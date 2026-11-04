@@ -1,5 +1,8 @@
+import 'dart:io' show FileSystemException;
+
 import 'package:args/command_runner.dart';
 
+import 'process_runner.dart';
 import 'version.dart';
 
 /// Conventional successful process exit.
@@ -12,6 +15,44 @@ const usageExitCode = 64;
 const failureExitCode = 1;
 
 typedef LineWriter = void Function(String line);
+
+/// An install that stopped partway, with the steps that finished and the
+/// command to rerun.
+final class InstallFailure implements Exception {
+  const InstallFailure(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
+/// The text for a failure the user can act on, or null when [error] is a bug.
+///
+/// Expected failures print as their message alone, never behind a Dart type
+/// name. Anything this does not recognize is a defect in remix_cli and gets
+/// a bug report with its stack instead.
+String? expectedFailureMessage(Object error) => switch (error) {
+  InstallFailure(:final message) => message,
+  ProcessFailure() => error.toString(),
+  FileSystemException(:final message, :final path, :final osError) =>
+    '$message${path == null ? '' : ': $path'}'
+        '${osError == null ? '' : ' (${osError.message})'}',
+  // toString, not message: YamlException keeps its line and column there, and
+  // jsonDecode keeps its offset and excerpt.
+  FormatException() => error.toString().replaceFirst(
+    RegExp('^FormatException: '),
+    '',
+  ),
+  _ => null,
+};
+
+String _bugReport(Object error, StackTrace stack) {
+  final details = '$error\n$stack'.trimRight().replaceAll('\n', '\n  ');
+  return 'remix_cli $remixCliVersion hit an unexpected error. This is a bug; '
+      'please report it at https://github.com/btwld/remix/issues with the '
+      'output below.\n  $details';
+}
 
 typedef InitHandler = Future<void> Function(InitOptions options);
 typedef RegistryHandler = Future<void> Function(RegistryOptions options);
@@ -116,8 +157,8 @@ Future<int> runRemixCli(
     writeError(error.message);
     writeError(error.usage);
     return usageExitCode;
-  } on Object catch (error) {
-    writeError(error.toString());
+  } on Object catch (error, stack) {
+    writeError(expectedFailureMessage(error) ?? _bugReport(error, stack));
     return failureExitCode;
   }
 }

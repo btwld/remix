@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:remix_cli/src/cli.dart';
+import 'package:remix_cli/src/process_runner.dart';
+import 'package:remix_cli/src/version.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
@@ -224,6 +226,92 @@ void main() {
     );
 
     expect(code, failureExitCode);
-    expect(errors.single, contains('broken'));
+    final report = errors.single;
+    expect(report, contains('broken'));
+    expect(report, startsWith('remix_cli $remixCliVersion hit an unexpected'));
+    expect(report, contains('https://github.com/btwld/remix/issues'));
+    expect(report, contains('\n  #0 '));
+    for (final line in report.split('\n').skip(1)) {
+      expect(line, startsWith('  '));
+    }
   });
+
+  test('expected handler failures print the message alone', () async {
+    final errors = <String>[];
+
+    final code = await runRemixCli(
+      ['init'],
+      writeOut: fail,
+      writeError: errors.add,
+      onInit: (_) async => throw const FormatException('Run remix init.'),
+    );
+
+    expect(code, failureExitCode);
+    expect(errors, ['Run remix init.']);
+  });
+
+  group('expectedFailureMessage', () {
+    final invocation = ProcessInvocation(
+      executable: 'dart',
+      arguments: const ['analyze', 'lib/ui'],
+      workingDirectory: '.',
+    );
+    final cases = <String, (Object, Matcher)>{
+      'FormatException': (
+        const FormatException('bad input'),
+        equals('bad input'),
+      ),
+      'FormatException with offset': (
+        const FormatException('Unexpected character', '{x', 1),
+        allOf(startsWith('Unexpected character'), contains('{x')),
+      ),
+      'YamlException': (
+        _yamlError('a: [b'),
+        allOf(startsWith('Error on line'), isNot(contains('Exception'))),
+      ),
+      'ProcessFailure': (
+        ProcessFailure(
+          invocation,
+          const ProcessOutput(exitCode: 1, stdout: '', stderr: 'boom'),
+          detail: 'Analysis failed',
+        ),
+        equals('Analysis failed: dart analyze lib/ui\nboom'),
+      ),
+      'FileSystemException': (
+        const FileSystemException(
+          'Cannot open file',
+          'lib/ui/ui.dart',
+          OSError('Permission denied', 13),
+        ),
+        equals('Cannot open file: lib/ui/ui.dart (Permission denied)'),
+      ),
+      'InstallFailure': (
+        const InstallFailure('stopped\nCompleted steps: none.'),
+        equals('stopped\nCompleted steps: none.'),
+      ),
+      'StateError': (StateError('bug'), isNull),
+      'TypeError': (_typeError(), isNull),
+    };
+    for (final MapEntry(key: name, value: (error, matcher)) in cases.entries) {
+      test(name, () => expect(expectedFailureMessage(error), matcher));
+    }
+  });
+}
+
+Object _yamlError(String source) {
+  try {
+    loadYaml(source);
+  } on YamlException catch (error) {
+    return error;
+  }
+  throw StateError('$source parsed');
+}
+
+Object _typeError() {
+  try {
+    <Object?>[null].single as String;
+  } on TypeError catch (error) {
+    return error;
+  }
+  throw StateError('cast succeeded');
 }

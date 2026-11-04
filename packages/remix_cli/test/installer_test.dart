@@ -534,7 +534,7 @@ packages:
               const AddOptions(items: ['button'], mode: AddMode.write),
             ),
             throwsA(
-              isA<StateError>().having(
+              isA<InstallFailure>().having(
                 (error) => error.message,
                 'message',
                 contains(unrelated ? 'pubspec.lock' : 'does not satisfy'),
@@ -1085,7 +1085,7 @@ packages:
         fileWriter: writer,
         sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
-      throwsStateError,
+      throwsA(isA<InstallFailure>()),
     );
 
     expect(writer.paths, isEmpty);
@@ -1116,7 +1116,7 @@ packages:
           processRunner: happyRunner(caseRoot, failStage: stage),
           sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
-        throwsStateError,
+        throwsA(isA<InstallFailure>()),
         reason: stage,
       );
 
@@ -1268,7 +1268,7 @@ dev_dependencies:
           fileWriter: writer,
           sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
-        throwsStateError,
+        throwsA(isA<InstallFailure>()),
       );
 
       expect(pubspec.readAsBytesSync(), before);
@@ -1303,7 +1303,7 @@ dev_dependencies:
               fileWriter: writer,
               sources: const FixtureOfficialResolver(),
             ).add(const AddOptions(items: ['accordion'], mode: AddMode.write)),
-            throwsStateError,
+            throwsA(isA<InstallFailure>()),
             reason: preset,
           );
 
@@ -1845,7 +1845,7 @@ dev_dependencies:
             const AddOptions(items: ['button', 'card'], mode: AddMode.write),
           ),
           throwsA(
-            isA<StateError>().having(
+            isA<InstallFailure>().having(
               (error) => error.message,
               'message',
               contains('remix add button card'),
@@ -1854,6 +1854,63 @@ dev_dependencies:
         );
       },
     );
+
+    test('an expected install failure reads as its message alone', () async {
+      writeRequiredPubspec(root);
+      writeRequiredLock(root);
+
+      await expectLater(
+        Installer(
+          projectRoot: root,
+          writeOut: (_) {},
+          processRunner: happyRunner(root, failStage: 'analyze'),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
+        throwsA(
+          isA<InstallFailure>().having(
+            expectedFailureMessage,
+            'rendered',
+            allOf(
+              startsWith('Installed UI analysis failed: '),
+              contains(
+                '\nCompleted steps: pub get, registry ownership, authored '
+                'source, format, generated Dart.',
+              ),
+              isNot(contains('Bad state')),
+              isNot(contains('Exception')),
+            ),
+          ),
+        ),
+      );
+    });
+
+    test('a bug inside the install keeps its own type and stack', () async {
+      writeRequiredPubspec(root);
+      writeRequiredLock(root);
+      final happy = happyRunner(root);
+      final runner = RecordingProcessRunner((invocation) {
+        if (invocation.arguments.join(' ') == 'pub get') {
+          throw StateError('runner bug');
+        }
+        return happy.handler(invocation);
+      });
+
+      await expectLater(
+        Installer(
+          projectRoot: root,
+          writeOut: (_) {},
+          processRunner: runner,
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            'runner bug',
+          ),
+        ),
+      );
+    });
 
     test('an unknown item in the batch fails before any write', () async {
       writeRequiredPubspec(root);

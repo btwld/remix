@@ -608,7 +608,7 @@ final class Installer {
         );
         for (final target in generationTargets) {
           if (!_projectFile(root, target).existsSync()) {
-            throw StateError('Code generation did not create $target.');
+            throw FormatException('Code generation did not create $target.');
           }
         }
         completed.add('generated Dart');
@@ -625,10 +625,12 @@ final class Installer {
       );
       completed.add('analysis');
     } on Object catch (error) {
+      final message = expectedFailureMessage(error);
+      if (message == null) rethrow;
       final done = completed.isEmpty ? 'none' : completed.join(', ');
-      throw StateError(
-        '$error\nCompleted steps: $done. Fix the reported problem, then rerun '
-        'remix add ${options.items.join(' ')}.',
+      throw InstallFailure(
+        '$message\nCompleted steps: $done. Fix the reported problem, then '
+        'rerun remix add ${options.items.join(' ')}.',
       );
     }
 
