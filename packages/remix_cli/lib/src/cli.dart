@@ -21,6 +21,17 @@ const driftExitCode = 2;
 
 typedef LineWriter = void Function(String line);
 
+/// The presets `remix init --help` describes, in `registry/index.yaml` order.
+///
+/// Help text, not validation: the pinned index owns the real set and
+/// `catalogPathForPreset` enforces it, so a newer preset still installs with
+/// an older CLI. A test pins these keys to the checkout's index.
+const officialPresets = {
+  'vanilla': 'Neutral, minimal theme inspired by shadcn/ui.',
+  'fortal': "Fortal's own visual language.",
+  'heroui': 'The look of HeroUI web 3.2.6.',
+};
+
 /// An install that stopped partway, with the steps that finished and the
 /// command to rerun.
 final class InstallFailure implements Exception {
@@ -131,16 +142,15 @@ Future<int> runRemixCli(
   AddHandler? onAdd,
   RegistryHandler? onRegistry,
 }) async {
-  final runner =
-      CommandRunner<int>('remix', 'Install editable Remix UI source.')
-        ..argParser.addFlag(
-          'version',
-          negatable: false,
-          help: 'Print the remix_cli version.',
-        )
-        ..addCommand(_InitCommand(onInit))
-        ..addCommand(_AddCommand(onAdd))
-        ..addCommand(_RegistryCommand(onRegistry));
+  final runner = _RemixRunner()
+    ..argParser.addFlag(
+      'version',
+      negatable: false,
+      help: 'Print the remix_cli version.',
+    )
+    ..addCommand(_InitCommand(onInit))
+    ..addCommand(_AddCommand(onAdd))
+    ..addCommand(_RegistryCommand(onRegistry));
 
   final helpCode = _writeRequestedHelp(
     arguments,
@@ -175,6 +185,18 @@ Future<int> runRemixCli(
     writeError(expectedFailureMessage(error) ?? _bugReport(error, stack));
     return failureExitCode;
   }
+}
+
+/// Subclassed only for the footer, which args exposes as a getter.
+final class _RemixRunner extends CommandRunner<int> {
+  _RemixRunner() : super('remix', 'Install editable Remix UI source.');
+
+  @override
+  String get usageFooter => '''
+
+Get started:
+  remix init          Pin the official registry and create lib/ui/ui.dart.
+  remix add button    Install an item and the items it needs.''';
 }
 
 int? _writeRequestedHelp(
@@ -214,9 +236,27 @@ int? _writeRequestedHelp(
 final class _InitCommand extends Command<int> {
   _InitCommand(this._handler) {
     argParser
-      ..addOption('prefix', defaultsTo: 'Ui')
-      ..addOption('preset', defaultsTo: 'vanilla')
-      ..addOption('ui-path', defaultsTo: 'lib/ui');
+      ..addOption(
+        'prefix',
+        defaultsTo: 'Ui',
+        valueHelp: 'Name',
+        help: 'Type prefix for installed widgets, as in UiButton.',
+      )
+      // No `allowed:`: the parser would reject a preset that the pinned
+      // index publishes but this CLI build predates.
+      ..addOption(
+        'preset',
+        defaultsTo: 'vanilla',
+        valueHelp: 'name',
+        help: 'Design language for every installed item.',
+        allowedHelp: officialPresets,
+      )
+      ..addOption(
+        'ui-path',
+        defaultsTo: 'lib/ui',
+        valueHelp: 'path',
+        help: 'Directory for installed source and its ui.dart barrel.',
+      );
   }
 
   final InitHandler? _handler;
@@ -226,6 +266,16 @@ final class _InitCommand extends Command<int> {
 
   @override
   String get description => 'Initialize Remix source installation settings.';
+
+  @override
+  String get invocation => 'remix init [options]';
+
+  @override
+  String get usageFooter => '''
+
+Examples:
+  remix init                                  Vanilla preset, Ui prefix, source in lib/ui.
+  remix init --preset fortal --prefix Acme    Fortal source with widgets named AcmeButton.''';
 
   @override
   Future<int> run() async {
@@ -250,13 +300,17 @@ final class _InitCommand extends Command<int> {
 final class _AddCommand extends Command<int> {
   _AddCommand(this._handler) {
     argParser
-      ..addFlag('dry-run', negatable: false)
-      ..addFlag('diff', negatable: false)
-      ..addFlag('overwrite', negatable: false)
       ..addFlag(
-        'adopt',
+        'dry-run',
         negatable: false,
-        help: 'Record verified legacy ownership without replacing source.',
+        help: 'Print the plan without running tools or writing files.',
+      )
+      ..addFlag(
+        'diff',
+        negatable: false,
+        help:
+            'Show how installed source differs from the registry; write '
+            'nothing.',
       )
       ..addFlag(
         'exit-code',
@@ -264,6 +318,18 @@ final class _AddCommand extends Command<int> {
         help:
             'With --diff, exit $driftExitCode when authored source differs, '
             'like git diff --exit-code.',
+      )
+      ..addFlag(
+        'overwrite',
+        negatable: false,
+        help:
+            'Replace the named items with registry source. Installed '
+            'dependencies are kept.',
+      )
+      ..addFlag(
+        'adopt',
+        negatable: false,
+        help: 'Record verified legacy ownership without replacing source.',
       );
   }
 
@@ -274,6 +340,20 @@ final class _AddCommand extends Command<int> {
 
   @override
   String get description => 'Install registry items and their dependencies.';
+
+  @override
+  String get invocation => 'remix add <item...> [options]';
+
+  @override
+  String get usageFooter =>
+      '''
+
+Examples:
+  remix add button                       Install button and the items it needs.
+  remix add button card dialog           Install several items at once.
+  remix add button --dry-run             Print the plan; change nothing.
+  remix add button --diff --exit-code    Exit $driftExitCode when installed source differs.
+  remix add @acme/card                   Install from a registry added with remix registry add.''';
 
   @override
   Future<int> run() async {
@@ -333,20 +413,53 @@ final class _RegistryCommand extends Command<int> {
   String get name => 'registry';
   @override
   String get description => 'Register and pin GitHub registry sources.';
+
+  @override
+  String get usageFooter => '''
+
+Examples:
+  remix registry add @acme --repository acme/design    Pin acme/design at its default branch.
+  remix registry update @remix                         Move @remix to the newest stable commit.
+  remix add @acme/card --diff                          Review what a moved pin would change.''';
 }
 
 final class _RegistryActionCommand extends Command<int> {
   _RegistryActionCommand(this.action, this.handler) {
-    argParser.addOption('ref');
     if (action == RegistryAction.add) {
-      argParser.addOption('repository');
-      argParser.addOption('path', defaultsTo: 'registry');
+      argParser
+        ..addOption(
+          'repository',
+          valueHelp: 'owner/repo',
+          help: 'Public GitHub repository that hosts the registry.',
+        )
+        ..addOption(
+          'path',
+          defaultsTo: 'registry',
+          valueHelp: 'path',
+          help: 'Registry directory inside the repository.',
+        );
     }
+    argParser.addOption(
+      'ref',
+      valueHelp: 'ref',
+      help: switch (action) {
+        RegistryAction.add =>
+          'Branch, tag, or commit to pin. Defaults to the default branch.',
+        RegistryAction.update =>
+          'Branch, tag, or commit to pin. Defaults to the ref in remix.yaml.',
+      },
+    );
   }
   final RegistryAction action;
   final RegistryHandler? handler;
   @override
   String get name => action.name;
+  @override
+  String get invocation => switch (action) {
+    RegistryAction.add =>
+      'remix registry add <@namespace> --repository <owner/repo> [options]',
+    RegistryAction.update => 'remix registry update <@namespace> [options]',
+  };
   @override
   String get description => switch (action) {
     RegistryAction.add =>

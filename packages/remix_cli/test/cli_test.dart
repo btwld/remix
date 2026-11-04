@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:remix_cli/src/cli.dart';
@@ -6,7 +7,97 @@ import 'package:remix_cli/src/version.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
+import 'checkout_registry.dart';
+
+/// Usage for [arguments], including the shapes args prints with `print()`.
+Future<String> _usage(List<String> arguments) async {
+  final printed = <String>[];
+  final code = await runZoned(
+    () => runRemixCli(arguments, writeOut: printed.add, writeError: fail),
+    zoneSpecification: ZoneSpecification(
+      print: (_, _, _, line) => printed.add(line),
+    ),
+  );
+  expect(code, successExitCode, reason: arguments.join(' '));
+  return printed.join('\n');
+}
+
 void main() {
+  group('help', () {
+    test('describes every option and flag', () async {
+      final undescribed = RegExp(
+        r'^\s*(-\w, )?--[\w-]+(=<[^>]+>)?\s*(\(defaults to [^)]*\))?$',
+        multiLine: true,
+      );
+      for (final command in [
+        ['init'],
+        ['add'],
+        ['registry', 'add'],
+        ['registry', 'update'],
+      ]) {
+        final usage = await _usage([...command, '--help']);
+        expect(usage, contains('    --'), reason: command.join(' '));
+        expect(
+          undescribed.allMatches(usage).map((match) => match[0]),
+          isEmpty,
+          reason: command.join(' '),
+        );
+      }
+    });
+
+    test('shows what to type for each command', () async {
+      expect(
+        await _usage(['help', 'add']),
+        allOf(
+          contains('Usage: remix add <item...> [options]'),
+          contains('Examples:\n  remix add button '),
+          contains('remix add button --diff --exit-code '),
+        ),
+      );
+      expect(
+        await _usage(['help', 'init']),
+        allOf(
+          contains('Usage: remix init [options]'),
+          contains('Examples:\n  remix init '),
+        ),
+      );
+      expect(
+        await _usage(['help', 'registry']),
+        contains('Examples:\n  remix registry add @acme --repository '),
+      );
+      expect(
+        await _usage(['registry', 'add', '--help']),
+        contains(
+          'Usage: remix registry add <@namespace> --repository <owner/repo>',
+        ),
+      );
+      expect(await _usage(['--help']), contains('Get started:\n  remix init '));
+    });
+
+    test('init lists the official presets without restricting them', () async {
+      final usage = await _usage(['help', 'init']);
+      for (final MapEntry(key: preset, value: summary)
+          in officialPresets.entries) {
+        expect(usage, contains(RegExp('\\[$preset\\].* $summary')));
+      }
+    });
+
+    test('officialPresets follows the checkout index, in order', () {
+      final index =
+          loadYaml(
+                File(
+                  '${findCheckoutRegistry().path}/index.yaml',
+                ).readAsStringSync(),
+              )
+              as YamlMap;
+
+      expect(
+        officialPresets.keys.toList(),
+        (index['presets'] as YamlMap).keys.toList(),
+      );
+    });
+  });
+
   test('--help prints usage successfully', () async {
     final output = <String>[];
 
