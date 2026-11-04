@@ -69,6 +69,7 @@ final class RegistryGraph {
             ?didYouMean(id, [
               for (final name in catalog.items.keys) '$namespace/$name',
             ]),
+            'Run remix list to see every item in the ${config.preset} preset.',
           ].join('\n'),
         );
       }

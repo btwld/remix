@@ -32,6 +32,7 @@ void main() {
       for (final command in [
         ['init'],
         ['add'],
+        ['list'],
         ['registry', 'add'],
         ['registry', 'update'],
       ]) {
@@ -71,7 +72,18 @@ void main() {
           'Usage: remix registry add <@namespace> --repository <owner/repo>',
         ),
       );
-      expect(await _usage(['--help']), contains('Get started:\n  remix init '));
+      expect(
+        await _usage(['--help']),
+        allOf(
+          contains('Get started:\n  remix init '),
+          contains('\n  remix list '),
+          contains('\n  list       List the items you can add'),
+        ),
+      );
+      expect(
+        await _usage(['help', 'list']),
+        contains('Usage: remix list [options]'),
+      );
     });
 
     test('init lists the official presets without restricting them', () async {
@@ -175,6 +187,36 @@ void main() {
       usageExitCode,
     );
     expect(errors.join('\n'), contains('Could not find a command named'));
+  });
+
+  test('help for a misspelled list suggests it', () async {
+    final errors = <String>[];
+
+    final code = await runRemixCli(
+      ['help', 'lsit'],
+      writeOut: fail,
+      writeError: errors.add,
+    );
+
+    expect(code, usageExitCode);
+    expect(
+      errors.first,
+      'Could not find a command named "lsit".\nDid you mean list or init?',
+    );
+  });
+
+  test('list dispatches its output mode', () async {
+    ListOptions? received;
+
+    final code = await runRemixCli(
+      ['list', '--json'],
+      writeOut: fail,
+      writeError: fail,
+      onList: (options) async => received = options,
+    );
+
+    expect(code, successExitCode);
+    expect(received!.json, isTrue);
   });
 
   test('help for a misspelled command suggests the near one', () async {

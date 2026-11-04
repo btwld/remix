@@ -7,6 +7,7 @@ import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
 import 'builder_config.dart';
+import 'catalog_listing.dart';
 import 'cli.dart';
 import 'process_runner.dart';
 import 'project_config.dart';
@@ -42,6 +43,7 @@ Future<int> runInstallerCli(
   writeError: writeError,
   onInit: installer.initialize,
   onAdd: installer.add,
+  onList: installer.list,
   onRegistry: installer.registry,
 );
 
@@ -162,16 +164,45 @@ final class Installer {
     });
   }
 
-  Future<void> registry(RegistryOptions options) async {
+  /// Reads `remix.yaml`, or names the command that needs `remix init` first.
+  (Directory, ProjectConfig) _readConfig({required String before}) {
     final root = validateFlutterPackageRoot(projectRoot);
     validateProjectFilePath(root, projectConfigFileName);
     final file = _projectFile(root, projectConfigFileName);
-    if (!file.existsSync())
-      throw const FormatException('Run remix init first.');
-    final config = ProjectConfig.parse(
-      file.readAsStringSync(),
-      packageRoot: root,
+    if (!file.existsSync()) {
+      throw FormatException('Run remix init before remix $before.');
+    }
+    return (
+      root,
+      ProjectConfig.parse(file.readAsStringSync(), packageRoot: root),
     );
+  }
+
+  /// Prints every item the configured registries offer for the project's
+  /// preset, default registry first. It reads the pinned catalogs and nothing
+  /// else, so it runs no process and writes no file.
+  Future<void> list(ListOptions options) async {
+    final (_, config) = _readConfig(before: 'list');
+    _writeProgress('Fetching registry items...');
+    final catalogs = <String, RegistryCatalog>{
+      for (final namespace in {
+        config.defaultRegistry,
+        ...config.registries.keys,
+      })
+        namespace: await _sources
+            .open(config.registries[namespace]!, config.preset)
+            .catalog(),
+    };
+    _writeOut(
+      options.json
+          ? catalogListingJson(config, catalogs)
+          : catalogListingText(config, catalogs),
+    );
+  }
+
+  Future<void> registry(RegistryOptions options) async {
+    final (root, config) = _readConfig(before: 'registry');
+    final file = _projectFile(root, projectConfigFileName);
     final namespace = options.namespace!;
     validateNamespace(namespace);
     final sources = <String, RegistrySource>{...config.registries};
@@ -263,16 +294,7 @@ final class Installer {
   /// written, which is also what lets `--dry-run` and `--diff` report from the
   /// same work a real install would do rather than from a second guess at it.
   Future<_InstallPlan> _planAdd(AddOptions options) async {
-    final root = validateFlutterPackageRoot(projectRoot);
-    final configFile = File(p.join(root.path, projectConfigFileName));
-    if (!configFile.existsSync()) {
-      throw const FormatException('Run remix init before remix add.');
-    }
-    validateProjectFilePath(root, projectConfigFileName);
-    final config = ProjectConfig.parse(
-      configFile.readAsStringSync(),
-      packageRoot: root,
-    );
+    final (root, config) = _readConfig(before: 'add');
     final barrelRelative = p.posix.join(config.uiPath, 'ui.dart');
     validateProjectFilePath(root, barrelRelative);
     final barrel = _projectFile(root, barrelRelative);
@@ -285,10 +307,7 @@ final class Installer {
     _writeProgress('Fetching registry items...');
     final graph = await RegistryGraph.resolve(config, options.items, _sources);
     for (final namespace in graph.catalogs.keys) {
-      _writeOut(
-        '$namespace (${config.preset}) revision '
-        '${config.registries[namespace]!.revision}',
-      );
+      _writeOut(revisionLine(config, namespace));
     }
     final items = graph.items;
     if (options.adopt && options.mode == AddMode.overwrite) {
@@ -330,7 +349,7 @@ final class Installer {
     for (final item in items) {
       final targets = <String>[];
       for (final registryFile in item.files) {
-        final relative = _resolveTarget(config, registryFile.target);
+        final relative = config.targetPath(registryFile.target);
         validateProjectFilePath(root, relative);
         if (rendered.containsKey(relative)) {
           throw FormatException('Multiple registry files target $relative.');
@@ -361,7 +380,7 @@ final class Installer {
       }
       filesByItem[item.name] = List.unmodifiable(targets);
       for (final generated in item.generated) {
-        validateProjectFilePath(root, _resolveTarget(config, generated));
+        validateProjectFilePath(root, config.targetPath(generated));
       }
     }
 
@@ -385,7 +404,7 @@ final class Installer {
     );
     final generated = <String>[
       for (final item in items)
-        for (final target in item.generated) _resolveTarget(config, target),
+        for (final target in item.generated) config.targetPath(target),
     ];
     // A newly added dependency can invalidate build_runner's asset graph. On
     // that first rebuild, outputs excluded by --build-filter may be removed as
@@ -398,8 +417,8 @@ final class Installer {
       ..._installedAdapters(root, config.uiPath, installedDart),
       for (final item in availableItems)
         for (final target in item.generated)
-          if (_projectFile(root, _resolveTarget(config, target)).existsSync())
-            _resolveTarget(config, target),
+          if (_projectFile(root, config.targetPath(target)).existsSync())
+            config.targetPath(target),
     }.toList(growable: false);
 
     // Spec stylers are opt-in in the supported Mix generator. Detect the
@@ -407,7 +426,7 @@ final class Installer {
     final specInputs = <String>[];
     for (final item in availableItems) {
       for (final file in item.files) {
-        final relative = _resolveTarget(config, file.target);
+        final relative = config.targetPath(file.target);
         validateProjectFilePath(root, relative);
         final existing = _projectFile(root, relative);
         final proposed = rendered[relative];
@@ -1202,9 +1221,6 @@ String _generationFilter(String packageName, String target) => Uri(
     ...p.posix.split(Glob.quote(target.substring('lib/'.length))),
   ],
 ).toString();
-
-String _resolveTarget(ProjectConfig config, String target) =>
-    p.posix.join(config.uiPath, target.substring(uiTargetPrefix.length));
 
 Set<String> _installedAdapters(
   Directory root,

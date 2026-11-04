@@ -68,7 +68,8 @@ void main() {
     expect(code, failureExitCode);
     expect(
       errors.single,
-      'Unknown registry item @remix/missing in the vanilla preset.',
+      'Unknown registry item @remix/missing in the vanilla preset.\n'
+      'Run remix list to see every item in the vanilla preset.',
     );
     expect(snapshotFiles(root), before);
     expect(runner.calls, isEmpty);
@@ -98,7 +99,8 @@ void main() {
     expect(
       errors.single,
       'Unknown registry item @remix/buton in the vanilla preset.\n'
-      'Did you mean @remix/button?',
+      'Did you mean @remix/button?\n'
+      'Run remix list to see every item in the vanilla preset.',
     );
   });
 }

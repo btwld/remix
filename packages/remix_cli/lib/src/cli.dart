@@ -72,6 +72,7 @@ String _bugReport(Object error, StackTrace stack) {
 }
 
 typedef InitHandler = Future<void> Function(InitOptions options);
+typedef ListHandler = Future<void> Function(ListOptions options);
 typedef RegistryHandler = Future<void> Function(RegistryOptions options);
 
 /// The installer reports what `add` found; only the shell maps it to an exit
@@ -118,6 +119,13 @@ final class AddOptions {
   final bool adopt;
 }
 
+final class ListOptions {
+  const ListOptions({this.json = false});
+
+  /// One JSON document on stdout, for scripts and agents.
+  final bool json;
+}
+
 enum RegistryAction { add, update }
 
 final class RegistryOptions {
@@ -141,6 +149,7 @@ Future<int> runRemixCli(
   required LineWriter writeError,
   InitHandler? onInit,
   AddHandler? onAdd,
+  ListHandler? onList,
   RegistryHandler? onRegistry,
 }) async {
   final runner = _RemixRunner()
@@ -151,6 +160,7 @@ Future<int> runRemixCli(
     )
     ..addCommand(_InitCommand(onInit))
     ..addCommand(_AddCommand(onAdd))
+    ..addCommand(_ListCommand(onList))
     ..addCommand(_RegistryCommand(onRegistry));
 
   final helpCode = _writeRequestedHelp(
@@ -197,6 +207,7 @@ final class _RemixRunner extends CommandRunner<int> {
 
 Get started:
   remix init          Pin the official registry and create lib/ui/ui.dart.
+  remix list          See the items you can add.
   remix add button    Install an item and the items it needs.''';
 }
 
@@ -409,6 +420,40 @@ Examples:
     return exitOnDrift && result == AddResult.differs
         ? driftExitCode
         : successExitCode;
+  }
+}
+
+final class _ListCommand extends Command<int> {
+  _ListCommand(this._handler) {
+    argParser.addFlag(
+      'json',
+      negatable: false,
+      help: 'Print the listing as JSON for scripts and agents.',
+    );
+  }
+
+  final ListHandler? _handler;
+
+  @override
+  String get name => 'list';
+
+  @override
+  String get description => 'List the items you can add from your registries.';
+
+  @override
+  String get invocation => 'remix list [options]';
+
+  @override
+  Future<int> run() async {
+    if (argResults!.rest.isNotEmpty) {
+      usageException('list accepts no positional arguments.');
+    }
+    final handler = _handler;
+    if (handler == null) {
+      throw StateError('The list command is not available.');
+    }
+    await handler(ListOptions(json: argResults!.flag('json')));
+    return successExitCode;
   }
 }
 
