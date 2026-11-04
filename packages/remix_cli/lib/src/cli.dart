@@ -3,6 +3,7 @@ import 'dart:io' show FileSystemException;
 import 'package:args/command_runner.dart';
 
 import 'process_runner.dart';
+import 'suggest.dart';
 import 'version.dart';
 
 /// Conventional successful process exit.
@@ -225,7 +226,15 @@ int? _writeRequestedHelp(
 
   final command = runner.commands[commandName];
   if (command == null || commandName == 'help') {
-    writeError('Could not find a command named "$commandName".');
+    writeError(
+      [
+        'Could not find a command named "$commandName".',
+        ?didYouMean(commandName, [
+          for (final MapEntry(:key, :value) in runner.commands.entries)
+            if (!value.hidden) key,
+        ]),
+      ].join('\n'),
+    );
     writeError(runner.usage);
     return usageExitCode;
   }

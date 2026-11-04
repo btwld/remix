@@ -479,4 +479,62 @@ void main() {
       }
     },
   );
+
+  group('an unknown preset', () {
+    const index = '''
+schema: 1
+presets:
+  vanilla: vanilla/registry.yaml
+  fortal: fortal/registry.yaml
+  heroui: heroui/registry.yaml
+  retired: null
+''';
+    Matcher fails(String message) => throwsA(
+      isA<FormatException>().having(
+        (error) => error.message,
+        'message',
+        message,
+      ),
+    );
+
+    test('suggests a near preset and lists the published ones', () {
+      expect(
+        () => catalogPathForPreset(
+          index,
+          preset: 'vanila',
+          origin: 'btwld/remix',
+        ),
+        fails(
+          'Registry btwld/remix has no vanila preset.\n'
+          'Did you mean vanilla?\n'
+          'Available presets: vanilla, fortal, heroui.',
+        ),
+      );
+    });
+
+    test('lists the published presets when none is close', () {
+      expect(
+        () => catalogPathForPreset(
+          index,
+          preset: 'shadcn',
+          origin: 'btwld/remix',
+        ),
+        fails(
+          'Registry btwld/remix has no shadcn preset.\n'
+          'Available presets: vanilla, fortal, heroui.',
+        ),
+      );
+    });
+
+    test('keeps the first line alone when the index publishes none', () {
+      expect(
+        () => catalogPathForPreset(
+          'schema: 1\npresets: {}\n',
+          preset: 'vanilla',
+          origin: 'acme/design',
+        ),
+        fails('Registry acme/design has no vanilla preset.'),
+      );
+    });
+  });
 }

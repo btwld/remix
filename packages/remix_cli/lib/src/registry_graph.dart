@@ -2,6 +2,7 @@ import 'project_config.dart';
 import 'registry.dart';
 import 'registry_reader.dart';
 import 'registry_source.dart';
+import 'suggest.dart';
 
 /// A complete, validated dependency closure. Qualified names remain distinct
 /// even when registries use the same local item name.
@@ -61,10 +62,16 @@ final class RegistryGraph {
       final reader = readers[namespace] ??= sources.open(source, config.preset);
       final catalog = catalogs[namespace] ??= await reader.catalog();
       final item = catalog.items[id.split('/').last];
-      if (item == null)
+      if (item == null) {
         throw FormatException(
-          'Unknown registry item $id in the ${config.preset} preset.',
+          [
+            'Unknown registry item $id in the ${config.preset} preset.',
+            ?didYouMean(id, [
+              for (final name in catalog.items.keys) '$namespace/$name',
+            ]),
+          ].join('\n'),
         );
+      }
       visiting.add(id);
       for (final dependency in item.registryDependencies) {
         await visit(qualify(dependency, namespace));

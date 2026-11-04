@@ -177,6 +177,22 @@ void main() {
     expect(errors.join('\n'), contains('Could not find a command named'));
   });
 
+  test('help for a misspelled command suggests the near one', () async {
+    final errors = <String>[];
+
+    final code = await runRemixCli(
+      ['help', 'ad'],
+      writeOut: fail,
+      writeError: errors.add,
+    );
+
+    expect(code, usageExitCode);
+    expect(
+      errors.first,
+      'Could not find a command named "ad".\nDid you mean add?',
+    );
+  });
+
   test('--version agrees with pubspec.yaml', () async {
     final output = <String>[];
     final pubspec =
