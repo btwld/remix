@@ -1,3 +1,10 @@
+## Unreleased
+
+### Fixes
+
+- `RemixToggle` with `semanticLabel` now replaces the visible `label` text for
+  assistive technology instead of concatenating both labels.
+
 ## 1.0.0-beta.16
 
 ### Fixes

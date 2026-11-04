@@ -213,7 +213,10 @@ class _NakedToggleState extends State<NakedToggle>
             button: !widget.asSwitch,
             label: widget.semanticLabel,
             onTap: widget._effectiveEnabled ? _activate : null,
-            child: gestureDetector,
+            child: ExcludeSemantics(
+              excluding: widget.semanticLabel != null,
+              child: gestureDetector,
+            ),
           );
   }
 
@@ -1074,14 +1077,16 @@ class _NakedToggleOptionState<T> extends State<NakedToggleOption<T>>
     Widget optionChild = widget.excludeSemantics
         ? ExcludeSemantics(child: gestureDetector)
         : Semantics(
-            container: true,
             enabled: isEnabled,
             selected: isSelected,
             button: true,
             inMutuallyExclusiveGroup: true,
             label: widget.semanticLabel,
             onTap: isEnabled ? () => _activate(scope) : null,
-            child: gestureDetector,
+            child: ExcludeSemantics(
+              excluding: widget.semanticLabel != null,
+              child: gestureDetector,
+            ),
           );
 
     final shortcuts = <ShortcutActivator, Intent>{

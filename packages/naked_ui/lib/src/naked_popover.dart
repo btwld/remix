@@ -375,7 +375,7 @@ class _NakedPopoverState extends State<NakedPopover>
               ? ExcludeFocusTraversal(child: widget.child!)
               : widget.child,
           builder: (context, buttonState, child) {
-            final content = NakedStateScopeBuilder(
+            return NakedStateScopeBuilder(
               value: NakedPopoverState(
                 states: buttonState.states,
                 isOpen: _menuController.isOpen,
@@ -383,10 +383,6 @@ class _NakedPopoverState extends State<NakedPopover>
               child: child,
               builder: widget.builder,
             );
-
-            return widget.semanticLabel == null
-                ? content
-                : ExcludeSemantics(child: content);
           },
         ),
       );
