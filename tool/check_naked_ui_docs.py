@@ -1,8 +1,8 @@
 """Check nav/API coverage and analyze every complete Dart example in Naked UI docs.
 
-Run `flutter pub get --enforce-lockfile` first using .fvmrc's SDK. Constructor
-signatures and expression fragments are reference excerpts; blocks with imports
-are complete compilable examples. Source includes are analyzed too.
+Run `flutter pub get --enforce-lockfile` first using .fvmrc's SDK. Every block
+is either a complete analyzed/frontend-compiled example or an explicit reasoned
+reference checked against references.json and active API source bytes.
 """
 from pathlib import Path
 import re

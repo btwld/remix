@@ -173,5 +173,12 @@
     "source": "packages/naked_ui/lib/src/naked_tooltip.dart",
     "sourceSha256": "f049755711942b8e9c9405da941ce1e4ae9d4585a42c872e8e02339d7575b065",
     "symbol": "NakedTooltip"
+  },
+  "widget/slider.mdx#1": {
+    "codeSha256": "23a7eeb53ebdd6ebd1586c6ff4dafbb15b0dd46c8e8ae32a7e176b366565fab3",
+    "reason": "API signature for NakedSlider; copied from the active declaration. It describes the API and omits constructor assertions.",
+    "source": "packages/naked_ui/lib/src/naked_slider.dart",
+    "sourceSha256": "14c9d28ad619790c1f8003bea6ec8afa062815bf03e51a1477158adbe12bd061",
+    "symbol": "NakedSlider"
   }
 }

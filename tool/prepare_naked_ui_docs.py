@@ -43,6 +43,7 @@ def prepare(root, output):
     (content / 'meta.json').write_text(json.dumps({'pages': meta}, indent=2) + '\n')
     shutil.copyfile(docs / 'LICENSE', output / 'LICENSE')
     shutil.copyfile(docs / 'SOURCES.json', output / 'SOURCES.json')
+    shutil.copyfile(docs / 'legacy-anchors.json', output / 'legacy-anchors.json')
     print(f'Staged {len(pages)} canonical Naked UI pages.')
     return content
 
