@@ -1,0 +1,17 @@
+---
+title: NakedMenubar
+description: Horizontal menu navigation and nested actions
+keywords: [flutter, headless, menubar]
+---
+
+Use `NakedMenubar` for an application menu row. Supply menu anchors as children; the bar coordinates keyboard movement and opening between menus. Use `NakedMenubarScope` only when custom descendants need the shared menu context.
+
+Build actions with `NakedMenuItem`, checkable actions with `NakedMenuCheckboxItem`, mutually exclusive actions with `NakedMenuRadioGroup`, and nested actions with `NakedMenuSubmenu`. Give each trigger an accessible label and retain Escape and focus restoration behavior.
+
+## Basic implementation
+
+<NakedSource file="naked_menubar.0.dart" />
+
+## Source and accessibility
+
+See the [package implementation](https://github.com/btwld/remix/tree/main/packages/naked_ui/lib/src) for the complete API. Keep visible labels, focus indication and sufficient contrast in your presentation layer.

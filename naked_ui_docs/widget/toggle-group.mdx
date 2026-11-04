@@ -1,0 +1,80 @@
+---
+title: NakedToggleGroup
+description: Controlled single-selection toggle groups
+keywords: [flutter, headless, toggle-group]
+---
+
+`NakedToggleGroup<T>` coordinates a single selected value across `NakedToggleOption<T>` descendants. Keep `selectedValue` in the caller and update it with `onChanged`. This API is single-select; it does not accept a set of selected values.
+
+Options expose selected, hover, focus and pressed state for custom rendering. Give each option an accessible name and use a [switch](/widget/switch) for an independent on/off setting.
+
+## Basic implementation
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+class ToggleGroupExample extends StatelessWidget {
+  const ToggleGroupExample({super.key, required this.value, required this.onChanged});
+
+  final String value;
+  final ValueChanged<String?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return NakedToggleGroup<String>(
+      selectedValue: value,
+      onChanged: onChanged,
+      child: Row(
+        children: [
+          NakedToggleOption<String>(
+            value: 'bold',
+            builder: (context, state, _) {
+              final isCurrent = state.isSelected;
+              return _SegmentChip(label: 'Bold', selected: isCurrent);
+            },
+          ),
+          const SizedBox(width: 8),
+          NakedToggleOption<String>(
+            value: 'italic',
+            builder: (context, state, _) {
+              final isCurrent = state.isSelected;
+              return _SegmentChip(label: 'Italic', selected: isCurrent);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SegmentChip extends StatelessWidget {
+  const _SegmentChip({required this.label, required this.selected});
+
+  final String label;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: selected ? Colors.blue.shade600 : Colors.grey.shade200,
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: selected ? Colors.white : Colors.grey.shade800,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+```
+
+## Source and accessibility
+
+See the [package implementation](https://github.com/btwld/remix/tree/main/packages/naked_ui/lib/src) for the complete API. Keep visible labels, focus indication and sufficient contrast in your presentation layer.

@@ -10,7 +10,7 @@ the trigger has button semantics, reports whether its panel is expanded, and
 activates with Enter or Space.
 
 <Info>
-  A complete example lives in [`packages/example/lib/api/naked_disclosure.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_disclosure.0.dart).
+  A complete example lives in [`apps/naked_ui_example/lib/api/naked_disclosure.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_disclosure.0.dart).
 </Info>
 
 ## Disclosure or accordion?
@@ -26,7 +26,11 @@ An uncontrolled disclosure owns its state. `defaultExpanded` is read only when
 the widget is initialized; later changes are intentionally ignored.
 
 ```dart
-NakedDisclosure(
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget disclosureExample(bool detailsOpen, ValueChanged<bool> onChanged) {
+  return NakedDisclosure(
   defaultExpanded: false,
   child: const Text('Show shipping details'),
   builder: (context, state, child) => Row(
@@ -40,7 +44,8 @@ NakedDisclosure(
     ],
   ),
   panel: const Text('Ships in 2–3 business days.'),
-)
+);
+}
 ```
 
 At least one of `child` or `builder` is required. Supply both when the builder
@@ -54,12 +59,17 @@ inverse value through `onExpandedChanged`; the panel changes only when the
 owner accepts and supplies the new value.
 
 ```dart
-NakedDisclosure(
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget disclosureExample(bool detailsOpen, ValueChanged<bool> onChanged) {
+  return NakedDisclosure(
   expanded: detailsOpen,
-  onExpandedChanged: (value) => setState(() => detailsOpen = value),
+  onExpandedChanged: onChanged,
   child: const Text('Delivery details'),
   panel: const Text('Tracking is included.'),
-)
+);
+}
 ```
 
 A controlled disclosure without `onExpandedChanged` is read-only. Its panel
@@ -79,12 +89,21 @@ supplied child preserves the trigger's original hit target, so the panel does
 not become part of the disclosure button.
 
 ```dart
-itemBuilder: (context, state, child) => DecoratedBox(
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget disclosureExample(bool detailsOpen, ValueChanged<bool> onChanged) {
+  return NakedDisclosure(
+  child: const Text("Details"),
+  panel: const Text("Shipping information"),
+  itemBuilder: (context, state, child) => DecoratedBox(
   decoration: BoxDecoration(
     border: Border.all(color: state.isFocused ? Colors.blue : Colors.grey),
   ),
   child: child,
 ),
+);
+}
 ```
 
 The same state is available below the scope through
@@ -99,7 +118,14 @@ mounted through the reverse animation. It is removed after dismissal; there is
 no persistent collapsed panel state.
 
 ```dart
-transitionBuilder: (context, animation, child) => FadeTransition(
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget disclosureExample(bool detailsOpen, ValueChanged<bool> onChanged) {
+  return NakedDisclosure(
+  child: const Text("Details"),
+  panel: const Text("Shipping information"),
+  transitionBuilder: (context, animation, child) => FadeTransition(
   opacity: animation,
   child: SizeTransition(
     sizeFactor: animation,
@@ -107,6 +133,8 @@ transitionBuilder: (context, animation, child) => FadeTransition(
     child: child,
   ),
 ),
+);
+}
 ```
 
 Custom transitions default to 200ms with `Curves.ease`. Configure

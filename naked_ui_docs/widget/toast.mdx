@@ -16,7 +16,7 @@ Headless toast host. `NakedToastScope` owns a queue of nonmodal notifications, t
 Use a dialog instead when the user must respond before continuing.
 
 <Info>
-  Working example: [`packages/example/lib/api/naked_toast.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_toast.0.dart).
+  Working example: [`apps/naked_ui_example/lib/api/naked_toast.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_toast.0.dart).
 </Info>
 
 ## Basic implementation
@@ -75,14 +75,21 @@ class App extends StatelessWidget {
   }
 }
 
-// From any event callback below the scope:
+Future<NakedToastDismissReason> showSaved(BuildContext context) async {
 final handle = NakedToastScope.of<Message>(context).show(
   const NakedToastRequest(
     data: Message('Draft saved'),
     semanticLabel: 'Draft saved',
   ),
 );
-final reason = await handle.closed;
+return await handle.closed;
+}
+
+class Home extends StatelessWidget {
+  const Home({super.key});
+  @override
+  Widget build(BuildContext context) => Center(child: NakedButton(onPressed: () => showSaved(context), child: const Text("Save draft")));
+}
 ```
 
 With `MaterialApp`, put the scope in `home` (or a persistent router shell) so it sits below the Navigator's Overlay.

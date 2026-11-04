@@ -1,5 +1,5 @@
 ---
-title: NakedSwitch
+title: Switch (NakedToggle)
 description: Headless on/off control built on top of NakedToggle with switch semantics for accessibility
 keywords: [flutter, switch, toggle, settings, accessibility, headless]
 ---
@@ -14,7 +14,7 @@ Headless switch component. Handles toggle behavior and accessibility with switch
 - **Status controls**: Active/inactive, enabled/disabled states
 
 <Info>
-  See the runnable sample in [`packages/example/lib/api/naked_toggle.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_toggle.0.dart) under the "Switch" section.
+  See the runnable sample in [`apps/naked_ui_example/lib/api/naked_toggle.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_toggle.0.dart) under the "Switch" section.
 </Info>
 
 ## Basic implementation
@@ -46,7 +46,7 @@ class _SettingsSwitchState extends State<SettingsSwitch> {
 
         final backgroundColor = state.when(
           disabled: Colors.grey.shade300,
-          toggled: Colors.green.shade500,
+          selected: Colors.green.shade500,
           orElse: Colors.grey.shade400,
         );
 
@@ -70,7 +70,7 @@ class _SettingsSwitchState extends State<SettingsSwitch> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 3,
                     offset: const Offset(0, 1),
                   ),

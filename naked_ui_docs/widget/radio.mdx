@@ -14,7 +14,7 @@ Headless radio button component. RadioGroup coordinates keyboard navigation and 
 - **Filters**: Select one filter option from a category
 
 <Info>
-  Full examples are available in [`packages/example/lib/api/naked_radio.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_radio.0.dart).
+  Full examples are available in [`apps/naked_ui_example/lib/api/naked_radio.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_radio.0.dart).
 </Info>
 
 ## Basic implementation
@@ -114,7 +114,7 @@ class _RadioChip extends StatelessWidget {
 
 - `value` → radio value for this option
 - `isSelected` → convenience getter for selection state
-- `widgetStates` → hover/focus/pressed/disabled information
+- `states` → hover/focus/pressed/disabled information
 
 ### Access from Context
 
@@ -174,3 +174,5 @@ Key notes:
 - Default keyboard support: arrow keys move between radios, Space selects
 - Keep your focus/hover styles visible using `state.isFocused` / `state.isHovered`
 - For more advanced layouts, wrap radio groups in `FocusTraversalGroup` to control traversal order
+
+`NakedRadioGroup<T>` wraps Flutter’s group with an optional `onChanged`, group-level `enabled` and `semanticLabel`. Use it when a whole group needs disabling or an accessible name.

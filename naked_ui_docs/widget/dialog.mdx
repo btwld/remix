@@ -15,7 +15,7 @@ Headless dialog component. Handles focus management, backdrop interaction, and a
 - **Custom modals**: When standard dialog styles don't match your design
 
 <Info>
-  See the complete example in [`packages/example/lib/api/naked_dialog.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_dialog.0.dart).
+  See the complete example in [`apps/naked_ui_example/lib/api/naked_dialog.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_dialog.0.dart).
 </Info>
 
 ## Basic implementation
@@ -24,7 +24,8 @@ Headless dialog component. Handles focus management, backdrop interaction, and a
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
-final result = await showNakedDialog<String>(
+Future<String?> dialogExample(BuildContext context) async {
+return showNakedDialog<String>(
   context: context,
   barrierColor: Colors.black54,
   builder: (context) => NakedDialog(
@@ -56,6 +57,7 @@ final result = await showNakedDialog<String>(
     ),
   ),
 );
+}
 ```
 
 For an urgent or destructive confirmation, use the alert helper. Its builder
@@ -63,17 +65,25 @@ returns visual content only; the helper supplies the single alert-dialog
 semantics wrapper and always moves focus into the route.
 
 ```dart
-final result = await showNakedAlertDialog<bool>(
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Future<bool?> dialogExample(BuildContext context, FocusNode cancelFocusNode) async {
+return showNakedAlertDialog<bool>(
   context: context,
   barrierColor: Colors.black54,
-  semanticLabel: localizedDeleteProjectTitle,
+  semanticLabel: 'Delete project',
   initialFocusNode: cancelFocusNode,
-  builder: (context) => YourStyledAlertContents(
-    cancelFocusNode: cancelFocusNode,
-    onCancel: () => Navigator.pop(context, false),
-    onConfirm: () => Navigator.pop(context, true),
+  builder: (context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      const Text('Delete this project?'),
+      NakedButton(focusNode: cancelFocusNode, onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+      NakedButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+    ],
   ),
 );
+}
 ```
 
 ## API

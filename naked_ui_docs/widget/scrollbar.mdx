@@ -1,0 +1,17 @@
+---
+title: NakedScrollbar
+description: State-aware scrollbar over Flutter RawScrollbar
+keywords: [flutter, headless, scrollbar]
+---
+
+Pass the same `ScrollController` to `NakedScrollbar` and its scrollable. The wrapper retains `RawScrollbar` painting, fading, hit testing and thumb dragging. `thumbColor`, `trackColor`, `trackBorderColor` and `thickness` accept `WidgetStateProperty` values for hover and drag styling.
+
+`thumbVisibility`, `trackVisibility`, `interactive`, `radius`, margins and fade durations control presentation. A visible track requires a visible thumb. Do not combine `shape` and `radius`; dispose controllers owned by your widget.
+
+## Basic implementation
+
+<NakedSource file="naked_scrollbar.0.dart" />
+
+## Source and accessibility
+
+See the [package implementation](https://github.com/btwld/remix/tree/main/packages/naked_ui/lib/src) for the complete API. Keep visible labels, focus indication and sufficient contrast in your presentation layer.

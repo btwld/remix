@@ -17,7 +17,15 @@
   },
   "meta": {
     "author": "Bitwild",
-    "keywords": ["flutter", "headless", "components", "ui", "widgets", "unstyled", "accessibility"]
+    "keywords": [
+      "flutter",
+      "headless",
+      "components",
+      "ui",
+      "widgets",
+      "unstyled",
+      "accessibility"
+    ]
   },
   "footer": {
     "links": [
@@ -34,7 +42,7 @@
         "url": "https://pub.dev/packages/naked_ui"
       }
     ],
-    "copyright": "© 2024 Bitwild. MIT License."
+    "copyright": "\u00a9 2024 Bitwild. MIT License."
   },
   "sidebar": [
     {
@@ -94,7 +102,7 @@
           "href": "/widget/slider"
         },
         {
-          "title": "NakedSwitch",
+          "title": "Switch (NakedToggle)",
           "href": "/widget/switch"
         },
         {
@@ -116,6 +124,31 @@
         {
           "title": "NakedTooltip",
           "href": "/widget/tooltip"
+        }
+      ]
+    },
+    {
+      "group": "Additional widgets",
+      "pages": [
+        {
+          "title": "NakedCombobox",
+          "href": "/widget/combobox"
+        },
+        {
+          "title": "NakedMenubar",
+          "href": "/widget/menubar"
+        },
+        {
+          "title": "NakedScrollbar",
+          "href": "/widget/scrollbar"
+        },
+        {
+          "title": "NakedToggleGroup",
+          "href": "/widget/toggle-group"
+        },
+        {
+          "title": "NakedTextMagnifier",
+          "href": "/widget/text-magnifier"
         }
       ]
     }

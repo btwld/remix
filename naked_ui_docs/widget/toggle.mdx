@@ -20,7 +20,7 @@ Headless toggle component. Handles binary state management and accessibility wit
 Use a standalone `NakedToggle` for button-like feature switches and toolbar commands. Set `asSwitch` when the same boolean state should use switch semantics.
 
 <Info>
-  Complete runnable examples live in [`packages/example/lib/api/naked_toggle.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_toggle.0.dart).
+  Complete runnable examples live in [`apps/naked_ui_example/lib/api/naked_toggle.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_toggle.0.dart).
 </Info>
 
 ## Basic implementation
@@ -148,8 +148,8 @@ class _ToggleButtonExampleState extends State<ToggleButtonExample> {
 The optional `builder` receives a strongly typed `NakedToggleState`:
 
 - `isToggled` → `bool`: current boolean value
-- `isHovered`, `isFocused`, `isPressed`, `isDisabled` → derived from `NakedWidgetState`
-- `widgetStates` → raw `Set<WidgetState>` if you need manual resolution
+- `isHovered`, `isFocused`, `isPressed`, `isDisabled` → derived from `NakedState`
+- `states` → raw `Set<WidgetState>` if you need manual resolution
 
 If you prefer simple composition, pass a `child` instead and style it externally.
 
@@ -203,7 +203,7 @@ class ToggleGroupExample extends StatelessWidget {
   const ToggleGroupExample({super.key, required this.value, required this.onChanged});
 
   final String value;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String?> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -312,7 +312,7 @@ const NakedToggleOption({
 `NakedToggleOptionState<T>` mirrors the base state helpers and exposes:
 - `value` → the option's value
 - `isSelected` → convenience getter for selection state
-- `widgetStates` → hover/focus/pressed/disabled flags for styling
+- `states` → hover/focus/pressed/disabled flags for styling
 
 ### Access from Context
 
@@ -331,4 +331,4 @@ const NakedToggleOption({
 - Focus management: callers that supply a `FocusNode` retain ownership and must dispose it
 - Visual feedback: use `state.isFocused` / `isPressed` to surface strong focus & press affordances
 
-Need more patterns? Review the full sample app under `packages/example/lib/api` for end-to-end scenarios.
+Need more patterns? Review the full sample app under `apps/naked_ui_example/lib/api` for end-to-end scenarios.

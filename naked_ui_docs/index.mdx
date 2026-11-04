@@ -22,11 +22,16 @@ Headless components provide behavior and accessibility without visual styling.
 Most UI libraries give you components that look like this:
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
 // Standard UI library approach
-ElevatedButton(
+Widget example0(BuildContext context, FocusNode myFocusNode) {
+  return ElevatedButton(
   onPressed: () {},
   child: const Text('Click me'), // Fixed appearance
-)
+);
+}
 ```
 
 Standard libraries limit customization to predefined themes and styles. Design flexibility is constrained.
@@ -36,7 +41,12 @@ Standard libraries limit customization to predefined themes and styles. Design f
 Naked UI provides custom styling through builders:
 
 ```dart
-NakedButton(
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+
+Widget example1(BuildContext context, FocusNode myFocusNode) {
+  return NakedButton(
   onPressed: () {},
   builder: (context, state, child) {
     // Custom styling based on state
@@ -49,7 +59,8 @@ NakedButton(
       child: const Text('Click me'),
     );
   },
-)
+);
+}
 ```
 
 Components handle behavior. Builders define appearance.
@@ -77,7 +88,7 @@ Components handle behavior. Builders define appearance.
 - NakedLink - link semantics, activation, and observable interaction state
 - NakedTooltip - anchored tooltip with lifecycle
 - NakedPopover - anchored, dismissible popover overlay
-- NakedSwitch - on/off control with switch semantics
+- Switch (NakedToggle) - on/off control with switch semantics
 - NakedTextField - native text editing with custom styling
 
 ## Getting Started
@@ -86,7 +97,7 @@ Components handle behavior. Builders define appearance.
 
 ```yaml
 dependencies:
-  naked_ui: ^1.0.0-beta.4  # https://pub.dev/packages/naked_ui
+  naked_ui: ^1.4.0  # https://pub.dev/packages/naked_ui
 ```
 
 Then: `flutter pub get`
@@ -101,7 +112,9 @@ Build a simple button:
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
-NakedButton(
+
+Widget example2(BuildContext context, FocusNode myFocusNode) {
+  return NakedButton(
   onPressed: () => print('Hello World!'),
   builder: (context, state, child) {
     return Container(
@@ -110,7 +123,8 @@ NakedButton(
       child: const Text('Submit'),
     );
   },
-)
+);
+}
 ```
 
 This button includes:
@@ -150,7 +164,9 @@ Handle pressed, hovered, and focused states:
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
-NakedButton(
+
+Widget example3(BuildContext context, FocusNode myFocusNode) {
+  return NakedButton(
   onPressed: () {},
   builder: (context, state, child) {
     // Method 1: Check each state individually
@@ -173,7 +189,8 @@ NakedButton(
       child: const Text('Interactive button'),
     );
   },
-)
+);
+}
 ```
 
 The `state.when()` method provides cleaner conditional logic.
@@ -186,16 +203,17 @@ For precise focus management in forms or complex UIs:
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
-final myFocusNode = FocusNode();
 
-NakedButton(
+Widget example4(BuildContext context, FocusNode myFocusNode) {
+  return NakedButton(
   focusNode: myFocusNode,        // Use your own focus node
   autofocus: true,               // Focus automatically when built
   onPressed: () {
     myFocusNode.requestFocus();  // Focus programmatically
   },
-  builder: (context, state, child) => YourCustomWidget(),
-)
+  builder: (context, state, child) => const Text('Continue'),
+);
+}
 ```
 
 ## Component selection guide
@@ -229,3 +247,11 @@ All components follow the same builder pattern. Choose based on interaction requ
 **Recommended approach**: Begin with Button - the simplest component for learning the core patterns. Other components use the same builder-based approach.
 
 **Next steps**: Review component-specific documentation for detailed implementation examples and API references.
+
+## More widgets
+
+- [NakedCombobox](/widget/combobox) — Editable selection with filtered options.
+- [NakedMenubar](/widget/menubar) — Horizontal menu navigation and nested actions.
+- [NakedScrollbar](/widget/scrollbar) — State-aware scrollbar over Flutter RawScrollbar.
+- [NakedToggleGroup](/widget/toggle-group) — Controlled single-selection toggle groups.
+- [NakedTextMagnifier](/widget/text-magnifier) — Adaptive touch magnification for editable text.

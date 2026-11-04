@@ -20,7 +20,7 @@ Headless tabs component. Handles keyboard navigation (arrow keys) and selection 
 - `NakedTabView` – panel that shows/hides content based on the active tab
 
 <Info>
-  See the complete implementation in [`packages/example/lib/api/naked_tabs.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_tabs.0.dart).
+  See the complete implementation in [`apps/naked_ui_example/lib/api/naked_tabs.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_tabs.0.dart).
 </Info>
 
 ## Basic implementation
@@ -171,7 +171,7 @@ class _PanelBox extends StatelessWidget {
 
 - `tabId` → identifier for the tab
 - `isSelected` → convenience getter for selection state
-- `widgetStates` → hover/focus/pressed/disabled flags for styling
+- `states` → hover/focus/pressed/disabled flags for styling
 
 ### Access from Context
 
@@ -188,6 +188,7 @@ const NakedTabs({
   required this.child,
   this.controller,
   this.selectedTabId,
+  this.activationMode = NakedTabActivationMode.automatic,
   this.onChanged,
   this.orientation = Axis.horizontal,
   this.enabled = true,
@@ -247,3 +248,5 @@ const NakedTabView({
 - Arrow keys move between tabs (horizontal or vertical based on `orientation`)
 - Provide strong focus states via `tabState.isFocused`
 - Each panel should contain headings or text to clarify context for screen readers
+
+`NakedTabBar` groups the triggers. `activationMode` chooses automatic activation on focus or manual activation. Tabs expose the tab role as well as button semantics.

@@ -14,7 +14,7 @@ Headless tooltip component built on Flutter's `RawTooltip`. Handles hover/touch 
 - **Feature descriptions**: Brief explanations of complex features
 
 <Info>
-  Working example: [`packages/example/lib/api/naked_tooltip.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_tooltip.0.dart).
+  Working example: [`apps/naked_ui_example/lib/api/naked_tooltip.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_tooltip.0.dart).
 </Info>
 
 ## Basic implementation
@@ -30,8 +30,9 @@ class TooltipExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return NakedTooltip(
       positioning: const OverlayPositionConfig(
-        targetAnchor: Alignment.topCenter,
-        followerAnchor: Alignment.bottomCenter,
+        side: OverlaySide.top,
+        alignment: OverlayAlignment.center,
+        sideOffset: 8,
       ),
       hoverDelay: const Duration(milliseconds: 400),
       dismissDelay: const Duration(seconds: 2),
@@ -111,14 +112,19 @@ const NakedTooltip({
 
 ## Positioning Tips
 
-Use `OverlayPositionConfig.offset` to nudge the tooltip position:
+Use `OverlayPositionConfig.sideOffset` to nudge the tooltip position:
 
 ```dart
-const OverlayPositionConfig(
-  targetAnchor: Alignment.topCenter,
-  followerAnchor: Alignment.bottomCenter,
-  offset: Offset(0, -8),
-);
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+OverlayPositionConfig examplePosition() => const OverlayPositionConfig(
+  side: OverlaySide.top,
+        alignment: OverlayAlignment.center,
+        sideOffset: 8,
+      );
 ```
 
 For fully custom positioning beyond what `OverlayPositionConfig` exposes, drop down to Flutter's `RawTooltip` directly and supply your own `TooltipPositionDelegate`.
+
+Opening is managed by `RawTooltip` and its trigger mode. The legacy `open`, `useRootOverlay` and `disableHoverableContent` parameters are deprecated; do not use them for new integrations.

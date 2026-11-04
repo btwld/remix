@@ -14,7 +14,7 @@ Headless popover component. Handles positioning, focus management, outside dismi
 - **Content previews**: Preview links, images, or documents
 
 <Info>
-  Explore the sample in [`packages/example/lib/api/naked_popover.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_popover.0.dart).
+  Explore the sample in [`apps/naked_ui_example/lib/api/naked_popover.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_popover.0.dart).
 </Info>
 
 ## Basic implementation
@@ -28,10 +28,13 @@ class PopoverExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final menuController = MenuController();
     return NakedPopover(
+      controller: menuController,
       positioning: const OverlayPositionConfig(
-        targetAnchor: Alignment.bottomCenter,
-        followerAnchor: Alignment.topCenter,
+        side: OverlaySide.bottom,
+        alignment: OverlayAlignment.center,
+        sideOffset: 8,
       ),
       popoverBuilder: (context, info) {
         return Material(
@@ -51,7 +54,7 @@ class PopoverExample extends StatelessWidget {
                   const Text('Share this project link to collaborate.'),
                   const SizedBox(height: 12),
                   ElevatedButton(
-                    onPressed: () => Navigator.of(context).maybePop(),
+                    onPressed: () => menuController.close(),
                     child: const Text('Copy link'),
                   ),
                 ],
@@ -155,6 +158,7 @@ const NakedPopover({
   this.onOpenRequested,
   this.onCloseRequested,
   this.controller,
+  this.anchorKey,
   this.semanticLabel,
   this.excludeSemantics = false,
 })
@@ -163,7 +167,7 @@ const NakedPopover({
 ### Key Parameters
 
 - `child` / `builder` → provide a static trigger or a `ValueWidgetBuilder<NakedPopoverState>` for dynamic styling
-- `popoverBuilder` → `(BuildContext, RawMenuAnchorOverlayInfo)` to build the overlay content
+- `popoverBuilder` → `(BuildContext, RawMenuOverlayInfo)` to build the overlay content
 - `positioning` → `OverlayPositionConfig` controlling alignment/offset/fallbacks
 - `openOnTap` → disable to manage open state manually (e.g. hover triggers)
 - `consumeOutsideTaps` / `useRootOverlay` → control gesture capture and overlay target
@@ -185,11 +189,16 @@ const NakedPopover({
 Use `OverlayPositionConfig` to adjust anchor placement:
 
 ```dart
-const OverlayPositionConfig(
-  targetAnchor: Alignment.bottomCenter,
-  followerAnchor: Alignment.topCenter,
-  offset: Offset(0, 8),
-);
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+OverlayPositionConfig examplePosition() => const OverlayPositionConfig(
+  side: OverlaySide.bottom,
+        alignment: OverlayAlignment.center,
+        sideOffset: 8,
+      );
 ```
 
-The builder receives `RawMenuAnchorOverlayInfo` (`info` in the sample) with `anchorRect`, `overlaySize`, and `position` should you need custom math.
+The builder receives `RawMenuOverlayInfo` (`info` in the sample) with `anchorRect`, `overlaySize`, and `position` should you need custom math.
+
+When `openOnTap` is false, supply a focusable child and pass that control’s focus node as `triggerFocusNode`. The popover adds no trigger semantics in this mode, so the child owns its accessible label.

@@ -14,7 +14,7 @@ Headless accordion component. Handles section expansion, keyboard navigation, an
 - **Space-saving layouts**: Show/hide content sections as needed
 
 <Info>
-  A complete example lives in [`packages/example/lib/api/naked_accordion.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_accordion.0.dart).
+  A complete example lives in [`apps/naked_ui_example/lib/api/naked_accordion.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_accordion.0.dart).
 </Info>
 
 ## Basic implementation
@@ -38,7 +38,7 @@ class _AccordionExampleState extends State<AccordionExample> {
     return NakedAccordionGroup<String>(
       controller: controller,
       initialExpandedValues: const ['intro'],
-      children: const [
+      child: Column(children: const [
         _AccordionSection(
           value: 'intro',
           title: 'Introduction',
@@ -50,7 +50,7 @@ class _AccordionExampleState extends State<AccordionExample> {
           title: 'Details',
           body: 'Deep-dive content that can be long-form text.',
         ),
-      ],
+      ]),
     );
   }
 }
@@ -137,7 +137,7 @@ class _AccordionSectionState extends State<_AccordionSection> {
 - `expandedCount` → number of currently expanded items
 - `canExpandMore` / `canCollapseMore` → whether additional opens/closes are allowed under the controller constraints
 - `minExpanded` / `maxExpanded` → configuration echoed for convenience
-- `widgetStates` → hover/focus/pressed/disabled states captured from the group container
+- `states` → hover/focus/pressed/disabled states captured from the group container
 
 ## Item State Snapshot
 
@@ -147,7 +147,7 @@ class _AccordionSectionState extends State<_AccordionSection> {
 - `value` → item identifier
 - `isExpanded` → whether the panel is currently open
 - `canExpand` / `canCollapse` → controller-aware capabilities
-- `widgetStates` → raw `Set<WidgetState>` to resolve hover, focus, press
+- `states` → raw `Set<WidgetState>` to resolve hover, focus, press
 
 Use these values to adjust affordances (e.g. disable icons when the controller prevents expansion).
 
@@ -159,7 +159,11 @@ transitioned panel, and its context exposes the same authoritative item state
 controller used by both descendants.
 
 ```dart
-NakedAccordion<String>(
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget wrappedAccordion() {
+  return NakedAccordion<String>(
   value: 'details',
   builder: (context, state) => Text(
     state.isExpanded ? 'Hide details' : 'Show details',
@@ -184,6 +188,7 @@ NakedAccordion<String>(
   },
   child: const Text('Detailed content'),
 );
+}
 ```
 
 Keep the supplied child in the returned subtree. It retains Naked UI's

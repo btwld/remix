@@ -1,0 +1,17 @@
+---
+title: NakedCombobox
+description: Editable selection with filtered options
+keywords: [flutter, headless, combobox]
+---
+
+Use a combobox when users should type to filter choices. Keep the text controller, selected value and filtering in the caller. `NakedCombobox<T>` manages the option overlay, highlight, keyboard selection and semantics. `NakedComboboxOption<T>` supplies each option’s interaction state.
+
+Keep option values stable across filtering. Dispose your text and focus controllers. Provide an accessible label for the editable field and a visible label for every option.
+
+## Basic implementation
+
+<NakedSource file="naked_combobox.0.dart" />
+
+## Source and accessibility
+
+See the [package implementation](https://github.com/btwld/remix/tree/main/packages/naked_ui/lib/src) for the complete API. Keep visible labels, focus indication and sufficient contrast in your presentation layer.

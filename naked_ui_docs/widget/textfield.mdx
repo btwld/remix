@@ -4,7 +4,7 @@ description: Headless text input component with native editing behavior
 keywords: [flutter, textfield, editabletext, headless, input]
 ---
 
-Headless text input component. Preserves native text editing behavior (selection handles, keyboard shortcuts, IME). Use builder pattern for custom styling.
+Selection handles and the cut/copy/paste menu are opt-in: supply `selectionControls` and `contextMenuBuilder`. [NakedTextMagnifier](/widget/text-magnifier) provides the adaptive touch lens.
 
 ## When to use this
 
@@ -14,7 +14,7 @@ Headless text input component. Preserves native text editing behavior (selection
 - **Specialized inputs**: Custom styled inputs that standard TextFields can't provide
 
 <Info>
-  See the complete example in [`packages/example/lib/api/naked_textfield.0.dart`](https://github.com/btwld/naked_ui/blob/main/packages/example/lib/api/naked_textfield.0.dart).
+  See the complete example in [`apps/naked_ui_example/lib/api/naked_textfield.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_textfield.0.dart).
 </Info>
 
 ## Basic implementation
@@ -50,7 +50,7 @@ class _HeadlessFieldState extends State<HeadlessField> {
           hovered: Colors.grey.shade400,
           orElse: Colors.grey.shade300,
         );
-        final borderWidth = state.isFocused ? 2 : 1;
+        final borderWidth = state.isFocused ? 2.0 : 1.0;
 
         return AnimatedContainer(
           duration: const Duration(milliseconds: 160),
@@ -65,7 +65,7 @@ class _HeadlessFieldState extends State<HeadlessField> {
             boxShadow: state.isFocused
                 ? [
                     BoxShadow(
-                      color: Colors.blue.withOpacity(0.12),
+                      color: Colors.blue.withValues(alpha: 0.12),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -162,7 +162,7 @@ const NakedTextField({
   this.onFocusChange,
   this.onPressChange,
   this.style,
-  required this.builder,
+  this.builder,
   this.ignorePointers,
   this.semanticLabel,
   this.semanticHint,
@@ -197,13 +197,18 @@ const NakedTextField({
 For a validation error, derive both parameters from the same state:
 
 ```dart
-NakedTextField(
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget emailInput(TextEditingController emailController, String? emailError) {
+  return NakedTextField(
   controller: emailController,
   error: emailError != null,
   semanticLabel: 'Email',
   semanticErrorText: emailError,
   builder: (context, state, editableText) => editableText,
 );
+}
 ```
 
 ## Tips

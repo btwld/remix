@@ -19,13 +19,17 @@ Use a button for an in-place action. A Link communicates that activation
 navigates to or references another destination.
 
 <Info>
-  The complete fixture is in the [GitHub repository](https://github.com/conceptadev/naked_ui/blob/main/packages/example/lib/api/naked_link.0.dart).
+  The complete fixture is in the [GitHub repository](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_link.0.dart).
 </Info>
 
 ## Basic implementation
 
 ```dart
-NakedLink(
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget docsLink(BuildContext context) {
+  return NakedLink(
   onPressed: () => Navigator.of(context).pushNamed('/docs'),
   child: const Text('Documentation'),
   builder: (context, state, child) {
@@ -41,7 +45,8 @@ NakedLink(
       child: child!,
     );
   },
-)
+);
+}
 ```
 
 ## Navigation ownership
