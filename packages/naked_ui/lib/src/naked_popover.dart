@@ -322,9 +322,6 @@ class _NakedPopoverState extends State<NakedPopover>
       child: widget.child,
       builder: widget.builder,
     );
-    final semanticContent = widget.semanticLabel == null
-        ? content
-        : ExcludeSemantics(child: content);
 
     Widget trigger = GestureDetector(
       onTapDown: (_) => updatePressState(true, null),
@@ -333,7 +330,7 @@ class _NakedPopoverState extends State<NakedPopover>
       onTap: _activate,
       behavior: HitTestBehavior.opaque,
       excludeFromSemantics: true,
-      child: semanticContent,
+      child: content,
     );
     trigger = Semantics(
       enabled: true,
@@ -342,6 +339,7 @@ class _NakedPopoverState extends State<NakedPopover>
       // reports isExpanded. Matches NakedMenu/NakedSelect/NakedAccordion.
       expanded: _menuController.isOpen,
       label: widget.semanticLabel,
+      excludeSemantics: widget.semanticLabel != null,
       onTap: _activate,
       child: trigger,
     );

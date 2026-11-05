@@ -250,12 +250,10 @@ class _NakedButtonState extends State<NakedButton>
             label: widget.semanticLabel,
             hint: widget.semanticHint,
             tooltip: widget.tooltip,
+            excludeSemantics: widget.semanticLabel != null,
             onTap: widget.onPressed != null ? _handleTap : null,
             onLongPress: widget.onLongPress != null ? _handleLongPress : null,
-            child: ExcludeSemantics(
-              excluding: widget.semanticLabel != null,
-              child: gestureDetector,
-            ),
+            child: gestureDetector,
           );
 
     return NakedFocusableDetector(

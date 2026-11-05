@@ -221,11 +221,9 @@ class _NakedCheckboxState extends State<NakedCheckbox>
             checked: widget.value == true,
             mixed: widget.tristate && widget.value == null,
             label: widget.semanticLabel,
+            excludeSemantics: widget.semanticLabel != null,
             onTap: _semanticsTapHandler,
-            child: ExcludeSemantics(
-              excluding: widget.semanticLabel != null,
-              child: gestureDetector,
-            ),
+            child: gestureDetector,
           );
   }
 
