@@ -28,16 +28,25 @@ void main() {
       if (command.hidden || command.name == 'help') return;
       if (!rendered.contains('# $path\n')) missing.add(path);
       expectOptions(path, command.argParser);
-      for (final subcommand in command.subcommands.values) {
+      for (final subcommand in documentedCommands(command.subcommands)) {
         walk('$path ${subcommand.name}', subcommand);
       }
     }
 
     expectOptions('remix', runner.argParser);
-    for (final command in runner.commands.values) {
+    for (final command in documentedCommands(runner.commands)) {
       walk('remix ${command.name}', command);
     }
     expect(missing, isEmpty);
+  });
+
+  test('an alias is documented once, and help stays hidden', () {
+    final runner = CommandRunner<int>('remix', 'test')
+      ..addCommand(_AliasedCommand());
+
+    expect(documentedCommands(runner.commands).map((command) => command.name), [
+      'sample',
+    ]);
   });
 
   group('replaceGeneratedRegion', () {
@@ -105,4 +114,18 @@ void main() {
   test('the committed CLI reference matches the parsers', () {
     expect(checkCliReference(Directory.current), isEmpty);
   });
+}
+
+final class _AliasedCommand extends Command<int> {
+  @override
+  String get name => 'sample';
+
+  @override
+  List<String> get aliases => const ['alias'];
+
+  @override
+  String get description => 'Sample.';
+
+  @override
+  Future<int> run() async => 0;
 }

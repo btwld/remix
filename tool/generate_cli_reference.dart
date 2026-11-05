@@ -100,8 +100,7 @@ String renderCliReference() {
     ..writeln();
   _writeFence(buffer, runner.usageFooter);
 
-  for (final command in runner.commands.values) {
-    if (command.hidden || command.name == 'help') continue;
+  for (final command in documentedCommands(runner.commands)) {
     _writeCommand(buffer, command, ['remix'], level: 3);
   }
 
@@ -174,10 +173,22 @@ void _writeCommand(
   _writeFence(buffer, command.invocation);
   _writeOptions(buffer, command.argParser);
   _writeFence(buffer, command.usageFooter);
-  for (final subcommand in command.subcommands.values.toSet()) {
-    if (subcommand.hidden) continue;
+  for (final subcommand in documentedCommands(command.subcommands)) {
     _writeCommand(buffer, subcommand, path, level: level + 1);
   }
+}
+
+/// Each command once, in registration order, skipping hidden commands.
+///
+/// [CommandRunner] stores a command again under every alias, so walking
+/// `values` directly would print that command twice.
+Iterable<Command<int>> documentedCommands(Map<String, Command<int>> commands) {
+  final seen = <Command<int>>{};
+  return [
+    for (final command in commands.values)
+      if (seen.add(command) && !command.hidden && command.name != 'help')
+        command,
+  ];
 }
 
 void _writeOptions(StringBuffer buffer, ArgParser parser) {
