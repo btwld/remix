@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Breaking changes
+
+- Require `naked_ui` ^2.0.0-beta.1.
+
 ### Fixes
 
 - `RemixToggle` with `semanticLabel` now replaces the visible `label` text for
