@@ -14,8 +14,13 @@
 #
 # Excluding them does not weaken coverage: the checker runs `flutter analyze`
 # over that exact source in the assembled app, where its dependencies are real.
+#
+# `tool/tutorial_capture/` holds screenshot tests that `tool/replay_tutorial.py`
+# copies into a sample application's `test/` directory; they import that
+# application's `lib/main.dart`, which does not exist here.
 analyzer:
   exclude:
+    - tool/tutorial_capture/**
     - open_code/fixture/**
     - open_code/fortal_fixture/**
     - open_code/heroui_fixture/**
