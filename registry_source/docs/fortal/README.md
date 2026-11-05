@@ -16,7 +16,7 @@ primary-role policy, separate from explicit `highContrast` component variants.
 ## Installation
 
 ```bash
-flutter pub add dev:remix_cli
+flutter pub add dev:remix_cli:^1.0.0-beta.1
 dart run remix_cli:remix init --prefix Fortal --preset fortal
 dart run remix_cli:remix add button
 ```

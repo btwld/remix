@@ -28,11 +28,13 @@ to read with an explicit error. Recover a schema 1 or 2 project by deleting
 `remix.yaml`, running `remix init` again with its old `--prefix`/`--preset`/
 `--ui-path`, then verifying the installed source's provenance before adoption.
 
-CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. The current
-CLI rejects unknown existing targets before mutation, including `--diff` and
-`--dry-run`. After verifying their source, name every existing dependency
-explicitly when adopting. For Vanilla Button, that is Theme and Button. Fortal
-Button also needs `base_button` when its targets already exist:
+CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. An
+unversioned `dev:remix_cli` dependency resolves 0.1.0; raise it to
+`^1.0.0-beta.1` first. The current CLI rejects unknown existing targets before
+mutation, including `--diff` and `--dry-run`. After verifying their source,
+name every existing dependency explicitly when adopting. For Vanilla Button,
+that is Theme and Button. Fortal Button also needs `base_button` when its
+targets already exist:
 
 ```bash
 dart run remix_cli:remix add theme button --adopt --diff
