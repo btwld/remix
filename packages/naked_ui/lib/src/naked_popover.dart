@@ -264,24 +264,29 @@ class _NakedPopoverState extends State<NakedPopover>
     return null;
   }
 
+  ({FocusNode node, FocusNode? child}) get _triggerNodes {
+    final child = _extractChildFocusNode();
+    return (
+      node: widget.triggerFocusNode ?? child ?? _internalTriggerNode,
+      child: child,
+    );
+  }
+
   FocusNode? get _childOwnedTriggerNode {
     if (!widget.openOnTap) return null;
-    final childFocusNode = _extractChildFocusNode();
-    final returnNode =
-        widget.triggerFocusNode ?? childFocusNode ?? _internalTriggerNode;
-
-    return identical(returnNode, childFocusNode) ? childFocusNode : null;
+    final trigger = _triggerNodes;
+    return identical(trigger.node, trigger.child) ? trigger.child : null;
   }
 
   void _updateObservedChildFocusNode() {
     final next = _childOwnedTriggerNode;
+    if (identical(next, _observedChildFocusNode)) return;
     if (next == null) {
       _keyboardPressTimer?.cancel();
       _keyboardPressTimer = null;
       updateHoverState(false, null);
       updatePressState(false, null);
     }
-    if (identical(next, _observedChildFocusNode)) return;
     _observedChildFocusNode?.removeListener(_handleChildFocusChange);
     _observedChildFocusNode = next;
     _observedChildFocusNode?.addListener(_handleChildFocusChange);
@@ -450,9 +455,9 @@ class _NakedPopoverState extends State<NakedPopover>
 
   @override
   Widget build(BuildContext context) {
-    final childFocusNode = _extractChildFocusNode();
-    final returnNode =
-        widget.triggerFocusNode ?? childFocusNode ?? _internalTriggerNode;
+    final trigger = _triggerNodes;
+    final returnNode = trigger.node;
+    final childFocusNode = trigger.child;
 
     final result = RawMenuAnchor(
       controller: _menuController,

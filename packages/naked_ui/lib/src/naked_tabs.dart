@@ -454,16 +454,10 @@ class _NakedTabState extends State<NakedTab>
   void _syncTabStates() {
     updateDisabledState(!_isEnabled);
     updateSelectedState(_scope.isTabSelected(widget.tabId), null);
-    if (!_isEnabled && updatePressState(false, null)) {
-      final onPressChange = widget.onPressChange;
-      if (onPressChange != null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted && !_isEnabled && !isPressed) {
-            onPressChange(false);
-          }
-        });
-      }
-    }
+    releasePressWhenDisabled(
+      disabled: () => !_isEnabled,
+      onPressChange: widget.onPressChange,
+    );
   }
 
   @override
