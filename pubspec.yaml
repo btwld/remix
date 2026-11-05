@@ -346,6 +346,7 @@ melos:
       # The catalog is rendered from the same specification `fortal:check`
       # holds against the recipes, so a stale page is drift, not a doc edit.
       steps:
+        - dart test test/tool/install_pins_test.dart
         - dart run tool/validate_docs.dart
         - dart run tool/generate_fortal_catalog.dart --check
         - python3 tool/check_example_hosts.py

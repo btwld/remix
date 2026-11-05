@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'install_pins.dart';
+
 final _removedComponentBackgroundColorInvocation = RegExp(
   r'\b(?:Remix)?(?:Accordion|Avatar|Badge|Button|Callout|Card|Dialog|'
   r'IconButton|Popover|TextField|Toggle|ToggleGroup|ToggleGroupItem|Tooltip)'
@@ -221,18 +223,47 @@ const _testSourceDirectories = <String>[
   'registry_source/test',
 ];
 
-const _publishedSkillDirectories = <String>[
-  'skills/using-remix',
-  'skills/building-remix-design-system',
+/// User-facing docs describe the published release; `open_code/RELEASING.md`
+/// owns the candidate (#383).
+final _releaseStagingPhrases = <RegExp>[
+  RegExp(r'\bunpublished\b', caseSensitive: false),
+  RegExp(r'\bnot published yet\b', caseSensitive: false),
+  RegExp(r'\bthis checkout\b', caseSensitive: false),
 ];
-const _consumerDocumentationFiles = <String>[
-  'README.md',
-  'packages/remix/README.md',
-  'registry_source/docs/fortal/README.md',
-  'packages/remix_cli/README.md',
-  'open_code/README.md',
-  'open_code/CLEAN_SHEET.md',
-];
+
+void _checkReleaseState(
+  String source,
+  String relativePath,
+  Map<String, String> expectedPins,
+  List<String> failures,
+) {
+  for (final command in installCommands(source)) {
+    final expected = expectedPins[command.package]!;
+    final constraint = command.constraint?.text;
+    if (constraint == null) {
+      failures.add(
+        '$relativePath installs ${command.package} without a version at '
+        'offset ${command.start}; pub.dev resolves that to the stable 0.x '
+        'line, so pin $expected.',
+      );
+    } else if (constraint != expected) {
+      failures.add(
+        '$relativePath pins ${command.package} $constraint at offset '
+        '${command.start}; the package is $expected. Run '
+        '`dart run tool/sync_install_pins.dart`.',
+      );
+    }
+  }
+  for (final phrase in _releaseStagingPhrases) {
+    final match = phrase.firstMatch(source);
+    if (match != null) {
+      failures.add(
+        '$relativePath says "${match[0]}" at offset ${match.start}; '
+        'user-facing docs describe the published release, not a staged one.',
+      );
+    }
+  }
+}
 
 final _staleConsumerDocumentationClaims = <(RegExp, String)>[
   (
@@ -364,6 +395,10 @@ Future<void> main() async {
   final docsRoot = Directory('${workspaceRoot.path}/docs');
   final docsConfig = File('${workspaceRoot.path}/docs.json');
   final failures = <String>[];
+  final expectedPins = {
+    for (final package in pinnedInstallPackages)
+      package: expectedInstallPin(workspaceRoot, package),
+  };
 
   final docs =
       docsRoot
@@ -389,10 +424,12 @@ Future<void> main() async {
       failures.add('$relativePath has unbalanced CodeGroup tags.');
     }
     _checkRetiredApis(source, relativePath, failures);
+    _checkReleaseState(source, relativePath, expectedPins, failures);
   }
 
   final consumerDocumentationCount = _checkConsumerDocumentation(
     workspaceRoot,
+    expectedPins,
     failures,
   );
   _checkOpenCodeCatalog(workspaceRoot, failures);
@@ -426,7 +463,7 @@ Future<void> main() async {
   }
 
   final skillDocuments = [
-    for (final relativeDirectory in _publishedSkillDirectories)
+    for (final relativeDirectory in publishedSkillDirectories)
       ...Directory('${workspaceRoot.path}/$relativeDirectory')
           .listSync(recursive: true)
           .whereType<File>()
@@ -499,10 +536,11 @@ Future<void> main() async {
 
 int _checkConsumerDocumentation(
   Directory workspaceRoot,
+  Map<String, String> expectedPins,
   List<String> failures,
 ) {
   final documents = <File>[];
-  for (final relativeDirectory in _publishedSkillDirectories) {
+  for (final relativeDirectory in publishedSkillDirectories) {
     final directory = Directory('${workspaceRoot.path}/$relativeDirectory');
     if (!directory.existsSync()) {
       failures.add(
@@ -517,7 +555,7 @@ int _checkConsumerDocumentation(
           .where((file) => file.path.endsWith('.md')),
     );
   }
-  for (final relativeFile in _consumerDocumentationFiles) {
+  for (final relativeFile in consumerDocumentationFiles) {
     final file = File('${workspaceRoot.path}/$relativeFile');
     if (!file.existsSync()) {
       failures.add('Missing consumer documentation file: $relativeFile.');
@@ -541,6 +579,7 @@ int _checkConsumerDocumentation(
         );
       }
     }
+    _checkReleaseState(source, relativePath, expectedPins, failures);
     for (final (index, match) in _dartFence.allMatches(source).indexed) {
       _checkRetiredApis(
         _fenceBody(match),
@@ -554,7 +593,7 @@ int _checkConsumerDocumentation(
 }
 
 void _checkSkillEvalMetadata(Directory workspaceRoot, List<String> failures) {
-  for (final skillDirectory in _publishedSkillDirectories) {
+  for (final skillDirectory in publishedSkillDirectories) {
     final evalsFile = File(
       '${workspaceRoot.path}/$skillDirectory/evals/evals.json',
     );
