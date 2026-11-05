@@ -11,8 +11,9 @@ import re
 import zipfile
 
 from prepare_docs_site import SOURCE_TAG
-from replay_tutorial import (ARCHIVE, ASSETS, DART_FLOOR, EVIDENCE, FLUTTER_FLOOR, TUTORIAL,
-                             sha256, tutorial_blocks)
+from replay_tutorial import (ARCHIVE, ASSETS, AUTHORED, AUTHORED_ROOT, DART_FLOOR, EVIDENCE,
+                             FLUTTER_FLOOR, SAMPLES, TUTORIAL, archive_path, sha256,
+                             tutorial_blocks)
 
 IMAGE = re.compile(r"\(/assets/remix-cli-tutorial/([\w.-]+\.png)\)")
 CHECKOUT_INSTALL_PHRASES = ["/path/to/remix", "git clone", "pubspec_overrides.yaml"]
@@ -111,8 +112,24 @@ def check_assets(root):
         if any(name.endswith("pubspec_overrides.yaml") for name in samples.namelist()):
             failures.append(f"{ARCHIVE}: pubspec_overrides.yaml would replace hosted packages")
         failures.extend(check_cli_sources(samples, evidence["cli_sources"]))
+        failures.extend(check_authored_sources(root, samples))
         for source in evidence["source"]:
             failures.extend(check_sample(samples, source, evidence["replay"]))
+    return failures
+
+
+def check_authored_sources(root, samples):
+    """The reviewable sample sources and the archive must be the same bytes."""
+    failures = []
+    for preset in SAMPLES:
+        for path in AUTHORED:
+            relative = f"{AUTHORED_ROOT}/{preset}/{path}"
+            on_disk = root / relative
+            if not on_disk.is_file():
+                failures.append(f"{relative} is missing")
+                continue
+            if samples.read(archive_path(preset, path)) != on_disk.read_bytes():
+                failures.append(f"{relative} differs from {ARCHIVE}")
     return failures
 
 

@@ -27,9 +27,10 @@ which `tool/check_tutorial_assets.py` verifies:
 python3 tool/replay_tutorial.py --flutter "$(command -v flutter)"
 ```
 
-Authored sample files (`lib/main.dart` and the tests) live only inside the ZIP;
-the replay carries them forward. Edit the tutorial or an authored file, then
-rerun the replay. Never hand-edit the evidence to pass a check.
+Authored sample files (`lib/main.dart` and the tests) live in
+`tool/tutorial_samples`. The replay copies them into the archive the docs
+include. Edit the tutorial or an authored file, then rerun the replay.
+Never hand-edit the evidence to pass a check.
 
 ## Validation
 

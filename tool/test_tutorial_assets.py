@@ -21,6 +21,7 @@ class TutorialAssetTests(unittest.TestCase):
         source = Path(__file__).resolve().parents[1]
         shutil.copytree(source / "docs", self.root / "docs")
         (self.root / "tool").mkdir()
+        shutil.copytree(source / "tool/tutorial_samples", self.root / "tool/tutorial_samples")
         shutil.copyfile(source / EVIDENCE, self.root / EVIDENCE)
         self.assets = self.root / ASSETS
         self.archive = self.assets / ARCHIVE
@@ -53,6 +54,12 @@ class TutorialAssetTests(unittest.TestCase):
         evidence = json.loads((self.root / EVIDENCE).read_text())
         (self.assets / evidence["screenshots"][0]["file"]).write_bytes(b"changed")
         self.assertFailure(check_assets(self.root), "SHA-256 differs")
+
+    def test_authored_tree_drift_fails(self):
+        path = self.root / "tool/tutorial_samples/default/lib/main.dart"
+        path.write_bytes(path.read_bytes() + b"\n")
+        self.assertFailure(check_assets(self.root),
+                           "tool/tutorial_samples/default/lib/main.dart differs")
 
     def test_archived_source_hash_drift_fails(self):
         self.edit_evidence(lambda evidence: evidence["source"][0].update(main_sha256="0" * 64))

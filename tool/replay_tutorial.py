@@ -11,8 +11,9 @@ order, in fresh projects that install hosted packages. The replay writes:
 - tool/tutorial_evidence.json, which tool/check_tutorial_assets.py verifies.
 
 Authored application files (lib/main.dart and both test files per sample)
-are inputs carried forward from the current archive. To change the samples,
-edit the tutorial or an authored file and rerun; never hand-edit evidence.
+are inputs in tool/tutorial_samples. The replay copies them into the sample
+projects and the archive. To change the samples, edit the tutorial or an
+authored file and rerun; never hand-edit evidence.
 
 Evidence shape:
 
@@ -56,6 +57,7 @@ DART_FLOOR = "3.12"
 SDK_FLOOR = f"^{DART_FLOOR}.0"
 SAMPLES = {"default": "remix_default_demo", "fortal": "remix_fortal_demo"}
 AUTHORED = ["lib/main.dart", "test/workflow_test.dart", "test/theme_modes_test.dart"]
+AUTHORED_ROOT = Path("tool/tutorial_samples")
 ARCHIVED_FILES = [".gitignore", ".metadata", "analysis_options.yaml", "pubspec.lock",
                   "pubspec.yaml", "remix.ownership.json", "remix.yaml"]
 ARCHIVED_DIRS = ["lib", "test", "web"]
@@ -89,10 +91,9 @@ def archive_path(preset, relative):
     return f"{preset}_demo/{Path(relative).as_posix()}"
 
 
-def read_authored():
-    with zipfile.ZipFile(ROOT / ASSETS / ARCHIVE) as archive:
-        return {(preset, path): archive.read(archive_path(preset, path))
-                for preset in SAMPLES for path in AUTHORED}
+def read_authored(root=ROOT):
+    return {(preset, path): (root / AUTHORED_ROOT / preset / path).read_bytes()
+            for preset in SAMPLES for path in AUTHORED}
 
 
 class Replay:
