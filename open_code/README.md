@@ -38,7 +38,7 @@ lib/ui/
 
 For a component's names and parameters, read the installed recipe and enums.
 Import `ui/ui.dart` from a file at the `lib/` root; nested files need the
-corresponding package or relative import. See the [catalog](../docs/open-code.mdx)
+corresponding package or relative import. See the [catalog](../docs/open-code/catalog.mdx)
 for items, including charts, icons, dashboard composition and Agent bundles.
 
 Contributors using an unreleased CLI can install it from a checkout:
