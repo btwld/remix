@@ -47,6 +47,15 @@ for (const index of ['search', 'search-pages']) {
   const data = JSON.parse(await readFile(join(root, 'api', index + '.json'), 'utf8'));
   assert.ok(data.type, `Missing ${index} database`);
 }
+const legacyAnchors = JSON.parse(await readFile(new URL('../legacy-anchors.json', import.meta.url), 'utf8'));
+for (const [from, moved] of Object.entries(legacyAnchors)) {
+  const source = await readFile(join(root, from, 'index.html'), 'utf8');
+  for (const [anchor, to] of Object.entries(moved)) {
+    assert.ok(!source.includes(`id="${anchor}"`), `${from}#${anchor} still exists, so the redirect would hide it`);
+    const target = await readFile(join(root, to, 'index.html'), 'utf8');
+    assert.ok(target.includes(`id="${anchor}"`), `${from}#${anchor} redirects to ${to}, which has no such heading`);
+  }
+}
 assert.ok(await exists(join(root, '404.html')));
 if (!docsOnly) {
   assert.ok(await exists(join(root, '.nojekyll')));
@@ -55,4 +64,4 @@ if (!docsOnly) {
     assert.ok(html.includes(`location.replace("${base}${to}"+location.search+location.hash)`));
   }
 }
-console.log(`Verified static routes, metadata, search indexes, Flutter builds, and ${checked} local links/assets.`);
+console.log(`Verified static routes, metadata, legacy anchors, search indexes, Flutter builds, and ${checked} local links/assets.`);
