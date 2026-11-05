@@ -14,10 +14,22 @@ and the analyzer own API accuracy.
 
 ## Tutorial evidence
 
-Full application/test panels use build-time `TutorialSource` includes from the
-checked sample ZIP. Keep screenshots, licenses and capture pins under
-[assets/remix-cli-tutorial](assets/remix-cli-tutorial/README.md); that README owns
-evidence rules. Do not maintain a second tutorial or relabel historical captures.
+Full application and test panels use build-time `TutorialSource` includes from
+`assets/remix-cli-tutorial/sample-projects.zip`. That directory serves only the
+tutorial's PNG screenshots and the ZIP.
+
+[`tool/replay_tutorial.py`](../tool/replay_tutorial.py) runs the tutorial's
+commands with hosted packages on a real Flutter SDK. It regenerates the
+screenshots, the ZIP, and [`tool/tutorial_evidence.json`](../tool/tutorial_evidence.json),
+which `tool/check_tutorial_assets.py` verifies:
+
+```bash
+python3 tool/replay_tutorial.py --flutter "$(command -v flutter)"
+```
+
+Authored sample files (`lib/main.dart` and the tests) live only inside the ZIP;
+the replay carries them forward. Edit the tutorial or an authored file, then
+rerun the replay. Never hand-edit the evidence to pass a check.
 
 ## Validation
 
@@ -28,6 +40,6 @@ fvm dart run melos run docs:check
 ```
 
 The gate checks navigation, retired APIs, compilable snippets, catalog drift,
-recorded tutorial evidence and selected local links. Recorded tutorial snippets
-are not a fresh app replay; replay samples when application code or CLI behavior
-changes. For site validation run `pnpm typecheck` and `pnpm build` in `apps/docs`.
+recorded tutorial evidence and selected local links. The tutorial check is not a
+fresh replay; rerun the replay when application code or CLI behavior changes.
+For site validation run `pnpm typecheck` and `pnpm build` in `apps/docs`.
