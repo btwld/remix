@@ -38,6 +38,94 @@ List<File> userFacingDocuments(Directory workspaceRoot) {
   return documents..sort((a, b) => a.path.compareTo(b.path));
 }
 
+/// Skill evals teach the install commands, so their pins move with the docs.
+List<String> get skillEvalRelativePaths => [
+  for (final relativeDirectory in publishedSkillDirectories)
+    '$relativeDirectory/evals/evals.json',
+];
+
+List<File> skillEvalFiles(Directory workspaceRoot) => [
+  for (final relativePath in skillEvalRelativePaths)
+    File('${workspaceRoot.path}/$relativePath'),
+];
+
+List<File> installPinDocuments(Directory workspaceRoot) {
+  final documents = [
+    ...userFacingDocuments(workspaceRoot),
+    ...skillEvalFiles(workspaceRoot),
+  ];
+  return documents..sort((a, b) => a.path.compareTo(b.path));
+}
+
+/// User-facing docs describe the published release; `open_code/RELEASING.md`
+/// owns the candidate (#383).
+final _releaseStagingPhrases = <RegExp>[
+  RegExp(r'\bunpublished\b', caseSensitive: false),
+  RegExp(r'\bnot published yet\b', caseSensitive: false),
+  RegExp(r'\bthis checkout\b', caseSensitive: false),
+];
+
+void checkInstallPins(
+  String source,
+  String relativePath,
+  Map<String, String> expectedPins,
+  List<String> failures,
+) {
+  for (final command in installCommands(source)) {
+    final expected = expectedPins[command.package]!;
+    final constraint = command.constraint?.text;
+    if (constraint == null) {
+      failures.add(
+        '$relativePath installs ${command.package} without a version at '
+        'offset ${command.start}; pub.dev resolves that to the stable 0.x '
+        'line, so pin $expected.',
+      );
+    } else if (constraint != expected) {
+      failures.add(
+        '$relativePath pins ${command.package} $constraint at offset '
+        '${command.start}; the package is $expected. Run '
+        '`dart run tool/sync_install_pins.dart`.',
+      );
+    }
+  }
+}
+
+void checkReleaseState(
+  String source,
+  String relativePath,
+  Map<String, String> expectedPins,
+  List<String> failures,
+) {
+  checkInstallPins(source, relativePath, expectedPins, failures);
+  for (final phrase in _releaseStagingPhrases) {
+    final match = phrase.firstMatch(source);
+    if (match != null) {
+      failures.add(
+        '$relativePath says "${match[0]}" at offset ${match.start}; '
+        'user-facing docs describe the published release, not a staged one.',
+      );
+    }
+  }
+}
+
+void checkSkillEvalInstallPins(
+  Directory workspaceRoot,
+  Map<String, String> expectedPins,
+  List<String> failures,
+) {
+  for (final relativePath in skillEvalRelativePaths) {
+    final file = File('${workspaceRoot.path}/$relativePath');
+    if (!file.existsSync()) continue;
+    // Eval prompts may say "this checkout". Only install pins are release state.
+    checkInstallPins(
+      file.readAsStringSync(),
+      relativePath,
+      expectedPins,
+      failures,
+    );
+  }
+}
+
 String expectedInstallPin(Directory workspaceRoot, String package) {
   final pubspec = File('${workspaceRoot.path}/packages/$package/pubspec.yaml');
   final declared = (loadYaml(pubspec.readAsStringSync()) as YamlMap)['version'];

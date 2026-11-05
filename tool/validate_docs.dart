@@ -223,48 +223,6 @@ const _testSourceDirectories = <String>[
   'registry_source/test',
 ];
 
-/// User-facing docs describe the published release; `open_code/RELEASING.md`
-/// owns the candidate (#383).
-final _releaseStagingPhrases = <RegExp>[
-  RegExp(r'\bunpublished\b', caseSensitive: false),
-  RegExp(r'\bnot published yet\b', caseSensitive: false),
-  RegExp(r'\bthis checkout\b', caseSensitive: false),
-];
-
-void _checkReleaseState(
-  String source,
-  String relativePath,
-  Map<String, String> expectedPins,
-  List<String> failures,
-) {
-  for (final command in installCommands(source)) {
-    final expected = expectedPins[command.package]!;
-    final constraint = command.constraint?.text;
-    if (constraint == null) {
-      failures.add(
-        '$relativePath installs ${command.package} without a version at '
-        'offset ${command.start}; pub.dev resolves that to the stable 0.x '
-        'line, so pin $expected.',
-      );
-    } else if (constraint != expected) {
-      failures.add(
-        '$relativePath pins ${command.package} $constraint at offset '
-        '${command.start}; the package is $expected. Run '
-        '`dart run tool/sync_install_pins.dart`.',
-      );
-    }
-  }
-  for (final phrase in _releaseStagingPhrases) {
-    final match = phrase.firstMatch(source);
-    if (match != null) {
-      failures.add(
-        '$relativePath says "${match[0]}" at offset ${match.start}; '
-        'user-facing docs describe the published release, not a staged one.',
-      );
-    }
-  }
-}
-
 final _staleConsumerDocumentationClaims = <(RegExp, String)>[
   (
     RegExp(r'Radix[- ]Themes[- ]inspired|Radix-shaped', caseSensitive: false),
@@ -424,7 +382,7 @@ Future<void> main() async {
       failures.add('$relativePath has unbalanced CodeGroup tags.');
     }
     _checkRetiredApis(source, relativePath, failures);
-    _checkReleaseState(source, relativePath, expectedPins, failures);
+    checkReleaseState(source, relativePath, expectedPins, failures);
   }
 
   final consumerDocumentationCount = _checkConsumerDocumentation(
@@ -434,6 +392,7 @@ Future<void> main() async {
   );
   _checkOpenCodeCatalog(workspaceRoot, failures);
   _checkSkillEvalMetadata(workspaceRoot, failures);
+  checkSkillEvalInstallPins(workspaceRoot, expectedPins, failures);
   final exampleSourceCount = _checkDartSources(
     workspaceRoot,
     _exampleSourceDirectories,
@@ -579,7 +538,7 @@ int _checkConsumerDocumentation(
         );
       }
     }
-    _checkReleaseState(source, relativePath, expectedPins, failures);
+    checkReleaseState(source, relativePath, expectedPins, failures);
     for (final (index, match) in _dartFence.allMatches(source).indexed) {
       _checkRetiredApis(
         _fenceBody(match),

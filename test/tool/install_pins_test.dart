@@ -68,6 +68,53 @@ dart pub global activate --source git https://github.com/btwld/remix.git \\
     });
   });
 
+  group('checkReleaseState', () {
+    const pins = {
+      'remix': '^1.0.0-beta.16',
+      'remix_cli': '^1.0.0-beta.1',
+      'remix_ui_icons': '^1.0.0-beta.1',
+    };
+
+    test('accepts pinned commands', () {
+      final failures = <String>[];
+
+      checkReleaseState(
+        'flutter pub add remix:^1.0.0-beta.16\n',
+        'docs/example.mdx',
+        pins,
+        failures,
+      );
+
+      expect(failures, isEmpty);
+    });
+
+    test('reports missing pins, stale pins, and staging prose', () {
+      final failures = <String>[];
+
+      checkReleaseState(
+        '''
+flutter pub add dev:remix_cli
+flutter pub add remix:^1.0.0-beta.14
+This checkout is unpublished and not published yet.
+''',
+        'docs/example.mdx',
+        pins,
+        failures,
+      );
+
+      expect(
+        failures,
+        containsAll([
+          contains('installs remix_cli without a version'),
+          contains('pins remix ^1.0.0-beta.14'),
+          contains('says "unpublished"'),
+          contains('says "not published yet"'),
+          contains('says "This checkout"'),
+        ]),
+      );
+    });
+  });
+
   group('sync_install_pins', () {
     final tool = File('tool/sync_install_pins.dart').absolute.path;
     late Directory sandbox;
@@ -94,6 +141,14 @@ dart pub global activate --source git https://github.com/btwld/remix.git \\
       for (final directory in publishedSkillDirectories) {
         Directory('${sandbox.path}/$directory').createSync(recursive: true);
       }
+      for (final relative in skillEvalRelativePaths) {
+        write(relative, '{}\n');
+      }
+      write(
+        'skills/using-remix/evals/evals.json',
+        '{"expected_output":"flutter pub add dev:remix_cli:^1.0.0-beta.0 '
+            'then remix init"}\n',
+      );
       for (final file in consumerDocumentationFiles) {
         write(file, '# Placeholder\n');
       }
@@ -147,6 +202,10 @@ dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
       expect(
         '${result.stdout}',
         contains('remix ^1.0.0-beta.14 -> ^1.0.0-beta.16'),
+      );
+      expect(
+        read('skills/using-remix/evals/evals.json'),
+        contains('dev:remix_cli:^1.0.0-beta.1'),
       );
     });
 
