@@ -607,6 +607,68 @@ void main() {
     await gesture.removePointer();
   });
 
+  testWidgets('disabling a pressed NakedTab clears pressed state', (
+    tester,
+  ) async {
+    var enabled = true;
+    late StateSetter rebuild;
+    final pressChanges = <bool>[];
+    Set<WidgetState> latestStates = const {};
+
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: StatefulBuilder(
+          builder: (context, setState) {
+            rebuild = setState;
+            return NakedTabs(
+              selectedTabId: 'tab1',
+              onChanged: (_) {},
+              child: NakedTabBar(
+                child: NakedTab(
+                  tabId: 'tab1',
+                  enabled: enabled,
+                  onPressChange: (pressed) {
+                    setState(() {
+                      pressChanges.add(pressed);
+                    });
+                  },
+                  builder: (context, state, child) {
+                    latestStates = state.states.toSet();
+                    return child ?? const SizedBox.shrink();
+                  },
+                  child: const SizedBox(
+                    key: Key('tab1'),
+                    width: 100,
+                    height: 40,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.byKey(const Key('tab1'))),
+    );
+    await tester.pump();
+
+    expect(latestStates, contains(WidgetState.pressed));
+    expect(pressChanges, [true]);
+
+    rebuild(() => enabled = false);
+    await tester.pump();
+
+    expect(latestStates, isNot(contains(WidgetState.pressed)));
+    expect(latestStates, contains(WidgetState.disabled));
+    expect(pressChanges, [true, false]);
+
+    await gesture.up();
+    await tester.pump();
+  });
+
   testWidgets('ESC triggers onEscapePressed at group level', (tester) async {
     bool esc = false;
     final tab1 = UniqueKey();

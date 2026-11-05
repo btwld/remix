@@ -1058,7 +1058,7 @@ class _NakedSelectionGestureDetectorBuilder
 /// Keeps the selection overlay alive without painting handles.
 ///
 /// Mixes in [TextSelectionHandleControls] so a caller's [contextMenuBuilder]
-/// is used for cut, copy, and paste instead of [TextSelectionControls.buildToolbar].
+/// is used for cut, copy, and paste instead of legacy `buildToolbar`.
 class _NoHandleSelectionControls extends TextSelectionControls
     with TextSelectionHandleControls {
   _NoHandleSelectionControls._();

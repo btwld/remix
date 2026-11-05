@@ -1,3 +1,26 @@
+## Unreleased
+
+### Breaking changes
+
+- Remove the deprecated `NakedTooltip.open`, `useRootOverlay`, and
+  `disableHoverableContent` parameters and the internal 1.1.0 compatibility
+  fallback (`LegacyNakedTooltip`). `NakedTooltip` now always builds on
+  `RawTooltip`; use `tooltipKey` (`GlobalKey<RawTooltipState>`) to show a
+  tooltip imperatively and `onOpenChanged` to observe visibility.
+
+### Fixes
+
+- Replace descendant text semantics when `semanticLabel` is set on
+  `NakedButton`, `NakedCheckbox`, `NakedToggle`, `NakedToggleOption`, and
+  `NakedPopover` (matching WAI-ARIA `aria-label` precedence and the other
+  `naked_ui` controls while preserving focus and activation semantics), and
+  stop observing a child `FocusNode` in `NakedPopover` when `openOnTap` is
+  `false` or `triggerFocusNode` is provided.
+- Move `NakedTab` disabled and selected `WidgetState` synchronization out of
+  `build()` into `didChangeDependencies` and `didUpdateWidget`, and clear
+  `WidgetState.pressed` when a pressed `NakedTab` or `NakedCheckbox` becomes
+  disabled.
+
 ## 1.5.0
 
 ### Features

@@ -937,5 +937,42 @@ void main() {
         expect(controller.isOpen, isFalse);
       });
     });
+
+    testWidgets(
+      'reports focused state when triggerFocusNode matches Focus child node',
+      (tester) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+        Set<WidgetState> latestStates = const {};
+
+        await tester.pumpMaterialWidget(
+          Center(
+            child: NakedPopover(
+              triggerFocusNode: focusNode,
+              popoverBuilder: (context, info) => const Text('Popover Content'),
+              builder: (context, state, child) {
+                latestStates = state.states.toSet();
+                return child ?? const SizedBox.shrink();
+              },
+              child: Focus(focusNode: focusNode, child: const Text('Trigger')),
+            ),
+          ),
+        );
+
+        expect(latestStates, isNot(contains(WidgetState.focused)));
+
+        focusNode.requestFocus();
+        await tester.pumpAndSettle();
+
+        expect(focusNode.hasFocus, isTrue);
+        expect(latestStates, contains(WidgetState.focused));
+
+        focusNode.unfocus();
+        await tester.pumpAndSettle();
+
+        expect(focusNode.hasFocus, isFalse);
+        expect(latestStates, isNot(contains(WidgetState.focused)));
+      },
+    );
   });
 }

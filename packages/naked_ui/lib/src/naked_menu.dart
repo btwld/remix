@@ -552,7 +552,7 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
       semanticLabel: widget.semanticLabel,
       child: widget.child,
       builder: (context, state, child) {
-        final trigger = NakedStateScopeBuilder(
+        return NakedStateScopeBuilder(
           value: NakedMenuState(
             states: state.states,
             isOpen: _controller.isOpen,
@@ -560,10 +560,6 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
           child: child,
           builder: widget.builder,
         );
-
-        return widget.semanticLabel == null
-            ? trigger
-            : ExcludeSemantics(child: trigger);
       },
     );
     final trigger = MouseRegion(
@@ -991,15 +987,11 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
                 isOpen: _isOpen,
               );
 
-              final content = NakedStateScopeBuilder(
+              return NakedStateScopeBuilder(
                 value: menuState,
                 child: widget.child,
                 builder: widget.builder,
               );
-
-              return widget.semanticLabel == null
-                  ? content
-                  : ExcludeSemantics(child: content);
             },
           )
         : NakedStateScopeBuilder(
