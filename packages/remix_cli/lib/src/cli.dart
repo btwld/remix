@@ -137,6 +137,24 @@ final class RegistryOptions {
   final String? ref;
 }
 
+/// Built apart from [runRemixCli] so the docs generator can walk the parser
+/// tree. Commands are registered in reader order; `--help` sorts them anyway.
+CommandRunner<int> remixCommandRunner({
+  InitHandler? onInit,
+  AddHandler? onAdd,
+  ListHandler? onList,
+  RegistryHandler? onRegistry,
+}) => _RemixRunner()
+  ..argParser.addFlag(
+    'version',
+    negatable: false,
+    help: 'Print the remix_cli version.',
+  )
+  ..addCommand(_InitCommand(onInit))
+  ..addCommand(_ListCommand(onList))
+  ..addCommand(_AddCommand(onAdd))
+  ..addCommand(_RegistryCommand(onRegistry));
+
 Future<int> runRemixCli(
   List<String> arguments, {
   required LineWriter writeOut,
@@ -146,16 +164,12 @@ Future<int> runRemixCli(
   ListHandler? onList,
   RegistryHandler? onRegistry,
 }) async {
-  final runner = _RemixRunner()
-    ..argParser.addFlag(
-      'version',
-      negatable: false,
-      help: 'Print the remix_cli version.',
-    )
-    ..addCommand(_InitCommand(onInit))
-    ..addCommand(_AddCommand(onAdd))
-    ..addCommand(_ListCommand(onList))
-    ..addCommand(_RegistryCommand(onRegistry));
+  final runner = remixCommandRunner(
+    onInit: onInit,
+    onAdd: onAdd,
+    onList: onList,
+    onRegistry: onRegistry,
+  );
 
   final helpCode = _writeRequestedHelp(
     arguments,
