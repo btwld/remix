@@ -315,6 +315,195 @@ void main() {
     expect(changes, ['tab2']);
   });
 
+  group('Sequential focus', () {
+    late List<FocusNode> nodes;
+    late NakedTabController controller;
+
+    void initializeFocus() {
+      nodes = [
+        for (final label in ['before', 'tab1', 'tab2', 'after'])
+          FocusNode(debugLabel: label),
+      ];
+      controller = NakedTabController(selectedTabId: 'tab2');
+      addTearDown(() {
+        for (final node in nodes) {
+          node.dispose();
+        }
+        controller.dispose();
+      });
+    }
+
+    Widget focusHarness({
+      NakedTabActivationMode activationMode = NakedTabActivationMode.automatic,
+      bool includeSelected = true,
+      bool selectedEnabled = true,
+      bool groupTabs = false,
+      bool groupBar = false,
+    }) {
+      Widget group(Widget child, bool enabled) =>
+          enabled ? FocusTraversalGroup(child: child) : child;
+      return WidgetsApp(
+        color: const Color(0xFF000000),
+        builder: (context, child) => Column(
+          children: [
+            NakedButton(
+              focusNode: nodes[0],
+              onPressed: () {},
+              child: const Text('Before'),
+            ),
+            NakedTabs(
+              controller: controller,
+              activationMode: activationMode,
+              child: NakedTabBar(
+                child: group(
+                  Row(
+                    children: [
+                      group(
+                        NakedTab(
+                          tabId: 'tab1',
+                          focusNode: nodes[1],
+                          child: const Text('First'),
+                        ),
+                        groupTabs,
+                      ),
+                      if (includeSelected)
+                        group(
+                          NakedTab(
+                            tabId: 'tab2',
+                            enabled: selectedEnabled,
+                            focusNode: nodes[2],
+                            child: const Text('Second'),
+                          ),
+                          groupTabs,
+                        ),
+                    ],
+                  ),
+                  groupBar,
+                ),
+              ),
+            ),
+            NakedButton(
+              focusNode: nodes[3],
+              onPressed: () {},
+              child: const Text('After'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    Future<void> tab(WidgetTester tester, {bool reverse = false}) async {
+      if (reverse) await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      if (reverse) await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets(
+      'selected tab is the single entry and arrows do not trap exit',
+      (tester) async {
+        initializeFocus();
+        for (final (groupTabs, groupBar) in [
+          (false, false),
+          (true, false),
+          (false, true),
+          (true, true),
+        ]) {
+          await tester.pumpWidget(
+            focusHarness(
+              activationMode: NakedTabActivationMode.manual,
+              groupTabs: groupTabs,
+              groupBar: groupBar,
+            ),
+          );
+          nodes[0].requestFocus();
+          await tester.pump();
+
+          await tab(tester);
+          expect(nodes[2].hasPrimaryFocus, isTrue);
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+          await tester.pump();
+          expect(nodes[1].hasPrimaryFocus, isTrue);
+          expect(controller.selectedTabId, 'tab2');
+
+          await tab(tester);
+          expect(nodes[3].hasPrimaryFocus, isTrue);
+          await tab(tester, reverse: true);
+          expect(nodes[2].hasPrimaryFocus, isTrue);
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+          await tester.pump();
+          await tab(tester, reverse: true);
+          expect(nodes[0].hasPrimaryFocus, isTrue);
+        }
+      },
+    );
+
+    testWidgets('disabled or removed selected tab leaves an enabled entry', (
+      tester,
+    ) async {
+      initializeFocus();
+      // Manual mode keeps the disabled/missing selection while focus falls back.
+      for (final includeSelected in [true, false]) {
+        await tester.pumpWidget(
+          focusHarness(
+            activationMode: NakedTabActivationMode.manual,
+            includeSelected: includeSelected,
+            selectedEnabled: false,
+          ),
+        );
+        nodes[0].requestFocus();
+        await tester.pump();
+
+        await tab(tester);
+        expect(nodes[1].hasPrimaryFocus, isTrue);
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.pump();
+        expect(nodes[1].hasPrimaryFocus, isTrue);
+        await tab(tester);
+        expect(nodes[3].hasPrimaryFocus, isTrue);
+        await tab(tester, reverse: true);
+        expect(nodes[1].hasPrimaryFocus, isTrue);
+        await tab(tester, reverse: true);
+        expect(nodes[0].hasPrimaryFocus, isTrue);
+      }
+    });
+  });
+
+  testWidgets('arrow navigation stays in each mounted tab bar', (tester) async {
+    // One const widget may be mounted more than once in the same focus scope.
+    const bar = NakedTabBar(
+      child: Row(
+        children: [
+          NakedTab(tabId: 'tab1', child: Text('First')),
+          NakedTab(tabId: 'tab2', child: Text('Second')),
+        ],
+      ),
+    );
+    await tester.pumpWidget(
+      WidgetsApp(
+        color: const Color(0xFF000000),
+        builder: (context, child) => NakedTabs(
+          selectedTabId: 'tab1',
+          onChanged: (_) {},
+          child: const Column(children: [bar, bar]),
+        ),
+      ),
+    );
+    await tester.tap(find.text('First').first);
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.pump();
+
+    expect(
+      Focus.of(tester.element(find.text('Second').first)).hasPrimaryFocus,
+      isTrue,
+    );
+    expect(
+      Focus.of(tester.element(find.text('Second').last)).hasPrimaryFocus,
+      isFalse,
+    );
+  });
+
   testWidgets('controller changes rebuild tabs and panels', (tester) async {
     final controller = NakedTabController(selectedTabId: 'tab1');
     addTearDown(controller.dispose);
