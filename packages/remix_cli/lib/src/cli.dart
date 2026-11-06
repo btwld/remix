@@ -192,14 +192,12 @@ Future<int> runRemixCli(
     writeError(runner.usage);
     return usageExitCode;
   }
-  if (!arguments.first.startsWith('-') &&
-      !runner.commands.containsKey(arguments.first)) {
-    return _writeUnknownCommand(
-      arguments.first,
-      runner: runner,
-      writeError: writeError,
-    );
-  }
+  final unknown = _unknownCommand(
+    arguments,
+    runner: runner,
+    writeError: writeError,
+  );
+  if (unknown != null) return unknown;
 
   try {
     // CommandRunner already prints help when it returns no command result.
@@ -214,21 +212,53 @@ Future<int> runRemixCli(
   }
 }
 
-int _writeUnknownCommand(
-  String name, {
+/// Suggests a misspelled command at any level.
+///
+/// Leaf arguments, such as `remix add buton`, are left for that command.
+/// The runner turns the args suggester off, so this is the only one.
+int? _unknownCommand(
+  List<String> arguments, {
   required CommandRunner<int> runner,
   required LineWriter writeError,
 }) {
+  var commands = runner.commands;
+  Command<int>? parent;
+  for (final token in arguments) {
+    if (token.startsWith('-') || commands.isEmpty) return null;
+    final command = commands[token];
+    if (command == null) {
+      return _writeUnknownCommand(
+        token,
+        commands: commands,
+        usage: parent?.usage ?? runner.usage,
+        subcommand: parent != null,
+        writeError: writeError,
+      );
+    }
+    parent = command;
+    commands = command.subcommands;
+  }
+  return null;
+}
+
+int _writeUnknownCommand(
+  String name, {
+  required Map<String, Command<int>> commands,
+  required String usage,
+  required bool subcommand,
+  required LineWriter writeError,
+}) {
+  final kind = subcommand ? 'subcommand' : 'command';
   writeError(
     [
-      'Could not find a command named "$name".',
+      'Could not find a $kind named "$name".',
       ?didYouMean(name, [
-        for (final MapEntry(:key, :value) in runner.commands.entries)
+        for (final MapEntry(:key, :value) in commands.entries)
           if (!value.hidden) key,
       ]),
     ].join('\n'),
   );
-  writeError(runner.usage);
+  writeError(usage);
   return usageExitCode;
 }
 
@@ -278,7 +308,9 @@ int? _writeRequestedHelp(
   if (command == null || commandName == 'help') {
     return _writeUnknownCommand(
       commandName,
-      runner: runner,
+      commands: runner.commands,
+      usage: runner.usage,
+      subcommand: false,
       writeError: writeError,
     );
   }

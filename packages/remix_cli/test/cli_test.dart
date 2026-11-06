@@ -230,6 +230,32 @@ void main() {
     expect(received!.json, isTrue);
   });
 
+  test('a misspelled subcommand suggests that command', () async {
+    for (final (arguments, message) in [
+      (
+        ['registry', 'udpate'],
+        'Could not find a subcommand named "udpate".\nDid you mean update?',
+      ),
+      (
+        ['registry', 'addd'],
+        'Could not find a subcommand named "addd".\nDid you mean add?',
+      ),
+    ]) {
+      final errors = <String>[];
+
+      final code = await runRemixCli(
+        arguments,
+        writeOut: fail,
+        writeError: errors.add,
+      );
+
+      expect(code, usageExitCode, reason: arguments.join(' '));
+      expect(errors.first, message, reason: arguments.join(' '));
+      expect(errors.last, contains('Usage: remix registry'));
+      expect(errors.last, isNot(contains('Usage: remix <command>')));
+    }
+  });
+
   test('help for a misspelled command suggests the near one', () async {
     final errors = <String>[];
 
