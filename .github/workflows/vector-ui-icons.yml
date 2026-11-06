@@ -1,6 +1,11 @@
 name: Vector UI icons
 on:
   pull_request:
+    # Exactly these types. ready_for_review re-runs icon checks after a draft
+    # is marked ready. Paths stay on the workflow: these jobs are not required
+    # checks on every pull request, and a required check that never starts
+    # would stay pending. Job-level draft skips are below.
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - design/icons/**
       - .github/workflows/vector-ui-icons.yml
@@ -13,12 +18,27 @@ permissions:
   contents: read
 concurrency:
   group: vector-ui-icons-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 env:
   VECTOR_UI_EVIDENCE_DIR: ${{ github.workspace }}/.context/vector-ui-evidence
 jobs:
+  draft:
+    name: Draft gate
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    steps:
+      - name: Fail draft pull requests
+        if: github.event.pull_request.draft == true
+        run: |
+          echo "::error::Draft pull request. Mark it ready for review to run icon checks."
+          exit 1
+      - name: Ready for review
+        if: github.event.pull_request.draft != true
+        run: echo "Pull request is ready for review."
   assets:
-    runs-on: ubuntu-24.04
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
       run:
@@ -45,7 +65,8 @@ jobs:
           name: vector-ui-assets
           path: ${{ env.VECTOR_UI_EVIDENCE_DIR }}
   browsers:
-    runs-on: ubuntu-24.04
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
       fail-fast: false
