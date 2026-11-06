@@ -1,0 +1,196 @@
+---
+title: Updating and migrating
+description: Move registry pins, review and take upstream changes, and bring older installs onto the current CLI and theme
+---
+
+## Updating
+
+Registry content releases independently of the CLI. Update a pin explicitly,
+then review installed source; no automatic merge or installed-source lockfile
+is used.
+
+```bash
+remix registry update @remix
+remix add button --diff
+```
+
+`registry update` resolves the recorded `ref` again; for the official registry
+that is `registry-stable`, the newest promoted commit. A SHA or tag pin
+resolves to the same commit, so move it with `--ref <sha>`, or return to the
+branch with `--ref registry-stable`.
+
+Register additional public GitHub sources with the same preset:
+
+```bash
+remix registry add @company --repository owner/repo --path registry --ref v1
+remix add @company/button
+```
+
+Bare dependencies resolve within their owning registry. Qualified dependencies
+require explicit registration; they cannot add or redirect sources. Cross-registry
+cycles, conflicting targets and incompatible package requirements fail before writes.
+
+For projects from earlier prereleases, complete
+[legacy source adoption](#legacy-source-adoption) before using these preview
+and overwrite commands. Restore a previously committed `remix.yaml` pin to
+roll back the source selection; installed files are not reverted.
+
+`--diff` renders the new template, formats it, and runs a real `git diff`
+against what is on disk. If the output is empty you are current:
+
+```
+No authored-source differences.
+```
+
+If you have edited the recipe, the diff never comes back empty: it reports your
+own edits every time, whether or not the template moved. Read the hunks. To see
+the template alone, compare against a copy of the file you installed, or run
+the diff in a scratch project that has never been edited.
+
+`--diff` exits `0` whether or not it finds differences. To fail a CI step on
+drift, add `--exit-code`. The command then exits `2` when authored source
+differs, and `1` still means the command failed:
+
+```bash
+remix add button --diff --exit-code
+```
+
+CLI updates do not change registry pins. `add`, `--diff`, and `--dry-run`
+fetch only the configured commits and never update configuration. Remote failures
+never substitute older or newer content. Private repositories, arbitrary HTTP
+sources, local registries and persistent offline caching are not supported.
+
+If you like the upstream version, take it wholesale:
+
+```bash
+remix add button --overwrite
+```
+
+`--overwrite` replaces **only the items you named**. Already-installed registry
+dependencies are untouched, so updating Button never silently rewrites a Theme
+you have customized:
+
+```
+Preserved theme.
+Updated button.
+```
+
+If you only want part of the upstream change, copy it out of the diff by hand.
+That is the intended workflow. The file is yours.
+
+## Legacy source adoption
+
+CLI 0.1.0 and 1.0.0-beta.0 did not record target ownership, even for schema-3
+projects. Upgrade the project-local CLI before recovery. Keep an existing
+schema-3 configuration; for schemas 1 or 2, remove `remix.yaml` and rerun
+`remix init` with the original prefix, preset, and UI path (schema 1's `default`
+preset corresponds to `vanilla`). Reinitialization preserves installed source
+and generated adapters.
+
+Every `add` mode rejects existing targets with unknown ownership. After
+verifying that each item came from the configured registry and preset, preview
+and adopt it explicitly. For Vanilla Button with an existing Theme:
+
+```bash
+remix add theme button --adopt --diff
+remix add theme button --adopt
+```
+
+Name every existing unknown dependency as well as the item itself; for an
+existing Fortal Button installation, also name `base_button`.
+The preview writes nothing. Adoption records your verified provenance in
+`remix.ownership.json` and preserves authored edits, while otherwise running
+normal installation, dependency resolution, missing adapter generation, and
+analysis. Commit that record with `remix.yaml` and the installed source.
+
+`--adopt` cannot be combined with `--overwrite`, cannot replace a known
+different owner, and does not verify provenance for you. If provenance is
+uncertain or source from different systems was mixed, restore a known matching
+configuration, ownership record (if one existed), and source, or start a clean
+installation and reapply your edits. Once adopted, use ordinary `--diff` and
+explicit `--overwrite` for updates. Do not downgrade to a CLI that ignores the
+ownership record.
+
+## Moving an older Vanilla install onto the current theme
+
+Complete [legacy source adoption](#legacy-source-adoption) first if your
+installation has unknown target ownership.
+
+The Vanilla theme was rebuilt on a new token set. Every recipe reads the new
+tokens, and `--overwrite` replaces only the items you name, so update the theme
+together with **every** Vanilla item you have installed, in one command:
+
+```bash
+remix add theme button card dialog tabs --diff
+remix add theme button card dialog tabs --overwrite
+```
+
+List your own installed items in place of the example ones. An item left out
+still reads the old token names and stops compiling once the theme changes.
+
+Then adjust any code of your own that read the old names:
+
+- `UiThemeData` gained thirteen required colors (`card`, `popover`, `input`,
+  `ring`, and eight `sidebar*` colors) and lost `focusRing`. A theme you build
+  with the constructor needs the new arguments; start from
+  `UiThemeData.light().copyWith(...)` instead.
+- `UiTokens.focusRing` is `UiTokens.ring`. Recipes draw the ring at half
+  strength, 3px wide with no offset, and turn a bordered control's outline
+  `ring` while it has focus. A toggle-group option draws the band inside
+  itself, because the group clips its options.
+- `uiFocusRingDecoration()` is gone. `UiTab`, `UiToggle`, `UiToggleGroup`,
+  `UiMenu`, `UiAccordion`, and `UiDisclosure` draw their rings with
+  `uiFocusRing()` through `containerEffects` (`triggerEffects` on the
+  accordion and disclosure), so reinstall them with the theme, and replace the
+  helper in your own code.
+- `UiTokens.radius` is replaced by four steps derived from the theme's one
+  `radius` value (now 10): `radiusSm` (6), `radiusMd` (8, the control radius),
+  `radiusLg` (10), and `radiusXl` (14, cards).
+- `accent` is no longer the `border` gray: it is the same light gray as
+  `muted`, so hover and selected surfaces stay distinct from outlines. A
+  selected toggle no longer draws a `primary` outline.
+- There is no pressed step: a press lands on the hover fill.
+- In the dark theme, destructive buttons and badges paint `destructive` at
+  60% rather than solid.
+- `UiSidebarLayout` collapses to 48px (was 72); the dashboard shell keeps its
+  own 72px rail.
+- Tooltips open as the pointer arrives (no 500ms delay).
+- `UiTabBar` and `UiTab` take a `UiTabsVariant`. The default `filled` is a
+  recessed pill list; pass `variant: .line` to both for the underline strip.
+- The shipped themes set `fontFamily` and `monoFontFamily` to Geist and Geist
+  Mono from `remix_ui_fonts`, which `remix add theme` adds to your
+  `dependencies`. To keep another family, change those two fields in
+  `theme_data.dart` or pass them to `copyWith`.
+- The root `UiTheme` now paints the page background and gives bare `Text`
+  the theme's body run and bare `Icon`s its `foreground`, so remove any
+  `ColoredBox` or `DefaultTextStyle` you added around the scope for that. A
+  nested scope in the other brightness recolors the text and icons below it.
+
+## The Remix drift notice
+
+Each registry revision is authored against one `remix` version, and the
+constraint it installs is a caret, so `flutter pub upgrade` can move you onto
+a later `remix` that these templates were never tested against. `add` reports
+that after it resolves your lockfile:
+
+```
+Resolved remix 1.0.0; this registry revision was authored against 1.0.0-beta.14. Your pin does not move on its own — run remix registry update @remix, then review with --diff.
+```
+
+Upgrading the CLI does not change the pin, so the notice names
+`registry update`. When the pin is a SHA or tag rather than
+`registry-stable`, it adds `--ref <newer ref>`, since a bare update would
+resolve the same commit.
+
+It is a notice, not a failure. The install completes. A `remix` *below* the
+authored version is a different case and still fails outright, because the
+templates would not compile against it.
+
+The notice needs a resolved lockfile, so it prints only on a real `add`.
+`--dry-run` and `--diff` stop before `flutter pub get` and never show it.
+
+## Removing an item
+
+There is no `remove` command. Delete the files and the matching `export` lines
+from the managed block in `lib/ui/ui.dart`. The next `add` will treat the item
+as missing and reinstall it cleanly.

@@ -1,0 +1,259 @@
+---
+title: CLI reference
+description: Every remix command, option, and exit code, plus the remix.yaml keys and dependency rules
+---
+
+The command is `remix`. A project-local install runs it as
+`dart run remix_cli:remix`; see [Running the CLI](/open-code/install#running-the-cli).
+
+{/* generated:start  Rendered by tool/generate_cli_reference.dart from packages/remix_cli/lib/src/cli.dart. Edit the parsers, then run `dart run melos run docs:cli`; `docs:check` fails on drift. */}
+
+## Commands
+
+Install editable Remix UI source.
+
+```text
+remix <command> [arguments]
+```
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--version` |  | Print the remix_cli version. |
+
+For one command's help in a terminal, run `remix help <command>` or `remix <command> --help`; both print the same text.
+
+```text
+Get started:
+  remix init          Pin the official registry and create lib/ui/ui.dart.
+  remix list          See the items you can add.
+  remix add button    Install an item and the items it needs.
+```
+
+### remix init
+
+Initialize Remix source installation settings.
+
+```text
+remix init [options]
+```
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--prefix <Name>` | `Ui` | Type prefix for installed widgets, as in UiButton. |
+| `--preset <name>` | `vanilla` | Design language for every installed item. One of `vanilla` (Neutral, minimal theme inspired by shadcn/ui), `fortal` (Fortal's own visual language), `heroui` (The look of HeroUI web 3.2.6). |
+| `--ui-path <path>` | `lib/ui` | Directory for installed source and its ui.dart barrel. |
+
+```text
+Examples:
+  remix init                                  Vanilla, Ui prefix, lib/ui.
+  remix init --preset fortal --prefix Acme    Fortal preset, AcmeButton.
+```
+
+### remix list
+
+List the items you can add from your registries.
+
+```text
+remix list [options]
+```
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--json` |  | Print the listing as JSON for scripts and agents. |
+
+### remix add
+
+Install registry items and their dependencies.
+
+```text
+remix add <item...> [options]
+```
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--dry-run` |  | Print the plan without running tools or writing files. |
+| `--diff` |  | Show how installed source differs from the registry and write nothing. |
+| `--exit-code` |  | With --diff, exit 2 when authored source differs, like git diff --exit-code. |
+| `--overwrite` |  | Replace the named items with registry source. Installed dependencies are kept. |
+| `--adopt` |  | Record verified legacy ownership without replacing source. |
+
+```text
+Examples:
+  remix add button                       Install button and what it needs.
+  remix add button card dialog           Install several items at once.
+  remix add button --dry-run             Print the plan and change nothing.
+  remix add button --diff --exit-code    Exit 2 on drift, for CI.
+  remix add @acme/card                   Install from a registry you added.
+```
+
+### remix registry
+
+Register and pin GitHub registry sources.
+
+```text
+remix registry <subcommand> [arguments]
+```
+
+```text
+Examples:
+  remix registry add @acme --repository acme/design   Pin its default branch.
+  remix registry update @remix                        Re-pin to the newest stable commit.
+  remix add @acme/card --diff                         Review what a moved pin changes.
+```
+
+#### remix registry add
+
+Register a public GitHub registry and pin its commit.
+
+```text
+remix registry add <@namespace> --repository <owner/repo> [options]
+```
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--repository <owner/repo>` |  | Public GitHub repository that hosts the registry. |
+| `--path <path>` | `registry` | Registry directory inside the repository. |
+| `--ref <ref>` |  | Branch, tag, or commit to pin. Defaults to the default branch. |
+
+#### remix registry update
+
+Update one registry pin without changing installed source.
+
+```text
+remix registry update <@namespace> [options]
+```
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--ref <ref>` |  | Branch, tag, or commit to pin. Defaults to the ref in remix.yaml. |
+
+## Exit codes
+
+| Code | Meaning |
+| --- | --- |
+| `0` | Success, including help, version, dry-run, diff, and no-op reruns |
+| `64` | Invalid command or arguments |
+| `1` | Configuration, registry, dependency, process, generation, analysis, or filesystem failure |
+| `2` | `add --diff --exit-code` found authored source that differs |
+
+{/* generated:end */}
+
+If generation or analysis fails *after* installation, the authored source stays
+on disk for inspection. Fix the reported problem and rerun the same command.
+
+## Configuration
+
+`remix.yaml` contains project settings and pinned named registry sources:
+
+```yaml
+schema: 3
+prefix: Ui       # type prefix for every generated identifier
+preset: vanilla  # selected across every configured registry
+paths:
+  ui: lib/ui     # where installed source lives
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: btwld/remix
+    path: registry
+    ref: registry-stable
+    revision: "<resolved-full-commit-sha>"
+```
+
+| Key | Default | Rules |
+|---|---|---|
+| `schema` | `3` | The only readable schema. Schemas 1–2 shipped in earlier prereleases and named no registry; such a project is reinitialized, not migrated. |
+| `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word. `Remix` and `Mix` are reserved for runtime dependencies. |
+| `preset` | `vanilla` | Preset selected across every configured registry. Choose `vanilla`, `fortal`, or `heroui` at `init`. |
+| `defaultRegistry` | `@remix` | Configured namespace for bare item names. |
+| `registries` | official GitHub source | Each namespace records repository, path, requested ref and full commit revision. |
+| `paths.ui` | `lib/ui` | Project-relative, normalized, no traversal, must be under `lib/`. Symlinks that escape the package root are rejected. |
+
+Unknown keys are an error rather than a warning, so a typo fails loudly instead
+of silently reverting to a default:
+
+```
+$ remix init
+configuration has unknown keys: style.
+```
+
+The prefix drives two identifier casings at once. With `prefix: Acme` you get
+the type `AcmeButton` and the function `acmeButtonStyle`.
+
+<Warning>
+Choose `prefix`, `preset`, and `paths.ui` before your first `add`. The CLI will
+not rename, restyle, or move source it has already installed.
+
+Running `init` with different values against an existing `remix.yaml` is a hard
+error, not a migration.
+
+Editing `remix.yaml` by hand afterwards conflicts with the prefix, preset, and
+UI path saved in `remix.ownership.json`. Every `add` mode, including `--diff`,
+`--dry-run`, `--overwrite`, and `--adopt`, rejects that mismatch. Renaming
+identifiers or deleting installed files does not update the recorded context
+or release target reservations.
+
+To recover an accidental change, restore the matching configuration, ownership
+record, and source from version control. To intentionally choose another
+prefix, preset, or UI path, initialize a clean installation in a separate app
+with those settings, install the required items, then reapply your application
+edits. Do not delete or edit the ownership record to relabel existing source.
+</Warning>
+
+For example, an `init` that conflicts with the existing configuration reports:
+
+```
+Existing remix.yaml does not match the requested prefix, preset, and UI path.
+```
+
+## Reinstall behavior
+
+| State of the item | `add` | `add --overwrite` |
+|---|---|---|
+| Not installed | Installs it, reports `Added` | Installs it, reports `Added` |
+| Fully installed | Successful no-op, reports `Preserved` | Re-renders, reports `Updated` |
+| Partially installed | **Error** — refuses to guess | Re-renders every file, reports `Updated` |
+
+A partial install is an error rather than a silent repair because the CLI
+cannot know whether the missing file was deleted on purpose. Use `--diff` to
+look, then `--overwrite` deliberately.
+
+<Note>
+Generated adapters are not your problem. `button.g.dart` is regenerated
+whenever its authored source is rewritten or the adapter is missing, and the
+CLI verifies the file exists afterwards rather than assuming the build worked.
+The current `mix_generator` writes `this.` qualifiers that `flutter_lints`
+reports as infos, so exclude `lib/ui/**/*.g.dart` under `analyzer: exclude:`
+in `analysis_options.yaml`.
+</Note>
+
+## Dependency rules
+
+The CLI checks your `pubspec.yaml` but never rewrites a declaration you already
+made. It adds only what is missing, and preserves hosted, path, Git,
+custom-hosted, and override declarations byte-for-byte.
+
+Section placement is enforced, because the installed source lives under your
+`lib/` and is compiled into anything that depends on your package:
+
+| Package | Required section |
+|---|---|
+| `remix`, `mix_annotations` | `dependencies` |
+| `mix_chart` | `dependencies` when `chart` is installed |
+| `remix_ui_icons` | `dependencies` when an installed item uses icons (`iconLibrary: remix`, the default, or `rounded`) |
+| `remix_ui_fonts` | `dependencies` with the Vanilla preset's `theme` |
+| `lucide_flutter` | `dependencies` in place of `remix_ui_icons` when `iconLibrary: lucide` is selected |
+| `build_runner`, `mix_generator` | either (build-time only) |
+
+A runtime package declared only under `dev_dependencies` fails **before** any
+process runs or file is written:
+
+```
+$ remix add button
+remix is declared under dev_dependencies but installed source
+imports it at runtime. Move remix to dependencies in pubspec.yaml and rerun.
+No source was written.
+```
+
+Declaring the same package in both sections is rejected the same way. Fix your
+manifest and rerun; the CLI will not edit it for you.

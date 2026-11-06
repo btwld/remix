@@ -279,7 +279,7 @@ final _staleConsumerDocumentationClaims = <(RegExp, String)>[
 /// The catalog is the one thing in these files that goes stale the instant a
 /// registry item lands, and it is the thing a reader trusts most.
 const _openCodeCatalogDocuments = <String>[
-  'docs/open-code.mdx',
+  'docs/open-code/catalog.mdx',
   'packages/remix_cli/README.md',
   'open_code/README.md',
 ];
