@@ -6,6 +6,7 @@ import 'package:yaml/yaml.dart';
 
 import 'registry.dart';
 import 'registry_reader.dart';
+import 'suggest.dart';
 
 const officialRepository = 'btwld/remix';
 
@@ -135,8 +136,22 @@ String catalogPathForPreset(
   }
   final presets = index['presets'];
   final catalogPath = presets is YamlMap ? presets[preset] : null;
-  if (catalogPath is! String)
-    throw FormatException('Registry $origin has no $preset preset.');
+  if (catalogPath is! String) {
+    // YAML keys need not be strings.
+    final names = presets is YamlMap
+        ? [
+            for (final MapEntry(:key, :value) in presets.entries)
+              if (value is String) '$key',
+          ]
+        : const <String>[];
+    throw FormatException(
+      [
+        'Registry $origin has no $preset preset.',
+        ?didYouMean(preset, names),
+        if (names.isNotEmpty) 'Available presets: ${names.join(', ')}.',
+      ].join('\n'),
+    );
+  }
   validateRegistryPath(catalogPath);
   return catalogPath;
 }

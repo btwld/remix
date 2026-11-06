@@ -331,7 +331,7 @@ void main() {
       );
       await expectLater(
         failing.add(const AddOptions(items: ['button'], mode: AddMode.write)),
-        throwsStateError,
+        throwsA(isA<InstallFailure>()),
       );
       fixture.company['button'] = item('button');
       await rejected(['@company/button'], AddMode.overwrite, 'owned by');

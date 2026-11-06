@@ -2,6 +2,7 @@ import 'project_config.dart';
 import 'registry.dart';
 import 'registry_reader.dart';
 import 'registry_source.dart';
+import 'suggest.dart';
 
 /// A complete, validated dependency closure. Qualified names remain distinct
 /// even when registries use the same local item name.
@@ -37,15 +38,6 @@ final class RegistryGraph {
     final ordered = <RegistryItem>[];
     final visiting = <String>[];
     final visited = <String>{};
-    String qualify(String name, String namespace) {
-      if (RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(name))
-        return '$namespace/$name';
-      if (!RegExp(r'^@[a-z][a-z0-9_-]*/[a-z][a-z0-9_]*$').hasMatch(name)) {
-        throw FormatException('Invalid registry item $name.');
-      }
-      return name;
-    }
-
     Future<void> visit(String id) async {
       if (visiting.contains(id))
         throw FormatException(
@@ -61,13 +53,22 @@ final class RegistryGraph {
       final reader = readers[namespace] ??= sources.open(source, config.preset);
       final catalog = catalogs[namespace] ??= await reader.catalog();
       final item = catalog.items[id.split('/').last];
-      if (item == null)
+      if (item == null) {
+        // Suggest in the spelling `add` accepts: bare in the default registry.
+        final prefix = namespace == config.defaultRegistry ? '' : '$namespace/';
         throw FormatException(
-          'Unknown registry item $id in the ${config.preset} preset.',
+          [
+            'Unknown registry item $id in the ${config.preset} preset.',
+            ?didYouMean('$prefix${id.split('/').last}', [
+              for (final name in catalog.items.keys) '$prefix$name',
+            ]),
+            'Run remix list to see every item in the ${config.preset} preset.',
+          ].join('\n'),
         );
+      }
       visiting.add(id);
       for (final dependency in item.registryDependencies) {
-        await visit(qualify(dependency, namespace));
+        await visit(qualifyRegistryItem(dependency, namespace));
       }
       visiting.removeLast();
       visited.add(id);
@@ -92,7 +93,7 @@ final class RegistryGraph {
     // is reported before the first one's registry is fetched.
     final roots = <String>{};
     for (final name in requested) {
-      final id = qualify(name, config.defaultRegistry);
+      final id = qualifyRegistryItem(name, config.defaultRegistry);
       if (!roots.add(id)) {
         throw FormatException('Registry item $id was requested twice.');
       }

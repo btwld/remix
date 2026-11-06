@@ -218,10 +218,6 @@ final class FixtureOfficialResolver implements RegistrySources {
   );
 
   @override
-  RegistryReader open(RegistrySource pin, String preset) {
-    if (preset != 'vanilla' && preset != 'fortal') {
-      throw FormatException('Official registry has no $preset preset.');
-    }
-    return CheckoutRegistry(findCheckoutRegistry(), preset);
-  }
+  RegistryReader open(RegistrySource pin, String preset) =>
+      CheckoutRegistry(findCheckoutRegistry(), preset);
 }

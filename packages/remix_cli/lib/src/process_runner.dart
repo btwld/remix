@@ -57,14 +57,30 @@ final class SystemProcessRunner implements ProcessRunner {
 }
 
 final class ProcessFailure implements Exception {
-  const ProcessFailure(this.invocation, this.output, {this.detail});
+  const ProcessFailure(this.invocation, this.output, {this.detail})
+    : _cause = null;
+
+  /// The tool did not start, usually because it is not installed or not on
+  /// PATH.
+  const ProcessFailure.unstarted(
+    this.invocation,
+    ProcessException cause, {
+    required String this.detail,
+  }) : output = null,
+       _cause = cause;
 
   final ProcessInvocation invocation;
-  final ProcessOutput output;
+  final ProcessOutput? output;
   final String? detail;
+  final ProcessException? _cause;
 
   @override
   String toString() {
+    final output = this.output;
+    if (output == null) {
+      return '$detail: could not start ${invocation.executable}. '
+          '${_cause!.message}';
+    }
     final message = StringBuffer(
       detail ?? 'Command failed with exit code ${output.exitCode}',
     )..write(': ${invocation.display}');

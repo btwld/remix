@@ -23,6 +23,7 @@ Future<void> main(List<String> arguments) async {
     Installer(
       projectRoot: Directory.current,
       writeOut: stdout.writeln,
+      writeProgress: stderr.writeln,
       sources: Platform.environment['REMIX_REGISTRY_OWNERSHIP_PROBE'] == '1'
           ? _OwnershipProbeSources(checkout)
           : releaseRef == null

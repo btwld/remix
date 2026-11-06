@@ -12,6 +12,16 @@ import 'yaml_fields.dart';
 /// swap also needs its length.
 const uiTargetPrefix = '@ui/';
 
+/// A registry item id as `@namespace/name`. A bare [name] belongs to
+/// [namespace]; a qualified one names its own registry.
+String qualifyRegistryItem(String name, String namespace) {
+  if (packageNamePattern.hasMatch(name)) return '$namespace/$name';
+  if (!RegExp(r'^@[a-z][a-z0-9_-]*/[a-z][a-z0-9_]*$').hasMatch(name)) {
+    throw FormatException('Invalid registry item $name.');
+  }
+  return name;
+}
+
 final class RegistryCatalog {
   RegistryCatalog._({required this.preset, required this.items});
 
