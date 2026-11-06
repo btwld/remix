@@ -95,7 +95,8 @@ class NakedComboboxOptionState<T extends Object> extends NakedState {
 /// Builds the text field for a [NakedCombobox].
 ///
 /// [onFieldSubmitted] must be forwarded to the field's submit handler so
-/// Enter selects the highlighted option.
+/// Enter selects the highlighted option. Submission while disabled or while
+/// confirming active text composition does not select an option.
 typedef NakedComboboxFieldBuilder<T extends Object> =
     Widget Function(
       BuildContext context,
@@ -242,7 +243,11 @@ class _OverlayLifecycleState extends State<_OverlayLifecycle> {
 /// - The options view is pinned to the field width and opens [optionsViewOpenDirection]
 ///   (`down`, `up`, or `mostSpace`). [OverlayPositionConfig] does not apply.
 /// - On Flutter 3.41, a selection-only caret change after picking an option
-///   can reopen the options list.
+///   can reopen the options list. Replacing selected text with the exact prior
+///   query may not reopen it until the text changes again.
+/// - An option's `enabled` flag disables its pointer/semantic activation, but
+///   does not remove it from RawAutocomplete's keyboard navigation or submit.
+///   Filter unavailable options in [optionsBuilder].
 ///
 /// The highlighted option scrolls just far enough into view when the highlight
 /// moves and when the options view opens, without moving focus.
@@ -302,7 +307,9 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
   final Widget Function(BuildContext context, Iterable<T> options)
   overlayBuilder;
 
-  /// Called when the user selects an option.
+  /// Called when the user selects an option, after RawAutocomplete writes its
+  /// display string. Synchronous text changes here are preserved and reflected
+  /// in the next state snapshot.
   final ValueChanged<T>? onSelected;
 
   /// String written into the field when [T] is selected.
@@ -321,6 +328,9 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
   final TextEditingValue? initialValue;
 
   /// Whether the combobox can open and select.
+  ///
+  /// Does not disable the caller's editor or change its focus or text. Pending
+  /// results are discarded when this changes; editing requests new results.
   final bool enabled;
 
   /// Called when the options view is mounted.
@@ -340,12 +350,48 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
 }
 
 class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
+  static final _disabledNavigation = <Type, Action<Intent>>{
+    for (final type in [
+      AutocompletePreviousOptionIntent,
+      AutocompleteNextOptionIntent,
+      AutocompleteFirstOptionIntent,
+      AutocompleteLastOptionIntent,
+      AutocompleteNextPageOptionIntent,
+      AutocompletePreviousPageOptionIntent,
+      DismissIntent,
+    ])
+      type: _DisabledComboboxAction(),
+  };
   bool _isOpen = false;
   T? _value;
   TextEditingController? _listenedController;
   FocusNode? _listenedFocusNode;
   bool _focused = false;
   int? _revealedIndex;
+  String _text = '';
+  bool _composing = false;
+  bool _handlingSelection = false;
+  int _optionsGeneration = 0;
+
+  @override
+  void didUpdateWidget(covariant NakedCombobox<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.enabled != widget.enabled ||
+        oldWidget.controller != widget.controller ||
+        oldWidget.focusNode != widget.focusNode) {
+      _optionsGeneration++;
+    }
+    // Detach before RawAutocomplete can dispose its internally owned pair.
+    if (!identical(oldWidget.controller, widget.controller)) {
+      _listenedController?.removeListener(_syncValueToText);
+      _listenedController = null;
+    }
+    if (!identical(oldWidget.focusNode, widget.focusNode)) {
+      _listenedFocusNode?.removeListener(_syncFocus);
+      _listenedFocusNode = null;
+    }
+    _reconcileValue();
+  }
 
   @override
   void dispose() {
@@ -358,6 +404,9 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     if (!identical(_listenedController, controller)) {
       _listenedController?.removeListener(_syncValueToText);
       _listenedController = controller;
+      _text = controller.text;
+      _composing = _hasComposition(controller.value);
+      _reconcileValue();
       controller.addListener(_syncValueToText);
     }
     if (!identical(_listenedFocusNode, focusNode)) {
@@ -374,22 +423,73 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     setState(() => _focused = focused);
   }
 
-  void _syncValueToText() {
+  void _reconcileValue() {
     final value = _value;
     final controller = _listenedController;
-    if (value == null || controller == null || !mounted) return;
-    if (controller.text == widget.displayStringForOption(value)) return;
-    setState(() => _value = null);
+    if (value != null &&
+        controller != null &&
+        controller.text != widget.displayStringForOption(value)) {
+      _value = null;
+    }
+  }
+
+  static bool _hasComposition(TextEditingValue value) =>
+      value.isComposingRangeValid && !value.composing.isCollapsed;
+
+  void _syncValueToText() {
+    final controller = _listenedController;
+    if (controller == null || !mounted) return;
+    final composing = _hasComposition(controller.value);
+    if (_composing && !composing) {
+      // EditableText clears composing before invoking onSubmitted. Keep the
+      // guard through that synchronous submit, then allow a later acceptance.
+      scheduleMicrotask(() {
+        if (mounted && identical(controller, _listenedController)) {
+          _composing = _hasComposition(controller.value);
+        }
+      });
+    } else {
+      _composing = composing;
+    }
+    if (controller.text == _text) return;
+    setState(() {
+      _text = controller.text;
+      _reconcileValue();
+    });
+  }
+
+  void _submit(VoidCallback onFieldSubmitted) {
+    if (_composing) return;
+    _invokeSelection(onFieldSubmitted);
+  }
+
+  void _invokeSelection(VoidCallback select) {
+    // RawAutocomplete writes selected text before onSelected. A callback-only
+    // guard is too late, including when Raw still holds cached options.
+    if (!mounted || !widget.enabled || _handlingSelection) return;
+    _handlingSelection = true;
+    try {
+      select();
+    } finally {
+      _handlingSelection = false;
+    }
   }
 
   void _handleSelected(T value) {
-    widget.onSelected?.call(value);
-    if (!mounted) return;
-    setState(() => _value = value);
+    try {
+      widget.onSelected?.call(value);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _value = value;
+          _reconcileValue();
+        });
+      }
+    }
   }
 
   void _handleMount() {
-    if (!mounted || _isOpen) return;
+    if (!mounted || !widget.enabled || _isOpen) return;
     setState(() => _isOpen = true);
     widget.onOpen?.call();
   }
@@ -410,11 +510,17 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   FutureOr<Iterable<T>> _optionsBuilder(TextEditingValue value) {
     if (!widget.enabled) return const Iterable.empty();
 
+    final generation = _optionsGeneration;
     final result = widget.optionsBuilder(value);
     if (result is Future<Iterable<T>>) {
-      return result.then(
-        (options) => mounted ? options : Completer<Iterable<T>>().future,
-      );
+      return result.then((options) {
+        // Flutter 3.41 accesses its context after await without a mounted check.
+        if (!mounted) return Completer<Iterable<T>>().future;
+        if (!widget.enabled || generation != _optionsGeneration) {
+          return const Iterable.empty();
+        }
+        return options;
+      });
     }
 
     return result;
@@ -439,12 +545,17 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
 
     final field = NakedStateScopeBuilder<NakedComboboxState<T>>(
       value: state,
-      builder: (context, state, _) => widget.fieldBuilder(
-        context,
-        state,
-        controller,
-        focusNode,
-        onFieldSubmitted,
+      builder: (context, state, _) => Actions(
+        // Raw still caches options while disabled. Shadow its navigation so
+        // hidden suggestions cannot consume the editor's ordinary shortcuts.
+        actions: widget.enabled ? const {} : _disabledNavigation,
+        child: widget.fieldBuilder(
+          context,
+          state,
+          controller,
+          focusNode,
+          () => _submit(onFieldSubmitted),
+        ),
       ),
     );
 
@@ -460,42 +571,62 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     BuildContext context,
     AutocompleteOnSelected<T> onSelected,
     Iterable<T> options,
-  ) => _OverlayLifecycle(
-    onMount: _handleMount,
-    onUnmount: _handleUnmount,
-    child: _NakedComboboxScope<T>(
-      options: options,
-      onSelected: onSelected,
-      claimReveal: _claimReveal,
-      enabled: widget.enabled,
-      value: _value,
-      child: Semantics(
-        role: SemanticsRole.list,
-        container: true,
-        explicitChildNodes: true,
-        child: ExcludeFocus(child: widget.overlayBuilder(context, options)),
+  ) {
+    // Raw has no public enabled/cache control. Suppress the actual options
+    // subtree while retaining its editor, highlight and overlay ownership.
+    if (!widget.enabled) return const SizedBox.shrink();
+    final generation = _optionsGeneration;
+    return _OverlayLifecycle(
+      onMount: _handleMount,
+      onUnmount: _handleUnmount,
+      child: _NakedComboboxScope<T>(
+        options: options,
+        onSelected: (value) {
+          if (generation == _optionsGeneration) {
+            _invokeSelection(() => onSelected(value));
+          }
+        },
+        claimReveal: _claimReveal,
+        enabled: widget.enabled,
+        value: _value,
+        // The portal's overlay semantics need their own exclusion boundary.
+        child: ExcludeSemantics(
+          excluding: widget.excludeSemantics,
+          child: Semantics(
+            role: SemanticsRole.list,
+            container: true,
+            explicitChildNodes: true,
+            child: ExcludeFocus(child: widget.overlayBuilder(context, options)),
+          ),
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    Widget combobox = RawAutocomplete<T>(
-      optionsBuilder: _optionsBuilder,
-      displayStringForOption: widget.displayStringForOption,
-      optionsViewOpenDirection: widget.optionsViewOpenDirection,
-      textEditingController: widget.controller,
-      focusNode: widget.focusNode,
-      initialValue: widget.initialValue,
-      onSelected: _handleSelected,
-      fieldViewBuilder: _buildFieldView,
-      optionsViewBuilder: _buildOptionsView,
+    return ExcludeSemantics(
+      excluding: widget.excludeSemantics,
+      child: RawAutocomplete<T>(
+        optionsBuilder: _optionsBuilder,
+        displayStringForOption: widget.displayStringForOption,
+        optionsViewOpenDirection: widget.optionsViewOpenDirection,
+        textEditingController: widget.controller,
+        focusNode: widget.focusNode,
+        initialValue: widget.initialValue,
+        onSelected: _handleSelected,
+        fieldViewBuilder: _buildFieldView,
+        optionsViewBuilder: _buildOptionsView,
+      ),
     );
-
-    if (widget.excludeSemantics) {
-      combobox = ExcludeSemantics(child: combobox);
-    }
-
-    return combobox;
   }
+}
+
+/// Makes RawAutocomplete's shortcuts fall through to native editor actions.
+class _DisabledComboboxAction extends Action<Intent> {
+  @override
+  bool isEnabled(Intent intent) => false;
+
+  @override
+  Object? invoke(Intent intent) => null;
 }

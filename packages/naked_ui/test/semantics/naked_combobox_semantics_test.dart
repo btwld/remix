@@ -8,6 +8,98 @@ import 'package:naked_ui/naked_ui.dart';
 import 'semantics_test_utils.dart';
 
 void main() {
+  testWidgets(
+    'option semantic tap selects once and disabled popup has no actions',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+      var enabled = true;
+      var excluded = false;
+      final selected = <String>[];
+      late StateSetter update;
+      late TextEditingController fieldController;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                update = setState;
+                return NakedCombobox<String>(
+                  enabled: enabled,
+                  excludeSemantics: excluded,
+                  optionsBuilder: (_) => ['apple'],
+                  onSelected: selected.add,
+                  fieldBuilder: (context, state, controller, focus, submit) {
+                    fieldController = controller;
+                    return TextField(
+                      controller: controller,
+                      focusNode: focus,
+                      onSubmitted: (_) => submit(),
+                    );
+                  },
+                  overlayBuilder: (context, options) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (final option in options)
+                        NakedComboboxOption(
+                          value: option,
+                          semanticLabel: option,
+                          child: Text(option),
+                        ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+      await tester.enterText(find.byType(TextField), 'ap');
+      await tester.pumpAndSettle();
+      final apple = tester.getSemantics(find.bySemanticsLabel('apple'));
+      expect(apple.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+      apple.owner!.performAction(apple.id, SemanticsAction.tap);
+      await tester.pumpAndSettle();
+      expect(selected, ['apple']);
+      expect(fieldController.text, 'apple');
+
+      // Flutter 3.41 retains the pre-selection query internally. Use a changed
+      // query to reopen here; this test exercises semantic activation/disable,
+      // not the inherited same-query reopening limitation.
+      await tester.enterText(find.byType(TextField), 'app');
+      await tester.pumpAndSettle();
+      // Keep a previously exposed activation callback to challenge the adapter
+      // guard even after the actual option subtree has been suppressed.
+      final stalePress = tester
+          .widget<NakedButton>(find.byType(NakedButton))
+          .onPressed!;
+      update(() => enabled = false);
+      await tester.pumpAndSettle();
+      expect(find.bySemanticsLabel('apple'), findsNothing);
+      expect(find.byType(NakedComboboxOption<String>), findsNothing);
+      stalePress();
+      await tester.pumpAndSettle();
+      expect(selected, ['apple']);
+      expect(fieldController.text, 'app');
+
+      update(() => enabled = true);
+      await tester.pumpAndSettle();
+      expect(find.bySemanticsLabel('apple'), findsOneWidget);
+      update(() => excluded = true);
+      await tester.pumpAndSettle();
+      expect(
+        findSemanticsNode(
+          semanticsRootOf(tester),
+          (node) => node.getSemanticsData().label == 'apple',
+        ),
+        isNull,
+      );
+      expect(find.byType(NakedComboboxOption<String>), findsOneWidget);
+      expect(fieldController.text, 'app');
+      expect(tester.takeException(), isNull);
+      handle.dispose();
+    },
+  );
+
   testWidgets('exposes a text field and a list of options', (tester) async {
     final handle = tester.ensureSemantics();
     await tester.pumpWidget(
