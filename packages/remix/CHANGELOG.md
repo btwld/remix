@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.0-beta.17
 
 ### Breaking changes
 
@@ -6,6 +6,9 @@
 
 ### Fixes
 
+- Checkbox indicators retain their requested size and center by default without
+  overriding explicit alignment, expanding unsized controls, or changing tap
+  targets.
 - `RemixToggle` with `semanticLabel` now replaces the visible `label` text for
   assistive technology instead of concatenating both labels.
 
