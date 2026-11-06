@@ -1,3 +1,8 @@
+## 1.0.0-beta.17
+
+ - **REFACTOR**(naked_ui,remix): remove LegacyNakedTooltip, tighten internals, and align semanticLabel with WAI-ARIA accname-1.2 (#382).
+ - **FIX**(checkbox): respect indicator size and alignment (#396).
+
 ## Unreleased
 
 ### Breaking changes
