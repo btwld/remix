@@ -47,6 +47,7 @@ class _CheckboxExampleState extends State<CheckboxExample> {
   CheckboxStyler get style {
     return CheckboxStyler()
         .size(24, 24)
+        .alignment(.center)
         .icon(IconStyler().size(20).color(Colors.white))
         .onSelected(CheckboxStyler().fillColor(Colors.grey.shade900))
         .borderRadius(.all(const Radius.circular(3)))
@@ -254,7 +255,9 @@ Sets checkbox fill color on the container.
 
 #### `alignment(Alignment value)`
 
-Sets container alignment.
+Sets the indicator's alignment within the container. Indicators are centered
+by default and keep their configured size, constrained by the available space
+after padding and borders. Explicit alignment overrides the default.
 
 #### `onIndeterminate(CheckboxStyler value)`
 
