@@ -5,6 +5,23 @@ import 'package:remix/remix.dart';
 enum Interest { design, code }
 
 void main() {
+  test(
+    'combobox minimal and generic callable API compile through the barrel',
+    () {
+      final minimal = RemixCombobox<String>(
+        label: 'Fruit',
+        optionsBuilder: (query) => ['Apple', 'Apricot'],
+      );
+      final styled = RemixCombobox.styleFrom().width(300)<String>(
+        label: 'Fruit',
+        optionsBuilder: (query) async => ['Apple'],
+      );
+      expect(minimal.style, isA<ComboboxStyler>());
+      expect(styled, isA<RemixCombobox<String>>());
+      expect(const ComboboxSpec(), isA<ComboboxSpec>());
+    },
+  );
+
   test('disclosure API is constructible from the package barrel', () {
     const disclosure = RemixDisclosure(
       trigger: Text('Details'),
