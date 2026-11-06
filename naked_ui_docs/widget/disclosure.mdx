@@ -1,0 +1,202 @@
+---
+title: NakedDisclosure
+description: Headless disclosure button and panel with controlled state, accessible semantics, and optional exit-aware transitions
+keywords: [flutter, disclosure, show hide, expansion, headless, accessibility]
+---
+
+`NakedDisclosure` is a headless button that shows or hides one content panel. It
+implements the [WAI-ARIA disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/):
+the trigger has button semantics, reports whether its panel is expanded, and
+activates with Enter or Space.
+
+<Info>
+  A complete example lives in [`apps/naked_ui_example/lib/api/naked_disclosure.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_disclosure.0.dart).
+</Info>
+
+## Disclosure or accordion?
+
+Use `NakedDisclosure` for an independent button controlling one section, such
+as optional details or a single help answer. Use `NakedAccordionGroup` and
+`NakedAccordion` when multiple sections form a coordinated collection with
+minimum or maximum expansion rules.
+
+## Uncontrolled disclosure
+
+An uncontrolled disclosure owns its state. `defaultExpanded` is read only when
+the widget is initialized; later changes are intentionally ignored.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget disclosureExample(bool detailsOpen, ValueChanged<bool> onChanged) {
+  return NakedDisclosure(
+  defaultExpanded: false,
+  child: const Text('Show shipping details'),
+  builder: (context, state, child) => Row(
+    children: [
+      Expanded(child: child!),
+      AnimatedRotation(
+        turns: state.isExpanded ? 0.5 : 0,
+        duration: const Duration(milliseconds: 200),
+        child: const Icon(Icons.keyboard_arrow_down),
+      ),
+    ],
+  ),
+  panel: const Text('Ships in 2–3 business days.'),
+);
+}
+```
+
+At least one of `child` or `builder` is required. Supply both when the builder
+should decorate static trigger content. The component supplies no styling or
+icons.
+
+## Controlled disclosure
+
+Set `expanded` to make the owner the source of truth. Activation requests the
+inverse value through `onExpandedChanged`; the panel changes only when the
+owner accepts and supplies the new value.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget disclosureExample(bool detailsOpen, ValueChanged<bool> onChanged) {
+  return NakedDisclosure(
+  expanded: detailsOpen,
+  onExpandedChanged: onChanged,
+  child: const Text('Delivery details'),
+  panel: const Text('Tracking is included.'),
+);
+}
+```
+
+A controlled disclosure without `onExpandedChanged` is read-only. Its panel
+still reflects `expanded`, but the trigger is disabled and exposes no tap
+action. An uncontrolled disclosure remains interactive without a callback.
+Setting `enabled: false` disables only the trigger; descendants of an already
+expanded panel remain available.
+
+## Styling state
+
+`builder` and `itemBuilder` receive one authoritative `NakedDisclosureState`.
+It exposes `isExpanded` and the standard hovered, focused, pressed, disabled,
+and selected states. `WidgetState.selected` always mirrors expansion.
+
+Use `itemBuilder` for decoration around the complete trigger and panel. Its
+supplied child preserves the trigger's original hit target, so the panel does
+not become part of the disclosure button.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget disclosureExample(bool detailsOpen, ValueChanged<bool> onChanged) {
+  return NakedDisclosure(
+  child: const Text("Details"),
+  panel: const Text("Shipping information"),
+  itemBuilder: (context, state, child) => DecoratedBox(
+  decoration: BoxDecoration(
+    border: Border.all(color: state.isFocused ? Colors.blue : Colors.grey),
+  ),
+  child: child,
+),
+);
+}
+```
+
+The same state is available below the scope through
+`NakedDisclosureState.of(context)`. Use `controllerOf(context)` when a
+descendant needs the stable `WidgetStatesController` identity.
+
+## Panel transitions and lifecycle
+
+Without `transitionBuilder`, panel mount and removal are immediate. With a
+transition, the real panel mounts before the forward animation and stays
+mounted through the reverse animation. It is removed after dismissal; there is
+no persistent collapsed panel state.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget disclosureExample(bool detailsOpen, ValueChanged<bool> onChanged) {
+  return NakedDisclosure(
+  child: const Text("Details"),
+  panel: const Text("Shipping information"),
+  transitionBuilder: (context, animation, child) => FadeTransition(
+  opacity: animation,
+  child: SizeTransition(
+    sizeFactor: animation,
+    axisAlignment: -1,
+    child: child,
+  ),
+),
+);
+}
+```
+
+Custom transitions default to 200ms with `Curves.ease`. Configure
+`animationStyle` to change the forward and reverse timing. Expansion remains
+immediate when no transition builder is supplied. `AnimationStyle.noAnimation`
+and the platform reduced-motion preference snap to the requested state.
+
+As soon as closing begins, the retained panel is excluded from semantics,
+pointer input, focus, and focus traversal. Rapid close/open changes safely
+reverse the same transition without allowing a stale dismissal to remove the
+reopened panel.
+
+## Accessibility
+
+- The trigger is the only button and the only disclosure tap target.
+- Visible trigger text supplies the accessible name by default.
+- While expanded, the trigger identifies a distinct panel semantics container it
+  controls. Flutter web maps this relationship to `aria-controls`.
+- The relationship is removed while collapsed because the panel is absent from
+  the semantics tree.
+- A non-empty `semanticLabel` replaces trigger-descendant semantics; use
+  `semanticHint` for short additional context.
+- `excludeSemantics: true` hides both the trigger and panel.
+- Opening keeps focus on the trigger. If an interactive disclosure collapses
+  while a panel descendant is focused, focus returns to the trigger.
+- Enter, Space, numpad Enter, pointer tap, and semantic tap activate the same
+  behavior.
+
+Do not place links, buttons, text fields, or other interactive controls inside
+the trigger. Put them in the panel so each control keeps a separate hit target,
+focus stop, and semantic action.
+
+## Constructor
+
+{/* dart-excerpt: API signature for NakedDisclosure; copied from the active declaration. It describes the API and has no implementation body. */}
+
+```dart
+const NakedDisclosure({
+  super.key,
+  this.child,
+  this.builder,
+  required this.panel,
+  this.itemBuilder,
+  this.expanded,
+  this.defaultExpanded = false,
+  this.onExpandedChanged,
+  this.enabled = true,
+  this.mouseCursor = SystemMouseCursors.click,
+  this.enableFeedback = true,
+  this.focusNode,
+  this.autofocus = false,
+  this.onFocusChange,
+  this.onHoverChange,
+  this.onPressChange,
+  this.semanticLabel,
+  this.semanticHint,
+  this.excludeSemantics = false,
+  this.transitionBuilder,
+  this.animationStyle = const AnimationStyle(
+    curve: Curves.ease,
+    duration: Duration(milliseconds: 200),
+    reverseDuration: Duration(milliseconds: 200),
+  ),
+})
+```

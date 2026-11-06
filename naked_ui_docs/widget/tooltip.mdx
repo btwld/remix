@@ -1,0 +1,154 @@
+---
+title: NakedTooltip
+description: Hover/touch triggered tooltip overlay with positioning, animation, and lifecycle callbacks
+keywords: [flutter, tooltip, hover, overlay, headless]
+---
+
+Headless tooltip component built on Flutter's `RawTooltip`. Handles hover/touch triggers, positioning, animations, timers, and dismissal. The builder receives an `Animation` for easy transitions.
+
+## When to use this
+
+- **Help text**: Explain UI elements or provide additional context
+- **Icon explanations**: Clarify what icon buttons do
+- **Form field hints**: Show validation rules or input examples
+- **Feature descriptions**: Brief explanations of complex features
+
+<Info>
+  Working example: [`apps/naked_ui_example/lib/api/naked_tooltip.0.dart`](https://github.com/btwld/remix/blob/main/apps/naked_ui_example/lib/api/naked_tooltip.0.dart).
+</Info>
+
+## Basic implementation
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+class TooltipExample extends StatelessWidget {
+  const TooltipExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return NakedTooltip(
+      positioning: const OverlayPositionConfig(
+        side: OverlaySide.top,
+        alignment: OverlayAlignment.center,
+        sideOffset: 8,
+      ),
+      hoverDelay: const Duration(milliseconds: 400),
+      dismissDelay: const Duration(seconds: 2),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade900,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(Icons.copy, color: Colors.white, size: 18),
+      ),
+      overlayBuilder: (context, animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: Material(
+            elevation: 4,
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: const Text('Copy to clipboard'),
+            ),
+          ),
+        );
+      },
+      semanticLabel: 'Copy button tooltip',
+    );
+  }
+}
+```
+
+## Constructor
+
+{/* dart-excerpt: API signature for NakedTooltip; copied from the active declaration. It describes the API and has no implementation body. */}
+
+```dart
+const NakedTooltip({
+  super.key,
+  required this.child,
+  required this.overlayBuilder,
+  this.tooltipKey,
+  @Deprecated(
+    'Use tooltipKey to show on command and onOpenChanged to observe '
+    'visibility. Controlled open runs the naked_ui 1.1.0 implementation. '
+    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+  )
+  this.open,
+  this.onOpenChanged,
+  this.isFocusVisible,
+  this.hoverDelay = Duration.zero,
+  this.touchDelay = const Duration(milliseconds: 1500),
+  this.dismissDelay = const Duration(milliseconds: 100),
+  @Deprecated(
+    'RawTooltip keeps the tooltip visible while its content is hovered. '
+    'Setting this runs the naked_ui 1.1.0 implementation. '
+    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+  )
+  this.disableHoverableContent = false,
+  this.enableTapToDismiss = true,
+  this.triggerMode = TooltipTriggerMode.longPress,
+  this.enableFeedback = true,
+  this.onTriggered,
+  this.animationStyle = _defaultTooltipAnimationStyle,
+  this.positioning = const OverlayPositionConfig(),
+  @Deprecated(
+    'RawTooltip uses the nearest Overlay. Setting this runs the naked_ui '
+    '1.1.0 implementation. Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
+  )
+  this.useRootOverlay = false,
+  this.semanticLabel,
+  this.excludeSemantics = false,
+  this.excludeOverlaySemantics,
+})
+```
+
+### Key Parameters
+
+- `child` → trigger widget that displays the tooltip on hover/touch
+- `overlayBuilder` → `(BuildContext, Animation<double>)` that returns the tooltip body; the animation drives show/hide transitions
+- `hoverDelay` → delay before showing once hover occurs (default: immediate)
+- `dismissDelay` → delay before hiding after mouse exits (default: 100ms)
+- `touchDelay` → how long the tooltip stays visible after touch release (default: 1500ms)
+- `positioning` → `OverlayPositionConfig` controlling anchor & offset
+- `triggerMode` → how touch events trigger the tooltip (longPress, tap, or manual)
+- `animationStyle` → customize animation duration, curve, and reverse behavior
+- `onTriggered` → called when triggered by tap or long press (not hover)
+- `semanticLabel` → text announced by assistive technologies
+- `excludeSemantics` → hide the trigger, tooltip description, and visual overlay subtree from accessibility services
+- `excludeOverlaySemantics` → control the visual overlay subtree independently; by default it is hidden when a non-empty `semanticLabel` describes the tooltip on the trigger, and retained otherwise
+
+## Behaviour Notes
+
+- Tooltips open on pointer hover automatically
+- Touch triggers depend on `triggerMode` (longPress by default, or tap)
+- The `overlayBuilder` receives an `Animation<double>` (0→1 on show, 1→0 on hide) for smooth transitions
+- Use `AnimationStyle.noAnimation` to disable the built-in transition
+- The tooltip dismisses on outside tap (controllable via `enableTapToDismiss`)
+- Only one tooltip is shown at a time when using nested tooltips
+- Visual overlay content is semantics-excluded automatically when a non-empty `semanticLabel` describes it on the trigger; set `excludeOverlaySemantics` explicitly to override this behavior
+
+## Positioning Tips
+
+Use `OverlayPositionConfig.sideOffset` to nudge the tooltip position:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+OverlayPositionConfig examplePosition() => const OverlayPositionConfig(
+  side: OverlaySide.top,
+        alignment: OverlayAlignment.center,
+        sideOffset: 8,
+      );
+```
+
+For fully custom positioning beyond what `OverlayPositionConfig` exposes, drop down to Flutter's `RawTooltip` directly and supply your own `TooltipPositionDelegate`.
+
+Opening is managed by `RawTooltip` and its trigger mode. The legacy `open`, `useRootOverlay` and `disableHoverableContent` parameters are deprecated; do not use them for new integrations.
+
+`isFocusVisible` can report keyboard-visible focus. When provided, focus restored after a pointer action does not open or hold the tooltip unless this callback returns true; hover still opens it. Without the callback, any focus opens the tooltip.

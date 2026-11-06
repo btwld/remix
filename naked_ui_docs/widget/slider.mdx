@@ -1,0 +1,333 @@
+---
+title: NakedSlider
+description: Controlled multi-thumb slider with pointer, keyboard and semantic interaction
+keywords: [flutter, slider, range, headless, keyboard]
+---
+
+`NakedSlider` is controlled by a nonempty ascending `List<double>`. Even a single thumb uses `values` and receives a list in `onChanged`. The default range is 0–100 and the default `step` is 1.
+
+## When to use this
+
+Use one thumb for a scalar value and two or more for ranges. The widget owns interaction, focus and slider semantics; your child or builder draws the track and thumbs.
+
+## Basic implementation
+
+This is the maintained package example, including its painters. Put `SliderExample` inside your app’s layout.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+class SliderExample extends StatefulWidget {
+  const SliderExample({super.key});
+
+  @override
+  State<SliderExample> createState() => _SliderExampleState();
+}
+
+class _SliderExampleState extends State<SliderExample> {
+  double _value = 0.5;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      child: SizedBox(
+        width: double.infinity,
+        height: 20,
+        child: NakedSlider(
+          values: [_value],
+          min: 0,
+          max: 1,
+          step: 0.01,
+          onChanged: (newValues) {
+            setState(() {
+              _value = newValues.single;
+            });
+          },
+          child: CustomPaint(
+            foregroundPainter: SliderThumbPainter(
+              value: _value,
+              thumbColor: Colors.white,
+              thumbSize: 18,
+              borderColor: Colors.black,
+            ),
+            painter: SliderTrackPainter(
+              value: _value,
+              activeTrackColor: Colors.black,
+              trackColor: Colors.black.withValues(alpha: 0.1),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SliderTrackPainter extends CustomPainter {
+  final double value;
+  final Color activeTrackColor;
+  final Color trackColor;
+
+  SliderTrackPainter({
+    required this.value,
+    required this.activeTrackColor,
+    required this.trackColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint backgroundPaint = Paint()
+      ..color = trackColor
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 6.0
+      ..strokeCap = StrokeCap.round;
+
+    final Paint progressPaint = Paint()
+      ..color = activeTrackColor
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 6.0
+      ..strokeCap = StrokeCap.round;
+
+    final double verticalCenter = size.height / 2;
+
+    canvas.drawLine(
+      Offset(0, verticalCenter),
+      Offset(size.width, verticalCenter),
+      backgroundPaint,
+    );
+
+    canvas.drawLine(
+      Offset(0, verticalCenter),
+      Offset(size.width * value, verticalCenter),
+      progressPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(SliderTrackPainter oldDelegate) {
+    return oldDelegate.value != value ||
+        oldDelegate.activeTrackColor != activeTrackColor ||
+        oldDelegate.trackColor != trackColor;
+  }
+}
+
+class SliderThumbPainter extends CustomPainter {
+  final double value;
+  final double thumbSize;
+  final Color thumbColor;
+  final Color borderColor;
+
+  SliderThumbPainter({
+    required this.value,
+    required this.thumbSize,
+    required this.thumbColor,
+    required this.borderColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint thumbPaint = Paint()
+      ..color = thumbColor
+      ..style = PaintingStyle.fill;
+
+    final Paint borderPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+
+    final double verticalCenter = size.height / 2;
+
+    canvas.drawCircle(
+      Offset(size.width * value, verticalCenter),
+      thumbSize / 2,
+      thumbPaint,
+    );
+
+    canvas.drawCircle(
+      Offset(size.width * value, verticalCenter),
+      thumbSize / 2,
+      borderPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(SliderThumbPainter oldDelegate) {
+    return oldDelegate.value != value ||
+        oldDelegate.thumbColor != thumbColor ||
+        oldDelegate.thumbSize != thumbSize;
+  }
+}
+
+```
+
+## Multiple state styling
+
+For a range, keep an ascending list such as `[20.0, 80.0]`, pass `values: range`, and store the next list in `onChanged`. Set `minSpacing` to keep adjacent thumbs apart. Draw each thumb at its corresponding percentage.
+
+## Implementation patterns
+
+`orientation: Axis.vertical` changes the axis; `inverted` reverses the visual direction. Use `state.visualPercentageAt(index)` for direction-aware painting. `NakedSliderTrack` declares the geometry used for pointer-to-value calculations when the track is a subtree.
+
+### Volume control with icons
+
+Arrow keys change the focused thumb by `step`; Home/End move to its allowed bounds. Each thumb has its own focus and semantic node. Supply `semanticLabels` and `semanticFormatterCallbacks` per thumb. Setting `onChanged` to null disables user updates.
+
+### Discrete value slider
+
+`NakedSlider` takes `values`, `min`, `max`, `step`, `minSpacing`, `orientation`, `inverted`, `onChanged`, `onChangeStart`, `onChangeEnd`, `focusNodes`, `autofocusThumbIndex`, `semanticLabels` and `semanticFormatterCallbacks`. See the [exact constructor](https://github.com/btwld/remix/blob/main/packages/naked_ui/lib/src/naked_slider.dart).
+
+### Custom painters (advanced)
+
+`NakedSliderState` exposes `values`, `percentages`, `percentageAt`, `visualPercentageAt`, `activeThumbIndex`, `focusedThumbIndex` and `isDragging`, alongside `isHovered` and `isFocused`. Keep focus-node ownership in the caller and dispose caller-created nodes.
+
+## Constructor
+
+{/* dart-excerpt: API signature for NakedSlider; copied from the active declaration. It describes the API and omits constructor assertions. */}
+
+```dart
+const NakedSlider({
+  super.key,
+  this.child,
+  this.builder,
+  required this.values,
+  this.min = 0,
+  this.max = 100,
+  this.step = 1,
+  this.minSpacing = 0,
+  this.orientation = Axis.horizontal,
+  this.inverted = false,
+  this.onChanged,
+  this.onChangeStart,
+  this.onChangeEnd,
+  this.onHoverChange,
+  this.onDragChange,
+  this.onFocusChange,
+  this.enabled = true,
+  this.mouseCursor = SystemMouseCursors.click,
+  this.enableFeedback = true,
+  this.focusNodes,
+  this.autofocusThumbIndex,
+  this.semanticLabels,
+  this.semanticFormatterCallbacks,
+  this.excludeSemantics = false,
+})
+```
+
+## Properties
+
+<span id="child---widget" />
+
+#### child → `Widget?`
+
+The visual track and thumbs. Supply child or builder.
+
+#### builder → `ValueWidgetBuilder<NakedSliderState>?`
+
+Builds the slider visuals from its interaction state.
+
+<span id="value--double" />
+
+#### values → `List<double>`
+
+Required, controlled nonempty ascending values. Use a one-item list for a single thumb.
+
+#### min → `double`
+
+Lower bound; defaults to 0.
+
+#### max → `double`
+
+Upper bound; defaults to 100.
+
+<span id="divisions--int" />
+
+<span id="keyboardstep--double" />
+
+<span id="largekeyboardstep--double" />
+
+#### step → `double`
+
+Positive finite interval for pointer, keyboard and semantic changes; defaults to 1. Shift multiplies keyboard movement by 10. PageUp/PageDown use at least one tenth of the range. The old divisions, keyboardStep and largeKeyboardStep parameters are replaced by this interval.
+
+#### minSpacing → `double`
+
+Minimum nonnegative distance between adjacent thumbs; defaults to 0.
+
+<span id="direction--axis" />
+
+#### orientation → `Axis`
+
+Axis.horizontal by default; use Axis.vertical for a vertical slider. Replaces direction.
+
+#### inverted → `bool`
+
+Reverses the visual direction; defaults to false.
+
+<span id="onchanged--valuechangeddouble" />
+
+#### onChanged → `ValueChanged<List<double>>?`
+
+Receives the entire value list. Store that list in caller state; null disables interaction.
+
+<span id="ondragstart--voidcallback" />
+
+#### onChangeStart → `ValueChanged<List<double>>?`
+
+Receives the current values when a pointer interaction starts. Replaces onDragStart.
+
+<span id="ondragend--valuechangeddouble" />
+
+#### onChangeEnd → `ValueChanged<List<double>>?`
+
+Receives the values when a pointer interaction ends or is cancelled. Replaces onDragEnd.
+
+#### onHoverChange → `ValueChanged<bool>?`
+
+Reports hover-state changes.
+
+#### onDragChange → `ValueChanged<bool>?`
+
+Reports drag-state changes.
+
+#### onFocusChange → `ValueChanged<bool>?`
+
+Reports focus-state changes.
+
+#### enabled → `bool`
+
+Whether interaction is enabled; defaults to true.
+
+#### mouseCursor → `MouseCursor`
+
+Cursor while enabled; defaults to SystemMouseCursors.click.
+
+#### enableFeedback → `bool`
+
+Enables platform interaction feedback; defaults to true.
+
+<span id="focusnode--focusnode" />
+
+#### focusNodes → `List<FocusNode?>?`
+
+Optional caller-owned focus node per thumb. Its length must match values; dispose caller-created nodes. Replaces focusNode.
+
+<span id="autofocus--bool" />
+
+#### autofocusThumbIndex → `int?`
+
+Optional valid thumb index to focus initially. Replaces the old autofocus boolean.
+
+<span id="semanticlabel--string" />
+
+#### semanticLabels → `List<String?>?`
+
+Optional accessible label per thumb; its length must match values. Replaces semanticLabel.
+
+#### semanticFormatterCallbacks → `List<NakedSliderSemanticFormatterCallback?>?`
+
+Optional spoken-value formatter per thumb; its length must match values.
+
+#### excludeSemantics → `bool`
+
+Excludes the slider semantics when true; defaults to false.
