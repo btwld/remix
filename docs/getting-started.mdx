@@ -1,6 +1,6 @@
 ---
 title: Getting started
-description: Install Remix from this checkout and render your first styled button
+description: Install Remix and render your first styled button
 ---
 
 Remix can be used directly as a widget library. You do not need the CLI or a
@@ -9,27 +9,18 @@ the [CLI tutorial](/tutorials/settings-screen).
 
 ## Installation
 
-These docs describe the code in this repository, whose Remix package version
-is `1.0.0-beta.14` (unpublished; the currently hosted release is
-`1.0.0-beta.13`). Do not substitute a stable `1.0.0` dependency: the repository
-version is a prerelease, not evidence that a stable release exists.
+Remix needs Flutter 3.44 / Dart 3.12 or later, because it depends on Mix
+2.3.1.
 
-For this checkout, use Flutter 3.44.0 and its bundled Dart 3.12.0, matching
-`.fvmrc`. Remix needs the same floor, Flutter 3.44 / Dart 3.12, because it
-depends on Mix 2.3.1.
-
-Create an application, then add the local runtime package. Replace
-`/path/to/remix` with the absolute path to your checkout:
+Create an application and add Remix. Remix is a `1.0.0` prerelease; pin it,
+because an unversioned install resolves the older stable `0.x` line, which
+these docs do not describe:
 
 ```bash
 flutter create remix_example
 cd remix_example
-flutter pub add "remix:{path: /path/to/remix/packages/remix}"
+flutter pub add remix:^1.0.0-beta.16
 ```
-
-For a registry installation, check the available versions on
-[pub.dev](https://pub.dev/packages/remix/versions) and select docs matching that
-release. A plain `flutter pub add remix` does not select an unpublished checkout.
 
 ## Your first component
 
