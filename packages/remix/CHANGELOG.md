@@ -1,16 +1,14 @@
 ## 1.0.0-beta.17
 
- - **REFACTOR**(naked_ui,remix): remove LegacyNakedTooltip, tighten internals, and align semanticLabel with WAI-ARIA accname-1.2 (#382).
- - **FIX**(checkbox): respect indicator size and alignment (#396).
-
-## Unreleased
-
 ### Breaking changes
 
 - Require `naked_ui` ^2.0.0-beta.1.
 
 ### Fixes
 
+- Checkbox indicators retain their requested size and center by default without
+  overriding explicit alignment, expanding unsized controls, or changing tap
+  targets.
 - `RemixToggle` with `semanticLabel` now replaces the visible `label` text for
   assistive technology instead of concatenating both labels.
 
