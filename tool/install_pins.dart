@@ -137,44 +137,178 @@ String expectedInstallPin(Directory workspaceRoot, String package) {
 
 typedef InstallConstraint = ({String text, int start, int end});
 
+/// One package named by an install command.
+///
+/// [start] is where the command begins and [argumentStart] where this
+/// package's argument does. [section] is `dev` or `override` when the command
+/// says so, through a `dev:` prefix or `--dev`, and null otherwise. It is
+/// information only: where `remix_cli` belongs is a documentation convention,
+/// not a rule pub enforces, so the pin check does not compare it.
 typedef InstallCommand = ({
   String package,
   int start,
+  int argumentStart,
+  String? section,
   InstallConstraint? constraint,
 });
 
 final _packages = pinnedInstallPackages.map(RegExp.escape).join('|');
 
-final _pubAdd = RegExp(
-  '\\bpub add ([\'"]?)(?:dev:)?($_packages)(?::(\\^?[0-9][^\\s\'"`]*))?\\1'
-  '(?=[\\s`]|\$)',
+final _pubAdd = RegExp(r'\bpub add(?=[\s`]|$)');
+
+/// One shell word of a `pub add` command: a quoted word, or a bare word that
+/// may end in a quoted descriptor (`remix:'>=1.0.0 <2.0.0'`).
+final _pubAddWord = RegExp(
+  r'''"[^"\n]*"|'[^'\n]*'|[^\s"'`;&|<>)]+(?:(?<=[:@])(?:"[^"\n]*"|'[^'\n]*'))?''',
 );
+
+/// `[section:]package[:descriptor]`, with the whole word or just the
+/// descriptor quoted. Groups: 1 outer quote, 2 section, 3 package, 4
+/// descriptor quote, 5 descriptor. `@` also separates a descriptor.
+final _pubAddPackage = RegExp(
+  r'''^(["']?)(?:(dev|override):)?([a-z_][a-z0-9_]*)(?:[:@](["']?)(.*?)\4)?\1$''',
+  dotAll: true,
+);
+
+/// Options that take their value as the next word.
+const _pubAddValueOptions = {
+  '-C',
+  '--directory',
+  '--git-url',
+  '--git-ref',
+  '--git-path',
+  '--hosted-url',
+  '--path',
+  '--sdk',
+};
+
+/// Options that point the package at a path, Git, or another host. Like a
+/// `{path: ...}` descriptor, they are not a hosted pin.
+const _pubAddSourceOptions = {'--git-url', '--hosted-url', '--path', '--sdk'};
 
 final _globalActivate = RegExp(
   '\\bpub global activate ($_packages)(?:[ \\t]+([\'"]?)(\\^?[0-9][^\\s\'"`]*)\\2)?'
   '(?=[\\s`]|\$)',
 );
 
+/// Every pinned package a `pub add` or `pub global activate` installs.
+///
+/// A `pub add` command reads word by word, so each package argument counts,
+/// not only the first. It ends at a line break, a backtick, a shell operator,
+/// or the first word that is neither an option nor a package argument, so
+/// prose after a command is not read as more packages. Path, Git, SDK, and
+/// custom-host installs are skipped. Any other descriptor, including `any` or
+/// a range, is returned as the constraint.
 List<InstallCommand> installCommands(String source) {
   final commands = <InstallCommand>[
     for (final match in _pubAdd.allMatches(source))
-      (
-        package: match[2]!,
-        start: match.start,
-        constraint: _constraint(match, match[3]),
-      ),
+      ..._pubAddCommand(source, match),
     for (final match in _globalActivate.allMatches(source))
       (
         package: match[1]!,
         start: match.start,
-        constraint: _constraint(match, match[3]),
+        argumentStart: match.start + match[0]!.indexOf(match[1]!),
+        section: null,
+        constraint: _constraint(
+          match.start + match[0]!.lastIndexOf(match[3] ?? ''),
+          match[3],
+        ),
       ),
   ];
-  return commands..sort((a, b) => a.start.compareTo(b.start));
+  return commands..sort((a, b) => a.argumentStart.compareTo(b.argumentStart));
 }
 
-InstallConstraint? _constraint(RegExpMatch match, String? text) {
-  if (text == null) return null;
-  final start = match.start + match[0]!.lastIndexOf(text);
+List<InstallCommand> _pubAddCommand(String source, RegExpMatch command) {
+  final installs = <InstallCommand>[];
+  var dev = false;
+  var hostedPin = true;
+  var skipValue = false;
+  var position = command.end;
+  while (true) {
+    position = _skipSpace(source, position);
+    final word = _pubAddWord.matchAsPrefix(source, position);
+    if (word == null) break;
+    position = word.end;
+    // Sentence punctuation after a word ends the command.
+    final text = word[0]!.replaceFirst(RegExp(r'[.,!?]+$'), '');
+
+    if (skipValue) {
+      skipValue = false;
+    } else if (text.startsWith('-')) {
+      final option = text.split('=').first;
+      if (option == '--dev' || option == '-d') dev = true;
+      if (_pubAddSourceOptions.contains(option)) hostedPin = false;
+      skipValue = _pubAddValueOptions.contains(text);
+    } else {
+      final argument = _pubAddPackage.firstMatch(text);
+      if (argument == null) break;
+      final install = _pubAddInstall(command, word.start, text, argument);
+      if (install != null) installs.add(install);
+    }
+    if (text.length != word[0]!.length) break;
+  }
+  if (!hostedPin) return const [];
+  return [
+    for (final install in installs)
+      (
+        package: install.package,
+        start: install.start,
+        argumentStart: install.argumentStart,
+        section: install.section ?? (dev ? 'dev' : null),
+        constraint: install.constraint,
+      ),
+  ];
+}
+
+InstallCommand? _pubAddInstall(
+  RegExpMatch command,
+  int argumentStart,
+  String text,
+  RegExpMatch argument,
+) {
+  final package = argument[3]!;
+  final descriptor = argument[5];
+  // A `{...}` descriptor names a path, Git, SDK, or hosted-URL source.
+  if (!pinnedInstallPackages.contains(package) ||
+      (descriptor?.startsWith('{') ?? false)) {
+    return null;
+  }
+  return (
+    package: package,
+    start: command.start,
+    argumentStart: argumentStart,
+    section: argument[2],
+    constraint: _constraint(
+      // The descriptor ends the word, before its closing quotes.
+      argumentStart +
+          text.length -
+          argument[1]!.length -
+          (argument[4] ?? '').length -
+          (descriptor?.length ?? 0),
+      descriptor,
+    ),
+  );
+}
+
+/// Skips blanks and backslash line continuations; a bare line break ends the
+/// command, so it is left for the word match to refuse.
+int _skipSpace(String source, int position) {
+  while (position < source.length) {
+    final unit = source[position];
+    if (unit == ' ' || unit == '\t') {
+      position++;
+    } else if (source.startsWith('\\\n', position)) {
+      position += 2;
+    } else if (source.startsWith('\\\r\n', position)) {
+      position += 3;
+    } else {
+      break;
+    }
+  }
+  return position;
+}
+
+InstallConstraint? _constraint(int start, String? text) {
+  if (text == null || text.isEmpty) return null;
   return (text: text, start: start, end: start + text.length);
 }
