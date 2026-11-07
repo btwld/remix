@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart' show NakedCalendarDay;
 import 'package:remix/remix.dart';
 
 Widget _host(
@@ -61,6 +62,95 @@ TextStyle? _renderedTextStyle(WidgetTester tester, String label) => tester
     .style;
 
 void main() {
+  for (final phase in [false, true]) {
+    testWidgets(
+      'root ${phase ? 'phase' : 'implicit'} animation reaches day anatomy once',
+      (tester) async {
+        const red = Color(0xffff0000);
+        const blue = Color(0xff0000ff);
+        final trigger = ValueNotifier(false);
+        addTearDown(trigger.dispose);
+        var changed = false;
+        var completions = 0;
+        late StateSetter rebuild;
+        await tester.pumpWidget(
+          _host(
+            StatefulBuilder(
+              builder: (context, setState) {
+                rebuild = setState;
+                final color = changed ? blue : red;
+                final base = CalendarStyler()
+                    .heading(TextStyler().color(color))
+                    .day(CalendarDayStyler().color(color))
+                    .wrap(.opacity(.5));
+                final style = phase
+                    ? base.phaseAnimation<int>(
+                        trigger: trigger,
+                        phases: const [0, 1],
+                        styleBuilder: (value, base) => base
+                            .heading(
+                              TextStyler().color(value == 0 ? red : blue),
+                            )
+                            .day(
+                              CalendarDayStyler().color(
+                                value == 0 ? red : blue,
+                              ),
+                            ),
+                        configBuilder: (_) => CurveAnimationConfig.linear(
+                          const Duration(milliseconds: 100),
+                          onEnd: () => completions++,
+                        ),
+                      )
+                    : base.animate(
+                        CurveAnimationConfig.linear(
+                          const Duration(milliseconds: 200),
+                          onEnd: () => completions++,
+                        ),
+                      );
+                return _calendar(style: style);
+              },
+            ),
+          ),
+        );
+        final day = find.byWidgetPredicate(
+          (widget) => widget is NakedCalendarDay && widget.date.day == 14,
+        );
+        Color? dayColor() =>
+            (tester
+                        .widget<Box>(
+                          find
+                              .descendant(of: day, matching: find.byType(Box))
+                              .first,
+                        )
+                        .styleSpec!
+                        .spec
+                        .decoration
+                    as BoxDecoration?)
+                ?.color;
+        expect(dayColor(), red);
+        if (phase) {
+          trigger.value = true;
+        } else {
+          rebuild(() => changed = true);
+        }
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(dayColor(), _renderedTextStyle(tester, 'February 2024')?.color);
+        expect(dayColor(), isNot(red));
+        expect(
+          tester
+              .widgetList<Opacity>(
+                find.ancestor(of: day, matching: find.byType(Opacity)),
+              )
+              .where((widget) => widget.opacity == .5),
+          hasLength(1),
+        );
+        await tester.pumpAndSettle();
+        expect(completions, 1);
+      },
+    );
+  }
+
   testWidgets(
     'material-free default renders full-date semantics and one live heading',
     (tester) async {

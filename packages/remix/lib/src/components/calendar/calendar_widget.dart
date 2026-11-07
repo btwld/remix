@@ -329,18 +329,23 @@ class RemixCalendar extends StatelessWidget {
         builder: (context) {
           // Merge unresolved inherited styles before resolving this day's
           // context and state variants. Only the day renders, not root effects.
-          final resolved =
-              styleSpec?.day ??
-              (Style.maybeOf<CalendarSpec>(context)?.merge(effectiveStyle) ??
-                      effectiveStyle)
-                  .build(context)
-                  .spec
-                  .day;
-          return StyleSpecBuilder<CalendarDaySpec>(
-            styleSpec: resolved,
-            builder: (context, spec) => Box(
-              styleSpec: spec.container,
-              child: StyledText(labels.day(date), styleSpec: spec.label),
+          final resolved = styleSpec == null
+              ? (Style.maybeOf<CalendarSpec>(context)?.merge(effectiveStyle) ??
+                        effectiveStyle)
+                    .build(context)
+              : StyleSpec(spec: styleSpec!);
+          // Root animation can change day anatomy too. Consume its frame data
+          // here without rendering the root modifiers again for every day.
+          return StyleAnimationBuilder<CalendarSpec>(
+            spec: resolved.copyWith(
+              animation: remixChildAnimation<CalendarSpec>(resolved.animation),
+            ),
+            builder: (context, frame) => StyleSpecBuilder<CalendarDaySpec>(
+              styleSpec: frame.spec.day,
+              builder: (context, spec) => Box(
+                styleSpec: spec.container,
+                child: StyledText(labels.day(date), styleSpec: spec.label),
+              ),
             ),
           );
         },
