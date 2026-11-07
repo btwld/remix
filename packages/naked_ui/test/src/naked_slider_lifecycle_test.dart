@@ -10,6 +10,48 @@ Widget host(Widget child, {TextDirection direction = TextDirection.ltr}) =>
     );
 
 void main() {
+  for (final coincident in [false, true]) {
+    testWidgets('tiny domain drag works with coincident=$coincident', (
+      tester,
+    ) async {
+      var values = coincident ? <double>[5e-12, 5e-12] : <double>[2e-12, 8e-12];
+      final requests = <List<double>>[];
+      await tester.pumpWidget(
+        host(
+          StatefulBuilder(
+            builder: (context, setState) => NakedSlider(
+              values: values,
+              min: 0,
+              max: 1e-11,
+              step: 1e-13,
+              enableFeedback: false,
+              onChanged: (next) {
+                requests.add(next);
+                setState(() => values = next);
+              },
+              child: const SizedBox(width: 240, height: 48),
+            ),
+          ),
+        ),
+      );
+      final rect = tester.getRect(find.byType(NakedSlider));
+      final start = coincident ? .5 : .2;
+      final end = coincident ? .7 : .4;
+      final drag = await tester.startGesture(
+        Offset(rect.left + rect.width * start, rect.center.dy),
+      );
+      await drag.moveTo(Offset(rect.left + rect.width * end, rect.center.dy));
+      await tester.pump();
+      await drag.up();
+      expect(requests, isNotEmpty);
+      expect(
+        values[coincident ? 1 : 0],
+        closeTo(coincident ? 7e-12 : 4e-12, 1e-25),
+      );
+      expect(values[coincident ? 0 : 1], coincident ? 5e-12 : 8e-12);
+    });
+  }
+
   testWidgets('excluded slider retains keyboard focus and arrows', (
     tester,
   ) async {

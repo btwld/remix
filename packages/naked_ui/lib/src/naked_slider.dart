@@ -629,7 +629,9 @@ class _NakedSliderState extends State<NakedSlider>
       if (distance < nearestDistance) {
         nearestIndex = index;
         nearestDistance = distance;
-      } else if ((distance - nearestDistance).abs() < precisionErrorTolerance &&
+      } else if ((distance - nearestDistance).abs() /
+                  (widget.max - widget.min) <
+              precisionErrorTolerance &&
           index == _focusedThumbIndex) {
         nearestIndex = index;
       }
@@ -640,14 +642,13 @@ class _NakedSliderState extends State<NakedSlider>
     // movement before locking the transaction's thumb.
     final coincident = <int>[
       for (var i = 0; i < _workingValues.length; i++)
-        if ((_workingValues[i] - _workingValues[nearestIndex]).abs() <
-            precisionErrorTolerance)
-          i,
+        if (_workingValues[i] == _workingValues[nearestIndex]) i,
     ];
     if (coincident.length > 1) {
       final center = _workingValues[nearestIndex];
-      if (value < center - precisionErrorTolerance) return coincident.first;
-      if (value > center + precisionErrorTolerance) return coincident.last;
+      final offset = (value - center) / (widget.max - widget.min);
+      if (offset < -precisionErrorTolerance) return coincident.first;
+      if (offset > precisionErrorTolerance) return coincident.last;
       _pendingThumbSelection = (
         anchor: center,
         first: coincident.first,
@@ -679,7 +680,8 @@ class _NakedSliderState extends State<NakedSlider>
     _effectiveFocusNodes[thumbIndex].requestFocus();
     // Controlled values need not lie on the step grid. Grabbing their exact
     // painted center must not snap them before the pointer moves.
-    if ((pointerValue - _workingValues[thumbIndex]).abs() >
+    if ((pointerValue - _workingValues[thumbIndex]).abs() /
+            (widget.max - widget.min) >
         precisionErrorTolerance) {
       _emitValues(_replaceThumb(_workingValues, thumbIndex, pointerValue));
     }
@@ -694,7 +696,9 @@ class _NakedSliderState extends State<NakedSlider>
     if (value == null) return;
     final pending = _pendingThumbSelection;
     if (pending != null) {
-      if ((value - pending.anchor).abs() < precisionErrorTolerance) return;
+      if ((value - pending.anchor).abs() / (widget.max - widget.min) <
+          precisionErrorTolerance)
+        return;
       thumbIndex = value < pending.anchor ? pending.first : pending.last;
       _pendingThumbSelection = null;
       _activeThumbIndex = thumbIndex;
