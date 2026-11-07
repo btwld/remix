@@ -11,7 +11,7 @@ void main() {
   final rendered = renderCliReference();
 
   test('the reference lists every visible command and option', () {
-    final runner = remixCommandRunner();
+    final runner = RemixCommandRunner();
     final missing = <String>[];
     void expectOptions(String owner, ArgParser parser) {
       for (final Option(:name, :hide) in parser.options.values) {
@@ -38,6 +38,25 @@ void main() {
       walk('remix ${command.name}', command);
     }
     expect(missing, isEmpty);
+  });
+
+  test('the exit-code table is rendered from the CLI exit-code list', () {
+    expect(exitCodeReference, isNotEmpty);
+    for (final (code, meaning) in exitCodeReference) {
+      expect(rendered, contains('| `$code` | $meaning |'));
+    }
+  });
+
+  test('a flag that defaults to true shows true in the Default column', () {
+    final runner = CommandRunner<int>('remix', 'test');
+    runner.argParser
+      ..addFlag('color', defaultsTo: true, help: 'Color the output.')
+      ..addFlag('quiet', negatable: false, help: 'Print less.');
+
+    final table = renderCliReference(runner: runner);
+
+    expect(table, contains('| `--[no-]color` | `true` | Color the output. |'));
+    expect(table, contains('| `--quiet` |  | Print less. |'));
   });
 
   test('an alias is documented once, and help stays hidden', () {

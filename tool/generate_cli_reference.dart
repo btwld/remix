@@ -14,23 +14,6 @@ const generatedStart =
 
 const generatedEnd = '{/* generated:end */}';
 
-const _exitCodes = [
-  (
-    successExitCode,
-    'Success, including help, version, dry-run, diff, and no-op reruns',
-  ),
-  (usageExitCode, 'Invalid command or arguments'),
-  (
-    failureExitCode,
-    'Configuration, registry, dependency, process, generation, analysis, or '
-        'filesystem failure',
-  ),
-  (
-    driftExitCode,
-    '`add --diff --exit-code` found authored source that differs',
-  ),
-];
-
 /// Rewrites the generated region of docs/open-code/cli.mdx from remix_cli's
 /// argument parsers. Pass --check to fail on drift instead.
 void main(List<String> arguments) {
@@ -83,8 +66,9 @@ void main(List<String> arguments) {
   stdout.writeln('Wrote $cliReferencePath.');
 }
 
-String renderCliReference() {
-  final runner = remixCommandRunner();
+/// Renders the reference for [runner], which defaults to the real CLI.
+String renderCliReference({CommandRunner<int>? runner}) {
+  runner ??= RemixCommandRunner();
   final buffer = StringBuffer()
     ..writeln('## Commands')
     ..writeln()
@@ -109,7 +93,7 @@ String renderCliReference() {
     ..writeln()
     ..writeln('| Code | Meaning |')
     ..writeln('| --- | --- |');
-  for (final (code, meaning) in _exitCodes) {
+  for (final (code, meaning) in exitCodeReference) {
     buffer.writeln('| `$code` | $meaning |');
   }
   return buffer.toString();
@@ -200,10 +184,11 @@ void _writeOptions(StringBuffer buffer, ArgParser parser) {
     ..writeln('| Option | Default | Description |')
     ..writeln('| --- | --- | --- |');
   for (final option in options) {
-    final defaultsTo = option.defaultsTo;
-    final defaultCell = option.isFlag || defaultsTo == null
-        ? ''
-        : _code('$defaultsTo');
+    // A flag is off unless it says otherwise, so only `true` is worth a cell.
+    final defaultCell = switch (option.defaultsTo) {
+      null || false => '',
+      final value => _code('$value'),
+    };
     buffer.writeln(
       '| ${_code(_optionSyntax(option))} | $defaultCell | '
       '${_description(option)} |',
