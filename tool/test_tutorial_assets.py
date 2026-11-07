@@ -10,7 +10,7 @@ import zipfile
 
 from check_tutorial_assets import check_assets, check_content, check_sample_api
 from prepare_docs_site import expand_sources, prepare
-from replay_tutorial import ARCHIVE, ASSETS, EVIDENCE, TUTORIAL
+from replay_tutorial import ARCHIVE, ASSETS, EVIDENCE, PINNED_PACKAGES, TUTORIAL, block_sha256
 
 
 class TutorialAssetTests(unittest.TestCase):
@@ -142,6 +142,51 @@ class TutorialAssetTests(unittest.TestCase):
     def test_native_command_drift_fails(self):
         self.tutorial.write_text(self.tutorial.read_text().replace("--dry-run", "--overwrite"))
         self.assertFailure(check_content(self.root), "code block")
+
+    def test_pin_sync_does_not_invalidate_command_evidence(self):
+        # Written against whatever pin the tutorial carries, so a release that
+        # moves the pin does not break this test.
+        text = self.tutorial.read_text()
+        bumped, count = re.subn(r"('dev:remix_cli:\^)[^']+'", r"\g<1>99.0.0-beta.9'", text)
+        self.assertEqual(count, 2)
+        self.assertNotEqual(bumped, text)
+        self.tutorial.write_text(bumped)
+        self.assertEqual(check_content(self.root), [])
+
+    def test_install_command_change_beyond_the_pin_fails(self):
+        original = self.tutorial.read_text()
+        for pattern, replacement in [
+                (r"'dev:(remix_cli:\^[^']+')", r"'\1"),
+                (r"'(dev:remix_cli:)\^([^']+')", r"'\1\2"),
+                (r"'dev:remix_cli:\^[^']+'", "'dev:remix_cli:any'"),
+                (r"'(remix_ui_fonts:\^)[\d.]+'", r"'\g<1>99.0.0'"),
+                (r"flutter pub add '(dev:remix_cli)", r"flutter pub add --dry-run '\1")]:
+            with self.subTest(pattern=pattern):
+                changed, count = re.subn(pattern, replacement, original)
+                self.assertGreater(count, 0)
+                self.tutorial.write_text(changed)
+                self.assertFailure(check_content(self.root), "code block")
+        self.tutorial.write_text(original)
+
+    def test_block_hash_ignores_only_pinned_package_constraints(self):
+        pinned = ["remix:^1.0.0-beta.17", "remix_cli:^1.0.0-beta.1", "dev:remix_cli:^1.0.0-beta.1",
+                  "remix_ui_icons:^1.0.0-beta.1", "remix@^1.0.0-beta.17"]
+        for command in pinned:
+            with self.subTest(command=command):
+                newer = re.sub(r"\^[\d.]+(?:-beta\.\d+)?", "^2.0.0", command)
+                self.assertNotEqual(newer, command)
+                self.assertEqual(block_sha256(f"flutter pub add '{command}'"),
+                                 block_sha256(f"flutter pub add '{newer}'"))
+        for command in ["remix_ui_fonts:^0.1.0", "other_package:^1.0.0"]:
+            with self.subTest(command=command):
+                self.assertNotEqual(block_sha256(f"flutter pub add '{command}'"),
+                                    block_sha256(f"flutter pub add '{command.replace('^', '^9')}'"))
+
+    def test_pinned_packages_match_the_pin_sync_tool(self):
+        source = (Path(__file__).resolve().parent / "install_pins.dart").read_text()
+        declared = re.search(r"pinnedInstallPackages\s*=\s*<String>\[([^\]]*)\]", source)
+        self.assertIsNotNone(declared)
+        self.assertEqual(tuple(re.findall(r"'([\w]+)'", declared.group(1))), PINNED_PACKAGES)
 
     def test_first_render_source_drift_fails(self):
         self.edit_evidence(lambda evidence: evidence.update(first_render_source_sha256="0" * 64))

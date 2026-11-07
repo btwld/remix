@@ -60,7 +60,7 @@
     },
     "install-cli": {
       "language": "bash",
-      "sha256": "abc4c65d9b2efef34bd926d4ace51b46ffeec5949e39f8c8422c29d0c827f8e4"
+      "sha256": "9061d1fe8321da4eaf00578c62b2b91e3d02b15019494c5044d9d165f483c174"
     },
     "init-default": {
       "language": "bash",
@@ -104,7 +104,7 @@
     },
     "install-fortal": {
       "language": "bash",
-      "sha256": "65c775f9225a8046e32310255aec8ff64d85bb992dcb01df38655840a3ca5043"
+      "sha256": "9f26ee37a49d1e37127de5e05446d6900563d5e57d2e31ab145346ae32c79f18"
     },
     "analysis-options": {
       "language": "yaml",

@@ -23,7 +23,8 @@ Evidence shape:
     screenshots: [{file, sha256, bytes, scene}]
     source: [{preset, main_sha256, test_sha256, theme_test_sha256}]
     first_render_source_sha256: str, the lib/main.dart written from first-main
-    code_blocks: {block id: {language, sha256}}
+    code_blocks: {block id: {language, sha256}}, the hash taken after block_sha256
+                 replaces install-pin constraints with a placeholder
     cli_sources: {files: {archive path: sha256 of lib/ui before customization},
                   edits: {archive path: {from, to}}}
     commands: [{block, label, directory, exit_code}], exit_code null when skipped
@@ -77,10 +78,27 @@ SCREENSHOTS = {
                                             "Fortal SampleApp, Mar accent, after Use dark theme"),
 }
 Block = collections.namedtuple("Block", "id language code")
+# The packages `tool/sync_install_pins.dart` repins on each release: the
+# `pinnedInstallPackages` of tool/install_pins.dart, which a unit test compares.
+PINNED_PACKAGES = ("remix", "remix_cli", "remix_ui_icons")
+PINNED_CONSTRAINT = re.compile(
+    rf"(\b(?:{'|'.join(PINNED_PACKAGES)})[:@]['\"]?)\^[0-9][^\s'\"`]*")
+PIN_PLACEHOLDER = r"\1^<pinned>"
 
 
 def sha256(data):
     return hashlib.sha256(data).hexdigest()
+
+
+def block_sha256(code):
+    """Hash a tutorial block, ignoring the version of each pinned install.
+
+    `pub add 'dev:remix_cli:^1.0.0-beta.1'` hashes as `...remix_cli:^<pinned>`,
+    so `tool/sync_install_pins.dart` repinning on a release does not invalidate
+    the evidence. The package, its section, the quoting, and every other command
+    still count, so a real change to an install command still does.
+    """
+    return sha256(PINNED_CONSTRAINT.sub(PIN_PLACEHOLDER, code).encode())
 
 
 def tutorial_blocks(source):
@@ -382,7 +400,8 @@ def main():
                         replay.authored[(preset, "test/theme_modes_test.dart")])}
                    for preset in SAMPLES],
         "first_render_source_sha256": replay.first_render_sha256,
-        "code_blocks": {block.id: {"language": block.language, "sha256": sha256(block.code.encode())}
+        "code_blocks": {block.id: {"language": block.language,
+                                   "sha256": block_sha256(block.code)}
                         for block in blocks},
         "cli_sources": {"files": replay.cli_files, "edits": replay.edits},
         "commands": replay.commands,

@@ -12,8 +12,8 @@ import zipfile
 
 from prepare_docs_site import SOURCE_TAG
 from replay_tutorial import (ARCHIVE, ASSETS, AUTHORED, AUTHORED_ROOT, DART_FLOOR, EVIDENCE,
-                             FLUTTER_FLOOR, SAMPLES, TUTORIAL, archive_path, sha256,
-                             tutorial_blocks)
+                             FLUTTER_FLOOR, SAMPLES, TUTORIAL, archive_path, block_sha256,
+                             sha256, tutorial_blocks)
 
 IMAGE = re.compile(r"\(/assets/remix-cli-tutorial/([\w.-]+\.png)\)")
 CHECKOUT_INSTALL_PHRASES = ["/path/to/remix", "git clone", "pubspec_overrides.yaml"]
@@ -160,7 +160,7 @@ def check_content(root):
         failures.append("Every native tutorial code block needs a tutorial-source marker")
     for block_id, language, code in blocks:
         expected = recorded.get(block_id, {})
-        if expected.get("language") != language or expected.get("sha256") != sha256(code.encode()):
+        if expected.get("language") != language or expected.get("sha256") != block_sha256(code):
             failures.append(f"Native tutorial code block {block_id} differs from recorded evidence")
     if {block[0] for block in blocks} != set(recorded):
         failures.append("Native tutorial is missing a recorded code block")

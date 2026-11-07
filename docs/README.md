@@ -32,6 +32,11 @@ Authored sample files (`lib/main.dart` and the tests) live in
 include. Edit the tutorial or an authored file, then rerun the replay.
 Never hand-edit the evidence to pass a check.
 
+The recorded hash of a tutorial command block ignores the version constraint of
+a pinned `remix`, `remix_cli`, or `remix_ui_icons` install, so
+`tool/sync_install_pins.dart` repinning on a release does not need a replay.
+Any other change to the command does.
+
 ## Validation
 
 With the pinned Flutter SDK and Python 3.9+:
