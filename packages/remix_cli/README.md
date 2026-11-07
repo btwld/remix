@@ -217,7 +217,7 @@ print the way `add` accepts them: bare for the default registry, qualified
 pinned catalogs and changes nothing.
 
 For scripts and agents, `--json` prints one JSON document on stdout with
-qualified ids, dependencies, and the files each item installs:
+qualified ids, `registryDependencies`, and the files each item installs:
 
 ```shell
 dart run remix_cli:remix list --json
@@ -475,9 +475,11 @@ in place for inspection. Fix the reported issue and rerun the same command.
 - `2`: `--diff --exit-code` found authored-source differences
 
 Errors print as plain messages on stderr. An unexpected internal error prints a
-bug report with the `remix_cli` version and a stack trace instead. While `add`
-runs, it prints one progress line on stderr before each slow phase, so stdout
-keeps only the plan, the diff, and the result.
+bug report with the `remix_cli` version and a stack trace instead. `add` prints
+one progress line on stderr before each slow phase, and `list` prints
+`Fetching registry items...` the same way, so stdout keeps only the plan, the
+diff, the listing, and the result. A successful run can still write to stderr,
+so check the exit code, not whether stderr is empty.
 
 ## Manual updates
 

@@ -48,9 +48,11 @@ final class InstallFailure implements Exception {
 String? expectedFailureMessage(Object error) => switch (error) {
   InstallFailure(:final message) => message,
   ProcessFailure() => error.toString(),
-  FileSystemException(:final message, :final path, :final osError) =>
-    '$message${path == null || path.isEmpty ? '' : ': $path'}'
-        '${osError == null ? '' : ' (${osError.message})'}',
+  FileSystemException(:final message, :final path, :final osError) => [
+    message,
+    if (path != null && path.isNotEmpty) ': $path',
+    if (osError != null) ' (${osError.message})',
+  ].join(),
   // toString, not message: YamlException keeps its line and column there, and
   // jsonDecode keeps its offset and excerpt.
   FormatException() => error.toString().replaceFirst(
@@ -398,9 +400,7 @@ final class _AddCommand extends Command<int> {
       ..addFlag(
         'exit-code',
         negatable: false,
-        help:
-            'With --diff, exit $driftExitCode when authored source differs, '
-            'like git diff --exit-code.',
+        help: 'With --diff, exit $driftExitCode when authored source differs.',
       )
       ..addFlag(
         'overwrite',
@@ -535,9 +535,9 @@ final class _RegistryCommand extends Command<int> {
   String get usageFooter => '''
 
 Examples:
-  remix registry add @acme --repository acme/design   Pin its default branch.
-  remix registry update @remix                        Re-pin to the newest stable commit.
-  remix add @acme/card --diff                         Review what a moved pin changes.''';
+  remix registry add @acme --repository acme/design  Pin its default branch.
+  remix registry update @remix                       Re-pin to latest stable.
+  remix add @acme/card --diff                        See what a new pin changes.''';
 }
 
 final class _RegistryActionCommand extends Command<int> {

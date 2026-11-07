@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:path/path.dart' as p;
 
@@ -19,13 +20,6 @@ String catalogListingText(
   ProjectConfig config,
   Map<String, RegistryCatalog> catalogs,
 ) {
-  String display(String id) {
-    final defaultPrefix = '${config.defaultRegistry}/';
-    return id.startsWith(defaultPrefix)
-        ? id.substring(defaultPrefix.length)
-        : id;
-  }
-
   final lines = <String>[];
   var count = 0;
   for (final MapEntry(key: namespace, value: catalog) in catalogs.entries) {
@@ -34,8 +28,8 @@ String catalogListingText(
     count += items.length;
     final width =
         items
-            .map((item) => display('$namespace/${item.name}').length)
-            .fold(0, (longest, length) => length > longest ? length : longest) +
+            .map((item) => config.addSpelling('$namespace/${item.name}').length)
+            .fold(0, math.max) +
         2;
     final groups = <String, List<RegistryItem>>{};
     for (final item in items) {
@@ -46,9 +40,9 @@ String catalogListingText(
       for (final item in members) {
         final needs = [
           for (final dependency in item.registryDependencies)
-            display(qualifyRegistryItem(dependency, namespace)),
+            config.addSpelling(qualifyRegistryItem(dependency, namespace)),
         ];
-        final name = display('$namespace/${item.name}');
+        final name = config.addSpelling('$namespace/${item.name}');
         lines.add(
           needs.isEmpty
               ? '  $name'
