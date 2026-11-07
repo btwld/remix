@@ -413,4 +413,88 @@ void main() {
       },
     );
   }
+
+  testWidgets(
+    'pending coincidence preserves original callbacks across controlled replacement',
+    (tester) async {
+      for (final move in [-20.0, 20.0]) {
+        var values = <double>[50, 50];
+        var original = true;
+        late StateSetter rebuild;
+        final ends = <List<double>>[],
+            replacements = <List<double>>[],
+            changes = <List<double>>[],
+            starts = <List<double>>[];
+        await tester.pumpWidget(
+          host(
+            StatefulBuilder(
+              builder: (context, setState) {
+                rebuild = setState;
+                return NakedSlider(
+                  values: values,
+                  enableFeedback: false,
+                  onChanged: changes.add,
+                  onChangeStart: starts.add,
+                  onChangeEnd: original ? ends.add : replacements.add,
+                  child: const SizedBox(width: 200, height: 48),
+                );
+              },
+            ),
+          ),
+        );
+        final center = tester.getCenter(find.byType(NakedSlider));
+        final gesture = await tester.startGesture(center);
+        await tester.pump();
+        rebuild(() {
+          values = [25, 75];
+          original = false;
+        });
+        await tester.pump();
+        await gesture.moveTo(center + Offset(move * 2, 0));
+        await tester.pump();
+        expect(changes.last, move < 0 ? [30, 75] : [25, 70]);
+        expect(() => changes.last[0] = 0, throwsUnsupportedError);
+        await gesture.cancel();
+        await tester.pump();
+        expect(starts, [
+          [50, 50],
+        ]);
+        expect(ends, [changes.last]);
+        expect(replacements, isEmpty);
+        await tester.pumpWidget(const SizedBox());
+      }
+    },
+  );
+
+  testWidgets(
+    'a spacing-constrained floating-point request can be accepted by its host',
+    (tester) async {
+      var values = <double>[.3, .7];
+      final focus = FocusNode();
+      addTearDown(focus.dispose);
+      await tester.pumpWidget(
+        host(
+          StatefulBuilder(
+            builder: (context, setState) => NakedSlider(
+              values: values,
+              min: 0,
+              max: 1,
+              step: .1,
+              minSpacing: .1,
+              focusNodes: [focus, null],
+              onChanged: (next) => setState(() => values = next),
+              child: const SizedBox(width: 200, height: 48),
+            ),
+          ),
+        ),
+      );
+      focus.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.end);
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(values[0], closeTo(.6, .000001));
+      expect(values[1], .7);
+    },
+  );
 }

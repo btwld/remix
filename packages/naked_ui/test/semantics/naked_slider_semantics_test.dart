@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 
@@ -243,4 +244,238 @@ void main() {
       handle.dispose();
     });
   });
+
+  testWidgets(
+    'semantic focus and Tab traversal retain lower upper identities in RTL',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+      for (final direction in TextDirection.values) {
+        for (final values in [
+          const [0.0, 100.0],
+          const [50.0, 50.0],
+        ]) {
+          final before = FocusNode(),
+              lower = FocusNode(),
+              upper = FocusNode(),
+              after = FocusNode();
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Directionality(
+                textDirection: direction,
+                child: Scaffold(
+                  body: Center(
+                    child: FocusTraversalGroup(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Focus(
+                            focusNode: before,
+                            child: const SizedBox(height: 8),
+                          ),
+                          NakedSlider(
+                            values: values,
+                            focusNodes: [lower, upper],
+                            onChanged: (_) {},
+                            child: const SizedBox(width: 240, height: 48),
+                          ),
+                          Focus(
+                            focusNode: after,
+                            child: const SizedBox(height: 8),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          performAction(
+            tester,
+            sliderNodes(tester)[1],
+            ui.SemanticsAction.focus,
+          );
+          await tester.pump();
+          expect(upper.hasPrimaryFocus, isTrue);
+          before.requestFocus();
+          await tester.pump();
+          for (final node in [lower, upper, after]) {
+            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            await tester.pump();
+            expect(node.hasPrimaryFocus, isTrue);
+          }
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+          for (final node in [upper, lower, before]) {
+            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            await tester.pump();
+            expect(node.hasPrimaryFocus, isTrue);
+          }
+          await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+          await tester.pumpWidget(const SizedBox());
+          for (final node in [before, lower, upper, after]) {
+            node.dispose();
+          }
+        }
+      }
+      handle.dispose();
+    },
+  );
+
+  testWidgets(
+    'packed decimal spacing blocks semantic actions at both domain endpoints',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+      final requests = <List<double>>[];
+      await tester.pumpWidget(
+        testApp(
+          values: const [.1, .2, .3],
+          min: .1,
+          max: .3,
+          step: .1,
+          minSpacing: .1,
+          onChanged: requests.add,
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      final nodes = sliderNodes(tester);
+      expect(nodes, hasLength(3));
+      for (final node in nodes) {
+        final data = node.getSemanticsData();
+        expect(data.hasAction(ui.SemanticsAction.increase), isFalse);
+        expect(data.hasAction(ui.SemanticsAction.decrease), isFalse);
+      }
+      expect(requests, isEmpty);
+      handle.dispose();
+    },
+  );
+
+  testWidgets(
+    'decimal requests round trip through a controlled arbitrary-thumb host',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+      var values = <double>[.1, .2, .3];
+      final requests = <List<double>>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) => NakedSlider(
+                values: values,
+                min: 0,
+                max: 1,
+                step: .1,
+                minSpacing: .1,
+                enableFeedback: false,
+                onChanged: (next) {
+                  requests.add(next);
+                  setState(() => values = next);
+                },
+                child: const SizedBox(width: 240, height: 48),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      expect(
+        sliderNodes(
+          tester,
+        )[1].getSemanticsData().hasAction(ui.SemanticsAction.increase),
+        isFalse,
+      );
+      expect(
+        sliderNodes(
+          tester,
+        )[1].getSemanticsData().hasAction(ui.SemanticsAction.decrease),
+        isFalse,
+      );
+      for (final index in [0, 1, 2]) {
+        performAction(
+          tester,
+          sliderNodes(tester)[index],
+          ui.SemanticsAction.decrease,
+        );
+        await tester.pump();
+        expect(tester.takeException(), isNull);
+        expect(values[index], closeTo(index * .1, .000000001));
+        expect(values.every((v) => v >= 0 && v <= 1), isTrue);
+        for (var i = 1; i < values.length; i++) {
+          expect(values[i], greaterThanOrEqualTo(values[i - 1]));
+          expect(values[i] - values[i - 1], greaterThanOrEqualTo(.1 - 1e-10));
+        }
+      }
+      expect(requests, hasLength(3));
+      expect(() => requests.last[0] = 1, throwsUnsupportedError);
+      handle.dispose();
+    },
+  );
+
+  testWidgets(
+    'small domains retain meaningful neighbor headroom and executable semantic actions',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+      try {
+        for (final spacing in [0.0, 1e-12]) {
+          var values = <double>[0, 1e-11];
+          final requests = <List<double>>[];
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Scaffold(
+                body: StatefulBuilder(
+                  builder: (context, setState) => NakedSlider(
+                    values: values,
+                    min: 0,
+                    max: 1e-10,
+                    step: 1e-12,
+                    minSpacing: spacing,
+                    enableFeedback: false,
+                    onChanged: (next) {
+                      requests.add(next);
+                      setState(() => values = next);
+                    },
+                    child: const SizedBox(width: 240, height: 48),
+                  ),
+                ),
+              ),
+            ),
+          );
+          expect(
+            sliderNodes(
+              tester,
+            )[0].getSemanticsData().hasAction(ui.SemanticsAction.increase),
+            isTrue,
+          );
+          expect(
+            sliderNodes(
+              tester,
+            )[1].getSemanticsData().hasAction(ui.SemanticsAction.decrease),
+            isTrue,
+          );
+          performAction(
+            tester,
+            sliderNodes(tester)[0],
+            ui.SemanticsAction.increase,
+          );
+          await tester.pump();
+          expect(requests.single, [1e-12, 1e-11]);
+          performAction(
+            tester,
+            sliderNodes(tester)[1],
+            ui.SemanticsAction.decrease,
+          );
+          await tester.pump();
+          expect(values[0], 1e-12);
+          expect(values[1], closeTo(9e-12, 1e-26));
+          expect(values[0], greaterThanOrEqualTo(0));
+          expect(values[1], lessThanOrEqualTo(1e-10));
+          expect(values[1] - values[0], greaterThanOrEqualTo(spacing));
+          expect(() => requests.last[0] = 0, throwsUnsupportedError);
+          expect(tester.takeException(), isNull);
+          await tester.pumpWidget(const SizedBox());
+        }
+      } finally {
+        handle.dispose();
+      }
+    },
+  );
 }

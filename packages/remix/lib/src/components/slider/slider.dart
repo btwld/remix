@@ -15,4 +15,6 @@ import '../../rendering/remix_box_effects.dart';
 part 'slider_spec.dart';
 part 'slider_style.dart';
 part 'slider_widget.dart';
+part 'range_slider_widget.dart';
+part 'slider_renderer.dart';
 part 'slider.g.dart';

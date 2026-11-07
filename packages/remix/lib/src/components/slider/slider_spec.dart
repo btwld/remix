@@ -5,7 +5,7 @@ const double _remixSliderDefaultTrackThickness = 8;
 const Color _remixSliderDefaultTrackColor = MixColors.grey;
 const Color _remixSliderDefaultRangeColor = MixColors.black;
 
-/// Resolved visuals for a multi-thumb [RemixSlider].
+/// Shared visuals for [RemixSlider] and [RemixRangeSlider].
 @MixableSpec(target: RemixSlider.new, extraStylerMixins: [RemixBoxStylerMixin])
 class SliderSpec with _$SliderSpec {
   static const Size defaultThumbSize = _remixSliderDefaultThumbSize;

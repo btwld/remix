@@ -262,6 +262,10 @@
         "path": "components/remixslider/slider-component"
       },
       {
+        "name": "Price range",
+        "path": "components/remixslider/price-range"
+      },
+      {
         "name": "Catalog",
         "path": "components/remixslider/catalog"
       }

@@ -72,6 +72,80 @@ class _SliderExampleState extends State<SliderExample> {
 ```
 </CodeGroup>
 
+## Two-bound intervals
+
+Use `RemixRangeSlider` for a lower and upper bound. The parent owns both values;
+accept a request by rebuilding with the returned list. Supply distinct localized
+names and formatters for each thumb.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class PriceRange extends StatefulWidget {
+  const PriceRange({super.key});
+
+  @override
+  State<PriceRange> createState() => _PriceRangeState();
+}
+
+class _PriceRangeState extends State<PriceRange> {
+  List<double> prices = [80, 240];
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 280,
+    child: RemixRangeSlider(
+      values: prices,
+      min: 0,
+      max: 400,
+      minSpacing: 20,
+      snapDivisions: 80,
+      semanticLabels: const ['Minimum nightly price', 'Maximum nightly price'],
+      semanticFormatterCallbacks: [
+        (value) => '\$${value.round()} per night',
+        (value) => '\$${value.round()} per night',
+      ],
+      onChanged: (next) => setState(() => prices = next),
+      style: SliderStyler()
+          .thumbSize(const Size(20, 20))
+          .thumbColor(const Color(0xff42654b))
+          .thickness(4)
+          .trackColor(const Color(0xffd5ddd1))
+          .rangeColor(const Color(0xff42654b)),
+    ),
+  );
+}
+```
+
+The list must contain exactly two finite, ordered values within `min` and `max`,
+separated by at least `minSpacing` (default zero). Thumbs can touch but never push,
+cross, or swap identities. From coincident values, movement toward smaller values
+opens the lower bound; movement toward larger values opens the upper bound.
+Horizontal placement and arrow keys respect ambient RTL direction.
+
+`focusNodes`, `semanticLabels` and `semanticFormatterCallbacks` use lower/upper
+order. `autofocusThumbIndex` accepts 0 or 1. Tab visits lower then upper; arrow,
+Home/End and Page keys adjust the focused thumb. Semantic increase/decrease acts
+on its corresponding bound. `excludeSemantics` hides both nodes while retaining
+keyboard operation. A null `onChanged` or `enabled: false` disables interaction.
+
+`onChanged` receives complete immutable requests from pointer, keyboard and
+semantic input. `onChangeStart` and `onChangeEnd` are **pointer-only**: one start on
+down, and one end on release or cancellation. End reports the last request, even
+when the parent rejected it. Without `snapDivisions`, the step is one thousandth
+of the domain. Neighbor spacing and domain bounds take precedence over snapping,
+so a constrained request may lie off the division grid.
+
+Both widgets reuse `SliderStyler` and `SliderSpec`. Track/range styling uses
+aggregate state; each range thumb resolves its own focused, pressed and hovered
+state. Root modifiers apply once; nested thumb modifiers apply per thumb. A raw
+`styleSpec` bypasses fluent and inherited styles. Forwarded `width`, constraints,
+margin and padding style the **thumb**, so constrain overall width with a parent.
+The range hit area is at least 48 logical pixels high; single-slider dimensions
+and `SliderStyler.call(value: ...)` remain unchanged. The range is horizontal;
+use `NakedSlider` for custom arbitrary-thumb or vertical anatomy.
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
@@ -162,7 +236,7 @@ Optional. The maximum value the slider can have. Must be strictly greater than `
 
 #### `onChanged` → `ValueChanged<double>?`
 
-Optional. Called during drag with the new value. When omitted, the slider is disabled.
+Optional. Called during pointer, keyboard or semantic input with the new value. When omitted, the slider is disabled.
 
 #### `value` → `double`
 
@@ -170,11 +244,11 @@ Optional. Called during drag with the new value. When omitted, the slider is dis
 
 #### `onChangeEnd` → `ValueChanged<double>?`
 
-Optional. Called when the user is done selecting a new value.
+Optional. Called at pointer release or cancellation with the last requested value.
 
 #### `onChangeStart` → `ValueChanged<double>?`
 
-Optional. Called when the user starts dragging the slider.
+Optional. Called when a pointer transaction begins.
 
 #### `style` → `SliderStyler`
 
@@ -265,7 +339,7 @@ Sets stroke width for the range only.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
-Sets the container padding.
+Sets the thumb padding.
 
 #### `color(Color value)`
 
@@ -273,7 +347,7 @@ Sets background color.
 
 #### `size(double width, double height)`
 
-Sets the component size.
+Sets the thumb size.
 
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 
@@ -281,7 +355,7 @@ Sets the border radius.
 
 #### `constraints(BoxConstraintsMix value)`
 
-Sets size constraints on the component.
+Sets size constraints on the thumb.
 
 #### `decoration(DecorationMix value)`
 
