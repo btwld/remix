@@ -12,6 +12,10 @@ void main() {
         expect(spec.label, equals(const StyleSpec(spec: TextSpec())));
         expect(spec.waitDuration, equals(const Duration(milliseconds: 300)));
         expect(spec.showDuration, equals(const Duration(milliseconds: 1500)));
+        expect(
+          spec.skipDelayDuration,
+          equals(const Duration(milliseconds: 300)),
+        );
       });
 
       test('creates with provided properties', () {
@@ -149,12 +153,13 @@ void main() {
       test('props includes all relevant properties', () {
         const spec = TooltipSpec();
 
-        expect(spec.props, hasLength(5));
+        expect(spec.props, hasLength(6));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.waitDuration));
         expect(spec.props, contains(spec.showDuration));
         expect(spec.props, contains(spec.dismissDuration));
+        expect(spec.props, contains(spec.skipDelayDuration));
       });
     });
 
@@ -171,6 +176,7 @@ void main() {
         expect(properties.any((p) => p.name == 'waitDuration'), isTrue);
         expect(properties.any((p) => p.name == 'showDuration'), isTrue);
         expect(properties.any((p) => p.name == 'dismissDuration'), isTrue);
+        expect(properties.any((p) => p.name == 'skipDelayDuration'), isTrue);
       });
     });
 

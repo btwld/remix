@@ -4,11 +4,16 @@ on:
   push:
     branches: ["main"]
   pull_request:
+    # Exactly these types. ready_for_review re-runs this workflow after a draft
+    # is marked ready. Do not add edited, labeled, unlabeled, or assigned.
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages.
+# pull-requests: read is for the job-level path filter.
 permissions:
   contents: read
+  pull-requests: read
   pages: write
   id-token: write
 
@@ -18,15 +23,71 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    name: Detect changed paths
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    outputs:
+      # Exactly one of these steps runs. `||` keeps the value that step wrote.
+      code: ${{ steps.on-push.outputs.code || steps.on-ready.outputs.code }}
+      docs: ${{ steps.on-push.outputs.docs || steps.on-ready.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v4
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: filter
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+        with:
+          predicate-quantifier: some-with-excludes
+          filters: .github/path-filters.yml
+          token: ${{ github.token }}
+      - id: on-push
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "code=true" >> "$GITHUB_OUTPUT"
+          echo "docs=true" >> "$GITHUB_OUTPUT"
+      - id: on-ready
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+        env:
+          CODE_CHANGED: ${{ steps.filter.outputs.code }}
+          DOCS_CHANGED: ${{ steps.filter.outputs.docs }}
+        run: |
+          set -euo pipefail
+          case "$CODE_CHANGED" in
+            true|false) ;;
+            *) echo "Unexpected code filter result: $CODE_CHANGED" >&2; exit 1 ;;
+          esac
+          case "$DOCS_CHANGED" in
+            true|false) ;;
+            *) echo "Unexpected docs filter result: $DOCS_CHANGED" >&2; exit 1 ;;
+          esac
+          echo "code=$CODE_CHANGED" >> "$GITHUB_OUTPUT"
+          echo "docs=$DOCS_CHANGED" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: changes
+    # Run on a draft so this check fails instead of skipping. A skip would
+    # satisfy branch protection before ready_for_review builds the site.
+    # Non-code, non-site pull requests skip the build; pushes to main always build.
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.draft == true ||
+      needs.changes.outputs.code == 'true' ||
+      needs.changes.outputs.docs == 'true'
     timeout-minutes: 30
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event_name == 'pull_request' && github.event.pull_request.draft == true && 'ubuntu-slim' || 'ubuntu-latest' }}
     env:
       NEXT_PUBLIC_BASE_PATH: /remix
       NEXT_PUBLIC_SITE_URL: https://btwld.github.io
       NEXT_TELEMETRY_DISABLED: 1
 
     steps:
+      - name: Fail draft pull requests
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == true
+        run: |
+          echo "::error::Draft pull request. Mark it ready for review to build the docs site."
+          exit 1
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -87,7 +148,8 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    # Pages deploy is one action. The site build stays on ubuntu-latest.
+    runs-on: ubuntu-slim
     needs: build
     steps:
       - name: Deploy to GitHub Pages

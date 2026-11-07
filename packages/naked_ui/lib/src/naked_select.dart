@@ -555,15 +555,11 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
             value: _effectiveValue,
           );
 
-          final trigger = NakedStateScopeBuilder(
+          return NakedStateScopeBuilder(
             value: selectState,
             child: child,
             builder: widget.builder,
           );
-
-          return widget.semanticLabel == null
-              ? trigger
-              : ExcludeSemantics(child: trigger);
         },
       ),
     );

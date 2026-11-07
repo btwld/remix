@@ -368,24 +368,18 @@ void main() {
           expect(_opacity(tester), 1);
         });
 
-        testWidgets('applies to a controlled tooltip', (tester) async {
+        testWidgets('applies when shown via tooltipKey', (tester) async {
           final reducedMotion = ReducedMotionSwitch(tester);
-          final open = ValueNotifier<bool>(false);
-          addTearDown(open.dispose);
+          final tooltipKey = GlobalKey<RawTooltipState>();
           await tester.pumpMaterialWidget(
             reducedMotion.wrap(
-              Center(
-                child: ValueListenableBuilder<bool>(
-                  valueListenable: open,
-                  builder: (_, isOpen, _) => _tooltip(slow, open: isOpen),
-                ),
-              ),
+              Center(child: _tooltip(slow, tooltipKey: tooltipKey)),
             ),
           );
 
           reducedMotion.set(request, on: true);
           await tester.pump();
-          open.value = true;
+          tooltipKey.currentState?.ensureTooltipVisible();
           await tester.pump();
           await tester.pump();
           expect(_opacity(tester), 1);
@@ -399,12 +393,9 @@ NakedTooltip _tooltip(
   AnimationStyle style, {
   GlobalKey<RawTooltipState>? tooltipKey,
   ValueChanged<bool>? onOpenChanged,
-  bool? open,
   Widget? child,
 }) => NakedTooltip(
   tooltipKey: tooltipKey,
-  // ignore: deprecated_member_use_from_same_package
-  open: open,
   onOpenChanged: onOpenChanged,
   dismissDelay: Duration.zero,
   animationStyle: style,

@@ -71,6 +71,7 @@ final class SidebarSpec with _$SidebarSpec {
                waitDuration: null,
                showDuration: null,
                dismissDuration: null,
+               skipDelayDuration: null,
              ),
            );
 }

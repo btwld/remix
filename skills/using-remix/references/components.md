@@ -141,7 +141,9 @@ for Overlay, Navigator and toast scope placement.
   the resolved `TooltipStyler.label(...)` spec through `DefaultTextStyle` so
   descendant `Text` widgets inside `tooltipChild` inherit the label style. The
   default `waitDuration` is 300ms (200ms in the Fortal recipe; see
-  [Fortal](fortal.md)).
+  [Fortal](fortal.md)); it paces hover only, and is skipped within 300ms after
+  another tooltip closes. Keyboard focus opens at once. One tooltip is visible
+  at a time.
 - **RemixMenu\<T\>** — `RemixMenuTrigger` and every entry type are
   **configuration objects, not widgets**. The sealed entry hierarchy is
   `RemixMenuItem<T>`, `RemixMenuCheckboxItem<T>`, `RemixMenuRadioGroup<T>`

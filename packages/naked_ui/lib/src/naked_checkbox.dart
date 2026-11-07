@@ -130,6 +130,8 @@ class NakedCheckbox extends StatefulWidget {
   final ValueWidgetBuilder<NakedCheckboxState>? builder;
 
   /// Semantic label for accessibility.
+  ///
+  /// When non-null, replaces descendant text semantics.
   final String? semanticLabel;
 
   /// Whether to exclude this widget from the semantic tree.
@@ -219,6 +221,7 @@ class _NakedCheckboxState extends State<NakedCheckbox>
             checked: widget.value == true,
             mixed: widget.tristate && widget.value == null,
             label: widget.semanticLabel,
+            excludeSemantics: widget.semanticLabel != null,
             onTap: _semanticsTapHandler,
             child: gestureDetector,
           );
@@ -241,9 +244,10 @@ class _NakedCheckboxState extends State<NakedCheckbox>
   void didUpdateWidget(covariant NakedCheckbox oldWidget) {
     super.didUpdateWidget(oldWidget);
     syncWidgetStates();
-    if (oldWidget.value != widget.value) {
-      updateSelectedState(widget.value == true, null);
-    }
+    releasePressWhenDisabled(
+      disabled: () => !widget._effectiveEnabled,
+      onPressChange: widget.onPressChange,
+    );
   }
 
   @override
