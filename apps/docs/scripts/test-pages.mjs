@@ -59,7 +59,7 @@ for (const [from, moved] of Object.entries(legacyAnchors)) {
 assert.ok(await exists(join(root, '404.html')));
 if (!docsOnly) {
   assert.ok(await exists(join(root, '.nojekyll')));
-  for (const [from, to] of Object.entries({ 'previews/index.html': '/catalog/', 'remix-cli-guide.html': '/open-code/', 'remix-cli-tutorial.html': '/tutorials/settings-screen/' })) {
+  for (const [from, to] of Object.entries({ 'previews/index.html': '/catalog/', 'remix-cli-guide.html': '/open-code/cli/', 'remix-cli-tutorial.html': '/tutorials/settings-screen/' })) {
     const html = await readFile(join(root, from), 'utf8');
     assert.ok(html.includes(`location.replace("${base}${to}"+location.search+location.hash)`));
   }

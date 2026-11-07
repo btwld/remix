@@ -4,7 +4,7 @@ await writeFile(new URL('.nojekyll', output), '');
 // Static aliases replace the old server redirects and preview rewrite.
 for (const [from, to] of Object.entries({
   'remix-cli-tutorial.html': '/remix/tutorials/settings-screen/',
-  'remix-cli-guide.html': '/remix/open-code/',
+  'remix-cli-guide.html': '/remix/open-code/cli/',
   'previews/index.html': '/remix/catalog/',
 })) {
   const target = new URL(from, output);
