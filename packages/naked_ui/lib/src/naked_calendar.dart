@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
+import 'naked_date_range.dart';
 import 'utilities/civil_date.dart';
 import 'utilities/focus_in_view.dart';
 import 'utilities/naked_focusable_detector.dart';
@@ -156,14 +157,245 @@ class NakedCalendar extends StatefulWidget {
   State<NakedCalendar> createState() => _NakedCalendarState();
 }
 
-class _NakedCalendarState extends State<NakedCalendar>
-    with FocusNodeMixin<NakedCalendar> {
+class _NakedCalendarState extends State<NakedCalendar> {
+  @override
+  Widget build(BuildContext context) => _Calendar(
+    value: widget.value,
+    firstDate: widget.firstDate,
+    lastDate: widget.lastDate,
+    onChanged: widget.onChanged,
+    currentDate: widget.currentDate,
+    isDateUnavailable: widget.isDateUnavailable,
+    firstDayOfWeek: widget.firstDayOfWeek,
+    enabled: widget.enabled,
+    semanticLabel: widget.semanticLabel,
+    focusNode: widget.focusNode,
+    autofocus: widget.autofocus,
+    builder: widget.builder,
+    excludeSemantics: widget.excludeSemantics,
+  );
+}
+
+/// Immutable range selection and calendar navigation snapshot.
+///
+/// [value] is committed and parent-owned. [anchor] and [preview] describe only
+/// the local draft; navigating never requests a selection.
+class NakedRangeCalendarState extends NakedState {
+  /// Creates a range calendar builder snapshot.
+  NakedRangeCalendarState({
+    required super.states,
+    required this.displayedMonth,
+    required this.focusedDate,
+    required this.value,
+    required this.anchor,
+    required this.preview,
+    required this.isPreviewValid,
+    required this.isValueValid,
+    required this.weeks,
+    required this.showPreviousMonth,
+    required this.showNextMonth,
+    required this.showMonth,
+  });
+
+  /// First day of the displayed month.
+  final DateTime displayedMonth;
+
+  /// Current keyboard entry date, independently clamped to the bounds.
+  final DateTime focusedDate;
+
+  /// Parent-owned complete inclusive range, never clamped or corrected.
+  final NakedDateRange? value;
+
+  /// First activated date of an incomplete local draft.
+  final DateTime? anchor;
+
+  /// Ordered interval from [anchor] to [focusedDate], or null without a draft.
+  final NakedDateRange? preview;
+
+  /// Whether [preview] can complete under the current bounds and availability.
+  final bool isPreviewValid;
+
+  /// Whether the supplied complete range satisfies bounds and availability.
+  ///
+  /// Null values are valid. Invalid values remain parent-owned and selected.
+  final bool isValueValid;
+
+  /// Immutable rows of seven dates, padded with nulls outside this month.
+  final List<List<DateTime?>> weeks;
+
+  /// Previous-month action, or null at the first month or when disabled.
+  final VoidCallback? showPreviousMonth;
+
+  /// Next-month action, or null at the last month or when disabled.
+  final VoidCallback? showNextMonth;
+
+  /// Shows a bounded month without selecting.
+  final ValueChanged<DateTime>? showMonth;
+
+  /// Reads the nearest range calendar builder state.
+  static NakedRangeCalendarState of(BuildContext context) =>
+      NakedState.of(context);
+
+  @override
+  List<Object?> get props => [
+    ...super.props,
+    displayedMonth,
+    focusedDate,
+    value,
+    anchor,
+    preview,
+    isPreviewValid,
+    isValueValid,
+    weeks,
+    showPreviousMonth,
+    showNextMonth,
+    showMonth,
+  ];
+}
+
+/// Headless controlled complete-range calendar using [NakedCalendarDay].
+///
+/// First activation anchors a draft; a second eligible activation requests one
+/// ordered inclusive range and clears the draft, even if the parent rejects it.
+/// Unavailable interior dates prevent completion without discarding the anchor.
+/// Unavailable and blocked completion dates remain keyboard-focusable.
+///
+/// Navigation and blur never commit. Escape discards the draft and bubbles to
+/// an enclosing overlay. Changing the supplied civil range, disabling interaction
+/// or invalidating the anchor cancels the draft. Equal values preserve browsing.
+class NakedRangeCalendar extends StatelessWidget {
+  /// Creates a headless range calendar with one shared navigation/focus engine.
+  const NakedRangeCalendar({
+    super.key,
+    required this.value,
+    required this.firstDate,
+    required this.lastDate,
+    required this.builder,
+    this.onChanged,
+    this.currentDate,
+    this.isDateUnavailable,
+    this.firstDayOfWeek = DateTime.sunday,
+    this.enabled = true,
+    this.semanticLabel,
+    this.focusNode,
+    this.autofocus = false,
+  });
+
+  /// Parent-owned complete range. Invalid external values are retained.
+  final NakedDateRange? value;
+
+  /// Inclusive earliest date; time and UTC flag are ignored.
+  final DateTime firstDate;
+
+  /// Inclusive latest date, on or after [firstDate].
+  final DateTime lastDate;
+
+  /// Complete-range request. Null disables all interaction.
+  final ValueChanged<NakedDateRange>? onChanged;
+
+  /// Today marker and initial fallback date; defaults to DateTime.now().
+  final DateTime? currentDate;
+
+  /// Pure current-availability predicate, checked for every inclusive date.
+  ///
+  /// Rebuild when its results change. Activation rechecks the whole interval,
+  /// including offscreen dates, even when the function object is unchanged.
+  final bool Function(DateTime)? isDateUnavailable;
+
+  /// First weekday column, Monday=1 through Sunday=7.
+  final int firstDayOfWeek;
+
+  /// Enables navigation, focus and selection when [onChanged] is nonnull.
+  final bool enabled;
+
+  /// Localized accessible calendar group name or current range instruction.
+  final String? semanticLabel;
+
+  /// Focus entry point, transferred to the current keyboard day.
+  final FocusNode? focusNode;
+
+  /// Focuses the keyboard entry date on mount.
+  final bool autofocus;
+
+  /// Builds presentation; retain [NakedCalendarDay] for visible dates.
+  final ValueWidgetBuilder<NakedRangeCalendarState> builder;
+
+  @override
+  Widget build(BuildContext context) => _Calendar(
+    rangeValue: value,
+    firstDate: firstDate,
+    lastDate: lastDate,
+    onRangeChanged: onChanged,
+    currentDate: currentDate,
+    isDateUnavailable: isDateUnavailable,
+    firstDayOfWeek: firstDayOfWeek,
+    enabled: enabled,
+    semanticLabel: semanticLabel,
+    focusNode: focusNode,
+    autofocus: autofocus,
+    rangeBuilder: builder,
+  );
+}
+
+// Only the two concrete public roots configure this private engine. Day parts,
+// navigation, focus registration and input dispatch have one lifecycle owner.
+class _Calendar extends StatefulWidget {
+  const _Calendar({
+    this.value,
+    this.rangeValue,
+    required this.firstDate,
+    required this.lastDate,
+    this.onChanged,
+    this.onRangeChanged,
+    required this.currentDate,
+    required this.isDateUnavailable,
+    required this.firstDayOfWeek,
+    required this.enabled,
+    required this.semanticLabel,
+    required this.focusNode,
+    required this.autofocus,
+    this.builder,
+    this.rangeBuilder,
+  });
+
+  final DateTime? value;
+  final NakedDateRange? rangeValue;
+  final DateTime firstDate;
+  final DateTime lastDate;
+  final ValueChanged<DateTime>? onChanged;
+  final ValueChanged<NakedDateRange>? onRangeChanged;
+  final DateTime? currentDate;
+  final bool Function(DateTime)? isDateUnavailable;
+  final int firstDayOfWeek;
+  final bool enabled;
+  final String? semanticLabel;
+  final FocusNode? focusNode;
+  final bool autofocus;
+  final bool excludeSemantics;
+  final ValueWidgetBuilder<NakedCalendarState>? builder;
+  final ValueWidgetBuilder<NakedRangeCalendarState>? rangeBuilder;
+
+  bool get isRange => rangeBuilder != null;
+  DateTime? get entryValue => isRange ? rangeValue?.start : value;
+
+  @override
+  State<_Calendar> createState() => _CalendarState();
+}
+
+class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
+  DateTime? _anchor;
+  DateTime? _blockedBefore;
+  DateTime? _blockedAfter;
   late DateTime _focused;
   late DateTime _displayed;
   final _days = <DateTime, FocusNode>{};
   final _dayOrder = <DateTime, int>{};
   bool get _interactive =>
-      mounted && widget.enabled && widget.onChanged != null;
+      mounted &&
+      widget.enabled &&
+      (widget.isRange
+          ? widget.onRangeChanged != null
+          : widget.onChanged != null);
   @override
   FocusNode? get widgetProvidedNode => widget.focusNode;
 
@@ -188,16 +420,79 @@ class _NakedCalendarState extends State<NakedCalendar>
         ? widget.lastDate
         : date,
   );
+  bool _available(DateTime date) =>
+      _inBounds(date) && !(widget.isDateUnavailable?.call(date) ?? false);
+
+  bool _selected(DateTime date) => widget.isRange
+      ? (widget.rangeValue?.contains(date) ?? false)
+      : _same(date, widget.value);
+
+  // The nearest blocked dates are recalculated once per build, not by scanning
+  // the full interval separately for every visible day and state update.
   bool _selectable(DateTime date) =>
       _interactive &&
-      _inBounds(date) &&
-      !(widget.isDateUnavailable?.call(date) ?? false);
+      _available(date) &&
+      (_anchor == null ||
+          (_blockedBefore == null || _compare(date, _blockedBefore!) > 0) &&
+              (_blockedAfter == null || _compare(date, _blockedAfter!) < 0));
+
+  NakedDateRange _range(DateTime a, DateTime b) => _compare(a, b) <= 0
+      ? NakedDateRange(start: a, end: b)
+      : NakedDateRange(start: b, end: a);
+
+  bool _validRange(NakedDateRange range) {
+    if (!_inBounds(range.start) || !_inBounds(range.end)) return false;
+    if (widget.isDateUnavailable == null) return true;
+    var date = range.start;
+    while (true) {
+      if (widget.isDateUnavailable!(date)) return false;
+      if (_same(date, range.end)) return true;
+      date = DateTime(date.year, date.month, date.day + 1);
+    }
+  }
+
+  void _prepareRange() {
+    _blockedBefore = null;
+    _blockedAfter = null;
+    final anchor = _anchor;
+    if (anchor == null) return;
+    if (!_interactive || !_available(anchor)) {
+      _blockedBefore = anchor;
+      _blockedAfter = anchor;
+      return;
+    }
+    if (widget.isDateUnavailable == null) return;
+    final first = _clamp(_displayed);
+    final last = _clamp(
+      DateTime(
+        _displayed.year,
+        _displayed.month,
+        _daysInMonth(_displayed.year, _displayed.month),
+      ),
+    );
+    var date = anchor;
+    while (_compare(date, first) > 0) {
+      date = DateTime(date.year, date.month, date.day - 1);
+      if (widget.isDateUnavailable!(date)) {
+        _blockedBefore = date;
+        break;
+      }
+    }
+    date = anchor;
+    while (_compare(date, last) < 0) {
+      date = DateTime(date.year, date.month, date.day + 1);
+      if (widget.isDateUnavailable!(date)) {
+        _blockedAfter = date;
+        break;
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _validate();
-    final value = widget.value;
+    final value = widget.entryValue;
     _focused = _clamp(
       value != null && _inBounds(value)
           ? value
@@ -207,13 +502,21 @@ class _NakedCalendarState extends State<NakedCalendar>
   }
 
   @override
-  void didUpdateWidget(NakedCalendar oldWidget) {
+  void didUpdateWidget(_Calendar oldWidget) {
     final ownedFocus = effectiveFocusNode.hasFocus;
     super.didUpdateWidget(oldWidget);
     final previous = _focused;
-    // Clearing selection does not reset browsing. A new supplied date does.
-    if (widget.value != null && !_same(widget.value, oldWidget.value)) {
-      _focused = _clamp(widget.value!);
+    final valueChanged = widget.isRange
+        ? widget.rangeValue != oldWidget.rangeValue
+        : !_same(widget.value, oldWidget.value);
+    if (valueChanged ||
+        !_interactive ||
+        (_anchor != null && !_available(_anchor!))) {
+      _anchor = null;
+    }
+    // Clearing selection does not reset browsing. A new supplied value does.
+    if (widget.entryValue != null && valueChanged) {
+      _focused = _clamp(widget.entryValue!);
       _displayed = _month(_focused);
     } else {
       _focused = _clamp(_focused);
@@ -237,7 +540,8 @@ class _NakedCalendarState extends State<NakedCalendar>
       // must win over this deferred handoff.
       if (primary != priorFocus &&
           !effectiveFocusNode.hasPrimaryFocus &&
-          !(priorFocus?.context == null && primary == priorScope))
+          !(priorFocus?.context?.mounted != true &&
+              (primary == null || primary == priorScope)))
         return;
       final node = _days[_focused];
       if (node != null) requestFocusInView(node);
@@ -290,7 +594,30 @@ class _NakedCalendarState extends State<NakedCalendar>
   }
 
   void _select(DateTime date) {
-    if (_selectable(date)) widget.onChanged!(_date(date));
+    if (!_interactive) return;
+    if (!widget.isRange) {
+      if (_available(date)) widget.onChanged!(_date(date));
+      return;
+    }
+    final anchor = _anchor;
+    if (anchor != null && !_available(anchor)) {
+      setState(() => _anchor = null);
+      return;
+    }
+    if (!_available(date)) return;
+    if (anchor == null) {
+      setState(() {
+        _anchor = _date(date);
+        _focused = _date(date);
+      });
+      return;
+    }
+    final range = _range(anchor, date);
+    // Recheck current inputs at activation; cached visual eligibility is not
+    // an authorization to commit after availability has changed.
+    if (!_validRange(range)) return;
+    setState(() => _anchor = null);
+    widget.onRangeChanged!(range);
   }
 
   KeyEventResult _key(DateTime date, KeyEvent event, TextDirection direction) {
@@ -360,21 +687,52 @@ class _NakedCalendarState extends State<NakedCalendar>
     // reconciliation avoids stale nodes from the previous month's layout.
     _days.clear();
     _dayOrder.clear();
-    final state = NakedCalendarState(
-      states: {if (!_interactive) WidgetState.disabled},
-      displayedMonth: _displayed,
-      focusedDate: _focused,
-      value: widget.value,
-      weeks: _weeks(),
-      showPreviousMonth:
-          !_interactive || _same(_displayed, _month(widget.firstDate))
-          ? null
-          : () => _showMonth(_shiftMonth(_displayed, -1)),
-      showNextMonth: !_interactive || _same(_displayed, _month(widget.lastDate))
-          ? null
-          : () => _showMonth(_shiftMonth(_displayed, 1)),
-      showMonth: _interactive ? _showMonth : null,
-    );
+    _prepareRange();
+    final states = {if (!_interactive) WidgetState.disabled};
+    final showPreviousMonth =
+        !_interactive || _same(_displayed, _month(widget.firstDate))
+        ? null
+        : () => _showMonth(_shiftMonth(_displayed, -1));
+    final showNextMonth =
+        !_interactive || _same(_displayed, _month(widget.lastDate))
+        ? null
+        : () => _showMonth(_shiftMonth(_displayed, 1));
+    final weeks = _weeks();
+    final Widget content;
+    if (widget.isRange) {
+      final preview = _anchor == null ? null : _range(_anchor!, _focused);
+      final state = NakedRangeCalendarState(
+        states: states,
+        displayedMonth: _displayed,
+        focusedDate: _focused,
+        value: widget.rangeValue,
+        anchor: _anchor,
+        preview: preview,
+        isPreviewValid: preview != null && _selectable(_focused),
+        isValueValid:
+            widget.rangeValue == null || _validRange(widget.rangeValue!),
+        weeks: weeks,
+        showPreviousMonth: showPreviousMonth,
+        showNextMonth: showNextMonth,
+        showMonth: _interactive ? _showMonth : null,
+      );
+      content = NakedStateScopeBuilder(
+        value: state,
+        builder: widget.rangeBuilder!,
+      );
+    } else {
+      final state = NakedCalendarState(
+        states: states,
+        displayedMonth: _displayed,
+        focusedDate: _focused,
+        value: widget.value,
+        weeks: weeks,
+        showPreviousMonth: showPreviousMonth,
+        showNextMonth: showNextMonth,
+        showMonth: _interactive ? _showMonth : null,
+      );
+      content = NakedStateScopeBuilder(value: state, builder: widget.builder!);
+    }
     return Focus(
       focusNode: effectiveFocusNode,
       skipTraversal: true,
@@ -383,6 +741,15 @@ class _NakedCalendarState extends State<NakedCalendar>
       descendantsAreTraversable: _interactive,
       autofocus: widget.autofocus,
       includeSemantics: false,
+      onKeyEvent: (_, event) {
+        if (widget.isRange &&
+            _anchor != null &&
+            event is KeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.escape) {
+          setState(() => _anchor = null);
+        }
+        return KeyEventResult.ignored;
+      },
       onFocusChange: (focused) {
         if (focused && effectiveFocusNode.hasPrimaryFocus) _requestDayFocus();
       },
@@ -394,11 +761,8 @@ class _NakedCalendarState extends State<NakedCalendar>
           label: widget.semanticLabel,
           child: _CalendarScope(
             owner: this,
-            snapshot: state,
-            child: NakedStateScopeBuilder(
-              value: state,
-              builder: widget.builder,
-            ),
+            displayedMonth: _displayed,
+            child: content,
           ),
         ),
       ),
@@ -409,14 +773,13 @@ class _NakedCalendarState extends State<NakedCalendar>
 class _CalendarScope extends InheritedWidget {
   const _CalendarScope({
     required this.owner,
-    required this.snapshot,
+    required this.displayedMonth,
     required super.child,
   });
-  final _NakedCalendarState owner;
-  final NakedCalendarState snapshot;
+  final _CalendarState owner;
+  final DateTime displayedMonth;
   @override
-  bool updateShouldNotify(_CalendarScope oldWidget) =>
-      !identical(snapshot, oldWidget.snapshot);
+  bool updateShouldNotify(_CalendarScope oldWidget) => true;
 }
 
 /// Immutable interaction state for a calendar day.
@@ -472,7 +835,7 @@ class NakedCalendarDayState extends NakedState {
   ];
 }
 
-/// Behavior-owning part of the nearest [NakedCalendar].
+/// Behavior-owning part of the nearest [NakedCalendar] or [NakedRangeCalendar].
 ///
 /// Build each displayed date once. Provide a complete, localized date in
 /// [semanticLabel], including any desired today context. The visual builder
@@ -514,7 +877,7 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
   // Orders duplicate builds of one date, such as an incoming and an outgoing
   // grid during a transition: the newest mounted day owns keyboard focus.
   final int _mountOrder = _mounts++;
-  _NakedCalendarState? _owner;
+  _CalendarState? _owner;
   DateTime? _registered;
   bool _outside = false;
   @override
@@ -535,13 +898,15 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
     super.didChangeDependencies();
     final scope = context.dependOnInheritedWidgetOfExactType<_CalendarScope>();
     if (scope == null)
-      throw FlutterError('NakedCalendarDay requires a NakedCalendar ancestor.');
+      throw FlutterError(
+        'NakedCalendarDay requires a NakedCalendar or NakedRangeCalendar ancestor.',
+      );
     _attach(scope);
   }
 
   void _attach(_CalendarScope scope) {
     _owner = scope.owner;
-    final displayed = scope.snapshot.displayedMonth;
+    final displayed = scope.displayedMonth;
     _outside = _day.year != displayed.year || _day.month != displayed.month;
     if (_outside) {
       _unregister();
@@ -551,7 +916,7 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
     _syncInteractionState();
   }
 
-  void _register(_NakedCalendarState owner) {
+  void _register(_CalendarState owner) {
     _unregister();
     final newer = owner._dayOrder[_day];
     if (newer != null && newer > _mountOrder) return;
@@ -617,7 +982,7 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
       states: {
         ...widgetStates,
         if (!selectable) WidgetState.disabled,
-        if (_same(_day, owner.widget.value)) WidgetState.selected,
+        if (owner._selected(_day)) WidgetState.selected,
       },
       date: _day,
       isToday: isToday,

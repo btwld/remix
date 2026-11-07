@@ -19,6 +19,7 @@ Naked UI uses Flutter's widget primitives and does not require a Material host.
 
 - NakedButton — button interactions (hover, press, focus)
 - NakedCalendar / NakedCalendarDay — controlled civil-date selection with keyboard navigation and discoverable unavailable days
+- NakedRangeCalendar / NakedDateRange — complete inclusive ranges with a local draft and unavailable-interior checks over the shared calendar engine
 - NakedLink — link semantics and Enter-only activation
 - NakedCheckbox — toggle behavior and semantics
 - NakedCombobox — autocomplete field on Flutter's RawAutocomplete

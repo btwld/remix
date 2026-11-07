@@ -119,6 +119,14 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `onToday` and `onUnavailable` (predicate-rejected, in range; declare after
   `onDisabled`). No preset ships a calendar recipe yet; use
   `RemixCalendar(style: ...)`; `CalendarStyler` has no callable widget shorthand.
+- **RangeCalendar** — controlled complete inclusive `NakedDateRange?`, sharing
+  Calendar navigation and day anatomy. First activation anchors locally without
+  a callback; second eligible activation requests one ordered range and clears
+  the draft. Every interior date must be available, including offscreen dates.
+  Parent rejection retains the supplied value. Escape cancels draft; inline
+  Tab/blur preserves it. Use `RemixCalendarLabels` plus
+  `RemixRangeCalendarLabels`, and the shared `CalendarStyler`; no public draft
+  controller, partial committed value, drag selection or typed entry.
 - **[DatePicker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)** — a thin Button + Popover + Calendar composition, not a text
   field. The parent owns nullable `value`; valid activation requests one date
   and closes even when rejected. Escape, outside interaction and disabling

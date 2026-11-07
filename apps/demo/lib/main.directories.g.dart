@@ -39,6 +39,8 @@ import 'package:demo/components/menu.dart' as _demo_components_menu;
 import 'package:demo/components/popover.dart' as _demo_components_popover;
 import 'package:demo/components/progress.dart' as _demo_components_progress;
 import 'package:demo/components/radio.dart' as _demo_components_radio;
+import 'package:demo/components/range_calendar.dart'
+    as _demo_components_range_calendar;
 import 'package:demo/components/segmented_control.dart'
     as _demo_components_segmented_control;
 import 'package:demo/components/select.dart' as _demo_components_select;
@@ -375,6 +377,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Radio Component',
             builder: _demo_components_radio.buildRadioUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixRangeCalendar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Reporting period',
+            builder: _demo_components_range_calendar.buildRangeCalendarUseCase,
           ),
         ],
       ),

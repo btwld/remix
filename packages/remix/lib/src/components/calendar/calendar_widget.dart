@@ -184,30 +184,149 @@ class RemixCalendar extends StatelessWidget {
   /// Creates a [CalendarStyler], for `RemixCalendar.styleFrom(...)`.
   static final styleFrom = CalendarStyler.new;
 
-  Widget _navigation(NakedCalendarState state, {required bool previous}) =>
-      RemixIconButton(
-        icon: null,
-        semanticLabel: previous ? labels.previousMonth : labels.nextMonth,
-        onPressed: previous ? state.showPreviousMonth : state.showNextMonth,
-        style: IconButtonStyler()
+  @override
+  Widget build(BuildContext context) {
+    final effectiveStyle = CalendarStyler(
+      day: CalendarDayStyler(
+        container: BoxStyler()
             .constraints(.minWidth(44).minHeight(44))
-            .merge(navigationStyle),
-        iconBuilder: (context, spec, _) => RemixPathIcon(
-          glyph: previous
-              ? RemixPathGlyph.chevronLeft
-              : RemixPathGlyph.chevronRight,
-          matchTextDirection: true,
-          styleSpec: StyleSpec(spec: spec),
-        ),
-      );
+            .alignment(Alignment.center),
+      ),
+    ).merge(style);
+    return NakedCalendar(
+      value: value,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      onChanged: onChanged,
+      currentDate: currentDate,
+      isDateUnavailable: isDateUnavailable,
+      firstDayOfWeek: firstDayOfWeek,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      builder: (context, state, _) => _CalendarView(
+        style: effectiveStyle,
+        styleSpec: styleSpec,
+        controller: NakedState.controllerOf<NakedCalendarState>(context),
+        labels: labels,
+        firstDayOfWeek: firstDayOfWeek,
+        weeks: state.weeks,
+        headerBuilder: (context, spec) =>
+            headerBuilder?.call(context, state) ??
+            _CalendarHeader(
+              displayedMonth: state.displayedMonth,
+              previousMonth: state.showPreviousMonth,
+              nextMonth: state.showNextMonth,
+              showMonth: state.showMonth,
+              firstDate: firstDate,
+              lastDate: lastDate,
+              labels: labels,
+              navigationStyle: navigationStyle,
+              selectorStyle: selectorStyle,
+              spec: spec,
+            ),
+        dayBuilder: (date) => _day(date, effectiveStyle),
+      ),
+    );
+  }
 
-  Widget _header(
-    BuildContext context,
-    NakedCalendarState state,
-    CalendarSpec spec,
-  ) {
-    final date = state.displayedMonth;
-    final showMonth = state.showMonth;
+  Widget _day(DateTime date, CalendarStyler effectiveStyle) => NakedCalendarDay(
+    date: date,
+    semanticLabel: _dayLabel(date),
+    builder: (context, day, _) => WidgetStateProvider(
+      states: day.states,
+      child: Builder(
+        builder: (context) {
+          // Merge unresolved inherited styles before resolving this day's
+          // context and state variants. Only the day renders, not root effects.
+          final resolved = styleSpec == null
+              ? (Style.maybeOf<CalendarSpec>(context)?.merge(effectiveStyle) ??
+                        effectiveStyle)
+                    .build(context)
+              : StyleSpec(spec: styleSpec!);
+          // Root animation can change day anatomy too. Consume its frame data
+          // here without rendering the root modifiers again for every day.
+          return StyleAnimationBuilder<CalendarSpec>(
+            spec: resolved.copyWith(
+              animation: remixChildAnimation<CalendarSpec>(resolved.animation),
+            ),
+            builder: (context, frame) => StyleSpecBuilder<CalendarDaySpec>(
+              styleSpec: frame.spec.day,
+              builder: (context, spec) {
+                final label = StyledText(
+                  labels.day(date),
+                  styleSpec: spec.label,
+                );
+                if (spec.containerEffects == null ||
+                    spec.containerEffects!.isEmpty) {
+                  return Box(styleSpec: spec.container, child: label);
+                }
+                return RemixBoxAdapter(
+                  styleSpec: spec.container,
+                  containerEffects: spec.containerEffects,
+                  child: label,
+                );
+              },
+            ),
+          );
+        },
+      ),
+    ),
+  );
+
+  String _dayLabel(DateTime date) {
+    final today = currentDate ?? DateTime.now();
+    return isSameCivilDate(date, today)
+        ? labels.joinDayLabel([labels.fullDate(date), labels.today])
+        : labels.fullDate(date);
+  }
+}
+
+class _CalendarHeader extends StatelessWidget {
+  const _CalendarHeader({
+    required this.displayedMonth,
+    required this.previousMonth,
+    required this.nextMonth,
+    required this.showMonth,
+    required this.firstDate,
+    required this.lastDate,
+    required this.labels,
+    required this.navigationStyle,
+    required this.selectorStyle,
+    required this.spec,
+  });
+  final DateTime displayedMonth;
+  final VoidCallback? previousMonth;
+  final VoidCallback? nextMonth;
+  final ValueChanged<DateTime>? showMonth;
+  final DateTime firstDate;
+  final DateTime lastDate;
+  final RemixCalendarLabels labels;
+  final IconButtonStyler navigationStyle;
+  final SelectStyler selectorStyle;
+  final CalendarSpec spec;
+
+  Widget _navigation({required bool previous}) => RemixIconButton(
+    icon: null,
+    semanticLabel: previous ? labels.previousMonth : labels.nextMonth,
+    onPressed: previous ? previousMonth : nextMonth,
+    style: IconButtonStyler()
+        .constraints(.minWidth(44).minHeight(44))
+        .merge(navigationStyle),
+    iconBuilder: (context, spec, _) => RemixPathIcon(
+      glyph: previous
+          ? RemixPathGlyph.chevronLeft
+          : RemixPathGlyph.chevronRight,
+      matchTextDirection: true,
+      styleSpec: StyleSpec(spec: spec),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final date = displayedMonth;
+    final showMonth = this.showMonth;
     final interactive = showMonth != null;
     return Semantics(
       container: true,
@@ -217,7 +336,7 @@ class RemixCalendar extends StatelessWidget {
       label: labels.monthYear(date),
       child: Row(
         children: [
-          Expanded(child: _navigation(state, previous: true)),
+          Expanded(child: _navigation(previous: true)),
           Expanded(
             flex: 5,
             child: Row(
@@ -298,168 +417,121 @@ class RemixCalendar extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(child: _navigation(state, previous: false)),
+          Expanded(child: _navigation(previous: false)),
         ],
       ),
     );
   }
+}
+
+class _CalendarView extends StatelessWidget {
+  const _CalendarView({
+    required this.style,
+    required this.styleSpec,
+    required this.controller,
+    required this.labels,
+    required this.firstDayOfWeek,
+    required this.weeks,
+    required this.headerBuilder,
+    required this.dayBuilder,
+    this.summary,
+  });
+  final CalendarStyler style;
+  final CalendarSpec? styleSpec;
+  final WidgetStatesController controller;
+  final RemixCalendarLabels labels;
+  final int firstDayOfWeek;
+  final List<List<DateTime?>> weeks;
+  final Widget Function(BuildContext, CalendarSpec) headerBuilder;
+  final Widget Function(DateTime) dayBuilder;
+  final String? summary;
 
   @override
-  Widget build(BuildContext context) {
-    final effectiveStyle = CalendarStyler(
-      day: CalendarDayStyler(
-        container: BoxStyler()
-            .constraints(.minWidth(44).minHeight(44))
-            .alignment(Alignment.center),
-      ),
-    ).merge(style);
-    return NakedCalendar(
-      value: value,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      onChanged: onChanged,
-      currentDate: currentDate,
-      isDateUnavailable: isDateUnavailable,
-      firstDayOfWeek: firstDayOfWeek,
-      enabled: enabled,
-      semanticLabel: semanticLabel,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      builder: (context, state, _) => RemixStyleSpecBuilder<CalendarSpec>(
-        style: effectiveStyle,
-        styleSpec: styleSpec,
-        controller: NakedState.controllerOf<NakedCalendarState>(context),
-        trackFocusVisibility: true,
-        builder: (context, spec) {
-          var container = spec.container;
-          final bounds = container.spec.constraints ?? const BoxConstraints();
-          if (!bounds.hasBoundedWidth) {
-            // Keep the default compact without conflicting with caller minima.
-            container = container.copyWith(
-              spec: container.spec.copyWith(
-                constraints: bounds.copyWith(
-                  maxWidth: bounds.minWidth > 308 ? bounds.minWidth : 308,
+  Widget build(BuildContext context) => RemixStyleSpecBuilder<CalendarSpec>(
+    style: style,
+    styleSpec: styleSpec,
+    controller: controller,
+    trackFocusVisibility: true,
+    builder: (context, spec) {
+      var container = spec.container;
+      final bounds = container.spec.constraints ?? const BoxConstraints();
+      if (!bounds.hasBoundedWidth) {
+        // Keep the default compact without conflicting with caller minima.
+        container = container.copyWith(
+          spec: container.spec.copyWith(
+            constraints: bounds.copyWith(
+              maxWidth: bounds.minWidth > 308 ? bounds.minWidth : 308,
+            ),
+          ),
+        );
+      }
+      return Box(
+        styleSpec: container,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final dayWidth =
+                spec.day.spec.container.spec.constraints?.minWidth ?? 44.0;
+            final minimumWidth = 7 * (dayWidth > 44 ? dayWidth : 44.0);
+            final available = constraints.maxWidth;
+            final width = available.isFinite && available > minimumWidth
+                ? available
+                : minimumWidth;
+            return SingleChildScrollView(
+              primary: false,
+              child: SingleChildScrollView(
+                primary: false,
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  width: width,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      headerBuilder(context, spec),
+                      SizedBox(height: spec.headerSpacing ?? 0),
+                      if (summary != null)
+                        Semantics(
+                          liveRegion: true,
+                          child: StyledText(summary!, styleSpec: spec.weekday),
+                        ),
+                      Row(
+                        children: [
+                          for (var i = 0; i < 7; i++)
+                            Expanded(
+                              child: Center(
+                                child: ExcludeSemantics(
+                                  child: StyledText(
+                                    labels.weekday(
+                                      (firstDayOfWeek - 1 + i) % 7 + 1,
+                                    ),
+                                    styleSpec: spec.weekday,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: spec.weekdaySpacing ?? 0),
+                      for (final (index, week) in weeks.indexed) ...[
+                        if (index > 0) SizedBox(height: spec.rowSpacing ?? 4),
+                        Row(
+                          children: [
+                            for (final date in week)
+                              Expanded(
+                                child: date == null
+                                    ? const SizedBox(height: 44)
+                                    : dayBuilder(date),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ),
             );
-          }
-          return Box(
-            styleSpec: container,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final dayWidth =
-                    spec.day.spec.container.spec.constraints?.minWidth ?? 44.0;
-                final minimumWidth = 7 * (dayWidth > 44 ? dayWidth : 44.0);
-                final available = constraints.maxWidth;
-                final width = available.isFinite && available > minimumWidth
-                    ? available
-                    : minimumWidth;
-                return SingleChildScrollView(
-                  primary: false,
-                  child: SingleChildScrollView(
-                    primary: false,
-                    scrollDirection: Axis.horizontal,
-                    child: SizedBox(
-                      width: width,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          headerBuilder?.call(context, state) ??
-                              _header(context, state, spec),
-                          SizedBox(height: spec.headerSpacing ?? 0),
-                          Row(
-                            children: [
-                              for (var i = 0; i < 7; i++)
-                                Expanded(
-                                  child: Center(
-                                    child: ExcludeSemantics(
-                                      child: StyledText(
-                                        labels.weekday(
-                                          (firstDayOfWeek - 1 + i) % 7 + 1,
-                                        ),
-                                        styleSpec: spec.weekday,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          SizedBox(height: spec.weekdaySpacing ?? 0),
-                          for (final (index, week) in state.weeks.indexed) ...[
-                            if (index > 0)
-                              SizedBox(height: spec.rowSpacing ?? 4),
-                            Row(
-                              children: [
-                                for (final date in week)
-                                  Expanded(
-                                    child: date == null
-                                        ? const SizedBox(height: 44)
-                                        : _day(date, effectiveStyle),
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _day(DateTime date, CalendarStyler effectiveStyle) => NakedCalendarDay(
-    date: date,
-    semanticLabel: _dayLabel(date),
-    builder: (context, day, _) => WidgetStateProvider(
-      states: day.states,
-      child: Builder(
-        builder: (context) {
-          // Merge unresolved inherited styles before resolving this day's
-          // context and state variants. Only the day renders, not root effects.
-          final resolved = styleSpec == null
-              ? (Style.maybeOf<CalendarSpec>(context)?.merge(effectiveStyle) ??
-                        effectiveStyle)
-                    .build(context)
-              : StyleSpec(spec: styleSpec!);
-          // Root animation can change day anatomy too. Consume its frame data
-          // here without rendering the root modifiers again for every day.
-          return StyleAnimationBuilder<CalendarSpec>(
-            spec: resolved.copyWith(
-              animation: remixChildAnimation<CalendarSpec>(resolved.animation),
-            ),
-            builder: (context, frame) => StyleSpecBuilder<CalendarDaySpec>(
-              styleSpec: frame.spec.day,
-              builder: (context, spec) {
-                final label = StyledText(
-                  labels.day(date),
-                  styleSpec: spec.label,
-                );
-                if (spec.containerEffects == null ||
-                    spec.containerEffects!.isEmpty) {
-                  return Box(styleSpec: spec.container, child: label);
-                }
-                return RemixBoxAdapter(
-                  styleSpec: spec.container,
-                  containerEffects: spec.containerEffects,
-                  child: label,
-                );
-              },
-            ),
-          );
-        },
-      ),
-    ),
+          },
+        ),
+      );
+    },
   );
-
-  String _dayLabel(DateTime date) {
-    final today = currentDate ?? DateTime.now();
-    return isSameCivilDate(date, today)
-        ? labels.joinDayLabel([labels.fullDate(date), labels.today])
-        : labels.fullDate(date);
-  }
 }

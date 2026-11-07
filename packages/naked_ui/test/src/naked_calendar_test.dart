@@ -258,6 +258,19 @@ void main() {
     },
   );
 
+  testWidgets('pointer entry retains focus across a removed month day', (
+    tester,
+  ) async {
+    final state = await _pump(tester);
+    await tester.tap(_day(29));
+    await tester.pumpAndSettle();
+    await _key(tester, LogicalKeyboardKey.arrowRight);
+    expect(state.snapshot.focusedDate, DateTime(2024, 3));
+    expect(state.days[DateTime(2024, 3)]!.isFocused, isTrue);
+    await _key(tester, LogicalKeyboardKey.arrowRight);
+    expect(state.snapshot.focusedDate, DateTime(2024, 3, 2));
+  });
+
   testWidgets(
     'arrows, week edges, page and shifted-year keys focus without selecting',
     (tester) async {
@@ -407,6 +420,18 @@ void main() {
     await tester.pump();
     await tester.pump();
     expect(state.after.hasFocus, isTrue);
+  });
+
+  testWidgets('pointer-entry pending handoff yields to external focus', (
+    tester,
+  ) async {
+    final state = await _pump(tester);
+    await tester.tap(_day(29));
+    await tester.pumpAndSettle();
+    state.snapshot.nextMonth!();
+    state.after.requestFocus();
+    await tester.pumpAndSettle();
+    expect(state.after.hasPrimaryFocus, isTrue);
   });
 
   testWidgets(

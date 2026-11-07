@@ -46,6 +46,40 @@ void main() {
     },
   );
 
+  test(
+    'range calendar API and shared fragments are exported through package barrel',
+    () {
+      final range = NakedDateRange(
+        start: DateTime(2024),
+        end: DateTime(2024, 2),
+      );
+      final calendar = RemixRangeCalendar(
+        value: range,
+        firstDate: DateTime(2024),
+        lastDate: DateTime(2025),
+        onChanged: (_) {},
+        headerBuilder: (context, NakedRangeCalendarState state) =>
+            Text('${state.displayedMonth}'),
+        rangeLabels: RemixRangeCalendarLabels(
+          selectedRange: (start, end) => '$start – $end',
+        ),
+        style: CalendarStyler(
+          rangeStart: CalendarDayStyler().color(Colors.blue),
+          rangeEnd: CalendarDayStyler().color(Colors.blue),
+          rangeSingle: CalendarDayStyler().borderRadius(.circular(22)),
+          rangePreview: CalendarDayStyler().color(Colors.lightBlue),
+        ),
+      );
+      expect(calendar.value, range);
+      expect(calendar.style, isA<CalendarStyler>());
+      expect(
+        const CalendarSpec().rangeSingle,
+        isA<StyleSpec<CalendarDaySpec>>(),
+      );
+      expect(RemixRangeCalendar.styleFrom(), isA<CalendarStyler>());
+    },
+  );
+
   test('disclosure API is constructible from the package barrel', () {
     const disclosure = RemixDisclosure(
       trigger: Text('Details'),

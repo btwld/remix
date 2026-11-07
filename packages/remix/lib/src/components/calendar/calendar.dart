@@ -16,4 +16,5 @@ import '../select/select.dart';
 part 'calendar_spec.dart';
 part 'calendar_style.dart';
 part 'calendar_widget.dart';
+part 'range_calendar_widget.dart';
 part 'calendar.g.dart';
