@@ -336,6 +336,121 @@ void main() {
     });
 
     group('Layout and Sizing', () {
+      for (final (name, selected, customIcon) in [
+        ('checked path', true, false),
+        ('indeterminate path', null, false),
+        ('checked icon', true, true),
+        ('indeterminate icon', null, true),
+        ('unchecked icon', false, true),
+      ]) {
+        testWidgets('$name keeps its size and is centered', (tester) async {
+          await tester.pumpRemixApp(
+            RemixCheckbox(
+              selected: selected,
+              tristate: true,
+              checkedIcon: customIcon ? Icons.check : null,
+              indeterminateIcon: customIcon ? Icons.remove : null,
+              uncheckedIcon: customIcon ? Icons.close : null,
+              onChanged: (_) {},
+              style: CheckboxStyler().size(20, 20).iconSize(12),
+            ),
+          );
+
+          final indicator = find.byType(
+            customIcon ? StyledIcon : RemixPathIcon,
+          );
+          final box = find.byType(Box);
+          expect(tester.getSize(indicator), const Size.square(12));
+          expect(tester.getSize(box), const Size.square(20));
+          expect(tester.getCenter(indicator), tester.getCenter(box));
+          expect(
+            tester.getSize(find.byType(RemixCheckbox)),
+            const Size.square(48),
+          );
+        });
+      }
+
+      testWidgets('unsized checkbox shrink-wraps its indicator', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixCheckbox(
+            selected: true,
+            onChanged: (_) {},
+            style: CheckboxStyler().iconSize(12),
+          ),
+        );
+
+        expect(tester.getSize(find.byType(Box)), const Size.square(12));
+        expect(
+          tester.getSize(find.byType(RemixCheckbox)),
+          const Size.square(48),
+        );
+      });
+
+      testWidgets('preserves explicit indicator alignment', (tester) async {
+        await tester.pumpRemixApp(
+          RemixCheckbox(
+            selected: true,
+            onChanged: (_) {},
+            style: CheckboxStyler()
+                .size(20, 20)
+                .iconSize(12)
+                .alignment(.topLeft),
+          ),
+        );
+
+        final indicator = find.byType(RemixPathIcon);
+        expect(tester.getSize(indicator), const Size.square(12));
+        expect(
+          tester.getTopLeft(indicator),
+          tester.getTopLeft(find.byType(Box)),
+        );
+      });
+
+      testWidgets('centers within the padded content area', (tester) async {
+        await tester.pumpRemixApp(
+          RemixCheckbox(
+            selected: true,
+            onChanged: (_) {},
+            style: CheckboxStyler()
+                .size(24, 24)
+                .iconSize(12)
+                .padding(.only(left: 4, top: 2)),
+          ),
+        );
+
+        final indicator = find.byType(RemixPathIcon);
+        expect(tester.getSize(indicator), const Size.square(12));
+        expect(
+          tester.getCenter(indicator),
+          tester.getCenter(find.byType(Box)) + const Offset(2, 1),
+        );
+      });
+
+      testWidgets('respects indicator size from a raw styleSpec', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixCheckbox(
+            selected: true,
+            onChanged: (_) {},
+            styleSpec: const CheckboxSpec(
+              container: StyleSpec(
+                spec: BoxSpec(
+                  constraints: BoxConstraints.tightFor(width: 20, height: 20),
+                ),
+              ),
+              indicator: StyleSpec(spec: IconSpec(size: 12)),
+            ),
+          ),
+        );
+
+        final indicator = find.byType(RemixPathIcon);
+        expect(tester.getSize(indicator), const Size.square(12));
+        expect(tester.getCenter(indicator), tester.getCenter(find.byType(Box)));
+      });
+
       testWidgets('checkbox adapts to custom size', (tester) async {
         final smallStyle = CheckboxStyler().size(16.0, 16.0);
         await tester.pumpRemixApp(

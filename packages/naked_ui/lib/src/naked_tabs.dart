@@ -268,7 +268,7 @@ class NakedTabsScope extends InheritedWidget {
 
 /// A container for tab triggers without visuals.
 ///
-/// Provides focus traversal for tab navigation.
+/// Provides a single sequential focus stop, with arrow-key navigation between tabs.
 ///
 /// See also:
 /// - [NakedTab], the individual tab trigger components.
@@ -281,17 +281,59 @@ class NakedTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FocusScope(
-      child: Semantics(
-        role: SemanticsRole.tabBar,
-        container: true,
-        explicitChildNodes: true,
-        child: FocusTraversalGroup(
-          policy: WidgetOrderTraversalPolicy(),
-          child: child,
-        ),
+    return Semantics(
+      role: SemanticsRole.tabBar,
+      container: true,
+      explicitChildNodes: true,
+      child: FocusTraversalGroup(
+        policy: _TabTraversalPolicy(NakedTabsScope.of(context).selectedTabId),
+        child: child,
       ),
     );
+  }
+}
+
+// Sequential traversal treats the strip as one stop. Keep the current trigger
+// when leaving (including in manual mode); entry uses the selected enabled tab,
+// or the first enabled tab when the selection is disabled or no longer present.
+class _TabTraversalPolicy extends WidgetOrderTraversalPolicy {
+  _TabTraversalPolicy(this.selectedTabId);
+
+  final String selectedTabId;
+
+  @override
+  Iterable<FocusNode> sortDescendants(
+    Iterable<FocusNode> descendants,
+    FocusNode currentNode,
+  ) {
+    final members = descendants.toList();
+    if (members.any(
+      (node) => node == currentNode || node.descendants.contains(currentNode),
+    )) {
+      return [currentNode];
+    }
+    // Nested traversal groups are represented by their group nodes. Choose a
+    // trigger directly so even a group containing several tabs stays one stop.
+    final nodes = members
+        .expand((node) => [node, ...node.traversalDescendants])
+        .where((node) {
+          final tab = node.context?.findAncestorStateOfType<_NakedTabState>();
+          return tab != null &&
+              identical(tab.effectiveFocusNode, node) &&
+              node.canRequestFocus &&
+              !node.skipTraversal;
+        })
+        .toSet()
+        .toList();
+    if (nodes.isEmpty) return nodes;
+    return [
+      nodes.firstWhere(
+        (node) =>
+            node.context?.findAncestorWidgetOfExactType<NakedTab>()?.tabId ==
+            selectedTabId,
+        orElse: () => nodes.first,
+      ),
+    ];
   }
 }
 
@@ -413,42 +455,70 @@ class _NakedTabState extends State<NakedTab>
     _scope.selectTab(widget.tabId);
   }
 
-  bool _moveFocus(FocusScopeNode scope, {required bool forward}) =>
-      forward ? scope.nextFocus() : scope.previousFocus();
+  Element? get _tabBarElement {
+    Element? bar;
+    context.visitAncestorElements((element) {
+      if (element.widget is! NakedTabBar) return true;
+      bar = element;
+      return false;
+    });
+    return bar;
+  }
+
+  // Use the focus tree's widget order, independent of the single-stop policy.
+  // Restrict navigation to this bar even when it shares its parent's focus scope.
+  List<FocusNode> _tabNodes() {
+    final bar = _tabBarElement;
+    return FocusScope.of(context).traversalDescendants.where((node) {
+      final tab = node.context?.findAncestorStateOfType<_NakedTabState>();
+      return tab != null &&
+          identical(tab.effectiveFocusNode, node) &&
+          identical(tab._tabBarElement, bar);
+    }).toList();
+  }
+
+  void _moveFocus({required bool forward}) {
+    final nodes = _tabNodes();
+    final index = nodes.indexOf(effectiveFocusNode);
+    if (index < 0) return;
+    requestFocusInView(nodes[(index + (forward ? 1 : -1)) % nodes.length]);
+  }
 
   void _handleDirectionalFocus(TraversalDirection direction) {
     if (!_isEnabled) return;
 
-    final focusScope = FocusScope.of(context);
     final isHorizontal = _scope.orientation == Axis.horizontal;
     // Widget order runs right to left in horizontal RTL strips.
     final rtl = Directionality.of(context) == TextDirection.rtl;
 
     switch (direction) {
       case TraversalDirection.left:
-        if (isHorizontal) _moveFocus(focusScope, forward: rtl);
+        if (isHorizontal) _moveFocus(forward: rtl);
         break;
       case TraversalDirection.right:
-        if (isHorizontal) _moveFocus(focusScope, forward: !rtl);
+        if (isHorizontal) _moveFocus(forward: !rtl);
         break;
       case TraversalDirection.up:
-        if (!isHorizontal) _moveFocus(focusScope, forward: false);
+        if (!isHorizontal) _moveFocus(forward: false);
         break;
       case TraversalDirection.down:
-        if (!isHorizontal) _moveFocus(focusScope, forward: true);
+        if (!isHorizontal) _moveFocus(forward: true);
         break;
     }
   }
 
   void _focusTabEdge({required bool last}) {
-    final current = FocusManager.instance.primaryFocus;
-    if (current == null) return;
-    final policy = FocusTraversalGroup.maybeOfNode(current);
-    if (policy == null) return;
-    final target = last
-        ? policy.findLastFocus(current, ignoreCurrentFocus: true)
-        : policy.findFirstFocus(current, ignoreCurrentFocus: true);
-    if (target != null) requestFocusInView(target);
+    final nodes = _tabNodes();
+    if (nodes.isNotEmpty) requestFocusInView(last ? nodes.last : nodes.first);
+  }
+
+  void _syncTabStates() {
+    updateDisabledState(!_isEnabled);
+    updateSelectedState(_scope.isTabSelected(widget.tabId), null);
+    releasePressWhenDisabled(
+      disabled: () => !_isEnabled,
+      onPressChange: widget.onPressChange,
+    );
   }
 
   @override
@@ -457,6 +527,7 @@ class _NakedTabState extends State<NakedTab>
     _scope = NakedTabsScope.of(context);
     _isEnabled = widget.enabled && _scope.enabled;
     _applyFocusability();
+    _syncTabStates();
   }
 
   @override
@@ -464,6 +535,7 @@ class _NakedTabState extends State<NakedTab>
     super.didUpdateWidget(oldWidget);
     _isEnabled = widget.enabled && _scope.enabled;
     _applyFocusability();
+    _syncTabStates();
   }
 
   @override
@@ -471,8 +543,6 @@ class _NakedTabState extends State<NakedTab>
     assert(widget.tabId.isNotEmpty, 'tabId cannot be empty');
 
     final isSelected = _scope.isTabSelected(widget.tabId);
-    updateDisabledState(!_isEnabled);
-    updateSelectedState(isSelected, null);
 
     final tabState = NakedTabState(states: widgetStates, tabId: widget.tabId);
 

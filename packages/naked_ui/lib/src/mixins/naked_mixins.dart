@@ -137,6 +137,25 @@ mixin WidgetStatesMixin<T extends StatefulWidget> on State<T> {
     return false;
   }
 
+  /// Clears a press that [disabled] still reports, then notifies
+  /// [onPressChange] on the next frame.
+  ///
+  /// Callers run during [State.didUpdateWidget] or
+  /// [State.didChangeDependencies], so the notification cannot be synchronous.
+  /// It is skipped when the control is enabled again or pressed again before
+  /// that frame.
+  @protected
+  void releasePressWhenDisabled({
+    required bool Function() disabled,
+    required ValueChanged<bool>? onPressChange,
+  }) {
+    if (!disabled() || !updatePressState(false, null)) return;
+    if (onPressChange == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && disabled() && !isPressed) onPressChange(false);
+    });
+  }
+
   /// Update disabled state. Returns true if the state actually changed.
   @protected
   bool updateDisabledState(bool value) {

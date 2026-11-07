@@ -1,3 +1,5 @@
+import 'dart:ui' show Tristate;
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -701,5 +703,47 @@ void main() {
 
       handle.dispose();
     });
+
+    testWidgets(
+      'semanticLabel replaces visible child text while keeping focus semantics',
+      (tester) async {
+        final handle = tester.ensureSemantics();
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpWidget(
+          _buildTestApp(
+            NakedButton(
+              onPressed: () {},
+              focusNode: focusNode,
+              semanticLabel: 'Save document',
+              child: const Text('Save'),
+            ),
+          ),
+        );
+
+        final root = tester.getSemantics(find.byType(Scaffold));
+        final buttons = collectSemanticsNodes(
+          root,
+          (node) => node.getSemanticsData().flagsCollection.isButton,
+        );
+        expect(buttons, hasLength(1));
+
+        final data = buttons.single.getSemanticsData();
+        expect(data.label, 'Save document');
+        expect(data.hasAction(SemanticsAction.tap), isTrue);
+        expect(data.hasAction(SemanticsAction.focus), isTrue);
+        expect(data.flagsCollection.isFocused, Tristate.isFalse);
+
+        focusNode.requestFocus();
+        await tester.pump();
+        expect(
+          buttons.single.getSemanticsData().flagsCollection.isFocused,
+          Tristate.isTrue,
+        );
+
+        handle.dispose();
+      },
+    );
   });
 }

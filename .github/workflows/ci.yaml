@@ -16,25 +16,76 @@ name: CI
 # never run, and would look green because nothing reports a job that does not
 # exist. tool/check_ci_coverage.dart fails on that drift and runs inside the
 # `checks` job.
+#
+# Pull requests use exactly opened, synchronize, reopened, and ready_for_review.
+# ready_for_review is what starts the real run after a draft is marked ready.
+# Heavy jobs skip on a draft, and GitHub counts a skip as success, so branch
+# protection would already be green. `Contract checks` therefore runs and fails
+# while the pull request is a draft, and passes only after ready_for_review
+# runs it again. Path skips are job-level (`.github/path-filters.yml`); a
+# workflow-level paths filter would leave this required check pending.
 
 on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: pr-${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    name: Detect changed paths
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    outputs:
+      # Exactly one of these steps runs. `||` keeps the value that step wrote.
+      run_heavy: ${{ steps.on-push.outputs.run_heavy || steps.on-draft.outputs.run_heavy || steps.on-ready.outputs.run_heavy }}
+    steps:
+      - uses: actions/checkout@v4
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: filter
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+        with:
+          predicate-quantifier: some-with-excludes
+          filters: .github/path-filters.yml
+          token: ${{ github.token }}
+      - id: on-push
+        if: github.event_name != 'pull_request'
+        run: echo "run_heavy=true" >> "$GITHUB_OUTPUT"
+      - id: on-draft
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == true
+        run: echo "run_heavy=false" >> "$GITHUB_OUTPUT"
+      - id: on-ready
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+        env:
+          CODE_CHANGED: ${{ steps.filter.outputs.code }}
+        run: |
+          set -euo pipefail
+          case "$CODE_CHANGED" in
+            true|false) echo "run_heavy=$CODE_CHANGED" >> "$GITHUB_OUTPUT" ;;
+            *) echo "Unexpected code filter result: $CODE_CHANGED" >&2; exit 1 ;;
+          esac
+
   checks:
     timeout-minutes: 15
     name: Contract checks
-    runs-on: ubuntu-latest
+    # Fail on the small runner while the PR is a draft. The job still reports
+    # under this name, so a skipped heavy job cannot satisfy branch protection.
+    runs-on: ${{ github.event_name == 'pull_request' && github.event.pull_request.draft == true && 'ubuntu-slim' || 'ubuntu-latest' }}
     steps:
+      - name: Fail draft pull requests
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == true
+        run: |
+          echo "::error::Draft pull request. Mark it ready for review to run required checks."
+          exit 1
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-workspace
       - uses: invertase/github-action-dart-analyzer@v1
@@ -43,6 +94,8 @@ jobs:
       - run: dart run melos run ci:checks
 
   codegen:
+    needs: changes
+    if: needs.changes.outputs.run_heavy == 'true'
     timeout-minutes: 20
     name: Generated source drift
     runs-on: ubuntu-latest
@@ -60,6 +113,8 @@ jobs:
       - run: dart run melos run ci:codegen
 
   flutter-tests:
+    needs: changes
+    if: needs.changes.outputs.run_heavy == 'true'
     timeout-minutes: 30
     name: Flutter package tests
     runs-on: ubuntu-latest
@@ -77,6 +132,8 @@ jobs:
           retention-days: 7
 
   cli-tests:
+    needs: changes
+    if: needs.changes.outputs.run_heavy == 'true'
     timeout-minutes: 30
     name: CLI tests and consumer mirrors
     runs-on: ubuntu-latest
@@ -90,6 +147,8 @@ jobs:
   # matrix they cost the slowest preset. `fail-fast: false` so a break in one
   # preset still reports the others rather than masking them.
   open-code:
+    needs: changes
+    if: needs.changes.outputs.run_heavy == 'true'
     timeout-minutes: 45
     name: Open-code consumers (${{ matrix.preset }})
     runs-on: ubuntu-latest
@@ -103,6 +162,8 @@ jobs:
       - run: dart run melos run ci:open-code:${{ matrix.preset }}
 
   open-code-icons:
+    needs: changes
+    if: needs.changes.outputs.run_heavy == 'true'
     timeout-minutes: 30
     name: Open-code icon libraries
     runs-on: ubuntu-latest
@@ -135,6 +196,8 @@ jobs:
   # and the Vector UI masters in design/icons. The job keeps the id `icons`,
   # and so the check name it has always reported.
   icons:
+    needs: changes
+    if: needs.changes.outputs.run_heavy == 'true'
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
@@ -175,6 +238,8 @@ jobs:
   # Flutter the package supports and on current stable. The tree shaker
   # changes between releases (ConstFinder today, record_use on master).
   icons-tree-shake:
+    needs: changes
+    if: needs.changes.outputs.run_heavy == 'true'
     timeout-minutes: 30
     name: Icon tree shaking (Flutter ${{ matrix.flutter }})
     runs-on: ubuntu-latest

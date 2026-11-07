@@ -39,7 +39,7 @@ Built-in chrome can be disabled; caller actions append to it and caller account
 content replaces the default. It leaves the application, routes,
 authentication, persistence, and backend search behavior with the host.
 
-The registry requires Remix beta.11, which includes `RemixSidebar` and the Toast APIs.
+The registry's Remix floor includes `RemixSidebar` and the Toast APIs.
 The installer rejects older resolved versions before it writes source.
 
 | Item | Surface you get | Axes |
@@ -195,10 +195,10 @@ Icons you reference in your own code stay as you wrote them. Import
 `package:remix_ui_icons/remix_ui_icons.dart` directly when you need the rest of
 the Vector UI pack: `RemixIcons` (the Outline family) and `RoundedIcons`.
 
-Upgrading an app from `remix_ui_icons` 0.1.x: the registry now requires
-`^1.0.0-beta.1`, which replaces every Radix glyph, so the installer refuses to
-write source until your `pubspec.yaml` declares it. Update the constraint,
-then follow the package's
+Upgrading an app from `remix_ui_icons` 0.1.x: the registry now requires the
+1.0 line, which replaces every Radix glyph, so the installer refuses to write
+source until your `pubspec.yaml` declares it. Raise the constraint with
+`flutter pub add remix_ui_icons:^1.0.0-beta.1`, then follow the package's
 [migration guide](https://github.com/btwld/remix/blob/main/packages/remix_ui_icons/MIGRATION.md)
 for your own icon references: 31 renamed names keep working as deprecated
 aliases until 2.0.0, and the guide names a Lucide icon for each removed one.

@@ -5,22 +5,22 @@ description: Add the remix CLI to a Flutter app, then initialize, preview, and i
 
 ## Install
 
-The registry in this checkout requires Remix `^1.0.0-beta.14`, which `add`
-declares for you. Beta.14 is not published yet; the currently hosted Remix
-release is beta.13. Registry pins and their floors remain independent of the
-CLI version.
+The registry declares the Remix version it requires, and `add` records that
+constraint for you. Registry pins and their floors are independent of the CLI
+version.
 
 Add the CLI as a project-local dev dependency so its version is pinned in your
 lockfile, not in a machine-global install:
 
 ```bash
-flutter pub add dev:remix_cli
+flutter pub add dev:remix_cli:^1.0.0-beta.1
 ```
 
 <Note>
-CLI `1.0.0-beta.1` is not published yet. For unreleased ownership or icon-table
-schema 2 support, use the Git activation instructions below. Exact hosted
-version instructions will follow publication.
+Keep the version. An unversioned install can select stable `0.1.0`, which reads
+only schema 1 icon tables and fails on the official registry's `icons.yaml`.
+A project moving from `0.1.0` also has no ownership record, so its first `add`
+goes through [legacy source adoption](/open-code/updating#legacy-source-adoption).
 </Note>
 
 ## Running the CLI
@@ -32,7 +32,7 @@ The command is called `remix`. How you reach it depends on how it is installed:
 dart run remix_cli:remix <command>
 
 # Global install
-dart pub global activate remix_cli
+dart pub global activate remix_cli '^1.0.0-beta.1'
 remix <command>
 ```
 
@@ -124,7 +124,7 @@ remix add button --dry-run
 ```
 @remix (vanilla) revision <pinned commit>
 Items: @remix/theme -> @remix/button
-Dependencies: remix@^1.0.0-beta.16, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+Dependencies: remix@^1.0.0-beta.17, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
 @remix/theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
 @remix/button: missing; lib/ui/components/button.dart
 Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, theme/effects.dart, components/button.dart

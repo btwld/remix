@@ -170,6 +170,56 @@ void main() {
       expect(isPressed, false);
     });
 
+    testWidgets('disabling a pressed NakedCheckbox clears pressed state', (
+      WidgetTester tester,
+    ) async {
+      var enabled = true;
+      late StateSetter rebuild;
+      final pressChanges = <bool>[];
+      Set<WidgetState> latestStates = const {};
+
+      await tester.pumpMaterialWidget(
+        StatefulBuilder(
+          builder: (context, setState) {
+            rebuild = setState;
+            return NakedCheckbox(
+              value: false,
+              enabled: enabled,
+              onChanged: (_) {},
+              onPressChange: (pressed) {
+                setState(() {
+                  pressChanges.add(pressed);
+                });
+              },
+              builder: (context, state, child) {
+                latestStates = state.states.toSet();
+                return child ?? const SizedBox.shrink();
+              },
+              child: const Text('Checkbox Label'),
+            );
+          },
+        ),
+      );
+
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(NakedCheckbox)),
+      );
+      await tester.pump();
+
+      expect(latestStates, contains(WidgetState.pressed));
+      expect(pressChanges, [true]);
+
+      rebuild(() => enabled = false);
+      await tester.pump();
+
+      expect(latestStates, isNot(contains(WidgetState.pressed)));
+      expect(latestStates, contains(WidgetState.disabled));
+      expect(pressChanges, [true, false]);
+
+      await gesture.up();
+      await tester.pump();
+    });
+
     testWidgets(
       'calls onPressChange on tap cancel when gesture leaves and releases',
       (tester) async {
