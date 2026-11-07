@@ -206,4 +206,54 @@ void main() {
     expect(find.bySemanticsLabel('Hidden volume'), findsNothing);
     semantics.dispose();
   });
+
+  testWidgets(
+    'padded single thumbs center on the marked rail without changing height',
+    (tester) async {
+      for (final direction in TextDirection.values) {
+        for (final value in [0.0, .5, 1.0]) {
+          for (final thickness in [4.0, 72.0]) {
+            final changes = <double>[];
+            await tester.pumpWidget(
+              host(
+                SizedBox(
+                  width: 240,
+                  child: RemixSlider(
+                    value: value,
+                    onChanged: changes.add,
+                    style: SliderStyler()
+                        .thumb(
+                          BoxStyler()
+                              .width(32)
+                              .height(12)
+                              .padding(.symmetric(horizontal: 6, vertical: 4)),
+                        )
+                        .thickness(thickness),
+                  ),
+                ),
+                direction: direction,
+              ),
+            );
+            final thumb = find.byWidgetPredicate(
+              (w) =>
+                  w is RemixBoxAdapter &&
+                  w.styleSpec.spec.constraints?.maxWidth == 32,
+            );
+            final slider = tester.getRect(find.byType(RemixSlider));
+            final inset = math.max(44.0, thickness) / 2;
+            final visual = direction == TextDirection.rtl ? 1 - value : value;
+            final center = tester.getCenter(thumb);
+            expect(
+              center.dx,
+              closeTo(slider.left + inset + (240 - 2 * inset) * visual, .001),
+            );
+            expect(slider.height, 20 + thickness);
+            await tester.tapAt(center);
+            await tester.pump();
+            expect(changes, isEmpty);
+          }
+        }
+      }
+    },
+  );
 }

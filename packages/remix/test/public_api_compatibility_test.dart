@@ -48,6 +48,7 @@ void main() {
       items: [RemixSelectItem(value: 'one', label: 'One')],
     );
     const slider = RemixSlider(value: 0.5);
+    const rangeSlider = RemixRangeSlider(values: [0.25, 0.75]);
     const progress = RemixProgress(value: 0.5);
     const tabBar = RemixTabBar(child: Text('Tabs'));
     const spinner = RemixSpinner();
@@ -95,6 +96,7 @@ void main() {
     expect(menu.items[3], isA<RemixMenuSubmenu<String>>());
     expect(select.items.single, isA<RemixSelectItem<String>>());
     expect(slider.value, 0.5);
+    expect(rangeSlider.values, [0.25, 0.75]);
     expect(progress.value, 0.5);
     expect(tabBar.child, isA<Text>());
     expect(spinner, isA<RemixSpinner>());
