@@ -5,10 +5,9 @@ migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
 Choose a preset offered by your pinned registry. The official catalog serves
-`vanilla` and `fortal`; the beta.14 catalog adds the HeroUI-inspired `heroui`
-preset after its registry promotion. Remix remains the behavior dependency; the
-application owns its tokens, theme values, component recipes, and generated
-adapters.
+`vanilla`, `fortal`, and the HeroUI-inspired `heroui`. Remix remains the
+behavior dependency; the application owns its tokens, theme values, component
+recipes, and generated adapters.
 
 The Vanilla and Fortal catalogs include an opt-in `icons` seam and cover the
 core Remix component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button`, `callout`, `card`,
@@ -66,10 +65,11 @@ dart run remix_cli:remix init --prefix Acme --preset fortal
 dart run remix_cli:remix add button
 ```
 
-Select the prerelease explicitly: the beta.14 registry's icon table requires
-CLI `1.0.0-beta.1` or later. An unversioned install can select stable `0.1.0`,
-which supports older schema 1 icon tables. Existing projects should update
-their CLI dependency before advancing to the new registry pin.
+Select the prerelease explicitly. An unversioned install can select stable
+`0.1.0`, which reads only schema 1 icon tables and fails on the official
+registry's schema 2 `icons.yaml`. A project that moves from `0.1.0` to this
+version also has no ownership record, so its first `add` needs the
+[legacy ownership migration](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record).
 
 To run an unreleased build, point at a checkout or staged package path:
 
@@ -78,9 +78,7 @@ dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
 The pinned catalog declares its required Remix version, which `add` records
-for you. Existing beta.13 catalog pins remain usable; the beta.14 catalog
-requires Remix `^1.0.0-beta.14`. Updating the CLI alone does not advance a
-project's catalog pin.
+for you. Updating the CLI alone does not advance a project's catalog pin.
 
 Global activation is convenient for experiments. Registry content remains
 pinned per project in `remix.yaml`:

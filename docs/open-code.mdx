@@ -38,22 +38,22 @@ vocabularies are different.
 
 ## Install
 
-The registry in this checkout requires Remix `^1.0.0-beta.14`, which `add`
-declares for you. Beta.14 is not published yet; the currently hosted Remix
-release is beta.13. Registry pins and their floors remain independent of the
-CLI version.
+The registry declares the Remix version it requires, and `add` records that
+constraint for you. Registry pins and their floors are independent of the CLI
+version.
 
 Add the CLI as a project-local dev dependency so its version is pinned in your
 lockfile, not in a machine-global install:
 
 ```bash
-flutter pub add dev:remix_cli
+flutter pub add dev:remix_cli:^1.0.0-beta.1
 ```
 
 <Note>
-CLI `1.0.0-beta.1` is not published yet. For unreleased ownership or icon-table
-schema 2 support, use the Git activation instructions below. Exact hosted
-version instructions will follow publication.
+Keep the version. An unversioned install can select stable `0.1.0`, which reads
+only schema 1 icon tables and fails on the official registry's `icons.yaml`.
+A project moving from `0.1.0` also has no ownership record, so its first `add`
+goes through [legacy source adoption](#legacy-source-adoption).
 </Note>
 
 ## Running the CLI
@@ -65,7 +65,7 @@ The command is called `remix`. How you reach it depends on how it is installed:
 dart run remix_cli:remix <command>
 
 # Global install
-dart pub global activate remix_cli
+dart pub global activate remix_cli '^1.0.0-beta.1'
 remix <command>
 ```
 
@@ -171,7 +171,7 @@ remix add button --dry-run
 
 ```
 Items: theme -> button
-Dependencies: remix@^1.0.0-beta.14, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+Dependencies: remix@^1.0.0-beta.16, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
 theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
 button: missing; lib/ui/components/button.dart
 Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, theme/effects.dart, components/button.dart
@@ -684,7 +684,8 @@ Then adjust any code of your own that read the old names:
 Each registry revision is authored against one `remix` version, and the
 constraint it installs is a caret, so `flutter pub upgrade` can move you onto
 a later `remix` that these templates were never tested against. `add` reports
-that after it resolves your lockfile:
+that after it resolves your lockfile. The versions below are examples; the
+notice names the version your pinned revision was authored against:
 
 ```
 Resolved remix 1.0.0; this registry revision was authored against 1.0.0-beta.14. Your pin does not move on its own — run remix registry update @remix, then review with --diff.
@@ -796,7 +797,7 @@ Built-in chrome can be disabled; caller actions append to it and caller account
 content replaces the default. It leaves the application, routes,
 authentication, persistence, and backend search behavior with the host.
 
-The registry requires Remix beta.11, which includes `RemixSidebar` and the Toast APIs.
+The registry's Remix floor includes `RemixSidebar` and the Toast APIs.
 The installer rejects older resolved versions before it writes source.
 
 | Item | Surface you get | Axes |
@@ -950,10 +951,10 @@ Icons you reference in your own code stay as you wrote them. Import
 `package:remix_ui_icons/remix_ui_icons.dart` directly when you need the rest of
 the Vector UI pack: `RemixIcons` (the Outline family) and `RoundedIcons`.
 
-Upgrading an app from `remix_ui_icons` 0.1.x: the registry now requires
-`^1.0.0-beta.1`, which replaces every Radix glyph, so the installer refuses to
-write source until your `pubspec.yaml` declares it. Update the constraint,
-then follow the package's
+Upgrading an app from `remix_ui_icons` 0.1.x: the registry now requires the
+1.0 line, which replaces every Radix glyph, so the installer refuses to write
+source until your `pubspec.yaml` declares it. Raise the constraint with
+`flutter pub add remix_ui_icons:^1.0.0-beta.1`, then follow the package's
 [migration guide](https://github.com/btwld/remix/blob/main/packages/remix_ui_icons/MIGRATION.md)
 for your own icon references: 31 renamed names keep working as deprecated
 aliases until 2.0.0, and the guide names a Lucide icon for each removed one.

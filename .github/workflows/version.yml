@@ -106,6 +106,9 @@ jobs:
           # step is part of versioning, not a cleanup after it.
           dart run tool/sync_registry_remix.dart
 
+          # Docs pin the version being released; docs:check fails on a stale pin.
+          dart run tool/sync_install_pins.dart
+
           # The Fortal preset copies its dependency floors from the default
           # registry. Rebuild it immediately after the default floor moves so
           # the two committed registry trees cannot disagree.
@@ -169,6 +172,7 @@ jobs:
             echo 'release. To release it, in its own pull request: bump'
             echo '`packages/remix_cli/pubspec.yaml`,'
             echo '`packages/remix_cli/lib/src/version.dart`, and its CHANGELOG'
-            echo 'to the same version, then push `remix_cli-v<version>`.'
+            echo 'to the same version, run `dart run tool/sync_install_pins.dart`,'
+            echo 'then push `remix_cli-v<version>`.'
           } >> "$GITHUB_STEP_SUMMARY"
           echo "Open the pull request: $url"

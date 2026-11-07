@@ -30,12 +30,11 @@ Flutter components with Naked UI behavior and Mix styling.
 
 ## Start with a component
 
-This checkout prepares `1.0.0-beta.14`, which is not published yet. The
-currently hosted version is `1.0.0-beta.13`; use the matching release docs or
-a local path dependency while beta.14 is staged. After publication:
+Remix is a `1.0.0` prerelease. Pin it, because an unversioned install
+resolves the older stable `0.x` line, which these docs do not describe.
 
 ```bash
-flutter pub add remix:^1.0.0-beta.14
+flutter pub add remix:^1.0.0-beta.17
 ```
 
 ```dart
@@ -56,7 +55,7 @@ Widget saveButton(VoidCallback save) => RemixButton(
 Or install editable theme and component source:
 
 ```bash
-flutter pub add dev:remix_cli
+flutter pub add dev:remix_cli:^1.0.0-beta.1
 dart run remix_cli:remix init --preset vanilla
 dart run remix_cli:remix add button
 ```
