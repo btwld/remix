@@ -12,6 +12,67 @@ Matcher _closeTo(double v, [double eps = 0.5]) =>
 
 void main() {
   group('NakedPopover', () {
+    testWidgets(
+      'view-safe panel respects safe top in a scaled nested Overlay',
+      (tester) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(800, 600);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        addTearDown(tester.view.resetPhysicalSize);
+        final controller = MenuController();
+        const panelKey = Key('panel');
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xffffffff),
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(viewPadding: const EdgeInsets.only(top: 80)),
+              child: Overlay.wrap(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Transform.scale(
+                    scale: .5,
+                    alignment: Alignment.topLeft,
+                    child: SizedBox(
+                      width: 400,
+                      height: 300,
+                      child: Overlay.wrap(
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: NakedPopover(
+                            controller: controller,
+                            avoidViewInsets: true,
+                            positioning: const OverlayPositionConfig(
+                              collisionPadding: EdgeInsets.zero,
+                            ),
+                            popoverBuilder: (context, info) => const SizedBox(
+                              key: panelKey,
+                              width: 300,
+                              height: 600,
+                            ),
+                            child: const SizedBox(width: 80, height: 30),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        final panel = tester.getRect(find.byKey(panelKey));
+        expect(
+          panel.top,
+          greaterThanOrEqualTo(80),
+          reason: 'Panel global rect: $panel',
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
     testWidgets('renders child and is closed by default', (tester) async {
       await tester.pumpMaterialWidget(
         NakedPopover(

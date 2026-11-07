@@ -193,12 +193,19 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
         ? null
         : MediaQuery.maybeOf(overlayState.context);
     if (media == null || overlay is! RenderBox) return config;
-    final origin = overlay.localToGlobal(Offset.zero);
     // Keyboard and safe areas overlap, rather than occupying adjacent bands.
     final left = math.max(media.viewPadding.left, media.viewInsets.left);
     final top = math.max(media.viewPadding.top, media.viewInsets.top);
     final right = math.max(media.viewPadding.right, media.viewInsets.right);
     final bottom = math.max(media.viewPadding.bottom, media.viewInsets.bottom);
+    // Use Flutter's coordinate conversion so scaled nested overlays receive
+    // exclusions in their own logical pixels, not untranslated view distances.
+    final safeBounds = Rect.fromPoints(
+      overlay.globalToLocal(Offset(left, top)),
+      overlay.globalToLocal(
+        Offset(media.size.width - right, media.size.height - bottom),
+      ),
+    );
     return OverlayPositionConfig(
       side: config.side,
       alignment: config.alignment,
@@ -209,20 +216,10 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
       collisionPadding:
           config.collisionPadding +
           EdgeInsets.fromLTRB(
-            math.max(0, left - origin.dx),
-            math.max(0, top - origin.dy),
-            math.max(
-              0,
-              origin.dx +
-                  widget.info.overlaySize.width -
-                  (media.size.width - right),
-            ),
-            math.max(
-              0,
-              origin.dy +
-                  widget.info.overlaySize.height -
-                  (media.size.height - bottom),
-            ),
+            math.max(0, safeBounds.left),
+            math.max(0, safeBounds.top),
+            math.max(0, widget.info.overlaySize.width - safeBounds.right),
+            math.max(0, widget.info.overlaySize.height - safeBounds.bottom),
           ),
     );
   }
