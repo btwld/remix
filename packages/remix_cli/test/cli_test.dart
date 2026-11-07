@@ -86,6 +86,47 @@ void main() {
       );
     });
 
+    test('--exit-code states its exit code without comparing to git', () async {
+      final usage = await _usage(['help', 'add']);
+      final line = usage
+          .split('\n')
+          .singleWhere((line) => line.trimLeft().startsWith('--exit-code '));
+
+      expect(
+        line,
+        contains('exit $driftExitCode when authored source differs'),
+      );
+      expect(line, isNot(contains('git')));
+    });
+
+    test('example rows stay within 80 columns', () async {
+      var checked = 0;
+      for (final command in [
+        ['--help'],
+        ['help', 'init'],
+        ['help', 'add'],
+        ['help', 'list'],
+        ['help', 'registry'],
+        ['registry', 'add', '--help'],
+        ['registry', 'update', '--help'],
+      ]) {
+        final usage = await _usage(command);
+        final rows = usage
+            .split('\n')
+            .where((line) => line.startsWith('  remix '))
+            .toList();
+        for (final row in rows) {
+          checked++;
+          expect(
+            row.length,
+            lessThanOrEqualTo(80),
+            reason: '${command.join(' ')}: $row',
+          );
+        }
+      }
+      expect(checked, greaterThan(10), reason: 'rows were found');
+    });
+
     test('init lists the official presets without restricting them', () async {
       final usage = await _usage(['help', 'init']);
       for (final MapEntry(key: preset, value: summary)
@@ -425,9 +466,15 @@ void main() {
     );
 
     test('exits $driftExitCode only when --diff found differences', () async {
-      expect(await run(['--diff', '--exit-code'], AddResult.differs), 2);
-      expect(await run(['--diff', '--exit-code'], AddResult.done), 0);
-      expect(await run(['--diff'], AddResult.differs), 0);
+      expect(
+        await run(['--diff', '--exit-code'], AddResult.differs),
+        driftExitCode,
+      );
+      expect(
+        await run(['--diff', '--exit-code'], AddResult.done),
+        successExitCode,
+      );
+      expect(await run(['--diff'], AddResult.differs), successExitCode);
     });
 
     test('without --diff is a usage error before dispatch', () async {

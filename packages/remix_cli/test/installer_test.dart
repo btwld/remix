@@ -1967,6 +1967,44 @@ dev_dependencies:
       );
     });
 
+    test(
+      'flutter output that is not JSON reads as its message alone',
+      () async {
+        writeRequiredPubspec(root);
+        writeRequiredLock(root);
+        final before = snapshotFiles(root);
+        final runner = RecordingProcessRunner(
+          (_) async => const ProcessOutput(
+            exitCode: 0,
+            stdout: 'Flutter is upgrading...',
+            stderr: '',
+          ),
+        );
+
+        await expectLater(
+          Installer(
+            projectRoot: root,
+            writeOut: (_) {},
+            processRunner: runner,
+            sources: const FixtureOfficialResolver(),
+          ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
+          throwsA(
+            isA<FormatException>().having(
+              expectedFailureMessage,
+              'rendered',
+              allOf(
+                startsWith(
+                  'flutter --version --machine returned invalid JSON: ',
+                ),
+                isNot(contains('FormatException')),
+              ),
+            ),
+          ),
+        );
+        expect(snapshotFiles(root), before);
+      },
+    );
+
     test('a bug inside the install keeps its own type and stack', () async {
       writeRequiredPubspec(root);
       writeRequiredLock(root);

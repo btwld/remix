@@ -137,11 +137,12 @@ String catalogPathForPreset(
   final presets = index['presets'];
   final catalogPath = presets is YamlMap ? presets[preset] : null;
   if (catalogPath is! String) {
-    // YAML keys need not be strings.
+    // YAML keys need not be strings; a preset named by anything else could
+    // not have been asked for.
     final names = presets is YamlMap
         ? [
             for (final MapEntry(:key, :value) in presets.entries)
-              if (value is String) '$key',
+              if (key is String && value is String) key,
           ]
         : const <String>[];
     throw FormatException(
@@ -179,6 +180,22 @@ abstract interface class RegistrySources {
 
 final _fullCommitSha = RegExp(r'^[0-9a-f]{40}$');
 
+/// Why [error] happened, without the class name that `toString` would put in
+/// front of it.
+///
+/// A socket's own message is often generic (`Connection failed`), with the
+/// reason in its OS error, so that is appended when present.
+String _ioFailureMessage(IOException error) {
+  final (message, osError) = switch (error) {
+    SocketException(:final message, :final osError) ||
+    TlsException(:final message, :final osError) => (message, osError),
+    HttpException(:final message) => (message, null),
+    _ => ('$error', null),
+  };
+  final cause = osError?.message ?? '';
+  return cause.isEmpty ? message : '$message ($cause)';
+}
+
 final class GitHubSources implements RegistrySources {
   const GitHubSources({this.transport = githubTransport});
   final RegistryTransport transport;
@@ -198,7 +215,9 @@ final class GitHubSources implements RegistrySources {
         'GitHub request timed out: $uri. Retry when the network is available.',
       );
     } on IOException catch (error) {
-      throw FormatException('GitHub network failure for $uri: $error');
+      throw FormatException(
+        'GitHub network failure for $uri: ${_ioFailureMessage(error)}',
+      );
     }
     if (response.statusCode == 429 ||
         (response.statusCode == 403 &&

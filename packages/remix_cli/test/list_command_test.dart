@@ -81,13 +81,15 @@ void main() {
     final document = jsonDecode(output.single) as Map<String, Object?>;
     expect(document['schema'], 1);
     expect(document['preset'], 'vanilla');
-    final registry = (document['registries']! as List).single as Map;
+    final registry = (document['registries']! as List<Object?>)
+        .whereType<Map<String, Object?>>()
+        .single;
     expect(registry['namespace'], '@remix');
     expect(registry['default'], isTrue);
     expect(registry['revision'], 'a' * 40);
-    final button = (registry['items'] as List).cast<Map>().singleWhere(
-      (item) => item['id'] == '@remix/button',
-    );
+    final button = (registry['items']! as List<Object?>)
+        .whereType<Map<String, Object?>>()
+        .singleWhere((item) => item['id'] == '@remix/button');
     expect(button['registryDependencies'], ['@remix/theme']);
     expect(button['group'], 'lib/ui/components');
     expect(button['files'], ['lib/ui/components/button.dart']);

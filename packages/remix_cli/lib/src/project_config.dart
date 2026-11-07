@@ -168,6 +168,15 @@ final class ProjectConfig {
   String targetPath(String target) =>
       p.posix.join(uiPath, target.substring(uiTargetPrefix.length));
 
+  /// The spelling `add` accepts for the qualified item [id]: bare in the
+  /// default registry, `@namespace/name` in every other one.
+  String addSpelling(String id) {
+    final defaultPrefix = '$defaultRegistry/';
+    return id.startsWith(defaultPrefix)
+        ? id.substring(defaultPrefix.length)
+        : id;
+  }
+
   String get valuePrefix =>
       '${prefix.substring(0, 1).toLowerCase()}${prefix.substring(1)}';
 

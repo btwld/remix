@@ -704,7 +704,7 @@ final class Installer {
       );
     } on FormatException catch (error) {
       throw FormatException(
-        'flutter --version --machine returned invalid JSON: $error',
+        'flutter --version --machine returned invalid JSON: ${error.message}',
       );
     }
     if (machine is! Map<String, Object?> ||

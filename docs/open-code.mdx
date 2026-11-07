@@ -765,13 +765,14 @@ Section placement is enforced, because the installed source lives under your
 | `build_runner`, `mix_generator` | either (build-time only) |
 
 A runtime package declared only under `dev_dependencies` fails **before** any
-process runs or file is written:
+tool runs or project file is written. The registry has been read by then, so the
+progress and revision lines come first, and the message itself is one line:
 
 ```
 $ remix add button
-remix is declared under dev_dependencies but installed source
-imports it at runtime. Move remix to dependencies in pubspec.yaml and rerun.
-No source was written.
+Fetching registry items...
+@remix (vanilla) revision <pinned commit>
+remix is declared under dev_dependencies but installed source imports it at runtime. Move remix to dependencies in pubspec.yaml and rerun. No source was written.
 ```
 
 Declaring the same package in both sections is rejected the same way. Fix your

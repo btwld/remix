@@ -54,13 +54,13 @@ final class RegistryGraph {
       final catalog = catalogs[namespace] ??= await reader.catalog();
       final item = catalog.items[id.split('/').last];
       if (item == null) {
-        // Suggest in the spelling `add` accepts: bare in the default registry.
-        final prefix = namespace == config.defaultRegistry ? '' : '$namespace/';
+        // Suggest in the spelling `add` accepts.
         throw FormatException(
           [
             'Unknown registry item $id in the ${config.preset} preset.',
-            ?didYouMean('$prefix${id.split('/').last}', [
-              for (final name in catalog.items.keys) '$prefix$name',
+            ?didYouMean(config.addSpelling(id), [
+              for (final name in catalog.items.keys)
+                config.addSpelling('$namespace/$name'),
             ]),
             'Run remix list to see every item in the ${config.preset} preset.',
           ].join('\n'),
