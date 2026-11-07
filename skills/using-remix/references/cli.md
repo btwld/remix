@@ -3,12 +3,23 @@
 Keeping installed source current, and projects from earlier prereleases.
 Commands assume `remix_cli` is a dev dependency.
 
+## Find an item
+
+```bash
+dart run remix_cli:remix list          # items the pinned registries offer, with what each needs
+dart run remix_cli:remix list --json   # the same listing as one JSON document
+```
+
+An unknown item or preset fails with a "Did you mean" hint when a name is
+close.
+
 ## Move a registry pin
 
 ```bash
 dart run remix_cli:remix registry update @remix                  # move to the newest promoted commit
 dart run remix_cli:remix registry update @remix --ref <sha|branch>
 dart run remix_cli:remix add theme button --diff                 # review what changed
+dart run remix_cli:remix add theme button --diff --exit-code     # exit 2 on drift, for CI
 dart run remix_cli:remix add theme button --overwrite            # adopt the new source
 ```
 
@@ -18,7 +29,8 @@ line — installed dependencies, including `theme`, are always kept as they
 are, customized or not. Name every item that should refresh, review with
 `--diff`, then adopt with `--overwrite`; there is no automatic merge.
 `--diff` always shows your own local edits, whether or not the template
-moved — read the hunks, not the exit state. Rolling back is
+moved, so read the hunks. Plain `--diff` exits 0. With `--exit-code` it exits
+2 when authored source differs and 1 on failure. Rolling back is
 `git checkout remix.yaml`, which restores the pin but not installed source.
 
 ## Projects from an earlier prerelease

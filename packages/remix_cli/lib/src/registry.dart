@@ -12,6 +12,19 @@ import 'yaml_fields.dart';
 /// swap also needs its length.
 const uiTargetPrefix = '@ui/';
 
+/// A registry item id with its namespace, `@namespace/name`.
+final qualifiedItemPattern = RegExp(r'^@[a-z][a-z0-9_-]*/[a-z][a-z0-9_]*$');
+
+/// A registry item id as `@namespace/name`. A bare [name] belongs to
+/// [namespace]; a qualified one names its own registry.
+String qualifyRegistryItem(String name, String namespace) {
+  if (packageNamePattern.hasMatch(name)) return '$namespace/$name';
+  if (!qualifiedItemPattern.hasMatch(name)) {
+    throw FormatException('Invalid registry item $name.');
+  }
+  return name;
+}
+
 final class RegistryCatalog {
   RegistryCatalog._({required this.preset, required this.items});
 
@@ -41,9 +54,7 @@ final class RegistryCatalog {
       for (final dependency in items[name]!.registryDependencies) {
         if (!packageNamePattern.hasMatch(dependency) &&
             !(root['schema'] == 2 &&
-                RegExp(
-                  r'^@[a-z][a-z0-9_-]*/[a-z][a-z0-9_]*$',
-                ).hasMatch(dependency))) {
+                qualifiedItemPattern.hasMatch(dependency))) {
           throw FormatException(
             'Invalid registry dependency $dependency for catalog schema ${root['schema']}.',
           );

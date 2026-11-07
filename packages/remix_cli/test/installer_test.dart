@@ -293,6 +293,81 @@ registries:
     },
   );
 
+  test('add reports each slow phase on the progress writer only', () async {
+    final output = <String>[];
+    final progress = <String>[];
+
+    await Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      writeProgress: progress.add,
+      processRunner: happyRunner(root, addMissingDependencies: true),
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.write));
+
+    expect(progress, [
+      'Fetching registry items...',
+      'Checking the Flutter SDK...',
+      'Adding dependencies...',
+      'Resolving dependencies...',
+      'Generating adapters...',
+      'Analyzing...',
+    ]);
+    expect(output, isNot(contains(endsWith('...'))));
+    expect(output.last, 'Generated lib/ui/components/button.g.dart.');
+  });
+
+  test('diff reports fetching and comparing on the progress writer', () async {
+    await installButton(root);
+    final output = <String>[];
+    final progress = <String>[];
+
+    await Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      writeProgress: progress.add,
+      processRunner: happyRunner(root),
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.diff));
+
+    expect(progress, [
+      'Fetching registry items...',
+      'Checking the Flutter SDK...',
+      'Comparing with installed source...',
+    ]);
+    expect(output.last, 'No authored-source differences.');
+  });
+
+  test('a missing Flutter SDK is an expected failure', () async {
+    writeRequiredPubspec(root);
+    writeRequiredLock(root);
+    final runner = RecordingProcessRunner(
+      (invocation) => throw ProcessException(
+        invocation.executable,
+        invocation.arguments,
+        'No such file or directory',
+        2,
+      ),
+    );
+
+    await expectLater(
+      Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: runner,
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
+      throwsA(
+        isA<ProcessFailure>().having(
+          (error) => error.toString(),
+          'toString',
+          'Could not inspect the active Flutter SDK: could not start '
+              'flutter. No such file or directory',
+        ),
+      ),
+    );
+  });
+
   test('generated build filter strips the lib/ directory', () async {
     final caseRoot = createFlutterPackage();
     addTearDown(() => caseRoot.deleteSync(recursive: true));
@@ -534,7 +609,7 @@ packages:
               const AddOptions(items: ['button'], mode: AddMode.write),
             ),
             throwsA(
-              isA<StateError>().having(
+              isA<InstallFailure>().having(
                 (error) => error.message,
                 'message',
                 contains(unrelated ? 'pubspec.lock' : 'does not satisfy'),
@@ -911,7 +986,7 @@ packages:
       );
       expect(
         output.join('\n'),
-        contains('Generated: lib/ui/components/button.g.dart'),
+        contains('Will generate: lib/ui/components/button.g.dart'),
       );
     },
   );
@@ -951,7 +1026,7 @@ packages:
     });
     final output = <String>[];
 
-    await Installer(
+    final result = await Installer(
       projectRoot: root,
       writeOut: output.add,
       processRunner: runner,
@@ -961,6 +1036,7 @@ packages:
     expect(snapshotFiles(root), before);
     expect(runner.calls, hasLength(3));
     expect(output.last, 'diff body');
+    expect(result, AddResult.differs);
   });
 
   test(
@@ -1024,7 +1100,7 @@ packages:
         final before = snapshotFiles(caseRoot);
         final output = <String>[];
 
-        await Installer(
+        final result = await Installer(
           projectRoot: caseRoot,
           writeOut: output.add,
           processRunner: happyRunner(
@@ -1037,6 +1113,7 @@ packages:
 
         expect(snapshotFiles(caseRoot), before, reason: item);
         expect(output.last, 'No authored-source differences.', reason: item);
+        expect(result, AddResult.done, reason: item);
       }
     },
   );
@@ -1067,7 +1144,13 @@ packages:
         processRunner: runner,
         sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['theme'], mode: AddMode.diff)),
-      throwsFormatException,
+      throwsA(
+        isA<ProcessFailure>().having(
+          (error) => error.toString(),
+          'toString',
+          startsWith('Could not diff with git: could not start git.'),
+        ),
+      ),
     );
     expect(snapshotFiles(root), before);
   });
@@ -1085,7 +1168,7 @@ packages:
         fileWriter: writer,
         sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
-      throwsStateError,
+      throwsA(isA<InstallFailure>()),
     );
 
     expect(writer.paths, isEmpty);
@@ -1116,7 +1199,7 @@ packages:
           processRunner: happyRunner(caseRoot, failStage: stage),
           sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
-        throwsStateError,
+        throwsA(isA<InstallFailure>()),
         reason: stage,
       );
 
@@ -1268,7 +1351,7 @@ dev_dependencies:
           fileWriter: writer,
           sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
-        throwsStateError,
+        throwsA(isA<InstallFailure>()),
       );
 
       expect(pubspec.readAsBytesSync(), before);
@@ -1303,7 +1386,7 @@ dev_dependencies:
               fileWriter: writer,
               sources: const FixtureOfficialResolver(),
             ).add(const AddOptions(items: ['accordion'], mode: AddMode.write)),
-            throwsStateError,
+            throwsA(isA<InstallFailure>()),
             reason: preset,
           );
 
@@ -1845,7 +1928,7 @@ dev_dependencies:
             const AddOptions(items: ['button', 'card'], mode: AddMode.write),
           ),
           throwsA(
-            isA<StateError>().having(
+            isA<InstallFailure>().having(
               (error) => error.message,
               'message',
               contains('remix add button card'),
@@ -1854,6 +1937,104 @@ dev_dependencies:
         );
       },
     );
+
+    test('an expected install failure reads as its message alone', () async {
+      writeRequiredPubspec(root);
+      writeRequiredLock(root);
+
+      await expectLater(
+        Installer(
+          projectRoot: root,
+          writeOut: (_) {},
+          processRunner: happyRunner(root, failStage: 'analyze'),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
+        throwsA(
+          isA<InstallFailure>().having(
+            expectedFailureMessage,
+            'rendered',
+            allOf(
+              startsWith('Installed UI analysis failed: '),
+              contains(
+                '\nCompleted steps: pub get, registry ownership, authored '
+                'source, format, generated Dart.',
+              ),
+              isNot(contains('Bad state')),
+              isNot(contains('Exception')),
+            ),
+          ),
+        ),
+      );
+    });
+
+    test(
+      'flutter output that is not JSON reads as its message alone',
+      () async {
+        writeRequiredPubspec(root);
+        writeRequiredLock(root);
+        final before = snapshotFiles(root);
+        final runner = RecordingProcessRunner(
+          (_) async => const ProcessOutput(
+            exitCode: 0,
+            stdout: 'Flutter is upgrading...',
+            stderr: '',
+          ),
+        );
+
+        await expectLater(
+          Installer(
+            projectRoot: root,
+            writeOut: (_) {},
+            processRunner: runner,
+            sources: const FixtureOfficialResolver(),
+          ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
+          throwsA(
+            isA<FormatException>().having(
+              expectedFailureMessage,
+              'rendered',
+              allOf(
+                startsWith(
+                  'flutter --version --machine returned invalid JSON: ',
+                ),
+                isNot(contains('FormatException')),
+              ),
+            ),
+          ),
+        );
+        expect(snapshotFiles(root), before);
+      },
+    );
+
+    test('a bug inside the install keeps its own type and stack', () async {
+      writeRequiredPubspec(root);
+      writeRequiredLock(root);
+      final progress = <String>[];
+      final happy = happyRunner(root);
+      final runner = RecordingProcessRunner((invocation) {
+        if (invocation.arguments.join(' ') == 'pub get') {
+          throw StateError('runner bug');
+        }
+        return happy.handler(invocation);
+      });
+
+      await expectLater(
+        Installer(
+          projectRoot: root,
+          writeOut: (_) {},
+          writeProgress: progress.add,
+          processRunner: runner,
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            'runner bug',
+          ),
+        ),
+      );
+      expect(progress.last, 'Completed steps: none.');
+    });
 
     test('an unknown item in the batch fails before any write', () async {
       writeRequiredPubspec(root);

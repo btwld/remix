@@ -236,4 +236,14 @@ registries:
     final roundTrip = ProjectConfig.parse(encoded, packageRoot: root);
     expect(roundTrip.iconLibrary, 'lucide');
   });
+
+  test('addSpelling is bare in the default registry only', () {
+    final config = configure(
+      packageRoot: root,
+      registries: {'@company': source, '@acme': source},
+    );
+
+    expect(config.addSpelling('@company/button'), 'button');
+    expect(config.addSpelling('@acme/card'), '@acme/card');
+  });
 }

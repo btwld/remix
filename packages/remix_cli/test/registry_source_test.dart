@@ -428,6 +428,53 @@ void main() {
     });
   }
 
+  test(
+    'a network failure reads as plain text without the exception name',
+    () async {
+      for (final (error, reason) in <(IOException, String)>[
+        (const SocketException('Connection refused'), 'Connection refused'),
+        (
+          const SocketException(
+            'Connection failed',
+            osError: OSError('Connection refused', 61),
+          ),
+          'Connection failed (Connection refused)',
+        ),
+        (
+          const HttpException('Connection closed early'),
+          'Connection closed early',
+        ),
+        (
+          const HandshakeException(
+            'Handshake error in client',
+            OSError('CERTIFICATE_VERIFY_FAILED', 1),
+          ),
+          'Handshake error in client (CERTIFICATE_VERIFY_FAILED)',
+        ),
+      ]) {
+        await expectLater(
+          GitHubSources(
+            transport: (_) async => throw error,
+          ).resolve(repository: 'owner/repo', ref: 'v1'),
+          throwsA(
+            isA<FormatException>().having(
+              expectedFailureMessage,
+              'rendered',
+              allOf(
+                startsWith(
+                  'GitHub network failure for https://api.github.com/',
+                ),
+                endsWith(': $reason'),
+                isNot(contains('Exception')),
+              ),
+            ),
+          ),
+          reason: '$error',
+        );
+      }
+    },
+  );
+
   for (final path in [
     '../registry',
     '/registry',
@@ -479,4 +526,76 @@ void main() {
       }
     },
   );
+
+  group('an unknown preset', () {
+    const index = '''
+schema: 1
+presets:
+  vanilla: vanilla/registry.yaml
+  fortal: fortal/registry.yaml
+  heroui: heroui/registry.yaml
+  retired: null
+''';
+    Matcher fails(String message) => throwsA(
+      isA<FormatException>().having(
+        (error) => error.message,
+        'message',
+        message,
+      ),
+    );
+
+    test('suggests a near preset and lists the published ones', () {
+      expect(
+        () => catalogPathForPreset(
+          index,
+          preset: 'vanila',
+          origin: 'btwld/remix',
+        ),
+        fails(
+          'Registry btwld/remix has no vanila preset.\n'
+          'Did you mean vanilla?\n'
+          'Available presets: vanilla, fortal, heroui.',
+        ),
+      );
+    });
+
+    test('lists the published presets when none is close', () {
+      expect(
+        () => catalogPathForPreset(
+          index,
+          preset: 'shadcn',
+          origin: 'btwld/remix',
+        ),
+        fails(
+          'Registry btwld/remix has no shadcn preset.\n'
+          'Available presets: vanilla, fortal, heroui.',
+        ),
+      );
+    });
+
+    test('neither suggests nor lists a preset whose key is not a string', () {
+      expect(
+        () => catalogPathForPreset(
+          'schema: 1\npresets:\n  1: registry/one.yaml\n  fortal: registry/f.yaml\n',
+          preset: '1',
+          origin: 'acme/design',
+        ),
+        fails(
+          'Registry acme/design has no 1 preset.\n'
+          'Available presets: fortal.',
+        ),
+      );
+    });
+
+    test('keeps the first line alone when the index publishes none', () {
+      expect(
+        () => catalogPathForPreset(
+          'schema: 1\npresets: {}\n',
+          preset: 'vanilla',
+          origin: 'acme/design',
+        ),
+        fails('Registry acme/design has no vanilla preset.'),
+      );
+    });
+  });
 }

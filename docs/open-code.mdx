@@ -170,13 +170,22 @@ remix add button --dry-run
 ```
 
 ```
-Items: theme -> button
-Dependencies: remix@^1.0.0-beta.16, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
-theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
-button: missing; lib/ui/components/button.dart
+@remix (vanilla) revision <pinned commit>
+Items: @remix/theme -> @remix/button
+Dependencies: remix@^1.0.0-beta.17, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+@remix/theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
+@remix/button: missing; lib/ui/components/button.dart
 Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, theme/effects.dart, components/button.dart
-Generated: lib/ui/components/button.g.dart
+Will generate: lib/ui/components/button.g.dart
+remix.ownership.json: record registry target ownership.
 ```
+
+`Fetching registry items...` appears on stderr before the plan. A real install
+also prints one stderr line before each slow phase, such as
+`Resolving dependencies...` and `Analyzing...`.
+
+To browse the catalog first, run `remix list`. It prints every item in your
+preset with the items each one needs.
 
 For the actual source, use `--diff`, which renders the proposed files, formats
 them, and shows a real `git diff` against what you have:
@@ -266,7 +275,7 @@ of silently reverting to a default:
 
 ```
 $ remix init
-FormatException: configuration has unknown keys: style.
+configuration has unknown keys: style.
 ```
 
 The prefix drives two identifier casings at once. With `prefix: Acme` you get
@@ -295,7 +304,7 @@ edits. Do not delete or edit the ownership record to relabel existing source.
 For example, an `init` that conflicts with the existing configuration reports:
 
 ```
-FormatException: Existing remix.yaml does not match the requested prefix, preset, and UI path.
+Existing remix.yaml does not match the requested prefix, preset, and UI path.
 ```
 
 ## What lands in your app
@@ -564,9 +573,17 @@ No authored-source differences.
 ```
 
 If you have edited the recipe, the diff never comes back empty: it reports your
-own edits every time, whether or not the template moved. Read the hunks, not the
-exit state. To see the template alone, compare against a copy of the file you
-installed, or run the diff in a scratch project that has never been edited.
+own edits every time, whether or not the template moved. Read the hunks. To see
+the template alone, compare against a copy of the file you installed, or run
+the diff in a scratch project that has never been edited.
+
+`--diff` exits `0` whether or not it finds differences. To fail a CI step on
+drift, add `--exit-code`. The command then exits `2` when authored source
+differs, and `1` still means the command failed:
+
+```bash
+remix add button --diff --exit-code
+```
 
 CLI updates do not change registry pins. `add`, `--diff`, and `--dry-run`
 fetch only the configured commits and never update configuration. Remote failures
@@ -749,13 +766,14 @@ Section placement is enforced, because the installed source lives under your
 | `build_runner`, `mix_generator` | either (build-time only) |
 
 A runtime package declared only under `dev_dependencies` fails **before** any
-process runs or file is written:
+tool runs or project file is written. The registry has been read by then, so the
+progress and revision lines come first, and the message itself is one line:
 
 ```
 $ remix add button
-FormatException: remix is declared under dev_dependencies but installed source
-imports it at runtime. Move remix to dependencies in pubspec.yaml and rerun.
-No source was written.
+Fetching registry items...
+@remix (vanilla) revision <pinned commit>
+remix is declared under dev_dependencies but installed source imports it at runtime. Move remix to dependencies in pubspec.yaml and rerun. No source was written.
 ```
 
 Declaring the same package in both sections is rejected the same way. Fix your

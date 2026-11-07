@@ -1,10 +1,156 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:remix_cli/src/cli.dart';
+import 'package:remix_cli/src/process_runner.dart';
+import 'package:remix_cli/src/version.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
+import 'checkout_registry.dart';
+
+/// Usage for [arguments], including the shapes args prints with `print()`.
+Future<String> _usage(List<String> arguments) async {
+  final printed = <String>[];
+  final code = await runZoned(
+    () => runRemixCli(arguments, writeOut: printed.add, writeError: fail),
+    zoneSpecification: ZoneSpecification(
+      print: (_, _, _, line) => printed.add(line),
+    ),
+  );
+  expect(code, successExitCode, reason: arguments.join(' '));
+  return printed.join('\n');
+}
+
 void main() {
+  group('help', () {
+    test('describes every option and flag', () async {
+      final undescribed = RegExp(
+        r'^\s*(-\w, )?--(\[no-\])?[\w-]+(=<[^>]+>)?\s*(\(defaults to [^)]*\))?$',
+        multiLine: true,
+      );
+      for (final command in [
+        ['init'],
+        ['add'],
+        ['list'],
+        ['registry', 'add'],
+        ['registry', 'update'],
+      ]) {
+        final usage = await _usage([...command, '--help']);
+        expect(usage, contains('    --'), reason: command.join(' '));
+        expect(
+          undescribed.allMatches(usage).map((match) => match[0]),
+          isEmpty,
+          reason: command.join(' '),
+        );
+      }
+    });
+
+    test('shows what to type for each command', () async {
+      expect(
+        await _usage(['help', 'add']),
+        allOf(
+          contains('Usage: remix add <item...> [options]'),
+          contains('Examples:\n  remix add button '),
+          contains('remix add button --diff --exit-code '),
+        ),
+      );
+      expect(
+        await _usage(['help', 'init']),
+        allOf(
+          contains('Usage: remix init [options]'),
+          contains('Examples:\n  remix init '),
+        ),
+      );
+      expect(
+        await _usage(['help', 'registry']),
+        contains('Examples:\n  remix registry add @acme --repository '),
+      );
+      expect(
+        await _usage(['registry', 'add', '--help']),
+        contains(
+          'Usage: remix registry add <@namespace> --repository <owner/repo>',
+        ),
+      );
+      expect(
+        await _usage(['--help']),
+        allOf(
+          contains('Get started:\n  remix init '),
+          contains('\n  remix list '),
+          contains('\n  list       List the items you can add'),
+        ),
+      );
+      expect(
+        await _usage(['help', 'list']),
+        contains('Usage: remix list [options]'),
+      );
+    });
+
+    test('--exit-code states its exit code without comparing to git', () async {
+      final usage = await _usage(['help', 'add']);
+      final line = usage
+          .split('\n')
+          .singleWhere((line) => line.trimLeft().startsWith('--exit-code '));
+
+      expect(
+        line,
+        contains('exit $driftExitCode when authored source differs'),
+      );
+      expect(line, isNot(contains('git')));
+    });
+
+    test('example rows stay within 80 columns', () async {
+      var checked = 0;
+      for (final command in [
+        ['--help'],
+        ['help', 'init'],
+        ['help', 'add'],
+        ['help', 'list'],
+        ['help', 'registry'],
+        ['registry', 'add', '--help'],
+        ['registry', 'update', '--help'],
+      ]) {
+        final usage = await _usage(command);
+        final rows = usage
+            .split('\n')
+            .where((line) => line.startsWith('  remix '))
+            .toList();
+        for (final row in rows) {
+          checked++;
+          expect(
+            row.length,
+            lessThanOrEqualTo(80),
+            reason: '${command.join(' ')}: $row',
+          );
+        }
+      }
+      expect(checked, greaterThan(10), reason: 'rows were found');
+    });
+
+    test('init lists the official presets without restricting them', () async {
+      final usage = await _usage(['help', 'init']);
+      for (final MapEntry(key: preset, value: summary)
+          in officialPresets.entries) {
+        expect(usage, contains(RegExp('\\[$preset\\].* $summary')));
+      }
+    });
+
+    test('officialPresets follows the checkout index, in order', () {
+      final index =
+          loadYaml(
+                File(
+                  '${findCheckoutRegistry().path}/index.yaml',
+                ).readAsStringSync(),
+              )
+              as YamlMap;
+
+      expect(
+        officialPresets.keys.toList(),
+        (index['presets'] as YamlMap).keys.toList(),
+      );
+    });
+  });
+
   test('--help prints usage successfully', () async {
     final output = <String>[];
 
@@ -84,6 +230,89 @@ void main() {
     expect(errors.join('\n'), contains('Could not find a command named'));
   });
 
+  test(
+    'a misspelled command suggests the same way with or without help',
+    () async {
+      for (final arguments in [
+        ['lsit'],
+        ['help', 'lsit'],
+        ['lsit', '--help'],
+      ]) {
+        final errors = <String>[];
+
+        final code = await runRemixCli(
+          arguments,
+          writeOut: fail,
+          writeError: errors.add,
+        );
+
+        expect(code, usageExitCode, reason: arguments.join(' '));
+        expect(
+          errors.first,
+          'Could not find a command named "lsit".\nDid you mean list or init?',
+          reason: arguments.join(' '),
+        );
+        expect(errors.last, contains('Usage: remix <command>'));
+      }
+    },
+  );
+
+  test('list dispatches its output mode', () async {
+    ListOptions? received;
+
+    final code = await runRemixCli(
+      ['list', '--json'],
+      writeOut: fail,
+      writeError: fail,
+      onList: (options) async => received = options,
+    );
+
+    expect(code, successExitCode);
+    expect(received!.json, isTrue);
+  });
+
+  test('a misspelled subcommand suggests that command', () async {
+    for (final (arguments, message) in [
+      (
+        ['registry', 'udpate'],
+        'Could not find a subcommand named "udpate".\nDid you mean update?',
+      ),
+      (
+        ['registry', 'addd'],
+        'Could not find a subcommand named "addd".\nDid you mean add?',
+      ),
+    ]) {
+      final errors = <String>[];
+
+      final code = await runRemixCli(
+        arguments,
+        writeOut: fail,
+        writeError: errors.add,
+      );
+
+      expect(code, usageExitCode, reason: arguments.join(' '));
+      expect(errors.first, message, reason: arguments.join(' '));
+      expect(errors.last, contains('Usage: remix registry'));
+      expect(errors.last, isNot(contains('Usage: remix <command>')));
+    }
+  });
+
+  test('help for a misspelled command suggests the near one', () async {
+    final errors = <String>[];
+
+    final code = await runRemixCli(
+      ['help', 'ad'],
+      writeOut: fail,
+      writeError: errors.add,
+    );
+
+    expect(code, usageExitCode);
+    expect(
+      errors.first,
+      'Could not find a command named "ad".\nDid you mean add?',
+    );
+  });
+
   test('--version agrees with pubspec.yaml', () async {
     final output = <String>[];
     final pubspec =
@@ -142,7 +371,10 @@ void main() {
       ['add', 'button', '--diff'],
       writeOut: fail,
       writeError: fail,
-      onAdd: (options) async => received = options,
+      onAdd: (options) async {
+        received = options;
+        return AddResult.done;
+      },
     );
 
     expect(code, successExitCode);
@@ -157,7 +389,10 @@ void main() {
       ['add', 'button', 'card', 'dialog'],
       writeOut: fail,
       writeError: fail,
-      onAdd: (options) async => received = options,
+      onAdd: (options) async {
+        received = options;
+        return AddResult.done;
+      },
     );
 
     expect(code, successExitCode);
@@ -173,7 +408,10 @@ void main() {
       ['add'],
       writeOut: (_) {},
       writeError: errors.add,
-      onAdd: (_) async => dispatched = true,
+      onAdd: (_) async {
+        dispatched = true;
+        return AddResult.done;
+      },
     );
 
     expect(code, usageExitCode);
@@ -189,7 +427,10 @@ void main() {
       ['add', 'button', 'card', 'button'],
       writeOut: (_) {},
       writeError: errors.add,
-      onAdd: (_) async => dispatched = true,
+      onAdd: (_) async {
+        dispatched = true;
+        return AddResult.done;
+      },
     );
 
     expect(code, usageExitCode);
@@ -205,12 +446,50 @@ void main() {
       ['add', 'button', '--dry-run', '--overwrite'],
       writeOut: fail,
       writeError: errors.add,
-      onAdd: (_) async => dispatched = true,
+      onAdd: (_) async {
+        dispatched = true;
+        return AddResult.done;
+      },
     );
 
     expect(code, usageExitCode);
     expect(dispatched, isFalse);
     expect(errors.join('\n'), contains('mutually exclusive'));
+  });
+
+  group('add --exit-code', () {
+    Future<int> run(List<String> flags, AddResult result) => runRemixCli(
+      ['add', 'button', ...flags],
+      writeOut: fail,
+      writeError: fail,
+      onAdd: (_) async => result,
+    );
+
+    test('exits $driftExitCode only when --diff found differences', () async {
+      expect(
+        await run(['--diff', '--exit-code'], AddResult.differs),
+        driftExitCode,
+      );
+      expect(
+        await run(['--diff', '--exit-code'], AddResult.done),
+        successExitCode,
+      );
+      expect(await run(['--diff'], AddResult.differs), successExitCode);
+    });
+
+    test('without --diff is a usage error before dispatch', () async {
+      final errors = <String>[];
+
+      final code = await runRemixCli(
+        ['add', 'button', '--exit-code'],
+        writeOut: fail,
+        writeError: errors.add,
+        onAdd: (_) async => fail('dispatched'),
+      );
+
+      expect(code, usageExitCode);
+      expect(errors.first, '--exit-code requires --diff.');
+    });
   });
 
   test('runtime handler failures use a stable failure exit', () async {
@@ -224,6 +503,96 @@ void main() {
     );
 
     expect(code, failureExitCode);
-    expect(errors.single, contains('broken'));
+    final report = errors.single;
+    expect(report, contains('broken'));
+    expect(report, startsWith('remix_cli $remixCliVersion hit an unexpected'));
+    expect(report, contains('https://github.com/btwld/remix/issues'));
+    expect(report, contains('\n  #0 '));
+    for (final line in report.split('\n').skip(1)) {
+      expect(line, startsWith('  '));
+    }
   });
+
+  test('expected handler failures print the message alone', () async {
+    final errors = <String>[];
+
+    final code = await runRemixCli(
+      ['init'],
+      writeOut: fail,
+      writeError: errors.add,
+      onInit: (_) async => throw const FormatException('Run remix init.'),
+    );
+
+    expect(code, failureExitCode);
+    expect(errors, ['Run remix init.']);
+  });
+
+  group('expectedFailureMessage', () {
+    final invocation = ProcessInvocation(
+      executable: 'dart',
+      arguments: const ['analyze', 'lib/ui'],
+      workingDirectory: '.',
+    );
+    final cases = <String, (Object, Matcher)>{
+      'FormatException': (
+        const FormatException('bad input'),
+        equals('bad input'),
+      ),
+      'FormatException with offset': (
+        const FormatException('Unexpected character', '{x', 1),
+        allOf(startsWith('Unexpected character'), contains('{x')),
+      ),
+      'YamlException': (
+        _yamlError('a: [b'),
+        allOf(startsWith('Error on line'), isNot(contains('Exception'))),
+      ),
+      'ProcessFailure': (
+        ProcessFailure(
+          invocation,
+          const ProcessOutput(exitCode: 1, stdout: '', stderr: 'boom'),
+          detail: 'Analysis failed',
+        ),
+        equals('Analysis failed: dart analyze lib/ui\nboom'),
+      ),
+      'FileSystemException': (
+        const FileSystemException(
+          'Cannot open file',
+          'lib/ui/ui.dart',
+          OSError('Permission denied', 13),
+        ),
+        equals('Cannot open file: lib/ui/ui.dart (Permission denied)'),
+      ),
+      'FileSystemException without a path': (
+        const FileSystemException('Disk full'),
+        equals('Disk full'),
+      ),
+      'InstallFailure': (
+        const InstallFailure('stopped\nCompleted steps: none.'),
+        equals('stopped\nCompleted steps: none.'),
+      ),
+      'StateError': (StateError('bug'), isNull),
+      'TypeError': (_typeError(), isNull),
+    };
+    for (final MapEntry(key: name, value: (error, matcher)) in cases.entries) {
+      test(name, () => expect(expectedFailureMessage(error), matcher));
+    }
+  });
+}
+
+Object _yamlError(String source) {
+  try {
+    loadYaml(source);
+  } on YamlException catch (error) {
+    return error;
+  }
+  throw StateError('$source parsed');
+}
+
+Object _typeError() {
+  try {
+    <Object?>[null].single as String;
+  } on TypeError catch (error) {
+    return error;
+  }
+  throw StateError('cast succeeded');
 }
