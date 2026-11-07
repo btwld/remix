@@ -42,9 +42,9 @@ Contributors using an unreleased CLI can install it from a checkout:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-A registry candidate whose Remix floor pub.dev does not serve yet needs a
-checkout override for development. Only [hosted release checks](RELEASING.md)
-establish that published packages satisfy the floor; a local override does not.
+If pub.dev does not yet serve a registry candidate's Remix floor, use a checkout
+override for development. Only [hosted release checks](RELEASING.md) establish
+that published packages satisfy the floor; a local override does not.
 
 ## Host requirements
 

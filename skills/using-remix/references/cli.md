@@ -28,13 +28,13 @@ to read with an explicit error. Recover a schema 1 or 2 project by deleting
 `remix.yaml`, running `remix init` again with its old `--prefix`/`--preset`/
 `--ui-path`, then verifying the installed source's provenance before adoption.
 
-CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. An
-unversioned `dev:remix_cli` dependency resolves 0.1.0; raise it to
-`^1.0.0-beta.1` first. The current CLI rejects unknown existing targets before
-mutation, including `--diff` and `--dry-run`. After verifying their source,
-name every existing dependency explicitly when adopting. For Vanilla Button,
-that is Theme and Button. Fortal Button also needs `base_button` when its
-targets already exist:
+CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. A
+`remix_cli` entry under `dev_dependencies` with no version resolves 0.1.0;
+raise it first with `flutter pub add dev:remix_cli:^1.0.0-beta.1`. The current
+CLI rejects unknown existing targets before mutation, including `--diff` and
+`--dry-run`. After verifying their source, name every existing dependency
+explicitly when adopting. For Vanilla Button, that is Theme and Button. Fortal
+Button also needs `base_button` when its targets already exist:
 
 ```bash
 dart run remix_cli:remix add theme button --adopt --diff
@@ -79,8 +79,9 @@ iconLibrary: rounded # remix (default), rounded, or lucide
 ```
 
 `remix` and `rounded` both add `remix_ui_icons`, and each draws every registry
-icon. `lucide` adds `lucide_flutter` instead. The registry requires `remix_ui_icons` `^1.0.0-beta.1`;
-projects on `^0.1.0` must update that constraint and migrate their own icon
+icon. `lucide` adds `lucide_flutter` instead. Projects still on `remix_ui_icons`
+`^0.1.0` must raise that constraint with
+`flutter pub add remix_ui_icons:^1.0.0-beta.1` and migrate their own icon
 references using the package’s `MIGRATION.md`.
 
 The choice applies at install. In Vanilla and Fortal four items use icons
