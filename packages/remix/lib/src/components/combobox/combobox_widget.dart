@@ -139,6 +139,7 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 288),
             child: SingleChildScrollView(
+              primary: false,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,

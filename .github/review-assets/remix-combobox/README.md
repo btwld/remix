@@ -19,3 +19,12 @@ exercised in the native window. No physical IME or screen-reader claim.
 Executed RGBA assertions cover independent editor/row states and raw-style
 precedence; geometry assertions separately cover a true 320×640 viewport.
 Screenshots are manual visual evidence, not full-composition golden baselines.
+
+## Scroll-isolation correction
+
+`native-scroll-fix-open.png` is a refreshed 800×600 native capture after the
+suggestions viewport stopped inheriting the host primary scroll controller.
+The final app hot reload and option acceptance passed without runtime errors.
+Android/iOS widget regressions, not this macOS image, establish host-controller
+isolation and independent popup scrolling. The other captures above retain
+the same appearance and their original capture snapshot.

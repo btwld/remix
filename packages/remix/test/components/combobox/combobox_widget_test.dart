@@ -348,6 +348,62 @@ void main() {
   );
 
   testWidgets(
+    'popup scrolling leaves the host primary scroll controller alone',
+    (tester) async {
+      final hostController = ScrollController(initialScrollOffset: 48);
+      addTearDown(hostController.dispose);
+      await tester.pumpWidget(
+        comboboxHost(
+          PrimaryScrollController(
+            controller: hostController,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RemixCombobox<String>(
+                  optionsBuilder: (_) =>
+                      List.generate(24, (index) => 'Suggestion $index'),
+                  style: testComboboxStyle(),
+                ),
+                SizedBox(
+                  height: 200,
+                  child: ListView(
+                    primary: true,
+                    children: const [SizedBox(height: 1000)],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(hostController.positions, hasLength(1));
+      final hostOffset = hostController.offset;
+      expect(hostOffset, 48);
+
+      await openCombobox(tester);
+
+      expect(find.text('Suggestion 0'), findsOneWidget);
+      expect(hostController.positions, hasLength(1));
+      expect(hostController.offset, hostOffset);
+      final popup = find.byType(SingleChildScrollView).last;
+      final popupState = tester.state<ScrollableState>(
+        find.descendant(of: popup, matching: find.byType(Scrollable)),
+      );
+      final popupOffset = popupState.position.pixels;
+      await tester.drag(popup, const Offset(0, -120));
+      await tester.pumpAndSettle();
+
+      expect(popupState.position.pixels, greaterThan(popupOffset));
+      expect(hostController.positions, hasLength(1));
+      expect(hostController.offset, hostOffset);
+    },
+    variant: TargetPlatformVariant({
+      TargetPlatform.android,
+      TargetPlatform.iOS,
+    }),
+  );
+
+  testWidgets(
     'touch scrolling does not select and eager last-row reveal works',
     (tester) async {
       final values = List.generate(24, (index) => 'Suggestion $index');
