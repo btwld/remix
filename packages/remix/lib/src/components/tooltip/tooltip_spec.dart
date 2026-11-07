@@ -14,6 +14,8 @@ class TooltipSpec with _$TooltipSpec {
   final Duration? showDuration;
   @override
   final Duration? dismissDuration;
+  @override
+  final Duration? skipDelayDuration;
 
   const TooltipSpec({
     StyleSpec<BoxSpec>? container,
@@ -21,6 +23,7 @@ class TooltipSpec with _$TooltipSpec {
     this.waitDuration = const Duration(milliseconds: 300),
     this.showDuration = const Duration(milliseconds: 1500),
     this.dismissDuration = const Duration(milliseconds: 100),
+    this.skipDelayDuration = const Duration(milliseconds: 300),
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec());
 }

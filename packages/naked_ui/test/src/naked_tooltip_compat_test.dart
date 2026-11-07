@@ -10,7 +10,7 @@ const _triggerKey = Key('compat-trigger');
 
 void main() {
   group('NakedTooltip focus, Escape, and placement', () {
-    testWidgets('focus opens after hoverDelay and blur closes after '
+    testWidgets('focus opens without hoverDelay and blur closes after '
         'dismissDelay', (tester) async {
       final focus = FocusNode();
       addTearDown(focus.dispose);
@@ -18,7 +18,7 @@ void main() {
       await tester.pumpMaterialWidget(
         Center(
           child: _tooltip(
-            hoverDelay: const Duration(milliseconds: 100),
+            hoverDelay: const Duration(seconds: 10),
             dismissDelay: const Duration(milliseconds: 100),
             onOpenChanged: changes.add,
             child: Focus(focusNode: focus, child: _trigger),
@@ -28,10 +28,6 @@ void main() {
 
       focus.requestFocus();
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 50));
-      expect(find.text('Tip'), findsNothing);
-      await tester.pump(const Duration(milliseconds: 60));
-      await tester.pumpAndSettle();
       expect(find.text('Tip'), findsOneWidget);
 
       focus.unfocus();
@@ -42,28 +38,6 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Tip'), findsNothing);
       expect(changes, [true, false]);
-    });
-
-    testWidgets('focus that leaves before hoverDelay never opens', (
-      tester,
-    ) async {
-      final focus = FocusNode();
-      addTearDown(focus.dispose);
-      await tester.pumpMaterialWidget(
-        Center(
-          child: _tooltip(
-            hoverDelay: const Duration(milliseconds: 100),
-            child: Focus(focusNode: focus, child: _trigger),
-          ),
-        ),
-      );
-
-      focus.requestFocus();
-      await tester.pump(const Duration(milliseconds: 50));
-      focus.unfocus();
-      await tester.pump(const Duration(milliseconds: 100));
-      await tester.pumpAndSettle();
-      expect(find.text('Tip'), findsNothing);
     });
 
     testWidgets('a focused tooltip stays open when the mouse leaves', (
@@ -157,7 +131,7 @@ void main() {
           child: Center(
             child: _tooltip(
               // Focus never opens it; only the enclosing action can react.
-              hoverDelay: const Duration(seconds: 10),
+              isFocusVisible: () => false,
               child: Focus(focusNode: focus, child: _trigger),
             ),
           ),
@@ -366,11 +340,13 @@ NakedTooltip _tooltip({
   Duration dismissDelay = Duration.zero,
   bool enableTapToDismiss = true,
   ValueChanged<bool>? onOpenChanged,
+  ValueGetter<bool>? isFocusVisible,
 }) => NakedTooltip(
   hoverDelay: hoverDelay,
   dismissDelay: dismissDelay,
   enableTapToDismiss: enableTapToDismiss,
   onOpenChanged: onOpenChanged,
+  isFocusVisible: isFocusVisible,
   animationStyle: AnimationStyle.noAnimation,
   overlayBuilder: (context, animation) =>
       const SizedBox(width: 60, height: 20, child: Text('Tip')),
