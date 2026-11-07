@@ -308,6 +308,26 @@ void main() {
       expect(childConstraints?.maxHeight, 300);
     });
 
+    testWidgets('constrained collision bounds limit width before shifting', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildHarness(
+          constrainToAvailableHeight: true,
+          positioning: const OverlayPositionConfig(
+            collisionPadding: EdgeInsets.fromLTRB(11, 13, 23, 17),
+          ),
+          child: const SizedBox(key: childKey, width: 400, height: 300),
+        ),
+      );
+      final rect = tester.getRect(find.byKey(childKey));
+      expect(rect.left, greaterThanOrEqualTo(11));
+      expect(rect.right, lessThanOrEqualTo(377));
+      expect(rect.width, 366);
+      expect(rect.top, greaterThanOrEqualTo(13));
+      expect(rect.bottom, lessThanOrEqualTo(283));
+    });
+
     group('constrainToAvailableHeight', () {
       // Taller than the 300 high overlay, like a long list that scrolls.
       Widget scrollingPanel({double itemHeight = 40, int items = 20}) =>

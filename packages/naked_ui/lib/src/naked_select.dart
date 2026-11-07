@@ -366,6 +366,12 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
     with OverlayStateMixin<NakedSelect<T>> {
   // ignore: dispose-fields
   late final MenuController _menuController;
+  final _internalTriggerFocusNode = FocusNode(
+    debugLabel: 'NakedSelect trigger',
+  );
+  FocusNode get _triggerFocusNode =>
+      widget.triggerFocusNode ?? _internalTriggerFocusNode;
+
   final _selectedOptionFocusNode = FocusNode(
     debugLabel: 'NakedSelect selected option',
   );
@@ -381,6 +387,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
 
   @override
   void dispose() {
+    _internalTriggerFocusNode.dispose();
     _selectedOptionFocusNode.dispose();
     super.dispose();
   }
@@ -407,10 +414,17 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
       if (_isEnabled) widget.onOpenChanged?.call(true);
       return;
     }
+    void show() {
+      if (!mounted) return;
+      // Root anchors establish trigger history themselves; nested anchors do
+      // not. Keep the actual selector, rather than its previous sibling, as the
+      // restoration target for both pointer and programmatic opening.
+      _triggerFocusNode.requestFocus();
+      showOverlay();
+    }
+
     final onOpenRequested = widget.onOpenRequested;
-    onOpenRequested == null
-        ? showOverlay()
-        : onOpenRequested(position, showOverlay);
+    onOpenRequested == null ? show() : onOpenRequested(position, show);
   }
 
   void _handleCloseRequested(VoidCallback hideOverlay) {
@@ -451,7 +465,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
     handleClose(
       onClose: widget.onClose,
       onCanceled: widget.onCanceled,
-      triggerFocusNode: widget.triggerFocusNode,
+      triggerFocusNode: _triggerFocusNode,
     );
     if (_controlledOpen == null) widget.onOpenChanged?.call(false);
     if (mounted) setState(() {});
@@ -504,7 +518,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
 
     Widget selectWidget = RawMenuAnchor(
       controller: _menuController,
-      childFocusNode: widget.triggerFocusNode,
+      childFocusNode: _triggerFocusNode,
       consumeOutsideTaps: widget.consumeOutsideTaps,
       onOpen: _handleOpen,
       onClose: _handleClose,
@@ -545,7 +559,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
         onPressed: _isEnabled ? _toggle : null,
         enabled: _isEnabled,
         mouseCursor: widget.mouseCursor,
-        focusNode: widget.triggerFocusNode,
+        focusNode: _triggerFocusNode,
         semanticLabel: widget.semanticLabel,
         child: widget.child,
         builder: (context, buttonState, child) {

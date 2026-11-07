@@ -19,6 +19,54 @@ void main() {
     return option.top >= viewport.top && option.bottom <= viewport.bottom;
   }
 
+  testWidgets(
+    'nested selector without a supplied node restores its actual trigger',
+    (tester) async {
+      final parent = MenuController();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Center(
+            child: NakedPopover(
+              controller: parent,
+              child: const Text('Parent trigger'),
+              popoverBuilder: (context, info) => NakedSelect<String>(
+                value: 'one',
+                onChanged: (_) {},
+                child: const Text('Selector trigger'),
+                overlayBuilder: (context, info) =>
+                    const NakedSelectOption<String>(
+                      value: 'one',
+                      child: Text('Option one'),
+                    ),
+              ),
+            ),
+          ),
+        ),
+      );
+      parent.open();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Selector trigger'));
+      await tester.pumpAndSettle();
+      expect(find.text('Option one'), findsOneWidget);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Option one'), findsNothing);
+      expect(parent.isOpen, isTrue);
+      var selectorFocused = false;
+      FocusManager.instance.primaryFocus?.context?.visitAncestorElements((
+        element,
+      ) {
+        if (element.widget is NakedSelect<String>) selectorFocused = true;
+        return !selectorFocused;
+      });
+      expect(selectorFocused, isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(parent.isOpen, isFalse);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   // Helper function to build select widget
   Widget buildSelect<T>({
     T? selectedValue,

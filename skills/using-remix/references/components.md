@@ -102,6 +102,19 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `SelectStyler().content(SelectContentStyler().minWidth(remixAnchorWidth()))`),
   which resolves to the trigger width inside `RemixSelect` and `RemixMenu`
   overlays and to `0` anywhere else, `RemixPopover` included.
+- **Calendar** — controlled Gregorian date selection. `value` is nullable;
+  `firstDate`/`lastDate` are required and inclusive. Compare civil year/month/day
+  fields, not instants; callbacks return local date-only `DateTime` values.
+  `enabled && onChanged != null` controls interaction. Unavailable in-range
+  dates stay keyboard-focusable without becoming selectable. Browsing never
+  selects; clearing `value` preserves the displayed month. The day grid has one
+  Tab entry and supports arrows, Home/End, PageUp/Down and Shift+PageUp/Down.
+  `RemixCalendarLabels` defaults to English; provide localized formatters and
+  `firstDayOfWeek` explicitly (Monday=1 through Sunday=7). Default month/year
+  selectors need an Overlay ancestor. Keep `navigationStyle`, `selectorStyle`
+  and day styling unresolved in their own interaction states. Shared runtime
+  only: preset calendar recipes are not installed by this change. Use
+  `RemixCalendar(style: ...)`; `CalendarStyler` has no callable widget shorthand.
 
 ## Data display
 

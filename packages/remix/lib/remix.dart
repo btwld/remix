@@ -10,6 +10,7 @@ export 'src/components/app_bar/app_bar.dart';
 export 'src/components/avatar/avatar.dart';
 export 'src/components/badge/badge.dart';
 export 'src/components/button/button.dart';
+export 'src/components/calendar/calendar.dart';
 export 'src/components/callout/callout.dart';
 export 'src/components/dialog/dialog.dart';
 export 'src/components/icon_button/icon_button.dart';
@@ -43,6 +44,7 @@ export 'src/components/tooltip/tooltip.dart';
 export 'package:mix/mix.dart';
 export 'package:naked_ui/naked_ui.dart'
     show
+        NakedCalendarState,
         NakedAccordionTriggerBuilder,
         NakedAccordionItemState,
         NakedDisclosureState,

@@ -15,6 +15,7 @@ import 'package:demo/components/app_bar.dart' as _demo_components_app_bar;
 import 'package:demo/components/avatar.dart' as _demo_components_avatar;
 import 'package:demo/components/badge.dart' as _demo_components_badge;
 import 'package:demo/components/button.dart' as _demo_components_button;
+import 'package:demo/components/calendar.dart' as _demo_components_calendar;
 import 'package:demo/components/callout.dart' as _demo_components_callout;
 import 'package:demo/components/card.dart' as _demo_components_card;
 import 'package:demo/components/checkbox.dart' as _demo_components_checkbox;
@@ -171,6 +172,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Catalog',
             builder: _demo_components_button.buildButtonCatalogUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixCalendar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Appointment date',
+            builder: _demo_components_calendar.buildCalendarUseCase,
           ),
         ],
       ),

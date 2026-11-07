@@ -55,6 +55,14 @@
       }
     ]
   },
+  "calendar": {
+    "cases": [
+      {
+        "name": "Appointment date",
+        "path": "components/remixcalendar/appointment-date"
+      }
+    ]
+  },
   "callout": {
     "cases": [
       {

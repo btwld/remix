@@ -217,6 +217,8 @@ class OverlayPositioner extends StatefulWidget {
   /// It may then overlap the anchor. A smaller child that fits still stays
   /// beside the anchor.
   ///
+  /// With collision avoidance, the constrained layout also caps child width
+  /// at the collision-padded overlay width, allowing horizontal scrolling.
   /// Content that cannot scroll overflows the capped height. Placements to
   /// the left or right of the anchor are not capped, because shifting already
   /// keeps them beside the anchor rather than over it.
@@ -310,24 +312,33 @@ class _OverlayPositionerDelegate extends SingleChildLayoutDelegate {
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    final loose = constraints.loosen();
+    var loose = constraints.loosen();
     if (!constrainToAvailableHeight) return loose;
 
-    final available = _availableHeight(
-      targetRect,
-      loose.maxHeight,
-      positioning,
-    );
+    final boundsHeight = loose.maxHeight;
+    if (positioning.avoidCollisions) {
+      // Shifting cannot fit a child wider than the collision-padded viewport.
+      // Bound the layout itself so scrollable content can honor those edges.
+      loose = loose.copyWith(
+        maxWidth: math.max(
+          0,
+          loose.maxWidth - positioning.collisionPadding.horizontal,
+        ),
+        maxHeight: switch (positioning.side) {
+          OverlaySide.top || OverlaySide.bottom => math.max(
+            0,
+            loose.maxHeight - positioning.collisionPadding.vertical,
+          ),
+          OverlaySide.left || OverlaySide.right => loose.maxHeight,
+        },
+      );
+    }
+    final available = _availableHeight(targetRect, boundsHeight, positioning);
     // A sliver beside a stretched anchor may leave no scroll viewport after
     // panel padding. Allow overlap below the caller's usable-height threshold.
     if (positioning.avoidCollisions &&
         available < positioning.minimumAvailableHeight) {
-      return loose.copyWith(
-        maxHeight: math.max(
-          0,
-          loose.maxHeight - positioning.collisionPadding.vertical,
-        ),
-      );
+      return loose;
     }
     return loose.copyWith(maxHeight: math.min(loose.maxHeight, available));
   }

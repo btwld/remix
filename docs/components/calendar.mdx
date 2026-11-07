@@ -1,0 +1,127 @@
+---
+title: Calendar
+description: A controlled, Material-independent single-date calendar with keyboard and touch interaction.
+keywords: [flutter, remix, calendar, date, accessibility]
+---
+
+`RemixCalendar` displays a Gregorian month and requests a selected date. The
+application owns the selected value; the calendar owns its focused day and
+displayed month. Use it inline with application-owned selection.
+
+## Basic usage
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class AppointmentCalendar extends StatefulWidget {
+  const AppointmentCalendar({super.key});
+
+  @override
+  State<AppointmentCalendar> createState() => _AppointmentCalendarState();
+}
+
+class _AppointmentCalendarState extends State<AppointmentCalendar> {
+  DateTime? selected;
+
+  @override
+  Widget build(BuildContext context) => RemixCalendar(
+    value: selected,
+    firstDate: DateTime(2026),
+    lastDate: DateTime(2028, 12, 31),
+    semanticLabel: 'Appointment date',
+    isDateUnavailable: (date) => date.weekday == DateTime.sunday,
+    onChanged: (date) => setState(() => selected = date),
+  );
+}
+```
+
+The default month/year selectors require an `Overlay` ancestor. A routed
+`WidgetsApp` supplies one; use `Overlay.wrap` in a builder-only host. No Material
+theme or `MaterialLocalizations` is required.
+
+## Date and state contract
+
+- Dates are year/month/day fields, not instants. Input times and UTC flags do
+  not affect same-day comparison. Callbacks return local `DateTime(year, month,
+  day)` values; do not convert them to UTC to preserve a birthday or booking date.
+- `firstDate` and `lastDate` are inclusive. Unavailable in-range dates remain
+  discoverable but cannot be selected.
+- Arrow navigation and changing the month do not call `onChanged`. Selection
+  stays unchanged if the parent does not accept a callback.
+- `enabled: false` or a null `onChanged` disables interaction. There is no
+  separate read-only mode or form-validation engine.
+- Clearing the parent's value to null preserves the browsing month. A new
+  non-null value navigates to its clamped month. An externally invalid value is
+  not silently changed or cleared.
+- `currentDate` overrides today's marker and fallback focus, useful for
+  deterministic examples/tests.
+
+## Styling
+
+Remix supplies anatomy, not a theme. Style the calendar and its existing child
+controls independently:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final calendarStyle = CalendarStyler()
+    .heading(TextStyler().fontSize(16).fontWeight(FontWeight.w600))
+    .weekday(TextStyler().fontSize(12).color(const Color(0xFF525252)))
+    .day(
+      CalendarDayStyler()
+          .borderRadius(.circular(8))
+          .label(TextStyler().fontSize(14))
+          .onSelected(
+            CalendarDayStyler()
+                .color(const Color(0xFF171717))
+                .label(TextStyler().color(const Color(0xFFFFFFFF))),
+          ),
+    );
+```
+
+`navigationStyle` styles the previous/next icon buttons; `selectorStyle` styles
+the month/year selects. `headerBuilder` can replace those controls using the
+calendar state's bounded month-navigation actions. Day selection/focus behavior
+remains owned by the calendar.
+
+Pass the styler to `RemixCalendar(style: calendarStyle, ...)`; `CalendarStyler`
+does not provide a callable widget shorthand.
+
+## Localization and direction
+
+Defaults are explicitly English; the widget does not detect date formatting or
+week starts from the locale. Replace `RemixCalendarLabels` strings and callbacks
+using the application's localization system. Its formatters cover month,
+month/year, complete accessible date, weekday, day number, and year.
+
+`firstDayOfWeek` uses Dart's weekday numbers: Monday is 1, Sunday is 7. It defaults
+to Sunday. `Directionality` controls RTL layout and horizontal keyboard movement;
+it does not translate labels. Full accessible date names should include weekday,
+day, month and year.
+
+## Interaction
+
+| Input | Behavior |
+| --- | --- |
+| Tab / Shift+Tab | Enter or leave the day grid as one keyboard stop. |
+| Left / Right | Move one visual day, respecting RTL. |
+| Up / Down | Move one week. |
+| Home / End | Move to the configured week's first/last day. |
+| PageUp / PageDown | Move one month, clamping the day when necessary. |
+| Shift+PageUp / Shift+PageDown | Move one year. |
+| Enter / Space / click / tap | Request the focused or activated date. |
+
+Hover and focus do not select. Touch does not require hover, swipe or dragging.
+The default day targets are 44 logical pixels; small spaces and enlarged text
+must retain access to every date through the component's scrollable layout.
+
+The headless `NakedCalendar` and `NakedCalendarDay` own interaction. Calendar days
+use supported Flutter button semantics with full date labels, selected/enabled
+state and actions. This is not a claim of literal web ARIA-grid parity or
+conformance on every assistive technology.
+
+Range selection, typed/segmented entry, non-Gregorian calendars and timezone
+scheduling are not part of this component. Preset recipes are separate from the
+runtime API.
