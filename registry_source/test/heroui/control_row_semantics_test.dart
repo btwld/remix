@@ -8,6 +8,62 @@ import '../helpers/heroui.dart';
 void main() {
   for (final radio in [true, false]) {
     testWidgets(
+      '${radio ? 'radio' : 'checkbox'} group names its options once and keeps help and error readable',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          var callbacks = 0;
+          await tester.pumpHeroUi(
+            radio
+                ? HeroUiRadioGroup<String>(
+                    groupValue: null,
+                    onChanged: (_) => callbacks++,
+                    label: 'Notifications',
+                    helperText: 'Choose your channels.',
+                    errorText: 'Choose at least one channel.',
+                    invalid: true,
+                    options: const [
+                      HeroUiRadioOption(value: 'email', label: 'Email'),
+                    ],
+                  )
+                : HeroUiCheckboxGroup<String>(
+                    values: const {},
+                    onChanged: (_) => callbacks++,
+                    label: 'Notifications',
+                    helperText: 'Choose your channels.',
+                    errorText: 'Choose at least one channel.',
+                    invalid: true,
+                    options: const [
+                      HeroUiCheckboxOption(value: 'email', label: 'Email'),
+                    ],
+                  ),
+          );
+          await tester.pumpAndSettle();
+          final groups = find.semantics.byPredicate(
+            (node) => node.getSemanticsData().label.contains('Notifications'),
+          );
+          expect(groups, findsOne);
+          final group = groups.evaluate().single;
+          expect(group.getSemanticsData().label, 'Notifications');
+          expect(find.semantics.byLabel('Choose your channels.'), findsOne);
+          expect(
+            find.semantics.byLabel('Choose at least one channel.'),
+            findsOne,
+          );
+          final option = find.semantics.byLabel('Email');
+          expect(option, findsOne);
+          tester.semantics.tap(option);
+          await tester.pumpAndSettle();
+          expect(callbacks, 1);
+        } finally {
+          semantics.dispose();
+        }
+      },
+    );
+  }
+
+  for (final radio in [true, false]) {
+    testWidgets(
       '${radio ? 'radio' : 'switch'} group exposes one actionable option name '
       'and its description',
       (tester) async {

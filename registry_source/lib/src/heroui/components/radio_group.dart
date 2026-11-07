@@ -61,7 +61,6 @@ class HeroUiRadioGroup<T> extends StatelessWidget {
       groupValue: groupValue,
       onChanged: onChanged,
       enabled: enabled,
-      semanticLabel: label,
       child: HeroUiFieldLayout(
         axis: orientation,
         label: label,

@@ -66,7 +66,6 @@ class HeroUiCheckboxGroup<T extends Object> extends StatelessWidget {
     values: values,
     onChanged: onChanged,
     enabled: enabled,
-    semanticLabel: label,
     child: HeroUiFieldLayout(
       label: label,
       helperText: helperText,

@@ -38,7 +38,14 @@ class HeroUiFieldLayout extends StatelessWidget {
   final bool enabled;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Semantics(
+    container: true,
+    explicitChildNodes: true,
+    label: label,
+    child: _buildContent(context),
+  );
+
+  Widget _buildContent(BuildContext context) {
     final labelStyle = _label(invalid: invalid);
     final labelText = label == null
         ? null
@@ -60,7 +67,12 @@ class HeroUiFieldLayout extends StatelessWidget {
       return Wrap(
         spacing: _groupGap,
         runSpacing: _groupGap,
-        children: [?labelText, ...items, ?description, ?error],
+        children: [
+          if (labelText != null) ExcludeSemantics(child: labelText),
+          ...items,
+          ?description,
+          ?error,
+        ],
       );
     }
     return FlexBox(
@@ -69,7 +81,7 @@ class HeroUiFieldLayout extends StatelessWidget {
           .mainAxisSize(.min)
           .crossAxisAlignment(.start),
       children: [
-        ?labelText,
+        if (labelText != null) ExcludeSemantics(child: labelText),
         for (var i = 0; i < items.length; i++)
           Box(
             style: BoxStyler().padding(
