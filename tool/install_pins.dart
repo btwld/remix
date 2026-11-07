@@ -21,17 +21,32 @@ const consumerDocumentationFiles = <String>[
   'open_code/CLEAN_SHEET.md',
 ];
 
-List<File> userFacingDocuments(Directory workspaceRoot) {
-  final documents = <File>[
-    ...Directory('${workspaceRoot.path}/docs')
-        .listSync(recursive: true)
-        .whereType<File>()
-        .where((file) => file.path.endsWith('.mdx')),
-    for (final relativeDirectory in publishedSkillDirectories)
+/// The MDX pages under `docs/`.
+List<File> documentationPages(Directory workspaceRoot) => [
+  ...Directory('${workspaceRoot.path}/docs')
+      .listSync(recursive: true)
+      .whereType<File>()
+      .where((file) => file.path.endsWith('.mdx')),
+]..sort((a, b) => a.path.compareTo(b.path));
+
+/// The Markdown files of the published skills. A skill directory that does not
+/// exist contributes nothing; `tool/validate_docs.dart` reports it.
+List<File> skillMarkdownFiles(Directory workspaceRoot) => [
+  for (final relativeDirectory in publishedSkillDirectories)
+    if (Directory('${workspaceRoot.path}/$relativeDirectory').existsSync())
       ...Directory('${workspaceRoot.path}/$relativeDirectory')
           .listSync(recursive: true)
           .whereType<File>()
           .where((file) => file.path.endsWith('.md')),
+]..sort((a, b) => a.path.compareTo(b.path));
+
+/// Every document `tool/sync_install_pins.dart` rewrites. `validate_docs.dart`
+/// checks the same set by reading [documentationPages], [skillMarkdownFiles],
+/// and [consumerDocumentationFiles], so the two cannot drift.
+List<File> userFacingDocuments(Directory workspaceRoot) {
+  final documents = <File>[
+    ...documentationPages(workspaceRoot),
+    ...skillMarkdownFiles(workspaceRoot),
     for (final relativeFile in consumerDocumentationFiles)
       File('${workspaceRoot.path}/$relativeFile'),
   ];

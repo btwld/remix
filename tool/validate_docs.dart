@@ -350,7 +350,6 @@ Future<void> main() async {
     return;
   }
 
-  final docsRoot = Directory('${workspaceRoot.path}/docs');
   final docsConfig = File('${workspaceRoot.path}/docs.json');
   final failures = <String>[];
   final expectedPins = {
@@ -358,13 +357,7 @@ Future<void> main() async {
       package: expectedInstallPin(workspaceRoot, package),
   };
 
-  final docs =
-      docsRoot
-          .listSync(recursive: true)
-          .whereType<File>()
-          .where((file) => file.path.endsWith('.mdx'))
-          .toList()
-        ..sort((a, b) => a.path.compareTo(b.path));
+  final docs = documentationPages(workspaceRoot);
 
   if (docs.isEmpty) failures.add('No MDX documentation files were found.');
 
@@ -421,16 +414,8 @@ Future<void> main() async {
     return;
   }
 
-  final skillDocuments = [
-    for (final relativeDirectory in publishedSkillDirectories)
-      ...Directory('${workspaceRoot.path}/$relativeDirectory')
-          .listSync(recursive: true)
-          .whereType<File>()
-          .where((file) => file.path.endsWith('.md')),
-  ]..sort((a, b) => a.path.compareTo(b.path));
-
   final extraction = _extractAnalyzableSnippets(
-    [...docs, ...skillDocuments],
+    [...docs, ...skillMarkdownFiles(workspaceRoot)],
     workspaceRoot,
     failures,
   );
@@ -498,22 +483,15 @@ int _checkConsumerDocumentation(
   Map<String, String> expectedPins,
   List<String> failures,
 ) {
-  final documents = <File>[];
   for (final relativeDirectory in publishedSkillDirectories) {
-    final directory = Directory('${workspaceRoot.path}/$relativeDirectory');
-    if (!directory.existsSync()) {
+    if (!Directory('${workspaceRoot.path}/$relativeDirectory').existsSync()) {
       failures.add(
         'Missing consumer documentation directory: $relativeDirectory.',
       );
-      continue;
     }
-    documents.addAll(
-      directory
-          .listSync(recursive: true)
-          .whereType<File>()
-          .where((file) => file.path.endsWith('.md')),
-    );
   }
+  // The pages under `docs/` are checked in `main`.
+  final documents = <File>[...skillMarkdownFiles(workspaceRoot)];
   for (final relativeFile in consumerDocumentationFiles) {
     final file = File('${workspaceRoot.path}/$relativeFile');
     if (!file.existsSync()) {
