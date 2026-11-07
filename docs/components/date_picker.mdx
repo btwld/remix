@@ -53,9 +53,11 @@ An `Overlay` ancestor is required. A routed `WidgetsApp` supplies one; use
   closes the picker, including reselecting the existing date.
 - The picker closes after a selection request even when the parent rejects it.
   There is no optimistic selected value or Apply/Cancel draft state.
-- Escape and outside interaction dismiss without changing the value. Closing
-  returns focus to the live trigger. A month/year selector handles its own first
-  Escape before the containing picker or dialog.
+- Escape and outside interaction dismiss without changing the value. Ordinary
+  dismissal restores the original live trigger. Replacing a borrowed `focusNode`
+  while open closes the picker; the application manages focus on its replacement.
+  A month/year selector handles its own first Escape before the containing
+  picker or dialog.
 - The popup is not a modal dialog. It uses the existing popover focus and
   dismissal behavior, without claiming modal background semantics.
 - The panel constrains and scrolls in small spaces. Touch uses the same explicit
