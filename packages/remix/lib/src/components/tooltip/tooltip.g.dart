@@ -12,6 +12,7 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
   Duration? get waitDuration;
   Duration? get showDuration;
   Duration? get dismissDuration;
+  Duration? get skipDelayDuration;
 
   @override
   Type get type => TooltipSpec;
@@ -23,6 +24,7 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
     Duration? waitDuration,
     Duration? showDuration,
     Duration? dismissDuration,
+    Duration? skipDelayDuration,
   }) {
     return TooltipSpec(
       container: container ?? this.container,
@@ -30,6 +32,7 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
       waitDuration: waitDuration ?? this.waitDuration,
       showDuration: showDuration ?? this.showDuration,
       dismissDuration: dismissDuration ?? this.dismissDuration,
+      skipDelayDuration: skipDelayDuration ?? this.skipDelayDuration,
     );
   }
 
@@ -45,6 +48,11 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
         other?.dismissDuration,
         t,
       ),
+      skipDelayDuration: MixOps.lerpSnap(
+        skipDelayDuration,
+        other?.skipDelayDuration,
+        t,
+      ),
     );
   }
 
@@ -55,6 +63,7 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
     waitDuration,
     showDuration,
     dismissDuration,
+    skipDelayDuration,
   ];
 
   @override
@@ -101,7 +110,8 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('waitDuration', waitDuration))
       ..add(DiagnosticsProperty('showDuration', showDuration))
-      ..add(DiagnosticsProperty('dismissDuration', dismissDuration));
+      ..add(DiagnosticsProperty('dismissDuration', dismissDuration))
+      ..add(DiagnosticsProperty('skipDelayDuration', skipDelayDuration));
   }
 }
 
@@ -122,6 +132,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
   final Prop<Duration>? $waitDuration;
   final Prop<Duration>? $showDuration;
   final Prop<Duration>? $dismissDuration;
+  final Prop<Duration>? $skipDelayDuration;
 
   const TooltipStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
@@ -129,6 +140,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     Prop<Duration>? waitDuration,
     Prop<Duration>? showDuration,
     Prop<Duration>? dismissDuration,
+    Prop<Duration>? skipDelayDuration,
     super.variants,
     super.modifier,
     super.animation,
@@ -136,7 +148,8 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
        $label = label,
        $waitDuration = waitDuration,
        $showDuration = showDuration,
-       $dismissDuration = dismissDuration;
+       $dismissDuration = dismissDuration,
+       $skipDelayDuration = skipDelayDuration;
 
   TooltipStyler({
     BoxStyler? container,
@@ -144,6 +157,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     Duration? waitDuration,
     Duration? showDuration,
     Duration? dismissDuration,
+    Duration? skipDelayDuration,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<TooltipSpec>>? variants,
@@ -153,6 +167,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
          waitDuration: Prop.maybe(waitDuration),
          showDuration: Prop.maybe(showDuration),
          dismissDuration: Prop.maybe(dismissDuration),
+         skipDelayDuration: Prop.maybe(skipDelayDuration),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -167,6 +182,8 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
       TooltipStyler().showDuration(value);
   factory TooltipStyler.dismissDuration(Duration value) =>
       TooltipStyler().dismissDuration(value);
+  factory TooltipStyler.skipDelayDuration(Duration value) =>
+      TooltipStyler().skipDelayDuration(value);
   factory TooltipStyler.alignment(AlignmentGeometry value) =>
       TooltipStyler().alignment(value);
   factory TooltipStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -665,6 +682,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     'waitDuration',
     'showDuration',
     'dismissDuration',
+    'skipDelayDuration',
     'animation',
     'modifier',
     'variants',
@@ -693,6 +711,11 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
   /// Sets the dismissDuration.
   TooltipStyler dismissDuration(Duration value) {
     return merge(TooltipStyler(dismissDuration: value));
+  }
+
+  /// Sets the skipDelayDuration.
+  TooltipStyler skipDelayDuration(Duration value) {
+    return merge(TooltipStyler(skipDelayDuration: value));
   }
 
   /// Sets the animation configuration.
@@ -748,6 +771,10 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
       waitDuration: MixOps.merge($waitDuration, other?.$waitDuration),
       showDuration: MixOps.merge($showDuration, other?.$showDuration),
       dismissDuration: MixOps.merge($dismissDuration, other?.$dismissDuration),
+      skipDelayDuration: MixOps.merge(
+        $skipDelayDuration,
+        other?.$skipDelayDuration,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -763,6 +790,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
       waitDuration: MixOps.resolve(context, $waitDuration),
       showDuration: MixOps.resolve(context, $showDuration),
       dismissDuration: MixOps.resolve(context, $dismissDuration),
+      skipDelayDuration: MixOps.resolve(context, $skipDelayDuration),
     );
 
     return StyleSpec(
@@ -780,7 +808,8 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('waitDuration', $waitDuration))
       ..add(DiagnosticsProperty('showDuration', $showDuration))
-      ..add(DiagnosticsProperty('dismissDuration', $dismissDuration));
+      ..add(DiagnosticsProperty('dismissDuration', $dismissDuration))
+      ..add(DiagnosticsProperty('skipDelayDuration', $skipDelayDuration));
   }
 
   @override
@@ -790,6 +819,7 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     $waitDuration,
     $showDuration,
     $dismissDuration,
+    $skipDelayDuration,
     $animation,
     $modifier,
     $variants,
