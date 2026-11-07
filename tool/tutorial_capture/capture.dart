@@ -53,8 +53,12 @@ Future<void> writeCapture(WidgetTester tester) async {
   );
   await tester.runAsync(() async {
     final image = await boundary.toImage(pixelRatio: 1);
-    final png = await image.toByteData(format: ui.ImageByteFormat.png);
-    image.dispose();
+    final ByteData? png;
+    try {
+      png = await image.toByteData(format: ui.ImageByteFormat.png);
+    } finally {
+      image.dispose();
+    }
     await File(output).writeAsBytes(png!.buffer.asUint8List());
   });
 }
