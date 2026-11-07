@@ -402,6 +402,10 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder: _demo_components_slider.buildSliderCatalogUseCase,
           ),
           _widgetbook.WidgetbookUseCase(
+            name: 'Price range',
+            builder: _demo_components_slider.buildRangeSliderUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
             name: 'Slider Component',
             builder: _demo_components_slider.buildSliderUseCase,
           ),

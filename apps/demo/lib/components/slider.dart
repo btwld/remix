@@ -67,3 +67,46 @@ Widget buildSliderCatalogUseCase(BuildContext context) {
     ),
   );
 }
+
+@widgetbook.UseCase(name: 'Price range', type: RemixSlider)
+Widget buildRangeSliderUseCase(BuildContext context) => const _PriceRange();
+
+class _PriceRange extends StatefulWidget {
+  const _PriceRange();
+  @override
+  State<_PriceRange> createState() => _PriceRangeState();
+}
+
+class _PriceRangeState extends State<_PriceRange> {
+  List<double> _prices = [80, 240];
+  @override
+  Widget build(BuildContext context) => Center(
+    child: SizedBox(
+      width: 280,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Nightly price'),
+          Text('\$${_prices[0].round()} – \$${_prices[1].round()}'),
+          RemixRangeSlider(
+            values: _prices,
+            min: 0,
+            max: 400,
+            snapDivisions: 80,
+            semanticLabels: const [
+              'Minimum nightly price',
+              'Maximum nightly price',
+            ],
+            semanticFormatterCallbacks: [
+              (v) => '\$${v.round()} per night',
+              (v) => '\$${v.round()} per night',
+            ],
+            style: fortalSliderStyle(),
+            onChanged: (next) => setState(() => _prices = next),
+          ),
+        ],
+      ),
+    ),
+  );
+}
