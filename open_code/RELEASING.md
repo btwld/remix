@@ -50,10 +50,11 @@ fixes/internal/docs changes patch.
 - `packages/<pkg>/pubspec.yaml` — `version:`
 - `packages/<pkg>/CHANGELOG.md` — a new top entry, matching the surrounding
   style (`## <version>` then `### Fixes` / `### Features` bullets)
-- install pins in user-facing docs (`README.md`, the package READMEs, `docs/`,
-  `skills/`) — run `dart run tool/sync_install_pins.dart`. The READMEs ship
-  inside the package tarball, so they must name the version being tagged;
-  `docs:check` fails until every pin matches the pubspec.
+- install pins in user-facing docs and skill evals — run
+  `dart run tool/sync_install_pins.dart`, which rewrites the files
+  `tool/install_pins.dart` lists. The READMEs ship inside the package
+  tarball, so they must name the version being tagged; `docs:check` fails
+  until every pin matches the pubspec.
 
 **`naked_ui` only — the consumer floor:**
 
@@ -180,10 +181,11 @@ git push https://github.com/btwld/remix.git "refs/tags/<tag>:refs/tags/<tag>"
 ## Keep user-facing docs on the published release
 
 `docs:check` rejects "unpublished", "not published yet", and "this checkout"
-in `README.md`, the package READMEs, `docs/`, and `skills/`, and holds every
-`pub add` and `pub global activate` pin there to the package pubspec. Describe
-a candidate here, in `REGISTRIES.md`, or in a pull request, never in those
-files. After a tag publishes, confirm the pinned version resolves from pub.dev
+in the documents `userFacingDocuments` lists in `tool/install_pins.dart`, and
+holds every `pub add` and `pub global activate` pin there, and in the skills'
+`evals/evals.json`, to the package pubspec. `tool/sync_install_pins.dart`
+rewrites the same files. Describe a candidate here, in `REGISTRIES.md`, or in a
+pull request, never in those documents. After a tag publishes, confirm the pinned version resolves from pub.dev
 with the hosted checks below and with a fresh app that follows `README.md`.
 
 ## Publish the required runtimes first

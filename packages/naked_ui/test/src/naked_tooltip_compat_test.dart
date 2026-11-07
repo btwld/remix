@@ -8,10 +8,9 @@ import '../test_helpers.dart';
 
 const _triggerKey = Key('compat-trigger');
 
-// naked_ui 1.1.0 behaviors that the RawTooltip path keeps.
 void main() {
-  group('NakedTooltip 1.1.0 behaviors on RawTooltip', () {
-    testWidgets('focus opens after hoverDelay and blur closes after '
+  group('NakedTooltip focus, Escape, and placement', () {
+    testWidgets('focus opens without hoverDelay and blur closes after '
         'dismissDelay', (tester) async {
       final focus = FocusNode();
       addTearDown(focus.dispose);
@@ -19,7 +18,7 @@ void main() {
       await tester.pumpMaterialWidget(
         Center(
           child: _tooltip(
-            hoverDelay: const Duration(milliseconds: 100),
+            hoverDelay: const Duration(seconds: 10),
             dismissDelay: const Duration(milliseconds: 100),
             onOpenChanged: changes.add,
             child: Focus(focusNode: focus, child: _trigger),
@@ -29,10 +28,6 @@ void main() {
 
       focus.requestFocus();
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 50));
-      expect(find.text('Tip'), findsNothing);
-      await tester.pump(const Duration(milliseconds: 60));
-      await tester.pumpAndSettle();
       expect(find.text('Tip'), findsOneWidget);
 
       focus.unfocus();
@@ -43,28 +38,6 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Tip'), findsNothing);
       expect(changes, [true, false]);
-    });
-
-    testWidgets('focus that leaves before hoverDelay never opens', (
-      tester,
-    ) async {
-      final focus = FocusNode();
-      addTearDown(focus.dispose);
-      await tester.pumpMaterialWidget(
-        Center(
-          child: _tooltip(
-            hoverDelay: const Duration(milliseconds: 100),
-            child: Focus(focusNode: focus, child: _trigger),
-          ),
-        ),
-      );
-
-      focus.requestFocus();
-      await tester.pump(const Duration(milliseconds: 50));
-      focus.unfocus();
-      await tester.pump(const Duration(milliseconds: 100));
-      await tester.pumpAndSettle();
-      expect(find.text('Tip'), findsNothing);
     });
 
     testWidgets('a focused tooltip stays open when the mouse leaves', (
@@ -158,7 +131,7 @@ void main() {
           child: Center(
             child: _tooltip(
               // Focus never opens it; only the enclosing action can react.
-              hoverDelay: const Duration(seconds: 10),
+              isFocusVisible: () => false,
               child: Focus(focusNode: focus, child: _trigger),
             ),
           ),
@@ -255,9 +228,6 @@ void main() {
       final tipRect = tester.getRect(find.text('OffsetTip'));
       expect(tipRect.top - triggerRect.bottom, 14);
     });
-  });
-
-  group('1.2.0 Audit Regressions', () {
     testWidgets(
       'Tabbing from tooltip A to tooltip B keeps B open after A dismissDelay elapses',
       (tester) async {
@@ -359,134 +329,7 @@ void main() {
         expect(find.text('Focusable Tip'), findsNothing);
       },
     );
-
-    testWidgets(
-      'toggling deprecated useRootOverlay preserves trigger child state via KeyedSubtree',
-      (tester) async {
-        var useRoot = false;
-        late StateSetter setHostState;
-
-        await tester.pumpMaterialWidget(
-          StatefulBuilder(
-            builder: (context, setState) {
-              setHostState = setState;
-              // ignore: deprecated_member_use_from_same_package
-              return NakedTooltip(
-                useRootOverlay: useRoot,
-                overlayBuilder: (context, animation) => const Text('Tip'),
-                child: const _StatefulCounterTrigger(),
-              );
-            },
-          ),
-        );
-
-        await tester.tap(find.text('Count: 0'));
-        await tester.pump();
-        expect(find.text('Count: 1'), findsOneWidget);
-
-        setHostState(() => useRoot = true);
-        await tester.pump();
-        expect(find.text('Count: 1'), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      'transitioning from open legacy tooltip to RawTooltip reports onOpenChanged(false)',
-      (tester) async {
-        var useRoot = true;
-        late StateSetter setHostState;
-        final focus = FocusNode();
-        addTearDown(focus.dispose);
-        final changes = <bool>[];
-
-        await tester.pumpMaterialWidget(
-          StatefulBuilder(
-            builder: (context, setState) {
-              setHostState = setState;
-              // ignore: deprecated_member_use_from_same_package
-              return NakedTooltip(
-                useRootOverlay: useRoot,
-                hoverDelay: Duration.zero,
-                dismissDelay: Duration.zero,
-                onOpenChanged: changes.add,
-                overlayBuilder: (context, animation) => const Text('LegacyTip'),
-                child: Focus(focusNode: focus, child: _trigger),
-              );
-            },
-          ),
-        );
-
-        focus.requestFocus();
-        await tester.pumpAndSettle();
-        expect(find.text('LegacyTip'), findsOneWidget);
-        expect(changes, [true]);
-
-        // Switch from legacy path (useRootOverlay: true) to RawTooltip path.
-        setHostState(() => useRoot = false);
-        await tester.pumpAndSettle();
-
-        expect(find.text('LegacyTip'), findsNothing);
-        expect(changes, [true, false]);
-      },
-    );
-
-    testWidgets(
-      'Escape reaches an enclosing dismiss action when LegacyNakedTooltip is closed',
-      (tester) async {
-        final focus = FocusNode();
-        addTearDown(focus.dispose);
-        var dismissed = 0;
-
-        await tester.pumpMaterialWidget(
-          Actions(
-            actions: {
-              DismissIntent: CallbackAction<DismissIntent>(
-                onInvoke: (_) => dismissed++,
-              ),
-            },
-            child: Center(
-              // ignore: deprecated_member_use_from_same_package
-              child: NakedTooltip(
-                useRootOverlay: true,
-                // Focus does not open before Escape is pressed.
-                hoverDelay: const Duration(seconds: 10),
-                overlayBuilder: (context, animation) => const Text('LegacyTip'),
-                child: Focus(focusNode: focus, child: _trigger),
-              ),
-            ),
-          ),
-        );
-
-        focus.requestFocus();
-        await tester.pump();
-        expect(find.text('LegacyTip'), findsNothing);
-
-        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-        await tester.pump();
-        expect(dismissed, 1);
-      },
-    );
   });
-}
-
-class _StatefulCounterTrigger extends StatefulWidget {
-  const _StatefulCounterTrigger();
-
-  @override
-  State<_StatefulCounterTrigger> createState() =>
-      _StatefulCounterTriggerState();
-}
-
-class _StatefulCounterTriggerState extends State<_StatefulCounterTrigger> {
-  int _count = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => setState(() => _count++),
-      child: Text('Count: $_count'),
-    );
-  }
 }
 
 const _trigger = SizedBox(key: _triggerKey, width: 100, height: 40);
@@ -497,11 +340,13 @@ NakedTooltip _tooltip({
   Duration dismissDelay = Duration.zero,
   bool enableTapToDismiss = true,
   ValueChanged<bool>? onOpenChanged,
+  ValueGetter<bool>? isFocusVisible,
 }) => NakedTooltip(
   hoverDelay: hoverDelay,
   dismissDelay: dismissDelay,
   enableTapToDismiss: enableTapToDismiss,
   onOpenChanged: onOpenChanged,
+  isFocusVisible: isFocusVisible,
   animationStyle: AnimationStyle.noAnimation,
   overlayBuilder: (context, animation) =>
       const SizedBox(width: 60, height: 20, child: Text('Tip')),

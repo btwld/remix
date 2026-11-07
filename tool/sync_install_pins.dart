@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'install_pins.dart';
 
-/// Rewrites every install pin in user-facing docs to the current version of
-/// the package it installs. `tool/validate_docs.dart` fails when this has not
-/// been run.
+/// Rewrites every install pin in user-facing docs and skill evals to the
+/// current version of the package it installs. `tool/validate_docs.dart` fails
+/// when this has not been run.
 void main(List<String> arguments) {
   if (arguments.isNotEmpty) {
     stderr.writeln('Unsupported arguments: ${arguments.join(', ')}');
@@ -31,7 +31,7 @@ void main(List<String> arguments) {
   };
 
   var rewritten = 0;
-  for (final file in userFacingDocuments(workspaceRoot)) {
+  for (final file in installPinDocuments(workspaceRoot)) {
     final source = file.readAsStringSync();
     final stale = [
       for (final command in installCommands(source))

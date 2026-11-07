@@ -4,6 +4,12 @@
 
 # Remix
 
+<p align="center">
+  <a href="https://pub.dev/packages/remix"><img alt="pub.dev" src="https://img.shields.io/pub/v/remix.svg?include_prereleases"></a>
+  <a href="https://github.com/btwld/remix/actions/workflows/ci.yaml?query=branch%3Amain"><img alt="CI" src="https://github.com/btwld/remix/actions/workflows/ci.yaml/badge.svg?branch=main"></a>
+  <a href="https://github.com/btwld/remix/blob/main/LICENSE"><img alt="BSD 3-Clause License" src="https://img.shields.io/github/license/btwld/remix"></a>
+</p>
+
 Flutter components with Naked UI behavior and Mix styling.
 
 ## Core concepts
@@ -28,7 +34,7 @@ Remix is a `1.0.0` prerelease. Pin it, because an unversioned install
 resolves the older stable `0.x` line, which these docs do not describe.
 
 ```bash
-flutter pub add remix:^1.0.0-beta.16
+flutter pub add remix:^1.0.0-beta.17
 ```
 
 ```dart

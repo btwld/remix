@@ -264,9 +264,29 @@ class _NakedPopoverState extends State<NakedPopover>
     return null;
   }
 
+  ({FocusNode node, FocusNode? child}) get _triggerNodes {
+    final child = _extractChildFocusNode();
+    return (
+      node: widget.triggerFocusNode ?? child ?? _internalTriggerNode,
+      child: child,
+    );
+  }
+
+  FocusNode? get _childOwnedTriggerNode {
+    if (!widget.openOnTap) return null;
+    final trigger = _triggerNodes;
+    return identical(trigger.node, trigger.child) ? trigger.child : null;
+  }
+
   void _updateObservedChildFocusNode() {
-    final next = _extractChildFocusNode();
+    final next = _childOwnedTriggerNode;
     if (identical(next, _observedChildFocusNode)) return;
+    if (next == null) {
+      _keyboardPressTimer?.cancel();
+      _keyboardPressTimer = null;
+      updateHoverState(false, null);
+      updatePressState(false, null);
+    }
     _observedChildFocusNode?.removeListener(_handleChildFocusChange);
     _observedChildFocusNode = next;
     _observedChildFocusNode?.addListener(_handleChildFocusChange);
@@ -294,10 +314,7 @@ class _NakedPopoverState extends State<NakedPopover>
 
   Widget _buildChildOwnedTrigger(FocusNode childFocusNode) {
     final state = NakedPopoverState(
-      states: {
-        ...widgetStates,
-        if (childFocusNode.hasFocus) WidgetState.focused,
-      },
+      states: widgetStates,
       isOpen: _menuController.isOpen,
     );
     final content = NakedStateScopeBuilder(
@@ -305,9 +322,6 @@ class _NakedPopoverState extends State<NakedPopover>
       child: widget.child,
       builder: widget.builder,
     );
-    final semanticContent = widget.semanticLabel == null
-        ? content
-        : ExcludeSemantics(child: content);
 
     Widget trigger = GestureDetector(
       onTapDown: (_) => updatePressState(true, null),
@@ -316,7 +330,7 @@ class _NakedPopoverState extends State<NakedPopover>
       onTap: _activate,
       behavior: HitTestBehavior.opaque,
       excludeFromSemantics: true,
-      child: semanticContent,
+      child: content,
     );
     trigger = Semantics(
       enabled: true,
@@ -325,6 +339,7 @@ class _NakedPopoverState extends State<NakedPopover>
       // reports isExpanded. Matches NakedMenu/NakedSelect/NakedAccordion.
       expanded: _menuController.isOpen,
       label: widget.semanticLabel,
+      excludeSemantics: widget.semanticLabel != null,
       onTap: _activate,
       child: trigger,
     );
@@ -438,9 +453,9 @@ class _NakedPopoverState extends State<NakedPopover>
 
   @override
   Widget build(BuildContext context) {
-    final childFocusNode = _extractChildFocusNode();
-    final returnNode =
-        widget.triggerFocusNode ?? childFocusNode ?? _internalTriggerNode;
+    final trigger = _triggerNodes;
+    final returnNode = trigger.node;
+    final childFocusNode = trigger.child;
 
     final result = RawMenuAnchor(
       controller: _menuController,

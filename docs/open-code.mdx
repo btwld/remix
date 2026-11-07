@@ -684,7 +684,8 @@ Then adjust any code of your own that read the old names:
 Each registry revision is authored against one `remix` version, and the
 constraint it installs is a caret, so `flutter pub upgrade` can move you onto
 a later `remix` that these templates were never tested against. `add` reports
-that after it resolves your lockfile:
+that after it resolves your lockfile. The versions below are examples; the
+notice names the version your pinned revision was authored against:
 
 ```
 Resolved remix 1.0.0; this registry revision was authored against 1.0.0-beta.14. Your pin does not move on its own — run remix registry update @remix, then review with --diff.
@@ -950,10 +951,10 @@ Icons you reference in your own code stay as you wrote them. Import
 `package:remix_ui_icons/remix_ui_icons.dart` directly when you need the rest of
 the Vector UI pack: `RemixIcons` (the Outline family) and `RoundedIcons`.
 
-Upgrading an app from `remix_ui_icons` 0.1.x: the registry now requires
-`^1.0.0-beta.1`, which replaces every Radix glyph, so the installer refuses to
-write source until your `pubspec.yaml` declares it. Update the constraint,
-then follow the package's
+Upgrading an app from `remix_ui_icons` 0.1.x: the registry now requires the
+1.0 line, which replaces every Radix glyph, so the installer refuses to write
+source until your `pubspec.yaml` declares it. Raise the constraint with
+`flutter pub add remix_ui_icons:^1.0.0-beta.1`, then follow the package's
 [migration guide](https://github.com/btwld/remix/blob/main/packages/remix_ui_icons/MIGRATION.md)
 for your own icon references: 31 renamed names keep working as deprecated
 aliases until 2.0.0, and the guide names a Lucide icon for each removed one.

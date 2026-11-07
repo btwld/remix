@@ -82,6 +82,9 @@ class RemixTooltip extends StatelessWidget {
           // dismissDuration is hover-exit grace before the tooltip closes.
           dismissDelay:
               spec.dismissDuration ?? const Duration(milliseconds: 100),
+          // How long after a tooltip closes hover still skips waitDuration.
+          skipDelayDuration:
+              spec.skipDelayDuration ?? const Duration(milliseconds: 300),
           positioning: positioning,
           semanticLabel: tooltipSemantics,
           child: child,
