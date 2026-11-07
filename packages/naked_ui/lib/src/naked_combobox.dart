@@ -476,6 +476,9 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   }
 
   void _handleSelected(T value) {
+    // Cached options can be accepted while a newer query is still pending.
+    // Its completion must not reopen suggestions after this acceptance.
+    _optionsGeneration++;
     try {
       widget.onSelected?.call(value);
     } finally {

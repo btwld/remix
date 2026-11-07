@@ -10,6 +10,41 @@ import 'package:naked_ui/naked_ui.dart';
 // RawAutocomplete uses its context after awaiting async options, so run this
 // file on the 3.41 floor as well as the pinned SDK.
 void main() {
+  testWidgets('pending query cannot reopen options after acceptance', (
+    tester,
+  ) async {
+    final pending = Completer<Iterable<String>>();
+    final selected = <String>[];
+    final key = GlobalKey<_ComboboxHostState>();
+    await tester.pumpWidget(
+      _ComboboxHost(
+        key: key,
+        optionsBuilder: (value) =>
+            value.text == 'new' ? pending.future : ['apple'],
+        onSelected: selected.add,
+      ),
+    );
+    await tester.enterText(find.byType(TextField), 'old');
+    await tester.pumpAndSettle();
+    final controller = key.currentState!.fieldController!;
+    controller.text = 'new';
+    await tester.pump();
+    await tester.tap(find.text('apple'));
+    await tester.pumpAndSettle();
+    pending.complete(['banana']);
+    await tester.pumpAndSettle();
+    expect(find.byType(NakedComboboxOption<String>), findsNothing);
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(selected, ['apple']);
+    expect(controller.text, 'apple');
+    await tester.enterText(find.byType(TextField), 'again');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('apple'));
+    await tester.pumpAndSettle();
+    expect(selected, ['apple', 'apple']);
+  });
+
   testWidgets('disabled cached options preserve native caret navigation', (
     tester,
   ) async {
