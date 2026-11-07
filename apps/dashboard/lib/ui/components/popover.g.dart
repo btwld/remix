@@ -22,6 +22,9 @@ class UiPopover extends StatelessWidget {
     this.useRootOverlay = false,
     this.openOnTap = true,
     this.triggerFocusNode,
+    this.initialFocusNode,
+    this.constrainToAvailableHeight = false,
+    this.avoidViewInsets = false,
     this.onOpen,
     this.onClose,
     this.onOpenRequested,
@@ -49,6 +52,12 @@ class UiPopover extends StatelessWidget {
 
   final FocusNode? triggerFocusNode;
 
+  final FocusNode? initialFocusNode;
+
+  final bool constrainToAvailableHeight;
+
+  final bool avoidViewInsets;
+
   final VoidCallback? onOpen;
 
   final VoidCallback? onClose;
@@ -75,6 +84,9 @@ class UiPopover extends StatelessWidget {
       useRootOverlay: this.useRootOverlay,
       openOnTap: this.openOnTap,
       triggerFocusNode: this.triggerFocusNode,
+      initialFocusNode: this.initialFocusNode,
+      constrainToAvailableHeight: this.constrainToAvailableHeight,
+      avoidViewInsets: this.avoidViewInsets,
       onOpen: this.onOpen,
       onClose: this.onClose,
       onOpenRequested: this.onOpenRequested,

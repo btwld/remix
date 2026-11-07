@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 
 import 'focus_in_view.dart';
@@ -41,6 +43,8 @@ class AnchoredOverlay extends StatefulWidget {
     this.constrainToAvailableSpace = false,
     this.closeOnTapOutside = true,
     this.initialFocusNode,
+    this.avoidViewInsets = false,
+    this.useRootOverlay = false,
     required this.child,
   });
 
@@ -66,6 +70,13 @@ class AnchoredOverlay extends StatefulWidget {
   /// that contain it. Focus stays put when something inside the overlay already
   /// holds it, and on the container when no item can take it.
   final FocusNode? initialFocusNode;
+
+  /// Avoids the target view's safe area and keyboard exclusions. Nested
+  /// anchored overlays inherit this preference from the open panel.
+  final bool avoidViewInsets;
+
+  /// Whether the anchor renders its panel in the root Overlay.
+  final bool useRootOverlay;
 
   /// The overlay panel.
   final Widget child;
@@ -98,14 +109,17 @@ class AnchoredOverlay extends StatefulWidget {
 class _AnchoredOverlayScope extends InheritedWidget {
   const _AnchoredOverlayScope({
     required this.containerFocusNode,
+    required this.avoidViewInsets,
     required super.child,
   });
 
   final FocusNode containerFocusNode;
+  final bool avoidViewInsets;
 
   @override
   bool updateShouldNotify(_AnchoredOverlayScope oldWidget) =>
-      containerFocusNode != oldWidget.containerFocusNode;
+      containerFocusNode != oldWidget.containerFocusNode ||
+      avoidViewInsets != oldWidget.avoidViewInsets;
 }
 
 class _AnchoredOverlayState extends State<AnchoredOverlay> {
@@ -154,15 +168,101 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
     if (target != null) requestFocusInView(target);
   }
 
+  OverlayPositionConfig _positioning(
+    BuildContext context,
+    bool avoidViewInsets,
+  ) {
+    final config = widget.positioning;
+    if (!avoidViewInsets) return config;
+    // RawMenuAnchor inherits the outermost anchor's flag, stopping at a
+    // RawMenuAnchorGroup. Follow that logical ancestry, not paint ancestry:
+    // an OverlayPortal can paint in a different Overlay from its widget tree.
+    var useRootOverlay = widget.useRootOverlay;
+    context.visitAncestorElements((element) {
+      final ancestor = element.widget;
+      if (ancestor is RawMenuAnchorGroup) return false;
+      if (ancestor is RawMenuAnchor) useRootOverlay = ancestor.useRootOverlay;
+      return true;
+    });
+    // In nearest-overlay mode an intermediary Overlay changes the target.
+    final overlayState = Overlay.maybeOf(context, rootOverlay: useRootOverlay);
+    final overlay = overlayState?.context.findRenderObject();
+    // The anchor can be inside SafeArea, whose MediaQuery has consumed padding.
+    // The panel is placed in Overlay coordinates, so use that Overlay's media.
+    final media = overlayState == null
+        ? null
+        : MediaQuery.maybeOf(overlayState.context);
+    if (media == null || overlay is! RenderBox) return config;
+    final origin = overlay.localToGlobal(Offset.zero);
+    // Keyboard and safe areas overlap, rather than occupying adjacent bands.
+    final left = math.max(media.viewPadding.left, media.viewInsets.left);
+    final top = math.max(media.viewPadding.top, media.viewInsets.top);
+    final right = math.max(media.viewPadding.right, media.viewInsets.right);
+    final bottom = math.max(media.viewPadding.bottom, media.viewInsets.bottom);
+    return OverlayPositionConfig(
+      side: config.side,
+      alignment: config.alignment,
+      sideOffset: config.sideOffset,
+      alignmentOffset: config.alignmentOffset,
+      avoidCollisions: config.avoidCollisions,
+      minimumAvailableHeight: config.minimumAvailableHeight,
+      collisionPadding:
+          config.collisionPadding +
+          EdgeInsets.fromLTRB(
+            math.max(0, left - origin.dx),
+            math.max(0, top - origin.dy),
+            math.max(
+              0,
+              origin.dx +
+                  widget.info.overlaySize.width -
+                  (media.size.width - right),
+            ),
+            math.max(
+              0,
+              origin.dy +
+                  widget.info.overlaySize.height -
+                  (media.size.height - bottom),
+            ),
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = MenuController.maybeOf(context);
     assert(controller != null, 'AnchoredOverlay requires a RawMenuAnchor.');
     void close() => controller?.close();
 
+    final avoidViewInsets =
+        widget.avoidViewInsets ||
+        (context
+                .dependOnInheritedWidgetOfExactType<_AnchoredOverlayScope>()
+                ?.avoidViewInsets ??
+            false);
+    final positioning = _positioning(context, avoidViewInsets);
+    // View safety caps both axes even for lateral placement. Keep the legacy
+    // unconstrained Popover and lateral-height defaults when this is not opted
+    // in; the ordinary positioner still chooses the side and collision shift.
+    final panel = avoidViewInsets
+        ? ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: math.max(
+                0,
+                widget.info.overlaySize.width -
+                    positioning.collisionPadding.horizontal,
+              ),
+              maxHeight: math.max(
+                0,
+                widget.info.overlaySize.height -
+                    positioning.collisionPadding.vertical,
+              ),
+            ),
+            child: widget.child,
+          )
+        : widget.child;
     return OverlayPositioner(
       targetRect: widget.info.anchorRect,
-      positioning: widget.positioning,
+      positioning: positioning,
       constrainToAvailableSpace: widget.constrainToAvailableSpace,
       child: TapRegion(
         onTapOutside: widget.closeOnTapOutside ? (_) => close() : null,
@@ -185,7 +285,8 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
                   includeSemantics: false,
                   child: _AnchoredOverlayScope(
                     containerFocusNode: _containerFocusNode,
-                    child: widget.child,
+                    avoidViewInsets: avoidViewInsets,
+                    child: panel,
                   ),
                 ),
               ),

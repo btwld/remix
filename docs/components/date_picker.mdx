@@ -1,0 +1,82 @@
+---
+title: DatePicker
+description: A controlled single-date picker composed from Remix Button, Popover and Calendar.
+keywords: [flutter, remix, date picker, calendar, accessibility]
+---
+
+`RemixDatePicker` opens a [Calendar](/components/calendar) from a real button.
+It composes existing Remix controls; the application still owns the selected
+date. Use [Calendar](/components/calendar) directly when dates should remain
+visible inline.
+
+## Basic usage
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class AppointmentDatePicker extends StatefulWidget {
+  const AppointmentDatePicker({super.key});
+
+  @override
+  State<AppointmentDatePicker> createState() => _AppointmentDatePickerState();
+}
+
+class _AppointmentDatePickerState extends State<AppointmentDatePicker> {
+  DateTime? selected;
+
+  @override
+  Widget build(BuildContext context) => RemixDatePicker(
+    value: selected,
+    firstDate: DateTime(2026),
+    lastDate: DateTime(2028, 12, 31),
+    semanticLabel: 'Appointment date',
+    placeholder: 'Select a date',
+    isDateUnavailable: (date) => date.weekday == DateTime.sunday,
+    onChanged: (date) => setState(() => selected = date),
+  );
+}
+```
+
+An `Overlay` ancestor is required. A routed `WidgetsApp` supplies one; use
+`Overlay.wrap` in a builder-only host. No Material theme or
+`MaterialLocalizations` is required.
+
+## Ownership and interaction
+
+- `value`, inclusive bounds, unavailable dates and civil-date comparison follow
+  the [Calendar contract](/components/calendar#date-and-state-contract).
+- `enabled: false` or a null `onChanged` disables the trigger. Disabling an open
+  picker closes it without selecting.
+- Opening focuses the calendar's selected/current, bounded date. Arrows browse
+  without selecting. Enter, Space, click or tap requests one available date and
+  closes the picker, including reselecting the existing date.
+- The picker closes after a selection request even when the parent rejects it.
+  There is no optimistic selected value or Apply/Cancel draft state.
+- Escape and outside interaction dismiss without changing the value. Closing
+  returns focus to the live trigger. A month/year selector handles its own first
+  Escape before the containing picker or dialog.
+- The popup is not a modal dialog. It uses the existing popover focus and
+  dismissal behavior, without claiming modal background semantics.
+- The panel constrains and scrolls in small spaces. Touch uses the same explicit
+  controls; hover, swiping and a software keyboard are not required.
+- View-size, safe-area or keyboard-inset changes close the picker without
+  selecting; reopen it in the updated space. Nested month/year menus inherit
+  the panel's inset protection.
+
+Clear the value by setting it to null in the parent. This button-only picker
+does not include a text parser, segmented field, range selection, or time input.
+
+## Labels and presentation
+
+Localize `semanticLabel` (the field purpose), `placeholder`, and
+`calendarLabels`. `formatDate` optionally controls the selected value shown on
+the button; by default it uses `calendarLabels.fullDate`. Set `firstDayOfWeek`
+explicitly for the application locale. English defaults do not imply automatic
+locale formatting.
+
+Style the composition with independent `buttonStyle`, `popoverStyle`,
+`calendarStyle`, `navigationStyle` and `selectorStyle` values. Each child resolves
+its own interaction states. There is no separate DatePicker styler, raw spec,
+controller, or callable widget shorthand. Preset recipes are a separate release
+from this shared runtime component.

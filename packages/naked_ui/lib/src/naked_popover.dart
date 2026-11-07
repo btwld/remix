@@ -120,6 +120,9 @@ class NakedPopover extends StatefulWidget {
     this.openOnTap = true,
     this.anchorKey,
     this.triggerFocusNode,
+    this.initialFocusNode,
+    this.constrainToAvailableHeight = false,
+    this.avoidViewInsets = false,
     this.onOpen,
     this.onClose,
     this.onOpenRequested,
@@ -182,6 +185,18 @@ class NakedPopover extends StatefulWidget {
   /// node only for the outermost anchor, so a nested popover opened without
   /// focusing its control also returns focus to whatever had it before opening.
   final FocusNode? triggerFocusNode;
+
+  /// Preferred focus target after the panel is attached.
+  final FocusNode? initialFocusNode;
+
+  /// Caps the panel to available height. Content must handle scrolling.
+  final bool constrainToAvailableHeight;
+
+  /// Keeps the panel inside the view's safe area and keyboard exclusions.
+  ///
+  /// These view-coordinate exclusions are intersected with the actual Overlay
+  /// bounds, including smaller or offset nested overlays. Defaults to false.
+  final bool avoidViewInsets;
 
   /// Called when the popover opens.
   final VoidCallback? onOpen;
@@ -475,6 +490,10 @@ class _NakedPopoverState extends State<NakedPopover>
         return AnchoredOverlay(
           info: anchored,
           positioning: widget.positioning,
+          avoidViewInsets: widget.avoidViewInsets,
+          useRootOverlay: widget.useRootOverlay,
+          initialFocusNode: widget.initialFocusNode,
+          constrainToAvailableHeight: widget.constrainToAvailableHeight,
           child: widget.popoverBuilder(context, anchored),
         );
       },

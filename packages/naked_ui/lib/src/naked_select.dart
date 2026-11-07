@@ -536,6 +536,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
       useRootOverlay: widget.useRootOverlay,
       overlayBuilder: (context, info) {
         return AnchoredOverlay(
+          useRootOverlay: widget.useRootOverlay,
           info: info,
           positioning: widget.positioning,
           constrainToAvailableSpace: widget.constrainToAvailableSpace,

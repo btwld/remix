@@ -14,6 +14,9 @@ class RemixPopover extends StatelessWidget {
     this.useRootOverlay = false,
     this.openOnTap = true,
     this.triggerFocusNode,
+    this.initialFocusNode,
+    this.constrainToAvailableHeight = false,
+    this.avoidViewInsets = false,
     this.onOpen,
     this.onClose,
     this.onOpenRequested,
@@ -52,6 +55,18 @@ class RemixPopover extends StatelessWidget {
   /// When [openOnTap] is false, attach it to the control in [child] so that
   /// closing the popover returns focus to it.
   final FocusNode? triggerFocusNode;
+
+  /// Preferred focus target after the panel is attached.
+  final FocusNode? initialFocusNode;
+
+  /// Caps the panel to available height. Content must handle scrolling.
+  final bool constrainToAvailableHeight;
+
+  /// Keeps the panel inside the view's safe area and keyboard exclusions.
+  ///
+  /// These view-coordinate exclusions are intersected with the actual Overlay
+  /// bounds, including smaller or offset nested overlays. Defaults to false.
+  final bool avoidViewInsets;
 
   /// Called after the popover opens.
   final VoidCallback? onOpen;
@@ -103,6 +118,9 @@ class RemixPopover extends StatelessWidget {
           useRootOverlay: useRootOverlay,
           openOnTap: openOnTap,
           triggerFocusNode: triggerFocusNode,
+          initialFocusNode: initialFocusNode,
+          constrainToAvailableHeight: constrainToAvailableHeight,
+          avoidViewInsets: avoidViewInsets,
           onOpen: onOpen,
           onClose: onClose,
           onOpenRequested: onOpenRequested,

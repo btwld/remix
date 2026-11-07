@@ -131,6 +131,14 @@
       }
     ]
   },
+  "date_picker": {
+    "cases": [
+      {
+        "name": "Appointment date",
+        "path": "components/remixdatepicker/appointment-date"
+      }
+    ]
+  },
   "dialog": {
     "cases": [
       {
