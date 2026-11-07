@@ -4,9 +4,12 @@
 renders it with the shared Concepta Fumadocs theme.
 
 - Start/setup: `index.mdx` and `getting-started.mdx`.
-- Workflows: `guides/styling-components.mdx`, `open-code.mdx` and
-  `tutorials/settings-screen.mdx`.
-- API references: `components/`, `agent/` and `fortal/`.
+- Workflows: `guides/styling-components.mdx`, `open-code/install.mdx`,
+  `open-code/updating.mdx` and `tutorials/settings-screen.mdx`.
+- Explanation: `open-code.mdx`.
+- API references: `components/`, `agent/`, `fortal/`, `open-code/catalog.mdx`
+  and `open-code/cli.mdx`, whose command and exit-code sections
+  `dart run melos run docs:cli` regenerates from the CLI parsers.
 
 The introduction/setup/styling content was adapted from `btwld/website` at
 `fb1c11e928144ff8a6e4ad9df22bc55a268d064f`, not mirrored. Local package source

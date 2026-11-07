@@ -1,0 +1,21 @@
+{
+  "/open-code": {
+    "install": "/open-code/install/",
+    "running-the-cli": "/open-code/install/",
+    "1-initialize": "/open-code/install/",
+    "2-preview-before-you-write": "/open-code/install/",
+    "3-add": "/open-code/install/",
+    "configuration": "/open-code/cli/",
+    "reinstall-behavior": "/open-code/cli/",
+    "dependency-rules": "/open-code/cli/",
+    "exit-codes": "/open-code/cli/",
+    "updating": "/open-code/updating/",
+    "legacy-source-adoption": "/open-code/updating/",
+    "moving-an-older-vanilla-install-onto-the-current-theme": "/open-code/updating/",
+    "the-remix-drift-notice": "/open-code/updating/",
+    "removing-an-item": "/open-code/updating/",
+    "vanilla-preset-catalog": "/open-code/catalog/",
+    "charts-in-the-vanilla-preset": "/open-code/catalog/",
+    "agent-surfaces-in-the-vanilla-and-fortal-presets": "/open-code/catalog/"
+  }
+}

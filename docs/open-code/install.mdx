@@ -1,0 +1,195 @@
+---
+title: Install and add your first item
+description: Add the remix CLI to a Flutter app, then initialize, preview, and install your first component
+---
+
+## Install
+
+The registry declares the Remix version it requires, and `add` records that
+constraint for you. Registry pins and their floors are independent of the CLI
+version.
+
+Add the CLI as a project-local dev dependency so its version is pinned in your
+lockfile, not in a machine-global install:
+
+```bash
+flutter pub add dev:remix_cli:^1.0.0-beta.1
+```
+
+<Note>
+Keep the version. An unversioned install can select stable `0.1.0`, which reads
+only schema 1 icon tables and fails on the official registry's `icons.yaml`.
+A project moving from `0.1.0` also has no ownership record, so its first `add`
+goes through [legacy source adoption](/open-code/updating#legacy-source-adoption).
+</Note>
+
+## Running the CLI
+
+The command is called `remix`. How you reach it depends on how it is installed:
+
+```bash
+# Project-local dev dependency (recommended)
+dart run remix_cli:remix <command>
+
+# Global install
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix <command>
+```
+
+To activate an unreleased revision from Git:
+
+```bash
+dart pub global activate --source git https://github.com/btwld/remix.git \
+  --git-path packages/remix_cli --git-ref main
+remix --help
+```
+
+To pin a specific CLI revision, replace `main` with a full commit SHA. Add
+Pub's `bin` directory to `PATH` if prompted. Git activation isolates the global
+command from local workspace lockfiles. If a previous `--source path` activation
+fails with "cannot resolve to the same set of dependencies", run this Git
+activation to replace it. You do not need to modify checkout manifests or
+lockfiles.
+
+Prefer the project-local form to pin the CLI. Registry content is pinned
+independently to a GitHub commit in `remix.yaml`. Neither CLI upgrades nor
+ordinary installs advance that pin.
+
+<Note>
+The examples below are written as `remix <command>` to match the tool's own
+usage output. If you are using the project-local form, prefix each one with
+`dart run remix_cli:`, for example `dart run remix_cli:remix init`.
+</Note>
+
+Run `remix --help` for the command list, or see the
+[CLI reference](/open-code/cli) for every command and option.
+
+## 1. Initialize
+
+```bash
+remix init --preset vanilla
+```
+
+This writes two files and nothing else:
+
+- `remix.yaml` — your prefix, preset, and UI path
+- `lib/ui/ui.dart` — a managed barrel with an export marker block
+
+```yaml
+# remix.yaml
+schema: 3
+prefix: Ui
+preset: vanilla
+paths:
+  ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: btwld/remix
+    path: registry
+    ref: registry-stable
+    revision: "<resolved-full-commit-sha>"
+```
+
+Choose the naming and location up front, because the prefix is baked into every
+identifier the CLI renders:
+
+```bash
+remix init --prefix Acme --preset fortal --ui-path lib/design_system
+```
+
+`--prefix Acme` produces identifiers such as `AcmeButton` and
+`acmeButtonStyle`. The prefix must be an UpperCamel Dart identifier whose
+lowercased form is not a reserved word, and the UI path must live under `lib/`.
+The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
+The preset defaults to `vanilla` when omitted.
+
+`init` is also a repair command. Run it again and it recreates whichever of the
+two files is missing, telling you exactly which one it touched:
+
+```
+Created remix.yaml; preserved lib/ui/ui.dart.
+```
+
+## 2. Preview before you write
+
+Never let a generator surprise you. Both preview modes run the full preflight
+(path safety, dependency sections, registry resolution) and then stop before any
+file is written or any process runs.
+
+```bash
+remix add button --dry-run
+```
+
+```
+@remix (vanilla) revision <pinned commit>
+Items: @remix/theme -> @remix/button
+Dependencies: remix@^1.0.0-beta.17, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+@remix/theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
+@remix/button: missing; lib/ui/components/button.dart
+Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, theme/effects.dart, components/button.dart
+Will generate: lib/ui/components/button.g.dart
+remix.ownership.json: record registry target ownership.
+```
+
+`Fetching registry items...` appears on stderr before the plan. A real install
+also prints one stderr line before each slow phase, such as
+`Resolving dependencies...` and `Analyzing...`.
+
+To browse the catalog first, run `remix list`. It prints every item in your
+preset with the items each one needs.
+
+For the actual source, use `--diff`, which renders the proposed files, formats
+them, and shows a real `git diff` against what you have:
+
+```bash
+remix add button --diff
+```
+
+## 3. Add
+
+```bash
+remix add button
+```
+
+Button depends on Theme in the registry, so both are installed, dependencies
+first. The command then runs a fixed sequence and stops at the first failure:
+
+1. `flutter --version --machine` — requires Flutter 3.44+
+2. `flutter pub add` — only for requirements you are actually missing
+3. `flutter pub get`, then verify the **resolved** versions in `pubspec.lock`
+4. Write the authored files and update the managed barrel
+5. `dart format` the files it wrote
+6. `dart run build_runner build --build-filter=...` — scoped to the generated targets only
+7. `dart analyze lib/ui`
+
+```
+Added theme.
+Added button.
+Generated lib/ui/components/button.g.dart.
+```
+
+Commit `remix.ownership.json` with `remix.yaml` and the installed source. It
+records the registry owner of authored and generated targets, including missing
+files; it does not lock their content or hash local edits. All install modes,
+including previews, enforce these reservations. Older installations need
+[explicit adoption](/open-code/updating#legacy-source-adoption) before previewing existing items.
+
+Then use it like any widget:
+
+```dart
+import 'package:flutter/widgets.dart';
+
+import 'ui/ui.dart';
+
+class SignUpButton extends StatelessWidget {
+  const SignUpButton({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return UiButton.primary(label: 'Create account', onPressed: onPressed);
+  }
+}
+```

@@ -5,7 +5,7 @@ import { docsConfig } from '@/docs.config';
 import { source } from '@/lib/source';
 import './global.css';
 import { sitePath } from '@/lib/paths';
-import { LegacyCatalogRedirect } from '@/components/legacy-catalog-redirect';
+import { LegacyRedirects } from '@/components/legacy-redirects';
 import { DocsProvider } from '@/components/docs-provider';
 
 export const metadata = {
@@ -20,7 +20,7 @@ layoutOptions.links = layoutOptions.links?.map(link =>
 export default function RootLayout({ children }: { children: ReactNode }) {
   return <html lang="en" className="concepta-docs remix-docs" suppressHydrationWarning><body className="flex min-h-screen flex-col">
     <DocsProvider>
-      <LegacyCatalogRedirect />
+      <LegacyRedirects />
       {/* No sidebar banner: the wordmark sits directly above it, and a
           "Documentation" label there reads as a heading for the quick links
           below it, which it does not head. */}

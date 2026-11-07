@@ -21,6 +21,28 @@ const failureExitCode = 1;
 /// [failureExitCode].
 const driftExitCode = 2;
 
+/// Each exit code with its meaning, in the order the docs list them.
+///
+/// `tool/generate_cli_reference.dart` renders the CLI reference's exit-code
+/// table from this list, so a new code or a changed meaning reaches the docs
+/// when it is edited here.
+const exitCodeReference = <(int code, String meaning)>[
+  (
+    successExitCode,
+    'Success, including help, version, dry-run, diff, and no-op reruns',
+  ),
+  (usageExitCode, 'Invalid command or arguments'),
+  (
+    failureExitCode,
+    'Configuration, registry, dependency, process, generation, analysis, or '
+        'filesystem failure',
+  ),
+  (
+    driftExitCode,
+    '`add --diff --exit-code` found authored source that differs',
+  ),
+];
+
 typedef LineWriter = void Function(String line);
 
 /// The presets `remix init --help` describes, in `registry/index.yaml` order.
@@ -148,16 +170,12 @@ Future<int> runRemixCli(
   ListHandler? onList,
   RegistryHandler? onRegistry,
 }) async {
-  final runner = _RemixRunner()
-    ..argParser.addFlag(
-      'version',
-      negatable: false,
-      help: 'Print the remix_cli version.',
-    )
-    ..addCommand(_InitCommand(onInit))
-    ..addCommand(_AddCommand(onAdd))
-    ..addCommand(_ListCommand(onList))
-    ..addCommand(_RegistryCommand(onRegistry));
+  final runner = RemixCommandRunner(
+    onInit: onInit,
+    onAdd: onAdd,
+    onList: onList,
+    onRegistry: onRegistry,
+  );
 
   final helpCode = _writeRequestedHelp(
     arguments,
@@ -250,14 +268,32 @@ int _writeUnknownCommand(
   return usageExitCode;
 }
 
-final class _RemixRunner extends CommandRunner<int> {
-  // args has its own command suggester; turning it off leaves one voice.
-  _RemixRunner()
-    : super(
-        'remix',
-        'Install editable Remix UI source.',
-        suggestionDistanceLimit: 0,
-      );
+/// The `remix` command line, with its flags and commands registered.
+///
+/// Public so [runRemixCli] and the docs generator walk the same parser tree.
+/// Commands are registered in reader order; `--help` sorts them anyway.
+final class RemixCommandRunner extends CommandRunner<int> {
+  RemixCommandRunner({
+    InitHandler? onInit,
+    AddHandler? onAdd,
+    ListHandler? onList,
+    RegistryHandler? onRegistry,
+  }) : super(
+         'remix',
+         'Install editable Remix UI source.',
+         // args has its own command suggester; turning it off leaves one voice.
+         suggestionDistanceLimit: 0,
+       ) {
+    argParser.addFlag(
+      'version',
+      negatable: false,
+      help: 'Print the remix_cli version.',
+    );
+    addCommand(_InitCommand(onInit));
+    addCommand(_ListCommand(onList));
+    addCommand(_AddCommand(onAdd));
+    addCommand(_RegistryCommand(onRegistry));
+  }
 
   @override
   String get usageFooter => '''

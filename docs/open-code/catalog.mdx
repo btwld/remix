@@ -1,0 +1,244 @@
+---
+title: Preset catalogs
+description: The items each preset installs, with charts, icons, behavioral widgets, and Agent surfaces
+---
+
+## Vanilla preset catalog
+
+The official registry is deliberately small, and every item after `theme`
+depends on it:
+
+`theme` installs `tokens.dart`, `theme_data.dart`, `theme_scope.dart`,
+and `effects.dart`, giving you `UiTokens` (including the fixed spacing, size,
+stroke, opacity, and motion scales), `UiThemeData`, `UiTheme`, and the shared
+tint, shadow, and focus-ring helpers the recipes draw on. It also adds
+`remix_ui_fonts`, the package that bundles Geist and Geist Mono, which the
+shipped themes set the text steps in. Every component item
+installs one authored file plus its generated adapter under
+`components/<item>.dart`. Eight items differ: `icons` installs app-owned
+`icons.dart` with no generated adapter; `chart` generates three adapters over
+`mix_chart`; `data_table` also pulls in
+`checkbox`, `icon_button`, and `select`, because its selection column, pager,
+and page-size control *are* those components; adding it installs all four;
+`sidebar` pulls in `toggle` and `tooltip`, because a destination *is* a toggle
+and a collapsed rail labels it with a tooltip. `toast` pulls in `button`
+and `icon_button` for its action and close control. `sidebar_layout` is a
+layout with no `Spec` or generated adapter; it pulls in `sidebar` to compose
+into its row and compact sheet. `dashboard_shell` composes those existing
+primitives, with `app_bar` as its page header (`title`, an optional `Widget?`
+`headerTitle` to override the default `Text(title)` in the app bar, and
+`headerActions`), into a host-controlled responsive shell (`collapsedWidth`
+defaults to `72` vs `48` on standalone `UiSidebarLayout`). It installs no
+charts, tables, sample data, routes, or application entry point.
+`dashboard_demo` adds the five-destination reference application: Overview,
+Chat, Customers, Orders, and Settings. Product content and navigation match
+across presets while rendering each preset's own components and variants. The
+starter includes deterministic Agent flows, complete customer and order tables,
+overview charts, appearance and notification chrome, and local toast feedback.
+Built-in chrome can be disabled; caller actions append to it and caller account
+content replaces the default. It leaves the application, routes,
+authentication, persistence, and backend search behavior with the host.
+
+The registry's Remix floor includes `RemixSidebar` and the Toast APIs.
+The installer rejects older resolved versions before it writes source.
+
+| Item | Surface you get | Axes |
+|---|---|---|
+| `icons` | `UiIcons` | — |
+| `accordion` | `UiAccordion` | — |
+| `app_bar` | `UiAppBar` | — |
+| `avatar` | `UiAvatar` | — |
+| `badge` | `UiBadge` | variant |
+| `button` | `UiButton` | variant, size |
+| `callout` | `UiCallout` | variant |
+| `card` | `UiCard` | — |
+| `chart` | `UiLineChart`, `UiBarChart`, `UiPieChart` | — |
+| `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | — |
+| `dashboard_demo` | `UiDashboardDemo`, `UiDashboardOverview` | — |
+| `dashboard_shell` | `UiDashboardShell` | — |
+| `data_list` | `UiDataList` | — |
+| `data_table` | `UiDataTable` | — |
+| `dialog` | `UiDialog` | — |
+| `disclosure` | `UiDisclosure` | — |
+| `divider` | `UiDivider` | — |
+| `icon_button` | `UiIconButton` | variant, size |
+| `link` | `UiLink` | — |
+| `menu` | `UiMenu` | — |
+| `popover` | `UiPopover` | — |
+| `progress` | `UiProgress` | — |
+| `radio` | `UiRadio` | — |
+| `segmented_control` | `UiSegmentedControl` | — |
+| `select` | `UiSelect` | — |
+| `sidebar` | `UiSidebar` | — |
+| `sidebar_layout` | `UiSidebarLayout` | — |
+| `skeleton` | `UiSkeleton` | — |
+| `slider` | `UiSlider` | — |
+| `spinner` | `UiSpinner` | — |
+| `switch` | `UiSwitch` | — |
+| `tabs` | `UiTabBar`, `UiTab`, `UiTabView` | variant |
+| `textfield` | `UiTextField`, `UiTextArea` | — |
+| `toast` | `UiToast` | variant |
+| `toggle` | `UiToggle` | variant, size |
+| `toggle_group` | `UiToggleGroup` | variant, size |
+| `tooltip` | `UiTooltip` | — |
+
+The `fortal` catalog contains every item above and adds `base_button`, `code`,
+`heading`, `kbd`, `text`, and `typography`. `base_button` and
+`typography` are shared authored recipes that arrive transitively with the
+components that use them. Fortal's component names use the configured prefix,
+so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
+`AcmeText` alongside its generated controls.
+
+The `heroui` catalog follows HeroUI's names. Beside shared names such as
+`button`, `select`, and `tabs`, it adds `alert`, `avatar_group`, `breadcrumbs`,
+`button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
+`field_layout`, `input_group`, `modal`, `radio_group`, `search_field`,
+`separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
+and `toggle_button_group`. It ships no `app_bar`, `sidebar`, `sidebar_layout`,
+dashboard, `chart`, or `icons` items and no Agent items. Families that need
+behavior Remix does not provide, such as Form and ComboBox, are not included.
+
+One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
+`--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the
+recipe declares, and a recipe whose axis is named `variant` also gets one
+named constructor per value, so `UiBadge.destructive(label: 'Failing')` works
+out of the box.
+
+A parameter is not an axis. `UiDivider` takes an `orientation`, but it is a
+plain Flutter `Axis` the recipe accepts rather than an enum of its own, so it
+generates no named constructors.
+
+## Charts in the Vanilla preset
+
+The Vanilla preset's `chart` is an optional extension with its own compact
+recipe:
+
+```bash
+remix add chart
+```
+
+It installs one editable recipe and generates `UiLineChart`, `UiBarChart`, and
+`UiPieChart`. Line series can draw lines or areas. Bar data can be grouped,
+stacked, or floating. A positive `centerRadius` makes a pie chart a donut.
+
+`mix_chart` retains the hard contract: data validation, rendering, pointer
+interaction, transitions, tooltips, and chart semantics. Your copied file owns
+the axes, grid, shared series geometry, and tooltip appearance. Series colors
+come from the Theme's `chart1` to `chart5` tokens. A Theme installed by an
+earlier CLI build lacks them: add the five tokens to `tokens.dart` and
+`theme_data.dart` before adding `chart`.
+
+Import chart data directly and give the chart finite dimensions:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:mix_chart/mix_chart.dart';
+
+import 'ui/ui.dart';
+
+final chart = SizedBox(
+  height: 240,
+  child: UiLineChart(
+    semanticsLabel: 'Weekly revenue',
+    showMarkers: true,
+    series: [
+      LineSeries(
+        id: 'revenue',
+        label: 'Revenue',
+        points: [
+          ChartPoint(id: 'mon', x: 0, y: 18),
+          ChartPoint(id: 'tue', x: 1, y: 31),
+        ],
+      ),
+    ],
+  ),
+);
+```
+
+The palette is `UiTokens.chart`: `chart1` to `chart5` in series order. The
+shipped values are a neutral gray ramp, the same five grays in both
+brightnesses, so series are told apart by lightness. Pie labels are off by
+default; a chart that turns them on colors each slice's label with
+`uiPieSliceLabelColor`, which picks `foreground` or `background` by contrast.
+Edit the tokens in `UiThemeData` for a design-system change.
+Pass `palette` or `style` for a one-chart override. The UI barrel does not
+re-export `mix_chart`.
+
+## Icons and behavioral widgets
+
+In Vanilla and Fortal, `remix add icons` installs a small app-owned alias
+surface. Registry templates resolve the `iconLibrary` in `remix.yaml` to either
+`RemixIcons` (the default), `RoundedIcons`, or `LucideIcons`, and add the
+selected package. Outline and Rounded each draw every icon the presets use, so
+neither adds Lucide. See [Icons in registry presets](/guides/icons#icons-in-registry-presets)
+for how presets size those icons.
+Four Vanilla and Fortal items use icons: `icons`, `dashboard_shell`,
+`dashboard_demo`, and `support`. HeroUI has no `icons` item; its three icon
+users are `breadcrumbs`, `close_button`, and `search_field`. To switch an
+existing install, change `iconLibrary`, then reinstall every one of those you
+have installed in one command, reviewing first (`--overwrite` replaces only
+the items you name, so one left out keeps the old library):
+
+```shell
+remix add icons dashboard_shell dashboard_demo support --diff
+remix add icons dashboard_shell dashboard_demo support --overwrite
+```
+
+For HeroUI:
+
+```shell
+remix add breadcrumbs close_button search_field --diff
+remix add breadcrumbs close_button search_field --overwrite
+```
+
+Icons you reference in your own code stay as you wrote them. Import
+`package:remix_ui_icons/remix_ui_icons.dart` directly when you need the rest of
+the Vector UI pack: `RemixIcons` (the Outline family) and `RoundedIcons`.
+
+Upgrading an app from `remix_ui_icons` 0.1.x: the registry now requires the
+1.0 line, which replaces every Radix glyph, so the installer refuses to write
+source until your `pubspec.yaml` declares it. Raise the constraint with
+`flutter pub add remix_ui_icons:^1.0.0-beta.1`, then follow the package's
+[migration guide](https://github.com/btwld/remix/blob/main/packages/remix_ui_icons/MIGRATION.md)
+for your own icon references: 31 renamed names keep working as deprecated
+aliases until 2.0.0, and the guide names a Lucide icon for each removed one.
+
+Some Remix widgets are behavioral and carry no style, so the registry has
+nothing to render for them. `RemixCheckboxGroup`, `RemixRadioGroup`,
+`RemixTabs`, and `RemixAccordionGroup` are the four in this catalog: import
+them from `package:remix/remix.dart` and put the installed adapters inside.
+
+`toggle_group`, `segmented_control`, `menu`, and `select` work the other way
+round. Their options are data, not widgets, and the parent's own recipe carries
+the option style, so one `add` covers the container *and* every row, and a row
+in a loop cannot be left unstyled.
+
+One host note: an installed text field needs an `Overlay` ancestor once it
+takes focus, for its selection handles. `MaterialApp`, `CupertinoApp`, and any
+`WidgetsApp` with routes already provide one; a bare
+`WidgetsApp(builder: ...)` does not.
+
+## Agent surfaces in the Vanilla and Fortal presets
+
+`activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
+and `transcript` install unstyled, application-owned behavior source in either
+the Vanilla or Fortal preset. Each `<component>_recipe` item adds a complete
+preset-specific recipe bundle. The
+private authoring source (`registry_source`) is not a consumer dependency. The shared `models` files
+are exported from the local UI barrel; `support` helpers install transitively
+without barrel exports. Appearance remains host-owned.
+
+```shell
+dart run remix_cli:remix add composer
+```
+
+These surfaces use `@MixableSpec`. The CLI enables the supported Mix generator's
+opt-in spec-styler builder for their installed source paths in `build.yaml`,
+preserving other builder settings and comments. Explicit exclusions or disabled
+generation are reported before writes. `--dry-run` and `--diff` remain read-only.
+Agent recipes extend the Vanilla and Fortal presets; they do not constitute
+another preset.
+
+Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
+`execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and
+`transcript_recipe`. Each installs only its component and styled-control closure.
