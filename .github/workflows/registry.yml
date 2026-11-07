@@ -45,11 +45,13 @@ jobs:
         run: dart run melos run open-code:release:check
 
   promote:
-    timeout-minutes: 15
+    # ubuntu-slim stops at 15 minutes. The push finishes well inside 10.
+    timeout-minutes: 10
     name: Promote registry
     needs: validate
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    # Push an already-validated commit. No toolchain.
+    runs-on: ubuntu-slim
     permissions:
       contents: write
     steps:

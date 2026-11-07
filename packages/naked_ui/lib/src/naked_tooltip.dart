@@ -1,14 +1,9 @@
-// The deprecated parameters are read here to route them to the 1.1.0
-// implementation.
-// ignore_for_file: deprecated_member_use_from_same_package
-
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import 'legacy_naked_tooltip.dart';
 import 'utilities/positioning.dart';
 import 'utilities/reduced_motion.dart';
 
@@ -32,12 +27,13 @@ const _defaultTooltipAnimationStyle = AnimationStyle(
 ///
 /// Only one [NakedTooltip] is visible at a time. Hover, focus, touch, or
 /// [tooltipKey] activation replaces the visible tooltip without moving focus,
-/// and the replaced tooltip disappears without an exit animation. Tooltips
-/// using the deprecated parameters below are not replaced.
+/// and the replaced tooltip disappears without an exit animation. Hover,
+/// focus, and touch also close other [RawTooltip]s, such as Material's
+/// `Tooltip`, which keep their exit animation; [tooltipKey] does not.
 ///
-/// Setting any of the deprecated [open], [useRootOverlay], or
-/// [disableHoverableContent] parameters uses the legacy 1.1.0 implementation.
-/// These parameters will be removed in 2.0.0.
+/// Keyboard focus opens the tooltip at once. Hover waits [hoverDelay], except
+/// while another tooltip is visible or within [skipDelayDuration] after the
+/// last one closed, so moving across neighboring triggers does not wait again.
 class NakedTooltip extends StatefulWidget {
   /// Creates a headless tooltip.
   const NakedTooltip({
@@ -45,43 +41,22 @@ class NakedTooltip extends StatefulWidget {
     required this.child,
     required this.overlayBuilder,
     this.tooltipKey,
-    @Deprecated(
-      'Use tooltipKey to show on command and onOpenChanged to observe '
-      'visibility. Controlled open runs the naked_ui 1.1.0 implementation. '
-      'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-    )
-    this.open,
     this.onOpenChanged,
     this.isFocusVisible,
     this.hoverDelay = Duration.zero,
     this.touchDelay = const Duration(milliseconds: 1500),
     this.dismissDelay = const Duration(milliseconds: 100),
-    @Deprecated(
-      'RawTooltip keeps the tooltip visible while its content is hovered. '
-      'Setting this runs the naked_ui 1.1.0 implementation. '
-      'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-    )
-    this.disableHoverableContent = false,
+    this.skipDelayDuration = const Duration(milliseconds: 300),
     this.enableTapToDismiss = true,
     this.triggerMode = TooltipTriggerMode.longPress,
     this.enableFeedback = true,
     this.onTriggered,
     this.animationStyle = _defaultTooltipAnimationStyle,
     this.positioning = const OverlayPositionConfig(),
-    @Deprecated(
-      'RawTooltip uses the nearest Overlay. Setting this runs the naked_ui '
-      '1.1.0 implementation. Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-    )
-    this.useRootOverlay = false,
     this.semanticLabel,
     this.excludeSemantics = false,
     this.excludeOverlaySemantics,
-  }) : assert(
-         tooltipKey == null ||
-             (open == null && !useRootOverlay && !disableHoverableContent),
-         'tooltipKey has no effect with the deprecated open, '
-         'useRootOverlay, or disableHoverableContent parameters.',
-       );
+  });
 
   /// The widget that triggers the tooltip.
   final Widget child;
@@ -95,22 +70,11 @@ class NakedTooltip extends StatefulWidget {
   /// A key for imperative control via [RawTooltipState.ensureTooltipVisible].
   final GlobalKey<RawTooltipState>? tooltipKey;
 
-  /// Whether the tooltip is open when controlled, or `null` when uncontrolled.
-  @Deprecated(
-    'Use tooltipKey to show on command and onOpenChanged to observe '
-    'visibility. Controlled open runs the naked_ui 1.1.0 implementation. '
-    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-  )
-  final bool? open;
-
   /// A callback invoked when the tooltip visible state changes.
   ///
   /// [RawTooltip] owns visibility. A tooltip replaced by another reports
   /// `false` at once. Notifications arrive after the current frame and stop
   /// when this widget is disposed.
-  ///
-  /// When the deprecated [open] parameter is non-null, this callback requests a
-  /// state change that the caller applies by updating [open].
   final ValueChanged<bool>? onOpenChanged;
 
   /// Reports whether focus is visible, as CSS `:focus-visible` defines it:
@@ -120,9 +84,6 @@ class NakedTooltip extends StatefulWidget {
   /// that a closing menu or dialog hands back to the trigger after pointer
   /// use does not open it. Hover still does. When `null`, every focus shows
   /// the tooltip.
-  ///
-  /// The deprecated [open], [useRootOverlay], and [disableHoverableContent]
-  /// parameters run the 1.1.0 implementation, which ignores this.
   final ValueGetter<bool>? isFocusVisible;
 
   /// The semantic label attached to the trigger.
@@ -132,6 +93,10 @@ class NakedTooltip extends StatefulWidget {
   final OverlayPositionConfig positioning;
 
   /// The delay before mouse hover requests the tooltip to open.
+  ///
+  /// Keyboard focus does not wait for it. Hover skips it while another tooltip
+  /// is visible or closing, and within [skipDelayDuration] after the last one
+  /// closed.
   final Duration hoverDelay;
 
   /// The duration a touch-triggered tooltip remains open after activation ends.
@@ -140,13 +105,14 @@ class NakedTooltip extends StatefulWidget {
   /// The delay before pointer exit requests the tooltip to close.
   final Duration dismissDelay;
 
-  /// Whether hovering the overlay content does not preserve visibility.
-  @Deprecated(
-    'RawTooltip keeps the tooltip visible while its content is hovered. '
-    'Setting this runs the naked_ui 1.1.0 implementation. '
-    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-  )
-  final bool disableHoverableContent;
+  /// How long after this tooltip closes, when no other is visible, hovering
+  /// any trigger still opens its tooltip without [hoverDelay].
+  ///
+  /// While a tooltip is visible or closing, the next hovered tooltip opens at
+  /// once regardless; [RawTooltip] does that itself. [Duration.zero] leaves
+  /// only that, which suits dense grids of triggers where tooltips would flash
+  /// while the pointer passes over them.
+  final Duration skipDelayDuration;
 
   /// Whether tapping outside an open tooltip dismisses it.
   final bool enableTapToDismiss;
@@ -173,13 +139,6 @@ class NakedTooltip extends StatefulWidget {
   /// off may still show once without motion.
   final AnimationStyle animationStyle;
 
-  /// Whether the tooltip is inserted into the root overlay.
-  @Deprecated(
-    'RawTooltip uses the nearest Overlay. Setting this runs the naked_ui '
-    '1.1.0 implementation. Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-  )
-  final bool useRootOverlay;
-
   /// Whether to hide the trigger and overlay subtrees from the semantics tree.
   final bool excludeSemantics;
 
@@ -205,7 +164,12 @@ class _NakedTooltipState extends State<NakedTooltip>
   // activation each supersede the previous one, hiding it.
   static _NakedTooltipState? _current;
 
-  final _childKey = GlobalKey();
+  // Whether a tooltip is visible, or the last one closed less than its
+  // skipDelayDuration ago. Hover opens tooltips without hoverDelay meanwhile.
+  // Changes only after frames and in timers, when every tooltip can rebuild.
+  static final _warm = ValueNotifier<bool>(false);
+  static Timer? _coolDown;
+
   final _internalTooltipKey = GlobalKey<RawTooltipState>();
   // Hides the overlay content as soon as another tooltip takes over, so the
   // previous bubble's exit animation never overlaps the next bubble.
@@ -216,10 +180,8 @@ class _NakedTooltipState extends State<NakedTooltip>
   bool _reducedMotion = false;
   CurvedAnimation? _rawAnimation;
 
-  // RawTooltip has no focus trigger, Escape binding, or placement callback.
-  // The fields below keep naked_ui 1.1.0's focus, Escape, and placement
-  // behavior on top of it.
-  Timer? _focusTimer;
+  // Focus trigger, Escape dismissal, and placement state layered over RawTooltip.
+  Timer? _blurTimer;
   bool _focusWithin = false;
   bool _triggerHovered = false;
   bool _contentHovered = false;
@@ -292,7 +254,11 @@ class _NakedTooltipState extends State<NakedTooltip>
   @override
   void initState() {
     super.initState();
+    if (_mountedTooltips.isEmpty) {
+      HardwareKeyboard.instance.addHandler(_handleHardwareKey);
+    }
     _mountedTooltips.add(this);
+    _warm.addListener(_handleWarmChanged);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -321,43 +287,61 @@ class _NakedTooltipState extends State<NakedTooltip>
         widget.positioning.alignment != oldWidget.positioning.alignment) {
       _placement = _initialPlacement(widget.positioning);
     }
-    if (_usesLegacyTooltip && identical(_current, this)) _current = null;
-    if (oldWidget.open != null && widget.open == null && _usesLegacyTooltip) {
-      _visible = oldWidget.open!;
-    }
-    if (_usesLegacy(oldWidget) && !_usesLegacyTooltip) {
-      // 1.1.0 kept the last accepted state when a controlled tooltip became
-      // uncontrolled. The RawTooltip path starts closed, so reopen it.
-      if (oldWidget.open == true) {
-        _visible = true;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted && !_usesLegacyTooltip) _show();
-        });
-      } else if (_visible) {
-        _setVisible(false);
-      }
-    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _warm.removeListener(_handleWarmChanged);
     _mountedTooltips.remove(this);
     if (identical(_current, this)) _current = null;
-    _focusTimer?.cancel();
+    if (_mountedTooltips.isEmpty) {
+      HardwareKeyboard.instance.removeHandler(_handleHardwareKey);
+      _updateWarmth(Duration.zero);
+    } else if (_visible) {
+      final skipDelay = widget.skipDelayDuration;
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _updateWarmth(skipDelay),
+      );
+    }
+    _blurTimer?.cancel();
     _superseded.dispose();
     super.dispose();
   }
 
+  void _handleWarmChanged() {
+    // Only the hover delay given to RawTooltip depends on warmth.
+    if (widget.hoverDelay > Duration.zero) setState(() {});
+  }
+
+  // Warms up while a tooltip is visible and cools down skipDelay after the
+  // last one closes, or at once when no tooltip remains.
+  static void _updateWarmth(Duration skipDelay) {
+    if (_mountedTooltips.any((tooltip) => tooltip._visible)) {
+      _coolDown?.cancel();
+      _coolDown = null;
+      _warm.value = true;
+    } else if (_mountedTooltips.isEmpty || skipDelay == Duration.zero) {
+      _coolDown?.cancel();
+      _coolDown = null;
+      _warm.value = false;
+    } else if (_warm.value) {
+      _coolDown ??= Timer(skipDelay, () {
+        _coolDown = null;
+        _warm.value = false;
+      });
+    }
+  }
+
   void _show() => _tooltipKey.currentState?.ensureTooltipVisible();
 
-  Iterable<_NakedTooltipState> get _others => _mountedTooltips.where(
-    (tooltip) => !identical(tooltip, this) && !tooltip._usesLegacyTooltip,
-  );
+  Iterable<_NakedTooltipState> get _others =>
+      _mountedTooltips.where((tooltip) => !identical(tooltip, this));
 
   // Makes this the only tooltip that may be visible. RawTooltip already
   // dismisses unhovered tooltips when another trigger is hovered, so hover
-  // passes dismissOthers: false. Focus and touch activation pass true.
+  // passes dismissOthers: false. Focus, touch, and command activation pass
+  // true.
   void _activate({required bool dismissOthers}) {
     _current = this;
     _superseded.value = false;
@@ -366,10 +350,13 @@ class _NakedTooltipState extends State<NakedTooltip>
       tooltip._supersede();
       othersOpen = othersOpen || tooltip._rawOpen;
     }
-    if (dismissOthers && othersOpen) {
-      // RawTooltip can only dismiss every tooltip. The others are hidden
-      // already, so reopen this one if it was open.
-      final wasOpen = _rawOpen;
+    final wasOpen = _rawOpen;
+    // RawTooltip can only dismiss every tooltip. Before this one opens, that
+    // also closes tooltips outside NakedTooltip, such as Material's. Once it
+    // is open, dismissing would close it too, at once without animation, so
+    // only do so for other NakedTooltips, which are hidden already, and reopen
+    // this one.
+    if (dismissOthers && (!wasOpen || othersOpen)) {
       RawTooltip.dismissAllToolTips();
       if (wasOpen) _show();
     }
@@ -377,9 +364,6 @@ class _NakedTooltipState extends State<NakedTooltip>
   }
 
   void _supersede() {
-    // A pending focus show must not take over from the new tooltip.
-    _focusTimer?.cancel();
-    _focusTimer = null;
     if (_rawOpen) _superseded.value = true;
     _syncVisibility();
   }
@@ -423,8 +407,10 @@ class _NakedTooltipState extends State<NakedTooltip>
     _visible = visible;
     // The overlay can first report its status during build. Deliver from the
     // owner so closing survives overlay removal, but not tooltip disposal.
+    final skipDelay = widget.skipDelayDuration;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) widget.onOpenChanged?.call(visible);
+      _updateWarmth(skipDelay);
     });
   }
 
@@ -434,31 +420,22 @@ class _NakedTooltipState extends State<NakedTooltip>
     final holds = focused && (widget.isFocusVisible?.call() ?? true);
     if (holds == _focusWithin) return;
     _focusWithin = holds;
-    _focusTimer?.cancel();
-    _focusTimer = null;
+    _blurTimer?.cancel();
+    _blurTimer = null;
     if (holds) {
-      if (_visible || widget.hoverDelay == Duration.zero) {
-        _holdForFocus();
-      } else {
-        _focusTimer = Timer(widget.hoverDelay, _holdForFocus);
-      }
+      // Keyboard focus opens at once; hoverDelay paces only the pointer.
+      _activate(dismissOthers: true);
+      // Also cancels a dismissal RawTooltip has already scheduled.
+      _show();
     } else if (widget.dismissDelay == Duration.zero) {
       _closeForBlur();
     } else {
-      _focusTimer = Timer(widget.dismissDelay, _closeForBlur);
+      _blurTimer = Timer(widget.dismissDelay, _closeForBlur);
     }
   }
 
-  void _holdForFocus() {
-    _focusTimer = null;
-    if (!mounted || !_focusWithin) return;
-    _activate(dismissOthers: true);
-    // Also cancels a dismissal RawTooltip has already scheduled.
-    _show();
-  }
-
   void _closeForBlur() {
-    _focusTimer = null;
+    _blurTimer = null;
     if (!mounted || _focusWithin || _triggerHovered || _contentHovered) return;
     // A replaced tooltip is hidden, so this cannot close its replacement.
     if (_visible) RawTooltip.dismissAllToolTips();
@@ -476,14 +453,25 @@ class _NakedTooltipState extends State<NakedTooltip>
 
   static const _escapeActivator = SingleActivator(LogicalKeyboardKey.escape);
 
+  static bool _isEscapeForVisibleTooltip(KeyEvent event) =>
+      _mountedTooltips.any((tooltip) => tooltip._visible) &&
+      _escapeActivator.accepts(event, HardwareKeyboard.instance);
+
+  // Runs before any focus handling. From Flutter 3.50, RawTooltip dismisses
+  // tooltips on Escape before focus handlers see the key, so record the
+  // dismissal here too: no current tooltip, which keeps focus from reopening
+  // the focused trigger's tooltip when the pointer leaves.
+  static bool _handleHardwareKey(KeyEvent event) {
+    if (_isEscapeForVisibleTooltip(event)) _current = null;
+
+    return false;
+  }
+
   KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
     // Leave Escape to enclosing dismiss actions while no tooltip is visible.
     // Otherwise close the visible tooltip, which may belong to another
-    // trigger, and keep focus from reopening the focused trigger's tooltip.
-    if (!(_current?._visible ?? false) ||
-        !_escapeActivator.accepts(event, HardwareKeyboard.instance)) {
-      return KeyEventResult.ignored;
-    }
+    // trigger.
+    if (!_isEscapeForVisibleTooltip(event)) return KeyEventResult.ignored;
     _current = null;
     RawTooltip.dismissAllToolTips();
 
@@ -505,49 +493,8 @@ class _NakedTooltipState extends State<NakedTooltip>
     });
   }
 
-  static bool _usesLegacy(NakedTooltip widget) =>
-      widget.open != null ||
-      widget.useRootOverlay ||
-      widget.disableHoverableContent;
-
-  bool get _usesLegacyTooltip => _usesLegacy(widget);
-
-  Widget _buildLegacyTooltip(Widget child) => LegacyNakedTooltip(
-    overlayBuilder: widget.overlayBuilder,
-    open: widget.open,
-    onOpenChanged: (open) {
-      if (widget.open == null) _visible = open;
-      widget.onOpenChanged?.call(open);
-    },
-    hoverDelay: widget.hoverDelay,
-    touchDelay: widget.touchDelay,
-    dismissDelay: widget.dismissDelay,
-    disableHoverableContent: widget.disableHoverableContent,
-    enableTapToDismiss: widget.enableTapToDismiss,
-    triggerMode: widget.triggerMode,
-    enableFeedback: widget.enableFeedback,
-    onTriggered: widget.onTriggered,
-    animationStyle: _reducedMotion
-        ? widget.animationStyle.copyWith(
-            duration: Duration.zero,
-            reverseDuration: Duration.zero,
-          )
-        : widget.animationStyle,
-    positioning: widget.positioning,
-    useRootOverlay: widget.useRootOverlay,
-    semanticLabel: widget.semanticLabel,
-    excludeSemantics: widget.excludeSemantics,
-    excludeOverlaySemantics: widget.excludeOverlaySemantics,
-    child: child,
-  );
-
   @override
   Widget build(BuildContext context) {
-    // Keep the trigger's state when a deprecated parameter switches between
-    // the RawTooltip path and the 1.1.0 implementation.
-    final child = KeyedSubtree(key: _childKey, child: widget.child);
-    if (_usesLegacyTooltip) return _buildLegacyTooltip(child);
-
     final textDirection = Directionality.of(context);
     final animationStyle = _animationStyle;
     Widget result = RawTooltip(
@@ -582,7 +529,7 @@ class _NakedTooltipState extends State<NakedTooltip>
           ),
         );
       },
-      hoverDelay: widget.hoverDelay,
+      hoverDelay: _warm.value ? Duration.zero : widget.hoverDelay,
       touchDelay: widget.touchDelay,
       dismissDelay: widget.dismissDelay,
       enableTapToDismiss: widget.enableTapToDismiss,
@@ -604,7 +551,7 @@ class _NakedTooltipState extends State<NakedTooltip>
 
         return placement.offset;
       },
-      child: child,
+      child: widget.child,
     );
     result = MouseRegion(
       opaque: false,

@@ -14,6 +14,7 @@ Widget _tip(
   GlobalKey<RawTooltipState>? tooltipKey,
   Duration hoverDelay = Duration.zero,
   Duration dismissDelay = const Duration(milliseconds: 100),
+  Duration skipDelayDuration = const Duration(milliseconds: 300),
   TooltipTriggerMode triggerMode = TooltipTriggerMode.longPress,
   bool enableTapToDismiss = true,
   ValueChanged<bool>? onOpenChanged,
@@ -22,6 +23,7 @@ Widget _tip(
   tooltipKey: tooltipKey,
   hoverDelay: hoverDelay,
   dismissDelay: dismissDelay,
+  skipDelayDuration: skipDelayDuration,
   triggerMode: triggerMode,
   enableTapToDismiss: enableTapToDismiss,
   onOpenChanged: onOpenChanged,
@@ -152,28 +154,6 @@ void main() {
       await tester.pump(const Duration(milliseconds: 150));
       await tester.pumpAndSettle();
       expect(RawTooltip.dismissAllToolTips(), isFalse);
-    });
-
-    testWidgets('a newer hover cancels a pending focus show', (tester) async {
-      final focusA = FocusNode();
-      addTearDown(focusA.dispose);
-      await tester.pumpMaterialWidget(
-        _row([
-          _tip(
-            'A',
-            focusNode: focusA,
-            hoverDelay: const Duration(milliseconds: 200),
-          ),
-          _tip('B'),
-        ]),
-      );
-      final mouse = await _mouse(tester);
-
-      focusA.requestFocus();
-      await tester.pump(const Duration(milliseconds: 50));
-      await _hover(tester, mouse, 'B');
-      await _expectSingleBubble(tester);
-      expect(_shownTips(), ['B']);
     });
 
     testWidgets('hover replaces a commanded tooltip', (tester) async {
@@ -329,6 +309,32 @@ void main() {
       expect(focusA.hasFocus, isTrue);
     });
 
+    testWidgets('focus replaces a hovered tooltip from outside NakedTooltip', (
+      tester,
+    ) async {
+      final focusA = FocusNode();
+      addTearDown(focusA.dispose);
+      await tester.pumpMaterialWidget(
+        _row([
+          _tip('A', focusNode: focusA),
+          Tooltip(
+            message: 'Material tip',
+            child: SizedBox(key: _triggerKey('M'), width: 80, height: 40),
+          ),
+        ]),
+      );
+      final mouse = await _mouse(tester);
+
+      await _hover(tester, mouse, 'M');
+      await tester.pumpAndSettle();
+      expect(find.text('Material tip'), findsOneWidget);
+
+      focusA.requestFocus();
+      await tester.pumpAndSettle();
+      expect(_shownTips(), ['A']);
+      expect(find.text('Material tip'), findsNothing);
+    });
+
     testWidgets('closing without a replacement keeps the exit animation', (
       tester,
     ) async {
@@ -348,6 +354,78 @@ void main() {
       expect(fade.opacity.value, inExclusiveRange(0, 1));
       await tester.pumpAndSettle();
       expect(_shownTips(), isEmpty);
+    });
+  });
+
+  group('NakedTooltip skips hoverDelay between tooltips', () {
+    const hoverDelay = Duration(milliseconds: 300);
+
+    // Shows A by hover, then moves away until A has fully closed.
+    Future<TestGesture> showThenCloseA(WidgetTester tester) async {
+      final mouse = await _mouse(tester);
+      await _hover(tester, mouse, 'A');
+      await tester.pump(hoverDelay);
+      await tester.pumpAndSettle();
+      expect(_shownTips(), ['A']);
+      await mouse.moveTo(Offset.zero);
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
+      expect(_shownTips(), isEmpty);
+      return mouse;
+    }
+
+    testWidgets('within skipDelayDuration after one closes', (tester) async {
+      await tester.pumpMaterialWidget(
+        _row([
+          _tip('A', hoverDelay: hoverDelay),
+          _tip('B', hoverDelay: hoverDelay),
+        ]),
+      );
+      final mouse = await showThenCloseA(tester);
+
+      await tester.pump(const Duration(milliseconds: 200));
+      await _hover(tester, mouse, 'B');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(_shownTips(), ['B']);
+    });
+
+    testWidgets('but not once skipDelayDuration has passed', (tester) async {
+      await tester.pumpMaterialWidget(
+        _row([
+          _tip('A', hoverDelay: hoverDelay),
+          _tip('B', hoverDelay: hoverDelay),
+        ]),
+      );
+      final mouse = await showThenCloseA(tester);
+
+      await tester.pump(const Duration(milliseconds: 400));
+      await _hover(tester, mouse, 'B');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(_shownTips(), isEmpty);
+      await tester.pump(hoverDelay);
+      await tester.pumpAndSettle();
+      expect(_shownTips(), ['B']);
+    });
+
+    testWidgets('and a zero skipDelayDuration keeps hoverDelay after one '
+        'closes', (tester) async {
+      await tester.pumpMaterialWidget(
+        _row([
+          _tip('A', hoverDelay: hoverDelay, skipDelayDuration: Duration.zero),
+          _tip('B', hoverDelay: hoverDelay, skipDelayDuration: Duration.zero),
+        ]),
+      );
+      final mouse = await showThenCloseA(tester);
+
+      await _hover(tester, mouse, 'B');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(_shownTips(), isEmpty);
+      await tester.pump(hoverDelay);
+      await tester.pumpAndSettle();
+      expect(_shownTips(), ['B']);
     });
   });
 }

@@ -212,6 +212,7 @@ class _NakedToggleState extends State<NakedToggle>
             toggled: widget.value,
             button: !widget.asSwitch,
             label: widget.semanticLabel,
+            excludeSemantics: widget.semanticLabel != null,
             onTap: widget._effectiveEnabled ? _activate : null,
             child: gestureDetector,
           );
@@ -1074,12 +1075,12 @@ class _NakedToggleOptionState<T> extends State<NakedToggleOption<T>>
     Widget optionChild = widget.excludeSemantics
         ? ExcludeSemantics(child: gestureDetector)
         : Semantics(
-            container: true,
             enabled: isEnabled,
             selected: isSelected,
             button: true,
             inMutuallyExclusiveGroup: true,
             label: widget.semanticLabel,
+            excludeSemantics: widget.semanticLabel != null,
             onTap: isEnabled ? () => _activate(scope) : null,
             child: gestureDetector,
           );
