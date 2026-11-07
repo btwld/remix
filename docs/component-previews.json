@@ -79,6 +79,14 @@
       }
     ]
   },
+  "combobox": {
+    "cases": [
+      {
+        "name": "Combobox Component",
+        "path": "components/remixcombobox<object>/combobox-component"
+      }
+    ]
+  },
   "checkbox": {
     "cases": [
       {

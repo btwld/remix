@@ -15,6 +15,7 @@ export 'src/components/dialog/dialog.dart';
 export 'src/components/icon_button/icon_button.dart';
 export 'src/components/card/card.dart';
 export 'src/components/checkbox/checkbox.dart';
+export 'src/components/combobox/combobox.dart';
 export 'src/components/data_list/data_list.dart';
 export 'src/components/data_table/data_table.dart';
 export 'src/components/disclosure/disclosure.dart';
@@ -45,6 +46,8 @@ export 'package:naked_ui/naked_ui.dart'
         NakedAccordionTriggerBuilder,
         NakedAccordionItemState,
         NakedDisclosureState,
+        NakedComboboxState,
+        NakedComboboxFieldBuilder,
         NakedDisclosureTransitionBuilder,
         NakedSliderSemanticFormatterCallback,
         NakedTabState,

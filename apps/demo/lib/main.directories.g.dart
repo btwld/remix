@@ -21,6 +21,7 @@ import 'package:demo/components/checkbox.dart' as _demo_components_checkbox;
 import 'package:demo/components/checkbox_group.dart'
     as _demo_components_checkbox_group;
 import 'package:demo/components/code.dart' as _demo_components_code;
+import 'package:demo/components/combobox.dart' as _demo_components_combobox;
 import 'package:demo/components/data_list.dart' as _demo_components_data_list;
 import 'package:demo/components/data_table.dart' as _demo_components_data_table;
 import 'package:demo/components/dialog.dart' as _demo_components_dialog;
@@ -218,6 +219,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Interests',
             builder: _demo_components_checkbox_group.buildCheckboxGroupUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixCombobox<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Combobox Component',
+            builder: _demo_components_combobox.buildComboboxUseCase,
           ),
         ],
       ),
