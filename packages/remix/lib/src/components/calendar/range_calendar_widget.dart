@@ -190,42 +190,56 @@ class RemixRangeCalendar extends StatelessWidget {
         states: day.states,
         child: Builder(
           builder: (context) {
-            final StyleSpec<CalendarDaySpec> resolved;
+            Widget render(StyleSpec<CalendarDaySpec> resolved) =>
+                StyleSpecBuilder<CalendarDaySpec>(
+                  styleSpec: resolved,
+                  builder: (context, spec) => Box(
+                    styleSpec: spec.container,
+                    child: StyledText(labels.day(date), styleSpec: spec.label),
+                  ),
+                );
             final raw = styleSpec;
             if (raw != null) {
-              resolved = _resolvedRangeDay(
-                raw,
-                preview: preview,
-                start: start,
-                end: end,
-                single: single,
+              return render(
+                _resolvedRangeDay(
+                  raw,
+                  preview: preview,
+                  start: start,
+                  end: end,
+                  single: single,
+                ),
               );
-            } else {
-              final inherited = Style.maybeOf<CalendarSpec>(context);
-              final merged = inherited?.merge(effectiveStyle) ?? effectiveStyle;
-              if (merged is CalendarStyler) {
-                resolved = _RangeDayStyle(
-                  merged,
-                  preview: preview,
-                  start: start,
-                  end: end,
-                  single: single,
-                ).build(context).spec.day;
-              } else {
-                resolved = _resolvedRangeDay(
-                  merged.build(context).spec,
-                  preview: preview,
-                  start: start,
-                  end: end,
-                  single: single,
-                );
-              }
             }
-            return StyleSpecBuilder<CalendarDaySpec>(
-              styleSpec: resolved,
-              builder: (context, spec) => Box(
-                styleSpec: spec.container,
-                child: StyledText(labels.day(date), styleSpec: spec.label),
+            final inherited = Style.maybeOf<CalendarSpec>(context);
+            final merged = inherited?.merge(effectiveStyle) ?? effectiveStyle;
+            final projected = merged is CalendarStyler;
+            final resolved = projected
+                ? _RangeDayStyle(
+                    merged,
+                    preview: preview,
+                    start: start,
+                    end: end,
+                    single: single,
+                  ).build(context)
+                : merged.build(context);
+            // Consume root frame data without rendering its effects or
+            // completing its callback once for every day.
+            return StyleAnimationBuilder<CalendarSpec>(
+              spec: resolved.copyWith(
+                animation: remixChildAnimation<CalendarSpec>(
+                  resolved.animation,
+                ),
+              ),
+              builder: (context, frame) => render(
+                projected
+                    ? frame.spec.day
+                    : _resolvedRangeDay(
+                        frame.spec,
+                        preview: preview,
+                        start: start,
+                        end: end,
+                        single: single,
+                      ),
               ),
             );
           },
@@ -277,11 +291,88 @@ class _RangeDayStyle extends CalendarStyler {
     ]) {
       day = day?.mergeProp(fragment) ?? fragment;
     }
-    return CalendarStyler.create(day: day).resolve(context);
+    return CalendarStyler.create(
+      day: day,
+      animation: _projectAnimation(source.$animation),
+    ).resolve(context);
   }
+
+  _RangeDayFrameStyle _projectFrame(Style<CalendarSpec> frame) =>
+      _RangeDayFrameStyle(frame);
+
+  AnimationConfig? _projectAnimation(AnimationConfig? config) =>
+      switch (config) {
+        PhaseAnimationConfig<CalendarSpec, Style<CalendarSpec>>() =>
+          PhaseAnimationConfig<CalendarSpec, CalendarStyler>(
+            styles: config.styles.map(_projectFrame).toList(),
+            curveConfigs: config.curveConfigs,
+            trigger: config.trigger,
+            onEnd: config.onEnd,
+          ),
+        KeyframeAnimationConfig<CalendarSpec>() =>
+          KeyframeAnimationConfig<CalendarSpec>(
+            trigger: config.trigger,
+            timeline: config.timeline,
+            // Retain the original source independently of the current interval.
+            initialStyle: _projectFrame(config.initialStyle),
+            styleBuilder: (values, initial) => _projectFrame(
+              config.styleBuilder(
+                values,
+                (initial as _RangeDayFrameStyle).source,
+              ),
+            ),
+          ),
+        _ => config,
+      };
 
   @override
   List<Object?> get props => [source, preview, start, end, single];
+}
+
+// Mix phase/keyframe drivers resolve stored styles directly. Re-enter the
+// same unresolved fragment/variant projection for each generated frame.
+class _RangeDayFrameStyle extends CalendarStyler {
+  _RangeDayFrameStyle(this.source);
+
+  final Style<CalendarSpec> source;
+
+  @override
+  StyleSpec<CalendarSpec> resolve(BuildContext context) {
+    // Interval changes must update frame projection without resetting its
+    // animation config. Existing calendar/day scopes own these live values.
+    final state = NakedRangeCalendarState.of(context);
+    final date = NakedCalendarDayState.of(context).date;
+    final interval = state.preview ?? state.value;
+    final inInterval = interval?.contains(date) ?? false;
+    final single = inInterval && interval!.start == interval.end;
+    final start = inInterval && _sameCalendarDate(date, interval!.start);
+    final end = inInterval && _sameCalendarDate(date, interval!.end);
+    final preview = state.preview != null && inInterval;
+    final source = this.source;
+    if (source is CalendarStyler) {
+      return _RangeDayStyle(
+        source,
+        preview: preview,
+        start: start,
+        end: end,
+        single: single,
+      ).build(context);
+    }
+    return StyleSpec(
+      spec: CalendarSpec(
+        day: _resolvedRangeDay(
+          source.build(context).spec,
+          preview: preview,
+          start: start,
+          end: end,
+          single: single,
+        ),
+      ),
+    );
+  }
+
+  @override
+  List<Object?> get props => [source];
 }
 
 StyleSpec<CalendarDaySpec> _resolvedRangeDay(

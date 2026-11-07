@@ -140,6 +140,139 @@ Color _pixel(
 }
 
 void main() {
+  for (final phase in [true, false]) {
+    testWidgets(
+      'root ${phase ? 'phase' : 'keyframe'} follows range endpoints without duplicating effects',
+      (tester) async {
+        final trigger = ValueNotifier(false);
+        final moved = ValueNotifier(false);
+        addTearDown(trigger.dispose);
+        addTearDown(moved.dispose);
+        var completions = 0;
+        const selectedLabel = Color(0xff00ff00);
+        final base = CalendarStyler()
+            .heading(TextStyler().color(_red))
+            .day(
+              CalendarDayStyler()
+                  .color(_white)
+                  .onSelected(.label(TextStyler().color(selectedLabel))),
+            )
+            .rangeStart(
+              CalendarDayStyler()
+                  .color(_red)
+                  .borderRadius(.circular(8))
+                  .wrap(.opacity(.6)),
+            )
+            .wrap(.opacity(.4));
+        CalendarStyler frame(CalendarStyler base, double progress) => base
+            .heading(TextStyler().color(Color.lerp(_red, _blue, progress)!))
+            .rangeStart(
+              CalendarDayStyler().color(Color.lerp(_red, _blue, progress)!),
+            );
+        final style = phase
+            ? base.phaseAnimation<int>(
+                trigger: trigger,
+                phases: const [0, 1],
+                styleBuilder: (value, base) => frame(base, value.toDouble()),
+                configBuilder: (_) => CurveAnimationConfig.linear(
+                  const Duration(milliseconds: 100),
+                  onEnd: () => completions++,
+                ),
+              )
+            : base.keyframeAnimation(
+                trigger: trigger,
+                timeline: [
+                  KeyframeTrack<double>('progress', [
+                    const Keyframe.linear(1, Duration(milliseconds: 100)),
+                  ], initial: 0),
+                ],
+                styleBuilder: (values, base) =>
+                    frame(base, values.get<double>('progress')),
+              );
+        await tester.pumpWidget(
+          _host(
+            ValueListenableBuilder<bool>(
+              valueListenable: moved,
+              builder: (_, shift, _) => _calendar(
+                value: shift ? _range(11, 13) : _range(10, 12),
+                style: style,
+              ),
+            ),
+          ),
+        );
+        Color? color(int day) =>
+            (tester.widget<Box>(_box(day)).styleSpec!.spec.decoration
+                    as BoxDecoration?)
+                ?.color;
+        expect(color(10), _red);
+        expect(color(11), _white);
+        trigger.value = true;
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+        final heading = tester.widget<RichText>(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is RichText &&
+                widget.text.toPlainText() == 'February 2024',
+          ),
+        );
+        expect(heading.text.style!.color, Color.lerp(_red, _blue, .5));
+        expect(color(10), heading.text.style!.color);
+        expect(
+          (tester.widget<Box>(_box(10)).styleSpec!.spec.decoration
+                  as BoxDecoration)
+              .borderRadius,
+          BorderRadius.circular(8),
+        );
+        final label = tester.widget<StyledText>(
+          find
+              .descendant(of: _day(10), matching: find.byType(StyledText))
+              .first,
+        );
+        expect(label.styleSpec!.spec.style!.color, selectedLabel);
+        expect(
+          find.byWidgetPredicate(
+            (widget) => widget is Opacity && widget.opacity == .4,
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+            of: _day(10),
+            matching: find.byWidgetPredicate(
+              (widget) => widget is Opacity && widget.opacity == .6,
+            ),
+          ),
+          findsOneWidget,
+        );
+        moved.value = true;
+        await tester.pump();
+        expect(color(10), _white);
+        await tester.pump(const Duration(milliseconds: 25));
+        final runningHeading = tester.widget<RichText>(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is RichText &&
+                widget.text.toPlainText() == 'February 2024',
+          ),
+        );
+        expect(
+          runningHeading.text.style!.color,
+          isNot(heading.text.style!.color),
+        );
+        expect(color(11), runningHeading.text.style!.color);
+        trigger.value = false;
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(color(10), _white);
+        expect(color(11), Color.lerp(_red, _blue, .5));
+        await tester.pumpAndSettle();
+        if (phase) expect(completions, 1);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets(
     'material-free root exposes controlled complete range and explicit draft semantics',
     (tester) async {
