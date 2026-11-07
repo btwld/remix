@@ -1,6 +1,34 @@
 import 'package:flutter/foundation.dart' show internal;
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart' hide AnimationConfig;
+import 'package:mix/mix.dart' as mix show AnimationConfig;
+
+/// Keeps root completion callbacks on the aggregate renderer while child
+/// frame drivers animate the same values. Nested slot configs are unchanged.
+@internal
+mix.AnimationConfig? remixChildAnimation<S extends Spec<S>>(
+  mix.AnimationConfig? config,
+) => switch (config) {
+  CurveAnimationConfig() => CurveAnimationConfig(
+    duration: config.duration,
+    curve: config.curve,
+    delay: config.delay,
+  ),
+  SpringAnimationConfig() => SpringAnimationConfig(spring: config.spring),
+  PhaseAnimationConfig<S, Style<S>>() => PhaseAnimationConfig<S, Style<S>>(
+    styles: config.styles,
+    curveConfigs: [
+      for (final curve in config.curveConfigs)
+        CurveAnimationConfig(
+          duration: curve.duration,
+          curve: curve.curve,
+          delay: curve.delay,
+        ),
+    ],
+    trigger: config.trigger,
+  ),
+  _ => config,
+};
 
 /// Applies resolved Remix text and icon specs as inherited defaults for
 /// arbitrary component content.

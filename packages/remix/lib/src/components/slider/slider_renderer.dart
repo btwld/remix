@@ -98,7 +98,9 @@ class _SliderRendererState extends State<_SliderRenderer> {
           // regenerate root modifiers, which the aggregate builder alone owns.
           // Mix still drives local interpolation and nested Box metadata survives.
           return StyleAnimationBuilder<SliderSpec>(
-            spec: resolved,
+            spec: resolved.copyWith(
+              animation: remixChildAnimation<SliderSpec>(resolved.animation),
+            ),
             builder: (context, spec) => _resolveThumbs(context, aggregate, [
               ...thumbs,
               spec.spec,

@@ -46,6 +46,52 @@ void action(WidgetTester t, String label, ui.SemanticsAction a) =>
       ),
     );
 void main() {
+  testWidgets('root completion runs once while nested thumb callbacks remain', (
+    tester,
+  ) async {
+    final trigger = ValueNotifier(false);
+    addTearDown(trigger.dispose);
+    var rootCompletions = 0;
+    var thumbCompletions = 0;
+    final style = SliderStyler()
+        .thumb(
+          BoxStyler()
+              .size(20, 20)
+              .color(red)
+              .animate(
+                CurveAnimationConfig.linear(
+                  const Duration(milliseconds: 20),
+                  onEnd: () => thumbCompletions++,
+                ),
+              ),
+        )
+        .phaseAnimation<int>(
+          trigger: trigger,
+          phases: const [0, 1],
+          styleBuilder: (phase, base) =>
+              base.thumbColor(phase == 0 ? red : blue),
+          configBuilder: (_) => CurveAnimationConfig.linear(
+            const Duration(milliseconds: 100),
+            onEnd: () => rootCompletions++,
+          ),
+        );
+    await tester.pumpWidget(
+      host(
+        RemixRangeSlider(
+          values: const [.25, .75],
+          onChanged: (_) {},
+          style: style,
+        ),
+      ),
+    );
+    trigger.value = true;
+    await tester.pump();
+    await tester.pumpAndSettle();
+    expect(rootCompletions, 1);
+    expect(thumbCompletions, greaterThan(0));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('public example runs in a widgets-only host', (t) async {
     await t.pumpWidget(host(const example.RangeSliderExample()));
     expect(find.byType(RemixRangeSlider), findsOneWidget);
