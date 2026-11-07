@@ -36,15 +36,24 @@ Import `ui/ui.dart` from a file at the `lib/` root; nested files need the
 corresponding package or relative import. See the [catalog](../docs/open-code.mdx)
 for items, including charts, icons, dashboard composition and Agent bundles.
 
+## Develop against a checkout
+
 Contributors using an unreleased CLI can install it from a checkout:
 
 ```shell
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-If pub.dev does not yet serve a registry candidate's Remix floor, use a checkout
-override for development. Only [hosted release checks](RELEASING.md) establish
-that published packages satisfy the floor; a local override does not.
+To build an application against the checkout's Remix package instead of the
+published one, add it by path:
+
+```shell
+flutter pub add "remix:{path: /path/to/remix/packages/remix}"
+```
+
+A registry candidate whose Remix floor pub.dev does not serve yet needs a
+checkout override for development. Only [hosted release checks](RELEASING.md)
+establish that published packages satisfy the floor; a local override does not.
 
 ## Host requirements
 
