@@ -3,6 +3,8 @@ import 'package:remix/remix.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
+import '../ui/ui.dart';
+
 @widgetbook.UseCase(name: 'Combobox Component', type: RemixCombobox)
 Widget buildComboboxUseCase(BuildContext context) => _ComboboxExample(
   enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
@@ -18,6 +20,28 @@ class _ComboboxExample extends StatefulWidget {
 
 class _ComboboxExampleState extends State<_ComboboxExample> {
   String? _selected;
+  final _controller = TextEditingController();
+  final _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_clearStaleSelection);
+  }
+
+  void _clearStaleSelection() {
+    if (_selected != null && _controller.text != _selected) {
+      setState(() => _selected = null);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   static const _cities = [
     'San Francisco, California · United States',
     'San Sebastián, Basque Country · Spain',
@@ -37,61 +61,112 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            RemixCombobox<String>(
-              label: 'Destination',
-              hintText: 'Try “san”',
-              enabled: widget.enabled,
-              optionsBuilder: (query) => query.text.isEmpty
-                  ? const []
-                  : _cities.where(
-                      (city) =>
-                          city.toLowerCase().contains(query.text.toLowerCase()),
-                    ),
-              onSelected: (city) => setState(() => _selected = city),
-              style: ComboboxStyler()
-                  .field(
-                    TextFieldStyler()
-                        .padding(.all(12))
-                        .constraints(.minHeight(48))
-                        .borderRadius(.circular(8))
-                        .color(const Color(0xFFFFFFFF))
-                        .text(TextStyler().color(const Color(0xFF202020)))
-                        .label(TextStyler().color(const Color(0xFF202020)))
-                        .border(.all(.color(const Color(0xFF999999)).width(1)))
-                        .onFocused(
-                          .border(
-                            .all(.color(const Color(0xFF256A50)).width(2)),
-                          ),
-                        ),
-                  )
-                  .panel(
-                    BoxStyler()
-                        .color(const Color(0xFFFFFFFF))
-                        .padding(.all(4))
-                        .border(.all(.color(const Color(0xFF999999)).width(1))),
-                  )
-                  .option(
-                    BoxStyler()
-                        .padding(.horizontal(12))
-                        .onHovered(.color(const Color(0xFFF0F5F2)))
-                        .onFocused(.color(const Color(0xFFDCEEE3))),
-                  )
-                  .optionLabel(
-                    TextStyler().color(const Color(0xFF202020)).fontSize(16),
-                  ),
-            ),
-            const SizedBox(height: 20),
             Semantics(
               liveRegion: true,
               child: Text(
                 _selected == null
                     ? 'Choose a suggested destination.'
                     : 'Selected: $_selected',
+                style: TextStyle(color: FortalTokens.gray11.resolve(context)),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ScrollConfiguration(
+              behavior: const _SuggestionScrollBehavior(),
+              child: RemixCombobox<String>(
+                controller: _controller,
+                focusNode: _focusNode,
+                label: 'Destination',
+                hintText: 'Try “san”',
+                enabled: widget.enabled,
+                optionsBuilder: (query) => query.text.isEmpty
+                    ? const []
+                    : _cities.where(
+                        (city) => city.toLowerCase().contains(
+                          query.text.toLowerCase(),
+                        ),
+                      ),
+                onSelected: (city) => setState(() => _selected = city),
+                style: ComboboxStyler()
+                    .field(
+                      TextFieldStyler()
+                          .padding(.all(12))
+                          .constraints(.minHeight(48))
+                          .borderRadius(.all(FortalTokens.radius3()))
+                          .color(FortalTokens.gray2())
+                          .text(TextStyler().color(FortalTokens.gray12()))
+                          .label(TextStyler().color(FortalTokens.gray12()))
+                          .hintText(TextStyler().color(FortalTokens.gray11()))
+                          .cursorColor(FortalTokens.accentContent())
+                          .border(
+                            .all(.color(FortalTokens.controlBorder()).width(1)),
+                          )
+                          .onFocused(
+                            .border(
+                              .all(.color(FortalTokens.focus8()).width(2)),
+                            ),
+                          )
+                          .onDisabled(
+                            .color(FortalTokens.gray3())
+                                .border(
+                                  .all(.color(FortalTokens.gray6()).width(1)),
+                                )
+                                .text(TextStyler().color(FortalTokens.gray8()))
+                                .hintText(
+                                  TextStyler().color(FortalTokens.gray8()),
+                                )
+                                .label(
+                                  TextStyler().color(FortalTokens.gray11()),
+                                ),
+                          ),
+                    )
+                    .panel(
+                      BoxStyler()
+                          .margin(.top(8))
+                          .borderRadius(.all(FortalTokens.radius3()))
+                          .color(FortalTokens.colorPanel())
+                          .padding(.all(4))
+                          .border(.all(.color(FortalTokens.gray7()).width(1)))
+                          .decoration(
+                            BoxDecorationMix.create(
+                              boxShadow: FortalTokens.shadow3.mix(),
+                            ),
+                          ),
+                    )
+                    .option(
+                      BoxStyler()
+                          .padding(.horizontal(12).vertical(8))
+                          .borderRadius(.all(FortalTokens.radius2()))
+                          .onHovered(.color(FortalTokens.accentA3()))
+                          .onFocused(.color(FortalTokens.accentA4())),
+                    )
+                    .optionLabel(
+                      TextStyler().color(FortalTokens.gray12()).fontSize(16),
+                    ),
               ),
             ),
           ],
         ),
       ),
     ),
+  );
+}
+
+/// Keep overflowing, wrapped suggestions discoverable in every pointer mode.
+class _SuggestionScrollBehavior extends ScrollBehavior {
+  const _SuggestionScrollBehavior();
+
+  @override
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) => RawScrollbar(
+    controller: details.controller,
+    thumbVisibility: true,
+    thumbColor: FortalTokens.gray8.resolve(context),
+    radius: FortalTokens.radius2.resolve(context),
+    thickness: 4,
+    child: child,
   );
 }
