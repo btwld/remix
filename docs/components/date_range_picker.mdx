@@ -118,8 +118,35 @@ requirement. The calendar's range summary is announced but not painted;
 `summaryBuilder` paints it inside the popover.
 
 There is no separate DateRangePicker styler, raw spec, controller or callable
-widget shorthand. Package publication and preset adoption are separate from
-this runtime component.
+widget shorthand. Use the Vanilla composite above for preset styling.
+
+## Vanilla recipe
+
+In a Vanilla app, install `date_range_picker` and import your generated UI barrel:
+
+```shell
+dart run remix_cli:remix add date_range_picker
+```
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget example() => UiDateRangePicker(
+  value: null,
+  firstDate: DateTime(2026),
+  lastDate: DateTime(2028, 12, 31),
+  onChanged: (value) { /* Store the requested value in application state. */ },
+);
+```
+
+`Ui` is the application's chosen prefix. Wrap the host Navigator in `UiTheme`.
+This hand-written composite wires the Vanilla outline Button, rounded and
+elevated Popover, calendar, icon navigation and Select recipes. Override each
+child with `buttonStyle`, `popoverStyle`, `calendarStyle`, `navigationStyle`
+and `selectorStyle`; each override merges last. The panel is offset from the
+trigger and sized for the calendar. Remix retains all opening, dismissal and
+selection behavior.
 
 When the full trigger label exceeds its available width, the default formatter
 uses compact numeric month/day/year endpoints. Compact or caller-formatted labels

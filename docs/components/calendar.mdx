@@ -181,6 +181,34 @@ use supported Flutter button semantics with full date labels, selected/enabled
 state and actions. This is not a claim of literal web ARIA-grid parity or
 conformance on every assistive technology.
 
+## Vanilla recipe
+
+In a Vanilla app, install `calendar` and import your generated UI barrel:
+
+```shell
+dart run remix_cli:remix add calendar
+```
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget example() => UiCalendar(
+  value: null,
+  firstDate: DateTime(2026),
+  lastDate: DateTime(2028, 12, 31),
+  onChanged: (value) { /* Store the requested value in application state. */ },
+);
+```
+
+`Ui` is the application's chosen prefix. Wrap the host Navigator in `UiTheme`.
+The hand-written facade supplies theme typography, Vanilla icon navigation and
+Select selectors that grow with text. Day treatments cover today, selection,
+hover, press, keyboard focus and disabled dates; unavailable dates add a strike
+through, while out-of-bounds dates only fade. Override `style`, `navigationStyle`
+and `selectorStyle` last. `CalendarSpec` has no generator target, so this
+composite deliberately has no generated part.
+
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
@@ -300,5 +328,4 @@ the day and its `NakedRangePosition` to context-aware style tokens.
 
 For an inclusive date range, use [Range Calendar](/components/range_calendar)
 instead. Typed/segmented entry, non-Gregorian calendars and timezone scheduling
-are not part of this component. Preset recipes are separate from the runtime
-API.
+are not part of this component. The Vanilla recipe above packages these styles for installation.

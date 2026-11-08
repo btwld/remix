@@ -50,12 +50,6 @@ class _CalendarReferencePageState extends State<CalendarReferencePage> {
   @override
   Widget build(BuildContext context) {
     final labels = _arabic ? _arabicLabels : const RemixCalendarLabels();
-    final navigationStyle = playgroundIconButtonStyle(
-      variant: PlaygroundIconButtonVariant.ghost,
-    ).size(44, 44);
-    final selectorStyle = playgroundSelectStyle().trigger(
-      SelectTriggerStyler().minHeight(44),
-    );
     return Directionality(
       textDirection: _arabic ? TextDirection.rtl : TextDirection.ltr,
       child: MediaQuery(
@@ -126,7 +120,7 @@ class _CalendarReferencePageState extends State<CalendarReferencePage> {
                         ),
                         const SizedBox(height: 24),
                         if (_mode == _CalendarMode.picker)
-                          RemixDatePicker(
+                          PlaygroundDatePicker(
                             value: _selected,
                             firstDate: DateTime(2025),
                             lastDate: DateTime(2028, 12, 31),
@@ -148,22 +142,6 @@ class _CalendarReferencePageState extends State<CalendarReferencePage> {
                             isDateUnavailable: _isWeekend,
                             onChanged: (date) =>
                                 setState(() => _selected = date),
-                            buttonStyle: playgroundButtonStyle(
-                              variant: PlaygroundButtonVariant.outline,
-                            ).minHeight(44),
-                            calendarStyle: _calendarStyle,
-                            navigationStyle: navigationStyle,
-                            selectorStyle: selectorStyle,
-                            popoverStyle: PopoverStyler()
-                                .color(PlaygroundTokens.popover())
-                                .border(
-                                  .color(
-                                    PlaygroundTokens.border(),
-                                  ).width(PlaygroundTokens.strokeHairline),
-                                )
-                                .borderRadius(.all(PlaygroundTokens.radiusMd()))
-                                .padding(.all(compact ? 0 : 12))
-                                .shadows(PlaygroundShadow.md.box),
                           )
                         else
                           SizedBox(
@@ -176,7 +154,7 @@ class _CalendarReferencePageState extends State<CalendarReferencePage> {
                                   )
                                   .borderRadius(.circular(12))
                                   .padding(.all(compact ? 0 : 12)),
-                              child: RemixCalendar(
+                              child: PlaygroundCalendar(
                                 value: _selected,
                                 firstDate: DateTime(2025),
                                 lastDate: DateTime(2028, 12, 31),
@@ -192,9 +170,6 @@ class _CalendarReferencePageState extends State<CalendarReferencePage> {
                                 labels: labels,
                                 onChanged: (date) =>
                                     setState(() => _selected = date),
-                                navigationStyle: navigationStyle,
-                                selectorStyle: selectorStyle,
-                                style: _calendarStyle,
                               ),
                             ),
                           ),
@@ -269,35 +244,6 @@ class _CalendarReferencePageState extends State<CalendarReferencePage> {
 }
 
 bool _isWeekend(DateTime date) => date.weekday >= DateTime.saturday;
-
-final _calendarStyle = CalendarStyler()
-    .weekday(
-      TextStyler().fontSize(12).color(PlaygroundTokens.mutedForeground()),
-    )
-    .day(
-      CalendarDayStyler()
-          .borderRadius(.circular(8))
-          .border(.color(const Color(0x00000000)).width(2))
-          .label(TextStyler().fontSize(14).color(PlaygroundTokens.foreground()))
-          .onHovered(CalendarDayStyler().color(PlaygroundTokens.accent()))
-          .onSelected(
-            CalendarDayStyler()
-                .color(PlaygroundTokens.primary())
-                .label(
-                  TextStyler().color(PlaygroundTokens.primaryForeground()),
-                ),
-          )
-          .onFocusVisible(
-            CalendarDayStyler().border(
-              .color(const Color(0xFF3E63DD)).width(2),
-            ),
-          )
-          .onDisabled(
-            CalendarDayStyler().label(
-              TextStyler().color(PlaygroundTokens.mutedForeground()),
-            ),
-          ),
-    );
 
 const _arabicMonths = [
   'يناير',

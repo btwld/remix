@@ -198,9 +198,40 @@ calendar.
 This component shows one month at a time and supports cross-month ranges through
 navigation. Typed/segmented entry, multiple visible months, drag selection,
 partial committed values, Apply/Cancel modes, min/max nights, non-Gregorian
-calendars and timezone scheduling are outside this API. Preset adoption and
-runtime publication are separate from adding the component source.
+calendars and timezone scheduling are outside this API. The Vanilla recipe above packages the range styles for installation.
 
+
+## Vanilla recipe
+
+In a Vanilla app, install `range_calendar` and import your generated UI barrel:
+
+```shell
+dart run remix_cli:remix add range_calendar
+```
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget example() => UiRangeCalendar(
+  value: null,
+  firstDate: DateTime(2026),
+  lastDate: DateTime(2028, 12, 31),
+  onChanged: (value) { /* Store the requested value in application state. */ },
+);
+```
+
+`Ui` is the application's chosen prefix. Wrap the host Navigator in `UiTheme`.
+The hand-written facade supplies theme typography, Vanilla icon navigation and
+Select selectors that grow with text. Day treatments cover today, selection,
+hover, press, keyboard focus and disabled dates; unavailable dates add a strike
+through, while out-of-bounds dates only fade. Override `style`, `navigationStyle`
+and `selectorStyle` last. `CalendarSpec` has no generator target, so this
+composite deliberately has no generated part.
+
+Committed endpoints use primary and interiors use accent. The draft uses a
+tinted fill and primary outline; the prior committed range becomes muted
+until the draft ends. Unavailable draft days use destructive text.
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">

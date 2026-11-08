@@ -117,7 +117,7 @@ class _RangeCalendarReferencePageState
                         ),
                         const SizedBox(height: 20),
                         if (widget.usePicker)
-                          RemixDateRangePicker(
+                          PlaygroundDateRangePicker(
                             value: _value,
                             firstDate: DateTime(2025),
                             lastDate: DateTime(2028, 12, 31),
@@ -139,24 +139,6 @@ class _RangeCalendarReferencePageState
                                 ? _arabicRangeLabels
                                 : const RemixRangeCalendarLabels(),
                             onChanged: _select,
-                            buttonStyle: playgroundButtonStyle(
-                              variant: PlaygroundButtonVariant.outline,
-                            ).minHeight(44),
-                            calendarStyle: _rangeStyle,
-                            navigationStyle: playgroundIconButtonStyle(
-                              variant: PlaygroundIconButtonVariant.ghost,
-                            ).size(44, 44),
-                            selectorStyle: playgroundSelectStyle().trigger(
-                              SelectTriggerStyler().minHeight(44),
-                            ),
-                            popoverStyle: PopoverStyler()
-                                .color(PlaygroundTokens.popover())
-                                .border(
-                                  .color(PlaygroundTokens.border()).width(1),
-                                )
-                                .borderRadius(.circular(12))
-                                .padding(.all(compact ? 0 : 12))
-                                .shadows(PlaygroundShadow.md.box),
                           )
                         else
                           SizedBox(
@@ -172,7 +154,7 @@ class _RangeCalendarReferencePageState
                                   )
                                   .borderRadius(.circular(12))
                                   .padding(.all(compact ? 0 : 12)),
-                              child: RemixRangeCalendar(
+                              child: PlaygroundRangeCalendar(
                                 value: _value,
                                 firstDate: DateTime(2025),
                                 lastDate: DateTime(2028, 12, 31),
@@ -190,13 +172,6 @@ class _RangeCalendarReferencePageState
                                     ? _arabicRangeLabels
                                     : const RemixRangeCalendarLabels(),
                                 onChanged: _select,
-                                navigationStyle: playgroundIconButtonStyle(
-                                  variant: PlaygroundIconButtonVariant.ghost,
-                                ).size(44, 44),
-                                selectorStyle: playgroundSelectStyle().trigger(
-                                  SelectTriggerStyler().minHeight(44),
-                                ),
-                                style: _rangeStyle,
                               ),
                             ),
                           ),
@@ -295,76 +270,6 @@ class _RangeCalendarReferencePageState
         style: ButtonStyler().minHeight(44),
       );
 }
-
-final _endpoint = CalendarDayStyler()
-    .color(const Color(0xFF3E63DD))
-    .label(TextStyler().color(const Color(0xFFFFFFFF)))
-    .onDisabled(_mutedRange);
-
-final _mutedRange = CalendarDayStyler()
-    .color(PlaygroundTokens.muted())
-    .label(TextStyler().color(PlaygroundTokens.mutedForeground()));
-final _rangeStyle = CalendarStyler()
-    .weekday(
-      TextStyler().fontSize(12).color(PlaygroundTokens.mutedForeground()),
-    )
-    .day(
-      CalendarDayStyler()
-          .border(.color(const Color(0x00000000)).width(2))
-          .label(TextStyler().fontSize(14).color(PlaygroundTokens.foreground()))
-          .onHovered(CalendarDayStyler().color(PlaygroundTokens.accent()))
-          .onSelected(
-            CalendarDayStyler()
-                .color(PlaygroundTokens.muted())
-                .label(TextStyler().color(PlaygroundTokens.mutedForeground())),
-          )
-          .onFocusVisible(
-            CalendarDayStyler().border(
-              .color(const Color(0xFF8DA4FF)).width(2),
-            ),
-          )
-          .onDisabled(
-            CalendarDayStyler().label(
-              TextStyler().color(PlaygroundTokens.mutedForeground()),
-            ),
-          )
-          // Range roles paint the committed interval; while drafting the old
-          // selection retains only its faint onSelected treatment.
-          .onRangeMiddle(
-            CalendarDayStyler()
-                .color(const Color(0xFFDBE5FF))
-                .label(TextStyler().color(const Color(0xFF18306A)))
-                .onDisabled(_mutedRange),
-          )
-          .onRangeStart(
-            _endpoint.borderRadius(
-              .only(
-                topStart: const Radius.circular(8),
-                bottomStart: const Radius.circular(8),
-              ),
-            ),
-          )
-          .onRangeEnd(
-            _endpoint.borderRadius(
-              .only(
-                topEnd: const Radius.circular(8),
-                bottomEnd: const Radius.circular(8),
-              ),
-            ),
-          )
-          .onRangeSingle(_endpoint.borderRadius(.circular(8)))
-          // Preview follows the caps, distinguishing the active draft.
-          .onRangePreview(
-            CalendarDayStyler()
-                .color(const Color(0xFFFAE2A0))
-                .label(TextStyler().color(const Color(0xFF653D00)))
-                .onDisabled(
-                  CalendarDayStyler()
-                      .color(const Color(0xFFF1CFCA))
-                      .label(TextStyler().color(const Color(0xFF7C2424))),
-                ),
-          ),
-    );
 
 final _arabicRangeLabels = RemixRangeCalendarLabels(
   noRange: 'لم يتم اختيار فترة',

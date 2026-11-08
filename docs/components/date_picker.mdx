@@ -104,6 +104,34 @@ open, including while a nested selector is open. Interaction variants still
 resolve in the button's own state. Use these fragments for muted empty text
 and an open-field ring. Month/year panels use a 4-pixel side offset.
 
+## Vanilla recipe
+
+In a Vanilla app, install `date_picker` and import your generated UI barrel:
+
+```shell
+dart run remix_cli:remix add date_picker
+```
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget example() => UiDatePicker(
+  value: null,
+  firstDate: DateTime(2026),
+  lastDate: DateTime(2028, 12, 31),
+  onChanged: (value) { /* Store the requested value in application state. */ },
+);
+```
+
+`Ui` is the application's chosen prefix. Wrap the host Navigator in `UiTheme`.
+This hand-written composite wires the Vanilla outline Button, rounded and
+elevated Popover, calendar, icon navigation and Select recipes. Override each
+child with `buttonStyle`, `popoverStyle`, `calendarStyle`, `navigationStyle`
+and `selectorStyle`; each override merges last. The panel is offset from the
+trigger and sized for the calendar. Remix retains all opening, dismissal and
+selection behavior.
+
 ## Constructor
 
 <CodeGroup title="Constructor" defaultLanguage="dart">
