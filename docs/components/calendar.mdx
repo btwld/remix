@@ -132,6 +132,17 @@ the month/year selects. `headerBuilder` can replace those controls using the
 calendar state's bounded month-navigation actions. Day selection/focus behavior
 remains owned by the calendar.
 
+`CalendarStyler.selectorSpacing` sets the horizontal gap between month/year
+selectors (default 8). `selectorRunSpacing` sets the gap between wrapped rows
+(default 4).
+
+Without an explicit container width bound, the compact maximum is seven times
+the resolved day minimum width plus horizontal container padding (308 by default).
+A larger container minimum lifts that fallback. Set `maxWidth` to an explicit
+finite size to replace the cap, or `maxWidth(double.maxFinite)` to fill a bounded
+parent. Under an unbounded parent, `double.maxFinite` uses the compact fallback.
+Narrower parents still allow horizontal scrolling without shrinking day targets.
+
 Pass the styler to `RemixCalendar(style: calendarStyle, ...)`; `CalendarStyler`
 does not provide a callable widget shorthand.
 

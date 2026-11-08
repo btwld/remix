@@ -241,6 +241,13 @@ final _primaryPressedFill = _dimmed(AcmeTokens.interactivePrimary, 0.8);
 recipe's hover fill must itself be an `.onHovered(...)` fragment. Declare
 `.onDisabled` last so it wins over every other state.
 
+**Calendar range variants keep their first position.** Mix retains a variant
+key's first-declaration position when later style layers merge that key.
+Declare `CalendarDayStyler.onRangeStart`, `onRangeMiddle`, `onRangeEnd`,
+`onRangeSingle` and `onRangePreview` after `onSelected` in the preset's base
+style. Repeating a range variant in a caller override changes its properties,
+not its priority position. Range variants apply only to `RemixRangeCalendar`.
+
 **Set foreground with fill in every state.** When hover or press changes the
 fill, set label, icon, and spinner colors in the same fragment. Touch devices
 never report hover, so a press fragment that changes only the fill paints the

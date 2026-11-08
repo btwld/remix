@@ -55,6 +55,10 @@ final _onRangePreviewCalendarDayVariant = _rangeVariant(
 /// Ranks a day condition with widget-state variants, which Mix applies after
 /// plain context variants. Declared after `onSelected` or `onDisabled`, it
 /// overrides them on shared properties; declared before, they override it.
+// Mix 2.3.1 lib/src/core/style.dart mergeActiveVariants uses a stable partition
+// by widget-state dependencies, preserving declaration order within each group
+// (Mix CHANGELOG 2.2.0, "Declaration order within a priority group is reliable").
+// Merging a variant key across layers retains its first-declaration position.
 final class _StateRankedContextVariant extends ContextVariant {
   _StateRankedContextVariant(
     super.key,
@@ -83,7 +87,7 @@ extension RemixCalendarDayStylerRemixHelpers on CalendarDayStyler {
     return variant(_onUnavailableCalendarDayVariant, value);
   }
 
-  /// Styles the first day of a multi-day painted range interval.
+  /// Styles the first day of a multi-day interval in [RemixRangeCalendar] only.
   ///
   /// The painted interval is the draft while one exists, otherwise the
   /// committed value. Range variants rank with widget states: declare them
@@ -93,7 +97,7 @@ extension RemixCalendarDayStylerRemixHelpers on CalendarDayStyler {
     return variant(_onRangeStartCalendarDayVariant, value);
   }
 
-  /// Styles days strictly inside a multi-day painted range interval.
+  /// Styles interior days of a multi-day interval in [RemixRangeCalendar] only.
   ///
   /// Committed interior days are also selected; declare this after
   /// `onSelected` to override it.
@@ -101,20 +105,21 @@ extension RemixCalendarDayStylerRemixHelpers on CalendarDayStyler {
     return variant(_onRangeMiddleCalendarDayVariant, value);
   }
 
-  /// Styles the last day of a multi-day painted range interval.
+  /// Styles the last day of a multi-day interval in [RemixRangeCalendar] only.
   ///
   /// A one-day interval uses [onRangeSingle] instead.
   CalendarDayStyler onRangeEnd(CalendarDayStyler value) {
     return variant(_onRangeEndCalendarDayVariant, value);
   }
 
-  /// Styles the only day of a one-day painted range interval, instead of
+  /// Styles a one-day interval in [RemixRangeCalendar] only, instead of
   /// combining [onRangeStart] and [onRangeEnd] caps.
   CalendarDayStyler onRangeSingle(CalendarDayStyler value) {
     return variant(_onRangeSingleCalendarDayVariant, value);
   }
 
-  /// Styles every day of the local draft, from its anchor to the focused day.
+  /// Styles the local draft in [RemixRangeCalendar] only, from its anchor to
+  /// the focused day.
   ///
   /// Draft days are never selected. Position variants declared after this one
   /// override it on shared properties, so caps can sit on a draft fill.

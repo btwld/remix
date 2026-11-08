@@ -213,6 +213,9 @@ class NakedRangeCalendarState extends NakedState {
   /// Whether the supplied complete range satisfies bounds and availability.
   ///
   /// Null values are valid. Invalid values remain parent-owned and selected.
+  /// Every widget update revalidates the committed range with O(span)
+  /// availability-predicate calls, even when the predicate identity is unchanged.
+  /// Internal focus moves and browsing reuse that result.
   final bool isValueValid;
 
   /// Immutable rows of seven dates, padded with nulls outside this month.
@@ -258,6 +261,9 @@ class NakedRangeCalendarState extends NakedState {
 /// Navigation and blur never commit. Escape discards the draft and bubbles to
 /// an enclosing overlay. Changing the supplied civil range, disabling interaction
 /// or invalidating the anchor cancels the draft. Equal values preserve browsing.
+/// Accepting this calendar's request in the request frame preserves the completed
+/// end's focus and month. Any other changed nonnull value recentres on its
+/// clamped start, including a previously rejected request supplied later.
 class NakedRangeCalendar extends StatelessWidget {
   /// Creates a headless range calendar with one shared navigation/focus engine.
   const NakedRangeCalendar({
