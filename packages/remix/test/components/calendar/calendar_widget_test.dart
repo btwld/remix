@@ -63,6 +63,26 @@ TextStyle? _renderedTextStyle(WidgetTester tester, String label) => tester
     .style;
 
 void main() {
+  testWidgets('dropdown caption has one row and a semantic live heading', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(_host(_calendar()));
+    expect(find.text('February 2024'), findsNothing);
+    final heading = tester.getSemantics(find.bySemanticsLabel('February 2024'));
+    expect(heading.getSemanticsData().flagsCollection.isHeader, isTrue);
+    expect(heading.getSemanticsData().flagsCollection.isLiveRegion, isTrue);
+    final month = tester.getRect(find.byType(RemixSelect<int>).first);
+    final previous = tester.getRect(find.bySemanticsLabel('Previous month'));
+    final next = tester.getRect(find.bySemanticsLabel('Next month'));
+    expect(month.center.dy, previous.center.dy);
+    expect(month.center.dy, next.center.dy);
+    await tester.tap(find.bySemanticsLabel('Next month'));
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('March 2024'), findsOneWidget);
+    semantics.dispose();
+  });
+
   testWidgets('month and year selector text fits at 200 percent scale', (
     tester,
   ) async {
@@ -141,7 +161,7 @@ void main() {
                 rebuild = setState;
                 final color = changed ? blue : red;
                 final base = CalendarStyler()
-                    .heading(TextStyler().color(color))
+                    .weekday(TextStyler().color(color))
                     .day(CalendarDayStyler().color(color))
                     .wrap(.opacity(.5));
                 final style = phase
@@ -149,7 +169,7 @@ void main() {
                         trigger: trigger,
                         phases: const [0, 1],
                         styleBuilder: (value, base) => base
-                            .heading(
+                            .weekday(
                               TextStyler().color(value == 0 ? red : blue),
                             )
                             .day(
@@ -196,7 +216,7 @@ void main() {
         }
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 100));
-        expect(dayColor(), _renderedTextStyle(tester, 'February 2024')?.color);
+        expect(dayColor(), _renderedTextStyle(tester, 'Su')?.color);
         expect(dayColor(), isNot(red));
         expect(
           tester
@@ -219,7 +239,7 @@ void main() {
       try {
         final changes = <DateTime>[];
         await tester.pumpWidget(_host(_calendar(onChanged: changes.add)));
-        expect(find.text('February 2024'), findsOneWidget);
+        expect(find.bySemanticsLabel('February 2024'), findsOneWidget);
         expect(
           find.bySemanticsLabel('Thursday, February 15, 2024, Today'),
           findsOneWidget,
@@ -228,7 +248,9 @@ void main() {
           find.bySemanticsLabel('Wednesday, February 14, 2024'),
           findsOneWidget,
         );
-        final heading = tester.getSemantics(find.text('February 2024'));
+        final heading = tester.getSemantics(
+          find.bySemanticsLabel('February 2024'),
+        );
         expect(heading.getSemanticsData().flagsCollection.isLiveRegion, isTrue);
         expect(heading.getSemanticsData().flagsCollection.isHeader, isTrue);
         final selected = tester.getSemantics(
@@ -403,7 +425,7 @@ void main() {
       addTearDown(brightness.dispose);
       final inherited =
           CalendarStyler(
-                heading: TextStyler().color(heading),
+                weekday: TextStyler().color(heading),
                 day: CalendarDayStyler(
                   label: TextStyler()
                       .color(normal)
@@ -436,7 +458,7 @@ void main() {
           ),
         ),
       );
-      expect(_renderedTextStyle(tester, 'February 2024')?.color, heading);
+      expect(_renderedTextStyle(tester, 'Su')?.color, heading);
       expect(_renderedTextStyle(tester, '13')?.color, normal);
       expect(_renderedTextStyle(tester, '14')?.fontWeight, FontWeight.w700);
       expect(
@@ -741,13 +763,13 @@ void main() {
       expect(find.text('October'), findsOneWidget);
       await tester.tap(find.text('October'));
       await tester.pumpAndSettle();
-      expect(find.text('October 2024'), findsOneWidget);
+      expect(find.bySemanticsLabel('October 2024'), findsOneWidget);
       expect(changes, isEmpty);
       await tester.tap(find.bySemanticsLabel('Choose year'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('2026'));
       await tester.pumpAndSettle();
-      expect(find.text('October 2026'), findsOneWidget);
+      expect(find.bySemanticsLabel('October 2026'), findsOneWidget);
       await tester.tap(find.bySemanticsLabel('Choose month'));
       await tester.pumpAndSettle();
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
@@ -792,7 +814,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('W1'), findsOneWidget);
-      expect(find.text('M2 Y2024'), findsOneWidget);
+      expect(find.bySemanticsLabel('M2 Y2024'), findsOneWidget);
       expect(find.bySemanticsLabel('Back'), findsOneWidget);
     },
   );

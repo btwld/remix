@@ -32,41 +32,45 @@ class _CalendarExampleState extends State<CalendarExample> {
         onChanged: (date) => setState(() => _value = date),
         navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
         selectorStyle: fortalSelectStyle(),
-        style: CalendarStyler().day(
-          CalendarDayStyler()
-              .borderRadius(.circular(6))
-              .label(TextStyler().fontSize(14))
-              .onHovered(CalendarDayStyler().color(FortalTokens.gray4()))
-              .onToday(
-                CalendarDayStyler()
-                    .border(.color(FortalTokens.accent8()).width(1))
-                    .label(
-                      TextStyler()
-                          .color(FortalTokens.accent11())
-                          .fontWeight(FontWeight.w700),
+        style: CalendarStyler()
+            .weekday(TextStyler().fontSize(12).color(FortalTokens.gray11()))
+            .day(
+              CalendarDayStyler()
+                  .borderRadius(.circular(6))
+                  .label(TextStyler().fontSize(14))
+                  .onHovered(CalendarDayStyler().color(FortalTokens.gray4()))
+                  .onToday(
+                    CalendarDayStyler()
+                        .border(.color(FortalTokens.accent8()).width(1))
+                        .label(
+                          TextStyler()
+                              .color(FortalTokens.accent11())
+                              .fontWeight(FontWeight.w700),
+                        ),
+                  )
+                  .onSelected(
+                    CalendarDayStyler()
+                        .color(FortalTokens.accentSolid())
+                        .label(
+                          TextStyler().color(FortalTokens.accentContrast()),
+                        ),
+                  )
+                  .onFocusVisible(
+                    CalendarDayStyler().border(
+                      .color(FortalTokens.focus8()).width(2),
                     ),
-              )
-              .onSelected(
-                CalendarDayStyler()
-                    .color(FortalTokens.accentSolid())
-                    .label(TextStyler().color(FortalTokens.accentContrast())),
-              )
-              .onFocusVisible(
-                CalendarDayStyler().border(
-                  .color(FortalTokens.focus8()).width(2),
-                ),
-              )
-              .onDisabled(
-                CalendarDayStyler()
-                    .color(FortalTokens.gray3())
-                    .label(TextStyler().color(FortalTokens.gray9())),
-              )
-              .onUnavailable(
-                CalendarDayStyler().label(
-                  TextStyler().decoration(TextDecoration.lineThrough),
-                ),
-              ),
-        ),
+                  )
+                  .onDisabled(
+                    CalendarDayStyler().label(
+                      TextStyler().color(FortalTokens.gray9()),
+                    ),
+                  )
+                  .onUnavailable(
+                    CalendarDayStyler().label(
+                      TextStyler().decoration(TextDecoration.lineThrough),
+                    ),
+                  ),
+            ),
       ),
     ),
   );
