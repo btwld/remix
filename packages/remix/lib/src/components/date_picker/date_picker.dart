@@ -177,36 +177,16 @@ class _DatePickerHost<T> extends StatefulWidget {
 class _DatePickerHostState<T> extends State<_DatePickerHost<T>> {
   final _controller = MenuController();
 
-  /// Callback validity token. Every open and close advances it, and each
-  /// selection callback, scheduled close and focus entry captures the value of
-  /// its own opening, so work queued by an earlier opening never selects into
-  /// or closes a newer one.
+  /// Each open advances this token. Selection, queued closure and focus entry
+  /// also require an open controller, so closing needs no separate invalidation.
+  /// The calendar key uses the same token to reset browsing and focus even
+  /// when a same-frame close/reopen keeps the overlay mounted.
   int _session = 0;
-
-  /// Identity of the current opening's calendar. Only opening advances it: a
-  /// same-frame close/reopen can keep the overlay mounted, so the new key is
-  /// what gives every opening a fresh calendar (browsed month, focus, draft),
-  /// while a closing panel keeps its content through any exit animation.
-  int _opening = 0;
   final _triggerFocus = FocusNode(debugLabel: 'Remix date picker trigger');
   final _calendarFocus = FocusNode(debugLabel: 'Remix date picker calendar');
-  Size? _viewSize;
 
   bool get _interactive => widget.enabled && widget.onChanged != null;
   FocusNode get _trigger => widget.focusNode ?? _triggerFocus;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // A new view size invalidates the anchor's placement, so close as
-    // RawMenuAnchor does. It only does so for root anchors; a picker nested in
-    // another menu or popover still needs this. Keyboard and safe-area changes
-    // only re-fit the view-safe panel: closing on them would dismiss the picker
-    // while the keyboard hides after its trigger takes focus from a text field.
-    final size = MediaQuery.maybeSizeOf(context);
-    if (_viewSize != null && size != _viewSize) _scheduleClose();
-    _viewSize = size;
-  }
 
   @override
   void didUpdateWidget(covariant _DatePickerHost<T> oldWidget) {
@@ -218,6 +198,7 @@ class _DatePickerHostState<T> extends State<_DatePickerHost<T>> {
 
   void _scheduleClose() {
     if (!_controller.isOpen) return;
+    // Defensive: a newer opening must not be closed by an older update.
     final session = _session;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && _controller.isOpen && session == _session) {
@@ -239,10 +220,7 @@ class _DatePickerHostState<T> extends State<_DatePickerHost<T>> {
 
   void _startSession() {
     final session = _session + 1;
-    setState(() {
-      _session = session;
-      _opening++;
-    });
+    setState(() => _session = session);
     // A same-frame close/open can retain AnchoredOverlay, so its mount-only
     // initial-focus hook does not run for the newly keyed calendar.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -268,7 +246,6 @@ class _DatePickerHostState<T> extends State<_DatePickerHost<T>> {
   }
 
   void _endSession() {
-    setState(() => _session++);
     widget.onClose?.call();
   }
 
@@ -312,7 +289,7 @@ class _DatePickerHostState<T> extends State<_DatePickerHost<T>> {
       positioning: widget.positioning,
       style: widget.popoverStyle,
       popoverChild: KeyedSubtree(
-        key: ValueKey(_opening),
+        key: ValueKey(_session),
         child: widget.calendarBuilder(
           _calendarFocus,
           _interactive ? (value) => _select(value, session) : null,
