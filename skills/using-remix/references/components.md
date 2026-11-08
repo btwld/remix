@@ -148,7 +148,18 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `style`/`styleSpec` or public controller.
   `onOpen`/`onClose` report the popover; a completed selection calls `onChanged`
   before `onClose`, a dismissal only `onClose`. Parsing and segmented entry are
-  not supported.
+  not supported; use DateRangePicker for ranges.
+- **DateRangePicker** — Button + Popover + RangeCalendar with a controlled
+  `NakedDateRange?`. First activation anchors without closing; second eligible
+  activation requests a complete range and closes even on parent rejection.
+  Every reopening starts a fresh draft. An Overlay ancestor is required.
+  Localize `semanticLabel` (purpose; the trigger's name), `placeholder`,
+  `calendarLabels`, `rangeLabels` (`rangeValue` is the trigger's value, `noRange`
+  when empty) and optionally `formatRange` (painted text only). Same resize,
+  keyboard, `onOpen`/`onClose` and five child styles as DatePicker; no picker
+  styler/controller or typed entry. Forwards `summaryBuilder` to paint the
+  otherwise unpainted range summary. See
+  [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).
 
 ## Data display
 

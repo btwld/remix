@@ -47,6 +47,39 @@ void main() {
   );
 
   test(
+    'date range picker is constructible through package barrel without controller',
+    () {
+      final range = NakedDateRange(
+        start: DateTime(2024),
+        end: DateTime(2024, 2),
+      );
+      final picker = RemixDateRangePicker(
+        value: range,
+        firstDate: DateTime(2024),
+        lastDate: DateTime(2025),
+        onChanged: (_) {},
+        formatRange: (range) => '${range.start.day}–${range.end.day}',
+        rangeLabels: const RemixRangeCalendarLabels(
+          chooseEnd: 'Choose final date',
+        ),
+        calendarStyle: CalendarStyler(
+          day: CalendarDayStyler().onRangeSingle(
+            CalendarDayStyler().borderRadius(.circular(22)),
+          ),
+        ),
+      );
+      expect(picker.value, range);
+      expect(picker.semanticLabel, 'Choose date range');
+      expect(picker.placeholder, 'Select date range');
+      expect(picker.rangeLabels.chooseEnd, 'Choose final date');
+      expect(picker.buttonStyle, isA<ButtonStyler>());
+      expect(picker.popoverStyle, isA<PopoverStyler>());
+      expect(picker.navigationStyle, isA<IconButtonStyler>());
+      expect(picker.selectorStyle, isA<SelectStyler>());
+    },
+  );
+
+  test(
     'range calendar API and day variants are exported through the barrel',
     () {
       final range = CivilDateRange(

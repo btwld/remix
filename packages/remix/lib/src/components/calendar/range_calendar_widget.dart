@@ -14,6 +14,8 @@ class RemixRangeCalendarLabels {
     this.unavailableRange = 'Range contains unavailable dates',
     this.invalidRange = 'Selected range is unavailable',
     this.selectedRange = _selectedRange,
+    this.noRange = 'No date range selected',
+    this.rangeValue = _rangeValue,
     this.joinSummary = _joinSentences,
   });
 
@@ -47,12 +49,22 @@ class RemixRangeCalendarLabels {
   /// Formats already-localized endpoint names, not raw DateTime values.
   final String Function(String start, String end) selectedRange;
 
+  /// A date range picker trigger's accessible value without a range.
+  final String noRange;
+
+  /// A date range picker trigger's accessible value for a multi-day range,
+  /// from already-localized endpoint names. The trigger is already named by
+  /// its purpose, so unlike [selectedRange] this carries no "Selected range"
+  /// prefix. A one-day range announces its single date instead.
+  final String Function(String start, String end) rangeValue;
+
   /// Joins the range summary's sentences, such as the selected range and the
   /// next instruction. Defaults to English sentence punctuation.
   final String Function(List<String> sentences) joinSummary;
 
   static String _selectedRange(String start, String end) =>
       'Selected range: $start to $end';
+  static String _rangeValue(String start, String end) => '$start to $end';
   static String _joinSentences(List<String> sentences) => sentences.join('. ');
 }
 

@@ -1,15 +1,18 @@
-/// A button-triggered, controlled single-date calendar.
+/// Button-triggered, controlled date and date-range calendars.
 library remix_date_picker;
 
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
-import 'package:naked_ui/naked_ui.dart' show OverlayPositionConfig;
+import 'package:naked_ui/naked_ui.dart'
+    show NakedDateRange, OverlayPositionConfig, isSameCivilDate;
 
 import '../button/button.dart';
 import '../calendar/calendar.dart';
 import '../icon_button/icon_button.dart';
 import '../popover/popover.dart';
 import '../select/select.dart';
+
+part 'date_range_picker.dart';
 
 /// Composes a real button, popover and [RemixCalendar].
 ///

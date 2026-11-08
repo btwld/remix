@@ -108,6 +108,10 @@
           "href": "/components/date_picker"
         },
         {
+          "title": "Date Range Picker",
+          "href": "/components/date_range_picker"
+        },
+        {
           "title": "Slider",
           "href": "/components/slider"
         },

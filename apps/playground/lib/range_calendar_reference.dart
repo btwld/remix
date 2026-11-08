@@ -14,11 +14,13 @@ void main() {
 
 /// Material-free, app-owned reference for inclusive range selection.
 class RangeCalendarReferenceApp extends StatelessWidget {
-  const RangeCalendarReferenceApp({super.key});
+  const RangeCalendarReferenceApp({super.key, this.usePicker = false});
+
+  final bool usePicker;
 
   @override
   Widget build(BuildContext context) => WidgetsApp(
-    title: 'Remix Range Calendar',
+    title: usePicker ? 'Remix Date Range Picker' : 'Remix Range Calendar',
     color: const Color(0xFFFAFAFA),
     debugShowCheckedModeBanner: false,
     textStyle: const TextStyle(fontSize: 14, color: Color(0xFF171717)),
@@ -33,13 +35,15 @@ class RangeCalendarReferenceApp extends StatelessWidget {
       actions: {
         DismissIntent: CallbackAction<DismissIntent>(onInvoke: (_) => null),
       },
-      child: const RangeCalendarReferencePage(),
+      child: RangeCalendarReferencePage(usePicker: usePicker),
     ),
   );
 }
 
 class RangeCalendarReferencePage extends StatefulWidget {
-  const RangeCalendarReferencePage({super.key});
+  const RangeCalendarReferencePage({super.key, this.usePicker = false});
+
+  final bool usePicker;
 
   @override
   State<RangeCalendarReferencePage> createState() =>
@@ -85,7 +89,9 @@ class _RangeCalendarReferencePageState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         StyledText(
-                          'REMIX / RANGE CALENDAR',
+                          widget.usePicker
+                              ? 'REMIX / DATE RANGE PICKER'
+                              : 'REMIX / RANGE CALENDAR',
                           style: TextStyler()
                               .fontSize(12)
                               .fontWeight(FontWeight.w600)
@@ -110,59 +116,90 @@ class _RangeCalendarReferencePageState
                               .color(PlaygroundTokens.mutedForeground()),
                         ),
                         const SizedBox(height: 20),
-                        SizedBox(
-                          width: (constraints.maxWidth - padding * 2).clamp(
-                            0.0,
-                            380.0,
-                          ),
-                          child: Box(
-                            style: BoxStyler()
-                                .color(PlaygroundTokens.card())
+                        if (widget.usePicker)
+                          RemixDateRangePicker(
+                            value: _value,
+                            firstDate: DateTime(2025),
+                            lastDate: DateTime(2028, 12, 31),
+                            currentDate: DateTime(2026, 11, 6),
+                            semanticLabel: _arabic
+                                ? 'فترة التقرير'
+                                : 'Reporting period',
+                            placeholder: _arabic
+                                ? 'اختر فترة'
+                                : 'Select a period',
+                            formatRange: formatRange,
+                            firstDayOfWeek: _arabic
+                                ? DateTime.saturday
+                                : DateTime.monday,
+                            isDateUnavailable: _isUnavailable,
+                            enabled: _enabled,
+                            calendarLabels: labels,
+                            rangeLabels: _arabic
+                                ? _arabicRangeLabels
+                                : const RemixRangeCalendarLabels(),
+                            onChanged: _select,
+                            buttonStyle: playgroundButtonStyle(
+                              variant: PlaygroundButtonVariant.outline,
+                            ).minHeight(44),
+                            calendarStyle: _rangeStyle,
+                            navigationStyle: playgroundIconButtonStyle(
+                              variant: PlaygroundIconButtonVariant.ghost,
+                            ).size(44, 44),
+                            selectorStyle: playgroundSelectStyle().trigger(
+                              SelectTriggerStyler().minHeight(44),
+                            ),
+                            popoverStyle: PopoverStyler()
+                                .color(PlaygroundTokens.popover())
                                 .border(
                                   .color(PlaygroundTokens.border()).width(1),
                                 )
                                 .borderRadius(.circular(12))
-                                .padding(.all(compact ? 0 : 12)),
-                            child: RemixRangeCalendar(
-                              value: _value,
-                              firstDate: DateTime(2025),
-                              lastDate: DateTime(2028, 12, 31),
-                              currentDate: DateTime(2026, 11, 6),
-                              semanticLabel: _arabic
-                                  ? 'فترة التقرير'
-                                  : 'Reporting period',
-                              firstDayOfWeek: _arabic
-                                  ? DateTime.saturday
-                                  : DateTime.monday,
-                              isDateUnavailable: (date) =>
-                                  date.year == 2026 &&
-                                  date.month == 11 &&
-                                  date.day == 18,
-                              enabled: _enabled,
-                              labels: labels,
-                              rangeLabels: _arabic
-                                  ? _arabicRangeLabels
-                                  : const RemixRangeCalendarLabels(),
-                              onChanged: (next) => setState(() {
-                                if (_reject) {
-                                  _message = _arabic
-                                      ? 'لم تُقبل الفترة الجديدة. بقيت الفترة السابقة.'
-                                      : 'Request rejected. The previous period is unchanged.';
-                                } else {
-                                  _value = next;
-                                  _message = null;
-                                }
-                              }),
-                              navigationStyle: playgroundIconButtonStyle(
-                                variant: PlaygroundIconButtonVariant.ghost,
-                              ).size(44, 44),
-                              selectorStyle: playgroundSelectStyle().trigger(
-                                SelectTriggerStyler().minHeight(44),
+                                .padding(.all(compact ? 0 : 12))
+                                .shadows(PlaygroundShadow.md.box),
+                          )
+                        else
+                          SizedBox(
+                            width: (constraints.maxWidth - padding * 2).clamp(
+                              0.0,
+                              380.0,
+                            ),
+                            child: Box(
+                              style: BoxStyler()
+                                  .color(PlaygroundTokens.card())
+                                  .border(
+                                    .color(PlaygroundTokens.border()).width(1),
+                                  )
+                                  .borderRadius(.circular(12))
+                                  .padding(.all(compact ? 0 : 12)),
+                              child: RemixRangeCalendar(
+                                value: _value,
+                                firstDate: DateTime(2025),
+                                lastDate: DateTime(2028, 12, 31),
+                                currentDate: DateTime(2026, 11, 6),
+                                semanticLabel: _arabic
+                                    ? 'فترة التقرير'
+                                    : 'Reporting period',
+                                firstDayOfWeek: _arabic
+                                    ? DateTime.saturday
+                                    : DateTime.monday,
+                                isDateUnavailable: _isUnavailable,
+                                enabled: _enabled,
+                                labels: labels,
+                                rangeLabels: _arabic
+                                    ? _arabicRangeLabels
+                                    : const RemixRangeCalendarLabels(),
+                                onChanged: _select,
+                                navigationStyle: playgroundIconButtonStyle(
+                                  variant: PlaygroundIconButtonVariant.ghost,
+                                ).size(44, 44),
+                                selectorStyle: playgroundSelectStyle().trigger(
+                                  SelectTriggerStyler().minHeight(44),
+                                ),
+                                style: _rangeStyle,
                               ),
-                              style: _rangeStyle,
                             ),
                           ),
-                        ),
                         const SizedBox(height: 16),
                         StyledText(
                           _value == null
@@ -236,6 +273,20 @@ class _RangeCalendarReferencePageState
       ),
     );
   }
+
+  bool _isUnavailable(DateTime date) =>
+      date.year == 2026 && date.month == 11 && date.day == 18;
+
+  void _select(NakedDateRange next) => setState(() {
+    if (_reject) {
+      _message = _arabic
+          ? 'لم تُقبل الفترة الجديدة. بقيت الفترة السابقة.'
+          : 'Request rejected. The previous period is unchanged.';
+    } else {
+      _value = next;
+      _message = null;
+    }
+  });
 
   Widget _control(String label, VoidCallback onPressed) =>
       PlaygroundButton.outline(
