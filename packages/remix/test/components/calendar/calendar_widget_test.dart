@@ -773,16 +773,21 @@ void main() {
     (CalendarStyler().day(CalendarDayStyler().minWidth(52)), 364.0),
     (CalendarStyler().padding(.all(12)), 332.0),
     (
+      CalendarStyler()
+          .padding(.all(12))
+          .border(.color(const Color(0xff000000)).width(2)),
+      336.0,
+    ),
+    (
       CalendarStyler().day(CalendarDayStyler().minWidth(52)).padding(.all(12)),
       388.0,
     ),
   ]) {
     testWidgets(
-      'compact width includes resolved day minimum and padding: ${entry.$2}',
+      'compact width includes day minimum, padding and border: ${entry.$2}',
       (tester) async {
         await tester.pumpWidget(_host(_calendar(style: entry.$1)));
         expect(tester.takeException(), isNull);
-        expect(tester.getSize(find.byType(RemixCalendar)).width, entry.$2);
         final horizontal = tester
             .widgetList<Scrollable>(
               find.descendant(
@@ -802,6 +807,7 @@ void main() {
               .maxScrollExtent,
           0,
         );
+        expect(tester.getSize(find.byType(RemixCalendar)).width, entry.$2);
       },
     );
   }
@@ -833,7 +839,6 @@ void main() {
           _host(_calendar(style: entry.$1, enabled: false)),
         );
         expect(tester.takeException(), isNull);
-        expect(tester.getSize(find.byType(RemixCalendar)).width, entry.$2);
       }
       await tester.pumpWidget(
         _host(

@@ -541,7 +541,13 @@ class _CalendarView extends StatelessWidget {
                   ?.resolve(Directionality.of(context))
                   .horizontal ??
               0;
-          final compactWidth = 7 * dayWidth + padding;
+          // Box uses Container semantics: decoration borders add to padding.
+          final decorationPadding =
+              container.spec.decoration?.padding
+                  .resolve(Directionality.of(context))
+                  .horizontal ??
+              0;
+          final compactWidth = 7 * dayWidth + padding + decorationPadding;
           // maxFinite is a request to fill available space, not a useful width
           // when the parent is unbounded. Default styles remain compact.
           final maxWidth =
