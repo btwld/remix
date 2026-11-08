@@ -263,6 +263,105 @@ void main() {
     },
   );
 
+  // In the Pacific/Apia lane (melos run test:calendar-civil) 2011-12-30 does
+  // not exist locally, so stepping by local DateTime skips or repeats it.
+  bool isSkippedDay(DateTime d) =>
+      d.year == 2011 && d.month == 12 && d.day == 30;
+
+  Finder skippedDay(int value) => find.byWidgetPredicate(
+    (w) => w is NakedCalendarDay && w.date.month == 12 && w.date.day == value,
+  );
+
+  Future<
+    ({
+      List<NakedDateRange> requests,
+      Map<int, NakedCalendarDayState> days,
+      VoidCallback rebuild,
+    })
+  >
+  skippedMonth(WidgetTester tester, bool Function(DateTime) unavailable) async {
+    final requests = <NakedDateRange>[];
+    final days = <int, NakedCalendarDayState>{};
+    late StateSetter setState;
+    await tester.pumpWidget(
+      _host(
+        StatefulBuilder(
+          builder: (context, update) {
+            setState = update;
+            return NakedRangeCalendar(
+              value: null,
+              currentDate: DateTime.utc(2011, 12, 29),
+              firstDate: DateTime.utc(2011, 12, 1),
+              lastDate: DateTime.utc(2011, 12, 31),
+              onChanged: requests.add,
+              isDateUnavailable: unavailable,
+              builder: (_, state, _) => Wrap(
+                children: [
+                  for (final date in state.weeks.expand((week) => week))
+                    if (date != null)
+                      NakedCalendarDay(
+                        date: date,
+                        semanticLabel: '${date.month}-${date.day}',
+                        builder: (_, day, _) {
+                          days[date.day] = day;
+                          return const SizedBox.square(dimension: 20);
+                        },
+                      ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+    return (requests: requests, days: days, rebuild: () => setState(() {}));
+  }
+
+  for (final forward in [true, false]) {
+    final direction = forward ? 'forward' : 'backward';
+    testWidgets('$direction completion onto a skipped local date terminates', (
+      tester,
+    ) async {
+      var calls = 0;
+      final calendar = await skippedMonth(tester, (_) {
+        if (++calls > 400) throw StateError('civil scan did not progress');
+        return false;
+      });
+      await tester.tap(skippedDay(forward ? 29 : 31));
+      await tester.pumpAndSettle();
+      await tester.tap(skippedDay(30));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      final range = calendar.requests.single;
+      expect([range.start.day, range.end.day], forward ? [29, 30] : [30, 31]);
+      expect(calls, lessThan(400));
+    });
+
+    testWidgets(
+      'an unavailable skipped local date blocks $direction completion',
+      (tester) async {
+        var blocked = false;
+        final calendar = await skippedMonth(
+          tester,
+          (d) => blocked && isSkippedDay(d),
+        );
+        final target = forward ? 31 : 29;
+        await tester.tap(skippedDay(forward ? 29 : 31));
+        await tester.pumpAndSettle();
+        // Without a rebuild, only completion's own interval check can see it.
+        blocked = true;
+        await tester.tap(skippedDay(target));
+        await tester.pumpAndSettle();
+        expect(calendar.requests, isEmpty);
+        // After a rebuild, the anchor scan disables the far endpoint.
+        calendar.rebuild();
+        await tester.pumpAndSettle();
+        expect(calendar.days[target]!.isDisabled, isTrue);
+        expect(calendar.days[30]!.isUnavailable, isTrue);
+      },
+    );
+  }
+
   testWidgets(
     'anchor, navigation, reverse completion and rejection stay controlled',
     (tester) async {
