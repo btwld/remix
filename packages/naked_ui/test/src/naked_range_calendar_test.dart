@@ -813,6 +813,25 @@ void main() {
   }
 
   testWidgets(
+    'a rejected request later supplied externally recentres after browsing',
+    (tester) async {
+      final state = await _pump(tester);
+      await _focus(tester, state);
+      await _tap(tester, 20);
+      await _tap(tester, 22);
+      expect(state.requests, [_range(20, 22)]);
+      expect(state.value, isNull);
+      await _key(tester, LogicalKeyboardKey.pageDown);
+      expect(state.snapshot.displayedMonth, DateTime(2024, 3));
+      state.change(() => state.value = _range(20, 22));
+      await tester.pumpAndSettle();
+      expect(state.snapshot.displayedMonth, DateTime(2024, 2));
+      expect(state.snapshot.focusedDate, DateTime(2024, 2, 20));
+      expect(state.days[DateTime(2024, 2, 20)]!.isFocused, isTrue);
+    },
+  );
+
+  testWidgets(
     'an external range change after completion still recentres on its start',
     (tester) async {
       final state = await _pump(tester);

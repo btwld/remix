@@ -693,6 +693,11 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
     if (!_validRange(range)) return;
     setState(() => _anchor = null);
     _requested = range;
+    // Acceptance in this request's frame preserves browsing. Once that frame
+    // passes, an equal value is a new external selection and must recentre.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && identical(_requested, range)) _requested = null;
+    });
     widget.onRangeChanged!(range);
   }
 
