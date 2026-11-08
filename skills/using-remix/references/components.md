@@ -121,7 +121,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `RemixCalendar(style: ...)`; `CalendarStyler` has no callable widget shorthand.
 - **DatePicker** — a thin Button + Popover + Calendar composition, not a text
   field. The parent owns nullable `value`; valid activation requests one date
-  and closes even when rejected. Escape/outside/disable close without selection.
+  and closes even when rejected. Escape, outside interaction and disabling
+  close without selection.
   Localize `semanticLabel` (purpose; the trigger's name), `placeholder`,
   `calendarLabels` (`fullDate` is the trigger's value, `noDate` when empty) and
   optionally `formatDate` (painted text only). An Overlay ancestor is required.

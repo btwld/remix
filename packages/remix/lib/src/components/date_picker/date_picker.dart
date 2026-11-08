@@ -16,7 +16,9 @@ import '../select/select.dart';
 /// closes even when the parent keeps its old value. Dismissal never selects.
 /// An Overlay ancestor is required. Labels default to English; callers own
 /// localization through [placeholder], [semanticLabel], [formatDate] and
-/// [calendarLabels]. The popover contains focus but is not a modal dialog.
+/// [calendarLabels], including [RemixCalendarLabels.noDate] for an empty value.
+/// The popover contains focus but is not a modal dialog. Scrolling an ancestor
+/// closes it. Removing an open picker does not call [onClose].
 class RemixDatePicker extends StatelessWidget {
   const RemixDatePicker({
     super.key,
@@ -47,9 +49,14 @@ class RemixDatePicker extends StatelessWidget {
     this.selectorStyle = const SelectStyler.create(),
   });
 
+  /// Parent-owned selected date, or null for an empty selection.
+  /// Civil-date comparison and bounds follow [RemixCalendar].
   final DateTime? value;
   final DateTime firstDate;
   final DateTime lastDate;
+
+  /// Requests one available date, then closes even if the parent rejects it.
+  /// A null callback disables the picker.
   final ValueChanged<DateTime>? onChanged;
 
   /// Called when the picker's popover opens.
@@ -57,10 +64,14 @@ class RemixDatePicker extends StatelessWidget {
 
   /// Called when the popover closes: after [onChanged] for a completed
   /// selection, or alone when the picker is dismissed without selecting.
+  /// Removing an open picker does not call this callback.
   final VoidCallback? onClose;
   final DateTime? currentDate;
   final bool Function(DateTime)? isDateUnavailable;
   final int firstDayOfWeek;
+
+  /// Whether the trigger can open the calendar and dates can be selected.
+  /// Disabling an open picker closes it without selecting.
   final bool enabled;
 
   /// Field purpose and the trigger's accessible name, such as "Appointment
@@ -78,8 +89,15 @@ class RemixDatePicker extends StatelessWidget {
   /// "20/2" are never announced as the date.
   final String Function(DateTime)? formatDate;
   final RemixCalendarLabels calendarLabels;
+
+  /// Optional caller-owned trigger focus node. Replacing it closes the picker.
   final FocusNode? focusNode;
+
+  /// Whether to focus the trigger automatically; does not open the calendar.
   final bool autofocus;
+
+  /// Panel placement, offsets and collision padding relative to the trigger.
+  /// The panel also avoids the view's safe area and keyboard exclusions.
   final OverlayPositionConfig positioning;
 
   /// Each child resolves its own style against its own interaction state.

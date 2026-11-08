@@ -55,7 +55,8 @@ An `Overlay` ancestor is required. A routed `WidgetsApp` supplies one; use
   There is no optimistic selected value or Apply/Cancel draft state.
 - `onOpen` fires when the popover opens and `onClose` when it has closed. A
   completed selection calls `onChanged` before `onClose`; a dismissal calls
-  only `onClose`, so the two are distinguishable.
+  only `onClose`, so the two are distinguishable. Removing an open picker does
+  not call `onClose`, matching [Select](/components/select).
 - Escape and outside interaction dismiss without changing the value. Ordinary
   dismissal restores the original live trigger. Replacing a borrowed `focusNode`
   while open closes the picker; the application manages focus on its replacement.
@@ -65,6 +66,7 @@ An `Overlay` ancestor is required. A routed `WidgetsApp` supplies one; use
   dismissal behavior, without claiming modal background semantics.
 - The panel constrains and scrolls in small spaces. Touch uses the same explicit
   controls; hover, swiping and a software keyboard are not required.
+- Scrolling an ancestor closes the picker without selecting.
 - A view-size change, such as a rotation or window resize, closes the picker
   without selecting; reopen it in the new space. Keyboard and safe-area changes
   re-fit the open panel instead, so the keyboard hiding as the trigger takes
