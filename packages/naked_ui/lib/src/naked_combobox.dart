@@ -291,7 +291,10 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
   /// Type alias for [NakedComboboxOption].
   static final Option = NakedComboboxOption.new;
 
-  /// Supplies the options for the current field value.
+  /// Supplies eligible entities for the current field value.
+  ///
+  /// Equal values are one entity: the first occurrence is retained. Distinct
+  /// unequal values may share a display string and remain separate options.
   final AutocompleteOptionsBuilder<T> optionsBuilder;
 
   /// Builds the text field. This maps to [RawAutocomplete.fieldViewBuilder].
@@ -349,6 +352,26 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
   State<NakedCombobox<T>> createState() => _NakedComboboxState<T>();
 }
 
+// RawAutocomplete retains its selected option even when an onSelected callback
+// clears the editor. Keep each delivered option immutable, while enumerating
+// Raw's cached iterable with the current *observable selection* identity. A new
+// acceptance after that selection is cleared is distinct to Raw; ordinary
+// reentry and a still-selected entity retain equality. The public API sees T.
+class _RawComboboxOption<T extends Object> {
+  const _RawComboboxOption(this.value, this.selectionEpoch);
+  final T value;
+  final int selectionEpoch;
+
+  @override
+  bool operator ==(Object other) =>
+      other is _RawComboboxOption<T> &&
+      value == other.value &&
+      selectionEpoch == other.selectionEpoch;
+
+  @override
+  int get hashCode => Object.hash(value, selectionEpoch);
+}
+
 class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   static final _disabledNavigation = <Type, Action<Intent>>{
     for (final type in [
@@ -371,6 +394,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   String _text = '';
   bool _composing = false;
   bool _handlingSelection = false;
+  int _selectionEpoch = 0;
   int _optionsGeneration = 0;
   int _optionsRequest = 0;
   String? _optionsText;
@@ -385,10 +409,12 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
         oldWidget.controller != widget.controller ||
         oldWidget.focusNode != widget.focusNode) {
       _optionsGeneration++;
-      if (_waitingForOptions) {
-        // Abandoning a pending query leaves RawAutocomplete's earlier cache
-        // intact. Do not revive that cache on re-enable or editor replacement;
-        // a fresh query must supply results before exposing options again.
+      if (_waitingForOptions ||
+          (oldWidget.controller != widget.controller &&
+              widget.controller?.text != _text)) {
+        // Raw retains resolved options when its editor pair changes. Suppress
+        // that cache when it belongs to different text, as well as when an
+        // in-flight query was abandoned. A fresh edit must supply results.
         _suppressCachedOptions = true;
         _freshQueryRequested = false;
         _waitingForOptions = false;
@@ -443,6 +469,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
         controller != null &&
         controller.text != widget.displayStringForOption(value)) {
       _value = null;
+      _selectionEpoch++;
     }
   }
 
@@ -467,7 +494,9 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     if (controller.text == _text) return;
     setState(() {
       _text = controller.text;
-      if (_suppressCachedOptions) _freshQueryRequested = true;
+      if (_suppressCachedOptions && widget.enabled) {
+        _freshQueryRequested = true;
+      }
       _reconcileValue();
     });
   }
@@ -494,7 +523,8 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     }
   }
 
-  void _handleSelected(T value) {
+  void _handleSelected(_RawComboboxOption<T> option) {
+    final value = option.value;
     // Cached options can be accepted while a newer query is still pending.
     // Its completion must not reopen suggestions after this acceptance.
     _optionsGeneration++;
@@ -533,45 +563,53 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     widget.onClose?.call();
   }
 
-  FutureOr<Iterable<T>> _optionsBuilder(TextEditingValue value) {
-    if (!widget.enabled) return const Iterable.empty();
-
-    final generation = _optionsGeneration;
-    // RawAutocomplete only adopts results for text changes, not caret changes.
-    // Selection-only invocations must not release a cancelled query's cache.
-    final textChanged = value.text != _optionsText;
-    _optionsText = value.text;
-    if (textChanged) _optionsRequest++;
-    final request = _optionsRequest;
-    final result = widget.optionsBuilder(value);
-    final asynchronous =
-        result is Future<Iterable<T>> || _suppressCachedOptions;
-    if (textChanged) _waitingForOptions = asynchronous;
-    if (asynchronous) {
-      // Normalize synchronous refreshes too: controller listeners must observe
-      // the new query before its result can release a suppressed cache.
-      return Future<Iterable<T>>.value(result).then((options) {
-        if (textChanged && request == _optionsRequest) {
-          _waitingForOptions = false;
-        }
-        // RawAutocomplete has no cancellation API. An empty result would still
-        // complete its search and announce "no results", so abandon this await.
-        // Later queries run independently. This also avoids Flutter 3.41's
-        // unmounted context access after await.
-        if (!mounted || !widget.enabled || generation != _optionsGeneration) {
-          return Completer<Iterable<T>>().future;
-        }
-        if (textChanged &&
-            request == _optionsRequest &&
-            _suppressCachedOptions &&
-            _freshQueryRequested) {
-          setState(() => _suppressCachedOptions = false);
-        }
-        return options;
-      });
+  Future<Iterable<_RawComboboxOption<T>>> _optionsBuilder(
+    TextEditingValue value,
+  ) {
+    if (!widget.enabled) {
+      // An empty result would announce a search that did not run. Raw also
+      // retains its old cache: it must stay ineligible after disabled edits.
+      if (value.text != _text) {
+        _suppressCachedOptions = true;
+        _freshQueryRequested = false;
+      }
+      return Completer<Iterable<_RawComboboxOption<T>>>().future;
     }
 
-    return result;
+    final generation = _optionsGeneration;
+    // Raw adopts results only for text changes. A faster caret-only invocation
+    // must not release the result/cache owned by the pending text invocation.
+    final textChanged = value.text != _optionsText;
+    _optionsText = value.text;
+    if (textChanged) {
+      _optionsRequest++;
+      _waitingForOptions = true;
+    }
+    final request = _optionsRequest;
+    final result = widget.optionsBuilder(value);
+    // Raw awaits synchronous iterables too. Every result must cross the same
+    // cancellation boundary before Raw can adopt it or announce its emptiness.
+    return Future<Iterable<T>>.value(result).then((options) {
+      if (textChanged && request == _optionsRequest) {
+        _waitingForOptions = false;
+      }
+      if (!mounted || !widget.enabled || generation != _optionsGeneration) {
+        return Completer<Iterable<_RawComboboxOption<T>>>().future;
+      }
+      if (textChanged &&
+          request == _optionsRequest &&
+          _suppressCachedOptions &&
+          _freshQueryRequested) {
+        setState(() => _suppressCachedOptions = false);
+      }
+      // Equality defines an entity, not its display string. Canonicalize once
+      // so Raw and public rows use the same first-occurrence ordering. Map
+      // lazily: Raw's retained iterable must use the live selection identity,
+      // without changing the equality of an already delivered option.
+      return options.toSet().map(
+        (value) => _RawComboboxOption(value, _selectionEpoch),
+      );
+    });
   }
 
   Widget _buildFieldView(
@@ -619,8 +657,8 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
 
   Widget _buildOptionsView(
     BuildContext context,
-    AutocompleteOnSelected<T> onSelected,
-    Iterable<T> options,
+    AutocompleteOnSelected<_RawComboboxOption<T>> onSelected,
+    Iterable<_RawComboboxOption<T>> options,
   ) {
     // Raw has no public enabled/cache control. Suppress the actual options
     // subtree while retaining its editor, highlight and overlay ownership.
@@ -632,10 +670,12 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
       onMount: _handleMount,
       onUnmount: _handleUnmount,
       child: _NakedComboboxScope<T>(
-        options: options,
+        options: options.map((option) => option.value),
         onSelected: (value) {
           if (generation == _optionsGeneration) {
-            _invokeSelection(() => onSelected(value));
+            _invokeSelection(
+              () => onSelected(_RawComboboxOption(value, _selectionEpoch)),
+            );
           }
         },
         claimReveal: _claimReveal,
@@ -648,7 +688,12 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
             role: SemanticsRole.list,
             container: true,
             explicitChildNodes: true,
-            child: ExcludeFocus(child: widget.overlayBuilder(context, options)),
+            child: ExcludeFocus(
+              child: widget.overlayBuilder(
+                context,
+                options.map((option) => option.value),
+              ),
+            ),
           ),
         ),
       ),
@@ -659,9 +704,10 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   Widget build(BuildContext context) {
     return ExcludeSemantics(
       excluding: widget.excludeSemantics,
-      child: RawAutocomplete<T>(
+      child: RawAutocomplete<_RawComboboxOption<T>>(
         optionsBuilder: _optionsBuilder,
-        displayStringForOption: widget.displayStringForOption,
+        displayStringForOption: (option) =>
+            widget.displayStringForOption(option.value),
         optionsViewOpenDirection: widget.optionsViewOpenDirection,
         textEditingController: widget.controller,
         focusNode: widget.focusNode,
