@@ -702,6 +702,17 @@ void main() {
         expect(node.label, contains('Choose start date'));
         expect(node.getSemanticsData().flagsCollection.isLiveRegion, isTrue);
         expect(node.rect.isEmpty, isFalse);
+        final weekdayRow = find
+            .ancestor(of: find.text('Su'), matching: find.byType(Row))
+            .first;
+        final summaryRender = tester.renderObject<RenderBox>(
+          _summary('Selected range:'),
+        );
+        final summaryRect = Rect.fromPoints(
+          summaryRender.localToGlobal(node.rect.topLeft),
+          summaryRender.localToGlobal(node.rect.bottomRight),
+        );
+        expect(summaryRect, tester.getRect(weekdayRow));
         await tester.tap(_day(20));
         await tester.pumpAndSettle();
         expect(_summary('Choose end date'), findsOneWidget);
@@ -710,6 +721,38 @@ void main() {
       }
     },
   );
+
+  for (final disabled in [false, true]) {
+    testWidgets(
+      'noninteractive summary keeps selection without prompts (disabled: $disabled)',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpWidget(
+            _host(
+              RemixRangeCalendar(
+                value: _range(10, 12),
+                firstDate: DateTime(2024),
+                lastDate: DateTime(2025, 12, 31),
+                enabled: !disabled,
+                onChanged: disabled ? (_) {} : null,
+              ),
+            ),
+          );
+          final node = tester.getSemantics(_summary('Selected range:'));
+          expect(
+            node.label,
+            'Selected range: Saturday, February 10, 2024 to Monday, February 12, 2024',
+          );
+          expect(node.getSemanticsData().flagsCollection.isLiveRegion, isTrue);
+          expect(_summary('Choose start date'), findsNothing);
+          expect(_summary('Choose end date'), findsNothing);
+        } finally {
+          semantics.dispose();
+        }
+      },
+    );
+  }
 
   testWidgets('summaryBuilder paints the summary and keeps it live', (
     tester,

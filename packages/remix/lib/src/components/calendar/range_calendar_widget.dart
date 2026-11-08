@@ -217,7 +217,8 @@ class RemixRangeCalendar extends StatelessWidget {
         labels.fullDate(value.end),
       ),
     if (!state.isValueValid) rangeLabels.invalidRange,
-    state.anchor == null ? rangeLabels.chooseStart : rangeLabels.chooseEnd,
+    if (enabled && onChanged != null)
+      state.anchor == null ? rangeLabels.chooseStart : rangeLabels.chooseEnd,
     if (state.preview != null && !state.isPreviewValid)
       rangeLabels.unavailableRange,
   ]);

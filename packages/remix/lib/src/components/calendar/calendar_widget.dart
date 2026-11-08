@@ -509,18 +509,11 @@ class _CalendarView extends StatelessWidget {
     );
     final summary = this.summary;
     if (summary == null || summaryBuilder != null) return row;
-    return Stack(
-      children: [
-        row,
-        Positioned.fill(
-          child: Semantics(
-            container: true,
-            liveRegion: true,
-            label: summary,
-            child: const SizedBox.expand(),
-          ),
-        ),
-      ],
+    return Semantics(
+      container: true,
+      liveRegion: true,
+      label: summary,
+      child: ExcludeSemantics(child: row),
     );
   }
 
