@@ -115,7 +115,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `RemixCalendarLabels` defaults to English; provide localized formatters and
   `firstDayOfWeek` explicitly (Monday=1 through Sunday=7). Default month/year
   selectors need an Overlay ancestor. Keep `navigationStyle`, `selectorStyle`
-  and day styling unresolved in their own interaction states. Shared runtime
+  and day styling unresolved in their own interaction states. Day styles add
+  `onToday` and `onUnavailable` (predicate-rejected, in range; declare after
+  `onDisabled`). Shared runtime
   only: preset calendar recipes are not installed by this change. Use
   `RemixCalendar(style: ...)`; `CalendarStyler` has no callable widget shorthand.
 

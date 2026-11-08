@@ -66,8 +66,8 @@ theme or `MaterialLocalizations` is required.
 - Clearing the parent's value to null preserves the browsing month. A new
   non-null value navigates to its clamped month. An externally invalid value is
   not silently changed or cleared.
-- `currentDate` overrides today's marker and fallback focus, useful for
-  deterministic examples/tests.
+- `currentDate` overrides today (styled with `onToday`) and fallback focus,
+  useful for deterministic examples/tests.
 
 ## Styling
 
@@ -90,6 +90,33 @@ final calendarStyle = CalendarStyler()
                 .color(const Color(0xFF171717))
                 .label(TextStyler().color(const Color(0xFFFFFFFF))),
           ),
+    );
+```
+
+Besides the widget-state variants (`onSelected`, `onHovered`, `onFocusVisible`,
+`onDisabled`), day styles have two calendar variants:
+
+- `onToday` marks `currentDate` (or today). Widget-state variants win on shared
+  properties, so a selected today still looks selected.
+- `onUnavailable` marks in-range dates that `isDateUnavailable` rejects. They are
+  disabled too, so declare it after `onDisabled` to override it. Dates outside
+  `firstDate`/`lastDate` are disabled but not unavailable.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final dayStyle = CalendarDayStyler()
+    .onToday(
+      CalendarDayStyler().border(.color(const Color(0xFF171717)).width(1)),
+    )
+    .onDisabled(
+      CalendarDayStyler().label(TextStyler().color(const Color(0xFFA3A3A3))),
+    )
+    .onUnavailable(
+      CalendarDayStyler().label(
+        TextStyler().decoration(TextDecoration.lineThrough),
+      ),
     );
 ```
 

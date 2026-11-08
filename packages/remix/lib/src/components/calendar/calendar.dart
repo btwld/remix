@@ -13,5 +13,6 @@ import '../icon_button/icon_button.dart';
 import '../select/select.dart';
 
 part 'calendar_spec.dart';
+part 'calendar_style.dart';
 part 'calendar_widget.dart';
 part 'calendar.g.dart';

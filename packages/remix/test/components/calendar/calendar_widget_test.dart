@@ -186,6 +186,62 @@ void main() {
     },
   );
 
+  testWidgets('day style variants mark today and unavailable days', (
+    tester,
+  ) async {
+    const normal = Color(0xff000001);
+    const selected = Color(0xff000002);
+    const today = Color(0xff000003);
+    const disabled = Color(0xff000004);
+    const unavailable = Color(0xff000005);
+    Future<void> pump(DateTime value) => tester.pumpWidget(
+      _host(
+        RemixCalendar(
+          value: value,
+          firstDate: DateTime(2024, 2, 10),
+          lastDate: DateTime(2026, 12, 31),
+          currentDate: DateTime(2024, 2, 15),
+          isDateUnavailable: (date) => date.day == 20,
+          onChanged: (_) {},
+          style: CalendarStyler(
+            day: CalendarDayStyler()
+                .color(normal)
+                .onToday(CalendarDayStyler().color(today))
+                .onSelected(CalendarDayStyler().color(selected))
+                .onDisabled(CalendarDayStyler().color(disabled))
+                .onUnavailable(CalendarDayStyler().color(unavailable)),
+          ),
+        ),
+      ),
+    );
+    Color? fill(int day) {
+      final box = find
+          .descendant(
+            of: find.byWidgetPredicate(
+              (w) =>
+                  w is Semantics &&
+                  (w.properties.label?.contains('February $day,') ?? false),
+            ),
+            matching: find.byType(Box),
+          )
+          .first;
+      return (tester.widget<Box>(box).styleSpec?.spec.decoration
+              as BoxDecoration?)
+          ?.color;
+    }
+
+    await pump(DateTime(2024, 2, 14));
+    expect(fill(15), today);
+    expect(fill(14), selected);
+    expect(fill(16), normal);
+    // A predicate-rejected day is distinct from an out-of-bounds one.
+    expect(fill(20), unavailable);
+    expect(fill(5), disabled);
+    // Selection, a widget state, outranks the today marker.
+    await pump(DateTime(2024, 2, 15));
+    expect(fill(15), selected);
+  });
+
   testWidgets('day style resolves selected and hovered states independently', (
     tester,
   ) async {
