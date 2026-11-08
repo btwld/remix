@@ -735,6 +735,71 @@ void main() {
     },
   );
 
+  testWidgets(
+    'outgoing range middle day keeps selection during a month transition',
+    (tester) async {
+      final focus = FocusNode();
+      addTearDown(focus.dispose);
+      final days = <DateTime, NakedCalendarDayState>{};
+      await tester.pumpWidget(
+        _host(
+          NakedRangeCalendar(
+            value: NakedDateRange(
+              start: DateTime(2024, 2, 10),
+              end: DateTime(2024, 2, 12),
+            ),
+            firstDate: DateTime(2024),
+            lastDate: DateTime(2024, 12, 31),
+            onChanged: (_) {},
+            focusNode: focus,
+            builder: (_, state, _) => AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Column(
+                key: ValueKey(state.displayedMonth),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final week in state.weeks)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (final date in week)
+                          if (date == null)
+                            const SizedBox.square(dimension: 44)
+                          else
+                            NakedCalendarDay(
+                              date: date,
+                              semanticLabel:
+                                  '${date.year}-${date.month}-${date.day}',
+                              builder: (_, day, _) {
+                                days[date] = day;
+                                return SizedBox.square(
+                                  dimension: 44,
+                                  child: Text('${date.day}'),
+                                );
+                              },
+                            ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      focus.requestFocus();
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      final outgoing = days[DateTime(2024, 2, 11)]!;
+      expect(outgoing.isOutsideMonth, isTrue);
+      expect(outgoing.isSelected, isTrue);
+      expect(outgoing.rangePosition, NakedRangePosition.middle);
+      expect(tester.takeException(), isNull);
+      await tester.pumpAndSettle();
+    },
+  );
+
   group('month transitions', () {
     final states = <String, NakedCalendarDayState>{};
 

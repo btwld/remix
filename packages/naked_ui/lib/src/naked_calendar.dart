@@ -1088,7 +1088,7 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
           value: NakedCalendarDayState(
             states: {
               WidgetState.disabled,
-              if (_same(_day, owner.widget.value)) WidgetState.selected,
+              if (owner._selected(_day)) WidgetState.selected,
             },
             date: _day,
             isToday: isToday,
