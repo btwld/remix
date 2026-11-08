@@ -1,6 +1,7 @@
 import 'dart:ui' show Tristate;
 
 import 'package:flutter/gestures.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -95,6 +96,79 @@ Future<void> _open(WidgetTester tester) async {
 }
 
 void main() {
+  testWidgets('queued metric close cannot dismiss a pointer-reopened session', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_host(_picker()));
+    await _open(tester);
+    final trigger = find.byType(RemixButton).first;
+    tester.binding.handleMetricsChanged();
+    await tester.tap(trigger);
+    await tester.tap(trigger);
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixCalendar), findsOneWidget);
+  });
+
+  for (final reopen in [false, true]) {
+    testWidgets(
+      'queued semantic day action is ignored after ${reopen ? 'reopen' : 'dismissal'}',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        final requests = <DateTime>[];
+        try {
+          await tester.pumpWidget(_host(_picker(onChanged: requests.add)));
+          await _open(tester);
+          final day = tester.getSemantics(
+            find.bySemanticsLabel('Thursday, February 22, 2024'),
+          );
+          final trigger = tester.getSemantics(find.byType(RemixButton).first);
+          final owner = day.owner!;
+          owner.performAction(trigger.id, SemanticsAction.tap);
+          if (reopen) owner.performAction(trigger.id, SemanticsAction.tap);
+          owner.performAction(day.id, SemanticsAction.tap);
+          await tester.pumpAndSettle();
+          expect(requests, isEmpty);
+          expect(
+            find.byType(RemixCalendar),
+            reopen ? findsOneWidget : findsNothing,
+          );
+        } finally {
+          semantics.dispose();
+        }
+      },
+    );
+  }
+
+  testWidgets(
+    'selection cleanup preserves a session reopened by the callback',
+    (tester) async {
+      late SemanticsNode trigger;
+      final semantics = tester.ensureSemantics();
+      final requests = <DateTime>[];
+      try {
+        await tester.pumpWidget(
+          _host(
+            _picker(
+              onChanged: (date) {
+                requests.add(date);
+                trigger.owner!.performAction(trigger.id, SemanticsAction.tap);
+                trigger.owner!.performAction(trigger.id, SemanticsAction.tap);
+              },
+            ),
+          ),
+        );
+        await _open(tester);
+        trigger = tester.getSemantics(find.byType(RemixButton).first);
+        await tester.tap(find.text('22'));
+        await tester.pumpAndSettle();
+        expect(requests, [DateTime(2024, 2, 22)]);
+        expect(find.byType(RemixCalendar), findsOneWidget);
+      } finally {
+        semantics.dispose();
+      }
+    },
+  );
+
   testWidgets('calendar minimum-width styling composes inside the picker', (
     tester,
   ) async {

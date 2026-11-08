@@ -79,6 +79,7 @@ class RemixDatePicker extends StatefulWidget {
 class _RemixDatePickerState extends State<RemixDatePicker>
     with WidgetsBindingObserver {
   final _controller = MenuController();
+  int _session = 0;
   final _triggerFocus = FocusNode(debugLabel: 'RemixDatePicker trigger');
   final _calendarFocus = FocusNode(debugLabel: 'RemixDatePicker calendar');
   ({EdgeInsets padding, EdgeInsets viewPadding, EdgeInsets viewInsets})?
@@ -121,8 +122,11 @@ class _RemixDatePickerState extends State<RemixDatePicker>
 
   void _scheduleClose() {
     if (!_controller.isOpen) return;
+    final session = _session;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && _controller.isOpen) _controller.close();
+      if (mounted && _controller.isOpen && session == _session) {
+        _controller.close();
+      }
     });
   }
 
@@ -137,12 +141,19 @@ class _RemixDatePickerState extends State<RemixDatePicker>
     }
   }
 
-  void _select(DateTime date) {
-    if (!_interactive) return;
+  void _select(DateTime date, int session) {
+    if (!mounted ||
+        !_interactive ||
+        !_controller.isOpen ||
+        session != _session) {
+      return;
+    }
     try {
       widget.onChanged!(date);
     } finally {
-      if (mounted && _controller.isOpen) _controller.close();
+      if (mounted && _controller.isOpen && session == _session) {
+        _controller.close();
+      }
     }
   }
 
@@ -156,12 +167,15 @@ class _RemixDatePickerState extends State<RemixDatePicker>
 
   @override
   Widget build(BuildContext context) {
+    final session = _session;
     final value = widget.value;
     final label = value == null
         ? widget.placeholder
         : (widget.formatDate ?? widget.calendarLabels.fullDate)(value);
     return RemixPopover(
       controller: _controller,
+      onOpen: () => setState(() => _session++),
+      onClose: () => setState(() => _session++),
       openOnTap: false,
       triggerFocusNode: _trigger,
       initialFocusNode: _calendarFocus,
@@ -173,7 +187,7 @@ class _RemixDatePickerState extends State<RemixDatePicker>
         value: value,
         firstDate: widget.firstDate,
         lastDate: widget.lastDate,
-        onChanged: _interactive ? _select : null,
+        onChanged: _interactive ? (date) => _select(date, session) : null,
         currentDate: widget.currentDate,
         isDateUnavailable: widget.isDateUnavailable,
         firstDayOfWeek: widget.firstDayOfWeek,
