@@ -35,7 +35,7 @@ ComboboxStyler vanillaComboboxStyle({
       ComboboxPanelStyler()
           .margin(.top(VanillaTokens.s2))
           .minWidth(VanillaTokens.panelMinWidth)
-          .maxHeight(320)
+          .maxHeight(VanillaTokens.panelMaxHeight)
           .scrollbarColor(VanillaTokens.mutedForeground())
           .color(VanillaTokens.popover())
           .border(

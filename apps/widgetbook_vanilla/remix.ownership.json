@@ -10,6 +10,8 @@
     "lib/ui/components/combobox.g.dart": "btwld/remix/registry#vanilla/combobox",
     "lib/ui/components/range_slider.dart": "btwld/remix/registry#vanilla/range_slider",
     "lib/ui/components/range_slider.g.dart": "btwld/remix/registry#vanilla/range_slider",
+    "lib/ui/components/select.dart": "btwld/remix/registry#vanilla/select",
+    "lib/ui/components/select.g.dart": "btwld/remix/registry#vanilla/select",
     "lib/ui/components/slider.dart": "btwld/remix/registry#vanilla/slider",
     "lib/ui/components/slider.g.dart": "btwld/remix/registry#vanilla/slider",
     "lib/ui/components/textfield.dart": "btwld/remix/registry#vanilla/textfield",

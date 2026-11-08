@@ -35,7 +35,7 @@ ComboboxStyler playgroundComboboxStyle({
       ComboboxPanelStyler()
           .margin(.top(PlaygroundTokens.s2))
           .minWidth(PlaygroundTokens.panelMinWidth)
-          .maxHeight(320)
+          .maxHeight(PlaygroundTokens.panelMaxHeight)
           .scrollbarColor(PlaygroundTokens.mutedForeground())
           .color(PlaygroundTokens.popover())
           .border(
