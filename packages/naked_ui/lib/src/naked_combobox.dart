@@ -127,7 +127,7 @@ class _NakedComboboxScope<T extends Object> extends OverlayScope<T> {
     );
   }
 
-  final Iterable<T> options;
+  final List<T> options;
   final ValueChanged<T> onSelected;
 
   /// Returns whether the option at the given index still has to be revealed,
@@ -161,8 +161,7 @@ class NakedComboboxOption<T extends Object>
   @override
   Widget build(BuildContext context) {
     final scope = _NakedComboboxScope.of<T>(context);
-    final options = scope.options.toList(growable: false);
-    final index = options.indexOf(value);
+    final index = scope.options.indexOf(value);
     final isHighlighted =
         index >= 0 && AutocompleteHighlightedOption.of(context) == index;
     final isSelected = scope.value == value;
@@ -661,12 +660,15 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     if (!widget.enabled || _suppressCachedOptions) {
       return const SizedBox.shrink();
     }
+    final values = options
+        .map((option) => option.value)
+        .toList(growable: false);
     final generation = _optionsGeneration;
     return _OverlayLifecycle(
       onMount: _handleMount,
       onUnmount: _handleUnmount,
       child: _NakedComboboxScope<T>(
-        options: options.map((option) => option.value),
+        options: values,
         onSelected: (value) {
           if (generation == _optionsGeneration) {
             _invokeSelection(
@@ -684,12 +686,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
             role: SemanticsRole.list,
             container: true,
             explicitChildNodes: true,
-            child: ExcludeFocus(
-              child: widget.overlayBuilder(
-                context,
-                options.map((option) => option.value),
-              ),
-            ),
+            child: ExcludeFocus(child: widget.overlayBuilder(context, values)),
           ),
         ),
       ),
