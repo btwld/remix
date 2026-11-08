@@ -21,7 +21,8 @@ part 'combobox.g.dart';
 /// [playgroundTextFieldStyle], including its focus, error and disabled treatments;
 /// the panel and rows follow the application's Select recipe.
 ///
-/// Keyboard highlight, hover and press use the same accent surface. Suggestions
+/// Keyboard highlight uses accent, hover a lighter tint, and press a stronger
+/// primary tint. Suggestions
 /// are eligible values only: Remix has no per-option disabled or selected
 /// state. The disabled treatment belongs to the editor. Custom field builders
 /// own their field recipe; custom option content inherits the row's text style.
@@ -31,8 +32,11 @@ ComboboxStyler playgroundComboboxStyle({
 }) => ComboboxStyler()
     .field(playgroundTextFieldStyle())
     .panel(
-      BoxStyler()
-          .margin(.top(PlaygroundTokens.s1))
+      ComboboxPanelStyler()
+          .margin(.top(PlaygroundTokens.s2))
+          .minWidth(PlaygroundTokens.panelMinWidth)
+          .maxHeight(320)
+          .scrollbarColor(PlaygroundTokens.mutedForeground())
           .color(PlaygroundTokens.popover())
           .border(
             .color(
@@ -41,10 +45,11 @@ ComboboxStyler playgroundComboboxStyle({
           )
           .borderRadius(.all(PlaygroundTokens.radiusMd()))
           .padding(.all(PlaygroundTokens.s1))
-          .shadows(PlaygroundShadow.md.box),
+          .containerEffects(.behindContent(PlaygroundShadow.md.effects)),
     )
     .option(
       ComboboxOptionStyler()
+          .minHeight(PlaygroundTokens.controlSm)
           .padding(
             .symmetric(
               horizontal: PlaygroundTokens.s2,
@@ -57,12 +62,18 @@ ComboboxStyler playgroundComboboxStyle({
               PlaygroundTokens.textSm.mix(),
             ).color(PlaygroundTokens.popoverForeground()),
           )
-          .onHovered(_highlighted())
-          .onFocused(_highlighted())
-          .onPressed(_highlighted()),
+          .onHovered(
+            _highlighted(playgroundTint(PlaygroundTokens.accent, 0.65)()),
+          )
+          .onFocused(_highlighted().label(.fontWeight(.w500)))
+          .onPressed(
+            _highlighted(
+              playgroundTint(PlaygroundTokens.primary, 0.18, dark: 0.2)(),
+            ),
+          ),
     )
     .merge(style);
 
-ComboboxOptionStyler _highlighted() => ComboboxOptionStyler()
-    .color(PlaygroundTokens.accent())
+ComboboxOptionStyler _highlighted([Color? fill]) => ComboboxOptionStyler()
+    .color(fill ?? PlaygroundTokens.accent())
     .label(.color(PlaygroundTokens.accentForeground()));

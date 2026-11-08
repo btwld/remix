@@ -937,7 +937,15 @@ final _selectTargets = <SpecTarget>[
       theme.popover,
       _hairline(theme.border),
       _rounded(theme, VanillaTokens.radiusMd),
-      _effectShadows(VanillaShadow.md),
+      [
+        for (final shadow in VanillaShadow.md.shadows)
+          RemixBoxShadow(
+            color: shadow.color,
+            offset: shadow.offset,
+            blurRadius: shadow.blurRadius,
+            spreadRadius: shadow.spreadRadius,
+          ),
+      ],
     ),
   ),
   _select(
@@ -1643,7 +1651,15 @@ final _menuTargets = <SpecTarget>[
       const EdgeInsets.symmetric(vertical: 4),
       const EdgeInsets.symmetric(horizontal: 4),
       128.0,
-      _effectShadows(VanillaShadow.md),
+      [
+        for (final shadow in VanillaShadow.md.shadows)
+          RemixBoxShadow(
+            color: shadow.color,
+            offset: shadow.offset,
+            blurRadius: shadow.blurRadius,
+            spreadRadius: shadow.spreadRadius,
+          ),
+      ],
     ),
   ),
   _menu(
@@ -2111,23 +2127,31 @@ final vanillaSpecTargets = <SpecTarget>[
     'combobox',
     'floating panel',
     source:
-        'Vanilla Select panel: popover border radius-md p-1 shadow-md; 4px offset',
+        'Vanilla Select panel: popover border radius-md p-1 shadow-md; 8px offset',
     style: vanillaComboboxStyle,
     read: (spec) => (
-      decorationOf(spec.spec.panel)?.color,
-      decorationOf(spec.spec.panel)?.border,
-      decorationOf(spec.spec.panel)?.borderRadius,
-      decorationOf(spec.spec.panel)?.boxShadow,
-      spec.spec.panel.spec.padding,
-      spec.spec.panel.spec.margin,
+      decorationOf(spec.spec.panel.spec.container)?.color,
+      decorationOf(spec.spec.panel.spec.container)?.border,
+      decorationOf(spec.spec.panel.spec.container)?.borderRadius,
+      spec.spec.panel.spec.containerEffects?.behindContent?.shadows,
+      spec.spec.panel.spec.container.spec.padding,
+      spec.spec.panel.spec.container.spec.margin,
     ),
     expected: (theme) => (
       theme.popover,
       _hairline(theme.border),
       _rounded(theme, VanillaTokens.radiusMd),
-      VanillaShadow.md.shadows,
+      [
+        for (final shadow in VanillaShadow.md.shadows)
+          RemixBoxShadow(
+            color: shadow.color,
+            offset: shadow.offset,
+            blurRadius: shadow.blurRadius,
+            spreadRadius: shadow.spreadRadius,
+          ),
+      ],
       const EdgeInsets.all(4),
-      const EdgeInsets.only(top: 4),
+      const EdgeInsets.only(top: 8),
     ),
   ),
   _target<ComboboxSpec>(

@@ -6,6 +6,40 @@ import 'package:remix/remix.dart';
 import 'support.dart';
 
 void main() {
+  testWidgets('combobox rows and panel bounds match Select', (tester) async {
+    final theme = vanillaThemes.first.data;
+    final combo = await resolveVanilla(
+      tester,
+      vanillaComboboxStyle(),
+      theme: theme,
+    );
+    final select = await resolveVanilla(
+      tester,
+      vanillaSelectStyle(),
+      theme: theme,
+    );
+    expect(
+      combo.spec.option.spec.container.spec.constraints?.minHeight,
+      select.spec.item.spec.container.spec.box!.spec.constraints?.minHeight,
+    );
+    expect(
+      combo.spec.option.spec.container.spec.padding,
+      select.spec.item.spec.container.spec.box!.spec.padding,
+    );
+    expect(
+      combo.spec.panel.spec.container.spec.constraints,
+      select.spec.content.spec.container.spec.constraints,
+    );
+    expect(
+      combo.spec.panel.spec.containerEffects,
+      select.spec.content.spec.containerEffects,
+    );
+    expect(
+      combo.spec.panel.spec.container.spec.margin,
+      const EdgeInsets.only(top: 8),
+    );
+  });
+
   for (final theme in vanillaThemes) {
     group(theme.name, () {
       testWidgets('combobox reuses the field recipe in every field state', (
@@ -40,10 +74,14 @@ void main() {
       testWidgets(
         'suggestion states keep readable labels and caller overrides win',
         (tester) async {
-          for (final state in [
-            WidgetState.hovered,
-            WidgetState.focused,
-            WidgetState.pressed,
+          final fills = <Color>[];
+          for (final (state, expected) in [
+            (WidgetState.hovered, tint(theme.data.accent, 0.65)),
+            (WidgetState.focused, theme.data.accent),
+            (
+              WidgetState.pressed,
+              tint(theme.data.primary, theme.name == 'dark' ? 0.2 : 0.18),
+            ),
           ]) {
             final spec = await resolveVanilla(
               tester,
@@ -53,13 +91,15 @@ void main() {
             );
             expect(
               decorationOf(spec.spec.option.spec.container)?.color,
-              theme.data.accent,
+              expected,
             );
+            fills.add(decorationOf(spec.spec.option.spec.container)!.color!);
             expect(
               spec.spec.option.spec.label.spec.style?.color,
               theme.data.accentForeground,
             );
           }
+          expect(fills.toSet(), hasLength(3));
           final custom = await resolveVanilla(
             tester,
             vanillaComboboxStyle(

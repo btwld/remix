@@ -21,7 +21,8 @@ part 'combobox.g.dart';
 /// [vanillaTextFieldStyle], including its focus, error and disabled treatments;
 /// the panel and rows follow the application's Select recipe.
 ///
-/// Keyboard highlight, hover and press use the same accent surface. Suggestions
+/// Keyboard highlight uses accent, hover a lighter tint, and press a stronger
+/// primary tint. Suggestions
 /// are eligible values only: Remix has no per-option disabled or selected
 /// state. The disabled treatment belongs to the editor. Custom field builders
 /// own their field recipe; custom option content inherits the row's text style.
@@ -31,18 +32,22 @@ ComboboxStyler vanillaComboboxStyle({
 }) => ComboboxStyler()
     .field(vanillaTextFieldStyle())
     .panel(
-      BoxStyler()
-          .margin(.top(VanillaTokens.s1))
+      ComboboxPanelStyler()
+          .margin(.top(VanillaTokens.s2))
+          .minWidth(VanillaTokens.panelMinWidth)
+          .maxHeight(320)
+          .scrollbarColor(VanillaTokens.mutedForeground())
           .color(VanillaTokens.popover())
           .border(
             .color(VanillaTokens.border()).width(VanillaTokens.strokeHairline),
           )
           .borderRadius(.all(VanillaTokens.radiusMd()))
           .padding(.all(VanillaTokens.s1))
-          .shadows(VanillaShadow.md.box),
+          .containerEffects(.behindContent(VanillaShadow.md.effects)),
     )
     .option(
       ComboboxOptionStyler()
+          .minHeight(VanillaTokens.controlSm)
           .padding(
             .symmetric(
               horizontal: VanillaTokens.s2,
@@ -55,12 +60,14 @@ ComboboxStyler vanillaComboboxStyle({
               VanillaTokens.textSm.mix(),
             ).color(VanillaTokens.popoverForeground()),
           )
-          .onHovered(_highlighted())
-          .onFocused(_highlighted())
-          .onPressed(_highlighted()),
+          .onHovered(_highlighted(vanillaTint(VanillaTokens.accent, 0.65)()))
+          .onFocused(_highlighted().label(.fontWeight(.w500)))
+          .onPressed(
+            _highlighted(vanillaTint(VanillaTokens.primary, 0.18, dark: 0.2)()),
+          ),
     )
     .merge(style);
 
-ComboboxOptionStyler _highlighted() => ComboboxOptionStyler()
-    .color(VanillaTokens.accent())
+ComboboxOptionStyler _highlighted([Color? fill]) => ComboboxOptionStyler()
+    .color(fill ?? VanillaTokens.accent())
     .label(.color(VanillaTokens.accentForeground()));

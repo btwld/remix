@@ -95,8 +95,9 @@ families carry over.
   lands on the hover fill.
 - **Combobox** — install with `remix add combobox`. `<Prefix>Combobox<T>`
   uses the TextField recipe for the editor and a Select-like rounded, elevated
-  popover panel, offset 4px. Suggestions use `textSm`; hover, press and keyboard
-  highlight use `accent` / `accentForeground`. The editor fades when disabled.
+  popover panel, offset 8px, bounded at 320px high with a 128px width floor.
+  Suggestions use `controlSm` and `textSm`; keyboard highlight uses `accent`,
+  hover a lighter accent tint, and press a stronger primary tint. The editor fades when disabled.
   Pass `optionsBuilder` and optionally `onSelected`; arbitrary text stays valid.
   Custom field builders own their recipe, while custom option content inherits
   the row's text style. Override nested `field`, `panel` and `option` through

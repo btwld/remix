@@ -14,7 +14,8 @@ part of 'combobox.dart';
 /// [playgroundTextFieldStyle], including its focus, error and disabled treatments;
 /// the panel and rows follow the application's Select recipe.
 ///
-/// Keyboard highlight, hover and press use the same accent surface. Suggestions
+/// Keyboard highlight uses accent, hover a lighter tint, and press a stronger
+/// primary tint. Suggestions
 /// are eligible values only: Remix has no per-option disabled or selected
 /// state. The disabled treatment belongs to the editor. Custom field builders
 /// own their field recipe; custom option content inherits the row's text style.

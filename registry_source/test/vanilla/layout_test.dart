@@ -131,7 +131,7 @@ void main() {
                 )
                 .last,
           );
-          expect(panelRect.top - fieldRect.bottom, 4);
+          expect(panelRect.top - fieldRect.bottom, 8);
           expect(panelRect.width, fieldRect.width);
           final label = tester.getRect(
             find.text('San Sebastián, Basque Country · Spain'),
