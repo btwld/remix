@@ -183,6 +183,43 @@ SemanticsNode _semantics(WidgetTester tester, int day) =>
     tester.getSemantics(find.bySemanticsLabel('2024-2-$day'));
 
 void main() {
+  testWidgets('retained range day tap is inert after disposal', (tester) async {
+    final state = await _pump(tester);
+    await _tap(tester, 20);
+    expect(state.snapshot.anchor, DateTime(2024, 2, 20));
+    final tap = tester
+        .widget<Semantics>(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is Semantics && widget.properties.label == '2024-2-22',
+          ),
+        )
+        .properties
+        .onTap!;
+    await tester.pumpWidget(const SizedBox());
+    expect(state.mounted, isFalse);
+    tap();
+    expect(state.requests, isEmpty);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final action in ['showMonth', 'nextMonth']) {
+    testWidgets('retained range $action is inert after disposal', (
+      tester,
+    ) async {
+      final state = await _pump(tester);
+      final show = state.snapshot.showMonth!;
+      final retained = action == 'showMonth'
+          ? () => show(DateTime(2024, 3))
+          : state.snapshot.nextMonth!;
+      await tester.pumpWidget(const SizedBox());
+      expect(state.mounted, isFalse);
+      retained();
+      expect(state.requests, isEmpty);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   for (final platform in [TargetPlatform.iOS, TargetPlatform.macOS]) {
     testWidgets(
       '$platform semantic anchor retains keyboard continuity without taking external focus',
