@@ -165,6 +165,55 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('view-size changes close a root picker in a dialog once', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 600);
+    addTearDown(tester.view.reset);
+    final navigator = GlobalKey<NavigatorState>();
+    var closes = 0;
+    final requests = <DateTime>[];
+    await tester.pumpWidget(
+      pickerHost(const Text('Host'), navigatorKey: navigator),
+    );
+    final result = showNakedDialog<void>(
+      context: navigator.currentContext!,
+      barrierColor: const Color(0x55000000),
+      builder: (_) => Center(
+        child: _picker(onChanged: requests.add, onClose: () => closes++),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await _open(tester);
+    final picker = tester
+        .widget<RemixPopover>(find.byType(RemixPopover))
+        .controller!;
+    expect(picker.isOpen, isTrue);
+    tester.view.physicalSize = const Size(600, 800);
+    await tester.pumpAndSettle();
+    expect(picker.isOpen, isFalse);
+    expect(find.byType(RemixCalendar), findsNothing);
+    expect(find.byType(RemixDatePicker), findsOneWidget);
+    expect(requests, isEmpty);
+    expect(closes, 1);
+    expect(tester.takeException(), isNull);
+    navigator.currentState!.pop();
+    await tester.pumpAndSettle();
+    await result;
+  });
+
+  testWidgets('removing an open picker does not call onClose', (tester) async {
+    var closes = 0;
+    await tester.pumpWidget(pickerHost(_picker(onClose: () => closes++)));
+    await _open(tester);
+    await tester.pumpWidget(pickerHost(const SizedBox()));
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixCalendar), findsNothing);
+    expect(closes, 0);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('view-size changes close a picker nested in a popover once', (
     tester,
   ) async {
