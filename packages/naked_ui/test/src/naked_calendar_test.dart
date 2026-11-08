@@ -685,6 +685,36 @@ void main() {
       }
     });
 
+    testWidgets('an outgoing selected day keeps its selected paint', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        final focus = FocusNode();
+        addTearDown(focus.dispose);
+        await pumpSwitcher(tester, focus);
+        expect(states['2-15']!.isSelected, isTrue);
+
+        focus.requestFocus();
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+
+        // February fades out still showing its selection, but stays inert.
+        final outgoing = states['2-15']!;
+        expect(outgoing.isOutsideMonth, isTrue);
+        expect(outgoing.isSelected, isTrue);
+        expect(outgoing.isDisabled, isTrue);
+        expect(outgoing.isFocused, isFalse);
+        expect(find.bySemanticsLabel('2024-2-15'), findsNothing);
+        expect(states['2-16']!.isSelected, isFalse);
+        await tester.pumpAndSettle();
+      } finally {
+        semantics.dispose();
+      }
+    });
+
     testWidgets('rapid back-and-forth keeps one live day per date', (
       tester,
     ) async {

@@ -552,10 +552,15 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
         inBounds && (owner.widget.isDateUnavailable?.call(_day) ?? false);
     final isToday = _same(_day, owner.widget.currentDate ?? DateTime.now());
     if (_outside) {
+      // Inert, but a selected date keeps painting as selected while its grid
+      // fades out.
       return ExcludeSemantics(
         child: NakedStateScopeBuilder(
           value: NakedCalendarDayState(
-            states: const {WidgetState.disabled},
+            states: {
+              WidgetState.disabled,
+              if (_same(_day, owner.widget.value)) WidgetState.selected,
+            },
             date: _day,
             isToday: isToday,
             isUnavailable: unavailable,
