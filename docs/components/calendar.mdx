@@ -42,19 +42,26 @@ theme or `MaterialLocalizations` is required.
 
 ## Date and state contract
 
-- Dates are year/month/day fields, not instants. Input times and UTC flags do
-  not affect same-day comparison. Callbacks return local date values where those
-  fields are representable. A historically skipped local day uses a UTC date-only
-  fallback to preserve its fields. Treat both as civil dates; do not convert
-  timezones to preserve a birthday or booking date.
-- To supply a historical day that may be skipped in the device's local zone,
-  construct `DateTime.utc(year, month, day)` as a civil-field carrier. A local
-  `DateTime` constructor can change those fields before the calendar receives them.
-- Compare and build dates with `isSameCivilDate(a, b)`, `compareCivilDates(a, b)`
-  and `civilDate(year, month, day)`, exported by `remix` and `naked_ui`; they read
-  only year, month and day. `==` against your own `DateTime(year, month, day)`,
-  `toLocal()`, `millisecondsSinceEpoch` and `difference(...).inDays` treat the
-  values as instants and can disagree for the skipped-day UTC carrier.
+- Dates are year/month/day fields, not instants. Only the fields are compared:
+  input times and UTC flags are ignored and nothing is converted between
+  timezones, so the flag never changes which day two values name. The fields
+  themselves depend on how you made the value. `DateTime.now().toUtc()`
+  supplies UTC fields, which can be the day before or after the local date, so
+  pass `DateTime.now()` for today. Callbacks return local date values where
+  those fields are representable. A historically skipped local day uses a UTC
+  date-only fallback to preserve its fields. Treat both as civil dates; do not
+  convert timezones to preserve a birthday or booking date.
+- Build dates with `civilDate(year, month, day)`, exported by `remix` and
+  `naked_ui`, rather than hand-building `DateTime.utc(year, month, day)`. It
+  returns the ordinary local date wherever the device's zone has that day, so
+  it matches the dates the calendar returns, and the UTC carrier only for a day
+  the zone skipped (such as Pacific/Apia's 2011-12-30), which a local
+  `DateTime(year, month, day)` would change before the calendar receives it.
+- Compare dates with `isSameCivilDate(a, b)` and `compareCivilDates(a, b)`,
+  also exported by `remix` and `naked_ui`; they read only year, month and day.
+  `==` against your own `DateTime(year, month, day)`, `toLocal()`,
+  `millisecondsSinceEpoch` and `difference(...).inDays` treat the values as
+  instants and can disagree for the skipped-day UTC carrier.
   `isDateUnavailable` receives the same civil values. Persist a selected date
   as its fields, for example an ISO `yyyy-MM-dd` string.
 - `firstDate` and `lastDate` are inclusive. Unavailable in-range dates remain
