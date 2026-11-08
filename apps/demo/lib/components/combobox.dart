@@ -52,26 +52,38 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
     'São Paulo, São Paulo · Brazil',
   ];
 
+  static const _arabicCities = [
+    'سان فرانسيسكو، كاليفورنيا · الولايات المتحدة',
+    'سان سيباستيان، إقليم الباسك · إسبانيا',
+    'سان ميغيل دي أليندي، غواناخواتو · المكسيك',
+    'سانتا كروث دي تينيريفه، جزر الكناري · إسبانيا',
+    'سانتياغو دي كومبوستيلا، غاليسيا · إسبانيا',
+    'سانتو دومينغو، المقاطعة الوطنية · جمهورية الدومينيكان',
+    'ساو باولو، ساو باولو · البرازيل',
+  ];
+
   @override
-  Widget build(BuildContext context) => Center(
-    child: ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 420),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ScrollConfiguration(
-              behavior: const _SuggestionScrollBehavior(),
-              child: RemixCombobox<String>(
+  Widget build(BuildContext context) {
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final cities = rtl ? _arabicCities : _cities;
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 420),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              RemixCombobox<String>(
                 controller: _controller,
                 focusNode: _focusNode,
-                label: 'Destination',
-                hintText: 'Try “san”',
+                label: rtl ? 'الوجهة' : 'Destination',
+                hintText: rtl ? 'جرّب «سان»' : 'Try “san”',
                 enabled: widget.enabled,
                 optionsBuilder: (query) => query.text.isEmpty
                     ? const []
-                    : _cities.where(
+                    : cities.where(
                         (city) => city.toLowerCase().contains(
                           query.text.toLowerCase(),
                         ),
@@ -80,13 +92,25 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
                 style: ComboboxStyler()
                     .field(
                       TextFieldStyler()
-                          .padding(.all(12))
-                          .constraints(.minHeight(48))
+                          .padding(.symmetric(horizontal: 12, vertical: 8))
+                          .constraints(.minHeight(36))
                           .borderRadius(.all(FortalTokens.radius3()))
                           .color(FortalTokens.gray2())
-                          .text(TextStyler().color(FortalTokens.gray12()))
-                          .label(TextStyler().color(FortalTokens.gray12()))
-                          .hintText(TextStyler().color(FortalTokens.gray11()))
+                          .text(
+                            TextStyler()
+                                .fontSize(14)
+                                .color(FortalTokens.gray12()),
+                          )
+                          .label(
+                            TextStyler()
+                                .fontSize(14)
+                                .color(FortalTokens.gray12()),
+                          )
+                          .hintText(
+                            TextStyler()
+                                .fontSize(14)
+                                .color(FortalTokens.gray11()),
+                          )
                           .cursorColor(FortalTokens.accentContent())
                           .border(
                             .all(.color(FortalTokens.controlBorder()).width(1)),
@@ -101,9 +125,9 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
                                 .border(
                                   .all(.color(FortalTokens.gray6()).width(1)),
                                 )
-                                .text(TextStyler().color(FortalTokens.gray8()))
+                                .text(TextStyler().color(FortalTokens.gray9()))
                                 .hintText(
-                                  TextStyler().color(FortalTokens.gray8()),
+                                  TextStyler().color(FortalTokens.gray9()),
                                 )
                                 .label(
                                   TextStyler().color(FortalTokens.gray11()),
@@ -111,8 +135,9 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
                           ),
                     )
                     .panel(
-                      BoxStyler()
+                      ComboboxPanelStyler()
                           .margin(.top(8))
+                          .scrollbarColor(FortalTokens.gray8())
                           .borderRadius(.all(FortalTokens.radius3()))
                           .color(FortalTokens.colorPanel())
                           .padding(.all(4))
@@ -125,50 +150,50 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
                     )
                     .option(
                       ComboboxOptionStyler()
-                          .padding(.horizontal(12).vertical(8))
+                          .minHeight(32)
+                          .padding(.symmetric(horizontal: 12, vertical: 6))
+                          .margin(.bottom(1))
                           .borderRadius(.all(FortalTokens.radius2()))
                           .onHovered(.color(FortalTokens.accentA3()))
-                          .onFocused(.color(FortalTokens.accentA4()))
+                          .onFocused(
+                            .color(FortalTokens.accentA5()).border(
+                              .all(.color(FortalTokens.accent8()).width(1)),
+                            ),
+                          )
+                          .onPressed(.color(FortalTokens.accentA7()))
                           .label(
                             TextStyler()
                                 .color(FortalTokens.gray12())
-                                .fontSize(16),
+                                .fontSize(14),
                           ),
                     ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Semantics(
-              liveRegion: true,
-              child: Text(
-                _selected == null
-                    ? 'Choose a suggested destination.'
-                    : 'Selected: $_selected',
-                style: TextStyle(color: FortalTokens.gray11.resolve(context)),
+              const SizedBox(height: 12),
+              Semantics(
+                liveRegion: true,
+                child: Text(
+                  _selected == null
+                      ? (rtl
+                            ? 'اختر وجهة من الاقتراحات.'
+                            : 'Choose a suggested destination.')
+                      : (rtl
+                            ? 'الوجهة المختارة: $_selected'
+                            : 'Selected: $_selected'),
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color:
+                        (widget.enabled
+                                ? FortalTokens.gray11
+                                : FortalTokens.gray9)
+                            .resolve(context),
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
-
-/// Keep overflowing, wrapped suggestions discoverable in every pointer mode.
-class _SuggestionScrollBehavior extends ScrollBehavior {
-  const _SuggestionScrollBehavior();
-
-  @override
-  Widget buildScrollbar(
-    BuildContext context,
-    Widget child,
-    ScrollableDetails details,
-  ) => RawScrollbar(
-    controller: details.controller,
-    thumbVisibility: true,
-    thumbColor: FortalTokens.gray8.resolve(context),
-    radius: FortalTokens.radius2.resolve(context),
-    thickness: 4,
-    child: child,
-  );
+    );
+  }
 }
