@@ -721,6 +721,8 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
     String? label,
     String? hintText,
     bool enabled = true,
+    bool autofocus = false,
+    String? semanticLabel,
     NakedComboboxFieldBuilder<T>? fieldBuilder,
     Widget Function(BuildContext context, T option)? optionBuilder,
     OptionsViewOpenDirection optionsViewOpenDirection =
@@ -741,6 +743,8 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
       label: label,
       hintText: hintText,
       enabled: enabled,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
       fieldBuilder: fieldBuilder,
       optionBuilder: optionBuilder,
       optionsViewOpenDirection: optionsViewOpenDirection,

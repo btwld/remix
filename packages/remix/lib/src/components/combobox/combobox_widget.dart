@@ -7,6 +7,7 @@ part of 'combobox.dart';
 /// Supply small result sets: all rows are built eagerly so keyboard navigation
 /// can reveal any suggestion. No results closes the panel.
 class RemixCombobox<T extends Object> extends StatelessWidget {
+  /// Creates an editable field with eligible suggestions.
   const RemixCombobox({
     super.key,
     required this.optionsBuilder,
@@ -18,6 +19,8 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
     this.label,
     this.hintText,
     this.enabled = true,
+    this.autofocus = false,
+    this.semanticLabel,
     this.fieldBuilder,
     this.optionBuilder,
     this.optionsViewOpenDirection = OptionsViewOpenDirection.down,
@@ -39,19 +42,35 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
   /// Synchronous controller changes here are preserved. Editing does not emit
   /// a nullable selection notification.
   final ValueChanged<T>? onSelected;
+
+  /// Text written into the editor and used to name each suggestion.
   final AutocompleteOptionToString<T> displayStringForOption;
 
-  /// Caller-owned editor objects; forward the exact pair when supplied.
+  /// Caller-owned editor controller; must be paired with [focusNode].
   final TextEditingController? controller;
+
+  /// Caller-owned editor focus node; must be paired with [controller].
   final FocusNode? focusNode;
 
   /// Initializes text, without selecting an entity.
   final TextEditingValue? initialValue;
 
-  /// Visible and accessible name of the default editor.
+  /// Visible label and fallback accessible name of the default editor.
   final String? label;
+
+  /// Placeholder shown while the default editor is empty.
   final String? hintText;
+
+  /// Whether editing and suggestion acceptance are enabled.
   final bool enabled;
+
+  /// Whether the enabled default editor requests focus when mounted.
+  /// Custom [fieldBuilder] implementations own their autofocus behavior.
+  final bool autofocus;
+
+  /// Accessible name, replacing [label] for the default editor.
+  /// Custom editors must apply this name to their editable semantics node.
+  final String? semanticLabel;
 
   /// Replaces the default editor. Own its label, disabled state and appearance;
   /// forward the supplied controller, focus node and submit callback unchanged.
@@ -60,19 +79,32 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
   /// Visual content only, beneath one named interactive option wrapper. Do not
   /// return another button. Its accessible name is [displayStringForOption].
   final Widget Function(BuildContext context, T option)? optionBuilder;
+
+  /// Preferred direction for opening the suggestions panel.
   final OptionsViewOpenDirection optionsViewOpenDirection;
+
+  /// Called after the suggestions subtree mounts.
   final VoidCallback? onOpen;
+
+  /// Called after the suggestions subtree unmounts.
   final VoidCallback? onClose;
+
+  /// Hides both the editor and suggestions from assistive technology.
   final bool excludeSemantics;
+
+  /// Fluent styling for the editor root, field, panel and suggestions.
   final ComboboxStyler style;
 
   /// Bypasses fluent defaults and resolution, including nested slots.
   final ComboboxSpec? styleSpec;
 
+  /// Creates fluent styles for a combobox and its anatomy.
   static final styleFrom = ComboboxStyler.new;
 
   @override
   Widget build(BuildContext context) {
+    final fieldBuilder = this.fieldBuilder;
+    final optionBuilder = this.optionBuilder;
     final base = ComboboxStyler()
         .field(TextFieldStyler().constraints(.minHeight(48)))
         .merge(style);
@@ -92,7 +124,9 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
       onOpen: onOpen,
       onClose: onClose,
       excludeSemantics: excludeSemantics,
-      // The default TextField owns its accessible name; no named container.
+      // The default editor names its editable node directly, avoiding a second
+      // named container. Custom editors receive Naked's container name too.
+      semanticLabel: fieldBuilder == null ? null : semanticLabel,
       fieldBuilder: (context, state, controller, focusNode, submit) {
         Widget defaultField(TextFieldSpec? rawSpec) => RemixTextField(
           controller: controller,
@@ -100,6 +134,8 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
           label: label,
           hintText: hintText,
           enabled: enabled,
+          autofocus: autofocus,
+          semanticLabel: semanticLabel,
           // Finalize IME text while retaining editor focus. Naked suppresses
           // acceptance for this composing submit.
           onEditingComplete: controller.clearComposing,
@@ -114,7 +150,7 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
           builder: (context, spec) => RemixBoxAdapter(
             styleSpec: spec.container,
             child: fieldBuilder != null
-                ? fieldBuilder!(context, state, controller, focusNode, submit)
+                ? fieldBuilder(context, state, controller, focusNode, submit)
                 : styleSpec != null
                 ? StyleSpecBuilder<TextFieldSpec>(
                     styleSpec: spec.field,
@@ -184,7 +220,7 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
                                             )
                                           : RemixDefaultContentStyle(
                                               text: spec.optionLabel,
-                                              child: optionBuilder!(
+                                              child: optionBuilder(
                                                 context,
                                                 option,
                                               ),

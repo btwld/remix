@@ -8,6 +8,65 @@ import 'package:remix/remix.dart';
 import 'combobox_test_host.dart';
 
 void main() {
+  testWidgets('semanticLabel replaces the visible editor name once', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(
+      comboboxHost(
+        RemixCombobox<String>(
+          label: 'Fruit',
+          semanticLabel: 'Search destinations',
+          optionsBuilder: (_) => suggestions,
+          style: testComboboxStyle(),
+        ),
+      ),
+    );
+    final nodes = tester.semantics.simulatedAccessibilityTraversal().toList();
+    final editor = nodes.singleWhere(
+      (node) => node.getSemanticsData().flagsCollection.isTextField,
+    );
+    expect(editor.getSemanticsData().label, 'Search destinations');
+    expect(
+      nodes.where(
+        (node) => node.getSemanticsData().label.contains('Search destinations'),
+      ),
+      hasLength(1),
+    );
+    expect(
+      nodes.where((node) => node.getSemanticsData().label.contains('Fruit')),
+      isEmpty,
+    );
+    editor.owner!.performAction(editor.id, SemanticsAction.tap);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(EditableText), 'ap');
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+      'ap',
+    );
+    expect(find.text('Fruit'), findsOneWidget);
+    handle.dispose();
+  });
+
+  for (final enabled in [true, false]) {
+    testWidgets('autofocus respects enabled=$enabled', (tester) async {
+      await tester.pumpWidget(
+        comboboxHost(
+          RemixCombobox<String>(
+            autofocus: true,
+            enabled: enabled,
+            optionsBuilder: (_) => suggestions,
+            style: testComboboxStyle(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final editor = tester.widget<EditableText>(find.byType(EditableText));
+      expect(editor.focusNode.hasFocus, enabled);
+    });
+  }
+
   testWidgets(
     'no-Material keyboard accept, dismiss and traversal retain editing',
     (tester) async {
