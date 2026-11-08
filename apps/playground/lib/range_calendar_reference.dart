@@ -367,6 +367,8 @@ final _rangeStyle = CalendarStyler()
     );
 
 final _arabicRangeLabels = RemixRangeCalendarLabels(
+  noRange: 'لم يتم اختيار فترة',
+  rangeValue: (s, e) => 'من $s إلى $e',
   start: 'بداية الفترة',
   end: 'نهاية الفترة',
   draftStart: 'بداية المسودة',

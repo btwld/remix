@@ -36,6 +36,35 @@ NakedDateRange? _value(WidgetTester tester) =>
     tester.widget<RemixDateRangePicker>(_picker).value;
 
 void main() {
+  for (final empty in [true, false]) {
+    testWidgets(
+      'Arabic picker announces a localized ${empty ? 'empty' : 'complete'} value',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await _pump(tester);
+          await _tap(tester, find.text('العربية / RTL'));
+          if (empty) await _tap(tester, find.text('Clear selection'));
+          final picker = tester.widget<RemixDateRangePicker>(_picker);
+          final selected = picker.value;
+          final expected = empty
+              ? 'لم يتم اختيار فترة'
+              : 'من ${picker.calendarLabels.fullDate(selected!.start)} إلى ${picker.calendarLabels.fullDate(selected.end)}';
+          expect(
+            tester
+                .getSemantics(find.bySemanticsLabel('فترة التقرير'))
+                .getSemanticsData()
+                .value,
+            expected,
+          );
+          expect(tester.takeException(), isNull);
+        } finally {
+          semantics.dispose();
+        }
+      },
+    );
+  }
+
   testWidgets(
     'reference accepts complete ranges and closes after rejected requests',
     (tester) async {
