@@ -8,31 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
-Widget _host(
-  Widget child, {
-  double textScale = 1,
-  TextDirection direction = TextDirection.ltr,
-  EdgeInsets? safeArea,
-  EdgeInsets? viewInsets,
-  GlobalKey<NavigatorState>? navigatorKey,
-}) => WidgetsApp(
-  color: const Color(0xffffffff),
-  navigatorKey: navigatorKey,
-  pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-    settings: settings,
-    pageBuilder: (context, animation, secondaryAnimation) => builder(context),
-  ),
-  builder: (context, page) => MediaQuery(
-    data: MediaQuery.of(context).copyWith(
-      textScaler: TextScaler.linear(textScale),
-      padding: safeArea,
-      viewPadding: safeArea,
-      viewInsets: viewInsets,
-    ),
-    child: Directionality(textDirection: direction, child: page!),
-  ),
-  home: Center(child: child),
-);
+import 'date_picker_test_helpers.dart';
 
 RemixDatePicker _picker({
   DateTime? value,
@@ -68,27 +44,6 @@ RemixDatePicker _picker({
   popoverStyle: popoverStyle,
 );
 
-DateTime? _focusedDate() {
-  DateTime? result;
-  FocusManager.instance.primaryFocus?.context?.visitAncestorElements((element) {
-    if (element.widget case NakedCalendarDay(:final date)) {
-      result = date;
-      return false;
-    }
-    return true;
-  });
-  return result;
-}
-
-bool _focusInside(Type type) {
-  var found = false;
-  FocusManager.instance.primaryFocus?.context?.visitAncestorElements((element) {
-    if (element.widget.runtimeType == type) found = true;
-    return !found;
-  });
-  return found;
-}
-
 Future<void> _open(WidgetTester tester) async {
   await tester.tap(find.byType(RemixButton).first);
   await tester.pumpAndSettle();
@@ -96,10 +51,68 @@ Future<void> _open(WidgetTester tester) async {
 }
 
 void main() {
+  testWidgets('onOpen and onClose tell completion apart from dismissal', (
+    tester,
+  ) async {
+    final events = <String>[];
+    await tester.pumpWidget(
+      pickerHost(
+        RemixDatePicker(
+          value: null,
+          firstDate: DateTime(2023),
+          lastDate: DateTime(2026, 12, 31),
+          currentDate: DateTime(2024, 2, 15),
+          onChanged: (date) => events.add('changed ${date.day}'),
+          onOpen: () => events.add('open'),
+          onClose: () => events.add('close'),
+        ),
+      ),
+    );
+    await _open(tester);
+    expect(events, ['open']);
+    await pressKey(tester, LogicalKeyboardKey.escape);
+    expect(events, ['open', 'close'], reason: 'dismissal never selects');
+    events.clear();
+    await _open(tester);
+    await tester.tap(find.text('20'));
+    await tester.pumpAndSettle();
+    expect(events, ['open', 'changed 20', 'close']);
+  });
+
+  for (final sameFrame in [false, true]) {
+    testWidgets(
+      'reopening (same frame: $sameFrame) restarts at the selected day',
+      (tester) async {
+        bool showsMarch() => find
+            .byWidgetPredicate(
+              (w) => w is NakedCalendarDay && w.date == DateTime(2024, 3, 5),
+            )
+            .evaluate()
+            .isNotEmpty;
+        await tester.pumpWidget(
+          pickerHost(_picker(value: DateTime(2024, 2, 20))),
+        );
+        await _open(tester);
+        expect(focusedDate(), DateTime(2024, 2, 20));
+        await pressKey(tester, LogicalKeyboardKey.pageDown);
+        expect(focusedDate(), DateTime(2024, 3, 20));
+        expect(showsMarch(), isTrue);
+        final controller = outerController(tester);
+        controller.close();
+        if (!sameFrame) await tester.pumpAndSettle();
+        controller.open();
+        await tester.pumpAndSettle();
+        expect(find.byType(RemixCalendar), findsOneWidget);
+        expect(showsMarch(), isFalse, reason: 'browsed month must reset');
+        expect(focusedDate(), DateTime(2024, 2, 20));
+      },
+    );
+  }
+
   testWidgets('metrics without a view-size change keep the picker open', (
     tester,
   ) async {
-    await tester.pumpWidget(_host(_picker()));
+    await tester.pumpWidget(pickerHost(_picker()));
     await _open(tester);
     tester.binding.handleMetricsChanged();
     await tester.pumpAndSettle();
@@ -113,7 +126,7 @@ void main() {
     tester.view.physicalSize = const Size(800, 600);
     addTearDown(tester.view.reset);
     final requests = <DateTime>[];
-    await tester.pumpWidget(_host(_picker(onChanged: requests.add)));
+    await tester.pumpWidget(pickerHost(_picker(onChanged: requests.add)));
     await _open(tester);
     tester.view.physicalSize = const Size(600, 800);
     await tester.pumpAndSettle();
@@ -136,7 +149,7 @@ void main() {
       addTearDown(text.dispose);
       addTearDown(textFocus.dispose);
       await tester.pumpWidget(
-        _host(
+        pickerHost(
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -165,7 +178,7 @@ void main() {
       }
       await tester.pumpAndSettle();
       expect(find.byType(RemixCalendar), findsOneWidget);
-      expect(_focusInside(RemixCalendar), isTrue);
+      expect(focusInside(RemixCalendar), isTrue);
     },
   );
 
@@ -176,7 +189,7 @@ void main() {
     tester.view.physicalSize = const Size(800, 600);
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      _host(Align(alignment: Alignment.topCenter, child: _picker())),
+      pickerHost(Align(alignment: Alignment.topCenter, child: _picker())),
     );
     await _open(tester);
     expect(tester.getRect(find.byType(RemixCalendar)).bottom, greaterThan(250));
@@ -196,7 +209,7 @@ void main() {
         final semantics = tester.ensureSemantics();
         final requests = <DateTime>[];
         try {
-          await tester.pumpWidget(_host(_picker(onChanged: requests.add)));
+          await tester.pumpWidget(pickerHost(_picker(onChanged: requests.add)));
           await _open(tester);
           final day = tester.getSemantics(
             find.bySemanticsLabel('Thursday, February 22, 2024'),
@@ -227,7 +240,7 @@ void main() {
       final requests = <DateTime>[];
       try {
         await tester.pumpWidget(
-          _host(
+          pickerHost(
             _picker(
               onChanged: (date) {
                 requests.add(date);
@@ -253,7 +266,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      _host(_picker(calendarStyle: CalendarStyler().minWidth(420))),
+      pickerHost(_picker(calendarStyle: CalendarStyler().minWidth(420))),
     );
     await _open(tester);
     expect(tester.takeException(), isNull);
@@ -266,68 +279,69 @@ void main() {
   testWidgets('one real trigger, localized name and single expanded state', (
     tester,
   ) async {
-    final semantics = tester.ensureSemantics();
-
-    final before = FocusNode();
-    final trigger = FocusNode();
-    final after = FocusNode();
-    addTearDown(before.dispose);
-    addTearDown(trigger.dispose);
-    addTearDown(after.dispose);
-    await tester.pumpWidget(
-      _host(
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RemixButton(label: 'Before', focusNode: before, onPressed: () {}),
-            _picker(
-              focusNode: trigger,
-              placeholder: 'Choisir',
-              semanticLabel: 'Rendez-vous',
-              calendarLabels: const RemixCalendarLabels(noDate: 'Aucune date'),
-            ),
-            RemixButton(label: 'After', focusNode: after, onPressed: () {}),
-          ],
+    await withSemantics(tester, () async {
+      final before = FocusNode();
+      final trigger = FocusNode();
+      final after = FocusNode();
+      addTearDown(before.dispose);
+      addTearDown(trigger.dispose);
+      addTearDown(after.dispose);
+      await tester.pumpWidget(
+        pickerHost(
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RemixButton(label: 'Before', focusNode: before, onPressed: () {}),
+              _picker(
+                focusNode: trigger,
+                placeholder: 'Choisir',
+                semanticLabel: 'Rendez-vous',
+                calendarLabels: const RemixCalendarLabels(
+                  noDate: 'Aucune date',
+                ),
+              ),
+              RemixButton(label: 'After', focusNode: after, onPressed: () {}),
+            ],
+          ),
         ),
-      ),
-    );
-    final node = tester.getSemantics(find.bySemanticsLabel('Rendez-vous'));
-    // The purpose is the name; the empty state is a localized value, not the
-    // visible placeholder appended to the name.
-    expect(node.getSemanticsData().value, 'Aucune date');
-    expect(node.getSemanticsData().flagsCollection.isButton, isTrue);
-    expect(
-      node.getSemanticsData().flagsCollection.isExpanded,
-      Tristate.isFalse,
-    );
-    expect(find.byType(NakedButton), findsNWidgets(3));
-    before.requestFocus();
-    await tester.pump();
-    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-    await tester.pump();
-    expect(trigger.hasPrimaryFocus, isTrue);
-    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-    await tester.pump();
-    expect(after.hasPrimaryFocus, isTrue);
-    trigger.requestFocus();
-    await tester.pump();
-    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-    await tester.pumpAndSettle();
-    expect(_focusedDate(), DateTime(2024, 2, 15));
-    // The open calendar shares the purpose as its name; read the trigger.
-    final expanded = tester.getSemantics(find.byType(RemixButton).at(1));
-    expect(expanded.getSemanticsData().label, 'Rendez-vous');
-    expect(
-      expanded.getSemanticsData().flagsCollection.isExpanded,
-      Tristate.isTrue,
-    );
-    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pumpAndSettle();
-    expect(trigger.hasPrimaryFocus, isTrue);
-    await tester.sendKeyEvent(LogicalKeyboardKey.space);
-    await tester.pumpAndSettle();
-    expect(_focusedDate(), DateTime(2024, 2, 15));
-    semantics.dispose();
+      );
+      final node = tester.getSemantics(find.bySemanticsLabel('Rendez-vous'));
+      // The purpose is the name; the empty state is a localized value, not the
+      // visible placeholder appended to the name.
+      expect(node.getSemanticsData().value, 'Aucune date');
+      expect(node.getSemanticsData().flagsCollection.isButton, isTrue);
+      expect(
+        node.getSemanticsData().flagsCollection.isExpanded,
+        Tristate.isFalse,
+      );
+      expect(find.byType(NakedButton), findsNWidgets(3));
+      before.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(trigger.hasPrimaryFocus, isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(after.hasPrimaryFocus, isTrue);
+      trigger.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+      expect(focusedDate(), DateTime(2024, 2, 15));
+      // The open calendar shares the purpose as its name; read the trigger.
+      final expanded = tester.getSemantics(find.byType(RemixButton).at(1));
+      expect(expanded.getSemanticsData().label, 'Rendez-vous');
+      expect(
+        expanded.getSemanticsData().flagsCollection.isExpanded,
+        Tristate.isTrue,
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(trigger.hasPrimaryFocus, isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pumpAndSettle();
+      expect(focusedDate(), DateTime(2024, 2, 15));
+    });
   });
 
   testWidgets('trigger value is the full date while formatDate stays visual', (
@@ -336,7 +350,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     try {
       await tester.pumpWidget(
-        _host(
+        pickerHost(
           _picker(
             value: DateTime(2024, 2, 20),
             formatDate: (date) => '${date.day}/${date.month}',
@@ -369,7 +383,7 @@ void main() {
       StatefulBuilder(
         builder: (context, setState) {
           update = setState;
-          return _host(_picker(focusNode: node, onChanged: requests.add));
+          return pickerHost(_picker(focusNode: node, onChanged: requests.add));
         },
       ),
     );
@@ -385,7 +399,7 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
     expect(find.byType(RemixCalendar), findsOneWidget);
-    expect(_focusedDate(), DateTime(2024, 2, 15));
+    expect(focusedDate(), DateTime(2024, 2, 15));
     expect(tester.takeException(), isNull);
   });
 
@@ -395,7 +409,7 @@ void main() {
     final trigger = FocusNode();
     addTearDown(trigger.dispose);
     await tester.pumpWidget(
-      _host(
+      pickerHost(
         RemixDatePicker(
           value: null,
           firstDate: DateTime(2023),
@@ -420,7 +434,7 @@ void main() {
       StatefulBuilder(
         builder: (context, setState) {
           update = setState;
-          return _host(
+          return pickerHost(
             _picker(
               value: value,
               onChanged: (date) => setState(() => value = date),
@@ -434,7 +448,7 @@ void main() {
     await tester.pump();
     expect(find.text('Select date'), findsOneWidget);
     await _open(tester);
-    expect(_focusedDate(), DateTime(2024, 2, 15));
+    expect(focusedDate(), DateTime(2024, 2, 15));
   });
 
   for (final kind in [
@@ -447,16 +461,16 @@ void main() {
     ) async {
       final changes = <DateTime>[];
       await tester.pumpWidget(
-        _host(
+        pickerHost(
           _picker(value: DateTime.utc(2024, 2, 14, 20), onChanged: changes.add),
         ),
       );
       await tester.tap(find.byType(RemixButton), kind: kind);
       await tester.pumpAndSettle();
-      expect(_focusedDate(), DateTime(2024, 2, 14));
+      expect(focusedDate(), DateTime(2024, 2, 14));
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
       await tester.pumpAndSettle();
-      expect(_focusedDate(), DateTime(2024, 2, 21));
+      expect(focusedDate(), DateTime(2024, 2, 21));
       expect(changes, isEmpty);
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
@@ -470,7 +484,7 @@ void main() {
   ) async {
     final changes = <DateTime>[];
     await tester.pumpWidget(
-      _host(
+      pickerHost(
         _picker(
           value: DateTime(2024, 2, 14),
           isDateUnavailable: (date) => date.day == 14,
@@ -479,14 +493,14 @@ void main() {
       ),
     );
     await _open(tester);
-    expect(_focusedDate(), DateTime(2024, 2, 14));
+    expect(focusedDate(), DateTime(2024, 2, 14));
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
     expect(changes, isEmpty);
     expect(find.byType(RemixCalendar), findsOneWidget);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.pumpAndSettle();
-    expect(_focusedDate(), DateTime(2024, 2, 15));
+    expect(focusedDate(), DateTime(2024, 2, 15));
     await tester.sendKeyEvent(LogicalKeyboardKey.space);
     await tester.pumpAndSettle();
     expect(changes, [DateTime(2024, 2, 15)]);
@@ -496,7 +510,7 @@ void main() {
     'invalid external value remains named; focus follows clamped current day',
     (tester) async {
       await tester.pumpWidget(
-        _host(
+        pickerHost(
           _picker(
             value: DateTime(2030, 8, 7),
             firstDate: DateTime(2024, 2, 10),
@@ -507,7 +521,7 @@ void main() {
       );
       expect(find.text('Wednesday, August 7, 2030'), findsOneWidget);
       await _open(tester);
-      expect(_focusedDate(), DateTime(2024, 2, 10));
+      expect(focusedDate(), DateTime(2024, 2, 10));
     },
   );
 
@@ -516,7 +530,9 @@ void main() {
     (tester) async {
       final changes = <DateTime>[];
       await tester.pumpWidget(
-        _host(_picker(value: DateTime(2024, 2, 14), onChanged: changes.add)),
+        pickerHost(
+          _picker(value: DateTime(2024, 2, 14), onChanged: changes.add),
+        ),
       );
       for (var attempt = 0; attempt < 2; attempt++) {
         await _open(tester);
@@ -536,7 +552,7 @@ void main() {
       final focus = FocusNode();
       addTearDown(focus.dispose);
       await tester.pumpWidget(
-        _host(_picker(focusNode: focus, onChanged: changes.add)),
+        pickerHost(_picker(focusNode: focus, onChanged: changes.add)),
       );
       await _open(tester);
       await tester.tapAt(const Offset(1, 1));
@@ -560,7 +576,7 @@ void main() {
         late StateSetter update;
         final changes = <DateTime>[];
         await tester.pumpWidget(
-          _host(
+          pickerHost(
             StatefulBuilder(
               builder: (context, setState) {
                 update = setState;
@@ -595,7 +611,7 @@ void main() {
       var count = 0;
       late StateSetter update;
       await tester.pumpWidget(
-        _host(
+        pickerHost(
           StatefulBuilder(
             builder: (context, setState) {
               update = setState;
@@ -620,7 +636,7 @@ void main() {
       update(() => visible = true);
       await tester.pumpAndSettle();
       await _open(tester);
-      await tester.pumpWidget(_host(const SizedBox()));
+      await tester.pumpWidget(pickerHost(const SizedBox()));
       await tester.pumpAndSettle();
       expect(find.byType(RemixCalendar), findsNothing);
       expect(tester.takeException(), isNull);
@@ -633,7 +649,9 @@ void main() {
     final navigator = GlobalKey<NavigatorState>();
     final trigger = FocusNode();
     addTearDown(trigger.dispose);
-    await tester.pumpWidget(_host(const Text('Host'), navigatorKey: navigator));
+    await tester.pumpWidget(
+      pickerHost(const Text('Host'), navigatorKey: navigator),
+    );
     final result = showNakedDialog<void>(
       context: navigator.currentContext!,
       barrierColor: const Color(0x55000000),
@@ -649,7 +667,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('January'), findsNothing);
     expect(find.byType(RemixCalendar), findsOneWidget);
-    expect(_focusInside(RemixSelect<int>), isTrue);
+    expect(focusInside(RemixSelect<int>), isTrue);
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
     expect(find.byType(RemixCalendar), findsNothing);
@@ -669,7 +687,7 @@ void main() {
       final trigger = FocusNode();
       addTearDown(trigger.dispose);
       await tester.pumpWidget(
-        _host(
+        pickerHost(
           RemixPopover(
             controller: parent,
             popoverChild: _picker(focusNode: trigger),
@@ -700,13 +718,13 @@ void main() {
   testWidgets(
     'forward and reverse Tab contain focus in panel and leave day grid',
     (tester) async {
-      await tester.pumpWidget(_host(_picker()));
+      await tester.pumpWidget(pickerHost(_picker()));
       await _open(tester);
       final dayNode = FocusManager.instance.primaryFocus;
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
       await tester.pumpAndSettle();
       expect(FocusManager.instance.primaryFocus, isNot(dayNode));
-      expect(_focusInside(RemixCalendar), isTrue);
+      expect(focusInside(RemixCalendar), isTrue);
       await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
       await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
@@ -715,7 +733,7 @@ void main() {
       for (var i = 0; i < 12; i++) {
         await tester.sendKeyEvent(LogicalKeyboardKey.tab);
         await tester.pumpAndSettle();
-        expect(_focusInside(RemixCalendar), isTrue);
+        expect(focusInside(RemixCalendar), isTrue);
       }
     },
   );
@@ -734,7 +752,7 @@ void main() {
         addTearDown(tester.view.resetDevicePixelRatio);
         final changes = <DateTime>[];
         await tester.pumpWidget(
-          _host(
+          pickerHost(
             Align(
               alignment: Alignment.bottomRight,
               child: _picker(
@@ -749,7 +767,7 @@ void main() {
           ),
         );
         await _open(tester);
-        expect(_focusedDate(), DateTime(2024, 2, 29));
+        expect(focusedDate(), DateTime(2024, 2, 29));
         final panel = tester.getRect(find.byType(RemixCalendar));
         final day = tester.getRect(find.text('29'));
         expect(panel.left, greaterThanOrEqualTo(8));
@@ -760,7 +778,7 @@ void main() {
         expect(find.text('29').hitTestable(), findsOneWidget);
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
         await tester.pumpAndSettle();
-        expect(_focusedDate(), DateTime(2024, 2, 22));
+        expect(focusedDate(), DateTime(2024, 2, 22));
         expect(find.text('22').hitTestable(), findsOneWidget);
         await tester.sendKeyEvent(LogicalKeyboardKey.enter);
         await tester.pumpAndSettle();
@@ -783,7 +801,7 @@ void main() {
         StatefulBuilder(
           builder: (context, setState) {
             update = setState;
-            return _host(
+            return pickerHost(
               Align(alignment: Alignment.topCenter, child: _picker()),
               safeArea: const EdgeInsets.fromLTRB(25, 30, 20, 40),
               viewInsets: keyboard,
@@ -817,7 +835,7 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       await tester.pumpWidget(
-        _host(
+        pickerHost(
           SafeArea(
             child: Align(alignment: Alignment.topLeft, child: _picker()),
           ),
@@ -850,7 +868,7 @@ void main() {
         expect(panel.bottom, lessThanOrEqualTo(340));
         await tester.sendKeyEvent(LogicalKeyboardKey.escape);
         await tester.pumpAndSettle();
-        expect(_focusInside(RemixSelect<int>), isTrue);
+        expect(focusInside(RemixSelect<int>), isTrue);
         expect(find.byType(RemixCalendar), findsOneWidget);
       }
       expect(tester.takeException(), isNull);
@@ -866,7 +884,7 @@ void main() {
     tester.view.viewPadding = const FakeViewPadding(top: 80, bottom: 60);
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      _host(
+      pickerHost(
         SafeArea(
           child: Align(alignment: Alignment.topCenter, child: _picker()),
         ),
@@ -894,7 +912,7 @@ void main() {
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
         await tester.pumpWidget(
-          _host(
+          pickerHost(
             Align(
               alignment: Alignment.topCenter,
               child: RemixDatePicker(
@@ -934,7 +952,7 @@ void main() {
         addTearDown(tester.view.resetPhysicalSize);
         final outer = MenuController();
         await tester.pumpWidget(
-          _host(
+          pickerHost(
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
@@ -997,7 +1015,7 @@ void main() {
     (tester) async {
       const nestedKey = ValueKey('nested overlay');
       await tester.pumpWidget(
-        _host(
+        pickerHost(
           Align(
             alignment: Alignment.topLeft,
             child: Padding(

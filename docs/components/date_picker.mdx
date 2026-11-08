@@ -1,5 +1,5 @@
 ---
-title: DatePicker
+title: Date Picker
 description: A controlled single-date picker composed from Remix Button, Popover and Calendar.
 keywords: [flutter, remix, date picker, calendar, accessibility]
 ---
@@ -53,6 +53,9 @@ An `Overlay` ancestor is required. A routed `WidgetsApp` supplies one; use
   closes the picker, including reselecting the existing date.
 - The picker closes after a selection request even when the parent rejects it.
   There is no optimistic selected value or Apply/Cancel draft state.
+- `onOpen` fires when the popover opens and `onClose` when it has closed. A
+  completed selection calls `onChanged` before `onClose`; a dismissal calls
+  only `onClose`, so the two are distinguishable.
 - Escape and outside interaction dismiss without changing the value. Ordinary
   dismissal restores the original live trigger. Replacing a borrowed `focusNode`
   while open closes the picker; the application manages focus on its replacement.
@@ -69,7 +72,7 @@ An `Overlay` ancestor is required. A routed `WidgetsApp` supplies one; use
   the panel's inset protection.
 
 Clear the value by setting it to null in the parent. This button-only picker
-does not include a text parser, segmented field, range selection, or time input.
+does not include a text parser, segmented field or time input.
 
 ## Labels and presentation
 

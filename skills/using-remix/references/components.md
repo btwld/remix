@@ -124,11 +124,14 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   and closes even when rejected. Escape/outside/disable close without selection.
   Localize `semanticLabel` (purpose; the trigger's name), `placeholder`,
   `calendarLabels` (`fullDate` is the trigger's value, `noDate` when empty) and
-  optionally `formatDate` (painted text only). An Overlay ancestor is required. A view resize closes it;
-  keyboard and safe-area changes re-fit the open panel. Style children independently
-  with `buttonStyle`, `popoverStyle`, `calendarStyle`, `navigationStyle` and
-  `selectorStyle`; there is no DatePicker `style`/`styleSpec` or public controller.
-  Range, parsing and segmented entry are not supported.
+  optionally `formatDate` (painted text only). An Overlay ancestor is required.
+  A view resize closes it; keyboard and safe-area changes re-fit the open panel.
+  Style children independently with `buttonStyle`, `popoverStyle`,
+  `calendarStyle`, `navigationStyle` and `selectorStyle`; there is no DatePicker
+  `style`/`styleSpec` or public controller.
+  `onOpen`/`onClose` report the popover; a completed selection calls `onChanged`
+  before `onClose`, a dismissal only `onClose`. Parsing and segmented entry are
+  not supported.
 
 ## Data display
 
