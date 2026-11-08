@@ -4,7 +4,7 @@ import 'package:playground/range_calendar_reference.dart';
 import 'package:remix/remix.dart';
 
 final _calendar = find.byType(RemixRangeCalendar);
-NakedDateRange _range(int start, int end) => NakedDateRange(
+CivilDateRange _range(int start, int end) => CivilDateRange(
   start: DateTime(2026, 11, start),
   end: DateTime(2026, 11, end),
 );
@@ -30,7 +30,7 @@ Future<void> _tap(WidgetTester tester, Finder target) async {
   await tester.pumpAndSettle();
 }
 
-NakedDateRange? _value(WidgetTester tester) =>
+CivilDateRange? _value(WidgetTester tester) =>
     tester.widget<RemixRangeCalendar>(_calendar).value;
 
 void main() {

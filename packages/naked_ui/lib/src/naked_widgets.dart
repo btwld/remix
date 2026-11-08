@@ -3,7 +3,6 @@ export 'naked_button.dart';
 export 'naked_calendar.dart';
 export 'naked_checkbox.dart';
 export 'naked_combobox.dart';
-export 'naked_date_range.dart';
 export 'naked_dialog.dart';
 export 'naked_disclosure.dart';
 export 'naked_link.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'utilities/civil_date.dart';
+import 'civil_date.dart';
 
 /// An immutable complete inclusive range of civil Gregorian dates.
 ///
@@ -9,9 +9,9 @@ import 'utilities/civil_date.dart';
 /// fields are not scheduling instants; do not convert their timezones.
 /// Reversed construction throws in release mode as well as debug mode.
 @immutable
-class NakedDateRange {
+class CivilDateRange {
   /// Creates an ordered inclusive range. A same-day range is valid.
-  NakedDateRange({required DateTime start, required DateTime end})
+  CivilDateRange({required DateTime start, required DateTime end})
     : start = civilDate(start.year, start.month, start.day),
       end = civilDate(end.year, end.month, end.day) {
     if (compareCivilDates(this.start, this.end) > 0) {
@@ -34,7 +34,7 @@ class NakedDateRange {
 
   @override
   bool operator ==(Object other) =>
-      other is NakedDateRange &&
+      other is CivilDateRange &&
       compareCivilDates(start, other.start) == 0 &&
       compareCivilDates(end, other.end) == 0;
 
@@ -50,7 +50,7 @@ class NakedDateRange {
 
   @override
   String toString() =>
-      'NakedDateRange(start: ${_civil(start)}, end: ${_civil(end)})';
+      'CivilDateRange(start: ${_civil(start)}, end: ${_civil(end)})';
 }
 
 // ISO-style year-month-day, without the time or zone a DateTime would print.

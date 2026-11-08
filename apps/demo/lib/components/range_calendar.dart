@@ -16,7 +16,7 @@ class RangeCalendarExample extends StatefulWidget {
 }
 
 class _RangeCalendarExampleState extends State<RangeCalendarExample> {
-  NakedDateRange? _value = NakedDateRange(
+  CivilDateRange? _value = CivilDateRange(
     start: DateTime(2026, 11, 10),
     end: DateTime(2026, 11, 13),
   );

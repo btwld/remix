@@ -119,7 +119,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `onToday` and `onUnavailable` (predicate-rejected, in range; declare after
   `onDisabled`). No preset ships a calendar recipe yet; use
   `RemixCalendar(style: ...)`; `CalendarStyler` has no callable widget shorthand.
-- **[RangeCalendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx)** — controlled complete inclusive `NakedDateRange?`, sharing
+- **[RangeCalendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx)** — controlled complete inclusive `CivilDateRange?`, sharing
   Calendar navigation and day anatomy. First activation anchors locally without
   a callback; second eligible activation requests one ordered range and clears
   the draft. Every interior date must be available, including offscreen dates.

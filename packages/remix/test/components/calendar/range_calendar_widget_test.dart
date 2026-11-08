@@ -13,7 +13,7 @@ const _yellow = Color(0xffffcc22);
 const _red = Color(0xffdd2244);
 const _boundary = ValueKey('calendar pixels');
 
-NakedDateRange _range(int start, int end) => NakedDateRange(
+CivilDateRange _range(int start, int end) => CivilDateRange(
   start: DateTime(2024, 2, start),
   end: DateTime(2024, 2, end),
 );
@@ -45,11 +45,11 @@ Widget _host(
 );
 
 RemixRangeCalendar _calendar({
-  NakedDateRange? value,
+  CivilDateRange? value,
   CalendarStyler style = const CalendarStyler.create(),
   CalendarSpec? styleSpec,
   FocusNode? focusNode,
-  ValueChanged<NakedDateRange>? onChanged,
+  ValueChanged<CivilDateRange>? onChanged,
   RemixCalendarLabels labels = const RemixCalendarLabels(),
   RemixRangeCalendarLabels rangeLabels = const RemixRangeCalendarLabels(),
   bool Function(DateTime)? isDateUnavailable,
@@ -294,7 +294,7 @@ void main() {
     (tester) async {
       final semantics = tester.ensureSemantics();
       try {
-        final requests = <NakedDateRange>[];
+        final requests = <CivilDateRange>[];
         await tester.pumpWidget(
           _host(_calendar(value: _range(10, 12), onChanged: requests.add)),
         );

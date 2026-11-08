@@ -7,7 +7,7 @@ keywords: [flutter, remix, calendar, date range, accessibility]
 `RemixRangeCalendar` lets people choose a complete inclusive date range in one
 Gregorian calendar. It reuses Calendar navigation, day interaction and styling;
 it is not two independently selected dates. The application owns the committed
-`NakedDateRange?`; the calendar retains only an unfinished selection anchor.
+`CivilDateRange?`; the calendar retains only an unfinished selection anchor.
 
 ## Basic usage
 
@@ -23,7 +23,7 @@ class ReportingPeriod extends StatefulWidget {
 }
 
 class _ReportingPeriodState extends State<ReportingPeriod> {
-  NakedDateRange? period;
+  CivilDateRange? period;
 
   @override
   Widget build(BuildContext context) => RemixRangeCalendar(
@@ -58,7 +58,7 @@ anchor again requests a one-day range. No partial value reaches the callback.
 If the parent rejects a request by leaving `value` unchanged, that supplied range
 remains selected; there is no optimistic local committed value.
 
-`NakedDateRange(start: ..., end: ...)` normalizes the civil year/month/day fields
+`CivilDateRange(start: ..., end: ...)` normalizes the civil year/month/day fields
 to local dates where representable, with a UTC date-only fallback for skipped
 local days. It ignores input times and UTC flags and rejects reversed construction
 in release mode. Treat the preserved fields as civil dates without timezone conversion. Equality and hashing compare civil endpoints.
@@ -208,10 +208,10 @@ import 'package:remix/remix.dart';
 
 RemixRangeCalendar remixRangeCalendarConstructor({
   Key? key,
-  required NakedDateRange? value,
+  required CivilDateRange? value,
   required DateTime firstDate,
   required DateTime lastDate,
-  ValueChanged<NakedDateRange>? onChanged,
+  ValueChanged<CivilDateRange>? onChanged,
   DateTime? currentDate,
   bool Function(DateTime)? isDateUnavailable,
   int firstDayOfWeek = DateTime.sunday,
@@ -234,7 +234,7 @@ RemixRangeCalendar remixRangeCalendarConstructor({
 ## Properties
 ### Widget Properties
 
-#### `value` → `NakedDateRange?`
+#### `value` → `CivilDateRange?`
 
 **Required**. Parent-owned complete inclusive range, compared by civil fields.
 Null shows no selection. Invalid values remain selected without correction.
@@ -244,7 +244,7 @@ Null shows no selection. Invalid values remain selected without correction.
 **Required**. Inclusive bounds; times and UTC flags are ignored. `firstDate`
 must be on or before `lastDate`.
 
-#### `onChanged` → `ValueChanged<NakedDateRange>?`
+#### `onChanged` → `ValueChanged<CivilDateRange>?`
 
 Optional. Requests one complete range. The parent accepts it by updating `value`.
 Null disables interaction.

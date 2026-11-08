@@ -93,7 +93,7 @@ class RemixRangeCalendar extends StatelessWidget {
   /// Parent-owned complete inclusive range, compared by civil fields.
   ///
   /// It is never clamped or corrected; an invalid value stays selected.
-  final NakedDateRange? value;
+  final CivilDateRange? value;
 
   /// Inclusive earliest selectable date; time and UTC flag are ignored.
   final DateTime firstDate;
@@ -104,7 +104,7 @@ class RemixRangeCalendar extends StatelessWidget {
   /// Requests one complete range. Null disables the calendar.
   ///
   /// The parent decides whether to accept it by updating [value].
-  final ValueChanged<NakedDateRange>? onChanged;
+  final ValueChanged<CivilDateRange>? onChanged;
 
   /// Today, for the `onToday` variant and fallback focus; defaults to now.
   final DateTime? currentDate;

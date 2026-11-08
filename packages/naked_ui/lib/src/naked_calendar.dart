@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
-import 'naked_date_range.dart';
 import 'utilities/civil_date.dart';
+import 'utilities/civil_date_range.dart';
 import 'utilities/focus_in_view.dart';
 import 'utilities/naked_focusable_detector.dart';
 import 'utilities/naked_state_scope.dart';
@@ -199,13 +199,13 @@ class NakedRangeCalendarState extends NakedState {
   final DateTime focusedDate;
 
   /// Parent-owned complete inclusive range, never clamped or corrected.
-  final NakedDateRange? value;
+  final CivilDateRange? value;
 
   /// First activated date of an incomplete local draft.
   final DateTime? anchor;
 
   /// Ordered interval from [anchor] to [focusedDate], or null without a draft.
-  final NakedDateRange? preview;
+  final CivilDateRange? preview;
 
   /// Whether [preview] can complete under the current bounds and availability.
   final bool isPreviewValid;
@@ -299,7 +299,7 @@ class NakedRangeCalendar extends StatelessWidget {
   });
 
   /// Parent-owned complete range. Invalid external values are retained.
-  final NakedDateRange? value;
+  final CivilDateRange? value;
 
   /// Inclusive earliest date; time and UTC flag are ignored.
   final DateTime firstDate;
@@ -308,7 +308,7 @@ class NakedRangeCalendar extends StatelessWidget {
   final DateTime lastDate;
 
   /// Complete-range request. Null disables all interaction.
-  final ValueChanged<NakedDateRange>? onChanged;
+  final ValueChanged<CivilDateRange>? onChanged;
 
   /// Today marker and initial fallback date; defaults to DateTime.now().
   final DateTime? currentDate;
@@ -383,11 +383,11 @@ class _Calendar extends StatefulWidget {
   });
 
   final DateTime? value;
-  final NakedDateRange? rangeValue;
+  final CivilDateRange? rangeValue;
   final DateTime firstDate;
   final DateTime lastDate;
   final ValueChanged<DateTime>? onChanged;
-  final ValueChanged<NakedDateRange>? onRangeChanged;
+  final ValueChanged<CivilDateRange>? onRangeChanged;
   final DateTime? currentDate;
   final bool Function(DateTime)? isDateUnavailable;
   final int firstDayOfWeek;
@@ -413,7 +413,7 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
   /// moved the selection elsewhere, so browsing stays on the completed end.
   /// Retain it until navigation, a new draft, a changed supplied value, or loss
   /// of interactivity (`enabled: false` or a null callback), not just one frame.
-  NakedDateRange? _requested;
+  CivilDateRange? _requested;
   DateTime? _blockedBefore;
   DateTime? _blockedAfter;
   // Availability scans around the draft anchor are cached across internal
@@ -476,12 +476,12 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
               (_blockedAfter == null ||
                   compareCivilDates(date, _blockedAfter!) < 0));
 
-  NakedDateRange _range(DateTime a, DateTime b) => compareCivilDates(a, b) <= 0
-      ? NakedDateRange(start: a, end: b)
-      : NakedDateRange(start: b, end: a);
+  CivilDateRange _range(DateTime a, DateTime b) => compareCivilDates(a, b) <= 0
+      ? CivilDateRange(start: a, end: b)
+      : CivilDateRange(start: b, end: a);
 
   // Set by build, read by this build's days.
-  NakedDateRange? _preview;
+  CivilDateRange? _preview;
 
   NakedRangePosition _rangePosition(DateTime date) {
     final interval = _preview ?? (widget.isRange ? widget.rangeValue : null);
@@ -500,7 +500,7 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
 
   bool _inPreview(DateTime date) => _preview?.contains(date) ?? false;
 
-  bool _validRange(NakedDateRange range) {
+  bool _validRange(CivilDateRange range) {
     if (!_inBounds(range.start) || !_inBounds(range.end)) return false;
     if (widget.isDateUnavailable == null) return true;
     var date = range.start;

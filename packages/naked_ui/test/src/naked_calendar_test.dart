@@ -744,7 +744,7 @@ void main() {
       await tester.pumpWidget(
         _host(
           NakedRangeCalendar(
-            value: NakedDateRange(
+            value: CivilDateRange(
               start: DateTime(2024, 2, 10),
               end: DateTime(2024, 2, 12),
             ),

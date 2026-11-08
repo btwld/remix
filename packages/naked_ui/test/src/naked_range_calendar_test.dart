@@ -34,16 +34,16 @@ class _Harness extends StatefulWidget {
 }
 
 class _HarnessState extends State<_Harness> {
-  NakedDateRange? value;
+  CivilDateRange? value;
   DateTime first = DateTime(2023, 1, 1, 20);
   DateTime last = DateTime.utc(2026, 12, 31);
   bool enabled = true;
   bool callback = true;
   int firstDay = DateTime.monday;
   bool Function(DateTime)? unavailable;
-  final requests = <NakedDateRange>[];
+  final requests = <CivilDateRange>[];
   bool accept = false;
-  void Function(NakedDateRange)? onRequest;
+  void Function(CivilDateRange)? onRequest;
   int escapes = 0;
   final entry = FocusNode(debugLabel: 'calendar entry');
   final before = FocusNode(debugLabel: 'before');
@@ -169,7 +169,7 @@ Future<void> _key(WidgetTester tester, LogicalKeyboardKey key) async {
 Finder _day(int day) =>
     find.byWidgetPredicate((w) => w is NakedCalendarDay && w.date.day == day);
 
-NakedDateRange _range(int start, int end) => NakedDateRange(
+CivilDateRange _range(int start, int end) => CivilDateRange(
   start: DateTime(2024, 2, start),
   end: DateTime(2024, 2, end),
 );
@@ -357,13 +357,13 @@ void main() {
 
   Future<
     ({
-      List<NakedDateRange> requests,
+      List<CivilDateRange> requests,
       Map<int, NakedCalendarDayState> days,
       VoidCallback rebuild,
     })
   >
   skippedMonth(WidgetTester tester, bool Function(DateTime) unavailable) async {
-    final requests = <NakedDateRange>[];
+    final requests = <CivilDateRange>[];
     final days = <int, NakedCalendarDayState>{};
     late StateSetter setState;
     await tester.pumpWidget(
@@ -556,7 +556,7 @@ void main() {
       state.snapshot.showMonth!(DateTime(2024, 3));
       await tester.pumpAndSettle();
       state.change(
-        () => state.value = NakedDateRange(
+        () => state.value = CivilDateRange(
           start: DateTime.utc(2024, 2, 20, 23),
           end: DateTime(2024, 2, 22, 18),
         ),
@@ -605,7 +605,7 @@ void main() {
       await _key(tester, LogicalKeyboardKey.arrowRight);
       await _key(tester, LogicalKeyboardKey.enter);
       expect(state.requests, [
-        NakedDateRange(start: DateTime(2024, 3), end: DateTime(2024, 3, 2)),
+        CivilDateRange(start: DateTime(2024, 3), end: DateTime(2024, 3, 2)),
       ]);
     },
   );
@@ -779,7 +779,7 @@ void main() {
       expect(state.snapshot.focusedDate, DateTime(2024, 3));
       expect(
         state.snapshot.preview,
-        NakedDateRange(start: DateTime(2024, 2, 29), end: DateTime(2024, 3)),
+        CivilDateRange(start: DateTime(2024, 2, 29), end: DateTime(2024, 3)),
       );
       await _key(tester, LogicalKeyboardKey.home);
       expect(state.snapshot.focusedDate, DateTime(2024, 2, 26));
@@ -844,7 +844,7 @@ void main() {
         expect(state.snapshot.focusedDate, DateTime(2024, 3, 28));
         await _key(tester, LogicalKeyboardKey.enter);
         expect(state.requests, [
-          NakedDateRange(
+          CivilDateRange(
             start: DateTime(2024, 2, 28),
             end: DateTime(2024, 3, 28),
           ),
@@ -881,7 +881,7 @@ void main() {
       await _tap(tester, 20);
       await _key(tester, LogicalKeyboardKey.pageDown);
       await _tap(tester, 3);
-      final requested = NakedDateRange(
+      final requested = CivilDateRange(
         start: DateTime(2024, 2, 20),
         end: DateTime(2024, 3, 3),
       );
@@ -913,7 +913,7 @@ void main() {
         await _tap(tester, 20);
         await _key(tester, LogicalKeyboardKey.pageDown);
         await _tap(tester, 3);
-        final requested = NakedDateRange(
+        final requested = CivilDateRange(
           start: DateTime(2024, 2, 20),
           end: DateTime(2024, 3, 3),
         );
@@ -976,7 +976,7 @@ void main() {
       await _key(tester, LogicalKeyboardKey.enter);
       expect(state.snapshot.displayedMonth, DateTime(2024, 3));
       state.change(
-        () => state.value = NakedDateRange(
+        () => state.value = CivilDateRange(
           start: DateTime(2024, 6, 3),
           end: DateTime(2024, 6, 5),
         ),
@@ -994,7 +994,7 @@ void main() {
       final state = await _pump(tester);
       // The parent snaps the requested range to the start of the end month.
       state.onRequest = (range) => state.change(
-        () => state.value = NakedDateRange(
+        () => state.value = CivilDateRange(
           start: DateTime(range.end.year, range.end.month),
           end: range.end,
         ),
@@ -1006,7 +1006,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         state.value,
-        NakedDateRange(start: DateTime(2024, 3), end: DateTime(2024, 3, 20)),
+        CivilDateRange(start: DateTime(2024, 3), end: DateTime(2024, 3, 20)),
       );
       expect(state.snapshot.displayedMonth, DateTime(2024, 3));
       expect(state.snapshot.focusedDate, DateTime(2024, 3));
@@ -1103,7 +1103,7 @@ void main() {
       state.change(() {
         state.first = DateTime(1900);
         state.last = DateTime(2100, 12, 31);
-        state.value = NakedDateRange(
+        state.value = CivilDateRange(
           start: DateTime(1924, 2, 15),
           end: DateTime(2024, 2, 15),
         );
@@ -1136,7 +1136,7 @@ void main() {
       await _tap(tester, 15);
       expect(
         state.requests.single,
-        NakedDateRange(
+        CivilDateRange(
           start: DateTime(1924, 2, 15),
           end: DateTime(2024, 2, 15),
         ),

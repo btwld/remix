@@ -48,7 +48,7 @@ class RangeCalendarReferencePage extends StatefulWidget {
 
 class _RangeCalendarReferencePageState
     extends State<RangeCalendarReferencePage> {
-  NakedDateRange? _value = NakedDateRange(
+  CivilDateRange? _value = CivilDateRange(
     start: DateTime(2026, 11, 10),
     end: DateTime(2026, 11, 13),
   );
@@ -61,7 +61,7 @@ class _RangeCalendarReferencePageState
   @override
   Widget build(BuildContext context) {
     final labels = _arabic ? _arabicLabels : const RemixCalendarLabels();
-    String formatRange(NakedDateRange range) =>
+    String formatRange(CivilDateRange range) =>
         '${labels.day(range.start)} ${labels.month(range.start.month)} – ${labels.day(range.end)} ${labels.month(range.end.month)} ${labels.year(range.end.year)}';
     return Directionality(
       textDirection: _arabic ? TextDirection.rtl : TextDirection.ltr,

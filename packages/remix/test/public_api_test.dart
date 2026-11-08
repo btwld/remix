@@ -49,7 +49,7 @@ void main() {
   test(
     'range calendar API and day variants are exported through the barrel',
     () {
-      final range = NakedDateRange(
+      final range = CivilDateRange(
         start: DateTime(2024),
         end: DateTime(2024, 2),
       );
