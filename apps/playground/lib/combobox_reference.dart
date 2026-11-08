@@ -49,6 +49,17 @@ const _destinations = [
   'São Paulo, São Paulo · Brazil',
 ];
 
+const _arabicDestinations = [
+  'سان فرانسيسكو، كاليفورنيا · الولايات المتحدة',
+  'سان سيباستيان، إقليم الباسك · إسبانيا',
+  'سان ميغيل دي أليندي، غواناخواتو · المكسيك',
+  'سانتا كروث دي تينيريفه، جزر الكناري · إسبانيا',
+  'سانتياغو دي كومبوستيلا، غاليسيا · إسبانيا',
+  'سانتو دومينغو، المقاطعة الوطنية · جمهورية الدومينيكان',
+  'سانتا باربرا، كاليفورنيا · الولايات المتحدة',
+  'سان خوسيه، الوادي الأوسط · كوستاريكا',
+];
+
 class _DestinationSearch extends StatefulWidget {
   const _DestinationSearch();
   @override
@@ -70,7 +81,7 @@ class _DestinationSearchState extends State<_DestinationSearch> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'FIELD NOTES / TRAVEL',
+                _rtl ? 'ملاحظات الرحلة / سفر' : 'FIELD NOTES / TRAVEL',
                 style: TextStyle(
                   fontSize: 12,
                   letterSpacing: 2,
@@ -79,7 +90,7 @@ class _DestinationSearchState extends State<_DestinationSearch> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Find your next stop.',
+                _rtl ? 'اكتشف وجهتك القادمة.' : 'Find your next stop.',
                 style: TextStyle(
                   fontSize: 36,
                   height: 1.15,
@@ -88,45 +99,57 @@ class _DestinationSearchState extends State<_DestinationSearch> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Explore a city, then make it yours. Type “san” to browse destinations.',
+                _rtl
+                    ? 'استكشف مدينة واجعلها وجهتك. اكتب «سان» لتصفّح الوجهات.'
+                    : 'Explore a city, then make it yours. Type “san” to browse destinations.',
               ),
               const SizedBox(height: 32),
               PlaygroundCombobox<String>(
                 label: _rtl ? 'الوجهة' : 'Destination',
-                hintText: 'Search cities',
+                hintText: _rtl ? 'ابحث عن مدينة' : 'Search cities',
                 optionsBuilder: (query) => query.text.isEmpty
                     ? const Iterable<String>.empty()
-                    : _destinations.where(
+                    : (_rtl ? _arabicDestinations : _destinations).where(
                         (city) => city.toLowerCase().contains(
                           query.text.toLowerCase(),
                         ),
                       ),
                 onSelected: (city) => setState(() => _picked = city),
               ),
-              const SizedBox(height: 24),
+              // Reserve the open panel's 320px bound plus a helper gap at
+              // large text sizes; the recipe should not own page layout.
+              const SizedBox(height: _large ? 352 : 24),
               Semantics(
                 liveRegion: true,
                 child: Text(
                   _picked == null
-                      ? 'Your next destination is waiting.'
-                      : 'Selected: $_picked',
+                      ? (_rtl
+                            ? 'وجهتك القادمة بانتظارك.'
+                            : 'Your next destination is waiting.')
+                      : (_rtl
+                            ? 'الوجهة المختارة: $_picked'
+                            : 'Selected: $_picked'),
                 ),
               ),
               const SizedBox(height: 36),
               const Text(
-                'Saved itinerary',
+                _rtl ? 'خطة الرحلة المحفوظة' : 'Saved itinerary',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 12),
               PlaygroundCombobox<String>(
-                label: 'Destination locked',
-                hintText: 'Unlock your itinerary to edit',
+                label: _rtl ? 'الوجهة مقفلة' : 'Destination locked',
+                hintText: _rtl
+                    ? 'افتح خطة الرحلة للتعديل'
+                    : 'Unlock your itinerary to edit',
                 enabled: false,
                 optionsBuilder: (_) => const [],
               ),
               const SizedBox(height: 24),
               const Text(
-                'Use ↑ and ↓ to explore. Enter chooses a city. Escape keeps your search.',
+                _rtl
+                    ? 'استخدم ↑ و↓ للاستكشاف. Enter يختار المدينة وEscape يحتفظ بالبحث.'
+                    : 'Use ↑ and ↓ to explore. Enter chooses a city. Escape keeps your search.',
                 style: TextStyle(fontSize: 13, height: 1.5),
               ),
             ],
