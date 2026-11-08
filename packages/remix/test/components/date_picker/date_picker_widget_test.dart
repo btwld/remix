@@ -880,8 +880,8 @@ void main() {
   ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(800, 600);
-    tester.view.padding = const FakeViewPadding(top: 80, bottom: 60);
-    tester.view.viewPadding = const FakeViewPadding(top: 80, bottom: 60);
+    tester.view.padding = const FakeViewPadding(bottom: 20);
+    tester.view.viewPadding = const FakeViewPadding(bottom: 20);
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       pickerHost(
@@ -891,15 +891,16 @@ void main() {
       ),
     );
     await _open(tester);
-    // The SafeArea above the anchor consumes this change; the panel is
-    // placed in the Overlay, whose media still reports it.
-    tester.view.padding = const FakeViewPadding(top: 140, bottom: 60);
-    tester.view.viewPadding = const FakeViewPadding(top: 140, bottom: 60);
+    expect(tester.getRect(find.byType(RemixCalendar)).bottom, greaterThan(200));
+    // SafeArea consumes this change at the anchor. The panel must re-read
+    // the Overlay media instead of retaining the exclusions from opening.
+    tester.view.padding = const FakeViewPadding(bottom: 400);
+    tester.view.viewPadding = const FakeViewPadding(bottom: 400);
     await tester.pumpAndSettle();
     expect(find.byType(RemixCalendar), findsOneWidget);
     final panel = tester.getRect(find.byType(RemixCalendar));
-    expect(panel.top, greaterThanOrEqualTo(148));
-    expect(panel.bottom, lessThanOrEqualTo(532));
+    expect(panel.top, greaterThanOrEqualTo(8));
+    expect(panel.bottom, lessThanOrEqualTo(192));
     expect(tester.takeException(), isNull);
   });
 

@@ -189,9 +189,13 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
     final overlay = overlayState?.context.findRenderObject();
     // The anchor can be inside SafeArea, whose MediaQuery has consumed padding.
     // The panel is placed in Overlay coordinates, so use that Overlay's media.
-    final media = overlayState == null
+    final mediaElement = overlayState?.context
+        .getElementForInheritedWidgetOfExactType<MediaQuery>();
+    // Listen from this panel, not the Overlay context: SafeArea can consume
+    // an inset update without otherwise rebuilding the open panel.
+    final media = mediaElement == null
         ? null
-        : MediaQuery.maybeOf(overlayState.context);
+        : (context.dependOnInheritedElement(mediaElement) as MediaQuery).data;
     if (media == null || overlay is! RenderBox) return config;
     // Keyboard and safe areas overlap, rather than occupying adjacent bands.
     final left = math.max(media.viewPadding.left, media.viewInsets.left);
