@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
-import 'date_picker_test_helpers.dart';
+import '../../helpers/date_picker_test_helpers.dart';
 
 RemixDatePicker _picker({
   DateTime? value,
