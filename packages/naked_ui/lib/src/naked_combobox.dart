@@ -546,8 +546,9 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   }
 
   void _handleMount() {
-    if (!mounted || !widget.enabled || _suppressCachedOptions || _isOpen)
+    if (!mounted || !widget.enabled || _suppressCachedOptions || _isOpen) {
       return;
+    }
     setState(() => _isOpen = true);
     widget.onOpen?.call();
   }
