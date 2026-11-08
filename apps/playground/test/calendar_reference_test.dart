@@ -44,6 +44,26 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
 }
 
 void main() {
+  testWidgets('Arabic empty picker announces localized noDate', (tester) async {
+    final semantics = tester.ensureSemantics();
+    try {
+      await _pump(tester);
+      await _tap(tester, find.text('العربية / RTL'));
+      await _tap(tester, find.text('Clear selection'));
+      expect(
+        tester.widget<RemixDatePicker>(_picker).calendarLabels.noDate,
+        'لم يتم اختيار تاريخ',
+      );
+      expect(
+        tester.getSemantics(_trigger).getSemanticsData().value,
+        'لم يتم اختيار تاريخ',
+      );
+      expect(tester.takeException(), isNull);
+    } finally {
+      semantics.dispose();
+    }
+  });
+
   testWidgets('Clear selection empties the picker and inline calendar', (
     tester,
   ) async {
