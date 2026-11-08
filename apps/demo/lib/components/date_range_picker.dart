@@ -17,7 +17,7 @@ class DateRangePickerExample extends StatefulWidget {
 }
 
 class _DateRangePickerExampleState extends State<DateRangePickerExample> {
-  NakedDateRange? _value = NakedDateRange(
+  CivilDateRange? _value = CivilDateRange(
     start: DateTime(2026, 11, 10),
     end: DateTime(2026, 11, 13),
   );

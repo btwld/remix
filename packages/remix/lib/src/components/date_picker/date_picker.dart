@@ -4,7 +4,7 @@ library remix_date_picker;
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart'
-    show NakedDateRange, OverlayPositionConfig, isSameCivilDate;
+    show CivilDateRange, OverlayPositionConfig, isSameCivilDate;
 
 import '../button/button.dart';
 import '../calendar/calendar.dart';

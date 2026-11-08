@@ -150,7 +150,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   before `onClose`, a dismissal only `onClose`. Parsing and segmented entry are
   not supported; use DateRangePicker for ranges.
 - **DateRangePicker** — Button + Popover + RangeCalendar with a controlled
-  `NakedDateRange?`. First activation anchors without closing; second eligible
+  `CivilDateRange?`. First activation anchors without closing; second eligible
   activation requests a complete range and closes even on parent rejection.
   Every reopening starts a fresh draft. An Overlay ancestor is required.
   Localize `semanticLabel` (purpose; the trigger's name), `placeholder`,

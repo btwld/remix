@@ -48,7 +48,7 @@ class RemixDateRangePicker extends StatelessWidget {
 
   /// Parent-owned complete inclusive range, or null for an empty selection.
   /// Civil-date comparison and bounds follow [RemixRangeCalendar].
-  final NakedDateRange? value;
+  final CivilDateRange? value;
 
   /// Inclusive earliest selectable civil date; time and UTC flag are ignored.
   final DateTime firstDate;
@@ -57,7 +57,7 @@ class RemixDateRangePicker extends StatelessWidget {
   final DateTime lastDate;
 
   /// Complete-range request. Null disables the trigger and calendar.
-  final ValueChanged<NakedDateRange>? onChanged;
+  final ValueChanged<CivilDateRange>? onChanged;
 
   /// Called when the picker's popover opens.
   final VoidCallback? onOpen;
@@ -95,7 +95,7 @@ class RemixDateRangePicker extends StatelessWidget {
   /// [calendarLabels] is localized. Provide this callback for locale-specific
   /// range grammar. It only changes what is painted, never the accessible
   /// value.
-  final String Function(NakedDateRange)? formatRange;
+  final String Function(CivilDateRange)? formatRange;
 
   /// Caller-owned date labels and formatters; English by default.
   final RemixCalendarLabels calendarLabels;
@@ -155,7 +155,7 @@ class RemixDateRangePicker extends StatelessWidget {
                   ? calendarLabels.fullDate(value.start)
                   : '${calendarLabels.fullDate(value.start)} – '
                         '${calendarLabels.fullDate(value.end)}');
-    return _DatePickerHost<NakedDateRange>(
+    return _DatePickerHost<CivilDateRange>(
       enabled: enabled,
       onChanged: onChanged,
       onOpen: onOpen,

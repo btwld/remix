@@ -6,7 +6,7 @@ keywords: [flutter, remix, date range picker, calendar, accessibility]
 
 `RemixDateRangePicker` composes Button, Popover and
 [RangeCalendar](/components/range_calendar). The application owns one complete
-inclusive `NakedDateRange?`; the open calendar owns only its unfinished draft.
+inclusive `CivilDateRange?`; the open calendar owns only its unfinished draft.
 Use RangeCalendar directly when dates should remain visible inline.
 
 ## Basic usage
@@ -23,7 +23,7 @@ class ReportingPeriodPicker extends StatefulWidget {
 }
 
 class _ReportingPeriodPickerState extends State<ReportingPeriodPicker> {
-  NakedDateRange? period;
+  CivilDateRange? period;
 
   @override
   Widget build(BuildContext context) => RemixDateRangePicker(
@@ -130,10 +130,10 @@ import 'package:remix/remix.dart';
 
 RemixDateRangePicker remixDateRangePickerConstructor({
   Key? key,
-  required NakedDateRange? value,
+  required CivilDateRange? value,
   required DateTime firstDate,
   required DateTime lastDate,
-  ValueChanged<NakedDateRange>? onChanged,
+  ValueChanged<CivilDateRange>? onChanged,
   VoidCallback? onOpen,
   VoidCallback? onClose,
   DateTime? currentDate,
@@ -142,7 +142,7 @@ RemixDateRangePicker remixDateRangePickerConstructor({
   bool enabled = true,
   String semanticLabel = 'Choose date range',
   String placeholder = 'Select date range',
-  String Function(NakedDateRange)? formatRange,
+  String Function(CivilDateRange)? formatRange,
   RemixCalendarLabels calendarLabels = const RemixCalendarLabels(),
   FocusNode? focusNode,
   bool autofocus = false,
@@ -165,7 +165,7 @@ RemixDateRangePicker remixDateRangePickerConstructor({
 
 ### Widget Properties
 
-#### `value` → `NakedDateRange?`
+#### `value` → `CivilDateRange?`
 
 **Required**. Parent-owned selected date range, or null for an empty selection. Civil-date bounds follow the calendar contract.
 
@@ -173,7 +173,7 @@ RemixDateRangePicker remixDateRangePickerConstructor({
 
 **Required**. Inclusive civil-date bounds; firstDate must be on or before lastDate.
 
-#### `onChanged` → `ValueChanged<NakedDateRange>?`
+#### `onChanged` → `ValueChanged<CivilDateRange>?`
 
 Requests one complete date range and closes even if the parent rejects it. Null disables the picker.
 
@@ -205,7 +205,7 @@ Accessible field purpose. Defaults to Choose date range.
 
 Visible empty text. Defaults to Select date range.
 
-#### `formatRange` → `String Function(NakedDateRange)?`
+#### `formatRange` → `String Function(CivilDateRange)?`
 
 Visible selected text only; accessible values use the full localized calendar labels.
 

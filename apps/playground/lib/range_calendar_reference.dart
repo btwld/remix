@@ -277,7 +277,7 @@ class _RangeCalendarReferencePageState
   bool _isUnavailable(DateTime date) =>
       date.year == 2026 && date.month == 11 && date.day == 18;
 
-  void _select(NakedDateRange next) => setState(() {
+  void _select(CivilDateRange next) => setState(() {
     if (_reject) {
       _message = _arabic
           ? 'لم تُقبل الفترة الجديدة. بقيت الفترة السابقة.'

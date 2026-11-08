@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:playground/range_calendar_reference.dart';
 import 'package:remix/remix.dart';
 
-NakedDateRange _range(int start, int end) => NakedDateRange(
+CivilDateRange _range(int start, int end) => CivilDateRange(
   start: DateTime(2026, 11, start),
   end: DateTime(2026, 11, end),
 );
@@ -32,7 +32,7 @@ Future<void> _tap(WidgetTester tester, Finder target) async {
 Finder get _picker => find.byType(RemixDateRangePicker);
 Finder get _trigger =>
     find.descendant(of: _picker, matching: find.byType(RemixButton));
-NakedDateRange? _value(WidgetTester tester) =>
+CivilDateRange? _value(WidgetTester tester) =>
     tester.widget<RemixDateRangePicker>(_picker).value;
 
 void main() {

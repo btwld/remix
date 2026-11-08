@@ -49,7 +49,7 @@ void main() {
   test(
     'date range picker is constructible through package barrel without controller',
     () {
-      final range = NakedDateRange(
+      final range = CivilDateRange(
         start: DateTime(2024),
         end: DateTime(2024, 2),
       );

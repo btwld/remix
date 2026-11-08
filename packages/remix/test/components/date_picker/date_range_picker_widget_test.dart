@@ -15,18 +15,18 @@ Finder _summary(String text) =>
     find.bySemanticsLabel(RegExp(RegExp.escape(text)));
 
 RemixDateRangePicker _picker({
-  NakedDateRange? value,
+  CivilDateRange? value,
   DateTime? firstDate,
   DateTime? lastDate,
   DateTime? currentDate,
-  ValueChanged<NakedDateRange>? onChanged,
+  ValueChanged<CivilDateRange>? onChanged,
   VoidCallback? onClose,
   FocusNode? focusNode,
   bool enabled = true,
   bool Function(DateTime)? isDateUnavailable,
   String semanticLabel = 'Booking dates',
   String placeholder = 'Select range',
-  String Function(NakedDateRange)? formatRange,
+  String Function(CivilDateRange)? formatRange,
   RemixCalendarLabels calendarLabels = const RemixCalendarLabels(),
   RemixRangeCalendarLabels rangeLabels = const RemixRangeCalendarLabels(),
   ButtonStyler buttonStyle = const ButtonStyler.create(),
@@ -73,7 +73,7 @@ SemanticsNode _semantics(WidgetTester tester, int day) => tester.getSemantics(
       .first,
 );
 
-NakedDateRange _range(int start, int end) => NakedDateRange(
+CivilDateRange _range(int start, int end) => CivilDateRange(
   start: DateTime(2024, 2, start),
   end: DateTime(2024, 2, end),
 );
@@ -134,7 +134,7 @@ void main() {
       'queued range completion is ignored after ${reopen ? 'reopen' : 'dismissal'}',
       (tester) async {
         final semantics = tester.ensureSemantics();
-        final requests = <NakedDateRange>[];
+        final requests = <CivilDateRange>[];
         try {
           await tester.pumpWidget(pickerHost(_picker(onChanged: requests.add)));
           await _open(tester);
@@ -169,7 +169,7 @@ void main() {
   ) async {
     late SemanticsNode trigger;
     final semantics = tester.ensureSemantics();
-    final requests = <NakedDateRange>[];
+    final requests = <CivilDateRange>[];
     try {
       await tester.pumpWidget(
         pickerHost(
@@ -206,7 +206,7 @@ void main() {
       final textFocus = FocusNode();
       addTearDown(text.dispose);
       addTearDown(textFocus.dispose);
-      final requests = <NakedDateRange>[];
+      final requests = <CivilDateRange>[];
       await tester.pumpWidget(
         pickerHost(
           Column(
@@ -348,7 +348,7 @@ void main() {
     testWidgets(
       '$kind first release anchors and second release completes; cancel never selects',
       (tester) async {
-        final requests = <NakedDateRange>[];
+        final requests = <CivilDateRange>[];
         await tester.pumpWidget(pickerHost(_picker(onChanged: requests.add)));
         await _open(tester);
         final first = await tester.startGesture(
@@ -391,7 +391,7 @@ void main() {
       var value = _range(10, 12);
       var accept = false;
       late StateSetter update;
-      final requests = <NakedDateRange>[];
+      final requests = <CivilDateRange>[];
       await tester.pumpWidget(
         pickerHost(
           StatefulBuilder(
@@ -434,7 +434,7 @@ void main() {
     'real semantic focus/tap shares two-step selection; unavailable interior keeps session open',
     (tester) async {
       await withSemantics(tester, () async {
-        final requests = <NakedDateRange>[];
+        final requests = <CivilDateRange>[];
         await tester.pumpWidget(
           pickerHost(
             _picker(
@@ -475,7 +475,7 @@ void main() {
   testWidgets(
     'cross-month keyboard draft navigates without callback and completes once',
     (tester) async {
-      final requests = <NakedDateRange>[];
+      final requests = <CivilDateRange>[];
       await tester.pumpWidget(
         pickerHost(_picker(value: _range(28, 29), onChanged: requests.add)),
       );
@@ -486,7 +486,7 @@ void main() {
       expect(requests, isEmpty);
       await pressKey(tester, LogicalKeyboardKey.space);
       expect(requests, [
-        NakedDateRange(
+        CivilDateRange(
           start: DateTime(2024, 2, 28),
           end: DateTime(2024, 3, 28),
         ),
@@ -498,7 +498,7 @@ void main() {
   testWidgets(
     'same-frame close/open starts a fresh draft at the original month',
     (tester) async {
-      final requests = <NakedDateRange>[];
+      final requests = <CivilDateRange>[];
       await tester.pumpWidget(pickerHost(_picker(onChanged: requests.add)));
       await _open(tester);
       await _tapDay(tester, 20);
@@ -529,7 +529,7 @@ void main() {
   testWidgets(
     'same-frame reopen restores supplied start for actual keyboard continuation',
     (tester) async {
-      final requests = <NakedDateRange>[];
+      final requests = <CivilDateRange>[];
       await tester.pumpWidget(
         pickerHost(_picker(value: _range(10, 12), onChanged: requests.add)),
       );
@@ -560,7 +560,7 @@ void main() {
       var visible = true;
       var enabled = true;
       late StateSetter update;
-      final requests = <NakedDateRange>[];
+      final requests = <CivilDateRange>[];
       await tester.pumpWidget(
         pickerHost(
           Column(
@@ -608,7 +608,7 @@ void main() {
   testWidgets(
     'nested month/year navigation and Escape preserve the outer draft',
     (tester) async {
-      final requests = <NakedDateRange>[];
+      final requests = <CivilDateRange>[];
       await tester.pumpWidget(pickerHost(_picker(onChanged: requests.add)));
       await _open(tester);
       await _tapDay(tester, 20);
@@ -673,7 +673,7 @@ void main() {
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(800, 600);
         addTearDown(tester.view.reset);
-        final requests = <NakedDateRange>[];
+        final requests = <CivilDateRange>[];
         var closes = 0;
         final focus = FocusNode();
         addTearDown(focus.dispose);
@@ -716,7 +716,7 @@ void main() {
     testWidgets('$change change re-fits the open draft without dismissing it', (
       tester,
     ) async {
-      final requests = <NakedDateRange>[];
+      final requests = <CivilDateRange>[];
       var insets = EdgeInsets.zero;
       late StateSetter update;
       await tester.pumpWidget(
@@ -762,7 +762,7 @@ void main() {
         var callback = true;
         var focus = firstFocus;
         late StateSetter update;
-        final requests = <NakedDateRange>[];
+        final requests = <CivilDateRange>[];
         var closes = 0;
         await tester.pumpWidget(
           pickerHost(
@@ -869,9 +869,9 @@ void main() {
   testWidgets(
     'invalid external value is formatted; equal values preserve draft and clear cancels it',
     (tester) async {
-      NakedDateRange? value = _range(5, 15);
+      CivilDateRange? value = _range(5, 15);
       late StateSetter update;
-      final requests = <NakedDateRange>[];
+      final requests = <CivilDateRange>[];
       await tester.pumpWidget(
         pickerHost(
           StatefulBuilder(
@@ -930,7 +930,7 @@ void main() {
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(240, 230);
       addTearDown(tester.view.reset);
-      final requests = <NakedDateRange>[];
+      final requests = <CivilDateRange>[];
       await tester.pumpWidget(
         pickerHost(
           Align(
