@@ -36,19 +36,31 @@ class _CalendarExampleState extends State<CalendarExample> {
           CalendarDayStyler()
               .borderRadius(.circular(6))
               .label(TextStyler().fontSize(14))
+              .onToday(
+                CalendarDayStyler().label(
+                  TextStyler()
+                      .color(FortalTokens.accent11())
+                      .fontWeight(FontWeight.w600),
+                ),
+              )
               .onSelected(
                 CalendarDayStyler()
-                    .color(const Color(0xFF3E63DD))
-                    .label(TextStyler().color(const Color(0xFFFFFFFF))),
+                    .color(FortalTokens.accentSolid())
+                    .label(TextStyler().color(FortalTokens.accentContrast())),
               )
               .onFocusVisible(
                 CalendarDayStyler().border(
-                  .color(const Color(0xFF3E63DD)).width(2),
+                  .color(FortalTokens.focus8()).width(2),
                 ),
               )
               .onDisabled(
                 CalendarDayStyler().label(
-                  TextStyler().color(const Color(0xFF8B8D98)),
+                  TextStyler().color(FortalTokens.gray9()),
+                ),
+              )
+              .onUnavailable(
+                CalendarDayStyler().label(
+                  TextStyler().decoration(TextDecoration.lineThrough),
                 ),
               ),
         ),
