@@ -273,7 +273,7 @@ final _arabicLabels = RemixCalendarLabels(
   chooseMonth: 'اختر الشهر',
   chooseYear: 'اختر السنة',
   today: 'اليوم',
-  month: (date) => _arabicMonths[date.month - 1],
+  month: (month) => _arabicMonths[month - 1],
   monthYear: (date) => '${_arabicMonths[date.month - 1]} ${_digits(date.year)}',
   fullDate: (date) =>
       '${_arabicWeekdays[date.weekday - 1]}، '

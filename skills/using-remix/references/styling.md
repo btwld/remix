@@ -54,7 +54,7 @@ final style = CheckboxStyler()
 
 ## Callable styles
 
-Every leaf component styler has a `call()` method that builds the widget
+Most leaf component stylers have a `call()` method that builds the widget
 directly:
 
 ```dart
@@ -73,8 +73,8 @@ Widget saveButton(VoidCallback save) =>
 
 Nine stylers use a generic `call<T>()` instead: Accordion, Combobox, Radio,
 SegmentedControl, Select, Menu, ToggleGroup, DataTable, and Sidebar. Dart
-usually infers `T` from the required values or item/row lists. Every other
-leaf component styler uses a non-generic `call()`. Behavioral group/root
+usually infers `T` from the required values or item/row lists. Other callable
+leaf component stylers use a non-generic `call()`. Behavioral group/root
 widgets — `RemixAccordionGroup`, `RemixRadioGroup`, `RemixTabs`,
 `RemixCheckboxGroup` — are constructed directly; they have no styler.
 

@@ -2,6 +2,7 @@ import 'dart:ui' show Tristate;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart' show NakedCalendarDay;
@@ -62,6 +63,66 @@ TextStyle? _renderedTextStyle(WidgetTester tester, String label) => tester
     .style;
 
 void main() {
+  testWidgets('month and year selector text fits at 200 percent scale', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _host(
+        RemixCalendar(
+          value: DateTime(2024, 2, 14),
+          firstDate: DateTime(2023),
+          lastDate: DateTime(2026),
+          onChanged: (_) {},
+          labels: RemixCalendarLabels(month: (_) => 'فبراير'),
+          selectorStyle: SelectStyler().trigger(
+            SelectTriggerStyler()
+                .height(32)
+                .label(TextStyler().fontSize(16).height(1.5)),
+          ),
+        ),
+        textScale: 2,
+        direction: TextDirection.rtl,
+      ),
+    );
+    for (final label in ['فبراير', '2024']) {
+      final text = tester.renderObject<RenderParagraph>(
+        find.descendant(of: find.text(label), matching: find.byType(RichText)),
+      );
+      final box = tester.getRect(
+        find.ancestor(
+          of: find.text(label),
+          matching: find.byType(RemixSelect<int>),
+        ),
+      );
+      final top = text.localToGlobal(Offset.zero).dy;
+      expect(text.didExceedMaxLines, isFalse);
+      expect(top, greaterThanOrEqualTo(box.top));
+      expect(top + text.size.height, lessThanOrEqualTo(box.bottom));
+      final painter = TextPainter(
+        text: text.text,
+        textDirection: TextDirection.rtl,
+        textScaler: TextScaler.linear(2),
+      )..layout(maxWidth: text.size.width);
+      expect(text.size.height, greaterThanOrEqualTo(painter.height));
+      painter.dispose();
+    }
+  });
+
+  testWidgets('today label uses the caller joiner', (tester) async {
+    await tester.pumpWidget(
+      _host(
+        _calendar(
+          labels: RemixCalendarLabels(
+            fullDate: (_) => 'date',
+            today: 'today',
+            joinDayLabel: (parts) => parts.join(' / '),
+          ),
+        ),
+      ),
+    );
+    expect(find.bySemanticsLabel('date / today'), findsOneWidget);
+  });
+
   for (final phase in [false, true]) {
     testWidgets(
       'root ${phase ? 'phase' : 'implicit'} animation reaches day anatomy once',
@@ -562,7 +623,7 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(320, 800));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       final labels = RemixCalendarLabels(
-        month: (date) => 'Long localized month number ${date.month}',
+        month: (month) => 'Long localized month number $month',
         monthYear: (date) =>
             'Long localized heading ${date.month} ${date.year}',
         fullDate: (date) => 'Full date ${date.year}/${date.month}/${date.day}',
@@ -706,7 +767,7 @@ void main() {
         chooseMonth: 'Month option',
         chooseYear: 'Year option',
         today: 'Current day',
-        month: (date) => 'M${date.month}',
+        month: (month) => 'M$month',
         monthYear: (date) => 'M${date.month} Y${date.year}',
         fullDate: (date) => 'Y${date.year} M${date.month} D${date.day}',
         weekday: (day) => 'W$day',

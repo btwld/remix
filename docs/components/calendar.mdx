@@ -140,7 +140,10 @@ does not provide a callable widget shorthand.
 Defaults are explicitly English; the widget does not detect date formatting or
 week starts from the locale. Replace `RemixCalendarLabels` strings and callbacks
 using the application's localization system. Its formatters cover month,
-month/year, complete accessible date, weekday, day number, and year.
+month/year, complete accessible date, weekday, day number, and year. The
+month formatter receives an integer from 1 through 12. Use `joinDayLabel`
+to join the complete date and contextual labels such as today with localized
+punctuation.
 
 `firstDayOfWeek` uses Dart's weekday numbers: Monday is 1, Sunday is 7. It defaults
 to Sunday. `Directionality` controls RTL layout and horizontal keyboard movement;

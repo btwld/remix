@@ -16,6 +16,7 @@ class RemixCalendarLabels {
     this.weekday = _englishWeekday,
     this.day = _numericDay,
     this.year = _numericYear,
+    this.joinDayLabel = _joinDayLabel,
   });
 
   /// Accessible name of the previous-month button.
@@ -34,7 +35,7 @@ class RemixCalendarLabels {
   final String today;
 
   /// Month name for the month selector items.
-  final String Function(DateTime) month;
+  final String Function(int month) month;
 
   /// Visible month heading, such as "February 2024".
   final String Function(DateTime) monthYear;
@@ -50,6 +51,11 @@ class RemixCalendarLabels {
 
   /// Year label for the year selector items.
   final String Function(int) year;
+
+  /// Joins the full date and contextual labels, such as today.
+  final String Function(List<String> parts) joinDayLabel;
+
+  static String _joinDayLabel(List<String> parts) => parts.join(', ');
 
   static const _months = [
     'January',
@@ -74,11 +80,11 @@ class RemixCalendarLabels {
     'Saturday',
     'Sunday',
   ];
-  static String _englishMonth(DateTime date) => _months[date.month - 1];
+  static String _englishMonth(int month) => _months[month - 1];
   static String _englishMonthYear(DateTime date) =>
-      '${_englishMonth(date)} ${date.year}';
+      '${_englishMonth(date.month)} ${date.year}';
   static String _englishFullDate(DateTime date) =>
-      '${_weekdays[date.weekday - 1]}, ${_englishMonth(date)} ${date.day}, ${date.year}';
+      '${_weekdays[date.weekday - 1]}, ${_englishMonth(date.month)} ${date.day}, ${date.year}';
   static String _englishWeekday(int weekday) =>
       _weekdays[weekday - 1].substring(0, 2);
   static String _numericDay(DateTime date) => '${date.day}';
@@ -174,7 +180,7 @@ class RemixCalendar extends StatelessWidget {
       RemixIconButton(
         icon: null,
         semanticLabel: previous ? labels.previousMonth : labels.nextMonth,
-        onPressed: previous ? state.previousMonth : state.nextMonth,
+        onPressed: previous ? state.showPreviousMonth : state.showNextMonth,
         style: IconButtonStyler()
             .constraints(.minWidth(44).minHeight(44))
             .merge(navigationStyle),
@@ -193,7 +199,8 @@ class RemixCalendar extends StatelessWidget {
     CalendarSpec spec,
   ) {
     final date = state.displayedMonth;
-    final interactive = state.showMonth != null;
+    final showMonth = state.showMonth;
+    final interactive = showMonth != null;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -232,18 +239,19 @@ class RemixCalendar extends StatelessWidget {
                     if ((date.year != firstDate.year ||
                             month >= firstDate.month) &&
                         (date.year != lastDate.year || month <= lastDate.month))
-                      RemixSelectItem(
-                        value: month,
-                        label: labels.month(DateTime(date.year, month)),
-                      ),
+                      RemixSelectItem(value: month, label: labels.month(month)),
                 ],
                 onChanged: interactive
                     ? (month) {
-                        if (month != null)
-                          state.showMonth!(DateTime(date.year, month));
+                        if (month != null) {
+                          showMonth(DateTime(date.year, month));
+                        }
                       }
                     : null,
-                style: selectorStyle,
+                // Preserve the recipe height as a minimum so scaled labels fit.
+                style: selectorStyle.trigger(
+                  SelectTriggerStyler().maxHeight(double.infinity),
+                ),
               ),
             ),
             SizedBox(
@@ -259,11 +267,15 @@ class RemixCalendar extends StatelessWidget {
                 ],
                 onChanged: interactive
                     ? (year) {
-                        if (year != null)
-                          state.showMonth!(DateTime(year, date.month));
+                        if (year != null) {
+                          showMonth(DateTime(year, date.month));
+                        }
                       }
                     : null,
-                style: selectorStyle,
+                // Preserve the recipe height as a minimum so scaled labels fit.
+                style: selectorStyle.trigger(
+                  SelectTriggerStyler().maxHeight(double.infinity),
+                ),
               ),
             ),
           ],
@@ -410,12 +422,8 @@ class RemixCalendar extends StatelessWidget {
 
   String _dayLabel(DateTime date) {
     final today = currentDate ?? DateTime.now();
-    final isToday =
-        date.year == today.year &&
-        date.month == today.month &&
-        date.day == today.day;
-    return isToday
-        ? '${labels.fullDate(date)}, ${labels.today}'
+    return isSameCivilDate(date, today)
+        ? labels.joinDayLabel([labels.fullDate(date), labels.today])
         : labels.fullDate(date);
   }
 }

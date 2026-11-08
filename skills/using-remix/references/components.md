@@ -102,7 +102,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `SelectStyler().content(SelectContentStyler().minWidth(remixAnchorWidth()))`),
   which resolves to the trigger width inside `RemixSelect` and `RemixMenu`
   overlays and to `0` anywhere else, `RemixPopover` included.
-- **Calendar** — controlled Gregorian date selection. `value` is nullable;
+- **[Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx)** — controlled Gregorian date selection. `value` is nullable;
   `firstDate`/`lastDate` are required and inclusive. Compare civil year/month/day
   fields, not instants; callbacks return local date-only `DateTime` values,
   with a UTC civil fallback for historically skipped local days. Do not convert
