@@ -4,6 +4,51 @@ import 'package:naked_ui/src/utilities/positioning.dart';
 
 void main() {
   group('OverlayPositionConfig', () {
+    test('copyWith preserves omitted fields and replaces every control', () {
+      const config = OverlayPositionConfig(
+        side: OverlaySide.left,
+        alignment: OverlayAlignment.end,
+        sideOffset: 8,
+        alignmentOffset: -4,
+        collisionPadding: EdgeInsets.all(12),
+        avoidCollisions: false,
+        minimumAvailableHeight: 24,
+      );
+      expect(config.copyWith(), config);
+      expect(
+        config.copyWith(collisionPadding: EdgeInsets.zero),
+        const OverlayPositionConfig(
+          side: OverlaySide.left,
+          alignment: OverlayAlignment.end,
+          sideOffset: 8,
+          alignmentOffset: -4,
+          avoidCollisions: false,
+          minimumAvailableHeight: 24,
+        ),
+      );
+      expect(
+        config.copyWith(
+          side: OverlaySide.top,
+          alignment: OverlayAlignment.center,
+          sideOffset: 0,
+          alignmentOffset: 0,
+          collisionPadding: EdgeInsets.zero,
+          avoidCollisions: true,
+          minimumAvailableHeight: 0,
+        ),
+        const OverlayPositionConfig(
+          side: OverlaySide.top,
+          alignment: OverlayAlignment.center,
+          minimumAvailableHeight: 0,
+        ),
+      );
+      expect(config.minimumAvailableHeight, 24);
+      expect(
+        () => config.copyWith(minimumAvailableHeight: -1),
+        throwsAssertionError,
+      );
+    });
+
     test('uses Radix-shaped defaults', () {
       const config = OverlayPositionConfig();
 

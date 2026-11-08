@@ -73,7 +73,8 @@ class AnchoredOverlay extends StatefulWidget {
   /// holds it, and on the container when no item can take it.
   final FocusNode? initialFocusNode;
 
-  /// Avoids the target view's safe area and keyboard exclusions on both axes.
+  /// Whether to keep the panel inside the view padding (safe area) and above
+  /// the view insets (keyboard), on both axes.
   /// Fixed-size content larger than the cap overflows unless it adapts or
   /// scrolls. The open panel re-fits when these insets change. Nested anchored
   /// overlays inherit this preference from the open panel.
@@ -214,13 +215,7 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
         Offset(media.size.width - right, media.size.height - bottom),
       ),
     );
-    return OverlayPositionConfig(
-      side: config.side,
-      alignment: config.alignment,
-      sideOffset: config.sideOffset,
-      alignmentOffset: config.alignmentOffset,
-      avoidCollisions: config.avoidCollisions,
-      minimumAvailableHeight: config.minimumAvailableHeight,
+    return config.copyWith(
       collisionPadding:
           config.collisionPadding +
           EdgeInsets.fromLTRB(

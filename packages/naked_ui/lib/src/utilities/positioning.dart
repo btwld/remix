@@ -85,6 +85,26 @@ class OverlayPositionConfig {
   /// padding; callers must choose a threshold that suits their content.
   final double minimumAvailableHeight;
 
+  /// Returns a copy with the supplied positioning controls replaced.
+  OverlayPositionConfig copyWith({
+    OverlaySide? side,
+    OverlayAlignment? alignment,
+    double? sideOffset,
+    double? alignmentOffset,
+    EdgeInsets? collisionPadding,
+    bool? avoidCollisions,
+    double? minimumAvailableHeight,
+  }) => OverlayPositionConfig(
+    side: side ?? this.side,
+    alignment: alignment ?? this.alignment,
+    sideOffset: sideOffset ?? this.sideOffset,
+    alignmentOffset: alignmentOffset ?? this.alignmentOffset,
+    collisionPadding: collisionPadding ?? this.collisionPadding,
+    avoidCollisions: avoidCollisions ?? this.avoidCollisions,
+    minimumAvailableHeight:
+        minimumAvailableHeight ?? this.minimumAvailableHeight,
+  );
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
