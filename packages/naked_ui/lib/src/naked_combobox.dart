@@ -400,7 +400,6 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   String? _optionsText;
   bool _waitingForOptions = false;
   bool _suppressCachedOptions = false;
-  bool _freshQueryRequested = false;
 
   @override
   void didUpdateWidget(covariant NakedCombobox<T> oldWidget) {
@@ -416,7 +415,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
         // that cache when it belongs to different text, as well as when an
         // in-flight query was abandoned. A fresh edit must supply results.
         _suppressCachedOptions = true;
-        _freshQueryRequested = false;
+        _optionsText = widget.controller?.text ?? _text;
         _waitingForOptions = false;
       }
     }
@@ -444,6 +443,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
       _listenedController?.removeListener(_syncValueToText);
       _listenedController = controller;
       _text = controller.text;
+      if (_suppressCachedOptions) _optionsText = _text;
       _composing = _hasComposition(controller.value);
       _reconcileValue();
       controller.addListener(_syncValueToText);
@@ -494,8 +494,11 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     if (controller.text == _text) return;
     setState(() {
       _text = controller.text;
-      if (_suppressCachedOptions && widget.enabled) {
-        _freshQueryRequested = true;
+      if (!widget.enabled) {
+        // Observe disabled edits here regardless of Raw's listener ordering.
+        // The next enabled query must be compared with this discarded text.
+        _suppressCachedOptions = true;
+        _optionsText = _text;
       }
       _reconcileValue();
     });
@@ -567,12 +570,8 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     TextEditingValue value,
   ) {
     if (!widget.enabled) {
-      // An empty result would announce a search that did not run. Raw also
-      // retains its old cache: it must stay ineligible after disabled edits.
-      if (value.text != _text) {
-        _suppressCachedOptions = true;
-        _freshQueryRequested = false;
-      }
+      // An empty result would announce a search that did not run. The text
+      // listener handles disabled edits and invalidates Raw's retained cache.
       return Completer<Iterable<_RawComboboxOption<T>>>().future;
     }
 
@@ -596,10 +595,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
       if (!mounted || !widget.enabled || generation != _optionsGeneration) {
         return Completer<Iterable<_RawComboboxOption<T>>>().future;
       }
-      if (textChanged &&
-          request == _optionsRequest &&
-          _suppressCachedOptions &&
-          _freshQueryRequested) {
+      if (textChanged && request == _optionsRequest && _suppressCachedOptions) {
         setState(() => _suppressCachedOptions = false);
       }
       // Equality defines an entity, not its display string. Canonicalize once

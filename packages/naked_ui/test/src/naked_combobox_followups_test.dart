@@ -148,6 +148,49 @@ Future<void> _type(WidgetTester tester, String text) async {
 }
 
 void main() {
+  for (final replaceController in [true, false]) {
+    testWidgets(
+      'previous query reopens options after ${replaceController ? 'controller replacement' : 'disabled edit'}',
+      (tester) async {
+        final host = await _pump(
+          tester,
+          _Host<String>(
+            optionsBuilder: (query) => query.text == 'a' ? ['Apple'] : [],
+          ),
+        );
+        await _type(tester, 'a');
+        expect(find.text('Apple'), findsOneWidget);
+
+        if (replaceController) {
+          host.replace('');
+          await tester.pumpAndSettle();
+        } else {
+          host.enable(false);
+          await tester.pumpAndSettle();
+          await _type(tester, '');
+          host.enable(true);
+          await tester.pumpAndSettle();
+        }
+
+        host.focus.unfocus();
+        await tester.pump();
+        host.focus.requestFocus();
+        await tester.pumpAndSettle();
+        host.controller.selection = const TextSelection.collapsed(offset: 0);
+        await tester.pumpAndSettle();
+        expect(find.byType(NakedComboboxOption<String>), findsNothing);
+        host.submit();
+        expect(host.selected, isEmpty);
+
+        await _type(tester, 'a');
+        expect(find.text('Apple'), findsOneWidget);
+        await tester.tap(find.text('Apple'));
+        await tester.pumpAndSettle();
+        expect(host.selected, ['Apple']);
+      },
+    );
+  }
+
   testWidgets('a still-selected entity retains Raw repeat-selection equality', (
     tester,
   ) async {
