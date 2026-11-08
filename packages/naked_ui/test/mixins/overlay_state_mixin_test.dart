@@ -27,6 +27,22 @@ class _HostState extends State<_Host> with OverlayStateMixin<_Host> {
 
 void main() {
   group('OverlayStateMixin.handleClose', () {
+    testWidgets('does not restore focus after the host is unmounted', (
+      tester,
+    ) async {
+      final trigger = FocusRequestCounter(debugLabel: 'trigger');
+      addTearDown(trigger.dispose);
+      await tester.pumpWidget(_Host(trigger: trigger, attachPanel: false));
+      final state = tester.state<_HostState>(find.byType(_Host));
+      await tester.pumpWidget(const SizedBox());
+
+      state.close();
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(trigger.requestCount, 0);
+    });
+
     testWidgets('does not restore when the panel is already gone and focus '
         'sits elsewhere', (tester) async {
       final trigger = FocusRequestCounter(debugLabel: 'trigger');
