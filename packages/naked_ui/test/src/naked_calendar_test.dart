@@ -432,47 +432,51 @@ void main() {
     'semantics expose all dates once, full name, selected, disabled, focus and tap action',
     (tester) async {
       final semantics = tester.ensureSemantics();
-
-      final state = await _pump(tester);
-      state.change(() => state.unavailable = (date) => date.day == 28);
-      await tester.pump();
-      await _focus(tester, state);
-      final selected = tester.getSemantics(find.bySemanticsLabel('2024-2-29'));
-      expect(selected.getSemanticsData().flagsCollection.isButton, isTrue);
-      expect(
-        selected.getSemanticsData().flagsCollection.isSelected,
-        Tristate.isTrue,
-      );
-      expect(
-        selected.getSemanticsData().flagsCollection.isFocused,
-        Tristate.isTrue,
-      );
-      expect(
-        selected.getSemanticsData().hasAction(SemanticsAction.tap),
-        isTrue,
-      );
-      final unavailable = tester.getSemantics(
-        find.bySemanticsLabel('2024-2-28'),
-      );
-      expect(
-        unavailable.getSemanticsData().flagsCollection.isEnabled,
-        Tristate.isFalse,
-      );
-      expect(
-        unavailable.getSemanticsData().flagsCollection.isFocused,
-        isNot(Tristate.none),
-      );
-      expect(
-        unavailable.getSemanticsData().hasAction(SemanticsAction.tap),
-        isFalse,
-      );
-      for (var day = 1; day <= 29; day++) {
-        expect(find.bySemanticsLabel('2024-2-$day'), findsOneWidget);
+      try {
+        final state = await _pump(tester);
+        state.change(() => state.unavailable = (date) => date.day == 28);
+        await tester.pump();
+        await _focus(tester, state);
+        final selected = tester.getSemantics(
+          find.bySemanticsLabel('2024-2-29'),
+        );
+        expect(selected.getSemanticsData().flagsCollection.isButton, isTrue);
+        expect(
+          selected.getSemanticsData().flagsCollection.isSelected,
+          Tristate.isTrue,
+        );
+        expect(
+          selected.getSemanticsData().flagsCollection.isFocused,
+          Tristate.isTrue,
+        );
+        expect(
+          selected.getSemanticsData().hasAction(SemanticsAction.tap),
+          isTrue,
+        );
+        final unavailable = tester.getSemantics(
+          find.bySemanticsLabel('2024-2-28'),
+        );
+        expect(
+          unavailable.getSemanticsData().flagsCollection.isEnabled,
+          Tristate.isFalse,
+        );
+        expect(
+          unavailable.getSemanticsData().flagsCollection.isFocused,
+          isNot(Tristate.none),
+        );
+        expect(
+          unavailable.getSemanticsData().hasAction(SemanticsAction.tap),
+          isFalse,
+        );
+        for (var day = 1; day <= 29; day++) {
+          expect(find.bySemanticsLabel('2024-2-$day'), findsOneWidget);
+        }
+        selected.owner!.performAction(selected.id, SemanticsAction.tap);
+        await tester.pump();
+        expect(state.requests, [DateTime(2024, 2, 29)]);
+      } finally {
+        semantics.dispose();
       }
-      selected.owner!.performAction(selected.id, SemanticsAction.tap);
-      await tester.pump();
-      expect(state.requests, [DateTime(2024, 2, 29)]);
-      semantics.dispose();
     },
   );
 
@@ -480,23 +484,26 @@ void main() {
     'semantic input focus targets the requested day and keeps one Tab stop',
     (tester) async {
       final semantics = tester.ensureSemantics();
-      final state = await _pump(tester);
-      await _focus(tester, state);
-      final target = tester.getSemantics(find.bySemanticsLabel('2024-2-20'));
-      expect(
-        target.getSemanticsData().hasAction(SemanticsAction.focus),
-        isTrue,
-      );
-      target.owner!.performAction(target.id, SemanticsAction.focus);
-      await tester.pumpAndSettle();
-      expect(state.snapshot.focusedDate, DateTime(2024, 2, 20));
-      expect(state.days[DateTime(2024, 2, 20)]!.isFocused, isTrue);
-      expect(find.bySemanticsLabel('2024-2-20'), findsOneWidget);
-      await _key(tester, LogicalKeyboardKey.enter);
-      expect(state.requests, [DateTime(2024, 2, 20)]);
-      await _key(tester, LogicalKeyboardKey.tab);
-      expect(state.after.hasFocus, isTrue);
-      semantics.dispose();
+      try {
+        final state = await _pump(tester);
+        await _focus(tester, state);
+        final target = tester.getSemantics(find.bySemanticsLabel('2024-2-20'));
+        expect(
+          target.getSemanticsData().hasAction(SemanticsAction.focus),
+          isTrue,
+        );
+        target.owner!.performAction(target.id, SemanticsAction.focus);
+        await tester.pumpAndSettle();
+        expect(state.snapshot.focusedDate, DateTime(2024, 2, 20));
+        expect(state.days[DateTime(2024, 2, 20)]!.isFocused, isTrue);
+        expect(find.bySemanticsLabel('2024-2-20'), findsOneWidget);
+        await _key(tester, LogicalKeyboardKey.enter);
+        expect(state.requests, [DateTime(2024, 2, 20)]);
+        await _key(tester, LogicalKeyboardKey.tab);
+        expect(state.after.hasFocus, isTrue);
+      } finally {
+        semantics.dispose();
+      }
     },
   );
 
@@ -504,26 +511,32 @@ void main() {
     'unavailable days accept semantic input focus without activation',
     (tester) async {
       final semantics = tester.ensureSemantics();
-      final state = await _pump(tester);
-      state.change(() => state.unavailable = (date) => date.day == 20);
-      await tester.pump();
-      await _focus(tester, state);
-      final target = tester.getSemantics(find.bySemanticsLabel('2024-2-20'));
-      expect(
-        target.getSemanticsData().hasAction(SemanticsAction.focus),
-        isTrue,
-      );
-      expect(target.getSemanticsData().hasAction(SemanticsAction.tap), isFalse);
-      target.owner!.performAction(target.id, SemanticsAction.focus);
-      await tester.pumpAndSettle();
-      expect(state.days[DateTime(2024, 2, 20)]!.isFocused, isTrue);
-      await _key(tester, LogicalKeyboardKey.enter);
-      expect(state.requests, isEmpty);
-      await _key(tester, LogicalKeyboardKey.arrowRight);
-      expect(state.snapshot.focusedDate, DateTime(2024, 2, 21));
-      await _key(tester, LogicalKeyboardKey.enter);
-      expect(state.requests, [DateTime(2024, 2, 21)]);
-      semantics.dispose();
+      try {
+        final state = await _pump(tester);
+        state.change(() => state.unavailable = (date) => date.day == 20);
+        await tester.pump();
+        await _focus(tester, state);
+        final target = tester.getSemantics(find.bySemanticsLabel('2024-2-20'));
+        expect(
+          target.getSemanticsData().hasAction(SemanticsAction.focus),
+          isTrue,
+        );
+        expect(
+          target.getSemanticsData().hasAction(SemanticsAction.tap),
+          isFalse,
+        );
+        target.owner!.performAction(target.id, SemanticsAction.focus);
+        await tester.pumpAndSettle();
+        expect(state.days[DateTime(2024, 2, 20)]!.isFocused, isTrue);
+        await _key(tester, LogicalKeyboardKey.enter);
+        expect(state.requests, isEmpty);
+        await _key(tester, LogicalKeyboardKey.arrowRight);
+        expect(state.snapshot.focusedDate, DateTime(2024, 2, 21));
+        await _key(tester, LogicalKeyboardKey.enter);
+        expect(state.requests, [DateTime(2024, 2, 21)]);
+      } finally {
+        semantics.dispose();
+      }
     },
   );
 
@@ -531,41 +544,50 @@ void main() {
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
-    final state = await _pump(tester);
-    state.change(() => state.first = DateTime(2024, 2, 10));
-    await tester.pumpAndSettle();
-    bool hasFocusAction(int day) => tester
-        .getSemantics(find.bySemanticsLabel('2024-2-$day'))
-        .getSemanticsData()
-        .hasAction(SemanticsAction.focus);
-    expect(hasFocusAction(9), isFalse);
-    expect(hasFocusAction(10), isTrue);
-    state.change(() => state.enabled = false);
-    await tester.pumpAndSettle();
-    expect(hasFocusAction(10), isFalse);
-    state.change(() {
-      state.enabled = true;
-      state.callback = false;
-    });
-    await tester.pumpAndSettle();
-    expect(hasFocusAction(10), isFalse);
-    semantics.dispose();
+    try {
+      final state = await _pump(tester);
+      state.change(() => state.first = DateTime(2024, 2, 10));
+      await tester.pumpAndSettle();
+      bool hasFocusAction(int day) => tester
+          .getSemantics(find.bySemanticsLabel('2024-2-$day'))
+          .getSemanticsData()
+          .hasAction(SemanticsAction.focus);
+      expect(hasFocusAction(9), isFalse);
+      expect(hasFocusAction(10), isTrue);
+      state.change(() => state.enabled = false);
+      await tester.pumpAndSettle();
+      expect(hasFocusAction(10), isFalse);
+      state.change(() {
+        state.enabled = true;
+        state.callback = false;
+      });
+      await tester.pumpAndSettle();
+      expect(hasFocusAction(10), isFalse);
+    } finally {
+      semantics.dispose();
+    }
   });
 
   testWidgets('iOS follows the SDK semantic input-focus policy', (
     tester,
   ) async {
-    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     final semantics = tester.ensureSemantics();
-    final state = await _pump(tester);
-    final target = tester.getSemantics(find.bySemanticsLabel('2024-2-20'));
-    expect(target.getSemanticsData().hasAction(SemanticsAction.focus), isFalse);
-    expect(target.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
-    target.owner!.performAction(target.id, SemanticsAction.tap);
-    await tester.pump();
-    expect(state.requests, [DateTime(2024, 2, 20)]);
-    semantics.dispose();
-    debugDefaultTargetPlatformOverride = null;
+    try {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final state = await _pump(tester);
+      final target = tester.getSemantics(find.bySemanticsLabel('2024-2-20'));
+      expect(
+        target.getSemanticsData().hasAction(SemanticsAction.focus),
+        isFalse,
+      );
+      expect(target.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+      target.owner!.performAction(target.id, SemanticsAction.tap);
+      await tester.pump();
+      expect(state.requests, [DateTime(2024, 2, 20)]);
+    } finally {
+      semantics.dispose();
+      debugDefaultTargetPlatformOverride = null;
+    }
   });
 
   testWidgets('week-start reconfiguration keeps the focused civil date', (

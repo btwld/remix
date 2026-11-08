@@ -242,8 +242,8 @@ void main() {
     ) async {
       // Desktop parks the primary focus on the root scope while the app is
       // inactive, so the panel closes with no node focused.
-      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
       try {
+        debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
         tester.binding.focusManager
             .listenToApplicationLifecycleChangesIfSupported();
         var open = true;
@@ -287,6 +287,9 @@ void main() {
         expect(trigger.requestCount - before, 1);
         expect(trigger.hasPrimaryFocus, isTrue);
       } finally {
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        );
         debugDefaultTargetPlatformOverride = null;
       }
     });

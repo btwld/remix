@@ -155,34 +155,36 @@ void main() {
     'material-free default renders full-date semantics and one live heading',
     (tester) async {
       final handle = tester.ensureSemantics();
-
-      final changes = <DateTime>[];
-      await tester.pumpWidget(_host(_calendar(onChanged: changes.add)));
-      expect(find.text('February 2024'), findsOneWidget);
-      expect(
-        find.bySemanticsLabel('Thursday, February 15, 2024, Today'),
-        findsOneWidget,
-      );
-      expect(
-        find.bySemanticsLabel('Wednesday, February 14, 2024'),
-        findsOneWidget,
-      );
-      final heading = tester.getSemantics(find.text('February 2024'));
-      expect(heading.getSemanticsData().flagsCollection.isLiveRegion, isTrue);
-      expect(heading.getSemanticsData().flagsCollection.isHeader, isTrue);
-      final selected = tester.getSemantics(
-        find.bySemanticsLabel('Wednesday, February 14, 2024'),
-      );
-      expect(
-        selected.getSemanticsData().flagsCollection.isSelected,
-        Tristate.isTrue,
-      );
-      expect(selected.getSemanticsData().flagsCollection.isButton, isTrue);
-      await tester.tap(find.text('16'));
-      await tester.pump();
-      expect(changes, [DateTime(2024, 2, 16)]);
-      expect(tester.takeException(), isNull);
-      handle.dispose();
+      try {
+        final changes = <DateTime>[];
+        await tester.pumpWidget(_host(_calendar(onChanged: changes.add)));
+        expect(find.text('February 2024'), findsOneWidget);
+        expect(
+          find.bySemanticsLabel('Thursday, February 15, 2024, Today'),
+          findsOneWidget,
+        );
+        expect(
+          find.bySemanticsLabel('Wednesday, February 14, 2024'),
+          findsOneWidget,
+        );
+        final heading = tester.getSemantics(find.text('February 2024'));
+        expect(heading.getSemanticsData().flagsCollection.isLiveRegion, isTrue);
+        expect(heading.getSemanticsData().flagsCollection.isHeader, isTrue);
+        final selected = tester.getSemantics(
+          find.bySemanticsLabel('Wednesday, February 14, 2024'),
+        );
+        expect(
+          selected.getSemanticsData().flagsCollection.isSelected,
+          Tristate.isTrue,
+        );
+        expect(selected.getSemanticsData().flagsCollection.isButton, isTrue);
+        await tester.tap(find.text('16'));
+        await tester.pump();
+        expect(changes, [DateTime(2024, 2, 16)]);
+        expect(tester.takeException(), isNull);
+      } finally {
+        handle.dispose();
+      }
     },
   );
 
