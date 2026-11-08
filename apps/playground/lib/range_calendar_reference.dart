@@ -247,7 +247,12 @@ class _RangeCalendarReferencePageState
 
 final _endpoint = CalendarDayStyler()
     .color(const Color(0xFF3E63DD))
-    .label(TextStyler().color(const Color(0xFFFFFFFF)));
+    .label(TextStyler().color(const Color(0xFFFFFFFF)))
+    .onDisabled(_mutedRange);
+
+final _mutedRange = CalendarDayStyler()
+    .color(PlaygroundTokens.muted())
+    .label(TextStyler().color(PlaygroundTokens.mutedForeground()));
 final _rangeStyle = CalendarStyler()
     .heading(TextStyler().fontSize(16).fontWeight(FontWeight.w600))
     .weekday(
@@ -260,8 +265,8 @@ final _rangeStyle = CalendarStyler()
           .onHovered(CalendarDayStyler().color(PlaygroundTokens.accent()))
           .onSelected(
             CalendarDayStyler()
-                .color(const Color(0xFFDBE5FF))
-                .label(TextStyler().color(const Color(0xFF18306A))),
+                .color(PlaygroundTokens.muted())
+                .label(TextStyler().color(PlaygroundTokens.mutedForeground())),
           )
           .onFocusVisible(
             CalendarDayStyler().border(
@@ -273,17 +278,13 @@ final _rangeStyle = CalendarStyler()
               TextStyler().color(PlaygroundTokens.mutedForeground()),
             ),
           )
-          // Range variants follow onSelected/onDisabled so they win on shared
-          // properties; caps follow the draft fill.
-          .onRangePreview(
+          // Range roles paint the committed interval; while drafting the old
+          // selection retains only its faint onSelected treatment.
+          .onRangeMiddle(
             CalendarDayStyler()
-                .color(const Color(0xFFFAE2A0))
-                .label(TextStyler().color(const Color(0xFF653D00)))
-                .onDisabled(
-                  CalendarDayStyler()
-                      .color(const Color(0xFFF1CFCA))
-                      .label(TextStyler().color(const Color(0xFF7C2424))),
-                ),
+                .color(const Color(0xFFDBE5FF))
+                .label(TextStyler().color(const Color(0xFF18306A)))
+                .onDisabled(_mutedRange),
           )
           .onRangeStart(
             _endpoint.borderRadius(
@@ -301,7 +302,18 @@ final _rangeStyle = CalendarStyler()
               ),
             ),
           )
-          .onRangeSingle(_endpoint.borderRadius(.circular(8))),
+          .onRangeSingle(_endpoint.borderRadius(.circular(8)))
+          // Preview follows the caps, distinguishing the active draft.
+          .onRangePreview(
+            CalendarDayStyler()
+                .color(const Color(0xFFFAE2A0))
+                .label(TextStyler().color(const Color(0xFF653D00)))
+                .onDisabled(
+                  CalendarDayStyler()
+                      .color(const Color(0xFFF1CFCA))
+                      .label(TextStyler().color(const Color(0xFF7C2424))),
+                ),
+          ),
     );
 
 final _arabicRangeLabels = RemixRangeCalendarLabels(

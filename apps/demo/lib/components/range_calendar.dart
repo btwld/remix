@@ -42,7 +42,7 @@ class _RangeCalendarExampleState extends State<RangeCalendarExample> {
             .day(
               CalendarDayStyler()
                   .label(TextStyler().fontSize(14))
-                  .border(.color(const Color(0x00000000)).width(2))
+                  .border(.color(FortalTokens.grayA1()).width(2))
                   .onToday(
                     CalendarDayStyler().label(
                       TextStyler().fontWeight(FontWeight.w600),
@@ -50,13 +50,8 @@ class _RangeCalendarExampleState extends State<RangeCalendarExample> {
                   )
                   .onSelected(
                     CalendarDayStyler()
-                        .color(FortalTokens.accent4())
-                        .label(TextStyler().color(FortalTokens.accent11())),
-                  )
-                  .onFocusVisible(
-                    CalendarDayStyler().border(
-                      .color(FortalTokens.focus8()).width(2),
-                    ),
+                        .color(FortalTokens.gray2())
+                        .label(TextStyler().color(FortalTokens.gray9())),
                   )
                   .onDisabled(
                     CalendarDayStyler().label(
@@ -68,19 +63,13 @@ class _RangeCalendarExampleState extends State<RangeCalendarExample> {
                       TextStyler().decoration(TextDecoration.lineThrough),
                     ),
                   )
-                  // Range variants follow onSelected/onDisabled so they win on
-                  // shared properties; caps follow the draft fill.
-                  .onRangePreview(
+                  // Committed fills come from range roles. While drafting,
+                  // the old selection keeps only its faint onSelected treatment.
+                  .onRangeMiddle(
                     CalendarDayStyler()
-                        .color(FortalTokens.gray4())
-                        .label(TextStyler().color(FortalTokens.gray12()))
-                        .onDisabled(
-                          CalendarDayStyler()
-                              .color(FortalTokens.error3())
-                              .label(
-                                TextStyler().color(FortalTokens.error11()),
-                              ),
-                        ),
+                        .color(FortalTokens.accent4())
+                        .label(TextStyler().color(FortalTokens.accent11()))
+                        .onDisabled(_mutedRange),
                   )
                   .onRangeStart(
                     _endpoint.borderRadius(
@@ -98,7 +87,35 @@ class _RangeCalendarExampleState extends State<RangeCalendarExample> {
                       ),
                     ),
                   )
-                  .onRangeSingle(_endpoint.borderRadius(.circular(6))),
+                  .onRangeSingle(_endpoint.borderRadius(.circular(6)))
+                  // Preview follows the caps so the draft has its own treatment.
+                  .onRangePreview(
+                    CalendarDayStyler()
+                        .color(FortalTokens.accent3())
+                        .border(.color(FortalTokens.accent8()).width(2))
+                        .label(TextStyler().color(FortalTokens.accent12()))
+                        .onRangeStart(
+                          CalendarDayStyler().color(FortalTokens.accent5()),
+                        )
+                        .onRangeEnd(
+                          CalendarDayStyler().color(FortalTokens.accent5()),
+                        )
+                        .onRangeSingle(
+                          CalendarDayStyler().color(FortalTokens.accent5()),
+                        )
+                        .onDisabled(
+                          CalendarDayStyler()
+                              .color(FortalTokens.error3())
+                              .label(
+                                TextStyler().color(FortalTokens.error11()),
+                              ),
+                        ),
+                  )
+                  .onFocusVisible(
+                    CalendarDayStyler().border(
+                      .color(FortalTokens.focus8()).width(2),
+                    ),
+                  ),
             ),
       ),
     ),
@@ -107,4 +124,9 @@ class _RangeCalendarExampleState extends State<RangeCalendarExample> {
 
 final _endpoint = CalendarDayStyler()
     .color(FortalTokens.accentSolid())
-    .label(TextStyler().color(FortalTokens.accentContrast()));
+    .label(TextStyler().color(FortalTokens.accentContrast()))
+    .onDisabled(_mutedRange);
+
+final _mutedRange = CalendarDayStyler()
+    .color(FortalTokens.gray3())
+    .label(TextStyler().color(FortalTokens.gray9()));
