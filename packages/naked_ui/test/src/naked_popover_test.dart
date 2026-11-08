@@ -13,6 +13,55 @@ Matcher _closeTo(double v, [double eps = 0.5]) =>
 void main() {
   group('NakedPopover', () {
     testWidgets(
+      'view-safe panel re-fits when consumed safe-area insets change',
+      (tester) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(800, 600);
+        tester.view.padding = const FakeViewPadding(bottom: 20);
+        tester.view.viewPadding = const FakeViewPadding(bottom: 20);
+        addTearDown(tester.view.reset);
+        final controller = MenuController();
+        const panelKey = Key('refit panel');
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xffffffff),
+            builder: (context, child) => Overlay.wrap(
+              child: SafeArea(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: NakedPopover(
+                    controller: controller,
+                    avoidViewInsets: true,
+                    constrainToAvailableSpace: true,
+                    positioning: const OverlayPositionConfig(
+                      collisionPadding: EdgeInsets.all(8),
+                    ),
+                    popoverBuilder: (context, info) =>
+                        const SizedBox(key: panelKey, width: 100, height: 400),
+                    child: const SizedBox(width: 80, height: 30),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        expect(tester.getRect(find.byKey(panelKey)).bottom, greaterThan(192));
+
+        tester.view.padding = const FakeViewPadding(bottom: 400);
+        tester.view.viewPadding = const FakeViewPadding(bottom: 400);
+        await tester.pumpAndSettle();
+        expect(
+          tester.getRect(find.byKey(panelKey)).bottom,
+          lessThanOrEqualTo(192),
+        );
+        expect(controller.isOpen, isTrue);
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
       'view-safe panel respects safe top in a scaled nested Overlay',
       (tester) async {
         tester.view.devicePixelRatio = 1;
