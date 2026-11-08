@@ -683,68 +683,176 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('G4 warmed 100-year probe compares null and real predicates', (
-    tester,
-  ) async {
-    final semantics = tester.ensureSemantics();
-    final state = await _pump(tester);
-    var calls = 0;
-    state.change(() {
-      state.first = DateTime(1900);
-      state.last = DateTime(2100, 12, 31);
-    });
-    await tester.pump();
-    for (final withPredicate in [false, true]) {
-      state.change(
-        () => state.unavailable = withPredicate
-            ? (_) {
-                calls++;
-                return false;
-              }
-            : null,
-      );
+  group('availability scan cost', () {
+    // Upper bound on predicate calls per visible day per update: the day's
+    // own state, its selectability and its lifecycle syncs each ask once.
+    const perDayChecks = 5;
+    // A 100-year browse is the worst case: the anchor is in 2024 while the
+    // displayed month is in 1924, so a fresh scan visits about 36,500 days.
+    Future<_HarnessState> farAnchor(
+      WidgetTester tester,
+      List<int> calls,
+    ) async {
+      final state = await _pump(tester);
+      state.change(() {
+        state.first = DateTime(1900);
+        state.last = DateTime(2100, 12, 31);
+        state.unavailable = (_) {
+          calls[0]++;
+          return false;
+        };
+      });
       await tester.pumpAndSettle();
-      final builds = <int>[];
-      final activations = <int>[];
-      for (var iteration = 0; iteration < 5; iteration++) {
-        state.snapshot.showMonth!(DateTime(2024, 2));
-        await tester.pumpAndSettle();
-        await _tap(tester, 15);
-        calls = 0;
-        final watch = Stopwatch()..start();
-        state.snapshot.showMonth!(DateTime(1924, 2));
-        await tester.pumpAndSettle();
-        watch.stop();
-        final buildCalls = calls;
-        expect(buildCalls, withPredicate ? inInclusiveRange(36500, 38000) : 0);
-        calls = 0;
-        final commitWatch = Stopwatch()..start();
-        final target = tester.getSemantics(find.bySemanticsLabel('1924-2-15'));
-        target.owner!.performAction(target.id, SemanticsAction.tap);
-        await tester.pumpAndSettle();
-        commitWatch.stop();
-        expect(calls, withPredicate ? inInclusiveRange(36500, 38000) : 0);
-        expect(
-          state.requests.last,
-          NakedDateRange(
-            start: DateTime(1924, 2, 15),
-            end: DateTime(2024, 2, 15),
-          ),
-        );
-        if (iteration > 0) {
-          builds.add(watch.elapsedMicroseconds);
-          activations.add(commitWatch.elapsedMicroseconds);
-        }
-        print(
-          'G4 predicate=$withPredicate iteration=$iteration buildCalls=$buildCalls activationCalls=$calls',
-        );
-      }
-      builds.sort();
-      activations.sort();
-      print(
-        'G4 predicate=$withPredicate warmed build us=$builds; activation+rebuild us=$activations. Debug widget-test pump timing is not a device-frame benchmark.',
-      );
+      await _focus(tester, state);
+      await _tap(tester, 15);
+      expect(state.snapshot.anchor, DateTime(2024, 2, 15));
+      state.snapshot.showMonth!(DateTime(1924, 2));
+      await tester.pumpAndSettle();
+      return state;
     }
-    semantics.dispose();
+
+    testWidgets('browsing within the scanned window does not rescan', (
+      tester,
+    ) async {
+      final calls = [0];
+      final state = await farAnchor(tester, calls);
+      expect(state.snapshot.displayedMonth, DateTime(1924, 2));
+      calls[0] = 0;
+      for (var i = 0; i < 3; i++) {
+        await _key(tester, LogicalKeyboardKey.arrowRight);
+      }
+      // Each internal update re-asks only the 29 visible days (a few times
+      // each, for state and semantics); none repeats the 100-year scan.
+      expect(calls[0], lessThanOrEqualTo(3 * perDayChecks * 29));
+    });
+
+    testWidgets('extending the window scans only newly exposed dates', (
+      tester,
+    ) async {
+      final calls = [0];
+      await farAnchor(tester, calls);
+      calls[0] = 0;
+      await _key(tester, LogicalKeyboardKey.pageUp);
+      // January 1924 adds 31 scanned dates plus its visible days.
+      expect(calls[0], lessThanOrEqualTo(31 + perDayChecks * 31));
+    });
+
+    testWidgets('a committed long range is validated once per widget update', (
+      tester,
+    ) async {
+      final state = await _pump(tester);
+      var calls = 0;
+      state.change(() {
+        state.first = DateTime(1900);
+        state.last = DateTime(2100, 12, 31);
+        state.value = NakedDateRange(
+          start: DateTime(1924, 2, 15),
+          end: DateTime(2024, 2, 15),
+        );
+        state.unavailable = (_) {
+          calls++;
+          return false;
+        };
+      });
+      await tester.pumpAndSettle();
+      expect(state.snapshot.isValueValid, isTrue);
+      await _focus(tester, state);
+      calls = 0;
+      for (var i = 0; i < 3; i++) {
+        await _key(tester, LogicalKeyboardKey.arrowRight);
+      }
+      expect(calls, lessThanOrEqualTo(3 * perDayChecks * 29));
+      calls = 0;
+      state.change(() {});
+      await tester.pumpAndSettle();
+      // A parent rebuild may carry new predicate results, so it revalidates.
+      expect(calls, greaterThan(36000));
+    });
+
+    testWidgets('completion still rechecks the whole interval once', (
+      tester,
+    ) async {
+      final calls = [0];
+      final state = await farAnchor(tester, calls);
+      calls[0] = 0;
+      await _tap(tester, 15);
+      expect(
+        state.requests.single,
+        NakedDateRange(
+          start: DateTime(1924, 2, 15),
+          end: DateTime(2024, 2, 15),
+        ),
+      );
+      expect(calls[0], inInclusiveRange(36500, 36525 + 2 * perDayChecks * 29));
+    });
+  });
+
+  group('availability scan invalidation', () {
+    // Each case starts with the anchor on Feb 15 and Feb 10 unavailable, so
+    // Feb 1–10 cannot complete a range; then one input changes.
+    Future<_HarnessState> anchored(WidgetTester tester) async {
+      final state = await _pump(tester);
+      state.change(() => state.unavailable = (d) => d == DateTime(2024, 2, 10));
+      await tester.pumpAndSettle();
+      await _tap(tester, 15);
+      expect(state.days[DateTime(2024, 2, 9)]!.isDisabled, isTrue);
+      expect(state.days[DateTime(2024, 2, 11)]!.isDisabled, isFalse);
+      return state;
+    }
+
+    bool disabled(_HarnessState state, int day) =>
+        state.days[DateTime(2024, 2, day)]!.isDisabled;
+
+    testWidgets('a new anchor rescans from that anchor', (tester) async {
+      final state = await anchored(tester);
+      await _key(tester, LogicalKeyboardKey.escape);
+      await _tap(tester, 5);
+      expect(state.snapshot.anchor, DateTime(2024, 2, 5));
+      expect(disabled(state, 9), isFalse);
+      expect(disabled(state, 11), isTrue);
+    });
+
+    testWidgets('a new predicate object rescans', (tester) async {
+      final state = await anchored(tester);
+      state.change(() => state.unavailable = (d) => d == DateTime(2024, 2, 20));
+      await tester.pumpAndSettle();
+      expect(state.snapshot.anchor, DateTime(2024, 2, 15));
+      expect(disabled(state, 9), isFalse);
+      expect(disabled(state, 21), isTrue);
+    });
+
+    testWidgets('new bounds rescan', (tester) async {
+      final state = await anchored(tester);
+      state.change(() => state.first = DateTime(2024, 2, 11));
+      await tester.pumpAndSettle();
+      expect(state.snapshot.anchor, DateTime(2024, 2, 15));
+      expect(disabled(state, 11), isFalse);
+      state.change(() => state.first = DateTime(2023));
+      await tester.pumpAndSettle();
+      expect(disabled(state, 9), isTrue);
+    });
+
+    for (final kind in ['enabled', 'value']) {
+      testWidgets('a changed $kind input discards the draft and its scan', (
+        tester,
+      ) async {
+        final state = await anchored(tester);
+        state.change(() {
+          if (kind == 'enabled') {
+            state.enabled = false;
+          } else {
+            state.value = _range(20, 22);
+          }
+        });
+        await tester.pumpAndSettle();
+        if (kind == 'enabled') {
+          state.change(() => state.enabled = true);
+          await tester.pumpAndSettle();
+        }
+        expect(state.snapshot.anchor, isNull);
+        expect(disabled(state, 9), isFalse);
+        expect(disabled(state, 10), isTrue);
+      });
+    }
   });
 }

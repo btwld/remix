@@ -298,7 +298,9 @@ class NakedRangeCalendar extends StatelessWidget {
 
   /// Pure current-availability predicate, checked for every inclusive date.
   ///
-  /// Rebuild when its results change. Activation rechecks the whole interval,
+  /// Rebuild when its results change: between widget updates, results for
+  /// the draft and the committed value are cached, so focus moves and browsing
+  /// cost only newly exposed dates. Activation rechecks the whole interval,
   /// including offscreen dates, even when the function object is unchanged.
   final bool Function(DateTime)? isDateUnavailable;
 
@@ -389,6 +391,14 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
   NakedDateRange? _requested;
   DateTime? _blockedBefore;
   DateTime? _blockedAfter;
+  // Availability scans around the draft anchor are cached across internal
+  // updates (focus moves, browsing) and extended only over newly exposed
+  // dates. Any widget update resets them: a rebuild is how a parent reports
+  // new predicate results, even for the same function object.
+  DateTime? _scanAnchor;
+  DateTime? _scannedBefore;
+  DateTime? _scannedAfter;
+  bool? _valueValid;
   late DateTime _focused;
   late DateTime _displayed;
   final _days = <DateTime, FocusNode>{};
@@ -430,8 +440,8 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
       ? (widget.rangeValue?.contains(date) ?? false)
       : _same(date, widget.value);
 
-  // The nearest blocked dates are recalculated once per build, not by scanning
-  // the full interval separately for every visible day and state update.
+  // The nearest blocked dates come from the cached anchor scan, not from
+  // scanning the interval separately for every visible day and state update.
   bool _selectable(DateTime date) =>
       _interactive &&
       _available(date) &&
@@ -456,17 +466,38 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
     }
   }
 
+  void _resetScans() {
+    _scanAnchor = null;
+    _valueValid = null;
+  }
+
+  // Finds the nearest unavailable dates on each side of the anchor, scanning
+  // only up to the displayed month. A scan resumes where the previous one
+  // stopped, so browsing away from the anchor costs each date once.
   void _prepareRange() {
-    _blockedBefore = null;
-    _blockedAfter = null;
     final anchor = _anchor;
-    if (anchor == null) return;
-    if (!_interactive || !_available(anchor)) {
-      _blockedBefore = anchor;
-      _blockedAfter = anchor;
+    final predicate = widget.isDateUnavailable;
+    if (anchor == null) {
+      _scanAnchor = null;
+      _blockedBefore = _blockedAfter = null;
       return;
     }
-    if (widget.isDateUnavailable == null) return;
+    if (!_interactive || !_available(anchor)) {
+      // An unusable anchor blocks every completion until it is discarded.
+      _scanAnchor = null;
+      _blockedBefore = _blockedAfter = anchor;
+      return;
+    }
+    if (predicate == null) {
+      _scanAnchor = null;
+      _blockedBefore = _blockedAfter = null;
+      return;
+    }
+    if (!_same(_scanAnchor, anchor)) {
+      _scanAnchor = anchor;
+      _scannedBefore = _scannedAfter = anchor;
+      _blockedBefore = _blockedAfter = null;
+    }
     final first = _clamp(_displayed);
     final last = _clamp(
       civilDate(
@@ -475,21 +506,27 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
         _daysInMonth(_displayed.year, _displayed.month),
       ),
     );
-    var date = anchor;
-    while (compareCivilDates(date, first) > 0) {
-      date = civilDate(date.year, date.month, date.day - 1);
-      if (widget.isDateUnavailable!(date)) {
-        _blockedBefore = date;
-        break;
+    if (_blockedBefore == null) {
+      var date = _scannedBefore!;
+      while (compareCivilDates(date, first) > 0) {
+        date = civilDate(date.year, date.month, date.day - 1);
+        if (predicate(date)) {
+          _blockedBefore = date;
+          break;
+        }
       }
+      _scannedBefore = date;
     }
-    date = anchor;
-    while (compareCivilDates(date, last) < 0) {
-      date = civilDate(date.year, date.month, date.day + 1);
-      if (widget.isDateUnavailable!(date)) {
-        _blockedAfter = date;
-        break;
+    if (_blockedAfter == null) {
+      var date = _scannedAfter!;
+      while (compareCivilDates(date, last) < 0) {
+        date = civilDate(date.year, date.month, date.day + 1);
+        if (predicate(date)) {
+          _blockedAfter = date;
+          break;
+        }
       }
+      _scannedAfter = date;
     }
   }
 
@@ -510,6 +547,7 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
   void didUpdateWidget(_Calendar oldWidget) {
     final ownedFocus = effectiveFocusNode.hasFocus;
     super.didUpdateWidget(oldWidget);
+    _resetScans();
     final previous = _focused;
     final valueChanged = widget.isRange
         ? widget.rangeValue != oldWidget.rangeValue
@@ -726,7 +764,9 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
         anchor: _anchor,
         preview: preview,
         isPreviewValid: preview != null && _selectable(_focused),
-        isValueValid:
+        // Validity depends only on widget inputs, so it is rechecked when the
+        // widget updates rather than on every focus move or browse.
+        isValueValid: _valueValid ??=
             widget.rangeValue == null || _validRange(widget.rangeValue!),
         weeks: weeks,
         showPreviousMonth: showPreviousMonth,
