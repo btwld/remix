@@ -8,6 +8,40 @@ import 'combobox_test_host.dart';
 
 void main() {
   testWidgets(
+    'overflow thumb stays visible after idle without host scrollbars',
+    (tester) async {
+      await tester.pumpWidget(
+        comboboxHost(
+          ScrollConfiguration(
+            behavior: const ScrollBehavior().copyWith(scrollbars: false),
+            child: RemixCombobox<String>(
+              optionsBuilder: (_) => List.generate(24, (i) => 'Suggestion $i'),
+              style: testComboboxStyle().panel(
+                ComboboxPanelStyler()
+                    .scrollbarColor(const Color(0xFFAA0000))
+                    .scrollbarThickness(6),
+              ),
+            ),
+          ),
+        ),
+      );
+      await openCombobox(tester);
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.byType(RawScrollbar), findsOneWidget);
+      final bar = tester.widget<RawScrollbar>(find.byType(RawScrollbar));
+      expect(bar.thumbVisibility, isTrue);
+      expect(bar.thumbColor, const Color(0xFFAA0000));
+      expect(bar.thickness, 6);
+      expect(bar.controller!.position.maxScrollExtent, greaterThan(0));
+      expect(bar.controller!.position.physics, isA<ClampingScrollPhysics>());
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.byType(RawScrollbar), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
     'popup viewport notifications stay inside its scroller',
     (tester) async {
       final hostController = ScrollController(initialScrollOffset: 48);

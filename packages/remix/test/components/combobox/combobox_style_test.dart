@@ -6,6 +6,55 @@ import 'package:naked_ui/naked_ui.dart' show NakedComboboxOption;
 import 'combobox_test_host.dart';
 
 void main() {
+  testWidgets('panel effects reach the rendering adapter', (tester) async {
+    await tester.pumpWidget(
+      comboboxHost(
+        RemixCombobox<String>(
+          optionsBuilder: (_) => suggestions,
+          style: testComboboxStyle().panel(
+            ComboboxPanelStyler().containerEffects(
+              .outline(.color(const Color(0xFFFF0000)).width(2)),
+            ),
+          ),
+        ),
+      ),
+    );
+    await openCombobox(tester);
+    expect(
+      find.byWidgetPredicate(
+        (w) => w.runtimeType.toString() == '_RemixBoxEffectsRenderer',
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('panel styles own the viewport bound and render effects', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      comboboxHost(
+        RemixCombobox<String>(
+          optionsBuilder: (_) => List.generate(24, (i) => 'Suggestion $i'),
+          style: testComboboxStyle().panel(
+            ComboboxPanelStyler()
+                .maxHeight(360)
+                .containerEffects(
+                  .outline(.color(const Color(0xFFFF0000)).width(2)),
+                ),
+          ),
+        ),
+      ),
+    );
+    await openCombobox(tester);
+    expect(tester.getSize(find.byType(SingleChildScrollView).last).height, 360);
+    expect(
+      find.byWidgetPredicate(
+        (w) => w.runtimeType.toString() == '_RemixBoxEffectsRenderer',
+      ),
+      findsOneWidget,
+    );
+  });
+
   testWidgets(
     'field projection retains inherited and parent variants in editor states',
     (tester) async {

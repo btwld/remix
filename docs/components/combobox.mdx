@@ -94,13 +94,15 @@ final cityStyle = ComboboxStyler()
         .padding(.all(12))
         .border(.all(.color(const Color(0xFF8A9991)).width(1)))
         .onFocused(.border(.all(.color(const Color(0xFF28775E)).width(2)))))
-    .panel(BoxStyler().color(const Color(0xFFFFFFFF)).padding(.all(4)))
+    .panel(ComboboxPanelStyler().color(const Color(0xFFFFFFFF)).padding(.all(4)))
     .option(ComboboxOptionStyler()
         .padding(.horizontal(12))
         .onHovered(.color(const Color(0xFFF1F5F2)))
         .onFocused(.color(const Color(0xFFDEEEE5)))
         .label(TextStyler().fontSize(16)));
 ```
+
+`ComboboxPanelStyler` supplies panel constraints, `containerEffects`, `scrollbarColor`, and `scrollbarThickness`. The component owns a persistent overflow thumb (painted only when scrolling is possible); its default is 4px wide with the inherited text color at 35% opacity. Panel scrolling clamps and stays isolated from the page, as in Select/Menu. Set option `.minHeight(...)` to size rows including padding; the unstyled default is 48px.
 
 `container` controls editor-root layout; `field` and `panel` style the editor and suggestions surface. The nested `option: ComboboxOptionSpec` groups `container` and `label`; use `ComboboxOptionStyler` for row styling and `.label(TextStyler(...))` for its text. An option's focused state denotes RawAutocomplete's keyboard highlight. Hover styles a row independently and does not move that highlight. Root modifiers and animation apply once around the editor. Direct `styleSpec: ComboboxSpec(...)` bypasses fluent styling and defaults. `RemixCombobox.styleFrom(...)` and generated `ComboboxStyler.call<T>()` are supported.
 

@@ -49,7 +49,7 @@ ComboboxStyler testComboboxStyle() => ComboboxStyler()
           .color(const Color(0xFFFFFFFF))
           .onFocused(.color(const Color(0xFFE0E0FF))),
     )
-    .panel(BoxStyler().color(const Color(0xFFFFFFFF)))
+    .panel(ComboboxPanelStyler().color(const Color(0xFFFFFFFF)))
     .option(
       ComboboxOptionStyler()
           .padding(.horizontal(12))

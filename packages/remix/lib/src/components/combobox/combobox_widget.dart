@@ -108,6 +108,7 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
     final base = ComboboxStyler()
         .field(TextFieldStyler().constraints(.minHeight(48)))
         .option(ComboboxOptionStyler().minHeight(48))
+        .panel(ComboboxPanelStyler().maxHeight(288))
         .merge(style);
     final inherited = Style.maybeOf<ComboboxSpec>(context);
     final effective = (inherited is ComboboxStyler
@@ -171,72 +172,66 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
         final panel =
             styleSpec?.panel ??
             _ComboboxProjection(effective, .panel).build(context).spec.panel;
-        return RemixBoxAdapter(
+        return StyleSpecBuilder<ComboboxPanelSpec>(
           styleSpec: panel,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 288),
-            // The portal keeps the host's widget ancestry. Contain viewport
-            // notifications as well as primary-controller ownership so popup
-            // scrolling cannot drive the host's refresh indicator or scrollbar.
-            child: NotificationListener<ViewportNotificationMixin>(
-              onNotification: (_) => true,
-              child: SingleChildScrollView(
-                primary: false,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (final (index, option) in options.indexed)
-                      NakedComboboxOption<T>(
-                        // Replacing or moving a pressed option cancels its
-                        // press rather than accepting a different result.
-                        key: ValueKey((index, option)),
-                        value: option,
-                        semanticLabel: displayStringForOption(option),
-                        builder: (context, state, _) => FocusVisibilityScope(
-                          child: WidgetStateProvider(
-                            states: state.states,
-                            child: Builder(
-                              builder: (context) {
-                                final spec =
-                                    styleSpec ??
-                                    _ComboboxProjection(
-                                      effective,
-                                      .option,
-                                    ).build(context).spec;
-                                return StyleSpecBuilder<ComboboxOptionSpec>(
-                                  styleSpec: spec.option,
-                                  builder: (context, optionSpec) =>
-                                      RemixBoxAdapter(
-                                        styleSpec: optionSpec.container,
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional.centerStart,
-                                          heightFactor: 1,
-                                          child: optionBuilder == null
-                                              ? StyledText(
-                                                  displayStringForOption(
-                                                    option,
-                                                  ),
-                                                  styleSpec: optionSpec.label,
-                                                )
-                                              : RemixDefaultContentStyle(
-                                                  text: optionSpec.label,
-                                                  child: optionBuilder(
-                                                    context,
-                                                    option,
-                                                  ),
+          builder: (context, spec) => RemixBoxAdapter(
+            styleSpec: spec.container,
+            containerEffects: spec.containerEffects,
+            child: _ComboboxOptionsViewport(
+              color: spec.scrollbarColor,
+              thickness: spec.scrollbarThickness ?? 4,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final (index, option) in options.indexed)
+                    NakedComboboxOption<T>(
+                      // Replacing or moving a pressed option cancels its
+                      // press rather than accepting a different result.
+                      key: ValueKey((index, option)),
+                      value: option,
+                      semanticLabel: displayStringForOption(option),
+                      builder: (context, state, _) => FocusVisibilityScope(
+                        child: WidgetStateProvider(
+                          states: state.states,
+                          child: Builder(
+                            builder: (context) {
+                              final spec =
+                                  styleSpec ??
+                                  _ComboboxProjection(
+                                    effective,
+                                    .option,
+                                  ).build(context).spec;
+                              return StyleSpecBuilder<ComboboxOptionSpec>(
+                                styleSpec: spec.option,
+                                builder: (context, optionSpec) =>
+                                    RemixBoxAdapter(
+                                      styleSpec: optionSpec.container,
+                                      child: Align(
+                                        alignment:
+                                            AlignmentDirectional.centerStart,
+                                        heightFactor: 1,
+                                        child: optionBuilder == null
+                                            ? StyledText(
+                                                displayStringForOption(option),
+                                                styleSpec: optionSpec.label,
+                                              )
+                                            : RemixDefaultContentStyle(
+                                                text: optionSpec.label,
+                                                child: optionBuilder(
+                                                  context,
+                                                  option,
                                                 ),
-                                        ),
+                                              ),
                                       ),
-                                );
-                              },
-                            ),
+                                    ),
+                              );
+                            },
                           ),
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -244,4 +239,60 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
       },
     );
   }
+}
+
+/// Own the controller for the entire mounted panel, including keyboard reveal.
+/// Contain notifications and clamp like Select/Menu's overlay scroll adapter.
+class _ComboboxOptionsViewport extends StatefulWidget {
+  const _ComboboxOptionsViewport({
+    required this.child,
+    required this.color,
+    required this.thickness,
+  });
+
+  final Widget child;
+  final Color? color;
+  final double thickness;
+
+  @override
+  State<_ComboboxOptionsViewport> createState() =>
+      _ComboboxOptionsViewportState();
+}
+
+class _ComboboxOptionsViewportState extends State<_ComboboxOptionsViewport> {
+  final _controller = ScrollController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      NotificationListener<ViewportNotificationMixin>(
+        onNotification: (_) => true,
+        child: RawScrollbar(
+          controller: _controller,
+          thumbVisibility: true,
+          thumbColor:
+              widget.color ??
+              DefaultTextStyle.of(context).style.color?.withValues(alpha: 0.35),
+          thickness: widget.thickness,
+          radius: const Radius.circular(2),
+          child: ScrollConfiguration(
+            // Own exactly one thumb even when the host adds desktop scrollbars.
+            behavior: ScrollConfiguration.of(context).copyWith(
+              scrollbars: false,
+              overscroll: false,
+              physics: const ClampingScrollPhysics(),
+            ),
+            child: SingleChildScrollView(
+              controller: _controller,
+              primary: false,
+              child: widget.child,
+            ),
+          ),
+        ),
+      );
 }

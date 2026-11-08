@@ -17,7 +17,7 @@ class ComboboxSpec with _$ComboboxSpec {
 
   /// Bounded suggestions surface.
   @override
-  final StyleSpec<BoxSpec> panel;
+  final StyleSpec<ComboboxPanelSpec> panel;
 
   /// Suggestion row and label, resolved in the option's own state.
   @override
@@ -26,11 +26,11 @@ class ComboboxSpec with _$ComboboxSpec {
   const ComboboxSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextFieldSpec>? field,
-    StyleSpec<BoxSpec>? panel,
+    StyleSpec<ComboboxPanelSpec>? panel,
     StyleSpec<ComboboxOptionSpec>? option,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        field = field ?? const StyleSpec(spec: TextFieldSpec()),
-       panel = panel ?? const StyleSpec(spec: BoxSpec()),
+       panel = panel ?? const StyleSpec(spec: ComboboxPanelSpec()),
        option = option ?? const StyleSpec(spec: ComboboxOptionSpec());
 }
 
@@ -51,4 +51,44 @@ class ComboboxOptionSpec with _$ComboboxOptionSpec {
     StyleSpec<TextSpec>? label,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec());
+}
+
+/// Suggestions surface, effects and persistent overflow cue.
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
+class ComboboxPanelSpec with _$ComboboxPanelSpec {
+  @override
+  @MixableField(forwardStyler: true)
+  final StyleSpec<BoxSpec> container;
+
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
+
+  /// Defaults to the inherited text color at 35% opacity.
+  @override
+  final Color? scrollbarColor;
+
+  /// Logical width of the overflow thumb; defaults to 4px.
+  @override
+  final double? scrollbarThickness;
+
+  const ComboboxPanelSpec({
+    StyleSpec<BoxSpec>? container,
+    this.containerEffects,
+    this.scrollbarColor,
+    this.scrollbarThickness,
+  }) : container = container ?? const StyleSpec(spec: BoxSpec());
+
+  @override
+  ComboboxPanelSpec lerp(ComboboxPanelSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
+    );
+  }
 }
