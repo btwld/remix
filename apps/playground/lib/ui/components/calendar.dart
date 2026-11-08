@@ -184,7 +184,7 @@ class PlaygroundCalendar extends StatelessWidget {
   final CalendarSpec? styleSpec;
 
   /// Creates a [CalendarStyler], for `RemixCalendar.styleFrom(...)`.
-  static final styleFrom = CalendarStyler.new;
+  static const styleFrom = CalendarStyler.new;
 
   @override
   Widget build(BuildContext context) => RemixCalendar(
