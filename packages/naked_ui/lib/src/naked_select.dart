@@ -313,8 +313,8 @@ class NakedSelect<T> extends StatefulWidget {
   /// [OverlayPositionConfig.minimumAvailableHeight] of room, the panel may
   /// overlap the trigger within the collision-padded overlay bounds instead.
   ///
-  /// Independently of that height rule, whenever
-  /// [OverlayPositionConfig.avoidCollisions] is true (the default) the panel is
+  /// Independently of that height rule, when both this flag and
+  /// [OverlayPositionConfig.avoidCollisions] are true (the default), the panel is
   /// also never wider than the collision-padded overlay, on any side, and
   /// scrollable content scrolls horizontally. Without collision avoidance the
   /// width is not capped. Content that cannot scroll overflows the capped
