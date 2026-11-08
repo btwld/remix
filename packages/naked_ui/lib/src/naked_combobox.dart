@@ -372,6 +372,11 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   bool _composing = false;
   bool _handlingSelection = false;
   int _optionsGeneration = 0;
+  int _optionsRequest = 0;
+  String? _optionsText;
+  bool _waitingForOptions = false;
+  bool _suppressCachedOptions = false;
+  bool _freshQueryRequested = false;
 
   @override
   void didUpdateWidget(covariant NakedCombobox<T> oldWidget) {
@@ -380,6 +385,14 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
         oldWidget.controller != widget.controller ||
         oldWidget.focusNode != widget.focusNode) {
       _optionsGeneration++;
+      if (_waitingForOptions) {
+        // Abandoning a pending query leaves RawAutocomplete's earlier cache
+        // intact. Do not revive that cache on re-enable or editor replacement;
+        // a fresh query must supply results before exposing options again.
+        _suppressCachedOptions = true;
+        _freshQueryRequested = false;
+        _waitingForOptions = false;
+      }
     }
     // Detach before RawAutocomplete can dispose its internally owned pair.
     if (!identical(oldWidget.controller, widget.controller)) {
@@ -454,6 +467,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     if (controller.text == _text) return;
     setState(() {
       _text = controller.text;
+      if (_suppressCachedOptions) _freshQueryRequested = true;
       _reconcileValue();
     });
   }
@@ -466,7 +480,12 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   void _invokeSelection(VoidCallback select) {
     // RawAutocomplete writes selected text before onSelected. A callback-only
     // guard is too late, including when Raw still holds cached options.
-    if (!mounted || !widget.enabled || _handlingSelection) return;
+    if (!mounted ||
+        !widget.enabled ||
+        _suppressCachedOptions ||
+        _handlingSelection) {
+      return;
+    }
     _handlingSelection = true;
     try {
       select();
@@ -479,6 +498,9 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     // Cached options can be accepted while a newer query is still pending.
     // Its completion must not reopen suggestions after this acceptance.
     _optionsGeneration++;
+    // Selection can replace Raw's last query without calling optionsBuilder.
+    // Restart pending-query tracking on either supported SDK's submit path.
+    _optionsText = null;
     try {
       widget.onSelected?.call(value);
     } finally {
@@ -492,7 +514,8 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   }
 
   void _handleMount() {
-    if (!mounted || !widget.enabled || _isOpen) return;
+    if (!mounted || !widget.enabled || _suppressCachedOptions || _isOpen)
+      return;
     setState(() => _isOpen = true);
     widget.onOpen?.call();
   }
@@ -514,13 +537,35 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     if (!widget.enabled) return const Iterable.empty();
 
     final generation = _optionsGeneration;
+    // RawAutocomplete only adopts results for text changes, not caret changes.
+    // Selection-only invocations must not release a cancelled query's cache.
+    final textChanged = value.text != _optionsText;
+    _optionsText = value.text;
+    if (textChanged) _optionsRequest++;
+    final request = _optionsRequest;
     final result = widget.optionsBuilder(value);
-    if (result is Future<Iterable<T>>) {
-      return result.then((options) {
-        // Flutter 3.41 accesses its context after await without a mounted check.
-        if (!mounted) return Completer<Iterable<T>>().future;
-        if (!widget.enabled || generation != _optionsGeneration) {
-          return const Iterable.empty();
+    final asynchronous =
+        result is Future<Iterable<T>> || _suppressCachedOptions;
+    if (textChanged) _waitingForOptions = asynchronous;
+    if (asynchronous) {
+      // Normalize synchronous refreshes too: controller listeners must observe
+      // the new query before its result can release a suppressed cache.
+      return Future<Iterable<T>>.value(result).then((options) {
+        if (textChanged && request == _optionsRequest) {
+          _waitingForOptions = false;
+        }
+        // RawAutocomplete has no cancellation API. An empty result would still
+        // complete its search and announce "no results", so abandon this await.
+        // Later queries run independently. This also avoids Flutter 3.41's
+        // unmounted context access after await.
+        if (!mounted || !widget.enabled || generation != _optionsGeneration) {
+          return Completer<Iterable<T>>().future;
+        }
+        if (textChanged &&
+            request == _optionsRequest &&
+            _suppressCachedOptions &&
+            _freshQueryRequested) {
+          setState(() => _suppressCachedOptions = false);
         }
         return options;
       });
@@ -551,7 +596,9 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
       builder: (context, state, _) => Actions(
         // Raw still caches options while disabled. Shadow its navigation so
         // hidden suggestions cannot consume the editor's ordinary shortcuts.
-        actions: widget.enabled ? const {} : _disabledNavigation,
+        actions: widget.enabled && !_suppressCachedOptions
+            ? const {}
+            : _disabledNavigation,
         child: widget.fieldBuilder(
           context,
           state,
@@ -577,7 +624,9 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   ) {
     // Raw has no public enabled/cache control. Suppress the actual options
     // subtree while retaining its editor, highlight and overlay ownership.
-    if (!widget.enabled) return const SizedBox.shrink();
+    if (!widget.enabled || _suppressCachedOptions) {
+      return const SizedBox.shrink();
+    }
     final generation = _optionsGeneration;
     return _OverlayLifecycle(
       onMount: _handleMount,
