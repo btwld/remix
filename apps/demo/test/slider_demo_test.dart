@@ -5,6 +5,50 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
+  for (final dark in [false, true]) {
+    testWidgets('${dark ? "dark" : "light"}: demo thumb states stay legible', (
+      tester,
+    ) async {
+      Color? idleFace;
+      for (final states in <Set<WidgetState>>[
+        {},
+        {WidgetState.hovered},
+        {WidgetState.pressed},
+        {WidgetState.disabled},
+      ]) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: FortalTheme(
+              mode: dark ? .dark : .light,
+              child: WidgetStateProvider(
+                states: states,
+                child: Builder(
+                  builder: (context) {
+                    final spec = demoSliderStyle().build(context).spec;
+                    final face =
+                        (spec.thumb.spec.decoration as BoxDecoration).color;
+                    if (states.isEmpty) idleFace = face;
+                    if (states.contains(WidgetState.disabled)) {
+                      expect(
+                        face,
+                        (dark ? FortalTokens.gray9 : FortalTokens.gray4)
+                            .resolve(context),
+                      );
+                      expect(spec.blendMode, BlendMode.srcOver);
+                    } else {
+                      expect(face, idleFace);
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+    });
+  }
+
   testWidgets('demo sliders share a 48px target and aligned label blocks', (
     tester,
   ) async {

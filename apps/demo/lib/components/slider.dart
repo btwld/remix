@@ -8,6 +8,14 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
+// Resolve inside the disabled fragment so the dark face is not shadowed by
+// the higher-priority disabled state of the shared recipe.
+final _disabledThumbFill = ContextToken<Color>(
+  (context) =>
+      (FortalTheme.of(context).isDark ? FortalTokens.gray9 : FortalTokens.gray4)
+          .resolve(context),
+);
+
 /// Shared presentation for the demo's single and range sliders.
 SliderStyler demoSliderStyle({
   FortalSliderVariant variant = .surface,
@@ -23,7 +31,13 @@ SliderStyler _demoSliderOverrides() => SliderStyler()
     .wrap(.sizedBox(height: 48))
     .onHovered(
       SliderStyler()
-          .thumbColor(FortalTokens.gray3())
+          .thumbEffects(
+            RemixBoxEffectsMix(
+              outline: .color(
+                FortalTokens.accentA4(),
+              ).width(FortalTokens.borderWidth2()),
+            ),
+          )
           .thumb(
             .border(
               .all(
@@ -36,7 +50,13 @@ SliderStyler _demoSliderOverrides() => SliderStyler()
     )
     .onPressed(
       SliderStyler()
-          .thumbColor(FortalTokens.gray6())
+          .thumbEffects(
+            RemixBoxEffectsMix(
+              outline: .color(
+                FortalTokens.accentA6(),
+              ).width(FortalTokens.space1()),
+            ),
+          )
           .thumb(
             .border(
               .all(
@@ -60,7 +80,14 @@ SliderStyler _demoSliderOverrides() => SliderStyler()
       SliderStyler()
           .track(.color(FortalTokens.gray5()))
           .range(.color(FortalTokens.gray8()))
-          .thumbColor(FortalTokens.gray3())
+          .thumbColor(_disabledThumbFill())
+          .thumb(
+            .border(
+              .all(
+                .color(FortalTokens.gray9()).width(FortalTokens.borderWidth1()),
+              ),
+            ),
+          )
           .blendMode(BlendMode.srcOver),
     )
     // Override the recipe's dark disabled screen blend as well.
@@ -69,7 +96,10 @@ SliderStyler _demoSliderOverrides() => SliderStyler()
         'demoSliderDark',
         (context) => FortalTheme.of(context).isDark,
       ),
-      SliderStyler().onDisabled(.blendMode(BlendMode.srcOver)),
+      // A neutral edge separates white handles even where they overlap.
+      SliderStyler()
+          .thumb(.border(.all(.color(FortalTokens.gray8()))))
+          .onDisabled(.blendMode(BlendMode.srcOver)),
     );
 
 @widgetbook.UseCase(name: 'Slider Component', type: RemixSlider)
