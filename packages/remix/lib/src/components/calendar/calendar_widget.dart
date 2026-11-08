@@ -210,8 +210,8 @@ class RemixCalendar extends StatelessWidget {
             headerBuilder?.call(context, state) ??
             _CalendarHeader(
               displayedMonth: state.displayedMonth,
-              previousMonth: state.showPreviousMonth,
-              nextMonth: state.showNextMonth,
+              showPreviousMonth: state.showPreviousMonth,
+              showNextMonth: state.showNextMonth,
               showMonth: state.showMonth,
               firstDate: firstDate,
               lastDate: lastDate,
@@ -323,8 +323,8 @@ Widget _calendarDay({
 class _CalendarHeader extends StatelessWidget {
   const _CalendarHeader({
     required this.displayedMonth,
-    required this.previousMonth,
-    required this.nextMonth,
+    required this.showPreviousMonth,
+    required this.showNextMonth,
     required this.showMonth,
     required this.firstDate,
     required this.lastDate,
@@ -334,8 +334,8 @@ class _CalendarHeader extends StatelessWidget {
     required this.spec,
   });
   final DateTime displayedMonth;
-  final VoidCallback? previousMonth;
-  final VoidCallback? nextMonth;
+  final VoidCallback? showPreviousMonth;
+  final VoidCallback? showNextMonth;
   final ValueChanged<DateTime>? showMonth;
   final DateTime firstDate;
   final DateTime lastDate;
@@ -347,7 +347,7 @@ class _CalendarHeader extends StatelessWidget {
   Widget _navigation({required bool previous}) => RemixIconButton(
     icon: null,
     semanticLabel: previous ? labels.previousMonth : labels.nextMonth,
-    onPressed: previous ? previousMonth : nextMonth,
+    onPressed: previous ? showPreviousMonth : showNextMonth,
     style: IconButtonStyler()
         .constraints(.minWidth(_calendarTarget).minHeight(_calendarTarget))
         .merge(navigationStyle),
@@ -525,15 +525,16 @@ class _CalendarView extends StatelessWidget {
     trackFocusVisibility: true,
     builder: (context, spec) => LayoutBuilder(
       builder: (context, parentConstraints) {
+        final summaryBuilder = this.summaryBuilder;
         var container = spec.container;
         final bounds = container.spec.constraints ?? const BoxConstraints();
         // Rows and padding cells follow the day style's minimum target.
         final dayBounds = spec.day.spec.container.spec.constraints;
-        final dayWidth = (dayBounds?.minWidth ?? 0) > 0
-            ? dayBounds!.minWidth
+        final dayWidth = dayBounds != null && dayBounds.minWidth > 0
+            ? dayBounds.minWidth
             : _calendarTarget;
-        final dayHeight = (dayBounds?.minHeight ?? 0) > 0
-            ? dayBounds!.minHeight
+        final dayHeight = dayBounds != null && dayBounds.minHeight > 0
+            ? dayBounds.minHeight
             : _calendarTarget;
         if (!bounds.hasBoundedWidth || bounds.maxWidth == double.maxFinite) {
           final padding =
@@ -592,7 +593,7 @@ class _CalendarView extends StatelessWidget {
                           Semantics(
                             container: true,
                             liveRegion: true,
-                            child: summaryBuilder!(context, summary),
+                            child: summaryBuilder(context, summary),
                           ),
                         _weekdays(spec),
                         SizedBox(height: spec.weekdaySpacing ?? 0),

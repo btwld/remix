@@ -234,6 +234,18 @@ class NakedRangeCalendarState extends NakedState {
   static NakedRangeCalendarState of(BuildContext context) =>
       NakedState.of(context);
 
+  /// Returns the nearest range state, if one is available.
+  static NakedRangeCalendarState? maybeOf(BuildContext context) =>
+      NakedState.maybeOf(context);
+
+  /// Returns the controller from the nearest range state scope.
+  static WidgetStatesController controllerOf(BuildContext context) =>
+      NakedState.controllerOf<NakedRangeCalendarState>(context);
+
+  /// Returns the nearest range state scope's controller, if one is available.
+  static WidgetStatesController? maybeControllerOf(BuildContext context) =>
+      NakedState.maybeControllerOf<NakedRangeCalendarState>(context);
+
   @override
   List<Object?> get props => [
     ...super.props,
@@ -283,6 +295,7 @@ class NakedRangeCalendar extends StatelessWidget {
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
+    this.excludeSemantics = false,
   });
 
   /// Parent-owned complete range. Invalid external values are retained.
@@ -311,7 +324,7 @@ class NakedRangeCalendar extends StatelessWidget {
   /// First weekday column, Monday=1 through Sunday=7.
   final int firstDayOfWeek;
 
-  /// Enables navigation, focus and selection when [onChanged] is nonnull.
+  /// Whether navigation, focus and selection are enabled when [onChanged] is nonnull.
   final bool enabled;
 
   /// Localized accessible calendar group name or current range instruction.
@@ -320,11 +333,14 @@ class NakedRangeCalendar extends StatelessWidget {
   /// Focus entry point, transferred to the current keyboard day.
   final FocusNode? focusNode;
 
-  /// Focuses the keyboard entry date on mount.
+  /// Whether to focus the keyboard entry date on mount.
   final bool autofocus;
 
   /// Builds presentation; retain [NakedCalendarDay] for visible dates.
   final ValueWidgetBuilder<NakedRangeCalendarState> builder;
+
+  /// Whether to hide this widget and its children from accessibility services.
+  final bool excludeSemantics;
 
   @override
   Widget build(BuildContext context) => _Calendar(
@@ -340,6 +356,7 @@ class NakedRangeCalendar extends StatelessWidget {
     focusNode: focusNode,
     autofocus: autofocus,
     rangeBuilder: builder,
+    excludeSemantics: excludeSemantics,
   );
 }
 

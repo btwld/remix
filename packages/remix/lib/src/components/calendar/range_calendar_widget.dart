@@ -15,7 +15,6 @@ class RemixRangeCalendarLabels {
     this.invalidRange = 'Selected range is unavailable',
     this.selectedRange = _selectedRange,
     this.joinSummary = _joinSentences,
-    this.joinDayLabel = _joinParts,
   });
 
   /// Appended to the accessible name of the committed range's first day.
@@ -52,13 +51,9 @@ class RemixRangeCalendarLabels {
   /// next instruction. Defaults to English sentence punctuation.
   final String Function(List<String> sentences) joinSummary;
 
-  /// Joins a day's accessible name parts: its date, today and range roles.
-  final String Function(List<String> parts) joinDayLabel;
-
   static String _selectedRange(String start, String end) =>
       'Selected range: $start to $end';
   static String _joinSentences(List<String> sentences) => sentences.join('. ');
-  static String _joinParts(List<String> parts) => parts.join(', ');
 }
 
 /// Controlled inclusive range selection over the shared calendar anatomy.
@@ -165,6 +160,7 @@ class RemixRangeCalendar extends StatelessWidget {
   /// technology only. A builder makes it visible and keeps it live.
   final Widget Function(BuildContext context, String summary)? summaryBuilder;
 
+  /// Creates a [CalendarStyler], for `RemixRangeCalendar.styleFrom(...)`.
   static final styleFrom = CalendarStyler.new;
 
   @override
@@ -195,8 +191,8 @@ class RemixRangeCalendar extends StatelessWidget {
             headerBuilder?.call(context, state) ??
             _CalendarHeader(
               displayedMonth: state.displayedMonth,
-              previousMonth: state.previousMonth,
-              nextMonth: state.nextMonth,
+              showPreviousMonth: state.showPreviousMonth,
+              showNextMonth: state.showNextMonth,
               showMonth: state.showMonth,
               firstDate: firstDate,
               lastDate: lastDate,
@@ -227,7 +223,8 @@ class RemixRangeCalendar extends StatelessWidget {
     final today = currentDate ?? DateTime.now();
     final committed = state.value;
     final draft = state.preview;
-    return rangeLabels.joinDayLabel([
+    final anchor = state.anchor;
+    return labels.joinDayLabel([
       labels.fullDate(date),
       if (isSameCivilDate(date, today)) labels.today,
       if (committed != null && isSameCivilDate(date, committed.start))
@@ -235,7 +232,7 @@ class RemixRangeCalendar extends StatelessWidget {
       if (committed != null && isSameCivilDate(date, committed.end))
         rangeLabels.end,
       if (draft != null && draft.contains(date)) rangeLabels.draftRange,
-      if (state.anchor != null && isSameCivilDate(date, state.anchor!))
+      if (anchor != null && isSameCivilDate(date, anchor))
         rangeLabels.draftStart,
       if (draft != null && isSameCivilDate(date, state.focusedDate))
         rangeLabels.draftEnd,

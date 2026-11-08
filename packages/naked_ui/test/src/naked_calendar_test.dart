@@ -428,7 +428,7 @@ void main() {
     final state = await _pump(tester);
     await tester.tap(_day(29));
     await tester.pumpAndSettle();
-    state.snapshot.nextMonth!();
+    state.snapshot.showNextMonth!();
     state.after.requestFocus();
     await tester.pumpAndSettle();
     expect(state.after.hasPrimaryFocus, isTrue);

@@ -804,7 +804,7 @@ void main() {
         _host(
           _calendar(
             value: _range(10, 12),
-            rangeLabels: RemixRangeCalendarLabels(
+            labels: RemixCalendarLabels(
               joinDayLabel: (parts) => parts.join(' ؛ '),
             ),
           ),

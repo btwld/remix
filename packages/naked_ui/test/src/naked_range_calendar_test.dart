@@ -103,11 +103,11 @@ class _HarnessState extends State<_Harness> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   NakedButton(
-                    onPressed: state.previousMonth,
+                    onPressed: state.showPreviousMonth,
                     child: const Text('Previous'),
                   ),
                   NakedButton(
-                    onPressed: state.nextMonth,
+                    onPressed: state.showNextMonth,
                     child: const Text('Next'),
                   ),
                   for (final week in state.weeks)
@@ -183,6 +183,52 @@ SemanticsNode _semantics(WidgetTester tester, int day) =>
     tester.getSemantics(find.bySemanticsLabel('2024-2-$day'));
 
 void main() {
+  testWidgets(
+    'excludeSemantics hides range subtree without disabling selection',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        var requests = 0;
+        await tester.pumpWidget(
+          _host(
+            NakedRangeCalendar(
+              value: null,
+              firstDate: DateTime(2024),
+              lastDate: DateTime(2024, 12, 31),
+              currentDate: DateTime(2024, 2, 15),
+              excludeSemantics: true,
+              semanticLabel: 'Hidden range',
+              onChanged: (_) => requests++,
+              builder: (context, state, _) {
+                expect(NakedRangeCalendarState.maybeOf(context), same(state));
+                expect(NakedRangeCalendarState.of(context), same(state));
+                expect(
+                  NakedRangeCalendarState.maybeControllerOf(context),
+                  same(NakedRangeCalendarState.controllerOf(context)),
+                );
+                return NakedCalendarDay(
+                  date: DateTime(2024, 2, 15),
+                  semanticLabel: 'Hidden range day',
+                  builder: (_, _, _) =>
+                      const SizedBox(width: 44, height: 44, child: Text('Day')),
+                );
+              },
+            ),
+          ),
+        );
+        expect(find.bySemanticsLabel('Hidden range'), findsNothing);
+        expect(find.bySemanticsLabel('Hidden range day'), findsNothing);
+        expect(find.bySemanticsLabel('Day'), findsNothing);
+        await tester.tap(find.text('Day'));
+        await tester.pump();
+        await tester.tap(find.text('Day'));
+        expect(requests, 1);
+      } finally {
+        semantics.dispose();
+      }
+    },
+  );
+
   testWidgets('retained range day tap is inert after disposal', (tester) async {
     final state = await _pump(tester);
     await _tap(tester, 20);
@@ -211,7 +257,7 @@ void main() {
       final show = state.snapshot.showMonth!;
       final retained = action == 'showMonth'
           ? () => show(DateTime(2024, 3))
-          : state.snapshot.nextMonth!;
+          : state.snapshot.showNextMonth!;
       await tester.pumpWidget(const SizedBox());
       expect(state.mounted, isFalse);
       retained();

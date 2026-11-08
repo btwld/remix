@@ -62,7 +62,7 @@ class _RangeCalendarReferencePageState
   Widget build(BuildContext context) {
     final labels = _arabic ? _arabicLabels : const RemixCalendarLabels();
     String formatRange(NakedDateRange range) =>
-        '${labels.day(range.start)} ${labels.month(range.start)} – ${labels.day(range.end)} ${labels.month(range.end)} ${labels.year(range.end.year)}';
+        '${labels.day(range.start)} ${labels.month(range.start.month)} – ${labels.day(range.end)} ${labels.month(range.end.month)} ${labels.year(range.end.year)}';
     return Directionality(
       textDirection: _arabic ? TextDirection.rtl : TextDirection.ltr,
       child: MediaQuery(
@@ -352,7 +352,7 @@ final _arabicLabels = RemixCalendarLabels(
   chooseMonth: 'اختر الشهر',
   chooseYear: 'اختر السنة',
   today: 'اليوم',
-  month: (date) => _arabicMonths[date.month - 1],
+  month: (month) => _arabicMonths[month - 1],
   monthYear: (date) => '${_arabicMonths[date.month - 1]} ${_digits(date.year)}',
   fullDate: (date) =>
       '${_arabicWeekdays[date.weekday - 1]}، '
