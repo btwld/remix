@@ -54,11 +54,19 @@ class RemixDatePicker extends StatefulWidget {
   final int firstDayOfWeek;
   final bool enabled;
 
-  /// Field purpose, combined with the displayed value on the trigger.
+  /// Field purpose and the trigger's accessible name, such as "Appointment
+  /// date". The trigger's accessible value is the selected date from
+  /// [RemixCalendarLabels.fullDate], or [RemixCalendarLabels.noDate].
   final String semanticLabel;
+
+  /// Visible trigger text without a selected date.
   final String placeholder;
 
-  /// Trigger date text. Defaults to [RemixCalendarLabels.fullDate].
+  /// Visible trigger date text. Defaults to [RemixCalendarLabels.fullDate].
+  ///
+  /// It only changes what is painted: the accessible value always uses the
+  /// complete [RemixCalendarLabels.fullDate], so compact formats such as
+  /// "20/2" are never announced as the date.
   final String Function(DateTime)? formatDate;
   final RemixCalendarLabels calendarLabels;
   final FocusNode? focusNode;
@@ -185,14 +193,21 @@ class _RemixDatePickerState extends State<RemixDatePicker> {
         navigationStyle: widget.navigationStyle,
         selectorStyle: widget.selectorStyle,
       ),
-      child: RemixButton(
-        label: label,
-        semanticLabel: '${widget.semanticLabel}, $label',
-        onPressed: _interactive ? _toggle : null,
-        enabled: _interactive,
-        focusNode: _trigger,
-        autofocus: widget.autofocus,
-        style: widget.buttonStyle,
+      // Name and value stay separate semantics fields, merged into the trigger
+      // by the popover, so assistive technology joins them in its own locale.
+      child: Semantics(
+        value: value == null
+            ? widget.calendarLabels.noDate
+            : widget.calendarLabels.fullDate(value),
+        child: RemixButton(
+          label: label,
+          semanticLabel: widget.semanticLabel,
+          onPressed: _interactive ? _toggle : null,
+          enabled: _interactive,
+          focusNode: _trigger,
+          autofocus: widget.autofocus,
+          style: widget.buttonStyle,
+        ),
       ),
     );
   }

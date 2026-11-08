@@ -73,11 +73,14 @@ does not include a text parser, segmented field, range selection, or time input.
 
 ## Labels and presentation
 
-Localize `semanticLabel` (the field purpose), `placeholder`, and
-`calendarLabels`. `formatDate` optionally controls the selected value shown on
-the button; by default it uses `calendarLabels.fullDate`. Set `firstDayOfWeek`
-explicitly for the application locale. English defaults do not imply automatic
-locale formatting.
+Localize `semanticLabel`, `placeholder`, and `calendarLabels`.
+`semanticLabel` is the field purpose and the trigger's accessible name. The
+trigger's accessible value is the selected date from `calendarLabels.fullDate`,
+or `calendarLabels.noDate` when empty; assistive technology joins the name and
+value in its own locale. `formatDate` only changes the text painted on the
+button (by default `calendarLabels.fullDate`), so a compact format is never
+announced as the date. Set `firstDayOfWeek` explicitly for the application
+locale. English defaults do not imply automatic locale formatting.
 
 Style the composition with independent `buttonStyle`, `popoverStyle`,
 `calendarStyle`, `navigationStyle` and `selectorStyle` values. Each child resolves

@@ -122,8 +122,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 - **DatePicker** — a thin Button + Popover + Calendar composition, not a text
   field. The parent owns nullable `value`; valid activation requests one date
   and closes even when rejected. Escape/outside/disable close without selection.
-  Localize `semanticLabel`, `placeholder`, `calendarLabels` and optionally
-  `formatDate`. An Overlay ancestor is required. A view resize closes it;
+  Localize `semanticLabel` (purpose; the trigger's name), `placeholder`,
+  `calendarLabels` (`fullDate` is the trigger's value, `noDate` when empty) and
+  optionally `formatDate` (painted text only). An Overlay ancestor is required. A view resize closes it;
   keyboard and safe-area changes re-fit the open panel. Style children independently
   with `buttonStyle`, `popoverStyle`, `calendarStyle`, `navigationStyle` and
   `selectorStyle`; there is no DatePicker `style`/`styleSpec` or public controller.

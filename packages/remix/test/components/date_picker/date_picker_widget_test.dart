@@ -284,15 +284,17 @@ void main() {
               focusNode: trigger,
               placeholder: 'Choisir',
               semanticLabel: 'Rendez-vous',
+              calendarLabels: const RemixCalendarLabels(noDate: 'Aucune date'),
             ),
             RemixButton(label: 'After', focusNode: after, onPressed: () {}),
           ],
         ),
       ),
     );
-    final node = tester.getSemantics(
-      find.bySemanticsLabel('Rendez-vous, Choisir'),
-    );
+    final node = tester.getSemantics(find.bySemanticsLabel('Rendez-vous'));
+    // The purpose is the name; the empty state is a localized value, not the
+    // visible placeholder appended to the name.
+    expect(node.getSemanticsData().value, 'Aucune date');
     expect(node.getSemanticsData().flagsCollection.isButton, isTrue);
     expect(
       node.getSemanticsData().flagsCollection.isExpanded,
@@ -312,9 +314,9 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
     expect(_focusedDate(), DateTime(2024, 2, 15));
-    final expanded = tester.getSemantics(
-      find.bySemanticsLabel('Rendez-vous, Choisir'),
-    );
+    // The open calendar shares the purpose as its name; read the trigger.
+    final expanded = tester.getSemantics(find.byType(RemixButton).at(1));
+    expect(expanded.getSemanticsData().label, 'Rendez-vous');
     expect(
       expanded.getSemanticsData().flagsCollection.isExpanded,
       Tristate.isTrue,
@@ -326,6 +328,31 @@ void main() {
     await tester.pumpAndSettle();
     expect(_focusedDate(), DateTime(2024, 2, 15));
     semantics.dispose();
+  });
+
+  testWidgets('trigger value is the full date while formatDate stays visual', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    try {
+      await tester.pumpWidget(
+        _host(
+          _picker(
+            value: DateTime(2024, 2, 20),
+            formatDate: (date) => '${date.day}/${date.month}',
+          ),
+        ),
+      );
+      expect(find.text('20/2'), findsOneWidget);
+      final data = tester
+          .getSemantics(find.bySemanticsLabel('Appointment date'))
+          .getSemanticsData();
+      expect(data.value, 'Tuesday, February 20, 2024');
+      expect(data.label, isNot(contains('20/2')));
+      expect(data.flagsCollection.isButton, isTrue);
+    } finally {
+      semantics.dispose();
+    }
   });
 
   for (final kind in [
