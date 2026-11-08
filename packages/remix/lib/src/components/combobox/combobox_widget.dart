@@ -138,60 +138,67 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
           styleSpec: panel,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 288),
-            child: SingleChildScrollView(
-              primary: false,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final (index, option) in options.indexed)
-                    NakedComboboxOption<T>(
-                      // Replacing a pressed option must cancel that press. The
-                      // index also avoids collisions for equal suggestions.
-                      key: ValueKey((index, option)),
-                      value: option,
-                      semanticLabel: displayStringForOption(option),
-                      builder: (context, state, _) => FocusVisibilityScope(
-                        child: WidgetStateProvider(
-                          states: state.states,
-                          child: Builder(
-                            builder: (context) {
-                              final spec =
-                                  styleSpec ??
-                                  _ComboboxProjection(
-                                    effective,
-                                    .option,
-                                  ).build(context).spec;
-                              return RemixBoxAdapter(
-                                styleSpec: spec.option,
-                                child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    minHeight: 48,
-                                  ),
-                                  child: Align(
-                                    alignment: AlignmentDirectional.centerStart,
-                                    heightFactor: 1,
-                                    child: optionBuilder == null
-                                        ? StyledText(
-                                            displayStringForOption(option),
-                                            styleSpec: spec.optionLabel,
-                                          )
-                                        : RemixDefaultContentStyle(
-                                            text: spec.optionLabel,
-                                            child: optionBuilder!(
-                                              context,
-                                              option,
+            // The portal keeps the host's widget ancestry. Contain viewport
+            // notifications as well as primary-controller ownership so popup
+            // scrolling cannot drive the host's refresh indicator or scrollbar.
+            child: NotificationListener<ViewportNotificationMixin>(
+              onNotification: (_) => true,
+              child: SingleChildScrollView(
+                primary: false,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final (index, option) in options.indexed)
+                      NakedComboboxOption<T>(
+                        // Replacing a pressed option must cancel that press. The
+                        // index also avoids collisions for equal suggestions.
+                        key: ValueKey((index, option)),
+                        value: option,
+                        semanticLabel: displayStringForOption(option),
+                        builder: (context, state, _) => FocusVisibilityScope(
+                          child: WidgetStateProvider(
+                            states: state.states,
+                            child: Builder(
+                              builder: (context) {
+                                final spec =
+                                    styleSpec ??
+                                    _ComboboxProjection(
+                                      effective,
+                                      .option,
+                                    ).build(context).spec;
+                                return RemixBoxAdapter(
+                                  styleSpec: spec.option,
+                                  child: ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      minHeight: 48,
+                                    ),
+                                    child: Align(
+                                      alignment:
+                                          AlignmentDirectional.centerStart,
+                                      heightFactor: 1,
+                                      child: optionBuilder == null
+                                          ? StyledText(
+                                              displayStringForOption(option),
+                                              styleSpec: spec.optionLabel,
+                                            )
+                                          : RemixDefaultContentStyle(
+                                              text: spec.optionLabel,
+                                              child: optionBuilder!(
+                                                context,
+                                                option,
+                                              ),
                                             ),
-                                          ),
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
