@@ -487,6 +487,212 @@ void main() {
   });
 
   group('keyboard and focus', () {
+    for (final offset in [0.0, 1e6, -1e6]) {
+      for (final (lower, upper, spacing) in [
+        (.2, .3, .1),
+        (.1, .3, .2),
+        (.4, .7, .3),
+      ]) {
+        for (final index in [0, 1]) {
+          testWidgets(
+            'spacing $spacing at offset $offset blocks inward thumb $index without rounding drift',
+            (tester) async {
+              final focus = FocusNode();
+              addTearDown(focus.dispose);
+              final values = [offset + lower, offset + upper];
+              final changes = <List<double>>[];
+              await tester.pumpWidget(
+                harness(
+                  values: values,
+                  min: offset,
+                  max: offset + 1,
+                  step: .01,
+                  minSpacing: spacing,
+                  focusNodes: [
+                    index == 0 ? focus : null,
+                    index == 1 ? focus : null,
+                  ],
+                  onChanged: changes.add,
+                ),
+              );
+              focus.requestFocus();
+              await tester.pump();
+
+              // Both a small request and an endpoint request must stay put.
+              for (final key in [
+                index == 0
+                    ? LogicalKeyboardKey.arrowRight
+                    : LogicalKeyboardKey.arrowLeft,
+                index == 0 ? LogicalKeyboardKey.end : LogicalKeyboardKey.home,
+              ]) {
+                await tester.sendKeyEvent(key);
+                await tester.pump();
+                expect(changes, isEmpty);
+                expect(
+                  tester.widget<NakedSlider>(find.byKey(sliderKey)).values,
+                  values,
+                );
+              }
+
+              // Rounding must not freeze movement away from the neighbor.
+              await tester.sendKeyEvent(
+                index == 0 ? LogicalKeyboardKey.home : LogicalKeyboardKey.end,
+              );
+              await tester.pump();
+              expect(changes, [
+                index == 0 ? [offset, values[1]] : [values[0], offset + 1],
+              ]);
+            },
+          );
+        }
+      }
+    }
+
+    test('rejects a parent-supplied genuine decimal spacing violation', () {
+      expect(
+        () => NakedSlider(
+          values: const [.1, .15],
+          min: 0,
+          max: 1,
+          minSpacing: .2,
+          child: const SizedBox(),
+        ).createState(),
+        throwsAssertionError,
+      );
+    });
+
+    for (final minimum in [0.0, -1.0]) {
+      for (final index in [0, 1]) {
+        for (final key in [
+          LogicalKeyboardKey.arrowLeft,
+          LogicalKeyboardKey.arrowRight,
+        ]) {
+          testWidgets(
+            'invalid spacing at min $minimum constrains thumb $index on ${key.keyLabel}',
+            (tester) async {
+              final focus = FocusNode();
+              addTearDown(focus.dispose);
+              final changes = <List<double>>[];
+              await tester.pumpWidget(
+                harness(
+                  values: const [.1, .3],
+                  min: minimum,
+                  max: 1,
+                  step: .01,
+                  minSpacing: .2,
+                  focusNodes: [
+                    index == 0 ? focus : null,
+                    index == 1 ? focus : null,
+                  ],
+                  onChanged: changes.add,
+                  acceptChanges: false,
+                ),
+              );
+              // Invalid parent values are rejected in debug mode. Mutate the
+              // supplied list after mounting to exercise the defensive release
+              // behavior without bypassing or changing the validation code.
+              tester.widget<NakedSlider>(find.byKey(sliderKey)).values[1] = .15;
+              focus.requestFocus();
+              await tester.pump();
+              await tester.sendKeyEvent(key);
+              await tester.pump();
+
+              if (index == 0 && minimum == 0) {
+                // No in-domain value can restore spacing: both keys are blocked.
+                expect(changes, isEmpty);
+              } else {
+                // Either key restores the full gap, even if that requires a
+                // larger move or a move opposite to the requested direction.
+                expect(changes, [
+                  index == 0 ? [.15 - .2, .15] : [.1, .1 + .2],
+                ]);
+                expect(
+                  changes.single[1] - changes.single[0],
+                  greaterThanOrEqualTo(.2),
+                );
+              }
+            },
+          );
+        }
+      }
+    }
+
+    for (final index in [0, 1]) {
+      testWidgets(
+        'division snapping preserves a blocked off-grid thumb $index',
+        (tester) async {
+          final focus = FocusNode();
+          addTearDown(focus.dispose);
+          final changes = <List<double>>[];
+          const divisions = 4;
+          await tester.pumpWidget(
+            harness(
+              values: const [.1, .3],
+              max: 1,
+              step: 1 / divisions,
+              minSpacing: .2,
+              focusNodes: [
+                index == 0 ? focus : null,
+                index == 1 ? focus : null,
+              ],
+              onChanged: changes.add,
+            ),
+          );
+          focus.requestFocus();
+          await tester.pump();
+          await tester.sendKeyEvent(
+            index == 0
+                ? LogicalKeyboardKey.arrowRight
+                : LogicalKeyboardKey.arrowLeft,
+          );
+          await tester.pump();
+          expect(changes, isEmpty);
+
+          await tester.sendKeyEvent(
+            index == 0
+                ? LogicalKeyboardKey.arrowLeft
+                : LogicalKeyboardKey.arrowRight,
+          );
+          await tester.pump();
+          expect(changes, [
+            index == 0 ? [0.0, .3] : [.1, .5],
+          ]);
+        },
+      );
+
+      testWidgets(
+        'division snapping clamps thumb $index back to an off-grid spacing bound',
+        (tester) async {
+          final focus = FocusNode();
+          addTearDown(focus.dispose);
+          final changes = <List<double>>[];
+          const divisions = 4;
+          await tester.pumpWidget(
+            harness(
+              values: const [.1, .9],
+              max: 1,
+              step: 1 / divisions,
+              minSpacing: .2,
+              focusNodes: [
+                index == 0 ? focus : null,
+                index == 1 ? focus : null,
+              ],
+              onChanged: changes.add,
+            ),
+          );
+          focus.requestFocus();
+          await tester.pump();
+          await tester.sendKeyEvent(
+            index == 0 ? LogicalKeyboardKey.end : LogicalKeyboardKey.home,
+          );
+          await tester.pump();
+          expect(changes, [
+            index == 0 ? [.9 - .2, .9] : [.1, .1 + .2],
+          ]);
+        },
+      );
+    }
+
     testWidgets('each thumb has independent focus and keyboard control', (
       tester,
     ) async {
