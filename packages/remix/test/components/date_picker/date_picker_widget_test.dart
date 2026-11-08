@@ -16,6 +16,8 @@ RemixDatePicker _picker({
   DateTime? lastDate,
   DateTime? currentDate,
   ValueChanged<DateTime>? onChanged,
+  VoidCallback? onOpen,
+  VoidCallback? onClose,
   FocusNode? focusNode,
   bool enabled = true,
   bool Function(DateTime)? isDateUnavailable,
@@ -32,6 +34,8 @@ RemixDatePicker _picker({
   lastDate: lastDate ?? DateTime(2026, 12, 31),
   currentDate: currentDate ?? DateTime(2024, 2, 15),
   onChanged: onChanged ?? (_) {},
+  onOpen: onOpen,
+  onClose: onClose,
   focusNode: focusNode,
   enabled: enabled,
   isDateUnavailable: isDateUnavailable,
@@ -77,6 +81,126 @@ void main() {
     await tester.tap(find.text('20'));
     await tester.pumpAndSettle();
     expect(events, ['open', 'changed 20', 'close']);
+  });
+
+  testWidgets('throwing onOpen still enters focus on a same-frame reopen', (
+    tester,
+  ) async {
+    var throwOnOpen = false;
+    await tester.pumpWidget(
+      pickerHost(
+        _picker(
+          onOpen: () {
+            if (throwOnOpen) throw StateError('onOpen failed');
+          },
+        ),
+      ),
+    );
+    await _open(tester);
+    await pressKey(tester, LogicalKeyboardKey.pageDown);
+    expect(focusedDate(), DateTime(2024, 3, 15));
+    final controller = outerController(tester);
+    throwOnOpen = true;
+    controller.close();
+    expect(controller.open, throwsStateError);
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixCalendar), findsOneWidget);
+    expect(focusedDate(), DateTime(2024, 2, 15));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a queued close cannot close a newer session', (tester) async {
+    final first = FocusNode();
+    final second = FocusNode();
+    addTearDown(first.dispose);
+    addTearDown(second.dispose);
+    var node = first;
+    late StateSetter update;
+    await tester.pumpWidget(
+      pickerHost(
+        StatefulBuilder(
+          builder: (context, setState) {
+            update = setState;
+            return _picker(focusNode: node);
+          },
+        ),
+      ),
+    );
+    await _open(tester);
+    final controller = outerController(tester);
+    // Run before the close queued by didUpdateWidget during the next build.
+    tester.binding.addPostFrameCallback((_) {
+      controller.close();
+      controller.open();
+    });
+    update(() => node = second);
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixCalendar), findsOneWidget);
+    expect(focusedDate(), DateTime(2024, 2, 15));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('onClose fires once when disabled while open', (tester) async {
+    var closes = 0;
+    var enabled = true;
+    late StateSetter update;
+    await tester.pumpWidget(
+      pickerHost(
+        StatefulBuilder(
+          builder: (context, setState) {
+            update = setState;
+            return _picker(enabled: enabled, onClose: () => closes++);
+          },
+        ),
+      ),
+    );
+    await _open(tester);
+    expect(closes, 0);
+    update(() => enabled = false);
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixCalendar), findsNothing);
+    expect(closes, 1);
+    await tester.pumpAndSettle();
+    expect(closes, 1);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('view-size changes close a picker nested in a popover once', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 600);
+    addTearDown(tester.view.reset);
+    final parent = MenuController();
+    var closes = 0;
+    final requests = <DateTime>[];
+    await tester.pumpWidget(
+      pickerHost(
+        RemixPopover(
+          controller: parent,
+          popoverChild: _picker(
+            onChanged: requests.add,
+            onClose: () => closes++,
+          ),
+          child: const Text('Open parent'),
+        ),
+      ),
+    );
+    parent.open();
+    await tester.pumpAndSettle();
+    await _open(tester);
+    final picker = tester
+        .widget<RemixPopover>(find.byType(RemixPopover).at(1))
+        .controller!;
+    expect(picker.isOpen, isTrue);
+    tester.view.physicalSize = const Size(600, 800);
+    await tester.pumpAndSettle();
+    expect(parent.isOpen, isFalse);
+    expect(picker.isOpen, isFalse);
+    expect(find.byType(RemixCalendar), findsNothing);
+    expect(requests, isEmpty);
+    expect(closes, 1);
+    expect(tester.takeException(), isNull);
   });
 
   for (final sameFrame in [false, true]) {
@@ -126,13 +250,18 @@ void main() {
     tester.view.physicalSize = const Size(800, 600);
     addTearDown(tester.view.reset);
     final requests = <DateTime>[];
-    await tester.pumpWidget(pickerHost(_picker(onChanged: requests.add)));
+    var closes = 0;
+    await tester.pumpWidget(
+      pickerHost(_picker(onChanged: requests.add, onClose: () => closes++)),
+    );
     await _open(tester);
     tester.view.physicalSize = const Size(600, 800);
     await tester.pumpAndSettle();
     expect(find.byType(RemixCalendar), findsNothing);
     expect(requests, isEmpty);
+    expect(closes, 1);
     await _open(tester);
+    expect(closes, 1);
     expect(tester.takeException(), isNull);
   });
 
