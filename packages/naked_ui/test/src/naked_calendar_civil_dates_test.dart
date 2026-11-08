@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,7 +10,26 @@ Widget _host(Widget child) => WidgetsApp(
   builder: (_, _) => Center(child: child),
 );
 
+/// `melos run test:calendar-civil` runs this file with TZ=Pacific/Apia, where
+/// 2011-12-30 does not exist locally. Elsewhere the cases are ordinary days.
+final _apiaLane = Platform.environment['TZ'] == 'Pacific/Apia';
+
 void main() {
+  test(
+    'Apia lane: the local zone actually skips 2011-12-30',
+    () {
+      // Without this, a lane whose TZ is not applied passes vacuously.
+      expect(
+        DateTime(2011, 12, 30).day,
+        31,
+        reason: 'TZ=Pacific/Apia was set but not applied by the runtime.',
+      );
+    },
+    skip: _apiaLane
+        ? false
+        : 'Runs in the Pacific/Apia lane (melos run test:calendar-civil).',
+  );
+
   testWidgets('month and year navigation preserve a skipped civil day', (
     tester,
   ) async {
@@ -46,6 +67,8 @@ void main() {
     expect(snapshot.focusedDate.day, 30);
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     expect(requests.single.day, 30);
+    // The skipped local day can only be carried as UTC civil fields.
+    if (_apiaLane) expect(requests.single.isUtc, isTrue);
     await tester.sendKeyEvent(LogicalKeyboardKey.pageUp);
     await tester.pumpAndSettle();
     expect(snapshot.focusedDate.month, 11);
@@ -144,6 +167,9 @@ void main() {
           local.month == start.month &&
           local.day == start.day + 1;
       expect(requests.single.isUtc, !representable);
+      if (_apiaLane && start == DateTime.utc(2011, 12, 29)) {
+        expect(representable, isFalse, reason: 'Dec 30 is skipped in Apia.');
+      }
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
       await tester.pumpAndSettle();
       expect(snapshot.focusedDate.day, start.day + 2);
