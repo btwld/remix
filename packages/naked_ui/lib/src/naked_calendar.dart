@@ -4,8 +4,8 @@ import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
 import 'utilities/civil_date.dart';
-import 'utilities/naked_focusable_detector.dart';
 import 'utilities/focus_in_view.dart';
+import 'utilities/naked_focusable_detector.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/state.dart';
 
@@ -31,8 +31,8 @@ class NakedCalendarState extends NakedState {
     required this.focusedDate,
     required this.value,
     required this.weeks,
-    required this.previousMonth,
-    required this.nextMonth,
+    required this.showPreviousMonth,
+    required this.showNextMonth,
     required this.showMonth,
   });
 
@@ -49,16 +49,28 @@ class NakedCalendarState extends NakedState {
   final List<List<DateTime?>> weeks;
 
   /// Previous-month action, or null at the first month or when disabled.
-  final VoidCallback? previousMonth;
+  final VoidCallback? showPreviousMonth;
 
   /// Next-month action, or null at the last month or when disabled.
-  final VoidCallback? nextMonth;
+  final VoidCallback? showNextMonth;
 
   /// Requests a month, clamped to the inclusive bounds, without selecting.
   final ValueChanged<DateTime>? showMonth;
 
   /// Reads the nearest calendar builder state.
   static NakedCalendarState of(BuildContext context) => NakedState.of(context);
+
+  /// Returns the nearest [NakedCalendarState], if one is available.
+  static NakedCalendarState? maybeOf(BuildContext context) =>
+      NakedState.maybeOf(context);
+
+  /// Returns the controller from the nearest state scope.
+  static WidgetStatesController controllerOf(BuildContext context) =>
+      NakedState.controllerOf<NakedCalendarState>(context);
+
+  /// Returns the nearest state scope's controller, if one is available.
+  static WidgetStatesController? maybeControllerOf(BuildContext context) =>
+      NakedState.maybeControllerOf<NakedCalendarState>(context);
 
   @override
   List<Object?> get props => [
@@ -67,8 +79,8 @@ class NakedCalendarState extends NakedState {
     focusedDate,
     value,
     weeks,
-    previousMonth,
-    nextMonth,
+    showPreviousMonth,
+    showNextMonth,
     showMonth,
   ];
 }
@@ -95,6 +107,7 @@ class NakedCalendar extends StatefulWidget {
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
+    this.excludeSemantics = false,
   });
 
   /// Parent-owned selected date, compared by year/month/day fields.
@@ -136,6 +149,9 @@ class NakedCalendar extends StatefulWidget {
   /// Builds the layout from immutable dates and bounded navigation actions.
   final ValueWidgetBuilder<NakedCalendarState> builder;
 
+  /// Whether to hide this widget and its children from accessibility services.
+  final bool excludeSemantics;
+
   @override
   State<NakedCalendar> createState() => _NakedCalendarState();
 }
@@ -152,16 +168,14 @@ class _NakedCalendarState extends State<NakedCalendar>
   FocusNode? get widgetProvidedNode => widget.focusNode;
 
   void _validate() {
-    if (compareCivilDates(widget.firstDate, widget.lastDate) > 0) {
-      throw ArgumentError('firstDate must be on or before lastDate.');
-    }
-    if (widget.firstDayOfWeek < 1 || widget.firstDayOfWeek > 7) {
-      throw ArgumentError.value(
-        widget.firstDayOfWeek,
-        'firstDayOfWeek',
-        'Must be 1 through 7.',
-      );
-    }
+    assert(
+      compareCivilDates(widget.firstDate, widget.lastDate) <= 0,
+      'firstDate must be on or before lastDate.',
+    );
+    assert(
+      widget.firstDayOfWeek >= 1 && widget.firstDayOfWeek <= 7,
+      'firstDayOfWeek must be 1 through 7.',
+    );
   }
 
   bool _inBounds(DateTime date) =>
@@ -352,11 +366,11 @@ class _NakedCalendarState extends State<NakedCalendar>
       focusedDate: _focused,
       value: widget.value,
       weeks: _weeks(),
-      previousMonth:
+      showPreviousMonth:
           !_interactive || _same(_displayed, _month(widget.firstDate))
           ? null
           : () => _showMonth(_shiftMonth(_displayed, -1)),
-      nextMonth: !_interactive || _same(_displayed, _month(widget.lastDate))
+      showNextMonth: !_interactive || _same(_displayed, _month(widget.lastDate))
           ? null
           : () => _showMonth(_shiftMonth(_displayed, 1)),
       showMonth: _interactive ? _showMonth : null,
@@ -372,14 +386,20 @@ class _NakedCalendarState extends State<NakedCalendar>
       onFocusChange: (focused) {
         if (focused && effectiveFocusNode.hasPrimaryFocus) _requestDayFocus();
       },
-      child: Semantics(
-        container: true,
-        explicitChildNodes: true,
-        label: widget.semanticLabel,
-        child: _CalendarScope(
-          owner: this,
-          snapshot: state,
-          child: NakedStateScopeBuilder(value: state, builder: widget.builder),
+      child: ExcludeSemantics(
+        excluding: widget.excludeSemantics,
+        child: Semantics(
+          container: true,
+          explicitChildNodes: true,
+          label: widget.semanticLabel,
+          child: _CalendarScope(
+            owner: this,
+            snapshot: state,
+            child: NakedStateScopeBuilder(
+              value: state,
+              builder: widget.builder,
+            ),
+          ),
         ),
       ),
     );
@@ -429,6 +449,19 @@ class NakedCalendarDayState extends NakedState {
   /// Reads the nearest day interaction snapshot.
   static NakedCalendarDayState of(BuildContext context) =>
       NakedState.of(context);
+
+  /// Returns the nearest [NakedCalendarDayState], if one is available.
+  static NakedCalendarDayState? maybeOf(BuildContext context) =>
+      NakedState.maybeOf(context);
+
+  /// Returns the controller from the nearest state scope.
+  static WidgetStatesController controllerOf(BuildContext context) =>
+      NakedState.controllerOf<NakedCalendarDayState>(context);
+
+  /// Returns the nearest state scope's controller, if one is available.
+  static WidgetStatesController? maybeControllerOf(BuildContext context) =>
+      NakedState.maybeControllerOf<NakedCalendarDayState>(context);
+
   @override
   List<Object?> get props => [
     ...super.props,
@@ -443,7 +476,8 @@ class NakedCalendarDayState extends NakedState {
 ///
 /// Build each displayed date once. Provide a complete, localized date in
 /// [semanticLabel], including any desired today context. The visual builder
-/// cannot remove the button semantics, gestures or keyboard handling.
+/// cannot remove gestures or keyboard handling. Use [excludeSemantics] to
+/// hide the day from accessibility services.
 ///
 /// A day outside the displayed month builds inert rather than failing, so a
 /// month transition can keep the outgoing grid mounted. If a displayed date is
@@ -455,6 +489,7 @@ class NakedCalendarDay extends StatefulWidget {
     required this.date,
     required this.semanticLabel,
     required this.builder,
+    this.excludeSemantics = false,
   }) : super(key: key ?? ValueKey(_date(date)));
 
   /// Date represented by this day, compared by civil fields.
@@ -465,6 +500,10 @@ class NakedCalendarDay extends StatefulWidget {
 
   /// Builds only the day visual inside owned interaction and semantics.
   final ValueWidgetBuilder<NakedCalendarDayState> builder;
+
+  /// Whether to hide this widget and its children from accessibility services.
+  final bool excludeSemantics;
+
   @override
   State<NakedCalendarDay> createState() => _NakedCalendarDayState();
 }
@@ -604,33 +643,41 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
           : SystemMouseCursors.basic,
       onKeyEvent: (_, event) =>
           owner._key(_day, event, Directionality.of(context)),
-      child: Semantics(
-        container: true,
-        button: true,
-        enabled: selectable,
-        selected: state.isSelected,
-        focusable: focusable,
-        focused: state.isFocused,
-        // Match Focus's platform policy while owning the single day node.
-        onFocus: defaultTargetPlatform != TargetPlatform.iOS && focusable
-            ? () => requestFocusInView(effectiveFocusNode)
-            : null,
-        label: widget.semanticLabel,
-        excludeSemantics: true,
-        onTap: selectable ? () => owner._select(_day) : null,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          excludeFromSemantics: true,
-          onTapDown: selectable
-              ? (_) {
-                  effectiveFocusNode.requestFocus();
-                  updatePressState(true, null);
-                }
+      child: ExcludeSemantics(
+        excluding: widget.excludeSemantics,
+        child: Semantics(
+          container: true,
+          button: true,
+          enabled: selectable,
+          selected: state.isSelected,
+          focusable: focusable,
+          focused: state.isFocused,
+          // Match Focus's platform policy while owning the single day node.
+          onFocus: defaultTargetPlatform != TargetPlatform.iOS && focusable
+              ? () => requestFocusInView(effectiveFocusNode)
               : null,
-          onTapUp: selectable ? (_) => updatePressState(false, null) : null,
-          onTapCancel: selectable ? () => updatePressState(false, null) : null,
+          label: widget.semanticLabel,
+          excludeSemantics: true,
           onTap: selectable ? () => owner._select(_day) : null,
-          child: NakedStateScopeBuilder(value: state, builder: widget.builder),
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            excludeFromSemantics: true,
+            onTapDown: selectable
+                ? (_) {
+                    effectiveFocusNode.requestFocus();
+                    updatePressState(true, null);
+                  }
+                : null,
+            onTapUp: selectable ? (_) => updatePressState(false, null) : null,
+            onTapCancel: selectable
+                ? () => updatePressState(false, null)
+                : null,
+            onTap: selectable ? () => owner._select(_day) : null,
+            child: NakedStateScopeBuilder(
+              value: state,
+              builder: widget.builder,
+            ),
+          ),
         ),
       ),
     );

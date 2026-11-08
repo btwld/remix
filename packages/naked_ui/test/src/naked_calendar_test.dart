@@ -72,15 +72,21 @@ class _HarnessState extends State<_Harness> {
           semanticLabel: 'Date',
           builder: (context, state, _) {
             snapshot = state;
+            expect(NakedCalendarState.of(context), same(state));
+            expect(NakedCalendarState.maybeOf(context), same(state));
+            expect(
+              NakedCalendarState.maybeControllerOf(context),
+              same(NakedCalendarState.controllerOf(context)),
+            );
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 NakedButton(
-                  onPressed: state.previousMonth,
+                  onPressed: state.showPreviousMonth,
                   child: const Text('Previous'),
                 ),
                 NakedButton(
-                  onPressed: state.nextMonth,
+                  onPressed: state.showNextMonth,
                   child: const Text('Next'),
                 ),
                 for (final week in state.weeks)
@@ -97,6 +103,22 @@ class _HarnessState extends State<_Harness> {
                                 '${date.year}-${date.month}-${date.day}',
                             builder: (context, state, _) {
                               days[date] = state;
+                              expect(
+                                NakedCalendarDayState.of(context),
+                                same(state),
+                              );
+                              expect(
+                                NakedCalendarDayState.maybeOf(context),
+                                same(state),
+                              );
+                              expect(
+                                NakedCalendarDayState.maybeControllerOf(
+                                  context,
+                                ),
+                                same(
+                                  NakedCalendarDayState.controllerOf(context),
+                                ),
+                              );
                               return SizedBox.square(
                                 dimension: 44,
                                 child: Center(child: Text('${date.day}')),
@@ -142,6 +164,49 @@ Finder _day(int day) =>
     find.byWidgetPredicate((w) => w is NakedCalendarDay && w.date.day == day);
 
 void main() {
+  for (final excludeRoot in [false, true]) {
+    testWidgets(
+      'excludeSemantics hides ${excludeRoot ? 'calendar' : 'day'} without disabling selection',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+
+        var selections = 0;
+        await tester.pumpWidget(
+          _host(
+            NakedCalendar(
+              value: null,
+              firstDate: DateTime(2024),
+              lastDate: DateTime(2024, 12, 31),
+              currentDate: DateTime(2024, 2, 15),
+              excludeSemantics: excludeRoot,
+              semanticLabel: 'Calendar group',
+              onChanged: (_) => selections++,
+              builder: (_, _, _) => NakedCalendarDay(
+                date: DateTime(2024, 2, 15),
+                semanticLabel: 'Hidden day',
+                excludeSemantics: !excludeRoot,
+                builder: (_, _, _) => const SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: Text('Day visual'),
+                ),
+              ),
+            ),
+          ),
+        );
+        expect(find.bySemanticsLabel('Hidden day'), findsNothing);
+        expect(find.bySemanticsLabel('Day visual'), findsNothing);
+        expect(
+          find.bySemanticsLabel('Calendar group'),
+          excludeRoot ? findsNothing : findsOneWidget,
+        );
+        await tester.tap(find.text('Day visual'));
+        expect(selections, 1);
+        semantics.dispose();
+      },
+    );
+  }
+
   testWidgets('retained day tap is inert after disposal', (tester) async {
     final state = await _pump(tester);
     final tap = tester
@@ -164,8 +229,8 @@ void main() {
     tester,
   ) async {
     final state = await _pump(tester);
-    final next = state.snapshot.nextMonth!;
-    final previous = state.snapshot.previousMonth!;
+    final next = state.snapshot.showNextMonth!;
+    final previous = state.snapshot.showPreviousMonth!;
     final show = state.snapshot.showMonth!;
     await tester.pumpWidget(const SizedBox());
     expect(state.mounted, isFalse);
@@ -325,7 +390,7 @@ void main() {
       expect(state.snapshot.focusedDate, DateTime(2024, 3, 30));
       state.after.requestFocus();
       await tester.pump();
-      state.snapshot.previousMonth!();
+      state.snapshot.showPreviousMonth!();
       await tester.pump();
       await tester.pump();
       expect(state.after.hasFocus, isTrue);
@@ -337,7 +402,7 @@ void main() {
   ) async {
     final state = await _pump(tester);
     await _focus(tester, state);
-    state.snapshot.nextMonth!();
+    state.snapshot.showNextMonth!();
     state.after.requestFocus();
     await tester.pump();
     await tester.pump();
@@ -873,7 +938,7 @@ void main() {
           ),
         ),
       );
-      expect(tester.takeException(), isArgumentError);
+      expect(tester.takeException(), isAssertionError);
     });
   }
   testWidgets('rejects reversed inclusive bounds', (tester) async {
@@ -887,6 +952,6 @@ void main() {
         ),
       ),
     );
-    expect(tester.takeException(), isArgumentError);
+    expect(tester.takeException(), isAssertionError);
   });
 }
