@@ -179,7 +179,7 @@ class _RemixDatePickerState extends State<RemixDatePicker>
       openOnTap: false,
       triggerFocusNode: _trigger,
       initialFocusNode: _calendarFocus,
-      constrainToAvailableHeight: true,
+      constrainToAvailableSpace: true,
       avoidViewInsets: true,
       positioning: widget.positioning,
       style: widget.popoverStyle,

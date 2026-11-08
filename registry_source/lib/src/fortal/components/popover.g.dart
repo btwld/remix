@@ -23,7 +23,7 @@ class FortalPopover extends StatelessWidget {
     this.openOnTap = true,
     this.triggerFocusNode,
     this.initialFocusNode,
-    this.constrainToAvailableHeight = false,
+    this.constrainToAvailableSpace = false,
     this.avoidViewInsets = false,
     this.onOpen,
     this.onClose,
@@ -54,7 +54,7 @@ class FortalPopover extends StatelessWidget {
 
   final FocusNode? initialFocusNode;
 
-  final bool constrainToAvailableHeight;
+  final bool constrainToAvailableSpace;
 
   final bool avoidViewInsets;
 
@@ -85,7 +85,7 @@ class FortalPopover extends StatelessWidget {
       openOnTap: this.openOnTap,
       triggerFocusNode: this.triggerFocusNode,
       initialFocusNode: this.initialFocusNode,
-      constrainToAvailableHeight: this.constrainToAvailableHeight,
+      constrainToAvailableSpace: this.constrainToAvailableSpace,
       avoidViewInsets: this.avoidViewInsets,
       onOpen: this.onOpen,
       onClose: this.onClose,

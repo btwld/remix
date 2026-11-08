@@ -121,7 +121,7 @@ class NakedPopover extends StatefulWidget {
     this.anchorKey,
     this.triggerFocusNode,
     this.initialFocusNode,
-    this.constrainToAvailableHeight = false,
+    this.constrainToAvailableSpace = false,
     this.avoidViewInsets = false,
     this.onOpen,
     this.onClose,
@@ -189,8 +189,10 @@ class NakedPopover extends StatefulWidget {
   /// Preferred focus target after the panel is attached.
   final FocusNode? initialFocusNode;
 
-  /// Caps the panel to available height. Content must handle scrolling.
-  final bool constrainToAvailableHeight;
+  /// Fits the panel into the space beside the trigger: its height, and with
+  /// collision avoidance also its width. Content must handle scrolling. See
+  /// `OverlayPositioner.constrainToAvailableSpace`.
+  final bool constrainToAvailableSpace;
 
   /// Keeps the panel inside the view's safe area and keyboard exclusions.
   ///
@@ -493,7 +495,7 @@ class _NakedPopoverState extends State<NakedPopover>
           avoidViewInsets: widget.avoidViewInsets,
           useRootOverlay: widget.useRootOverlay,
           initialFocusNode: widget.initialFocusNode,
-          constrainToAvailableHeight: widget.constrainToAvailableHeight,
+          constrainToAvailableSpace: widget.constrainToAvailableSpace,
           child: widget.popoverBuilder(context, anchored),
         );
       },
