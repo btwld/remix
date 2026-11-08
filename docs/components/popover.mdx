@@ -112,6 +112,36 @@ const positioning = OverlayPositionConfig(
 
 The overlay is clamped to the available screen bounds.
 
+### Fitting and view safety
+
+- `constrainToAvailableSpace: true` fits the panel into the space its placement
+  can use: its height beside the trigger and, with collision avoidance, its
+  width inside the padded overlay. The content must scroll when it is larger.
+- `avoidViewInsets: true` keeps the panel out of the view's safe area and
+  keyboard. The open panel re-fits when either changes, including padding that
+  a `SafeArea` around the trigger consumes. Selects, menus and submenus opened
+  from inside the panel inherit this protection.
+- `initialFocusNode` takes focus when the panel opens, in place of the panel
+  container, and is revealed in its scrollables. Use it to land on a selected
+  item. Focus stays put when something inside the panel already holds it.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final selectedItem = FocusNode();
+
+final viewSafePopover = RemixPopover(
+  constrainToAvailableSpace: true,
+  avoidViewInsets: true,
+  initialFocusNode: selectedItem,
+  popoverChild: SingleChildScrollView(
+    child: Focus(focusNode: selectedItem, child: const Text('Selected item')),
+  ),
+  child: const Text('Open'),
+);
+```
+
 ## Styling
 
 `PopoverStyler` styles the overlay container. The trigger keeps its own
@@ -160,6 +190,9 @@ RemixPopover remixPopoverConstructor({
   bool useRootOverlay = false,
   bool openOnTap = true,
   FocusNode? triggerFocusNode,
+  FocusNode? initialFocusNode,
+  bool constrainToAvailableSpace = false,
+  bool avoidViewInsets = false,
   VoidCallback? onOpen,
   VoidCallback? onClose,
   RawMenuAnchorOpenRequestedCallback? onOpenRequested,
