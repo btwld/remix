@@ -45,6 +45,7 @@ SliderStyler vanillaSliderStyle({
   SliderStyler style = const SliderStyler.create(),
 }) {
   return SliderStyler()
+      .wrap(.sizedBox(height: VanillaTokens.s12))
       .animate(VanillaTokens.motion)
       .thickness(_rail)
       .trackColor(VanillaTokens.muted())

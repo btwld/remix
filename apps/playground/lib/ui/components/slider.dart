@@ -45,6 +45,7 @@ SliderStyler playgroundSliderStyle({
   SliderStyler style = const SliderStyler.create(),
 }) {
   return SliderStyler()
+      .wrap(.sizedBox(height: PlaygroundTokens.s12))
       .animate(PlaygroundTokens.motion)
       .thickness(_rail)
       .trackColor(PlaygroundTokens.muted())

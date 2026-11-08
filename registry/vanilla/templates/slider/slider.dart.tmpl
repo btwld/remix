@@ -45,6 +45,7 @@ SliderStyler {{valuePrefix}}SliderStyle({
   SliderStyler style = const SliderStyler.create(),
 }) {
   return SliderStyler()
+      .wrap(.sizedBox(height: {{typePrefix}}Tokens.s12))
       .animate({{typePrefix}}Tokens.motion)
       .thickness(_rail)
       .trackColor({{typePrefix}}Tokens.muted())

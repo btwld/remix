@@ -102,6 +102,9 @@ families carry over.
   or track only. Without a `label`, give a `semanticLabel`.
 - **Slider and RangeSlider** — install `slider` for `<Prefix>Slider`, or
   `range_slider` for `<Prefix>RangeSlider` (which installs `slider` too).
+  Both recipes reserve a 48px interaction height. The single slider previously
+  occupied 22px; existing layouts must allow the additional 26px when updating
+  the installed recipe. The extra height accepts pointer input too.
   Both use the same muted rail, primary interval, white outlined thumbs,
   and 4px hover, press and keyboard-focus rings. Disabled fades the whole
   control. The range widget takes two ordered, parent-owned `values`,
