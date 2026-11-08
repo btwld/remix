@@ -362,6 +362,57 @@ void main() {
     );
   }
 
+  testWidgets('day states report positions in the painted interval', (
+    tester,
+  ) async {
+    final state = await _pump(tester);
+    NakedRangePosition position(int day) =>
+        state.days[DateTime(2024, 2, day)]!.rangePosition;
+    bool preview(int day) => state.days[DateTime(2024, 2, day)]!.isInPreview;
+    state.change(() => state.value = _range(10, 12));
+    await tester.pump();
+    expect(
+      [
+        for (final day in [9, 10, 11, 12, 13]) position(day),
+      ],
+      [
+        NakedRangePosition.none,
+        NakedRangePosition.start,
+        NakedRangePosition.middle,
+        NakedRangePosition.end,
+        NakedRangePosition.none,
+      ],
+    );
+    expect(preview(11), isFalse);
+    state.change(() => state.value = _range(12, 12));
+    await tester.pump();
+    expect(position(12), NakedRangePosition.single);
+    // A draft replaces the committed interval as the painted one, without
+    // becoming selected.
+    await _tap(tester, 20);
+    expect(position(20), NakedRangePosition.single);
+    expect(preview(20), isTrue);
+    expect(position(12), NakedRangePosition.none);
+    expect(state.days[DateTime(2024, 2, 12)]!.isSelected, isTrue);
+    await _key(tester, LogicalKeyboardKey.arrowRight);
+    await _key(tester, LogicalKeyboardKey.arrowRight);
+    expect(
+      [
+        for (final day in [20, 21, 22]) position(day),
+      ],
+      [
+        NakedRangePosition.start,
+        NakedRangePosition.middle,
+        NakedRangePosition.end,
+      ],
+    );
+    expect([preview(19), preview(21), preview(23)], [false, true, false]);
+    expect(state.days[DateTime(2024, 2, 21)]!.isSelected, isFalse);
+    await _key(tester, LogicalKeyboardKey.escape);
+    expect(position(12), NakedRangePosition.single);
+    expect(preview(21), isFalse);
+  });
+
   testWidgets(
     'anchor, navigation, reverse completion and rejection stay controlled',
     (tester) async {

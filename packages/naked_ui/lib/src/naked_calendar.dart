@@ -455,6 +455,26 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
       ? NakedDateRange(start: a, end: b)
       : NakedDateRange(start: b, end: a);
 
+  // Set by build, read by this build's days.
+  NakedDateRange? _preview;
+
+  NakedRangePosition _rangePosition(DateTime date) {
+    final interval = _preview ?? (widget.isRange ? widget.rangeValue : null);
+    if (interval == null || !interval.contains(date)) {
+      return NakedRangePosition.none;
+    }
+    final start = _same(date, interval.start);
+    final end = _same(date, interval.end);
+    return switch ((start, end)) {
+      (true, true) => NakedRangePosition.single,
+      (true, false) => NakedRangePosition.start,
+      (false, true) => NakedRangePosition.end,
+      (false, false) => NakedRangePosition.middle,
+    };
+  }
+
+  bool _inPreview(DateTime date) => _preview?.contains(date) ?? false;
+
   bool _validRange(NakedDateRange range) {
     if (!_inBounds(range.start) || !_inBounds(range.end)) return false;
     if (widget.isDateUnavailable == null) return true;
@@ -743,6 +763,9 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
     _days.clear();
     _dayOrder.clear();
     _prepareRange();
+    _preview = widget.isRange && _anchor != null
+        ? _range(_anchor!, _focused)
+        : null;
     final states = {if (!_interactive) WidgetState.disabled};
     final showPreviousMonth =
         !_interactive || _same(_displayed, _month(widget.firstDate))
@@ -755,7 +778,7 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
     final weeks = _weeks();
     final Widget content;
     if (widget.isRange) {
-      final preview = _anchor == null ? null : _range(_anchor!, _focused);
+      final preview = _preview;
       final state = NakedRangeCalendarState(
         states: states,
         displayedMonth: _displayed,
@@ -839,6 +862,27 @@ class _CalendarScope extends InheritedWidget {
   bool updateShouldNotify(_CalendarScope oldWidget) => true;
 }
 
+/// Where a day sits in the interval a [NakedRangeCalendar] paints.
+///
+/// The painted interval is the draft while one exists, otherwise the
+/// committed value. Single-date calendars always report [none].
+enum NakedRangePosition {
+  /// Outside the painted interval, or in a single-date calendar.
+  none,
+
+  /// First day of an interval longer than one day.
+  start,
+
+  /// A day strictly between the first and last day.
+  middle,
+
+  /// Last day of an interval longer than one day.
+  end,
+
+  /// The only day of a one-day interval.
+  single,
+}
+
 /// Immutable interaction state for a calendar day.
 class NakedCalendarDayState extends NakedState {
   /// Creates a date and interaction snapshot.
@@ -848,6 +892,8 @@ class NakedCalendarDayState extends NakedState {
     required this.isToday,
     required this.isUnavailable,
     this.isOutsideMonth = false,
+    this.rangePosition = NakedRangePosition.none,
+    this.isInPreview = false,
   });
 
   /// Date represented by this day, compared by civil fields.
@@ -865,6 +911,14 @@ class NakedCalendarDayState extends NakedState {
   /// still animating out. Such a day is inert: disabled, unfocusable and
   /// excluded from semantics.
   final bool isOutsideMonth;
+
+  /// Position in the painted interval: the draft while one exists, otherwise
+  /// the committed value. Use it to draw interval caps and connections.
+  final NakedRangePosition rangePosition;
+
+  /// Whether this day is inside the current draft, from its anchor to the
+  /// focused day. Draft days are never selected; selection stays committed.
+  final bool isInPreview;
 
   /// Reads the nearest day interaction snapshot.
   static NakedCalendarDayState of(BuildContext context) =>
@@ -889,6 +943,8 @@ class NakedCalendarDayState extends NakedState {
     isToday,
     isUnavailable,
     isOutsideMonth,
+    rangePosition,
+    isInPreview,
   ];
 }
 
@@ -1013,6 +1069,10 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
     final unavailable =
         inBounds && (owner.widget.isDateUnavailable?.call(_day) ?? false);
     final isToday = _same(_day, owner.widget.currentDate ?? DateTime.now());
+    // Outgoing days keep their interval position so a transition still
+    // paints the range they belong to.
+    final rangePosition = owner._rangePosition(_day);
+    final inPreview = owner._inPreview(_day);
     if (_outside) {
       // Inert, but a selected date keeps painting as selected while its grid
       // fades out.
@@ -1027,6 +1087,8 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
             isToday: isToday,
             isUnavailable: unavailable,
             isOutsideMonth: true,
+            rangePosition: rangePosition,
+            isInPreview: inPreview,
           ),
           builder: widget.builder,
         ),
@@ -1044,6 +1106,8 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
       date: _day,
       isToday: isToday,
       isUnavailable: unavailable,
+      rangePosition: rangePosition,
+      isInPreview: inPreview,
     );
     return NakedFocusableDetector(
       enabled: interactive,
