@@ -151,8 +151,8 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
                   children: [
                     for (final (index, option) in options.indexed)
                       NakedComboboxOption<T>(
-                        // Replacing a pressed option must cancel that press. The
-                        // index also avoids collisions for equal suggestions.
+                        // Replacing or moving a pressed option cancels its
+                        // press rather than accepting a different result.
                         key: ValueKey((index, option)),
                         value: option,
                         semanticLabel: displayStringForOption(option),

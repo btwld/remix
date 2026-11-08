@@ -226,6 +226,108 @@ void main() {
     expect(controller.text, isEmpty);
   });
 
+  testWidgets('replacement editor cannot accept the previous query cache', (
+    tester,
+  ) async {
+    final oldController = TextEditingController();
+    final oldFocus = FocusNode();
+    final nextController = TextEditingController.fromValue(
+      const TextEditingValue(
+        text: 'new query',
+        selection: TextSelection.collapsed(offset: 9),
+      ),
+    );
+    final nextFocus = FocusNode();
+    for (final controller in [oldController, nextController]) {
+      addTearDown(controller.dispose);
+    }
+    for (final focus in [oldFocus, nextFocus]) {
+      addTearDown(focus.dispose);
+    }
+    var replaced = false;
+    late StateSetter update;
+    final picked = <String>[];
+    await tester.pumpWidget(
+      comboboxHost(
+        StatefulBuilder(
+          builder: (context, setState) {
+            update = setState;
+            return RemixCombobox<String>(
+              label: 'Fruit',
+              controller: replaced ? nextController : oldController,
+              focusNode: replaced ? nextFocus : oldFocus,
+              optionsBuilder: (query) =>
+                  query.text == 'cached' ? const ['Apple'] : const ['Banana'],
+              onSelected: picked.add,
+              style: testComboboxStyle(),
+            );
+          },
+        ),
+      ),
+    );
+    await openCombobox(tester, 'cached');
+    expect(find.text('Apple'), findsOneWidget);
+    update(() => replaced = true);
+    await tester.pumpAndSettle();
+    nextFocus.requestFocus();
+    await tester.pumpAndSettle();
+    expect(nextController.text, 'new query');
+    expect(find.text('Apple'), findsNothing);
+    expect(picked, isEmpty);
+    nextController.text = 'fresh';
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Banana'));
+    await tester.pumpAndSettle();
+    expect(picked, ['Banana']);
+    expect(nextController.text, 'Banana');
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('callback clear permits accepting a whole pasted value again', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    final focus = FocusNode();
+    addTearDown(controller.dispose);
+    addTearDown(focus.dispose);
+    final picked = <String>[];
+    await tester.pumpWidget(
+      comboboxHost(
+        RemixCombobox<String>(
+          label: 'Fruit',
+          controller: controller,
+          focusNode: focus,
+          optionsBuilder: (_) => const ['Apple'],
+          onSelected: (value) {
+            picked.add(value);
+            controller.clear();
+          },
+          style: testComboboxStyle(),
+        ),
+      ),
+    );
+    await openCombobox(tester, 'ap');
+    await tester.tap(find.text('Apple'));
+    await tester.pumpAndSettle();
+    expect(picked, ['Apple']);
+    expect(controller.text, isEmpty);
+    tester.testTextInput.updateEditingValue(
+      const TextEditingValue(
+        text: 'Apple',
+        selection: TextSelection.collapsed(offset: 5),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.pumpAndSettle();
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(picked, ['Apple', 'Apple']);
+    expect(controller.text, isEmpty);
+    expect(focus.hasFocus, isTrue);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('named editor and visual-only option semantics actions work', (
     tester,
   ) async {

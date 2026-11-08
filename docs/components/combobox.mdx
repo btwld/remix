@@ -104,6 +104,8 @@ final cityStyle = ComboboxStyler()
 
 `container` controls editor-root layout; `field`, `panel`, `option` and `optionLabel` style the anatomy. An option's focused state denotes RawAutocomplete's keyboard highlight. Hover styles a row independently and does not move that highlight. Root modifiers and animation apply once around the editor. Direct `styleSpec: ComboboxSpec(...)` bypasses fluent styling and defaults. `RemixCombobox.styleFrom(...)` and generated `ComboboxStyler.call<T>()` are supported.
 
+The root exposes focus and disabled state. Put hover and press styles on the `field` or `option` slots, whose interactive widgets supply those states.
+
 Rows have a structural minimum height of 48 logical pixels and grow with wrapped labels. The eager scroll panel is bounded to 288 logical pixels and the available overlay space. Keep result sets small; eager construction allows keyboard navigation to reveal every option. Width and opening direction follow RawAutocomplete; `optionsViewOpenDirection` supports down, up and mostSpace.
 
 ## Interaction and filtering
@@ -111,5 +113,7 @@ Rows have a structural minimum height of 48 logical pixels and grow with wrapped
 Arrow keys move the highlighted suggestion while focus stays in the editor. Enter accepts; Escape dismisses while preserving text. Tab and Shift-Tab leave without committing. Pointer, touch and stylus release activate an option; scrolling and canceled presses do not select it.
 
 Return eligible suggestions only. There is no per-option disabled API. Callers own fetching, filtering, debounce and errors; no results closes the panel. RawAutocomplete handles stale asynchronous responses. `onOpen` and `onClose` observe options-subtree mounting after a frame; they do not control visibility.
+
+Option equality identifies an entity. Equal values are shown once, retaining the first occurrence; distinct unequal entities can share the same display string and remain separate suggestions.
 
 The fallback semantics expose one editable field and named actionable suggestions. Widget semantics tests do not establish screen-reader parity. Expanded relationships, highlighted-result discovery and announcements still require real platform/assistive-technology testing.
