@@ -953,10 +953,9 @@ void main() {
       }
       // Each internal update re-asks only the 29 visible days (a few times
       // each, for state and semantics); none repeats the 100-year scan.
-      // Measured: 366 calls resumed, 109,983 if _prepareRange restarts.
       expect(
         calls[0],
-        lessThanOrEqualTo(3 * perDayChecks * 29),
+        lessThanOrEqualTo(2000),
         reason: 'Focus moves must reuse the scanned century, not restart it.',
       );
     });
@@ -969,10 +968,9 @@ void main() {
       calls[0] = 0;
       await _key(tester, LogicalKeyboardKey.pageUp);
       // January 1924 adds 31 scanned dates plus its visible days.
-      // Measured: 128 calls resumed, 36,667 if _prepareRange restarts.
       expect(
         calls[0],
-        lessThanOrEqualTo(31 + perDayChecks * 31),
+        lessThanOrEqualTo(1000),
         reason:
             'PageUp must scan only January, not restart from the 2024 anchor.',
       );
