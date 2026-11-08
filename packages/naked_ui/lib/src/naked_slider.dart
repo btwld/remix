@@ -1,13 +1,19 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/rendering.dart';
 
 import 'mixins/naked_mixins.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/state.dart';
+
+/// Relative tolerance for residue from slider spacing arithmetic.
+///
+/// Exactly four times binary64 machine epsilon (2^-52), covering the
+/// add/subtract and comparison without erasing headroom on small domains.
+const double _spacingResidueTolerance = 8.881784197001252e-16;
 
 /// Formats one slider thumb's value for assistive technologies.
 typedef NakedSliderSemanticFormatterCallback = String Function(double value);
@@ -582,7 +588,7 @@ class _NakedSliderState extends State<NakedSlider>
     double spacingResidue(double neighbor) => widget.minSpacing == 0
         ? 0
         : math.max(current.abs(), math.max(neighbor.abs(), widget.minSpacing)) *
-              8.881784197001252e-16;
+              _spacingResidueTolerance;
     if (index > 0 &&
         lower > current &&
         (lower - current).abs() <= spacingResidue(sourceValues[index - 1])) {
@@ -721,8 +727,9 @@ class _NakedSliderState extends State<NakedSlider>
     final pending = _pendingThumbSelection;
     if (pending != null) {
       if ((value - pending.anchor).abs() / (widget.max - widget.min) <
-          precisionErrorTolerance)
+          precisionErrorTolerance) {
         return;
+      }
       thumbIndex = value < pending.anchor ? pending.first : pending.last;
       _pendingThumbSelection = null;
       _activeThumbIndex = thumbIndex;
