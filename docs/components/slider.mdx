@@ -220,7 +220,7 @@ RemixSlider remixSliderConstructor({
 
 
 ## Properties
-### Widget Properties
+### RemixSlider properties
 
 #### `key` → `Key?`
 
@@ -290,6 +290,33 @@ Optional. Formats the semantic value for the slider's single thumb. Remix forwar
 
 Optional. Whether to hide the slider from the semantics tree. Defaults to `false`.
 
+
+### RemixRangeSlider properties
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `key` | `Key?` | `null` | Controls widget replacement. |
+| `values` | `List<double>` | Required | Exactly two finite, ordered bounds within the domain, separated by at least `minSpacing`. |
+| `min` | `double` | `0` | Finite lower domain bound, strictly less than `max`. |
+| `max` | `double` | `1` | Finite upper domain bound. |
+| `minSpacing` | `double` | `0` | Finite, nonnegative minimum separation in value units. |
+| `snapDivisions` | `int?` | `null` | Positive interaction divisions without visible ticks. Null uses 1000 divisions. |
+| `onChanged` | `ValueChanged<List<double>>?` | `null` | Receives immutable complete requests. Null disables interaction. |
+| `onChangeStart` | `ValueChanged<List<double>>?` | `null` | Receives starting values when a pointer transaction begins. |
+| `onChangeEnd` | `ValueChanged<List<double>>?` | `null` | Receives the last request at pointer release or cancellation, even if the parent rejected it. |
+| `enabled` | `bool` | `true` | Enables interaction when `onChanged` is also supplied. |
+| `enableFeedback` | `bool` | `true` | Enables platform feedback during value changes. |
+| `focusNodes` | `List<FocusNode?>?` | `null` | Two caller-owned nodes in lower/upper order. Null entries use internal nodes. |
+| `autofocusThumbIndex` | `int?` | `null` | Initially focuses thumb 0 or 1. |
+| `semanticLabels` | `List<String?>?` | `null` | Two accessible names in lower/upper order. |
+| `semanticFormatterCallbacks` | `List<NakedSliderSemanticFormatterCallback?>?` | `null` | Two value formatters in lower/upper order. |
+| `excludeSemantics` | `bool` | `false` | Hides both semantic nodes while preserving keyboard operation. |
+| `style` | `SliderStyler` | `const SliderStyler.create()` | Fluent and inherited presentation. |
+| `styleSpec` | `SliderSpec?` | `null` | Resolved presentation that bypasses fluent and inherited styles. |
+
+Small `minSpacing` values can leave the painted thumbs overlapping. The spacing
+constraint measures values, not pixels; coincident bounds remain independently
+keyboard accessible.
 
 ### Style Methods
 

@@ -82,7 +82,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   order. `onChanged` requests values; the parent decides whether to accept them.
   `onChangeEnd` reports the last pointer request, including a rejected request;
   keyboard and semantic changes do not emit pointer-only start/end callbacks.
-  See [Slider](../../../docs/components/slider.mdx).
+  See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
 - **Select** — is interactively enabled only when `enabled == true` and
   `onChanged != null`; either condition alone leaves it visually present but
   inert. `positioning` defaults to
