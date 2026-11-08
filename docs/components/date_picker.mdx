@@ -66,7 +66,8 @@ An `Overlay` ancestor is required. A routed `WidgetsApp` supplies one; use
   dismissal behavior, without claiming modal background semantics.
 - The panel constrains and scrolls in small spaces. Touch uses the same explicit
   controls; hover, swiping and a software keyboard are not required.
-- Scrolling an ancestor closes the picker without selecting.
+- Scrolling an ancestor closes a root picker without selecting. A picker nested
+  in another menu or popover closes when the outer root closes.
 - A view-size change, such as a rotation or window resize, closes the picker
   without selecting; reopen it in the new space. Keyboard and safe-area changes
   re-fit the open panel instead, so the keyboard hiding as the trigger takes
@@ -93,3 +94,131 @@ Style the composition with independent `buttonStyle`, `popoverStyle`,
 its own interaction states. There is no separate DatePicker styler, raw spec,
 controller, or callable widget shorthand. Preset recipes are a separate release
 from this shared runtime component.
+
+## Constructor
+
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixDatePicker date_pickerConstructor({
+  Key? key,
+  required DateTime? value,
+  required DateTime firstDate,
+  required DateTime lastDate,
+  ValueChanged<DateTime>? onChanged,
+  VoidCallback? onOpen,
+  VoidCallback? onClose,
+  DateTime? currentDate,
+  bool Function(DateTime)? isDateUnavailable,
+  int firstDayOfWeek = DateTime.sunday,
+  bool enabled = true,
+  String semanticLabel = 'Choose date',
+  String placeholder = 'Select date',
+  String Function(DateTime)? formatDate,
+  RemixCalendarLabels calendarLabels = const RemixCalendarLabels(),
+  FocusNode? focusNode,
+  bool autofocus = false,
+  OverlayPositionConfig positioning = const OverlayPositionConfig(
+    sideOffset: 4,
+    collisionPadding: EdgeInsets.all(8),
+  ),
+  ButtonStyler buttonStyle = const ButtonStyler.create(),
+  CalendarStyler calendarStyle = const CalendarStyler.create(),
+  PopoverStyler popoverStyle = const PopoverStyler.create(),
+  IconButtonStyler navigationStyle = const IconButtonStyler.create(),
+  SelectStyler selectorStyle = const SelectStyler.create(),
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `value` → `DateTime?`
+
+**Required**. Parent-owned selected date, or null for an empty selection. Civil-date bounds follow the calendar contract.
+
+#### `firstDate / lastDate` → `DateTime`
+
+**Required**. Inclusive civil-date bounds; firstDate must be on or before lastDate.
+
+#### `onChanged` → `ValueChanged<DateTime>?`
+
+Requests one complete date and closes even if the parent rejects it. Null disables the picker.
+
+#### `onOpen / onClose` → `VoidCallback?`
+
+Opening and closure notifications. Selection calls onChanged before onClose; dismissal calls only onClose. Removal does not call onClose.
+
+#### `currentDate` → `DateTime?`
+
+Today and fallback focus date; defaults to now.
+
+#### `isDateUnavailable` → `bool Function(DateTime)?`
+
+Marks dates unavailable for selection.
+
+#### `firstDayOfWeek` → `int`
+
+First weekday column, Monday=1 through Sunday=7. Defaults to Sunday.
+
+#### `enabled` → `bool`
+
+Defaults to true. Disabling an open picker closes it without selecting.
+
+#### `semanticLabel` → `String`
+
+Accessible field purpose. Defaults to Choose date.
+
+#### `placeholder` → `String`
+
+Visible empty text. Defaults to Select date.
+
+#### `formatDate` → `String Function(DateTime)?`
+
+Visible selected text only; accessible values use the full localized calendar labels.
+
+#### `calendarLabels` → `RemixCalendarLabels`
+
+Calendar and accessible-value labels; English by default.
+
+#### `focusNode` → `FocusNode?`
+
+Caller-owned trigger focus node. Replacing it closes the picker.
+
+#### `autofocus` → `bool`
+
+Defaults to false. Focuses the trigger without opening the calendar.
+
+#### `positioning` → `OverlayPositionConfig`
+
+Placement, offsets and collision padding relative to the trigger. Defaults to a side offset of 4 and collision padding of 8. The panel avoids safe-area and keyboard exclusions.
+
+#### `buttonStyle` → `ButtonStyler`
+
+Trigger styling, resolved in its own state.
+
+#### `calendarStyle` → `CalendarStyler`
+
+Calendar surface and day styling.
+
+#### `popoverStyle` → `PopoverStyler`
+
+Popup surface styling.
+
+#### `navigationStyle` → `IconButtonStyler`
+
+Previous/next button styling.
+
+#### `selectorStyle` → `SelectStyler`
+
+Month/year selector styling.
+
+### Style Methods
+
+Each child uses its own styler and interaction states. There is no separate
+DatePicker styler or raw spec. See [Calendar](/components/calendar#properties)
+for calendar and day style methods.

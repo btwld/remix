@@ -54,7 +54,9 @@ class AnchoredOverlay extends StatefulWidget {
   /// Where [child] sits relative to [RawMenuOverlayInfo.anchorRect].
   final OverlayPositionConfig positioning;
 
-  /// Whether to fit [child] into the space its placement can use.
+  /// Whether to fit [child] into the space its placement can use. Top and
+  /// bottom placements cap height beside the trigger; collision avoidance
+  /// also caps width inside the padded overlay. Content must handle scrolling.
   ///
   /// See [OverlayPositioner.constrainToAvailableSpace].
   final bool constrainToAvailableSpace;
@@ -71,8 +73,10 @@ class AnchoredOverlay extends StatefulWidget {
   /// holds it, and on the container when no item can take it.
   final FocusNode? initialFocusNode;
 
-  /// Avoids the target view's safe area and keyboard exclusions. Nested
-  /// anchored overlays inherit this preference from the open panel.
+  /// Avoids the target view's safe area and keyboard exclusions on both axes.
+  /// Fixed-size content larger than the cap overflows unless it adapts or
+  /// scrolls. The open panel re-fits when these insets change. Nested anchored
+  /// overlays inherit this preference from the open panel.
   final bool avoidViewInsets;
 
   /// Whether the anchor renders its panel in the root Overlay.

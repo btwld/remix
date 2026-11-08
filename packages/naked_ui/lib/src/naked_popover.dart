@@ -189,15 +189,19 @@ class NakedPopover extends StatefulWidget {
   /// Preferred focus target after the panel is attached.
   final FocusNode? initialFocusNode;
 
-  /// Fits the panel into the space beside the trigger: its height, and with
-  /// collision avoidance also its width. Content must handle scrolling. See
-  /// `OverlayPositioner.constrainToAvailableSpace`.
+  /// Fits the panel into the space its placement can use. For top and bottom
+  /// placements, caps height beside the trigger; with collision avoidance,
+  /// also caps width inside the padded overlay. Content must handle scrolling.
+  /// See `OverlayPositioner.constrainToAvailableSpace`.
   final bool constrainToAvailableSpace;
 
   /// Keeps the panel inside the view's safe area and keyboard exclusions.
   ///
   /// These view-coordinate exclusions are intersected with the actual Overlay
-  /// bounds, including smaller or offset nested overlays. Defaults to false.
+  /// bounds, including smaller or offset nested overlays, and cap both axes.
+  /// Fixed-size content larger than the cap overflows unless it adapts or
+  /// scrolls. The open panel re-fits when safe-area or keyboard insets change.
+  /// Defaults to false.
   final bool avoidViewInsets;
 
   /// Called when the popover opens.

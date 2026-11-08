@@ -18,7 +18,8 @@ import '../select/select.dart';
 /// localization through [placeholder], [semanticLabel], [formatDate] and
 /// [calendarLabels], including [RemixCalendarLabels.noDate] for an empty value.
 /// The popover contains focus but is not a modal dialog. Scrolling an ancestor
-/// closes it. Removing an open picker does not call [onClose].
+/// closes a root picker. A picker nested in a menu or popover closes when that
+/// outer root closes. Removing an open picker does not call [onClose].
 class RemixDatePicker extends StatelessWidget {
   const RemixDatePicker({
     super.key,
@@ -148,6 +149,9 @@ class RemixDatePicker extends StatelessWidget {
   }
 }
 
+// The typed calendar builder keeps selection callbacks concrete while sharing
+// the picker lifecycle and shell. It supplies a calendar, not behavior strategies
+// or a public protocol.
 class _DatePickerHost<T> extends StatefulWidget {
   const _DatePickerHost({
     required this.enabled,
