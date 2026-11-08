@@ -305,16 +305,20 @@ class NakedSelect<T> extends StatefulWidget {
 
   /// Whether to lay the overlay panel out within the space it can use.
   ///
-  /// By default the panel can be as tall as the whole overlay, so one taller
+  /// By default the panel can be as large as the whole overlay, so one taller
   /// than the space beside the trigger slides over the trigger. When true, the
   /// panel is capped at the space on the side [positioning] resolves to, after
   /// its side offset and collision padding, so a scrollable panel scrolls
   /// there. With collision avoidance, if neither side has
   /// [OverlayPositionConfig.minimumAvailableHeight] of room, the panel may
-  /// overlap the trigger within the collision-padded overlay bounds instead,
-  /// and the panel is never wider than the collision-padded overlay. Content
-  /// that cannot scroll overflows the capped panel. See
-  /// [OverlayPositioner.constrainToAvailableSpace].
+  /// overlap the trigger within the collision-padded overlay bounds instead.
+  ///
+  /// Independently of that height rule, whenever
+  /// [OverlayPositionConfig.avoidCollisions] is true (the default) the panel is
+  /// also never wider than the collision-padded overlay, on any side, and
+  /// scrollable content scrolls horizontally. Without collision avoidance the
+  /// width is not capped. Content that cannot scroll overflows the capped
+  /// panel. See [OverlayPositioner.constrainToAvailableSpace].
   final bool constrainToAvailableSpace;
 
   /// Called when the select overlay opens.
