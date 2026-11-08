@@ -352,6 +352,12 @@ schema 2 official table's fallbacks. Add or rename
 aliases there as your interface evolves. Every Remix icon remains one direct
 `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
+Vanilla additionally ships `calendar`, `range_calendar`, `date_picker` and
+`date_range_picker`. They are hand-written composites with no generated part:
+the calendars wire IconButton and Select recipes; the pickers add outline
+Button and elevated Popover recipes around the matching calendar. Each child
+styler override merges last. Calendar selectors grow with text scaling.
+
 Most Vanilla component items generate one widget. Four generate several:
 `checkbox` also generates
 `UiCheckboxGroupItem`, `textfield` generates `UiTextField` and `UiTextArea`,

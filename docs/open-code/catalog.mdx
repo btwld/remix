@@ -13,9 +13,9 @@ and `effects.dart`, giving you `UiTokens` (including the fixed spacing, size,
 stroke, opacity, and motion scales), `UiThemeData`, `UiTheme`, and the shared
 tint, shadow, and focus-ring helpers the recipes draw on. It also adds
 `remix_ui_fonts`, the package that bundles Geist and Geist Mono, which the
-shipped themes set the text steps in. Every component item
-installs one authored file plus its generated adapter under
-`components/<item>.dart`. Nine items differ: `icons` installs app-owned
+shipped themes set the text steps in. Most component items
+install one authored file plus their generated adapter under
+`components/<item>.dart`. The following items differ: `icons` installs app-owned
 `icons.dart` with no generated adapter; `chart` generates three adapters over
 `mix_chart`; `range_slider` installs `slider` to share its rail, interval and
 thumb styling; `data_table` also pulls in
@@ -51,6 +51,10 @@ The installer rejects older resolved versions before it writes source.
 | `avatar` | `UiAvatar` | — |
 | `badge` | `UiBadge` | variant |
 | `button` | `UiButton` | variant, size |
+| `calendar` | `UiCalendar` | — |
+| `date_picker` | `UiDatePicker` | — |
+| `date_range_picker` | `UiDateRangePicker` | — |
+| `range_calendar` | `UiRangeCalendar` | — |
 | `callout` | `UiCallout` | variant |
 | `card` | `UiCard` | — |
 | `chart` | `UiLineChart`, `UiBarChart`, `UiPieChart` | — |
@@ -85,7 +89,13 @@ The installer rejects older resolved versions before it writes source.
 | `toggle_group` | `UiToggleGroup` | variant, size |
 | `tooltip` | `UiTooltip` | — |
 
-The `fortal` catalog contains every item above, and adds `base_button`, `code`,
+The four calendar items are Vanilla hand-written composites with no generated
+part. `calendar` wires IconButton and Select recipes; `range_calendar` adds
+range day states. The pickers compose outline Button, elevated Popover and the
+matching calendar, retaining all five child-styler overrides.
+
+The `fortal` catalog contains the items above except `calendar`, `range_calendar`,
+`date_picker` and `date_range_picker`, and adds `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`. `base_button` and
 `typography` are shared authored recipes that arrive transitively with the
 components that use them. Fortal's component names use the configured prefix,

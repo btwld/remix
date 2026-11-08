@@ -157,6 +157,10 @@ the two-bound `<Prefix>RangeSlider` recipe.
 
 All three presets also ship `combobox` (depends on `theme` and `textfield`).
 
+Vanilla also: `calendar`, `range_calendar`, `date_picker`, `date_range_picker`.
+These hand-written composites wire the Vanilla child recipes and have no
+generated part; selection and overlay behavior stay in Remix.
+
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`.
 
 HeroUI follows HeroUI's names, adding `alert`, `avatar_group`, `breadcrumbs`,
