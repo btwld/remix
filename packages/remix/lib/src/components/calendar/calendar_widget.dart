@@ -242,16 +242,16 @@ class RemixCalendar extends StatelessWidget {
 }
 
 // Layout defaults every calendar style starts from. Day and navigation
-// targets meet the 44-point minimum; seven of them make the compact width.
+// targets meet the 44-point minimum; the resolved day minimum sizes the grid.
 const _calendarTarget = 44.0;
-const _calendarCompactWidth = 7 * _calendarTarget;
 
 /// Defaults merged under the caller's [CalendarStyler]; each is overridable.
 ///
 /// The compact width is not one of them: a default `maxWidth` would conflict
 /// with a caller's `minWidth` in every resolved spec. It applies only while
-/// the resolved container has no width bound; any finite `maxWidth`, such as
-/// `double.maxFinite` to fill the parent, replaces it.
+/// the resolved container has no width bound. An explicit finite `maxWidth`
+/// replaces it; `double.maxFinite` fills bounded parents and otherwise uses
+/// the compact fallback.
 final _calendarDefaults = CalendarStyler(
   day: CalendarDayStyler(
     container: BoxStyler()
@@ -523,81 +523,95 @@ class _CalendarView extends StatelessWidget {
     styleSpec: styleSpec,
     controller: controller,
     trackFocusVisibility: true,
-    builder: (context, spec) {
-      var container = spec.container;
-      final bounds = container.spec.constraints ?? const BoxConstraints();
-      if (!bounds.hasBoundedWidth) {
-        // Keep an unbounded calendar compact, without conflicting with a
-        // caller minimum. Any finite caller maxWidth replaces this cap.
-        container = container.copyWith(
-          spec: container.spec.copyWith(
-            constraints: bounds.copyWith(
-              maxWidth: bounds.minWidth > _calendarCompactWidth
-                  ? bounds.minWidth
-                  : _calendarCompactWidth,
+    builder: (context, spec) => LayoutBuilder(
+      builder: (context, parentConstraints) {
+        var container = spec.container;
+        final bounds = container.spec.constraints ?? const BoxConstraints();
+        // Rows and padding cells follow the day style's minimum target.
+        final dayBounds = spec.day.spec.container.spec.constraints;
+        final dayWidth = (dayBounds?.minWidth ?? 0) > 0
+            ? dayBounds!.minWidth
+            : _calendarTarget;
+        final dayHeight = (dayBounds?.minHeight ?? 0) > 0
+            ? dayBounds!.minHeight
+            : _calendarTarget;
+        if (!bounds.hasBoundedWidth || bounds.maxWidth == double.maxFinite) {
+          final padding =
+              container.spec.padding
+                  ?.resolve(Directionality.of(context))
+                  .horizontal ??
+              0;
+          final compactWidth = 7 * dayWidth + padding;
+          // maxFinite is a request to fill available space, not a useful width
+          // when the parent is unbounded. Default styles remain compact.
+          final maxWidth =
+              bounds.maxWidth == double.maxFinite &&
+                  parentConstraints.hasBoundedWidth &&
+                  parentConstraints.maxWidth < double.maxFinite
+              ? parentConstraints.maxWidth
+              : compactWidth;
+          container = container.copyWith(
+            spec: container.spec.copyWith(
+              constraints: bounds.copyWith(
+                maxWidth: bounds.minWidth > maxWidth
+                    ? bounds.minWidth
+                    : maxWidth,
+              ),
             ),
-          ),
-        );
-      }
-      // Rows and padding cells follow the day style's minimum target.
-      final dayBounds = spec.day.spec.container.spec.constraints;
-      final dayWidth = (dayBounds?.minWidth ?? 0) > 0
-          ? dayBounds!.minWidth
-          : _calendarTarget;
-      final dayHeight = (dayBounds?.minHeight ?? 0) > 0
-          ? dayBounds!.minHeight
-          : _calendarTarget;
-      return Box(
-        styleSpec: container,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final minimumWidth = 7 * dayWidth;
-            final available = constraints.maxWidth;
-            final width = available.isFinite && available > minimumWidth
-                ? available
-                : minimumWidth;
-            return SingleChildScrollView(
-              primary: false,
-              child: SingleChildScrollView(
+          );
+        }
+        return Box(
+          styleSpec: container,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final minimumWidth = 7 * dayWidth;
+              final available = constraints.maxWidth;
+              final width = available.isFinite && available > minimumWidth
+                  ? available
+                  : minimumWidth;
+              return SingleChildScrollView(
                 primary: false,
-                scrollDirection: Axis.horizontal,
-                child: SizedBox(
-                  width: width,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      headerBuilder(context, spec),
-                      SizedBox(height: spec.headerSpacing ?? 0),
-                      if (summary case final summary?
-                          when summaryBuilder != null)
-                        Semantics(
-                          container: true,
-                          liveRegion: true,
-                          child: summaryBuilder!(context, summary),
-                        ),
-                      _weekdays(spec),
-                      SizedBox(height: spec.weekdaySpacing ?? 0),
-                      for (final (index, week) in weeks.indexed) ...[
-                        if (index > 0) SizedBox(height: spec.rowSpacing ?? 4),
-                        Row(
-                          children: [
-                            for (final date in week)
-                              Expanded(
-                                child: date == null
-                                    ? SizedBox(height: dayHeight)
-                                    : dayBuilder(date),
-                              ),
-                          ],
-                        ),
+                child: SingleChildScrollView(
+                  primary: false,
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    width: width,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        headerBuilder(context, spec),
+                        SizedBox(height: spec.headerSpacing ?? 0),
+                        if (summary case final summary?
+                            when summaryBuilder != null)
+                          Semantics(
+                            container: true,
+                            liveRegion: true,
+                            child: summaryBuilder!(context, summary),
+                          ),
+                        _weekdays(spec),
+                        SizedBox(height: spec.weekdaySpacing ?? 0),
+                        for (final (index, week) in weeks.indexed) ...[
+                          if (index > 0) SizedBox(height: spec.rowSpacing ?? 4),
+                          Row(
+                            children: [
+                              for (final date in week)
+                                Expanded(
+                                  child: date == null
+                                      ? SizedBox(height: dayHeight)
+                                      : dayBuilder(date),
+                                ),
+                            ],
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
-        ),
-      );
-    },
+              );
+            },
+          ),
+        );
+      },
+    ),
   );
 }

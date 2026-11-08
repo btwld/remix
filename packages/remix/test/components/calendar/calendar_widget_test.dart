@@ -769,6 +769,58 @@ void main() {
     },
   );
 
+  for (final entry in [
+    (CalendarStyler().day(CalendarDayStyler().minWidth(52)), 364.0),
+    (CalendarStyler().padding(.all(12)), 332.0),
+    (
+      CalendarStyler().day(CalendarDayStyler().minWidth(52)).padding(.all(12)),
+      388.0,
+    ),
+  ]) {
+    testWidgets(
+      'compact width includes resolved day minimum and padding: ${entry.$2}',
+      (tester) async {
+        await tester.pumpWidget(_host(_calendar(style: entry.$1)));
+        expect(tester.takeException(), isNull);
+        expect(tester.getSize(find.byType(RemixCalendar)).width, entry.$2);
+        final horizontal = tester
+            .widgetList<Scrollable>(
+              find.descendant(
+                of: find.byType(RemixCalendar),
+                matching: find.byType(Scrollable),
+              ),
+            )
+            .where(
+              (widget) =>
+                  axisDirectionToAxis(widget.axisDirection) == Axis.horizontal,
+            );
+        expect(horizontal, hasLength(1));
+        expect(
+          tester
+              .state<ScrollableState>(find.byWidget(horizontal.single))
+              .position
+              .maxScrollExtent,
+          0,
+        );
+      },
+    );
+  }
+
+  testWidgets('maxFinite in an unbounded parent uses the compact fallback', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _host(
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: _calendar(style: CalendarStyler().maxWidth(double.maxFinite)),
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    expect(tester.getSize(find.byType(RemixCalendar)).width, 308);
+  });
+
   testWidgets(
     'fallback width respects caller minima, maxima and resolved variants',
     (tester) async {
