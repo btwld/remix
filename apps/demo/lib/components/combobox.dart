@@ -61,16 +61,6 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Semantics(
-              liveRegion: true,
-              child: Text(
-                _selected == null
-                    ? 'Choose a suggested destination.'
-                    : 'Selected: $_selected',
-                style: TextStyle(color: FortalTokens.gray11.resolve(context)),
-              ),
-            ),
-            const SizedBox(height: 12),
             ScrollConfiguration(
               behavior: const _SuggestionScrollBehavior(),
               child: RemixCombobox<String>(
@@ -145,6 +135,16 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
                                 .fontSize(16),
                           ),
                     ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Semantics(
+              liveRegion: true,
+              child: Text(
+                _selected == null
+                    ? 'Choose a suggested destination.'
+                    : 'Selected: $_selected',
+                style: TextStyle(color: FortalTokens.gray11.resolve(context)),
               ),
             ),
           ],
