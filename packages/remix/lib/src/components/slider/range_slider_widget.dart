@@ -30,13 +30,21 @@ class RemixRangeSlider extends StatelessWidget {
     this.styleSpec,
   }) : assert(
          min > double.negativeInfinity && max < double.infinity && min < max,
+         'Range slider bounds must be finite and min must be less than max',
        ),
-       assert(minSpacing >= 0 && minSpacing < double.infinity),
-       assert(snapDivisions == null || snapDivisions > 0),
+       assert(
+         minSpacing >= 0 && minSpacing < double.infinity,
+         'Range slider minSpacing must be finite and nonnegative',
+       ),
+       assert(
+         snapDivisions == null || snapDivisions > 0,
+         'Range slider snapDivisions must be greater than 0',
+       ),
        assert(
          autofocusThumbIndex == null ||
              autofocusThumbIndex == 0 ||
              autofocusThumbIndex == 1,
+         'Range slider autofocusThumbIndex must be 0 or 1',
        );
 
   /// The parent-authoritative `[lower, upper]` bounds.
@@ -84,11 +92,18 @@ class RemixRangeSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(values.length == 2, 'Range slider requires exactly two values');
-    assert(focusNodes == null || focusNodes!.length == 2);
-    assert(semanticLabels == null || semanticLabels!.length == 2);
+    assert(
+      focusNodes == null || focusNodes!.length == 2,
+      'Range slider focusNodes must contain exactly two entries',
+    );
+    assert(
+      semanticLabels == null || semanticLabels!.length == 2,
+      'Range slider semanticLabels must contain exactly two entries',
+    );
     assert(
       semanticFormatterCallbacks == null ||
           semanticFormatterCallbacks!.length == 2,
+      'Range slider semanticFormatterCallbacks must contain exactly two entries',
     );
 
     assert(
@@ -104,7 +119,7 @@ class RemixRangeSlider extends StatelessWidget {
       min: min,
       max: max,
       minSpacing: minSpacing,
-      step: (max - min) / (snapDivisions ?? 1000),
+      step: _sliderStep(min, max, snapDivisions),
       onChanged: onChanged,
       onChangeStart: onChangeStart,
       onChangeEnd: onChangeEnd,

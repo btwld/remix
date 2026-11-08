@@ -102,11 +102,7 @@ class RemixSlider extends StatelessWidget {
   /// Whether to hide the slider from the semantic tree.
   final bool excludeSemantics;
 
-  double get _effectiveStep {
-    final divisions = snapDivisions;
-    if (divisions != null) return (max - min) / divisions;
-    return (max - min) / 1000;
-  }
+  double get _effectiveStep => _sliderStep(min, max, snapDivisions);
 
   @override
   Widget build(BuildContext context) {
@@ -144,3 +140,7 @@ class RemixSlider extends StatelessWidget {
     );
   }
 }
+
+// Keep continuous and divided interaction steps identical across both facades.
+double _sliderStep(double min, double max, int? snapDivisions) =>
+    (max - min) / (snapDivisions ?? 1000);
