@@ -30,23 +30,13 @@ SliderStyler _demoSliderOverrides() => SliderStyler()
     // Local to this demo: preserve the preset's shared 40px target elsewhere.
     .wrap(.sizedBox(height: 48))
     .onHovered(
-      SliderStyler()
-          .thumbEffects(
-            RemixBoxEffectsMix(
-              outline: .color(
-                FortalTokens.accentA4(),
-              ).width(FortalTokens.borderWidth2()),
-            ),
-          )
-          .thumb(
-            .border(
-              .all(
-                .color(
-                  FortalTokens.accent11(),
-                ).width(FortalTokens.borderWidth2()),
-              ),
-            ),
-          ),
+      SliderStyler().thumbEffects(
+        RemixBoxEffectsMix(
+          outline: .color(
+            FortalTokens.accentA7(),
+          ).width(FortalTokens.borderWidth2()),
+        ),
+      ),
     )
     .onPressed(
       SliderStyler()
@@ -73,7 +63,8 @@ SliderStyler _demoSliderOverrides() => SliderStyler()
           color: FortalTokens.accent11(),
           width: FortalTokens.focusRingWidth(),
         ),
-        outlineOffset: FortalTokens.focusRingOffset(),
+        // Keep the ring contiguous so no rail-coloured notch crosses a neighbour.
+        outlineOffset: 0,
       ),
     )
     .onDisabled(
@@ -98,7 +89,13 @@ SliderStyler _demoSliderOverrides() => SliderStyler()
       ),
       // A neutral edge separates white handles even where they overlap.
       SliderStyler()
-          .thumb(.border(.all(.color(FortalTokens.gray8()))))
+          .thumb(
+            .border(
+              .all(
+                .color(FortalTokens.gray3()).width(FortalTokens.borderWidth2()),
+              ),
+            ),
+          )
           .onDisabled(.blendMode(BlendMode.srcOver)),
     );
 

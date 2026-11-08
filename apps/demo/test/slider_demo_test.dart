@@ -10,6 +10,7 @@ void main() {
       tester,
     ) async {
       Color? idleFace;
+      BoxBorder? idleBorder;
       for (final states in <Set<WidgetState>>[
         {},
         {WidgetState.hovered},
@@ -27,7 +28,20 @@ void main() {
                     final spec = demoSliderStyle().build(context).spec;
                     final face =
                         (spec.thumb.spec.decoration as BoxDecoration).color;
-                    if (states.isEmpty) idleFace = face;
+                    final border =
+                        (spec.thumb.spec.decoration as BoxDecoration).border;
+                    if (states.isEmpty) {
+                      idleFace = face;
+                      idleBorder = border;
+                    }
+                    if (states.contains(WidgetState.hovered)) {
+                      expect(border, idleBorder);
+                      expect(
+                        spec.thumbEffects!.outline.color,
+                        FortalTokens.accentA7.resolve(context),
+                      );
+                    }
+                    expect(spec.thumbFocusEffects!.outlineOffset, 0);
                     if (states.contains(WidgetState.disabled)) {
                       expect(
                         face,
