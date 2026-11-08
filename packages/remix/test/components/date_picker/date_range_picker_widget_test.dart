@@ -86,6 +86,19 @@ Future<void> _tapDay(WidgetTester tester, int day) async {
 }
 
 void main() {
+  testWidgets('removing an open range picker does not call onClose', (
+    tester,
+  ) async {
+    var closes = 0;
+    await tester.pumpWidget(pickerHost(_picker(onClose: () => closes++)));
+    await _open(tester);
+    await tester.pumpWidget(pickerHost(const SizedBox()));
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixRangeCalendar), findsNothing);
+    expect(closes, 0);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('onOpen and onClose tell completion apart from dismissal', (
     tester,
   ) async {
