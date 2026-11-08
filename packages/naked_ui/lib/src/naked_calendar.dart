@@ -146,6 +146,7 @@ class _NakedCalendarState extends State<NakedCalendar>
   late DateTime _focused;
   late DateTime _displayed;
   final _days = <DateTime, FocusNode>{};
+  final _dayOrder = <DateTime, int>{};
   bool get _interactive => widget.enabled && widget.onChanged != null;
   @override
   FocusNode? get widgetProvidedNode => widget.focusNode;
@@ -344,6 +345,7 @@ class _NakedCalendarState extends State<NakedCalendar>
     // Visible parts register again when this snapshot changes. Clearing before
     // reconciliation avoids stale nodes from the previous month's layout.
     _days.clear();
+    _dayOrder.clear();
     final state = NakedCalendarState(
       states: {if (!_interactive) WidgetState.disabled},
       displayedMonth: _displayed,
@@ -405,6 +407,7 @@ class NakedCalendarDayState extends NakedState {
     required this.date,
     required this.isToday,
     required this.isUnavailable,
+    this.isOutsideMonth = false,
   });
 
   /// Date represented by this day, compared by civil fields.
@@ -413,21 +416,38 @@ class NakedCalendarDayState extends NakedState {
   /// Whether this is the configured current date.
   final bool isToday;
 
-  /// Whether the calendar predicate marks this date unavailable.
+  /// Whether the availability predicate rejects this in-bounds date.
+  ///
+  /// Dates outside the calendar bounds are disabled but not unavailable.
   final bool isUnavailable;
+
+  /// Whether this day is not in the displayed month, such as a grid that is
+  /// still animating out. Such a day is inert: disabled, unfocusable and
+  /// excluded from semantics.
+  final bool isOutsideMonth;
 
   /// Reads the nearest day interaction snapshot.
   static NakedCalendarDayState of(BuildContext context) =>
       NakedState.of(context);
   @override
-  List<Object?> get props => [...super.props, date, isToday, isUnavailable];
+  List<Object?> get props => [
+    ...super.props,
+    date,
+    isToday,
+    isUnavailable,
+    isOutsideMonth,
+  ];
 }
 
 /// Behavior-owning part of the nearest [NakedCalendar].
 ///
-/// Each visible date must appear once. Provide a complete, localized date in
+/// Build each displayed date once. Provide a complete, localized date in
 /// [semanticLabel], including any desired today context. The visual builder
 /// cannot remove the button semantics, gestures or keyboard handling.
+///
+/// A day outside the displayed month builds inert rather than failing, so a
+/// month transition can keep the outgoing grid mounted. If a displayed date is
+/// built twice, the most recently mounted day owns keyboard focus.
 class NakedCalendarDay extends StatefulWidget {
   /// Creates a behavior-owning visible day with stable civil-date identity.
   NakedCalendarDay({
@@ -451,15 +471,24 @@ class NakedCalendarDay extends StatefulWidget {
 
 class _NakedCalendarDayState extends State<NakedCalendarDay>
     with WidgetStatesMixin<NakedCalendarDay>, FocusNodeMixin<NakedCalendarDay> {
+  static int _mounts = 0;
+  // Orders duplicate builds of one date, such as an incoming and an outgoing
+  // grid during a transition: the newest mounted day owns keyboard focus.
+  final int _mountOrder = _mounts++;
   _NakedCalendarState? _owner;
   DateTime? _registered;
+  bool _outside = false;
   @override
   FocusNode? get widgetProvidedNode => null;
   DateTime get _day => _date(widget.date);
 
   void _unregister() {
-    if (_owner?._days[_registered] == effectiveFocusNode)
-      _owner?._days.remove(_registered);
+    final owner = _owner;
+    if (owner != null && owner._days[_registered] == effectiveFocusNode) {
+      owner._days.remove(_registered);
+      owner._dayOrder.remove(_registered);
+    }
+    _registered = null;
   }
 
   @override
@@ -468,25 +497,27 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
     final scope = context.dependOnInheritedWidgetOfExactType<_CalendarScope>();
     if (scope == null)
       throw FlutterError('NakedCalendarDay requires a NakedCalendar ancestor.');
-    if (_day.year != scope.snapshot.displayedMonth.year ||
-        _day.month != scope.snapshot.displayedMonth.month) {
-      throw FlutterError(
-        'NakedCalendarDay must belong to the displayed month.',
-      );
+    _attach(scope);
+  }
+
+  void _attach(_CalendarScope scope) {
+    _owner = scope.owner;
+    final displayed = scope.snapshot.displayedMonth;
+    _outside = _day.year != displayed.year || _day.month != displayed.month;
+    if (_outside) {
+      _unregister();
+    } else {
+      _register(scope.owner);
     }
-    _register(scope);
     _syncInteractionState();
   }
 
-  void _register(_CalendarScope scope) {
+  void _register(_NakedCalendarState owner) {
     _unregister();
-    _owner = scope.owner;
-    final existing = _owner!._days[_day];
-    assert(
-      existing == null || existing == effectiveFocusNode,
-      'Each calendar date must appear once.',
-    );
-    _owner!._days[_day] = effectiveFocusNode;
+    final newer = owner._dayOrder[_day];
+    if (newer != null && newer > _mountOrder) return;
+    owner._days[_day] = effectiveFocusNode;
+    owner._dayOrder[_day] = _mountOrder;
     _registered = _day;
   }
 
@@ -494,23 +525,18 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
   void didUpdateWidget(NakedCalendarDay oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!_same(oldWidget.date, widget.date)) {
-      final scope = context
-          .dependOnInheritedWidgetOfExactType<_CalendarScope>()!;
-      if (_day.year != scope.snapshot.displayedMonth.year ||
-          _day.month != scope.snapshot.displayedMonth.month) {
-        throw FlutterError(
-          'NakedCalendarDay must belong to the displayed month.',
-        );
-      }
-      _register(scope);
+      _attach(context.dependOnInheritedWidgetOfExactType<_CalendarScope>()!);
+    } else {
+      _syncInteractionState();
     }
-    _syncInteractionState();
   }
 
   void _syncInteractionState() {
-    final owner = _owner!;
-    if (!owner._selectable(_day) && isPressed) updatePressState(false, null);
-    if (!owner._interactive && isHovered) updateHoverState(false, null);
+    final selectable = !_outside && _owner!._selectable(_day);
+    if (!selectable && isPressed) updatePressState(false, null);
+    // Hover advertises a click; unavailable and inert days have none.
+    if (!selectable && isHovered) updateHoverState(false, null);
+    if (_outside && isFocused) updateFocusState(false, null);
   }
 
   @override
@@ -522,10 +548,27 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
   @override
   Widget build(BuildContext context) {
     final owner = _owner!;
+    final inBounds = owner._inBounds(_day);
+    final unavailable =
+        inBounds && (owner.widget.isDateUnavailable?.call(_day) ?? false);
+    final isToday = _same(_day, owner.widget.currentDate ?? DateTime.now());
+    if (_outside) {
+      return ExcludeSemantics(
+        child: NakedStateScopeBuilder(
+          value: NakedCalendarDayState(
+            states: const {WidgetState.disabled},
+            date: _day,
+            isToday: isToday,
+            isUnavailable: unavailable,
+            isOutsideMonth: true,
+          ),
+          builder: widget.builder,
+        ),
+      );
+    }
     final interactive = owner._interactive;
-    final focusable = interactive && owner._inBounds(_day);
+    final focusable = interactive && inBounds;
     final selectable = owner._selectable(_day);
-    final unavailable = owner.widget.isDateUnavailable?.call(_day) ?? false;
     final state = NakedCalendarDayState(
       states: {
         ...widgetStates,
@@ -533,7 +576,7 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
         if (_same(_day, owner.widget.value)) WidgetState.selected,
       },
       date: _day,
-      isToday: _same(_day, owner.widget.currentDate ?? DateTime.now()),
+      isToday: isToday,
       isUnavailable: unavailable,
     );
     return NakedFocusableDetector(
@@ -547,7 +590,7 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
         if (focused && !_same(owner._focused, _day))
           owner._move(_day, requestFocus: false);
       },
-      onHoverChange: (hovered) => updateHoverState(hovered, null),
+      onHoverChange: (hovered) => updateHoverState(hovered && selectable, null),
       mouseCursor: selectable
           ? SystemMouseCursors.click
           : SystemMouseCursors.basic,

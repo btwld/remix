@@ -590,6 +590,147 @@ void main() {
     },
   );
 
+  group('month transitions', () {
+    final states = <String, NakedCalendarDayState>{};
+
+    Future<List<DateTime>> pumpSwitcher(
+      WidgetTester tester,
+      FocusNode focus,
+    ) async {
+      final requests = <DateTime>[];
+      states.clear();
+      await tester.pumpWidget(
+        _host(
+          NakedCalendar(
+            value: DateTime(2024, 2, 15),
+            firstDate: DateTime(2024),
+            lastDate: DateTime(2024, 12, 31),
+            onChanged: requests.add,
+            focusNode: focus,
+            builder: (_, state, _) => AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Column(
+                key: ValueKey(state.displayedMonth),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final week in state.weeks)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (final date in week)
+                          if (date == null)
+                            const SizedBox.square(dimension: 44)
+                          else
+                            NakedCalendarDay(
+                              date: date,
+                              semanticLabel:
+                                  '${date.year}-${date.month}-${date.day}',
+                              builder: (_, day, _) {
+                                states['${date.month}-${date.day}'] = day;
+                                return SizedBox.square(
+                                  dimension: 44,
+                                  child: Text('${date.day}'),
+                                );
+                              },
+                            ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      return requests;
+    }
+
+    testWidgets('outgoing month days build inert instead of throwing', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        final focus = FocusNode();
+        addTearDown(focus.dispose);
+        await pumpSwitcher(tester, focus);
+        focus.requestFocus();
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(tester.takeException(), isNull);
+        // February is still painted while it fades out, but it is inert.
+        final outgoing = states['2-15']!;
+        expect(outgoing.isOutsideMonth, isTrue);
+        expect(outgoing.isDisabled, isTrue);
+        expect(find.bySemanticsLabel('2024-2-15'), findsNothing);
+        expect(find.bySemanticsLabel('2024-3-15'), findsOneWidget);
+        expect(states['3-15']!.isOutsideMonth, isFalse);
+        await tester.pump(); // Rebuild after the deferred focus handoff.
+        expect(states['3-15']!.isFocused, isTrue);
+        expect(states['2-15']!.isFocused, isFalse);
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      } finally {
+        semantics.dispose();
+      }
+    });
+
+    testWidgets('rapid back-and-forth keeps one live day per date', (
+      tester,
+    ) async {
+      final focus = FocusNode();
+      addTearDown(focus.dispose);
+      final requests = await pumpSwitcher(tester, focus);
+      focus.requestFocus();
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.sendKeyEvent(LogicalKeyboardKey.pageUp);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(tester.takeException(), isNull);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+      expect(requests, [DateTime(2024, 2, 16)]);
+      expect(tester.takeException(), isNull);
+    });
+  });
+
+  testWidgets('unavailable days do not report hover', (tester) async {
+    final state = await _pump(tester);
+    state.change(() => state.unavailable = (date) => date.day == 20);
+    await tester.pump();
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    addTearDown(mouse.removePointer);
+    await mouse.addPointer(location: tester.getCenter(_day(20)));
+    await tester.pump();
+    expect(state.days[DateTime(2024, 2, 20)]!.isHovered, isFalse);
+    await mouse.moveTo(tester.getCenter(_day(21)));
+    await tester.pump();
+    expect(state.days[DateTime(2024, 2, 21)]!.isHovered, isTrue);
+  });
+
+  testWidgets('isUnavailable reports in-bounds predicate dates only', (
+    tester,
+  ) async {
+    final state = await _pump(tester);
+    state.change(() {
+      state.first = DateTime(2024, 2, 10);
+      state.unavailable = (_) => true;
+    });
+    await tester.pump();
+    final outOfBounds = state.days[DateTime(2024, 2, 5)]!;
+    expect(outOfBounds.isDisabled, isTrue);
+    expect(outOfBounds.isUnavailable, isFalse);
+    final rejected = state.days[DateTime(2024, 2, 12)]!;
+    expect(rejected.isDisabled, isTrue);
+    expect(rejected.isUnavailable, isTrue);
+  });
+
   for (final invalidWeekday in [0, 8]) {
     testWidgets('rejects weekday $invalidWeekday', (tester) async {
       await tester.pumpWidget(
