@@ -226,7 +226,11 @@ class RemixCalendar extends StatelessWidget {
                 Flexible(
                   flex: 3,
                   child: RemixSelect<int>(
-                    positioning: const OverlayPositionConfig(sideOffset: 4),
+                    positioning: const OverlayPositionConfig(
+                      side: .bottom,
+                      alignment: .center,
+                      sideOffset: 4,
+                    ),
                     trigger: RemixSelectTrigger(
                       placeholder: labels.chooseMonth,
                     ),
@@ -261,7 +265,11 @@ class RemixCalendar extends StatelessWidget {
                 Flexible(
                   flex: 2,
                   child: RemixSelect<int>(
-                    positioning: const OverlayPositionConfig(sideOffset: 4),
+                    positioning: const OverlayPositionConfig(
+                      side: .bottom,
+                      alignment: .center,
+                      sideOffset: 4,
+                    ),
                     trigger: RemixSelectTrigger(placeholder: labels.chooseYear),
                     semanticLabel: labels.chooseYear,
                     selectedValue: date.year,

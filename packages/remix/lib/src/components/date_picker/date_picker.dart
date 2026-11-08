@@ -2,6 +2,7 @@
 library remix_date_picker;
 
 import 'package:flutter/widgets.dart';
+import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart' show OverlayPositionConfig;
 
 import '../button/button.dart';
@@ -43,6 +44,9 @@ class RemixDatePicker extends StatelessWidget {
       sideOffset: 4,
       collisionPadding: EdgeInsets.all(8),
     ),
+    this.icon,
+    this.placeholderStyle = const ButtonStyler.create(),
+    this.expandedStyle = const ButtonStyler.create(),
     this.buttonStyle = const ButtonStyler.create(),
     this.calendarStyle = const CalendarStyler.create(),
     this.popoverStyle = const PopoverStyler.create(),
@@ -113,7 +117,20 @@ class RemixDatePicker extends StatelessWidget {
   /// The panel also avoids the view's safe area and keyboard exclusions.
   final OverlayPositionConfig positioning;
 
+  /// Decorative leading trigger icon. Its size and color follow [buttonStyle].
+  final IconData? icon;
+
+  /// Fragment merged over [buttonStyle] only while [value] is null.
+  /// Interaction variants, including disabled styling, still resolve normally.
+  final ButtonStyler placeholderStyle;
+
+  /// Fragment merged last while the calendar popover is open.
+  /// Nested month/year selectors keep this fragment active until dismissal.
+  final ButtonStyler expandedStyle;
+
   /// Trigger styling, resolved against the trigger's own interaction state.
+  /// The default label is one line with an ellipsis under a finite width.
+  /// Overrides may replace its text layout; accessible values stay complete.
   final ButtonStyler buttonStyle;
 
   /// Calendar and day styling, resolved against each part's own state.
@@ -147,6 +164,11 @@ class RemixDatePicker extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       positioning: positioning,
+      icon: icon,
+      placeholderStyle: value == null
+          ? placeholderStyle
+          : const ButtonStyler.create(),
+      expandedStyle: expandedStyle,
       buttonStyle: buttonStyle,
       popoverStyle: popoverStyle,
       calendarBuilder: (focus, select) => RemixCalendar(
@@ -184,6 +206,9 @@ class _DatePickerHost<T> extends StatefulWidget {
     required this.focusNode,
     required this.autofocus,
     required this.positioning,
+    required this.icon,
+    required this.placeholderStyle,
+    required this.expandedStyle,
     required this.buttonStyle,
     required this.popoverStyle,
     required this.calendarBuilder,
@@ -205,6 +230,9 @@ class _DatePickerHost<T> extends StatefulWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final OverlayPositionConfig positioning;
+  final IconData? icon;
+  final ButtonStyler placeholderStyle;
+  final ButtonStyler expandedStyle;
   final ButtonStyler buttonStyle;
   final PopoverStyler popoverStyle;
 
@@ -288,6 +316,7 @@ class _DatePickerHostState<T> extends State<_DatePickerHost<T>> {
   }
 
   void _endSession() {
+    if (mounted) setState(() {});
     widget.onClose?.call();
   }
 
@@ -343,12 +372,17 @@ class _DatePickerHostState<T> extends State<_DatePickerHost<T>> {
         value: widget.semanticValue,
         child: RemixButton(
           label: widget.label,
+          leadingIcon: widget.icon,
           semanticLabel: widget.semanticLabel,
           onPressed: _interactive ? _toggle : null,
           enabled: _interactive,
           focusNode: _trigger,
           autofocus: widget.autofocus,
-          style: widget.buttonStyle,
+          style: ButtonStyler()
+              .label(TextStyler().maxLines(1).overflow(TextOverflow.ellipsis))
+              .merge(widget.buttonStyle)
+              .merge(widget.placeholderStyle)
+              .merge(_controller.isOpen ? widget.expandedStyle : null),
         ),
       ),
     );

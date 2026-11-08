@@ -1,4 +1,5 @@
 import 'dart:ui' show Tristate;
+import 'package:flutter/rendering.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/semantics.dart';
@@ -55,6 +56,96 @@ Future<void> _open(WidgetTester tester) async {
 }
 
 void main() {
+  testWidgets(
+    'placeholder and expanded fragments and leading icon follow value and opening',
+    (tester) async {
+      const normal = Color(0xff112233),
+          empty = Color(0xff445566),
+          expanded = Color(0xff778899);
+      Widget field(DateTime? value) => pickerHost(
+        RemixDatePicker(
+          value: value,
+          firstDate: DateTime(2023),
+          lastDate: DateTime(2026),
+          currentDate: DateTime(2024, 2, 15),
+          onChanged: (_) {},
+          icon: const IconData(0xe123),
+          buttonStyle: ButtonStyler().labelColor(normal),
+          placeholderStyle: ButtonStyler().labelColor(empty),
+          expandedStyle: ButtonStyler().labelColor(expanded),
+        ),
+      );
+      Color? color() => tester
+          .widget<RichText>(
+            find
+                .descendant(
+                  of: find.byType(RemixButton).first,
+                  matching: find.byType(RichText),
+                )
+                .last,
+          )
+          .text
+          .style
+          ?.color;
+      await tester.pumpWidget(field(null));
+      expect(color(), empty);
+      expect(
+        tester.widget<RemixButton>(find.byType(RemixButton).first).leadingIcon,
+        const IconData(0xe123),
+      );
+      await _open(tester);
+      expect(color(), expanded);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(color(), empty);
+      await tester.pumpWidget(field(DateTime(2024, 2, 14)));
+      expect(color(), normal);
+      await _open(tester);
+      expect(color(), expanded);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(color(), normal);
+    },
+  );
+
+  testWidgets('long trigger label stays one line at 240 pixels', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      pickerHost(
+        SizedBox(
+          width: 240,
+          child: _picker(
+            value: DateTime(2024, 2, 14),
+            formatDate: (_) =>
+                'A very long localized appointment date that must not wrap',
+          ),
+        ),
+      ),
+    );
+    final text = tester.renderObject<RenderParagraph>(
+      find.descendant(
+        of: find.text(
+          'A very long localized appointment date that must not wrap',
+        ),
+        matching: find.byType(RichText),
+      ),
+    );
+    expect(text.maxLines, 1);
+    expect(text.overflow, TextOverflow.ellipsis);
+    expect(text.didExceedMaxLines, isTrue);
+    expect(tester.takeException(), isNull);
+  });
+  testWidgets('nested selectors use a four pixel panel offset', (tester) async {
+    await tester.pumpWidget(pickerHost(_picker()));
+    await _open(tester);
+    for (final select in tester.widgetList<RemixSelect<int>>(
+      find.byType(RemixSelect<int>),
+    )) {
+      expect(select.positioning.sideOffset, 4);
+    }
+  });
+
   testWidgets('onOpen and onClose tell completion apart from dismissal', (
     tester,
   ) async {

@@ -127,6 +127,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `calendarLabels` (`fullDate` is the trigger's value, `noDate` when empty) and
   optionally `formatDate` (painted text only). An Overlay ancestor is required.
   A view resize closes it; keyboard and safe-area changes re-fit the open panel.
+  Use `icon` for a decorative leading date-picker icon, `placeholderStyle`
+  for the null-value fragment, and `expandedStyle` for the open-panel fragment
+  (merged last over `buttonStyle`). Finite trigger labels ellipsize on one line.
   Style children independently with `buttonStyle`, `popoverStyle`,
   `calendarStyle`, `navigationStyle` and `selectorStyle`; there is no DatePicker
   `style`/`styleSpec` or public controller.

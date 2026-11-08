@@ -166,7 +166,10 @@ void main() {
   testWidgets(
     'narrow RTL at 200% keeps hidden dates reachable by wheel and keys',
     (tester) async {
-      await _pump(tester, size: const Size(360, 640));
+      await _pump(
+        tester, // Keep the compact dropdown header in a genuinely scroll-constrained view.
+        size: const Size(360, 560),
+      );
       await _tap(tester, find.text('العربية / RTL'));
       await _tap(tester, find.text('200% text'));
       expect(find.textContaining('Tab into the calendar'), findsNothing);
@@ -175,7 +178,7 @@ void main() {
       expect(panel.left, greaterThanOrEqualTo(8));
       expect(panel.right, lessThanOrEqualTo(352));
       expect(panel.top, greaterThanOrEqualTo(8));
-      expect(panel.bottom, lessThanOrEqualTo(632));
+      expect(panel.bottom, lessThanOrEqualTo(552));
       final lastDay = find.text('٣٠');
       expect(lastDay.hitTestable(), findsNothing);
       await tester.sendEventToBinding(
