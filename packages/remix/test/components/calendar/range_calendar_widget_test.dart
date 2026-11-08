@@ -85,28 +85,35 @@ SemanticsNode _semantics(WidgetTester tester, int day) => tester.getSemantics(
       .first,
 );
 
+// Range variants follow onSelected so they override it on shared properties,
+// and caps follow the preview so they sit on a draft fill.
 CalendarStyler _style() => CalendarStyler(
   day: CalendarDayStyler()
       .color(_white)
       .label(TextStyler().color(const Color(0xff111111)))
-      .onSelected(CalendarDayStyler().color(_blue)),
-  rangeStart: CalendarDayStyler().borderRadius(
-    .only(
-      topStart: const Radius.circular(22),
-      bottomStart: const Radius.circular(22),
-    ),
-  ),
-  rangeEnd: CalendarDayStyler().borderRadius(
-    .only(
-      topEnd: const Radius.circular(22),
-      bottomEnd: const Radius.circular(22),
-    ),
-  ),
-  rangeSingle: CalendarDayStyler().borderRadius(.circular(22)),
-  rangePreview: CalendarDayStyler()
-      .color(_yellow)
-      .onSelected(CalendarDayStyler().color(_yellow))
-      .onDisabled(CalendarDayStyler().color(_red)),
+      .onSelected(CalendarDayStyler().color(_blue))
+      .onRangePreview(
+        CalendarDayStyler()
+            .color(_yellow)
+            .onDisabled(CalendarDayStyler().color(_red)),
+      )
+      .onRangeStart(
+        CalendarDayStyler().borderRadius(
+          .only(
+            topStart: const Radius.circular(22),
+            bottomStart: const Radius.circular(22),
+          ),
+        ),
+      )
+      .onRangeEnd(
+        CalendarDayStyler().borderRadius(
+          .only(
+            topEnd: const Radius.circular(22),
+            bottomEnd: const Radius.circular(22),
+          ),
+        ),
+      )
+      .onRangeSingle(CalendarDayStyler().borderRadius(.circular(22))),
 );
 
 Future<({ByteData bytes, int width})> _pixels(WidgetTester tester) async {
@@ -155,19 +162,23 @@ void main() {
             .day(
               CalendarDayStyler()
                   .color(_white)
-                  .onSelected(.label(TextStyler().color(selectedLabel))),
-            )
-            .rangeStart(
-              CalendarDayStyler()
-                  .color(_red)
-                  .borderRadius(.circular(8))
-                  .wrap(.opacity(.6)),
+                  .onSelected(.label(TextStyler().color(selectedLabel)))
+                  .onRangeStart(
+                    CalendarDayStyler()
+                        .color(_red)
+                        .borderRadius(.circular(8))
+                        .wrap(.opacity(.6)),
+                  ),
             )
             .wrap(.opacity(.4));
+        // Frames change the range-start variant; Mix builds nested day styles
+        // with their variants on every frame, under each day's state.
         CalendarStyler frame(CalendarStyler base, double progress) => base
             .heading(TextStyler().color(Color.lerp(_red, _blue, progress)!))
-            .rangeStart(
-              CalendarDayStyler().color(Color.lerp(_red, _blue, progress)!),
+            .day(
+              CalendarDayStyler().onRangeStart(
+                CalendarDayStyler().color(Color.lerp(_red, _blue, progress)!),
+              ),
             );
         final style = phase
             ? base.phaseAnimation<int>(
@@ -440,26 +451,43 @@ void main() {
     },
   );
 
-  testWidgets(
-    'normal Mix state precedence is preserved for plain endpoint and preview fill',
-    (tester) async {
-      final style = _style()
-          .rangeStart(CalendarDayStyler().color(_red))
-          .rangePreview(CalendarDayStyler().color(_yellow));
-      await tester.pumpWidget(
-        _host(_calendar(value: _range(10, 12), style: style)),
-      );
-      final pixels = await _pixels(tester);
-      expect(
-        _pixel(
-          tester,
-          pixels,
-          tester.getRect(_day(10)).centerRight + const Offset(-3, 0),
-        ),
-        _blue,
-      );
-    },
-  );
+  for (final rangeLast in [true, false]) {
+    testWidgets(
+      'a range variant declared ${rangeLast ? 'after' : 'before'} onSelected '
+      '${rangeLast ? 'overrides' : 'yields to'} its fill',
+      (tester) async {
+        final day = CalendarDayStyler().color(_white);
+        final selected = CalendarDayStyler().color(_blue);
+        final start = CalendarDayStyler().color(_red);
+        final style = CalendarStyler(
+          day: rangeLast
+              ? day.onSelected(selected).onRangeStart(start)
+              : day.onRangeStart(start).onSelected(selected),
+        );
+        await tester.pumpWidget(
+          _host(_calendar(value: _range(10, 12), style: style)),
+        );
+        final pixels = await _pixels(tester);
+        expect(
+          _pixel(
+            tester,
+            pixels,
+            tester.getRect(_day(10)).centerRight + const Offset(-3, 0),
+          ),
+          rangeLast ? _red : _blue,
+        );
+        // The interior keeps the selected fill either way.
+        expect(
+          _pixel(
+            tester,
+            pixels,
+            tester.getRect(_day(11)).topLeft + const Offset(2, 2),
+          ),
+          _blue,
+        );
+      },
+    );
+  }
 
   testWidgets(
     'root dark/RTL variants and nested day state variants resolve together',
@@ -467,17 +495,19 @@ void main() {
       final style = _style()
           .onDark(
             CalendarStyler(
-              rangeStart: CalendarDayStyler(
-                label: TextStyler()
-                    .fontSize(24)
-                    .onSelected(TextStyler().fontWeight(FontWeight.w700)),
+              day: CalendarDayStyler().onRangeStart(
+                CalendarDayStyler(
+                  label: TextStyler()
+                      .fontSize(24)
+                      .onSelected(TextStyler().fontWeight(FontWeight.w700)),
+                ),
               ),
             ),
           )
           .onRtl(
             CalendarStyler(
-              rangeStart: CalendarDayStyler().onSelected(
-                CalendarDayStyler().color(_red),
+              day: CalendarDayStyler().onRangeStart(
+                CalendarDayStyler().onSelected(CalendarDayStyler().color(_red)),
               ),
             ),
           );
@@ -511,7 +541,7 @@ void main() {
   );
 
   testWidgets(
-    'raw spec bypass preserves base focus border, label fields, explicit shape/zeros and single caps',
+    'raw spec renders every day with its day spec, without range variants',
     (tester) async {
       const raw = CalendarSpec(
         day: StyleSpec(
@@ -538,26 +568,6 @@ void main() {
             ),
           ),
         ),
-        rangeStart: StyleSpec(
-          spec: CalendarDaySpec(
-            container: StyleSpec(
-              spec: BoxSpec(
-                decoration: BoxDecoration(borderRadius: BorderRadius.zero),
-              ),
-            ),
-          ),
-        ),
-        rangeSingle: StyleSpec(
-          spec: CalendarDaySpec(
-            container: StyleSpec(
-              spec: BoxSpec(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(22)),
-                ),
-              ),
-            ),
-          ),
-        ),
       );
       await tester.pumpWidget(
         _host(
@@ -566,197 +576,111 @@ void main() {
             inheritable: true,
             builder: (_, _) => _calendar(
               value: _range(12, 14),
-              style: _style().rangeStart(CalendarDayStyler().color(_yellow)),
+              style: _style(),
               styleSpec: raw,
             ),
           ),
         ),
       );
-      final spec = tester.widget<Box>(_box(12)).styleSpec!.spec;
-      final decoration = spec.decoration! as BoxDecoration;
-      expect(decoration.color, _blue);
-      expect(decoration.borderRadius, BorderRadius.zero);
-      expect(
-        decoration.border,
-        const Border.fromBorderSide(BorderSide(color: _red, width: 2)),
-      );
-      final pixels = await _pixels(tester);
-      expect(
-        _pixel(
-          tester,
-          pixels,
-          tester.getRect(_day(12)).topLeft + const Offset(3, 3),
-        ),
-        _blue,
-      );
+      for (final day in [11, 12, 13, 14]) {
+        final spec = tester.widget<Box>(_box(day)).styleSpec!.spec;
+        expect(spec.decoration, raw.day.spec.container.spec.decoration);
+      }
       final text = tester.widget<RichText>(
         find.descendant(of: _day(12), matching: find.byType(RichText)).first,
       );
       expect(text.text.style!.fontSize, 18);
       expect(text.text.style!.color, _white);
       expect(text.maxLines, 1);
-      await tester.pumpWidget(
-        _host(_calendar(value: _range(12, 12), styleSpec: raw)),
-      );
-      final single = await _pixels(tester);
-      expect(
-        _pixel(
-          tester,
-          single,
-          tester.getRect(_day(12)).topLeft + const Offset(2, 2),
-        ),
-        _white,
-      );
     },
   );
 
-  testWidgets('raw circle endpoint clears incompatible base corner radii', (
-    tester,
-  ) async {
-    const raw = CalendarSpec(
-      day: StyleSpec(
-        spec: CalendarDaySpec(
-          container: StyleSpec(
-            spec: BoxSpec(
-              constraints: BoxConstraints(minWidth: 44, minHeight: 44),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: _blue,
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-              ),
-            ),
-          ),
-        ),
-      ),
-      rangeStart: StyleSpec(
-        spec: CalendarDaySpec(
-          container: StyleSpec(
-            spec: BoxSpec(decoration: BoxDecoration(shape: BoxShape.circle)),
-          ),
-        ),
-      ),
-    );
-    await tester.pumpWidget(
-      _host(_calendar(value: _range(12, 14), styleSpec: raw)),
-    );
-    await tester.pumpAndSettle();
-    expect(tester.takeException(), isNull);
-    final decoration =
-        tester.widget<Box>(_box(12)).styleSpec!.spec.decoration!
-            as BoxDecoration;
-    expect(decoration.shape, BoxShape.circle);
-    expect(decoration.borderRadius, isNull);
-    final pixels = await _pixels(tester);
-    expect(
-      _pixel(
-        tester,
-        pixels,
-        tester.getRect(_day(12)).topLeft + const Offset(2, 2),
-      ),
-      _white,
-    );
-    expect(
-      _pixel(
-        tester,
-        pixels,
-        tester.getRect(_day(12)).centerLeft + const Offset(3, 0),
-      ),
-      _blue,
-    );
-  });
-
   for (final raw in [false, true]) {
-    testWidgets(
-      'raw=$raw day/box/label metadata forwards once with explicit raw composition',
-      (tester) async {
-        final dayAnimation = AnimationConfig.linear(
-          const Duration(milliseconds: 100),
-        );
-        final boxAnimation = AnimationConfig.linear(
-          const Duration(milliseconds: 110),
-        );
-        final labelAnimation = AnimationConfig.linear(
-          const Duration(milliseconds: 120),
-        );
-        final style = CalendarStyler(
-          day: CalendarDayStyler(
-            container: BoxStyler().animate(boxAnimation).wrap(.opacity(.8)),
-            label: TextStyler().wrap(.opacity(.7)),
-          ).wrap(.opacity(.9)),
-          rangeStart: CalendarDayStyler(
-            label: TextStyler().animate(labelAnimation),
-          ).animate(dayAnimation).wrap(.opacity(.6)),
-        );
-        final spec = CalendarSpec(
-          day: StyleSpec(
-            spec: CalendarDaySpec(
-              container: StyleSpec(
-                spec: const BoxSpec(
-                  constraints: BoxConstraints(minWidth: 44, minHeight: 44),
-                  alignment: Alignment.center,
+    testWidgets('raw=$raw day/box/label metadata forwards once per day', (
+      tester,
+    ) async {
+      final dayAnimation = AnimationConfig.linear(
+        const Duration(milliseconds: 100),
+      );
+      final boxAnimation = AnimationConfig.linear(
+        const Duration(milliseconds: 110),
+      );
+      final labelAnimation = AnimationConfig.linear(
+        const Duration(milliseconds: 120),
+      );
+      // The range-start variant replaces the day's opacity modifier and
+      // animation; the box and label keep their own.
+      final style = CalendarStyler(
+        day:
+            CalendarDayStyler(
+                  container: BoxStyler()
+                      .animate(boxAnimation)
+                      .wrap(.opacity(.8)),
+                  label: TextStyler().wrap(.opacity(.7)),
+                )
+                .wrap(.opacity(.9))
+                .onRangeStart(
+                  CalendarDayStyler(
+                    label: TextStyler().animate(labelAnimation),
+                  ).animate(dayAnimation).wrap(.opacity(.6)),
                 ),
-                animation: boxAnimation,
-                widgetModifiers: const [OpacityModifier(.8)],
+      );
+      final spec = CalendarSpec(
+        day: StyleSpec(
+          spec: CalendarDaySpec(
+            container: StyleSpec(
+              spec: const BoxSpec(
+                constraints: BoxConstraints(minWidth: 44, minHeight: 44),
+                alignment: Alignment.center,
               ),
-              label: const StyleSpec(
-                spec: TextSpec(),
-                widgetModifiers: [OpacityModifier(.7)],
-              ),
+              animation: boxAnimation,
+              widgetModifiers: const [OpacityModifier(.8)],
             ),
-            widgetModifiers: const [OpacityModifier(.9)],
-          ),
-          rangeStart: StyleSpec(
-            spec: CalendarDaySpec(
-              label: StyleSpec(
-                spec: const TextSpec(),
-                animation: labelAnimation,
-              ),
-            ),
-            animation: dayAnimation,
-            widgetModifiers: const [OpacityModifier(.6)],
-          ),
-        );
-        await tester.pumpWidget(
-          _host(
-            _calendar(
-              value: _range(12, 14),
-              style: style,
-              styleSpec: raw ? spec : null,
+            label: StyleSpec(
+              spec: const TextSpec(),
+              animation: labelAnimation,
+              widgetModifiers: const [OpacityModifier(.7)],
             ),
           ),
-        );
-        await tester.pumpAndSettle();
-        final opacities = tester
-            .widgetList<Opacity>(
-              find.descendant(of: _day(12), matching: find.byType(Opacity)),
+          animation: dayAnimation,
+          widgetModifiers: const [OpacityModifier(.9)],
+        ),
+      );
+      await tester.pumpWidget(
+        _host(
+          _calendar(
+            value: _range(12, 14),
+            style: style,
+            styleSpec: raw ? spec : null,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final opacities = tester
+          .widgetList<Opacity>(
+            find.descendant(of: _day(12), matching: find.byType(Opacity)),
+          )
+          .map((w) => w.opacity)
+          .toList();
+      expect(opacities, unorderedEquals(raw ? [.9, .8, .7] : [.6, .8, .7]));
+      final dayBuilder = tester.widget<StyleSpecBuilder<CalendarDaySpec>>(
+        find
+            .descendant(
+              of: _day(12),
+              matching: find.byWidgetPredicate(
+                (w) => w is StyleSpecBuilder<CalendarDaySpec>,
+              ),
             )
-            .map((w) => w.opacity)
-            .toList();
-        expect(
-          opacities,
-          unorderedEquals(raw ? [.9, .6, .8, .7] : [.6, .8, .7]),
-        );
-        final dayBuilder = tester.widget<StyleSpecBuilder<CalendarDaySpec>>(
-          find
-              .descendant(
-                of: _day(12),
-                matching: find.byWidgetPredicate(
-                  (w) => w is StyleSpecBuilder<CalendarDaySpec>,
-                ),
-              )
-              .first,
-        );
-        expect(dayBuilder.styleSpec.animation, dayAnimation);
-        expect(tester.widget<Box>(_box(12)).styleSpec!.animation, boxAnimation);
-        final text = tester.widget<StyledText>(
-          find
-              .descendant(of: _day(12), matching: find.byType(StyledText))
-              .first,
-        );
-        expect(text.styleSpec!.animation, labelAnimation);
-        expect(tester.takeException(), isNull);
-      },
-    );
+            .first,
+      );
+      expect(dayBuilder.styleSpec.animation, dayAnimation);
+      expect(tester.widget<Box>(_box(12)).styleSpec!.animation, boxAnimation);
+      final text = tester.widget<StyledText>(
+        find.descendant(of: _day(12), matching: find.byType(StyledText)).first,
+      );
+      expect(text.styleSpec!.animation, labelAnimation);
+      expect(tester.takeException(), isNull);
+    });
   }
 
   testWidgets(

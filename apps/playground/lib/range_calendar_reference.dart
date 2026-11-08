@@ -245,12 +245,9 @@ class _RangeCalendarReferencePageState
       );
 }
 
-final _endpointFill = CalendarDayStyler()
+final _endpoint = CalendarDayStyler()
     .color(const Color(0xFF3E63DD))
     .label(TextStyler().color(const Color(0xFFFFFFFF)));
-final _endpoint = _endpointFill
-    .onSelected(_endpointFill)
-    .onHovered(_endpointFill);
 final _rangeStyle = CalendarStyler()
     .heading(TextStyler().fontSize(16).fontWeight(FontWeight.w600))
     .weekday(
@@ -275,39 +272,36 @@ final _rangeStyle = CalendarStyler()
             CalendarDayStyler().label(
               TextStyler().color(PlaygroundTokens.mutedForeground()),
             ),
-          ),
-    )
-    .rangeStart(
-      _endpoint.borderRadius(
-        .only(
-          topStart: const Radius.circular(8),
-          bottomStart: const Radius.circular(8),
-        ),
-      ),
-    )
-    .rangeEnd(
-      _endpoint.borderRadius(
-        .only(
-          topEnd: const Radius.circular(8),
-          bottomEnd: const Radius.circular(8),
-        ),
-      ),
-    )
-    .rangeSingle(_endpoint.borderRadius(.circular(8)))
-    .rangePreview(
-      CalendarDayStyler()
-          .color(const Color(0xFFFAE2A0))
-          .onSelected(
+          )
+          // Range variants follow onSelected/onDisabled so they win on shared
+          // properties; caps follow the draft fill.
+          .onRangePreview(
             CalendarDayStyler()
                 .color(const Color(0xFFFAE2A0))
-                .label(TextStyler().color(const Color(0xFF653D00))),
+                .label(TextStyler().color(const Color(0xFF653D00)))
+                .onDisabled(
+                  CalendarDayStyler()
+                      .color(const Color(0xFFF1CFCA))
+                      .label(TextStyler().color(const Color(0xFF7C2424))),
+                ),
           )
-          .label(TextStyler().color(const Color(0xFF653D00)))
-          .onDisabled(
-            CalendarDayStyler()
-                .color(const Color(0xFFF1CFCA))
-                .label(TextStyler().color(const Color(0xFF7C2424))),
-          ),
+          .onRangeStart(
+            _endpoint.borderRadius(
+              .only(
+                topStart: const Radius.circular(8),
+                bottomStart: const Radius.circular(8),
+              ),
+            ),
+          )
+          .onRangeEnd(
+            _endpoint.borderRadius(
+              .only(
+                topEnd: const Radius.circular(8),
+                bottomEnd: const Radius.circular(8),
+              ),
+            ),
+          )
+          .onRangeSingle(_endpoint.borderRadius(.circular(8))),
     );
 
 final _arabicRangeLabels = RemixRangeCalendarLabels(

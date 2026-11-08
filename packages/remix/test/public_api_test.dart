@@ -47,7 +47,7 @@ void main() {
   );
 
   test(
-    'range calendar API and shared fragments are exported through package barrel',
+    'range calendar API and day variants are exported through the barrel',
     () {
       final range = NakedDateRange(
         start: DateTime(2024),
@@ -64,19 +64,18 @@ void main() {
           selectedRange: (start, end) => '$start – $end',
         ),
         style: CalendarStyler(
-          rangeStart: CalendarDayStyler().color(Colors.blue),
-          rangeEnd: CalendarDayStyler().color(Colors.blue),
-          rangeSingle: CalendarDayStyler().borderRadius(.circular(22)),
-          rangePreview: CalendarDayStyler().color(Colors.lightBlue),
+          day: CalendarDayStyler()
+              .onRangePreview(CalendarDayStyler().color(Colors.lightBlue))
+              .onRangeStart(CalendarDayStyler().color(Colors.blue))
+              .onRangeMiddle(CalendarDayStyler().color(Colors.blue))
+              .onRangeEnd(CalendarDayStyler().color(Colors.blue))
+              .onRangeSingle(CalendarDayStyler().borderRadius(.circular(22))),
         ),
       );
       expect(calendar.value, range);
       expect(calendar.style, isA<CalendarStyler>());
-      expect(
-        const CalendarSpec().rangeSingle,
-        isA<StyleSpec<CalendarDaySpec>>(),
-      );
       expect(RemixRangeCalendar.styleFrom(), isA<CalendarStyler>());
+      expect(isSameCivilDate(range.start, DateTime.utc(2024)), isTrue);
     },
   );
 

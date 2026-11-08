@@ -231,48 +231,12 @@ class RemixCalendar extends StatelessWidget {
     );
   }
 
-  Widget _day(DateTime date, CalendarStyler effectiveStyle) => NakedCalendarDay(
+  Widget _day(DateTime date, CalendarStyler effectiveStyle) => _calendarDay(
     date: date,
     semanticLabel: _dayLabel(date),
-    builder: (context, day, _) => WidgetStateProvider(
-      states: day.states,
-      child: Builder(
-        builder: (context) {
-          // Merge unresolved inherited styles before resolving this day's
-          // context and state variants. Only the day renders, not root effects.
-          final resolved = styleSpec == null
-              ? (Style.maybeOf<CalendarSpec>(context)?.merge(effectiveStyle) ??
-                        effectiveStyle)
-                    .build(context)
-              : StyleSpec(spec: styleSpec!);
-          // Root animation can change day anatomy too. Consume its frame data
-          // here without rendering the root modifiers again for every day.
-          return StyleAnimationBuilder<CalendarSpec>(
-            spec: resolved.copyWith(
-              animation: remixChildAnimation<CalendarSpec>(resolved.animation),
-            ),
-            builder: (context, frame) => StyleSpecBuilder<CalendarDaySpec>(
-              styleSpec: frame.spec.day,
-              builder: (context, spec) {
-                final label = StyledText(
-                  labels.day(date),
-                  styleSpec: spec.label,
-                );
-                if (spec.containerEffects == null ||
-                    spec.containerEffects!.isEmpty) {
-                  return Box(styleSpec: spec.container, child: label);
-                }
-                return RemixBoxAdapter(
-                  styleSpec: spec.container,
-                  containerEffects: spec.containerEffects,
-                  child: label,
-                );
-              },
-            ),
-          );
-        },
-      ),
-    ),
+    style: effectiveStyle,
+    styleSpec: styleSpec,
+    labels: labels,
   );
 
   String _dayLabel(DateTime date) {
@@ -282,6 +246,59 @@ class RemixCalendar extends StatelessWidget {
         : labels.fullDate(date);
   }
 }
+
+/// One styled day, shared by single and range calendars.
+///
+/// The day style resolves under the day's own [NakedCalendarDayState], so
+/// widget-state and calendar day variants (today, unavailable, range position)
+/// apply per day, including on root animation frames: Mix builds nested day
+/// styles, with their variants, for every frame. A raw [styleSpec] carries no
+/// variants and renders every day with its `day` spec.
+Widget _calendarDay({
+  required DateTime date,
+  required String semanticLabel,
+  required CalendarStyler style,
+  required CalendarSpec? styleSpec,
+  required RemixCalendarLabels labels,
+}) => NakedCalendarDay(
+  date: date,
+  semanticLabel: semanticLabel,
+  builder: (context, day, _) => WidgetStateProvider(
+    states: day.states,
+    child: Builder(
+      builder: (context) {
+        // Merge unresolved inherited styles before resolving this day's
+        // context and state variants. Only the day renders, not root effects.
+        final resolved = styleSpec == null
+            ? (Style.maybeOf<CalendarSpec>(context)?.merge(style) ?? style)
+                  .build(context)
+            : StyleSpec(spec: styleSpec);
+        // Root animation can change day anatomy too. Consume its frame data
+        // here without rendering the root modifiers again for every day.
+        return StyleAnimationBuilder<CalendarSpec>(
+          spec: resolved.copyWith(
+            animation: remixChildAnimation<CalendarSpec>(resolved.animation),
+          ),
+          builder: (context, frame) => StyleSpecBuilder<CalendarDaySpec>(
+            styleSpec: frame.spec.day,
+            builder: (context, spec) {
+              final label = StyledText(labels.day(date), styleSpec: spec.label);
+              if (spec.containerEffects == null ||
+                  spec.containerEffects!.isEmpty) {
+                return Box(styleSpec: spec.container, child: label);
+              }
+              return RemixBoxAdapter(
+                styleSpec: spec.container,
+                containerEffects: spec.containerEffects,
+                child: label,
+              );
+            },
+          ),
+        );
+      },
+    ),
+  ),
+);
 
 class _CalendarHeader extends StatelessWidget {
   const _CalendarHeader({

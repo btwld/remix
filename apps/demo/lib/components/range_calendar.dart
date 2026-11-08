@@ -43,55 +43,68 @@ class _RangeCalendarExampleState extends State<RangeCalendarExample> {
               CalendarDayStyler()
                   .label(TextStyler().fontSize(14))
                   .border(.color(const Color(0x00000000)).width(2))
+                  .onToday(
+                    CalendarDayStyler().label(
+                      TextStyler().fontWeight(FontWeight.w600),
+                    ),
+                  )
                   .onSelected(
                     CalendarDayStyler()
-                        .color(const Color(0xFFDBE5FF))
-                        .label(TextStyler().color(const Color(0xFF18306A))),
+                        .color(FortalTokens.accent4())
+                        .label(TextStyler().color(FortalTokens.accent11())),
                   )
                   .onFocusVisible(
                     CalendarDayStyler().border(
-                      .color(const Color(0xFF8DA4FF)).width(2),
+                      .color(FortalTokens.focus8()).width(2),
                     ),
                   )
                   .onDisabled(
                     CalendarDayStyler().label(
-                      TextStyler().color(const Color(0xFF8B8D98)),
+                      TextStyler().color(FortalTokens.gray9()),
                     ),
-                  ),
-            )
-            .rangeStart(
-              _endpoint.borderRadius(
-                .only(
-                  topStart: const Radius.circular(6),
-                  bottomStart: const Radius.circular(6),
-                ),
-              ),
-            )
-            .rangeEnd(
-              _endpoint.borderRadius(
-                .only(
-                  topEnd: const Radius.circular(6),
-                  bottomEnd: const Radius.circular(6),
-                ),
-              ),
-            )
-            .rangeSingle(_endpoint.borderRadius(.circular(6)))
-            .rangePreview(
-              CalendarDayStyler()
-                  .onSelected(
-                    CalendarDayStyler()
-                        .color(const Color(0xFFFAE2A0))
-                        .label(TextStyler().color(const Color(0xFF653D00))),
                   )
-                  .color(const Color(0xFFFAE2A0))
-                  .label(TextStyler().color(const Color(0xFF653D00))),
+                  .onUnavailable(
+                    CalendarDayStyler().label(
+                      TextStyler().decoration(TextDecoration.lineThrough),
+                    ),
+                  )
+                  // Range variants follow onSelected/onDisabled so they win on
+                  // shared properties; caps follow the draft fill.
+                  .onRangePreview(
+                    CalendarDayStyler()
+                        .color(FortalTokens.gray4())
+                        .label(TextStyler().color(FortalTokens.gray12()))
+                        .onDisabled(
+                          CalendarDayStyler()
+                              .color(FortalTokens.error3())
+                              .label(
+                                TextStyler().color(FortalTokens.error11()),
+                              ),
+                        ),
+                  )
+                  .onRangeStart(
+                    _endpoint.borderRadius(
+                      .only(
+                        topStart: const Radius.circular(6),
+                        bottomStart: const Radius.circular(6),
+                      ),
+                    ),
+                  )
+                  .onRangeEnd(
+                    _endpoint.borderRadius(
+                      .only(
+                        topEnd: const Radius.circular(6),
+                        bottomEnd: const Radius.circular(6),
+                      ),
+                    ),
+                  )
+                  .onRangeSingle(_endpoint.borderRadius(.circular(6))),
             ),
       ),
     ),
   );
 }
 
-final _endpointFill = CalendarDayStyler()
-    .color(const Color(0xFF3E63DD))
-    .label(TextStyler().color(const Color(0xFFFFFFFF)));
-final _endpoint = _endpointFill.onSelected(_endpointFill);
+final _endpoint = CalendarDayStyler()
+    .color(FortalTokens.accentSolid())
+    .label(TextStyler().color(FortalTokens.accentContrast()));

@@ -101,63 +101,68 @@ behavior-owning semantics even when their visuals are styled.
 ## Styling the interval
 
 Use the same `CalendarStyler` and independently resolved navigation/selector
-styles as Calendar. Its four range day fragments are:
+styles as Calendar. Range days are styled with day variants on
+`CalendarStyler.day`, resolved in each day's own state:
 
-| Fragment | Applies to |
+| Variant | Applies to |
 | --- | --- |
-| `rangeStart` | Chronological start of a multi-day displayed interval. |
-| `rangeEnd` | Chronological end of a multi-day displayed interval. |
-| `rangeSingle` | A one-day interval, instead of combining start/end fragments. |
-| `rangePreview` | Every date in the local draft interval. |
+| `onRangeStart` | First day of a multi-day painted interval. |
+| `onRangeMiddle` | Days strictly between the first and last day. |
+| `onRangeEnd` | Last day of a multi-day painted interval. |
+| `onRangeSingle` | A one-day interval, instead of combining start/end caps. |
+| `onRangePreview` | Every date in the local draft interval. |
 
-The displayed interval is the draft while anchored, otherwise the committed
-value. Composition is base day, preview, then the single or start/end fragment.
-Normal Mix context/state precedence still applies: to replace a base
-`day.onSelected(...)` fill, provide a selected-state fill in the fragment too.
-Selected semantics continue to describe the committed range, including while a
-draft overlaps it. Use directional corner radii for chronological endpoint caps.
-Keep merged radius values in the same coordinate family with Mix 2.3.1: do not
-combine a physical base radius (`.circular(...)`) with directional endpoint
-radii. Leave the base radius unset for square interiors, as below.
+The painted interval is the draft while anchored, otherwise the committed
+value. Range variants rank with widget states: Mix applies them after plain
+context variants, and among widget-state variants the one declared last wins
+on shared properties. Declare them after `onSelected` (and `onDisabled`) to
+override those, and declare position variants after `onRangePreview` so caps
+sit on the draft fill. Selected semantics continue to describe the committed
+range, including while a draft overlaps it.
+
+Use directional corner radii for chronological endpoint caps. Keep merged
+radius values in the same coordinate family with Mix 2.3.1: do not combine a
+physical base radius (`.circular(...)`) with directional endpoint radii. Leave
+the base radius unset for square interiors, as below.
 
 ```dart
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
-final endpointFill = CalendarDayStyler()
+final endpoint = CalendarDayStyler()
     .color(const Color(0xFF3E63DD))
     .label(TextStyler().color(const Color(0xFFFFFFFF)));
-final endpoint = endpointFill.onSelected(endpointFill);
-final previewFill = CalendarDayStyler()
-    .color(const Color(0xFFFAE2A0))
-    .label(TextStyler().color(const Color(0xFF653D00)));
 
-final rangeStyle = CalendarStyler()
-    .day(
-      CalendarDayStyler().onSelected(
+final rangeStyle = CalendarStyler().day(
+  CalendarDayStyler()
+      .onSelected(
         CalendarDayStyler()
             .color(const Color(0xFFDBE5FF))
             .label(TextStyler().color(const Color(0xFF18306A))),
-      ),
-    )
-    .rangeStart(endpoint.borderRadius(.only(
-      topStart: const Radius.circular(8),
-      bottomStart: const Radius.circular(8),
-    )))
-    .rangeEnd(endpoint.borderRadius(.only(
-      topEnd: const Radius.circular(8),
-      bottomEnd: const Radius.circular(8),
-    )))
-    .rangeSingle(endpoint.borderRadius(.circular(8)))
-    .rangePreview(previewFill.onSelected(previewFill));
+      )
+      .onRangePreview(
+        CalendarDayStyler()
+            .color(const Color(0xFFFAE2A0))
+            .label(TextStyler().color(const Color(0xFF653D00))),
+      )
+      .onRangeStart(endpoint.borderRadius(.only(
+        topStart: const Radius.circular(8),
+        bottomStart: const Radius.circular(8),
+      )))
+      .onRangeEnd(endpoint.borderRadius(.only(
+        topEnd: const Radius.circular(8),
+        bottomEnd: const Radius.circular(8),
+      )))
+      .onRangeSingle(endpoint.borderRadius(.circular(8))),
+);
 ```
 
 Pass this to `RemixRangeCalendar(style: rangeStyle, ...)`; there is no callable
-CalendarStyler widget shorthand. A raw `styleSpec` bypasses inherited/local
-stylers. Raw fragment nonnull properties override the base; resolved decoration
-shape and corner zeros are explicit values. Raw specs cannot retain the
-omitted-versus-zero distinction of unresolved Mix styling. Modifiers compose;
-later fragment animation metadata wins.
+CalendarStyler widget shorthand. Variants keep working through root
+animations, because each frame builds the nested day style in that day's
+state. A raw `styleSpec` is already resolved and carries no variants: every day
+renders its `day` spec, so selection, availability and range positions are not
+painted. Use `style` for state and range styling.
 
 ## Interaction and scope
 

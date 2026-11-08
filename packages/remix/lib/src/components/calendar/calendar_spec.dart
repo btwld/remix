@@ -1,6 +1,9 @@
 part of 'calendar.dart';
 
 /// Resolved calendar surface, typography and independently styled day anatomy.
+///
+/// Range days are styled with day variants such as
+/// `CalendarDayStyler.onRangeStart`, resolved in each day's own state.
 // No target: the generator cannot resolve cross-generated constructor
 // styler types for navigationStyle and selectorStyle in the same build.
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
@@ -21,22 +24,6 @@ class CalendarSpec with _$CalendarSpec {
   @override
   final double? weekdaySpacing;
 
-  /// Fragment for the first day of the currently painted interval.
-  @override
-  final StyleSpec<CalendarDaySpec> rangeStart;
-
-  /// Fragment for the last day of the currently painted interval.
-  @override
-  final StyleSpec<CalendarDaySpec> rangeEnd;
-
-  /// Fragment for a one-day interval, used instead of start/end fragments.
-  @override
-  final StyleSpec<CalendarDaySpec> rangeSingle;
-
-  /// Draft-only fragment; never sets semantic selected state.
-  @override
-  final StyleSpec<CalendarDaySpec> rangePreview;
-
   /// Vertical gap between week rows; columns remain connected.
   @override
   final double? rowSpacing;
@@ -48,17 +35,9 @@ class CalendarSpec with _$CalendarSpec {
     this.rowSpacing,
     this.headerSpacing,
     this.weekdaySpacing,
-    StyleSpec<CalendarDaySpec>? rangeStart,
-    StyleSpec<CalendarDaySpec>? rangeEnd,
-    StyleSpec<CalendarDaySpec>? rangeSingle,
-    StyleSpec<CalendarDaySpec>? rangePreview,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        weekday = weekday ?? const StyleSpec(spec: TextSpec()),
-       day = day ?? const StyleSpec(spec: CalendarDaySpec()),
-       rangeStart = rangeStart ?? const StyleSpec(spec: CalendarDaySpec()),
-       rangeEnd = rangeEnd ?? const StyleSpec(spec: CalendarDaySpec()),
-       rangeSingle = rangeSingle ?? const StyleSpec(spec: CalendarDaySpec()),
-       rangePreview = rangePreview ?? const StyleSpec(spec: CalendarDaySpec());
+       day = day ?? const StyleSpec(spec: CalendarDaySpec());
 }
 
 /// Day surface and numeric label, resolved in that day's interaction state.

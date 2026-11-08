@@ -125,7 +125,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   the draft. Every interior date must be available, including offscreen dates.
   Parent rejection retains the supplied value. Escape cancels draft; inline
   Tab/blur preserves it. Use `RemixCalendarLabels` plus
-  `RemixRangeCalendarLabels`, and the shared `CalendarStyler`; no public draft
+  `RemixRangeCalendarLabels`, and the shared `CalendarStyler`. Style the painted
+  interval with `CalendarDayStyler` variants `onRangePreview`, `onRangeStart`,
+  `onRangeMiddle`, `onRangeEnd` and `onRangeSingle`, declared after
+  `onSelected` so they win; a raw `styleSpec` paints no range. No public draft
   controller, partial committed value, drag selection or typed entry.
 - **[DatePicker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)** — a thin Button + Popover + Calendar composition, not a text
   field. The parent owns nullable `value`; valid activation requests one date
