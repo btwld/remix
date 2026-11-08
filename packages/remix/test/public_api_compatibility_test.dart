@@ -29,7 +29,7 @@ void main() {
       optionsViewOpenDirection: OptionsViewOpenDirection.up,
       style: ComboboxStyler()
           .field(TextFieldStyler().onFocused(.cursorColor(Colors.blue)))
-          .panel(BoxStyler().padding(.all(4)))
+          .panel(ComboboxPanelStyler().padding(.all(4)))
           .option(
             ComboboxOptionStyler()
                 .onHovered(.color(Colors.blue))

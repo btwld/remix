@@ -79,7 +79,7 @@ class _DestinationSearchState extends State<_DestinationSearch> {
               ),
         )
         .panel(
-          BoxStyler()
+          ComboboxPanelStyler()
               .color(surface)
               .padding(.all(6))
               .borderRadius(.circular(12))
