@@ -83,9 +83,11 @@ same function object. Completion also rechecks the current predicate. Invalid
 completion dates remain keyboard-discoverable but do not expose a selection
 action. An invalid anchor is discarded without changing the committed range.
 
-For large intervals, predicate work is proportional to the span. Use a cheap
-synchronous predicate; network fetching and business validation belong to the
-application, not the calendar.
+For large intervals, completion work is proportional to the span. Between
+rebuilds, availability results are cached, so focus moves and browsing check
+only newly shown dates; rebuild the calendar when the predicate's results
+change. Use a cheap synchronous predicate; network fetching and business
+validation belong to the application, not the calendar.
 
 ## Presentation and localization
 
@@ -97,6 +99,12 @@ keys; it does not translate text. `firstDayOfWeek` uses Monday=1 through Sunday=
 Committed interval dates retain selected semantics. A draft is described
 separately; it is not a second committed selection. Calendar days retain their
 behavior-owning semantics even when their visuals are styled.
+
+A range summary (the selected range, the next instruction and any availability
+problem) is announced as a live region. It is not painted by default; pass
+`summaryBuilder` to show it, for example `(context, summary) => Text(summary)`.
+`RemixRangeCalendarLabels.joinSummary` and `joinDayLabel` join the summary's
+sentences and each day's name parts, so their punctuation is localizable.
 
 ## Styling the interval
 

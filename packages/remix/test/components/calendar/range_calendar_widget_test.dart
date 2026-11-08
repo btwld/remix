@@ -85,6 +85,11 @@ SemanticsNode _semantics(WidgetTester tester, int day) => tester.getSemantics(
       .first,
 );
 
+/// The range summary is a live region that is not painted by default.
+Finder _summary(Pattern text) => find.bySemanticsLabel(
+  text is RegExp ? text : RegExp(RegExp.escape(text as String)),
+);
+
 // Range variants follow onSelected so they override it on shared properties,
 // and caps follow the preview so they sit on a draft fill.
 CalendarStyler _style() => CalendarStyler(
@@ -292,8 +297,8 @@ void main() {
       await tester.pumpWidget(
         _host(_calendar(value: _range(10, 12), onChanged: requests.add)),
       );
-      expect(find.textContaining('Selected range:'), findsOneWidget);
-      expect(find.textContaining('Choose start date'), findsOneWidget);
+      expect(_summary('Selected range:'), findsOneWidget);
+      expect(_summary('Choose start date'), findsOneWidget);
       final selected = _semantics(tester, 10);
       expect(
         selected.getSemanticsData().flagsCollection.isSelected,
@@ -303,7 +308,7 @@ void main() {
       await tester.tap(_day(20));
       await tester.pumpAndSettle();
       expect(requests, isEmpty);
-      expect(find.textContaining('Choose end date'), findsOneWidget);
+      expect(_summary('Choose end date'), findsOneWidget);
       final draft = _semantics(tester, 20);
       expect(draft.label, contains('Draft start'));
       expect(draft.label, contains('Draft end'));
@@ -318,7 +323,7 @@ void main() {
       end.owner!.performAction(end.id, SemanticsAction.tap);
       await tester.pumpAndSettle();
       expect(requests, [_range(20, 21)]);
-      expect(find.textContaining('Choose start date'), findsOneWidget);
+      expect(_summary('Choose start date'), findsOneWidget);
       expect(
         _semantics(tester, 10).getSemanticsData().flagsCollection.isSelected,
         ui.Tristate.isTrue,
@@ -434,10 +439,7 @@ void main() {
         blocked.getSemanticsData().hasAction(SemanticsAction.focus),
         isTrue,
       );
-      expect(
-        find.textContaining('Range contains unavailable dates'),
-        findsOneWidget,
-      );
+      expect(_summary('Range contains unavailable dates'), findsOneWidget);
       pixels = await _pixels(tester);
       expect(
         _pixel(
@@ -682,6 +684,88 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
+
+  testWidgets(
+    'the summary is an unpainted live region over the weekday row by default',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        await tester.pumpWidget(_host(_calendar(value: _range(10, 12))));
+        expect(find.textContaining('Selected range:'), findsNothing);
+        final node = tester.getSemantics(_summary('Selected range:'));
+        expect(node.label, contains('Choose start date'));
+        expect(node.getSemanticsData().flagsCollection.isLiveRegion, isTrue);
+        expect(node.rect.isEmpty, isFalse);
+        await tester.tap(_day(20));
+        await tester.pumpAndSettle();
+        expect(_summary('Choose end date'), findsOneWidget);
+      } finally {
+        semantics.dispose();
+      }
+    },
+  );
+
+  testWidgets('summaryBuilder paints the summary and keeps it live', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    try {
+      await tester.pumpWidget(
+        _host(
+          RemixRangeCalendar(
+            value: _range(10, 12),
+            firstDate: DateTime(2024),
+            lastDate: DateTime(2025, 12, 31),
+            currentDate: DateTime(2024, 2, 15),
+            onChanged: (_) {},
+            rangeLabels: RemixRangeCalendarLabels(
+              joinSummary: (sentences) => sentences.join(' / '),
+            ),
+            summaryBuilder: (context, summary) => Text(summary),
+          ),
+        ),
+      );
+      final painted = find.textContaining('Selected range:');
+      expect(painted, findsOneWidget);
+      expect(
+        tester.widget<Text>(painted).data,
+        contains(' / Choose start date'),
+      );
+      expect(
+        tester
+            .getSemantics(painted)
+            .getSemanticsData()
+            .flagsCollection
+            .isLiveRegion,
+        isTrue,
+      );
+      // Only the painted summary is announced, not a second hidden copy.
+      expect(_summary('Selected range:'), findsOneWidget);
+    } finally {
+      semantics.dispose();
+    }
+  });
+
+  testWidgets('day labels join their parts with the localizable joiner', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    try {
+      await tester.pumpWidget(
+        _host(
+          _calendar(
+            value: _range(10, 12),
+            rangeLabels: RemixRangeCalendarLabels(
+              joinDayLabel: (parts) => parts.join(' ؛ '),
+            ),
+          ),
+        ),
+      );
+      expect(_semantics(tester, 10).label, contains(' ؛ Range start'));
+    } finally {
+      semantics.dispose();
+    }
+  });
 
   testWidgets(
     'long translations, RTL, narrow scrolling and 2x text retain day targets',

@@ -14,6 +14,8 @@ class RemixRangeCalendarLabels {
     this.unavailableRange = 'Range contains unavailable dates',
     this.invalidRange = 'Selected range is unavailable',
     this.selectedRange = _selectedRange,
+    this.joinSummary = _joinSentences,
+    this.joinDayLabel = _joinParts,
   });
 
   final String start;
@@ -29,8 +31,17 @@ class RemixRangeCalendarLabels {
   /// Formats already-localized endpoint names, not raw DateTime values.
   final String Function(String start, String end) selectedRange;
 
+  /// Joins the range summary's sentences, such as the selected range and the
+  /// next instruction. Defaults to English sentence punctuation.
+  final String Function(List<String> sentences) joinSummary;
+
+  /// Joins a day's accessible name parts: its date, today and range roles.
+  final String Function(List<String> parts) joinDayLabel;
+
   static String _selectedRange(String start, String end) =>
       'Selected range: $start to $end';
+  static String _joinSentences(List<String> sentences) => sentences.join('. ');
+  static String _joinParts(List<String> parts) => parts.join(', ');
 }
 
 /// Controlled inclusive range selection over the shared calendar anatomy.
@@ -64,6 +75,7 @@ class RemixRangeCalendar extends StatelessWidget {
     this.selectorStyle = const SelectStyler.create(),
     this.style = const CalendarStyler.create(),
     this.styleSpec,
+    this.summaryBuilder,
   });
 
   final NakedDateRange? value;
@@ -90,6 +102,13 @@ class RemixRangeCalendar extends StatelessWidget {
   /// selection, availability and range positions are not painted. Use [style]
   /// for state and range styling.
   final CalendarSpec? styleSpec;
+
+  /// Paints the range summary: the selected range, the next instruction and
+  /// any availability problem.
+  ///
+  /// By default the summary is not painted; it is a live region for assistive
+  /// technology only. A builder makes it visible and keeps it live.
+  final Widget Function(BuildContext context, String summary)? summaryBuilder;
 
   static final styleFrom = CalendarStyler.new;
 
@@ -122,6 +141,7 @@ class RemixRangeCalendar extends StatelessWidget {
         firstDayOfWeek: firstDayOfWeek,
         weeks: state.weeks,
         summary: _summary(state),
+        summaryBuilder: summaryBuilder,
         headerBuilder: (context, spec) =>
             headerBuilder?.call(context, state) ??
             _CalendarHeader(
@@ -141,7 +161,7 @@ class RemixRangeCalendar extends StatelessWidget {
     );
   }
 
-  String _summary(NakedRangeCalendarState state) => [
+  String _summary(NakedRangeCalendarState state) => rangeLabels.joinSummary([
     if (state.value case final value?)
       rangeLabels.selectedRange(
         labels.fullDate(value.start),
@@ -151,13 +171,13 @@ class RemixRangeCalendar extends StatelessWidget {
     state.anchor == null ? rangeLabels.chooseStart : rangeLabels.chooseEnd,
     if (state.preview != null && !state.isPreviewValid)
       rangeLabels.unavailableRange,
-  ].join('. ');
+  ]);
 
   String _dayLabel(DateTime date, NakedRangeCalendarState state) {
     final today = currentDate ?? DateTime.now();
     final committed = state.value;
     final draft = state.preview;
-    return [
+    return rangeLabels.joinDayLabel([
       labels.fullDate(date),
       if (isSameCivilDate(date, today)) labels.today,
       if (committed != null && isSameCivilDate(date, committed.start))
@@ -169,7 +189,7 @@ class RemixRangeCalendar extends StatelessWidget {
         rangeLabels.draftStart,
       if (draft != null && isSameCivilDate(date, state.focusedDate))
         rangeLabels.draftEnd,
-    ].join(', ');
+    ]);
   }
 
   Widget _day(

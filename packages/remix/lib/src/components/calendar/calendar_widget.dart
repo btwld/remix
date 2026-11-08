@@ -452,6 +452,7 @@ class _CalendarView extends StatelessWidget {
     required this.headerBuilder,
     required this.dayBuilder,
     this.summary,
+    this.summaryBuilder,
   });
   final CalendarStyler style;
   final CalendarSpec? styleSpec;
@@ -462,6 +463,42 @@ class _CalendarView extends StatelessWidget {
   final Widget Function(BuildContext, CalendarSpec) headerBuilder;
   final Widget Function(DateTime) dayBuilder;
   final String? summary;
+  final Widget Function(BuildContext, String)? summaryBuilder;
+
+  // Weekday headings are visual only. An unpainted summary shares their row,
+  // so its live region has a real rect without taking layout space.
+  Widget _weekdays(CalendarSpec spec) {
+    final row = Row(
+      children: [
+        for (var i = 0; i < 7; i++)
+          Expanded(
+            child: Center(
+              child: ExcludeSemantics(
+                child: StyledText(
+                  labels.weekday((firstDayOfWeek - 1 + i) % 7 + 1),
+                  styleSpec: spec.weekday,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+    final summary = this.summary;
+    if (summary == null || summaryBuilder != null) return row;
+    return Stack(
+      children: [
+        row,
+        Positioned.fill(
+          child: Semantics(
+            container: true,
+            liveRegion: true,
+            label: summary,
+            child: const SizedBox.expand(),
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) => RemixStyleSpecBuilder<CalendarSpec>(
@@ -505,28 +542,14 @@ class _CalendarView extends StatelessWidget {
                     children: [
                       headerBuilder(context, spec),
                       SizedBox(height: spec.headerSpacing ?? 0),
-                      if (summary != null)
+                      if (summary case final summary?
+                          when summaryBuilder != null)
                         Semantics(
+                          container: true,
                           liveRegion: true,
-                          child: StyledText(summary!, styleSpec: spec.weekday),
+                          child: summaryBuilder!(context, summary),
                         ),
-                      Row(
-                        children: [
-                          for (var i = 0; i < 7; i++)
-                            Expanded(
-                              child: Center(
-                                child: ExcludeSemantics(
-                                  child: StyledText(
-                                    labels.weekday(
-                                      (firstDayOfWeek - 1 + i) % 7 + 1,
-                                    ),
-                                    styleSpec: spec.weekday,
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
+                      _weekdays(spec),
                       SizedBox(height: spec.weekdaySpacing ?? 0),
                       for (final (index, week) in weeks.indexed) ...[
                         if (index > 0) SizedBox(height: spec.rowSpacing ?? 4),

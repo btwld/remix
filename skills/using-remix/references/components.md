@@ -128,8 +128,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `RemixRangeCalendarLabels`, and the shared `CalendarStyler`. Style the painted
   interval with `CalendarDayStyler` variants `onRangePreview`, `onRangeStart`,
   `onRangeMiddle`, `onRangeEnd` and `onRangeSingle`, declared after
-  `onSelected` so they win; a raw `styleSpec` paints no range. No public draft
-  controller, partial committed value, drag selection or typed entry.
+  `onSelected` so they win; a raw `styleSpec` paints no range. The range
+  summary is an unpainted live region unless `summaryBuilder` shows it. No
+  public draft controller, partial committed value, drag selection or typed
+  entry.
 - **[DatePicker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)** — a thin Button + Popover + Calendar composition, not a text
   field. The parent owns nullable `value`; valid activation requests one date
   and closes even when rejected. Escape, outside interaction and disabling
