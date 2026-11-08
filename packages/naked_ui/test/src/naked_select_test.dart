@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../test_helpers.dart';
+import '../helpers/focus_request_counter.dart';
 import 'helpers/builder_state_scope.dart';
 
 void main() {
@@ -68,130 +70,225 @@ void main() {
   );
 
   group('focus on close', () {
-    Future<({FocusNode field, VoidCallback finishClose})> openThenClickField(
-      WidgetTester tester, {
-      required ValueChanged<VoidCallback> onCloseRequested,
-    }) async {
+    // Counting requests tells a deliberate restore from focus that merely
+    // landed on the trigger. The trigger is requested once more when the
+    // select opens, so every test measures from after the open.
+    late FocusRequestCounter trigger;
+
+    setUp(() {
+      trigger = FocusRequestCounter(debugLabel: 'trigger');
+      addTearDown(trigger.dispose);
+    });
+
+    Widget app(Widget select, {FocusNode? field, bool withOverlay = false}) {
+      final body = Column(
+        children: [
+          if (field != null)
+            SizedBox(
+              width: 200,
+              child: TextField(key: const Key('field'), focusNode: field),
+            ),
+          const SizedBox(height: 200),
+          select,
+        ],
+      );
+      return MaterialApp(home: Scaffold(body: body));
+    }
+
+    NakedSelect<String> select({
+      ValueChanged<String?>? onChanged,
+      ValueChanged<bool>? onOpenChanged,
+      bool consumeOutsideTaps = true,
+      ValueChanged<VoidCallback>? onCloseRequested,
+    }) {
+      return NakedSelect<String>(
+        triggerFocusNode: trigger,
+        onChanged: onChanged ?? (_) {},
+        onOpenChanged: onOpenChanged,
+        consumeOutsideTaps: consumeOutsideTaps,
+        onCloseRequested: onCloseRequested == null
+            ? null
+            : (hide) => onCloseRequested(hide),
+        child: const Text('Trigger'),
+        overlayBuilder: (context, info) => const NakedSelectOption<String>(
+          value: 'one',
+          child: Text('Option one'),
+        ),
+      );
+    }
+
+    Future<int> openSelect(WidgetTester tester) async {
+      await tester.tap(find.text('Trigger'));
+      await tester.pumpAndSettle();
+      expect(find.text('Option one'), findsOneWidget);
+      expect(
+        trigger.hasPrimaryFocus,
+        isFalse,
+        reason: 'opening moves focus into the panel',
+      );
+      return trigger.requestCount;
+    }
+
+    testWidgets('Escape inside the panel restores the trigger', (tester) async {
+      await tester.pumpWidget(app(select()));
+      final before = await openSelect(tester);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option one'), findsNothing);
+      expect(trigger.requestCount - before, 1);
+      expect(trigger.hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('selecting an option restores the trigger', (tester) async {
+      String? selected;
+      await tester.pumpWidget(app(select(onChanged: (v) => selected = v)));
+      final before = await openSelect(tester);
+
+      await tester.tap(find.text('Option one'));
+      await tester.pumpAndSettle();
+
+      expect(selected, 'one');
+      expect(find.text('Option one'), findsNothing);
+      expect(trigger.requestCount - before, 1);
+      expect(trigger.hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('an outside click that moved focus keeps it there', (
+      tester,
+    ) async {
       final field = FocusNode(debugLabel: 'field');
       addTearDown(field.dispose);
-      VoidCallback? pendingHide;
+      VoidCallback? finishClose;
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Column(
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: TextField(key: const Key('field'), focusNode: field),
-                ),
-                const SizedBox(height: 200),
-                NakedSelect<String>(
+        app(
+          // Mirrors an exit animation that hides the panel later.
+          select(
+            consumeOutsideTaps: false,
+            onCloseRequested: (hide) => finishClose = hide,
+          ),
+          field: field,
+        ),
+      );
+      final before = await openSelect(tester);
+
+      await tester.tap(find.byKey(const Key('field')));
+      await tester.pump();
+      expect(field.hasPrimaryFocus, isTrue);
+      finishClose!();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option one'), findsNothing);
+      expect(trigger.requestCount - before, 0);
+      expect(field.hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('a focus move made in onChanged survives the close', (
+      tester,
+    ) async {
+      final next = FocusNode(debugLabel: 'next');
+      addTearDown(next.dispose);
+      await tester.pumpWidget(
+        app(
+          Column(
+            children: [
+              select(onChanged: (_) => next.requestFocus()),
+              Focus(focusNode: next, child: const Text('Next')),
+            ],
+          ),
+        ),
+      );
+      final before = await openSelect(tester);
+
+      await tester.tap(find.text('Option one'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option one'), findsNothing);
+      expect(trigger.requestCount - before, 0);
+      expect(next.hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('a focus move made after the close, in onOpenChanged, '
+        'survives it', (tester) async {
+      final next = FocusNode(debugLabel: 'next');
+      addTearDown(next.dispose);
+      await tester.pumpWidget(
+        app(
+          Column(
+            children: [
+              select(
+                onOpenChanged: (open) {
+                  if (!open) next.requestFocus();
+                },
+              ),
+              Focus(focusNode: next, child: const Text('Next')),
+            ],
+          ),
+        ),
+      );
+      final before = await openSelect(tester);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option one'), findsNothing);
+      expect(trigger.requestCount - before, 0);
+      expect(next.hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('restores the trigger when no node holds focus', (
+      tester,
+    ) async {
+      // Desktop parks the primary focus on the root scope while the app is
+      // inactive, so the panel closes with no node focused.
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        tester.binding.focusManager
+            .listenToApplicationLifecycleChangesIfSupported();
+        var open = true;
+        late StateSetter setOpen;
+        await tester.pumpWidget(
+          app(
+            StatefulBuilder(
+              builder: (context, setState) {
+                setOpen = setState;
+                return NakedSelect<String>(
+                  triggerFocusNode: trigger,
+                  open: open,
+                  onOpenChanged: (_) {},
                   onChanged: (_) {},
-                  consumeOutsideTaps: false,
-                  // Mirrors an exit animation that hides the panel later.
-                  onCloseRequested: (hide) {
-                    pendingHide = hide;
-                    onCloseRequested(hide);
-                  },
                   child: const Text('Trigger'),
                   overlayBuilder: (context, info) =>
                       const NakedSelectOption<String>(
                         value: 'one',
                         child: Text('Option one'),
                       ),
-                ),
-              ],
+                );
+              },
             ),
           ),
-        ),
-      );
-      await tester.tap(find.text('Trigger'));
-      await tester.pumpAndSettle();
-      expect(find.text('Option one'), findsOneWidget);
-      await tester.tap(find.byKey(const Key('field')));
-      await tester.pump();
-      return (field: field, finishClose: () => pendingHide!());
-    }
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Option one'), findsOneWidget);
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.inactive,
+        );
+        expect(
+          FocusManager.instance.primaryFocus,
+          FocusManager.instance.rootScope,
+        );
+        final before = trigger.requestCount;
 
-    testWidgets('an outside click that moved focus keeps it there', (
-      tester,
-    ) async {
-      final session = await openThenClickField(
-        tester,
-        onCloseRequested: (_) {},
-      );
-      expect(session.field.hasFocus, isTrue);
-      session.finishClose();
-      await tester.pumpAndSettle();
-      expect(find.text('Option one'), findsNothing);
-      expect(session.field.hasFocus, isTrue);
-    });
+        setOpen(() => open = false);
+        await tester.pumpAndSettle();
 
-    testWidgets('Escape inside the panel returns focus to the trigger', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Center(
-            child: NakedSelect<String>(
-              onChanged: (_) {},
-              child: const Text('Trigger'),
-              overlayBuilder: (context, info) =>
-                  const NakedSelectOption<String>(
-                    value: 'one',
-                    child: Text('Option one'),
-                  ),
-            ),
-          ),
-        ),
-      );
-      await tester.tap(find.text('Trigger'));
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pumpAndSettle();
-      expect(find.text('Option one'), findsNothing);
-      var triggerFocused = false;
-      FocusManager.instance.primaryFocus?.context?.visitAncestorElements((
-        element,
-      ) {
-        if (element.widget is NakedSelect<String>) triggerFocused = true;
-        return !triggerFocused;
-      });
-      expect(triggerFocused, isTrue);
-    });
-
-    testWidgets('selecting an option returns focus to the trigger', (
-      tester,
-    ) async {
-      String? selected;
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Center(
-            child: NakedSelect<String>(
-              onChanged: (value) => selected = value,
-              child: const Text('Trigger'),
-              overlayBuilder: (context, info) =>
-                  const NakedSelectOption<String>(
-                    value: 'one',
-                    child: Text('Option one'),
-                  ),
-            ),
-          ),
-        ),
-      );
-      await tester.tap(find.text('Trigger'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Option one'));
-      await tester.pumpAndSettle();
-      expect(selected, 'one');
-      var triggerFocused = false;
-      FocusManager.instance.primaryFocus?.context?.visitAncestorElements((
-        element,
-      ) {
-        if (element.widget is NakedSelect<String>) triggerFocused = true;
-        return !triggerFocused;
-      });
-      expect(triggerFocused, isTrue);
+        expect(find.text('Option one'), findsNothing);
+        expect(trigger.requestCount - before, 1);
+        expect(trigger.hasPrimaryFocus, isTrue);
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
     });
   });
 

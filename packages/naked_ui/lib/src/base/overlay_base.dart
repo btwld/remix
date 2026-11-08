@@ -6,6 +6,7 @@
 /// - [OverlayStateMixin]: State management for overlay widgets.
 library;
 
+import 'dart:async' show scheduleMicrotask;
 import 'dart:ui' show SemanticsRole;
 
 import 'package:flutter/widgets.dart';
@@ -187,6 +188,7 @@ mixin OverlayStateMixin<T extends StatefulWidget> on State<T> {
   @protected
   void handleOpen(VoidCallback? onOpen) {
     _selectionMadeDuringSession = false;
+    _openCount++;
     onOpen?.call();
   }
 
@@ -197,12 +199,22 @@ mixin OverlayStateMixin<T extends StatefulWidget> on State<T> {
   @protected
   final GlobalKey overlayContentKey = GlobalKey(debugLabel: 'overlay content');
 
+  // Bumped on every open so a restore queued by an earlier close can tell the
+  // panel was reopened before it ran.
+  int _openCount = 0;
+
   /// Handles overlay closure, invoking [onCanceled] if no selection occurred.
   ///
-  /// Always invokes [onClose]. Focus returns to [triggerFocusNode] only while
-  /// it is still inside the closing panel or nowhere, as after Escape or a
-  /// selection. A close that follows the user moving focus elsewhere, such as
-  /// clicking a text field outside the panel, leaves that focus in place.
+  /// Always invokes [onClose]. If [triggerFocusNode] is non-null, focus then
+  /// returns to it only when nothing else has claimed focus. That is decided
+  /// in a microtask, after the focus requests made earlier in the same event
+  /// (an `onChanged` or `onClose` callback calling `requestFocus`) have been
+  /// applied. Focus returns when the primary focus is then inside the closing
+  /// panel, as after Escape or a selection, or when no node holds it (the root
+  /// scope). It stays where it is when it sits on a node outside the panel,
+  /// such as a text field the user clicked or a callback focused. Nothing is
+  /// restored if this state is unmounted, or the overlay opened again, before
+  /// the microtask runs.
   @protected
   void handleClose({
     VoidCallback? onClose,
@@ -212,16 +224,28 @@ mixin OverlayStateMixin<T extends StatefulWidget> on State<T> {
     if (!_selectionMadeDuringSession) {
       onCanceled?.call();
     }
-    // Read before callbacks can move focus or rebuild the panel.
-    final restore = triggerFocusNode != null && _focusBelongsToPanel();
     onClose?.call();
-    if (restore) triggerFocusNode.requestFocus();
+    if (triggerFocusNode == null) return;
+    final openCount = _openCount;
+    scheduleMicrotask(() {
+      if (!mounted || openCount != _openCount) return;
+      // The FocusManager applies requests in a microtask of its own. A request
+      // made after the close queues that microtask behind this one, so apply
+      // them now to read the focus they leave. Applying also gives the focus
+      // manager a primary focus, the root scope at the least, never null.
+      FocusManager.instance.applyFocusChangesIfNeeded();
+      if (_focusBelongsToPanel()) triggerFocusNode.requestFocus();
+    });
   }
 
   bool _focusBelongsToPanel() {
-    if (FocusManager.instance.primaryFocus == null) return true;
+    if (FocusManager.instance.primaryFocus == FocusManager.instance.rootScope) {
+      return true;
+    }
+    // A panel that is already unmounted cannot hold the focus.
     final panel = overlayContentKey.currentContext;
-    return panel != null && FocusScope.of(panel).hasFocus;
+    return panel != null &&
+        FocusScope.of(panel, createDependency: false).hasFocus;
   }
 
   /// Marks that a selection was made during the current session.

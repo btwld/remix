@@ -285,6 +285,11 @@ class NakedSelect<T> extends StatefulWidget {
   final MouseCursor mouseCursor;
 
   /// Focus node for the trigger.
+  ///
+  /// When the select closes, focus returns to this node unless something else
+  /// has claimed it: after Escape or a selection it returns, but if the user
+  /// clicked a text field outside the panel, or a callback such as [onChanged]
+  /// focused another node, that focus stays.
   final FocusNode? triggerFocusNode;
 
   /// Optional semantics label for the trigger.

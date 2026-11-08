@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../helpers/focus_request_counter.dart';
 import '../test_helpers.dart';
 import 'helpers/builder_state_scope.dart';
 
@@ -1133,6 +1134,145 @@ void main() {
         );
       });
     });
+    group('focus on close', () {
+      // Counting requests tells a deliberate restore from focus that merely
+      // landed on the trigger, which also happens as the menu opens.
+      late FocusRequestCounter trigger;
+      late MenuController controller;
+
+      setUp(() {
+        trigger = FocusRequestCounter(debugLabel: 'trigger');
+        addTearDown(trigger.dispose);
+        controller = MenuController();
+      });
+
+      Widget app({
+        FocusNode? field,
+        ValueChanged<VoidCallback>? onCloseRequested,
+        ValueChanged<String>? onSelected,
+      }) {
+        return Column(
+          children: [
+            if (field != null)
+              SizedBox(
+                width: 200,
+                child: TextField(key: const Key('field'), focusNode: field),
+              ),
+            const SizedBox(height: 200),
+            NakedMenu<String>(
+              controller: controller,
+              triggerFocusNode: trigger,
+              consumeOutsideTaps: false,
+              onSelected: onSelected,
+              onCloseRequested: onCloseRequested == null
+                  ? null
+                  : (hide) => onCloseRequested(hide),
+              child: const Text('Trigger'),
+              overlayBuilder: (context, info) => const NakedMenuItem<String>(
+                value: 'item',
+                child: Text('Item'),
+              ),
+            ),
+          ],
+        );
+      }
+
+      Future<int> openMenu(WidgetTester tester) async {
+        await tester.tap(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(find.text('Item'), findsOneWidget);
+        expect(
+          trigger.hasPrimaryFocus,
+          isFalse,
+          reason: 'opening moves focus into the panel',
+        );
+        return trigger.requestCount;
+      }
+
+      testWidgets('Escape restores the trigger', (tester) async {
+        await tester.pumpMaterialWidget(app());
+        final before = await openMenu(tester);
+
+        await tester.pressEsc();
+
+        expect(find.text('Item'), findsNothing);
+        expect(trigger.requestCount - before, 1);
+        expect(trigger.hasPrimaryFocus, isTrue);
+      });
+
+      testWidgets('selecting an item restores the trigger', (tester) async {
+        final selected = <String>[];
+        await tester.pumpMaterialWidget(app(onSelected: selected.add));
+        final before = await openMenu(tester);
+
+        await tester.tap(find.text('Item'));
+        await tester.pumpAndSettle();
+
+        expect(selected, ['item']);
+        expect(find.text('Item'), findsNothing);
+        expect(trigger.requestCount - before, 1);
+        expect(trigger.hasPrimaryFocus, isTrue);
+      });
+
+      testWidgets('a deferred close after focus moved elsewhere keeps it', (
+        tester,
+      ) async {
+        final field = FocusNode(debugLabel: 'field');
+        addTearDown(field.dispose);
+        VoidCallback? finishClose;
+        await tester.pumpMaterialWidget(
+          // Mirrors an exit animation that hides the panel later.
+          app(field: field, onCloseRequested: (hide) => finishClose = hide),
+        );
+        final before = await openMenu(tester);
+
+        await tester.tap(find.byKey(const Key('field')));
+        await tester.pump();
+        expect(field.hasPrimaryFocus, isTrue);
+        finishClose!();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Item'), findsNothing);
+        expect(trigger.requestCount - before, 0);
+        expect(field.hasPrimaryFocus, isTrue);
+      });
+
+      testWidgets('closing and reopening in one event does not restore', (
+        tester,
+      ) async {
+        // Only a root menu asks for its trigger as it opens, so a nested one
+        // shows whether the restore queued by the close stands down.
+        final parent = MenuController();
+        await tester.pumpMaterialWidget(
+          NakedMenu<String>(
+            controller: parent,
+            child: const Text('Parent trigger'),
+            overlayBuilder: (context, info) => NakedMenu<String>(
+              controller: controller,
+              triggerFocusNode: trigger,
+              child: const Text('Trigger'),
+              overlayBuilder: (context, info) => const NakedMenuItem<String>(
+                value: 'item',
+                child: Text('Item'),
+              ),
+            ),
+          ),
+        );
+        parent.open();
+        await tester.pumpAndSettle();
+        final before = await openMenu(tester);
+
+        controller.close();
+        controller.open();
+        await tester.pumpAndSettle();
+
+        expect(controller.isOpen, isTrue);
+        expect(find.text('Item'), findsOneWidget);
+        expect(trigger.requestCount - before, 0);
+        expect(trigger.hasPrimaryFocus, isFalse);
+      });
+    });
+
     group('Panel height', () {
       const triggerKey = Key('trigger');
       const panelKey = Key('panel');
