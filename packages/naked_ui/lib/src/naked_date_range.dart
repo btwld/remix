@@ -15,7 +15,10 @@ class NakedDateRange {
     : start = civilDate(start.year, start.month, start.day),
       end = civilDate(end.year, end.month, end.day) {
     if (compareCivilDates(this.start, this.end) > 0) {
-      throw ArgumentError('start must be on or before end.');
+      throw ArgumentError(
+        'start (${_civil(this.start)}) must be on or before '
+        'end (${_civil(this.end)}).',
+      );
     }
   }
 
@@ -46,5 +49,12 @@ class NakedDateRange {
   );
 
   @override
-  String toString() => 'NakedDateRange(start: $start, end: $end)';
+  String toString() =>
+      'NakedDateRange(start: ${_civil(start)}, end: ${_civil(end)})';
 }
+
+// ISO-style year-month-day, without the time or zone a DateTime would print.
+String _civil(DateTime date) =>
+    '${date.year.toString().padLeft(4, '0')}-'
+    '${date.month.toString().padLeft(2, '0')}-'
+    '${date.day.toString().padLeft(2, '0')}';

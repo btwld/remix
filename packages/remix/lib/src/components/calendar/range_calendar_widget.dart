@@ -18,14 +18,31 @@ class RemixRangeCalendarLabels {
     this.joinDayLabel = _joinParts,
   });
 
+  /// Appended to the accessible name of the committed range's first day.
   final String start;
+
+  /// Appended to the accessible name of the committed range's last day.
   final String end;
+
+  /// Appended to the accessible name of the draft's anchor day.
   final String draftStart;
+
+  /// Appended to the accessible name of the focused day ending the draft.
   final String draftEnd;
+
+  /// Appended to the accessible name of every day inside the draft.
   final String draftRange;
+
+  /// Summary instruction while no draft is anchored.
   final String chooseStart;
+
+  /// Summary instruction while a draft waits for its second date.
   final String chooseEnd;
+
+  /// Summary notice when the draft cannot complete over unavailable dates.
   final String unavailableRange;
+
+  /// Summary notice when the supplied value fails bounds or availability.
   final String invalidRange;
 
   /// Formats already-localized endpoint names, not raw DateTime values.
@@ -78,22 +95,60 @@ class RemixRangeCalendar extends StatelessWidget {
     this.summaryBuilder,
   });
 
+  /// Parent-owned complete inclusive range, compared by civil fields.
+  ///
+  /// It is never clamped or corrected; an invalid value stays selected.
   final NakedDateRange? value;
+
+  /// Inclusive earliest selectable date; time and UTC flag are ignored.
   final DateTime firstDate;
+
+  /// Inclusive latest selectable date, on or after [firstDate].
   final DateTime lastDate;
+
+  /// Requests one complete range. Null disables the calendar.
+  ///
+  /// The parent decides whether to accept it by updating [value].
   final ValueChanged<NakedDateRange>? onChanged;
+
+  /// Today, for the `onToday` variant and fallback focus; defaults to now.
   final DateTime? currentDate;
+
+  /// Marks in-range dates unavailable. A range cannot include them, even
+  /// offscreen; they stay keyboard-focusable. Rebuild when results change.
   final bool Function(DateTime)? isDateUnavailable;
+
+  /// First weekday column, from Monday=1 through Sunday=7.
   final int firstDayOfWeek;
+
+  /// Whether navigation, focus and selection are enabled.
   final bool enabled;
+
+  /// Accessible name of the calendar group.
   final String? semanticLabel;
+
+  /// Focus entry point; requesting it focuses the current day.
   final FocusNode? focusNode;
+
+  /// Whether to focus the current day on mount.
   final bool autofocus;
+
+  /// Caller-owned date labels and formatters; English by default.
   final RemixCalendarLabels labels;
+
+  /// Caller-owned range roles, instructions and joiners; English by default.
   final RemixRangeCalendarLabels rangeLabels;
+
+  /// Replaces header visuals/navigation only. Day behavior remains owned.
   final Widget Function(BuildContext, NakedRangeCalendarState)? headerBuilder;
+
+  /// Independent button styling, resolved in each navigation button state.
   final IconButtonStyler navigationStyle;
+
+  /// Independent month/year selector styling.
   final SelectStyler selectorStyle;
+
+  /// Calendar and day styling, including the range day variants.
   final CalendarStyler style;
 
   /// Raw resolved spec; bypasses [style] and inherited styles.

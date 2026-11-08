@@ -72,4 +72,28 @@ void main() {
       }
     },
   );
+
+  test('toString prints civil dates without time or zone', () {
+    final range = NakedDateRange(
+      start: DateTime(2024, 2, 5, 13),
+      end: DateTime.utc(2024, 12, 31, 23),
+    );
+    expect(
+      range.toString(),
+      'NakedDateRange(start: 2024-02-05, end: 2024-12-31)',
+    );
+  });
+
+  test('a reversed range names both civil dates', () {
+    expect(
+      () => NakedDateRange(start: DateTime(2024, 3), end: DateTime(2024, 2)),
+      throwsA(
+        isA<ArgumentError>().having(
+          (e) => e.message,
+          'message',
+          allOf(contains('2024-03-01'), contains('2024-02-01')),
+        ),
+      ),
+    );
+  });
 }
