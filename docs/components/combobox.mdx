@@ -77,7 +77,7 @@ class _CitySearchState extends State<CitySearch> {
 }
 ```
 
-Custom field builders reuse `NakedComboboxFieldBuilder<T>` and own their editor label, appearance and disabled forwarding. Forward all three editor arguments: controller, focus node and submit callback. Finalize composition while retaining focus on completion if your editor normally unfocuses. The default editor uses `label` as its visible and accessible name once.
+Custom field builders reuse `NakedComboboxFieldBuilder<T>` and own their editor label, appearance and disabled forwarding. Forward all three editor arguments: controller, focus node and submit callback. Finalize composition while retaining focus on completion if your editor normally unfocuses. The default editor uses `label` as its visible and accessible name once. Set `semanticLabel` to replace the accessible name while retaining the visible label.
 
 `optionBuilder` returns visual content beneath one named interactive wrapper. Do not return a button or add another actionable semantics node. The accessible option name comes from `displayStringForOption`.
 
@@ -117,3 +117,65 @@ Return eligible suggestions only. There is no per-option disabled API. Callers o
 Option equality identifies an entity. Equal values are shown once, retaining the first occurrence; distinct unequal entities can share the same display string and remain separate suggestions.
 
 The fallback semantics expose one editable field and named actionable suggestions. Widget semantics tests do not establish screen-reader parity. Expanded relationships, highlighted-result discovery and announcements still require real platform/assistive-technology testing.
+
+
+## Constructor
+
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixCombobox<T> remixComboboxConstructor<T extends Object>({
+  Key? key,
+  required AutocompleteOptionsBuilder<T> optionsBuilder,
+  ValueChanged<T>? onSelected,
+  AutocompleteOptionToString<T> displayStringForOption =
+      RawAutocomplete.defaultStringForOption,
+  TextEditingController? controller,
+  FocusNode? focusNode,
+  TextEditingValue? initialValue,
+  String? label,
+  String? hintText,
+  bool enabled = true,
+  bool autofocus = false,
+  String? semanticLabel,
+  NakedComboboxFieldBuilder<T>? fieldBuilder,
+  Widget Function(BuildContext, T)? optionBuilder,
+  OptionsViewOpenDirection optionsViewOpenDirection =
+      OptionsViewOpenDirection.down,
+  VoidCallback? onOpen,
+  VoidCallback? onClose,
+  bool excludeSemantics = false,
+  ComboboxStyler style = const ComboboxStyler.create(),
+  ComboboxSpec? styleSpec,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+| Property | Type | Behavior |
+| --- | --- | --- |
+| `key` | `Key?` | Controls widget identity. |
+| `optionsBuilder` | `AutocompleteOptionsBuilder<T>` | Required. Returns eligible suggestions for the editing value, synchronously or asynchronously. |
+| `onSelected` | `ValueChanged<T>?` | Reports accepted suggestions after writing their display string. Ordinary text edits do not call it. |
+| `displayStringForOption` | `AutocompleteOptionToString<T>` | Supplies editor text and accessible option names. Defaults to `RawAutocomplete.defaultStringForOption`. |
+| `controller` | `TextEditingController?` | Caller-owned editor controller. Supply it together with `focusNode`. |
+| `focusNode` | `FocusNode?` | Caller-owned editor focus node. Supply it together with `controller`. |
+| `initialValue` | `TextEditingValue?` | Initial text without an entity selection. Cannot be combined with `controller`. |
+| `label` | `String?` | Visible label and fallback accessible name of the default editor. |
+| `hintText` | `String?` | Placeholder for the empty default editor. |
+| `enabled` | `bool` | Enables editing and acceptance. Defaults to `true`. |
+| `autofocus` | `bool` | Requests initial focus for the enabled default editor. Defaults to `false`. Custom editors own autofocus. |
+| `semanticLabel` | `String?` | Replaces the default editor's accessible name, including `label`. Does not change the visible label. Custom editors must apply it to their editable node. |
+| `fieldBuilder` | `NakedComboboxFieldBuilder<T>?` | Replaces the default editor. Forward the supplied controller, focus node and submit callback. |
+| `optionBuilder` | `Widget Function(BuildContext, T)?` | Builds visual content inside a named interactive suggestion wrapper. |
+| `optionsViewOpenDirection` | `OptionsViewOpenDirection` | Preferred opening direction: `down` (default), `up` or `mostSpace`. |
+| `onOpen` | `VoidCallback?` | Observes suggestion-subtree mounting after a frame. |
+| `onClose` | `VoidCallback?` | Observes suggestion-subtree unmounting after a frame. |
+| `excludeSemantics` | `bool` | Hides the editor and suggestions from assistive technology. Defaults to `false`. |
+| `style` | `ComboboxStyler` | Fluent styles for the container, field, panel, option and option label. |
+| `styleSpec` | `ComboboxSpec?` | Resolved anatomy that bypasses fluent defaults and style resolution. |
