@@ -64,9 +64,10 @@ SliderStyler vanillaSliderStyle({
             )
             .shadows(VanillaShadow.sm.box),
       )
-      // A thumb is a grab target, so it answers the pointer with the same ring
-      // keyboard focus draws.
+      // A thumb is a grab target: hover and press (including touch) use the
+      // same ring keyboard focus draws.
       .onHovered(SliderStyler().thumbEffects(_thumbRing()))
+      .onPressed(SliderStyler().thumbEffects(_thumbRing()))
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
       .merge(style);

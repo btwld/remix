@@ -53,6 +53,8 @@ import 'package:widgetbook_vanilla/components/progress.dart'
     as _widgetbook_vanilla_components_progress;
 import 'package:widgetbook_vanilla/components/radio.dart'
     as _widgetbook_vanilla_components_radio;
+import 'package:widgetbook_vanilla/components/range_slider.dart'
+    as _widgetbook_vanilla_components_range_slider;
 import 'package:widgetbook_vanilla/components/segmented_control.dart'
     as _widgetbook_vanilla_components_segmented_control;
 import 'package:widgetbook_vanilla/components/select.dart'
@@ -295,6 +297,26 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Radio',
             builder:
                 _widgetbook_vanilla_components_radio.buildVanillaRadioUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaRangeSlider',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Disabled',
+            builder: _widgetbook_vanilla_components_range_slider
+                .buildVanillaRangeSliderDisabledUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Interval',
+            builder: _widgetbook_vanilla_components_range_slider
+                .buildVanillaRangeSliderUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'RTL · 200% text',
+            builder: _widgetbook_vanilla_components_range_slider
+                .buildVanillaRangeSliderRtlUseCase,
           ),
         ],
       ),

@@ -2329,6 +2329,7 @@ void main() {
           find.byType(AcmeSwitch),
           find.byType(AcmeRadio<String>),
           find.byType(AcmeSlider),
+          find.byType(AcmeRangeSlider),
           find.byType(AcmeTextField),
           find.byType(AcmeTextArea),
           find.byType(AcmeToggleGroup<String>),

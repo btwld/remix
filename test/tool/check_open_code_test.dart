@@ -540,7 +540,8 @@ Future<void> main(List<String> arguments) async {
       for (final preset in ['vanilla', 'fortal']) {
         final items = checker.independentInstallsForTest(preset);
 
-        expect(items, hasLength(18), reason: preset);
+        expect(items, hasLength(preset == 'vanilla' ? 19 : 18), reason: preset);
+        if (preset == 'vanilla') expect(items, contains('range_slider'));
         expect(
           items,
           containsAll(['activity', 'transcript_recipe', 'dashboard_demo']),

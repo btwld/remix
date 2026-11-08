@@ -133,6 +133,7 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
   Set<AcmeToggleVariant> _pinned = const {AcmeToggleVariant.outline};
   bool _notifications = true;
   String? _plan = 'pro';
+  List<double> _budget = [0.25, 0.75];
   double _volume = 0.4;
   String? _weight = 'bold';
   String _view = 'list';
@@ -721,6 +722,13 @@ class _AcmeThemeSectionState extends State<AcmeThemeSection> {
                       _lastAction = 'volume -> ${value.toStringAsFixed(2)}';
                     }),
                   ),
+                ),
+                const SizedBox(height: 16),
+
+                AcmeRangeSlider(
+                  values: _budget,
+                  semanticLabels: const ['Minimum budget', 'Maximum budget'],
+                  onChanged: (values) => setState(() => _budget = values),
                 ),
                 const SizedBox(height: 16),
 

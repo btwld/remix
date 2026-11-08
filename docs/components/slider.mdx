@@ -146,6 +146,55 @@ The range hit area is at least 48 logical pixels high; single-slider dimensions
 and `SliderStyler.call(value: ...)` remain unchanged. The range is horizontal;
 use `NakedSlider` for custom arbitrary-thumb or vertical anatomy.
 
+## Vanilla widgets
+
+Install the range recipe into an app initialized with the Vanilla preset:
+
+```shell
+dart run remix_cli:remix add range_slider
+```
+
+This installs `slider` and `theme` as dependencies. With prefix `Ui`, import
+`ui/ui.dart` and place `UiTheme` in the app's builder. The single-value
+`UiSlider` and two-bound `UiRangeSlider` share the same rail, interval and
+thumb styling. Hover, press and keyboard focus draw a 4px ring around the
+corresponding thumb; disabled fades the complete control.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+class VanillaPriceRange extends StatefulWidget {
+  const VanillaPriceRange({super.key});
+
+  @override
+  State<VanillaPriceRange> createState() => _VanillaPriceRangeState();
+}
+
+class _VanillaPriceRangeState extends State<VanillaPriceRange> {
+  List<double> prices = [80, 240];
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 280,
+    child: UiRangeSlider(
+      values: prices,
+      min: 0,
+      max: 400,
+      minSpacing: 20,
+      snapDivisions: 80,
+      semanticLabels: const ['Minimum nightly price', 'Maximum nightly price'],
+      onChanged: (next) => setState(() => prices = next),
+    ),
+  );
+}
+```
+
+The generated adapter forwards the range API except `styleSpec` and
+`semanticFormatterCallbacks`. For localized value formatting, keep
+`RemixRangeSlider` and set `style: uiRangeSliderStyle()` instead. Caller
+`style` overrides merge last, including state fragments.
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:

@@ -155,7 +155,8 @@ the steps above. The source column names the file under
 | Checkbox | 16, radius 4, border `input`, `shadow-xs`; checked primary; check 10 (see Deviations); no hover fill; label `text-sm` w500, gap 12 | `checkbox.tsx`, `label.tsx` |
 | Radio | 16, border `input` in both states, `shadow-xs`; dot 8 primary; label `text-sm` w500, gap 12 | `radio-group.tsx`, `label.tsx` |
 | Switch | 32 × 18.4, transparent 1px border, `shadow-xs`; off `input` (dark input/80), on primary; thumb 16, no border; label `text-sm` w500, gap 8 | `switch.tsx`, `label.tsx` |
-| Slider | rail 6 muted, range primary; thumb 16, 1px primary border, white, `shadow-sm`; 4px ring/50 on hover and focus | `slider.tsx` |
+| Slider | rail 6 muted, range primary; thumb 16, 1px primary border, white, `shadow-sm`; 4px ring/50 on hover, press and focus | `slider.tsx` |
+| Range slider | shares Slider's tokens and geometry for both independently styled thumbs; interval runs between the bounds; 48px hit area, RTL follows Remix | `slider.tsx`; Remix range-slider contract |
 | Tabs (filled) | list h 36, p 3, radius lg, muted; tab radius md, px 8, py 4, gap 6; inactive foreground/60; active background + `shadow-sm` | `tabs.tsx` |
 | Tabs (line) | transparent list; active tab marked by a 2px `foreground` underline | `tabs.tsx` (`variant=line`) |
 | Segmented control | styled as the filled tab list | `tabs.tsx` |
@@ -191,6 +192,7 @@ the steps above. The source column names the file under
 | Text field size | `text-base` below `md` | `text-sm` everywhere | Flutter has no viewport-conditional recipe; 14 is the desktop value. |
 | Checkbox, select, and menu 9×9 glyphs | `size-3.5` (14) / `size-4` (16) | 10 (`VanillaTokens.s2_5`) | The reference sizes padded 24×24 Lucide icons; Remix draws edge-to-edge 9×9 paths (`thickCheck`, `chevronDown`, `thickChevronRight`), which match the painted mark at 10. |
 | Select item horizontal padding | `pl-2 pr-8` (8 / 32) | `px-2` (8) | CSS positions the check mark inside the 32px right gutter (`right-2`); Remix lays the check mark out in the row after the label, so `px-2` places it 8px from the trailing edge. |
+| Slider and range slider | hover and focus ring | press shares the hover ring | Keeps grab feedback visible on touch devices, which do not hover. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
 | Toggle group, outline | `shadow-xs` | no shadow | Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that draw `shadow-xs` in the effects layer cut the box out as CSS does, but the strip has no effects layer. |
 | Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page, and the darkest two (`chart4`, `chart5`) about 1.3 to 1.8:1 on the dark page and card; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |

@@ -18,6 +18,31 @@ import 'support.dart';
 void main() {
   for (final theme in vanillaThemes) {
     group(theme.name, () {
+      for (var index = 0; index < 2; index++) {
+        testWidgets('range thumb $index rings independently without reflow', (
+          tester,
+        ) async {
+          final probe = await _pump(
+            tester,
+            theme.data,
+            (node) => VanillaRangeSlider(
+              values: const [0.25, 0.75],
+              onChanged: (_) {},
+              focusNodes: [
+                if (index == 0) node else null,
+                if (index == 1) node else null,
+              ],
+            ),
+          );
+          final other = tester.getRect(rangeThumb(1 - index));
+          await probe.expectRing(
+            part: rangeThumb(index),
+            includes: (part) => [part.topCenter.translate(0, -2)],
+            excludes: (_) => [other.topCenter.translate(0, -2)],
+          );
+        });
+      }
+
       testWidgets('a toggle rings outside itself', (tester) async {
         final probe = await _pump(
           tester,

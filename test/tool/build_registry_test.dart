@@ -225,6 +225,24 @@ void main() {
     }
   });
 
+  test(
+    'Vanilla range slider installs the shared slider recipe and generated adapter',
+    () {
+      final output = PresetBuilder.forRepository(
+        Directory.current,
+        spec: defaultPreset,
+      ).derive();
+      final items =
+          loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+      final range = items['range_slider'] as YamlMap;
+      expect(_strings(range['registryDependencies']), ['slider']);
+      expect(_strings(range['generated']), [
+        '@ui/components/range_slider.g.dart',
+      ]);
+      expect(_strings(range['exports']), ['components/range_slider.dart']);
+    },
+  );
+
   test('registry dependencies and package floors are inferred', () {
     final output = PresetBuilder.forRepository(Directory.current).derive();
     final document = loadYaml(output.files['registry.yaml']!) as YamlMap;

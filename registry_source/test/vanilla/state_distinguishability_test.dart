@@ -358,7 +358,24 @@ final _cases = <_Case>[
   _resolved<SliderSpec>(
     'slider thumb',
     style: vanillaSliderStyle,
-    states: const [WidgetState.hovered, WidgetState.focused],
+    states: const [
+      WidgetState.hovered,
+      WidgetState.pressed,
+      WidgetState.focused,
+    ],
+    read: (spec) => [
+      ..._boxLook(spec.spec.thumb, effects: spec.spec.thumbEffects),
+      spec.spec.thumbFocusEffects?.outline,
+    ],
+  ),
+  _resolved<SliderSpec>(
+    'range slider thumb',
+    style: vanillaRangeSliderStyle,
+    states: const [
+      WidgetState.hovered,
+      WidgetState.pressed,
+      WidgetState.focused,
+    ],
     read: (spec) => [
       ..._boxLook(spec.spec.thumb, effects: spec.spec.thumbEffects),
       spec.spec.thumbFocusEffects?.outline,

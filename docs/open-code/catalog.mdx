@@ -15,9 +15,10 @@ tint, shadow, and focus-ring helpers the recipes draw on. It also adds
 `remix_ui_fonts`, the package that bundles Geist and Geist Mono, which the
 shipped themes set the text steps in. Every component item
 installs one authored file plus its generated adapter under
-`components/<item>.dart`. Eight items differ: `icons` installs app-owned
+`components/<item>.dart`. Nine items differ: `icons` installs app-owned
 `icons.dart` with no generated adapter; `chart` generates three adapters over
-`mix_chart`; `data_table` also pulls in
+`mix_chart`; `range_slider` installs `slider` to share its rail, interval and
+thumb styling; `data_table` also pulls in
 `checkbox`, `icon_button`, and `select`, because its selection column, pager,
 and page-size control *are* those components; adding it installs all four;
 `sidebar` pulls in `toggle` and `tooltip`, because a destination *is* a toggle
@@ -67,6 +68,7 @@ The installer rejects older resolved versions before it writes source.
 | `popover` | `UiPopover` | — |
 | `progress` | `UiProgress` | — |
 | `radio` | `UiRadio` | — |
+| `range_slider` | `UiRangeSlider` (depends on `slider`) | — |
 | `segmented_control` | `UiSegmentedControl` | — |
 | `select` | `UiSelect` | — |
 | `sidebar` | `UiSidebar` | — |
@@ -82,8 +84,8 @@ The installer rejects older resolved versions before it writes source.
 | `toggle_group` | `UiToggleGroup` | variant, size |
 | `tooltip` | `UiTooltip` | — |
 
-The `fortal` catalog contains every item above and adds `base_button`, `code`,
-`heading`, `kbd`, `text`, and `typography`. `base_button` and
+The `fortal` catalog contains every item above except `range_slider`, and adds
+`base_button`, `code`, `heading`, `kbd`, `text`, and `typography`. `base_button` and
 `typography` are shared authored recipes that arrive transitively with the
 components that use them. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and

@@ -69,6 +69,7 @@ const _defaultRegistryItems = <String>[
   'popover',
   'progress',
   'radio',
+  'range_slider',
   'segmented_control',
   'select',
   'sidebar',
@@ -190,6 +191,7 @@ const _defaultPreset = _PresetContract(
   name: 'vanilla',
   fixtureDirectory: 'fixture',
   registryItems: _defaultRegistryItems,
+  independentItems: [..._independentRegistryItems, 'range_slider'],
   // Vanilla's theme sets its type in Geist, so every install carries the fonts.
   requiredRuntimeDependencies: [..._baseRuntimeDependencies, 'remix_ui_fonts'],
   allowedImportPackages: [..._baseImportPackages, 'remix_ui_fonts'],
