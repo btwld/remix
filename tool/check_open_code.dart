@@ -46,6 +46,10 @@ const _fixtureAppFiles = <String>[
 /// meets an application that already has the previous ones. Theme arrives as
 /// the first item's registry dependency.
 const _defaultRegistryItems = <String>[
+  'calendar',
+  'range_calendar',
+  'date_picker',
+  'date_range_picker',
   'icons',
   'accordion',
   'app_bar',

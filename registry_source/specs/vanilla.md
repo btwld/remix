@@ -208,3 +208,33 @@ the steps above. The source column names the file under
 | Sidebar layout, dashboard shell | 48 collapsed | 48 for `sidebar_layout`; the dashboard shell keeps its own 72 | The dashboard shell is out of this spec's scope. |
 | Tooltip delay | `delayDuration = 0` on the provider | 0 | Matches; recorded because Vanilla used to wait 500ms. |
 | Font | Geist and Geist Mono | Geist and Geist Mono from `remix_ui_fonts` | Matches; recorded because the fonts are static files (Geist 400, 500, 600, 700; Geist Mono 400, 500) rather than shadcn's variable fonts. Vanilla uses 400, 500, and 600. |
+
+## Calendar recipes (designed from the Vanilla scale)
+
+These are native recipe decisions for the calendar lane, using the existing
+Vanilla palette and scales rather than claiming upstream calendar parity.
+`calendar` and `range_calendar` install hand-written facades because
+`CalendarSpec` has no generator target. Navigation uses the ghost IconButton
+recipe at `s12`; selectors use Select, scale their 152px width with the text
+scaler and retain intrinsic text height. At 200% they wrap onto separate rows
+so month names remain on one line.
+
+- Day minimum: `s12` (48px), `radiusSm` corners, `textSm`; weekdays `textXs`,
+  muted foreground; heading `textSm`, semibold; container padding `s3`.
+- Rest: transparent. Today: accent and semibold. Hover: accent (half in dark,
+  like the ghost button). Press: primary at 15% / 25%. Selection: primary /
+  primaryForeground. Disabled: mutedForeground and disabledOpacity; unavailable
+  dates additionally strike through. Focus: shared ring at 50%, strokeRing,
+  inset foreground decoration so scrolling never clips it or reflows a day.
+- Range: primary endpoint caps, accent interiors, directional corners. During a
+  draft, prior selection is muted / mutedForeground. Preview: primary at
+  12% / 20% with a 60% primary hairline; unavailable preview uses destructive
+  text and a destructive tint at 10% / 20%.
+- Picker composites retain all Remix constructor parameters. They merge caller
+  child stylers last over outline Button, Popover, the matching calendar,
+  ghost IconButton and Select recipes. The panel uses the existing rounded
+  popover border/shadow, `s1` padding, 4px offset, and a width derived from the
+  seven day targets plus calendar/panel padding and border. No generated part.
+
+The Vanilla spec, state, layout and pixel focus suites enforce these decisions;
+calendar recipe tests cover real day and range states in both theme modes.

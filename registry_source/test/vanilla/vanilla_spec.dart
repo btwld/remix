@@ -2096,8 +2096,72 @@ final _displayTargets = <SpecTarget>[
   ),
 ];
 
+// Calendar geometry and palette are designed from the existing Vanilla scale.
+final _calendarTargets = <SpecTarget>[
+  for (final (name, recipe) in [
+    ('calendar', vanillaCalendarStyle),
+    ('range_calendar', vanillaRangeCalendarStyle),
+  ]) ...[
+    _target<CalendarSpec>(
+      name,
+      'day minimum target',
+      source: 'vanilla.md: calendar recipes',
+      style: recipe,
+      read: (s) => s.spec.day.spec.container.spec.constraints?.minHeight,
+      expected: (_) => VanillaTokens.s12,
+    ),
+    _target<CalendarSpec>(
+      name,
+      'resting days are transparent',
+      source: 'vanilla.md: calendar recipes',
+      style: recipe,
+      read: (s) => decorationOf(s.spec.day.spec.container)?.color?.a,
+      expected: (_) => 0.0,
+    ),
+    _target<CalendarSpec>(
+      name,
+      'weekday typography',
+      source: 'vanilla.md: calendar recipes',
+      style: recipe,
+      read: (s) => s.spec.weekday.spec.style?.fontSize,
+      expected: (_) => 12.0,
+    ),
+    _target<CalendarSpec>(
+      name,
+      'selected day color',
+      source: 'vanilla.md: calendar recipes',
+      style: recipe,
+      states: {WidgetState.selected},
+      read: (s) => decorationOf(s.spec.day.spec.container)?.color,
+      expected: (t) => name == 'calendar' ? t.primary : t.muted,
+    ),
+  ],
+  for (final range in [false, true])
+    _pumped<ButtonSpec>(
+      range ? 'date_range_picker' : 'date_picker',
+      'Vanilla trigger typography',
+      source: 'vanilla.md: picker composites',
+      widget: () => range
+          ? VanillaDateRangePicker(
+              value: null,
+              firstDate: DateTime(2026),
+              lastDate: DateTime(2027),
+              onChanged: (_) {},
+            )
+          : VanillaDatePicker(
+              value: null,
+              firstDate: DateTime(2026),
+              lastDate: DateTime(2027),
+              onChanged: (_) {},
+            ),
+      read: (s) => s.spec.label.spec.style?.fontSize,
+      expected: (_) => 14.0,
+    ),
+];
+
 /// Every Vanilla target, in the order `specs/vanilla.md` lists components.
 final vanillaSpecTargets = <SpecTarget>[
+  ..._calendarTargets,
   ..._buttonTargets,
   ..._iconButtonTargets,
   ..._linkTargets,
