@@ -186,13 +186,7 @@ class RemixCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveStyle = CalendarStyler(
-      day: CalendarDayStyler(
-        container: BoxStyler()
-            .constraints(.minWidth(44).minHeight(44))
-            .alignment(Alignment.center),
-      ),
-    ).merge(style);
+    final effectiveStyle = _calendarDefaults.merge(style);
     return NakedCalendar(
       value: value,
       firstDate: firstDate,
@@ -246,6 +240,32 @@ class RemixCalendar extends StatelessWidget {
         : labels.fullDate(date);
   }
 }
+
+// Layout defaults every calendar style starts from. Day and navigation
+// targets meet the 44-point minimum; seven of them make the compact width.
+const _calendarTarget = 44.0;
+const _calendarCompactWidth = 7 * _calendarTarget;
+
+/// Defaults merged under the caller's [CalendarStyler]; each is overridable.
+///
+/// The compact width is not one of them: a default `maxWidth` would conflict
+/// with a caller's `minWidth` in every resolved spec. It applies only while
+/// the resolved container has no width bound; any finite `maxWidth`, such as
+/// `double.maxFinite` to fill the parent, replaces it.
+final _calendarDefaults = CalendarStyler(
+  day: CalendarDayStyler(
+    container: BoxStyler()
+        .constraints(.minWidth(_calendarTarget).minHeight(_calendarTarget))
+        .alignment(Alignment.center),
+  ),
+  selectorSpacing: 8,
+  selectorRunSpacing: 4,
+);
+
+/// Default month/year selector width, merged under `selectorStyle`.
+final _selectorDefaults = SelectStyler().trigger(
+  SelectTriggerStyler().width(146),
+);
 
 /// One styled day, shared by single and range calendars.
 ///
@@ -329,7 +349,7 @@ class _CalendarHeader extends StatelessWidget {
     semanticLabel: previous ? labels.previousMonth : labels.nextMonth,
     onPressed: previous ? previousMonth : nextMonth,
     style: IconButtonStyler()
-        .constraints(.minWidth(44).minHeight(44))
+        .constraints(.minWidth(_calendarTarget).minHeight(_calendarTarget))
         .merge(navigationStyle),
     iconBuilder: (context, spec, _) => RemixPathIcon(
       glyph: previous
@@ -387,17 +407,19 @@ class _CalendarHeader extends StatelessWidget {
                     onChanged: interactive
                         ? (month) {
                             if (month != null) {
-                              showMonth(DateTime(date.year, month));
+                              showMonth(civilDate(date.year, month));
                             }
                           }
                         : null,
                     // Preserve the recipe height as a minimum so scaled labels fit.
-                    style: selectorStyle.trigger(
-                      SelectTriggerStyler().maxHeight(double.infinity),
-                    ),
+                    style: _selectorDefaults
+                        .merge(selectorStyle)
+                        .trigger(
+                          SelectTriggerStyler().maxHeight(double.infinity),
+                        ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: spec.selectorSpacing ?? 8),
                 Flexible(
                   flex: 2,
                   child: RemixSelect<int>(
@@ -421,14 +443,16 @@ class _CalendarHeader extends StatelessWidget {
                     onChanged: interactive
                         ? (year) {
                             if (year != null) {
-                              showMonth(DateTime(year, date.month));
+                              showMonth(civilDate(year, date.month));
                             }
                           }
                         : null,
                     // Preserve the recipe height as a minimum so scaled labels fit.
-                    style: selectorStyle.trigger(
-                      SelectTriggerStyler().maxHeight(double.infinity),
-                    ),
+                    style: _selectorDefaults
+                        .merge(selectorStyle)
+                        .trigger(
+                          SelectTriggerStyler().maxHeight(double.infinity),
+                        ),
                   ),
                 ),
               ],
@@ -510,22 +534,31 @@ class _CalendarView extends StatelessWidget {
       var container = spec.container;
       final bounds = container.spec.constraints ?? const BoxConstraints();
       if (!bounds.hasBoundedWidth) {
-        // Keep the default compact without conflicting with caller minima.
+        // Keep an unbounded calendar compact, without conflicting with a
+        // caller minimum. Any finite caller maxWidth replaces this cap.
         container = container.copyWith(
           spec: container.spec.copyWith(
             constraints: bounds.copyWith(
-              maxWidth: bounds.minWidth > 308 ? bounds.minWidth : 308,
+              maxWidth: bounds.minWidth > _calendarCompactWidth
+                  ? bounds.minWidth
+                  : _calendarCompactWidth,
             ),
           ),
         );
       }
+      // Rows and padding cells follow the day style's minimum target.
+      final dayBounds = spec.day.spec.container.spec.constraints;
+      final dayWidth = (dayBounds?.minWidth ?? 0) > 0
+          ? dayBounds!.minWidth
+          : _calendarTarget;
+      final dayHeight = (dayBounds?.minHeight ?? 0) > 0
+          ? dayBounds!.minHeight
+          : _calendarTarget;
       return Box(
         styleSpec: container,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final dayWidth =
-                spec.day.spec.container.spec.constraints?.minWidth ?? 44.0;
-            final minimumWidth = 7 * (dayWidth > 44 ? dayWidth : 44.0);
+            final minimumWidth = 7 * dayWidth;
             final available = constraints.maxWidth;
             final width = available.isFinite && available > minimumWidth
                 ? available
@@ -558,7 +591,7 @@ class _CalendarView extends StatelessWidget {
                             for (final date in week)
                               Expanded(
                                 child: date == null
-                                    ? const SizedBox(height: 44)
+                                    ? SizedBox(height: dayHeight)
                                     : dayBuilder(date),
                               ),
                           ],

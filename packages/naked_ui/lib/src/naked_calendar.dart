@@ -356,6 +356,7 @@ class _Calendar extends StatefulWidget {
     required this.semanticLabel,
     required this.focusNode,
     required this.autofocus,
+    this.excludeSemantics = false,
     this.builder,
     this.rangeBuilder,
   });

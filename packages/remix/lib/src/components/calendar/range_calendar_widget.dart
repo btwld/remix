@@ -114,13 +114,7 @@ class RemixRangeCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveStyle = CalendarStyler(
-      day: CalendarDayStyler(
-        container: BoxStyler()
-            .constraints(.minWidth(44).minHeight(44))
-            .alignment(Alignment.center),
-      ),
-    ).merge(style);
+    final effectiveStyle = _calendarDefaults.merge(style);
     return NakedRangeCalendar(
       value: value,
       firstDate: firstDate,
