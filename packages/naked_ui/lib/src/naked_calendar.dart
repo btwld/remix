@@ -92,7 +92,7 @@ class NakedCalendarState extends NakedState {
 /// not selection, keyboard, focus or semantics behavior. Bounds are inclusive.
 /// An external value outside the bounds is retained; only focus/view are
 /// clamped. Unavailable dates within the bounds remain keyboard-focusable.
-class NakedCalendar extends StatefulWidget {
+class NakedCalendar extends StatelessWidget {
   /// Creates a headless single-date calendar.
   const NakedCalendar({
     super.key,
@@ -154,25 +154,20 @@ class NakedCalendar extends StatefulWidget {
   final bool excludeSemantics;
 
   @override
-  State<NakedCalendar> createState() => _NakedCalendarState();
-}
-
-class _NakedCalendarState extends State<NakedCalendar> {
-  @override
   Widget build(BuildContext context) => _Calendar(
-    value: widget.value,
-    firstDate: widget.firstDate,
-    lastDate: widget.lastDate,
-    onChanged: widget.onChanged,
-    currentDate: widget.currentDate,
-    isDateUnavailable: widget.isDateUnavailable,
-    firstDayOfWeek: widget.firstDayOfWeek,
-    enabled: widget.enabled,
-    semanticLabel: widget.semanticLabel,
-    focusNode: widget.focusNode,
-    autofocus: widget.autofocus,
-    builder: widget.builder,
-    excludeSemantics: widget.excludeSemantics,
+    value: value,
+    firstDate: firstDate,
+    lastDate: lastDate,
+    onChanged: onChanged,
+    currentDate: currentDate,
+    isDateUnavailable: isDateUnavailable,
+    firstDayOfWeek: firstDayOfWeek,
+    enabled: enabled,
+    semanticLabel: semanticLabel,
+    focusNode: focusNode,
+    autofocus: autofocus,
+    builder: builder,
+    excludeSemantics: excludeSemantics,
   );
 }
 
