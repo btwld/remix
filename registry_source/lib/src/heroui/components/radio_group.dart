@@ -61,9 +61,13 @@ class HeroUiRadioGroup<T> extends StatelessWidget {
       groupValue: groupValue,
       onChanged: onChanged,
       enabled: enabled,
+      semanticLabel: label,
       child: HeroUiFieldLayout(
         axis: orientation,
         label: label,
+        // The name must wrap Flutter's radioGroup role, which is above this
+        // layout. RemixRadioGroup supplies that named ancestor.
+        excludeLabelSemantics: true,
         helperText: helperText,
         errorText: errorText,
         invalid: invalid,

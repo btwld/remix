@@ -6,9 +6,13 @@ import 'package:registry_source/heroui.dart';
 import '../helpers/heroui.dart';
 
 void main() {
-  for (final radio in [true, false]) {
+  for (final (radio, axis, enabled) in [
+    for (final radio in [true, false])
+      for (final axis in radio ? Axis.values : [Axis.vertical])
+        for (final enabled in [true, false]) (radio, axis, enabled),
+  ]) {
     testWidgets(
-      '${radio ? 'radio' : 'checkbox'} group names its options once and keeps help and error readable',
+      '${radio ? 'radio' : 'checkbox'} group names its options once and keeps help and error readable (${axis.name}, enabled: $enabled)',
       (tester) async {
         final semantics = tester.ensureSemantics();
         try {
@@ -19,22 +23,27 @@ void main() {
                     groupValue: null,
                     onChanged: (_) => callbacks++,
                     label: 'Notifications',
+                    orientation: axis,
+                    enabled: enabled,
                     helperText: 'Choose your channels.',
                     errorText: 'Choose at least one channel.',
                     invalid: true,
                     options: const [
                       HeroUiRadioOption(value: 'email', label: 'Email'),
+                      HeroUiRadioOption(value: 'sms', label: 'SMS'),
                     ],
                   )
                 : HeroUiCheckboxGroup<String>(
                     values: const {},
                     onChanged: (_) => callbacks++,
                     label: 'Notifications',
+                    enabled: enabled,
                     helperText: 'Choose your channels.',
                     errorText: 'Choose at least one channel.',
                     invalid: true,
                     options: const [
                       HeroUiCheckboxOption(value: 'email', label: 'Email'),
+                      HeroUiCheckboxOption(value: 'sms', label: 'SMS'),
                     ],
                   ),
           );
@@ -45,6 +54,22 @@ void main() {
           expect(groups, findsOne);
           final group = groups.evaluate().single;
           expect(group.getSemanticsData().label, 'Notifications');
+          if (radio) {
+            final roles = find.semantics.byPredicate(
+              (node) =>
+                  node.getSemanticsData().role == SemanticsRole.radioGroup,
+            );
+            expect(roles, findsOne);
+            SemanticsNode? ancestor = roles.evaluate().single.parent;
+            while (ancestor != null && ancestor != group) {
+              ancestor = ancestor.parent;
+            }
+            expect(
+              ancestor,
+              same(group),
+              reason: 'the named container must wrap the radio-group role',
+            );
+          }
           expect(find.semantics.byLabel('Choose your channels.'), findsOne);
           expect(
             find.semantics.byLabel('Choose at least one channel.'),
@@ -52,9 +77,18 @@ void main() {
           );
           final option = find.semantics.byLabel('Email');
           expect(option, findsOne);
-          tester.semantics.tap(option);
-          await tester.pumpAndSettle();
-          expect(callbacks, 1);
+          expect(find.semantics.byLabel('SMS'), findsOne);
+          expect(
+            option.evaluate().single.getSemanticsData().hasAction(
+              SemanticsAction.tap,
+            ),
+            enabled,
+          );
+          if (enabled) {
+            tester.semantics.tap(option);
+            await tester.pumpAndSettle();
+          }
+          expect(callbacks, enabled ? 1 : 0);
         } finally {
           semantics.dispose();
         }

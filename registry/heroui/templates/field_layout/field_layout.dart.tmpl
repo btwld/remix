@@ -23,6 +23,7 @@ class {{typePrefix}}FieldLayout extends StatelessWidget {
     required this.items,
     this.axis = Axis.vertical,
     this.label,
+    this.excludeLabelSemantics = false,
     this.helperText,
     this.errorText,
     this.invalid = false,
@@ -32,6 +33,10 @@ class {{typePrefix}}FieldLayout extends StatelessWidget {
   final List<Widget> items;
   final Axis axis;
   final String? label;
+
+  /// Whether an enclosing behavioral group already supplies [label] as its
+  /// accessible name. The painted label remains visible either way.
+  final bool excludeLabelSemantics;
   final String? helperText;
   final String? errorText;
   final bool invalid;
@@ -41,7 +46,7 @@ class {{typePrefix}}FieldLayout extends StatelessWidget {
   Widget build(BuildContext context) => Semantics(
     container: true,
     explicitChildNodes: true,
-    label: label,
+    label: excludeLabelSemantics ? null : label,
     child: _buildContent(context),
   );
 
