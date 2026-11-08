@@ -123,7 +123,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   field. The parent owns nullable `value`; valid activation requests one date
   and closes even when rejected. Escape/outside/disable close without selection.
   Localize `semanticLabel`, `placeholder`, `calendarLabels` and optionally
-  `formatDate`. An Overlay ancestor is required. Style children independently
+  `formatDate`. An Overlay ancestor is required. A view resize closes it;
+  keyboard and safe-area changes re-fit the open panel. Style children independently
   with `buttonStyle`, `popoverStyle`, `calendarStyle`, `navigationStyle` and
   `selectorStyle`; there is no DatePicker `style`/`styleSpec` or public controller.
   Range, parsing and segmented entry are not supported.

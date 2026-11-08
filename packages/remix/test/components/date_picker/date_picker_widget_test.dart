@@ -96,17 +96,97 @@ Future<void> _open(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets('queued metric close cannot dismiss a pointer-reopened session', (
+  testWidgets('metrics without a view-size change keep the picker open', (
     tester,
   ) async {
     await tester.pumpWidget(_host(_picker()));
     await _open(tester);
-    final trigger = find.byType(RemixButton).first;
     tester.binding.handleMetricsChanged();
-    await tester.tap(trigger);
-    await tester.tap(trigger);
     await tester.pumpAndSettle();
     expect(find.byType(RemixCalendar), findsOneWidget);
+  });
+
+  testWidgets('a view-size change closes the picker without selecting', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 600);
+    addTearDown(tester.view.reset);
+    final requests = <DateTime>[];
+    await tester.pumpWidget(_host(_picker(onChanged: requests.add)));
+    await _open(tester);
+    tester.view.physicalSize = const Size(600, 800);
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixCalendar), findsNothing);
+    expect(requests, isEmpty);
+    await _open(tester);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'the keyboard hiding after the trigger takes focus keeps it open',
+    (tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(400, 800);
+      // A text field above is focused, so the soft keyboard is showing.
+      tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+      addTearDown(tester.view.reset);
+      final text = TextEditingController();
+      final textFocus = FocusNode();
+      addTearDown(text.dispose);
+      addTearDown(textFocus.dispose);
+      await tester.pumpWidget(
+        _host(
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              EditableText(
+                controller: text,
+                focusNode: textFocus,
+                style: const TextStyle(fontSize: 14),
+                cursorColor: const Color(0xff000000),
+                backgroundCursorColor: const Color(0xff888888),
+              ),
+              _picker(),
+            ],
+          ),
+        ),
+      );
+      textFocus.requestFocus();
+      await tester.pump();
+      await tester.tap(find.byType(RemixButton));
+      await tester.pump();
+      expect(textFocus.hasFocus, isFalse);
+      expect(find.byType(RemixCalendar), findsOneWidget);
+      // The platform now animates the keyboard away over several frames.
+      for (final bottom in [200.0, 100.0, 0.0]) {
+        tester.view.viewInsets = FakeViewPadding(bottom: bottom);
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await tester.pumpAndSettle();
+      expect(find.byType(RemixCalendar), findsOneWidget);
+      expect(_focusInside(RemixCalendar), isTrue);
+    },
+  );
+
+  testWidgets('a keyboard shown while open re-fits the panel above it', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 600);
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      _host(Align(alignment: Alignment.topCenter, child: _picker())),
+    );
+    await _open(tester);
+    expect(tester.getRect(find.byType(RemixCalendar)).bottom, greaterThan(250));
+    tester.view.viewInsets = const FakeViewPadding(bottom: 350);
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixCalendar), findsOneWidget);
+    final panel = tester.getRect(find.byType(RemixCalendar));
+    expect(panel.top, greaterThanOrEqualTo(8));
+    expect(panel.bottom, lessThanOrEqualTo(242));
+    expect(tester.takeException(), isNull);
   });
 
   for (final reopen in [false, true]) {
@@ -582,7 +662,7 @@ void main() {
   }
 
   testWidgets(
-    'safe areas and keyboard overlap; inset-only update safely closes',
+    'safe areas and keyboard overlap; an inset-only update re-fits the panel',
     (tester) async {
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(800, 350);
@@ -612,12 +692,10 @@ void main() {
       expect(panel.bottom, greaterThan(202));
       update(() => keyboard = const EdgeInsets.only(bottom: 150));
       await tester.pumpAndSettle();
-      expect(find.byType(RemixCalendar), findsNothing);
-      await _open(tester);
-      expect(
-        tester.getRect(find.byType(RemixCalendar)).bottom,
-        lessThanOrEqualTo(192),
-      );
+      expect(find.byType(RemixCalendar), findsOneWidget);
+      final refit = tester.getRect(find.byType(RemixCalendar));
+      expect(refit.top, greaterThanOrEqualTo(38));
+      expect(refit.bottom, lessThanOrEqualTo(192));
       expect(tester.takeException(), isNull);
     },
   );
@@ -670,24 +748,33 @@ void main() {
     },
   );
 
-  testWidgets(
-    'view safe-area metrics consumed by SafeArea still close the picker',
-    (tester) async {
-      tester.view.devicePixelRatio = 1;
-      tester.view.padding = const FakeViewPadding(top: 80, bottom: 60);
-      tester.view.viewPadding = const FakeViewPadding(top: 80, bottom: 60);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      addTearDown(tester.view.resetPadding);
-      addTearDown(tester.view.resetViewPadding);
-      await tester.pumpWidget(_host(SafeArea(child: _picker())));
-      await _open(tester);
-      tester.view.padding = const FakeViewPadding(top: 100, bottom: 60);
-      tester.view.viewPadding = const FakeViewPadding(top: 100, bottom: 60);
-      await tester.pumpAndSettle();
-      expect(find.byType(RemixCalendar), findsNothing);
-      expect(tester.takeException(), isNull);
-    },
-  );
+  testWidgets('safe-area changes consumed by SafeArea re-fit the open picker', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 600);
+    tester.view.padding = const FakeViewPadding(top: 80, bottom: 60);
+    tester.view.viewPadding = const FakeViewPadding(top: 80, bottom: 60);
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      _host(
+        SafeArea(
+          child: Align(alignment: Alignment.topCenter, child: _picker()),
+        ),
+      ),
+    );
+    await _open(tester);
+    // The SafeArea above the anchor consumes this change; the panel is
+    // placed in the Overlay, whose media still reports it.
+    tester.view.padding = const FakeViewPadding(top: 140, bottom: 60);
+    tester.view.viewPadding = const FakeViewPadding(top: 140, bottom: 60);
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixCalendar), findsOneWidget);
+    final panel = tester.getRect(find.byType(RemixCalendar));
+    expect(panel.top, greaterThanOrEqualTo(148));
+    expect(panel.bottom, lessThanOrEqualTo(532));
+    expect(tester.takeException(), isNull);
+  });
 
   for (final side in [OverlaySide.left, OverlaySide.right]) {
     testWidgets(

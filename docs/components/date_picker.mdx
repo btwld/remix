@@ -62,8 +62,10 @@ An `Overlay` ancestor is required. A routed `WidgetsApp` supplies one; use
   dismissal behavior, without claiming modal background semantics.
 - The panel constrains and scrolls in small spaces. Touch uses the same explicit
   controls; hover, swiping and a software keyboard are not required.
-- View-size, safe-area or keyboard-inset changes close the picker without
-  selecting; reopen it in the updated space. Nested month/year menus inherit
+- A view-size change, such as a rotation or window resize, closes the picker
+  without selecting; reopen it in the new space. Keyboard and safe-area changes
+  re-fit the open panel instead, so the keyboard hiding as the trigger takes
+  focus from a text field does not dismiss it. Nested month/year menus inherit
   the panel's inset protection.
 
 Clear the value by setting it to null in the parent. This button-only picker

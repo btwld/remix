@@ -76,40 +76,27 @@ class RemixDatePicker extends StatefulWidget {
   State<RemixDatePicker> createState() => _RemixDatePickerState();
 }
 
-class _RemixDatePickerState extends State<RemixDatePicker>
-    with WidgetsBindingObserver {
+class _RemixDatePickerState extends State<RemixDatePicker> {
   final _controller = MenuController();
   int _session = 0;
   final _triggerFocus = FocusNode(debugLabel: 'RemixDatePicker trigger');
   final _calendarFocus = FocusNode(debugLabel: 'RemixDatePicker calendar');
-  ({EdgeInsets padding, EdgeInsets viewPadding, EdgeInsets viewInsets})?
-  _insets;
+  Size? _viewSize;
 
   bool get _interactive => widget.enabled && widget.onChanged != null;
   FocusNode get _trigger => widget.focusNode ?? _triggerFocus;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  // SafeArea can consume changes from the nearest MediaQuery. Actual view
-  // metrics still reach this observer, including inset-only changes.
-  @override
-  void didChangeMetrics() => _scheduleClose();
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final media = MediaQuery.maybeOf(context);
-    final next = (
-      padding: media?.padding ?? EdgeInsets.zero,
-      viewPadding: media?.viewPadding ?? EdgeInsets.zero,
-      viewInsets: media?.viewInsets ?? EdgeInsets.zero,
-    );
-    if (_insets != null && next != _insets) _scheduleClose();
-    _insets = next;
+    // A new view size invalidates the anchor's placement, so close as
+    // RawMenuAnchor does. It only does so for root anchors; a picker nested in
+    // another menu or popover still needs this. Keyboard and safe-area changes
+    // only re-fit the view-safe panel: closing on them would dismiss the picker
+    // while the keyboard hides after its trigger takes focus from a text field.
+    final size = MediaQuery.maybeSizeOf(context);
+    if (_viewSize != null && size != _viewSize) _scheduleClose();
+    _viewSize = size;
   }
 
   @override
@@ -159,7 +146,6 @@ class _RemixDatePickerState extends State<RemixDatePicker>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _calendarFocus.dispose();
     _triggerFocus.dispose();
     super.dispose();
