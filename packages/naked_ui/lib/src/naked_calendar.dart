@@ -12,8 +12,7 @@ import 'utilities/state.dart';
 DateTime _date(DateTime date) => civilDate(date.year, date.month, date.day);
 DateTime _month(DateTime date) => civilDate(date.year, date.month);
 
-bool _same(DateTime? a, DateTime? b) =>
-    a == null || b == null ? a == b : compareCivilDates(a, b) == 0;
+bool _same(DateTime? a, DateTime? b) => isSameCivilDate(a, b);
 int _daysInMonth(int year, int month) => switch (month) {
   2 => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) ? 29 : 28,
   4 || 6 || 9 || 11 => 30,

@@ -106,7 +106,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `firstDate`/`lastDate` are required and inclusive. Compare civil year/month/day
   fields, not instants; callbacks return local date-only `DateTime` values,
   with a UTC civil fallback for historically skipped local days. Do not convert
-  their timezones.
+  their timezones; compare with `isSameCivilDate`/`compareCivilDates` and build
+  with `civilDate`, not `==` or `difference`.
   `enabled && onChanged != null` controls interaction. Unavailable in-range
   dates stay keyboard-focusable without becoming selectable. Browsing never
   selects; clearing `value` preserves the displayed month. The day grid has one

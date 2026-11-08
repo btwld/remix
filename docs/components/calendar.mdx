@@ -50,6 +50,13 @@ theme or `MaterialLocalizations` is required.
 - To supply a historical day that may be skipped in the device's local zone,
   construct `DateTime.utc(year, month, day)` as a civil-field carrier. A local
   `DateTime` constructor can change those fields before the calendar receives them.
+- Compare and build dates with `isSameCivilDate(a, b)`, `compareCivilDates(a, b)`
+  and `civilDate(year, month, day)`, exported by `remix` and `naked_ui`; they read
+  only year, month and day. `==` against your own `DateTime(year, month, day)`,
+  `toLocal()`, `millisecondsSinceEpoch` and `difference(...).inDays` treat the
+  values as instants and can disagree for the skipped-day UTC carrier.
+  `isDateUnavailable` receives the same civil values. Persist a selected date
+  as its fields, for example an ISO `yyyy-MM-dd` string.
 - `firstDate` and `lastDate` are inclusive. Unavailable in-range dates remain
   discoverable but cannot be selected.
 - Arrow navigation and changing the month do not call `onChanged`. Selection
