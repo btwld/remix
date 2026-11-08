@@ -2,15 +2,17 @@ part of 'calendar.dart';
 
 // Calendar day states that are not Flutter WidgetStates. Each day resolves its
 // style under the NakedCalendarDayState it scopes, so these apply to days only.
+// Mix merges context variants by identity; keys are diagnostic labels only.
+// They are namespaced so calendar variants read unambiguously in diagnostics.
 
 final _onTodayCalendarDayVariant = ContextVariant(
-  'onToday',
+  'remix.calendar.day.today',
   (context) =>
       NakedState.maybeOf<NakedCalendarDayState>(context)?.isToday ?? false,
 );
 
 final _onUnavailableCalendarDayVariant = _DisabledContextVariant(
-  'onUnavailable',
+  'remix.calendar.day.unavailable',
   (context) =>
       NakedState.maybeOf<NakedCalendarDayState>(context)?.isUnavailable ??
       false,
