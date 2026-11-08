@@ -828,6 +828,79 @@ void main() {
   });
 
   testWidgets(
+    'a pending request supplied after a new draft recentres on its start',
+    (tester) async {
+      final state = await _pump(tester);
+      await _focus(tester, state);
+      await _tap(tester, 20);
+      await _key(tester, LogicalKeyboardKey.pageDown);
+      await _tap(tester, 3);
+      final requested = NakedDateRange(
+        start: DateTime(2024, 2, 20),
+        end: DateTime(2024, 3, 3),
+      );
+      expect(state.requests, [requested]);
+      expect(state.value, isNull);
+      expect(state.snapshot.anchor, isNull);
+      expect(state.snapshot.displayedMonth, DateTime(2024, 3));
+      expect(state.days[DateTime(2024, 3, 3)]!.isFocused, isTrue);
+
+      // Activating the already focused end starts a draft without navigating.
+      await _tap(tester, 3);
+      expect(state.snapshot.anchor, DateTime(2024, 3, 3));
+      expect(state.requests, [requested]);
+      state.change(() => state.value = requested);
+      await tester.pumpAndSettle();
+      expect(state.snapshot.anchor, isNull);
+      expect(state.snapshot.displayedMonth, DateTime(2024, 2));
+      expect(state.snapshot.focusedDate, DateTime(2024, 2, 20));
+      expect(state.days[DateTime(2024, 2, 20)]!.isFocused, isTrue);
+    },
+  );
+
+  for (final disabledBy in ['enabled', 'onChanged']) {
+    testWidgets(
+      'a pending request supplied after restoring $disabledBy recentres on its start',
+      (tester) async {
+        final state = await _pump(tester);
+        await _focus(tester, state);
+        await _tap(tester, 20);
+        await _key(tester, LogicalKeyboardKey.pageDown);
+        await _tap(tester, 3);
+        final requested = NakedDateRange(
+          start: DateTime(2024, 2, 20),
+          end: DateTime(2024, 3, 3),
+        );
+        expect(state.requests, [requested]);
+        expect(state.value, isNull);
+        state.change(() {
+          if (disabledBy == 'enabled') {
+            state.enabled = false;
+          } else {
+            state.callback = false;
+          }
+        });
+        await tester.pumpAndSettle();
+        expect(state.snapshot.showMonth, isNull);
+        state.change(() {
+          state.enabled = true;
+          state.callback = true;
+        });
+        await tester.pumpAndSettle();
+        await _focus(tester, state);
+        expect(state.snapshot.displayedMonth, DateTime(2024, 3));
+        expect(state.snapshot.focusedDate, DateTime(2024, 3, 3));
+
+        state.change(() => state.value = requested);
+        await tester.pumpAndSettle();
+        expect(state.snapshot.displayedMonth, DateTime(2024, 2));
+        expect(state.snapshot.focusedDate, DateTime(2024, 2, 20));
+        expect(state.days[DateTime(2024, 2, 20)]!.isFocused, isTrue);
+      },
+    );
+  }
+
+  testWidgets(
     'a rejected request later supplied externally recentres after browsing',
     (tester) async {
       final state = await _pump(tester);

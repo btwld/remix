@@ -261,11 +261,12 @@ class NakedRangeCalendarState extends NakedState {
 /// Navigation and blur never commit. Escape discards the draft and bubbles to
 /// an enclosing overlay. Changing the supplied civil range, disabling interaction
 /// or invalidating the anchor cancels the draft. Equal values preserve browsing.
-/// Accepting this calendar's request before further navigation preserves the
-/// completed end's focus and month, including asynchronous acceptance. Navigation
-/// or a changed supplied value clears the remembered request. Any other changed
-/// nonnull value recentres on its clamped start, including a previously rejected
-/// request supplied after browsing elsewhere.
+/// Accepting this calendar's remembered request preserves the completed end's
+/// focus and month, including asynchronous acceptance. Navigation, starting a new
+/// draft, a changed supplied value, or disabling interaction (`enabled: false`
+/// or null `onChanged`) clears the remembered request. Any other changed nonnull
+/// value recentres on its clamped start, including a previously rejected request
+/// supplied after browsing elsewhere, starting a new draft, or losing interaction.
 class NakedRangeCalendar extends StatelessWidget {
   /// Creates a headless range calendar with one shared navigation/focus engine.
   const NakedRangeCalendar({
@@ -390,9 +391,11 @@ class _Calendar extends StatefulWidget {
 
 class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
   DateTime? _anchor;
-  // The last range this calendar requested. A parent that accepts it has not
-  // moved the selection elsewhere, so browsing stays on the completed end.
-  // Retain it until navigation or a changed supplied value, not just one frame.
+
+  /// The last range this calendar requested. A parent that accepts it has not
+  /// moved the selection elsewhere, so browsing stays on the completed end.
+  /// Retain it until navigation, a new draft, a changed supplied value, or loss
+  /// of interactivity (`enabled: false` or a null callback), not just one frame.
   NakedDateRange? _requested;
   DateTime? _blockedBefore;
   DateTime? _blockedAfter;
@@ -582,6 +585,7 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
         (_anchor != null && !_available(_anchor!))) {
       _anchor = null;
     }
+    if (!_interactive) _requested = null;
     final accepted =
         widget.isRange && valueChanged && widget.rangeValue == _requested;
     if (valueChanged) _requested = null;
@@ -687,6 +691,7 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
     }
     if (anchor == null) {
       setState(() {
+        _requested = null;
         _anchor = _date(date);
         _focused = _date(date);
       });

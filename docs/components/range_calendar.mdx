@@ -68,13 +68,14 @@ converting a scheduling instant.
 `firstDate` and `lastDate` are inclusive. `enabled: false` or null `onChanged`
 disables interaction and cancels an unfinished draft. Equal replacement range
 objects preserve browsing. Clearing the committed range does not reset the
-browsing month. Accepting the calendar's request before further navigation
-preserves focus and the displayed month at the completed end, including an
-asynchronous acceptance. The calendar remembers its last request until the user
-navigates (including month/year selectors) or the supplied value changes. Any
-other changed non-null value recentres on its clamped start. This includes an
-equal-to-request value supplied after the original request was rejected and the
-user browsed elsewhere.
+browsing month. Accepting the calendar's remembered request preserves focus and
+the displayed month at the completed end, including an asynchronous acceptance.
+The calendar remembers its last request until the user navigates (including
+month/year selectors), starts a new draft, the supplied value changes, or
+interaction is disabled (`enabled: false` or null `onChanged`). Any other changed
+non-null value recentres on its clamped start. This includes an equal-to-request
+value supplied after the original request was rejected and the user browsed
+elsewhere, started a new draft, or interaction was disabled and re-enabled.
 
 ## Unavailable dates
 
