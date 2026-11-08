@@ -293,42 +293,45 @@ void main() {
     'material-free root exposes controlled complete range and explicit draft semantics',
     (tester) async {
       final semantics = tester.ensureSemantics();
-      final requests = <NakedDateRange>[];
-      await tester.pumpWidget(
-        _host(_calendar(value: _range(10, 12), onChanged: requests.add)),
-      );
-      expect(_summary('Selected range:'), findsOneWidget);
-      expect(_summary('Choose start date'), findsOneWidget);
-      final selected = _semantics(tester, 10);
-      expect(
-        selected.getSemanticsData().flagsCollection.isSelected,
-        ui.Tristate.isTrue,
-      );
-      expect(selected.label, contains('Range start'));
-      await tester.tap(_day(20));
-      await tester.pumpAndSettle();
-      expect(requests, isEmpty);
-      expect(_summary('Choose end date'), findsOneWidget);
-      final draft = _semantics(tester, 20);
-      expect(draft.label, contains('Draft start'));
-      expect(draft.label, contains('Draft end'));
-      expect(
-        draft.getSemanticsData().flagsCollection.isSelected,
-        ui.Tristate.isFalse,
-      );
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-      await tester.pumpAndSettle();
-      final end = _semantics(tester, 21);
-      expect(end.label, contains('Draft range'));
-      end.owner!.performAction(end.id, SemanticsAction.tap);
-      await tester.pumpAndSettle();
-      expect(requests, [_range(20, 21)]);
-      expect(_summary('Choose start date'), findsOneWidget);
-      expect(
-        _semantics(tester, 10).getSemanticsData().flagsCollection.isSelected,
-        ui.Tristate.isTrue,
-      );
-      semantics.dispose();
+      try {
+        final requests = <NakedDateRange>[];
+        await tester.pumpWidget(
+          _host(_calendar(value: _range(10, 12), onChanged: requests.add)),
+        );
+        expect(_summary('Selected range:'), findsOneWidget);
+        expect(_summary('Choose start date'), findsOneWidget);
+        final selected = _semantics(tester, 10);
+        expect(
+          selected.getSemanticsData().flagsCollection.isSelected,
+          ui.Tristate.isTrue,
+        );
+        expect(selected.label, contains('Range start'));
+        await tester.tap(_day(20));
+        await tester.pumpAndSettle();
+        expect(requests, isEmpty);
+        expect(_summary('Choose end date'), findsOneWidget);
+        final draft = _semantics(tester, 20);
+        expect(draft.label, contains('Draft start'));
+        expect(draft.label, contains('Draft end'));
+        expect(
+          draft.getSemanticsData().flagsCollection.isSelected,
+          ui.Tristate.isFalse,
+        );
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.pumpAndSettle();
+        final end = _semantics(tester, 21);
+        expect(end.label, contains('Draft range'));
+        end.owner!.performAction(end.id, SemanticsAction.tap);
+        await tester.pumpAndSettle();
+        expect(requests, [_range(20, 21)]);
+        expect(_summary('Choose start date'), findsOneWidget);
+        expect(
+          _semantics(tester, 10).getSemanticsData().flagsCollection.isSelected,
+          ui.Tristate.isTrue,
+        );
+      } finally {
+        semantics.dispose();
+      }
     },
   );
 
@@ -399,57 +402,60 @@ void main() {
     'draft overlap paints preview while semantic selection stays committed; blocked completion explains why',
     (tester) async {
       final semantics = tester.ensureSemantics();
-      await tester.pumpWidget(
-        _host(
-          _calendar(
-            value: _range(10, 12),
-            style: _style(),
-            isDateUnavailable: (d) => d.day == 14,
+      try {
+        await tester.pumpWidget(
+          _host(
+            _calendar(
+              value: _range(10, 12),
+              style: _style(),
+              isDateUnavailable: (d) => d.day == 14,
+            ),
           ),
-        ),
-      );
-      await tester.tap(_day(11));
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-      await tester.pumpAndSettle();
-      var pixels = await _pixels(tester);
-      expect(
-        _pixel(
-          tester,
-          pixels,
-          tester.getRect(_day(12)).centerLeft + const Offset(3, 0),
-        ),
-        _yellow,
-      );
-      expect(
-        _semantics(tester, 12).getSemanticsData().flagsCollection.isSelected,
-        ui.Tristate.isTrue,
-      );
-      for (var i = 0; i < 3; i++) {
+        );
+        await tester.tap(_day(11));
+        await tester.pumpAndSettle();
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
         await tester.pumpAndSettle();
+        var pixels = await _pixels(tester);
+        expect(
+          _pixel(
+            tester,
+            pixels,
+            tester.getRect(_day(12)).centerLeft + const Offset(3, 0),
+          ),
+          _yellow,
+        );
+        expect(
+          _semantics(tester, 12).getSemanticsData().flagsCollection.isSelected,
+          ui.Tristate.isTrue,
+        );
+        for (var i = 0; i < 3; i++) {
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pumpAndSettle();
+        }
+        await tester.pumpAndSettle();
+        final blocked = _semantics(tester, 15);
+        expect(
+          blocked.getSemanticsData().hasAction(SemanticsAction.tap),
+          isFalse,
+        );
+        expect(
+          blocked.getSemanticsData().hasAction(SemanticsAction.focus),
+          isTrue,
+        );
+        expect(_summary('Range contains unavailable dates'), findsOneWidget);
+        pixels = await _pixels(tester);
+        expect(
+          _pixel(
+            tester,
+            pixels,
+            tester.getRect(_day(15)).centerLeft + const Offset(3, 0),
+          ),
+          _red,
+        );
+      } finally {
+        semantics.dispose();
       }
-      await tester.pumpAndSettle();
-      final blocked = _semantics(tester, 15);
-      expect(
-        blocked.getSemanticsData().hasAction(SemanticsAction.tap),
-        isFalse,
-      );
-      expect(
-        blocked.getSemanticsData().hasAction(SemanticsAction.focus),
-        isTrue,
-      );
-      expect(_summary('Range contains unavailable dates'), findsOneWidget);
-      pixels = await _pixels(tester);
-      expect(
-        _pixel(
-          tester,
-          pixels,
-          tester.getRect(_day(15)).centerLeft + const Offset(3, 0),
-        ),
-        _red,
-      );
-      semantics.dispose();
     },
   );
 
@@ -771,6 +777,7 @@ void main() {
     'long translations, RTL, narrow scrolling and 2x text retain day targets',
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(260, 300));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(
         _host(
           _calendar(
@@ -790,7 +797,6 @@ void main() {
       expect(tester.takeException(), isNull);
       expect(tester.getSize(_day(12)).width, greaterThanOrEqualTo(44));
       expect(tester.getSize(_day(12)).height, greaterThanOrEqualTo(44));
-      await tester.binding.setSurfaceSize(null);
     },
   );
 }

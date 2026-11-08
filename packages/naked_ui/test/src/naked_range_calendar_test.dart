@@ -507,11 +507,14 @@ void main() {
       expect(state.requests, isEmpty);
       expect(state.snapshot.anchor, DateTime(2024, 3, 2));
       final semantics = tester.ensureSemantics();
-      await tester.pump();
-      final target = _semantics(tester, 28);
-      target.owner!.performAction(target.id, SemanticsAction.focus);
-      await tester.pumpAndSettle();
-      semantics.dispose();
+      try {
+        await tester.pump();
+        final target = _semantics(tester, 28);
+        target.owner!.performAction(target.id, SemanticsAction.focus);
+        await tester.pumpAndSettle();
+      } finally {
+        semantics.dispose();
+      }
       await _key(tester, LogicalKeyboardKey.arrowRight);
       expect(state.snapshot.focusedDate, DateTime(2024, 2, 29));
       await _key(tester, LogicalKeyboardKey.enter);
@@ -619,48 +622,51 @@ void main() {
     'semantic actions preserve committed selection and blocked-date focus',
     (tester) async {
       final semantics = tester.ensureSemantics();
-      final state = await _pump(tester);
-      state.change(() {
-        state.value = _range(10, 12);
-        state.unavailable = (d) => d.day == 21;
-      });
-      await tester.pump();
-      final start = _semantics(tester, 20);
-      start.owner!.performAction(start.id, SemanticsAction.tap);
-      await tester.pumpAndSettle();
-      expect(state.requests, isEmpty);
-      expect(
-        _semantics(tester, 11).getSemanticsData().flagsCollection.isSelected,
-        Tristate.isTrue,
-      );
-      expect(
-        _semantics(tester, 20).getSemanticsData().flagsCollection.isSelected,
-        Tristate.isFalse,
-      );
-      final blocked = _semantics(tester, 22);
-      expect(
-        blocked.getSemanticsData().hasAction(SemanticsAction.tap),
-        isFalse,
-      );
-      expect(
-        blocked.getSemanticsData().hasAction(SemanticsAction.focus),
-        isTrue,
-      );
-      blocked.owner!.performAction(blocked.id, SemanticsAction.focus);
-      await tester.pumpAndSettle();
-      expect(state.snapshot.focusedDate, DateTime(2024, 2, 22));
-      expect(state.snapshot.isPreviewValid, isFalse);
-      await _key(tester, LogicalKeyboardKey.enter);
-      expect(state.requests, isEmpty);
-      final end = _semantics(tester, 19);
-      end.owner!.performAction(end.id, SemanticsAction.tap);
-      await tester.pump();
-      expect(state.requests, [_range(19, 20)]);
-      expect(state.snapshot.anchor, isNull);
-      for (var day = 1; day <= 29; day++) {
-        expect(find.bySemanticsLabel('2024-2-$day'), findsOneWidget);
+      try {
+        final state = await _pump(tester);
+        state.change(() {
+          state.value = _range(10, 12);
+          state.unavailable = (d) => d.day == 21;
+        });
+        await tester.pump();
+        final start = _semantics(tester, 20);
+        start.owner!.performAction(start.id, SemanticsAction.tap);
+        await tester.pumpAndSettle();
+        expect(state.requests, isEmpty);
+        expect(
+          _semantics(tester, 11).getSemanticsData().flagsCollection.isSelected,
+          Tristate.isTrue,
+        );
+        expect(
+          _semantics(tester, 20).getSemanticsData().flagsCollection.isSelected,
+          Tristate.isFalse,
+        );
+        final blocked = _semantics(tester, 22);
+        expect(
+          blocked.getSemanticsData().hasAction(SemanticsAction.tap),
+          isFalse,
+        );
+        expect(
+          blocked.getSemanticsData().hasAction(SemanticsAction.focus),
+          isTrue,
+        );
+        blocked.owner!.performAction(blocked.id, SemanticsAction.focus);
+        await tester.pumpAndSettle();
+        expect(state.snapshot.focusedDate, DateTime(2024, 2, 22));
+        expect(state.snapshot.isPreviewValid, isFalse);
+        await _key(tester, LogicalKeyboardKey.enter);
+        expect(state.requests, isEmpty);
+        final end = _semantics(tester, 19);
+        end.owner!.performAction(end.id, SemanticsAction.tap);
+        await tester.pump();
+        expect(state.requests, [_range(19, 20)]);
+        expect(state.snapshot.anchor, isNull);
+        for (var day = 1; day <= 29; day++) {
+          expect(find.bySemanticsLabel('2024-2-$day'), findsOneWidget);
+        }
+      } finally {
+        semantics.dispose();
       }
-      semantics.dispose();
     },
   );
 
@@ -822,15 +828,18 @@ void main() {
   ) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     final semantics = tester.ensureSemantics();
-    final state = await _pump(tester);
-    final day = _semantics(tester, 20);
-    expect(day.getSemanticsData().hasAction(SemanticsAction.focus), isFalse);
-    day.owner!.performAction(day.id, SemanticsAction.tap);
-    await tester.pump();
-    expect(state.snapshot.anchor, DateTime(2024, 2, 20));
-    expect(state.requests, isEmpty);
-    semantics.dispose();
-    debugDefaultTargetPlatformOverride = null;
+    try {
+      final state = await _pump(tester);
+      final day = _semantics(tester, 20);
+      expect(day.getSemanticsData().hasAction(SemanticsAction.focus), isFalse);
+      day.owner!.performAction(day.id, SemanticsAction.tap);
+      await tester.pump();
+      expect(state.snapshot.anchor, DateTime(2024, 2, 20));
+      expect(state.requests, isEmpty);
+    } finally {
+      semantics.dispose();
+      debugDefaultTargetPlatformOverride = null;
+    }
   });
 
   group('availability scan cost', () {
