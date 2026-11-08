@@ -581,7 +581,10 @@ class _NakedCalendarDayState extends State<NakedCalendarDay>
     return NakedFocusableDetector(
       enabled: interactive,
       canRequestFocus: focusable,
-      skipTraversal: !_same(_day, owner._focused),
+      // Only the newest duplicate of the focused date is a tab stop; an older
+      // one, such as the outgoing grid of a month transition, is not.
+      skipTraversal:
+          !_same(_day, owner._focused) || owner._dayOrder[_day] != _mountOrder,
       includeSemantics: false,
       focusNode: effectiveFocusNode,
       onFocusChange: (focused) {

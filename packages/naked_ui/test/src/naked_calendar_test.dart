@@ -599,6 +599,16 @@ void main() {
     ) async {
       final requests = <DateTime>[];
       states.clear();
+      // Keying each grid by navigation, not by month, keeps the outgoing
+      // February beside the incoming one when the user returns to it.
+      DateTime? lastMonth;
+      var generation = 0;
+      Key gridKey(DateTime month) {
+        if (lastMonth != month) generation++;
+        lastMonth = month;
+        return ValueKey(generation);
+      }
+
       await tester.pumpWidget(
         _host(
           NakedCalendar(
@@ -610,7 +620,7 @@ void main() {
             builder: (_, state, _) => AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               child: Column(
-                key: ValueKey(state.displayedMonth),
+                key: gridKey(state.displayedMonth),
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (final week in state.weeks)
@@ -690,6 +700,40 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
       expect(tester.takeException(), isNull);
+      // The first February grid is still fading out beside the incoming one.
+      // Only the newest grid is live: it holds focus and is the one tab stop.
+      final newest = tester
+          .elementList(
+            find.descendant(
+              of: find.byType(AnimatedSwitcher),
+              matching: find.byType(FadeTransition),
+            ),
+          )
+          .last;
+      bool isUnder(Element ancestor, BuildContext? context) {
+        var found = false;
+        context?.visitAncestorElements((element) {
+          found = identical(element, ancestor);
+          return !found;
+        });
+        return found;
+      }
+
+      expect(
+        isUnder(newest, FocusManager.instance.primaryFocus?.context),
+        isTrue,
+        reason: 'primary focus sits under the newest grid',
+      );
+      final dayStops = FocusManager.instance.rootScope.traversalDescendants
+          .where(
+            (node) =>
+                node.context
+                    ?.findAncestorWidgetOfExactType<NakedCalendarDay>() !=
+                null,
+          )
+          .toList();
+      expect(dayStops, hasLength(1), reason: 'one tab stop for the date');
+      expect(isUnder(newest, dayStops.single.context), isTrue);
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
