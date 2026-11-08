@@ -12,6 +12,7 @@ part of 'range_slider.dart';
 /// spacing constraints, RTL placement, and accessibility semantics. This recipe
 /// supplies the shared Slider rail, filled interval, and both thumb treatments
 /// through [playgroundSliderStyle], including hover, press, focus and disabled.
+/// Both recipes share a 48px interaction height and pill-shaped rails.
 ///
 /// Give each bound a distinct localized name in `semanticLabels`. The generated
 /// `PlaygroundRangeSlider` omits `semanticFormatterCallbacks`, whose Naked UI type

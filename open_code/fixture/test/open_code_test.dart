@@ -3827,7 +3827,7 @@ void main() {
 
         expect(spec.spec.trackWidth, 6);
         expect(spec.spec.rangeWidth, 6);
-        expect(spec.spec.trackColor, theme.data.muted);
+        expect(spec.spec.trackColor, theme.data.mutedForeground);
         expect(spec.spec.rangeColor, theme.data.primary);
       });
     }
@@ -3849,11 +3849,12 @@ void main() {
         states: const {WidgetState.disabled},
       );
 
-      // A step wider than other controls' ring: 4px.
+      // Slider focus is opaque and separated locally from its white handle.
       expect(
         focused.spec.thumbFocusEffects?.outline,
-        _focusRing(theme).copyWith(width: 4),
+        BorderSide(color: theme.mutedForeground, width: 3),
       );
+      expect(focused.spec.thumbFocusEffects?.outlineOffset, 2);
       expect(
         disabled.widgetModifiers,
         contains(

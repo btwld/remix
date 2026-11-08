@@ -13,7 +13,8 @@ part 'slider.g.dart';
 /// a 0-1 value onto the filled range, and the slider accessibility semantics;
 /// this recipe supplies the rail, the filled range, and the thumb.
 ///
-/// The rail is `muted` and the range is `primary`. The thumb is a white disc
+/// The pill-shaped rail is `mutedForeground` and the range is `primary`.
+/// Both slider recipes reserve a 48px interaction height. The thumb is a white disc
 /// with a `primary` outline and a small shadow, which keeps it a distinct
 /// handle on either page.
 ///
@@ -48,8 +49,10 @@ SliderStyler vanillaSliderStyle({
       .wrap(.sizedBox(height: VanillaTokens.s12))
       .animate(VanillaTokens.motion)
       .thickness(_rail)
-      .trackColor(VanillaTokens.muted())
+      .trackColor(VanillaTokens.mutedForeground())
       .rangeColor(VanillaTokens.primary())
+      .track(.borderRadius(.all(_circular)))
+      .range(.borderRadius(.all(_circular)))
       .thumbSize(const Size.square(VanillaTokens.icon))
       // White in both themes: the thumb is a physical-looking handle, and its
       // `primary` outline and small shadow are what separate it from the range
@@ -65,10 +68,16 @@ SliderStyler vanillaSliderStyle({
             )
             .shadows(VanillaShadow.sm.box),
       )
-      // A thumb is a grab target: hover and press (including touch) use the
-      // same ring keyboard focus draws.
-      .onHovered(SliderStyler().thumbEffects(_thumbRing()))
-      .onPressed(SliderStyler().thumbEffects(_thumbRing()))
+      .onHovered(
+        SliderStyler().thumbEffects(
+          _thumbRing(_hoverRingColor, VanillaTokens.s0_5),
+        ),
+      )
+      .onPressed(
+        SliderStyler().thumbEffects(
+          _thumbRing(_pressedRingColor, VanillaTokens.s1_5),
+        ),
+      )
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
       .merge(style);
@@ -80,25 +89,39 @@ const _circular = Radius.circular(VanillaTokens.pill);
 /// The thumb's fill: white, in both themes.
 const _thumbFill = Color(0xFFFFFFFF);
 
-/// Width of the ring around a hovered or focused thumb: 4px, a step wider than
-/// other controls' because the thumb is a small target.
-const _thumbRingWidth = 4.0;
-
 /// The rail's thickness: 6px.
 ///
 /// One size, not a scale. A call site that needs another sets `.thickness(...)`
 /// through [style].
 const _rail = VanillaTokens.s1_5;
 
-/// The ring around a hovered or focused thumb.
-RemixBoxEffectsMix _thumbRing() => vanillaFocusRing(width: _thumbRingWidth);
+// Pre-blend against the page, rather than painting translucent over the rail
+// and interval: a halo must read as one even colour around the whole handle.
+final _hoverRingColor = _opaqueRingColor(0.25);
+final _pressedRingColor = _opaqueRingColor(0.5);
+
+ContextToken<Color> _opaqueRingColor(double alpha) => ContextToken<Color>(
+  (context) => Color.alphaBlend(
+    VanillaTokens.mutedForeground.resolve(context).withValues(alpha: alpha),
+    VanillaTokens.background.resolve(context),
+  ),
+);
+
+RemixBoxEffectsMix _thumbRing(MixToken<Color> color, double width) =>
+    RemixBoxEffectsMix(
+      outline: BorderSideMix(color: color(), width: width),
+    );
 
 /// The keyboard focus ring, drawn around the thumb.
 ///
 /// `thumbFocusEffects` rather than `thumbEffects`: Remix paints the former
 /// only while the slider has visible focus, which is the state a ring is for.
-SliderStyler _focusVisibleStyle() =>
-    SliderStyler().thumbFocusEffects(_thumbRing());
+SliderStyler _focusVisibleStyle() => SliderStyler().thumbFocusEffects(
+  _thumbRing(
+    VanillaTokens.mutedForeground,
+    VanillaTokens.strokeRing,
+  ).outlineOffset(VanillaTokens.s0_5),
+);
 
 /// Declared last so it wins over every other state fragment.
 ///

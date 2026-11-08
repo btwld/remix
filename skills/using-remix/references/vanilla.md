@@ -105,8 +105,11 @@ families carry over.
   Both recipes reserve a 48px interaction height. The single slider previously
   occupied 22px; existing layouts must allow the additional 26px when updating
   the installed recipe. The extra height accepts pointer input too.
-  Both use the same muted rail, primary interval, white outlined thumbs,
-  and 4px hover, press and keyboard-focus rings. Disabled fades the whole
+  Both use pill-shaped `mutedForeground` rails, a primary interval and white
+  outlined thumbs. Hover draws a subtle opaque 2px halo; press uses a stronger
+  6px halo. Keyboard focus draws an opaque 3px `mutedForeground` ring with a
+  2px gap, raised locally rather than through the shared focus helper.
+  Disabled fades the whole
   control. The range widget takes two ordered, parent-owned `values`,
   `minSpacing`, `snapDivisions`, and lower/upper `semanticLabels` and
   `focusNodes`. The generated adapters omit Naked UI's semantic formatter

@@ -52,7 +52,13 @@ void main() {
         await tester.pumpAndSettle();
         expect(
           thumbOf(tester, index).containerEffects?.outline,
-          BorderSide(color: tint(theme.data.ring, 0.5), width: 4),
+          BorderSide(
+            color: Color.alphaBlend(
+              tint(theme.data.mutedForeground, 0.25),
+              theme.data.background,
+            ),
+            width: 2,
+          ),
         );
         expect(
           thumbOf(tester, other).containerEffects?.outline.style ??
@@ -65,7 +71,13 @@ void main() {
         await tester.pumpAndSettle();
         expect(
           thumbOf(tester, index).containerEffects?.outline,
-          BorderSide(color: tint(theme.data.ring, 0.5), width: 4),
+          BorderSide(
+            color: Color.alphaBlend(
+              tint(theme.data.mutedForeground, 0.5),
+              theme.data.background,
+            ),
+            width: 6,
+          ),
         );
         expect(
           thumbOf(tester, other).containerEffects?.outline.style ??

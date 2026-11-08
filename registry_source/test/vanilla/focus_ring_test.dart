@@ -37,8 +37,12 @@ void main() {
           final other = tester.getRect(rangeThumb(1 - index));
           await probe.expectRing(
             part: rangeThumb(index),
-            includes: (part) => [part.topCenter.translate(0, -2)],
-            excludes: (_) => [other.topCenter.translate(0, -2)],
+            ringColor: theme.data.mutedForeground,
+            includes: (part) => [part.topCenter.translate(0, -4)],
+            excludes: (part) => [
+              part.topCenter.translate(0, -1),
+              other.topCenter.translate(0, -4),
+            ],
           );
         });
       }
@@ -434,6 +438,7 @@ final class _Probe {
   Future<_Pixels> expectRing({
     required Finder part,
     Finder? neighbor,
+    Color? ringColor,
     Iterable<Offset> Function(Rect part) includes = _none,
     Iterable<Offset> Function(Rect part) excludes = _none,
   }) async {
@@ -452,7 +457,7 @@ final class _Probe {
       neighborRect,
       reason: 'the part does not push what sits beside or inside it',
     );
-    final ring = tint(theme.ring, 0.5);
+    final ring = ringColor ?? tint(theme.ring, 0.5);
     for (final point in includes(rect)) {
       final resting = before.colorAt(point);
       expect(

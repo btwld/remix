@@ -1236,23 +1236,35 @@ List<SpecTarget> _sliderTargetsFor(
     target(
       'hover ring',
       states: const {WidgetState.hovered},
-      source: 'slider.tsx: hover:ring-4 ring-ring/50',
+      source: 'Slider polish: opaque 2px hover halo',
       read: (spec) => spec.spec.thumbEffects?.outline,
-      expected: (theme) => BorderSide(color: tint(theme.ring, 0.5), width: 4),
+      expected: (theme) => BorderSide(
+        color: Color.alphaBlend(
+          tint(theme.mutedForeground, 0.25),
+          theme.background,
+        ),
+        width: 2,
+      ),
     ),
     target(
       'pressed ring',
       states: const {WidgetState.pressed},
-      source: 'Vanilla touch feedback: same ring as hover',
+      source: 'Slider polish: opaque 6px pressed halo',
       read: (spec) => spec.spec.thumbEffects?.outline,
-      expected: (theme) => BorderSide(color: tint(theme.ring, 0.5), width: 4),
+      expected: (theme) => BorderSide(
+        color: Color.alphaBlend(
+          tint(theme.mutedForeground, 0.5),
+          theme.background,
+        ),
+        width: 6,
+      ),
     ),
     target(
       'focus ring',
       states: const {WidgetState.focused},
-      source: 'slider.tsx: focus-visible:ring-4 ring-ring/50',
+      source: 'Slider polish: opaque 3px local focus ring',
       read: (spec) => spec.spec.thumbFocusEffects?.outline,
-      expected: (theme) => BorderSide(color: tint(theme.ring, 0.5), width: 4),
+      expected: (theme) => BorderSide(color: theme.mutedForeground, width: 3),
     ),
   ];
 }
@@ -2082,7 +2094,7 @@ final vanillaSpecTargets = <SpecTarget>[
   _target<SliderSpec>(
     'range slider',
     'rail and interval',
-    source: 'slider.tsx: h-1.5 bg-muted / bg-primary',
+    source: 'Slider polish: 6px muted-foreground rail / primary interval',
     style: vanillaRangeSliderStyle,
     read: (spec) => (
       spec.spec.trackColor,
@@ -2090,7 +2102,7 @@ final vanillaSpecTargets = <SpecTarget>[
       spec.spec.trackWidth,
       spec.spec.rangeWidth,
     ),
-    expected: (theme) => (theme.muted, theme.primary, 6.0, 6.0),
+    expected: (theme) => (theme.mutedForeground, theme.primary, 6.0, 6.0),
   ),
   ..._tabsTargets,
   ..._appBarTargets,
