@@ -62,6 +62,9 @@ class VanillaPopover extends StatelessWidget {
     this.useRootOverlay = false,
     this.openOnTap = true,
     this.triggerFocusNode,
+    this.initialFocusNode,
+    this.constrainToAvailableSpace = false,
+    this.avoidViewInsets = false,
     this.onOpen,
     this.onClose,
     this.onOpenRequested,
@@ -86,6 +89,12 @@ class VanillaPopover extends StatelessWidget {
   final bool openOnTap;
 
   final FocusNode? triggerFocusNode;
+
+  final FocusNode? initialFocusNode;
+
+  final bool constrainToAvailableSpace;
+
+  final bool avoidViewInsets;
 
   final VoidCallback? onOpen;
 
@@ -113,6 +122,9 @@ class VanillaPopover extends StatelessWidget {
       useRootOverlay: this.useRootOverlay,
       openOnTap: this.openOnTap,
       triggerFocusNode: this.triggerFocusNode,
+      initialFocusNode: this.initialFocusNode,
+      constrainToAvailableSpace: this.constrainToAvailableSpace,
+      avoidViewInsets: this.avoidViewInsets,
       onOpen: this.onOpen,
       onClose: this.onClose,
       onOpenRequested: this.onOpenRequested,
