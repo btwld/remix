@@ -138,7 +138,7 @@ class _CalendarReferencePageState extends State<CalendarReferencePage> {
                                 ? 'اختر تاريخًا'
                                 : 'Select a date',
                             formatDate: (date) =>
-                                '${labels.day(date)} ${labels.month(date)} '
+                                '${labels.day(date)} ${labels.month(date.month)} '
                                 '${labels.year(date.year)}',
                             calendarLabels: labels,
                             firstDayOfWeek: _arabic
