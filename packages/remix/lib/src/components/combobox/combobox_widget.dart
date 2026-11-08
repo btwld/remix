@@ -107,6 +107,7 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
     final optionBuilder = this.optionBuilder;
     final base = ComboboxStyler()
         .field(TextFieldStyler().constraints(.minHeight(48)))
+        .option(ComboboxOptionStyler().minHeight(48))
         .merge(style);
     final inherited = Style.maybeOf<ComboboxSpec>(context);
     final effective = (inherited is ComboboxStyler
@@ -208,29 +209,24 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
                                   builder: (context, optionSpec) =>
                                       RemixBoxAdapter(
                                         styleSpec: optionSpec.container,
-                                        child: ConstrainedBox(
-                                          constraints: const BoxConstraints(
-                                            minHeight: 48,
-                                          ),
-                                          child: Align(
-                                            alignment: AlignmentDirectional
-                                                .centerStart,
-                                            heightFactor: 1,
-                                            child: optionBuilder == null
-                                                ? StyledText(
-                                                    displayStringForOption(
-                                                      option,
-                                                    ),
-                                                    styleSpec: optionSpec.label,
-                                                  )
-                                                : RemixDefaultContentStyle(
-                                                    text: optionSpec.label,
-                                                    child: optionBuilder(
-                                                      context,
-                                                      option,
-                                                    ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional.centerStart,
+                                          heightFactor: 1,
+                                          child: optionBuilder == null
+                                              ? StyledText(
+                                                  displayStringForOption(
+                                                    option,
                                                   ),
-                                          ),
+                                                  styleSpec: optionSpec.label,
+                                                )
+                                              : RemixDefaultContentStyle(
+                                                  text: optionSpec.label,
+                                                  child: optionBuilder(
+                                                    context,
+                                                    option,
+                                                  ),
+                                                ),
                                         ),
                                       ),
                                 );

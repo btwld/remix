@@ -5,9 +5,33 @@ import 'package:flutter/gestures.dart' show PointerScrollEvent;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:naked_ui/naked_ui.dart' show NakedComboboxOption;
 import 'combobox_test_host.dart';
 
 void main() {
+  for (final height in [32.0, 64.0]) {
+    testWidgets('option style owns the $height px minimum including padding', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        comboboxHost(
+          RemixCombobox<String>(
+            optionsBuilder: (_) => suggestions,
+            style: testComboboxStyle().option(
+              ComboboxOptionStyler()
+                  .minHeight(height)
+                  .padding(.symmetric(horizontal: 8, vertical: 6))
+                  .label(.fontSize(14)),
+            ),
+          ),
+        ),
+      );
+      await openCombobox(tester);
+      final row = find.byType(NakedComboboxOption<String>).first;
+      expect(tester.getSize(row).height, height);
+    });
+  }
+
   testWidgets('semanticLabel replaces the visible editor name once', (
     tester,
   ) async {

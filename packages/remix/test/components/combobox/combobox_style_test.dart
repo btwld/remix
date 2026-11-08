@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:naked_ui/naked_ui.dart' show NakedComboboxOption;
 import 'combobox_test_host.dart';
 
 void main() {
@@ -297,7 +298,7 @@ void main() {
           in find
               .descendant(
                 of: find.byType(SingleChildScrollView).last,
-                matching: find.byType(Align),
+                matching: find.byType(NakedComboboxOption<String>),
               )
               .evaluate()) {
         expect(
