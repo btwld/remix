@@ -104,7 +104,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   overlays and to `0` anywhere else, `RemixPopover` included.
 - **Calendar** — controlled Gregorian date selection. `value` is nullable;
   `firstDate`/`lastDate` are required and inclusive. Compare civil year/month/day
-  fields, not instants; callbacks return local date-only `DateTime` values.
+  fields, not instants; callbacks return local date-only `DateTime` values,
+  with a UTC civil fallback for historically skipped local days. Do not convert
+  their timezones.
   `enabled && onChanged != null` controls interaction. Unavailable in-range
   dates stay keyboard-focusable without becoming selectable. Browsing never
   selects; clearing `value` preserves the displayed month. The day grid has one

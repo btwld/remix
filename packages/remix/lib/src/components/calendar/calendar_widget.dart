@@ -65,8 +65,9 @@ class RemixCalendarLabels {
 
 /// A styled controlled single-date calendar with keyboard day navigation.
 ///
-/// Selection is parent-owned. [onChanged] requests a local date with no time;
-/// focus and month browsing never change the selected value. Null callbacks
+/// Selection is parent-owned. [onChanged] requests date-only civil fields,
+/// using a UTC fallback only when a local date cannot preserve those fields.
+/// Focus and month browsing never change the selected value. Null callbacks
 /// disable the whole calendar. An Overlay ancestor is needed for the default
 /// month/year selectors. Supply [headerBuilder] for alternative navigation.
 class RemixCalendar extends StatelessWidget {

@@ -3,22 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
+import 'utilities/civil_date.dart';
 import 'utilities/naked_focusable_detector.dart';
 import 'utilities/focus_in_view.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/state.dart';
 
-DateTime _date(DateTime date) => DateTime(date.year, date.month, date.day);
-DateTime _month(DateTime date) => DateTime(date.year, date.month);
-int _compare(DateTime a, DateTime b) {
-  final year = a.year.compareTo(b.year);
-  if (year != 0) return year;
-  final month = a.month.compareTo(b.month);
-  return month != 0 ? month : a.day.compareTo(b.day);
-}
+DateTime _date(DateTime date) => civilDate(date.year, date.month, date.day);
+DateTime _month(DateTime date) => civilDate(date.year, date.month);
 
 bool _same(DateTime? a, DateTime? b) =>
-    a == null || b == null ? a == b : _compare(a, b) == 0;
+    a == null || b == null ? a == b : compareCivilDates(a, b) == 0;
 int _daysInMonth(int year, int month) => switch (month) {
   2 => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) ? 29 : 28,
   4 || 6 || 9 || 11 => 30,
@@ -113,6 +108,9 @@ class NakedCalendar extends StatefulWidget {
   final DateTime lastDate;
 
   /// Selection request. Null disables all calendar interaction.
+  ///
+  /// Returns local civil dates where representable, otherwise a UTC date that
+  /// preserves the fields of a skipped local day. Do not convert timezones.
   final ValueChanged<DateTime>? onChanged;
 
   /// Today marker and initial fallback date; defaults to DateTime.now().
@@ -153,7 +151,7 @@ class _NakedCalendarState extends State<NakedCalendar>
   FocusNode? get widgetProvidedNode => widget.focusNode;
 
   void _validate() {
-    if (_compare(widget.firstDate, widget.lastDate) > 0) {
+    if (compareCivilDates(widget.firstDate, widget.lastDate) > 0) {
       throw ArgumentError('firstDate must be on or before lastDate.');
     }
     if (widget.firstDayOfWeek < 1 || widget.firstDayOfWeek > 7) {
@@ -166,12 +164,12 @@ class _NakedCalendarState extends State<NakedCalendar>
   }
 
   bool _inBounds(DateTime date) =>
-      _compare(date, widget.firstDate) >= 0 &&
-      _compare(date, widget.lastDate) <= 0;
+      compareCivilDates(date, widget.firstDate) >= 0 &&
+      compareCivilDates(date, widget.lastDate) <= 0;
   DateTime _clamp(DateTime date) => _date(
-    _compare(date, widget.firstDate) < 0
+    compareCivilDates(date, widget.firstDate) < 0
         ? widget.firstDate
-        : _compare(date, widget.lastDate) > 0
+        : compareCivilDates(date, widget.lastDate) > 0
         ? widget.lastDate
         : date,
   );
@@ -246,7 +244,7 @@ class _NakedCalendarState extends State<NakedCalendar>
     final target = _month(_clampMonth(date));
     final dayOwnedFocus = _days.values.any((node) => node.hasFocus);
     _move(
-      DateTime(
+      civilDate(
         target.year,
         target.month,
         _focused.day.clamp(1, _daysInMonth(target.year, target.month)),
@@ -256,9 +254,9 @@ class _NakedCalendarState extends State<NakedCalendar>
   }
 
   DateTime _clampMonth(DateTime date) {
-    if (_compare(_month(date), _month(widget.firstDate)) < 0)
+    if (compareCivilDates(_month(date), _month(widget.firstDate)) < 0)
       return widget.firstDate;
-    if (_compare(_month(date), _month(widget.lastDate)) > 0)
+    if (compareCivilDates(_month(date), _month(widget.lastDate)) > 0)
       return widget.lastDate;
     return date;
   }
@@ -272,7 +270,7 @@ class _NakedCalendarState extends State<NakedCalendar>
     final year = (index / 12).floor();
     final month = index - year * 12 + 1;
     return _clamp(
-      DateTime(year, month, date.day.clamp(1, _daysInMonth(year, month))),
+      civilDate(year, month, date.day.clamp(1, _daysInMonth(year, month))),
     );
   }
 
@@ -297,10 +295,10 @@ class _NakedCalendarState extends State<NakedCalendar>
       // Stop at the inclusive bounds before constructing each next day.
       var target = date;
       for (var i = 0; i < delta.abs(); i++) {
-        if (delta < 0 && _compare(target, widget.firstDate) <= 0 ||
-            delta > 0 && _compare(target, widget.lastDate) >= 0)
+        if (delta < 0 && compareCivilDates(target, widget.firstDate) <= 0 ||
+            delta > 0 && compareCivilDates(target, widget.lastDate) >= 0)
           break;
-        target = DateTime(target.year, target.month, target.day + delta.sign);
+        target = civilDate(target.year, target.month, target.day + delta.sign);
       }
       _move(target);
       return KeyEventResult.handled;
@@ -333,7 +331,7 @@ class _NakedCalendarState extends State<NakedCalendar>
             final day = week * 7 + column - offset + 1;
             return day < 1 || day > count
                 ? null
-                : DateTime(_displayed.year, _displayed.month, day);
+                : civilDate(_displayed.year, _displayed.month, day);
           }),
         ),
       ),

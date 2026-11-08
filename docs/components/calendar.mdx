@@ -43,8 +43,13 @@ theme or `MaterialLocalizations` is required.
 ## Date and state contract
 
 - Dates are year/month/day fields, not instants. Input times and UTC flags do
-  not affect same-day comparison. Callbacks return local `DateTime(year, month,
-  day)` values; do not convert them to UTC to preserve a birthday or booking date.
+  not affect same-day comparison. Callbacks return local date values where those
+  fields are representable. A historically skipped local day uses a UTC date-only
+  fallback to preserve its fields. Treat both as civil dates; do not convert
+  timezones to preserve a birthday or booking date.
+- To supply a historical day that may be skipped in the device's local zone,
+  construct `DateTime.utc(year, month, day)` as a civil-field carrier. A local
+  `DateTime` constructor can change those fields before the calendar receives them.
 - `firstDate` and `lastDate` are inclusive. Unavailable in-range dates remain
   discoverable but cannot be selected.
 - Arrow navigation and changing the month do not call `onChanged`. Selection

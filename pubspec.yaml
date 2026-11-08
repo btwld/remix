@@ -132,6 +132,14 @@ melos:
         dirExists: test
         flutter: true
 
+    test:calendar-civil:
+      description: Verify skipped civil dates in Pacific/Apia
+      env:
+        TZ: Pacific/Apia
+      exec: flutter test --no-pub test/src/naked_calendar_civil_dates_test.dart --reporter=failures-only
+      packageFilters:
+        scope: [naked_ui]
+
     test:cli:
       description: Run the pure-Dart remix_cli test suite
       exec:
@@ -282,7 +290,8 @@ melos:
     ci:flutter:
       steps:
         - test:flutter
-      description: Every Flutter package test suite
+        - test:calendar-civil
+      description: Every Flutter package test suite and skipped civil-date regressions
 
     # Fresh consumers use checkout Remix (and remix_ui_fonts for Vanilla) with
     # hosted supporting packages.
