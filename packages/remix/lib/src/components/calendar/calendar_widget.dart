@@ -17,16 +17,38 @@ class RemixCalendarLabels {
     this.day = _numericDay,
     this.year = _numericYear,
   });
+
+  /// Accessible name of the previous-month button.
   final String previousMonth;
+
+  /// Accessible name of the next-month button.
   final String nextMonth;
+
+  /// Placeholder and accessible name of the month selector.
   final String chooseMonth;
+
+  /// Placeholder and accessible name of the year selector.
   final String chooseYear;
+
+  /// Appended to the accessible name of the current date.
   final String today;
+
+  /// Month name for the month selector items.
   final String Function(DateTime) month;
+
+  /// Visible month heading, such as "February 2024".
   final String Function(DateTime) monthYear;
+
+  /// Complete accessible date name for each day, including the weekday.
   final String Function(DateTime) fullDate;
+
+  /// Weekday column heading for a Dart weekday (Monday=1 through Sunday=7).
   final String Function(int) weekday;
+
+  /// Visible day number.
   final String Function(DateTime) day;
+
+  /// Year label for the year selector items.
   final String Function(int) year;
 
   static const _months = [
@@ -91,17 +113,43 @@ class RemixCalendar extends StatelessWidget {
     this.style = const CalendarStyler.create(),
     this.styleSpec,
   });
+
+  /// Parent-owned selected date, compared by year/month/day fields.
   final DateTime? value;
+
+  /// Inclusive earliest selectable date; time and UTC flag are ignored.
   final DateTime firstDate;
+
+  /// Inclusive latest selectable date, on or after [firstDate].
   final DateTime lastDate;
+
+  /// Requests a selected date. Null disables the calendar.
+  ///
+  /// The parent decides whether to accept it by updating [value].
   final ValueChanged<DateTime>? onChanged;
+
+  /// Today, for the `onToday` variant and fallback focus; defaults to now.
   final DateTime? currentDate;
+
+  /// Marks in-range dates unselectable; they stay keyboard-focusable.
   final bool Function(DateTime)? isDateUnavailable;
+
+  /// First weekday column, from Monday=1 through Sunday=7.
   final int firstDayOfWeek;
+
+  /// Whether navigation, focus and selection are enabled.
   final bool enabled;
+
+  /// Accessible name of the calendar group.
   final String? semanticLabel;
+
+  /// Focus entry point; requesting it focuses the current day.
   final FocusNode? focusNode;
+
+  /// Whether to focus the current day on mount.
   final bool autofocus;
+
+  /// Caller-owned labels and date formatters; English by default.
   final RemixCalendarLabels labels;
 
   /// Replaces header visuals/navigation only. Day behavior remains owned.
@@ -112,8 +160,14 @@ class RemixCalendar extends StatelessWidget {
 
   /// Independent month/year selector styling.
   final SelectStyler selectorStyle;
+
+  /// Calendar and day styling, resolved in each part's own state.
   final CalendarStyler style;
+
+  /// Raw resolved spec; bypasses [style] and inherited styles.
   final CalendarSpec? styleSpec;
+
+  /// Creates a [CalendarStyler], for `RemixCalendar.styleFrom(...)`.
   static final styleFrom = CalendarStyler.new;
 
   Widget _navigation(NakedCalendarState state, {required bool previous}) =>

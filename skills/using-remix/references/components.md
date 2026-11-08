@@ -117,8 +117,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   selectors need an Overlay ancestor. Keep `navigationStyle`, `selectorStyle`
   and day styling unresolved in their own interaction states. Day styles add
   `onToday` and `onUnavailable` (predicate-rejected, in range; declare after
-  `onDisabled`). Shared runtime
-  only: preset calendar recipes are not installed by this change. Use
+  `onDisabled`). No preset ships a calendar recipe yet; use
   `RemixCalendar(style: ...)`; `CalendarStyler` has no callable widget shorthand.
 
 ## Data display

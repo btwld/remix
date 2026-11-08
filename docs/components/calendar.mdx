@@ -161,6 +161,117 @@ use supported Flutter button semantics with full date labels, selected/enabled
 state and actions. This is not a claim of literal web ARIA-grid parity or
 conformance on every assistive technology.
 
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixCalendar remixCalendarConstructor({
+  Key? key,
+  required DateTime? value,
+  required DateTime firstDate,
+  required DateTime lastDate,
+  ValueChanged<DateTime>? onChanged,
+  DateTime? currentDate,
+  bool Function(DateTime)? isDateUnavailable,
+  int firstDayOfWeek = DateTime.sunday,
+  bool enabled = true,
+  String? semanticLabel,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  RemixCalendarLabels labels = const RemixCalendarLabels(),
+  Widget Function(BuildContext, NakedCalendarState)? headerBuilder,
+  IconButtonStyler navigationStyle = const IconButtonStyler.create(),
+  SelectStyler selectorStyle = const SelectStyler.create(),
+  CalendarStyler style = const CalendarStyler.create(),
+  CalendarSpec? styleSpec,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+## Properties
+### Widget Properties
+
+#### `value` → `DateTime?`
+
+**Required**. The parent-owned selected date, compared by year/month/day fields.
+Null shows no selection.
+
+#### `firstDate` / `lastDate` → `DateTime`
+
+**Required**. Inclusive bounds; times and UTC flags are ignored. `firstDate` must
+be on or before `lastDate`.
+
+#### `onChanged` → `ValueChanged<DateTime>?`
+
+Optional. Requests a date. The calendar stays unchanged until the parent updates
+`value`. Null disables the calendar.
+
+#### `currentDate` → `DateTime?`
+
+Optional. Today, for the `onToday` variant and fallback focus. Defaults to now.
+
+#### `isDateUnavailable` → `bool Function(DateTime)?`
+
+Optional. Marks in-range dates unselectable. They stay keyboard-focusable and
+match `onUnavailable`.
+
+#### `firstDayOfWeek` → `int`
+
+Optional. First weekday column, Monday=1 through Sunday=7. Defaults to Sunday.
+
+#### `enabled` → `bool`
+
+Optional. Whether navigation, focus and selection are enabled.
+
+#### `semanticLabel` → `String?`
+
+Optional. Accessible name of the calendar group.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. Focus entry point; requesting it focuses the current day.
+
+#### `autofocus` → `bool`
+
+Optional. Whether to focus the current day on mount.
+
+#### `labels` → `RemixCalendarLabels`
+
+Optional. Labels and date formatters; English by default.
+
+#### `headerBuilder` → `Widget Function(BuildContext, NakedCalendarState)?`
+
+Optional. Replaces the header's visuals and navigation. Day behavior stays owned
+by the calendar.
+
+#### `navigationStyle` → `IconButtonStyler`
+
+Optional. Previous/next button styling, resolved in each button's state.
+
+#### `selectorStyle` → `SelectStyler`
+
+Optional. Month/year selector styling.
+
+#### `style` → `CalendarStyler`
+
+Optional. Calendar and day styling.
+
+#### `styleSpec` → `CalendarSpec?`
+
+Optional. A raw resolved spec that bypasses `style` and inherited styles.
+
+### Style Methods
+
+`CalendarStyler` styles the surface like a box (`padding`, `color`,
+`borderRadius`, `constraints`, ...) and its parts through `heading(TextStyler)`,
+`weekday(TextStyler)` and `day(CalendarDayStyler)`.
+
+`CalendarDayStyler` styles a day like a box, its number through
+`label(TextStyler)`, and its states through `onSelected`, `onHovered`,
+`onPressed`, `onFocusVisible`, `onDisabled`, `onToday` and `onUnavailable`.
+
 Range selection, typed/segmented entry, non-Gregorian calendars and timezone
 scheduling are not part of this component. Preset recipes are separate from the
 runtime API.
