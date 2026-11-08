@@ -155,6 +155,8 @@ Vanilla and Fortal: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
 Vanilla also: `range_slider`, which installs `slider` and supplies the two-bound
 `<Prefix>RangeSlider` recipe.
 
+Vanilla also: `combobox` (depends on `theme` and `textfield`).
+
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`.
 
 HeroUI follows HeroUI's names, adding `alert`, `avatar_group`, `breadcrumbs`,

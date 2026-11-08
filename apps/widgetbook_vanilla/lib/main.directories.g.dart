@@ -31,6 +31,8 @@ import 'package:widgetbook_vanilla/components/checkbox.dart'
     as _widgetbook_vanilla_components_checkbox;
 import 'package:widgetbook_vanilla/components/checkbox_group.dart'
     as _widgetbook_vanilla_components_checkbox_group;
+import 'package:widgetbook_vanilla/components/combobox.dart'
+    as _widgetbook_vanilla_components_combobox;
 import 'package:widgetbook_vanilla/components/data_list.dart'
     as _widgetbook_vanilla_components_data_list;
 import 'package:widgetbook_vanilla/components/data_table.dart'
@@ -177,6 +179,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'CheckboxGroup',
             builder: _widgetbook_vanilla_components_checkbox_group
                 .buildVanillaCheckboxGroupUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaCombobox<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Combobox',
+            builder: _widgetbook_vanilla_components_combobox
+                .buildVanillaComboboxUseCase,
           ),
         ],
       ),

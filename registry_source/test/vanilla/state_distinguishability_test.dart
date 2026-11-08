@@ -390,6 +390,29 @@ final _cases = <_Case>[
       spec.spec.helperText.spec.style?.color,
     ],
   ),
+  _resolved<ComboboxSpec>(
+    'combobox field',
+    style: vanillaComboboxStyle,
+    states: const [WidgetState.focused, WidgetState.error],
+    read: (spec) => _boxLook(
+      spec.spec.field.spec.container,
+      effects: spec.spec.field.spec.containerEffects,
+    ),
+  ),
+  _resolved<ComboboxSpec>(
+    'combobox option',
+    style: vanillaComboboxStyle,
+    states: const [
+      WidgetState.hovered,
+      WidgetState.focused,
+      WidgetState.pressed,
+    ],
+    surface: _popover,
+    read: (spec) => _boxLook(
+      spec.spec.option.spec.container,
+      label: spec.spec.option.spec.label.spec.style,
+    ),
+  ),
   _resolved<SelectSpec>(
     'select trigger',
     style: vanillaSelectStyle,

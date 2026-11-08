@@ -55,6 +55,7 @@ The installer rejects older resolved versions before it writes source.
 | `card` | `UiCard` | — |
 | `chart` | `UiLineChart`, `UiBarChart`, `UiPieChart` | — |
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | — |
+| `combobox` | `UiCombobox` (Vanilla only; installs `theme` and `textfield`) | — |
 | `dashboard_demo` | `UiDashboardDemo`, `UiDashboardOverview` | — |
 | `dashboard_shell` | `UiDashboardShell` | — |
 | `data_list` | `UiDataList` | — |
@@ -84,8 +85,8 @@ The installer rejects older resolved versions before it writes source.
 | `toggle_group` | `UiToggleGroup` | variant, size |
 | `tooltip` | `UiTooltip` | — |
 
-The `fortal` catalog contains every item above, and adds
-`base_button`, `code`, `heading`, `kbd`, `text`, and `typography`. `base_button` and
+The `fortal` catalog contains every item above except `combobox`, and adds `base_button`, `code`,
+`heading`, `kbd`, `text`, and `typography`. `base_button` and
 `typography` are shared authored recipes that arrive transitively with the
 components that use them. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and

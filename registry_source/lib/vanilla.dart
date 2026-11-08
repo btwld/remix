@@ -26,6 +26,7 @@ export 'src/default/components/callout.dart';
 export 'src/default/components/card.dart';
 export 'src/default/components/chart.dart';
 export 'src/default/components/checkbox.dart';
+export 'src/default/components/combobox.dart';
 export 'src/default/components/data_list.dart';
 export 'src/default/components/data_table.dart';
 export 'src/default/components/dialog.dart';

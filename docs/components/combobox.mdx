@@ -24,7 +24,40 @@ Widget fruitSearch(ValueChanged<String> onSelected) => RemixCombobox<String>(
 );
 ```
 
-Provide an Overlay through a Navigator or WidgetsApp. Material is not required. Remix supplies structural anatomy; applications supply colors, borders and typography. No preset recipe is included in this release.
+Provide an Overlay through a Navigator or WidgetsApp. Material is not required. Remix supplies structural anatomy. Vanilla supplies the field, panel and suggestion styling through an installable recipe.
+
+## Vanilla recipe
+
+Install `remix add combobox` in a Vanilla app. This also installs `theme` and
+`textfield`. With the default `Ui` prefix:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget vanillaFruitSearch(ValueChanged<String> onSelected) => UiCombobox<String>(
+  label: 'Fruit',
+  hintText: 'Search fruit',
+  optionsBuilder: (query) => query.text.isEmpty
+      ? const []
+      : ['Apple', 'Apricot', 'Avocado'].where(
+          (fruit) => fruit.toLowerCase().startsWith(query.text.toLowerCase()),
+        ),
+  onSelected: onSelected,
+);
+```
+
+Place `UiTheme` above the Navigator, inside the app builder. The recipe reuses
+Vanilla TextField's light/dark fill, focus ring and disabled opacity. Suggestions
+sit in a rounded, bordered `popover` surface with a medium shadow and 4px gap.
+Hover, press and keyboard highlight use `accent` with `accentForeground`.
+Rows grow with wrapped text. Remix retains its structural 48px row minimum and
+288px scroll bound. There is no per-option selected or disabled state.
+
+Use `style: ComboboxStyler().field(...).panel(...).option(...)` for overrides;
+state overrides belong in matching state fragments. A custom `fieldBuilder`
+owns its field appearance; custom option content inherits the recipe's label
+style. Other presets continue to use application-owned styling.
 
 ## Editing and ownership
 

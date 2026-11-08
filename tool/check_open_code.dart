@@ -58,6 +58,7 @@ const _defaultRegistryItems = <String>[
   'dashboard_demo',
   'dashboard_shell',
   'checkbox',
+  'combobox',
   'data_list',
   'data_table',
   'dialog',

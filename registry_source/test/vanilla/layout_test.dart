@@ -76,6 +76,74 @@ void main() {
     );
   }
 
+  for (final dark in [false, true]) {
+    for (final rtl in [false, true]) {
+      testWidgets(
+        'combobox panel follows its field; dark=$dark RTL 200%=$rtl',
+        (tester) async {
+          await tester.pumpWidget(
+            WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+                settings: settings,
+                pageBuilder: (context, _, _) => builder(context),
+              ),
+              builder: (context, navigator) => VanillaTheme(
+                mode: dark ? .dark : .light,
+                child: MediaQuery(
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: TextScaler.linear(rtl ? 2 : 1)),
+                  child: Directionality(
+                    textDirection: rtl ? .rtl : .ltr,
+                    child: navigator!,
+                  ),
+                ),
+              ),
+              home: Align(
+                alignment: .topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: SizedBox(
+                    width: 320,
+                    child: VanillaCombobox<String>(
+                      hintText: 'Search destinations',
+                      optionsBuilder: (_) => const [
+                        'San Sebastián, Basque Country · Spain',
+                        'San Francisco, California · United States',
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          final field = find.byType(RemixTextField);
+          if (!rtl) expect(tester.getSize(field).height, 36);
+          await tester.enterText(find.byType(EditableText), 'san');
+          await tester.pumpAndSettle();
+          final fieldRect = tester.getRect(field);
+          final panelRect = tester.getRect(
+            find
+                .ancestor(
+                  of: find.text('San Sebastián, Basque Country · Spain'),
+                  matching: find.byType(DecoratedBox),
+                )
+                .last,
+          );
+          expect(panelRect.top - fieldRect.bottom, 4);
+          expect(panelRect.width, fieldRect.width);
+          final label = tester.getRect(
+            find.text('San Sebastián, Basque Country · Spain'),
+          );
+          expect(panelRect.contains(label.topLeft), isTrue);
+          expect(panelRect.contains(label.bottomRight), isTrue);
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  }
+
   testWidgets('a dialog is centered and fills at most 512px', (tester) async {
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1;

@@ -69,7 +69,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `container` and `label` slots. Set option text with `.label(TextStyler(...))`;
   option `onFocused` means keyboard highlight,
   independent of hover. Eager rows grow from a 48px minimum inside a bounded
-  scroll panel. See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
+  scroll panel. Vanilla ships `<Prefix>Combobox<T>` via `remix add combobox`,
+  with the TextField recipe and a Select-like panel; its dependencies are
+  `theme` and `textfield`. Other presets still require application styling.
+  See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 - **TextField/TextArea** — forwards the standard Flutter text-input surface
   (`controller`, `keyboardType`, `inputFormatters`, `maxLines`, etc.)
   unchanged; check the doc page rather than assuming a param is missing.
