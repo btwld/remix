@@ -71,7 +71,7 @@ Widget saveButton(VoidCallback save) =>
     primaryButton(label: 'Save', onPressed: save); // → RemixButton
 ```
 
-Eight stylers use a generic `call<T>()` instead: Accordion, Radio,
+Nine stylers use a generic `call<T>()` instead: Accordion, Combobox, Radio,
 SegmentedControl, Select, Menu, ToggleGroup, DataTable, and Sidebar. Dart
 usually infers `T` from the required values or item/row lists. Every other
 leaf component styler uses a non-generic `call()`. Behavioral group/root
