@@ -37,10 +37,10 @@ void main() {
           final other = tester.getRect(rangeThumb(1 - index));
           await probe.expectRing(
             part: rangeThumb(index),
-            ringColor: theme.data.mutedForeground,
-            includes: (part) => [part.topCenter.translate(0, -4)],
+            ringColor: theme.data.primary,
+            includes: (part) => [part.topCenter.translate(0, -2)],
             excludes: (part) => [
-              part.topCenter.translate(0, -1),
+              part.topCenter.translate(0, -4),
               other.topCenter.translate(0, -4),
             ],
           );

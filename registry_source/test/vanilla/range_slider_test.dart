@@ -45,7 +45,14 @@ void main() {
         final other = 1 - index;
         final decoration = decorationOf(thumbOf(tester, index).styleSpec);
         expect(decoration?.color, const Color(0xFFFFFFFF));
-        expect(decoration?.border, Border.all(color: theme.data.primary));
+        expect(
+          decoration?.border,
+          Border.all(
+            color: theme.data.brightness == Brightness.dark
+                ? theme.data.primaryForeground
+                : theme.data.primary,
+          ),
+        );
         final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
         await mouse.addPointer(location: Offset.zero);
         await mouse.moveTo(tester.getCenter(thumb));
@@ -54,7 +61,7 @@ void main() {
           thumbOf(tester, index).containerEffects?.outline,
           BorderSide(
             color: Color.alphaBlend(
-              tint(theme.data.mutedForeground, 0.25),
+              tint(theme.data.mutedForeground, 0.4),
               theme.data.background,
             ),
             width: 2,
@@ -73,7 +80,7 @@ void main() {
           thumbOf(tester, index).containerEffects?.outline,
           BorderSide(
             color: Color.alphaBlend(
-              tint(theme.data.mutedForeground, 0.5),
+              tint(theme.data.mutedForeground, 0.65),
               theme.data.background,
             ),
             width: 6,

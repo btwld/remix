@@ -5,6 +5,18 @@ import 'package:registry_source/vanilla.dart';
 import 'support.dart';
 
 void main() {
+  test('identical slider recipe arguments preserve style equality', () {
+    for (final surface in <Color?>[null, const Color(0xFFE1E7F6)]) {
+      expect(
+        vanillaSliderStyle(surfaceColor: surface),
+        vanillaSliderStyle(surfaceColor: surface),
+      );
+      expect(
+        vanillaRangeSliderStyle(surfaceColor: surface),
+        vanillaRangeSliderStyle(surfaceColor: surface),
+      );
+    }
+  });
   for (final theme in vanillaThemes) {
     testWidgets('${theme.name}: slider rails are legible pills', (
       tester,
@@ -19,6 +31,17 @@ void main() {
           contrastRatio(spec.trackColor, theme.data.background),
           greaterThanOrEqualTo(3),
         );
+        expect(
+          contrastRatio(spec.trackColor, spec.rangeColor),
+          greaterThanOrEqualTo(3),
+        );
+        if (theme.data.brightness == Brightness.dark) {
+          final border = decorationOf(spec.thumb)!.border! as Border;
+          expect(
+            contrastRatio(border.top.color, const Color(0xFFFFFFFF)),
+            greaterThanOrEqualTo(7),
+          );
+        }
         expect(decorationOf(spec.track)?.borderRadius, isFullyRounded);
         expect(decorationOf(spec.range)?.borderRadius, isFullyRounded);
       }
@@ -48,7 +71,12 @@ void main() {
         expect(hover.outline.width, 2);
         expect(press.outline.width, 6);
         expect(focus.outline.width, 3);
-        expect(focus.outlineOffset, 2);
+        expect(focus.outlineOffset, 0);
+        expect(focus.outline.color, isNot(theme.data.mutedForeground));
+        expect(
+          contrastRatio(hover.outline.color, theme.data.background),
+          greaterThanOrEqualTo(1.5),
+        );
         for (final ring in [hover, press, focus]) {
           expect(ring.outline.color.a, 1);
         }

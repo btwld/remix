@@ -1228,7 +1228,11 @@ List<SpecTarget> _sliderTargetsFor(
       },
       expected: (theme) => (
         BoxConstraints.tight(const Size.square(16)),
-        _hairline(theme.primary),
+        _hairline(
+          theme.brightness == Brightness.dark
+              ? theme.primaryForeground
+              : theme.primary,
+        ),
         const Color(0xFFFFFFFF),
         VanillaShadow.sm.shadows,
       ),
@@ -1240,7 +1244,7 @@ List<SpecTarget> _sliderTargetsFor(
       read: (spec) => spec.spec.thumbEffects?.outline,
       expected: (theme) => BorderSide(
         color: Color.alphaBlend(
-          tint(theme.mutedForeground, 0.25),
+          tint(theme.mutedForeground, 0.4),
           theme.background,
         ),
         width: 2,
@@ -1253,7 +1257,7 @@ List<SpecTarget> _sliderTargetsFor(
       read: (spec) => spec.spec.thumbEffects?.outline,
       expected: (theme) => BorderSide(
         color: Color.alphaBlend(
-          tint(theme.mutedForeground, 0.5),
+          tint(theme.mutedForeground, 0.65),
           theme.background,
         ),
         width: 6,
@@ -1264,7 +1268,7 @@ List<SpecTarget> _sliderTargetsFor(
       states: const {WidgetState.focused},
       source: 'Slider polish: opaque 3px local focus ring',
       read: (spec) => spec.spec.thumbFocusEffects?.outline,
-      expected: (theme) => BorderSide(color: theme.mutedForeground, width: 3),
+      expected: (theme) => BorderSide(color: theme.primary, width: 3),
     ),
   ];
 }
@@ -2094,7 +2098,7 @@ final vanillaSpecTargets = <SpecTarget>[
   _target<SliderSpec>(
     'range slider',
     'rail and interval',
-    source: 'Slider polish: 6px muted-foreground rail / primary interval',
+    source: 'Slider polish: 6px mid-gray rail / primary interval',
     style: vanillaRangeSliderStyle,
     read: (spec) => (
       spec.spec.trackColor,
@@ -2102,7 +2106,12 @@ final vanillaSpecTargets = <SpecTarget>[
       spec.spec.trackWidth,
       spec.spec.rangeWidth,
     ),
-    expected: (theme) => (theme.mutedForeground, theme.primary, 6.0, 6.0),
+    expected: (theme) => (
+      theme.brightness == Brightness.dark ? theme.ring : theme.mutedForeground,
+      theme.primary,
+      6.0,
+      6.0,
+    ),
   ),
   ..._tabsTargets,
   ..._appBarTargets,

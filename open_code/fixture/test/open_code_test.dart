@@ -3827,7 +3827,12 @@ void main() {
 
         expect(spec.spec.trackWidth, 6);
         expect(spec.spec.rangeWidth, 6);
-        expect(spec.spec.trackColor, theme.data.mutedForeground);
+        expect(
+          spec.spec.trackColor,
+          theme.data.brightness == Brightness.dark
+              ? theme.data.ring
+              : theme.data.mutedForeground,
+        );
         expect(spec.spec.rangeColor, theme.data.primary);
       });
     }
@@ -3852,9 +3857,9 @@ void main() {
       // Slider focus is opaque and separated locally from its white handle.
       expect(
         focused.spec.thumbFocusEffects?.outline,
-        BorderSide(color: theme.mutedForeground, width: 3),
+        BorderSide(color: theme.primary, width: 3),
       );
-      expect(focused.spec.thumbFocusEffects?.outlineOffset, 2);
+      expect(focused.spec.thumbFocusEffects?.outlineOffset, 0);
       expect(
         disabled.widgetModifiers,
         contains(
@@ -3869,6 +3874,7 @@ void main() {
         SizedBox(
           width: 200,
           child: AcmeSlider(
+            surfaceColor: const Color(0xFFE1E7F6),
             value: 0.5,
             min: 0,
             max: 10,
@@ -3885,7 +3891,10 @@ void main() {
       expect(remix.max, 10);
       expect(remix.snapDivisions, 5);
       expect(remix.semanticLabel, 'Volume');
-      expect(remix.style, acmeSliderStyle());
+      expect(
+        remix.style,
+        acmeSliderStyle(surfaceColor: const Color(0xFFE1E7F6)),
+      );
       // `semanticFormatterCallback` would drag `package:naked_ui` into the
       // adapter, so it is deliberately outside the generated surface.
       expect(remix.semanticFormatterCallback, isNull);

@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
 import '../theme/tokens.dart';
+import '../theme/theme_scope.dart';
 
 part 'slider.g.dart';
 
@@ -13,10 +14,17 @@ part 'slider.g.dart';
 /// a 0-1 value onto the filled range, and the slider accessibility semantics;
 /// this recipe supplies the rail, the filled range, and the thumb.
 ///
-/// The pill-shaped rail is `mutedForeground` and the range is `primary`.
+/// The pill-shaped rail is `mutedForeground` in light and `ring` in dark;
+/// the range is `primary`.
 /// Both slider recipes reserve a 48px interaction height. The thumb is a white disc
 /// with a `primary` outline and a small shadow, which keeps it a distinct
-/// handle on either page.
+/// handle on either page. In dark mode a dark outline separates overlapping
+/// white handles.
+///
+/// Set [surfaceColor] to the actual enclosing surface on cards or tinted panels
+/// (for example, `{{typePrefix}}Tokens.card.resolve(context)`). It defaults to the page
+/// background. Hover and press halos blend against that surface so the range
+/// does not show through them.
 ///
 /// `semanticFormatterCallback` is deliberately not forwarded to the generated
 /// `{{typePrefix}}Slider`. Its type is
@@ -43,39 +51,36 @@ part 'slider.g.dart';
   }),
 )
 SliderStyler {{valuePrefix}}SliderStyle({
+  Color? surfaceColor,
   SliderStyler style = const SliderStyler.create(),
 }) {
   return SliderStyler()
       .wrap(.sizedBox(height: {{typePrefix}}Tokens.s12))
       .animate({{typePrefix}}Tokens.motion)
       .thickness(_rail)
-      .trackColor({{typePrefix}}Tokens.mutedForeground())
+      .trackColor(_railColor())
       .rangeColor({{typePrefix}}Tokens.primary())
       .track(.borderRadius(.all(_circular)))
       .range(.borderRadius(.all(_circular)))
       .thumbSize(const Size.square({{typePrefix}}Tokens.icon))
-      // White in both themes: the thumb is a physical-looking handle, and its
-      // `primary` outline and small shadow are what separate it from the range
-      // it sits on.
+      // The dark outline also separates white handles when they overlap.
       .thumbColor(_thumbFill)
       .thumb(
         BoxStyler()
             .borderRadius(.all(_circular))
             .border(
-              .color(
-                {{typePrefix}}Tokens.primary(),
-              ).width({{typePrefix}}Tokens.strokeHairline),
+              .color(_thumbBorderColor()).width({{typePrefix}}Tokens.strokeHairline),
             )
             .shadows({{typePrefix}}Shadow.sm.box),
       )
       .onHovered(
         SliderStyler().thumbEffects(
-          _thumbRing(_hoverRingColor, {{typePrefix}}Tokens.s0_5),
+          _thumbRing(_ringColor(0.4, surfaceColor), {{typePrefix}}Tokens.s0_5),
         ),
       )
       .onPressed(
         SliderStyler().thumbEffects(
-          _thumbRing(_pressedRingColor, {{typePrefix}}Tokens.s1_5),
+          _thumbRing(_ringColor(0.65, surfaceColor), {{typePrefix}}Tokens.s1_5),
         ),
       )
       .onFocusVisible(_focusVisibleStyle())
@@ -95,17 +100,40 @@ const _thumbFill = Color(0xFFFFFFFF);
 /// through [style].
 const _rail = {{typePrefix}}Tokens.s1_5;
 
-// Pre-blend against the page, rather than painting translucent over the rail
-// and interval: a halo must read as one even colour around the whole handle.
-final _hoverRingColor = _opaqueRingColor(0.25);
-final _pressedRingColor = _opaqueRingColor(0.5);
-
-ContextToken<Color> _opaqueRingColor(double alpha) => ContextToken<Color>(
-  (context) => Color.alphaBlend(
-    {{typePrefix}}Tokens.mutedForeground.resolve(context).withValues(alpha: alpha),
-    {{typePrefix}}Tokens.background.resolve(context),
-  ),
+final _railColor = ContextToken<Color>(
+  (context) =>
+      ({{typePrefix}}Theme.of(context).brightness == Brightness.dark
+              ? {{typePrefix}}Tokens.ring
+              : {{typePrefix}}Tokens.mutedForeground)
+          .resolve(context),
 );
+
+final _thumbBorderColor = ContextToken<Color>(
+  (context) =>
+      ({{typePrefix}}Theme.of(context).brightness == Brightness.dark
+              ? {{typePrefix}}Tokens.primaryForeground
+              : {{typePrefix}}Tokens.primary)
+          .resolve(context),
+);
+
+// An opaque halo stays even over the filled interval. Use the caller's actual
+// surface on cards instead of baking the page colour into every instance.
+ContextToken<Color> _ringColor(double alpha, Color? surfaceColor) =>
+    _ringColors.putIfAbsent(
+      (alpha, surfaceColor),
+      () => ContextToken<Color>(
+        (context) => Color.alphaBlend(
+          {{typePrefix}}Tokens.mutedForeground
+              .resolve(context)
+              .withValues(alpha: alpha),
+          surfaceColor ?? {{typePrefix}}Tokens.background.resolve(context),
+        ),
+      ),
+    );
+
+// ContextToken equality is resolver identity, as in {{valuePrefix}}Tint. Cache per
+// argument set so rebuilding the same recipe preserves style equality.
+final _ringColors = <(double, Color?), ContextToken<Color>>{};
 
 RemixBoxEffectsMix _thumbRing(MixToken<Color> color, double width) =>
     RemixBoxEffectsMix(
@@ -117,10 +145,7 @@ RemixBoxEffectsMix _thumbRing(MixToken<Color> color, double width) =>
 /// `thumbFocusEffects` rather than `thumbEffects`: Remix paints the former
 /// only while the slider has visible focus, which is the state a ring is for.
 SliderStyler _focusVisibleStyle() => SliderStyler().thumbFocusEffects(
-  _thumbRing(
-    {{typePrefix}}Tokens.mutedForeground,
-    {{typePrefix}}Tokens.strokeRing,
-  ).outlineOffset({{typePrefix}}Tokens.s0_5),
+  _thumbRing({{typePrefix}}Tokens.primary, {{typePrefix}}Tokens.strokeRing),
 );
 
 /// Declared last so it wins over every other state fragment.
