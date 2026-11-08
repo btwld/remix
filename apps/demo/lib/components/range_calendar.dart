@@ -42,7 +42,9 @@ class _RangeCalendarExampleState extends State<RangeCalendarExample> {
             .day(
               CalendarDayStyler()
                   .label(TextStyler().fontSize(14))
-                  .border(.color(FortalTokens.grayA1()).width(2))
+                  .border(.color(const Color.fromARGB(0, 0, 0, 0)).width(2))
+                  .onHovered(CalendarDayStyler().color(FortalTokens.gray4()))
+                  .onPressed(CalendarDayStyler().color(FortalTokens.gray5()))
                   .onToday(
                     CalendarDayStyler().label(
                       TextStyler().fontWeight(FontWeight.w600),
