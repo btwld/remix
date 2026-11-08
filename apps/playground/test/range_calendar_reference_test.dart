@@ -98,22 +98,25 @@ void main() {
     '320px Arabic at 200 percent keeps full-size days reachable and selectable',
     (tester) async {
       final semantics = tester.ensureSemantics();
-      await _pump(tester, size: const Size(320, 640));
-      await _tap(tester, find.text('العربية / RTL'));
-      await _tap(tester, find.text('200% text'));
-      await _tap(tester, find.text('٢٠'));
-      final day = tester.getSize(
-        find.bySemanticsLabel(RegExp('الجمعة، ٢٠ نوفمبر ٢٠٢٦')),
-      );
-      expect(day.width, greaterThanOrEqualTo(44));
-      expect(day.height, greaterThanOrEqualTo(44));
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-      await tester.pumpAndSettle();
-      expect(_value(tester), _range(20, 21));
-      expect(tester.takeException(), isNull);
-      semantics.dispose();
+      try {
+        await _pump(tester, size: const Size(320, 640));
+        await _tap(tester, find.text('العربية / RTL'));
+        await _tap(tester, find.text('200% text'));
+        await _tap(tester, find.text('٢٠'));
+        final day = tester.getSize(
+          find.bySemanticsLabel(RegExp('الجمعة، ٢٠ نوفمبر ٢٠٢٦')),
+        );
+        expect(day.width, greaterThanOrEqualTo(44));
+        expect(day.height, greaterThanOrEqualTo(44));
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(_value(tester), _range(20, 21));
+        expect(tester.takeException(), isNull);
+      } finally {
+        semantics.dispose();
+      }
     },
   );
 }

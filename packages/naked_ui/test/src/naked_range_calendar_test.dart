@@ -224,9 +224,9 @@ void main() {
     testWidgets(
       '$platform semantic anchor retains keyboard continuity without taking external focus',
       (tester) async {
-        debugDefaultTargetPlatformOverride = platform;
         final semantics = tester.ensureSemantics();
         try {
+          debugDefaultTargetPlatformOverride = platform;
           final state = await _pump(tester);
           await _focus(tester, state);
           final anchor = _semantics(tester, 20);
@@ -882,9 +882,9 @@ void main() {
   testWidgets('semantic iOS policy remains unchanged for range days', (
     tester,
   ) async {
-    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     final semantics = tester.ensureSemantics();
     try {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final state = await _pump(tester);
       final day = _semantics(tester, 20);
       expect(day.getSemanticsData().hasAction(SemanticsAction.focus), isFalse);
