@@ -6,6 +6,19 @@ import 'package:naked_ui/naked_ui.dart';
 
 typedef City = ({int id, String label});
 
+class _EqualEntity {
+  const _EqualEntity(this.id, this.label);
+
+  final int id;
+  final String label;
+
+  @override
+  bool operator ==(Object other) => other is _EqualEntity && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
+}
+
 class _Host<T extends Object> extends StatefulWidget {
   const _Host({
     super.key,
@@ -334,6 +347,38 @@ void main() {
     await tester.pumpAndSettle();
     expect(host.selected, ['Banana']);
   });
+  testWidgets('identity-set suggestions retain the first equal entity', (
+    tester,
+  ) async {
+    const first = _EqualEntity(1, 'First');
+    const second = _EqualEntity(1, 'Second');
+    final options = Set<_EqualEntity>.identity()
+      ..add(first)
+      ..add(second);
+    expect(options, hasLength(2));
+    expect(first, equals(second));
+    expect(identical(first, second), isFalse);
+
+    final host = await _pump(
+      tester,
+      _Host<_EqualEntity>(
+        display: (entity) => entity.label,
+        optionsBuilder: (_) => options,
+      ),
+    );
+    await _type(tester, 'f');
+    expect(find.text('First'), findsOneWidget);
+    expect(find.text('Second'), findsNothing);
+    expect(host.rows, hasLength(1));
+    expect(host.rows.single.value, same(first));
+    expect(host.rows.single.isHighlighted, isTrue);
+    host.submit();
+    await tester.pumpAndSettle();
+    expect(host.selected, hasLength(1));
+    expect(host.selected.single, same(first));
+    expect(host.controller.text, 'First');
+  });
+
   testWidgets(
     'unequal entities sharing display text stay independently selectable',
     (tester) async {

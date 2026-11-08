@@ -606,9 +606,9 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
       // so Raw and public rows use the same first-occurrence ordering. Map
       // lazily: Raw's retained iterable must use the live selection identity,
       // without changing the equality of an already delivered option.
-      return options.toSet().map(
-        (value) => _RawComboboxOption(value, _selectionEpoch),
-      );
+      return Set<T>.of(
+        options,
+      ).map((value) => _RawComboboxOption(value, _selectionEpoch));
     });
   }
 
