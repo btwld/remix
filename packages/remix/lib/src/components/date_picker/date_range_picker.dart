@@ -49,7 +49,11 @@ class RemixDateRangePicker extends StatelessWidget {
   /// Parent-owned complete inclusive range, or null for an empty selection.
   /// Civil-date comparison and bounds follow [RemixRangeCalendar].
   final NakedDateRange? value;
+
+  /// Inclusive earliest selectable civil date; time and UTC flag are ignored.
   final DateTime firstDate;
+
+  /// Inclusive latest selectable civil date, on or after [firstDate].
   final DateTime lastDate;
 
   /// Complete-range request. Null disables the trigger and calendar.
@@ -62,8 +66,14 @@ class RemixDateRangePicker extends StatelessWidget {
   /// or alone when the picker is dismissed with or without a draft.
   /// Removing an open picker does not call this callback.
   final VoidCallback? onClose;
+
+  /// Today marker and fallback focus date; defaults to the current date.
   final DateTime? currentDate;
+
+  /// Marks in-range dates unselectable while keeping them keyboard-focusable.
   final bool Function(DateTime)? isDateUnavailable;
+
+  /// First weekday column, from Monday=1 through Sunday=7.
   final int firstDayOfWeek;
 
   /// Whether the trigger can open the calendar and dates can be selected.
@@ -86,7 +96,11 @@ class RemixDateRangePicker extends StatelessWidget {
   /// range grammar. It only changes what is painted, never the accessible
   /// value.
   final String Function(NakedDateRange)? formatRange;
+
+  /// Caller-owned date labels and formatters; English by default.
   final RemixCalendarLabels calendarLabels;
+
+  /// Caller-owned range roles, summaries and accessible values; English by default.
   final RemixRangeCalendarLabels rangeLabels;
 
   /// Optional caller-owned trigger focus node. Replacing it closes the picker.
@@ -99,11 +113,19 @@ class RemixDateRangePicker extends StatelessWidget {
   /// The panel also avoids the view's safe area and keyboard exclusions.
   final OverlayPositionConfig positioning;
 
-  /// Each child resolves style independently against its own interaction state.
+  /// Trigger styling, resolved against the trigger's own interaction state.
   final ButtonStyler buttonStyle;
+
+  /// Calendar and day styling, resolved against each part's own state.
   final CalendarStyler calendarStyle;
+
+  /// Styling for the popover panel containing the calendar.
   final PopoverStyler popoverStyle;
+
+  /// Month-navigation button styling, resolved in each button's state.
   final IconButtonStyler navigationStyle;
+
+  /// Month/year selector styling, resolved in each selector’s state.
   final SelectStyler selectorStyle;
 
   /// Paints the calendar's range summary; see
@@ -114,10 +136,11 @@ class RemixDateRangePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final value = this.value;
+    final singleDay = value != null && isSameCivilDate(value.start, value.end);
     final String? spoken;
     if (value == null) {
       spoken = null;
-    } else if (isSameCivilDate(value.start, value.end)) {
+    } else if (singleDay) {
       spoken = calendarLabels.fullDate(value.start);
     } else {
       spoken = rangeLabels.rangeValue(
@@ -128,7 +151,7 @@ class RemixDateRangePicker extends StatelessWidget {
     final label = value == null
         ? placeholder
         : formatRange?.call(value) ??
-              (isSameCivilDate(value.start, value.end)
+              (singleDay
                   ? calendarLabels.fullDate(value.start)
                   : '${calendarLabels.fullDate(value.start)} – '
                         '${calendarLabels.fullDate(value.end)}');
