@@ -593,6 +593,80 @@ void main() {
     );
   }
 
+  for (final accept in [false, true]) {
+    testWidgets(
+      'forward cross-month completion keeps the view (accept: $accept)',
+      (tester) async {
+        final state = await _pump(tester);
+        state.accept = accept;
+        await _focus(tester, state);
+        await _tap(tester, 28);
+        await _key(tester, LogicalKeyboardKey.pageDown);
+        expect(state.snapshot.focusedDate, DateTime(2024, 3, 28));
+        await _key(tester, LogicalKeyboardKey.enter);
+        expect(state.requests, [
+          NakedDateRange(
+            start: DateTime(2024, 2, 28),
+            end: DateTime(2024, 3, 28),
+          ),
+        ]);
+        // Accepting the value this calendar just requested is not an external
+        // change: browsing and keyboard focus stay on the completed end.
+        expect(state.snapshot.displayedMonth, DateTime(2024, 3));
+        expect(state.snapshot.focusedDate, DateTime(2024, 3, 28));
+        expect(state.days[DateTime(2024, 3, 28)]!.isFocused, isTrue);
+      },
+    );
+  }
+
+  testWidgets(
+    'an external range change after completion still recentres on its start',
+    (tester) async {
+      final state = await _pump(tester);
+      state.accept = true;
+      await _focus(tester, state);
+      await _tap(tester, 28);
+      await _key(tester, LogicalKeyboardKey.pageDown);
+      await _key(tester, LogicalKeyboardKey.enter);
+      expect(state.snapshot.displayedMonth, DateTime(2024, 3));
+      state.change(
+        () => state.value = NakedDateRange(
+          start: DateTime(2024, 6, 3),
+          end: DateTime(2024, 6, 5),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(state.snapshot.displayedMonth, DateTime(2024, 6));
+      expect(state.snapshot.focusedDate, DateTime(2024, 6, 3));
+      expect(state.days[DateTime(2024, 6, 3)]!.isFocused, isTrue);
+    },
+  );
+
+  testWidgets(
+    'a parent that substitutes a different range recentres on its start',
+    (tester) async {
+      final state = await _pump(tester);
+      // The parent snaps the requested range to the start of the end month.
+      state.onRequest = (range) => state.change(
+        () => state.value = NakedDateRange(
+          start: DateTime(range.end.year, range.end.month),
+          end: range.end,
+        ),
+      );
+      await _focus(tester, state);
+      await _tap(tester, 20);
+      await _key(tester, LogicalKeyboardKey.pageDown);
+      await _key(tester, LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+      expect(
+        state.value,
+        NakedDateRange(start: DateTime(2024, 3), end: DateTime(2024, 3, 20)),
+      );
+      expect(state.snapshot.displayedMonth, DateTime(2024, 3));
+      expect(state.snapshot.focusedDate, DateTime(2024, 3));
+    },
+  );
+
   testWidgets('semantic iOS policy remains unchanged for range days', (
     tester,
   ) async {

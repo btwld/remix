@@ -384,6 +384,9 @@ class _Calendar extends StatefulWidget {
 
 class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
   DateTime? _anchor;
+  // The last range this calendar requested. A parent that accepts it has not
+  // moved the selection elsewhere, so browsing stays on the completed end.
+  NakedDateRange? _requested;
   DateTime? _blockedBefore;
   DateTime? _blockedAfter;
   late DateTime _focused;
@@ -516,8 +519,12 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
         (_anchor != null && !_available(_anchor!))) {
       _anchor = null;
     }
-    // Clearing selection does not reset browsing. A new supplied value does.
-    if (widget.entryValue != null && valueChanged) {
+    final accepted =
+        widget.isRange && valueChanged && widget.rangeValue == _requested;
+    if (valueChanged) _requested = null;
+    // Clearing selection does not reset browsing, and neither does accepting
+    // this calendar's own request. Any other new supplied value does.
+    if (widget.entryValue != null && valueChanged && !accepted) {
       _focused = _clamp(widget.entryValue!);
       _displayed = _month(_focused);
     } else {
@@ -626,6 +633,7 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
     // an authorization to commit after availability has changed.
     if (!_validRange(range)) return;
     setState(() => _anchor = null);
+    _requested = range;
     widget.onRangeChanged!(range);
   }
 
