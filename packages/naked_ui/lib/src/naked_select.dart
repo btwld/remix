@@ -532,23 +532,26 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
           constrainToAvailableHeight: widget.constrainToAvailableHeight,
           closeOnTapOutside: widget.closeOnClickOutside,
           initialFocusNode: _selectedOptionFocusNode,
-          child: Semantics(
-            role: SemanticsRole.menu,
-            container: true,
-            explicitChildNodes: true,
-            // Preserve a child boundary while transitions hide option semantics.
+          child: KeyedSubtree(
+            key: overlayContentKey,
             child: Semantics(
+              role: SemanticsRole.menu,
               container: true,
               explicitChildNodes: true,
-              child: _NakedSelectScope<T>(
-                close: () => _requestOpen(false),
-                closeOnSelect: widget.closeOnSelect,
-                enabled: _isEnabled,
-                selectedOptionFocusNode: _selectedOptionFocusNode,
-                onChanged: _handleSelection,
-                value: _effectiveValue,
-                child: Builder(
-                  builder: (context) => widget.overlayBuilder(context, info),
+              // Preserve a child boundary while transitions hide option semantics.
+              child: Semantics(
+                container: true,
+                explicitChildNodes: true,
+                child: _NakedSelectScope<T>(
+                  close: () => _requestOpen(false),
+                  closeOnSelect: widget.closeOnSelect,
+                  enabled: _isEnabled,
+                  selectedOptionFocusNode: _selectedOptionFocusNode,
+                  onChanged: _handleSelection,
+                  value: _effectiveValue,
+                  child: Builder(
+                    builder: (context) => widget.overlayBuilder(context, info),
+                  ),
                 ),
               ),
             ),

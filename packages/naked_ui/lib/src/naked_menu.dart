@@ -1072,7 +1072,7 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
           positioning: widget.positioning,
           constrainToAvailableHeight: widget.constrainToAvailableHeight,
           closeOnTapOutside: widget.closeOnClickOutside,
-          child: panel,
+          child: KeyedSubtree(key: overlayContentKey, child: panel),
         );
       },
       child: menuChild,

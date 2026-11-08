@@ -67,6 +67,134 @@ void main() {
     },
   );
 
+  group('focus on close', () {
+    Future<({FocusNode field, VoidCallback finishClose})> openThenClickField(
+      WidgetTester tester, {
+      required ValueChanged<VoidCallback> onCloseRequested,
+    }) async {
+      final field = FocusNode(debugLabel: 'field');
+      addTearDown(field.dispose);
+      VoidCallback? pendingHide;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Column(
+              children: [
+                SizedBox(
+                  width: 200,
+                  child: TextField(key: const Key('field'), focusNode: field),
+                ),
+                const SizedBox(height: 200),
+                NakedSelect<String>(
+                  onChanged: (_) {},
+                  consumeOutsideTaps: false,
+                  // Mirrors an exit animation that hides the panel later.
+                  onCloseRequested: (hide) {
+                    pendingHide = hide;
+                    onCloseRequested(hide);
+                  },
+                  child: const Text('Trigger'),
+                  overlayBuilder: (context, info) =>
+                      const NakedSelectOption<String>(
+                        value: 'one',
+                        child: Text('Option one'),
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Trigger'));
+      await tester.pumpAndSettle();
+      expect(find.text('Option one'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('field')));
+      await tester.pump();
+      return (field: field, finishClose: () => pendingHide!());
+    }
+
+    testWidgets('an outside click that moved focus keeps it there', (
+      tester,
+    ) async {
+      final session = await openThenClickField(
+        tester,
+        onCloseRequested: (_) {},
+      );
+      expect(session.field.hasFocus, isTrue);
+      session.finishClose();
+      await tester.pumpAndSettle();
+      expect(find.text('Option one'), findsNothing);
+      expect(session.field.hasFocus, isTrue);
+    });
+
+    testWidgets('Escape inside the panel returns focus to the trigger', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Center(
+            child: NakedSelect<String>(
+              onChanged: (_) {},
+              child: const Text('Trigger'),
+              overlayBuilder: (context, info) =>
+                  const NakedSelectOption<String>(
+                    value: 'one',
+                    child: Text('Option one'),
+                  ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Trigger'));
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Option one'), findsNothing);
+      var triggerFocused = false;
+      FocusManager.instance.primaryFocus?.context?.visitAncestorElements((
+        element,
+      ) {
+        if (element.widget is NakedSelect<String>) triggerFocused = true;
+        return !triggerFocused;
+      });
+      expect(triggerFocused, isTrue);
+    });
+
+    testWidgets('selecting an option returns focus to the trigger', (
+      tester,
+    ) async {
+      String? selected;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Center(
+            child: NakedSelect<String>(
+              onChanged: (value) => selected = value,
+              child: const Text('Trigger'),
+              overlayBuilder: (context, info) =>
+                  const NakedSelectOption<String>(
+                    value: 'one',
+                    child: Text('Option one'),
+                  ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Trigger'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Option one'));
+      await tester.pumpAndSettle();
+      expect(selected, 'one');
+      var triggerFocused = false;
+      FocusManager.instance.primaryFocus?.context?.visitAncestorElements((
+        element,
+      ) {
+        if (element.widget is NakedSelect<String>) triggerFocused = true;
+        return !triggerFocused;
+      });
+      expect(triggerFocused, isTrue);
+    });
+  });
+
   // Helper function to build select widget
   Widget buildSelect<T>({
     T? selectedValue,

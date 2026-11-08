@@ -190,10 +190,19 @@ mixin OverlayStateMixin<T extends StatefulWidget> on State<T> {
     onOpen?.call();
   }
 
+  /// Keys the panel content inside its [AnchoredOverlay] focus scope.
+  ///
+  /// Place it on the overlay content so [handleClose] can tell whether focus
+  /// is still inside the closing panel.
+  @protected
+  final GlobalKey overlayContentKey = GlobalKey(debugLabel: 'overlay content');
+
   /// Handles overlay closure, invoking [onCanceled] if no selection occurred.
   ///
-  /// Always invokes [onClose] and requests focus on [triggerFocusNode] when
-  /// provided.
+  /// Always invokes [onClose]. Focus returns to [triggerFocusNode] only while
+  /// it is still inside the closing panel or nowhere, as after Escape or a
+  /// selection. A close that follows the user moving focus elsewhere, such as
+  /// clicking a text field outside the panel, leaves that focus in place.
   @protected
   void handleClose({
     VoidCallback? onClose,
@@ -203,8 +212,16 @@ mixin OverlayStateMixin<T extends StatefulWidget> on State<T> {
     if (!_selectionMadeDuringSession) {
       onCanceled?.call();
     }
+    // Read before callbacks can move focus or rebuild the panel.
+    final restore = triggerFocusNode != null && _focusBelongsToPanel();
     onClose?.call();
-    triggerFocusNode?.requestFocus();
+    if (restore) triggerFocusNode.requestFocus();
+  }
+
+  bool _focusBelongsToPanel() {
+    if (FocusManager.instance.primaryFocus == null) return true;
+    final panel = overlayContentKey.currentContext;
+    return panel != null && FocusScope.of(panel).hasFocus;
   }
 
   /// Marks that a selection was made during the current session.
