@@ -183,6 +183,86 @@ SemanticsNode _semantics(WidgetTester tester, int day) =>
     tester.getSemantics(find.bySemanticsLabel('2024-2-$day'));
 
 void main() {
+  for (final platform in [TargetPlatform.iOS, TargetPlatform.macOS]) {
+    testWidgets(
+      '$platform semantic anchor retains keyboard continuity without taking external focus',
+      (tester) async {
+        debugDefaultTargetPlatformOverride = platform;
+        final semantics = tester.ensureSemantics();
+        try {
+          final state = await _pump(tester);
+          await _focus(tester, state);
+          final anchor = _semantics(tester, 20);
+          if (platform == TargetPlatform.iOS) {
+            expect(
+              anchor.getSemanticsData().hasAction(SemanticsAction.focus),
+              isFalse,
+            );
+          }
+          anchor.owner!.performAction(anchor.id, SemanticsAction.tap);
+          await tester.pumpAndSettle();
+          expect(state.days[DateTime(2024, 2, 20)]!.isFocused, isTrue);
+          await _key(tester, LogicalKeyboardKey.arrowRight);
+          expect(state.snapshot.preview, _range(20, 21));
+          expect(state.requests, isEmpty);
+          await _key(tester, LogicalKeyboardKey.escape);
+          state.after.requestFocus();
+          await tester.pumpAndSettle();
+          final externalAnchor = _semantics(tester, 22);
+          externalAnchor.owner!.performAction(
+            externalAnchor.id,
+            SemanticsAction.tap,
+          );
+          await tester.pumpAndSettle();
+          expect(state.after.hasPrimaryFocus, isTrue);
+          expect(state.snapshot.anchor, DateTime(2024, 2, 22));
+          expect(state.requests, isEmpty);
+        } finally {
+          semantics.dispose();
+          debugDefaultTargetPlatformOverride = null;
+        }
+      },
+    );
+  }
+
+  testWidgets(
+    'backward availability scan progresses across a skipped local date',
+    (tester) async {
+      var calls = 0;
+      late NakedRangeCalendarState snapshot;
+      await tester.pumpWidget(
+        _host(
+          NakedRangeCalendar(
+            value: null,
+            currentDate: DateTime.utc(2011, 12, 31),
+            firstDate: DateTime.utc(2011, 12, 1),
+            lastDate: DateTime.utc(2011, 12, 31),
+            onChanged: (_) {},
+            isDateUnavailable: (date) {
+              if (++calls > 100)
+                throw StateError('civil scan did not progress');
+              return false;
+            },
+            builder: (_, state, _) {
+              snapshot = state;
+              return NakedCalendarDay(
+                date: DateTime.utc(2011, 12, 31),
+                semanticLabel: 'December 31',
+                builder: (_, _, _) => const SizedBox.square(dimension: 44),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.tap(find.byType(NakedCalendarDay));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(snapshot.anchor?.day, 31);
+      expect(snapshot.isPreviewValid, isTrue);
+      expect(calls, lessThan(100));
+    },
+  );
+
   testWidgets(
     'anchor, navigation, reverse completion and rejection stay controlled',
     (tester) async {

@@ -2,6 +2,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 void main() {
+  test('skipped local endpoints retain civil fields, equality and order', () {
+    final start = DateTime.utc(2011, 12, 30, 18);
+    final range = NakedDateRange(start: start, end: DateTime.utc(2011, 12, 31));
+    expect(range.start.day, 30);
+    expect(range.end.day, 31);
+    expect(range.contains(DateTime.utc(2011, 12, 30)), isTrue);
+    final equal = NakedDateRange(
+      start: DateTime.utc(2011, 12, 30),
+      end: DateTime(2011, 12, 31),
+    );
+    expect(range, equal);
+    expect(range.hashCode, equal.hashCode);
+    expect(
+      () => NakedDateRange(start: DateTime.utc(2011, 12, 31), end: start),
+      throwsArgumentError,
+    );
+  });
+
   test(
     'normalizes civil fields, ignores time/UTC and includes both endpoints',
     () {

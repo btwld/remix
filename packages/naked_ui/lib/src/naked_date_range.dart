@@ -1,23 +1,20 @@
 import 'package:flutter/foundation.dart';
 
-int _compareCivil(DateTime a, DateTime b) {
-  final year = a.year.compareTo(b.year);
-  if (year != 0) return year;
-  final month = a.month.compareTo(b.month);
-  return month != 0 ? month : a.day.compareTo(b.day);
-}
+import 'utilities/civil_date.dart';
 
 /// An immutable complete inclusive range of civil Gregorian dates.
 ///
-/// Time and UTC flags are ignored. Endpoints are normalized to local midnight;
-/// reversed construction throws in release mode as well as debug mode.
+/// Time and UTC flags are ignored. Endpoints use local civil dates where
+/// representable, with a UTC date-only fallback for skipped local days. These
+/// fields are not scheduling instants; do not convert their timezones.
+/// Reversed construction throws in release mode as well as debug mode.
 @immutable
 class NakedDateRange {
   /// Creates an ordered inclusive range. A same-day range is valid.
   NakedDateRange({required DateTime start, required DateTime end})
-    : start = DateTime(start.year, start.month, start.day),
-      end = DateTime(end.year, end.month, end.day) {
-    if (_compareCivil(this.start, this.end) > 0) {
+    : start = civilDate(start.year, start.month, start.day),
+      end = civilDate(end.year, end.month, end.day) {
+    if (compareCivilDates(this.start, this.end) > 0) {
       throw ArgumentError('start must be on or before end.');
     }
   }
@@ -30,13 +27,13 @@ class NakedDateRange {
 
   /// Whether [date]'s civil fields fall within the inclusive endpoints.
   bool contains(DateTime date) =>
-      _compareCivil(date, start) >= 0 && _compareCivil(date, end) <= 0;
+      compareCivilDates(date, start) >= 0 && compareCivilDates(date, end) <= 0;
 
   @override
   bool operator ==(Object other) =>
       other is NakedDateRange &&
-      _compareCivil(start, other.start) == 0 &&
-      _compareCivil(end, other.end) == 0;
+      compareCivilDates(start, other.start) == 0 &&
+      compareCivilDates(end, other.end) == 0;
 
   @override
   int get hashCode => Object.hash(

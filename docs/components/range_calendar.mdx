@@ -59,9 +59,11 @@ If the parent rejects a request by leaving `value` unchanged, that supplied rang
 remains selected; there is no optimistic local committed value.
 
 `NakedDateRange(start: ..., end: ...)` normalizes the civil year/month/day fields
-to local dates, ignores input times and UTC flags, and rejects reversed
-construction in release mode. Equality and hashing compare civil endpoints.
-Both endpoints are included. Date conversion to UTC is not part of this model.
+to local dates where representable, with a UTC date-only fallback for skipped
+local days. It ignores input times and UTC flags and rejects reversed construction
+in release mode. Treat the preserved fields as civil dates without timezone conversion. Equality and hashing compare civil endpoints.
+Both endpoints are included. The UTC fallback preserves fields rather than
+converting a scheduling instant.
 
 `firstDate` and `lastDate` are inclusive. `enabled: false` or null `onChanged`
 disables interaction and cancels an unfinished draft. Equal replacement range

@@ -179,7 +179,8 @@ class RemixRangeCalendar extends StatelessWidget {
   ) {
     final interval = state.preview ?? state.value;
     final inInterval = interval?.contains(date) ?? false;
-    final single = inInterval && interval!.start == interval.end;
+    final single =
+        inInterval && _sameCalendarDate(interval!.start, interval.end);
     final start = inInterval && _sameCalendarDate(date, interval!.start);
     final end = inInterval && _sameCalendarDate(date, interval!.end);
     final preview = state.preview != null && inInterval;
@@ -344,7 +345,8 @@ class _RangeDayFrameStyle extends CalendarStyler {
     final date = NakedCalendarDayState.of(context).date;
     final interval = state.preview ?? state.value;
     final inInterval = interval?.contains(date) ?? false;
-    final single = inInterval && interval!.start == interval.end;
+    final single =
+        inInterval && _sameCalendarDate(interval!.start, interval.end);
     final start = inInterval && _sameCalendarDate(date, interval!.start);
     final end = inInterval && _sameCalendarDate(date, interval!.end);
     final preview = state.preview != null && inInterval;

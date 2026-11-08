@@ -433,10 +433,12 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
       _interactive &&
       _available(date) &&
       (_anchor == null ||
-          (_blockedBefore == null || _compare(date, _blockedBefore!) > 0) &&
-              (_blockedAfter == null || _compare(date, _blockedAfter!) < 0));
+          (_blockedBefore == null ||
+                  compareCivilDates(date, _blockedBefore!) > 0) &&
+              (_blockedAfter == null ||
+                  compareCivilDates(date, _blockedAfter!) < 0));
 
-  NakedDateRange _range(DateTime a, DateTime b) => _compare(a, b) <= 0
+  NakedDateRange _range(DateTime a, DateTime b) => compareCivilDates(a, b) <= 0
       ? NakedDateRange(start: a, end: b)
       : NakedDateRange(start: b, end: a);
 
@@ -447,7 +449,7 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
     while (true) {
       if (widget.isDateUnavailable!(date)) return false;
       if (_same(date, range.end)) return true;
-      date = DateTime(date.year, date.month, date.day + 1);
+      date = civilDate(date.year, date.month, date.day + 1);
     }
   }
 
@@ -464,23 +466,23 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
     if (widget.isDateUnavailable == null) return;
     final first = _clamp(_displayed);
     final last = _clamp(
-      DateTime(
+      civilDate(
         _displayed.year,
         _displayed.month,
         _daysInMonth(_displayed.year, _displayed.month),
       ),
     );
     var date = anchor;
-    while (_compare(date, first) > 0) {
-      date = DateTime(date.year, date.month, date.day - 1);
+    while (compareCivilDates(date, first) > 0) {
+      date = civilDate(date.year, date.month, date.day - 1);
       if (widget.isDateUnavailable!(date)) {
         _blockedBefore = date;
         break;
       }
     }
     date = anchor;
-    while (_compare(date, last) < 0) {
-      date = DateTime(date.year, date.month, date.day + 1);
+    while (compareCivilDates(date, last) < 0) {
+      date = civilDate(date.year, date.month, date.day + 1);
       if (widget.isDateUnavailable!(date)) {
         _blockedAfter = date;
         break;
@@ -605,6 +607,13 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
       return;
     }
     if (!_available(date)) return;
+    // Semantic activation need not move input focus (notably on iOS). Keep an
+    // existing keyboard session aligned with the activated date, but do not
+    // acquire input focus from an external control or accessibility focus alone.
+    if (effectiveFocusNode.hasFocus) {
+      final node = _days[_date(date)];
+      if (node != null) requestFocusInView(node);
+    }
     if (anchor == null) {
       setState(() {
         _anchor = _date(date);
