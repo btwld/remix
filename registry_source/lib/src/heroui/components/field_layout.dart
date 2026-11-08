@@ -23,7 +23,7 @@ class HeroUiFieldLayout extends StatelessWidget {
     required this.items,
     this.axis = Axis.vertical,
     this.label,
-    this.excludeLabelSemantics = false,
+    this.controlProvidesName = false,
     this.helperText,
     this.errorText,
     this.invalid = false,
@@ -34,21 +34,30 @@ class HeroUiFieldLayout extends StatelessWidget {
   final Axis axis;
   final String? label;
 
-  /// Whether an enclosing behavioral group already supplies [label] as its
-  /// accessible name. The painted label remains visible either way.
-  final bool excludeLabelSemantics;
+  /// Whether the control supplies [label] as its accessible name.
+  ///
+  /// When true, this layout adds neither a name nor a semantics container.
+  /// The painted label is always excluded from semantics.
+  final bool controlProvidesName;
   final String? helperText;
   final String? errorText;
   final bool invalid;
   final bool enabled;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    container: true,
-    explicitChildNodes: true,
-    label: excludeLabelSemantics ? null : label,
-    child: _buildContent(context),
-  );
+  Widget build(BuildContext context) {
+    final semanticLabel = controlProvidesName ? null : label;
+    final hasName = semanticLabel?.isNotEmpty ?? false;
+
+    return Semantics(
+      container: hasName,
+      // Preserve separate help/error announcements even when the control's
+      // semantic boundary (such as RadioGroup) is above this layout.
+      explicitChildNodes: true,
+      label: hasName ? semanticLabel : null,
+      child: _buildContent(context),
+    );
+  }
 
   Widget _buildContent(BuildContext context) {
     final labelStyle = _label(invalid: invalid);

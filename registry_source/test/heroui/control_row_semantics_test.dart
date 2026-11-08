@@ -2,6 +2,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/heroui.dart';
+import 'package:remix/remix.dart';
 
 import '../helpers/heroui.dart';
 
@@ -69,6 +70,12 @@ void main() {
               same(group),
               reason: 'the named container must wrap the radio-group role',
             );
+          } else {
+            expect(
+              tester.getSemantics(find.byType(RemixCheckboxGroup<String>)),
+              same(group),
+              reason: 'the checkbox coordinator must own the group name',
+            );
           }
           expect(find.semantics.byLabel('Choose your channels.'), findsOne);
           expect(
@@ -94,6 +101,73 @@ void main() {
         }
       },
     );
+  }
+
+  for (final axis in Axis.values) {
+    for (final (label, controlProvidesName) in [
+      (null, false),
+      ('', false),
+      ('Channels', true),
+      ('Channels', false),
+    ]) {
+      testWidgets('field preserves traversal with label: $label, '
+          'controlProvidesName: $controlProvidesName (${axis.name})', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          var taps = 0;
+          await tester.pumpHeroUi(
+            Semantics(
+              container: true,
+              explicitChildNodes: true,
+              label: 'Page',
+              child: HeroUiFieldLayout(
+                axis: axis,
+                label: label,
+                controlProvidesName: controlProvidesName,
+                helperText: 'Help',
+                errorText: 'Error',
+                invalid: true,
+                items: [
+                  for (final name in ['Email', 'SMS'])
+                    Semantics(
+                      container: true,
+                      label: name,
+                      onTap: () => taps++,
+                      child: const SizedBox(width: 48, height: 48),
+                    ),
+                ],
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final hasLayoutName = !controlProvidesName && label == 'Channels';
+          final parent = find.semantics
+              .byLabel(hasLayoutName ? 'Channels' : 'Page')
+              .evaluate()
+              .single;
+          expect(
+            parent
+                .debugListChildrenInOrder(
+                  DebugSemanticsDumpOrder.traversalOrder,
+                )
+                .map((node) => node.getSemanticsData().label),
+            ['Email', 'SMS', 'Help', 'Error'],
+            reason: 'no empty field boundary should interrupt traversal',
+          );
+          if (controlProvidesName) {
+            expect(find.semantics.byLabel('Channels'), findsNothing);
+          }
+          tester.semantics.tap(find.semantics.byLabel('Email'));
+          tester.semantics.tap(find.semantics.byLabel('SMS'));
+          expect(taps, 2);
+        } finally {
+          semantics.dispose();
+        }
+      });
+    }
   }
 
   for (final radio in [true, false]) {

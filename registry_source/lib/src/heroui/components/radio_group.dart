@@ -67,7 +67,7 @@ class HeroUiRadioGroup<T> extends StatelessWidget {
         label: label,
         // The name must wrap Flutter's radioGroup role, which is above this
         // layout. RemixRadioGroup supplies that named ancestor.
-        excludeLabelSemantics: true,
+        controlProvidesName: true,
         helperText: helperText,
         errorText: errorText,
         invalid: invalid,
