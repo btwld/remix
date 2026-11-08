@@ -812,6 +812,21 @@ void main() {
     );
   }
 
+  testWidgets('asynchronous acceptance keeps the completed end focused', (
+    tester,
+  ) async {
+    final state = await _pump(tester);
+    await _focus(tester, state);
+    await _tap(tester, 20);
+    await _key(tester, LogicalKeyboardKey.pageDown);
+    await _tap(tester, 3);
+    await tester.pump(const Duration(milliseconds: 100));
+    state.change(() => state.value = state.requests.single);
+    await tester.pumpAndSettle();
+    expect(state.snapshot.displayedMonth, DateTime(2024, 3));
+    expect(state.snapshot.focusedDate, DateTime(2024, 3, 3));
+  });
+
   testWidgets(
     'a rejected request later supplied externally recentres after browsing',
     (tester) async {
