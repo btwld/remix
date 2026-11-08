@@ -10,8 +10,7 @@ mixin _$ComboboxSpec implements Spec<ComboboxSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<TextFieldSpec> get field;
   StyleSpec<BoxSpec> get panel;
-  StyleSpec<BoxSpec> get option;
-  StyleSpec<TextSpec> get optionLabel;
+  StyleSpec<ComboboxOptionSpec> get option;
 
   @override
   Type get type => ComboboxSpec;
@@ -21,15 +20,13 @@ mixin _$ComboboxSpec implements Spec<ComboboxSpec>, Diagnosticable {
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextFieldSpec>? field,
     StyleSpec<BoxSpec>? panel,
-    StyleSpec<BoxSpec>? option,
-    StyleSpec<TextSpec>? optionLabel,
+    StyleSpec<ComboboxOptionSpec>? option,
   }) {
     return ComboboxSpec(
       container: container ?? this.container,
       field: field ?? this.field,
       panel: panel ?? this.panel,
       option: option ?? this.option,
-      optionLabel: optionLabel ?? this.optionLabel,
     );
   }
 
@@ -40,12 +37,11 @@ mixin _$ComboboxSpec implements Spec<ComboboxSpec>, Diagnosticable {
       field: field.lerp(other?.field, t),
       panel: panel.lerp(other?.panel, t),
       option: option.lerp(other?.option, t),
-      optionLabel: optionLabel.lerp(other?.optionLabel, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, field, panel, option, optionLabel];
+  List<Object?> get props => [container, field, panel, option];
 
   @override
   bool operator ==(Object other) {
@@ -90,8 +86,7 @@ mixin _$ComboboxSpec implements Spec<ComboboxSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('field', field))
       ..add(DiagnosticsProperty('panel', panel))
-      ..add(DiagnosticsProperty('option', option))
-      ..add(DiagnosticsProperty('optionLabel', optionLabel));
+      ..add(DiagnosticsProperty('option', option));
   }
 }
 
@@ -99,6 +94,85 @@ mixin _$ComboboxSpec implements Spec<ComboboxSpec>, Diagnosticable {
   'Rename to `_\$ComboboxSpec` and migrate the class declaration to `class ComboboxSpec with _\$ComboboxSpec`. The `_\$ComboboxSpecMethods` alias will be removed in mix_generator 3.0.',
 )
 typedef _$ComboboxSpecMethods = _$ComboboxSpec; // ignore: unused_element
+
+mixin _$ComboboxOptionSpec implements Spec<ComboboxOptionSpec>, Diagnosticable {
+  StyleSpec<BoxSpec> get container;
+  StyleSpec<TextSpec> get label;
+
+  @override
+  Type get type => ComboboxOptionSpec;
+
+  @override
+  ComboboxOptionSpec copyWith({
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<TextSpec>? label,
+  }) {
+    return ComboboxOptionSpec(
+      container: container ?? this.container,
+      label: label ?? this.label,
+    );
+  }
+
+  @override
+  ComboboxOptionSpec lerp(ComboboxOptionSpec? other, double t) {
+    return ComboboxOptionSpec(
+      container: container.lerp(other?.container, t),
+      label: label.lerp(other?.label, t),
+    );
+  }
+
+  @override
+  List<Object?> get props => [container, label];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is ComboboxOptionSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('label', label));
+  }
+}
+
+@Deprecated(
+  'Rename to `_\$ComboboxOptionSpec` and migrate the class declaration to `class ComboboxOptionSpec with _\$ComboboxOptionSpec`. The `_\$ComboboxOptionSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$ComboboxOptionSpecMethods = _$ComboboxOptionSpec; // ignore: unused_element
 
 // **************************************************************************
 // SpecStylerGenerator
@@ -110,30 +184,26 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextFieldSpec>>? $field;
   final Prop<StyleSpec<BoxSpec>>? $panel;
-  final Prop<StyleSpec<BoxSpec>>? $option;
-  final Prop<StyleSpec<TextSpec>>? $optionLabel;
+  final Prop<StyleSpec<ComboboxOptionSpec>>? $option;
 
   const ComboboxStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextFieldSpec>>? field,
     Prop<StyleSpec<BoxSpec>>? panel,
-    Prop<StyleSpec<BoxSpec>>? option,
-    Prop<StyleSpec<TextSpec>>? optionLabel,
+    Prop<StyleSpec<ComboboxOptionSpec>>? option,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $field = field,
        $panel = panel,
-       $option = option,
-       $optionLabel = optionLabel;
+       $option = option;
 
   ComboboxStyler({
     BoxStyler? container,
     TextFieldStyler? field,
     BoxStyler? panel,
-    BoxStyler? option,
-    TextStyler? optionLabel,
+    ComboboxOptionStyler? option,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<ComboboxSpec>>? variants,
@@ -142,7 +212,6 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
          field: Prop.maybeMix(field),
          panel: Prop.maybeMix(panel),
          option: Prop.maybeMix(option),
-         optionLabel: Prop.maybeMix(optionLabel),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -154,10 +223,8 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
       ComboboxStyler().field(value);
   factory ComboboxStyler.panel(BoxStyler value) =>
       ComboboxStyler().panel(value);
-  factory ComboboxStyler.option(BoxStyler value) =>
+  factory ComboboxStyler.option(ComboboxOptionStyler value) =>
       ComboboxStyler().option(value);
-  factory ComboboxStyler.optionLabel(TextStyler value) =>
-      ComboboxStyler().optionLabel(value);
   factory ComboboxStyler.alignment(AlignmentGeometry value) =>
       ComboboxStyler().alignment(value);
   factory ComboboxStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -655,7 +722,6 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
     'field',
     'panel',
     'option',
-    'optionLabel',
     'animation',
     'modifier',
     'variants',
@@ -677,13 +743,8 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
   }
 
   /// Sets the option.
-  ComboboxStyler option(BoxStyler value) {
+  ComboboxStyler option(ComboboxOptionStyler value) {
     return merge(ComboboxStyler(option: value));
-  }
-
-  /// Sets the optionLabel.
-  ComboboxStyler optionLabel(TextStyler value) {
-    return merge(ComboboxStyler(optionLabel: value));
   }
 
   /// Sets the animation configuration.
@@ -762,7 +823,6 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
       field: MixOps.merge($field, other?.$field),
       panel: MixOps.merge($panel, other?.$panel),
       option: MixOps.merge($option, other?.$option),
-      optionLabel: MixOps.merge($optionLabel, other?.$optionLabel),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -777,7 +837,6 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
       field: MixOps.resolve(context, $field),
       panel: MixOps.resolve(context, $panel),
       option: MixOps.resolve(context, $option),
-      optionLabel: MixOps.resolve(context, $optionLabel),
     );
 
     return StyleSpec(
@@ -794,8 +853,7 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('field', $field))
       ..add(DiagnosticsProperty('panel', $panel))
-      ..add(DiagnosticsProperty('option', $option))
-      ..add(DiagnosticsProperty('optionLabel', $optionLabel));
+      ..add(DiagnosticsProperty('option', $option));
   }
 
   @override
@@ -804,7 +862,632 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
     $field,
     $panel,
     $option,
-    $optionLabel,
+    $animation,
+    $modifier,
+    $variants,
+  ];
+}
+
+class ComboboxOptionStyler
+    extends MixStyler<ComboboxOptionStyler, ComboboxOptionSpec>
+    with
+        RemixBoxStylerMixin<ComboboxOptionStyler>,
+        LabelStyleMixin<ComboboxOptionStyler>
+    implements StylerFieldMetadata {
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<TextSpec>>? $label;
+
+  const ComboboxOptionStyler.create({
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<TextSpec>>? label,
+    super.variants,
+    super.modifier,
+    super.animation,
+  }) : $container = container,
+       $label = label;
+
+  ComboboxOptionStyler({
+    BoxStyler? container,
+    TextStyler? label,
+    AnimationConfig? animation,
+    WidgetModifierConfig? modifier,
+    List<VariantStyle<ComboboxOptionSpec>>? variants,
+  }) : this.create(
+         container: Prop.maybeMix(container),
+         label: Prop.maybeMix(label),
+         variants: variants,
+         modifier: modifier,
+         animation: animation,
+       );
+
+  factory ComboboxOptionStyler.container(BoxStyler value) =>
+      ComboboxOptionStyler().container(value);
+  factory ComboboxOptionStyler.label(TextStyler value) =>
+      ComboboxOptionStyler().label(value);
+  factory ComboboxOptionStyler.alignment(AlignmentGeometry value) =>
+      ComboboxOptionStyler().alignment(value);
+  factory ComboboxOptionStyler.padding(EdgeInsetsGeometryMix value) =>
+      ComboboxOptionStyler().padding(value);
+  factory ComboboxOptionStyler.margin(EdgeInsetsGeometryMix value) =>
+      ComboboxOptionStyler().margin(value);
+  factory ComboboxOptionStyler.constraints(BoxConstraintsMix value) =>
+      ComboboxOptionStyler().constraints(value);
+  factory ComboboxOptionStyler.decoration(DecorationMix value) =>
+      ComboboxOptionStyler().decoration(value);
+  factory ComboboxOptionStyler.foregroundDecoration(DecorationMix value) =>
+      ComboboxOptionStyler().foregroundDecoration(value);
+  factory ComboboxOptionStyler.clipBehavior(Clip value) =>
+      ComboboxOptionStyler().clipBehavior(value);
+  factory ComboboxOptionStyler.color(Color value) =>
+      ComboboxOptionStyler().color(value);
+  factory ComboboxOptionStyler.gradient(GradientMix value) =>
+      ComboboxOptionStyler().gradient(value);
+  factory ComboboxOptionStyler.border(BoxBorderMix value) =>
+      ComboboxOptionStyler().border(value);
+  factory ComboboxOptionStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      ComboboxOptionStyler().borderRadius(value);
+  factory ComboboxOptionStyler.elevation(ElevationShadow value) =>
+      ComboboxOptionStyler().elevation(value);
+  factory ComboboxOptionStyler.shadow(BoxShadowMix value) =>
+      ComboboxOptionStyler().shadow(value);
+  factory ComboboxOptionStyler.shadows(List<BoxShadowMix> value) =>
+      ComboboxOptionStyler().shadows(value);
+  factory ComboboxOptionStyler.width(double value) =>
+      ComboboxOptionStyler().width(value);
+  factory ComboboxOptionStyler.height(double value) =>
+      ComboboxOptionStyler().height(value);
+  factory ComboboxOptionStyler.size(double width, double height) =>
+      ComboboxOptionStyler().size(width, height);
+  factory ComboboxOptionStyler.minWidth(double value) =>
+      ComboboxOptionStyler().minWidth(value);
+  factory ComboboxOptionStyler.maxWidth(double value) =>
+      ComboboxOptionStyler().maxWidth(value);
+  factory ComboboxOptionStyler.minHeight(double value) =>
+      ComboboxOptionStyler().minHeight(value);
+  factory ComboboxOptionStyler.maxHeight(double value) =>
+      ComboboxOptionStyler().maxHeight(value);
+  factory ComboboxOptionStyler.scale(
+    double scale, {
+    Alignment alignment = .center,
+  }) => ComboboxOptionStyler().scale(scale, alignment: alignment);
+  factory ComboboxOptionStyler.rotate(
+    double radians, {
+    Alignment alignment = .center,
+  }) => ComboboxOptionStyler().rotate(radians, alignment: alignment);
+  factory ComboboxOptionStyler.translate(
+    double x,
+    double y, [
+    double z = 0.0,
+  ]) => ComboboxOptionStyler().translate(x, y, z);
+  factory ComboboxOptionStyler.skew(double skewX, double skewY) =>
+      ComboboxOptionStyler().skew(skewX, skewY);
+  factory ComboboxOptionStyler.textStyle(TextStyler value) =>
+      ComboboxOptionStyler().textStyle(value);
+  factory ComboboxOptionStyler.image(DecorationImageMix value) =>
+      ComboboxOptionStyler().image(value);
+  factory ComboboxOptionStyler.shape(ShapeBorderMix value) =>
+      ComboboxOptionStyler().shape(value);
+  factory ComboboxOptionStyler.backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => ComboboxOptionStyler().backgroundImage(
+    image,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory ComboboxOptionStyler.backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => ComboboxOptionStyler().backgroundImageUrl(
+    url,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory ComboboxOptionStyler.backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => ComboboxOptionStyler().backgroundImageAsset(
+    path,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory ComboboxOptionStyler.linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) => ComboboxOptionStyler().linearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+    transform: transform,
+  );
+  factory ComboboxOptionStyler.radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) => ComboboxOptionStyler().radialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+    transform: transform,
+  );
+  factory ComboboxOptionStyler.sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) => ComboboxOptionStyler().sweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+    transform: transform,
+  );
+  factory ComboboxOptionStyler.foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) => ComboboxOptionStyler().foregroundLinearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+    transform: transform,
+  );
+  factory ComboboxOptionStyler.foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) => ComboboxOptionStyler().foregroundRadialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+    transform: transform,
+  );
+  factory ComboboxOptionStyler.foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) => ComboboxOptionStyler().foregroundSweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+    transform: transform,
+  );
+  factory ComboboxOptionStyler.transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) => ComboboxOptionStyler().transform(value, alignment: alignment);
+
+  ComboboxOptionStyler alignment(AlignmentGeometry value) {
+    return container(BoxStyler().alignment(value));
+  }
+
+  ComboboxOptionStyler padding(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().padding(value));
+  }
+
+  ComboboxOptionStyler margin(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().margin(value));
+  }
+
+  ComboboxOptionStyler constraints(BoxConstraintsMix value) {
+    return container(BoxStyler().constraints(value));
+  }
+
+  ComboboxOptionStyler decoration(DecorationMix value) {
+    return container(BoxStyler().decoration(value));
+  }
+
+  ComboboxOptionStyler foregroundDecoration(DecorationMix value) {
+    return container(BoxStyler().foregroundDecoration(value));
+  }
+
+  ComboboxOptionStyler clipBehavior(Clip value) {
+    return container(BoxStyler().clipBehavior(value));
+  }
+
+  ComboboxOptionStyler color(Color value) {
+    return container(BoxStyler().color(value));
+  }
+
+  ComboboxOptionStyler gradient(GradientMix value) {
+    return container(BoxStyler().gradient(value));
+  }
+
+  ComboboxOptionStyler border(BoxBorderMix value) {
+    return container(BoxStyler().border(value));
+  }
+
+  ComboboxOptionStyler borderRadius(BorderRadiusGeometryMix value) {
+    return container(BoxStyler().borderRadius(value));
+  }
+
+  ComboboxOptionStyler elevation(ElevationShadow value) {
+    return container(BoxStyler().elevation(value));
+  }
+
+  ComboboxOptionStyler shadow(BoxShadowMix value) {
+    return container(BoxStyler().shadow(value));
+  }
+
+  ComboboxOptionStyler shadows(List<BoxShadowMix> value) {
+    return container(BoxStyler().shadows(value));
+  }
+
+  ComboboxOptionStyler width(double value) {
+    return container(BoxStyler().width(value));
+  }
+
+  ComboboxOptionStyler height(double value) {
+    return container(BoxStyler().height(value));
+  }
+
+  ComboboxOptionStyler size(double width, double height) {
+    return container(BoxStyler().size(width, height));
+  }
+
+  ComboboxOptionStyler minWidth(double value) {
+    return container(BoxStyler().minWidth(value));
+  }
+
+  ComboboxOptionStyler maxWidth(double value) {
+    return container(BoxStyler().maxWidth(value));
+  }
+
+  ComboboxOptionStyler minHeight(double value) {
+    return container(BoxStyler().minHeight(value));
+  }
+
+  ComboboxOptionStyler maxHeight(double value) {
+    return container(BoxStyler().maxHeight(value));
+  }
+
+  ComboboxOptionStyler scale(double scale, {Alignment alignment = .center}) {
+    return container(BoxStyler().scale(scale, alignment: alignment));
+  }
+
+  ComboboxOptionStyler rotate(double radians, {Alignment alignment = .center}) {
+    return container(BoxStyler().rotate(radians, alignment: alignment));
+  }
+
+  ComboboxOptionStyler translate(double x, double y, [double z = 0.0]) {
+    return container(BoxStyler().translate(x, y, z));
+  }
+
+  ComboboxOptionStyler skew(double skewX, double skewY) {
+    return container(BoxStyler().skew(skewX, skewY));
+  }
+
+  ComboboxOptionStyler textStyle(TextStyler value) {
+    return container(BoxStyler().textStyle(value));
+  }
+
+  ComboboxOptionStyler image(DecorationImageMix value) {
+    return container(BoxStyler().image(value));
+  }
+
+  ComboboxOptionStyler shape(ShapeBorderMix value) {
+    return container(BoxStyler().shape(value));
+  }
+
+  ComboboxOptionStyler backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImage(
+        image,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  ComboboxOptionStyler backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImageUrl(
+        url,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  ComboboxOptionStyler backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImageAsset(
+        path,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  ComboboxOptionStyler linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) {
+    return container(
+      BoxStyler().linearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+        transform: transform,
+      ),
+    );
+  }
+
+  ComboboxOptionStyler radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) {
+    return container(
+      BoxStyler().radialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+        transform: transform,
+      ),
+    );
+  }
+
+  ComboboxOptionStyler sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) {
+    return container(
+      BoxStyler().sweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+        transform: transform,
+      ),
+    );
+  }
+
+  ComboboxOptionStyler foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) {
+    return container(
+      BoxStyler().foregroundLinearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+        transform: transform,
+      ),
+    );
+  }
+
+  ComboboxOptionStyler foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) {
+    return container(
+      BoxStyler().foregroundRadialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+        transform: transform,
+      ),
+    );
+  }
+
+  ComboboxOptionStyler foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+    GradientTransform? transform,
+  }) {
+    return container(
+      BoxStyler().foregroundSweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+        transform: transform,
+      ),
+    );
+  }
+
+  ComboboxOptionStyler transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) {
+    return container(BoxStyler().transform(value, alignment: alignment));
+  }
+
+  @override
+  Set<String> get $stylerFieldNames => const {
+    'container',
+    'label',
+    'animation',
+    'modifier',
+    'variants',
+  };
+
+  /// Sets the container.
+  ComboboxOptionStyler container(BoxStyler value) {
+    return merge(ComboboxOptionStyler(container: value));
+  }
+
+  /// Sets the label.
+  @override
+  ComboboxOptionStyler label(TextStyler value) {
+    return merge(ComboboxOptionStyler(label: value));
+  }
+
+  /// Sets the animation configuration.
+  @override
+  ComboboxOptionStyler animate(AnimationConfig value) {
+    return merge(ComboboxOptionStyler(animation: value));
+  }
+
+  /// Sets the style variants.
+  @override
+  ComboboxOptionStyler variants(List<VariantStyle<ComboboxOptionSpec>> value) {
+    return merge(ComboboxOptionStyler(variants: value));
+  }
+
+  /// Wraps with a widget modifier.
+  @override
+  ComboboxOptionStyler wrap(WidgetModifierConfig value) {
+    return merge(ComboboxOptionStyler(modifier: value));
+  }
+
+  /// Sets the widget modifier.
+  ComboboxOptionStyler modifier(WidgetModifierConfig value) {
+    return merge(ComboboxOptionStyler(modifier: value));
+  }
+
+  /// Merges with another [ComboboxOptionStyler].
+  @override
+  ComboboxOptionStyler merge(ComboboxOptionStyler? other) {
+    return ComboboxOptionStyler.create(
+      container: MixOps.merge($container, other?.$container),
+      label: MixOps.merge($label, other?.$label),
+      variants: MixOps.mergeVariants($variants, other?.$variants),
+      modifier: MixOps.mergeModifier($modifier, other?.$modifier),
+      animation: MixOps.mergeAnimation($animation, other?.$animation),
+    );
+  }
+
+  /// Resolves to [StyleSpec<ComboboxOptionSpec>] using [context].
+  @override
+  StyleSpec<ComboboxOptionSpec> resolve(BuildContext context) {
+    final spec = ComboboxOptionSpec(
+      container: MixOps.resolve(context, $container),
+      label: MixOps.resolve(context, $label),
+    );
+
+    return StyleSpec(
+      spec: spec,
+      animation: $animation,
+      widgetModifiers: $modifier?.resolve(context),
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('label', $label));
+  }
+
+  @override
+  List<Object?> get props => [
+    $container,
+    $label,
     $animation,
     $modifier,
     $variants,

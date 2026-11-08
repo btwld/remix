@@ -134,14 +134,16 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
                           ),
                     )
                     .option(
-                      BoxStyler()
+                      ComboboxOptionStyler()
                           .padding(.horizontal(12).vertical(8))
                           .borderRadius(.all(FortalTokens.radius2()))
                           .onHovered(.color(FortalTokens.accentA3()))
-                          .onFocused(.color(FortalTokens.accentA4())),
-                    )
-                    .optionLabel(
-                      TextStyler().color(FortalTokens.gray12()).fontSize(16),
+                          .onFocused(.color(FortalTokens.accentA4()))
+                          .label(
+                            TextStyler()
+                                .color(FortalTokens.gray12())
+                                .fontSize(16),
+                          ),
                     ),
               ),
             ),

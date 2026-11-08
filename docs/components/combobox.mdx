@@ -95,14 +95,14 @@ final cityStyle = ComboboxStyler()
         .border(.all(.color(const Color(0xFF8A9991)).width(1)))
         .onFocused(.border(.all(.color(const Color(0xFF28775E)).width(2)))))
     .panel(BoxStyler().color(const Color(0xFFFFFFFF)).padding(.all(4)))
-    .option(BoxStyler()
+    .option(ComboboxOptionStyler()
         .padding(.horizontal(12))
         .onHovered(.color(const Color(0xFFF1F5F2)))
-        .onFocused(.color(const Color(0xFFDEEEE5))))
-    .optionLabel(TextStyler().fontSize(16));
+        .onFocused(.color(const Color(0xFFDEEEE5)))
+        .label(TextStyler().fontSize(16)));
 ```
 
-`container` controls editor-root layout; `field`, `panel`, `option` and `optionLabel` style the anatomy. An option's focused state denotes RawAutocomplete's keyboard highlight. Hover styles a row independently and does not move that highlight. Root modifiers and animation apply once around the editor. Direct `styleSpec: ComboboxSpec(...)` bypasses fluent styling and defaults. `RemixCombobox.styleFrom(...)` and generated `ComboboxStyler.call<T>()` are supported.
+`container` controls editor-root layout; `field` and `panel` style the editor and suggestions surface. The nested `option: ComboboxOptionSpec` groups `container` and `label`; use `ComboboxOptionStyler` for row styling and `.label(TextStyler(...))` for its text. An option's focused state denotes RawAutocomplete's keyboard highlight. Hover styles a row independently and does not move that highlight. Root modifiers and animation apply once around the editor. Direct `styleSpec: ComboboxSpec(...)` bypasses fluent styling and defaults. `RemixCombobox.styleFrom(...)` and generated `ComboboxStyler.call<T>()` are supported.
 
 The root exposes focus and disabled state. Put hover and press styles on the `field` or `option` slots, whose interactive widgets supply those states.
 
@@ -177,5 +177,5 @@ RemixCombobox<T> remixComboboxConstructor<T extends Object>({
 | `onOpen` | `VoidCallback?` | Observes suggestion-subtree mounting after a frame. |
 | `onClose` | `VoidCallback?` | Observes suggestion-subtree unmounting after a frame. |
 | `excludeSemantics` | `bool` | Hides the editor and suggestions from assistive technology. Defaults to `false`. |
-| `style` | `ComboboxStyler` | Fluent styles for the container, field, panel, option and option label. |
+| `style` | `ComboboxStyler` | Fluent styles for the container, field, panel and nested option container/label. |
 | `styleSpec` | `ComboboxSpec?` | Resolved anatomy that bypasses fluent defaults and style resolution. |

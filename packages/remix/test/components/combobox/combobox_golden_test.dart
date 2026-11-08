@@ -187,8 +187,15 @@ void main() {
               ),
             ),
             option: StyleSpec(
-              spec: BoxSpec(
-                decoration: BoxDecoration(color: Color(0xFFFFFF00)),
+              spec: ComboboxOptionSpec(
+                container: StyleSpec(
+                  spec: BoxSpec(
+                    decoration: BoxDecoration(color: Color(0xFFFFFF00)),
+                  ),
+                ),
+                label: StyleSpec(
+                  spec: TextSpec(style: TextStyle(fontSize: 23)),
+                ),
               ),
             ),
           ),
@@ -202,6 +209,19 @@ void main() {
     expect(pixel(await capture(tester, key), point), 0xFF0000FF);
     await openCombobox(tester);
     expect(pixel(await capture(tester, key), point), 0xFF0000FF);
+    expect(
+      tester
+          .widget<RichText>(
+            find.descendant(
+              of: find.text('Apple'),
+              matching: find.byType(RichText),
+            ),
+          )
+          .text
+          .style!
+          .fontSize,
+      23,
+    );
     final panel = tester.getRect(find.byType(SingleChildScrollView).last);
     expect(
       pixel(await capture(tester, key), Offset(panel.right - 2, panel.top + 2)),

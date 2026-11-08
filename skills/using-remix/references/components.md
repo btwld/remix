@@ -65,7 +65,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   chips or multiselect API. Custom fields forward the exact editor pair and
   submit callback, and own labels/disablement; custom option builders provide
   visuals beneath one named interactive wrapper. Style `field`, `panel`,
-  `option` and `optionLabel`; option `onFocused` means keyboard highlight,
+  and `option(ComboboxOptionStyler())`; the nested `ComboboxOptionSpec` has
+  `container` and `label` slots. Set option text with `.label(TextStyler(...))`;
+  option `onFocused` means keyboard highlight,
   independent of hover. Eager rows grow from a 48px minimum inside a bounded
   scroll panel. See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 - **TextField/TextArea** — forwards the standard Flutter text-input surface

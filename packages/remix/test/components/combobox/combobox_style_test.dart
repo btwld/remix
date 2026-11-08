@@ -112,10 +112,18 @@ void main() {
     'inherited context variants and local slot overrides survive overlays',
     (tester) async {
       final inherited = ComboboxStyler()
-          .optionLabel(TextStyler().fontFamily('InheritedFont').fontSize(19))
+          .option(
+            ComboboxOptionStyler().label(
+              TextStyler().fontFamily('InheritedFont').fontSize(19),
+            ),
+          )
           .onBuilder(
-            (context) => ComboboxStyler().optionLabel(
-              TextStyler().fontSize(MediaQuery.textScalerOf(context).scale(20)),
+            (context) => ComboboxStyler().option(
+              ComboboxOptionStyler().label(
+                TextStyler().fontSize(
+                  MediaQuery.textScalerOf(context).scale(20),
+                ),
+              ),
             ),
           );
       await tester.pumpWidget(
@@ -126,7 +134,11 @@ void main() {
               optionsBuilder: (_) => suggestions,
               style: ComboboxStyler()
                   .width(280)
-                  .optionLabel(TextStyler().color(const Color(0xFFAA0000))),
+                  .option(
+                    ComboboxOptionStyler().label(
+                      TextStyler().color(const Color(0xFFAA0000)),
+                    ),
+                  ),
             ),
           ),
           scale: 1.25,

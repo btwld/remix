@@ -19,23 +19,36 @@ class ComboboxSpec with _$ComboboxSpec {
   @override
   final StyleSpec<BoxSpec> panel;
 
-  /// Row appearance; focused means RawAutocomplete's keyboard highlight.
+  /// Suggestion row and label, resolved in the option's own state.
   @override
-  final StyleSpec<BoxSpec> option;
-
-  /// Default label and inherited text style for custom visual content.
-  @override
-  final StyleSpec<TextSpec> optionLabel;
+  final StyleSpec<ComboboxOptionSpec> option;
 
   const ComboboxSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextFieldSpec>? field,
     StyleSpec<BoxSpec>? panel,
-    StyleSpec<BoxSpec>? option,
-    StyleSpec<TextSpec>? optionLabel,
+    StyleSpec<ComboboxOptionSpec>? option,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        field = field ?? const StyleSpec(spec: TextFieldSpec()),
        panel = panel ?? const StyleSpec(spec: BoxSpec()),
-       option = option ?? const StyleSpec(spec: BoxSpec()),
-       optionLabel = optionLabel ?? const StyleSpec(spec: TextSpec());
+       option = option ?? const StyleSpec(spec: ComboboxOptionSpec());
+}
+
+/// Resolved visual values for a combobox suggestion.
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin])
+class ComboboxOptionSpec with _$ComboboxOptionSpec {
+  /// Row appearance; focused means RawAutocomplete's keyboard highlight.
+  @override
+  @MixableField(forwardStyler: true)
+  final StyleSpec<BoxSpec> container;
+
+  /// Default label and inherited text style for custom visual content.
+  @override
+  final StyleSpec<TextSpec> label;
+
+  const ComboboxOptionSpec({
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<TextSpec>? label,
+  }) : container = container ?? const StyleSpec(spec: BoxSpec()),
+       label = label ?? const StyleSpec(spec: TextSpec());
 }

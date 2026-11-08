@@ -89,7 +89,7 @@ class _DestinationSearchState extends State<_DestinationSearch> {
               ),
         )
         .option(
-          BoxStyler()
+          ComboboxOptionStyler()
               .padding(.horizontal(12))
               .borderRadius(.circular(7))
               .onHovered(
@@ -101,9 +101,9 @@ class _DestinationSearchState extends State<_DestinationSearch> {
                 .color(
                   _dark ? const Color(0xFF335847) : const Color(0xFFDEEEE5),
                 ),
-              ),
-        )
-        .optionLabel(TextStyler().color(ink).fontSize(16).height(1.5));
+              )
+              .label(TextStyler().color(ink).fontSize(16).height(1.5)),
+        );
   }
 
   @override

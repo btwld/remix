@@ -30,8 +30,11 @@ void main() {
       style: ComboboxStyler()
           .field(TextFieldStyler().onFocused(.cursorColor(Colors.blue)))
           .panel(BoxStyler().padding(.all(4)))
-          .option(BoxStyler().onHovered(.color(Colors.blue)))
-          .optionLabel(TextStyler().fontSize(16)),
+          .option(
+            ComboboxOptionStyler()
+                .onHovered(.color(Colors.blue))
+                .label(TextStyler().fontSize(16)),
+          ),
     );
     expect(widget.controller, same(controller));
     expect(widget.focusNode, same(focus));

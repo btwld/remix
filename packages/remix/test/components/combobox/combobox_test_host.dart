@@ -51,13 +51,13 @@ ComboboxStyler testComboboxStyle() => ComboboxStyler()
     )
     .panel(BoxStyler().color(const Color(0xFFFFFFFF)))
     .option(
-      BoxStyler()
+      ComboboxOptionStyler()
           .padding(.horizontal(12))
           .color(const Color(0xFFFFFFFF))
           .onHovered(.color(const Color(0xFF00FF00)))
-          .onFocused(.color(const Color(0xFF0000FF))),
-    )
-    .optionLabel(TextStyler().fontSize(16));
+          .onFocused(.color(const Color(0xFF0000FF)))
+          .label(TextStyler().fontSize(16)),
+    );
 
 Future<void> openCombobox(WidgetTester tester, [String text = 'a']) async {
   await tester.tap(find.byType(EditableText));

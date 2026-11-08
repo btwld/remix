@@ -13,6 +13,7 @@ import 'package:naked_ui/naked_ui.dart';
 import '../textfield/textfield.dart';
 import '../../rendering/remix_box_effects.dart';
 import '../../utilities/remix_style.dart';
+import '../../style/style.dart';
 
 part 'combobox_spec.dart';
 part 'combobox_style.dart';

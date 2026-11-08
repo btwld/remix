@@ -29,10 +29,7 @@ final class _ComboboxProjection extends ComboboxStyler {
         ),
       ),
       .panel => ComboboxSpec(panel: MixOps.resolve(context, source.$panel)),
-      .option => ComboboxSpec(
-        option: MixOps.resolve(context, source.$option),
-        optionLabel: MixOps.resolve(context, source.$optionLabel),
-      ),
+      .option => ComboboxSpec(option: MixOps.resolve(context, source.$option)),
     },
   );
 

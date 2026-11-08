@@ -203,30 +203,36 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
                                       effective,
                                       .option,
                                     ).build(context).spec;
-                                return RemixBoxAdapter(
+                                return StyleSpecBuilder<ComboboxOptionSpec>(
                                   styleSpec: spec.option,
-                                  child: ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      minHeight: 48,
-                                    ),
-                                    child: Align(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      heightFactor: 1,
-                                      child: optionBuilder == null
-                                          ? StyledText(
-                                              displayStringForOption(option),
-                                              styleSpec: spec.optionLabel,
-                                            )
-                                          : RemixDefaultContentStyle(
-                                              text: spec.optionLabel,
-                                              child: optionBuilder(
-                                                context,
-                                                option,
-                                              ),
-                                            ),
-                                    ),
-                                  ),
+                                  builder: (context, optionSpec) =>
+                                      RemixBoxAdapter(
+                                        styleSpec: optionSpec.container,
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            minHeight: 48,
+                                          ),
+                                          child: Align(
+                                            alignment: AlignmentDirectional
+                                                .centerStart,
+                                            heightFactor: 1,
+                                            child: optionBuilder == null
+                                                ? StyledText(
+                                                    displayStringForOption(
+                                                      option,
+                                                    ),
+                                                    styleSpec: optionSpec.label,
+                                                  )
+                                                : RemixDefaultContentStyle(
+                                                    text: optionSpec.label,
+                                                    child: optionBuilder(
+                                                      context,
+                                                      option,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                      ),
                                 );
                               },
                             ),
