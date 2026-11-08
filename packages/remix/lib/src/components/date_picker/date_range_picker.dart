@@ -12,7 +12,8 @@ part of 'date_picker.dart';
 /// [calendarLabels] and [rangeLabels]. Selection remains parent-owned; there is
 /// no partial value or public open/draft controller.
 /// The popover contains focus but is not a modal dialog. Scrolling an ancestor
-/// closes it. Removing an open picker does not call [onClose].
+/// closes a root picker. A picker nested in a menu or popover closes when that
+/// outer root closes. Removing an open picker does not call [onClose].
 class RemixDateRangePicker extends StatelessWidget {
   const RemixDateRangePicker({
     super.key,
@@ -45,6 +46,8 @@ class RemixDateRangePicker extends StatelessWidget {
     this.summaryBuilder,
   });
 
+  /// Parent-owned complete inclusive range, or null for an empty selection.
+  /// Civil-date comparison and bounds follow [RemixRangeCalendar].
   final NakedDateRange? value;
   final DateTime firstDate;
   final DateTime lastDate;
@@ -62,6 +65,9 @@ class RemixDateRangePicker extends StatelessWidget {
   final DateTime? currentDate;
   final bool Function(DateTime)? isDateUnavailable;
   final int firstDayOfWeek;
+
+  /// Whether the trigger can open the calendar and dates can be selected.
+  /// Disabling an open picker closes it without selecting.
   final bool enabled;
 
   /// Field purpose and the trigger's accessible name, such as "Stay dates".
@@ -82,8 +88,15 @@ class RemixDateRangePicker extends StatelessWidget {
   final String Function(NakedDateRange)? formatRange;
   final RemixCalendarLabels calendarLabels;
   final RemixRangeCalendarLabels rangeLabels;
+
+  /// Optional caller-owned trigger focus node. Replacing it closes the picker.
   final FocusNode? focusNode;
+
+  /// Whether to focus the trigger automatically; does not open the calendar.
   final bool autofocus;
+
+  /// Panel placement, offsets and collision padding relative to the trigger.
+  /// The panel also avoids the view's safe area and keyboard exclusions.
   final OverlayPositionConfig positioning;
 
   /// Each child resolves style independently against its own interaction state.
