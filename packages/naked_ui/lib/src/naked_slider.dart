@@ -439,6 +439,19 @@ class _NakedSliderState extends State<NakedSlider>
     return false;
   }
 
+  bool _hasCurrentFocusRequest(FocusNode node) {
+    if (!node.hasFocus) return false;
+    // Scope history changes as soon as requestFocus is called, even before
+    // FocusManager applies primaryFocus. A parent build may already have
+    // requested another control while the retiring thumb is still primary.
+    var child = node;
+    for (final scope in node.ancestors.whereType<FocusScopeNode>()) {
+      if (scope.focusedChild != child) return false;
+      child = scope;
+    }
+    return true;
+  }
+
   void _replaceFocusNodes() {
     final oldOwned = _ownedFocusNodes;
     final oldEffective = _effectiveFocusNodes;
@@ -475,16 +488,23 @@ class _NakedSliderState extends State<NakedSlider>
     final retiredNodes = oldOwned
         .where((node) => !_ownedFocusNodes.contains(node))
         .toList();
+    if (transferNode != null &&
+        _isEnabled &&
+        _hasCurrentFocusRequest(focusedNode!)) {
+      // FocusNode defers this until the replacement attaches during this
+      // rebuild. Later application requests must win, including requests that
+      // FocusManager has not applied yet when the frame ends.
+      transferNode.requestFocus();
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       for (final node in retiredNodes) {
         node.dispose();
       }
       if (!mounted) return;
-      if (transferNode != null &&
-          _effectiveFocusNodes.contains(transferNode) &&
-          _isEnabled) {
-        transferNode.requestFocus();
-      } else if (_focusedThumbIndices.isEmpty && isFocused) {
+      // Reconcile aggregate focus after Flutter applies the winning request,
+      // without reporting a transient blur while the replacement attaches.
+      FocusManager.instance.applyFocusChangesIfNeeded();
+      if (mounted && _focusedThumbIndices.isEmpty && isFocused) {
         updateFocusState(false, widget.onFocusChange);
       }
     });

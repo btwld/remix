@@ -9,7 +9,315 @@ Widget host(Widget child, {TextDirection direction = TextDirection.ltr}) =>
       child: Center(child: child),
     );
 
+Widget focusHost(Widget child, FocusNode external) => host(
+  FocusScope(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        child,
+        NakedButton(
+          focusNode: external,
+          onPressed: () {},
+          child: const Text('External'),
+        ),
+      ],
+    ),
+  ),
+);
+
+FocusNode thumbNode(WidgetTester tester, int index) => tester
+    .widgetList<Focus>(
+      find.descendant(
+        of: find.byType(NakedSlider),
+        matching: find.byType(Focus),
+      ),
+    )
+    .elementAt(index)
+    .focusNode!;
+
 void main() {
+  for (final applyImmediately in [false, true]) {
+    testWidgets(
+      'replacement yields to a newer external request applied=$applyImmediately',
+      (tester) async {
+        final old = FocusNode();
+        final next = FocusNode();
+        final external = FocusNode();
+        for (final node in [old, next, external]) {
+          addTearDown(node.dispose);
+        }
+        var node = old;
+        late StateSetter rebuild;
+        final changes = <List<double>>[];
+        final focusChanges = <bool>[];
+        await tester.pumpWidget(
+          focusHost(
+            StatefulBuilder(
+              builder: (_, setState) {
+                rebuild = setState;
+                return NakedSlider(
+                  values: const [20, 80],
+                  focusNodes: [node, null],
+                  onChanged: changes.add,
+                  onFocusChange: focusChanges.add,
+                  child: const SizedBox(width: 200, height: 48),
+                );
+              },
+            ),
+            external,
+          ),
+        );
+        old.requestFocus();
+        await tester.pumpAndSettle();
+        expect(old.hasPrimaryFocus, isTrue);
+        rebuild(() => node = next);
+        // Registered before didUpdateWidget schedules its replacement handoff.
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          external.requestFocus();
+          if (applyImmediately) {
+            FocusManager.instance.applyFocusChangesIfNeeded();
+          }
+        });
+        await tester.pumpAndSettle();
+        expect(external.hasPrimaryFocus, isTrue);
+        expect(next.hasFocus, isFalse);
+        expect(focusChanges, [true, false]);
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        expect(changes, isEmpty);
+        await tester.pumpWidget(const SizedBox());
+        old.addListener(() {});
+        next.addListener(() {});
+      },
+    );
+  }
+
+  for (final duringBuild in [false, true]) {
+    testWidgets(
+      'replacement yields to external focus requested ${duringBuild ? "in parent build" : "before frame"}',
+      (tester) async {
+        final old = FocusNode();
+        final next = FocusNode();
+        final external = FocusNode();
+        for (final node in [old, next, external]) {
+          addTearDown(node.dispose);
+        }
+        var node = old;
+        var requestFromBuild = false;
+        late StateSetter rebuild;
+        final focusChanges = <bool>[];
+        await tester.pumpWidget(
+          focusHost(
+            StatefulBuilder(
+              builder: (_, setState) {
+                rebuild = setState;
+                if (requestFromBuild) {
+                  requestFromBuild = false;
+                  external.requestFocus();
+                }
+                return NakedSlider(
+                  values: const [20, 80],
+                  focusNodes: [node, null],
+                  onChanged: (_) {},
+                  onFocusChange: focusChanges.add,
+                  child: const SizedBox(width: 200, height: 48),
+                );
+              },
+            ),
+            external,
+          ),
+        );
+        old.requestFocus();
+        await tester.pumpAndSettle();
+        rebuild(() {
+          node = next;
+          requestFromBuild = duringBuild;
+        });
+        if (!duringBuild) external.requestFocus();
+        await tester.pumpAndSettle();
+        expect(external.hasPrimaryFocus, isTrue);
+        expect(next.hasFocus, isFalse);
+        expect(focusChanges, [true, false]);
+      },
+    );
+  }
+
+  for (final ownedReplacement in [false, true]) {
+    for (final externalHistory in [false, true]) {
+      testWidgets(
+        'ordinary replacement owned=$ownedReplacement retains focus with external history=$externalHistory',
+        (tester) async {
+          final old = FocusNode();
+          final next = FocusNode();
+          final external = FocusNode();
+          for (final node in [old, next, external]) {
+            addTearDown(node.dispose);
+          }
+          FocusNode? node = old;
+          late StateSetter rebuild;
+          final changes = <List<double>>[];
+          final focusChanges = <bool>[];
+          await tester.pumpWidget(
+            focusHost(
+              StatefulBuilder(
+                builder: (_, setState) {
+                  rebuild = setState;
+                  return NakedSlider(
+                    values: const [20, 80],
+                    focusNodes: [node, null],
+                    onChanged: changes.add,
+                    onFocusChange: focusChanges.add,
+                    child: const SizedBox(width: 200, height: 48),
+                  );
+                },
+              ),
+              external,
+            ),
+          );
+          if (externalHistory) {
+            external.requestFocus();
+            await tester.pumpAndSettle();
+          }
+          old.requestFocus();
+          await tester.pumpAndSettle();
+          rebuild(() => node = ownedReplacement ? null : next);
+          await tester.pumpAndSettle();
+          expect(thumbNode(tester, 0).hasPrimaryFocus, isTrue);
+          expect(focusChanges, [true]);
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          expect(changes, [
+            [21, 80],
+          ]);
+          await tester.pumpWidget(const SizedBox());
+          old.addListener(() {});
+          next.addListener(() {});
+        },
+      );
+    }
+  }
+
+  testWidgets(
+    'rapid replacement targets the latest thumb and leaves borrowed nodes reusable',
+    (tester) async {
+      final old = FocusNode();
+      final intermediate = FocusNode();
+      final next = FocusNode();
+      final external = FocusNode();
+      for (final node in [old, intermediate, next, external]) {
+        addTearDown(node.dispose);
+      }
+      var node = old;
+      late StateSetter rebuild;
+      final changes = <List<double>>[];
+      await tester.pumpWidget(
+        focusHost(
+          StatefulBuilder(
+            builder: (_, setState) {
+              rebuild = setState;
+              return NakedSlider(
+                values: const [20, 80],
+                focusNodes: [node, null],
+                onChanged: changes.add,
+                child: const SizedBox(width: 200, height: 48),
+              );
+            },
+          ),
+          external,
+        ),
+      );
+      old.requestFocus();
+      await tester.pumpAndSettle();
+      rebuild(() => node = intermediate);
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => rebuild(() => node = next),
+      );
+      await tester.pumpAndSettle();
+      expect(next.hasPrimaryFocus, isTrue);
+      expect(intermediate.hasFocus, isFalse);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      expect(changes, [
+        [21, 80],
+      ]);
+      await tester.pumpWidget(
+        focusHost(
+          NakedButton(
+            focusNode: intermediate,
+            onPressed: () {},
+            child: const Text('Reused'),
+          ),
+          external,
+        ),
+      );
+      external.requestFocus();
+      await tester.pumpAndSettle();
+      expect(external.hasPrimaryFocus, isTrue);
+      intermediate.requestFocus();
+      await tester.pumpAndSettle();
+      expect(intermediate.hasPrimaryFocus, isTrue);
+      await tester.pumpWidget(const SizedBox());
+      for (final node in [old, intermediate, next]) {
+        node.addListener(() {});
+      }
+    },
+  );
+
+  for (final interruption in ['disable', 'callback', 'remove']) {
+    testWidgets(
+      'replacement interrupted by $interruption does not revive focus',
+      (tester) async {
+        final old = FocusNode();
+        final next = FocusNode();
+        final external = FocusNode();
+        for (final node in [old, next, external]) {
+          addTearDown(node.dispose);
+        }
+        var node = old;
+        var enabled = true;
+        var callback = true;
+        var visible = true;
+        late StateSetter rebuild;
+        final changes = <List<double>>[];
+        await tester.pumpWidget(
+          focusHost(
+            StatefulBuilder(
+              builder: (_, setState) {
+                rebuild = setState;
+                return visible
+                    ? NakedSlider(
+                        values: const [20, 80],
+                        focusNodes: [node, null],
+                        enabled: enabled,
+                        onChanged: callback ? changes.add : null,
+                        child: const SizedBox(width: 200, height: 48),
+                      )
+                    : const SizedBox();
+              },
+            ),
+            external,
+          ),
+        );
+        old.requestFocus();
+        await tester.pumpAndSettle();
+        rebuild(() => node = next);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          rebuild(() {
+            if (interruption == 'disable') enabled = false;
+            if (interruption == 'callback') callback = false;
+            if (interruption == 'remove') visible = false;
+          });
+          external.requestFocus();
+        });
+        await tester.pumpAndSettle();
+        expect(external.hasPrimaryFocus, isTrue);
+        expect(next.hasFocus, isFalse);
+        expect(changes, isEmpty);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+        old.addListener(() {});
+        next.addListener(() {});
+      },
+    );
+  }
+
   for (final coincident in [false, true]) {
     testWidgets('tiny domain drag works with coincident=$coincident', (
       tester,
