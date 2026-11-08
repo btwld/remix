@@ -555,17 +555,21 @@ class _NakedSliderState extends State<NakedSlider>
         : math.min(widget.max, sourceValues[index + 1] - widget.minSpacing);
     // Normalize only spacing arithmetic residue, scaled to its operands.
     // Four double-precision rounding units cover the add/subtract and compare;
-    // an absolute epsilon would erase real headroom on small domains. With
+    // an absolute epsilon would erase real headroom on small domains. Only
+    // correct bounds that exclude the current value: nearby bounds on the
+    // other side still leave real headroom, even on large-offset domains. With
     // zero spacing the neighbor bound is exact, so no normalization is needed.
     double spacingResidue(double neighbor) => widget.minSpacing == 0
         ? 0
         : math.max(current.abs(), math.max(neighbor.abs(), widget.minSpacing)) *
               8.881784197001252e-16;
     if (index > 0 &&
+        lower > current &&
         (lower - current).abs() <= spacingResidue(sourceValues[index - 1])) {
       lower = current;
     }
     if (index < sourceValues.length - 1 &&
+        upper < current &&
         (upper - current).abs() <= spacingResidue(sourceValues[index + 1])) {
       upper = current;
     }

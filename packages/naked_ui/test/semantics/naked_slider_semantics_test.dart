@@ -321,6 +321,82 @@ void main() {
     },
   );
 
+  for (final (minimum, step, gap, spacing) in [
+    (1e15, .25, 1.5, 1.0),
+    (1e12, 1 / 4096, 6 / 4096, 4 / 4096),
+  ]) {
+    for (final index in [0, 1]) {
+      testWidgets(
+        'offset $minimum preserves real spacing headroom for thumb $index',
+        (tester) async {
+          final handle = tester.ensureSemantics();
+          try {
+            final focus = FocusNode();
+            addTearDown(focus.dispose);
+            var values = <double>[minimum, minimum + gap];
+            final requests = <List<double>>[];
+            await tester.pumpWidget(
+              StatefulBuilder(
+                builder: (context, setState) => testApp(
+                  values: values,
+                  min: minimum,
+                  max: minimum + 10,
+                  step: step,
+                  minSpacing: spacing,
+                  focusNodes: [
+                    index == 0 ? focus : null,
+                    index == 1 ? focus : null,
+                  ],
+                  onChanged: (next) {
+                    requests.add(next);
+                    setState(() => values = next);
+                  },
+                ),
+              ),
+            );
+
+            final action = index == 0
+                ? ui.SemanticsAction.increase
+                : ui.SemanticsAction.decrease;
+            final node = sliderNodes(tester)[index];
+            expect(node.getSemanticsData().hasAction(action), isTrue);
+            performAction(tester, node, action);
+            await tester.pump();
+            expect(requests, [
+              index == 0
+                  ? [minimum + step, minimum + gap]
+                  : [minimum, minimum + gap - step],
+            ]);
+
+            focus.requestFocus();
+            await tester.pump();
+            await tester.sendKeyEvent(
+              index == 0
+                  ? LogicalKeyboardKey.arrowRight
+                  : LogicalKeyboardKey.arrowLeft,
+            );
+            await tester.pump();
+            expect(requests, hasLength(2));
+            expect(
+              values,
+              index == 0
+                  ? [minimum + 2 * step, minimum + gap]
+                  : [minimum, minimum + gap - 2 * step],
+            );
+            expect(values[1] - values[0], spacing);
+            expect(
+              sliderNodes(tester)[index].getSemanticsData().hasAction(action),
+              isFalse,
+            );
+            await tester.pumpWidget(const SizedBox());
+          } finally {
+            handle.dispose();
+          }
+        },
+      );
+    }
+  }
+
   testWidgets(
     'packed decimal spacing blocks semantic actions at both domain endpoints',
     (tester) async {

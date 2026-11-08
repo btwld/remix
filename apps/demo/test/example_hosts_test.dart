@@ -11,6 +11,8 @@ import '../../../packages/remix/example/api/checkbox.0.dart'
 import '../../../packages/remix/example/api/radio.0.dart' as radio_example;
 import '../../../packages/remix/example/api/badge.0.dart' as badge_example;
 import '../../../packages/remix/example/api/slider.0.dart' as slider_example;
+import '../../../packages/remix/example/api/range_slider.0.dart'
+    as range_slider_example;
 import '../../../packages/remix/example/api/accordion.0.dart'
     as accordion_example;
 import '../../../packages/remix/example/api/callout.0.dart' as callout_example;
@@ -33,6 +35,44 @@ import '../../../registry_source/example/misc/fortal_button_comprehensive.dart'
     as comprehensive;
 
 void main() {
+  testWidgets('range slider runs with a minimal host and named bounds', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    try {
+      range_slider_example.main();
+      await tester.pump();
+      expect(find.byType(WidgetsApp), findsOneWidget);
+      expect(find.byType(MaterialApp), findsNothing);
+      // A slider needs neither navigation nor an overlay. Exercise the actual
+      // example's host instead of supplying services it does not require.
+      final lower = tester.getSemantics(
+        find.bySemanticsLabel('Minimum nightly price'),
+      );
+      expect(lower.getSemanticsData().value, r'$80 per night');
+      lower.owner!.performAction(lower.id, ui.SemanticsAction.increase);
+      await tester.pump();
+      expect(
+        tester
+            .getSemantics(find.bySemanticsLabel('Minimum nightly price'))
+            .getSemanticsData()
+            .value,
+        r'$85 per night',
+      );
+      expect(
+        tester
+            .getSemantics(find.bySemanticsLabel('Maximum nightly price'))
+            .getSemanticsData()
+            .value,
+        r'$240 per night',
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    } finally {
+      semantics.dispose();
+    }
+  });
+
   testWidgets('single slider has a stable name separate from its value', (
     tester,
   ) async {
