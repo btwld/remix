@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
 import '../../../packages/remix/example/api/progress.0.dart'
     as progress_example;
 import '../../../packages/remix/example/api/card.0.dart' as card_example;
@@ -32,6 +33,43 @@ import '../../../registry_source/example/misc/fortal_button_comprehensive.dart'
     as comprehensive;
 
 void main() {
+  testWidgets('single slider has a stable name separate from its value', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    try {
+      slider_example.main();
+      await tester.pump();
+      final slider = find.byType(RemixSlider);
+      final before = tester.widget<RemixSlider>(slider).value;
+      final named = find.bySemanticsLabel('Slider value');
+      final node = tester.getSemantics(named);
+      node.owner!.performAction(node.id, ui.SemanticsAction.increase);
+      await tester.pump();
+      expect(tester.widget<RemixSlider>(slider).value, greaterThan(before));
+      expect(
+        tester.getSemantics(named).getSemanticsData().label,
+        'Slider value',
+      );
+      expect(find.byType(MaterialApp), findsNothing);
+      await tester.pumpWidget(const SizedBox.shrink());
+    } finally {
+      semantics.dispose();
+    }
+  });
+
+  testWidgets('API textfield disposes its owned editing controller', (
+    tester,
+  ) async {
+    textfield_example.main();
+    await tester.pump();
+    final controller = tester
+        .widget<EditableText>(find.byType(EditableText))
+        .controller;
+    await tester.pumpWidget(const SizedBox.shrink());
+    expect(() => controller.addListener(() {}), throwsFlutterError);
+  });
+
   final examples = <String, VoidCallback>{
     'progress': progress_example.main,
     'card': card_example.main,
