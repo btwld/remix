@@ -579,7 +579,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
           ? widget.triggerFocusNode
           : _controlFocusNode,
       positioning: widget.positioning,
-      constrainToAvailableHeight: true,
+      constrainToAvailableSpace: true,
       semanticLabel: _resolvedTriggerSemanticLabel,
       excludeSemantics: widget.excludeSemantics,
       // Render trigger from RemixMenuTrigger data

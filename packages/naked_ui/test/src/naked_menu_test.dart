@@ -1152,13 +1152,13 @@ void main() {
         ),
       );
 
-      // A null [constrainToAvailableHeight] leaves the argument out so the
+      // A null [constrainToAvailableSpace] leaves the argument out so the
       // widget's own default applies.
       Widget buildPanelMenu(
         MenuController controller, {
         Alignment alignment = Alignment.topLeft,
         int items = 30,
-        bool? constrainToAvailableHeight,
+        bool? constrainToAvailableSpace,
       }) {
         const positioning = OverlayPositionConfig(
           side: OverlaySide.bottom,
@@ -1171,7 +1171,7 @@ void main() {
 
         return Align(
           alignment: alignment,
-          child: constrainToAvailableHeight == null
+          child: constrainToAvailableSpace == null
               ? NakedMenu<String>(
                   controller: controller,
                   positioning: positioning,
@@ -1181,7 +1181,7 @@ void main() {
               : NakedMenu<String>(
                   controller: controller,
                   positioning: positioning,
-                  constrainToAvailableHeight: constrainToAvailableHeight,
+                  constrainToAvailableSpace: constrainToAvailableSpace,
                   builder: builder,
                   overlayBuilder: overlayBuilder,
                 ),
@@ -1209,7 +1209,7 @@ void main() {
       ) async {
         final controller = MenuController();
         await tester.pumpMaterialWidget(
-          buildPanelMenu(controller, constrainToAvailableHeight: true),
+          buildPanelMenu(controller, constrainToAvailableSpace: true),
         );
         final (:trigger, :panel) = await openPanel(tester, controller);
 
@@ -1226,7 +1226,7 @@ void main() {
           buildPanelMenu(
             controller,
             alignment: Alignment.bottomLeft,
-            constrainToAvailableHeight: true,
+            constrainToAvailableSpace: true,
           ),
         );
         final (:trigger, :panel) = await openPanel(tester, controller);

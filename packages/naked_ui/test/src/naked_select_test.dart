@@ -1452,14 +1452,14 @@ void main() {
     const panelKey = Key('panel');
     const sideOffset = 8.0;
 
-    // A null [constrainToAvailableHeight] leaves the argument out so the
+    // A null [constrainToAvailableSpace] leaves the argument out so the
     // widget's own default applies.
     Widget buildPanelSelect({
       Alignment alignment = Alignment.topCenter,
       OverlayAlignment overlayAlignment = OverlayAlignment.center,
       TextDirection textDirection = TextDirection.ltr,
       int options = 30,
-      bool? constrainToAvailableHeight,
+      bool? constrainToAvailableSpace,
     }) {
       final positioning = OverlayPositionConfig(
         alignment: overlayAlignment,
@@ -1493,7 +1493,7 @@ void main() {
         textDirection: textDirection,
         child: Align(
           alignment: alignment,
-          child: constrainToAvailableHeight == null
+          child: constrainToAvailableSpace == null
               ? NakedSelect<int>(
                   onChanged: (_) {},
                   positioning: positioning,
@@ -1503,7 +1503,7 @@ void main() {
               : NakedSelect<int>(
                   onChanged: (_) {},
                   positioning: positioning,
-                  constrainToAvailableHeight: constrainToAvailableHeight,
+                  constrainToAvailableSpace: constrainToAvailableSpace,
                   builder: builder,
                   overlayBuilder: overlayBuilder,
                 ),
@@ -1528,7 +1528,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpMaterialWidget(
-        buildPanelSelect(constrainToAvailableHeight: true),
+        buildPanelSelect(constrainToAvailableSpace: true),
       );
       final (:trigger, :panel) = await openPanel(tester);
 
@@ -1543,7 +1543,7 @@ void main() {
       await tester.pumpMaterialWidget(
         buildPanelSelect(
           alignment: Alignment.bottomCenter,
-          constrainToAvailableHeight: true,
+          constrainToAvailableSpace: true,
         ),
       );
       final (:trigger, :panel) = await openPanel(tester);
@@ -1578,7 +1578,7 @@ void main() {
         buildPanelSelect(
           overlayAlignment: OverlayAlignment.start,
           textDirection: TextDirection.rtl,
-          constrainToAvailableHeight: true,
+          constrainToAvailableSpace: true,
         ),
       );
       final (:trigger, :panel) = await openPanel(tester);

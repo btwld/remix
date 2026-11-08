@@ -312,7 +312,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       semanticLabel: widget.semanticLabel,
       semanticValue: selectedItem?.semanticLabel ?? selectedItem?.label,
       positioning: widget.positioning,
-      constrainToAvailableHeight: true,
+      constrainToAvailableSpace: true,
       onOpen: () {
         if (remixReducedMotionOf(context)) {
           animationController.value = 1;

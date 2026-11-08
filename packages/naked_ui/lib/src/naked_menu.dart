@@ -736,7 +736,7 @@ class NakedMenu<T> extends StatefulWidget {
     this.openOnTap = true,
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
-    this.constrainToAvailableHeight = false,
+    this.constrainToAvailableSpace = false,
     this.semanticLabel,
     this.excludeSemantics = false,
   }) : assert(
@@ -832,8 +832,7 @@ class NakedMenu<T> extends StatefulWidget {
   /// Overlay positioning configuration.
   final OverlayPositionConfig positioning;
 
-  /// Whether to lay the overlay panel out no taller than the space above or
-  /// below the trigger.
+  /// Whether to lay the overlay panel out within the space it can use.
   ///
   /// By default the panel can be as tall as the whole overlay, so one taller
   /// than the space beside the trigger slides over the trigger. When true, the
@@ -841,10 +840,11 @@ class NakedMenu<T> extends StatefulWidget {
   /// its side offset and collision padding, so a scrollable panel scrolls
   /// there. With collision avoidance, if neither side has
   /// [OverlayPositionConfig.minimumAvailableHeight] of room, the panel may
-  /// overlap the trigger within the collision-padded overlay bounds instead.
-  /// Content that cannot scroll overflows the capped panel. See
-  /// [OverlayPositioner.constrainToAvailableHeight].
-  final bool constrainToAvailableHeight;
+  /// overlap the trigger within the collision-padded overlay bounds instead,
+  /// and the panel is never wider than the collision-padded overlay. Content
+  /// that cannot scroll overflows the capped panel. See
+  /// [OverlayPositioner.constrainToAvailableSpace].
+  final bool constrainToAvailableSpace;
 
   /// Semantic label for the menu trigger.
   ///
@@ -1070,7 +1070,7 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
         return AnchoredOverlay(
           info: info,
           positioning: widget.positioning,
-          constrainToAvailableHeight: widget.constrainToAvailableHeight,
+          constrainToAvailableSpace: widget.constrainToAvailableSpace,
           closeOnTapOutside: widget.closeOnClickOutside,
           child: KeyedSubtree(key: overlayContentKey, child: panel),
         );

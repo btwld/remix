@@ -38,7 +38,7 @@ class AnchoredOverlay extends StatefulWidget {
     super.key,
     required this.info,
     this.positioning = const OverlayPositionConfig(),
-    this.constrainToAvailableHeight = false,
+    this.constrainToAvailableSpace = false,
     this.closeOnTapOutside = true,
     this.initialFocusNode,
     required this.child,
@@ -50,10 +50,10 @@ class AnchoredOverlay extends StatefulWidget {
   /// Where [child] sits relative to [RawMenuOverlayInfo.anchorRect].
   final OverlayPositionConfig positioning;
 
-  /// Whether to cap [child]'s height at the space beside the anchor.
+  /// Whether to fit [child] into the space its placement can use.
   ///
-  /// See [OverlayPositioner.constrainToAvailableHeight].
-  final bool constrainToAvailableHeight;
+  /// See [OverlayPositioner.constrainToAvailableSpace].
+  final bool constrainToAvailableSpace;
 
   /// Whether a tap outside the menu's tap region closes the overlay.
   final bool closeOnTapOutside;
@@ -163,7 +163,7 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
     return OverlayPositioner(
       targetRect: widget.info.anchorRect,
       positioning: widget.positioning,
-      constrainToAvailableHeight: widget.constrainToAvailableHeight,
+      constrainToAvailableSpace: widget.constrainToAvailableSpace,
       child: TapRegion(
         onTapOutside: widget.closeOnTapOutside ? (_) => close() : null,
         groupId: widget.info.tapRegionGroupId,
