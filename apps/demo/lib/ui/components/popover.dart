@@ -32,6 +32,7 @@ PopoverStyler fortalPopoverStyle({
   };
 
   return PopoverStyler()
+      .border(.color(FortalTokens.gray7()).width(1))
       .maxWidth(FortalTokens.popoverMaxWidth())
       .padding(.all(padding))
       .borderRadius(.all(radius))
