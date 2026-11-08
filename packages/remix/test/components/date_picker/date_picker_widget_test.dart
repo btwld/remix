@@ -355,6 +355,88 @@ void main() {
     }
   });
 
+  testWidgets('replacing a borrowed focusNode while open closes the picker', (
+    tester,
+  ) async {
+    final first = FocusNode(debugLabel: 'first borrowed');
+    final second = FocusNode(debugLabel: 'second borrowed');
+    addTearDown(first.dispose);
+    addTearDown(second.dispose);
+    final requests = <DateTime>[];
+    late StateSetter update;
+    var node = first;
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (context, setState) {
+          update = setState;
+          return _host(_picker(focusNode: node, onChanged: requests.add));
+        },
+      ),
+    );
+    await _open(tester);
+    update(() => node = second);
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixCalendar), findsNothing);
+    expect(requests, isEmpty);
+    // The application owns focus on its replacement node.
+    expect(second.hasFocus, isFalse);
+    second.requestFocus();
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(find.byType(RemixCalendar), findsOneWidget);
+    expect(_focusedDate(), DateTime(2024, 2, 15));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('autofocus focuses the trigger, not the calendar', (
+    tester,
+  ) async {
+    final trigger = FocusNode();
+    addTearDown(trigger.dispose);
+    await tester.pumpWidget(
+      _host(
+        RemixDatePicker(
+          value: null,
+          firstDate: DateTime(2023),
+          lastDate: DateTime(2026, 12, 31),
+          onChanged: (_) {},
+          focusNode: trigger,
+          autofocus: true,
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(trigger.hasPrimaryFocus, isTrue);
+    expect(find.byType(RemixCalendar), findsNothing);
+  });
+
+  testWidgets('clearing the parent value restores the placeholder', (
+    tester,
+  ) async {
+    DateTime? value = DateTime(2024, 2, 20);
+    late StateSetter update;
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (context, setState) {
+          update = setState;
+          return _host(
+            _picker(
+              value: value,
+              onChanged: (date) => setState(() => value = date),
+            ),
+          );
+        },
+      ),
+    );
+    expect(find.text('Tuesday, February 20, 2024'), findsOneWidget);
+    update(() => value = null);
+    await tester.pump();
+    expect(find.text('Select date'), findsOneWidget);
+    await _open(tester);
+    expect(_focusedDate(), DateTime(2024, 2, 15));
+  });
+
   for (final kind in [
     PointerDeviceKind.touch,
     PointerDeviceKind.mouse,

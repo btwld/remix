@@ -44,6 +44,29 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
 }
 
 void main() {
+  testWidgets('Clear selection empties the picker and inline calendar', (
+    tester,
+  ) async {
+    await _pump(tester);
+    expect(tester.widget<RemixDatePicker>(_picker).value, isNotNull);
+    await _tap(tester, find.text('Clear selection'));
+    expect(tester.widget<RemixDatePicker>(_picker).value, isNull);
+    expect(find.text('Select a date'), findsOneWidget);
+    await _tap(tester, _trigger);
+    await _tap(tester, find.text('13'));
+    expect(
+      tester.widget<RemixDatePicker>(_picker).value,
+      DateTime(2026, 11, 13),
+    );
+    await _tap(tester, find.text('Clear selection'));
+    await _tap(tester, find.text('Inline'));
+    expect(
+      tester.widget<RemixCalendar>(find.byType(RemixCalendar)).value,
+      isNull,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'picker and inline are exclusive and preserve the selected date',
     (tester) async {
