@@ -146,7 +146,8 @@ class _NakedCalendarState extends State<NakedCalendar>
   late DateTime _displayed;
   final _days = <DateTime, FocusNode>{};
   final _dayOrder = <DateTime, int>{};
-  bool get _interactive => widget.enabled && widget.onChanged != null;
+  bool get _interactive =>
+      mounted && widget.enabled && widget.onChanged != null;
   @override
   FocusNode? get widgetProvidedNode => widget.focusNode;
 

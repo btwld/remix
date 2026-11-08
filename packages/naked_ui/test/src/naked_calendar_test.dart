@@ -142,6 +142,39 @@ Finder _day(int day) =>
     find.byWidgetPredicate((w) => w is NakedCalendarDay && w.date.day == day);
 
 void main() {
+  testWidgets('retained day tap is inert after disposal', (tester) async {
+    final state = await _pump(tester);
+    final tap = tester
+        .widget<Semantics>(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is Semantics && widget.properties.label == '2024-2-29',
+          ),
+        )
+        .properties
+        .onTap!;
+    await tester.pumpWidget(const SizedBox());
+    expect(state.mounted, isFalse);
+    tap();
+    expect(state.requests, isEmpty);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('retained month actions are inert after disposal', (
+    tester,
+  ) async {
+    final state = await _pump(tester);
+    final next = state.snapshot.nextMonth!;
+    final previous = state.snapshot.previousMonth!;
+    final show = state.snapshot.showMonth!;
+    await tester.pumpWidget(const SizedBox());
+    expect(state.mounted, isFalse);
+    next();
+    previous();
+    show(DateTime(2024, 3));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'controlled selection normalizes civil fields; rejecting callback retains value',
     (tester) async {
