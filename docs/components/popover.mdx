@@ -118,8 +118,8 @@ The overlay is clamped to the available screen bounds.
   can use. For top/bottom placements, this limits height beside the trigger.
   With collision avoidance, it also limits width inside the padded overlay.
   The content must scroll when it is larger.
-- `avoidViewInsets: true` keeps the panel out of the view's safe area and
-  keyboard. It always caps both axes to the visible overlay; fixed-size content
+- `avoidViewInsets: true` keeps the panel inside the view padding (safe area)
+  and above the view insets (keyboard). It always caps both axes to the visible overlay; fixed-size content
   larger than these bounds overflows unless it can adapt or scroll.
   The open panel re-fits when either exclusion changes, including padding that
   a `SafeArea` around the trigger consumes. Selects, menus and submenus opened
@@ -173,6 +173,8 @@ fully composable.
 ## Keyboard and accessibility
 
 - Tap the trigger or press Space or Enter while it is focused to toggle the popover.
+- Close-time focus return comes from Flutter’s `RawMenuAnchor`; unlike
+  Select/Menu, it is not conditional on focus remaining in the panel.
 - Press Escape to close it and return focus to the trigger. With `openOnTap: false`, focus returns to the control that carries `triggerFocusNode`.
 - Clicking outside closes the overlay. `consumeOutsideTaps` controls whether that tap reaches the widget behind it.
 - Use `semanticLabel` when the built-in trigger's visual content does not provide a clear accessible name. With `openOnTap: false`, label the interactive child instead.

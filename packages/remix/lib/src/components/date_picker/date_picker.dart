@@ -53,7 +53,11 @@ class RemixDatePicker extends StatelessWidget {
   /// Parent-owned selected date, or null for an empty selection.
   /// Civil-date comparison and bounds follow [RemixCalendar].
   final DateTime? value;
+
+  /// Inclusive earliest selectable civil date; time and UTC flag are ignored.
   final DateTime firstDate;
+
+  /// Inclusive latest selectable civil date, on or after [firstDate].
   final DateTime lastDate;
 
   /// Requests one available date, then closes even if the parent rejects it.
@@ -67,8 +71,14 @@ class RemixDatePicker extends StatelessWidget {
   /// selection, or alone when the picker is dismissed without selecting.
   /// Removing an open picker does not call this callback.
   final VoidCallback? onClose;
+
+  /// Today marker and fallback focus date; defaults to the current date.
   final DateTime? currentDate;
+
+  /// Marks in-range dates unselectable while keeping them keyboard-focusable.
   final bool Function(DateTime)? isDateUnavailable;
+
+  /// First weekday column, from Monday=1 through Sunday=7.
   final int firstDayOfWeek;
 
   /// Whether the trigger can open the calendar and dates can be selected.
@@ -89,6 +99,8 @@ class RemixDatePicker extends StatelessWidget {
   /// complete [RemixCalendarLabels.fullDate], so compact formats such as
   /// "20/2" are never announced as the date.
   final String Function(DateTime)? formatDate;
+
+  /// Caller-owned date labels and formatters; English by default.
   final RemixCalendarLabels calendarLabels;
 
   /// Optional caller-owned trigger focus node. Replacing it closes the picker.
@@ -101,11 +113,19 @@ class RemixDatePicker extends StatelessWidget {
   /// The panel also avoids the view's safe area and keyboard exclusions.
   final OverlayPositionConfig positioning;
 
-  /// Each child resolves its own style against its own interaction state.
+  /// Trigger styling, resolved against the trigger's own interaction state.
   final ButtonStyler buttonStyle;
+
+  /// Calendar and day styling, resolved against each part's own state.
   final CalendarStyler calendarStyle;
+
+  /// Styling for the popover panel containing the calendar.
   final PopoverStyler popoverStyle;
+
+  /// Month-navigation button styling, resolved in each button's state.
   final IconButtonStyler navigationStyle;
+
+  /// Month/year selector styling, resolved in each selector’s state.
   final SelectStyler selectorStyle;
 
   @override

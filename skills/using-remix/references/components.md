@@ -119,7 +119,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `onToday` and `onUnavailable` (predicate-rejected, in range; declare after
   `onDisabled`). No preset ships a calendar recipe yet; use
   `RemixCalendar(style: ...)`; `CalendarStyler` has no callable widget shorthand.
-- **DatePicker** — a thin Button + Popover + Calendar composition, not a text
+- **[DatePicker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)** — a thin Button + Popover + Calendar composition, not a text
   field. The parent owns nullable `value`; valid activation requests one date
   and closes even when rejected. Escape, outside interaction and disabling
   close without selection.
