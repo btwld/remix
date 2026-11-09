@@ -221,6 +221,8 @@ SelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
     .size2 || .size3 => FortalTokens.radius4(),
   };
   return SelectContentStyler()
+      .maxHeight(320)
+      .border(.color(FortalTokens.gray7()).width(1))
       // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
       .padding(

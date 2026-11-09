@@ -195,7 +195,7 @@ void main() {
     Widget buildHarness({
       Rect targetRect = const Rect.fromLTWH(100, 100, 50, 30),
       OverlayPositionConfig positioning = const OverlayPositionConfig(),
-      bool constrainToAvailableHeight = false,
+      bool constrainToAvailableSpace = false,
       TextDirection textDirection = TextDirection.ltr,
       ValueChanged<OverlayPlacement>? onPlacementChanged,
       Widget? child,
@@ -211,7 +211,7 @@ void main() {
               child: OverlayPositioner(
                 targetRect: targetRect,
                 positioning: positioning,
-                constrainToAvailableHeight: constrainToAvailableHeight,
+                constrainToAvailableSpace: constrainToAvailableSpace,
                 onPlacementChanged: onPlacementChanged,
                 child:
                     child ??
@@ -308,7 +308,109 @@ void main() {
       expect(childConstraints?.maxHeight, 300);
     });
 
-    group('constrainToAvailableHeight', () {
+    testWidgets('constrained collision bounds limit width before shifting', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildHarness(
+          constrainToAvailableSpace: true,
+          positioning: const OverlayPositionConfig(
+            collisionPadding: EdgeInsets.fromLTRB(11, 13, 23, 17),
+          ),
+          child: const SizedBox(key: childKey, width: 400, height: 300),
+        ),
+      );
+      final rect = tester.getRect(find.byKey(childKey));
+      expect(rect.left, greaterThanOrEqualTo(11));
+      expect(rect.right, lessThanOrEqualTo(377));
+      expect(rect.width, 366);
+      expect(rect.top, greaterThanOrEqualTo(13));
+      expect(rect.bottom, lessThanOrEqualTo(283));
+    });
+
+    group('width cap', () {
+      Future<BoxConstraints?> widthConstraints(
+        WidgetTester tester, {
+        Rect targetRect = const Rect.fromLTWH(100, 100, 50, 30),
+        OverlayPositionConfig positioning = const OverlayPositionConfig(
+          collisionPadding: EdgeInsets.all(20),
+        ),
+        TextDirection textDirection = TextDirection.ltr,
+      }) async {
+        BoxConstraints? constraints;
+        await tester.pumpWidget(
+          buildHarness(
+            targetRect: targetRect,
+            constrainToAvailableSpace: true,
+            positioning: positioning,
+            textDirection: textDirection,
+            child: LayoutBuilder(
+              builder: (context, value) {
+                constraints = value;
+                return const SizedBox(key: childKey, width: 400, height: 40);
+              },
+            ),
+          ),
+        );
+        return constraints;
+      }
+
+      testWidgets('does not cap width without collision avoidance', (
+        tester,
+      ) async {
+        final constraints = await widthConstraints(
+          tester,
+          positioning: const OverlayPositionConfig(
+            avoidCollisions: false,
+            collisionPadding: EdgeInsets.all(20),
+          ),
+        );
+        expect(constraints?.maxWidth, 400);
+      });
+
+      for (final side in [OverlaySide.left, OverlaySide.right]) {
+        testWidgets('caps width for a ${side.name} placement', (tester) async {
+          final constraints = await widthConstraints(
+            tester,
+            positioning: OverlayPositionConfig(
+              side: side,
+              collisionPadding: const EdgeInsets.all(20),
+            ),
+          );
+          expect(constraints?.maxWidth, 360);
+          expect(constraints?.maxHeight, 300, reason: 'height stays uncapped');
+        });
+      }
+
+      testWidgets('caps width the same way in right-to-left layouts', (
+        tester,
+      ) async {
+        final constraints = await widthConstraints(
+          tester,
+          textDirection: TextDirection.rtl,
+        );
+        expect(constraints?.maxWidth, 360);
+        final rect = tester.getRect(find.byKey(childKey));
+        expect(rect.left, greaterThanOrEqualTo(20));
+        expect(rect.right, lessThanOrEqualTo(380));
+      });
+
+      testWidgets('a trigger wider than the padded viewport still bounds it', (
+        tester,
+      ) async {
+        final constraints = await widthConstraints(
+          tester,
+          targetRect: const Rect.fromLTWH(5, 100, 390, 30),
+        );
+        expect(constraints?.maxWidth, 360);
+        final rect = tester.getRect(find.byKey(childKey));
+        expect(rect.width, 360);
+        expect(rect.left, greaterThanOrEqualTo(20));
+        expect(rect.right, lessThanOrEqualTo(380));
+      });
+    });
+
+    group('constrainToAvailableSpace', () {
       // Taller than the 300 high overlay, like a long list that scrolls.
       Widget scrollingPanel({double itemHeight = 40, int items = 20}) =>
           SingleChildScrollView(
@@ -333,7 +435,7 @@ void main() {
           buildHarness(
             targetRect: targetRect,
             positioning: positioning,
-            constrainToAvailableHeight: true,
+            constrainToAvailableSpace: true,
             textDirection: textDirection,
             onPlacementChanged: onPlacementChanged,
             child: panel ?? scrollingPanel(),
@@ -466,7 +568,7 @@ void main() {
             buildHarness(
               targetRect: const Rect.fromLTWH(100, 100, 50, 30),
               positioning: const OverlayPositionConfig(sideOffset: 6),
-              constrainToAvailableHeight: constrain,
+              constrainToAvailableSpace: constrain,
               child: scrollingPanel(),
             ),
           );

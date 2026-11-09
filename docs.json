@@ -96,6 +96,10 @@
           "href": "/components/select"
         },
         {
+          "title": "Calendar",
+          "href": "/components/calendar"
+        },
+        {
           "title": "Slider",
           "href": "/components/slider"
         },

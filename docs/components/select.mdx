@@ -139,9 +139,15 @@ the panel may overlap the trigger to keep options usable, while respecting
 `collisionPadding`. Increase this threshold for larger rows or panel padding;
 it is a placement policy, not a guarantee for arbitrary content or a minimum
 panel size. Set it to zero to retain strict side-capping, even at zero headroom.
-A short
-panel that fits still stays beside its trigger. With `avoidCollisions: false`,
-only the requested side's space is used and the fallback does not apply.
+A short panel that fits still stays beside its trigger. With
+`avoidCollisions: false`, only the requested side's space is used and the
+fallback does not apply.
+
+The panel is also never wider than the overlay inside `collisionPadding`, on
+any side, so content wider than that scrolls horizontally instead of running off
+screen. This width cap applies whenever `avoidCollisions` is true, the default,
+whatever the height rule does; with `avoidCollisions: false` the width is not
+capped.
 
 ```dart
 import 'package:remix/remix.dart';

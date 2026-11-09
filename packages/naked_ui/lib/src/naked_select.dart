@@ -229,7 +229,7 @@ class NakedSelect<T> extends StatefulWidget {
     this.positioning = const OverlayPositionConfig(
       alignment: OverlayAlignment.center,
     ),
-    this.constrainToAvailableHeight = false,
+    this.constrainToAvailableSpace = false,
     this.onOpen,
     this.onClose,
     this.open,
@@ -285,6 +285,11 @@ class NakedSelect<T> extends StatefulWidget {
   final MouseCursor mouseCursor;
 
   /// Focus node for the trigger.
+  ///
+  /// When the select closes, focus returns to this node unless something else
+  /// has claimed it: after Escape or a selection it returns, but if the user
+  /// clicked a text field outside the panel, or a callback such as [onChanged]
+  /// focused another node, that focus stays.
   final FocusNode? triggerFocusNode;
 
   /// Optional semantics label for the trigger.
@@ -298,19 +303,23 @@ class NakedSelect<T> extends StatefulWidget {
   /// Overlay positioning configuration.
   final OverlayPositionConfig positioning;
 
-  /// Whether to lay the overlay panel out no taller than the space above or
-  /// below the trigger.
+  /// Whether to lay the overlay panel out within the space it can use.
   ///
-  /// By default the panel can be as tall as the whole overlay, so one taller
+  /// By default the panel can be as large as the whole overlay, so one taller
   /// than the space beside the trigger slides over the trigger. When true, the
   /// panel is capped at the space on the side [positioning] resolves to, after
   /// its side offset and collision padding, so a scrollable panel scrolls
   /// there. With collision avoidance, if neither side has
   /// [OverlayPositionConfig.minimumAvailableHeight] of room, the panel may
   /// overlap the trigger within the collision-padded overlay bounds instead.
-  /// Content that cannot scroll overflows the capped panel. See
-  /// [OverlayPositioner.constrainToAvailableHeight].
-  final bool constrainToAvailableHeight;
+  ///
+  /// Independently of that height rule, when both this flag and
+  /// [OverlayPositionConfig.avoidCollisions] are true (the default), the panel is
+  /// also never wider than the collision-padded overlay, on any side, and
+  /// scrollable content scrolls horizontally. Without collision avoidance the
+  /// width is not capped. Content that cannot scroll overflows the capped
+  /// panel. See [OverlayPositioner.constrainToAvailableSpace].
+  final bool constrainToAvailableSpace;
 
   /// Called when the select overlay opens.
   final VoidCallback? onOpen;
@@ -366,6 +375,12 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
     with OverlayStateMixin<NakedSelect<T>> {
   // ignore: dispose-fields
   late final MenuController _menuController;
+  final _internalTriggerFocusNode = FocusNode(
+    debugLabel: 'NakedSelect trigger',
+  );
+  FocusNode get _triggerFocusNode =>
+      widget.triggerFocusNode ?? _internalTriggerFocusNode;
+
   final _selectedOptionFocusNode = FocusNode(
     debugLabel: 'NakedSelect selected option',
   );
@@ -381,6 +396,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
 
   @override
   void dispose() {
+    _internalTriggerFocusNode.dispose();
     _selectedOptionFocusNode.dispose();
     super.dispose();
   }
@@ -407,10 +423,17 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
       if (_isEnabled) widget.onOpenChanged?.call(true);
       return;
     }
+    void show() {
+      if (!mounted) return;
+      // Root anchors establish trigger history themselves; nested anchors do
+      // not. Keep the actual selector, rather than its previous sibling, as the
+      // restoration target for both pointer and programmatic opening.
+      _triggerFocusNode.requestFocus();
+      showOverlay();
+    }
+
     final onOpenRequested = widget.onOpenRequested;
-    onOpenRequested == null
-        ? showOverlay()
-        : onOpenRequested(position, showOverlay);
+    onOpenRequested == null ? show() : onOpenRequested(position, show);
   }
 
   void _handleCloseRequested(VoidCallback hideOverlay) {
@@ -451,7 +474,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
     handleClose(
       onClose: widget.onClose,
       onCanceled: widget.onCanceled,
-      triggerFocusNode: widget.triggerFocusNode,
+      triggerFocusNode: _triggerFocusNode,
     );
     if (_controlledOpen == null) widget.onOpenChanged?.call(false);
     if (mounted) setState(() {});
@@ -504,7 +527,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
 
     Widget selectWidget = RawMenuAnchor(
       controller: _menuController,
-      childFocusNode: widget.triggerFocusNode,
+      childFocusNode: _triggerFocusNode,
       consumeOutsideTaps: widget.consumeOutsideTaps,
       onOpen: _handleOpen,
       onClose: _handleClose,
@@ -515,26 +538,29 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
         return AnchoredOverlay(
           info: info,
           positioning: widget.positioning,
-          constrainToAvailableHeight: widget.constrainToAvailableHeight,
+          constrainToAvailableSpace: widget.constrainToAvailableSpace,
           closeOnTapOutside: widget.closeOnClickOutside,
           initialFocusNode: _selectedOptionFocusNode,
-          child: Semantics(
-            role: SemanticsRole.menu,
-            container: true,
-            explicitChildNodes: true,
-            // Preserve a child boundary while transitions hide option semantics.
+          child: KeyedSubtree(
+            key: overlayContentKey,
             child: Semantics(
+              role: SemanticsRole.menu,
               container: true,
               explicitChildNodes: true,
-              child: _NakedSelectScope<T>(
-                close: () => _requestOpen(false),
-                closeOnSelect: widget.closeOnSelect,
-                enabled: _isEnabled,
-                selectedOptionFocusNode: _selectedOptionFocusNode,
-                onChanged: _handleSelection,
-                value: _effectiveValue,
-                child: Builder(
-                  builder: (context) => widget.overlayBuilder(context, info),
+              // Preserve a child boundary while transitions hide option semantics.
+              child: Semantics(
+                container: true,
+                explicitChildNodes: true,
+                child: _NakedSelectScope<T>(
+                  close: () => _requestOpen(false),
+                  closeOnSelect: widget.closeOnSelect,
+                  enabled: _isEnabled,
+                  selectedOptionFocusNode: _selectedOptionFocusNode,
+                  onChanged: _handleSelection,
+                  value: _effectiveValue,
+                  child: Builder(
+                    builder: (context) => widget.overlayBuilder(context, info),
+                  ),
                 ),
               ),
             ),
@@ -545,7 +571,7 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
         onPressed: _isEnabled ? _toggle : null,
         enabled: _isEnabled,
         mouseCursor: widget.mouseCursor,
-        focusNode: widget.triggerFocusNode,
+        focusNode: _triggerFocusNode,
         semanticLabel: widget.semanticLabel,
         child: widget.child,
         builder: (context, buttonState, child) {

@@ -7,6 +7,21 @@ void main() {
   const idleOverride = Color(0xFF123456);
   const hoverOverride = Color(0xFFABCDEF);
 
+  testWidgets('Select caps long panels and caller bounds win', (tester) async {
+    final panel = await _resolve(
+      tester,
+      (context) => fortalSelectStyle().build(context).spec.content.spec,
+    );
+    expect(panel.container.spec.constraints?.maxHeight, 320);
+    final override = await _resolve(
+      tester,
+      (context) => fortalSelectStyle(
+        style: SelectStyler().content(SelectContentStyler().maxHeight(280)),
+      ).build(context).spec.content.spec,
+    );
+    expect(override.container.spec.constraints?.maxHeight, 280);
+  });
+
   group('Fortal style overrides', () {
     testWidgets('Button merges idle and hovered overrides last', (
       tester,

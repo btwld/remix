@@ -10,16 +10,17 @@ export 'src/components/app_bar/app_bar.dart';
 export 'src/components/avatar/avatar.dart';
 export 'src/components/badge/badge.dart';
 export 'src/components/button/button.dart';
+export 'src/components/calendar/calendar.dart';
 export 'src/components/callout/callout.dart';
-export 'src/components/dialog/dialog.dart';
-export 'src/components/icon_button/icon_button.dart';
 export 'src/components/card/card.dart';
 export 'src/components/checkbox/checkbox.dart';
 export 'src/components/combobox/combobox.dart';
 export 'src/components/data_list/data_list.dart';
 export 'src/components/data_table/data_table.dart';
+export 'src/components/dialog/dialog.dart';
 export 'src/components/disclosure/disclosure.dart';
 export 'src/components/divider/divider.dart';
+export 'src/components/icon_button/icon_button.dart';
 export 'src/components/link/link.dart';
 export 'src/components/menu/menu.dart';
 export 'src/components/popover/popover.dart';
@@ -43,19 +44,24 @@ export 'src/components/tooltip/tooltip.dart';
 export 'package:mix/mix.dart';
 export 'package:naked_ui/naked_ui.dart'
     show
-        NakedAccordionTriggerBuilder,
         NakedAccordionItemState,
+        NakedAccordionTriggerBuilder,
+        NakedCalendarState,
+        NakedCalendarDayState,
         NakedDisclosureState,
         NakedComboboxState,
         NakedComboboxFieldBuilder,
         NakedDisclosureTransitionBuilder,
+        NakedMenuState,
         NakedSliderSemanticFormatterCallback,
         NakedTabState,
-        NakedMenuState,
         OverlayAlignment,
         OverlayPlacement,
         OverlayPositionConfig,
-        OverlaySide;
+        OverlaySide,
+        civilDate,
+        compareCivilDates,
+        isSameCivilDate;
 
 /// RENDERING
 export 'src/rendering/remix_blend_mode.dart' show RemixBlendMode;

@@ -221,6 +221,8 @@ SelectContentStyler _{{valuePrefix}}SelectContentStyler({{typePrefix}}SelectSize
     .size2 || .size3 => {{typePrefix}}Tokens.radius4(),
   };
   return SelectContentStyler()
+      .maxHeight(320)
+      .border(.color({{typePrefix}}Tokens.gray7()).width(1))
       // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
       .padding(

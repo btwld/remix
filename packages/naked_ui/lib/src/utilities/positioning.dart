@@ -75,7 +75,7 @@ class OverlayPositionConfig {
   /// Minimum useful height beside an anchor before a constrained panel may
   /// overlap it instead.
   ///
-  /// Used only when [OverlayPositioner.constrainToAvailableHeight] and
+  /// Used only when [OverlayPositioner.constrainToAvailableSpace] and
   /// [avoidCollisions] are true, for top or bottom placements. The default of
   /// 48 logical pixels reserves room for a typical interactive row. Increase
   /// this for larger rows or panel padding; it is a placement threshold, not a
@@ -189,7 +189,7 @@ class OverlayPositioner extends StatefulWidget {
     super.key,
     required this.targetRect,
     this.positioning = const OverlayPositionConfig(),
-    this.constrainToAvailableHeight = false,
+    this.constrainToAvailableSpace = false,
     this.onPlacementChanged,
     required this.child,
   });
@@ -200,27 +200,31 @@ class OverlayPositioner extends StatefulWidget {
   /// Side, alignment, offset, and collision configuration for the overlay.
   final OverlayPositionConfig positioning;
 
-  /// Whether to cap the child's height at the space beside the anchor.
+  /// Whether to fit the child into the space its placement can use.
   ///
-  /// By default the child may be as tall as the whole overlay, so a panel
-  /// taller than the space beside the anchor is shifted over the anchor. When
-  /// true, a child placed above or below the anchor is laid out no taller than
-  /// the space on that side, after [OverlayPositionConfig.sideOffset] and
+  /// By default the child may be as large as the whole overlay, so a panel
+  /// taller than the space beside the anchor is shifted over the anchor.
+  ///
+  /// Height: when true, a child placed above or below the anchor is laid out
+  /// no taller than the space on that side, after
+  /// [OverlayPositionConfig.sideOffset] and
   /// [OverlayPositionConfig.collisionPadding], so a scrollable panel scrolls
-  /// there instead. With collision avoidance on, the larger side bounds the
+  /// there instead. With collision avoidance the larger side bounds the
   /// layout; the panel stays on the preferred side when it fits there,
-  /// otherwise it flips.
+  /// otherwise it flips. If neither side has
+  /// [OverlayPositionConfig.minimumAvailableHeight] of room, the
+  /// collision-padded overlay height is used instead so the panel remains
+  /// usable; it may then overlap the anchor. Left and right placements keep the
+  /// full overlay height, because shifting already keeps them beside the
+  /// anchor.
   ///
-  /// With collision avoidance, if neither side has
-  /// [OverlayPositionConfig.minimumAvailableHeight] of vertical room, uses
-  /// the collision-padded overlay height instead so the panel remains usable.
-  /// It may then overlap the anchor. A smaller child that fits still stays
-  /// beside the anchor.
+  /// Width: when true with collision avoidance, every placement is also laid
+  /// out no wider than the collision-padded overlay width, because shifting
+  /// cannot fit a wider child; scrollable content then scrolls horizontally.
+  /// Without collision avoidance, width is not capped.
   ///
-  /// Content that cannot scroll overflows the capped height. Placements to
-  /// the left or right of the anchor are not capped, because shifting already
-  /// keeps them beside the anchor rather than over it.
-  final bool constrainToAvailableHeight;
+  /// Content that cannot scroll overflows the capped size.
+  final bool constrainToAvailableSpace;
 
   /// Called after layout when the resolved placement changes.
   final ValueChanged<OverlayPlacement>? onPlacementChanged;
@@ -284,7 +288,7 @@ class _OverlayPositionerState extends State<OverlayPositioner> {
       delegate: _OverlayPositionerDelegate(
         targetRect: widget.targetRect,
         positioning: widget.positioning,
-        constrainToAvailableHeight: widget.constrainToAvailableHeight,
+        constrainToAvailableSpace: widget.constrainToAvailableSpace,
         textDirection: Directionality.of(context),
         onPlacement: _reportPlacement,
       ),
@@ -297,37 +301,46 @@ class _OverlayPositionerDelegate extends SingleChildLayoutDelegate {
   const _OverlayPositionerDelegate({
     required this.targetRect,
     required this.positioning,
-    required this.constrainToAvailableHeight,
+    required this.constrainToAvailableSpace,
     required this.textDirection,
     required this.onPlacement,
   });
 
   final Rect targetRect;
   final OverlayPositionConfig positioning;
-  final bool constrainToAvailableHeight;
+  final bool constrainToAvailableSpace;
   final TextDirection textDirection;
   final ValueChanged<OverlayPlacement> onPlacement;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    final loose = constraints.loosen();
-    if (!constrainToAvailableHeight) return loose;
+    var loose = constraints.loosen();
+    if (!constrainToAvailableSpace) return loose;
 
-    final available = _availableHeight(
-      targetRect,
-      loose.maxHeight,
-      positioning,
-    );
+    final boundsHeight = loose.maxHeight;
+    if (positioning.avoidCollisions) {
+      // Shifting cannot fit a child wider than the collision-padded viewport.
+      // Bound the layout itself so scrollable content can honor those edges.
+      loose = loose.copyWith(
+        maxWidth: math.max(
+          0,
+          loose.maxWidth - positioning.collisionPadding.horizontal,
+        ),
+        maxHeight: switch (positioning.side) {
+          OverlaySide.top || OverlaySide.bottom => math.max(
+            0,
+            loose.maxHeight - positioning.collisionPadding.vertical,
+          ),
+          OverlaySide.left || OverlaySide.right => loose.maxHeight,
+        },
+      );
+    }
+    final available = _availableHeight(targetRect, boundsHeight, positioning);
     // A sliver beside a stretched anchor may leave no scroll viewport after
     // panel padding. Allow overlap below the caller's usable-height threshold.
     if (positioning.avoidCollisions &&
         available < positioning.minimumAvailableHeight) {
-      return loose.copyWith(
-        maxHeight: math.max(
-          0,
-          loose.maxHeight - positioning.collisionPadding.vertical,
-        ),
-      );
+      return loose;
     }
     return loose.copyWith(maxHeight: math.min(loose.maxHeight, available));
   }
@@ -350,7 +363,7 @@ class _OverlayPositionerDelegate extends SingleChildLayoutDelegate {
   bool shouldRelayout(_OverlayPositionerDelegate oldDelegate) =>
       targetRect != oldDelegate.targetRect ||
       positioning != oldDelegate.positioning ||
-      constrainToAvailableHeight != oldDelegate.constrainToAvailableHeight ||
+      constrainToAvailableSpace != oldDelegate.constrainToAvailableSpace ||
       textDirection != oldDelegate.textDirection ||
       onPlacement != oldDelegate.onPlacement;
 }

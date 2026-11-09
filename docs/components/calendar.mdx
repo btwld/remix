@@ -1,0 +1,292 @@
+---
+title: Calendar
+description: A controlled, Material-independent single-date calendar with keyboard and touch interaction.
+keywords: [flutter, remix, calendar, date, accessibility]
+---
+
+`RemixCalendar` displays a Gregorian month and requests a selected date. The
+application owns the selected value; the calendar owns its focused day and
+displayed month. Use it inline with application-owned selection.
+
+## Basic usage
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class AppointmentCalendar extends StatefulWidget {
+  const AppointmentCalendar({super.key});
+
+  @override
+  State<AppointmentCalendar> createState() => _AppointmentCalendarState();
+}
+
+class _AppointmentCalendarState extends State<AppointmentCalendar> {
+  DateTime? selected;
+
+  @override
+  Widget build(BuildContext context) => RemixCalendar(
+    value: selected,
+    firstDate: DateTime(2026),
+    lastDate: DateTime(2028, 12, 31),
+    semanticLabel: 'Appointment date',
+    isDateUnavailable: (date) => date.weekday == DateTime.sunday,
+    onChanged: (date) => setState(() => selected = date),
+  );
+}
+```
+
+The default month/year selectors require an `Overlay` ancestor. A routed
+`WidgetsApp` supplies one; use `Overlay.wrap` in a builder-only host. No Material
+theme or `MaterialLocalizations` is required.
+
+## Date and state contract
+
+- Dates are year/month/day fields, not instants. Only the fields are compared:
+  input times and UTC flags are ignored and nothing is converted between
+  timezones, so the flag never changes which day two values name. The fields
+  themselves depend on how you made the value. `DateTime.now().toUtc()`
+  supplies UTC fields, which can be the day before or after the local date, so
+  pass `DateTime.now()` for today. Callbacks return local date values where
+  those fields are representable. A historically skipped local day uses a UTC
+  date-only fallback to preserve its fields. Treat both as civil dates; do not
+  convert timezones to preserve a birthday or booking date.
+- Build dates with `civilDate(year, month, day)`, exported by `remix` and
+  `naked_ui`, rather than hand-building `DateTime.utc(year, month, day)`. It
+  returns the ordinary local date wherever the device's zone has that day, so
+  it matches the dates the calendar returns, and the UTC carrier only for a day
+  the zone skipped (such as Pacific/Apia's 2011-12-30), which a local
+  `DateTime(year, month, day)` would change before the calendar receives it.
+- Compare dates with `isSameCivilDate(a, b)` and `compareCivilDates(a, b)`,
+  also exported by `remix` and `naked_ui`; they read only year, month and day.
+  `==` against your own `DateTime(year, month, day)`, `toLocal()`,
+  `millisecondsSinceEpoch` and `difference(...).inDays` treat the values as
+  instants and can disagree for the skipped-day UTC carrier.
+  `isDateUnavailable` receives the same civil values. Persist a selected date
+  as its fields, for example an ISO `yyyy-MM-dd` string.
+- `firstDate` and `lastDate` are inclusive. Unavailable in-range dates remain
+  discoverable but cannot be selected.
+- Arrow navigation and changing the month do not call `onChanged`. Selection
+  stays unchanged if the parent does not accept a callback.
+- `enabled: false` or a null `onChanged` disables interaction. There is no
+  separate read-only mode or form-validation engine.
+- Clearing the parent's value to null preserves the browsing month. A new
+  non-null value navigates to its clamped month. An externally invalid value is
+  not silently changed or cleared.
+- `currentDate` overrides today (styled with `onToday`) and fallback focus,
+  useful for deterministic examples/tests.
+
+## Styling
+
+Remix supplies anatomy, not a theme. Style the calendar and its existing child
+controls independently:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final calendarStyle = CalendarStyler()
+    .weekday(TextStyler().fontSize(12).color(const Color(0xFF525252)))
+    .day(
+      CalendarDayStyler()
+          .borderRadius(.circular(8))
+          .label(TextStyler().fontSize(14))
+          .onSelected(
+            CalendarDayStyler()
+                .color(const Color(0xFF171717))
+                .label(TextStyler().color(const Color(0xFFFFFFFF))),
+          ),
+    );
+```
+
+Besides the widget-state variants (`onSelected`, `onHovered`, `onFocusVisible`,
+`onDisabled`), day styles have two calendar variants:
+
+- `onToday` marks `currentDate` (or today). Widget-state variants win on shared
+  properties, so a selected today still looks selected.
+- `onUnavailable` marks in-range dates that `isDateUnavailable` rejects. They are
+  disabled too, so declare it after `onDisabled` to override it. Dates outside
+  `firstDate`/`lastDate` are disabled but not unavailable.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final dayStyle = CalendarDayStyler()
+    .onToday(
+      CalendarDayStyler().border(.color(const Color(0xFF171717)).width(1)),
+    )
+    .onDisabled(
+      CalendarDayStyler().label(TextStyler().color(const Color(0xFFA3A3A3))),
+    )
+    .onUnavailable(
+      CalendarDayStyler().label(
+        TextStyler().decoration(TextDecoration.lineThrough),
+      ),
+    );
+```
+
+`navigationStyle` styles the previous/next icon buttons; `selectorStyle` styles
+the month/year selects. `headerBuilder` can replace those controls using the
+calendar state's bounded month-navigation actions. Day selection/focus behavior
+remains owned by the calendar.
+
+Pass the styler to `RemixCalendar(style: calendarStyle, ...)`; `CalendarStyler`
+does not provide a callable widget shorthand.
+
+## Localization and direction
+
+Defaults are explicitly English; the widget does not detect date formatting or
+week starts from the locale. Replace `RemixCalendarLabels` strings and callbacks
+using the application's localization system. Its formatters cover month,
+month/year, complete accessible date, weekday, day number, and year. The
+month formatter receives an integer from 1 through 12. Use `joinDayLabel`
+to join the complete date and contextual labels such as today with localized
+punctuation.
+
+`firstDayOfWeek` uses Dart's weekday numbers: Monday is 1, Sunday is 7. It defaults
+to Sunday. `Directionality` controls RTL layout and horizontal keyboard movement;
+it does not translate labels. Full accessible date names should include weekday,
+day, month and year.
+
+## Interaction
+
+| Input | Behavior |
+| --- | --- |
+| Tab / Shift+Tab | Enter or leave the day grid as one keyboard stop. |
+| Left / Right | Move one visual day, respecting RTL. |
+| Up / Down | Move one week. |
+| Home / End | Move to the configured week's first/last day. |
+| PageUp / PageDown | Move one month, clamping the day when necessary. |
+| Shift+PageUp / Shift+PageDown | Move one year. |
+| Enter / Space / click / tap | Request the focused or activated date. |
+
+Hover and focus do not select. Touch does not require hover, swipe or dragging.
+The default day targets are 44 logical pixels; small spaces and enlarged text
+must retain access to every date through the component's scrollable layout.
+
+The headless `NakedCalendar` and `NakedCalendarDay` own interaction. Calendar days
+use supported Flutter button semantics with full date labels, selected/enabled
+state and actions. This is not a claim of literal web ARIA-grid parity or
+conformance on every assistive technology.
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixCalendar remixCalendarConstructor({
+  Key? key,
+  required DateTime? value,
+  required DateTime firstDate,
+  required DateTime lastDate,
+  ValueChanged<DateTime>? onChanged,
+  DateTime? currentDate,
+  bool Function(DateTime)? isDateUnavailable,
+  int firstDayOfWeek = DateTime.sunday,
+  bool enabled = true,
+  String? semanticLabel,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  RemixCalendarLabels labels = const RemixCalendarLabels(),
+  Widget Function(BuildContext, NakedCalendarState)? headerBuilder,
+  IconButtonStyler navigationStyle = const IconButtonStyler.create(),
+  SelectStyler selectorStyle = const SelectStyler.create(),
+  CalendarStyler style = const CalendarStyler.create(),
+  CalendarSpec? styleSpec,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+## Properties
+### Widget Properties
+
+#### `value` → `DateTime?`
+
+**Required**. The parent-owned selected date, compared by year/month/day fields.
+Null shows no selection.
+
+#### `firstDate` / `lastDate` → `DateTime`
+
+**Required**. Inclusive bounds; times and UTC flags are ignored. `firstDate` must
+be on or before `lastDate`.
+
+#### `onChanged` → `ValueChanged<DateTime>?`
+
+Optional. Requests a date. The calendar stays unchanged until the parent updates
+`value`. Null disables the calendar.
+
+#### `currentDate` → `DateTime?`
+
+Optional. Today, for the `onToday` variant and fallback focus. Defaults to now.
+
+#### `isDateUnavailable` → `bool Function(DateTime)?`
+
+Optional. Marks in-range dates unselectable. They stay keyboard-focusable and
+match `onUnavailable`.
+
+#### `firstDayOfWeek` → `int`
+
+Optional. First weekday column, Monday=1 through Sunday=7. Defaults to Sunday.
+
+#### `enabled` → `bool`
+
+Optional. Whether navigation, focus and selection are enabled.
+
+#### `semanticLabel` → `String?`
+
+Optional. Accessible name of the calendar group.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. Focus entry point; requesting it focuses the current day.
+
+#### `autofocus` → `bool`
+
+Optional. Whether to focus the current day on mount.
+
+#### `labels` → `RemixCalendarLabels`
+
+Optional. Labels and date formatters; English by default.
+
+#### `headerBuilder` → `Widget Function(BuildContext, NakedCalendarState)?`
+
+Optional. Replaces the header's visuals and navigation. Day behavior stays owned
+by the calendar.
+
+#### `navigationStyle` → `IconButtonStyler`
+
+Optional. Previous/next button styling, resolved in each button's state.
+
+#### `selectorStyle` → `SelectStyler`
+
+Optional. Month/year selector styling.
+
+#### `style` → `CalendarStyler`
+
+Optional. Calendar and day styling.
+
+#### `styleSpec` → `CalendarSpec?`
+
+Optional. A raw resolved spec that bypasses `style` and inherited styles.
+
+### Style Methods
+
+`CalendarStyler` styles the surface like a box (`padding`, `color`,
+`borderRadius`, `constraints`, ...) and its parts through
+`weekday(TextStyler)` and `day(CalendarDayStyler)`. Use `headerSpacing` for the
+gap below the header and `weekdaySpacing` for the gap before the first week.
+Both default to zero; navigation centres follow the outer day columns.
+
+`CalendarDayStyler` styles a day like a box, its number through
+`label(TextStyler)`, and its states through `onSelected`, `onHovered`,
+`onPressed`, `onFocusVisible`, `onDisabled`, `onToday` and `onUnavailable`.
+Use `containerEffects(RemixBoxEffectsMix)` for focus outlines and other box
+effects: they follow the day tile's resolved radius without changing its layout.
+`NakedCalendarDayState.maybeOf(context)` exposes the day to context-aware style
+tokens.
+
+Range selection, typed/segmented entry, non-Gregorian calendars and timezone
+scheduling are not part of this component. Preset recipes are separate from the
+runtime API.
