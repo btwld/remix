@@ -23,6 +23,7 @@ class CalendarSpec with _$CalendarSpec {
   /// Gap below the weekday labels, before the first week.
   @override
   final double? weekdaySpacing;
+
   /// Horizontal gap between the month and year selectors.
   @override
   final double? selectorSpacing;
