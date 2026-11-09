@@ -119,6 +119,23 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `onToday` and `onUnavailable` (predicate-rejected, in range; declare after
   `onDisabled`). No preset ships a calendar recipe yet; use
   `RemixCalendar(style: ...)`; `CalendarStyler` has no callable widget shorthand.
+- **[DatePicker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)** — a thin Button + Popover + Calendar composition, not a text
+  field. The parent owns nullable `value`; valid activation requests one date
+  and closes even when rejected. Escape, outside interaction and disabling
+  close without selection.
+  Localize `semanticLabel` (purpose; the trigger's name), `placeholder`,
+  `calendarLabels` (`fullDate` is the trigger's value, `noDate` when empty) and
+  optionally `formatDate` (painted text only). An Overlay ancestor is required.
+  A view resize closes it; keyboard and safe-area changes re-fit the open panel.
+  Use `icon` for a decorative leading date-picker icon, `placeholderStyle`
+  for the null-value fragment, and `expandedStyle` for the open-panel fragment
+  (merged last over `buttonStyle`). Finite trigger labels ellipsize on one line.
+  Style children independently with `buttonStyle`, `popoverStyle`,
+  `calendarStyle`, `navigationStyle` and `selectorStyle`; there is no DatePicker
+  `style`/`styleSpec` or public controller.
+  `onOpen`/`onClose` report the popover; a completed selection calls `onChanged`
+  before `onClose`, a dismissal only `onClose`. Parsing and segmented entry are
+  not supported.
 
 ## Data display
 

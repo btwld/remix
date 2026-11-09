@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
+import 'package:naked_ui/src/utilities/anchored_overlay.dart';
 
 import '../test_helpers.dart';
 import 'helpers/builder_state_scope.dart';
@@ -11,6 +12,168 @@ Matcher _closeTo(double v, [double eps = 0.5]) =>
 
 void main() {
   group('NakedPopover', () {
+    for (final constrained in [false, true]) {
+      testWidgets(
+        'view safety excludes keyboard with collisions off (constrained: $constrained)',
+        (tester) async {
+          tester.view.devicePixelRatio = 1;
+          tester.view.physicalSize = const Size(800, 600);
+          tester.view.viewInsets = const FakeViewPadding(bottom: 200);
+          tester.view.viewPadding = const FakeViewPadding(top: 20);
+          addTearDown(tester.view.reset);
+          final controller = MenuController();
+          const panelKey = Key('keyboard-safe panel');
+          await tester.pumpWidget(
+            WidgetsApp(
+              color: const Color(0xffffffff),
+              builder: (context, child) => Overlay.wrap(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 410),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: NakedPopover(
+                      controller: controller,
+                      avoidViewInsets: true,
+                      constrainToAvailableSpace: constrained,
+                      positioning: const OverlayPositionConfig(
+                        avoidCollisions: false,
+                      ),
+                      popoverBuilder: (context, info) => const SizedBox(
+                        key: panelKey,
+                        width: 100,
+                        height: 200,
+                      ),
+                      child: const SizedBox(width: 80, height: 30),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+          final panel = tester.getRect(find.byKey(panelKey));
+          expect(
+            panel.height,
+            200,
+            reason: 'View safety must not collapse the panel.',
+          );
+          expect(panel.top, greaterThanOrEqualTo(20));
+          expect(panel.bottom, lessThanOrEqualTo(400));
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+    testWidgets(
+      'view-safe panel re-fits when consumed safe-area insets change',
+      (tester) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(800, 600);
+        tester.view.padding = const FakeViewPadding(bottom: 20);
+        tester.view.viewPadding = const FakeViewPadding(bottom: 20);
+        addTearDown(tester.view.reset);
+        final controller = MenuController();
+        const panelKey = Key('refit panel');
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xffffffff),
+            builder: (context, child) => Overlay.wrap(
+              child: SafeArea(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: NakedPopover(
+                    controller: controller,
+                    avoidViewInsets: true,
+                    constrainToAvailableSpace: true,
+                    positioning: const OverlayPositionConfig(
+                      collisionPadding: EdgeInsets.all(8),
+                    ),
+                    popoverBuilder: (context, info) =>
+                        const SizedBox(key: panelKey, width: 100, height: 400),
+                    child: const SizedBox(width: 80, height: 30),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        expect(tester.getRect(find.byKey(panelKey)).bottom, greaterThan(192));
+
+        tester.view.padding = const FakeViewPadding(bottom: 400);
+        tester.view.viewPadding = const FakeViewPadding(bottom: 400);
+        await tester.pumpAndSettle();
+        expect(
+          tester.getRect(find.byKey(panelKey)).bottom,
+          lessThanOrEqualTo(192),
+        );
+        expect(controller.isOpen, isTrue);
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
+      'view-safe panel respects safe top in a scaled nested Overlay',
+      (tester) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(800, 600);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        addTearDown(tester.view.resetPhysicalSize);
+        final controller = MenuController();
+        const panelKey = Key('panel');
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xffffffff),
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(viewPadding: const EdgeInsets.only(top: 80)),
+              child: Overlay.wrap(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Transform.scale(
+                    scale: .5,
+                    alignment: Alignment.topLeft,
+                    child: SizedBox(
+                      width: 400,
+                      height: 300,
+                      child: Overlay.wrap(
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: NakedPopover(
+                            controller: controller,
+                            avoidViewInsets: true,
+                            positioning: const OverlayPositionConfig(
+                              collisionPadding: EdgeInsets.zero,
+                            ),
+                            popoverBuilder: (context, info) => const SizedBox(
+                              key: panelKey,
+                              width: 300,
+                              height: 600,
+                            ),
+                            child: const SizedBox(width: 80, height: 30),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        final panel = tester.getRect(find.byKey(panelKey));
+        expect(
+          panel.top,
+          greaterThanOrEqualTo(80),
+          reason: 'Panel global rect: $panel',
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
     testWidgets('renders child and is closed by default', (tester) async {
       await tester.pumpMaterialWidget(
         NakedPopover(
@@ -318,6 +481,242 @@ void main() {
         tester.view.physicalSize.height / tester.view.devicePixelRatio,
       );
     });
+
+    for (final useRootOverlay in [false, true]) {
+      for (final offset in [0.0, 200.0]) {
+        testWidgets(
+          'nested view-safe panel inherits root=$useRootOverlay at offset $offset',
+          (tester) async {
+            tester.view.devicePixelRatio = 1;
+            tester.view.physicalSize = const Size(800, 600);
+            addTearDown(tester.view.resetDevicePixelRatio);
+            addTearDown(tester.view.resetPhysicalSize);
+            final outer = MenuController();
+            final inner = MenuController();
+            const panelKey = Key('nested safe panel');
+            await tester.pumpWidget(
+              WidgetsApp(
+                color: const Color(0xffffffff),
+                builder: (context, child) => MediaQuery(
+                  data: MediaQuery.of(context).copyWith(
+                    viewPadding: const EdgeInsets.only(top: 80, bottom: 60),
+                  ),
+                  child: Overlay.wrap(
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: offset, top: offset),
+                        child: SizedBox(
+                          width: 400,
+                          height: 300,
+                          child: Overlay.wrap(
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: NakedPopover(
+                                controller: outer,
+                                useRootOverlay: useRootOverlay,
+                                avoidViewInsets: true,
+                                popoverBuilder: (context, info) => NakedPopover(
+                                  controller: inner,
+                                  useRootOverlay: !useRootOverlay,
+                                  positioning: const OverlayPositionConfig(
+                                    collisionPadding: EdgeInsets.all(8),
+                                  ),
+                                  popoverBuilder: (context, info) =>
+                                      const SizedBox(
+                                        key: panelKey,
+                                        width: 300,
+                                        height: 600,
+                                      ),
+                                  child: const SizedBox(width: 80, height: 30),
+                                ),
+                                child: const SizedBox(width: 80, height: 30),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+            outer.open();
+            await tester.pumpAndSettle();
+            inner.open();
+            await tester.pumpAndSettle();
+            final panel = tester.getRect(find.byKey(panelKey));
+            // The oversized panel fills the intersection of the target Overlay
+            // and the safe view, with the caller's extra collision padding.
+            final top = useRootOverlay || offset == 0 ? 88.0 : 208.0;
+            final bottom = useRootOverlay ? 532.0 : offset + 292;
+            expect(panel.top, _closeTo(top));
+            expect(panel.bottom, _closeTo(bottom));
+            expect(panel.width, 300);
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+    }
+
+    testWidgets(
+      'inherited nearest-overlay mode resolves an intermediary Overlay',
+      (tester) async {
+        final outer = MenuController();
+        final inner = MenuController();
+        const intermediaryKey = Key('intermediary overlay');
+        const panelKey = Key('intermediary panel');
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xffffffff),
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                viewPadding: const EdgeInsets.only(top: 80, bottom: 60),
+              ),
+              child: Overlay.wrap(
+                child: Center(
+                  child: NakedPopover(
+                    controller: outer,
+                    avoidViewInsets: true,
+                    popoverBuilder: (context, info) => SizedBox(
+                      width: 250,
+                      height: 260,
+                      child: Overlay.wrap(
+                        key: intermediaryKey,
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: NakedPopover(
+                            controller: inner,
+                            useRootOverlay: true,
+                            positioning: const OverlayPositionConfig(
+                              collisionPadding: EdgeInsets.all(8),
+                            ),
+                            popoverBuilder: (context, info) => const SizedBox(
+                              key: panelKey,
+                              width: 300,
+                              height: 600,
+                            ),
+                            child: const SizedBox(width: 80, height: 30),
+                          ),
+                        ),
+                      ),
+                    ),
+                    child: const SizedBox(width: 80, height: 30),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        outer.open();
+        await tester.pumpAndSettle();
+        inner.open();
+        await tester.pumpAndSettle();
+        final target = tester.getRect(find.byKey(intermediaryKey));
+        final panel = tester.getRect(find.byKey(panelKey));
+        final safeView = Rect.fromLTRB(
+          0,
+          80,
+          tester.view.physicalSize.width / tester.view.devicePixelRatio,
+          tester.view.physicalSize.height / tester.view.devicePixelRatio - 60,
+        );
+        expect(panel, target.intersect(safeView).deflate(8));
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    for (final rawGroup in [false, true]) {
+      for (final useRootOverlay in [false, true]) {
+        testWidgets(
+          '${rawGroup ? 'RawMenuAnchorGroup' : 'NakedMenubar'} resets overlay inheritance to root=$useRootOverlay',
+          (tester) async {
+            tester.view.devicePixelRatio = 1;
+            tester.view.physicalSize = const Size(800, 600);
+            addTearDown(tester.view.resetDevicePixelRatio);
+            addTearDown(tester.view.resetPhysicalSize);
+            final outer = MenuController();
+            final inner = MenuController();
+            const targetKey = Key('group target overlay');
+            const panelKey = Key('group panel');
+            const positioning = OverlayPositionConfig(
+              collisionPadding: EdgeInsets.all(8),
+            );
+            const panel = SizedBox(key: panelKey, width: 300, height: 600);
+            const trigger = SizedBox(width: 80, height: 30);
+            final group = rawGroup
+                ? RawMenuAnchorGroup(
+                    controller: MenuController(),
+                    child: RawMenuAnchor(
+                      controller: inner,
+                      useRootOverlay: useRootOverlay,
+                      overlayBuilder: (context, info) => AnchoredOverlay(
+                        info: info,
+                        positioning: positioning,
+                        useRootOverlay: useRootOverlay,
+                        child: panel,
+                      ),
+                      child: trigger,
+                    ),
+                  )
+                : NakedMenubar(
+                    child: NakedMenu<String>(
+                      controller: inner,
+                      useRootOverlay: useRootOverlay,
+                      positioning: positioning,
+                      overlayBuilder: (context, info) => panel,
+                      child: trigger,
+                    ),
+                  );
+            await tester.pumpWidget(
+              WidgetsApp(
+                color: const Color(0xffffffff),
+                builder: (context, child) => MediaQuery(
+                  data: MediaQuery.of(context).copyWith(
+                    viewPadding: const EdgeInsets.only(top: 80, bottom: 60),
+                  ),
+                  child: Overlay.wrap(
+                    child: Center(
+                      child: NakedPopover(
+                        controller: outer,
+                        useRootOverlay: !useRootOverlay,
+                        avoidViewInsets: true,
+                        popoverBuilder: (context, info) => SizedBox(
+                          width: 250,
+                          height: 260,
+                          child: Overlay.wrap(
+                            key: targetKey,
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: group,
+                            ),
+                          ),
+                        ),
+                        child: trigger,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+            outer.open();
+            await tester.pumpAndSettle();
+            inner.open();
+            await tester.pumpAndSettle();
+            final rect = tester.getRect(find.byKey(panelKey));
+            const safeView = Rect.fromLTRB(0, 80, 800, 540);
+            if (useRootOverlay) {
+              expect(rect.height, safeView.height - 16);
+              expect(rect.top, 88);
+              expect(rect.bottom, 532);
+            } else {
+              final target = tester.getRect(find.byKey(targetKey));
+              expect(rect, target.intersect(safeView).deflate(8));
+            }
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+    }
 
     testWidgets('can position against a separate keyed anchor', (tester) async {
       final anchorKey = GlobalKey();

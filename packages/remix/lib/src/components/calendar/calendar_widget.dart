@@ -10,6 +10,7 @@ class RemixCalendarLabels {
     this.chooseMonth = 'Choose month',
     this.chooseYear = 'Choose year',
     this.today = 'Today',
+    this.noDate = 'No date selected',
     this.month = _englishMonth,
     this.monthYear = _englishMonthYear,
     this.fullDate = _englishFullDate,
@@ -33,6 +34,13 @@ class RemixCalendarLabels {
 
   /// Appended to the accessible name of the current date.
   final String today;
+
+  /// Accessible value of a date picker trigger without a selected date.
+  ///
+  /// The trigger's name is the picker's purpose; this replaces the selected
+  /// date as its value, so assistive technology does not read the visible
+  /// placeholder as if it were one.
+  final String noDate;
 
   /// Month name for the month selector items.
   final String Function(int month) month;
@@ -218,7 +226,11 @@ class RemixCalendar extends StatelessWidget {
                 Flexible(
                   flex: 3,
                   child: RemixSelect<int>(
-                    positioning: const OverlayPositionConfig(sideOffset: 4),
+                    positioning: const OverlayPositionConfig(
+                      side: .bottom,
+                      alignment: .center,
+                      sideOffset: 4,
+                    ),
                     trigger: RemixSelectTrigger(
                       placeholder: labels.chooseMonth,
                     ),
@@ -253,7 +265,11 @@ class RemixCalendar extends StatelessWidget {
                 Flexible(
                   flex: 2,
                   child: RemixSelect<int>(
-                    positioning: const OverlayPositionConfig(sideOffset: 4),
+                    positioning: const OverlayPositionConfig(
+                      side: .bottom,
+                      alignment: .center,
+                      sideOffset: 4,
+                    ),
                     trigger: RemixSelectTrigger(placeholder: labels.chooseYear),
                     semanticLabel: labels.chooseYear,
                     selectedValue: date.year,

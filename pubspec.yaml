@@ -123,7 +123,14 @@ melos:
       # checks dashboard's explicit chat closure, not the full Fortal catalog.
       packageFilters:
         scope:
-          [remix, registry_source, playground, dashboard]
+          [
+            remix,
+            registry_source,
+            playground,
+            dashboard,
+            demo,
+            widgetbook_vanilla,
+          ]
 
     test:flutter:
       exec: flutter test --reporter=failures-only

@@ -1,0 +1,247 @@
+---
+title: Date Picker
+description: A controlled single-date picker composed from Remix Button, Popover and Calendar.
+keywords: [flutter, remix, date picker, calendar, accessibility]
+---
+
+`RemixDatePicker` opens a [Calendar](/components/calendar) from a real button.
+It composes existing Remix controls; the application still owns the selected
+date. Use [Calendar](/components/calendar) directly when dates should remain
+visible inline.
+
+## Basic usage
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class AppointmentDatePicker extends StatefulWidget {
+  const AppointmentDatePicker({super.key});
+
+  @override
+  State<AppointmentDatePicker> createState() => _AppointmentDatePickerState();
+}
+
+class _AppointmentDatePickerState extends State<AppointmentDatePicker> {
+  DateTime? selected;
+
+  @override
+  Widget build(BuildContext context) => RemixDatePicker(
+    value: selected,
+    firstDate: DateTime(2026),
+    lastDate: DateTime(2028, 12, 31),
+    semanticLabel: 'Appointment date',
+    placeholder: 'Select a date',
+    isDateUnavailable: (date) => date.weekday == DateTime.sunday,
+    onChanged: (date) => setState(() => selected = date),
+  );
+}
+```
+
+An `Overlay` ancestor is required. A routed `WidgetsApp` supplies one; use
+`Overlay.wrap` in a builder-only host. No Material theme or
+`MaterialLocalizations` is required.
+
+## Ownership and interaction
+
+- `value`, inclusive bounds, unavailable dates and civil-date comparison follow
+  the [Calendar contract](/components/calendar#date-and-state-contract).
+- `enabled: false` or a null `onChanged` disables the trigger. Disabling an open
+  picker closes it without selecting.
+- Opening focuses the calendar's selected/current, bounded date. Arrows browse
+  without selecting. Enter, Space, click or tap requests one available date and
+  closes the picker, including reselecting the existing date.
+- The picker closes after a selection request even when the parent rejects it.
+  There is no optimistic selected value or Apply/Cancel draft state.
+- `onOpen` fires when the popover opens and `onClose` when it has closed. A
+  completed selection calls `onChanged` before `onClose`; a dismissal calls
+  only `onClose`, so the two are distinguishable. Removing an open picker does
+  not call `onClose`, matching [Select](/components/select).
+- Escape and outside interaction dismiss without changing the value. Ordinary
+  dismissal restores the original live trigger. Replacing a borrowed `focusNode`
+  while open closes the picker; the application manages focus on its replacement.
+  A month/year selector handles its own first Escape before the containing
+  picker or dialog.
+- The popup is not a modal dialog. It uses the existing popover focus and
+  dismissal behavior, without claiming modal background semantics.
+- The panel constrains and scrolls in small spaces. Touch uses the same explicit
+  controls; hover, swiping and a software keyboard are not required.
+- Scrolling an ancestor closes a root picker without selecting. A picker nested
+  in another menu or popover closes when the outer root closes.
+- A view-size change, such as a rotation or window resize, closes the picker
+  without selecting; reopen it in the new space. Keyboard and safe-area changes
+  re-fit the open panel instead, so the keyboard hiding as the trigger takes
+  focus from a text field does not dismiss it. Nested month/year menus inherit
+  the panel's inset protection.
+
+Clear the value by setting it to null in the parent. This button-only picker
+does not include a text parser, segmented field or time input.
+
+## Labels and presentation
+
+Localize `semanticLabel`, `placeholder`, and `calendarLabels`. Supply
+`calendarLabels.noDate` with the other localized labels for an empty selection.
+`semanticLabel` is the field purpose and the trigger's accessible name. The
+trigger's accessible value is the selected date from `calendarLabels.fullDate`,
+or `calendarLabels.noDate` when empty; assistive technology joins the name and
+value in its own locale. `formatDate` only changes the text painted on the
+button (by default `calendarLabels.fullDate`), so a compact format is never
+announced as the date. Set `firstDayOfWeek` explicitly for the application
+locale. English defaults do not imply automatic locale formatting.
+
+Style the composition with independent `buttonStyle`, `popoverStyle`,
+`calendarStyle`, `navigationStyle` and `selectorStyle` values. Each child resolves
+its own interaction states. There is no separate DatePicker styler, raw spec,
+controller, or callable widget shorthand. Preset recipes are a separate release
+from this shared runtime component.
+
+The trigger label defaults to one line with an ellipsis under a finite width;
+its accessible value remains complete. `icon` supplies a decorative leading
+icon, styled by `buttonStyle`. `placeholderStyle` merges over `buttonStyle`
+only when `value` is null; `expandedStyle` merges last while the popover is
+open, including while a nested selector is open. Interaction variants still
+resolve in the button's own state. Use these fragments for muted empty text
+and an open-field ring. Month/year panels use a 4-pixel side offset.
+
+## Constructor
+
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixDatePicker date_pickerConstructor({
+  Key? key,
+  required DateTime? value,
+  required DateTime firstDate,
+  required DateTime lastDate,
+  ValueChanged<DateTime>? onChanged,
+  VoidCallback? onOpen,
+  VoidCallback? onClose,
+  DateTime? currentDate,
+  bool Function(DateTime)? isDateUnavailable,
+  int firstDayOfWeek = DateTime.sunday,
+  bool enabled = true,
+  String semanticLabel = 'Choose date',
+  String placeholder = 'Select date',
+  String Function(DateTime)? formatDate,
+  RemixCalendarLabels calendarLabels = const RemixCalendarLabels(),
+  FocusNode? focusNode,
+  bool autofocus = false,
+  OverlayPositionConfig positioning = const OverlayPositionConfig(
+    sideOffset: 4,
+    collisionPadding: EdgeInsets.all(8),
+  ),
+  IconData? icon,
+  ButtonStyler placeholderStyle = const ButtonStyler.create(),
+  ButtonStyler expandedStyle = const ButtonStyler.create(),
+  ButtonStyler buttonStyle = const ButtonStyler.create(),
+  CalendarStyler calendarStyle = const CalendarStyler.create(),
+  PopoverStyler popoverStyle = const PopoverStyler.create(),
+  IconButtonStyler navigationStyle = const IconButtonStyler.create(),
+  SelectStyler selectorStyle = const SelectStyler.create(),
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `value` → `DateTime?`
+
+**Required**. Parent-owned selected date, or null for an empty selection. Civil-date bounds follow the calendar contract.
+
+#### `firstDate / lastDate` → `DateTime`
+
+**Required**. Inclusive civil-date bounds; firstDate must be on or before lastDate.
+
+#### `onChanged` → `ValueChanged<DateTime>?`
+
+Requests one complete date and closes even if the parent rejects it. Null disables the picker.
+
+#### `onOpen / onClose` → `VoidCallback?`
+
+Opening and closure notifications. Selection calls onChanged before onClose; dismissal calls only onClose. Removal does not call onClose.
+
+#### `currentDate` → `DateTime?`
+
+Today and fallback focus date; defaults to now.
+
+#### `isDateUnavailable` → `bool Function(DateTime)?`
+
+Marks dates unavailable for selection.
+
+#### `firstDayOfWeek` → `int`
+
+First weekday column, Monday=1 through Sunday=7. Defaults to Sunday.
+
+#### `enabled` → `bool`
+
+Defaults to true. Disabling an open picker closes it without selecting.
+
+#### `semanticLabel` → `String`
+
+Accessible field purpose. Defaults to Choose date.
+
+#### `placeholder` → `String`
+
+Visible empty text. Defaults to Select date.
+
+#### `formatDate` → `String Function(DateTime)?`
+
+Visible selected text only; accessible values use the full localized calendar labels.
+
+#### `calendarLabels` → `RemixCalendarLabels`
+
+Calendar and accessible-value labels; English by default.
+
+#### `focusNode` → `FocusNode?`
+
+Caller-owned trigger focus node. Replacing it closes the picker.
+
+#### `autofocus` → `bool`
+
+Defaults to false. Focuses the trigger without opening the calendar.
+
+#### `positioning` → `OverlayPositionConfig`
+
+Placement, offsets and collision padding relative to the trigger. Defaults to a side offset of 4 and collision padding of 8. The panel avoids safe-area and keyboard exclusions.
+
+#### `icon` → `IconData?`
+
+Optional decorative leading icon; size and color follow `buttonStyle`.
+
+#### `placeholderStyle` → `ButtonStyler`
+
+Fragment merged over `buttonStyle` only when `value` is null.
+
+#### `expandedStyle` → `ButtonStyler`
+
+Fragment merged last while the popover is open, including nested selectors.
+
+#### `buttonStyle` → `ButtonStyler`
+
+Trigger styling, resolved in its own state.
+
+#### `calendarStyle` → `CalendarStyler`
+
+Calendar surface and day styling.
+
+#### `popoverStyle` → `PopoverStyler`
+
+Popup surface styling.
+
+#### `navigationStyle` → `IconButtonStyler`
+
+Previous/next button styling.
+
+#### `selectorStyle` → `SelectStyler`
+
+Month/year selector styling.
+
+### Style Methods
+
+Each child uses its own styler and interaction states. There is no separate
+DatePicker styler or raw spec. See [Calendar](/components/calendar#properties)
+for calendar and day style methods.

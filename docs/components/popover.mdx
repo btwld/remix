@@ -112,6 +112,39 @@ const positioning = OverlayPositionConfig(
 
 The overlay is clamped to the available screen bounds.
 
+### Fitting and view safety
+
+- `constrainToAvailableSpace: true` fits the panel into the space its placement
+  can use. For top/bottom placements, this limits height beside the trigger.
+  With collision avoidance, it also limits width inside the padded overlay.
+  The content must scroll when it is larger.
+- `avoidViewInsets: true` keeps the panel inside the view padding (safe area)
+  and above the view insets (keyboard). It always caps both axes to the visible overlay; fixed-size content
+  larger than these bounds overflows unless it can adapt or scroll.
+  The open panel re-fits when either exclusion changes, including padding that
+  a `SafeArea` around the trigger consumes. Selects, menus and submenus opened
+  from inside the panel inherit this protection.
+- `initialFocusNode` takes focus when the panel opens, in place of the panel
+  container, and is revealed in its scrollables. Use it to land on a selected
+  item. Focus stays put when something inside the panel already holds it.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final selectedItem = FocusNode();
+
+final viewSafePopover = RemixPopover(
+  constrainToAvailableSpace: true,
+  avoidViewInsets: true,
+  initialFocusNode: selectedItem,
+  popoverChild: SingleChildScrollView(
+    child: Focus(focusNode: selectedItem, child: const Text('Selected item')),
+  ),
+  child: const Text('Open'),
+);
+```
+
 ## Styling
 
 `PopoverStyler` styles the overlay container. The trigger keeps its own
@@ -140,6 +173,8 @@ fully composable.
 ## Keyboard and accessibility
 
 - Tap the trigger or press Space or Enter while it is focused to toggle the popover.
+- Close-time focus return comes from Flutter’s `RawMenuAnchor`; unlike
+  Select/Menu, it is not conditional on focus remaining in the panel.
 - Press Escape to close it and return focus to the trigger. With `openOnTap: false`, focus returns to the control that carries `triggerFocusNode`.
 - Clicking outside closes the overlay. `consumeOutsideTaps` controls whether that tap reaches the widget behind it.
 - Use `semanticLabel` when the built-in trigger's visual content does not provide a clear accessible name. With `openOnTap: false`, label the interactive child instead.
@@ -160,6 +195,9 @@ RemixPopover remixPopoverConstructor({
   bool useRootOverlay = false,
   bool openOnTap = true,
   FocusNode? triggerFocusNode,
+  FocusNode? initialFocusNode,
+  bool constrainToAvailableSpace = false,
+  bool avoidViewInsets = false,
   VoidCallback? onOpen,
   VoidCallback? onClose,
   RawMenuAnchorOpenRequestedCallback? onOpenRequested,

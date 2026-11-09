@@ -120,6 +120,9 @@ class NakedPopover extends StatefulWidget {
     this.openOnTap = true,
     this.anchorKey,
     this.triggerFocusNode,
+    this.initialFocusNode,
+    this.constrainToAvailableSpace = false,
+    this.avoidViewInsets = false,
     this.onOpen,
     this.onClose,
     this.onOpenRequested,
@@ -181,7 +184,36 @@ class NakedPopover extends StatefulWidget {
   /// Inside another popover's or menu's overlay, [RawMenuAnchor] focuses the
   /// node only for the outermost anchor, so a nested popover opened without
   /// focusing its control also returns focus to whatever had it before opening.
+  ///
+  /// Close-time focus return is owned by [RawMenuAnchor]. Unlike Select/Menu,
+  /// it is not limited to cases where focus is still inside the panel.
   final FocusNode? triggerFocusNode;
+
+  /// Preferred focus target after the panel attaches, revealed in its scrollables.
+  ///
+  /// Attach this node to a focusable descendant of the panel. If it is detached
+  /// or cannot request focus, the first focusable descendant is used instead.
+  /// Existing focus inside the panel is preserved. With no eligible descendant,
+  /// focus remains on the panel container. Null keeps the default container focus.
+  final FocusNode? initialFocusNode;
+
+  /// Whether to fit the panel into the space its placement can use. For top and bottom
+  /// placements, caps height beside the trigger; with collision avoidance,
+  /// also caps width inside the padded overlay. Content must handle scrolling.
+  /// See [OverlayPositioner.constrainToAvailableSpace].
+  final bool constrainToAvailableSpace;
+
+  /// Whether to keep the panel inside the view padding (safe area) and above
+  /// the view insets (keyboard).
+  ///
+  /// These view-coordinate exclusions are intersected with the actual Overlay
+  /// bounds, including smaller or offset nested overlays, and cap both axes.
+  /// Fixed-size content larger than the cap overflows unless it adapts or
+  /// scrolls. The open panel re-fits when safe-area or keyboard insets change.
+  ///
+  /// Defaults to false. Safe placement may flip or shift even when
+  /// [OverlayPositionConfig.avoidCollisions] is false.
+  final bool avoidViewInsets;
 
   /// Called when the popover opens.
   final VoidCallback? onOpen;
@@ -475,6 +507,10 @@ class _NakedPopoverState extends State<NakedPopover>
         return AnchoredOverlay(
           info: anchored,
           positioning: widget.positioning,
+          avoidViewInsets: widget.avoidViewInsets,
+          useRootOverlay: widget.useRootOverlay,
+          initialFocusNode: widget.initialFocusNode,
+          constrainToAvailableSpace: widget.constrainToAvailableSpace,
           child: widget.popoverBuilder(context, anchored),
         );
       },

@@ -38,8 +38,11 @@ class CalendarReferencePage extends StatefulWidget {
   State<CalendarReferencePage> createState() => _CalendarReferencePageState();
 }
 
+enum _CalendarMode { picker, inline }
+
 class _CalendarReferencePageState extends State<CalendarReferencePage> {
   DateTime? _selected = DateTime(2026, 11, 12);
+  _CalendarMode _mode = _CalendarMode.picker;
   bool _enabled = true;
   bool _arabic = false;
   bool _largeText = false;
@@ -104,38 +107,97 @@ class _CalendarReferencePageState extends State<CalendarReferencePage> {
                               .color(PlaygroundTokens.mutedForeground()),
                         ),
                         const SizedBox(height: 24),
-                        SizedBox(
-                          width: panelWidth,
-                          child: Box(
-                            style: BoxStyler()
-                                .color(PlaygroundTokens.card())
+                        PlaygroundSegmentedControl<_CalendarMode>(
+                          semanticLabel: _arabic
+                              ? 'طريقة العرض'
+                              : 'Calendar mode',
+                          selectedValue: _mode,
+                          onChanged: (mode) => setState(() => _mode = mode),
+                          items: [
+                            RemixSegmentedControlItem(
+                              value: _CalendarMode.picker,
+                              label: _arabic ? 'منتقي التاريخ' : 'Picker',
+                            ),
+                            RemixSegmentedControlItem(
+                              value: _CalendarMode.inline,
+                              label: _arabic ? 'تقويم مضمّن' : 'Inline',
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        if (_mode == _CalendarMode.picker)
+                          RemixDatePicker(
+                            value: _selected,
+                            firstDate: DateTime(2025),
+                            lastDate: DateTime(2028, 12, 31),
+                            currentDate: DateTime(2026, 11, 6),
+                            semanticLabel: _arabic
+                                ? 'تاريخ الموعد'
+                                : 'Appointment date',
+                            placeholder: _arabic
+                                ? 'اختر تاريخًا'
+                                : 'Select a date',
+                            formatDate: (date) =>
+                                '${labels.day(date)} ${labels.month(date.month)} '
+                                '${labels.year(date.year)}',
+                            calendarLabels: labels,
+                            firstDayOfWeek: _arabic
+                                ? DateTime.saturday
+                                : DateTime.monday,
+                            enabled: _enabled,
+                            isDateUnavailable: _isWeekend,
+                            onChanged: (date) =>
+                                setState(() => _selected = date),
+                            buttonStyle: playgroundButtonStyle(
+                              variant: PlaygroundButtonVariant.outline,
+                            ).minHeight(44),
+                            calendarStyle: _calendarStyle,
+                            navigationStyle: navigationStyle,
+                            selectorStyle: selectorStyle,
+                            popoverStyle: PopoverStyler()
+                                .color(PlaygroundTokens.popover())
                                 .border(
-                                  .color(PlaygroundTokens.border()).width(1),
+                                  .color(
+                                    PlaygroundTokens.border(),
+                                  ).width(PlaygroundTokens.strokeHairline),
                                 )
-                                .borderRadius(.circular(12))
-                                .padding(.all(compact ? 0 : 12)),
-                            child: RemixCalendar(
-                              value: _selected,
-                              firstDate: DateTime(2025),
-                              lastDate: DateTime(2028, 12, 31),
-                              currentDate: DateTime(2026, 11, 6),
-                              semanticLabel: _arabic
-                                  ? 'تاريخ الموعد'
-                                  : 'Appointment date',
-                              isDateUnavailable: _isWeekend,
-                              firstDayOfWeek: _arabic
-                                  ? DateTime.saturday
-                                  : DateTime.monday,
-                              enabled: _enabled,
-                              labels: labels,
-                              onChanged: (date) =>
-                                  setState(() => _selected = date),
-                              navigationStyle: navigationStyle,
-                              selectorStyle: selectorStyle,
-                              style: _calendarStyle,
+                                .borderRadius(.all(PlaygroundTokens.radiusMd()))
+                                .padding(.all(compact ? 0 : 12))
+                                .shadows(PlaygroundShadow.md.box),
+                          )
+                        else
+                          SizedBox(
+                            width: panelWidth,
+                            child: Box(
+                              style: BoxStyler()
+                                  .color(PlaygroundTokens.card())
+                                  .border(
+                                    .color(PlaygroundTokens.border()).width(1),
+                                  )
+                                  .borderRadius(.circular(12))
+                                  .padding(.all(compact ? 0 : 12)),
+                              child: RemixCalendar(
+                                value: _selected,
+                                firstDate: DateTime(2025),
+                                lastDate: DateTime(2028, 12, 31),
+                                currentDate: DateTime(2026, 11, 6),
+                                semanticLabel: _arabic
+                                    ? 'تاريخ الموعد'
+                                    : 'Appointment date',
+                                isDateUnavailable: _isWeekend,
+                                firstDayOfWeek: _arabic
+                                    ? DateTime.saturday
+                                    : DateTime.monday,
+                                enabled: _enabled,
+                                labels: labels,
+                                onChanged: (date) =>
+                                    setState(() => _selected = date),
+                                navigationStyle: navigationStyle,
+                                selectorStyle: selectorStyle,
+                                style: _calendarStyle,
+                              ),
                             ),
                           ),
-                        ),
                         const SizedBox(height: 20),
                         StyledText(
                           _selected == null
@@ -272,6 +334,7 @@ final _arabicLabels = RemixCalendarLabels(
   chooseMonth: 'اختر الشهر',
   chooseYear: 'اختر السنة',
   today: 'اليوم',
+  noDate: 'لم يتم اختيار تاريخ',
   month: (month) => _arabicMonths[month - 1],
   monthYear: (date) => '${_arabicMonths[date.month - 1]} ${_digits(date.year)}',
   fullDate: (date) =>

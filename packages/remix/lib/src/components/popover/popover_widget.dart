@@ -14,6 +14,9 @@ class RemixPopover extends StatelessWidget {
     this.useRootOverlay = false,
     this.openOnTap = true,
     this.triggerFocusNode,
+    this.initialFocusNode,
+    this.constrainToAvailableSpace = false,
+    this.avoidViewInsets = false,
     this.onOpen,
     this.onClose,
     this.onOpenRequested,
@@ -51,7 +54,33 @@ class RemixPopover extends StatelessWidget {
   ///
   /// When [openOnTap] is false, attach it to the control in [child] so that
   /// closing the popover returns focus to it.
+  ///
+  /// Close-time focus return is owned by [RawMenuAnchor]. Unlike Select/Menu,
+  /// it is not limited to cases where focus is still inside the panel.
   final FocusNode? triggerFocusNode;
+
+  /// Preferred focus target after the panel attaches, revealed in its scrollables.
+  ///
+  /// Attach this node to a focusable descendant of the panel. If it is detached
+  /// or cannot request focus, the first focusable descendant is used instead.
+  /// Existing focus inside the panel is preserved. With no eligible descendant,
+  /// focus remains on the panel container. Null keeps the default container focus.
+  final FocusNode? initialFocusNode;
+
+  /// Whether to fit the panel into the space its placement can use. For top and bottom
+  /// placements, caps height beside the trigger; with collision avoidance,
+  /// also caps width inside the padded overlay. Content must handle scrolling.
+  final bool constrainToAvailableSpace;
+
+  /// Whether to keep the panel inside the view padding (safe area) and above
+  /// the view insets (keyboard).
+  ///
+  /// These view-coordinate exclusions are intersected with the actual Overlay
+  /// bounds, including smaller or offset nested overlays, and cap both axes.
+  /// Fixed-size content larger than the cap overflows unless it adapts or
+  /// scrolls. The open panel re-fits when safe-area or keyboard insets change.
+  /// Defaults to false.
+  final bool avoidViewInsets;
 
   /// Called after the popover opens.
   final VoidCallback? onOpen;
@@ -103,6 +132,9 @@ class RemixPopover extends StatelessWidget {
           useRootOverlay: useRootOverlay,
           openOnTap: openOnTap,
           triggerFocusNode: triggerFocusNode,
+          initialFocusNode: initialFocusNode,
+          constrainToAvailableSpace: constrainToAvailableSpace,
+          avoidViewInsets: avoidViewInsets,
           onOpen: onOpen,
           onClose: onClose,
           onOpenRequested: onOpenRequested,

@@ -1076,6 +1076,7 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
         );
         return AnchoredOverlay(
           info: info,
+          useRootOverlay: widget.useRootOverlay,
           positioning: widget.positioning,
           constrainToAvailableSpace: widget.constrainToAvailableSpace,
           closeOnTapOutside: widget.closeOnClickOutside,
