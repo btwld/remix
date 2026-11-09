@@ -89,6 +89,135 @@ Future<void> _tapDay(WidgetTester tester, int day) async {
 }
 
 void main() {
+  for (final layout in [
+    'IntrinsicWidth',
+    'IntrinsicHeight',
+    'button modifier',
+  ]) {
+    testWidgets('selected range supports $layout intrinsic layout', (t) async {
+      final style = ButtonStyler()
+          .padding(.horizontal(12))
+          .label(.fontSize(10));
+      final picker = _picker(
+        value: _range(14, 16),
+        buttonStyle: layout == 'button modifier'
+            ? style.wrap(.intrinsicWidth())
+            : style,
+      );
+      await t.pumpWidget(
+        pickerHost(switch (layout) {
+          'IntrinsicWidth' => IntrinsicWidth(child: picker),
+          'IntrinsicHeight' => IntrinsicHeight(child: picker),
+          _ => picker,
+        }),
+      );
+      expect(t.takeException(), isNull);
+      final trigger = find.byType(RemixButton);
+      final paragraph = t.renderObject<RenderParagraph>(
+        find.descendant(of: trigger, matching: find.byType(RichText)),
+      );
+      expect(
+        paragraph.text.toPlainText(),
+        'Wednesday, February 14, 2024 – Friday, February 16, 2024',
+      );
+      expect(paragraph.didExceedMaxLines, isFalse);
+      if (layout != 'IntrinsicHeight') {
+        expect(
+          t.getSize(trigger).width,
+          closeTo(paragraph.getMaxIntrinsicWidth(double.infinity) + 24, 0.01),
+        );
+      }
+    });
+  }
+
+  testWidgets(
+    'range label dry layout and intrinsics follow the fitted candidate',
+    (t) async {
+      double? minimumWidth;
+      for (final width in [120.0, 300.0, 600.0]) {
+        await t.pumpWidget(
+          pickerHost(
+            SizedBox(
+              width: width,
+              child: IntrinsicHeight(
+                child: _picker(
+                  value: CivilDateRange(
+                    start: DateTime(2024, 11, 10),
+                    end: DateTime(2025, 3, 24),
+                  ),
+                  buttonStyle: ButtonStyler()
+                      .padding(.horizontal(12))
+                      .label(.fontSize(10)),
+                ),
+              ),
+            ),
+          ),
+        );
+        expect(t.takeException(), isNull);
+        final trigger = find.byType(RemixButton);
+        final paragraph = t.renderObject<RenderParagraph>(
+          find.descendant(of: trigger, matching: find.byType(RichText)),
+        );
+        expect(paragraph.text.toPlainText(), switch (width) {
+          120 => '11/10/2024 –\n3/24/2025',
+          300 => '11/10/2024 – 3/24/2025',
+          _ => 'Sunday, November 10, 2024 – Monday, March 24, 2025',
+        });
+        final slot = t.renderObject<RenderBox>(
+          find.descendant(of: trigger, matching: find.byType(Flexible)),
+        );
+        final constraints = BoxConstraints(maxWidth: width - 24);
+        expect(slot.getDryLayout(constraints), slot.size);
+        expect(
+          slot.getMinIntrinsicHeight(width - 24),
+          paragraph.getMinIntrinsicHeight(width - 24),
+        );
+        expect(
+          slot.getMaxIntrinsicHeight(width - 24),
+          paragraph.getMaxIntrinsicHeight(width - 24),
+        );
+        expect(
+          slot.getDryBaseline(constraints, TextBaseline.alphabetic),
+          paragraph.getDryBaseline(constraints, TextBaseline.alphabetic),
+        );
+        minimumWidth ??= paragraph.getMinIntrinsicWidth(double.infinity);
+        expect(slot.getMinIntrinsicWidth(double.infinity), minimumWidth);
+        if (width == 600) {
+          expect(
+            slot.getMaxIntrinsicWidth(double.infinity),
+            paragraph.getMaxIntrinsicWidth(double.infinity),
+          );
+        }
+      }
+    },
+  );
+
+  testWidgets(
+    'intrinsic picker accepts its first selection after starting empty',
+    (t) async {
+      CivilDateRange? value;
+      await t.pumpWidget(
+        pickerHost(
+          StatefulBuilder(
+            builder: (context, setState) => IntrinsicWidth(
+              child: _picker(
+                value: value,
+                onChanged: (next) => setState(() => value = next),
+                buttonStyle: ButtonStyler().label(.fontSize(10)),
+              ),
+            ),
+          ),
+        ),
+      );
+      await _open(t);
+      await _tapDay(t, 14);
+      await _tapDay(t, 16);
+      expect(value, _range(14, 16));
+      expect(find.byType(RemixRangeCalendar), findsNothing);
+      expect(t.takeException(), isNull);
+    },
+  );
+
   for (final expanded in [true, false]) {
     for (final fallback in ['compact', 'wrap', 'custom']) {
       testWidgets(

@@ -238,54 +238,183 @@ class RemixDateRangePicker extends StatelessWidget {
 }
 
 // Fit inside the button's Flexible text slot, after state-resolved box and icon
-// layout. Measure during layout using the slot's actual constraints.
+// layout. Keep every candidate measurable before layout for intrinsic parents.
 Widget _fittedRangeLabel(
   BuildContext context,
   TextSpec spec,
   String label, {
   String? compactLabel,
   String? wrappedCompactLabel,
-}) => LayoutBuilder(
-  builder: (context, constraints) {
-    final defaults = DefaultTextStyle.of(context);
-    final painter = TextPainter(
-      textDirection: spec.textDirection ?? Directionality.of(context),
-      textAlign: spec.textAlign ?? defaults.textAlign ?? TextAlign.start,
-      textScaler: spec.textScaler ?? MediaQuery.textScalerOf(context),
-      locale: spec.locale ?? Localizations.maybeLocaleOf(context),
-      strutStyle: spec.strutStyle,
-      textWidthBasis: spec.textWidthBasis ?? defaults.textWidthBasis,
-      textHeightBehavior:
-          spec.textHeightBehavior ?? defaults.textHeightBehavior,
-      maxLines: 1,
+}) {
+  final defaults = DefaultTextStyle.of(context);
+  final painter = TextPainter(
+    textDirection: spec.textDirection ?? Directionality.of(context),
+    textAlign: spec.textAlign ?? defaults.textAlign ?? TextAlign.start,
+    textScaler: spec.textScaler ?? MediaQuery.textScalerOf(context),
+    locale: spec.locale ?? Localizations.maybeLocaleOf(context),
+    strutStyle: spec.strutStyle,
+    textWidthBasis: spec.textWidthBasis ?? defaults.textWidthBasis,
+    textHeightBehavior: spec.textHeightBehavior ?? defaults.textHeightBehavior,
+    maxLines: 1,
+  );
+  double oneLineWidth(String text) {
+    painter.text = TextSpan(
+      text: spec.textDirectives?.apply(text) ?? text,
+      style: defaults.style.merge(spec.style),
     );
-    bool fits(String text) {
-      painter.text = TextSpan(
-        text: spec.textDirectives?.apply(text) ?? text,
-        style: defaults.style.merge(spec.style),
-      );
-      painter.layout(maxWidth: constraints.maxWidth);
-      return !painter.didExceedMaxLines;
-    }
+    painter.layout();
+    // Explicit line breaks must use the uncapped fallback even at infinite width.
+    return painter.didExceedMaxLines
+        ? double.infinity
+        : painter.maxIntrinsicWidth;
+  }
 
-    try {
-      if (fits(label)) {
-        return StyledText(label, styleSpec: StyleSpec(spec: spec));
-      }
-      final compact = compactLabel;
-      if (compact != null && fits(compact)) {
-        return StyledText(compact, styleSpec: StyleSpec(spec: spec));
-      }
-      return _wrappedRangeLabel(
-        context,
-        spec,
-        wrappedCompactLabel ?? compact ?? label,
-      );
-    } finally {
-      painter.dispose();
+  try {
+    return _FittedRangeLabel(
+      oneLineWidths: [
+        oneLineWidth(label),
+        if (compactLabel != null) oneLineWidth(compactLabel),
+      ],
+      children: [
+        StyledText(label, styleSpec: StyleSpec(spec: spec)),
+        if (compactLabel != null)
+          StyledText(compactLabel, styleSpec: StyleSpec(spec: spec)),
+        _wrappedRangeLabel(
+          context,
+          spec,
+          wrappedCompactLabel ?? compactLabel ?? label,
+        ),
+      ],
+    );
+  } finally {
+    painter.dispose();
+  }
+}
+
+class _FittedRangeLabel extends MultiChildRenderObjectWidget {
+  const _FittedRangeLabel({
+    required this.oneLineWidths,
+    required super.children,
+  });
+
+  final List<double> oneLineWidths;
+
+  @override
+  MultiChildRenderObjectElement createElement() =>
+      _FittedRangeLabelElement(this);
+
+  @override
+  _RenderFittedRangeLabel createRenderObject(BuildContext context) =>
+      _RenderFittedRangeLabel(oneLineWidths);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderFittedRangeLabel renderObject,
+  ) => renderObject.oneLineWidths = oneLineWidths;
+}
+
+// Like IndexedStack, only the painted candidate is onstage for inspection.
+class _FittedRangeLabelElement extends MultiChildRenderObjectElement {
+  _FittedRangeLabelElement(_FittedRangeLabel super.widget);
+
+  @override
+  void debugVisitOnstageChildren(ElementVisitor visitor) {
+    final selected = (renderObject as _RenderFittedRangeLabel)._selected;
+    for (final child in children) {
+      if (child.renderObject == selected) visitor(child);
     }
-  },
-);
+  }
+}
+
+class _RangeLabelParentData extends ContainerBoxParentData<RenderBox> {}
+
+class _RenderFittedRangeLabel extends RenderBox
+    with ContainerRenderObjectMixin<RenderBox, _RangeLabelParentData> {
+  _RenderFittedRangeLabel(this._oneLineWidths);
+
+  List<double> _oneLineWidths;
+  RenderBox? _selected;
+
+  set oneLineWidths(List<double> value) {
+    if (listEquals(_oneLineWidths, value)) return;
+    _oneLineWidths = value;
+    markNeedsLayout();
+  }
+
+  @override
+  void setupParentData(RenderBox child) {
+    if (child.parentData is! _RangeLabelParentData) {
+      child.parentData = _RangeLabelParentData();
+    }
+  }
+
+  RenderBox _candidate(double width) {
+    var child = firstChild!;
+    for (final oneLineWidth in _oneLineWidths) {
+      if (oneLineWidth.isFinite && oneLineWidth <= width) return child;
+      child = childAfter(child)!;
+    }
+    return child;
+  }
+
+  @override
+  double computeMinIntrinsicWidth(double height) =>
+      lastChild!.getMinIntrinsicWidth(height);
+
+  @override
+  double computeMaxIntrinsicWidth(double height) =>
+      firstChild!.getMaxIntrinsicWidth(height);
+
+  @override
+  double computeMinIntrinsicHeight(double width) =>
+      _candidate(width).getMinIntrinsicHeight(width);
+
+  @override
+  double computeMaxIntrinsicHeight(double width) =>
+      _candidate(width).getMaxIntrinsicHeight(width);
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) =>
+      _candidate(constraints.maxWidth).getDryLayout(constraints);
+
+  @override
+  double? computeDryBaseline(
+    BoxConstraints constraints,
+    TextBaseline baseline,
+  ) => _candidate(constraints.maxWidth).getDryBaseline(constraints, baseline);
+
+  @override
+  void performLayout() {
+    final selected = _candidate(constraints.maxWidth);
+    for (var child = firstChild; child != null; child = childAfter(child)) {
+      child.layout(constraints, parentUsesSize: true);
+    }
+    size = selected.size;
+    if (_selected != selected) {
+      _selected = selected;
+      markNeedsSemanticsUpdate();
+    }
+  }
+
+  @override
+  double? computeDistanceToActualBaseline(TextBaseline baseline) =>
+      _selected?.getDistanceToActualBaseline(baseline);
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    if (_selected case final selected?) context.paintChild(selected, offset);
+  }
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>
+      _selected?.hitTest(result, position: position) ?? false;
+
+  @override
+  void visitChildrenForSemantics(RenderObjectVisitor visitor) {
+    if (_selected case final selected?) visitor(selected);
+  }
+}
 
 // Render the fallback without the host's one-line default or a caller's line
 // cap. Preserve the resolved typography and directives for the whole label.
