@@ -135,7 +135,7 @@ final class _RtlDraftEdge extends ContextVariant {
   Set<WidgetState> get widgetStateDependencies => const {WidgetState.selected};
 }
 
-final _middle = playgroundTint(PlaygroundTokens.primary, 0.09, dark: 0.14);
+final _middle = playgroundTint(PlaygroundTokens.primary, 0.09, dark: 0.24);
 final _draft = playgroundTint(PlaygroundTokens.primary, 0.12, dark: 0.2);
 final _draftBorder = playgroundTint(PlaygroundTokens.primary, 0.6);
 final _blocked = playgroundTint(PlaygroundTokens.destructive, 0, dark: 0);
@@ -311,9 +311,7 @@ class PlaygroundRangeCalendar extends StatelessWidget {
     style: playgroundRangeCalendarStyle(
       style: CalendarStyler()
           .day(
-            CalendarDayStyler().minWidth(
-              MediaQuery.textScalerOf(context).scale(PlaygroundTokens.s12),
-            ),
+            CalendarDayStyler().minWidth(playgroundCalendarDayWidth(context)),
           )
           .merge(style),
     ),

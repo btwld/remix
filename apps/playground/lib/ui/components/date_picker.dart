@@ -171,9 +171,7 @@ class PlaygroundDatePicker extends StatelessWidget {
       calendarStyle: playgroundCalendarStyle(
         style: CalendarStyler()
             .day(
-              CalendarDayStyler().minWidth(
-                MediaQuery.textScalerOf(context).scale(PlaygroundTokens.s12),
-              ),
+              CalendarDayStyler().minWidth(playgroundCalendarDayWidth(context)),
             )
             .merge(calendarStyle),
       ),
@@ -181,8 +179,7 @@ class PlaygroundDatePicker extends StatelessWidget {
         style: PopoverStyler()
             .minWidth(
               math.max(
-                MediaQuery.textScalerOf(context).scale(PlaygroundTokens.s12) *
-                        DateTime.daysPerWeek +
+                playgroundCalendarDayWidth(context) * DateTime.daysPerWeek +
                     PlaygroundTokens.s3 * 2 +
                     PlaygroundTokens.s1 * 2 +
                     PlaygroundTokens.strokeHairline * 2,

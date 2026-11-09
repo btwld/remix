@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
@@ -157,6 +159,25 @@ final _focusContour = ContextToken<Color>((context) {
       .withValues(alpha: 0.65);
 });
 
+/// Scales the grid when space allows, retaining compact targets in narrow views.
+/// Header labels can wrap there; growing the entire grid would hide columns
+/// from a vertical-only pointer scroll after initial focus moves the viewport.
+double playgroundCalendarDayWidth(BuildContext context) {
+  final available =
+      MediaQuery.sizeOf(context).width -
+      PlaygroundTokens.s3 * 2 -
+      PlaygroundTokens.s1 * 2 -
+      PlaygroundTokens.strokeHairline * 2 -
+      PlaygroundTokens.s2 * 2;
+  return math.max(
+    PlaygroundTokens.s12,
+    math.min(
+      MediaQuery.textScalerOf(context).scale(PlaygroundTokens.s12),
+      available / DateTime.daysPerWeek,
+    ),
+  );
+}
+
 /// The application's Calendar recipe.
 ///
 /// Remix owns rendering, civil-date selection, keyboard navigation, focus and
@@ -298,9 +319,7 @@ class PlaygroundCalendar extends StatelessWidget {
     style: playgroundCalendarStyle(
       style: CalendarStyler()
           .day(
-            CalendarDayStyler().minWidth(
-              MediaQuery.textScalerOf(context).scale(PlaygroundTokens.s12),
-            ),
+            CalendarDayStyler().minWidth(playgroundCalendarDayWidth(context)),
           )
           .merge(style),
     ),

@@ -7,6 +7,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import '../theme/effects.dart';
 import '../theme/tokens.dart';
 import 'button.dart';
+import 'calendar.dart';
 import 'icon_button.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
@@ -182,19 +183,14 @@ class VanillaDateRangePicker extends StatelessWidget {
       ),
       calendarStyle: vanillaRangeCalendarStyle(
         style: CalendarStyler()
-            .day(
-              CalendarDayStyler().minWidth(
-                MediaQuery.textScalerOf(context).scale(VanillaTokens.s12),
-              ),
-            )
+            .day(CalendarDayStyler().minWidth(vanillaCalendarDayWidth(context)))
             .merge(calendarStyle),
       ),
       popoverStyle: vanillaPopoverStyle(
         style: PopoverStyler()
             .minWidth(
               math.max(
-                MediaQuery.textScalerOf(context).scale(VanillaTokens.s12) *
-                        DateTime.daysPerWeek +
+                vanillaCalendarDayWidth(context) * DateTime.daysPerWeek +
                     VanillaTokens.s3 * 2 +
                     VanillaTokens.s1 * 2 +
                     VanillaTokens.strokeHairline * 2,

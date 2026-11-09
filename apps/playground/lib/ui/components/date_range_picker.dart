@@ -7,6 +7,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import '../theme/effects.dart';
 import '../theme/tokens.dart';
 import 'button.dart';
+import 'calendar.dart';
 import 'icon_button.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
@@ -183,9 +184,7 @@ class PlaygroundDateRangePicker extends StatelessWidget {
       calendarStyle: playgroundRangeCalendarStyle(
         style: CalendarStyler()
             .day(
-              CalendarDayStyler().minWidth(
-                MediaQuery.textScalerOf(context).scale(PlaygroundTokens.s12),
-              ),
+              CalendarDayStyler().minWidth(playgroundCalendarDayWidth(context)),
             )
             .merge(calendarStyle),
       ),
@@ -193,8 +192,7 @@ class PlaygroundDateRangePicker extends StatelessWidget {
         style: PopoverStyler()
             .minWidth(
               math.max(
-                MediaQuery.textScalerOf(context).scale(PlaygroundTokens.s12) *
-                        DateTime.daysPerWeek +
+                playgroundCalendarDayWidth(context) * DateTime.daysPerWeek +
                     PlaygroundTokens.s3 * 2 +
                     PlaygroundTokens.s1 * 2 +
                     PlaygroundTokens.strokeHairline * 2,

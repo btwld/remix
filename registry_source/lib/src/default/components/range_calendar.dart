@@ -133,7 +133,7 @@ final class _RtlDraftEdge extends ContextVariant {
   Set<WidgetState> get widgetStateDependencies => const {WidgetState.selected};
 }
 
-final _middle = vanillaTint(VanillaTokens.primary, 0.09, dark: 0.14);
+final _middle = vanillaTint(VanillaTokens.primary, 0.09, dark: 0.24);
 final _draft = vanillaTint(VanillaTokens.primary, 0.12, dark: 0.2);
 final _draftBorder = vanillaTint(VanillaTokens.primary, 0.6);
 final _blocked = vanillaTint(VanillaTokens.destructive, 0, dark: 0);
@@ -304,11 +304,7 @@ class VanillaRangeCalendar extends StatelessWidget {
     ),
     style: vanillaRangeCalendarStyle(
       style: CalendarStyler()
-          .day(
-            CalendarDayStyler().minWidth(
-              MediaQuery.textScalerOf(context).scale(VanillaTokens.s12),
-            ),
-          )
+          .day(CalendarDayStyler().minWidth(vanillaCalendarDayWidth(context)))
           .merge(style),
     ),
     styleSpec: styleSpec,

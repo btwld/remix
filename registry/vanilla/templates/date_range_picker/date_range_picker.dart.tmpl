@@ -7,6 +7,7 @@ import 'package:remix/remix.dart';
 import '../theme/effects.dart';
 import '../theme/tokens.dart';
 import 'button.dart';
+import 'calendar.dart';
 import 'icon_button.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
@@ -182,19 +183,14 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
       ),
       calendarStyle: {{valuePrefix}}RangeCalendarStyle(
         style: CalendarStyler()
-            .day(
-              CalendarDayStyler().minWidth(
-                MediaQuery.textScalerOf(context).scale({{typePrefix}}Tokens.s12),
-              ),
-            )
+            .day(CalendarDayStyler().minWidth({{valuePrefix}}CalendarDayWidth(context)))
             .merge(calendarStyle),
       ),
       popoverStyle: {{valuePrefix}}PopoverStyle(
         style: PopoverStyler()
             .minWidth(
               math.max(
-                MediaQuery.textScalerOf(context).scale({{typePrefix}}Tokens.s12) *
-                        DateTime.daysPerWeek +
+                {{valuePrefix}}CalendarDayWidth(context) * DateTime.daysPerWeek +
                     {{typePrefix}}Tokens.s3 * 2 +
                     {{typePrefix}}Tokens.s1 * 2 +
                     {{typePrefix}}Tokens.strokeHairline * 2,

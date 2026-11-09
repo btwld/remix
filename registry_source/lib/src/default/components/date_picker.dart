@@ -170,19 +170,14 @@ class VanillaDatePicker extends StatelessWidget {
       ),
       calendarStyle: vanillaCalendarStyle(
         style: CalendarStyler()
-            .day(
-              CalendarDayStyler().minWidth(
-                MediaQuery.textScalerOf(context).scale(VanillaTokens.s12),
-              ),
-            )
+            .day(CalendarDayStyler().minWidth(vanillaCalendarDayWidth(context)))
             .merge(calendarStyle),
       ),
       popoverStyle: vanillaPopoverStyle(
         style: PopoverStyler()
             .minWidth(
               math.max(
-                MediaQuery.textScalerOf(context).scale(VanillaTokens.s12) *
-                        DateTime.daysPerWeek +
+                vanillaCalendarDayWidth(context) * DateTime.daysPerWeek +
                     VanillaTokens.s3 * 2 +
                     VanillaTokens.s1 * 2 +
                     VanillaTokens.strokeHairline * 2,

@@ -240,6 +240,16 @@ void main() {
             await t.pumpAndSettle();
             final hover = dayDecoration(t, day)?.color;
             expect(hover, isNot(rest), reason: 'hover $day');
+            expect(hover, theme.data.accent);
+            if (widget is VanillaRangeCalendar && day == 11) {
+              final before = Color.alphaBlend(rest!, theme.data.background);
+              final after = Color.alphaBlend(hover!, theme.data.background);
+              expect(
+                (before.r - after.r).abs(),
+                greaterThanOrEqualTo(8 / 255),
+                reason: 'middle hover must remain visible',
+              );
+            }
             await mouse.down(t.getCenter(dayBox(day)));
             await t.pumpAndSettle();
             expect(

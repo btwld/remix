@@ -103,6 +103,10 @@ const _minimumContrast = 1.05;
 /// Near-collisions the reference makes too, keyed
 /// `case|theme|state|rest or border`, with the reason each is kept.
 const _accepted = <String, String>{
+  'calendar day|dark|hovered|border':
+      'The calendar uses the plain accent hover required by its visual contract, as ghost controls do; the selected fill and focus keyline carry stronger emphasis.',
+  'range calendar day|dark|hovered|border':
+      'The same plain accent hover as calendar days; range interiors use a separate tint.',
   'range calendar day|dark|selected|border':
       'The old committed selection is muted while drafting, as the data table selected row; active range roles and the outlined draft carry emphasis.',
   'button secondary|light|hovered|rest':

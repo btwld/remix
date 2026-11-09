@@ -378,6 +378,7 @@ items:
     registryDependencies:
       - theme
       - button
+      - calendar
       - icon_button
       - popover
       - range_calendar
