@@ -171,7 +171,7 @@ class VanillaDateRangePicker extends StatelessWidget {
         variant: .outline,
         style: ButtonStyler()
             .mainAxisAlignment(.start)
-            .minWidth(VanillaTokens.s12 * 5)
+            .minWidth(VanillaTokens.s16 * 3 + VanillaTokens.s12)
             .padding(.horizontal(VanillaTokens.s3))
             .label(
               .fontWeight(

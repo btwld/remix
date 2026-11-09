@@ -159,7 +159,7 @@ class PlaygroundDatePicker extends StatelessWidget {
         variant: .outline,
         style: ButtonStyler()
             .mainAxisAlignment(.start)
-            .minWidth(PlaygroundTokens.s12 * 5)
+            .minWidth(PlaygroundTokens.s16 * 3 + PlaygroundTokens.s12)
             .padding(.horizontal(PlaygroundTokens.s3))
             .label(
               .fontWeight(
