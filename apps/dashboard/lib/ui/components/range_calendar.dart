@@ -268,7 +268,7 @@ final _quietCommitted = ContextToken<Color>((context) {
           compareCivilDates(day, value.end) == 0);
   final dark = UiTheme.of(context).isDark;
   return (cap
-          ? (dark ? UiTokens.gray3 : UiTokens.gray4)
+          ? (dark ? _quietDarkCap : UiTokens.gray4)
           : (dark ? _quietDarkMiddle : UiTokens.gray3))
       .resolve(context);
 });
@@ -425,6 +425,14 @@ final _quietDarkMiddle = ContextToken<Color>(
   (context) => Color.lerp(
     UiTokens.gray2.resolve(context),
     UiTokens.gray3.resolve(context),
-    .5,
+    .75,
+  )!,
+);
+
+final _quietDarkCap = ContextToken<Color>(
+  (context) => Color.lerp(
+    UiTokens.gray3.resolve(context),
+    UiTokens.gray4.resolve(context),
+    .25,
   )!,
 );

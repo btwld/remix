@@ -25,8 +25,15 @@ CalendarStyler fortalCalendarGeometry(BuildContext context) => CalendarStyler()
 
 IconButtonStyler fortalCalendarNavigationStyle(BuildContext context) =>
     fortalIconButtonStyle(variant: .ghost)
-        .size(fortalCalendarTarget, fortalCalendarTarget)
-        // Ghost content padding otherwise forces the vector to fill 28px.
+        .size(
+          MediaQuery.textScalerOf(context)
+              .scale(FortalTokens.space5.resolve(context))
+              .clamp(fortalCalendarTarget, double.infinity),
+          MediaQuery.textScalerOf(context)
+              .scale(FortalTokens.space5.resolve(context))
+              .clamp(fortalCalendarTarget, double.infinity),
+        )
+        // Keep ghost padding from overriding the requested vector size.
         .padding(.all(0))
         .margin(.all(0))
         .alignment(.center)
@@ -34,7 +41,7 @@ IconButtonStyler fortalCalendarNavigationStyle(BuildContext context) =>
           .size(
             MediaQuery.textScalerOf(
               context,
-            ).scale(FortalTokens.space4.resolve(context)),
+            ).scale(FortalTokens.space5.resolve(context)),
           ),
         );
 
@@ -122,10 +129,12 @@ SelectStyler fortalCalendarSelectorStyle(
     )
     .content(
       SelectContentStyler()
+          // Half an extra item plus the panel borders puts the bottom
+          // in a calendar row gap rather than through the day labels.
           .maxHeight(
             MediaQuery.textScalerOf(
               context,
-            ).scale(FortalTokens.touchTargetMin.resolve(context) * 6),
+            ).scale(FortalTokens.touchTargetMin.resolve(context) * 6.5 + 2),
           )
           .wrap(WidgetModifierConfig.modifier(const _CalendarScrollCueMix())),
     );

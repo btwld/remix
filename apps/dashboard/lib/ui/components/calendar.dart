@@ -25,8 +25,15 @@ CalendarStyler uiCalendarGeometry(BuildContext context) => CalendarStyler()
 
 IconButtonStyler uiCalendarNavigationStyle(BuildContext context) =>
     uiIconButtonStyle(variant: .ghost)
-        .size(uiCalendarTarget, uiCalendarTarget)
-        // Ghost content padding otherwise forces the vector to fill 28px.
+        .size(
+          MediaQuery.textScalerOf(context)
+              .scale(UiTokens.space5.resolve(context))
+              .clamp(uiCalendarTarget, double.infinity),
+          MediaQuery.textScalerOf(context)
+              .scale(UiTokens.space5.resolve(context))
+              .clamp(uiCalendarTarget, double.infinity),
+        )
+        // Keep ghost padding from overriding the requested vector size.
         .padding(.all(0))
         .margin(.all(0))
         .alignment(.center)
@@ -34,7 +41,7 @@ IconButtonStyler uiCalendarNavigationStyle(BuildContext context) =>
           .size(
             MediaQuery.textScalerOf(
               context,
-            ).scale(UiTokens.space4.resolve(context)),
+            ).scale(UiTokens.space5.resolve(context)),
           ),
         );
 
@@ -114,10 +121,12 @@ SelectStyler uiCalendarSelectorStyle(BuildContext context) => uiSelectStyle()
     )
     .content(
       SelectContentStyler()
+          // Half an extra item plus the panel borders puts the bottom
+          // in a calendar row gap rather than through the day labels.
           .maxHeight(
             MediaQuery.textScalerOf(
               context,
-            ).scale(UiTokens.touchTargetMin.resolve(context) * 6),
+            ).scale(UiTokens.touchTargetMin.resolve(context) * 6.5 + 2),
           )
           .wrap(WidgetModifierConfig.modifier(const _CalendarScrollCueMix())),
     );

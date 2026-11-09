@@ -272,7 +272,7 @@ final _quietCommitted = ContextToken<Color>((context) {
           compareCivilDates(day, value.end) == 0);
   final dark = FortalTheme.of(context).isDark;
   return (cap
-          ? (dark ? FortalTokens.gray3 : FortalTokens.gray4)
+          ? (dark ? _quietDarkCap : FortalTokens.gray4)
           : (dark ? _quietDarkMiddle : FortalTokens.gray3))
       .resolve(context);
 });
@@ -431,6 +431,14 @@ final _quietDarkMiddle = ContextToken<Color>(
   (context) => Color.lerp(
     FortalTokens.gray2.resolve(context),
     FortalTokens.gray3.resolve(context),
-    .5,
+    .75,
+  )!,
+);
+
+final _quietDarkCap = ContextToken<Color>(
+  (context) => Color.lerp(
+    FortalTokens.gray3.resolve(context),
+    FortalTokens.gray4.resolve(context),
+    .25,
   )!,
 );

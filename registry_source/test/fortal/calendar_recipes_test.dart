@@ -100,14 +100,14 @@ void main() {
               )
               .spec
               .spec;
-          expect(nav.icon.spec.size, FortalTokens.space4.resolve(context) * 2);
+          expect(nav.icon.spec.size, FortalTokens.space5.resolve(context) * 2);
           final glyph = find.descendant(
             of: find.byType(RemixIconButton).first,
             matching: find.byType(RemixPathIcon),
           );
           expect(
             t.getSize(glyph).height,
-            FortalTokens.space4.resolve(context) * 2,
+            FortalTokens.space5.resolve(context) * 2,
           );
           expect(selector.indicator.spec.size, 18);
           final indicator = find.descendant(
@@ -216,10 +216,7 @@ void main() {
               )
               .spec
               .spec;
-          expect(
-            spec.container.spec.constraints?.maxHeight,
-            lessThanOrEqualTo(240),
-          );
+          expect(spec.container.spec.constraints?.maxHeight, equals(262));
           expect(
             find.byWidgetPredicate(
               (w) => w is RawScrollbar && w.thumbVisibility == true,

@@ -272,7 +272,7 @@ final _quietCommitted = ContextToken<Color>((context) {
           compareCivilDates(day, value.end) == 0);
   final dark = {{typePrefix}}Theme.of(context).isDark;
   return (cap
-          ? (dark ? {{typePrefix}}Tokens.gray3 : {{typePrefix}}Tokens.gray4)
+          ? (dark ? _quietDarkCap : {{typePrefix}}Tokens.gray4)
           : (dark ? _quietDarkMiddle : {{typePrefix}}Tokens.gray3))
       .resolve(context);
 });
@@ -431,6 +431,14 @@ final _quietDarkMiddle = ContextToken<Color>(
   (context) => Color.lerp(
     {{typePrefix}}Tokens.gray2.resolve(context),
     {{typePrefix}}Tokens.gray3.resolve(context),
-    .5,
+    .75,
+  )!,
+);
+
+final _quietDarkCap = ContextToken<Color>(
+  (context) => Color.lerp(
+    {{typePrefix}}Tokens.gray3.resolve(context),
+    {{typePrefix}}Tokens.gray4.resolve(context),
+    .25,
   )!,
 );
