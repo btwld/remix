@@ -191,10 +191,10 @@ melos:
 
     open-code:release:check:
       steps:
-        - dart run tool/check_open_code.dart --source hosted
-        - dart run tool/check_open_code.dart --preset fortal --source hosted
-        - dart run tool/check_open_code.dart --preset heroui --source hosted
-      description: Verify all presets against the required published Remix release
+        - dart run tool/check_open_code.dart --source hosted --install batch --independent none
+        - dart run tool/check_open_code.dart --preset fortal --source hosted --install batch --independent none
+        - dart run tool/check_open_code.dart --preset heroui --source hosted --install batch --independent none
+      description: Fast hosted check of all presets (three registry inits total)
 
     open-code:release:check:vanilla:
       run: dart run tool/check_open_code.dart --source hosted

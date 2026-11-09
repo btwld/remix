@@ -404,6 +404,57 @@ void main() {
   });
 
   group('consumer source selection', () {
+    test(
+      'hosted fast modes stay below ten init calls and release smoke uses three',
+      () {
+        var canaryCalls = 0;
+        var checkoutCalls = 0;
+        for (final preset in ['vanilla', 'fortal', 'heroui']) {
+          canaryCalls += checker.plannedInitCalls(
+            checker.parseConsumerCheckOptions([
+              '--source',
+              'hosted',
+              '--preset',
+              preset,
+            ])!,
+          );
+          checkoutCalls += checker.plannedInitCalls(
+            checker.parseConsumerCheckOptions([
+              '--source',
+              'checkout',
+              '--preset',
+              preset,
+            ])!,
+          );
+        }
+        expect(canaryCalls, 6);
+        expect(canaryCalls, lessThan(10));
+        expect(checkoutCalls, greaterThan(10));
+        final scripts =
+            (loadYaml(File('pubspec.yaml').readAsStringSync())
+                    as YamlMap)['melos']['scripts']
+                as YamlMap;
+        final commands =
+            scripts['open-code:release:check']['steps'] as YamlList;
+        var smokeCalls = 0;
+        for (final command in commands.cast<String>()) {
+          final options = checker.parseConsumerCheckOptions(
+            command.split('check_open_code.dart ').last.split(' '),
+          )!;
+          expect(options.source, checker.RemixSource.hosted);
+          expect(options.independent, checker.IndependentMode.none);
+          expect(options.install, checker.InstallMode.batch);
+          smokeCalls += checker.plannedInitCalls(options);
+        }
+        expect(smokeCalls, 3);
+        expect(smokeCalls, lessThan(10));
+        final workflow = File(
+          '.github/workflows/publish.yml',
+        ).readAsStringSync();
+        expect(workflow, contains("REMIX_REGISTRY_RELEASE_SMOKE: '1'"));
+        expect(workflow, contains('melos run open-code:release:check'));
+      },
+    );
     test('hosted batches the gallery after two incremental adds', () {
       for (final source in checker.RemixSource.values) {
         expect(

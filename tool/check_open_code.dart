@@ -1668,6 +1668,22 @@ List<String> independentInstallItems(
   ).independentInstalls(repositoryRoot),
 };
 
+/// Planned fresh init calls, hence branch-resolution API calls in release smoke.
+/// Candidate SHAs skip the API altogether. This uses the production independent
+/// plan so adding another canary changes the budget test as well.
+int plannedInitCalls(
+  ConsumerCheckOptions options, {
+  Directory? repositoryRoot,
+}) =>
+    1 +
+    (options.item != null
+        ? 0
+        : independentInstallItems(
+            options.preset,
+            mode: options.independent,
+            repositoryRoot: repositoryRoot,
+          ).length);
+
 /// Runs [work] for every input with at most [limit] in flight, and returns the
 /// failure of the earliest input that failed, or null.
 ///
