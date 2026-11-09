@@ -20,6 +20,7 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
     .padding(.all({{typePrefix}}Tokens.s3))
     .headerSpacing({{typePrefix}}Tokens.s2)
     .weekdaySpacing({{typePrefix}}Tokens.s1)
+    .rowSpacing({{typePrefix}}Tokens.s0_5)
     .selectorSpacing({{typePrefix}}Tokens.s2)
     .selectorRunSpacing({{typePrefix}}Tokens.s1)
     .heading(
@@ -52,7 +53,7 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
           )
           .onToday(
             CalendarDayStyler()
-                .border(.color({{typePrefix}}Tokens.ring()))
+                .border(.color({{typePrefix}}Tokens.mutedForeground()))
                 .label(.fontWeight(FontWeight.w600)),
           )
           .onSelected(
@@ -101,24 +102,14 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
           )
           .onFocusVisible(
             CalendarDayStyler()
-                .border(
-                  .all(
-                    .width(
-                      {{typePrefix}}Tokens.strokeHairline,
-                    ).style(BorderStyle.solid),
-                  ),
-                )
-                .border({{valuePrefix}}FocusBorder())
+                .border(.all(.color(_clear()).width(0).style(BorderStyle.none)))
                 .containerEffects(
-                  {{valuePrefix}}FocusRing(inset: true).overContent(
-                    .shadows([
-                      RemixBoxShadowMix(
-                        kind: .inset,
-                        color: _focusContour(),
-                        spreadRadius: {{typePrefix}}Tokens.strokeHairline,
-                        shapeInset: {{typePrefix}}Tokens.strokeRing,
-                      ),
-                    ]),
+                  RemixBoxEffectsMix(
+                    outline: BorderSideMix(
+                      color: _focusContour(),
+                      width: {{typePrefix}}Tokens.strokeIndicator,
+                    ),
+                    outlineOffset: -{{typePrefix}}Tokens.strokeIndicator,
                   ),
                 ),
           )
@@ -163,8 +154,7 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
 
 final _clear = {{valuePrefix}}Tint({{typePrefix}}Tokens.foreground, 0);
 final _pressed = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, 0.22, dark: 0.32);
-// A thin inner keyline supplies calendar-local contrast where the shared
-// half-strength ring is too faint. Keep the token border and band unchanged.
+// One inset outline follows the resolved day or range-cap shape.
 final _focusContour = ContextToken<Color>((context) {
   final day = NakedCalendarDayState.maybeOf(context);
   final range = NakedRangeCalendarState.maybeOf(context);
@@ -366,4 +356,16 @@ final _middleHover = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .15, dark
 final _middlePressed = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .22, dark: .4);
 final _draftHover = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .18, dark: .28);
 final _draftPressed = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .24, dark: .36);
-final _quietSelected = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .18, dark: .28);
+final _quietSelected = ContextToken<Color>((context) {
+  final value = NakedRangeCalendarState.maybeOf(context)?.value;
+  if (value == null) return _quietSingle.resolve(context);
+  final day = NakedCalendarDayState.maybeOf(context)?.date;
+  final cap =
+      day != null &&
+      (compareCivilDates(day, value.start) == 0 ||
+          compareCivilDates(day, value.end) == 0);
+  return (cap ? _quietCap : _quietMiddle).resolve(context);
+});
+final _quietSingle = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .12, dark: .2);
+final _quietCap = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .09, dark: .16);
+final _quietMiddle = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .07, dark: .12);

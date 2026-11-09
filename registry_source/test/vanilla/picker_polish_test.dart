@@ -1,4 +1,5 @@
 import 'package:flutter/rendering.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
@@ -41,6 +42,25 @@ void main() {
               .spec;
           expect(spec.icon.spec.color, theme.data.mutedForeground);
           expect(spec.icon.spec.size, VanillaTokens.icon * 2);
+          final mouse = await t.createGesture(kind: PointerDeviceKind.mouse);
+          await mouse.addPointer();
+          await mouse.moveTo(t.getCenter(find.byType(RemixButton)));
+          await t.pumpAndSettle();
+          for (final pressed in [false, true]) {
+            if (pressed) {
+              await mouse.down(t.getCenter(find.byType(RemixButton)));
+              await t.pumpAndSettle();
+            }
+            final active = t
+                .widget<StyleSpecProvider<ButtonSpec>>(
+                  find.byType(StyleSpecProvider<ButtonSpec>).first,
+                )
+                .spec
+                .spec;
+            expect(active.icon.spec.color, theme.data.mutedForeground);
+          }
+          await mouse.cancel();
+          await mouse.removePointer();
         },
       );
     }

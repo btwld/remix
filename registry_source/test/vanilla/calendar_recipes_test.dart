@@ -115,7 +115,10 @@ void main() {
         expect(dayDecoration(t, 12)?.color, theme.data.primary);
         expect(dayText(t, 12)?.color, theme.data.primaryForeground);
         expect(dayDecoration(t, 6)?.color?.a, 0);
-        expect(dayDecoration(t, 6)?.border?.top.color, theme.data.ring);
+        expect(
+          dayDecoration(t, 6)?.border?.top.color,
+          theme.data.mutedForeground,
+        );
         expect(dayText(t, 6)?.fontWeight, FontWeight.w600);
         expect(dayText(t, 18)?.decoration, TextDecoration.lineThrough);
         expect(dayText(t, 1)?.decoration, isNot(TextDecoration.lineThrough));
@@ -154,7 +157,7 @@ void main() {
           dayDecoration(t, 10)?.color,
           tint(
             theme.data.primary,
-            theme.data.brightness == Brightness.dark ? .28 : .18,
+            theme.data.brightness == Brightness.dark ? .16 : .09,
           ),
         );
         expect(dayDecoration(t, 8)?.color?.a, 0);
@@ -351,7 +354,9 @@ void main() {
           dayDecoration(t, selected)?.color,
           tint(
             theme.data.primary,
-            theme.data.brightness == Brightness.dark ? .28 : .18,
+            widget is VanillaCalendar
+                ? (theme.data.brightness == Brightness.dark ? .2 : .12)
+                : (theme.data.brightness == Brightness.dark ? .16 : .09),
           ),
         );
         expect(dayText(t, selected)?.color, theme.data.mutedForeground);

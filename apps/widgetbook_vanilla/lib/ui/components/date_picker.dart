@@ -180,6 +180,12 @@ class VanillaDatePicker extends StatelessWidget {
           variant: .outline,
           style: ButtonStyler()
               .mainAxisAlignment(.start)
+              .onHovered(
+                ButtonStyler().icon(.color(VanillaTokens.mutedForeground())),
+              )
+              .onPressed(
+                ButtonStyler().icon(.color(VanillaTokens.mutedForeground())),
+              )
               .icon(
                 .color(VanillaTokens.mutedForeground()).size(
                   MediaQuery.textScalerOf(context).scale(VanillaTokens.icon),

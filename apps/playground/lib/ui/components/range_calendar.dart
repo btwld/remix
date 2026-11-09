@@ -21,10 +21,16 @@ CalendarStyler playgroundRangeCalendarStyle({
       CalendarDayStyler()
           .onSelected(
             _muted()
-                .variant(_committedStart, _shape(start: true))
+                .variant(
+                  _committedStart,
+                  _shape(start: true).color(_quietCap()),
+                )
                 .variant(_committedMiddle, _shape())
-                .variant(_committedEnd, _shape(end: true))
-                .variant(_committedSingle, _shape(start: true, end: true)),
+                .variant(_committedEnd, _shape(end: true).color(_quietCap()))
+                .variant(
+                  _committedSingle,
+                  _shape(start: true, end: true).color(_quietCap()),
+                ),
           )
           .onRangeMiddle(
             _shape()
@@ -136,7 +142,7 @@ final class _RtlDraftEdge extends ContextVariant {
 }
 
 final _middle = playgroundTint(PlaygroundTokens.primary, 0.09, dark: 0.24);
-final _draft = playgroundTint(PlaygroundTokens.primary, 0.12, dark: 0.2);
+final _draft = playgroundTint(PlaygroundTokens.primary, 0.12, dark: 0.28);
 final _draftBorder = playgroundTint(PlaygroundTokens.primary, 0.6);
 final _blocked = playgroundTint(PlaygroundTokens.destructive, 0, dark: 0);
 final _draftStroke = BorderSideMix(
@@ -326,6 +332,7 @@ class PlaygroundRangeCalendar extends StatelessWidget {
 
 final _quietCommitted = playgroundTint(
   PlaygroundTokens.primary,
-  .18,
-  dark: .28,
+  .07,
+  dark: .12,
 );
+final _quietCap = playgroundTint(PlaygroundTokens.primary, .09, dark: .16);

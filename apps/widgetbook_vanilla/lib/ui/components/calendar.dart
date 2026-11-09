@@ -20,6 +20,7 @@ CalendarStyler vanillaCalendarStyle({
     .padding(.all(VanillaTokens.s3))
     .headerSpacing(VanillaTokens.s2)
     .weekdaySpacing(VanillaTokens.s1)
+    .rowSpacing(VanillaTokens.s0_5)
     .selectorSpacing(VanillaTokens.s2)
     .selectorRunSpacing(VanillaTokens.s1)
     .heading(
@@ -52,7 +53,7 @@ CalendarStyler vanillaCalendarStyle({
           )
           .onToday(
             CalendarDayStyler()
-                .border(.color(VanillaTokens.ring()))
+                .border(.color(VanillaTokens.mutedForeground()))
                 .label(.fontWeight(FontWeight.w600)),
           )
           .onSelected(
@@ -101,24 +102,14 @@ CalendarStyler vanillaCalendarStyle({
           )
           .onFocusVisible(
             CalendarDayStyler()
-                .border(
-                  .all(
-                    .width(
-                      VanillaTokens.strokeHairline,
-                    ).style(BorderStyle.solid),
-                  ),
-                )
-                .border(vanillaFocusBorder())
+                .border(.all(.color(_clear()).width(0).style(BorderStyle.none)))
                 .containerEffects(
-                  vanillaFocusRing(inset: true).overContent(
-                    .shadows([
-                      RemixBoxShadowMix(
-                        kind: .inset,
-                        color: _focusContour(),
-                        spreadRadius: VanillaTokens.strokeHairline,
-                        shapeInset: VanillaTokens.strokeRing,
-                      ),
-                    ]),
+                  RemixBoxEffectsMix(
+                    outline: BorderSideMix(
+                      color: _focusContour(),
+                      width: VanillaTokens.strokeIndicator,
+                    ),
+                    outlineOffset: -VanillaTokens.strokeIndicator,
                   ),
                 ),
           )
@@ -163,8 +154,7 @@ CalendarStyler vanillaCalendarStyle({
 
 final _clear = vanillaTint(VanillaTokens.foreground, 0);
 final _pressed = vanillaTint(VanillaTokens.primary, 0.22, dark: 0.32);
-// A thin inner keyline supplies calendar-local contrast where the shared
-// half-strength ring is too faint. Keep the token border and band unchanged.
+// One inset outline follows the resolved day or range-cap shape.
 final _focusContour = ContextToken<Color>((context) {
   final day = NakedCalendarDayState.maybeOf(context);
   final range = NakedRangeCalendarState.maybeOf(context);
@@ -366,4 +356,16 @@ final _middleHover = vanillaTint(VanillaTokens.primary, .15, dark: .32);
 final _middlePressed = vanillaTint(VanillaTokens.primary, .22, dark: .4);
 final _draftHover = vanillaTint(VanillaTokens.primary, .18, dark: .28);
 final _draftPressed = vanillaTint(VanillaTokens.primary, .24, dark: .36);
-final _quietSelected = vanillaTint(VanillaTokens.primary, .18, dark: .28);
+final _quietSelected = ContextToken<Color>((context) {
+  final value = NakedRangeCalendarState.maybeOf(context)?.value;
+  if (value == null) return _quietSingle.resolve(context);
+  final day = NakedCalendarDayState.maybeOf(context)?.date;
+  final cap =
+      day != null &&
+      (compareCivilDates(day, value.start) == 0 ||
+          compareCivilDates(day, value.end) == 0);
+  return (cap ? _quietCap : _quietMiddle).resolve(context);
+});
+final _quietSingle = vanillaTint(VanillaTokens.primary, .12, dark: .2);
+final _quietCap = vanillaTint(VanillaTokens.primary, .09, dark: .16);
+final _quietMiddle = vanillaTint(VanillaTokens.primary, .07, dark: .12);

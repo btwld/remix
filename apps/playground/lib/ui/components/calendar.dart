@@ -20,6 +20,7 @@ CalendarStyler playgroundCalendarStyle({
     .padding(.all(PlaygroundTokens.s3))
     .headerSpacing(PlaygroundTokens.s2)
     .weekdaySpacing(PlaygroundTokens.s1)
+    .rowSpacing(PlaygroundTokens.s0_5)
     .selectorSpacing(PlaygroundTokens.s2)
     .selectorRunSpacing(PlaygroundTokens.s1)
     .heading(
@@ -54,7 +55,7 @@ CalendarStyler playgroundCalendarStyle({
           )
           .onToday(
             CalendarDayStyler()
-                .border(.color(PlaygroundTokens.ring()))
+                .border(.color(PlaygroundTokens.mutedForeground()))
                 .label(.fontWeight(FontWeight.w600)),
           )
           .onSelected(
@@ -103,24 +104,14 @@ CalendarStyler playgroundCalendarStyle({
           )
           .onFocusVisible(
             CalendarDayStyler()
-                .border(
-                  .all(
-                    .width(
-                      PlaygroundTokens.strokeHairline,
-                    ).style(BorderStyle.solid),
-                  ),
-                )
-                .border(playgroundFocusBorder())
+                .border(.all(.color(_clear()).width(0).style(BorderStyle.none)))
                 .containerEffects(
-                  playgroundFocusRing(inset: true).overContent(
-                    .shadows([
-                      RemixBoxShadowMix(
-                        kind: .inset,
-                        color: _focusContour(),
-                        spreadRadius: PlaygroundTokens.strokeHairline,
-                        shapeInset: PlaygroundTokens.strokeRing,
-                      ),
-                    ]),
+                  RemixBoxEffectsMix(
+                    outline: BorderSideMix(
+                      color: _focusContour(),
+                      width: PlaygroundTokens.strokeIndicator,
+                    ),
+                    outlineOffset: -PlaygroundTokens.strokeIndicator,
                   ),
                 ),
           )
@@ -165,8 +156,7 @@ CalendarStyler playgroundCalendarStyle({
 
 final _clear = playgroundTint(PlaygroundTokens.foreground, 0);
 final _pressed = playgroundTint(PlaygroundTokens.primary, 0.22, dark: 0.32);
-// A thin inner keyline supplies calendar-local contrast where the shared
-// half-strength ring is too faint. Keep the token border and band unchanged.
+// One inset outline follows the resolved day or range-cap shape.
 final _focusContour = ContextToken<Color>((context) {
   final day = NakedCalendarDayState.maybeOf(context);
   final range = NakedRangeCalendarState.maybeOf(context);
@@ -374,4 +364,16 @@ final _middleHover = playgroundTint(PlaygroundTokens.primary, .15, dark: .32);
 final _middlePressed = playgroundTint(PlaygroundTokens.primary, .22, dark: .4);
 final _draftHover = playgroundTint(PlaygroundTokens.primary, .18, dark: .28);
 final _draftPressed = playgroundTint(PlaygroundTokens.primary, .24, dark: .36);
-final _quietSelected = playgroundTint(PlaygroundTokens.primary, .18, dark: .28);
+final _quietSelected = ContextToken<Color>((context) {
+  final value = NakedRangeCalendarState.maybeOf(context)?.value;
+  if (value == null) return _quietSingle.resolve(context);
+  final day = NakedCalendarDayState.maybeOf(context)?.date;
+  final cap =
+      day != null &&
+      (compareCivilDates(day, value.start) == 0 ||
+          compareCivilDates(day, value.end) == 0);
+  return (cap ? _quietCap : _quietMiddle).resolve(context);
+});
+final _quietSingle = playgroundTint(PlaygroundTokens.primary, .12, dark: .2);
+final _quietCap = playgroundTint(PlaygroundTokens.primary, .09, dark: .16);
+final _quietMiddle = playgroundTint(PlaygroundTokens.primary, .07, dark: .12);

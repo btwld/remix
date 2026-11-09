@@ -193,6 +193,12 @@ class PlaygroundDateRangePicker extends StatelessWidget {
           variant: .outline,
           style: ButtonStyler()
               .mainAxisAlignment(.start)
+              .onHovered(
+                ButtonStyler().icon(.color(PlaygroundTokens.mutedForeground())),
+              )
+              .onPressed(
+                ButtonStyler().icon(.color(PlaygroundTokens.mutedForeground())),
+              )
               .icon(
                 .color(PlaygroundTokens.mutedForeground()).size(
                   MediaQuery.textScalerOf(context).scale(PlaygroundTokens.icon),

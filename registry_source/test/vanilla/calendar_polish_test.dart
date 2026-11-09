@@ -14,6 +14,39 @@ double contrast(Color a, Color b) {
 
 void main() {
   for (final theme in vanillaThemes) {
+    testWidgets('${theme.name} draft hierarchy and separated rows', (t) async {
+      await t.pumpWidget(calendarHost(rangeCalendar(), theme.data));
+      expect(
+        t.getTopLeft(dayBox(13)).dy - t.getBottomLeft(dayBox(6)).dy,
+        greaterThanOrEqualTo(2),
+      );
+      await t.tap(find.text('20'));
+      await t.pumpAndSettle();
+      await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await t.pumpAndSettle();
+      await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await t.pumpAndSettle();
+      Color fill(int day) => Color.alphaBlend(
+        dayDecoration(t, day)!.color!,
+        theme.data.background,
+      );
+      expect(
+        contrast(fill(21), theme.data.background),
+        greaterThanOrEqualTo(contrast(fill(10), theme.data.background)),
+      );
+      expect(
+        contrast(fill(10), theme.data.background),
+        greaterThan(contrast(fill(11), theme.data.background)),
+      );
+      expect(contrast(fill(11), theme.data.background), greaterThan(1.1));
+      final spec = t
+          .widget<StyleSpecProvider<CalendarDaySpec>>(dayBox(22))
+          .spec
+          .spec;
+      expect(dayBorder(t, 22).top.width, 0);
+      expect(spec.containerEffects!.overContent?.shadows ?? [], isEmpty);
+      expect(spec.containerEffects!.outline.width, 2);
+    });
     testWidgets(
       '${theme.name} scaled day grid stays square and navigation stays centred',
       (t) async {
@@ -33,7 +66,10 @@ void main() {
       '${theme.name} today and disabled selections remain recognizable',
       (t) async {
         await t.pumpWidget(calendarHost(calendar(), theme.data));
-        expect(dayBorder(t, 6).top.color, theme.data.ring);
+        expect(
+          contrast(dayBorder(t, 6).top.color, theme.data.background),
+          greaterThanOrEqualTo(3),
+        );
         for (final child in [
           calendar(enabled: false),
           rangeCalendar(enabled: false),
@@ -44,7 +80,7 @@ void main() {
             dayDecoration(t, d)!.color!,
             theme.data.background,
           );
-          expect(contrast(fill, theme.data.background), greaterThan(1.3));
+          expect(contrast(fill, theme.data.background), greaterThan(1.15));
           expect(dayText(t, d)?.color, theme.data.mutedForeground);
           expect(
             dayDecoration(t, d)?.color,
@@ -106,17 +142,13 @@ void main() {
               dayDecoration(t, days[i])!.color!,
               theme.data.background,
             );
-            expect(
-              dayDecoration(t, days[i])!.border!.top.color,
-              theme.data.ring,
-            );
+            expect(dayDecoration(t, days[i])!.border!.top.width, 0);
             final effects = spec.containerEffects!;
-            expect(effects.outlineOffset, -VanillaTokens.strokeRing);
-            expect(effects.outline.color, tint(theme.data.ring, .5));
-            final keyline = effects.overContent!.shadows.single;
-            expect(keyline.spreadRadius, greaterThan(0));
+            expect(effects.outlineOffset, -VanillaTokens.strokeIndicator);
+            expect(effects.outline.width, VanillaTokens.strokeIndicator);
+            expect(effects.overContent?.shadows ?? [], isEmpty);
             expect(
-              contrast(Color.alphaBlend(keyline.color, fill), fill),
+              contrast(Color.alphaBlend(effects.outline.color, fill), fill),
               greaterThanOrEqualTo(3),
             );
             expect(t.getRect(dayBox(days[i])), rects[i]);
