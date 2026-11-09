@@ -39,6 +39,7 @@ import 'package:yaml/yaml.dart';
 
 import '../packages/remix_cli/lib/src/icon_registry.dart';
 import 'compile_registry_consumer.dart';
+import 'check_pub_floors.dart';
 import 'consumer_check_reporting.dart';
 import 'open_code_lifecycle.dart';
 
@@ -910,6 +911,16 @@ Future<_Failure?> _run(
 }) async {
   final rootFailure = _verifyRepositoryRoot(repositoryRoot);
   if (rootFailure != null) return rootFailure;
+
+  if (source != RemixSource.checkout) {
+    _reporter.startPhase('pub.dev floor preflight');
+    final problem = await checkPubFloors(
+      Directory('${repositoryRoot.path}/registry'),
+    );
+    if (problem != null) return _Failure(problem);
+    _step('Every hosted floor exists; Remix floor is current.');
+    _reporter.startPhase('Consumer setup');
+  }
 
   final pinnedVersion = _pinnedFlutterVersion(repositoryRoot);
   if (pinnedVersion == null) {

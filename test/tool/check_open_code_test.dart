@@ -7,6 +7,7 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
 import '../../tool/check_open_code.dart' as checker;
+import '../../tool/check_pub_floors.dart';
 import '../../tool/compile_registry_consumer.dart';
 import '../../tool/consumer_check_reporting.dart';
 import '../../tool/open_code_lifecycle.dart';
@@ -20,6 +21,129 @@ void main() {
 
   tearDown(() {
     if (sandbox.existsSync()) sandbox.deleteSync(recursive: true);
+  });
+
+  group('pub.dev floor preflight', () {
+    late Directory registry;
+    setUp(() {
+      registry = Directory('${sandbox.path}/registry')..createSync();
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
+        final catalog = File('${registry.path}/$preset/registry.yaml');
+        catalog.parent.createSync();
+        catalog.writeAsStringSync("""
+items:
+  theme:
+    dependencies: {remix: ^1.0.0-beta.18, flutter: {sdk: flutter}}
+    devDependencies: {mix_generator: ^2.2.0-beta.3}
+""");
+      }
+      File('${registry.path}/icons.yaml').writeAsStringSync("""
+libraries:
+  remix: {dependency: {remix_ui_icons: ^1.0.0-beta.1}}
+""");
+    });
+    _FakePubClient client({String? missing, bool newer = false}) =>
+        _FakePubClient((uri) async {
+          final package = uri.pathSegments.last;
+          final version = readHostedFloors(registry)[package]!.single;
+          return (
+            statusCode: 200,
+            body: jsonEncode({
+              'versions': [
+                if (package != missing) {'version': version},
+                if (newer && package == 'remix') {'version': '1.0.0-beta.19'},
+              ],
+            }),
+          );
+        });
+    test(
+      'present floors include generators and icons and query each package once',
+      () async {
+        final http = client();
+        expect(await checkPubFloors(registry, client: http), isNull);
+        expect(
+          http.requests.map((uri) => uri.path),
+          unorderedEquals([
+            '/api/packages/remix',
+            '/api/packages/mix_generator',
+            '/api/packages/remix_ui_icons',
+          ]),
+        );
+        expect(
+          http.requests.every(
+            (uri) => uri.host == 'pub.dev' && uri.scheme == 'https',
+          ),
+          isTrue,
+        );
+      },
+    );
+    test(
+      'missing floor explains publication order before creating any app',
+      () async {
+        expect(
+          await checkPubFloors(registry, client: client(missing: 'remix')),
+          'remix ^1.0.0-beta.18 is not on pub.dev yet; push tag v1.0.0-beta.18, wait for the Publish workflow, then re-run Promote registry',
+        );
+        expect(
+          await checkPubFloors(
+            registry,
+            client: client(missing: 'mix_generator'),
+          ),
+          contains('publish the required dependency upstream'),
+        );
+      },
+    );
+    test(
+      '404 means missing while server and network errors stay distinct',
+      () async {
+        expect(
+          await checkPubFloors(
+            registry,
+            client: _FakePubClient(
+              (_) async => (statusCode: 404, body: 'not found'),
+            ),
+          ),
+          contains('not on pub.dev yet'),
+        );
+        expect(
+          await checkPubFloors(
+            registry,
+            client: _FakePubClient(
+              (_) async => (statusCode: 503, body: 'unavailable'),
+            ),
+          ),
+          contains('HTTP 503'),
+        );
+        final error = await checkPubFloors(
+          registry,
+          client: _FakePubClient(
+            (_) async => throw const SocketException('fixture offline'),
+          ),
+        );
+        expect(error, contains('fixture offline'));
+        expect(error, isNot(contains('not on pub.dev yet')));
+      },
+    );
+    test('a newer prerelease fails the separate freshness check', () async {
+      expect(
+        await checkPubFloors(registry, client: client(newer: true)),
+        contains('older than published 1.0.0-beta.19'),
+      );
+    });
+    test('every current catalog has hosted floors', () {
+      expect(
+        readHostedFloors(Directory('registry')).keys,
+        containsAll([
+          'remix',
+          'mix_annotations',
+          'mix_generator',
+          'build_runner',
+          'remix_ui_fonts',
+          'remix_ui_icons',
+          'lucide_flutter',
+        ]),
+      );
+    });
   });
 
   group('quiet process reporting', () {
@@ -1464,4 +1588,18 @@ final class _ReportingProcess implements Process {
   int get pid => 123456789;
   @override
   bool kill([ProcessSignal signal = ProcessSignal.sigterm]) => true;
+}
+
+final class _FakePubClient implements PubFloorClient {
+  _FakePubClient(this.reply);
+  final Future<PubResponse> Function(Uri) reply;
+  final requests = <Uri>[];
+  @override
+  Future<PubResponse> get(Uri uri) {
+    requests.add(uri);
+    return reply(uri);
+  }
+
+  @override
+  void close() {}
 }
