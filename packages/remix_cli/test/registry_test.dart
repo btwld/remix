@@ -621,6 +621,33 @@ items:
           'plan' => ['models', 'theme', 'support', name],
           'combobox' => ['theme', 'textfield', name],
           'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
+          'calendar' => ['theme', 'icon_button', 'select', name],
+          'date_picker' => [
+            'theme',
+            'button',
+            'icon_button',
+            'select',
+            'calendar',
+            'popover',
+            name,
+          ],
+          'range_calendar' => [
+            'theme',
+            'icon_button',
+            'select',
+            'calendar',
+            name,
+          ],
+          'date_range_picker' => [
+            'theme',
+            'button',
+            'icon_button',
+            'select',
+            'calendar',
+            'popover',
+            'range_calendar',
+            name,
+          ],
           'range_slider' => ['theme', 'slider', name],
           'sidebar' => ['theme', 'toggle', 'tooltip', name],
           'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
@@ -631,8 +658,14 @@ items:
           expect(item!.files.single.target, '@ui/icons.dart');
           expect(item.generated, isEmpty);
           expect(item.exports, ['icons.dart']);
-        } else if (name == 'sidebar_layout') {
-          // A layout, not a styled component: no Spec, no generated adapter.
+        } else if (const {
+          'sidebar_layout',
+          'calendar',
+          'date_picker',
+          'range_calendar',
+          'date_range_picker',
+        }.contains(name)) {
+          // Handwritten layouts and composites have no generated adapter.
           expect(item!.files.single.target, '@ui/components/$name.dart');
           expect(item.generated, isEmpty);
           expect(item.exports, ['components/$name.dart']);
@@ -701,9 +734,8 @@ items:
     final catalog = await registry.catalog();
 
     for (final entry in _componentSurfaces.entries) {
-      final source = await registry.template(
-        catalog.items[entry.key]!.files.single,
-      );
+      final item = catalog.items[entry.key]!;
+      final source = await registry.template(item.files.single);
 
       for (final prefix in const [
         (type: 'Acme', value: 'acme'),
@@ -718,14 +750,18 @@ items:
         final reason = '${entry.key}/${prefix.type}';
 
         for (final widget in entry.value.widgets) {
-          // The recipe is what the generator reads the widget name from, so
-          // this is the widget's name too. Matched as a declaration rather
-          // than a bare substring, because the templates mention their own
-          // identifiers in prose and a doc comment must not satisfy this.
+          // Generated widgets take their name from the recipe. Handwritten
+          // composites declare the widget class directly. Match declarations
+          // so a reference in prose cannot satisfy the public-surface pin.
           expect(
             rendered,
             contains(
-              RegExp('^\\w+ ${prefix.value}${widget}Style\\(', multiLine: true),
+              RegExp(
+                item.generated.isEmpty
+                    ? '^class ${prefix.type}$widget extends StatelessWidget '
+                    : '^\\w+ ${prefix.value}${widget}Style\\(',
+                multiLine: true,
+              ),
             ),
             reason: '$reason: ${prefix.type}$widget',
           );
@@ -823,6 +859,7 @@ items:
 /// searching for a string that no longer appears in the template.
 ///
 /// `types` are the enums and other names written with the type prefix.
+/// Handwritten composites pin their widget class instead of a recipe function.
 ///
 /// Renaming or dropping any of these breaks a consumer's source, so they are
 /// pinned here rather than left to the fixture, which only ever sees the
@@ -835,6 +872,7 @@ const _componentSurfaces =
       'avatar': (widgets: ['Avatar'], types: []),
       'badge': (widgets: ['Badge'], types: ['BadgeVariant']),
       'button': (widgets: ['Button'], types: ['ButtonVariant', 'ButtonSize']),
+      'calendar': (widgets: ['Calendar'], types: []),
       'callout': (widgets: ['Callout'], types: ['CalloutVariant']),
       'card': (widgets: ['Card'], types: []),
       'chart': (widgets: ['LineChart', 'BarChart', 'PieChart'], types: []),
@@ -842,6 +880,8 @@ const _componentSurfaces =
       'combobox': (widgets: ['Combobox'], types: []),
       'data_list': (widgets: ['DataList'], types: []),
       'data_table': (widgets: ['DataTable'], types: []),
+      'date_picker': (widgets: ['DatePicker'], types: []),
+      'date_range_picker': (widgets: ['DateRangePicker'], types: []),
       'dialog': (widgets: ['Dialog'], types: []),
       'disclosure': (widgets: ['Disclosure'], types: []),
       'divider': (widgets: ['Divider'], types: []),
@@ -854,6 +894,7 @@ const _componentSurfaces =
       'popover': (widgets: ['Popover'], types: []),
       'progress': (widgets: ['Progress'], types: []),
       'radio': (widgets: ['Radio'], types: []),
+      'range_calendar': (widgets: ['RangeCalendar'], types: []),
       'range_slider': (widgets: ['RangeSlider'], types: []),
       'segmented_control': (widgets: ['SegmentedControl'], types: []),
       'select': (widgets: ['Select'], types: []),
