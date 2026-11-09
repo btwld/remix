@@ -48,16 +48,24 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
           )
           .onToday(
             CalendarDayStyler()
-                .color({{typePrefix}}Tokens.accent())
-                .label(
-                  .color(
-                    {{typePrefix}}Tokens.accentForeground(),
-                  ).fontWeight(FontWeight.w600),
-                ),
+                .border(.color({{typePrefix}}Tokens.input()))
+                .label(.fontWeight(FontWeight.w600)),
           )
+          .onSelected(
+            CalendarDayStyler()
+                .color({{typePrefix}}Tokens.primary())
+                .label(.color({{typePrefix}}Tokens.primaryForeground())),
+          )
+          // Reserve range keys before pointer states: Mix keeps a key's first
+          // position when the range recipe supplies its role fragments.
+          .onRangeStart(CalendarDayStyler())
+          .onRangeMiddle(CalendarDayStyler())
+          .onRangeEnd(CalendarDayStyler())
+          .onRangeSingle(CalendarDayStyler())
+          .onRangePreview(CalendarDayStyler())
           .onHovered(
             CalendarDayStyler()
-                .color(_hover())
+                .color({{typePrefix}}Tokens.accent())
                 .label(.color({{typePrefix}}Tokens.accentForeground())),
           )
           .onPressed(
@@ -65,38 +73,83 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
                 .color(_pressed())
                 .label(.color({{typePrefix}}Tokens.foreground())),
           )
-          .onSelected(
+          .onFocusVisible(
             CalendarDayStyler()
-                .color({{typePrefix}}Tokens.primary())
-                .label(.color({{typePrefix}}Tokens.primaryForeground())),
+                .border(
+                  .all(
+                    .width(
+                      {{typePrefix}}Tokens.strokeHairline,
+                    ).style(BorderStyle.solid),
+                  ),
+                )
+                .border({{valuePrefix}}FocusBorder())
+                .containerEffects(
+                  {{valuePrefix}}FocusRing(inset: true).overContent(
+                    .shadows([
+                      RemixBoxShadowMix(
+                        kind: .inset,
+                        color: _focusContour(),
+                        spreadRadius: {{typePrefix}}Tokens.strokeHairline,
+                        shapeInset: {{typePrefix}}Tokens.strokeRing,
+                      ),
+                    ]),
+                  ),
+                ),
           )
           .onDisabled(
             CalendarDayStyler()
                 .label(.color({{typePrefix}}Tokens.mutedForeground()))
-                .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+                .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity))
+                .onSelected(CalendarDayStyler().color({{typePrefix}}Tokens.muted())),
           )
           .onUnavailable(
-            CalendarDayStyler().label(.decoration(TextDecoration.lineThrough)),
-          )
-          .onFocusVisible(
-            CalendarDayStyler().foregroundDecoration(
-              BoxDecorationMix(
-                border: BorderMix.all(
-                  BorderSideMix(
-                    color: _ring(),
-                    width: {{typePrefix}}Tokens.strokeRing,
+            CalendarDayStyler()
+                .label(
+                  .color(
+                    {{typePrefix}}Tokens.mutedForeground(),
+                  ).decoration(TextDecoration.lineThrough),
+                )
+                .wrap(.opacity(1))
+                .variant(
+                  _calendarDisabled,
+                  CalendarDayStyler().wrap(
+                    .opacity({{typePrefix}}Tokens.disabledOpacity),
                   ),
                 ),
-                borderRadius: BorderRadiusMix.all({{typePrefix}}Tokens.radiusSm()),
-              ),
-            ),
+          ),
+    )
+    .variant(
+      _calendarDisabled,
+      CalendarStyler()
+          .heading(.color({{typePrefix}}Tokens.mutedForeground()))
+          .weekday(
+            .color(
+              {{typePrefix}}Tokens.mutedForeground(),
+            ).wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
           ),
     )
     .merge(style);
 
 final _clear = {{valuePrefix}}Tint({{typePrefix}}Tokens.foreground, 0);
-final _pressed = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, 0.15, dark: 0.25);
-final _ring = {{valuePrefix}}Tint({{typePrefix}}Tokens.ring, 0.5);
+final _pressed = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, 0.22, dark: 0.32);
+// A thin inner keyline supplies calendar-local contrast where the shared
+// half-strength ring is too faint. Keep the token border and band unchanged.
+final _focusContour = ContextToken<Color>((context) {
+  final day = NakedCalendarDayState.maybeOf(context);
+  final range = NakedRangeCalendarState.maybeOf(context);
+  final states = day?.states ?? const <WidgetState>{};
+  final solid =
+      states.contains(WidgetState.selected) &&
+      !states.contains(WidgetState.hovered) &&
+      !states.contains(WidgetState.pressed) &&
+      !states.contains(WidgetState.disabled) &&
+      (range == null ||
+          (range.preview == null &&
+              day?.rangePosition != NakedRangePosition.middle));
+  return (solid ? {{typePrefix}}Tokens.primaryForeground : {{typePrefix}}Tokens.foreground)
+      .resolve(context)
+      .withValues(alpha: 0.65);
+});
 
 /// The application's Calendar recipe.
 ///
@@ -203,12 +256,21 @@ class {{typePrefix}}Calendar extends StatelessWidget {
       variant: .ghost,
       style: IconButtonStyler()
           .size({{typePrefix}}Tokens.s12, {{typePrefix}}Tokens.s12)
+          .margin(.symmetric(vertical: {{typePrefix}}Tokens.s1))
+          .icon(
+            .size(MediaQuery.textScalerOf(context).scale({{typePrefix}}Tokens.icon)),
+          )
           .merge(navigationStyle),
     ),
     selectorStyle: {{valuePrefix}}SelectStyle(
       style: SelectStyler()
           .trigger(
             SelectTriggerStyler()
+                .indicator(
+                  .size(
+                    MediaQuery.textScalerOf(context).scale({{typePrefix}}Tokens.s2_5),
+                  ),
+                )
                 .minHeight(
                   MediaQuery.textScalerOf(
                     context,
@@ -236,4 +298,11 @@ class {{typePrefix}}Calendar extends StatelessWidget {
   );
 }
 
-final _hover = {{valuePrefix}}Tint({{typePrefix}}Tokens.accent, 1, dark: 0.5);
+final _calendarDisabled = ContextVariant(
+  '{{valuePrefix}}.calendar.disabled',
+  (context) =>
+      (NakedCalendarState.maybeOf(context)?.states ??
+              NakedRangeCalendarState.maybeOf(context)?.states ??
+              const <WidgetState>{})
+          .contains(WidgetState.disabled),
+);

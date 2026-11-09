@@ -50,16 +50,24 @@ CalendarStyler playgroundCalendarStyle({
           )
           .onToday(
             CalendarDayStyler()
-                .color(PlaygroundTokens.accent())
-                .label(
-                  .color(
-                    PlaygroundTokens.accentForeground(),
-                  ).fontWeight(FontWeight.w600),
-                ),
+                .border(.color(PlaygroundTokens.input()))
+                .label(.fontWeight(FontWeight.w600)),
           )
+          .onSelected(
+            CalendarDayStyler()
+                .color(PlaygroundTokens.primary())
+                .label(.color(PlaygroundTokens.primaryForeground())),
+          )
+          // Reserve range keys before pointer states: Mix keeps a key's first
+          // position when the range recipe supplies its role fragments.
+          .onRangeStart(CalendarDayStyler())
+          .onRangeMiddle(CalendarDayStyler())
+          .onRangeEnd(CalendarDayStyler())
+          .onRangeSingle(CalendarDayStyler())
+          .onRangePreview(CalendarDayStyler())
           .onHovered(
             CalendarDayStyler()
-                .color(_hover())
+                .color(PlaygroundTokens.accent())
                 .label(.color(PlaygroundTokens.accentForeground())),
           )
           .onPressed(
@@ -67,38 +75,87 @@ CalendarStyler playgroundCalendarStyle({
                 .color(_pressed())
                 .label(.color(PlaygroundTokens.foreground())),
           )
-          .onSelected(
+          .onFocusVisible(
             CalendarDayStyler()
-                .color(PlaygroundTokens.primary())
-                .label(.color(PlaygroundTokens.primaryForeground())),
+                .border(
+                  .all(
+                    .width(
+                      PlaygroundTokens.strokeHairline,
+                    ).style(BorderStyle.solid),
+                  ),
+                )
+                .border(playgroundFocusBorder())
+                .containerEffects(
+                  playgroundFocusRing(inset: true).overContent(
+                    .shadows([
+                      RemixBoxShadowMix(
+                        kind: .inset,
+                        color: _focusContour(),
+                        spreadRadius: PlaygroundTokens.strokeHairline,
+                        shapeInset: PlaygroundTokens.strokeRing,
+                      ),
+                    ]),
+                  ),
+                ),
           )
           .onDisabled(
             CalendarDayStyler()
                 .label(.color(PlaygroundTokens.mutedForeground()))
-                .wrap(.opacity(PlaygroundTokens.disabledOpacity)),
+                .wrap(.opacity(PlaygroundTokens.disabledOpacity))
+                .onSelected(
+                  CalendarDayStyler().color(PlaygroundTokens.muted()),
+                ),
           )
           .onUnavailable(
-            CalendarDayStyler().label(.decoration(TextDecoration.lineThrough)),
-          )
-          .onFocusVisible(
-            CalendarDayStyler().foregroundDecoration(
-              BoxDecorationMix(
-                border: BorderMix.all(
-                  BorderSideMix(
-                    color: _ring(),
-                    width: PlaygroundTokens.strokeRing,
+            CalendarDayStyler()
+                .label(
+                  .color(
+                    PlaygroundTokens.mutedForeground(),
+                  ).decoration(TextDecoration.lineThrough),
+                )
+                .wrap(.opacity(1))
+                .variant(
+                  _calendarDisabled,
+                  CalendarDayStyler().wrap(
+                    .opacity(PlaygroundTokens.disabledOpacity),
                   ),
                 ),
-                borderRadius: BorderRadiusMix.all(PlaygroundTokens.radiusSm()),
-              ),
-            ),
+          ),
+    )
+    .variant(
+      _calendarDisabled,
+      CalendarStyler()
+          .heading(.color(PlaygroundTokens.mutedForeground()))
+          .weekday(
+            .color(
+              PlaygroundTokens.mutedForeground(),
+            ).wrap(.opacity(PlaygroundTokens.disabledOpacity)),
           ),
     )
     .merge(style);
 
 final _clear = playgroundTint(PlaygroundTokens.foreground, 0);
-final _pressed = playgroundTint(PlaygroundTokens.primary, 0.15, dark: 0.25);
-final _ring = playgroundTint(PlaygroundTokens.ring, 0.5);
+final _pressed = playgroundTint(PlaygroundTokens.primary, 0.22, dark: 0.32);
+// A thin inner keyline supplies calendar-local contrast where the shared
+// half-strength ring is too faint. Keep the token border and band unchanged.
+final _focusContour = ContextToken<Color>((context) {
+  final day = NakedCalendarDayState.maybeOf(context);
+  final range = NakedRangeCalendarState.maybeOf(context);
+  final states = day?.states ?? const <WidgetState>{};
+  final solid =
+      states.contains(WidgetState.selected) &&
+      !states.contains(WidgetState.hovered) &&
+      !states.contains(WidgetState.pressed) &&
+      !states.contains(WidgetState.disabled) &&
+      (range == null ||
+          (range.preview == null &&
+              day?.rangePosition != NakedRangePosition.middle));
+  return (solid
+          ? PlaygroundTokens.primaryForeground
+          : PlaygroundTokens.foreground)
+      .resolve(context)
+      .withValues(alpha: 0.65);
+});
 
 /// The application's Calendar recipe.
 ///
@@ -205,22 +262,57 @@ class PlaygroundCalendar extends StatelessWidget {
       variant: .ghost,
       style: IconButtonStyler()
           .size(PlaygroundTokens.s12, PlaygroundTokens.s12)
+          .margin(.symmetric(vertical: PlaygroundTokens.s1))
+          .icon(
+            .size(
+              MediaQuery.textScalerOf(context).scale(PlaygroundTokens.icon),
+            ),
+          )
           .merge(navigationStyle),
     ),
     selectorStyle: playgroundSelectStyle(
       style: SelectStyler()
           .trigger(
-            SelectTriggerStyler().width(
-              MediaQuery.textScalerOf(
-                context,
-              ).scale(PlaygroundTokens.s16 * 2 + PlaygroundTokens.s6),
-            ),
+            SelectTriggerStyler()
+                .indicator(
+                  .size(
+                    MediaQuery.textScalerOf(
+                      context,
+                    ).scale(PlaygroundTokens.s2_5),
+                  ),
+                )
+                .minHeight(
+                  MediaQuery.textScalerOf(
+                    context,
+                  ).scale(PlaygroundTokens.controlMd),
+                )
+                .maxWidth(double.infinity)
+                .minWidth(
+                  MediaQuery.textScalerOf(
+                    context,
+                  ).scale(PlaygroundTokens.s16 + PlaygroundTokens.s12),
+                ),
           )
           .merge(selectorStyle),
     ),
-    style: playgroundCalendarStyle(style: style),
+    style: playgroundCalendarStyle(
+      style: CalendarStyler()
+          .day(
+            CalendarDayStyler().minWidth(
+              MediaQuery.textScalerOf(context).scale(PlaygroundTokens.s12),
+            ),
+          )
+          .merge(style),
+    ),
     styleSpec: styleSpec,
   );
 }
 
-final _hover = playgroundTint(PlaygroundTokens.accent, 1, dark: 0.5);
+final _calendarDisabled = ContextVariant(
+  'playground.calendar.disabled',
+  (context) =>
+      (NakedCalendarState.maybeOf(context)?.states ??
+              NakedRangeCalendarState.maybeOf(context)?.states ??
+              const <WidgetState>{})
+          .contains(WidgetState.disabled),
+);

@@ -46,7 +46,10 @@ void main() {
                     ),
             );
             final day = find
-                .ancestor(of: find.text('12'), matching: find.byType(Box))
+                .ancestor(
+                  of: find.text('12'),
+                  matching: find.byType(StyleSpecProvider<CalendarDaySpec>),
+                )
                 .first;
             await probe.expectRing(
               part: day,

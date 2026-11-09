@@ -10,86 +10,143 @@ import 'calendar.dart';
 /// The application's RangeCalendar style recipe.
 ///
 /// Remix owns the complete range, local draft and range roles. This recipe
-/// paints committed endpoints in primary, interiors in accent, and the draft
+/// paints committed endpoints in primary, interiors in a distinct tint, and the draft
 /// with a tinted fill and primary outline. While drafting, the old committed
 /// value keeps only its quiet selected treatment. Unavailable draft days use
-/// the destructive text role and remain struck through and visibly muted.
+/// the full-strength destructive text role and remain struck through.
 CalendarStyler vanillaRangeCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => vanillaCalendarStyle()
     .day(
       CalendarDayStyler()
           .onSelected(
-            CalendarDayStyler()
-                .color(VanillaTokens.muted())
-                .label(.color(VanillaTokens.mutedForeground())),
+            _muted()
+                .variant(_committedStart, _shape(start: true))
+                .variant(_committedMiddle, _shape())
+                .variant(_committedEnd, _shape(end: true))
+                .variant(_committedSingle, _shape(start: true, end: true)),
           )
           .onRangeMiddle(
-            CalendarDayStyler()
-                .color(VanillaTokens.accent())
-                .borderRadius(
-                  .only(
-                    topStart: Radius.zero,
-                    topEnd: Radius.zero,
-                    bottomStart: Radius.zero,
-                    bottomEnd: Radius.zero,
-                  ),
-                )
-                .label(.color(VanillaTokens.accentForeground())),
+            _shape().color(_middle()).label(.color(VanillaTokens.foreground())),
           )
-          .onRangeStart(
-            _endpoint().borderRadius(
-              .only(
-                topStart: VanillaTokens.radiusSm(),
-                bottomStart: VanillaTokens.radiusSm(),
-                topEnd: Radius.zero,
-                bottomEnd: Radius.zero,
-              ),
-            ),
-          )
-          .onRangeEnd(
-            _endpoint().borderRadius(
-              .only(
-                topEnd: VanillaTokens.radiusSm(),
-                bottomEnd: VanillaTokens.radiusSm(),
-                topStart: Radius.zero,
-                bottomStart: Radius.zero,
-              ),
-            ),
-          )
-          .onRangeSingle(
-            _endpoint().borderRadius(
-              .only(
-                topStart: VanillaTokens.radiusSm(),
-                topEnd: VanillaTokens.radiusSm(),
-                bottomStart: VanillaTokens.radiusSm(),
-                bottomEnd: VanillaTokens.radiusSm(),
-              ),
-            ),
-          )
+          .onRangeStart(_endpoint().merge(_shape(start: true)))
+          .onRangeEnd(_endpoint().merge(_shape(end: true)))
+          .onRangeSingle(_endpoint().merge(_shape(start: true, end: true)))
           .onRangePreview(
             CalendarDayStyler()
                 .color(_draft())
                 .border(
-                  .color(_draftBorder()).width(VanillaTokens.strokeHairline),
+                  BorderMix(
+                    top: _draftStroke,
+                    bottom: _draftStroke,
+                    left: _none,
+                    right: _none,
+                  ),
                 )
                 .label(.color(VanillaTokens.foreground()))
-                .onDisabled(
+                .onRangeStart(
                   CalendarDayStyler()
-                      .color(_blocked())
-                      .label(.color(VanillaTokens.destructive())),
-                ),
-          ),
+                      .border(.left(_draftStroke))
+                      .variant(
+                        _rtlDraftStart,
+                        CalendarDayStyler().border(
+                          BorderMix(left: _none, right: _draftStroke),
+                        ),
+                      ),
+                )
+                .onRangeEnd(
+                  CalendarDayStyler()
+                      .border(.right(_draftStroke))
+                      .variant(
+                        _rtlDraftEnd,
+                        CalendarDayStyler().border(
+                          BorderMix(left: _draftStroke, right: _none),
+                        ),
+                      ),
+                )
+                .onRangeSingle(CalendarDayStyler().border(.all(_draftStroke))),
+          )
+          .onDisabled(CalendarDayStyler().onRangePreview(_blockedPreview()))
+          .onUnavailable(CalendarDayStyler().onRangePreview(_blockedPreview())),
     )
     .merge(style);
+
+CalendarDayStyler _blockedPreview() => CalendarDayStyler()
+    .color(_blocked())
+    .label(.color(VanillaTokens.destructive()))
+    .wrap(.opacity(1));
+
+CalendarDayStyler _muted() => CalendarDayStyler()
+    .color(VanillaTokens.muted())
+    .label(.color(VanillaTokens.mutedForeground()));
 
 CalendarDayStyler _endpoint() => CalendarDayStyler()
     .color(VanillaTokens.primary())
     .label(.color(VanillaTokens.primaryForeground()));
 
+CalendarDayStyler _shape({bool start = false, bool end = false}) {
+  final radius = BorderRadiusGeometryMix.only(
+    topStart: start ? VanillaTokens.radiusSm() : Radius.zero,
+    bottomStart: start ? VanillaTokens.radiusSm() : Radius.zero,
+    topEnd: end ? VanillaTokens.radiusSm() : Radius.zero,
+    bottomEnd: end ? VanillaTokens.radiusSm() : Radius.zero,
+  );
+  return CalendarDayStyler().borderRadius(radius);
+}
+
+// The headless role tracks the draft while drafting. Read the committed
+// snapshot only for the old selection's geometry, reusing the same shapes.
+ContextVariant _committedRole(String name, NakedRangePosition position) =>
+    ContextVariant('vanilla.calendar.committed-$name', (context) {
+      final value = NakedRangeCalendarState.maybeOf(context)?.value;
+      final day = NakedCalendarDayState.maybeOf(context)?.date;
+      if (value == null || day == null || !value.contains(day)) return false;
+      final start = compareCivilDates(day, value.start) == 0;
+      final end = compareCivilDates(day, value.end) == 0;
+      final role = start && end
+          ? NakedRangePosition.single
+          : start
+          ? NakedRangePosition.start
+          : end
+          ? NakedRangePosition.end
+          : NakedRangePosition.middle;
+      return role == position;
+    });
+final _committedStart = _committedRole('start', .start);
+final _committedMiddle = _committedRole('middle', .middle);
+final _committedEnd = _committedRole('end', .end);
+final _committedSingle = _committedRole('single', .single);
+// Rank the directional override with the draft role it refines; plain
+// context variants run before widget-state-ranked range variants in Mix.
+final _rtlDraftStart = _RtlDraftEdge(NakedRangePosition.start);
+final _rtlDraftEnd = _RtlDraftEdge(NakedRangePosition.end);
+
+final class _RtlDraftEdge extends ContextVariant {
+  _RtlDraftEdge(NakedRangePosition role)
+    : super(
+        'vanilla.calendar.rtl-draft-${role.name}',
+        (context) =>
+            Directionality.of(context) == TextDirection.rtl &&
+            NakedCalendarDayState.maybeOf(context)?.rangePosition == role,
+      );
+  @override
+  Set<WidgetState> get widgetStateDependencies => const {WidgetState.selected};
+}
+
+final _middle = vanillaTint(VanillaTokens.primary, 0.09, dark: 0.14);
 final _draft = vanillaTint(VanillaTokens.primary, 0.12, dark: 0.2);
 final _draftBorder = vanillaTint(VanillaTokens.primary, 0.6);
-final _blocked = vanillaTint(VanillaTokens.destructive, 0.1, dark: 0.2);
+final _blocked = vanillaTint(VanillaTokens.destructive, 0, dark: 0);
+final _draftStroke = BorderSideMix(
+  color: _draftBorder(),
+  width: VanillaTokens.strokeHairline,
+  style: BorderStyle.solid,
+);
+final _none = BorderSideMix(
+  color: _draftBorder(),
+  width: 0,
+  style: BorderStyle.none,
+);
 
 /// The application's RangeCalendar recipe.
 ///
@@ -216,12 +273,21 @@ class VanillaRangeCalendar extends StatelessWidget {
       variant: .ghost,
       style: IconButtonStyler()
           .size(VanillaTokens.s12, VanillaTokens.s12)
+          .margin(.symmetric(vertical: VanillaTokens.s1))
+          .icon(
+            .size(MediaQuery.textScalerOf(context).scale(VanillaTokens.icon)),
+          )
           .merge(navigationStyle),
     ),
     selectorStyle: vanillaSelectStyle(
       style: SelectStyler()
           .trigger(
             SelectTriggerStyler()
+                .indicator(
+                  .size(
+                    MediaQuery.textScalerOf(context).scale(VanillaTokens.s2_5),
+                  ),
+                )
                 .minHeight(
                   MediaQuery.textScalerOf(
                     context,

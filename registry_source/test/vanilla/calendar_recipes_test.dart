@@ -7,11 +7,37 @@ import 'package:remix/remix.dart';
 
 import 'support.dart';
 
-Finder dayBox(int day) =>
-    find.ancestor(of: find.text('$day'), matching: find.byType(Box)).first;
+Finder dayBox(int day) => find
+    .ancestor(
+      of: find.text('$day'),
+      matching: find.byType(StyleSpecProvider<CalendarDaySpec>),
+    )
+    .first;
 BoxDecoration? dayDecoration(WidgetTester tester, int day) =>
-    tester.widget<Box>(dayBox(day)).styleSpec!.spec.decoration
+    tester
+            .widget<StyleSpecProvider<CalendarDaySpec>>(dayBox(day))
+            .spec
+            .spec
+            .container
+            .spec
+            .decoration
         as BoxDecoration?;
+Border dayBorder(
+  WidgetTester tester,
+  int day, {
+  TextDirection direction = TextDirection.ltr,
+}) {
+  final border = dayDecoration(tester, day)!.border!;
+  if (border is Border) return border;
+  final logical = border as BorderDirectional;
+  return Border(
+    top: logical.top,
+    bottom: logical.bottom,
+    left: direction == TextDirection.ltr ? logical.start : logical.end,
+    right: direction == TextDirection.ltr ? logical.end : logical.start,
+  );
+}
+
 TextStyle? dayText(WidgetTester tester, int day) => tester
     .widget<StyledText>(
       find
@@ -88,7 +114,9 @@ void main() {
         expect(dayDecoration(t, 20)?.color?.a, 0);
         expect(dayDecoration(t, 12)?.color, theme.data.primary);
         expect(dayText(t, 12)?.color, theme.data.primaryForeground);
-        expect(dayDecoration(t, 6)?.color, theme.data.accent);
+        expect(dayDecoration(t, 6)?.color?.a, 0);
+        expect(dayDecoration(t, 6)?.border?.top.color, theme.data.input);
+        expect(dayText(t, 6)?.fontWeight, FontWeight.w600);
         expect(dayText(t, 18)?.decoration, TextDecoration.lineThrough);
         expect(dayText(t, 1)?.decoration, isNot(TextDecoration.lineThrough));
         expect(dayText(t, 1)?.color, theme.data.mutedForeground);
@@ -116,19 +144,18 @@ void main() {
         await t.pumpWidget(calendarHost(rangeCalendar(), theme.data));
         final committed = dayDecoration(t, 10)?.color;
         expect(committed, theme.data.primary);
-        expect(dayDecoration(t, 11)?.color, theme.data.accent);
+        expect(dayDecoration(t, 11)?.color, isNot(theme.data.accent));
         await t.tap(find.text('20'));
         await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await t.pumpAndSettle();
         await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
         await t.pumpAndSettle();
         expect(dayDecoration(t, 10)?.color, theme.data.muted);
+        expect(dayDecoration(t, 8)?.color?.a, 0);
         expect(dayText(t, 10)?.color, theme.data.mutedForeground);
         expect(dayDecoration(t, 20)?.color, isNot(committed));
         expect(dayDecoration(t, 21)?.color, isNot(dayDecoration(t, 11)?.color));
-        expect(
-          (dayDecoration(t, 21)?.border as Border?)?.top.color.a,
-          greaterThan(0),
-        );
+        expect(dayBorder(t, 21).top.color.a, greaterThan(0));
         await t.sendKeyEvent(LogicalKeyboardKey.escape);
         await t.pumpAndSettle();
         expect(dayDecoration(t, 10)?.color, committed);
@@ -139,9 +166,27 @@ void main() {
     ) async {
       await t.pumpWidget(calendarHost(rangeCalendar(), theme.data));
       await t.tap(find.text('17'));
-      await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-      await t.pumpAndSettle();
-      expect(dayText(t, 18)?.color, theme.data.destructive);
+      for (var i = 0; i < 3; i++) {
+        await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await t.pumpAndSettle();
+      }
+      for (final day in [18, 19, 20]) {
+        expect(dayText(t, day)?.color, theme.data.destructive);
+        final opacity = t
+            .widget<Opacity>(
+              find
+                  .ancestor(of: dayBox(day), matching: find.byType(Opacity))
+                  .first,
+            )
+            .opacity;
+        expect(opacity, 1);
+        final foreground = dayText(t, day)!.color!.computeLuminance();
+        final background = theme.data.background.computeLuminance();
+        final contrast = foreground > background
+            ? (foreground + .05) / (background + .05)
+            : (background + .05) / (foreground + .05);
+        expect(contrast, greaterThanOrEqualTo(4.5));
+      }
       expect(dayText(t, 18)?.decoration, TextDecoration.lineThrough);
     });
     testWidgets(
@@ -177,6 +222,100 @@ void main() {
         );
       },
     );
+    testWidgets(
+      '${theme.name} selected and range roles retain pointer feedback',
+      (t) async {
+        for (final (widget, days) in [
+          (calendar(), [12]),
+          (rangeCalendar(), [10, 11, 13]),
+        ]) {
+          await t.pumpWidget(calendarHost(widget, theme.data));
+          final mouse = await t.createGesture(kind: PointerDeviceKind.mouse);
+          await mouse.addPointer(location: Offset.zero);
+          for (final day in days) {
+            await mouse.moveTo(Offset.zero);
+            await t.pumpAndSettle();
+            final rest = dayDecoration(t, day)?.color;
+            await mouse.moveTo(t.getCenter(dayBox(day)));
+            await t.pumpAndSettle();
+            final hover = dayDecoration(t, day)?.color;
+            expect(hover, isNot(rest), reason: 'hover $day');
+            await mouse.down(t.getCenter(dayBox(day)));
+            await t.pumpAndSettle();
+            expect(
+              dayDecoration(t, day)?.color,
+              isNot(hover),
+              reason: 'press $day',
+            );
+            await mouse.cancel();
+          }
+          await mouse.removePointer();
+          await t.pumpWidget(const SizedBox.shrink());
+        }
+      },
+    );
+    testWidgets(
+      '${theme.name} draft has perimeter edges and keeps old range shapes',
+      (t) async {
+        await t.pumpWidget(calendarHost(rangeCalendar(), theme.data));
+        final oldShapes = [
+          for (final d in [10, 11, 12, 13]) dayDecoration(t, d)?.borderRadius,
+        ];
+        await t.tap(find.text('20'));
+        await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await t.pumpAndSettle();
+        await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await t.pumpAndSettle();
+        expect([
+          for (final d in [10, 11, 12, 13]) dayDecoration(t, d)?.borderRadius,
+        ], oldShapes);
+        final middle = dayBorder(t, 21);
+        expect(middle.top.color.a, greaterThan(0));
+        expect(middle.bottom.color.a, greaterThan(0));
+        expect(middle.left.style, BorderStyle.none, reason: middle.toString());
+        expect(middle.right.style, BorderStyle.none);
+        final start = dayBorder(t, 20);
+        expect(start.left.color.a, greaterThan(0));
+        expect(start.right.style, BorderStyle.none);
+      },
+    );
+    testWidgets(
+      '${theme.name} unavailable is readable while out of bounds fades',
+      (t) async {
+        await t.pumpWidget(calendarHost(calendar(), theme.data));
+        expect(dayText(t, 18)?.color, theme.data.mutedForeground);
+        double opacity(int d) {
+          final ancestors = find.ancestor(
+            of: dayBox(d),
+            matching: find.byType(Opacity),
+          );
+          return ancestors.evaluate().isEmpty
+              ? 1
+              : t.widget<Opacity>(ancestors.first).opacity;
+        }
+
+        expect(opacity(18), 1);
+        expect(opacity(1), VanillaTokens.disabledOpacity);
+        await t.pumpWidget(calendarHost(rangeCalendar(), theme.data));
+        await t.tap(find.text('17'));
+        await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await t.pumpAndSettle();
+        expect(opacity(18), 1);
+        expect(dayText(t, 18)?.color, theme.data.destructive);
+      },
+    );
+    testWidgets('${theme.name} disabled selection is quiet', (t) async {
+      for (final widget in [
+        calendar(enabled: false),
+        rangeCalendar(enabled: false),
+      ]) {
+        await t.pumpWidget(calendarHost(widget, theme.data));
+        final selected = widget is VanillaCalendar ? 12 : 10;
+        expect(dayDecoration(t, selected)?.color, theme.data.muted);
+        expect(dayText(t, selected)?.color, theme.data.mutedForeground);
+        expect(dayDecoration(t, 20)?.color?.a, 0);
+      }
+    });
     testWidgets('${theme.name} caller overrides win on day states', (t) async {
       await t.pumpWidget(
         calendarHost(
@@ -239,14 +378,17 @@ void main() {
                 find.byType(StyleSpecProvider<ButtonSpec>).first,
               )
               .spec;
-          expect(button.spec.label.spec.style?.color, theme.data.foreground);
+          expect(
+            button.spec.label.spec.style?.color,
+            theme.data.foreground,
+          );
           await t.tap(find.byType(RemixButton));
           await t.pumpAndSettle();
           expect(
             find.byType(range ? RemixRangeCalendar : RemixCalendar),
             findsOneWidget,
           );
-          expect(dayText(t, 6)?.color, theme.data.accentForeground);
+          expect(dayText(t, 6)?.color, theme.data.foreground);
           final panel = t
               .widget<StyleSpecProvider<PopoverSpec>>(
                 find.byType(StyleSpecProvider<PopoverSpec>).first,
