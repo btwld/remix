@@ -116,6 +116,6 @@ so installed presets can express form-field states without owning behavior.
 2026-11-08 · Accepted
 
 `CalendarDaySpec.containerEffects` uses the same box-effects adapter as buttons
-and selectors. Presets can draw inset focus bands with each day tile's resolved
+and selectors. Presets can draw inset focus bands with each range tile's resolved
 radius, without duplicating geometry in a foreground decoration or changing
 layout. Rendering and behavior remain in Remix; recipes own colors and effects.

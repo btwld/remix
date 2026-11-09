@@ -295,9 +295,9 @@ Both default to zero; navigation centres follow the outer day columns.
 `label(TextStyler)`, and its states through `onSelected`, `onHovered`,
 `onPressed`, `onFocusVisible`, `onDisabled`, `onToday` and `onUnavailable`.
 Use `containerEffects(RemixBoxEffectsMix)` for focus outlines and other box
-effects: they follow the day tile's resolved radius without changing its layout.
-`NakedCalendarDayState.maybeOf(context)` exposes the day to context-aware style
-tokens.
+effects: they follow the day tile's resolved radius, including range caps,
+without changing its layout. `NakedCalendarDayState.maybeOf(context)` exposes
+the day and its `NakedRangePosition` to context-aware style tokens.
 
 For an inclusive date range, use [Range Calendar](/components/range_calendar)
 instead. Typed/segmented entry, non-Gregorian calendars and timezone scheduling

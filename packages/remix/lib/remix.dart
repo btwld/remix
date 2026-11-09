@@ -56,6 +56,7 @@ export 'package:naked_ui/naked_ui.dart'
         NakedDisclosureTransitionBuilder,
         NakedMenuState,
         NakedRangeCalendarState,
+        NakedRangePosition,
         NakedSliderSemanticFormatterCallback,
         NakedTabState,
         OverlayAlignment,
