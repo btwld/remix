@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui' show Tristate;
 import 'package:flutter/rendering.dart';
 
@@ -89,6 +90,156 @@ Future<void> _tapDay(WidgetTester tester, int day) async {
 }
 
 void main() {
+  setUpAll(() async {
+    final loader = FontLoader('RangeFitTest');
+    for (final weight in ['Regular', 'Bold']) {
+      loader.addFont(
+        File(
+          '../remix_ui_fonts/lib/fonts/geist/Geist-$weight.ttf',
+        ).readAsBytes().then(ByteData.sublistView),
+      );
+    }
+    await loader.load();
+  });
+
+  for (final candidate in ['full', 'compact']) {
+    testWidgets('accessibility bold re-fits the $candidate range label', (
+      t,
+    ) async {
+      const full = 'Sunday, November 10, 2024 – Monday, March 24, 2025';
+      const compact = '11/10/2024 – 3/24/2025';
+      final label = candidate == 'full' ? full : compact;
+      const typography = TextStyle(
+        fontFamily: 'RangeFitTest',
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      );
+      // Derive the threshold from real paragraphs in both accessibility modes.
+      final widths = <double>[];
+      for (final bold in [false, true]) {
+        await t.pumpWidget(
+          pickerHost(
+            MediaQuery(
+              data: MediaQueryData(boldText: bold),
+              child: Text(label, style: typography),
+            ),
+          ),
+        );
+        widths.add(
+          t
+              .renderObject<RenderParagraph>(find.byType(RichText))
+              .getMaxIntrinsicWidth(double.infinity),
+        );
+      }
+      expect(widths.last, greaterThan(widths.first));
+      final available = (widths.first + widths.last) / 2;
+      for (final bold in [false, true]) {
+        await t.pumpWidget(
+          pickerHost(
+            MediaQuery(
+              data: MediaQueryData(boldText: bold),
+              child: SizedBox(
+                width: available + 24,
+                child: IntrinsicHeight(
+                  child: _picker(
+                    value: CivilDateRange(
+                      start: DateTime(2024, 11, 10),
+                      end: DateTime(2025, 3, 24),
+                    ),
+                    buttonStyle: ButtonStyler()
+                        .padding(.horizontal(12))
+                        .label(
+                          TextStyler()
+                              .fontFamily('RangeFitTest')
+                              .fontSize(14)
+                              .fontWeight(FontWeight.w400)
+                              .maxLines(1),
+                        ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        final trigger = find.byType(RemixButton);
+        final paragraph = t.renderObject<RenderParagraph>(
+          find.descendant(of: trigger, matching: find.byType(RichText)),
+        );
+        final visible = paragraph.text.toPlainText();
+        final end = paragraph.getBoxesForSelection(
+          TextSelection(
+            baseOffset: visible.length - 4,
+            extentOffset: visible.length,
+          ),
+        );
+        expect(end, isNotEmpty, reason: 'The final year must be laid out.');
+        for (final box in end) {
+          expect(box.right, lessThanOrEqualTo(paragraph.size.width));
+          expect(box.bottom, lessThanOrEqualTo(paragraph.size.height));
+        }
+        expect(paragraph.didExceedMaxLines, isFalse);
+        expect(
+          visible,
+          !bold
+              ? label
+              : candidate == 'full'
+              ? compact
+              : '11/10/2024 –\n3/24/2025',
+        );
+        final slot = t.renderObject<RenderBox>(
+          find.descendant(of: trigger, matching: find.byType(Flexible)),
+        );
+        final constraints = BoxConstraints(maxWidth: available);
+        expect(slot.getDryLayout(constraints), slot.size);
+        expect(slot.getMinIntrinsicHeight(available), paragraph.size.height);
+        expect(slot.getMaxIntrinsicHeight(available), paragraph.size.height);
+        expect(
+          slot.getDryBaseline(constraints, TextBaseline.alphabetic),
+          paragraph.getDryBaseline(constraints, TextBaseline.alphabetic),
+        );
+        expect(t.takeException(), isNull);
+      }
+    });
+  }
+
+  testWidgets('custom range with an explicit newline lays out both lines', (
+    t,
+  ) async {
+    const label = 'November 10, 2024 –\nMarch 24, 2025';
+    await t.pumpWidget(
+      pickerHost(
+        SizedBox(
+          width: 600,
+          child: IntrinsicHeight(
+            child: _picker(
+              value: CivilDateRange(
+                start: DateTime(2024, 11, 10),
+                end: DateTime(2025, 3, 24),
+              ),
+              formatRange: (_) => label,
+              buttonStyle: ButtonStyler()
+                  .padding(.horizontal(12))
+                  .label(TextStyler().fontSize(10).maxLines(1)),
+            ),
+          ),
+        ),
+      ),
+    );
+    final paragraph = t.renderObject<RenderParagraph>(
+      find.descendant(of: find.text(label), matching: find.byType(RichText)),
+    );
+    for (final start in [0, label.length - 4]) {
+      final boxes = paragraph.getBoxesForSelection(
+        TextSelection(baseOffset: start, extentOffset: start + 4),
+      );
+      expect(boxes, isNotEmpty);
+      expect(boxes.last.bottom, lessThanOrEqualTo(paragraph.size.height));
+    }
+    expect(paragraph.didExceedMaxLines, isFalse);
+    expect(paragraph.size.height, greaterThan(paragraph.preferredLineHeight));
+    expect(t.takeException(), isNull);
+  });
+
   for (final layout in [
     'IntrinsicWidth',
     'IntrinsicHeight',

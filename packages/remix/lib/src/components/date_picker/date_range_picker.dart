@@ -246,58 +246,31 @@ Widget _fittedRangeLabel(
   String? compactLabel,
   String? wrappedCompactLabel,
 }) {
-  final defaults = DefaultTextStyle.of(context);
-  final painter = TextPainter(
-    textDirection: spec.textDirection ?? Directionality.of(context),
-    textAlign: spec.textAlign ?? defaults.textAlign ?? TextAlign.start,
-    textScaler: spec.textScaler ?? MediaQuery.textScalerOf(context),
-    locale: spec.locale ?? Localizations.maybeLocaleOf(context),
-    strutStyle: spec.strutStyle,
-    textWidthBasis: spec.textWidthBasis ?? defaults.textWidthBasis,
-    textHeightBehavior: spec.textHeightBehavior ?? defaults.textHeightBehavior,
-    maxLines: 1,
+  final candidates = [label, if (compactLabel != null) compactLabel];
+  return _FittedRangeLabel(
+    singleLineCandidates: [
+      for (final candidate in candidates)
+        !(spec.textDirectives?.apply(candidate) ?? candidate).contains('\n'),
+    ],
+    children: [
+      for (final candidate in candidates)
+        StyledText(candidate, styleSpec: StyleSpec(spec: spec)),
+      _wrappedRangeLabel(
+        context,
+        spec,
+        wrappedCompactLabel ?? compactLabel ?? label,
+      ),
+    ],
   );
-  double oneLineWidth(String text) {
-    painter.text = TextSpan(
-      text: spec.textDirectives?.apply(text) ?? text,
-      style: defaults.style.merge(spec.style),
-    );
-    painter.layout();
-    // Explicit line breaks must use the uncapped fallback even at infinite width.
-    return painter.didExceedMaxLines
-        ? double.infinity
-        : painter.maxIntrinsicWidth;
-  }
-
-  try {
-    return _FittedRangeLabel(
-      oneLineWidths: [
-        oneLineWidth(label),
-        if (compactLabel != null) oneLineWidth(compactLabel),
-      ],
-      children: [
-        StyledText(label, styleSpec: StyleSpec(spec: spec)),
-        if (compactLabel != null)
-          StyledText(compactLabel, styleSpec: StyleSpec(spec: spec)),
-        _wrappedRangeLabel(
-          context,
-          spec,
-          wrappedCompactLabel ?? compactLabel ?? label,
-        ),
-      ],
-    );
-  } finally {
-    painter.dispose();
-  }
 }
 
 class _FittedRangeLabel extends MultiChildRenderObjectWidget {
   const _FittedRangeLabel({
-    required this.oneLineWidths,
+    required this.singleLineCandidates,
     required super.children,
   });
 
-  final List<double> oneLineWidths;
+  final List<bool> singleLineCandidates;
 
   @override
   MultiChildRenderObjectElement createElement() =>
@@ -305,13 +278,13 @@ class _FittedRangeLabel extends MultiChildRenderObjectWidget {
 
   @override
   _RenderFittedRangeLabel createRenderObject(BuildContext context) =>
-      _RenderFittedRangeLabel(oneLineWidths);
+      _RenderFittedRangeLabel(singleLineCandidates);
 
   @override
   void updateRenderObject(
     BuildContext context,
     _RenderFittedRangeLabel renderObject,
-  ) => renderObject.oneLineWidths = oneLineWidths;
+  ) => renderObject.singleLineCandidates = singleLineCandidates;
 }
 
 // Like IndexedStack, only the painted candidate is onstage for inspection.
@@ -331,14 +304,14 @@ class _RangeLabelParentData extends ContainerBoxParentData<RenderBox> {}
 
 class _RenderFittedRangeLabel extends RenderBox
     with ContainerRenderObjectMixin<RenderBox, _RangeLabelParentData> {
-  _RenderFittedRangeLabel(this._oneLineWidths);
+  _RenderFittedRangeLabel(this._singleLineCandidates);
 
-  List<double> _oneLineWidths;
+  List<bool> _singleLineCandidates;
   RenderBox? _selected;
 
-  set oneLineWidths(List<double> value) {
-    if (listEquals(_oneLineWidths, value)) return;
-    _oneLineWidths = value;
+  set singleLineCandidates(List<bool> value) {
+    if (listEquals(_singleLineCandidates, value)) return;
+    _singleLineCandidates = value;
     markNeedsLayout();
   }
 
@@ -351,10 +324,15 @@ class _RenderFittedRangeLabel extends RenderBox
 
   RenderBox _candidate(double width) {
     var child = firstChild!;
-    for (final oneLineWidth in _oneLineWidths) {
-      if (oneLineWidth.isFinite && oneLineWidth <= width) return child;
+    for (final singleLine in _singleLineCandidates) {
+      // Ask the rendered child so Text owns typography resolution, including
+      // accessibility bold, inherited style, directives, and text scaling.
+      if (singleLine && child.getMaxIntrinsicWidth(double.infinity) <= width) {
+        return child;
+      }
       child = childAfter(child)!;
     }
+    // The last child always wraps, even if no single-line candidate fits.
     return child;
   }
 
