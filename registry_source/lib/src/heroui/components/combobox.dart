@@ -21,6 +21,8 @@ enum HeroUiComboboxVariant { primary, secondary }
 /// Accepted values appear in the editor; suggestions have no persistent
 /// selected or per-option disabled state. Custom field builders own their
 /// field appearance, and caller style overrides merge last.
+/// Upstream's trailing chevron is omitted: RemixCombobox has no
+/// trailing-indicator slot; the editor keeps symmetric horizontal padding.
 @MixWidget(target: RemixCombobox.new)
 ComboboxStyler heroUiComboboxStyle({
   HeroUiComboboxVariant variant = .primary,
@@ -40,7 +42,15 @@ ComboboxStyler heroUiComboboxStyle({
     .panel(
       ComboboxPanelStyler()
           .margin(.top(_panelGap))
-          .padding(.all(_listPadding))
+          .padding(
+            .fromLTRB(
+              _listPadding,
+              _listPadding,
+              _listPadding,
+              _listPadding - _rowGap,
+            ),
+          )
+          .maxHeight(_panelMaxHeight)
           .borderRadius(.all(HeroUiTokens.radiusPanel()))
           .color(HeroUiTokens.overlay())
           .scrollbarColor(_scrollbar())
@@ -87,3 +97,7 @@ const _rowGap = 4.0;
 const _listPadding = 6.0;
 const _panelGap = 8.0;
 const _pressedScale = .98;
+
+// Upstream ComboBox/Select have no fixed CSS cap. Bound seven measured
+// 36px rows, six 4px gaps and two 6px insets; available space can shrink it.
+const _panelMaxHeight = 7 * _rowMinHeight + 6 * _rowGap + 2 * _listPadding;

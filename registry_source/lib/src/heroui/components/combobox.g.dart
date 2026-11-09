@@ -14,6 +14,8 @@ part of 'combobox.dart';
 /// Accepted values appear in the editor; suggestions have no persistent
 /// selected or per-option disabled state. Custom field builders own their
 /// field appearance, and caller style overrides merge last.
+/// Upstream's trailing chevron is omitted: RemixCombobox has no
+/// trailing-indicator slot; the editor keeps symmetric horizontal padding.
 class HeroUiCombobox<T extends Object> extends StatelessWidget {
   const HeroUiCombobox({
     super.key,

@@ -43,6 +43,65 @@ Future<ComboboxSpec> resolve(
 BoxDecoration decoration(BoxSpec spec) => spec.decoration! as BoxDecoration;
 
 void main() {
+  for (final count in [7, 20]) {
+    testWidgets(
+      '$count suggestions have balanced insets and scroll only on overflow',
+      (tester) async {
+        await tester.pumpHeroUi(
+          Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: 320,
+              child: HeroUiCombobox<String>(
+                optionsBuilder: (_) => List.generate(count, (i) => 'City $i'),
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.byType(EditableText));
+        await tester.enterText(find.byType(EditableText), 'City');
+        await tester.pumpAndSettle();
+        final scroll = tester.state<ScrollableState>(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is Scrollable &&
+                widget.axisDirection == AxisDirection.down,
+          ),
+        );
+        if (count == 7) {
+          expect(scroll.position.maxScrollExtent, 0);
+          final panel = find
+              .ancestor(
+                of: find.byType(SingleChildScrollView),
+                matching: find.byType(DecoratedBox),
+              )
+              .first;
+          Rect row(String text) => tester.getRect(
+            find
+                .ancestor(
+                  of: find.text(text),
+                  matching: find.byType(DecoratedBox),
+                )
+                .first,
+          );
+          final panelRect = tester.getRect(panel);
+          expect(row('City 0').top - panelRect.top, 6);
+          expect(panelRect.bottom - row('City 6').bottom, 6);
+          expect(row('City 1').top - row('City 0').bottom, 4);
+        } else {
+          expect(scroll.position.maxScrollExtent, greaterThan(0));
+          await tester.drag(
+            find.byType(SingleChildScrollView),
+            const Offset(0, -120),
+          );
+          await tester.pumpAndSettle();
+          expect(scroll.position.pixels, greaterThan(0));
+        }
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   for (final mode in ['light', 'dark']) {
     for (final width in [375, 1024]) {
       for (final variant in HeroUiComboboxVariant.values) {
@@ -98,7 +157,7 @@ void main() {
               expect(spec.option.spec.label.spec.style!.fontSize, 14);
               expect(
                 spec.panel.spec.container.spec.padding,
-                const EdgeInsets.all(6),
+                const EdgeInsets.fromLTRB(6, 6, 6, 2),
               );
               expect(
                 decoration(spec.panel.spec.container.spec).borderRadius,
