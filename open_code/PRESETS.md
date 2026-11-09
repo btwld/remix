@@ -15,5 +15,9 @@ gains a new preset only after registry promotion.
 
 `open_code/heroui_fixture` is the installed-source gallery for HeroUI. Run the
 consumer checker with `--preset heroui --source checkout --keep`; the retained
-app uses the `Acme` prefix. Worksheets live in `registry_source/specs/heroui/`
+app uses the `Acme` prefix. Normal runs clean up after success, failure, and
+handled Ctrl-C or SIGTERM. Add `--keep` to inspect output or run the gallery;
+the checker preserves it and prints its path on every outcome.
+
+Worksheets live in `registry_source/specs/heroui/`
 and upstream evidence in `registry_source/reference/heroui_3_2_6/`.

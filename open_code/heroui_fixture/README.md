@@ -19,7 +19,9 @@ From the repository root, with the SDK pinned in `.fvmrc`:
 fvm dart run tool/check_open_code.dart --preset heroui --source checkout --keep
 ```
 
-`--keep` prints the retained app's path.
+Normal runs clean up after success, failure, and handled Ctrl-C or SIGTERM.
+Add `--keep` to inspect a failure or run the gallery. It preserves the output
+and prints its path on success, failure, or handled cancellation.
 
 `focused/search_field_*` replaces the gallery for a fresh install of the search
 field and its dependencies alone. This check also runs `flutter build web`:
