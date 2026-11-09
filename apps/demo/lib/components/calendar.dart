@@ -31,8 +31,13 @@ class _CalendarExampleState extends State<CalendarExample> {
         isDateUnavailable: (date) => date.weekday >= DateTime.saturday,
         onChanged: (date) => setState(() => _value = date),
         navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
-        selectorStyle: fortalSelectStyle(),
+        selectorStyle: fortalSelectStyle().trigger(
+          SelectTriggerStyler().width(
+            MediaQuery.textScalerOf(context).scale(146),
+          ),
+        ),
         style: CalendarStyler()
+            .minWidth(MediaQuery.textScalerOf(context).scale(308))
             .weekday(TextStyler().fontSize(12).color(FortalTokens.gray11()))
             .day(
               CalendarDayStyler()
