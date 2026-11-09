@@ -27,6 +27,8 @@ import 'package:demo/components/data_list.dart' as _demo_components_data_list;
 import 'package:demo/components/data_table.dart' as _demo_components_data_table;
 import 'package:demo/components/date_picker.dart'
     as _demo_components_date_picker;
+import 'package:demo/components/date_range_picker.dart'
+    as _demo_components_date_range_picker;
 import 'package:demo/components/dialog.dart' as _demo_components_dialog;
 import 'package:demo/components/disclosure.dart' as _demo_components_disclosure;
 import 'package:demo/components/divider.dart' as _demo_components_divider;
@@ -273,6 +275,16 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Appointment date',
             builder: _demo_components_date_picker.buildDatePickerUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixDateRangePicker',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Reporting period',
+            builder:
+                _demo_components_date_range_picker.buildDateRangePickerUseCase,
           ),
         ],
       ),

@@ -139,6 +139,14 @@
       }
     ]
   },
+  "date_range_picker": {
+    "cases": [
+      {
+        "name": "Reporting period",
+        "path": "components/remixdaterangepicker/reporting-period"
+      }
+    ]
+  },
   "dialog": {
     "cases": [
       {
