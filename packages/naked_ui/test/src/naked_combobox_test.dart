@@ -202,6 +202,134 @@ void main() {
     expect(find.byType(NakedComboboxOption<String>), findsNothing);
   });
 
+  testWidgets('query and programmatic text changes refresh snapshots', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    final focus = FocusNode();
+    addTearDown(controller.dispose);
+    addTearDown(focus.dispose);
+    NakedComboboxState<String>? latest;
+    var builds = 0;
+    await pumpCombobox(
+      tester,
+      controller: controller,
+      focusNode: focus,
+      optionsBuilder: (_) => const [],
+      onState: (state) {
+        latest = state;
+        builds++;
+      },
+    );
+
+    await tester.enterText(find.byType(TextField), 'ap');
+    await tester.pumpAndSettle();
+    expect(latest!.text, 'ap');
+    await tester.enterText(find.byType(TextField), 'apr');
+    await tester.pumpAndSettle();
+    expect(latest!.text, 'apr');
+    controller.text = 'programmatic';
+    await tester.pumpAndSettle();
+    expect(latest!.text, 'programmatic');
+    expect(latest!.value, isNull);
+
+    final settledBuilds = builds;
+    controller.value = controller.value.copyWith(
+      selection: const TextSelection.collapsed(offset: 2),
+      composing: const TextRange(start: 0, end: 2),
+    );
+    await tester.pump();
+    controller.clearComposing();
+    await tester.pump();
+    expect(builds, settledBuilds);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final replacement in ['', 'different query']) {
+    testWidgets('selection callback can replace text with "$replacement"', (
+      tester,
+    ) async {
+      final controller = TextEditingController();
+      final focus = FocusNode();
+      addTearDown(controller.dispose);
+      addTearDown(focus.dispose);
+      NakedComboboxState<String>? latest;
+      final selected = <String>[];
+      await pumpCombobox(
+        tester,
+        controller: controller,
+        focusNode: focus,
+        optionsBuilder: (_) => ['apple'],
+        onState: (state) => latest = state,
+        onSelected: (value) {
+          selected.add(value);
+          controller.text = replacement;
+        },
+      );
+      await tester.enterText(find.byType(TextField), 'ap');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('hi:apple'));
+      await tester.pumpAndSettle();
+      expect(controller.text, replacement);
+      expect(latest!.text, replacement);
+      expect(latest!.value, isNull);
+      expect(selected, ['apple']);
+
+      // Raw must release its prior selection after another query, so the same
+      // item can be accepted again following synchronous callback mutation.
+      await tester.enterText(find.byType(TextField), 'a');
+      await tester.pumpAndSettle();
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(selected, ['apple', 'apple']);
+      expect(controller.text, replacement);
+      expect(latest!.value, isNull);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  for (final ime in [false, true]) {
+    testWidgets('composing ${ime ? 'IME' : 'field'} submit does not select', (
+      tester,
+    ) async {
+      final selected = <String>[];
+      await pumpCombobox(
+        tester,
+        optionsBuilder: (_) => ['apple'],
+        onSelected: selected.add,
+      );
+      await tester.enterText(find.byType(TextField), 'ap');
+      await tester.pumpAndSettle();
+      final field = tester.widget<TextField>(find.byType(TextField));
+      tester.testTextInput.updateEditingValue(
+        const TextEditingValue(
+          text: 'ap',
+          selection: TextSelection.collapsed(offset: 2),
+          composing: TextRange(start: 0, end: 2),
+        ),
+      );
+      await tester.pump();
+      if (ime) {
+        // EditableText clears composing synchronously before onSubmitted.
+        await tester.testTextInput.receiveAction(TextInputAction.done);
+      } else {
+        field.onSubmitted!('ap');
+      }
+      await tester.pumpAndSettle();
+      expect(selected, isEmpty);
+      expect(field.controller!.text, 'ap');
+
+      field.controller!.clearComposing();
+      field.focusNode!.requestFocus();
+      await tester.pumpAndSettle();
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(selected, ['apple']);
+      expect(field.controller!.text, 'apple');
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   testWidgets('uses an external controller and focus node pair', (
     tester,
   ) async {
