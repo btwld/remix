@@ -69,6 +69,9 @@ class HeroUiCheckboxGroup<T extends Object> extends StatelessWidget {
     semanticLabel: label,
     child: HeroUiFieldLayout(
       label: label,
+      // Flutter has no checkbox-group role; RemixCheckboxGroup owns the
+      // semantic container that names its explicit checkbox children.
+      controlProvidesName: true,
       helperText: helperText,
       errorText: errorText,
       invalid: invalid,

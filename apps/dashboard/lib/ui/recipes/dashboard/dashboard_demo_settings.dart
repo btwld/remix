@@ -97,6 +97,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                     ],
                   ),
                   UiSelect<String>(
+                    semanticLabel: 'Language',
                     trigger: const RemixSelectTrigger(placeholder: 'Language'),
                     selectedValue: _language,
                     items: const [

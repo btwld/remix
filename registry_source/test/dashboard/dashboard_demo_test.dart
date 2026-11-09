@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -915,17 +916,25 @@ void main() {
       testWidgets(
         'Settings Select, Checkbox, and Danger zone Disclosure work',
         (tester) async {
+          final semantics = tester.ensureSemantics();
           await _pumpDashboard(
             tester,
             preset: preset,
             initialPage: RegistryDashboardDemoPage.settings,
           );
 
+          final language = find.semantics.byLabel('Language');
+          expect(language, findsOne);
+          expect(
+            language.evaluate().single.getSemanticsData().value,
+            preset == .defaultPreset ? 'English' : 'English (US)',
+          );
+
           final select = find.byType(RemixSelect<String>);
           expect(_glyphIn(select, RemixPathGlyph.chevronDown), findsOneWidget);
           expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
 
-          await tester.tap(select);
+          tester.semantics.tap(language);
           await tester.pumpAndSettle();
           expect(_transformAngleIn(tester, select), closeTo(math.pi, 0.01));
           expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
@@ -937,6 +946,10 @@ void main() {
             findsOneWidget,
           );
           expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
+          expect(
+            language.evaluate().single.getSemanticsData().value,
+            'Spanish',
+          );
 
           final checkbox = find.byType(RemixCheckbox);
           expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsNothing);
@@ -957,6 +970,8 @@ void main() {
           expect(find.text('Delete workspace'), findsOneWidget);
           expect(_transformAngleIn(tester, dangerZone), closeTo(math.pi, 0.01));
           expect(tester.takeException(), isNull);
+
+          semantics.dispose();
         },
       );
     });
@@ -996,6 +1011,7 @@ void main() {
   testWidgets('settings radius slider changes the resolved radius', (
     tester,
   ) async {
+    final semantics = tester.ensureSemantics();
     await _pumpDashboard(
       tester,
       preset: .defaultPreset,
@@ -1005,6 +1021,15 @@ void main() {
     Radius radiusOf(RadiusToken token) => MixScope.tokenOf(
       token,
       tester.element(find.textContaining('Control radius')),
+    );
+
+    final radius = find.semantics.byLabel('Control radius');
+    expect(radius, findsOne);
+    expect(
+      radius.evaluate().single.getSemanticsData().hasAction(
+        SemanticsAction.increase,
+      ),
+      isTrue,
     );
 
     final before = radiusOf(VanillaTokens.radiusLg);
@@ -1044,6 +1069,8 @@ void main() {
     expect(find.text('Light'), findsWidgets);
     expect(find.text('Dark'), findsWidgets);
     expect(tester.takeException(), isNull);
+
+    semantics.dispose();
   });
 
   test('dashboard_demo starter sources remain independent of Material', () {

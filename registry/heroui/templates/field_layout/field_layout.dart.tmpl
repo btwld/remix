@@ -23,6 +23,7 @@ class {{typePrefix}}FieldLayout extends StatelessWidget {
     required this.items,
     this.axis = Axis.vertical,
     this.label,
+    this.controlProvidesName = false,
     this.helperText,
     this.errorText,
     this.invalid = false,
@@ -32,6 +33,12 @@ class {{typePrefix}}FieldLayout extends StatelessWidget {
   final List<Widget> items;
   final Axis axis;
   final String? label;
+
+  /// Whether the control supplies [label] as its accessible name.
+  ///
+  /// When true, this layout adds neither a name nor a semantics container.
+  /// The painted label is always excluded from semantics.
+  final bool controlProvidesName;
   final String? helperText;
   final String? errorText;
   final bool invalid;
@@ -39,6 +46,20 @@ class {{typePrefix}}FieldLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final semanticLabel = controlProvidesName ? null : label;
+    final hasName = semanticLabel?.isNotEmpty ?? false;
+
+    return Semantics(
+      container: hasName,
+      // Preserve separate help/error announcements even when the control's
+      // semantic boundary (such as RadioGroup) is above this layout.
+      explicitChildNodes: true,
+      label: hasName ? semanticLabel : null,
+      child: _buildContent(context),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
     final labelStyle = _label(invalid: invalid);
     final labelText = label == null
         ? null
@@ -60,7 +81,12 @@ class {{typePrefix}}FieldLayout extends StatelessWidget {
       return Wrap(
         spacing: _groupGap,
         runSpacing: _groupGap,
-        children: [?labelText, ...items, ?description, ?error],
+        children: [
+          if (labelText != null) ExcludeSemantics(child: labelText),
+          ...items,
+          ?description,
+          ?error,
+        ],
       );
     }
     return FlexBox(
@@ -69,7 +95,7 @@ class {{typePrefix}}FieldLayout extends StatelessWidget {
           .mainAxisSize(.min)
           .crossAxisAlignment(.start),
       children: [
-        ?labelText,
+        if (labelText != null) ExcludeSemantics(child: labelText),
         for (var i = 0; i < items.length; i++)
           Box(
             style: BoxStyler().padding(

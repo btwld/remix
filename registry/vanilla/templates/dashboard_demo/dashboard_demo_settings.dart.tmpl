@@ -116,6 +116,7 @@ class _{{typePrefix}}DashboardSettingsPageState
                   ],
                 ),
                 {{typePrefix}}Select<String>(
+                  semanticLabel: 'Language',
                   trigger: const RemixSelectTrigger(placeholder: 'Language'),
                   items: const [
                     RemixSelectItem(value: 'en', label: 'English'),
@@ -225,6 +226,7 @@ class _{{typePrefix}}DashboardSettingsPageState
                       emphasized: true,
                     ),
                     {{typePrefix}}Slider(
+                      semanticLabel: 'Control radius',
                       value: _resolvedRadius(context),
                       min: 0,
                       max: 16,
