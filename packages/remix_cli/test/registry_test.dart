@@ -619,6 +619,7 @@ items:
           'message' ||
           'permission' ||
           'plan' => ['models', 'theme', 'support', name],
+          'combobox' => ['theme', 'textfield', name],
           'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
           'range_slider' => ['theme', 'slider', name],
           'sidebar' => ['theme', 'toggle', 'tooltip', name],
@@ -838,6 +839,7 @@ const _componentSurfaces =
       'card': (widgets: ['Card'], types: []),
       'chart': (widgets: ['LineChart', 'BarChart', 'PieChart'], types: []),
       'checkbox': (widgets: ['Checkbox', 'CheckboxGroupItem'], types: []),
+      'combobox': (widgets: ['Combobox'], types: []),
       'data_list': (widgets: ['DataList'], types: []),
       'data_table': (widgets: ['DataTable'], types: []),
       'dialog': (widgets: ['Dialog'], types: []),
