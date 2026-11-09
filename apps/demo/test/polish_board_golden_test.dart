@@ -38,6 +38,15 @@ void main() {
     await (FontLoader(
       'MaterialIcons',
     )..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'))).load();
+    // Packaged icon fonts register under `packages/<package>/<family>`.
+    // Without this, RemixIcons glyphs (for example the picker triggers'
+    // calendar icon) paint as missing-glyph boxes in the goldens.
+    await (FontLoader('packages/remix_ui_icons/RemixIcons')..addFont(
+          File(
+            '../../packages/remix_ui_icons/lib/src/generated/fonts/RemixIcons.otf',
+          ).readAsBytes().then((bytes) => ByteData.sublistView(bytes)),
+        ))
+        .load();
   });
 
   test('polish board covers every family in the owned specification', () {
