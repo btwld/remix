@@ -221,15 +221,30 @@ class {{typePrefix}}RangeCalendar extends StatelessWidget {
     selectorStyle: {{valuePrefix}}SelectStyle(
       style: SelectStyler()
           .trigger(
-            SelectTriggerStyler().width(
-              MediaQuery.textScalerOf(
-                context,
-              ).scale({{typePrefix}}Tokens.s16 * 2 + {{typePrefix}}Tokens.s6),
-            ),
+            SelectTriggerStyler()
+                .minHeight(
+                  MediaQuery.textScalerOf(
+                    context,
+                  ).scale({{typePrefix}}Tokens.controlMd),
+                )
+                .maxWidth(double.infinity)
+                .minWidth(
+                  MediaQuery.textScalerOf(
+                    context,
+                  ).scale({{typePrefix}}Tokens.s16 + {{typePrefix}}Tokens.s12),
+                ),
           )
           .merge(selectorStyle),
     ),
-    style: {{valuePrefix}}RangeCalendarStyle(style: style),
+    style: {{valuePrefix}}RangeCalendarStyle(
+      style: CalendarStyler()
+          .day(
+            CalendarDayStyler().minWidth(
+              MediaQuery.textScalerOf(context).scale({{typePrefix}}Tokens.s12),
+            ),
+          )
+          .merge(style),
+    ),
     styleSpec: styleSpec,
     summaryBuilder: summaryBuilder,
   );

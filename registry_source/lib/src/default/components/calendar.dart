@@ -208,15 +208,30 @@ class VanillaCalendar extends StatelessWidget {
     selectorStyle: vanillaSelectStyle(
       style: SelectStyler()
           .trigger(
-            SelectTriggerStyler().width(
-              MediaQuery.textScalerOf(
-                context,
-              ).scale(VanillaTokens.s16 * 2 + VanillaTokens.s6),
-            ),
+            SelectTriggerStyler()
+                .minHeight(
+                  MediaQuery.textScalerOf(
+                    context,
+                  ).scale(VanillaTokens.controlMd),
+                )
+                .maxWidth(double.infinity)
+                .minWidth(
+                  MediaQuery.textScalerOf(
+                    context,
+                  ).scale(VanillaTokens.s16 + VanillaTokens.s12),
+                ),
           )
           .merge(selectorStyle),
     ),
-    style: vanillaCalendarStyle(style: style),
+    style: vanillaCalendarStyle(
+      style: CalendarStyler()
+          .day(
+            CalendarDayStyler().minWidth(
+              MediaQuery.textScalerOf(context).scale(VanillaTokens.s12),
+            ),
+          )
+          .merge(style),
+    ),
     styleSpec: styleSpec,
   );
 }
