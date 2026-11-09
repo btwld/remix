@@ -82,7 +82,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   order. `onChanged` requests values; the parent decides whether to accept them.
   `onChangeEnd` reports the last pointer request, including a rejected request;
   keyboard and semantic changes do not emit pointer-only start/end callbacks.
-  Vanilla and Fortal's `range_slider` item installs `<Prefix>RangeSlider` and its shared
+  Each preset's `range_slider` item installs `<Prefix>RangeSlider` and its shared
   `slider` recipe dependency. Both thumbs use their preset's shared slider treatments;
   focus, hover and press rings apply independently to the active thumb.
   Use `<prefix>RangeSliderStyle()` on the base widget for custom semantic

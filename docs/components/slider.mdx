@@ -244,6 +244,15 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
   See the [fortalSliderStyle source code](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/slider.dart) for all available options.
 </Info>
 
+## HeroUI widgets
+
+`remix add range_slider` also works in a HeroUI app. `UiRangeSlider` delegates
+to `uiSliderStyle()` for the pill track, accent interval and both ringed
+thumbs. Press scales only the active thumb; keyboard focus rings only the
+focused thumb. Hover keeps HeroUI v3's resting paint. Disabled fades the
+complete control. The range has a 48px interaction height, and keeps the same
+`values`, `minSpacing`, snapping and `semanticLabels` API shown above.
+
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart

@@ -1,0 +1,7 @@
+@import '@heroui/styles';
+@source './range_slider.jsx';
+@font-face { font-family: SliderGeist; src: url('../../../../packages/remix_ui_fonts/lib/fonts/geist/Geist-Regular.ttf'); font-weight: 400; }
+@font-face { font-family: SliderGeist; src: url('../../../../packages/remix_ui_fonts/lib/fonts/geist/Geist-Medium.ttf'); font-weight: 500; }
+body { margin: 0; padding: 32px; background: var(--background); color: var(--foreground); font-family: SliderGeist, sans-serif; }
+main { display: flex; flex-direction: column; gap: 32px; }
+.case { width: min(100%, 360px); }

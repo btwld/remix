@@ -26,6 +26,6 @@ approximations:
   - "RemixSlider reserves thumb height plus track thickness (20 + 20 = 40px) for a bare slider; HeroUI's is 24px (a 20px track and the 4px gap of the empty label row), 44px with a label and output."
   - "The thumb's pill is its fill inside a 2px accent border. The inner corner radius is therefore 10 (the 12px thumb less the 2px rim); upstream's `::after` is `rounded-lg` (8). The field shadow falls around the whole thumb, and dragging scales the whole thumb where upstream scales only the pill."
   - The track is inset by half the thumb (14px) so the thumb stays inside; the CSS uses 12px transparent borders.
-  - RemixSlider is horizontal with one thumb; vertical sliders and ranges are not mapped.
+  - RemixSlider is horizontal with one thumb; the two-bound configuration is mapped separately by range_slider.yaml. Vertical sliders are not mapped.
   - The 250ms thumb transition runs on every state change, not only background and transform.
   - The focus ring is the thumb's outline effect: a background gap, then the focus ring, as upstream.

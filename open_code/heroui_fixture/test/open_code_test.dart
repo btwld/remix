@@ -518,6 +518,14 @@ final _cases = <_WidgetCase>[
     {AcmeSkeleton},
   ),
   const _WidgetCase('slider', AcmeSlider(value: 0.5), {AcmeSlider}),
+  const _WidgetCase(
+    'range slider',
+    AcmeRangeSlider(
+      values: [0.25, 0.75],
+      semanticLabels: ['Minimum', 'Maximum'],
+    ),
+    {AcmeRangeSlider},
+  ),
   const _WidgetCase('spinner', AcmeSpinner(), {AcmeSpinner}),
   const _WidgetCase('surface', AcmeSurface(child: Text('Surface')), {
     AcmeSurface,

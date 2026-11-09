@@ -116,6 +116,7 @@ class _GalleryState extends State<Gallery> {
   var _bold = true;
   var _italic = false;
   String? _align = 'left';
+  List<double> _priceRange = [80, 240];
   var _volume = 0.4;
   var _tab = 'overview';
   String? _fruit;
@@ -634,6 +635,19 @@ class _GalleryState extends State<Gallery> {
         value: _volume,
         semanticLabel: 'Volume',
         onChanged: (value) => setState(() => _volume = value),
+      ),
+      _caption('Nightly price range'),
+      AcmeRangeSlider(
+        values: _priceRange,
+        min: 0,
+        max: 400,
+        minSpacing: 20,
+        snapDivisions: 80,
+        semanticLabels: const [
+          'Minimum nightly price',
+          'Maximum nightly price',
+        ],
+        onChanged: (values) => setState(() => _priceRange = values),
       ),
     ]);
   }

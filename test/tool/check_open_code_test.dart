@@ -565,6 +565,7 @@ Future<void> main(List<String> arguments) async {
           'close_button',
           'input_group',
           'radio_group',
+          'range_slider',
           'search_field',
           'switch_group',
           'table',

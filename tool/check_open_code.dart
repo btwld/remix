@@ -231,6 +231,7 @@ const _herouiRegistryItems = [
   'progress',
   'radio',
   'radio_group',
+  'range_slider',
   'search_field',
   'select',
   'separator',

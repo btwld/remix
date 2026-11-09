@@ -280,6 +280,14 @@
   "sha256": "059cab2a9565963bb95e58e4783ef2a8ec68c74a920bafe6f35951af074c2c12"
  },
  {
+  "path": "source/react/dist/components/slider/slider.d.ts",
+  "sha256": "838991749d430295bda398db620df95e892efabcb15b1359f03c009648bcc86a"
+ },
+ {
+  "path": "source/react/dist/components/slider/slider.js",
+  "sha256": "370332ca7b996d49bdb940619189e36a864527a2991c5969d1269e989a0029a8"
+ },
+ {
   "path": "source/react/dist/components/spinner/spinner.js",
   "sha256": "df4aef1909fcc823c3e234b12f4903c9045821379360ae027f5b80f58dbc3cf1"
  },

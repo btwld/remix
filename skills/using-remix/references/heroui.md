@@ -216,3 +216,13 @@ Form, Fieldset, NumberField, InputOTP, ListBox, ComboBox, Pagination, a
 standalone Menu, and the date and color pickers. Each component's worksheet
 lists its visual approximations (fonts, shadow softness, motion such as the
 sliding tab indicator).
+
+## Range sliders
+
+Install `range_slider` for `<Prefix>RangeSlider` and its `slider` dependency.
+Both use the upstream pill track, accent interval and ringed thumbs. Each
+thumb owns drag scaling and visible keyboard focus; hover retains the
+upstream resting paint. The range reserves a 48px target and keeps Remix's
+ordered `values`, `minSpacing`, snapping, RTL and accessible bound names.
+Custom announcements use `RemixRangeSlider` with `<prefix>RangeSliderStyle()`.
+See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).

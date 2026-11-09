@@ -2,7 +2,7 @@
  "schema": 2,
  "source": "@heroui/react@3.2.6 dist/components/index.d.ts",
  "componentFamilies": 85,
- "note": "Each upstream family maps to a Remix-backed item, a composition, or is deferred (docs/adr/heroui/0002).",
+ "note": "Each upstream family maps to a Remix-backed item, a composition, or is deferred (docs/adr/heroui/0002). The slider family has separate single-value and two-bound range item mappings.",
  "families": [
   {
    "upstream": "accordion",
@@ -434,6 +434,13 @@
    "status": "mapped",
    "item": "slider",
    "remix": "RemixSlider"
+  },
+  {
+   "upstream": "slider",
+   "configuration": "range (two thumbs)",
+   "status": "mapped",
+   "item": "range_slider",
+   "remix": "RemixRangeSlider"
   },
   {
    "upstream": "table",
