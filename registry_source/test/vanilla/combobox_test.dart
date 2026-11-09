@@ -54,6 +54,46 @@ void main() {
 
   for (final theme in vanillaThemes) {
     group(theme.name, () {
+      testWidgets('keyboard ring visibly distinguishes the lighter hover', (
+        tester,
+      ) async {
+        final borders = <Border?>[];
+        for (final states in <Set<WidgetState>>[
+          {},
+          {.hovered},
+          {.focused},
+          {.pressed},
+        ]) {
+          final combo = await resolveVanilla(
+            tester,
+            vanillaComboboxStyle(),
+            theme: theme.data,
+            states: states,
+          );
+          final decoration = decorationOf(combo.spec.option.spec.container)!;
+          borders.add(decoration.border as Border?);
+        }
+        expect(borders[2]?.top.color, theme.data.ring);
+        expect(borders[2]?.top.width, 1);
+        expect(borders[1]?.top.color.a ?? 0, 0);
+        expect(borders[2], isNot(borders[1]));
+        expect(
+          borders.map((border) => border?.dimensions).toSet(),
+          hasLength(1),
+          reason: 'changing interaction state cannot move text',
+        );
+      });
+      testWidgets('combobox thumb stays subdued', (tester) async {
+        final combo = await resolveVanilla(
+          tester,
+          vanillaComboboxStyle(),
+          theme: theme.data,
+        );
+        expect(
+          combo.spec.panel.spec.scrollbarColor,
+          tint(theme.data.mutedForeground, 0.35),
+        );
+      });
       testWidgets('keyboard highlight preserves wrapped label metrics', (
         tester,
       ) async {

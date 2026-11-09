@@ -21,8 +21,8 @@ part 'combobox.g.dart';
 /// [vanillaTextFieldStyle], including its focus, error and disabled treatments;
 /// the panel and rows follow the application's Select recipe.
 ///
-/// Keyboard highlight uses accent, hover a lighter tint, and press a stronger
-/// primary tint. Suggestions
+/// Keyboard highlight uses accent with a reserved ring border, hover a lighter
+/// tint, and press a stronger primary tint. Suggestions
 /// are eligible values only: Remix has no per-option disabled or selected
 /// state. The disabled treatment belongs to the editor. Custom field builders
 /// own their field recipe; custom option content inherits the row's text style.
@@ -36,7 +36,7 @@ ComboboxStyler vanillaComboboxStyle({
           .margin(.top(VanillaTokens.s2))
           .minWidth(VanillaTokens.panelMinWidth)
           .maxHeight(VanillaTokens.panelMaxHeight)
-          .scrollbarColor(VanillaTokens.mutedForeground())
+          .scrollbarColor(vanillaTint(VanillaTokens.mutedForeground, 0.35)())
           .color(VanillaTokens.popover())
           .border(
             .color(VanillaTokens.border()).width(VanillaTokens.strokeHairline),
@@ -56,13 +56,22 @@ ComboboxStyler vanillaComboboxStyle({
             ),
           )
           .borderRadius(.all(VanillaTokens.radiusSm()))
+          .border(
+            .color(
+              vanillaTint(VanillaTokens.ring, 0)(),
+            ).width(VanillaTokens.strokeHairline),
+          )
           .label(
             .style(
               VanillaTokens.textSm.mix(),
             ).color(VanillaTokens.popoverForeground()),
           )
           .onHovered(_highlighted(vanillaTint(VanillaTokens.accent, 0.85)()))
-          .onFocused(_highlighted())
+          .onFocused(
+            _highlighted().border(
+              .color(VanillaTokens.ring()).width(VanillaTokens.strokeHairline),
+            ),
+          )
           .onPressed(
             _highlighted(vanillaTint(VanillaTokens.primary, 0.18, dark: 0.2)()),
           ),
