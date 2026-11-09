@@ -4,8 +4,12 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 import '../ui/ui.dart';
-import 'calendar.dart' show calendarDemoSelectorStyle;
+import 'calendar.dart' show calendarDemoSelectorStyle, calendarDemoTarget;
 import 'range_calendar.dart' show reportingPeriodCalendarStyle;
+
+// Picker widths are content bounds, with no matching Fortal spacing step.
+const _pickerMinWidth = 260.0;
+const _pickerPanelMaxWidth = 480.0;
 
 @widgetbook.UseCase(name: 'Reporting period', type: RemixDateRangePicker)
 Widget buildDateRangePickerUseCase(BuildContext context) =>
@@ -46,24 +50,39 @@ class _DateRangePickerExampleState extends State<DateRangePickerExample> {
         isDateUnavailable: (date) =>
             date.year == 2026 && date.month == 11 && date.day == 18,
         onChanged: (range) => setState(() => _value = range),
-        navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
+        navigationStyle: fortalIconButtonStyle(
+          variant: .ghost,
+        ).size(calendarDemoTarget, calendarDemoTarget),
         selectorStyle: calendarDemoSelectorStyle(context),
         buttonStyle: fortalButtonStyle(variant: .outline)
-            .minHeight(44)
-            .minWidth(MediaQuery.textScalerOf(context).scale(260))
-            .spacing(8),
+            .minHeight(calendarDemoTarget)
+            .minWidth(MediaQuery.textScalerOf(context).scale(_pickerMinWidth))
+            .spacing(FortalTokens.space2())
+            .icon(
+              IconStyler().size(
+                MediaQuery.textScalerOf(
+                  context,
+                ).scale(FortalTokens.space4.resolve(context)),
+              ),
+            ),
         popoverStyle: fortalPopoverStyle()
             .padding(.all(0))
-            .maxWidth(MediaQuery.textScalerOf(context).scale(480)),
+            .maxWidth(
+              MediaQuery.textScalerOf(context).scale(_pickerPanelMaxWidth),
+            ),
         calendarStyle: reportingPeriodCalendarStyle
             .minWidth(
-              MediaQuery.textScalerOf(context).scale(44) * 7 +
+              MediaQuery.textScalerOf(context).scale(calendarDemoTarget) * 7 +
                   FortalTokens.space3.resolve(context) * 2,
             )
             .day(
               CalendarDayStyler()
-                  .minWidth(MediaQuery.textScalerOf(context).scale(44))
-                  .minHeight(MediaQuery.textScalerOf(context).scale(44)),
+                  .minWidth(
+                    MediaQuery.textScalerOf(context).scale(calendarDemoTarget),
+                  )
+                  .minHeight(
+                    MediaQuery.textScalerOf(context).scale(calendarDemoTarget),
+                  ),
             ),
       ),
     ),
