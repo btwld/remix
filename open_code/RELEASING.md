@@ -223,10 +223,19 @@ override. Other overrides and path substitutions remain forbidden. A separate
 pub.dev preflight rejects a stale Remix floor, including newer prereleases.
 Publishing a newer version during the consumer run cannot change its resolution.
 
-Each lane also activates the published `remix_cli`, initializes from stable,
+Each lane also selects the newest unretracted `remix_cli` published on pub.dev
+in the documented install pin’s major line, including prereleases. It activates
+that exact version, prints it, verifies `remix --version`, initializes from stable,
 and runs `registry update @remix --ref <candidate-SHA>`. It installs two
 representative items and analyzes their installed source. This uses the
-published executable without the checkout harness or a fallback.
+published executable without the checkout harness or a fallback. Selection
+ignores the candidate pubspec's lower bound: a synchronized install pin can
+already name the next, unpublished CLI. A separate readiness guard warns if no
+published version satisfies that pin; the candidate version will satisfy it
+once published. This warning does not block promotion, because compatibility
+must be proved with the CLI users can install today. Publish the candidate CLI
+before advertising its new install pin. Missing same-major releases and pub.dev
+lookup failures still block the compatibility check.
 
 Expect approximately 6–9 minutes wall time, including canaries and the
 published-CLI smoke, versus approximately 45 minutes previously. This is an
@@ -269,6 +278,12 @@ gallery, and skips independent apps:
 ```shell
 REMIX_REGISTRY_RELEASE_SMOKE=1 fvm dart run melos run open-code:release:check
 ```
+
+After the initial registry and CLI bootstrap, CLI publication and registry
+promotion can run in either order: promotion tests the newest already-published
+CLI, while CLI publication tests the already-promoted registry. A candidate that
+requires new CLI behavior must remain compatible with the released major line
+or wait for that CLI's publication.
 
 Normal component changes require only that promotion. The same CLI installs
 the new commit after an explicit `registry update`; existing pins do not

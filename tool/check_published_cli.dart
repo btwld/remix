@@ -1,8 +1,9 @@
 /// Checks the released CLI against a candidate without test-only transports.
 /// Usage: dart run tool/check_published_cli.dart --preset vanilla --ref <40-hex-SHA>
-/// Activates and verifies the documented published CLI before creating an app.
+/// Activates and verifies the newest published CLI in the documented major line.
 library;
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:pub_semver/pub_semver.dart';
@@ -44,16 +45,46 @@ Future<String?> checkPublishedCliCandidate({
   }
   final pin = expectedInstallPin(repositoryRoot, 'remix_cli');
   final constraint = VersionConstraint.parse(pin) as VersionRange;
-  final preflight = await checkPubPackageFloors({
-    'remix_cli': {constraint.min!.toString()},
-  }, client: pubClient);
-  if (preflight != null) return preflight;
+  final http = pubClient ?? IoPubFloorClient();
+  final List<Version> published;
+  try {
+    final response = await http
+        .get(Uri.https('pub.dev', '/api/packages/remix_cli'))
+        .timeout(const Duration(seconds: 8));
+    if (response.statusCode != 200 && response.statusCode != 404) {
+      return 'pub.dev preflight for remix_cli failed: HTTP ${response.statusCode}; re-run Promote registry.';
+    }
+    published = response.statusCode == 404
+        ? []
+        : [
+            for (final release
+                in (jsonDecode(response.body) as Map)['versions'] as List)
+              if (release['retracted'] != true)
+                Version.parse(release['version'] as String),
+          ];
+  } on Object catch (error) {
+    return 'pub.dev preflight for remix_cli failed: $error; re-run Promote registry.';
+  } finally {
+    if (pubClient == null) http.close();
+  }
+  // This compatibility proof deliberately ignores the candidate's lower bound:
+  // its synchronized docs may already name a release not yet on pub.dev.
+  final major = constraint.min!.major;
+  final compatible =
+      published.where((version) => version.major == major).toList()..sort();
+  if (compatible.isEmpty) {
+    return 'No published, unretracted remix_cli in major $major on pub.dev; '
+        'cannot check the candidate with a released CLI.';
+  }
+  final selected = compatible.last;
+  final warning = documentedCliPinWarning(pin, published);
+  if (warning != null) (out ?? stdout).writeln(warning);
   final activation = await run(dart, [
     'pub',
     'global',
     'activate',
     'remix_cli',
-    pin,
+    selected.toString(),
   ]);
   if (activation != null) return activation;
   final versionOutput = StringBuffer();
@@ -70,13 +101,13 @@ Future<String?> checkPublishedCliCandidate({
     version = Version.parse(versionOutput.toString().trim());
   } on FormatException {
     return 'Could not determine activated remix_cli version from '
-        '`remix --version`: "$versionOutput"; expected documented constraint $pin.';
+        '`remix --version`: "$versionOutput"; expected published version $selected.';
   }
   (out ?? stdout).writeln(
     'Activated remix_cli $version (documented constraint $pin).',
   );
-  if (!constraint.allows(version)) {
-    return 'Activated remix_cli $version does not satisfy documented constraint $pin.';
+  if (version != selected) {
+    return 'Activated remix_cli $version does not match selected published version $selected.';
   }
   final create = await run(flutter, [
     'create',
@@ -132,6 +163,18 @@ Future<String?> checkPublishedCliCandidate({
     }
   }
   return hostedFloorOverrideProblem(app, floor: floor);
+}
+
+/// Documentation readiness is separate from released-CLI compatibility. The
+/// shared pin tracks the candidate pubspec; warn until a published version can
+/// satisfy it, allowing promotion before the candidate's CLI tag is published.
+String? documentedCliPinWarning(String pin, Iterable<Version> published) {
+  final constraint = VersionConstraint.parse(pin) as VersionRange;
+  if (published.any(constraint.allows)) return null;
+  return 'WARNING: documented remix_cli pin $pin has no published satisfier; '
+      'candidate ${constraint.min} satisfies it when published. '
+      'Publish that CLI before advertising the new install pin. '
+      'Registry promotion continues with the newest published CLI.';
 }
 
 Future<void> main(List<String> arguments) async {

@@ -201,7 +201,7 @@ libraries:
     });
 
     test(
-      'activates the documented constraint before creating an app',
+      'activates the exact published version before creating an app',
       () async {
         final app = Directory('${sandbox.path}/app');
         final commands = <List<String>>[];
@@ -235,7 +235,7 @@ libraries:
           'global',
           'activate',
           'remix_cli',
-          expectedInstallPin(Directory.current, 'remix_cli'),
+          cliVersion,
         ]);
       },
     );

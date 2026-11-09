@@ -16,13 +16,12 @@ void main() {
 
   setUp(() {
     root = Directory.systemTemp.createTempSync('published_cli_test_');
-    // Deliberately differs from the repository: a version bump must move the
-    // activation constraint and publication check without editing the gate.
+    // Candidate X+1 and its synchronized documentation are not published yet.
     File('${root.path}/packages/remix_cli/pubspec.yaml')
       ..parent.createSync(recursive: true)
       ..writeAsStringSync('version: 7.4.0-beta.9\n');
     pin = expectedInstallPin(root, 'remix_cli');
-    version = pin.substring(1);
+    version = '7.4.0-beta.8';
     commands = [];
     out = StringBuffer();
   });
@@ -47,6 +46,7 @@ void main() {
     String? activatedVersion,
     PubFloorClient? client,
     String? failingCommand,
+    bool complete = false,
   }) => checkPublishedCliCandidate(
     app: Directory('${root.path}/app'),
     repositoryRoot: root,
@@ -62,51 +62,101 @@ void main() {
       if (args.contains('--version')) {
         capturedOutput!.writeln(activatedVersion ?? version);
       }
-      // Never execute a consumer check, even on a successful activation.
-      return args.first == 'create' ? 'fixture reached consumer setup' : null;
-    },
-  );
-
-  test(
-    'uses the shared install pin and reports the executable version',
-    () async {
-      final client = published();
-      expect(await check(client: client), 'fixture reached consumer setup');
-      expect(commands.take(2), [
-        ['fake-dart', 'pub', 'global', 'activate', 'remix_cli', pin],
-        ['fake-dart', 'pub', 'global', 'run', 'remix_cli:remix', '--version'],
-      ]);
-      expect(
-        client.requests.single.toString(),
-        'https://pub.dev/api/packages/remix_cli',
-      );
-      expect(out.toString(), contains('Activated remix_cli $version'));
-      expect(out.toString(), contains('documented constraint $pin'));
-    },
-  );
-
-  test(
-    'allows newer versions that satisfy the documented constraint',
-    () async {
-      for (final newer in ['7.4.0-beta.10', '7.4.0', '7.5.0']) {
-        expect(
-          await check(activatedVersion: newer),
-          'fixture reached consumer setup',
-        );
-        expect(out.toString(), contains('Activated remix_cli $newer'));
+      // Every command is fake, including the full successful consumer path.
+      if (args.first == 'create') {
+        if (!complete) return 'fixture reached consumer setup';
+        Directory('${root.path}/app').createSync();
       }
+      if (args.contains('update')) {
+        File('${root.path}/app/remix.yaml').writeAsStringSync(
+          'registries: {"@remix": {revision: "${'a' * 40}"}}',
+        );
+      }
+      return null;
     },
   );
 
-  test('rejects the old stable CLI and other versions outside the pin', () async {
-    for (final wrong in ['0.1.0', '7.4.0-beta.8', '8.0.0']) {
+  test('tests published X even when candidate X+1 is unpublished', () async {
+    final client = published();
+    expect(await check(client: client), 'fixture reached consumer setup');
+    expect(commands.take(2), [
+      ['fake-dart', 'pub', 'global', 'activate', 'remix_cli', version],
+      ['fake-dart', 'pub', 'global', 'run', 'remix_cli:remix', '--version'],
+    ]);
+    expect(
+      client.requests.single.toString(),
+      'https://pub.dev/api/packages/remix_cli',
+    );
+    expect(out.toString(), contains('Activated remix_cli $version'));
+    expect(out.toString(), contains('documented constraint $pin'));
+  });
+
+  test('unpublished X+1 passes the complete gate using published X', () async {
+    File('${root.path}/registry/vanilla/registry.yaml')
+      ..parent.createSync(recursive: true)
+      ..writeAsStringSync('items: {theme: {dependencies: {remix: ^1.0.0}}}');
+    expect(await check(complete: true), isNull);
+    expect(commands.first.last, version);
+    expect(commands.last, ['fake-dart', 'analyze', 'lib/ui']);
+  });
+
+  test('selects newest same-major release, including prereleases', () async {
+    final response = (
+      statusCode: 200,
+      body: jsonEncode({
+        'latest': {'version': '0.1.0'},
+        'versions': [
+          {'version': '8.0.0'},
+          {'version': '7.5.0-beta.2'},
+          {'version': '7.5.0-beta.3', 'retracted': true},
+          {'version': '0.1.0'},
+          {'version': version},
+          {'version': '7.4.0'},
+        ],
+      }),
+    );
+    expect(
+      await check(
+        client: published(response: response),
+        activatedVersion: '7.5.0-beta.2',
+      ),
+      'fixture reached consumer setup',
+    );
+    expect(commands.first.last, '7.5.0-beta.2');
+    expect(out.toString(), isNot(contains('WARNING')));
+  });
+
+  test('warns separately when the documented pin is not published', () async {
+    expect(await check(), 'fixture reached consumer setup');
+    expect(out.toString(), contains('WARNING: documented remix_cli pin $pin'));
+    expect(out.toString(), contains('no published satisfier'));
+    expect(out.toString(), contains('candidate 7.4.0-beta.9'));
+  });
+
+  test('a published satisfier need not equal the documented minimum', () async {
+    expect(
+      await check(
+        client: published(
+          response: (
+            statusCode: 200,
+            body: '{"versions": [{"version": "7.4.0-beta.10"}]}',
+          ),
+        ),
+        activatedVersion: '7.4.0-beta.10',
+      ),
+      'fixture reached consumer setup',
+    );
+    expect(out.toString(), isNot(contains('WARNING')));
+  });
+
+  test('rejects any executable other than the exact selected release', () async {
+    for (final wrong in ['0.1.0', '7.4.0-beta.9', '7.5.0', '8.0.0']) {
       commands.clear();
       expect(
         await check(activatedVersion: wrong),
-        'Activated remix_cli $wrong does not satisfy documented constraint $pin.',
+        'Activated remix_cli $wrong does not match selected published version $version.',
       );
       expect(commands, hasLength(2));
-      expect(out.toString(), contains('Activated remix_cli $wrong'));
     }
   });
 
@@ -118,36 +168,33 @@ void main() {
         problem,
         contains('Could not determine activated remix_cli version'),
       );
-      expect(problem, contains('expected documented constraint $pin'));
+      expect(problem, contains('expected published version $version'));
       expect(commands, hasLength(2));
     }
   });
 
-  test(
-    'an unpublished or retracted CLI explains the publication order',
-    () async {
-      for (final response in <PubResponse>[
-        (statusCode: 404, body: 'not found'),
-        (statusCode: 200, body: '{"versions": []}'),
-        (
-          statusCode: 200,
-          body: jsonEncode({
-            'versions': [
-              {'version': version, 'retracted': true},
-              {'version': '7.4.0-beta.10'},
-            ],
-          }),
-        ),
-      ]) {
-        expect(
-          await check(client: published(response: response)),
-          'remix_cli $pin is not on pub.dev yet; push tag remix_cli-v$version, '
-          'wait for the Publish workflow, then re-run Promote registry',
-        );
-        expect(commands, isEmpty);
-      }
-    },
-  );
+  test('no unretracted same-major release stops before activation', () async {
+    for (final response in <PubResponse>[
+      (statusCode: 404, body: 'not found'),
+      (statusCode: 200, body: '{"versions": []}'),
+      (
+        statusCode: 200,
+        body: jsonEncode({
+          'versions': [
+            {'version': version, 'retracted': true},
+            {'version': '8.0.0'},
+          ],
+        }),
+      ),
+    ]) {
+      expect(
+        await check(client: published(response: response)),
+        'No published, unretracted remix_cli in major 7 on pub.dev; '
+        'cannot check the candidate with a released CLI.',
+      );
+      expect(commands, isEmpty);
+    }
+  });
 
   test(
     'preflight keeps server and network failures distinct from missing releases',
@@ -164,6 +211,14 @@ void main() {
       expect(commands, isEmpty);
     },
   );
+
+  test('malformed pub.dev metadata fails before activation', () async {
+    expect(
+      await check(client: published(response: (statusCode: 200, body: '{}'))),
+      contains('pub.dev preflight for remix_cli failed'),
+    );
+    expect(commands, isEmpty);
+  });
 
   test(
     'activation and version command failures stop before consumer setup',
