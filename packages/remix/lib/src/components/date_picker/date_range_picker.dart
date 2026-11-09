@@ -97,9 +97,11 @@ class RemixDateRangePicker extends StatelessWidget {
   /// single date of a one-day range; those labels are English unless
   /// [calendarLabels] is localized. Provide this callback for locale-specific
   /// range grammar. It only changes what is painted, never the accessible
-  /// value. When the default full label exceeds the trigger width, the visible
+  /// value. Labels are fitted with the trigger's resolved typography and available
+  /// text width, including interaction and expanded styles. The default full
   /// label falls back to numeric month/day/year endpoints. Labels that still
-  /// exceed one line, including caller-formatted labels, wrap to keep both ends.
+  /// exceed one line, including caller-formatted labels, wrap without a line cap
+  /// to keep both ends visible.
   final String Function(CivilDateRange)? formatRange;
 
   /// Caller-owned date labels and formatters; English by default.
@@ -130,7 +132,8 @@ class RemixDateRangePicker extends StatelessWidget {
   final ButtonStyler expandedStyle;
 
   /// Trigger styling, resolved against the trigger's own interaction state.
-  /// Full labels fall back to compact numeric endpoints when width is limited.
+  /// Labels fit the resolved typography and the space inside the styled trigger.
+  /// Default full labels fall back to compact numeric endpoints when limited.
   /// Labels that still exceed one line wrap without a line cap; accessible
   /// values stay complete.
   final ButtonStyler buttonStyle;
@@ -174,108 +177,115 @@ class RemixDateRangePicker extends StatelessWidget {
                   ? calendarLabels.fullDate(value.start)
                   : '${calendarLabels.fullDate(value.start)} – '
                         '${calendarLabels.fullDate(value.end)}');
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final spec = buttonStyle.build(context).spec;
-        final box = spec.container.spec.box?.spec;
-        final requestedWidth = box?.constraints?.maxWidth ?? double.infinity;
-        final direction = Directionality.of(context);
-        // Margins sit outside the button's own width constraint.
-        final margin = box?.margin?.resolve(direction).horizontal ?? 0.0;
-        final constrainedWidth = (constraints.maxWidth - margin).clamp(
-          0.0,
-          double.infinity,
-        );
-        final width = requestedWidth < constrainedWidth
-            ? requestedWidth
-            : constrainedWidth;
-        final padding = box?.padding?.resolve(direction).horizontal ?? 0.0;
-        final border =
-            box?.decoration?.padding.resolve(direction).horizontal ?? 0.0;
-        final iconWidth = icon == null
-            ? 0.0
-            : (spec.icon.spec.size ?? IconTheme.of(context).size ?? 24) +
-                  (spec.container.spec.flex?.spec.spacing ?? 0);
-        final available = (width - padding - border - iconWidth).clamp(
-          0.0,
-          double.infinity,
-        );
-        final textStyle = DefaultTextStyle.of(
-          context,
-        ).style.merge(spec.label.spec.style);
-        bool fits(String text) {
-          final painter = TextPainter(
-            text: TextSpan(text: text, style: textStyle),
-            textDirection: direction,
-            textScaler: MediaQuery.textScalerOf(context),
-            maxLines: 1,
-          )..layout(maxWidth: available);
-          final result = !painter.didExceedMaxLines;
-          painter.dispose();
-          return result;
-        }
-
-        var visible = label;
-        var wrapLabel = false;
-        if (value != null && !fits(label)) {
-          if (formatRange == null) {
-            String compact(DateTime d) =>
-                '${d.month}/${d.day}/${calendarLabels.year(d.year)}';
-            visible = singleDay
-                ? compact(value.start)
-                : '${compact(value.start)} – ${compact(value.end)}';
-            if (!fits(visible) && !singleDay) {
-              visible = '${compact(value.start)} –\n${compact(value.end)}';
-            }
-          }
-          // Retain caller-owned localized grammar too: wrapping keeps both ends
-          // visible when a compact/custom label still cannot fit on one line.
-          if (!fits(visible)) {
-            wrapLabel = true;
-          }
-        }
-        return _DatePickerHost<CivilDateRange>(
-          enabled: enabled,
-          onChanged: onChanged,
-          onOpen: onOpen,
-          onClose: onClose,
-          label: visible,
-          textBuilder: wrapLabel ? _wrappedRangeLabel : null,
-          semanticLabel: semanticLabel,
-          semanticValue: spoken ?? rangeLabels.noRange,
-          focusNode: focusNode,
-          autofocus: autofocus,
-          positioning: positioning,
-          icon: icon,
-          placeholderStyle: value == null
-              ? placeholderStyle
-              : const ButtonStyler.create(),
-          expandedStyle: expandedStyle,
-          buttonStyle: buttonStyle,
-          popoverStyle: popoverStyle,
-          calendarBuilder: (focus, select) => RemixRangeCalendar(
-            value: value,
-            firstDate: firstDate,
-            lastDate: lastDate,
-            onChanged: select,
-            currentDate: currentDate,
-            isDateUnavailable: isDateUnavailable,
-            firstDayOfWeek: firstDayOfWeek,
-            enabled: select != null,
-            semanticLabel: semanticLabel,
-            focusNode: focus,
-            labels: calendarLabels,
-            rangeLabels: rangeLabels,
-            style: calendarStyle,
-            navigationStyle: navigationStyle,
-            selectorStyle: selectorStyle,
-            summaryBuilder: summaryBuilder,
-          ),
-        );
-      },
+    String compact(DateTime d) =>
+        '${d.month}/${d.day}/${calendarLabels.year(d.year)}';
+    final compactLabel = value == null || formatRange != null
+        ? null
+        : singleDay
+        ? compact(value.start)
+        : '${compact(value.start)} – ${compact(value.end)}';
+    final wrappedCompactLabel =
+        value == null || singleDay || formatRange != null
+        ? null
+        : '${compact(value.start)} –\n${compact(value.end)}';
+    return _DatePickerHost<CivilDateRange>(
+      enabled: enabled,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      label: label,
+      textBuilder: value == null
+          ? null
+          : (context, spec, label) => _fittedRangeLabel(
+              context,
+              spec,
+              label,
+              compactLabel: compactLabel,
+              wrappedCompactLabel: wrappedCompactLabel,
+            ),
+      semanticLabel: semanticLabel,
+      semanticValue: spoken ?? rangeLabels.noRange,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      positioning: positioning,
+      icon: icon,
+      placeholderStyle: value == null
+          ? placeholderStyle
+          : const ButtonStyler.create(),
+      expandedStyle: expandedStyle,
+      buttonStyle: buttonStyle,
+      popoverStyle: popoverStyle,
+      calendarBuilder: (focus, select) => RemixRangeCalendar(
+        value: value,
+        firstDate: firstDate,
+        lastDate: lastDate,
+        onChanged: select,
+        currentDate: currentDate,
+        isDateUnavailable: isDateUnavailable,
+        firstDayOfWeek: firstDayOfWeek,
+        enabled: select != null,
+        semanticLabel: semanticLabel,
+        focusNode: focus,
+        labels: calendarLabels,
+        rangeLabels: rangeLabels,
+        style: calendarStyle,
+        navigationStyle: navigationStyle,
+        selectorStyle: selectorStyle,
+        summaryBuilder: summaryBuilder,
+      ),
     );
   }
 }
+
+// Fit inside the button's Flexible text slot, after state-resolved box and icon
+// layout. Measure during layout using the slot's actual constraints.
+Widget _fittedRangeLabel(
+  BuildContext context,
+  TextSpec spec,
+  String label, {
+  String? compactLabel,
+  String? wrappedCompactLabel,
+}) => LayoutBuilder(
+  builder: (context, constraints) {
+    final defaults = DefaultTextStyle.of(context);
+    final painter = TextPainter(
+      textDirection: spec.textDirection ?? Directionality.of(context),
+      textAlign: spec.textAlign ?? defaults.textAlign ?? TextAlign.start,
+      textScaler: spec.textScaler ?? MediaQuery.textScalerOf(context),
+      locale: spec.locale ?? Localizations.maybeLocaleOf(context),
+      strutStyle: spec.strutStyle,
+      textWidthBasis: spec.textWidthBasis ?? defaults.textWidthBasis,
+      textHeightBehavior:
+          spec.textHeightBehavior ?? defaults.textHeightBehavior,
+      maxLines: 1,
+    );
+    bool fits(String text) {
+      painter.text = TextSpan(
+        text: spec.textDirectives?.apply(text) ?? text,
+        style: defaults.style.merge(spec.style),
+      );
+      painter.layout(maxWidth: constraints.maxWidth);
+      return !painter.didExceedMaxLines;
+    }
+
+    try {
+      if (fits(label)) {
+        return StyledText(label, styleSpec: StyleSpec(spec: spec));
+      }
+      final compact = compactLabel;
+      if (compact != null && fits(compact)) {
+        return StyledText(compact, styleSpec: StyleSpec(spec: spec));
+      }
+      return _wrappedRangeLabel(
+        context,
+        spec,
+        wrappedCompactLabel ?? compact ?? label,
+      );
+    } finally {
+      painter.dispose();
+    }
+  },
+);
 
 // Render the fallback without the host's one-line default or a caller's line
 // cap. Preserve the resolved typography and directives for the whole label.

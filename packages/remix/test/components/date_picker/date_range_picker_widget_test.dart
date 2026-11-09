@@ -31,6 +31,7 @@ RemixDateRangePicker _picker({
   RemixCalendarLabels calendarLabels = const RemixCalendarLabels(),
   RemixRangeCalendarLabels rangeLabels = const RemixRangeCalendarLabels(),
   ButtonStyler buttonStyle = const ButtonStyler.create(),
+  ButtonStyler expandedStyle = const ButtonStyler.create(),
   CalendarStyler calendarStyle = const CalendarStyler.create(),
   PopoverStyler popoverStyle = const PopoverStyler.create(),
 }) => RemixDateRangePicker(
@@ -49,6 +50,7 @@ RemixDateRangePicker _picker({
   calendarLabels: calendarLabels,
   rangeLabels: rangeLabels,
   buttonStyle: buttonStyle,
+  expandedStyle: expandedStyle,
   calendarStyle: calendarStyle,
   popoverStyle: popoverStyle,
 );
@@ -87,6 +89,103 @@ Future<void> _tapDay(WidgetTester tester, int day) async {
 }
 
 void main() {
+  for (final expanded in [true, false]) {
+    for (final fallback in ['compact', 'wrap', 'custom']) {
+      testWidgets(
+        '${expanded ? 'expanded padding' : 'hover font size'} re-fits the range to $fallback',
+        (t) async => withSemantics(t, () async {
+          const full = 'Sunday, November 10, 2024 – Monday, March 24, 2025';
+          const custom = 'November 10, 2024 – March 24, 2025';
+          const compact = '11/10/2024 – 3/24/2025';
+          final wraps = fallback != 'compact';
+          final stateStyle = expanded
+              ? ButtonStyler().padding(.horizontal(wraps ? 210 : 100))
+              : ButtonStyler().labelFontSize(wraps ? 32 : 20);
+          await t.pumpWidget(
+            pickerHost(
+              SizedBox(
+                width: 600,
+                child: _picker(
+                  value: CivilDateRange(
+                    start: DateTime(2024, 11, 10),
+                    end: DateTime(2025, 3, 24),
+                  ),
+                  formatRange: fallback == 'custom' ? (_) => custom : null,
+                  buttonStyle: ButtonStyler()
+                      .padding(.horizontal(12))
+                      .label(TextStyler().fontSize(10).maxLines(1))
+                      .onHovered(
+                        expanded ? const ButtonStyler.create() : stateStyle,
+                      ),
+                  expandedStyle: expanded
+                      ? stateStyle
+                      : const ButtonStyler.create(),
+                ),
+              ),
+            ),
+          );
+          final trigger = find.byType(RemixButton).first;
+          RenderParagraph paragraph() => t.renderObject<RenderParagraph>(
+            find.descendant(of: trigger, matching: find.byType(RichText)).first,
+          );
+          expect(
+            paragraph().text.toPlainText(),
+            fallback == 'custom' ? custom : full,
+          );
+          expect(paragraph().didExceedMaxLines, isFalse);
+          final closedHeight = paragraph().size.height;
+          if (expanded) {
+            await _open(t);
+          } else {
+            final mouse = await t.createGesture(kind: PointerDeviceKind.mouse);
+            addTearDown(mouse.removePointer);
+            await mouse.addPointer(location: Offset.zero);
+            await mouse.moveTo(t.getCenter(trigger));
+            await t.pumpAndSettle();
+          }
+          final text = paragraph();
+          final visible = text.text.toPlainText();
+          expect(
+            visible.replaceAll('\n', ' '),
+            fallback == 'custom' ? custom : compact,
+          );
+          expect(text.didExceedMaxLines, isFalse);
+          if (wraps) {
+            expect(text.size.height, greaterThan(closedHeight));
+          }
+          final end = text.getBoxesForSelection(
+            TextSelection(
+              baseOffset: visible.length - 4,
+              extentOffset: visible.length,
+            ),
+          );
+          expect(end, isNotEmpty, reason: 'The end year must be laid out.');
+          final buttonRect = t.getRect(trigger).inflate(0.01);
+          for (final box in end) {
+            expect(box.left, greaterThanOrEqualTo(0));
+            expect(box.right, lessThanOrEqualTo(text.size.width));
+            expect(box.bottom, lessThanOrEqualTo(text.size.height));
+            expect(
+              buttonRect.contains(
+                text.localToGlobal(Offset(box.left, box.top)),
+              ),
+              isTrue,
+            );
+            expect(
+              buttonRect.contains(
+                text.localToGlobal(Offset(box.right, box.bottom)),
+              ),
+              isTrue,
+            );
+          }
+          final spoken = t.getSemantics(trigger).getSemanticsData().value;
+          expect(spoken, contains('November 10, 2024'));
+          expect(spoken, contains('March 24, 2025'));
+          expect(t.takeException(), isNull);
+        }),
+      );
+    }
+  }
   for (final scale in [1.0, 2.0]) {
     testWidgets('custom range label shows its end beyond four lines at $scale', (
       t,
@@ -150,12 +249,15 @@ void main() {
         ),
       ),
     );
-    final label = t.widget<RemixButton>(find.byType(RemixButton)).label;
+    final paragraph = t.renderObject<RenderParagraph>(
+      find.descendant(
+        of: find.byType(RemixButton),
+        matching: find.byType(RichText),
+      ),
+    );
+    final label = paragraph.text.toPlainText();
     expect(label, contains('11/10/2024'));
     expect(label, contains('3/24/2025'));
-    final paragraph = t.renderObject<RenderParagraph>(
-      find.descendant(of: find.text(label), matching: find.byType(RichText)),
-    );
     expect(paragraph.didExceedMaxLines, isFalse);
     expect(t.takeException(), isNull);
   });
@@ -180,12 +282,15 @@ void main() {
           textScale: scale,
         ),
       );
-      final label = t.widget<RemixButton>(find.byType(RemixButton)).label;
+      final paragraph = t.renderObject<RenderParagraph>(
+        find.descendant(
+          of: find.byType(RemixButton),
+          matching: find.byType(RichText),
+        ),
+      );
+      final label = paragraph.text.toPlainText();
       expect(label, contains('11/10/2024'));
       expect(label, contains('3/24/2025'));
-      final paragraph = t.renderObject<RenderParagraph>(
-        find.descendant(of: find.text(label), matching: find.byType(RichText)),
-      );
       expect(paragraph.didExceedMaxLines, isFalse);
       expect(t.takeException(), isNull);
     });
@@ -256,10 +361,9 @@ void main() {
       await tester.pumpWidget(
         pickerHost(SizedBox(width: 240, child: _picker(value: _range(14, 20)))),
       );
-      final button = tester.widget<RemixButton>(find.byType(RemixButton).first);
       final text = tester.renderObject<RenderParagraph>(
         find.descendant(
-          of: find.text(button.label),
+          of: find.byType(RemixButton).first,
           matching: find.byType(RichText),
         ),
       );
