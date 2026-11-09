@@ -1,0 +1,205 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+import '../theme/theme.dart';
+import 'calendar.dart';
+import 'popover.dart';
+
+/// HeroUi's reviewed DatePicker composition.
+///
+/// Remix owns civil-date selection, focus, keyboard navigation and semantics.
+/// Multiple independent child styles require a hand-written facade; caller
+/// overrides merge last and there is no generated adapter.
+class HeroUiDatePicker extends StatelessWidget {
+  const HeroUiDatePicker({
+    super.key,
+    required this.value,
+    required this.firstDate,
+    required this.lastDate,
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.currentDate,
+    this.isDateUnavailable,
+    this.firstDayOfWeek = DateTime.sunday,
+    this.enabled = true,
+    this.semanticLabel = 'Choose date',
+    this.placeholder = 'Select date',
+    this.formatDate,
+    this.calendarLabels = const RemixCalendarLabels(),
+    this.focusNode,
+    this.autofocus = false,
+    this.positioning = const OverlayPositionConfig(
+      sideOffset: 4,
+      collisionPadding: EdgeInsets.all(8),
+    ),
+    this.buttonStyle = const ButtonStyler.create(),
+    this.calendarStyle = const CalendarStyler.create(),
+    this.popoverStyle = const PopoverStyler.create(),
+    this.navigationStyle = const IconButtonStyler.create(),
+    this.selectorStyle = const SelectStyler.create(),
+  });
+
+  /// Parent-owned selected date, or null for an empty selection.
+  /// Civil-date comparison and bounds follow [RemixCalendar].
+  final DateTime? value;
+
+  /// Inclusive earliest selectable civil date; time and UTC flag are ignored.
+  final DateTime firstDate;
+
+  /// Inclusive latest selectable civil date, on or after [firstDate].
+  final DateTime lastDate;
+
+  /// Requests one available date, then closes even if the parent rejects it.
+  /// A null callback disables the picker.
+  final ValueChanged<DateTime>? onChanged;
+
+  /// Called when the picker's popover opens.
+  final VoidCallback? onOpen;
+
+  /// Called when the popover closes: after [onChanged] for a completed
+  /// selection, or alone when the picker is dismissed without selecting.
+  /// Removing an open picker does not call this callback.
+  final VoidCallback? onClose;
+
+  /// Today marker and fallback focus date; defaults to the current date.
+  final DateTime? currentDate;
+
+  /// Marks in-range dates unselectable while keeping them keyboard-focusable.
+  final bool Function(DateTime)? isDateUnavailable;
+
+  /// First weekday column, from Monday=1 through Sunday=7.
+  final int firstDayOfWeek;
+
+  /// Whether the trigger can open the calendar and dates can be selected.
+  /// Disabling an open picker closes it without selecting.
+  final bool enabled;
+
+  /// Field purpose and the trigger's accessible name, such as "Appointment
+  /// date". The trigger's accessible value is the selected date from
+  /// [RemixCalendarLabels.fullDate], or [RemixCalendarLabels.noDate].
+  final String semanticLabel;
+
+  /// Visible trigger text without a selected date.
+  final String placeholder;
+
+  /// Visible trigger date text. Defaults to [RemixCalendarLabels.fullDate].
+  ///
+  /// It only changes what is painted: the accessible value always uses the
+  /// complete [RemixCalendarLabels.fullDate], so compact formats such as
+  /// "20/2" are never announced as the date.
+  final String Function(DateTime)? formatDate;
+
+  /// Caller-owned date labels and formatters; English by default.
+  final RemixCalendarLabels calendarLabels;
+
+  /// Optional caller-owned trigger focus node. Replacing it closes the picker.
+  final FocusNode? focusNode;
+
+  /// Whether to focus the trigger automatically; does not open the calendar.
+  final bool autofocus;
+
+  /// Panel placement, offsets and collision padding relative to the trigger.
+  /// The panel also avoids the view's safe area and keyboard exclusions.
+  final OverlayPositionConfig positioning;
+
+  /// Trigger styling, resolved against the trigger's own interaction state.
+  final ButtonStyler buttonStyle;
+
+  /// Calendar and day styling, resolved against each part's own state.
+  final CalendarStyler calendarStyle;
+
+  /// Styling for the popover panel containing the calendar.
+  final PopoverStyler popoverStyle;
+
+  /// Month-navigation button styling, resolved in each button's state.
+  final IconButtonStyler navigationStyle;
+
+  /// Month/year selector styling, resolved in each selector’s state.
+  final SelectStyler selectorStyle;
+
+  @override
+  Widget build(BuildContext context) => RemixDatePicker(
+    value: value,
+    firstDate: firstDate,
+    lastDate: lastDate,
+    onChanged: onChanged,
+    onOpen: onOpen,
+    onClose: onClose,
+    currentDate: currentDate,
+    isDateUnavailable: isDateUnavailable,
+    firstDayOfWeek: firstDayOfWeek,
+    enabled: enabled,
+    semanticLabel: semanticLabel,
+    placeholder: placeholder,
+    calendarLabels: calendarLabels,
+    formatDate: formatDate,
+    focusNode: focusNode,
+    autofocus: autofocus,
+    positioning: positioning,
+    icon: RemixIcons.calendar,
+    placeholderStyle: ButtonStyler()
+        .labelColor(HeroUiTokens.fieldPlaceholder())
+        .labelFontWeight(FontWeight.w400),
+    expandedStyle: ButtonStyler()
+        .color(HeroUiTokens.fieldFocus())
+        .containerEffects(heroUiFocusRing()),
+    buttonStyle: heroUiDatePickerButtonStyle(context).merge(buttonStyle),
+    popoverStyle: heroUiPopoverStyle()
+        .padding(.all(0))
+        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
+        .borderRadius(.all(heroUiCalendarPopoverRadius()))
+        .merge(popoverStyle),
+    navigationStyle: heroUiCalendarNavigationStyle(
+      context,
+    ).merge(navigationStyle),
+    selectorStyle: heroUiCalendarSelectorStyle(context).merge(selectorStyle),
+    calendarStyle: heroUiCalendarStyle(
+      style: heroUiCalendarGeometry(context).merge(calendarStyle),
+    ),
+  );
+}
+
+/// Field-shaped button approximation of upstream's segmented DateField.
+ButtonStyler heroUiDatePickerButtonStyle(BuildContext context) => ButtonStyler()
+    .minHeight(40)
+    .onBreakpoint(
+      const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
+      ButtonStyler().minHeight(36),
+    )
+    .minWidth(200)
+    .padding(.horizontal(12))
+    .padding(.vertical(8))
+    .spacing(8)
+    .iconAlignment(.end)
+    .mainAxisAlignment(.spaceBetween)
+    .borderRadius(.all(HeroUiTokens.radiusField()))
+    .color(HeroUiTokens.fieldBackground())
+    .label(
+      TextStyler()
+          .style(HeroUiTokens.textBase.mix())
+          .color(HeroUiTokens.fieldForeground())
+          .softWrap(true)
+          .onBreakpoint(
+            const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
+            TextStyler().style(HeroUiTokens.textSm.mix()),
+          ),
+    )
+    .icon(
+      .size(
+        MediaQuery.textScalerOf(context).scale(16),
+      ).color(HeroUiTokens.fieldPlaceholder()),
+    )
+    .containerEffects(heroUiSurfaceEffects())
+    .onHovered(ButtonStyler().color(HeroUiTokens.fieldHover()))
+    .onPressed(ButtonStyler().color(HeroUiTokens.fieldFocus()))
+    .onFocusVisible(ButtonStyler().containerEffects(heroUiFocusRing()))
+    .onDisabled(ButtonStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)));
+
+/// date-picker.css: min(32px, radius * 2.5).
+final heroUiCalendarPopoverRadius = heroUiRadius(
+  HeroUiTokens.radiusLg,
+  scale: 2.5,
+  max: 32,
+);

@@ -534,6 +534,46 @@ final _cases = <_WidgetCase>[
     AcmeCombobox<String>(label: 'City', optionsBuilder: (_) => const []),
     {AcmeCombobox<String>},
   ),
+  _WidgetCase(
+    'calendar',
+    AcmeCalendar(
+      value: null,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (_) {},
+    ),
+    {AcmeCalendar},
+  ),
+  _WidgetCase(
+    'range_calendar',
+    AcmeRangeCalendar(
+      value: null,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (_) {},
+    ),
+    {AcmeRangeCalendar},
+  ),
+  _WidgetCase(
+    'date_picker',
+    AcmeDatePicker(
+      value: null,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (_) {},
+    ),
+    {AcmeDatePicker},
+  ),
+  _WidgetCase(
+    'date_range_picker',
+    AcmeDateRangePicker(
+      value: null,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (_) {},
+    ),
+    {AcmeDateRangePicker},
+  ),
   const _WidgetCase('separator', AcmeSeparator(), {AcmeSeparator}),
   const _WidgetCase(
     'skeleton',

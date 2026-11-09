@@ -1,0 +1,37 @@
+component: RangeCalendar
+widget: HeroUiRangeCalendar
+target: RemixRangeCalendar
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6; @heroui/react@3.2.6"
+  manifest: reference/heroui_3_2_6/sources.json
+  commit: e385ac202b2cdb94b1bf6fa76d32c31c8259cc5e
+  pages:
+    - {path: source/dist/components/range-calendar.css, sha256: 43e94c644a82070421364c73d534ff38da265de9c65487619be129f6387e00cb}
+    - {path: source/react/dist/components/range-calendar/range-calendar.d.ts, sha256: 9bf26fa610815bf340b715dc8fa1436d9213ad13febaea0f3f339053c37aaf06}
+    - {path: source/react/dist/components/range-calendar/range-calendar.js, sha256: 6dee813ad4ef5936dcced20a8a6f8a5b062cc3d2a347932b6f42614ef190dce0}
+anatomy: [field trigger for pickers, panel, month and year selectors, navigation, weekdays, day cells]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest, hover, pressed, focus-visible, today, selected, disabled, unavailable, range start, range middle, range end, draft, rtl]
+tokens: [foreground, muted, accent, accent-foreground, accent-hover, accent-soft, accent-soft-foreground, default, default-hover, field-background, field-hover, field-focus, field-placeholder, overlay, radius-field, radius-3xl]
+measurements:
+  - {what: day grid, value: "252px = seven 36px cells; 14/20 medium type", cite: calendar-day10}
+  - {what: navigation, value: "24px target and 16px chevron", cite: calendar-nav-button}
+  - {what: range row spacing, value: "4px vertical margin, zero column gap", cite: "range-calendar.css cell my-[2px] mx-0"}
+  - {what: picker inset, value: "12px each side", cite: date-picker-popover}
+  - {what: field, value: "36px minimum; 40px mobile; 12px horizontal and 8px vertical padding", cite: "date-field.css date-input-group; date-picker-date-input-group"}
+apiMapping:
+  - "Controlled DateTime or CivilDateRange, onChanged, civil bounds, availability and caller-owned labels retain Remix names and shapes."
+  - "Independent navigation, selector, calendar, trigger and panel stylers require hand-written facades; caller overrides merge last. No React props or date state are copied."
+approximations:
+  - "Single visible Gregorian month only. Remix owns date behavior. Month/year Select menus replace the upstream heading/year-grid composition; nested panels use a 4px gap and persistent scrollbar. Segmented editing, time fields, decade/year grids and non-Gregorian calendars remain deferred."
+  - "DatePicker and DateRangePicker use a field-shaped button, not the upstream segmented DateField. Remix compacts default range labels to numeric endpoints under bounds and wraps both endpoints instead of truncating one; semantic values remain complete."
+  - "The calendar owns the 12px inset; picker popovers have zero extra padding, yielding equal insets. Inline calendars retain that same inset, unlike the unpadded upstream grid."
+  - "Day tiles and glyphs scale with text to retain square cells at 200%; upstream's fixed 252px calendar does not. Large calendars can scroll within Remix's bounded viewport."
+  - "Today adds a 1px foreground contour for at least 3:1 contrast. Keyboard focus uses a 2px inset contrasting contour, because the scrolling grid clips an outside ring."
+  - "Range endpoints are a single cap rather than an upstream inner circle over a band. Drafts use an outlined soft-accent band; old committed ranges recede to secondary/tertiary surfaces while the live draft owns range roles."
+  - "Pressed fills preserve cap and middle roles; whole-day scaling is omitted to keep connected bands. Unavailable dates are struck through. Disabled selection uses a quiet fill and readable text."
+  - "Real Geist fonts replace the upstream system sans. Flutter and CSS blur kernels differ; calendar transitions and popover entry/exit are immediate."
+  - "Navigation reuses Calendar's 16px corner token; upstream RangeCalendar uses a 12px corner on the same 24px target."
+  - "Today uses semibold text; its hover uses the ordinary default surface while preserving the contour, rather than upstream soft-accent-hover."

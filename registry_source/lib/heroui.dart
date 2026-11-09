@@ -47,3 +47,7 @@ export 'src/heroui/components/toggle_button_group.dart';
 export 'src/heroui/components/tooltip.dart';
 export 'src/heroui/components/typography.dart';
 export 'src/heroui/components/combobox.dart';
+export 'src/heroui/components/calendar.dart';
+export 'src/heroui/components/range_calendar.dart';
+export 'src/heroui/components/date_picker.dart';
+export 'src/heroui/components/date_range_picker.dart';

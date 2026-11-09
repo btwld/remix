@@ -51,6 +51,39 @@ void main() {
     },
   );
 
+  test(
+    'HeroUI calendar items retain exact dependency closure and composite exports',
+    () async {
+      final catalog = await CheckoutRegistry(distribution, 'heroui').catalog();
+      for (final name in [
+        'calendar',
+        'range_calendar',
+        'date_picker',
+        'date_range_picker',
+      ]) {
+        expect(catalog.items, contains(name));
+        final item = catalog.items[name]!;
+        expect(item.generated, isEmpty);
+        expect(item.files.single.target, '@ui/components/$name.dart');
+        expect(item.exports, ['components/$name.dart']);
+        expect(catalog.resolve(name).map((item) => item.name), switch (name) {
+          'calendar' => ['theme', 'select', name],
+          'range_calendar' => ['theme', 'select', 'calendar', name],
+          'date_picker' => ['theme', 'select', 'calendar', 'popover', name],
+          _ => [
+            'theme',
+            'select',
+            'calendar',
+            'popover',
+            'date_picker',
+            'range_calendar',
+            name,
+          ],
+        });
+      }
+    },
+  );
+
   test('Fortal registry loads its inferred dependency graph', () async {
     final registry = CheckoutRegistry(distribution, 'fortal');
     final catalog = await registry.catalog();

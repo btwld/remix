@@ -341,3 +341,14 @@ the day and its `NakedRangePosition` to context-aware style tokens.
 For an inclusive date range, use [Range Calendar](/components/range_calendar)
 instead. Typed/segmented entry, non-Gregorian calendars and timezone scheduling
 are not part of this component. The Vanilla recipe above packages these styles for installation.
+## HeroUI widgets
+
+In a HeroUI app, `remix add calendar` installs `<Prefix>Calendar`
+with the same controlled value, bounds, availability callbacks and labels as Remix.
+The hand-written composition merges caller styles last for each independent part.
+
+The recipes port HeroUI web 3.2.6 colors, typography and day geometry. Month/year
+Select menus replace the upstream year grid. Date pickers use a field-shaped
+button in place of segmented text entry. Day tiles and icons grow with text;
+range drafts take visual precedence over the previous committed range. Picker
+panels retain equal 12px insets. See [Open Code](/open-code) for theme setup.

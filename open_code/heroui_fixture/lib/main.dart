@@ -106,6 +106,11 @@ class _GalleryState extends State<Gallery> {
   final _defaultAccordion = RemixAccordionController<String>();
   final _surfaceAccordion = RemixAccordionController<String>();
 
+  DateTime? _date = DateTime(2026, 11, 10);
+  CivilDateRange? _dates = CivilDateRange(
+    start: DateTime(2026, 11, 10),
+    end: DateTime(2026, 11, 13),
+  );
   var _presses = 0;
   var _accepted = true;
   var _subscribed = false;
@@ -232,6 +237,7 @@ class _GalleryState extends State<Gallery> {
     (520, _selection()),
     (260, _toggles()),
     (180, _tabs()),
+    (850, _calendars()),
     (340, _overlays()),
     (360, _accordions()),
     (300, _toastsAndAlerts()),
@@ -257,6 +263,35 @@ class _GalleryState extends State<Gallery> {
 
   Widget _caption(String text) =>
       AcmeTypography(text, type: .bodyXs, color: .muted);
+
+  Widget _calendars() => _card('Calendar and date pickers', [
+    AcmeCalendar(
+      value: _date,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      currentDate: DateTime(2026, 11, 6),
+      onChanged: (value) => setState(() => _date = value),
+    ),
+    AcmeRangeCalendar(
+      value: _dates,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      currentDate: DateTime(2026, 11, 6),
+      onChanged: (value) => setState(() => _dates = value),
+    ),
+    AcmeDatePicker(
+      value: _date,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (value) => setState(() => _date = value),
+    ),
+    AcmeDateRangePicker(
+      value: _dates,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (value) => setState(() => _dates = value),
+    ),
+  ]);
 
   Widget _buttons() {
     return _card('Buttons', [
