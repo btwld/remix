@@ -6,6 +6,30 @@ enum Interest { design, code }
 
 void main() {
   test(
+    'range slider is additive and reuses the existing single-value styler',
+    () {
+      final style = SliderStyler().thumbSize(const Size(20, 20));
+      final ValueChanged<double> singleChanged = (_) {};
+      final ValueChanged<List<double>> rangeChanged = (_) {};
+      final single = style(value: .5, onChanged: singleChanged);
+      final range = RemixRangeSlider(
+        values: const [.25, .75],
+        onChanged: rangeChanged,
+        style: style,
+        semanticLabels: const ['Lower', 'Upper'],
+        minSpacing: .1,
+        snapDivisions: 10,
+      );
+      expect(single, isA<RemixSlider>());
+      expect(single.value, .5);
+      expect(single.onChanged, same(singleChanged));
+      expect(range.style, same(style));
+      expect(range.values, [.25, .75]);
+      expect(range.onChanged, same(rangeChanged));
+    },
+  );
+
+  test(
     'combobox minimal and generic callable API compile through the barrel',
     () {
       final minimal = RemixCombobox<String>(

@@ -77,6 +77,12 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `expands`/`obscureText` fixed to `false`. Vanilla, Fortal, and HeroUI recipes
   ring the field with `onFocused`, so a click shows the ring. Other controls use
   `onFocusVisible`.
+- **RangeSlider** — `RemixRangeSlider` takes exactly two ordered, parent-owned
+  values. Give the lower and upper thumbs distinct `semanticLabels` in that
+  order. `onChanged` requests values; the parent decides whether to accept them.
+  `onChangeEnd` reports the last pointer request, including a rejected request;
+  keyboard and semantic changes do not emit pointer-only start/end callbacks.
+  See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
 - **Select** — is interactively enabled only when `enabled == true` and
   `onChanged != null`; either condition alone leaves it visually present but
   inert. `positioning` defaults to

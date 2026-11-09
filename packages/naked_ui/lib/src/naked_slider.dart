@@ -1,12 +1,19 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/state.dart';
+
+/// Relative tolerance for residue from slider spacing arithmetic.
+///
+/// Exactly four times binary64 machine epsilon (2^-52), covering the
+/// add/subtract and comparison without erasing headroom on small domains.
+const double _spacingResidueTolerance = 8.881784197001252e-16;
 
 /// Formats one slider thumb's value for assistive technologies.
 typedef NakedSliderSemanticFormatterCallback = String Function(double value);
@@ -29,14 +36,23 @@ class NakedSliderTrack extends StatelessWidget {
         .dependOnInheritedWidgetOfExactType<_NakedSliderTrackScope>();
     assert(scope != null, 'NakedSliderTrack must be inside NakedSlider');
 
-    return KeyedSubtree(key: scope!.trackKey, child: child);
+    return _RailLayoutNotifier(
+      key: scope!.trackKey,
+      onGeometryChange: scope.onGeometryChange,
+      child: child,
+    );
   }
 }
 
 class _NakedSliderTrackScope extends InheritedWidget {
-  const _NakedSliderTrackScope({required this.trackKey, required super.child});
+  const _NakedSliderTrackScope({
+    required this.trackKey,
+    required this.onGeometryChange,
+    required super.child,
+  });
 
   final GlobalKey trackKey;
+  final VoidCallback onGeometryChange;
 
   @override
   bool updateShouldNotify(_NakedSliderTrackScope oldWidget) =>
@@ -341,7 +357,13 @@ bool _debugValidSliderValues(
   for (var index = 0; index < values.length; index++) {
     final value = values[index];
     if (!value.isFinite || value < min || value > max) return false;
-    if (index > 0 && value - values[index - 1] < minSpacing) return false;
+    if (index > 0 &&
+        (value < values[index - 1] ||
+            value - values[index - 1] < minSpacing - precisionErrorTolerance)) {
+      // A constrained request such as .7 - .1 can round just above .6.
+      // Accept floating-point spacing noise while keeping ordering strict.
+      return false;
+    }
   }
 
   return true;
@@ -370,6 +392,22 @@ class _NakedSliderState extends State<NakedSlider>
 
   MouseCursor get _cursor =>
       _isEnabled ? widget.mouseCursor : SystemMouseCursors.basic;
+
+  void _invalidateThumbGeometry() {
+    if (!mounted || widget.excludeSemantics) return;
+    final root = context.findRenderObject();
+    if (root == null || !root.attached) return;
+    void invalidate(RenderObject node) {
+      if (node is _RailThumbRender) {
+        node.markNeedsSemanticsUpdate();
+      } else if (node is! _RailLayoutRender) {
+        // The marker's decorative subtree cannot contain this slider's thumbs.
+        node.visitChildren(invalidate);
+      }
+    }
+
+    invalidate(root);
+  }
 
   @override
   void initState() {
@@ -405,6 +443,19 @@ class _NakedSliderState extends State<NakedSlider>
     }
 
     return false;
+  }
+
+  bool _hasCurrentFocusRequest(FocusNode node) {
+    if (!node.hasFocus) return false;
+    // Scope history changes as soon as requestFocus is called, even before
+    // FocusManager applies primaryFocus. A parent build may already have
+    // requested another control while the retiring thumb is still primary.
+    var child = node;
+    for (final scope in node.ancestors.whereType<FocusScopeNode>()) {
+      if (scope.focusedChild != child) return false;
+      child = scope;
+    }
+    return true;
   }
 
   void _replaceFocusNodes() {
@@ -443,16 +494,23 @@ class _NakedSliderState extends State<NakedSlider>
     final retiredNodes = oldOwned
         .where((node) => !_ownedFocusNodes.contains(node))
         .toList();
+    if (transferNode != null &&
+        _isEnabled &&
+        _hasCurrentFocusRequest(focusedNode!)) {
+      // FocusNode defers this until the replacement attaches during this
+      // rebuild. Later application requests must win, including requests that
+      // FocusManager has not applied yet when the frame ends.
+      transferNode.requestFocus();
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       for (final node in retiredNodes) {
         node.dispose();
       }
       if (!mounted) return;
-      if (transferNode != null &&
-          _effectiveFocusNodes.contains(transferNode) &&
-          _isEnabled) {
-        transferNode.requestFocus();
-      } else if (_focusedThumbIndices.isEmpty && isFocused) {
+      // Reconcile aggregate focus after Flutter applies the winning request,
+      // without reporting a transient blur while the replacement attaches.
+      FocusManager.instance.applyFocusChangesIfNeeded();
+      if (mounted && _focusedThumbIndices.isEmpty && isFocused) {
         updateFocusState(false, widget.onFocusChange);
       }
     });
@@ -514,13 +572,37 @@ class _NakedSliderState extends State<NakedSlider>
   }
 
   double _constrainThumb(int index, double value, List<double> sourceValues) {
-    final lower = index == 0
+    final current = sourceValues[index];
+    var lower = index == 0
         ? widget.min
-        : sourceValues[index - 1] + widget.minSpacing;
-    final upper = index == sourceValues.length - 1
+        : math.max(widget.min, sourceValues[index - 1] + widget.minSpacing);
+    var upper = index == sourceValues.length - 1
         ? widget.max
-        : sourceValues[index + 1] - widget.minSpacing;
+        : math.min(widget.max, sourceValues[index + 1] - widget.minSpacing);
+    // Normalize only spacing arithmetic residue, scaled to its operands.
+    // Four double-precision rounding units cover the add/subtract and compare;
+    // an absolute epsilon would erase real headroom on small domains. Only
+    // correct bounds that exclude the current value: nearby bounds on the
+    // other side still leave real headroom, even on large-offset domains. With
+    // zero spacing the neighbor bound is exact, so no normalization is needed.
+    double spacingResidue(double neighbor) => widget.minSpacing == 0
+        ? 0
+        : math.max(current.abs(), math.max(neighbor.abs(), widget.minSpacing)) *
+              _spacingResidueTolerance;
+    if (index > 0 &&
+        lower > current &&
+        (lower - current).abs() <= spacingResidue(sourceValues[index - 1])) {
+      lower = current;
+    }
+    if (index < sourceValues.length - 1 &&
+        upper < current &&
+        (upper - current).abs() <= spacingResidue(sourceValues[index + 1])) {
+      upper = current;
+    }
+    if (lower > upper) return current;
     final constrained = value.clamp(lower, upper);
+    // Do not snap a blocked, possibly off-grid controlled value into a request.
+    if (constrained == current) return current;
     final snapped = _snap(constrained);
 
     return snapped.clamp(lower, upper);
@@ -567,6 +649,8 @@ class _NakedSliderState extends State<NakedSlider>
     return widget.min + percentage.clamp(0.0, 1.0) * (widget.max - widget.min);
   }
 
+  ({double anchor, int first, int last})? _pendingThumbSelection;
+
   int _nearestThumbIndex(double value) {
     var nearestIndex = 0;
     var nearestDistance = double.infinity;
@@ -575,12 +659,32 @@ class _NakedSliderState extends State<NakedSlider>
       if (distance < nearestDistance) {
         nearestIndex = index;
         nearestDistance = distance;
-      } else if ((distance - nearestDistance).abs() < precisionErrorTolerance &&
+      } else if ((distance - nearestDistance).abs() /
+                  (widget.max - widget.min) <
+              precisionErrorTolerance &&
           index == _focusedThumbIndex) {
         nearestIndex = index;
       }
     }
 
+    // Equal values have stable identities. A position on either side selects
+    // the outer thumb that can open that side; an exact-center press waits for
+    // movement before locking the transaction's thumb.
+    final coincident = <int>[
+      for (var i = 0; i < _workingValues.length; i++)
+        if (_workingValues[i] == _workingValues[nearestIndex]) i,
+    ];
+    if (coincident.length > 1) {
+      final center = _workingValues[nearestIndex];
+      final offset = (value - center) / (widget.max - widget.min);
+      if (offset < -precisionErrorTolerance) return coincident.first;
+      if (offset > precisionErrorTolerance) return coincident.last;
+      _pendingThumbSelection = (
+        anchor: center,
+        first: coincident.first,
+        last: coincident.last,
+      );
+    }
     return nearestIndex;
   }
 
@@ -592,6 +696,7 @@ class _NakedSliderState extends State<NakedSlider>
     _workingValues = List<double>.of(widget.values);
     final pointerValue = _valueForPosition(localPosition, box);
     if (pointerValue == null) return;
+    _pendingThumbSelection = null;
     final thumbIndex = _nearestThumbIndex(pointerValue);
     _isDragging = true;
     _activeThumbIndex = thumbIndex;
@@ -605,19 +710,31 @@ class _NakedSliderState extends State<NakedSlider>
     _effectiveFocusNodes[thumbIndex].requestFocus();
     // Controlled values need not lie on the step grid. Grabbing their exact
     // painted center must not snap them before the pointer moves.
-    if ((pointerValue - _workingValues[thumbIndex]).abs() >
+    if ((pointerValue - _workingValues[thumbIndex]).abs() /
+            (widget.max - widget.min) >
         precisionErrorTolerance) {
       _emitValues(_replaceThumb(_workingValues, thumbIndex, pointerValue));
     }
   }
 
   void _updatePointerInteraction(Offset localPosition) {
-    final thumbIndex = _activeThumbIndex;
+    var thumbIndex = _activeThumbIndex;
     if (!_isEnabled || !_isDragging || thumbIndex == null) return;
     final box = context.findRenderObject() as RenderBox?;
     if (box == null || !box.hasSize) return;
     final value = _valueForPosition(localPosition, box);
     if (value == null) return;
+    final pending = _pendingThumbSelection;
+    if (pending != null) {
+      if ((value - pending.anchor).abs() / (widget.max - widget.min) <
+          precisionErrorTolerance) {
+        return;
+      }
+      thumbIndex = value < pending.anchor ? pending.first : pending.last;
+      _pendingThumbSelection = null;
+      _activeThumbIndex = thumbIndex;
+      _effectiveFocusNodes[thumbIndex].requestFocus();
+    }
     _emitValues(_replaceThumb(_workingValues, thumbIndex, value));
   }
 
@@ -627,6 +744,7 @@ class _NakedSliderState extends State<NakedSlider>
     final onDragChange = _pointerDragCallback;
     final onChangeEnd = _pointerEndCallback;
     _isDragging = false;
+    _pendingThumbSelection = null;
     _activeThumbIndex = null;
     _lastRequestedValues = null;
     _pointerStartValues = null;
@@ -797,8 +915,11 @@ class _NakedSliderState extends State<NakedSlider>
         ? Alignment(visualPercentage * 2 - 1, 0)
         : Alignment(0, visualPercentage * 2 - 1);
 
-    return Align(
+    return _RailThumbPosition(
       key: ObjectKey(focusNode),
+      trackKey: _trackKey,
+      percentage: visualPercentage,
+      axis: widget.orientation,
       alignment: alignment,
       child: Focus(
         focusNode: focusNode,
@@ -931,7 +1052,11 @@ class _NakedSliderState extends State<NakedSlider>
       ),
     );
 
-    result = _NakedSliderTrackScope(trackKey: _trackKey, child: result);
+    result = _NakedSliderTrackScope(
+      trackKey: _trackKey,
+      onGeometryChange: _invalidateThumbGeometry,
+      child: result,
+    );
     if (widget.excludeSemantics) result = ExcludeSemantics(child: result);
 
     return MouseRegion(
@@ -944,5 +1069,164 @@ class _NakedSliderState extends State<NakedSlider>
           : null,
       child: result,
     );
+  }
+}
+
+// The marker invalidates its known semantic siblings during layout, including
+// layouts contained by a RepaintBoundary. A position-only ancestor change can
+// reuse the marker's layout; painting its rail then invalidates semantics too.
+// Neither callback measures siblings or waits for a later frame.
+class _RailLayoutNotifier extends SingleChildRenderObjectWidget {
+  const _RailLayoutNotifier({
+    super.key,
+    required this.onGeometryChange,
+    required super.child,
+  });
+  final VoidCallback onGeometryChange;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RailLayoutRender(onGeometryChange);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    covariant _RailLayoutRender renderObject,
+  ) {
+    renderObject.onGeometryChange = onGeometryChange;
+  }
+}
+
+class _RailLayoutRender extends RenderProxyBox {
+  _RailLayoutRender(this.onGeometryChange);
+  VoidCallback onGeometryChange;
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    onGeometryChange();
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    onGeometryChange();
+    super.paint(context, offset);
+  }
+}
+
+// Keep the focus/semantic subtree in index order. Its transform reads current
+// rail geometry after layout, including during the semantics flush when this
+// sibling is not painted. Never read sibling sizes during performLayout.
+class _RailThumbPosition extends SingleChildRenderObjectWidget {
+  const _RailThumbPosition({
+    super.key,
+    required this.trackKey,
+    required this.percentage,
+    required this.axis,
+    required this.alignment,
+    required super.child,
+  });
+  final GlobalKey trackKey;
+  final double percentage;
+  final Axis axis;
+  final Alignment alignment;
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RailThumbRender(trackKey, percentage, axis, alignment);
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    covariant _RailThumbRender renderObject,
+  ) {
+    renderObject
+      ..trackKey = trackKey
+      ..percentage = percentage
+      ..axis = axis
+      ..alignment = alignment;
+    renderObject.markNeedsLayout();
+  }
+}
+
+class _RailThumbRender extends RenderShiftedBox {
+  _RailThumbRender(this.trackKey, this.percentage, this.axis, this.alignment)
+    : super(null);
+  GlobalKey trackKey;
+  double percentage;
+  Axis axis;
+  Alignment alignment;
+  Offset? _lastPaintedOffset;
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) => constraints.constrain(
+    Size(
+      constraints.hasBoundedWidth ? constraints.maxWidth : 48,
+      constraints.hasBoundedHeight ? constraints.maxHeight : 48,
+    ),
+  );
+
+  @override
+  void performLayout() {
+    size = computeDryLayout(constraints);
+    final thumbConstraints = const BoxConstraints.tightFor(
+      width: 48,
+      height: 48,
+    );
+    child!.layout(
+      thumbConstraints.enforce(constraints.loosen()),
+      parentUsesSize: true,
+    );
+    (child!.parentData! as BoxParentData).offset = alignment.alongOffset(
+      Offset(size.width - child!.size.width, size.height - child!.size.height),
+    );
+  }
+
+  void _updateOffset() {
+    if (!attached || !hasSize || child == null || !child!.hasSize) return;
+    final rail = trackKey.currentContext?.findRenderObject() as RenderBox?;
+    Offset center;
+    if (rail != null && rail.attached && rail.hasSize) {
+      final point = axis == Axis.horizontal
+          ? Offset(rail.size.width * percentage, rail.size.height / 2)
+          : Offset(rail.size.width / 2, rail.size.height * percentage);
+      center = globalToLocal(rail.localToGlobal(point));
+    } else {
+      center =
+          alignment.alongOffset(
+            Offset(
+              size.width - child!.size.width,
+              size.height - child!.size.height,
+            ),
+          ) +
+          child!.size.center(Offset.zero);
+    }
+    (child!.parentData! as BoxParentData).offset =
+        center - child!.size.center(Offset.zero);
+  }
+
+  @override
+  void applyPaintTransform(RenderBox child, Matrix4 transform) {
+    _updateOffset();
+    super.applyPaintTransform(child, transform);
+  }
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
+    _updateOffset();
+    return super.hitTestChildren(result, position: position);
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    _updateOffset();
+    final currentOffset = (child!.parentData! as BoxParentData).offset;
+    if (_lastPaintedOffset != currentOffset) {
+      // Padding can move a cached rail layer without invoking its layout or
+      // paint. The visible thumb still paints: invalidate cached semantics in
+      // this frame, while keeping invalidation out of applyPaintTransform
+      // (which is also called during the semantics flush).
+      _lastPaintedOffset = currentOffset;
+      markNeedsSemanticsUpdate();
+    }
+    super.paint(context, offset);
   }
 }
