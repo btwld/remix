@@ -4,6 +4,8 @@ import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 import 'package:widgetbook_vanilla/ui/ui.dart';
 
+import 'calendar_labels.dart';
+
 @widgetbook.UseCase(name: 'Reporting period', type: VanillaDateRangePicker)
 Widget buildVanillaDateRangePickerUseCase(BuildContext context) {
   final inWidgetbook = WidgetbookState.maybeOf(context) != null;
@@ -30,13 +32,13 @@ Widget buildVanillaDateRangePickerUseCase(BuildContext context) {
               lastDate: DateTime(2027),
               currentDate: DateTime(2026, 11, 6),
               enabled: enabled,
+              calendarLabels: calendarSceneLabels(rtl),
               firstDayOfWeek: DateTime.monday,
               semanticLabel: 'Reporting period',
               isDateUnavailable: (date) =>
                   date.year == 2026 && date.month == 11 && date.day == 18,
               onChanged: (next) => setState(() => value = next),
-              formatRange: (range) =>
-                  '${range.start.month}/${range.start.day} – ${range.end.month}/${range.end.day}',
+              formatRange: (range) => formatCalendarSceneRange(range, rtl: rtl),
             ),
           ),
         ),
@@ -44,3 +46,19 @@ Widget buildVanillaDateRangePickerUseCase(BuildContext context) {
     ),
   );
 }
+
+@widgetbook.UseCase(name: 'Long range at 240px', type: VanillaDateRangePicker)
+Widget buildVanillaDateRangePickerLongValue(BuildContext context) => Center(
+  child: SizedBox(
+    width: 240,
+    child: VanillaDateRangePicker(
+      value: CivilDateRange(
+        start: DateTime(2026, 11, 10),
+        end: DateTime(2027, 3, 24),
+      ),
+      firstDate: DateTime(2026),
+      lastDate: DateTime(2028),
+      onChanged: (_) {},
+    ),
+  ),
+);

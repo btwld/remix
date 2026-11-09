@@ -1,7 +1,10 @@
 import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 import 'package:widgetbook_vanilla/ui/ui.dart';
+
+import 'calendar_labels.dart';
 
 @widgetbook.UseCase(name: 'Appointment date', type: VanillaDatePicker)
 Widget buildVanillaDatePickerUseCase(BuildContext context) {
@@ -26,12 +29,13 @@ Widget buildVanillaDatePickerUseCase(BuildContext context) {
               lastDate: DateTime(2027),
               currentDate: DateTime(2026, 11, 6),
               enabled: enabled,
+              calendarLabels: calendarSceneLabels(rtl),
               firstDayOfWeek: DateTime.monday,
               semanticLabel: 'Appointment date',
               isDateUnavailable: (date) =>
                   date.year == 2026 && date.month == 11 && date.day == 18,
               onChanged: (next) => setState(() => value = next),
-              formatDate: (date) => '${date.month}/${date.day}/${date.year}',
+              formatDate: (date) => formatCalendarSceneDate(date, rtl: rtl),
             ),
           ),
         ),
@@ -39,3 +43,34 @@ Widget buildVanillaDatePickerUseCase(BuildContext context) {
     ),
   );
 }
+
+@widgetbook.UseCase(name: 'Bottom edge', type: VanillaDatePicker)
+Widget buildVanillaDatePickerBottomEdge(BuildContext context) =>
+    _edgeScene(Alignment.bottomCenter, OverlaySide.bottom);
+
+@widgetbook.UseCase(name: 'Left edge', type: VanillaDatePicker)
+Widget buildVanillaDatePickerLeftEdge(BuildContext context) =>
+    _edgeScene(Alignment.centerLeft, OverlaySide.right);
+
+@widgetbook.UseCase(name: 'Right edge', type: VanillaDatePicker)
+Widget buildVanillaDatePickerRightEdge(BuildContext context) =>
+    _edgeScene(Alignment.centerRight, OverlaySide.left);
+
+Widget _edgeScene(Alignment alignment, OverlaySide side) => Padding(
+  padding: const EdgeInsets.all(VanillaTokens.s4),
+  child: Align(
+    alignment: alignment,
+    child: VanillaDatePicker(
+      value: DateTime(2026, 11, 12),
+      firstDate: DateTime(2026),
+      lastDate: DateTime(2027),
+      onChanged: (_) {},
+      positioning: OverlayPositionConfig(
+        side: side,
+        sideOffset: VanillaTokens.s1,
+        collisionPadding: const EdgeInsets.all(VanillaTokens.s2),
+      ),
+      formatDate: formatCalendarSceneDate,
+    ),
+  ),
+);
