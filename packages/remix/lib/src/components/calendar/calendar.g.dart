@@ -11,6 +11,8 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
   StyleSpec<TextSpec> get heading;
   StyleSpec<TextSpec> get weekday;
   StyleSpec<CalendarDaySpec> get day;
+  double? get headerSpacing;
+  double? get weekdaySpacing;
 
   @override
   Type get type => CalendarSpec;
@@ -21,12 +23,16 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
     StyleSpec<TextSpec>? heading,
     StyleSpec<TextSpec>? weekday,
     StyleSpec<CalendarDaySpec>? day,
+    double? headerSpacing,
+    double? weekdaySpacing,
   }) {
     return CalendarSpec(
       container: container ?? this.container,
       heading: heading ?? this.heading,
       weekday: weekday ?? this.weekday,
       day: day ?? this.day,
+      headerSpacing: headerSpacing ?? this.headerSpacing,
+      weekdaySpacing: weekdaySpacing ?? this.weekdaySpacing,
     );
   }
 
@@ -37,11 +43,20 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
       heading: heading.lerp(other?.heading, t),
       weekday: weekday.lerp(other?.weekday, t),
       day: day.lerp(other?.day, t),
+      headerSpacing: MixOps.lerp(headerSpacing, other?.headerSpacing, t),
+      weekdaySpacing: MixOps.lerp(weekdaySpacing, other?.weekdaySpacing, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, heading, weekday, day];
+  List<Object?> get props => [
+    container,
+    heading,
+    weekday,
+    day,
+    headerSpacing,
+    weekdaySpacing,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -86,7 +101,9 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('heading', heading))
       ..add(DiagnosticsProperty('weekday', weekday))
-      ..add(DiagnosticsProperty('day', day));
+      ..add(DiagnosticsProperty('day', day))
+      ..add(DoubleProperty('headerSpacing', headerSpacing))
+      ..add(DoubleProperty('weekdaySpacing', weekdaySpacing));
   }
 }
 
@@ -194,25 +211,33 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
   final Prop<StyleSpec<TextSpec>>? $heading;
   final Prop<StyleSpec<TextSpec>>? $weekday;
   final Prop<StyleSpec<CalendarDaySpec>>? $day;
+  final Prop<double>? $headerSpacing;
+  final Prop<double>? $weekdaySpacing;
 
   const CalendarStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? heading,
     Prop<StyleSpec<TextSpec>>? weekday,
     Prop<StyleSpec<CalendarDaySpec>>? day,
+    Prop<double>? headerSpacing,
+    Prop<double>? weekdaySpacing,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $heading = heading,
        $weekday = weekday,
-       $day = day;
+       $day = day,
+       $headerSpacing = headerSpacing,
+       $weekdaySpacing = weekdaySpacing;
 
   CalendarStyler({
     BoxStyler? container,
     TextStyler? heading,
     TextStyler? weekday,
     CalendarDayStyler? day,
+    double? headerSpacing,
+    double? weekdaySpacing,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<CalendarSpec>>? variants,
@@ -221,6 +246,8 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
          heading: Prop.maybeMix(heading),
          weekday: Prop.maybeMix(weekday),
          day: Prop.maybeMix(day),
+         headerSpacing: Prop.maybe(headerSpacing),
+         weekdaySpacing: Prop.maybe(weekdaySpacing),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -234,6 +261,10 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
       CalendarStyler().weekday(value);
   factory CalendarStyler.day(CalendarDayStyler value) =>
       CalendarStyler().day(value);
+  factory CalendarStyler.headerSpacing(double value) =>
+      CalendarStyler().headerSpacing(value);
+  factory CalendarStyler.weekdaySpacing(double value) =>
+      CalendarStyler().weekdaySpacing(value);
   factory CalendarStyler.alignment(AlignmentGeometry value) =>
       CalendarStyler().alignment(value);
   factory CalendarStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -731,6 +762,8 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     'heading',
     'weekday',
     'day',
+    'headerSpacing',
+    'weekdaySpacing',
     'animation',
     'modifier',
     'variants',
@@ -754,6 +787,16 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
   /// Sets the day.
   CalendarStyler day(CalendarDayStyler value) {
     return merge(CalendarStyler(day: value));
+  }
+
+  /// Sets the headerSpacing.
+  CalendarStyler headerSpacing(double value) {
+    return merge(CalendarStyler(headerSpacing: value));
+  }
+
+  /// Sets the weekdaySpacing.
+  CalendarStyler weekdaySpacing(double value) {
+    return merge(CalendarStyler(weekdaySpacing: value));
   }
 
   /// Sets the animation configuration.
@@ -787,6 +830,8 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
       heading: MixOps.merge($heading, other?.$heading),
       weekday: MixOps.merge($weekday, other?.$weekday),
       day: MixOps.merge($day, other?.$day),
+      headerSpacing: MixOps.merge($headerSpacing, other?.$headerSpacing),
+      weekdaySpacing: MixOps.merge($weekdaySpacing, other?.$weekdaySpacing),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -801,6 +846,8 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
       heading: MixOps.resolve(context, $heading),
       weekday: MixOps.resolve(context, $weekday),
       day: MixOps.resolve(context, $day),
+      headerSpacing: MixOps.resolve(context, $headerSpacing),
+      weekdaySpacing: MixOps.resolve(context, $weekdaySpacing),
     );
 
     return StyleSpec(
@@ -817,7 +864,9 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('heading', $heading))
       ..add(DiagnosticsProperty('weekday', $weekday))
-      ..add(DiagnosticsProperty('day', $day));
+      ..add(DiagnosticsProperty('day', $day))
+      ..add(DiagnosticsProperty('headerSpacing', $headerSpacing))
+      ..add(DiagnosticsProperty('weekdaySpacing', $weekdaySpacing));
   }
 
   @override
@@ -826,6 +875,8 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     $heading,
     $weekday,
     $day,
+    $headerSpacing,
+    $weekdaySpacing,
     $animation,
     $modifier,
     $variants,

@@ -63,6 +63,35 @@ TextStyle? _renderedTextStyle(WidgetTester tester, String label) => tester
     .style;
 
 void main() {
+  testWidgets('header and weekday gaps preserve column-centred navigation', (
+    t,
+  ) async {
+    await t.pumpWidget(
+      _host(
+        _calendar(
+          style: CalendarStyler()
+              .headerSpacing(8)
+              .weekdaySpacing(4)
+              .day(CalendarDayStyler().minWidth(64).minHeight(64)),
+        ),
+      ),
+    );
+    final previous = find.byType(RemixIconButton).first;
+    final next = find.byType(RemixIconButton).last;
+    final first = find.text('4');
+    final last = find.text('10');
+    expect(t.getCenter(previous).dx, closeTo(t.getCenter(first).dx, .01));
+    expect(t.getCenter(next).dx, closeTo(t.getCenter(last).dx, .01));
+    final weekday = find.text('Su');
+    expect(t.getTopLeft(weekday).dy - t.getBottomLeft(previous).dy, 8);
+    final day = find.ancestor(
+      of: find.text('1'),
+      matching: find.byType(NakedCalendarDay),
+    );
+    expect(t.getTopLeft(day).dy - t.getBottomLeft(weekday).dy, 4);
+    expect(t.takeException(), isNull);
+  });
+
   testWidgets('day effects paint without changing layout', (tester) async {
     final style = CalendarStyler().day(
       CalendarDayStyler().onFocusVisible(

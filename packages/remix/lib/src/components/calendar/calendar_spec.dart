@@ -15,11 +15,21 @@ class CalendarSpec with _$CalendarSpec {
   @override
   final StyleSpec<CalendarDaySpec> day;
 
+  /// Gap below the header, before the weekday labels.
+  @override
+  final double? headerSpacing;
+
+  /// Gap below the weekday labels, before the first week.
+  @override
+  final double? weekdaySpacing;
+
   const CalendarSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? heading,
     StyleSpec<TextSpec>? weekday,
     StyleSpec<CalendarDaySpec>? day,
+    this.headerSpacing,
+    this.weekdaySpacing,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        heading = heading ?? const StyleSpec(spec: TextSpec()),
        weekday = weekday ?? const StyleSpec(spec: TextSpec()),

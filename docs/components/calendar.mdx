@@ -276,7 +276,9 @@ Optional. A raw resolved spec that bypasses `style` and inherited styles.
 
 `CalendarStyler` styles the surface like a box (`padding`, `color`,
 `borderRadius`, `constraints`, ...) and its parts through `heading(TextStyler)`,
-`weekday(TextStyler)` and `day(CalendarDayStyler)`.
+`weekday(TextStyler)` and `day(CalendarDayStyler)`. Use `headerSpacing` for the
+gap below the header and `weekdaySpacing` for the gap before the first week.
+Both default to zero; navigation centres follow the outer day columns.
 
 `CalendarDayStyler` styles a day like a box, its number through
 `label(TextStyler)`, and its states through `onSelected`, `onHovered`,

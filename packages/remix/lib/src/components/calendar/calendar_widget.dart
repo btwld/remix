@@ -209,14 +209,16 @@ class RemixCalendar extends StatelessWidget {
       label: labels.monthYear(date),
       child: Row(
         children: [
-          _navigation(state, previous: true),
+          Expanded(child: _navigation(state, previous: true)),
           Expanded(
+            flex: 5,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
                   flex: 3,
                   child: RemixSelect<int>(
+                    positioning: const OverlayPositionConfig(sideOffset: 4),
                     trigger: RemixSelectTrigger(
                       placeholder: labels.chooseMonth,
                     ),
@@ -251,6 +253,7 @@ class RemixCalendar extends StatelessWidget {
                 Flexible(
                   flex: 2,
                   child: RemixSelect<int>(
+                    positioning: const OverlayPositionConfig(sideOffset: 4),
                     trigger: RemixSelectTrigger(placeholder: labels.chooseYear),
                     semanticLabel: labels.chooseYear,
                     selectedValue: date.year,
@@ -279,7 +282,7 @@ class RemixCalendar extends StatelessWidget {
               ],
             ),
           ),
-          _navigation(state, previous: false),
+          Expanded(child: _navigation(state, previous: false)),
         ],
       ),
     );
@@ -347,6 +350,7 @@ class RemixCalendar extends StatelessWidget {
                         children: [
                           headerBuilder?.call(context, state) ??
                               _header(context, state, spec),
+                          SizedBox(height: spec.headerSpacing ?? 0),
                           Row(
                             children: [
                               for (var i = 0; i < 7; i++)
@@ -364,6 +368,7 @@ class RemixCalendar extends StatelessWidget {
                                 ),
                             ],
                           ),
+                          SizedBox(height: spec.weekdaySpacing ?? 0),
                           for (final week in state.weeks)
                             Row(
                               children: [
