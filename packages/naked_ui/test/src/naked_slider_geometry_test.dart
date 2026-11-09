@@ -328,6 +328,75 @@ void main() {
     },
   );
 
+  for (final axis in Axis.values) {
+    for (final marked in [false, true]) {
+      for (final extent in [24.0, 48.0, 64.0]) {
+        testWidgets(
+          '$axis marked=$marked extent=$extent keeps thumb semantics within slider bounds',
+          (tester) async {
+            final handle = tester.ensureSemantics();
+            try {
+              tester.view.devicePixelRatio = 1;
+              addTearDown(tester.view.resetDevicePixelRatio);
+              final horizontal = axis == Axis.horizontal;
+              final labels = ['Lower', 'Middle', 'Upper'];
+              // Reserve half a semantic target at each marked rail endpoint.
+              final rail = Padding(
+                padding: horizontal
+                    ? const EdgeInsets.symmetric(horizontal: 24)
+                    : const EdgeInsets.symmetric(vertical: 24),
+                child: const NakedSliderTrack(child: SizedBox.expand()),
+              );
+              await tester.pumpWidget(
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Center(
+                    child: NakedSlider(
+                      values: const [0, 50, 100],
+                      orientation: axis,
+                      semanticLabels: labels,
+                      onChanged: (_) {},
+                      child: SizedBox(
+                        width: horizontal ? 240 : extent,
+                        height: horizontal ? extent : 240,
+                        child: marked ? rail : null,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+
+              final bounds = tester.getRect(find.byType(NakedSlider));
+              for (final label in labels) {
+                final node = tester.getSemantics(find.bySemanticsLabel(label));
+                var transform = Matrix4.identity();
+                for (var current = node; ;) {
+                  if (current.transform != null) {
+                    transform = current.transform! * transform;
+                  }
+                  if (current.parent == null) break;
+                  current = current.parent!;
+                }
+                final rect = MatrixUtils.transformRect(transform, node.rect);
+                expect(rect.left, greaterThanOrEqualTo(bounds.left));
+                expect(rect.top, greaterThanOrEqualTo(bounds.top));
+                expect(rect.right, lessThanOrEqualTo(bounds.right));
+                expect(rect.bottom, lessThanOrEqualTo(bounds.bottom));
+                final crossExtent = extent.clamp(0.0, 48.0);
+                expect(
+                  rect.size,
+                  horizontal ? Size(48, crossExtent) : Size(crossExtent, 48),
+                );
+              }
+            } finally {
+              handle.dispose();
+            }
+          },
+        );
+      }
+    }
+  }
+
   testWidgets(
     'unmarked small sliders retain their constrained semantic bounds',
     (tester) async {

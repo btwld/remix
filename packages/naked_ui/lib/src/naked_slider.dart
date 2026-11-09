@@ -1172,9 +1172,7 @@ class _RailThumbRender extends RenderShiftedBox {
       height: 48,
     );
     child!.layout(
-      trackKey.currentContext == null
-          ? thumbConstraints.enforce(constraints.loosen())
-          : thumbConstraints,
+      thumbConstraints.enforce(constraints.loosen()),
       parentUsesSize: true,
     );
     (child!.parentData! as BoxParentData).offset = alignment.alongOffset(
