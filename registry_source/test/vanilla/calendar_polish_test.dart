@@ -14,6 +14,38 @@ double contrast(Color a, Color b) {
 
 void main() {
   for (final theme in vanillaThemes) {
+    testWidgets(
+      '${theme.name} bounded selectors retain a visible scroll thumb',
+      (t) async {
+        for (final label in ['Choose month', 'Choose year']) {
+          await t.pumpWidget(
+            calendarHost(
+              VanillaCalendar(
+                value: DateTime(2026, 11, 12),
+                firstDate: DateTime(1920),
+                lastDate: DateTime(2126),
+                onChanged: (_) {},
+              ),
+              theme.data,
+            ),
+          );
+          await t.tap(find.bySemanticsLabel(label));
+          await t.pumpAndSettle();
+          expect(
+            find.byWidgetPredicate(
+              (w) =>
+                  w is RawScrollbar &&
+                  w.thumbVisibility == true &&
+                  w.thickness == VanillaTokens.s1,
+            ),
+            findsWidgets,
+          );
+          await t.sendKeyEvent(LogicalKeyboardKey.escape);
+          await t.pumpAndSettle();
+          await t.pumpWidget(const SizedBox());
+        }
+      },
+    );
     testWidgets('${theme.name} draft hierarchy and separated rows', (t) async {
       await t.pumpWidget(calendarHost(rangeCalendar(), theme.data));
       expect(

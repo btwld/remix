@@ -293,6 +293,7 @@ class PlaygroundRangeCalendar extends StatelessWidget {
     ),
     selectorStyle: playgroundSelectStyle(
       style: SelectStyler()
+          .content(playgroundCalendarSelectorContentStyle())
           .trigger(
             SelectTriggerStyler()
                 .indicator(

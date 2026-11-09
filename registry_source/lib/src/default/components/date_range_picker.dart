@@ -246,6 +246,7 @@ class VanillaDateRangePicker extends StatelessWidget {
         ),
         selectorStyle: vanillaSelectStyle(
           style: SelectStyler()
+              .content(vanillaCalendarSelectorContentStyle())
               .trigger(
                 SelectTriggerStyler()
                     .indicator(

@@ -304,6 +304,7 @@ class VanillaCalendar extends StatelessWidget {
     ),
     selectorStyle: vanillaSelectStyle(
       style: SelectStyler()
+          .content(vanillaCalendarSelectorContentStyle())
           .trigger(
             SelectTriggerStyler()
                 .indicator(
@@ -369,3 +370,51 @@ final _quietSelected = ContextToken<Color>((context) {
 final _quietSingle = vanillaTint(VanillaTokens.primary, .12, dark: .2);
 final _quietCap = vanillaTint(VanillaTokens.primary, .09, dark: .16);
 final _quietMiddle = vanillaTint(VanillaTokens.primary, .07, dark: .12);
+
+/// Persistent overflow cue for the calendar's bounded selector panels.
+SelectContentStyler vanillaCalendarSelectorContentStyle() =>
+    SelectContentStyler().wrap(
+      WidgetModifierConfig.modifier(const _CalendarScrollCueMix()),
+    );
+
+final class _CalendarScrollCueMix extends ModifierMix<_CalendarScrollCue> {
+  const _CalendarScrollCueMix();
+  @override
+  _CalendarScrollCue resolve(BuildContext context) =>
+      const _CalendarScrollCue();
+  @override
+  _CalendarScrollCueMix merge(_CalendarScrollCueMix? other) => other ?? this;
+  @override
+  List<Object?> get props => const [];
+}
+
+final class _CalendarScrollCue extends WidgetModifier<_CalendarScrollCue> {
+  const _CalendarScrollCue();
+  @override
+  Widget build(Widget child) => ScrollConfiguration(
+    behavior: const _CalendarScrollBehavior(),
+    child: child,
+  );
+  @override
+  _CalendarScrollCue copyWith() => this;
+  @override
+  _CalendarScrollCue lerp(_CalendarScrollCue? other, double t) => this;
+  @override
+  List<Object?> get props => const [];
+}
+
+class _CalendarScrollBehavior extends ScrollBehavior {
+  const _CalendarScrollBehavior();
+  @override
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) => RawScrollbar(
+    controller: details.controller,
+    thumbVisibility: true,
+    thumbColor: VanillaTokens.mutedForeground.resolve(context),
+    thickness: VanillaTokens.s1,
+    child: child,
+  );
+}
