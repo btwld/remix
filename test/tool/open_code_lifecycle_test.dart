@@ -73,7 +73,8 @@ void main() {
         expect(await run, outcome == 'failure' ? 'original failure' : null);
       }
       expect(output.existsSync(), isTrue);
-      expect(log.toString(), contains(output.path));
+      expect(log.toString().split(output.path), hasLength(2));
+      log.clear();
     }
   });
 
@@ -130,6 +131,7 @@ void main() {
     'sweep reports unmarked, kept, malformed and linked directories',
     () async {
       final legacy = sandbox.createTempSync('remix_open_code_');
+      final otherLegacy = sandbox.createTempSync('remix_open_code_');
       final malformed = sandbox.createTempSync('remix_open_code_');
       File('${malformed.path}/$openCodeOwnerMarker').writeAsStringSync('{}');
       late Directory kept;
@@ -142,11 +144,35 @@ void main() {
       await lifecycle().sweep(
         now: DateTime.now().add(const Duration(hours: 1)),
       );
-      for (final directory in [legacy, malformed, kept]) {
+      for (final directory in [malformed, kept]) {
         expect(directory.existsSync(), isTrue);
         expect(log.toString(), contains(directory.path));
       }
+      for (final directory in [legacy, otherLegacy]) {
+        expect(directory.existsSync(), isTrue);
+        expect(log.toString(), isNot(contains(directory.path)));
+      }
+      expect(
+        log.toString(),
+        contains(
+          'Left 2 older remix_open_code_* directories without an owner marker '
+          'in ${sandbox.path}; remove them manually once no older checker is running.',
+        ),
+      );
       if (!Platform.isWindows) expect(link.existsSync(), isTrue);
+    },
+  );
+
+  test(
+    'a failed sweep listing warns once and allows the check to continue',
+    () async {
+      final run = lifecycle();
+      sandbox.deleteSync();
+      await run.sweep();
+      expect(log.toString().trim().split('\n'), hasLength(1));
+      expect(log.toString(), contains('Could not sweep temporary output'));
+      sandbox.createSync();
+      expect(await run.run<String>((_) async => null), isNull);
     },
   );
 
@@ -162,6 +188,7 @@ void main() {
       isTrue,
       reason: 'exclusive lock is held by another OS process',
     );
+    expect(log.toString(), contains('Leaving $path: live owner.'));
     owner.process.kill(ProcessSignal.sigkill);
     await owner.process.exitCode;
     await lifecycle().sweep();
@@ -170,6 +197,7 @@ void main() {
       isTrue,
       reason: 'recent output is not reclaimed',
     );
+    expect(log.toString(), contains('Leaving $path: recently active.'));
     await lifecycle().sweep(now: future);
     expect(abandoned.existsSync(), isFalse);
   });
@@ -239,6 +267,82 @@ void main() {
   }
 
   test(
+    'SIGKILL rechecks descendant membership after the grace period',
+    () async {
+      final bin = Directory('${sandbox.path}/bin')..createSync();
+      final seen = File('${sandbox.path}/ps_seen');
+      final excluded = File('${sandbox.path}/ps_excluded');
+      final ps = File('${bin.path}/ps')
+        ..writeAsStringSync(r'''#!/bin/sh
+if [ -e "$OPEN_CODE_PS_SEEN" ]; then
+  /bin/ps -e -o pid=,ppid= | /usr/bin/awk -v excluded="$(/bin/cat "$OPEN_CODE_PS_EXCLUDED")" '$1 != excluded'
+else
+  /usr/bin/touch "$OPEN_CODE_PS_SEEN"
+  /bin/ps -e -o pid=,ppid=
+fi
+''');
+      expect((await Process.run('chmod', ['+x', ps.path])).exitCode, 0);
+      final fixture = await _startFixture(
+        sandbox,
+        'wait',
+        environment: {
+          'PATH': '${bin.path}:${Platform.environment['PATH']}',
+          'OPEN_CODE_PS_SEEN': seen.path,
+          'OPEN_CODE_PS_EXCLUDED': excluded.path,
+        },
+      );
+      final ready = jsonDecode(await fixture.ready) as Map;
+      final child = ready['child'] as int;
+      final grandchild = ready['grandchild'] as int;
+      addTearDown(() {
+        Process.killPid(child, ProcessSignal.sigkill);
+        Process.killPid(grandchild, ProcessSignal.sigkill);
+      });
+      // The second snapshot models a PID that no longer belongs to the tree.
+      excluded.writeAsStringSync('$grandchild');
+      fixture.process.kill(ProcessSignal.sigint);
+      expect(
+        await fixture.process.exitCode.timeout(const Duration(seconds: 15)),
+        130,
+      );
+      expect(seen.existsSync(), isTrue);
+      expect(await _alive(child), isFalse);
+      expect(await _alive(grandchild), isTrue);
+    },
+    skip: Platform.isWindows ? 'POSIX process-table fixture' : false,
+  );
+
+  for (final first in [ProcessSignal.sigint, ProcessSignal.sigterm]) {
+    test(
+      'a second signal exits immediately with ${first.name} status',
+      () async {
+        final fixture = await _startFixture(sandbox, 'wait');
+        final ready = jsonDecode(await fixture.ready) as Map;
+        final child = ready['child'] as int;
+        final grandchild = ready['grandchild'] as int;
+        addTearDown(() {
+          Process.killPid(child, ProcessSignal.sigkill);
+          Process.killPid(grandchild, ProcessSignal.sigkill);
+        });
+        fixture.process.kill(first);
+        await fixture.cancelling.timeout(const Duration(seconds: 5));
+        fixture.process.kill(
+          first == ProcessSignal.sigint
+              ? ProcessSignal.sigterm
+              : ProcessSignal.sigint,
+        );
+        expect(
+          await fixture.process.exitCode.timeout(const Duration(seconds: 1)),
+          first == ProcessSignal.sigint ? 130 : 143,
+        );
+        expect(await _alive(child), isFalse);
+        expect(await _alive(grandchild), isFalse);
+      },
+      skip: Platform.isWindows ? 'POSIX signal fixture' : false,
+    );
+  }
+
+  test(
     'captured commands retain their exit status and both output streams',
     () async {
       final processes = OpenCodeProcesses();
@@ -302,14 +406,26 @@ void main() {
   );
 }
 
-Future<({Process process, Future<String> ready, Future<String> output})>
-_startFixture(Directory root, String mode, {bool keep = false}) async {
+Future<
+  ({
+    Process process,
+    Future<String> ready,
+    Future<void> cancelling,
+    Future<String> output,
+  })
+>
+_startFixture(
+  Directory root,
+  String mode, {
+  bool keep = false,
+  Map<String, String>? environment,
+}) async {
   final process = await Process.start(Platform.resolvedExecutable, [
     'test/tool/fixtures/open_code_lifecycle_fixture.dart',
     root.path,
     mode,
     if (keep) '--keep',
-  ]);
+  ], environment: environment);
   final errors = process.stderr.transform(utf8.decoder).join();
   addTearDown(() async {
     process.kill(ProcessSignal.sigkill);
@@ -317,11 +433,15 @@ _startFixture(Directory root, String mode, {bool keep = false}) async {
     expect(await errors, isEmpty);
   });
   final ready = Completer<String>();
+  final cancelling = Completer<void>();
   final output = process.stdout
       .transform(utf8.decoder)
       .transform(const LineSplitter())
       .map((line) {
         if (!ready.isCompleted) ready.complete(line);
+        if (line.startsWith('Cancelling ') && !cancelling.isCompleted) {
+          cancelling.complete();
+        }
         return line;
       })
       .join('\n');
@@ -331,7 +451,12 @@ _startFixture(Directory root, String mode, {bool keep = false}) async {
         ready.completeError(StateError('Fixture exited before becoming ready'));
     }),
   );
-  return (process: process, ready: ready.future, output: output);
+  return (
+    process: process,
+    ready: ready.future,
+    cancelling: cancelling.future,
+    output: output,
+  );
 }
 
 Future<bool> _alive(int pid) async {

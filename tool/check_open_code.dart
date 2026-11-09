@@ -33,7 +33,10 @@ import '../packages/remix_cli/lib/src/icon_registry.dart';
 import 'compile_registry_consumer.dart';
 import 'open_code_lifecycle.dart';
 
-final _processes = OpenCodeProcesses();
+var _lifecycle = OpenCodeLifecycle(
+  repositoryRoot: Directory.current.absolute,
+  keep: false,
+);
 
 const _fixtureAppFiles = <String>[
   'pubspec.yaml',
@@ -731,8 +734,8 @@ Future<void> main(List<String> arguments) async {
       '[--icon-library remix|rounded|lucide] '
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
       '[--keep]\n'
-      'Normal runs clean up after success, failure and handled cancellation.\n'
-      'Add --keep to inspect output or run the gallery; its path is printed.',
+      'Runs clean up after success, failure and handled cancellation; '
+      'add --keep to retain output and print its path.',
     );
     exitCode = 64;
     return;
@@ -749,14 +752,13 @@ Future<void> main(List<String> arguments) async {
   }
 
   final repositoryRoot = Directory.current.absolute;
-  final lifecycle = OpenCodeLifecycle(
+  _lifecycle = OpenCodeLifecycle(
     repositoryRoot: repositoryRoot,
     keep: parsed.keep,
-    processes: _processes,
   );
-  lifecycle.watchSignals();
+  _lifecycle.watchSignals();
   try {
-    await lifecycle.sweep();
+    await _lifecycle.sweep();
     final ref = publishedRegistryRef(
       hostedCli: parsed.hostedCli,
       environment: Platform.environment,
@@ -777,7 +779,6 @@ Future<void> main(List<String> arguments) async {
     );
     final failure = await _run(
       repositoryRoot,
-      lifecycle: lifecycle,
       keep: parsed.keep,
       preset: _presetByName(parsed.preset).forIcons(
         icons,
@@ -792,18 +793,17 @@ Future<void> main(List<String> arguments) async {
     );
     if (failure != null) {
       stderr.writeln('open-code check failed: ${failure.message}');
-      exitCode = _processes.cancellationExitCode ?? failure.exitCode;
+      exitCode = _lifecycle.processes.cancellationExitCode ?? failure.exitCode;
     }
   } on OpenCodeCancelled {
-    exitCode = _processes.cancellationExitCode!;
+    exitCode = _lifecycle.processes.cancellationExitCode!;
   } finally {
-    await lifecycle.close();
+    await _lifecycle.close();
   }
 }
 
 Future<_Failure?> _run(
   Directory repositoryRoot, {
-  required OpenCodeLifecycle lifecycle,
   required bool keep,
   required _PresetContract preset,
   required RemixSource source,
@@ -839,7 +839,7 @@ Future<_Failure?> _run(
   late Directory app;
   _Failure? failure;
   try {
-    failure = await lifecycle.run<_Failure>((parent) async {
+    failure = await _lifecycle.run<_Failure>((parent) async {
       app = Directory('${parent.path}/app');
       return _checkInTemporaryApp(
         sdk: sdk,
@@ -860,15 +860,10 @@ Future<_Failure?> _run(
     failure = _Failure('unexpected exception: $error\n$stackTrace');
   }
   if (failure != null) return failure;
-  if (lifecycle.cleanupProblem case final problem?) return _Failure(problem);
-  _processes.throwIfCancelled();
+  if (_lifecycle.cleanupProblem case final problem?) return _Failure(problem);
+  _lifecycle.processes.throwIfCancelled();
 
   if (keep) {
-    stdout
-      ..writeln('')
-      ..writeln('Kept the generated application at:')
-      ..writeln('  ${app.path}')
-      ..writeln('');
     if (source != RemixSource.hosted) {
       stdout
         ..writeln('It has a temporary checkout override for Remix. Delete')
@@ -910,7 +905,7 @@ Future<_Failure?> _checkInTemporaryApp({
       dart: sdk.dart,
       repositoryRoot: repositoryRoot,
       outputDirectory: app.parent,
-      processes: _processes,
+      processes: _lifecycle.processes,
       environment: environment,
     );
     environment['REMIX_REGISTRY_CONSUMER_CLI'] = snapshot.path;
@@ -1389,7 +1384,7 @@ _Failure? _applyFocusedFixture({
     final source = File('${fixtureRoot.path}/focused/${entry.key}');
     if (!source.existsSync()) {
       return _Failure(
-        'open_code/${fixtureRoot.path.split('/').last}/focused/'
+        'open_code/${basename(fixtureRoot.path)}/focused/'
         '${entry.key} is missing',
       );
     }
@@ -1528,7 +1523,7 @@ Future<_Failure?> _checkIndependentItems({
     limit: jobs,
     out: stdout,
     work: checkItem,
-    isCancelled: () => _processes.cancelled,
+    isCancelled: () => _lifecycle.processes.cancelled,
   );
 }
 
@@ -1691,7 +1686,7 @@ Future<Object> _resolveToolchain(Directory root, String pinned) async {
   for (final candidate in candidates) {
     final ProcessResult result;
     try {
-      result = await _processes.run(candidate.first, [
+      result = await _lifecycle.processes.run(candidate.first, [
         ...candidate.skip(1),
         '--version',
         '--machine',
@@ -2114,7 +2109,7 @@ _Failure? _verifyCheckoutPackages({
     final directory = Directory(entry.value);
     if (!directory.existsSync()) continue;
     final resolved = directory.resolveSymbolicLinksSync();
-    if (!_isWithin(resolved, repository) && resolved != repository) continue;
+    if (!isWithin(resolved, repository) && resolved != repository) continue;
 
     final expectedDirectory = expected[entry.key];
     if (expectedDirectory == null) {
@@ -2196,9 +2191,6 @@ bool _isHostedCachePath(String path) {
   return path.contains('${separator}hosted$separator');
 }
 
-bool _isWithin(String path, String parent) =>
-    path.startsWith(parent.endsWith('/') ? parent : '$parent/');
-
 /// Runs a process, streaming its output to this process' stdio.
 ///
 /// Concurrent callers pass a [log] instead: inherited stdio from several
@@ -2221,7 +2213,7 @@ Future<_Failure?> _runProcess(
   (log ?? stdout).writeln('\$ $executable ${arguments.join(' ')}');
   final Process process;
   try {
-    process = await _processes.start(
+    process = await _lifecycle.processes.start(
       executable,
       arguments,
       workingDirectory: workingDirectory,
@@ -2233,9 +2225,7 @@ Future<_Failure?> _runProcess(
   } on ProcessException catch (error) {
     return _Failure('could not start `$executable`: ${error.message}');
   }
-  // A process that fills a pipe nobody reads never exits, and one that reads
-  // stdin never would, so stdin is closed and both pipes are drained alongside
-  // the exit code.
+  // Close stdin and drain both pipes to prevent child-process deadlocks.
   const decoder = Utf8Decoder(allowMalformed: true);
   final drained = <Future<Object?>>[
     if (log != null) ...[
@@ -2246,7 +2236,7 @@ Future<_Failure?> _runProcess(
   ];
   final code = await process.exitCode;
   await Future.wait(drained);
-  _processes.throwIfCancelled();
+  _lifecycle.processes.throwIfCancelled();
   if (code == 0) return null;
   return _Failure('`$executable ${arguments.join(' ')}` exited $code');
 }

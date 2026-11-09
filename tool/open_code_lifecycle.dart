@@ -85,41 +85,19 @@ final class OpenCodeProcesses {
   Future<void> get stopped => _stopping ?? Future.value();
 
   Future<void> _stop() async {
-    // A signal can arrive while Process.start is still resolving. No more
-    // starts are allowed, and these must be registered before taking a snapshot.
+    // Register pending starts before inspecting the process tree.
     await Future.wait([
       for (final pending in _starting.toList())
         pending.then<void>((_) {}, onError: (Object _) {}),
     ]);
     final running = _running.toList();
     if (running.isEmpty) return;
-    final descendants = <int>{};
     Object? inspectionProblem;
     try {
       if (!Platform.isWindows) {
-        // The CLI and Flutter can themselves start commands. Snapshot their PID
-        // descendants before signalling parents, without process groups or workers.
-        final table = await Process.run('ps', ['-e', '-o', 'pid=,ppid=']);
-        if (table.exitCode != 0)
-          throw StateError(
-            'Could not inspect child processes: ${table.stderr}',
-          );
-        final parents = <int, int>{};
-        for (final line in (table.stdout as String).split('\n')) {
-          final fields = line.trim().split(RegExp(r'\s+'));
-          if (fields.length == 2)
-            parents[int.parse(fields[0])] = int.parse(fields[1]);
-        }
-        var ancestors = running.map((process) => process.pid).toSet();
-        while (ancestors.isNotEmpty) {
-          ancestors = {
-            for (final entry in parents.entries)
-              if (ancestors.contains(entry.value) &&
-                  !descendants.contains(entry.key))
-                entry.key,
-          };
-          descendants.addAll(ancestors);
-        }
+        final descendants = _descendants(
+          await Process.run('ps', ['-e', '-o', 'pid=,ppid=']),
+        );
         for (final child in descendants.toList().reversed) {
           Process.killPid(child, ProcessSignal.sigterm);
         }
@@ -134,11 +112,19 @@ final class OpenCodeProcesses {
     for (final process in running) {
       process.kill(ProcessSignal.sigterm);
     }
-    // Descendants may outlive their immediate parent, so give the whole tree
-    // the grace period even if all tracked handles have already exited.
+    // Allow descendants the grace period even if tracked handles have exited.
     await Future<void>.delayed(const Duration(seconds: 2));
-    for (final child in descendants) {
-      Process.killPid(child, ProcessSignal.sigkill);
+    try {
+      if (!Platform.isWindows && _running.isNotEmpty) {
+        final descendants = _descendants(
+          await Process.run('ps', ['-e', '-o', 'pid=,ppid=']),
+        );
+        for (final child in descendants) {
+          Process.killPid(child, ProcessSignal.sigkill);
+        }
+      }
+    } on Object catch (error) {
+      inspectionProblem ??= error;
     }
     for (final process in running) {
       if (_running.contains(process)) process.kill(ProcessSignal.sigkill);
@@ -147,6 +133,49 @@ final class OpenCodeProcesses {
       running.map((process) => process.exitCode),
     ).timeout(const Duration(seconds: 2), onTimeout: () => <int>[]);
     if (inspectionProblem != null) throw inspectionProblem;
+  }
+
+  void forceKill() {
+    try {
+      if (!Platform.isWindows && _running.isNotEmpty) {
+        final descendants = _descendants(
+          Process.runSync('ps', ['-e', '-o', 'pid=,ppid=']),
+        );
+        for (final child in descendants) {
+          Process.killPid(child, ProcessSignal.sigkill);
+        }
+      }
+    } on Object {
+      // Process inspection must not prevent the second signal from exiting.
+    }
+    for (final process in _running.toList()) {
+      process.kill(ProcessSignal.sigkill);
+    }
+  }
+
+  Set<int> _descendants(ProcessResult table) {
+    if (table.exitCode != 0) {
+      throw StateError('Could not inspect child processes: ${table.stderr}');
+    }
+    final parents = <int, int>{};
+    for (final line in (table.stdout as String).split('\n')) {
+      final fields = line.trim().split(RegExp(r'\s+'));
+      if (fields.length == 2) {
+        parents[int.parse(fields[0])] = int.parse(fields[1]);
+      }
+    }
+    final descendants = <int>{};
+    var ancestors = _running.map((process) => process.pid).toSet();
+    while (ancestors.isNotEmpty) {
+      ancestors = {
+        for (final entry in parents.entries)
+          if (ancestors.contains(entry.value) &&
+              !descendants.contains(entry.key))
+            entry.key,
+      };
+      descendants.addAll(ancestors);
+    }
+    return descendants;
   }
 }
 
@@ -188,12 +217,14 @@ final class OpenCodeLifecycle {
     ]) {
       _signals.add(
         signal.watch().listen((signal) async {
-          if (processes.cancelled) return;
+          if (processes.cancelled) {
+            processes.forceKill();
+            exit(processes.cancellationExitCode!);
+          }
           err.writeln('Cancelling open-code check (${signal.name}).');
           try {
             await processes.cancel(signal);
-            // Let command pipes drain and runPooled finish its ordered logs.
-            // Non-process I/O must not prevent a handled signal from exiting.
+            // Bound pipe draining so non-process I/O cannot delay cancellation.
             await _workSettled?.future.timeout(
               const Duration(seconds: 2),
               onTimeout: () {},
@@ -205,8 +236,6 @@ final class OpenCodeLifecycle {
             _finish();
             await stdout.flush();
             await stderr.flush();
-            // Cancellation also interrupts outstanding non-process I/O. Retention
-            // and child shutdown are complete before this deliberate signal exit.
             exit(processes.cancellationExitCode!);
           }
         }),
@@ -278,28 +307,34 @@ final class OpenCodeLifecycle {
     }
   }
 
-  /// Only direct children with a valid, non-kept owner marker are candidates.
-  /// Lock files are never opened during marker reads: closing another handle
-  /// to a locked file would release this process's POSIX advisory lock.
+  /// Reclaims inactive direct children with a valid, non-kept owner marker.
   Future<void> sweep({DateTime? now}) async {
     final cutoff = (now ?? DateTime.now()).subtract(_quietPeriod);
-    for (final entity in temporaryRoot.listSync(followLinks: false)) {
-      if (!_basename(entity.path).startsWith(_prefix)) continue;
+    final List<FileSystemEntity> entries;
+    try {
+      entries = temporaryRoot.listSync(followLinks: false);
+    } on FileSystemException catch (error) {
+      err.writeln(
+        'Could not sweep temporary output in ${temporaryRoot.path}: $error',
+      );
+      return;
+    }
+    var unmarked = 0;
+    for (final entity in entries) {
+      if (!basename(entity.path).startsWith(_prefix)) continue;
       RandomAccessFile? lock;
       try {
         if (entity is! Directory) {
           out.writeln('Leaving ${entity.path}: not a regular directory.');
           continue;
         }
-        // Never open our own run's lock, even if called twice in one process.
+        // Closing another handle to our lock would release its POSIX lock.
         if (entity.path == _parent?.path) continue;
         final marker = File('${entity.path}/$openCodeOwnerMarker');
         final lockFile = File('${entity.path}/$_lockName');
         if (FileSystemEntity.typeSync(marker.path, followLinks: false) !=
             FileSystemEntityType.file) {
-          out.writeln(
-            'Leaving ${entity.path}: no owner marker (older or manually kept output).',
-          );
+          unmarked++;
           continue;
         }
         final owner = jsonDecode(marker.readAsStringSync());
@@ -323,12 +358,14 @@ final class OpenCodeLifecycle {
         try {
           lock.lockSync(FileLock.exclusive);
         } on FileSystemException {
-          continue; // A parallel run still owns this directory.
+          out.writeln('Leaving ${entity.path}: live owner.');
+          continue;
         }
-        if (!_quiet(entity, cutoff, 2)) continue;
-        // Windows cannot delete an open lock file. Once ownership is proven
-        // gone, closing immediately before guarded deletion is safe: new runs
-        // always create a fresh directory, never adopt an existing one.
+        if (!_quiet(entity, cutoff, 2)) {
+          out.writeln('Leaving ${entity.path}: recently active.');
+          continue;
+        }
+        // Windows cannot delete an open lock; new runs never adopt old output.
         if (Platform.isWindows) {
           lock.closeSync();
           lock = null;
@@ -341,13 +378,20 @@ final class OpenCodeLifecycle {
         lock?.closeSync();
       }
     }
+    if (unmarked > 0) {
+      out.writeln(
+        'Left $unmarked older remix_open_code_* directories without an owner marker '
+        'in ${temporaryRoot.path}; remove them manually once no older checker is running.',
+      );
+    }
   }
 }
 
 bool _quiet(FileSystemEntity entity, DateTime cutoff, int depth) {
   final stat = FileStat.statSync(entity.path);
-  if (stat.modified.isAfter(cutoff) || stat.changed.isAfter(cutoff))
+  if (stat.modified.isAfter(cutoff) || stat.changed.isAfter(cutoff)) {
     return false;
+  }
   if (entity is Directory && depth > 0) {
     for (final child in entity.listSync(followLinks: false)) {
       // Links are not followed, including for timestamps.
@@ -363,11 +407,11 @@ String? _verifyDeletableParent(Directory parent, Directory repositoryRoot) {
   final resolved = parent.resolveSymbolicLinksSync();
   final temp = Directory.systemTemp.resolveSymbolicLinksSync();
   final repository = repositoryRoot.resolveSymbolicLinksSync();
-  if (!_isWithin(resolved, temp)) problems.add('$resolved is not inside $temp');
-  if (_isWithin(resolved, repository) || resolved == repository) {
+  if (!isWithin(resolved, temp)) problems.add('$resolved is not inside $temp');
+  if (isWithin(resolved, repository) || resolved == repository) {
     problems.add('$resolved is inside the repository');
   }
-  if (!_basename(resolved).startsWith(_prefix)) {
+  if (!basename(resolved).startsWith(_prefix)) {
     problems.add('$resolved was not created by this checker');
   }
   if (FileSystemEntity.isLinkSync(parent.path)) {
@@ -390,9 +434,9 @@ void _deleteVerifiedParent(
 
 void _deleteDirectoryRecursively(Directory parent) =>
     parent.deleteSync(recursive: true);
-bool _isWithin(String path, String parent) => path.startsWith(
+bool isWithin(String path, String parent) => path.startsWith(
   parent.endsWith(Platform.pathSeparator)
       ? parent
       : '$parent${Platform.pathSeparator}',
 );
-String _basename(String path) => path.split(Platform.pathSeparator).last;
+String basename(String path) => path.split(Platform.pathSeparator).last;
