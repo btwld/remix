@@ -1,3 +1,30 @@
+## 1.0.0-beta.18
+
+### Breaking changes
+
+- Requires `naked_ui` ^2.0.0-beta.2.
+
+### Features
+
+- Add `RemixCombobox` for editable text with styled suggestions (#401).
+- Add `RemixRangeSlider` for controlled lower and upper bounds (#402).
+- Add `RemixCalendar` for controlled date selection (#403).
+- Add `RemixDatePicker` for button-triggered calendar selection (#404).
+- Add `RemixRangeCalendar` for controlled inclusive date ranges (#405).
+- Add `RemixDateRangePicker` for button-triggered date-range selection (#406).
+- Add `initialFocusNode`, `constrainToAvailableSpace`, and `avoidViewInsets`
+  to `RemixPopover` and `PopoverStyler.call` for panel focus and sizing.
+- Add `TooltipStyler.skipDelayDuration` to configure how long hover skips
+  its opening delay after another tooltip closes (#407).
+
+### Fixes
+
+- `RemixTooltip` opens immediately on keyboard focus and skips the hover
+  delay when moving between tooltips (#407).
+- `RemixSelect` and `RemixMenu` panels also cap their width to the available
+  overlay space when collision avoidance is on, so wide panels stay on screen
+  (#403).
+
 ## 1.0.0-beta.17
 
 ### Breaking changes
