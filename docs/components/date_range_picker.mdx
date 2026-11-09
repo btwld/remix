@@ -121,7 +121,9 @@ There is no separate DateRangePicker styler, raw spec, controller or callable
 widget shorthand. Package publication and preset adoption are separate from
 this runtime component.
 
-The trigger label defaults to one line with an ellipsis under a finite width;
+When the full trigger label exceeds its available width, the default formatter
+uses compact numeric month/day/year endpoints. Compact or caller-formatted labels
+that still exceed one line wrap to keep both endpoints visible;
 its accessible value remains complete. `icon` supplies a decorative leading
 icon, styled by `buttonStyle`. `placeholderStyle` merges over `buttonStyle`
 only when `value` is null; `expandedStyle` merges last while the popover is

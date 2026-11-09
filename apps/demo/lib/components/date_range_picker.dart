@@ -4,6 +4,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 import '../ui/ui.dart';
+import 'calendar.dart' show calendarDemoSelectorStyle;
 import 'range_calendar.dart' show reportingPeriodCalendarStyle;
 
 @widgetbook.UseCase(name: 'Reporting period', type: RemixDateRangePicker)
@@ -25,7 +26,7 @@ class _DateRangePickerExampleState extends State<DateRangePickerExample> {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(4),
+    padding: EdgeInsets.all(FortalTokens.space1.resolve(context)),
     child: Center(
       child: RemixDateRangePicker(
         value: _value,
@@ -46,21 +47,24 @@ class _DateRangePickerExampleState extends State<DateRangePickerExample> {
             date.year == 2026 && date.month == 11 && date.day == 18,
         onChanged: (range) => setState(() => _value = range),
         navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
-        selectorStyle: fortalSelectStyle().trigger(
-          SelectTriggerStyler().width(
-            MediaQuery.textScalerOf(context).scale(146),
-          ),
-        ),
+        selectorStyle: calendarDemoSelectorStyle(context),
         buttonStyle: fortalButtonStyle(variant: .outline)
             .minHeight(44)
             .minWidth(MediaQuery.textScalerOf(context).scale(260))
             .spacing(8),
-        popoverStyle: fortalPopoverStyle().maxWidth(
-          MediaQuery.textScalerOf(context).scale(480),
-        ),
-        calendarStyle: reportingPeriodCalendarStyle.minWidth(
-          MediaQuery.textScalerOf(context).scale(308),
-        ),
+        popoverStyle: fortalPopoverStyle()
+            .padding(.all(0))
+            .maxWidth(MediaQuery.textScalerOf(context).scale(480)),
+        calendarStyle: reportingPeriodCalendarStyle
+            .minWidth(
+              MediaQuery.textScalerOf(context).scale(44) * 7 +
+                  FortalTokens.space3.resolve(context) * 2,
+            )
+            .day(
+              CalendarDayStyler()
+                  .minWidth(MediaQuery.textScalerOf(context).scale(44))
+                  .minHeight(MediaQuery.textScalerOf(context).scale(44)),
+            ),
       ),
     ),
   );

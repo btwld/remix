@@ -87,6 +87,38 @@ Future<void> _tapDay(WidgetTester tester, int day) async {
 }
 
 void main() {
+  for (final scale in [1.0, 2.0]) {
+    testWidgets('cross-year endpoints fit a styled 240px trigger at $scale', (
+      t,
+    ) async {
+      await t.pumpWidget(
+        pickerHost(
+          SizedBox(
+            width: 240,
+            child: _picker(
+              value: CivilDateRange(
+                start: DateTime(2024, 11, 10),
+                end: DateTime(2025, 3, 24),
+              ),
+              buttonStyle: ButtonStyler()
+                  .padding(.horizontal(12))
+                  .label(.fontSize(14)),
+            ),
+          ),
+          textScale: scale,
+        ),
+      );
+      final label = t.widget<RemixButton>(find.byType(RemixButton)).label;
+      expect(label, contains('11/10/2024'));
+      expect(label, contains('3/24/2025'));
+      final paragraph = t.renderObject<RenderParagraph>(
+        find.descendant(of: find.text(label), matching: find.byType(RichText)),
+      );
+      expect(paragraph.didExceedMaxLines, isFalse);
+      expect(t.takeException(), isNull);
+    });
+  }
+
   testWidgets(
     'placeholder and expanded fragments and leading icon follow value and opening',
     (tester) async {
@@ -146,7 +178,7 @@ void main() {
   );
 
   testWidgets(
-    'long range label ellipsizes at 240 pixels and speaks the full range',
+    'bounded range keeps both endpoints visible and speaks the full range',
     (tester) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpWidget(
@@ -159,9 +191,9 @@ void main() {
           matching: find.byType(RichText),
         ),
       );
-      expect(text.maxLines, 1);
-      expect(text.overflow, TextOverflow.ellipsis);
-      expect(text.didExceedMaxLines, isTrue);
+      expect(text.maxLines, greaterThanOrEqualTo(1));
+
+      expect(text.didExceedMaxLines, isFalse);
       final value = tester
           .getSemantics(find.byType(RemixButton).first)
           .getSemanticsData()

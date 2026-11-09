@@ -97,7 +97,9 @@ class RemixDateRangePicker extends StatelessWidget {
   /// single date of a one-day range; those labels are English unless
   /// [calendarLabels] is localized. Provide this callback for locale-specific
   /// range grammar. It only changes what is painted, never the accessible
-  /// value.
+  /// value. When the default full label exceeds the trigger width, the visible
+  /// label falls back to numeric month/day/year endpoints. Labels that still
+  /// exceed one line, including caller-formatted labels, wrap to keep both ends.
   final String Function(CivilDateRange)? formatRange;
 
   /// Caller-owned date labels and formatters; English by default.
@@ -128,8 +130,8 @@ class RemixDateRangePicker extends StatelessWidget {
   final ButtonStyler expandedStyle;
 
   /// Trigger styling, resolved against the trigger's own interaction state.
-  /// The default label is one line with an ellipsis under a finite width.
-  /// Overrides may replace its text layout; accessible values stay complete.
+  /// Full labels fall back to compact numeric endpoints when width is limited.
+  /// Labels that still exceed one line wrap; accessible values stay complete.
   final ButtonStyler buttonStyle;
 
   /// Calendar and day styling, resolved against each part's own state.
@@ -171,42 +173,103 @@ class RemixDateRangePicker extends StatelessWidget {
                   ? calendarLabels.fullDate(value.start)
                   : '${calendarLabels.fullDate(value.start)} – '
                         '${calendarLabels.fullDate(value.end)}');
-    return _DatePickerHost<CivilDateRange>(
-      enabled: enabled,
-      onChanged: onChanged,
-      onOpen: onOpen,
-      onClose: onClose,
-      label: label,
-      semanticLabel: semanticLabel,
-      semanticValue: spoken ?? rangeLabels.noRange,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      positioning: positioning,
-      icon: icon,
-      placeholderStyle: value == null
-          ? placeholderStyle
-          : const ButtonStyler.create(),
-      expandedStyle: expandedStyle,
-      buttonStyle: buttonStyle,
-      popoverStyle: popoverStyle,
-      calendarBuilder: (focus, select) => RemixRangeCalendar(
-        value: value,
-        firstDate: firstDate,
-        lastDate: lastDate,
-        onChanged: select,
-        currentDate: currentDate,
-        isDateUnavailable: isDateUnavailable,
-        firstDayOfWeek: firstDayOfWeek,
-        enabled: select != null,
-        semanticLabel: semanticLabel,
-        focusNode: focus,
-        labels: calendarLabels,
-        rangeLabels: rangeLabels,
-        style: calendarStyle,
-        navigationStyle: navigationStyle,
-        selectorStyle: selectorStyle,
-        summaryBuilder: summaryBuilder,
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final spec = buttonStyle.build(context).spec;
+        final box = spec.container.spec.box?.spec;
+        final requestedWidth = box?.constraints?.maxWidth ?? double.infinity;
+        final width = requestedWidth < constraints.maxWidth
+            ? requestedWidth
+            : constraints.maxWidth;
+        final direction = Directionality.of(context);
+        final padding = box?.padding?.resolve(direction).horizontal ?? 0.0;
+        final border =
+            box?.decoration?.padding.resolve(direction).horizontal ?? 0.0;
+        final iconWidth = icon == null
+            ? 0.0
+            : (spec.icon.spec.size ?? IconTheme.of(context).size ?? 24) +
+                  (spec.container.spec.flex?.spec.spacing ?? 0);
+        final available = (width - padding - border - iconWidth).clamp(
+          0.0,
+          double.infinity,
+        );
+        final textStyle = DefaultTextStyle.of(
+          context,
+        ).style.merge(spec.label.spec.style);
+        bool fits(String text) {
+          final painter = TextPainter(
+            text: TextSpan(text: text, style: textStyle),
+            textDirection: direction,
+            textScaler: MediaQuery.textScalerOf(context),
+            maxLines: 1,
+          )..layout(maxWidth: available);
+          final result = !painter.didExceedMaxLines;
+          painter.dispose();
+          return result;
+        }
+
+        var visible = label;
+        var triggerStyle = buttonStyle;
+        if (value != null && !fits(label)) {
+          if (formatRange == null) {
+            String compact(DateTime d) =>
+                '${d.month}/${d.day}/${calendarLabels.year(d.year)}';
+            visible = singleDay
+                ? compact(value.start)
+                : '${compact(value.start)} – ${compact(value.end)}';
+            if (!fits(visible) && !singleDay) {
+              visible = '${compact(value.start)} –\n${compact(value.end)}';
+            }
+          }
+          // Retain caller-owned localized grammar too: wrapping keeps both ends
+          // visible when a compact/custom label still cannot fit on one line.
+          if (!fits(visible)) {
+            triggerStyle = triggerStyle.label(
+              TextStyler()
+                  .maxLines(4)
+                  .softWrap(true)
+                  .overflow(TextOverflow.visible),
+            );
+          }
+        }
+        return _DatePickerHost<CivilDateRange>(
+          enabled: enabled,
+          onChanged: onChanged,
+          onOpen: onOpen,
+          onClose: onClose,
+          label: visible,
+          semanticLabel: semanticLabel,
+          semanticValue: spoken ?? rangeLabels.noRange,
+          focusNode: focusNode,
+          autofocus: autofocus,
+          positioning: positioning,
+          icon: icon,
+          placeholderStyle: value == null
+              ? placeholderStyle
+              : const ButtonStyler.create(),
+          expandedStyle: expandedStyle,
+          buttonStyle: triggerStyle,
+          popoverStyle: popoverStyle,
+          calendarBuilder: (focus, select) => RemixRangeCalendar(
+            value: value,
+            firstDate: firstDate,
+            lastDate: lastDate,
+            onChanged: select,
+            currentDate: currentDate,
+            isDateUnavailable: isDateUnavailable,
+            firstDayOfWeek: firstDayOfWeek,
+            enabled: select != null,
+            semanticLabel: semanticLabel,
+            focusNode: focus,
+            labels: calendarLabels,
+            rangeLabels: rangeLabels,
+            style: calendarStyle,
+            navigationStyle: navigationStyle,
+            selectorStyle: selectorStyle,
+            summaryBuilder: summaryBuilder,
+          ),
+        );
+      },
     );
   }
 }
