@@ -10,6 +10,7 @@ Future<void> _pump(
   WidgetTester tester, {
   Widget child = const RangeCalendarExample(),
   bool rtl = false,
+  bool dark = false,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = const Size(1000, 900);
@@ -20,6 +21,7 @@ Future<void> _pump(
   await tester.pumpWidget(
     MaterialApp(
       builder: (context, child) => FortalTheme(
+        mode: dark ? FortalThemeMode.dark : FortalThemeMode.light,
         child: Directionality(
           textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
           child: child!,
@@ -50,6 +52,34 @@ BoxDecoration _day(WidgetTester tester, int day) {
   _ => throw StateError('Unexpected border'),
 };
 void main() {
+  for (final dark in [false, true]) {
+    testWidgets('$dark today ring contrasts with the range middle by 3:1', (
+      t,
+    ) async {
+      await _pump(
+        t,
+        dark: dark,
+        child: RemixRangeCalendar(
+          value: CivilDateRange(
+            start: DateTime(2026, 11, 5),
+            end: DateTime(2026, 11, 9),
+          ),
+          firstDate: DateTime(2025),
+          lastDate: DateTime(2028),
+          currentDate: DateTime(2026, 11, 6),
+          onChanged: (_) {},
+          style: reportingPeriodCalendarStyle,
+        ),
+      );
+      final day = _day(t, 6);
+      final a = day.border!.top.color.computeLuminance(),
+          b = day.color!.computeLuminance();
+      expect(
+        (a > b ? a + .05 : b + .05) / (a > b ? b + .05 : a + .05),
+        greaterThanOrEqualTo(3),
+      );
+    });
+  }
   for (final rtl in [false, true]) {
     testWidgets(
       'draft edges connect without internal seams in ${rtl ? "RTL" : "LTR"}',

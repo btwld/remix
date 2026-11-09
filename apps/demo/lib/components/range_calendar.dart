@@ -3,7 +3,7 @@ import 'package:remix/remix.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 import '../ui/ui.dart';
-import 'calendar.dart' show calendarDemoSelectorStyle;
+import 'calendar.dart' show calendarDemoSelectorStyle, calendarDemoTarget;
 
 @widgetbook.UseCase(name: 'Reporting period', type: RemixRangeCalendar)
 Widget buildRangeCalendarUseCase(BuildContext context) =>
@@ -36,17 +36,23 @@ class _RangeCalendarExampleState extends State<RangeCalendarExample> {
         isDateUnavailable: (date) =>
             date.year == 2026 && date.month == 11 && date.day == 18,
         onChanged: (range) => setState(() => _value = range),
-        navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
+        navigationStyle: fortalIconButtonStyle(
+          variant: .ghost,
+        ).size(calendarDemoTarget, calendarDemoTarget),
         selectorStyle: calendarDemoSelectorStyle(context),
         style: reportingPeriodCalendarStyle
             .minWidth(
-              MediaQuery.textScalerOf(context).scale(44) * 7 +
+              MediaQuery.textScalerOf(context).scale(calendarDemoTarget) * 7 +
                   FortalTokens.space3.resolve(context) * 2,
             )
             .day(
               CalendarDayStyler()
-                  .minWidth(MediaQuery.textScalerOf(context).scale(44))
-                  .minHeight(MediaQuery.textScalerOf(context).scale(44)),
+                  .minWidth(
+                    MediaQuery.textScalerOf(context).scale(calendarDemoTarget),
+                  )
+                  .minHeight(
+                    MediaQuery.textScalerOf(context).scale(calendarDemoTarget),
+                  ),
             ),
       ),
     ),
@@ -58,8 +64,11 @@ final reportingPeriodCalendarStyle = CalendarStyler()
     .padding(.all(FortalTokens.space3()))
     .headerSpacing(FortalTokens.space2())
     .weekdaySpacing(FortalTokens.space1())
+    .rowSpacing(FortalTokens.space1())
     .heading(TextStyler().color(FortalTokens.gray11()))
-    .weekday(TextStyler().fontSize(12).color(FortalTokens.gray11()))
+    .weekday(
+      TextStyler().style(FortalTokens.text1.mix()).color(FortalTokens.gray11()),
+    )
     .onDisabled(
       CalendarStyler()
           .heading(TextStyler().color(FortalTokens.gray9()))
@@ -67,20 +76,22 @@ final reportingPeriodCalendarStyle = CalendarStyler()
     )
     .day(
       CalendarDayStyler()
-          .label(TextStyler().fontSize(14))
+          .label(TextStyler().style(FortalTokens.text2.mix()))
           .border(BorderMix.all(BorderSideMix.none))
           .onToday(
             CalendarDayStyler()
                 .border(
                   BorderMix.all(
                     BorderSideMix(
-                      color: FortalTokens.accent8(),
+                      color: FortalTokens.gray10(),
                       width: 1,
                       style: .solid,
                     ),
                   ),
                 )
-                .borderRadius(BorderRadiusDirectionalMix.circular(6))
+                .borderRadius(
+                  BorderRadiusDirectionalMix.all(FortalTokens.radius3()),
+                )
                 .label(
                   TextStyler()
                       .color(FortalTokens.accent11())
@@ -89,8 +100,37 @@ final reportingPeriodCalendarStyle = CalendarStyler()
           )
           .onSelected(
             CalendarDayStyler()
-                .color(FortalTokens.gray2())
-                .label(TextStyler().color(FortalTokens.gray9())),
+                .color(_quietCommitted())
+                .borderRadius(BorderRadiusDirectionalMix.circular(0))
+                .variant(
+                  _committedStart,
+                  CalendarDayStyler().borderRadius(
+                    .only(
+                      topStart: FortalTokens.radius3(),
+                      bottomStart: FortalTokens.radius3(),
+                      topEnd: Radius.zero,
+                      bottomEnd: Radius.zero,
+                    ),
+                  ),
+                )
+                .variant(
+                  _committedEnd,
+                  CalendarDayStyler().borderRadius(
+                    .only(
+                      topEnd: FortalTokens.radius3(),
+                      bottomEnd: FortalTokens.radius3(),
+                      topStart: Radius.zero,
+                      bottomStart: Radius.zero,
+                    ),
+                  ),
+                )
+                .variant(
+                  _committedSingle,
+                  CalendarDayStyler().borderRadius(
+                    BorderRadiusDirectionalMix.all(FortalTokens.radius3()),
+                  ),
+                )
+                .label(TextStyler().color(FortalTokens.gray11())),
           )
           .onDisabled(
             CalendarDayStyler().label(TextStyler().color(FortalTokens.gray9())),
@@ -101,19 +141,19 @@ final reportingPeriodCalendarStyle = CalendarStyler()
             ),
           )
           // Committed fills come from range roles. While drafting,
-          // the old selection keeps only its faint onSelected treatment.
+          // the old selection retains a quiet band and slightly stronger caps.
           .onRangeMiddle(
             CalendarDayStyler()
                 .borderRadius(BorderRadiusDirectionalMix.circular(0))
                 .color(FortalTokens.accent4())
-                .label(TextStyler().color(FortalTokens.accent11()))
-                .onDisabled(_mutedRange),
+                .label(TextStyler().color(FortalTokens.gray12()))
+                .onDisabled(_mutedMiddle),
           )
           .onRangeStart(
             _endpoint.borderRadius(
               .only(
-                topStart: const Radius.circular(6),
-                bottomStart: const Radius.circular(6),
+                topStart: FortalTokens.radius3(),
+                bottomStart: FortalTokens.radius3(),
                 topEnd: Radius.zero,
                 bottomEnd: Radius.zero,
               ),
@@ -122,20 +162,22 @@ final reportingPeriodCalendarStyle = CalendarStyler()
           .onRangeEnd(
             _endpoint.borderRadius(
               .only(
-                topEnd: const Radius.circular(6),
-                bottomEnd: const Radius.circular(6),
+                topEnd: FortalTokens.radius3(),
+                bottomEnd: FortalTokens.radius3(),
                 topStart: Radius.zero,
                 bottomStart: Radius.zero,
               ),
             ),
           )
           .onRangeSingle(
-            _endpoint.borderRadius(BorderRadiusDirectionalMix.circular(6)),
+            _endpoint.borderRadius(
+              BorderRadiusDirectionalMix.all(FortalTokens.radius3()),
+            ),
           )
           // Preview follows the caps so the draft has its own treatment.
           .onRangePreview(
             CalendarDayStyler()
-                .color(FortalTokens.accent3())
+                .color(FortalTokens.accent4())
                 .border(
                   BorderMix(
                     top: _draftStroke,
@@ -192,6 +234,10 @@ final _endpoint = CalendarDayStyler()
     .label(TextStyler().color(FortalTokens.accentContrast()))
     .onDisabled(_mutedRange);
 
+final _mutedMiddle = CalendarDayStyler()
+    .color(FortalTokens.gray3())
+    .label(TextStyler().color(FortalTokens.gray11()));
+
 final _mutedRange = CalendarDayStyler()
     .color(FortalTokens.gray4())
     .label(TextStyler().color(FortalTokens.gray11()));
@@ -209,7 +255,7 @@ final _draftNone = BorderSideMix(
 );
 
 CalendarDayStyler _pointer({required bool pressed}) => CalendarDayStyler()
-    .color(pressed ? FortalTokens.gray5() : FortalTokens.gray4())
+    .color(pressed ? FortalTokens.gray6() : FortalTokens.gray4())
     .onSelected(
       CalendarDayStyler().color(
         pressed ? FortalTokens.gray4() : FortalTokens.gray3(),
@@ -266,3 +312,34 @@ CalendarDayStyler _focusEdges({bool start = false, bool end = false}) =>
             ),
           ),
         );
+
+// The live roles follow the draft; use the parent-owned value for stale geometry.
+final _quietCommitted = ContextToken<Color>((context) {
+  final value = NakedRangeCalendarState.maybeOf(context)?.value;
+  final day = NakedCalendarDayState.maybeOf(context)?.date;
+  final cap =
+      value != null &&
+      day != null &&
+      (compareCivilDates(day, value.start) == 0 ||
+          compareCivilDates(day, value.end) == 0);
+  return (cap ? FortalTokens.gray4 : FortalTokens.gray3).resolve(context);
+});
+ContextVariant _committedRole(String name, NakedRangePosition position) =>
+    ContextVariant('demo.calendar.committed-$name', (context) {
+      final value = NakedRangeCalendarState.maybeOf(context)?.value;
+      final day = NakedCalendarDayState.maybeOf(context)?.date;
+      if (value == null || day == null || !value.contains(day)) return false;
+      final start = compareCivilDates(day, value.start) == 0;
+      final end = compareCivilDates(day, value.end) == 0;
+      return (start && end
+              ? NakedRangePosition.single
+              : start
+              ? NakedRangePosition.start
+              : end
+              ? NakedRangePosition.end
+              : NakedRangePosition.middle) ==
+          position;
+    });
+final _committedStart = _committedRole('start', .start);
+final _committedEnd = _committedRole('end', .end);
+final _committedSingle = _committedRole('single', .single);
