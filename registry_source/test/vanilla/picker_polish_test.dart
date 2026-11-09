@@ -79,6 +79,39 @@ void main() {
         },
       );
     }
+    testWidgets(
+      '${theme.name} natural long range stays within its panel width',
+      (t) async {
+        await t.pumpWidget(
+          calendarHost(
+            VanillaDateRangePicker(
+              value: CivilDateRange(
+                start: DateTime(2026, 11, 10),
+                end: DateTime(2027, 3, 24),
+              ),
+              firstDate: DateTime(2026),
+              lastDate: DateTime(2028),
+              onChanged: (_) {},
+            ),
+            theme.data,
+          ),
+        );
+        final anchor = t.getSize(find.byType(RemixButton)).width;
+        await t.tap(find.byType(RemixButton));
+        await t.pumpAndSettle();
+        final panel = t
+            .widget<StyleSpecProvider<PopoverSpec>>(
+              find.byType(StyleSpecProvider<PopoverSpec>).first,
+            )
+            .spec
+            .spec;
+        final panelBox = find.byWidgetPredicate(
+          (w) => w is Box && w.styleSpec?.spec == panel.container.spec,
+        );
+        expect(t.getSize(panelBox).width, greaterThanOrEqualTo(anchor));
+        expect(t.takeException(), isNull);
+      },
+    );
     testWidgets('${theme.name} long range ellipsizes at 240px', (t) async {
       await t.pumpWidget(
         calendarHost(

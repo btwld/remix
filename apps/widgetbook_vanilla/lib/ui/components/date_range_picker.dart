@@ -142,113 +142,121 @@ class VanillaDateRangePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) => RemixDateRangePicker(
-      value: value,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      onChanged: onChanged,
-      onOpen: onOpen,
-      onClose: onClose,
-      currentDate: currentDate,
-      isDateUnavailable: isDateUnavailable,
-      firstDayOfWeek: firstDayOfWeek,
-      enabled: enabled,
-      semanticLabel: semanticLabel,
-      placeholder: placeholder,
-      formatRange: formatRange,
-      calendarLabels: calendarLabels,
-      rangeLabels: rangeLabels,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      positioning: positioning,
-      icon: RemixIcons.calendar,
-      placeholderStyle: ButtonStyler().label(
-        .color(VanillaTokens.mutedForeground()),
-      ),
-      expandedStyle: ButtonStyler()
-          .border(vanillaFocusBorder())
-          .containerEffects(vanillaFocusRing()),
-      buttonStyle: vanillaButtonStyle(
-        variant: .outline,
-        style: ButtonStyler()
-            .mainAxisAlignment(.start)
-            .minWidth(VanillaTokens.s16 * 3 + VanillaTokens.s12)
-            .padding(.horizontal(VanillaTokens.s3))
-            .label(
-              .fontWeight(
-                FontWeight.w400,
-              ).textAlign(.start).maxLines(1).overflow(.ellipsis),
-            )
-            .merge(buttonStyle),
-      ),
-      calendarStyle: vanillaRangeCalendarStyle(
-        style: CalendarStyler()
-            .day(CalendarDayStyler().minWidth(vanillaCalendarDayWidth(context)))
-            .merge(calendarStyle),
-      ),
-      popoverStyle: vanillaPopoverStyle(
-        style: PopoverStyler()
-            .minWidth(
-              math.max(
-                vanillaCalendarDayWidth(context) * DateTime.daysPerWeek +
-                    VanillaTokens.s3 * 2 +
-                    VanillaTokens.s1 * 2 +
-                    VanillaTokens.strokeHairline * 2,
-                math.max(
-                  constraints.minWidth,
-                  buttonStyle
-                          .build(context)
-                          .spec
-                          .container
-                          .spec
-                          .box
-                          ?.spec
-                          .constraints
-                          ?.minWidth ??
-                      0,
+    builder: (context, constraints) {
+      final requested = buttonStyle
+          .build(context)
+          .spec
+          .container
+          .spec
+          .box
+          ?.spec
+          .constraints;
+      final panelWidth = math.max(
+        vanillaCalendarDayWidth(context) * DateTime.daysPerWeek +
+            VanillaTokens.s3 * 2 +
+            VanillaTokens.s1 * 2 +
+            VanillaTokens.strokeHairline * 2,
+        math.max(
+          constraints.minWidth,
+          math.max(
+            requested?.minWidth ?? 0.0,
+            requested?.hasBoundedWidth == true ? requested!.maxWidth : 0.0,
+          ),
+        ),
+      );
+      return RemixDateRangePicker(
+        value: value,
+        firstDate: firstDate,
+        lastDate: lastDate,
+        onChanged: onChanged,
+        onOpen: onOpen,
+        onClose: onClose,
+        currentDate: currentDate,
+        isDateUnavailable: isDateUnavailable,
+        firstDayOfWeek: firstDayOfWeek,
+        enabled: enabled,
+        semanticLabel: semanticLabel,
+        placeholder: placeholder,
+        formatRange: formatRange,
+        calendarLabels: calendarLabels,
+        rangeLabels: rangeLabels,
+        focusNode: focusNode,
+        autofocus: autofocus,
+        positioning: positioning,
+        icon: RemixIcons.calendar,
+        placeholderStyle: ButtonStyler().label(
+          .color(VanillaTokens.mutedForeground()),
+        ),
+        expandedStyle: ButtonStyler()
+            .border(vanillaFocusBorder())
+            .containerEffects(vanillaFocusRing()),
+        buttonStyle: vanillaButtonStyle(
+          variant: .outline,
+          style: ButtonStyler()
+              .mainAxisAlignment(.start)
+              .minWidth(VanillaTokens.s16 * 3 + VanillaTokens.s12)
+              .maxWidth(panelWidth)
+              .padding(.horizontal(VanillaTokens.s3))
+              .label(
+                .fontWeight(
+                  FontWeight.w400,
+                ).textAlign(.start).maxLines(1).overflow(.ellipsis),
+              )
+              .merge(buttonStyle),
+        ),
+        calendarStyle: vanillaRangeCalendarStyle(
+          style: CalendarStyler()
+              .day(
+                CalendarDayStyler().minWidth(vanillaCalendarDayWidth(context)),
+              )
+              .merge(calendarStyle),
+        ),
+        popoverStyle: vanillaPopoverStyle(
+          style: PopoverStyler()
+              .minWidth(panelWidth)
+              .maxWidth(double.infinity)
+              .padding(.all(VanillaTokens.s1))
+              .merge(popoverStyle),
+        ),
+        navigationStyle: vanillaIconButtonStyle(
+          variant: .ghost,
+          style: IconButtonStyler()
+              .size(VanillaTokens.s12, VanillaTokens.s12)
+              .margin(.symmetric(vertical: VanillaTokens.s1))
+              .icon(
+                .size(
+                  MediaQuery.textScalerOf(context).scale(VanillaTokens.icon),
                 ),
-              ),
-            )
-            .maxWidth(double.infinity)
-            .padding(.all(VanillaTokens.s1))
-            .merge(popoverStyle),
-      ),
-      navigationStyle: vanillaIconButtonStyle(
-        variant: .ghost,
-        style: IconButtonStyler()
-            .size(VanillaTokens.s12, VanillaTokens.s12)
-            .margin(.symmetric(vertical: VanillaTokens.s1))
-            .icon(
-              .size(MediaQuery.textScalerOf(context).scale(VanillaTokens.icon)),
-            )
-            .merge(navigationStyle),
-      ),
-      selectorStyle: vanillaSelectStyle(
-        style: SelectStyler()
-            .trigger(
-              SelectTriggerStyler()
-                  .indicator(
-                    .size(
+              )
+              .merge(navigationStyle),
+        ),
+        selectorStyle: vanillaSelectStyle(
+          style: SelectStyler()
+              .trigger(
+                SelectTriggerStyler()
+                    .indicator(
+                      .size(
+                        MediaQuery.textScalerOf(
+                          context,
+                        ).scale(VanillaTokens.s2_5),
+                      ),
+                    )
+                    .maxWidth(double.infinity)
+                    .minHeight(
                       MediaQuery.textScalerOf(
                         context,
-                      ).scale(VanillaTokens.s2_5),
+                      ).scale(VanillaTokens.controlMd),
+                    )
+                    .minWidth(
+                      MediaQuery.textScalerOf(
+                        context,
+                      ).scale(VanillaTokens.s16 + VanillaTokens.s12),
                     ),
-                  )
-                  .maxWidth(double.infinity)
-                  .minHeight(
-                    MediaQuery.textScalerOf(
-                      context,
-                    ).scale(VanillaTokens.controlMd),
-                  )
-                  .minWidth(
-                    MediaQuery.textScalerOf(
-                      context,
-                    ).scale(VanillaTokens.s16 + VanillaTokens.s12),
-                  ),
-            )
-            .merge(selectorStyle),
-      ),
-      summaryBuilder: summaryBuilder,
-    ),
+              )
+              .merge(selectorStyle),
+        ),
+        summaryBuilder: summaryBuilder,
+      );
+    },
   );
 }
