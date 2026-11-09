@@ -12,10 +12,35 @@ const _quietPeriod = Duration(minutes: 10);
 
 final class OpenCodeCancelled implements Exception {}
 
+typedef OpenCodeProcessStarter =
+    Future<Process> Function(
+      String executable,
+      List<String> arguments, {
+      String? workingDirectory,
+      Map<String, String>? environment,
+      required ProcessStartMode mode,
+    });
+
 /// Tracks every command, including SDK discovery and CLI compilation.
 final class OpenCodeProcesses {
+  OpenCodeProcesses({
+    OpenCodeProcessStarter? startProcess,
+    Future<ProcessResult> Function(String, List<String>)? runProcess,
+    bool? isWindows,
+    this.stopTimeout = const Duration(seconds: 2),
+  }) : _startProcess = startProcess ?? Process.start,
+       _runProcess =
+           runProcess ?? ((command, args) => Process.run(command, args)),
+       _isWindows = isWindows ?? Platform.isWindows;
+
+  final OpenCodeProcessStarter _startProcess;
+  final Future<ProcessResult> Function(String, List<String>) _runProcess;
+  final bool _isWindows;
+  final Duration stopTimeout;
   final _running = <Process>{};
   final _starting = <Future<Process>>{};
+  final _descendants = <int>{};
+  bool _snapshotTaken = false;
   Future<void>? _stopping;
   int? cancellationExitCode;
 
@@ -33,7 +58,7 @@ final class OpenCodeProcesses {
     ProcessStartMode mode = ProcessStartMode.normal,
   }) async {
     throwIfCancelled();
-    final starting = Process.start(
+    final starting = _startProcess(
       executable,
       arguments,
       workingDirectory: workingDirectory,
@@ -49,6 +74,10 @@ final class OpenCodeProcesses {
           _running.remove(process);
         }),
       );
+      // A start can resolve after cancellation's bounded snapshot wait. Never
+      // let that late process escape just because shutdown already returned.
+      if (cancelled && _snapshotTaken)
+        _ignoreCleanupError(() => process.kill(ProcessSignal.sigkill));
       return process;
     } finally {
       _starting.remove(starting);
@@ -84,22 +113,37 @@ final class OpenCodeProcesses {
 
   Future<void> get stopped => _stopping ?? Future.value();
 
+  /// Synchronous fallback for a second signal; never waits for OS helpers.
+  void killTracked() {
+    for (final child in _descendants) {
+      _ignoreCleanupError(() => Process.killPid(child, ProcessSignal.sigkill));
+    }
+    for (final process in _running.toList()) {
+      _ignoreCleanupError(() => process.kill(ProcessSignal.sigkill));
+    }
+  }
+
   Future<void> _stop() async {
     // A signal can arrive while Process.start is still resolving. No more
-    // starts are allowed, and these must be registered before taking a snapshot.
+    // starts are allowed. Bound the wait; late arrivals kill themselves above.
     await Future.wait([
       for (final pending in _starting.toList())
         pending.then<void>((_) {}, onError: (Object _) {}),
-    ]);
+    ]).timeout(stopTimeout, onTimeout: () => <void>[]);
+    _snapshotTaken = true;
     final running = _running.toList();
     if (running.isEmpty) return;
-    final descendants = <int>{};
+    final descendants = _descendants;
     Object? inspectionProblem;
     try {
-      if (!Platform.isWindows) {
+      if (!_isWindows) {
         // The CLI and Flutter can themselves start commands. Snapshot their PID
         // descendants before signalling parents, without process groups or workers.
-        final table = await Process.run('ps', ['-e', '-o', 'pid=,ppid=']);
+        final table = await _runProcess('ps', [
+          '-e',
+          '-o',
+          'pid=,ppid=',
+        ]).timeout(stopTimeout);
         if (table.exitCode != 0)
           throw StateError(
             'Could not inspect child processes: ${table.stderr}',
@@ -121,31 +165,37 @@ final class OpenCodeProcesses {
           descendants.addAll(ancestors);
         }
         for (final child in descendants.toList().reversed) {
-          Process.killPid(child, ProcessSignal.sigterm);
+          _ignoreCleanupError(
+            () => Process.killPid(child, ProcessSignal.sigterm),
+          );
         }
       } else {
         for (final process in running) {
-          await Process.run('taskkill', ['/PID', '${process.pid}', '/T', '/F']);
+          try {
+            await _runProcess('taskkill', [
+              '/PID',
+              '${process.pid}',
+              '/T',
+              '/F',
+            ]).timeout(stopTimeout);
+          } on Object catch (error) {
+            inspectionProblem ??= error;
+          }
         }
       }
     } on Object catch (error) {
       inspectionProblem = error;
     }
     for (final process in running) {
-      process.kill(ProcessSignal.sigterm);
+      _ignoreCleanupError(() => process.kill(ProcessSignal.sigterm));
     }
     // Descendants may outlive their immediate parent, so give the whole tree
     // the grace period even if all tracked handles have already exited.
-    await Future<void>.delayed(const Duration(seconds: 2));
-    for (final child in descendants) {
-      Process.killPid(child, ProcessSignal.sigkill);
-    }
-    for (final process in running) {
-      if (_running.contains(process)) process.kill(ProcessSignal.sigkill);
-    }
+    await Future<void>.delayed(stopTimeout);
+    killTracked();
     await Future.wait(
       running.map((process) => process.exitCode),
-    ).timeout(const Duration(seconds: 2), onTimeout: () => <int>[]);
+    ).timeout(stopTimeout, onTimeout: () => <int>[]);
     if (inspectionProblem != null) throw inspectionProblem;
   }
 }
@@ -160,10 +210,14 @@ final class OpenCodeLifecycle {
     StringSink? err,
     void Function(Directory)? deleteDirectory,
     OpenCodeProcesses? processes,
+    Future<void> Function()? flushOutput,
+    Future<void> Function()? flushErrors,
   }) : temporaryRoot = temporaryRoot ?? Directory.systemTemp,
        processes = processes ?? OpenCodeProcesses(),
        out = out ?? stdout,
        err = err ?? stderr,
+       _flushOutput = flushOutput ?? stdout.flush,
+       _flushErrors = flushErrors ?? stderr.flush,
        _deleteDirectory = deleteDirectory ?? _deleteDirectoryRecursively;
 
   final Directory repositoryRoot;
@@ -173,6 +227,8 @@ final class OpenCodeLifecycle {
   final StringSink err;
   final void Function(Directory) _deleteDirectory;
   final OpenCodeProcesses processes;
+  final Future<void> Function() _flushOutput;
+  final Future<void> Function() _flushErrors;
   final _signals = <StreamSubscription<ProcessSignal>>[];
   Directory? _parent;
   RandomAccessFile? _lock;
@@ -188,9 +244,18 @@ final class OpenCodeLifecycle {
     ]) {
       _signals.add(
         signal.watch().listen((signal) async {
-          if (processes.cancelled) return;
-          err.writeln('Cancelling open-code check (${signal.name}).');
+          final code = signal == ProcessSignal.sigint ? 130 : 143;
+          if (processes.cancelled) {
+            try {
+              processes.killTracked();
+            } finally {
+              exit(code);
+            }
+          }
           try {
+            _ignoreCleanupError(
+              () => err.writeln('Cancelling open-code check (${signal.name}).'),
+            );
             await processes.cancel(signal);
             // Let command pipes drain and runPooled finish its ordered logs.
             // Non-process I/O must not prevent a handled signal from exiting.
@@ -199,15 +264,24 @@ final class OpenCodeLifecycle {
               onTimeout: () {},
             );
           } on Object catch (error) {
-            err.writeln('Could not stop all child processes: $error');
+            _ignoreCleanupError(
+              () => err.writeln('Could not stop all child processes: $error'),
+            );
           } finally {
-            if (_parent != null && !keep) _hint();
-            _finish();
-            await stdout.flush();
-            await stderr.flush();
-            // Cancellation also interrupts outstanding non-process I/O. Retention
-            // and child shutdown are complete before this deliberate signal exit.
-            exit(processes.cancellationExitCode!);
+            try {
+              if (_parent != null && !keep) _ignoreCleanupError(_hint);
+              _ignoreCleanupError(_finish);
+              for (final flush in [_flushOutput, _flushErrors]) {
+                try {
+                  await flush().timeout(const Duration(seconds: 2));
+                } on Object {
+                  // Broken or blocked pipes must not skip the remaining cleanup.
+                }
+              }
+            } finally {
+              // Also interrupts outstanding non-process I/O, even if cleanup fails.
+              exit(code);
+            }
           }
         }),
       );
@@ -341,6 +415,14 @@ final class OpenCodeLifecycle {
         lock?.closeSync();
       }
     }
+  }
+}
+
+void _ignoreCleanupError(void Function() action) {
+  try {
+    action();
+  } on Object {
+    // Cancellation is best effort; failure of one step must not skip the rest.
   }
 }
 

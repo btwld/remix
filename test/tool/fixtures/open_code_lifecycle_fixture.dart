@@ -31,6 +31,16 @@ Future<void> main(List<String> arguments) async {
     await Completer<void>().future;
     return;
   }
+  if (arguments[1] != 'hold' && arguments[1] != 'wait') {
+    // Keep a failed async handler alive so only its deliberate exit can pass.
+    await runZonedGuarded(
+      () => _cancellationFailure(arguments),
+      (error, stack) => File(
+        '${arguments[0]}/handler-errors',
+      ).writeAsStringSync('$error\n', mode: FileMode.append),
+    );
+    return;
+  }
   final lifecycle = OpenCodeLifecycle(
     repositoryRoot: Directory.current,
     temporaryRoot: Directory(arguments[0]),
@@ -76,4 +86,108 @@ Future<void> main(List<String> arguments) async {
   } finally {
     await lifecycle.close();
   }
+}
+
+Future<void> _cancellationFailure(List<String> arguments) async {
+  final root = arguments[0];
+  final failure = arguments[1];
+  void recordFlush(String stream) => File(
+    '$root/flushes',
+  ).writeAsStringSync('$stream\n', mode: FileMode.append);
+  final lifecycle = OpenCodeLifecycle(
+    repositoryRoot: Directory.current,
+    temporaryRoot: Directory(root),
+    keep: false,
+    processes: OpenCodeProcesses(
+      startProcess:
+          (
+            executable,
+            arguments, {
+            workingDirectory,
+            environment,
+            required mode,
+          }) => executable == 'tracked'
+          ? Future.value(_TrackedProcess(root))
+          : Completer<Process>().future,
+      // Leave time to deliver a second signal before the bounded first cancel.
+      stopTimeout: failure == 'stuck-start'
+          ? const Duration(seconds: 10)
+          : const Duration(milliseconds: 20),
+    ),
+    err: _FailureSink(root, failure),
+    deleteDirectory: failure == 'finish'
+        ? (_) => throw StateError('synthetic deletion failure')
+        : null,
+    flushOutput: () async {
+      recordFlush('output');
+      if (failure == 'flush-output')
+        throw StateError('synthetic flush failure');
+      if (failure == 'stuck-flush') await Completer<void>().future;
+      await stdout.flush();
+    },
+    flushErrors: () async {
+      recordFlush('errors');
+      if (failure == 'flush-errors')
+        throw StateError('synthetic flush failure');
+      await stderr.flush();
+    },
+  );
+  lifecycle.watchSignals();
+  await lifecycle.run<String>((parent) async {
+    if (failure == 'stuck-start') {
+      await lifecycle.processes.start('tracked', []);
+      unawaited(lifecycle.processes.start('never-starts', []));
+    }
+    stdout.writeln(parent.path);
+    await stdout.flush();
+    if (failure == 'closed-stdout') await stdout.close();
+    await Completer<void>().future;
+    return null;
+  });
+}
+
+final class _TrackedProcess implements Process {
+  _TrackedProcess(this.root);
+
+  final String root;
+
+  @override
+  int get pid => 123456789;
+
+  @override
+  final Future<int> exitCode = Completer<int>().future;
+
+  @override
+  bool kill([ProcessSignal signal = ProcessSignal.sigterm]) {
+    File('$root/kills').writeAsStringSync('$signal\n', mode: FileMode.append);
+    return true;
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+final class _FailureSink implements StringSink {
+  _FailureSink(this.root, this.failure);
+
+  final String root;
+  final String failure;
+
+  @override
+  void writeln([Object? value = '']) {
+    final message = '$value';
+    if (message.startsWith('Cancelling')) {
+      File('$root/cancelling').writeAsStringSync(message);
+      if (failure == 'announcement') throw StateError('synthetic announcement');
+    }
+    if (failure == 'hint' && message.startsWith('To inspect')) {
+      throw StateError('synthetic hint failure');
+    }
+    if (failure == 'finish' && message.startsWith('Could not clean up')) {
+      throw StateError('synthetic finish failure');
+    }
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

@@ -202,6 +202,56 @@ void main() {
     ProcessSignal.sigint,
     if (!Platform.isWindows) ProcessSignal.sigterm,
   ]) {
+    for (final failure in [
+      'announcement',
+      'hint',
+      'finish',
+      'flush-output',
+      'flush-errors',
+      'stuck-flush',
+      'closed-stdout',
+    ]) {
+      test(
+        '${signal.name} exits despite $failure failure',
+        () async {
+          final fixture = await _startFixture(sandbox, failure);
+          final parent = Directory(await fixture.ready);
+          fixture.process.kill(signal);
+          expect(
+            await fixture.process.exitCode.timeout(const Duration(seconds: 5)),
+            signal == ProcessSignal.sigint ? 130 : 143,
+          );
+          expect(parent.existsSync(), failure == 'finish');
+          expect(File('${sandbox.path}/flushes').readAsLinesSync(), [
+            'output',
+            'errors',
+          ]);
+        },
+        skip: Platform.isWindows ? 'POSIX signal fixture' : false,
+      );
+    }
+
+    for (final second in [ProcessSignal.sigint, ProcessSignal.sigterm]) {
+      test(
+        '${signal.name} then ${second.name} forces prompt exit',
+        () async {
+          final fixture = await _startFixture(sandbox, 'stuck-start');
+          await fixture.ready;
+          fixture.process.kill(signal);
+          await _waitForFile(File('${sandbox.path}/cancelling'));
+          fixture.process.kill(second);
+          expect(
+            await fixture.process.exitCode.timeout(const Duration(seconds: 1)),
+            second == ProcessSignal.sigint ? 130 : 143,
+          );
+          expect(File('${sandbox.path}/kills').readAsLinesSync(), [
+            '${ProcessSignal.sigkill}',
+          ]);
+        },
+        skip: Platform.isWindows ? 'POSIX signal fixture' : false,
+      );
+    }
+
     for (final keep in [false, true]) {
       test(
         '${signal.name} stops children before ${keep ? 'keeping' : 'deleting'} output',
@@ -236,6 +286,98 @@ void main() {
         skip: Platform.isWindows ? 'POSIX descendant fixture' : false,
       );
     }
+  }
+
+  test('cancellation bounds a never-completing process start', () async {
+    final pending = Completer<Process>();
+    final processes = OpenCodeProcesses(
+      startProcess:
+          (
+            executable,
+            arguments, {
+            workingDirectory,
+            environment,
+            required mode,
+          }) => pending.future,
+      stopTimeout: const Duration(milliseconds: 20),
+    );
+    final starting = processes.start('fake', []);
+    await processes
+        .cancel(ProcessSignal.sigint)
+        .timeout(const Duration(seconds: 1));
+    final lateProcess = _FakeProcess();
+    pending.complete(lateProcess);
+    await starting;
+    expect(lateProcess.signals, contains(ProcessSignal.sigkill));
+    expect(processes.cancelled, isTrue);
+  });
+
+  test('a pending start is inspected before its parent is killed', () async {
+    final pending = Completer<Process>();
+    final child = _FakeProcess();
+    final processes = OpenCodeProcesses(
+      startProcess:
+          (
+            executable,
+            arguments, {
+            workingDirectory,
+            environment,
+            required mode,
+          }) => pending.future,
+      runProcess: (command, arguments) async {
+        expect(child.signals, isEmpty);
+        return ProcessResult(0, 0, '', '');
+      },
+      isWindows: false,
+      stopTimeout: const Duration(milliseconds: 20),
+    );
+    final starting = processes.start('fake', []);
+    final stopping = processes.cancel(ProcessSignal.sigint);
+    pending.complete(child);
+    await starting;
+    await stopping.timeout(const Duration(seconds: 1));
+    expect(child.signals, [ProcessSignal.sigterm, ProcessSignal.sigkill]);
+  });
+
+  for (final windows in [false, true]) {
+    test(
+      'cancellation bounds stuck ${windows ? 'taskkill' : 'ps'} and exit',
+      () async {
+        final child = _FakeProcess();
+        final commands = <String>[];
+        final processes = OpenCodeProcesses(
+          startProcess:
+              (
+                executable,
+                arguments, {
+                workingDirectory,
+                environment,
+                required mode,
+              }) async => child,
+          runProcess: (command, arguments) {
+            commands.add(command);
+            return Completer<ProcessResult>().future;
+          },
+          isWindows: windows,
+          stopTimeout: const Duration(milliseconds: 20),
+        );
+        await processes.start('fake', []);
+        await expectLater(
+          processes
+              .cancel(ProcessSignal.sigint)
+              .timeout(const Duration(seconds: 1)),
+          throwsA(
+            isA<TimeoutException>().having(
+              (error) => error.duration,
+              'bounded inspection',
+              const Duration(milliseconds: 20),
+            ),
+          ),
+        );
+        expect(commands, [windows ? 'taskkill' : 'ps']);
+        expect(child.signals, [ProcessSignal.sigterm, ProcessSignal.sigkill]);
+      },
+    );
   }
 
   test(
@@ -339,4 +481,31 @@ Future<bool> _alive(int pid) async {
   return result.exitCode == 0 &&
       (result.stdout as String).trim().isNotEmpty &&
       !(result.stdout as String).trim().startsWith('Z');
+}
+
+Future<void> _waitForFile(File file) async {
+  await (() async {
+    while (!file.existsSync()) {
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+    }
+  })().timeout(const Duration(seconds: 2));
+}
+
+final class _FakeProcess implements Process {
+  final signals = <ProcessSignal>[];
+
+  @override
+  int get pid => 123456789;
+
+  @override
+  final Future<int> exitCode = Completer<int>().future;
+
+  @override
+  bool kill([ProcessSignal signal = ProcessSignal.sigterm]) {
+    signals.add(signal);
+    return true;
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
