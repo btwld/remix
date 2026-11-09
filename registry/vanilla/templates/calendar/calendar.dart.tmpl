@@ -22,12 +22,6 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
     .weekdaySpacing({{typePrefix}}Tokens.s1)
     .rowSpacing({{typePrefix}}Tokens.s0_5)
     .selectorSpacing({{typePrefix}}Tokens.s2)
-    .selectorRunSpacing({{typePrefix}}Tokens.s1)
-    .heading(
-      .style(
-        {{typePrefix}}Tokens.textSm.mix(),
-      ).fontWeight(FontWeight.w600).color({{typePrefix}}Tokens.foreground()),
-    )
     .weekday(
       .style({{typePrefix}}Tokens.textXs.mix()).color({{typePrefix}}Tokens.mutedForeground()),
     )
@@ -142,13 +136,11 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
     )
     .variant(
       _calendarDisabled,
-      CalendarStyler()
-          .heading(.color({{typePrefix}}Tokens.mutedForeground()))
-          .weekday(
-            .color(
-              {{typePrefix}}Tokens.mutedForeground(),
-            ).wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
-          ),
+      CalendarStyler().weekday(
+        .color(
+          {{typePrefix}}Tokens.mutedForeground(),
+        ).wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+      ),
     )
     .merge(style);
 

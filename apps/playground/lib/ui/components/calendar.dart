@@ -22,12 +22,6 @@ CalendarStyler playgroundCalendarStyle({
     .weekdaySpacing(PlaygroundTokens.s1)
     .rowSpacing(PlaygroundTokens.s0_5)
     .selectorSpacing(PlaygroundTokens.s2)
-    .selectorRunSpacing(PlaygroundTokens.s1)
-    .heading(
-      .style(
-        PlaygroundTokens.textSm.mix(),
-      ).fontWeight(FontWeight.w600).color(PlaygroundTokens.foreground()),
-    )
     .weekday(
       .style(
         PlaygroundTokens.textXs.mix(),
@@ -144,13 +138,11 @@ CalendarStyler playgroundCalendarStyle({
     )
     .variant(
       _calendarDisabled,
-      CalendarStyler()
-          .heading(.color(PlaygroundTokens.mutedForeground()))
-          .weekday(
-            .color(
-              PlaygroundTokens.mutedForeground(),
-            ).wrap(.opacity(PlaygroundTokens.disabledOpacity)),
-          ),
+      CalendarStyler().weekday(
+        .color(
+          PlaygroundTokens.mutedForeground(),
+        ).wrap(.opacity(PlaygroundTokens.disabledOpacity)),
+      ),
     )
     .merge(style);
 

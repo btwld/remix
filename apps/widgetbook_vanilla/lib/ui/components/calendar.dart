@@ -22,12 +22,6 @@ CalendarStyler vanillaCalendarStyle({
     .weekdaySpacing(VanillaTokens.s1)
     .rowSpacing(VanillaTokens.s0_5)
     .selectorSpacing(VanillaTokens.s2)
-    .selectorRunSpacing(VanillaTokens.s1)
-    .heading(
-      .style(
-        VanillaTokens.textSm.mix(),
-      ).fontWeight(FontWeight.w600).color(VanillaTokens.foreground()),
-    )
     .weekday(
       .style(VanillaTokens.textXs.mix()).color(VanillaTokens.mutedForeground()),
     )
@@ -142,13 +136,11 @@ CalendarStyler vanillaCalendarStyle({
     )
     .variant(
       _calendarDisabled,
-      CalendarStyler()
-          .heading(.color(VanillaTokens.mutedForeground()))
-          .weekday(
-            .color(
-              VanillaTokens.mutedForeground(),
-            ).wrap(.opacity(VanillaTokens.disabledOpacity)),
-          ),
+      CalendarStyler().weekday(
+        .color(
+          VanillaTokens.mutedForeground(),
+        ).wrap(.opacity(VanillaTokens.disabledOpacity)),
+      ),
     )
     .merge(style);
 

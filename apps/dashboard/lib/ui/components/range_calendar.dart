@@ -12,13 +12,8 @@ CalendarStyler uiRangeCalendarStyle({
     .headerSpacing(UiTokens.space2())
     .weekdaySpacing(UiTokens.space1())
     .rowSpacing(UiTokens.space1())
-    .heading(TextStyler().color(UiTokens.gray11()))
     .weekday(TextStyler().style(UiTokens.text1.mix()).color(UiTokens.gray11()))
-    .onDisabled(
-      CalendarStyler()
-          .heading(TextStyler().color(UiTokens.gray9()))
-          .weekday(TextStyler().color(UiTokens.gray9())),
-    )
+    .onDisabled(CalendarStyler().weekday(TextStyler().color(UiTokens.gray9())))
     .day(
       CalendarDayStyler()
           .label(TextStyler().style(UiTokens.text2.mix()))

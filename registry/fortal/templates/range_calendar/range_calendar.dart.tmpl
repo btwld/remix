@@ -12,14 +12,11 @@ CalendarStyler {{valuePrefix}}RangeCalendarStyle({
     .headerSpacing({{typePrefix}}Tokens.space2())
     .weekdaySpacing({{typePrefix}}Tokens.space1())
     .rowSpacing({{typePrefix}}Tokens.space1())
-    .heading(TextStyler().color({{typePrefix}}Tokens.gray11()))
     .weekday(
       TextStyler().style({{typePrefix}}Tokens.text1.mix()).color({{typePrefix}}Tokens.gray11()),
     )
     .onDisabled(
-      CalendarStyler()
-          .heading(TextStyler().color({{typePrefix}}Tokens.gray9()))
-          .weekday(TextStyler().color({{typePrefix}}Tokens.gray9())),
+      CalendarStyler().weekday(TextStyler().color({{typePrefix}}Tokens.gray9())),
     )
     .day(
       CalendarDayStyler()
