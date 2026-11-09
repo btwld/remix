@@ -4,6 +4,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 import '../ui/ui.dart';
+import 'calendar.dart' show appointmentCalendarStyle, calendarDemoSelectorStyle;
 
 @widgetbook.UseCase(name: 'Appointment date', type: RemixDatePicker)
 Widget buildDatePickerUseCase(BuildContext context) =>
@@ -44,50 +45,12 @@ class _DatePickerExampleState extends State<DatePickerExample> {
           .minHeight(44)
           .minWidth(MediaQuery.textScalerOf(context).scale(200))
           .spacing(8),
-      popoverStyle: fortalPopoverStyle().maxWidth(
-        MediaQuery.textScalerOf(context).scale(480),
-      ),
+      popoverStyle: fortalPopoverStyle()
+          .padding(.all(0))
+          .maxWidth(MediaQuery.textScalerOf(context).scale(480)),
       navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
-      selectorStyle: fortalSelectStyle().trigger(
-        SelectTriggerStyler().width(
-          MediaQuery.textScalerOf(context).scale(146),
-        ),
-      ),
-      calendarStyle: CalendarStyler()
-          .minWidth(MediaQuery.textScalerOf(context).scale(308))
-          .weekday(TextStyler().fontSize(12).color(FortalTokens.gray11()))
-          .day(
-            CalendarDayStyler()
-                .borderRadius(.circular(6))
-                .label(TextStyler().fontSize(14))
-                .onToday(
-                  CalendarDayStyler().label(
-                    TextStyler()
-                        .color(FortalTokens.accent11())
-                        .fontWeight(FontWeight.w600),
-                  ),
-                )
-                .onSelected(
-                  CalendarDayStyler()
-                      .color(FortalTokens.accentSolid())
-                      .label(TextStyler().color(FortalTokens.accentContrast())),
-                )
-                .onFocusVisible(
-                  CalendarDayStyler().border(
-                    .color(FortalTokens.focus8()).width(2),
-                  ),
-                )
-                .onDisabled(
-                  CalendarDayStyler().label(
-                    TextStyler().color(FortalTokens.gray9()),
-                  ),
-                )
-                .onUnavailable(
-                  CalendarDayStyler().label(
-                    TextStyler().decoration(TextDecoration.lineThrough),
-                  ),
-                ),
-          ),
+      selectorStyle: calendarDemoSelectorStyle(context),
+      calendarStyle: appointmentCalendarStyle(context),
     ),
   );
 }
