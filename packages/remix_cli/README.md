@@ -336,9 +336,7 @@ dashboard_demo` preserves local edits. Inspect a newer template with `--diff`, a
 use `--overwrite` only when deliberately replacing the installed recipe.
 
 Contributors can reproduce the isolated dashboard consumer gates for Vanilla
-and Fortal. Normal runs clean up after success, failure, and handled Ctrl-C or
-SIGTERM. Add `--keep` to inspect output or run the gallery; the checker preserves
-it and prints its path on every outcome:
+and Fortal. Add `--keep` to keep the generated app; its path is printed.
 
 ```shell
 dart run tool/check_open_code.dart --preset vanilla --source checkout --item dashboard_demo --keep
