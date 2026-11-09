@@ -261,6 +261,8 @@ class _ComboboxOptionsViewport extends StatefulWidget {
 
 class _ComboboxOptionsViewportState extends State<_ComboboxOptionsViewport> {
   final _controller = ScrollController();
+  bool _fadeTop = false;
+  bool _fadeBottom = false;
 
   @override
   void dispose() {
@@ -271,7 +273,24 @@ class _ComboboxOptionsViewportState extends State<_ComboboxOptionsViewport> {
   @override
   Widget build(BuildContext context) =>
       NotificationListener<ViewportNotificationMixin>(
-        onNotification: (_) => true,
+        onNotification: (notification) {
+          final metrics = switch (notification) {
+            ScrollNotification(:final metrics) => metrics,
+            ScrollMetricsNotification(:final metrics) => metrics,
+            _ => null,
+          };
+          if (metrics != null) {
+            final top = metrics.extentBefore > 0;
+            final bottom = metrics.extentAfter > 0;
+            if (top != _fadeTop || bottom != _fadeBottom) {
+              setState(() {
+                _fadeTop = top;
+                _fadeBottom = bottom;
+              });
+            }
+          }
+          return true;
+        },
         child: RawScrollbar(
           controller: _controller,
           thumbVisibility: true,
@@ -287,10 +306,37 @@ class _ComboboxOptionsViewportState extends State<_ComboboxOptionsViewport> {
               overscroll: false,
               physics: const ClampingScrollPhysics(),
             ),
-            child: SingleChildScrollView(
-              controller: _controller,
-              primary: false,
-              child: widget.child,
+            child: Padding(
+              // Reserve a stable trailing gutter, mirrored in RTL, so the
+              // persistent thumb never paints over an option's fill or label.
+              padding: EdgeInsetsDirectional.only(end: widget.thickness + 2),
+              child: ShaderMask(
+                blendMode: BlendMode.dstIn,
+                shaderCallback: (bounds) {
+                  // Wrapped rows cannot snap to a fixed row height. Fade just
+                  // the edges with more content beyond them, leaving the panel
+                  // chrome and thumb untouched. Clamp for very short panels.
+                  final edge = bounds.height > 0
+                      ? (12 / bounds.height).clamp(0.0, 0.5)
+                      : 0.0;
+                  return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(_fadeTop ? 0x00FFFFFF : 0xFFFFFFFF),
+                      const Color(0xFFFFFFFF),
+                      const Color(0xFFFFFFFF),
+                      Color(_fadeBottom ? 0x00FFFFFF : 0xFFFFFFFF),
+                    ],
+                    stops: [0, edge, 1 - edge, 1],
+                  ).createShader(bounds);
+                },
+                child: SingleChildScrollView(
+                  controller: _controller,
+                  primary: false,
+                  child: widget.child,
+                ),
+              ),
             ),
           ),
         ),

@@ -257,8 +257,12 @@ void main() {
         );
         expect(tester.getSize(find.byType(RemixTextField)).width, expected);
         await openCombobox(tester);
-        final panel = tester.getRect(find.byType(SingleChildScrollView).last);
+        final panel = tester.getRect(find.byType(RawScrollbar));
         expect(panel.width, expected);
+        expect(
+          tester.getSize(find.byType(SingleChildScrollView).last).width,
+          expected - 6,
+        );
       },
     );
   }
