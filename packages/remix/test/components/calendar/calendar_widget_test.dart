@@ -92,6 +92,21 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
+  testWidgets('default week rows have a four pixel vertical gap', (t) async {
+    await t.pumpWidget(_host(_calendar()));
+    Finder tile(String label) => find.ancestor(
+      of: find.text(label),
+      matching: find.byType(NakedCalendarDay),
+    );
+    expect(
+      t.getTopLeft(tile('8')).dy - t.getBottomLeft(tile('1')).dy,
+      greaterThanOrEqualTo(4),
+    );
+    expect(t.getTopLeft(tile('2')).dx - t.getTopRight(tile('1')).dx, 0);
+    await t.pumpWidget(_host(_calendar(style: CalendarStyler().rowSpacing(2))));
+    expect(t.getTopLeft(tile('8')).dy - t.getBottomLeft(tile('1')).dy, 2);
+  });
+
   testWidgets('day effects paint without changing layout', (tester) async {
     final style = CalendarStyler().day(
       CalendarDayStyler().onFocusVisible(

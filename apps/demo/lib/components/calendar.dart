@@ -4,6 +4,11 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 import '../ui/ui.dart';
 
+// Calendar touch targets have no matching step on Fortal’s spacing scale.
+const calendarDemoTarget = 44.0;
+// Fits localized month captions; no spacing token represents this width.
+const calendarDemoSelectorWidth = 146.0;
+
 @widgetbook.UseCase(name: 'Appointment date', type: RemixCalendar)
 Widget buildCalendarUseCase(BuildContext context) => const CalendarExample();
 
@@ -30,7 +35,9 @@ class _CalendarExampleState extends State<CalendarExample> {
         firstDayOfWeek: DateTime.monday,
         isDateUnavailable: (date) => date.weekday >= DateTime.saturday,
         onChanged: (date) => setState(() => _value = date),
-        navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
+        navigationStyle: fortalIconButtonStyle(
+          variant: .ghost,
+        ).size(calendarDemoTarget, calendarDemoTarget),
         selectorStyle: calendarDemoSelectorStyle(context),
         style: appointmentCalendarStyle(context),
       ),
@@ -45,23 +52,26 @@ CalendarStyler appointmentCalendarStyle(
     .padding(.all(FortalTokens.space3()))
     .headerSpacing(FortalTokens.space2())
     .weekdaySpacing(FortalTokens.space1())
+    .rowSpacing(FortalTokens.space1())
     .onDisabled(
       CalendarStyler().weekday(TextStyler().color(FortalTokens.gray9())),
     )
     .minWidth(
-      MediaQuery.textScalerOf(context).scale(44) * 7 +
+      MediaQuery.textScalerOf(context).scale(calendarDemoTarget) * 7 +
           FortalTokens.space3.resolve(context) * 2,
     )
-    .weekday(TextStyler().fontSize(12).color(FortalTokens.gray11()))
+    .weekday(
+      TextStyler().style(FortalTokens.text1.mix()).color(FortalTokens.gray11()),
+    )
     .day(
       CalendarDayStyler()
-          .minWidth(MediaQuery.textScalerOf(context).scale(44))
-          .minHeight(MediaQuery.textScalerOf(context).scale(44))
-          .borderRadius(.circular(6))
-          .label(TextStyler().fontSize(14))
+          .minWidth(MediaQuery.textScalerOf(context).scale(calendarDemoTarget))
+          .minHeight(MediaQuery.textScalerOf(context).scale(calendarDemoTarget))
+          .borderRadius(.all(FortalTokens.radius3()))
+          .label(TextStyler().style(FortalTokens.text2.mix()))
           .onToday(
             CalendarDayStyler()
-                .border(.color(FortalTokens.accent8()).width(1))
+                .border(.color(FortalTokens.gray9()).width(1))
                 .label(
                   TextStyler()
                       .color(FortalTokens.accent11())
@@ -80,7 +90,7 @@ CalendarStyler appointmentCalendarStyle(
           )
           .onPressed(
             CalendarDayStyler()
-                .color(FortalTokens.gray5())
+                .color(FortalTokens.gray6())
                 .onSelected(CalendarDayStyler().color(_selectedPressed())),
           )
           .onFocusVisible(
@@ -109,7 +119,12 @@ SelectStyler calendarDemoSelectorStyle(BuildContext context) =>
         .trigger(
           SelectTriggerStyler()
               .padding(.horizontal(FortalTokens.space2()))
-              .width(MediaQuery.textScalerOf(context).scale(146)),
+              .height(FortalTokens.touchTargetMin())
+              .width(
+                MediaQuery.textScalerOf(
+                  context,
+                ).scale(calendarDemoSelectorWidth),
+              ),
         )
         .content(
           SelectContentStyler().wrap(

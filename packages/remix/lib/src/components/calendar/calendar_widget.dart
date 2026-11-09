@@ -369,7 +369,9 @@ class RemixCalendar extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: spec.weekdaySpacing ?? 0),
-                          for (final week in state.weeks)
+                          for (final (index, week) in state.weeks.indexed) ...[
+                            if (index > 0)
+                              SizedBox(height: spec.rowSpacing ?? 4),
                             Row(
                               children: [
                                 for (final date in week)
@@ -380,6 +382,7 @@ class RemixCalendar extends StatelessWidget {
                                   ),
                               ],
                             ),
+                          ],
                         ],
                       ),
                     ),

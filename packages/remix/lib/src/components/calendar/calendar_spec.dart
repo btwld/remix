@@ -23,11 +23,16 @@ class CalendarSpec with _$CalendarSpec {
   @override
   final double? weekdaySpacing;
 
+  /// Vertical gap between week rows; columns remain connected.
+  @override
+  final double? rowSpacing;
+
   const CalendarSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? heading,
     StyleSpec<TextSpec>? weekday,
     StyleSpec<CalendarDaySpec>? day,
+    this.rowSpacing,
     this.headerSpacing,
     this.weekdaySpacing,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
