@@ -24,6 +24,33 @@ void main() {
   });
 
   group('pub.dev floor preflight', () {
+    test('hosted pin is exact and rejects path or extra override leaks', () {
+      final floor = checker.registryRemixFloor(Directory.current, 'vanilla');
+      checker.writeHostedFloorOverride(sandbox, floor: floor);
+      expect(checker.hostedFloorOverrideProblem(sandbox, floor: floor), isNull);
+      final file = File('${sandbox.path}/pubspec_overrides.yaml');
+      expect(
+        (loadYaml(file.readAsStringSync()) as YamlMap)['dependency_overrides'],
+        {'remix': floor},
+      );
+      for (final declaration in [
+        'dependency_overrides:\n  remix: ^$floor\n',
+        'dependency_overrides:\n  remix: {path: ../remix}\n',
+        'dependency_overrides:\n  remix: $floor\n  mix: 2.3.1\n',
+        'dependency_overrides:\n  remix: $floor\nresolution: workspace\n',
+      ]) {
+        file.writeAsStringSync(declaration);
+        expect(
+          checker.hostedFloorOverrideProblem(sandbox, floor: floor),
+          contains('exact hosted version'),
+        );
+      }
+      file.deleteSync();
+      expect(
+        checker.hostedFloorOverrideProblem(sandbox, floor: floor),
+        contains('missing'),
+      );
+    });
     late Directory registry;
     setUp(() {
       registry = Directory('${sandbox.path}/registry')..createSync();

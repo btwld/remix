@@ -1056,7 +1056,12 @@ Future<_Failure?> _checkInTemporaryApp({
     return _Failure('packages/remix is missing from this checkout.');
   }
   final startsWithCheckout = source == RemixSource.checkout;
-  if (startsWithCheckout) _writeCheckoutOverride(app, remixSource, preset);
+  final floor = registryRemixFloor(repositoryRoot, preset.name);
+  if (startsWithCheckout) {
+    _writeCheckoutOverride(app, remixSource, preset);
+  } else {
+    writeHostedFloorOverride(app, floor: floor);
+  }
 
   // Hosted mode never falls back to the checkout. A missing release must fail
   // the release check, even when checkout validation already passed.
@@ -1149,6 +1154,7 @@ Future<_Failure?> _checkInTemporaryApp({
     app,
     preset: preset,
     hostedCli: hostedCli,
+    hostedFloor: startsWithCheckout ? null : floor,
   );
   if (dependencyFailure != null) return dependencyFailure;
 
@@ -1916,49 +1922,71 @@ _Failure? _verifyRegistryCoverage(
   );
 }
 
+/// The single Remix floor shared by all items in the selected catalog.
+String registryRemixFloor(Directory repositoryRoot, String preset) {
+  final file = File('${repositoryRoot.path}/registry/$preset/registry.yaml');
+  final items =
+      (loadYaml(file.readAsStringSync()) as YamlMap)['items'] as YamlMap;
+  final constraints = <String>{
+    for (final item in items.values.cast<YamlMap>())
+      if (item['dependencies'] is YamlMap &&
+          item['dependencies']['remix'] is String)
+        item['dependencies']['remix'] as String,
+  };
+  if (constraints.length != 1 || !constraints.single.startsWith('^')) {
+    throw const FormatException(
+      'registry.yaml must declare one caret remix floor.',
+    );
+  }
+  return Version.parse(constraints.single.substring(1)).toString();
+}
+
+/// An exact hosted override tests the claimed minimum even if pub.dev advances.
+void writeHostedFloorOverride(Directory app, {required String floor}) {
+  Version.parse(floor);
+  File(
+    '${app.path}/pubspec_overrides.yaml',
+  ).writeAsStringSync('dependency_overrides:\n  remix: $floor\n');
+}
+
+/// Only the deliberate exact hosted pin is allowed; paths and other overrides
+/// must still fail the hosted boundary checks.
+String? hostedFloorOverrideProblem(Directory app, {required String floor}) {
+  final file = File('${app.path}/pubspec_overrides.yaml');
+  if (!file.existsSync()) return 'Hosted Remix floor override is missing.';
+  final document = loadYaml(file.readAsStringSync());
+  if (document is YamlMap && document.length == 1) {
+    final overrides = document['dependency_overrides'];
+    if (overrides is YamlMap &&
+        overrides.length == 1 &&
+        overrides['remix'] == floor) {
+      return null;
+    }
+  }
+  return 'Hosted overrides must contain only remix: $floor (exact hosted version).';
+}
+
 /// Fails when the selected source resolved a `remix` other than the one the
 /// registry floors at.
 ///
 /// The registry constraint is a caret, so every later beta resolves and every
 /// other check here still passes — while the installed templates were only
 /// ever authored against the floor. `tool/check_version_alignment.dart` holds
-/// that floor equal to `packages/remix`; this proves the version a real
-/// consumer actually gets is the same one.
+/// that floor equal to `packages/remix`. Hosted consumers pin exactly that
+/// version in pubspec_overrides.yaml so a newer publication during validation
+/// cannot change the proof. The pub.dev preflight separately rejects a stale
+/// floor, including when a newer prerelease already exists.
 _Failure? _verifyResolvedRemixFloor({
   required Directory repositoryRoot,
   required Map<String, String> resolvedPackages,
   required _PresetContract preset,
 }) {
-  final registry = File(
-    '${repositoryRoot.path}/registry/'
-    '${preset.name}/registry.yaml',
-  );
-  final document = loadYaml(registry.readAsStringSync());
-  final items = document is YamlMap ? document['items'] : null;
-  if (items is! YamlMap) {
-    return _Failure('registry.yaml is not in the expected shape.');
-  }
-
-  String? constraint;
-  for (final item in items.values) {
-    final dependencies = (item as YamlMap)['dependencies'];
-    if (dependencies is YamlMap && dependencies['remix'] is String) {
-      constraint = dependencies['remix'] as String;
-      break;
-    }
-  }
-  if (constraint == null || !constraint.startsWith('^')) {
-    return _Failure(
-      'registry.yaml declares no caret remix constraint to floor at.',
-    );
-  }
-
   final root = resolvedPackages['remix'];
   if (root == null) {
     return _Failure('remix is missing from package_config.json.');
   }
 
-  final floor = constraint.substring(1);
+  final floor = registryRemixFloor(repositoryRoot, preset.name);
   final manifest = File('$root/pubspec.yaml');
   if (!manifest.existsSync()) return _Failure('Resolved Remix has no pubspec.');
   final actual = (loadYaml(manifest.readAsStringSync()) as YamlMap)['version'];
@@ -2018,6 +2046,7 @@ _Failure? _verifyInstalledDependencies(
   Directory app, {
   required _PresetContract preset,
   required bool hostedCli,
+  String? hostedFloor,
 }) {
   final sections = _dependencySections(
     File('${app.path}/pubspec.yaml').readAsStringSync(),
@@ -2060,6 +2089,10 @@ _Failure? _verifyInstalledDependencies(
   }
   if (sections.containsKey('dependency_overrides')) {
     problems.add('hosted phase unexpectedly declares dependency_overrides');
+  }
+  if (hostedFloor != null) {
+    final problem = hostedFloorOverrideProblem(app, floor: hostedFloor);
+    if (problem != null) problems.add(problem);
   }
 
   if (problems.isEmpty) return null;
