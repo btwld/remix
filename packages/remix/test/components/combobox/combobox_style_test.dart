@@ -261,7 +261,7 @@ void main() {
         expect(panel.width, expected);
         expect(
           tester.getSize(find.byType(SingleChildScrollView).last).width,
-          expected - 6,
+          expected - 8,
         );
       },
     );

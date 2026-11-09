@@ -174,12 +174,11 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
             _ComboboxProjection(effective, .panel).build(context).spec.panel;
         return StyleSpecBuilder<ComboboxPanelSpec>(
           styleSpec: panel,
-          builder: (context, spec) => RemixBoxAdapter(
+          builder: (context, spec) => StyleSpecBuilder<BoxSpec>(
             styleSpec: spec.container,
-            containerEffects: spec.containerEffects,
-            child: _ComboboxOptionsViewport(
-              color: spec.scrollbarColor,
-              thickness: spec.scrollbarThickness ?? 4,
+            builder: (context, box) => _ComboboxOptionsViewport(
+              panel: spec,
+              box: box,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -246,13 +245,13 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
 class _ComboboxOptionsViewport extends StatefulWidget {
   const _ComboboxOptionsViewport({
     required this.child,
-    required this.color,
-    required this.thickness,
+    required this.panel,
+    required this.box,
   });
 
   final Widget child;
-  final Color? color;
-  final double thickness;
+  final ComboboxPanelSpec panel;
+  final BoxSpec box;
 
   @override
   State<_ComboboxOptionsViewport> createState() =>
@@ -271,34 +270,54 @@ class _ComboboxOptionsViewportState extends State<_ComboboxOptionsViewport> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      NotificationListener<ViewportNotificationMixin>(
-        onNotification: (notification) {
-          final metrics = switch (notification) {
-            ScrollNotification(:final metrics) => metrics,
-            ScrollMetricsNotification(:final metrics) => metrics,
-            _ => null,
-          };
-          if (metrics != null) {
-            final top = metrics.extentBefore > 0;
-            final bottom = metrics.extentAfter > 0;
-            if (top != _fadeTop || bottom != _fadeBottom) {
-              setState(() {
-                _fadeTop = top;
-                _fadeBottom = bottom;
-              });
-            }
+  Widget build(BuildContext context) {
+    final direction = Directionality.of(context);
+    final thickness = widget.panel.scrollbarThickness ?? 4;
+    final box = widget.box;
+    final padding = (box.padding ?? EdgeInsets.zero).resolve(direction);
+    final margin = (box.margin ?? EdgeInsets.zero).resolve(direction);
+    final border = box.decoration is BoxDecoration
+        ? ((box.decoration as BoxDecoration).border?.dimensions ??
+                  EdgeInsets.zero)
+              .resolve(direction)
+        : EdgeInsets.zero;
+    // Reuse the panel's padding for the thumb. Unpadded custom panels get the
+    // same minimum space on both sides, independent of their scroll range.
+    final extra =
+        (thickness -
+                (padding.left < padding.right ? padding.left : padding.right))
+            .clamp(0.0, thickness);
+    return NotificationListener<ViewportNotificationMixin>(
+      onNotification: (notification) {
+        final metrics = switch (notification) {
+          ScrollNotification(:final metrics) => metrics,
+          ScrollMetricsNotification(:final metrics) => metrics,
+          _ => null,
+        };
+        if (metrics != null) {
+          final top = metrics.extentBefore > 0;
+          final bottom = metrics.extentAfter > 0;
+          if (top != _fadeTop || bottom != _fadeBottom) {
+            setState(() {
+              _fadeTop = top;
+              _fadeBottom = bottom;
+            });
           }
-          return true;
-        },
-        child: RawScrollbar(
-          controller: _controller,
-          thumbVisibility: true,
-          thumbColor:
-              widget.color ??
-              DefaultTextStyle.of(context).style.color?.withValues(alpha: 0.35),
-          thickness: widget.thickness,
-          radius: const Radius.circular(2),
+        }
+        return true;
+      },
+      child: RawScrollbar(
+        controller: _controller,
+        thumbVisibility: true,
+        thumbColor:
+            widget.panel.scrollbarColor ??
+            DefaultTextStyle.of(context).style.color?.withValues(alpha: 0.35),
+        thickness: thickness,
+        padding: margin + border,
+        radius: const Radius.circular(2),
+        child: RemixBoxAdapter(
+          styleSpec: StyleSpec(spec: box),
+          containerEffects: widget.panel.containerEffects,
           child: ScrollConfiguration(
             // Own exactly one thumb even when the host adds desktop scrollbars.
             behavior: ScrollConfiguration.of(context).copyWith(
@@ -307,9 +326,7 @@ class _ComboboxOptionsViewportState extends State<_ComboboxOptionsViewport> {
               physics: const ClampingScrollPhysics(),
             ),
             child: Padding(
-              // Reserve a stable trailing gutter, mirrored in RTL, so the
-              // persistent thumb never paints over an option's fill or label.
-              padding: EdgeInsetsDirectional.only(end: widget.thickness + 2),
+              padding: EdgeInsets.symmetric(horizontal: extra),
               child: ShaderMask(
                 blendMode: BlendMode.dstIn,
                 shaderCallback: (bounds) {
@@ -340,5 +357,7 @@ class _ComboboxOptionsViewportState extends State<_ComboboxOptionsViewport> {
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }
