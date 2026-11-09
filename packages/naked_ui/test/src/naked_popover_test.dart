@@ -12,6 +12,58 @@ Matcher _closeTo(double v, [double eps = 0.5]) =>
 
 void main() {
   group('NakedPopover', () {
+    for (final constrained in [false, true]) {
+      testWidgets(
+        'view safety excludes keyboard with collisions off (constrained: $constrained)',
+        (tester) async {
+          tester.view.devicePixelRatio = 1;
+          tester.view.physicalSize = const Size(800, 600);
+          tester.view.viewInsets = const FakeViewPadding(bottom: 200);
+          tester.view.viewPadding = const FakeViewPadding(top: 20);
+          addTearDown(tester.view.reset);
+          final controller = MenuController();
+          const panelKey = Key('keyboard-safe panel');
+          await tester.pumpWidget(
+            WidgetsApp(
+              color: const Color(0xffffffff),
+              builder: (context, child) => Overlay.wrap(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 410),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: NakedPopover(
+                      controller: controller,
+                      avoidViewInsets: true,
+                      constrainToAvailableSpace: constrained,
+                      positioning: const OverlayPositionConfig(
+                        avoidCollisions: false,
+                      ),
+                      popoverBuilder: (context, info) => const SizedBox(
+                        key: panelKey,
+                        width: 100,
+                        height: 200,
+                      ),
+                      child: const SizedBox(width: 80, height: 30),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          controller.open();
+          await tester.pumpAndSettle();
+          final panel = tester.getRect(find.byKey(panelKey));
+          expect(
+            panel.height,
+            200,
+            reason: 'View safety must not collapse the panel.',
+          );
+          expect(panel.top, greaterThanOrEqualTo(20));
+          expect(panel.bottom, lessThanOrEqualTo(400));
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
     testWidgets(
       'view-safe panel re-fits when consumed safe-area insets change',
       (tester) async {

@@ -75,6 +75,10 @@ class AnchoredOverlay extends StatefulWidget {
 
   /// Whether to keep the panel inside the view padding (safe area) and above
   /// the view insets (keyboard), on both axes.
+  /// View safety may flip or shift the panel even when
+  /// [OverlayPositionConfig.avoidCollisions] is false. With
+  /// [constrainToAvailableSpace], it also uses the safe bounds to choose a
+  /// usable side instead of capping an obscured side to zero height.
   /// Fixed-size content larger than the cap overflows unless it adapts or
   /// scrolls. The open panel re-fits when these insets change. Nested anchored
   /// overlays inherit this preference from the open panel.
@@ -216,6 +220,9 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
       ),
     );
     return config.copyWith(
+      // Opting into view safety requires placement as well as size bounds,
+      // independently of the caller's ordinary collision-avoidance preference.
+      avoidCollisions: true,
       collisionPadding:
           config.collisionPadding +
           EdgeInsets.fromLTRB(

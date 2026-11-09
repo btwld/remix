@@ -210,7 +210,9 @@ class NakedPopover extends StatefulWidget {
   /// bounds, including smaller or offset nested overlays, and cap both axes.
   /// Fixed-size content larger than the cap overflows unless it adapts or
   /// scrolls. The open panel re-fits when safe-area or keyboard insets change.
-  /// Defaults to false.
+  ///
+  /// Defaults to false. Safe placement may flip or shift even when
+  /// [OverlayPositionConfig.avoidCollisions] is false.
   final bool avoidViewInsets;
 
   /// Called when the popover opens.
