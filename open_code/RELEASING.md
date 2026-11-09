@@ -6,11 +6,10 @@ and CLI publication have separate gates. Publishing tags/releases is a release
 operator action, not something the builder performs.
 
 When adding a preset, follow [Adding a first-party preset](ADDING_PRESETS.md).
-Extend `open-code:release:check` in the root pubspec and the examples below.
-The promotion workflow runs that aggregate once with
-`REMIX_REGISTRY_RELEASE_REF` set to its exact commit, so the same preset list
-owns hosted and remote-candidate coverage. Normal checkout CI alone does not
-establish hosted compatibility. The commands here cover all current presets.
+Extend `open-code:release:check` in the root pubspec, the promotion workflow's
+hosted matrix, and the examples below. Each matrix lane sets
+`REMIX_REGISTRY_RELEASE_REF` to the exact candidate SHA. Normal checkout CI
+alone does not establish hosted compatibility. The commands here cover all current presets.
 
 ## Validate the candidate
 
@@ -205,13 +204,47 @@ fvm dart run melos run open-code:release:check
 ## Publish the registry before the GitHub-first CLI
 
 Merge the reviewed commit to `main`. **Promote registry** validates
-generation drift, dependency constraints, CLI compatibility, and all supported
-presets against hosted runtimes in one remote-candidate pass. Each preset
-reads the exact workflow commit; the workflow then fast-forwards
-`registry-stable`. A hand-started run promotes only when it
-is executing `main`.
+the candidate through two parallel jobs:
 
-If the registry's Remix floor is not on pub.dev yet, the run fails and
+| Job | Proof |
+| --- | --- |
+| `static` | Generated registry drift, dependency constraints, version alignment, builder tests, checker/lifecycle fixture tests, and CLI tests. |
+| `hosted` | A matrix of Vanilla, Fortal, and HeroUI with `fail-fast: false` and a 20-minute timeout per lane. |
+
+Each hosted lane reads the exact workflow commit through the checkout CLI's
+GitHub transport. It installs one independent canary: `dashboard_shell` for
+Vanilla/Fortal and `search_field` for HeroUI. The gallery installs its first
+two items incrementally, then batches every remaining item. Inventory,
+dependency boundaries, generated snapshots, analysis, and fixture tests still run.
+Checkout CI retains every independent install and the full incremental loop.
+
+The hosted app pins Remix to the exact registry floor with a hosted version
+override. Other overrides and path substitutions remain forbidden. A separate
+pub.dev preflight rejects a stale Remix floor, including newer prereleases.
+Publishing a newer version during the consumer run cannot change its resolution.
+
+Each lane also activates the published `remix_cli`, initializes from stable,
+and runs `registry update @remix --ref <candidate-SHA>`. It installs two
+representative items and analyzes their installed source. This uses the
+published executable without the checkout harness or a fallback.
+
+Expect approximately 6–9 minutes wall time, including canaries and the
+published-CLI smoke, versus approximately 45 minutes previously. This is an
+estimate from the audit; measure the first GitHub runs. Logs show one timing
+line per child step. GitHub groups phases and appends a timing table to the
+step summary, including on failure. Use `--verbose` for streaming child output.
+
+`promote` needs both jobs and fast-forwards `registry-stable` only on `main`.
+A dispatch on a feature branch validates its candidate and skips promotion.
+
+Before creating an app, the preflight checks every runtime, generator, and icon
+library floor on pub.dev. A missing Remix floor prints:
+
+```text
+remix ^X is not on pub.dev yet; push tag vX, wait for the Publish workflow, then re-run Promote registry
+```
+
+If a floor is missing, the run fails within seconds and
 `registry-stable` does not move. `main` shows that failure until the floor
 is published. Publish the runtime, wait until pub.dev serves it, then
 re-run **Promote registry** on `main` (Actions → Promote registry → Run
@@ -228,12 +261,13 @@ branch back by hand takes a force push, which that protection rejects, and
 the next push to `main` would advance the branch over the reset. Projects
 that already pinned a revision stay on it either way.
 
-Smoke-test the promoted branch with hosted dependencies for all presets:
+Optionally repeat the fast smoke after promotion. The workflow already checked
+the candidate against hosted packages and the published CLI. This aggregate
+installs every item in all presets, with two incremental adds and one batch per
+gallery, and skips independent apps:
 
 ```shell
-REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --source hosted
-REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --preset fortal --source hosted
-REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --preset heroui --source hosted
+REMIX_REGISTRY_RELEASE_SMOKE=1 fvm dart run melos run open-code:release:check
 ```
 
 Normal component changes require only that promotion. The same CLI installs
@@ -248,7 +282,7 @@ package release workflow; do not infer a new CLI version from a registry
 version.
 
 The CLI publish workflow requires `registry-stable` to resolve and runs
-all supported consumer presets against its GitHub content with hosted runtime packages.
+the same fast aggregate against its GitHub content with hosted runtime packages.
 A missing `registry-stable` branch must fail; there is no local content to
 substitute, and nothing may be added to bypass the bootstrap order.
 
@@ -260,17 +294,17 @@ that tag pattern. Never republish an existing version.
 After publication, verify the exact hosted CLI:
 
 ```shell
-fvm dart run tool/check_open_code.dart --source hosted --hosted-cli
-fvm dart run tool/check_open_code.dart --preset fortal --source hosted --hosted-cli
-fvm dart run tool/check_open_code.dart --preset heroui --source hosted --hosted-cli
+fvm dart run tool/check_open_code.dart --source hosted --hosted-cli --install batch --independent none
+fvm dart run tool/check_open_code.dart --preset fortal --source hosted --hosted-cli --install batch --independent none
+fvm dart run tool/check_open_code.dart --preset heroui --source hosted --hosted-cli --install batch --independent none
 ```
 
-Every item a preset installs alone starts a fresh `remix init`, and an `init`
-that resolves the registry by branch name makes one unauthenticated GitHub API
-request; GitHub allows 60 an hour. The three presets' commands together use
-most of that, so keep each preset's list of independently installed items
-short. HeroUI's is derived from its registry: the items that depend on an item
-besides the theme.
+Each branch-based `init` makes one unauthenticated GitHub API request; GitHub
+allows 60 an hour. These smoke commands use three requests total, one per preset.
+The default hosted plan includes one independent canary per preset and plans six
+inits total. Candidate SHAs need no API call to resolve their revision.
+Use `--independent all` for a full isolation investigation; checkout and `both`
+already default to that. Avoid repeated full branch-based smokes on a shared IP.
 
 ## Rollback and migration
 
