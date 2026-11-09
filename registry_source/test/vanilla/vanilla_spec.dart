@@ -2135,7 +2135,7 @@ final _calendarTargets = <SpecTarget>[
       read: (s) => decorationOf(s.spec.day.spec.container)?.color,
       expected: (t) => name == 'calendar'
           ? t.primary
-          : tint(t.primary, t.brightness == Brightness.dark ? .28 : .18),
+          : tint(t.primary, t.brightness == Brightness.dark ? .12 : .07),
     ),
   ],
   for (final range in [false, true])

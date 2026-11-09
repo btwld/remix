@@ -53,7 +53,9 @@ void main() {
                 .first;
             await probe.expectRing(
               part: day,
+              ringColor: tint(theme.data.primaryForeground, .65),
               includes: (part) => [part.centerLeft.translate(1.5, 0)],
+              excludes: (part) => [part.centerLeft.translate(3.5, 0)],
             );
           },
         );
