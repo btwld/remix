@@ -7,6 +7,7 @@
 ///     [--independent canary|all|none] [--install batch|incremental]
 ///     [--item dashboard_demo|dashboard_shell|icons|ownership|search_field]
 ///     [--icon-library remix|rounded|lucide] [--hosted-cli] [--jobs N] [--keep]
+///     [--verbose]
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs
@@ -24,6 +25,9 @@
 /// core, never fewer than two or more than four.
 /// Normal runs clean up on every outcome. Add `--keep` to retain output for
 /// debugging or the gallery; its path is printed even on failure or cancellation.
+/// Child output is captured unless --verbose streams it. Failures print the
+/// complete child output; GitHub runs group phases and append their timings to
+/// GITHUB_STEP_SUMMARY, including on failure.
 library;
 
 import 'dart:convert';
@@ -35,12 +39,14 @@ import 'package:yaml/yaml.dart';
 
 import '../packages/remix_cli/lib/src/icon_registry.dart';
 import 'compile_registry_consumer.dart';
+import 'consumer_check_reporting.dart';
 import 'open_code_lifecycle.dart';
 
 var _lifecycle = OpenCodeLifecycle(
   repositoryRoot: Directory.current.absolute,
   keep: false,
 );
+var _reporter = ConsumerCheckReporter(out: stdout, err: stderr);
 
 const _fixtureAppFiles = <String>[
   'pubspec.yaml',
@@ -603,6 +609,7 @@ final class ConsumerCheckOptions {
     required this.item,
     this.iconLibrary = 'remix',
     this.jobs,
+    this.verbose = false,
     IndependentMode? independent,
     InstallMode? install,
   }) : _independent = independent,
@@ -613,6 +620,7 @@ final class ConsumerCheckOptions {
   final RemixSource source;
   final bool hostedCli;
   final String? item;
+  final bool verbose;
   final IndependentMode? _independent;
   final InstallMode? _install;
   InstallMode get install =>
@@ -635,6 +643,7 @@ final class ConsumerCheckOptions {
 
 ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   var keep = false;
+  var verbose = false;
   var sawPreset = false;
   var sawSource = false;
   var preset = _defaultPreset;
@@ -648,6 +657,11 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   InstallMode? install;
   for (var index = 0; index < arguments.length; index += 1) {
     final argument = arguments[index];
+    if (argument == '--verbose') {
+      if (verbose) return null;
+      verbose = true;
+      continue;
+    }
     if (argument == '--install') {
       if (install != null || index + 1 >= arguments.length) return null;
       final name = arguments[++index];
@@ -742,6 +756,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   }
   return ConsumerCheckOptions(
     keep: keep,
+    verbose: verbose,
     preset: preset.name,
     source: source,
     hostedCli: hostedCli,
@@ -790,7 +805,7 @@ Future<void> main(List<String> arguments) async {
       '--source checkout; icons/ownership are vanilla, search_field is heroui)] '
       '[--icon-library remix|rounded|lucide] '
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
-      '[--keep]\n'
+      '[--keep] [--verbose]\n'
       '[--independent canary|all|none (hosted: canary; checkout/both: all)]\n'
       '[--install batch|incremental (hosted: batch; checkout/both: incremental)]\n'
       'Runs clean up after success, failure and handled cancellation; '
@@ -811,6 +826,15 @@ Future<void> main(List<String> arguments) async {
   }
 
   final repositoryRoot = Directory.current.absolute;
+  final summary = Platform.environment['GITHUB_STEP_SUMMARY'];
+  _reporter = ConsumerCheckReporter(
+    out: stdout,
+    err: stderr,
+    verbose: parsed.verbose,
+    githubActions: Platform.environment['GITHUB_ACTIONS'] == 'true',
+    summaryFile: summary == null ? null : File(summary),
+  );
+  _reporter.startPhase('Setup (${parsed.preset})');
   _lifecycle = OpenCodeLifecycle(
     repositoryRoot: repositoryRoot,
     keep: parsed.keep,
@@ -826,7 +850,7 @@ Future<void> main(List<String> arguments) async {
     try {
       icons = await _registryIcons(repositoryRoot, ref);
     } on IOException catch (error) {
-      stderr.writeln(
+      _reporter.failure(
         'open-code check failed: could not read the '
         '${ref ?? 'checkout'} registry\'s icons.yaml: $error',
       );
@@ -853,13 +877,22 @@ Future<void> main(List<String> arguments) async {
       install: parsed.install,
     );
     if (failure != null) {
-      stderr.writeln('open-code check failed: ${failure.message}');
+      _reporter.failure('open-code check failed: ${failure.message}');
       exitCode = _lifecycle.processes.cancellationExitCode ?? failure.exitCode;
     }
   } on OpenCodeCancelled {
     exitCode = _lifecycle.processes.cancellationExitCode!;
+  } on Object catch (error, stackTrace) {
+    _reporter.failure('open-code check failed: $error\n$stackTrace');
+    exitCode = 1;
   } finally {
-    await _lifecycle.close();
+    try {
+      await _lifecycle.close();
+    } finally {
+      _reporter.finish(
+        'Registry validation: ${parsed.preset} (${parsed.source.name})',
+      );
+    }
   }
 }
 
@@ -973,6 +1006,7 @@ Future<_Failure?> _checkInTemporaryApp({
       repositoryRoot: repositoryRoot,
       outputDirectory: app.parent,
       processes: _lifecycle.processes,
+      reporter: _reporter,
       environment: environment,
     );
     environment['REMIX_REGISTRY_CONSUMER_CLI'] = snapshot.path;
@@ -1071,6 +1105,7 @@ Future<_Failure?> _checkInTemporaryApp({
     );
   }
 
+  _reporter.startPhase('Independent installs');
   final independentFailure = await _checkIndependentItems(
     sdk: sdk,
     app: app,
@@ -1081,6 +1116,7 @@ Future<_Failure?> _checkInTemporaryApp({
   );
   if (independentFailure != null) return independentFailure;
 
+  _reporter.startPhase('Gallery installs');
   for (final items in galleryInstallBatches(preset.registryItems, install)) {
     final add = await _runProcess(
       sdk.dart,
@@ -1092,6 +1128,7 @@ Future<_Failure?> _checkInTemporaryApp({
       return _Failure('remix add ${items.join(' ')} failed in the fresh app');
   }
   _step('CLI installed Theme, every item, dependencies, and generated output.');
+  _reporter.startPhase('Verify installed gallery');
 
   final installedFailure = _verifyInstalledUi(app, preset);
   if (installedFailure != null) return installedFailure;
@@ -1715,6 +1752,7 @@ Future<_Failure?> _analyzeAndTest({
   required String dependencySource,
   required Map<String, String> environment,
 }) async {
+  _reporter.startPhase('Analyze and test ($dependencySource)');
   final analyze = await _runProcess(
     sdk.flutter,
     ['analyze'],
@@ -2290,6 +2328,9 @@ Future<_Failure?> _runProcess(
   Map<String, String>? environment,
   StringSink? log,
 }) async {
+  final step = arguments.length >= 2 && arguments[1] == 'remix_cli:remix'
+      ? arguments.skip(2).join(' ')
+      : arguments.join(' ');
   final harness = environment?['REMIX_REGISTRY_CONSUMER_CLI'];
   if (harness != null &&
       arguments.length >= 2 &&
@@ -2297,35 +2338,16 @@ Future<_Failure?> _runProcess(
       arguments[1] == 'remix_cli:remix') {
     arguments = [harness, ...arguments.skip(2)];
   }
-  (log ?? stdout).writeln('\$ $executable ${arguments.join(' ')}');
-  final Process process;
-  try {
-    process = await _lifecycle.processes.start(
-      executable,
-      arguments,
-      workingDirectory: workingDirectory,
-      environment: environment,
-      mode: log == null
-          ? ProcessStartMode.inheritStdio
-          : ProcessStartMode.normal,
-    );
-  } on ProcessException catch (error) {
-    return _Failure('could not start `$executable`: ${error.message}');
-  }
-  // Close stdin and drain both pipes to prevent child-process deadlocks.
-  const decoder = Utf8Decoder(allowMalformed: true);
-  final drained = <Future<Object?>>[
-    if (log != null) ...[
-      process.stdin.close(),
-      process.stdout.transform(decoder).forEach(log.write),
-      process.stderr.transform(decoder).forEach(log.write),
-    ],
-  ];
-  final code = await process.exitCode;
-  await Future.wait(drained);
-  _lifecycle.processes.throwIfCancelled();
-  if (code == 0) return null;
-  return _Failure('`$executable ${arguments.join(' ')}` exited $code');
+  final problem = await _reporter.run(
+    _lifecycle.processes,
+    executable,
+    arguments,
+    workingDirectory: workingDirectory,
+    environment: environment,
+    log: log,
+    step: step,
+  );
+  return problem == null ? null : _Failure(problem);
 }
 
 Map<String, Map<String, Object?>> _dependencySections(String pubspec) {

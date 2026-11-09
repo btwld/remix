@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -6,6 +7,9 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
 import '../../tool/check_open_code.dart' as checker;
+import '../../tool/compile_registry_consumer.dart';
+import '../../tool/consumer_check_reporting.dart';
+import '../../tool/open_code_lifecycle.dart';
 
 void main() {
   late Directory sandbox;
@@ -16,6 +20,151 @@ void main() {
 
   tearDown(() {
     if (sandbox.existsSync()) sandbox.deleteSync(recursive: true);
+  });
+
+  group('quiet process reporting', () {
+    test('CLI compilation uses the same quiet tracked runner', () async {
+      final out = StringBuffer();
+      final processes = OpenCodeProcesses(
+        startProcess:
+            (
+              _,
+              args, {
+              String? workingDirectory,
+              Map<String, String>? environment,
+              required ProcessStartMode mode,
+            }) async {
+              expect(mode, ProcessStartMode.normal);
+              expect(args.take(2), ['compile', 'kernel']);
+              File(args.last).writeAsStringSync('fixture kernel');
+              final child = _ReportingProcess();
+              child.output.add(utf8.encode('compiler details'));
+              unawaited(child.output.close());
+              unawaited(child.errors.close());
+              child.completed.complete(0);
+              return child;
+            },
+      );
+      final snapshot = await compileRegistryConsumerCli(
+        dart: 'fake-dart',
+        repositoryRoot: sandbox,
+        outputDirectory: sandbox,
+        processes: processes,
+        reporter: ConsumerCheckReporter(out: out, err: out),
+      );
+      expect(snapshot.readAsStringSync(), 'fixture kernel');
+      expect(out.toString(), startsWith('ok compile CLI ('));
+      expect(out.toString(), isNot(contains('compiler details')));
+    });
+    Future<String?> child(
+      StringBuffer out, {
+      int code = 0,
+      bool verbose = false,
+    }) async {
+      final script = File('${sandbox.path}/output.dart')
+        ..writeAsStringSync('''
+import 'dart:io';
+void main() {
+  stdout.writeln('child stdout');
+  stderr.writeln('child stderr');
+  exitCode = $code;
+}
+''');
+      return ConsumerCheckReporter(out: out, err: out, verbose: verbose).run(
+        OpenCodeProcesses(),
+        Platform.resolvedExecutable,
+        [script.path],
+        workingDirectory: sandbox.path,
+        step: 'add fixture',
+      );
+    }
+
+    test('success prints only one timing line', () async {
+      final out = StringBuffer();
+      expect(await child(out), isNull);
+      expect(out.toString(), matches(r'^ok add fixture \(\d+\.\d s\)\n$'));
+      expect(out.toString(), isNot(contains('ERROR')));
+    });
+    test('failure prints full stdout and stderr and the exit code', () async {
+      final out = StringBuffer();
+      expect(await child(out, code: 7), contains('exited 7'));
+      expect(out.toString(), contains('child stdout'));
+      expect(out.toString(), contains('child stderr'));
+      expect(out.toString(), isNot(contains('ok add')));
+    });
+    test('verbose streams child output and parses once', () async {
+      expect(checker.parseConsumerCheckOptions(['--verbose'])!.verbose, isTrue);
+      expect(checker.parseConsumerCheckOptions([])!.verbose, isFalse);
+      expect(
+        checker.parseConsumerCheckOptions(['--verbose', '--verbose']),
+        isNull,
+      );
+      final out = StringBuffer();
+      expect(await child(out, verbose: true), isNull);
+      expect(out.toString(), contains('child stdout'));
+      expect(out.toString(), contains('child stderr'));
+    });
+    test('verbose bypasses pool buffers before the child finishes', () async {
+      final child = _ReportingProcess();
+      final processes = OpenCodeProcesses(
+        startProcess:
+            (
+              _,
+              _, {
+              String? workingDirectory,
+              Map<String, String>? environment,
+              required ProcessStartMode mode,
+            }) async => child,
+      );
+      final out = StringBuffer();
+      final pooledLog = StringBuffer();
+      final pending = ConsumerCheckReporter(out: out, err: out, verbose: true)
+          .run(
+            processes,
+            'fake',
+            ['add', 'fixture'],
+            workingDirectory: sandbox.path,
+            log: pooledLog,
+          );
+      await _settle();
+      child.output.add(utf8.encode('live stdout\n'));
+      child.errors.add(utf8.encode('live stderr\n'));
+      await _settle();
+      expect(out.toString(), contains('live stdout'));
+      expect(out.toString(), contains('live stderr'));
+      expect(pooledLog.toString(), isEmpty);
+      expect(child.completed.isCompleted, isFalse);
+      await child.output.close();
+      await child.errors.close();
+      child.completed.complete(0);
+      expect(await pending, isNull);
+    });
+    test('phases close and timing summaries append on success and failure', () {
+      final summary = File('${sandbox.path}/summary.md')
+        ..writeAsStringSync('earlier\n');
+      final out = StringBuffer();
+      final reporter = ConsumerCheckReporter(
+        out: out,
+        err: out,
+        githubActions: true,
+        summaryFile: summary,
+      );
+      reporter.startPhase('Setup');
+      reporter.startPhase('Gallery');
+      reporter.failure('actual failure\nwith details%');
+      reporter.finish('fixture');
+      expect(out.toString(), contains('::group::Setup\n::endgroup::'));
+      expect(out.toString(), contains('::group::Gallery'));
+      expect(
+        out.toString(),
+        contains('::error::actual failure%0Awith details%25'),
+      );
+      expect(out.toString().split('::endgroup::'), hasLength(3));
+      expect(summary.readAsStringSync(), startsWith('earlier\n'));
+      expect(summary.readAsStringSync(), contains('| Phase | Time |'));
+      expect(summary.readAsStringSync(), contains('| Setup |'));
+      expect(summary.readAsStringSync(), contains('| Gallery |'));
+    });
   });
 
   test('every invocation shipped in CI and docs actually parses', () {
@@ -1293,4 +1442,26 @@ final class _Tasks {
       if (!gate.isCompleted) gate.complete();
     }
   }
+}
+
+final class _ReportingProcess implements Process {
+  _ReportingProcess() {
+    unawaited(input.stream.drain<void>());
+  }
+  final completed = Completer<int>();
+  final output = StreamController<List<int>>();
+  final errors = StreamController<List<int>>();
+  final input = StreamController<List<int>>();
+  @override
+  Future<int> get exitCode => completed.future;
+  @override
+  Stream<List<int>> get stdout => output.stream;
+  @override
+  Stream<List<int>> get stderr => errors.stream;
+  @override
+  late final IOSink stdin = IOSink(input.sink);
+  @override
+  int get pid => 123456789;
+  @override
+  bool kill([ProcessSignal signal = ProcessSignal.sigterm]) => true;
 }
