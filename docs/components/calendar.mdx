@@ -281,6 +281,10 @@ Optional. A raw resolved spec that bypasses `style` and inherited styles.
 `CalendarDayStyler` styles a day like a box, its number through
 `label(TextStyler)`, and its states through `onSelected`, `onHovered`,
 `onPressed`, `onFocusVisible`, `onDisabled`, `onToday` and `onUnavailable`.
+Use `containerEffects(RemixBoxEffectsMix)` for focus outlines and other box
+effects: they follow the day tile's resolved radius without changing its layout.
+`NakedCalendarDayState.maybeOf(context)` exposes the day to context-aware style
+tokens.
 
 Range selection, typed/segmented entry, non-Gregorian calendars and timezone
 scheduling are not part of this component. Preset recipes are separate from the

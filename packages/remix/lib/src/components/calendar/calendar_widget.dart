@@ -410,8 +410,9 @@ class RemixCalendar extends StatelessWidget {
             ),
             builder: (context, frame) => StyleSpecBuilder<CalendarDaySpec>(
               styleSpec: frame.spec.day,
-              builder: (context, spec) => Box(
+              builder: (context, spec) => RemixBoxAdapter(
                 styleSpec: spec.container,
+                containerEffects: spec.containerEffects,
                 child: StyledText(labels.day(date), styleSpec: spec.label),
               ),
             ),

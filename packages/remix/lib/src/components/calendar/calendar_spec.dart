@@ -35,9 +35,28 @@ class CalendarDaySpec with _$CalendarDaySpec {
   @override
   final StyleSpec<TextSpec> label;
 
+  /// Box effects painted with the day's resolved radius, without layout space.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? containerEffects;
+
   const CalendarDaySpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
+    this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec());
+
+  @override
+  CalendarDaySpec lerp(CalendarDaySpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      containerEffects: RemixBoxEffectsSpec.lerpNullable(
+        containerEffects,
+        other.containerEffects,
+        t,
+      ),
+    );
+  }
 }

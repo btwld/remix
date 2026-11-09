@@ -47,6 +47,7 @@ export 'package:naked_ui/naked_ui.dart'
         NakedAccordionItemState,
         NakedAccordionTriggerBuilder,
         NakedCalendarState,
+        NakedCalendarDayState,
         NakedDisclosureState,
         NakedComboboxState,
         NakedComboboxFieldBuilder,

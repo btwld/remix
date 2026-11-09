@@ -63,6 +63,45 @@ TextStyle? _renderedTextStyle(WidgetTester tester, String label) => tester
     .style;
 
 void main() {
+  testWidgets('day effects paint without changing layout', (
+    tester,
+  ) async {
+    final style = CalendarStyler().day(
+      CalendarDayStyler().onFocusVisible(
+        CalendarDayStyler().containerEffects(
+          RemixBoxEffectsMix.outline(
+            BorderSideMix(color: const Color(0xff555555), width: 3),
+          ).outlineOffset(-3),
+        ),
+      ),
+    );
+    final node = FocusNode();
+    addTearDown(node.dispose);
+    await tester.pumpWidget(_host(_calendar(style: style, focusNode: node)));
+    final day = find
+        .ancestor(
+          of: find.text('14'),
+          matching: find.byType(StyleSpecProvider<CalendarDaySpec>),
+        )
+        .first;
+    final before = tester.getRect(day);
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTraditional;
+    addTearDown(
+      () => FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.automatic,
+    );
+    node.requestFocus();
+    await tester.pumpAndSettle();
+    final spec = tester
+        .widget<StyleSpecProvider<CalendarDaySpec>>(day)
+        .spec
+        .spec;
+    expect(spec.containerEffects?.outline.width, 3);
+    expect(tester.getRect(day), before);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('dropdown caption has one row and a semantic live heading', (
     tester,
   ) async {
