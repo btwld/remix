@@ -718,7 +718,13 @@ class _CalendarState extends State<_Calendar> with FocusNodeMixin<_Calendar> {
     // Recheck current inputs at activation; cached visual eligibility is not
     // an authorization to commit after availability has changed.
     if (!_validRange(range)) return;
-    setState(() => _anchor = null);
+    setState(() {
+      _anchor = null;
+      // Semantic activation may never acquire input focus. Align the logical
+      // day now so a later focus handoff is not treated as navigation by _move,
+      // which would discard the acceptance memory below.
+      _focused = _date(date);
+    });
     _requested = range;
     widget.onRangeChanged!(range);
   }

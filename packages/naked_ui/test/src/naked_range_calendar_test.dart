@@ -183,6 +183,88 @@ SemanticsNode _semantics(WidgetTester tester, int day) =>
     tester.getSemantics(find.bySemanticsLabel('2024-2-$day'));
 
 void main() {
+  for (final activation in [
+    'pointer',
+    'keyboard',
+    'semantics',
+    'focused semantics',
+  ]) {
+    for (final delayed in [false, true]) {
+      testWidgets(
+        '$activation completion retains end through acceptance (delayed: $delayed)',
+        (tester) async {
+          final semantics = tester.ensureSemantics();
+          try {
+            final state = await _pump(tester);
+            state.accept = !delayed;
+            final semantic = activation.contains('semantics');
+            if (activation == 'semantics') {
+              state.after.requestFocus();
+              await tester.pumpAndSettle();
+            } else {
+              await _focus(tester, state);
+            }
+            Future<void> semanticTap(int day) async {
+              final node = tester.getSemantics(
+                find.bySemanticsLabel(
+                  '2024-${state.snapshot.displayedMonth.month}-$day',
+                ),
+              );
+              node.owner!.performAction(node.id, SemanticsAction.tap);
+              await tester.pumpAndSettle();
+            }
+
+            if (semantic) {
+              await semanticTap(20);
+            } else if (activation == 'keyboard') {
+              for (var i = 0; i < 5; i++) {
+                await _key(tester, LogicalKeyboardKey.arrowRight);
+              }
+              await _key(tester, LogicalKeyboardKey.enter);
+            } else {
+              await _tap(tester, 20);
+            }
+            if (activation == 'keyboard') {
+              await _key(tester, LogicalKeyboardKey.pageDown);
+            } else {
+              state.snapshot.showNextMonth!();
+              await tester.pumpAndSettle();
+            }
+            final end = DateTime(2024, 3, activation == 'keyboard' ? 20 : 3);
+            if (semantic) {
+              await semanticTap(3);
+            } else if (activation == 'keyboard') {
+              await _key(tester, LogicalKeyboardKey.enter);
+            } else {
+              await _tap(tester, 3);
+            }
+            expect(state.requests, [
+              CivilDateRange(start: DateTime(2024, 2, 20), end: end),
+            ]);
+            if (delayed) {
+              // Rebuild with the unchanged parent value before accepting later.
+              state.change(() {});
+              await tester.pumpAndSettle();
+              await tester.pump(const Duration(milliseconds: 100));
+              state.change(() => state.value = state.requests.single);
+              await tester.pumpAndSettle();
+            }
+            expect(state.snapshot.focusedDate, end);
+            expect(state.snapshot.displayedMonth, DateTime(2024, 3));
+            if (activation == 'semantics') {
+              expect(state.after.hasFocus, isTrue);
+              expect(state.entry.hasFocus, isFalse);
+            } else {
+              expect(state.days[end]!.isFocused, isTrue);
+            }
+            expect(tester.takeException(), isNull);
+          } finally {
+            semantics.dispose();
+          }
+        },
+      );
+    }
+  }
   testWidgets(
     'excludeSemantics hides range subtree without disabling selection',
     (tester) async {
