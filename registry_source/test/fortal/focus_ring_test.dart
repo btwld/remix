@@ -55,7 +55,6 @@ void main() {
                     fortalCheckboxStyle().build(context).spec.containerEffects,
                     fortalRadioStyle().build(context).spec.containerEffects,
                     fortalSwitchStyle().build(context).spec.trackEffects,
-                    fortalSliderStyle().build(context).spec.thumbFocusEffects,
                     fortalTextFieldStyle().build(context).spec.containerEffects,
                     fortalTextAreaStyle().build(context).spec.containerEffects,
                     fortalSelectStyle()
@@ -81,6 +80,16 @@ void main() {
                     expect(ring?.outline.width, 2);
                     expect(ring?.outlineOffset, 2);
                   }
+                  final slider = fortalSliderStyle()
+                      .build(context)
+                      .spec
+                      .thumbFocusEffects!;
+                  expect(
+                    slider.outline.color,
+                    FortalTokens.accent11.resolve(context),
+                  );
+                  expect(slider.outline.width, 2);
+                  expect(slider.outlineOffset, 0);
                   return const SizedBox();
                 },
               ),

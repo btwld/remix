@@ -193,6 +193,11 @@ final _families = <_Family>[
     build: switch_story.buildSwitchCatalogUseCase,
   ),
   (id: 'slider', group: 'Inputs', build: slider.buildSliderCatalogUseCase),
+  (
+    id: 'range_slider',
+    group: 'Inputs',
+    build: slider.buildRangeSliderCatalogUseCase,
+  ),
   (id: 'select', group: 'Inputs', build: select.buildSelectCatalogUseCase),
   (
     id: 'segmented_control',

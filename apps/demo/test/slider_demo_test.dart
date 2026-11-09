@@ -25,7 +25,7 @@ void main() {
                 states: states,
                 child: Builder(
                   builder: (context) {
-                    final spec = demoSliderStyle().build(context).spec;
+                    final spec = fortalSliderStyle().build(context).spec;
                     final face =
                         (spec.thumb.spec.decoration as BoxDecoration).color;
                     final border =
@@ -86,12 +86,7 @@ void main() {
                     children: [
                       const Text('Single price'),
                       const Text(r'$80'),
-                      FortalSlider(
-                        value: 80,
-                        max: 400,
-                        onChanged: changes.add,
-                        style: demoSliderStyle(),
-                      ),
+                      FortalSlider(value: 80, max: 400, onChanged: changes.add),
                     ],
                   ),
                 ),

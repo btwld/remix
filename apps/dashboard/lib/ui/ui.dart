@@ -32,6 +32,7 @@ export 'components/plan.dart';
 export 'components/popover.dart';
 export 'components/progress.dart';
 export 'components/radio.dart';
+export 'components/range_slider.dart';
 export 'components/segmented_control.dart';
 export 'components/select.dart';
 export 'components/sidebar.dart';

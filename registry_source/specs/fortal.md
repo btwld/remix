@@ -85,7 +85,8 @@ rewriting the source scales:
   and panel. Recipes use these content roles, not raw step 11, for normal text.
 - `focus8` fits source step 8 toward step 12 only as needed for **3:1** on
   the page and panel. Empty soft controls use this solid ring rather than
-  relying on their low-contrast tint alone. Focus stays 2px wide with a 2px gap.
+  relying on their low-contrast tint alone. Focus stays 2px wide with a 2px gap, except the contiguous slider ring
+  specified below.
 - `controlBorder` fits neutral step 8 toward neutral step 12 for **3:1** on
   the page, panel and off-track fill. Disabled controls keep quieter strokes.
 - Selected surface switch and slider thumbs stay white. Their `accentThumbRing`
@@ -186,7 +187,8 @@ a 1px `controlBorder` ring on a track edged in `controlBorder`; the selected
 surface track keeps its quiet gray-alpha-5 edge. Disabled switches keep a
 neutral gray-2 thumb with a gray-6 border and drop the active track edge
 (surface keeps the quiet edge, soft has none), whatever the selection, focus
-or press state. Slider thumbs are white with a 2px `accentThumbRing`; the thumb
+or press state. Slider thumbs are white with a 2px `accentThumbRing` in light
+and gray3 in dark; the thumb
 is identified by its fill or its ring. The soft slider range is step 6 alone,
 with no accent alpha layered over it. Geometry and state precedence are shared.
 
@@ -251,3 +253,18 @@ Caller style overrides are always merged last.
   Remix/Naked UI behavior coverage. Fortal-owned goldens cover both modes.
 - `tool/generate_fortal_catalog.dart --check`, `docs:check`, registry derivation,
   and installed-consumer checks prevent source/documentation/distribution drift.
+
+### Slider and range slider
+
+`range_slider` installs `FortalRangeSlider`, depending on the shared `slider`
+recipe. Both use `FortalSliderSize` (size1–size3), `FortalSliderVariant`
+(surface, soft), and high contrast. The demo's reviewed slider treatment is the
+source for their shared polish: 48px interaction height at normal scaling,
+accentA7/2px hover halo, accentA6/space1 press halo with an accent12 edge,
+and a contiguous accent11/2px visible-focus ring. The zero focus gap prevents
+rail-coloured notches between neighbouring handles. Dark idle handles use a
+neutral gray3 edge. Disabled sliders show gray5 rail, gray8 interval and a
+gray4 light / gray9 dark face with gray9 hairline, using srcOver in both modes;
+interaction halos are suppressed. Per-thumb state belongs to Remix.
+Two ordered values, minimum spacing, snapping, RTL and semantics retain Remix's
+API. Custom value formatters use the base widget with the recipe.

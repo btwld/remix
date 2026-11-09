@@ -69,7 +69,9 @@ void main() {
   });
 
   group('slider thumb', () {
-    testWidgets('uses the shared ring without a thumb halo', (tester) async {
+    testWidgets('uses the contiguous slider ring without a shadow', (
+      tester,
+    ) async {
       for (final variant in FortalSliderVariant.values) {
         final (ring, focus8) = await _resolveFocused(
           tester,
@@ -77,7 +79,7 @@ void main() {
             fortalSliderStyle(
               variant: variant,
             ).build(context).spec.thumbFocusEffects!,
-            FortalTokens.focus8.resolve(context),
+            FortalTokens.accent11.resolve(context),
           ),
         );
         final reason = '$variant';
@@ -89,7 +91,7 @@ void main() {
         );
         expect(ring.outline.color, focus8, reason: reason);
         expect(ring.outline.width, 2, reason: reason);
-        expect(ring.outlineOffset, 2, reason: reason);
+        expect(ring.outlineOffset, 0, reason: reason);
       }
     });
 
@@ -126,13 +128,17 @@ void main() {
             await tester.pump();
 
             final context = tester.element(find.byType(FortalSlider));
-            final edgeColor = FortalTokens.accentThumbRing.resolve(context);
-            final focus8 = MixScope.tokenOf(FortalTokens.focus8, context);
+            final edgeColor =
+                (mode == FortalThemeMode.dark
+                        ? FortalTokens.gray3
+                        : FortalTokens.accentThumbRing)
+                    .resolve(context);
+            final focus8 = MixScope.tokenOf(FortalTokens.accent11, context);
             final pixels = await _capture(tester, slider);
             final thumb = tester.getCenter(find.byType(FortalSlider));
             final origin = tester.getTopLeft(find.byKey(slider));
 
-            // Sample the 2px border, 2px clear gap and 2px shared ring
+            // Sample the 2px border, contiguous 2px focus ring
             // along the thumb's center column at four device pixels per px.
             var y = ((thumb.dy - origin.dy) * _scale).round();
             final x = ((thumb.dx - origin.dx) * _scale).round();
@@ -140,12 +146,9 @@ void main() {
               y--;
             }
             final edge = y - _scale;
-            final gap = y - 3 * _scale;
-            final ring = y - 5 * _scale;
+            final ring = y - 3 * _scale;
 
             _expectNear(pixels.at(x, edge), edgeColor);
-            // The capture excludes the theme background, so the gap is clear.
-            expect(pixels.at(x, gap), const Color(0x00000000));
             _expectNear(pixels.at(x, ring), focus8);
           },
         );

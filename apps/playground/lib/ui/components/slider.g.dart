@@ -12,10 +12,17 @@ part of 'slider.dart';
 /// a 0-1 value onto the filled range, and the slider accessibility semantics;
 /// this recipe supplies the rail, the filled range, and the thumb.
 ///
-/// The pill-shaped rail is `mutedForeground` and the range is `primary`.
+/// The pill-shaped rail is `mutedForeground` in light and `ring` in dark;
+/// the range is `primary`.
 /// Both slider recipes reserve a 48px interaction height. The thumb is a white disc
 /// with a `primary` outline and a small shadow, which keeps it a distinct
-/// handle on either page.
+/// handle on either page. In dark mode a dark outline separates overlapping
+/// white handles.
+///
+/// Set [surfaceColor] to the actual enclosing surface on cards or tinted panels
+/// (for example, `PlaygroundTokens.card.resolve(context)`). It defaults to the page
+/// background. Hover and press halos blend against that surface so the range
+/// does not show through them.
 ///
 /// `semanticFormatterCallback` is deliberately not forwarded to the generated
 /// `PlaygroundSlider`. Its type is
@@ -26,6 +33,7 @@ part of 'slider.dart';
 class PlaygroundSlider extends StatelessWidget {
   const PlaygroundSlider({
     super.key,
+    this.surfaceColor,
     this.style = const SliderStyler.create(),
     required this.value,
     this.onChanged,
@@ -41,6 +49,8 @@ class PlaygroundSlider extends StatelessWidget {
     this.semanticLabel,
     this.excludeSemantics = false,
   });
+
+  final Color? surfaceColor;
 
   final SliderStyler style;
 
@@ -74,7 +84,10 @@ class PlaygroundSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSlider(
       key: this.key,
-      style: playgroundSliderStyle(style: this.style),
+      style: playgroundSliderStyle(
+        surfaceColor: this.surfaceColor,
+        style: this.style,
+      ),
       value: this.value,
       onChanged: this.onChanged,
       onChangeStart: this.onChangeStart,

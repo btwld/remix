@@ -30,7 +30,7 @@ SliderStyler fortalSliderStyle({
         .size(metrics.thumbSize, metrics.thumbSize).borderRadius(thumbRadius),
       )
       .thickness(metrics.trackSize)
-      .thumbFocusEffects(fortalFocusOutline());
+      .thumbFocusEffects(fortalSliderFocusOutline());
 
   final styled = switch (variant) {
     .surface => _fortalSliderSurface(
@@ -47,20 +47,49 @@ SliderStyler fortalSliderStyle({
     ),
   };
   return styled
-      .onDisabled(
-        _fortalSliderDisabled(
-          variant,
-          trackRadius: radius,
-          thumbRadius: thumbRadius,
-        ),
-      )
       .variant(
         ContextVariant(
-          'fortalSliderDisabledDarkBlend',
+          'fortalSliderDark',
           (context) => FortalTheme.of(context).isDark,
         ),
-        SliderStyler().onDisabled(.blendMode(BlendMode.screen)),
+        SliderStyler().thumb(
+          .border(
+            .all(
+              .color(FortalTokens.gray3()).width(FortalTokens.borderWidth2()),
+            ),
+          ),
+        ),
       )
+      .onHovered(
+        SliderStyler().thumbEffects(
+          RemixBoxEffectsMix(
+            outline: .color(
+              FortalTokens.accentA7(),
+            ).width(FortalTokens.borderWidth2()),
+          ),
+        ),
+      )
+      .onPressed(
+        SliderStyler()
+            .thumbEffects(
+              RemixBoxEffectsMix(
+                outline: .color(
+                  FortalTokens.accentA6(),
+                ).width(FortalTokens.space1()),
+              ),
+            )
+            .thumb(
+              .border(
+                .all(
+                  .color(
+                    FortalTokens.accent12(),
+                  ).width(FortalTokens.borderWidth2()),
+                ),
+              ),
+            ),
+      )
+      .onDisabled(_fortalSliderDisabled(variant))
+      .wrap(.sizedBox(height: FortalTokens.space8()))
       .wrap(fortalTouchTarget())
       .merge(style);
 }
@@ -134,11 +163,7 @@ BoxStyler _fortalSliderThumbRing() => BoxStyler().decoration(
   ),
 );
 
-SliderStyler _fortalSliderDisabled(
-  FortalSliderVariant variant, {
-  required BorderRadiusMix trackRadius,
-  required BorderRadiusMix thumbRadius,
-}) {
+SliderStyler _fortalSliderDisabled(FortalSliderVariant variant) {
   final track = switch (variant) {
     .surface =>
       SliderStyler()
@@ -158,8 +183,10 @@ SliderStyler _fortalSliderDisabled(
           ),
   };
   return track
-      .range(.color(const Color(0x00000000)))
-      .thumbColor(FortalTokens.gray1())
+      .track(.color(FortalTokens.gray5()))
+      .range(.color(FortalTokens.gray8()))
+      .thumbColor(_disabledThumbFill())
+      .thumbEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
       .rangeEffects(
         RemixBoxEffectsMix.behindContent(
           RemixBoxEffectLayerMix(gradients: const [], shadows: const []),
@@ -174,7 +201,7 @@ SliderStyler _fortalSliderDisabled(
         BoxStyler().decoration(
           .border(
             .all(
-              .color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()),
+              .color(FortalTokens.gray9()).width(FortalTokens.borderWidth1()),
             ),
           ),
         ),
@@ -182,7 +209,7 @@ SliderStyler _fortalSliderDisabled(
       .thumbFocusEffects(
         RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
       )
-      .blendMode(BlendMode.multiply);
+      .blendMode(BlendMode.srcOver);
 }
 
 List<RemixLinearGradientMix> _fortalSliderHighContrastGradients(
@@ -228,3 +255,10 @@ _FortalSliderMetrics _fortalSliderMetrics(FortalSliderSize size) =>
         trackRadius: FortalTokens.sliderTrackRadius3(),
       ),
     };
+
+// Resolve inside the disabled fragment, whose priority is higher than dark mode.
+final _disabledThumbFill = ContextToken<Color>(
+  (context) =>
+      (FortalTheme.of(context).isDark ? FortalTokens.gray9 : FortalTokens.gray4)
+          .resolve(context),
+);

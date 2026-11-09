@@ -135,7 +135,8 @@ The twelve flat-control families expose no `classic` constructor. Kbd defaults
 to `soft`; segmented control has only `surface`. Toast's independent `classic`
 variant remains a floating notification surface. Cards and controls have no
 elevation, surface fields use gray2 with the 3:1 `controlBorder` frame (select
-triggers keep gray7), and focus uses the fitted `focus8` role at 2px with a 2px gap. Labelled fills
+triggers keep gray7). Most focus rings use the fitted `focus8` role at 2px
+with a 2px gap; sliders use contiguous accent11 rings. Labelled fills
 (solid buttons, badges, avatars, menu highlights) read `accentSolid` and
 `accentSolidHover` with `accentContrast`. `accentIndicator`/`accentTrack` are the mark
 fill of selected controls and progress, and checks read
@@ -144,7 +145,7 @@ palettes carry white labels in both modes; Sol keeps warm-brown labels. Orla use
 Gray-12 primary fills in light mode and true white in dark mode, with opposite
 ink. Its soft variants and neutral surfaces stay subtle. `accentMarkHover` pairs
 selected marks/tracks with their hover or pressed fill; mark ink follows both. Normal selected surface-switch thumbs and enabled slider thumbs are
-white with an `accentThumbRing` outline rather than ink discs; off switch
+white with an `accentThumbRing` outline (slider edges use gray3 in dark); off switch
 thumbs are white with a `controlBorder` ring. Progress tracks are edged in
 `controlBorder`. Selected soft thumbs keep accentContent (accent12 at
 high contrast), selected high-contrast surface thumbs keep accent1, and
@@ -167,8 +168,19 @@ both modes on a 4px grid, with palette and interaction-state selectors.
 Fortal uses one shared outline from `focus8`, `focusRingWidth`, and
 `focusRingOffset` (2px wide, 2px outside by default). Effects-capable controls
 paint it through `containerEffects`, accordion/disclosure use `triggerEffects`,
-switches use `trackEffects`, and sliders use `thumbFocusEffects`. The ring
-takes no layout space. Disabled controls do not ring.
+switches use `trackEffects`. Sliders use `thumbFocusEffects` with accent11
+and a zero gap so neighbouring handles keep contiguous rings. Rings take
+no layout space. Disabled controls do not ring.
 
 Select panels use `minWidth(remixAnchorWidth())`; a smaller `maxWidth` override
 must also replace that minimum.
+
+## Slider intervals
+
+Install `range_slider` for `<Prefix>RangeSlider` and its shared `slider`
+dependency. Both recipes expose `size` (size1–size3), `variant` (surface/soft),
+and `highContrast`; caller style merges last. Independent thumbs have hover,
+press and contiguous keyboard-focus rings. Normal scaling reserves 48px.
+Give `semanticLabels` distinct localized names. Custom value formatters use
+`RemixRangeSlider` with `<prefix>RangeSliderStyle()`.
+See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).

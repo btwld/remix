@@ -168,6 +168,7 @@ const _fortalRegistryItems = <String>[
   'popover',
   'progress',
   'radio',
+  'range_slider',
   'segmented_control',
   'select',
   'sidebar',
@@ -202,6 +203,7 @@ const _fortalPreset = _PresetContract(
   name: 'fortal',
   fixtureDirectory: 'fortal_fixture',
   registryItems: _fortalRegistryItems,
+  independentItems: [..._independentRegistryItems, 'range_slider'],
 );
 
 const _herouiRegistryItems = [

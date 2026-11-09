@@ -11,7 +11,7 @@ This is the API reference. Start with the [Fortal overview](/fortal) for install
 
 A `—` value means the widget does not expose that axis. When values are listed but their default is `—`, the parameter is nullable with no pinned value. That is the typography path: an omitted size or weight resolves from the active scope's tokens (`text3`, regular) rather than from an enum, so a host text run cannot resize Fortal text. See [Typography](/fortal/typography).
 
-<CatalogSearch items={["FortalAccordion","FortalAppBar","FortalAvatar","FortalBadge","FortalButton","FortalCallout","FortalCard","FortalCheckbox","FortalCode","FortalDataList","FortalDataTable","FortalDialog","FortalDisclosure","FortalDivider","FortalHeading","FortalIconButton","FortalKbd","FortalLineChart","FortalLink","FortalMenu","FortalPopover","FortalProgress","FortalRadio","FortalSegmentedControl","FortalSelect","FortalSidebar","FortalSidebarLayout","FortalSkeleton","FortalSlider","FortalSpinner","FortalSwitch","FortalTabBar","FortalText","FortalTextArea","FortalTextField","FortalToast","FortalToggle","FortalToggleGroup","FortalTooltip"]} />
+<CatalogSearch items={["FortalAccordion","FortalAppBar","FortalAvatar","FortalBadge","FortalButton","FortalCallout","FortalCard","FortalCheckbox","FortalCode","FortalDataList","FortalDataTable","FortalDialog","FortalDisclosure","FortalDivider","FortalHeading","FortalIconButton","FortalKbd","FortalLineChart","FortalLink","FortalMenu","FortalPopover","FortalProgress","FortalRadio","FortalRangeSlider","FortalSegmentedControl","FortalSelect","FortalSidebar","FortalSidebarLayout","FortalSkeleton","FortalSlider","FortalSpinner","FortalSwitch","FortalTabBar","FortalText","FortalTextArea","FortalTextField","FortalToast","FortalToggle","FortalToggleGroup","FortalTooltip"]} />
 
 ## At a glance
 
@@ -40,6 +40,7 @@ A `—` value means the widget does not expose that axis. When values are listed
 | `FortalPopover` | `size1`, `size2`, `size3`, `size4` | `size2` | — | — |
 | `FortalProgress` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalRadio` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
+| `FortalRangeSlider` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalSegmentedControl` | `size1`, `size2`, `size3` | `size2` | `surface` | `surface` |
 | `FortalSelect` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft`, `ghost` | `surface` |
 | `FortalSidebar` | — | — | — | — |
@@ -161,6 +162,28 @@ Recipe `registry_source/lib/src/fortal/components/slider.dart`
 **Style props:** `color`, `radius`, `highContrast`
 
 **States:** `idle`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`, `rtl`
+
+### FortalRangeSlider
+
+Recipe `registry_source/lib/src/fortal/components/range_slider.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalRangeSlider.soft`, `FortalRangeSlider.surface`
+
+**Other defaults:** `enabled: true`, `highContrast: false`, `max: 1`, `min: 0`, `minSpacing: 0`
+
+**Style props:** `color`, `radius`, `highContrast`
+
+**States:** `idle`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`, `rtl`
+
+**Flutter differences:**
+
+- Shares FortalSliderSize and FortalSliderVariant with the slider recipe.
+- Exactly two ordered values; no vertical orientation. Custom announcements use RemixRangeSlider with fortalRangeSliderStyle().
 
 ### FortalSwitch
 

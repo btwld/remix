@@ -281,6 +281,29 @@ List<_Probe> _probes() {
         _sliderThumb,
         width: 144,
       ),
+    for (final variant in FortalSliderVariant.values)
+      for (final index in [0, 1])
+        _Probe(
+          'range-slider.${variant.name}.$index',
+          SizedBox(
+            width: 120,
+            child: FortalRangeSlider(
+              values: const [.25, .75],
+              variant: variant,
+              onChanged: _changed,
+            ),
+          ),
+          (image, rects) => _sliderThumb(image, (
+            cell: Rect.fromLTRB(
+              index == 0 ? rects.cell.left : rects.cell.center.dx,
+              rects.cell.top,
+              index == 0 ? rects.cell.center.dx : rects.cell.right,
+              rects.cell.bottom,
+            ),
+            child: rects.child,
+          )),
+          width: 144,
+        ),
     // A bare progress bar has no visible value text: the track's extent shows
     // the total and the filled extent shows the value, at 0, part and full.
     for (final variant in FortalProgressVariant.values)

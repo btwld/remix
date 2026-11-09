@@ -13,6 +13,8 @@ part of 'range_slider.dart';
 /// supplies the shared Slider rail, filled interval, and both thumb treatments
 /// through [playgroundSliderStyle], including hover, press, focus and disabled.
 /// Both recipes share a 48px interaction height and pill-shaped rails.
+/// Pass [surfaceColor] on a card or tinted panel so its opaque interaction halos
+/// blend with the enclosing surface rather than the page background.
 ///
 /// Give each bound a distinct localized name in `semanticLabels`. The generated
 /// `PlaygroundRangeSlider` omits `semanticFormatterCallbacks`, whose Naked UI type
@@ -21,6 +23,7 @@ part of 'range_slider.dart';
 class PlaygroundRangeSlider extends StatelessWidget {
   const PlaygroundRangeSlider({
     super.key,
+    this.surfaceColor,
     this.style = const SliderStyler.create(),
     required this.values,
     this.onChanged,
@@ -37,6 +40,8 @@ class PlaygroundRangeSlider extends StatelessWidget {
     this.semanticLabels,
     this.excludeSemantics = false,
   });
+
+  final Color? surfaceColor;
 
   final SliderStyler style;
 
@@ -72,7 +77,10 @@ class PlaygroundRangeSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixRangeSlider(
       key: this.key,
-      style: playgroundRangeSliderStyle(style: this.style),
+      style: playgroundRangeSliderStyle(
+        surfaceColor: this.surfaceColor,
+        style: this.style,
+      ),
       values: this.values,
       onChanged: this.onChanged,
       onChangeStart: this.onChangeStart,
