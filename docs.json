@@ -100,6 +100,10 @@
           "href": "/components/calendar"
         },
         {
+          "title": "Range Calendar",
+          "href": "/components/range_calendar"
+        },
+        {
           "title": "Date Picker",
           "href": "/components/date_picker"
         },

@@ -1,6 +1,9 @@
 part of 'calendar.dart';
 
 /// Resolved calendar surface, typography and independently styled day anatomy.
+///
+/// Range days are styled with day variants such as
+/// `CalendarDayStyler.onRangeStart`, resolved in each day's own state.
 // No target: the generator cannot resolve cross-generated constructor
 // styler types for navigationStyle and selectorStyle in the same build.
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
@@ -21,6 +24,10 @@ class CalendarSpec with _$CalendarSpec {
   @override
   final double? weekdaySpacing;
 
+  /// Horizontal gap between the month and year selectors.
+  @override
+  final double? selectorSpacing;
+
   /// Vertical gap between week rows; columns remain connected.
   @override
   final double? rowSpacing;
@@ -32,6 +39,7 @@ class CalendarSpec with _$CalendarSpec {
     this.rowSpacing,
     this.headerSpacing,
     this.weekdaySpacing,
+    this.selectorSpacing,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        weekday = weekday ?? const StyleSpec(spec: TextSpec()),
        day = day ?? const StyleSpec(spec: CalendarDaySpec());

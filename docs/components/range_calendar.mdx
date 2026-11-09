@@ -1,0 +1,323 @@
+---
+title: Range Calendar
+description: A controlled inclusive date range with shared calendar navigation and a local selection draft.
+keywords: [flutter, remix, calendar, date range, accessibility]
+---
+
+`RemixRangeCalendar` lets people choose a complete inclusive date range in one
+Gregorian calendar. It reuses Calendar navigation, day interaction and styling;
+it is not two independently selected dates. The application owns the committed
+`CivilDateRange?`; the calendar retains only an unfinished selection anchor.
+
+## Basic usage
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class ReportingPeriod extends StatefulWidget {
+  const ReportingPeriod({super.key});
+
+  @override
+  State<ReportingPeriod> createState() => _ReportingPeriodState();
+}
+
+class _ReportingPeriodState extends State<ReportingPeriod> {
+  CivilDateRange? period;
+
+  @override
+  Widget build(BuildContext context) => RemixRangeCalendar(
+    value: period,
+    firstDate: DateTime(2026),
+    lastDate: DateTime(2028, 12, 31),
+    semanticLabel: 'Reporting period',
+    firstDayOfWeek: DateTime.monday,
+    onChanged: (next) => setState(() => period = next),
+  );
+}
+```
+
+The default month/year selectors need an `Overlay` ancestor. A routed
+`WidgetsApp` supplies one; use `Overlay.wrap` in a builder-only host. No Material
+theme, `MaterialLocalizations` or Material `DateTimeRange` is required.
+
+## Selection and ownership
+
+| Action | Result |
+| --- | --- |
+| First eligible activation | Start a local draft; no callback. |
+| Navigate after anchoring | Preview the ordered interval from the anchor to the focused day; no callback. |
+| Second eligible activation | Clear the draft and request one complete inclusive range. |
+| Activate an unavailable date or cross an unavailable interior date | Keep the anchor; no callback and no silent truncation. |
+| Escape | Cancel the local draft; leave Escape available to an enclosing overlay. |
+| Tab or blur | Preserve the inline draft without committing. |
+| Parent replaces or clears the value | Show the supplied value and cancel a stale draft. |
+
+Reverse selection orders endpoints before calling `onChanged`. Selecting the
+anchor again requests a one-day range. No partial value reaches the callback.
+If the parent rejects a request by leaving `value` unchanged, that supplied range
+remains selected; there is no optimistic local committed value.
+
+`CivilDateRange(start: ..., end: ...)` normalizes the civil year/month/day fields
+to local dates where representable, with a UTC date-only fallback for skipped
+local days. It ignores input times and UTC flags and rejects reversed construction
+in release mode. Treat the preserved fields as civil dates without timezone conversion. Equality and hashing compare civil endpoints.
+Both endpoints are included. The UTC fallback preserves fields rather than
+converting a scheduling instant.
+
+`firstDate` and `lastDate` are inclusive. `enabled: false` or null `onChanged`
+disables interaction and cancels an unfinished draft. Equal replacement range
+objects preserve browsing. Clearing the committed range does not reset the
+browsing month. Accepting the calendar's remembered request preserves focus and
+the displayed month at the completed end, including an asynchronous acceptance.
+The calendar remembers its last request until the user navigates (including
+month/year selectors), starts a new draft, the supplied value changes, or
+interaction is disabled (`enabled: false` or null `onChanged`). Any other changed
+non-null value recentres on its clamped start. This includes an equal-to-request
+value supplied after the original request was rejected and the user browsed
+elsewhere, started a new draft, or interaction was disabled and re-enabled.
+
+## Unavailable dates
+
+`isDateUnavailable` must be a pure date predicate. Every date in a candidate
+range must be available, including dates outside the visible month. Bounds and
+availability constrain focus/activation independently of the supplied value;
+an invalid externally supplied range is retained and described, never silently
+corrected through a callback.
+
+Rebuild when availability changes, including changes to data captured by the
+same function object. Completion also rechecks the current predicate. Invalid
+completion dates remain keyboard-discoverable but do not expose a selection
+action. An invalid anchor is discarded without changing the committed range.
+
+Every widget update revalidates the committed range with O(span) predicate
+calls, even if the function identity is unchanged. Completion also rechecks the
+whole candidate interval. Between rebuilds, availability results are cached, so focus moves and browsing check
+only newly shown dates; rebuild the calendar when the predicate's results
+change. Use a cheap synchronous predicate; network fetching and business
+validation belong to the application, not the calendar.
+
+## Presentation and localization
+
+Calendar labels default explicitly to English. Use `RemixCalendarLabels` for
+date formatting, navigation and weekday names; range-specific labels belong to
+`RemixRangeCalendarLabels`. `Directionality` controls RTL layout and horizontal
+keys; it does not translate text. `firstDayOfWeek` uses Monday=1 through Sunday=7.
+
+Committed interval dates retain selected semantics. A draft is described
+separately; it is not a second committed selection. Calendar days retain their
+behavior-owning semantics even when their visuals are styled.
+
+A range summary (the selected range, the next instruction and any availability
+problem) is announced as a live region. It is not painted by default; pass
+`summaryBuilder` to show it, for example `(context, summary) => Text(summary)`.
+`RemixRangeCalendarLabels.joinSummary` and `RemixCalendarLabels.joinDayLabel` join the summary's
+sentences and each day's name parts, so their punctuation is localizable.
+
+## Styling the interval
+
+Use the same `CalendarStyler` and independently resolved navigation/selector
+styles as Calendar. Range days are styled with day variants on
+`CalendarStyler.day`, resolved in each day's own state:
+
+| Variant | Applies to |
+| --- | --- |
+| `onRangeStart` | First day of a multi-day painted interval. |
+| `onRangeMiddle` | Days strictly between the first and last day. |
+| `onRangeEnd` | Last day of a multi-day painted interval. |
+| `onRangeSingle` | A one-day interval, instead of combining start/end caps. |
+| `onRangePreview` | Every date in the local draft interval. |
+
+The painted interval is the draft while anchored, otherwise the committed
+value. Range variants rank with widget states: Mix applies them after plain
+context variants, and among widget-state variants the one declared last wins
+on shared properties. Declare them after `onSelected` (and `onDisabled`) to
+override those, and declare position variants after `onRangePreview` so caps
+sit on the draft fill. Selected semantics continue to describe the committed
+range, including while a draft overlaps it.
+
+Use directional corner radii for chronological endpoint caps. Keep merged
+radius values in the same coordinate family with Mix 2.3.1: do not combine a
+physical base radius (`.circular(...)`) with directional endpoint radii. Leave
+the base radius unset for square interiors, as below.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final endpoint = CalendarDayStyler()
+    .color(const Color(0xFF3E63DD))
+    .label(TextStyler().color(const Color(0xFFFFFFFF)));
+
+final rangeStyle = CalendarStyler().day(
+  CalendarDayStyler()
+      .onSelected(
+        CalendarDayStyler()
+            .color(const Color(0xFFDBE5FF))
+            .label(TextStyler().color(const Color(0xFF18306A))),
+      )
+      .onRangePreview(
+        CalendarDayStyler()
+            .color(const Color(0xFFFAE2A0))
+            .label(TextStyler().color(const Color(0xFF653D00))),
+      )
+      .onRangeStart(endpoint.borderRadius(.only(
+        topStart: const Radius.circular(8),
+        bottomStart: const Radius.circular(8),
+      )))
+      .onRangeEnd(endpoint.borderRadius(.only(
+        topEnd: const Radius.circular(8),
+        bottomEnd: const Radius.circular(8),
+      )))
+      .onRangeSingle(endpoint.borderRadius(.circular(8))),
+);
+```
+
+Pass this to `RemixRangeCalendar(style: rangeStyle, ...)`; there is no callable
+CalendarStyler widget shorthand. Variants keep working through root
+animations, because each frame builds the nested day style in that day's
+state. A raw `styleSpec` is already resolved and carries no variants: every day
+renders its `day` spec, so selection, availability and range positions are not
+painted. Use `style` for state and range styling.
+
+## Interaction and scope
+
+The keyboard contract matches [Calendar](/components/calendar): arrows move by
+day/week, Home/End move within the week, PageUp/PageDown move by month, and Shift
+with PageUp/PageDown moves by year. Enter, Space, semantic activation and
+pointer release use the same two-step selection contract. Hover, pointer-down,
+cancellation and scrolling do not select. Touch has no hover or drag prerequisite.
+
+Default day targets are at least 44 logical pixels; narrow layouts and enlarged
+text scroll without shrinking them. Header replacement remains presentation-only:
+use the snapshot's bounded navigation actions and keep day behavior owned by the
+calendar.
+
+This component shows one month at a time and supports cross-month ranges through
+navigation. Typed/segmented entry, multiple visible months, drag selection,
+partial committed values, Apply/Cancel modes, min/max nights, non-Gregorian
+calendars and timezone scheduling are outside this API. Preset adoption and
+runtime publication are separate from adding the component source.
+
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixRangeCalendar remixRangeCalendarConstructor({
+  Key? key,
+  required CivilDateRange? value,
+  required DateTime firstDate,
+  required DateTime lastDate,
+  ValueChanged<CivilDateRange>? onChanged,
+  DateTime? currentDate,
+  bool Function(DateTime)? isDateUnavailable,
+  int firstDayOfWeek = DateTime.sunday,
+  bool enabled = true,
+  String? semanticLabel,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  RemixCalendarLabels labels = const RemixCalendarLabels(),
+  RemixRangeCalendarLabels rangeLabels = const RemixRangeCalendarLabels(),
+  Widget Function(BuildContext, NakedRangeCalendarState)? headerBuilder,
+  IconButtonStyler navigationStyle = const IconButtonStyler.create(),
+  SelectStyler selectorStyle = const SelectStyler.create(),
+  CalendarStyler style = const CalendarStyler.create(),
+  CalendarSpec? styleSpec,
+  Widget Function(BuildContext, String)? summaryBuilder,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+## Properties
+### Widget Properties
+
+#### `value` → `CivilDateRange?`
+
+**Required**. Parent-owned complete inclusive range, compared by civil fields.
+Null shows no selection. Invalid values remain selected without correction.
+
+#### `firstDate` / `lastDate` → `DateTime`
+
+**Required**. Inclusive bounds; times and UTC flags are ignored. `firstDate`
+must be on or before `lastDate`.
+
+#### `onChanged` → `ValueChanged<CivilDateRange>?`
+
+Optional. Requests one complete range. The parent accepts it by updating `value`.
+Null disables interaction.
+
+#### `currentDate` → `DateTime?`
+
+Optional. Today, for `onToday` and fallback focus. Defaults to now.
+
+#### `isDateUnavailable` → `bool Function(DateTime)?`
+
+Optional. Marks dates unavailable, including offscreen interior dates.
+See [Unavailable dates](#unavailable-dates) for validation cost and rebuild rules.
+
+#### `firstDayOfWeek` → `int`
+
+Optional. First weekday column, Monday=1 through Sunday=7. Defaults to Sunday.
+
+#### `enabled` → `bool`
+
+Optional. Enables navigation, focus and selection when `onChanged` is non-null.
+
+#### `semanticLabel` → `String?`
+
+Optional. Accessible name of the calendar group.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. Focus entry point; requesting it focuses the current day.
+
+#### `autofocus` → `bool`
+
+Optional. Whether to focus the current day on mount. Defaults to false.
+
+#### `labels` → `RemixCalendarLabels`
+
+Optional. Caller-owned date labels and formatters; English by default.
+
+#### `rangeLabels` → `RemixRangeCalendarLabels`
+
+Optional. Caller-owned range roles, prompts, selected-range formatter and joiners;
+English by default. Disabled calendars retain the selected-range description
+without selection prompts.
+
+#### `headerBuilder` → `Widget Function(BuildContext, NakedRangeCalendarState)?`
+
+Optional. Replaces header visuals and navigation using the snapshot's bounded
+actions. Day selection, focus and semantics remain owned by the calendar.
+
+#### `summaryBuilder` → `Widget Function(BuildContext, String)?`
+
+Optional. Paints the localized summary and retains its live-region semantics.
+By default the summary is unpainted over the weekday row.
+
+#### `navigationStyle` → `IconButtonStyler`
+
+Optional. Previous/next button styling, resolved in each button's state.
+
+#### `selectorStyle` → `SelectStyler`
+
+Optional. Independent month/year selector styling.
+
+#### `style` → `CalendarStyler`
+
+Optional. Calendar and day styling, including range variants.
+
+#### `styleSpec` → `CalendarSpec?`
+
+Optional. Raw resolved spec that bypasses `style` and inherited styles. It carries
+no variants, so all days render the same `day` spec without range or state paint.
+
+### Style Methods
+
+Use the shared [Calendar style methods](/components/calendar#style-methods) for
+container, weekday, day and selector spacing. Range-only day variants
+are `onRangeStart`, `onRangeMiddle`, `onRangeEnd`, `onRangeSingle` and
+`onRangePreview`; see [Styling the interval](#styling-the-interval) for their ordering and painted interval.

@@ -143,7 +143,7 @@ melos:
       description: Verify skipped civil dates in Pacific/Apia
       env:
         TZ: Pacific/Apia
-      exec: flutter test --no-pub test/src/naked_calendar_civil_dates_test.dart --reporter=failures-only
+      exec: flutter test --no-pub test/src/naked_calendar_civil_dates_test.dart test/utilities/civil_date_range_test.dart test/src/naked_range_calendar_test.dart --reporter=failures-only
       packageFilters:
         scope: [naked_ui]
 

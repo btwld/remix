@@ -46,6 +46,39 @@ void main() {
     },
   );
 
+  test(
+    'range calendar API and day variants are exported through the barrel',
+    () {
+      final range = CivilDateRange(
+        start: DateTime(2024),
+        end: DateTime(2024, 2),
+      );
+      final calendar = RemixRangeCalendar(
+        value: range,
+        firstDate: DateTime(2024),
+        lastDate: DateTime(2025),
+        onChanged: (_) {},
+        headerBuilder: (context, NakedRangeCalendarState state) =>
+            Text('${state.displayedMonth}'),
+        rangeLabels: RemixRangeCalendarLabels(
+          selectedRange: (start, end) => '$start – $end',
+        ),
+        style: CalendarStyler(
+          day: CalendarDayStyler()
+              .onRangePreview(CalendarDayStyler().color(Colors.lightBlue))
+              .onRangeStart(CalendarDayStyler().color(Colors.blue))
+              .onRangeMiddle(CalendarDayStyler().color(Colors.blue))
+              .onRangeEnd(CalendarDayStyler().color(Colors.blue))
+              .onRangeSingle(CalendarDayStyler().borderRadius(.circular(22))),
+        ),
+      );
+      expect(calendar.value, range);
+      expect(calendar.style, isA<CalendarStyler>());
+      expect(RemixRangeCalendar.styleFrom(), isA<CalendarStyler>());
+      expect(isSameCivilDate(range.start, DateTime.utc(2024)), isTrue);
+    },
+  );
+
   test('disclosure API is constructible from the package barrel', () {
     const disclosure = RemixDisclosure(
       trigger: Text('Details'),

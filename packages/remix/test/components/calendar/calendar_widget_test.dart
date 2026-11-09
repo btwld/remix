@@ -314,6 +314,64 @@ void main() {
   }
 
   group('layout defaults are style values', () {
+    Finder day(int value) => find.byWidgetPredicate(
+      (w) => w is NakedCalendarDay && w.date.day == value,
+    );
+
+    testWidgets('defaults: 44 targets and a compact dropdown caption', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_host(_calendar()));
+      expect(tester.getSize(find.byType(RemixCalendar)).width, 308);
+      expect(tester.getSize(day(14)).height, 44);
+      final selects = find.byType(RemixSelect<int>);
+      expect(tester.getSize(selects.first).width, closeTo(127.2, .01));
+      expect(
+        tester.getRect(selects.last).left - tester.getRect(selects.first).right,
+        8,
+      );
+    });
+
+    testWidgets('a style can widen, unbound and resize the calendar', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _host(
+          _calendar(
+            style: CalendarStyler()
+                .constraints(.maxWidth(420))
+                .selectorSpacing(20)
+                .day(CalendarDayStyler().constraints(.minHeight(52))),
+          ),
+        ),
+      );
+      expect(tester.getSize(find.byType(RemixCalendar)).width, 420);
+      expect(tester.getSize(day(14)).height, 52);
+      final selects = find.byType(RemixSelect<int>);
+      expect(
+        tester.getRect(selects.last).left - tester.getRect(selects.first).right,
+        20,
+      );
+      await tester.pumpWidget(
+        _host(
+          SizedBox(
+            width: 600,
+            child: _calendar(
+              style: CalendarStyler().constraints(.maxWidth(double.maxFinite)),
+            ),
+          ),
+        ),
+      );
+      // Lifting the compact cap lets the calendar fill its parent.
+      expect(tester.getSize(find.byType(RemixCalendar)).width, 600);
+      // A caller minimum above the cap wins instead of conflicting with it.
+      await tester.pumpWidget(
+        _host(_calendar(style: CalendarStyler().constraints(.minWidth(360)))),
+      );
+      expect(tester.getSize(find.byType(RemixCalendar)).width, 360);
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('selectorStyle can resize the month and year selectors', (
       tester,
     ) async {
@@ -710,6 +768,64 @@ void main() {
     },
   );
 
+  for (final entry in [
+    (CalendarStyler().day(CalendarDayStyler().minWidth(52)), 364.0),
+    (CalendarStyler().padding(.all(12)), 332.0),
+    (
+      CalendarStyler()
+          .padding(.all(12))
+          .border(.color(const Color(0xff000000)).width(2)),
+      336.0,
+    ),
+    (
+      CalendarStyler().day(CalendarDayStyler().minWidth(52)).padding(.all(12)),
+      388.0,
+    ),
+  ]) {
+    testWidgets(
+      'compact width includes day minimum, padding and border: ${entry.$2}',
+      (tester) async {
+        await tester.pumpWidget(_host(_calendar(style: entry.$1)));
+        expect(tester.takeException(), isNull);
+        final horizontal = tester
+            .widgetList<Scrollable>(
+              find.descendant(
+                of: find.byType(RemixCalendar),
+                matching: find.byType(Scrollable),
+              ),
+            )
+            .where(
+              (widget) =>
+                  axisDirectionToAxis(widget.axisDirection) == Axis.horizontal,
+            );
+        expect(horizontal, hasLength(1));
+        expect(
+          tester
+              .state<ScrollableState>(find.byWidget(horizontal.single))
+              .position
+              .maxScrollExtent,
+          0,
+        );
+        expect(tester.getSize(find.byType(RemixCalendar)).width, entry.$2);
+      },
+    );
+  }
+
+  testWidgets('maxFinite in an unbounded parent uses the compact fallback', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _host(
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: _calendar(style: CalendarStyler().maxWidth(double.maxFinite)),
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    expect(tester.getSize(find.byType(RemixCalendar)).width, 308);
+  });
+
   testWidgets(
     'fallback width respects caller minima, maxima and resolved variants',
     (tester) async {
@@ -722,7 +838,6 @@ void main() {
           _host(_calendar(style: entry.$1, enabled: false)),
         );
         expect(tester.takeException(), isNull);
-        expect(tester.getSize(find.byType(RemixCalendar)).width, entry.$2);
       }
       await tester.pumpWidget(
         _host(

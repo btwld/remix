@@ -243,6 +243,14 @@
       }
     ]
   },
+  "range_calendar": {
+    "cases": [
+      {
+        "name": "Reporting period",
+        "path": "components/remixrangecalendar/reporting-period"
+      }
+    ]
+  },
   "segmented_control": {
     "cases": [
       {

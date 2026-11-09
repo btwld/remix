@@ -45,6 +45,7 @@ export 'src/components/tooltip/tooltip.dart';
 export 'package:mix/mix.dart';
 export 'package:naked_ui/naked_ui.dart'
     show
+        CivilDateRange,
         NakedAccordionItemState,
         NakedAccordionTriggerBuilder,
         NakedCalendarState,
@@ -54,6 +55,8 @@ export 'package:naked_ui/naked_ui.dart'
         NakedComboboxFieldBuilder,
         NakedDisclosureTransitionBuilder,
         NakedMenuState,
+        NakedRangeCalendarState,
+        NakedRangePosition,
         NakedSliderSemanticFormatterCallback,
         NakedTabState,
         OverlayAlignment,
