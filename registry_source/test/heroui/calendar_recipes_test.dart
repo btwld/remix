@@ -129,7 +129,13 @@ void main() {
           heroUiToken(HeroUiTokens.accentForeground, mode),
         );
         expect(
-          contrastRatio(dayBorder(t, 6).top.color, dayDecoration(t, 6)!.color!),
+          contrastRatio(
+            dayBorder(t, 6).top.color,
+            Color.alphaBlend(
+              dayDecoration(t, 6)!.color!,
+              heroUiToken(HeroUiTokens.overlay, mode),
+            ),
+          ),
           greaterThanOrEqualTo(3),
         );
         expect(dayText(t, 18)?.decoration, TextDecoration.lineThrough);

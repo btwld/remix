@@ -27,11 +27,11 @@ class HeroUiDatePicker extends StatelessWidget {
     this.semanticLabel = 'Choose date',
     this.placeholder = 'Select date',
     this.formatDate,
-    this.calendarLabels = const RemixCalendarLabels(),
+    this.calendarLabels = heroUiCalendarLabels,
     this.focusNode,
     this.autofocus = false,
     this.positioning = const OverlayPositionConfig(
-      sideOffset: 4,
+      sideOffset: 8,
       collisionPadding: EdgeInsets.all(8),
     ),
     this.buttonStyle = const ButtonStyler.create(),
@@ -192,8 +192,8 @@ ButtonStyler heroUiDatePickerButtonStyle(BuildContext context) => ButtonStyler()
       ).color(HeroUiTokens.fieldPlaceholder()),
     )
     .containerEffects(heroUiSurfaceEffects())
-    .onHovered(ButtonStyler().color(HeroUiTokens.fieldHover()))
-    .onPressed(ButtonStyler().color(HeroUiTokens.fieldFocus()))
+    .onHovered(ButtonStyler().color(HeroUiTokens.defaultColor()))
+    .onPressed(ButtonStyler().color(HeroUiTokens.defaultHover()))
     .onFocusVisible(ButtonStyler().containerEffects(heroUiFocusRing()))
     .onDisabled(ButtonStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)));
 

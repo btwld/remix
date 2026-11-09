@@ -27,11 +27,11 @@ class {{typePrefix}}DatePicker extends StatelessWidget {
     this.semanticLabel = 'Choose date',
     this.placeholder = 'Select date',
     this.formatDate,
-    this.calendarLabels = const RemixCalendarLabels(),
+    this.calendarLabels = {{valuePrefix}}CalendarLabels,
     this.focusNode,
     this.autofocus = false,
     this.positioning = const OverlayPositionConfig(
-      sideOffset: 4,
+      sideOffset: 8,
       collisionPadding: EdgeInsets.all(8),
     ),
     this.buttonStyle = const ButtonStyler.create(),
@@ -192,8 +192,8 @@ ButtonStyler {{valuePrefix}}DatePickerButtonStyle(BuildContext context) => Butto
       ).color({{typePrefix}}Tokens.fieldPlaceholder()),
     )
     .containerEffects({{valuePrefix}}SurfaceEffects())
-    .onHovered(ButtonStyler().color({{typePrefix}}Tokens.fieldHover()))
-    .onPressed(ButtonStyler().color({{typePrefix}}Tokens.fieldFocus()))
+    .onHovered(ButtonStyler().color({{typePrefix}}Tokens.defaultColor()))
+    .onPressed(ButtonStyler().color({{typePrefix}}Tokens.defaultHover()))
     .onFocusVisible(ButtonStyler().containerEffects({{valuePrefix}}FocusRing()))
     .onDisabled(ButtonStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)));
 

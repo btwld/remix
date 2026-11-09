@@ -45,9 +45,22 @@ SelectStyler heroUiCalendarSelectorStyle(BuildContext context) =>
         )
         .content(
           SelectContentStyler()
-              .maxHeight(MediaQuery.textScalerOf(context).scale(216))
+              // Four complete day rows plus their gap below the selector.
+              .maxHeight(38 + MediaQuery.textScalerOf(context).scale(160))
+              .maxWidth(remixAnchorWidth())
               .wrap(
                 WidgetModifierConfig.modifier(const _CalendarScrollCueMix()),
+              ),
+        )
+        // Keep full month names on one line at the trigger's narrow width.
+        .menuContainer(FlexBoxStyler().padding(.all(4)).spacing(4))
+        .item(
+          SelectMenuItemStyler()
+              .padding(.horizontal(4))
+              .spacing(4)
+              .icon(.size(12))
+              .onFocusVisible(
+                SelectMenuItemStyler().containerEffects(heroUiInsetFocusRing),
               ),
         );
 
@@ -89,8 +102,12 @@ CalendarStyler heroUiCalendarStyle({
           .onToday(
             CalendarDayStyler()
                 .color(HeroUiTokens.accentSoft())
-                .border(.color(HeroUiTokens.foreground()))
-                .label(.fontWeight(FontWeight.w600)),
+                .border(.color(HeroUiTokens.accentSoftForeground()))
+                .label(
+                  .fontWeight(
+                    FontWeight.w600,
+                  ).color(HeroUiTokens.accentSoftForeground()),
+                ),
           )
           .onSelected(
             CalendarDayStyler()
@@ -188,19 +205,9 @@ final _pressed = ContextToken<Color>(
   (c) => HeroUiTokens.defaultHover.resolve(c),
 );
 // One inset outline follows the resolved day or range-cap shape.
-final _focusContour = ContextToken<Color>((context) {
-  final day = NakedCalendarDayState.maybeOf(context);
-  final range = NakedRangeCalendarState.maybeOf(context);
-  final states = day?.states ?? const <WidgetState>{};
-  final solid =
-      states.contains(WidgetState.selected) &&
-      !states.contains(WidgetState.disabled) &&
-      (range == null ||
-          (range.preview == null &&
-              day?.rangePosition != NakedRangePosition.middle));
-  return (solid ? HeroUiTokens.accentForeground : HeroUiTokens.foreground)
-      .resolve(context);
-});
+final _focusContour = ContextToken<Color>(
+  (context) => HeroUiTokens.foreground.resolve(context),
+);
 
 final _calendarDisabled = ContextVariant(
   'heroUi.calendar.disabled',
@@ -220,7 +227,7 @@ final _primaryPressed = ContextToken<Color>(
   (c) => HeroUiTokens.accentHover.resolve(c),
 );
 final _middleHover = ContextToken<Color>(
-  (c) => HeroUiTokens.accentSoft.resolve(c),
+  (c) => HeroUiTokens.accentSoftHover.resolve(c),
 );
 final _middlePressed = ContextToken<Color>(
   (c) => HeroUiTokens.accentSoftHover.resolve(c),
@@ -285,6 +292,11 @@ class _CalendarScrollBehavior extends ScrollBehavior {
   );
 }
 
+/// HeroUI's three-letter English weekday headings; callers can localize labels.
+const heroUiCalendarLabels = RemixCalendarLabels(weekday: _heroUiWeekday);
+String _heroUiWeekday(int day) =>
+    const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][day - 1];
+
 /// HeroUI reference Calendar composition.
 ///
 /// Remix owns civil-date selection, focus, keyboard navigation and semantics.
@@ -304,7 +316,7 @@ class HeroUiCalendar extends StatelessWidget {
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
-    this.labels = const RemixCalendarLabels(),
+    this.labels = heroUiCalendarLabels,
     this.headerBuilder,
     this.navigationStyle = const IconButtonStyler.create(),
     this.selectorStyle = const SelectStyler.create(),

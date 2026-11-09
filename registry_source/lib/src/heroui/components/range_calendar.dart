@@ -186,7 +186,7 @@ class HeroUiRangeCalendar extends StatelessWidget {
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
-    this.labels = const RemixCalendarLabels(),
+    this.labels = heroUiCalendarLabels,
     this.rangeLabels = const RemixRangeCalendarLabels(),
     this.headerBuilder,
     this.navigationStyle = const IconButtonStyler.create(),
