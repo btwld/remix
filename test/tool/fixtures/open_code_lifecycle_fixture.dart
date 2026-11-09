@@ -12,8 +12,10 @@ Future<void> main(List<String> arguments) async {
     return;
   }
   if (arguments.first == 'child') {
-    // Both generations ignore SIGTERM so the bounded SIGKILL fallback is tested.
-    ProcessSignal.sigterm.watch().listen((_) {});
+    // The orphan fixture lets the tracked parent exit before SIGKILL.
+    ProcessSignal.sigterm.watch().listen((_) {
+      if (arguments.contains('exit-on-term')) exit(0);
+    });
     if (arguments.length > 1) {
       final child = await Process.start(Platform.resolvedExecutable, [
         Platform.script.toFilePath(),
@@ -31,12 +33,29 @@ Future<void> main(List<String> arguments) async {
     await Completer<void>().future;
     return;
   }
+  int? grandchildPid;
   final lifecycle = OpenCodeLifecycle(
     repositoryRoot: Directory.current,
     temporaryRoot: Directory(arguments[0]),
     keep: arguments.contains('--keep'),
     // Keep stderr empty so the parent test can check fixture errors.
     err: stdout,
+    deleteDirectory: arguments[1] == 'orphan'
+        ? (parent) {
+            final result = Process.runSync('ps', [
+              '-o',
+              'stat=',
+              '-p',
+              '$grandchildPid',
+            ]);
+            final state = (result.stdout as String).trim();
+            stdout.writeln(
+              'grandchild alive before deletion: '
+              '${result.exitCode == 0 && state.isNotEmpty && !state.startsWith('Z')}',
+            );
+            parent.deleteSync(recursive: true);
+          }
+        : null,
   );
   lifecycle.watchSignals();
   try {
@@ -46,16 +65,20 @@ Future<void> main(List<String> arguments) async {
         stdout.writeln(parent.path);
         await stdin.first;
       } else {
-        final child = await lifecycle.processes.start(
-          Platform.resolvedExecutable,
-          [Platform.script.toFilePath(), 'child', 'grandchild'],
-        );
+        final child = await lifecycle.processes
+            .start(Platform.resolvedExecutable, [
+              Platform.script.toFilePath(),
+              'child',
+              'grandchild',
+              if (arguments[1] == 'orphan') 'exit-on-term',
+            ]);
         final grandchild = int.parse(
           await child.stdout
               .transform(utf8.decoder)
               .transform(const LineSplitter())
               .first,
         );
+        grandchildPid = grandchild;
         stdout.writeln(
           jsonEncode({
             'parent': parent.path,

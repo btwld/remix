@@ -16,6 +16,8 @@ final class OpenCodeCancelled implements Exception {}
 final class OpenCodeProcesses {
   final _running = <Process>{};
   final _starting = <Future<Process>>{};
+  // Retain identities after parents exit and descendants are reparented.
+  final _descendantStarts = <int, String>{};
   Future<void>? _stopping;
   int? cancellationExitCode;
 
@@ -95,10 +97,12 @@ final class OpenCodeProcesses {
     Object? inspectionProblem;
     try {
       if (!Platform.isWindows) {
-        final descendants = _descendants(
-          await Process.run('ps', ['-e', '-o', 'pid=,ppid=']),
+        _descendantStarts.addAll(
+          _descendants(
+            await Process.run('ps', ['-e', '-o', 'pid=,ppid=,lstart=']),
+          ),
         );
-        for (final child in descendants.toList().reversed) {
+        for (final child in _descendantStarts.keys.toList().reversed) {
           Process.killPid(child, ProcessSignal.sigterm);
         }
       } else {
@@ -115,13 +119,8 @@ final class OpenCodeProcesses {
     // Allow descendants the grace period even if tracked handles have exited.
     await Future<void>.delayed(const Duration(seconds: 2));
     try {
-      if (!Platform.isWindows && _running.isNotEmpty) {
-        final descendants = _descendants(
-          await Process.run('ps', ['-e', '-o', 'pid=,ppid=']),
-        );
-        for (final child in descendants) {
-          Process.killPid(child, ProcessSignal.sigkill);
-        }
+      if (!Platform.isWindows && _descendantStarts.isNotEmpty) {
+        _killDescendants(await Process.run('ps', ['-e', '-o', 'pid=,lstart=']));
       }
     } on Object catch (error) {
       inspectionProblem ??= error;
@@ -137,12 +136,17 @@ final class OpenCodeProcesses {
 
   void forceKill() {
     try {
-      if (!Platform.isWindows && _running.isNotEmpty) {
-        final descendants = _descendants(
-          Process.runSync('ps', ['-e', '-o', 'pid=,ppid=']),
-        );
-        for (final child in descendants) {
-          Process.killPid(child, ProcessSignal.sigkill);
+      if (!Platform.isWindows) {
+        if (_running.isNotEmpty) {
+          final descendants = _descendants(
+            Process.runSync('ps', ['-e', '-o', 'pid=,ppid=,lstart=']),
+          );
+          for (final entry in descendants.entries) {
+            _descendantStarts.putIfAbsent(entry.key, () => entry.value);
+          }
+        }
+        if (_descendantStarts.isNotEmpty) {
+          _killDescendants(Process.runSync('ps', ['-e', '-o', 'pid=,lstart=']));
         }
       }
     } on Object {
@@ -153,15 +157,33 @@ final class OpenCodeProcesses {
     }
   }
 
-  Set<int> _descendants(ProcessResult table) {
+  Iterable<String> _processRows(ProcessResult table) {
     if (table.exitCode != 0) {
       throw StateError('Could not inspect child processes: ${table.stderr}');
     }
+    return (table.stdout as String).split('\n');
+  }
+
+  void _killDescendants(ProcessResult table) {
+    for (final line in _processRows(table)) {
+      final fields = RegExp(r'^\s*(\d+)\s+(.+?)\s*$').firstMatch(line);
+      if (fields == null) continue;
+      final child = int.parse(fields[1]!);
+      if (_descendantStarts[child] == fields[2]) {
+        Process.killPid(child, ProcessSignal.sigkill);
+      }
+    }
+  }
+
+  Map<int, String> _descendants(ProcessResult table) {
     final parents = <int, int>{};
-    for (final line in (table.stdout as String).split('\n')) {
-      final fields = line.trim().split(RegExp(r'\s+'));
-      if (fields.length == 2) {
-        parents[int.parse(fields[0])] = int.parse(fields[1]);
+    final starts = <int, String>{};
+    for (final line in _processRows(table)) {
+      final fields = RegExp(r'^\s*(\d+)\s+(\d+)\s+(.+?)\s*$').firstMatch(line);
+      if (fields != null) {
+        final child = int.parse(fields[1]!);
+        parents[child] = int.parse(fields[2]!);
+        starts[child] = fields[3]!;
       }
     }
     final descendants = <int>{};
@@ -175,7 +197,7 @@ final class OpenCodeProcesses {
       };
       descendants.addAll(ancestors);
     }
-    return descendants;
+    return {for (final child in descendants) child: starts[child]!};
   }
 }
 

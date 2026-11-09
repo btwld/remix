@@ -267,50 +267,92 @@ void main() {
   }
 
   test(
-    'SIGKILL rechecks descendant membership after the grace period',
+    'cancellation kills an orphaned grandchild before deleting output',
     () async {
-      final bin = Directory('${sandbox.path}/bin')..createSync();
-      final seen = File('${sandbox.path}/ps_seen');
-      final excluded = File('${sandbox.path}/ps_excluded');
-      final ps = File('${bin.path}/ps')
-        ..writeAsStringSync(r'''#!/bin/sh
-if [ -e "$OPEN_CODE_PS_SEEN" ]; then
-  /bin/ps -e -o pid=,ppid= | /usr/bin/awk -v excluded="$(/bin/cat "$OPEN_CODE_PS_EXCLUDED")" '$1 != excluded'
-else
-  /usr/bin/touch "$OPEN_CODE_PS_SEEN"
-  /bin/ps -e -o pid=,ppid=
-fi
-''');
-      expect((await Process.run('chmod', ['+x', ps.path])).exitCode, 0);
-      final fixture = await _startFixture(
-        sandbox,
-        'wait',
-        environment: {
-          'PATH': '${bin.path}:${Platform.environment['PATH']}',
-          'OPEN_CODE_PS_SEEN': seen.path,
-          'OPEN_CODE_PS_EXCLUDED': excluded.path,
-        },
-      );
+      final fixture = await _startFixture(sandbox, 'orphan');
       final ready = jsonDecode(await fixture.ready) as Map;
+      final parent = Directory(ready['parent'] as String);
       final child = ready['child'] as int;
       final grandchild = ready['grandchild'] as int;
       addTearDown(() {
         Process.killPid(child, ProcessSignal.sigkill);
         Process.killPid(grandchild, ProcessSignal.sigkill);
       });
-      // The second snapshot models a PID that no longer belongs to the tree.
-      excluded.writeAsStringSync('$grandchild');
-      fixture.process.kill(ProcessSignal.sigint);
+      fixture.process.kill(ProcessSignal.sigterm);
       expect(
         await fixture.process.exitCode.timeout(const Duration(seconds: 15)),
-        130,
+        143,
       );
-      expect(seen.existsSync(), isTrue);
       expect(await _alive(child), isFalse);
-      expect(await _alive(grandchild), isTrue);
+      expect(await _alive(grandchild), isFalse);
+      expect(
+        await fixture.output,
+        contains('grandchild alive before deletion: false'),
+      );
+      expect(parent.existsSync(), isFalse);
     },
-    skip: Platform.isWindows ? 'POSIX process-table fixture' : false,
+    skip: Platform.isWindows ? 'POSIX descendant fixture' : false,
   );
+
+  for (final secondSignal in [false, true]) {
+    test(
+      'SIGKILL rechecks descendant identity ${secondSignal ? 'on a second signal' : 'after the grace period'}',
+      () async {
+        final bin = Directory('${sandbox.path}/bin')..createSync();
+        final seen = File('${sandbox.path}/ps_seen');
+        final reused = File('${sandbox.path}/ps_reused');
+        final ps = File('${bin.path}/ps')
+          ..writeAsStringSync(r'''#!/bin/sh
+if [ -e "$OPEN_CODE_PS_SEEN" ]; then
+  /bin/ps "$@" | /usr/bin/awk -v reused="$(/bin/cat "$OPEN_CODE_PS_REUSED")" '$1 == reused { $NF = 1900 } { print }'
+else
+  /usr/bin/touch "$OPEN_CODE_PS_SEEN"
+  /bin/ps "$@"
+fi
+''');
+        expect((await Process.run('chmod', ['+x', ps.path])).exitCode, 0);
+        final fixture = await _startFixture(
+          sandbox,
+          secondSignal ? 'orphan' : 'wait',
+          environment: {
+            'PATH': '${bin.path}:${Platform.environment['PATH']}',
+            'OPEN_CODE_PS_SEEN': seen.path,
+            'OPEN_CODE_PS_REUSED': reused.path,
+          },
+        );
+        final ready = jsonDecode(await fixture.ready) as Map;
+        final child = ready['child'] as int;
+        final grandchild = ready['grandchild'] as int;
+        addTearDown(() {
+          Process.killPid(child, ProcessSignal.sigkill);
+          Process.killPid(grandchild, ProcessSignal.sigkill);
+        });
+        // Later snapshots model the same PID reused with a different start time.
+        reused.writeAsStringSync('$grandchild');
+        fixture.process.kill(ProcessSignal.sigint);
+        if (secondSignal) {
+          // Parent exit proves the first snapshot and SIGTERM phase completed.
+          for (
+            var attempt = 0;
+            attempt < 100 && await _alive(child);
+            attempt++
+          ) {
+            await Future<void>.delayed(const Duration(milliseconds: 10));
+          }
+          expect(await _alive(child), isFalse);
+          fixture.process.kill(ProcessSignal.sigterm);
+        }
+        expect(
+          await fixture.process.exitCode.timeout(const Duration(seconds: 15)),
+          130,
+        );
+        expect(seen.existsSync(), isTrue);
+        expect(await _alive(child), isFalse);
+        expect(await _alive(grandchild), isTrue);
+      },
+      skip: Platform.isWindows ? 'POSIX process-table fixture' : false,
+    );
+  }
 
   for (final first in [ProcessSignal.sigint, ProcessSignal.sigterm]) {
     test(
