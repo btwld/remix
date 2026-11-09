@@ -9,8 +9,6 @@ class CalendarSpec with _$CalendarSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
-  final StyleSpec<TextSpec> heading;
-  @override
   final StyleSpec<TextSpec> weekday;
   @override
   final StyleSpec<CalendarDaySpec> day;
@@ -29,14 +27,12 @@ class CalendarSpec with _$CalendarSpec {
 
   const CalendarSpec({
     StyleSpec<BoxSpec>? container,
-    StyleSpec<TextSpec>? heading,
     StyleSpec<TextSpec>? weekday,
     StyleSpec<CalendarDaySpec>? day,
     this.rowSpacing,
     this.headerSpacing,
     this.weekdaySpacing,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
-       heading = heading ?? const StyleSpec(spec: TextSpec()),
        weekday = weekday ?? const StyleSpec(spec: TextSpec()),
        day = day ?? const StyleSpec(spec: CalendarDaySpec());
 }

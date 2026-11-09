@@ -37,7 +37,7 @@ class RemixCalendarLabels {
   /// Month name for the month selector items.
   final String Function(int month) month;
 
-  /// Visible month heading, such as "February 2024".
+  /// Header semantics label, such as "February 2024", announced as a live region.
   final String Function(DateTime) monthYear;
 
   /// Complete accessible date name for each day, including the weekday.

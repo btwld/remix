@@ -8,7 +8,6 @@ part of 'calendar.dart';
 
 mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
-  StyleSpec<TextSpec> get heading;
   StyleSpec<TextSpec> get weekday;
   StyleSpec<CalendarDaySpec> get day;
   double? get rowSpacing;
@@ -21,7 +20,6 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
   @override
   CalendarSpec copyWith({
     StyleSpec<BoxSpec>? container,
-    StyleSpec<TextSpec>? heading,
     StyleSpec<TextSpec>? weekday,
     StyleSpec<CalendarDaySpec>? day,
     double? rowSpacing,
@@ -30,7 +28,6 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
   }) {
     return CalendarSpec(
       container: container ?? this.container,
-      heading: heading ?? this.heading,
       weekday: weekday ?? this.weekday,
       day: day ?? this.day,
       rowSpacing: rowSpacing ?? this.rowSpacing,
@@ -43,7 +40,6 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
   CalendarSpec lerp(CalendarSpec? other, double t) {
     return CalendarSpec(
       container: container.lerp(other?.container, t),
-      heading: heading.lerp(other?.heading, t),
       weekday: weekday.lerp(other?.weekday, t),
       day: day.lerp(other?.day, t),
       rowSpacing: MixOps.lerp(rowSpacing, other?.rowSpacing, t),
@@ -55,7 +51,6 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
   @override
   List<Object?> get props => [
     container,
-    heading,
     weekday,
     day,
     rowSpacing,
@@ -104,7 +99,6 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('heading', heading))
       ..add(DiagnosticsProperty('weekday', weekday))
       ..add(DiagnosticsProperty('day', day))
       ..add(DoubleProperty('rowSpacing', rowSpacing))
@@ -214,7 +208,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     with RemixBoxStylerMixin<CalendarStyler>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
-  final Prop<StyleSpec<TextSpec>>? $heading;
   final Prop<StyleSpec<TextSpec>>? $weekday;
   final Prop<StyleSpec<CalendarDaySpec>>? $day;
   final Prop<double>? $rowSpacing;
@@ -223,7 +216,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
 
   const CalendarStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
-    Prop<StyleSpec<TextSpec>>? heading,
     Prop<StyleSpec<TextSpec>>? weekday,
     Prop<StyleSpec<CalendarDaySpec>>? day,
     Prop<double>? rowSpacing,
@@ -233,7 +225,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     super.modifier,
     super.animation,
   }) : $container = container,
-       $heading = heading,
        $weekday = weekday,
        $day = day,
        $rowSpacing = rowSpacing,
@@ -242,7 +233,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
 
   CalendarStyler({
     BoxStyler? container,
-    TextStyler? heading,
     TextStyler? weekday,
     CalendarDayStyler? day,
     double? rowSpacing,
@@ -253,7 +243,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     List<VariantStyle<CalendarSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
-         heading: Prop.maybeMix(heading),
          weekday: Prop.maybeMix(weekday),
          day: Prop.maybeMix(day),
          rowSpacing: Prop.maybe(rowSpacing),
@@ -266,8 +255,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
 
   factory CalendarStyler.container(BoxStyler value) =>
       CalendarStyler().container(value);
-  factory CalendarStyler.heading(TextStyler value) =>
-      CalendarStyler().heading(value);
   factory CalendarStyler.weekday(TextStyler value) =>
       CalendarStyler().weekday(value);
   factory CalendarStyler.day(CalendarDayStyler value) =>
@@ -772,7 +759,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
   @override
   Set<String> get $stylerFieldNames => const {
     'container',
-    'heading',
     'weekday',
     'day',
     'rowSpacing',
@@ -786,11 +772,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
   /// Sets the container.
   CalendarStyler container(BoxStyler value) {
     return merge(CalendarStyler(container: value));
-  }
-
-  /// Sets the heading.
-  CalendarStyler heading(TextStyler value) {
-    return merge(CalendarStyler(heading: value));
   }
 
   /// Sets the weekday.
@@ -846,7 +827,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
   CalendarStyler merge(CalendarStyler? other) {
     return CalendarStyler.create(
       container: MixOps.merge($container, other?.$container),
-      heading: MixOps.merge($heading, other?.$heading),
       weekday: MixOps.merge($weekday, other?.$weekday),
       day: MixOps.merge($day, other?.$day),
       rowSpacing: MixOps.merge($rowSpacing, other?.$rowSpacing),
@@ -863,7 +843,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
   StyleSpec<CalendarSpec> resolve(BuildContext context) {
     final spec = CalendarSpec(
       container: MixOps.resolve(context, $container),
-      heading: MixOps.resolve(context, $heading),
       weekday: MixOps.resolve(context, $weekday),
       day: MixOps.resolve(context, $day),
       rowSpacing: MixOps.resolve(context, $rowSpacing),
@@ -883,7 +862,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('heading', $heading))
       ..add(DiagnosticsProperty('weekday', $weekday))
       ..add(DiagnosticsProperty('day', $day))
       ..add(DiagnosticsProperty('rowSpacing', $rowSpacing))
@@ -894,7 +872,6 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
   @override
   List<Object?> get props => [
     $container,
-    $heading,
     $weekday,
     $day,
     $rowSpacing,

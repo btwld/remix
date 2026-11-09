@@ -209,7 +209,6 @@ class _CalendarReferencePageState extends State<CalendarReferencePage> {
 bool _isWeekend(DateTime date) => date.weekday >= DateTime.saturday;
 
 final _calendarStyle = CalendarStyler()
-    .heading(TextStyler().fontSize(16).fontWeight(FontWeight.w600))
     .weekday(
       TextStyler().fontSize(12).color(PlaygroundTokens.mutedForeground()),
     )
