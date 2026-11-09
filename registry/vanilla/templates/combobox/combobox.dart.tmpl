@@ -48,6 +48,7 @@ ComboboxStyler {{valuePrefix}}ComboboxStyle({
     .option(
       ComboboxOptionStyler()
           .minHeight({{typePrefix}}Tokens.controlSm)
+          .margin(.bottom(1))
           .padding(
             .symmetric(
               horizontal: {{typePrefix}}Tokens.s2,
@@ -60,8 +61,8 @@ ComboboxStyler {{valuePrefix}}ComboboxStyle({
               {{typePrefix}}Tokens.textSm.mix(),
             ).color({{typePrefix}}Tokens.popoverForeground()),
           )
-          .onHovered(_highlighted({{valuePrefix}}Tint({{typePrefix}}Tokens.accent, 0.65)()))
-          .onFocused(_highlighted().label(.fontWeight(.w500)))
+          .onHovered(_highlighted({{valuePrefix}}Tint({{typePrefix}}Tokens.accent, 0.85)()))
+          .onFocused(_highlighted())
           .onPressed(
             _highlighted({{valuePrefix}}Tint({{typePrefix}}Tokens.primary, 0.18, dark: 0.2)()),
           ),

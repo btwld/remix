@@ -50,6 +50,7 @@ ComboboxStyler playgroundComboboxStyle({
     .option(
       ComboboxOptionStyler()
           .minHeight(PlaygroundTokens.controlSm)
+          .margin(.bottom(1))
           .padding(
             .symmetric(
               horizontal: PlaygroundTokens.s2,
@@ -63,9 +64,9 @@ ComboboxStyler playgroundComboboxStyle({
             ).color(PlaygroundTokens.popoverForeground()),
           )
           .onHovered(
-            _highlighted(playgroundTint(PlaygroundTokens.accent, 0.65)()),
+            _highlighted(playgroundTint(PlaygroundTokens.accent, 0.85)()),
           )
-          .onFocused(_highlighted().label(.fontWeight(.w500)))
+          .onFocused(_highlighted())
           .onPressed(
             _highlighted(
               playgroundTint(PlaygroundTokens.primary, 0.18, dark: 0.2)(),

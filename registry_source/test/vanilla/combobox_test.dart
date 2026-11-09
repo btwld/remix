@@ -40,8 +40,46 @@ void main() {
     );
   });
 
+  testWidgets('combobox separates rounded rows by one pixel', (tester) async {
+    final combo = await resolveVanilla(
+      tester,
+      vanillaComboboxStyle(),
+      theme: vanillaThemes.first.data,
+    );
+    expect(
+      combo.spec.option.spec.container.spec.margin,
+      const EdgeInsets.only(bottom: 1),
+    );
+  });
+
   for (final theme in vanillaThemes) {
     group(theme.name, () {
+      testWidgets('keyboard highlight preserves wrapped label metrics', (
+        tester,
+      ) async {
+        final resting = await resolveVanilla(
+          tester,
+          vanillaComboboxStyle(),
+          theme: theme.data,
+        );
+        for (final state in [
+          WidgetState.focused,
+          WidgetState.hovered,
+          WidgetState.pressed,
+        ]) {
+          final highlighted = await resolveVanilla(
+            tester,
+            vanillaComboboxStyle(),
+            theme: theme.data,
+            states: {state},
+          );
+          expect(
+            highlighted.spec.option.spec.label.spec.style?.fontWeight,
+            resting.spec.option.spec.label.spec.style?.fontWeight,
+            reason: '$state must not reflow wrapped labels',
+          );
+        }
+      });
       testWidgets('combobox reuses the field recipe in every field state', (
         tester,
       ) async {
@@ -76,7 +114,7 @@ void main() {
         (tester) async {
           final fills = <Color>[];
           for (final (state, expected) in [
-            (WidgetState.hovered, tint(theme.data.accent, 0.65)),
+            (WidgetState.hovered, tint(theme.data.accent, 0.85)),
             (WidgetState.focused, theme.data.accent),
             (
               WidgetState.pressed,

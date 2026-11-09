@@ -48,6 +48,7 @@ ComboboxStyler vanillaComboboxStyle({
     .option(
       ComboboxOptionStyler()
           .minHeight(VanillaTokens.controlSm)
+          .margin(.bottom(1))
           .padding(
             .symmetric(
               horizontal: VanillaTokens.s2,
@@ -60,8 +61,8 @@ ComboboxStyler vanillaComboboxStyle({
               VanillaTokens.textSm.mix(),
             ).color(VanillaTokens.popoverForeground()),
           )
-          .onHovered(_highlighted(vanillaTint(VanillaTokens.accent, 0.65)()))
-          .onFocused(_highlighted().label(.fontWeight(.w500)))
+          .onHovered(_highlighted(vanillaTint(VanillaTokens.accent, 0.85)()))
+          .onFocused(_highlighted())
           .onPressed(
             _highlighted(vanillaTint(VanillaTokens.primary, 0.18, dark: 0.2)()),
           ),
