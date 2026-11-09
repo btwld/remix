@@ -341,7 +341,6 @@ void main() {
             style: CalendarStyler()
                 .constraints(.maxWidth(420))
                 .selectorSpacing(20)
-                .selectorRunSpacing(10)
                 .day(CalendarDayStyler().constraints(.minHeight(52))),
           ),
         ),

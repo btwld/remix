@@ -259,7 +259,6 @@ final _calendarDefaults = CalendarStyler(
         .alignment(Alignment.center),
   ),
   selectorSpacing: 8,
-  selectorRunSpacing: 4,
 );
 
 /// Default month/year selector width, merged under `selectorStyle`.

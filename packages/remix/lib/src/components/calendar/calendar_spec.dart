@@ -28,10 +28,6 @@ class CalendarSpec with _$CalendarSpec {
   @override
   final double? selectorSpacing;
 
-  /// Vertical gap when the month and year selectors wrap onto two lines.
-  @override
-  final double? selectorRunSpacing;
-
   /// Vertical gap between week rows; columns remain connected.
   @override
   final double? rowSpacing;
@@ -44,7 +40,6 @@ class CalendarSpec with _$CalendarSpec {
     this.headerSpacing,
     this.weekdaySpacing,
     this.selectorSpacing,
-    this.selectorRunSpacing,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        weekday = weekday ?? const StyleSpec(spec: TextSpec()),
        day = day ?? const StyleSpec(spec: CalendarDaySpec());

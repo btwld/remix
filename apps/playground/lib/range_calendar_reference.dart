@@ -254,7 +254,6 @@ final _mutedRange = CalendarDayStyler()
     .color(PlaygroundTokens.muted())
     .label(TextStyler().color(PlaygroundTokens.mutedForeground()));
 final _rangeStyle = CalendarStyler()
-    .heading(TextStyler().fontSize(16).fontWeight(FontWeight.w600))
     .weekday(
       TextStyler().fontSize(12).color(PlaygroundTokens.mutedForeground()),
     )

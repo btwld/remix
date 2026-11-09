@@ -65,14 +65,11 @@ final reportingPeriodCalendarStyle = CalendarStyler()
     .headerSpacing(FortalTokens.space2())
     .weekdaySpacing(FortalTokens.space1())
     .rowSpacing(FortalTokens.space1())
-    .heading(TextStyler().color(FortalTokens.gray11()))
     .weekday(
       TextStyler().style(FortalTokens.text1.mix()).color(FortalTokens.gray11()),
     )
     .onDisabled(
-      CalendarStyler()
-          .heading(TextStyler().color(FortalTokens.gray9()))
-          .weekday(TextStyler().color(FortalTokens.gray9())),
+      CalendarStyler().weekday(TextStyler().color(FortalTokens.gray9())),
     )
     .day(
       CalendarDayStyler()
