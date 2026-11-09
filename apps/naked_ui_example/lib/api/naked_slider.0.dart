@@ -54,6 +54,7 @@ class _SliderExampleState extends State<SliderExample> {
         height: 20,
         child: NakedSlider(
           values: [_value],
+          semanticLabels: const ['Simple Slider'],
           min: 0,
           max: 1,
           step: 0.01,
@@ -62,15 +63,16 @@ class _SliderExampleState extends State<SliderExample> {
               _value = newValues.single;
             });
           },
-          child: CustomPaint(
+          builder: (context, state, _) => CustomPaint(
             foregroundPainter: SliderThumbPainter(
-              value: _value,
+              value: state.visualPercentageAt(0),
               thumbColor: Colors.white,
               thumbSize: 18,
               borderColor: Colors.black,
             ),
             painter: SliderTrackPainter(
-              value: _value,
+              value: state.visualPercentageAt(0),
+              startValue: state.visualPercentageOf(0),
               activeTrackColor: Colors.black,
               trackColor: Colors.black.withValues(alpha: 0.1),
             ),
@@ -83,11 +85,13 @@ class _SliderExampleState extends State<SliderExample> {
 
 class SliderTrackPainter extends CustomPainter {
   final double value;
+  final double startValue;
   final Color activeTrackColor;
   final Color trackColor;
 
   SliderTrackPainter({
     required this.value,
+    this.startValue = 0,
     required this.activeTrackColor,
     required this.trackColor,
   });
@@ -115,7 +119,7 @@ class SliderTrackPainter extends CustomPainter {
     );
 
     canvas.drawLine(
-      Offset(0, verticalCenter),
+      Offset(size.width * startValue, verticalCenter),
       Offset(size.width * value, verticalCenter),
       progressPaint,
     );
@@ -124,6 +128,7 @@ class SliderTrackPainter extends CustomPainter {
   @override
   bool shouldRepaint(SliderTrackPainter oldDelegate) {
     return oldDelegate.value != value ||
+        oldDelegate.startValue != startValue ||
         oldDelegate.activeTrackColor != activeTrackColor ||
         oldDelegate.trackColor != trackColor;
   }
