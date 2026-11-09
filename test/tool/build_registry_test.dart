@@ -44,6 +44,7 @@ void main() {
           [
             'theme',
             'button',
+            'calendar',
             'icon_button',
             'popover',
             'range_calendar',
