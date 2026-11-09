@@ -38,6 +38,9 @@ class RemixDateRangePicker extends StatelessWidget {
       sideOffset: 4,
       collisionPadding: EdgeInsets.all(8),
     ),
+    this.icon,
+    this.placeholderStyle = const ButtonStyler.create(),
+    this.expandedStyle = const ButtonStyler.create(),
     this.buttonStyle = const ButtonStyler.create(),
     this.calendarStyle = const CalendarStyler.create(),
     this.popoverStyle = const PopoverStyler.create(),
@@ -113,7 +116,20 @@ class RemixDateRangePicker extends StatelessWidget {
   /// The panel also avoids the view's safe area and keyboard exclusions.
   final OverlayPositionConfig positioning;
 
+  /// Decorative leading trigger icon. Its size and color follow [buttonStyle].
+  final IconData? icon;
+
+  /// Fragment merged over [buttonStyle] only while [value] is null.
+  /// Interaction variants, including disabled styling, still resolve normally.
+  final ButtonStyler placeholderStyle;
+
+  /// Fragment merged last while the calendar popover is open.
+  /// Nested month/year selectors keep this fragment active until dismissal.
+  final ButtonStyler expandedStyle;
+
   /// Trigger styling, resolved against the trigger's own interaction state.
+  /// The default label is one line with an ellipsis under a finite width.
+  /// Overrides may replace its text layout; accessible values stay complete.
   final ButtonStyler buttonStyle;
 
   /// Calendar and day styling, resolved against each part's own state.
@@ -166,6 +182,11 @@ class RemixDateRangePicker extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       positioning: positioning,
+      icon: icon,
+      placeholderStyle: value == null
+          ? placeholderStyle
+          : const ButtonStyler.create(),
+      expandedStyle: expandedStyle,
       buttonStyle: buttonStyle,
       popoverStyle: popoverStyle,
       calendarBuilder: (focus, select) => RemixRangeCalendar(

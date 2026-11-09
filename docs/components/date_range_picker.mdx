@@ -121,6 +121,13 @@ There is no separate DateRangePicker styler, raw spec, controller or callable
 widget shorthand. Package publication and preset adoption are separate from
 this runtime component.
 
+The trigger label defaults to one line with an ellipsis under a finite width;
+its accessible value remains complete. `icon` supplies a decorative leading
+icon, styled by `buttonStyle`. `placeholderStyle` merges over `buttonStyle`
+only when `value` is null; `expandedStyle` merges last while the popover is
+open, including while a nested selector is open. Interaction variants still
+resolve in the button's own state. Month/year panels use a 4-pixel side offset.
+
 ## Constructor
 
 <CodeGroup title="Constructor" defaultLanguage="dart">
@@ -150,6 +157,9 @@ RemixDateRangePicker remixDateRangePickerConstructor({
     sideOffset: 4,
     collisionPadding: EdgeInsets.all(8),
   ),
+  IconData? icon,
+  ButtonStyler placeholderStyle = const ButtonStyler.create(),
+  ButtonStyler expandedStyle = const ButtonStyler.create(),
   ButtonStyler buttonStyle = const ButtonStyler.create(),
   CalendarStyler calendarStyle = const CalendarStyler.create(),
   PopoverStyler popoverStyle = const PopoverStyler.create(),
@@ -228,6 +238,18 @@ Defaults to false. Focuses the trigger without opening the calendar.
 #### `positioning` → `OverlayPositionConfig`
 
 Placement, offsets and collision padding relative to the trigger. Defaults to a side offset of 4 and collision padding of 8. The panel avoids safe-area and keyboard exclusions.
+
+#### `icon` → `IconData?`
+
+Optional decorative leading icon; size and color follow `buttonStyle`.
+
+#### `placeholderStyle` → `ButtonStyler`
+
+Fragment merged over `buttonStyle` only when `value` is null.
+
+#### `expandedStyle` → `ButtonStyler`
+
+Fragment merged last while the popover is open, including nested selectors.
 
 #### `buttonStyle` → `ButtonStyler`
 

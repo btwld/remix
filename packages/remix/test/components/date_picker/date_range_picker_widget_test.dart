@@ -1,4 +1,5 @@
 import 'dart:ui' show Tristate;
+import 'package:flutter/rendering.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -86,6 +87,92 @@ Future<void> _tapDay(WidgetTester tester, int day) async {
 }
 
 void main() {
+  testWidgets(
+    'placeholder and expanded fragments and leading icon follow value and opening',
+    (tester) async {
+      const normal = Color(0xff112233),
+          empty = Color(0xff445566),
+          expanded = Color(0xff778899);
+      Widget field(CivilDateRange? value) => pickerHost(
+        RemixDateRangePicker(
+          value: value,
+          firstDate: DateTime(2023),
+          lastDate: DateTime(2026),
+          currentDate: DateTime(2024, 2, 15),
+          onChanged: (_) {},
+          icon: const IconData(0xe123),
+          buttonStyle: ButtonStyler().labelColor(normal),
+          placeholderStyle: ButtonStyler().labelColor(empty),
+          expandedStyle: ButtonStyler().labelColor(expanded),
+        ),
+      );
+      Color? color() => tester
+          .widget<RichText>(
+            find
+                .descendant(
+                  of: find.byType(RemixButton).first,
+                  matching: find.byType(RichText),
+                )
+                .last,
+          )
+          .text
+          .style
+          ?.color;
+      await tester.pumpWidget(field(null));
+      expect(color(), empty);
+      expect(
+        tester.widget<RemixButton>(find.byType(RemixButton).first).leadingIcon,
+        const IconData(0xe123),
+      );
+      await _open(tester);
+      expect(color(), expanded);
+      await tester.tap(find.bySemanticsLabel('Choose year'));
+      await tester.pumpAndSettle();
+      expect(color(), expanded);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(color(), expanded);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(color(), empty);
+      await tester.pumpWidget(field(_range(14, 16)));
+      expect(color(), normal);
+      await _open(tester);
+      expect(color(), expanded);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(color(), normal);
+    },
+  );
+
+  testWidgets(
+    'long range label ellipsizes at 240 pixels and speaks the full range',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpWidget(
+        pickerHost(SizedBox(width: 240, child: _picker(value: _range(14, 20)))),
+      );
+      final button = tester.widget<RemixButton>(find.byType(RemixButton).first);
+      final text = tester.renderObject<RenderParagraph>(
+        find.descendant(
+          of: find.text(button.label),
+          matching: find.byType(RichText),
+        ),
+      );
+      expect(text.maxLines, 1);
+      expect(text.overflow, TextOverflow.ellipsis);
+      expect(text.didExceedMaxLines, isTrue);
+      final value = tester
+          .getSemantics(find.byType(RemixButton).first)
+          .getSemanticsData()
+          .value;
+      expect(value, contains('February 14'));
+      expect(value, contains('February 20'));
+      semantics.dispose();
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('removing an open range picker does not call onClose', (
     tester,
   ) async {
