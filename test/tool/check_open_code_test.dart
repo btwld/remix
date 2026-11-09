@@ -8,6 +8,7 @@ import 'package:yaml/yaml.dart';
 
 import '../../tool/check_open_code.dart' as checker;
 import '../../tool/check_pub_floors.dart';
+import '../../tool/check_published_cli.dart';
 import '../../tool/compile_registry_consumer.dart';
 import '../../tool/consumer_check_reporting.dart';
 import '../../tool/open_code_lifecycle.dart';
@@ -171,6 +172,147 @@ libraries:
         ]),
       );
     });
+  });
+
+  group('published CLI candidate', () {
+    test(
+      'every preset uses the activated CLI and repins before installing',
+      () async {
+        for (final preset in ['vanilla', 'fortal', 'heroui']) {
+          final app = Directory('${sandbox.path}/released_$preset');
+          final commands = <List<String>>[];
+          final sha = 'a' * 40;
+          expect(
+            await checkPublishedCliCandidate(
+              app: app,
+              repositoryRoot: Directory.current,
+              preset: preset,
+              sha: sha,
+              dart: 'fake-dart',
+              flutter: 'fake-flutter',
+              run: (executable, args) async {
+                commands.add([executable, ...args]);
+                if (args.first == 'create') app.createSync();
+                if (args.contains('update')) {
+                  File('${app.path}/remix.yaml').writeAsStringSync(
+                    'registries: {"@remix": {revision: "$sha"}}',
+                  );
+                }
+                return null;
+              },
+            ),
+            isNull,
+          );
+          expect(commands.map((command) => command.first), [
+            'fake-flutter',
+            'fake-dart',
+            'fake-dart',
+            'fake-dart',
+            'fake-dart',
+            'fake-dart',
+          ]);
+          expect(
+            commands[2],
+            containsAllInOrder([
+              'pub',
+              'global',
+              'run',
+              'remix_cli:remix',
+              'init',
+            ]),
+          );
+          expect(
+            commands[3],
+            containsAllInOrder(['registry', 'update', '@remix', '--ref', sha]),
+          );
+          expect(
+            commands[4],
+            containsAllInOrder([
+              'pub',
+              'global',
+              'run',
+              'remix_cli:remix',
+              'add',
+              preset == 'heroui' ? 'search_field' : 'dashboard_shell',
+              'button',
+            ]),
+          );
+          expect(commands.last, ['fake-dart', 'analyze', 'lib/ui']);
+          expect(
+            commands.expand((command) => command).join(' '),
+            isNot(contains('registry_consumer_cli')),
+          );
+        }
+        final workflow = File(
+          '.github/workflows/registry.yml',
+        ).readAsStringSync();
+        expect(workflow, contains('dart pub global activate remix_cli'));
+        expect(
+          workflow,
+          contains(
+            r'check_published_cli.dart --preset ${{ matrix.preset }} --ref ${{ github.sha }}',
+          ),
+        );
+      },
+    );
+    test('failure stops the published CLI lane without falling back', () async {
+      var calls = 0;
+      expect(
+        await checkPublishedCliCandidate(
+          app: sandbox,
+          repositoryRoot: Directory.current,
+          preset: 'vanilla',
+          sha: 'a' * 40,
+          dart: 'fake-dart',
+          flutter: 'fake-flutter',
+          run: (_, args) async {
+            calls++;
+            return args.contains('update')
+                ? 'unsupported by published CLI'
+                : null;
+          },
+        ),
+        'unsupported by published CLI',
+      );
+      expect(calls, 4);
+    });
+    test(
+      'branch names cannot silently spend the candidate API budget',
+      () async {
+        expect(
+          await checkPublishedCliCandidate(
+            app: sandbox,
+            repositoryRoot: Directory.current,
+            preset: 'vanilla',
+            sha: 'main',
+            dart: 'fake-dart',
+            flutter: 'fake-flutter',
+            run: (_, _) async => throw StateError('must not execute'),
+          ),
+          contains('full lowercase candidate SHA'),
+        );
+      },
+    );
+    test(
+      'a successful update must actually select the candidate revision',
+      () async {
+        File(
+          '${sandbox.path}/remix.yaml',
+        ).writeAsStringSync('registries: {"@remix": {revision: "old"}}');
+        expect(
+          await checkPublishedCliCandidate(
+            app: sandbox,
+            repositoryRoot: Directory.current,
+            preset: 'vanilla',
+            sha: 'a' * 40,
+            dart: 'fake-dart',
+            flutter: 'fake-flutter',
+            run: (_, _) async => null,
+          ),
+          contains('did not pin @remix'),
+        );
+      },
+    );
   });
 
   group('quiet process reporting', () {
