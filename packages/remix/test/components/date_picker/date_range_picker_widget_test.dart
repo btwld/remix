@@ -87,6 +87,35 @@ Future<void> _tapDay(WidgetTester tester, int day) async {
 }
 
 void main() {
+  testWidgets('range label fit accounts for horizontal trigger margins', (
+    t,
+  ) async {
+    await t.pumpWidget(
+      pickerHost(
+        SizedBox(
+          width: 400,
+          child: _picker(
+            value: CivilDateRange(
+              start: DateTime(2024, 11, 10),
+              end: DateTime(2025, 3, 24),
+            ),
+            buttonStyle: ButtonStyler()
+                .margin(.horizontal(60))
+                .padding(.horizontal(12))
+                .label(.fontSize(14)),
+          ),
+        ),
+      ),
+    );
+    final label = t.widget<RemixButton>(find.byType(RemixButton)).label;
+    expect(label, contains('11/10/2024'));
+    expect(label, contains('3/24/2025'));
+    final paragraph = t.renderObject<RenderParagraph>(
+      find.descendant(of: find.text(label), matching: find.byType(RichText)),
+    );
+    expect(paragraph.didExceedMaxLines, isFalse);
+    expect(t.takeException(), isNull);
+  });
   for (final scale in [1.0, 2.0]) {
     testWidgets('cross-year endpoints fit a styled 240px trigger at $scale', (
       t,

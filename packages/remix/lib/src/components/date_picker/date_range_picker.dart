@@ -178,10 +178,16 @@ class RemixDateRangePicker extends StatelessWidget {
         final spec = buttonStyle.build(context).spec;
         final box = spec.container.spec.box?.spec;
         final requestedWidth = box?.constraints?.maxWidth ?? double.infinity;
-        final width = requestedWidth < constraints.maxWidth
-            ? requestedWidth
-            : constraints.maxWidth;
         final direction = Directionality.of(context);
+        // Margins sit outside the button's own width constraint.
+        final margin = box?.margin?.resolve(direction).horizontal ?? 0.0;
+        final constrainedWidth = (constraints.maxWidth - margin).clamp(
+          0.0,
+          double.infinity,
+        );
+        final width = requestedWidth < constrainedWidth
+            ? requestedWidth
+            : constrainedWidth;
         final padding = box?.padding?.resolve(direction).horizontal ?? 0.0;
         final border =
             box?.decoration?.padding.resolve(direction).horizontal ?? 0.0;
