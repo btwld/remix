@@ -4,7 +4,15 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 import '../ui/ui.dart';
-import 'calendar.dart' show appointmentCalendarStyle, calendarDemoSelectorStyle;
+import 'calendar.dart'
+    show
+        appointmentCalendarStyle,
+        calendarDemoSelectorStyle,
+        calendarDemoTarget;
+
+// Picker widths are content bounds, with no matching Fortal spacing step.
+const _pickerMinWidth = 200.0;
+const _pickerPanelMaxWidth = 480.0;
 
 @widgetbook.UseCase(name: 'Appointment date', type: RemixDatePicker)
 Widget buildDatePickerUseCase(BuildContext context) =>
@@ -42,13 +50,24 @@ class _DatePickerExampleState extends State<DatePickerExample> {
       isDateUnavailable: (date) => date.weekday >= DateTime.saturday,
       onChanged: (date) => setState(() => _value = date),
       buttonStyle: fortalButtonStyle(variant: .outline)
-          .minHeight(44)
-          .minWidth(MediaQuery.textScalerOf(context).scale(200))
-          .spacing(8),
+          .minHeight(calendarDemoTarget)
+          .minWidth(MediaQuery.textScalerOf(context).scale(_pickerMinWidth))
+          .spacing(FortalTokens.space2())
+          .icon(
+            IconStyler().size(
+              MediaQuery.textScalerOf(
+                context,
+              ).scale(FortalTokens.space4.resolve(context)),
+            ),
+          ),
       popoverStyle: fortalPopoverStyle()
           .padding(.all(0))
-          .maxWidth(MediaQuery.textScalerOf(context).scale(480)),
-      navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
+          .maxWidth(
+            MediaQuery.textScalerOf(context).scale(_pickerPanelMaxWidth),
+          ),
+      navigationStyle: fortalIconButtonStyle(
+        variant: .ghost,
+      ).size(calendarDemoTarget, calendarDemoTarget),
       selectorStyle: calendarDemoSelectorStyle(context),
       calendarStyle: appointmentCalendarStyle(context),
     ),
