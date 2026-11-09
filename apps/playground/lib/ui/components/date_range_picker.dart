@@ -1,11 +1,15 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../theme/effects.dart';
 import '../theme/tokens.dart';
 import 'button.dart';
-import 'range_calendar.dart';
 import 'icon_button.dart';
 import 'popover.dart';
+import 'range_calendar.dart';
 import 'select.dart';
 
 /// The application's DateRangePicker composite.
@@ -136,55 +140,121 @@ class PlaygroundDateRangePicker extends StatelessWidget {
   final Widget Function(BuildContext context, String summary)? summaryBuilder;
 
   @override
-  Widget build(BuildContext context) => RemixDateRangePicker(
-    value: value,
-    firstDate: firstDate,
-    lastDate: lastDate,
-    onChanged: onChanged,
-    onOpen: onOpen,
-    onClose: onClose,
-    currentDate: currentDate,
-    isDateUnavailable: isDateUnavailable,
-    firstDayOfWeek: firstDayOfWeek,
-    enabled: enabled,
-    semanticLabel: semanticLabel,
-    placeholder: placeholder,
-    formatRange: formatRange,
-    calendarLabels: calendarLabels,
-    rangeLabels: rangeLabels,
-    focusNode: focusNode,
-    autofocus: autofocus,
-    positioning: positioning,
-    buttonStyle: playgroundButtonStyle(variant: .outline, style: buttonStyle),
-    calendarStyle: playgroundRangeCalendarStyle(style: calendarStyle),
-    popoverStyle: playgroundPopoverStyle(
-      style: PopoverStyler()
-          .width(
-            PlaygroundTokens.s12 * DateTime.daysPerWeek +
-                PlaygroundTokens.s3 * 2 +
-                PlaygroundTokens.s1 * 2 +
-                PlaygroundTokens.strokeHairline * 2,
-          )
-          .padding(.all(PlaygroundTokens.s1))
-          .merge(popoverStyle),
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => RemixDateRangePicker(
+      value: value,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      currentDate: currentDate,
+      isDateUnavailable: isDateUnavailable,
+      firstDayOfWeek: firstDayOfWeek,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      placeholder: placeholder,
+      formatRange: formatRange,
+      calendarLabels: calendarLabels,
+      rangeLabels: rangeLabels,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      positioning: positioning,
+      icon: RemixIcons.calendar,
+      placeholderStyle: ButtonStyler().label(
+        .color(PlaygroundTokens.mutedForeground()),
+      ),
+      expandedStyle: ButtonStyler()
+          .border(playgroundFocusBorder())
+          .containerEffects(playgroundFocusRing()),
+      buttonStyle: playgroundButtonStyle(
+        variant: .outline,
+        style: ButtonStyler()
+            .mainAxisAlignment(.start)
+            .minWidth(PlaygroundTokens.s12 * 5)
+            .padding(.horizontal(PlaygroundTokens.s3))
+            .label(
+              .fontWeight(
+                FontWeight.w400,
+              ).textAlign(.start).maxLines(1).overflow(.ellipsis),
+            )
+            .merge(buttonStyle),
+      ),
+      calendarStyle: playgroundRangeCalendarStyle(
+        style: CalendarStyler()
+            .day(
+              CalendarDayStyler().minWidth(
+                MediaQuery.textScalerOf(context).scale(PlaygroundTokens.s12),
+              ),
+            )
+            .merge(calendarStyle),
+      ),
+      popoverStyle: playgroundPopoverStyle(
+        style: PopoverStyler()
+            .minWidth(
+              math.max(
+                MediaQuery.textScalerOf(context).scale(PlaygroundTokens.s12) *
+                        DateTime.daysPerWeek +
+                    PlaygroundTokens.s3 * 2 +
+                    PlaygroundTokens.s1 * 2 +
+                    PlaygroundTokens.strokeHairline * 2,
+                math.max(
+                  constraints.minWidth,
+                  buttonStyle
+                          .build(context)
+                          .spec
+                          .container
+                          .spec
+                          .box
+                          ?.spec
+                          .constraints
+                          ?.minWidth ??
+                      0,
+                ),
+              ),
+            )
+            .maxWidth(double.infinity)
+            .padding(.all(PlaygroundTokens.s1))
+            .merge(popoverStyle),
+      ),
+      navigationStyle: playgroundIconButtonStyle(
+        variant: .ghost,
+        style: IconButtonStyler()
+            .size(PlaygroundTokens.s12, PlaygroundTokens.s12)
+            .margin(.symmetric(vertical: PlaygroundTokens.s1))
+            .icon(
+              .size(
+                MediaQuery.textScalerOf(context).scale(PlaygroundTokens.icon),
+              ),
+            )
+            .merge(navigationStyle),
+      ),
+      selectorStyle: playgroundSelectStyle(
+        style: SelectStyler()
+            .trigger(
+              SelectTriggerStyler()
+                  .indicator(
+                    .size(
+                      MediaQuery.textScalerOf(
+                        context,
+                      ).scale(PlaygroundTokens.s2_5),
+                    ),
+                  )
+                  .maxWidth(double.infinity)
+                  .minHeight(
+                    MediaQuery.textScalerOf(
+                      context,
+                    ).scale(PlaygroundTokens.controlMd),
+                  )
+                  .minWidth(
+                    MediaQuery.textScalerOf(
+                      context,
+                    ).scale(PlaygroundTokens.s16 + PlaygroundTokens.s12),
+                  ),
+            )
+            .merge(selectorStyle),
+      ),
+      summaryBuilder: summaryBuilder,
     ),
-    navigationStyle: playgroundIconButtonStyle(
-      variant: .ghost,
-      style: IconButtonStyler()
-          .size(PlaygroundTokens.s12, PlaygroundTokens.s12)
-          .merge(navigationStyle),
-    ),
-    selectorStyle: playgroundSelectStyle(
-      style: SelectStyler()
-          .trigger(
-            SelectTriggerStyler().width(
-              MediaQuery.textScalerOf(
-                context,
-              ).scale(PlaygroundTokens.s16 * 2 + PlaygroundTokens.s6),
-            ),
-          )
-          .merge(selectorStyle),
-    ),
-    summaryBuilder: summaryBuilder,
   );
 }

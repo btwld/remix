@@ -380,7 +380,7 @@ void main() {
               .spec;
           expect(
             button.spec.label.spec.style?.color,
-            theme.data.foreground,
+            theme.data.mutedForeground,
           );
           await t.tap(find.byType(RemixButton));
           await t.pumpAndSettle();

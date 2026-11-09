@@ -1,11 +1,15 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../theme/effects.dart';
 import '../theme/tokens.dart';
 import 'button.dart';
-import 'range_calendar.dart';
 import 'icon_button.dart';
 import 'popover.dart';
+import 'range_calendar.dart';
 import 'select.dart';
 
 /// The application's DateRangePicker composite.
@@ -136,55 +140,119 @@ class VanillaDateRangePicker extends StatelessWidget {
   final Widget Function(BuildContext context, String summary)? summaryBuilder;
 
   @override
-  Widget build(BuildContext context) => RemixDateRangePicker(
-    value: value,
-    firstDate: firstDate,
-    lastDate: lastDate,
-    onChanged: onChanged,
-    onOpen: onOpen,
-    onClose: onClose,
-    currentDate: currentDate,
-    isDateUnavailable: isDateUnavailable,
-    firstDayOfWeek: firstDayOfWeek,
-    enabled: enabled,
-    semanticLabel: semanticLabel,
-    placeholder: placeholder,
-    formatRange: formatRange,
-    calendarLabels: calendarLabels,
-    rangeLabels: rangeLabels,
-    focusNode: focusNode,
-    autofocus: autofocus,
-    positioning: positioning,
-    buttonStyle: vanillaButtonStyle(variant: .outline, style: buttonStyle),
-    calendarStyle: vanillaRangeCalendarStyle(style: calendarStyle),
-    popoverStyle: vanillaPopoverStyle(
-      style: PopoverStyler()
-          .width(
-            VanillaTokens.s12 * DateTime.daysPerWeek +
-                VanillaTokens.s3 * 2 +
-                VanillaTokens.s1 * 2 +
-                VanillaTokens.strokeHairline * 2,
-          )
-          .padding(.all(VanillaTokens.s1))
-          .merge(popoverStyle),
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => RemixDateRangePicker(
+      value: value,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      currentDate: currentDate,
+      isDateUnavailable: isDateUnavailable,
+      firstDayOfWeek: firstDayOfWeek,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      placeholder: placeholder,
+      formatRange: formatRange,
+      calendarLabels: calendarLabels,
+      rangeLabels: rangeLabels,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      positioning: positioning,
+      icon: RemixIcons.calendar,
+      placeholderStyle: ButtonStyler().label(
+        .color(VanillaTokens.mutedForeground()),
+      ),
+      expandedStyle: ButtonStyler()
+          .border(vanillaFocusBorder())
+          .containerEffects(vanillaFocusRing()),
+      buttonStyle: vanillaButtonStyle(
+        variant: .outline,
+        style: ButtonStyler()
+            .mainAxisAlignment(.start)
+            .minWidth(VanillaTokens.s12 * 5)
+            .padding(.horizontal(VanillaTokens.s3))
+            .label(
+              .fontWeight(
+                FontWeight.w400,
+              ).textAlign(.start).maxLines(1).overflow(.ellipsis),
+            )
+            .merge(buttonStyle),
+      ),
+      calendarStyle: vanillaRangeCalendarStyle(
+        style: CalendarStyler()
+            .day(
+              CalendarDayStyler().minWidth(
+                MediaQuery.textScalerOf(context).scale(VanillaTokens.s12),
+              ),
+            )
+            .merge(calendarStyle),
+      ),
+      popoverStyle: vanillaPopoverStyle(
+        style: PopoverStyler()
+            .minWidth(
+              math.max(
+                MediaQuery.textScalerOf(context).scale(VanillaTokens.s12) *
+                        DateTime.daysPerWeek +
+                    VanillaTokens.s3 * 2 +
+                    VanillaTokens.s1 * 2 +
+                    VanillaTokens.strokeHairline * 2,
+                math.max(
+                  constraints.minWidth,
+                  buttonStyle
+                          .build(context)
+                          .spec
+                          .container
+                          .spec
+                          .box
+                          ?.spec
+                          .constraints
+                          ?.minWidth ??
+                      0,
+                ),
+              ),
+            )
+            .maxWidth(double.infinity)
+            .padding(.all(VanillaTokens.s1))
+            .merge(popoverStyle),
+      ),
+      navigationStyle: vanillaIconButtonStyle(
+        variant: .ghost,
+        style: IconButtonStyler()
+            .size(VanillaTokens.s12, VanillaTokens.s12)
+            .margin(.symmetric(vertical: VanillaTokens.s1))
+            .icon(
+              .size(MediaQuery.textScalerOf(context).scale(VanillaTokens.icon)),
+            )
+            .merge(navigationStyle),
+      ),
+      selectorStyle: vanillaSelectStyle(
+        style: SelectStyler()
+            .trigger(
+              SelectTriggerStyler()
+                  .indicator(
+                    .size(
+                      MediaQuery.textScalerOf(
+                        context,
+                      ).scale(VanillaTokens.s2_5),
+                    ),
+                  )
+                  .maxWidth(double.infinity)
+                  .minHeight(
+                    MediaQuery.textScalerOf(
+                      context,
+                    ).scale(VanillaTokens.controlMd),
+                  )
+                  .minWidth(
+                    MediaQuery.textScalerOf(
+                      context,
+                    ).scale(VanillaTokens.s16 + VanillaTokens.s12),
+                  ),
+            )
+            .merge(selectorStyle),
+      ),
+      summaryBuilder: summaryBuilder,
     ),
-    navigationStyle: vanillaIconButtonStyle(
-      variant: .ghost,
-      style: IconButtonStyler()
-          .size(VanillaTokens.s12, VanillaTokens.s12)
-          .merge(navigationStyle),
-    ),
-    selectorStyle: vanillaSelectStyle(
-      style: SelectStyler()
-          .trigger(
-            SelectTriggerStyler().width(
-              MediaQuery.textScalerOf(
-                context,
-              ).scale(VanillaTokens.s16 * 2 + VanillaTokens.s6),
-            ),
-          )
-          .merge(selectorStyle),
-    ),
-    summaryBuilder: summaryBuilder,
   );
 }
