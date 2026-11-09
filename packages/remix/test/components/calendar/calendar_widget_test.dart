@@ -63,9 +63,7 @@ TextStyle? _renderedTextStyle(WidgetTester tester, String label) => tester
     .style;
 
 void main() {
-  testWidgets('day effects paint without changing layout', (
-    tester,
-  ) async {
+  testWidgets('day effects paint without changing layout', (tester) async {
     final style = CalendarStyler().day(
       CalendarDayStyler().onFocusVisible(
         CalendarDayStyler().containerEffects(
