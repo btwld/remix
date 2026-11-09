@@ -211,30 +211,35 @@ the steps above. The source column names the file under
 
 ## Calendar recipes (designed from the Vanilla scale)
 
-These are native recipe decisions for the calendar lane, using the existing
-Vanilla palette and scales rather than claiming upstream calendar parity.
-`calendar` and `range_calendar` install hand-written facades because
-`CalendarSpec` has no generator target. Navigation uses the ghost IconButton
-recipe at `s12`; selectors use Select, scale their 152px width with the text
-scaler and retain intrinsic text height. At 200% they wrap onto separate rows
-so month names remain on one line.
+These are native recipe decisions using the existing Vanilla palette and
+scales rather than claiming upstream calendar parity. `calendar` and
+`range_calendar` install hand-written facades because `CalendarSpec` has no
+generator target. Ghost IconButton navigation follows the outer day columns;
+Select captions retain intrinsic text height and scale their minimum width.
 
-- Day minimum: `s12` (48px), `radiusSm` corners, `textSm`; weekdays `textXs`,
-  muted foreground; heading `textSm`, semibold; container padding `s3`.
-- Rest: transparent. Today: accent and semibold. Hover: accent (half in dark,
-  like the ghost button). Press: primary at 15% / 25%. Selection: primary /
-  primaryForeground. Disabled: mutedForeground and disabledOpacity; unavailable
-  dates additionally strike through. Focus: shared ring at 50%, strokeRing,
-  inset foreground decoration so scrolling never clips it or reflows a day.
-- Range: primary endpoint caps, accent interiors, directional corners. During a
-  draft, prior selection is muted / mutedForeground. Preview: primary at
-  12% / 20% with a 60% primary hairline; unavailable preview uses destructive
-  text and a destructive tint at 10% / 20%.
-- Picker composites retain all Remix constructor parameters. They merge caller
-  child stylers last over outline Button, Popover, the matching calendar,
-  ghost IconButton and Select recipes. The panel uses the existing rounded
-  popover border/shadow, `s1` padding, 4px offset, and a width derived from the
-  seven day targets plus calendar/panel padding and border. No generated part.
+- Geometry: square `s12` day targets, scaling with text when the viewport allows;
+  `radiusSm` corners, `textSm` labels and `textXs` muted weekdays. Container
+  padding is `s3`, header-to-weekday spacing `s2`, and weekday-to-first-week
+  spacing `s1`. Equal zero row/column gutters preserve connected range bands.
+- Ordinary days rest transparent, hover in accent, and press in primary at
+  22% / 32% (light / dark). Today uses a ring-token hairline and semibold label.
+  Selection uses primary / primaryForeground, retaining that family at 90%
+  on hover and 80% on press. Focus uses the shared inset ring plus a contrasting
+  inner keyline without changing day geometry.
+- Disabled ordinary days use mutedForeground and disabledOpacity. Disabled
+  selections and the previous committed range while drafting use primary at
+  18% / 28% with full-opacity mutedForeground, keeping the selection recognizable.
+  Unavailable dates additionally strike through.
+- Range endpoints use primary caps with directional corners. Interiors use
+  primary at 9% / 24%, stepping to 15% / 32% on hover and 22% / 40% on press.
+  Preview uses primary at 12% / 20% with a 60% primary perimeter hairline;
+  blocked previews use full-strength destructive labels without a tinted fill.
+- Pickers merge caller child stylers last over outline Button, Popover, calendar,
+  ghost IconButton and Select recipes. The panel retains its rounded border and
+  shadow with a `s1` offset. The calendar owns the single `s3` padding layer;
+  the outer panel adds no padding. Width follows the seven day targets, calendar
+  padding and panel border. Trigger icons use mutedForeground and scale with text.
+  Bounded range labels use compact endpoints or wrap to retain both dates.
 
 The Vanilla spec, state, layout and pixel focus suites enforce these decisions;
 calendar recipe tests cover real day and range states in both theme modes.

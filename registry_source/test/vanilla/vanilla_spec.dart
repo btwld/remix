@@ -2133,7 +2133,9 @@ final _calendarTargets = <SpecTarget>[
       style: recipe,
       states: {WidgetState.selected},
       read: (s) => decorationOf(s.spec.day.spec.container)?.color,
-      expected: (t) => name == 'calendar' ? t.primary : t.muted,
+      expected: (t) => name == 'calendar'
+          ? t.primary
+          : tint(t.primary, t.brightness == Brightness.dark ? .28 : .18),
     ),
   ],
   for (final range in [false, true])
