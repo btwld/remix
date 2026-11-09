@@ -104,6 +104,54 @@ void main() {
   });
 
   group('consumer source selection', () {
+    test('independent defaults follow the selected source', () {
+      for (final source in checker.RemixSource.values) {
+        final options = checker.parseConsumerCheckOptions([
+          '--source',
+          source.name,
+        ])!;
+        expect(
+          options.independent,
+          source == checker.RemixSource.hosted
+              ? checker.IndependentMode.none
+              : checker.IndependentMode.all,
+        );
+        for (final mode in checker.IndependentMode.values) {
+          expect(
+            checker.parseConsumerCheckOptions([
+              '--source',
+              source.name,
+              '--independent',
+              mode.name,
+            ])!.independent,
+            mode,
+          );
+        }
+      }
+      for (final args in [
+        ['--independent'],
+        ['--independent', 'bad'],
+        ['--independent', 'all', '--independent', 'none'],
+      ]) {
+        expect(checker.parseConsumerCheckOptions(args), isNull);
+      }
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
+        expect(
+          checker.independentInstallItems(
+            preset,
+            mode: checker.IndependentMode.none,
+          ),
+          isEmpty,
+        );
+        expect(
+          checker.independentInstallItems(
+            preset,
+            mode: checker.IndependentMode.all,
+          ),
+          checker.independentInstallsForTest(preset),
+        );
+      }
+    });
     test('the default retains hosted and checkout validation', () {
       final options = checker.parseConsumerCheckOptions([])!;
 

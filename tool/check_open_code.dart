@@ -574,6 +574,8 @@ final class _PresetContract {
 
 enum RemixSource { both, hosted, checkout }
 
+enum IndependentMode { all, none }
+
 final class ConsumerCheckOptions {
   const ConsumerCheckOptions({
     required this.keep,
@@ -583,13 +585,20 @@ final class ConsumerCheckOptions {
     required this.item,
     this.iconLibrary = 'remix',
     this.jobs,
-  });
+    IndependentMode? independent,
+  }) : _independent = independent;
 
   final bool keep;
   final String preset;
   final RemixSource source;
   final bool hostedCli;
   final String? item;
+  final IndependentMode? _independent;
+  IndependentMode get independent =>
+      _independent ??
+      (source == RemixSource.hosted
+          ? IndependentMode.none
+          : IndependentMode.all);
 
   /// Independent items installed at once, or null to resolve the default.
   final int? jobs;
@@ -609,8 +618,19 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   var sawIconLibrary = false;
   int? jobs;
   String? item;
+  IndependentMode? independent;
   for (var index = 0; index < arguments.length; index += 1) {
     final argument = arguments[index];
+    if (argument == '--independent') {
+      if (independent != null || index + 1 >= arguments.length) return null;
+      final name = arguments[++index];
+      final selected = IndependentMode.values.where(
+        (value) => value.name == name,
+      );
+      if (selected.isEmpty) return null;
+      independent = selected.single;
+      continue;
+    }
     if (argument == '--hosted-cli') {
       if (hostedCli) return null;
       hostedCli = true;
@@ -693,6 +713,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
     item: item,
     iconLibrary: iconLibrary,
     jobs: jobs,
+    independent: independent,
   );
 }
 
@@ -734,6 +755,7 @@ Future<void> main(List<String> arguments) async {
       '[--icon-library remix|rounded|lucide] '
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
       '[--keep]\n'
+      '[--independent all|none (hosted: none; checkout/both: all)]\n'
       'Runs clean up after success, failure and handled cancellation; '
       'add --keep to retain output and print its path.',
     );
@@ -790,6 +812,7 @@ Future<void> main(List<String> arguments) async {
       hostedCli: parsed.hostedCli,
       item: parsed.item,
       jobs: jobs,
+      independent: parsed.independent,
     );
     if (failure != null) {
       stderr.writeln('open-code check failed: ${failure.message}');
@@ -811,6 +834,7 @@ Future<_Failure?> _run(
   required String? item,
   required String iconLibrary,
   required int jobs,
+  required IndependentMode independent,
 }) async {
   final rootFailure = _verifyRepositoryRoot(repositoryRoot);
   if (rootFailure != null) return rootFailure;
@@ -852,6 +876,7 @@ Future<_Failure?> _run(
         item: item,
         iconLibrary: iconLibrary,
         jobs: jobs,
+        independent: independent,
       );
     });
   } on OpenCodeCancelled {
@@ -897,6 +922,7 @@ Future<_Failure?> _checkInTemporaryApp({
   required String? item,
   required String iconLibrary,
   required int jobs,
+  required IndependentMode independent,
 }) async {
   final environment = _toolchainEnvironment(sdk);
   if (!hostedCli &&
@@ -1004,14 +1030,15 @@ Future<_Failure?> _checkInTemporaryApp({
     );
   }
 
-  final independent = await _checkIndependentItems(
+  final independentFailure = await _checkIndependentItems(
     sdk: sdk,
     app: app,
     preset: preset,
     environment: environment,
     jobs: jobs,
+    mode: independent,
   );
-  if (independent != null) return independent;
+  if (independentFailure != null) return independentFailure;
 
   for (final item in preset.registryItems) {
     final add = await _runProcess(
@@ -1457,10 +1484,11 @@ Future<_Failure?> _checkIndependentItems({
   required _PresetContract preset,
   required Map<String, String> environment,
   required int jobs,
+  IndependentMode mode = IndependentMode.all,
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  final items = preset.independentInstalls();
+  final items = independentInstallItems(preset.name, mode: mode);
 
   Future<_Failure?> checkItem(String item, StringSink log) async {
     final elapsed = Stopwatch()..start();
@@ -1526,6 +1554,15 @@ Future<_Failure?> _checkIndependentItems({
     isCancelled: () => _lifecycle.processes.cancelled,
   );
 }
+
+/// The independent install plan used by production and fixture tests.
+List<String> independentInstallItems(
+  String preset, {
+  required IndependentMode mode,
+  Directory? repositoryRoot,
+}) => mode == IndependentMode.none
+    ? []
+    : _presetByName(preset).independentInstalls(repositoryRoot);
 
 /// Runs [work] for every input with at most [limit] in flight, and returns the
 /// failure of the earliest input that failed, or null.
