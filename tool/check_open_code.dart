@@ -172,6 +172,7 @@ const _fortalRegistryItems = <String>[
   'range_slider',
   'segmented_control',
   'select',
+  'combobox',
   'sidebar',
   'sidebar_layout',
   'skeleton',

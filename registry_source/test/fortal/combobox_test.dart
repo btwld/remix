@@ -1,0 +1,158 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:registry_source/fortal.dart';
+import 'package:remix/remix.dart';
+
+import '../helpers/contrast.dart';
+import '../helpers/test_helpers.dart';
+
+BoxDecoration decoration(BoxSpec spec) => spec.decoration! as BoxDecoration;
+
+void main() {
+  for (final dark in [false, true]) {
+    final FortalThemeMode mode = dark ? .dark : .light;
+    testWidgets(
+      '$mode field matrix matches TextField including disabled and focus',
+      (tester) async {
+        for (final size in FortalComboboxSize.values) {
+          for (final variant in FortalComboboxVariant.values) {
+            for (final states in <Set<WidgetState>>[
+              {},
+              {.hovered},
+              {.focused},
+              {.disabled},
+              {.focused, .disabled},
+            ]) {
+              await resolveInFortalTheme(
+                tester,
+                (context) {
+                  final combo = fortalComboboxStyle(
+                    size: size,
+                    variant: variant,
+                  ).build(context).spec;
+                  final field = fortalTextFieldStyle(
+                    size: FortalTextFieldSize.values[size.index],
+                    variant: FortalTextFieldVariant.values[variant.index],
+                  ).build(context);
+                  expect(combo.field, field);
+                },
+                mode: mode,
+                states: states,
+              );
+            }
+          }
+        }
+      },
+    );
+    testWidgets(
+      '$mode suggestion states preserve geometry and readable contrast for every palette',
+      (tester) async {
+        for (final accent in FortalAccentColor.values) {
+          final fills = <Color>{};
+          final borders = <EdgeInsetsGeometry?>{};
+          for (final state in [
+            WidgetState.hovered,
+            WidgetState.focused,
+            WidgetState.pressed,
+          ]) {
+            await resolveInFortalTheme(
+              tester,
+              (context) {
+                final spec = fortalComboboxStyle().build(context).spec;
+                final row = decoration(spec.option.spec.container.spec);
+                final panel = decoration(spec.panel.spec.container.spec);
+                expect(
+                  spec.option.spec.container.spec.padding,
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                );
+                fills.add(row.color!);
+                borders.add(row.border?.dimensions);
+                expect(
+                  compositedContrast(
+                    foreground: spec.option.spec.label.spec.style!.color!,
+                    fill: row.color!,
+                    panel: panel.color!,
+                  ),
+                  greaterThanOrEqualTo(4.5),
+                );
+                expect(
+                  spec.option.spec.container.spec.constraints!.minHeight,
+                  32,
+                );
+                expect(
+                  spec.panel.spec.scrollbarColor,
+                  FortalTokens.gray9.resolve(context),
+                );
+              },
+              accent: accent,
+              mode: mode,
+              states: {state},
+            );
+          }
+          expect(fills, hasLength(3));
+          expect(
+            borders,
+            hasLength(1),
+            reason: 'highlight must not move wrapped labels',
+          );
+        }
+      },
+    );
+    testWidgets('$mode caller state overrides merge last', (tester) async {
+      await resolveInFortalTheme(
+        tester,
+        (context) {
+          final spec = fortalComboboxStyle(
+            style: ComboboxStyler().option(
+              ComboboxOptionStyler().onHovered(.color(FortalTokens.gray4())),
+            ),
+          ).build(context).spec;
+          expect(
+            decoration(spec.option.spec.container.spec).color,
+            FortalTokens.gray4.resolve(context),
+          );
+        },
+        mode: mode,
+        states: {WidgetState.hovered},
+      );
+    });
+    testWidgets(
+      '$mode RTL at 200 percent grows wrapped suggestions and accepts by keyboard',
+      (tester) async {
+        String? accepted;
+        await tester.pumpRemixApp(
+          MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: SizedBox(
+              width: 320,
+              child: FortalCombobox<String>(
+                label: 'Destination',
+                onSelected: (value) => accepted = value,
+                optionsBuilder: (_) => const [
+                  'San Sebastián, Basque Country · Spain',
+                  'Santiago de Compostela, Galicia · Spain',
+                ],
+              ),
+            ),
+          ),
+          mode: mode,
+          textDirection: .rtl,
+        );
+        await tester.tap(find.byType(EditableText));
+        await tester.enterText(find.byType(EditableText), 'San');
+        await tester.pumpAndSettle();
+        expect(
+          find.text('San Sebastián, Basque Country · Spain'),
+          findsOneWidget,
+        );
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+        await tester.testTextInput.receiveAction(TextInputAction.done);
+        await tester.pumpAndSettle();
+        expect(accepted, 'San Sebastián, Basque Country · Spain');
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+}

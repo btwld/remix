@@ -226,6 +226,10 @@ final directories = <_widgetbook.WidgetbookNode>[
         name: 'RemixCombobox<Object>',
         useCases: [
           _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder: _demo_components_combobox.buildComboboxCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
             name: 'Combobox Component',
             builder: _demo_components_combobox.buildComboboxUseCase,
           ),

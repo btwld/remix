@@ -214,6 +214,21 @@ grid. Check padding against height, text centering, matched icon size/gap,
 40px hit targets, and distinct hover/press/disabled states in both modes.
 Caller style overrides are always merged last.
 
+## Combobox
+
+Combobox promotes `apps/demo/lib/components/combobox.dart` into the registry.
+Its surface/soft and size1/size2/size3 axes match TextField; it calls the same
+field recipe, including disabled colors and the focus outline without layout
+shift. The floating panel uses colorPanel, gray7 border, radius3, shadow3,
+space1 padding, space2 gap and a gray9 overflow thumb. Remix owns fades and
+scrolling. Rows grow from 24/32/32px minima, with space3 horizontal and 6px
+vertical padding, radius2, text1/2/3 and gray12 labels. A transparent 1px
+accent8 border reserves keyboard highlight geometry. Hover uses accentA3,
+keyboard highlight accentA5 with the accent8 border, and press accentA7.
+Acceptance appears as the field value; there is no persistent selected or
+per-option disabled state. No preset behavior is added. Test coverage includes
+both modes, every accent, field matrices, contrast and RTL at 200% text.
+
 ## Enforcement
 
 - `tool/check_fortal.dart` (`melos run fortal:check`) holds the catalog against

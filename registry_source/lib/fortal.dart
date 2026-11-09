@@ -68,3 +68,4 @@ export 'src/fortal/components/toggle.dart';
 export 'src/fortal/components/toggle_group.dart';
 export 'src/fortal/components/tooltip.dart';
 export 'src/fortal/components/typography.dart';
+export 'src/fortal/components/combobox.dart';

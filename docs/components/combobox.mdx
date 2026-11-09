@@ -24,7 +24,7 @@ Widget fruitSearch(ValueChanged<String> onSelected) => RemixCombobox<String>(
 );
 ```
 
-Provide an Overlay through a Navigator or WidgetsApp. Material is not required. Remix supplies structural anatomy. Vanilla supplies the field, panel and suggestion styling through an installable recipe.
+Provide an Overlay through a Navigator or WidgetsApp. Material is not required. Remix supplies structural anatomy. Vanilla and Fortal supply the field, panel and suggestion styling through installable recipes.
 
 ## Vanilla recipe
 
@@ -56,7 +56,17 @@ Rows grow with wrapped text from Select’s 32px minimum and padding. The panel 
 Use `style: ComboboxStyler().field(...).panel(...).option(...)` for overrides;
 state overrides belong in matching state fragments. A custom `fieldBuilder`
 owns its field appearance; custom option content inherits the recipe's label
-style. Other presets continue to use application-owned styling.
+style.
+
+## Fortal recipe
+
+Install `remix add combobox` in a Fortal app. It installs `theme` and `textfield`
+and exposes the same `UiCombobox<T>` editing API. Use `variant: .surface` (default)
+or `.soft`, and `size: .size1`, `.size2` (default), or `.size3`. The field shares
+Fortal TextField's colors, focus outline and disabled treatment. The panel uses
+Fortal's floating surface, shadow and neutral scrollbar. Rounded rows grow for
+wrapped text; hover, keyboard highlight and press use distinct accent tints.
+Acceptance writes the field value, with no persistent selected suggestion state.
 
 ## Editing and ownership
 

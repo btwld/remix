@@ -72,7 +72,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   scroll panel with a persistent overflow thumb. Panel styles expose effects,
   scrollbar color and thickness. Vanilla ships `<Prefix>Combobox<T>` via `remix add combobox`,
   with the TextField recipe and a Select-like panel; its dependencies are
-  `theme` and `textfield`. Other presets still require application styling.
+  `theme` and `textfield`. Fortal also ships the recipe with surface/soft variants and three TextField sizes; HeroUI still requires application styling.
   See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 - **TextField/TextArea** — forwards the standard Flutter text-input surface
   (`controller`, `keyboardType`, `inputFormatters`, `maxLines`, etc.)

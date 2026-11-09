@@ -184,3 +184,13 @@ press and contiguous keyboard-focus rings. Normal scaling reserves 48px.
 Give `semanticLabels` distinct localized names. Custom value formatters use
 `RemixRangeSlider` with `<prefix>RangeSliderStyle()`.
 See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
+
+## Combobox
+
+`remix add combobox` installs `<Prefix>Combobox<T>` with `theme` and `textfield`.
+Use `variant: .surface|.soft` and `size: .size1|.size2|.size3`; defaults are
+surface and size2. Its field reuses TextField. The floating suggestion panel
+uses Fortal tokens, growing wrapped rows, distinct hover/keyboard/press fills,
+and the shared overflow fades and thumb. Acceptance updates the editor; there
+is no per-option selected or disabled state. See
+[Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
