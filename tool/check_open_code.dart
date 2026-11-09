@@ -146,6 +146,11 @@ const _generatedSnapshots = <String, String>{
 };
 
 const _fortalRegistryItems = <String>[
+  'calendar',
+  'range_calendar',
+  'date_picker',
+  'date_range_picker',
+
   'icons',
   'accordion',
   'app_bar',
@@ -209,7 +214,14 @@ const _fortalPreset = _PresetContract(
   name: 'fortal',
   fixtureDirectory: 'fortal_fixture',
   registryItems: _fortalRegistryItems,
-  independentItems: [..._independentRegistryItems, 'range_slider'],
+  independentItems: [
+    ..._independentRegistryItems,
+    'range_slider',
+    'calendar',
+    'range_calendar',
+    'date_picker',
+    'date_range_picker',
+  ],
 );
 
 const _herouiRegistryItems = [

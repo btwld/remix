@@ -56,6 +56,50 @@ void main() {
     final catalog = await registry.catalog();
 
     expect(catalog.preset, 'fortal');
+    for (final name in [
+      'calendar',
+      'range_calendar',
+      'date_picker',
+      'date_range_picker',
+    ]) {
+      final item = catalog.items[name]!;
+      expect(item.generated, isEmpty);
+      expect(item.files.single.target, '@ui/components/$name.dart');
+      expect(item.exports, ['components/$name.dart']);
+      expect(catalog.resolve(name).map((item) => item.name), switch (name) {
+        'calendar' => ['theme', 'base_button', 'icon_button', 'select', name],
+        'range_calendar' => [
+          'theme',
+          'base_button',
+          'icon_button',
+          'select',
+          'calendar',
+          name,
+        ],
+        'date_picker' => [
+          'theme',
+          'base_button',
+          'button',
+          'icon_button',
+          'select',
+          'calendar',
+          'popover',
+          name,
+        ],
+        _ => [
+          'theme',
+          'base_button',
+          'button',
+          'icon_button',
+          'select',
+          'calendar',
+          'popover',
+          'range_calendar',
+          name,
+        ],
+      });
+    }
+
     expect(catalog.resolve('button').map((item) => item.name), [
       'theme',
       'base_button',

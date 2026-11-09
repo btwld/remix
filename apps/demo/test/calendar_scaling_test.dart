@@ -1,3 +1,6 @@
+import 'package:demo/polish_board.dart' show PolishTypography;
+import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:demo/components/calendar.dart';
 import 'package:demo/components/date_picker.dart';
 import 'package:demo/components/range_calendar.dart';
@@ -9,6 +12,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
+  setUpAll(() async {
+    final loader = FontLoader('Geist');
+    final fallback = FontLoader('Roboto');
+    for (final weight in ['Regular', 'Medium', 'SemiBold', 'Bold']) {
+      final data = File(
+        '../../packages/remix_ui_fonts/lib/fonts/geist/Geist-$weight.ttf',
+      ).readAsBytes().then(ByteData.sublistView);
+      loader.addFont(data);
+      fallback.addFont(data);
+    }
+    await loader.load();
+    await fallback.load();
+  });
+
   for (final (name, example, picker) in <(String, Widget, Type?)>[
     ('calendar', const CalendarExample(), null),
     ('range calendar', const RangeCalendarExample(), null),
@@ -27,11 +44,14 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             builder: (context, child) => FortalTheme(
-              child: MediaQuery(
-                data: MediaQuery.of(
-                  context,
-                ).copyWith(textScaler: TextScaler.linear(2)),
-                child: child!,
+              child: PolishTypography(
+                fontFamily: 'Geist',
+                child: MediaQuery(
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: TextScaler.linear(2)),
+                  child: child!,
+                ),
               ),
             ),
             home: example,

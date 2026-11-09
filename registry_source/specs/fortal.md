@@ -283,3 +283,39 @@ gray4 light / gray9 dark face with gray9 hairline, using srcOver in both modes;
 interaction halos are suppressed. Per-thumb state belongs to Remix.
 Two ordered values, minimum spacing, snapping, RTL and semantics retain Remix's
 API. Custom value formatters use the base widget with the recipe.
+
+## Calendar and picker families
+
+The design source is the reviewed Appointment date and Reporting period stories
+in `apps/demo/lib/components/{calendar,range_calendar,date_picker,date_range_picker}.dart`
+at d8ad0b877 (calendar polish round 4). These are Fortal designs, not reference
+ports. Four independently installable hand-written composites retain Remix's
+controlled civil-date APIs; CalendarSpec has no widget generator target, and
+pickers combine five independently overridable child stylers.
+
+- Calendar: 44px minimum day targets scale with text; seven columns plus space3
+  padding. Navigation retains 44px targets; its space4 chevrons scale with text,
+  as do the 9px selector indicators. Select captions have 146px scaled widths,
+  touchTargetMin minimum height, and space2 horizontal padding. Text2 days,
+  text1 gray11 weekdays, space2 header gap, space1 weekday and row gaps, radius3.
+- Today: gray12 bold numeral and gray9 ring (range uses gray10), retaining
+  selected ink when today is also selected. Ordinary days hover gray4 and press
+  gray6. Selected days use accentSolid/accentContrast, 90% hover and 80% press.
+  Disabled days use gray9; unavailable days add a strike.
+- Ranges: directional radius3 caps in accentSolid, accent4 interiors; draft
+  accent4 with accent5 caps and 2px accent8 perimeter. Blocked draft uses
+  error3/error11. Stale committed selection has gray4/gray3 caps/interior in
+  light, gray3 / the midpoint of gray2 and gray3 in dark, distinct from the live middle. Keyboard day focus
+  uses the reviewed 2px border contour; dark uses gray11 so it separates from
+  accent8, light uses focus8. This inset day treatment preserves connected bands.
+- Pickers: outline Button, calendar icon scaled from space4, gray10 placeholder,
+  focus8 open border, Popover with zero extra padding and 480px scaled maximum.
+  Single/range trigger width floors are 200/260px scaled; labels and formatting
+  stay caller-owned. Nested selector panels cap at six touchTargetMin steps
+  (240px at normal scale), scaled with text, with a persistent gray9 scroll cue.
+- Caller styles merge last. `summaryBuilder`, localized labels, RTL and range
+  semantics pass through unchanged. No new date or interaction machinery.
+
+The calendar regression suite exercises both modes, actual pointer and keyboard
+states, geometry, contrast and 200% RTL. The polish board adds all four families
+to Inputs, so its Linux Inputs master must be regenerated on Linux.

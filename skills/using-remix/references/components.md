@@ -117,7 +117,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   selectors need an Overlay ancestor. Keep `navigationStyle`, `selectorStyle`
   and day styling unresolved in their own interaction states. Day styles add
   `onToday` and `onUnavailable` (predicate-rejected, in range; declare after
-  `onDisabled`). Vanilla ships `<Prefix>Calendar` with icon navigation, growing Select
+  `onDisabled`). Vanilla and Fortal ship `<Prefix>Calendar` with icon navigation, growing Select
   selectors and all day states; install `calendar`. `CalendarStyler` has no
   callable widget shorthand.
 - **[RangeCalendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx)** — controlled complete inclusive `CivilDateRange?`, sharing
@@ -132,7 +132,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `onSelected` so they win; a raw `styleSpec` paints no range. The range
   summary is an unpainted live region unless `summaryBuilder` shows it. No
   public draft controller, partial committed value, drag selection or typed
-  entry. Vanilla ships `<Prefix>RangeCalendar`; install `range_calendar`. Its
+  entry. Vanilla and Fortal ship `<Prefix>RangeCalendar`; install `range_calendar`. Its
   outlined tinted draft de-emphasizes the old committed range.
 - **[DatePicker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)** — a thin Button + Popover + Calendar composition, not a text
   field. The parent owns nullable `value`; valid activation requests one date
@@ -150,7 +150,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `style`/`styleSpec` or public controller.
   `onOpen`/`onClose` report the popover; a completed selection calls `onChanged`
   before `onClose`, a dismissal only `onClose`. Parsing and segmented entry are
-  not supported; use DateRangePicker for ranges. Vanilla ships
+  not supported; use DateRangePicker for ranges. Vanilla and Fortal ship
   `<Prefix>DatePicker`; install `date_picker` for the Button, Popover and
   Calendar recipes wired as a hand-written composite.
 - **DateRangePicker** — Button + Popover + RangeCalendar with a controlled
@@ -162,7 +162,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   when empty) and optionally `formatRange` (painted text only). Same resize,
   keyboard, `onOpen`/`onClose` and five child styles as DatePicker; no picker
   styler/controller or typed entry. Forwards `summaryBuilder` to paint the
-  otherwise unpainted range summary. Vanilla ships `<Prefix>DateRangePicker`;
+  otherwise unpainted range summary. Vanilla and Fortal ship `<Prefix>DateRangePicker`;
   install `date_range_picker` for the matching hand-written composite. See
   [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).
 

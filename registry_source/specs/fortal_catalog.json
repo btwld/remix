@@ -1774,6 +1774,130 @@
         "test/components/sidebar_layout/sidebar_layout_test.dart",
         "test/fortal/spec_conformance_test.dart"
       ]
+    },
+    {
+      "id": "calendar",
+      "fortalType": "FortalCalendar",
+      "enums": {},
+      "defaults": {
+        "enabled": true,
+        "firstDayOfWeek": "DateTime.sunday"
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "selected",
+        "disabled",
+        "today",
+        "unavailable",
+        "rtl"
+      ],
+      "tests": [
+        "test/fortal/calendar_recipes_test.dart",
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_control_contrast_render_test.dart"
+      ],
+      "flutterExceptions": [
+        "Hand-written composition retains Remix civil-date, focus, overlay and selection behavior; child styles merge last."
+      ]
+    },
+    {
+      "id": "range_calendar",
+      "fortalType": "FortalRangeCalendar",
+      "enums": {},
+      "defaults": {
+        "enabled": true,
+        "firstDayOfWeek": "DateTime.sunday"
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "selected",
+        "disabled",
+        "today",
+        "unavailable",
+        "rtl",
+        "draft",
+        "blockedDraft"
+      ],
+      "tests": [
+        "test/fortal/calendar_recipes_test.dart",
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_control_contrast_render_test.dart"
+      ],
+      "flutterExceptions": [
+        "Hand-written composition retains Remix civil-date, focus, overlay and selection behavior; child styles merge last."
+      ]
+    },
+    {
+      "id": "date_picker",
+      "fortalType": "FortalDatePicker",
+      "enums": {},
+      "defaults": {
+        "enabled": true,
+        "firstDayOfWeek": "DateTime.sunday"
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "selected",
+        "disabled",
+        "today",
+        "unavailable",
+        "rtl"
+      ],
+      "tests": [
+        "test/fortal/calendar_recipes_test.dart",
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_control_contrast_render_test.dart"
+      ],
+      "flutterExceptions": [
+        "Hand-written composition retains Remix civil-date, focus, overlay and selection behavior; child styles merge last."
+      ]
+    },
+    {
+      "id": "date_range_picker",
+      "fortalType": "FortalDateRangePicker",
+      "enums": {},
+      "defaults": {
+        "enabled": true,
+        "firstDayOfWeek": "DateTime.sunday"
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "selected",
+        "disabled",
+        "today",
+        "unavailable",
+        "rtl",
+        "draft",
+        "blockedDraft"
+      ],
+      "tests": [
+        "test/fortal/calendar_recipes_test.dart",
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_control_contrast_render_test.dart"
+      ],
+      "flutterExceptions": [
+        "Hand-written composition retains Remix civil-date, focus, overlay and selection behavior; child styles merge last."
+      ]
     }
   ],
   "visualGate": "apps/demo/test/polish_board_golden_test.dart"

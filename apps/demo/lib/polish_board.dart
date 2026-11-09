@@ -1,3 +1,7 @@
+import 'components/date_range_picker.dart' as date_range_picker;
+import 'components/date_picker.dart' as date_picker;
+import 'components/range_calendar.dart' as range_calendar;
+import 'components/calendar.dart' as calendar;
 import 'dart:math' as math;
 import 'package:flutter/material.dart' show Icons;
 import 'package:flutter/widgets.dart';
@@ -192,6 +196,22 @@ final _families = <_Family>[
     id: 'switch',
     group: 'Inputs',
     build: switch_story.buildSwitchCatalogUseCase,
+  ),
+  (id: 'calendar', group: 'Inputs', build: calendar.buildCalendarUseCase),
+  (
+    id: 'range_calendar',
+    group: 'Inputs',
+    build: range_calendar.buildRangeCalendarUseCase,
+  ),
+  (
+    id: 'date_picker',
+    group: 'Inputs',
+    build: date_picker.buildDatePickerUseCase,
+  ),
+  (
+    id: 'date_range_picker',
+    group: 'Inputs',
+    build: date_range_picker.buildDateRangePickerUseCase,
   ),
   (id: 'slider', group: 'Inputs', build: slider.buildSliderCatalogUseCase),
   (
