@@ -334,16 +334,24 @@ class FortalPolishContents extends StatelessWidget {
                                   weight: .bold,
                                 ),
                                 const SizedBox(height: 16),
-                                WidgetStateStyleOverride(
-                                  states: states,
-                                  child: Builder(
-                                    builder: (context) => _MatrixCells(
-                                      matrix:
-                                          family.build(context)
-                                              as CatalogMatrix,
+                                // A calendar contains mixed selected/disabled
+                                // days. A blanket override erases those roles.
+                                if (family.group == 'Calendars')
+                                  _MatrixCells(
+                                    matrix:
+                                        family.build(context) as CatalogMatrix,
+                                  )
+                                else
+                                  WidgetStateStyleOverride(
+                                    states: states,
+                                    child: Builder(
+                                      builder: (context) => _MatrixCells(
+                                        matrix:
+                                            family.build(context)
+                                                as CatalogMatrix,
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                           ),
