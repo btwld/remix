@@ -113,7 +113,7 @@ void main() {
         expect(
           options.independent,
           source == checker.RemixSource.hosted
-              ? checker.IndependentMode.none
+              ? checker.IndependentMode.canary
               : checker.IndependentMode.all,
         );
         for (final mode in checker.IndependentMode.values) {
@@ -136,6 +136,14 @@ void main() {
         expect(checker.parseConsumerCheckOptions(args), isNull);
       }
       for (final preset in ['vanilla', 'fortal', 'heroui']) {
+        final canary = checker.independentInstallItems(
+          preset,
+          mode: checker.IndependentMode.canary,
+        );
+        expect(canary, [
+          preset == 'heroui' ? 'search_field' : 'dashboard_shell',
+        ]);
+        expect(checker.independentInstallsForTest(preset), containsAll(canary));
         expect(
           checker.independentInstallItems(
             preset,

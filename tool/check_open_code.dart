@@ -574,7 +574,7 @@ final class _PresetContract {
 
 enum RemixSource { both, hosted, checkout }
 
-enum IndependentMode { all, none }
+enum IndependentMode { canary, all, none }
 
 final class ConsumerCheckOptions {
   const ConsumerCheckOptions({
@@ -597,7 +597,7 @@ final class ConsumerCheckOptions {
   IndependentMode get independent =>
       _independent ??
       (source == RemixSource.hosted
-          ? IndependentMode.none
+          ? IndependentMode.canary
           : IndependentMode.all);
 
   /// Independent items installed at once, or null to resolve the default.
@@ -755,7 +755,7 @@ Future<void> main(List<String> arguments) async {
       '[--icon-library remix|rounded|lucide] '
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
       '[--keep]\n'
-      '[--independent all|none (hosted: none; checkout/both: all)]\n'
+      '[--independent canary|all|none (hosted: canary; checkout/both: all)]\n'
       'Runs clean up after success, failure and handled cancellation; '
       'add --keep to retain output and print its path.',
     );
@@ -1560,9 +1560,17 @@ List<String> independentInstallItems(
   String preset, {
   required IndependentMode mode,
   Directory? repositoryRoot,
-}) => mode == IndependentMode.none
-    ? []
-    : _presetByName(preset).independentInstalls(repositoryRoot);
+}) => switch (mode) {
+  IndependentMode.none => [],
+  // A large closure on Vanilla/Fortal and a generated multi-item closure on
+  // HeroUI retain a fresh hosted install tripwire without repeating Lane B.
+  IndependentMode.canary => [
+    preset == 'heroui' ? 'search_field' : 'dashboard_shell',
+  ],
+  IndependentMode.all => _presetByName(
+    preset,
+  ).independentInstalls(repositoryRoot),
+};
 
 /// Runs [work] for every input with at most [limit] in flight, and returns the
 /// failure of the earliest input that failed, or null.
