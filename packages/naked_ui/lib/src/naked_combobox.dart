@@ -499,7 +499,9 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
         _suppressCachedOptions = true;
         _optionsText = _text;
       }
-      _reconcileValue();
+      // Raw writes the next selection's text before _handleSelected stores its
+      // value. Reconcile there so this write does not invalidate its epoch.
+      if (!_handlingSelection) _reconcileValue();
     });
   }
 

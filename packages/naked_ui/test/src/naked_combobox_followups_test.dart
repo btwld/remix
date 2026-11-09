@@ -212,6 +212,46 @@ void main() {
     expect(host.snapshot.value, 'Apple');
   });
 
+  testWidgets(
+    'selecting a different cached option retains repeat-selection equality',
+    (tester) async {
+      final host = await _pump(
+        tester,
+        _Host<String>(optionsBuilder: (_) => ['Apple', 'Banana']),
+      );
+      await _type(tester, 'a');
+      await tester.tap(find.text('Apple'));
+      await tester.pumpAndSettle();
+      expect(host.selected, ['Apple']);
+
+      // Reopen Raw's retained results without editing away the first value.
+      host.focus.unfocus();
+      await tester.pump();
+      host.focus.requestFocus();
+      await tester.pumpAndSettle();
+      expect(host.snapshot.value, 'Apple');
+      await tester.tap(find.text('Banana'));
+      await tester.pumpAndSettle();
+      expect(host.selected, ['Apple', 'Banana']);
+      expect(host.snapshot.value, 'Banana');
+
+      host.focus.unfocus();
+      await tester.pump();
+      host.focus.requestFocus();
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pumpAndSettle();
+      expect(
+        host.rows.where((row) => row.isHighlighted).map((row) => row.value),
+        ['Banana'],
+      );
+      host.submit();
+      await tester.pumpAndSettle();
+      expect(host.selected, ['Apple', 'Banana']);
+      expect(host.snapshot.value, 'Banana');
+    },
+  );
+
   testWidgets('replacement with valid caret suppresses resolved old results', (
     tester,
   ) async {
