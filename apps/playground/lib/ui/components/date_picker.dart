@@ -244,11 +244,7 @@ class PlaygroundDatePicker extends StatelessWidget {
                       ),
                     )
                     .maxWidth(double.infinity)
-                    .minHeight(
-                      MediaQuery.textScalerOf(
-                        context,
-                      ).scale(PlaygroundTokens.controlMd),
-                    )
+                    .minHeight(playgroundCalendarDayWidth(context))
                     .minWidth(
                       MediaQuery.textScalerOf(
                         context,

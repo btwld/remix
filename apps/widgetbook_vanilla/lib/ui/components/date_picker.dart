@@ -244,11 +244,7 @@ class VanillaDatePicker extends StatelessWidget {
                       ),
                     )
                     .maxWidth(double.infinity)
-                    .minHeight(
-                      MediaQuery.textScalerOf(
-                        context,
-                      ).scale(VanillaTokens.controlMd),
-                    )
+                    .minHeight(vanillaCalendarDayWidth(context))
                     .minWidth(
                       MediaQuery.textScalerOf(
                         context,

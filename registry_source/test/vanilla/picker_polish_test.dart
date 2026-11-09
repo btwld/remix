@@ -1,6 +1,8 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
 import 'package:remix/remix.dart';
@@ -10,7 +12,59 @@ import 'calendar_recipes_test.dart' show calendarHost;
 import 'support.dart';
 
 void main() {
+  setUpAll(() async {
+    final loader = FontLoader(RemixFonts.geist);
+    for (final weight in ['Regular', 'Medium', 'SemiBold', 'Bold']) {
+      loader.addFont(
+        rootBundle.load(
+          'packages/remix_ui_fonts/lib/fonts/geist/Geist-$weight.ttf',
+        ),
+      );
+    }
+    await loader.load();
+  });
   for (final theme in vanillaThemes) {
+    for (final range in [false, true]) {
+      testWidgets(
+        '${theme.name} $range picker has an even visible header inset',
+        (t) async {
+          await t.pumpWidget(
+            calendarHost(
+              range
+                  ? VanillaDateRangePicker(
+                      value: null,
+                      firstDate: DateTime(2026),
+                      lastDate: DateTime(2028),
+                      currentDate: DateTime(2026, 11, 6),
+                      onChanged: (_) {},
+                    )
+                  : VanillaDatePicker(
+                      value: null,
+                      firstDate: DateTime(2026),
+                      lastDate: DateTime(2028),
+                      currentDate: DateTime(2026, 11, 6),
+                      onChanged: (_) {},
+                    ),
+              theme.data,
+            ),
+          );
+          await t.tap(find.byType(RemixButton));
+          await t.pumpAndSettle();
+          final nav = t.getRect(find.byType(RemixIconButton).first);
+          final selector = t.getRect(
+            find.byType(StyleSpecProvider<SelectTriggerSpec>).first,
+          );
+
+          // Compare painted control bounds, not the header row's invisible box.
+          expect(selector.top, closeTo(nav.top, .01));
+          expect(nav.height, greaterThanOrEqualTo(VanillaTokens.s12));
+          final calendar = t.getRect(
+            find.byType(range ? RemixRangeCalendar : RemixCalendar),
+          );
+          expect(selector.top - calendar.top, closeTo(VanillaTokens.s3, .01));
+        },
+      );
+    }
     for (final range in [false, true]) {
       testWidgets(
         '${theme.name} $range trigger icon follows muted text at 200 percent',

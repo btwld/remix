@@ -297,11 +297,7 @@ class VanillaRangeCalendar extends StatelessWidget {
                     MediaQuery.textScalerOf(context).scale(VanillaTokens.s2_5),
                   ),
                 )
-                .minHeight(
-                  MediaQuery.textScalerOf(
-                    context,
-                  ).scale(VanillaTokens.controlMd),
-                )
+                .minHeight(vanillaCalendarDayWidth(context))
                 .maxWidth(double.infinity)
                 .minWidth(
                   MediaQuery.textScalerOf(

@@ -244,11 +244,7 @@ class {{typePrefix}}DatePicker extends StatelessWidget {
                       ),
                     )
                     .maxWidth(double.infinity)
-                    .minHeight(
-                      MediaQuery.textScalerOf(
-                        context,
-                      ).scale({{typePrefix}}Tokens.controlMd),
-                    )
+                    .minHeight({{valuePrefix}}CalendarDayWidth(context))
                     .minWidth(
                       MediaQuery.textScalerOf(
                         context,

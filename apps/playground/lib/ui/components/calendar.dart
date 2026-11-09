@@ -320,11 +320,7 @@ class PlaygroundCalendar extends StatelessWidget {
                     ).scale(PlaygroundTokens.s2_5),
                   ),
                 )
-                .minHeight(
-                  MediaQuery.textScalerOf(
-                    context,
-                  ).scale(PlaygroundTokens.controlMd),
-                )
+                .minHeight(playgroundCalendarDayWidth(context))
                 .maxWidth(double.infinity)
                 .minWidth(
                   MediaQuery.textScalerOf(

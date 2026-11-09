@@ -216,6 +216,8 @@ scales rather than claiming upstream calendar parity. `calendar` and
 `range_calendar` install hand-written facades because `CalendarSpec` has no
 generator target. Ghost IconButton navigation follows the outer day columns;
 Select captions retain intrinsic text height and scale their minimum width.
+Their minimum height matches the 48px navigation target, keeping the visible
+header controls flush with the calendar’s 12px content inset.
 
 - Geometry: square `s12` day targets, scaling with text when the viewport allows;
   `radiusSm` corners, `textSm` labels and `textXs` muted weekdays. Container
