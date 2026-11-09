@@ -211,55 +211,72 @@ class RemixCalendar extends StatelessWidget {
         children: [
           _navigation(state, previous: true),
           Expanded(
-            flex: 3,
-            child: RemixSelect<int>(
-              trigger: RemixSelectTrigger(placeholder: labels.chooseMonth),
-              semanticLabel: labels.chooseMonth,
-              selectedValue: date.month,
-              enabled: interactive,
-              items: [
-                for (var month = 1; month <= 12; month++)
-                  if ((date.year != firstDate.year ||
-                          month >= firstDate.month) &&
-                      (date.year != lastDate.year || month <= lastDate.month))
-                    RemixSelectItem(value: month, label: labels.month(month)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  flex: 3,
+                  child: RemixSelect<int>(
+                    trigger: RemixSelectTrigger(
+                      placeholder: labels.chooseMonth,
+                    ),
+                    semanticLabel: labels.chooseMonth,
+                    selectedValue: date.month,
+                    enabled: interactive,
+                    items: [
+                      for (var month = 1; month <= 12; month++)
+                        if ((date.year != firstDate.year ||
+                                month >= firstDate.month) &&
+                            (date.year != lastDate.year ||
+                                month <= lastDate.month))
+                          RemixSelectItem(
+                            value: month,
+                            label: labels.month(month),
+                          ),
+                    ],
+                    onChanged: interactive
+                        ? (month) {
+                            if (month != null) {
+                              showMonth(DateTime(date.year, month));
+                            }
+                          }
+                        : null,
+                    // Preserve the recipe height as a minimum so scaled labels fit.
+                    style: selectorStyle.trigger(
+                      SelectTriggerStyler().maxHeight(double.infinity),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  flex: 2,
+                  child: RemixSelect<int>(
+                    trigger: RemixSelectTrigger(placeholder: labels.chooseYear),
+                    semanticLabel: labels.chooseYear,
+                    selectedValue: date.year,
+                    enabled: interactive,
+                    items: [
+                      for (
+                        var year = firstDate.year;
+                        year <= lastDate.year;
+                        year++
+                      )
+                        RemixSelectItem(value: year, label: labels.year(year)),
+                    ],
+                    onChanged: interactive
+                        ? (year) {
+                            if (year != null) {
+                              showMonth(DateTime(year, date.month));
+                            }
+                          }
+                        : null,
+                    // Preserve the recipe height as a minimum so scaled labels fit.
+                    style: selectorStyle.trigger(
+                      SelectTriggerStyler().maxHeight(double.infinity),
+                    ),
+                  ),
+                ),
               ],
-              onChanged: interactive
-                  ? (month) {
-                      if (month != null) {
-                        showMonth(DateTime(date.year, month));
-                      }
-                    }
-                  : null,
-              // Preserve the recipe height as a minimum so scaled labels fit.
-              style: selectorStyle.trigger(
-                SelectTriggerStyler().maxHeight(double.infinity),
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 2,
-            child: RemixSelect<int>(
-              trigger: RemixSelectTrigger(placeholder: labels.chooseYear),
-              semanticLabel: labels.chooseYear,
-              selectedValue: date.year,
-              enabled: interactive,
-              items: [
-                for (var year = firstDate.year; year <= lastDate.year; year++)
-                  RemixSelectItem(value: year, label: labels.year(year)),
-              ],
-              onChanged: interactive
-                  ? (year) {
-                      if (year != null) {
-                        showMonth(DateTime(year, date.month));
-                      }
-                    }
-                  : null,
-              // Preserve the recipe height as a minimum so scaled labels fit.
-              style: selectorStyle.trigger(
-                SelectTriggerStyler().maxHeight(double.infinity),
-              ),
             ),
           ),
           _navigation(state, previous: false),

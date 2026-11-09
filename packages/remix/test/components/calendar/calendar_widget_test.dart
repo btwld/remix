@@ -232,6 +232,29 @@ void main() {
     );
   }
 
+  group('layout defaults are style values', () {
+    testWidgets('selectorStyle can resize the month and year selectors', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _host(
+          RemixCalendar(
+            value: DateTime(2024, 2, 14),
+            firstDate: DateTime(2023),
+            lastDate: DateTime(2026, 12, 31),
+            currentDate: DateTime(2024, 2, 15),
+            onChanged: (_) {},
+            selectorStyle: SelectStyler().trigger(
+              SelectTriggerStyler().width(120),
+            ),
+          ),
+        ),
+      );
+      expect(tester.getSize(find.byType(RemixSelect<int>).first).width, 120);
+      expect(tester.takeException(), isNull);
+    });
+  });
+
   testWidgets(
     'material-free default renders full-date semantics and one live heading',
     (tester) async {
