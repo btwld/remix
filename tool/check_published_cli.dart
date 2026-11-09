@@ -1,10 +1,11 @@
 /// Checks the released CLI against a candidate without test-only transports.
 /// Usage: dart run tool/check_published_cli.dart --preset vanilla --ref <40-hex-SHA>
-/// First activate the published package: dart pub global activate remix_cli.
+/// Activates and verifies the documented published CLI before creating an app.
 library;
 
 import 'dart:io';
 
+import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
 import 'check_open_code.dart'
@@ -12,10 +13,17 @@ import 'check_open_code.dart'
         registryRemixFloor,
         writeHostedFloorOverride,
         hostedFloorOverrideProblem;
+import 'check_pub_floors.dart';
 import 'consumer_check_reporting.dart';
+import 'install_pins.dart';
 import 'open_code_lifecycle.dart';
 
-typedef PublishedCliRunner = Future<String?> Function(String, List<String>);
+typedef PublishedCliRunner =
+    Future<String?> Function(
+      String,
+      List<String>, {
+      StringSink? capturedOutput,
+    });
 
 /// Production sequence exposed to fakes: use only the globally activated
 /// published executable. In particular, no checkout CLI or harness can enter it.
@@ -27,10 +35,48 @@ Future<String?> checkPublishedCliCandidate({
   required String dart,
   required String flutter,
   required PublishedCliRunner run,
+  PubFloorClient? pubClient,
+  StringSink? out,
 }) async {
   if (!['vanilla', 'fortal', 'heroui'].contains(preset) ||
       !RegExp(r'^[0-9a-f]{40}$').hasMatch(sha)) {
     return 'Expected a supported preset and a full lowercase candidate SHA.';
+  }
+  final pin = expectedInstallPin(repositoryRoot, 'remix_cli');
+  final constraint = VersionConstraint.parse(pin) as VersionRange;
+  final preflight = await checkPubPackageFloors({
+    'remix_cli': {constraint.min!.toString()},
+  }, client: pubClient);
+  if (preflight != null) return preflight;
+  final activation = await run(dart, [
+    'pub',
+    'global',
+    'activate',
+    'remix_cli',
+    pin,
+  ]);
+  if (activation != null) return activation;
+  final versionOutput = StringBuffer();
+  final versionFailure = await run(dart, [
+    'pub',
+    'global',
+    'run',
+    'remix_cli:remix',
+    '--version',
+  ], capturedOutput: versionOutput);
+  if (versionFailure != null) return versionFailure;
+  final Version version;
+  try {
+    version = Version.parse(versionOutput.toString().trim());
+  } on FormatException {
+    return 'Could not determine activated remix_cli version from '
+        '`remix --version`: "$versionOutput"; expected documented constraint $pin.';
+  }
+  (out ?? stdout).writeln(
+    'Activated remix_cli $version (documented constraint $pin).',
+  );
+  if (!constraint.allows(version)) {
+    return 'Activated remix_cli $version does not satisfy documented constraint $pin.';
   }
   final create = await run(flutter, [
     'create',
@@ -126,11 +172,12 @@ Future<void> main(List<String> arguments) async {
         sha: arguments[3],
         dart: Platform.resolvedExecutable,
         flutter: 'flutter',
-        run: (command, args) => reporter.run(
+        run: (command, args, {capturedOutput}) => reporter.run(
           lifecycle.processes,
           command,
           args,
           workingDirectory: app.existsSync() ? app.path : parent.path,
+          capturedOutput: capturedOutput,
         ),
       );
     });

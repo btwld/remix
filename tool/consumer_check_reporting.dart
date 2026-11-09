@@ -59,6 +59,7 @@ final class ConsumerCheckReporter {
     required String workingDirectory,
     Map<String, String>? environment,
     StringSink? log,
+    StringSink? capturedOutput,
     String? step,
   }) async {
     // Pool logs stay ordered in quiet mode; verbose explicitly opts into live,
@@ -83,6 +84,7 @@ final class ConsumerCheckReporter {
     if (verbose) sink.writeln('\$ $executable $label');
     void record(String chunk) {
       output.write(chunk);
+      capturedOutput?.write(chunk);
       if (verbose) sink.write(chunk);
     }
 

@@ -91,9 +91,24 @@ Future<String?> checkPubFloors(
   Directory registryRoot, {
   PubFloorClient? client,
 }) async {
+  try {
+    return await checkPubPackageFloors(
+      readHostedFloors(registryRoot),
+      client: client,
+    );
+  } on Object catch (error) {
+    return 'pub.dev floor preflight failed: $error';
+  }
+}
+
+/// The same publication preflight for floors outside the registry catalogs,
+/// such as the CLI version used by the documented install command.
+Future<String?> checkPubPackageFloors(
+  Map<String, Set<String>> floors, {
+  PubFloorClient? client,
+}) async {
   final http = client ?? IoPubFloorClient();
   try {
-    final floors = readHostedFloors(registryRoot);
     final problems = await Future.wait(
       floors.entries.map((entry) async {
         final name = entry.key;

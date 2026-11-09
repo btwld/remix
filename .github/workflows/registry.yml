@@ -33,7 +33,7 @@ jobs:
           dart run tool/check_dependency_constraints.dart
           dart run tool/check_version_alignment.dart
           dart test test/tool/build_registry_test.dart test/tool/build_registry_agent_test.dart
-          dart test test/tool/check_open_code_test.dart test/tool/open_code_lifecycle_test.dart
+          dart test test/tool/check_open_code_test.dart test/tool/open_code_lifecycle_test.dart test/tool/check_published_cli_test.dart
       - name: Test CLI
         working-directory: packages/remix_cli
         run: dart test
@@ -62,8 +62,6 @@ jobs:
         env:
           REMIX_REGISTRY_RELEASE_REF: ${{ github.sha }}
         run: dart run tool/check_open_code.dart --preset ${{ matrix.preset }} --source hosted
-      - name: Install the published CLI
-        run: dart pub global activate remix_cli
       - name: Check released CLI compatibility with candidate
         run: dart run tool/check_published_cli.dart --preset ${{ matrix.preset }} --ref ${{ github.sha }}
 

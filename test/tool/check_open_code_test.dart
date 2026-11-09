@@ -11,6 +11,7 @@ import '../../tool/check_pub_floors.dart';
 import '../../tool/check_published_cli.dart';
 import '../../tool/compile_registry_consumer.dart';
 import '../../tool/consumer_check_reporting.dart';
+import '../../tool/install_pins.dart';
 import '../../tool/open_code_lifecycle.dart';
 
 void main() {
@@ -175,6 +176,70 @@ libraries:
   });
 
   group('published CLI candidate', () {
+    final cliPin = expectedInstallPin(Directory.current, 'remix_cli');
+    final cliVersion = cliPin.substring(1);
+    _FakePubClient publishedCli() => _FakePubClient(
+      (_) async => (
+        statusCode: 200,
+        body: jsonEncode({
+          'versions': [
+            {'version': cliVersion},
+          ],
+        }),
+      ),
+    );
+
+    test('workflow never activates remix_cli without the documented pin', () {
+      final workflow = File(
+        '.github/workflows/registry.yml',
+      ).readAsStringSync();
+      final failures = <String>[];
+      checkInstallPins(workflow, '.github/workflows/registry.yml', {
+        'remix_cli': expectedInstallPin(Directory.current, 'remix_cli'),
+      }, failures);
+      expect(failures, isEmpty);
+    });
+
+    test(
+      'activates the documented constraint before creating an app',
+      () async {
+        final app = Directory('${sandbox.path}/app');
+        final commands = <List<String>>[];
+        final sha = 'a' * 40;
+        expect(
+          await checkPublishedCliCandidate(
+            app: app,
+            repositoryRoot: Directory.current,
+            preset: 'vanilla',
+            sha: sha,
+            dart: 'fake-dart',
+            flutter: 'fake-flutter',
+            pubClient: publishedCli(),
+            run: (executable, args, {capturedOutput}) async {
+              capturedOutput?.writeln(cliVersion);
+              commands.add([executable, ...args]);
+              if (args.first == 'create') app.createSync();
+              if (args.contains('update')) {
+                File('${app.path}/remix.yaml').writeAsStringSync(
+                  'registries: {"@remix": {revision: "$sha"}}',
+                );
+              }
+              return null;
+            },
+          ),
+          isNull,
+        );
+        expect(commands.first, [
+          'fake-dart',
+          'pub',
+          'global',
+          'activate',
+          'remix_cli',
+          expectedInstallPin(Directory.current, 'remix_cli'),
+        ]);
+      },
+    );
+
     test(
       'every preset uses the activated CLI and repins before installing',
       () async {
@@ -190,7 +255,9 @@ libraries:
               sha: sha,
               dart: 'fake-dart',
               flutter: 'fake-flutter',
-              run: (executable, args) async {
+              pubClient: publishedCli(),
+              run: (executable, args, {capturedOutput}) async {
+                capturedOutput?.writeln(cliVersion);
                 commands.add([executable, ...args]);
                 if (args.first == 'create') app.createSync();
                 if (args.contains('update')) {
@@ -204,6 +271,8 @@ libraries:
             isNull,
           );
           expect(commands.map((command) => command.first), [
+            'fake-dart',
+            'fake-dart',
             'fake-flutter',
             'fake-dart',
             'fake-dart',
@@ -212,7 +281,7 @@ libraries:
             'fake-dart',
           ]);
           expect(
-            commands[2],
+            commands[4],
             containsAllInOrder([
               'pub',
               'global',
@@ -222,11 +291,11 @@ libraries:
             ]),
           );
           expect(
-            commands[3],
+            commands[5],
             containsAllInOrder(['registry', 'update', '@remix', '--ref', sha]),
           );
           expect(
-            commands[4],
+            commands[6],
             containsAllInOrder([
               'pub',
               'global',
@@ -246,7 +315,10 @@ libraries:
         final workflow = File(
           '.github/workflows/registry.yml',
         ).readAsStringSync();
-        expect(workflow, contains('dart pub global activate remix_cli'));
+        expect(
+          installCommands(workflow).where((c) => c.package == 'remix_cli'),
+          isEmpty,
+        );
         expect(
           workflow,
           contains(
@@ -265,7 +337,9 @@ libraries:
           sha: 'a' * 40,
           dart: 'fake-dart',
           flutter: 'fake-flutter',
-          run: (_, args) async {
+          pubClient: publishedCli(),
+          run: (_, args, {capturedOutput}) async {
+            capturedOutput?.writeln(cliVersion);
             calls++;
             return args.contains('update')
                 ? 'unsupported by published CLI'
@@ -274,7 +348,7 @@ libraries:
         ),
         'unsupported by published CLI',
       );
-      expect(calls, 4);
+      expect(calls, 6);
     });
     test(
       'branch names cannot silently spend the candidate API budget',
@@ -287,7 +361,8 @@ libraries:
             sha: 'main',
             dart: 'fake-dart',
             flutter: 'fake-flutter',
-            run: (_, _) async => throw StateError('must not execute'),
+            run: (_, _, {capturedOutput}) async =>
+                throw StateError('must not execute'),
           ),
           contains('full lowercase candidate SHA'),
         );
@@ -307,7 +382,11 @@ libraries:
             sha: 'a' * 40,
             dart: 'fake-dart',
             flutter: 'fake-flutter',
-            run: (_, _) async => null,
+            pubClient: publishedCli(),
+            run: (_, _, {capturedOutput}) async {
+              capturedOutput?.writeln(cliVersion);
+              return null;
+            },
           ),
           contains('did not pin @remix'),
         );
@@ -353,6 +432,7 @@ libraries:
       StringBuffer out, {
       int code = 0,
       bool verbose = false,
+      StringSink? capturedOutput,
     }) async {
       final script = File('${sandbox.path}/output.dart')
         ..writeAsStringSync('''
@@ -369,6 +449,7 @@ void main() {
         [script.path],
         workingDirectory: sandbox.path,
         step: 'add fixture',
+        capturedOutput: capturedOutput,
       );
     }
 
@@ -377,6 +458,14 @@ void main() {
       expect(await child(out), isNull);
       expect(out.toString(), matches(r'^ok add fixture \(\d+\.\d s\)\n$'));
       expect(out.toString(), isNot(contains('ERROR')));
+    });
+    test('captures successful child output for version assertions', () async {
+      final out = StringBuffer();
+      final captured = StringBuffer();
+      expect(await child(out, capturedOutput: captured), isNull);
+      expect(captured.toString(), contains('child stdout'));
+      expect(captured.toString(), contains('child stderr'));
+      expect(out.toString(), isNot(contains('child stdout')));
     });
     test('failure prints full stdout and stderr and the exit code', () async {
       final out = StringBuffer();
