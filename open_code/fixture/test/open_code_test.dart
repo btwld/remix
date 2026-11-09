@@ -104,7 +104,7 @@ void main() {
           );
           expect(
             day.styleSpec!.spec.style?.color,
-            const AcmeThemeData.light().accentForeground,
+            const AcmeThemeData.light().foreground,
           );
           await _pumpInstalledAgent(
             tester,
