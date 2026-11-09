@@ -3,8 +3,55 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
+import '../../helpers/test_helpers.dart';
+import '../../helpers/fortal_text_input_geometry.dart';
+
 /// Resolved-value coverage for the shared Fortal text-input recipe.
 void main() {
+  for (final (size, height, paddingY) in const [
+    (FortalTextFieldSize.size1, 24.0, 4.0),
+    (FortalTextFieldSize.size2, 32.0, 6.0),
+    (FortalTextFieldSize.size3, 40.0, 8.0),
+  ]) {
+    for (final variant in FortalTextFieldVariant.values) {
+      for (final scale in [1.0, 2.0]) {
+        testWidgets(
+          '$size/$variant at $scale keeps the text line inside its field',
+          (tester) async {
+            final controller = TextEditingController(text: 'Agj Ép');
+            addTearDown(controller.dispose);
+            for (final direction in TextDirection.values) {
+              for (final enabled in [true, false]) {
+                await tester.pumpRemixApp(
+                  MediaQuery(
+                    data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+                    child: SizedBox(
+                      width: 320,
+                      child: FortalTextField(
+                        size: size,
+                        variant: variant,
+                        controller: controller,
+                        enabled: enabled,
+                      ),
+                    ),
+                  ),
+                  textDirection: direction,
+                );
+                await tester.pumpAndSettle();
+                expectFortalTextInputGeometry(
+                  tester,
+                  scale: scale,
+                  height: height,
+                  paddingY: paddingY,
+                );
+              }
+            }
+          },
+        );
+      }
+    }
+  }
+
   for (final (size, height, paddingX, softPaddingX, spacing, fontSize, radius)
       in const [
         (FortalTextFieldSize.size1, 24.0, 8.0, 8.0, 8.0, 12.0, 4.0),
@@ -18,11 +65,12 @@ void main() {
         final container = spec.container.spec;
 
         expect(container.constraints?.minHeight, height);
-        expect(container.constraints?.maxHeight, height);
+        expect(container.constraints?.maxHeight, double.infinity);
         expect(
           container.padding?.resolve(TextDirection.ltr),
           EdgeInsets.symmetric(
             horizontal: variant == .soft ? softPaddingX : paddingX,
+            vertical: (height - [16.0, 20.0, 24.0][size.index]) / 2,
           ),
         );
         expect(spec.spacing, spacing);
@@ -269,8 +317,8 @@ void main() {
         );
         expect(padding.left, closeTo(expected, 0.000001));
         expect(padding.right, closeTo(expected, 0.000001));
-        expect(padding.top, 0);
-        expect(padding.bottom, 0);
+        expect(padding.top, closeTo([4.4, 6.6, 8.8][size.index], 0.000001));
+        expect(padding.bottom, closeTo([4.4, 6.6, 8.8][size.index], 0.000001));
       }
     }
   });

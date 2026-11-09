@@ -5,11 +5,60 @@ import 'package:registry_source/fortal.dart';
 import 'package:remix/remix.dart';
 
 import '../helpers/contrast.dart';
+import '../helpers/fortal_text_input_geometry.dart';
 import '../helpers/test_helpers.dart';
 
 BoxDecoration decoration(BoxSpec spec) => spec.decoration! as BoxDecoration;
 
 void main() {
+  for (final (size, height, paddingY) in const [
+    (FortalComboboxSize.size1, 24.0, 4.0),
+    (FortalComboboxSize.size2, 32.0, 6.0),
+    (FortalComboboxSize.size3, 40.0, 8.0),
+  ]) {
+    for (final variant in FortalComboboxVariant.values) {
+      for (final scale in [1.0, 2.0]) {
+        testWidgets(
+          '$size/$variant at $scale keeps the accepted text line inside its field',
+          (tester) async {
+            final controller = TextEditingController(text: 'Agj Ép');
+            addTearDown(controller.dispose);
+            final focusNode = FocusNode();
+            addTearDown(focusNode.dispose);
+            for (final direction in TextDirection.values) {
+              for (final enabled in [true, false]) {
+                await tester.pumpRemixApp(
+                  MediaQuery(
+                    data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+                    child: SizedBox(
+                      width: 320,
+                      child: FortalCombobox<String>(
+                        size: size,
+                        variant: variant,
+                        controller: controller,
+                        focusNode: focusNode,
+                        enabled: enabled,
+                        optionsBuilder: (_) => const <String>[],
+                      ),
+                    ),
+                  ),
+                  textDirection: direction,
+                );
+                await tester.pumpAndSettle();
+                expectFortalTextInputGeometry(
+                  tester,
+                  scale: scale,
+                  height: height,
+                  paddingY: paddingY,
+                );
+              }
+            }
+          },
+        );
+      }
+    }
+  }
+
   for (final dark in [false, true]) {
     final FortalThemeMode mode = dark ? .dark : .light;
     testWidgets(

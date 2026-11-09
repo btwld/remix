@@ -451,9 +451,13 @@ void main() {
             ).build(context),
           );
           expect(
-            resolved.spec.container.spec.constraints?.maxHeight,
+            resolved.spec.container.spec.constraints?.minHeight,
             entry.value,
             reason: '$variant ${entry.key}',
+          );
+          expect(
+            resolved.spec.container.spec.constraints?.maxHeight,
+            double.infinity,
           );
           expect(resolved.spec.containerEffects?.behindContent, isNotNull);
           if (entry.key == FortalTextFieldSize.size2) {
