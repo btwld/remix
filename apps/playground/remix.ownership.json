@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "context": {
+    "prefix": "Playground",
+    "preset": "vanilla",
+    "uiPath": "lib/ui"
+  },
+  "targets": {
+    "lib/ui/components/range_slider.dart": "btwld/remix/registry#vanilla/range_slider",
+    "lib/ui/components/range_slider.g.dart": "btwld/remix/registry#vanilla/range_slider",
+    "lib/ui/components/slider.dart": "btwld/remix/registry#vanilla/slider",
+    "lib/ui/components/slider.g.dart": "btwld/remix/registry#vanilla/slider",
+    "lib/ui/theme/effects.dart": "btwld/remix/registry#vanilla/theme",
+    "lib/ui/theme/theme_data.dart": "btwld/remix/registry#vanilla/theme",
+    "lib/ui/theme/theme_scope.dart": "btwld/remix/registry#vanilla/theme",
+    "lib/ui/theme/tokens.dart": "btwld/remix/registry#vanilla/theme"
+  }
+}

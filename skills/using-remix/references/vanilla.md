@@ -100,6 +100,22 @@ families carry over.
   as a form label: `textSm` at medium weight in `foreground`, 12px from a
   radio's circle and 8px from a switch's track. The focus ring wraps the circle
   or track only. Without a `label`, give a `semanticLabel`.
+- **Slider and RangeSlider** — install `slider` for `<Prefix>Slider`, or
+  `range_slider` for `<Prefix>RangeSlider` (which installs `slider` too).
+  Both recipes reserve a 48px interaction height. The single slider previously
+  occupied 22px; existing layouts must allow the additional 26px when updating
+  the installed recipe. The extra height accepts pointer input too.
+  Both use pill-shaped `mutedForeground` rails, a primary interval and white
+  outlined thumbs. Hover draws a subtle opaque 2px halo; press uses a stronger
+  6px halo. Keyboard focus draws an opaque 3px `mutedForeground` ring with a
+  2px gap, raised locally rather than through the shared focus helper.
+  Disabled fades the whole
+  control. The range widget takes two ordered, parent-owned `values`,
+  `minSpacing`, `snapDivisions`, and lower/upper `semanticLabels` and
+  `focusNodes`. The generated adapters omit Naked UI's semantic formatter
+  typedefs; for custom announcements, use `RemixRangeSlider` with
+  `<prefix>RangeSliderStyle()`. See the
+  [Slider examples](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
 - **Tabs** — compose `RemixTabs` (the behavioral root) with `<Prefix>TabBar`,
   `<Prefix>Tab`, and `<Prefix>TabView`. `<Prefix>TabsVariant { filled, line }`:
   `filled` (the default) is a recessed pill list, `line` an underline.

@@ -18,6 +18,35 @@ import 'support.dart';
 void main() {
   for (final theme in vanillaThemes) {
     group(theme.name, () {
+      for (var index = 0; index < 2; index++) {
+        testWidgets('range thumb $index rings independently without reflow', (
+          tester,
+        ) async {
+          final probe = await _pump(
+            tester,
+            theme.data,
+            (node) => VanillaRangeSlider(
+              values: const [0.25, 0.75],
+              onChanged: (_) {},
+              focusNodes: [
+                if (index == 0) node else null,
+                if (index == 1) node else null,
+              ],
+            ),
+          );
+          final other = tester.getRect(rangeThumb(1 - index));
+          await probe.expectRing(
+            part: rangeThumb(index),
+            ringColor: theme.data.primary,
+            includes: (part) => [part.topCenter.translate(0, -2)],
+            excludes: (part) => [
+              part.topCenter.translate(0, -4),
+              other.topCenter.translate(0, -4),
+            ],
+          );
+        });
+      }
+
       testWidgets('a toggle rings outside itself', (tester) async {
         final probe = await _pump(
           tester,
@@ -409,6 +438,7 @@ final class _Probe {
   Future<_Pixels> expectRing({
     required Finder part,
     Finder? neighbor,
+    Color? ringColor,
     Iterable<Offset> Function(Rect part) includes = _none,
     Iterable<Offset> Function(Rect part) excludes = _none,
   }) async {
@@ -427,7 +457,7 @@ final class _Probe {
       neighborRect,
       reason: 'the part does not push what sits beside or inside it',
     );
-    final ring = tint(theme.ring, 0.5);
+    final ring = ringColor ?? tint(theme.ring, 0.5);
     for (final point in includes(rect)) {
       final resting = before.colorAt(point);
       expect(

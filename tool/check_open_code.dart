@@ -69,6 +69,7 @@ const _defaultRegistryItems = <String>[
   'popover',
   'progress',
   'radio',
+  'range_slider',
   'segmented_control',
   'select',
   'sidebar',
@@ -167,6 +168,7 @@ const _fortalRegistryItems = <String>[
   'popover',
   'progress',
   'radio',
+  'range_slider',
   'segmented_control',
   'select',
   'sidebar',
@@ -190,6 +192,7 @@ const _defaultPreset = _PresetContract(
   name: 'vanilla',
   fixtureDirectory: 'fixture',
   registryItems: _defaultRegistryItems,
+  independentItems: [..._independentRegistryItems, 'range_slider'],
   // Vanilla's theme sets its type in Geist, so every install carries the fonts.
   requiredRuntimeDependencies: [..._baseRuntimeDependencies, 'remix_ui_fonts'],
   allowedImportPackages: [..._baseImportPackages, 'remix_ui_fonts'],
@@ -200,6 +203,7 @@ const _fortalPreset = _PresetContract(
   name: 'fortal',
   fixtureDirectory: 'fortal_fixture',
   registryItems: _fortalRegistryItems,
+  independentItems: [..._independentRegistryItems, 'range_slider'],
 );
 
 const _herouiRegistryItems = [
@@ -227,6 +231,7 @@ const _herouiRegistryItems = [
   'progress',
   'radio',
   'radio_group',
+  'range_slider',
   'search_field',
   'select',
   'separator',

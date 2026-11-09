@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
+import 'ui/ui.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) SemanticsBinding.instance.ensureSemantics();
@@ -45,7 +47,10 @@ class RangeSliderReferenceApp extends StatelessWidget {
       ).copyWith(textScaler: TextScaler.linear(textScale)),
       child: Directionality(
         textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
-        child: _BudgetFilter(dark: dark),
+        child: PlaygroundTheme(
+          mode: dark ? .dark : .light,
+          child: _BudgetFilter(dark: dark),
+        ),
       ),
     ),
   );
@@ -76,28 +81,6 @@ class _BudgetFilterState extends State<_BudgetFilter> {
     final matches = _stays
         .where((s) => s.price >= _prices[0] && s.price <= _prices[1])
         .toList();
-    final sliderStyle = SliderStyler()
-        .thumbSize(const Size(24, 24))
-        .thumb(
-          BoxStyler()
-              .borderRadius(.circular(12))
-              .border(.all(BorderSideMix(color: accent, width: 2))),
-        )
-        .thumbColor(dark ? const Color(0xff27382c) : const Color(0xffffffff))
-        .thickness(4)
-        .trackColor(line)
-        .rangeColor(accent)
-        .thumbFocusEffects(
-          RemixBoxEffectsMix.outline(
-            BorderSideMix(color: accent, width: 2),
-          ).outlineOffset(4),
-        )
-        .onHovered(
-          SliderStyler().thumbColor(
-            dark ? const Color(0xff526849) : const Color(0xffe2ecd8),
-          ),
-        )
-        .onPressed(SliderStyler().thumbColor(accent));
     Text text(
       String value,
       double size, {
@@ -227,7 +210,7 @@ class _BudgetFilterState extends State<_BudgetFilter> {
                               max: 400,
                               minSpacing: 20,
                               snapDivisions: 80,
-                              style: sliderStyle,
+                              style: playgroundRangeSliderStyle(),
                               semanticLabels: const [
                                 'Minimum nightly price',
                                 'Maximum nightly price',

@@ -354,6 +354,15 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'RemixRangeSlider',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Range catalog',
+            builder: _demo_components_slider.buildRangeSliderCatalogUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'RemixSegmentedControl<Object>',
         useCases: [
           _widgetbook.WidgetbookUseCase(

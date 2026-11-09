@@ -1,0 +1,45 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import 'slider.dart';
+
+part 'range_slider.g.dart';
+
+/// The application's two-bound Slider recipe.
+///
+/// Remix owns rendering, independent thumb states, drag and keyboard behavior,
+/// spacing constraints, RTL placement, and accessibility semantics. This recipe
+/// supplies the shared Slider rail, filled interval, and both thumb treatments
+/// through [playgroundSliderStyle], including hover, press, focus and disabled.
+/// Both recipes share a 48px interaction height and pill-shaped rails.
+/// Pass [surfaceColor] on a card or tinted panel so its opaque interaction halos
+/// blend with the enclosing surface rather than the page background.
+///
+/// Give each bound a distinct localized name in `semanticLabels`. The generated
+/// `PlaygroundRangeSlider` omits `semanticFormatterCallbacks`, whose Naked UI type
+/// is outside this layer's dependencies. Use `RemixRangeSlider` with this recipe
+/// when custom value announcements are needed.
+@MixWidget(
+  target: RemixRangeSlider.new,
+  widgetParameters: .only({
+    'values',
+    'onChanged',
+    'onChangeStart',
+    'onChangeEnd',
+    'min',
+    'max',
+    'minSpacing',
+    'snapDivisions',
+    'enabled',
+    'enableFeedback',
+    'focusNodes',
+    'autofocusThumbIndex',
+    'semanticLabels',
+    'excludeSemantics',
+  }),
+)
+SliderStyler playgroundRangeSliderStyle({
+  Color? surfaceColor,
+  SliderStyler style = const SliderStyler.create(),
+}) => playgroundSliderStyle(surfaceColor: surfaceColor, style: style);

@@ -12,8 +12,8 @@ import 'package:widgetbook_vanilla/ui/ui.dart';
 void main() {
   final useCases = _collectUseCases(directories);
 
-  test('catalog registers all 36 Vanilla component use cases', () {
-    expect(useCases, hasLength(36));
+  test('catalog registers all 39 Vanilla component use cases', () {
+    expect(useCases, hasLength(39));
   });
 
   for (final entry in useCases) {

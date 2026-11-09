@@ -7,6 +7,8 @@ import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import 'support.dart';
+
 /// Laid-out sizes the spec states. The spec targets read style inputs, which
 /// can agree with the spec while the rendered widget does not.
 void main() {
@@ -25,6 +27,54 @@ void main() {
         .ancestor(of: find.text(text), matching: find.byType(DecoratedBox))
         .first,
   );
+
+  for (final direction in TextDirection.values) {
+    testWidgets(
+      'range slider keeps both 16px thumbs and interval in $direction at 200% text',
+      (tester) async {
+        await tester.pumpWidget(
+          host(
+            MediaQuery(
+              data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+              child: Directionality(
+                textDirection: direction,
+                child: Center(
+                  child: SizedBox(
+                    width: 240,
+                    child: VanillaRangeSlider(
+                      values: const [0.25, 0.75],
+                      onChanged: (_) {},
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final lower = tester.getRect(rangeThumb(0));
+        final upper = tester.getRect(rangeThumb(1));
+        expect(lower.size, const Size.square(16));
+        expect(upper.size, lower.size);
+        expect((upper.center.dx - lower.center.dx).abs(), 112);
+        // The filled interval spans the centers of the two handles.
+        // ignore: invalid_use_of_internal_member
+        final interval = tester.getRect(find.byType(RemixBoxAdapter).at(1));
+        expect(interval.size, const Size(112, 6));
+        expect(interval.center.dx, (lower.center.dx + upper.center.dx) / 2);
+
+        expect(
+          lower.center.dx < upper.center.dx,
+          direction == TextDirection.ltr,
+        );
+        expect(
+          tester.getSize(find.byType(RemixRangeSlider)),
+          const Size(240, 48),
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
 
   testWidgets('a dialog is centered and fills at most 512px', (tester) async {
     tester.view.physicalSize = const Size(1280, 800);

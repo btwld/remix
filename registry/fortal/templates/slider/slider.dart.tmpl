@@ -30,7 +30,7 @@ SliderStyler {{valuePrefix}}SliderStyle({
         .size(metrics.thumbSize, metrics.thumbSize).borderRadius(thumbRadius),
       )
       .thickness(metrics.trackSize)
-      .thumbFocusEffects({{valuePrefix}}FocusOutline());
+      .thumbFocusEffects({{valuePrefix}}SliderFocusOutline());
 
   final styled = switch (variant) {
     .surface => _{{valuePrefix}}SliderSurface(
@@ -47,20 +47,49 @@ SliderStyler {{valuePrefix}}SliderStyle({
     ),
   };
   return styled
-      .onDisabled(
-        _{{valuePrefix}}SliderDisabled(
-          variant,
-          trackRadius: radius,
-          thumbRadius: thumbRadius,
-        ),
-      )
       .variant(
         ContextVariant(
-          '{{valuePrefix}}SliderDisabledDarkBlend',
+          '{{valuePrefix}}SliderDark',
           (context) => {{typePrefix}}Theme.of(context).isDark,
         ),
-        SliderStyler().onDisabled(.blendMode(BlendMode.screen)),
+        SliderStyler().thumb(
+          .border(
+            .all(
+              .color({{typePrefix}}Tokens.gray3()).width({{typePrefix}}Tokens.borderWidth2()),
+            ),
+          ),
+        ),
       )
+      .onHovered(
+        SliderStyler().thumbEffects(
+          RemixBoxEffectsMix(
+            outline: .color(
+              {{typePrefix}}Tokens.accentA7(),
+            ).width({{typePrefix}}Tokens.borderWidth2()),
+          ),
+        ),
+      )
+      .onPressed(
+        SliderStyler()
+            .thumbEffects(
+              RemixBoxEffectsMix(
+                outline: .color(
+                  {{typePrefix}}Tokens.accentA6(),
+                ).width({{typePrefix}}Tokens.space1()),
+              ),
+            )
+            .thumb(
+              .border(
+                .all(
+                  .color(
+                    {{typePrefix}}Tokens.accent12(),
+                  ).width({{typePrefix}}Tokens.borderWidth2()),
+                ),
+              ),
+            ),
+      )
+      .onDisabled(_{{valuePrefix}}SliderDisabled(variant))
+      .wrap(.sizedBox(height: {{typePrefix}}Tokens.space8()))
       .wrap({{valuePrefix}}TouchTarget())
       .merge(style);
 }
@@ -134,11 +163,7 @@ BoxStyler _{{valuePrefix}}SliderThumbRing() => BoxStyler().decoration(
   ),
 );
 
-SliderStyler _{{valuePrefix}}SliderDisabled(
-  {{typePrefix}}SliderVariant variant, {
-  required BorderRadiusMix trackRadius,
-  required BorderRadiusMix thumbRadius,
-}) {
+SliderStyler _{{valuePrefix}}SliderDisabled({{typePrefix}}SliderVariant variant) {
   final track = switch (variant) {
     .surface =>
       SliderStyler()
@@ -158,8 +183,10 @@ SliderStyler _{{valuePrefix}}SliderDisabled(
           ),
   };
   return track
-      .range(.color(const Color(0x00000000)))
-      .thumbColor({{typePrefix}}Tokens.gray1())
+      .track(.color({{typePrefix}}Tokens.gray5()))
+      .range(.color({{typePrefix}}Tokens.gray8()))
+      .thumbColor(_disabledThumbFill())
+      .thumbEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
       .rangeEffects(
         RemixBoxEffectsMix.behindContent(
           RemixBoxEffectLayerMix(gradients: const [], shadows: const []),
@@ -174,7 +201,7 @@ SliderStyler _{{valuePrefix}}SliderDisabled(
         BoxStyler().decoration(
           .border(
             .all(
-              .color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1()),
+              .color({{typePrefix}}Tokens.gray9()).width({{typePrefix}}Tokens.borderWidth1()),
             ),
           ),
         ),
@@ -182,7 +209,7 @@ SliderStyler _{{valuePrefix}}SliderDisabled(
       .thumbFocusEffects(
         RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
       )
-      .blendMode(BlendMode.multiply);
+      .blendMode(BlendMode.srcOver);
 }
 
 List<RemixLinearGradientMix> _{{valuePrefix}}SliderHighContrastGradients(
@@ -228,3 +255,10 @@ _{{typePrefix}}SliderMetrics _{{valuePrefix}}SliderMetrics({{typePrefix}}SliderS
         trackRadius: {{typePrefix}}Tokens.sliderTrackRadius3(),
       ),
     };
+
+// Resolve inside the disabled fragment, whose priority is higher than dark mode.
+final _disabledThumbFill = ContextToken<Color>(
+  (context) =>
+      ({{typePrefix}}Theme.of(context).isDark ? {{typePrefix}}Tokens.gray9 : {{typePrefix}}Tokens.gray4)
+          .resolve(context),
+);

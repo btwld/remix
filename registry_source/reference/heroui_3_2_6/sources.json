@@ -173,6 +173,14 @@
         {
           "path": "dist/components/input-otp/input-otp.d.ts",
           "sha256": "b4cc1faa4a7e5bf2d6b4ac5954cff5a6018dcf1caa7e35ae36e9ccae35b8498f"
+        },
+        {
+          "path": "dist/components/slider/slider.js",
+          "sha256": "370332ca7b996d49bdb940619189e36a864527a2991c5969d1269e989a0029a8"
+        },
+        {
+          "path": "dist/components/slider/slider.d.ts",
+          "sha256": "838991749d430295bda398db620df95e892efabcb15b1359f03c009648bcc86a"
         }
       ]
     },

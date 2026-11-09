@@ -1193,57 +1193,85 @@ final _switchTargets = <SpecTarget>[
 
 // -- slider -------------------------------------------------------------------
 
-SpecTarget _slider(
-  String property, {
-  Set<WidgetState> states = const {},
-  required String source,
-  required Object? Function(StyleSpec<SliderSpec> spec) read,
-  required Object? Function(VanillaThemeData theme) expected,
-}) => _target<SliderSpec>(
-  'slider',
-  property,
-  source: source,
-  style: vanillaSliderStyle,
-  states: states,
-  read: read,
-  expected: expected,
-);
+List<SpecTarget> _sliderTargetsFor(
+  String component,
+  SliderStyler Function() style,
+) {
+  SpecTarget target(
+    String property, {
+    Set<WidgetState> states = const {},
+    required String source,
+    required Object? Function(StyleSpec<SliderSpec> spec) read,
+    required Object? Function(VanillaThemeData theme) expected,
+  }) => _target<SliderSpec>(
+    component,
+    property,
+    source: source,
+    style: style,
+    states: states,
+    read: read,
+    expected: expected,
+  );
 
-final _sliderTargets = <SpecTarget>[
-  _slider(
-    'thumb',
-    source: 'slider.tsx: size-4 border border-primary bg-white shadow-sm',
-    read: (spec) {
-      final decoration = decorationOf(spec.spec.thumb);
-      return (
-        spec.spec.thumb.spec.constraints,
-        decoration?.border,
-        decoration?.color,
-        decoration?.boxShadow,
-      );
-    },
-    expected: (theme) => (
-      BoxConstraints.tight(const Size.square(16)),
-      _hairline(theme.primary),
-      const Color(0xFFFFFFFF),
-      VanillaShadow.sm.shadows,
+  return <SpecTarget>[
+    target(
+      'thumb',
+      source: 'slider.tsx: size-4 border border-primary bg-white shadow-sm',
+      read: (spec) {
+        final decoration = decorationOf(spec.spec.thumb);
+        return (
+          spec.spec.thumb.spec.constraints,
+          decoration?.border,
+          decoration?.color,
+          decoration?.boxShadow,
+        );
+      },
+      expected: (theme) => (
+        BoxConstraints.tight(const Size.square(16)),
+        _hairline(
+          theme.brightness == Brightness.dark
+              ? theme.primaryForeground
+              : theme.primary,
+        ),
+        const Color(0xFFFFFFFF),
+        VanillaShadow.sm.shadows,
+      ),
     ),
-  ),
-  _slider(
-    'hover ring',
-    states: const {WidgetState.hovered},
-    source: 'slider.tsx: hover:ring-4 ring-ring/50',
-    read: (spec) => spec.spec.thumbEffects?.outline,
-    expected: (theme) => BorderSide(color: tint(theme.ring, 0.5), width: 4),
-  ),
-  _slider(
-    'focus ring',
-    states: const {WidgetState.focused},
-    source: 'slider.tsx: focus-visible:ring-4 ring-ring/50',
-    read: (spec) => spec.spec.thumbFocusEffects?.outline,
-    expected: (theme) => BorderSide(color: tint(theme.ring, 0.5), width: 4),
-  ),
-];
+    target(
+      'hover ring',
+      states: const {WidgetState.hovered},
+      source: 'Slider polish: opaque 2px hover halo',
+      read: (spec) => spec.spec.thumbEffects?.outline,
+      expected: (theme) => BorderSide(
+        color: Color.alphaBlend(
+          tint(theme.mutedForeground, 0.4),
+          theme.background,
+        ),
+        width: 2,
+      ),
+    ),
+    target(
+      'pressed ring',
+      states: const {WidgetState.pressed},
+      source: 'Slider polish: opaque 6px pressed halo',
+      read: (spec) => spec.spec.thumbEffects?.outline,
+      expected: (theme) => BorderSide(
+        color: Color.alphaBlend(
+          tint(theme.mutedForeground, 0.65),
+          theme.background,
+        ),
+        width: 6,
+      ),
+    ),
+    target(
+      'focus ring',
+      states: const {WidgetState.focused},
+      source: 'Slider polish: opaque 3px local focus ring',
+      read: (spec) => spec.spec.thumbFocusEffects?.outline,
+      expected: (theme) => BorderSide(color: theme.primary, width: 3),
+    ),
+  ];
+}
 
 // -- tabs and segmented control -----------------------------------------------
 
@@ -2065,7 +2093,26 @@ final vanillaSpecTargets = <SpecTarget>[
   ..._checkboxTargets,
   ..._radioTargets,
   ..._switchTargets,
-  ..._sliderTargets,
+  ..._sliderTargetsFor('slider', vanillaSliderStyle),
+  ..._sliderTargetsFor('range slider', vanillaRangeSliderStyle),
+  _target<SliderSpec>(
+    'range slider',
+    'rail and interval',
+    source: 'Slider polish: 6px mid-gray rail / primary interval',
+    style: vanillaRangeSliderStyle,
+    read: (spec) => (
+      spec.spec.trackColor,
+      spec.spec.rangeColor,
+      spec.spec.trackWidth,
+      spec.spec.rangeWidth,
+    ),
+    expected: (theme) => (
+      theme.brightness == Brightness.dark ? theme.ring : theme.mutedForeground,
+      theme.primary,
+      6.0,
+      6.0,
+    ),
+  ),
   ..._tabsTargets,
   ..._appBarTargets,
   ..._sidebarTargets,

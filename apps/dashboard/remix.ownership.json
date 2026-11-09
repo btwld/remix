@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "context": {
+    "prefix": "Ui",
+    "preset": "fortal",
+    "uiPath": "lib/ui"
+  },
+  "targets": {
+    "lib/ui/components/range_slider.dart": "btwld/remix/registry#fortal/range_slider",
+    "lib/ui/components/range_slider.g.dart": "btwld/remix/registry#fortal/range_slider",
+    "lib/ui/components/slider.dart": "btwld/remix/registry#fortal/slider",
+    "lib/ui/components/slider.g.dart": "btwld/remix/registry#fortal/slider",
+    "lib/ui/theme/computed.dart": "btwld/remix/registry#fortal/theme",
+    "lib/ui/theme/control_styles.dart": "btwld/remix/registry#fortal/theme",
+    "lib/ui/theme/fortal_colors.dart": "btwld/remix/registry#fortal/theme",
+    "lib/ui/theme/palette.dart": "btwld/remix/registry#fortal/theme",
+    "lib/ui/theme/surface_frame.dart": "btwld/remix/registry#fortal/theme",
+    "lib/ui/theme/theme.dart": "btwld/remix/registry#fortal/theme",
+    "lib/ui/theme/theme_data.dart": "btwld/remix/registry#fortal/theme",
+    "lib/ui/theme/theme_scope.dart": "btwld/remix/registry#fortal/theme",
+    "lib/ui/theme/tokens.dart": "btwld/remix/registry#fortal/theme"
+  }
+}

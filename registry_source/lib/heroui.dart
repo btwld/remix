@@ -27,6 +27,7 @@ export 'src/heroui/components/popover.dart';
 export 'src/heroui/components/progress.dart';
 export 'src/heroui/components/radio.dart';
 export 'src/heroui/components/radio_group.dart';
+export 'src/heroui/components/range_slider.dart';
 export 'src/heroui/components/search_field.dart';
 export 'src/heroui/components/select.dart';
 export 'src/heroui/components/separator.dart';

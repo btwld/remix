@@ -780,7 +780,59 @@
       "tests": [
         "test/fortal/fortal_control_matrix_test.dart",
         "test/fortal/fortal_high_contrast_test.dart",
-        "test/fortal/spec_conformance_test.dart"
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/slider_polish_test.dart"
+      ]
+    },
+    {
+      "id": "range_slider",
+      "fortalType": "FortalRangeSlider",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "min": 0,
+        "max": 1,
+        "minSpacing": 0,
+        "enabled": true,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "highContrast",
+        "rtl"
+      ],
+      "tests": [
+        "test/fortal/range_slider_test.dart",
+        "test/fortal/slider_polish_test.dart",
+        "test/fortal/fortal_control_contrast_render_test.dart"
+      ],
+      "flutterExceptions": [
+        "Shares FortalSliderSize and FortalSliderVariant with the slider recipe.",
+        "Exactly two ordered values; no vertical orientation. Custom announcements use RemixRangeSlider with fortalRangeSliderStyle()."
       ]
     },
     {

@@ -620,6 +620,7 @@ items:
           'permission' ||
           'plan' => ['models', 'theme', 'support', name],
           'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
+          'range_slider' => ['theme', 'slider', name],
           'sidebar' => ['theme', 'toggle', 'tooltip', name],
           'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
           'toast' => ['theme', 'button', 'icon_button', name],
@@ -851,6 +852,7 @@ const _componentSurfaces =
       'popover': (widgets: ['Popover'], types: []),
       'progress': (widgets: ['Progress'], types: []),
       'radio': (widgets: ['Radio'], types: []),
+      'range_slider': (widgets: ['RangeSlider'], types: []),
       'segmented_control': (widgets: ['SegmentedControl'], types: []),
       'select': (widgets: ['Select'], types: []),
       'sidebar': (widgets: ['Sidebar'], types: []),
