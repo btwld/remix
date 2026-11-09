@@ -2,7 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+typedef _City = ({int id, String label});
+
 void main() {
+  test('combobox demanding caller retains paired ownership and builders', () {
+    final controller = TextEditingController();
+    final focus = FocusNode();
+    addTearDown(controller.dispose);
+    addTearDown(focus.dispose);
+    final NakedComboboxFieldBuilder<_City> field =
+        (context, state, controller, focus, submit) => RemixTextField(
+          label: 'City',
+          controller: controller,
+          focusNode: focus,
+          enabled: !state.isDisabled,
+          onSubmitted: (_) => submit(),
+        );
+    final widget = RemixCombobox<_City>(
+      controller: controller,
+      focusNode: focus,
+      optionsBuilder: (query) async => [(id: 1, label: 'Recife')],
+      displayStringForOption: (city) => city.label,
+      onSelected: (city) => controller.clear(),
+      fieldBuilder: field,
+      optionBuilder: (context, city) => Text(city.label),
+      optionsViewOpenDirection: OptionsViewOpenDirection.up,
+      style: ComboboxStyler()
+          .field(TextFieldStyler().onFocused(.cursorColor(Colors.blue)))
+          .panel(ComboboxPanelStyler().padding(.all(4)))
+          .option(
+            ComboboxOptionStyler()
+                .onHovered(.color(Colors.blue))
+                .label(TextStyler().fontSize(16)),
+          ),
+    );
+    expect(widget.controller, same(controller));
+    expect(widget.focusNode, same(focus));
+    expect(widget.fieldBuilder, same(field));
+  });
+
   test('core constructors retain the origin/main data-driven surface', () {
     const button = RemixButton(label: 'Save');
     const card = RemixCard(child: Text('Passive'));

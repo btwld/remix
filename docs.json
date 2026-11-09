@@ -88,6 +88,10 @@
           "href": "/components/radio"
         },
         {
+          "title": "Combobox",
+          "href": "/components/combobox"
+        },
+        {
           "title": "Select",
           "href": "/components/select"
         },

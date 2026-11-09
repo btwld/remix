@@ -56,6 +56,20 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   every enabled `RemixCheckboxGroupItem` is an ordinary Tab stop in widget
   order, and Space/Enter toggle the focused option, exactly like native HTML
   checkbox groups. The group does not rove focus with arrow keys.
+- **Combobox** — editable text with eligible suggestions, using
+  `RemixCombobox<T>` over NakedCombobox/RawAutocomplete. Supply both `controller`
+  and `focusNode` or neither; `initialValue` initializes text, not an entity.
+  `onSelected(T)` reports acceptance rather than arbitrary text changes, so it
+  uses `onSelected` instead of `onChanged`. Observe the controller for edits;
+  callback controller edits are preserved. Callers own filtering, debounce and errors. No unavailable rows,
+  chips or multiselect API. Custom fields forward the exact editor pair and
+  submit callback, and own labels/disablement; custom option builders provide
+  visuals beneath one named interactive wrapper. Style `field`, `panel`,
+  and `option(ComboboxOptionStyler())`; the nested `ComboboxOptionSpec` has
+  `container` and `label` slots. Set option text with `.label(TextStyler(...))`;
+  option `onFocused` means keyboard highlight,
+  independent of hover. Eager rows grow from a 48px minimum inside a bounded
+  scroll panel. See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 - **TextField/TextArea** — forwards the standard Flutter text-input surface
   (`controller`, `keyboardType`, `inputFormatters`, `maxLines`, etc.)
   unchanged; check the doc page rather than assuming a param is missing.
