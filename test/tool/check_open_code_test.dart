@@ -43,6 +43,7 @@ void main() {
       for (final match in invocation.allMatches(file.readAsStringSync())) {
         final arguments = match
             .group(1)!
+            .replaceAll(r'${{ matrix.preset }}', 'vanilla')
             .trim()
             .split(RegExp(r'\s+'))
             .where((argument) => argument.isNotEmpty)
@@ -56,6 +57,50 @@ void main() {
       }
     }
     expect(checked, greaterThan(4), reason: 'found no invocations to check');
+  });
+
+  test('promotion validates static contracts and every hosted preset', () {
+    final jobs =
+        (loadYaml(File('.github/workflows/registry.yml').readAsStringSync())
+                as YamlMap)['jobs']
+            as YamlMap;
+    final hosted = jobs['hosted'] as YamlMap;
+    expect(hosted['timeout-minutes'], 20);
+    expect(hosted['strategy']['fail-fast'], isFalse);
+    expect(hosted['strategy']['matrix']['preset'], [
+      'vanilla',
+      'fortal',
+      'heroui',
+    ]);
+    expect(jobs['promote']['needs'], ['static', 'hosted']);
+    expect(jobs['promote']['if'], "github.ref == 'refs/heads/main'");
+    final staticSteps = jobs['static']['steps'].toString();
+    for (final command in [
+      'build_registry.dart --check',
+      'check_dependency_constraints.dart',
+      'check_version_alignment.dart',
+      'build_registry_test.dart',
+      'build_registry_agent_test.dart',
+      'dart test',
+    ]) {
+      expect(staticSteps, contains(command));
+    }
+    expect(
+      hosted['steps'].toString(),
+      contains('check_open_code.dart --preset'),
+    );
+    expect(hosted['steps'].toString(), isNot(contains('melos run')));
+    final scripts =
+        (loadYaml(File('pubspec.yaml').readAsStringSync())
+                as YamlMap)['melos']['scripts']
+            as YamlMap;
+    for (final preset in ['vanilla', 'fortal', 'heroui']) {
+      expect(
+        scripts['open-code:release:check:$preset']['run'],
+        contains('--source hosted'),
+      );
+    }
+    expect(scripts['open-code:release:check']['steps'], hasLength(3));
   });
 
   group('consumer source selection', () {

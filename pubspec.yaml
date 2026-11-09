@@ -196,6 +196,18 @@ melos:
         - dart run tool/check_open_code.dart --preset heroui --source hosted
       description: Verify all presets against the required published Remix release
 
+    open-code:release:check:vanilla:
+      run: dart run tool/check_open_code.dart --source hosted
+      description: Verify Vanilla against published runtimes
+
+    open-code:release:check:fortal:
+      run: dart run tool/check_open_code.dart --preset fortal --source hosted
+      description: Verify Fortal against published runtimes
+
+    open-code:release:check:heroui:
+      run: dart run tool/check_open_code.dart --preset heroui --source hosted
+      description: Verify HeroUI against published runtimes
+
     open-code:registry:build:
       run: dart run tool/build_registry.dart
       description: Derive every remote preset from analyzer-checked package source
