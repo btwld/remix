@@ -1,7 +1,3 @@
-import 'components/date_range_picker.dart' as date_range_picker;
-import 'components/date_picker.dart' as date_picker;
-import 'components/range_calendar.dart' as range_calendar;
-import 'components/calendar.dart' as calendar;
 import 'dart:math' as math;
 import 'package:flutter/material.dart' show Icons;
 import 'package:flutter/widgets.dart';
@@ -163,6 +159,7 @@ String paletteLabel(FortalAccentColor value) => switch (value) {
 const polishGroups = <String>[
   'Actions',
   'Inputs',
+  'Calendars',
   'Containers',
   'Typography',
   'Feedback',
@@ -197,22 +194,10 @@ final _families = <_Family>[
     group: 'Inputs',
     build: switch_story.buildSwitchCatalogUseCase,
   ),
-  (id: 'calendar', group: 'Inputs', build: calendar.buildCalendarUseCase),
-  (
-    id: 'range_calendar',
-    group: 'Inputs',
-    build: range_calendar.buildRangeCalendarUseCase,
-  ),
-  (
-    id: 'date_picker',
-    group: 'Inputs',
-    build: date_picker.buildDatePickerUseCase,
-  ),
-  (
-    id: 'date_range_picker',
-    group: 'Inputs',
-    build: date_range_picker.buildDateRangePickerUseCase,
-  ),
+  (id: 'calendar', group: 'Calendars', build: _calendarMatrix),
+  (id: 'range_calendar', group: 'Calendars', build: _rangeCalendarMatrix),
+  (id: 'date_picker', group: 'Calendars', build: _datePickerMatrix),
+  (id: 'date_range_picker', group: 'Calendars', build: _dateRangePickerMatrix),
   (id: 'slider', group: 'Inputs', build: slider.buildSliderCatalogUseCase),
   (
     id: 'range_slider',
@@ -703,3 +688,63 @@ class PolishTypography extends StatelessWidget {
     );
   }
 }
+
+// Calendar families expose a single size and recipe. Review enabled/disabled
+// inline selection, and both value/placeholder states of the closed fields.
+final _boardToday = DateTime(2026, 11, 6);
+final _boardRange = CivilDateRange(
+  start: DateTime(2026, 11, 10),
+  end: DateTime(2026, 11, 13),
+);
+CatalogMatrix _calendarMatrix(BuildContext context) => CatalogMatrix(
+  columns: const ['Default'],
+  rows: const ['Selected', 'Disabled'],
+  cellWidth: 340,
+  cell: (row, _) => FortalCalendar(
+    value: DateTime(2026, 11, 10),
+    firstDate: DateTime(2025),
+    lastDate: DateTime(2028),
+    currentDate: _boardToday,
+    enabled: row == 0,
+    onChanged: (_) {},
+  ),
+);
+CatalogMatrix _rangeCalendarMatrix(BuildContext context) => CatalogMatrix(
+  columns: const ['Default'],
+  rows: const ['Committed range', 'Disabled'],
+  cellWidth: 340,
+  cell: (row, _) => FortalRangeCalendar(
+    value: _boardRange,
+    firstDate: DateTime(2025),
+    lastDate: DateTime(2028),
+    currentDate: _boardToday,
+    enabled: row == 0,
+    onChanged: (_) {},
+  ),
+);
+CatalogMatrix _datePickerMatrix(BuildContext context) => CatalogMatrix(
+  columns: const ['Enabled', 'Disabled'],
+  rows: const ['Value', 'Placeholder'],
+  cellWidth: 300,
+  cell: (row, column) => FortalDatePicker(
+    value: row == 0 ? _boardToday : null,
+    firstDate: DateTime(2025),
+    lastDate: DateTime(2028),
+    currentDate: _boardToday,
+    enabled: column == 0,
+    onChanged: (_) {},
+  ),
+);
+CatalogMatrix _dateRangePickerMatrix(BuildContext context) => CatalogMatrix(
+  columns: const ['Enabled', 'Disabled'],
+  rows: const ['Value', 'Placeholder'],
+  cellWidth: 340,
+  cell: (row, column) => FortalDateRangePicker(
+    value: row == 0 ? _boardRange : null,
+    firstDate: DateTime(2025),
+    lastDate: DateTime(2028),
+    currentDate: _boardToday,
+    enabled: column == 0,
+    onChanged: (_) {},
+  ),
+);
