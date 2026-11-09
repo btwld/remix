@@ -18,6 +18,8 @@ CalendarStyler vanillaCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => CalendarStyler()
     .padding(.all(VanillaTokens.s3))
+    .headerSpacing(VanillaTokens.s2)
+    .weekdaySpacing(VanillaTokens.s1)
     .selectorSpacing(VanillaTokens.s2)
     .selectorRunSpacing(VanillaTokens.s1)
     .heading(
@@ -50,7 +52,7 @@ CalendarStyler vanillaCalendarStyle({
           )
           .onToday(
             CalendarDayStyler()
-                .border(.color(VanillaTokens.input()))
+                .border(.color(VanillaTokens.ring()))
                 .label(.fontWeight(FontWeight.w600)),
           )
           .onSelected(
@@ -68,12 +70,34 @@ CalendarStyler vanillaCalendarStyle({
           .onHovered(
             CalendarDayStyler()
                 .color(VanillaTokens.accent())
-                .label(.color(VanillaTokens.accentForeground())),
+                .label(.color(VanillaTokens.accentForeground()))
+                .onSelected(_solidPointer(_primaryHover))
+                .onRangeMiddle(
+                  CalendarDayStyler()
+                      .color(_middleHover())
+                      .label(.color(VanillaTokens.foreground())),
+                )
+                .onRangePreview(
+                  CalendarDayStyler()
+                      .color(_draftHover())
+                      .label(.color(VanillaTokens.foreground())),
+                ),
           )
           .onPressed(
             CalendarDayStyler()
                 .color(_pressed())
-                .label(.color(VanillaTokens.foreground())),
+                .label(.color(VanillaTokens.foreground()))
+                .onSelected(_solidPointer(_primaryPressed))
+                .onRangeMiddle(
+                  CalendarDayStyler()
+                      .color(_middlePressed())
+                      .label(.color(VanillaTokens.foreground())),
+                )
+                .onRangePreview(
+                  CalendarDayStyler()
+                      .color(_draftPressed())
+                      .label(.color(VanillaTokens.foreground())),
+                ),
           )
           .onFocusVisible(
             CalendarDayStyler()
@@ -102,7 +126,12 @@ CalendarStyler vanillaCalendarStyle({
             CalendarDayStyler()
                 .label(.color(VanillaTokens.mutedForeground()))
                 .wrap(.opacity(VanillaTokens.disabledOpacity))
-                .onSelected(CalendarDayStyler().color(VanillaTokens.muted())),
+                .onSelected(
+                  CalendarDayStyler()
+                      .color(_quietSelected())
+                      .label(.color(VanillaTokens.mutedForeground()))
+                      .wrap(.opacity(1)),
+                ),
           )
           .onUnavailable(
             CalendarDayStyler()
@@ -142,8 +171,6 @@ final _focusContour = ContextToken<Color>((context) {
   final states = day?.states ?? const <WidgetState>{};
   final solid =
       states.contains(WidgetState.selected) &&
-      !states.contains(WidgetState.hovered) &&
-      !states.contains(WidgetState.pressed) &&
       !states.contains(WidgetState.disabled) &&
       (range == null ||
           (range.preview == null &&
@@ -276,8 +303,10 @@ class VanillaCalendar extends StatelessWidget {
     navigationStyle: vanillaIconButtonStyle(
       variant: .ghost,
       style: IconButtonStyler()
-          .size(VanillaTokens.s12, VanillaTokens.s12)
-          .margin(.symmetric(vertical: VanillaTokens.s1))
+          .size(
+            vanillaCalendarDayWidth(context),
+            vanillaCalendarDayWidth(context),
+          )
           .icon(
             .size(MediaQuery.textScalerOf(context).scale(VanillaTokens.icon)),
           )
@@ -308,7 +337,11 @@ class VanillaCalendar extends StatelessWidget {
     ),
     style: vanillaCalendarStyle(
       style: CalendarStyler()
-          .day(CalendarDayStyler().minWidth(vanillaCalendarDayWidth(context)))
+          .day(
+            CalendarDayStyler()
+                .minWidth(vanillaCalendarDayWidth(context))
+                .minHeight(vanillaCalendarDayWidth(context)),
+          )
           .merge(style),
     ),
     styleSpec: styleSpec,
@@ -323,3 +356,14 @@ final _calendarDisabled = ContextVariant(
               const <WidgetState>{})
           .contains(WidgetState.disabled),
 );
+
+CalendarDayStyler _solidPointer(ContextToken<Color> fill) => CalendarDayStyler()
+    .color(fill())
+    .label(.color(VanillaTokens.primaryForeground()));
+final _primaryHover = vanillaTint(VanillaTokens.primary, .9);
+final _primaryPressed = vanillaTint(VanillaTokens.primary, .8);
+final _middleHover = vanillaTint(VanillaTokens.primary, .15, dark: .32);
+final _middlePressed = vanillaTint(VanillaTokens.primary, .22, dark: .4);
+final _draftHover = vanillaTint(VanillaTokens.primary, .18, dark: .28);
+final _draftPressed = vanillaTint(VanillaTokens.primary, .24, dark: .36);
+final _quietSelected = vanillaTint(VanillaTokens.primary, .18, dark: .28);

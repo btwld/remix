@@ -18,6 +18,8 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => CalendarStyler()
     .padding(.all({{typePrefix}}Tokens.s3))
+    .headerSpacing({{typePrefix}}Tokens.s2)
+    .weekdaySpacing({{typePrefix}}Tokens.s1)
     .selectorSpacing({{typePrefix}}Tokens.s2)
     .selectorRunSpacing({{typePrefix}}Tokens.s1)
     .heading(
@@ -50,7 +52,7 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
           )
           .onToday(
             CalendarDayStyler()
-                .border(.color({{typePrefix}}Tokens.input()))
+                .border(.color({{typePrefix}}Tokens.ring()))
                 .label(.fontWeight(FontWeight.w600)),
           )
           .onSelected(
@@ -68,12 +70,34 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
           .onHovered(
             CalendarDayStyler()
                 .color({{typePrefix}}Tokens.accent())
-                .label(.color({{typePrefix}}Tokens.accentForeground())),
+                .label(.color({{typePrefix}}Tokens.accentForeground()))
+                .onSelected(_solidPointer(_primaryHover))
+                .onRangeMiddle(
+                  CalendarDayStyler()
+                      .color(_middleHover())
+                      .label(.color({{typePrefix}}Tokens.foreground())),
+                )
+                .onRangePreview(
+                  CalendarDayStyler()
+                      .color(_draftHover())
+                      .label(.color({{typePrefix}}Tokens.foreground())),
+                ),
           )
           .onPressed(
             CalendarDayStyler()
                 .color(_pressed())
-                .label(.color({{typePrefix}}Tokens.foreground())),
+                .label(.color({{typePrefix}}Tokens.foreground()))
+                .onSelected(_solidPointer(_primaryPressed))
+                .onRangeMiddle(
+                  CalendarDayStyler()
+                      .color(_middlePressed())
+                      .label(.color({{typePrefix}}Tokens.foreground())),
+                )
+                .onRangePreview(
+                  CalendarDayStyler()
+                      .color(_draftPressed())
+                      .label(.color({{typePrefix}}Tokens.foreground())),
+                ),
           )
           .onFocusVisible(
             CalendarDayStyler()
@@ -102,7 +126,12 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
             CalendarDayStyler()
                 .label(.color({{typePrefix}}Tokens.mutedForeground()))
                 .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity))
-                .onSelected(CalendarDayStyler().color({{typePrefix}}Tokens.muted())),
+                .onSelected(
+                  CalendarDayStyler()
+                      .color(_quietSelected())
+                      .label(.color({{typePrefix}}Tokens.mutedForeground()))
+                      .wrap(.opacity(1)),
+                ),
           )
           .onUnavailable(
             CalendarDayStyler()
@@ -142,8 +171,6 @@ final _focusContour = ContextToken<Color>((context) {
   final states = day?.states ?? const <WidgetState>{};
   final solid =
       states.contains(WidgetState.selected) &&
-      !states.contains(WidgetState.hovered) &&
-      !states.contains(WidgetState.pressed) &&
       !states.contains(WidgetState.disabled) &&
       (range == null ||
           (range.preview == null &&
@@ -276,8 +303,10 @@ class {{typePrefix}}Calendar extends StatelessWidget {
     navigationStyle: {{valuePrefix}}IconButtonStyle(
       variant: .ghost,
       style: IconButtonStyler()
-          .size({{typePrefix}}Tokens.s12, {{typePrefix}}Tokens.s12)
-          .margin(.symmetric(vertical: {{typePrefix}}Tokens.s1))
+          .size(
+            {{valuePrefix}}CalendarDayWidth(context),
+            {{valuePrefix}}CalendarDayWidth(context),
+          )
           .icon(
             .size(MediaQuery.textScalerOf(context).scale({{typePrefix}}Tokens.icon)),
           )
@@ -308,7 +337,11 @@ class {{typePrefix}}Calendar extends StatelessWidget {
     ),
     style: {{valuePrefix}}CalendarStyle(
       style: CalendarStyler()
-          .day(CalendarDayStyler().minWidth({{valuePrefix}}CalendarDayWidth(context)))
+          .day(
+            CalendarDayStyler()
+                .minWidth({{valuePrefix}}CalendarDayWidth(context))
+                .minHeight({{valuePrefix}}CalendarDayWidth(context)),
+          )
           .merge(style),
     ),
     styleSpec: styleSpec,
@@ -323,3 +356,14 @@ final _calendarDisabled = ContextVariant(
               const <WidgetState>{})
           .contains(WidgetState.disabled),
 );
+
+CalendarDayStyler _solidPointer(ContextToken<Color> fill) => CalendarDayStyler()
+    .color(fill())
+    .label(.color({{typePrefix}}Tokens.primaryForeground()));
+final _primaryHover = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .9);
+final _primaryPressed = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .8);
+final _middleHover = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .15, dark: .32);
+final _middlePressed = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .22, dark: .4);
+final _draftHover = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .18, dark: .28);
+final _draftPressed = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .24, dark: .36);
+final _quietSelected = {{valuePrefix}}Tint({{typePrefix}}Tokens.primary, .18, dark: .28);

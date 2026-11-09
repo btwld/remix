@@ -115,7 +115,7 @@ void main() {
         expect(dayDecoration(t, 12)?.color, theme.data.primary);
         expect(dayText(t, 12)?.color, theme.data.primaryForeground);
         expect(dayDecoration(t, 6)?.color?.a, 0);
-        expect(dayDecoration(t, 6)?.border?.top.color, theme.data.input);
+        expect(dayDecoration(t, 6)?.border?.top.color, theme.data.ring);
         expect(dayText(t, 6)?.fontWeight, FontWeight.w600);
         expect(dayText(t, 18)?.decoration, TextDecoration.lineThrough);
         expect(dayText(t, 1)?.decoration, isNot(TextDecoration.lineThrough));
@@ -150,7 +150,13 @@ void main() {
         await t.pumpAndSettle();
         await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
         await t.pumpAndSettle();
-        expect(dayDecoration(t, 10)?.color, theme.data.muted);
+        expect(
+          dayDecoration(t, 10)?.color,
+          tint(
+            theme.data.primary,
+            theme.data.brightness == Brightness.dark ? .28 : .18,
+          ),
+        );
         expect(dayDecoration(t, 8)?.color?.a, 0);
         expect(dayText(t, 10)?.color, theme.data.mutedForeground);
         expect(dayDecoration(t, 20)?.color, isNot(committed));
@@ -240,7 +246,18 @@ void main() {
             await t.pumpAndSettle();
             final hover = dayDecoration(t, day)?.color;
             expect(hover, isNot(rest), reason: 'hover $day');
-            expect(hover, theme.data.accent);
+            final middle = widget is VanillaRangeCalendar && day == 11;
+            final expectedHover = tint(
+              theme.data.primary,
+              middle
+                  ? (theme.data.brightness == Brightness.dark ? .32 : .15)
+                  : .9,
+            );
+            expect(hover, expectedHover);
+            expect(
+              dayText(t, day)?.color,
+              middle ? theme.data.foreground : theme.data.primaryForeground,
+            );
             if (widget is VanillaRangeCalendar && day == 11) {
               final before = Color.alphaBlend(rest!, theme.data.background);
               final after = Color.alphaBlend(hover!, theme.data.background);
@@ -256,6 +273,15 @@ void main() {
               dayDecoration(t, day)?.color,
               isNot(hover),
               reason: 'press $day',
+            );
+            expect(
+              dayDecoration(t, day)?.color,
+              tint(
+                theme.data.primary,
+                middle
+                    ? (theme.data.brightness == Brightness.dark ? .4 : .22)
+                    : .8,
+              ),
             );
             await mouse.cancel();
           }
@@ -321,7 +347,13 @@ void main() {
       ]) {
         await t.pumpWidget(calendarHost(widget, theme.data));
         final selected = widget is VanillaCalendar ? 12 : 10;
-        expect(dayDecoration(t, selected)?.color, theme.data.muted);
+        expect(
+          dayDecoration(t, selected)?.color,
+          tint(
+            theme.data.primary,
+            theme.data.brightness == Brightness.dark ? .28 : .18,
+          ),
+        );
         expect(dayText(t, selected)?.color, theme.data.mutedForeground);
         expect(dayDecoration(t, 20)?.color?.a, 0);
       }
@@ -343,7 +375,7 @@ void main() {
     });
     for (final range in [false, true]) {
       testWidgets(
-        '${theme.name} ${range ? "range" : "single"} disabled days fade',
+        '${theme.name} ${range ? "range" : "single"} ordinary disabled days fade and selection stays recognizable',
         (t) async {
           await t.pumpWidget(
             calendarHost(
@@ -356,8 +388,13 @@ void main() {
             matching: find.byType(Opacity),
           );
           expect(opacity, findsWidgets);
+          expect(t.widget<Opacity>(opacity.first).opacity, 1);
+          final ordinary = find.ancestor(
+            of: dayBox(20),
+            matching: find.byType(Opacity),
+          );
           expect(
-            t.widget<Opacity>(opacity.first).opacity,
+            t.widget<Opacity>(ordinary.first).opacity,
             VanillaTokens.disabledOpacity,
           );
         },

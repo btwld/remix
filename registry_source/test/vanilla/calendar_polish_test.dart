@@ -14,6 +14,46 @@ double contrast(Color a, Color b) {
 
 void main() {
   for (final theme in vanillaThemes) {
+    testWidgets(
+      '${theme.name} scaled day grid stays square and navigation stays centred',
+      (t) async {
+        await t.pumpWidget(calendarHost(calendar(), theme.data, scale: 2));
+        final tile = t.getSize(dayBox(12));
+        expect(tile.width, tile.height);
+        final previous = find.byType(RemixIconButton).first;
+        final next = find.byType(RemixIconButton).last;
+        expect(
+          t.getCenter(previous).dx,
+          closeTo(t.getCenter(dayBox(8)).dx, .01),
+        );
+        expect(t.getCenter(next).dx, closeTo(t.getCenter(dayBox(14)).dx, .01));
+      },
+    );
+    testWidgets(
+      '${theme.name} today and disabled selections remain recognizable',
+      (t) async {
+        await t.pumpWidget(calendarHost(calendar(), theme.data));
+        expect(dayBorder(t, 6).top.color, theme.data.ring);
+        for (final child in [
+          calendar(enabled: false),
+          rangeCalendar(enabled: false),
+        ]) {
+          await t.pumpWidget(calendarHost(child, theme.data));
+          final d = child is VanillaCalendar ? 12 : 10;
+          final fill = Color.alphaBlend(
+            dayDecoration(t, d)!.color!,
+            theme.data.background,
+          );
+          expect(contrast(fill, theme.data.background), greaterThan(1.3));
+          expect(dayText(t, d)?.color, theme.data.mutedForeground);
+          expect(
+            dayDecoration(t, d)?.color,
+            isNot(dayDecoration(t, 20)?.color),
+          );
+        }
+      },
+    );
+
     for (final range in [false, true]) {
       testWidgets(
         '${theme.name} ${range ? "range" : "single"} day focus has a 3:1 keyline and keeps geometry',

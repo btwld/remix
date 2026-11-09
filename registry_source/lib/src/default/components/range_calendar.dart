@@ -77,7 +77,7 @@ CalendarDayStyler _blockedPreview() => CalendarDayStyler()
     .wrap(.opacity(1));
 
 CalendarDayStyler _muted() => CalendarDayStyler()
-    .color(VanillaTokens.muted())
+    .color(_quietCommitted())
     .label(.color(VanillaTokens.mutedForeground()));
 
 CalendarDayStyler _endpoint() => CalendarDayStyler()
@@ -272,8 +272,10 @@ class VanillaRangeCalendar extends StatelessWidget {
     navigationStyle: vanillaIconButtonStyle(
       variant: .ghost,
       style: IconButtonStyler()
-          .size(VanillaTokens.s12, VanillaTokens.s12)
-          .margin(.symmetric(vertical: VanillaTokens.s1))
+          .size(
+            vanillaCalendarDayWidth(context),
+            vanillaCalendarDayWidth(context),
+          )
           .icon(
             .size(MediaQuery.textScalerOf(context).scale(VanillaTokens.icon)),
           )
@@ -304,10 +306,16 @@ class VanillaRangeCalendar extends StatelessWidget {
     ),
     style: vanillaRangeCalendarStyle(
       style: CalendarStyler()
-          .day(CalendarDayStyler().minWidth(vanillaCalendarDayWidth(context)))
+          .day(
+            CalendarDayStyler()
+                .minWidth(vanillaCalendarDayWidth(context))
+                .minHeight(vanillaCalendarDayWidth(context)),
+          )
           .merge(style),
     ),
     styleSpec: styleSpec,
     summaryBuilder: summaryBuilder,
   );
 }
+
+final _quietCommitted = vanillaTint(VanillaTokens.primary, .18, dark: .28);
