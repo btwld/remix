@@ -4,6 +4,7 @@
 /// ```shell
 /// dart run tool/check_open_code.dart [--preset vanilla|fortal|heroui]
 ///     [--source both|hosted|checkout]
+///     [--independent canary|all|none] [--install batch|incremental]
 ///     [--item dashboard_demo|dashboard_shell|icons|ownership|search_field]
 ///     [--icon-library remix|rounded|lucide] [--hosted-cli] [--jobs N] [--keep]
 /// ```
@@ -14,6 +15,9 @@
 /// hosted Remix first, then regenerates against the checkout. CI selects the
 /// checkout explicitly so a registry can be validated before its Remix version
 /// is on pub.dev.
+/// Hosted defaults to one independent canary and two incremental gallery adds,
+/// then one batch for the remainder. Checkout and both keep every independent
+/// install and the full incremental loop. Override either plan with the flags.
 ///
 /// The independent-item installs run in parallel: `--jobs N` or
 /// `REMIX_OPEN_CODE_JOBS=N` sets how many at once, and the default is one per
@@ -48,11 +52,12 @@ const _fixtureAppFiles = <String>[
 
 /// The registry items the CLI installs, in invocation order.
 ///
-/// Each is added by its own `remix add` on purpose, even though one
-/// invocation can now name several: installing them one at a time is what
+/// Checkout (and both) adds each by its own `remix add` on purpose: this
 /// exercises the incremental path a consumer actually takes, where each item
 /// meets an application that already has the previous ones. Theme arrives as
-/// the first item's registry dependency.
+/// the first item's registry dependency. Hosted installs the first two items
+/// incrementally, then batches the remainder: checkout CI owns the full
+/// incremental and asset-graph invalidation proof on the same SHA.
 const _defaultRegistryItems = <String>[
   'calendar',
   'range_calendar',
@@ -576,6 +581,19 @@ enum RemixSource { both, hosted, checkout }
 
 enum IndependentMode { canary, all, none }
 
+enum InstallMode { batch, incremental }
+
+/// Every catalog item is installed once; a batch still exercises two incremental
+/// adds before installing the rest together. Small catalogs need no empty add.
+List<List<String>> galleryInstallBatches(
+  List<String> items,
+  InstallMode mode,
+) => [
+  for (final item in (mode == InstallMode.batch ? items.take(2) : items))
+    [item],
+  if (mode == InstallMode.batch && items.length > 2) items.skip(2).toList(),
+];
+
 final class ConsumerCheckOptions {
   const ConsumerCheckOptions({
     required this.keep,
@@ -586,7 +604,9 @@ final class ConsumerCheckOptions {
     this.iconLibrary = 'remix',
     this.jobs,
     IndependentMode? independent,
-  }) : _independent = independent;
+    InstallMode? install,
+  }) : _independent = independent,
+       _install = install;
 
   final bool keep;
   final String preset;
@@ -594,6 +614,12 @@ final class ConsumerCheckOptions {
   final bool hostedCli;
   final String? item;
   final IndependentMode? _independent;
+  final InstallMode? _install;
+  InstallMode get install =>
+      _install ??
+      (source == RemixSource.hosted
+          ? InstallMode.batch
+          : InstallMode.incremental);
   IndependentMode get independent =>
       _independent ??
       (source == RemixSource.hosted
@@ -619,8 +645,17 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   int? jobs;
   String? item;
   IndependentMode? independent;
+  InstallMode? install;
   for (var index = 0; index < arguments.length; index += 1) {
     final argument = arguments[index];
+    if (argument == '--install') {
+      if (install != null || index + 1 >= arguments.length) return null;
+      final name = arguments[++index];
+      final selected = InstallMode.values.where((value) => value.name == name);
+      if (selected.isEmpty) return null;
+      install = selected.single;
+      continue;
+    }
     if (argument == '--independent') {
       if (independent != null || index + 1 >= arguments.length) return null;
       final name = arguments[++index];
@@ -714,6 +749,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
     iconLibrary: iconLibrary,
     jobs: jobs,
     independent: independent,
+    install: install,
   );
 }
 
@@ -756,6 +792,7 @@ Future<void> main(List<String> arguments) async {
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
       '[--keep]\n'
       '[--independent canary|all|none (hosted: canary; checkout/both: all)]\n'
+      '[--install batch|incremental (hosted: batch; checkout/both: incremental)]\n'
       'Runs clean up after success, failure and handled cancellation; '
       'add --keep to retain output and print its path.',
     );
@@ -813,6 +850,7 @@ Future<void> main(List<String> arguments) async {
       item: parsed.item,
       jobs: jobs,
       independent: parsed.independent,
+      install: parsed.install,
     );
     if (failure != null) {
       stderr.writeln('open-code check failed: ${failure.message}');
@@ -835,6 +873,7 @@ Future<_Failure?> _run(
   required String iconLibrary,
   required int jobs,
   required IndependentMode independent,
+  required InstallMode install,
 }) async {
   final rootFailure = _verifyRepositoryRoot(repositoryRoot);
   if (rootFailure != null) return rootFailure;
@@ -877,6 +916,7 @@ Future<_Failure?> _run(
         iconLibrary: iconLibrary,
         jobs: jobs,
         independent: independent,
+        install: install,
       );
     });
   } on OpenCodeCancelled {
@@ -923,6 +963,7 @@ Future<_Failure?> _checkInTemporaryApp({
   required String iconLibrary,
   required int jobs,
   required IndependentMode independent,
+  required InstallMode install,
 }) async {
   final environment = _toolchainEnvironment(sdk);
   if (!hostedCli &&
@@ -1040,14 +1081,15 @@ Future<_Failure?> _checkInTemporaryApp({
   );
   if (independentFailure != null) return independentFailure;
 
-  for (final item in preset.registryItems) {
+  for (final items in galleryInstallBatches(preset.registryItems, install)) {
     final add = await _runProcess(
       sdk.dart,
-      ['run', 'remix_cli:remix', 'add', item],
+      ['run', 'remix_cli:remix', 'add', ...items],
       workingDirectory: app.path,
       environment: environment,
     );
-    if (add != null) return _Failure('remix add $item failed in the fresh app');
+    if (add != null)
+      return _Failure('remix add ${items.join(' ')} failed in the fresh app');
   }
   _step('CLI installed Theme, every item, dependencies, and generated output.');
 

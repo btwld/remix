@@ -104,6 +104,48 @@ void main() {
   });
 
   group('consumer source selection', () {
+    test('hosted batches the gallery after two incremental adds', () {
+      for (final source in checker.RemixSource.values) {
+        expect(
+          checker.parseConsumerCheckOptions(['--source', source.name])!.install,
+          source == checker.RemixSource.hosted
+              ? checker.InstallMode.batch
+              : checker.InstallMode.incremental,
+        );
+      }
+      for (final mode in checker.InstallMode.values) {
+        expect(
+          checker.parseConsumerCheckOptions(['--install', mode.name])!.install,
+          mode,
+        );
+      }
+      for (final args in [
+        ['--install'],
+        ['--install', 'bad'],
+        ['--install', 'batch', '--install', 'incremental'],
+      ]) {
+        expect(checker.parseConsumerCheckOptions(args), isNull);
+      }
+      const items = ['theme_user', 'generated', 'chart', 'dashboard', 'last'];
+      expect(checker.galleryInstallBatches(items, checker.InstallMode.batch), [
+        ['theme_user'],
+        ['generated'],
+        ['chart', 'dashboard', 'last'],
+      ]);
+      expect(
+        checker.galleryInstallBatches(items, checker.InstallMode.incremental),
+        items.map((item) => [item]).toList(),
+      );
+      for (var length = 0; length <= items.length; length++) {
+        final subset = items.take(length).toList();
+        final batches = checker.galleryInstallBatches(
+          subset,
+          checker.InstallMode.batch,
+        );
+        expect(batches.expand((batch) => batch), subset);
+        expect(batches.every((batch) => batch.isNotEmpty), isTrue);
+      }
+    });
     test('independent defaults follow the selected source', () {
       for (final source in checker.RemixSource.values) {
         final options = checker.parseConsumerCheckOptions([
