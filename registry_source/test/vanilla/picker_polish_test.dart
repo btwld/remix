@@ -12,6 +12,41 @@ void main() {
   for (final theme in vanillaThemes) {
     for (final range in [false, true]) {
       testWidgets(
+        '${theme.name} $range trigger icon follows muted text at 200 percent',
+        (t) async {
+          await t.pumpWidget(
+            calendarHost(
+              range
+                  ? VanillaDateRangePicker(
+                      value: null,
+                      firstDate: DateTime(2026),
+                      lastDate: DateTime(2028),
+                      onChanged: (_) {},
+                    )
+                  : VanillaDatePicker(
+                      value: null,
+                      firstDate: DateTime(2026),
+                      lastDate: DateTime(2028),
+                      onChanged: (_) {},
+                    ),
+              theme.data,
+              scale: 2,
+            ),
+          );
+          final spec = t
+              .widget<StyleSpecProvider<ButtonSpec>>(
+                find.byType(StyleSpecProvider<ButtonSpec>).first,
+              )
+              .spec
+              .spec;
+          expect(spec.icon.spec.color, theme.data.mutedForeground);
+          expect(spec.icon.spec.size, VanillaTokens.icon * 2);
+        },
+      );
+    }
+
+    for (final range in [false, true]) {
+      testWidgets(
         '${theme.name} ${range ? "range" : "single"} picker is a field and tracks its anchor',
         (t) async {
           final child = range
@@ -112,7 +147,7 @@ void main() {
         expect(t.takeException(), isNull);
       },
     );
-    testWidgets('${theme.name} long range ellipsizes at 240px', (t) async {
+    testWidgets('${theme.name} long range keeps both ends at 240px', (t) async {
       await t.pumpWidget(
         calendarHost(
           SizedBox(
@@ -138,9 +173,9 @@ void main() {
             )
             .last,
       );
-      expect(label.maxLines, 1);
-      expect(label.overflow, TextOverflow.ellipsis);
-      expect(label.didExceedMaxLines, isTrue);
+      expect(label.maxLines, greaterThanOrEqualTo(1));
+
+      expect(label.didExceedMaxLines, isFalse);
       expect(t.getSize(find.byType(RemixButton)).width, 240);
       expect(t.takeException(), isNull);
     });

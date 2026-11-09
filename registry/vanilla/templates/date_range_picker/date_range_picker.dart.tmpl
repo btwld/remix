@@ -154,7 +154,6 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
       final panelWidth = math.max(
         {{valuePrefix}}CalendarDayWidth(context) * DateTime.daysPerWeek +
             {{typePrefix}}Tokens.s3 * 2 +
-            {{typePrefix}}Tokens.s1 * 2 +
             {{typePrefix}}Tokens.strokeHairline * 2,
         math.max(
           constraints.minWidth,
@@ -194,6 +193,11 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
           variant: .outline,
           style: ButtonStyler()
               .mainAxisAlignment(.start)
+              .icon(
+                .color({{typePrefix}}Tokens.mutedForeground()).size(
+                  MediaQuery.textScalerOf(context).scale({{typePrefix}}Tokens.icon),
+                ),
+              )
               .minWidth({{typePrefix}}Tokens.s16 * 3 + {{typePrefix}}Tokens.s12)
               .maxWidth(panelWidth)
               .padding(.horizontal({{typePrefix}}Tokens.s3))
@@ -207,7 +211,9 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
         calendarStyle: {{valuePrefix}}RangeCalendarStyle(
           style: CalendarStyler()
               .day(
-                CalendarDayStyler().minWidth({{valuePrefix}}CalendarDayWidth(context)),
+                CalendarDayStyler()
+                    .minWidth({{valuePrefix}}CalendarDayWidth(context))
+                    .minHeight({{valuePrefix}}CalendarDayWidth(context)),
               )
               .merge(calendarStyle),
         ),
@@ -215,14 +221,16 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
           style: PopoverStyler()
               .minWidth(panelWidth)
               .maxWidth(double.infinity)
-              .padding(.all({{typePrefix}}Tokens.s1))
+              .padding(.all(0))
               .merge(popoverStyle),
         ),
         navigationStyle: {{valuePrefix}}IconButtonStyle(
           variant: .ghost,
           style: IconButtonStyler()
-              .size({{typePrefix}}Tokens.s12, {{typePrefix}}Tokens.s12)
-              .margin(.symmetric(vertical: {{typePrefix}}Tokens.s1))
+              .size(
+                {{valuePrefix}}CalendarDayWidth(context),
+                {{valuePrefix}}CalendarDayWidth(context),
+              )
               .icon(
                 .size(
                   MediaQuery.textScalerOf(context).scale({{typePrefix}}Tokens.icon),
