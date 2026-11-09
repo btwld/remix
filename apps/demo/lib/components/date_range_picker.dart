@@ -46,12 +46,21 @@ class _DateRangePickerExampleState extends State<DateRangePickerExample> {
             date.year == 2026 && date.month == 11 && date.day == 18,
         onChanged: (range) => setState(() => _value = range),
         navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
-        selectorStyle: fortalSelectStyle(),
-        buttonStyle: fortalButtonStyle(
-          variant: .outline,
-        ).minHeight(44).minWidth(260).spacing(8),
-        popoverStyle: fortalPopoverStyle(),
-        calendarStyle: reportingPeriodCalendarStyle,
+        selectorStyle: fortalSelectStyle().trigger(
+          SelectTriggerStyler().width(
+            MediaQuery.textScalerOf(context).scale(146),
+          ),
+        ),
+        buttonStyle: fortalButtonStyle(variant: .outline)
+            .minHeight(44)
+            .minWidth(MediaQuery.textScalerOf(context).scale(260))
+            .spacing(8),
+        popoverStyle: fortalPopoverStyle().maxWidth(
+          MediaQuery.textScalerOf(context).scale(480),
+        ),
+        calendarStyle: reportingPeriodCalendarStyle.minWidth(
+          MediaQuery.textScalerOf(context).scale(308),
+        ),
       ),
     ),
   );
