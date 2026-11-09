@@ -137,7 +137,7 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
                     .panel(
                       ComboboxPanelStyler()
                           .margin(.top(8))
-                          .scrollbarColor(FortalTokens.gray8())
+                          .scrollbarColor(FortalTokens.gray9())
                           .borderRadius(.all(FortalTokens.radius3()))
                           .color(FortalTokens.colorPanel())
                           .padding(.all(4))
@@ -154,6 +154,13 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
                           .padding(.symmetric(horizontal: 12, vertical: 6))
                           .margin(.bottom(1))
                           .borderRadius(.all(FortalTokens.radius2()))
+                          .border(
+                            .all(
+                              .color(
+                                FortalTokens.accent8().withValues(alpha: 0),
+                              ).width(1),
+                            ),
+                          )
                           .onHovered(.color(FortalTokens.accentA3()))
                           .onFocused(
                             .color(FortalTokens.accentA5()).border(

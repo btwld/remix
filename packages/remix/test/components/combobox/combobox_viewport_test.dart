@@ -14,10 +14,7 @@ void main() {
       tester,
     ) async {
       final key = GlobalKey();
-      final rows = List.generate(
-        12,
-        (i) => 'Suggestion $i wraps',
-      );
+      final rows = List.generate(12, (i) => 'Suggestion $i wraps');
       await tester.pumpWidget(
         comboboxHost(
           RemixCombobox<String>(
