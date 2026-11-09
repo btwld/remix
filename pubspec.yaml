@@ -178,6 +178,7 @@ melos:
     open-code:check:
       steps:
         - dart test test/tool/check_open_code_test.dart
+        - dart test test/tool/open_code_lifecycle_test.dart
         - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_shell
@@ -307,6 +308,7 @@ melos:
       steps:
         - dart run tool/check_open_code.dart --source checkout --item ownership
         - dart test test/tool/check_open_code_test.dart
+        - dart test test/tool/open_code_lifecycle_test.dart
         - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --source checkout

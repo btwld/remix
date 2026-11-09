@@ -3,11 +3,14 @@ library;
 
 import 'dart:io';
 
+import 'open_code_lifecycle.dart';
+
 Future<File> compileRegistryConsumerCli({
   required String dart,
   required Directory repositoryRoot,
   required Directory outputDirectory,
   Map<String, String>? environment,
+  OpenCodeProcesses? processes,
 }) async {
   final snapshot = File('${outputDirectory.path}/registry_consumer_cli.dill');
   final arguments = [
@@ -17,7 +20,8 @@ Future<File> compileRegistryConsumerCli({
     '-o',
     snapshot.path,
   ];
-  final result = await Process.run(
+  final run = processes?.run ?? Process.run;
+  final result = await run(
     dart,
     arguments,
     workingDirectory: repositoryRoot.path,
