@@ -152,6 +152,31 @@ Color _pixel(
 }
 
 void main() {
+  testWidgets('range dropdown caption retains the semantic live heading', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    try {
+      await tester.pumpWidget(_host(_calendar(value: _range(10, 13))));
+      expect(find.text('February 2024'), findsNothing);
+      final heading = tester.getSemantics(
+        find.bySemanticsLabel('February 2024'),
+      );
+      expect(heading.getSemanticsData().flagsCollection.isHeader, isTrue);
+      expect(heading.getSemanticsData().flagsCollection.isLiveRegion, isTrue);
+      final selects = find.byType(RemixSelect<int>);
+      expect(
+        tester.getRect(selects.first).center.dy,
+        tester.getRect(find.bySemanticsLabel('Next month')).center.dy,
+      );
+      for (final select in tester.widgetList<RemixSelect<int>>(selects)) {
+        expect(select.positioning.sideOffset, 4);
+      }
+    } finally {
+      semantics.dispose();
+    }
+  });
+
   for (final phase in [true, false]) {
     testWidgets(
       'root ${phase ? 'phase' : 'keyframe'} follows range endpoints without duplicating effects',
@@ -163,7 +188,7 @@ void main() {
         var completions = 0;
         const selectedLabel = Color(0xff00ff00);
         final base = CalendarStyler()
-            .heading(TextStyler().color(_red))
+            .weekday(TextStyler().color(_red))
             .day(
               CalendarDayStyler()
                   .color(_white)
@@ -179,7 +204,7 @@ void main() {
         // Frames change the range-start variant; Mix builds nested day styles
         // with their variants on every frame, under each day's state.
         CalendarStyler frame(CalendarStyler base, double progress) => base
-            .heading(TextStyler().color(Color.lerp(_red, _blue, progress)!))
+            .weekday(TextStyler().color(Color.lerp(_red, _blue, progress)!))
             .day(
               CalendarDayStyler().onRangeStart(
                 CalendarDayStyler().color(Color.lerp(_red, _blue, progress)!),
@@ -227,9 +252,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 50));
         final heading = tester.widget<RichText>(
           find.byWidgetPredicate(
-            (widget) =>
-                widget is RichText &&
-                widget.text.toPlainText() == 'February 2024',
+            (widget) => widget is RichText && widget.text.toPlainText() == 'Su',
           ),
         );
         expect(heading.text.style!.color, Color.lerp(_red, _blue, .5));
@@ -267,9 +290,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 25));
         final runningHeading = tester.widget<RichText>(
           find.byWidgetPredicate(
-            (widget) =>
-                widget is RichText &&
-                widget.text.toPlainText() == 'February 2024',
+            (widget) => widget is RichText && widget.text.toPlainText() == 'Su',
           ),
         );
         expect(
