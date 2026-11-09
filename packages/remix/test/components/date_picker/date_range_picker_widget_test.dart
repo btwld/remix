@@ -192,6 +192,107 @@ void main() {
     },
   );
 
+  for (final maxLines in [1, 2]) {
+    for (final custom in [false, true]) {
+      testWidgets(
+        '${custom ? "custom" : "default"} wrapped range ignores inherited maxLines $maxLines',
+        (t) async {
+          const customLabel = 'November 10, 2024 through March 24, 2025';
+          await t.pumpWidget(
+            pickerHost(
+              DefaultTextStyle.merge(
+                maxLines: maxLines,
+                child: SizedBox(
+                  width: 120,
+                  child: IntrinsicHeight(
+                    child: _picker(
+                      value: CivilDateRange(
+                        start: DateTime(2024, 11, 10),
+                        end: DateTime(2025, 3, 24),
+                      ),
+                      formatRange: custom ? (_) => customLabel : null,
+                      buttonStyle: ButtonStyler()
+                          .padding(.horizontal(12))
+                          .label(.fontSize(10)),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          final trigger = find.byType(RemixButton);
+          final paragraph = t.renderObject<RenderParagraph>(
+            find.descendant(of: trigger, matching: find.byType(RichText)),
+          );
+          final label = paragraph.text.toPlainText();
+          expect(label, custom ? customLabel : '11/10/2024 –\n3/24/2025');
+          final end = paragraph.getBoxesForSelection(
+            TextSelection(
+              baseOffset: label.length - 4,
+              extentOffset: label.length,
+            ),
+          );
+          expect(end, isNotEmpty, reason: 'The final year must be laid out.');
+          for (final box in end) {
+            expect(box.left, greaterThanOrEqualTo(0));
+            expect(box.right, lessThanOrEqualTo(paragraph.size.width));
+            expect(box.bottom, lessThanOrEqualTo(paragraph.size.height));
+          }
+          expect(paragraph.didExceedMaxLines, isFalse);
+          final slot = t.renderObject<RenderBox>(
+            find.descendant(of: trigger, matching: find.byType(Flexible)),
+          );
+          const constraints = BoxConstraints(maxWidth: 96);
+          expect(slot.getDryLayout(constraints), slot.size);
+          expect(slot.getMinIntrinsicHeight(96), paragraph.size.height);
+          expect(slot.getMaxIntrinsicHeight(96), paragraph.size.height);
+          expect(t.takeException(), isNull);
+        },
+      );
+    }
+    for (final width in [300.0, 600.0]) {
+      testWidgets(
+        'one-line range at $width fits with inherited maxLines $maxLines',
+        (t) async {
+          await t.pumpWidget(
+            pickerHost(
+              DefaultTextStyle.merge(
+                maxLines: maxLines,
+                child: SizedBox(
+                  width: width,
+                  child: _picker(
+                    value: CivilDateRange(
+                      start: DateTime(2024, 11, 10),
+                      end: DateTime(2025, 3, 24),
+                    ),
+                    buttonStyle: ButtonStyler()
+                        .padding(.horizontal(12))
+                        .label(.fontSize(10)),
+                  ),
+                ),
+              ),
+            ),
+          );
+          final paragraph = t.renderObject<RenderParagraph>(
+            find.descendant(
+              of: find.byType(RemixButton),
+              matching: find.byType(RichText),
+            ),
+          );
+          expect(
+            paragraph.text.toPlainText(),
+            width == 300
+                ? '11/10/2024 – 3/24/2025'
+                : 'Sunday, November 10, 2024 – Monday, March 24, 2025',
+          );
+          expect(paragraph.didExceedMaxLines, isFalse);
+          expect(paragraph.size.height, paragraph.preferredLineHeight);
+          expect(t.takeException(), isNull);
+        },
+      );
+    }
+  }
+
   testWidgets(
     'intrinsic picker accepts its first selection after starting empty',
     (t) async {

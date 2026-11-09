@@ -419,19 +419,30 @@ class _RenderFittedRangeLabel extends RenderBox
 // Render the fallback without the host's one-line default or a caller's line
 // cap. Preserve the resolved typography and directives for the whole label.
 Widget _wrappedRangeLabel(BuildContext context, TextSpec spec, String label) {
-  return Text(
-    spec.textDirectives?.apply(label) ?? label,
-    style: spec.style,
-    strutStyle: spec.strutStyle,
-    textAlign: spec.textAlign,
-    textDirection: spec.textDirection,
-    locale: spec.locale,
-    softWrap: true,
-    overflow: TextOverflow.visible,
-    textScaler: spec.textScaler,
-    semanticsLabel: spec.semanticsLabel,
-    textWidthBasis: spec.textWidthBasis,
-    textHeightBehavior: spec.textHeightBehavior,
-    selectionColor: spec.selectionColor,
+  final defaults = DefaultTextStyle.of(context);
+  // DefaultTextStyle.merge cannot clear maxLines: null means inherit there.
+  return DefaultTextStyle(
+    style: defaults.style,
+    textAlign: defaults.textAlign,
+    softWrap: defaults.softWrap,
+    overflow: defaults.overflow,
+    maxLines: null,
+    textWidthBasis: defaults.textWidthBasis,
+    textHeightBehavior: defaults.textHeightBehavior,
+    child: Text(
+      spec.textDirectives?.apply(label) ?? label,
+      style: spec.style,
+      strutStyle: spec.strutStyle,
+      textAlign: spec.textAlign,
+      textDirection: spec.textDirection,
+      locale: spec.locale,
+      softWrap: true,
+      overflow: TextOverflow.visible,
+      textScaler: spec.textScaler,
+      semanticsLabel: spec.semanticsLabel,
+      textWidthBasis: spec.textWidthBasis,
+      textHeightBehavior: spec.textHeightBehavior,
+      selectionColor: spec.selectionColor,
+    ),
   );
 }
