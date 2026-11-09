@@ -87,6 +87,49 @@ Future<void> _tapDay(WidgetTester tester, int day) async {
 }
 
 void main() {
+  for (final scale in [1.0, 2.0]) {
+    testWidgets('custom range label shows its end beyond four lines at $scale', (
+      t,
+    ) async {
+      t.view.devicePixelRatio = 1;
+      t.view.physicalSize = const Size(800, 1600);
+      addTearDown(t.view.reset);
+      const label =
+          'Wednesday, the tenth of November, two thousand twenty-four '
+          'through Monday, the twenty-fourth of March, two thousand twenty-five';
+      await t.pumpWidget(
+        pickerHost(
+          SizedBox(
+            width: 180,
+            child: _picker(
+              value: CivilDateRange(
+                start: DateTime(2024, 11, 10),
+                end: DateTime(2025, 3, 24),
+              ),
+              formatRange: (_) => label,
+              buttonStyle: ButtonStyler()
+                  .padding(.horizontal(12))
+                  .label(TextStyler().fontSize(14).maxLines(1)),
+            ),
+          ),
+          textScale: scale,
+        ),
+      );
+      final paragraph = t.renderObject<RenderParagraph>(
+        find.descendant(of: find.text(label), matching: find.byType(RichText)),
+      );
+      expect(paragraph.didExceedMaxLines, isFalse);
+      final end = paragraph.getBoxesForSelection(
+        const TextSelection(
+          baseOffset: label.length - 11,
+          extentOffset: label.length,
+        ),
+      );
+      expect(end, isNotEmpty, reason: 'The final year must be laid out.');
+      expect(end.last.bottom, lessThanOrEqualTo(paragraph.size.height));
+      expect(t.takeException(), isNull);
+    });
+  }
   testWidgets('range label fit accounts for horizontal trigger margins', (
     t,
   ) async {
@@ -220,8 +263,6 @@ void main() {
           matching: find.byType(RichText),
         ),
       );
-      expect(text.maxLines, greaterThanOrEqualTo(1));
-
       expect(text.didExceedMaxLines, isFalse);
       final value = tester
           .getSemantics(find.byType(RemixButton).first)

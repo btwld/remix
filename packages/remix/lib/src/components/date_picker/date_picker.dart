@@ -204,6 +204,7 @@ class _DatePickerHost<T> extends StatefulWidget {
     required this.onOpen,
     required this.onClose,
     required this.label,
+    this.textBuilder,
     required this.semanticLabel,
     required this.semanticValue,
     required this.focusNode,
@@ -222,6 +223,7 @@ class _DatePickerHost<T> extends StatefulWidget {
   final VoidCallback? onOpen;
   final VoidCallback? onClose;
   final String label;
+  final RemixButtonTextBuilder? textBuilder;
 
   /// The trigger's accessible name: the field purpose.
   final String semanticLabel;
@@ -375,6 +377,7 @@ class _DatePickerHostState<T> extends State<_DatePickerHost<T>> {
         value: widget.semanticValue,
         child: RemixButton(
           label: widget.label,
+          textBuilder: widget.textBuilder,
           leadingIcon: widget.icon,
           semanticLabel: widget.semanticLabel,
           onPressed: _interactive ? _toggle : null,

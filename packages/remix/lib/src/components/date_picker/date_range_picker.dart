@@ -131,7 +131,8 @@ class RemixDateRangePicker extends StatelessWidget {
 
   /// Trigger styling, resolved against the trigger's own interaction state.
   /// Full labels fall back to compact numeric endpoints when width is limited.
-  /// Labels that still exceed one line wrap; accessible values stay complete.
+  /// Labels that still exceed one line wrap without a line cap; accessible
+  /// values stay complete.
   final ButtonStyler buttonStyle;
 
   /// Calendar and day styling, resolved against each part's own state.
@@ -215,7 +216,7 @@ class RemixDateRangePicker extends StatelessWidget {
         }
 
         var visible = label;
-        var triggerStyle = buttonStyle;
+        var wrapLabel = false;
         if (value != null && !fits(label)) {
           if (formatRange == null) {
             String compact(DateTime d) =>
@@ -230,12 +231,7 @@ class RemixDateRangePicker extends StatelessWidget {
           // Retain caller-owned localized grammar too: wrapping keeps both ends
           // visible when a compact/custom label still cannot fit on one line.
           if (!fits(visible)) {
-            triggerStyle = triggerStyle.label(
-              TextStyler()
-                  .maxLines(4)
-                  .softWrap(true)
-                  .overflow(TextOverflow.visible),
-            );
+            wrapLabel = true;
           }
         }
         return _DatePickerHost<CivilDateRange>(
@@ -244,6 +240,7 @@ class RemixDateRangePicker extends StatelessWidget {
           onOpen: onOpen,
           onClose: onClose,
           label: visible,
+          textBuilder: wrapLabel ? _wrappedRangeLabel : null,
           semanticLabel: semanticLabel,
           semanticValue: spoken ?? rangeLabels.noRange,
           focusNode: focusNode,
@@ -254,7 +251,7 @@ class RemixDateRangePicker extends StatelessWidget {
               ? placeholderStyle
               : const ButtonStyler.create(),
           expandedStyle: expandedStyle,
-          buttonStyle: triggerStyle,
+          buttonStyle: buttonStyle,
           popoverStyle: popoverStyle,
           calendarBuilder: (focus, select) => RemixRangeCalendar(
             value: value,
@@ -278,4 +275,24 @@ class RemixDateRangePicker extends StatelessWidget {
       },
     );
   }
+}
+
+// Render the fallback without the host's one-line default or a caller's line
+// cap. Preserve the resolved typography and directives for the whole label.
+Widget _wrappedRangeLabel(BuildContext context, TextSpec spec, String label) {
+  return Text(
+    spec.textDirectives?.apply(label) ?? label,
+    style: spec.style,
+    strutStyle: spec.strutStyle,
+    textAlign: spec.textAlign,
+    textDirection: spec.textDirection,
+    locale: spec.locale,
+    softWrap: true,
+    overflow: TextOverflow.visible,
+    textScaler: spec.textScaler,
+    semanticsLabel: spec.semanticsLabel,
+    textWidthBasis: spec.textWidthBasis,
+    textHeightBehavior: spec.textHeightBehavior,
+    selectionColor: spec.selectionColor,
+  );
 }
