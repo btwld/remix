@@ -18,6 +18,8 @@
 /// The independent-item installs run in parallel: `--jobs N` or
 /// `REMIX_OPEN_CODE_JOBS=N` sets how many at once, and the default is one per
 /// core, never fewer than two or more than four.
+/// Normal runs clean up on every outcome. Add `--keep` to retain output for
+/// debugging or the gallery; its path is printed even on failure or cancellation.
 library;
 
 import 'dart:convert';
@@ -29,6 +31,12 @@ import 'package:yaml/yaml.dart';
 
 import '../packages/remix_cli/lib/src/icon_registry.dart';
 import 'compile_registry_consumer.dart';
+import 'open_code_lifecycle.dart';
+
+var _lifecycle = OpenCodeLifecycle(
+  repositoryRoot: Directory.current.absolute,
+  keep: false,
+);
 
 const _fixtureAppFiles = <String>[
   'pubspec.yaml',
@@ -725,7 +733,9 @@ Future<void> main(List<String> arguments) async {
       '--source checkout; icons/ownership are vanilla, search_field is heroui)] '
       '[--icon-library remix|rounded|lucide] '
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
-      '[--keep]',
+      '[--keep]\n'
+      'Runs clean up after success, failure and handled cancellation; '
+      'add --keep to retain output and print its path.',
     );
     exitCode = 64;
     return;
@@ -742,41 +752,53 @@ Future<void> main(List<String> arguments) async {
   }
 
   final repositoryRoot = Directory.current.absolute;
-  final ref = publishedRegistryRef(
-    hostedCli: parsed.hostedCli,
-    environment: Platform.environment,
-  );
-  final String icons;
-  try {
-    icons = await _registryIcons(repositoryRoot, ref);
-  } on IOException catch (error) {
-    stderr.writeln(
-      'open-code check failed: could not read the '
-      '${ref ?? 'checkout'} registry\'s icons.yaml: $error',
-    );
-    exitCode = 1;
-    return;
-  }
-  stdout.writeln(
-    'Registry under test: ${ref == null ? 'this checkout' : '$_officialRepository@$ref'}.',
-  );
-  final failure = await _run(
-    repositoryRoot,
+  _lifecycle = OpenCodeLifecycle(
+    repositoryRoot: repositoryRoot,
     keep: parsed.keep,
-    preset: _presetByName(parsed.preset).forIcons(
-      icons,
-      parsed.iconLibrary,
-      checkoutIconsVersion: _packageVersion(repositoryRoot, 'remix_ui_icons'),
-    ),
-    iconLibrary: parsed.iconLibrary,
-    source: parsed.source,
-    hostedCli: parsed.hostedCli,
-    item: parsed.item,
-    jobs: jobs,
   );
-  if (failure != null) {
-    stderr.writeln('open-code check failed: ${failure.message}');
-    exitCode = failure.exitCode;
+  _lifecycle.watchSignals();
+  try {
+    await _lifecycle.sweep();
+    final ref = publishedRegistryRef(
+      hostedCli: parsed.hostedCli,
+      environment: Platform.environment,
+    );
+    final String icons;
+    try {
+      icons = await _registryIcons(repositoryRoot, ref);
+    } on IOException catch (error) {
+      stderr.writeln(
+        'open-code check failed: could not read the '
+        '${ref ?? 'checkout'} registry\'s icons.yaml: $error',
+      );
+      exitCode = 1;
+      return;
+    }
+    stdout.writeln(
+      'Registry under test: ${ref == null ? 'this checkout' : '$_officialRepository@$ref'}.',
+    );
+    final failure = await _run(
+      repositoryRoot,
+      keep: parsed.keep,
+      preset: _presetByName(parsed.preset).forIcons(
+        icons,
+        parsed.iconLibrary,
+        checkoutIconsVersion: _packageVersion(repositoryRoot, 'remix_ui_icons'),
+      ),
+      iconLibrary: parsed.iconLibrary,
+      source: parsed.source,
+      hostedCli: parsed.hostedCli,
+      item: parsed.item,
+      jobs: jobs,
+    );
+    if (failure != null) {
+      stderr.writeln('open-code check failed: ${failure.message}');
+      exitCode = _lifecycle.processes.cancellationExitCode ?? failure.exitCode;
+    }
+  } on OpenCodeCancelled {
+    exitCode = _lifecycle.processes.cancellationExitCode!;
+  } finally {
+    await _lifecycle.close();
   }
 }
 
@@ -814,45 +836,34 @@ Future<_Failure?> _run(
   if (fixtureFailure != null) return fixtureFailure;
   _step('Fixture is a minimal pre-install app with no consumer build.yaml.');
 
-  final parent = Directory.systemTemp.createTempSync('remix_open_code_');
-  final app = Directory('${parent.path}/app');
-
+  late Directory app;
+  _Failure? failure;
   try {
-    final guardFailure = _verifyDeletableParent(parent, repositoryRoot);
-    if (guardFailure != null) return _retainedFailure(parent, guardFailure);
-
-    final checkFailure = await _checkInTemporaryApp(
-      sdk: sdk,
-      repositoryRoot: repositoryRoot,
-      fixtureRoot: fixtureRoot,
-      app: app,
-      preset: preset,
-      source: source,
-      hostedCli: hostedCli,
-      item: item,
-      iconLibrary: iconLibrary,
-      jobs: jobs,
-    );
-    if (checkFailure != null) {
-      return _retainedFailure(parent, checkFailure);
-    }
-
-    if (!keep) {
-      final deletionFailure = _deleteVerifiedParent(parent, repositoryRoot);
-      if (deletionFailure != null) {
-        return _retainedFailure(parent, deletionFailure);
-      }
-    }
+    failure = await _lifecycle.run<_Failure>((parent) async {
+      app = Directory('${parent.path}/app');
+      return _checkInTemporaryApp(
+        sdk: sdk,
+        repositoryRoot: repositoryRoot,
+        fixtureRoot: fixtureRoot,
+        app: app,
+        preset: preset,
+        source: source,
+        hostedCli: hostedCli,
+        item: item,
+        iconLibrary: iconLibrary,
+        jobs: jobs,
+      );
+    });
+  } on OpenCodeCancelled {
+    rethrow;
   } on Object catch (error, stackTrace) {
-    return _retainedFailure(parent, error, stackTrace: stackTrace);
+    failure = _Failure('unexpected exception: $error\n$stackTrace');
   }
+  if (failure != null) return failure;
+  if (_lifecycle.cleanupProblem case final problem?) return _Failure(problem);
+  _lifecycle.processes.throwIfCancelled();
 
   if (keep) {
-    stdout
-      ..writeln('')
-      ..writeln('Kept the generated application at:')
-      ..writeln('  ${app.path}')
-      ..writeln('');
     if (source != RemixSource.hosted) {
       stdout
         ..writeln('It has a temporary checkout override for Remix. Delete')
@@ -894,6 +905,7 @@ Future<_Failure?> _checkInTemporaryApp({
       dart: sdk.dart,
       repositoryRoot: repositoryRoot,
       outputDirectory: app.parent,
+      processes: _lifecycle.processes,
       environment: environment,
     );
     environment['REMIX_REGISTRY_CONSUMER_CLI'] = snapshot.path;
@@ -1372,7 +1384,7 @@ _Failure? _applyFocusedFixture({
     final source = File('${fixtureRoot.path}/focused/${entry.key}');
     if (!source.existsSync()) {
       return _Failure(
-        'open_code/${fixtureRoot.path.split('/').last}/focused/'
+        'open_code/${basename(fixtureRoot.path)}/focused/'
         '${entry.key} is missing',
       );
     }
@@ -1506,7 +1518,13 @@ Future<_Failure?> _checkIndependentItems({
   }
 
   _step('Checking ${items.length} independent items, up to $jobs at a time.');
-  return runPooled(items, limit: jobs, out: stdout, work: checkItem);
+  return runPooled(
+    items,
+    limit: jobs,
+    out: stdout,
+    work: checkItem,
+    isCancelled: () => _lifecycle.processes.cancelled,
+  );
 }
 
 /// Runs [work] for every input with at most [limit] in flight, and returns the
@@ -1525,6 +1543,7 @@ Future<F?> runPooled<T, F extends Object>(
   required int limit,
   required StringSink out,
   required Future<F?> Function(T input, StringSink log) work,
+  bool Function()? isCancelled,
 }) async {
   if (limit < 1) throw ArgumentError.value(limit, 'limit', 'must be positive');
   final logs = [for (final _ in inputs) StringBuffer()];
@@ -1536,7 +1555,9 @@ Future<F?> runPooled<T, F extends Object>(
   var stopped = false;
 
   Future<void> worker() async {
-    while (!stopped && started < inputs.length) {
+    while (!stopped &&
+        !(isCancelled?.call() ?? false) &&
+        started < inputs.length) {
       final index = started++;
       try {
         final failure = await work(inputs[index], logs[index]);
@@ -1665,7 +1686,7 @@ Future<Object> _resolveToolchain(Directory root, String pinned) async {
   for (final candidate in candidates) {
     final ProcessResult result;
     try {
-      result = await Process.run(candidate.first, [
+      result = await _lifecycle.processes.run(candidate.first, [
         ...candidate.skip(1),
         '--version',
         '--machine',
@@ -2088,7 +2109,7 @@ _Failure? _verifyCheckoutPackages({
     final directory = Directory(entry.value);
     if (!directory.existsSync()) continue;
     final resolved = directory.resolveSymbolicLinksSync();
-    if (!_isWithin(resolved, repository) && resolved != repository) continue;
+    if (!isWithin(resolved, repository) && resolved != repository) continue;
 
     final expectedDirectory = expected[entry.key];
     if (expectedDirectory == null) {
@@ -2170,42 +2191,6 @@ bool _isHostedCachePath(String path) {
   return path.contains('${separator}hosted$separator');
 }
 
-_Failure? _verifyDeletableParent(Directory parent, Directory repositoryRoot) {
-  final problems = <String>[];
-  final resolved = parent.resolveSymbolicLinksSync();
-  final temp = Directory.systemTemp.resolveSymbolicLinksSync();
-  final repository = repositoryRoot.resolveSymbolicLinksSync();
-
-  if (!_isWithin(resolved, temp)) problems.add('$resolved is not inside $temp');
-  if (_isWithin(resolved, repository) || resolved == repository) {
-    problems.add('$resolved is inside the repository');
-  }
-  if (!_basename(resolved).startsWith('remix_open_code_')) {
-    problems.add('$resolved was not created by this checker');
-  }
-  if (FileSystemEntity.isLinkSync(parent.path)) {
-    problems.add('$resolved is a symbolic link');
-  }
-
-  if (problems.isEmpty) return null;
-  return _Failure(
-    'refusing to use a temporary directory that cannot be proven safe:\n'
-    '${problems.map((problem) => '  - $problem').join('\n')}',
-  );
-}
-
-_Failure? _deleteVerifiedParent(Directory parent, Directory repositoryRoot) {
-  final guard = _verifyDeletableParent(parent, repositoryRoot);
-  if (guard != null) return guard;
-  parent.deleteSync(recursive: true);
-  return null;
-}
-
-bool _isWithin(String path, String parent) =>
-    path.startsWith(parent.endsWith('/') ? parent : '$parent/');
-
-String _basename(String path) => path.split(Platform.pathSeparator).last;
-
 /// Runs a process, streaming its output to this process' stdio.
 ///
 /// Concurrent callers pass a [log] instead: inherited stdio from several
@@ -2228,7 +2213,7 @@ Future<_Failure?> _runProcess(
   (log ?? stdout).writeln('\$ $executable ${arguments.join(' ')}');
   final Process process;
   try {
-    process = await Process.start(
+    process = await _lifecycle.processes.start(
       executable,
       arguments,
       workingDirectory: workingDirectory,
@@ -2240,9 +2225,7 @@ Future<_Failure?> _runProcess(
   } on ProcessException catch (error) {
     return _Failure('could not start `$executable`: ${error.message}');
   }
-  // A process that fills a pipe nobody reads never exits, and one that reads
-  // stdin never would, so stdin is closed and both pipes are drained alongside
-  // the exit code.
+  // Close stdin and drain both pipes to prevent child-process deadlocks.
   const decoder = Utf8Decoder(allowMalformed: true);
   final drained = <Future<Object?>>[
     if (log != null) ...[
@@ -2253,6 +2236,7 @@ Future<_Failure?> _runProcess(
   ];
   final code = await process.exitCode;
   await Future.wait(drained);
+  _lifecycle.processes.throwIfCancelled();
   if (code == 0) return null;
   return _Failure('`$executable ${arguments.join(' ')}` exited $code');
 }
@@ -2387,31 +2371,6 @@ List<String> focusedInventoryProblemsForTest(
 /// Returns the independent expected inventory for a focused consumer check.
 Set<String> focusedInventoryForTest(String item, {String preset = 'vanilla'}) =>
     _presetByName(preset).focusedUiFiles(item).toSet();
-
-/// Formats a post-creation failure so the retained directory is always named.
-String retainedFailureMessage(
-  Directory parent,
-  Object problem, {
-  StackTrace? stackTrace,
-}) {
-  final String message;
-  if (problem is _Failure) {
-    message = problem.message;
-  } else {
-    final stack = stackTrace == null ? '' : '\n$stackTrace';
-    message = 'unexpected exception: $problem$stack';
-  }
-  return '$message\nTemporary application preserved at ${parent.path}';
-}
-
-_Failure _retainedFailure(
-  Directory parent,
-  Object problem, {
-  StackTrace? stackTrace,
-}) => _Failure(
-  retainedFailureMessage(parent, problem, stackTrace: stackTrace),
-  exitCode: problem is _Failure ? problem.exitCode : 1,
-);
 
 void _step(String message, [StringSink? sink]) =>
     (sink ?? stdout).writeln('✓ $message');

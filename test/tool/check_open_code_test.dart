@@ -439,6 +439,30 @@ Future<void> main(List<String> arguments) async {
       },
     );
 
+    test('cancellation stops dispatch, waits and keeps ordered logs', () async {
+      var cancelled = false;
+      var settled = false;
+      final result = checker
+          .runPooled<int, String>(
+            [0, 1, 2, 3],
+            limit: 2,
+            out: out,
+            work: tasks.run,
+            isCancelled: () => cancelled,
+          )
+          .whenComplete(() => settled = true);
+      await _settle();
+      cancelled = true;
+      tasks.finish(1);
+      await _settle();
+      expect(tasks.started, [0, 1]);
+      expect(settled, isFalse);
+      expect(out.toString(), isEmpty);
+      tasks.finish(0);
+      expect(await result, isNull);
+      expect(out.toString(), 'log 0;log 1;');
+    });
+
     test('a limit below one is rejected instead of running nothing', () {
       for (final limit in [0, -1]) {
         expect(pool(3, limit: limit), throwsArgumentError);
@@ -1039,16 +1063,6 @@ icons:
         isTrue,
       );
     });
-  });
-
-  test('retained failure reporting includes the temporary directory', () {
-    expect(
-      checker.retainedFailureMessage(sandbox, StateError('synthetic failure')),
-      allOf(
-        contains('synthetic failure'),
-        contains('Temporary application preserved at ${sandbox.path}'),
-      ),
-    );
   });
 }
 

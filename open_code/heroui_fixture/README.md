@@ -19,7 +19,7 @@ From the repository root, with the SDK pinned in `.fvmrc`:
 fvm dart run tool/check_open_code.dart --preset heroui --source checkout --keep
 ```
 
-`--keep` prints the retained app's path.
+Add `--keep` to keep the generated app; its path is printed.
 
 `focused/search_field_*` replaces the gallery for a fresh install of the search
 field and its dependencies alone. This check also runs `flutter build web`:
