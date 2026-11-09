@@ -117,8 +117,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   selectors need an Overlay ancestor. Keep `navigationStyle`, `selectorStyle`
   and day styling unresolved in their own interaction states. Day styles add
   `onToday` and `onUnavailable` (predicate-rejected, in range; declare after
-  `onDisabled`). No preset ships a calendar recipe yet; use
-  `RemixCalendar(style: ...)`; `CalendarStyler` has no callable widget shorthand.
+  `onDisabled`). Vanilla, Fortal and HeroUI ship `<Prefix>Calendar` with icon navigation, growing Select
+  selectors and all day states; install `calendar`. `CalendarStyler` has no
+  callable widget shorthand.
 - **[RangeCalendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx)** — controlled complete inclusive `CivilDateRange?`, sharing
   Calendar navigation and day anatomy. First activation anchors locally without
   a callback; second eligible activation requests one ordered range and clears
@@ -131,7 +132,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `onSelected` so they win; a raw `styleSpec` paints no range. The range
   summary is an unpainted live region unless `summaryBuilder` shows it. No
   public draft controller, partial committed value, drag selection or typed
-  entry.
+  entry. Vanilla, Fortal and HeroUI ship `<Prefix>RangeCalendar`; install `range_calendar`. Its
+  outlined tinted draft de-emphasizes the old committed range.
 - **[DatePicker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)** — a thin Button + Popover + Calendar composition, not a text
   field. The parent owns nullable `value`; valid activation requests one date
   and closes even when rejected. Escape, outside interaction and disabling
@@ -148,7 +150,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `style`/`styleSpec` or public controller.
   `onOpen`/`onClose` report the popover; a completed selection calls `onChanged`
   before `onClose`, a dismissal only `onClose`. Parsing and segmented entry are
-  not supported; use DateRangePicker for ranges.
+  not supported; use DateRangePicker for ranges. Vanilla, Fortal and HeroUI ship
+  `<Prefix>DatePicker`; install `date_picker` for the Button, Popover and
+  Calendar recipes wired as a hand-written composite.
 - **DateRangePicker** — Button + Popover + RangeCalendar with a controlled
   `CivilDateRange?`. First activation anchors without closing; second eligible
   activation requests a complete range and closes even on parent rejection.
@@ -158,7 +162,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   when empty) and optionally `formatRange` (painted text only). Same resize,
   keyboard, `onOpen`/`onClose` and five child styles as DatePicker; no picker
   styler/controller or typed entry. Forwards `summaryBuilder` to paint the
-  otherwise unpainted range summary. See
+  otherwise unpainted range summary. Vanilla, Fortal and HeroUI ship `<Prefix>DateRangePicker`;
+  install `date_range_picker` for the matching hand-written composite. See
   [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).
 
 ## Data display
@@ -303,3 +308,11 @@ for Overlay, Navigator and toast scope placement.
 the Fortal preset. `RemixLink` is base Remix — the Vanilla preset also ships
 a `link` item generating `<Prefix>Link`, and Fortal ships `FortalLink`. See
 [Fortal typography](fortal.md#typography).
+
+### HeroUI calendar family
+
+HeroUI also installs `calendar`, `range_calendar`, `date_picker` and
+`date_range_picker`. The composites retain Remix's date and range API and merge
+each child style last. Pickers use field-shaped button triggers rather than
+segmented input. See the [Open Code catalog](https://github.com/btwld/remix/blob/main/docs/open-code/catalog.mdx)
+and [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx).

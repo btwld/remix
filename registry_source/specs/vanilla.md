@@ -208,3 +208,40 @@ the steps above. The source column names the file under
 | Sidebar layout, dashboard shell | 48 collapsed | 48 for `sidebar_layout`; the dashboard shell keeps its own 72 | The dashboard shell is out of this spec's scope. |
 | Tooltip delay | `delayDuration = 0` on the provider | 0 | Matches; recorded because Vanilla used to wait 500ms. |
 | Font | Geist and Geist Mono | Geist and Geist Mono from `remix_ui_fonts` | Matches; recorded because the fonts are static files (Geist 400, 500, 600, 700; Geist Mono 400, 500) rather than shadcn's variable fonts. Vanilla uses 400, 500, and 600. |
+
+## Calendar recipes (designed from the Vanilla scale)
+
+These are native recipe decisions using the existing Vanilla palette and
+scales rather than claiming upstream calendar parity. `calendar` and
+`range_calendar` install hand-written facades because `CalendarSpec` has no
+generator target. Ghost IconButton navigation follows the outer day columns;
+Select captions retain intrinsic text height and scale their minimum width.
+Their minimum height matches the 48px navigation target, keeping the visible
+header controls flush with the calendar’s 12px content inset.
+
+- Geometry: square `s12` day targets, scaling with text when the viewport allows;
+  `radiusSm` corners, `textSm` labels and `textXs` muted weekdays. Container
+  padding is `s3`, header-to-weekday spacing `s2`, and weekday-to-first-week
+  spacing `s1`. Equal zero row/column gutters preserve connected range bands.
+- Ordinary days rest transparent, hover in accent, and press in primary at
+  22% / 32% (light / dark). Today uses a ring-token hairline and semibold label.
+  Selection uses primary / primaryForeground, retaining that family at 90%
+  on hover and 80% on press. Focus uses the shared inset ring plus a contrasting
+  inner keyline without changing day geometry.
+- Disabled ordinary days use mutedForeground and disabledOpacity. Disabled
+  selections and the previous committed range while drafting use primary at
+  18% / 28% with full-opacity mutedForeground, keeping the selection recognizable.
+  Unavailable dates additionally strike through.
+- Range endpoints use primary caps with directional corners. Interiors use
+  primary at 9% / 24%, stepping to 15% / 32% on hover and 22% / 40% on press.
+  Preview uses primary at 12% / 20% with a 60% primary perimeter hairline;
+  blocked previews use full-strength destructive labels without a tinted fill.
+- Pickers merge caller child stylers last over outline Button, Popover, calendar,
+  ghost IconButton and Select recipes. The panel retains its rounded border and
+  shadow with a `s1` offset. The calendar owns the single `s3` padding layer;
+  the outer panel adds no padding. Width follows the seven day targets, calendar
+  padding and panel border. Trigger icons use mutedForeground and scale with text.
+  Bounded range labels use compact endpoints or wrap to retain both dates.
+
+The Vanilla spec, state, layout and pixel focus suites enforce these decisions;
+calendar recipe tests cover real day and range states in both theme modes.

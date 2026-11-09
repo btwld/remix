@@ -181,6 +181,34 @@ use supported Flutter button semantics with full date labels, selected/enabled
 state and actions. This is not a claim of literal web ARIA-grid parity or
 conformance on every assistive technology.
 
+## Vanilla recipe
+
+In a Vanilla app, install `calendar` and import your generated UI barrel:
+
+```shell
+dart run remix_cli:remix add calendar
+```
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget example() => UiCalendar(
+  value: null,
+  firstDate: DateTime(2026),
+  lastDate: DateTime(2028, 12, 31),
+  onChanged: (value) { /* Store the requested value in application state. */ },
+);
+```
+
+`Ui` is the application's chosen prefix. Wrap the host Navigator in `UiTheme`.
+The hand-written facade supplies theme typography, Vanilla icon navigation and
+Select selectors that grow with text. Day treatments cover today, selection,
+hover, press, keyboard focus and disabled dates; unavailable dates add a strike
+through, while out-of-bounds dates only fade. Override `style`, `navigationStyle`
+and `selectorStyle` last. `CalendarSpec` has no generator target, so this
+composite deliberately has no generated part.
+
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
@@ -209,6 +237,18 @@ RemixCalendar remixCalendarConstructor({
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
+
+
+## Fortal widgets
+
+In a Fortal app, `remix add calendar` installs `<Prefix>Calendar` through
+the same UI barrel. It retains the Remix date, labels, focus and controlled
+selection contract above. The hand-written facade merges caller child styles
+last over the reviewed Fortal calendar, ghost navigation and Select recipes.
+Day targets and chevrons scale with text. Today uses bold gray12 ink; range
+drafts have a separate perimeter and a quieter previous selection. Nested
+month/year panels have a bounded height and a persistent scroll thumb.
+See [Fortal](/fortal) for theme setup.
 
 ## Properties
 ### Widget Properties
@@ -300,5 +340,15 @@ the day and its `NakedRangePosition` to context-aware style tokens.
 
 For an inclusive date range, use [Range Calendar](/components/range_calendar)
 instead. Typed/segmented entry, non-Gregorian calendars and timezone scheduling
-are not part of this component. Preset recipes are separate from the runtime
-API.
+are not part of this component. The Vanilla recipe above packages these styles for installation.
+## HeroUI widgets
+
+In a HeroUI app, `remix add calendar` installs `<Prefix>Calendar`
+with the same controlled value, bounds, availability callbacks and labels as Remix.
+The hand-written composition merges caller styles last for each independent part.
+
+The recipes port HeroUI web 3.2.6 colors, typography and day geometry. Month/year
+Select menus replace the upstream year grid. Date pickers use a field-shaped
+button in place of segmented text entry. Day tiles and icons grow with text;
+range drafts take visual precedence over the previous committed range. Picker
+panels retain equal 12px insets. See [Open Code](/open-code) for theme setup.

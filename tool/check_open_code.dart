@@ -46,6 +46,10 @@ const _fixtureAppFiles = <String>[
 /// meets an application that already has the previous ones. Theme arrives as
 /// the first item's registry dependency.
 const _defaultRegistryItems = <String>[
+  'calendar',
+  'range_calendar',
+  'date_picker',
+  'date_range_picker',
   'icons',
   'accordion',
   'app_bar',
@@ -142,6 +146,11 @@ const _generatedSnapshots = <String, String>{
 };
 
 const _fortalRegistryItems = <String>[
+  'calendar',
+  'range_calendar',
+  'date_picker',
+  'date_range_picker',
+
   'icons',
   'accordion',
   'app_bar',
@@ -205,7 +214,14 @@ const _fortalPreset = _PresetContract(
   name: 'fortal',
   fixtureDirectory: 'fortal_fixture',
   registryItems: _fortalRegistryItems,
-  independentItems: [..._independentRegistryItems, 'range_slider'],
+  independentItems: [
+    ..._independentRegistryItems,
+    'range_slider',
+    'calendar',
+    'range_calendar',
+    'date_picker',
+    'date_range_picker',
+  ],
 );
 
 const _herouiRegistryItems = [
@@ -218,6 +234,10 @@ const _herouiRegistryItems = [
   'button',
   'button_group',
   'card',
+  'calendar',
+  'range_calendar',
+  'date_picker',
+  'date_range_picker',
   'checkbox',
   'checkbox_group',
   'chip',

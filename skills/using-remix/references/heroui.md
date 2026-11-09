@@ -213,7 +213,7 @@ top-level final, never `token().withValues(...)`.
 
 Families that need behavior Remix does not provide are not in the preset:
 Form, Fieldset, NumberField, InputOTP, ListBox, Autocomplete, Pagination, a
-standalone Menu, and the date and color pickers. Each component's worksheet
+standalone Menu, segmented DateField, TimeField, CalendarYearPicker, and color pickers. Each component's worksheet
 lists its visual approximations (fonts, shadow softness, motion such as the
 sliding tab indicator).
 
@@ -238,3 +238,28 @@ observe the controller for edits. Supply eligible suggestions only. No trigger
 glyph, per-option disabled state, persistent selected row or multi-selection
 API is added. The upstream Autocomplete with popover search remains deferred.
 See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
+
+## Calendars and date pickers
+
+Install `calendar`, `range_calendar`, `date_picker` or `date_range_picker`.
+These are hand-written composites (`HeroUiCalendar`, `HeroUiRangeCalendar`,
+`HeroUiDatePicker`, `HeroUiDateRangePicker`) because their child styles resolve
+independently. Remix owns civil dates, keyboard navigation and range drafts.
+Keep Remix's controlled `value` and `onChanged`; `CivilDateRange` carries both
+range endpoints. Null callbacks disable the controls.
+
+Calendar `style`, `navigationStyle` and `selectorStyle` merge last. Pickers
+also accept `buttonStyle`, `calendarStyle` and `popoverStyle`. The button looks
+like a primary HeroUI field with a muted calendar icon; Remix compacts default range labels under bounds and wraps both endpoints. It approximates upstream segmented DateField
+entry. Month/year Select menus replace upstream's year grid. The standalone
+`date-field`, `time-field` and `calendar-year-picker` families stay deferred.
+
+Today has a contrasting contour. Selected caps, middles and live drafts keep
+their roles through pointer states; old committed ranges recede during drafting.
+Tiles remain square and chevrons scale with text. Picker panels have one 12px
+inset, and nested selector panels have a 4px offset and persistent scroll cue.
+
+See [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx),
+[Range Calendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx),
+[Date Picker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)
+and [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).

@@ -194,3 +194,20 @@ uses Fortal tokens, growing wrapped rows, distinct hover/keyboard/press fills,
 and the shared overflow fades and thumb. Acceptance updates the editor; there
 is no per-option selected or disabled state. See
 [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
+
+## Calendar family
+
+Install `calendar`, `range_calendar`, `date_picker` and `date_range_picker`
+for the corresponding `<Prefix>Calendar`, `<Prefix>RangeCalendar`,
+`<Prefix>DatePicker` and `<Prefix>DateRangePicker` hand-written composites.
+They keep Remix's names and controlled civil-date APIs. Pickers compose the
+outline Button, Popover and calendar recipes; each child styler merges last.
+Calendar day targets are 44px and scale with text, including navigation and
+selector chevrons. Today uses gray12 bold ink and a ring. The outlined draft
+de-emphasizes the committed range, with a brighter focus contour in dark mode.
+Month/year panels are capped and keep a visible scroll thumb. Localize labels,
+`semanticLabel`, `placeholder` and optional trigger formatters in the app.
+See [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx),
+[Range Calendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx),
+[Date Picker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)
+and [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).

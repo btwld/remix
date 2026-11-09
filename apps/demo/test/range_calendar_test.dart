@@ -68,7 +68,7 @@ void main() {
           lastDate: DateTime(2028),
           currentDate: DateTime(2026, 11, 6),
           onChanged: (_) {},
-          style: reportingPeriodCalendarStyle,
+          style: fortalRangeCalendarStyle(),
         ),
       );
       final day = _day(t, 6);

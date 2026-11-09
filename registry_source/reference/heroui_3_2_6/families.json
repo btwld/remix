@@ -123,17 +123,19 @@
   {
    "upstream": "date-field",
    "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "reason": "Segmented text editing and time-field state are not exposed by Remix; picker button triggers do not implement date segments."
   },
   {
    "upstream": "date-picker",
-   "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "status": "mapped",
+   "item": "date_picker",
+   "remix": "RemixDatePicker"
   },
   {
    "upstream": "date-range-picker",
-   "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "status": "mapped",
+   "item": "date_range_picker",
+   "remix": "RemixDateRangePicker"
   },
   {
    "upstream": "drawer",
@@ -154,7 +156,7 @@
   {
    "upstream": "time-field",
    "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "reason": "Segmented text editing and time-field state are not exposed by Remix; picker button triggers do not implement date segments."
   },
   {
    "upstream": "disclosure",
@@ -452,18 +454,20 @@
   },
   {
    "upstream": "calendar",
-   "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "status": "mapped",
+   "item": "calendar",
+   "remix": "RemixCalendar"
   },
   {
    "upstream": "range-calendar",
-   "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "status": "mapped",
+   "item": "range_calendar",
+   "remix": "RemixRangeCalendar"
   },
   {
    "upstream": "calendar-year-picker",
    "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "reason": "Remix provides bounded month/year Select menus, not the upstream integrated year grid and decade navigation."
   },
   {
    "upstream": "icons",

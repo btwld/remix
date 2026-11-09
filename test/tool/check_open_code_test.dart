@@ -540,7 +540,18 @@ Future<void> main(List<String> arguments) async {
       for (final preset in ['vanilla', 'fortal']) {
         final items = checker.independentInstallsForTest(preset);
 
-        expect(items, hasLength(19), reason: preset);
+        expect(items, hasLength(preset == 'fortal' ? 23 : 19), reason: preset);
+        if (preset == 'fortal') {
+          expect(
+            items,
+            containsAll([
+              'calendar',
+              'range_calendar',
+              'date_picker',
+              'date_range_picker',
+            ]),
+          );
+        }
         expect(items, contains('range_slider'));
         expect(
           items,
@@ -561,6 +572,10 @@ Future<void> main(List<String> arguments) async {
           'breadcrumbs',
           'button',
           'button_group',
+          'calendar',
+          'range_calendar',
+          'date_picker',
+          'date_range_picker',
           'checkbox_group',
           'close_button',
           'combobox',

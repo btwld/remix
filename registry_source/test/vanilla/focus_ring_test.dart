@@ -18,6 +18,49 @@ import 'support.dart';
 void main() {
   for (final theme in vanillaThemes) {
     group(theme.name, () {
+      for (final range in [false, true]) {
+        testWidgets(
+          '${range ? "range" : "single"} calendar rings inside its day without reflow',
+          (tester) async {
+            final probe = await _pump(
+              tester,
+              theme.data,
+              (node) => range
+                  ? VanillaRangeCalendar(
+                      value: CivilDateRange(
+                        start: DateTime(2026, 11, 12),
+                        end: DateTime(2026, 11, 14),
+                      ),
+                      firstDate: DateTime(2026),
+                      lastDate: DateTime(2027),
+                      currentDate: DateTime(2026, 11, 6),
+                      focusNode: node,
+                      onChanged: (_) {},
+                    )
+                  : VanillaCalendar(
+                      value: DateTime(2026, 11, 12),
+                      firstDate: DateTime(2026),
+                      lastDate: DateTime(2027),
+                      focusNode: node,
+                      onChanged: (_) {},
+                    ),
+            );
+            final day = find
+                .ancestor(
+                  of: find.text('12'),
+                  matching: find.byType(StyleSpecProvider<CalendarDaySpec>),
+                )
+                .first;
+            await probe.expectRing(
+              part: day,
+              ringColor: tint(theme.data.primaryForeground, .65),
+              includes: (part) => [part.centerLeft.translate(1.5, 0)],
+              excludes: (part) => [part.centerLeft.translate(3.5, 0)],
+            );
+          },
+        );
+      }
+
       for (var index = 0; index < 2; index++) {
         testWidgets('range thumb $index rings independently without reflow', (
           tester,

@@ -133,6 +133,17 @@ items:
     exports:
       - components/button.dart
 
+  calendar:
+    registryDependencies:
+      - theme
+      - icon_button
+      - select
+    files:
+      - source: templates/calendar/calendar.dart.tmpl
+        target: "@ui/components/calendar.dart"
+    exports:
+      - components/calendar.dart
+
   callout:
     registryDependencies:
       - theme
@@ -349,6 +360,35 @@ items:
     exports:
       - components/data_table.dart
 
+  date_picker:
+    registryDependencies:
+      - theme
+      - button
+      - calendar
+      - icon_button
+      - popover
+      - select
+    files:
+      - source: templates/date_picker/date_picker.dart.tmpl
+        target: "@ui/components/date_picker.dart"
+    exports:
+      - components/date_picker.dart
+
+  date_range_picker:
+    registryDependencies:
+      - theme
+      - button
+      - calendar
+      - icon_button
+      - popover
+      - range_calendar
+      - select
+    files:
+      - source: templates/date_range_picker/date_range_picker.dart.tmpl
+        target: "@ui/components/date_range_picker.dart"
+    exports:
+      - components/date_range_picker.dart
+
   dialog:
     registryDependencies:
       - theme
@@ -541,6 +581,18 @@ items:
       - "@ui/components/radio.g.dart"
     exports:
       - components/radio.dart
+
+  range_calendar:
+    registryDependencies:
+      - theme
+      - calendar
+      - icon_button
+      - select
+    files:
+      - source: templates/range_calendar/range_calendar.dart.tmpl
+        target: "@ui/components/range_calendar.dart"
+    exports:
+      - components/range_calendar.dart
 
   range_slider:
     registryDependencies:

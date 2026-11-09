@@ -81,3 +81,14 @@ font override and its browser environment separately from the older matrices.
 
 The range screenshots default to `out/range_slider/`. Set
 `SLIDER_CAPTURE_DIR` to write them into a review artifact directory.
+
+## Calendar family
+
+Run `node fetch_calendar_sources.mjs` to fetch the pinned tarballs and verify
+their SHA-512 integrity before refreshing calendar source files and hashes.
+Run `node capture_calendar.mjs`, then from `registry_source` run
+`dart run tool/heroui_parity/slim_measurements.dart --calendar` to merge only
+this evidence. `CALENDAR_CAPTURE_DIR` selects the upstream PNG directory.
+The fixture uses real Geist and covers Calendar, RangeCalendar, DatePicker and
+DateRangePicker in both modes, 375/1024 widths, pointer/focus/disabled states,
+and LTR/RTL at 200%. Picker DateFields are actual upstream segments.

@@ -198,9 +198,40 @@ calendar.
 This component shows one month at a time and supports cross-month ranges through
 navigation. Typed/segmented entry, multiple visible months, drag selection,
 partial committed values, Apply/Cancel modes, min/max nights, non-Gregorian
-calendars and timezone scheduling are outside this API. Preset adoption and
-runtime publication are separate from adding the component source.
+calendars and timezone scheduling are outside this API. The Vanilla recipe above packages the range styles for installation.
 
+
+## Vanilla recipe
+
+In a Vanilla app, install `range_calendar` and import your generated UI barrel:
+
+```shell
+dart run remix_cli:remix add range_calendar
+```
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget example() => UiRangeCalendar(
+  value: null,
+  firstDate: DateTime(2026),
+  lastDate: DateTime(2028, 12, 31),
+  onChanged: (value) { /* Store the requested value in application state. */ },
+);
+```
+
+`Ui` is the application's chosen prefix. Wrap the host Navigator in `UiTheme`.
+The hand-written facade supplies theme typography, Vanilla icon navigation and
+Select selectors that grow with text. Day treatments cover today, selection,
+hover, press, keyboard focus and disabled dates; unavailable dates add a strike
+through, while out-of-bounds dates only fade. Override `style`, `navigationStyle`
+and `selectorStyle` last. `CalendarSpec` has no generator target, so this
+composite deliberately has no generated part.
+
+Committed endpoints use primary and interiors use accent. The draft uses a
+tinted fill and primary outline; the prior committed range becomes muted
+until the draft ends. Unavailable draft days use destructive text.
 
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
@@ -232,6 +263,18 @@ RemixRangeCalendar remixRangeCalendarConstructor({
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
+
+
+## Fortal widgets
+
+In a Fortal app, `remix add range_calendar` installs `<Prefix>RangeCalendar` through
+the same UI barrel. It retains the Remix date, labels, focus and controlled
+selection contract above. The hand-written facade merges caller child styles
+last over the reviewed Fortal calendar, ghost navigation and Select recipes.
+Day targets and chevrons scale with text. Today uses bold gray12 ink; range
+drafts have a separate perimeter and a quieter previous selection. Nested
+month/year panels have a bounded height and a persistent scroll thumb.
+See [Fortal](/fortal) for theme setup.
 
 ## Properties
 ### Widget Properties
@@ -323,3 +366,14 @@ Use the shared [Calendar style methods](/components/calendar#style-methods) for
 container, weekday, day and selector spacing. Range-only day variants
 are `onRangeStart`, `onRangeMiddle`, `onRangeEnd`, `onRangeSingle` and
 `onRangePreview`; see [Styling the interval](#styling-the-interval) for their ordering and painted interval.
+## HeroUI widgets
+
+In a HeroUI app, `remix add range_calendar` installs `<Prefix>RangeCalendar`
+with the same controlled value, bounds, availability callbacks and labels as Remix.
+The hand-written composition merges caller styles last for each independent part.
+
+The recipes port HeroUI web 3.2.6 colors, typography and day geometry. Month/year
+Select menus replace the upstream year grid. Date pickers use a field-shaped
+button in place of segmented text entry. Day tiles and icons grow with text;
+range drafts take visual precedence over the previous committed range. Picker
+panels retain equal 12px insets. See [Open Code](/open-code) for theme setup.

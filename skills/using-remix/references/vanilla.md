@@ -144,6 +144,24 @@ families carry over.
   `FocusNode` as the popover's `triggerFocusNode` and the button's `focusNode`.
   Keep the controller and node in a `State` and dispose the node there. The
   button is then the only tab stop and gets focus back when the popover closes.
+- **Calendar / RangeCalendar** — install `calendar` or `range_calendar`.
+  `<Prefix>Calendar` and `<Prefix>RangeCalendar` are hand-written composites:
+  CalendarSpec has no generator target. They wire Vanilla icon navigation and
+  Select selectors, whose heights grow with text. Day targets are 48px; resting
+  days are transparent, unavailable dates strike through, disabled dates fade,
+  and keyboard focus paints an inset ring without reflow. The range uses solid
+  committed caps and accent interiors; an outlined tinted draft de-emphasizes
+  the old committed selection. Override `style`, `navigationStyle` and
+  `selectorStyle` last. See [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx)
+  and [Range Calendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx).
+- **DatePicker / DateRangePicker** — install `date_picker` or
+  `date_range_picker`. These hand-written composites wire the outline Button,
+  elevated Popover and matching calendar recipes with a 4px panel offset.
+  They retain Remix's constructor parameters and five child-styler overrides;
+  no separate picker styler or generated part. Use `formatDate`/`formatRange`
+  for compact visible trigger text and caller-owned labels for localization.
+  See [Date Picker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)
+  and [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).
 - **Toast** — style lives on the scope:
   `RemixToastScope(style: uiToastStyle(), child: ...)`. A per-toast
   `RemixToastData.style` (for example `uiToastStyle(variant: .destructive)`)

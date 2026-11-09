@@ -28,6 +28,75 @@ void main() {
         .first,
   );
 
+  for (final range in [false, true]) {
+    for (final dark in [false, true]) {
+      testWidgets(
+        '${range ? "range" : "single"} calendar selectors grow at 200% in RTL (${dark ? "dark" : "light"})',
+        (tester) async {
+          tester.view.physicalSize = const Size(900, 900);
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.reset);
+          Widget scene(double scale) => WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            builder: (context, _) => VanillaTheme(
+              mode: dark ? .dark : .light,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: MediaQuery(
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: TextScaler.linear(scale)),
+                  child: Overlay(
+                    initialEntries: [
+                      OverlayEntry(
+                        builder: (_) => Center(
+                          child: range
+                              ? VanillaRangeCalendar(
+                                  value: null,
+                                  firstDate: DateTime(2026),
+                                  lastDate: DateTime(2027),
+                                  currentDate: DateTime(2026, 11, 6),
+                                  onChanged: (_) {},
+                                )
+                              : VanillaCalendar(
+                                  value: null,
+                                  firstDate: DateTime(2026),
+                                  lastDate: DateTime(2027),
+                                  currentDate: DateTime(2026, 11, 6),
+                                  onChanged: (_) {},
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pumpWidget(scene(1));
+          final normal = [
+            for (final selector in find.byType(RemixSelect<int>).evaluate())
+              tester.getSize(find.byWidget(selector.widget)),
+          ];
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pumpWidget(scene(2));
+          final large = [
+            for (final selector in find.byType(RemixSelect<int>).evaluate())
+              tester.getSize(find.byWidget(selector.widget)),
+          ];
+          for (var i = 0; i < normal.length; i++) {
+            expect(large[i].width, greaterThan(normal[i].width));
+            expect(large[i].height, greaterThanOrEqualTo(normal[i].height));
+          }
+          // Ahem may wrap the long month at 100%; the numeric year always
+          // starts on one line and proves intrinsic height growth.
+          expect(large.last.height, greaterThan(normal.last.height));
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  }
+
   for (final direction in TextDirection.values) {
     testWidgets(
       'range slider keeps both 16px thumbs and interval in $direction at 200% text',

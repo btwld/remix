@@ -71,6 +71,70 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
+  group('installed Vanilla calendar composites', () {
+    for (final range in [false, true]) {
+      testWidgets(
+        '${range ? "range" : "single"} calendar and picker install with their child recipes',
+        (tester) async {
+          final first = DateTime(2026), last = DateTime(2027);
+          final today = DateTime(2026, 11, 6);
+          await _pumpInstalledAgent(
+            tester,
+            range
+                ? AcmeRangeCalendar(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  )
+                : AcmeCalendar(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  ),
+          );
+          expect(find.byType(RemixSelect<int>), findsNWidgets(2));
+          final day = tester.widget<StyledText>(
+            find
+                .ancestor(of: find.text('6'), matching: find.byType(StyledText))
+                .first,
+          );
+          expect(
+            day.styleSpec!.spec.style?.color,
+            const AcmeThemeData.light().foreground,
+          );
+          await _pumpInstalledAgent(
+            tester,
+            range
+                ? AcmeDateRangePicker(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  )
+                : AcmeDatePicker(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  ),
+          );
+          await tester.tap(find.byType(RemixButton));
+          await tester.pumpAndSettle();
+          expect(
+            find.byType(range ? RemixRangeCalendar : RemixCalendar),
+            findsOneWidget,
+          );
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  });
 
   group('installed Agent behavior', () {
     testWidgets('composer submits and clears through Remix controls', (

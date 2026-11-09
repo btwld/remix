@@ -8,6 +8,38 @@ import 'package:registry_source/src/fortal/theme/theme_data.dart'
     show buildFortalScopeTokens;
 
 void main() {
+  testWidgets('calendar geometry follows the reviewed Fortal contract', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      FortalTheme(
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Builder(
+            builder: (context) {
+              for (final style in [
+                fortalCalendarStyle(),
+                fortalRangeCalendarStyle(),
+              ]) {
+                final spec = style.build(context).spec;
+                expect(
+                  spec.container.spec.padding?.resolve(TextDirection.ltr),
+                  EdgeInsets.all(FortalTokens.space3.resolve(context)),
+                );
+                expect(
+                  spec.headerSpacing,
+                  FortalTokens.space2.resolve(context),
+                );
+                expect(spec.rowSpacing, FortalTokens.space1.resolve(context));
+              }
+              return const SizedBox();
+            },
+          ),
+        ),
+      ),
+    );
+  });
+
   final specification =
       jsonDecode(File('specs/fortal_catalog.json').readAsStringSync())
           as Map<String, dynamic>;

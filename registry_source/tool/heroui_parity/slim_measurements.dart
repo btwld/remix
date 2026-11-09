@@ -119,10 +119,13 @@ const _widths = {'375', '1024'};
 
 void main(List<String> arguments) {
   if (arguments.isNotEmpty) {
-    if (arguments.length != 1 || arguments.single != '--range-slider') {
+    if (arguments.length != 1 ||
+        !const {'--range-slider', '--calendar'}.contains(arguments.single)) {
       throw ArgumentError('Usage: slim_measurements.dart [--range-slider]');
     }
-    _mergeRangeSlider();
+    _mergeMatrix(
+      arguments.single == '--calendar' ? 'calendar' : 'range_slider',
+    );
     return;
   }
   final modes = <String, Map<String, Map<String, Object>>>{};
@@ -242,9 +245,9 @@ void main(List<String> arguments) {
 }
 
 // Refresh this isolated matrix without requiring all ignored raw captures.
-void _mergeRangeSlider() {
+void _mergeMatrix(String matrix) {
   final existing = _read('measurements.json');
-  final capture = _read('chromium/range_slider.json');
+  final capture = _read('chromium/$matrix.json');
   if (capture['upstream'] != existing['upstream']) {
     throw StateError('Range slider upstream commit drift');
   }
@@ -258,7 +261,16 @@ void _mergeRangeSlider() {
   for (final entry in (capture['modes'] as Map<String, dynamic>).entries) {
     final groups = modes[entry.key]!;
     for (final cases in groups.values) {
-      cases.removeWhere((id, _) => id.startsWith('slider-range-'));
+      cases.removeWhere(
+        (id, _) => matrix == 'calendar'
+            ? const [
+                'calendar-',
+                'range-calendar-',
+                'date-picker-',
+                'date-range-picker-',
+              ].any(id.startsWith)
+            : id.startsWith('slider-range-'),
+      );
     }
     final data = entry.value as Map;
     for (final width in _widths) {
@@ -284,7 +296,7 @@ void _mergeRangeSlider() {
     ...existing,
     'environment': {
       ...existing['environment'] as Map,
-      'rangeSlider': capture['environment'],
+      matrix: capture['environment'],
     },
     'modes': modes,
   });

@@ -34,6 +34,7 @@ icons:
   barChart: {remix: chart, rounded: chart, lucide: barChart3}
   bell: {remix: bell, rounded: bell, lucide: bell}
   box: {remix: box, rounded: box, lucide: box}
+  calendar: {remix: calendar, rounded: calendar, lucide: calendar}
   chatBubble: {remix: chat, rounded: chat, lucide: messageCircle}
   check: {remix: check, rounded: check, lucide: check}
   checkCircled: {remix: checkCircle, rounded: checkCircle, lucide: circleCheck}

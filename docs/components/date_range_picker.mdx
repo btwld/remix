@@ -118,8 +118,35 @@ requirement. The calendar's range summary is announced but not painted;
 `summaryBuilder` paints it inside the popover.
 
 There is no separate DateRangePicker styler, raw spec, controller or callable
-widget shorthand. Package publication and preset adoption are separate from
-this runtime component.
+widget shorthand. Use the Vanilla composite above for preset styling.
+
+## Vanilla recipe
+
+In a Vanilla app, install `date_range_picker` and import your generated UI barrel:
+
+```shell
+dart run remix_cli:remix add date_range_picker
+```
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget example() => UiDateRangePicker(
+  value: null,
+  firstDate: DateTime(2026),
+  lastDate: DateTime(2028, 12, 31),
+  onChanged: (value) { /* Store the requested value in application state. */ },
+);
+```
+
+`Ui` is the application's chosen prefix. Wrap the host Navigator in `UiTheme`.
+This hand-written composite wires the Vanilla outline Button, rounded and
+elevated Popover, calendar, icon navigation and Select recipes. Override each
+child with `buttonStyle`, `popoverStyle`, `calendarStyle`, `navigationStyle`
+and `selectorStyle`; each override merges last. The panel is offset from the
+trigger and sized for the calendar. Remix retains all opening, dismissal and
+selection behavior.
 
 When the full trigger label exceeds its available width, the default formatter
 uses compact numeric month/day/year endpoints. Compact or caller-formatted labels
@@ -172,6 +199,18 @@ RemixDateRangePicker remixDateRangePickerConstructor({
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
+
+
+## Fortal widgets
+
+In a Fortal app, `remix add date_range_picker` installs `<Prefix>DateRangePicker` through
+the same UI barrel. It retains the Remix date, labels, focus and controlled
+selection contract above. The hand-written facade merges caller child styles
+last over the reviewed Fortal calendar, ghost navigation and Select recipes.
+Day targets and chevrons scale with text. Today uses bold gray12 ink; range
+drafts have a separate perimeter and a quieter previous selection. Nested
+month/year panels have a bounded height and a persistent scroll thumb.
+See [Fortal](/fortal) for theme setup.
 
 ## Properties
 
@@ -282,3 +321,14 @@ Paints the calendar range summary. By default it is announced without being pain
 Each child uses its own styler and interaction states. There is no separate
 DateRangePicker styler or raw spec. See [Calendar](/components/calendar#properties)
 for calendar and day style methods.
+## HeroUI widgets
+
+In a HeroUI app, `remix add date_range_picker` installs `<Prefix>DateRangePicker`
+with the same controlled value, bounds, availability callbacks and labels as Remix.
+The hand-written composition merges caller styles last for each independent part.
+
+The recipes port HeroUI web 3.2.6 colors, typography and day geometry. Month/year
+Select menus replace the upstream year grid. Date pickers use a field-shaped
+button in place of segmented text entry. Day tiles and icons grow with text;
+range drafts take visual precedence over the previous committed range. Picker
+panels retain equal 12px insets. See [Open Code](/open-code) for theme setup.
