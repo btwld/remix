@@ -19,6 +19,6 @@ void main() {
     final box = tester.widget<Box>(day);
     final decoration = box.styleSpec!.spec.decoration as BoxDecoration?;
     expect(decoration?.color?.a ?? 0, 0);
-    expect((decoration?.border as Border?)?.top.color.a ?? 0, 0);
+    expect(decoration?.border?.top.style ?? BorderStyle.none, BorderStyle.none);
   });
 }

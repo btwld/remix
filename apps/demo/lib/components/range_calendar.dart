@@ -36,8 +36,13 @@ class _RangeCalendarExampleState extends State<RangeCalendarExample> {
             date.year == 2026 && date.month == 11 && date.day == 18,
         onChanged: (range) => setState(() => _value = range),
         navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
-        selectorStyle: fortalSelectStyle(),
+        selectorStyle: fortalSelectStyle().trigger(
+          SelectTriggerStyler().width(
+            MediaQuery.textScalerOf(context).scale(146),
+          ),
+        ),
         style: CalendarStyler()
+            .minWidth(MediaQuery.textScalerOf(context).scale(308))
             .heading(TextStyler().color(FortalTokens.gray11()))
             .weekday(TextStyler().fontSize(12).color(FortalTokens.gray11()))
             .onDisabled(
