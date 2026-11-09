@@ -79,7 +79,7 @@ CalendarDayStyler _blockedPreview() => CalendarDayStyler()
     .wrap(.opacity(1));
 
 CalendarDayStyler _muted() => CalendarDayStyler()
-    .color(PlaygroundTokens.muted())
+    .color(_quietCommitted())
     .label(.color(PlaygroundTokens.mutedForeground()));
 
 CalendarDayStyler _endpoint() => CalendarDayStyler()
@@ -274,8 +274,10 @@ class PlaygroundRangeCalendar extends StatelessWidget {
     navigationStyle: playgroundIconButtonStyle(
       variant: .ghost,
       style: IconButtonStyler()
-          .size(PlaygroundTokens.s12, PlaygroundTokens.s12)
-          .margin(.symmetric(vertical: PlaygroundTokens.s1))
+          .size(
+            playgroundCalendarDayWidth(context),
+            playgroundCalendarDayWidth(context),
+          )
           .icon(
             .size(
               MediaQuery.textScalerOf(context).scale(PlaygroundTokens.icon),
@@ -311,7 +313,9 @@ class PlaygroundRangeCalendar extends StatelessWidget {
     style: playgroundRangeCalendarStyle(
       style: CalendarStyler()
           .day(
-            CalendarDayStyler().minWidth(playgroundCalendarDayWidth(context)),
+            CalendarDayStyler()
+                .minWidth(playgroundCalendarDayWidth(context))
+                .minHeight(playgroundCalendarDayWidth(context)),
           )
           .merge(style),
     ),
@@ -319,3 +323,9 @@ class PlaygroundRangeCalendar extends StatelessWidget {
     summaryBuilder: summaryBuilder,
   );
 }
+
+final _quietCommitted = playgroundTint(
+  PlaygroundTokens.primary,
+  .18,
+  dark: .28,
+);

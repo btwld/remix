@@ -154,7 +154,6 @@ class VanillaDateRangePicker extends StatelessWidget {
       final panelWidth = math.max(
         vanillaCalendarDayWidth(context) * DateTime.daysPerWeek +
             VanillaTokens.s3 * 2 +
-            VanillaTokens.s1 * 2 +
             VanillaTokens.strokeHairline * 2,
         math.max(
           constraints.minWidth,
@@ -194,6 +193,11 @@ class VanillaDateRangePicker extends StatelessWidget {
           variant: .outline,
           style: ButtonStyler()
               .mainAxisAlignment(.start)
+              .icon(
+                .color(VanillaTokens.mutedForeground()).size(
+                  MediaQuery.textScalerOf(context).scale(VanillaTokens.icon),
+                ),
+              )
               .minWidth(VanillaTokens.s16 * 3 + VanillaTokens.s12)
               .maxWidth(panelWidth)
               .padding(.horizontal(VanillaTokens.s3))
@@ -207,7 +211,9 @@ class VanillaDateRangePicker extends StatelessWidget {
         calendarStyle: vanillaRangeCalendarStyle(
           style: CalendarStyler()
               .day(
-                CalendarDayStyler().minWidth(vanillaCalendarDayWidth(context)),
+                CalendarDayStyler()
+                    .minWidth(vanillaCalendarDayWidth(context))
+                    .minHeight(vanillaCalendarDayWidth(context)),
               )
               .merge(calendarStyle),
         ),
@@ -215,14 +221,16 @@ class VanillaDateRangePicker extends StatelessWidget {
           style: PopoverStyler()
               .minWidth(panelWidth)
               .maxWidth(double.infinity)
-              .padding(.all(VanillaTokens.s1))
+              .padding(.all(0))
               .merge(popoverStyle),
         ),
         navigationStyle: vanillaIconButtonStyle(
           variant: .ghost,
           style: IconButtonStyler()
-              .size(VanillaTokens.s12, VanillaTokens.s12)
-              .margin(.symmetric(vertical: VanillaTokens.s1))
+              .size(
+                vanillaCalendarDayWidth(context),
+                vanillaCalendarDayWidth(context),
+              )
               .icon(
                 .size(
                   MediaQuery.textScalerOf(context).scale(VanillaTokens.icon),

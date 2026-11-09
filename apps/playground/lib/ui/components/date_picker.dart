@@ -142,7 +142,6 @@ class PlaygroundDatePicker extends StatelessWidget {
       final panelWidth = math.max(
         playgroundCalendarDayWidth(context) * DateTime.daysPerWeek +
             PlaygroundTokens.s3 * 2 +
-            PlaygroundTokens.s1 * 2 +
             PlaygroundTokens.strokeHairline * 2,
         math.max(
           constraints.minWidth,
@@ -181,6 +180,11 @@ class PlaygroundDatePicker extends StatelessWidget {
           variant: .outline,
           style: ButtonStyler()
               .mainAxisAlignment(.start)
+              .icon(
+                .color(PlaygroundTokens.mutedForeground()).size(
+                  MediaQuery.textScalerOf(context).scale(PlaygroundTokens.icon),
+                ),
+              )
               .minWidth(PlaygroundTokens.s16 * 3 + PlaygroundTokens.s12)
               .maxWidth(panelWidth)
               .padding(.horizontal(PlaygroundTokens.s3))
@@ -194,9 +198,9 @@ class PlaygroundDatePicker extends StatelessWidget {
         calendarStyle: playgroundCalendarStyle(
           style: CalendarStyler()
               .day(
-                CalendarDayStyler().minWidth(
-                  playgroundCalendarDayWidth(context),
-                ),
+                CalendarDayStyler()
+                    .minWidth(playgroundCalendarDayWidth(context))
+                    .minHeight(playgroundCalendarDayWidth(context)),
               )
               .merge(calendarStyle),
         ),
@@ -204,14 +208,16 @@ class PlaygroundDatePicker extends StatelessWidget {
           style: PopoverStyler()
               .minWidth(panelWidth)
               .maxWidth(double.infinity)
-              .padding(.all(PlaygroundTokens.s1))
+              .padding(.all(0))
               .merge(popoverStyle),
         ),
         navigationStyle: playgroundIconButtonStyle(
           variant: .ghost,
           style: IconButtonStyler()
-              .size(PlaygroundTokens.s12, PlaygroundTokens.s12)
-              .margin(.symmetric(vertical: PlaygroundTokens.s1))
+              .size(
+                playgroundCalendarDayWidth(context),
+                playgroundCalendarDayWidth(context),
+              )
               .icon(
                 .size(
                   MediaQuery.textScalerOf(context).scale(PlaygroundTokens.icon),

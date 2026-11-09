@@ -18,6 +18,8 @@ CalendarStyler playgroundCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => CalendarStyler()
     .padding(.all(PlaygroundTokens.s3))
+    .headerSpacing(PlaygroundTokens.s2)
+    .weekdaySpacing(PlaygroundTokens.s1)
     .selectorSpacing(PlaygroundTokens.s2)
     .selectorRunSpacing(PlaygroundTokens.s1)
     .heading(
@@ -52,7 +54,7 @@ CalendarStyler playgroundCalendarStyle({
           )
           .onToday(
             CalendarDayStyler()
-                .border(.color(PlaygroundTokens.input()))
+                .border(.color(PlaygroundTokens.ring()))
                 .label(.fontWeight(FontWeight.w600)),
           )
           .onSelected(
@@ -70,12 +72,34 @@ CalendarStyler playgroundCalendarStyle({
           .onHovered(
             CalendarDayStyler()
                 .color(PlaygroundTokens.accent())
-                .label(.color(PlaygroundTokens.accentForeground())),
+                .label(.color(PlaygroundTokens.accentForeground()))
+                .onSelected(_solidPointer(_primaryHover))
+                .onRangeMiddle(
+                  CalendarDayStyler()
+                      .color(_middleHover())
+                      .label(.color(PlaygroundTokens.foreground())),
+                )
+                .onRangePreview(
+                  CalendarDayStyler()
+                      .color(_draftHover())
+                      .label(.color(PlaygroundTokens.foreground())),
+                ),
           )
           .onPressed(
             CalendarDayStyler()
                 .color(_pressed())
-                .label(.color(PlaygroundTokens.foreground())),
+                .label(.color(PlaygroundTokens.foreground()))
+                .onSelected(_solidPointer(_primaryPressed))
+                .onRangeMiddle(
+                  CalendarDayStyler()
+                      .color(_middlePressed())
+                      .label(.color(PlaygroundTokens.foreground())),
+                )
+                .onRangePreview(
+                  CalendarDayStyler()
+                      .color(_draftPressed())
+                      .label(.color(PlaygroundTokens.foreground())),
+                ),
           )
           .onFocusVisible(
             CalendarDayStyler()
@@ -105,7 +129,10 @@ CalendarStyler playgroundCalendarStyle({
                 .label(.color(PlaygroundTokens.mutedForeground()))
                 .wrap(.opacity(PlaygroundTokens.disabledOpacity))
                 .onSelected(
-                  CalendarDayStyler().color(PlaygroundTokens.muted()),
+                  CalendarDayStyler()
+                      .color(_quietSelected())
+                      .label(.color(PlaygroundTokens.mutedForeground()))
+                      .wrap(.opacity(1)),
                 ),
           )
           .onUnavailable(
@@ -146,8 +173,6 @@ final _focusContour = ContextToken<Color>((context) {
   final states = day?.states ?? const <WidgetState>{};
   final solid =
       states.contains(WidgetState.selected) &&
-      !states.contains(WidgetState.hovered) &&
-      !states.contains(WidgetState.pressed) &&
       !states.contains(WidgetState.disabled) &&
       (range == null ||
           (range.preview == null &&
@@ -282,8 +307,10 @@ class PlaygroundCalendar extends StatelessWidget {
     navigationStyle: playgroundIconButtonStyle(
       variant: .ghost,
       style: IconButtonStyler()
-          .size(PlaygroundTokens.s12, PlaygroundTokens.s12)
-          .margin(.symmetric(vertical: PlaygroundTokens.s1))
+          .size(
+            playgroundCalendarDayWidth(context),
+            playgroundCalendarDayWidth(context),
+          )
           .icon(
             .size(
               MediaQuery.textScalerOf(context).scale(PlaygroundTokens.icon),
@@ -319,7 +346,9 @@ class PlaygroundCalendar extends StatelessWidget {
     style: playgroundCalendarStyle(
       style: CalendarStyler()
           .day(
-            CalendarDayStyler().minWidth(playgroundCalendarDayWidth(context)),
+            CalendarDayStyler()
+                .minWidth(playgroundCalendarDayWidth(context))
+                .minHeight(playgroundCalendarDayWidth(context)),
           )
           .merge(style),
     ),
@@ -335,3 +364,14 @@ final _calendarDisabled = ContextVariant(
               const <WidgetState>{})
           .contains(WidgetState.disabled),
 );
+
+CalendarDayStyler _solidPointer(ContextToken<Color> fill) => CalendarDayStyler()
+    .color(fill())
+    .label(.color(PlaygroundTokens.primaryForeground()));
+final _primaryHover = playgroundTint(PlaygroundTokens.primary, .9);
+final _primaryPressed = playgroundTint(PlaygroundTokens.primary, .8);
+final _middleHover = playgroundTint(PlaygroundTokens.primary, .15, dark: .32);
+final _middlePressed = playgroundTint(PlaygroundTokens.primary, .22, dark: .4);
+final _draftHover = playgroundTint(PlaygroundTokens.primary, .18, dark: .28);
+final _draftPressed = playgroundTint(PlaygroundTokens.primary, .24, dark: .36);
+final _quietSelected = playgroundTint(PlaygroundTokens.primary, .18, dark: .28);
