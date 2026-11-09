@@ -148,6 +148,53 @@ void main() {
         }
       },
     );
+    testWidgets('$mode keyboard suggestion ring is opaque accent8', (
+      tester,
+    ) async {
+      for (final accent in FortalAccentColor.values) {
+        final (border, accent8) = await resolveInFortalTheme(
+          tester,
+          (context) {
+            final spec = fortalComboboxStyle().build(context).spec;
+            return (
+              decoration(spec.option.spec.container.spec).border! as Border,
+              FortalTokens.accent8.resolve(context),
+            );
+          },
+          accent: accent,
+          mode: mode,
+          states: {WidgetState.focused},
+        );
+        expect(border.top.width, 1);
+        expect(border.top.color, accent8);
+        expect(border.top.color.a, 1);
+      }
+    });
+    testWidgets('$mode caller suggestion border stays opaque', (tester) async {
+      for (final focused in [false, true]) {
+        final (border, callerColor) = await resolveInFortalTheme(
+          tester,
+          (context) {
+            final override = ComboboxOptionStyler().border(
+              .all(.color(FortalTokens.gray11()).width(1)),
+            );
+            final spec = fortalComboboxStyle(
+              style: ComboboxStyler().option(
+                focused ? ComboboxOptionStyler().onFocused(override) : override,
+              ),
+            ).build(context).spec;
+            return (
+              decoration(spec.option.spec.container.spec).border! as Border,
+              FortalTokens.gray11.resolve(context),
+            );
+          },
+          mode: mode,
+          states: focused ? {WidgetState.focused} : {},
+        );
+        expect(border.top.color, callerColor);
+        expect(border.top.color.a, 1);
+      }
+    });
     testWidgets('$mode caller state overrides merge last', (tester) async {
       await resolveInFortalTheme(
         tester,

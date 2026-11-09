@@ -74,11 +74,7 @@ ComboboxStyler fortalComboboxStyle({
             )
             .margin(.bottom(1))
             .borderRadius(.all(FortalTokens.radius2()))
-            .border(
-              .all(
-                .color(FortalTokens.accent8().withValues(alpha: 0)).width(1),
-              ),
-            )
+            .border(.all(.color(_optionReservedBorderColor()).width(1)))
             .label(TextStyler(style: text.mix()).color(FortalTokens.gray12()))
             .onHovered(.color(FortalTokens.accentA3()))
             .onFocused(
@@ -94,4 +90,13 @@ ComboboxStyler fortalComboboxStyle({
 // SpaceToken placeholders cannot participate in arithmetic before resolution.
 final _optionPaddingY = ContextToken<double>(
   (context) => FortalTokens.space3.resolve(context) / 2,
+);
+
+// Resolve before merging so the transparent reservation cannot tint a later
+// keyboard ring or caller border override.
+Color _resolveOptionReservedBorderColor(BuildContext context) =>
+    FortalTokens.accent8.resolve(context).withValues(alpha: 0);
+
+const _optionReservedBorderColor = ContextToken<Color>(
+  _resolveOptionReservedBorderColor,
 );

@@ -72,9 +72,7 @@ ComboboxStyler uiComboboxStyle({
             )
             .margin(.bottom(1))
             .borderRadius(.all(UiTokens.radius2()))
-            .border(
-              .all(.color(UiTokens.accent8().withValues(alpha: 0)).width(1)),
-            )
+            .border(.all(.color(_optionReservedBorderColor()).width(1)))
             .label(TextStyler(style: text.mix()).color(UiTokens.gray12()))
             .onHovered(.color(UiTokens.accentA3()))
             .onFocused(
@@ -90,4 +88,13 @@ ComboboxStyler uiComboboxStyle({
 // SpaceToken placeholders cannot participate in arithmetic before resolution.
 final _optionPaddingY = ContextToken<double>(
   (context) => UiTokens.space3.resolve(context) / 2,
+);
+
+// Resolve before merging so the transparent reservation cannot tint a later
+// keyboard ring or caller border override.
+Color _resolveOptionReservedBorderColor(BuildContext context) =>
+    UiTokens.accent8.resolve(context).withValues(alpha: 0);
+
+const _optionReservedBorderColor = ContextToken<Color>(
+  _resolveOptionReservedBorderColor,
 );
