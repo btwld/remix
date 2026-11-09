@@ -46,3 +46,4 @@ export 'src/heroui/components/toggle_button.dart';
 export 'src/heroui/components/toggle_button_group.dart';
 export 'src/heroui/components/tooltip.dart';
 export 'src/heroui/components/typography.dart';
+export 'src/heroui/components/combobox.dart';

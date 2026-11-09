@@ -236,6 +236,7 @@ const _herouiRegistryItems = [
   'range_slider',
   'search_field',
   'select',
+  'combobox',
   'separator',
   'skeleton',
   'slider',

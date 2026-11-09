@@ -24,7 +24,7 @@ Widget fruitSearch(ValueChanged<String> onSelected) => RemixCombobox<String>(
 );
 ```
 
-Provide an Overlay through a Navigator or WidgetsApp. Material is not required. Remix supplies structural anatomy. Vanilla and Fortal supply the field, panel and suggestion styling through installable recipes.
+Provide an Overlay through a Navigator or WidgetsApp. Material is not required. Remix supplies structural anatomy. Vanilla, Fortal and HeroUI supply the field, panel and suggestion styling through installable recipes.
 
 ## Vanilla recipe
 
@@ -67,6 +67,21 @@ Fortal TextField's colors, focus outline and disabled treatment. The panel uses
 Fortal's floating surface, shadow and neutral scrollbar. Rounded rows grow for
 wrapped text; hover, keyboard highlight and press use distinct accent tints.
 Acceptance writes the field value, with no persistent selected suggestion state.
+
+## HeroUI recipe
+
+Install `remix add combobox` in a HeroUI app. The same `UiCombobox<T>` API supports
+`variant: .primary` (default) and `.secondary`. Its field shares HeroUI TextField's
+responsive type and focus/disabled treatments. The suggestion surface follows the
+pinned HeroUI v3 ComboBox/ListBox: 24px panel radius, 6px padding, growing 36px
+minimum rows with 16px radius and 10×6px padding. Hover uses `default`; keyboard
+highlight paints an inset focus ring that stays visible inside the scroll viewport; press scales the row to 0.98.
+
+This maps the inline editable ComboBox family. Upstream Autocomplete's separate
+search field inside a popover remains deferred. Remix has no trigger glyph slot,
+per-option disabled state, persistent selection mark or multiple selection.
+Overflow cues, panel bounds and immediate press scaling follow Remix. Review the
+worksheet for remaining font, shadow and motion approximations.
 
 ## Editing and ownership
 

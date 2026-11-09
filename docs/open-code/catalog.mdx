@@ -55,7 +55,7 @@ The installer rejects older resolved versions before it writes source.
 | `card` | `UiCard` | — |
 | `chart` | `UiLineChart`, `UiBarChart`, `UiPieChart` | — |
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | — |
-| `combobox` | `UiCombobox` (Vanilla only; installs `theme` and `textfield`) | — |
+| `combobox` | `UiCombobox` (every preset; installs `theme` and `textfield`) | — |
 | `dashboard_demo` | `UiDashboardDemo`, `UiDashboardOverview` | — |
 | `dashboard_shell` | `UiDashboardShell` | — |
 | `data_list` | `UiDataList` | — |
@@ -85,7 +85,7 @@ The installer rejects older resolved versions before it writes source.
 | `toggle_group` | `UiToggleGroup` | variant, size |
 | `tooltip` | `UiTooltip` | — |
 
-The `fortal` catalog contains every item above except `combobox`, and adds `base_button`, `code`,
+The `fortal` catalog contains every item above, and adds `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`. `base_button` and
 `typography` are shared authored recipes that arrive transitively with the
 components that use them. Fortal's component names use the configured prefix,
@@ -93,13 +93,13 @@ so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
 `AcmeText` alongside its generated controls.
 
 The `heroui` catalog follows HeroUI's names. Beside shared names such as
-`button`, `select`, `range_slider`, and `tabs`, it adds `alert`, `avatar_group`, `breadcrumbs`,
+`button`, `combobox`, `select`, `range_slider`, and `tabs`, it adds `alert`, `avatar_group`, `breadcrumbs`,
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
 `field_layout`, `input_group`, `modal`, `radio_group`, `search_field`,
 `separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
 and `toggle_button_group`. It ships no `app_bar`, `sidebar`, `sidebar_layout`,
 dashboard, `chart`, or `icons` items and no Agent items. Families that need
-behavior Remix does not provide, such as Form and ComboBox, are not included.
+behavior Remix does not provide, such as Form and the separate popover-search Autocomplete, are not included.
 
 One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the

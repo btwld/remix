@@ -563,6 +563,7 @@ Future<void> main(List<String> arguments) async {
           'button_group',
           'checkbox_group',
           'close_button',
+          'combobox',
           'input_group',
           'radio_group',
           'range_slider',

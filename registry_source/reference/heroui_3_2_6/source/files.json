@@ -8,6 +8,10 @@
   "sha256": "2c402bc75c65643a9ea02a2f700b86ee07d6e884963fee09cb2959eb2001889b"
  },
  {
+  "path": "source/dist/components/autocomplete.css",
+  "sha256": "ad4f036dc668805879090d1d05dafbcfccc716d7ed026a546d10c1583649db12"
+ },
+ {
   "path": "source/dist/components/avatar-group.css",
   "sha256": "0b61587b363963389fca303d6fe2b73326bc31d72e189180096261363be6daf8"
  },
@@ -50,6 +54,14 @@
  {
   "path": "source/dist/components/close-button.css",
   "sha256": "f185e385b0803022aae89b98ce5c76d847c2ba28ef947f32e2e67923f72628c2"
+ },
+ {
+  "path": "source/dist/components/combo-box.css",
+  "sha256": "90957a3239531a4dcb8d08c92d77c68da0e97492204e69340a6a40abb1682e45"
+ },
+ {
+  "path": "source/dist/components/combo-box/combo-box.styles.js",
+  "sha256": "7e6ce4ca7deb18db9250af0acc2eb9ce280d1ef2b37b9f329433860156b3473b"
  },
  {
   "path": "source/dist/components/description.css",
@@ -242,6 +254,18 @@
  {
   "path": "source/react/dist/components/close-button/close-button.js",
   "sha256": "2d53aa21f2816f95169b6afed97ee8f1182f3f1ae0787c698b7afd8ebb71288f"
+ },
+ {
+  "path": "source/react/dist/components/combo-box/combo-box.d.ts",
+  "sha256": "609f88ad79d42f48bdadb4ce3852ad5edfed00a5aadcc5339addf05284cef272"
+ },
+ {
+  "path": "source/react/dist/components/combo-box/combo-box.js",
+  "sha256": "ab8705c57c57f5b05862c8e8b9ea8fab4b0bfa0f1e9cbb7040148907c28a6567"
+ },
+ {
+  "path": "source/react/dist/components/combo-box/index.d.ts",
+  "sha256": "7d46e7269a7aa4ea4def06c17192b08e1aeb3be9d94c39ec55aca474b254ffb1"
  },
  {
   "path": "source/react/dist/components/icons.js",
