@@ -40,44 +40,54 @@ class _DatePickerExampleState extends State<DatePickerExample> {
       firstDayOfWeek: DateTime.monday,
       isDateUnavailable: (date) => date.weekday >= DateTime.saturday,
       onChanged: (date) => setState(() => _value = date),
-      buttonStyle: fortalButtonStyle(
-        variant: .outline,
-      ).minHeight(44).minWidth(200).spacing(8),
-      popoverStyle: fortalPopoverStyle(),
-      navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
-      selectorStyle: fortalSelectStyle(),
-      calendarStyle: CalendarStyler().day(
-        CalendarDayStyler()
-            .borderRadius(.circular(6))
-            .label(TextStyler().fontSize(14))
-            .onToday(
-              CalendarDayStyler().label(
-                TextStyler()
-                    .color(FortalTokens.accent11())
-                    .fontWeight(FontWeight.w600),
-              ),
-            )
-            .onSelected(
-              CalendarDayStyler()
-                  .color(FortalTokens.accentSolid())
-                  .label(TextStyler().color(FortalTokens.accentContrast())),
-            )
-            .onFocusVisible(
-              CalendarDayStyler().border(
-                .color(FortalTokens.focus8()).width(2),
-              ),
-            )
-            .onDisabled(
-              CalendarDayStyler().label(
-                TextStyler().color(FortalTokens.gray9()),
-              ),
-            )
-            .onUnavailable(
-              CalendarDayStyler().label(
-                TextStyler().decoration(TextDecoration.lineThrough),
-              ),
-            ),
+      buttonStyle: fortalButtonStyle(variant: .outline)
+          .minHeight(44)
+          .minWidth(MediaQuery.textScalerOf(context).scale(200))
+          .spacing(8),
+      popoverStyle: fortalPopoverStyle().maxWidth(
+        MediaQuery.textScalerOf(context).scale(480),
       ),
+      navigationStyle: fortalIconButtonStyle(variant: .ghost).size(44, 44),
+      selectorStyle: fortalSelectStyle().trigger(
+        SelectTriggerStyler().width(
+          MediaQuery.textScalerOf(context).scale(146),
+        ),
+      ),
+      calendarStyle: CalendarStyler()
+          .minWidth(MediaQuery.textScalerOf(context).scale(308))
+          .weekday(TextStyler().fontSize(12).color(FortalTokens.gray11()))
+          .day(
+            CalendarDayStyler()
+                .borderRadius(.circular(6))
+                .label(TextStyler().fontSize(14))
+                .onToday(
+                  CalendarDayStyler().label(
+                    TextStyler()
+                        .color(FortalTokens.accent11())
+                        .fontWeight(FontWeight.w600),
+                  ),
+                )
+                .onSelected(
+                  CalendarDayStyler()
+                      .color(FortalTokens.accentSolid())
+                      .label(TextStyler().color(FortalTokens.accentContrast())),
+                )
+                .onFocusVisible(
+                  CalendarDayStyler().border(
+                    .color(FortalTokens.focus8()).width(2),
+                  ),
+                )
+                .onDisabled(
+                  CalendarDayStyler().label(
+                    TextStyler().color(FortalTokens.gray9()),
+                  ),
+                )
+                .onUnavailable(
+                  CalendarDayStyler().label(
+                    TextStyler().decoration(TextDecoration.lineThrough),
+                  ),
+                ),
+          ),
     ),
   );
 }
