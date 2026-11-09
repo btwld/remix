@@ -23,6 +23,7 @@ const _families = [
   'checkbox',
   'chip',
   'close',
+  'combobox',
   'code',
   'disclosure',
   'dropdown',
@@ -92,6 +93,7 @@ const _styles = [
 const _familyStyles = {
   'accordion': ['rotate', 'left', 'right'],
   'disclosure': ['rotate'],
+  'combobox': ['transform'],
   'modal': [
     'maxWidth',
     'maxHeight',
@@ -171,7 +173,7 @@ void main(List<String> arguments) {
 
   // Interaction captures: one case per mode/width/variant/state, with slots.
   // A slot that repeats (tabs, list items) is keyed by its text.
-  for (final family in ['tabs', 'select', 'menu', 'dropdown']) {
+  for (final family in ['tabs', 'select', 'menu', 'dropdown', 'combobox']) {
     final capture = _read('chromium/${family}_visual.json');
     for (final c in capture['cases'] as List) {
       final width = '${c['width']}';

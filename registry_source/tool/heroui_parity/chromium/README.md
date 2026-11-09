@@ -32,6 +32,7 @@ writes one raw file to `reference/heroui_3_2_6/chromium/`.
 | `capture_range_slider.mjs` | `range_slider.*` | `range_slider.json` | Slider two-thumb range, both modes and widths, per-thumb hover/drag/focus, disabled and RTL at 200% |
 | `capture_families2.mjs` | `families2.*` | `families2.json` | Tooltip, Modal, Accordion, Disclosure, Slider, Toast, Alert, ProgressBar, Meter, Table |
 | `capture_tabs.mjs`, `capture_select.mjs`, `capture_menu.mjs`, `capture_dropdown.mjs` | `tabs.*`, `select.*`, `menu.*`, `dropdown.*` | `*_visual.json` | Tabs, Select, Menu, Dropdown: slots per state, mode, and width |
+| `capture_combobox.mjs` | `combobox.*` | `combobox_visual.json` | Editable ComboBox: both variants, modes and viewport sides, rest, keyboard, hover, press and disabled |
 | `capture_breadcrumbs.mjs` | `breadcrumbs.*` | `breadcrumbs_visual.json` | Breadcrumbs item rects and list gap, at rest and with keyboard focus |
 
 The matrix captures (`generate`, `foundation`, `selection`, `toggles`,

@@ -181,6 +181,18 @@
         {
           "path": "dist/components/slider/slider.d.ts",
           "sha256": "838991749d430295bda398db620df95e892efabcb15b1359f03c009648bcc86a"
+        },
+        {
+          "path": "dist/components/combo-box/combo-box.js",
+          "sha256": "ab8705c57c57f5b05862c8e8b9ea8fab4b0bfa0f1e9cbb7040148907c28a6567"
+        },
+        {
+          "path": "dist/components/combo-box/combo-box.d.ts",
+          "sha256": "609f88ad79d42f48bdadb4ce3852ad5edfed00a5aadcc5339addf05284cef272"
+        },
+        {
+          "path": "dist/components/combo-box/index.d.ts",
+          "sha256": "7d46e7269a7aa4ea4def06c17192b08e1aeb3be9d94c39ec55aca474b254ffb1"
         }
       ]
     },
@@ -353,6 +365,18 @@
         {
           "path": "src/components/input-otp/input-otp.styles.ts",
           "sha256": "24ac377763aa5efc36be453b38bfa23e7fe2d4503e861934e7920ac16fe9df7d"
+        },
+        {
+          "path": "dist/components/combo-box.css",
+          "sha256": "90957a3239531a4dcb8d08c92d77c68da0e97492204e69340a6a40abb1682e45"
+        },
+        {
+          "path": "dist/components/autocomplete.css",
+          "sha256": "ad4f036dc668805879090d1d05dafbcfccc716d7ed026a546d10c1583649db12"
+        },
+        {
+          "path": "dist/components/combo-box/combo-box.styles.js",
+          "sha256": "7e6ce4ca7deb18db9250af0acc2eb9ce280d1ef2b37b9f329433860156b3473b"
         }
       ]
     }

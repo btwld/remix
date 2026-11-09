@@ -93,6 +93,16 @@ families carry over.
   destructive }`; `<Prefix>ButtonSize { small, medium, large }` (32/36/40px).
   Every size sets its label in `textSm`. There is no pressed step: a press
   lands on the hover fill.
+- **Combobox** — install with `remix add combobox`. `<Prefix>Combobox<T>`
+  uses the TextField recipe for the editor and a Select-like rounded, elevated
+  popover panel, offset 8px, bounded at 320px high with a 128px width floor.
+  Suggestions use `controlSm` and `textSm`; keyboard highlight uses `accent`,
+  hover a lighter accent tint, and press a stronger primary tint. The editor fades when disabled.
+  Pass `optionsBuilder` and optionally `onSelected`; arbitrary text stays valid.
+  Custom field builders own their recipe, while custom option content inherits
+  the row's text style. Override nested `field`, `panel` and `option` through
+  `style`, with matching state fragments for state overrides. See
+  [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 - **Toggle** — on is `accent` with `accentForeground`; a ghost toggle hovers
   onto `muted` with `mutedForeground`. There is no selected border.
 - **Radio and Switch** — pass `label` for visible text. It is part of the

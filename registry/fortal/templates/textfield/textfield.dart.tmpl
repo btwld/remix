@@ -55,8 +55,10 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
   final metrics = _{{valuePrefix}}TextFieldMetrics(size, bordered: variant != .soft);
   final base = _{{valuePrefix}}TextInputBaseStyle(
     container: BoxStyler()
-        .height(metrics.height)
-        .padding(.horizontal(metrics.paddingX))
+        .minHeight(metrics.height)
+        .padding(
+          .symmetric(horizontal: metrics.paddingX, vertical: metrics.paddingY),
+        )
         .borderRadius(.all(metrics.radius))
         .clipBehavior(.antiAlias),
     spacing: metrics.spacing,
@@ -238,6 +240,7 @@ TextFieldStyler _{{valuePrefix}}TextInputErrorStyle() => TextFieldStyler(
 ({
   double height,
   double paddingX,
+  double paddingY,
   double spacing,
   Radius radius,
   TextStyleToken text,
@@ -246,6 +249,7 @@ _{{valuePrefix}}TextFieldMetrics({{typePrefix}}TextFieldSize size, {required boo
     switch (size) {
       .size1 => (
         height: {{typePrefix}}Tokens.space5(),
+        paddingY: _textFieldPaddingY(size)(),
         paddingX: bordered ? {{typePrefix}}Tokens.space2() : {{typePrefix}}Tokens.space2(),
         spacing: {{typePrefix}}Tokens.space2(),
         radius: {{typePrefix}}Tokens.radius2OrFull(),
@@ -253,6 +257,7 @@ _{{valuePrefix}}TextFieldMetrics({{typePrefix}}TextFieldSize size, {required boo
       ),
       .size2 => (
         height: {{typePrefix}}Tokens.space6(),
+        paddingY: _textFieldPaddingY(size)(),
         paddingX: bordered ? {{typePrefix}}Tokens.space2() : {{typePrefix}}Tokens.space2(),
         spacing: {{typePrefix}}Tokens.space2(),
         radius: {{typePrefix}}Tokens.radius2OrFull(),
@@ -260,12 +265,27 @@ _{{valuePrefix}}TextFieldMetrics({{typePrefix}}TextFieldSize size, {required boo
       ),
       .size3 => (
         height: {{typePrefix}}Tokens.space7(),
+        paddingY: _textFieldPaddingY(size)(),
         paddingX: bordered ? {{typePrefix}}Tokens.space3() : {{typePrefix}}Tokens.space3(),
         spacing: {{typePrefix}}Tokens.space3(),
         radius: {{typePrefix}}Tokens.radius3OrFull(),
         text: {{typePrefix}}Tokens.text3,
       ),
     };
+
+// Keep the existing 24/32/40px chrome and centered baseline at 1x, while
+// leaving the text line unconstrained as MediaQuery text scaling increases.
+// These frames use inset effects rather than layout-consuming borders.
+ContextToken<double> _textFieldPaddingY({{typePrefix}}TextFieldSize size) =>
+    ContextToken<double>((context) {
+      final (height, text) = switch (size) {
+        .size1 => ({{typePrefix}}Tokens.space5, {{typePrefix}}Tokens.text1),
+        .size2 => ({{typePrefix}}Tokens.space6, {{typePrefix}}Tokens.text2),
+        .size3 => ({{typePrefix}}Tokens.space7, {{typePrefix}}Tokens.text3),
+      };
+      final style = text.resolve(context);
+      return (height.resolve(context) - style.fontSize! * style.height!) / 2;
+    });
 
 /// {{typePrefix}} TextArea size presets.
 enum {{typePrefix}}TextAreaSize { size1, size2, size3 }

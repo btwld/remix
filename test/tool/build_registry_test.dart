@@ -9,6 +9,21 @@ import '../../packages/remix_cli/lib/src/template_renderer.dart';
 import '../../tool/build_registry.dart';
 
 void main() {
+  test('Vanilla combobox installs its field recipe and generated adapter', () {
+    final output = PresetBuilder.forRepository(
+      Directory.current,
+      spec: defaultPreset,
+    ).derive();
+    final catalog = loadYaml(output.files['registry.yaml']!) as YamlMap;
+    final item = (catalog['items'] as YamlMap)['combobox'] as YamlMap;
+    expect(_strings(item['registryDependencies']), ['theme', 'textfield']);
+    expect(_strings(item['generated']), ['@ui/components/combobox.g.dart']);
+    expect(
+      output.files['templates/combobox/combobox.dart.tmpl'],
+      contains('target: RemixCombobox.new'),
+    );
+  });
+
   test('owned palette data filename stays stable under a consumer prefix', () {
     final output = PresetBuilder.forRepository(
       Directory.current.absolute,

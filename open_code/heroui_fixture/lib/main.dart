@@ -692,7 +692,23 @@ class _GalleryState extends State<Gallery> {
   }
 
   Widget _overlays() {
-    return _card('Select, dropdown, popover, tooltip, modal', [
+    return _card('Combobox, Select, dropdown, popover, tooltip, modal', [
+      for (final variant in AcmeComboboxVariant.values)
+        SizedBox(
+          width: 320,
+          child: AcmeCombobox<String>(
+            variant: variant,
+            label: 'Destination ${variant.name}',
+            hintText: 'Search cities',
+            optionsBuilder: (query) => query.text.isEmpty
+                ? const []
+                : const ['Recife', 'Porto', 'Chiang Mai'].where(
+                    (city) =>
+                        city.toLowerCase().contains(query.text.toLowerCase()),
+                  ),
+            onSelected: (value) => setState(() => _lastAction = value),
+          ),
+        ),
       for (final variant in AcmeSelectVariant.values)
         AcmeSelect<String>(
           variant: variant,

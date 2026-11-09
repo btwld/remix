@@ -4,6 +4,7 @@ import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 import '../ui/ui.dart';
+import '../helpers/catalog.dart';
 
 @widgetbook.UseCase(name: 'Combobox Component', type: RemixCombobox)
 Widget buildComboboxUseCase(BuildContext context) => _ComboboxExample(
@@ -75,7 +76,7 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              RemixCombobox<String>(
+              FortalCombobox<String>(
                 controller: _controller,
                 focusNode: _focusNode,
                 label: rtl ? 'الوجهة' : 'Destination',
@@ -89,91 +90,6 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
                         ),
                       ),
                 onSelected: (city) => setState(() => _selected = city),
-                style: ComboboxStyler()
-                    .field(
-                      TextFieldStyler()
-                          .padding(.symmetric(horizontal: 12, vertical: 8))
-                          .constraints(.minHeight(36))
-                          .borderRadius(.all(FortalTokens.radius3()))
-                          .color(FortalTokens.gray2())
-                          .text(
-                            TextStyler()
-                                .fontSize(14)
-                                .color(FortalTokens.gray12()),
-                          )
-                          .label(
-                            TextStyler()
-                                .fontSize(14)
-                                .color(FortalTokens.gray12()),
-                          )
-                          .hintText(
-                            TextStyler()
-                                .fontSize(14)
-                                .color(FortalTokens.gray11()),
-                          )
-                          .cursorColor(FortalTokens.accentContent())
-                          .border(
-                            .all(.color(FortalTokens.controlBorder()).width(1)),
-                          )
-                          .onFocused(
-                            .border(
-                              .all(.color(FortalTokens.focus8()).width(2)),
-                            ),
-                          )
-                          .onDisabled(
-                            .color(FortalTokens.gray3())
-                                .border(
-                                  .all(.color(FortalTokens.gray6()).width(1)),
-                                )
-                                .text(TextStyler().color(FortalTokens.gray9()))
-                                .hintText(
-                                  TextStyler().color(FortalTokens.gray9()),
-                                )
-                                .label(
-                                  TextStyler().color(FortalTokens.gray11()),
-                                ),
-                          ),
-                    )
-                    .panel(
-                      ComboboxPanelStyler()
-                          .margin(.top(8))
-                          .scrollbarColor(FortalTokens.gray9())
-                          .borderRadius(.all(FortalTokens.radius3()))
-                          .color(FortalTokens.colorPanel())
-                          .padding(.all(4))
-                          .border(.all(.color(FortalTokens.gray7()).width(1)))
-                          .decoration(
-                            BoxDecorationMix.create(
-                              boxShadow: FortalTokens.shadow3.mix(),
-                            ),
-                          ),
-                    )
-                    .option(
-                      ComboboxOptionStyler()
-                          .minHeight(32)
-                          .padding(.symmetric(horizontal: 12, vertical: 6))
-                          .margin(.bottom(1))
-                          .borderRadius(.all(FortalTokens.radius2()))
-                          .border(
-                            .all(
-                              .color(
-                                FortalTokens.accent8().withValues(alpha: 0),
-                              ).width(1),
-                            ),
-                          )
-                          .onHovered(.color(FortalTokens.accentA3()))
-                          .onFocused(
-                            .color(FortalTokens.accentA5()).border(
-                              .all(.color(FortalTokens.accent8()).width(1)),
-                            ),
-                          )
-                          .onPressed(.color(FortalTokens.accentA7()))
-                          .label(
-                            TextStyler()
-                                .color(FortalTokens.gray12())
-                                .fontSize(14),
-                          ),
-                    ),
               ),
               const SizedBox(height: 12),
               Semantics(
@@ -204,3 +120,17 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
     );
   }
 }
+
+@widgetbook.UseCase(name: 'Catalog', type: RemixCombobox)
+Widget buildComboboxCatalogUseCase(BuildContext context) => CatalogMatrix(
+  cellWidth: 220,
+  columns: labelsOf(FortalComboboxSize.values),
+  rows: labelsOf(FortalComboboxVariant.values),
+  cell: (row, column) => FortalCombobox<String>(
+    variant: FortalComboboxVariant.values[row],
+    size: FortalComboboxSize.values[column],
+    label: 'Destination',
+    hintText: 'Search cities',
+    optionsBuilder: (_) => const ['Recife', 'Porto', 'Chiang Mai'],
+  ),
+);

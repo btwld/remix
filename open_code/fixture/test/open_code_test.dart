@@ -10,6 +10,68 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 void main() {
+  for (final dark in [false, true]) {
+    testWidgets('installed combobox accepts a suggestion; dark=$dark', (
+      tester,
+    ) async {
+      String? selected;
+      await tester.pumpWidget(
+        WidgetsApp(
+          color: const Color(0xFF000000),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
+          builder: (_, navigator) =>
+              AcmeTheme(mode: dark ? .dark : .light, child: navigator!),
+          home: Center(
+            child: SizedBox(
+              width: 320,
+              child: Column(
+                mainAxisSize: .min,
+                children: [
+                  AcmeCombobox<String>(
+                    label: 'City',
+                    hintText: 'Search cities',
+                    optionsBuilder: (_) => const ['Recife', 'Rio'],
+                    onSelected: (city) => selected = city,
+                  ),
+                  AcmeCombobox<String>(
+                    label: 'Locked',
+                    enabled: false,
+                    optionsBuilder: (_) => const ['Unavailable'],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      final fields = find.byType(EditableText);
+      expect(tester.widget<EditableText>(fields.last).readOnly, isTrue);
+      await tester.enterText(fields.first, 'r');
+      await tester.pumpAndSettle();
+      final theme = dark
+          ? const AcmeThemeData.dark()
+          : const AcmeThemeData.light();
+      final rows = tester.widgetList<StyleSpecProvider<ComboboxOptionSpec>>(
+        find.byType(StyleSpecProvider<ComboboxOptionSpec>),
+      );
+      expect(rows, hasLength(2));
+      expect(
+        rows.first.spec.spec.label.spec.style?.color,
+        theme.accentForeground,
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(selected, 'Rio');
+      expect(tester.widget<EditableText>(fields.first).controller.text, 'Rio');
+      expect(find.text('Recife'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   group('installed Agent behavior', () {
     testWidgets('composer submits and clears through Remix controls', (
       tester,

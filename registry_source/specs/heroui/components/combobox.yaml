@@ -1,0 +1,39 @@
+component: ComboBox
+widget: HeroUiCombobox
+target: RemixCombobox
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6; @heroui/react@3.2.6"
+  pages: [dist/components/combo-box.css, dist/components/input.css, dist/components/list-box.css, dist/components/list-box-item.css, react/dist/components/combo-box/combo-box.js]
+anatomy: [field, label, input, popover, list, item]
+variants: [primary, secondary]
+sizes: {supported: [], default: null}
+states: [rest, hover, focus, disabled, open, item hover, item keyboard highlight, item pressed, accepted value]
+tokens:
+  - field-background, field-hover, field-focus, field-foreground, field-placeholder (primary)
+  - default, default-hover (secondary and item hover)
+  - overlay, overlay-shadow, foreground, muted (panel and item)
+  - focus, background (keyboard ring and gap), radius-field, radius-panel, radius-2xl
+measurements:
+  - {what: field height and type, value: "40 and 16/24 below 640px; 36 and 14/20 above", cite: combobox-primary-rest-input}
+  - {what: input radius and padding, value: "12px, 12x8 (28px end with upstream's optional trigger)", cite: combobox-primary-rest-input}
+  - {what: panel, value: "320px wide for a 320px field, radius 24, overlay and overlay-shadow", cite: combobox-primary-keyboard-open-combo-box-popover}
+  - {what: list padding and row gap, value: "6px and 4px", cite: "combobox-primary-keyboard-open-list-box; list-box.css .list-box-item + .list-box-item mt-1"}
+  - {what: panel maxHeight, value: "288px = 7 × 36px rows + 6 × 4px gaps + 2 × 6px insets", cite: "HeroUI 3.2.6 combo-box.css .combo-box__popover and react ComboBoxPopover set no explicit height cap; Select shares the same list anatomy (select.yaml item and list measurements); combobox-primary-keyboard-open-list-box-item:Apple"}
+  - {what: panel padding in Remix, value: "6px top and sides, 2px bottom + final row's 4px margin = 6px visual bottom inset", cite: "combo-box.css list-box p-1.5; list-box.css margin before subsequent items"}
+  - {what: row, value: "minimum height 36, padding 10x6, radius 16, type 14/20", cite: "combobox-primary-keyboard-open-list-box-item:Apple"}
+  - {what: keyboard ring, value: "2px background gap then 2px focus ring, no reflow", cite: "combobox-primary-keyboard-open-list-box-item:Apple"}
+  - {what: hover and press, value: "default fill on hover, scale 0.98 on press", cite: "combobox-primary-item-hover-list-box-item:Apricot; list-box-item.css data-pressed transform"}
+apiMapping:
+  - "ComboBox maps to RemixCombobox<T>; filtering is optionsBuilder, acceptance is onSelected, editing uses controller/focusNode. Arbitrary text remains valid."
+  - "Upstream variant maps to the same primary/secondary field recipes as HeroUiTextField. No React props or collection state are introduced."
+  - "Autocomplete's trigger with a search field inside its popover is a separate deferred family; this recipe covers inline editable ComboBox."
+approximations:
+  - "RemixCombobox has no trailing-indicator slot for upstream's trailing chevron, trigger button slot, persistent option selection/checkmark, per-option disabled state or multiple selection. Accepted values appear in the editor; supply eligible suggestions only."
+  - "The input has symmetric 12px padding because no optional trigger glyph occupies its end."
+  - "Keyboard traversal stays in the editor. The scroll viewport clips outer row rings, so the focused row paints a 2px inset foreground border without consuming layout space, instead of the upstream outer ring and background gap."
+  - "The panel uses an 8px gap and an explicit 288px maximum derived from seven measured rows with six inter-row gaps and symmetric list insets, also bounded by available space; upstream ComboBox/Select have no explicit CSS height cap and follow React Aria's placement and available-space policy. Overflow fades and the 35%-muted directional thumb are Remix adaptations."
+  - "A bottom margin supplies the 4px inter-row gap; the panel's bottom padding subtracts the final margin to keep both visual insets at 6px. Upstream applies margin before subsequent rows only."
+  - "The panel mounts without upstream's 150ms fade/zoom. Pressed scale changes immediately rather than using the upstream 250ms transform transition."
+  - "The source records system sans; review captures use real Geist, with Arial Unicode fallback for Arabic. Flutter and CSS shadow blur kernels differ."
+  - "Validation uses a custom fieldBuilder and the TextField error API; RemixCombobox exposes no root invalid/helper-text parameters."

@@ -64,12 +64,16 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   callback controller edits are preserved. Callers own filtering, debounce and errors. No unavailable rows,
   chips or multiselect API. Custom fields forward the exact editor pair and
   submit callback, and own labels/disablement; custom option builders provide
-  visuals beneath one named interactive wrapper. Style `field`, `panel`,
+  visuals beneath one named interactive wrapper. Style `field`, `panel(ComboboxPanelStyler())`,
   and `option(ComboboxOptionStyler())`; the nested `ComboboxOptionSpec` has
   `container` and `label` slots. Set option text with `.label(TextStyler(...))`;
   option `onFocused` means keyboard highlight,
-  independent of hover. Eager rows grow from a 48px minimum inside a bounded
-  scroll panel. See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
+  independent of hover. Eager rows have a style-owned minimum (48px by default) inside a bounded
+  scroll panel with a persistent overflow thumb. Panel styles expose effects,
+  scrollbar color and thickness. Vanilla ships `<Prefix>Combobox<T>` via `remix add combobox`,
+  with the TextField recipe and a Select-like panel; its dependencies are
+  `theme` and `textfield`. Fortal also ships the recipe with surface/soft variants and three TextField sizes; HeroUI ships primary/secondary variants with its responsive TextField and ComboBox/ListBox panel.
+  See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 - **TextField/TextArea** — forwards the standard Flutter text-input surface
   (`controller`, `keyboardType`, `inputFormatters`, `maxLines`, etc.)
   unchanged; check the doc page rather than assuming a param is missing.

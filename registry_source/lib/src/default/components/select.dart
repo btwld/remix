@@ -60,7 +60,7 @@ const _chevronOpacity = 0.5;
 ///
 /// Bounded on purpose: an unbounded list of options grows past the viewport
 /// and takes its own dismissal affordances with it.
-const _panelMaxHeight = 320.0;
+const _panelMaxHeight = VanillaTokens.panelMaxHeight;
 
 /// The closed control: a field showing the current value and a chevron, 36px
 /// tall with a 12px side inset, 8px above and below, and an 8px gap.

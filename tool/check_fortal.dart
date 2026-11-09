@@ -151,6 +151,7 @@ List<String> checkFortalContract(Directory workspace) {
 
 /// Layers that float, the only recipes that may cast a shadow.
 const _floatingRecipes = {
+  'combobox',
   'dialog',
   'menu',
   'popover',

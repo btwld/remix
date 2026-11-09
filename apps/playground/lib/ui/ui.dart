@@ -12,6 +12,7 @@ export 'components/callout.dart';
 export 'components/card.dart';
 export 'components/chart.dart';
 export 'components/checkbox.dart';
+export 'components/combobox.dart';
 export 'components/composer.dart';
 export 'components/data_list.dart';
 export 'components/data_table.dart';

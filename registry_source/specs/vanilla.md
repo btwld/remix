@@ -149,6 +149,7 @@ the steps above. The source column names the file under
 | Text field | h 36; px 12, py 4; border `input`, transparent fill, `shadow-xs`; `text-sm`; placeholder muted-fg | `input.tsx` |
 | Text area | min-h 64; px 12, py 8 | `textarea.tsx` |
 | Field label and helper | label `text-sm` w500, gap 8; helper `text-sm` muted-fg; error helper `destructive` | `label.tsx`, `field.tsx` |
+| Combobox | TextField recipe field (36px minimum); Select-like popover panel with border, radius md, p 4, effects shadow md, 8px gap, max height 320px, min width 128px; rows controlSm minimum, px 8, py 6, radius sm, text-sm popover-foreground; 1px row gap; stable label weight across states; keyboard highlight accent, hover accent at 85%, press primary at 18% light / 20% dark; accent-foreground labels; caller overrides last | Designed from the Sol combobox brief, reusing `input.tsx` and `select.tsx`; Remix owns a persistent scroll cue; RawAutocomplete pins the panel to the field width. No selected/disabled option API. |
 | Select trigger | the text field's metrics, gap 8; chevron 10 at 50% (see Deviations) | `select.tsx` |
 | Select content | `popover` fill, border, radius md, `shadow-md`, p 4, min-w 128, never narrower than the trigger (the default `item-aligned` position) | `select.tsx` |
 | Select item | h 32; px 8, py 6 (see Deviations); radius sm; highlight accent; check 10 muted-fg | `select.tsx` |

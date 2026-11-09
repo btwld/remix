@@ -19,7 +19,7 @@
   {
    "upstream": "autocomplete",
    "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "reason": "Upstream Autocomplete is a Select-like trigger with search inside its popover; RemixCombobox maps the editable ComboBox family instead. Separate popover search, collection state and multiple selection remain deferred."
   },
   {
    "upstream": "avatar",
@@ -115,8 +115,10 @@
   },
   {
    "upstream": "combo-box",
-   "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "status": "mapped",
+   "item": "combobox",
+   "remix": "RemixCombobox",
+   "scope": "Editable single-value suggestions; trigger glyph, persistent selection and multiple selection are not exposed by RemixCombobox."
   },
   {
    "upstream": "date-field",

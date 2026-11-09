@@ -212,7 +212,7 @@ top-level final, never `token().withValues(...)`.
 ## Not included
 
 Families that need behavior Remix does not provide are not in the preset:
-Form, Fieldset, NumberField, InputOTP, ListBox, ComboBox, Pagination, a
+Form, Fieldset, NumberField, InputOTP, ListBox, Autocomplete, Pagination, a
 standalone Menu, and the date and color pickers. Each component's worksheet
 lists its visual approximations (fonts, shadow softness, motion such as the
 sliding tab indicator).
@@ -226,3 +226,15 @@ upstream resting paint. The range reserves a 48px target and keeps Remix's
 ordered `values`, `minSpacing`, snapping, RTL and accessible bound names.
 Custom announcements use `RemixRangeSlider` with `<prefix>RangeSliderStyle()`.
 See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
+
+## Combobox
+
+`remix add combobox` installs `<Prefix>Combobox<T>` and its `theme`/`textfield`
+dependencies. Use `variant: .primary|.secondary` (primary by default); there is
+no size axis upstream. The field matches TextField, while suggestions follow
+ComboBox/ListBox with growing rows, hover fill, keyboard ring, pressed scale,
+and Remix's overflow fades and directional thumb. Accept through `onSelected`;
+observe the controller for edits. Supply eligible suggestions only. No trigger
+glyph, per-option disabled state, persistent selected row or multi-selection
+API is added. The upstream Autocomplete with popover search remains deferred.
+See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).

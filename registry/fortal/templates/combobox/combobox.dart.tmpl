@@ -1,0 +1,102 @@
+// ignore: unused_import
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+import 'textfield.dart';
+
+part 'combobox.g.dart';
+
+/// {{typePrefix}} editable-field sizes, matching TextField.
+enum {{typePrefix}}ComboboxSize { size1, size2, size3 }
+
+/// {{typePrefix}} editable-field treatments.
+enum {{typePrefix}}ComboboxVariant { surface, soft }
+
+/// {{typePrefix}}'s editable suggestions recipe, promoted from the demo's polish story.
+///
+/// The field shares TextField's recipe. Suggestions use the Select panel's
+/// token roles with growing rows and separate hover, keyboard and press fills.
+/// Remix owns filtering callbacks, traversal, acceptance, fades and scrollbar.
+/// Eligible suggestions have no persistent selected or per-option disabled
+/// state; acceptance writes the value into the field. A custom field builder
+/// owns its editor styling. Caller overrides merge last.
+@MixWidget(target: RemixCombobox.new)
+ComboboxStyler {{valuePrefix}}ComboboxStyle({
+  {{typePrefix}}ComboboxVariant variant = .surface,
+  {{typePrefix}}ComboboxSize size = .size2,
+  ComboboxStyler style = const ComboboxStyler.create(),
+}) {
+  final text = switch (size) {
+    .size1 => {{typePrefix}}Tokens.text1,
+    .size2 => {{typePrefix}}Tokens.text2,
+    .size3 => {{typePrefix}}Tokens.text3,
+  };
+  return ComboboxStyler()
+      .field(
+        {{valuePrefix}}TextFieldStyle(
+          variant: switch (variant) {
+            .surface => .surface,
+            .soft => .soft,
+          },
+          size: switch (size) {
+            .size1 => .size1,
+            .size2 => .size2,
+            .size3 => .size3,
+          },
+        ),
+      )
+      .panel(
+        ComboboxPanelStyler()
+            .margin(.top({{typePrefix}}Tokens.space2()))
+            .scrollbarColor({{typePrefix}}Tokens.gray9())
+            .borderRadius(.all({{typePrefix}}Tokens.radius3()))
+            .color({{typePrefix}}Tokens.colorPanel())
+            .padding(.all({{typePrefix}}Tokens.space1()))
+            .border(.all(.color({{typePrefix}}Tokens.gray7()).width(1)))
+            .decoration(
+              BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow3.mix()),
+            ),
+      )
+      .option(
+        ComboboxOptionStyler()
+            .minHeight(
+              size == .size1 ? {{typePrefix}}Tokens.space5() : {{typePrefix}}Tokens.space6(),
+            )
+            .padding(
+              .symmetric(
+                horizontal: {{typePrefix}}Tokens.space3(),
+                vertical: _optionPaddingY(),
+              ),
+            )
+            .margin(.bottom(1))
+            .borderRadius(.all({{typePrefix}}Tokens.radius2()))
+            .border(.all(.color(_optionReservedBorderColor()).width(1)))
+            .label(TextStyler(style: text.mix()).color({{typePrefix}}Tokens.gray12()))
+            .onHovered(.color({{typePrefix}}Tokens.accentA3()))
+            .onFocused(
+              .color(
+                {{typePrefix}}Tokens.accentA5(),
+              ).border(.all(.color({{typePrefix}}Tokens.accent8()).width(1))),
+            )
+            .onPressed(.color({{typePrefix}}Tokens.accentA7())),
+      )
+      .merge(style);
+}
+
+// SpaceToken placeholders cannot participate in arithmetic before resolution.
+final _optionPaddingY = ContextToken<double>(
+  (context) => {{typePrefix}}Tokens.space3.resolve(context) / 2,
+);
+
+// Resolve before merging so the transparent reservation cannot tint a later
+// keyboard ring or caller border override.
+Color _resolveOptionReservedBorderColor(BuildContext context) =>
+    {{typePrefix}}Tokens.accent8.resolve(context).withValues(alpha: 0);
+
+const _optionReservedBorderColor = ContextToken<Color>(
+  _resolveOptionReservedBorderColor,
+);

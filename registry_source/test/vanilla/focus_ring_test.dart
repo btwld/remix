@@ -47,6 +47,29 @@ void main() {
         });
       }
 
+      testWidgets('a combobox field rings without moving its neighbor', (
+        tester,
+      ) async {
+        final controller = TextEditingController();
+        addTearDown(controller.dispose);
+        final probe = await _pump(
+          tester,
+          theme.data,
+          (node) => Overlay.wrap(
+            clipBehavior: Clip.none,
+            child: VanillaCombobox<String>(
+              controller: controller,
+              focusNode: node,
+              optionsBuilder: (_) => const [],
+              hintText: 'Destination',
+            ),
+          ),
+        );
+        await probe.expectRing(
+          part: find.byType(RemixTextField),
+          includes: (part) => [part.centerLeft.translate(-1.5, 0)],
+        );
+      });
       testWidgets('a toggle rings outside itself', (tester) async {
         final probe = await _pump(
           tester,

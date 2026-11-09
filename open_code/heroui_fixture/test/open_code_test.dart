@@ -36,6 +36,24 @@ void main() {
       });
     }
 
+    testWidgets('installed combobox accepts an eligible suggestion', (
+      tester,
+    ) async {
+      await _pumpGallery(tester, width: 1024);
+      final combo = find.byType(AcmeCombobox<String>).first;
+      await tester.ensureVisible(combo);
+      final editor = find.descendant(
+        of: combo,
+        matching: find.byType(EditableText),
+      );
+      await tester.enterText(editor, 're');
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.text('Recife'));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(tester.widget<EditableText>(editor).controller.text, 'Recife');
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('a checkbox label toggles its checkbox', (tester) async {
       await _pumpGallery(tester, width: 1024);
       bool selected() =>
@@ -510,6 +528,11 @@ final _cases = <_WidgetCase>[
       items: [RemixSelectItem(value: 'a', label: 'A')],
     ),
     {AcmeSelect<String>},
+  ),
+  _WidgetCase(
+    'combobox',
+    AcmeCombobox<String>(label: 'City', optionsBuilder: (_) => const []),
+    {AcmeCombobox<String>},
   ),
   const _WidgetCase('separator', AcmeSeparator(), {AcmeSeparator}),
   const _WidgetCase(

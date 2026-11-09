@@ -152,8 +152,10 @@ Vanilla and Fortal: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
 `select`, `sidebar`, `sidebar_layout`, `skeleton`, `slider`, `spinner`, `switch`,
 `tabs`, `textfield`, `toast`, `toggle`, `toggle_group`, `tooltip`.
 
-Vanilla also: `range_slider`, which installs `slider` and supplies the two-bound
-`<Prefix>RangeSlider` recipe.
+All three presets also ship `range_slider`, which installs `slider` and supplies
+the two-bound `<Prefix>RangeSlider` recipe.
+
+All three presets also ship `combobox` (depends on `theme` and `textfield`).
 
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`.
 

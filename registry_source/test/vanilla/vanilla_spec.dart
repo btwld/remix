@@ -937,7 +937,15 @@ final _selectTargets = <SpecTarget>[
       theme.popover,
       _hairline(theme.border),
       _rounded(theme, VanillaTokens.radiusMd),
-      _effectShadows(VanillaShadow.md),
+      [
+        for (final shadow in VanillaShadow.md.shadows)
+          RemixBoxShadow(
+            color: shadow.color,
+            offset: shadow.offset,
+            blurRadius: shadow.blurRadius,
+            spreadRadius: shadow.spreadRadius,
+          ),
+      ],
     ),
   ),
   _select(
@@ -1643,7 +1651,15 @@ final _menuTargets = <SpecTarget>[
       const EdgeInsets.symmetric(vertical: 4),
       const EdgeInsets.symmetric(horizontal: 4),
       128.0,
-      _effectShadows(VanillaShadow.md),
+      [
+        for (final shadow in VanillaShadow.md.shadows)
+          RemixBoxShadow(
+            color: shadow.color,
+            offset: shadow.offset,
+            blurRadius: shadow.blurRadius,
+            spreadRadius: shadow.spreadRadius,
+          ),
+      ],
     ),
   ),
   _menu(
@@ -2089,6 +2105,74 @@ final vanillaSpecTargets = <SpecTarget>[
   ..._toggleTargets,
   ..._toggleGroupTargets,
   ..._textFieldTargets,
+  _target<ComboboxSpec>(
+    'combobox',
+    'field metrics',
+    source: 'Vanilla TextField recipe: h-9 px-3 py-1 text-sm',
+    style: vanillaComboboxStyle,
+    read: (spec) => (
+      spec.spec.field.spec.container.spec.constraints?.minHeight,
+      spec.spec.field.spec.container.spec.padding,
+      spec.spec.field.spec.text.spec.style?.fontSize,
+      spec.spec.field.spec.text.spec.style?.color,
+    ),
+    expected: (theme) => (
+      36.0,
+      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      14.0,
+      theme.foreground,
+    ),
+  ),
+  _target<ComboboxSpec>(
+    'combobox',
+    'floating panel',
+    source:
+        'Vanilla Select panel: popover border radius-md p-1 shadow-md; 8px offset',
+    style: vanillaComboboxStyle,
+    read: (spec) => (
+      decorationOf(spec.spec.panel.spec.container)?.color,
+      decorationOf(spec.spec.panel.spec.container)?.border,
+      decorationOf(spec.spec.panel.spec.container)?.borderRadius,
+      spec.spec.panel.spec.containerEffects?.behindContent?.shadows,
+      spec.spec.panel.spec.container.spec.padding,
+      spec.spec.panel.spec.container.spec.margin,
+    ),
+    expected: (theme) => (
+      theme.popover,
+      _hairline(theme.border),
+      _rounded(theme, VanillaTokens.radiusMd),
+      [
+        for (final shadow in VanillaShadow.md.shadows)
+          RemixBoxShadow(
+            color: shadow.color,
+            offset: shadow.offset,
+            blurRadius: shadow.blurRadius,
+            spreadRadius: shadow.spreadRadius,
+          ),
+      ],
+      const EdgeInsets.all(4),
+      const EdgeInsets.only(top: 8),
+    ),
+  ),
+  _target<ComboboxSpec>(
+    'combobox',
+    'option metrics',
+    source:
+        'Vanilla Select row: px-2 py-1.5 radius-sm text-sm popover-foreground',
+    style: vanillaComboboxStyle,
+    read: (spec) => (
+      spec.spec.option.spec.container.spec.padding,
+      decorationOf(spec.spec.option.spec.container)?.borderRadius,
+      spec.spec.option.spec.label.spec.style?.fontSize,
+      spec.spec.option.spec.label.spec.style?.color,
+    ),
+    expected: (theme) => (
+      const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      _rounded(theme, VanillaTokens.radiusSm),
+      14.0,
+      theme.popoverForeground,
+    ),
+  ),
   ..._selectTargets,
   ..._checkboxTargets,
   ..._radioTargets,

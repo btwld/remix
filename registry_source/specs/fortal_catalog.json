@@ -736,6 +736,46 @@
       ]
     },
     {
+      "id": "combobox",
+      "fortalType": "FortalCombobox",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "rest",
+        "open",
+        "hover",
+        "pressed",
+        "keyboard-highlight",
+        "disabled",
+        "accepted-value"
+      ],
+      "tests": [
+        "test/fortal/combobox_test.dart"
+      ]
+    },
+    {
       "id": "slider",
       "fortalType": "FortalSlider",
       "enums": {

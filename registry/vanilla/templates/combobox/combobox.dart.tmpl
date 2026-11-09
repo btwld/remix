@@ -1,0 +1,83 @@
+// Codegen validates the expanded optionsBuilder signature, including FutureOr,
+// before emitting its typedef. Keep that type visible to the generator.
+// ignore: unused_import
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/effects.dart';
+import '../theme/tokens.dart';
+import 'textfield.dart';
+
+part 'combobox.g.dart';
+
+/// The application's Combobox recipe.
+///
+/// Remix owns editing, filtering callbacks, suggestion traversal, acceptance,
+/// overlay geometry and accessibility semantics. This recipe supplies the
+/// field, floating suggestions panel and option rows. The field reuses
+/// [{{valuePrefix}}TextFieldStyle], including its focus, error and disabled treatments;
+/// the panel and rows follow the application's Select recipe.
+///
+/// Keyboard highlight uses accent with a reserved ring border, hover a lighter
+/// tint, and press a stronger primary tint. Suggestions
+/// are eligible values only: Remix has no per-option disabled or selected
+/// state. The disabled treatment belongs to the editor. Custom field builders
+/// own their field recipe; custom option content inherits the row's text style.
+@MixWidget(target: RemixCombobox.new)
+ComboboxStyler {{valuePrefix}}ComboboxStyle({
+  ComboboxStyler style = const ComboboxStyler.create(),
+}) => ComboboxStyler()
+    .field({{valuePrefix}}TextFieldStyle())
+    .panel(
+      ComboboxPanelStyler()
+          .margin(.top({{typePrefix}}Tokens.s2))
+          .minWidth({{typePrefix}}Tokens.panelMinWidth)
+          .maxHeight({{typePrefix}}Tokens.panelMaxHeight)
+          .scrollbarColor({{valuePrefix}}Tint({{typePrefix}}Tokens.mutedForeground, 0.35)())
+          .color({{typePrefix}}Tokens.popover())
+          .border(
+            .color({{typePrefix}}Tokens.border()).width({{typePrefix}}Tokens.strokeHairline),
+          )
+          .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
+          .padding(.all({{typePrefix}}Tokens.s1))
+          .containerEffects(.behindContent({{typePrefix}}Shadow.md.effects)),
+    )
+    .option(
+      ComboboxOptionStyler()
+          .minHeight({{typePrefix}}Tokens.controlSm)
+          .margin(.bottom(1))
+          .padding(
+            .symmetric(
+              horizontal: {{typePrefix}}Tokens.s2,
+              vertical: {{typePrefix}}Tokens.s1_5,
+            ),
+          )
+          .borderRadius(.all({{typePrefix}}Tokens.radiusSm()))
+          .border(
+            .color(
+              {{valuePrefix}}Tint({{typePrefix}}Tokens.ring, 0)(),
+            ).width({{typePrefix}}Tokens.strokeHairline),
+          )
+          .label(
+            .style(
+              {{typePrefix}}Tokens.textSm.mix(),
+            ).color({{typePrefix}}Tokens.popoverForeground()),
+          )
+          .onHovered(_highlighted({{valuePrefix}}Tint({{typePrefix}}Tokens.accent, 0.85)()))
+          .onFocused(
+            _highlighted().border(
+              .color({{typePrefix}}Tokens.ring()).width({{typePrefix}}Tokens.strokeHairline),
+            ),
+          )
+          .onPressed(
+            _highlighted({{valuePrefix}}Tint({{typePrefix}}Tokens.primary, 0.18, dark: 0.2)()),
+          ),
+    )
+    .merge(style);
+
+ComboboxOptionStyler _highlighted([Color? fill]) => ComboboxOptionStyler()
+    .color(fill ?? {{typePrefix}}Tokens.accent())
+    .label(.color({{typePrefix}}Tokens.accentForeground()));
