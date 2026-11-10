@@ -280,7 +280,7 @@ void main() {
               'them, or were not written by it:\n'
               '  .agents/skills/using-remix/SKILL.md\n'
               'Restore or delete them, then rerun remix skills install. Keep '
-              'project notes outside the skills directory.',
+              'project notes outside the Remix skill directories.',
         ]);
         expect(output, isEmpty);
         expect(snapshotFiles(root), before);
@@ -842,7 +842,7 @@ void main() {
           '  .agents/skills/using-remix/SKILL.md\n'
           '  .agents/skills/using-remix/references/cli.md\n'
           'Restore or delete them, then rerun remix skills install. Keep '
-          'project notes outside the skills directory.',
+          'project notes outside the Remix skill directories.',
         ),
       );
     });

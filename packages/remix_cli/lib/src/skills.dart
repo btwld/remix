@@ -355,7 +355,7 @@ final class SkillsPlan {
               'wrote them, or were not written by it:',
           for (final conflict in conflicts) '  $conflict',
           'Restore or delete them, then rerun remix skills install. Keep '
-              'project notes outside the skills directory.',
+              'project notes outside the Remix skill directories.',
         ].join('\n'),
       );
     }

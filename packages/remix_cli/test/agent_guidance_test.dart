@@ -32,7 +32,7 @@ void main() {
 <!-- remix_cli:skills:start -->
 ## Remix skills
 
-`remix skills install` wrote this block and the files under `.agents/skills/`.
+`remix skills install` wrote this block and the skill directories it lists.
 They are copied from the commit pinned for `@remix` in `remix.yaml`, so they
 describe the Remix this project installs. Read the matching `SKILL.md` before
 you write or review Remix code, and prefer it over what you remember about
@@ -44,8 +44,8 @@ Remix, Mix, or Naked UI.
 Open a skill's `references/` files only when its `SKILL.md` sends you there.
 If `revision` in `remix.skills.json` differs from the `@remix` revision in
 `remix.yaml`, run `dart run remix_cli:remix skills install` before relying on
-the skills. Do not edit the files under `.agents/skills/`; that command owns
-them.
+the skills. Do not edit the listed skill directories; that command owns them.
+It does not manage other skills under `.agents/skills/`.
 <!-- remix_cli:skills:end -->''');
     });
 
