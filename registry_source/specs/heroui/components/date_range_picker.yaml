@@ -17,6 +17,7 @@ states: [rest, hover, pressed, focus-visible, today, selected, disabled, unavail
 tokens: [foreground, muted, accent, accent-foreground, accent-hover, accent-soft, accent-soft-foreground, default, default-hover, field-background, field-hover, field-focus, field-placeholder, overlay, radius-field, radius-3xl]
 measurements:
   - {what: day grid, value: "252px = seven 36px cells; 14/20 medium type", cite: calendar-day10}
+  - {what: weekday headings, value: "12/16 medium muted", cite: "calendar-header-cell; calendar.css calendar__header-cell"}
   - {what: navigation, value: "24px target and 16px chevron", cite: calendar-nav-button}
   - {what: range row spacing, value: "4px vertical margin, zero column gap", cite: "range-calendar.css cell my-[2px] mx-0"}
   - {what: picker inset, value: "12px each side", cite: date-picker-popover}
