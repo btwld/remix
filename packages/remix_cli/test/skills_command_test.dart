@@ -572,6 +572,27 @@ void main() {
       expect(SkillsRecord.read(root)!.revision, 'c' * 40);
     });
 
+    test('a --dir move that stops partway names the flag to rerun', () async {
+      expect(await run(['skills', 'install']), successExitCode);
+      final move = ['skills', 'install', '--dir', '.claude/skills'];
+
+      expect(
+        await run(move, fileWriter: _FailingWriter(failOn: 2)),
+        failureExitCode,
+      );
+      expect(
+        errors.single,
+        endsWith(
+          'Rerun remix skills install --dir .claude/skills. It continues from '
+          'the files already written.',
+        ),
+      );
+
+      expect(await run(move), successExitCode);
+      expect(Directory(p.join(root.path, '.agents')).existsSync(), isFalse);
+      expect(SkillsRecord.read(root)!.directory, '.claude/skills');
+    });
+
     test('registry update says when vendored skills fall behind', () async {
       final sources = _MemorySkills({
         'c' * 40: _published({'using-remix/SKILL.md': '# Using Remix\n'}),

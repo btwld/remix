@@ -354,7 +354,8 @@ final class Installer {
       }
     } on FileSystemException catch (error) {
       throw InstallFailure(
-        '${expectedFailureMessage(error)}\nRerun remix skills install. It '
+        '${expectedFailureMessage(error)}\nRerun remix skills install'
+        '${options.directory == null ? '' : ' --dir $directory'}. It '
         'continues from the files already written.',
       );
     }
