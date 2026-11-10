@@ -53,25 +53,33 @@ void main() {
       return (code, errors);
     }
 
-    test('passes --dir through, and null when it is absent', () async {
+    test('passes --dir through normalized, and null when absent', () async {
       final received = <String?>[];
       Future<void> record(SkillsInstallOptions options) async =>
           received.add(options.directory);
 
-      expect(
-        (await parse(['skills', 'install'], onSkillsInstall: record)).$1,
-        successExitCode,
-      );
-      expect(
-        (await parse([
-          'skills',
-          'install',
-          '--dir',
-          '.claude/skills',
-        ], onSkillsInstall: record)).$1,
-        successExitCode,
-      );
-      expect(received, [null, '.claude/skills']);
+      for (final arguments in [
+        <String>[],
+        ['--dir', '.claude/skills'],
+        ['--dir', '.claude/skills/'],
+        ['--dir', r'.\.claude\skills'],
+      ]) {
+        expect(
+          (await parse([
+            'skills',
+            'install',
+            ...arguments,
+          ], onSkillsInstall: record)).$1,
+          successExitCode,
+          reason: arguments.join(' '),
+        );
+      }
+      expect(received, [
+        null,
+        '.claude/skills',
+        '.claude/skills',
+        '.claude/skills',
+      ]);
     });
 
     test('rejects bad arguments before dispatch', () async {
@@ -80,21 +88,17 @@ void main() {
           ['skills', 'install', 'extra'],
           'skills install accepts no positional arguments.',
         ),
-        (
-          ['skills', 'install', '--dir', '../shared/skills'],
-          '--dir ../shared/skills must be a project-relative directory such '
-              'as .agents/skills.',
-        ),
-        (
-          ['skills', 'install', '--dir', '/etc/skills'],
-          '--dir /etc/skills must be a project-relative directory such as '
-              '.agents/skills.',
-        ),
-        (
-          ['skills', 'install', '--dir', '.claude/skills/'],
-          '--dir .claude/skills/ must be a project-relative directory such '
-              'as .agents/skills.',
-        ),
+        for (final directory in [
+          '../shared/skills',
+          '/etc/skills',
+          'my skills',
+        ])
+          (
+            ['skills', 'install', '--dir', directory],
+            '--dir $directory must be a directory inside the project, such as '
+                '.agents/skills, named with letters, digits, `_`, `.`, `-`, '
+                'and `/`.',
+          ),
         (['skills'], 'Missing subcommand for "remix skills".'),
       ]) {
         final (code, errors) = await parse(arguments);

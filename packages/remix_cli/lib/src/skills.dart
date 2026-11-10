@@ -211,14 +211,21 @@ bool _isRelativePath(String value) {
   }
 }
 
-/// Throws a [FormatException] when [directory] cannot hold vendored skills.
-void validateSkillsDirectory(String directory) {
+/// [value] as the directory a receipt records, or a [FormatException] when
+/// it cannot hold vendored skills.
+///
+/// A trailing or Windows separator, as shell completion types it, is
+/// accepted and normalized away.
+String parseSkillsDirectory(String value) {
+  final directory = p.posix.normalize(value.replaceAll('\\', '/'));
   if (!_isRelativePath(directory)) {
     throw FormatException(
-      '$directory must be a project-relative directory such as '
-      '$defaultSkillsDirectory.',
+      '$value must be a directory inside the project, such as '
+      '$defaultSkillsDirectory, named with letters, digits, `_`, `.`, `-`, '
+      'and `/`.',
     );
   }
+  return directory;
 }
 
 /// SHA-256 of [contents] with CRLF folded to LF.

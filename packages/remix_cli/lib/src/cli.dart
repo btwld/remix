@@ -707,13 +707,14 @@ final class _SkillsInstallCommand extends Command<int> {
     if (argResults!.rest.isNotEmpty) {
       usageException('skills install accepts no positional arguments.');
     }
-    final directory = argResults!.option('dir');
-    if (directory != null) {
-      try {
-        validateSkillsDirectory(directory);
-      } on FormatException catch (error) {
-        usageException('--dir ${error.message}');
-      }
+    final String? directory;
+    try {
+      directory = switch (argResults!.option('dir')) {
+        final value? => parseSkillsDirectory(value),
+        null => null,
+      };
+    } on FormatException catch (error) {
+      usageException('--dir ${error.message}');
     }
     final handler = _handler;
     if (handler == null) {
