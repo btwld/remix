@@ -220,4 +220,8 @@ final class FixtureOfficialResolver implements RegistrySources {
   @override
   RegistryReader open(RegistrySource pin, String preset) =>
       CheckoutRegistry(findCheckoutRegistry(), preset);
+
+  @override
+  Future<String?> file(RegistrySource pin, String path) =>
+      readCheckoutFile(findCheckoutRegistry(), path);
 }
