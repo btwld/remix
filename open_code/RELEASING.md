@@ -201,7 +201,7 @@ Validate against hosted runtimes, without checkout substitution:
 fvm dart run melos run open-code:release:check
 ```
 
-## Publish the registry before the GitHub-first CLI
+## Promote the registry and bootstrap the GitHub-first CLI
 
 Merge the reviewed commit to `main`. **Promote registry** validates
 the candidate through two parallel jobs:
@@ -297,9 +297,22 @@ package release workflow; do not infer a new CLI version from a registry
 version.
 
 The CLI publish workflow requires `registry-stable` to resolve and runs
-the same fast aggregate against its GitHub content with hosted runtime packages.
-A missing `registry-stable` branch must fail; there is no local content to
-substitute, and nothing may be added to bypass the bootstrap order.
+the fast aggregate against its GitHub content with hosted runtime packages.
+After `init`, the smoke reads the index, preset catalog, and icons at the exact
+revision recorded in `remix.yaml`. That catalog supplies every gallery item,
+its authored and generated inventory, runtime dependencies, and exact Remix
+floor. It includes items removed from the candidate as well as excluding items
+not yet promoted; the item plan never comes from the candidate's hardcoded list.
+The published floors must exist but may predate newer runtime releases. Candidate
+promotion retains the separate newest-Remix-floor requirement.
+
+The stable smoke compiles the installed public barrel and analyzes all installed
+source using a minimal app, so candidate gallery widgets and generated snapshots
+cannot demand unpromoted items. Candidate validation retains its full committed
+gallery, behavior tests, and snapshot checks. There is no checkout fallback for a
+missing branch or catalog. Bootstrap requires an initial stable registry and an
+initial published CLI; subsequent CLI tags can publish before or after promotion
+of the corresponding registry changes.
 
 If the CLI has never been published, the authorized uploader must perform the
 first pub.dev publication and configure automated publishing for repository

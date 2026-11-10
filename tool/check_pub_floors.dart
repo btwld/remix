@@ -34,6 +34,28 @@ final class IoPubFloorClient implements PubFloorClient {
 /// SDK dependencies have no hosted floor. Reject unbounded declarations instead
 /// of silently treating them as published.
 Map<String, Set<String>> readHostedFloors(Directory registryRoot) {
+  final catalogs =
+      registryRoot
+          .listSync()
+          .whereType<Directory>()
+          .map((directory) => File('${directory.path}/registry.yaml'))
+          .where((file) => file.existsSync())
+          .toList()
+        ..sort((left, right) => left.path.compareTo(right.path));
+  if (catalogs.isEmpty)
+    throw const FormatException('No registry catalogs found.');
+  final icons = File('${registryRoot.path}/icons.yaml');
+  return readCatalogHostedFloors(
+    catalogs.map((file) => file.readAsStringSync()),
+    iconsYaml: icons.existsSync() ? icons.readAsStringSync() : null,
+  );
+}
+
+/// Floors from the catalogs actually installed, including their icon table.
+Map<String, Set<String>> readCatalogHostedFloors(
+  Iterable<String> catalogs, {
+  String? iconsYaml,
+}) {
   final floors = <String, Set<String>>{};
   void add(Object? node) {
     if (node is! YamlMap) return;
@@ -54,28 +76,15 @@ Map<String, Set<String>> readHostedFloors(Directory registryRoot) {
     }
   }
 
-  final catalogs =
-      registryRoot
-          .listSync()
-          .whereType<Directory>()
-          .map((directory) => File('${directory.path}/registry.yaml'))
-          .where((file) => file.existsSync())
-          .toList()
-        ..sort((left, right) => left.path.compareTo(right.path));
-  if (catalogs.isEmpty)
-    throw const FormatException('No registry catalogs found.');
-  for (final file in catalogs) {
-    final items =
-        (loadYaml(file.readAsStringSync()) as YamlMap)['items'] as YamlMap;
+  for (final catalog in catalogs) {
+    final items = (loadYaml(catalog) as YamlMap)['items'] as YamlMap;
     for (final item in items.values.cast<YamlMap>()) {
       add(item['dependencies']);
       add(item['devDependencies']);
     }
   }
-  final icons = File('${registryRoot.path}/icons.yaml');
-  if (icons.existsSync()) {
-    final libraries =
-        (loadYaml(icons.readAsStringSync()) as YamlMap)['libraries'] as YamlMap;
+  if (iconsYaml != null) {
+    final libraries = (loadYaml(iconsYaml) as YamlMap)['libraries'] as YamlMap;
     for (final library in libraries.values.cast<YamlMap>()) {
       add(library['dependency']);
     }
@@ -101,11 +110,13 @@ Future<String?> checkPubFloors(
   }
 }
 
-/// The same publication preflight for floors outside the registry catalogs,
-/// such as the CLI version used by the documented install command.
+/// Checks exact publication of each floor. Candidate promotion also requires
+/// the newest Remix floor; an already-promoted catalog may legitimately be older
+/// when testing a CLI release, so it sets [requireLatestRemix] to false.
 Future<String?> checkPubPackageFloors(
   Map<String, Set<String>> floors, {
   PubFloorClient? client,
+  bool requireLatestRemix = true,
 }) async {
   final http = client ?? IoPubFloorClient();
   try {
@@ -143,7 +154,7 @@ Future<String?> checkPubPackageFloors(
               return '$name ^$floor is not on pub.dev yet; $action, then re-run Promote registry';
             }
           }
-          if (name == 'remix' && versions.isNotEmpty) {
+          if (requireLatestRemix && name == 'remix' && versions.isNotEmpty) {
             versions.sort();
             for (final floor in entry.value) {
               if (Version.parse(floor).compareTo(versions.last) < 0) {

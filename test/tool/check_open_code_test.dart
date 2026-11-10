@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
+import '../../packages/remix_cli/lib/src/registry_source.dart';
 import '../../tool/check_open_code.dart' as checker;
 import '../../tool/check_pub_floors.dart';
 import '../../tool/check_published_cli.dart';
@@ -159,6 +160,31 @@ libraries:
         contains('older than published 1.0.0-beta.19'),
       );
     });
+    test(
+      'stable floors may predate newest Remix, but must be published',
+      () async {
+        final floors = readCatalogHostedFloors([
+          'items: {theme: {dependencies: {remix: ^1.0.0-beta.18}}}',
+        ]);
+        expect(
+          await checkPubPackageFloors(
+            floors,
+            client: client(newer: true),
+            requireLatestRemix: false,
+          ),
+          isNull,
+        );
+        expect(
+          await checkPubPackageFloors(
+            floors,
+            client: client(missing: 'remix'),
+            requireLatestRemix: false,
+          ),
+          contains('not on pub.dev yet'),
+        );
+      },
+    );
+
     test('every current catalog has hosted floors', () {
       expect(
         readHostedFloors(Directory('registry')).keys,
@@ -1705,6 +1731,114 @@ icons:
   checkCircled: {lucide: circleCheck, fallback: lucide}
 ''';
 
+    test('release smoke plans only the installed registry catalog', () {
+      // The checkout has many unpromoted items, while stable also retains an
+      // item since removed from the checkout. Use stable, not an intersection.
+      const catalog = """
+items:
+  theme:
+    dependencies: {remix: ^1.0.0-beta.17}
+    files: [{source: theme.dart.tmpl, target: "@ui/theme/theme.dart"}]
+  button:
+    registryDependencies: [theme]
+    dependencies: {stable_runtime: ^2.0.0}
+    devDependencies: {stable_generator: ^3.0.0}
+    files: [{source: button.dart.tmpl, target: "@ui/components/button.dart"}]
+    generated: ["@ui/components/button.g.dart"]
+  stable_only:
+    registryDependencies: [theme]
+    files: [{source: stable.dart.tmpl, target: "@ui/components/stable.dart"}]
+""";
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
+        final plan = checker.registryPlanForTest(preset, catalog);
+        expect(plan.items, ['theme', 'button', 'stable_only']);
+        expect(plan.floor, '1.0.0-beta.17');
+        expect(plan.runtime.toSet(), {
+          'remix',
+          'stable_runtime',
+          'remix_ui_icons',
+        });
+        expect(readCatalogHostedFloors([catalog]), {
+          'remix': {'1.0.0-beta.17'},
+          'stable_runtime': {'2.0.0'},
+          'stable_generator': {'3.0.0'},
+        });
+        expect(
+          checker
+              .galleryInstallBatches(plan.items, checker.InstallMode.batch)
+              .expand((batch) => batch),
+          plan.items,
+        );
+        expect(plan.files.toSet(), {
+          'ui.dart',
+          'theme/theme.dart',
+          'components/button.dart',
+          'components/button.g.dart',
+          'components/stable.dart',
+        });
+      }
+    });
+
+    test(
+      'smoke reads the CLI pin via the registry index without branch races',
+      () async {
+        _writePinnedRegistryConfig(sandbox);
+        final requests = <Uri>[];
+        final registry = await checker.readInstalledRegistryCatalog(
+          sandbox,
+          transport: (uri) async {
+            requests.add(uri);
+            expect(uri.path, startsWith('/btwld/remix/${'a' * 40}/registry/'));
+            return RegistryResponse(200, switch (uri.pathSegments.last) {
+              'index.yaml' =>
+                'schema: 1\npresets: {vanilla: archived/catalog.yaml}',
+              'catalog.yaml' =>
+                'items: {theme: {files: [], dependencies: {remix: ^1.0.0}}}',
+              'icons.yaml' => stable,
+              _ => throw StateError('Unexpected request $uri'),
+            });
+          },
+        );
+        expect(requests.map((uri) => uri.pathSegments.last), [
+          'index.yaml',
+          'catalog.yaml',
+          'icons.yaml',
+        ]);
+        expect(requests[1].path, endsWith('/registry/archived/catalog.yaml'));
+        expect(checker.registryPlanForTest('vanilla', registry.catalog).items, [
+          'theme',
+        ]);
+        expect(registry.icons, stable);
+      },
+    );
+
+    test(
+      'missing or unavailable pinned catalogs never fall back to checkout',
+      () async {
+        _writePinnedRegistryConfig(sandbox);
+        for (final status in [404, 503]) {
+          await expectLater(
+            checker.readInstalledRegistryCatalog(
+              sandbox,
+              transport: (uri) async {
+                return RegistryResponse(
+                  uri.pathSegments.last == 'index.yaml' ? 200 : status,
+                  'schema: 1\npresets: {vanilla: vanilla/registry.yaml}',
+                );
+              },
+            ),
+            throwsA(
+              isA<HttpException>().having(
+                (error) => error.message,
+                'message',
+                contains('returned $status'),
+              ),
+            ),
+          );
+        }
+      },
+    );
+
     test('a CLI release smoke reads registry-stable', () {
       // publish.yml verifies a new CLI against the promoted registry before
       // publishing it, the same registry applications read.
@@ -1911,4 +2045,20 @@ final class _FakePubClient implements PubFloorClient {
 
   @override
   void close() {}
+}
+
+void _writePinnedRegistryConfig(Directory app) {
+  File('${app.path}/remix.yaml').writeAsStringSync("""
+schema: 3
+prefix: Acme
+preset: vanilla
+paths: {ui: lib/ui}
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: btwld/remix
+    path: registry
+    ref: registry-stable
+    revision: ${'a' * 40}
+""");
 }
