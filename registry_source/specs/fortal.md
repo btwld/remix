@@ -16,7 +16,12 @@ scales, and the approved pairings. `tool/fortal_palettes/radix/extract.mjs` impo
 the package's structured exports. Geometry, components, behavior and contrast
 requirements remain Fortal's; this is a color-data adoption, not a Radix widget port.
 The [architecture decision](../../../ARCHITECTURE.md#fortal-owns-its-visual-contract-fortal-adr-0003)
-records this update. Geist and Remix Icons remain the typography and icon sources.
+records this update. Remix Icons remain the icon source. Fortal sets no font
+family: text uses the application's face, and the polish-board goldens load
+Geist only for reproducible captures. `FortalCode` names the system monospace
+stack (Menlo, Consolas, Bitstream Vera Sans Mono, `monospace`), which Flutter
+cannot load on the web or where those faces are absent; there it falls back to
+the default face.
 
 ## Paired themes
 
