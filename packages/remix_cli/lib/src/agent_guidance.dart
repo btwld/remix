@@ -63,8 +63,9 @@ String skillsGuidanceBlock({
 /// title keeps it. A developer can move the block; reruns update it where it
 /// is.
 ///
-/// Throws a [FormatException] unless [source] has no marker, or exactly one
-/// start marker followed by exactly one end marker, each alone on its line.
+/// A marker is a line that holds only the marker, so prose that quotes one is
+/// text. Throws a [FormatException] unless [source] has no marker, or exactly
+/// one start marker followed by exactly one end marker.
 String updateManagedGuidance(
   String source,
   String block, {
@@ -78,15 +79,8 @@ String updateManagedGuidance(
   for (final raw in source.split('\n')) {
     final line = raw.endsWith('\r') ? raw.substring(0, raw.length - 1) : raw;
     final span = (offset, offset + line.length);
-    for (final (marker, found) in [
-      (managedSkillsStart, starts),
-      (managedSkillsEnd, ends),
-    ]) {
-      if (line.contains(marker)) {
-        if (line != marker) throw _malformedMarkers(path);
-        found.add(span);
-      }
-    }
+    if (line.trim() == managedSkillsStart) starts.add(span);
+    if (line.trim() == managedSkillsEnd) ends.add(span);
     offset += raw.length + 1;
   }
 
@@ -103,6 +97,11 @@ String updateManagedGuidance(
   return source.replaceRange(starts.single.$1, ends.single.$2, replacement);
 }
 
+bool _holdsMarker(String text) => text
+    .split('\n')
+    .map((line) => line.trim())
+    .any((line) => line == managedSkillsStart || line == managedSkillsEnd);
+
 FormatException _malformedMarkers(String path) => FormatException(
   '$path must contain one ordered remix_cli:skills marker pair. Remove the '
   'stray marker, then rerun remix skills install.',
@@ -110,25 +109,14 @@ FormatException _malformedMarkers(String path) => FormatException(
 
 enum GuidanceChange { created, updated, preserved }
 
-/// Whether to tell the developer that Claude Code will not see the block.
-///
-/// True when this run writes the block to `AGENTS.md` and [claudeMarkdown],
-/// the text of `CLAUDE.md` after the run, neither imports `AGENTS.md` with a
-/// line that is exactly `@AGENTS.md` nor holds the block itself, as it does
-/// when it is a symbolic link to `AGENTS.md`. The CLI does not edit
-/// `CLAUDE.md`: it owns the block, not the file. A run that leaves the block
-/// unchanged stays quiet, so a team that keeps `CLAUDE.md` separate on purpose
-/// hears it when the block is written, not on every rerun.
-bool needsClaudeImportHint(GuidancePlan plan, String? claudeMarkdown) =>
-    plan.change != GuidanceChange.preserved &&
-    plan.path == agentGuidanceFiles.first &&
-    claudeMarkdown != null &&
-    !claudeMarkdown.contains(managedSkillsStart) &&
-    !claudeMarkdown.split('\n').any((line) => line.trim() == '@AGENTS.md');
-
 /// The decision for the agent instruction file. It reads; it does not write.
 final class GuidancePlan {
-  const GuidancePlan._(this.path, this.after, this.change);
+  const GuidancePlan._(
+    this.path,
+    this.after,
+    this.change, {
+    required this.claudeImportHint,
+  });
 
   /// Project-relative path of the file that holds, or will hold, the block.
   final String path;
@@ -139,13 +127,24 @@ final class GuidancePlan {
 
   final GuidanceChange change;
 
+  /// Whether to tell the developer that Claude Code will not see the block.
+  ///
+  /// True when this run writes the block to `AGENTS.md` and a separate
+  /// `CLAUDE.md` does not import it with `@AGENTS.md`. The CLI does not edit
+  /// `CLAUDE.md`: it owns the block, not the file. A run that leaves the block
+  /// unchanged stays quiet, so a team that keeps `CLAUDE.md` separate on
+  /// purpose hears it when the block is written, not on every rerun.
+  final bool claudeImportHint;
+
   /// Picks the target and computes its contents.
   ///
   /// Target rule: the one file in [agentGuidanceFiles] that already contains
   /// a marker; otherwise `AGENTS.md`, created when it does not exist. A
   /// candidate that is a symbolic link counts as the file it points to, so a
   /// `CLAUDE.md` linked to `AGENTS.md` is one holder, and a write replaces
-  /// the target's contents instead of the link.
+  /// the target's contents instead of the link. An absent candidate is not
+  /// checked, so a `.github` that links outside the project does not matter
+  /// until it holds the block.
   ///
   /// Throws a [FormatException] when two files contain a marker, and for
   /// every case [updateManagedGuidance] rejects.
@@ -153,24 +152,25 @@ final class GuidancePlan {
     final canonicalRoot = root.resolveSymbolicLinksSync();
     final contents = <String, String>{};
     final holders = <String>[];
+    String? claude;
     var target = agentGuidanceFiles.first;
     for (final candidate in agentGuidanceFiles) {
-      validateProjectFilePath(root, candidate);
       final file = File(p.joinAll([root.path, ...p.posix.split(candidate)]));
       if (!file.existsSync()) continue;
       final path = p.posix.joinAll(
         p.split(
-          p.relative(file.resolveSymbolicLinksSync(), from: canonicalRoot),
+          p.relative(
+            validateProjectFilePath(root, candidate),
+            from: canonicalRoot,
+          ),
         ),
       );
       if (candidate == agentGuidanceFiles.first) target = path;
       if (contents.containsKey(path)) continue;
       final text = file.readAsStringSync();
       contents[path] = text;
-      if (text.contains(managedSkillsStart) ||
-          text.contains(managedSkillsEnd)) {
-        holders.add(path);
-      }
+      if (candidate == 'CLAUDE.md') claude = text;
+      if (_holdsMarker(text)) holders.add(path);
     }
     if (holders.length > 1) {
       throw FormatException(
@@ -179,16 +179,26 @@ final class GuidancePlan {
       );
     }
     final path = holders.firstOrNull ?? target;
+    validateProjectFilePath(root, path);
     final before = contents[path];
     final after = updateManagedGuidance(before ?? '', block, path: path);
+    final change = before == null
+        ? GuidanceChange.created
+        : before == after
+        ? GuidanceChange.preserved
+        : GuidanceChange.updated;
     return GuidancePlan._(
       path,
       after,
-      before == null
-          ? GuidanceChange.created
-          : before == after
-          ? GuidanceChange.preserved
-          : GuidanceChange.updated,
+      change,
+      claudeImportHint:
+          change != GuidanceChange.preserved &&
+          path == target &&
+          claude != null &&
+          !_importsAgents.hasMatch(claude),
     );
   }
 }
+
+/// Claude Code's import syntax, which may sit inside a sentence.
+final _importsAgents = RegExp(r'(^|\s)@(\./)?AGENTS\.md\b', multiLine: true);

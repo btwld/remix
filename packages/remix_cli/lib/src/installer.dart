@@ -383,13 +383,7 @@ final class Installer {
       GuidanceChange.preserved => 'Preserved',
     };
     _writeOut('$guidanceVerb ${guidance.path}.');
-    // Read after the writes: a CLAUDE.md linked to AGENTS.md holds the block
-    // only once it has been written.
-    final claude = _projectFile(root, 'CLAUDE.md');
-    if (needsClaudeImportHint(
-      guidance,
-      claude.existsSync() ? claude.readAsStringSync() : null,
-    )) {
+    if (guidance.claudeImportHint) {
       _writeOut(
         'Claude Code reads CLAUDE.md. Add the line @AGENTS.md to it so the '
         'block applies there.',

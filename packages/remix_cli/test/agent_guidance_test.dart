@@ -105,7 +105,7 @@ It does not manage other skills under `.agents/skills/`.
       }
     });
 
-    test('rejects a lone, duplicated, reversed, or inline marker', () {
+    test('rejects a lone, duplicated, or reversed marker', () {
       const message =
           'AGENTS.md must contain one ordered remix_cli:skills marker pair. '
           'Remove the stray marker, then rerun remix skills install.';
@@ -115,10 +115,14 @@ It does not manage other skills under `.agents/skills/`.
         '$managedSkillsStart\n$managedSkillsEnd\n'
             '$managedSkillsStart\n$managedSkillsEnd\n',
         '$managedSkillsEnd\n$managedSkillsStart\n',
-        'See $managedSkillsStart\n$managedSkillsEnd\n',
       ]) {
         expect(() => update(source), _rejects(message), reason: source);
       }
+    });
+
+    test('treats a marker quoted in prose as text', () {
+      const notes = 'The CLI owns the `$managedSkillsStart` block.\n';
+      expect(update(notes), '$notes\n$_block\n');
     });
   });
 
@@ -187,7 +191,7 @@ It does not manage other skills under `.agents/skills/`.
 
       expect(plan.path, 'AGENTS.md');
       expect(plan.change, GuidanceChange.updated);
-      expect(needsClaudeImportHint(plan, plan.after), isFalse);
+      expect(plan.claudeImportHint, isFalse);
     });
 
     test('writes through an AGENTS.md that links to CLAUDE.md', () {
@@ -199,9 +203,26 @@ It does not manage other skills under `.agents/skills/`.
       expect(plan.path, 'CLAUDE.md');
       expect(plan.change, GuidanceChange.updated);
     });
+
+    test('ignores markers quoted in other files', () {
+      file('AGENTS.md').writeAsStringSync('$_block\n');
+      file(
+        '.cursorrules',
+      ).writeAsStringSync('Never touch $managedSkillsEnd.\n');
+
+      expect(GuidancePlan.resolve(root, _block).path, 'AGENTS.md');
+    });
+
+    test('ignores an absent candidate behind a link out of the project', () {
+      final outside = Directory.systemTemp.createTempSync('agent_outside_');
+      addTearDown(() => outside.deleteSync(recursive: true));
+      Link(p.join(root.path, '.github')).createSync(outside.path);
+
+      expect(GuidancePlan.resolve(root, _block).path, 'AGENTS.md');
+    });
   });
 
-  group('needsClaudeImportHint', () {
+  group('GuidancePlan.claudeImportHint', () {
     late Directory root;
 
     setUp(() {
@@ -209,30 +230,39 @@ It does not manage other skills under `.agents/skills/`.
       addTearDown(() => root.deleteSync(recursive: true));
     });
 
-    test('asks for the import only when CLAUDE.md lacks it', () {
-      final plan = GuidancePlan.resolve(root, _block);
+    bool hint({String? agents, String? claude}) {
+      for (final (name, text) in [
+        ('AGENTS.md', agents),
+        ('CLAUDE.md', claude),
+      ]) {
+        final file = File(p.join(root.path, name));
+        if (text == null) {
+          if (file.existsSync()) file.deleteSync();
+        } else {
+          file.writeAsStringSync(text);
+        }
+      }
+      return GuidancePlan.resolve(root, _block).claudeImportHint;
+    }
 
-      expect(needsClaudeImportHint(plan, null), isFalse);
-      expect(needsClaudeImportHint(plan, '# Claude\n'), isTrue);
-      expect(
-        needsClaudeImportHint(plan, '# Claude\r\n@AGENTS.md\r\n'),
-        isFalse,
-      );
+    test('asks for the import only when CLAUDE.md lacks it', () {
+      expect(hint(), isFalse, reason: 'no CLAUDE.md');
+      expect(hint(claude: '# Claude\n'), isTrue);
+      for (final imports in [
+        '# Claude\r\n@AGENTS.md\r\n',
+        'Read @AGENTS.md first.\n',
+        'See @./AGENTS.md\n',
+      ]) {
+        expect(hint(claude: imports), isFalse, reason: imports);
+      }
     });
 
     test('stays quiet when the block did not change', () {
-      File(p.join(root.path, 'AGENTS.md')).writeAsStringSync('$_block\n');
-      final plan = GuidancePlan.resolve(root, _block);
-
-      expect(plan.change, GuidanceChange.preserved);
-      expect(needsClaudeImportHint(plan, '# Claude\n'), isFalse);
+      expect(hint(agents: '$_block\n', claude: '# Claude\n'), isFalse);
     });
 
     test('stays quiet when the block lives in CLAUDE.md', () {
-      File(p.join(root.path, 'CLAUDE.md')).writeAsStringSync('$_block\n');
-      final plan = GuidancePlan.resolve(root, _block);
-
-      expect(needsClaudeImportHint(plan, '$_block\n'), isFalse);
+      expect(hint(claude: '$_block\n'), isFalse);
     });
   });
 }
