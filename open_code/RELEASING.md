@@ -245,6 +245,8 @@ step summary, including on failure. Use `--verbose` for streaming child output.
 
 `promote` needs both jobs and fast-forwards `registry-stable` only on `main`.
 A dispatch on a feature branch validates its candidate and skips promotion.
+The `static` job also runs `generate_skills_index.dart --check`, so a stale
+`skills/index.yaml` cannot reach a pin that `remix skills install` reads.
 
 Before creating an app, the preflight checks every runtime, generator, and icon
 library floor on pub.dev. A missing Remix floor prints:
