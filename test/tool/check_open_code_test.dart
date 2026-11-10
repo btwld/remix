@@ -459,6 +459,7 @@ libraries:
       int code = 0,
       bool verbose = false,
       StringSink? capturedOutput,
+      StringSink? capturedStdout,
     }) async {
       final script = File('${sandbox.path}/output.dart')
         ..writeAsStringSync('''
@@ -476,6 +477,7 @@ void main() {
         workingDirectory: sandbox.path,
         step: 'add fixture',
         capturedOutput: capturedOutput,
+        capturedStdout: capturedStdout,
       );
     }
 
@@ -493,6 +495,30 @@ void main() {
       expect(captured.toString(), contains('child stderr'));
       expect(out.toString(), isNot(contains('child stdout')));
     });
+    test(
+      'captures stdout separately while preserving full failure logs',
+      () async {
+        for (final code in [0, 7]) {
+          final out = StringBuffer();
+          final combined = StringBuffer();
+          final captured = StringBuffer();
+          final problem = await child(
+            out,
+            code: code,
+            capturedOutput: combined,
+            capturedStdout: captured,
+          );
+          expect(problem, code == 0 ? isNull : contains('exited 7'));
+          expect(captured.toString(), 'child stdout\n');
+          expect(combined.toString(), contains('child stdout'));
+          expect(combined.toString(), contains('child stderr'));
+          if (code != 0) {
+            expect(out.toString(), contains('child stdout'));
+            expect(out.toString(), contains('child stderr'));
+          }
+        }
+      },
+    );
     test('failure prints full stdout and stderr and the exit code', () async {
       final out = StringBuffer();
       expect(await child(out, code: 7), contains('exited 7'));

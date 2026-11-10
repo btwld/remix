@@ -160,8 +160,65 @@ void main() {
     }
   });
 
+  test('reads the version after pub build chatter', () async {
+    expect(
+      await check(
+        activatedVersion:
+            'Building package executable...\n'
+            'Built remix_cli:remix.\n'
+            '$version\n',
+      ),
+      'fixture reached consumer setup',
+    );
+    expect(out.toString(), contains('Activated remix_cli $version'));
+  });
+
+  test('reads the version before a warning', () async {
+    expect(
+      await check(
+        activatedVersion: '$version\nWarning: deprecated precompile option.\n',
+      ),
+      'fixture reached consumer setup',
+    );
+    expect(out.toString(), contains('Activated remix_cli $version'));
+  });
+
+  test('reads the version with CRLF output', () async {
+    expect(
+      await check(
+        activatedVersion:
+            'Building package executable...\r\n'
+            '$version\r\n'
+            'Warning: deprecated precompile option.\r\n',
+      ),
+      'fixture reached consumer setup',
+    );
+    expect(out.toString(), contains('Activated remix_cli $version'));
+  });
+
+  test('uses the last exact semver line including build metadata', () async {
+    version = '7.4.0-beta.8+build.42';
+    expect(
+      await check(
+        activatedVersion:
+            '7.4.0-beta.7\n'
+            '$version\n'
+            'Warning: installed 8.0.0\n',
+      ),
+      'fixture reached consumer setup',
+    );
+    expect(out.toString(), contains('Activated remix_cli $version'));
+  });
+
   test('fails clearly when the executable version cannot be parsed', () async {
-    for (final malformed in ['', 'unknown version']) {
+    for (final malformed in [
+      '',
+      'unknown version',
+      'Building package executable...\nBuilt remix_cli:remix.\n',
+      'Warning: installed $version\n',
+      'v$version',
+      '7.4',
+    ]) {
       commands.clear();
       final problem = await check(activatedVersion: malformed);
       expect(

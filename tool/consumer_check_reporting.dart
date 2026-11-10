@@ -60,6 +60,7 @@ final class ConsumerCheckReporter {
     Map<String, String>? environment,
     StringSink? log,
     StringSink? capturedOutput,
+    StringSink? capturedStdout,
     String? step,
   }) async {
     // Pool logs stay ordered in quiet mode; verbose explicitly opts into live,
@@ -90,7 +91,10 @@ final class ConsumerCheckReporter {
 
     const decoder = Utf8Decoder(allowMalformed: true);
     final drained = Future.wait([
-      process.stdout.transform(decoder).forEach(record),
+      process.stdout.transform(decoder).forEach((chunk) {
+        capturedStdout?.write(chunk);
+        record(chunk);
+      }),
       process.stderr.transform(decoder).forEach(record),
       process.stdin.close(),
     ]);

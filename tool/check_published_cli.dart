@@ -19,6 +19,7 @@ import 'consumer_check_reporting.dart';
 import 'install_pins.dart';
 import 'open_code_lifecycle.dart';
 
+/// Runs a command, optionally capturing only its stdout.
 typedef PublishedCliRunner =
     Future<String?> Function(
       String,
@@ -96,9 +97,17 @@ Future<String?> checkPublishedCliCandidate({
     '--version',
   ], capturedOutput: versionOutput);
   if (versionFailure != null) return versionFailure;
+  final versionPattern = RegExp(
+    r'^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$',
+  );
+  // pub can print build chatter before the version and warnings after it.
+  final versionLine = const LineSplitter()
+      .convert(versionOutput.toString())
+      .where(versionPattern.hasMatch)
+      .lastOrNull;
   final Version version;
   try {
-    version = Version.parse(versionOutput.toString().trim());
+    version = Version.parse(versionLine ?? '');
   } on FormatException {
     return 'Could not determine activated remix_cli version from '
         '`remix --version`: "$versionOutput"; expected published version $selected.';
@@ -220,7 +229,7 @@ Future<void> main(List<String> arguments) async {
           command,
           args,
           workingDirectory: app.existsSync() ? app.path : parent.path,
-          capturedOutput: capturedOutput,
+          capturedStdout: capturedOutput,
         ),
       );
     });
