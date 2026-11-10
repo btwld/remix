@@ -4,8 +4,9 @@ part of 'calendar.dart';
 ///
 /// Range days are styled with day variants such as
 /// `CalendarDayStyler.onRangeStart`, resolved in each day's own state.
-// No target: the generator cannot resolve cross-generated constructor
-// styler types for navigationStyle and selectorStyle in the same build.
+// No target: mix_generator 2.2.0-beta.3 emits InvalidType for the cross-generated
+// navigationStyle and selectorStyle constructor parameters. calendar_style.dart
+// supplies the matching call helper by hand until the generator can resolve them.
 @MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class CalendarSpec with _$CalendarSpec {
   @override

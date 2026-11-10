@@ -175,9 +175,9 @@ final rangeStyle = CalendarStyler().day(
 );
 ```
 
-Pass this to `RemixRangeCalendar(style: rangeStyle, ...)`; there is no callable
-CalendarStyler widget shorthand. Variants keep working through root
-animations, because each frame builds the nested day style in that day's
+Pass this to `RemixRangeCalendar(style: rangeStyle, ...)`;
+`CalendarStyler.call` builds a single-date `RemixCalendar`. Variants keep working
+through root animations, because each frame builds the nested day style in that day's
 state. A raw `styleSpec` is already resolved and carries no variants: every day
 renders its `day` spec, so selection, availability and range positions are not
 painted. Use `style` for state and range styling.
