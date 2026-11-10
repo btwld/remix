@@ -1,12 +1,9 @@
 ## 1.0.0-beta.19
 
- - **FEAT**(remix): make CalendarStyler callable (#424).
-
-## Unreleased
-
 ### Features
 
-- Add `CalendarStyler.call` to build a `RemixCalendar` with the owning style.
+- Add `CalendarStyler.call` to build a `RemixCalendar` with the owning style
+  (#424).
 
 ## 1.0.0-beta.18
 
