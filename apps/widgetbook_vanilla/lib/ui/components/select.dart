@@ -63,7 +63,12 @@ const _chevronOpacity = 0.5;
 const _panelMaxHeight = VanillaTokens.panelMaxHeight;
 
 /// The closed control: a field showing the current value and a chevron, 36px
-/// tall with a 12px side inset, 8px above and below, and an 8px gap.
+/// tall with a 12px side inset, 4px above and below, and an 8px gap.
+///
+/// The insets are the text field's, so the two stand the same height side by
+/// side. The reference is `h-9 py-2`: CSS fixes the height and lets the 20px
+/// line overrun the padding. Flutter lays the line out inside the padding and
+/// the border, so `py-2` would make a 38px trigger beside a 36px field.
 SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .animate(VanillaTokens.motion)
     .direction(.horizontal)
@@ -71,7 +76,7 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .mainAxisAlignment(.spaceBetween)
     .minHeight(VanillaTokens.controlMd)
     .padding(
-      .symmetric(horizontal: VanillaTokens.s3, vertical: VanillaTokens.s2),
+      .symmetric(horizontal: VanillaTokens.s3, vertical: VanillaTokens.s1),
     )
     .spacing(VanillaTokens.s2)
     .color(_triggerFill())

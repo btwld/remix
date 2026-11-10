@@ -881,7 +881,7 @@ List<RemixBoxShadow> _effectShadows(VanillaShadow level) => [
 final _selectTargets = <SpecTarget>[
   _select(
     'trigger',
-    source: 'select.tsx: h-9 px-3 gap-2',
+    source: 'select.tsx: h-9 px-3 gap-2 (py-2, see Deviations)',
     read: (spec) {
       final container = spec.spec.trigger.spec.container;
       return (
@@ -891,7 +891,7 @@ final _selectTargets = <SpecTarget>[
       );
     },
     expected: (_) =>
-        (36.0, const EdgeInsets.symmetric(horizontal: 12, vertical: 8), 8.0),
+        (36.0, const EdgeInsets.symmetric(horizontal: 12, vertical: 4), 8.0),
   ),
   _select(
     'trigger surface',
