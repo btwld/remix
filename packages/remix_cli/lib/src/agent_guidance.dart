@@ -112,12 +112,15 @@ enum GuidanceChange { created, updated, preserved }
 
 /// Whether to tell the developer that Claude Code will not see the block.
 ///
-/// True when the block is in `AGENTS.md` and [claudeMarkdown], the text of
-/// `CLAUDE.md` after the run, neither imports `AGENTS.md` with a line that is
-/// exactly `@AGENTS.md` nor holds the block itself, as it does when it is a
-/// symbolic link to `AGENTS.md`. The CLI does not edit `CLAUDE.md`: it owns
-/// the block, not the file.
+/// True when this run writes the block to `AGENTS.md` and [claudeMarkdown],
+/// the text of `CLAUDE.md` after the run, neither imports `AGENTS.md` with a
+/// line that is exactly `@AGENTS.md` nor holds the block itself, as it does
+/// when it is a symbolic link to `AGENTS.md`. The CLI does not edit
+/// `CLAUDE.md`: it owns the block, not the file. A run that leaves the block
+/// unchanged stays quiet, so a team that keeps `CLAUDE.md` separate on purpose
+/// hears it when the block is written, not on every rerun.
 bool needsClaudeImportHint(GuidancePlan plan, String? claudeMarkdown) =>
+    plan.change != GuidanceChange.preserved &&
     plan.path == agentGuidanceFiles.first &&
     claudeMarkdown != null &&
     !claudeMarkdown.contains(managedSkillsStart) &&

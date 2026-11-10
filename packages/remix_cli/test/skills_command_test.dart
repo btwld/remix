@@ -474,15 +474,16 @@ void main() {
         file('AGENTS.md').readAsStringSync(),
         startsWith('# Acme\n\nRun flutter test.\n\n$managedSkillsStart\n'),
       );
+      const hint =
+          'Claude Code reads CLAUDE.md. Add the line @AGENTS.md to it so the '
+          'block applies there.';
       expect(file('CLAUDE.md').readAsStringSync(), '# Claude\n');
       expect(output, contains('Updated AGENTS.md.'));
-      expect(
-        output,
-        contains(
-          'Claude Code reads CLAUDE.md. Add the line @AGENTS.md to it so the '
-          'block applies there.',
-        ),
-      );
+      expect(output, contains(hint));
+
+      expect(await run(['skills', 'install']), successExitCode);
+      expect(output, contains('Preserved AGENTS.md.'));
+      expect(output, isNot(contains(hint)));
     });
 
     test('a run that stops partway converges on a rerun', () async {

@@ -180,17 +180,14 @@ them.
     });
 
     test('treats CLAUDE.md linked to AGENTS.md as one file', () {
-      file('AGENTS.md').writeAsStringSync('# Agents\n\n$_block\n');
+      file('AGENTS.md').writeAsStringSync('# Agents\n');
       Link(p.join(root.path, 'CLAUDE.md')).createSync('AGENTS.md');
 
       final plan = GuidancePlan.resolve(root, _block);
 
       expect(plan.path, 'AGENTS.md');
-      expect(plan.change, GuidanceChange.preserved);
-      expect(
-        needsClaudeImportHint(plan, file('CLAUDE.md').readAsStringSync()),
-        isFalse,
-      );
+      expect(plan.change, GuidanceChange.updated);
+      expect(needsClaudeImportHint(plan, plan.after), isFalse);
     });
 
     test('writes through an AGENTS.md that links to CLAUDE.md', () {
@@ -221,6 +218,14 @@ them.
         needsClaudeImportHint(plan, '# Claude\r\n@AGENTS.md\r\n'),
         isFalse,
       );
+    });
+
+    test('stays quiet when the block did not change', () {
+      File(p.join(root.path, 'AGENTS.md')).writeAsStringSync('$_block\n');
+      final plan = GuidancePlan.resolve(root, _block);
+
+      expect(plan.change, GuidanceChange.preserved);
+      expect(needsClaudeImportHint(plan, '# Claude\n'), isFalse);
     });
 
     test('stays quiet when the block lives in CLAUDE.md', () {
