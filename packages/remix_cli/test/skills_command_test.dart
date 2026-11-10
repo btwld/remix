@@ -402,6 +402,43 @@ void main() {
       expect(SkillsRecord.read(root)!.directory, '.claude/skills');
     });
 
+    test('--dir to a link of the installed copy deletes nothing', () async {
+      for (final link in [
+        ('.claude/skills', '../.agents/skills'),
+        ('.claude/skills/using-remix', '../../.agents/skills/using-remix'),
+      ]) {
+        expect(await run(['skills', 'install']), successExitCode);
+        final (path, target) = link;
+        Directory(
+          p.join(root.path, p.dirname(path)),
+        ).createSync(recursive: true);
+        Link(p.join(root.path, path)).createSync(target);
+
+        expect(
+          await run(['skills', 'install', '--dir', '.claude/skills']),
+          successExitCode,
+          reason: '$path: $errors',
+        );
+
+        expect(writer.deleted, isNot(contains(contains('using-remix'))));
+        expect(
+          file('.agents/skills/using-remix/SKILL.md').existsSync(),
+          isTrue,
+        );
+        expect(output, contains('Preserved using-remix.'), reason: path);
+        expect(
+          output.contains('Removed the previous copy in .agents/skills.'),
+          writer.deleted.isNotEmpty,
+          reason: path,
+        );
+        expect(await run(['skills', 'install']), successExitCode);
+        expect(writer.paths, isEmpty, reason: path);
+
+        Directory(p.join(root.path, '.claude')).deleteSync(recursive: true);
+        file(skillsRecordFileName).deleteSync();
+      }
+    });
+
     test('a pin that predates skills fails without writing', () async {
       final before = snapshotFiles(root);
 
