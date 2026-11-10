@@ -182,12 +182,19 @@ final class RecordingFileWriter implements ProjectFileWriter {
 
   final Directory root;
   final paths = <String>[];
+  final deleted = <String>[];
   final AtomicProjectFileWriter _delegate = const AtomicProjectFileWriter();
 
   @override
   void write(File target, String contents) {
     paths.add(p.relative(target.path, from: root.path));
     _delegate.write(target, contents);
+  }
+
+  @override
+  void delete(File target, {required Directory within}) {
+    deleted.add(p.relative(target.path, from: root.path));
+    _delegate.delete(target, within: within);
   }
 }
 

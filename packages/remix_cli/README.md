@@ -472,6 +472,38 @@ CLI names the package and the section to move it to rather than editing your
 If generation or analysis fails after installation, the authored source stays
 in place for inspection. Fix the reported issue and rerun the same command.
 
+## Install agent skills
+
+Remix publishes two agent skills: `using-remix` for app UI and
+`building-remix-design-system` for registry authors. Copy them into your
+project from the commit your project is pinned to:
+
+```shell
+dart run remix_cli:remix skills install
+```
+
+The command reads the `@remix` revision in `remix.yaml` and writes:
+
+- `.agents/skills/<skill>/`: the skill files from that commit.
+- `AGENTS.md`: one `remix_cli:skills` block that tells an agent when to read
+  each skill. Text outside the block is not changed.
+- `remix.skills.json`: the revision and a digest of each file.
+
+Commit all three. Run the command again after `remix registry update @remix`.
+
+Claude Code loads project skills from `.claude/skills`. Name the directory
+once; later runs remember it:
+
+```shell
+dart run remix_cli:remix skills install --dir .claude/skills
+```
+
+To keep the block in `CLAUDE.md` or another instruction file, move the block
+there. The next run updates it in place.
+
+The command owns the files it vendors. If one was changed, the next run stops
+and names it. Restore or delete the file, then run the command again.
+
 ## Exit codes
 
 - `0`: success, including help, version, dry-run, diff, and no-op reruns

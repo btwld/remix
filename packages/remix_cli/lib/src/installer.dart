@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
+import 'agent_guidance.dart';
 import 'builder_config.dart';
 import 'catalog_listing.dart';
 import 'cli.dart';
@@ -17,6 +18,7 @@ import 'icon_registry.dart';
 import 'registry_graph.dart';
 import 'registry_reader.dart';
 import 'registry_source.dart';
+import 'skills.dart';
 import 'template_renderer.dart';
 
 const managedExportsStart = '// remix_cli:exports:start';
@@ -45,10 +47,15 @@ Future<int> runInstallerCli(
   onAdd: installer.add,
   onList: installer.list,
   onRegistry: installer.registry,
+  onSkillsInstall: installer.installSkills,
 );
 
 abstract interface class ProjectFileWriter {
   void write(File target, String contents);
+
+  /// Deletes [target] if it exists, then each parent directory the deletion
+  /// leaves empty, stopping before [within].
+  void delete(File target, {required Directory within});
 }
 
 final class AtomicProjectFileWriter implements ProjectFileWriter {
@@ -68,6 +75,21 @@ final class AtomicProjectFileWriter implements ProjectFileWriter {
       temporary.renameSync(target.path);
     } finally {
       if (temporary.existsSync()) temporary.deleteSync();
+    }
+  }
+
+  @override
+  void delete(File target, {required Directory within}) {
+    if (target.existsSync()) target.deleteSync();
+    final stop = p.normalize(within.absolute.path);
+    for (
+      var directory = target.parent.absolute;
+      p.isWithin(stop, directory.path) &&
+          directory.existsSync() &&
+          directory.listSync().isEmpty;
+      directory = directory.parent
+    ) {
+      directory.deleteSync();
     }
   }
 }
@@ -226,6 +248,8 @@ final class Installer {
       );
     }
     await _sources.open(source, config.preset).catalog();
+    final skillsBehind =
+        namespace == skillsNamespace && _skillsBehind(root, source.revision);
     sources[namespace] = source;
     final updated = config.copyWith(registries: sources);
     _fileWriter.write(file, updated.encode());
@@ -235,6 +259,164 @@ final class Installer {
     _writeOut(
       'Review an installed item next: remix add $namespace/<item> --diff',
     );
+    if (skillsBehind) {
+      _writeOut('Update the vendored skills next: remix skills install');
+    }
+  }
+
+  /// Whether vendored skills exist that [revision] would make stale.
+  ///
+  /// A receipt that does not parse counts as stale: `skills install` is the
+  /// command that reports what is wrong with it, and a pin move must not
+  /// fail over it.
+  bool _skillsBehind(Directory root, String revision) {
+    try {
+      final record = SkillsRecord.read(root);
+      return record != null && record.revision != revision;
+    } on FormatException {
+      return true;
+    }
+  }
+
+  /// `remix skills install`.
+  ///
+  /// Reads local state, then the pin, decides every write and rejection
+  /// before the first one, then writes skill files, removals, the guidance
+  /// file, and the receipt.
+  ///
+  /// The receipt is written last because it is a receipt. `add` writes
+  /// `remix.ownership.json` first because that file is a reservation. With
+  /// this order a run that stops partway converges on a plain rerun: a file
+  /// already written equals the pinned bytes and is kept, and a file not yet
+  /// written still matches the old receipt and is replaced.
+  Future<void> installSkills(SkillsInstallOptions options) async {
+    final (root, config) = _readConfig(command: 'skills install');
+    final pin = config.registries[skillsNamespace];
+    if (pin == null) {
+      throw const FormatException(
+        'remix.yaml registers no @remix registry, which is where Remix '
+        'skills come from. Add it with remix registry add @remix '
+        '--repository btwld/remix --ref registry-stable.',
+      );
+    }
+    final before = SkillsRecord.read(root);
+    final directory =
+        options.directory ?? before?.directory ?? defaultSkillsDirectory;
+
+    _writeProgress('Fetching Remix skills at ${pin.revision}...');
+    final indexSource = await _sources.file(pin, skillsIndexPath);
+    if (indexSource == null) {
+      throw FormatException(
+        '${pin.repository} publishes no skills at the @remix pin '
+        '${pin.revision} (no $skillsIndexPath). Move the pin with remix '
+        'registry update @remix, then rerun remix skills install.',
+      );
+    }
+    final index = SkillsIndex.parse(indexSource);
+    // Skill bytes never pass through TemplateRenderer: skill text documents
+    // literal `{{typePrefix}}` tokens.
+    final contents = Map.fromEntries(
+      await Future.wait([
+        for (final skill in index.skills)
+          for (final file in skill.files)
+            _pinnedSkillFile(pin, skill.name, file),
+      ]),
+    );
+
+    final plan = SkillsPlan.resolve(
+      root: root,
+      directory: directory,
+      pin: pin,
+      index: index,
+      contents: contents,
+      before: before,
+    );
+    final guidance = GuidancePlan.resolve(
+      root,
+      skillsGuidanceBlock(directory: directory, skills: index.skills),
+    );
+
+    try {
+      for (final MapEntry(:key, :value) in plan.writes.entries) {
+        _fileWriter.write(_projectFile(root, key), value);
+      }
+      for (final path in plan.removals) {
+        _fileWriter.delete(_projectFile(root, path), within: root);
+      }
+      if (guidance.change != GuidanceChange.preserved) {
+        _fileWriter.write(_projectFile(root, guidance.path), guidance.after);
+      }
+      if (plan.recordChanged) {
+        _fileWriter.write(
+          _projectFile(root, skillsRecordFileName),
+          plan.record.encode(),
+        );
+      }
+    } on FileSystemException catch (error) {
+      throw InstallFailure(
+        '${expectedFailureMessage(error)}\nRerun remix skills install. It '
+        'continues from the files already written.',
+      );
+    }
+
+    _writeOut('$skillsNamespace skills revision ${pin.revision}');
+    for (final MapEntry(:key, :value) in plan.changes.entries) {
+      final verb = switch (value) {
+        SkillChange.added => 'Added',
+        SkillChange.updated => 'Updated',
+        SkillChange.preserved => 'Preserved',
+        SkillChange.removed => 'Removed',
+      };
+      _writeOut('$verb $key.');
+    }
+    // A `--dir` move deletes the old copy, which the per-skill lines alone
+    // report as two fresh additions.
+    if (before != null && before.directory != directory) {
+      _writeOut('Removed the previous copy in ${before.directory}.');
+    }
+    final guidanceVerb = switch (guidance.change) {
+      GuidanceChange.created => 'Created',
+      GuidanceChange.updated => 'Updated',
+      GuidanceChange.preserved => 'Preserved',
+    };
+    _writeOut('$guidanceVerb ${guidance.path}.');
+    // Read after the writes: a CLAUDE.md linked to AGENTS.md holds the block
+    // only once it has been written.
+    final claude = _projectFile(root, 'CLAUDE.md');
+    if (needsClaudeImportHint(
+      guidance,
+      claude.existsSync() ? claude.readAsStringSync() : null,
+    )) {
+      _writeOut(
+        'Claude Code reads CLAUDE.md. Add the line @AGENTS.md to it so the '
+        'block applies there.',
+      );
+    }
+    if (plan.writes.isNotEmpty ||
+        plan.removals.isNotEmpty ||
+        guidance.change != GuidanceChange.preserved ||
+        plan.recordChanged) {
+      _writeOut(
+        'Commit $directory, ${guidance.path}, and $skillsRecordFileName so '
+        'every agent on the project reads the same skills.',
+      );
+    }
+  }
+
+  Future<MapEntry<String, String>> _pinnedSkillFile(
+    RegistrySource pin,
+    String skill,
+    String file,
+  ) async {
+    final path = skillRepositoryPath(skill, file);
+    final text = await _sources.file(pin, path);
+    if (text == null) {
+      throw FormatException(
+        '$skillsIndexPath lists $path, which ${pin.repository} does not have '
+        'at ${pin.revision}. Report it at https://github.com/btwld/remix/issues.',
+      );
+    }
+    return MapEntry('$skill/$file', text);
   }
 
   Future<AddResult> add(AddOptions options) async {

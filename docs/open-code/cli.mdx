@@ -24,9 +24,10 @@ For one command's help in a terminal, run `remix help <command>` or `remix <comm
 
 ```text
 Get started:
-  remix init          Pin the official registry and create lib/ui/ui.dart.
-  remix list          See the items you can add.
-  remix add button    Install an item and the items it needs.
+  remix init              Pin the official registry and create lib/ui/ui.dart.
+  remix list              See the items you can add.
+  remix add button        Install an item and the items it needs.
+  remix skills install    Give your coding agent the skills at your pin.
 ```
 
 ### remix init
@@ -126,6 +127,32 @@ remix registry update <@namespace> [options]
 | Option | Default | Description |
 | --- | --- | --- |
 | `--ref <ref>` |  | Branch, tag, or commit to pin. Defaults to the ref in remix.yaml. |
+
+### remix skills
+
+Give coding agents the Remix skills at your pin.
+
+```text
+remix skills <subcommand> [arguments]
+```
+
+```text
+Examples:
+  remix skills install                       Copy skills into .agents/skills.
+  remix skills install --dir .claude/skills  Copy them where Claude Code looks.
+```
+
+#### remix skills install
+
+Copy the Remix skills from the pinned @remix commit into the project and register them in AGENTS.md.
+
+```text
+remix skills install [options]
+```
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--dir <path>` |  | Project directory your agent loads skills from. Defaults to the directory of the last install, or .agents/skills. |
 
 ## Exit codes
 
