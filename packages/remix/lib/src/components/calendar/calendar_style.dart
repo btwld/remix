@@ -1,5 +1,47 @@
 part of 'calendar.dart';
 
+extension RemixCalendarStylerRemixHelpers on CalendarStyler {
+  /// Builds a [RemixCalendar] with this style.
+  RemixCalendar call({
+    Key? key,
+    required DateTime? value,
+    required DateTime firstDate,
+    required DateTime lastDate,
+    ValueChanged<DateTime>? onChanged,
+    DateTime? currentDate,
+    bool Function(DateTime)? isDateUnavailable,
+    int firstDayOfWeek = DateTime.sunday,
+    bool enabled = true,
+    String? semanticLabel,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    RemixCalendarLabels labels = const RemixCalendarLabels(),
+    Widget Function(BuildContext, NakedCalendarState)? headerBuilder,
+    IconButtonStyler navigationStyle = const IconButtonStyler.create(),
+    SelectStyler selectorStyle = const SelectStyler.create(),
+  }) {
+    return RemixCalendar(
+      key: key,
+      style: this,
+      value: value,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      onChanged: onChanged,
+      currentDate: currentDate,
+      isDateUnavailable: isDateUnavailable,
+      firstDayOfWeek: firstDayOfWeek,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      labels: labels,
+      headerBuilder: headerBuilder,
+      navigationStyle: navigationStyle,
+      selectorStyle: selectorStyle,
+    );
+  }
+}
+
 // Calendar day states that are not Flutter WidgetStates. Each day resolves its
 // style under the NakedCalendarDayState it scopes, so these apply to days only.
 // Mix merges context variants by identity; keys are diagnostic labels only.

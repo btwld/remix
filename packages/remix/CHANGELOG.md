@@ -1,3 +1,9 @@
+## Unreleased
+
+### Features
+
+- Add `CalendarStyler.call` to build a `RemixCalendar` with the owning style.
+
 ## 1.0.0-beta.18
 
 ### Breaking changes

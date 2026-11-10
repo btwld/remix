@@ -142,8 +142,10 @@ finite size to replace the cap, or `maxWidth(double.maxFinite)` to fill a bounde
 parent. Under an unbounded parent, `double.maxFinite` uses the compact fallback.
 Narrower parents still allow horizontal scrolling without shrinking day targets.
 
-Pass the styler to `RemixCalendar(style: calendarStyle, ...)`; `CalendarStyler`
-does not provide a callable widget shorthand.
+Pass the styler to `RemixCalendar(style: calendarStyle, ...)`, or call it directly:
+`calendarStyle(value: value, firstDate: firstDate, lastDate: lastDate, onChanged: onChanged)`.
+`CalendarStyler.call` returns a `RemixCalendar` and accepts its constructor
+parameters except `style` and `styleSpec`.
 
 ## Localization and direction
 

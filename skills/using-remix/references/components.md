@@ -118,8 +118,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   and day styling unresolved in their own interaction states. Day styles add
   `onToday` and `onUnavailable` (predicate-rejected, in range; declare after
   `onDisabled`). Vanilla, Fortal and HeroUI ship `<Prefix>Calendar` with icon navigation, growing Select
-  selectors and all day states; install `calendar`. `CalendarStyler` has no
-  callable widget shorthand.
+  selectors and all day states; install `calendar`. `CalendarStyler.call(...)`
+  builds a `RemixCalendar` with the supplied style.
 - **[RangeCalendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx)** — controlled complete inclusive `CivilDateRange?`, sharing
   Calendar navigation and day anatomy. First activation anchors locally without
   a callback; second eligible activation requests one ordered range and clears
