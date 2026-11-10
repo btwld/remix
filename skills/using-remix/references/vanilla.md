@@ -115,11 +115,11 @@ families carry over.
   Both recipes reserve a 48px interaction height. The single slider previously
   occupied 22px; existing layouts must allow the additional 26px when updating
   the installed recipe. The extra height accepts pointer input too.
-  Both use pill-shaped `mutedForeground` rails, a primary interval and white
-  outlined thumbs. Hover draws a subtle opaque 2px halo; press uses a stronger
-  6px halo. Keyboard focus draws an opaque 3px `mutedForeground` ring with a
-  2px gap, raised locally rather than through the shared focus helper.
-  Disabled fades the whole
+  Both use pill-shaped rails (`mutedForeground` in light, `ring` in dark), a
+  primary interval and white outlined thumbs. Hover draws a subtle opaque 2px
+  halo; press uses a stronger 6px halo. Keyboard focus draws a contiguous 3px
+  `primary` ring around the thumb, raised locally rather than through the
+  shared focus helper. Disabled fades the whole
   control. The range widget takes two ordered, parent-owned `values`,
   `minSpacing`, `snapDivisions`, and lower/upper `semanticLabels` and
   `focusNodes`. The generated adapters omit Naked UI's semantic formatter
@@ -150,8 +150,9 @@ families carry over.
   Select selectors, whose heights grow with text. Day targets are 48px; resting
   days are transparent, unavailable dates strike through, disabled dates fade,
   and keyboard focus paints an inset ring without reflow. The range uses solid
-  committed caps and accent interiors; an outlined tinted draft de-emphasizes
-  the old committed selection. Override `style`, `navigationStyle` and
+  `primary` committed caps and `primary`-tinted interiors; an outlined tinted
+  draft de-emphasizes the old committed selection. Override `style`,
+  `navigationStyle` and
   `selectorStyle` last. See [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx)
   and [Range Calendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx).
 - **DatePicker / DateRangePicker** — install `date_picker` or
