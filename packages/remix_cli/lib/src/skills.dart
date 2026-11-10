@@ -274,9 +274,9 @@ final class SkillsPlan {
   /// | equals the receipt digest | write (the CLI wrote it; safe to replace)|
   /// | anything else             | conflict                                 |
   ///
-  /// A path in [before] that the new layout does not contain is removed when
-  /// the disk still matches its receipt digest or the file is already gone,
-  /// and is a conflict otherwise.
+  /// A path in [before] that names no file of the new layout, once links are
+  /// resolved, is removed when the disk still matches its receipt digest or
+  /// the file is already gone, and is a conflict otherwise.
   ///
   /// Throws one [FormatException] that lists every conflict. There is no
   /// `--overwrite`: deleting the file is the explicit act.
@@ -305,10 +305,11 @@ final class SkillsPlan {
       for (final file in skill.files) {
         final key = '${skill.name}/$file';
         final target = p.posix.join(directory, key);
-        targets.add(target);
+        final physical = validateProjectFilePath(root, target);
+        targets.add(physical);
         final pinned = contents[key]!;
         digests[key] = skillFileDigest(pinned);
-        final onDisk = _diskDigest(root, target);
+        final onDisk = _diskDigest(physical);
         if (onDisk == null) {
           writes[target] = pinned;
           touched.add(skill.name);
@@ -332,8 +333,10 @@ final class SkillsPlan {
         final skill = key.split('/').first;
         if (!published.contains(skill)) removed.add(skill);
         final previous = p.posix.join(before.directory, key);
-        if (targets.contains(previous)) continue;
-        final onDisk = _diskDigest(root, previous);
+        final physical = validateProjectFilePath(root, previous);
+        // A new --dir that links to the old copy keeps these same files.
+        if (targets.contains(physical)) continue;
+        final onDisk = _diskDigest(physical);
         if (onDisk != null && onDisk != value) {
           conflicts.add(previous);
           continue;
@@ -381,13 +384,12 @@ final class SkillsPlan {
     );
   }
 
-  /// The digest of [relative] on disk, or null when it does not exist.
+  /// The digest of the file at [physical], or null when it does not exist.
   ///
   /// Malformed UTF-8 is decoded leniently: such a file cannot equal pinned
   /// text, so it lands in the conflict list rather than failing the run.
-  static String? _diskDigest(Directory root, String relative) {
-    validateProjectFilePath(root, relative);
-    final file = File(p.joinAll([root.path, ...p.posix.split(relative)]));
+  static String? _diskDigest(String physical) {
+    final file = File(physical);
     if (!file.existsSync()) return null;
     return skillFileDigest(
       utf8.decode(file.readAsBytesSync(), allowMalformed: true),

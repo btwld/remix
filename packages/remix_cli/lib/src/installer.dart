@@ -371,7 +371,9 @@ final class Installer {
     }
     // A `--dir` move deletes the old copy, which the per-skill lines alone
     // report as two fresh additions.
-    if (before != null && before.directory != directory) {
+    if (before != null &&
+        before.directory != directory &&
+        plan.removals.isNotEmpty) {
       _writeOut('Removed the previous copy in ${before.directory}.');
     }
     final guidanceVerb = switch (guidance.change) {
