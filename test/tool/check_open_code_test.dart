@@ -1,11 +1,19 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
+import '../../packages/remix_cli/lib/src/registry_source.dart';
 import '../../tool/check_open_code.dart' as checker;
+import '../../tool/check_pub_floors.dart';
+import '../../tool/check_published_cli.dart';
+import '../../tool/compile_registry_consumer.dart';
+import '../../tool/consumer_check_reporting.dart';
+import '../../tool/install_pins.dart';
+import '../../tool/open_code_lifecycle.dart';
 
 void main() {
   late Directory sandbox;
@@ -16,6 +24,581 @@ void main() {
 
   tearDown(() {
     if (sandbox.existsSync()) sandbox.deleteSync(recursive: true);
+  });
+
+  group('pub.dev floor preflight', () {
+    test('hosted pin is exact and rejects path or extra override leaks', () {
+      final floor = checker.registryRemixFloor(Directory.current, 'vanilla');
+      checker.writeHostedFloorOverride(sandbox, floor: floor);
+      expect(checker.hostedFloorOverrideProblem(sandbox, floor: floor), isNull);
+      final file = File('${sandbox.path}/pubspec_overrides.yaml');
+      expect(
+        (loadYaml(file.readAsStringSync()) as YamlMap)['dependency_overrides'],
+        {'remix': floor},
+      );
+      for (final declaration in [
+        'dependency_overrides:\n  remix: ^$floor\n',
+        'dependency_overrides:\n  remix: {path: ../remix}\n',
+        'dependency_overrides:\n  remix: $floor\n  mix: 2.3.1\n',
+        'dependency_overrides:\n  remix: $floor\nresolution: workspace\n',
+      ]) {
+        file.writeAsStringSync(declaration);
+        expect(
+          checker.hostedFloorOverrideProblem(sandbox, floor: floor),
+          contains('exact hosted version'),
+        );
+      }
+      file.deleteSync();
+      expect(
+        checker.hostedFloorOverrideProblem(sandbox, floor: floor),
+        contains('missing'),
+      );
+    });
+    late Directory registry;
+    setUp(() {
+      registry = Directory('${sandbox.path}/registry')..createSync();
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
+        final catalog = File('${registry.path}/$preset/registry.yaml');
+        catalog.parent.createSync();
+        catalog.writeAsStringSync("""
+items:
+  theme:
+    dependencies: {remix: ^1.0.0-beta.18, flutter: {sdk: flutter}}
+    devDependencies: {mix_generator: ^2.2.0-beta.3}
+""");
+      }
+      File('${registry.path}/icons.yaml').writeAsStringSync("""
+libraries:
+  remix: {dependency: {remix_ui_icons: ^1.0.0-beta.1}}
+""");
+    });
+    _FakePubClient client({String? missing, bool newer = false}) =>
+        _FakePubClient((uri) async {
+          final package = uri.pathSegments.last;
+          final version = readHostedFloors(registry)[package]!.single;
+          return (
+            statusCode: 200,
+            body: jsonEncode({
+              'versions': [
+                if (package != missing) {'version': version},
+                if (newer && package == 'remix') {'version': '1.0.0-beta.19'},
+              ],
+            }),
+          );
+        });
+    test(
+      'present floors include generators and icons and query each package once',
+      () async {
+        final http = client();
+        expect(await checkPubFloors(registry, client: http), isNull);
+        expect(
+          http.requests.map((uri) => uri.path),
+          unorderedEquals([
+            '/api/packages/remix',
+            '/api/packages/mix_generator',
+            '/api/packages/remix_ui_icons',
+          ]),
+        );
+        expect(
+          http.requests.every(
+            (uri) => uri.host == 'pub.dev' && uri.scheme == 'https',
+          ),
+          isTrue,
+        );
+      },
+    );
+    test(
+      'missing floor explains publication order before creating any app',
+      () async {
+        expect(
+          await checkPubFloors(registry, client: client(missing: 'remix')),
+          'remix ^1.0.0-beta.18 is not on pub.dev yet; push tag v1.0.0-beta.18, wait for the Publish workflow, then re-run Promote registry',
+        );
+        expect(
+          await checkPubFloors(
+            registry,
+            client: client(missing: 'mix_generator'),
+          ),
+          contains('publish the required dependency upstream'),
+        );
+      },
+    );
+    test(
+      '404 means missing while server and network errors stay distinct',
+      () async {
+        expect(
+          await checkPubFloors(
+            registry,
+            client: _FakePubClient(
+              (_) async => (statusCode: 404, body: 'not found'),
+            ),
+          ),
+          contains('not on pub.dev yet'),
+        );
+        expect(
+          await checkPubFloors(
+            registry,
+            client: _FakePubClient(
+              (_) async => (statusCode: 503, body: 'unavailable'),
+            ),
+          ),
+          contains('HTTP 503'),
+        );
+        final error = await checkPubFloors(
+          registry,
+          client: _FakePubClient(
+            (_) async => throw const SocketException('fixture offline'),
+          ),
+        );
+        expect(error, contains('fixture offline'));
+        expect(error, isNot(contains('not on pub.dev yet')));
+      },
+    );
+    test('a newer prerelease fails the separate freshness check', () async {
+      expect(
+        await checkPubFloors(registry, client: client(newer: true)),
+        contains('older than published 1.0.0-beta.19'),
+      );
+    });
+    test(
+      'stable floors may predate newest Remix, but must be published',
+      () async {
+        final floors = readCatalogHostedFloors([
+          'items: {theme: {dependencies: {remix: ^1.0.0-beta.18}}}',
+        ]);
+        expect(
+          await checkPubPackageFloors(
+            floors,
+            client: client(newer: true),
+            requireLatestRemix: false,
+          ),
+          isNull,
+        );
+        expect(
+          await checkPubPackageFloors(
+            floors,
+            client: client(missing: 'remix'),
+            requireLatestRemix: false,
+          ),
+          contains('not on pub.dev yet'),
+        );
+      },
+    );
+
+    test('every current catalog has hosted floors', () {
+      expect(
+        readHostedFloors(Directory('registry')).keys,
+        containsAll([
+          'remix',
+          'mix_annotations',
+          'mix_generator',
+          'build_runner',
+          'remix_ui_fonts',
+          'remix_ui_icons',
+          'lucide_flutter',
+        ]),
+      );
+    });
+  });
+
+  group('published CLI candidate', () {
+    final cliPin = expectedInstallPin(Directory.current, 'remix_cli');
+    final cliVersion = cliPin.substring(1);
+    _FakePubClient publishedCli() => _FakePubClient(
+      (_) async => (
+        statusCode: 200,
+        body: jsonEncode({
+          'versions': [
+            {'version': cliVersion},
+          ],
+        }),
+      ),
+    );
+
+    test('workflow never activates remix_cli without the documented pin', () {
+      final workflow = File(
+        '.github/workflows/registry.yml',
+      ).readAsStringSync();
+      final failures = <String>[];
+      checkInstallPins(workflow, '.github/workflows/registry.yml', {
+        'remix_cli': expectedInstallPin(Directory.current, 'remix_cli'),
+      }, failures);
+      expect(failures, isEmpty);
+    });
+
+    test(
+      'activates the exact published version before creating an app',
+      () async {
+        final app = Directory('${sandbox.path}/app');
+        final commands = <List<String>>[];
+        final sha = 'a' * 40;
+        expect(
+          await checkPublishedCliCandidate(
+            app: app,
+            repositoryRoot: Directory.current,
+            preset: 'vanilla',
+            sha: sha,
+            dart: 'fake-dart',
+            flutter: 'fake-flutter',
+            pubClient: publishedCli(),
+            run: (executable, args, {capturedOutput}) async {
+              capturedOutput?.writeln(cliVersion);
+              commands.add([executable, ...args]);
+              if (args.first == 'create') app.createSync();
+              if (args.contains('update')) {
+                File('${app.path}/remix.yaml').writeAsStringSync(
+                  'registries: {"@remix": {revision: "$sha"}}',
+                );
+              }
+              return null;
+            },
+          ),
+          isNull,
+        );
+        expect(commands.first, [
+          'fake-dart',
+          'pub',
+          'global',
+          'activate',
+          'remix_cli',
+          cliVersion,
+        ]);
+      },
+    );
+
+    test(
+      'every preset uses the activated CLI and repins before installing',
+      () async {
+        for (final preset in ['vanilla', 'fortal', 'heroui']) {
+          final app = Directory('${sandbox.path}/released_$preset');
+          final commands = <List<String>>[];
+          final sha = 'a' * 40;
+          expect(
+            await checkPublishedCliCandidate(
+              app: app,
+              repositoryRoot: Directory.current,
+              preset: preset,
+              sha: sha,
+              dart: 'fake-dart',
+              flutter: 'fake-flutter',
+              pubClient: publishedCli(),
+              run: (executable, args, {capturedOutput}) async {
+                capturedOutput?.writeln(cliVersion);
+                commands.add([executable, ...args]);
+                if (args.first == 'create') app.createSync();
+                if (args.contains('update')) {
+                  File('${app.path}/remix.yaml').writeAsStringSync(
+                    'registries: {"@remix": {revision: "$sha"}}',
+                  );
+                }
+                return null;
+              },
+            ),
+            isNull,
+          );
+          expect(commands.map((command) => command.first), [
+            'fake-dart',
+            'fake-dart',
+            'fake-flutter',
+            'fake-dart',
+            'fake-dart',
+            'fake-dart',
+            'fake-dart',
+            'fake-dart',
+          ]);
+          expect(
+            commands[4],
+            containsAllInOrder([
+              'pub',
+              'global',
+              'run',
+              'remix_cli:remix',
+              'init',
+            ]),
+          );
+          expect(
+            commands[5],
+            containsAllInOrder(['registry', 'update', '@remix', '--ref', sha]),
+          );
+          expect(
+            commands[6],
+            containsAllInOrder([
+              'pub',
+              'global',
+              'run',
+              'remix_cli:remix',
+              'add',
+              preset == 'heroui' ? 'search_field' : 'dashboard_shell',
+              'button',
+            ]),
+          );
+          expect(commands.last, ['fake-dart', 'analyze', 'lib/ui']);
+          expect(
+            commands.expand((command) => command).join(' '),
+            isNot(contains('registry_consumer_cli')),
+          );
+        }
+        final workflow = File(
+          '.github/workflows/registry.yml',
+        ).readAsStringSync();
+        expect(
+          installCommands(workflow).where((c) => c.package == 'remix_cli'),
+          isEmpty,
+        );
+        expect(
+          workflow,
+          contains(
+            r'check_published_cli.dart --preset ${{ matrix.preset }} --ref ${{ github.sha }}',
+          ),
+        );
+      },
+    );
+    test('failure stops the published CLI lane without falling back', () async {
+      var calls = 0;
+      expect(
+        await checkPublishedCliCandidate(
+          app: sandbox,
+          repositoryRoot: Directory.current,
+          preset: 'vanilla',
+          sha: 'a' * 40,
+          dart: 'fake-dart',
+          flutter: 'fake-flutter',
+          pubClient: publishedCli(),
+          run: (_, args, {capturedOutput}) async {
+            capturedOutput?.writeln(cliVersion);
+            calls++;
+            return args.contains('update')
+                ? 'unsupported by published CLI'
+                : null;
+          },
+        ),
+        'unsupported by published CLI',
+      );
+      expect(calls, 6);
+    });
+    test(
+      'branch names cannot silently spend the candidate API budget',
+      () async {
+        expect(
+          await checkPublishedCliCandidate(
+            app: sandbox,
+            repositoryRoot: Directory.current,
+            preset: 'vanilla',
+            sha: 'main',
+            dart: 'fake-dart',
+            flutter: 'fake-flutter',
+            run: (_, _, {capturedOutput}) async =>
+                throw StateError('must not execute'),
+          ),
+          contains('full lowercase candidate SHA'),
+        );
+      },
+    );
+    test(
+      'a successful update must actually select the candidate revision',
+      () async {
+        File(
+          '${sandbox.path}/remix.yaml',
+        ).writeAsStringSync('registries: {"@remix": {revision: "old"}}');
+        expect(
+          await checkPublishedCliCandidate(
+            app: sandbox,
+            repositoryRoot: Directory.current,
+            preset: 'vanilla',
+            sha: 'a' * 40,
+            dart: 'fake-dart',
+            flutter: 'fake-flutter',
+            pubClient: publishedCli(),
+            run: (_, _, {capturedOutput}) async {
+              capturedOutput?.writeln(cliVersion);
+              return null;
+            },
+          ),
+          contains('did not pin @remix'),
+        );
+      },
+    );
+  });
+
+  group('quiet process reporting', () {
+    test('CLI compilation uses the same quiet tracked runner', () async {
+      final out = StringBuffer();
+      final processes = OpenCodeProcesses(
+        startProcess:
+            (
+              _,
+              args, {
+              String? workingDirectory,
+              Map<String, String>? environment,
+              required ProcessStartMode mode,
+            }) async {
+              expect(mode, ProcessStartMode.normal);
+              expect(args.take(2), ['compile', 'kernel']);
+              File(args.last).writeAsStringSync('fixture kernel');
+              final child = _ReportingProcess();
+              child.output.add(utf8.encode('compiler details'));
+              unawaited(child.output.close());
+              unawaited(child.errors.close());
+              child.completed.complete(0);
+              return child;
+            },
+      );
+      final snapshot = await compileRegistryConsumerCli(
+        dart: 'fake-dart',
+        repositoryRoot: sandbox,
+        outputDirectory: sandbox,
+        processes: processes,
+        reporter: ConsumerCheckReporter(out: out, err: out),
+      );
+      expect(snapshot.readAsStringSync(), 'fixture kernel');
+      expect(out.toString(), startsWith('ok compile CLI ('));
+      expect(out.toString(), isNot(contains('compiler details')));
+    });
+    Future<String?> child(
+      StringBuffer out, {
+      int code = 0,
+      bool verbose = false,
+      StringSink? capturedOutput,
+      StringSink? capturedStdout,
+    }) async {
+      final script = File('${sandbox.path}/output.dart')
+        ..writeAsStringSync('''
+import 'dart:io';
+void main() {
+  stdout.writeln('child stdout');
+  stderr.writeln('child stderr');
+  exitCode = $code;
+}
+''');
+      return ConsumerCheckReporter(out: out, err: out, verbose: verbose).run(
+        OpenCodeProcesses(),
+        Platform.resolvedExecutable,
+        [script.path],
+        workingDirectory: sandbox.path,
+        step: 'add fixture',
+        capturedOutput: capturedOutput,
+        capturedStdout: capturedStdout,
+      );
+    }
+
+    test('success prints only one timing line', () async {
+      final out = StringBuffer();
+      expect(await child(out), isNull);
+      expect(out.toString(), matches(r'^ok add fixture \(\d+\.\d s\)\n$'));
+      expect(out.toString(), isNot(contains('ERROR')));
+    });
+    test('captures successful child output for version assertions', () async {
+      final out = StringBuffer();
+      final captured = StringBuffer();
+      expect(await child(out, capturedOutput: captured), isNull);
+      expect(captured.toString(), contains('child stdout'));
+      expect(captured.toString(), contains('child stderr'));
+      expect(out.toString(), isNot(contains('child stdout')));
+    });
+    test(
+      'captures stdout separately while preserving full failure logs',
+      () async {
+        for (final code in [0, 7]) {
+          final out = StringBuffer();
+          final combined = StringBuffer();
+          final captured = StringBuffer();
+          final problem = await child(
+            out,
+            code: code,
+            capturedOutput: combined,
+            capturedStdout: captured,
+          );
+          expect(problem, code == 0 ? isNull : contains('exited 7'));
+          expect(captured.toString(), 'child stdout\n');
+          expect(combined.toString(), contains('child stdout'));
+          expect(combined.toString(), contains('child stderr'));
+          if (code != 0) {
+            expect(out.toString(), contains('child stdout'));
+            expect(out.toString(), contains('child stderr'));
+          }
+        }
+      },
+    );
+    test('failure prints full stdout and stderr and the exit code', () async {
+      final out = StringBuffer();
+      expect(await child(out, code: 7), contains('exited 7'));
+      expect(out.toString(), contains('child stdout'));
+      expect(out.toString(), contains('child stderr'));
+      expect(out.toString(), isNot(contains('ok add')));
+    });
+    test('verbose streams child output and parses once', () async {
+      expect(checker.parseConsumerCheckOptions(['--verbose'])!.verbose, isTrue);
+      expect(checker.parseConsumerCheckOptions([])!.verbose, isFalse);
+      expect(
+        checker.parseConsumerCheckOptions(['--verbose', '--verbose']),
+        isNull,
+      );
+      final out = StringBuffer();
+      expect(await child(out, verbose: true), isNull);
+      expect(out.toString(), contains('child stdout'));
+      expect(out.toString(), contains('child stderr'));
+    });
+    test('verbose bypasses pool buffers before the child finishes', () async {
+      final child = _ReportingProcess();
+      final processes = OpenCodeProcesses(
+        startProcess:
+            (
+              _,
+              _, {
+              String? workingDirectory,
+              Map<String, String>? environment,
+              required ProcessStartMode mode,
+            }) async => child,
+      );
+      final out = StringBuffer();
+      final pooledLog = StringBuffer();
+      final pending = ConsumerCheckReporter(out: out, err: out, verbose: true)
+          .run(
+            processes,
+            'fake',
+            ['add', 'fixture'],
+            workingDirectory: sandbox.path,
+            log: pooledLog,
+          );
+      await _settle();
+      child.output.add(utf8.encode('live stdout\n'));
+      child.errors.add(utf8.encode('live stderr\n'));
+      await _settle();
+      expect(out.toString(), contains('live stdout'));
+      expect(out.toString(), contains('live stderr'));
+      expect(pooledLog.toString(), isEmpty);
+      expect(child.completed.isCompleted, isFalse);
+      await child.output.close();
+      await child.errors.close();
+      child.completed.complete(0);
+      expect(await pending, isNull);
+    });
+    test('phases close and timing summaries append on success and failure', () {
+      final summary = File('${sandbox.path}/summary.md')
+        ..writeAsStringSync('earlier\n');
+      final out = StringBuffer();
+      final reporter = ConsumerCheckReporter(
+        out: out,
+        err: out,
+        githubActions: true,
+        summaryFile: summary,
+      );
+      reporter.startPhase('Setup');
+      reporter.startPhase('Gallery');
+      reporter.failure('actual failure\nwith details%');
+      reporter.finish('fixture');
+      expect(out.toString(), contains('::group::Setup\n::endgroup::'));
+      expect(out.toString(), contains('::group::Gallery'));
+      expect(
+        out.toString(),
+        contains('::error::actual failure%0Awith details%25'),
+      );
+      expect(out.toString().split('::endgroup::'), hasLength(3));
+      expect(summary.readAsStringSync(), startsWith('earlier\n'));
+      expect(summary.readAsStringSync(), contains('| Phase | Time |'));
+      expect(summary.readAsStringSync(), contains('| Setup |'));
+      expect(summary.readAsStringSync(), contains('| Gallery |'));
+    });
   });
 
   test('every invocation shipped in CI and docs actually parses', () {
@@ -43,6 +626,7 @@ void main() {
       for (final match in invocation.allMatches(file.readAsStringSync())) {
         final arguments = match
             .group(1)!
+            .replaceAll(r'${{ matrix.preset }}', 'vanilla')
             .trim()
             .split(RegExp(r'\s+'))
             .where((argument) => argument.isNotEmpty)
@@ -58,7 +642,200 @@ void main() {
     expect(checked, greaterThan(4), reason: 'found no invocations to check');
   });
 
+  test('promotion validates static contracts and every hosted preset', () {
+    final jobs =
+        (loadYaml(File('.github/workflows/registry.yml').readAsStringSync())
+                as YamlMap)['jobs']
+            as YamlMap;
+    final hosted = jobs['hosted'] as YamlMap;
+    expect(hosted['timeout-minutes'], 20);
+    expect(hosted['strategy']['fail-fast'], isFalse);
+    expect(hosted['strategy']['matrix']['preset'], [
+      'vanilla',
+      'fortal',
+      'heroui',
+    ]);
+    expect(jobs['promote']['needs'], ['static', 'hosted']);
+    expect(jobs['promote']['if'], "github.ref == 'refs/heads/main'");
+    final staticSteps = jobs['static']['steps'].toString();
+    for (final command in [
+      'build_registry.dart --check',
+      'check_dependency_constraints.dart',
+      'check_version_alignment.dart',
+      'build_registry_test.dart',
+      'build_registry_agent_test.dart',
+      'dart test',
+    ]) {
+      expect(staticSteps, contains(command));
+    }
+    expect(
+      hosted['steps'].toString(),
+      contains('check_open_code.dart --preset'),
+    );
+    expect(hosted['steps'].toString(), isNot(contains('melos run')));
+    final scripts =
+        (loadYaml(File('pubspec.yaml').readAsStringSync())
+                as YamlMap)['melos']['scripts']
+            as YamlMap;
+    for (final preset in ['vanilla', 'fortal', 'heroui']) {
+      expect(
+        scripts['open-code:release:check:$preset']['run'],
+        contains('--source hosted'),
+      );
+    }
+    expect(scripts['open-code:release:check']['steps'], hasLength(3));
+  });
+
   group('consumer source selection', () {
+    test(
+      'hosted fast modes stay below ten init calls and release smoke uses three',
+      () {
+        var canaryCalls = 0;
+        var checkoutCalls = 0;
+        for (final preset in ['vanilla', 'fortal', 'heroui']) {
+          canaryCalls += checker.plannedInitCalls(
+            checker.parseConsumerCheckOptions([
+              '--source',
+              'hosted',
+              '--preset',
+              preset,
+            ])!,
+          );
+          checkoutCalls += checker.plannedInitCalls(
+            checker.parseConsumerCheckOptions([
+              '--source',
+              'checkout',
+              '--preset',
+              preset,
+            ])!,
+          );
+        }
+        expect(canaryCalls, 6);
+        expect(canaryCalls, lessThan(10));
+        expect(checkoutCalls, greaterThan(10));
+        final scripts =
+            (loadYaml(File('pubspec.yaml').readAsStringSync())
+                    as YamlMap)['melos']['scripts']
+                as YamlMap;
+        final commands =
+            scripts['open-code:release:check']['steps'] as YamlList;
+        var smokeCalls = 0;
+        for (final command in commands.cast<String>()) {
+          final options = checker.parseConsumerCheckOptions(
+            command.split('check_open_code.dart ').last.split(' '),
+          )!;
+          expect(options.source, checker.RemixSource.hosted);
+          expect(options.independent, checker.IndependentMode.none);
+          expect(options.install, checker.InstallMode.batch);
+          smokeCalls += checker.plannedInitCalls(options);
+        }
+        expect(smokeCalls, 3);
+        expect(smokeCalls, lessThan(10));
+        final workflow = File(
+          '.github/workflows/publish.yml',
+        ).readAsStringSync();
+        expect(workflow, contains("REMIX_REGISTRY_RELEASE_SMOKE: '1'"));
+        expect(workflow, contains('melos run open-code:release:check'));
+      },
+    );
+    test('hosted batches the gallery after two incremental adds', () {
+      for (final source in checker.RemixSource.values) {
+        expect(
+          checker.parseConsumerCheckOptions(['--source', source.name])!.install,
+          source == checker.RemixSource.hosted
+              ? checker.InstallMode.batch
+              : checker.InstallMode.incremental,
+        );
+      }
+      for (final mode in checker.InstallMode.values) {
+        expect(
+          checker.parseConsumerCheckOptions(['--install', mode.name])!.install,
+          mode,
+        );
+      }
+      for (final args in [
+        ['--install'],
+        ['--install', 'bad'],
+        ['--install', 'batch', '--install', 'incremental'],
+      ]) {
+        expect(checker.parseConsumerCheckOptions(args), isNull);
+      }
+      const items = ['theme_user', 'generated', 'chart', 'dashboard', 'last'];
+      expect(checker.galleryInstallBatches(items, checker.InstallMode.batch), [
+        ['theme_user'],
+        ['generated'],
+        ['chart', 'dashboard', 'last'],
+      ]);
+      expect(
+        checker.galleryInstallBatches(items, checker.InstallMode.incremental),
+        items.map((item) => [item]).toList(),
+      );
+      for (var length = 0; length <= items.length; length++) {
+        final subset = items.take(length).toList();
+        final batches = checker.galleryInstallBatches(
+          subset,
+          checker.InstallMode.batch,
+        );
+        expect(batches.expand((batch) => batch), subset);
+        expect(batches.every((batch) => batch.isNotEmpty), isTrue);
+      }
+    });
+    test('independent defaults follow the selected source', () {
+      for (final source in checker.RemixSource.values) {
+        final options = checker.parseConsumerCheckOptions([
+          '--source',
+          source.name,
+        ])!;
+        expect(
+          options.independent,
+          source == checker.RemixSource.hosted
+              ? checker.IndependentMode.canary
+              : checker.IndependentMode.all,
+        );
+        for (final mode in checker.IndependentMode.values) {
+          expect(
+            checker.parseConsumerCheckOptions([
+              '--source',
+              source.name,
+              '--independent',
+              mode.name,
+            ])!.independent,
+            mode,
+          );
+        }
+      }
+      for (final args in [
+        ['--independent'],
+        ['--independent', 'bad'],
+        ['--independent', 'all', '--independent', 'none'],
+      ]) {
+        expect(checker.parseConsumerCheckOptions(args), isNull);
+      }
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
+        final canary = checker.independentInstallItems(
+          preset,
+          mode: checker.IndependentMode.canary,
+        );
+        expect(canary, [
+          preset == 'heroui' ? 'search_field' : 'dashboard_shell',
+        ]);
+        expect(checker.independentInstallsForTest(preset), containsAll(canary));
+        expect(
+          checker.independentInstallItems(
+            preset,
+            mode: checker.IndependentMode.none,
+          ),
+          isEmpty,
+        );
+        expect(
+          checker.independentInstallItems(
+            preset,
+            mode: checker.IndependentMode.all,
+          ),
+          checker.independentInstallsForTest(preset),
+        );
+      }
+    });
     test('the default retains hosted and checkout validation', () {
       final options = checker.parseConsumerCheckOptions([])!;
 
@@ -980,6 +1757,114 @@ icons:
   checkCircled: {lucide: circleCheck, fallback: lucide}
 ''';
 
+    test('release smoke plans only the installed registry catalog', () {
+      // The checkout has many unpromoted items, while stable also retains an
+      // item since removed from the checkout. Use stable, not an intersection.
+      const catalog = """
+items:
+  theme:
+    dependencies: {remix: ^1.0.0-beta.17}
+    files: [{source: theme.dart.tmpl, target: "@ui/theme/theme.dart"}]
+  button:
+    registryDependencies: [theme]
+    dependencies: {stable_runtime: ^2.0.0}
+    devDependencies: {stable_generator: ^3.0.0}
+    files: [{source: button.dart.tmpl, target: "@ui/components/button.dart"}]
+    generated: ["@ui/components/button.g.dart"]
+  stable_only:
+    registryDependencies: [theme]
+    files: [{source: stable.dart.tmpl, target: "@ui/components/stable.dart"}]
+""";
+      for (final preset in ['vanilla', 'fortal', 'heroui']) {
+        final plan = checker.registryPlanForTest(preset, catalog);
+        expect(plan.items, ['theme', 'button', 'stable_only']);
+        expect(plan.floor, '1.0.0-beta.17');
+        expect(plan.runtime.toSet(), {
+          'remix',
+          'stable_runtime',
+          'remix_ui_icons',
+        });
+        expect(readCatalogHostedFloors([catalog]), {
+          'remix': {'1.0.0-beta.17'},
+          'stable_runtime': {'2.0.0'},
+          'stable_generator': {'3.0.0'},
+        });
+        expect(
+          checker
+              .galleryInstallBatches(plan.items, checker.InstallMode.batch)
+              .expand((batch) => batch),
+          plan.items,
+        );
+        expect(plan.files.toSet(), {
+          'ui.dart',
+          'theme/theme.dart',
+          'components/button.dart',
+          'components/button.g.dart',
+          'components/stable.dart',
+        });
+      }
+    });
+
+    test(
+      'smoke reads the CLI pin via the registry index without branch races',
+      () async {
+        _writePinnedRegistryConfig(sandbox);
+        final requests = <Uri>[];
+        final registry = await checker.readInstalledRegistryCatalog(
+          sandbox,
+          transport: (uri) async {
+            requests.add(uri);
+            expect(uri.path, startsWith('/btwld/remix/${'a' * 40}/registry/'));
+            return RegistryResponse(200, switch (uri.pathSegments.last) {
+              'index.yaml' =>
+                'schema: 1\npresets: {vanilla: archived/catalog.yaml}',
+              'catalog.yaml' =>
+                'items: {theme: {files: [], dependencies: {remix: ^1.0.0}}}',
+              'icons.yaml' => stable,
+              _ => throw StateError('Unexpected request $uri'),
+            });
+          },
+        );
+        expect(requests.map((uri) => uri.pathSegments.last), [
+          'index.yaml',
+          'catalog.yaml',
+          'icons.yaml',
+        ]);
+        expect(requests[1].path, endsWith('/registry/archived/catalog.yaml'));
+        expect(checker.registryPlanForTest('vanilla', registry.catalog).items, [
+          'theme',
+        ]);
+        expect(registry.icons, stable);
+      },
+    );
+
+    test(
+      'missing or unavailable pinned catalogs never fall back to checkout',
+      () async {
+        _writePinnedRegistryConfig(sandbox);
+        for (final status in [404, 503]) {
+          await expectLater(
+            checker.readInstalledRegistryCatalog(
+              sandbox,
+              transport: (uri) async {
+                return RegistryResponse(
+                  uri.pathSegments.last == 'index.yaml' ? 200 : status,
+                  'schema: 1\npresets: {vanilla: vanilla/registry.yaml}',
+                );
+              },
+            ),
+            throwsA(
+              isA<HttpException>().having(
+                (error) => error.message,
+                'message',
+                contains('returned $status'),
+              ),
+            ),
+          );
+        }
+      },
+    );
+
     test('a CLI release smoke reads registry-stable', () {
       // publish.yml verifies a new CLI against the promoted registry before
       // publishing it, the same registry applications read.
@@ -1150,4 +2035,56 @@ final class _Tasks {
       if (!gate.isCompleted) gate.complete();
     }
   }
+}
+
+final class _ReportingProcess implements Process {
+  _ReportingProcess() {
+    unawaited(input.stream.drain<void>());
+  }
+  final completed = Completer<int>();
+  final output = StreamController<List<int>>();
+  final errors = StreamController<List<int>>();
+  final input = StreamController<List<int>>();
+  @override
+  Future<int> get exitCode => completed.future;
+  @override
+  Stream<List<int>> get stdout => output.stream;
+  @override
+  Stream<List<int>> get stderr => errors.stream;
+  @override
+  late final IOSink stdin = IOSink(input.sink);
+  @override
+  int get pid => 123456789;
+  @override
+  bool kill([ProcessSignal signal = ProcessSignal.sigterm]) => true;
+}
+
+final class _FakePubClient implements PubFloorClient {
+  _FakePubClient(this.reply);
+  final Future<PubResponse> Function(Uri) reply;
+  final requests = <Uri>[];
+  @override
+  Future<PubResponse> get(Uri uri) {
+    requests.add(uri);
+    return reply(uri);
+  }
+
+  @override
+  void close() {}
+}
+
+void _writePinnedRegistryConfig(Directory app) {
+  File('${app.path}/remix.yaml').writeAsStringSync("""
+schema: 3
+prefix: Acme
+preset: vanilla
+paths: {ui: lib/ui}
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: btwld/remix
+    path: registry
+    ref: registry-stable
+    revision: ${'a' * 40}
+""");
 }
