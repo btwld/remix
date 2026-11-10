@@ -1,4 +1,7 @@
-## 1.0.0-beta.19
+## 1.0.0-rc.1
+
+First release candidate for 1.0.0. `1.0.0-beta.19` was prepared but never
+published; its change ships in this release.
 
 ### Features
 
