@@ -33,21 +33,6 @@ moved, so read the hunks. Plain `--diff` exits 0. With `--exit-code` it exits
 2 when authored source differs and 1 on failure. Rolling back is
 `git checkout remix.yaml`, which restores the pin but not installed source.
 
-## Agent skills
-
-```bash
-dart run remix_cli:remix skills install                       # copy the skills at the @remix pin into .agents/skills
-dart run remix_cli:remix skills install --dir .claude/skills  # the directory Claude Code loads; later runs remember it
-```
-
-The command copies the skill files from the pinned `@remix` commit, writes one
-`remix_cli:skills` block into `AGENTS.md`, and records the revision and file
-digests in `remix.skills.json`. Run it again after `registry update @remix`:
-when `revision` in `remix.skills.json` differs from the `@remix` revision in
-`remix.yaml`, the copied skills describe an older commit. The command owns the
-files it copies and stops on one that changed; restore or delete that file,
-then rerun.
-
 ## Projects from an earlier prerelease
 
 `remix.yaml` schema 3 is the only readable configuration; an older file fails

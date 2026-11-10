@@ -73,14 +73,9 @@ using its widgets. See [setup and host requirements](skills/using-remix/SKILL.md
 
 ## Agent skills
 
-Copy the [app UI](skills/using-remix/SKILL.md) and
-[design-system authoring](skills/building-remix-design-system/SKILL.md) skills
-into a project that has run `remix init`. The copies come from the commit the
-project pins, so they describe the Remix the project installs:
+Install the [app UI](skills/using-remix/SKILL.md) and
+[design-system authoring](skills/building-remix-design-system/SKILL.md) skills:
 
 ```bash
-dart run remix_cli:remix skills install
+npx skills add btwld/remix
 ```
-
-To have a coding agent do the whole setup, paste the
-[Start with AI prompt](docs/getting-started.mdx#start-with-ai).
