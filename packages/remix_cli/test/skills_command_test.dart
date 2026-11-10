@@ -331,6 +331,44 @@ void main() {
       },
     );
 
+    test(
+      'deleting a conflicting file of a dropped skill leaves no directory',
+      () async {
+        final sources = _MemorySkills({
+          'a' * 40: _published({
+            'using-remix/SKILL.md': '# Using Remix\n',
+            'old-skill/SKILL.md': '# Old\n',
+            'old-skill/references/notes.md': '# Notes\n',
+          }),
+          'c' * 40: _published({'using-remix/SKILL.md': '# Using Remix\n'}),
+        });
+        expect(
+          await run(['skills', 'install'], sources: sources),
+          successExitCode,
+        );
+        final notes = file('.agents/skills/old-skill/references/notes.md');
+        notes.writeAsStringSync('ours\n', mode: FileMode.append);
+        pinTo('c' * 40);
+        expect(
+          await run(['skills', 'install'], sources: sources),
+          failureExitCode,
+        );
+
+        notes.deleteSync();
+        expect(
+          await run(['skills', 'install'], sources: sources),
+          successExitCode,
+          reason: '$errors',
+        );
+
+        expect(
+          Directory(p.join(root.path, '.agents/skills/old-skill')).existsSync(),
+          isFalse,
+        );
+        expect(output, contains('Removed old-skill.'));
+      },
+    );
+
     test('--dir moves the copy, and later runs remember it', () async {
       expect(await run(['skills', 'install']), successExitCode);
 
@@ -750,7 +788,7 @@ void main() {
       );
     });
 
-    test('removes an untouched file the pin dropped, and only that one', () {
+    test('removes files the pin dropped, including already deleted ones', () {
       write('.agents/skills/using-remix/references/forms.md', '# Forms\n');
 
       final plan = resolve(
@@ -760,7 +798,10 @@ void main() {
         }),
       );
 
-      expect(plan.removals, ['.agents/skills/using-remix/references/forms.md']);
+      expect(plan.removals, [
+        '.agents/skills/using-remix/references/forms.md',
+        '.agents/skills/using-remix/references/actions.md',
+      ]);
       expect(plan.record.files.keys, isNot(contains(contains('forms.md'))));
     });
 

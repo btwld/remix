@@ -275,8 +275,8 @@ final class SkillsPlan {
   /// | anything else             | conflict                                 |
   ///
   /// A path in [before] that the new layout does not contain is removed when
-  /// the disk still matches its receipt digest, is dropped silently when the
-  /// file is already gone, and is a conflict otherwise.
+  /// the disk still matches its receipt digest or the file is already gone,
+  /// and is a conflict otherwise.
   ///
   /// Throws one [FormatException] that lists every conflict. There is no
   /// `--overwrite`: deleting the file is the explicit act.
@@ -334,13 +334,14 @@ final class SkillsPlan {
         final previous = p.posix.join(before.directory, key);
         if (targets.contains(previous)) continue;
         final onDisk = _diskDigest(root, previous);
-        if (onDisk == null) continue;
-        if (onDisk == value) {
-          removals.add(previous);
-          touched.add(skill);
-        } else {
+        if (onDisk != null && onDisk != value) {
           conflicts.add(previous);
+          continue;
         }
+        // An already-deleted file is still removed, so the delete prunes the
+        // directories the developer's deletion left empty.
+        removals.add(previous);
+        if (onDisk != null) touched.add(skill);
       }
     }
 
