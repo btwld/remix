@@ -108,7 +108,9 @@ TextFieldStyler _{{valuePrefix}}TextInputBaseStyle({
             overContent: RemixBoxEffectLayerMix(),
           ),
         )
-        .wrap(.iconTheme(color: {{typePrefix}}Tokens.gray11(), size: 16.0))
+        .wrap(
+          .iconTheme(color: {{typePrefix}}Tokens.gray11(), size: {{typePrefix}}Tokens.space4()),
+        )
         .onFocused(.containerEffects({{valuePrefix}}FocusOutline()));
 
 TextFieldStyler _{{valuePrefix}}ApplySurfaceTextInput(TextFieldStyler base) =>

@@ -108,7 +108,7 @@ TextFieldStyler _uiTextInputBaseStyle({
             overContent: RemixBoxEffectLayerMix(),
           ),
         )
-        .wrap(.iconTheme(color: UiTokens.gray11(), size: 16.0))
+        .wrap(.iconTheme(color: UiTokens.gray11(), size: UiTokens.space4()))
         .onFocused(.containerEffects(uiFocusOutline()));
 
 TextFieldStyler _uiApplySurfaceTextInput(TextFieldStyler base) =>

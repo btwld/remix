@@ -108,7 +108,9 @@ TextFieldStyler _fortalTextInputBaseStyle({
             overContent: RemixBoxEffectLayerMix(),
           ),
         )
-        .wrap(.iconTheme(color: FortalTokens.gray11(), size: 16.0))
+        .wrap(
+          .iconTheme(color: FortalTokens.gray11(), size: FortalTokens.space4()),
+        )
         .onFocused(.containerEffects(fortalFocusOutline()));
 
 TextFieldStyler _fortalApplySurfaceTextInput(TextFieldStyler base) =>
