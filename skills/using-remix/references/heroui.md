@@ -231,9 +231,10 @@ See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx
 
 `remix add combobox` installs `<Prefix>Combobox<T>` and its `theme`/`textfield`
 dependencies. Use `variant: .primary|.secondary` (primary by default); there is
-no size axis upstream. The field matches TextField, while suggestions follow
-ComboBox/ListBox with growing rows, hover fill, keyboard ring, pressed scale,
-and Remix's overflow fades and directional thumb. Accept through `onSelected`;
+no size axis upstream. The field matches TextField, except that a focused
+secondary field takes the field-focus fill, as upstream does. Suggestions
+follow ComboBox/ListBox with growing rows, hover fill, keyboard ring, pressed
+scale, and Remix's overflow fades and directional thumb. Accept through `onSelected`;
 observe the controller for edits. Supply eligible suggestions only. No trigger
 glyph, per-option disabled state, persistent selected row or multi-selection
 API is added. The upstream Autocomplete with popover search remains deferred.

@@ -17,6 +17,7 @@ tokens:
 measurements:
   - {what: field height and type, value: "40 and 16/24 below 640px; 36 and 14/20 above", cite: combobox-primary-rest-input}
   - {what: input radius and padding, value: "12px, 12x8 (28px end with upstream's optional trigger)", cite: combobox-primary-rest-input}
+  - {what: focused field fill, value: "field-focus in both variants; secondary rests on default", cite: "combobox-secondary-keyboard-open-input, combobox-secondary-rest-input; combo-box.css .combo-box [data-slot=input]:focus"}
   - {what: panel, value: "320px wide for a 320px field, radius 24, overlay and overlay-shadow", cite: combobox-primary-keyboard-open-combo-box-popover}
   - {what: list padding and row gap, value: "6px and 4px", cite: "combobox-primary-keyboard-open-list-box; list-box.css .list-box-item + .list-box-item mt-1"}
   - {what: panel maxHeight, value: "288px = 7 × 36px rows + 6 × 4px gaps + 2 × 6px insets", cite: "HeroUI 3.2.6 combo-box.css .combo-box__popover and react ComboBoxPopover set no explicit height cap; Select shares the same list anatomy (select.yaml item and list measurements); combobox-primary-keyboard-open-list-box-item:Apple"}
@@ -26,7 +27,7 @@ measurements:
   - {what: hover and press, value: "default fill on hover, scale 0.98 on press", cite: "combobox-primary-item-hover-list-box-item:Apricot; list-box-item.css data-pressed transform"}
 apiMapping:
   - "ComboBox maps to RemixCombobox<T>; filtering is optionsBuilder, acceptance is onSelected, editing uses controller/focusNode. Arbitrary text remains valid."
-  - "Upstream variant maps to the same primary/secondary field recipes as HeroUiTextField. No React props or collection state are introduced."
+  - "Upstream variant maps to the same primary/secondary field recipes as HeroUiTextField, except that a focused field takes field-focus in either variant, as combo-box.css does. No React props or collection state are introduced."
   - "Autocomplete's trigger with a search field inside its popover is a separate deferred family; this recipe covers inline editable ComboBox."
 approximations:
   - "RemixCombobox has no trailing-indicator slot for upstream's trailing chevron, trigger button slot, persistent option selection/checkmark, per-option disabled state or multiple selection. Accepted values appear in the editor; supply eligible suggestions only."

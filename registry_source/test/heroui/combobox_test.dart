@@ -25,11 +25,15 @@ Future<ComboboxSpec> resolve(
             variant: variant,
             style: style,
           ).build(context).spec;
-          final field = heroUiTextFieldStyle(
-            variant: HeroUiTextFieldVariant.values[variant.index],
-            style: TextFieldStyler().constraints(.minHeight(0)),
-          ).build(context);
-          expect(spec.field, field);
+          // A focused field takes `--field-focus` in either variant, which
+          // the field-fill test checks against the measurements.
+          if (!states.contains(WidgetState.focused)) {
+            final field = heroUiTextFieldStyle(
+              variant: HeroUiTextFieldVariant.values[variant.index],
+              style: TextFieldStyler().constraints(.minHeight(0)),
+            ).build(context);
+            expect(spec.field, field);
+          }
           return const SizedBox.shrink();
         },
       ),
@@ -190,6 +194,29 @@ void main() {
           },
         );
       }
+    }
+    for (final variant in HeroUiComboboxVariant.values) {
+      testWidgets(
+        '$mode ${variant.name} field fills follow combo-box.css at rest and focused',
+        (tester) async {
+          for (final (states, state) in <(Set<WidgetState>, String)>[
+            ({}, 'rest'),
+            ({.focused}, 'keyboard-open'),
+          ]) {
+            final spec = await resolve(
+              tester,
+              mode: mode,
+              variant: variant,
+              states: states,
+            );
+            expectFill(
+              decoration(spec.field.spec.container.spec).color,
+              heroUiCase('combobox-${variant.name}-$state-input', mode: mode),
+              reason: state,
+            );
+          }
+        },
+      );
     }
     testWidgets(
       '$mode keyboard ring, hover and pressed scale stay distinct and legible',
