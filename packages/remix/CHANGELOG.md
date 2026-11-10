@@ -1,3 +1,7 @@
+## 1.0.0-beta.19
+
+ - **FEAT**(remix): make CalendarStyler callable (#424).
+
 ## Unreleased
 
 ### Features
