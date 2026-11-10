@@ -63,6 +63,16 @@ void main() {
       );
     });
 
+    test('rejects a skill directory the published list leaves out', () {
+      File('${workspace.path}/skills/new-skill/SKILL.md')
+        ..createSync(recursive: true)
+        ..writeAsStringSync('# New\n');
+      expect(checkSkillsIndex(workspace), [
+        'skills/new-skill has a SKILL.md but is not in '
+            'publishedSkillDirectories in tool/install_pins.dart.',
+      ]);
+    });
+
     test('rejects a binary file instead of publishing it', () {
       File(
         '${workspace.path}/skills/using-remix/references/logo.png',

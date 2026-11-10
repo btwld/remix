@@ -81,11 +81,23 @@ void main(List<String> arguments) {
 /// `interface.short_description` from the skill's `agents/openai.yaml`, so the
 /// one-line description has one author.
 ///
-/// Throws a [FormatException] for a skill without `SKILL.md` or a
-/// `short_description`, a file that is not UTF-8 text, or a path the CLI
+/// Throws a [FormatException] for a `skills/<name>/SKILL.md` that
+/// [publishedSkillDirectories] does not list, for a skill without `SKILL.md`
+/// or a `short_description`, a file that is not UTF-8 text, or a path the CLI
 /// would reject. The CLI transport decodes text only, so a binary file must
 /// fail here, in the repository, instead of in a user's project.
 String renderSkillsIndex(Directory workspaceRoot) {
+  for (final entity in Directory('${workspaceRoot.path}/skills').listSync()) {
+    final skillPath =
+        'skills/${entity.path.split(Platform.pathSeparator).last}';
+    if (File('${entity.path}/SKILL.md').existsSync() &&
+        !publishedSkillDirectories.contains(skillPath)) {
+      throw FormatException(
+        '$skillPath has a SKILL.md but is not in publishedSkillDirectories in '
+        'tool/install_pins.dart.',
+      );
+    }
+  }
   final buffer = StringBuffer(_header)
     ..writeln('schema: 1')
     ..writeln('skills:');
