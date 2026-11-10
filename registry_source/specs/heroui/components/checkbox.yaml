@@ -34,6 +34,6 @@ measurements:
 approximations:
   - "The mark is Remix's check glyph, drawn in the svg's 10px box and centered in the 16px control; HeroUI's stroke check draws in over 150ms. The glyph is squarer than the upstream polyline (about 9.5 x 8.8 ink against 9.2 x 6.9) and its stroke is about 1.7px against 1.4px. The indeterminate dash matches (10 x 2 against 10.5 x 1.5)."
   - The selected fill changes color over 200ms; upstream also scales it in from 70%.
-  - The row is at least 24px tall (HeroUI's touch-target size); upstream's 24px target is an overlay, so its row stays 20px.
+  - "The row is at least 24px tall, the size of HeroUI's `touch-target` utility, and a bare control sits centered in that 24px box. The utility is an overlay that changes no layout, and `checkbox.css` 3.2.6 does not apply it, so upstream's row stays 20px and its bare control 16px."
   - A description line is the app's composition; RemixCheckbox takes one label.
   - "The `checkbox-*-selected-control` captures report the unselected field fill; the selected fill is checked against `checkbox-primary-mixed-control` and the theme's accent. The `*-selected-focus-control` captures report that fill too; only their ring is compared."
