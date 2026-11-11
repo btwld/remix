@@ -145,6 +145,10 @@ fill must identify the control. Check the actual component on its host surface.
   Component and agent recipes use these tokens whenever a dimension has an equivalent step.
   Specialized measurements (20px icons, tiny indicators, em-relative inline
   typography, and bounded agent viewports) remain named tokens or proportions.
+  The select trigger chevron is the reference's fixed 9px glyph (11px at size
+  3), named by `selectTriggerIndicatorSize12`/`3`, and deliberately does not
+  follow scaling (Radix Themes 3.3.0 `icons.tsx` L53–58, `select.css`
+  L209–212); its item check marks do scale.
 - Type: **12, 14, 16, 18, 20, 24, 28, 36, 60px**. Accordion and disclosure
   size 2 use `text2`, not an intermediate 15px style. Text8 has a 40px line box.
   Fortal sets no font family; the application supplies it, as the
@@ -152,6 +156,15 @@ fill must identify the control. Check the actual component on its host surface.
   states.
 - Radius: `none`, `small`, `medium` (default), `large`, `full`; scaling:
   90, 95, 100 (default), 105, 110 percent. `highContrast` remains available.
+- Control radii follow Radix Themes 3.3.0 per size. Buttons, icon buttons and
+  select triggers use radius 1/2/3 (`base-button.css` L45–55, `select.css`
+  L165–199); text fields, text areas and segmented controls use radius 2/2/3
+  (`text-field.css` L192–245, `text-area.css` L79–105,
+  `segmented-control.css` L251–275). At size 1 a field is therefore 1px
+  rounder than a button or select beside it; this is intended.
+- Toggles at sizes 1–3 have the Button minimum heights, 24/32/40px, labelled or
+  icon-only, with content centred and horizontal padding only. They grow
+  beyond that only when their content is taller, as with enlarged text.
 - Compact painted controls retain their sizes, inside a **40px minimum hit
   target**, which does not shrink at 90/95% scaling. Hosts must leave room for
   that target instead of imposing a smaller tight constraint.
@@ -173,15 +186,30 @@ not a raised-card/control variant and uses the ordinary elevation scale.
 
 Cards and controls have no blurred/offset shadows or gradients. Crisp inset
 frames are borders, not elevation. Menus, popovers, dialogs, tooltips, and
-toasts retain outer elevation; a shadow means the surface floats. Surface text
-fields and text areas use an opaque gray-2 fill and the `controlBorder` frame,
-so a field without a visible label can still be found; soft fields and areas
-keep their accent-3 fill inside a fitted `focus8` ring, the recipe's base frame so
-caller frames still win. Error replaces either frame with error step 8, and
-disabled clears the soft ring (error keeps its precedence). Select triggers keep their gray-7 frame (gray alpha 8
-when open or hovered): their value and chevron identify them.
-Enabled surface input hints use secondary gray content; enabled soft input
-hints and icons use secondary accent content. Disabled input treatments stay separate.
+toasts retain outer elevation; a shadow means the surface floats.
+
+Fortal's elevation shadows carry no ring, so the anchored menu, select,
+popover and combobox panels share a 1px gray-7 edge. Radix Themes 3.3.0 gives
+its menu, select and popover panels one edge through the ring inside
+`--shadow-5` (`shadow.css` L26–29, `base-menu.css` L184). The menu paints its
+edge as a foreground decoration, so items sized to a panel width keep it.
+
+Surface text fields and text areas use an opaque gray-2 fill and the
+`controlBorder` frame, so a field without a visible label can still be found;
+soft fields and areas keep their accent-3 fill inside a fitted `focus8` ring,
+the recipe's base frame so caller frames still win. Error replaces either
+frame with error step 8, and disabled clears the soft ring (error keeps its
+precedence). Enabled surface input hints use secondary gray content; enabled
+soft input hints and icons use secondary accent content. Disabled input
+treatments stay separate.
+
+Select triggers keep their gray-7 frame (gray alpha 8 when open or hovered):
+their value and chevron identify them. A trigger always paints its value or
+placeholder and a gray-12 chevron (at least 11.5:1 on gray-2), so under WCAG
+1.4.11 its frame (about 1.5:1) is not the information that identifies it; a
+text field can be empty and unlabelled, so its frame is. Radix Themes 3.3.0
+frames both with gray-a7 (`select.css` L299, `text-field.css` L286); Fortal
+strengthens only the field.
 
 Selected surface switch thumbs are white with a 2px `accentThumbRing`, or
 `accent1` against the high-contrast `accent12` track. Selected soft thumbs use

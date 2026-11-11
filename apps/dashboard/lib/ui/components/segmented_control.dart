@@ -137,7 +137,7 @@ SegmentedControlItemStyler _uiSegmentedControlSelectedItem(
       shadows: [
         RemixBoxShadowMix(
           color: UiTokens.grayA4(),
-          spreadRadius: 1,
+          spreadRadius: UiTokens.borderWidth1(),
           shapeInset: 1,
         ),
       ],

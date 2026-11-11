@@ -52,7 +52,7 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
   {{typePrefix}}TextFieldSize size = .size2,
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
-  final metrics = _{{valuePrefix}}TextFieldMetrics(size, bordered: variant != .soft);
+  final metrics = _{{valuePrefix}}TextFieldMetrics(size);
   final base = _{{valuePrefix}}TextInputBaseStyle(
     container: BoxStyler()
         .minHeight(metrics.height)
@@ -232,7 +232,7 @@ TextFieldStyler _{{valuePrefix}}TextInputErrorStyle() => TextFieldStyler(
         RemixBoxShadowMix(
           kind: .inset,
           color: {{typePrefix}}Tokens.error8(),
-          spreadRadius: 1,
+          spreadRadius: {{typePrefix}}Tokens.borderWidth1(),
         ),
       ],
     ),
@@ -247,33 +247,32 @@ TextFieldStyler _{{valuePrefix}}TextInputErrorStyle() => TextFieldStyler(
   Radius radius,
   TextStyleToken text,
 })
-_{{valuePrefix}}TextFieldMetrics({{typePrefix}}TextFieldSize size, {required bool bordered}) =>
-    switch (size) {
-      .size1 => (
-        height: {{typePrefix}}Tokens.space5(),
-        paddingY: _textFieldPaddingY(size)(),
-        paddingX: bordered ? {{typePrefix}}Tokens.space2() : {{typePrefix}}Tokens.space2(),
-        spacing: {{typePrefix}}Tokens.space2(),
-        radius: {{typePrefix}}Tokens.radius2OrFull(),
-        text: {{typePrefix}}Tokens.text1,
-      ),
-      .size2 => (
-        height: {{typePrefix}}Tokens.space6(),
-        paddingY: _textFieldPaddingY(size)(),
-        paddingX: bordered ? {{typePrefix}}Tokens.space2() : {{typePrefix}}Tokens.space2(),
-        spacing: {{typePrefix}}Tokens.space2(),
-        radius: {{typePrefix}}Tokens.radius2OrFull(),
-        text: {{typePrefix}}Tokens.text2,
-      ),
-      .size3 => (
-        height: {{typePrefix}}Tokens.space7(),
-        paddingY: _textFieldPaddingY(size)(),
-        paddingX: bordered ? {{typePrefix}}Tokens.space3() : {{typePrefix}}Tokens.space3(),
-        spacing: {{typePrefix}}Tokens.space3(),
-        radius: {{typePrefix}}Tokens.radius3OrFull(),
-        text: {{typePrefix}}Tokens.text3,
-      ),
-    };
+_{{valuePrefix}}TextFieldMetrics({{typePrefix}}TextFieldSize size) => switch (size) {
+  .size1 => (
+    height: {{typePrefix}}Tokens.space5(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: {{typePrefix}}Tokens.space2(),
+    spacing: {{typePrefix}}Tokens.space2(),
+    radius: {{typePrefix}}Tokens.radius2OrFull(),
+    text: {{typePrefix}}Tokens.text1,
+  ),
+  .size2 => (
+    height: {{typePrefix}}Tokens.space6(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: {{typePrefix}}Tokens.space2(),
+    spacing: {{typePrefix}}Tokens.space2(),
+    radius: {{typePrefix}}Tokens.radius2OrFull(),
+    text: {{typePrefix}}Tokens.text2,
+  ),
+  .size3 => (
+    height: {{typePrefix}}Tokens.space7(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: {{typePrefix}}Tokens.space3(),
+    spacing: {{typePrefix}}Tokens.space3(),
+    radius: {{typePrefix}}Tokens.radius3OrFull(),
+    text: {{typePrefix}}Tokens.text3,
+  ),
+};
 
 // Keep the existing 24/32/40px chrome and centered baseline at 1x, while
 // leaving the text line unconstrained as MediaQuery text scaling increases.

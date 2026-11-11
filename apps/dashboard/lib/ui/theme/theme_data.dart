@@ -423,6 +423,8 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.tabActiveLetterSpacing2: -0.14 * scaling,
     UiTokens.selectIndicatorWidth1: 20.0 * scaling,
     UiTokens.selectIndicatorSize2: 10.0 * scaling,
+    UiTokens.selectTriggerIndicatorSize12: 9.0,
+    UiTokens.selectTriggerIndicatorSize3: 11.0,
     UiTokens.selectGhostMarginX12: -8.0 * scaling,
     UiTokens.selectGhostMarginY12: -4.0 * scaling,
     UiTokens.selectGhostMarginX3: -12.0 * scaling,

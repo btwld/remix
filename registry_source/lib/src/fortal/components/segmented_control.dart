@@ -137,7 +137,7 @@ SegmentedControlItemStyler _fortalSegmentedControlSelectedItem(
       shadows: [
         RemixBoxShadowMix(
           color: FortalTokens.grayA4(),
-          spreadRadius: 1,
+          spreadRadius: FortalTokens.borderWidth1(),
           shapeInset: 1,
         ),
       ],

@@ -24,7 +24,7 @@ CalendarStyler uiRangeCalendarStyle({
                   BorderMix.all(
                     BorderSideMix(
                       color: UiTokens.gray10(),
-                      width: 1,
+                      width: UiTokens.borderWidth1(),
                       style: .solid,
                     ),
                   ),
@@ -35,7 +35,7 @@ CalendarStyler uiRangeCalendarStyle({
                 .label(
                   TextStyler()
                       .color(UiTokens.gray12())
-                      .fontWeight(FontWeight.w700),
+                      .fontWeight(UiTokens.fontWeightBold()),
                 ),
           )
           .onSelected(

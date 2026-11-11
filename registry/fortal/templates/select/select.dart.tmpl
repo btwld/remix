@@ -61,7 +61,12 @@ SelectTriggerStyler _{{valuePrefix}}SelectTriggerStyler(
           .size3 => {{typePrefix}}Tokens.spinnerSize3(),
         }),
       )
-      .indicator(.color({{typePrefix}}Tokens.gray12()).size(size == .size3 ? 11 : 9))
+      .indicator(
+        .color({{typePrefix}}Tokens.gray12()).size(switch (size) {
+          .size1 || .size2 => {{typePrefix}}Tokens.selectTriggerIndicatorSize12(),
+          .size3 => {{typePrefix}}Tokens.selectTriggerIndicatorSize3(),
+        }),
+      )
       .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()))
       .merge(_{{valuePrefix}}SelectTriggerSizeStyler(variant, size))
       .wrap({{valuePrefix}}TouchTarget());
@@ -222,7 +227,7 @@ SelectContentStyler _{{valuePrefix}}SelectContentStyler({{typePrefix}}SelectSize
   };
   return SelectContentStyler()
       .maxHeight(320)
-      .border(.color({{typePrefix}}Tokens.gray7()).width(1))
+      .border(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1()))
       // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
       .padding(

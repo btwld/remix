@@ -28,6 +28,18 @@ MenuStyler uiMenuStyle({
         FlexBoxStyler()
             .padding(.all(metrics.contentPadding))
             .borderRadius(.all(metrics.contentRadius))
+            // The panel edge, drawn in the foreground to take no layout space.
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.all(
+                  BorderSideMix(
+                    color: UiTokens.gray7(),
+                    width: UiTokens.borderWidth1(),
+                  ),
+                ),
+                borderRadius: BorderRadiusMix.all(metrics.contentRadius),
+              ),
+            )
             .color(UiTokens.colorPanel())
             .decoration(
               BoxDecorationMix.create(boxShadow: UiTokens.shadow5.mix()),
