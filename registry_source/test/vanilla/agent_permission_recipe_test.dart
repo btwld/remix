@@ -43,4 +43,35 @@ void main() {
       reason: 'Allow once is the last action, at the card end ($inset px).',
     );
   });
+
+  for (final (status, token) in [
+    (AgentPermissionStatus.pending, VanillaTokens.primary),
+    (AgentPermissionStatus.complete, VanillaTokens.primary),
+    (AgentPermissionStatus.denied, VanillaTokens.mutedForeground),
+    (AgentPermissionStatus.error, VanillaTokens.destructive),
+  ]) {
+    testWidgets('the ${status.name} mark takes its outcome color', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _themed(
+          AgentPermission(
+            tool: 'release.publish',
+            status: status,
+            style: recipe.style,
+            surfaceStyle: recipe.surfaceStyle,
+          ),
+        ),
+      );
+      final colors = tester
+          .widgetList<Icon>(
+            find.descendant(
+              of: find.byType(AgentPermission),
+              matching: find.byType(Icon),
+            ),
+          )
+          .map((icon) => icon.color);
+      expect(colors, contains(tokenOf(const VanillaThemeData.light(), token)));
+    });
+  }
 }

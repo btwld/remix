@@ -58,8 +58,17 @@ VanillaAgentPermissionRecipe vanillaAgentPermissionRecipe({
     status: TextStyler().color(VanillaTokens.mutedForeground()).fontSize(12),
     detailsLabel: TextStyler().color(VanillaTokens.foreground()).fontSize(13),
     toolIcon: IconStyler().color(VanillaTokens.foreground()).size(16),
-    statusIcon: IconStyler().color(VanillaTokens.primary()).size(12),
+    // The status mark takes its outcome's color from the status box below;
+    // its glyph and label already name the outcome.
+    statusIcon: IconStyler().size(12),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
+    pendingStatus: _statusMark(VanillaTokens.primary),
+    decidingStatus: _statusMark(VanillaTokens.primary),
+    allowedStatus: _statusMark(VanillaTokens.primary),
+    runningStatus: _statusMark(VanillaTokens.primary),
+    completedStatus: _statusMark(VanillaTokens.primary),
+    deniedStatus: _statusMark(VanillaTokens.mutedForeground),
+    errorStatus: _statusMark(VanillaTokens.destructive),
   ).merge(style),
   surfaceStyle: vanillaCardStyle(
     style: CardStyler().padding(.all(VanillaTokens.s4)).merge(surfaceStyle),
@@ -78,3 +87,6 @@ VanillaAgentPermissionRecipe vanillaAgentPermissionRecipe({
   ),
   denyStyle: vanillaButtonStyle(variant: .ghost, style: denyStyle),
 );
+
+BoxStyler _statusMark(ColorToken color) =>
+    BoxStyler().wrap(.iconTheme(color: color()));

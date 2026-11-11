@@ -52,4 +52,25 @@ void main() {
       reason: 'A running tool keeps its newest line in view.',
     );
   });
+
+  for (final (status, token) in [
+    (AgentExecutionStatus.success, VanillaTokens.primary),
+    (AgentExecutionStatus.error, VanillaTokens.destructive),
+    (AgentExecutionStatus.cancelled, VanillaTokens.mutedForeground),
+  ]) {
+    testWidgets('the ${status.name} mark takes its outcome color', (
+      tester,
+    ) async {
+      await tester.pumpWidget(execution(status));
+      final colors = tester
+          .widgetList<Icon>(
+            find.descendant(
+              of: find.byType(AgentExecution),
+              matching: find.byType(Icon),
+            ),
+          )
+          .map((icon) => icon.color);
+      expect(colors, contains(tokenOf(const VanillaThemeData.light(), token)));
+    });
+  }
 }

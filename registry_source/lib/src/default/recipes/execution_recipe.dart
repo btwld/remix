@@ -47,8 +47,14 @@ VanillaAgentExecutionRecipe vanillaAgentExecutionRecipe({
     meta: TextStyler().color(VanillaTokens.mutedForeground()).fontSize(12),
     status: TextStyler().color(VanillaTokens.mutedForeground()).fontSize(12),
     toolIcon: IconStyler().color(VanillaTokens.foreground()).size(16),
-    statusIcon: IconStyler().color(VanillaTokens.primary()).size(12),
+    // The status mark takes its outcome's color from the status box below;
+    // its glyph and label already name the outcome.
+    statusIcon: IconStyler().size(12),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
+    runningStatus: _statusMark(VanillaTokens.primary),
+    successStatus: _statusMark(VanillaTokens.primary),
+    errorStatus: _statusMark(VanillaTokens.destructive),
+    cancelledStatus: _statusMark(VanillaTokens.mutedForeground),
   ).merge(style),
   surfaceStyle: vanillaCardStyle(
     style: CardStyler().padding(.all(VanillaTokens.s4)).merge(surfaceStyle),
@@ -70,3 +76,6 @@ VanillaAgentExecutionRecipe vanillaAgentExecutionRecipe({
     style: IconButtonStyler().size(28, 28).merge(retryStyle),
   ),
 );
+
+BoxStyler _statusMark(ColorToken color) =>
+    BoxStyler().wrap(.iconTheme(color: color()));
