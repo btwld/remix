@@ -75,7 +75,6 @@ class _{{typePrefix}}DashboardCustomersPageState
               style: BoxStyler().maxWidth(300),
               child: {{typePrefix}}SearchField(
                 key: const ValueKey('customer-search'),
-                semanticLabel: 'Search customers',
                 leading: const {{typePrefix}}SearchIcon(),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
@@ -121,9 +120,13 @@ class _{{typePrefix}}DashboardCustomersPageState
         {{typePrefix}}Table<{{typePrefix}}DashboardCustomer>(
           key: const ValueKey('data-grid-customers'),
           // Rows sit on `surface`, the primary checkbox's own fill, so the
-          // selection column takes the `secondary` checkbox.
+          // selection column takes the `secondary` checkbox, edged so an
+          // unchecked box shows on the card.
           style: DataTableStyler().selectionCheckbox(
-            {{valuePrefix}}CheckboxStyle(variant: .secondary),
+            {{valuePrefix}}CheckboxStyle(
+              variant: .secondary,
+              style: {{valuePrefix}}DashboardCardCheckboxStyle,
+            ),
           ),
           rows: page.items,
           columns: _customerColumns(context),

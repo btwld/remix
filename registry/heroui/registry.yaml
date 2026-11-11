@@ -354,7 +354,6 @@ items:
       - slider
       - switch
       - table
-      - tabs
       - textfield
       - toast
       - transcript

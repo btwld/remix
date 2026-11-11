@@ -155,6 +155,7 @@ class _{{typePrefix}}DashboardSettingsPageState
                   'Weekly digest',
                   'A summary of workspace activity each Monday.',
                   {{typePrefix}}Checkbox.secondary(
+                    style: {{valuePrefix}}DashboardCardCheckboxStyle,
                     selected: _weeklyDigest,
                     semanticLabel: 'Receive weekly digest',
                     onChanged: (value) =>

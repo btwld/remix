@@ -80,11 +80,7 @@ class UiDashboardOverview extends StatelessWidget {
           ),
           UiDashboardText(metric.value, type: .h3),
           if (metric.progress case final progress?)
-            UiProgress(
-              value: progress,
-              size: .sm,
-              semanticsLabel: metric.label,
-            ),
+            UiProgress(value: progress, size: .sm),
           UiDashboardText(metric.change, type: .bodyXs, muted: true),
         ],
       ),

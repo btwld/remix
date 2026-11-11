@@ -74,7 +74,6 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
               style: BoxStyler().maxWidth(300),
               child: UiSearchField(
                 key: const ValueKey('customer-search'),
-                semanticLabel: 'Search customers',
                 leading: const UiSearchIcon(),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
@@ -120,9 +119,13 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
         UiTable<UiDashboardCustomer>(
           key: const ValueKey('data-grid-customers'),
           // Rows sit on `surface`, the primary checkbox's own fill, so the
-          // selection column takes the `secondary` checkbox.
+          // selection column takes the `secondary` checkbox, edged so an
+          // unchecked box shows on the card.
           style: DataTableStyler().selectionCheckbox(
-            uiCheckboxStyle(variant: .secondary),
+            uiCheckboxStyle(
+              variant: .secondary,
+              style: uiDashboardCardCheckboxStyle,
+            ),
           ),
           rows: page.items,
           columns: _customerColumns(context),

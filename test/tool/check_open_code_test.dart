@@ -1798,12 +1798,13 @@ import 'package:flutter/widgets.dart'
         'components/activity.dart',
         'components/chart.dart',
         'components/table.dart',
-        'components/tabs.dart',
         'models/statuses.dart',
         'support/functional_glyph.dart',
       ]),
     );
     expect(demo, isNot(contains('components/typography.dart')));
+    // Its segmented choices are RemixSegmentedControl, not a tab list.
+    expect(demo, isNot(contains('components/tabs.dart')));
 
     for (final file in [
       'search_field_main.dart',

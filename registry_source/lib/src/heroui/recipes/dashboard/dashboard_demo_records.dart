@@ -75,7 +75,6 @@ class _HeroUiDashboardCustomersPageState
               style: BoxStyler().maxWidth(300),
               child: HeroUiSearchField(
                 key: const ValueKey('customer-search'),
-                semanticLabel: 'Search customers',
                 leading: const HeroUiSearchIcon(),
                 hintText: 'Search customers…',
                 onChanged: (value) => setState(() {
@@ -121,9 +120,13 @@ class _HeroUiDashboardCustomersPageState
         HeroUiTable<RegistryDashboardCustomer>(
           key: const ValueKey('data-grid-customers'),
           // Rows sit on `surface`, the primary checkbox's own fill, so the
-          // selection column takes the `secondary` checkbox.
+          // selection column takes the `secondary` checkbox, edged so an
+          // unchecked box shows on the card.
           style: DataTableStyler().selectionCheckbox(
-            heroUiCheckboxStyle(variant: .secondary),
+            heroUiCheckboxStyle(
+              variant: .secondary,
+              style: heroUiDashboardCardCheckboxStyle,
+            ),
           ),
           rows: page.items,
           columns: _customerColumns(context),

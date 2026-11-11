@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-import '../../components/tabs.dart';
 import '../../theme/theme.dart';
 
 /// The text sizes the demo uses, named as HeroUI's typography names them.
@@ -78,9 +77,17 @@ void uiDashboardToast(BuildContext context, String title) => showRemixToast(
   RemixToastData(title: title, icon: RemixIcons.checkCircle),
 );
 
-/// A single choice among a few values, drawn as HeroUI's primary tabs: the
-/// segmented pill. HeroUI has no segmented control; its tab list is the same
-/// control in its design.
+/// A single choice among a few values, drawn as HeroUI's primary tabs pill.
+///
+/// HeroUI has no segmented control, and a choice that only changes a value
+/// has no panels for a tab list to control, so this is a
+/// [RemixSegmentedControl]: one labelled group of options, as Vanilla's demo
+/// uses here. It wears the `tabs` recipe's primary look, restated from the
+/// same tokens: the `default` list with its `p-1` inset and
+/// `calc(var(--radius) * 2.5)` corners, and `h-8 px-4` `text-sm` medium
+/// segments in `muted`, the chosen one raised on `segment` with
+/// `segment-foreground` and the surface shadow. Segments share one width, as
+/// every segmented control's do.
 class UiDashboardSegments<T extends Object> extends StatelessWidget {
   const UiDashboardSegments({
     super.key,
@@ -96,28 +103,83 @@ class UiDashboardSegments<T extends Object> extends StatelessWidget {
   final String? semanticLabel;
 
   @override
-  Widget build(BuildContext context) {
-    final ids = {for (final (index, item) in items.indexed) '$index': item};
-    final selected = items.indexWhere((item) => item.value == selectedValue);
-    return Semantics(
-      container: true,
-      label: semanticLabel,
-      child: RemixTabs(
-        selectedTabId: '$selected',
-        onChanged: (id) {
-          final item = ids[id];
-          if (item != null) onChanged(item.value);
-        },
-        child: UiTabBar.primary(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final MapEntry(key: id, value: item) in ids.entries)
-                UiTab(tabId: id, label: item.label),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => RemixSegmentedControl<T>(
+    semanticLabel: semanticLabel,
+    selectedValue: selectedValue,
+    onChanged: onChanged,
+    style: uiDashboardSegmentsStyle(),
+    items: [
+      for (final item in items)
+        RemixSegmentedControlItem(value: item.value, label: item.label),
+    ],
+  );
 }
+
+/// The primary tabs pill as a [RemixSegmentedControl] style.
+SegmentedControlStyler uiDashboardSegmentsStyle() => SegmentedControlStyler()
+    .color(UiTokens.defaultColor())
+    .borderRadius(.all(_segmentsRadius()))
+    .padding(.all(_segmentsInset))
+    .mainAxisSize(.min)
+    .spacing(0)
+    .item(
+      SegmentedControlItemStyler()
+          .minHeight(_segmentHeight)
+          .padding(.horizontal(_segmentPaddingX))
+          .borderRadius(.all(UiTokens.radius3xl()))
+          .label(
+            .style(
+              UiTokens.textSm.mix(),
+            ).fontWeight(.w500).color(UiTokens.muted()),
+          )
+          // Unchosen segments fade on hover; the chosen one restores it.
+          .onHovered(SegmentedControlItemStyler().wrap(.opacity(_hoverOpacity)))
+          .onSelected(
+            SegmentedControlItemStyler()
+                .color(UiTokens.segment())
+                .label(.color(UiTokens.segmentForeground()))
+                .containerEffects(uiSurfaceEffects())
+                .wrap(.opacity(1)),
+          )
+          .onFocusVisible(
+            SegmentedControlItemStyler().containerEffects(uiFocusRing()),
+          )
+          .onDisabled(
+            SegmentedControlItemStyler().wrap(
+              .opacity(UiTokens.disabledOpacity),
+            ),
+          )
+          .animate(UiTokens.smoothMotion),
+    );
+
+/// `.tabs__list`: `p-1`, with `calc(var(--radius) * 2.5)` corners.
+const _segmentsInset = 4.0;
+final _segmentsRadius = uiRadius(UiTokens.radiusLg, scale: 2.5);
+
+/// `.tabs__tab`: `h-8 px-4`, and `opacity-70` while hovered.
+const _segmentHeight = 32.0;
+const _segmentPaddingX = 16.0;
+const _hoverOpacity = .7;
+
+/// A secondary checkbox on a card, with a resting `border-tertiary` edge.
+///
+/// The secondary fill, `default`, is nearly the card's `surface` in both
+/// modes, so an unchecked box would show no edge. The outline sits inside the
+/// box, so it keeps its 16px, and goes once the box is checked or
+/// indeterminate, where the accent fill marks it. Keyboard focus still swaps
+/// it for the focus ring.
+final uiDashboardCardCheckboxStyle = CheckboxStyler()
+    .containerEffects(
+      RemixBoxEffectsMix(
+        outline: BorderSideMix(
+          color: UiTokens.borderTertiary(),
+          width: _checkboxEdgeWidth,
+        ),
+        outlineOffset: -_checkboxEdgeWidth,
+      ),
+    )
+    .onSelected(.containerEffects(.outline(.style(.none))))
+    .onIndeterminate(.containerEffects(.outline(.style(.none))));
+
+/// HeroUI's `border-width`.
+const _checkboxEdgeWidth = 1.0;

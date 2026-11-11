@@ -80,11 +80,7 @@ class {{typePrefix}}DashboardOverview extends StatelessWidget {
           ),
           {{typePrefix}}DashboardText(metric.value, type: .h3),
           if (metric.progress case final progress?)
-            {{typePrefix}}Progress(
-              value: progress,
-              size: .sm,
-              semanticsLabel: metric.label,
-            ),
+            {{typePrefix}}Progress(value: progress, size: .sm),
           {{typePrefix}}DashboardText(metric.change, type: .bodyXs, muted: true),
         ],
       ),

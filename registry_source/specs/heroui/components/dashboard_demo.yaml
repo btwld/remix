@@ -17,8 +17,8 @@ tokens:
   - "metric deltas: soft sm chips, success up and danger down"
   - "charts: chart.yaml's ramp (accent, muted, foreground); activity marks and empty states on default with default-foreground; unread notifications on default; the unread dot accent ringed in background"
 measurements:
-  - {what: pages, value: "Overview pads 24 (16 below 600 wide); Customers, Orders and Settings pad 32; sections 20 and 16 apart", cite: "the shared overview base; designed for the rest, as the other presets"}
-  - {what: segmented choices, value: "the primary tabs recipe (the segmented pill) for the order filter and both color-mode choices", cite: tabs.yaml}
+  - {what: pages, value: "Overview pads 24 (16 below 600 wide); Customers, Orders and Settings pad 32; sections sit 24 apart on the Overview (20 below 600 wide), 20 on Customers and Orders, and 16 on Settings", cite: "the shared overview base; designed for the rest, as the other presets"}
+  - {what: segmented choices, value: "RemixSegmentedControl for the order filter and both color-mode choices, in the primary tabs pill: a default track with p-1 and calc(var(--radius) * 2.5) corners; h-8 px-4 text-sm medium muted segments with radius-3xl, the chosen one on segment with segment-foreground and the surface shadow; opacity-70 on hover; segments share one width", cite: "tabs.yaml primary, restated from its tokens"}
   - {what: tables, value: "the table recipe: secondary for recent orders on the overview card, primary for Customers and Orders; the customer selection column takes the secondary checkbox", cite: table.yaml}
   - {what: fields on cards, value: "the secondary text field, select and checkbox (default fill), because the primary field fill is the card's own surface", cite: "textfield.yaml, select.yaml, checkbox.yaml"}
   - {what: date and order columns, value: "112 for order numbers on the overview, 136 for dates, so each stays on one line inside the table's 16px cell insets", cite: "designed; table.yaml px-4"}
@@ -27,7 +27,7 @@ measurements:
 approximations:
   - "No upstream reference: @heroui/react 3.2.6 ships no dashboard, so the composition and every value above are designed from existing HeroUI tokens and recipes. Listed under `extensions` in reference/heroui_3_2_6/families.json."
   - "Sample data, navigation, copy, keys and behavior are the shared base's, unchanged from Vanilla and Fortal; only components and their variants differ."
-  - "HeroUI has no segmented control, so the orders filter and the light/dark choices are primary tabs (RemixTabs) rather than RemixSegmentedControl; they announce as tabs."
+  - "HeroUI has no segmented control. The orders filter and the light/dark choices are RemixSegmentedControl, as in Vanilla, so they announce as one labelled group of options rather than a tab list with no panels; they wear the primary tabs look, restated from its tokens, and size their segments equally where tabs fit their labels."
   - "HeroUI has no data list or callout: the permission parameters are styled in permission_recipe.yaml and the Settings note is the default alert."
   - "The theme exposes only its selected data, so the radius from Settings reaches both brightnesses through two probe scopes that read the host's light and dark themes."
   - "Headings follow HeroUiTypography's sizes without the typography item, which would add the remix_ui_fonts package to the demo."

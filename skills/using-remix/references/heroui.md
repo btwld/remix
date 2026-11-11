@@ -229,8 +229,9 @@ button, disclosure, and text area styles to the shared Agent components.
 HeroUI has no data list, so the permission parameters are styled in that
 recipe. `HeroUiDashboardDemo` is the other presets' five-destination demo
 (the same data, copy, and behavior) drawn with HeroUI components. Its
-order filter and appearance choices are the primary `HeroUiTabBar` pill,
-because HeroUI has no segmented control.
+order filter and appearance choices are `RemixSegmentedControl`, as in
+Vanilla, drawn in the primary tabs pill: HeroUI has no segmented control, and
+a choice with no panels is not a tab list.
 
 ## Theme
 

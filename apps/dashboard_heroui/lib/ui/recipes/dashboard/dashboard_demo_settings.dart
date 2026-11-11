@@ -154,6 +154,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                   'Weekly digest',
                   'A summary of workspace activity each Monday.',
                   UiCheckbox.secondary(
+                    style: uiDashboardCardCheckboxStyle,
                     selected: _weeklyDigest,
                     semanticLabel: 'Receive weekly digest',
                     onChanged: (value) =>

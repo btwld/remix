@@ -1,3 +1,6 @@
+import 'dart:ui' show Tristate;
+
+import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
@@ -6,12 +9,14 @@ import 'package:registry_source/src/dashboard/dashboard_demo_charts.dart';
 import 'package:registry_source/src/heroui/components/button.dart';
 import 'package:registry_source/src/heroui/components/chart.dart';
 import 'package:registry_source/src/heroui/components/chip.dart';
-import 'package:registry_source/src/heroui/components/tabs.dart';
 import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_demo.dart';
+import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
 
+import '../helpers/contrast.dart';
 import '../helpers/heroui.dart';
+import '../helpers/pixels.dart';
 
 void main() {
   for (final mode in ['light', 'dark']) {
@@ -51,19 +56,158 @@ void main() {
     }
   });
 
-  testWidgets('the order filter is the primary tabs pill', (tester) async {
-    await _pumpDemo(tester, initialPage: RegistryDashboardDemoPage.orders);
+  for (final mode in ['light', 'dark']) {
+    testWidgets('the order filter is a segmented control in the primary '
+        'tabs pill in $mode', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await _pumpDemo(
+        tester,
+        initialPage: RegistryDashboardDemoPage.orders,
+        host: _host(mode),
+      );
 
-    final bar = tester.widget<HeroUiTabBar>(find.byType(HeroUiTabBar));
-    expect(bar.variant, HeroUiTabsVariant.primary);
-    expect(find.byType(HeroUiTab), findsNWidgets(5));
-    await tester.tap(find.text('Refunded'));
-    await tester.pump();
-    final orders = tester.widget<RemixDataTable<Object>>(
-      find.byWidgetPredicate((widget) => widget is RemixDataTable),
+      final control = find.byWidgetPredicate(
+        (widget) => widget is RemixSegmentedControl,
+      );
+      expect(control, findsOneWidget);
+      expect(find.byType(RemixTabs), findsNothing);
+      Finder inControl(String label) =>
+          find.descendant(of: control, matching: find.text(label));
+
+      // One labelled group of options, not a tab list without panels.
+      final group = find.semantics.byLabel('Filter orders by status');
+      expect(group, findsOne);
+      SemanticsData option(String label) => find.semantics
+          .descendant(of: group, matching: find.semantics.byLabel(label))
+          .evaluate()
+          .single
+          .getSemanticsData();
+      for (final label in ['All', 'Paid', 'Pending', 'Refunded', 'Cancelled']) {
+        final data = option(label);
+        expect(data.role, isNot(SemanticsRole.tab), reason: label);
+        expect(data.flagsCollection.isSelected, isNot(Tristate.none));
+      }
+      expect(option('All').flagsCollection.isSelected, Tristate.isTrue);
+      expect(
+        find.semantics.byPredicate(
+          (node) => node.getSemanticsData().role == SemanticsRole.tabBar,
+        ),
+        findsNothing,
+      );
+
+      // The track and the chosen segment are the primary tabs' tokens.
+      final spec = tester
+          .widget<StyleSpecProvider<SegmentedControlSpec>>(
+            find.byType(StyleSpecProvider<SegmentedControlSpec>).first,
+          )
+          .spec
+          .spec;
+      final track = spec.container.spec.decoration! as BoxDecoration;
+      expect(track.color, heroUiToken(HeroUiTokens.defaultColor, mode));
+      expect(track.borderRadius, BorderRadius.circular(20));
+      expect(spec.container.spec.padding, const EdgeInsets.all(4));
+
+      SegmentedControlItemSpec segment(String label) => tester
+          .widget<StyleSpecProvider<SegmentedControlItemSpec>>(
+            find
+                .ancestor(
+                  of: inControl(label),
+                  matching: find.byType(
+                    StyleSpecProvider<SegmentedControlItemSpec>,
+                  ),
+                )
+                .first,
+          )
+          .spec
+          .spec;
+      final chosen = segment('All');
+      expect(
+        (chosen.container.spec.decoration! as BoxDecoration).color,
+        heroUiToken(HeroUiTokens.segment, mode),
+      );
+      expect(
+        chosen.label.spec.style!.color,
+        heroUiToken(HeroUiTokens.segmentForeground, mode),
+      );
+      final rest = segment('Paid');
+      expect(
+        rest.label.spec.style!.color,
+        heroUiToken(HeroUiTokens.muted, mode),
+      );
+      expect(rest.label.spec.style!.fontSize, 14);
+      expect(rest.label.spec.style!.fontWeight, FontWeight.w500);
+      expect(
+        tester
+            .getSize(
+              find
+                  .ancestor(
+                    of: inControl('Paid'),
+                    matching: find.byType(MergeSemantics),
+                  )
+                  .first,
+            )
+            .height,
+        32,
+      );
+
+      await tester.tap(inControl('Refunded'));
+      await tester.pumpAndSettle();
+      final orders = tester.widget<RemixDataTable<Object>>(
+        find.byWidgetPredicate((widget) => widget is RemixDataTable),
+      );
+      expect(orders.rows, isNotEmpty);
+      expect(
+        find.semantics
+            .byLabel('Refunded')
+            .evaluate()
+            .single
+            .getSemanticsData()
+            .flagsCollection
+            .isSelected,
+        Tristate.isTrue,
+      );
+      expect(tester.takeException(), isNull);
+      semantics.dispose();
+    });
+  }
+
+  testWidgets('the appearance choices are segmented controls, not tabs', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await _pumpDemo(tester, initialPage: RegistryDashboardDemoPage.settings);
+    // The visible heading and the group share the name; the options sit in
+    // the group.
+    for (final label in ['Light', 'Dark', 'System']) {
+      expect(
+        find.semantics.descendant(
+          of: find.semantics.byLabel('Color mode'),
+          matching: find.semantics.byLabel(label),
+        ),
+        findsOne,
+        reason: label,
+      );
+    }
+    expect(find.byType(RemixTabs), findsNothing);
+
+    await tester.tap(find.bySemanticsLabel('Open theme settings'));
+    await tester.pumpAndSettle();
+    for (final label in ['Light', 'Dark']) {
+      expect(
+        find.semantics.descendant(
+          of: find.semantics.byLabel('Theme appearance'),
+          matching: find.semantics.byLabel(label),
+        ),
+        findsOne,
+        reason: label,
+      );
+    }
+    expect(find.byType(RemixTabs), findsNothing);
+    expect(
+      find.byWidgetPredicate((widget) => widget is RemixSegmentedControl),
+      findsNWidgets(2),
     );
-    expect(orders.rows, isNotEmpty);
-    expect(tester.takeException(), isNull);
+    semantics.dispose();
   });
 
   testWidgets('the radius slider reaches both brightnesses and keeps a '
@@ -152,6 +296,187 @@ void main() {
     });
   }
 
+  testWidgets('a radius change keeps the open page and its edits', (
+    tester,
+  ) async {
+    await _pumpDemo(tester);
+    await _open(tester, 'Settings');
+    final digest = find.byType(RemixCheckbox);
+    await tester.ensureVisible(digest);
+    await tester.tap(digest);
+    await tester.pumpAndSettle();
+    expect(tester.widget<RemixCheckbox>(digest).selected, isTrue);
+
+    final slider = find.byType(RemixSlider);
+    await tester.ensureVisible(slider);
+    await tester.drag(slider, const Offset(160, 0));
+    await tester.pumpAndSettle();
+    expect(
+      MixScope.tokenOf(
+        HeroUiTokens.radiusLg,
+        tester.element(find.textContaining('Control radius')),
+      ).x,
+      greaterThan(8),
+    );
+    expect(find.text('Danger zone'), findsOneWidget);
+    expect(tester.widget<RemixCheckbox>(digest).selected, isTrue);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final mode in ['light', 'dark']) {
+    for (final (page, label) in [
+      (RegistryDashboardDemoPage.settings, 'the weekly digest'),
+      (RegistryDashboardDemoPage.customers, 'a customer row'),
+    ]) {
+      testWidgets('an unchecked box on $label has a visible edge in $mode', (
+        tester,
+      ) async {
+        final boundary = GlobalKey();
+        await _pumpDemo(
+          tester,
+          initialPage: page,
+          host: _host(mode),
+          boundary: boundary,
+        );
+        await tester.pumpAndSettle();
+        final boxes = find.byType(RemixCheckbox);
+        final box = page == RegistryDashboardDemoPage.settings
+            ? boxes
+            : boxes.at(1);
+        await tester.ensureVisible(box);
+        await tester.pumpAndSettle();
+        expect(tester.widget<RemixCheckbox>(box).selected, isFalse);
+
+        final pixels = await capturePixels(tester, boundary);
+        final origin = tester.getTopLeft(find.byKey(boundary));
+        Color pixel(Offset logical) {
+          final device = (logical - origin) * pixelScale.toDouble();
+          return pixels.at(device.dx.round(), device.dy.round());
+        }
+
+        // The control is the 16px box centered in its 24px tap target.
+        final center = tester.getCenter(box);
+        final top = center.dy - 8;
+        final edge = pixel(Offset(center.dx, top + .5));
+        final card = pixel(Offset(center.dx, top - 3));
+        final inside = pixel(center.translate(-4, -4));
+        expectNearColor(card, heroUiToken(HeroUiTokens.surface, mode));
+        expectNearColor(inside, heroUiToken(HeroUiTokens.defaultColor, mode));
+        expectNearColor(edge, heroUiToken(HeroUiTokens.borderTertiary, mode));
+        // Twice the contrast the bare `default` fill has against the card.
+        expect(contrastRatio(edge, card), greaterThan(2.3));
+        expect(contrastRatio(inside, card), lessThan(1.3));
+      });
+    }
+  }
+
+  testWidgets('a checked box on a card drops the edge for the accent fill', (
+    tester,
+  ) async {
+    await _pumpDemo(tester, initialPage: RegistryDashboardDemoPage.settings);
+    final box = find.byType(RemixCheckbox);
+    await tester.ensureVisible(box);
+    await tester.tap(box);
+    await tester.pumpAndSettle();
+    final spec = tester
+        .widget<StyleSpecProvider<CheckboxSpec>>(
+          find
+              .descendant(
+                of: box,
+                matching: find.byType(StyleSpecProvider<CheckboxSpec>),
+              )
+              .first,
+        )
+        .spec
+        .spec;
+    expect(
+      (spec.container.spec.decoration! as BoxDecoration).color,
+      heroUiToken(HeroUiTokens.accent),
+    );
+    expect(spec.containerEffects?.outline.style, BorderStyle.none);
+  });
+
+  for (final mode in ['light', 'dark']) {
+    testWidgets('every status keeps its label in its soft chip color in '
+        '$mode', (tester) async {
+      const cases = <(String, HeroUiColor)>[
+        ('Paid', .success),
+        ('Pending', .warning),
+        ('Refunded', .defaultColor),
+        ('Cancelled', .danger),
+        ('Active', .success),
+        ('Invited', .warning),
+        ('Suspended', .danger),
+        ('Fulfilled', .success),
+        // The record pages pass the enum names.
+        ('paid', .success),
+        ('suspended', .danger),
+      ];
+      final soft = <HeroUiColor, (ColorToken, ColorToken)>{
+        .success: (
+          HeroUiTokens.successSoft,
+          HeroUiTokens.successSoftForeground,
+        ),
+        .warning: (
+          HeroUiTokens.warningSoft,
+          HeroUiTokens.warningSoftForeground,
+        ),
+        .danger: (HeroUiTokens.dangerSoft, HeroUiTokens.dangerSoftForeground),
+        .defaultColor: (
+          HeroUiTokens.defaultSoft,
+          HeroUiTokens.defaultSoftForeground,
+        ),
+      };
+      for (final (label, color) in cases) {
+        await tester.pumpHeroUi(heroUiDashboardStatusChip(label), mode: mode);
+        expect(find.text(label), findsOneWidget, reason: label);
+        final chip = tester.widget<HeroUiChip>(find.byType(HeroUiChip));
+        expect(chip.color, color, reason: label);
+        expect(chip.variant, HeroUiChipVariant.soft, reason: label);
+
+        final (fill, foreground) = soft[color]!;
+        final painted = tester
+            .widget<RichText>(
+              find.descendant(
+                of: find.byType(HeroUiChip),
+                matching: find.byType(RichText),
+              ),
+            )
+            .text
+            .style
+            ?.color;
+        expect(painted, heroUiToken(foreground, mode), reason: label);
+        final fills = [
+          for (final box in tester.widgetList<DecoratedBox>(
+            find.descendant(
+              of: find.byType(HeroUiChip),
+              matching: find.byType(DecoratedBox),
+            ),
+          ))
+            if (box.decoration case BoxDecoration(:final color?)) color,
+        ];
+        expect(fills, contains(heroUiToken(fill, mode)), reason: label);
+      }
+    });
+  }
+
+  testWidgets('the radius slider is one named node that can increase', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await _pumpDemo(tester, initialPage: RegistryDashboardDemoPage.settings);
+
+    final radius = find.semantics.byLabel('Control radius');
+    expect(radius, findsOne);
+    expect(
+      radius.evaluate().single.getSemanticsData().hasAction(
+        SemanticsAction.increase,
+      ),
+      isTrue,
+    );
+    semantics.dispose();
+  });
+
   testWidgets('theme settings switch the demo to dark and back', (
     tester,
   ) async {
@@ -173,6 +498,12 @@ void main() {
   });
 }
 
+/// Opens [page] from the sidebar, as a person would.
+Future<void> _open(WidgetTester tester, String page) async {
+  await tester.tap(find.text(page).first);
+  await tester.pumpAndSettle();
+}
+
 typedef _Host = Widget Function(Widget child);
 
 _Host _host(String mode) =>
@@ -183,6 +514,7 @@ Future<void> _pumpDemo(
   WidgetTester tester, {
   RegistryDashboardDemoPage initialPage = RegistryDashboardDemoPage.overview,
   _Host? host,
+  GlobalKey? boundary,
 }) async {
   tester.view
     ..devicePixelRatio = 1
@@ -199,6 +531,9 @@ Future<void> _pumpDemo(
       chatStepDelay: const Duration(milliseconds: 10),
     ),
   );
-  await tester.pumpWidget((host ?? _host('light'))(app));
+  final hosted = (host ?? _host('light'))(app);
+  await tester.pumpWidget(
+    boundary == null ? hosted : RepaintBoundary(key: boundary, child: hosted),
+  );
   await tester.pump();
 }

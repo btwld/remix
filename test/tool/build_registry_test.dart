@@ -234,11 +234,12 @@ void main() {
         'chart',
         'dashboard_shell',
         'table',
-        'tabs',
         'chip',
       ]),
     );
     expect(demo, isNot(contains('typography')));
+    // Its segmented choices are RemixSegmentedControl, not a tab list.
+    expect(demo, isNot(contains('tabs')));
     expect((items['dashboard_demo'] as YamlMap)['exports'], [
       'recipes/dashboard/dashboard_sample_data.dart',
       'recipes/dashboard/dashboard_overview.dart',

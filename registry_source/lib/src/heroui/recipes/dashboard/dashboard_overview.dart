@@ -80,11 +80,7 @@ class HeroUiDashboardOverview extends StatelessWidget {
           ),
           HeroUiDashboardText(metric.value, type: .h3),
           if (metric.progress case final progress?)
-            HeroUiProgress(
-              value: progress,
-              size: .sm,
-              semanticsLabel: metric.label,
-            ),
+            HeroUiProgress(value: progress, size: .sm),
           HeroUiDashboardText(metric.change, type: .bodyXs, muted: true),
         ],
       ),

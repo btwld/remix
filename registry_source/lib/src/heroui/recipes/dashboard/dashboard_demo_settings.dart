@@ -155,6 +155,7 @@ class _HeroUiDashboardSettingsPageState
                   'Weekly digest',
                   'A summary of workspace activity each Monday.',
                   HeroUiCheckbox.secondary(
+                    style: heroUiDashboardCardCheckboxStyle,
                     selected: _weeklyDigest,
                     semanticLabel: 'Receive weekly digest',
                     onChanged: (value) =>
