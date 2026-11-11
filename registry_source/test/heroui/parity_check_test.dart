@@ -105,6 +105,35 @@ void main() {
       );
     });
 
+    test('an empty extension field followed by another key declares none', () {
+      expect(
+        familyMapFailures(
+          manifest: _manifest(
+            extensions: [
+              {'item': 'sidebar', 'reason': 'no sidebar upstream'},
+            ],
+          ),
+          items: {'button', 'sidebar'},
+          worksheets: {
+            'button': _mapped,
+            'sidebar': 'component: Sidebar\nextension:\nsource:\n  ref: none\n',
+          },
+        ),
+        ['extension sidebar worksheet does not declare extension:'],
+      );
+    });
+
+    test('a spaced extension key still marks a mapped item', () {
+      expect(
+        familyMapFailures(
+          manifest: _manifest(),
+          items: {'button'},
+          worksheets: {'button': '${_mapped}extension : "not upstream"\n'},
+        ),
+        ['item button worksheet declares extension: but is mapped'],
+      );
+    });
+
     test('extensions are enumerated, reasoned, unique, and shipped', () {
       final failures = familyMapFailures(
         manifest: _manifest(
