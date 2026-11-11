@@ -56,7 +56,11 @@ ComboboxStyler fortalComboboxStyle({
             .borderRadius(.all(FortalTokens.radius3()))
             .color(FortalTokens.colorPanel())
             .padding(.all(FortalTokens.space1()))
-            .border(.all(.color(FortalTokens.gray7()).width(1)))
+            .border(
+              .all(
+                .color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()),
+              ),
+            )
             .decoration(
               BoxDecorationMix.create(boxShadow: FortalTokens.shadow3.mix()),
             ),
@@ -74,13 +78,23 @@ ComboboxStyler fortalComboboxStyle({
             )
             .margin(.bottom(1))
             .borderRadius(.all(FortalTokens.radius2()))
-            .border(.all(.color(_optionReservedBorderColor()).width(1)))
+            .border(
+              .all(
+                .color(
+                  _optionReservedBorderColor(),
+                ).width(FortalTokens.borderWidth1()),
+              ),
+            )
             .label(TextStyler(style: text.mix()).color(FortalTokens.gray12()))
             .onHovered(.color(FortalTokens.accentA3()))
             .onFocused(
-              .color(
-                FortalTokens.accentA5(),
-              ).border(.all(.color(FortalTokens.accent8()).width(1))),
+              .color(FortalTokens.accentA5()).border(
+                .all(
+                  .color(
+                    FortalTokens.accent8(),
+                  ).width(FortalTokens.borderWidth1()),
+                ),
+              ),
             )
             .onPressed(.color(FortalTokens.accentA7())),
       )

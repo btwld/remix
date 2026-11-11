@@ -156,9 +156,9 @@ class FortalDateRangePicker extends StatelessWidget {
     icon: RemixIcons.calendar,
     placeholderStyle: ButtonStyler()
         .labelColor(FortalTokens.gray10())
-        .labelFontWeight(FontWeight.w400),
+        .labelFontWeight(FortalTokens.fontWeightRegular()),
     expandedStyle: ButtonStyler().border(
-      .color(FortalTokens.focus8()).width(1),
+      .color(FortalTokens.focus8()).width(FortalTokens.borderWidth1()),
     ),
     buttonStyle: fortalButtonStyle(variant: .outline)
         .minHeight(fortalCalendarTarget)

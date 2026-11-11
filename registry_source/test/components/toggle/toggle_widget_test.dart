@@ -28,21 +28,15 @@ void main() {
               );
               await tester.pumpAndSettle();
               final box = _toggleRow(tester).styleSpec.spec.box!.spec;
-              final padding = switch (size) {
-                FortalToggleSize.size1 => const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                FortalToggleSize.size2 => const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                FortalToggleSize.size3 => const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
+              final paddingX = switch (size) {
+                FortalToggleSize.size1 => 8.0,
+                FortalToggleSize.size2 => 12.0,
+                FortalToggleSize.size3 => 16.0,
               };
-              expect(box.padding!.resolve(TextDirection.ltr), padding);
+              expect(
+                box.padding!.resolve(TextDirection.ltr),
+                EdgeInsets.symmetric(horizontal: paddingX),
+              );
               final context = tester.element(_toggleRowFinder);
               Color color(ColorToken token) => MixScope.tokenOf(token, context);
               final decoration = box.decoration! as BoxDecoration;
@@ -118,7 +112,6 @@ void main() {
       final rowSize = tester.getSize(_toggleRowFinder);
       final labelSize = tester.getSize(find.text('Bold'));
       expect(rowSize.width, closeTo(labelSize.width + 24, 0.01));
-      expect(rowSize.height, closeTo(labelSize.height + 16, 0.01));
 
       final iconOnlySizes = <Size>[];
       for (final scaler in const [TextScaler.noScaling, TextScaler.linear(2)]) {
@@ -137,6 +130,60 @@ void main() {
       }
 
       expect(iconOnlySizes[1], iconOnlySizes[0]);
+    });
+
+    testWidgets('paints the button height for each size, label or icon', (
+      tester,
+    ) async {
+      for (final size in FortalToggleSize.values) {
+        final buttonSize = switch (size) {
+          FortalToggleSize.size1 => FortalButtonSize.size1,
+          FortalToggleSize.size2 => FortalButtonSize.size2,
+          FortalToggleSize.size3 => FortalButtonSize.size3,
+        };
+        await tester.pumpRemixApp(
+          FortalButton.surface(
+            size: buttonSize,
+            label: 'Bold',
+            onPressed: () {},
+          ),
+        );
+        await tester.pumpAndSettle();
+        final buttonHeight = tester
+            .getSize(
+              find.descendant(
+                of: find.byType(RemixButton),
+                matching: find.byType(DecoratedBox),
+              ),
+            )
+            .height;
+
+        for (final content in ['label', 'icon']) {
+          await tester.pumpRemixApp(
+            FortalToggle(
+              selected: false,
+              size: size,
+              label: content == 'label' ? 'Bold' : null,
+              icon: content == 'icon' ? Icons.format_bold : null,
+              onChanged: (_) {},
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(
+            tester.getSize(_toggleRowFinder).height,
+            buttonHeight,
+            reason: '$size $content toggle',
+          );
+          // Content stays centred in the painted box.
+          final row = tester.getRect(_toggleRowFinder);
+          final glyph = tester.getRect(
+            content == 'label'
+                ? find.text('Bold')
+                : find.byIcon(Icons.format_bold),
+          );
+          expect(glyph.center.dy, closeTo(row.center.dy, 0.5));
+        }
+      }
     });
 
     testWidgets('keeps labels intrinsic under unbounded width', (tester) async {

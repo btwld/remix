@@ -211,6 +211,10 @@ RemixBoxEffectLayerMix _uiSwitchInsetRing(Color? color) =>
     RemixBoxEffectLayerMix(
       shadows: [
         if (color != null)
-          RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1),
+          RemixBoxShadowMix(
+            kind: .inset,
+            color: color,
+            spreadRadius: UiTokens.borderWidth1(),
+          ),
       ],
     );

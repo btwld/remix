@@ -17,14 +17,41 @@ import 'palette.dart';
 import 'theme_data.dart';
 import 'tokens.dart';
 
+/// Ui's margin over WCAG's 3:1 for marks and focus rings on a surface.
+const _markMargin = 3.05;
+
+/// WCAG 2 contrast ratio between two opaque colors.
+double computeContrastRatio(Color first, Color second) {
+  final a = first.computeLuminance();
+  final b = second.computeLuminance();
+  return (math.max(a, b) + .05) / (math.min(a, b) + .05);
+}
+
 /// Fits the source step-8 focus color to the surfaces it must identify.
 Color computeFocus8(UiColorScale accent, {List<Color>? surfaces}) =>
     _fitForeground(
       accent.step(8),
       accent.step(12),
       surfaces ?? [accent.step(1), accent.step(2)],
-      3.05,
+      _markMargin,
     );
+
+/// A chart series color from [scale] that keeps 3:1 on every one of
+/// [surfaces]: [preferred] when it does, otherwise the first of source steps
+/// 9 to 11 that does, otherwise step 12.
+Color computeChartSeries(
+  UiColorScale scale,
+  List<Color> surfaces, {
+  Color? preferred,
+}) {
+  for (final color in [
+    ?preferred,
+    for (var step = 9; step <= 11; step++) scale.step(step),
+  ]) {
+    if (_keepsContrast(color, surfaces, _markMargin)) return color;
+  }
+  return scale.step(12);
+}
 
 /// Computes translucent text selection color (accent alpha step 5).
 Color computeFocusA5(UiColorScale accent) => accent.alphaStep(5);
@@ -89,7 +116,7 @@ Color computeControlBorder(UiColorScale gray, {required bool isDark}) =>
         surface,
         Color.alphaBlend(gray.alphaStep(3), surface),
       ],
-    ], 3.05);
+    ], _markMargin);
 
 /// Least movement toward the strong source text tone that meets the role.
 /// Raw upstream scale and alpha steps remain untouched.
@@ -99,13 +126,7 @@ Color _fitForeground(
   List<Color> surfaces,
   double floor,
 ) {
-  bool passes(Color color) => surfaces.every((surface) {
-    final ink = Color.alphaBlend(color, surface).computeLuminance();
-    final background = surface.computeLuminance();
-    return (math.max(ink, background) + .05) /
-            (math.min(ink, background) + .05) >=
-        floor;
-  });
+  bool passes(Color color) => _keepsContrast(color, surfaces, floor);
   if (passes(start)) return start;
   var low = 0.0, high = 1.0;
   for (var i = 0; i < 12; i++) {
@@ -118,6 +139,14 @@ Color _fitForeground(
   }
   return mixOklabPremultiplied(start, end, high);
 }
+
+/// Whether [color], composited over each of [surfaces], keeps [floor] there.
+bool _keepsContrast(Color color, List<Color> surfaces, double floor) =>
+    surfaces.every(
+      (surface) =>
+          computeContrastRatio(Color.alphaBlend(color, surface), surface) >=
+          floor,
+    );
 
 /// Computes the ink of checks and radio dots on the accent's indicator.
 ///
@@ -171,11 +200,8 @@ Color _markInk(Color fill, Color supplied) {
 }
 
 /// WCAG 2 contrast of at least 3:1, the non-text threshold.
-bool _keepsMarkContrast(Color first, Color second) {
-  final a = first.computeLuminance();
-  final b = second.computeLuminance();
-  return (math.max(a, b) + .05) / (math.min(a, b) + .05) >= 3;
-}
+bool _keepsMarkContrast(Color first, Color second) =>
+    computeContrastRatio(first, second) >= 3;
 
 /// Computes modal backdrop overlay color.
 ///
@@ -355,6 +381,10 @@ class UiThemeColors {
   /// Ink of checks and radio dots on the accent's indicator.
   Color get accentIndicatorContrast => computeAccentIndicatorContrast(accent);
 
+  /// The page and the solid and translucent panels marks must show on.
+  List<Color> get markSurfaces =>
+      _markSurfaces(colorBackground, colorPanelSolid, colorPanelTranslucent);
+
   List<Color> get _contentSurfaces => [
     for (var step = 1; step <= 5; step++) accent.scale.step(step),
     for (final surface in [colorBackground, colorPanelSolid]) ...[
@@ -398,6 +428,12 @@ class UiThemeColors {
     required this.focusA8,
   });
 }
+
+List<Color> _markSurfaces(Color page, Color panel, Color translucentPanel) => [
+  page,
+  panel,
+  Color.alphaBlend(translucentPanel, page),
+];
 
 // Named palettes share the same fixed-role model.
 const Map<String, UiColorTheme> _accentThemesByName = {
@@ -468,11 +504,11 @@ UiThemeColors resolveUiTokens(UiThemeConfig theme) {
     accentThumbRing: computeAccentThumbRing(
       accentRC,
       controlBorder,
-      surfaces: [
+      surfaces: _markSurfaces(
         colorBackground,
         colorPanelSolid,
-        Color.alphaBlend(colorPanelTranslucent, colorBackground),
-      ],
+        colorPanelTranslucent,
+      ),
     ),
     focus8: focus8,
     focusA5: focusA5,

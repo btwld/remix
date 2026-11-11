@@ -422,6 +422,8 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.tabActiveLetterSpacing2: -0.14 * scaling,
     FortalTokens.selectIndicatorWidth1: 20.0 * scaling,
     FortalTokens.selectIndicatorSize2: 10.0 * scaling,
+    FortalTokens.selectTriggerIndicatorSize12: 9.0,
+    FortalTokens.selectTriggerIndicatorSize3: 11.0,
     FortalTokens.selectGhostMarginX12: -8.0 * scaling,
     FortalTokens.selectGhostMarginY12: -4.0 * scaling,
     FortalTokens.selectGhostMarginX3: -12.0 * scaling,

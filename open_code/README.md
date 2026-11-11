@@ -9,7 +9,7 @@ Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
 ## Install the CLI
 
 ```shell
-dart pub global activate remix_cli '^1.0.0-beta.1'
+dart pub global activate remix_cli '^1.0.0-beta.2'
 remix init --prefix Acme --preset vanilla
 remix add button
 ```

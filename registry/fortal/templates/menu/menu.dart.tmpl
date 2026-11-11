@@ -30,6 +30,18 @@ MenuStyler {{valuePrefix}}MenuStyle({
         FlexBoxStyler()
             .padding(.all(metrics.contentPadding))
             .borderRadius(.all(metrics.contentRadius))
+            // The panel edge, drawn in the foreground to take no layout space.
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.all(
+                  BorderSideMix(
+                    color: {{typePrefix}}Tokens.gray7(),
+                    width: {{typePrefix}}Tokens.borderWidth1(),
+                  ),
+                ),
+                borderRadius: BorderRadiusMix.all(metrics.contentRadius),
+              ),
+            )
             .color({{typePrefix}}Tokens.colorPanel())
             .decoration(
               BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow5.mix()),

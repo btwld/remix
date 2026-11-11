@@ -61,7 +61,7 @@ activation fails during version solving.
 Install the CLI once globally; `remix.yaml` separately pins registry content:
 
 ```shell
-dart pub global activate remix_cli '^1.0.0-beta.1'
+dart pub global activate remix_cli '^1.0.0-beta.2'
 remix init --prefix Acme --preset fortal
 remix add button
 ```
@@ -75,7 +75,7 @@ version also has no ownership record, so its first `add` needs the
 [legacy ownership migration](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record).
 
 For teams that want the CLI pinned in the app's lockfile, use
-`flutter pub add dev:remix_cli:^1.0.0-beta.1` instead. Prefix each command with
+`flutter pub add dev:remix_cli:^1.0.0-beta.2` instead. Prefix each command with
 `dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 
 To run an unreleased build, point at a checkout or staged package path:

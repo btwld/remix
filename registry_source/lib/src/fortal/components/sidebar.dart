@@ -87,10 +87,14 @@ SidebarStyler fortalSidebarStyle({
               highContrast: highContrast,
             )
             .minHeight(FortalTokens.sidebarDestinationMinHeight())
+            // Keeps labels clear of the row edges once text outgrows the
+            // minimum height.
             .padding(
               .only(
                 left: destinationLeftPadding,
                 right: destinationRightPadding,
+                top: FortalTokens.space2(),
+                bottom: FortalTokens.space2(),
               ),
             )
             .container(

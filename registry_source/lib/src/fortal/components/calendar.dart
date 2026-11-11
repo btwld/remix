@@ -67,11 +67,15 @@ CalendarStyler fortalCalendarStyle({
           .label(TextStyler().style(FortalTokens.text2.mix()))
           .onToday(
             CalendarDayStyler()
-                .border(.color(FortalTokens.gray9()).width(1))
+                .border(
+                  .color(
+                    FortalTokens.gray9(),
+                  ).width(FortalTokens.borderWidth1()),
+                )
                 .label(
                   TextStyler()
                       .color(FortalTokens.gray12())
-                      .fontWeight(FontWeight.w700),
+                      .fontWeight(FortalTokens.fontWeightBold()),
                 ),
           )
           .onSelected(

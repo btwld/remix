@@ -52,7 +52,7 @@ TextFieldStyler uiTextFieldStyle({
   UiTextFieldSize size = .size2,
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
-  final metrics = _uiTextFieldMetrics(size, bordered: variant != .soft);
+  final metrics = _uiTextFieldMetrics(size);
   final base = _uiTextInputBaseStyle(
     container: BoxStyler()
         .minHeight(metrics.height)
@@ -225,7 +225,7 @@ TextFieldStyler _uiTextInputErrorStyle() => TextFieldStyler(
         RemixBoxShadowMix(
           kind: .inset,
           color: UiTokens.error8(),
-          spreadRadius: 1,
+          spreadRadius: UiTokens.borderWidth1(),
         ),
       ],
     ),
@@ -240,33 +240,32 @@ TextFieldStyler _uiTextInputErrorStyle() => TextFieldStyler(
   Radius radius,
   TextStyleToken text,
 })
-_uiTextFieldMetrics(UiTextFieldSize size, {required bool bordered}) =>
-    switch (size) {
-      .size1 => (
-        height: UiTokens.space5(),
-        paddingY: _textFieldPaddingY(size)(),
-        paddingX: bordered ? UiTokens.space2() : UiTokens.space2(),
-        spacing: UiTokens.space2(),
-        radius: UiTokens.radius2OrFull(),
-        text: UiTokens.text1,
-      ),
-      .size2 => (
-        height: UiTokens.space6(),
-        paddingY: _textFieldPaddingY(size)(),
-        paddingX: bordered ? UiTokens.space2() : UiTokens.space2(),
-        spacing: UiTokens.space2(),
-        radius: UiTokens.radius2OrFull(),
-        text: UiTokens.text2,
-      ),
-      .size3 => (
-        height: UiTokens.space7(),
-        paddingY: _textFieldPaddingY(size)(),
-        paddingX: bordered ? UiTokens.space3() : UiTokens.space3(),
-        spacing: UiTokens.space3(),
-        radius: UiTokens.radius3OrFull(),
-        text: UiTokens.text3,
-      ),
-    };
+_uiTextFieldMetrics(UiTextFieldSize size) => switch (size) {
+  .size1 => (
+    height: UiTokens.space5(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: UiTokens.space2(),
+    spacing: UiTokens.space2(),
+    radius: UiTokens.radius2OrFull(),
+    text: UiTokens.text1,
+  ),
+  .size2 => (
+    height: UiTokens.space6(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: UiTokens.space2(),
+    spacing: UiTokens.space2(),
+    radius: UiTokens.radius2OrFull(),
+    text: UiTokens.text2,
+  ),
+  .size3 => (
+    height: UiTokens.space7(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: UiTokens.space3(),
+    spacing: UiTokens.space3(),
+    radius: UiTokens.radius3OrFull(),
+    text: UiTokens.text3,
+  ),
+};
 
 // Keep the existing 24/32/40px chrome and centered baseline at 1x, while
 // leaving the text line unconstrained as MediaQuery text scaling increases.

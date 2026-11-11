@@ -56,7 +56,11 @@ ComboboxStyler {{valuePrefix}}ComboboxStyle({
             .borderRadius(.all({{typePrefix}}Tokens.radius3()))
             .color({{typePrefix}}Tokens.colorPanel())
             .padding(.all({{typePrefix}}Tokens.space1()))
-            .border(.all(.color({{typePrefix}}Tokens.gray7()).width(1)))
+            .border(
+              .all(
+                .color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1()),
+              ),
+            )
             .decoration(
               BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow3.mix()),
             ),
@@ -74,13 +78,23 @@ ComboboxStyler {{valuePrefix}}ComboboxStyle({
             )
             .margin(.bottom(1))
             .borderRadius(.all({{typePrefix}}Tokens.radius2()))
-            .border(.all(.color(_optionReservedBorderColor()).width(1)))
+            .border(
+              .all(
+                .color(
+                  _optionReservedBorderColor(),
+                ).width({{typePrefix}}Tokens.borderWidth1()),
+              ),
+            )
             .label(TextStyler(style: text.mix()).color({{typePrefix}}Tokens.gray12()))
             .onHovered(.color({{typePrefix}}Tokens.accentA3()))
             .onFocused(
-              .color(
-                {{typePrefix}}Tokens.accentA5(),
-              ).border(.all(.color({{typePrefix}}Tokens.accent8()).width(1))),
+              .color({{typePrefix}}Tokens.accentA5()).border(
+                .all(
+                  .color(
+                    {{typePrefix}}Tokens.accent8(),
+                  ).width({{typePrefix}}Tokens.borderWidth1()),
+                ),
+              ),
             )
             .onPressed(.color({{typePrefix}}Tokens.accentA7())),
       )

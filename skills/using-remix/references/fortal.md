@@ -35,6 +35,10 @@ Generic presets infer their type from required values and item lists, so
 `add chart` additionally installs the chart recipe's own `mix_chart`
 dependency; import `mix_chart` directly for its data models, since the owned
 barrel does not re-export it.
+Chart series start with the accent and stay at 3:1 on the page and panels.
+Pie labels are off by default; when you turn them on, color each slice's
+label with `<prefix>PieSliceLabelColor(sliceColor)`, which takes no
+`BuildContext`, unlike Vanilla's.
 
 Components that expose `highContrast` use it to strengthen their active or
 foreground treatment — do not assume the option exists on every family; check

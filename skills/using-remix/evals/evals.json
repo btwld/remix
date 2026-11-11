@@ -187,7 +187,7 @@
     {
       "id": 17,
       "prompt": "This is a fresh Flutter app with no Remix dependency yet. Set it up with Remix's default preset and build a primary action button styled from the starter theme.",
-      "expected_output": "Runs `dart pub global activate remix_cli '^1.0.0-beta.1'` then `remix init` with no --preset flag, explaining that it defaults to the vanilla preset and the Ui prefix, then remix add button. Wraps the app in UiTheme (theme/darkTheme/mode) inside WidgetsApp.builder, above the Navigator, and uses a named UiButton variant constructor such as UiButton.primary(...) rather than initializing the Fortal preset.",
+      "expected_output": "Runs `dart pub global activate remix_cli '^1.0.0-beta.2'` then `remix init` with no --preset flag, explaining that it defaults to the vanilla preset and the Ui prefix, then remix add button. Wraps the app in UiTheme (theme/darkTheme/mode) inside WidgetsApp.builder, above the Navigator, and uses a named UiButton variant constructor such as UiButton.primary(...) rather than initializing the Fortal preset.",
       "files": [],
       "expectations": [
         "Runs remix init without --preset, explaining the default is the vanilla preset with the Ui prefix.",

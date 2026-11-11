@@ -132,8 +132,10 @@ BoxStyler _fortalDataTableRowDivider() => BoxStyler().foregroundDecoration(
 
 /// The `gray-a5` 1px edge shared by the row divider and the footer's top
 /// border, so the footer reads as a continuation of the last row's divider.
-BorderSideMix _fortalDataTableDividerSide() =>
-    BorderSideMix(color: FortalTokens.grayA5(), width: 1);
+BorderSideMix _fortalDataTableDividerSide() => BorderSideMix(
+  color: FortalTokens.grayA5(),
+  width: FortalTokens.borderWidth1(),
+);
 
 FlexBoxStyler _fortalDataTableFooter() => FlexBoxStyler()
     .direction(.horizontal)
