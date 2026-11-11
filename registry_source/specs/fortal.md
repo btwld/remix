@@ -217,6 +217,13 @@ state filters the painted subtree, so labels, icons, spinners and the focus
 ring keep their colours, and `fortalClearFilter()` still clears a caller's
 own filter when disabled.
 
+Control radii follow Radix Themes 3.3.0 per size. Buttons, icon buttons and
+select triggers use radius 1/2/3 (`base-button.css` L45–55, `select.css`
+L165–199); text fields, text areas and segmented controls use radius 2/2/3
+(`text-field.css` L192–245, `text-area.css` L79–105, `segmented-control.css`
+L251–275). At size 1 a field is therefore 1px rounder than a button or
+select beside it; this is intended, not drift.
+
 Toggles share the Button height scale: sizes 1–3 paint at least 24/32/40px,
 labelled or icon-only, with content centred and horizontal padding only, so a
 toggle lines up with buttons, fields and selects of the same size.
