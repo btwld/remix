@@ -30,9 +30,9 @@ Fortal specification and test surface. Consumer applications do not depend on th
 ## Installation
 
 ```bash
-flutter pub add dev:remix_cli:^1.0.0-beta.1
-dart run remix_cli:remix init --prefix Fortal --preset fortal
-dart run remix_cli:remix add button
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix init --prefix Fortal --preset fortal
+remix add button
 ```
 
 The `Fortal` prefix keeps the API names shown throughout this guide. Add each
@@ -228,7 +228,7 @@ Fortal provides themed line, bar, and pie recipes backed by `mix_chart`. Install
 the owned chart recipe through the same configured preset:
 
 ```bash
-dart run remix_cli:remix add chart
+remix add chart
 ```
 
 ```dart
@@ -260,7 +260,7 @@ Install the optional application-owned icon aliases through the configured
 preset:
 
 ```bash
-dart run remix_cli:remix add icons
+remix add icons
 ```
 
 That item adds `remix_ui_icons` and creates `FortalIcons` with the small alias

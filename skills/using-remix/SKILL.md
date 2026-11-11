@@ -41,10 +41,17 @@ For base widgets: `flutter pub add remix:^1.0.0-rc.1`, then import
 `package:remix/remix.dart` and widgets-layer Flutter. For editable source:
 
 ```bash
-flutter pub add dev:remix_cli:^1.0.0-beta.1
-dart run remix_cli:remix init                  # vanilla, prefix Ui
-dart run remix_cli:remix add button textfield
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix init                  # vanilla, prefix Ui
+remix add button textfield
 ```
+
+Install once globally. Keep the prerelease pin: an unversioned activation
+selects stable `0.1.0`, which fails on the official registry. Add Pub's `bin`
+directory to `PATH` if needed; Pub prints the instructions.
+For a CLI pinned in the app's lockfile, use
+`flutter pub add dev:remix_cli:^1.0.0-beta.1` instead and prefix each command
+with `dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 
 Choose Fortal at initialization with `init --prefix Fortal --preset fortal`.
 Choose HeroUI with `init --prefix HeroUi --preset heroui`.

@@ -35,17 +35,17 @@ flutter create --empty --platforms=web remix_default_demo
 cd remix_default_demo
 ```
 
-Add the CLI as a project-local development dependency, pinned to the
-prerelease, and confirm its version:
+Install the CLI once globally, pinned to the prerelease, and confirm its version:
 
 {/* tutorial-source: install-cli */}
 
 ```bash
-flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
-dart run remix_cli:remix --version
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix --version
 ```
 
-The printed version should match the pin above. An unversioned install
+Add Pub's `bin` directory to `PATH` if needed; Pub prints the instructions.
+The printed version should match the pin above. An unversioned activation
 selects the older `0.1.0` stable line, which cannot read the current registry. Keep
 running CLI commands from the project root, beside `pubspec.yaml`.
 
@@ -54,7 +54,7 @@ running CLI commands from the project root, beside `pubspec.yaml`.
 {/* tutorial-source: init-default */}
 
 ```bash
-dart run remix_cli:remix init --prefix Acme --preset vanilla
+remix init --prefix Acme --preset vanilla
 ```
 
 `Acme` controls local names such as `AcmeButton` and `acmeButtonStyle`.
@@ -67,7 +67,7 @@ Preview the first install:
 {/* tutorial-source: preview-button */}
 
 ```bash
-dart run remix_cli:remix add button --dry-run
+remix add button --dry-run
 ```
 
 The plan should install `theme` before `button` and list the dependencies the
@@ -77,7 +77,7 @@ CLI will add, including `remix` and `remix_ui_fonts`. No source is written by
 {/* tutorial-source: install-button-command */}
 
 ```bash
-dart run remix_cli:remix add button
+remix add button
 ```
 
 Inspect `lib/ui/components/button.dart`, the recipe you own, and
@@ -158,12 +158,12 @@ Install the remaining recipes, one item per command:
 {/* tutorial-source: install-screen */}
 
 ```bash
-dart run remix_cli:remix add checkbox
-dart run remix_cli:remix add textfield
-dart run remix_cli:remix add dialog
-dart run remix_cli:remix add card
-dart run remix_cli:remix add sidebar
-dart run remix_cli:remix add sidebar_layout
+remix add checkbox
+remix add textfield
+remix add dialog
+remix add card
+remix add sidebar
+remix add sidebar_layout
 ```
 
 The existing theme is preserved. Sidebar also installs its `toggle` and
@@ -229,7 +229,7 @@ Now compare your edited Button with its registry recipe:
 {/* tutorial-source: diff-button */}
 
 ```bash
-dart run remix_cli:remix add button --diff
+remix add button --diff
 ```
 
 The diff's `current` side contains your `44.0` edit; `proposed` contains the
@@ -238,7 +238,7 @@ registry token `AcmeTokens.controlMd`. The command does not replace your source.
 {/* tutorial-source: preserve-button */}
 
 ```bash
-dart run remix_cli:remix add button
+remix add button
 ```
 
 Confirm the medium height remains `44.0`. `--overwrite` is an explicit
@@ -258,22 +258,21 @@ flutter create --empty --platforms=web remix_fortal_demo
 cd remix_fortal_demo
 ```
 
-Install the CLI, initialize Fortal, and install its recipes. The Fortal theme
+Initialize Fortal and install its recipes using the same global CLI. The Fortal theme
 does not depend on `remix_ui_fonts`, so the last command adds Geist for the
 application:
 
 {/* tutorial-source: install-fortal */}
 
 ```bash
-flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
-dart run remix_cli:remix init --prefix Acme --preset fortal
-dart run remix_cli:remix add button
-dart run remix_cli:remix add checkbox
-dart run remix_cli:remix add textfield
-dart run remix_cli:remix add dialog
-dart run remix_cli:remix add card
-dart run remix_cli:remix add sidebar
-dart run remix_cli:remix add sidebar_layout
+remix init --prefix Acme --preset fortal
+remix add button
+remix add checkbox
+remix add textfield
+remix add dialog
+remix add card
+remix add sidebar
+remix add sidebar_layout
 flutter pub add 'remix_ui_fonts:^0.1.0'
 ```
 

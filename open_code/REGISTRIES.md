@@ -142,7 +142,7 @@ reservations. Restore matching configuration, ownership, and source after an
 accidental context change; for an intentional change, initialize a clean
 installation in a separate app and reapply your edits.
 
-Upgrade the project-local CLI before migrating. Older CLIs ignore this record
+Upgrade the CLI before migrating. Older CLIs ignore this record
 and do not enforce the boundary; do not downgrade installer commands afterward.
 This installer behavior requires a new CLI release; updating a registry pin
 alone does not deliver it.

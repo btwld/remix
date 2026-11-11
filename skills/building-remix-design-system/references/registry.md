@@ -242,12 +242,12 @@ the version it needs):
 
 ```shell
 flutter create --empty scratch && cd scratch
-flutter pub add dev:remix_cli:^1.0.0-beta.1
-dart run remix_cli:remix init --prefix Ui
-dart run remix_cli:remix registry add @acme \
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix init --prefix Ui
+remix registry add @acme \
   --repository acme/design-system --path registry --ref my-change
-dart run remix_cli:remix add @acme/button --dry-run
-dart run remix_cli:remix add @acme/button
+remix add @acme/button --dry-run
+remix add @acme/button
 ```
 
 `--dry-run` resolves the whole graph and renders every template without
@@ -259,8 +259,8 @@ render each component inside the installed scope.
 Iterate by pushing to the same branch, then:
 
 ```shell
-dart run remix_cli:remix registry update @acme
-dart run remix_cli:remix add @acme/theme @acme/button --overwrite
+remix registry update @acme
+remix add @acme/theme @acme/button --overwrite
 ```
 
 `--overwrite` rewrites only the items you name; installed dependencies are

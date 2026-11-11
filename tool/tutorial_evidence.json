@@ -1,40 +1,40 @@
 {
   "replay": {
-    "date": "2026-11-05",
-    "flutter": "3.47.9",
-    "dart": "3.13.7",
-    "remix": "1.0.0-beta.16",
+    "date": "2026-11-10",
+    "flutter": "3.44.0",
+    "dart": "3.12.0",
+    "remix": "1.0.0-rc.1",
     "remix_cli": "1.0.0-beta.1",
     "remix_ui_fonts": "0.1.0",
-    "registry_revision": "890b5e1aae971b38afb1aff75ebcc3c2001fe4e0",
+    "registry_revision": "c726e8995f08db690a255754e587fc7fc5d7ba47",
     "sdk_floor": "^3.12.0",
-    "host": "Linux 6.18.57 (x86_64)",
+    "host": "Darwin 27.0.0 (arm64)",
     "web_build": "release"
   },
-  "archive_sha256": "6e15390e1ab9a05c4039ae975bb048a8cea2084897d84df244e36ade2e1bdc98",
+  "archive_sha256": "cac2063e53ae23917b0598f5ddbdadcb2e688e3eeb04aa13183520b0ac74e010",
   "screenshots": [
     {
       "file": "first-render.png",
-      "sha256": "b80335b296097d5ede493e1815e7db96cbc85adfd3e447749d4fff321b8eb42f",
-      "bytes": 9790,
+      "sha256": "ebc78c9ed6c54173bb6b23a6996c66a440abb969a34779c38cde1c9b1264ec6f",
+      "bytes": 9982,
       "scene": "first-main AcmeApp on the Vanilla light theme"
     },
     {
       "file": "launchpad-vanilla.png",
-      "sha256": "c72698e954b0c7dc9db3127f376baa80f749d17382612284d03ba95824639d6f",
-      "bytes": 88123,
+      "sha256": "a8ae74918c2d74eb648a8895bec213717ff60ff650565d35893fc7841c878b81",
+      "bytes": 92819,
       "scene": "Vanilla SampleApp, initial light state, 44-pixel medium Button"
     },
     {
       "file": "saved.png",
-      "sha256": "96c8cc0f30c9926d0b85a93549287736efff369c54e42e4dbe68cdc95b42b177",
-      "bytes": 91191,
+      "sha256": "dd67c32b743dc261154ad9c8b573cb745fba74986f9e8918fabde78e36ceb36c",
+      "bytes": 96141,
       "scene": "Vanilla after entering Launchpad Studio, clearing the weekly summary, and one completed save"
     },
     {
       "file": "launchpad-fortal-dark.png",
-      "sha256": "d845d4a28292b8e2157facad0a8ce7c11306e4c91f8abfd6a4536e2cb2014b95",
-      "bytes": 86715,
+      "sha256": "5a7b3c012ef47bc0b919d7a8ae381d7b46f21c5b150ef4b9427dee481a9d47a5",
+      "bytes": 92046,
       "scene": "Fortal SampleApp, Mar accent, after Use dark theme"
     }
   ],
@@ -60,19 +60,19 @@
     },
     "install-cli": {
       "language": "bash",
-      "sha256": "9061d1fe8321da4eaf00578c62b2b91e3d02b15019494c5044d9d165f483c174"
+      "sha256": "18bdfc4501a294ea7eabfc48012acd1fd25d86068701af375b194dfb9cb7ef14"
     },
     "init-default": {
       "language": "bash",
-      "sha256": "f6dbccf663bae2305c33fb4805964f1bc2b33b68fb0421df5bd8df2529343a13"
+      "sha256": "aa1197345e71dab79ba8ce8aaa2f296eae21d7224fcc9744cb3b64b3c43ea76c"
     },
     "preview-button": {
       "language": "bash",
-      "sha256": "25992687a0f803bf6ce6e7641726c7d2b5dad71d93b2c17c173aa51a570ab94b"
+      "sha256": "8db46682e2c33fd2ccf5625f2ba81abb35720e4f3485209d48310c951f91d0a1"
     },
     "install-button-command": {
       "language": "bash",
-      "sha256": "06e2196d76f7330d87721f248db67169493e11eb1e65421c36043e05e2077a3e"
+      "sha256": "826b08a6348de6b094c069e60b9ef25ae4c748e990f321df802c68444a149be4"
     },
     "first-main": {
       "language": "dart",
@@ -84,7 +84,7 @@
     },
     "install-screen": {
       "language": "bash",
-      "sha256": "0c9832469ae8f1cc90fbf2521be93debc344f4e077c1fd282eafb757920850e8"
+      "sha256": "69890001fc87cd3053e267c96aab43aa565687344c9a0ae4c1aa1670f42fa951"
     },
     "customize-button": {
       "language": "dart",
@@ -92,11 +92,11 @@
     },
     "diff-button": {
       "language": "bash",
-      "sha256": "34ad896c421e5526af279c388379b943e8b7e522f2bc3cf7557b42aaac70ce8b"
+      "sha256": "67549454973821d4df2f0d47e1f21d52b861e099264d8ef1af1184bd8938b56f"
     },
     "preserve-button": {
       "language": "bash",
-      "sha256": "06e2196d76f7330d87721f248db67169493e11eb1e65421c36043e05e2077a3e"
+      "sha256": "826b08a6348de6b094c069e60b9ef25ae4c748e990f321df802c68444a149be4"
     },
     "create-fortal": {
       "language": "bash",
@@ -104,7 +104,7 @@
     },
     "install-fortal": {
       "language": "bash",
-      "sha256": "9f26ee37a49d1e37127de5e05446d6900563d5e57d2e31ab145346ae32c79f18"
+      "sha256": "22162ddba702189aaf4ce7dd4633c4e321b1d32786c1a5d94cb81de4f6932077"
     },
     "analysis-options": {
       "language": "yaml",
@@ -137,7 +137,7 @@
       "default_demo/lib/ui/theme/effects.dart": "326c1520c401334befef3188e791966fcc980471c55c0568d3b12eb1282789d8",
       "default_demo/lib/ui/theme/theme_data.dart": "0dd1effe644949e3295d1ea30f2751a9f2b233725eefad54602468ee86f872b2",
       "default_demo/lib/ui/theme/theme_scope.dart": "633d85f2f7caa59c0bcc11be60a38fe888c537d98265e3c36d13264afb307b0f",
-      "default_demo/lib/ui/theme/tokens.dart": "0c8680d5c55de46a9dfc864414e802d8963dd7ac8c3f9378becf6b202ac75fbb",
+      "default_demo/lib/ui/theme/tokens.dart": "404128a9292aba8e41ad48b67a30f7f87f4f5f04cfae2e5d77173086b7c5f853",
       "default_demo/lib/ui/ui.dart": "0c7c1f7615d73fcf83ef51912a4d288fb1d4b20a9a7d7f40844a5f36765a720f",
       "fortal_demo/lib/ui/components/base_button.dart": "baa8ee2ed080b0a2332825eeea66cf942d2bbf53149db8a29ddab5c09f3eed36",
       "fortal_demo/lib/ui/components/button.dart": "973b697a06a20ff68bee40e9f6bbbad6ab187060c380e6749109cc73fe93ff60",
@@ -153,7 +153,7 @@
       "fortal_demo/lib/ui/components/sidebar_layout.dart": "9a6455c302b47300d6a27b01c59fb863380035601a45fd76718dce670be59e3f",
       "fortal_demo/lib/ui/components/text.dart": "e7556f2518576b63fc61616d7d83bfbbf846b3fd666858e4cb87123230875d06",
       "fortal_demo/lib/ui/components/text.g.dart": "6a99b491ba953d48152811d6573529d6da848c867a24f71fdf3dbb11505f472b",
-      "fortal_demo/lib/ui/components/textfield.dart": "66624bed3e27625562202186d8857a7610909933e4e9b53e87fd67de86d945b0",
+      "fortal_demo/lib/ui/components/textfield.dart": "1bf6da6593e53651be4c91904b7a540cc56ca598ab83bc7d940a570baa741ef4",
       "fortal_demo/lib/ui/components/textfield.g.dart": "b1b3d6858e583eeaa063ee9533823e1869587b23b7647f5e52f4c0879dc1dcf6",
       "fortal_demo/lib/ui/components/toggle.dart": "9645b3527b9023b429d9fae8b11bb10812498f01f017607e72a3d890bd6e1538",
       "fortal_demo/lib/ui/components/toggle.g.dart": "99ec13489ad6db4aa16444458d9499cbec48d6cf057fcf574dfe2523fee31df1",
@@ -161,7 +161,7 @@
       "fortal_demo/lib/ui/components/tooltip.g.dart": "e519e619b782b7997b4c74cdd6e617b2cf7c3ac5c5e3e6f767705306187789b6",
       "fortal_demo/lib/ui/components/typography.dart": "614b458b494758fe07e2e545c7ba988479cb3567c0f73bc03e52ab57fd27dd16",
       "fortal_demo/lib/ui/theme/computed.dart": "60973195db9cdfb8e2d8b6eef6a34864071be26df44fd88a38072e8712524c60",
-      "fortal_demo/lib/ui/theme/control_styles.dart": "0ff96734918ac2ce957a6cf946c57b2bc173417bcf272b62090dbb06051fb494",
+      "fortal_demo/lib/ui/theme/control_styles.dart": "0f7c375d18459df097bb33d0c6dfa946d1ad04a83f737703b4063fa43d781f09",
       "fortal_demo/lib/ui/theme/fortal_colors.dart": "a3926b5644235941660c2f843c30d0aee9b24f4c558ea53366d488d23e80f403",
       "fortal_demo/lib/ui/theme/palette.dart": "56001dbe2eff3a74ab502ac3f4971e18d64b481e23581c41fbb427f1c3b23345",
       "fortal_demo/lib/ui/theme/surface_frame.dart": "a21120c96f72478ed43c41651589cdc1e85e6820c19abb0dbd415b05ebd3ab35",
@@ -199,31 +199,31 @@
     },
     {
       "block": "install-cli",
-      "label": "flutter pub add 'dev:remix_cli:^1.0.0-beta.1'",
+      "label": "dart pub global activate remix_cli '^1.0.0-beta.1'",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "install-cli",
-      "label": "dart run remix_cli:remix --version",
+      "label": "remix --version",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "init-default",
-      "label": "dart run remix_cli:remix init --prefix Acme --preset vanilla",
+      "label": "remix init --prefix Acme --preset vanilla",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "preview-button",
-      "label": "dart run remix_cli:remix add button --dry-run",
+      "label": "remix add button --dry-run",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "install-button-command",
-      "label": "dart run remix_cli:remix add button",
+      "label": "remix add button",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
@@ -247,49 +247,49 @@
     },
     {
       "block": "install-screen",
-      "label": "dart run remix_cli:remix add checkbox",
+      "label": "remix add checkbox",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "install-screen",
-      "label": "dart run remix_cli:remix add textfield",
+      "label": "remix add textfield",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "install-screen",
-      "label": "dart run remix_cli:remix add dialog",
+      "label": "remix add dialog",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "install-screen",
-      "label": "dart run remix_cli:remix add card",
+      "label": "remix add card",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "install-screen",
-      "label": "dart run remix_cli:remix add sidebar",
+      "label": "remix add sidebar",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "install-screen",
-      "label": "dart run remix_cli:remix add sidebar_layout",
+      "label": "remix add sidebar_layout",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "diff-button",
-      "label": "dart run remix_cli:remix add button --diff",
+      "label": "remix add button --diff",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
     {
       "block": "preserve-button",
-      "label": "dart run remix_cli:remix add button",
+      "label": "remix add button",
       "directory": "remix_default_demo",
       "exit_code": 0
     },
@@ -313,55 +313,49 @@
     },
     {
       "block": "install-fortal",
-      "label": "flutter pub add 'dev:remix_cli:^1.0.0-beta.1'",
+      "label": "remix init --prefix Acme --preset fortal",
       "directory": "remix_fortal_demo",
       "exit_code": 0
     },
     {
       "block": "install-fortal",
-      "label": "dart run remix_cli:remix init --prefix Acme --preset fortal",
+      "label": "remix add button",
       "directory": "remix_fortal_demo",
       "exit_code": 0
     },
     {
       "block": "install-fortal",
-      "label": "dart run remix_cli:remix add button",
+      "label": "remix add checkbox",
       "directory": "remix_fortal_demo",
       "exit_code": 0
     },
     {
       "block": "install-fortal",
-      "label": "dart run remix_cli:remix add checkbox",
+      "label": "remix add textfield",
       "directory": "remix_fortal_demo",
       "exit_code": 0
     },
     {
       "block": "install-fortal",
-      "label": "dart run remix_cli:remix add textfield",
+      "label": "remix add dialog",
       "directory": "remix_fortal_demo",
       "exit_code": 0
     },
     {
       "block": "install-fortal",
-      "label": "dart run remix_cli:remix add dialog",
+      "label": "remix add card",
       "directory": "remix_fortal_demo",
       "exit_code": 0
     },
     {
       "block": "install-fortal",
-      "label": "dart run remix_cli:remix add card",
+      "label": "remix add sidebar",
       "directory": "remix_fortal_demo",
       "exit_code": 0
     },
     {
       "block": "install-fortal",
-      "label": "dart run remix_cli:remix add sidebar",
-      "directory": "remix_fortal_demo",
-      "exit_code": 0
-    },
-    {
-      "block": "install-fortal",
-      "label": "dart run remix_cli:remix add sidebar_layout",
+      "label": "remix add sidebar_layout",
       "directory": "remix_fortal_demo",
       "exit_code": 0
     },
@@ -435,6 +429,12 @@
       "block": "capture",
       "label": "flutter test test/launchpad_test.dart --dart-define=TUTORIAL_SCENE=dark --dart-define=TUTORIAL_CAPTURE_OUT=../launchpad-fortal-dark.png",
       "directory": "remix_fortal_demo",
+      "exit_code": 0
+    },
+    {
+      "block": "replay",
+      "label": "remix --version",
+      "directory": ".",
       "exit_code": 0
     }
   ]
