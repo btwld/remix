@@ -344,3 +344,10 @@ frameless and clips its marks to the plot.
   and Caju and step 11 for Sol; every dark step 9 already passes.
   `highContrast` uses step 12 throughout. Colour still never carries meaning
   alone: label the series or slices.
+- Series order: after the accent come Mar, Caju, Céu, Serra, Sol, Duna and
+  Orla's gray, skipping the accent's family. Teal, orange and blue lead so
+  the first four series stay at least 0.12 apart in OKLab for every accent
+  in both modes; gray, nearest to the muted gold and brown and the
+  lowest-contrast dark series, is last. With four warm families and two cool
+  ones, warm families cannot all be kept apart: under Sol, gold and brown
+  (0.037) are neighbours at series five and six.

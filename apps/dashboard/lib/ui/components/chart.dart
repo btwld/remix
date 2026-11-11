@@ -66,14 +66,19 @@ List<Color> resolveUiChartPalette(
 }
 
 /// The color families that follow the accent, in series order.
+///
+/// Teal, orange and blue lead because they are the furthest apart, so the
+/// first four series stay distinct whichever accent goes first. The muted
+/// warm families come next and gray, the least distinct in either mode and
+/// the lowest-contrast series in dark mode, comes last.
 const _seriesFamilies = <(UiAccentColor, UiColorTheme)>[
-  (.orla, orla),
   (.mar, mar),
+  (.caju, caju),
   (.ceu, ceu),
   (.serra, serra),
   (.sol, sol),
   (.duna, duna),
-  (.caju, caju),
+  (.orla, orla),
 ];
 
 /// The 3.05:1 margin Ui fits marks and focus rings to, over WCAG's 3:1.

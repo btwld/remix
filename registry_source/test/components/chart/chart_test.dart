@@ -141,6 +141,33 @@ void main() {
         }
       });
 
+      // Most charts show four series or fewer, so those must be the most
+      // distinct. OKLab distance; gray beside gold is 0.054 and gold beside
+      // brown 0.037, the closest pairs among the families.
+      testWidgets('the first four series stay distinct and gray is last', (
+        tester,
+      ) async {
+        for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+          for (final accent in FortalAccentColor.values) {
+            final (palette, colors) = await resolve(tester, accent, mode);
+            final lead = palette.take(4).toList();
+            for (var i = 0; i < lead.length; i++) {
+              for (var j = i + 1; j < lead.length; j++) {
+                expect(
+                  _oklabDistance(lead[i], lead[j]),
+                  greaterThan(0.12),
+                  reason: '${accent.name} $mode: series ${i + 1} and ${j + 1}',
+                );
+              }
+            }
+            if (accent != .orla) {
+              final gray = mode == .dark ? orla.dark.scale : orla.light.scale;
+              expect(palette.last, gray.step(9), reason: '${accent.name}');
+            }
+          }
+        }
+      });
+
       // Measured with this palette: the lowest WCAG ratio of each series on
       // the page and the solid panel. Raw step 9 left Mar teal at 2.91,
       // Caju orange at 2.81 and Sol amber at 1.50 on the light panel.
@@ -148,21 +175,21 @@ void main() {
         const recorded = {
           FortalAccentColor.mar: [
             (Color(0xFF04A190), 3.05),
-            (Color(0xFF8D8D8D), 3.14),
+            (Color(0xFFEF5F00), 3.15),
             (Color(0xFF0090FF), 3.09),
             (Color(0xFF978365), 3.45),
             (Color(0xFFAB6400), 4.36),
             (Color(0xFFAD7F58), 3.34),
-            (Color(0xFFEF5F00), 3.15),
+            (Color(0xFF8D8D8D), 3.14),
           ],
           FortalAccentColor.sol: [
             (Color(0xFFAB6400), 4.38),
-            (Color(0xFF8D8D8D), 3.15),
             (Color(0xFF0D9B8A), 3.28),
+            (Color(0xFFEF5F00), 3.16),
             (Color(0xFF0090FF), 3.10),
             (Color(0xFF978365), 3.47),
             (Color(0xFFAD7F58), 3.35),
-            (Color(0xFFEF5F00), 3.16),
+            (Color(0xFF8D8D8D), 3.15),
           ],
         };
         for (final MapEntry(key: accent, value: expected) in recorded.entries) {
@@ -605,3 +632,40 @@ BarGroup _barGroup() => BarGroup(
 );
 
 PieSlice _pieSlice() => PieSlice(id: 'mobile', label: 'Mobile', value: 64);
+
+/// Euclidean distance between two colors in Björn Ottosson's OKLab.
+double _oklabDistance(Color a, Color b) {
+  List<double> lab(Color color) {
+    double linear(double c) => c <= 0.04045
+        ? c / 12.92
+        : math.pow((c + 0.055) / 1.055, 2.4).toDouble();
+    final r = linear(color.r);
+    final g = linear(color.g);
+    final b = linear(color.b);
+    final l = math.pow(
+      0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b,
+      1 / 3,
+    );
+    final m = math.pow(
+      0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b,
+      1 / 3,
+    );
+    final s = math.pow(
+      0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b,
+      1 / 3,
+    );
+    return [
+      0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+      1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+      0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
+    ];
+  }
+
+  final x = lab(a);
+  final y = lab(b);
+  return math.sqrt(
+    math.pow(x[0] - y[0], 2) +
+        math.pow(x[1] - y[1], 2) +
+        math.pow(x[2] - y[2], 2),
+  );
+}
