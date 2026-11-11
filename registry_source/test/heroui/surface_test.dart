@@ -86,12 +86,11 @@ void main() {
     });
   }
 
-  // `text-surface-*-foreground` is the CSS `color`, which `currentColor` icons
-  // inherit as text does; an override shows it.
+  // `text-surface-*-foreground` is the CSS `color`, which icons inherit too.
   testWidgets('every variant colours icons as it colours text', (tester) async {
     const recolor = Color(0xFF8000FF);
-    // The theme scope already colours icons `foreground`; the filled
-    // variants must replace it with their own foreground.
+    // Surface foregrounds differ from `foreground`, which the theme scope
+    // gives icons, so each filled variant must show its own.
     final theme = const HeroUiThemeData.light().copyWith(
       colors: {
         HeroUiTokens.surfaceForeground: recolor,

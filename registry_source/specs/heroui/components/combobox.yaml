@@ -27,7 +27,7 @@ measurements:
   - {what: hover and press, value: "default fill on hover, scale 0.98 on press", cite: "combobox-primary-item-hover-list-box-item:Apricot; list-box-item.css data-pressed transform"}
 apiMapping:
   - "ComboBox maps to RemixCombobox<T>; filtering is optionsBuilder, acceptance is onSelected, editing uses controller/focusNode. Arbitrary text remains valid."
-  - "Upstream variant maps to the same primary/secondary field recipes as HeroUiTextField, except that a focused field takes field-focus in either variant, as combo-box.css does. No React props or collection state are introduced."
+  - "Upstream variant maps to the same primary/secondary field recipes as HeroUiTextField, apart from the focused fill above. No React props or collection state are introduced."
   - "Autocomplete's trigger with a search field inside its popover is a separate deferred family; this recipe covers inline editable ComboBox."
 approximations:
   - "RemixCombobox has no trailing-indicator slot for upstream's trailing chevron, trigger button slot, persistent option selection/checkmark, per-option disabled state or multiple selection. Accepted values appear in the editor; supply eligible suggestions only."

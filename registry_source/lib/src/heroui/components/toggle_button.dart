@@ -149,8 +149,6 @@ ToggleStyler heroUiToggleButtonStyle({
       .merge(style);
 }
 
-/// `.toggle-button`: `gap-2` less the icon's `-mx-0.5` on both sides, between
-/// an icon and its label. The margins pull the icon into the padding and the
-/// gap; folding both into the spacing keeps upstream's width, as the button
-/// does. Shared with `heroUiToggleButtonGroupStyle`.
+/// `gap-2` less the icon's `-mx-0.5` on both sides, as on the button. Shared
+/// with `heroUiToggleButtonGroupStyle`.
 const heroUiToggleButtonGap = 8.0 - 2 * 2;

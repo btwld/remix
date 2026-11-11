@@ -94,10 +94,7 @@ ToastStyler heroUiToastStyle({
 /// `.toast__close-button` on top of the close button: `size-5` with a
 /// `size-3.5` icon and `bg-default` on hover; from `sm` up it gains the border
 /// and the overlay fill, and its icon is `size-3`.
-///
-/// The close button's `p-1` stays upstream, where the svg overflows it and is
-/// centered in the 20px box. A Flutter box clamps the icon to its padding
-/// instead, so the padding is dropped and the centered icon keeps its size.
+/// No padding: upstream's icon overflows `p-1`, which would shrink it here.
 final _closeButton = heroUiCloseButtonStyle()
     .size(_closeSize, _closeSize)
     .padding(.all(0))

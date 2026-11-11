@@ -36,9 +36,7 @@ ComboboxStyler {{valuePrefix}}ComboboxStyle({
         },
         // Clear the unstyled Combobox's 48px floor; TextField's intrinsic
         // 24/20px line plus 16px padding supplies HeroUI's 40/36px field.
-        // `.combo-box [data-slot="input"]:focus` (0,3,0) outranks
-        // `.input--secondary:focus` (0,2,0): a focused field of either
-        // variant takes `--field-focus` (combo-box.css).
+        // combo-box.css: either variant takes `--field-focus` while focused.
         style: TextFieldStyler()
             .constraints(.minHeight(0))
             .onFocused(.color({{typePrefix}}Tokens.fieldFocus())),
