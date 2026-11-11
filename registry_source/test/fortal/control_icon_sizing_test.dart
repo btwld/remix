@@ -106,8 +106,6 @@ void main() {
         selectedValue: null,
         onChanged: (_) {},
       ),
-      // Text inputs size their slot icons through the same token, so a field
-      // beside a select keeps matching icons at every scaling.
       const FortalTextField(hintText: 'Search', leading: Icon(Icons.star)),
       const FortalTextField.soft(hintText: 'Search', leading: Icon(Icons.star)),
       const FortalTextArea(hintText: 'Notes', leading: Icon(Icons.star)),
