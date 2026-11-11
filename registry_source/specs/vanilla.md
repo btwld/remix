@@ -192,7 +192,7 @@ the steps above. The source column names the file under
 | Button padding with an icon | `has-[>svg]:px-3` | the size's padding | A recipe cannot see its children. |
 | Text field size | `text-base` below `md` | `text-sm` everywhere | Flutter has no viewport-conditional recipe; 14 is the desktop value. |
 | Checkbox, select, and menu 9×9 glyphs | `size-3.5` (14) / `size-4` (16) | 10 (`VanillaTokens.s2_5`) | The reference sizes padded 24×24 Lucide icons; Remix draws edge-to-edge 9×9 paths (`thickCheck`, `chevronDown`, `thickChevronRight`), which match the painted mark at 10. |
-| Select trigger vertical padding | `h-9 py-2` | 36 min height, `py-1` (4), the text field's | CSS fixes the height and lets the 20px line overrun the padding; Flutter lays the line out inside the padding and border, so `py-2` would make a 38px trigger beside a 36px text field. |
+| Select trigger vertical padding | `px-3 py-2`, `data-[size=default]:h-9` | 36 min height, `py-1` (4), the text field's | CSS fixes the height and lets the 20px line overrun the padding; Flutter lays the line out inside the padding and border, so `py-2` would make a 38px trigger beside a 36px text field. |
 | Select item horizontal padding | `pl-2 pr-8` (8 / 32) | `px-2` (8) | CSS positions the check mark inside the 32px right gutter (`right-2`); Remix lays the check mark out in the row after the label, so `px-2` places it 8px from the trailing edge. |
 | Slider and range slider | hover and focus ring | press uses a stronger, wider halo | Keeps grab feedback visible on touch devices, which do not hover. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
