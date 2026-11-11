@@ -119,12 +119,11 @@ families carry over.
   primary interval and white outlined thumbs. Hover draws a subtle opaque 2px
   halo; press uses a stronger 6px halo. Keyboard focus draws a contiguous 3px
   `primary` ring around the thumb, raised locally rather than through the
-  shared focus helper. Disabled fades the whole
-  control. The range widget takes two ordered, parent-owned `values`,
-  `minSpacing`, `snapDivisions`, and lower/upper `semanticLabels` and
-  `focusNodes`. The generated adapters omit Naked UI's semantic formatter
-  typedefs; for custom announcements, use `RemixRangeSlider` with
-  `<prefix>RangeSliderStyle()`. See the
+  shared focus helper. Disabled fades the whole control. The range widget
+  takes two ordered, parent-owned `values`, `minSpacing`, `snapDivisions`, and
+  lower/upper `semanticLabels` and `focusNodes`. The generated adapters omit
+  Naked UI's semantic formatter typedefs; for custom announcements, use
+  `RemixRangeSlider` with `<prefix>RangeSliderStyle()`. See the
   [Slider examples](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
 - **Tabs** — compose `RemixTabs` (the behavioral root) with `<Prefix>TabBar`,
   `<Prefix>Tab`, and `<Prefix>TabView`. `<Prefix>TabsVariant { filled, line }`:
@@ -152,8 +151,8 @@ families carry over.
   and keyboard focus paints an inset ring without reflow. The range uses solid
   `primary` committed caps and `primary`-tinted interiors; an outlined tinted
   draft de-emphasizes the old committed selection. Override `style`,
-  `navigationStyle` and
-  `selectorStyle` last. See [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx)
+  `navigationStyle` and `selectorStyle` last. See
+  [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx)
   and [Range Calendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx).
 - **DatePicker / DateRangePicker** — install `date_picker` or
   `date_range_picker`. These hand-written composites wire the outline Button,
