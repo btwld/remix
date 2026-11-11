@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -8,6 +9,7 @@ import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
 
 import '../helpers/heroui.dart';
+import '../helpers/pixels.dart';
 
 const _overviewIcon = IconData(0xe000, fontFamily: 'Ahem');
 const _reportsIcon = IconData(0xe001, fontFamily: 'Ahem');
@@ -197,6 +199,213 @@ void main() {
     expect(tooltip?.color, heroUiToken(HeroUiTokens.overlay));
     expect(spec.tooltip.spec.label.spec.style?.fontSize, 12);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('AnimationStyle.noAnimation collapses in a single frame', (
+    tester,
+  ) async {
+    var collapsed = false;
+    late StateSetter update;
+    await tester.pumpHeroUi(
+      Align(
+        alignment: Alignment.topLeft,
+        child: StatefulBuilder(
+          builder: (context, setState) {
+            update = setState;
+            return HeroUiSidebar<String>(
+              collapsed: collapsed,
+              expandedWidth: 256,
+              collapsedWidth: 72,
+              animationStyle: AnimationStyle.noAnimation,
+              sections: const [],
+              selectedValue: null,
+            );
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final sidebar = find.byType(HeroUiSidebar<String>);
+    expect(tester.getSize(sidebar).width, 256);
+    update(() => collapsed = true);
+    await tester.pump();
+    expect(tester.getSize(sidebar).width, 72);
+    expect(tester.binding.hasScheduledFrame, isFalse);
+    update(() => collapsed = false);
+    await tester.pump();
+    expect(tester.getSize(sidebar).width, 256);
+  });
+
+  for (final mode in _modes) {
+    testWidgets(
+      'hovering a collapsed destination shows its tooltip in $mode',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        await tester.pumpHeroUi(
+          _sidebar(collapsed: true, width: 72),
+          mode: mode,
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Overview'), findsNothing);
+
+        // The rail destination is named by its label once, selected, and
+        // carries no tooltip text that a screen reader would repeat.
+        final node = tester.getSemantics(find.bySemanticsLabel('Overview'));
+        expect(node.getSemanticsData().tooltip, isEmpty);
+        expect(
+          node.getSemanticsData().flagsCollection.isSelected,
+          ui.Tristate.isTrue,
+        );
+
+        final gesture = await tester.createGesture(
+          kind: ui.PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: const Offset(900, 700));
+        addTearDown(gesture.removePointer);
+        await gesture.moveTo(tester.getCenter(find.byIcon(_overviewIcon)));
+        await tester.pump(const Duration(milliseconds: 201));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 200));
+
+        final label = find.text('Overview');
+        expect(label, findsOneWidget);
+        expect(
+          DefaultTextStyle.of(tester.element(label)).style.color,
+          heroUiToken(HeroUiTokens.foreground, mode),
+        );
+        final panel = tester
+            .widgetList<Container>(
+              find.ancestor(of: label, matching: find.byType(Container)),
+            )
+            .map((container) => container.decoration)
+            .whereType<BoxDecoration>()
+            .firstWhere((decoration) => decoration.color != null);
+        expect(panel.color, heroUiToken(HeroUiTokens.overlay, mode));
+        // The visible tooltip adds no second node announcing the label.
+        expect(find.bySemanticsLabel('Overview'), findsOneWidget);
+        expect(
+          tester
+              .getSemantics(find.bySemanticsLabel('Overview'))
+              .getSemanticsData()
+              .flagsCollection
+              .isSelected,
+          ui.Tristate.isTrue,
+        );
+
+        await gesture.moveTo(const Offset(900, 700));
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle();
+        semantics.dispose();
+        expect(tester.takeException(), isNull);
+      },
+      variant: desktopOnly,
+    );
+  }
+
+  group('keyboard focus on a clipped destination', () {
+    late FocusHighlightStrategy previous;
+    setUp(() {
+      previous = FocusManager.instance.highlightStrategy;
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+    });
+    tearDown(() => FocusManager.instance.highlightStrategy = previous);
+
+    // The sidebar is shorter than its destinations, so reaching the fifth one
+    // scrolls the destination region.
+    const labels = [
+      'Home',
+      'Customers',
+      'Orders',
+      'Reports',
+      'Billing',
+      'Team',
+      'Logs',
+      'Settings',
+    ];
+    const target = 'Billing';
+    const targetIcon = IconData(0xe002, fontFamily: 'Ahem');
+    const otherIcon = IconData(0xe003, fontFamily: 'Ahem');
+
+    for (final mode in _modes) {
+      for (final collapsed in [false, true]) {
+        testWidgets('scrolls it into view and paints its ring in $mode, '
+            '${collapsed ? 'collapsed' : 'expanded'}', (tester) async {
+          final boundary = GlobalKey();
+          await tester.pumpHeroUi(
+            RepaintBoundary(
+              key: boundary,
+              child: SizedBox(
+                width: collapsed ? 72 : 256,
+                height: 160,
+                child: HeroUiSidebar<String>(
+                  collapsed: collapsed,
+                  animationStyle: AnimationStyle.noAnimation,
+                  selectedValue: 'Home',
+                  onSelected: (_) {},
+                  sections: [
+                    RemixSidebarSection(
+                      destinations: [
+                        for (final label in labels)
+                          RemixSidebarDestination(
+                            value: label,
+                            label: label,
+                            icon: label == target ? targetIcon : otherIcon,
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            mode: mode,
+          );
+          await tester.pumpAndSettle();
+          final scrollable = find.descendant(
+            of: find.byType(HeroUiSidebar<String>),
+            matching: find.byType(Scrollable),
+          );
+          final viewport = tester.getRect(scrollable);
+          expect(
+            viewport.contains(
+              tester.getBottomLeft(find.bySemanticsLabel(target)),
+            ),
+            isFalse,
+            reason: 'the target starts clipped',
+          );
+
+          for (var i = 0; i <= labels.indexOf(target); i++) {
+            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+          }
+          await tester.pumpAndSettle();
+
+          final scroll = tester.state<ScrollableState>(scrollable);
+          expect(scroll.position.pixels, greaterThan(0));
+          final destination = tester.getRect(find.bySemanticsLabel(target));
+          expect(destination.top, greaterThanOrEqualTo(viewport.top - .001));
+          expect(destination.bottom, lessThanOrEqualTo(viewport.bottom + .001));
+
+          // The inset ring paints inside the destination's edge, so scrolling
+          // the destination flush against the region keeps all of it visible.
+          final focused = await capturePixels(tester, boundary);
+          final origin = tester.getTopLeft(find.byKey(boundary));
+          Color pixel(Offset logical) {
+            final device = (logical - origin) * pixelScale.toDouble();
+            return focused.at(device.dx.round(), device.dy.round());
+          }
+
+          final ring = heroUiToken(HeroUiTokens.focus, mode);
+          const inside = HeroUiTokens.focusWidth / 2;
+          for (final at in [
+            Offset(destination.center.dx, destination.top + inside),
+            Offset(destination.center.dx, destination.bottom - inside),
+          ]) {
+            expectNearColor(pixel(at), ring);
+          }
+          expect(tester.takeException(), isNull);
+        });
+      }
+    }
   });
 
   test('the recipe leaves width and header padding to the host', () {

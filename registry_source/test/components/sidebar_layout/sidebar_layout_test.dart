@@ -5,45 +5,191 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:registry_source/heroui.dart';
 
 const _sidebarKey = ValueKey('sidebar');
 const _bodyKey = ValueKey('body');
 const _headerKey = ValueKey('header');
 
+/// What a lifecycle test reads from a preset's sidebar layout scope.
+typedef _Scope = ({
+  bool isCompact,
+  bool isCompactOpen,
+  VoidCallback openCompact,
+  VoidCallback closeCompact,
+});
+
+/// A preset's sidebar layout, its scope, its app bar, and the app harness that
+/// installs its theme where that preset documents it.
+class _Preset {
+  const _Preset({
+    required this.name,
+    required this.app,
+    required this.layout,
+    required this.scopeOf,
+    required this.appBar,
+  });
+
+  final String name;
+
+  /// A `WidgetsApp` around [home] with this preset's theme. A non-null
+  /// `textDirection` is declared above the Navigator, so the compact sheet's
+  /// route inherits it.
+  final Widget Function({
+    required Widget home,
+    TextDirection? textDirection,
+    GlobalKey<NavigatorState>? navigatorKey,
+  })
+  app;
+
+  final Widget Function({
+    Widget? header,
+    required Widget sidebar,
+    required Widget body,
+    double compactBreakpoint,
+    double sidebarWidth,
+    bool collapsed,
+    bool? compactOpen,
+    ValueChanged<bool>? onCompactOpenChanged,
+  })
+  layout;
+
+  final _Scope Function(BuildContext context) scopeOf;
+
+  final Widget Function(String title) appBar;
+
+  Type get appBarType => appBar('').runtimeType;
+}
+
+PageRoute<T> _pageRoute<T>(RouteSettings settings, WidgetBuilder builder) =>
+    PageRouteBuilder<T>(
+      settings: settings,
+      pageBuilder: (context, _, _) => builder(context),
+    );
+
+final _fortal = _Preset(
+  name: 'Fortal',
+  app: ({required home, textDirection, navigatorKey}) => FortalTheme(
+    child: WidgetsApp(
+      color: const Color(0xFFFFFFFF),
+      pageRouteBuilder: _pageRoute,
+      navigatorKey: navigatorKey,
+      // `builder` wraps the Navigator itself, unlike `home`, which is only
+      // the initial route's content. `showRemixDialog` pushes a sibling
+      // route on the same Navigator, so the compact sheet only inherits a
+      // Directionality declared here, not one nested inside `home`.
+      builder: textDirection == null
+          ? null
+          : (context, child) =>
+                Directionality(textDirection: textDirection, child: child!),
+      home: home,
+    ),
+  ),
+  layout:
+      ({
+        header,
+        required sidebar,
+        required body,
+        compactBreakpoint = 720,
+        sidebarWidth = 256,
+        collapsed = false,
+        compactOpen,
+        onCompactOpenChanged,
+      }) => FortalSidebarLayout(
+        compactBreakpoint: compactBreakpoint,
+        sidebarWidth: sidebarWidth,
+        collapsed: collapsed,
+        compactOpen: compactOpen,
+        onCompactOpenChanged: onCompactOpenChanged,
+        header: header,
+        sidebar: sidebar,
+        body: body,
+      ),
+  scopeOf: (context) {
+    final scope = FortalSidebarLayoutScope.of(context);
+    return (
+      isCompact: scope.isCompact,
+      isCompactOpen: scope.isCompactOpen,
+      openCompact: scope.openCompact,
+      closeCompact: scope.closeCompact,
+    );
+  },
+  appBar: (title) => FortalAppBar(title: title),
+);
+
+final _heroUi = _Preset(
+  name: 'HeroUI',
+  // HeroUiTheme sits in the builder, above the Navigator, as it documents.
+  app: ({required home, textDirection, navigatorKey}) => WidgetsApp(
+    color: const Color(0xFFFFFFFF),
+    pageRouteBuilder: _pageRoute,
+    navigatorKey: navigatorKey,
+    builder: (context, navigator) {
+      final themed = HeroUiTheme(child: navigator!);
+      return textDirection == null
+          ? themed
+          : Directionality(textDirection: textDirection, child: themed);
+    },
+    home: home,
+  ),
+  layout:
+      ({
+        header,
+        required sidebar,
+        required body,
+        compactBreakpoint = 720,
+        sidebarWidth = 256,
+        collapsed = false,
+        compactOpen,
+        onCompactOpenChanged,
+      }) => HeroUiSidebarLayout(
+        compactBreakpoint: compactBreakpoint,
+        sidebarWidth: sidebarWidth,
+        collapsed: collapsed,
+        compactOpen: compactOpen,
+        onCompactOpenChanged: onCompactOpenChanged,
+        header: header,
+        sidebar: sidebar,
+        body: body,
+      ),
+  scopeOf: (context) {
+    final scope = HeroUiSidebarLayoutScope.of(context);
+    return (
+      isCompact: scope.isCompact,
+      isCompactOpen: scope.isCompactOpen,
+      openCompact: scope.openCompact,
+      closeCompact: scope.closeCompact,
+    );
+  },
+  appBar: (title) => HeroUiAppBar(title: title),
+);
+
+/// The presets whose sidebar layouts share the lifecycle tests below.
+final _presets = [_fortal, _heroUi];
+
 /// Pumps [layout] inside a resizable [width] harness with a real [Navigator]
-/// (via [WidgetsApp]) and [FortalTheme], so `showRemixDialog` and Fortal
-/// token resolution both work. [width] changes propagate through
-/// [StatefulBuilder] so tests can cross the compact breakpoint mid-test.
+/// (via [WidgetsApp]) and [preset]'s theme, so `showRemixDialog` and token
+/// resolution both work. [width] changes propagate through [StatefulBuilder]
+/// so tests can cross the compact breakpoint mid-test.
 Future<StateSetter> _pump(
   WidgetTester tester,
   Widget layout, {
   required double width,
   TextDirection textDirection = TextDirection.ltr,
+  _Preset? preset,
 }) async {
   late StateSetter setState;
   await tester.pumpWidget(
-    FortalTheme(
-      child: WidgetsApp(
-        color: const Color(0xFFFFFFFF),
-        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-          settings: settings,
-          pageBuilder: (context, _, _) => builder(context),
-        ),
-        // `builder` wraps the Navigator itself, unlike `home`, which is only
-        // the initial route's content. `showRemixDialog` pushes a sibling
-        // route on the same Navigator, so the compact sheet only inherits a
-        // Directionality declared here, not one nested inside `home`.
-        builder: (context, child) =>
-            Directionality(textDirection: textDirection, child: child!),
-        home: StatefulBuilder(
-          builder: (context, setter) {
-            setState = setter;
-            return Align(
-              alignment: Alignment.topLeft,
-              child: SizedBox(width: width, height: 600, child: layout),
-            );
-          },
-        ),
+    (preset ?? _fortal).app(
+      textDirection: textDirection,
+      home: StatefulBuilder(
+        builder: (context, setter) {
+          setState = setter;
+          return Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(width: width, height: 600, child: layout),
+          );
+        },
       ),
     ),
   );
@@ -55,8 +201,9 @@ Widget _layout({
   bool? compactOpen,
   ValueChanged<bool>? onCompactOpenChanged,
   double compactBreakpoint = 720,
+  _Preset? preset,
 }) {
-  return FortalSidebarLayout(
+  return (preset ?? _fortal).layout(
     compactBreakpoint: compactBreakpoint,
     collapsed: collapsed,
     compactOpen: compactOpen,
@@ -68,139 +215,381 @@ Widget _layout({
 }
 
 void main() {
-  testWidgets('the body does not reserve the top inset under a header', (
-    tester,
-  ) async {
-    tester.view.devicePixelRatio = 1;
-    tester.view.padding = const FakeViewPadding(top: 24);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    addTearDown(tester.view.resetPadding);
+  for (final preset in _presets) {
+    group(preset.name, () {
+      testWidgets('the body does not reserve the top inset under a header', (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.padding = const FakeViewPadding(top: 24);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        addTearDown(tester.view.resetPadding);
 
-    await _pump(
-      tester,
-      FortalSidebarLayout(
-        header: const FortalAppBar(title: 'Orders'),
-        sidebar: const SizedBox(key: _sidebarKey),
-        body: ListView(children: const [SizedBox(key: _bodyKey, height: 40)]),
-      ),
-      width: 1000,
-    );
-
-    final bar = tester.getRect(find.byType(FortalAppBar));
-    expect(bar.top, 0);
-    expect(bar.height, 64 + 24);
-    expect(tester.getRect(find.byKey(_bodyKey)).top, bar.bottom);
-  });
-
-  testWidgets('the column beside the sidebar ignores the start inset', (
-    tester,
-  ) async {
-    tester.view.devicePixelRatio = 1;
-    tester.view.padding = const FakeViewPadding(left: 44);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    addTearDown(tester.view.resetPadding);
-
-    await _pump(
-      tester,
-      const FortalSidebarLayout(
-        sidebarWidth: 256,
-        header: FortalAppBar(title: 'Orders'),
-        sidebar: SizedBox(key: _sidebarKey),
-        body: SizedBox(key: _bodyKey),
-      ),
-      width: 1000,
-    );
-
-    // The app bar's toolbar inset is 16 from the column's start edge, not
-    // 16 plus the 44 the sidebar already keeps clear of.
-    expect(tester.getTopLeft(find.text('Orders')).dx, 256 + 16);
-    expect(MediaQuery.paddingOf(tester.element(find.byKey(_bodyKey))).left, 0);
-  });
-
-  testWidgets('controlled dismissal waits for the host to close', (
-    tester,
-  ) async {
-    final open = ValueNotifier<bool>(true);
-    addTearDown(open.dispose);
-    final requests = <bool>[];
-    await tester.pumpWidget(
-      FortalTheme(
-        child: WidgetsApp(
-          color: const Color(0xFFFFFFFF),
-          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-            settings: settings,
-            pageBuilder: (context, _, _) => builder(context),
+        await _pump(
+          tester,
+          preset.layout(
+            header: preset.appBar('Orders'),
+            sidebar: const SizedBox(key: _sidebarKey),
+            body: ListView(
+              children: const [SizedBox(key: _bodyKey, height: 40)],
+            ),
           ),
-          home: ValueListenableBuilder<bool>(
-            valueListenable: open,
-            builder: (context, value, _) => SizedBox(
-              width: 500,
-              child: FortalSidebarLayout(
-                compactBreakpoint: 1000,
-                compactOpen: value,
-                onCompactOpenChanged: requests.add,
-                sidebar: const SizedBox(
-                  key: _sidebarKey,
-                  child: Text('Sidebar'),
+          width: 1000,
+          preset: preset,
+        );
+
+        final bar = tester.getRect(find.byType(preset.appBarType));
+        expect(bar.top, 0);
+        expect(bar.height, 64 + 24);
+        expect(tester.getRect(find.byKey(_bodyKey)).top, bar.bottom);
+      });
+
+      testWidgets('the column beside the sidebar ignores the start inset', (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.padding = const FakeViewPadding(left: 44);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        addTearDown(tester.view.resetPadding);
+
+        await _pump(
+          tester,
+          preset.layout(
+            sidebarWidth: 256,
+            header: preset.appBar('Orders'),
+            sidebar: const SizedBox(key: _sidebarKey),
+            body: const SizedBox(key: _bodyKey),
+          ),
+          width: 1000,
+          preset: preset,
+        );
+
+        // The app bar's toolbar inset is 16 from the column's start edge, not
+        // 16 plus the 44 the sidebar already keeps clear of.
+        expect(tester.getTopLeft(find.text('Orders')).dx, 256 + 16);
+        expect(
+          MediaQuery.paddingOf(tester.element(find.byKey(_bodyKey))).left,
+          0,
+        );
+      });
+
+      testWidgets('controlled dismissal waits for the host to close', (
+        tester,
+      ) async {
+        final open = ValueNotifier<bool>(true);
+        addTearDown(open.dispose);
+        final requests = <bool>[];
+        await tester.pumpWidget(
+          preset.app(
+            home: ValueListenableBuilder<bool>(
+              valueListenable: open,
+              builder: (context, value, _) => SizedBox(
+                width: 500,
+                child: preset.layout(
+                  compactBreakpoint: 1000,
+                  compactOpen: value,
+                  onCompactOpenChanged: requests.add,
+                  sidebar: const SizedBox(
+                    key: _sidebarKey,
+                    child: Text('Sidebar'),
+                  ),
+                  body: const Text('Body'),
                 ),
-                body: const Text('Body'),
               ),
             ),
           ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tapAt(const Offset(790, 300));
-    await tester.pumpAndSettle();
-    expect(requests, [false]);
-    expect(find.byKey(_sidebarKey), findsOneWidget);
-    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pumpAndSettle();
-    expect(requests, [false, false]);
-    expect(find.byKey(_sidebarKey), findsOneWidget);
-    open.value = false;
-    await tester.pumpAndSettle();
-    expect(find.byKey(_sidebarKey), findsNothing);
-    expect(requests, [false, false]);
-  });
+        );
+        await tester.pumpAndSettle();
+        await tester.tapAt(const Offset(790, 300));
+        await tester.pumpAndSettle();
+        expect(requests, [false]);
+        expect(find.byKey(_sidebarKey), findsOneWidget);
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        expect(requests, [false, false]);
+        expect(find.byKey(_sidebarKey), findsOneWidget);
+        open.value = false;
+        await tester.pumpAndSettle();
+        expect(find.byKey(_sidebarKey), findsNothing);
+        expect(requests, [false, false]);
+      });
 
-  testWidgets('removing the layout removes its open sheet', (tester) async {
-    final present = ValueNotifier<bool>(true);
-    addTearDown(present.dispose);
-    await tester.pumpWidget(
-      FortalTheme(
-        child: WidgetsApp(
-          color: const Color(0xFFFFFFFF),
-          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-            settings: settings,
-            pageBuilder: (context, _, _) => builder(context),
+      testWidgets('removing the layout removes its open sheet', (tester) async {
+        final present = ValueNotifier<bool>(true);
+        addTearDown(present.dispose);
+        await tester.pumpWidget(
+          preset.app(
+            home: ValueListenableBuilder<bool>(
+              valueListenable: present,
+              builder: (context, value, _) => value
+                  ? preset.layout(
+                      compactBreakpoint: 1000,
+                      compactOpen: true,
+                      sidebar: const SizedBox(
+                        key: _sidebarKey,
+                        child: Text('Sidebar'),
+                      ),
+                      body: const Text('Body'),
+                    )
+                  : const Text('Replacement'),
+            ),
           ),
-          home: ValueListenableBuilder<bool>(
-            valueListenable: present,
-            builder: (context, value, _) => value
-                ? FortalSidebarLayout(
-                    compactBreakpoint: 1000,
-                    compactOpen: true,
-                    sidebar: const SizedBox(
-                      key: _sidebarKey,
-                      child: Text('Sidebar'),
+        );
+        await tester.pumpAndSettle();
+        expect(find.byKey(_sidebarKey), findsOneWidget);
+        present.value = false;
+        await tester.pumpAndSettle();
+        expect(find.byKey(_sidebarKey), findsNothing);
+        expect(find.text('Replacement'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('closes the compact sheet through the scope', (tester) async {
+        bool? lastOpen;
+        await _pump(
+          tester,
+          _layout(
+            compactOpen: true,
+            onCompactOpenChanged: (value) => lastOpen = value,
+            preset: preset,
+          ),
+          width: 500,
+          preset: preset,
+        );
+        await tester.pumpAndSettle();
+        expect(find.byKey(_sidebarKey), findsOneWidget);
+
+        // The destination lives inside the sheet's own route, which is not a
+        // descendant of the layout's main subtree. The scope must still
+        // resolve there so a destination's onSelected can close the sheet
+        // after navigating.
+        preset.scopeOf(tester.element(find.byKey(_sidebarKey))).closeCompact();
+        await tester.pumpAndSettle();
+
+        expect(lastOpen, isFalse);
+      });
+
+      testWidgets('an uncontrolled layout manages its own compact-open state', (
+        tester,
+      ) async {
+        bool? lastNotified;
+        await _pump(
+          tester,
+          _layout(
+            onCompactOpenChanged: (value) => lastNotified = value,
+            preset: preset,
+          ),
+          width: 500,
+          preset: preset,
+        );
+
+        final scopeContext = tester.element(find.byKey(_bodyKey));
+        preset.scopeOf(scopeContext).openCompact();
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(_sidebarKey), findsOneWidget);
+        expect(lastNotified, isTrue);
+      });
+
+      testWidgets(
+        'openCompact is a no-op while wide and its state does not carry over '
+        'to the next compact presentation',
+        (tester) async {
+          late BuildContext scopeContext;
+          final width = ValueNotifier<double>(900);
+          await tester.pumpWidget(
+            preset.app(
+              home: ValueListenableBuilder<double>(
+                valueListenable: width,
+                builder: (context, value, _) => Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    width: value,
+                    height: 600,
+                    child: preset.layout(
+                      header: Builder(
+                        builder: (context) {
+                          scopeContext = context;
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                      sidebar: const SizedBox(
+                        key: _sidebarKey,
+                        child: Text('Sidebar'),
+                      ),
+                      body: const SizedBox(key: _bodyKey, child: Text('Body')),
                     ),
-                    body: const Text('Body'),
-                  )
-                : const Text('Replacement'),
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.byKey(_sidebarKey), findsOneWidget);
-    present.value = false;
-    await tester.pumpAndSettle();
-    expect(find.byKey(_sidebarKey), findsNothing);
-    expect(find.text('Replacement'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+                  ),
+                ),
+              ),
+            ),
+          );
+
+          expect(preset.scopeOf(scopeContext).isCompact, isFalse);
+
+          preset.scopeOf(scopeContext).openCompact();
+          await tester.pumpAndSettle();
+
+          // Still wide: the sidebar is only ever mounted once, inline in the
+          // row, and the documented "always false outside a compact
+          // presentation" invariant holds despite the openCompact call.
+          expect(find.byKey(_sidebarKey), findsOneWidget);
+          expect(preset.scopeOf(scopeContext).isCompactOpen, isFalse);
+
+          width.value = 500;
+          await tester.pumpAndSettle();
+
+          // Narrow now, but nothing asked for the sheet at this width: the
+          // earlier no-op openCompact call must not have left state that
+          // reopens it.
+          final scopeNarrow = preset.scopeOf(
+            tester.element(find.byKey(_bodyKey)),
+          );
+          expect(scopeNarrow.isCompact, isTrue);
+          expect(scopeNarrow.isCompactOpen, isFalse);
+          expect(find.byKey(_sidebarKey), findsNothing);
+        },
+      );
+
+      testWidgets(
+        'closes the sheet on its own route when a nested Navigator sits '
+        'between the layout and the root Navigator showRemixDialog pushed onto',
+        (tester) async {
+          final width = ValueNotifier<double>(500);
+          late BuildContext scopeContext;
+          await tester.pumpWidget(
+            preset.app(
+              home: ValueListenableBuilder<double>(
+                valueListenable: width,
+                builder: (context, value, _) => Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    width: value,
+                    height: 600,
+                    // A Navigator nested below the root -- e.g. what a
+                    // go_router ShellRoute or a per-tab Navigator would put
+                    // between the layout and the app's root Navigator, which
+                    // is where showRemixDialog's default useRootNavigator:
+                    // true actually pushes the sheet's route.
+                    child: Navigator(
+                      onGenerateRoute: (settings) => MaterialPageRoute(
+                        builder: (context) => preset.layout(
+                          header: Builder(
+                            builder: (context) {
+                              scopeContext = context;
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                          sidebar: const SizedBox(
+                            key: _sidebarKey,
+                            child: Text('Sidebar'),
+                          ),
+                          body: const SizedBox(
+                            key: _bodyKey,
+                            child: Text('Body'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+
+          preset.scopeOf(scopeContext).openCompact();
+          await tester.pumpAndSettle();
+          expect(find.byKey(_sidebarKey), findsOneWidget);
+
+          width.value = 900;
+          await tester.pumpAndSettle();
+
+          // Exactly one sidebar instance: the wide row's. A bare
+          // `Navigator.of(context).maybePop()` would pop the nested Navigator
+          // (a no-op there, since it owns only its single route) and leave the
+          // sheet's own route stuck open on the root Navigator underneath.
+          expect(find.byKey(_sidebarKey), findsOneWidget);
+          final scopeAfter = preset.scopeOf(
+            tester.element(find.byKey(_sidebarKey)),
+          );
+          expect(scopeAfter.isCompact, isFalse);
+          expect(scopeAfter.isCompactOpen, isFalse);
+        },
+      );
+
+      testWidgets(
+        'crossing to wide leaves a route pushed above the sheet alone',
+        (tester) async {
+          final rootNavigatorKey = GlobalKey<NavigatorState>();
+          const markerKey = ValueKey('marker-route');
+          final width = ValueNotifier<double>(500);
+          late BuildContext scopeContext;
+          await tester.pumpWidget(
+            preset.app(
+              navigatorKey: rootNavigatorKey,
+              home: ValueListenableBuilder<double>(
+                valueListenable: width,
+                builder: (context, value, _) => Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    width: value,
+                    height: 600,
+                    child: preset.layout(
+                      header: Builder(
+                        builder: (context) {
+                          scopeContext = context;
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                      sidebar: const SizedBox(
+                        key: _sidebarKey,
+                        child: Text('Sidebar'),
+                      ),
+                      body: const SizedBox(key: _bodyKey, child: Text('Body')),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+
+          preset.scopeOf(scopeContext).openCompact();
+          await tester.pumpAndSettle();
+          expect(find.byKey(_sidebarKey), findsOneWidget);
+
+          // Simulate the host pushing something else on top of the sheet, on
+          // the same root Navigator the sheet's own route lives on.
+          unawaited(
+            rootNavigatorKey.currentState!.push<void>(
+              MaterialPageRoute<void>(
+                builder: (context) => const SizedBox(
+                  key: markerKey,
+                  child: Text('On top of the sheet'),
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.byKey(markerKey), findsOneWidget);
+
+          width.value = 900;
+          await tester.pumpAndSettle();
+
+          // The marker route -- not the sheet's -- is on top, so it must still
+          // be there, undisturbed, after the layout closes its own route.
+          expect(find.byKey(markerKey), findsOneWidget);
+
+          rootNavigatorKey.currentState!.pop();
+          await tester.pumpAndSettle();
+
+          // With the marker popped, only the wide row's sidebar remains: the
+          // sheet's own route was actually removed, not left stuck
+          // underneath.
+          expect(find.byKey(_sidebarKey), findsOneWidget);
+        },
+      );
+    });
+  }
 
   testWidgets('renders the sidebar inline above the compact breakpoint', (
     tester,
@@ -337,31 +726,6 @@ void main() {
     expect(tester.getSize(find.byKey(_sidebarKey)).width, 256);
   });
 
-  testWidgets('closes the compact sheet through the scope', (tester) async {
-    bool? lastOpen;
-    await _pump(
-      tester,
-      _layout(
-        compactOpen: true,
-        onCompactOpenChanged: (value) => lastOpen = value,
-      ),
-      width: 500,
-    );
-    await tester.pumpAndSettle();
-    expect(find.byKey(_sidebarKey), findsOneWidget);
-
-    // The destination lives inside the sheet's own route, which is not a
-    // descendant of the layout's main subtree. The scope must still resolve
-    // there so a destination's onSelected can close the sheet after
-    // navigating.
-    FortalSidebarLayoutScope.of(
-      tester.element(find.byKey(_sidebarKey)),
-    ).closeCompact();
-    await tester.pumpAndSettle();
-
-    expect(lastOpen, isFalse);
-  });
-
   testWidgets('Escape dismisses the compact sheet', (tester) async {
     bool? lastOpen;
     await _pump(
@@ -398,241 +762,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(_sidebarKey), findsNothing);
-  });
-
-  testWidgets('an uncontrolled layout manages its own compact-open state', (
-    tester,
-  ) async {
-    bool? lastNotified;
-    await _pump(
-      tester,
-      _layout(onCompactOpenChanged: (value) => lastNotified = value),
-      width: 500,
-    );
-
-    final scopeContext = tester.element(find.byKey(_bodyKey));
-    FortalSidebarLayoutScope.of(scopeContext).openCompact();
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(_sidebarKey), findsOneWidget);
-    expect(lastNotified, isTrue);
-  });
-
-  testWidgets(
-    'openCompact is a no-op while wide and its state does not carry over '
-    'to the next compact presentation',
-    (tester) async {
-      late BuildContext scopeContext;
-      final width = ValueNotifier<double>(900);
-      await tester.pumpWidget(
-        FortalTheme(
-          child: WidgetsApp(
-            color: const Color(0xFFFFFFFF),
-            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-              settings: settings,
-              pageBuilder: (context, _, _) => builder(context),
-            ),
-            home: ValueListenableBuilder<double>(
-              valueListenable: width,
-              builder: (context, value, _) => Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                  width: value,
-                  height: 600,
-                  child: FortalSidebarLayout(
-                    header: Builder(
-                      builder: (context) {
-                        scopeContext = context;
-                        return const SizedBox.shrink();
-                      },
-                    ),
-                    sidebar: const SizedBox(
-                      key: _sidebarKey,
-                      child: Text('Sidebar'),
-                    ),
-                    body: const SizedBox(key: _bodyKey, child: Text('Body')),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      expect(FortalSidebarLayoutScope.of(scopeContext).isCompact, isFalse);
-
-      FortalSidebarLayoutScope.of(scopeContext).openCompact();
-      await tester.pumpAndSettle();
-
-      // Still wide: the sidebar is only ever mounted once, inline in the
-      // row, and the documented "always false outside a compact
-      // presentation" invariant holds despite the openCompact call.
-      expect(find.byKey(_sidebarKey), findsOneWidget);
-      expect(FortalSidebarLayoutScope.of(scopeContext).isCompactOpen, isFalse);
-
-      width.value = 500;
-      await tester.pumpAndSettle();
-
-      // Narrow now, but nothing asked for the sheet at this width: the
-      // earlier no-op openCompact call must not have left state that
-      // reopens it.
-      final scopeNarrow = FortalSidebarLayoutScope.of(
-        tester.element(find.byKey(_bodyKey)),
-      );
-      expect(scopeNarrow.isCompact, isTrue);
-      expect(scopeNarrow.isCompactOpen, isFalse);
-      expect(find.byKey(_sidebarKey), findsNothing);
-    },
-  );
-
-  testWidgets(
-    'closes the sheet on its own route when a nested Navigator sits between '
-    'the layout and the root Navigator showRemixDialog pushed onto',
-    (tester) async {
-      final width = ValueNotifier<double>(500);
-      late BuildContext scopeContext;
-      await tester.pumpWidget(
-        FortalTheme(
-          child: WidgetsApp(
-            color: const Color(0xFFFFFFFF),
-            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-              settings: settings,
-              pageBuilder: (context, _, _) => builder(context),
-            ),
-            home: ValueListenableBuilder<double>(
-              valueListenable: width,
-              builder: (context, value, _) => Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                  width: value,
-                  height: 600,
-                  // A Navigator nested below the root -- e.g. what a
-                  // go_router ShellRoute or a per-tab Navigator would put
-                  // between the layout and the app's root Navigator, which
-                  // is where showRemixDialog's default useRootNavigator:
-                  // true actually pushes the sheet's route.
-                  child: Navigator(
-                    onGenerateRoute: (settings) => MaterialPageRoute(
-                      builder: (context) => FortalSidebarLayout(
-                        header: Builder(
-                          builder: (context) {
-                            scopeContext = context;
-                            return const SizedBox.shrink();
-                          },
-                        ),
-                        sidebar: const SizedBox(
-                          key: _sidebarKey,
-                          child: Text('Sidebar'),
-                        ),
-                        body: const SizedBox(
-                          key: _bodyKey,
-                          child: Text('Body'),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      FortalSidebarLayoutScope.of(scopeContext).openCompact();
-      await tester.pumpAndSettle();
-      expect(find.byKey(_sidebarKey), findsOneWidget);
-
-      width.value = 900;
-      await tester.pumpAndSettle();
-
-      // Exactly one sidebar instance: the wide row's. A bare
-      // `Navigator.of(context).maybePop()` would pop the nested Navigator
-      // (a no-op there, since it owns only its single route) and leave the
-      // sheet's own route stuck open on the root Navigator underneath.
-      expect(find.byKey(_sidebarKey), findsOneWidget);
-      final scopeAfter = FortalSidebarLayoutScope.of(
-        tester.element(find.byKey(_sidebarKey)),
-      );
-      expect(scopeAfter.isCompact, isFalse);
-      expect(scopeAfter.isCompactOpen, isFalse);
-    },
-  );
-
-  testWidgets('crossing to wide leaves a route pushed above the sheet alone', (
-    tester,
-  ) async {
-    final rootNavigatorKey = GlobalKey<NavigatorState>();
-    const markerKey = ValueKey('marker-route');
-    final width = ValueNotifier<double>(500);
-    late BuildContext scopeContext;
-    await tester.pumpWidget(
-      FortalTheme(
-        child: WidgetsApp(
-          color: const Color(0xFFFFFFFF),
-          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-            settings: settings,
-            pageBuilder: (context, _, _) => builder(context),
-          ),
-          navigatorKey: rootNavigatorKey,
-          home: ValueListenableBuilder<double>(
-            valueListenable: width,
-            builder: (context, value, _) => Align(
-              alignment: Alignment.topLeft,
-              child: SizedBox(
-                width: value,
-                height: 600,
-                child: FortalSidebarLayout(
-                  header: Builder(
-                    builder: (context) {
-                      scopeContext = context;
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                  sidebar: const SizedBox(
-                    key: _sidebarKey,
-                    child: Text('Sidebar'),
-                  ),
-                  body: const SizedBox(key: _bodyKey, child: Text('Body')),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
-    FortalSidebarLayoutScope.of(scopeContext).openCompact();
-    await tester.pumpAndSettle();
-    expect(find.byKey(_sidebarKey), findsOneWidget);
-
-    // Simulate the host pushing something else on top of the sheet, on
-    // the same root Navigator the sheet's own route lives on.
-    unawaited(
-      rootNavigatorKey.currentState!.push<void>(
-        MaterialPageRoute<void>(
-          builder: (context) => const SizedBox(
-            key: markerKey,
-            child: Text('On top of the sheet'),
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.byKey(markerKey), findsOneWidget);
-
-    width.value = 900;
-    await tester.pumpAndSettle();
-
-    // The marker route -- not the sheet's -- is on top, so it must still
-    // be there, undisturbed, after the layout closes its own route.
-    expect(find.byKey(markerKey), findsOneWidget);
-
-    rootNavigatorKey.currentState!.pop();
-    await tester.pumpAndSettle();
-
-    // With the marker popped, only the wide row's sidebar remains: the
-    // sheet's own route was actually removed, not left stuck underneath.
-    expect(find.byKey(_sidebarKey), findsOneWidget);
   });
 
   testWidgets('the compact sheet sits at the start edge in LTR', (
