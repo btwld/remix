@@ -266,6 +266,9 @@ class _AgentTranscriptState extends State<AgentTranscript> {
                 final list = NotificationListener<ScrollMetricsNotification>(
                   onNotification: (notification) {
                     if (notification.depth == 0) {
+                      if (_liveEdge.needsFollow(notification.metrics)) {
+                        _scheduleFollow();
+                      }
                       _updateLatest(notification.metrics);
                     }
                     return false;

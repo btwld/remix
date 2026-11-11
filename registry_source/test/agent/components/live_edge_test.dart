@@ -304,6 +304,52 @@ void main() {
     );
   });
 
+  testWidgets('a recreated scroll position still lands on the live edge', (
+    tester,
+  ) async {
+    // A Scrollable rebuilds its ScrollPosition when its dependencies change,
+    // for example a new ScrollBehavior at a responsive breakpoint, and that
+    // position's first layout skips the physics that keep the end.
+    final controller = ScrollController();
+    addTearDown(controller.dispose);
+    var behavior = 0;
+    var count = 20;
+    late StateSetter update;
+    await pumpAgent(
+      tester,
+      StatefulBuilder(
+        builder: (context, setState) {
+          update = setState;
+          return ScrollConfiguration(
+            behavior: _TaggedBehavior(behavior),
+            child: SizedBox(
+              width: 300,
+              height: 200,
+              child: AgentTranscript(
+                controller: controller,
+                children: [for (var i = 0; i < count; i++) Text('Line $i')],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+    await tester.pump();
+    final first = controller.position;
+
+    update(() {
+      behavior = 1;
+      count = 40;
+    });
+    await tester.pump();
+    await tester.pump();
+    expect(controller.position, isNot(same(first)));
+    expect(
+      controller.offset,
+      closeTo(controller.position.maxScrollExtent, 0.5),
+    );
+  });
+
   testWidgets('turning followOutput off leaves the reader position stable', (
     tester,
   ) async {
@@ -616,4 +662,13 @@ class _GrowingActivityState extends State<_GrowingActivity> {
         ),
     ],
   );
+}
+
+class _TaggedBehavior extends ScrollBehavior {
+  const _TaggedBehavior(this.tag);
+
+  final int tag;
+
+  @override
+  bool shouldNotify(_TaggedBehavior oldDelegate) => tag != oldDelegate.tag;
 }

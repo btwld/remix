@@ -36,6 +36,15 @@ class AgentLiveEdgeEngine {
   /// Whether growing output should keep the end in view.
   bool get sticks => _enabled && _following;
 
+  /// Whether [metrics] left a following scrollable short of its end.
+  ///
+  /// The physics keep the end during layout, except on the first layout of a
+  /// recreated [ScrollPosition]: a Scrollable rebuilds its position when its
+  /// dependencies change (scroll behavior, gesture settings), and that layout
+  /// does not consult [ScrollPhysics.adjustPositionForNewDimensions].
+  bool needsFollow(ScrollMetrics metrics) =>
+      sticks && metrics.maxScrollExtent - metrics.pixels > _atEnd;
+
   /// Updates following from a scroll at the scrollable's own depth.
   void handleScroll(ScrollNotification notification) {
     if (_programmatic || notification is! ScrollUpdateNotification) return;
@@ -172,15 +181,24 @@ class _AgentLiveEdgeScrollViewState extends State<AgentLiveEdgeScrollView> {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<ScrollNotification>(
+    return NotificationListener<ScrollMetricsNotification>(
       onNotification: (notification) {
-        if (notification.depth == 0) _liveEdge.handleScroll(notification);
+        if (notification.depth == 0 &&
+            _liveEdge.needsFollow(notification.metrics)) {
+          _scheduleFollow();
+        }
         return false;
       },
-      child: SingleChildScrollView(
-        controller: _controller,
-        physics: _physics,
-        child: widget.child,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification.depth == 0) _liveEdge.handleScroll(notification);
+          return false;
+        },
+        child: SingleChildScrollView(
+          controller: _controller,
+          physics: _physics,
+          child: widget.child,
+        ),
       ),
     );
   }
