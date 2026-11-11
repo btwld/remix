@@ -36,10 +36,11 @@ Widget styled(VoidCallback save) => RemixButton(
 ```
 
 Recipes resolve `HeroUiTokens`, so a `HeroUiTheme` ancestor is required. Every
-`variant` value has a named constructor; HeroUI's `default` becomes
-`default<Component>` (`HeroUiCard.defaultCard`), and colour props use the
-shared `HeroUiColor` (`defaultColor`, `accent`, `success`, `warning`,
-`danger`).
+`variant` value has a named constructor; HeroUI's `default` becomes a
+`default`-prefixed name, usually `default<Component>` (`HeroUiCard.defaultCard`)
+but `defaultToggle` on toggle buttons and `defaultItem` on dropdown items, and
+colour props use the shared `HeroUiColor` (`defaultColor`, `accent`,
+`success`, `warning`, `danger`).
 
 HeroUI's React props map onto Remix rather than being copied:
 
