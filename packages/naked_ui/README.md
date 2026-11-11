@@ -26,7 +26,7 @@ The consolidated site publishes these docs at `/naked-ui/docs/` after cutover. T
 - NakedCheckbox — toggle behavior and semantics
 - NakedCombobox — autocomplete field on Flutter's RawAutocomplete
 - NakedRadio / NakedRadioGroup — single‑select radio on RawRadio with group management
-- NakedSelect — controlled/uncontrolled dropdown with keyboard navigation
+- NakedSelect — caller-controlled selection and controlled/uncontrolled opening with keyboard navigation
 - NakedScrollbar — styleable scrollbar thumb and track
 - NakedSlider — arbitrary multi-thumb slider with per-thumb focus + semantics
 - NakedTextField — headless text input on EditableText with observable interaction states

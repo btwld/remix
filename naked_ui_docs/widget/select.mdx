@@ -180,7 +180,7 @@ const NakedSelect({
 
 - `child` / `builder` → provide static trigger content or a `ValueWidgetBuilder<NakedSelectState<T>>`
 - `overlayBuilder` → `(BuildContext, RawMenuOverlayInfo)` – build any list/panel/search UI
-- `value` / `onChanged` → manage the selected value externally (falls back to internal state when `value` is null)
+- `value` / `onChanged` → selection is caller-controlled: store each selection in `onChanged` and pass it back through `value`. A null `value` means no selection; it does not enable internal selection state. Omitting `onChanged` disables the control.
 - `positioning` → tune `OverlayPositionConfig` alignment, fallback, and offset for the dropdown shell
 - `closeOnSelect` / `closeOnClickOutside` → opt into dismissal after selection and pointer taps outside
 - `consumeOutsideTaps` / `useRootOverlay` → control how outside gestures are captured and which overlay stack is used
