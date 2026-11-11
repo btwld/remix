@@ -324,47 +324,38 @@ to Inputs, so its Linux Inputs master must be regenerated on Linux.
 
 The `chart` item styles `mix_chart`'s line, bar and pie charts; data, bounds,
 ticks, tooltips and semantics stay `mix_chart`'s. The plot is transparent and
-frameless and clips its marks to the plot.
+frameless and clips its marks.
 
-- Value axis: the y axis reserves `space8`, scaled, beside its `space2` label
-  space, room for a six-character tick such as `1.284K`. On line charts each
-  tick stays centred on the value it names (`fitInside` off), so the end
-  ticks overhang the plot by half a line rather than moving off their
-  values. Bar charts keep their end ticks fitted inside: `mix_chart` clips
-  the whole bar chart, labels included, so an overhanging tick would be cut
-  in half. The category axis keeps its edge labels inside the plot.
+- Value axis: the y axis reserves `space8`, scaled, for ticks of up to six
+  characters and their `space2` label space. Line-chart ticks stay centered
+  on their values (`fitInside` off), so the top tick extends half a label
+  line above the chart: leave that room above a line chart inside a clipping
+  parent. Bar charts keep their end ticks fitted inside, because `mix_chart`
+  clips the whole bar chart, labels included. The category axis keeps its
+  edge labels inside the plot.
 - Labels are `text1` in `gray11`; the horizontal grid is `grayA5` at
   `borderWidth1`.
-- Series colours: `resolveFortalChartPalette` starts with the accent's mark
-  fill, `accentIndicator`, then the other named families without the
-  accent's own. Each series is a graphical object (WCAG 1.4.11), so each
-  family uses its first source step from 9 that keeps the 3.05:1 mark margin
-  on the page and solid and translucent panels; a luminous accent mark fill
-  (Sol in light mode) does the same. In light mode that is step 10 for Mar
-  and Caju and step 11 for Sol; every dark step 9 already passes.
-  `highContrast` uses step 12 throughout. Colour still never carries meaning
-  alone: label the series or slices.
-- Series order: after the accent come Mar, Caju, Céu, Serra, Sol, Duna and
-  Orla's gray, skipping the accent's family. Teal, orange and blue lead so
-  the first four series stay at least 0.12 apart in OKLab for every accent
-  in both modes; gray, nearest to the muted gold and brown and the
-  lowest-contrast dark series, is last. With four warm families and two cool
-  ones, warm families cannot all be kept apart: under Sol, gold and brown
-  (0.037) are neighbours at series five and six.
-- Pie slice labels are off by default. `showLabels` draws them in
-  `accentContrast`, which no series colour is fitted to, so a chart that
-  shows them colours each slice's label with `fortalPieSliceLabelColor`
-  (installed as `<prefix>PieSliceLabelColor`): white or Orla's `#111111`
-  ink, whichever contrasts more, at least 4.61:1 on every standard and
-  high-contrast series colour. Vanilla's `vanillaPieSliceLabelColor` is the
-  same pattern.
+- Series colors meet WCAG 1.4.11's 3:1 on the page and the solid and
+  translucent panels. `resolveFortalChartPalette` starts with the accent's
+  `accentIndicator`, then the other named families without the accent's own;
+  `computeChartSeries` takes each family's first step from 9 that keeps
+  Fortal's 3.05:1 mark margin there, and does the same for an accent
+  indicator that falls short. `highContrast` uses step 12 throughout. Color
+  never carries meaning alone: label the series or slices.
+- Series order after the accent: Mar, Caju, Céu, Serra, Sol, Duna, then
+  Orla's gray. Teal, orange and blue are the most distinct families, so they
+  lead; the muted gold, amber and brown follow, and gray, the least distinct,
+  is last.
+- Pie labels are off by default. A chart that shows them colors each slice's
+  label with `fortalPieSliceLabelColor(sliceColor)` (installed as
+  `<prefix>PieSliceLabelColor`), which picks white or Orla's `#111111` ink to
+  meet WCAG 1.4.3's 4.5:1 on every series color.
 - Legends are the caller's, as in Vanilla: the `chart` item ships none. The
-  `dashboard_demo` item's `FortalDashboardChartLegend` is a worked example
-  of a swatch-and-label legend inside one semantics container.
+  `dashboard_demo` item's `FortalDashboardChartLegend` is a worked example.
 - Bars round all four corners with `radius2`, as Vanilla's do. `mix_chart`
   applies one radius to positive and negative bars alike, so rounding only
   the top would round a negative bar at its baseline.
-- The plot clips marks at its edges, so a marker on an axis bound is cut.
-  Give data room past its extremes with the axis bounds rather than turning
-  clipping off, which would let lines cross the axes when bounds are
-  narrower than the data or the viewport zooms.
+- A marker on an axis bound is cut by the plot's clip. Give the data room
+  past its extremes with the axis bounds; turning clipping off would let
+  lines cross the axes when bounds are narrower than the data or the
+  viewport zooms.

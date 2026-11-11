@@ -254,6 +254,12 @@ Use `FortalLineChart`, `FortalBarChart`, and `FortalPieChart` for the ready-made
 widgets. Their matching `fortal*ChartStyle()` recipes can style the underlying
 `mix_chart` widgets directly.
 
+`resolveFortalChartPalette(context)` returns the series colors: the accent
+first, then the other color families, each at 3:1 on the page and panels. Pie
+labels are off by default; a chart that turns them on colors each slice's
+label with `fortalPieSliceLabelColor(sliceColor)`, which picks white or dark
+ink by contrast.
+
 ## Icons
 
 Install the optional application-owned icon aliases through the configured
