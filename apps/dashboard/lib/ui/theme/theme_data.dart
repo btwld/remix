@@ -423,6 +423,10 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.tabActiveLetterSpacing2: -0.14 * scaling,
     UiTokens.selectIndicatorWidth1: 20.0 * scaling,
     UiTokens.selectIndicatorSize2: 10.0 * scaling,
+    // The trigger chevron keeps the reference's fixed 9/11px glyph at every
+    // scaling (Radix Themes 3.3.0 icons.tsx L53-58, select.css L209-212).
+    UiTokens.selectTriggerIndicatorSize12: 9.0,
+    UiTokens.selectTriggerIndicatorSize3: 11.0,
     UiTokens.selectGhostMarginX12: -8.0 * scaling,
     UiTokens.selectGhostMarginY12: -4.0 * scaling,
     UiTokens.selectGhostMarginX3: -12.0 * scaling,

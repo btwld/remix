@@ -145,6 +145,10 @@ fill must identify the control. Check the actual component on its host surface.
   Component and agent recipes use these tokens whenever a dimension has an equivalent step.
   Specialized measurements (20px icons, tiny indicators, em-relative inline
   typography, and bounded agent viewports) remain named tokens or proportions.
+  The select trigger chevron is the reference's fixed 9px glyph (11px at size
+  3), named by `selectTriggerIndicatorSize12`/`3`, and deliberately does not
+  follow scaling (Radix Themes 3.3.0 `icons.tsx` L53–58, `select.css`
+  L209–212); its item check marks do scale.
 - Type: **12, 14, 16, 18, 20, 24, 28, 36, 60px**. Accordion and disclosure
   size 2 use `text2`, not an intermediate 15px style. Text8 has a 40px line box.
   Fortal sets no font family; the application supplies it, as the

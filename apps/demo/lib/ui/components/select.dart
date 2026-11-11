@@ -61,7 +61,12 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
           .size3 => FortalTokens.spinnerSize3(),
         }),
       )
-      .indicator(.color(FortalTokens.gray12()).size(size == .size3 ? 11 : 9))
+      .indicator(
+        .color(FortalTokens.gray12()).size(switch (size) {
+          .size1 || .size2 => FortalTokens.selectTriggerIndicatorSize12(),
+          .size3 => FortalTokens.selectTriggerIndicatorSize3(),
+        }),
+      )
       .onFocusVisible(.containerEffects(fortalFocusOutline()))
       .merge(_fortalSelectTriggerSizeStyler(variant, size))
       .wrap(fortalTouchTarget());
