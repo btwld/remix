@@ -12,6 +12,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:yaml/yaml.dart';
 
 const _reference = 'reference/heroui_3_2_6';
 const _components = 'lib/src/heroui/components';
@@ -126,8 +127,9 @@ Set<String> catalogItems(String catalog) {
 ///
 /// Every item is either named by a mapped or composed upstream family, or
 /// listed under `extensions`, never both. [worksheets] holds the worksheet text
-/// of each item that has one; every item needs one, and exactly the extensions
-/// declare a top-level `extension:` there.
+/// of each item that has one; every item needs one. An extension's worksheet
+/// has a top-level `extension` field holding a non-empty string; a mapped
+/// item's worksheet has no `extension` field at all.
 List<String> familyMapFailures({
   required Map<String, dynamic> manifest,
   required Set<String> items,
@@ -180,7 +182,6 @@ List<String> familyMapFailures({
     );
   }
 
-  final declaresExtension = RegExp(r'^extension:\s*\S', multiLine: true);
   for (final item in items) {
     final extension = extensions.contains(item);
     require(
@@ -192,15 +193,26 @@ List<String> familyMapFailures({
       failures.add('item $item has no worksheet');
       continue;
     }
-    final declared = declaresExtension.hasMatch(worksheet);
+    final Object? fields;
+    try {
+      fields = loadYaml(worksheet);
+    } on YamlException catch (error) {
+      failures.add('item $item worksheet is not YAML: ${error.message}');
+      continue;
+    }
+    if (fields is! Map) {
+      failures.add('item $item worksheet is not a YAML mapping');
+      continue;
+    }
     if (extension) {
+      final label = fields['extension'];
       require(
-        declared,
+        label is String && label.trim().isNotEmpty,
         'extension $item worksheet does not declare extension:',
       );
     } else {
       require(
-        !declared,
+        !fields.containsKey('extension'),
         'item $item worksheet declares extension: but is mapped',
       );
     }

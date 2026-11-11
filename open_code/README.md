@@ -173,7 +173,11 @@ HeroUI follows HeroUI's names, adding `alert`, `avatar_group`, `breadcrumbs`,
 `field_layout`, `input_group`, `modal`, `radio_group`, `search_field`,
 `separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
 and `toggle_button_group` to shared names such as `button` and `select`.
-It includes no Agent, dashboard, chart or icons items. Its installed-source
+It also ships `icons`, `sidebar`, `sidebar_layout`, `app_bar`, and
+`dashboard_shell` as labelled extensions: HeroUI web has no counterpart to
+port, so they are styled only from HeroUI's tokens and mapped recipes (see
+[ARCHITECTURE.md](../ARCHITECTURE.md#heroui-dashboard-items-are-labelled-extensions)).
+It includes no `chart`, `dashboard_demo`, or Agent items. Its installed-source
 gallery is `open_code/heroui_fixture`; see [Presets](PRESETS.md) and
 [Adding a preset](ADDING_PRESETS.md).
 
