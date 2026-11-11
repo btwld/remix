@@ -141,6 +141,38 @@ void main() {
         }
       });
 
+      // WCAG 1.4.3: a slice label is 12px text, so it needs 4.5:1 on its
+      // slice. Measured lowest: 4.61:1, ink on light-mode Sol amber step 11.
+      testWidgets('slice labels read on every series colour', (tester) async {
+        for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+          for (final accent in FortalAccentColor.values) {
+            late List<Color> colors;
+            await tester.pumpWidget(
+              FortalTheme(
+                accent: accent,
+                mode: mode,
+                child: Builder(
+                  builder: (context) {
+                    colors = [
+                      ...resolveFortalChartPalette(context),
+                      ...resolveFortalChartPalette(context, highContrast: true),
+                    ];
+                    return const SizedBox();
+                  },
+                ),
+              ),
+            );
+            for (final slice in colors) {
+              expect(
+                contrastRatio(fortalPieSliceLabelColor(slice), slice),
+                greaterThanOrEqualTo(4.5),
+                reason: '${accent.name} $mode: label on $slice',
+              );
+            }
+          }
+        }
+      });
+
       // Most charts show four series or fewer, so those must be the most
       // distinct. OKLab distance; gray beside gold is 0.054 and gold beside
       // brown 0.037, the closest pairs among the families.

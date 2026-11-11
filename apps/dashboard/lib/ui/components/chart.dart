@@ -65,6 +65,36 @@ List<Color> resolveUiChartPalette(
   return List<Color>.unmodifiable(candidates.toSet());
 }
 
+/// The label color that reads on a pie slice filled with [slice].
+///
+/// Slice labels are 12px text, which needs 4.5:1 on its fill (WCAG 1.4.3),
+/// and no one color reaches that on every series color. This returns white
+/// or Orla's deepest ink, `#111111`, whichever contrasts more with [slice];
+/// on every Ui series color, standard or high contrast, the lower of the
+/// two choices is still 4.61:1.
+///
+/// Pie labels are off by default. A chart that turns them on sets each
+/// slice's label color from this, next to the fill the slice is drawn in:
+///
+/// ```dart
+/// final palette = resolveUiChartPalette(context);
+///
+/// PieSlice(
+///   id: 'mobile',
+///   label: 'Mobile',
+///   value: 64,
+///   style: PieSliceStyler().label(
+///     TextStyler().color(uiPieSliceLabelColor(palette[0])),
+///   ),
+/// )
+/// ```
+Color uiPieSliceLabelColor(Color slice) {
+  const white = Color(0xFFFFFFFF);
+  final ink = orla.dark.scale.step(1);
+
+  return _contrast(white, slice) >= _contrast(ink, slice) ? white : ink;
+}
+
 /// The color families that follow the accent, in series order.
 ///
 /// Teal, orange and blue lead because they are the furthest apart, so the
@@ -198,7 +228,9 @@ BarChartStyler uiBarChartStyle({
 ///
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing
-/// low-contrast text onto arbitrary categorical colors. Generates
+/// low-contrast text onto arbitrary categorical colors. [showLabels] draws
+/// them in `accentContrast`, which no series color is fitted to: pair it with
+/// [uiPieSliceLabelColor] on each slice. Generates
 /// [UiPieChart] through `mix_generator`. For advanced chart-level geometry,
 /// pass this recipe directly to [PieChart.style] and merge a [PieSliceStyler].
 ///
@@ -228,7 +260,8 @@ PieChartStyler uiPieChartStyle({
             .cornerRadius(UiTokens.borderWidth2())
             // Opt-in slice labels take the accent's label colour, which is
             // fitted to the accent's labelled solid, not to every slice of
-            // the categorical palette. Check contrast when enabling them.
+            // the categorical palette. Callers set each slice's label colour
+            // from uiPieSliceLabelColor.
             .label(
               TextStyler()
                   .style(UiTokens.text1.mix())

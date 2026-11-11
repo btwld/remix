@@ -351,3 +351,10 @@ frameless and clips its marks to the plot.
   lowest-contrast dark series, is last. With four warm families and two cool
   ones, warm families cannot all be kept apart: under Sol, gold and brown
   (0.037) are neighbours at series five and six.
+- Pie slice labels are off by default. `showLabels` draws them in
+  `accentContrast`, which no series colour is fitted to, so a chart that
+  shows them colours each slice's label with `fortalPieSliceLabelColor`
+  (installed as `<prefix>PieSliceLabelColor`): white or Orla's `#111111`
+  ink, whichever contrasts more, at least 4.61:1 on every standard and
+  high-contrast series colour. Vanilla's `vanillaPieSliceLabelColor` is the
+  same pattern.
