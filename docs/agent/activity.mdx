@@ -30,7 +30,7 @@ Import `ui/ui.dart` from your application and use the scope for your preset:
 
 ## Behavior
 
-Pass `UiActivityItem` values to `items`. Row states are `pending`, `active`, and `complete`; the ledger uses `UiRunStatus.working` or `.complete`. While working it stays open. Use `onFollowChanged` to observe reader release and `expanded` with `onExpandedChanged` for controlled disclosure.
+Pass `UiActivityItem` values to `items`. Row states are `pending`, `active`, and `complete`; the ledger uses `UiRunStatus.working` or `.complete`. It opens when work starts and collapses when it completes (unless `collapseOnComplete` is false); the reader can collapse or reopen it at any time, as with a plan. Use `onFollowChanged` to observe reader release and `expanded` with `onExpandedChanged` for controlled disclosure.
 
 ## Recipe bundle
 

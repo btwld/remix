@@ -101,9 +101,14 @@ void main() {
     expect(find.text('One'), findsOneWidget);
   });
 
-  testWidgets('activity locks only while working', (tester) async {
+  testWidgets('activity stays toggleable while working, like a plan', (
+    tester,
+  ) async {
     final key = GlobalKey<_ActivityHarnessState>();
     await pumpAgent(tester, _ActivityHarness(key: key));
+    await tester.tap(find.text('Activity'));
+    await tester.pumpAndSettle();
+    expect(find.text('Working item'), findsNothing);
     await tester.tap(find.text('Activity'));
     await tester.pumpAndSettle();
     expect(find.text('Working item'), findsOneWidget);

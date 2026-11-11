@@ -41,7 +41,9 @@ void main() {
     expect(find.text('Activity step'), findsNothing);
     key.currentState!.start();
     await tester.pump();
-    expect(find.text('Activity step'), findsOneWidget);
+    // A controlled ledger opens when its host accepts the request, as a
+    // controlled execution or plan does.
+    expect(find.text('Activity step'), findsNothing);
     key.currentState!.settle();
     await tester.pumpAndSettle();
 

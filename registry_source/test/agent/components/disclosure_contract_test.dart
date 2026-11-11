@@ -69,7 +69,7 @@ void main() {
   );
 
   testWidgets(
-    'activity ignores working toggles and uses the current callback',
+    'activity honours toggles while working and uses the current callback',
     (tester) async {
       final oldRequests = <bool>[];
       final currentRequests = <bool>[];
@@ -78,24 +78,26 @@ void main() {
             tester,
             AgentActivity(
               status: status,
-              expanded: false,
               onExpandedChanged: callback,
               items: const [AgentActivityItem(id: 'one', title: 'Work')],
             ),
           );
       await pump(.working, oldRequests.add);
       await tester.tap(find.text('Activity'));
-      await tester.pump();
-      expect(oldRequests, isEmpty);
-      expect(find.text('Work'), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(oldRequests, [false]);
+      expect(find.text('Work'), findsNothing);
+      await tester.tap(find.text('Activity'));
+      await tester.pumpAndSettle();
+      expect(oldRequests, [false, true]);
       await pump(.complete, currentRequests.add);
       await tester.pumpAndSettle();
-      expect(oldRequests, isEmpty);
+      expect(oldRequests, [false, true]);
       expect(currentRequests, [false]);
+      expect(find.text('Work'), findsNothing);
       await tester.tap(find.text('Activity'));
       await tester.pump();
       expect(currentRequests, [false, true]);
-      expect(find.text('Work'), findsNothing);
     },
   );
 

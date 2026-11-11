@@ -1,3 +1,5 @@
+import 'dart:ui' show Tristate;
+
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -43,6 +45,43 @@ void main() {
     );
 
     expect(find.bySemanticsLabel('Inspect output'), findsOneWidget);
+    semantics.dispose();
+  });
+
+  testWidgets('a working activity header keeps its enabled look and state', (
+    tester,
+  ) async {
+    const disabledFill = Color(0xFFFF0000);
+    final semantics = tester.ensureSemantics();
+    await pumpAgent(
+      tester,
+      AgentActivity(
+        disclosureStyle: DisclosureStyler().onDisabled(
+          DisclosureStyler().trigger(BoxStyler().color(disabledFill)),
+        ),
+        items: const [
+          AgentActivityItem(
+            id: 'one',
+            title: 'Work',
+            status: AgentActivityItemStatus.active,
+          ),
+        ],
+      ),
+    );
+
+    final fills = tester
+        .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+        .map((box) => box.decoration)
+        .whereType<BoxDecoration>()
+        .map((decoration) => decoration.color);
+    expect(fills, isNot(contains(disabledFill)));
+    final header = tester.semantics
+        .simulatedAccessibilityTraversal()
+        .map((node) => node.getSemanticsData())
+        .singleWhere(
+          (data) => data.label == 'Activity' && data.flagsCollection.isButton,
+        );
+    expect(header.flagsCollection.isEnabled, Tristate.isTrue);
     semantics.dispose();
   });
 

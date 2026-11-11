@@ -18,7 +18,11 @@ typedef AgentActivityStatusLabelBuilder =
 typedef AgentActivityIndicatorBuilder =
     Widget Function(BuildContext context, bool expanded);
 
-/// Activity ledger that is forced open and non-toggleable only while working.
+/// Activity ledger that opens when work starts and collapses when it completes.
+///
+/// Like [AgentPlan] and [AgentExecution], the reader can collapse or reopen it
+/// at any time, so its header keeps the enabled look of every other ledger
+/// while work runs.
 class AgentActivity extends StatefulWidget {
   const AgentActivity({
     super.key,
@@ -73,7 +77,7 @@ class AgentActivity extends StatefulWidget {
 class _AgentActivityState extends State<AgentActivity> {
   late final AgentDisclosureEngine _disclosure;
 
-  bool get _expanded => widget.isWorking ? true : (_disclosure.value);
+  bool get _expanded => _disclosure.value;
 
   @override
   void initState() {
@@ -89,16 +93,15 @@ class _AgentActivityState extends State<AgentActivity> {
     super.didUpdateWidget(oldWidget);
     _disclosure.reconcile(widget.expanded);
     if (!oldWidget.isWorking && widget.isWorking) {
-      _request(true, lifecycle: true);
+      _request(true);
     } else if (oldWidget.isWorking &&
         !widget.isWorking &&
         widget.collapseOnComplete) {
-      _request(false, lifecycle: true);
+      _request(false);
     }
   }
 
-  void _request(bool next, {bool lifecycle = false}) {
-    if (widget.isWorking && !lifecycle) return;
+  void _request(bool next) {
     if (_disclosure.request(next)) setState(() {});
     widget.onExpandedChanged?.call(next);
   }
@@ -157,15 +160,12 @@ class _AgentActivityState extends State<AgentActivity> {
         label: widget.semanticLabel,
         child: RemixDisclosure(
           expanded: _expanded,
-          enabled: !widget.isWorking,
           onExpandedChanged: _request,
           semanticLabel: widget.title,
           style: widget.disclosureStyle,
           triggerBuilder: (context, state, trigger) => Row(
             children: [
               Expanded(child: trigger!),
-              // Preserve the count alignment and expansion cue while working.
-              // RemixDisclosure keeps the forced-open header non-toggleable.
               AgentDisclosureIndicator(
                 styleSpec: spec.indicator,
                 expanded: state.isExpanded,
