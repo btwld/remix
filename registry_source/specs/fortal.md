@@ -358,3 +358,13 @@ frameless and clips its marks to the plot.
   ink, whichever contrasts more, at least 4.61:1 on every standard and
   high-contrast series colour. Vanilla's `vanillaPieSliceLabelColor` is the
   same pattern.
+- Legends are the caller's, as in Vanilla: the `chart` item ships none. The
+  `dashboard_demo` item's `FortalDashboardChartLegend` is a worked example
+  of a swatch-and-label legend inside one semantics container.
+- Bars round all four corners with `radius2`, as Vanilla's do. `mix_chart`
+  applies one radius to positive and negative bars alike, so rounding only
+  the top would round a negative bar at its baseline.
+- The plot clips marks at its edges, so a marker on an axis bound is cut.
+  Give data room past its extremes with the axis bounds rather than turning
+  clipping off, which would let lines cross the axes when bounds are
+  narrower than the data or the viewport zooms.
