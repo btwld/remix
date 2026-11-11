@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/src/heroui/components/surface.dart';
+import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
 
 import '../helpers/heroui.dart';
@@ -84,6 +85,38 @@ void main() {
       }
     });
   }
+
+  // `text-surface-*-foreground` is the CSS `color`, which `currentColor` icons
+  // inherit as text does; an override shows it.
+  testWidgets('every variant colours icons as it colours text', (tester) async {
+    const recolor = Color(0xFF8000FF);
+    // The theme scope already colours icons `foreground`; the filled
+    // variants must replace it with their own foreground.
+    final theme = const HeroUiThemeData.light().copyWith(
+      colors: {
+        HeroUiTokens.surfaceForeground: recolor,
+        HeroUiTokens.surfaceSecondaryForeground: recolor,
+        HeroUiTokens.surfaceTertiaryForeground: recolor,
+      },
+    );
+    for (final variant in HeroUiSurfaceVariant.values) {
+      await tester.pumpHeroUi(
+        HeroUiSurface(
+          variant: variant,
+          child: const Icon(IconData(0xe000), key: Key('icon')),
+        ),
+        theme: theme,
+      );
+      await tester.pumpAndSettle();
+      expect(
+        IconTheme.of(tester.element(find.byKey(const Key('icon')))).color,
+        variant == .transparent
+            ? heroUiToken(HeroUiTokens.foreground)
+            : recolor,
+        reason: variant.name,
+      );
+    }
+  });
 
   testWidgets('a caller style wins over the recipe', (tester) async {
     const override = Color(0xFF00FF00);
