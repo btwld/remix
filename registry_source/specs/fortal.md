@@ -335,3 +335,12 @@ frameless and clips its marks to the plot.
   in half. The category axis keeps its edge labels inside the plot.
 - Labels are `text1` in `gray11`; the horizontal grid is `grayA5` at
   `borderWidth1`.
+- Series colours: `resolveFortalChartPalette` starts with the accent's mark
+  fill, `accentIndicator`, then the other named families without the
+  accent's own. Each series is a graphical object (WCAG 1.4.11), so each
+  family uses its first source step from 9 that keeps the 3.05:1 mark margin
+  on the page and solid and translucent panels; a luminous accent mark fill
+  (Sol in light mode) does the same. In light mode that is step 10 for Mar
+  and Caju and step 11 for Sol; every dark step 9 already passes.
+  `highContrast` uses step 12 throughout. Colour still never carries meaning
+  alone: label the series or slices.

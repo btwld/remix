@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -9,6 +10,7 @@ import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
+import '../../helpers/contrast.dart';
 import '../../helpers/pixels.dart';
 
 void main() {
@@ -51,7 +53,7 @@ void main() {
       final spec = resolved.spec;
 
       expect(spec.palette, publicPalette);
-      expect(spec.palette!.first, colors.accent.scale.step(9));
+      expect(spec.palette!.first, colors.accent.indicator);
       expect(spec.palette, hasLength(greaterThanOrEqualTo(7)));
       expect(spec.palette!.toSet(), hasLength(spec.palette!.length));
       expect(
@@ -59,6 +61,126 @@ void main() {
         colors.gray.scale.alphaStep(5),
       );
       expect(spec.tooltip!.spec.backgroundColor, colors.colorPanelSolid);
+    });
+
+    group('series colours', () {
+      Future<(List<Color>, FortalThemeColors)> resolve(
+        WidgetTester tester,
+        FortalAccentColor accent,
+        FortalThemeMode mode,
+      ) async {
+        late List<Color> palette;
+        late FortalThemeColors colors;
+        await tester.pumpWidget(
+          FortalTheme(
+            accent: accent,
+            mode: mode,
+            child: Builder(
+              builder: (context) {
+                palette = resolveFortalChartPalette(context);
+                colors = resolveFortalTokens(FortalTheme.of(context));
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+        return (palette, colors);
+      }
+
+      // WCAG 1.4.11: a series is a graphical object needed to read the
+      // chart, so it needs 3:1 on everything a chart sits on.
+      for (final mode in FortalThemeMode.values.where((m) => m != .system)) {
+        for (final accent in FortalAccentColor.values) {
+          testWidgets('${accent.name} ${mode.name}: 3:1 on page and panels', (
+            tester,
+          ) async {
+            final (palette, colors) = await resolve(tester, accent, mode);
+            final surfaces = {
+              'page': colors.colorBackground,
+              'solid panel': colors.colorPanelSolid,
+              'translucent panel': Color.alphaBlend(
+                colors.colorPanelTranslucent,
+                colors.colorBackground,
+              ),
+            };
+
+            expect(palette, hasLength(7));
+            expect(palette.toSet(), hasLength(7));
+            for (final (index, color) in palette.indexed) {
+              for (final MapEntry(key: name, value: surface)
+                  in surfaces.entries) {
+                expect(
+                  contrastRatio(color, surface),
+                  greaterThanOrEqualTo(3),
+                  reason: 'series ${index + 1} ($color) on the $name',
+                );
+              }
+            }
+            // The accent's own family is not repeated after its mark fill.
+            final own = colors.accent.scale;
+            for (final color in palette.skip(1)) {
+              for (var step = 9; step <= 12; step++) {
+                expect(color, isNot(own.step(step)));
+              }
+            }
+          });
+        }
+      }
+
+      testWidgets('the first series is the accent mark fill', (tester) async {
+        for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+          for (final accent in FortalAccentColor.values) {
+            final (palette, colors) = await resolve(tester, accent, mode);
+            // Sol's luminous light mark fill is 1.55:1 on the page; its
+            // first source step that reaches 3:1 there is step 11.
+            final expected = accent == .sol && mode == .light
+                ? colors.accent.scale.step(11)
+                : colors.accent.indicator;
+            expect(palette.first, expected, reason: '${accent.name} $mode');
+          }
+        }
+      });
+
+      // Measured with this palette: the lowest WCAG ratio of each series on
+      // the page and the solid panel. Raw step 9 left Mar teal at 2.91,
+      // Caju orange at 2.81 and Sol amber at 1.50 on the light panel.
+      testWidgets('records the light Mar and Sol palettes', (tester) async {
+        const recorded = {
+          FortalAccentColor.mar: [
+            (Color(0xFF04A190), 3.05),
+            (Color(0xFF8D8D8D), 3.14),
+            (Color(0xFF0090FF), 3.09),
+            (Color(0xFF978365), 3.45),
+            (Color(0xFFAB6400), 4.36),
+            (Color(0xFFAD7F58), 3.34),
+            (Color(0xFFEF5F00), 3.15),
+          ],
+          FortalAccentColor.sol: [
+            (Color(0xFFAB6400), 4.38),
+            (Color(0xFF8D8D8D), 3.15),
+            (Color(0xFF0D9B8A), 3.28),
+            (Color(0xFF0090FF), 3.10),
+            (Color(0xFF978365), 3.47),
+            (Color(0xFFAD7F58), 3.35),
+            (Color(0xFFEF5F00), 3.16),
+          ],
+        };
+        for (final MapEntry(key: accent, value: expected) in recorded.entries) {
+          final (palette, colors) = await resolve(tester, accent, .light);
+          expect(palette, [for (final (color, _) in expected) color]);
+          for (final (index, (color, ratio)) in expected.indexed) {
+            final lowest = [
+              colors.colorBackground,
+              colors.colorPanelSolid,
+            ].map((surface) => contrastRatio(color, surface)).reduce(math.min);
+            expect(
+              lowest,
+              moreOrLessEquals(ratio, epsilon: 0.005),
+              reason: '${accent.name} series ${index + 1}',
+            );
+          }
+        }
+      });
     });
 
     testWidgets('high contrast uses the Fortal step-12 palette', (

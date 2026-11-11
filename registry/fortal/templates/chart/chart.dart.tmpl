@@ -1,9 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/fortal_colors.dart';
+import '../theme/palette.dart';
 import '../theme/theme.dart';
 
 part 'chart.g.dart';
@@ -25,24 +28,76 @@ const _highContrastLineWidthToken = ContextToken<double>(
 
 /// Returns the categorical palette used by {{typePrefix}} charts in the current scope.
 ///
-/// The first entry follows the configured {{typePrefix}} accent. Remaining entries use
-/// {{typePrefix}} color families selected for clear categorical separation. Set
-/// [highContrast] to use step 12 instead of the standard step 9, each
-/// palette's mark fill.
+/// The first entry is the accent's mark fill, `accentIndicator`. The other
+/// {{typePrefix}} color families follow, without the named accent's own family. Every
+/// entry is a graphical object that must stay visible on the page and on solid
+/// and translucent panels (WCAG 1.4.11), so each family uses its first source
+/// step from 9 that keeps the 3.05:1 mark margin on those surfaces, and an
+/// accent whose mark fill is luminous (Sol in light mode) does the same.
+///
+/// Set [highContrast] to use step 12 throughout instead.
 List<Color> resolve{{typePrefix}}ChartPalette(
   BuildContext context, {
   bool highContrast = false,
 }) {
   final theme = {{typePrefix}}Theme.of(context);
   final colors = resolve{{typePrefix}}Tokens(theme);
-  final step = highContrast ? 12 : 9;
+  final surfaces = [
+    colors.colorBackground,
+    colors.colorPanelSolid,
+    Color.alphaBlend(colors.colorPanelTranslucent, colors.colorBackground),
+  ];
+  final namedAccent = theme.accentPalette == null ? theme.accent : null;
+  Color series({{typePrefix}}ColorScale scale) =>
+      highContrast ? scale.step(12) : _seriesStep(scale, surfaces);
+  final indicator = colors.accent.indicator;
+
   final candidates = <Color>[
-    colors.accent.scale.step(step),
-    for (final family in [orla, mar, ceu, serra, sol, duna, caju])
-      (theme.isDark ? family.dark : family.light).scale.step(step),
+    if (!highContrast && _keepsSeriesContrast(indicator, surfaces))
+      indicator
+    else
+      series(colors.accent.scale),
+    for (final (accent, family) in _seriesFamilies)
+      if (accent != namedAccent)
+        series((theme.isDark ? family.dark : family.light).scale),
   ];
 
   return List<Color>.unmodifiable(candidates.toSet());
+}
+
+/// The color families that follow the accent, in series order.
+const _seriesFamilies = <({{typePrefix}}AccentColor, {{typePrefix}}ColorTheme)>[
+  (.orla, orla),
+  (.mar, mar),
+  (.ceu, ceu),
+  (.serra, serra),
+  (.sol, sol),
+  (.duna, duna),
+  (.caju, caju),
+];
+
+/// The 3.05:1 margin {{typePrefix}} fits marks and focus rings to, over WCAG's 3:1.
+const _seriesContrast = 3.05;
+
+/// The first source step from 9 that keeps [_seriesContrast] on [surfaces].
+Color _seriesStep({{typePrefix}}ColorScale scale, List<Color> surfaces) {
+  for (var step = 9; step < 12; step++) {
+    final color = scale.step(step);
+    if (_keepsSeriesContrast(color, surfaces)) return color;
+  }
+
+  return scale.step(12);
+}
+
+bool _keepsSeriesContrast(Color color, List<Color> surfaces) =>
+    surfaces.every((surface) => _contrast(color, surface) >= _seriesContrast);
+
+/// WCAG 2 contrast ratio between two opaque colors.
+double _contrast(Color a, Color b) {
+  final lighter = math.max(a.computeLuminance(), b.computeLuminance());
+  final darker = math.min(a.computeLuminance(), b.computeLuminance());
+
+  return (lighter + 0.05) / (darker + 0.05);
 }
 
 /// {{typePrefix}} presentation for a Mix line or area chart.
