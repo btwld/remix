@@ -35,7 +35,9 @@ final class {{typePrefix}}AgentAnswerRecipe {
     actions: FlexBoxStyler()
         .spacing({{typePrefix}}Tokens.space2())
         .padding(.top({{typePrefix}}Tokens.space3())),
-    feedback: BoxStyler().padding(.top({{typePrefix}}Tokens.space2())),
+    // The actions row centres its children; a top inset here dropped the
+    // feedback below the icons beside it.
+    feedback: BoxStyler(),
     sourcesLabel: TextStyler()
         .color({{typePrefix}}Tokens.gray12())
         .style({{typePrefix}}Tokens.text2.mix()),

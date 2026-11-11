@@ -1,21 +1,41 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import '../components/icon_button.dart';
 import '../components/transcript.dart';
 import '../theme/theme.dart';
 
 @immutable
 final class {{typePrefix}}AgentTranscriptRecipe {
-  const {{typePrefix}}AgentTranscriptRecipe({required this.style});
+  const {{typePrefix}}AgentTranscriptRecipe({
+    required this.style,
+    required this.latestStyle,
+  });
   final {{typePrefix}}TranscriptStyler style;
+  final IconButtonStyler latestStyle;
 }
 
 {{typePrefix}}AgentTranscriptRecipe {{valuePrefix}}AgentTranscriptRecipe({
   {{typePrefix}}TranscriptStyler style = const {{typePrefix}}TranscriptStyler.create(),
+  IconButtonStyler latestStyle = const IconButtonStyler.create(),
 }) => {{typePrefix}}AgentTranscriptRecipe(
   style: {{typePrefix}}TranscriptStyler(
     viewport: BoxStyler(),
     item: BoxStyler(),
     spacing: {{typePrefix}}Tokens.space3(),
+    latest: BoxStyler().padding(.bottom({{typePrefix}}Tokens.space3())),
   ).merge(style),
+  // A round surface button over the newest output. Its fill is the opaque
+  // panel, so the output beneath does not show through; {{typePrefix}} keeps shadows
+  // for floating layers, so its accent frame alone sets it apart.
+  latestStyle: {{valuePrefix}}IconButtonStyle(
+    variant: .surface,
+    size: .size2,
+    style: IconButtonStyler()
+        .color({{typePrefix}}Tokens.colorPanelSolid())
+        .borderRadius(.all({{typePrefix}}Tokens.radiusCircle()))
+        .onHovered(.color({{typePrefix}}Tokens.colorPanelSolid()))
+        .onPressed(.color({{typePrefix}}Tokens.gray3()))
+        .merge(latestStyle),
+  ),
 );

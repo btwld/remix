@@ -38,6 +38,8 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
         .color(UiTokens.gray3())
         .borderRadius(.all(UiTokens.radius3()))
         .padding(.all(UiTokens.space3())),
+    // Long output scrolls inside the well instead of growing the card.
+    viewport: BoxStyler().maxHeight(UiTokens.executionOutputMaxHeight()),
     actions: FlexBoxStyler()
         .spacing(UiTokens.space2())
         .padding(.top(UiTokens.space3())),
@@ -48,10 +50,14 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
     meta: TextStyler().color(UiTokens.gray11()).style(UiTokens.text1.mix()),
     status: TextStyler().color(UiTokens.gray11()).style(UiTokens.text1.mix()),
     toolIcon: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
-    statusIcon: IconStyler()
-        .color(UiTokens.accentIndicator())
-        .size(UiTokens.space3()),
+    // The status mark takes its outcome's color from the status box below;
+    // its glyph and label already name the outcome.
+    statusIcon: IconStyler().size(UiTokens.space3()),
     indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
+    runningStatus: _statusMark(UiTokens.accentIndicator),
+    successStatus: _statusMark(UiTokens.accentIndicator),
+    errorStatus: _statusMark(UiTokens.error11),
+    cancelledStatus: _statusMark(UiTokens.gray11),
   ).merge(style),
   surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
   disclosureStyle: uiDisclosureStyle(
@@ -78,3 +84,6 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
     style: retryStyle,
   ),
 );
+
+BoxStyler _statusMark(ColorToken color) =>
+    BoxStyler().wrap(.iconTheme(color: color()));

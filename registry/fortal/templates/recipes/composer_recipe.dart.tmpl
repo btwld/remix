@@ -38,18 +38,35 @@ final class {{typePrefix}}AgentComposerRecipe {
         .spacing({{typePrefix}}Tokens.space2())
         .padding(.top({{typePrefix}}Tokens.space2())),
   ).merge(style),
+  // The card is the field's frame: it rings while the field has focus, as a
+  // text input rings its own frame.
   surfaceStyle: {{valuePrefix}}CardStyle(
     size: .size2,
     style: CardStyler()
         .padding(.all({{typePrefix}}Tokens.space3()))
+        .onFocused(.containerEffects({{valuePrefix}}FocusOutline()))
         .merge(surfaceStyle),
   ),
+  // So the field inside draws no frame of its own: the text area's inset
+  // stroke, focus ring and disabled well would nest a second frame inside
+  // the card.
   fieldStyle: {{valuePrefix}}TextAreaStyle(
     style: TextFieldStyler()
         .color(const Color(0x00000000))
         .border(.style(.none))
+        .containerEffects(_noFieldFrame)
         .minHeight({{typePrefix}}Tokens.composerFieldMinHeight())
         .padding(.all({{typePrefix}}Tokens.space1()))
+        .onFocused(
+          .containerEffects(
+            RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+          ),
+        )
+        .onDisabled(
+          TextFieldStyler()
+              .color(const Color(0x00000000))
+              .containerEffects(_noFieldFrame),
+        )
         .merge(fieldStyle),
   ),
   submitStyle: {{valuePrefix}}IconButtonStyle(
@@ -65,4 +82,9 @@ final class {{typePrefix}}AgentComposerRecipe {
         .size({{typePrefix}}Tokens.space7(), {{typePrefix}}Tokens.space7())
         .merge(stopStyle),
   ),
+);
+
+final _noFieldFrame = RemixBoxEffectsMix(
+  behindContent: RemixBoxEffectLayerMix(gradients: const []),
+  overContent: RemixBoxEffectLayerMix(shadows: const []),
 );

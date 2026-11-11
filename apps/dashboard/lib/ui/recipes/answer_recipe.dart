@@ -35,7 +35,9 @@ UiAgentAnswerRecipe uiAgentAnswerRecipe({
     actions: FlexBoxStyler()
         .spacing(UiTokens.space2())
         .padding(.top(UiTokens.space3())),
-    feedback: BoxStyler().padding(.top(UiTokens.space2())),
+    // The actions row centres its children; a top inset here dropped the
+    // feedback below the icons beside it.
+    feedback: BoxStyler(),
     sourcesLabel: TextStyler()
         .color(UiTokens.gray12())
         .style(UiTokens.text2.mix()),

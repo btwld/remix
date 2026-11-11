@@ -16,6 +16,9 @@ import 'theme_scope.dart' show UiTheme;
 class UiTokens {
   static const activityMaxHeight = DoubleToken('ui.activity.max-height');
   static const planMaxHeight = DoubleToken('ui.plan.max-height');
+  static const executionOutputMaxHeight = DoubleToken(
+    'ui.execution.output-max-height',
+  );
   static const messageAvatarSize = DoubleToken('ui.message.avatar-size');
   static const messageContentMaxWidth = DoubleToken(
     'ui.message.content-max-width',

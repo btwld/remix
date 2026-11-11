@@ -41,7 +41,10 @@ final class {{typePrefix}}AgentPermissionRecipe {
     header: FlexBoxStyler()
         .spacing({{typePrefix}}Tokens.space2())
         .crossAxisAlignment(.center),
+    // Decisions sit at the trailing edge with the primary last, like {{typePrefix}}
+    // dialog actions.
     actions: FlexBoxStyler()
+        .mainAxisAlignment(.end)
         .spacing({{typePrefix}}Tokens.space2())
         .padding(.top({{typePrefix}}Tokens.space2())),
     title: TextStyler()
@@ -63,12 +66,19 @@ final class {{typePrefix}}AgentPermissionRecipe {
     toolIcon: IconStyler()
         .color({{typePrefix}}Tokens.gray12())
         .size({{typePrefix}}Tokens.space4()),
-    statusIcon: IconStyler()
-        .color({{typePrefix}}Tokens.accentIndicator())
-        .size({{typePrefix}}Tokens.space3()),
+    // The status mark takes its outcome's color from the status box below;
+    // its glyph and label already name the outcome.
+    statusIcon: IconStyler().size({{typePrefix}}Tokens.space3()),
     indicator: IconStyler()
         .color({{typePrefix}}Tokens.gray12())
         .size({{typePrefix}}Tokens.space4()),
+    pendingStatus: _statusMark({{typePrefix}}Tokens.accentIndicator),
+    decidingStatus: _statusMark({{typePrefix}}Tokens.accentIndicator),
+    allowedStatus: _statusMark({{typePrefix}}Tokens.accentIndicator),
+    runningStatus: _statusMark({{typePrefix}}Tokens.accentIndicator),
+    completedStatus: _statusMark({{typePrefix}}Tokens.accentIndicator),
+    deniedStatus: _statusMark({{typePrefix}}Tokens.gray11),
+    errorStatus: _statusMark({{typePrefix}}Tokens.error11),
   ).merge(style),
   surfaceStyle: {{valuePrefix}}CardStyle(size: .size2, style: surfaceStyle),
   detailsStyle: {{valuePrefix}}DisclosureStyle(
@@ -85,3 +95,6 @@ final class {{typePrefix}}AgentPermissionRecipe {
   ),
   denyStyle: {{valuePrefix}}ButtonStyle(variant: .ghost, style: denyStyle),
 );
+
+BoxStyler _statusMark(ColorToken color) =>
+    BoxStyler().wrap(.iconTheme(color: color()));

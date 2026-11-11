@@ -41,7 +41,10 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
     header: FlexBoxStyler()
         .spacing(UiTokens.space2())
         .crossAxisAlignment(.center),
+    // Decisions sit at the trailing edge with the primary last, like Ui
+    // dialog actions.
     actions: FlexBoxStyler()
+        .mainAxisAlignment(.end)
         .spacing(UiTokens.space2())
         .padding(.top(UiTokens.space2())),
     title: TextStyler()
@@ -59,10 +62,17 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
         .color(UiTokens.gray12())
         .style(UiTokens.text2.mix()),
     toolIcon: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
-    statusIcon: IconStyler()
-        .color(UiTokens.accentIndicator())
-        .size(UiTokens.space3()),
+    // The status mark takes its outcome's color from the status box below;
+    // its glyph and label already name the outcome.
+    statusIcon: IconStyler().size(UiTokens.space3()),
     indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
+    pendingStatus: _statusMark(UiTokens.accentIndicator),
+    decidingStatus: _statusMark(UiTokens.accentIndicator),
+    allowedStatus: _statusMark(UiTokens.accentIndicator),
+    runningStatus: _statusMark(UiTokens.accentIndicator),
+    completedStatus: _statusMark(UiTokens.accentIndicator),
+    deniedStatus: _statusMark(UiTokens.gray11),
+    errorStatus: _statusMark(UiTokens.error11),
   ).merge(style),
   surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
   detailsStyle: uiDisclosureStyle(
@@ -76,3 +86,6 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
   alwaysAllowStyle: uiButtonStyle(variant: .outline, style: alwaysAllowStyle),
   denyStyle: uiButtonStyle(variant: .ghost, style: denyStyle),
 );
+
+BoxStyler _statusMark(ColorToken color) =>
+    BoxStyler().wrap(.iconTheme(color: color()));
