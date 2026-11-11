@@ -37,8 +37,9 @@ Widget styled(VoidCallback save) => RemixButton(
 
 Recipes resolve `HeroUiTokens`, so a `HeroUiTheme` ancestor is required. Every
 `variant` value has a named constructor; HeroUI's `default` becomes
-`default<Component>` (`HeroUiCard.defaultCard`), and colour props use the
-shared `HeroUiColor` (`defaultColor`, `accent`, `success`, `warning`,
+`default<Component>` (`HeroUiCard.defaultCard`), shortened to `defaultToggle`
+on toggle buttons and `defaultItem` on dropdown items, and colour props use
+the shared `HeroUiColor` (`defaultColor`, `accent`, `success`, `warning`,
 `danger`).
 
 HeroUI's React props map onto Remix rather than being copied:
@@ -231,12 +232,14 @@ See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx
 
 `remix add combobox` installs `<Prefix>Combobox<T>` and its `theme`/`textfield`
 dependencies. Use `variant: .primary|.secondary` (primary by default); there is
-no size axis upstream. The field matches TextField, while suggestions follow
-ComboBox/ListBox with growing rows, hover fill, keyboard ring, pressed scale,
-and Remix's overflow fades and directional thumb. Accept through `onSelected`;
-observe the controller for edits. Supply eligible suggestions only. No trigger
-glyph, per-option disabled state, persistent selected row or multi-selection
-API is added. The upstream Autocomplete with popover search remains deferred.
+no size axis upstream. The field matches TextField, except that a focused
+secondary field takes the `fieldFocus` fill, as upstream does. Suggestions
+follow ComboBox/ListBox with growing rows, hover fill, keyboard ring, pressed
+scale, and Remix's overflow fades and directional thumb. Accept through
+`onSelected`; observe the controller for edits. Supply eligible suggestions
+only. No trigger glyph, per-option disabled state, persistent selected row or
+multi-selection API is added. The upstream Autocomplete with popover search
+remains deferred.
 See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 
 ## Calendars and date pickers

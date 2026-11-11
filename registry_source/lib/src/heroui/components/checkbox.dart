@@ -13,8 +13,8 @@ enum HeroUiCheckboxVariant { primary, secondary }
 /// HeroUI recipe for [RemixCheckbox].
 ///
 /// [invalid] paints the error treatment; validation stays with the app.
-/// [minimumTapTargetSize] sets the widget's default tap target to HeroUI's 24px
-/// `touch-target`; the style itself does not read it.
+/// [minimumTapTargetSize] sets the widget's default tap target to 24px, the
+/// size of HeroUI's `touch-target` utility; the style itself does not read it.
 @MixWidget(target: RemixCheckbox.new)
 CheckboxStyler heroUiCheckboxStyle({
   HeroUiCheckboxVariant variant = .primary,
@@ -74,7 +74,9 @@ CheckboxStyler heroUiCheckboxStyle({
       .merge(style);
 }
 
-/// `touch-target`: the 24px square around the 16px control.
+/// The 24px square of the `touch-target` utility (`utilities/index.css`)
+/// around the 16px control. Upstream draws that utility as an overlay and
+/// `checkbox.css` 3.2.6 does not apply it; here it is a layout minimum.
 const heroUiCheckboxTapTarget = Size.square(24);
 
 /// `.checkbox__control`: `size-4`.
