@@ -31,6 +31,7 @@ class FortalLineChart extends StatelessWidget {
     this.tooltipBuilder,
     this.hitTestRadius = 10,
     this.mouseCursorResolver,
+    this.valueFormatter,
     this.semanticsLabel,
     this.semanticsValue,
     this.excludeFromSemantics = false,
@@ -72,6 +73,8 @@ class FortalLineChart extends StatelessWidget {
 
   final ChartMouseCursorResolver<LineChartHit>? mouseCursorResolver;
 
+  final ChartAxisLabelFormatter? valueFormatter;
+
   final String? semanticsLabel;
 
   final String? semanticsValue;
@@ -102,6 +105,7 @@ class FortalLineChart extends StatelessWidget {
       tooltipBuilder: this.tooltipBuilder,
       hitTestRadius: this.hitTestRadius,
       mouseCursorResolver: this.mouseCursorResolver,
+      valueFormatter: this.valueFormatter,
       semanticsLabel: this.semanticsLabel,
       semanticsValue: this.semanticsValue,
       excludeFromSemantics: this.excludeFromSemantics,
@@ -132,6 +136,7 @@ class FortalBarChart extends StatelessWidget {
     this.tooltipBuilder,
     this.hitTestPadding = const EdgeInsets.all(4),
     this.mouseCursorResolver,
+    this.valueFormatter,
     this.semanticsLabel,
     this.semanticsValue,
     this.excludeFromSemantics = false,
@@ -171,6 +176,8 @@ class FortalBarChart extends StatelessWidget {
 
   final ChartMouseCursorResolver<BarChartHit>? mouseCursorResolver;
 
+  final ChartAxisLabelFormatter? valueFormatter;
+
   final String? semanticsLabel;
 
   final String? semanticsValue;
@@ -200,6 +207,7 @@ class FortalBarChart extends StatelessWidget {
       tooltipBuilder: this.tooltipBuilder,
       hitTestPadding: this.hitTestPadding,
       mouseCursorResolver: this.mouseCursorResolver,
+      valueFormatter: this.valueFormatter,
       semanticsLabel: this.semanticsLabel,
       semanticsValue: this.semanticsValue,
       excludeFromSemantics: this.excludeFromSemantics,
@@ -211,14 +219,14 @@ class FortalBarChart extends StatelessWidget {
 ///
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing
-/// low-contrast text onto arbitrary categorical colors. Generates
+/// low-contrast text onto arbitrary categorical colors; with [showLabels], set
+/// each slice's label color with [fortalPieSliceLabelColor]. Generates
 /// [FortalPieChart] through `mix_generator`. For advanced chart-level geometry,
 /// pass this recipe directly to [PieChart.style] and merge a [PieSliceStyler].
 ///
-/// The pie does not scale to its box: mix_chart draws each slice 80px wide
-/// whatever room it has, so a donut reaches [centerRadius] plus 80px and is
-/// clipped in a box less than twice that. Set the ring to fit the box:
-/// `style: PieChartStyler().slice(PieSliceStyler().radius(44))`.
+/// The default slice radius is at most 80 logical pixels and shrinks to fit
+/// the available box, accounting for the center hole and selection expansion.
+/// An explicit `PieSliceStyler().radius(...)` keeps caller-controlled sizing.
 class FortalPieChart extends StatelessWidget {
   const FortalPieChart({
     super.key,

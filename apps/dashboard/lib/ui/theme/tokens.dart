@@ -424,6 +424,16 @@ class UiTokens {
   /// Select size-2/3 check size (10px at 100% scaling).
   static const selectIndicatorSize2 = DoubleToken('ui.select.indicator-size.2');
 
+  /// Select trigger chevron, sizes 1-2 (9px; does not follow scaling).
+  static const selectTriggerIndicatorSize12 = DoubleToken(
+    'ui.select.trigger-indicator-size.1-2',
+  );
+
+  /// Select trigger chevron, size 3 (11px; does not follow scaling).
+  static const selectTriggerIndicatorSize3 = DoubleToken(
+    'ui.select.trigger-indicator-size.3',
+  );
+
   /// Negative margins that cancel Select ghost-trigger padding.
   static const selectGhostMarginX12 = DoubleToken(
     'ui.select.ghost-margin-x.1-2',

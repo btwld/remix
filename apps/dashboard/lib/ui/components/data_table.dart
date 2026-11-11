@@ -125,7 +125,7 @@ BoxStyler _uiDataTableRowDivider() => BoxStyler().foregroundDecoration(
 /// The `gray-a5` 1px edge shared by the row divider and the footer's top
 /// border, so the footer reads as a continuation of the last row's divider.
 BorderSideMix _uiDataTableDividerSide() =>
-    BorderSideMix(color: UiTokens.grayA5(), width: 1);
+    BorderSideMix(color: UiTokens.grayA5(), width: UiTokens.borderWidth1());
 
 FlexBoxStyler _uiDataTableFooter() => FlexBoxStyler()
     .direction(.horizontal)

@@ -19,6 +19,10 @@ that is `registry-stable`, the newest promoted commit. A SHA or tag pin
 resolves to the same commit, so move it with `--ref <sha>`, or return to the
 branch with `--ref registry-stable`.
 
+If the project has [agent skills](/open-code/install#agent-skills) installed,
+run `remix skills install` after the pin moves. It replaces the copied skill
+files with the ones at the new commit.
+
 Register additional public GitHub sources with the same preset:
 
 ```bash

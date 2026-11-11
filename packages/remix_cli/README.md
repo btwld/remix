@@ -61,21 +61,21 @@ activation fails during version solving.
 Install the CLI once globally; `remix.yaml` separately pins registry content:
 
 ```shell
-dart pub global activate remix_cli '^1.0.0-beta.1'
+dart pub global activate remix_cli '^1.0.0-rc.1'
 remix init --prefix Acme --preset fortal
 remix add button
 ```
 
 Add Pub's `bin` directory to `PATH` if needed; Pub prints the instructions.
 
-Select the prerelease explicitly. An unversioned install can select stable
-`0.1.0`, which reads only schema 1 icon tables and fails on the official
-registry's schema 2 `icons.yaml`. A project that moves from `0.1.0` to this
-version also has no ownership record, so its first `add` needs the
+The constraint includes the 1.0 release candidate. CLI `0.1.0` reads only schema 1
+icon tables and cannot use the official registry's schema 2 `icons.yaml`.
+Projects upgrading from `0.1.0` also lack an ownership record, so their first
+`add` needs the
 [legacy ownership migration](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record).
 
 For teams that want the CLI pinned in the app's lockfile, use
-`flutter pub add dev:remix_cli:^1.0.0-beta.1` instead. Prefix each command with
+`flutter pub add dev:remix_cli:^1.0.0-rc.1` instead. Prefix each command with
 `dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 
 To run an unreleased build, point at a checkout or staged package path:
@@ -469,6 +469,38 @@ CLI names the package and the section to move it to rather than editing your
 
 If generation or analysis fails after installation, the authored source stays
 in place for inspection. Fix the reported issue and rerun the same command.
+
+## Install agent skills
+
+Remix publishes two agent skills: `using-remix` for app UI and
+`building-remix-design-system` for registry authors. Copy them into your
+project from the commit your project is pinned to:
+
+```shell
+remix skills install
+```
+
+The command reads the `@remix` revision in `remix.yaml` and writes:
+
+- `.agents/skills/<skill>/`: the skill files from that commit.
+- `AGENTS.md`: one `remix_cli:skills` block that tells an agent when to read
+  each skill. Text outside the block is not changed.
+- `remix.skills.json`: the revision and a digest of each file.
+
+Commit all three. Run the command again after `remix registry update @remix`.
+
+Claude Code loads project skills from `.claude/skills`. Name the directory
+once; later runs remember it:
+
+```shell
+remix skills install --dir .claude/skills
+```
+
+To keep the block in `CLAUDE.md` or another instruction file, move the block
+there. The next run updates it in place.
+
+The command owns the files it vendors. If one was changed, the next run stops
+and names it. Restore or delete the file, then run the command again.
 
 ## Exit codes
 

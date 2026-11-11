@@ -217,11 +217,15 @@ void validateProjectSettings(
   _validateUiPath(root, uiPath);
 }
 
-void validateProjectFilePath(Directory packageRoot, String relativePath) {
-  _validateProjectPath(packageRoot, relativePath, _ProjectPathKind.file);
-}
+/// Throws unless [relativePath] names a file inside [packageRoot], and
+/// returns the absolute path it names with every existing link resolved.
+///
+/// Two project paths name the same file exactly when their returned paths
+/// are equal, whether or not the file exists yet.
+String validateProjectFilePath(Directory packageRoot, String relativePath) =>
+    _validateProjectPath(packageRoot, relativePath, _ProjectPathKind.file);
 
-void _validateProjectPath(
+String _validateProjectPath(
   Directory packageRoot,
   String relativePath,
   _ProjectPathKind targetKind,
@@ -249,7 +253,7 @@ void _validateProjectPath(
     current = p.join(current, segment);
     final type = FileSystemEntity.typeSync(current, followLinks: false);
     if (type == FileSystemEntityType.notFound) {
-      break;
+      return p.joinAll([current, ...segments.skip(index + 1)]);
     }
     final String resolved;
     try {
@@ -291,6 +295,7 @@ void _validateProjectPath(
     }
     current = resolved;
   }
+  return current;
 }
 
 Directory validateFlutterPackageRoot(Directory directory) {

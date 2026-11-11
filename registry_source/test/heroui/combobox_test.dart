@@ -29,7 +29,12 @@ Future<ComboboxSpec> resolve(
             variant: HeroUiTextFieldVariant.values[variant.index],
             style: TextFieldStyler().constraints(.minHeight(0)),
           ).build(context);
-          expect(spec.field, field);
+          expect(
+            spec.field,
+            variant == .secondary && states.contains(WidgetState.focused)
+                ? _withFill(field, HeroUiTokens.fieldFocus.resolve(context))
+                : field,
+          );
           return const SizedBox.shrink();
         },
       ),
@@ -41,6 +46,20 @@ Future<ComboboxSpec> resolve(
 }
 
 BoxDecoration decoration(BoxSpec spec) => spec.decoration! as BoxDecoration;
+
+/// [field] with its container filled with [fill] instead.
+StyleSpec<TextFieldSpec> _withFill(StyleSpec<TextFieldSpec> field, Color fill) {
+  final box = field.spec.container;
+  return field.copyWith(
+    spec: field.spec.copyWith(
+      container: box.copyWith(
+        spec: box.spec.copyWith(
+          decoration: decoration(box.spec).copyWith(color: fill),
+        ),
+      ),
+    ),
+  );
+}
 
 void main() {
   for (final count in [7, 20]) {
@@ -190,6 +209,29 @@ void main() {
           },
         );
       }
+    }
+    for (final variant in HeroUiComboboxVariant.values) {
+      testWidgets(
+        '$mode ${variant.name} field fills follow combo-box.css at rest and focused',
+        (tester) async {
+          for (final (states, state) in <(Set<WidgetState>, String)>[
+            ({}, 'rest'),
+            ({.focused}, 'keyboard-open'),
+          ]) {
+            final spec = await resolve(
+              tester,
+              mode: mode,
+              variant: variant,
+              states: states,
+            );
+            expectFill(
+              decoration(spec.field.spec.container.spec).color,
+              heroUiCase('combobox-${variant.name}-$state-input', mode: mode),
+              reason: state,
+            );
+          }
+        },
+      );
     }
     testWidgets(
       '$mode keyboard ring, hover and pressed scale stay distinct and legible',

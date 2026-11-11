@@ -78,7 +78,12 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
     .weekdaySpacing(12.0)
     .rowSpacing(4.0)
     .selectorSpacing(4.0)
-    .weekday(.style({{typePrefix}}Tokens.textXs.mix()).color({{typePrefix}}Tokens.muted()))
+    // `.calendar__header-cell`: `text-xs font-medium text-muted`.
+    .weekday(
+      .style(
+        {{typePrefix}}Tokens.textXs.mix(),
+      ).fontWeight(.w500).color({{typePrefix}}Tokens.muted()),
+    )
     .day(
       CalendarDayStyler()
           .minWidth(36.0)

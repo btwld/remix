@@ -4,6 +4,7 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/fortal_colors.dart';
+import '../theme/palette.dart';
 import '../theme/theme.dart';
 
 part 'chart.g.dart';
@@ -23,27 +24,65 @@ const _highContrastLineWidthToken = ContextToken<double>(
   _resolveHighContrastLineWidth,
 );
 
-/// Returns the categorical palette used by Fortal charts in the current scope.
+/// Returns the series colors for Fortal charts in the current scope.
 ///
-/// The first entry follows the configured Fortal accent. Remaining entries use
-/// Fortal color families selected for clear categorical separation. Set
-/// [highContrast] to use step 12 instead of the standard step 9, each
-/// palette's mark fill.
+/// The accent's `accentIndicator` comes first, then the other named color
+/// families, each at a step that keeps 3:1 on the page and panels (see
+/// [computeChartSeries]). Set [highContrast] to use step 12 throughout.
 List<Color> resolveFortalChartPalette(
   BuildContext context, {
   bool highContrast = false,
 }) {
   final theme = FortalTheme.of(context);
   final colors = resolveFortalTokens(theme);
-  final step = highContrast ? 12 : 9;
-  final candidates = <Color>[
-    colors.accent.scale.step(step),
-    for (final family in [orla, mar, ceu, serra, sol, duna, caju])
-      (theme.isDark ? family.dark : family.light).scale.step(step),
-  ];
+  final namedAccent = theme.accentPalette == null ? theme.accent : null;
+  Color series(FortalColorScale scale, {Color? preferred}) => highContrast
+      ? scale.step(12)
+      : computeChartSeries(scale, colors.markSurfaces, preferred: preferred);
 
-  return List<Color>.unmodifiable(candidates.toSet());
+  return List<Color>.unmodifiable({
+    series(colors.accent.scale, preferred: colors.accent.indicator),
+    for (final (accent, family) in _seriesFamilies)
+      if (accent != namedAccent)
+        series((theme.isDark ? family.dark : family.light).scale),
+  });
 }
+
+/// The label color for a pie slice filled with [slice]: white or Orla's
+/// `#111111` ink, whichever contrasts more.
+///
+/// ```dart
+/// final palette = resolveFortalChartPalette(context);
+///
+/// PieSlice(
+///   id: 'mobile',
+///   label: 'Mobile',
+///   value: 64,
+///   style: PieSliceStyler().label(
+///     TextStyler().color(fortalPieSliceLabelColor(palette[0])),
+///   ),
+/// )
+/// ```
+Color fortalPieSliceLabelColor(Color slice) {
+  const white = Color(0xFFFFFFFF);
+  final ink = orla.dark.scale.step(1);
+
+  return computeContrastRatio(white, slice) >= computeContrastRatio(ink, slice)
+      ? white
+      : ink;
+}
+
+/// The color families after the accent. Teal, orange and blue lead because
+/// they are the most distinct from one another; gray, the least, is last.
+const _seriesFamilies = <(FortalAccentColor, FortalColorTheme)>[
+  (.mar, mar),
+  (.caju, caju),
+  (.ceu, ceu),
+  (.serra, serra),
+  (.sol, sol),
+  (.duna, duna),
+  (.orla, orla),
+];
 
 /// Fortal presentation for a Mix line or area chart.
 ///
@@ -59,6 +98,9 @@ LineChartStyler fortalLineChartStyle({
   final recipe = LineChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
+      // Value ticks stay centered on their values, so the end ticks overhang
+      // the plot by half a line.
+      .yAxis(ChartAxisStyler().fitInside(false))
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_fortalGridStyle())
@@ -131,14 +173,14 @@ BarChartStyler fortalBarChartStyle({
 ///
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing
-/// low-contrast text onto arbitrary categorical colors. Generates
+/// low-contrast text onto arbitrary categorical colors; with [showLabels], set
+/// each slice's label color with [fortalPieSliceLabelColor]. Generates
 /// [FortalPieChart] through `mix_generator`. For advanced chart-level geometry,
 /// pass this recipe directly to [PieChart.style] and merge a [PieSliceStyler].
 ///
-/// The pie does not scale to its box: mix_chart draws each slice 80px wide
-/// whatever room it has, so a donut reaches [centerRadius] plus 80px and is
-/// clipped in a box less than twice that. Set the ring to fit the box:
-/// `style: PieChartStyler().slice(PieSliceStyler().radius(44))`.
+/// The default slice radius is at most 80 logical pixels and shrinks to fit
+/// the available box, accounting for the center hole and selection expansion.
+/// An explicit `PieSliceStyler().radius(...)` keeps caller-controlled sizing.
 @MixWidget(target: PieChart.new)
 PieChartStyler fortalPieChartStyle({
   bool highContrast = false,
@@ -150,16 +192,15 @@ PieChartStyler fortalPieChartStyle({
   final recipe = PieChartStyler()
       .frame(_fortalFrameStyle())
       .centerRadius(centerRadius)
-      .centerColor(FortalTokens.colorPanel())
+      // The hole shows whatever the chart sits on. A panel-colored disc stands
+      // out on the page and doubles the tint of a translucent panel.
+      .centerColor(MixColors.transparent)
       .sliceSpacing(FortalTokens.borderWidth2())
       .selectedSliceRadiusOffset(FortalTokens.space2())
       .slice(
         PieSliceStyler()
             .showLabel(showLabels)
             .cornerRadius(FortalTokens.borderWidth2())
-            // Opt-in slice labels take the accent's label colour, which is
-            // fitted to the accent's labelled solid, not to every slice of
-            // the categorical palette. Check contrast when enabling them.
             .label(
               TextStyler()
                   .style(FortalTokens.text1.mix())

@@ -17,7 +17,7 @@ tokens:
   - focus (inset ring)
   - "rail tooltip: tooltip.yaml (overlay, foreground, radius-xl, text-xs)"
 measurements:
-  - {what: destination, value: "toggle_button sm: 36 high below 768px and 32 from it, px-3, text-sm medium, 16px icon, 8px icon gap, full width with content at the start", cite: "designed: toggle_button.yaml sm"}
+  - {what: destination, value: "toggle_button sm: 36 high below 768px and 32 from it, px-3, text-sm medium, 16px icon, a 4px icon gap (gap-2 less the icon's -mx-0.5, as on the toggle button), full width with content at the start", cite: "designed: toggle_button.yaml sm"}
   - {what: destination gap, value: 4, cite: "designed: gap-1"}
   - {what: panel inset, value: "12 on every side of the destination region and the footer", cite: "designed: p-3"}
   - {what: section gap, value: 16, cite: "designed: gap-4"}

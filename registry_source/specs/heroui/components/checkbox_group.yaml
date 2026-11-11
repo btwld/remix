@@ -23,7 +23,7 @@ measurements:
   - {what: disabled option, value: 0.5, cite: checkbox-primary-disabled}
 approximations:
   - The item recipe is the checkbox recipe on `RemixCheckboxGroupItem`, which carries its own label and a 24px tap target.
-  - Each option row is 24px tall (the touch target); upstream's content row is 20, so a group is 4px taller per option than `checkbox-group-primary`.
+  - Each option row is 24px tall (the size of HeroUI's `touch-target` utility, which upstream does not apply here); upstream's content row is 20, so a group is 4px taller per option than `checkbox-group-primary`.
   - The per-option description line that upstream has (`checkbox-group-primary-a-description`) is not offered, unlike the radio and switch groups; `RemixCheckboxGroupItem` takes one label.
   - Group-level `invalid` reaches the label, the options, and the error line; upstream scopes it through context. The description stays and `errorText` follows it, as in the radio group.
   - The required asterisk (`label--required`) is the app's, in the label text.

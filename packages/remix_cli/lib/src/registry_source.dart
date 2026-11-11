@@ -176,6 +176,19 @@ abstract interface class RegistrySources {
 
   /// Open [pin] for reading [preset].
   RegistryReader open(RegistrySource pin, String preset);
+
+  /// The text of one file at [pin]'s commit, or null when that commit has no
+  /// such file.
+  ///
+  /// [path] is relative to the repository root, not to `pin.path`: skills sit
+  /// beside the registry directory, not inside it. It must pass
+  /// [validateRegistryPath].
+  ///
+  /// Null is the only "missing" signal, so a caller can tell "this pin
+  /// publishes no skills" from a network failure without matching message
+  /// text. Every other failure throws the same [FormatException]s as a
+  /// catalog read.
+  Future<String?> file(RegistrySource pin, String path);
 }
 
 final _fullCommitSha = RegExp(r'^[0-9a-f]{40}$');
@@ -207,6 +220,26 @@ final class GitHubSources implements RegistrySources {
     String missing = 'file',
     String? missingRef,
   }) async {
+    final response = await _get(uri);
+    if (response.statusCode == 404 || _isUnknownCommit(response)) {
+      final what = response.statusCode == 404 ? missing : missingRef ?? missing;
+      throw FormatException(
+        'GitHub $what not found: $uri. Check that the repository is public and the source exists.',
+      );
+    }
+    return _body(response, uri);
+  }
+
+  /// Reads [uri], or returns null for a 404 so a caller can treat "not at
+  /// this commit" as a value rather than match an error message.
+  Future<String?> _readOrNull(Uri uri) async {
+    final response = await _get(uri);
+    return response.statusCode == 404 ? null : _body(response, uri);
+  }
+
+  /// The response for [uri], with transport failures and rate limits mapped
+  /// to messages. Status codes a caller interprets are left to the caller.
+  Future<RegistryResponse> _get(Uri uri) async {
     final RegistryResponse response;
     try {
       response = await transport(uri);
@@ -227,12 +260,10 @@ final class GitHubSources implements RegistrySources {
         'GitHub rate limit exceeded for $uri. Retry after the limit resets.',
       );
     }
-    if (response.statusCode == 404 || _isUnknownCommit(response)) {
-      final what = response.statusCode == 404 ? missing : missingRef ?? missing;
-      throw FormatException(
-        'GitHub $what not found: $uri. Check that the repository is public and the source exists.',
-      );
-    }
+    return response;
+  }
+
+  String _body(RegistryResponse response, Uri uri) {
     if (response.statusCode != 200) {
       throw FormatException(
         'GitHub request failed (${response.statusCode}): $uri.',
@@ -323,6 +354,19 @@ final class GitHubSources implements RegistrySources {
   @override
   RegistryReader open(RegistrySource pin, String preset) =>
       _GitHubRegistry(this, pin, preset);
+
+  @override
+  Future<String?> file(RegistrySource pin, String path) async {
+    validateRegistryPath(path);
+    // The commit, never the ref, as in _GitHubRegistry._root. A raw read
+    // spends no API rate limit.
+    return _readOrNull(
+      Uri.https(
+        'raw.githubusercontent.com',
+        '/${pin.repository}/${pin.revision}/$path',
+      ),
+    );
+  }
 }
 
 /// One pinned GitHub registry, serving one preset.

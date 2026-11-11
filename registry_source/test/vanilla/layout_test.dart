@@ -349,6 +349,48 @@ void main() {
     },
   );
 
+  testWidgets('form controls in one row share the 36px height', (tester) async {
+    await tester.pumpWidget(
+      host(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final control in [
+              const VanillaTextField(hintText: 'Name'),
+              VanillaSelect<String>(
+                trigger: const RemixSelectTrigger(placeholder: 'Plan'),
+                items: const [RemixSelectItem(value: 'free', label: 'Free')],
+                onChanged: (_) {},
+              ),
+              VanillaCombobox<String>(
+                hintText: 'Search',
+                optionsBuilder: (_) => const ['Free'],
+              ),
+              VanillaButton.outline(label: 'Apply', onPressed: () {}),
+              VanillaDatePicker(
+                value: null,
+                firstDate: DateTime(2026),
+                lastDate: DateTime(2027),
+                onChanged: (_) {},
+              ),
+            ])
+              SizedBox(width: 240, child: control),
+          ],
+        ),
+      ),
+    );
+
+    for (final type in [
+      VanillaTextField,
+      VanillaSelect<String>,
+      VanillaCombobox<String>,
+      VanillaButton,
+      VanillaDatePicker,
+    ]) {
+      expect(tester.getSize(find.byType(type)).height, 36, reason: '$type');
+    }
+  });
+
   testWidgets('a segmented control stays 36px tall inside a taller row', (
     tester,
   ) async {

@@ -598,4 +598,74 @@ presets:
       );
     });
   });
+
+  group('file', () {
+    final pin = RegistrySource(
+      repository: 'owner/repo',
+      path: 'nested/registry',
+      ref: 'main',
+      revision: sha,
+    );
+
+    test('reads a repository-root path at the pinned commit', () async {
+      final requests = <Uri>[];
+      final sources = GitHubSources(
+        transport: (uri) async {
+          requests.add(uri);
+          return const RegistryResponse(200, '# Skill\n');
+        },
+      );
+
+      expect(await sources.file(pin, 'skills/index.yaml'), '# Skill\n');
+      expect(requests, [
+        Uri.https(
+          'raw.githubusercontent.com',
+          '/owner/repo/$sha/skills/index.yaml',
+        ),
+      ]);
+    });
+
+    test('answers null when the commit has no such file', () async {
+      final sources = GitHubSources(
+        transport: (_) async => const RegistryResponse(404, 'Not Found'),
+      );
+
+      expect(await sources.file(pin, 'skills/index.yaml'), isNull);
+    });
+
+    test('still fails on a rate limit or an unexpected status', () async {
+      for (final entry in <String, RegistryResponse>{
+        'rate limit exceeded': const RegistryResponse(
+          403,
+          '',
+          headers: {'x-ratelimit-remaining': '0'},
+        ),
+        'request failed (500)': const RegistryResponse(500, ''),
+      }.entries) {
+        await expectLater(
+          GitHubSources(
+            transport: (_) async => entry.value,
+          ).file(pin, 'skills/index.yaml'),
+          throwsA(
+            isA<FormatException>().having(
+              (error) => error.message,
+              'message',
+              contains(entry.key),
+            ),
+          ),
+        );
+      }
+    });
+
+    test('rejects traversal before any request', () async {
+      final sources = GitHubSources(
+        transport: (uri) async => fail('Unexpected request to $uri'),
+      );
+
+      await expectLater(
+        sources.file(pin, '../secrets/token'),
+        throwsFormatException,
+      );
+    });
+  });
 }

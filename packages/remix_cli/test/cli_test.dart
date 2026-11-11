@@ -35,6 +35,7 @@ void main() {
         ['list'],
         ['registry', 'add'],
         ['registry', 'update'],
+        ['skills', 'install'],
       ]) {
         final usage = await _usage([...command, '--help']);
         expect(usage, contains('    --'), reason: command.join(' '));
@@ -109,6 +110,8 @@ void main() {
         ['help', 'registry'],
         ['registry', 'add', '--help'],
         ['registry', 'update', '--help'],
+        ['help', 'skills'],
+        ['skills', 'install', '--help'],
       ]) {
         final usage = await _usage(command);
         final rows = usage

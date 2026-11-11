@@ -2,8 +2,8 @@
 # predate tool/check_vanilla_scale.dart. One line per file and value:
 # `<file> <value> <count>`.
 #
-# This list only shrinks. Moving a recipe onto VanillaSpace, VanillaSize,
-# VanillaStroke, or a text token removes its lines here; a new off-scale
+# This list only shrinks. Moving a recipe onto a VanillaTokens spacing, size,
+# or stroke constant, or a text token, removes its lines here; a new off-scale
 # literal is a finding, not a new line.
 chart.dart 280 1
 data_list.dart 96 1

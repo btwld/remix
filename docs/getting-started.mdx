@@ -7,6 +7,49 @@ Remix can be used directly as a widget library. You do not need the CLI or a
 preset for this path. If you want editable component recipes instead, follow
 the [CLI tutorial](/tutorials/settings-screen).
 
+## Start with AI
+
+To have a coding agent do the setup, paste this prompt into an agent opened at
+the root of a Flutter app. This path uses the CLI: the agent installs Remix,
+pins the registry, and copies the Remix skills from the pinned commit into the
+project. The agent then works from guidance that matches the code it installs.
+
+```text
+Set up Remix, a Flutter component library, in this Flutter app.
+
+1. Run `flutter --version`. Stop and tell me if Flutter is older than 3.44.
+2. Add Remix and install its CLI globally, at these versions. An install
+   without a version selects an old 0.x release:
+   flutter pub add 'remix:^1.0.0-rc.2'
+   dart pub global activate remix_cli '^1.0.0-rc.1'
+   If `remix` is not found afterward, add Pub's bin directory to PATH as the
+   activate output says.
+3. Pin the registry. Use `--preset fortal` or `--preset heroui` if I asked
+   for one:
+   remix init --preset vanilla
+4. Install the Remix skills at that pin:
+   remix skills install
+   If you load project skills from another directory, add `--dir <path>`.
+   Claude Code uses `--dir .claude/skills`. If the command says to add
+   `@AGENTS.md` to CLAUDE.md, do it.
+5. Read the installed `using-remix/SKILL.md` and follow it for the rest:
+   add a button with `remix add button`, place the theme scope, and render
+   the button on the first screen.
+
+Done when:
+- `remix.skills.json` and `remix.yaml` name the same `@remix` revision.
+- AGENTS.md has one `remix_cli:skills` block that lists `using-remix`.
+- The first screen renders the installed button, imported from the
+  `ui/ui.dart` barrel, with the installed theme above the Navigator.
+- `flutter analyze` reports no issues, and you edited no `*.g.dart` file.
+```
+
+Commit the files the agent adds. Run `remix skills install` again after you
+move the registry pin. See [Agent skills](/open-code/install#agent-skills) for
+what the command writes.
+
+To set up Remix by hand, without the CLI, continue with the next section.
+
 ## Installation
 
 Remix needs Flutter 3.44 or newer, which bundles Dart 3.12. Check your SDK:
@@ -22,7 +65,7 @@ describe.
 ```bash
 flutter create --empty remix_example
 cd remix_example
-flutter pub add 'remix:^1.0.0-rc.1'
+flutter pub add 'remix:^1.0.0-rc.2'
 ```
 
 Every published version is listed on
