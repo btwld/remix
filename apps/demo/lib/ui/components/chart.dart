@@ -100,7 +100,7 @@ LineChartStyler fortalLineChartStyle({
       .axis(_fortalAxisStyle())
       // Value ticks stay centered on their values, so the end ticks overhang
       // the plot by half a line.
-      .yAxis(_fortalValueAxisStyle().fitInside(false))
+      .yAxis(ChartAxisStyler().fitInside(false))
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_fortalGridStyle())
@@ -152,9 +152,6 @@ BarChartStyler fortalBarChartStyle({
   final recipe = BarChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
-      // mix_chart clips the whole bar chart, labels included, so the end
-      // ticks stay fitted inside it.
-      .yAxis(_fortalValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_fortalGridStyle())
@@ -181,10 +178,9 @@ BarChartStyler fortalBarChartStyle({
 /// [FortalPieChart] through `mix_generator`. For advanced chart-level geometry,
 /// pass this recipe directly to [PieChart.style] and merge a [PieSliceStyler].
 ///
-/// The pie does not scale to its box: mix_chart draws each slice 80px wide
-/// whatever room it has, so a donut reaches [centerRadius] plus 80px and is
-/// clipped in a box less than twice that. Set the ring to fit the box:
-/// `style: PieChartStyler().slice(PieSliceStyler().radius(44))`.
+/// The default slice radius is at most 80 logical pixels and shrinks to fit
+/// the available box, accounting for the center hole and selection expansion.
+/// An explicit `PieSliceStyler().radius(...)` keeps caller-controlled sizing.
 @MixWidget(target: PieChart.new)
 PieChartStyler fortalPieChartStyle({
   bool highContrast = false,
@@ -248,11 +244,6 @@ ChartAxisStyler _fortalAxisStyle() => ChartAxisStyler()
     .fitInside(true)
     .fitInsideDistance(FortalTokens.space1())
     .drawBelowEverything(true);
-
-/// Reserves `space8` for value ticks of up to six characters, such as
-/// `1.250K`, and their label space, scaled with the theme like the label text.
-ChartAxisStyler _fortalValueAxisStyle() =>
-    ChartAxisStyler().reservedSize(FortalTokens.space8());
 
 ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
 

@@ -357,8 +357,8 @@ The `chart` item styles `mix_chart`'s line, bar and pie charts; data, bounds,
 ticks, tooltips and semantics stay `mix_chart`'s. The plot is transparent and
 frameless and clips its marks.
 
-- Value axis: the y axis reserves `space8`, scaled, for ticks of up to six
-  characters and their `space2` label space. Line-chart ticks stay centered
+- Value axis: `mix_chart` measures formatted ticks and reserves enough width
+  for their labels and `space2` label space. Line-chart ticks stay centered
   on their values (`fitInside` off), so the top tick extends half a label
   line above the chart: leave that room above a line chart inside a clipping
   parent. Bar charts keep their end ticks fitted inside, because `mix_chart`
