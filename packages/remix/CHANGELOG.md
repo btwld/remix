@@ -1,3 +1,7 @@
+## 1.0.0-rc.2
+
+ - **DOCS**: run the CLI as remix after a global install (#434).
+
 ## 1.0.0-rc.1
 
 First release candidate for 1.0.0. `1.0.0-beta.19` was prepared but never
