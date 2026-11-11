@@ -130,12 +130,14 @@ void main() {
             file.uri.pathSegments.last.replaceAll('.dart', ''),
       };
       // Besides the components: the `icons` file item, the grouped
-      // `dashboard_shell` recipe, and the Agent recipes. The Agent behavior
-      // they style merges in from `herouiAgentExtension`.
+      // `dashboard_shell` and `dashboard_demo` recipes, and the Agent
+      // recipes. The Agent behavior they style merges in from
+      // `herouiAgentExtension`.
       expect(items.keys.toSet(), {
         'theme',
         'icons',
         'dashboard_shell',
+        'dashboard_demo',
         ...agentRecipes,
         ...components,
       });
@@ -220,6 +222,48 @@ void main() {
     expect(shell, contains('{{icon:hamburgerMenu}}'));
     expect(shell, isNot(contains('HeroUi')));
     expect(shell, isNot(contains('package:registry_source')));
+
+    // The demo installs the shared base Vanilla installs, byte for byte, and
+    // HeroUI's own five pages over it.
+    final demo = dependencies('dashboard_demo');
+    expect(
+      demo,
+      containsAll([
+        ...agentRecipes,
+        ...agentRecipes.map((name) => name.replaceAll('_recipe', '')),
+        'chart',
+        'dashboard_shell',
+        'table',
+        'tabs',
+        'chip',
+      ]),
+    );
+    expect(demo, isNot(contains('typography')));
+    expect((items['dashboard_demo'] as YamlMap)['exports'], [
+      'recipes/dashboard/dashboard_sample_data.dart',
+      'recipes/dashboard/dashboard_overview.dart',
+      'recipes/dashboard/dashboard_demo.dart',
+    ]);
+    final vanilla = PresetBuilder.forRepository(
+      Directory.current.absolute,
+    ).derive();
+    for (final shared in [
+      'dashboard_sample_data',
+      'dashboard_overview_base',
+      'dashboard_demo_base',
+      'dashboard_demo_chat',
+      'dashboard_demo_charts',
+      'dashboard_demo_records',
+    ]) {
+      final path = 'templates/dashboard_demo/$shared.dart.tmpl';
+      expect(output.files[path], vanilla.files[path], reason: path);
+    }
+    final page =
+        output.files['templates/dashboard_demo/dashboard_demo.dart.tmpl']!;
+    expect(page, contains('class {{typePrefix}}DashboardDemo '));
+    expect(page, contains('{{icon:bell}}'));
+    expect(page, isNot(contains('HeroUi')));
+    expect(page, isNot(contains('RemixIcons')));
   });
 
   test(

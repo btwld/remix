@@ -24,10 +24,13 @@ import 'package:registry_source/src/default/theme/tokens.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
+import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_demo.dart';
+import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_overview.dart';
+import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/utilities/remix_path_icon.dart';
 
-enum _Preset { defaultPreset, fortal }
+enum _Preset { defaultPreset, fortal, heroui }
 
 void main() {
   test('shared dashboard contract matches the Fortal sample inventory', () {
@@ -459,14 +462,14 @@ void main() {
         expect(find.bySemanticsLabel('Use light appearance'), findsOneWidget);
 
         final notifications = switch (preset) {
-          .defaultPreset => 'Open notifications',
+          .defaultPreset || .heroui => 'Open notifications',
           .fortal => 'Notifications',
         };
         await tester.tap(find.bySemanticsLabel(notifications).first);
         await tester.pump();
         expect(
           find.text(switch (preset) {
-            .defaultPreset => 'Order ORD-1047 requires review.',
+            .defaultPreset || .heroui => 'Order ORD-1047 requires review.',
             .fortal => 'Inventory alert',
           }),
           findsWidgets,
@@ -927,7 +930,7 @@ void main() {
           expect(language, findsOne);
           expect(
             language.evaluate().single.getSemanticsData().value,
-            preset == .defaultPreset ? 'English' : 'English (US)',
+            preset == .fortal ? 'English (US)' : 'English',
           );
 
           final select = find.byType(RemixSelect<String>);
@@ -1135,6 +1138,7 @@ Future<void> _pumpOverview(
   final overview = switch (preset) {
     .defaultPreset => VanillaDashboardOverview(data: data),
     .fortal => FortalDashboardOverview(data: data),
+    .heroui => HeroUiDashboardOverview(data: data),
   };
   await _pump(
     tester,
@@ -1179,6 +1183,14 @@ Future<void> _pumpDashboard(
       builtInChrome: builtInChrome,
       account: account,
     ),
+    .heroui => HeroUiDashboardDemo(
+      key: ValueKey(initialPage),
+      brand: const Text('Acme starter'),
+      initialPage: initialPage,
+      chatStepDelay: chatStepDelay,
+      builtInChrome: builtInChrome,
+      account: account,
+    ),
   },
 );
 
@@ -1216,6 +1228,7 @@ Future<void> _pump(
       child: app,
     ),
     .fortal => FortalTheme(child: app),
+    .heroui => HeroUiTheme(mode: HeroUiThemeMode.light, child: app),
   });
   await tester.pump();
 }

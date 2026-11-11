@@ -9,13 +9,16 @@ HeroUI item with the `Acme` prefix (each one alone as `Solo` first), then runs
 family, with a header switch between light and dark (`AcmeThemeMode`). Its
 "Dashboard shell" card opens `DashboardReview`, a full-window
 `AcmeDashboardShell` with sidebar sections, search, a dark mode switch in the
-app bar, and a simple overview page. The dashboard items are extensions with no
-upstream HeroUI family. It
-imports the installed `ui/ui.dart` plus Remix for the part types it passes
-(`RemixSelectItem`, `RemixMenuItem`, `RemixDataTableColumn`, toasts, dialogs).
-There is no Material. `test/` covers both modes at desktop and phone widths,
-every installed widget building below `AcmeTheme`, a handful of interactions,
-and the theme API.
+app bar, and a simple overview page. The "Chart" card draws the line, bar and
+pie recipes, and "Agent surfaces" a message, a permission request, an answer
+and the composer with the HeroUI Agent recipes. The dashboard, chart and Agent
+items are extensions with no upstream HeroUI family. It
+imports the installed `ui/ui.dart` plus Remix and `mix_chart` for the part
+types it passes (`RemixSelectItem`, `RemixMenuItem`, `RemixDataTableColumn`,
+chart series, toasts, dialogs). There is no Material. `test/` covers both modes
+at desktop and phone widths, every installed widget building below
+`AcmeTheme`, a handful of interactions, the Agent recipe overrides, and the
+theme API.
 
 From the repository root, with the SDK pinned in `.fvmrc`:
 
@@ -25,13 +28,14 @@ fvm dart run tool/check_open_code.dart --preset heroui --source checkout --keep
 
 Add `--keep` to keep the generated app; its path is printed.
 
-`focused/search_field_*` and `focused/dashboard_shell_*` replace the gallery
-for a fresh install of that item and its dependencies alone. These checks also
-run `flutter build web`:
+`focused/search_field_*`, `focused/dashboard_shell_*` and
+`focused/dashboard_demo_*` replace the gallery for a fresh install of that item
+and its dependencies alone. These checks also run `flutter build web`:
 
 ```shell
 fvm dart run tool/check_open_code.dart --preset heroui --source checkout --item search_field
 fvm dart run tool/check_open_code.dart --preset heroui --source checkout --item dashboard_shell
+fvm dart run tool/check_open_code.dart --preset heroui --source checkout --item dashboard_demo
 ```
 
 ## Screenshots

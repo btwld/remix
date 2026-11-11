@@ -1310,6 +1310,16 @@ Future<void> main(List<String> arguments) async {
       fortalDemo.where((path) => path.startsWith('recipes/dashboard/')),
       hasLength(19),
     );
+    // HeroUI mirrors Vanilla's file set: the shared base and five preset
+    // files, plus the shell's two.
+    final herouiDemo = checker.focusedInventoryForTest(
+      'dashboard_demo',
+      preset: 'heroui',
+    );
+    expect(
+      herouiDemo.where((path) => path.startsWith('recipes/dashboard/')),
+      hasLength(13),
+    );
   });
 
   test('focused dashboard_demo inventory rejects a missing recipe file', () {
@@ -1400,6 +1410,7 @@ Future<void> main(List<String> arguments) async {
           'permission_recipe',
           'plan_recipe',
           'transcript_recipe',
+          'dashboard_demo',
         ]),
       );
     });
@@ -1677,6 +1688,8 @@ import 'package:flutter/widgets.dart'
         checker.installedUiProblem(app, preset: 'heroui'),
         contains('scoped Agent builder contract'),
       );
+      // HeroUI now ships the demo, as an extension; only Vanilla checks
+      // its icon aliases and ownership alone.
       expect(
         checker.parseConsumerCheckOptions([
           '--preset',
@@ -1685,6 +1698,17 @@ import 'package:flutter/widgets.dart'
           'checkout',
           '--item',
           'dashboard_demo',
+        ])!.item,
+        'dashboard_demo',
+      );
+      expect(
+        checker.parseConsumerCheckOptions([
+          '--preset',
+          'heroui',
+          '--source',
+          'checkout',
+          '--item',
+          'icons',
         ]),
         isNull,
       );
@@ -1761,11 +1785,33 @@ import 'package:flutter/widgets.dart'
     expect(shell, isNot(contains('icons.dart')));
     expect(shell, isNot(contains('components/typography.dart')));
 
+    final demo = checker.focusedInventoryForTest(
+      'dashboard_demo',
+      preset: 'heroui',
+    );
+    expect(
+      demo,
+      containsAll([
+        'recipes/dashboard/dashboard_demo.dart',
+        'recipes/dashboard/dashboard_demo_records_page.dart',
+        'recipes/activity_recipe.dart',
+        'components/activity.dart',
+        'components/chart.dart',
+        'components/table.dart',
+        'components/tabs.dart',
+        'models/statuses.dart',
+        'support/functional_glyph.dart',
+      ]),
+    );
+    expect(demo, isNot(contains('components/typography.dart')));
+
     for (final file in [
       'search_field_main.dart',
       'search_field_test.dart',
       'dashboard_shell_main.dart',
       'dashboard_shell_test.dart',
+      'dashboard_demo_main.dart',
+      'dashboard_demo_test.dart',
     ]) {
       expect(
         File('open_code/heroui_fixture/focused/$file').existsSync(),
@@ -1785,6 +1831,7 @@ import 'package:flutter/widgets.dart'
         containsAll([
           '$full --item search_field',
           '$full --item dashboard_shell',
+          '$full --item dashboard_demo',
           full,
         ]),
         reason: script,

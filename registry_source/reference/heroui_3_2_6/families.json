@@ -520,6 +520,10 @@
    "reason": "No Agent family upstream; passes HeroUI recipes into the shared AgentComposer stylers."
   },
   {
+   "item": "dashboard_demo",
+   "reason": "No dashboard upstream; the other presets' demo over the shared base with HeroUI recipes and the chart, Agent and shell extensions."
+  },
+  {
    "item": "dashboard_shell",
    "reason": "No application shell upstream; composes sidebar_layout, sidebar, app_bar, button and search_field over the shared dashboard base."
   },

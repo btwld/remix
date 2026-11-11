@@ -912,6 +912,102 @@ const herouiPreset = PresetSpec(
       ],
       exports: ['recipes/dashboard/dashboard_shell.dart'],
     ),
+    // The other presets' demo over the shared base: the same pages, data and
+    // behavior, with HeroUI's components.
+    GroupedRecipeItemSpec(
+      name: 'dashboard_demo',
+      registryDependencies: [
+        'activity',
+        'activity_recipe',
+        'answer',
+        'answer_recipe',
+        'composer',
+        'composer_recipe',
+        'execution',
+        'execution_recipe',
+        'message',
+        'message_recipe',
+        'permission',
+        'permission_recipe',
+        'plan',
+        'plan_recipe',
+        'transcript',
+        'transcript_recipe',
+      ],
+      files: [
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_sample_data.dart',
+          target: 'recipes/dashboard/dashboard_sample_data.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_overview_base.dart',
+          target: 'recipes/dashboard/dashboard_overview_base.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_base.dart',
+          target: 'recipes/dashboard/dashboard_demo_base.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_chat.dart',
+          target: 'recipes/dashboard/dashboard_demo_chat.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_charts.dart',
+          target: 'recipes/dashboard/dashboard_demo_charts.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_records.dart',
+          target: 'recipes/dashboard/dashboard_demo_records.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_overview.dart',
+          target: 'recipes/dashboard/dashboard_overview.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_text.dart',
+          target: 'recipes/dashboard/dashboard_demo_text.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_records.dart',
+          target: 'recipes/dashboard/dashboard_demo_records_page.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_settings.dart',
+          target: 'recipes/dashboard/dashboard_demo_settings.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo.dart',
+          target: 'recipes/dashboard/dashboard_demo.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+      ],
+      exports: [
+        'recipes/dashboard/dashboard_sample_data.dart',
+        'recipes/dashboard/dashboard_overview.dart',
+        'recipes/dashboard/dashboard_demo.dart',
+      ],
+    ),
   ],
   // The Agent recipes are extensions too: HeroUI's card, button, disclosure
   // and text area styles passed into the shared Agent stylers.
