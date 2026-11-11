@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:registry_source/vanilla.dart' as vanilla;
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 import '../../helpers/contrast.dart';
@@ -255,31 +256,6 @@ void main() {
       expect(resolved.spec.selectedSliceRadiusOffset, expectedOffset);
     });
 
-    testWidgets('line and bar value axes share one scaled reservation', (
-      tester,
-    ) async {
-      late double expected;
-      late StyleSpec<LineChartSpec> line;
-      late StyleSpec<BarChartSpec> bar;
-
-      await tester.pumpWidget(
-        FortalTheme(
-          scaling: .percent110,
-          child: Builder(
-            builder: (context) {
-              expected = MixScope.tokenOf(FortalTokens.space8, context);
-              line = fortalLineChartStyle().build(context);
-              bar = fortalBarChartStyle().build(context);
-              return const SizedBox();
-            },
-          ),
-        ),
-      );
-
-      expect(line.spec.yAxis!.spec.reservedSize, expected);
-      expect(bar.spec.yAxis!.spec.reservedSize, expected);
-    });
-
     testWidgets('line value ticks sit on the values they name', (tester) async {
       const height = 200.0;
       final chart = GlobalKey();
@@ -439,53 +415,59 @@ void main() {
       FortalScaling.percent100,
       FortalScaling.percent110,
     ]) {
-      testWidgets('six-character ticks stay on one line at ${scaling.name}', (
-        tester,
-      ) async {
-        await tester.pumpWidget(
-          FortalTheme(
-            scaling: scaling,
-            child: Directionality(
-              textDirection: .ltr,
-              child: DefaultTextStyle(
-                style: const TextStyle(fontFamily: RemixFonts.geist),
-                child: Align(
-                  alignment: .topLeft,
-                  child: SizedBox(
-                    width: 360,
-                    height: 200,
-                    child: FortalLineChart(
-                      yAxis: ChartAxis.numeric(
-                        min: 1050,
-                        max: 1300,
-                        interval: 50,
-                        labelFormatter: (value) =>
-                            '${(value / 1000).toStringAsFixed(3)}K',
-                      ),
-                      series: [_lineSeries()],
+      for (final isBar in [false, true]) {
+        testWidgets(
+          '${isBar ? 'bar' : 'line'} ticks fit long values at ${scaling.name}',
+          (tester) async {
+            final axis = ChartAxis.numeric(
+              min: 1050,
+              max: 1300,
+              interval: 50,
+              labelFormatter: (value) => 'USD ${value.toStringAsFixed(2)}',
+            );
+            final chart = isBar
+                ? FortalBarChart(yAxis: axis, groups: [_barGroup()])
+                : FortalLineChart(yAxis: axis, series: [_lineSeries()]);
+
+            await tester.pumpWidget(
+              FortalTheme(
+                scaling: scaling,
+                child: Directionality(
+                  textDirection: .ltr,
+                  child: DefaultTextStyle(
+                    style: const TextStyle(fontFamily: RemixFonts.geist),
+                    child: Align(
+                      alignment: .topLeft,
+                      child: SizedBox(width: 360, height: 200, child: chart),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        );
-        await tester.pump();
+            );
+            await tester.pump();
 
-        // Every tick, such as "1.250K", must lay out as a single line.
-        final ticks = tester.renderObjectList<RenderParagraph>(
-          find.textContaining('K'),
+            final ticks = tester.renderObjectList<RenderParagraph>(
+              find.textContaining('USD'),
+            );
+            expect(ticks, isNotEmpty);
+            for (final tick in ticks) {
+              expect(
+                tick.size.height,
+                tick.getMaxIntrinsicHeight(double.infinity),
+                reason: '"${tick.text.toPlainText()}" wrapped',
+              );
+              expect(
+                tick.size.width,
+                greaterThanOrEqualTo(
+                  tick.getMaxIntrinsicWidth(double.infinity) - 0.5,
+                ),
+                reason: '"${tick.text.toPlainText()}" was clipped',
+              );
+            }
+            expect(tester.takeException(), isNull);
+          },
         );
-        expect(ticks, isNotEmpty);
-        for (final tick in ticks) {
-          expect(
-            tick.size.height,
-            tick.getMaxIntrinsicHeight(double.infinity),
-            reason: '"${tick.text.toPlainText()}" wrapped',
-          );
-        }
-        expect(tester.takeException(), isNull);
-      });
+      }
     }
   });
 
@@ -561,6 +543,83 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   });
+
+  for (final isFortal in [false, true]) {
+    testWidgets(
+      '${isFortal ? 'Fortal' : 'Vanilla'} chart formatters reach semantics',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          String format(double value) => 'USD ${value.round()}';
+
+          final charts = Column(
+            children: [
+              SizedBox(
+                width: 360,
+                height: 180,
+                child: isFortal
+                    ? FortalLineChart(
+                        semanticsLabel: 'Line revenue',
+                        valueFormatter: format,
+                        series: [_lineSeries()],
+                      )
+                    : vanilla.VanillaLineChart(
+                        semanticsLabel: 'Line revenue',
+                        valueFormatter: format,
+                        series: [_lineSeries()],
+                      ),
+              ),
+              SizedBox(
+                width: 360,
+                height: 180,
+                child: isFortal
+                    ? FortalBarChart(
+                        semanticsLabel: 'Bar orders',
+                        valueFormatter: format,
+                        groups: [_barGroup()],
+                      )
+                    : vanilla.VanillaBarChart(
+                        semanticsLabel: 'Bar orders',
+                        valueFormatter: format,
+                        groups: [_barGroup()],
+                      ),
+              ),
+            ],
+          );
+          final app = WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, _) => builder(context),
+            ),
+            home: charts,
+          );
+          await tester.pumpWidget(
+            isFortal
+                ? FortalTheme(child: app)
+                : vanilla.VanillaTheme(child: app),
+          );
+          await tester.pump();
+
+          for (final (label, value) in [
+            ('Line revenue', 'USD 18'),
+            ('Bar orders', 'USD 42'),
+          ]) {
+            expect(
+              tester
+                  .getSemantics(find.bySemanticsLabel(label))
+                  .getSemanticsData()
+                  .value,
+              contains(value),
+            );
+          }
+          expect(tester.takeException(), isNull);
+        } finally {
+          semantics.dispose();
+        }
+      },
+    );
+  }
 
   group('package boundary', () {
     test('Fortal does not import the private chart renderer', () {
