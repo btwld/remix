@@ -57,6 +57,8 @@ behavior:
   - Shift+Enter inserts a newline
   - IME composition ignores Enter
   - Focus remains in the field after submit
+  - Field focus resolves the surface's onFocused (focus-within on the card);
+    the card's controls keep their own state
   - Send/stop glyph springs; reduced motion snaps
   - Host owns Overlay if a trailing picker needs one
 approximations:

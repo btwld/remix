@@ -208,4 +208,61 @@ void main() {
       expect(composerBuilds, 2);
     },
   );
+
+  testWidgets('field focus reaches the surface style, and only the surface', (
+    tester,
+  ) async {
+    const ring = Color(0xFF0055FF);
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    final leadingSaw = <bool>[];
+    await pumpAgent(
+      tester,
+      SizedBox(
+        width: 400,
+        child: AgentComposer(
+          initialValue: 'go',
+          focusNode: focusNode,
+          onSubmit: (_) {},
+          surfaceStyle: CardStyler().onFocused(CardStyler().color(ring)),
+          leading: Builder(
+            builder: (context) {
+              leadingSaw.add(
+                WidgetStateProvider.hasStateOf(context, WidgetState.focused),
+              );
+              return const SizedBox(width: 8, height: 8);
+            },
+          ),
+        ),
+      ),
+      overlay: true,
+    );
+    Iterable<Color?> cardFills() => [
+      for (final widget in tester.widgetList(
+        find.descendant(
+          of: find.byType(RemixCard),
+          matching: find.byWidgetPredicate(
+            (widget) => widget is DecoratedBox || widget is ColoredBox,
+          ),
+        ),
+      ))
+        switch (widget) {
+          ColoredBox(:final color) => color,
+          DecoratedBox(:final BoxDecoration decoration) => decoration.color,
+          _ => null,
+        },
+    ];
+    expect(cardFills(), isNot(contains(ring)));
+
+    focusNode.requestFocus();
+    await tester.pump();
+    await tester.pump();
+    expect(cardFills(), contains(ring));
+    expect(leadingSaw, everyElement(isFalse));
+
+    focusNode.unfocus();
+    await tester.pump();
+    await tester.pump();
+    expect(cardFills(), isNot(contains(ring)));
+  });
 }

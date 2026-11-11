@@ -88,6 +88,11 @@ class _AgentComposerState extends State<AgentComposer> {
   /// only when this flips; the text field repaints its own text.
   late bool _hasDraft;
 
+  /// Whether the text field holds focus, published to [AgentComposer.surfaceStyle]
+  /// as [WidgetState.focused] so a recipe can mark the whole card, the way a
+  /// text input marks its own frame.
+  bool _fieldFocused = false;
+
   FocusNode get _focusNode =>
       widget.focusNode ?? (_ownedFocusNode ??= FocusNode());
 
@@ -215,68 +220,81 @@ class _AgentComposerState extends State<AgentComposer> {
           canRequestFocus: false,
           skipTraversal: true,
           onKeyEvent: _handleKey,
-          child: RemixCard(
-            style: widget.surfaceStyle,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(
-                    context,
-                  ).copyWith(scrollbars: false),
-                  child: RemixTextArea(
-                    controller: _controller,
-                    focusNode: _focusNode,
-                    enabled: widget.enabled,
-                    autofocus: widget.autofocus,
-                    hintText: widget.hintText,
-                    semanticLabel: widget.semanticLabel,
-                    minLines: widget.minLines,
-                    maxLines: widget.maxLines,
-                    textInputAction: TextInputAction.newline,
-                    style: widget.fieldStyle,
-                  ),
-                ),
-                RowBox(
-                  styleSpec: spec.toolbar,
-                  children: [
-                    if (widget.leading != null) widget.leading!,
-                    const Spacer(),
-                    if (widget.trailing != null) widget.trailing!,
-                    Semantics(
-                      container: true,
-                      child: RemixIconButton(
-                        key: ValueKey(
-                          widget.running
-                              ? 'agent-composer-stop'
-                              : 'agent-composer-send',
-                        ),
-                        icon: null,
-                        iconBuilder: widget.running
-                            ? (widget.stopIconBuilder ?? _defaultStopIcon)
-                            : (widget.submitIconBuilder ?? _defaultSubmitIcon),
-                        semanticLabel: widget.running
-                            ? widget.stopLabel
-                            : widget.submitLabel,
-                        enabled: widget.running
-                            ? widget.enabled && widget.onStop != null
-                            : _canSubmit,
-                        onPressed: widget.running ? widget.onStop : _submit,
-                        style: widget.running
-                            ? widget.stopStyle
-                            : widget.submitStyle,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+          child: WidgetStateProvider(
+            states: {if (_fieldFocused) WidgetState.focused},
+            child: RemixCard(
+              style: widget.surfaceStyle,
+              // The card's state belongs to the card alone, as a disclosure
+              // panel's does; its controls resolve their own.
+              child: WidgetStateProvider(
+                states: const {},
+                child: _content(spec),
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
+  Widget _content(AgentComposerSpec spec) => Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Focus(
+        canRequestFocus: false,
+        skipTraversal: true,
+        onFocusChange: (focused) {
+          if (focused != _fieldFocused) {
+            setState(() => _fieldFocused = focused);
+          }
+        },
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+          child: RemixTextArea(
+            controller: _controller,
+            focusNode: _focusNode,
+            enabled: widget.enabled,
+            autofocus: widget.autofocus,
+            hintText: widget.hintText,
+            semanticLabel: widget.semanticLabel,
+            minLines: widget.minLines,
+            maxLines: widget.maxLines,
+            textInputAction: TextInputAction.newline,
+            style: widget.fieldStyle,
+          ),
+        ),
+      ),
+      RowBox(
+        styleSpec: spec.toolbar,
+        children: [
+          if (widget.leading != null) widget.leading!,
+          const Spacer(),
+          if (widget.trailing != null) widget.trailing!,
+          Semantics(
+            container: true,
+            child: RemixIconButton(
+              key: ValueKey(
+                widget.running ? 'agent-composer-stop' : 'agent-composer-send',
+              ),
+              icon: null,
+              iconBuilder: widget.running
+                  ? (widget.stopIconBuilder ?? _defaultStopIcon)
+                  : (widget.submitIconBuilder ?? _defaultSubmitIcon),
+              semanticLabel: widget.running
+                  ? widget.stopLabel
+                  : widget.submitLabel,
+              enabled: widget.running
+                  ? widget.enabled && widget.onStop != null
+                  : _canSubmit,
+              onPressed: widget.running ? widget.onStop : _submit,
+              style: widget.running ? widget.stopStyle : widget.submitStyle,
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
 
   @override
   void dispose() {
