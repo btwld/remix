@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -242,6 +243,7 @@ class _GalleryState extends State<Gallery> {
     (360, _accordions()),
     (300, _toastsAndAlerts()),
     (330, _table()),
+    (560, _charts()),
     (420, _dashboard()),
   ];
 
@@ -995,6 +997,79 @@ class _GalleryState extends State<Gallery> {
             ),
           ],
         ),
+    ]);
+  }
+
+  Widget _charts() {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    return _card('Chart', [
+      _caption(
+        'An extension over mix_chart: the series are accent, muted, and '
+        'foreground, never a status colour.',
+      ),
+      SizedBox(
+        height: 160,
+        child: AcmeLineChart(
+          semanticsLabel: 'Visitors and signups',
+          showMarkers: true,
+          series: [
+            for (final (index, (id, values)) in const [
+              ('visitors', [32.0, 41.0, 38.0, 52.0, 49.0, 61.0]),
+              ('signups', [12.0, 18.0, 16.0, 24.0, 28.0, 30.0]),
+            ].indexed)
+              LineSeries(
+                id: id,
+                label: index == 0 ? 'Visitors' : 'Signups',
+                points: [
+                  for (final (x, y) in values.indexed)
+                    ChartPoint(id: '$id-$x', x: x.toDouble(), y: y),
+                ],
+              ),
+          ],
+          xAxis: ChartAxis.numeric(
+            min: -0.5,
+            max: months.length - 0.5,
+            interval: 1,
+            minIncluded: false,
+            maxIncluded: false,
+            labelFormatter: (value) {
+              final index = value.round();
+              return index >= 0 && index < months.length ? months[index] : '';
+            },
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 160,
+        child: AcmeBarChart(
+          semanticsLabel: 'Orders by channel',
+          groups: [
+            for (final (index, month) in months.take(4).indexed)
+              BarGroup(
+                id: month,
+                label: month,
+                bars: [
+                  BarValue(id: 'web', label: 'Web', toY: 20.0 + index * 6),
+                  BarValue(id: 'app', label: 'App', toY: 14.0 + index * 4),
+                  BarValue(id: 'store', label: 'Store', toY: 8.0 + index * 2),
+                ],
+              ),
+          ],
+        ),
+      ),
+      SizedBox(
+        height: 180,
+        child: AcmePieChart(
+          semanticsLabel: 'Order status',
+          centerRadius: 40,
+          style: PieChartStyler().slice(PieSliceStyler().radius(44)),
+          slices: [
+            PieSlice(id: 'fulfilled', label: 'Fulfilled', value: 72),
+            PieSlice(id: 'processing', label: 'Processing', value: 18),
+            PieSlice(id: 'review', label: 'Review', value: 10),
+          ],
+        ),
+      ),
     ]);
   }
 

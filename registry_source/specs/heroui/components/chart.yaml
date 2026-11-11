@@ -1,0 +1,33 @@
+component: Chart
+widget: HeroUiLineChart, HeroUiBarChart, HeroUiPieChart
+target: "mix_chart LineChart, BarChart, PieChart"
+status: implemented
+extension: "No chart family and no chart colors in @heroui/react 3.2.6. Built from the pinned tokens over mix_chart; nothing here is measured upstream."
+source:
+  ref: none
+  derivedFrom: ["specs/heroui/tokens.json", tooltip.yaml, separator.yaml, card.yaml]
+anatomy: [frame, axes, axis labels, grid, line series, markers, bars, pie slices, tooltip]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest, touched (tooltip shown), selected slice]
+tokens:
+  - "series, in order: accent, muted, foreground, border-tertiary (heroUiChartSeries); no opacity is applied to any of them"
+  - muted, text-xs (axis labels)
+  - separator (horizontal grid lines)
+  - surface (marker ring; pie label default, the card behind the chart)
+  - "tooltip: overlay, overlay-foreground, border, radius-xl (capped at 32), text-xs medium"
+  - radius-sm (bar corners)
+measurements:
+  - {what: series contrast against surface, value: "accent 3.68 light / 4.81 dark, muted 4.83 / 6.75, foreground 17.72 / 17.27, border-tertiary 2.38 / 2.66", cite: "WCAG ratios from reference/heroui_3_2_6/chromium/tokens.json rgba"}
+  - {what: adjacent series, value: "accent / muted 1.31 light and 1.40 dark by luminance, separated by hue; muted / foreground 3.67 / 2.56; accent / foreground 4.81 / 3.59", cite: "same"}
+  - {what: line, value: "2 wide, curved (smoothness 0.18), round caps and joins; optional 3px markers ringed 2px in surface", cite: "designed; the other presets' chart recipes"}
+  - {what: bars, value: "16 wide, 6 between bars in a group, 12 between groups, radius-sm corners", cite: "designed: gap-3 between groups"}
+  - {what: pie, value: "2 between slices, 2px slice corners, a selected slice 4px out; labels hidden by default; the hole is transparent", cite: "designed; the other presets' chart recipes"}
+  - {what: axes, value: "left and bottom labels only, text-xs muted, 8 from the plot; horizontal grid only, 1px separator", cite: "designed"}
+  - {what: tooltip, value: "overlay fill, 1px border outline, radius min(32, radius-xl) = 12, padding 8, max width 320, 8 from the mark, text-xs medium overlay-foreground", cite: "designed from tooltip.yaml"}
+approximations:
+  - "No upstream reference: @heroui/react 3.2.6 ships no chart, so the series ramp and every value above are designed from existing HeroUI tokens, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "The series colors are existing theme tokens; the theme gains no chart token or color. success, warning and danger are not series colors because they read as status."
+  - "border-tertiary, the fourth series, is below 3:1 against surface in both modes; the demo draws at most three series, and a chart with more should label its marks or pass a palette."
+  - "The chart tooltip has no shadow slot, so a 1px border outline stands in for the tooltip recipe's overlay shadow."
+  - "Rendering, interaction, hit testing and semantics are mix_chart's."

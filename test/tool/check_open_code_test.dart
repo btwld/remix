@@ -1654,6 +1654,7 @@ import 'package:flutter/widgets.dart'
         unorderedEquals([
           'remix',
           'mix_annotations',
+          'mix_chart',
           'remix_ui_fonts',
           'remix_ui_icons',
         ]),

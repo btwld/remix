@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:open_code_fixture/main.dart';
 import 'package:open_code_fixture/ui/ui.dart';
 import 'package:remix/remix.dart';
@@ -511,6 +512,43 @@ final _cases = <_WidgetCase>[
       ),
     ),
     {AcmeCard, AcmeCardTitle, AcmeCardDescription},
+  ),
+  _WidgetCase(
+    'line chart',
+    AcmeLineChart(
+      series: [
+        LineSeries(
+          id: 'revenue',
+          label: 'Revenue',
+          points: [
+            ChartPoint(id: 'a', x: 0, y: 18),
+            ChartPoint(id: 'b', x: 1, y: 31),
+          ],
+        ),
+      ],
+    ),
+    {AcmeLineChart},
+  ),
+  _WidgetCase(
+    'bar chart',
+    AcmeBarChart(
+      groups: [
+        BarGroup(
+          id: 'q1',
+          label: 'Q1',
+          bars: [BarValue(id: 'actual', label: 'Actual', toY: 42)],
+        ),
+      ],
+    ),
+    {AcmeBarChart},
+  ),
+  _WidgetCase(
+    'pie chart',
+    AcmePieChart(
+      centerRadius: 40,
+      slices: [PieSlice(id: 'mobile', label: 'Mobile', value: 64)],
+    ),
+    {AcmePieChart},
   ),
   const _WidgetCase(
     'checkbox',

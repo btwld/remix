@@ -246,9 +246,9 @@ const _fortalPreset = _PresetContract(
   ],
 );
 
-/// HeroUI's items. `app_bar`, `dashboard_shell`, `icons`, `sidebar` and
-/// `sidebar_layout` are extensions with no upstream family; see `extensions`
-/// in registry_source/reference/heroui_3_2_6/families.json.
+/// HeroUI's items. `app_bar`, `chart`, `dashboard_shell`, `icons`, `sidebar`
+/// and `sidebar_layout` are extensions with no upstream family; see
+/// `extensions` in registry_source/reference/heroui_3_2_6/families.json.
 const _herouiRegistryItems = [
   'icons',
   'accordion',
@@ -265,6 +265,7 @@ const _herouiRegistryItems = [
   'range_calendar',
   'date_picker',
   'date_range_picker',
+  'chart',
   'dashboard_shell',
   'checkbox',
   'checkbox_group',
@@ -315,6 +316,7 @@ const _herouiPreset = _PresetContract(
   requiredRuntimeDependencies: [
     'remix',
     'mix_annotations',
+    'mix_chart',
     'remix_ui_fonts',
     'remix_ui_icons',
   ],
@@ -322,6 +324,7 @@ const _herouiPreset = _PresetContract(
     'flutter',
     'remix',
     'mix_annotations',
+    'mix_chart',
     'remix_ui_fonts',
     'remix_ui_icons',
   ],

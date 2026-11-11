@@ -882,9 +882,10 @@ const herouiPreset = PresetSpec(
     'mix_annotations',
     'build_runner',
     'mix_generator',
+    'mix_chart',
     'remix_ui_fonts',
   },
-  detectedPackages: ['remix_ui_fonts'],
+  detectedPackages: ['mix_chart', 'remix_ui_fonts'],
   // The dashboard items are extensions with no upstream HeroUI family; see
   // `extensions` in registry_source/reference/heroui_3_2_6/families.json.
   // As in the other presets, `sidebar_layout` composes a `Widget`-typed

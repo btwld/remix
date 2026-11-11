@@ -488,6 +488,11 @@
    "reason": "No navbar or app bar family upstream; the dashboard shell's page header."
   },
   {
+   "item": "chart",
+   "remix": "mix_chart LineChart, BarChart, PieChart",
+   "reason": "No chart family upstream; series colors are an accent and neutral token ramp, not new colors."
+  },
+  {
    "item": "dashboard_shell",
    "reason": "No application shell upstream; composes sidebar_layout, sidebar, app_bar, button and search_field over the shared dashboard base."
   },
