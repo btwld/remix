@@ -34,6 +34,8 @@ behavior:
     within threshold
   - Decisions read the position after the scroll moved; the wheel announces
     its direction before it moves
+  - Growth is followed inside the layout that grew it (scroll physics), so
+    the newest output paints in view without a second frame
   - Nested scrollables (depth > 0) do not release follow
   - Reduced motion jumps instead of animating
   - Programmatic follow is latched

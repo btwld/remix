@@ -33,6 +33,9 @@ class AgentLiveEdgeEngine {
 
   bool get following => _following;
 
+  /// Whether growing output should keep the end in view.
+  bool get sticks => _enabled && _following;
+
   /// Updates following from a scroll at the scrollable's own depth.
   void handleScroll(ScrollNotification notification) {
     if (_programmatic || notification is! ScrollUpdateNotification) return;
@@ -67,6 +70,42 @@ class AgentLiveEdgeEngine {
 /// Distance from the end that still counts as being at it.
 const double _atEnd = 0.5;
 
+/// Keeps a following scrollable at its end during the layout that grew it.
+///
+/// [ScrollPhysics.adjustPositionForNewDimensions] runs inside the viewport's
+/// layout whenever its extents change, so the end stays in view in the frame
+/// that painted the new output. A post-frame jump instead paints one frame
+/// with the newest line below the fold and schedules a second frame for every
+/// streamed token. Nothing moves while the reader is scrolling.
+class AgentLiveEdgeScrollPhysics extends ScrollPhysics {
+  const AgentLiveEdgeScrollPhysics({required this.liveEdge, super.parent});
+
+  final AgentLiveEdgeEngine liveEdge;
+
+  @override
+  AgentLiveEdgeScrollPhysics applyTo(ScrollPhysics? ancestor) =>
+      AgentLiveEdgeScrollPhysics(
+        liveEdge: liveEdge,
+        parent: buildParent(ancestor),
+      );
+
+  @override
+  double adjustPositionForNewDimensions({
+    required ScrollMetrics oldPosition,
+    required ScrollMetrics newPosition,
+    required bool isScrolling,
+    required double velocity,
+  }) {
+    if (liveEdge.sticks && !isScrolling) return newPosition.maxScrollExtent;
+    return super.adjustPositionForNewDimensions(
+      oldPosition: oldPosition,
+      newPosition: newPosition,
+      isScrolling: isScrolling,
+      velocity: velocity,
+    );
+  }
+}
+
 /// Small non-lazy scroll view used by plan and activity ledgers.
 class AgentLiveEdgeScrollView extends StatefulWidget {
   const AgentLiveEdgeScrollView({
@@ -90,6 +129,7 @@ class AgentLiveEdgeScrollView extends StatefulWidget {
 class _AgentLiveEdgeScrollViewState extends State<AgentLiveEdgeScrollView> {
   late final ScrollController _controller;
   late final AgentLiveEdgeEngine _liveEdge;
+  late final AgentLiveEdgeScrollPhysics _physics;
 
   @override
   void initState() {
@@ -100,6 +140,8 @@ class _AgentLiveEdgeScrollViewState extends State<AgentLiveEdgeScrollView> {
       threshold: widget.followThreshold,
       onChanged: widget.onFollowChanged,
     );
+    _physics = AgentLiveEdgeScrollPhysics(liveEdge: _liveEdge);
+    // Growth follows in layout; only the first extents need a jump.
     _scheduleFollow();
   }
 
@@ -110,7 +152,7 @@ class _AgentLiveEdgeScrollViewState extends State<AgentLiveEdgeScrollView> {
       ..enabled = widget.followOutput
       ..threshold = widget.followThreshold
       ..onChanged = widget.onFollowChanged;
-    _scheduleFollow();
+    if (!oldWidget.followOutput && widget.followOutput) _scheduleFollow();
   }
 
   void _scheduleFollow() {
@@ -121,20 +163,15 @@ class _AgentLiveEdgeScrollViewState extends State<AgentLiveEdgeScrollView> {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<ScrollMetricsNotification>(
+    return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
-        if (notification.depth == 0 && _liveEdge.following) _scheduleFollow();
+        if (notification.depth == 0) _liveEdge.handleScroll(notification);
         return false;
       },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          if (notification.depth == 0) _liveEdge.handleScroll(notification);
-          return false;
-        },
-        child: SingleChildScrollView(
-          controller: _controller,
-          child: widget.child,
-        ),
+      child: SingleChildScrollView(
+        controller: _controller,
+        physics: _physics,
+        child: widget.child,
       ),
     );
   }

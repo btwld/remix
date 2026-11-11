@@ -1,5 +1,6 @@
 import 'dart:ui' show PointerDeviceKind;
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -235,6 +236,72 @@ void main() {
     await tester.pump();
     await tester.pump();
     expect(controller.offset, closeTo(reading, 0.5));
+  });
+
+  testWidgets('streamed output is in view in the frame that paints it', (
+    tester,
+  ) async {
+    final (key, controller) = await pumpGrowing(tester);
+    final viewport = tester.getRect(find.byType(ListView));
+    for (var update = 0; update < 5; update++) {
+      key.currentState!.grow();
+      await tester.pump();
+
+      final newest = 'Line ${key.currentState!.count - 1}';
+      expect(
+        tester.getRect(find.text(newest)).bottom,
+        lessThanOrEqualTo(viewport.bottom + 0.5),
+        reason: 'The newest line must be painted inside the viewport.',
+      );
+      expect(
+        controller.offset,
+        closeTo(controller.position.maxScrollExtent, 0.5),
+      );
+      expect(
+        tester
+            .renderObject<RenderViewport>(find.byType(Viewport))
+            .debugNeedsLayout,
+        isFalse,
+        reason: 'Following must not lay the list out again in a second frame.',
+      );
+    }
+  });
+
+  testWidgets('a plan ledger keeps its newest row in view the same way', (
+    tester,
+  ) async {
+    final key = GlobalKey<_GrowingPlanState>();
+    await pumpAgent(
+      tester,
+      SizedBox(width: 300, child: _GrowingPlan(key: key)),
+    );
+    await tester.pump();
+    final scrollView = find.descendant(
+      of: find.byType(AgentPlan),
+      matching: find.byType(SingleChildScrollView),
+    );
+
+    key.currentState!.grow();
+    await tester.pump();
+
+    final newest = 'Plan ${key.currentState!.count - 1}';
+    expect(
+      tester.getRect(find.text(newest)).bottom,
+      lessThanOrEqualTo(tester.getRect(scrollView).bottom + 0.5),
+    );
+    final viewport = tester.renderObject<RenderBox>(
+      find.descendant(
+        of: scrollView,
+        matching: find.byWidgetPredicate(
+          (widget) => '${widget.runtimeType}' == '_SingleChildViewport',
+        ),
+      ),
+    );
+    expect(
+      viewport.debugNeedsPaint,
+      isFalse,
+      reason: 'The frame that grew the ledger already painted its end.',
+    );
   });
 
   testWidgets('turning followOutput off leaves the reader position stable', (

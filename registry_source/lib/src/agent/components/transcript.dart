@@ -64,6 +64,7 @@ class _AgentTranscriptState extends State<AgentTranscript> {
   ScrollController? _ownedController;
   late ScrollController _controller;
   late final AgentLiveEdgeEngine _liveEdge;
+  late final AgentLiveEdgeScrollPhysics _physics;
 
   /// Publishes this surface's focus to the styles resolved above it.
   ///
@@ -87,6 +88,11 @@ class _AgentTranscriptState extends State<AgentTranscript> {
       threshold: widget.followThreshold,
       onChanged: widget.onFollowChanged,
     );
+    _physics = AgentLiveEdgeScrollPhysics(
+      liveEdge: _liveEdge,
+      parent: const ClampingScrollPhysics(),
+    );
+    // Growth follows in layout; only the first extents need a jump.
     _scheduleFollow();
   }
 
@@ -107,8 +113,10 @@ class _AgentTranscriptState extends State<AgentTranscript> {
       if (oldOwned != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) => oldOwned.dispose());
       }
+      _scheduleFollow();
+    } else if (!oldWidget.followOutput && widget.followOutput) {
+      _scheduleFollow();
     }
-    _scheduleFollow();
   }
 
   void _scheduleFollow() {
@@ -172,24 +180,16 @@ class _AgentTranscriptState extends State<AgentTranscript> {
             styleSpec: spec.viewport,
             child: LayoutBuilder(
               builder: (context, constraints) =>
-                  NotificationListener<ScrollMetricsNotification>(
-                    onNotification: (notification) {
-                      if (notification.depth == 0 && _liveEdge.following) {
-                        _scheduleFollow();
-                      }
-                      return false;
-                    },
-                    child: NotificationListener<ScrollNotification>(
-                      onNotification: _handleScroll,
-                      child: ScrollConfiguration(
-                        behavior: ScrollConfiguration.of(context).copyWith(
-                          overscroll: false,
-                          physics: const ClampingScrollPhysics(),
-                        ),
-                        child: _buildList(
-                          spec,
-                          shrinkWrap: !constraints.hasBoundedHeight,
-                        ),
+                  NotificationListener<ScrollNotification>(
+                    onNotification: _handleScroll,
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(
+                        overscroll: false,
+                        physics: const ClampingScrollPhysics(),
+                      ),
+                      child: _buildList(
+                        spec,
+                        shrinkWrap: !constraints.hasBoundedHeight,
                       ),
                     ),
                   ),
@@ -208,7 +208,7 @@ class _AgentTranscriptState extends State<AgentTranscript> {
     return ListView.separated(
       controller: _controller,
       shrinkWrap: shrinkWrap,
-      physics: const ClampingScrollPhysics(),
+      physics: _physics,
       clipBehavior: widget.clipBehavior,
       itemCount: count,
       itemBuilder: (context, index) => Box(
