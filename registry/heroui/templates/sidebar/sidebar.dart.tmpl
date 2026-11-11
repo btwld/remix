@@ -1,0 +1,113 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+import 'toggle_button.dart';
+import 'tooltip.dart';
+
+part 'sidebar.g.dart';
+
+/// Navigation panel recipe for [RemixSidebar], styled with HeroUI tokens.
+///
+/// An extension: HeroUI web 3.2.6 has no sidebar to port, so this recipe is
+/// built only from the theme's tokens and two mapped recipes. Remix owns the
+/// rendering, the header/content/footer stacking, Tab traversal across
+/// destinations, the selection semantics, and the navigation landmark.
+///
+/// A destination is the `sm` ghost [{{valuePrefix}}ToggleButtonStyle], stretched to a
+/// full-width row with its content at the start: transparent at rest,
+/// `default` while hovered, `accent-soft` with `accent-soft-foreground` while
+/// current, exactly as a selected toggle button. This recipe therefore
+/// **depends on the `toggle_button` and `tooltip` items**. When the host
+/// collapses the panel to an icon rail, each destination's label appears in
+/// [{{valuePrefix}}TooltipStyle].
+///
+/// The panel sits on the page `background` with a `separator` line on its
+/// end edge, and the footer has one along its top. Section labels are
+/// `text-xs` medium `muted` text, inset like the destination labels below
+/// them.
+///
+/// It takes no variant and no size, and sets no panel width and no header
+/// padding: the host sizes the panel, because the same panel is presented
+/// as a sheet at narrow widths. Give the header the app bar's
+/// `{{valuePrefix}}AppBarToolbarHeight` and separator so the two rows line up.
+@MixWidget(target: RemixSidebar.new)
+SidebarStyler {{valuePrefix}}SidebarStyle({
+  SidebarStyler style = const SidebarStyler.create(),
+}) => SidebarStyler(
+  container: FlexBoxStyler()
+      .color({{typePrefix}}Tokens.background())
+      .border(.end(.color({{typePrefix}}Tokens.separator()).width(_separatorWidth))),
+  content: FlexBoxStyler().padding(.all(_inset)).spacing(_sectionGap),
+  footer: BoxStyler()
+      .border(.top(.color({{typePrefix}}Tokens.separator()).width(_separatorWidth)))
+      .padding(.all(_inset)),
+  sectionLabel: TextStyler()
+      .style({{typePrefix}}Tokens.textXs.mix())
+      .fontWeight(.w500)
+      .color({{typePrefix}}Tokens.muted())
+      .wrap(
+        .padding(
+          .symmetric(horizontal: _destinationPaddingX, vertical: _labelPadY),
+        ),
+      ),
+  destinations: FlexBoxStyler().spacing(_destinationGap),
+  destination: _destinationStyle(),
+  tooltip: {{valuePrefix}}TooltipStyle(),
+).merge(style);
+
+/// The `sm` ghost toggle button as a full-width navigation row.
+///
+/// The toggle's outside focus ring would be cropped by the scrolling
+/// destination region, so a destination rings inside its own edge instead
+/// (`ring-inset`), as the items of a joined toggle button group do. Neither
+/// ring changes layout.
+///
+/// The toggle's 100ms fill motion is left out, as Vanilla's sidebar leaves
+/// out its toggle's: a collapsing rail moves destination padding every frame,
+/// and an implicit animation would ease each of those steps again.
+ToggleStyler _destinationStyle() {
+  final resolved = {{valuePrefix}}ToggleButtonStyle(variant: .ghost, size: .sm)
+      .container(.mainAxisSize(.max).mainAxisAlignment(.start))
+      .onFocusVisible(ToggleStyler().containerEffects(_insetRing));
+
+  return ToggleStyler.create(
+    container: resolved.$container,
+    containerEffects: resolved.$containerEffects,
+    label: resolved.$label,
+    icon: resolved.$icon,
+    variants: resolved.$variants,
+    modifier: resolved.$modifier,
+  );
+}
+
+/// `focus-ring ring-inset`, without the background gap the outside ring
+/// paints under itself.
+final _insetRing = RemixBoxEffectsMix(
+  outline: BorderSideMix(
+    color: {{typePrefix}}Tokens.focus(),
+    width: {{typePrefix}}Tokens.focusWidth,
+  ),
+  outlineOffset: -{{typePrefix}}Tokens.focusWidth,
+  overContent: RemixBoxEffectLayerMix(shadows: const []),
+);
+
+/// The panel and footer insets, `p-3`.
+const _inset = 12.0;
+
+/// `gap-4` between sections.
+const _sectionGap = 16.0;
+
+/// `gap-1` between destinations.
+const _destinationGap = 4.0;
+
+/// The `sm` toggle button's `px-3`: section labels start where destination
+/// labels without an icon do.
+const _destinationPaddingX = 12.0;
+
+/// `py-2` around a section label.
+const _labelPadY = 8.0;
+
+/// The `separator` line.
+const _separatorWidth = 1.0;

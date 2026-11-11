@@ -3,8 +3,10 @@
 library;
 
 export 'src/heroui/theme/theme.dart';
+export 'src/heroui/icons.dart';
 export 'src/heroui/components/accordion.dart';
 export 'src/heroui/components/alert.dart';
+export 'src/heroui/components/app_bar.dart';
 export 'src/heroui/components/avatar.dart';
 export 'src/heroui/components/avatar_group.dart';
 export 'src/heroui/components/badge.dart';
@@ -31,6 +33,8 @@ export 'src/heroui/components/range_slider.dart';
 export 'src/heroui/components/search_field.dart';
 export 'src/heroui/components/select.dart';
 export 'src/heroui/components/separator.dart';
+export 'src/heroui/components/sidebar.dart';
+export 'src/heroui/components/sidebar_layout.dart';
 export 'src/heroui/components/skeleton.dart';
 export 'src/heroui/components/slider.dart';
 export 'src/heroui/components/spinner.dart';

@@ -1,0 +1,59 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'app_bar.g.dart';
+
+/// The toolbar row's height, `h-16`, including its bottom separator.
+///
+/// HeroUI web has no app bar, so this is a designed value. The sidebar
+/// header beside the bar uses it too, so the two rows line up.
+const heroUiAppBarToolbarHeight = 64.0;
+
+/// The separator under the toolbar row and beside the sidebar.
+const heroUiAppBarSeparatorWidth = 1.0;
+
+/// Page header recipe for [RemixAppBar], styled with HeroUI tokens.
+///
+/// An extension: HeroUI web 3.2.6 has no navbar or app bar to port. The bar
+/// sits on the page `background`, with a [heroUiAppBarToolbarHeight] toolbar
+/// row, a `separator` line beneath it, `px-4` insets, a `text-base`
+/// semibold `foreground` title, and `gap-3` between leading, title, and
+/// actions.
+///
+/// Merges [style] last, so a caller can override anything:
+///
+/// ```dart
+/// HeroUiAppBar(
+///   style: AppBarStyler().toolbarHeight(56),
+///   title: 'Orders',
+/// )
+/// ```
+@MixWidget(target: RemixAppBar.new)
+AppBarStyler heroUiAppBarStyle({
+  AppBarStyler style = const AppBarStyler.create(),
+}) => AppBarStyler(
+  container: BoxStyler().color(HeroUiTokens.background()),
+  toolbar: BoxStyler()
+      .padding(.horizontal(_paddingX))
+      .border(
+        .bottom(
+          .color(HeroUiTokens.separator()).width(heroUiAppBarSeparatorWidth),
+        ),
+      ),
+  title: TextStyler()
+      .style(HeroUiTokens.textBase.mix())
+      .fontWeight(.w600)
+      .color(HeroUiTokens.foreground()),
+  actions: FlexBoxStyler().spacing(_gap),
+  toolbarHeight: heroUiAppBarToolbarHeight,
+  spacing: _gap,
+).merge(style);
+
+/// `px-4`.
+const _paddingX = 16.0;
+
+/// `gap-3`.
+const _gap = 12.0;

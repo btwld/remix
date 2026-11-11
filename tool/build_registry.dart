@@ -867,6 +867,15 @@ const herouiPreset = PresetSpec(
     ),
   ],
   copiedItems: [],
+  fileItems: [
+    FileItemSpec(
+      name: 'icons',
+      file: 'icons.dart',
+      packages: const {},
+      registryDependencies: ['theme'],
+      exports: ['icons.dart'],
+    ),
+  ],
   ignoredSourceFiles: {},
   floorPackages: {
     'remix',
@@ -876,7 +885,33 @@ const herouiPreset = PresetSpec(
     'remix_ui_fonts',
   },
   detectedPackages: ['remix_ui_fonts'],
-  composedRegistryDependencies: {},
+  // The dashboard items are extensions with no upstream HeroUI family; see
+  // `extensions` in registry_source/reference/heroui_3_2_6/families.json.
+  // As in the other presets, `sidebar_layout` composes a `Widget`-typed
+  // sidebar, so import inference alone would miss the dependency.
+  composedRegistryDependencies: {
+    'sidebar_layout': ['sidebar'],
+  },
+  groupedRecipeItems: [
+    GroupedRecipeItemSpec(
+      name: 'dashboard_shell',
+      files: [
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_shell_base.dart',
+          target: 'recipes/dashboard/dashboard_shell_base.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_shell.dart',
+          target: 'recipes/dashboard/dashboard_shell.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+      ],
+      exports: ['recipes/dashboard/dashboard_shell.dart'],
+    ),
+  ],
 );
 
 /// Every remote preset and the specs that derive it, writer first.

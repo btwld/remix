@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart' show FortalSidebarLayout;
+import 'package:registry_source/heroui.dart' show HeroUiSidebarLayout;
 import 'package:registry_source/vanilla.dart' show VanillaSidebarLayout;
 
 Widget _stop(FocusNode node) =>
@@ -15,6 +16,8 @@ void main() {
         FortalSidebarLayout(sidebar: sidebar, body: body),
     'Vanilla': (sidebar, body) =>
         VanillaSidebarLayout(sidebar: sidebar, body: body),
+    'HeroUI': (sidebar, body) =>
+        HeroUiSidebarLayout(sidebar: sidebar, body: body),
   };
 
   for (final MapEntry(key: preset, value: layout) in layouts.entries) {

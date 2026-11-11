@@ -481,5 +481,28 @@
   }
  ],
  "extensionsNote": "Extensions are HeroUI-styled items with no upstream family in @heroui/react 3.2.6. They are built only from the pinned tokens and the mapped recipes, carry no reference evidence, and their worksheets say so (ARCHITECTURE.md, HeroUI dashboard items are labelled extensions).",
- "extensions": []
+ "extensions": [
+  {
+   "item": "app_bar",
+   "remix": "RemixAppBar",
+   "reason": "No navbar or app bar family upstream; the dashboard shell's page header."
+  },
+  {
+   "item": "dashboard_shell",
+   "reason": "No application shell upstream; composes sidebar_layout, sidebar, app_bar, button and search_field over the shared dashboard base."
+  },
+  {
+   "item": "icons",
+   "reason": "Application-owned aliases over the registry icon table; the upstream icon set stays deferred."
+  },
+  {
+   "item": "sidebar",
+   "remix": "RemixSidebar",
+   "reason": "No sidebar family upstream; destinations reuse the ghost toggle_button and tooltip recipes."
+  },
+  {
+   "item": "sidebar_layout",
+   "reason": "No layout family upstream; pairs the sidebar with page content and a compact sheet."
+  }
+ ]
 }
