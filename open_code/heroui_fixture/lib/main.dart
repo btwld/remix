@@ -1077,7 +1077,16 @@ class _GalleryState extends State<Gallery> {
   Widget _agent() {
     final message = acmeAgentMessageRecipe();
     final answer = acmeAgentAnswerRecipe();
-    final permission = acmeAgentPermissionRecipe();
+    // Below 600 wide the actions stack, as the dashboard chat stacks them:
+    // three HeroUI buttons do not fit side by side inside a phone card.
+    final narrow = MediaQuery.sizeOf(context).width < 600;
+    final permission = acmeAgentPermissionRecipe(
+      style: AcmePermissionStyler(
+        actions: FlexBoxStyler()
+            .direction(narrow ? .vertical : .horizontal)
+            .crossAxisAlignment(narrow ? .stretch : .center),
+      ),
+    );
     final composer = acmeAgentComposerRecipe();
     return _card('Agent surfaces', [
       _caption(
