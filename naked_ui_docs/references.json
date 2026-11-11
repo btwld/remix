@@ -17,14 +17,14 @@
     "codeSha256": "708093241ff21190e4f5257ce0f7bc02201cfe6f9b6a1e837d7d89e307d993a1",
     "reason": "API signature for NakedButton; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_button.dart",
-    "sourceSha256": "924158c56afe8fa3895e49856472507b0d493d09e5c13847f320804da588f63d",
+    "sourceSha256": "3ebafd7d37ff730bf73fbdc02f1ea8f8c3c96941fbb2f359af5782528083833b",
     "symbol": "NakedButton"
   },
   "widget/checkbox.mdx#1": {
     "codeSha256": "da8e261adc8962da79a56ffe04f28804a6157582a4322207cc3da667755d1ba4",
     "reason": "API signature for NakedCheckbox; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_checkbox.dart",
-    "sourceSha256": "3723d306c2c097271dc7ee30e475d0183b599a8b23a70956c0524e7534453d7c",
+    "sourceSha256": "922102c36d83bf18397da725d88c4ad15f617e2f21145280f8cd573046868c4b",
     "symbol": "NakedCheckbox"
   },
   "widget/dialog.mdx#2": {
@@ -63,24 +63,24 @@
     "symbol": "NakedLink"
   },
   "widget/menu.mdx#1": {
-    "codeSha256": "a178b30cbd82b7eec91381e0cf486681176e1c514ff160f2083b8191bc86f575",
+    "codeSha256": "d98ed24a778f7bd5431eedd7876f6c80a45f3d33f9ad0240327e791fe25f1f17",
     "reason": "API signature for NakedMenu; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_menu.dart",
-    "sourceSha256": "3afb44828fcff78829f17e85fe732645bb42b56269372f09c60f8323069f7d5c",
+    "sourceSha256": "436223ea46dbeb532f66ed1f65fe816d6720a9d4a22fb4d176955ac88c6833d8",
     "symbol": "NakedMenu"
   },
   "widget/menu.mdx#2": {
     "codeSha256": "d0b0fae5dad3f300c4594ae22aa5ef53f96b0cccc666df1ca46c480d7be76fb6",
     "reason": "API signature for NakedMenuItem; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_menu.dart",
-    "sourceSha256": "3afb44828fcff78829f17e85fe732645bb42b56269372f09c60f8323069f7d5c",
+    "sourceSha256": "436223ea46dbeb532f66ed1f65fe816d6720a9d4a22fb4d176955ac88c6833d8",
     "symbol": "NakedMenuItem"
   },
   "widget/popover.mdx#2": {
-    "codeSha256": "d14e7c1db227e8aeef0d932c9a9bd4e211abc3819927562bf3dfa2ad747cc77a",
+    "codeSha256": "ef0cad23defe53871061adff5ebb13a141f57a6bad35ed8f1acce3dc34679523",
     "reason": "API signature for NakedPopover; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_popover.dart",
-    "sourceSha256": "b26a830c8a7e3fa8528131f04099d91b9ff1daa9cd16533299474f2b441e4d31",
+    "sourceSha256": "2e3a652c7a2624a91689fa509924b39c15cfd57a0cc66382376387b3680fd7eb",
     "symbol": "NakedPopover"
   },
   "widget/radio.mdx#1": {
@@ -98,87 +98,87 @@
     "symbol": "NakedRadio"
   },
   "widget/select.mdx#1": {
-    "codeSha256": "e9f6d6c9d4ec1b0d05034e45f7b46631c1ff326cd7f4fb8d520f897242235762",
+    "codeSha256": "90767f2aa36299d86701c9939eb8974ebeed42ec5f27668fff9b2e87739f6640",
     "reason": "API signature for NakedSelect; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_select.dart",
-    "sourceSha256": "4ece72ea52a31f4ca9c1e6da91edaa2eefa9eda4dd80bab70397f9490d0dc554",
+    "sourceSha256": "55e623792da1ff6c9c2a03cfc47ce1e1ee96e76b67f7a223684de9926d52f072",
     "symbol": "NakedSelect"
   },
   "widget/select.mdx#2": {
     "codeSha256": "28461deb55d7b51007ba59716c39ba999055ad8ac4cd56578afe2245bd9cc5c7",
     "reason": "API signature for NakedSelectOption; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_select.dart",
-    "sourceSha256": "4ece72ea52a31f4ca9c1e6da91edaa2eefa9eda4dd80bab70397f9490d0dc554",
+    "sourceSha256": "55e623792da1ff6c9c2a03cfc47ce1e1ee96e76b67f7a223684de9926d52f072",
     "symbol": "NakedSelectOption"
   },
   "widget/tabs.mdx#1": {
     "codeSha256": "757bf5c648dee1b60db346729dc687f9475a58892e3f6210bd029f1dcf2d41ce",
     "reason": "API signature for NakedTabs; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_tabs.dart",
-    "sourceSha256": "90bd5e9daa7352aa01d8021de4caeda53792a645637919e8e5a909063ee14d4a",
+    "sourceSha256": "95083f0b60a850df9dc2387d081d1c98507628781d3b1489b33139d96155e88b",
     "symbol": "NakedTabs"
   },
   "widget/tabs.mdx#2": {
     "codeSha256": "293d30c8482a02de265622512d51c0d9f7920db939cd69d882ecb19a4b6427b9",
     "reason": "API signature for NakedTab; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_tabs.dart",
-    "sourceSha256": "90bd5e9daa7352aa01d8021de4caeda53792a645637919e8e5a909063ee14d4a",
+    "sourceSha256": "95083f0b60a850df9dc2387d081d1c98507628781d3b1489b33139d96155e88b",
     "symbol": "NakedTab"
   },
   "widget/tabs.mdx#3": {
     "codeSha256": "02546146acb916472fb161a96816cade8981d128007be38a3e27b7b8a7b22a04",
     "reason": "API signature for NakedTabView; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_tabs.dart",
-    "sourceSha256": "90bd5e9daa7352aa01d8021de4caeda53792a645637919e8e5a909063ee14d4a",
+    "sourceSha256": "95083f0b60a850df9dc2387d081d1c98507628781d3b1489b33139d96155e88b",
     "symbol": "NakedTabView"
   },
   "widget/textfield.mdx#1": {
     "codeSha256": "afc9908a0d2c5ac02c8baa9c9a9e2864bb2971222478a1a5cfec7fde2be71c61",
     "reason": "API signature for NakedTextFieldBuilder; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_textfield.dart",
-    "sourceSha256": "396846c2cc2caab0fa81c0d81713c1242b4246deae0e80f4287a81d74088685a",
+    "sourceSha256": "5e98ecf234a8e2244b6d3a6351d414e417706497ca1c3a46fd92cfe54d15cc3f",
     "symbol": "NakedTextFieldBuilder"
   },
   "widget/textfield.mdx#2": {
     "codeSha256": "0f154821c168b951413de77e760fe4033e088922b095fb54526f6faa2eb480af",
     "reason": "API signature for NakedTextField; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_textfield.dart",
-    "sourceSha256": "396846c2cc2caab0fa81c0d81713c1242b4246deae0e80f4287a81d74088685a",
+    "sourceSha256": "5e98ecf234a8e2244b6d3a6351d414e417706497ca1c3a46fd92cfe54d15cc3f",
     "symbol": "NakedTextField"
   },
   "widget/toggle.mdx#1": {
     "codeSha256": "4d074a40477b21c08e69baa421c0e45452924c196e047e8604a5e3628946bb11",
     "reason": "API signature for NakedToggle; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_toggle.dart",
-    "sourceSha256": "fa8527f8a9c386480c0cb86951c17b2812255b7fb9ab61739c768eae4a93afc9",
+    "sourceSha256": "bcd3044f21711d039e99865f1315c5f4bf66ddab366dd6e8101343725db3df15",
     "symbol": "NakedToggle"
   },
   "widget/toggle.mdx#3": {
     "codeSha256": "e36c42544d5266ea47cd8f465e9b8d638635ac012793f71b1c3f37805cf0264d",
     "reason": "API signature for NakedToggleGroup; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_toggle.dart",
-    "sourceSha256": "fa8527f8a9c386480c0cb86951c17b2812255b7fb9ab61739c768eae4a93afc9",
+    "sourceSha256": "bcd3044f21711d039e99865f1315c5f4bf66ddab366dd6e8101343725db3df15",
     "symbol": "NakedToggleGroup"
   },
   "widget/toggle.mdx#4": {
     "codeSha256": "9c3b6a413493422a3228d316c96daf0d99d56331b99c234cd9a5bea8a2a36c7f",
     "reason": "API signature for NakedToggleOption; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_toggle.dart",
-    "sourceSha256": "fa8527f8a9c386480c0cb86951c17b2812255b7fb9ab61739c768eae4a93afc9",
+    "sourceSha256": "bcd3044f21711d039e99865f1315c5f4bf66ddab366dd6e8101343725db3df15",
     "symbol": "NakedToggleOption"
   },
   "widget/tooltip.mdx#1": {
-    "codeSha256": "9a0bf67531bd4e8fd73a47293dce7dba298eb89fd8a12de8fc2c5fa3e4d1859b",
+    "codeSha256": "88e65915fbefb2402b663370547343f84dc2204dd28b48457b3febf568bcf802",
     "reason": "API signature for NakedTooltip; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_tooltip.dart",
-    "sourceSha256": "f049755711942b8e9c9405da941ce1e4ae9d4585a42c872e8e02339d7575b065",
+    "sourceSha256": "b253179ad6524830163f5fc5ec684514cf36947910676c346eca049b2d33daf8",
     "symbol": "NakedTooltip"
   },
   "widget/slider.mdx#1": {
     "codeSha256": "23a7eeb53ebdd6ebd1586c6ff4dafbb15b0dd46c8e8ae32a7e176b366565fab3",
     "reason": "API signature for NakedSlider; copied from the active declaration. It describes the API and omits constructor assertions.",
     "source": "packages/naked_ui/lib/src/naked_slider.dart",
-    "sourceSha256": "14c9d28ad619790c1f8003bea6ec8afa062815bf03e51a1477158adbe12bd061",
+    "sourceSha256": "991d09ae138500689cdef6359db1afbac8b543729dab0cb6fa16be49fa2555fa",
     "symbol": "NakedSlider"
   }
 }

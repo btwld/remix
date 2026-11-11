@@ -73,34 +73,18 @@ const NakedTooltip({
   required this.child,
   required this.overlayBuilder,
   this.tooltipKey,
-  @Deprecated(
-    'Use tooltipKey to show on command and onOpenChanged to observe '
-    'visibility. Controlled open runs the naked_ui 1.1.0 implementation. '
-    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-  )
-  this.open,
   this.onOpenChanged,
   this.isFocusVisible,
   this.hoverDelay = Duration.zero,
   this.touchDelay = const Duration(milliseconds: 1500),
   this.dismissDelay = const Duration(milliseconds: 100),
-  @Deprecated(
-    'RawTooltip keeps the tooltip visible while its content is hovered. '
-    'Setting this runs the naked_ui 1.1.0 implementation. '
-    'Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-  )
-  this.disableHoverableContent = false,
+  this.skipDelayDuration = const Duration(milliseconds: 300),
   this.enableTapToDismiss = true,
   this.triggerMode = TooltipTriggerMode.longPress,
   this.enableFeedback = true,
   this.onTriggered,
   this.animationStyle = _defaultTooltipAnimationStyle,
   this.positioning = const OverlayPositionConfig(),
-  @Deprecated(
-    'RawTooltip uses the nearest Overlay. Setting this runs the naked_ui '
-    '1.1.0 implementation. Deprecated in naked_ui 1.2.0; removed in 2.0.0.',
-  )
-  this.useRootOverlay = false,
   this.semanticLabel,
   this.excludeSemantics = false,
   this.excludeOverlaySemantics,
@@ -112,6 +96,7 @@ const NakedTooltip({
 - `child` → trigger widget that displays the tooltip on hover/touch
 - `overlayBuilder` → `(BuildContext, Animation<double>)` that returns the tooltip body; the animation drives show/hide transitions
 - `hoverDelay` → delay before showing once hover occurs (default: immediate)
+- `skipDelayDuration` → hover opens immediately for this duration after the last tooltip closes (default: 300ms)
 - `dismissDelay` → delay before hiding after mouse exits (default: 100ms)
 - `touchDelay` → how long the tooltip stays visible after touch release (default: 1500ms)
 - `positioning` → `OverlayPositionConfig` controlling anchor & offset
@@ -149,6 +134,6 @@ OverlayPositionConfig examplePosition() => const OverlayPositionConfig(
 
 For fully custom positioning beyond what `OverlayPositionConfig` exposes, drop down to Flutter's `RawTooltip` directly and supply your own `TooltipPositionDelegate`.
 
-Opening is managed by `RawTooltip` and its trigger mode. The legacy `open`, `useRootOverlay` and `disableHoverableContent` parameters are deprecated; do not use them for new integrations.
+Opening is managed by `RawTooltip` and its trigger mode. Use `tooltipKey` for imperative display and `onOpenChanged` to observe visibility. The legacy `open`, `useRootOverlay` and `disableHoverableContent` parameters were removed in 2.0.0.
 
 `isFocusVisible` can report keyboard-visible focus. When provided, focus restored after a pointer action does not open or hold the tooltip unless this callback returns true; hover still opens it. Without the callback, any focus opens the tooltip.
