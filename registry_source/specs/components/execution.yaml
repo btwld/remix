@@ -21,6 +21,7 @@ anatomy:
   - trailing chevron (14px, ink@0.50, muted on trigger hover)
   - output well (clipped 12-radius ink wash, no stroke)
   - log (14 / ink@0.80, mono, wrap)
+  - log viewport (bounded height; long output scrolls inside the well)
   - copy / retry (28×28, 6px radius, hover wash; gap 2, px 8, pb 6, trailing 11px status)
 states:
   - running
@@ -49,6 +50,8 @@ behavior:
   - Tool and status stay on the trigger in every state
   - Meta does not replace the status word
   - Copy/retry only after settle, inside the well
+  - Long output scrolls inside a bounded viewport and follows its end while
+    running
 approximations:
   - Status mark and label are host-ink, not a semantic palette
   - Kind is a host slot; default is a Mix terminal glyph, not a kind catalog
