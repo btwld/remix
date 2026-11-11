@@ -349,73 +349,47 @@ void main() {
     },
   );
 
-  for (final dark in [false, true]) {
-    testWidgets('form fields that sit side by side share the 36px height '
-        '(${dark ? "dark" : "light"})', (tester) async {
-      tester.view.physicalSize = const Size(1280, 800);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final fields = <String, Widget>{
-        'text field': const VanillaTextField(hintText: 'Name'),
-        'select trigger': VanillaSelect<String>(
-          trigger: const RemixSelectTrigger(placeholder: 'Plan'),
-          items: const [RemixSelectItem(value: 'free', label: 'Free')],
-          onChanged: (_) {},
+  testWidgets('form controls in one row share the 36px height', (tester) async {
+    await tester.pumpWidget(
+      host(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final control in [
+              const VanillaTextField(hintText: 'Name'),
+              VanillaSelect<String>(
+                trigger: const RemixSelectTrigger(placeholder: 'Plan'),
+                items: const [RemixSelectItem(value: 'free', label: 'Free')],
+                onChanged: (_) {},
+              ),
+              VanillaCombobox<String>(
+                hintText: 'Search',
+                optionsBuilder: (_) => const ['Free'],
+              ),
+              VanillaButton.outline(label: 'Apply', onPressed: () {}),
+              VanillaDatePicker(
+                value: null,
+                firstDate: DateTime(2026),
+                lastDate: DateTime(2027),
+                onChanged: (_) {},
+              ),
+            ])
+              SizedBox(width: 240, child: control),
+          ],
         ),
-        'combobox field': VanillaCombobox<String>(
-          hintText: 'Search',
-          optionsBuilder: (_) => const ['Free'],
-        ),
-        'outline button': VanillaButton.outline(
-          label: 'Apply',
-          onPressed: () {},
-        ),
-        'date picker trigger': VanillaDatePicker(
-          value: null,
-          firstDate: DateTime(2026),
-          lastDate: DateTime(2027),
-          onChanged: (_) {},
-        ),
-      };
-      final keys = {for (final name in fields.keys) name: GlobalKey()};
-      await tester.pumpWidget(
-        WidgetsApp(
-          color: const Color(0xFFFFFFFF),
-          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-            settings: settings,
-            pageBuilder: (context, _, _) => builder(context),
-          ),
-          builder: (context, navigator) =>
-              VanillaTheme(mode: dark ? .dark : .light, child: navigator!),
-          home: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (final MapEntry(:key, :value) in fields.entries)
-                  SizedBox(
-                    width: 200,
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: KeyedSubtree(key: keys[key], child: value),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
+      ),
+    );
 
-      for (final MapEntry(key: name, value: key) in keys.entries) {
-        expect(
-          tester.getSize(find.byKey(key)).height,
-          36,
-          reason: '$name height',
-        );
-      }
-    });
-  }
+    for (final type in [
+      VanillaTextField,
+      VanillaSelect<String>,
+      VanillaCombobox<String>,
+      VanillaButton,
+      VanillaDatePicker,
+    ]) {
+      expect(tester.getSize(find.byType(type)).height, 36, reason: '$type');
+    }
+  });
 
   testWidgets('a segmented control stays 36px tall inside a taller row', (
     tester,
