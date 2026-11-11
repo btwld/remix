@@ -225,7 +225,7 @@ TextFieldStyler _uiTextInputErrorStyle() => TextFieldStyler(
         RemixBoxShadowMix(
           kind: .inset,
           color: UiTokens.error8(),
-          spreadRadius: 1,
+          spreadRadius: UiTokens.borderWidth1(),
         ),
       ],
     ),

@@ -132,8 +132,10 @@ BoxStyler _{{valuePrefix}}DataTableRowDivider() => BoxStyler().foregroundDecorat
 
 /// The `gray-a5` 1px edge shared by the row divider and the footer's top
 /// border, so the footer reads as a continuation of the last row's divider.
-BorderSideMix _{{valuePrefix}}DataTableDividerSide() =>
-    BorderSideMix(color: {{typePrefix}}Tokens.grayA5(), width: 1);
+BorderSideMix _{{valuePrefix}}DataTableDividerSide() => BorderSideMix(
+  color: {{typePrefix}}Tokens.grayA5(),
+  width: {{typePrefix}}Tokens.borderWidth1(),
+);
 
 FlexBoxStyler _{{valuePrefix}}DataTableFooter() => FlexBoxStyler()
     .direction(.horizontal)

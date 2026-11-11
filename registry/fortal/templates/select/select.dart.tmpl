@@ -227,7 +227,7 @@ SelectContentStyler _{{valuePrefix}}SelectContentStyler({{typePrefix}}SelectSize
   };
   return SelectContentStyler()
       .maxHeight(320)
-      .border(.color({{typePrefix}}Tokens.gray7()).width(1))
+      .border(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1()))
       // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
       .padding(

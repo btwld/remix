@@ -28,7 +28,7 @@ CalendarStyler fortalRangeCalendarStyle({
                   BorderMix.all(
                     BorderSideMix(
                       color: FortalTokens.gray10(),
-                      width: 1,
+                      width: FortalTokens.borderWidth1(),
                       style: .solid,
                     ),
                   ),

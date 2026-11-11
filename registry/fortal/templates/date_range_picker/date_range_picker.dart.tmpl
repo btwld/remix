@@ -158,7 +158,7 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
         .labelColor({{typePrefix}}Tokens.gray10())
         .labelFontWeight(FontWeight.w400),
     expandedStyle: ButtonStyler().border(
-      .color({{typePrefix}}Tokens.focus8()).width(1),
+      .color({{typePrefix}}Tokens.focus8()).width({{typePrefix}}Tokens.borderWidth1()),
     ),
     buttonStyle: {{valuePrefix}}ButtonStyle(variant: .outline)
         .minHeight({{valuePrefix}}CalendarTarget)

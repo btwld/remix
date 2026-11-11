@@ -219,7 +219,7 @@ SelectContentStyler _uiSelectContentStyler(UiSelectSize size) {
   };
   return SelectContentStyler()
       .maxHeight(320)
-      .border(.color(UiTokens.gray7()).width(1))
+      .border(.color(UiTokens.gray7()).width(UiTokens.borderWidth1()))
       // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
       .padding(

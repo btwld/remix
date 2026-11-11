@@ -67,7 +67,11 @@ CalendarStyler {{valuePrefix}}CalendarStyle({
           .label(TextStyler().style({{typePrefix}}Tokens.text2.mix()))
           .onToday(
             CalendarDayStyler()
-                .border(.color({{typePrefix}}Tokens.gray9()).width(1))
+                .border(
+                  .color(
+                    {{typePrefix}}Tokens.gray9(),
+                  ).width({{typePrefix}}Tokens.borderWidth1()),
+                )
                 .label(
                   TextStyler()
                       .color({{typePrefix}}Tokens.gray12())

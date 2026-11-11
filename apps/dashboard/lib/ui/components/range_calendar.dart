@@ -24,7 +24,7 @@ CalendarStyler uiRangeCalendarStyle({
                   BorderMix.all(
                     BorderSideMix(
                       color: UiTokens.gray10(),
-                      width: 1,
+                      width: UiTokens.borderWidth1(),
                       style: .solid,
                     ),
                   ),

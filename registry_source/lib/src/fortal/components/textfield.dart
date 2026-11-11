@@ -232,7 +232,7 @@ TextFieldStyler _fortalTextInputErrorStyle() => TextFieldStyler(
         RemixBoxShadowMix(
           kind: .inset,
           color: FortalTokens.error8(),
-          spreadRadius: 1,
+          spreadRadius: FortalTokens.borderWidth1(),
         ),
       ],
     ),
