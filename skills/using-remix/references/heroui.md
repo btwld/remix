@@ -9,8 +9,8 @@ edit. For install commands, scope placement, and theme selection shared with
 the other presets, see the [main skill](../SKILL.md).
 
 Sections: [Recipes](#recipes) · [Compositions](#compositions) ·
-[Overlays](#overlays) · [Theme](#theme) · [Tokens](#tokens) ·
-[Not included](#not-included).
+[Overlays](#overlays) · [Dashboard extensions](#dashboard-extensions) ·
+[Theme](#theme) · [Tokens](#tokens) · [Not included](#not-included).
 
 ## Recipes
 
@@ -175,6 +175,49 @@ ToastStyler secondaryAction() => ToastStyler()
 - Overlays keep the theme through `HeroUiTheme`'s `InheritedTheme.wrap`;
   place the scope in `WidgetsApp.builder`, above the Navigator.
 
+## Dashboard extensions
+
+HeroUI web 3.2.6 has no navbar, sidebar, or application shell, so `app_bar`,
+`sidebar`, `sidebar_layout`, `icons`, and `dashboard_shell` are extensions:
+styled with HeroUI's tokens and recipes, with no upstream reference behind
+their geometry. A sidebar destination is the `sm` ghost `HeroUiToggleButton`
+(selected is `accent-soft`), a collapsed rail labels it with `HeroUiTooltip`,
+and the app bar and the sidebar's brand row share a 64px toolbar over a
+`separator` line. `HeroUiDashboardShell` takes the same parameters as the
+other presets' shells; the host owns navigation state and page content:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+Widget shell(String page, ValueChanged<String> select, Widget body) =>
+    HeroUiDashboardShell<String>(
+      sections: const [
+        RemixSidebarSection(
+          label: 'Workspace',
+          destinations: [
+            RemixSidebarDestination(
+              value: 'overview',
+              label: 'Overview',
+              icon: HeroUiIcons.dashboard,
+            ),
+          ],
+        ),
+      ],
+      selectedValue: page,
+      onSelected: select,
+      title: 'Overview',
+      brand: const Text('Northstar'),
+      onSearchChanged: (query) {},
+      body: body,
+    );
+```
+
+The shell's search is a `HeroUiSearchField`, and its icon buttons are ghost
+`HeroUiIconButton`s. Below 720 logical pixels the sidebar moves into a
+start-edge sheet over the `backdrop` scrim.
+
 ## Theme
 
 `HeroUiTheme(theme:, darkTheme:, mode:)` selects between a light and a dark
@@ -211,6 +254,7 @@ top-level final, never `token().withValues(...)`.
 
 ## Not included
 
+HeroUI ships no `chart`, `dashboard_demo`, or Agent items.
 Families that need behavior Remix does not provide are not in the preset:
 Form, Fieldset, NumberField, InputOTP, ListBox, Autocomplete, Pagination, a
 standalone Menu, segmented DateField, TimeField, CalendarYearPicker, and color pickers. Each component's worksheet

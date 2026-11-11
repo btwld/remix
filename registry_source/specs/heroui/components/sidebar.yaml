@@ -30,3 +30,4 @@ approximations:
   - "The destination rings inside its edge, as joined toggle group items do, because the scrolling destination region would crop the toggle's outside ring."
   - "The toggle's 100ms fill motion is omitted on destinations so a collapsing rail's per-frame padding is not eased twice."
   - Width, header metrics and collapse motion are the host's; the dashboard shell sets them.
+  - "Rows keep the sm toggle button's 36px (phone) and 32px (desktop) heights, below the 48px touch-target guideline Fortal's sidebar meets; Vanilla's rows are 32px."

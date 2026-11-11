@@ -183,8 +183,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 ## Layout and dashboard recipes
 
 
-Vanilla and Fortal also ship layout items beyond the core component set
-(HeroUI ships none of them):
+Vanilla and Fortal also ship layout items beyond the core component set.
+HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, and `dashboard_shell` as
+extensions with no upstream HeroUI reference, and no `dashboard_demo`:
 
 - **app_bar** — `RemixAppBar`: provides slots for leading widgets, title headings,
   actions, and bottom content. By default, `safeArea` is enabled (`true`). Wrap
@@ -192,13 +193,15 @@ Vanilla and Fortal also ship layout items beyond the core component set
   recipe requires the `text` item.
 - **sidebar** — `RemixSidebar<T>`: provides vertical navigation sections and
   collapsible panels. Its styler includes a generic `call<T>()` builder. The
-  Fortal recipe requires the `text` item.
+  Fortal recipe requires the `text` item; the HeroUI recipe requires
+  `toggle_button` and `tooltip`.
 - **sidebar_layout** — layout shell pairing an installed `sidebar` with page content.
   Displays an inline row above the compact breakpoint and a modal start-edge sheet
   below it. Contains no generated adapter.
 - **dashboard_shell** — compound recipe combining `app_bar`, `sidebar`, and
   `sidebar_layout`. Provides slots for brand, search, page title (or custom
   `headerTitle`), account, and header actions. Contains no generated adapter.
+  The HeroUI shell also installs `button` and `search_field`.
 - **dashboard_demo** — showcase recipe assembling the five product dashboard
   screens (Overview, Chat, Customers, Orders, and Settings) into a runnable
   demo; see [Reference showcases](reference-showcases.md) for product-example
