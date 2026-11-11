@@ -1,0 +1,28 @@
+name: dashboard_heroui
+description: Workspace-only HeroUI dashboard demo, mounted from installed registry source.
+publish_to: "none"
+version: 0.1.0+1
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Workspace resolution uses the local packages during development; these
+  # hosted constraints keep the app manifest deployable outside the workspace.
+  remix: ^1.0.0-beta.15
+  mix_annotations: ^2.2.0-beta.1
+  remix_ui_icons: ^1.0.0-beta.1
+  mix_chart: ^0.0.1-beta.3
+  remix_ui_fonts: ^0.1.0
+
+dev_dependencies:
+  build_runner: ^2.10.1
+  flutter_test:
+    sdk: flutter
+  mix_generator: ^2.2.0-beta.3
+  # Project-local CLI pin for the application-owned UI source.
+  remix_cli: ^1.0.0-beta.1

@@ -1,0 +1,91 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import 'checkbox.dart';
+import 'field_layout.dart';
+
+part 'checkbox_group.g.dart';
+
+/// HeroUI recipe for [RemixCheckboxGroupItem]: the checkbox recipe on an item
+/// that carries its own label.
+///
+/// [minimumTapTargetSize] sets the widget's default tap target, as on
+/// `UiCheckbox`.
+@MixWidget(target: RemixCheckboxGroupItem.new)
+CheckboxStyler uiCheckboxGroupItemStyle({
+  UiCheckboxVariant variant = .primary,
+  bool invalid = false,
+  Size minimumTapTargetSize = uiCheckboxTapTarget,
+  CheckboxStyler style = const CheckboxStyler.create(),
+}) => uiCheckboxStyle(variant: variant, invalid: invalid, style: style);
+
+/// One option of a [UiCheckboxGroup].
+class UiCheckboxOption<T extends Object> {
+  const UiCheckboxOption({
+    required this.value,
+    required this.label,
+    this.enabled = true,
+  });
+
+  final T value;
+  final String label;
+  final bool enabled;
+}
+
+/// A [RemixCheckboxGroup] with HeroUI's label, option spacing, and description.
+///
+/// [variant], [invalid], and [enabled] apply to every option. While [invalid],
+/// [errorText] shows after [helperText].
+class UiCheckboxGroup<T extends Object> extends StatelessWidget {
+  const UiCheckboxGroup({
+    super.key,
+    required this.values,
+    required this.options,
+    this.onChanged,
+    this.variant = .primary,
+    this.invalid = false,
+    this.enabled = true,
+    this.label,
+    this.helperText,
+    this.errorText,
+  });
+
+  final Set<T> values;
+  final List<UiCheckboxOption<T>> options;
+  final ValueChanged<Set<T>>? onChanged;
+  final UiCheckboxVariant variant;
+  final bool invalid;
+  final bool enabled;
+  final String? label;
+  final String? helperText;
+  final String? errorText;
+
+  @override
+  Widget build(BuildContext context) => RemixCheckboxGroup<T>(
+    values: values,
+    onChanged: onChanged,
+    enabled: enabled,
+    semanticLabel: label,
+    child: UiFieldLayout(
+      label: label,
+      // Flutter has no checkbox-group role; RemixCheckboxGroup owns the
+      // semantic container that names its explicit checkbox children.
+      controlProvidesName: true,
+      helperText: helperText,
+      errorText: errorText,
+      invalid: invalid,
+      enabled: enabled && onChanged != null,
+      items: [
+        for (final option in options)
+          UiCheckboxGroupItem<T>(
+            value: option.value,
+            label: option.label,
+            enabled: option.enabled,
+            variant: variant,
+            invalid: invalid,
+          ),
+      ],
+    ),
+  );
+}
