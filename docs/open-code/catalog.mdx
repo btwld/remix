@@ -113,8 +113,14 @@ no navbar, sidebar, or application shell, so these are styled from HeroUI's
 tokens and recipes (a destination is the ghost `toggle_button`, a rail label
 the `tooltip`) without an upstream reference. HeroUI's `sidebar` pulls in
 `toggle_button` and `tooltip`, and its `dashboard_shell` pulls in `button` and
-`search_field` for its icon buttons and search. It ships no `chart`,
-`dashboard_demo`, or Agent items. Families that need
+`search_field` for its icon buttons and search. `chart`, the Agent items, and
+`dashboard_demo` are extensions too. HeroUI's `chart` draws its series in an
+ordered ramp of existing tokens (`accent`, `muted`, `foreground`, then
+`border-tertiary`) and never in a status color. The Agent recipes pass HeroUI's
+`card`, `button`, `disclosure`, and `textarea` styles into the shared Agent
+components. HeroUI's `dashboard_demo` renders the same five destinations with
+HeroUI's components, and pulls in `chart`, `table`, `tabs`, `chip`, and the
+Agent items. Families that need
 behavior Remix does not provide, such as Form and the separate popover-search Autocomplete, are not included.
 
 One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
@@ -193,7 +199,8 @@ neither adds Lucide. See [Icons in registry presets](/guides/icons#icons-in-regi
 for how presets size those icons.
 Four Vanilla and Fortal items use icons: `icons`, `dashboard_shell`,
 `dashboard_demo`, and `support`. In HeroUI, `icons`, `dashboard_shell`,
-`breadcrumbs`, `close_button`, and `search_field` do. To switch an
+`dashboard_demo`, `support`, `breadcrumbs`, `close_button`, and `search_field`
+do. To switch an
 existing install, change `iconLibrary`, then reinstall every one of those you
 have installed in one command, reviewing first (`--overwrite` replaces only
 the items you name, so one left out keeps the old library):
@@ -206,8 +213,8 @@ remix add icons dashboard_shell dashboard_demo support --overwrite
 For HeroUI:
 
 ```shell
-remix add icons dashboard_shell breadcrumbs close_button search_field --diff
-remix add icons dashboard_shell breadcrumbs close_button search_field --overwrite
+remix add icons dashboard_shell dashboard_demo support breadcrumbs close_button search_field --diff
+remix add icons dashboard_shell dashboard_demo support breadcrumbs close_button search_field --overwrite
 ```
 
 Icons you reference in your own code stay as you wrote them. Import
@@ -237,11 +244,11 @@ takes focus, for its selection handles. `MaterialApp`, `CupertinoApp`, and any
 `WidgetsApp` with routes already provide one; a bare
 `WidgetsApp(builder: ...)` does not.
 
-## Agent surfaces in the Vanilla and Fortal presets
+## Agent surfaces in the Vanilla, Fortal, and HeroUI presets
 
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
-and `transcript` install unstyled, application-owned behavior source in either
-the Vanilla or Fortal preset. Each `<component>_recipe` item adds a complete
+and `transcript` install unstyled, application-owned behavior source in the
+Vanilla, Fortal, or HeroUI preset. Each `<component>_recipe` item adds a complete
 preset-specific recipe bundle. The
 private authoring source (`registry_source`) is not a consumer dependency. The shared `models` files
 are exported from the local UI barrel; `support` helpers install transitively
@@ -255,8 +262,9 @@ These surfaces use `@MixableSpec`. The CLI enables the supported Mix generator's
 opt-in spec-styler builder for their installed source paths in `build.yaml`,
 preserving other builder settings and comments. Explicit exclusions or disabled
 generation are reported before writes. `--dry-run` and `--diff` remain read-only.
-Agent recipes extend the Vanilla and Fortal presets; they do not constitute
-another preset.
+Agent recipes extend the Vanilla, Fortal, and HeroUI presets; they do not
+constitute another preset. HeroUI web has no Agent surfaces, so HeroUI's are
+extensions styled from its own recipes.
 
 Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
 `execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and

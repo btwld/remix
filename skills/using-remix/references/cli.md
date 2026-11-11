@@ -97,16 +97,16 @@ icon. `lucide` adds `lucide_flutter` instead. Projects still on `remix_ui_icons`
 references using the package’s `MIGRATION.md`.
 
 The choice applies at install. In Vanilla and Fortal four items use icons
-(`icons`, `dashboard_shell`, `dashboard_demo`, `support`); in HeroUI `icons`,
-`dashboard_shell`, `breadcrumbs`, `close_button`, and `search_field` do.
+(`icons`, `dashboard_shell`, `dashboard_demo`, `support`); in HeroUI those
+four, `breadcrumbs`, `close_button`, and `search_field` do.
 To switch an installed project, change the setting and reinstall every one of
 them you have, in one command; `--overwrite` rewrites only the items named:
 
 ```bash
 remix add icons dashboard_shell dashboard_demo support --diff       # Vanilla, Fortal
 remix add icons dashboard_shell dashboard_demo support --overwrite
-remix add icons dashboard_shell breadcrumbs close_button search_field --diff   # HeroUI
-remix add icons dashboard_shell breadcrumbs close_button search_field --overwrite
+remix add icons dashboard_shell dashboard_demo support breadcrumbs close_button search_field --diff   # HeroUI
+remix add icons dashboard_shell dashboard_demo support breadcrumbs close_button search_field --overwrite
 ```
 
 Icons referenced in application code are not rewritten. The CLI that

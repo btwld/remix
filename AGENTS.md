@@ -47,8 +47,8 @@ or `borderRounded`.
   dependency and dev-dependency floors in `registry/vanilla/registry.yaml`, which the
   builder reads back as input. Edit those floors through the release workflow
   documented in [open_code/RELEASING.md](open_code/RELEASING.md).
-- `apps/`: `playground`, `demo`, `dashboard`, and `widgetbook_vanilla` are
-  workspace consumers pinned in their `remix.yaml`; `docs` is the docs site;
+- `apps/`: `playground`, `demo`, `dashboard`, `dashboard_heroui`, and
+  `widgetbook_vanilla` are workspace consumers pinned in their `remix.yaml`; `docs` is the docs site;
   `naked_ui_example`.
 - `docs/`: MDX documentation. `open_code/`: registry, preset, and release docs.
 - `skills/`: published agent skills (`npx skills add btwld/remix`).

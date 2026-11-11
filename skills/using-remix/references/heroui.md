@@ -218,6 +218,20 @@ The shell's search is a `HeroUiSearchField`, and its icon buttons are ghost
 `HeroUiIconButton`s. Below 720 logical pixels the sidebar moves into a
 start-edge sheet over the `backdrop` scrim.
 
+`chart`, the eight Agent items, and `dashboard_demo` are extensions as well.
+`HeroUiLineChart`, `HeroUiBarChart`, and `HeroUiPieChart` draw series in
+`heroUiChartSeries`: `accent`, `muted`, `foreground`, then `border-tertiary`.
+These are existing tokens, never a status color; the theme has no chart
+tokens. The fourth series is under 3:1 against a card, so a chart with more
+than three series should label its marks or pass `palette`. The Agent recipes
+(`heroUiAgentComposerRecipe()` and the rest) pass HeroUI's card, button, icon
+button, disclosure, and text area styles to the shared Agent components.
+HeroUI has no data list, so the permission parameters are styled in that
+recipe. `HeroUiDashboardDemo` is the other presets' five-destination demo
+(the same data, copy, and behavior) drawn with HeroUI components. Its
+order filter and appearance choices are the primary `HeroUiTabBar` pill,
+because HeroUI has no segmented control.
+
 ## Theme
 
 `HeroUiTheme(theme:, darkTheme:, mode:)` selects between a light and a dark
@@ -254,7 +268,6 @@ top-level final, never `token().withValues(...)`.
 
 ## Not included
 
-HeroUI ships no `chart`, `dashboard_demo`, or Agent items.
 Families that need behavior Remix does not provide are not in the preset:
 Form, Fieldset, NumberField, InputOTP, ListBox, Autocomplete, Pagination, a
 standalone Menu, segmented DateField, TimeField, CalendarYearPicker, and color pickers. Each component's worksheet
