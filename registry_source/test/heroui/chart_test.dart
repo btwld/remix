@@ -109,6 +109,8 @@ void main() {
       expect(pie.centerRadius, 40);
       expect(pie.centerColor, HeroUiTokens.transparent);
       expect(pie.slice!.spec.showLabel, isFalse);
+      // A selected slice pulls out 4px.
+      expect(pie.selectedSliceRadiusOffset, 4);
     });
 
     testWidgets('a pie label reads on every series in $mode', (tester) async {
