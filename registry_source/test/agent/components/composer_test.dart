@@ -164,4 +164,48 @@ void main() {
     await tester.pump();
     expect(adopted.hasFocus, isTrue);
   });
+
+  testWidgets(
+    'typing rebuilds the composer only when sending becomes possible',
+    (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+      final changes = <String>[];
+      await pumpAgent(
+        tester,
+        SizedBox(
+          width: 400,
+          child: AgentComposer(
+            controller: controller,
+            onChanged: changes.add,
+            onSubmit: (_) {},
+          ),
+        ),
+        overlay: true,
+      );
+
+      var composerBuilds = 0;
+      final previous = debugOnRebuildDirtyWidget;
+      debugOnRebuildDirtyWidget = (element, builtOnce) {
+        if (element.widget is AgentComposer) composerBuilds++;
+      };
+      addTearDown(() => debugOnRebuildDirtyWidget = previous);
+
+      const draft = 'Ship the notes';
+      for (var length = 1; length <= draft.length; length++) {
+        controller.text = draft.substring(0, length);
+        await tester.pump();
+      }
+      expect(changes, hasLength(draft.length));
+      expect(
+        composerBuilds,
+        1,
+        reason: 'Only the first character changes whether Send is enabled.',
+      );
+
+      controller.clear();
+      await tester.pump();
+      expect(composerBuilds, 2);
+    },
+  );
 }

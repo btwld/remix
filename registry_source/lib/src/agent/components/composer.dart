@@ -80,7 +80,13 @@ class _AgentComposerState extends State<AgentComposer> {
   TextEditingController? _ownedController;
   FocusNode? _ownedFocusNode;
   late TextEditingController _controller;
+
+  /// The last text reported through [AgentComposer.onChanged].
   late String _text;
+
+  /// Whether the draft has something to send. Typing rebuilds the composer
+  /// only when this flips; the text field repaints its own text.
+  late bool _hasDraft;
 
   FocusNode get _focusNode =>
       widget.focusNode ?? (_ownedFocusNode ??= FocusNode());
@@ -93,7 +99,7 @@ class _AgentComposerState extends State<AgentComposer> {
   bool get _canSubmit =>
       widget.enabled &&
       !widget.running &&
-      _text.trim().isNotEmpty &&
+      _hasDraft &&
       widget.onSubmit != null &&
       (widget.canSubmit ?? true);
 
@@ -103,14 +109,21 @@ class _AgentComposerState extends State<AgentComposer> {
     _controller =
         widget.controller ??
         (_ownedController = TextEditingController(text: widget.initialValue));
-    _text = _controller.text;
+    _adoptText();
     _controller.addListener(_handleControllerChanged);
+  }
+
+  void _adoptText() {
+    _text = _controller.text;
+    _hasDraft = _text.trim().isNotEmpty;
   }
 
   void _handleControllerChanged() {
     final next = _controller.text;
     if (next == _text) return;
-    setState(() => _text = next);
+    _text = next;
+    final hasDraft = next.trim().isNotEmpty;
+    if (hasDraft != _hasDraft) setState(() => _hasDraft = hasDraft);
     widget.onChanged?.call(next);
   }
 
@@ -125,7 +138,7 @@ class _AgentComposerState extends State<AgentComposer> {
       _controller =
           widget.controller ??
           (_ownedController = TextEditingController(text: seed));
-      _text = _controller.text;
+      _adoptText();
       _controller.addListener(_handleControllerChanged);
       _disposeAfterFrame(oldOwnedController);
     }
