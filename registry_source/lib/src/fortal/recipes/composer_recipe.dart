@@ -38,18 +38,35 @@ FortalAgentComposerRecipe fortalAgentComposerRecipe({
         .spacing(FortalTokens.space2())
         .padding(.top(FortalTokens.space2())),
   ).merge(style),
+  // The card is the field's frame: it rings while the field has focus, as a
+  // text input rings its own frame.
   surfaceStyle: fortalCardStyle(
     size: .size2,
     style: CardStyler()
         .padding(.all(FortalTokens.space3()))
+        .onFocused(.containerEffects(fortalFocusOutline()))
         .merge(surfaceStyle),
   ),
+  // So the field inside draws no frame of its own: the text area's inset
+  // stroke, focus ring and disabled well would nest a second frame inside
+  // the card.
   fieldStyle: fortalTextAreaStyle(
     style: TextFieldStyler()
         .color(const Color(0x00000000))
         .border(.style(.none))
+        .containerEffects(_noFieldFrame)
         .minHeight(FortalTokens.composerFieldMinHeight())
         .padding(.all(FortalTokens.space1()))
+        .onFocused(
+          .containerEffects(
+            RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+          ),
+        )
+        .onDisabled(
+          TextFieldStyler()
+              .color(const Color(0x00000000))
+              .containerEffects(_noFieldFrame),
+        )
         .merge(fieldStyle),
   ),
   submitStyle: fortalIconButtonStyle(
@@ -65,4 +82,9 @@ FortalAgentComposerRecipe fortalAgentComposerRecipe({
         .size(FortalTokens.space7(), FortalTokens.space7())
         .merge(stopStyle),
   ),
+);
+
+final _noFieldFrame = RemixBoxEffectsMix(
+  behindContent: RemixBoxEffectLayerMix(gradients: const []),
+  overContent: RemixBoxEffectLayerMix(shadows: const []),
 );
