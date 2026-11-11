@@ -479,5 +479,7 @@
    "status": "deferred",
    "reason": "React Aria internals, not a component"
   }
- ]
+ ],
+ "extensionsNote": "Extensions are HeroUI-styled items with no upstream family in @heroui/react 3.2.6. They are built only from the pinned tokens and the mapped recipes, carry no reference evidence, and their worksheets say so (ARCHITECTURE.md, HeroUI dashboard items are labelled extensions).",
+ "extensions": []
 }

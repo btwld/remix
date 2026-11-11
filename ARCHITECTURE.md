@@ -94,6 +94,22 @@ does not provide remain deferred in `families.json`. Shared-library additions
 must be general across presets, additive and shipped separately before preset
 adoption, with remaining visual approximations recorded in `specs/heroui/`.
 
+## HeroUI dashboard items are labelled extensions
+
+2026-11-11 · Accepted · Extends [HeroUI ADR-0002](#heroui-ports-reference-design-over-remix-heroui-adr-0001-adr-0002) · [Extension list](registry_source/reference/heroui_3_2_6/families.json) · [Worksheets](registry_source/specs/heroui/components/)
+
+Ship `sidebar`, `sidebar_layout`, `app_bar`, `icons` and `dashboard_shell` in
+HeroUI so one reference dashboard renders in every preset, although
+`@heroui/react` 3.2.6 has no sidebar, navbar, app bar or application shell to
+port. They are extensions outside the reference-parity evidence: styled only
+with the pinned tokens and composed from mapped recipes (destinations are the
+ghost `toggle_button`, rail labels the `tooltip`), with no new token, colour
+or shared-library API. `families.json` enumerates them, the parity check
+requires each to be listed there and its worksheet to say `extension:`, and
+the worksheets record their geometry as designed rather than measured. They
+never claim upstream parity; a later upstream family replaces its extension
+through the normal port.
+
 ## Retain the private Fortal package (Fortal ADR-0001, superseded)
 
 2026-09-14 · Superseded by [Fortal ADR-0002](#one-analyzed-authoring-tree-fortal-adr-0002)
