@@ -41,6 +41,28 @@ void main() {
     },
   );
 
+  testWidgets('feedback is announced as a polite live region when it appears', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await pumpAgent(
+      tester,
+      AgentAnswer(
+        status: AgentAnswerStatus.complete,
+        onCopy: () {},
+        feedback: const Text('Copied'),
+        child: const Text('done'),
+      ),
+    );
+
+    final feedback = tester.getSemantics(find.text('Copied'));
+    expect(feedback.label, 'Copied');
+    expect(feedback.getSemanticsData().flagsCollection.isLiveRegion, isTrue);
+    final body = tester.getSemantics(find.text('done'));
+    expect(body.getSemanticsData().flagsCollection.isLiveRegion, isFalse);
+    semantics.dispose();
+  });
+
   testWidgets('showActions false hides callbacks after completion', (
     tester,
   ) async {

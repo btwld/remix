@@ -38,6 +38,7 @@ behavior:
   - Completion chrome appears only when complete or errored
   - showActions override can keep chrome hidden after settle
   - Feedback paints only when status is complete
+  - Feedback is a polite live region, announced when it appears
   - Sources trigger sits inline in the action row; expanded list uses sourcesContent
 approximations:
   - Host supplies copy / retry / feedback / sources widgets

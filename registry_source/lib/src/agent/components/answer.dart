@@ -178,7 +178,16 @@ class _AgentAnswerState extends State<AgentAnswer> {
                       ),
                     if (widget.status == AgentAnswerStatus.complete &&
                         widget.feedback != null)
-                      Box(styleSpec: spec.feedback, child: widget.feedback),
+                      // A status message such as "Copied" is announced
+                      // without moving focus (WCAG 2.2 SC 4.1.3).
+                      Semantics(
+                        container: true,
+                        liveRegion: true,
+                        child: Box(
+                          styleSpec: spec.feedback,
+                          child: widget.feedback,
+                        ),
+                      ),
                   ],
                 ),
             ],
