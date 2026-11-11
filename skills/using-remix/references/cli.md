@@ -42,7 +42,7 @@ to read with an explicit error. Recover a schema 1 or 2 project by deleting
 
 CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. Upgrade
 these versions first with
-`dart pub global activate remix_cli '^1.0.0'`. The current
+`dart pub global activate remix_cli '^1.0.0-rc.1'`. The current
 CLI rejects unknown existing targets before mutation, including `--diff` and
 `--dry-run`. After verifying their source, name every existing dependency
 explicitly when adopting. For Vanilla Button, that is Theme and Button. Fortal

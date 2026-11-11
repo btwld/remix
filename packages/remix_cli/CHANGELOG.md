@@ -1,6 +1,6 @@
-## 1.0.0
+## 1.0.0-rc.1
 
-First stable 1.0 release of the GitHub-pinned registry installer.
+First 1.0 release candidate of the GitHub-pinned registry installer.
 
 ### Features
 

@@ -12,11 +12,11 @@ version.
 Install the CLI once globally, then run `remix` from any Flutter app:
 
 ```bash
-dart pub global activate remix_cli '^1.0.0'
+dart pub global activate remix_cli '^1.0.0-rc.1'
 ```
 
 <Note>
-The constraint selects the stable 1.x line. CLI `0.1.0` reads only schema 1
+The constraint includes the 1.0 release candidate. CLI `0.1.0` reads only schema 1
 icon tables and cannot use the official registry's `icons.yaml`.
 A project moving from `0.1.0` also has no ownership record, so its first `add`
 goes through [legacy source adoption](/open-code/updating#legacy-source-adoption).
@@ -35,7 +35,7 @@ For teams that want the CLI pinned in the app's lockfile, use a project-local
 dev dependency instead:
 
 ```bash
-flutter pub add dev:remix_cli:^1.0.0
+flutter pub add dev:remix_cli:^1.0.0-rc.1
 ```
 
 Prefix each command with `dart run remix_cli:`, for example

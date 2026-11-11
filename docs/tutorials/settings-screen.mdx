@@ -35,17 +35,17 @@ flutter create --empty --platforms=web remix_default_demo
 cd remix_default_demo
 ```
 
-Install the stable 1.x CLI globally and confirm its version:
+Install the CLI release candidate globally and confirm its version:
 
 {/* tutorial-source: install-cli */}
 
 ```bash
-dart pub global activate remix_cli '^1.0.0'
+dart pub global activate remix_cli '^1.0.0-rc.1'
 remix --version
 ```
 
 Add Pub's `bin` directory to `PATH` if needed; Pub prints the instructions.
-The printed version should satisfy the 1.x constraint above. Keep running CLI
+The printed version should satisfy the release-candidate constraint above. Keep running CLI
 commands from the project root, beside `pubspec.yaml`.
 
 ## Initialize and install Button
