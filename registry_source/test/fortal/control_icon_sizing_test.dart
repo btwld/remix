@@ -86,37 +86,6 @@ void main() {
     }
   });
 
-  testWidgets('Select chevron keeps a fixed 9/9/11px at every scaling', (
-    tester,
-  ) async {
-    for (final scaling in [
-      FortalScaling.percent100,
-      FortalScaling.percent110,
-    ]) {
-      for (final size in FortalSelectSize.values) {
-        await tester.pumpRemixApp(
-          FortalTheme(
-            scaling: scaling,
-            child: FortalSelect<String>(
-              size: size,
-              trigger: const RemixSelectTrigger(placeholder: 'Choose'),
-              items: const [RemixSelectItem(value: 'a', label: 'Apple')],
-            ),
-          ),
-        );
-        final base = size == FortalSelectSize.size3 ? 11.0 : 9.0;
-        expect(
-          tester
-              .getSize(find.byKey(const ValueKey('remix-select-indicator')))
-              .width,
-          base,
-          reason: '$size at ${scaling.name}',
-        );
-        expect(tester.takeException(), isNull);
-      }
-    }
-  });
-
   testWidgets('Content icon tokens follow Fortal scaling', (tester) async {
     for (final widget in <Widget>[
       FortalSelect<String>(

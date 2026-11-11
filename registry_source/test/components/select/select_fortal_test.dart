@@ -190,6 +190,12 @@ void main() {
       expect(item.icon.spec.size, closeTo(8.8, 1e-9));
       expect(item.text.spec.style!.fontSize, closeTo(13.2, 1e-9));
       expect(spec.trigger.spec.indicator.spec.size, 9);
+      final size3 = await _resolve(
+        tester,
+        fortalSelectStyle(size: .size3),
+        scaling: .percent110,
+      );
+      expect(size3.trigger.spec.indicator.spec.size, 11);
     });
 
     testWidgets('full radius promotes only the trigger to a pill', (
