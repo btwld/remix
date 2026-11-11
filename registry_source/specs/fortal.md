@@ -179,7 +179,12 @@ so a field without a visible label can still be found; soft fields and areas
 keep their accent-3 fill inside a fitted `focus8` ring, the recipe's base frame so
 caller frames still win. Error replaces either frame with error step 8, and
 disabled clears the soft ring (error keeps its precedence). Select triggers keep their gray-7 frame (gray alpha 8
-when open or hovered): their value and chevron identify them.
+when open or hovered): their value and chevron identify them. A trigger always
+paints its value or placeholder and a gray-12 chevron (at least 11.5:1 on
+gray-2), so under WCAG 1.4.11 its frame (about 1.5:1) is not the information
+that identifies it; a text field can be empty and unlabelled, so its frame is.
+Radix Themes 3.3.0 frames both with gray-a7 (`select.css` L299,
+`text-field.css` L286); Fortal strengthens only the field.
 Enabled surface input hints use secondary gray content; enabled soft input
 hints and icons use secondary accent content. Disabled input treatments stay separate.
 
