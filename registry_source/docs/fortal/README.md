@@ -16,7 +16,7 @@ primary-role policy, separate from explicit `highContrast` component variants.
 ## Installation
 
 ```bash
-dart pub global activate remix_cli '^1.0.0-beta.2'
+dart pub global activate remix_cli '^1.0.0-rc.1'
 remix init --prefix Fortal --preset fortal
 remix add button
 ```

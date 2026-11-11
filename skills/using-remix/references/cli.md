@@ -40,9 +40,9 @@ to read with an explicit error. Recover a schema 1 or 2 project by deleting
 `remix.yaml`, running `remix init` again with its old `--prefix`/`--preset`/
 `--ui-path`, then verifying the installed source's provenance before adoption.
 
-CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. An
-unversioned activation selects 0.1.0; upgrade first with
-`dart pub global activate remix_cli '^1.0.0-beta.2'`. The current
+CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. Upgrade
+these versions first with
+`dart pub global activate remix_cli '^1.0.0-rc.1'`. The current
 CLI rejects unknown existing targets before mutation, including `--diff` and
 `--dry-run`. After verifying their source, name every existing dependency
 explicitly when adopting. For Vanilla Button, that is Theme and Button. Fortal

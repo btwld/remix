@@ -1,3 +1,12 @@
+## 1.0.0-rc.1
+
+First 1.0 release candidate of the GitHub-pinned registry installer. Retains
+the functionality of 1.0.0-beta.2, including `remix skills install` and `remix list`.
+
+### Documentation
+
+- Select the CLI release candidate in installation commands and agent guidance.
+
 ## 1.0.0-beta.2
 
 ### Features

@@ -1,3 +1,14 @@
+## 1.0.0-rc.2
+
+### Dependencies
+
+- Require Naked UI ^2.0.0-rc.1, its first 2.0 release candidate.
+
+### Documentation
+
+- Use the globally installed CLI and document the `remix skills install`
+  command. Installation examples now select the CLI 1.0 release candidate.
+
 ## 1.0.0-rc.1
 
 First release candidate for 1.0.0. `1.0.0-beta.19` was prepared but never

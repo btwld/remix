@@ -8,7 +8,7 @@ Remix is a `1.0.0` prerelease. Pin it, because an unversioned install
 resolves the older stable `0.x` line, which these docs do not describe.
 
 ```bash
-flutter pub add remix:^1.0.0-rc.1
+flutter pub add remix:^1.0.0-rc.2
 ```
 
 ```dart
@@ -30,16 +30,16 @@ Use `Remix*` widgets with your own stylers, or install a neutral Vanilla or
 Fortal preset as editable application source:
 
 ```bash
-dart pub global activate remix_cli '^1.0.0-beta.2'
+dart pub global activate remix_cli '^1.0.0-rc.1'
 remix init --preset vanilla
 remix add button
 ```
 
-Install the CLI once globally. Keep the prerelease pin: an unversioned
-activation selects stable `0.1.0`, which fails on the official registry.
+Install the CLI once globally. The constraint includes the 1.0 release
+candidate; `remix.yaml` pins the registry revision used by each project.
 Add Pub's `bin` directory to `PATH` if needed; Pub prints the instructions.
 For a CLI pinned in the app's lockfile, use
-`flutter pub add dev:remix_cli:^1.0.0-beta.2` instead and prefix each command
+`flutter pub add dev:remix_cli:^1.0.0-rc.1` instead and prefix each command
 with `dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 
 The CLI installs a theme and recipes, then generates adapters against your
