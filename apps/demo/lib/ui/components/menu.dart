@@ -30,6 +30,21 @@ MenuStyler fortalMenuStyle({
         FlexBoxStyler()
             .padding(.all(metrics.contentPadding))
             .borderRadius(.all(metrics.contentRadius))
+            // Fortal's elevation shadows carry no ring, so anchored panels
+            // (menu, select, popover, combobox) share a 1px gray-7 edge. A
+            // foreground decoration takes no layout space, so callers that
+            // size items to a panel width keep that width.
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.all(
+                  BorderSideMix(
+                    color: FortalTokens.gray7(),
+                    width: FortalTokens.borderWidth1(),
+                  ),
+                ),
+                borderRadius: BorderRadiusMix.all(metrics.contentRadius),
+              ),
+            )
             .color(FortalTokens.colorPanel())
             .decoration(
               BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),

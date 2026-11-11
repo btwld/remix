@@ -28,6 +28,21 @@ MenuStyler uiMenuStyle({
         FlexBoxStyler()
             .padding(.all(metrics.contentPadding))
             .borderRadius(.all(metrics.contentRadius))
+            // Ui's elevation shadows carry no ring, so anchored panels
+            // (menu, select, popover, combobox) share a 1px gray-7 edge. A
+            // foreground decoration takes no layout space, so callers that
+            // size items to a panel width keep that width.
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.all(
+                  BorderSideMix(
+                    color: UiTokens.gray7(),
+                    width: UiTokens.borderWidth1(),
+                  ),
+                ),
+                borderRadius: BorderRadiusMix.all(metrics.contentRadius),
+              ),
+            )
             .color(UiTokens.colorPanel())
             .decoration(
               BoxDecorationMix.create(boxShadow: UiTokens.shadow5.mix()),

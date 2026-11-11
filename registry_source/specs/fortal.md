@@ -173,7 +173,12 @@ not a raised-card/control variant and uses the ordinary elevation scale.
 
 Cards and controls have no blurred/offset shadows or gradients. Crisp inset
 frames are borders, not elevation. Menus, popovers, dialogs, tooltips, and
-toasts retain outer elevation; a shadow means the surface floats. Surface text
+toasts retain outer elevation; a shadow means the surface floats. Fortal's
+elevation shadows carry no ring, so the anchored menu, select, popover and
+combobox panels share a 1px gray-7 edge; Radix Themes 3.3.0 gives its menu,
+select and popover panels one edge through the ring inside `--shadow-5`
+(`shadow.css` L26–29, `base-menu.css` L184). The menu paints its edge as a
+foreground decoration, so items sized to a panel width keep it. Surface text
 fields and text areas use an opaque gray-2 fill and the `controlBorder` frame,
 so a field without a visible label can still be found; soft fields and areas
 keep their accent-3 fill inside a fitted `focus8` ring, the recipe's base frame so
