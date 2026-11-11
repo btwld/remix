@@ -59,6 +59,7 @@ LineChartStyler uiLineChartStyle({
   final recipe = LineChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
+      .yAxis(_uiValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_uiGridStyle())
@@ -110,6 +111,7 @@ BarChartStyler uiBarChartStyle({
   final recipe = BarChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
+      .yAxis(_uiValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_uiGridStyle())
@@ -150,7 +152,9 @@ PieChartStyler uiPieChartStyle({
   final recipe = PieChartStyler()
       .frame(_uiFrameStyle())
       .centerRadius(centerRadius)
-      .centerColor(UiTokens.colorPanel())
+      // The hole shows whatever the chart sits on. A panel-colored disc stands
+      // out on the page and doubles the tint of a translucent panel.
+      .centerColor(MixColors.transparent)
       .sliceSpacing(UiTokens.borderWidth2())
       .selectedSliceRadiusOffset(UiTokens.space2())
       .slice(
@@ -201,6 +205,11 @@ ChartAxisStyler _uiAxisStyle() => ChartAxisStyler()
     .fitInside(true)
     .fitInsideDistance(UiTokens.space1())
     .drawBelowEverything(true);
+
+/// Reserves `space8` for value ticks of up to six characters, such as
+/// `1.250K`, and their label space, scaled with the theme like the label text.
+ChartAxisStyler _uiValueAxisStyle() =>
+    ChartAxisStyler().reservedSize(UiTokens.space8());
 
 ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
 

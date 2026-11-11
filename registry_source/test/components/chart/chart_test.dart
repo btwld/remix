@@ -1,10 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
+
+import '../../helpers/pixels.dart';
 
 void main() {
   group('Fortal chart recipes', () {
@@ -105,6 +110,152 @@ void main() {
 
       expect(resolved.spec.selectedSliceRadiusOffset, expectedOffset);
     });
+
+    testWidgets('line and bar value axes share one scaled reservation', (
+      tester,
+    ) async {
+      late double expected;
+      late StyleSpec<LineChartSpec> line;
+      late StyleSpec<BarChartSpec> bar;
+
+      await tester.pumpWidget(
+        FortalTheme(
+          scaling: .percent110,
+          child: Builder(
+            builder: (context) {
+              expected = MixScope.tokenOf(FortalTokens.space8, context);
+              line = fortalLineChartStyle().build(context);
+              bar = fortalBarChartStyle().build(context);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      expect(line.spec.yAxis!.spec.reservedSize, expected);
+      expect(bar.spec.yAxis!.spec.reservedSize, expected);
+    });
+
+    for (final (name, panel) in [
+      ('the page', null),
+      ('a translucent panel', FortalPanelBackground.translucent),
+    ]) {
+      testWidgets('a donut hole shows $name behind it', (tester) async {
+        final key = GlobalKey();
+        late Color behind;
+
+        await tester.pumpWidget(
+          FortalTheme(
+            mode: .light,
+            panelBackground: panel ?? .solid,
+            child: Builder(
+              builder: (context) {
+                final page = FortalTokens.colorBackground.resolve(context);
+                final surface = panel == null
+                    ? const Color(0x00000000)
+                    : FortalTokens.colorPanel.resolve(context);
+                behind = Color.alphaBlend(surface, page);
+                return Directionality(
+                  textDirection: .ltr,
+                  child: Center(
+                    child: RepaintBoundary(
+                      key: key,
+                      child: ColoredBox(
+                        color: page,
+                        child: ColoredBox(
+                          color: surface,
+                          child: SizedBox.square(
+                            dimension: 160,
+                            child: FortalPieChart(
+                              centerRadius: 40,
+                              style: PieChartStyler().slice(
+                                PieSliceStyler().radius(30),
+                              ),
+                              slices: [_pieSlice()],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pump();
+
+        final pixels = await capturePixels(tester, key);
+        expectNearColor(pixels.at(80 * pixelScale, 80 * pixelScale), behind);
+      });
+    }
+  });
+
+  group('Fortal value axis', () {
+    setUpAll(() async {
+      final loader = FontLoader(RemixFonts.geist);
+      for (final weight in ['Regular', 'Medium', 'SemiBold', 'Bold']) {
+        loader.addFont(
+          rootBundle.load(
+            'packages/remix_ui_fonts/lib/fonts/geist/Geist-$weight.ttf',
+          ),
+        );
+      }
+      await loader.load();
+    });
+
+    for (final scaling in [
+      FortalScaling.percent100,
+      FortalScaling.percent110,
+    ]) {
+      testWidgets('six-character ticks stay on one line at ${scaling.name}', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          FortalTheme(
+            scaling: scaling,
+            child: Directionality(
+              textDirection: .ltr,
+              child: DefaultTextStyle(
+                style: const TextStyle(fontFamily: RemixFonts.geist),
+                child: Align(
+                  alignment: .topLeft,
+                  child: SizedBox(
+                    width: 360,
+                    height: 200,
+                    child: FortalLineChart(
+                      yAxis: ChartAxis.numeric(
+                        min: 1050,
+                        max: 1300,
+                        interval: 50,
+                        labelFormatter: (value) =>
+                            '${(value / 1000).toStringAsFixed(3)}K',
+                      ),
+                      series: [_lineSeries()],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pump();
+
+        // Every tick, such as "1.250K", must lay out as a single line.
+        final ticks = tester.renderObjectList<RenderParagraph>(
+          find.textContaining('K'),
+        );
+        expect(ticks, isNotEmpty);
+        for (final tick in ticks) {
+          expect(
+            tick.size.height,
+            tick.getMaxIntrinsicHeight(double.infinity),
+            reason: '"${tick.text.toPlainText()}" wrapped',
+          );
+        }
+        expect(tester.takeException(), isNull);
+      });
+    }
   });
 
   group('Fortal chart widgets', () {

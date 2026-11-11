@@ -59,6 +59,7 @@ LineChartStyler fortalLineChartStyle({
   final recipe = LineChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
+      .yAxis(_fortalValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_fortalGridStyle())
@@ -110,6 +111,7 @@ BarChartStyler fortalBarChartStyle({
   final recipe = BarChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
+      .yAxis(_fortalValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_fortalGridStyle())
@@ -150,7 +152,9 @@ PieChartStyler fortalPieChartStyle({
   final recipe = PieChartStyler()
       .frame(_fortalFrameStyle())
       .centerRadius(centerRadius)
-      .centerColor(FortalTokens.colorPanel())
+      // The hole shows whatever the chart sits on. A panel-colored disc stands
+      // out on the page and doubles the tint of a translucent panel.
+      .centerColor(MixColors.transparent)
       .sliceSpacing(FortalTokens.borderWidth2())
       .selectedSliceRadiusOffset(FortalTokens.space2())
       .slice(
@@ -203,6 +207,11 @@ ChartAxisStyler _fortalAxisStyle() => ChartAxisStyler()
     .fitInside(true)
     .fitInsideDistance(FortalTokens.space1())
     .drawBelowEverything(true);
+
+/// Reserves `space8` for value ticks of up to six characters, such as
+/// `1.250K`, and their label space, scaled with the theme like the label text.
+ChartAxisStyler _fortalValueAxisStyle() =>
+    ChartAxisStyler().reservedSize(FortalTokens.space8());
 
 ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
 
