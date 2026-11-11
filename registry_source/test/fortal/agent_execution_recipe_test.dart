@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/agent.dart';
+import 'package:registry_source/fortal.dart';
 import 'package:registry_source/src/fortal/recipes/execution_recipe.dart';
+
 import '../helpers/test_helpers.dart';
 
 void main() {
@@ -45,5 +47,27 @@ void main() {
         reason: 'A running tool keeps its newest line in view.',
       );
     });
+
+    for (final (status, token) in [
+      (AgentExecutionStatus.success, FortalTokens.accentIndicator),
+      (AgentExecutionStatus.error, FortalTokens.error11),
+      (AgentExecutionStatus.cancelled, FortalTokens.gray11),
+    ]) {
+      testWidgets('the ${status.name} mark takes its outcome color', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(execution(status));
+        final context = tester.element(find.byType(AgentExecution));
+        final mark = tester
+            .widgetList<Icon>(
+              find.descendant(
+                of: find.byType(AgentExecution),
+                matching: find.byType(Icon),
+              ),
+            )
+            .map((icon) => icon.color);
+        expect(mark, contains(token.resolve(context)));
+      });
+    }
   });
 }

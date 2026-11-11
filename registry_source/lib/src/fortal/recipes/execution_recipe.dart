@@ -58,12 +58,16 @@ FortalAgentExecutionRecipe fortalAgentExecutionRecipe({
     toolIcon: IconStyler()
         .color(FortalTokens.gray12())
         .size(FortalTokens.space4()),
-    statusIcon: IconStyler()
-        .color(FortalTokens.accentIndicator())
-        .size(FortalTokens.space3()),
+    // The status mark takes its outcome's color from the status box below;
+    // its glyph and label already name the outcome.
+    statusIcon: IconStyler().size(FortalTokens.space3()),
     indicator: IconStyler()
         .color(FortalTokens.gray12())
         .size(FortalTokens.space4()),
+    runningStatus: _statusMark(FortalTokens.accentIndicator),
+    successStatus: _statusMark(FortalTokens.accentIndicator),
+    errorStatus: _statusMark(FortalTokens.error11),
+    cancelledStatus: _statusMark(FortalTokens.gray11),
   ).merge(style),
   surfaceStyle: fortalCardStyle(size: .size2, style: surfaceStyle),
   disclosureStyle: fortalDisclosureStyle(
@@ -96,3 +100,6 @@ FortalAgentExecutionRecipe fortalAgentExecutionRecipe({
     style: retryStyle,
   ),
 );
+
+BoxStyler _statusMark(ColorToken color) =>
+    BoxStyler().wrap(.iconTheme(color: color()));

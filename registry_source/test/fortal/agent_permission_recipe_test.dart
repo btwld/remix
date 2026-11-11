@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/agent.dart';
+import 'package:registry_source/fortal.dart';
 import 'package:registry_source/src/fortal/recipes/permission_recipe.dart';
 import 'package:remix/remix.dart';
 import '../helpers/test_helpers.dart';
@@ -36,4 +37,38 @@ void main() {
       reason: 'Allow once is the last action, at the card end ($inset px).',
     );
   });
+
+  for (final (status, token) in [
+    (AgentPermissionStatus.pending, FortalTokens.accentIndicator),
+    (AgentPermissionStatus.complete, FortalTokens.accentIndicator),
+    (AgentPermissionStatus.denied, FortalTokens.gray11),
+    (AgentPermissionStatus.error, FortalTokens.error11),
+  ]) {
+    testWidgets('the ${status.name} mark takes its outcome color', (
+      tester,
+    ) async {
+      final recipe = fortalAgentPermissionRecipe();
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 560,
+          child: AgentPermission(
+            tool: 'release.publish',
+            status: status,
+            style: recipe.style,
+            surfaceStyle: recipe.surfaceStyle,
+          ),
+        ),
+      );
+      final context = tester.element(find.byType(AgentPermission));
+      final colors = tester
+          .widgetList<Icon>(
+            find.descendant(
+              of: find.byType(AgentPermission),
+              matching: find.byType(Icon),
+            ),
+          )
+          .map((icon) => icon.color);
+      expect(colors, contains(token.resolve(context)));
+    });
+  }
 }
