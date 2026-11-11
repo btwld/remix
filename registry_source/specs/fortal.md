@@ -322,3 +322,43 @@ pickers combine five independently overridable child stylers.
 The calendar regression suite exercises both modes, actual pointer and keyboard
 states, geometry, contrast and 200% RTL. The polish board adds all four families
 to Inputs, so its Linux Inputs master must be regenerated on Linux.
+
+## Charts
+
+The `chart` item styles `mix_chart`'s line, bar and pie charts; data, bounds,
+ticks, tooltips and semantics stay `mix_chart`'s. The plot is transparent and
+frameless and clips its marks.
+
+- Value axis: the y axis reserves `space8`, scaled, for ticks of up to six
+  characters and their `space2` label space. Line-chart ticks stay centered
+  on their values (`fitInside` off), so the top tick extends half a label
+  line above the chart: leave that room above a line chart inside a clipping
+  parent. Bar charts keep their end ticks fitted inside, because `mix_chart`
+  clips the whole bar chart, labels included. The category axis keeps its
+  edge labels inside the plot.
+- Labels are `text1` in `gray11`; the horizontal grid is `grayA5` at
+  `borderWidth1`.
+- Series colors meet WCAG 1.4.11's 3:1 on the page and the solid and
+  translucent panels. `resolveFortalChartPalette` starts with the accent's
+  `accentIndicator`, then the other named families without the accent's own;
+  `computeChartSeries` takes each family's first step from 9 that keeps
+  Fortal's 3.05:1 mark margin there, and does the same for an accent
+  indicator that falls short. `highContrast` uses step 12 throughout. Color
+  never carries meaning alone: label the series or slices.
+- Series order after the accent: Mar, Caju, Céu, Serra, Sol, Duna, then
+  Orla's gray. Teal, orange and blue are the most distinct families, so they
+  lead; the muted gold, amber and brown follow, and gray, the least distinct,
+  is last.
+- Pie labels are off by default. A chart that shows them colors each slice's
+  label with `fortalPieSliceLabelColor(sliceColor)` (installed as
+  `<prefix>PieSliceLabelColor`), which picks white or Orla's `#111111` ink to
+  meet WCAG 1.4.3's 4.5:1 on every series color.
+- Legends are the caller's, as in Vanilla: the `chart` item ships none. The
+  `dashboard_demo` item's `FortalDashboardChartLegend` is a worked example.
+- Bars round all four corners with `radius2`, as Vanilla's do. `mix_chart`
+  applies one radius to positive and negative bars alike, so rounding only
+  the top would round a negative bar at its baseline.
+- A marker on an axis bound is cut by the plot's clip. Give the data room
+  past its extremes with the axis bounds; turning clipping off would let
+  lines cross the axes when bounds are narrower than the data or the
+  viewport zooms.
