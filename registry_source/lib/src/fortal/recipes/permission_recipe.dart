@@ -41,7 +41,10 @@ FortalAgentPermissionRecipe fortalAgentPermissionRecipe({
     header: FlexBoxStyler()
         .spacing(FortalTokens.space2())
         .crossAxisAlignment(.center),
+    // Decisions sit at the trailing edge with the primary last, like Fortal
+    // dialog actions.
     actions: FlexBoxStyler()
+        .mainAxisAlignment(.end)
         .spacing(FortalTokens.space2())
         .padding(.top(FortalTokens.space2())),
     title: TextStyler()
