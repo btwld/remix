@@ -34,6 +34,7 @@ class VanillaLineChart extends StatelessWidget {
     this.tooltipBuilder,
     this.hitTestRadius = 10,
     this.mouseCursorResolver,
+    this.valueFormatter,
     this.semanticsLabel,
     this.semanticsValue,
     this.excludeFromSemantics = false,
@@ -73,6 +74,8 @@ class VanillaLineChart extends StatelessWidget {
 
   final ChartMouseCursorResolver<LineChartHit>? mouseCursorResolver;
 
+  final ChartAxisLabelFormatter? valueFormatter;
+
   final String? semanticsLabel;
 
   final String? semanticsValue;
@@ -102,6 +105,7 @@ class VanillaLineChart extends StatelessWidget {
       tooltipBuilder: this.tooltipBuilder,
       hitTestRadius: this.hitTestRadius,
       mouseCursorResolver: this.mouseCursorResolver,
+      valueFormatter: this.valueFormatter,
       semanticsLabel: this.semanticsLabel,
       semanticsValue: this.semanticsValue,
       excludeFromSemantics: this.excludeFromSemantics,
@@ -135,6 +139,7 @@ class VanillaBarChart extends StatelessWidget {
     this.tooltipBuilder,
     this.hitTestPadding = const EdgeInsets.all(4),
     this.mouseCursorResolver,
+    this.valueFormatter,
     this.semanticsLabel,
     this.semanticsValue,
     this.excludeFromSemantics = false,
@@ -172,6 +177,8 @@ class VanillaBarChart extends StatelessWidget {
 
   final ChartMouseCursorResolver<BarChartHit>? mouseCursorResolver;
 
+  final ChartAxisLabelFormatter? valueFormatter;
+
   final String? semanticsLabel;
 
   final String? semanticsValue;
@@ -197,6 +204,7 @@ class VanillaBarChart extends StatelessWidget {
       tooltipBuilder: this.tooltipBuilder,
       hitTestPadding: this.hitTestPadding,
       mouseCursorResolver: this.mouseCursorResolver,
+      valueFormatter: this.valueFormatter,
       semanticsLabel: this.semanticsLabel,
       semanticsValue: this.semanticsValue,
       excludeFromSemantics: this.excludeFromSemantics,
@@ -213,10 +221,9 @@ class VanillaBarChart extends StatelessWidget {
 /// Give the generated [VanillaPieChart] a bounded width and height because
 /// charts have no intrinsic size.
 ///
-/// The pie does not scale to that box: mix_chart draws each slice 80px wide
-/// whatever room it has, so a donut reaches [centerRadius] plus 80px and is
-/// clipped in a box less than twice that. Set the ring to fit the box:
-/// `style: PieChartStyler().slice(PieSliceStyler().radius(44))`.
+/// The default slice radius is at most 80 logical pixels and shrinks to fit
+/// the available box, accounting for the center hole and selection expansion.
+/// An explicit `PieSliceStyler().radius(...)` keeps caller-controlled sizing.
 ///
 /// [style] merges last, so one call site can replace any part of the recipe.
 class VanillaPieChart extends StatelessWidget {

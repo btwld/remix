@@ -100,7 +100,7 @@ LineChartStyler uiLineChartStyle({
       .axis(_uiAxisStyle())
       // Value ticks stay centered on their values, so the end ticks overhang
       // the plot by half a line.
-      .yAxis(_uiValueAxisStyle().fitInside(false))
+      .yAxis(ChartAxisStyler().fitInside(false))
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_uiGridStyle())
@@ -152,9 +152,6 @@ BarChartStyler uiBarChartStyle({
   final recipe = BarChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
-      // mix_chart clips the whole bar chart, labels included, so the end
-      // ticks stay fitted inside it.
-      .yAxis(_uiValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_uiGridStyle())
@@ -181,10 +178,9 @@ BarChartStyler uiBarChartStyle({
 /// [UiPieChart] through `mix_generator`. For advanced chart-level geometry,
 /// pass this recipe directly to [PieChart.style] and merge a [PieSliceStyler].
 ///
-/// The pie does not scale to its box: mix_chart draws each slice 80px wide
-/// whatever room it has, so a donut reaches [centerRadius] plus 80px and is
-/// clipped in a box less than twice that. Set the ring to fit the box:
-/// `style: PieChartStyler().slice(PieSliceStyler().radius(44))`.
+/// The default slice radius is at most 80 logical pixels and shrinks to fit
+/// the available box, accounting for the center hole and selection expansion.
+/// An explicit `PieSliceStyler().radius(...)` keeps caller-controlled sizing.
 @MixWidget(target: PieChart.new)
 PieChartStyler uiPieChartStyle({
   bool highContrast = false,
@@ -241,16 +237,13 @@ ChartFrameStyler _uiFrameStyle() => ChartFrameStyler()
 
 ChartAxisStyler _uiAxisStyle() => ChartAxisStyler()
     .showLabels(true)
-    .label(TextStyler().style(UiTokens.text1.mix()).color(UiTokens.gray11()))
+    .label(
+      TextStyler().style(UiTokens.text1.mix()).color(UiTokens.gray11()),
+    )
     .labelSpace(UiTokens.space2())
     .fitInside(true)
     .fitInsideDistance(UiTokens.space1())
     .drawBelowEverything(true);
-
-/// Reserves `space8` for value ticks of up to six characters, such as
-/// `1.250K`, and their label space, scaled with the theme like the label text.
-ChartAxisStyler _uiValueAxisStyle() =>
-    ChartAxisStyler().reservedSize(UiTokens.space8());
 
 ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
 
