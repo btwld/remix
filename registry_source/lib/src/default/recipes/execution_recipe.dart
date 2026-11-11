@@ -36,6 +36,9 @@ VanillaAgentExecutionRecipe vanillaAgentExecutionRecipe({
         .color(VanillaTokens.muted())
         .borderRadius(.circular(6))
         .padding(.all(12)),
+    // Long output scrolls inside the well instead of growing the card; the
+    // plan's own limit.
+    viewport: BoxStyler().maxHeight(220),
     actions: FlexBoxStyler().spacing(6).padding(.top(6)),
     tool: TextStyler().color(VanillaTokens.mutedForeground()).fontSize(12),
     title: TextStyler()
