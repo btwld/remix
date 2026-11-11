@@ -79,10 +79,14 @@ SidebarStyler uiSidebarStyle({
     destination:
         uiToggleStyle(variant: .ghost, size: .size2, highContrast: highContrast)
             .minHeight(UiTokens.sidebarDestinationMinHeight())
+            // Keeps labels clear of the row edges once text outgrows the
+            // minimum height.
             .padding(
               .only(
                 left: destinationLeftPadding,
                 right: destinationRightPadding,
+                top: UiTokens.space2(),
+                bottom: UiTokens.space2(),
               ),
             )
             .container(

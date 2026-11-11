@@ -30,6 +30,18 @@ MenuStyler fortalMenuStyle({
         FlexBoxStyler()
             .padding(.all(metrics.contentPadding))
             .borderRadius(.all(metrics.contentRadius))
+            // The panel edge, drawn in the foreground to take no layout space.
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BoxBorderMix.all(
+                  BorderSideMix(
+                    color: FortalTokens.gray7(),
+                    width: FortalTokens.borderWidth1(),
+                  ),
+                ),
+                borderRadius: BorderRadiusMix.all(metrics.contentRadius),
+              ),
+            )
             .color(FortalTokens.colorPanel())
             .decoration(
               BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),

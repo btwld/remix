@@ -63,7 +63,8 @@ const _chevronOpacity = 0.5;
 const _panelMaxHeight = PlaygroundTokens.panelMaxHeight;
 
 /// The closed control: a field showing the current value and a chevron, 36px
-/// tall with a 12px side inset, 8px above and below, and an 8px gap.
+/// tall with a 12px side inset, 4px above and below, and an 8px gap.
+/// See "Select trigger vertical padding" in the spec's Deviations.
 SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .animate(PlaygroundTokens.motion)
     .direction(.horizontal)
@@ -73,7 +74,7 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .padding(
       .symmetric(
         horizontal: PlaygroundTokens.s3,
-        vertical: PlaygroundTokens.s2,
+        vertical: PlaygroundTokens.s1,
       ),
     )
     .spacing(PlaygroundTokens.s2)

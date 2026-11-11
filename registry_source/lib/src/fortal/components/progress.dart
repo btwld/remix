@@ -118,5 +118,11 @@ ProgressStyler _fortalProgressSoftStyler(
 /// A 1px inset ring that follows the bar's radius.
 RemixBoxEffectLayerMix _fortalProgressInsetRing(Color color) =>
     RemixBoxEffectLayerMix(
-      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
+      shadows: [
+        RemixBoxShadowMix(
+          kind: .inset,
+          color: color,
+          spreadRadius: FortalTokens.borderWidth1(),
+        ),
+      ],
     );

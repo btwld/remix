@@ -65,6 +65,38 @@ String _id(HeroUiToggleButtonVariant variant) =>
     };
 
 void main() {
+  // `toggle-button.css` and `button.css` give an icon the same `gap-2` and
+  // `svg -mx-0.5`, so an icon widens a toggle as much as it widens the
+  // measured button.
+  testWidgets('an icon beside the label adds what it adds to a button', (
+    tester,
+  ) async {
+    for (final width in [375, 1024]) {
+      Future<double> measure({required bool icon}) async {
+        await tester.pumpHeroUi(
+          HeroUiToggleButton(
+            selected: false,
+            label: _label,
+            icon: icon ? _icon : null,
+            onChanged: (_) {},
+          ),
+          width: width.toDouble(),
+        );
+        await tester.pumpAndSettle();
+        return tester.getSize(find.byType(HeroUiToggleButton)).width;
+      }
+
+      final plain = await measure(icon: false);
+      final withIcon = await measure(icon: true);
+      expect(
+        withIcon - plain,
+        heroUiCase('button-leading', width: width).size.width -
+            heroUiCase('button-primary-md', width: width).size.width,
+        reason: '$width',
+      );
+    }
+  });
+
   test('variants and sizes follow HeroUI', () {
     expect(HeroUiToggleButtonVariant.values, [
       HeroUiToggleButtonVariant.defaultToggle,
@@ -120,10 +152,6 @@ void main() {
                     upstream.px('lineHeight'),
                   );
                   expect(label.fontWeight, FontWeight.w500);
-                  expect(
-                    spec.container.spec.flex!.spec.spacing,
-                    upstream.px('gap'),
-                  );
                 }
                 expect(
                   (spec.container.spec.boxSpec.decoration as BoxDecoration)

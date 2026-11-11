@@ -30,7 +30,7 @@ PopoverStyler uiPopoverStyle({
   };
 
   return PopoverStyler()
-      .border(.color(UiTokens.gray7()).width(1))
+      .border(.color(UiTokens.gray7()).width(UiTokens.borderWidth1()))
       .maxWidth(UiTokens.popoverMaxWidth())
       .padding(.all(padding))
       .borderRadius(.all(radius))

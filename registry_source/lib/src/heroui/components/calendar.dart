@@ -78,7 +78,12 @@ CalendarStyler heroUiCalendarStyle({
     .weekdaySpacing(12.0)
     .rowSpacing(4.0)
     .selectorSpacing(4.0)
-    .weekday(.style(HeroUiTokens.textXs.mix()).color(HeroUiTokens.muted()))
+    // `.calendar__header-cell`: `text-xs font-medium text-muted`.
+    .weekday(
+      .style(
+        HeroUiTokens.textXs.mix(),
+      ).fontWeight(.w500).color(HeroUiTokens.muted()),
+    )
     .day(
       CalendarDayStyler()
           .minWidth(36.0)

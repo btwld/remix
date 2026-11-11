@@ -294,6 +294,12 @@ and layers only what your project actually adds. Reaching for a bare
   `truncate` control flow; use layout constraints to select responsive values.
 - `FortalCode` and `FortalKbd` are standalone boxes, not inline text spans.
   Compose them in a `Wrap` or row alongside text.
+- `FortalCode` names the system monospace stack Menlo, Consolas, Bitstream Vera
+  Sans Mono and `monospace`. Flutter's web renderers register only the fonts an
+  app bundles, with Roboto as their default, so on the web code renders in
+  Roboto. To use a bundled monospace face, such as Geist Mono from
+  `package:remix_ui_fonts/remix_ui_fonts.dart`, set it on the label through
+  `style`: `BadgeStyler().label(TextStyler().fontFamily(RemixFonts.geistMono))`.
 - Link underline thickness follows the font's underline metrics. Keyboard
   focus uses the shared outside ring and suppresses the underline.
 - Kbd has only the flat `soft` variant and is inert, with keyboard-key semantics.

@@ -63,11 +63,11 @@ CalendarStyler uiCalendarStyle({
           .label(TextStyler().style(UiTokens.text2.mix()))
           .onToday(
             CalendarDayStyler()
-                .border(.color(UiTokens.gray9()).width(1))
+                .border(.color(UiTokens.gray9()).width(UiTokens.borderWidth1()))
                 .label(
                   TextStyler()
                       .color(UiTokens.gray12())
-                      .fontWeight(FontWeight.w700),
+                      .fontWeight(UiTokens.fontWeightBold()),
                 ),
           )
           .onSelected(

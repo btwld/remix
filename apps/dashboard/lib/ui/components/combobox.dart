@@ -56,7 +56,9 @@ ComboboxStyler uiComboboxStyle({
             .borderRadius(.all(UiTokens.radius3()))
             .color(UiTokens.colorPanel())
             .padding(.all(UiTokens.space1()))
-            .border(.all(.color(UiTokens.gray7()).width(1)))
+            .border(
+              .all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())),
+            )
             .decoration(
               BoxDecorationMix.create(boxShadow: UiTokens.shadow3.mix()),
             ),
@@ -72,13 +74,19 @@ ComboboxStyler uiComboboxStyle({
             )
             .margin(.bottom(1))
             .borderRadius(.all(UiTokens.radius2()))
-            .border(.all(.color(_optionReservedBorderColor()).width(1)))
+            .border(
+              .all(
+                .color(
+                  _optionReservedBorderColor(),
+                ).width(UiTokens.borderWidth1()),
+              ),
+            )
             .label(TextStyler(style: text.mix()).color(UiTokens.gray12()))
             .onHovered(.color(UiTokens.accentA3()))
             .onFocused(
-              .color(
-                UiTokens.accentA5(),
-              ).border(.all(.color(UiTokens.accent8()).width(1))),
+              .color(UiTokens.accentA5()).border(
+                .all(.color(UiTokens.accent8()).width(UiTokens.borderWidth1())),
+              ),
             )
             .onPressed(.color(UiTokens.accentA7())),
       )

@@ -1,3 +1,8 @@
+## 2.0.0-rc.1
+
+First release candidate for 2.0.0. Retains the behavior and public API of
+2.0.0-beta.2, including the breaking changes documented below.
+
 ## 2.0.0-beta.2
 
 ### Breaking changes

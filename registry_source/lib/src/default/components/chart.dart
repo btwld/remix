@@ -142,10 +142,9 @@ BarChartStyler vanillaBarChartStyle({
 /// Give the generated [VanillaPieChart] a bounded width and height because
 /// charts have no intrinsic size.
 ///
-/// The pie does not scale to that box: mix_chart draws each slice 80px wide
-/// whatever room it has, so a donut reaches [centerRadius] plus 80px and is
-/// clipped in a box less than twice that. Set the ring to fit the box:
-/// `style: PieChartStyler().slice(PieSliceStyler().radius(44))`.
+/// The default slice radius is at most 80 logical pixels and shrinks to fit
+/// the available box, accounting for the center hole and selection expansion.
+/// An explicit `PieSliceStyler().radius(...)` keeps caller-controlled sizing.
 ///
 /// [style] merges last, so one call site can replace any part of the recipe.
 @MixWidget(target: PieChart.new)
@@ -227,9 +226,9 @@ ChartAxisStyler _chartAxisStyle() => ChartAxisStyler()
           .style(VanillaTokens.textXs.mix())
           .color(VanillaTokens.mutedForeground()),
     )
-    .labelSpace(8)
+    .labelSpace(VanillaTokens.s2)
     .fitInside(true)
-    .fitInsideDistance(4)
+    .fitInsideDistance(VanillaTokens.s1)
     .drawBelowEverything(true);
 
 ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
@@ -238,7 +237,11 @@ ChartGridStyler _chartGridStyle() => ChartGridStyler()
     .show(true)
     .showHorizontal(true)
     .showVertical(false)
-    .stroke(ChartStrokeStyler().color(VanillaTokens.border()).width(1));
+    .stroke(
+      ChartStrokeStyler()
+          .color(VanillaTokens.border())
+          .width(VanillaTokens.strokeHairline),
+    );
 
 ChartTooltipStyler _chartTooltipStyle() =>
     ChartTooltipStyler.create(
@@ -247,7 +250,7 @@ ChartTooltipStyler _chartTooltipStyle() =>
           padding: Prop.token(_tooltipPaddingToken),
         )
         .backgroundColor(VanillaTokens.background())
-        .margin(8)
+        .margin(VanillaTokens.s2)
         .maxWidth(280)
         .fitHorizontally(true)
         .fitVertically(true)

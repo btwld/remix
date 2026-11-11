@@ -107,5 +107,11 @@ ProgressStyler _uiProgressSoftStyler(
 /// A 1px inset ring that follows the bar's radius.
 RemixBoxEffectLayerMix _uiProgressInsetRing(Color color) =>
     RemixBoxEffectLayerMix(
-      shadows: [RemixBoxShadowMix(kind: .inset, color: color, spreadRadius: 1)],
+      shadows: [
+        RemixBoxShadowMix(
+          kind: .inset,
+          color: color,
+          spreadRadius: UiTokens.borderWidth1(),
+        ),
+      ],
     );

@@ -112,33 +112,31 @@ ToggleStyler _uiToggleOutlineStyler(
 }
 
 ToggleStyler _uiToggleSizeStyler(UiToggleSize size) {
+  // The Button height scale, with content centred in it.
   return switch (size) {
     .size1 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(UiTokens.space2()))
-          .padding(.vertical(UiTokens.space1()))
           .borderRadius(.all(UiTokens.radius2()))
           .spacing(UiTokens.space1()),
       label: .style(UiTokens.text1.mix()),
       icon: .size(UiTokens.space3()),
-    ),
+    ).minHeight(UiTokens.space5()),
     .size2 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(UiTokens.space3()))
-          .padding(.vertical(UiTokens.space2()))
           .borderRadius(.all(UiTokens.radius2()))
           .spacing(UiTokens.space1()),
       label: .style(UiTokens.text2.mix()),
       icon: .size(UiTokens.space4()),
-    ),
+    ).minHeight(UiTokens.space6()),
     .size3 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(UiTokens.space4()))
-          .padding(.vertical(UiTokens.space2()))
           .borderRadius(.all(UiTokens.radius3()))
           .spacing(UiTokens.space2()),
       label: .style(UiTokens.text3.mix()),
       icon: .size(UiTokens.spinnerSize3()),
-    ),
+    ).minHeight(UiTokens.space7()),
   };
 }

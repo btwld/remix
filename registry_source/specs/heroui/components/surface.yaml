@@ -15,6 +15,7 @@ tokens:
 measurements:
   - {what: fill, value: "surface token per variant; transparent has none", cite: "surface-default, -secondary, -tertiary, -transparent"}
   - {what: text colour, value: "the variant's foreground token, inherited by content", cite: "surface-text-default, -secondary, -tertiary, -transparent"}
+  - {what: icon colour, value: "the same foreground: the CSS color reaches currentColor icons", cite: "surface.css text-surface-*-foreground"}
 approximations:
   - HeroUI's SurfaceContext, which lets nested fields pick a contrasting variant, is not carried; pass the variant to those components.
   - HeroUI's default variant is defaultSurface.

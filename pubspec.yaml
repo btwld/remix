@@ -78,11 +78,11 @@ melos:
         # 2.3.1's Prop fallback, where the latest source wins.
         mix: ^2.3.1
         mix_annotations: ^2.2.0-beta.1
-        mix_chart: ^0.0.1-beta.3
+        mix_chart: ^0.0.1
         crypto: ^3.0.7
         pub_semver: ^2.2.0
         yaml: ^3.1.3
-        naked_ui: ^2.0.0-beta.2
+        naked_ui: ^2.0.0-rc.1
         remix: ^1.0.0-beta.15
         remix_ui_icons: ^1.0.0-beta.1
         remix_ui_fonts: ^0.1.0
@@ -378,18 +378,25 @@ melos:
       run: dart run tool/generate_cli_reference.dart
       description: Regenerate the CLI reference from remix_cli's argument parsers
 
+    skills:index:
+      run: dart run tool/generate_skills_index.dart
+      description: Regenerate skills/index.yaml, the file list remix skills install reads at a pin
+
     docs:check:
       # The Fortal catalog is rendered from the same specification
-      # `fortal:check` holds against the recipes, and the CLI reference from
-      # remix_cli's parsers, so a stale page is drift, not a doc edit.
+      # `fortal:check` holds against the recipes, the CLI reference from
+      # remix_cli's parsers, and the skills manifest from the skill
+      # directories, so a stale page is drift, not a doc edit.
       steps:
         - dart test test/tool/install_pins_test.dart
         - dart run tool/validate_docs.dart
         - dart run tool/generate_fortal_catalog.dart --check
         - dart test test/tool/generate_cli_reference_test.dart
         - dart run tool/generate_cli_reference.dart --check
+        - dart test test/tool/generate_skills_index_test.dart
+        - dart run tool/generate_skills_index.dart --check
         - python3 tool/check_example_hosts.py
         - python3 -m unittest discover -s tool -p 'test_example_hosts.py'
         - python3 tool/check_tutorial_assets.py
         - python3 -m unittest discover -s tool -p 'test_tutorial_assets.py'
-      description: Validate docs, reject retired APIs, and fail on catalog or CLI reference drift
+      description: Validate docs, reject retired APIs, and fail on catalog, CLI reference, or skills manifest drift

@@ -140,6 +140,10 @@ It installs one editable recipe and generates `UiLineChart`, `UiBarChart`, and
 `UiPieChart`. Line series can draw lines or areas. Bar data can be grouped,
 stacked, or floating. A positive `centerRadius` makes a pie chart a donut.
 
+The chart item requires stable `mix_chart` 0.0.1. `UiLineChart` and
+`UiBarChart` accept `valueFormatter` for tooltip values, bar labels, and
+semantics. Use `ChartAxis.labelFormatter` for axis ticks.
+
 `mix_chart` retains the hard contract: data validation, rendering, pointer
 interaction, transitions, tooltips, and chart semantics. Your copied file owns
 the axes, grid, shared series geometry, and tooltip appearance. Series colors

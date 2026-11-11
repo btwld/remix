@@ -82,6 +82,40 @@ String _id(HeroUiToggleButtonVariant variant) =>
     variant == .defaultToggle ? 'default' : 'ghost';
 
 void main() {
+  testWidgets('an icon beside an item label adds what it adds to a button', (
+    tester,
+  ) async {
+    for (final width in [375, 1024]) {
+      Future<double> measure({required bool icon}) async {
+        await _pump(
+          tester,
+          HeroUiToggleButtonGroup<String>(
+            selectedValue: 'a',
+            onChanged: (_) {},
+            items: [
+              RemixToggleGroupItem(
+                value: 'a',
+                label: _one,
+                icon: icon ? _icon : null,
+              ),
+            ],
+          ),
+          width: width,
+        );
+        return tester.getSize(_itemBox(_one)).width;
+      }
+
+      final plain = await measure(icon: false);
+      final withIcon = await measure(icon: true);
+      expect(
+        withIcon - plain,
+        heroUiCase('button-leading', width: width).size.width -
+            heroUiCase('button-primary-md', width: width).size.width,
+        reason: '$width',
+      );
+    }
+  });
+
   for (final mode in _modes) {
     for (final width in [375, 1024]) {
       for (final variant in HeroUiToggleButtonVariant.values) {
