@@ -115,33 +115,34 @@ ToggleStyler _fortalToggleOutlineStyler(
 }
 
 ToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
+  // Toggles share the Button height scale (24/32/40) so they line up with
+  // buttons, fields and selects of the same size. Content is centred in that
+  // height instead of deriving it from vertical padding, which made a labelled
+  // size-2 toggle 36px and icon-only size-1/size-3 toggles 20px/36px.
   return switch (size) {
     .size1 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(FortalTokens.space2()))
-          .padding(.vertical(FortalTokens.space1()))
           .borderRadius(.all(FortalTokens.radius2()))
           .spacing(FortalTokens.space1()),
       label: .style(FortalTokens.text1.mix()),
       icon: .size(FortalTokens.space3()),
-    ),
+    ).minHeight(FortalTokens.space5()),
     .size2 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(FortalTokens.space3()))
-          .padding(.vertical(FortalTokens.space2()))
           .borderRadius(.all(FortalTokens.radius2()))
           .spacing(FortalTokens.space1()),
       label: .style(FortalTokens.text2.mix()),
       icon: .size(FortalTokens.space4()),
-    ),
+    ).minHeight(FortalTokens.space6()),
     .size3 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(FortalTokens.space4()))
-          .padding(.vertical(FortalTokens.space2()))
           .borderRadius(.all(FortalTokens.radius3()))
           .spacing(FortalTokens.space2()),
       label: .style(FortalTokens.text3.mix()),
       icon: .size(FortalTokens.spinnerSize3()),
-    ),
+    ).minHeight(FortalTokens.space7()),
   };
 }

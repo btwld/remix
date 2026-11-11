@@ -112,33 +112,34 @@ ToggleStyler _uiToggleOutlineStyler(
 }
 
 ToggleStyler _uiToggleSizeStyler(UiToggleSize size) {
+  // Toggles share the Button height scale (24/32/40) so they line up with
+  // buttons, fields and selects of the same size. Content is centred in that
+  // height instead of deriving it from vertical padding, which made a labelled
+  // size-2 toggle 36px and icon-only size-1/size-3 toggles 20px/36px.
   return switch (size) {
     .size1 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(UiTokens.space2()))
-          .padding(.vertical(UiTokens.space1()))
           .borderRadius(.all(UiTokens.radius2()))
           .spacing(UiTokens.space1()),
       label: .style(UiTokens.text1.mix()),
       icon: .size(UiTokens.space3()),
-    ),
+    ).minHeight(UiTokens.space5()),
     .size2 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(UiTokens.space3()))
-          .padding(.vertical(UiTokens.space2()))
           .borderRadius(.all(UiTokens.radius2()))
           .spacing(UiTokens.space1()),
       label: .style(UiTokens.text2.mix()),
       icon: .size(UiTokens.space4()),
-    ),
+    ).minHeight(UiTokens.space6()),
     .size3 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(UiTokens.space4()))
-          .padding(.vertical(UiTokens.space2()))
           .borderRadius(.all(UiTokens.radius3()))
           .spacing(UiTokens.space2()),
       label: .style(UiTokens.text3.mix()),
       icon: .size(UiTokens.spinnerSize3()),
-    ),
+    ).minHeight(UiTokens.space7()),
   };
 }

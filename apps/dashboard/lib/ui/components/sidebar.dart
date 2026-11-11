@@ -79,10 +79,14 @@ SidebarStyler uiSidebarStyle({
     destination:
         uiToggleStyle(variant: .ghost, size: .size2, highContrast: highContrast)
             .minHeight(UiTokens.sidebarDestinationMinHeight())
+            // Destinations keep their own vertical inset; the toggle recipe
+            // centres content in a fixed height instead of padding it.
             .padding(
               .only(
                 left: destinationLeftPadding,
                 right: destinationRightPadding,
+                top: UiTokens.space2(),
+                bottom: UiTokens.space2(),
               ),
             )
             .container(

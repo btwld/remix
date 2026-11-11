@@ -212,6 +212,10 @@ state filters the painted subtree, so labels, icons, spinners and the focus
 ring keep their colours, and `fortalClearFilter()` still clears a caller's
 own filter when disabled.
 
+Toggles share the Button height scale: sizes 1–3 paint at least 24/32/40px,
+labelled or icon-only, with content centred and horizontal padding only, so a
+toggle lines up with buttons, fields and selects of the same size.
+
 The polish board presents all families and sizes in light/dark pairs on a 4px
 grid. Check padding against height, text centering, matched icon size/gap,
 40px hit targets, and distinct hover/press/disabled states in both modes.
