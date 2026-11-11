@@ -2,9 +2,12 @@
 
 ### Documentation
 
-- The README installs the CLI once with
-  `dart pub global activate remix_cli '^1.0.0-beta.1'` and runs it as
+- Install the CLI globally with
+  `dart pub global activate remix_cli '^1.0.0-beta.2'` and run plain
   `remix init` and `remix add` (#434).
+- Document `remix skills install` for copying agent guidance from a project's
+  pinned registry revision, and link the complete Start with AI setup prompt
+  (#428). The CLI is released independently.
 
 ## 1.0.0-rc.1
 
