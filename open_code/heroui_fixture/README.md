@@ -1,7 +1,9 @@
 # HeroUI installed-source gallery
 
 A pre-install app, not a workspace package. `tool/check_open_code.dart` creates
-a fresh Flutter app, copies this directory's `lib/` and `test/`, installs every
+a fresh Flutter app, copies `lib/main.dart`, `test/open_code_test.dart` and
+`test/theme_modes_test.dart` from this directory (the files it lists in
+`_fixtureAppFiles`, so a new test belongs in one of them), installs every
 HeroUI item with the `Acme` prefix (each one alone as `Solo` first), then runs
 `flutter analyze` and `flutter test`.
 
