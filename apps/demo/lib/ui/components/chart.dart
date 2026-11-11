@@ -152,7 +152,9 @@ PieChartStyler fortalPieChartStyle({
   final recipe = PieChartStyler()
       .frame(_fortalFrameStyle())
       .centerRadius(centerRadius)
-      .centerColor(FortalTokens.colorPanel())
+      // The hole shows whatever the chart sits on. A panel-colored disc stands
+      // out on the page and doubles the tint of a translucent panel.
+      .centerColor(MixColors.transparent)
       .sliceSpacing(FortalTokens.borderWidth2())
       .selectedSliceRadiusOffset(FortalTokens.space2())
       .slice(

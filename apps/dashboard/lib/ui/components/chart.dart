@@ -152,7 +152,9 @@ PieChartStyler uiPieChartStyle({
   final recipe = PieChartStyler()
       .frame(_uiFrameStyle())
       .centerRadius(centerRadius)
-      .centerColor(UiTokens.colorPanel())
+      // The hole shows whatever the chart sits on. A panel-colored disc stands
+      // out on the page and doubles the tint of a translucent panel.
+      .centerColor(MixColors.transparent)
       .sliceSpacing(UiTokens.borderWidth2())
       .selectedSliceRadiusOffset(UiTokens.space2())
       .slice(

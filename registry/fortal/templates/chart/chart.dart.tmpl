@@ -152,7 +152,9 @@ PieChartStyler {{valuePrefix}}PieChartStyle({
   final recipe = PieChartStyler()
       .frame(_{{valuePrefix}}FrameStyle())
       .centerRadius(centerRadius)
-      .centerColor({{typePrefix}}Tokens.colorPanel())
+      // The hole shows whatever the chart sits on. A panel-colored disc stands
+      // out on the page and doubles the tint of a translucent panel.
+      .centerColor(MixColors.transparent)
       .sliceSpacing({{typePrefix}}Tokens.borderWidth2())
       .selectedSliceRadiusOffset({{typePrefix}}Tokens.space2())
       .slice(

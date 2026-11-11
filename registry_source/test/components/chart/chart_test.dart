@@ -9,6 +9,8 @@ import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
+import '../../helpers/pixels.dart';
+
 void main() {
   setUpAll(() async {
     final loader = FontLoader(RemixFonts.geist);
@@ -205,6 +207,45 @@ void main() {
         },
       );
     }
+
+    testWidgets('a donut hole shows the surface the chart sits on', (
+      tester,
+    ) async {
+      final key = GlobalKey();
+      late Color page;
+
+      await tester.pumpWidget(
+        _ChartHost(
+          child: Builder(
+            builder: (context) {
+              page = FortalTokens.colorBackground.resolve(context);
+              return Center(
+                child: RepaintBoundary(
+                  key: key,
+                  child: ColoredBox(
+                    color: page,
+                    child: SizedBox.square(
+                      dimension: 160,
+                      child: FortalPieChart(
+                        centerRadius: 40,
+                        style: PieChartStyler().slice(
+                          PieSliceStyler().radius(30),
+                        ),
+                        slices: [_pieSlice()],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final pixels = await capturePixels(tester, key);
+      expectNearColor(pixels.at(80 * pixelScale, 80 * pixelScale), page);
+    });
   });
 
   group('Fortal chart widgets', () {
