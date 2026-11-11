@@ -1,0 +1,62 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../components/answer.dart';
+import '../components/button.dart';
+import '../components/card.dart';
+import '../components/disclosure.dart';
+import '../theme/theme.dart';
+
+/// Styles for the answer surface: a HeroUI card, a disclosure for its
+/// sources, and ghost `sm` icon buttons for copy and retry.
+@immutable
+final class {{typePrefix}}AgentAnswerRecipe {
+  const {{typePrefix}}AgentAnswerRecipe({
+    required this.style,
+    required this.surfaceStyle,
+    required this.sourcesStyle,
+    required this.copyStyle,
+    required this.retryStyle,
+  });
+  final {{typePrefix}}AnswerStyler style;
+  final CardStyler surfaceStyle;
+  final DisclosureStyler sourcesStyle;
+  final IconButtonStyler copyStyle;
+  final IconButtonStyler retryStyle;
+}
+
+{{typePrefix}}AgentAnswerRecipe {{valuePrefix}}AgentAnswerRecipe({
+  {{typePrefix}}AnswerStyler style = const {{typePrefix}}AnswerStyler.create(),
+  CardStyler surfaceStyle = const CardStyler.create(),
+  DisclosureStyler sourcesStyle = const DisclosureStyler.create(),
+  IconButtonStyler copyStyle = const IconButtonStyler.create(),
+  IconButtonStyler retryStyle = const IconButtonStyler.create(),
+}) => {{typePrefix}}AgentAnswerRecipe(
+  style: {{typePrefix}}AnswerStyler(
+    body: BoxStyler(),
+    actions: FlexBoxStyler().spacing(4).padding(.top(8)),
+    feedback: BoxStyler().padding(.top(6)),
+    sourcesLabel: TextStyler()
+        .style({{typePrefix}}Tokens.textSm.mix())
+        .color({{typePrefix}}Tokens.foreground()),
+    indicator: IconStyler().color({{typePrefix}}Tokens.foreground()).size(16),
+  ).merge(style),
+  surfaceStyle: {{valuePrefix}}CardStyle(style: surfaceStyle),
+  sourcesStyle: {{valuePrefix}}DisclosureStyle(
+    style: DisclosureStyler()
+        .container(BoxStyler().margin(.top(4)))
+        .padding(.symmetric(vertical: 10))
+        .content(BoxStyler().padding(.bottom(8)))
+        .merge(sourcesStyle),
+  ),
+  copyStyle: {{valuePrefix}}IconButtonStyle(
+    variant: .ghost,
+    size: .sm,
+    style: copyStyle,
+  ),
+  retryStyle: {{valuePrefix}}IconButtonStyle(
+    variant: .ghost,
+    size: .sm,
+    style: retryStyle,
+  ),
+);

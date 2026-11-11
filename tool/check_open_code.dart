@@ -246,9 +246,10 @@ const _fortalPreset = _PresetContract(
   ],
 );
 
-/// HeroUI's items. `app_bar`, `chart`, `dashboard_shell`, `icons`, `sidebar`
-/// and `sidebar_layout` are extensions with no upstream family; see
-/// `extensions` in registry_source/reference/heroui_3_2_6/families.json.
+/// HeroUI's items. `app_bar`, `chart`, `dashboard_shell`, `icons`, `sidebar`,
+/// `sidebar_layout` and the Agent items are extensions with no upstream
+/// family; see `extensions` in
+/// registry_source/reference/heroui_3_2_6/families.json.
 const _herouiRegistryItems = [
   'icons',
   'accordion',
@@ -304,15 +305,14 @@ const _herouiRegistryItems = [
   'toggle_button_group',
   'tooltip',
   'typography',
+  ..._agentRegistryItems,
 ];
 
 const _herouiPreset = _PresetContract(
   name: 'heroui',
   fixtureDirectory: 'heroui_fixture',
   registryItems: _herouiRegistryItems,
-  foundationItems: {'theme'},
   independentItems: null,
-  specStylerItems: [],
   requiredRuntimeDependencies: [
     'remix',
     'mix_annotations',

@@ -1392,6 +1392,14 @@ Future<void> main(List<String> arguments) async {
           'textarea',
           'toast',
           'toggle_button_group',
+          'activity_recipe',
+          'answer_recipe',
+          'composer_recipe',
+          'execution_recipe',
+          'message_recipe',
+          'permission_recipe',
+          'plan_recipe',
+          'transcript_recipe',
         ]),
       );
     });
@@ -1659,13 +1667,15 @@ import 'package:flutter/widgets.dart'
           'remix_ui_icons',
         ]),
       );
+      // The Agent components are `@MixableSpec` source, so HeroUI installs
+      // the same scoped spec builder as the other presets.
       final app = Directory('${sandbox.path}/heroui');
       _writeInstalledUi(app, preset: 'heroui');
       expect(checker.installedUiProblem(app, preset: 'heroui'), isNull);
       File('${app.path}/build.yaml').writeAsStringSync('targets: {}\n');
       expect(
         checker.installedUiProblem(app, preset: 'heroui'),
-        contains('unnecessary'),
+        contains('scoped Agent builder contract'),
       );
       expect(
         checker.parseConsumerCheckOptions([
@@ -2026,8 +2036,7 @@ dev_dependencies:
 void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
   final files = checker.installedUiFilesForTest(preset: preset);
   app.createSync(recursive: true);
-  if (preset != 'heroui') {
-    File('${app.path}/build.yaml').writeAsStringSync('''targets:
+  File('${app.path}/build.yaml').writeAsStringSync('''targets:
   \$default:
     builders:
       mix_generator:spec_styler_generator:
@@ -2042,7 +2051,6 @@ void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
           - lib/ui/components/plan.dart
           - lib/ui/components/transcript.dart
 ''');
-  }
   for (final relative in files) {
     final file = File('${app.path}/lib/ui/$relative');
     file.parent.createSync(recursive: true);

@@ -244,6 +244,7 @@ class _GalleryState extends State<Gallery> {
     (300, _toastsAndAlerts()),
     (330, _table()),
     (560, _charts()),
+    (620, _agent()),
     (420, _dashboard()),
   ];
 
@@ -1069,6 +1070,61 @@ class _GalleryState extends State<Gallery> {
             PieSlice(id: 'review', label: 'Review', value: 10),
           ],
         ),
+      ),
+    ]);
+  }
+
+  Widget _agent() {
+    final message = acmeAgentMessageRecipe();
+    final answer = acmeAgentAnswerRecipe();
+    final permission = acmeAgentPermissionRecipe();
+    final composer = acmeAgentComposerRecipe();
+    return _card('Agent surfaces', [
+      _caption(
+        'The shared Agent behavior with HeroUI card, button, disclosure, '
+        'and text area recipes. An extension: HeroUI web has none.',
+      ),
+      AcmeMessage(
+        role: AcmeRole.user,
+        surfaceStyle: message.surfaceStyle,
+        style: message.style,
+        child: const Text('Run the checkout checks.'),
+      ),
+      AcmePermission(
+        tool: 'terminal',
+        title: 'Run flutter test?',
+        parameters: const [
+          RemixDataListItem(label: 'Command', value: 'flutter test'),
+        ],
+        onAllowOnce: () => setState(() => _lastAction = 'allow once'),
+        onAlwaysAllow: () => setState(() => _lastAction = 'always allow'),
+        onDeny: () => setState(() => _lastAction = 'deny'),
+        surfaceStyle: permission.surfaceStyle,
+        detailsStyle: permission.detailsStyle,
+        parametersStyle: permission.parametersStyle,
+        allowOnceStyle: permission.allowOnceStyle,
+        alwaysAllowStyle: permission.alwaysAllowStyle,
+        denyStyle: permission.denyStyle,
+        style: permission.style,
+      ),
+      AcmeAnswer(
+        status: AcmeAnswerStatus.complete,
+        onCopy: () => setState(() => _lastAction = 'copy'),
+        surfaceStyle: answer.surfaceStyle,
+        sourcesStyle: answer.sourcesStyle,
+        copyStyle: answer.copyStyle,
+        retryStyle: answer.retryStyle,
+        style: answer.style,
+        child: const Text('The checks pass. The flow is ready for review.'),
+      ),
+      AcmeComposer(
+        hintText: 'Ask a follow-up…',
+        onSubmit: (_) => setState(() => _lastAction = 'send'),
+        surfaceStyle: composer.surfaceStyle,
+        fieldStyle: composer.fieldStyle,
+        submitStyle: composer.submitStyle,
+        stopStyle: composer.stopStyle,
+        style: composer.style,
       ),
     ]);
   }

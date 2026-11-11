@@ -913,6 +913,48 @@ const herouiPreset = PresetSpec(
       exports: ['recipes/dashboard/dashboard_shell.dart'],
     ),
   ],
+  // The Agent recipes are extensions too: HeroUI's card, button, disclosure
+  // and text area styles passed into the shared Agent stylers.
+  recipeItems: agentRecipes,
+  behavior: agentBehavior,
+);
+
+/// Agent behavior merged into the HeroUI preset, as above.
+const herouiAgentExtension = PresetSpec(
+  name: 'heroui',
+  sourceRoot: 'registry_source/lib/src/agent',
+  sourcePackage: 'registry_source',
+  typeWord: 'Agent',
+  valueWord: 'agent',
+  componentDirectory: 'components',
+  extensionDirectory: 'templates/agent',
+  sharedItems: [
+    SharedItemSpec(
+      name: 'models',
+      directory: 'models',
+      requiredFile: 'models/statuses.dart',
+      packages: {},
+      exports: [
+        'models/activity_item.dart',
+        'models/plan_item.dart',
+        'models/statuses.dart',
+      ],
+    ),
+    SharedItemSpec(
+      name: 'support',
+      directory: 'support',
+      requiredFile: 'support/functional_glyph.dart',
+      packages: {},
+      // As in the default extension: the theme item owns the Remix floor.
+      registryDependencies: ['theme'],
+      exports: [],
+    ),
+  ],
+  copiedItems: [],
+  ignoredSourceFiles: {},
+  floorPackages: {'mix_annotations', 'build_runner', 'mix_generator'},
+  detectedPackages: const [],
+  composedRegistryDependencies: {},
 );
 
 /// Every remote preset and the specs that derive it, writer first.
@@ -922,7 +964,7 @@ const herouiPreset = PresetSpec(
 const presetSpecs = <String, List<PresetSpec>>{
   'vanilla': [defaultPreset, defaultAgentExtension],
   'fortal': [fortalPreset, fortalAgentExtension],
-  'heroui': [herouiPreset],
+  'heroui': [herouiPreset, herouiAgentExtension],
 };
 
 PresetOutput mergePresetOutputs(PresetOutput base, PresetOutput extension) {

@@ -1,0 +1,26 @@
+component: Composer recipe
+widget: heroUiAgentComposerRecipe
+target: "AgentComposerStyler and the child stylers of composer.yaml"
+status: implemented
+extension: "No Agent family in @heroui/react 3.2.6. HeroUI's own recipes passed into the shared Agent stylers, as Vanilla and Fortal pass theirs."
+source:
+  ref: none
+  derivedFrom: ["specs/components/composer.yaml", "specs/heroui/tokens.json"]
+recipes: "surface: heroUiCardStyle (default card); field: heroUiTextAreaStyle secondary; submit: heroUiIconButtonStyle primary md; stop: heroUiIconButtonStyle danger md"
+anatomy: "as composer.yaml"
+variants: []
+sizes: {supported: [], default: null}
+states: "the states of the HeroUI recipes it passes"
+tokens:
+  - "the card recipe"
+  - "the text area recipe with transparent fill in rest, hover and focus; focus (its 2px ring)"
+  - "accent, accent-foreground (submit); danger, danger-foreground (stop)"
+measurements:
+  - {what: surface, value: "the card with padding 12", cite: "designed"}
+  - {what: field, value: "at least 56 high, 4 padding, no fill or shadow of its own", cite: "designed"}
+  - {what: submit and stop, value: "md icon buttons: 40 square below 768px, 36 from it", cite: "designed"}
+  - {what: toolbar, value: "8 between controls, 8 above", cite: "designed"}
+approximations:
+  - "No upstream reference: HeroUI web 3.2.6 has no Agent surfaces, so every value above is designed from existing HeroUI tokens and recipes, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "Spacing follows the Vanilla recipe; type uses HeroUI's text-xs and text-sm tokens in place of Vanilla's literal 12, 13 and 14."
+  - "The field keeps the text area focus ring (2px focus, no offset) inside the card; Vanilla and Fortal remove the field border instead."

@@ -6,7 +6,6 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:registry_source/src/heroui/components/card.dart';
 import 'package:registry_source/src/heroui/components/chart.dart';
 import 'package:registry_source/src/heroui/theme/theme.dart';
-import 'package:remix/remix.dart';
 
 import '../helpers/heroui.dart';
 

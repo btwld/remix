@@ -129,12 +129,14 @@ void main() {
           if (file.path.endsWith('.dart') && !file.path.endsWith('.g.dart'))
             file.uri.pathSegments.last.replaceAll('.dart', ''),
       };
-      // Besides the components: the `icons` file item and the grouped
-      // `dashboard_shell` recipe.
+      // Besides the components: the `icons` file item, the grouped
+      // `dashboard_shell` recipe, and the Agent recipes. The Agent behavior
+      // they style merges in from `herouiAgentExtension`.
       expect(items.keys.toSet(), {
         'theme',
         'icons',
         'dashboard_shell',
+        ...agentRecipes,
         ...components,
       });
       final checkbox = items['checkbox'] as YamlMap;
@@ -255,9 +257,75 @@ void main() {
   );
 
   test(
+    'HeroUI merges Agent behavior and recipes without changing base output',
+    () {
+      final root = Directory.current.absolute;
+      final base = PresetBuilder.forRepository(
+        root,
+        spec: herouiPreset,
+      ).derive();
+      final agent = PresetBuilder.forRepository(
+        root,
+        spec: herouiAgentExtension,
+      ).derive();
+      final merged = mergePresetOutputs(base, agent);
+
+      for (final entry in base.files.entries) {
+        if (entry.key == 'registry.yaml') continue;
+        expect(merged.files[entry.key], entry.value, reason: entry.key);
+      }
+      // The behavior is the same source Vanilla installs, byte for byte.
+      final vanilla = mergePresetOutputs(
+        PresetBuilder.forRepository(root).derive(),
+        PresetBuilder.forRepository(root, spec: defaultAgentExtension).derive(),
+      );
+      final behavior = agent.files.keys.where(
+        (path) => path.startsWith('templates/agent/'),
+      );
+      expect(behavior, isNotEmpty);
+      for (final path in behavior) {
+        expect(merged.files[path], vanilla.files[path], reason: path);
+      }
+
+      final items =
+          (loadYaml(merged.files['registry.yaml']!) as YamlMap)['items']
+              as YamlMap;
+      expect(_strings((items['support'] as YamlMap)['registryDependencies']), [
+        'theme',
+      ]);
+      List<String> dependencies(String item) =>
+          _strings((items[item] as YamlMap)['registryDependencies']);
+      // Each recipe styles its behavior with HeroUI's own recipes.
+      expect(
+        dependencies('answer_recipe'),
+        unorderedEquals(['theme', 'answer', 'button', 'card', 'disclosure']),
+      );
+      expect(
+        dependencies('composer_recipe'),
+        unorderedEquals(['theme', 'composer', 'button', 'card', 'textarea']),
+      );
+      expect(
+        dependencies('permission_recipe'),
+        unorderedEquals([
+          'theme',
+          'permission',
+          'button',
+          'card',
+          'disclosure',
+        ]),
+      );
+      expect(dependencies('transcript_recipe'), ['transcript']);
+      final recipe = merged.files['templates/recipes/answer_recipe.dart.tmpl']!;
+      expect(recipe, contains('{{valuePrefix}}IconButtonStyle'));
+      expect(recipe, contains('{{valuePrefix}}CardStyle'));
+      expect(recipe, isNot(contains('HeroUi')));
+    },
+  );
+
+  test(
     'recipes derive against installed behavior, not the authoring import',
     () {
-      for (final spec in [defaultPreset, fortalPreset]) {
+      for (final spec in [defaultPreset, fortalPreset, herouiPreset]) {
         final output = PresetBuilder.forRepository(
           Directory.current.absolute,
           spec: spec,
