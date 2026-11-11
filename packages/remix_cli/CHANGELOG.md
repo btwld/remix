@@ -1,3 +1,14 @@
+## 1.0.0-beta.2
+
+### Features
+
+- Add `remix skills install` to copy agent skills from the project's pinned
+  registry revision, record file digests in `remix.skills.json`, and maintain
+  the project instruction block. Preserve unrelated files and refuse to
+  overwrite locally modified skill files.
+- Add `remix list`, command-specific help, and plain-language errors for
+  discovering and installing registry components.
+
 ## 1.0.0-beta.1
 
 ### Features
