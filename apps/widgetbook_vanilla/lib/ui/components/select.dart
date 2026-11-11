@@ -63,7 +63,8 @@ const _chevronOpacity = 0.5;
 const _panelMaxHeight = VanillaTokens.panelMaxHeight;
 
 /// The closed control: a field showing the current value and a chevron, 36px
-/// tall with a 12px side inset, 8px above and below, and an 8px gap.
+/// tall with a 12px side inset, 4px above and below, and an 8px gap.
+/// See "Select trigger vertical padding" in the spec's Deviations.
 SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .animate(VanillaTokens.motion)
     .direction(.horizontal)
@@ -71,7 +72,7 @@ SelectTriggerStyler _triggerStyle() => SelectTriggerStyler()
     .mainAxisAlignment(.spaceBetween)
     .minHeight(VanillaTokens.controlMd)
     .padding(
-      .symmetric(horizontal: VanillaTokens.s3, vertical: VanillaTokens.s2),
+      .symmetric(horizontal: VanillaTokens.s3, vertical: VanillaTokens.s1),
     )
     .spacing(VanillaTokens.s2)
     .color(_triggerFill())
