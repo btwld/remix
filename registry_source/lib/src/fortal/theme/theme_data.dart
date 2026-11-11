@@ -422,8 +422,6 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.tabActiveLetterSpacing2: -0.14 * scaling,
     FortalTokens.selectIndicatorWidth1: 20.0 * scaling,
     FortalTokens.selectIndicatorSize2: 10.0 * scaling,
-    // The trigger chevron keeps the reference's fixed 9/11px glyph at every
-    // scaling (Radix Themes 3.3.0 icons.tsx L53-58, select.css L209-212).
     FortalTokens.selectTriggerIndicatorSize12: 9.0,
     FortalTokens.selectTriggerIndicatorSize3: 11.0,
     FortalTokens.selectGhostMarginX12: -8.0 * scaling,

@@ -87,8 +87,8 @@ SidebarStyler {{valuePrefix}}SidebarStyle({
               highContrast: highContrast,
             )
             .minHeight({{typePrefix}}Tokens.sidebarDestinationMinHeight())
-            // Destinations keep their own vertical inset; the toggle recipe
-            // centres content in a fixed height instead of padding it.
+            // Keeps labels clear of the row edges once text outgrows the
+            // minimum height.
             .padding(
               .only(
                 left: destinationLeftPadding,

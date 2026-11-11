@@ -115,10 +115,7 @@ ToggleStyler _{{valuePrefix}}ToggleOutlineStyler(
 }
 
 ToggleStyler _{{valuePrefix}}ToggleSizeStyler({{typePrefix}}ToggleSize size) {
-  // Toggles share the Button height scale (24/32/40) so they line up with
-  // buttons, fields and selects of the same size. Content is centred in that
-  // height instead of deriving it from vertical padding, which made a labelled
-  // size-2 toggle 36px and icon-only size-1/size-3 toggles 20px/36px.
+  // The Button height scale, with content centred in it.
   return switch (size) {
     .size1 => ToggleStyler(
       container: FlexBoxStyler()

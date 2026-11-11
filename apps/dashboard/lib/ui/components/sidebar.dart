@@ -79,8 +79,8 @@ SidebarStyler uiSidebarStyle({
     destination:
         uiToggleStyle(variant: .ghost, size: .size2, highContrast: highContrast)
             .minHeight(UiTokens.sidebarDestinationMinHeight())
-            // Destinations keep their own vertical inset; the toggle recipe
-            // centres content in a fixed height instead of padding it.
+            // Keeps labels clear of the row edges once text outgrows the
+            // minimum height.
             .padding(
               .only(
                 left: destinationLeftPadding,
