@@ -39,7 +39,12 @@ PlaygroundAgentPermissionRecipe playgroundAgentPermissionRecipe({
 }) => PlaygroundAgentPermissionRecipe(
   style: PlaygroundPermissionStyler(
     header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
-    actions: FlexBoxStyler().spacing(8).padding(.top(12)),
+    // Decisions sit at the trailing edge with the primary last, like Playground
+    // dialog actions.
+    actions: FlexBoxStyler()
+        .mainAxisAlignment(.end)
+        .spacing(8)
+        .padding(.top(12)),
     title: TextStyler()
         .color(PlaygroundTokens.foreground())
         .fontWeight(FontWeight.w600),
@@ -55,8 +60,17 @@ PlaygroundAgentPermissionRecipe playgroundAgentPermissionRecipe({
         .color(PlaygroundTokens.foreground())
         .fontSize(13),
     toolIcon: IconStyler().color(PlaygroundTokens.foreground()).size(16),
-    statusIcon: IconStyler().color(PlaygroundTokens.primary()).size(12),
+    // The status mark takes its outcome's color from the status box below;
+    // its glyph and label already name the outcome.
+    statusIcon: IconStyler().size(12),
     indicator: IconStyler().color(PlaygroundTokens.foreground()).size(16),
+    pendingStatus: _statusMark(PlaygroundTokens.primary),
+    decidingStatus: _statusMark(PlaygroundTokens.primary),
+    allowedStatus: _statusMark(PlaygroundTokens.primary),
+    runningStatus: _statusMark(PlaygroundTokens.primary),
+    completedStatus: _statusMark(PlaygroundTokens.primary),
+    deniedStatus: _statusMark(PlaygroundTokens.mutedForeground),
+    errorStatus: _statusMark(PlaygroundTokens.destructive),
   ).merge(style),
   surfaceStyle: playgroundCardStyle(
     style: CardStyler().padding(.all(PlaygroundTokens.s4)).merge(surfaceStyle),
@@ -75,3 +89,6 @@ PlaygroundAgentPermissionRecipe playgroundAgentPermissionRecipe({
   ),
   denyStyle: playgroundButtonStyle(variant: .ghost, style: denyStyle),
 );
+
+BoxStyler _statusMark(ColorToken color) =>
+    BoxStyler().wrap(.iconTheme(color: color()));

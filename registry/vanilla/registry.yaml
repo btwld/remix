@@ -228,6 +228,7 @@ items:
 
   composer_recipe:
     registryDependencies:
+      - theme
       - card
       - composer
       - icon_button
@@ -834,6 +835,8 @@ items:
 
   transcript_recipe:
     registryDependencies:
+      - theme
+      - icon_button
       - transcript
     files:
       - source: templates/recipes/transcript_recipe.dart.tmpl

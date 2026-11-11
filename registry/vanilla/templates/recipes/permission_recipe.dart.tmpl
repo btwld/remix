@@ -39,7 +39,12 @@ final class {{typePrefix}}AgentPermissionRecipe {
 }) => {{typePrefix}}AgentPermissionRecipe(
   style: {{typePrefix}}PermissionStyler(
     header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
-    actions: FlexBoxStyler().spacing(8).padding(.top(12)),
+    // Decisions sit at the trailing edge with the primary last, like {{typePrefix}}
+    // dialog actions.
+    actions: FlexBoxStyler()
+        .mainAxisAlignment(.end)
+        .spacing(8)
+        .padding(.top(12)),
     title: TextStyler()
         .color({{typePrefix}}Tokens.foreground())
         .fontWeight(FontWeight.w600),
@@ -53,8 +58,17 @@ final class {{typePrefix}}AgentPermissionRecipe {
     status: TextStyler().color({{typePrefix}}Tokens.mutedForeground()).fontSize(12),
     detailsLabel: TextStyler().color({{typePrefix}}Tokens.foreground()).fontSize(13),
     toolIcon: IconStyler().color({{typePrefix}}Tokens.foreground()).size(16),
-    statusIcon: IconStyler().color({{typePrefix}}Tokens.primary()).size(12),
+    // The status mark takes its outcome's color from the status box below;
+    // its glyph and label already name the outcome.
+    statusIcon: IconStyler().size(12),
     indicator: IconStyler().color({{typePrefix}}Tokens.foreground()).size(16),
+    pendingStatus: _statusMark({{typePrefix}}Tokens.primary),
+    decidingStatus: _statusMark({{typePrefix}}Tokens.primary),
+    allowedStatus: _statusMark({{typePrefix}}Tokens.primary),
+    runningStatus: _statusMark({{typePrefix}}Tokens.primary),
+    completedStatus: _statusMark({{typePrefix}}Tokens.primary),
+    deniedStatus: _statusMark({{typePrefix}}Tokens.mutedForeground),
+    errorStatus: _statusMark({{typePrefix}}Tokens.destructive),
   ).merge(style),
   surfaceStyle: {{valuePrefix}}CardStyle(
     style: CardStyler().padding(.all({{typePrefix}}Tokens.s4)).merge(surfaceStyle),
@@ -73,3 +87,6 @@ final class {{typePrefix}}AgentPermissionRecipe {
   ),
   denyStyle: {{valuePrefix}}ButtonStyle(variant: .ghost, style: denyStyle),
 );
+
+BoxStyler _statusMark(ColorToken color) =>
+    BoxStyler().wrap(.iconTheme(color: color()));

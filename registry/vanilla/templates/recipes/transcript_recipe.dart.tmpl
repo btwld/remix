@@ -1,20 +1,41 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+import '../components/icon_button.dart';
 import '../components/transcript.dart';
+import '../theme/tokens.dart';
 
 @immutable
 final class {{typePrefix}}AgentTranscriptRecipe {
-  const {{typePrefix}}AgentTranscriptRecipe({required this.style});
+  const {{typePrefix}}AgentTranscriptRecipe({
+    required this.style,
+    required this.latestStyle,
+  });
   final {{typePrefix}}TranscriptStyler style;
+  final IconButtonStyler latestStyle;
 }
 
 {{typePrefix}}AgentTranscriptRecipe {{valuePrefix}}AgentTranscriptRecipe({
   {{typePrefix}}TranscriptStyler style = const {{typePrefix}}TranscriptStyler.create(),
+  IconButtonStyler latestStyle = const IconButtonStyler.create(),
 }) => {{typePrefix}}AgentTranscriptRecipe(
   style: {{typePrefix}}TranscriptStyler(
     viewport: BoxStyler(),
     item: BoxStyler(),
     spacing: 12,
+    latest: BoxStyler().padding(.bottom({{typePrefix}}Tokens.s4)),
   ).merge(style),
+  // AI Elements' ConversationScrollButton: a round outline icon button. Its
+  // fill is the opaque background in both modes (the outline variant's dark
+  // fill is translucent), so the output beneath does not show through.
+  latestStyle: {{valuePrefix}}IconButtonStyle(
+    variant: .outline,
+    size: .small,
+    style: IconButtonStyler()
+        .borderRadius(.circular(9999))
+        .color({{typePrefix}}Tokens.background())
+        .onHovered(.color({{typePrefix}}Tokens.accent()))
+        .onPressed(.color({{typePrefix}}Tokens.accent()))
+        .merge(latestStyle),
+  ),
 );

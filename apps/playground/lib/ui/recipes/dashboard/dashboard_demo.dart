@@ -536,6 +536,7 @@ PlaygroundDashboardAgentStyles _playgroundAgentStyles() {
     answerCopyStyle: answer.copyStyle,
     answerRetryStyle: answer.retryStyle,
     transcriptStyle: transcript.style,
+    transcriptLatestStyle: transcript.latestStyle,
     planStyle: plan.style,
     planDisclosureStyle: plan.disclosureStyle,
     activityStyle: activity.style,

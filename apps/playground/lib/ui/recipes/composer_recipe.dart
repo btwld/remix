@@ -5,6 +5,7 @@ import '../components/card.dart';
 import '../components/composer.dart';
 import '../components/icon_button.dart';
 import '../components/textfield.dart';
+import '../theme/effects.dart';
 
 @immutable
 final class PlaygroundAgentComposerRecipe {
@@ -37,15 +38,33 @@ PlaygroundAgentComposerRecipe playgroundAgentComposerRecipe({
         .spacing(8)
         .padding(.top(8)),
   ).merge(style),
+  // The card is the field's frame: it takes the field's focus border and ring
+  // while the field has focus, as shadcn's InputGroup does.
   surfaceStyle: playgroundCardStyle(
-    style: CardStyler().padding(.all(12)).merge(surfaceStyle),
+    style: CardStyler()
+        .padding(.all(12))
+        .onFocused(
+          CardStyler()
+              .border(playgroundFocusBorder())
+              .containerEffects(playgroundFocusRing()),
+        )
+        .merge(surfaceStyle),
   ),
+  // So the field inside draws no frame of its own: no border, shadow or ring.
   fieldStyle: playgroundTextAreaStyle(
     style: TextFieldStyler()
         .color(const Color(0x00000000))
         .border(.style(.none))
+        .containerEffects(
+          .behindContent(RemixBoxEffectLayerMix(shadows: const [])),
+        )
         .minHeight(56)
         .padding(.all(4))
+        .onFocused(
+          .containerEffects(
+            RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
+          ),
+        )
         .merge(fieldStyle),
   ),
   submitStyle: playgroundIconButtonStyle(

@@ -36,6 +36,9 @@ final class {{typePrefix}}AgentExecutionRecipe {
         .color({{typePrefix}}Tokens.muted())
         .borderRadius(.circular(6))
         .padding(.all(12)),
+    // Long output scrolls inside the well instead of growing the card; the
+    // plan's own limit.
+    viewport: BoxStyler().maxHeight(220),
     actions: FlexBoxStyler().spacing(6).padding(.top(6)),
     tool: TextStyler().color({{typePrefix}}Tokens.mutedForeground()).fontSize(12),
     title: TextStyler()
@@ -44,8 +47,14 @@ final class {{typePrefix}}AgentExecutionRecipe {
     meta: TextStyler().color({{typePrefix}}Tokens.mutedForeground()).fontSize(12),
     status: TextStyler().color({{typePrefix}}Tokens.mutedForeground()).fontSize(12),
     toolIcon: IconStyler().color({{typePrefix}}Tokens.foreground()).size(16),
-    statusIcon: IconStyler().color({{typePrefix}}Tokens.primary()).size(12),
+    // The status mark takes its outcome's color from the status box below;
+    // its glyph and label already name the outcome.
+    statusIcon: IconStyler().size(12),
     indicator: IconStyler().color({{typePrefix}}Tokens.foreground()).size(16),
+    runningStatus: _statusMark({{typePrefix}}Tokens.primary),
+    successStatus: _statusMark({{typePrefix}}Tokens.primary),
+    errorStatus: _statusMark({{typePrefix}}Tokens.destructive),
+    cancelledStatus: _statusMark({{typePrefix}}Tokens.mutedForeground),
   ).merge(style),
   surfaceStyle: {{valuePrefix}}CardStyle(
     style: CardStyler().padding(.all({{typePrefix}}Tokens.s4)).merge(surfaceStyle),
@@ -67,3 +76,6 @@ final class {{typePrefix}}AgentExecutionRecipe {
     style: IconButtonStyler().size(28, 28).merge(retryStyle),
   ),
 );
+
+BoxStyler _statusMark(ColorToken color) =>
+    BoxStyler().wrap(.iconTheme(color: color()));

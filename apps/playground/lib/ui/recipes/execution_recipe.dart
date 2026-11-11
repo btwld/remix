@@ -36,6 +36,9 @@ PlaygroundAgentExecutionRecipe playgroundAgentExecutionRecipe({
         .color(PlaygroundTokens.muted())
         .borderRadius(.circular(6))
         .padding(.all(12)),
+    // Long output scrolls inside the well instead of growing the card; the
+    // plan's own limit.
+    viewport: BoxStyler().maxHeight(220),
     actions: FlexBoxStyler().spacing(6).padding(.top(6)),
     tool: TextStyler().color(PlaygroundTokens.mutedForeground()).fontSize(12),
     title: TextStyler()
@@ -44,8 +47,14 @@ PlaygroundAgentExecutionRecipe playgroundAgentExecutionRecipe({
     meta: TextStyler().color(PlaygroundTokens.mutedForeground()).fontSize(12),
     status: TextStyler().color(PlaygroundTokens.mutedForeground()).fontSize(12),
     toolIcon: IconStyler().color(PlaygroundTokens.foreground()).size(16),
-    statusIcon: IconStyler().color(PlaygroundTokens.primary()).size(12),
+    // The status mark takes its outcome's color from the status box below;
+    // its glyph and label already name the outcome.
+    statusIcon: IconStyler().size(12),
     indicator: IconStyler().color(PlaygroundTokens.foreground()).size(16),
+    runningStatus: _statusMark(PlaygroundTokens.primary),
+    successStatus: _statusMark(PlaygroundTokens.primary),
+    errorStatus: _statusMark(PlaygroundTokens.destructive),
+    cancelledStatus: _statusMark(PlaygroundTokens.mutedForeground),
   ).merge(style),
   surfaceStyle: playgroundCardStyle(
     style: CardStyler().padding(.all(PlaygroundTokens.s4)).merge(surfaceStyle),
@@ -67,3 +76,6 @@ PlaygroundAgentExecutionRecipe playgroundAgentExecutionRecipe({
     style: IconButtonStyler().size(28, 28).merge(retryStyle),
   ),
 );
+
+BoxStyler _statusMark(ColorToken color) =>
+    BoxStyler().wrap(.iconTheme(color: color()));
