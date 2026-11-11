@@ -18,7 +18,7 @@ anatomy:
   - description (muted, leading-5)
   - view details (12/medium muted→ink, 2px focus-visible ring, 14px down chevron)
   - parameter rows (12px, items-center, shared minmax(0, 7rem) label)
-  - allow once / always allow (if handler) / deny
+  - deny / always allow (if handler) / allow once, trailing edge
 states:
   - pending
   - deciding
@@ -58,6 +58,8 @@ behavior:
   - Parameters are dedicated rows, not a definition list
   - Parameter values wrap long tokens in the value column
 approximations:
+  - Actions put the primary decision last at the trailing edge, as the preset
+    dialogs and AI Elements' Confirmation do; the benchmark leads with it
   - Status well paints local 16px permission, check, close, and alert marks; busy is RemixSpinner
   - Error well mark uses danger luminance; other marks stay ink/muted
   - Status chip is RemixBadge with ink-alpha tints and danger luminance, not a named palette

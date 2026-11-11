@@ -30,7 +30,7 @@ Import `ui/ui.dart` from your application and use the scope for your preset:
 
 ## Behavior
 
-Supply `tool` and wire `onAllowOnce`, `onAlwaysAllow`, and `onDeny`. States are `pending`, `deciding`, `allowed`, `running`, `complete`, `denied`, and `error`. Use a new `requestId` for a new request. Buttons report decisions; the application must enforce permission and define the scope of an always-allow grant. Parameter details use `RemixDataListItem` values.
+Supply `tool` and wire `onAllowOnce`, `onAlwaysAllow`, and `onDeny`. The actions read Deny, Always allow, Allow once, so the primary decision comes last in reading and focus order, as in a dialog footer; the recipes place the row at the trailing edge. States are `pending`, `deciding`, `allowed`, `running`, `complete`, `denied`, and `error`. Use a new `requestId` for a new request. Buttons report decisions; the application must enforce permission and define the scope of an always-allow grant. Parameter details use `RemixDataListItem` values.
 
 ## Recipe bundle
 

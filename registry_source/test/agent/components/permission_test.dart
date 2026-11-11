@@ -86,4 +86,38 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('the primary decision comes last, visually and when read', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await pumpAgent(
+      tester,
+      SizedBox(
+        width: 600,
+        child: AgentPermission(
+          tool: 'tool',
+          onAllowOnce: () {},
+          onAlwaysAllow: () {},
+          onDeny: () {},
+        ),
+      ),
+    );
+    const order = ['Deny', 'Always allow', 'Allow once'];
+    final lefts = [
+      for (final label in order) tester.getTopLeft(find.text(label)).dx,
+    ];
+    expect(lefts, orderedEquals([...lefts]..sort()));
+
+    // Focus traversal is reading order, which assistive technology follows.
+    final read = tester.semantics
+        .simulatedAccessibilityTraversal()
+        .map((node) => node.getSemanticsData())
+        .where((data) => data.flagsCollection.isButton)
+        .map((data) => data.label)
+        .where(order.contains)
+        .toList();
+    expect(read, order);
+    semantics.dispose();
+  });
 }
