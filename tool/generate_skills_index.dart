@@ -76,10 +76,10 @@ void main(List<String> arguments) {
 /// The manifest text for the skill directories under [workspaceRoot].
 ///
 /// For each entry of [publishedSkillDirectories], in that order, `files` lists
-/// every file under the directory except [unpublishedSkillEntries], as sorted
-/// skill-relative POSIX paths with `SKILL.md` first, and `summary` is
-/// `interface.short_description` from the skill's `agents/openai.yaml`, so the
-/// one-line description has one author.
+/// every file under the directory except [unpublishedSkillEntries] and hidden
+/// files such as `.DS_Store`, as sorted skill-relative POSIX paths with
+/// `SKILL.md` first, and `summary` is `interface.short_description` from the
+/// skill's `agents/openai.yaml`, so the one-line description has one author.
 ///
 /// Throws a [FormatException] for a `skills/<name>/SKILL.md` that
 /// [publishedSkillDirectories] does not list, for a skill without `SKILL.md`
@@ -113,7 +113,9 @@ String renderSkillsIndex(Directory workspaceRoot) {
       final relative = entity.path
           .substring(directory.path.length + 1)
           .replaceAll(Platform.pathSeparator, '/');
-      if (unpublishedSkillEntries.contains(relative.split('/').first)) {
+      final segments = relative.split('/');
+      if (unpublishedSkillEntries.contains(segments.first) ||
+          segments.any((segment) => segment.startsWith('.'))) {
         continue;
       }
       validateRegistryPath('$skillPath/$relative');

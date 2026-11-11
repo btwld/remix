@@ -120,6 +120,16 @@ void main() {
       );
     });
 
+    test('ignores hidden files such as .DS_Store', () {
+      File(
+        '${workspace.path}/skills/using-remix/.DS_Store',
+      ).writeAsBytesSync([0, 0, 0, 1, 0x42, 0x75, 0x64, 0x31, 0xff, 0xfe]);
+      File(
+        '${workspace.path}/skills/using-remix/references/.notes.md',
+      ).writeAsStringSync('# Local notes\n');
+      expect(checkSkillsIndex(workspace), isEmpty);
+    });
+
     test('leaves evals out of the manifest', () {
       expect(
         Directory('${workspace.path}/skills/using-remix/evals').existsSync(),
