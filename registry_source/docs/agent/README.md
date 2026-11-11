@@ -29,11 +29,11 @@ preset recipe bundles and their theme for all eight surfaces.
 ## Install
 
 The package remains unpublished authoring/test source. Install individual
-surfaces through the project-local checkout CLI (see [open-code setup](../../../open_code/README.md)):
+surfaces through the global CLI (see [open-code setup](../../../open_code/README.md)):
 
 ```shell
-dart run remix_cli:remix init --prefix Ui --preset vanilla
-dart run remix_cli:remix add composer
+remix init --prefix Ui --preset vanilla
+remix add composer
 ```
 
 The CLI installs shared `models` and `support` when needed, enables Mix's

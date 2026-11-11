@@ -83,6 +83,8 @@ Block = collections.namedtuple("Block", "id language code")
 PINNED_PACKAGES = ("remix", "remix_cli", "remix_ui_icons")
 PINNED_CONSTRAINT = re.compile(
     rf"(\b(?:{'|'.join(PINNED_PACKAGES)})[:@]['\"]?)\^[0-9][^\s'\"`]*")
+GLOBAL_PINNED_CONSTRAINT = re.compile(
+    rf"(\bpub global activate (?:{'|'.join(PINNED_PACKAGES)}) ['\"]?)\^[0-9][^\s'\"`]*")
 PIN_PLACEHOLDER = r"\1^<pinned>"
 
 
@@ -93,12 +95,13 @@ def sha256(data):
 def block_sha256(code):
     """Hash a tutorial block, ignoring the version of each pinned install.
 
-    `pub add 'dev:remix_cli:^1.0.0-beta.1'` hashes as `...remix_cli:^<pinned>`,
+    Both `pub add` and `pub global activate` constraints become `^<pinned>`,
     so `tool/sync_install_pins.dart` repinning on a release does not invalidate
     the evidence. The package, its section, the quoting, and every other command
     still count, so a real change to an install command still does.
     """
-    return sha256(PINNED_CONSTRAINT.sub(PIN_PLACEHOLDER, code).encode())
+    normalized = PINNED_CONSTRAINT.sub(PIN_PLACEHOLDER, code)
+    return sha256(GLOBAL_PINNED_CONSTRAINT.sub(PIN_PLACEHOLDER, normalized).encode())
 
 
 def tutorial_blocks(source):
@@ -119,8 +122,10 @@ class Replay:
         self.work = work
         self.cwd = work
         self.skip_web_build = skip_web_build
+        pub_cache = Path(os.environ.get("PUB_CACHE", Path.home() / ".pub-cache"))
         self.env = {**os.environ, "CI": "true",
-                    "PATH": f"{flutter.parent}{os.pathsep}{os.environ.get('PATH', '')}"}
+                    "PATH": os.pathsep.join([str(flutter.parent), str(pub_cache / "bin"),
+                                             os.environ.get("PATH", "")])}
         self.authored = read_authored()
         self.log = work / "replay.log"
         self.commands = []
@@ -301,8 +306,8 @@ Callbacks use local state and send no requests.
 3. Run `flutter pub get`, `flutter analyze`, and `flutter test`.
 4. Run `flutter run -d chrome` to open the application in a browser.
 
-Packages resolve from pub.dev: remix {info['remix']}, remix_ui_fonts {info['remix_ui_fonts']},
-and the development-only remix_cli {info['remix_cli']}. `remix.yaml` pins the component
+Packages resolve from pub.dev: remix {info['remix']} and remix_ui_fonts {info['remix_ui_fonts']}.
+The tutorial uses the globally activated remix_cli {info['remix_cli']}. `remix.yaml` pins the component
 registry to revision {info['registry_revision']}.
 
 `lib/main.dart` is the application. `lib/ui` holds the recipes the CLI installed and
@@ -375,8 +380,7 @@ def main():
         "flutter": flutter_version,
         "dart": dart_version,
         "remix": agreed_across_samples(replay, lambda sample: locked_version(sample, "remix")),
-        "remix_cli": agreed_across_samples(
-            replay, lambda sample: locked_version(sample, "remix_cli")),
+        "remix_cli": replay.run("replay", "remix --version", replay.work).strip(),
         "remix_ui_fonts": agreed_across_samples(
             replay, lambda sample: locked_version(sample, "remix_ui_fonts")),
         "registry_revision": agreed_across_samples(replay, registry_revision),

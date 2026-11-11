@@ -1,6 +1,6 @@
 ---
 title: Install and add your first item
-description: Add the remix CLI to a Flutter app, then initialize, preview, and install your first component
+description: Install the remix CLI, then initialize, preview, and install your first component in a Flutter app
 ---
 
 ## Install
@@ -9,11 +9,10 @@ The registry declares the Remix version it requires, and `add` records that
 constraint for you. Registry pins and their floors are independent of the CLI
 version.
 
-Add the CLI as a project-local dev dependency so its version is pinned in your
-lockfile, not in a machine-global install:
+Install the CLI once globally, then run `remix` from any Flutter app:
 
 ```bash
-flutter pub add dev:remix_cli:^1.0.0-beta.1
+dart pub global activate remix_cli '^1.0.0-beta.1'
 ```
 
 <Note>
@@ -25,16 +24,22 @@ goes through [legacy source adoption](/open-code/updating#legacy-source-adoption
 
 ## Running the CLI
 
-The command is called `remix`. How you reach it depends on how it is installed:
+Add Pub's `bin` directory to `PATH` if needed; Pub prints the instructions.
+Then run:
 
 ```bash
-# Project-local dev dependency (recommended)
-dart run remix_cli:remix <command>
-
-# Global install
-dart pub global activate remix_cli '^1.0.0-beta.1'
 remix <command>
 ```
+
+For teams that want the CLI pinned in the app's lockfile, use a project-local
+dev dependency instead:
+
+```bash
+flutter pub add dev:remix_cli:^1.0.0-beta.1
+```
+
+Prefix each command with `dart run remix_cli:`, for example
+`dart run remix_cli:remix init`.
 
 To activate an unreleased revision from Git:
 
@@ -51,15 +56,8 @@ fails with "cannot resolve to the same set of dependencies", run this Git
 activation to replace it. You do not need to modify checkout manifests or
 lockfiles.
 
-Prefer the project-local form to pin the CLI. Registry content is pinned
-independently to a GitHub commit in `remix.yaml`. Neither CLI upgrades nor
-ordinary installs advance that pin.
-
-<Note>
-The examples below are written as `remix <command>` to match the tool's own
-usage output. If you are using the project-local form, prefix each one with
-`dart run remix_cli:`, for example `dart run remix_cli:remix init`.
-</Note>
+Registry content is pinned independently to a GitHub commit in `remix.yaml`.
+Neither CLI upgrades nor ordinary installs advance that pin.
 
 Run `remix --help` for the command list, or see the
 [CLI reference](/open-code/cli) for every command and option.

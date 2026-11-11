@@ -1,13 +1,13 @@
 # Remix CLI Reference
 
 Keeping installed source current, and projects from earlier prereleases.
-Commands assume `remix_cli` is a dev dependency.
+Commands assume the [global CLI setup](../SKILL.md#set-up-dependencies-and-imports).
 
 ## Find an item
 
 ```bash
-dart run remix_cli:remix list          # items the pinned registries offer, with what each needs
-dart run remix_cli:remix list --json   # the same listing as one JSON document
+remix list          # items the pinned registries offer, with what each needs
+remix list --json   # the same listing as one JSON document
 ```
 
 An unknown item or preset fails with a "Did you mean" hint when a name is
@@ -16,11 +16,11 @@ close.
 ## Move a registry pin
 
 ```bash
-dart run remix_cli:remix registry update @remix                  # move to the newest promoted commit
-dart run remix_cli:remix registry update @remix --ref <sha|branch>
-dart run remix_cli:remix add theme button --diff                 # review what changed
-dart run remix_cli:remix add theme button --diff --exit-code     # exit 2 on drift, for CI
-dart run remix_cli:remix add theme button --overwrite            # adopt the new source
+remix registry update @remix                  # move to the newest promoted commit
+remix registry update @remix --ref <sha|branch>
+remix add theme button --diff                 # review what changed
+remix add theme button --diff --exit-code     # exit 2 on drift, for CI
+remix add theme button --overwrite            # adopt the new source
 ```
 
 `registry update` only rewrites the pin in `remix.yaml`; it never touches
@@ -40,24 +40,24 @@ to read with an explicit error. Recover a schema 1 or 2 project by deleting
 `remix.yaml`, running `remix init` again with its old `--prefix`/`--preset`/
 `--ui-path`, then verifying the installed source's provenance before adoption.
 
-CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. A
-`remix_cli` entry under `dev_dependencies` with no version resolves 0.1.0;
-raise it first with `flutter pub add dev:remix_cli:^1.0.0-beta.1`. The current
+CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. An
+unversioned activation selects 0.1.0; upgrade first with
+`dart pub global activate remix_cli '^1.0.0-beta.1'`. The current
 CLI rejects unknown existing targets before mutation, including `--diff` and
 `--dry-run`. After verifying their source, name every existing dependency
 explicitly when adopting. For Vanilla Button, that is Theme and Button. Fortal
 Button also needs `base_button` when its targets already exist:
 
 ```bash
-dart run remix_cli:remix add theme button --adopt --diff
-dart run remix_cli:remix add theme button --adopt
+remix add theme button --adopt --diff
+remix add theme button --adopt
 ```
 
 Adoption preserves authored edits and records provenance in
 `remix.ownership.json`; commit it with configuration and source. Disjoint
 additions remain supported. A known different owner is rejected in every mode,
 even `--overwrite` and `--adopt`. An old CLI does not enforce these reservations;
-use the upgraded project-local CLI consistently.
+use the upgraded CLI consistently.
 
 The ownership record also binds the prefix, preset, and UI path. If those no
 longer match, restore the matching configuration, ownership record, and source.
@@ -71,8 +71,8 @@ A project registers another registry under a namespace and names its items
 explicitly:
 
 ```bash
-dart run remix_cli:remix registry add @acme --repository acme/design-system --path registry --ref stable
-dart run remix_cli:remix add @acme/button
+remix registry add @acme --repository acme/design-system --path registry --ref stable
+remix add @acme/button
 ```
 
 The registry must offer the project's preset, or `registry add` fails. Install
