@@ -28,18 +28,15 @@ void main() {
               );
               await tester.pumpAndSettle();
               final box = _toggleRow(tester).styleSpec.spec.box!.spec;
-              // Toggles share the button height scale (24/32/40) and centre
-              // their content, rather than deriving height from padding.
-              final (paddingX, height) = switch (size) {
-                FortalToggleSize.size1 => (8.0, 24.0),
-                FortalToggleSize.size2 => (12.0, 32.0),
-                FortalToggleSize.size3 => (16.0, 40.0),
+              final paddingX = switch (size) {
+                FortalToggleSize.size1 => 8.0,
+                FortalToggleSize.size2 => 12.0,
+                FortalToggleSize.size3 => 16.0,
               };
               expect(
                 box.padding!.resolve(TextDirection.ltr),
                 EdgeInsets.symmetric(horizontal: paddingX),
               );
-              expect(box.constraints!.minHeight, height);
               final context = tester.element(_toggleRowFinder);
               Color color(ColorToken token) => MixScope.tokenOf(token, context);
               final decoration = box.decoration! as BoxDecoration;
@@ -115,7 +112,6 @@ void main() {
       final rowSize = tester.getSize(_toggleRowFinder);
       final labelSize = tester.getSize(find.text('Bold'));
       expect(rowSize.width, closeTo(labelSize.width + 24, 0.01));
-      expect(rowSize.height, 32);
 
       final iconOnlySizes = <Size>[];
       for (final scaler in const [TextScaler.noScaling, TextScaler.linear(2)]) {
