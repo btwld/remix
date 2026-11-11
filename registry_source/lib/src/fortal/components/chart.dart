@@ -208,9 +208,8 @@ ChartAxisStyler _fortalAxisStyle() => ChartAxisStyler()
     .fitInsideDistance(FortalTokens.space1())
     .drawBelowEverything(true);
 
-/// The value axis reserves room for a six-character tick such as `1.284K`
-/// beside its label space, and grows with the theme's scaling like the label
-/// text does. The package's fixed 44px wraps such a tick onto two lines.
+/// Reserves `space8` for value ticks of up to six characters, such as
+/// `1.250K`, and their label space, scaled with the theme like the label text.
 ChartAxisStyler _fortalValueAxisStyle() =>
     ChartAxisStyler().reservedSize(FortalTokens.space8());
 
