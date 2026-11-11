@@ -96,15 +96,21 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                         const .maxWidth(559),
                         .equalColumns(1).gap(12),
                       ),
+                  // Inside a card, HeroUI's fields take their `secondary`
+                  // variant: the primary field fill is the card's own
+                  // `surface`.
                   children: const [
-                    UiTextField(label: 'Full name', hintText: 'Ada Chen'),
-                    UiTextField(
+                    UiTextField.secondary(
+                      label: 'Full name',
+                      hintText: 'Ada Chen',
+                    ),
+                    UiTextField.secondary(
                       label: 'Email address',
                       hintText: 'ada@northstar.co',
                     ),
                   ],
                 ),
-                UiSelect<String>(
+                UiSelect<String>.secondary(
                   semanticLabel: 'Language',
                   trigger: const RemixSelectTrigger(placeholder: 'Language'),
                   items: const [
@@ -147,7 +153,7 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                 _preference(
                   'Weekly digest',
                   'A summary of workspace activity each Monday.',
-                  UiCheckbox(
+                  UiCheckbox.secondary(
                     selected: _weeklyDigest,
                     semanticLabel: 'Receive weekly digest',
                     onChanged: (value) =>

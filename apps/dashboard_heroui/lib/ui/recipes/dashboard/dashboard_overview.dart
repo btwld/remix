@@ -315,9 +315,10 @@ Widget _ordersCard(
         key: const ValueKey('dashboard-records-table'),
         semanticLabel: 'Recent customer orders',
         rows: data.records,
-        // Fits the half-width card at a 1280px desktop with the sidebar open;
-        // narrower than this, the table scrolls sideways.
-        minimumWidth: 400,
+        // Fits the half-width card at a 1280px desktop with the sidebar open,
+        // with the table's 16px cell insets; narrower than this, the table
+        // scrolls sideways.
+        minimumWidth: 440,
         columns: _recordColumns,
       ),
     ],
@@ -356,7 +357,8 @@ final _recordColumns = <RemixDataTableColumn<UiDashboardRecord>>[
   RemixDataTableColumn(
     id: 'id',
     label: 'Record',
-    width: const FixedColumnWidth(96),
+    // An order number on one line inside the 16px cell insets.
+    width: const FixedColumnWidth(112),
     cellBuilder: (_, record) => _cell(record.id, emphasized: true),
   ),
   RemixDataTableColumn(

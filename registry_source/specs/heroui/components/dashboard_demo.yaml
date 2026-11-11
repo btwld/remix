@@ -19,7 +19,9 @@ tokens:
 measurements:
   - {what: pages, value: "Overview pads 24 (16 below 600 wide); Customers, Orders and Settings pad 32; sections 20 and 16 apart", cite: "the shared overview base; designed for the rest, as the other presets"}
   - {what: segmented choices, value: "the primary tabs recipe (the segmented pill) for the order filter and both color-mode choices", cite: tabs.yaml}
-  - {what: tables, value: "the table recipe: secondary for recent orders on the overview card, primary for Customers and Orders", cite: table.yaml}
+  - {what: tables, value: "the table recipe: secondary for recent orders on the overview card, primary for Customers and Orders; the customer selection column takes the secondary checkbox", cite: table.yaml}
+  - {what: fields on cards, value: "the secondary text field, select and checkbox (default fill), because the primary field fill is the card's own surface", cite: "textfield.yaml, select.yaml, checkbox.yaml"}
+  - {what: date and order columns, value: "112 for order numbers on the overview, 136 for dates, so each stays on one line inside the table's 16px cell insets", cite: "designed; table.yaml px-4"}
   - {what: account row, value: "8 padding, radius-2xl, default fill on hover, an inset focus ring; a soft accent sm avatar", cite: "designed"}
   - {what: popovers, value: "288 wide content in the popover recipe", cite: "designed; the other presets' width"}
 approximations:

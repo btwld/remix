@@ -5,6 +5,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import '../../../dashboard/dashboard_demo_records.dart';
 import '../../components/avatar.dart';
 import '../../components/button.dart';
+import '../../components/checkbox.dart';
 import '../../components/chip.dart';
 import '../../components/dropdown.dart';
 import '../../components/search_field.dart';
@@ -119,6 +120,11 @@ class _HeroUiDashboardCustomersPageState
         ),
         HeroUiTable<RegistryDashboardCustomer>(
           key: const ValueKey('data-grid-customers'),
+          // Rows sit on `surface`, the primary checkbox's own fill, so the
+          // selection column takes the `secondary` checkbox.
+          style: DataTableStyler().selectionCheckbox(
+            heroUiCheckboxStyle(variant: .secondary),
+          ),
           rows: page.items,
           columns: _customerColumns(context),
           semanticLabel: 'Customers',
@@ -301,7 +307,8 @@ List<RemixDataTableColumn<RegistryDashboardCustomer>> _customerColumns(
     id: 'joined',
     label: 'Joined',
     sortable: true,
-    width: const FixedColumnWidth(118),
+    // A date on one line inside the table's 16px cell insets.
+    width: const FixedColumnWidth(136),
     cellBuilder: (_, value) =>
         HeroUiDashboardText(registryDashboardShortDate(value.joinedAt)),
   ),
@@ -334,7 +341,7 @@ List<RemixDataTableColumn<RegistryDashboardOrder>> _orderColumns(
     id: 'date',
     label: 'Date',
     sortable: true,
-    width: const FixedColumnWidth(120),
+    width: const FixedColumnWidth(136),
     cellBuilder: (_, value) =>
         HeroUiDashboardText(registryDashboardShortDate(value.date)),
   ),
