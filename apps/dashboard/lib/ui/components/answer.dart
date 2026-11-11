@@ -174,7 +174,16 @@ class _UiAnswerState extends State<UiAnswer> {
                       ),
                     if (widget.status == UiAnswerStatus.complete &&
                         widget.feedback != null)
-                      Box(styleSpec: spec.feedback, child: widget.feedback),
+                      // A status message such as "Copied" is announced
+                      // without moving focus (WCAG 2.2 SC 4.1.3).
+                      Semantics(
+                        container: true,
+                        liveRegion: true,
+                        child: Box(
+                          styleSpec: spec.feedback,
+                          child: widget.feedback,
+                        ),
+                      ),
                   ],
                 ),
             ],

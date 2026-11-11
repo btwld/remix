@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 
 abstract final class _Glyphs {
   static const arrowUp = {{icon:arrowUp}};
+  static const arrowDown = {{icon:arrowDown}};
   static const square = {{icon:square}};
   static const copy = {{icon:copy}};
   static const rotateCcw = {{icon:reload}};
@@ -75,6 +76,7 @@ enum {{typePrefix}}FunctionalGlyphKind {
   cancelledCircle,
   errorCircle,
   permission,
+  latest,
 }
 
 class {{typePrefix}}FunctionalGlyph extends StatelessWidget {
@@ -106,6 +108,7 @@ class {{typePrefix}}FunctionalGlyph extends StatelessWidget {
     .cancelledCircle => _Glyphs.ban,
     .errorCircle => _Glyphs.circleX,
     .permission => _Glyphs.shieldCheck,
+    .latest => _Glyphs.arrowDown,
   };
 
   @override

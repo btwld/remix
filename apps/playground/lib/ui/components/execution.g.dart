@@ -10,6 +10,7 @@ mixin _$PlaygroundExecutionSpec
     implements Spec<PlaygroundExecutionSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get header;
   StyleSpec<BoxSpec> get output;
+  StyleSpec<BoxSpec> get viewport;
   StyleSpec<FlexBoxSpec> get actions;
   StyleSpec<TextSpec> get tool;
   StyleSpec<TextSpec> get title;
@@ -30,6 +31,7 @@ mixin _$PlaygroundExecutionSpec
   PlaygroundExecutionSpec copyWith({
     StyleSpec<FlexBoxSpec>? header,
     StyleSpec<BoxSpec>? output,
+    StyleSpec<BoxSpec>? viewport,
     StyleSpec<FlexBoxSpec>? actions,
     StyleSpec<TextSpec>? tool,
     StyleSpec<TextSpec>? title,
@@ -46,6 +48,7 @@ mixin _$PlaygroundExecutionSpec
     return PlaygroundExecutionSpec(
       header: header ?? this.header,
       output: output ?? this.output,
+      viewport: viewport ?? this.viewport,
       actions: actions ?? this.actions,
       tool: tool ?? this.tool,
       title: title ?? this.title,
@@ -66,6 +69,7 @@ mixin _$PlaygroundExecutionSpec
     return PlaygroundExecutionSpec(
       header: header.lerp(other?.header, t),
       output: output.lerp(other?.output, t),
+      viewport: viewport.lerp(other?.viewport, t),
       actions: actions.lerp(other?.actions, t),
       tool: tool.lerp(other?.tool, t),
       title: title.lerp(other?.title, t),
@@ -85,6 +89,7 @@ mixin _$PlaygroundExecutionSpec
   List<Object?> get props => [
     header,
     output,
+    viewport,
     actions,
     tool,
     title,
@@ -141,6 +146,7 @@ mixin _$PlaygroundExecutionSpec
     properties
       ..add(DiagnosticsProperty('header', header))
       ..add(DiagnosticsProperty('output', output))
+      ..add(DiagnosticsProperty('viewport', viewport))
       ..add(DiagnosticsProperty('actions', actions))
       ..add(DiagnosticsProperty('tool', tool))
       ..add(DiagnosticsProperty('title', title))
@@ -170,6 +176,7 @@ class PlaygroundExecutionStyler
     implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $header;
   final Prop<StyleSpec<BoxSpec>>? $output;
+  final Prop<StyleSpec<BoxSpec>>? $viewport;
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
   final Prop<StyleSpec<TextSpec>>? $tool;
   final Prop<StyleSpec<TextSpec>>? $title;
@@ -186,6 +193,7 @@ class PlaygroundExecutionStyler
   const PlaygroundExecutionStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? header,
     Prop<StyleSpec<BoxSpec>>? output,
+    Prop<StyleSpec<BoxSpec>>? viewport,
     Prop<StyleSpec<FlexBoxSpec>>? actions,
     Prop<StyleSpec<TextSpec>>? tool,
     Prop<StyleSpec<TextSpec>>? title,
@@ -203,6 +211,7 @@ class PlaygroundExecutionStyler
     super.animation,
   }) : $header = header,
        $output = output,
+       $viewport = viewport,
        $actions = actions,
        $tool = tool,
        $title = title,
@@ -219,6 +228,7 @@ class PlaygroundExecutionStyler
   PlaygroundExecutionStyler({
     FlexBoxStyler? header,
     BoxStyler? output,
+    BoxStyler? viewport,
     FlexBoxStyler? actions,
     TextStyler? tool,
     TextStyler? title,
@@ -237,6 +247,7 @@ class PlaygroundExecutionStyler
   }) : this.create(
          header: Prop.maybeMix(header),
          output: Prop.maybeMix(output),
+         viewport: Prop.maybeMix(viewport),
          actions: Prop.maybeMix(actions),
          tool: Prop.maybeMix(tool),
          title: Prop.maybeMix(title),
@@ -258,6 +269,8 @@ class PlaygroundExecutionStyler
       PlaygroundExecutionStyler().header(value);
   factory PlaygroundExecutionStyler.output(BoxStyler value) =>
       PlaygroundExecutionStyler().output(value);
+  factory PlaygroundExecutionStyler.viewport(BoxStyler value) =>
+      PlaygroundExecutionStyler().viewport(value);
   factory PlaygroundExecutionStyler.actions(FlexBoxStyler value) =>
       PlaygroundExecutionStyler().actions(value);
   factory PlaygroundExecutionStyler.tool(TextStyler value) =>
@@ -287,6 +300,7 @@ class PlaygroundExecutionStyler
   Set<String> get $stylerFieldNames => const {
     'header',
     'output',
+    'viewport',
     'actions',
     'tool',
     'title',
@@ -312,6 +326,11 @@ class PlaygroundExecutionStyler
   /// Sets the output.
   PlaygroundExecutionStyler output(BoxStyler value) {
     return merge(PlaygroundExecutionStyler(output: value));
+  }
+
+  /// Sets the viewport.
+  PlaygroundExecutionStyler viewport(BoxStyler value) {
+    return merge(PlaygroundExecutionStyler(viewport: value));
   }
 
   /// Sets the actions.
@@ -466,6 +485,7 @@ class PlaygroundExecutionStyler
     return PlaygroundExecutionStyler.create(
       header: MixOps.merge($header, other?.$header),
       output: MixOps.merge($output, other?.$output),
+      viewport: MixOps.merge($viewport, other?.$viewport),
       actions: MixOps.merge($actions, other?.$actions),
       tool: MixOps.merge($tool, other?.$tool),
       title: MixOps.merge($title, other?.$title),
@@ -490,6 +510,7 @@ class PlaygroundExecutionStyler
     final spec = PlaygroundExecutionSpec(
       header: MixOps.resolve(context, $header),
       output: MixOps.resolve(context, $output),
+      viewport: MixOps.resolve(context, $viewport),
       actions: MixOps.resolve(context, $actions),
       tool: MixOps.resolve(context, $tool),
       title: MixOps.resolve(context, $title),
@@ -517,6 +538,7 @@ class PlaygroundExecutionStyler
     properties
       ..add(DiagnosticsProperty('header', $header))
       ..add(DiagnosticsProperty('output', $output))
+      ..add(DiagnosticsProperty('viewport', $viewport))
       ..add(DiagnosticsProperty('actions', $actions))
       ..add(DiagnosticsProperty('tool', $tool))
       ..add(DiagnosticsProperty('title', $title))
@@ -535,6 +557,7 @@ class PlaygroundExecutionStyler
   List<Object?> get props => [
     $header,
     $output,
+    $viewport,
     $actions,
     $tool,
     $title,

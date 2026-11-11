@@ -199,7 +199,7 @@ void main() {
       expect(changes, [false, true]);
     });
 
-    testWidgets('activity stays open while working even under host control', (
+    testWidgets('activity defers to its host while working, then settles', (
       tester,
     ) async {
       final changes = <bool>[];
@@ -217,11 +217,11 @@ void main() {
       await pump(.working);
       await tester.tap(find.text('Activity'));
       await tester.pump();
-      expect(changes, isEmpty);
-      expect(find.text('Installed activity'), findsOneWidget);
+      expect(changes, [true]);
+      expect(find.text('Installed activity'), findsNothing);
       await pump(.complete);
       await tester.pumpAndSettle();
-      expect(changes, [false]);
+      expect(changes, [true, false]);
       expect(find.text('Installed activity'), findsNothing);
     });
 

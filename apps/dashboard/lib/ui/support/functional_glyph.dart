@@ -4,6 +4,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 abstract final class _Glyphs {
   static const arrowUp = RemixIcons.arrowUp;
+  static const arrowDown = RemixIcons.arrowDown;
   static const square = RemixIcons.square;
   static const copy = RemixIcons.copy;
   static const rotateCcw = RemixIcons.refresh;
@@ -75,6 +76,7 @@ enum UiFunctionalGlyphKind {
   cancelledCircle,
   errorCircle,
   permission,
+  latest,
 }
 
 class UiFunctionalGlyph extends StatelessWidget {
@@ -106,6 +108,7 @@ class UiFunctionalGlyph extends StatelessWidget {
     .cancelledCircle => _Glyphs.ban,
     .errorCircle => _Glyphs.circleX,
     .permission => _Glyphs.shieldCheck,
+    .latest => _Glyphs.arrowDown,
   };
 
   @override

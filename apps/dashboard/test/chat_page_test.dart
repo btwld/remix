@@ -227,7 +227,13 @@ void main() {
     await tester.drag(transcript, const Offset(0, 300));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
-    await tester.tap(find.text('Return to latest'));
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is RemixIconButton &&
+            widget.semanticLabel == 'Scroll to latest',
+      ),
+    );
     expect(position.isScrollingNotifier.value, isFalse);
     await tester.pump();
     expect(tester.takeException(), isNull);

@@ -267,17 +267,20 @@ class _UiPermissionState extends State<UiPermission> {
                     ),
                   ),
                 if (widget.status == UiPermissionStatus.pending)
+                  // The primary decision comes last, in reading and focus
+                  // order, like the dialog footers of every preset; recipes
+                  // place the row at the trailing edge.
                   FlexBox(
                     styleSpec: _actionsStyle(spec),
                     children: [
                       RemixButton(
-                        key: const ValueKey('ui-permission-allow-once'),
-                        label: widget.allowOnceLabel,
+                        key: const ValueKey('ui-permission-deny'),
+                        label: widget.denyLabel,
                         enabled: !_decisionSubmitted,
-                        onPressed: widget.onAllowOnce == null
+                        onPressed: widget.onDeny == null
                             ? null
-                            : () => _submit(widget.onAllowOnce),
-                        style: widget.allowOnceStyle,
+                            : () => _submit(widget.onDeny),
+                        style: widget.denyStyle,
                       ),
                       if (widget.onAlwaysAllow != null)
                         RemixButton(
@@ -288,13 +291,13 @@ class _UiPermissionState extends State<UiPermission> {
                           style: widget.alwaysAllowStyle,
                         ),
                       RemixButton(
-                        key: const ValueKey('ui-permission-deny'),
-                        label: widget.denyLabel,
+                        key: const ValueKey('ui-permission-allow-once'),
+                        label: widget.allowOnceLabel,
                         enabled: !_decisionSubmitted,
-                        onPressed: widget.onDeny == null
+                        onPressed: widget.onAllowOnce == null
                             ? null
-                            : () => _submit(widget.onDeny),
-                        style: widget.denyStyle,
+                            : () => _submit(widget.onAllowOnce),
+                        style: widget.allowOnceStyle,
                       ),
                     ],
                   ),

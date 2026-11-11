@@ -39,6 +39,7 @@ final class UiDashboardAgentStyles {
     required this.answerCopyStyle,
     required this.answerRetryStyle,
     required this.transcriptStyle,
+    this.transcriptLatestStyle = const IconButtonStyler.create(),
     required this.planStyle,
     required this.planDisclosureStyle,
     required this.activityStyle,
@@ -73,6 +74,7 @@ final class UiDashboardAgentStyles {
   final IconButtonStyler answerCopyStyle;
   final IconButtonStyler answerRetryStyle;
   final UiTranscriptStyler transcriptStyle;
+  final IconButtonStyler transcriptLatestStyle;
   final UiPlanStyler planStyle;
   final DisclosureStyler planDisclosureStyle;
   final UiActivityStyler activityStyle;
@@ -265,20 +267,6 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
     keepMessage: true,
   );
 
-  void _returnToLatest() {
-    setState(() => _following = true);
-    if (!_scroll.hasClients) return;
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _scroll.jumpTo(_scroll.position.maxScrollExtent);
-    } else {
-      _scroll.animateTo(
-        _scroll.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 180),
-        curve: Curves.easeOut,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final gutter = MediaQuery.sizeOf(context).width < 600 ? 16.0 : 20.0;
@@ -328,16 +316,8 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
                   ],
                 ),
                 if (!compact && !_active) _starters(),
+                // The transcript offers its own way back to the latest.
                 Expanded(child: _transcript()),
-                if (!_following)
-                  Box(
-                    style: BoxStyler().alignment(.center),
-                    child: styles.buttonBuilder(
-                      'Return to latest',
-                      _returnToLatest,
-                      .soft,
-                    ),
-                  ),
                 _composer(maxLines: compact ? 2 : 8),
               ],
             );
@@ -511,6 +491,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
         if (_following != value) setState(() => _following = value);
       },
       style: styles.transcriptStyle,
+      latestStyle: styles.transcriptLatestStyle,
       children: children.isEmpty
           ? [
               Box(

@@ -80,7 +80,18 @@ class _{{typePrefix}}ComposerState extends State<{{typePrefix}}Composer> {
   TextEditingController? _ownedController;
   FocusNode? _ownedFocusNode;
   late TextEditingController _controller;
+
+  /// The last text reported through [{{typePrefix}}Composer.onChanged].
   late String _text;
+
+  /// Whether the draft has something to send. Typing rebuilds the composer
+  /// only when this flips; the text field repaints its own text.
+  late bool _hasDraft;
+
+  /// Whether the text field holds focus, published to [{{typePrefix}}Composer.surfaceStyle]
+  /// as [WidgetState.focused] so a recipe can mark the whole card, the way a
+  /// text input marks its own frame.
+  bool _fieldFocused = false;
 
   FocusNode get _focusNode =>
       widget.focusNode ?? (_ownedFocusNode ??= FocusNode());
@@ -93,7 +104,7 @@ class _{{typePrefix}}ComposerState extends State<{{typePrefix}}Composer> {
   bool get _canSubmit =>
       widget.enabled &&
       !widget.running &&
-      _text.trim().isNotEmpty &&
+      _hasDraft &&
       widget.onSubmit != null &&
       (widget.canSubmit ?? true);
 
@@ -103,14 +114,21 @@ class _{{typePrefix}}ComposerState extends State<{{typePrefix}}Composer> {
     _controller =
         widget.controller ??
         (_ownedController = TextEditingController(text: widget.initialValue));
-    _text = _controller.text;
+    _adoptText();
     _controller.addListener(_handleControllerChanged);
+  }
+
+  void _adoptText() {
+    _text = _controller.text;
+    _hasDraft = _text.trim().isNotEmpty;
   }
 
   void _handleControllerChanged() {
     final next = _controller.text;
     if (next == _text) return;
-    setState(() => _text = next);
+    _text = next;
+    final hasDraft = next.trim().isNotEmpty;
+    if (hasDraft != _hasDraft) setState(() => _hasDraft = hasDraft);
     widget.onChanged?.call(next);
   }
 
@@ -125,7 +143,7 @@ class _{{typePrefix}}ComposerState extends State<{{typePrefix}}Composer> {
       _controller =
           widget.controller ??
           (_ownedController = TextEditingController(text: seed));
-      _text = _controller.text;
+      _adoptText();
       _controller.addListener(_handleControllerChanged);
       _disposeAfterFrame(oldOwnedController);
     }
@@ -154,16 +172,25 @@ class _{{typePrefix}}ComposerState extends State<{{typePrefix}}Composer> {
     _focusNode.requestFocus();
   }
 
+  /// Enter belongs to sending whenever the composer can send at all.
+  ///
+  /// It submits when there is something to send, and otherwise does nothing:
+  /// an empty draft, a live run or `canSubmit: false` must not turn Enter into
+  /// a newline, and a held Enter must not add newlines after it sent. Shift+
+  /// Enter and IME composition keep the field's own handling, and a composer
+  /// without [{{typePrefix}}Composer.onSubmit] is a plain multiline field.
   KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
-    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    if (event is KeyUpEvent) return KeyEventResult.ignored;
     final isEnter =
         event.logicalKey == LogicalKeyboardKey.enter ||
         event.logicalKey == LogicalKeyboardKey.numpadEnter;
-    if (!isEnter || HardwareKeyboard.instance.isShiftPressed || _isComposing) {
+    if (!isEnter ||
+        widget.onSubmit == null ||
+        HardwareKeyboard.instance.isShiftPressed ||
+        _isComposing) {
       return KeyEventResult.ignored;
     }
-    if (!_canSubmit) return KeyEventResult.ignored;
-    _submit();
+    if (event is KeyDownEvent) _submit();
     return KeyEventResult.handled;
   }
 
@@ -193,68 +220,81 @@ class _{{typePrefix}}ComposerState extends State<{{typePrefix}}Composer> {
           canRequestFocus: false,
           skipTraversal: true,
           onKeyEvent: _handleKey,
-          child: RemixCard(
-            style: widget.surfaceStyle,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(
-                    context,
-                  ).copyWith(scrollbars: false),
-                  child: RemixTextArea(
-                    controller: _controller,
-                    focusNode: _focusNode,
-                    enabled: widget.enabled,
-                    autofocus: widget.autofocus,
-                    hintText: widget.hintText,
-                    semanticLabel: widget.semanticLabel,
-                    minLines: widget.minLines,
-                    maxLines: widget.maxLines,
-                    textInputAction: TextInputAction.newline,
-                    style: widget.fieldStyle,
-                  ),
-                ),
-                RowBox(
-                  styleSpec: spec.toolbar,
-                  children: [
-                    if (widget.leading != null) widget.leading!,
-                    const Spacer(),
-                    if (widget.trailing != null) widget.trailing!,
-                    Semantics(
-                      container: true,
-                      child: RemixIconButton(
-                        key: ValueKey(
-                          widget.running
-                              ? '{{valuePrefix}}-composer-stop'
-                              : '{{valuePrefix}}-composer-send',
-                        ),
-                        icon: null,
-                        iconBuilder: widget.running
-                            ? (widget.stopIconBuilder ?? _defaultStopIcon)
-                            : (widget.submitIconBuilder ?? _defaultSubmitIcon),
-                        semanticLabel: widget.running
-                            ? widget.stopLabel
-                            : widget.submitLabel,
-                        enabled: widget.running
-                            ? widget.enabled && widget.onStop != null
-                            : _canSubmit,
-                        onPressed: widget.running ? widget.onStop : _submit,
-                        style: widget.running
-                            ? widget.stopStyle
-                            : widget.submitStyle,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+          child: WidgetStateProvider(
+            states: {if (_fieldFocused) WidgetState.focused},
+            child: RemixCard(
+              style: widget.surfaceStyle,
+              // The card's state belongs to the card alone, as a disclosure
+              // panel's does; its controls resolve their own.
+              child: WidgetStateProvider(
+                states: const {},
+                child: _content(spec),
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
+  Widget _content({{typePrefix}}ComposerSpec spec) => Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Focus(
+        canRequestFocus: false,
+        skipTraversal: true,
+        onFocusChange: (focused) {
+          if (focused != _fieldFocused) {
+            setState(() => _fieldFocused = focused);
+          }
+        },
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+          child: RemixTextArea(
+            controller: _controller,
+            focusNode: _focusNode,
+            enabled: widget.enabled,
+            autofocus: widget.autofocus,
+            hintText: widget.hintText,
+            semanticLabel: widget.semanticLabel,
+            minLines: widget.minLines,
+            maxLines: widget.maxLines,
+            textInputAction: TextInputAction.newline,
+            style: widget.fieldStyle,
+          ),
+        ),
+      ),
+      RowBox(
+        styleSpec: spec.toolbar,
+        children: [
+          if (widget.leading != null) widget.leading!,
+          const Spacer(),
+          if (widget.trailing != null) widget.trailing!,
+          Semantics(
+            container: true,
+            child: RemixIconButton(
+              key: ValueKey(
+                widget.running ? '{{valuePrefix}}-composer-stop' : '{{valuePrefix}}-composer-send',
+              ),
+              icon: null,
+              iconBuilder: widget.running
+                  ? (widget.stopIconBuilder ?? _defaultStopIcon)
+                  : (widget.submitIconBuilder ?? _defaultSubmitIcon),
+              semanticLabel: widget.running
+                  ? widget.stopLabel
+                  : widget.submitLabel,
+              enabled: widget.running
+                  ? widget.enabled && widget.onStop != null
+                  : _canSubmit,
+              onPressed: widget.running ? widget.onStop : _submit,
+              style: widget.running ? widget.stopStyle : widget.submitStyle,
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
 
   @override
   void dispose() {

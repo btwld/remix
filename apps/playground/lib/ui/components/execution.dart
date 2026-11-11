@@ -232,9 +232,14 @@ class _PlaygroundExecutionState extends State<PlaygroundExecution> {
                   // second time. This is the primitive plan and activity use.
                   Semantics(
                     label: widget.outputLabel,
-                    child: PlaygroundLiveEdgeScrollView(
-                      followOutput: widget.status.isWorking,
-                      child: widget.child,
+                    // A bounded viewport keeps long output scrolling inside
+                    // its own box, following the end while the tool runs.
+                    child: Box(
+                      styleSpec: spec.viewport,
+                      child: PlaygroundLiveEdgeScrollView(
+                        followOutput: widget.status.isWorking,
+                        child: widget.child,
+                      ),
                     ),
                   ),
                   if (widget.showActions && widget.status.isSettled)
@@ -288,6 +293,11 @@ final class PlaygroundExecutionSpec with _$PlaygroundExecutionSpec {
   final StyleSpec<FlexBoxSpec> header;
   @override
   final StyleSpec<BoxSpec> output;
+
+  /// Bounds the scrolling output inside [output], for example with a
+  /// maximum height.
+  @override
+  final StyleSpec<BoxSpec> viewport;
   @override
   final StyleSpec<FlexBoxSpec> actions;
   @override
@@ -316,6 +326,7 @@ final class PlaygroundExecutionSpec with _$PlaygroundExecutionSpec {
   const PlaygroundExecutionSpec({
     StyleSpec<FlexBoxSpec>? header,
     StyleSpec<BoxSpec>? output,
+    StyleSpec<BoxSpec>? viewport,
     StyleSpec<FlexBoxSpec>? actions,
     StyleSpec<TextSpec>? tool,
     StyleSpec<TextSpec>? title,
@@ -330,6 +341,7 @@ final class PlaygroundExecutionSpec with _$PlaygroundExecutionSpec {
     StyleSpec<BoxSpec>? cancelledStatus,
   }) : header = header ?? const StyleSpec(spec: FlexBoxSpec()),
        output = output ?? const StyleSpec(spec: BoxSpec()),
+       viewport = viewport ?? const StyleSpec(spec: BoxSpec()),
        actions = actions ?? const StyleSpec(spec: FlexBoxSpec()),
        tool = tool ?? const StyleSpec(spec: TextSpec()),
        title = title ?? const StyleSpec(spec: TextSpec()),

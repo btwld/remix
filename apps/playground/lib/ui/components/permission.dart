@@ -270,17 +270,20 @@ class _PlaygroundPermissionState extends State<PlaygroundPermission> {
                     ),
                   ),
                 if (widget.status == PlaygroundPermissionStatus.pending)
+                  // The primary decision comes last, in reading and focus
+                  // order, like the dialog footers of every preset; recipes
+                  // place the row at the trailing edge.
                   FlexBox(
                     styleSpec: _actionsStyle(spec),
                     children: [
                       RemixButton(
-                        key: const ValueKey('playground-permission-allow-once'),
-                        label: widget.allowOnceLabel,
+                        key: const ValueKey('playground-permission-deny'),
+                        label: widget.denyLabel,
                         enabled: !_decisionSubmitted,
-                        onPressed: widget.onAllowOnce == null
+                        onPressed: widget.onDeny == null
                             ? null
-                            : () => _submit(widget.onAllowOnce),
-                        style: widget.allowOnceStyle,
+                            : () => _submit(widget.onDeny),
+                        style: widget.denyStyle,
                       ),
                       if (widget.onAlwaysAllow != null)
                         RemixButton(
@@ -293,13 +296,13 @@ class _PlaygroundPermissionState extends State<PlaygroundPermission> {
                           style: widget.alwaysAllowStyle,
                         ),
                       RemixButton(
-                        key: const ValueKey('playground-permission-deny'),
-                        label: widget.denyLabel,
+                        key: const ValueKey('playground-permission-allow-once'),
+                        label: widget.allowOnceLabel,
                         enabled: !_decisionSubmitted,
-                        onPressed: widget.onDeny == null
+                        onPressed: widget.onAllowOnce == null
                             ? null
-                            : () => _submit(widget.onDeny),
-                        style: widget.denyStyle,
+                            : () => _submit(widget.onAllowOnce),
+                        style: widget.allowOnceStyle,
                       ),
                     ],
                   ),
