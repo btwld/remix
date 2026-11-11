@@ -1,5 +1,5 @@
 // Screenshots the installed gallery in light and dark, at desktop and phone
-// widths, plus its overlays.
+// widths, plus its overlays and the full-window dashboard shell.
 //
 //   node capture.mjs /absolute/app/build/web /absolute/output/dir
 //
@@ -112,6 +112,23 @@ async function hover(page, target) {
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
 }
 
+/** Pointer input at the centre of a target that needs no scrolling. */
+async function click(page, target) {
+  const box = await target.boundingBox();
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  await page.waitForTimeout(600);
+}
+
+/** Switches the visible `Dark mode` switch on. */
+async function setDark(page) {
+  const toggle = named(page, 'switch', 'Dark mode');
+  for (let attempt = 0; attempt < 5; attempt++) {
+    if ((await toggle.getAttribute('aria-checked')) === 'true') break;
+    await click(page, toggle);
+  }
+  assert.equal(await toggle.getAttribute('aria-checked'), 'true', 'Dark mode did not switch on.');
+}
+
 const overlays = {
   select: (page) => press(page, named(page, 'button', 'Fruit primary')),
   dropdown: (page) => press(page, named(page, 'button', 'Actions')),
@@ -163,6 +180,40 @@ try {
       }
       await page.mouse.wheel(0, -20000);
       await page.waitForTimeout(800);
+    }
+    await page.context().close();
+  }
+  for (const [width, height] of [[1440, 900], [390, 844]]) {
+    const page = await open(browser, width, height);
+    // The card can sit at the very end of the gallery, below the upper half
+    // that `reveal` aims for, so scroll it anywhere into view instead.
+    const opener = named(page, 'button', 'Open dashboard');
+    await page.mouse.move(width / 2, height / 2);
+    for (let attempt = 0; attempt < 40; attempt++) {
+      const box = await opener.boundingBox();
+      if (box && box.y > 0 && box.y + box.height < height) break;
+      await page.mouse.wheel(0, 600);
+      await page.waitForTimeout(250);
+    }
+    await click(page, opener);
+    await named(page, 'button', 'Collapse navigation').or(named(page, 'button', 'Open navigation')).waitFor({timeout: 60000});
+    const size = `${width}x${height}`;
+    for (const mode of ['light', 'dark']) {
+      if (mode === 'dark') await setDark(page);
+      await page.mouse.move(width - 1, height - 1);
+      await shot(page, `dashboard-${mode}-${size}`);
+      if (width >= 720) {
+        await click(page, named(page, 'button', 'Collapse navigation'));
+        await page.mouse.move(width - 1, height - 1);
+        await shot(page, `dashboard-collapsed-${mode}-${size}`);
+        await click(page, named(page, 'button', 'Expand navigation'));
+      } else {
+        await click(page, named(page, 'button', 'Open navigation'));
+        await page.mouse.move(width - 1, height - 1);
+        await shot(page, `dashboard-sheet-${mode}-${size}`);
+        await page.keyboard.press('Escape');
+        await page.waitForTimeout(600);
+      }
     }
     await page.context().close();
   }

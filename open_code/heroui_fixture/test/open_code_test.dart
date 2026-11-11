@@ -254,6 +254,57 @@ void main() {
     });
   });
 
+  group('dashboard shell', () {
+    setUpAll(_loadGeist);
+
+    for (final size in [const Size(1440, 900), const Size(390, 844)]) {
+      final wide = size.width >= 720;
+      testWidgets('opens from the gallery and navigates at '
+          '${size.width.round()} logical pixels', (tester) async {
+        tester.view
+          ..physicalSize = size
+          ..devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await tester.pumpWidget(const AcmeApp());
+        await tester.pump(const Duration(milliseconds: 100));
+        await _tap(tester, find.text('Open dashboard'));
+        await tester.pump(const Duration(milliseconds: 400));
+
+        final shell = find.byType(AcmeDashboardShell<String>);
+        expect(shell, findsOneWidget);
+        expect(find.text('Good morning, Ada'), findsOneWidget);
+        expect(find.text('Northstar'), wide ? findsOneWidget : findsNothing);
+        expect(tester.takeException(), isNull);
+
+        await tester.tap(
+          find.descendant(of: shell, matching: find.byType(AcmeSwitch)),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(AcmeTheme.of(tester.element(shell)).brightness, Brightness.dark);
+        expect(tester.takeException(), isNull);
+
+        if (!wide) {
+          await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
+          await _settleSheet(tester);
+          expect(find.text('Northstar'), findsOneWidget);
+        }
+        await tester.tap(
+          find.descendant(
+            of: find.byType(AcmeSidebar<String>),
+            matching: find.text('Customers'),
+          ),
+        );
+        await _settleSheet(tester);
+        expect(
+          find.text('Customers has no content in this review.'),
+          findsOneWidget,
+        );
+        expect(find.text('Northstar'), wide ? findsOneWidget : findsNothing);
+        expect(tester.takeException(), isNull);
+      });
+    }
+  });
+
   testWidgets('every installed Acme widget builds below AcmeTheme', (
     tester,
   ) async {
@@ -285,6 +336,14 @@ void main() {
     );
     await tester.pumpWidget(const SizedBox.shrink());
   });
+}
+
+/// The compact sheet is pushed after the frame that asks for it, then slides
+/// for 250ms; the gallery below animates forever, so never wait for a settle.
+Future<void> _settleSheet(WidgetTester tester) async {
+  for (var frame = 0; frame < 4; frame++) {
+    await tester.pump(const Duration(milliseconds: 150));
+  }
 }
 
 /// Tests draw every family as Ahem unless it is loaded. The gallery sets
@@ -413,6 +472,7 @@ final _cases = <_WidgetCase>[
     {AcmeAccordionGroup<String>, AcmeAccordion<String>},
   ),
   const _WidgetCase('alert', AcmeAlert(text: 'Notice'), {AcmeAlert}),
+  const _WidgetCase('app bar', AcmeAppBar(title: 'Orders'), {AcmeAppBar}),
   const _WidgetCase('avatar', AcmeAvatar(label: 'AB'), {AcmeAvatar}),
   const _WidgetCase(
     'avatar group',
@@ -648,6 +708,33 @@ final _cases = <_WidgetCase>[
       selectedValue: 'a',
     ),
     {AcmeToggleButtonGroup<String>},
+  ),
+  _WidgetCase(
+    'sidebar in its layout',
+    AcmeSidebarLayout(
+      // The host is 640 wide; keep the sidebar inline.
+      compactBreakpoint: 320,
+      header: const AcmeAppBar(title: 'Orders'),
+      sidebar: AcmeSidebar<String>(
+        sections: const [
+          RemixSidebarSection(
+            label: 'Workspace',
+            destinations: [
+              RemixSidebarDestination(
+                value: 'orders',
+                label: 'Orders',
+                icon: AcmeIcons.dashboard,
+              ),
+            ],
+          ),
+        ],
+        selectedValue: 'orders',
+        onSelected: (_) {},
+      ),
+      body: const Text('Body'),
+    ),
+    // The layout is a StatefulWidget, outside the stateless inventory.
+    {AcmeSidebar<String>, AcmeAppBar},
   ),
   const _WidgetCase(
     'tooltip',
