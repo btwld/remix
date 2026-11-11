@@ -1,3 +1,6 @@
+import 'dart:ui' show PointerDeviceKind;
+
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -82,6 +85,156 @@ void main() {
       controller.offset,
       closeTo(controller.position.maxScrollExtent, 0.5),
     );
+  });
+
+  Future<void> wheel(WidgetTester tester, Finder over, double dy) async {
+    final mouse = TestPointer(1, PointerDeviceKind.mouse);
+    mouse.hover(tester.getCenter(over));
+    await tester.sendEventToBinding(mouse.scroll(Offset(0, dy)));
+    await tester.pump();
+  }
+
+  Future<(GlobalKey<_GrowingTranscriptState>, ScrollController)> pumpGrowing(
+    WidgetTester tester,
+  ) async {
+    final controller = ScrollController();
+    addTearDown(controller.dispose);
+    final key = GlobalKey<_GrowingTranscriptState>();
+    await pumpAgent(
+      tester,
+      SizedBox(
+        width: 300,
+        height: 120,
+        child: _GrowingTranscript(key: key, controller: controller),
+      ),
+    );
+    await tester.pump();
+    return (key, controller);
+  }
+
+  for (final dy in [-400.0, -20.0]) {
+    testWidgets('a mouse wheel turned up ${-dy}px releases the live edge and '
+        'holds the reader through later output', (tester) async {
+      final (key, controller) = await pumpGrowing(tester);
+      final end = controller.position.maxScrollExtent;
+      expect(controller.offset, closeTo(end, 0.5));
+
+      await wheel(tester, find.byType(ListView), dy);
+      expect(key.currentState!.changes, [false]);
+      final reading = controller.offset;
+      expect(reading, closeTo(end + dy, 0.5));
+
+      key.currentState!.grow();
+      await tester.pump();
+      await tester.pump();
+      expect(controller.offset, closeTo(reading, 0.5));
+      expect(
+        controller.position.maxScrollExtent,
+        greaterThan(end),
+        reason: 'The output grew below the reader.',
+      );
+    });
+  }
+
+  testWidgets('the wheel brings the reader back to the end and follows again', (
+    tester,
+  ) async {
+    final (key, controller) = await pumpGrowing(tester);
+    await wheel(tester, find.byType(ListView), -200);
+    expect(key.currentState!.changes, [false]);
+
+    await wheel(tester, find.byType(ListView), 1000);
+    expect(key.currentState!.changes, [false, true]);
+    key.currentState!.grow();
+    await tester.pump();
+    await tester.pump();
+    expect(
+      controller.offset,
+      closeTo(controller.position.maxScrollExtent, 0.5),
+    );
+  });
+
+  testWidgets('a short drag up releases even inside the follow threshold', (
+    tester,
+  ) async {
+    final (key, controller) = await pumpGrowing(tester);
+    await tester.drag(
+      find.byType(ListView),
+      const Offset(0, 30),
+      touchSlopY: 0,
+    );
+    await tester.pump();
+    expect(key.currentState!.changes, [false]);
+    final reading = controller.offset;
+
+    key.currentState!.grow();
+    await tester.pump();
+    await tester.pump();
+    expect(controller.offset, closeTo(reading, 0.5));
+  });
+
+  testWidgets('Home releases and End follows again from the keyboard', (
+    tester,
+  ) async {
+    final (key, controller) = await pumpGrowing(tester);
+    Focus.of(tester.element(find.byType(ListView))).requestFocus();
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.home);
+    await tester.pump();
+    expect(key.currentState!.changes, [false]);
+    expect(controller.offset, 0);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.end);
+    await tester.pump();
+    expect(key.currentState!.changes, [false, true]);
+    key.currentState!.grow();
+    await tester.pump();
+    await tester.pump();
+    expect(
+      controller.offset,
+      closeTo(controller.position.maxScrollExtent, 0.5),
+    );
+  });
+
+  testWidgets('a host scroll toward older output releases the live edge', (
+    tester,
+  ) async {
+    final (key, controller) = await pumpGrowing(tester);
+    controller.jumpTo(40);
+    await tester.pump();
+    expect(key.currentState!.changes, [false]);
+
+    key.currentState!.grow();
+    await tester.pump();
+    await tester.pump();
+    expect(controller.offset, 40);
+  });
+
+  testWidgets('a mouse wheel releases a plan ledger the same way', (
+    tester,
+  ) async {
+    final key = GlobalKey<_GrowingPlanState>();
+    await pumpAgent(
+      tester,
+      SizedBox(width: 300, child: _GrowingPlan(key: key)),
+    );
+    await tester.pump();
+    final scrollView = find.descendant(
+      of: find.byType(AgentPlan),
+      matching: find.byType(SingleChildScrollView),
+    );
+    final controller = tester
+        .widget<SingleChildScrollView>(scrollView)
+        .controller!;
+
+    await wheel(tester, scrollView, -30);
+    expect(key.currentState!.changes, [false]);
+    final reading = controller.offset;
+
+    key.currentState!.grow();
+    await tester.pump();
+    await tester.pump();
+    expect(controller.offset, closeTo(reading, 0.5));
   });
 
   testWidgets('turning followOutput off leaves the reader position stable', (

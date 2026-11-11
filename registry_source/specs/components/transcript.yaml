@@ -28,9 +28,12 @@ recipe_measurements:
   - scrollbar gutter 12
   - focus ring 2 inset, host ink
 behavior:
-  - Follow while distance-to-end <= threshold
-  - Release on user scroll or drag away
-  - Re-attach only after the reader returns to the edge
+  - Any scroll toward older output releases at once, whatever the input
+    (wheel, trackpad, drag, keyboard, scrollbar, focus, host scroll)
+  - Re-attach when a scroll reaches the end, or moves toward it and stops
+    within threshold
+  - Decisions read the position after the scroll moved; the wheel announces
+    its direction before it moves
   - Nested scrollables (depth > 0) do not release follow
   - Reduced motion jumps instead of animating
   - Programmatic follow is latched

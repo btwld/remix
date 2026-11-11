@@ -119,7 +119,7 @@ class _AgentTranscriptState extends State<AgentTranscript> {
 
   bool _handleScroll(ScrollNotification notification) {
     if (notification.depth != 0) return false;
-    _liveEdge.handleScroll(notification, _controller);
+    _liveEdge.handleScroll(notification);
     return notification is OverscrollNotification;
   }
 
@@ -136,12 +136,13 @@ class _AgentTranscriptState extends State<AgentTranscript> {
       _TranscriptScrollKind.home => position.minScrollExtent,
       _TranscriptScrollKind.end => position.maxScrollExtent,
     };
+    // The jump reports a scroll update, which decides following like any
+    // other reader scroll.
     position.jumpTo(
       target
           .clamp(position.minScrollExtent, position.maxScrollExtent)
           .toDouble(),
     );
-    _liveEdge.handlePosition(position);
   }
 
   @override

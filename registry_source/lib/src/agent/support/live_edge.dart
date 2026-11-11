@@ -1,7 +1,14 @@
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 /// Shared private-package live-edge state machine.
+///
+/// The reader decides. Any scroll that moves toward older content releases
+/// the edge at once, whatever produced it: a wheel or trackpad, a drag, the
+/// keyboard, a scrollbar, or focus moving to an earlier message. A scroll that
+/// arrives at the end, or moves toward it and stops within [threshold], follows
+/// again. The decision reads each [ScrollUpdateNotification] after the scroll
+/// has moved, so input that announces its direction before it moves (the mouse
+/// wheel does) cannot be mistaken for a reader still at the end.
 class AgentLiveEdgeEngine {
   AgentLiveEdgeEngine({
     required this._enabled,
@@ -26,23 +33,19 @@ class AgentLiveEdgeEngine {
 
   bool get following => _following;
 
-  void handleScroll(
-    ScrollNotification notification,
-    ScrollController controller,
-  ) {
-    if (_programmatic || !controller.hasClients) return;
-    final fromDrag =
-        notification is ScrollUpdateNotification &&
-        notification.dragDetails != null;
-    final fromUserDirection =
-        notification is UserScrollNotification &&
-        notification.direction != ScrollDirection.idle;
-    if (fromDrag || fromUserDirection) handlePosition(controller.position);
-  }
-
-  void handlePosition(ScrollPosition position) {
-    final distance = position.maxScrollExtent - position.pixels;
-    _setFollowing(distance <= threshold);
+  /// Updates following from a scroll at the scrollable's own depth.
+  void handleScroll(ScrollNotification notification) {
+    if (_programmatic || notification is! ScrollUpdateNotification) return;
+    final delta = notification.scrollDelta ?? 0;
+    final metrics = notification.metrics;
+    final distance = metrics.maxScrollExtent - metrics.pixels;
+    if (distance <= _atEnd) {
+      _setFollowing(true);
+    } else if (delta < 0) {
+      _setFollowing(false);
+    } else if (delta > 0 && distance <= threshold) {
+      _setFollowing(true);
+    }
   }
 
   void follow(ScrollController controller) {
@@ -60,6 +63,9 @@ class AgentLiveEdgeEngine {
     onChanged?.call(next);
   }
 }
+
+/// Distance from the end that still counts as being at it.
+const double _atEnd = 0.5;
 
 /// Small non-lazy scroll view used by plan and activity ledgers.
 class AgentLiveEdgeScrollView extends StatefulWidget {
@@ -122,9 +128,7 @@ class _AgentLiveEdgeScrollViewState extends State<AgentLiveEdgeScrollView> {
       },
       child: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          if (notification.depth == 0) {
-            _liveEdge.handleScroll(notification, _controller);
-          }
+          if (notification.depth == 0) _liveEdge.handleScroll(notification);
           return false;
         },
         child: SingleChildScrollView(
