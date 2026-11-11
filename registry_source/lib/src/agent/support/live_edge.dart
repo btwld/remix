@@ -51,8 +51,17 @@ class AgentLiveEdgeEngine {
     }
   }
 
+  /// The reader asked for the newest output: follow again.
+  void resume() => _setFollowing(true);
+
   void follow(ScrollController controller) {
-    if (!enabled || !following || !controller.hasClients) return;
+    if (!enabled || !following) return;
+    jumpToEnd(controller);
+  }
+
+  /// Moves to the end without reading the jump as a reader scroll.
+  void jumpToEnd(ScrollController controller) {
+    if (!controller.hasClients) return;
     final position = controller.position;
     if (!position.hasContentDimensions) return;
     _programmatic = true;

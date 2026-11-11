@@ -11,6 +11,7 @@ mixin _$AgentTranscriptSpec
   StyleSpec<BoxSpec> get viewport;
   StyleSpec<BoxSpec> get item;
   double? get spacing;
+  StyleSpec<BoxSpec> get latest;
 
   @override
   Type get type => AgentTranscriptSpec;
@@ -20,11 +21,13 @@ mixin _$AgentTranscriptSpec
     StyleSpec<BoxSpec>? viewport,
     StyleSpec<BoxSpec>? item,
     double? spacing,
+    StyleSpec<BoxSpec>? latest,
   }) {
     return AgentTranscriptSpec(
       viewport: viewport ?? this.viewport,
       item: item ?? this.item,
       spacing: spacing ?? this.spacing,
+      latest: latest ?? this.latest,
     );
   }
 
@@ -34,11 +37,12 @@ mixin _$AgentTranscriptSpec
       viewport: viewport.lerp(other?.viewport, t),
       item: item.lerp(other?.item, t),
       spacing: MixOps.lerp(spacing, other?.spacing, t),
+      latest: latest.lerp(other?.latest, t),
     );
   }
 
   @override
-  List<Object?> get props => [viewport, item, spacing];
+  List<Object?> get props => [viewport, item, spacing, latest];
 
   @override
   bool operator ==(Object other) {
@@ -82,7 +86,8 @@ mixin _$AgentTranscriptSpec
     properties
       ..add(DiagnosticsProperty('viewport', viewport))
       ..add(DiagnosticsProperty('item', item))
-      ..add(DoubleProperty('spacing', spacing));
+      ..add(DoubleProperty('spacing', spacing))
+      ..add(DiagnosticsProperty('latest', latest));
   }
 }
 
@@ -101,22 +106,26 @@ class AgentTranscriptStyler
   final Prop<StyleSpec<BoxSpec>>? $viewport;
   final Prop<StyleSpec<BoxSpec>>? $item;
   final Prop<double>? $spacing;
+  final Prop<StyleSpec<BoxSpec>>? $latest;
 
   const AgentTranscriptStyler.create({
     Prop<StyleSpec<BoxSpec>>? viewport,
     Prop<StyleSpec<BoxSpec>>? item,
     Prop<double>? spacing,
+    Prop<StyleSpec<BoxSpec>>? latest,
     super.variants,
     super.modifier,
     super.animation,
   }) : $viewport = viewport,
        $item = item,
-       $spacing = spacing;
+       $spacing = spacing,
+       $latest = latest;
 
   AgentTranscriptStyler({
     BoxStyler? viewport,
     BoxStyler? item,
     double? spacing,
+    BoxStyler? latest,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<AgentTranscriptSpec>>? variants,
@@ -124,6 +133,7 @@ class AgentTranscriptStyler
          viewport: Prop.maybeMix(viewport),
          item: Prop.maybeMix(item),
          spacing: Prop.maybe(spacing),
+         latest: Prop.maybeMix(latest),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -135,12 +145,15 @@ class AgentTranscriptStyler
       AgentTranscriptStyler().item(value);
   factory AgentTranscriptStyler.spacing(double value) =>
       AgentTranscriptStyler().spacing(value);
+  factory AgentTranscriptStyler.latest(BoxStyler value) =>
+      AgentTranscriptStyler().latest(value);
 
   @override
   Set<String> get $stylerFieldNames => const {
     'viewport',
     'item',
     'spacing',
+    'latest',
     'animation',
     'modifier',
     'variants',
@@ -159,6 +172,11 @@ class AgentTranscriptStyler
   /// Sets the spacing.
   AgentTranscriptStyler spacing(double value) {
     return merge(AgentTranscriptStyler(spacing: value));
+  }
+
+  /// Sets the latest.
+  AgentTranscriptStyler latest(BoxStyler value) {
+    return merge(AgentTranscriptStyler(latest: value));
   }
 
   /// Sets the animation configuration.
@@ -197,6 +215,10 @@ class AgentTranscriptStyler
     ValueChanged<bool>? onFollowChanged,
     ScrollController? controller,
     Clip clipBehavior = Clip.hardEdge,
+    bool showLatestButton = true,
+    String latestLabel = 'Scroll to latest',
+    RemixIconButtonIconBuilder? latestIconBuilder,
+    IconButtonStyler latestStyle = const IconButtonStyler.create(),
   }) {
     return AgentTranscript(
       key: key,
@@ -210,6 +232,10 @@ class AgentTranscriptStyler
       onFollowChanged: onFollowChanged,
       controller: controller,
       clipBehavior: clipBehavior,
+      showLatestButton: showLatestButton,
+      latestLabel: latestLabel,
+      latestIconBuilder: latestIconBuilder,
+      latestStyle: latestStyle,
     );
   }
 
@@ -220,6 +246,7 @@ class AgentTranscriptStyler
       viewport: MixOps.merge($viewport, other?.$viewport),
       item: MixOps.merge($item, other?.$item),
       spacing: MixOps.merge($spacing, other?.$spacing),
+      latest: MixOps.merge($latest, other?.$latest),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -233,6 +260,7 @@ class AgentTranscriptStyler
       viewport: MixOps.resolve(context, $viewport),
       item: MixOps.resolve(context, $item),
       spacing: MixOps.resolve(context, $spacing),
+      latest: MixOps.resolve(context, $latest),
     );
 
     return StyleSpec(
@@ -248,7 +276,8 @@ class AgentTranscriptStyler
     properties
       ..add(DiagnosticsProperty('viewport', $viewport))
       ..add(DiagnosticsProperty('item', $item))
-      ..add(DiagnosticsProperty('spacing', $spacing));
+      ..add(DiagnosticsProperty('spacing', $spacing))
+      ..add(DiagnosticsProperty('latest', $latest));
   }
 
   @override
@@ -256,6 +285,7 @@ class AgentTranscriptStyler
     $viewport,
     $item,
     $spacing,
+    $latest,
     $animation,
     $modifier,
     $variants,

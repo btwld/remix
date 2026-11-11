@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../support/functional_glyph.dart';
 import '../support/live_edge.dart';
 
 part 'transcript.g.dart';
@@ -21,6 +23,10 @@ class AgentTranscript extends StatefulWidget {
     this.onFollowChanged,
     this.controller,
     this.clipBehavior = Clip.hardEdge,
+    this.showLatestButton = true,
+    this.latestLabel = 'Scroll to latest',
+    this.latestIconBuilder,
+    this.latestStyle = const IconButtonStyler.create(),
     this.style = const AgentTranscriptStyler.create(),
     this.styleSpec,
   }) : itemCount = null,
@@ -38,6 +44,10 @@ class AgentTranscript extends StatefulWidget {
     this.onFollowChanged,
     this.controller,
     this.clipBehavior = Clip.hardEdge,
+    this.showLatestButton = true,
+    this.latestLabel = 'Scroll to latest',
+    this.latestIconBuilder,
+    this.latestStyle = const IconButtonStyler.create(),
     this.style = const AgentTranscriptStyler.create(),
     this.styleSpec,
   }) : children = null;
@@ -53,6 +63,16 @@ class AgentTranscript extends StatefulWidget {
   final ValueChanged<bool>? onFollowChanged;
   final ScrollController? controller;
   final Clip clipBehavior;
+
+  /// Whether a reader away from the live edge is offered a way back to it.
+  ///
+  /// The button appears once the reader is more than [followThreshold] from
+  /// the end and the transcript is not following, returns to the end
+  /// (instantly when animations are disabled) and follows again.
+  final bool showLatestButton;
+  final String latestLabel;
+  final RemixIconButtonIconBuilder? latestIconBuilder;
+  final IconButtonStyler latestStyle;
   final AgentTranscriptStyler style;
   final AgentTranscriptSpec? styleSpec;
 
@@ -65,6 +85,10 @@ class _AgentTranscriptState extends State<AgentTranscript> {
   late ScrollController _controller;
   late final AgentLiveEdgeEngine _liveEdge;
   late final AgentLiveEdgeScrollPhysics _physics;
+  final FocusNode _viewportFocus = FocusNode(debugLabel: 'AgentTranscript');
+  final FocusNode _latestFocus = FocusNode(debugLabel: 'Scroll to latest');
+  bool _showLatest = false;
+  bool _returning = false;
 
   /// Publishes this surface's focus to the styles resolved above it.
   ///
@@ -86,7 +110,7 @@ class _AgentTranscriptState extends State<AgentTranscript> {
     _liveEdge = AgentLiveEdgeEngine(
       enabled: widget.followOutput,
       threshold: widget.followThreshold,
-      onChanged: widget.onFollowChanged,
+      onChanged: _handleFollowChanged,
     );
     _physics = AgentLiveEdgeScrollPhysics(
       liveEdge: _liveEdge,
@@ -101,8 +125,7 @@ class _AgentTranscriptState extends State<AgentTranscript> {
     super.didUpdateWidget(oldWidget);
     _liveEdge
       ..enabled = widget.followOutput
-      ..threshold = widget.followThreshold
-      ..onChanged = widget.onFollowChanged;
+      ..threshold = widget.followThreshold;
     if (!identical(oldWidget.controller, widget.controller)) {
       final offset = _controller.hasClients ? _controller.offset : 0.0;
       final oldOwned = _ownedController;
@@ -114,9 +137,66 @@ class _AgentTranscriptState extends State<AgentTranscript> {
         WidgetsBinding.instance.addPostFrameCallback((_) => oldOwned.dispose());
       }
       _scheduleFollow();
-    } else if (!oldWidget.followOutput && widget.followOutput) {
+    } else if (!oldWidget.followOutput && widget.followOutput && !_returning) {
       _scheduleFollow();
     }
+    // Build follows; a field write is enough.
+    _showLatest = _latestWanted(null);
+  }
+
+  void _handleFollowChanged(bool following) {
+    widget.onFollowChanged?.call(following);
+    _updateLatest(null);
+  }
+
+  /// Whether the reader is away from the end without the transcript
+  /// following them back, like the scroll button use-stick-to-bottom's
+  /// `isAtBottom` hides near the end.
+  bool _latestWanted(ScrollMetrics? metrics) {
+    if (!widget.showLatestButton) return false;
+    if (_liveEdge.sticks) return false;
+    final position = _controller.hasClients ? _controller.position : null;
+    final current =
+        metrics ??
+        (position != null && position.hasContentDimensions ? position : null);
+    if (current == null) return false;
+    return current.maxScrollExtent - current.pixels > _liveEdge.threshold;
+  }
+
+  void _updateLatest(ScrollMetrics? metrics) {
+    final next = _latestWanted(metrics);
+    if (next == _showLatest || !mounted) return;
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _updateLatest(null));
+      return;
+    }
+    setState(() => _showLatest = next);
+  }
+
+  void _returnToLatest() {
+    final hadFocus = _latestFocus.hasFocus;
+    _liveEdge.resume();
+    _updateLatest(null);
+    if (hadFocus) _viewportFocus.requestFocus();
+    if (!_controller.hasClients) return;
+    final position = _controller.position;
+    if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) {
+      _liveEdge.jumpToEnd(_controller);
+      return;
+    }
+    _returning = true;
+    position
+        .animateTo(
+          position.maxScrollExtent,
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+        )
+        .whenComplete(() {
+          _returning = false;
+          // Output may have grown while the animation ran.
+          if (mounted && _liveEdge.following) _liveEdge.jumpToEnd(_controller);
+        });
   }
 
   void _scheduleFollow() {
@@ -128,6 +208,7 @@ class _AgentTranscriptState extends State<AgentTranscript> {
   bool _handleScroll(ScrollNotification notification) {
     if (notification.depth != 0) return false;
     _liveEdge.handleScroll(notification);
+    _updateLatest(notification.metrics);
     return notification is OverscrollNotification;
   }
 
@@ -165,6 +246,7 @@ class _AgentTranscriptState extends State<AgentTranscript> {
         label: widget.label,
         value: widget.busy ? widget.busyLabel : null,
         child: FocusableActionDetector(
+          focusNode: _viewportFocus,
           onFocusChange: (focused) =>
               _statesController.update(WidgetState.focused, focused),
           shortcuts: _transcriptShortcuts,
@@ -179,26 +261,54 @@ class _AgentTranscriptState extends State<AgentTranscript> {
           child: Box(
             styleSpec: spec.viewport,
             child: LayoutBuilder(
-              builder: (context, constraints) =>
-                  NotificationListener<ScrollNotification>(
+              builder: (context, constraints) {
+                final bounded = constraints.hasBoundedHeight;
+                final list = NotificationListener<ScrollMetricsNotification>(
+                  onNotification: (notification) {
+                    if (notification.depth == 0) {
+                      _updateLatest(notification.metrics);
+                    }
+                    return false;
+                  },
+                  child: NotificationListener<ScrollNotification>(
                     onNotification: _handleScroll,
                     child: ScrollConfiguration(
                       behavior: ScrollConfiguration.of(context).copyWith(
                         overscroll: false,
                         physics: const ClampingScrollPhysics(),
                       ),
-                      child: _buildList(
-                        spec,
-                        shrinkWrap: !constraints.hasBoundedHeight,
-                      ),
+                      child: _buildList(spec, shrinkWrap: !bounded),
                     ),
                   ),
+                );
+                if (!bounded || !widget.showLatestButton) return list;
+                return Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [list, if (_showLatest) _latestButton(spec)],
+                );
+              },
             ),
           ),
         ),
       ),
     );
   }
+
+  Widget _latestButton(AgentTranscriptSpec spec) => Box(
+    styleSpec: spec.latest,
+    child: RemixIconButton(
+      key: const ValueKey('agent-transcript-latest'),
+      icon: null,
+      focusNode: _latestFocus,
+      iconBuilder:
+          widget.latestIconBuilder ??
+          (context, iconSpec, icon) =>
+              AgentFunctionalGlyph(kind: .latest, spec: iconSpec),
+      semanticLabel: widget.latestLabel,
+      onPressed: _returnToLatest,
+      style: widget.latestStyle,
+    ),
+  );
 
   Widget _buildList(AgentTranscriptSpec spec, {required bool shrinkWrap}) {
     final children = widget.children;
@@ -223,6 +333,8 @@ class _AgentTranscriptState extends State<AgentTranscript> {
   void dispose() {
     _ownedController?.dispose();
     _statesController.dispose();
+    _viewportFocus.dispose();
+    _latestFocus.dispose();
     super.dispose();
   }
 }
@@ -265,10 +377,16 @@ final class AgentTranscriptSpec with _$AgentTranscriptSpec {
   @override
   final double? spacing;
 
+  /// Places the scroll-to-latest button over the bottom of the viewport.
+  @override
+  final StyleSpec<BoxSpec> latest;
+
   const AgentTranscriptSpec({
     StyleSpec<BoxSpec>? viewport,
     StyleSpec<BoxSpec>? item,
     this.spacing,
+    StyleSpec<BoxSpec>? latest,
   }) : viewport = viewport ?? const StyleSpec(spec: BoxSpec()),
-       item = item ?? const StyleSpec(spec: BoxSpec());
+       item = item ?? const StyleSpec(spec: BoxSpec()),
+       latest = latest ?? const StyleSpec(spec: BoxSpec());
 }
