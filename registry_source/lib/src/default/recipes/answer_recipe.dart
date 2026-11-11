@@ -33,7 +33,9 @@ VanillaAgentAnswerRecipe vanillaAgentAnswerRecipe({
   style: AgentAnswerStyler(
     body: BoxStyler(),
     actions: FlexBoxStyler().spacing(6).padding(.top(8)),
-    feedback: BoxStyler().padding(.top(6)),
+    // The actions row centres its children; a top inset here dropped the
+    // feedback below the icons beside it.
+    feedback: BoxStyler(),
     sourcesLabel: TextStyler().color(VanillaTokens.foreground()).fontSize(13),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
   ).merge(style),
