@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
 import '../theme/tokens.dart';
+import '../theme/theme_scope.dart';
 
 part 'slider.g.dart';
 
@@ -13,9 +14,17 @@ part 'slider.g.dart';
 /// a 0-1 value onto the filled range, and the slider accessibility semantics;
 /// this recipe supplies the rail, the filled range, and the thumb.
 ///
-/// The rail is `muted` and the range is `primary`. The thumb is a white disc
+/// The pill-shaped rail is `mutedForeground` in light and `ring` in dark;
+/// the range is `primary`.
+/// Both slider recipes reserve a 48px interaction height. The thumb is a white disc
 /// with a `primary` outline and a small shadow, which keeps it a distinct
-/// handle on either page.
+/// handle on either page. In dark mode a dark outline separates overlapping
+/// white handles.
+///
+/// Set [surfaceColor] to the actual enclosing surface on cards or tinted panels
+/// (for example, `VanillaTokens.card.resolve(context)`). It defaults to the page
+/// background. Hover and press halos blend against that surface so the range
+/// does not show through them.
 ///
 /// `semanticFormatterCallback` is deliberately not forwarded to the generated
 /// `VanillaSlider`. Its type is
@@ -42,31 +51,38 @@ part 'slider.g.dart';
   }),
 )
 SliderStyler vanillaSliderStyle({
+  Color? surfaceColor,
   SliderStyler style = const SliderStyler.create(),
 }) {
   return SliderStyler()
+      .wrap(.sizedBox(height: VanillaTokens.s12))
       .animate(VanillaTokens.motion)
       .thickness(_rail)
-      .trackColor(VanillaTokens.muted())
+      .trackColor(_railColor())
       .rangeColor(VanillaTokens.primary())
+      .track(.borderRadius(.all(_circular)))
+      .range(.borderRadius(.all(_circular)))
       .thumbSize(const Size.square(VanillaTokens.icon))
-      // White in both themes: the thumb is a physical-looking handle, and its
-      // `primary` outline and small shadow are what separate it from the range
-      // it sits on.
+      // The dark outline also separates white handles when they overlap.
       .thumbColor(_thumbFill)
       .thumb(
         BoxStyler()
             .borderRadius(.all(_circular))
             .border(
-              .color(
-                VanillaTokens.primary(),
-              ).width(VanillaTokens.strokeHairline),
+              .color(_thumbBorderColor()).width(VanillaTokens.strokeHairline),
             )
             .shadows(VanillaShadow.sm.box),
       )
-      // A thumb is a grab target, so it answers the pointer with the same ring
-      // keyboard focus draws.
-      .onHovered(SliderStyler().thumbEffects(_thumbRing()))
+      .onHovered(
+        SliderStyler().thumbEffects(
+          _thumbRing(_ringColor(0.4, surfaceColor), VanillaTokens.s0_5),
+        ),
+      )
+      .onPressed(
+        SliderStyler().thumbEffects(
+          _thumbRing(_ringColor(0.65, surfaceColor), VanillaTokens.s1_5),
+        ),
+      )
       .onFocusVisible(_focusVisibleStyle())
       .onDisabled(_disabledStyle())
       .merge(style);
@@ -78,25 +94,59 @@ const _circular = Radius.circular(VanillaTokens.pill);
 /// The thumb's fill: white, in both themes.
 const _thumbFill = Color(0xFFFFFFFF);
 
-/// Width of the ring around a hovered or focused thumb: 4px, a step wider than
-/// other controls' because the thumb is a small target.
-const _thumbRingWidth = 4.0;
-
 /// The rail's thickness: 6px.
 ///
 /// One size, not a scale. A call site that needs another sets `.thickness(...)`
 /// through [style].
 const _rail = VanillaTokens.s1_5;
 
-/// The ring around a hovered or focused thumb.
-RemixBoxEffectsMix _thumbRing() => vanillaFocusRing(width: _thumbRingWidth);
+final _railColor = ContextToken<Color>(
+  (context) =>
+      (VanillaTheme.of(context).brightness == Brightness.dark
+              ? VanillaTokens.ring
+              : VanillaTokens.mutedForeground)
+          .resolve(context),
+);
+
+final _thumbBorderColor = ContextToken<Color>(
+  (context) =>
+      (VanillaTheme.of(context).brightness == Brightness.dark
+              ? VanillaTokens.primaryForeground
+              : VanillaTokens.primary)
+          .resolve(context),
+);
+
+// An opaque halo stays even over the filled interval. Use the caller's actual
+// surface on cards instead of baking the page colour into every instance.
+ContextToken<Color> _ringColor(double alpha, Color? surfaceColor) =>
+    _ringColors.putIfAbsent(
+      (alpha, surfaceColor),
+      () => ContextToken<Color>(
+        (context) => Color.alphaBlend(
+          VanillaTokens.mutedForeground
+              .resolve(context)
+              .withValues(alpha: alpha),
+          surfaceColor ?? VanillaTokens.background.resolve(context),
+        ),
+      ),
+    );
+
+// ContextToken equality is resolver identity, as in vanillaTint. Cache per
+// argument set so rebuilding the same recipe preserves style equality.
+final _ringColors = <(double, Color?), ContextToken<Color>>{};
+
+RemixBoxEffectsMix _thumbRing(MixToken<Color> color, double width) =>
+    RemixBoxEffectsMix(
+      outline: BorderSideMix(color: color(), width: width),
+    );
 
 /// The keyboard focus ring, drawn around the thumb.
 ///
 /// `thumbFocusEffects` rather than `thumbEffects`: Remix paints the former
 /// only while the slider has visible focus, which is the state a ring is for.
-SliderStyler _focusVisibleStyle() =>
-    SliderStyler().thumbFocusEffects(_thumbRing());
+SliderStyler _focusVisibleStyle() => SliderStyler().thumbFocusEffects(
+  _thumbRing(VanillaTokens.primary, VanillaTokens.strokeRing),
+);
 
 /// Declared last so it wins over every other state fragment.
 ///

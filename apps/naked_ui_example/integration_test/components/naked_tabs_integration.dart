@@ -66,16 +66,44 @@ void main() {
       final darkTabKey = UniqueKey();
       final systemTabKey = UniqueKey();
       final darkTabFocusNode = tester.createManagedFocusNode();
+      final beforeTabsFocusNode = tester.createManagedFocusNode();
+      final afterTabsFocusNode = tester.createManagedFocusNode();
+
+      Future<void> tab({bool reverse = false}) async {
+        if (reverse) {
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+        }
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        if (reverse) {
+          await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+        }
+        await tester.pumpAndSettle();
+      }
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: _StatefulTabsWidget(
-                lightTabKey: lightTabKey,
-                darkTabKey: darkTabKey,
-                systemTabKey: systemTabKey,
-                darkTabFocusNode: darkTabFocusNode,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton(
+                    focusNode: beforeTabsFocusNode,
+                    onPressed: () {},
+                    child: const Text('Before tabs'),
+                  ),
+                  _StatefulTabsWidget(
+                    lightTabKey: lightTabKey,
+                    darkTabKey: darkTabKey,
+                    systemTabKey: systemTabKey,
+                    darkTabFocusNode: darkTabFocusNode,
+                  ),
+                  TextButton(
+                    focusNode: afterTabsFocusNode,
+                    onPressed: () {},
+                    child: const Text('After tabs'),
+                  ),
+                ],
               ),
             ),
           ),
@@ -93,12 +121,31 @@ void main() {
         reason: 'activating the focused dark tab must show its view',
       );
 
-      // Test tab order navigation
-      await tester.verifyTabOrder([
-        find.byKey(lightTabKey),
-        find.byKey(darkTabKey),
-        find.byKey(systemTabKey),
-      ]);
+      // The selected tab is the bar's one sequential stop. Tab must leave
+      // the bar; Shift-Tab restores its selected entry rather than visiting
+      // every sibling trigger.
+      await tab();
+      expect(afterTabsFocusNode.hasPrimaryFocus, isTrue);
+      await tab(reverse: true);
+      expect(tester.hasPrimaryFocusOn(find.byKey(darkTabKey)), isTrue);
+
+      // Arrows stay within the bar and automatic activation follows focus.
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pumpAndSettle();
+      expect(tester.hasPrimaryFocusOn(find.byKey(systemTabKey)), isTrue);
+      expect(find.text('System Content'), findsOneWidget);
+      await tab();
+      expect(afterTabsFocusNode.hasPrimaryFocus, isTrue);
+      await tab(reverse: true);
+      expect(tester.hasPrimaryFocusOn(find.byKey(systemTabKey)), isTrue);
+      await tab(reverse: true);
+      expect(beforeTabsFocusNode.hasPrimaryFocus, isTrue);
+      await tab();
+      expect(tester.hasPrimaryFocusOn(find.byKey(systemTabKey)), isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pumpAndSettle();
+      expect(tester.hasPrimaryFocusOn(find.byKey(darkTabKey)), isTrue);
+      expect(find.text('Dark Content'), findsOneWidget);
     });
 
     testWidgets('tab state callbacks work correctly', (tester) async {

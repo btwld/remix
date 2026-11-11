@@ -552,7 +552,7 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
       semanticLabel: widget.semanticLabel,
       child: widget.child,
       builder: (context, state, child) {
-        final trigger = NakedStateScopeBuilder(
+        return NakedStateScopeBuilder(
           value: NakedMenuState(
             states: state.states,
             isOpen: _controller.isOpen,
@@ -560,10 +560,6 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
           child: child,
           builder: widget.builder,
         );
-
-        return widget.semanticLabel == null
-            ? trigger
-            : ExcludeSemantics(child: trigger);
       },
     );
     final trigger = MouseRegion(
@@ -677,10 +673,10 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
 /// Set [openOnTap] to false to use a control you already have instead, such as
 /// a button from your design system. The menu then draws no button and adds no
 /// activation or focus stop, so the control opens and closes the menu through
-/// [controller] and carries [triggerFocusNode], which receives focus when the
-/// menu closes. Pass one control: the menu merges its semantics into a single
-/// node that also carries the expanded state, so do not wrap it in
-/// [MergeSemantics].
+/// [controller] and carries [triggerFocusNode], which gets focus back when the
+/// menu closes unless focus has moved elsewhere. Pass one control: the menu
+/// merges its semantics into a single node that also carries the expanded
+/// state, so do not wrap it in [MergeSemantics].
 ///
 /// Keep the controller and focus node in a [State] and dispose the node:
 /// ```dart
@@ -740,7 +736,7 @@ class NakedMenu<T> extends StatefulWidget {
     this.openOnTap = true,
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
-    this.constrainToAvailableHeight = false,
+    this.constrainToAvailableSpace = false,
     this.semanticLabel,
     this.excludeSemantics = false,
   }) : assert(
@@ -815,9 +811,9 @@ class NakedMenu<T> extends StatefulWidget {
   /// When false, [child] or [builder] is the caller's own control. The menu
   /// adds no button, tap or keyboard activation, or focus stop of its own, so
   /// the control must open and close the menu through [controller], and
-  /// [triggerFocusNode] belongs on the control so focus returns to it when the
-  /// menu closes. The [builder] receives no widget states in this mode; only
-  /// [NakedMenuState.isOpen] is meaningful.
+  /// [triggerFocusNode] belongs on the control so focus can return to it when
+  /// the menu closes. The [builder] receives no widget states in this mode;
+  /// only [NakedMenuState.isOpen] is meaningful.
   ///
   /// The menu adds the expanded state to the control's semantics, keeping live
   /// announcements separate from its accessible name. Pass a single control
@@ -829,26 +825,33 @@ class NakedMenu<T> extends StatefulWidget {
 
   /// Optional focus node for the trigger.
   ///
-  /// Focus returns to this node when the menu closes. With [openOnTap] set to
-  /// false, attach it to the caller's own control.
+  /// When the menu closes, focus returns to this node unless something else
+  /// has claimed it: after Escape or a selection it returns, but if the user
+  /// clicked a text field outside the menu, or a callback such as [onSelected]
+  /// focused another node, that focus stays. With [openOnTap] set to false,
+  /// attach it to the caller's own control.
   final FocusNode? triggerFocusNode;
 
   /// Overlay positioning configuration.
   final OverlayPositionConfig positioning;
 
-  /// Whether to lay the overlay panel out no taller than the space above or
-  /// below the trigger.
+  /// Whether to lay the overlay panel out within the space it can use.
   ///
-  /// By default the panel can be as tall as the whole overlay, so one taller
+  /// By default the panel can be as large as the whole overlay, so one taller
   /// than the space beside the trigger slides over the trigger. When true, the
   /// panel is capped at the space on the side [positioning] resolves to, after
   /// its side offset and collision padding, so a scrollable panel scrolls
   /// there. With collision avoidance, if neither side has
   /// [OverlayPositionConfig.minimumAvailableHeight] of room, the panel may
   /// overlap the trigger within the collision-padded overlay bounds instead.
-  /// Content that cannot scroll overflows the capped panel. See
-  /// [OverlayPositioner.constrainToAvailableHeight].
-  final bool constrainToAvailableHeight;
+  ///
+  /// Independently of that height rule, when both this flag and
+  /// [OverlayPositionConfig.avoidCollisions] are true (the default), the panel is
+  /// also never wider than the collision-padded overlay, on any side, and
+  /// scrollable content scrolls horizontally. Without collision avoidance the
+  /// width is not capped. Content that cannot scroll overflows the capped
+  /// panel. See [OverlayPositioner.constrainToAvailableSpace].
+  final bool constrainToAvailableSpace;
 
   /// Semantic label for the menu trigger.
   ///
@@ -991,15 +994,11 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
                 isOpen: _isOpen,
               );
 
-              final content = NakedStateScopeBuilder(
+              return NakedStateScopeBuilder(
                 value: menuState,
                 child: widget.child,
                 builder: widget.builder,
               );
-
-              return widget.semanticLabel == null
-                  ? content
-                  : ExcludeSemantics(child: content);
             },
           )
         : NakedStateScopeBuilder(
@@ -1077,10 +1076,11 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
         );
         return AnchoredOverlay(
           info: info,
+          useRootOverlay: widget.useRootOverlay,
           positioning: widget.positioning,
-          constrainToAvailableHeight: widget.constrainToAvailableHeight,
+          constrainToAvailableSpace: widget.constrainToAvailableSpace,
           closeOnTapOutside: widget.closeOnClickOutside,
-          child: panel,
+          child: KeyedSubtree(key: overlayContentKey, child: panel),
         );
       },
       child: menuChild,

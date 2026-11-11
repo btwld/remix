@@ -1,6 +1,8 @@
 library;
 
 export '../mixins/naked_mixins.dart';
+export 'civil_date.dart';
+export 'civil_date_range.dart';
 export 'equality.dart' show NakedEquatable;
 export 'naked_focusable_detector.dart';
 export 'naked_state_scope.dart';

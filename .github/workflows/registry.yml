@@ -12,9 +12,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  validate:
-    timeout-minutes: 90
-    name: Validate registry
+  static:
+    timeout-minutes: 20
+    name: Validate registry contracts
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -30,26 +30,50 @@ jobs:
       - name: Validate generated output and dependency floors
         run: |
           dart run tool/build_registry.dart --check
+          dart run tool/generate_skills_index.dart --check
           dart run tool/check_dependency_constraints.dart
           dart run tool/check_version_alignment.dart
           dart test test/tool/build_registry_test.dart test/tool/build_registry_agent_test.dart
+          dart test test/tool/check_open_code_test.dart test/tool/open_code_lifecycle_test.dart test/tool/check_published_cli_test.dart
       - name: Test CLI
         working-directory: packages/remix_cli
         run: dart test
-      # The aggregate covers every preset once, reading the exact candidate
-      # from GitHub with hosted runtimes. A dispatch validates its own commit;
-      # only the main branch can reach the promotion job below.
+
+  hosted:
+    timeout-minutes: 20
+    name: Hosted (${{ matrix.preset }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [vanilla, fortal, heroui]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
+      - run: flutter pub get
+      # Direct invocation keeps child stderr out of melos's error logger.
       - name: Install candidate presets with hosted dependencies
         env:
           REMIX_REGISTRY_RELEASE_REF: ${{ github.sha }}
-        run: dart run melos run open-code:release:check
+        run: dart run tool/check_open_code.dart --preset ${{ matrix.preset }} --source hosted
+      - name: Check released CLI compatibility with candidate
+        run: dart run tool/check_published_cli.dart --preset ${{ matrix.preset }} --ref ${{ github.sha }}
 
   promote:
-    timeout-minutes: 15
+    # ubuntu-slim stops at 15 minutes. The push finishes well inside 10.
+    timeout-minutes: 10
     name: Promote registry
-    needs: validate
+    needs: [static, hosted]
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    # Push an already-validated commit. No toolchain.
+    runs-on: ubuntu-slim
     permissions:
       contents: write
     steps:

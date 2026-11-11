@@ -3030,10 +3030,8 @@ void main() {
                 )
                 .having((slot) => slot.child, 'child', isA<RemixPathIcon>()),
           );
-          expect(
-            find.ancestor(of: row, matching: find.byType(ExcludeSemantics)),
-            findsOneWidget,
-          );
+          // The accessible name replaces the visible label without duplicating it.
+          expect(find.bySemanticsLabel(label), findsNothing);
         }
 
         expect(find.bySemanticsLabel('Checked choice'), findsOneWidget);

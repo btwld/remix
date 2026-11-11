@@ -8,6 +8,10 @@
   "sha256": "2c402bc75c65643a9ea02a2f700b86ee07d6e884963fee09cb2959eb2001889b"
  },
  {
+  "path": "source/dist/components/autocomplete.css",
+  "sha256": "ad4f036dc668805879090d1d05dafbcfccc716d7ed026a546d10c1583649db12"
+ },
+ {
   "path": "source/dist/components/avatar-group.css",
   "sha256": "0b61587b363963389fca303d6fe2b73326bc31d72e189180096261363be6daf8"
  },
@@ -32,6 +36,10 @@
   "sha256": "a2bd37d460655889cbf6f492fb083e7e632201c7ab819c9b2533335a5ecc248c"
  },
  {
+  "path": "source/dist/components/calendar.css",
+  "sha256": "8e0f91f5b9def7a1a48451c08dccfcb395eee348355701ebc4a24b1d71fe194a"
+ },
+ {
   "path": "source/dist/components/card.css",
   "sha256": "da156ad4192d4dd969a0a41ea0ee3be5474829113c4dfbbe6527d4fbeda203d8"
  },
@@ -50,6 +58,26 @@
  {
   "path": "source/dist/components/close-button.css",
   "sha256": "f185e385b0803022aae89b98ce5c76d847c2ba28ef947f32e2e67923f72628c2"
+ },
+ {
+  "path": "source/dist/components/combo-box.css",
+  "sha256": "90957a3239531a4dcb8d08c92d77c68da0e97492204e69340a6a40abb1682e45"
+ },
+ {
+  "path": "source/dist/components/combo-box/combo-box.styles.js",
+  "sha256": "7e6ce4ca7deb18db9250af0acc2eb9ce280d1ef2b37b9f329433860156b3473b"
+ },
+ {
+  "path": "source/dist/components/date-field.css",
+  "sha256": "af87b502787ff992627be66c29c245e68da7438fd6ceeb967c3d0b8418759619"
+ },
+ {
+  "path": "source/dist/components/date-picker.css",
+  "sha256": "8570b93458dd5dc3ed999a961147de92459eaf0d5892c58bbeec85676bb0b71c"
+ },
+ {
+  "path": "source/dist/components/date-range-picker.css",
+  "sha256": "db1809af98a9a0707aeb2a842f7032a1a6ea299e13f466b62a8d88b447e28216"
  },
  {
   "path": "source/dist/components/description.css",
@@ -130,6 +158,10 @@
  {
   "path": "source/dist/components/radio.css",
   "sha256": "51d8ae53e525703993034db6ad6bd469d7375a71011073ee6788724d41f8b1d1"
+ },
+ {
+  "path": "source/dist/components/range-calendar.css",
+  "sha256": "43e94c644a82070421364c73d534ff38da265de9c65487619be129f6387e00cb"
  },
  {
   "path": "source/dist/components/search-field.css",
@@ -232,6 +264,14 @@
   "sha256": "fbd3ba1d23b3dca8d75746476edf1225edb655b03474ab58791a8a4291a52216"
  },
  {
+  "path": "source/react/dist/components/calendar/calendar.d.ts",
+  "sha256": "e84caed75972c7d49c1b7fc906ac9794b033858cec1a414d9998bd0c8281fa41"
+ },
+ {
+  "path": "source/react/dist/components/calendar/calendar.js",
+  "sha256": "a5211885fe9446e172d5399c044b9f326b6cfe30781a1a1ff6f618a3e376de8a"
+ },
+ {
   "path": "source/react/dist/components/checkbox-group/checkbox-group.js",
   "sha256": "cf9ab9d976de9a815aa805993a3bc9eb496eae77dca64de54feaf236ea170684"
  },
@@ -242,6 +282,34 @@
  {
   "path": "source/react/dist/components/close-button/close-button.js",
   "sha256": "2d53aa21f2816f95169b6afed97ee8f1182f3f1ae0787c698b7afd8ebb71288f"
+ },
+ {
+  "path": "source/react/dist/components/combo-box/combo-box.d.ts",
+  "sha256": "609f88ad79d42f48bdadb4ce3852ad5edfed00a5aadcc5339addf05284cef272"
+ },
+ {
+  "path": "source/react/dist/components/combo-box/combo-box.js",
+  "sha256": "ab8705c57c57f5b05862c8e8b9ea8fab4b0bfa0f1e9cbb7040148907c28a6567"
+ },
+ {
+  "path": "source/react/dist/components/combo-box/index.d.ts",
+  "sha256": "7d46e7269a7aa4ea4def06c17192b08e1aeb3be9d94c39ec55aca474b254ffb1"
+ },
+ {
+  "path": "source/react/dist/components/date-picker/date-picker.d.ts",
+  "sha256": "0bf5b288113d1875cc7ac2ded9c948ce73109e392626dfdeaa8d1034905dad28"
+ },
+ {
+  "path": "source/react/dist/components/date-picker/date-picker.js",
+  "sha256": "0d1f70fcbcb9d6a5a85bdd0adbcb85e28b85c00abc4f869dcf99e1c56e43ec17"
+ },
+ {
+  "path": "source/react/dist/components/date-range-picker/date-range-picker.d.ts",
+  "sha256": "1e16b8cae5a2f7275d524f29519b69a71eafb3cd357f3815627c4c01628705c7"
+ },
+ {
+  "path": "source/react/dist/components/date-range-picker/date-range-picker.js",
+  "sha256": "89d22bfb4bc1bc8e355130b46358e26cda8fb695834f84143b41b0620f0c097e"
  },
  {
   "path": "source/react/dist/components/icons.js",
@@ -268,6 +336,14 @@
   "sha256": "401046807d5e4c640249bae5ce27e89c92c508c7bd4565b2ce6a26a90eb3efc6"
  },
  {
+  "path": "source/react/dist/components/range-calendar/range-calendar.d.ts",
+  "sha256": "9bf26fa610815bf340b715dc8fa1436d9213ad13febaea0f3f339053c37aaf06"
+ },
+ {
+  "path": "source/react/dist/components/range-calendar/range-calendar.js",
+  "sha256": "6dee813ad4ef5936dcced20a8a6f8a5b062cc3d2a347932b6f42614ef190dce0"
+ },
+ {
   "path": "source/react/dist/components/search-field/search-field.js",
   "sha256": "9f42699affc2c3096ff93d84bab56c16805012a1694087acb22373513ec25087"
  },
@@ -278,6 +354,14 @@
  {
   "path": "source/react/dist/components/skeleton/skeleton.js",
   "sha256": "059cab2a9565963bb95e58e4783ef2a8ec68c74a920bafe6f35951af074c2c12"
+ },
+ {
+  "path": "source/react/dist/components/slider/slider.d.ts",
+  "sha256": "838991749d430295bda398db620df95e892efabcb15b1359f03c009648bcc86a"
+ },
+ {
+  "path": "source/react/dist/components/slider/slider.js",
+  "sha256": "370332ca7b996d49bdb940619189e36a864527a2991c5969d1269e989a0029a8"
  },
  {
   "path": "source/react/dist/components/spinner/spinner.js",

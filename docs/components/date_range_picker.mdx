@@ -1,0 +1,334 @@
+---
+title: Date Range Picker
+description: A controlled inclusive date range selected through a button-triggered calendar.
+keywords: [flutter, remix, date range picker, calendar, accessibility]
+---
+
+`RemixDateRangePicker` composes Button, Popover and
+[RangeCalendar](/components/range_calendar). The application owns one complete
+inclusive `CivilDateRange?`; the open calendar owns only its unfinished draft.
+Use RangeCalendar directly when dates should remain visible inline.
+
+## Basic usage
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class ReportingPeriodPicker extends StatefulWidget {
+  const ReportingPeriodPicker({super.key});
+
+  @override
+  State<ReportingPeriodPicker> createState() => _ReportingPeriodPickerState();
+}
+
+class _ReportingPeriodPickerState extends State<ReportingPeriodPicker> {
+  CivilDateRange? period;
+
+  @override
+  Widget build(BuildContext context) => RemixDateRangePicker(
+    value: period,
+    firstDate: DateTime(2026),
+    lastDate: DateTime(2028, 12, 31),
+    semanticLabel: 'Reporting period',
+    placeholder: 'Select a period',
+    firstDayOfWeek: DateTime.monday,
+    onChanged: (next) => setState(() => period = next),
+  );
+}
+```
+
+An `Overlay` ancestor is required. A routed `WidgetsApp` supplies one; use
+`Overlay.wrap` in a builder-only host. No Material theme, MaterialLocalizations
+or Material DateTimeRange is required.
+
+## Selection and dismissal
+
+| Action | Result |
+| --- | --- |
+| First eligible date activation | Start a draft; keep the picker open and do not call `onChanged`. |
+| Navigation | Preview the candidate range without changing the supplied value. |
+| Second eligible activation | Request one complete ordered range and close. |
+| Unavailable endpoint or interior date | Keep the draft and panel open; do not truncate or select. |
+| Parent rejects the request | Close; retain the parent's value on the trigger. |
+| Escape or outside interaction | Close without changing the supplied value. |
+| Reopen | Start a fresh draft session, including an immediate close/reopen. |
+
+`onOpen` fires when the popover opens and `onClose` when it has closed. A
+completed range calls `onChanged` before `onClose`; a dismissal, with or
+without a draft, calls only `onClose`. Removing an open picker does not call
+`onClose`, matching [Select](/components/select).
+
+Reverse selection orders the endpoints; selecting the anchor again requests a
+one-day range. No partial range reaches the callback. Clear or replace selection
+by updating `value` in the parent. Civil-date normalization, bounds, invalid
+supplied values and the synchronous unavailable-date predicate follow the
+[RangeCalendar contract](/components/range_calendar#selection-and-ownership).
+Every date in the inclusive interval must be available, including offscreen
+interior dates; predicate work can be proportional to the span.
+
+Opening focuses the calendar's bounded selected/current date. Arrow keys browse;
+Enter, Space, pointer release and semantic activation use the same two-step
+selection contract. Ordinary dismissal restores focus to the original live
+trigger. Replacing a borrowed `focusNode` while open closes the panel; the
+application manages focus on the replacement node. The first Escape inside a
+month/year selector closes only that selector and retains the draft.
+
+`enabled: false` or a null `onChanged` disables the trigger and closes an open
+picker. Scrolling an ancestor closes a root picker without selecting. A picker
+nested in another menu or popover closes when the outer root closes.
+A view-size change, such as a rotation or window resize, dismisses
+without selecting; reopen in the new space. Keyboard and safe-area changes re-fit
+the open panel and keep the draft. The panel constrains and scrolls without
+shrinking day targets. Nested selectors reuse the existing inset-aware
+positioning.
+
+The popup is nonmodal and uses the existing Popover focus/dismissal behavior.
+This is a button-only picker, not two editable date fields. It has no parser,
+Apply/Cancel mode, partial committed value, time input or drag prerequisite.
+
+## Labels and styling
+
+Defaults are explicitly English. Localize `semanticLabel`, `placeholder`,
+`calendarLabels` and `rangeLabels`; set `firstDayOfWeek` for the application
+locale. `Directionality` controls RTL layout and keys but does not translate.
+
+`semanticLabel` is the field purpose and the trigger's accessible name. The
+trigger's accessible value is `rangeLabels.rangeValue` over both
+`calendarLabels.fullDate` endpoints ("Saturday, February 10, 2024 to Monday,
+February 12, 2024"), the single full date of a one-day range, or
+`rangeLabels.noRange` when empty. The value carries no "Selected range" prefix:
+the name already says what the field is, and assistive technology joins name
+and value in its own locale.
+
+`formatRange` controls only the trigger's painted text. Its default joins
+`calendarLabels.fullDate(start)` and `calendarLabels.fullDate(end)` with an en
+dash, and paints a one-day range as its single date. Supply a compact
+application formatter for long dates or narrow triggers; both complete endpoints
+remain available to it, and assistive technology still receives the complete
+range.
+
+Use the existing five independent child styles: `buttonStyle`, `popoverStyle`,
+`calendarStyle`, `navigationStyle` and `selectorStyle`. Style the interval in
+`calendarStyle` with the day variants `onRangePreview`, `onRangeStart`,
+`onRangeMiddle`, `onRangeEnd` and `onRangeSingle`, as described in
+[RangeCalendar styling](/components/range_calendar#styling-the-interval),
+including declaration order after `onSelected` and the consistent-radius-family
+requirement. The calendar's range summary is announced but not painted;
+`summaryBuilder` paints it inside the popover.
+
+There is no separate DateRangePicker styler, raw spec, controller or callable
+widget shorthand. Use the Vanilla composite above for preset styling.
+
+## Vanilla recipe
+
+In a Vanilla app, install `date_range_picker` and import your generated UI barrel:
+
+```shell
+remix add date_range_picker
+```
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget example() => UiDateRangePicker(
+  value: null,
+  firstDate: DateTime(2026),
+  lastDate: DateTime(2028, 12, 31),
+  onChanged: (value) { /* Store the requested value in application state. */ },
+);
+```
+
+`Ui` is the application's chosen prefix. Wrap the host Navigator in `UiTheme`.
+This hand-written composite wires the Vanilla outline Button, rounded and
+elevated Popover, calendar, icon navigation and Select recipes. Override each
+child with `buttonStyle`, `popoverStyle`, `calendarStyle`, `navigationStyle`
+and `selectorStyle`; each override merges last. The panel is offset from the
+trigger and sized for the calendar. Remix retains all opening, dismissal and
+selection behavior.
+
+When the full trigger label exceeds its available width, the default formatter
+uses compact numeric month/day/year endpoints. Compact or caller-formatted labels
+that still exceed one line wrap to keep both endpoints visible;
+its accessible value remains complete. `icon` supplies a decorative leading
+icon, styled by `buttonStyle`. `placeholderStyle` merges over `buttonStyle`
+only when `value` is null; `expandedStyle` merges last while the popover is
+open, including while a nested selector is open. Interaction variants still
+resolve in the button's own state. Month/year panels use a 4-pixel side offset.
+
+## Constructor
+
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixDateRangePicker remixDateRangePickerConstructor({
+  Key? key,
+  required CivilDateRange? value,
+  required DateTime firstDate,
+  required DateTime lastDate,
+  ValueChanged<CivilDateRange>? onChanged,
+  VoidCallback? onOpen,
+  VoidCallback? onClose,
+  DateTime? currentDate,
+  bool Function(DateTime)? isDateUnavailable,
+  int firstDayOfWeek = DateTime.sunday,
+  bool enabled = true,
+  String semanticLabel = 'Choose date range',
+  String placeholder = 'Select date range',
+  String Function(CivilDateRange)? formatRange,
+  RemixCalendarLabels calendarLabels = const RemixCalendarLabels(),
+  FocusNode? focusNode,
+  bool autofocus = false,
+  OverlayPositionConfig positioning = const OverlayPositionConfig(
+    sideOffset: 4,
+    collisionPadding: EdgeInsets.all(8),
+  ),
+  IconData? icon,
+  ButtonStyler placeholderStyle = const ButtonStyler.create(),
+  ButtonStyler expandedStyle = const ButtonStyler.create(),
+  ButtonStyler buttonStyle = const ButtonStyler.create(),
+  CalendarStyler calendarStyle = const CalendarStyler.create(),
+  PopoverStyler popoverStyle = const PopoverStyler.create(),
+  IconButtonStyler navigationStyle = const IconButtonStyler.create(),
+  SelectStyler selectorStyle = const SelectStyler.create(),
+  RemixRangeCalendarLabels rangeLabels = const RemixRangeCalendarLabels(),
+  Widget Function(BuildContext, String)? summaryBuilder,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+
+## Fortal widgets
+
+In a Fortal app, `remix add date_range_picker` installs `<Prefix>DateRangePicker` through
+the same UI barrel. It retains the Remix date, labels, focus and controlled
+selection contract above. The hand-written facade merges caller child styles
+last over the reviewed Fortal calendar, ghost navigation and Select recipes.
+Day targets and chevrons scale with text. Today uses bold gray12 ink; range
+drafts have a separate perimeter and a quieter previous selection. Nested
+month/year panels have a bounded height and a persistent scroll thumb.
+See [Fortal](/fortal) for theme setup.
+
+## Properties
+
+### Widget Properties
+
+#### `value` → `CivilDateRange?`
+
+**Required**. Parent-owned selected date range, or null for an empty selection. Civil-date bounds follow the calendar contract.
+
+#### `firstDate / lastDate` → `DateTime`
+
+**Required**. Inclusive civil-date bounds; firstDate must be on or before lastDate.
+
+#### `onChanged` → `ValueChanged<CivilDateRange>?`
+
+Requests one complete date range and closes even if the parent rejects it. Null disables the picker.
+
+#### `onOpen / onClose` → `VoidCallback?`
+
+Opening and closure notifications. Selection calls onChanged before onClose; dismissal calls only onClose. Removal does not call onClose.
+
+#### `currentDate` → `DateTime?`
+
+Today and fallback focus date; defaults to now.
+
+#### `isDateUnavailable` → `bool Function(DateTime)?`
+
+Marks dates unavailable for selection.
+
+#### `firstDayOfWeek` → `int`
+
+First weekday column, Monday=1 through Sunday=7. Defaults to Sunday.
+
+#### `enabled` → `bool`
+
+Defaults to true. Disabling an open picker closes it without selecting.
+
+#### `semanticLabel` → `String`
+
+Accessible field purpose. Defaults to Choose date range.
+
+#### `placeholder` → `String`
+
+Visible empty text. Defaults to Select date range.
+
+#### `formatRange` → `String Function(CivilDateRange)?`
+
+Visible selected text only; accessible values use the full localized calendar labels.
+
+#### `calendarLabels` → `RemixCalendarLabels`
+
+Calendar and accessible-value labels; English by default.
+
+#### `rangeLabels` → `RemixRangeCalendarLabels`
+
+Range instructions, empty value, and complete range grammar; English by default.
+
+#### `focusNode` → `FocusNode?`
+
+Caller-owned trigger focus node. Replacing it closes the picker.
+
+#### `autofocus` → `bool`
+
+Defaults to false. Focuses the trigger without opening the calendar.
+
+#### `positioning` → `OverlayPositionConfig`
+
+Placement, offsets and collision padding relative to the trigger. Defaults to a side offset of 4 and collision padding of 8. The panel avoids safe-area and keyboard exclusions.
+
+#### `icon` → `IconData?`
+
+Optional decorative leading icon; size and color follow `buttonStyle`.
+
+#### `placeholderStyle` → `ButtonStyler`
+
+Fragment merged over `buttonStyle` only when `value` is null.
+
+#### `expandedStyle` → `ButtonStyler`
+
+Fragment merged last while the popover is open, including nested selectors.
+
+#### `buttonStyle` → `ButtonStyler`
+
+Trigger styling, resolved in its own state.
+
+#### `calendarStyle` → `CalendarStyler`
+
+Calendar surface and day styling.
+
+#### `popoverStyle` → `PopoverStyler`
+
+Popup surface styling.
+
+#### `navigationStyle` → `IconButtonStyler`
+
+Previous/next button styling.
+
+#### `selectorStyle` → `SelectStyler`
+
+Month/year selector styling.
+
+#### `summaryBuilder` → `Widget Function(BuildContext, String)?`
+
+Paints the calendar range summary. By default it is announced without being painted.
+
+### Style Methods
+
+Each child uses its own styler and interaction states. There is no separate
+DateRangePicker styler or raw spec. See [Calendar](/components/calendar#properties)
+for calendar and day style methods.
+## HeroUI widgets
+
+In a HeroUI app, `remix add date_range_picker` installs `<Prefix>DateRangePicker`
+with the same controlled value, bounds, availability callbacks and labels as Remix.
+The hand-written composition merges caller styles last for each independent part.
+
+The recipes port HeroUI web 3.2.6 colors, typography and day geometry. Month/year
+Select menus replace the upstream year grid. Date pickers use a field-shaped
+button in place of segmented text entry. Day tiles and icons grow with text;
+range drafts take visual precedence over the previous committed range. Picker
+panels retain equal 12px insets. See [Open Code](/open-code) for theme setup.

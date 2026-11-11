@@ -55,6 +55,14 @@
       }
     ]
   },
+  "calendar": {
+    "cases": [
+      {
+        "name": "Appointment date",
+        "path": "components/remixcalendar/appointment-date"
+      }
+    ]
+  },
   "callout": {
     "cases": [
       {
@@ -76,6 +84,14 @@
       {
         "name": "Catalog",
         "path": "components/remixcard/catalog"
+      }
+    ]
+  },
+  "combobox": {
+    "cases": [
+      {
+        "name": "Combobox Component",
+        "path": "components/remixcombobox<object>/combobox-component"
       }
     ]
   },
@@ -112,6 +128,22 @@
       {
         "name": "Catalog",
         "path": "components/remixdatatable/catalog"
+      }
+    ]
+  },
+  "date_picker": {
+    "cases": [
+      {
+        "name": "Appointment date",
+        "path": "components/remixdatepicker/appointment-date"
+      }
+    ]
+  },
+  "date_range_picker": {
+    "cases": [
+      {
+        "name": "Reporting period",
+        "path": "components/remixdaterangepicker/reporting-period"
       }
     ]
   },
@@ -219,6 +251,14 @@
       }
     ]
   },
+  "range_calendar": {
+    "cases": [
+      {
+        "name": "Reporting period",
+        "path": "components/remixrangecalendar/reporting-period"
+      }
+    ]
+  },
   "segmented_control": {
     "cases": [
       {
@@ -260,6 +300,10 @@
       {
         "name": "Slider Component",
         "path": "components/remixslider/slider-component"
+      },
+      {
+        "name": "Price range",
+        "path": "components/remixslider/price-range"
       },
       {
         "name": "Catalog",

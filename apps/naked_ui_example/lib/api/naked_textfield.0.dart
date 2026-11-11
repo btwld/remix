@@ -48,6 +48,7 @@ class _TextFieldExampleState extends State<TextFieldExample> {
     return SizedBox(
       width: 300,
       child: NakedTextField(
+        semanticLabel: 'Simple TextField',
         cursorColor: Colors.grey.shade700,
         style: TextStyle(
           color: Colors.grey.shade700,

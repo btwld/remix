@@ -4,6 +4,12 @@
 
 # Remix
 
+<p align="center">
+  <a href="https://pub.dev/packages/remix"><img alt="pub.dev" src="https://img.shields.io/pub/v/remix.svg?include_prereleases"></a>
+  <a href="https://github.com/btwld/remix/actions/workflows/ci.yaml?query=branch%3Amain"><img alt="CI" src="https://github.com/btwld/remix/actions/workflows/ci.yaml/badge.svg?branch=main"></a>
+  <a href="https://github.com/btwld/remix/blob/main/LICENSE"><img alt="BSD 3-Clause License" src="https://img.shields.io/github/license/btwld/remix"></a>
+</p>
+
 Flutter components with Naked UI behavior and Mix styling.
 
 ## Core concepts
@@ -24,12 +30,11 @@ Flutter components with Naked UI behavior and Mix styling.
 
 ## Start with a component
 
-This checkout prepares `1.0.0-beta.14`, which is not published yet. The
-currently hosted version is `1.0.0-beta.13`; use the matching release docs or
-a local path dependency while beta.14 is staged. After publication:
+Remix is a `1.0.0` prerelease. Pin it, because an unversioned install
+resolves the older stable `0.x` line, which these docs do not describe.
 
 ```bash
-flutter pub add remix:^1.0.0-beta.14
+flutter pub add remix:^1.0.0-rc.1
 ```
 
 ```dart
@@ -50,10 +55,17 @@ Widget saveButton(VoidCallback save) => RemixButton(
 Or install editable theme and component source:
 
 ```bash
-flutter pub add dev:remix_cli
-dart run remix_cli:remix init --preset vanilla
-dart run remix_cli:remix add button
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix init --preset vanilla
+remix add button
 ```
+
+Install the CLI once globally. Keep the prerelease pin: an unversioned
+activation selects stable `0.1.0`, which fails on the official registry.
+Add Pub's `bin` directory to `PATH` if needed; Pub prints the instructions.
+For a CLI pinned in the app's lockfile, use
+`flutter pub add dev:remix_cli:^1.0.0-beta.1` instead and prefix each command
+with `dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 
 Place the installed theme above your Navigator in the host's builder before
 using its widgets. See [setup and host requirements](skills/using-remix/SKILL.md#place-the-theme-scope).

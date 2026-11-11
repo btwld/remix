@@ -120,6 +120,9 @@ class NakedPopover extends StatefulWidget {
     this.openOnTap = true,
     this.anchorKey,
     this.triggerFocusNode,
+    this.initialFocusNode,
+    this.constrainToAvailableSpace = false,
+    this.avoidViewInsets = false,
     this.onOpen,
     this.onClose,
     this.onOpenRequested,
@@ -181,7 +184,36 @@ class NakedPopover extends StatefulWidget {
   /// Inside another popover's or menu's overlay, [RawMenuAnchor] focuses the
   /// node only for the outermost anchor, so a nested popover opened without
   /// focusing its control also returns focus to whatever had it before opening.
+  ///
+  /// Close-time focus return is owned by [RawMenuAnchor]. Unlike Select/Menu,
+  /// it is not limited to cases where focus is still inside the panel.
   final FocusNode? triggerFocusNode;
+
+  /// Preferred focus target after the panel attaches, revealed in its scrollables.
+  ///
+  /// Attach this node to a focusable descendant of the panel. If it is detached
+  /// or cannot request focus, the first focusable descendant is used instead.
+  /// Existing focus inside the panel is preserved. With no eligible descendant,
+  /// focus remains on the panel container. Null keeps the default container focus.
+  final FocusNode? initialFocusNode;
+
+  /// Whether to fit the panel into the space its placement can use. For top and bottom
+  /// placements, caps height beside the trigger; with collision avoidance,
+  /// also caps width inside the padded overlay. Content must handle scrolling.
+  /// See [OverlayPositioner.constrainToAvailableSpace].
+  final bool constrainToAvailableSpace;
+
+  /// Whether to keep the panel inside the view padding (safe area) and above
+  /// the view insets (keyboard).
+  ///
+  /// These view-coordinate exclusions are intersected with the actual Overlay
+  /// bounds, including smaller or offset nested overlays, and cap both axes.
+  /// Fixed-size content larger than the cap overflows unless it adapts or
+  /// scrolls. The open panel re-fits when safe-area or keyboard insets change.
+  ///
+  /// Defaults to false. Safe placement may flip or shift even when
+  /// [OverlayPositionConfig.avoidCollisions] is false.
+  final bool avoidViewInsets;
 
   /// Called when the popover opens.
   final VoidCallback? onOpen;
@@ -264,9 +296,29 @@ class _NakedPopoverState extends State<NakedPopover>
     return null;
   }
 
+  ({FocusNode node, FocusNode? child}) get _triggerNodes {
+    final child = _extractChildFocusNode();
+    return (
+      node: widget.triggerFocusNode ?? child ?? _internalTriggerNode,
+      child: child,
+    );
+  }
+
+  FocusNode? get _childOwnedTriggerNode {
+    if (!widget.openOnTap) return null;
+    final trigger = _triggerNodes;
+    return identical(trigger.node, trigger.child) ? trigger.child : null;
+  }
+
   void _updateObservedChildFocusNode() {
-    final next = _extractChildFocusNode();
+    final next = _childOwnedTriggerNode;
     if (identical(next, _observedChildFocusNode)) return;
+    if (next == null) {
+      _keyboardPressTimer?.cancel();
+      _keyboardPressTimer = null;
+      updateHoverState(false, null);
+      updatePressState(false, null);
+    }
     _observedChildFocusNode?.removeListener(_handleChildFocusChange);
     _observedChildFocusNode = next;
     _observedChildFocusNode?.addListener(_handleChildFocusChange);
@@ -294,10 +346,7 @@ class _NakedPopoverState extends State<NakedPopover>
 
   Widget _buildChildOwnedTrigger(FocusNode childFocusNode) {
     final state = NakedPopoverState(
-      states: {
-        ...widgetStates,
-        if (childFocusNode.hasFocus) WidgetState.focused,
-      },
+      states: widgetStates,
       isOpen: _menuController.isOpen,
     );
     final content = NakedStateScopeBuilder(
@@ -305,9 +354,6 @@ class _NakedPopoverState extends State<NakedPopover>
       child: widget.child,
       builder: widget.builder,
     );
-    final semanticContent = widget.semanticLabel == null
-        ? content
-        : ExcludeSemantics(child: content);
 
     Widget trigger = GestureDetector(
       onTapDown: (_) => updatePressState(true, null),
@@ -316,7 +362,7 @@ class _NakedPopoverState extends State<NakedPopover>
       onTap: _activate,
       behavior: HitTestBehavior.opaque,
       excludeFromSemantics: true,
-      child: semanticContent,
+      child: content,
     );
     trigger = Semantics(
       enabled: true,
@@ -325,6 +371,7 @@ class _NakedPopoverState extends State<NakedPopover>
       // reports isExpanded. Matches NakedMenu/NakedSelect/NakedAccordion.
       expanded: _menuController.isOpen,
       label: widget.semanticLabel,
+      excludeSemantics: widget.semanticLabel != null,
       onTap: _activate,
       child: trigger,
     );
@@ -438,9 +485,9 @@ class _NakedPopoverState extends State<NakedPopover>
 
   @override
   Widget build(BuildContext context) {
-    final childFocusNode = _extractChildFocusNode();
-    final returnNode =
-        widget.triggerFocusNode ?? childFocusNode ?? _internalTriggerNode;
+    final trigger = _triggerNodes;
+    final returnNode = trigger.node;
+    final childFocusNode = trigger.child;
 
     final result = RawMenuAnchor(
       controller: _menuController,
@@ -460,6 +507,10 @@ class _NakedPopoverState extends State<NakedPopover>
         return AnchoredOverlay(
           info: anchored,
           positioning: widget.positioning,
+          avoidViewInsets: widget.avoidViewInsets,
+          useRootOverlay: widget.useRootOverlay,
+          initialFocusNode: widget.initialFocusNode,
+          constrainToAvailableSpace: widget.constrainToAvailableSpace,
           child: widget.popoverBuilder(context, anchored),
         );
       },

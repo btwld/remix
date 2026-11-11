@@ -10,11 +10,11 @@ not as a separate Agent runtime package. The names below assume prefix `Ui`.
 
 ## Install
 
-In a Flutter application with the project-local CLI configured:
+In a Flutter application with the global CLI installed:
 
 ```shell
-dart run remix_cli:remix init --prefix Ui --preset fortal
-dart run remix_cli:remix add composer_recipe
+remix init --prefix Ui --preset fortal
+remix add composer_recipe
 ```
 
 Use `--preset vanilla` when initializing a Vanilla-preset application. Do not
@@ -53,6 +53,6 @@ disabled styles resolve in the child's context.
 
 The dashboard's **Workspace → Chat** demonstrates this surface alongside the
 other Agent components. Its responses and tool activity are simulated locally.
-Edit your installed source to customize it; `dart run remix_cli:remix add
+Edit your installed source to customize it; `remix add
 composer_recipe --diff` previews authored-source differences without overwriting
 local edits.

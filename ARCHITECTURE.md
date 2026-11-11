@@ -103,3 +103,19 @@ import sites (39 demo, 30 dashboard, 9 playground) and generated/parity fixtures
 supplied no consumer benefit by itself. This retained migration and duplicated
 ownership costs; demonstrated duplication and enum bridges later justified the
 single analyzed tree, while private authoring never implied a hosted release.
+
+The date picker trigger composes `buttonStyle`, its null-value
+`placeholderStyle`, and its open-panel `expandedStyle` before resolving button
+interaction states. The decorative `icon` uses the button's existing leading
+icon slot. Its one-line visual label may ellipsize while semantic values retain
+the complete date. These presentation hooks belong to the shared picker host,
+so installed presets can express form-field states without owning behavior.
+
+## Calendar day effects share the box renderer
+
+2026-11-08 · Accepted
+
+`CalendarDaySpec.containerEffects` uses the same box-effects adapter as buttons
+and selectors. Presets can draw inset focus bands with each range tile's resolved
+radius, without duplicating geometry in a foreground decoration or changing
+layout. Rendering and behavior remain in Remix; recipes own colors and effects.

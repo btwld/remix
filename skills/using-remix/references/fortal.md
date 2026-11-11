@@ -35,6 +35,10 @@ Generic presets infer their type from required values and item lists, so
 `add chart` additionally installs the chart recipe's own `mix_chart`
 dependency; import `mix_chart` directly for its data models, since the owned
 barrel does not re-export it.
+Chart series start with the accent and stay at 3:1 on the page and panels.
+Pie labels are off by default; when you turn them on, color each slice's
+label with `<prefix>PieSliceLabelColor(sliceColor)`, which takes no
+`BuildContext`, unlike Vanilla's.
 
 Components that expose `highContrast` use it to strengthen their active or
 foreground treatment — do not assume the option exists on every family; check
@@ -135,7 +139,8 @@ The twelve flat-control families expose no `classic` constructor. Kbd defaults
 to `soft`; segmented control has only `surface`. Toast's independent `classic`
 variant remains a floating notification surface. Cards and controls have no
 elevation, surface fields use gray2 with the 3:1 `controlBorder` frame (select
-triggers keep gray7), and focus uses the fitted `focus8` role at 2px with a 2px gap. Labelled fills
+triggers keep gray7). Most focus rings use the fitted `focus8` role at 2px
+with a 2px gap; sliders use contiguous accent11 rings. Labelled fills
 (solid buttons, badges, avatars, menu highlights) read `accentSolid` and
 `accentSolidHover` with `accentContrast`. `accentIndicator`/`accentTrack` are the mark
 fill of selected controls and progress, and checks read
@@ -144,7 +149,7 @@ palettes carry white labels in both modes; Sol keeps warm-brown labels. Orla use
 Gray-12 primary fills in light mode and true white in dark mode, with opposite
 ink. Its soft variants and neutral surfaces stay subtle. `accentMarkHover` pairs
 selected marks/tracks with their hover or pressed fill; mark ink follows both. Normal selected surface-switch thumbs and enabled slider thumbs are
-white with an `accentThumbRing` outline rather than ink discs; off switch
+white with an `accentThumbRing` outline (slider edges use gray3 in dark); off switch
 thumbs are white with a `controlBorder` ring. Progress tracks are edged in
 `controlBorder`. Selected soft thumbs keep accentContent (accent12 at
 high contrast), selected high-contrast surface thumbs keep accent1, and
@@ -167,8 +172,46 @@ both modes on a 4px grid, with palette and interaction-state selectors.
 Fortal uses one shared outline from `focus8`, `focusRingWidth`, and
 `focusRingOffset` (2px wide, 2px outside by default). Effects-capable controls
 paint it through `containerEffects`, accordion/disclosure use `triggerEffects`,
-switches use `trackEffects`, and sliders use `thumbFocusEffects`. The ring
-takes no layout space. Disabled controls do not ring.
+switches use `trackEffects`. Sliders use `thumbFocusEffects` with accent11
+and a zero gap so neighbouring handles keep contiguous rings. Rings take
+no layout space. Disabled controls do not ring.
 
 Select panels use `minWidth(remixAnchorWidth())`; a smaller `maxWidth` override
 must also replace that minimum.
+
+## Slider intervals
+
+Install `range_slider` for `<Prefix>RangeSlider` and its shared `slider`
+dependency. Both recipes expose `size` (size1–size3), `variant` (surface/soft),
+and `highContrast`; caller style merges last. Independent thumbs have hover,
+press and contiguous keyboard-focus rings. Normal scaling reserves 48px.
+Give `semanticLabels` distinct localized names. Custom value formatters use
+`RemixRangeSlider` with `<prefix>RangeSliderStyle()`.
+See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
+
+## Combobox
+
+`remix add combobox` installs `<Prefix>Combobox<T>` with `theme` and `textfield`.
+Use `variant: .surface|.soft` and `size: .size1|.size2|.size3`; defaults are
+surface and size2. Its field reuses TextField. The floating suggestion panel
+uses Fortal tokens, growing wrapped rows, distinct hover/keyboard/press fills,
+and the shared overflow fades and thumb. Acceptance updates the editor; there
+is no per-option selected or disabled state. See
+[Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
+
+## Calendar family
+
+Install `calendar`, `range_calendar`, `date_picker` and `date_range_picker`
+for the corresponding `<Prefix>Calendar`, `<Prefix>RangeCalendar`,
+`<Prefix>DatePicker` and `<Prefix>DateRangePicker` hand-written composites.
+They keep Remix's names and controlled civil-date APIs. Pickers compose the
+outline Button, Popover and calendar recipes; each child styler merges last.
+Calendar day targets are 44px and scale with text, including navigation and
+selector chevrons. Today uses gray12 bold ink and a ring. The outlined draft
+de-emphasizes the committed range, with a brighter focus contour in dark mode.
+Month/year panels are capped and keep a visible scroll thumb. Localize labels,
+`semanticLabel`, `placeholder` and optional trigger formatters in the app.
+See [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx),
+[Range Calendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx),
+[Date Picker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)
+and [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).

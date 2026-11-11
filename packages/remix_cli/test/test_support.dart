@@ -182,12 +182,19 @@ final class RecordingFileWriter implements ProjectFileWriter {
 
   final Directory root;
   final paths = <String>[];
+  final deleted = <String>[];
   final AtomicProjectFileWriter _delegate = const AtomicProjectFileWriter();
 
   @override
   void write(File target, String contents) {
     paths.add(p.relative(target.path, from: root.path));
     _delegate.write(target, contents);
+  }
+
+  @override
+  void delete(File target, {required Directory within}) {
+    deleted.add(p.relative(target.path, from: root.path));
+    _delegate.delete(target, within: within);
   }
 }
 
@@ -218,10 +225,10 @@ final class FixtureOfficialResolver implements RegistrySources {
   );
 
   @override
-  RegistryReader open(RegistrySource pin, String preset) {
-    if (preset != 'vanilla' && preset != 'fortal') {
-      throw FormatException('Official registry has no $preset preset.');
-    }
-    return CheckoutRegistry(findCheckoutRegistry(), preset);
-  }
+  RegistryReader open(RegistrySource pin, String preset) =>
+      CheckoutRegistry(findCheckoutRegistry(), preset);
+
+  @override
+  Future<String?> file(RegistrySource pin, String path) =>
+      readCheckoutFile(findCheckoutRegistry(), path);
 }

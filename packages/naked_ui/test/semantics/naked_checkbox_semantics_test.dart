@@ -1,3 +1,5 @@
+import 'dart:ui' show SemanticsAction;
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -340,5 +342,35 @@ void main() {
       await mouse.removePointer();
       handle.dispose();
     });
+
+    testWidgets(
+      'semanticLabel replaces visible child text while keeping focus semantics',
+      (tester) async {
+        final handle = tester.ensureSemantics();
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpWidget(
+          _buildTestApp(
+            NakedCheckbox(
+              value: true,
+              onChanged: (_) {},
+              focusNode: focusNode,
+              semanticLabel: 'Accept terms and conditions',
+              child: const Text('Accept'),
+            ),
+          ),
+        );
+
+        final data = tester
+            .getSemantics(find.byType(NakedCheckbox))
+            .getSemanticsData();
+        expect(data.label, 'Accept terms and conditions');
+        expect(data.hasAction(SemanticsAction.tap), isTrue);
+        expect(data.hasAction(SemanticsAction.focus), isTrue);
+
+        handle.dispose();
+      },
+    );
   });
 }

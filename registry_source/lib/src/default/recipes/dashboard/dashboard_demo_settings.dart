@@ -116,6 +116,7 @@ class _VanillaDashboardSettingsPageState
                   ],
                 ),
                 VanillaSelect<String>(
+                  semanticLabel: 'Language',
                   trigger: const RemixSelectTrigger(placeholder: 'Language'),
                   items: const [
                     RemixSelectItem(value: 'en', label: 'English'),
@@ -225,6 +226,7 @@ class _VanillaDashboardSettingsPageState
                       emphasized: true,
                     ),
                     VanillaSlider(
+                      semanticLabel: 'Control radius',
                       value: _resolvedRadius(context),
                       min: 0,
                       max: 16,

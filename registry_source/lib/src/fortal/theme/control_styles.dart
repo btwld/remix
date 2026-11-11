@@ -14,6 +14,16 @@ RemixBoxEffectsMix fortalFocusOutline() => RemixBoxEffectsMix(
   outlineOffset: FortalTokens.focusRingOffset(),
 );
 
+/// Contiguous slider ring: no rail-coloured notch between neighbouring thumbs.
+/// Its ink and width follow the polished slider's token roles in both modes.
+RemixBoxEffectsMix fortalSliderFocusOutline() => RemixBoxEffectsMix(
+  outline: BorderSideMix(
+    color: FortalTokens.accent11(),
+    width: FortalTokens.focusRingWidth(),
+  ),
+  outlineOffset: 0,
+);
+
 /// Keeps compact visual sizes while giving controls a 40px interaction area.
 /// This wraps the painted child inside Naked UI's existing gesture target.
 WidgetModifierConfig fortalTouchTarget() =>

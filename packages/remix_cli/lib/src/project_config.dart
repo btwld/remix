@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
 import 'icon_registry.dart';
+import 'registry.dart';
 import 'registry_source.dart';
 import 'yaml_fields.dart';
 
@@ -163,6 +164,19 @@ final class ProjectConfig {
     iconLibrary: iconLibrary ?? this.iconLibrary,
   );
 
+  /// The project-relative path a registry `@ui/` [target] installs to.
+  String targetPath(String target) =>
+      p.posix.join(uiPath, target.substring(uiTargetPrefix.length));
+
+  /// The spelling `add` accepts for the qualified item [id]: bare in the
+  /// default registry, `@namespace/name` in every other one.
+  String addSpelling(String id) {
+    final defaultPrefix = '$defaultRegistry/';
+    return id.startsWith(defaultPrefix)
+        ? id.substring(defaultPrefix.length)
+        : id;
+  }
+
   String get valuePrefix =>
       '${prefix.substring(0, 1).toLowerCase()}${prefix.substring(1)}';
 
@@ -203,11 +217,15 @@ void validateProjectSettings(
   _validateUiPath(root, uiPath);
 }
 
-void validateProjectFilePath(Directory packageRoot, String relativePath) {
-  _validateProjectPath(packageRoot, relativePath, _ProjectPathKind.file);
-}
+/// Throws unless [relativePath] names a file inside [packageRoot], and
+/// returns the absolute path it names with every existing link resolved.
+///
+/// Two project paths name the same file exactly when their returned paths
+/// are equal, whether or not the file exists yet.
+String validateProjectFilePath(Directory packageRoot, String relativePath) =>
+    _validateProjectPath(packageRoot, relativePath, _ProjectPathKind.file);
 
-void _validateProjectPath(
+String _validateProjectPath(
   Directory packageRoot,
   String relativePath,
   _ProjectPathKind targetKind,
@@ -235,7 +253,7 @@ void _validateProjectPath(
     current = p.join(current, segment);
     final type = FileSystemEntity.typeSync(current, followLinks: false);
     if (type == FileSystemEntityType.notFound) {
-      break;
+      return p.joinAll([current, ...segments.skip(index + 1)]);
     }
     final String resolved;
     try {
@@ -277,6 +295,7 @@ void _validateProjectPath(
     }
     current = resolved;
   }
+  return current;
 }
 
 Directory validateFlutterPackageRoot(Directory directory) {

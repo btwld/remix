@@ -23,6 +23,7 @@ Future<void> main(List<String> arguments) async {
     Installer(
       projectRoot: Directory.current,
       writeOut: stdout.writeln,
+      writeProgress: stderr.writeln,
       sources: Platform.environment['REMIX_REGISTRY_OWNERSHIP_PROBE'] == '1'
           ? _OwnershipProbeSources(checkout)
           : releaseRef == null
@@ -55,6 +56,10 @@ final class _PublishedSources implements RegistrySources {
   @override
   RegistryReader open(RegistrySource pin, String preset) =>
       _github.open(pin, preset);
+
+  @override
+  Future<String?> file(RegistrySource pin, String path) =>
+      _github.file(pin, path);
 }
 
 /// An additive registry fixture available only through the checkout harness.
@@ -86,6 +91,10 @@ final class _OwnershipProbeSources implements RegistrySources {
       pin.repository == 'fixture/addon'
       ? _OwnershipProbeRegistry()
       : CheckoutRegistry(distribution, preset);
+
+  @override
+  Future<String?> file(RegistrySource pin, String path) =>
+      CheckoutSources(distribution).file(pin, path);
 }
 
 final class _OwnershipProbeRegistry implements RegistryReader {

@@ -23,6 +23,7 @@ const _families = [
   'checkbox',
   'chip',
   'close',
+  'combobox',
   'code',
   'disclosure',
   'dropdown',
@@ -92,6 +93,7 @@ const _styles = [
 const _familyStyles = {
   'accordion': ['rotate', 'left', 'right'],
   'disclosure': ['rotate'],
+  'combobox': ['transform'],
   'modal': [
     'maxWidth',
     'maxHeight',
@@ -115,7 +117,17 @@ const _initial = {'0px', 'normal', 'none', 'auto', '0', 'rgba(0, 0, 0, 0)'};
 
 const _widths = {'375', '1024'};
 
-void main() {
+void main(List<String> arguments) {
+  if (arguments.isNotEmpty) {
+    if (arguments.length != 1 ||
+        !const {'--range-slider', '--calendar'}.contains(arguments.single)) {
+      throw ArgumentError('Usage: slim_measurements.dart [--range-slider]');
+    }
+    _mergeMatrix(
+      arguments.single == '--calendar' ? 'calendar' : 'range_slider',
+    );
+    return;
+  }
   final modes = <String, Map<String, Map<String, Object>>>{};
   Map<String, Object> group(String mode, String name) =>
       (modes[mode] ??= {})[name] ??= <String, Object>{};
@@ -128,6 +140,7 @@ void main() {
     'toggles',
     'editors',
     'families2',
+    'range_slider',
   ]) {
     final capture = _read('chromium/$file.json');
     for (final MapEntry(key: mode, value: data)
@@ -163,7 +176,7 @@ void main() {
 
   // Interaction captures: one case per mode/width/variant/state, with slots.
   // A slot that repeats (tabs, list items) is keyed by its text.
-  for (final family in ['tabs', 'select', 'menu', 'dropdown']) {
+  for (final family in ['tabs', 'select', 'menu', 'dropdown', 'combobox']) {
     final capture = _read('chromium/${family}_visual.json');
     for (final c in capture['cases'] as List) {
       final width = '${c['width']}';
@@ -227,6 +240,64 @@ void main() {
     'note':
         'Viewport 375 lists only cases that differ from 1024. Styles omit CSS '
         'initial values. Regenerate with tool/heroui_parity/slim_measurements.dart.',
+    'modes': modes,
+  });
+}
+
+// Refresh this isolated matrix without requiring all ignored raw captures.
+void _mergeMatrix(String matrix) {
+  final existing = _read('measurements.json');
+  final capture = _read('chromium/$matrix.json');
+  if (capture['upstream'] != existing['upstream']) {
+    throw StateError('Range slider upstream commit drift');
+  }
+  final modes = <String, Map<String, Map<String, Object>>>{
+    for (final entry in (existing['modes'] as Map<String, dynamic>).entries)
+      entry.key: {
+        for (final group in (entry.value as Map<String, dynamic>).entries)
+          group.key: Map<String, Object>.from(group.value as Map),
+      },
+  };
+  for (final entry in (capture['modes'] as Map<String, dynamic>).entries) {
+    final groups = modes[entry.key]!;
+    for (final cases in groups.values) {
+      cases.removeWhere(
+        (id, _) => matrix == 'calendar'
+            ? const [
+                'calendar-',
+                'range-calendar-',
+                'date-picker-',
+                'date-range-picker-',
+              ].any(id.startsWith)
+            : id.startsWith('slider-range-'),
+      );
+    }
+    final data = entry.value as Map;
+    for (final width in _widths) {
+      final cases = (data['viewports'] as Map)[width] as Map;
+      for (final entry in cases.entries) {
+        (groups[width] ??= {})[entry.key as String] = _slim(
+          entry.value as Map,
+          entry.key as String,
+        );
+      }
+    }
+    for (final entry in (data['states'] as Map).entries) {
+      (groups['states'] ??= {})[entry.key as String] = _slim(
+        entry.value as Map,
+        entry.key as String,
+      );
+    }
+    groups['375']?.removeWhere(
+      (id, value) => jsonEncode(groups['1024']?[id]) == jsonEncode(value),
+    );
+  }
+  _write({
+    ...existing,
+    'environment': {
+      ...existing['environment'] as Map,
+      matrix: capture['environment'],
+    },
     'modes': modes,
   });
 }

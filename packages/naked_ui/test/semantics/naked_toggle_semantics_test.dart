@@ -458,28 +458,53 @@ void main() {
       });
     });
 
-    testWidgets('toggle with semantic label', (tester) async {
-      final handle = tester.ensureSemantics();
+    testWidgets(
+      'toggle and toggle option semanticLabel replace visible child text while keeping focus semantics',
+      (tester) async {
+        final handle = tester.ensureSemantics();
 
-      await tester.pumpWidget(
-        _buildTestApp(
-          NakedToggle(
-            value: false,
-            onChanged: (_) {},
-            semanticLabel: 'Enable notifications',
-            asSwitch: true,
-            child: const Text('Notifications'),
+        await tester.pumpWidget(
+          _buildTestApp(
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NakedToggle(
+                  value: false,
+                  onChanged: (_) {},
+                  semanticLabel: 'Enable notifications',
+                  asSwitch: true,
+                  child: const Text('Notifications'),
+                ),
+                NakedToggleGroup<String>(
+                  selectedValue: 'bold',
+                  onChanged: (_) {},
+                  child: const NakedToggleOption<String>(
+                    value: 'bold',
+                    semanticLabel: 'Bold formatting',
+                    child: Text('B'),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      );
+        );
 
-      final summary = summarizeMergedFromRoot(
-        tester,
-        control: ControlType.toggle,
-      );
-      expect(summary.label, equals('Enable notifications'));
+        final toggleData = tester
+            .getSemantics(find.byType(NakedToggle))
+            .getSemanticsData();
+        expect(toggleData.label, 'Enable notifications');
+        expect(toggleData.hasAction(SemanticsAction.tap), isTrue);
+        expect(toggleData.hasAction(SemanticsAction.focus), isTrue);
 
-      handle.dispose();
-    });
+        final optionData = tester
+            .getSemantics(find.byType(NakedToggleOption<String>))
+            .getSemanticsData();
+        expect(optionData.label, 'Bold formatting');
+        expect(optionData.hasAction(SemanticsAction.tap), isTrue);
+        expect(optionData.hasAction(SemanticsAction.focus), isTrue);
+
+        handle.dispose();
+      },
+    );
   });
 }

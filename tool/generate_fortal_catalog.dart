@@ -150,6 +150,10 @@ Map<String, List<Map<String, Object?>>> _categories(
       };
       final family = remaining.remove(id);
       if (family != null) members.add(family);
+      if (slug == 'slider') {
+        if (remaining.remove('range_slider') case final range?)
+          members.add(range);
+      }
     }
     if (members.isNotEmpty) result[group['group']! as String] = members;
   }

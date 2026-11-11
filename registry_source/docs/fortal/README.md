@@ -16,9 +16,9 @@ primary-role policy, separate from explicit `highContrast` component variants.
 ## Installation
 
 ```bash
-flutter pub add dev:remix_cli
-dart run remix_cli:remix init --prefix Fortal --preset fortal
-dart run remix_cli:remix add button
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix init --prefix Fortal --preset fortal
+remix add button
 ```
 
 The `Fortal` prefix preserves the API names in this guide. Add each additional
@@ -139,7 +139,7 @@ Install the optional application-owned icon aliases through the configured
 preset:
 
 ```bash
-dart run remix_cli:remix add icons
+remix add icons
 ```
 
 That item adds `remix_ui_icons` and creates a small `FortalIcons` alias set you
@@ -204,7 +204,7 @@ dependency automatically; import it directly when constructing chart data
 because the application-owned barrel does not re-export it.
 
 ```bash
-dart run remix_cli:remix add chart
+remix add chart
 ```
 
 ```dart

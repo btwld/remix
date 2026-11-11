@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  naked_ui: ^1.5.0
+  naked_ui: ^2.0.0-beta.2
 
 dev_dependencies:
   flutter_test:

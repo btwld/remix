@@ -1,0 +1,240 @@
+---
+title: Combobox
+description: Editable text with eligible suggestions and single-option acceptance
+keywords: [flutter, remix, combobox, autocomplete, suggestions]
+---
+
+Combobox lets people edit text and accept a suggestion. Arbitrary text remains valid. Use Select when people must choose from a fixed set without editing.
+
+## Basic implementation
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Widget fruitSearch(ValueChanged<String> onSelected) => RemixCombobox<String>(
+  label: 'Fruit',
+  hintText: 'Search fruit',
+  optionsBuilder: (query) => query.text.isEmpty
+      ? const []
+      : ['Apple', 'Apricot', 'Avocado'].where(
+          (fruit) => fruit.toLowerCase().startsWith(query.text.toLowerCase()),
+        ),
+  onSelected: onSelected,
+);
+```
+
+Provide an Overlay through a Navigator or WidgetsApp. Material is not required. Remix supplies structural anatomy. Vanilla, Fortal and HeroUI supply the field, panel and suggestion styling through installable recipes.
+
+## Vanilla recipe
+
+Install `remix add combobox` in a Vanilla app. This also installs `theme` and
+`textfield`. With the default `Ui` prefix:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget vanillaFruitSearch(ValueChanged<String> onSelected) => UiCombobox<String>(
+  label: 'Fruit',
+  hintText: 'Search fruit',
+  optionsBuilder: (query) => query.text.isEmpty
+      ? const []
+      : ['Apple', 'Apricot', 'Avocado'].where(
+          (fruit) => fruit.toLowerCase().startsWith(query.text.toLowerCase()),
+        ),
+  onSelected: onSelected,
+);
+```
+
+Place `UiTheme` above the Navigator, inside the app builder. The recipe reuses
+Vanilla TextField's light/dark fill, focus ring and disabled opacity. Suggestions
+sit in a rounded, bordered `popover` surface with a medium effects shadow and 8px gap.
+Keyboard highlight uses `accent`; hover uses an 85% accent tint, and press uses a stronger primary tint. Labels use `accentForeground` and keep the same weight across states so wrapped text stays stable. A 1px gap separates rounded rows.
+Rows grow with wrapped text from Select’s 32px minimum and padding. The panel has a 320px height bound and a 128px width floor; RawAutocomplete anchors its width to the field. There is no per-option selected or disabled state.
+
+Use `style: ComboboxStyler().field(...).panel(...).option(...)` for overrides;
+state overrides belong in matching state fragments. A custom `fieldBuilder`
+owns its field appearance; custom option content inherits the recipe's label
+style.
+
+## Fortal recipe
+
+Install `remix add combobox` in a Fortal app. It installs `theme` and `textfield`
+and exposes the same `UiCombobox<T>` editing API. Use `variant: .surface` (default)
+or `.soft`, and `size: .size1`, `.size2` (default), or `.size3`. The field shares
+Fortal TextField's colors, focus outline and disabled treatment. The panel uses
+Fortal's floating surface, shadow and neutral scrollbar. Rounded rows grow for
+wrapped text; hover, keyboard highlight and press use distinct accent tints.
+Acceptance writes the field value, with no persistent selected suggestion state.
+
+## HeroUI recipe
+
+Install `remix add combobox` in a HeroUI app. The same `UiCombobox<T>` API supports
+`variant: .primary` (default) and `.secondary`. Its field shares HeroUI TextField's
+responsive type and focus/disabled treatments. The suggestion surface follows the
+pinned HeroUI v3 ComboBox/ListBox: 24px panel radius, 6px padding, growing 36px
+minimum rows with 16px radius and 10×6px padding. Hover uses `default`; keyboard
+highlight paints an inset focus ring that stays visible inside the scroll viewport; press scales the row to 0.98.
+
+This maps the inline editable ComboBox family. Upstream Autocomplete's separate
+search field inside a popover remains deferred. Remix has no trigger glyph slot,
+per-option disabled state, persistent selection mark or multiple selection.
+Overflow cues, panel bounds and immediate press scaling follow Remix. Review the
+worksheet for remaining font, shadow and motion approximations.
+
+## Editing and ownership
+
+`initialValue` initializes text, without selecting an entity. `onSelected(T)` reports acceptance after the display string is written. Ordinary edits do not emit a nullable selection callback. The last selected entity remains in the field-builder snapshot only while its display string matches the current text.
+
+Supply both `controller` and `focusNode`, or neither. They are forwarded as the exact pair and remain caller-owned. Do not combine `controller` and `initialValue`. Synchronous changes such as `controller.clear()` inside `onSelected` are preserved.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class CitySearch extends StatefulWidget {
+  const CitySearch({super.key});
+
+  @override
+  State<CitySearch> createState() => _CitySearchState();
+}
+
+class _CitySearchState extends State<CitySearch> {
+  final query = TextEditingController();
+  final focus = FocusNode();
+
+  @override
+  void dispose() {
+    query.dispose();
+    focus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => RemixCombobox<({int id, String name})>(
+    controller: query,
+    focusNode: focus,
+    optionsBuilder: (value) async => [(id: 1, name: 'Recife')].where(
+      (city) => city.name.toLowerCase().contains(value.text.toLowerCase()),
+    ),
+    displayStringForOption: (city) => city.name,
+    onSelected: (city) => query.clear(),
+    fieldBuilder: (context, state, controller, focusNode, submit) => RemixTextField(
+      label: 'City',
+      helperText: 'Choose a suggestion or keep your search text.',
+      controller: controller,
+      focusNode: focusNode,
+      enabled: !state.isDisabled,
+      onEditingComplete: controller.clearComposing,
+      onSubmitted: (_) => submit(),
+    ),
+    optionBuilder: (context, city) => Text(city.name),
+  );
+}
+```
+
+Custom field builders reuse `NakedComboboxFieldBuilder<T>` and own their editor label, appearance and disabled forwarding. Forward all three editor arguments: controller, focus node and submit callback. Finalize composition while retaining focus on completion if your editor normally unfocuses. The default editor uses `label` as its visible and accessible name once. Set `semanticLabel` to replace the accessible name while retaining the visible label.
+
+`optionBuilder` returns visual content beneath one named interactive wrapper. Do not return a button or add another actionable semantics node. The accessible option name comes from `displayStringForOption`.
+
+## Styling
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final cityStyle = ComboboxStyler()
+    .width(320)
+    .field(TextFieldStyler()
+        .constraints(.minHeight(48))
+        .padding(.all(12))
+        .border(.all(.color(const Color(0xFF8A9991)).width(1)))
+        .onFocused(.border(.all(.color(const Color(0xFF28775E)).width(2)))))
+    .panel(ComboboxPanelStyler().color(const Color(0xFFFFFFFF)).padding(.all(4)))
+    .option(ComboboxOptionStyler()
+        .padding(.horizontal(12))
+        .onHovered(.color(const Color(0xFFF1F5F2)))
+        .onFocused(.color(const Color(0xFFDEEEE5)))
+        .label(TextStyler().fontSize(16)));
+```
+
+`ComboboxPanelStyler` supplies panel constraints, `containerEffects`, `scrollbarColor`, and `scrollbarThickness`. The component owns a persistent overflow thumb (painted only when scrolling is possible); its default is 4px wide with the inherited text color at 35% opacity. Panel scrolling clamps and stays isolated from the page, as in Select/Menu. Set option `.minHeight(...)` to size rows including padding; the unstyled default is 48px.
+
+`container` controls editor-root layout; `field` and `panel` style the editor and suggestions surface. The nested `option: ComboboxOptionSpec` groups `container` and `label`; use `ComboboxOptionStyler` for row styling and `.label(TextStyler(...))` for its text. An option's focused state denotes RawAutocomplete's keyboard highlight. Hover styles a row independently and does not move that highlight. Root modifiers and animation apply once around the editor. Direct `styleSpec: ComboboxSpec(...)` bypasses fluent styling and defaults. `RemixCombobox.styleFrom(...)` and generated `ComboboxStyler.call<T>()` are supported.
+
+The root exposes focus and disabled state. Put hover and press styles on the `field` or `option` slots, whose interactive widgets supply those states.
+
+Unstyled rows default to a 48px minimum and grow with wrapped labels; option styles own this minimum. The eager scroll panel defaults to a 288px maximum within the available overlay space; panel styles can replace it. A short fade marks each overflowing end, and a directional gutter keeps the persistent scrollbar clear of row fills. Keep result sets small; eager construction allows keyboard navigation to reveal every option. Width and opening direction follow RawAutocomplete; `optionsViewOpenDirection` supports down, up and mostSpace.
+
+## Interaction and filtering
+
+Arrow keys move the highlighted suggestion while focus stays in the editor. Enter accepts; Escape dismisses while preserving text. Tab and Shift-Tab leave without committing. Pointer, touch and stylus release activate an option; scrolling and canceled presses do not select it.
+
+Return eligible suggestions only. There is no per-option disabled API. Callers own fetching, filtering, debounce and errors; no results closes the panel. RawAutocomplete handles stale asynchronous responses. `onOpen` and `onClose` observe options-subtree mounting after a frame; they do not control visibility.
+
+Option equality identifies an entity. Equal values are shown once, retaining the first occurrence; distinct unequal entities can share the same display string and remain separate suggestions.
+
+The fallback semantics expose one editable field and named actionable suggestions. Widget semantics tests do not establish screen-reader parity. Expanded relationships, highlighted-result discovery and announcements still require real platform/assistive-technology testing.
+
+
+## Constructor
+
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+RemixCombobox<T> remixComboboxConstructor<T extends Object>({
+  Key? key,
+  required AutocompleteOptionsBuilder<T> optionsBuilder,
+  ValueChanged<T>? onSelected,
+  AutocompleteOptionToString<T> displayStringForOption =
+      RawAutocomplete.defaultStringForOption,
+  TextEditingController? controller,
+  FocusNode? focusNode,
+  TextEditingValue? initialValue,
+  String? label,
+  String? hintText,
+  bool enabled = true,
+  bool autofocus = false,
+  String? semanticLabel,
+  NakedComboboxFieldBuilder<T>? fieldBuilder,
+  Widget Function(BuildContext, T)? optionBuilder,
+  OptionsViewOpenDirection optionsViewOpenDirection =
+      OptionsViewOpenDirection.down,
+  VoidCallback? onOpen,
+  VoidCallback? onClose,
+  bool excludeSemantics = false,
+  ComboboxStyler style = const ComboboxStyler.create(),
+  ComboboxSpec? styleSpec,
+}) => throw UnimplementedError();
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+| Property | Type | Behavior |
+| --- | --- | --- |
+| `key` | `Key?` | Controls widget identity. |
+| `optionsBuilder` | `AutocompleteOptionsBuilder<T>` | Required. Returns eligible suggestions for the editing value, synchronously or asynchronously. |
+| `onSelected` | `ValueChanged<T>?` | Reports accepted suggestions after writing their display string. Ordinary text edits do not call it. |
+| `displayStringForOption` | `AutocompleteOptionToString<T>` | Supplies editor text and accessible option names. Defaults to `RawAutocomplete.defaultStringForOption`. |
+| `controller` | `TextEditingController?` | Caller-owned editor controller. Supply it together with `focusNode`. |
+| `focusNode` | `FocusNode?` | Caller-owned editor focus node. Supply it together with `controller`. |
+| `initialValue` | `TextEditingValue?` | Initial text without an entity selection. Cannot be combined with `controller`. |
+| `label` | `String?` | Visible label and fallback accessible name of the default editor. |
+| `hintText` | `String?` | Placeholder for the empty default editor. |
+| `enabled` | `bool` | Enables editing and acceptance. Defaults to `true`. |
+| `autofocus` | `bool` | Requests initial focus for the enabled default editor. Defaults to `false`. Custom editors own autofocus. |
+| `semanticLabel` | `String?` | Replaces the default editor's accessible name, including `label`. Does not change the visible label. Custom editors must apply it to their editable node. |
+| `fieldBuilder` | `NakedComboboxFieldBuilder<T>?` | Replaces the default editor. Forward the supplied controller, focus node and submit callback. |
+| `optionBuilder` | `Widget Function(BuildContext, T)?` | Builds visual content inside a named interactive suggestion wrapper. |
+| `optionsViewOpenDirection` | `OptionsViewOpenDirection` | Preferred opening direction: `down` (default), `up` or `mostSpace`. |
+| `onOpen` | `VoidCallback?` | Observes suggestion-subtree mounting after a frame. |
+| `onClose` | `VoidCallback?` | Observes suggestion-subtree unmounting after a frame. |
+| `excludeSemantics` | `bool` | Hides the editor and suggestions from assistive technology. Defaults to `false`. |
+| `style` | `ComboboxStyler` | Fluent styles for the container, field, panel and nested option container/label. |
+| `styleSpec` | `ComboboxSpec?` | Resolved anatomy that bypasses fluent defaults and style resolution. |

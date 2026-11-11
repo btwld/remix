@@ -1,6 +1,6 @@
 part of 'slider.dart';
 
-/// Style builder for [RemixSlider].
+/// Style builder for [RemixSlider] and [RemixRangeSlider].
 ///
 /// Use this class to customize the thumb, track, and filled range. It supports
 /// Mix variants and widget state variants such as disabled, hovered, focused,

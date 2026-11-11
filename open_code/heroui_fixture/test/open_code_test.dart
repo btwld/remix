@@ -36,6 +36,24 @@ void main() {
       });
     }
 
+    testWidgets('installed combobox accepts an eligible suggestion', (
+      tester,
+    ) async {
+      await _pumpGallery(tester, width: 1024);
+      final combo = find.byType(AcmeCombobox<String>).first;
+      await tester.ensureVisible(combo);
+      final editor = find.descendant(
+        of: combo,
+        matching: find.byType(EditableText),
+      );
+      await tester.enterText(editor, 're');
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.text('Recife'));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(tester.widget<EditableText>(editor).controller.text, 'Recife');
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('a checkbox label toggles its checkbox', (tester) async {
       await _pumpGallery(tester, width: 1024);
       bool selected() =>
@@ -511,6 +529,51 @@ final _cases = <_WidgetCase>[
     ),
     {AcmeSelect<String>},
   ),
+  _WidgetCase(
+    'combobox',
+    AcmeCombobox<String>(label: 'City', optionsBuilder: (_) => const []),
+    {AcmeCombobox<String>},
+  ),
+  _WidgetCase(
+    'calendar',
+    AcmeCalendar(
+      value: null,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (_) {},
+    ),
+    {AcmeCalendar},
+  ),
+  _WidgetCase(
+    'range_calendar',
+    AcmeRangeCalendar(
+      value: null,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (_) {},
+    ),
+    {AcmeRangeCalendar},
+  ),
+  _WidgetCase(
+    'date_picker',
+    AcmeDatePicker(
+      value: null,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (_) {},
+    ),
+    {AcmeDatePicker},
+  ),
+  _WidgetCase(
+    'date_range_picker',
+    AcmeDateRangePicker(
+      value: null,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (_) {},
+    ),
+    {AcmeDateRangePicker},
+  ),
   const _WidgetCase('separator', AcmeSeparator(), {AcmeSeparator}),
   const _WidgetCase(
     'skeleton',
@@ -518,6 +581,14 @@ final _cases = <_WidgetCase>[
     {AcmeSkeleton},
   ),
   const _WidgetCase('slider', AcmeSlider(value: 0.5), {AcmeSlider}),
+  const _WidgetCase(
+    'range slider',
+    AcmeRangeSlider(
+      values: [0.25, 0.75],
+      semanticLabels: ['Minimum', 'Maximum'],
+    ),
+    {AcmeRangeSlider},
+  ),
   const _WidgetCase('spinner', AcmeSpinner(), {AcmeSpinner}),
   const _WidgetCase('surface', AcmeSurface(child: Text('Surface')), {
     AcmeSurface,

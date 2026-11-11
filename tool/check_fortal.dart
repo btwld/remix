@@ -65,13 +65,19 @@ List<String> checkFortalContract(Directory workspace) {
       final kind = entry.key;
       final definition = entry.value as Map;
       final enumType = switch (kind) {
+        'size' ||
+        'variant' when id == 'range_slider' => 'FortalSlider${_pascal(kind)}',
         'weight' => 'FortalTextWeight',
         'size' when {'text', 'heading', 'code', 'kbd', 'link'}.contains(id) =>
           'FortalTextSize',
         'size' when id == 'tabs' => 'FortalTabsSize',
         _ => 'Fortal${_pascal(id)}${_pascal(kind)}',
       };
-      var enumSource = source;
+      var enumSource = id == 'range_slider'
+          ? File(
+              '$root/lib/src/fortal/components/slider.dart',
+            ).readAsStringSync()
+          : source;
       if (enumType == 'FortalTextSize' || enumType == 'FortalTextWeight') {
         enumSource = File(
           '$root/lib/src/fortal/components/typography.dart',
@@ -145,6 +151,7 @@ List<String> checkFortalContract(Directory workspace) {
 
 /// Layers that float, the only recipes that may cast a shadow.
 const _floatingRecipes = {
+  'combobox',
   'dialog',
   'menu',
   'popover',

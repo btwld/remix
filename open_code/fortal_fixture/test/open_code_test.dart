@@ -7,6 +7,71 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 void main() {
+  group('installed Fortal calendar composites', () {
+    for (final range in [false, true]) {
+      testWidgets(
+        '${range ? "range" : "single"} calendar and picker install with their child recipes',
+        (tester) async {
+          final first = DateTime(2026), last = DateTime(2027);
+          final today = DateTime(2026, 11, 6);
+          await _pumpCalendar(
+            tester,
+            range
+                ? AcmeRangeCalendar(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  )
+                : AcmeCalendar(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  ),
+          );
+          expect(find.byType(RemixSelect<int>), findsNWidgets(2));
+          final day = tester.widget<StyledText>(
+            find
+                .ancestor(of: find.text('6'), matching: find.byType(StyledText))
+                .first,
+          );
+          expect(
+            day.styleSpec!.spec.style?.color,
+            AcmeTokens.gray12.resolve(tester.element(find.text('6'))),
+          );
+          await _pumpCalendar(
+            tester,
+            range
+                ? AcmeDateRangePicker(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  )
+                : AcmeDatePicker(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  ),
+          );
+          await tester.tap(find.byType(RemixButton));
+          await tester.pumpAndSettle();
+          expect(
+            find.byType(range ? RemixRangeCalendar : RemixCalendar),
+            findsOneWidget,
+          );
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  });
+
   test(
     'the default Orla theme retains its paired Radix specification values',
     () {
@@ -228,6 +293,14 @@ List<_WidgetCase> _generatedWidgetCases() => [
     {AcmeSkeleton},
   ),
   const _WidgetCase('slider', AcmeSlider(value: 0.5), {AcmeSlider}),
+  const _WidgetCase(
+    'range slider',
+    AcmeRangeSlider(
+      values: [0.25, 0.75],
+      semanticLabels: ['Minimum', 'Maximum'],
+    ),
+    {AcmeRangeSlider},
+  ),
   const _WidgetCase('spinner', AcmeSpinner(), {AcmeSpinner}),
   const _WidgetCase(
     'switch',
@@ -302,6 +375,7 @@ const _allGeneratedWidgetTypes = <Type>{
   AcmeSidebar<String>,
   AcmeSkeleton,
   AcmeSlider,
+  AcmeRangeSlider,
   AcmeSpinner,
   AcmeSwitch,
   AcmeTabBar,
@@ -325,3 +399,16 @@ final class _WidgetCase {
 }
 
 Widget _stringCell(BuildContext context, String value) => Text(value);
+
+Future<void> _pumpCalendar(WidgetTester tester, Widget child) =>
+    tester.pumpWidget(
+      WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, _, _) => builder(context),
+        ),
+        builder: (context, navigator) => AcmeTheme(child: navigator!),
+        home: Center(child: child),
+      ),
+    );

@@ -37,8 +37,9 @@ Widget styled(VoidCallback save) => RemixButton(
 
 Recipes resolve `HeroUiTokens`, so a `HeroUiTheme` ancestor is required. Every
 `variant` value has a named constructor; HeroUI's `default` becomes
-`default<Component>` (`HeroUiCard.defaultCard`), and colour props use the
-shared `HeroUiColor` (`defaultColor`, `accent`, `success`, `warning`,
+`default<Component>` (`HeroUiCard.defaultCard`), shortened to `defaultToggle`
+on toggle buttons and `defaultItem` on dropdown items, and colour props use
+the shared `HeroUiColor` (`defaultColor`, `accent`, `success`, `warning`,
 `danger`).
 
 HeroUI's React props map onto Remix rather than being copied:
@@ -212,7 +213,56 @@ top-level final, never `token().withValues(...)`.
 ## Not included
 
 Families that need behavior Remix does not provide are not in the preset:
-Form, Fieldset, NumberField, InputOTP, ListBox, ComboBox, Pagination, a
-standalone Menu, and the date and color pickers. Each component's worksheet
+Form, Fieldset, NumberField, InputOTP, ListBox, Autocomplete, Pagination, a
+standalone Menu, segmented DateField, TimeField, CalendarYearPicker, and color pickers. Each component's worksheet
 lists its visual approximations (fonts, shadow softness, motion such as the
 sliding tab indicator).
+
+## Range sliders
+
+Install `range_slider` for `<Prefix>RangeSlider` and its `slider` dependency.
+Both use the upstream pill track, accent interval and ringed thumbs. Each
+thumb owns drag scaling and visible keyboard focus; hover retains the
+upstream resting paint. The range reserves a 48px target and keeps Remix's
+ordered `values`, `minSpacing`, snapping, RTL and accessible bound names.
+Custom announcements use `RemixRangeSlider` with `<prefix>RangeSliderStyle()`.
+See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
+
+## Combobox
+
+`remix add combobox` installs `<Prefix>Combobox<T>` and its `theme`/`textfield`
+dependencies. Use `variant: .primary|.secondary` (primary by default); there is
+no size axis upstream. The field matches TextField, except that a focused
+secondary field takes the `fieldFocus` fill, as upstream does. Suggestions
+follow ComboBox/ListBox with growing rows, hover fill, keyboard ring, pressed
+scale, and Remix's overflow fades and directional thumb. Accept through
+`onSelected`; observe the controller for edits. Supply eligible suggestions
+only. No trigger glyph, per-option disabled state, persistent selected row or
+multi-selection API is added. The upstream Autocomplete with popover search
+remains deferred.
+See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
+
+## Calendars and date pickers
+
+Install `calendar`, `range_calendar`, `date_picker` or `date_range_picker`.
+These are hand-written composites (`HeroUiCalendar`, `HeroUiRangeCalendar`,
+`HeroUiDatePicker`, `HeroUiDateRangePicker`) because their child styles resolve
+independently. Remix owns civil dates, keyboard navigation and range drafts.
+Keep Remix's controlled `value` and `onChanged`; `CivilDateRange` carries both
+range endpoints. Null callbacks disable the controls.
+
+Calendar `style`, `navigationStyle` and `selectorStyle` merge last. Pickers
+also accept `buttonStyle`, `calendarStyle` and `popoverStyle`. The button looks
+like a primary HeroUI field with a muted calendar icon; Remix compacts default range labels under bounds and wraps both endpoints. It approximates upstream segmented DateField
+entry. Month/year Select menus replace upstream's year grid. The standalone
+`date-field`, `time-field` and `calendar-year-picker` families stay deferred.
+
+Today has a contrasting contour. Selected caps, middles and live drafts keep
+their roles through pointer states; old committed ranges recede during drafting.
+Tiles remain square and chevrons scale with text. Picker panels have one 12px
+inset, and nested selector panels have a 4px offset and persistent scroll cue.
+
+See [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx),
+[Range Calendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx),
+[Date Picker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)
+and [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).

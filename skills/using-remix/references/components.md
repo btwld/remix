@@ -56,6 +56,24 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   every enabled `RemixCheckboxGroupItem` is an ordinary Tab stop in widget
   order, and Space/Enter toggle the focused option, exactly like native HTML
   checkbox groups. The group does not rove focus with arrow keys.
+- **Combobox** — editable text with eligible suggestions, using
+  `RemixCombobox<T>` over NakedCombobox/RawAutocomplete. Supply both `controller`
+  and `focusNode` or neither; `initialValue` initializes text, not an entity.
+  `onSelected(T)` reports acceptance rather than arbitrary text changes, so it
+  uses `onSelected` instead of `onChanged`. Observe the controller for edits;
+  callback controller edits are preserved. Callers own filtering, debounce and errors. No unavailable rows,
+  chips or multiselect API. Custom fields forward the exact editor pair and
+  submit callback, and own labels/disablement; custom option builders provide
+  visuals beneath one named interactive wrapper. Style `field`, `panel(ComboboxPanelStyler())`,
+  and `option(ComboboxOptionStyler())`; the nested `ComboboxOptionSpec` has
+  `container` and `label` slots. Set option text with `.label(TextStyler(...))`;
+  option `onFocused` means keyboard highlight,
+  independent of hover. Eager rows have a style-owned minimum (48px by default) inside a bounded
+  scroll panel with a persistent overflow thumb. Panel styles expose effects,
+  scrollbar color and thickness. Vanilla ships `<Prefix>Combobox<T>` via `remix add combobox`,
+  with the TextField recipe and a Select-like panel; its dependencies are
+  `theme` and `textfield`. Fortal also ships the recipe with surface/soft variants and three TextField sizes; HeroUI ships primary/secondary variants with its responsive TextField and ComboBox/ListBox panel.
+  See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 - **TextField/TextArea** — forwards the standard Flutter text-input surface
   (`controller`, `keyboardType`, `inputFormatters`, `maxLines`, etc.)
   unchanged; check the doc page rather than assuming a param is missing.
@@ -63,6 +81,17 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `expands`/`obscureText` fixed to `false`. Vanilla, Fortal, and HeroUI recipes
   ring the field with `onFocused`, so a click shows the ring. Other controls use
   `onFocusVisible`.
+- **RangeSlider** — `RemixRangeSlider` takes exactly two ordered, parent-owned
+  values. Give the lower and upper thumbs distinct `semanticLabels` in that
+  order. `onChanged` requests values; the parent decides whether to accept them.
+  `onChangeEnd` reports the last pointer request, including a rejected request;
+  keyboard and semantic changes do not emit pointer-only start/end callbacks.
+  Each preset's `range_slider` item installs `<Prefix>RangeSlider` and its shared
+  `slider` recipe dependency. Both thumbs use their preset's shared slider treatments;
+  focus, hover and press rings apply independently to the active thumb.
+  Use `<prefix>RangeSliderStyle()` on the base widget for custom semantic
+  formatters, which the generated adapter omits.
+  See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
 - **Select** — is interactively enabled only when `enabled == true` and
   `onChanged != null`; either condition alone leaves it visually present but
   inert. `positioning` defaults to
@@ -73,6 +102,69 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `SelectStyler().content(SelectContentStyler().minWidth(remixAnchorWidth()))`),
   which resolves to the trigger width inside `RemixSelect` and `RemixMenu`
   overlays and to `0` anywhere else, `RemixPopover` included.
+- **[Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx)** — controlled Gregorian date selection. `value` is nullable;
+  `firstDate`/`lastDate` are required and inclusive. Compare civil year/month/day
+  fields, not instants; callbacks return local date-only `DateTime` values,
+  with a UTC civil fallback for historically skipped local days. Do not convert
+  their timezones; compare with `isSameCivilDate`/`compareCivilDates` and build
+  with `civilDate`, not `==` or `difference`.
+  `enabled && onChanged != null` controls interaction. Unavailable in-range
+  dates stay keyboard-focusable without becoming selectable. Browsing never
+  selects; clearing `value` preserves the displayed month. The day grid has one
+  Tab entry and supports arrows, Home/End, PageUp/Down and Shift+PageUp/Down.
+  `RemixCalendarLabels` defaults to English; provide localized formatters and
+  `firstDayOfWeek` explicitly (Monday=1 through Sunday=7). Default month/year
+  selectors need an Overlay ancestor. Keep `navigationStyle`, `selectorStyle`
+  and day styling unresolved in their own interaction states. Day styles add
+  `onToday` and `onUnavailable` (predicate-rejected, in range; declare after
+  `onDisabled`). Vanilla, Fortal and HeroUI ship `<Prefix>Calendar` with icon navigation, growing Select
+  selectors and all day states; install `calendar`. `CalendarStyler.call(...)`
+  builds a `RemixCalendar` with the supplied style.
+- **[RangeCalendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx)** — controlled complete inclusive `CivilDateRange?`, sharing
+  Calendar navigation and day anatomy. First activation anchors locally without
+  a callback; second eligible activation requests one ordered range and clears
+  the draft. Every interior date must be available, including offscreen dates.
+  Parent rejection retains the supplied value. Escape cancels draft; inline
+  Tab/blur preserves it. Use `RemixCalendarLabels` plus
+  `RemixRangeCalendarLabels`, and the shared `CalendarStyler`. Style the painted
+  interval with `CalendarDayStyler` variants `onRangePreview`, `onRangeStart`,
+  `onRangeMiddle`, `onRangeEnd` and `onRangeSingle`, declared after
+  `onSelected` so they win; a raw `styleSpec` paints no range. The range
+  summary is an unpainted live region unless `summaryBuilder` shows it. No
+  public draft controller, partial committed value, drag selection or typed
+  entry. Vanilla, Fortal and HeroUI ship `<Prefix>RangeCalendar`; install `range_calendar`. Its
+  outlined tinted draft de-emphasizes the old committed range.
+- **[DatePicker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)** — a thin Button + Popover + Calendar composition, not a text
+  field. The parent owns nullable `value`; valid activation requests one date
+  and closes even when rejected. Escape, outside interaction and disabling
+  close without selection.
+  Localize `semanticLabel` (purpose; the trigger's name), `placeholder`,
+  `calendarLabels` (`fullDate` is the trigger's value, `noDate` when empty) and
+  optionally `formatDate` (painted text only). An Overlay ancestor is required.
+  A view resize closes it; keyboard and safe-area changes re-fit the open panel.
+  Use `icon` for a decorative leading date-picker icon, `placeholderStyle`
+  for the null-value fragment, and `expandedStyle` for the open-panel fragment
+  (merged last over `buttonStyle`). Finite trigger labels ellipsize on one line.
+  Style children independently with `buttonStyle`, `popoverStyle`,
+  `calendarStyle`, `navigationStyle` and `selectorStyle`; there is no DatePicker
+  `style`/`styleSpec` or public controller.
+  `onOpen`/`onClose` report the popover; a completed selection calls `onChanged`
+  before `onClose`, a dismissal only `onClose`. Parsing and segmented entry are
+  not supported; use DateRangePicker for ranges. Vanilla, Fortal and HeroUI ship
+  `<Prefix>DatePicker`; install `date_picker` for the Button, Popover and
+  Calendar recipes wired as a hand-written composite.
+- **DateRangePicker** — Button + Popover + RangeCalendar with a controlled
+  `CivilDateRange?`. First activation anchors without closing; second eligible
+  activation requests a complete range and closes even on parent rejection.
+  Every reopening starts a fresh draft. An Overlay ancestor is required.
+  Localize `semanticLabel` (purpose; the trigger's name), `placeholder`,
+  `calendarLabels`, `rangeLabels` (`rangeValue` is the trigger's value, `noRange`
+  when empty) and optionally `formatRange` (painted text only). Same resize,
+  keyboard, `onOpen`/`onClose` and five child styles as DatePicker; no picker
+  styler/controller or typed entry. Forwards `summaryBuilder` to paint the
+  otherwise unpainted range summary. Vanilla, Fortal and HeroUI ship `<Prefix>DateRangePicker`;
+  install `date_range_picker` for the matching hand-written composite. See
+  [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).
 
 ## Data display
 
@@ -141,7 +233,9 @@ for Overlay, Navigator and toast scope placement.
   the resolved `TooltipStyler.label(...)` spec through `DefaultTextStyle` so
   descendant `Text` widgets inside `tooltipChild` inherit the label style. The
   default `waitDuration` is 300ms (200ms in the Fortal recipe; see
-  [Fortal](fortal.md)).
+  [Fortal](fortal.md)); it paces hover only, and is skipped within 300ms after
+  another tooltip closes. Keyboard focus opens at once. One tooltip is visible
+  at a time.
 - **RemixMenu\<T\>** — `RemixMenuTrigger` and every entry type are
   **configuration objects, not widgets**. The sealed entry hierarchy is
   `RemixMenuItem<T>`, `RemixMenuCheckboxItem<T>`, `RemixMenuRadioGroup<T>`
@@ -214,3 +308,11 @@ for Overlay, Navigator and toast scope placement.
 the Fortal preset. `RemixLink` is base Remix — the Vanilla preset also ships
 a `link` item generating `<Prefix>Link`, and Fortal ships `FortalLink`. See
 [Fortal typography](fortal.md#typography).
+
+### HeroUI calendar family
+
+HeroUI also installs `calendar`, `range_calendar`, `date_picker` and
+`date_range_picker`. The composites retain Remix's date and range API and merge
+each child style last. Pickers use field-shaped button triggers rather than
+segmented input. See the [Open Code catalog](https://github.com/btwld/remix/blob/main/docs/open-code/catalog.mdx)
+and [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx).

@@ -103,6 +103,12 @@ const _minimumContrast = 1.05;
 /// Near-collisions the reference makes too, keyed
 /// `case|theme|state|rest or border`, with the reason each is kept.
 const _accepted = <String, String>{
+  'calendar day|dark|hovered|border':
+      'The calendar uses the plain accent hover required by its visual contract, as ghost controls do; the selected fill and focus keyline carry stronger emphasis.',
+  'range calendar day|dark|hovered|border':
+      'The same plain accent hover as calendar days; range interiors use a separate tint.',
+  'range calendar day|dark|selected|border':
+      'The old committed selection is muted while drafting, as the data table selected row; active range roles and the outlined draft carry emphasis.',
   'button secondary|light|hovered|rest':
       'hover:bg-secondary/80 over secondary; the label and pointer carry it.',
   'icon button secondary|light|hovered|rest':
@@ -217,6 +223,20 @@ const _pointer = [WidgetState.hovered, WidgetState.pressed];
 const _focus = [WidgetState.focused];
 
 final _cases = <_Case>[
+  for (final (name, recipe) in [
+    ('calendar day', vanillaCalendarStyle),
+    ('range calendar day', vanillaRangeCalendarStyle),
+  ])
+    _resolved<CalendarSpec>(
+      name,
+      style: recipe,
+      states: [..._pointer, WidgetState.selected],
+      read: (spec) => _boxLook(
+        spec.spec.day.spec.container,
+        label: spec.spec.day.spec.label.spec.style,
+      ),
+    ),
+
   for (final variant in VanillaButtonVariant.values)
     _resolved<ButtonSpec>(
       'button ${variant.name}',
@@ -358,7 +378,24 @@ final _cases = <_Case>[
   _resolved<SliderSpec>(
     'slider thumb',
     style: vanillaSliderStyle,
-    states: const [WidgetState.hovered, WidgetState.focused],
+    states: const [
+      WidgetState.hovered,
+      WidgetState.pressed,
+      WidgetState.focused,
+    ],
+    read: (spec) => [
+      ..._boxLook(spec.spec.thumb, effects: spec.spec.thumbEffects),
+      spec.spec.thumbFocusEffects?.outline,
+    ],
+  ),
+  _resolved<SliderSpec>(
+    'range slider thumb',
+    style: vanillaRangeSliderStyle,
+    states: const [
+      WidgetState.hovered,
+      WidgetState.pressed,
+      WidgetState.focused,
+    ],
     read: (spec) => [
       ..._boxLook(spec.spec.thumb, effects: spec.spec.thumbEffects),
       spec.spec.thumbFocusEffects?.outline,
@@ -372,6 +409,29 @@ final _cases = <_Case>[
       ..._boxLook(spec.spec.container, effects: spec.spec.containerEffects),
       spec.spec.helperText.spec.style?.color,
     ],
+  ),
+  _resolved<ComboboxSpec>(
+    'combobox field',
+    style: vanillaComboboxStyle,
+    states: const [WidgetState.focused, WidgetState.error],
+    read: (spec) => _boxLook(
+      spec.spec.field.spec.container,
+      effects: spec.spec.field.spec.containerEffects,
+    ),
+  ),
+  _resolved<ComboboxSpec>(
+    'combobox option',
+    style: vanillaComboboxStyle,
+    states: const [
+      WidgetState.hovered,
+      WidgetState.focused,
+      WidgetState.pressed,
+    ],
+    surface: _popover,
+    read: (spec) => _boxLook(
+      spec.spec.option.spec.container,
+      label: spec.spec.option.spec.label.spec.style,
+    ),
   ),
   _resolved<SelectSpec>(
     'select trigger',

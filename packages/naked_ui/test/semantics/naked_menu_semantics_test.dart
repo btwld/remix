@@ -360,7 +360,6 @@ void main() {
             ),
           );
 
-          debugPrint(semanticsRootOf(tester).toStringDeep());
           expect(find.semantics.byLabel('Account actions'), findsOne);
           expect(find.semantics.byLabel('Account actions, loading'), findsOne);
           var button = find.semantics

@@ -38,6 +38,15 @@ void main() {
     await (FontLoader(
       'MaterialIcons',
     )..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'))).load();
+    // Packaged icon fonts register under `packages/<package>/<family>`.
+    // Without this, RemixIcons glyphs (for example the picker triggers'
+    // calendar icon) paint as missing-glyph boxes in the goldens.
+    await (FontLoader('packages/remix_ui_icons/RemixIcons')..addFont(
+          File(
+            '../../packages/remix_ui_icons/lib/src/generated/fonts/RemixIcons.otf',
+          ).readAsBytes().then((bytes) => ByteData.sublistView(bytes)),
+        ))
+        .load();
   });
 
   test('polish board covers every family in the owned specification', () {
@@ -405,11 +414,15 @@ class _SemanticsPanel extends StatelessWidget {
       child: Builder(
         builder: (context) {
           final colors = resolveFortalTokens(FortalTheme.of(context));
+          // Series use the first of steps 9 to 12 that keeps 3:1 on the
+          // page; the first series is Caju's fitted `accentIndicator`.
           String familyOf(Color color) => _families
               .firstWhere(
-                (family) =>
-                    (dark ? family.$2.dark : family.$2.light).scale.step(9) ==
-                    color,
+                (family) => [
+                  for (var step = 9; step <= 12; step++)
+                    (dark ? family.$2.dark : family.$2.light).scale.step(step),
+                ].contains(color),
+                orElse: () => _families.last,
               )
               .$1;
           return ColoredBox(

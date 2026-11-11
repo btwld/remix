@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:widgetbook/widgetbook.dart';
+import 'package:widgetbook_vanilla/components/calendar_labels.dart';
 import 'package:widgetbook_vanilla/components/checkbox.dart';
 import 'package:widgetbook_vanilla/components/select.dart';
 import 'package:widgetbook_vanilla/components/switch.dart';
@@ -10,10 +11,31 @@ import 'package:widgetbook_vanilla/main.directories.g.dart';
 import 'package:widgetbook_vanilla/ui/ui.dart';
 
 void main() {
+  test(
+    'calendar scenes localize Arabic dates and collapse a one-day range',
+    () {
+      final day = DateTime(2026, 11, 24);
+      expect(formatCalendarSceneDate(day, rtl: true), '٢٤ نوفمبر ٢٠٢٦');
+      expect(
+        formatCalendarSceneRange(CivilDateRange(start: day, end: day)),
+        formatCalendarSceneDate(day),
+      );
+      final range = formatCalendarSceneRange(
+        CivilDateRange(
+          start: DateTime(2026, 11, 10),
+          end: DateTime(2026, 11, 13),
+        ),
+        rtl: true,
+      );
+      expect(range, '١٠ نوفمبر ٢٠٢٦ – ١٣ نوفمبر ٢٠٢٦');
+      expect(RegExp('[0-9/]').hasMatch(range), isFalse);
+    },
+  );
+
   final useCases = _collectUseCases(directories);
 
-  test('catalog registers all 36 Vanilla component use cases', () {
-    expect(useCases, hasLength(36));
+  test('catalog registers all 48 Vanilla component use cases', () {
+    expect(useCases, hasLength(48));
   });
 
   for (final entry in useCases) {

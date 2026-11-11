@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Build a settings page with a form that has text fields for name and email, a select dropdown for language preference, some checkboxes for notification options, and a submit button. Use Fortal theming with a teal accent. Make it look polished.",
-      "expected_output": "A complete Flutter widget using the Fortal preset with its configured prefix, importing its ui/ui.dart barrel (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalTheme(accent: .mar), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton generated widgets. Setup uses dart run remix_cli:remix init --prefix Fortal --preset fortal and adds the required items.",
+      "expected_output": "A complete Flutter widget using the Fortal preset with its configured prefix, importing its ui/ui.dart barrel (plus package:remix/remix.dart only if base Remix types are used), wrapped in FortalTheme(accent: .mar), using named Fortal variant constructors where the variant is fixed, including FortalSelect.surface without an unnecessary explicit generic type or redundant per-item preset styling, plus FortalTextField, FortalCheckbox, and FortalButton generated widgets. Setup uses remix init --prefix Fortal --preset fortal and adds the required items.",
       "files": [],
       "expectations": [
         "Uses the Fortal preset and its owned ui/ui.dart barrel, importing remix only if base Remix types are used.",
@@ -187,7 +187,7 @@
     {
       "id": 17,
       "prompt": "This is a fresh Flutter app with no Remix dependency yet. Set it up with Remix's default preset and build a primary action button styled from the starter theme.",
-      "expected_output": "Runs flutter pub add dev:remix_cli then remix init with no --preset flag, explaining that it defaults to the vanilla preset and the Ui prefix, then remix add button. Wraps the app in UiTheme (theme/darkTheme/mode) inside WidgetsApp.builder, above the Navigator, and uses a named UiButton variant constructor such as UiButton.primary(...) rather than initializing the Fortal preset.",
+      "expected_output": "Runs `dart pub global activate remix_cli '^1.0.0-beta.1'` then `remix init` with no --preset flag, explaining that it defaults to the vanilla preset and the Ui prefix, then remix add button. Wraps the app in UiTheme (theme/darkTheme/mode) inside WidgetsApp.builder, above the Navigator, and uses a named UiButton variant constructor such as UiButton.primary(...) rather than initializing the Fortal preset.",
       "files": [],
       "expectations": [
         "Runs remix init without --preset, explaining the default is the vanilla preset with the Ui prefix.",

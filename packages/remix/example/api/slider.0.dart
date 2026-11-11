@@ -36,6 +36,7 @@ class _SliderExampleState extends State<SliderExample> {
       child: SizedBox(
         width: 300,
         child: RemixSlider(
+          semanticLabel: 'Slider value',
           value: _selectedValue,
           style: style,
           onChanged: (value) {

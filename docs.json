@@ -20,16 +20,37 @@
           "href": "/styler-api"
         },
         {
-          "title": "Open Code",
-          "href": "/open-code"
-        },
-        {
           "title": "Registries",
           "href": "/guides/registries"
         },
         {
           "title": "Icons",
           "href": "/guides/icons"
+        }
+      ]
+    },
+    {
+      "group": "Open code",
+      "pages": [
+        {
+          "title": "How open code works",
+          "href": "/open-code"
+        },
+        {
+          "title": "Install and add your first item",
+          "href": "/open-code/install"
+        },
+        {
+          "title": "CLI reference",
+          "href": "/open-code/cli"
+        },
+        {
+          "title": "Updating and migrating",
+          "href": "/open-code/updating"
+        },
+        {
+          "title": "Preset catalogs",
+          "href": "/open-code/catalog"
         }
       ]
     },
@@ -67,8 +88,28 @@
           "href": "/components/radio"
         },
         {
+          "title": "Combobox",
+          "href": "/components/combobox"
+        },
+        {
           "title": "Select",
           "href": "/components/select"
+        },
+        {
+          "title": "Calendar",
+          "href": "/components/calendar"
+        },
+        {
+          "title": "Range Calendar",
+          "href": "/components/range_calendar"
+        },
+        {
+          "title": "Date Picker",
+          "href": "/components/date_picker"
+        },
+        {
+          "title": "Date Range Picker",
+          "href": "/components/date_range_picker"
         },
         {
           "title": "Slider",

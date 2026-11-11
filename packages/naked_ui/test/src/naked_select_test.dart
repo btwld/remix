@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../test_helpers.dart';
+import '../helpers/focus_request_counter.dart';
 import 'helpers/builder_state_scope.dart';
 
 void main() {
@@ -18,6 +20,280 @@ void main() {
     );
     return option.top >= viewport.top && option.bottom <= viewport.bottom;
   }
+
+  testWidgets(
+    'nested selector without a supplied node restores its actual trigger',
+    (tester) async {
+      final parent = MenuController();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Center(
+            child: NakedPopover(
+              controller: parent,
+              child: const Text('Parent trigger'),
+              popoverBuilder: (context, info) => NakedSelect<String>(
+                value: 'one',
+                onChanged: (_) {},
+                child: const Text('Selector trigger'),
+                overlayBuilder: (context, info) =>
+                    const NakedSelectOption<String>(
+                      value: 'one',
+                      child: Text('Option one'),
+                    ),
+              ),
+            ),
+          ),
+        ),
+      );
+      parent.open();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Selector trigger'));
+      await tester.pumpAndSettle();
+      expect(find.text('Option one'), findsOneWidget);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Option one'), findsNothing);
+      expect(parent.isOpen, isTrue);
+      var selectorFocused = false;
+      FocusManager.instance.primaryFocus?.context?.visitAncestorElements((
+        element,
+      ) {
+        if (element.widget is NakedSelect<String>) selectorFocused = true;
+        return !selectorFocused;
+      });
+      expect(selectorFocused, isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(parent.isOpen, isFalse);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  group('focus on close', () {
+    // Counting requests tells a deliberate restore from focus that merely
+    // landed on the trigger. The trigger is requested once more when the
+    // select opens, so every test measures from after the open.
+    late FocusRequestCounter trigger;
+
+    setUp(() {
+      trigger = FocusRequestCounter(debugLabel: 'trigger');
+      addTearDown(trigger.dispose);
+    });
+
+    Widget app(Widget select, {FocusNode? field, bool withOverlay = false}) {
+      final body = Column(
+        children: [
+          if (field != null)
+            SizedBox(
+              width: 200,
+              child: TextField(key: const Key('field'), focusNode: field),
+            ),
+          const SizedBox(height: 200),
+          select,
+        ],
+      );
+      return MaterialApp(home: Scaffold(body: body));
+    }
+
+    NakedSelect<String> select({
+      ValueChanged<String?>? onChanged,
+      ValueChanged<bool>? onOpenChanged,
+      bool consumeOutsideTaps = true,
+      ValueChanged<VoidCallback>? onCloseRequested,
+    }) {
+      return NakedSelect<String>(
+        triggerFocusNode: trigger,
+        onChanged: onChanged ?? (_) {},
+        onOpenChanged: onOpenChanged,
+        consumeOutsideTaps: consumeOutsideTaps,
+        onCloseRequested: onCloseRequested == null
+            ? null
+            : (hide) => onCloseRequested(hide),
+        child: const Text('Trigger'),
+        overlayBuilder: (context, info) => const NakedSelectOption<String>(
+          value: 'one',
+          child: Text('Option one'),
+        ),
+      );
+    }
+
+    Future<int> openSelect(WidgetTester tester) async {
+      await tester.tap(find.text('Trigger'));
+      await tester.pumpAndSettle();
+      expect(find.text('Option one'), findsOneWidget);
+      expect(
+        trigger.hasPrimaryFocus,
+        isFalse,
+        reason: 'opening moves focus into the panel',
+      );
+      return trigger.requestCount;
+    }
+
+    testWidgets('Escape inside the panel restores the trigger', (tester) async {
+      await tester.pumpWidget(app(select()));
+      final before = await openSelect(tester);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option one'), findsNothing);
+      expect(trigger.requestCount - before, 1);
+      expect(trigger.hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('selecting an option restores the trigger', (tester) async {
+      String? selected;
+      await tester.pumpWidget(app(select(onChanged: (v) => selected = v)));
+      final before = await openSelect(tester);
+
+      await tester.tap(find.text('Option one'));
+      await tester.pumpAndSettle();
+
+      expect(selected, 'one');
+      expect(find.text('Option one'), findsNothing);
+      expect(trigger.requestCount - before, 1);
+      expect(trigger.hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('an outside click that moved focus keeps it there', (
+      tester,
+    ) async {
+      final field = FocusNode(debugLabel: 'field');
+      addTearDown(field.dispose);
+      VoidCallback? finishClose;
+      await tester.pumpWidget(
+        app(
+          // Mirrors an exit animation that hides the panel later.
+          select(
+            consumeOutsideTaps: false,
+            onCloseRequested: (hide) => finishClose = hide,
+          ),
+          field: field,
+        ),
+      );
+      final before = await openSelect(tester);
+
+      await tester.tap(find.byKey(const Key('field')));
+      await tester.pump();
+      expect(field.hasPrimaryFocus, isTrue);
+      finishClose!();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option one'), findsNothing);
+      expect(trigger.requestCount - before, 0);
+      expect(field.hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('a focus move made in onChanged survives the close', (
+      tester,
+    ) async {
+      final next = FocusNode(debugLabel: 'next');
+      addTearDown(next.dispose);
+      await tester.pumpWidget(
+        app(
+          Column(
+            children: [
+              select(onChanged: (_) => next.requestFocus()),
+              Focus(focusNode: next, child: const Text('Next')),
+            ],
+          ),
+        ),
+      );
+      final before = await openSelect(tester);
+
+      await tester.tap(find.text('Option one'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option one'), findsNothing);
+      expect(trigger.requestCount - before, 0);
+      expect(next.hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('a focus move made after the close, in onOpenChanged, '
+        'survives it', (tester) async {
+      final next = FocusNode(debugLabel: 'next');
+      addTearDown(next.dispose);
+      await tester.pumpWidget(
+        app(
+          Column(
+            children: [
+              select(
+                onOpenChanged: (open) {
+                  if (!open) next.requestFocus();
+                },
+              ),
+              Focus(focusNode: next, child: const Text('Next')),
+            ],
+          ),
+        ),
+      );
+      final before = await openSelect(tester);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option one'), findsNothing);
+      expect(trigger.requestCount - before, 0);
+      expect(next.hasPrimaryFocus, isTrue);
+    });
+
+    testWidgets('restores the trigger when no node holds focus', (
+      tester,
+    ) async {
+      // Desktop parks the primary focus on the root scope while the app is
+      // inactive, so the panel closes with no node focused.
+      try {
+        debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+        tester.binding.focusManager
+            .listenToApplicationLifecycleChangesIfSupported();
+        var open = true;
+        late StateSetter setOpen;
+        await tester.pumpWidget(
+          app(
+            StatefulBuilder(
+              builder: (context, setState) {
+                setOpen = setState;
+                return NakedSelect<String>(
+                  triggerFocusNode: trigger,
+                  open: open,
+                  onOpenChanged: (_) {},
+                  onChanged: (_) {},
+                  child: const Text('Trigger'),
+                  overlayBuilder: (context, info) =>
+                      const NakedSelectOption<String>(
+                        value: 'one',
+                        child: Text('Option one'),
+                      ),
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Option one'), findsOneWidget);
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.inactive,
+        );
+        expect(
+          FocusManager.instance.primaryFocus,
+          FocusManager.instance.rootScope,
+        );
+        final before = trigger.requestCount;
+
+        setOpen(() => open = false);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Option one'), findsNothing);
+        expect(trigger.requestCount - before, 1);
+        expect(trigger.hasPrimaryFocus, isTrue);
+      } finally {
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        );
+        debugDefaultTargetPlatformOverride = null;
+      }
+    });
+  });
 
   // Helper function to build select widget
   Widget buildSelect<T>({
@@ -1276,14 +1552,14 @@ void main() {
     const panelKey = Key('panel');
     const sideOffset = 8.0;
 
-    // A null [constrainToAvailableHeight] leaves the argument out so the
+    // A null [constrainToAvailableSpace] leaves the argument out so the
     // widget's own default applies.
     Widget buildPanelSelect({
       Alignment alignment = Alignment.topCenter,
       OverlayAlignment overlayAlignment = OverlayAlignment.center,
       TextDirection textDirection = TextDirection.ltr,
       int options = 30,
-      bool? constrainToAvailableHeight,
+      bool? constrainToAvailableSpace,
     }) {
       final positioning = OverlayPositionConfig(
         alignment: overlayAlignment,
@@ -1317,7 +1593,7 @@ void main() {
         textDirection: textDirection,
         child: Align(
           alignment: alignment,
-          child: constrainToAvailableHeight == null
+          child: constrainToAvailableSpace == null
               ? NakedSelect<int>(
                   onChanged: (_) {},
                   positioning: positioning,
@@ -1327,7 +1603,7 @@ void main() {
               : NakedSelect<int>(
                   onChanged: (_) {},
                   positioning: positioning,
-                  constrainToAvailableHeight: constrainToAvailableHeight,
+                  constrainToAvailableSpace: constrainToAvailableSpace,
                   builder: builder,
                   overlayBuilder: overlayBuilder,
                 ),
@@ -1352,7 +1628,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpMaterialWidget(
-        buildPanelSelect(constrainToAvailableHeight: true),
+        buildPanelSelect(constrainToAvailableSpace: true),
       );
       final (:trigger, :panel) = await openPanel(tester);
 
@@ -1367,7 +1643,7 @@ void main() {
       await tester.pumpMaterialWidget(
         buildPanelSelect(
           alignment: Alignment.bottomCenter,
-          constrainToAvailableHeight: true,
+          constrainToAvailableSpace: true,
         ),
       );
       final (:trigger, :panel) = await openPanel(tester);
@@ -1402,7 +1678,7 @@ void main() {
         buildPanelSelect(
           overlayAlignment: OverlayAlignment.start,
           textDirection: TextDirection.rtl,
-          constrainToAvailableHeight: true,
+          constrainToAvailableSpace: true,
         ),
       );
       final (:trigger, :panel) = await openPanel(tester);

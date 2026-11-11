@@ -29,6 +29,13 @@ class TextfieldExample extends StatefulWidget {
 
 class _TextfieldExampleState extends State<TextfieldExample> {
   final controller = TextEditingController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(

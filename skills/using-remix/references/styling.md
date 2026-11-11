@@ -54,8 +54,7 @@ final style = CheckboxStyler()
 
 ## Callable styles
 
-Every leaf component styler has a `call()` method that builds the widget
-directly:
+Stylers with an owning widget have a `call()` method that builds it directly:
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -71,11 +70,14 @@ Widget saveButton(VoidCallback save) =>
     primaryButton(label: 'Save', onPressed: save); // → RemixButton
 ```
 
-Eight stylers use a generic `call<T>()` instead: Accordion, Radio,
+Nine stylers use a generic `call<T>()` instead: Accordion, Combobox, Radio,
 SegmentedControl, Select, Menu, ToggleGroup, DataTable, and Sidebar. Dart
-usually infers `T` from the required values or item/row lists. Every other
-leaf component styler uses a non-generic `call()`. Behavioral group/root
-widgets — `RemixAccordionGroup`, `RemixRadioGroup`, `RemixTabs`,
+usually infers `T` from the required values or item/row lists. Other callable
+component stylers use a non-generic `call()`. `CalendarStyler.call(...)` builds
+`RemixCalendar`; pass the shared styler to `RemixRangeCalendar(style: ...)`
+for a range calendar. Part stylers without an owning public widget have no
+`call()`. Behavioral group/root widgets — `RemixAccordionGroup`,
+`RemixRadioGroup`, `RemixTabs`,
 `RemixCheckboxGroup` — are constructed directly; they have no styler.
 
 ## Styling with installed tokens

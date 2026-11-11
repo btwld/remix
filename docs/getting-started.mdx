@@ -1,6 +1,6 @@
 ---
 title: Getting started
-description: Install Remix from this checkout and render your first styled button
+description: Install Remix from pub.dev and render your first styled button
 ---
 
 Remix can be used directly as a widget library. You do not need the CLI or a
@@ -9,27 +9,26 @@ the [CLI tutorial](/tutorials/settings-screen).
 
 ## Installation
 
-These docs describe the code in this repository, whose Remix package version
-is `1.0.0-beta.14` (unpublished; the currently hosted release is
-`1.0.0-beta.13`). Do not substitute a stable `1.0.0` dependency: the repository
-version is a prerelease, not evidence that a stable release exists.
-
-For this checkout, use Flutter 3.44.0 and its bundled Dart 3.12.0, matching
-`.fvmrc`. Remix needs the same floor, Flutter 3.44 / Dart 3.12, because it
-depends on Mix 2.3.1.
-
-Create an application, then add the local runtime package. Replace
-`/path/to/remix` with the absolute path to your checkout:
+Remix needs Flutter 3.44 or newer, which bundles Dart 3.12. Check your SDK:
 
 ```bash
-flutter create remix_example
-cd remix_example
-flutter pub add "remix:{path: /path/to/remix/packages/remix}"
+flutter --version
 ```
 
-For a registry installation, check the available versions on
-[pub.dev](https://pub.dev/packages/remix/versions) and select docs matching that
-release. A plain `flutter pub add remix` does not select an unpublished checkout.
+Create an application and add Remix. Pin the prerelease. An unversioned
+install selects the older `0.2.0` stable line, which these docs do not
+describe.
+
+```bash
+flutter create --empty remix_example
+cd remix_example
+flutter pub add 'remix:^1.0.0-rc.1'
+```
+
+Every published version is listed on
+[pub.dev](https://pub.dev/packages/remix/versions). Contributors who build
+against a checkout of this repository add the package by path instead; see the
+[contributor notes](https://github.com/btwld/remix/blob/main/open_code/README.md#develop-against-a-checkout).
 
 ## Your first component
 

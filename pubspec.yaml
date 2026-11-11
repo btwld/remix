@@ -82,7 +82,7 @@ melos:
         crypto: ^3.0.7
         pub_semver: ^2.2.0
         yaml: ^3.1.3
-        naked_ui: ^1.5.0
+        naked_ui: ^2.0.0-beta.2
         remix: ^1.0.0-beta.15
         remix_ui_icons: ^1.0.0-beta.1
         remix_ui_fonts: ^0.1.0
@@ -123,7 +123,14 @@ melos:
       # checks dashboard's explicit chat closure, not the full Fortal catalog.
       packageFilters:
         scope:
-          [remix, registry_source, playground, dashboard]
+          [
+            remix,
+            registry_source,
+            playground,
+            dashboard,
+            demo,
+            widgetbook_vanilla,
+          ]
 
     test:flutter:
       exec: flutter test --reporter=failures-only
@@ -131,6 +138,14 @@ melos:
       packageFilters:
         dirExists: test
         flutter: true
+
+    test:calendar-civil:
+      description: Verify skipped civil dates in Pacific/Apia
+      env:
+        TZ: Pacific/Apia
+      exec: flutter test --no-pub test/src/naked_calendar_civil_dates_test.dart test/utilities/civil_date_range_test.dart test/src/naked_range_calendar_test.dart --reporter=failures-only
+      packageFilters:
+        scope: [naked_ui]
 
     test:cli:
       description: Run the pure-Dart remix_cli test suite
@@ -163,6 +178,7 @@ melos:
     open-code:check:
       steps:
         - dart test test/tool/check_open_code_test.dart
+        - dart test test/tool/open_code_lifecycle_test.dart
         - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_shell
@@ -175,10 +191,22 @@ melos:
 
     open-code:release:check:
       steps:
-        - dart run tool/check_open_code.dart --source hosted
-        - dart run tool/check_open_code.dart --preset fortal --source hosted
-        - dart run tool/check_open_code.dart --preset heroui --source hosted
-      description: Verify all presets against the required published Remix release
+        - dart run tool/check_open_code.dart --source hosted --install batch --independent none
+        - dart run tool/check_open_code.dart --preset fortal --source hosted --install batch --independent none
+        - dart run tool/check_open_code.dart --preset heroui --source hosted --install batch --independent none
+      description: Fast hosted check of all presets (three registry inits total)
+
+    open-code:release:check:vanilla:
+      run: dart run tool/check_open_code.dart --source hosted
+      description: Verify Vanilla against published runtimes
+
+    open-code:release:check:fortal:
+      run: dart run tool/check_open_code.dart --preset fortal --source hosted
+      description: Verify Fortal against published runtimes
+
+    open-code:release:check:heroui:
+      run: dart run tool/check_open_code.dart --preset heroui --source hosted
+      description: Verify HeroUI against published runtimes
 
     open-code:registry:build:
       run: dart run tool/build_registry.dart
@@ -282,7 +310,8 @@ melos:
     ci:flutter:
       steps:
         - test:flutter
-      description: Every Flutter package test suite
+        - test:calendar-civil
+      description: Every Flutter package test suite and skipped civil-date regressions
 
     # Fresh consumers use checkout Remix (and remix_ui_fonts for Vanilla) with
     # hosted supporting packages.
@@ -291,6 +320,7 @@ melos:
       steps:
         - dart run tool/check_open_code.dart --source checkout --item ownership
         - dart test test/tool/check_open_code_test.dart
+        - dart test test/tool/open_code_lifecycle_test.dart
         - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --source checkout
@@ -342,14 +372,29 @@ melos:
       run: dart run tool/generate_fortal_catalog.dart
       description: Regenerate the Fortal widget catalog from its owned specification
 
+    docs:cli:
+      run: dart run tool/generate_cli_reference.dart
+      description: Regenerate the CLI reference from remix_cli's argument parsers
+
+    skills:index:
+      run: dart run tool/generate_skills_index.dart
+      description: Regenerate skills/index.yaml, the file list remix skills install reads at a pin
+
     docs:check:
-      # The catalog is rendered from the same specification `fortal:check`
-      # holds against the recipes, so a stale page is drift, not a doc edit.
+      # The Fortal catalog is rendered from the same specification
+      # `fortal:check` holds against the recipes, the CLI reference from
+      # remix_cli's parsers, and the skills manifest from the skill
+      # directories, so a stale page is drift, not a doc edit.
       steps:
+        - dart test test/tool/install_pins_test.dart
         - dart run tool/validate_docs.dart
         - dart run tool/generate_fortal_catalog.dart --check
+        - dart test test/tool/generate_cli_reference_test.dart
+        - dart run tool/generate_cli_reference.dart --check
+        - dart test test/tool/generate_skills_index_test.dart
+        - dart run tool/generate_skills_index.dart --check
         - python3 tool/check_example_hosts.py
         - python3 -m unittest discover -s tool -p 'test_example_hosts.py'
         - python3 tool/check_tutorial_assets.py
         - python3 -m unittest discover -s tool -p 'test_tutorial_assets.py'
-      description: Validate docs, reject retired APIs, and fail on catalog drift
+      description: Validate docs, reject retired APIs, and fail on catalog, CLI reference, or skills manifest drift

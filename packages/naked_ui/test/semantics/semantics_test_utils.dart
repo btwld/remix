@@ -416,15 +416,13 @@ Future<T> withSemantics<T>(
 
 String? _normalizeLabel(String raw) {
   if (raw.isEmpty) return null;
-  // Split on newlines and dedupe while preserving order.
   final parts = raw
       .split('\n')
       .map((s) => s.trim())
       .where((s) => s.isNotEmpty)
       .toList();
   if (parts.isEmpty) return null;
-  // Use the first unique part as canonical label.
-  return parts.first;
+  return parts.join('\n');
 }
 
 /// Minimal strict matcher builder derived directly from SemanticsData

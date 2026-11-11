@@ -736,6 +736,46 @@
       ]
     },
     {
+      "id": "combobox",
+      "fortalType": "FortalCombobox",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "rest",
+        "open",
+        "hover",
+        "pressed",
+        "keyboard-highlight",
+        "disabled",
+        "accepted-value"
+      ],
+      "tests": [
+        "test/fortal/combobox_test.dart"
+      ]
+    },
+    {
       "id": "slider",
       "fortalType": "FortalSlider",
       "enums": {
@@ -780,7 +820,59 @@
       "tests": [
         "test/fortal/fortal_control_matrix_test.dart",
         "test/fortal/fortal_high_contrast_test.dart",
-        "test/fortal/spec_conformance_test.dart"
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/slider_polish_test.dart"
+      ]
+    },
+    {
+      "id": "range_slider",
+      "fortalType": "FortalRangeSlider",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "min": 0,
+        "max": 1,
+        "minSpacing": 0,
+        "enabled": true,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "highContrast",
+        "rtl"
+      ],
+      "tests": [
+        "test/fortal/range_slider_test.dart",
+        "test/fortal/slider_polish_test.dart",
+        "test/fortal/fortal_control_contrast_render_test.dart"
+      ],
+      "flutterExceptions": [
+        "Shares FortalSliderSize and FortalSliderVariant with the slider recipe.",
+        "Exactly two ordered values; no vertical orientation. Custom announcements use RemixRangeSlider with fortalRangeSliderStyle()."
       ]
     },
     {
@@ -1681,6 +1773,130 @@
       "tests": [
         "test/components/sidebar_layout/sidebar_layout_test.dart",
         "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "calendar",
+      "fortalType": "FortalCalendar",
+      "enums": {},
+      "defaults": {
+        "enabled": true,
+        "firstDayOfWeek": "DateTime.sunday"
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "selected",
+        "disabled",
+        "today",
+        "unavailable",
+        "rtl"
+      ],
+      "tests": [
+        "test/fortal/calendar_recipes_test.dart",
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_control_contrast_render_test.dart"
+      ],
+      "flutterExceptions": [
+        "Hand-written composition retains Remix civil-date, focus, overlay and selection behavior; child styles merge last."
+      ]
+    },
+    {
+      "id": "range_calendar",
+      "fortalType": "FortalRangeCalendar",
+      "enums": {},
+      "defaults": {
+        "enabled": true,
+        "firstDayOfWeek": "DateTime.sunday"
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "selected",
+        "disabled",
+        "today",
+        "unavailable",
+        "rtl",
+        "draft",
+        "blockedDraft"
+      ],
+      "tests": [
+        "test/fortal/calendar_recipes_test.dart",
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_control_contrast_render_test.dart"
+      ],
+      "flutterExceptions": [
+        "Hand-written composition retains Remix civil-date, focus, overlay and selection behavior; child styles merge last."
+      ]
+    },
+    {
+      "id": "date_picker",
+      "fortalType": "FortalDatePicker",
+      "enums": {},
+      "defaults": {
+        "enabled": true,
+        "firstDayOfWeek": "DateTime.sunday"
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "selected",
+        "disabled",
+        "today",
+        "unavailable",
+        "rtl"
+      ],
+      "tests": [
+        "test/fortal/calendar_recipes_test.dart",
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_control_contrast_render_test.dart"
+      ],
+      "flutterExceptions": [
+        "Hand-written composition retains Remix civil-date, focus, overlay and selection behavior; child styles merge last."
+      ]
+    },
+    {
+      "id": "date_range_picker",
+      "fortalType": "FortalDateRangePicker",
+      "enums": {},
+      "defaults": {
+        "enabled": true,
+        "firstDayOfWeek": "DateTime.sunday"
+      },
+      "supportedStyleProps": [],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "selected",
+        "disabled",
+        "today",
+        "unavailable",
+        "rtl",
+        "draft",
+        "blockedDraft"
+      ],
+      "tests": [
+        "test/fortal/calendar_recipes_test.dart",
+        "test/fortal/spec_conformance_test.dart",
+        "test/fortal/fortal_control_matrix_test.dart",
+        "test/fortal/fortal_control_contrast_render_test.dart"
+      ],
+      "flutterExceptions": [
+        "Hand-written composition retains Remix civil-date, focus, overlay and selection behavior; child styles merge last."
       ]
     }
   ],

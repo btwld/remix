@@ -5,6 +5,113 @@ import 'package:remix/remix.dart';
 enum Interest { design, code }
 
 void main() {
+  test(
+    'range slider is additive and reuses the existing single-value styler',
+    () {
+      final style = SliderStyler().thumbSize(const Size(20, 20));
+      final ValueChanged<double> singleChanged = (_) {};
+      final ValueChanged<List<double>> rangeChanged = (_) {};
+      final single = style(value: .5, onChanged: singleChanged);
+      final range = RemixRangeSlider(
+        values: const [.25, .75],
+        onChanged: rangeChanged,
+        style: style,
+        semanticLabels: const ['Lower', 'Upper'],
+        minSpacing: .1,
+        snapDivisions: 10,
+      );
+      expect(single, isA<RemixSlider>());
+      expect(single.value, .5);
+      expect(single.onChanged, same(singleChanged));
+      expect(range.style, same(style));
+      expect(range.values, [.25, .75]);
+      expect(range.onChanged, same(rangeChanged));
+    },
+  );
+
+  test(
+    'combobox minimal and generic callable API compile through the barrel',
+    () {
+      final minimal = RemixCombobox<String>(
+        label: 'Fruit',
+        optionsBuilder: (query) => ['Apple', 'Apricot'],
+      );
+      final styled = RemixCombobox.styleFrom().width(300)<String>(
+        label: 'Fruit',
+        optionsBuilder: (query) async => ['Apple'],
+      );
+      expect(minimal.style, isA<ComboboxStyler>());
+      expect(styled, isA<RemixCombobox<String>>());
+      expect(const ComboboxSpec(), isA<ComboboxSpec>());
+    },
+  );
+
+  test(
+    'date range picker is constructible through package barrel without controller',
+    () {
+      final range = CivilDateRange(
+        start: DateTime(2024),
+        end: DateTime(2024, 2),
+      );
+      final picker = RemixDateRangePicker(
+        value: range,
+        firstDate: DateTime(2024),
+        lastDate: DateTime(2025),
+        onChanged: (_) {},
+        formatRange: (range) => '${range.start.day}–${range.end.day}',
+        rangeLabels: const RemixRangeCalendarLabels(
+          chooseEnd: 'Choose final date',
+        ),
+        calendarStyle: CalendarStyler(
+          day: CalendarDayStyler().onRangeSingle(
+            CalendarDayStyler().borderRadius(.circular(22)),
+          ),
+        ),
+      );
+      expect(picker.value, range);
+      expect(picker.semanticLabel, 'Choose date range');
+      expect(picker.placeholder, 'Select date range');
+      expect(picker.rangeLabels.chooseEnd, 'Choose final date');
+      expect(picker.buttonStyle, isA<ButtonStyler>());
+      expect(picker.popoverStyle, isA<PopoverStyler>());
+      expect(picker.navigationStyle, isA<IconButtonStyler>());
+      expect(picker.selectorStyle, isA<SelectStyler>());
+    },
+  );
+
+  test(
+    'range calendar API and day variants are exported through the barrel',
+    () {
+      final range = CivilDateRange(
+        start: DateTime(2024),
+        end: DateTime(2024, 2),
+      );
+      final calendar = RemixRangeCalendar(
+        value: range,
+        firstDate: DateTime(2024),
+        lastDate: DateTime(2025),
+        onChanged: (_) {},
+        headerBuilder: (context, NakedRangeCalendarState state) =>
+            Text('${state.displayedMonth}'),
+        rangeLabels: RemixRangeCalendarLabels(
+          selectedRange: (start, end) => '$start – $end',
+        ),
+        style: CalendarStyler(
+          day: CalendarDayStyler()
+              .onRangePreview(CalendarDayStyler().color(Colors.lightBlue))
+              .onRangeStart(CalendarDayStyler().color(Colors.blue))
+              .onRangeMiddle(CalendarDayStyler().color(Colors.blue))
+              .onRangeEnd(CalendarDayStyler().color(Colors.blue))
+              .onRangeSingle(CalendarDayStyler().borderRadius(.circular(22))),
+        ),
+      );
+      expect(calendar.value, range);
+      expect(calendar.style, isA<CalendarStyler>());
+      expect(RemixRangeCalendar.styleFrom(), isA<CalendarStyler>());
+      expect(isSameCivilDate(range.start, DateTime.utc(2024)), isTrue);
+    },
+  );
+
   test('disclosure API is constructible from the package barrel', () {
     const disclosure = RemixDisclosure(
       trigger: Text('Details'),

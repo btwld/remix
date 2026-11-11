@@ -1,3 +1,60 @@
+## 2.0.0-beta.2
+
+### Breaking changes
+
+- Rename `constrainToAvailableHeight` to `constrainToAvailableSpace` on
+  `OverlayPositioner`, `NakedSelect`, and `NakedMenu`. With collision avoidance,
+  it also caps panel width to the padded overlay.
+
+### Features
+
+- Add controlled `NakedCalendar` and `NakedRangeCalendar`, plus
+  `NakedCalendarDay`, with `NakedCalendarState`, `NakedCalendarDayState`, and
+  `NakedRangeCalendarState`, including `maybeOf`, `controllerOf`, and
+  `maybeControllerOf` helpers. Add `CivilDateRange` and `NakedRangePosition`.
+- Add civil-date helpers `civilDate`, `compareCivilDates`, and `isSameCivilDate`.
+- Add `NakedPopover.initialFocusNode`, `constrainToAvailableSpace`, and
+  `avoidViewInsets`, and `OverlayPositionConfig.copyWith`.
+- Let drag direction choose between overlapping `NakedSlider` thumbs.
+- Open `NakedTooltip` immediately on keyboard focus; add `skipDelayDuration`
+  to skip hover delay between nearby activations.
+
+### Fixes
+
+- Return menu and select focus to the trigger unless focus moved elsewhere.
+- Re-fit panels through safe-area and keyboard inset changes. Apply opted-in
+  view safety even with collision avoidance off.
+- Honor `NakedCombobox` disablement, discard stale results, preserve selection
+  callback edits, and prevent submission during text composition.
+- Let Tab and Shift+Tab leave `NakedTabBar` as one focus stop.
+- Correct `NakedSlider` spacing arithmetic and focus transfers; align thumb
+  hit targets and semantics with `NakedSliderTrack`.
+- Preserve the completed range end's focus and month through parent acceptance,
+  including asynchronous acceptance.
+
+## 2.0.0-beta.1
+
+### Breaking changes
+
+- Remove the deprecated `NakedTooltip.open`, `useRootOverlay`, and
+  `disableHoverableContent` parameters and the internal 1.1.0 compatibility
+  fallback (`LegacyNakedTooltip`). `NakedTooltip` now always builds on
+  `RawTooltip`; use `tooltipKey` (`GlobalKey<RawTooltipState>`) to show a
+  tooltip imperatively and `onOpenChanged` to observe visibility.
+
+### Fixes
+
+- Replace descendant text semantics when `semanticLabel` is set on
+  `NakedButton`, `NakedCheckbox`, `NakedToggle`, `NakedToggleOption`, and
+  `NakedPopover` (matching WAI-ARIA `aria-label` precedence and the other
+  `naked_ui` controls while preserving focus and activation semantics), and
+  stop observing a child `FocusNode` in `NakedPopover` when `openOnTap` is
+  `false` or `triggerFocusNode` is provided.
+- Move `NakedTab` disabled and selected `WidgetState` synchronization out of
+  `build()` into `didChangeDependencies` and `didUpdateWidget`, and clear
+  `WidgetState.pressed` when a pressed `NakedTab` or `NakedCheckbox` becomes
+  disabled.
+
 ## 1.5.0
 
 ### Features

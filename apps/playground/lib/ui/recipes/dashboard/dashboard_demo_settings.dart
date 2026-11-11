@@ -119,6 +119,7 @@ class _PlaygroundDashboardSettingsPageState
                   ],
                 ),
                 PlaygroundSelect<String>(
+                  semanticLabel: 'Language',
                   trigger: const RemixSelectTrigger(placeholder: 'Language'),
                   items: const [
                     RemixSelectItem(value: 'en', label: 'English'),
@@ -231,6 +232,7 @@ class _PlaygroundDashboardSettingsPageState
                       emphasized: true,
                     ),
                     PlaygroundSlider(
+                      semanticLabel: 'Control radius',
                       value: _resolvedRadius(context),
                       min: 0,
                       max: 16,

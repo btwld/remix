@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/rendering/remix_box_effects.dart';
 
 /// Both shipped themes, named for test descriptions.
 const vanillaThemes = <({String name, VanillaThemeData data})>[
@@ -168,3 +169,11 @@ double contrastRatio(Color first, Color second) {
 
   return (lighter + 0.05) / (darker + 0.05);
 }
+
+/// The painted thumb, inside the positioning transforms (which do not include
+/// their own offsets when measured directly).
+Finder rangeThumb(int index) => find.descendant(
+  of: find.byKey(ValueKey(index)),
+  // ignore: invalid_use_of_internal_member
+  matching: find.byType(RemixBoxAdapter),
+);

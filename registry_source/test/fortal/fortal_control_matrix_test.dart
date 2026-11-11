@@ -4,8 +4,45 @@ import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
 import '../helpers/test_helpers.dart';
+import 'calendar_recipes_test.dart' as calendars;
 
 void main() {
+  for (final dark in [false, true]) {
+    testWidgets(
+      '$dark calendar family builds across palettes in RTL at 200 percent',
+      (tester) async {
+        for (final accent in FortalAccentColor.values) {
+          for (final range in [false, true]) {
+            await tester.pumpRemixApp(
+              MediaQuery(
+                data: const MediaQueryData(
+                  size: Size(1000, 1000),
+                  textScaler: TextScaler.linear(2),
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: calendars.calendar(range: range),
+                ),
+              ),
+              accent: accent,
+              mode: dark ? .dark : .light,
+              textDirection: TextDirection.rtl,
+            );
+            expect(
+              tester
+                  .getSize(
+                    find.byType(range ? RemixRangeCalendar : RemixCalendar),
+                  )
+                  .width,
+              greaterThanOrEqualTo(640),
+            );
+            expect(tester.takeException(), isNull);
+          }
+        }
+      },
+    );
+  }
+
   group('Fortal control matrices', () {
     test('enum domains and defaults match Fortal specification', () {
       expect(FortalIconButtonSize.values, [
@@ -451,9 +488,13 @@ void main() {
             ).build(context),
           );
           expect(
-            resolved.spec.container.spec.constraints?.maxHeight,
+            resolved.spec.container.spec.constraints?.minHeight,
             entry.value,
             reason: '$variant ${entry.key}',
+          );
+          expect(
+            resolved.spec.container.spec.constraints?.maxHeight,
+            double.infinity,
           );
           expect(resolved.spec.containerEffects?.behindContent, isNotNull);
           if (entry.key == FortalTextFieldSize.size2) {

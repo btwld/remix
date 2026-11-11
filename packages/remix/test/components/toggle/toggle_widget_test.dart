@@ -257,6 +257,7 @@ void main() {
 
     group('Semantics and Accessibility', () {
       testWidgets('accepts semanticLabel parameter', (tester) async {
+        final semantics = tester.ensureSemantics();
         await tester.pumpRemixApp(
           RemixToggle(
             selected: false,
@@ -271,6 +272,11 @@ void main() {
 
         final toggle = tester.widget<RemixToggle>(find.byType(RemixToggle));
         expect(toggle.semanticLabel, equals('Toggle bold formatting'));
+        expect(
+          tester.getSemantics(find.byType(RemixToggle)).label,
+          equals('Toggle bold formatting'),
+        );
+        semantics.dispose();
       });
 
       testWidgets('excludeSemantics allows replacement destination semantics', (

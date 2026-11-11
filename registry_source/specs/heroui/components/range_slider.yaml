@@ -1,0 +1,39 @@
+component: Slider (range configuration)
+widget: HeroUiRangeSlider
+target: RemixRangeSlider
+status: implemented
+source:
+  ref: "@heroui/styles@3.2.6 and @heroui/react@3.2.6"
+  manifest: reference/heroui_3_2_6/sources.json
+  pages:
+    - dist/components/slider.css
+    - dist/components/slider/slider.js
+    - dist/components/slider/slider.d.ts
+anatomy: [track, fill, lower thumb, upper thumb]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest, hover, dragging, focus-visible, disabled, rtl]
+tokens:
+  - default (track), accent (fill and thumb rim), accent-foreground (thumb pill)
+  - radius-xl, surface shadow (field shadow), focus (ring), disabled opacity
+measurements:
+  - {what: track, value: "20px high, radius 12, default fill", cite: slider-range-track}
+  - {what: selected interval, value: "accent fill between the two bound positions", cite: slider-range-fill}
+  - {what: each thumb, value: "28 x 20, accent rim; 24 x 16 accent-foreground pill", cite: "slider-range-thumb0, slider-range-thumb1, slider-range-thumb0-pill"}
+  - {what: hover, value: "resting paint; grab cursor", cite: "slider.css .slider__thumb and slider-range-hover-thumb0"}
+  - {what: dragging, value: "only the dragged pill scales to 0.9", cite: "slider-range-drag-thumb0-pill, slider-range-drag-thumb1-pill"}
+  - {what: focus, value: "2px background gap and 2px focus ring, on the focused thumb", cite: "slider-range-focus-thumb0, slider-range-focus-thumb1"}
+  - {what: disabled, value: "root opacity 0.5", cite: slider-range-disabled-root}
+apiMapping:
+  - "Controlled values: exactly two ordered Remix values, with onChanged and onChangeStart/onChangeEnd."
+  - "Remix min/max, minSpacing, snapDivisions, enabled, focusNodes and semanticLabels retain their names and shapes."
+  - "Custom value announcements use RemixRangeSlider with heroUiRangeSliderStyle(); the adapter omits the Naked UI formatter type."
+  - "The range_slider registry item depends on slider and delegates to heroUiSliderStyle(), merging caller style last."
+approximations:
+  - "Inherits slider.yaml's rim, shadow-kernel and whole-thumb drag-scale approximations."
+  - "RemixRangeSlider reserves a minimum 48px interaction height; the upstream labelled range is 44px (20px label row, 4px gap, 20px track)."
+  - "Remix insets by half the thumb (14px); upstream uses 12px transparent track borders."
+  - "Remix owns RTL, stable lower/upper identities, minimum spacing, keyboard and semantics; upstream React behavior is not copied."
+  - "Horizontal two-bound intervals only; vertical and arbitrary-thumb sliders remain outside this mapping."
+  - "The label and output are app composition. Reference captures use the requested real Geist fonts instead of upstream's platform font fallback."
+  - "The existing shared 250ms transition applies to all thumb state changes; reduced-motion geometry is not separately mapped."

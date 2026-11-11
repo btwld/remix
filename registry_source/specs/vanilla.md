@@ -149,13 +149,15 @@ the steps above. The source column names the file under
 | Text field | h 36; px 12, py 4; border `input`, transparent fill, `shadow-xs`; `text-sm`; placeholder muted-fg | `input.tsx` |
 | Text area | min-h 64; px 12, py 8 | `textarea.tsx` |
 | Field label and helper | label `text-sm` w500, gap 8; helper `text-sm` muted-fg; error helper `destructive` | `label.tsx`, `field.tsx` |
+| Combobox | TextField recipe field (36px minimum); Select-like popover panel with border, radius md, p 4, effects shadow md, 8px gap, max height 320px, min width 128px; rows controlSm minimum, px 8, py 6, radius sm, text-sm popover-foreground; 1px row gap; stable label weight across states; keyboard highlight accent, hover accent at 85%, press primary at 18% light / 20% dark; accent-foreground labels; caller overrides last | Designed from the Sol combobox brief, reusing `input.tsx` and `select.tsx`; Remix owns a persistent scroll cue; RawAutocomplete pins the panel to the field width. No selected/disabled option API. |
 | Select trigger | the text field's metrics, gap 8; chevron 10 at 50% (see Deviations) | `select.tsx` |
 | Select content | `popover` fill, border, radius md, `shadow-md`, p 4, min-w 128, never narrower than the trigger (the default `item-aligned` position) | `select.tsx` |
 | Select item | h 32; px 8, py 6 (see Deviations); radius sm; highlight accent; check 10 muted-fg | `select.tsx` |
 | Checkbox | 16, radius 4, border `input`, `shadow-xs`; checked primary; check 10 (see Deviations); no hover fill; label `text-sm` w500, gap 12 | `checkbox.tsx`, `label.tsx` |
 | Radio | 16, border `input` in both states, `shadow-xs`; dot 8 primary; label `text-sm` w500, gap 12 | `radio-group.tsx`, `label.tsx` |
 | Switch | 32 × 18.4, transparent 1px border, `shadow-xs`; off `input` (dark input/80), on primary; thumb 16, no border; label `text-sm` w500, gap 8 | `switch.tsx`, `label.tsx` |
-| Slider | rail 6 muted, range primary; thumb 16, 1px primary border, white, `shadow-sm`; 4px ring/50 on hover and focus | `slider.tsx` |
+| Slider | 48px hit area; pill rail 6 muted-fg (light) / ring (dark), range primary; white thumb 16, 1px primary (light) / primary-fg (dark) border, `shadow-sm`; opaque 2px hover halo at 40%, 6px pressed halo at 65%, contiguous 3px primary focus ring | `slider.tsx`; local slider polish |
+| Range slider | shares Slider's tokens and geometry for both independently styled thumbs; interval runs between the bounds; 48px hit area, RTL follows Remix | `slider.tsx`; Remix range-slider contract |
 | Tabs (filled) | list h 36, p 3, radius lg, muted; tab radius md, px 8, py 4, gap 6; inactive foreground/60; active background + `shadow-sm` | `tabs.tsx` |
 | Tabs (line) | transparent list; active tab marked by a 2px `foreground` underline | `tabs.tsx` (`variant=line`) |
 | Segmented control | styled as the filled tab list | `tabs.tsx` |
@@ -190,10 +192,13 @@ the steps above. The source column names the file under
 | Button padding with an icon | `has-[>svg]:px-3` | the size's padding | A recipe cannot see its children. |
 | Text field size | `text-base` below `md` | `text-sm` everywhere | Flutter has no viewport-conditional recipe; 14 is the desktop value. |
 | Checkbox, select, and menu 9×9 glyphs | `size-3.5` (14) / `size-4` (16) | 10 (`VanillaTokens.s2_5`) | The reference sizes padded 24×24 Lucide icons; Remix draws edge-to-edge 9×9 paths (`thickCheck`, `chevronDown`, `thickChevronRight`), which match the painted mark at 10. |
+| Select trigger vertical padding | `px-3 py-2`, `data-[size=default]:h-9` | 36 min height, `py-1` (4), the text field's | CSS fixes the height and lets the 20px line overrun the padding; Flutter lays the line out inside the padding and border, so `py-2` would make a 38px trigger beside a 36px text field. |
 | Select item horizontal padding | `pl-2 pr-8` (8 / 32) | `px-2` (8) | CSS positions the check mark inside the 32px right gutter (`right-2`); Remix lays the check mark out in the row after the label, so `px-2` places it 8px from the trailing edge. |
+| Slider and range slider | hover and focus ring | press uses a stronger, wider halo | Keeps grab feedback visible on touch devices, which do not hover. |
 | Toggle group, outline | per-item borders sharing edges | one border on the clipped group | A recipe cannot tell the first and last items apart. |
 | Toggle group, outline | `shadow-xs` | no shadow | Flutter paints a decoration shadow under the whole box, where it shows through a transparent fill as a gray wash. Controls that draw `shadow-xs` in the effects layer cut the box out as CSS does, but the strip has no effects layer. |
 | Chart palette | gray ramp | gray ramp | The reference's lightest series measures about 1.5:1 on the light page, and the darkest two (`chart4`, `chart5`) about 1.3 to 1.8:1 on the dark page and card; Vanilla keeps the palette and picks each pie label from `foreground` or `background` by contrast (`vanillaPieSliceLabelColor`). |
+| Slider rail and feedback | muted rail, shared 4px ring/50 | mid-gray pill rail; opaque surface-aware hover/press halos, contiguous primary keyboard ring | Keep rail ends visible, distinguish input states, and avoid uneven translucent rings over the interval. Both recipes reserve a 48px gesture target. Supply `surfaceColor` on cards or tinted panels so halos blend against the actual surface. The dark thumb border separates overlapping white handles. |
 | Focus ring | `ring/50`, 3px | `ring` at 50%, 3px | Matches the reference, which is below the 3:1 non-text floor: about 1.5:1 on the light page and 1.85:1 on the dark. The old Vanilla `focusRing` cleared 3:1. Raise the band's alpha in the recipes, or darken `ring`, where focus visibility matters more than matching. |
 | Toggle group option focus | band drawn outside, the focused item lifted with `focus-visible:z-10` | the same 3px band drawn inside the option | The group clips its options to the rounded strip, which would crop an outside band on the first and last option, and a filled neighbor painted after the focused option would cover its side of one. A recipe cannot lift an option above its neighbors, so the band goes inside. |
 | Text field and text area focus | `focus-visible:` | any focus (`onFocused`) | Browsers treat a focused text input as `:focus-visible` even after a click, but Mix's `onFocusVisible` does not, so the recipe keys the ring on `onFocused` to show it on click as the reference does. Other controls stay on `onFocusVisible`. |
@@ -204,3 +209,40 @@ the steps above. The source column names the file under
 | Sidebar layout, dashboard shell | 48 collapsed | 48 for `sidebar_layout`; the dashboard shell keeps its own 72 | The dashboard shell is out of this spec's scope. |
 | Tooltip delay | `delayDuration = 0` on the provider | 0 | Matches; recorded because Vanilla used to wait 500ms. |
 | Font | Geist and Geist Mono | Geist and Geist Mono from `remix_ui_fonts` | Matches; recorded because the fonts are static files (Geist 400, 500, 600, 700; Geist Mono 400, 500) rather than shadcn's variable fonts. Vanilla uses 400, 500, and 600. |
+
+## Calendar recipes (designed from the Vanilla scale)
+
+These are native recipe decisions using the existing Vanilla palette and
+scales rather than claiming upstream calendar parity. `calendar` and
+`range_calendar` install hand-written facades because `CalendarSpec` has no
+generator target. Ghost IconButton navigation follows the outer day columns;
+Select captions retain intrinsic text height and scale their minimum width.
+Their minimum height matches the 48px navigation target, keeping the visible
+header controls flush with the calendar’s 12px content inset.
+
+- Geometry: square `s12` day targets, scaling with text when the viewport allows;
+  `radiusSm` corners, `textSm` labels and `textXs` muted weekdays. Container
+  padding is `s3`, header-to-weekday spacing `s2`, and weekday-to-first-week
+  spacing `s1`. Equal zero row/column gutters preserve connected range bands.
+- Ordinary days rest transparent, hover in accent, and press in primary at
+  22% / 32% (light / dark). Today uses a ring-token hairline and semibold label.
+  Selection uses primary / primaryForeground, retaining that family at 90%
+  on hover and 80% on press. Focus uses the shared inset ring plus a contrasting
+  inner keyline without changing day geometry.
+- Disabled ordinary days use mutedForeground and disabledOpacity. Disabled
+  selections and the previous committed range while drafting use primary at
+  18% / 28% with full-opacity mutedForeground, keeping the selection recognizable.
+  Unavailable dates additionally strike through.
+- Range endpoints use primary caps with directional corners. Interiors use
+  primary at 9% / 24%, stepping to 15% / 32% on hover and 22% / 40% on press.
+  Preview uses primary at 12% / 20% with a 60% primary perimeter hairline;
+  blocked previews use full-strength destructive labels without a tinted fill.
+- Pickers merge caller child stylers last over outline Button, Popover, calendar,
+  ghost IconButton and Select recipes. The panel retains its rounded border and
+  shadow with a `s1` offset. The calendar owns the single `s3` padding layer;
+  the outer panel adds no padding. Width follows the seven day targets, calendar
+  padding and panel border. Trigger icons use mutedForeground and scale with text.
+  Bounded range labels use compact endpoints or wrap to retain both dates.
+
+The Vanilla spec, state, layout and pixel focus suites enforce these decisions;
+calendar recipe tests cover real day and range states in both theme modes.

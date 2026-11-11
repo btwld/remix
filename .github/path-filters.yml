@@ -1,0 +1,39 @@
+# Pull-request path classes. Job-level filters read this file. Do not move
+# these patterns to a workflow `paths` / `paths-ignore`: a workflow that never
+# starts leaves a required check pending, and a skipped required check is not
+# the same as one that failed.
+#
+# `code` — a changed file can affect packages, apps, tests, the registry,
+# generated sources, icons, or workflow behavior. Heavy CI runs only then.
+# Everything matches, then the non-code paths below are removed. The workflows
+# pass `predicate-quantifier: some-with-excludes`, which is what makes those
+# `!` patterns stick: the default `some` would let `**` match every file.
+# One code file in the diff makes `code` true.
+#
+# `docs` — input to the published docs site (`docs/`, `docs.json`, `apps/docs`).
+# The pages build runs when `docs` or `code` is true.
+#
+# A file that matches neither (license, issue and PR templates, review assets,
+# dashboard showcase screenshots, published skills, markdown outside the site)
+# skips heavy CI and the pages build. Contract checks still run, because
+# `docs:check` lives there and owns the root README, package READMEs, and skills.
+
+code:
+  - '**'
+  - '!docs/**'
+  - '!apps/docs/**'
+  - '!docs.json'
+  - '!skills/**'
+  - '!**/*.md'
+  - '!**/*.mdx'
+  - '!**/LICENSE'
+  - '!**/LICENSE.*'
+  - '!.github/ISSUE_TEMPLATE/**'
+  - '!.github/PULL_REQUEST_TEMPLATE.md'
+  - '!.github/review-assets/**'
+  - '!apps/dashboard/screenshots/**'
+
+docs:
+  - 'docs/**'
+  - 'apps/docs/**'
+  - 'docs.json'

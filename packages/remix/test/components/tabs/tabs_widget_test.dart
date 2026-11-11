@@ -433,6 +433,79 @@ void main() {
     });
 
     group('Focus', () {
+      testWidgets(
+        'Tab traverses the selected tab and panel in both directions',
+        (tester) async {
+          final before = FocusNode();
+          final selected = FocusNode();
+          final panel = FocusNode();
+          final after = FocusNode();
+          final controller = NakedTabController(selectedTabId: 'tab2');
+          addTearDown(() {
+            for (final node in [before, selected, panel, after]) {
+              node.dispose();
+            }
+            controller.dispose();
+          });
+
+          await tester.pumpRemixApp(
+            Column(
+              children: [
+                RemixButton(
+                  label: 'Before',
+                  focusNode: before,
+                  onPressed: () {},
+                ),
+                RemixTabs(
+                  controller: controller,
+                  child: Column(
+                    children: [
+                      RemixTabBar(
+                        child: Row(
+                          children: [
+                            const RemixTab(tabId: 'tab1', label: 'Tab 1'),
+                            RemixTab(
+                              tabId: 'tab2',
+                              label: 'Tab 2',
+                              focusNode: selected,
+                            ),
+                          ],
+                        ),
+                      ),
+                      RemixTabView(
+                        tabId: 'tab2',
+                        child: RemixButton(
+                          label: 'Panel action',
+                          focusNode: panel,
+                          onPressed: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                RemixButton(label: 'After', focusNode: after, onPressed: () {}),
+              ],
+            ),
+          );
+          before.requestFocus();
+          await tester.pumpAndSettle();
+
+          for (final target in [selected, panel, after]) {
+            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            await tester.pumpAndSettle();
+            expect(target.hasPrimaryFocus, isTrue);
+          }
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+          for (final target in [panel, selected, before]) {
+            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            await tester.pumpAndSettle();
+            expect(target.hasPrimaryFocus, isTrue);
+          }
+          await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+          expect(controller.selectedTabId, 'tab2');
+        },
+      );
+
       testWidgets('handles autofocus on tab', (tester) async {
         await tester.pumpRemixApp(
           RemixTabs(

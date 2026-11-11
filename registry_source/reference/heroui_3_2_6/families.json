@@ -2,7 +2,7 @@
  "schema": 2,
  "source": "@heroui/react@3.2.6 dist/components/index.d.ts",
  "componentFamilies": 85,
- "note": "Each upstream family maps to a Remix-backed item, a composition, or is deferred (docs/adr/heroui/0002).",
+ "note": "Each upstream family maps to a Remix-backed item, a composition, or is deferred (docs/adr/heroui/0002). The slider family has separate single-value and two-bound range item mappings.",
  "families": [
   {
    "upstream": "accordion",
@@ -19,7 +19,7 @@
   {
    "upstream": "autocomplete",
    "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "reason": "Upstream Autocomplete is a Select-like trigger with search inside its popover; RemixCombobox maps the editable ComboBox family instead. Separate popover search, collection state and multiple selection remain deferred."
   },
   {
    "upstream": "avatar",
@@ -115,23 +115,27 @@
   },
   {
    "upstream": "combo-box",
-   "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "status": "mapped",
+   "item": "combobox",
+   "remix": "RemixCombobox",
+   "scope": "Editable single-value suggestions; trigger glyph, persistent selection and multiple selection are not exposed by RemixCombobox."
   },
   {
    "upstream": "date-field",
    "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "reason": "Segmented text editing and time-field state are not exposed by Remix; picker button triggers do not implement date segments."
   },
   {
    "upstream": "date-picker",
-   "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "status": "mapped",
+   "item": "date_picker",
+   "remix": "RemixDatePicker"
   },
   {
    "upstream": "date-range-picker",
-   "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "status": "mapped",
+   "item": "date_range_picker",
+   "remix": "RemixDateRangePicker"
   },
   {
    "upstream": "drawer",
@@ -152,7 +156,7 @@
   {
    "upstream": "time-field",
    "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "reason": "Segmented text editing and time-field state are not exposed by Remix; picker button triggers do not implement date segments."
   },
   {
    "upstream": "disclosure",
@@ -436,6 +440,13 @@
    "remix": "RemixSlider"
   },
   {
+   "upstream": "slider",
+   "configuration": "range (two thumbs)",
+   "status": "mapped",
+   "item": "range_slider",
+   "remix": "RemixRangeSlider"
+  },
+  {
    "upstream": "table",
    "status": "mapped",
    "item": "table",
@@ -443,18 +454,20 @@
   },
   {
    "upstream": "calendar",
-   "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "status": "mapped",
+   "item": "calendar",
+   "remix": "RemixCalendar"
   },
   {
    "upstream": "range-calendar",
-   "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "status": "mapped",
+   "item": "range_calendar",
+   "remix": "RemixRangeCalendar"
   },
   {
    "upstream": "calendar-year-picker",
    "status": "deferred",
-   "reason": "needs behavior or state Remix does not provide"
+   "reason": "Remix provides bounded month/year Select menus, not the upstream integrated year grid and decade navigation."
   },
   {
    "upstream": "icons",

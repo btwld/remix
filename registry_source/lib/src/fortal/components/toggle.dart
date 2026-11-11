@@ -115,33 +115,31 @@ ToggleStyler _fortalToggleOutlineStyler(
 }
 
 ToggleStyler _fortalToggleSizeStyler(FortalToggleSize size) {
+  // The Button height scale, with content centred in it.
   return switch (size) {
     .size1 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(FortalTokens.space2()))
-          .padding(.vertical(FortalTokens.space1()))
           .borderRadius(.all(FortalTokens.radius2()))
           .spacing(FortalTokens.space1()),
       label: .style(FortalTokens.text1.mix()),
       icon: .size(FortalTokens.space3()),
-    ),
+    ).minHeight(FortalTokens.space5()),
     .size2 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(FortalTokens.space3()))
-          .padding(.vertical(FortalTokens.space2()))
           .borderRadius(.all(FortalTokens.radius2()))
           .spacing(FortalTokens.space1()),
       label: .style(FortalTokens.text2.mix()),
       icon: .size(FortalTokens.space4()),
-    ),
+    ).minHeight(FortalTokens.space6()),
     .size3 => ToggleStyler(
       container: FlexBoxStyler()
           .padding(.horizontal(FortalTokens.space4()))
-          .padding(.vertical(FortalTokens.space2()))
           .borderRadius(.all(FortalTokens.radius3()))
           .spacing(FortalTokens.space2()),
       label: .style(FortalTokens.text3.mix()),
       icon: .size(FortalTokens.spinnerSize3()),
-    ),
+    ).minHeight(FortalTokens.space7()),
   };
 }

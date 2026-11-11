@@ -20,6 +20,8 @@ The consolidated site publishes these docs at `/naked-ui/docs/` after cutover. T
 ## Supported Components
 
 - NakedButton — button interactions (hover, press, focus)
+- NakedCalendar / NakedCalendarDay — controlled civil-date selection with keyboard navigation and discoverable unavailable days
+- NakedRangeCalendar / CivilDateRange — complete inclusive ranges with a local draft and unavailable-interior checks over the shared calendar engine
 - NakedLink — link semantics and Enter-only activation
 - NakedCheckbox — toggle behavior and semantics
 - NakedCombobox — autocomplete field on Flutter's RawAutocomplete

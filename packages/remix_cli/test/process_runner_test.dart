@@ -6,6 +6,23 @@ import 'package:remix_cli/src/process_runner.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('an unstarted tool names the tool and the reason', () {
+    final failure = ProcessFailure.unstarted(
+      ProcessInvocation(
+        executable: 'git',
+        arguments: const ['diff'],
+        workingDirectory: '.',
+      ),
+      const ProcessException('git', ['diff'], 'No such file or directory', 2),
+      detail: 'Could not diff with git',
+    );
+
+    expect(
+      failure.toString(),
+      'Could not diff with git: could not start git. No such file or directory',
+    );
+  });
+
   test(
     'SystemProcessRunner passes literal arguments and environment',
     () async {
@@ -44,19 +61,69 @@ void main(List<String> arguments) => stdout.write(jsonEncode({
     },
   );
 
-  test('ProcessFailure reports the exact invocation and diagnostics', () {
+  group('ProcessFailure', () {
     const invocation = ProcessInvocation(
       executable: '/sdk/dart',
       arguments: ['analyze', 'lib/ui'],
       workingDirectory: '/project',
     );
-    const failure = ProcessFailure(
-      invocation,
-      ProcessOutput(exitCode: 2, stdout: '', stderr: 'bad source'),
-      detail: 'Analysis failed',
-    );
 
-    expect(failure.toString(), contains('/sdk/dart analyze lib/ui'));
-    expect(failure.toString(), contains('bad source'));
+    test('reports the exact invocation and diagnostics', () {
+      const failure = ProcessFailure(
+        invocation,
+        ProcessOutput(exitCode: 2, stdout: '', stderr: 'bad source'),
+        detail: 'Analysis failed',
+      );
+
+      expect(
+        failure.toString(),
+        'Analysis failed: /sdk/dart analyze lib/ui\nbad source',
+      );
+    });
+
+    test('names the exit code when there is no detail', () {
+      const failure = ProcessFailure(
+        invocation,
+        ProcessOutput(exitCode: 2, stdout: '', stderr: ''),
+      );
+
+      expect(
+        failure.toString(),
+        'Command failed with exit code 2: /sdk/dart analyze lib/ui',
+      );
+    });
+
+    test('falls back to stdout when stderr is blank', () {
+      const failure = ProcessFailure(
+        invocation,
+        ProcessOutput(exitCode: 1, stdout: 'on stdout\n', stderr: ' \n'),
+        detail: 'Analysis failed',
+      );
+
+      expect(
+        failure.toString(),
+        'Analysis failed: /sdk/dart analyze lib/ui\non stdout',
+      );
+    });
+
+    test(
+      'an ordinary failure keeps its output and an unstarted one has none',
+      () {
+        const output = ProcessOutput(exitCode: 2, stdout: '', stderr: 'bad');
+        const ordinary = ProcessFailure(invocation, output);
+        final unstarted = ProcessFailure.unstarted(
+          invocation,
+          const ProcessException('/sdk/dart', ['analyze'], 'not found', 2),
+          detail: 'Analysis failed',
+        );
+
+        expect(ordinary.output, same(output));
+        expect(unstarted.output, isNull);
+        expect(
+          unstarted.toString(),
+          'Analysis failed: could not start /sdk/dart. not found',
+        );
+      },
+    );
   });
 }

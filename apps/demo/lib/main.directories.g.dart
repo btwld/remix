@@ -15,14 +15,20 @@ import 'package:demo/components/app_bar.dart' as _demo_components_app_bar;
 import 'package:demo/components/avatar.dart' as _demo_components_avatar;
 import 'package:demo/components/badge.dart' as _demo_components_badge;
 import 'package:demo/components/button.dart' as _demo_components_button;
+import 'package:demo/components/calendar.dart' as _demo_components_calendar;
 import 'package:demo/components/callout.dart' as _demo_components_callout;
 import 'package:demo/components/card.dart' as _demo_components_card;
 import 'package:demo/components/checkbox.dart' as _demo_components_checkbox;
 import 'package:demo/components/checkbox_group.dart'
     as _demo_components_checkbox_group;
 import 'package:demo/components/code.dart' as _demo_components_code;
+import 'package:demo/components/combobox.dart' as _demo_components_combobox;
 import 'package:demo/components/data_list.dart' as _demo_components_data_list;
 import 'package:demo/components/data_table.dart' as _demo_components_data_table;
+import 'package:demo/components/date_picker.dart'
+    as _demo_components_date_picker;
+import 'package:demo/components/date_range_picker.dart'
+    as _demo_components_date_range_picker;
 import 'package:demo/components/dialog.dart' as _demo_components_dialog;
 import 'package:demo/components/disclosure.dart' as _demo_components_disclosure;
 import 'package:demo/components/divider.dart' as _demo_components_divider;
@@ -35,6 +41,8 @@ import 'package:demo/components/menu.dart' as _demo_components_menu;
 import 'package:demo/components/popover.dart' as _demo_components_popover;
 import 'package:demo/components/progress.dart' as _demo_components_progress;
 import 'package:demo/components/radio.dart' as _demo_components_radio;
+import 'package:demo/components/range_calendar.dart'
+    as _demo_components_range_calendar;
 import 'package:demo/components/segmented_control.dart'
     as _demo_components_segmented_control;
 import 'package:demo/components/select.dart' as _demo_components_select;
@@ -174,6 +182,15 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'RemixCalendar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Appointment date',
+            builder: _demo_components_calendar.buildCalendarUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'RemixCallout',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -222,6 +239,19 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'RemixCombobox<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder: _demo_components_combobox.buildComboboxCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Combobox Component',
+            builder: _demo_components_combobox.buildComboboxUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'RemixDataList',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -236,6 +266,25 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Catalog',
             builder: _demo_components_data_table.buildDataTableCatalogUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixDatePicker',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Appointment date',
+            builder: _demo_components_date_picker.buildDatePickerUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixDateRangePicker',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Reporting period',
+            builder:
+                _demo_components_date_range_picker.buildDateRangePickerUseCase,
           ),
         ],
       ),
@@ -344,6 +393,24 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'RemixRangeCalendar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Reporting period',
+            builder: _demo_components_range_calendar.buildRangeCalendarUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixRangeSlider',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Range catalog',
+            builder: _demo_components_slider.buildRangeSliderCatalogUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'RemixSegmentedControl<Object>',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -390,6 +457,10 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Catalog',
             builder: _demo_components_slider.buildSliderCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Price range',
+            builder: _demo_components_slider.buildRangeSliderUseCase,
           ),
           _widgetbook.WidgetbookUseCase(
             name: 'Slider Component',

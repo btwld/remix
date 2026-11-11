@@ -1,15 +1,26 @@
 # Remix CLI Reference
 
 Keeping installed source current, and projects from earlier prereleases.
-Commands assume `remix_cli` is a dev dependency.
+Commands assume the [global CLI setup](../SKILL.md#set-up-dependencies-and-imports).
+
+## Find an item
+
+```bash
+remix list          # items the pinned registries offer, with what each needs
+remix list --json   # the same listing as one JSON document
+```
+
+An unknown item or preset fails with a "Did you mean" hint when a name is
+close.
 
 ## Move a registry pin
 
 ```bash
-dart run remix_cli:remix registry update @remix                  # move to the newest promoted commit
-dart run remix_cli:remix registry update @remix --ref <sha|branch>
-dart run remix_cli:remix add theme button --diff                 # review what changed
-dart run remix_cli:remix add theme button --overwrite            # adopt the new source
+remix registry update @remix                  # move to the newest promoted commit
+remix registry update @remix --ref <sha|branch>
+remix add theme button --diff                 # review what changed
+remix add theme button --diff --exit-code     # exit 2 on drift, for CI
+remix add theme button --overwrite            # adopt the new source
 ```
 
 `registry update` only rewrites the pin in `remix.yaml`; it never touches
@@ -18,7 +29,8 @@ line — installed dependencies, including `theme`, are always kept as they
 are, customized or not. Name every item that should refresh, review with
 `--diff`, then adopt with `--overwrite`; there is no automatic merge.
 `--diff` always shows your own local edits, whether or not the template
-moved — read the hunks, not the exit state. Rolling back is
+moved, so read the hunks. Plain `--diff` exits 0. With `--exit-code` it exits
+2 when authored source differs and 1 on failure. Rolling back is
 `git checkout remix.yaml`, which restores the pin but not installed source.
 
 ## Projects from an earlier prerelease
@@ -28,22 +40,24 @@ to read with an explicit error. Recover a schema 1 or 2 project by deleting
 `remix.yaml`, running `remix init` again with its old `--prefix`/`--preset`/
 `--ui-path`, then verifying the installed source's provenance before adoption.
 
-CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. The current
+CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. An
+unversioned activation selects 0.1.0; upgrade first with
+`dart pub global activate remix_cli '^1.0.0-beta.1'`. The current
 CLI rejects unknown existing targets before mutation, including `--diff` and
 `--dry-run`. After verifying their source, name every existing dependency
 explicitly when adopting. For Vanilla Button, that is Theme and Button. Fortal
 Button also needs `base_button` when its targets already exist:
 
 ```bash
-dart run remix_cli:remix add theme button --adopt --diff
-dart run remix_cli:remix add theme button --adopt
+remix add theme button --adopt --diff
+remix add theme button --adopt
 ```
 
 Adoption preserves authored edits and records provenance in
 `remix.ownership.json`; commit it with configuration and source. Disjoint
 additions remain supported. A known different owner is rejected in every mode,
 even `--overwrite` and `--adopt`. An old CLI does not enforce these reservations;
-use the upgraded project-local CLI consistently.
+use the upgraded CLI consistently.
 
 The ownership record also binds the prefix, preset, and UI path. If those no
 longer match, restore the matching configuration, ownership record, and source.
@@ -57,8 +71,8 @@ A project registers another registry under a namespace and names its items
 explicitly:
 
 ```bash
-dart run remix_cli:remix registry add @acme --repository acme/design-system --path registry --ref stable
-dart run remix_cli:remix add @acme/button
+remix registry add @acme --repository acme/design-system --path registry --ref stable
+remix add @acme/button
 ```
 
 The registry must offer the project's preset, or `registry add` fails. Install
@@ -77,8 +91,9 @@ iconLibrary: rounded # remix (default), rounded, or lucide
 ```
 
 `remix` and `rounded` both add `remix_ui_icons`, and each draws every registry
-icon. `lucide` adds `lucide_flutter` instead. The registry requires `remix_ui_icons` `^1.0.0-beta.1`;
-projects on `^0.1.0` must update that constraint and migrate their own icon
+icon. `lucide` adds `lucide_flutter` instead. Projects still on `remix_ui_icons`
+`^0.1.0` must raise that constraint with
+`flutter pub add remix_ui_icons:^1.0.0-beta.1` and migrate their own icon
 references using the package’s `MIGRATION.md`.
 
 The choice applies at install. In Vanilla and Fortal four items use icons

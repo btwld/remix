@@ -131,7 +131,7 @@ void main() {
           );
           expect(dryRun.exitCode, 0, reason: dryRun.stderr as String);
           expect(dryRun.stdout, contains('lib/ui/icons.dart'));
-          expect(dryRun.stderr, isEmpty);
+          expect(dryRun.stderr, 'Fetching registry items...\n');
           final missing = await runCli(
             ['add', 'missing_item', '--dry-run'],
             app: app,
@@ -196,7 +196,7 @@ void main() {
       expect(preview.exitCode, 0, reason: preview.stderr as String);
       expect(preview.stdout, contains('lib/ui/components/button.dart'));
       expect(preview.stdout, contains('lib/ui/addons/extra_button.dart'));
-      expect(preview.stderr, isEmpty);
+      expect(preview.stderr, 'Fetching registry items...\n');
       expect(_cliConsumerFiles(app), before);
     });
 

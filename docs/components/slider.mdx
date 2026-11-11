@@ -72,7 +72,136 @@ class _SliderExampleState extends State<SliderExample> {
 ```
 </CodeGroup>
 
+## Two-bound intervals
+
+Use `RemixRangeSlider` for a lower and upper bound. The parent owns both values;
+accept a request by rebuilding with the returned list. Supply distinct localized
+names and formatters for each thumb.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class PriceRange extends StatefulWidget {
+  const PriceRange({super.key});
+
+  @override
+  State<PriceRange> createState() => _PriceRangeState();
+}
+
+class _PriceRangeState extends State<PriceRange> {
+  List<double> prices = [80, 240];
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 280,
+    child: RemixRangeSlider(
+      values: prices,
+      min: 0,
+      max: 400,
+      minSpacing: 20,
+      snapDivisions: 80,
+      semanticLabels: const ['Minimum nightly price', 'Maximum nightly price'],
+      semanticFormatterCallbacks: [
+        (value) => '\$${value.round()} per night',
+        (value) => '\$${value.round()} per night',
+      ],
+      onChanged: (next) => setState(() => prices = next),
+      style: SliderStyler()
+          .thumbSize(const Size(20, 20))
+          .thumbColor(const Color(0xff42654b))
+          .thickness(4)
+          .trackColor(const Color(0xffd5ddd1))
+          .rangeColor(const Color(0xff42654b)),
+    ),
+  );
+}
+```
+
+The list must contain exactly two finite, ordered values within `min` and `max`,
+separated by at least `minSpacing` (default zero). Thumbs can touch but never push,
+cross, or swap identities. From coincident values, movement toward smaller values
+opens the lower bound; movement toward larger values opens the upper bound.
+Horizontal placement and arrow keys respect ambient RTL direction.
+
+`focusNodes`, `semanticLabels` and `semanticFormatterCallbacks` use lower/upper
+order. `autofocusThumbIndex` accepts 0 or 1. Tab visits lower then upper; arrow,
+Home/End and Page keys adjust the focused thumb. Semantic increase/decrease acts
+on its corresponding bound. `excludeSemantics` hides both nodes while retaining
+keyboard operation. A null `onChanged` or `enabled: false` disables interaction.
+
+`onChanged` receives complete immutable requests from pointer, keyboard and
+semantic input. `onChangeStart` and `onChangeEnd` are **pointer-only**: one start on
+down, and one end on release or cancellation. End reports the last request, even
+when the parent rejected it. Without `snapDivisions`, the step is one thousandth
+of the domain. Neighbor spacing and domain bounds take precedence over snapping,
+so a constrained request may lie off the division grid.
+
+Both widgets reuse `SliderStyler` and `SliderSpec`. Track/range styling uses
+aggregate state; each range thumb resolves its own focused, pressed and hovered
+state. Root modifiers apply once; nested thumb modifiers apply per thumb. A raw
+`styleSpec` bypasses fluent and inherited styles. Forwarded `width`, constraints,
+margin and padding style the **thumb**, so constrain overall width with a parent.
+The range hit area is at least 48 logical pixels high; single-slider dimensions
+and `SliderStyler.call(value: ...)` remain unchanged. The range is horizontal;
+use `NakedSlider` for custom arbitrary-thumb or vertical anatomy.
+
+## Vanilla widgets
+
+Install the range recipe into an app initialized with the Vanilla preset:
+
+```shell
+remix add range_slider
+```
+
+This installs `slider` and `theme` as dependencies. With prefix `Ui`, import
+`ui/ui.dart` and place `UiTheme` in the app's builder. The single-value
+`UiSlider` and two-bound `UiRangeSlider` share the same rail, interval and
+thumb styling. Hover, press and keyboard focus draw a 4px ring around the
+corresponding thumb; disabled fades the complete control.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+class VanillaPriceRange extends StatefulWidget {
+  const VanillaPriceRange({super.key});
+
+  @override
+  State<VanillaPriceRange> createState() => _VanillaPriceRangeState();
+}
+
+class _VanillaPriceRangeState extends State<VanillaPriceRange> {
+  List<double> prices = [80, 240];
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 280,
+    child: UiRangeSlider(
+      values: prices,
+      min: 0,
+      max: 400,
+      minSpacing: 20,
+      snapDivisions: 80,
+      semanticLabels: const ['Minimum nightly price', 'Maximum nightly price'],
+      onChanged: (next) => setState(() => prices = next),
+    ),
+  );
+}
+```
+
+The generated adapter forwards the range API except `styleSpec` and
+`semanticFormatterCallbacks`. For localized value formatting, keep
+`RemixRangeSlider` and set `style: uiRangeSliderStyle()` instead. Caller
+`style` overrides merge last, including state fragments.
+
 ## Fortal widgets
+
+Fortal also installs `range_slider`, sharing the single slider's surface/soft
+variants, three sizes, high contrast, and 48px interaction height. Each thumb
+has its own hover halo, pressed edge and contiguous visible-focus ring.
+Disabled intervals remain visible in both modes. Use the base
+`RemixRangeSlider` with `uiRangeSliderStyle()` for custom announcements.
 
 The application-owned Fortal preset provides a themed widget for this component:
 
@@ -115,6 +244,15 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
   See the [fortalSliderStyle source code](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/slider.dart) for all available options.
 </Info>
 
+## HeroUI widgets
+
+`remix add range_slider` also works in a HeroUI app. `UiRangeSlider` delegates
+to `uiSliderStyle()` for the pill track, accent interval and both ringed
+thumbs. Press scales only the active thumb; keyboard focus rings only the
+focused thumb. Hover keeps HeroUI v3's resting paint. Disabled fades the
+complete control. The range has a 48px interaction height, and keeps the same
+`values`, `minSpacing`, snapping and `semanticLabels` API shown above.
+
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
@@ -146,7 +284,7 @@ RemixSlider remixSliderConstructor({
 
 
 ## Properties
-### Widget Properties
+### RemixSlider properties
 
 #### `key` → `Key?`
 
@@ -162,7 +300,7 @@ Optional. The maximum value the slider can have. Must be strictly greater than `
 
 #### `onChanged` → `ValueChanged<double>?`
 
-Optional. Called during drag with the new value. When omitted, the slider is disabled.
+Optional. Called during pointer, keyboard or semantic input with the new value. When omitted, the slider is disabled.
 
 #### `value` → `double`
 
@@ -170,11 +308,11 @@ Optional. Called during drag with the new value. When omitted, the slider is dis
 
 #### `onChangeEnd` → `ValueChanged<double>?`
 
-Optional. Called when the user is done selecting a new value.
+Optional. Called at pointer release or cancellation with the last requested value.
 
 #### `onChangeStart` → `ValueChanged<double>?`
 
-Optional. Called when the user starts dragging the slider.
+Optional. Called when a pointer transaction begins.
 
 #### `style` → `SliderStyler`
 
@@ -216,6 +354,33 @@ Optional. Formats the semantic value for the slider's single thumb. Remix forwar
 
 Optional. Whether to hide the slider from the semantics tree. Defaults to `false`.
 
+
+### RemixRangeSlider properties
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `key` | `Key?` | `null` | Controls widget replacement. |
+| `values` | `List<double>` | Required | Exactly two finite, ordered bounds within the domain, separated by at least `minSpacing`. |
+| `min` | `double` | `0` | Finite lower domain bound, strictly less than `max`. |
+| `max` | `double` | `1` | Finite upper domain bound. |
+| `minSpacing` | `double` | `0` | Finite, nonnegative minimum separation in value units. |
+| `snapDivisions` | `int?` | `null` | Positive interaction divisions without visible ticks. Null uses 1000 divisions. |
+| `onChanged` | `ValueChanged<List<double>>?` | `null` | Receives immutable complete requests. Null disables interaction. |
+| `onChangeStart` | `ValueChanged<List<double>>?` | `null` | Receives starting values when a pointer transaction begins. |
+| `onChangeEnd` | `ValueChanged<List<double>>?` | `null` | Receives the last request at pointer release or cancellation, even if the parent rejected it. |
+| `enabled` | `bool` | `true` | Enables interaction when `onChanged` is also supplied. |
+| `enableFeedback` | `bool` | `true` | Enables platform feedback during value changes. |
+| `focusNodes` | `List<FocusNode?>?` | `null` | Two caller-owned nodes in lower/upper order. Null entries use internal nodes. |
+| `autofocusThumbIndex` | `int?` | `null` | Initially focuses thumb 0 or 1. |
+| `semanticLabels` | `List<String?>?` | `null` | Two accessible names in lower/upper order. |
+| `semanticFormatterCallbacks` | `List<NakedSliderSemanticFormatterCallback?>?` | `null` | Two value formatters in lower/upper order. |
+| `excludeSemantics` | `bool` | `false` | Hides both semantic nodes while preserving keyboard operation. |
+| `style` | `SliderStyler` | `const SliderStyler.create()` | Fluent and inherited presentation. |
+| `styleSpec` | `SliderSpec?` | `null` | Resolved presentation that bypasses fluent and inherited styles. |
+
+Small `minSpacing` values can leave the painted thumbs overlapping. The spacing
+constraint measures values, not pixels; coincident bounds remain independently
+keyboard accessible.
 
 ### Style Methods
 
@@ -265,7 +430,7 @@ Sets stroke width for the range only.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
-Sets the container padding.
+Sets the thumb padding.
 
 #### `color(Color value)`
 
@@ -273,7 +438,7 @@ Sets background color.
 
 #### `size(double width, double height)`
 
-Sets the component size.
+Sets the thumb size.
 
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 
@@ -281,7 +446,7 @@ Sets the border radius.
 
 #### `constraints(BoxConstraintsMix value)`
 
-Sets size constraints on the component.
+Sets size constraints on the thumb.
 
 #### `decoration(DecorationMix value)`
 

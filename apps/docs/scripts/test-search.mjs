@@ -26,7 +26,7 @@ for (const page of sidebar.flatMap(group => group.pages).filter(page => page.hre
   });
 }
 test('keywords find TextField', async () => assert.equal((await searchClient.search('text field'))[0]?.url, '/components/textfield'));
-test('body queries retain guide section links', async () => assert.ok((await searchClient.search('dry-run')).some(result => result.url.startsWith('/open-code#'))));
+test('body queries retain guide section links', async () => assert.ok((await searchClient.search('dry-run')).some(result => result.url.startsWith('/open-code/'))));
 test('empty and unknown queries return no results', async () => {
   for (const query of ['', '   ', 'zzznosuchcomponent']) assert.deepEqual(await searchClient.search(query), []);
 });

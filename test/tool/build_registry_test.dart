@@ -9,6 +9,89 @@ import '../../packages/remix_cli/lib/src/template_renderer.dart';
 import '../../tool/build_registry.dart';
 
 void main() {
+  test('Vanilla combobox installs its field recipe and generated adapter', () {
+    final output = PresetBuilder.forRepository(
+      Directory.current,
+      spec: defaultPreset,
+    ).derive();
+    final catalog = loadYaml(output.files['registry.yaml']!) as YamlMap;
+    final item = (catalog['items'] as YamlMap)['combobox'] as YamlMap;
+    expect(_strings(item['registryDependencies']), ['theme', 'textfield']);
+    expect(_strings(item['generated']), ['@ui/components/combobox.g.dart']);
+    expect(
+      output.files['templates/combobox/combobox.dart.tmpl'],
+      contains('target: RemixCombobox.new'),
+    );
+  });
+  test(
+    'Vanilla calendar composites infer complete install closures without generated parts',
+    () {
+      final output = PresetBuilder.forRepository(
+        Directory.current,
+        spec: defaultPreset,
+      ).derive();
+      final items =
+          loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+      for (final (item, dependencies) in [
+        ('calendar', ['theme', 'icon_button', 'select']),
+        ('range_calendar', ['theme', 'calendar', 'icon_button', 'select']),
+        (
+          'date_picker',
+          ['theme', 'button', 'calendar', 'icon_button', 'popover', 'select'],
+        ),
+        (
+          'date_range_picker',
+          [
+            'theme',
+            'button',
+            'calendar',
+            'icon_button',
+            'popover',
+            'range_calendar',
+            'select',
+          ],
+        ),
+      ]) {
+        final entry = items[item] as YamlMap;
+        expect(_strings(entry['registryDependencies']), dependencies);
+        expect(entry.containsKey('generated'), isFalse);
+        expect(
+          output.files['templates/$item/$item.dart.tmpl'],
+          contains('{{typePrefix}}'),
+        );
+      }
+    },
+  );
+
+  test(
+    'Fortal calendar composites infer complete install closures without generated parts',
+    () {
+      final output = PresetBuilder.forRepository(
+        Directory.current,
+        spec: fortalPreset,
+      ).derive();
+      final items =
+          loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+      for (final (item, dependencies) in [
+        ('calendar', ['theme', 'icon_button', 'select']),
+        ('range_calendar', ['theme', 'calendar']),
+        ('date_picker', ['theme', 'button', 'calendar', 'popover']),
+        (
+          'date_range_picker',
+          ['theme', 'button', 'calendar', 'popover', 'range_calendar'],
+        ),
+      ]) {
+        final entry = items[item] as YamlMap;
+        expect(_strings(entry['registryDependencies']), dependencies);
+        expect(entry.containsKey('generated'), isFalse);
+        expect(
+          output.files['templates/$item/$item.dart.tmpl'],
+          contains('{{typePrefix}}'),
+        );
+      }
+    },
+  );
+
   test('owned palette data filename stays stable under a consumer prefix', () {
     final output = PresetBuilder.forRepository(
       Directory.current.absolute,
@@ -224,6 +307,24 @@ void main() {
       );
     }
   });
+
+  test(
+    'Vanilla range slider installs the shared slider recipe and generated adapter',
+    () {
+      final output = PresetBuilder.forRepository(
+        Directory.current,
+        spec: defaultPreset,
+      ).derive();
+      final items =
+          loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+      final range = items['range_slider'] as YamlMap;
+      expect(_strings(range['registryDependencies']), ['slider']);
+      expect(_strings(range['generated']), [
+        '@ui/components/range_slider.g.dart',
+      ]);
+      expect(_strings(range['exports']), ['components/range_slider.dart']);
+    },
+  );
 
   test('registry dependencies and package floors are inferred', () {
     final output = PresetBuilder.forRepository(Directory.current).derive();

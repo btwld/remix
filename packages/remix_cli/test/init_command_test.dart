@@ -240,6 +240,27 @@ registries:
     );
   });
 
+  test('an unknown preset names the published presets', () async {
+    final before = snapshotFiles(root);
+    final errors = <String>[];
+
+    final code = await runInstallerCli(
+      ['init', '--preset', 'vanila'],
+      installer,
+      writeOut: output.add,
+      writeError: errors.add,
+    );
+
+    expect(code, failureExitCode);
+    expect(
+      errors.single,
+      'Registry checkout has no vanila preset.\n'
+      'Did you mean vanilla?\n'
+      'Available presets: vanilla, fortal, heroui.',
+    );
+    expect(snapshotFiles(root), before);
+  });
+
   test('rejects an unknown preset without partial initialization', () async {
     final before = snapshotFiles(root);
 

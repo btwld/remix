@@ -61,7 +61,12 @@ SelectTriggerStyler _fortalSelectTriggerStyler(
           .size3 => FortalTokens.spinnerSize3(),
         }),
       )
-      .indicator(.color(FortalTokens.gray12()).size(size == .size3 ? 11 : 9))
+      .indicator(
+        .color(FortalTokens.gray12()).size(switch (size) {
+          .size1 || .size2 => FortalTokens.selectTriggerIndicatorSize12(),
+          .size3 => FortalTokens.selectTriggerIndicatorSize3(),
+        }),
+      )
       .onFocusVisible(.containerEffects(fortalFocusOutline()))
       .merge(_fortalSelectTriggerSizeStyler(variant, size))
       .wrap(fortalTouchTarget());
@@ -221,6 +226,8 @@ SelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
     .size2 || .size3 => FortalTokens.radius4(),
   };
   return SelectContentStyler()
+      .maxHeight(320)
+      .border(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()))
       // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
       .padding(

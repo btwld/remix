@@ -106,6 +106,11 @@ class _GalleryState extends State<Gallery> {
   final _defaultAccordion = RemixAccordionController<String>();
   final _surfaceAccordion = RemixAccordionController<String>();
 
+  DateTime? _date = DateTime(2026, 11, 10);
+  CivilDateRange? _dates = CivilDateRange(
+    start: DateTime(2026, 11, 10),
+    end: DateTime(2026, 11, 13),
+  );
   var _presses = 0;
   var _accepted = true;
   var _subscribed = false;
@@ -116,6 +121,7 @@ class _GalleryState extends State<Gallery> {
   var _bold = true;
   var _italic = false;
   String? _align = 'left';
+  List<double> _priceRange = [80, 240];
   var _volume = 0.4;
   var _tab = 'overview';
   String? _fruit;
@@ -231,6 +237,7 @@ class _GalleryState extends State<Gallery> {
     (520, _selection()),
     (260, _toggles()),
     (180, _tabs()),
+    (850, _calendars()),
     (340, _overlays()),
     (360, _accordions()),
     (300, _toastsAndAlerts()),
@@ -256,6 +263,35 @@ class _GalleryState extends State<Gallery> {
 
   Widget _caption(String text) =>
       AcmeTypography(text, type: .bodyXs, color: .muted);
+
+  Widget _calendars() => _card('Calendar and date pickers', [
+    AcmeCalendar(
+      value: _date,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      currentDate: DateTime(2026, 11, 6),
+      onChanged: (value) => setState(() => _date = value),
+    ),
+    AcmeRangeCalendar(
+      value: _dates,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      currentDate: DateTime(2026, 11, 6),
+      onChanged: (value) => setState(() => _dates = value),
+    ),
+    AcmeDatePicker(
+      value: _date,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (value) => setState(() => _date = value),
+    ),
+    AcmeDateRangePicker(
+      value: _dates,
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2028),
+      onChanged: (value) => setState(() => _dates = value),
+    ),
+  ]);
 
   Widget _buttons() {
     return _card('Buttons', [
@@ -635,6 +671,19 @@ class _GalleryState extends State<Gallery> {
         semanticLabel: 'Volume',
         onChanged: (value) => setState(() => _volume = value),
       ),
+      _caption('Nightly price range'),
+      AcmeRangeSlider(
+        values: _priceRange,
+        min: 0,
+        max: 400,
+        minSpacing: 20,
+        snapDivisions: 80,
+        semanticLabels: const [
+          'Minimum nightly price',
+          'Maximum nightly price',
+        ],
+        onChanged: (values) => setState(() => _priceRange = values),
+      ),
     ]);
   }
 
@@ -678,7 +727,23 @@ class _GalleryState extends State<Gallery> {
   }
 
   Widget _overlays() {
-    return _card('Select, dropdown, popover, tooltip, modal', [
+    return _card('Combobox, Select, dropdown, popover, tooltip, modal', [
+      for (final variant in AcmeComboboxVariant.values)
+        SizedBox(
+          width: 320,
+          child: AcmeCombobox<String>(
+            variant: variant,
+            label: 'Destination ${variant.name}',
+            hintText: 'Search cities',
+            optionsBuilder: (query) => query.text.isEmpty
+                ? const []
+                : const ['Recife', 'Porto', 'Chiang Mai'].where(
+                    (city) =>
+                        city.toLowerCase().contains(query.text.toLowerCase()),
+                  ),
+            onSelected: (value) => setState(() => _lastAction = value),
+          ),
+        ),
       for (final variant in AcmeSelectVariant.values)
         AcmeSelect<String>(
           variant: variant,

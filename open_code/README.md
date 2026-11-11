@@ -1,30 +1,30 @@
 # Application-owned Remix UI
 
-Release staging: Remix beta.14 and CLI beta.1 are unpublished. Hosted CLI
-install commands remain unversioned for the existing stable/schema-1 path;
-Git or checkout activation previews unreleased features. Pin the hosted
-beta.1 CLI after publication and before registry cutover.
-
 `remix_cli` installs editable preset source into your app. Remix retains
 rendering, interaction and accessibility; you own the theme, recipes and
 installed Agent behavior. Choose one preset: neutral **Vanilla**, **Fortal**
 with its own visual contract, or **HeroUI** following HeroUI web 3.2.6.
 Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
 
-## Install the CLI in a project
+## Install the CLI
 
 ```shell
-flutter pub add dev:remix_cli
-dart run remix_cli:remix init --prefix Acme --preset vanilla
-dart run remix_cli:remix add button
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix init --prefix Acme --preset vanilla
+remix add button
 ```
+
+Install once globally. Keep the prerelease pin: an unversioned activation
+selects stable `0.1.0`, which fails on the official registry. Add Pub's `bin`
+directory to `PATH` if needed; Pub prints the instructions. For a CLI pinned
+in the app's lockfile, see the [project-local alternative](../docs/open-code/install.mdx#running-the-cli).
 
 Use `--preset fortal` for Fortal or `--preset heroui` for HeroUI at initialization.
 Preset, prefix and UI path
 are chosen once; `Ui` and `lib/ui` are defaults. `Remix` and `Mix` are reserved
 prefixes. Each `add` installs only the requested item and its dependency closure.
 `init` pins `registry-stable` to a full GitHub commit in `remix.yaml`; commit it
-alongside the app lockfile, which pins the project-local CLI separately.
+alongside the app lockfile.
 
 The resulting Vanilla layout is:
 
@@ -38,8 +38,10 @@ lib/ui/
 
 For a component's names and parameters, read the installed recipe and enums.
 Import `ui/ui.dart` from a file at the `lib/` root; nested files need the
-corresponding package or relative import. See the [catalog](../docs/open-code.mdx)
+corresponding package or relative import. See the [catalog](../docs/open-code/catalog.mdx)
 for items, including charts, icons, dashboard composition and Agent bundles.
+
+## Develop against a checkout
 
 Contributors using an unreleased CLI can install it from a checkout:
 
@@ -47,7 +49,14 @@ Contributors using an unreleased CLI can install it from a checkout:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-If the registry's required runtime floor is not published yet, use an explicit
+To build an application against the checkout's Remix package instead of the
+published one, add it by path:
+
+```shell
+flutter pub add "remix:{path: /path/to/remix/packages/remix}"
+```
+
+A registry candidate whose Remix floor pub.dev does not serve yet needs a
 checkout override for development. Only [hosted release checks](RELEASING.md)
 establish that published packages satisfy the floor; a local override does not.
 
@@ -97,9 +106,9 @@ or earlier need explicit provenance verification and `--adopt`; see the
 Updating a pin and adopting source are separate operations:
 
 ```shell
-dart run remix_cli:remix registry update @remix
-dart run remix_cli:remix add button --diff
-dart run remix_cli:remix add button --overwrite
+remix registry update @remix
+remix add button --diff
+remix add button --overwrite
 ```
 
 `--diff` is read-only and requires Git. `--overwrite` replaces only named items,
@@ -147,6 +156,15 @@ Vanilla and Fortal: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`, `segmented_control`,
 `select`, `sidebar`, `sidebar_layout`, `skeleton`, `slider`, `spinner`, `switch`,
 `tabs`, `textfield`, `toast`, `toggle`, `toggle_group`, `tooltip`.
+
+All three presets also ship `range_slider`, which installs `slider` and supplies
+the two-bound `<Prefix>RangeSlider` recipe.
+
+All three presets also ship `combobox` (depends on `theme` and `textfield`).
+
+Vanilla also: `calendar`, `range_calendar`, `date_picker`, `date_range_picker`.
+These hand-written composites wire the Vanilla child recipes and have no
+generated part; selection and overlay behavior stay in Remix.
 
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`.
 

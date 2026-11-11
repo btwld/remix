@@ -29,13 +29,10 @@ Fortal specification and test surface. Consumer applications do not depend on th
 
 ## Installation
 
-The commands below apply after the first CLI release and Remix beta.11.
-For checkout use, follow the [Open Code installation instructions](/open-code#install).
-
 ```bash
-flutter pub add dev:remix_cli
-dart run remix_cli:remix init --prefix Fortal --preset fortal
-dart run remix_cli:remix add button
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix init --prefix Fortal --preset fortal
+remix add button
 ```
 
 The `Fortal` prefix keeps the API names shown throughout this guide. Add each
@@ -231,7 +228,7 @@ Fortal provides themed line, bar, and pie recipes backed by `mix_chart`. Install
 the owned chart recipe through the same configured preset:
 
 ```bash
-dart run remix_cli:remix add chart
+remix add chart
 ```
 
 ```dart
@@ -257,13 +254,19 @@ Use `FortalLineChart`, `FortalBarChart`, and `FortalPieChart` for the ready-made
 widgets. Their matching `fortal*ChartStyle()` recipes can style the underlying
 `mix_chart` widgets directly.
 
+`resolveFortalChartPalette(context)` returns the series colors: the accent
+first, then the other color families, each at 3:1 on the page and panels. Pie
+labels are off by default; a chart that turns them on colors each slice's
+label with `fortalPieSliceLabelColor(sliceColor)`, which picks white or dark
+ink by contrast.
+
 ## Icons
 
 Install the optional application-owned icon aliases through the configured
 preset:
 
 ```bash
-dart run remix_cli:remix add icons
+remix add icons
 ```
 
 That item adds `remix_ui_icons` and creates `FortalIcons` with the small alias
@@ -388,6 +391,15 @@ Use a control's `highContrast: true` treatment or an explicit step-8 border
 when a visible boundary matters. See the
 [owned custom-palette policy](https://github.com/btwld/remix/blob/main/registry_source/specs/fortal.md#very-light-custom-accents)
 for the guarantees, limits, and near-white measurements.
+
+## Calendars and date pickers
+
+Install `calendar`, `range_calendar`, `date_picker` or `date_range_picker`
+for the matching `<Prefix>Calendar`, `<Prefix>RangeCalendar`,
+`<Prefix>DatePicker` and `<Prefix>DateRangePicker` composites. They preserve
+Remix's controlled civil-date APIs and localized labels. Independent calendar,
+navigation, selector, button and popover styles merge last. The Appointment
+date and Reporting period stories in `apps/demo` consume these installed recipes.
 
 ## Owned specification and review
 

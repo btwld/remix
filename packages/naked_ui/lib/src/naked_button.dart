@@ -104,6 +104,8 @@ class NakedButton extends StatefulWidget {
   final String? tooltip;
 
   /// Semantic label for the button.
+  ///
+  /// When non-null, replaces descendant text semantics.
   final String? semanticLabel;
 
   /// Additional context announced with the button's accessible name.
@@ -248,6 +250,7 @@ class _NakedButtonState extends State<NakedButton>
             label: widget.semanticLabel,
             hint: widget.semanticHint,
             tooltip: widget.tooltip,
+            excludeSemantics: widget.semanticLabel != null,
             onTap: widget.onPressed != null ? _handleTap : null,
             onLongPress: widget.onLongPress != null ? _handleLongPress : null,
             child: gestureDetector,

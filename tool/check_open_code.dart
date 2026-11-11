@@ -4,8 +4,10 @@
 /// ```shell
 /// dart run tool/check_open_code.dart [--preset vanilla|fortal|heroui]
 ///     [--source both|hosted|checkout]
+///     [--independent canary|all|none] [--install batch|incremental]
 ///     [--item dashboard_demo|dashboard_shell|icons|ownership|search_field]
 ///     [--icon-library remix|rounded|lucide] [--hosted-cli] [--jobs N] [--keep]
+///     [--verbose]
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs
@@ -14,10 +16,18 @@
 /// hosted Remix first, then regenerates against the checkout. CI selects the
 /// checkout explicitly so a registry can be validated before its Remix version
 /// is on pub.dev.
+/// Hosted defaults to one independent canary and two incremental gallery adds,
+/// then one batch for the remainder. Checkout and both keep every independent
+/// install and the full incremental loop. Override either plan with the flags.
 ///
 /// The independent-item installs run in parallel: `--jobs N` or
 /// `REMIX_OPEN_CODE_JOBS=N` sets how many at once, and the default is one per
 /// core, never fewer than two or more than four.
+/// Normal runs clean up on every outcome. Add `--keep` to retain output for
+/// debugging or the gallery; its path is printed even on failure or cancellation.
+/// Child output is captured unless --verbose streams it. Failures print the
+/// complete child output; GitHub runs group phases and append their timings to
+/// GITHUB_STEP_SUMMARY, including on failure.
 library;
 
 import 'dart:convert';
@@ -28,7 +38,18 @@ import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
 import '../packages/remix_cli/lib/src/icon_registry.dart';
+import '../packages/remix_cli/lib/src/project_config.dart';
+import '../packages/remix_cli/lib/src/registry_source.dart';
 import 'compile_registry_consumer.dart';
+import 'check_pub_floors.dart';
+import 'consumer_check_reporting.dart';
+import 'open_code_lifecycle.dart';
+
+var _lifecycle = OpenCodeLifecycle(
+  repositoryRoot: Directory.current.absolute,
+  keep: false,
+);
+var _reporter = ConsumerCheckReporter(out: stdout, err: stderr);
 
 const _fixtureAppFiles = <String>[
   'pubspec.yaml',
@@ -40,12 +61,17 @@ const _fixtureAppFiles = <String>[
 
 /// The registry items the CLI installs, in invocation order.
 ///
-/// Each is added by its own `remix add` on purpose, even though one
-/// invocation can now name several: installing them one at a time is what
+/// Checkout (and both) adds each by its own `remix add` on purpose: this
 /// exercises the incremental path a consumer actually takes, where each item
 /// meets an application that already has the previous ones. Theme arrives as
-/// the first item's registry dependency.
+/// the first item's registry dependency. Hosted installs the first two items
+/// incrementally, then batches the remainder: checkout CI owns the full
+/// incremental and asset-graph invalidation proof on the same SHA.
 const _defaultRegistryItems = <String>[
+  'calendar',
+  'range_calendar',
+  'date_picker',
+  'date_range_picker',
   'icons',
   'accordion',
   'app_bar',
@@ -58,6 +84,7 @@ const _defaultRegistryItems = <String>[
   'dashboard_demo',
   'dashboard_shell',
   'checkbox',
+  'combobox',
   'data_list',
   'data_table',
   'dialog',
@@ -69,6 +96,7 @@ const _defaultRegistryItems = <String>[
   'popover',
   'progress',
   'radio',
+  'range_slider',
   'segmented_control',
   'select',
   'sidebar',
@@ -140,6 +168,11 @@ const _generatedSnapshots = <String, String>{
 };
 
 const _fortalRegistryItems = <String>[
+  'calendar',
+  'range_calendar',
+  'date_picker',
+  'date_range_picker',
+
   'icons',
   'accordion',
   'app_bar',
@@ -167,8 +200,10 @@ const _fortalRegistryItems = <String>[
   'popover',
   'progress',
   'radio',
+  'range_slider',
   'segmented_control',
   'select',
+  'combobox',
   'sidebar',
   'sidebar_layout',
   'skeleton',
@@ -190,6 +225,7 @@ const _defaultPreset = _PresetContract(
   name: 'vanilla',
   fixtureDirectory: 'fixture',
   registryItems: _defaultRegistryItems,
+  independentItems: [..._independentRegistryItems, 'range_slider'],
   // Vanilla's theme sets its type in Geist, so every install carries the fonts.
   requiredRuntimeDependencies: [..._baseRuntimeDependencies, 'remix_ui_fonts'],
   allowedImportPackages: [..._baseImportPackages, 'remix_ui_fonts'],
@@ -200,6 +236,14 @@ const _fortalPreset = _PresetContract(
   name: 'fortal',
   fixtureDirectory: 'fortal_fixture',
   registryItems: _fortalRegistryItems,
+  independentItems: [
+    ..._independentRegistryItems,
+    'range_slider',
+    'calendar',
+    'range_calendar',
+    'date_picker',
+    'date_range_picker',
+  ],
 );
 
 const _herouiRegistryItems = [
@@ -212,6 +256,10 @@ const _herouiRegistryItems = [
   'button',
   'button_group',
   'card',
+  'calendar',
+  'range_calendar',
+  'date_picker',
+  'date_range_picker',
   'checkbox',
   'checkbox_group',
   'chip',
@@ -227,8 +275,10 @@ const _herouiRegistryItems = [
   'progress',
   'radio',
   'radio_group',
+  'range_slider',
   'search_field',
   'select',
+  'combobox',
   'separator',
   'skeleton',
   'slider',
@@ -381,6 +431,38 @@ Future<String> _registryIcons(Directory repositoryRoot, String? ref) async {
   }
 }
 
+/// Read the same immutable revision the shipped CLI pinned during init.
+/// The transport seam permits fixture-only tests with no GitHub requests.
+Future<({String catalog, String icons})> readInstalledRegistryCatalog(
+  Directory app, {
+  RegistryTransport transport = githubTransport,
+}) async {
+  final config = ProjectConfig.parse(
+    File('${app.path}/remix.yaml').readAsStringSync(),
+    packageRoot: app,
+  );
+  final pin = config.registries[config.defaultRegistry]!;
+  final root = Uri.https(
+    'raw.githubusercontent.com',
+    '/${pin.repository}/${pin.revision}/${pin.path}/',
+  );
+  Future<String> read(String path) async {
+    final uri = root.resolve(path);
+    final response = await transport(uri);
+    if (response.statusCode != 200) {
+      throw HttpException('GET $uri returned ${response.statusCode}', uri: uri);
+    }
+    return response.body;
+  }
+
+  final catalogPath = catalogPathForPreset(
+    await read('index.yaml'),
+    preset: config.preset,
+    origin: pin.repository,
+  );
+  return (catalog: await read(catalogPath), icons: await read('icons.yaml'));
+}
+
 final class _PresetContract {
   const _PresetContract({
     required this.name,
@@ -393,8 +475,10 @@ final class _PresetContract {
     this.independentItems = _independentRegistryItems,
     this.specStylerItems = _agentComponentItems,
     this.iconsFromCheckout = false,
+    this.catalogYaml,
   });
 
+  final String? catalogYaml;
   final String name;
   final String fixtureDirectory;
   final List<String> registryItems;
@@ -436,6 +520,7 @@ final class _PresetContract {
       name: name,
       fixtureDirectory: fixtureDirectory,
       registryItems: registryItems,
+      catalogYaml: catalogYaml,
       generatedSnapshots: generatedSnapshots,
       requiredRuntimeDependencies: swap(requiredRuntimeDependencies),
       allowedImportPackages: swap(allowedImportPackages),
@@ -448,7 +533,36 @@ final class _PresetContract {
     );
   }
 
+  /// Stable may contain fewer, more, or different items than this checkout.
+  /// Install all its keys explicitly, including foundations, so nothing is
+  /// accidentally omitted because a checkout dependency closure changed.
+  _PresetContract forCatalog(String catalogYaml) {
+    final items = (loadYaml(catalogYaml) as YamlMap)['items'] as YamlMap;
+    final runtime = <String>{
+      for (final item in items.values.cast<YamlMap>())
+        if (item['dependencies'] is YamlMap)
+          ...(item['dependencies'] as YamlMap).keys.cast<String>(),
+      // Icon library dependencies are supplied by forIcons below.
+      'remix_ui_icons',
+    }..remove('flutter');
+    return _PresetContract(
+      name: name,
+      fixtureDirectory: fixtureDirectory,
+      catalogYaml: catalogYaml,
+      registryItems: items.keys.cast<String>().toList(),
+      foundationItems: foundationItems.intersection(
+        items.keys.cast<String>().toSet(),
+      ),
+      independentItems: null,
+      specStylerItems: [],
+      requiredRuntimeDependencies: runtime.toList(),
+      allowedImportPackages: ['flutter', ...runtime],
+    );
+  }
+
   YamlMap _loadItems([Directory? repositoryRoot]) {
+    if (catalogYaml != null)
+      return (loadYaml(catalogYaml!) as YamlMap)['items'] as YamlMap;
     final root = repositoryRoot ?? Directory.current.absolute;
     final file = File('${root.path}/registry/$name/registry.yaml');
     final document = loadYaml(file.readAsStringSync()) as YamlMap;
@@ -538,6 +652,21 @@ final class _PresetContract {
 
 enum RemixSource { both, hosted, checkout }
 
+enum IndependentMode { canary, all, none }
+
+enum InstallMode { batch, incremental }
+
+/// Every catalog item is installed once; a batch still exercises two incremental
+/// adds before installing the rest together. Small catalogs need no empty add.
+List<List<String>> galleryInstallBatches(
+  List<String> items,
+  InstallMode mode,
+) => [
+  for (final item in (mode == InstallMode.batch ? items.take(2) : items))
+    [item],
+  if (mode == InstallMode.batch && items.length > 2) items.skip(2).toList(),
+];
+
 final class ConsumerCheckOptions {
   const ConsumerCheckOptions({
     required this.keep,
@@ -547,13 +676,30 @@ final class ConsumerCheckOptions {
     required this.item,
     this.iconLibrary = 'remix',
     this.jobs,
-  });
+    this.verbose = false,
+    IndependentMode? independent,
+    InstallMode? install,
+  }) : _independent = independent,
+       _install = install;
 
   final bool keep;
   final String preset;
   final RemixSource source;
   final bool hostedCli;
   final String? item;
+  final bool verbose;
+  final IndependentMode? _independent;
+  final InstallMode? _install;
+  InstallMode get install =>
+      _install ??
+      (source == RemixSource.hosted
+          ? InstallMode.batch
+          : InstallMode.incremental);
+  IndependentMode get independent =>
+      _independent ??
+      (source == RemixSource.hosted
+          ? IndependentMode.canary
+          : IndependentMode.all);
 
   /// Independent items installed at once, or null to resolve the default.
   final int? jobs;
@@ -564,6 +710,7 @@ final class ConsumerCheckOptions {
 
 ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   var keep = false;
+  var verbose = false;
   var sawPreset = false;
   var sawSource = false;
   var preset = _defaultPreset;
@@ -573,8 +720,33 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   var sawIconLibrary = false;
   int? jobs;
   String? item;
+  IndependentMode? independent;
+  InstallMode? install;
   for (var index = 0; index < arguments.length; index += 1) {
     final argument = arguments[index];
+    if (argument == '--verbose') {
+      if (verbose) return null;
+      verbose = true;
+      continue;
+    }
+    if (argument == '--install') {
+      if (install != null || index + 1 >= arguments.length) return null;
+      final name = arguments[++index];
+      final selected = InstallMode.values.where((value) => value.name == name);
+      if (selected.isEmpty) return null;
+      install = selected.single;
+      continue;
+    }
+    if (argument == '--independent') {
+      if (independent != null || index + 1 >= arguments.length) return null;
+      final name = arguments[++index];
+      final selected = IndependentMode.values.where(
+        (value) => value.name == name,
+      );
+      if (selected.isEmpty) return null;
+      independent = selected.single;
+      continue;
+    }
     if (argument == '--hosted-cli') {
       if (hostedCli) return null;
       hostedCli = true;
@@ -651,12 +823,15 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   }
   return ConsumerCheckOptions(
     keep: keep,
+    verbose: verbose,
     preset: preset.name,
     source: source,
     hostedCli: hostedCli,
     item: item,
     iconLibrary: iconLibrary,
     jobs: jobs,
+    independent: independent,
+    install: install,
   );
 }
 
@@ -697,7 +872,11 @@ Future<void> main(List<String> arguments) async {
       '--source checkout; icons/ownership are vanilla, search_field is heroui)] '
       '[--icon-library remix|rounded|lucide] '
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
-      '[--keep]',
+      '[--keep] [--verbose]\n'
+      '[--independent canary|all|none (hosted: canary; checkout/both: all)]\n'
+      '[--install batch|incremental (hosted: batch; checkout/both: incremental)]\n'
+      'Runs clean up after success, failure and handled cancellation; '
+      'add --keep to retain output and print its path.',
     );
     exitCode = 64;
     return;
@@ -714,56 +893,109 @@ Future<void> main(List<String> arguments) async {
   }
 
   final repositoryRoot = Directory.current.absolute;
-  final ref = publishedRegistryRef(
-    hostedCli: parsed.hostedCli,
-    environment: Platform.environment,
+  final summary = Platform.environment['GITHUB_STEP_SUMMARY'];
+  _reporter = ConsumerCheckReporter(
+    out: stdout,
+    err: stderr,
+    verbose: parsed.verbose,
+    githubActions: Platform.environment['GITHUB_ACTIONS'] == 'true',
+    summaryFile: summary == null ? null : File(summary),
   );
-  final String icons;
-  try {
-    icons = await _registryIcons(repositoryRoot, ref);
-  } on IOException catch (error) {
-    stderr.writeln(
-      'open-code check failed: could not read the '
-      '${ref ?? 'checkout'} registry\'s icons.yaml: $error',
-    );
-    exitCode = 1;
-    return;
-  }
-  stdout.writeln(
-    'Registry under test: ${ref == null ? 'this checkout' : '$_officialRepository@$ref'}.',
-  );
-  final failure = await _run(
-    repositoryRoot,
+  _reporter.startPhase('Setup (${parsed.preset})');
+  _lifecycle = OpenCodeLifecycle(
+    repositoryRoot: repositoryRoot,
     keep: parsed.keep,
-    preset: _presetByName(parsed.preset).forIcons(
-      icons,
-      parsed.iconLibrary,
-      checkoutIconsVersion: _packageVersion(repositoryRoot, 'remix_ui_icons'),
-    ),
-    iconLibrary: parsed.iconLibrary,
-    source: parsed.source,
-    hostedCli: parsed.hostedCli,
-    item: parsed.item,
-    jobs: jobs,
   );
-  if (failure != null) {
-    stderr.writeln('open-code check failed: ${failure.message}');
-    exitCode = failure.exitCode;
+  _lifecycle.watchSignals();
+  try {
+    await _lifecycle.sweep();
+    final ref = publishedRegistryRef(
+      hostedCli: parsed.hostedCli,
+      environment: Platform.environment,
+    );
+    final String icons;
+    try {
+      icons = ref == 'registry-stable'
+          ? ''
+          : await _registryIcons(repositoryRoot, ref);
+    } on IOException catch (error) {
+      _reporter.failure(
+        'open-code check failed: could not read the '
+        '${ref ?? 'checkout'} registry\'s icons.yaml: $error',
+      );
+      exitCode = 1;
+      return;
+    }
+    stdout.writeln(
+      'Registry under test: ${ref == null ? 'this checkout' : '$_officialRepository@$ref'}.',
+    );
+    final failure = await _run(
+      repositoryRoot,
+      keep: parsed.keep,
+      stableRegistry: ref == 'registry-stable',
+      preset: ref == 'registry-stable'
+          ? _presetByName(parsed.preset)
+          : _presetByName(parsed.preset).forIcons(
+              icons,
+              parsed.iconLibrary,
+              checkoutIconsVersion: _packageVersion(
+                repositoryRoot,
+                'remix_ui_icons',
+              ),
+            ),
+      iconLibrary: parsed.iconLibrary,
+      source: parsed.source,
+      hostedCli: parsed.hostedCli,
+      item: parsed.item,
+      jobs: jobs,
+      independent: parsed.independent,
+      install: parsed.install,
+    );
+    if (failure != null) {
+      _reporter.failure('open-code check failed: ${failure.message}');
+      exitCode = _lifecycle.processes.cancellationExitCode ?? failure.exitCode;
+    }
+  } on OpenCodeCancelled {
+    exitCode = _lifecycle.processes.cancellationExitCode!;
+  } on Object catch (error, stackTrace) {
+    _reporter.failure('open-code check failed: $error\n$stackTrace');
+    exitCode = 1;
+  } finally {
+    try {
+      await _lifecycle.close();
+    } finally {
+      _reporter.finish(
+        'Registry validation: ${parsed.preset} (${parsed.source.name})',
+      );
+    }
   }
 }
 
 Future<_Failure?> _run(
   Directory repositoryRoot, {
   required bool keep,
+  required bool stableRegistry,
   required _PresetContract preset,
   required RemixSource source,
   required bool hostedCli,
   required String? item,
   required String iconLibrary,
   required int jobs,
+  required IndependentMode independent,
+  required InstallMode install,
 }) async {
   final rootFailure = _verifyRepositoryRoot(repositoryRoot);
   if (rootFailure != null) return rootFailure;
+
+  if (!stableRegistry && source != RemixSource.checkout) {
+    _reporter.startPhase('pub.dev floor preflight');
+    final problem = await checkPubFloors(
+      Directory('${repositoryRoot.path}/registry'),
+    );
+    if (problem != null) return _Failure(problem);
+    _step('Every hosted floor exists; Remix floor is current.');
+    _reporter.startPhase('Consumer setup');
+  }
 
   final pinnedVersion = _pinnedFlutterVersion(repositoryRoot);
   if (pinnedVersion == null) {
@@ -775,9 +1007,11 @@ Future<_Failure?> _run(
   final sdk = resolved as _Toolchain;
   _step('Flutter ${sdk.version} from ${sdk.root}');
 
-  final coverageFailure = _verifyRegistryCoverage(repositoryRoot, preset);
-  if (coverageFailure != null) return coverageFailure;
-  _step('Every remote registry item is installed by this check.');
+  if (!stableRegistry) {
+    final coverageFailure = _verifyRegistryCoverage(repositoryRoot, preset);
+    if (coverageFailure != null) return coverageFailure;
+    _step('Every candidate registry item is installed by this check.');
+  }
 
   final fixtureRoot = Directory(
     '${repositoryRoot.path}/open_code/${preset.fixtureDirectory}',
@@ -786,45 +1020,37 @@ Future<_Failure?> _run(
   if (fixtureFailure != null) return fixtureFailure;
   _step('Fixture is a minimal pre-install app with no consumer build.yaml.');
 
-  final parent = Directory.systemTemp.createTempSync('remix_open_code_');
-  final app = Directory('${parent.path}/app');
-
+  late Directory app;
+  _Failure? failure;
   try {
-    final guardFailure = _verifyDeletableParent(parent, repositoryRoot);
-    if (guardFailure != null) return _retainedFailure(parent, guardFailure);
-
-    final checkFailure = await _checkInTemporaryApp(
-      sdk: sdk,
-      repositoryRoot: repositoryRoot,
-      fixtureRoot: fixtureRoot,
-      app: app,
-      preset: preset,
-      source: source,
-      hostedCli: hostedCli,
-      item: item,
-      iconLibrary: iconLibrary,
-      jobs: jobs,
-    );
-    if (checkFailure != null) {
-      return _retainedFailure(parent, checkFailure);
-    }
-
-    if (!keep) {
-      final deletionFailure = _deleteVerifiedParent(parent, repositoryRoot);
-      if (deletionFailure != null) {
-        return _retainedFailure(parent, deletionFailure);
-      }
-    }
+    failure = await _lifecycle.run<_Failure>((parent) async {
+      app = Directory('${parent.path}/app');
+      return _checkInTemporaryApp(
+        sdk: sdk,
+        repositoryRoot: repositoryRoot,
+        fixtureRoot: fixtureRoot,
+        app: app,
+        stableRegistry: stableRegistry,
+        preset: preset,
+        source: source,
+        hostedCli: hostedCli,
+        item: item,
+        iconLibrary: iconLibrary,
+        jobs: jobs,
+        independent: independent,
+        install: install,
+      );
+    });
+  } on OpenCodeCancelled {
+    rethrow;
   } on Object catch (error, stackTrace) {
-    return _retainedFailure(parent, error, stackTrace: stackTrace);
+    failure = _Failure('unexpected exception: $error\n$stackTrace');
   }
+  if (failure != null) return failure;
+  if (_lifecycle.cleanupProblem case final problem?) return _Failure(problem);
+  _lifecycle.processes.throwIfCancelled();
 
   if (keep) {
-    stdout
-      ..writeln('')
-      ..writeln('Kept the generated application at:')
-      ..writeln('  ${app.path}')
-      ..writeln('');
     if (source != RemixSource.hosted) {
       stdout
         ..writeln('It has a temporary checkout override for Remix. Delete')
@@ -852,12 +1078,15 @@ Future<_Failure?> _checkInTemporaryApp({
   required Directory repositoryRoot,
   required Directory fixtureRoot,
   required Directory app,
+  required bool stableRegistry,
   required _PresetContract preset,
   required RemixSource source,
   required bool hostedCli,
   required String? item,
   required String iconLibrary,
   required int jobs,
+  required IndependentMode independent,
+  required InstallMode install,
 }) async {
   final environment = _toolchainEnvironment(sdk);
   if (!hostedCli &&
@@ -866,6 +1095,8 @@ Future<_Failure?> _checkInTemporaryApp({
       dart: sdk.dart,
       repositoryRoot: repositoryRoot,
       outputDirectory: app.parent,
+      processes: _lifecycle.processes,
+      reporter: _reporter,
       environment: environment,
     );
     environment['REMIX_REGISTRY_CONSUMER_CLI'] = snapshot.path;
@@ -892,8 +1123,16 @@ Future<_Failure?> _checkInTemporaryApp({
   if (create != null) return create;
   _step('Created a fresh Flutter application.');
 
-  _replaceSkeleton(app: app, fixtureRoot: fixtureRoot);
-  _step('Applied the committed pre-install fixture.');
+  _replaceSkeleton(
+    app: app,
+    fixtureRoot: fixtureRoot,
+    registrySmoke: stableRegistry,
+  );
+  _step(
+    stableRegistry
+        ? 'Applied the registry-independent smoke fixture.'
+        : 'Applied the committed pre-install fixture.',
+  );
 
   final cliRoot = Directory('${repositoryRoot.path}/packages/remix_cli');
   if (!cliRoot.existsSync()) {
@@ -904,7 +1143,14 @@ Future<_Failure?> _checkInTemporaryApp({
     return _Failure('packages/remix is missing from this checkout.');
   }
   final startsWithCheckout = source == RemixSource.checkout;
-  if (startsWithCheckout) _writeCheckoutOverride(app, remixSource, preset);
+  var floor = stableRegistry
+      ? null
+      : registryRemixFloor(repositoryRoot, preset.name);
+  if (startsWithCheckout) {
+    _writeCheckoutOverride(app, remixSource, preset);
+  } else if (floor != null) {
+    writeHostedFloorOverride(app, floor: floor);
+  }
 
   // Hosted mode never falls back to the checkout. A missing release must fail
   // the release check, even when checkout validation already passed.
@@ -940,6 +1186,29 @@ Future<_Failure?> _checkInTemporaryApp({
     environment: environment,
   );
   if (init != null) return _Failure('remix init failed in the fresh app');
+  if (stableRegistry) {
+    final registry = await readInstalledRegistryCatalog(app);
+    preset = preset
+        .forCatalog(registry.catalog)
+        .forIcons(
+          registry.icons,
+          iconLibrary,
+          checkoutIconsVersion: _packageVersion(
+            repositoryRoot,
+            'remix_ui_icons',
+          ),
+        );
+    final problem = await checkPubPackageFloors(
+      readCatalogHostedFloors([registry.catalog], iconsYaml: registry.icons),
+      requireLatestRemix: false,
+    );
+    if (problem != null) return _Failure(problem);
+    floor = _remixFloor(preset._loadItems());
+    if (!startsWithCheckout) writeHostedFloorOverride(app, floor: floor);
+    _step(
+      'Plan, inventory, and hosted floors follow the CLI’s pinned registry.',
+    );
+  }
   _writeIconLibrary(app, iconLibrary);
 
   if (item == 'ownership') {
@@ -964,25 +1233,30 @@ Future<_Failure?> _checkInTemporaryApp({
     );
   }
 
-  final independent = await _checkIndependentItems(
+  _reporter.startPhase('Independent installs');
+  final independentFailure = await _checkIndependentItems(
     sdk: sdk,
     app: app,
     preset: preset,
     environment: environment,
     jobs: jobs,
+    mode: independent,
   );
-  if (independent != null) return independent;
+  if (independentFailure != null) return independentFailure;
 
-  for (final item in preset.registryItems) {
+  _reporter.startPhase('Gallery installs');
+  for (final items in galleryInstallBatches(preset.registryItems, install)) {
     final add = await _runProcess(
       sdk.dart,
-      ['run', 'remix_cli:remix', 'add', item],
+      ['run', 'remix_cli:remix', 'add', ...items],
       workingDirectory: app.path,
       environment: environment,
     );
-    if (add != null) return _Failure('remix add $item failed in the fresh app');
+    if (add != null)
+      return _Failure('remix add ${items.join(' ')} failed in the fresh app');
   }
   _step('CLI installed Theme, every item, dependencies, and generated output.');
+  _reporter.startPhase('Verify installed gallery');
 
   final installedFailure = _verifyInstalledUi(app, preset);
   if (installedFailure != null) return installedFailure;
@@ -992,6 +1266,7 @@ Future<_Failure?> _checkInTemporaryApp({
     app,
     preset: preset,
     hostedCli: hostedCli,
+    hostedFloor: startsWithCheckout ? null : floor,
   );
   if (dependencyFailure != null) return dependencyFailure;
 
@@ -1344,7 +1619,7 @@ _Failure? _applyFocusedFixture({
     final source = File('${fixtureRoot.path}/focused/${entry.key}');
     if (!source.existsSync()) {
       return _Failure(
-        'open_code/${fixtureRoot.path.split('/').last}/focused/'
+        'open_code/${basename(fixtureRoot.path)}/focused/'
         '${entry.key} is missing',
       );
     }
@@ -1417,10 +1692,20 @@ Future<_Failure?> _checkIndependentItems({
   required _PresetContract preset,
   required Map<String, String> environment,
   required int jobs,
+  IndependentMode mode = IndependentMode.all,
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  final items = preset.independentInstalls();
+  final items = preset.catalogYaml == null
+      ? independentInstallItems(preset.name, mode: mode)
+      : switch (mode) {
+          IndependentMode.none => <String>[],
+          IndependentMode.canary => independentInstallItems(
+            preset.name,
+            mode: mode,
+          ).where(preset.registryItems.contains).toList(),
+          IndependentMode.all => preset.independentInstalls(),
+        };
 
   Future<_Failure?> checkItem(String item, StringSink log) async {
     final elapsed = Stopwatch()..start();
@@ -1429,6 +1714,23 @@ Future<_Failure?> _checkIndependentItems({
     File('${isolated.path}/pubspec.yaml').writeAsStringSync(pubspec);
     if (override.existsSync()) {
       override.copySync('${isolated.path}/pubspec_overrides.yaml');
+    }
+    if (preset.catalogYaml != null) {
+      final pinned = ProjectConfig.parse(
+        File('${app.path}/remix.yaml').readAsStringSync(),
+        packageRoot: app,
+      );
+      File('${isolated.path}/remix.yaml').writeAsStringSync(
+        ProjectConfig(
+          packageRoot: isolated,
+          prefix: 'Solo',
+          preset: preset.name,
+          uiPath: 'lib/ui',
+          defaultRegistry: pinned.defaultRegistry,
+          registries: pinned.registries,
+          iconLibrary: pinned.iconLibrary,
+        ).encode(),
+      );
     }
     Directory('${isolated.path}/lib').createSync();
     File(
@@ -1478,8 +1780,47 @@ Future<_Failure?> _checkIndependentItems({
   }
 
   _step('Checking ${items.length} independent items, up to $jobs at a time.');
-  return runPooled(items, limit: jobs, out: stdout, work: checkItem);
+  return runPooled(
+    items,
+    limit: jobs,
+    out: stdout,
+    work: checkItem,
+    isCancelled: () => _lifecycle.processes.cancelled,
+  );
 }
+
+/// The independent install plan used by production and fixture tests.
+List<String> independentInstallItems(
+  String preset, {
+  required IndependentMode mode,
+  Directory? repositoryRoot,
+}) => switch (mode) {
+  IndependentMode.none => [],
+  // A large closure on Vanilla/Fortal and a generated multi-item closure on
+  // HeroUI retain a fresh hosted install tripwire without repeating Lane B.
+  IndependentMode.canary => [
+    preset == 'heroui' ? 'search_field' : 'dashboard_shell',
+  ],
+  IndependentMode.all => _presetByName(
+    preset,
+  ).independentInstalls(repositoryRoot),
+};
+
+/// Planned fresh init calls, hence branch-resolution API calls in release smoke.
+/// Candidate SHAs skip the API altogether. This uses the production independent
+/// plan so adding another canary changes the budget test as well.
+int plannedInitCalls(
+  ConsumerCheckOptions options, {
+  Directory? repositoryRoot,
+}) =>
+    1 +
+    (options.item != null
+        ? 0
+        : independentInstallItems(
+            options.preset,
+            mode: options.independent,
+            repositoryRoot: repositoryRoot,
+          ).length);
 
 /// Runs [work] for every input with at most [limit] in flight, and returns the
 /// failure of the earliest input that failed, or null.
@@ -1497,6 +1838,7 @@ Future<F?> runPooled<T, F extends Object>(
   required int limit,
   required StringSink out,
   required Future<F?> Function(T input, StringSink log) work,
+  bool Function()? isCancelled,
 }) async {
   if (limit < 1) throw ArgumentError.value(limit, 'limit', 'must be positive');
   final logs = [for (final _ in inputs) StringBuffer()];
@@ -1508,7 +1850,9 @@ Future<F?> runPooled<T, F extends Object>(
   var stopped = false;
 
   Future<void> worker() async {
-    while (!stopped && started < inputs.length) {
+    while (!stopped &&
+        !(isCancelled?.call() ?? false) &&
+        started < inputs.length) {
       final index = started++;
       try {
         final failure = await work(inputs[index], logs[index]);
@@ -1579,6 +1923,7 @@ Future<_Failure?> _analyzeAndTest({
   required String dependencySource,
   required Map<String, String> environment,
 }) async {
+  _reporter.startPhase('Analyze and test ($dependencySource)');
   final analyze = await _runProcess(
     sdk.flutter,
     ['analyze'],
@@ -1637,7 +1982,7 @@ Future<Object> _resolveToolchain(Directory root, String pinned) async {
   for (final candidate in candidates) {
     final ProcessResult result;
     try {
-      result = await Process.run(candidate.first, [
+      result = await _lifecycle.processes.run(candidate.first, [
         ...candidate.skip(1),
         '--version',
         '--machine',
@@ -1731,49 +2076,75 @@ _Failure? _verifyRegistryCoverage(
   );
 }
 
+/// The single Remix floor shared by all items in the selected catalog.
+String registryRemixFloor(Directory repositoryRoot, String preset) {
+  final file = File('${repositoryRoot.path}/registry/$preset/registry.yaml');
+  return _remixFloor(
+    (loadYaml(file.readAsStringSync()) as YamlMap)['items'] as YamlMap,
+  );
+}
+
+String _remixFloor(YamlMap items) {
+  final constraints = <String>{
+    for (final item in items.values.cast<YamlMap>())
+      if (item['dependencies'] is YamlMap &&
+          item['dependencies']['remix'] is String)
+        item['dependencies']['remix'] as String,
+  };
+  if (constraints.length != 1 || !constraints.single.startsWith('^')) {
+    throw const FormatException(
+      'registry.yaml must declare one caret remix floor.',
+    );
+  }
+  return Version.parse(constraints.single.substring(1)).toString();
+}
+
+/// An exact hosted override tests the claimed minimum even if pub.dev advances.
+void writeHostedFloorOverride(Directory app, {required String floor}) {
+  Version.parse(floor);
+  File(
+    '${app.path}/pubspec_overrides.yaml',
+  ).writeAsStringSync('dependency_overrides:\n  remix: $floor\n');
+}
+
+/// Only the deliberate exact hosted pin is allowed; paths and other overrides
+/// must still fail the hosted boundary checks.
+String? hostedFloorOverrideProblem(Directory app, {required String floor}) {
+  final file = File('${app.path}/pubspec_overrides.yaml');
+  if (!file.existsSync()) return 'Hosted Remix floor override is missing.';
+  final document = loadYaml(file.readAsStringSync());
+  if (document is YamlMap && document.length == 1) {
+    final overrides = document['dependency_overrides'];
+    if (overrides is YamlMap &&
+        overrides.length == 1 &&
+        overrides['remix'] == floor) {
+      return null;
+    }
+  }
+  return 'Hosted overrides must contain only remix: $floor (exact hosted version).';
+}
+
 /// Fails when the selected source resolved a `remix` other than the one the
 /// registry floors at.
 ///
 /// The registry constraint is a caret, so every later beta resolves and every
 /// other check here still passes — while the installed templates were only
 /// ever authored against the floor. `tool/check_version_alignment.dart` holds
-/// that floor equal to `packages/remix`; this proves the version a real
-/// consumer actually gets is the same one.
+/// that floor equal to `packages/remix`. Hosted consumers pin exactly that
+/// version in pubspec_overrides.yaml so a newer publication during validation
+/// cannot change the proof. The pub.dev preflight separately rejects a stale
+/// floor, including when a newer prerelease already exists.
 _Failure? _verifyResolvedRemixFloor({
   required Directory repositoryRoot,
   required Map<String, String> resolvedPackages,
   required _PresetContract preset,
 }) {
-  final registry = File(
-    '${repositoryRoot.path}/registry/'
-    '${preset.name}/registry.yaml',
-  );
-  final document = loadYaml(registry.readAsStringSync());
-  final items = document is YamlMap ? document['items'] : null;
-  if (items is! YamlMap) {
-    return _Failure('registry.yaml is not in the expected shape.');
-  }
-
-  String? constraint;
-  for (final item in items.values) {
-    final dependencies = (item as YamlMap)['dependencies'];
-    if (dependencies is YamlMap && dependencies['remix'] is String) {
-      constraint = dependencies['remix'] as String;
-      break;
-    }
-  }
-  if (constraint == null || !constraint.startsWith('^')) {
-    return _Failure(
-      'registry.yaml declares no caret remix constraint to floor at.',
-    );
-  }
-
   final root = resolvedPackages['remix'];
   if (root == null) {
     return _Failure('remix is missing from package_config.json.');
   }
 
-  final floor = constraint.substring(1);
+  final floor = _remixFloor(preset._loadItems(repositoryRoot));
   final manifest = File('$root/pubspec.yaml');
   if (!manifest.existsSync()) return _Failure('Resolved Remix has no pubspec.');
   final actual = (loadYaml(manifest.readAsStringSync()) as YamlMap)['version'];
@@ -1833,6 +2204,7 @@ _Failure? _verifyInstalledDependencies(
   Directory app, {
   required _PresetContract preset,
   required bool hostedCli,
+  String? hostedFloor,
 }) {
   final sections = _dependencySections(
     File('${app.path}/pubspec.yaml').readAsStringSync(),
@@ -1876,6 +2248,10 @@ _Failure? _verifyInstalledDependencies(
   if (sections.containsKey('dependency_overrides')) {
     problems.add('hosted phase unexpectedly declares dependency_overrides');
   }
+  if (hostedFloor != null) {
+    final problem = hostedFloorOverrideProblem(app, floor: hostedFloor);
+    if (problem != null) problems.add(problem);
+  }
 
   if (problems.isEmpty) return null;
   return _Failure(
@@ -1903,25 +2279,37 @@ bool _isFlutterSdkDeclaration(Object? declaration) =>
 
 _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
   final buildConfig = File('${app.path}/build.yaml');
+  final specStylerFiles = preset.catalogYaml == null
+      ? [
+          for (final item in preset.specStylerItems)
+            'lib/ui/components/$item.dart',
+        ]
+      : [
+          for (final file in preset.installedUiFiles)
+            if (!file.endsWith('.g.dart') &&
+                file.endsWith('.dart') &&
+                File('${app.path}/lib/ui/$file').existsSync() &&
+                RegExp(
+                  r'@MixableSpec\s*\(',
+                ).hasMatch(File('${app.path}/lib/ui/$file').readAsStringSync()))
+              'lib/ui/$file',
+        ];
   final expected = {
     'targets': {
       r'$default': {
         'builders': {
           'mix_generator:spec_styler_generator': {
             'enabled': true,
-            'generate_for': [
-              for (final item in preset.specStylerItems)
-                'lib/ui/components/$item.dart',
-            ]..sort(),
+            'generate_for': specStylerFiles..sort(),
           },
         },
       },
     },
   };
-  if (preset.specStylerItems.isEmpty && buildConfig.existsSync()) {
+  if (specStylerFiles.isEmpty && buildConfig.existsSync()) {
     return _Failure('consumer build.yaml is unnecessary for ${preset.name}');
   }
-  if (preset.specStylerItems.isNotEmpty &&
+  if (specStylerFiles.isNotEmpty &&
       (!buildConfig.existsSync() ||
           _canonicalYaml(loadYaml(buildConfig.readAsStringSync())) !=
               _canonicalYaml(expected))) {
@@ -2060,7 +2448,7 @@ _Failure? _verifyCheckoutPackages({
     final directory = Directory(entry.value);
     if (!directory.existsSync()) continue;
     final resolved = directory.resolveSymbolicLinksSync();
-    if (!_isWithin(resolved, repository) && resolved != repository) continue;
+    if (!isWithin(resolved, repository) && resolved != repository) continue;
 
     final expectedDirectory = expected[entry.key];
     if (expectedDirectory == null) {
@@ -2091,6 +2479,7 @@ _Failure? _verifyCheckoutPackages({
 void _replaceSkeleton({
   required Directory app,
   required Directory fixtureRoot,
+  bool registrySmoke = false,
 }) {
   final lib = Directory('${app.path}/lib');
   if (lib.existsSync()) lib.deleteSync(recursive: true);
@@ -2102,10 +2491,43 @@ void _replaceSkeleton({
   if (build.existsSync()) build.deleteSync();
 
   for (final relative in _fixtureAppFiles) {
+    if (registrySmoke &&
+        (relative.startsWith('lib/') || relative.startsWith('test/')))
+      continue;
     final target = File('${app.path}/$relative');
     target.parent.createSync(recursive: true);
     File('${fixtureRoot.path}/$relative').copySync(target.path);
   }
+  if (registrySmoke) writeRegistrySmokeApp(app);
+}
+
+/// The published-registry smoke analyzes every installed file, with a minimal
+/// runnable app independent of candidate-only widgets in the checkout gallery.
+void writeRegistrySmokeApp(Directory app) {
+  File('${app.path}/lib/main.dart')
+    ..parent.createSync(recursive: true)
+    ..writeAsStringSync("""
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: Scaffold(body: Text('Registry smoke'))));
+""");
+  File('${app.path}/test/open_code_test.dart')
+    ..parent.createSync(recursive: true)
+    ..writeAsStringSync("""
+import 'package:flutter_test/flutter_test.dart';
+import '../lib/main.dart' as app;
+// Compile every installed public export without naming candidate-only widgets.
+// ignore: unused_import
+import '../lib/ui/ui.dart';
+
+void main() {
+  testWidgets('registry consumer starts', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+    expect(find.text('Registry smoke'), findsOneWidget);
+  });
+}
+""");
 }
 
 Object _readPackageConfig(Directory app) {
@@ -2142,42 +2564,6 @@ bool _isHostedCachePath(String path) {
   return path.contains('${separator}hosted$separator');
 }
 
-_Failure? _verifyDeletableParent(Directory parent, Directory repositoryRoot) {
-  final problems = <String>[];
-  final resolved = parent.resolveSymbolicLinksSync();
-  final temp = Directory.systemTemp.resolveSymbolicLinksSync();
-  final repository = repositoryRoot.resolveSymbolicLinksSync();
-
-  if (!_isWithin(resolved, temp)) problems.add('$resolved is not inside $temp');
-  if (_isWithin(resolved, repository) || resolved == repository) {
-    problems.add('$resolved is inside the repository');
-  }
-  if (!_basename(resolved).startsWith('remix_open_code_')) {
-    problems.add('$resolved was not created by this checker');
-  }
-  if (FileSystemEntity.isLinkSync(parent.path)) {
-    problems.add('$resolved is a symbolic link');
-  }
-
-  if (problems.isEmpty) return null;
-  return _Failure(
-    'refusing to use a temporary directory that cannot be proven safe:\n'
-    '${problems.map((problem) => '  - $problem').join('\n')}',
-  );
-}
-
-_Failure? _deleteVerifiedParent(Directory parent, Directory repositoryRoot) {
-  final guard = _verifyDeletableParent(parent, repositoryRoot);
-  if (guard != null) return guard;
-  parent.deleteSync(recursive: true);
-  return null;
-}
-
-bool _isWithin(String path, String parent) =>
-    path.startsWith(parent.endsWith('/') ? parent : '$parent/');
-
-String _basename(String path) => path.split(Platform.pathSeparator).last;
-
 /// Runs a process, streaming its output to this process' stdio.
 ///
 /// Concurrent callers pass a [log] instead: inherited stdio from several
@@ -2190,6 +2576,9 @@ Future<_Failure?> _runProcess(
   Map<String, String>? environment,
   StringSink? log,
 }) async {
+  final step = arguments.length >= 2 && arguments[1] == 'remix_cli:remix'
+      ? arguments.skip(2).join(' ')
+      : arguments.join(' ');
   final harness = environment?['REMIX_REGISTRY_CONSUMER_CLI'];
   if (harness != null &&
       arguments.length >= 2 &&
@@ -2197,36 +2586,16 @@ Future<_Failure?> _runProcess(
       arguments[1] == 'remix_cli:remix') {
     arguments = [harness, ...arguments.skip(2)];
   }
-  (log ?? stdout).writeln('\$ $executable ${arguments.join(' ')}');
-  final Process process;
-  try {
-    process = await Process.start(
-      executable,
-      arguments,
-      workingDirectory: workingDirectory,
-      environment: environment,
-      mode: log == null
-          ? ProcessStartMode.inheritStdio
-          : ProcessStartMode.normal,
-    );
-  } on ProcessException catch (error) {
-    return _Failure('could not start `$executable`: ${error.message}');
-  }
-  // A process that fills a pipe nobody reads never exits, and one that reads
-  // stdin never would, so stdin is closed and both pipes are drained alongside
-  // the exit code.
-  const decoder = Utf8Decoder(allowMalformed: true);
-  final drained = <Future<Object?>>[
-    if (log != null) ...[
-      process.stdin.close(),
-      process.stdout.transform(decoder).forEach(log.write),
-      process.stderr.transform(decoder).forEach(log.write),
-    ],
-  ];
-  final code = await process.exitCode;
-  await Future.wait(drained);
-  if (code == 0) return null;
-  return _Failure('`$executable ${arguments.join(' ')}` exited $code');
+  final problem = await _reporter.run(
+    _lifecycle.processes,
+    executable,
+    arguments,
+    workingDirectory: workingDirectory,
+    environment: environment,
+    log: log,
+    step: step,
+  );
+  return problem == null ? null : _Failure(problem);
 }
 
 Map<String, Map<String, Object?>> _dependencySections(String pubspec) {
@@ -2342,6 +2711,18 @@ iconContractForTest(
   );
 }
 
+/// The production gallery plan and inventory for a selected registry catalog.
+({List<String> items, List<String> files, String floor, List<String> runtime})
+registryPlanForTest(String preset, String catalogYaml) {
+  final contract = _presetByName(preset).forCatalog(catalogYaml);
+  return (
+    items: contract.registryItems,
+    files: contract.installedUiFiles,
+    floor: _remixFloor(contract._loadItems()),
+    runtime: contract.requiredRuntimeDependencies,
+  );
+}
+
 /// Returns the expected installed UI inventory for focused regression tests.
 List<String> installedUiFilesForTest({String preset = 'vanilla'}) =>
     _presetByName(preset).installedUiFiles;
@@ -2359,31 +2740,6 @@ List<String> focusedInventoryProblemsForTest(
 /// Returns the independent expected inventory for a focused consumer check.
 Set<String> focusedInventoryForTest(String item, {String preset = 'vanilla'}) =>
     _presetByName(preset).focusedUiFiles(item).toSet();
-
-/// Formats a post-creation failure so the retained directory is always named.
-String retainedFailureMessage(
-  Directory parent,
-  Object problem, {
-  StackTrace? stackTrace,
-}) {
-  final String message;
-  if (problem is _Failure) {
-    message = problem.message;
-  } else {
-    final stack = stackTrace == null ? '' : '\n$stackTrace';
-    message = 'unexpected exception: $problem$stack';
-  }
-  return '$message\nTemporary application preserved at ${parent.path}';
-}
-
-_Failure _retainedFailure(
-  Directory parent,
-  Object problem, {
-  StackTrace? stackTrace,
-}) => _Failure(
-  retainedFailureMessage(parent, problem, stackTrace: stackTrace),
-  exitCode: problem is _Failure ? problem.exitCode : 1,
-);
 
 void _step(String message, [StringSink? sink]) =>
     (sink ?? stdout).writeln('✓ $message');

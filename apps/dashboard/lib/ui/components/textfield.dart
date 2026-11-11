@@ -52,11 +52,13 @@ TextFieldStyler uiTextFieldStyle({
   UiTextFieldSize size = .size2,
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
-  final metrics = _uiTextFieldMetrics(size, bordered: variant != .soft);
+  final metrics = _uiTextFieldMetrics(size);
   final base = _uiTextInputBaseStyle(
     container: BoxStyler()
-        .height(metrics.height)
-        .padding(.horizontal(metrics.paddingX))
+        .minHeight(metrics.height)
+        .padding(
+          .symmetric(horizontal: metrics.paddingX, vertical: metrics.paddingY),
+        )
         .borderRadius(.all(metrics.radius))
         .clipBehavior(.antiAlias),
     spacing: metrics.spacing,
@@ -106,7 +108,7 @@ TextFieldStyler _uiTextInputBaseStyle({
             overContent: RemixBoxEffectLayerMix(),
           ),
         )
-        .wrap(.iconTheme(color: UiTokens.gray11(), size: 16.0))
+        .wrap(.iconTheme(color: UiTokens.gray11(), size: UiTokens.space4()))
         .onFocused(.containerEffects(uiFocusOutline()));
 
 TextFieldStyler _uiApplySurfaceTextInput(TextFieldStyler base) =>
@@ -223,7 +225,7 @@ TextFieldStyler _uiTextInputErrorStyle() => TextFieldStyler(
         RemixBoxShadowMix(
           kind: .inset,
           color: UiTokens.error8(),
-          spreadRadius: 1,
+          spreadRadius: UiTokens.borderWidth1(),
         ),
       ],
     ),
@@ -233,34 +235,51 @@ TextFieldStyler _uiTextInputErrorStyle() => TextFieldStyler(
 ({
   double height,
   double paddingX,
+  double paddingY,
   double spacing,
   Radius radius,
   TextStyleToken text,
 })
-_uiTextFieldMetrics(UiTextFieldSize size, {required bool bordered}) =>
-    switch (size) {
-      .size1 => (
-        height: UiTokens.space5(),
-        paddingX: bordered ? UiTokens.space2() : UiTokens.space2(),
-        spacing: UiTokens.space2(),
-        radius: UiTokens.radius2OrFull(),
-        text: UiTokens.text1,
-      ),
-      .size2 => (
-        height: UiTokens.space6(),
-        paddingX: bordered ? UiTokens.space2() : UiTokens.space2(),
-        spacing: UiTokens.space2(),
-        radius: UiTokens.radius2OrFull(),
-        text: UiTokens.text2,
-      ),
-      .size3 => (
-        height: UiTokens.space7(),
-        paddingX: bordered ? UiTokens.space3() : UiTokens.space3(),
-        spacing: UiTokens.space3(),
-        radius: UiTokens.radius3OrFull(),
-        text: UiTokens.text3,
-      ),
-    };
+_uiTextFieldMetrics(UiTextFieldSize size) => switch (size) {
+  .size1 => (
+    height: UiTokens.space5(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: UiTokens.space2(),
+    spacing: UiTokens.space2(),
+    radius: UiTokens.radius2OrFull(),
+    text: UiTokens.text1,
+  ),
+  .size2 => (
+    height: UiTokens.space6(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: UiTokens.space2(),
+    spacing: UiTokens.space2(),
+    radius: UiTokens.radius2OrFull(),
+    text: UiTokens.text2,
+  ),
+  .size3 => (
+    height: UiTokens.space7(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: UiTokens.space3(),
+    spacing: UiTokens.space3(),
+    radius: UiTokens.radius3OrFull(),
+    text: UiTokens.text3,
+  ),
+};
+
+// Keep the existing 24/32/40px chrome and centered baseline at 1x, while
+// leaving the text line unconstrained as MediaQuery text scaling increases.
+// These frames use inset effects rather than layout-consuming borders.
+ContextToken<double> _textFieldPaddingY(UiTextFieldSize size) =>
+    ContextToken<double>((context) {
+      final (height, text) = switch (size) {
+        .size1 => (UiTokens.space5, UiTokens.text1),
+        .size2 => (UiTokens.space6, UiTokens.text2),
+        .size3 => (UiTokens.space7, UiTokens.text3),
+      };
+      final style = text.resolve(context);
+      return (height.resolve(context) - style.fontSize! * style.height!) / 2;
+    });
 
 /// Ui TextArea size presets.
 enum UiTextAreaSize { size1, size2, size3 }

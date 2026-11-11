@@ -10,6 +10,132 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 void main() {
+  for (final dark in [false, true]) {
+    testWidgets('installed combobox accepts a suggestion; dark=$dark', (
+      tester,
+    ) async {
+      String? selected;
+      await tester.pumpWidget(
+        WidgetsApp(
+          color: const Color(0xFF000000),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
+          ),
+          builder: (_, navigator) =>
+              AcmeTheme(mode: dark ? .dark : .light, child: navigator!),
+          home: Center(
+            child: SizedBox(
+              width: 320,
+              child: Column(
+                mainAxisSize: .min,
+                children: [
+                  AcmeCombobox<String>(
+                    label: 'City',
+                    hintText: 'Search cities',
+                    optionsBuilder: (_) => const ['Recife', 'Rio'],
+                    onSelected: (city) => selected = city,
+                  ),
+                  AcmeCombobox<String>(
+                    label: 'Locked',
+                    enabled: false,
+                    optionsBuilder: (_) => const ['Unavailable'],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      final fields = find.byType(EditableText);
+      expect(tester.widget<EditableText>(fields.last).readOnly, isTrue);
+      await tester.enterText(fields.first, 'r');
+      await tester.pumpAndSettle();
+      final theme = dark
+          ? const AcmeThemeData.dark()
+          : const AcmeThemeData.light();
+      final rows = tester.widgetList<StyleSpecProvider<ComboboxOptionSpec>>(
+        find.byType(StyleSpecProvider<ComboboxOptionSpec>),
+      );
+      expect(rows, hasLength(2));
+      expect(
+        rows.first.spec.spec.label.spec.style?.color,
+        theme.accentForeground,
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(selected, 'Rio');
+      expect(tester.widget<EditableText>(fields.first).controller.text, 'Rio');
+      expect(find.text('Recife'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+  }
+  group('installed Vanilla calendar composites', () {
+    for (final range in [false, true]) {
+      testWidgets(
+        '${range ? "range" : "single"} calendar and picker install with their child recipes',
+        (tester) async {
+          final first = DateTime(2026), last = DateTime(2027);
+          final today = DateTime(2026, 11, 6);
+          await _pumpInstalledAgent(
+            tester,
+            range
+                ? AcmeRangeCalendar(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  )
+                : AcmeCalendar(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  ),
+          );
+          expect(find.byType(RemixSelect<int>), findsNWidgets(2));
+          final day = tester.widget<StyledText>(
+            find
+                .ancestor(of: find.text('6'), matching: find.byType(StyledText))
+                .first,
+          );
+          expect(
+            day.styleSpec!.spec.style?.color,
+            const AcmeThemeData.light().foreground,
+          );
+          await _pumpInstalledAgent(
+            tester,
+            range
+                ? AcmeDateRangePicker(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  )
+                : AcmeDatePicker(
+                    value: null,
+                    firstDate: first,
+                    lastDate: last,
+                    currentDate: today,
+                    onChanged: (_) {},
+                  ),
+          );
+          await tester.tap(find.byType(RemixButton));
+          await tester.pumpAndSettle();
+          expect(
+            find.byType(range ? RemixRangeCalendar : RemixCalendar),
+            findsOneWidget,
+          );
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  });
+
   group('installed Agent behavior', () {
     testWidgets('composer submits and clears through Remix controls', (
       tester,
@@ -2329,6 +2455,7 @@ void main() {
           find.byType(AcmeSwitch),
           find.byType(AcmeRadio<String>),
           find.byType(AcmeSlider),
+          find.byType(AcmeRangeSlider),
           find.byType(AcmeTextField),
           find.byType(AcmeTextArea),
           find.byType(AcmeToggleGroup<String>),
@@ -3826,7 +3953,12 @@ void main() {
 
         expect(spec.spec.trackWidth, 6);
         expect(spec.spec.rangeWidth, 6);
-        expect(spec.spec.trackColor, theme.data.muted);
+        expect(
+          spec.spec.trackColor,
+          theme.data.brightness == Brightness.dark
+              ? theme.data.ring
+              : theme.data.mutedForeground,
+        );
         expect(spec.spec.rangeColor, theme.data.primary);
       });
     }
@@ -3848,11 +3980,12 @@ void main() {
         states: const {WidgetState.disabled},
       );
 
-      // A step wider than other controls' ring: 4px.
+      // Slider focus is opaque and separated locally from its white handle.
       expect(
         focused.spec.thumbFocusEffects?.outline,
-        _focusRing(theme).copyWith(width: 4),
+        BorderSide(color: theme.primary, width: 3),
       );
+      expect(focused.spec.thumbFocusEffects?.outlineOffset, 0);
       expect(
         disabled.widgetModifiers,
         contains(
@@ -3867,6 +4000,7 @@ void main() {
         SizedBox(
           width: 200,
           child: AcmeSlider(
+            surfaceColor: const Color(0xFFE1E7F6),
             value: 0.5,
             min: 0,
             max: 10,
@@ -3883,7 +4017,10 @@ void main() {
       expect(remix.max, 10);
       expect(remix.snapDivisions, 5);
       expect(remix.semanticLabel, 'Volume');
-      expect(remix.style, acmeSliderStyle());
+      expect(
+        remix.style,
+        acmeSliderStyle(surfaceColor: const Color(0xFFE1E7F6)),
+      );
       // `semanticFormatterCallback` would drag `package:naked_ui` into the
       // adapter, so it is deliberately outside the generated surface.
       expect(remix.semanticFormatterCallback, isNull);

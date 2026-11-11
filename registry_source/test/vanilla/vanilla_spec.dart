@@ -881,7 +881,8 @@ List<RemixBoxShadow> _effectShadows(VanillaShadow level) => [
 final _selectTargets = <SpecTarget>[
   _select(
     'trigger',
-    source: 'select.tsx: h-9 px-3 gap-2',
+    source:
+        'select.tsx: px-3 py-2 data-[size=default]:h-9 gap-2 (see Deviations)',
     read: (spec) {
       final container = spec.spec.trigger.spec.container;
       return (
@@ -891,7 +892,7 @@ final _selectTargets = <SpecTarget>[
       );
     },
     expected: (_) =>
-        (36.0, const EdgeInsets.symmetric(horizontal: 12, vertical: 8), 8.0),
+        (36.0, const EdgeInsets.symmetric(horizontal: 12, vertical: 4), 8.0),
   ),
   _select(
     'trigger surface',
@@ -937,7 +938,15 @@ final _selectTargets = <SpecTarget>[
       theme.popover,
       _hairline(theme.border),
       _rounded(theme, VanillaTokens.radiusMd),
-      _effectShadows(VanillaShadow.md),
+      [
+        for (final shadow in VanillaShadow.md.shadows)
+          RemixBoxShadow(
+            color: shadow.color,
+            offset: shadow.offset,
+            blurRadius: shadow.blurRadius,
+            spreadRadius: shadow.spreadRadius,
+          ),
+      ],
     ),
   ),
   _select(
@@ -1193,57 +1202,85 @@ final _switchTargets = <SpecTarget>[
 
 // -- slider -------------------------------------------------------------------
 
-SpecTarget _slider(
-  String property, {
-  Set<WidgetState> states = const {},
-  required String source,
-  required Object? Function(StyleSpec<SliderSpec> spec) read,
-  required Object? Function(VanillaThemeData theme) expected,
-}) => _target<SliderSpec>(
-  'slider',
-  property,
-  source: source,
-  style: vanillaSliderStyle,
-  states: states,
-  read: read,
-  expected: expected,
-);
+List<SpecTarget> _sliderTargetsFor(
+  String component,
+  SliderStyler Function() style,
+) {
+  SpecTarget target(
+    String property, {
+    Set<WidgetState> states = const {},
+    required String source,
+    required Object? Function(StyleSpec<SliderSpec> spec) read,
+    required Object? Function(VanillaThemeData theme) expected,
+  }) => _target<SliderSpec>(
+    component,
+    property,
+    source: source,
+    style: style,
+    states: states,
+    read: read,
+    expected: expected,
+  );
 
-final _sliderTargets = <SpecTarget>[
-  _slider(
-    'thumb',
-    source: 'slider.tsx: size-4 border border-primary bg-white shadow-sm',
-    read: (spec) {
-      final decoration = decorationOf(spec.spec.thumb);
-      return (
-        spec.spec.thumb.spec.constraints,
-        decoration?.border,
-        decoration?.color,
-        decoration?.boxShadow,
-      );
-    },
-    expected: (theme) => (
-      BoxConstraints.tight(const Size.square(16)),
-      _hairline(theme.primary),
-      const Color(0xFFFFFFFF),
-      VanillaShadow.sm.shadows,
+  return <SpecTarget>[
+    target(
+      'thumb',
+      source: 'slider.tsx: size-4 border border-primary bg-white shadow-sm',
+      read: (spec) {
+        final decoration = decorationOf(spec.spec.thumb);
+        return (
+          spec.spec.thumb.spec.constraints,
+          decoration?.border,
+          decoration?.color,
+          decoration?.boxShadow,
+        );
+      },
+      expected: (theme) => (
+        BoxConstraints.tight(const Size.square(16)),
+        _hairline(
+          theme.brightness == Brightness.dark
+              ? theme.primaryForeground
+              : theme.primary,
+        ),
+        const Color(0xFFFFFFFF),
+        VanillaShadow.sm.shadows,
+      ),
     ),
-  ),
-  _slider(
-    'hover ring',
-    states: const {WidgetState.hovered},
-    source: 'slider.tsx: hover:ring-4 ring-ring/50',
-    read: (spec) => spec.spec.thumbEffects?.outline,
-    expected: (theme) => BorderSide(color: tint(theme.ring, 0.5), width: 4),
-  ),
-  _slider(
-    'focus ring',
-    states: const {WidgetState.focused},
-    source: 'slider.tsx: focus-visible:ring-4 ring-ring/50',
-    read: (spec) => spec.spec.thumbFocusEffects?.outline,
-    expected: (theme) => BorderSide(color: tint(theme.ring, 0.5), width: 4),
-  ),
-];
+    target(
+      'hover ring',
+      states: const {WidgetState.hovered},
+      source: 'Slider polish: opaque 2px hover halo',
+      read: (spec) => spec.spec.thumbEffects?.outline,
+      expected: (theme) => BorderSide(
+        color: Color.alphaBlend(
+          tint(theme.mutedForeground, 0.4),
+          theme.background,
+        ),
+        width: 2,
+      ),
+    ),
+    target(
+      'pressed ring',
+      states: const {WidgetState.pressed},
+      source: 'Slider polish: opaque 6px pressed halo',
+      read: (spec) => spec.spec.thumbEffects?.outline,
+      expected: (theme) => BorderSide(
+        color: Color.alphaBlend(
+          tint(theme.mutedForeground, 0.65),
+          theme.background,
+        ),
+        width: 6,
+      ),
+    ),
+    target(
+      'focus ring',
+      states: const {WidgetState.focused},
+      source: 'Slider polish: opaque 3px local focus ring',
+      read: (spec) => spec.spec.thumbFocusEffects?.outline,
+      expected: (theme) => BorderSide(color: theme.primary, width: 3),
+    ),
+  ];
+}
 
 // -- tabs and segmented control -----------------------------------------------
 
@@ -1615,7 +1652,15 @@ final _menuTargets = <SpecTarget>[
       const EdgeInsets.symmetric(vertical: 4),
       const EdgeInsets.symmetric(horizontal: 4),
       128.0,
-      _effectShadows(VanillaShadow.md),
+      [
+        for (final shadow in VanillaShadow.md.shadows)
+          RemixBoxShadow(
+            color: shadow.color,
+            offset: shadow.offset,
+            blurRadius: shadow.blurRadius,
+            spreadRadius: shadow.spreadRadius,
+          ),
+      ],
     ),
   ),
   _menu(
@@ -2052,8 +2097,74 @@ final _displayTargets = <SpecTarget>[
   ),
 ];
 
+// Calendar geometry and palette are designed from the existing Vanilla scale.
+final _calendarTargets = <SpecTarget>[
+  for (final (name, recipe) in [
+    ('calendar', vanillaCalendarStyle),
+    ('range_calendar', vanillaRangeCalendarStyle),
+  ]) ...[
+    _target<CalendarSpec>(
+      name,
+      'day minimum target',
+      source: 'vanilla.md: calendar recipes',
+      style: recipe,
+      read: (s) => s.spec.day.spec.container.spec.constraints?.minHeight,
+      expected: (_) => VanillaTokens.s12,
+    ),
+    _target<CalendarSpec>(
+      name,
+      'resting days are transparent',
+      source: 'vanilla.md: calendar recipes',
+      style: recipe,
+      read: (s) => decorationOf(s.spec.day.spec.container)?.color?.a,
+      expected: (_) => 0.0,
+    ),
+    _target<CalendarSpec>(
+      name,
+      'weekday typography',
+      source: 'vanilla.md: calendar recipes',
+      style: recipe,
+      read: (s) => s.spec.weekday.spec.style?.fontSize,
+      expected: (_) => 12.0,
+    ),
+    _target<CalendarSpec>(
+      name,
+      'selected day color',
+      source: 'vanilla.md: calendar recipes',
+      style: recipe,
+      states: {WidgetState.selected},
+      read: (s) => decorationOf(s.spec.day.spec.container)?.color,
+      expected: (t) => name == 'calendar'
+          ? t.primary
+          : tint(t.primary, t.brightness == Brightness.dark ? .12 : .07),
+    ),
+  ],
+  for (final range in [false, true])
+    _pumped<ButtonSpec>(
+      range ? 'date_range_picker' : 'date_picker',
+      'Vanilla trigger typography',
+      source: 'vanilla.md: picker composites',
+      widget: () => range
+          ? VanillaDateRangePicker(
+              value: null,
+              firstDate: DateTime(2026),
+              lastDate: DateTime(2027),
+              onChanged: (_) {},
+            )
+          : VanillaDatePicker(
+              value: null,
+              firstDate: DateTime(2026),
+              lastDate: DateTime(2027),
+              onChanged: (_) {},
+            ),
+      read: (s) => s.spec.label.spec.style?.fontSize,
+      expected: (_) => 14.0,
+    ),
+];
+
 /// Every Vanilla target, in the order `specs/vanilla.md` lists components.
 final vanillaSpecTargets = <SpecTarget>[
+  ..._calendarTargets,
   ..._buttonTargets,
   ..._iconButtonTargets,
   ..._linkTargets,
@@ -2061,11 +2172,98 @@ final vanillaSpecTargets = <SpecTarget>[
   ..._toggleTargets,
   ..._toggleGroupTargets,
   ..._textFieldTargets,
+  _target<ComboboxSpec>(
+    'combobox',
+    'field metrics',
+    source: 'Vanilla TextField recipe: h-9 px-3 py-1 text-sm',
+    style: vanillaComboboxStyle,
+    read: (spec) => (
+      spec.spec.field.spec.container.spec.constraints?.minHeight,
+      spec.spec.field.spec.container.spec.padding,
+      spec.spec.field.spec.text.spec.style?.fontSize,
+      spec.spec.field.spec.text.spec.style?.color,
+    ),
+    expected: (theme) => (
+      36.0,
+      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      14.0,
+      theme.foreground,
+    ),
+  ),
+  _target<ComboboxSpec>(
+    'combobox',
+    'floating panel',
+    source:
+        'Vanilla Select panel: popover border radius-md p-1 shadow-md; 8px offset',
+    style: vanillaComboboxStyle,
+    read: (spec) => (
+      decorationOf(spec.spec.panel.spec.container)?.color,
+      decorationOf(spec.spec.panel.spec.container)?.border,
+      decorationOf(spec.spec.panel.spec.container)?.borderRadius,
+      spec.spec.panel.spec.containerEffects?.behindContent?.shadows,
+      spec.spec.panel.spec.container.spec.padding,
+      spec.spec.panel.spec.container.spec.margin,
+    ),
+    expected: (theme) => (
+      theme.popover,
+      _hairline(theme.border),
+      _rounded(theme, VanillaTokens.radiusMd),
+      [
+        for (final shadow in VanillaShadow.md.shadows)
+          RemixBoxShadow(
+            color: shadow.color,
+            offset: shadow.offset,
+            blurRadius: shadow.blurRadius,
+            spreadRadius: shadow.spreadRadius,
+          ),
+      ],
+      const EdgeInsets.all(4),
+      const EdgeInsets.only(top: 8),
+    ),
+  ),
+  _target<ComboboxSpec>(
+    'combobox',
+    'option metrics',
+    source:
+        'Vanilla Select row: px-2 py-1.5 radius-sm text-sm popover-foreground',
+    style: vanillaComboboxStyle,
+    read: (spec) => (
+      spec.spec.option.spec.container.spec.padding,
+      decorationOf(spec.spec.option.spec.container)?.borderRadius,
+      spec.spec.option.spec.label.spec.style?.fontSize,
+      spec.spec.option.spec.label.spec.style?.color,
+    ),
+    expected: (theme) => (
+      const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      _rounded(theme, VanillaTokens.radiusSm),
+      14.0,
+      theme.popoverForeground,
+    ),
+  ),
   ..._selectTargets,
   ..._checkboxTargets,
   ..._radioTargets,
   ..._switchTargets,
-  ..._sliderTargets,
+  ..._sliderTargetsFor('slider', vanillaSliderStyle),
+  ..._sliderTargetsFor('range slider', vanillaRangeSliderStyle),
+  _target<SliderSpec>(
+    'range slider',
+    'rail and interval',
+    source: 'Slider polish: 6px mid-gray rail / primary interval',
+    style: vanillaRangeSliderStyle,
+    read: (spec) => (
+      spec.spec.trackColor,
+      spec.spec.rangeColor,
+      spec.spec.trackWidth,
+      spec.spec.rangeWidth,
+    ),
+    expected: (theme) => (
+      theme.brightness == Brightness.dark ? theme.ring : theme.mutedForeground,
+      theme.primary,
+      6.0,
+      6.0,
+    ),
+  ),
   ..._tabsTargets,
   ..._appBarTargets,
   ..._sidebarTargets,

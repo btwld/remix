@@ -106,6 +106,9 @@ void main() {
         selectedValue: null,
         onChanged: (_) {},
       ),
+      const FortalTextField(hintText: 'Search', leading: Icon(Icons.star)),
+      const FortalTextField.soft(hintText: 'Search', leading: Icon(Icons.star)),
+      const FortalTextArea(hintText: 'Notes', leading: Icon(Icons.star)),
     ]) {
       await tester.pumpRemixApp(
         FortalTheme(scaling: .percent110, child: widget),

@@ -34,6 +34,7 @@ class ComboboxExample extends StatelessWidget {
         fieldBuilder:
             (context, state, controller, focusNode, onFieldSubmitted) {
               return NakedTextField(
+                semanticLabel: 'Fruit',
                 controller: controller,
                 focusNode: focusNode,
                 onSubmitted: (_) => onFieldSubmitted(),

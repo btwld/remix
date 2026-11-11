@@ -5,10 +5,9 @@ migration, and independent registry releases.
 
 `remix_cli` installs editable component source into a Flutter application.
 Choose a preset offered by your pinned registry. The official catalog serves
-`vanilla` and `fortal`; the beta.14 catalog adds the HeroUI-inspired `heroui`
-preset after its registry promotion. Remix remains the behavior dependency; the
-application owns its tokens, theme values, component recipes, and generated
-adapters.
+`vanilla`, `fortal`, and the HeroUI-inspired `heroui`. Remix remains the
+behavior dependency; the application owns its tokens, theme values, component
+recipes, and generated adapters.
 
 The Vanilla and Fortal catalogs include an opt-in `icons` seam and cover the
 core Remix component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button`, `callout`, `card`,
@@ -16,10 +15,12 @@ core Remix component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
 `segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
 `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`, `toggle`,
-`toggle_group`, and `tooltip`, each with a `theme` dependency. The Fortal
+`toggle_group`, and `tooltip`, each with a `theme` dependency. Vanilla also
+ships `combobox`, with `theme` and `textfield` dependencies. The Fortal
 preset also includes `base_button`, `code`, `heading`, `kbd`, `text`, and
-`typography`. The `data_table` item uses `checkbox`, `icon_button`, and
-`select` for its controls; `toast` uses `button` and `icon_button` for its
+`typography`. Vanilla also provides `range_slider`, which installs
+`slider` and generates a two-bound `<Prefix>RangeSlider`. The `data_table` item
+uses `checkbox`, `icon_button`, and `select` for its controls; `toast` uses `button` and `icon_button` for its
 action and close control. The default `sidebar` item uses the application's
 `toggle` recipe for destinations. `sidebar_layout` is a plain shell layout
 with no `Spec` or generated adapter: it composes an installed `sidebar` into
@@ -52,24 +53,30 @@ Each surface has an opt-in `<component>_recipe` item that installs a complete,
 preset-specific styler bundle under `lib/ui/recipes/`; bare components remain
 unstyled and backward compatible.
 
-## Install project-locally
+## Install
 
-The CLI requires Flutter 3.44 or later (Dart 3.12). With an older SDK, adding
-the dependency fails during version solving.
+The CLI requires Flutter 3.44 or later (Dart 3.12). With an older SDK,
+activation fails during version solving.
 
-A project-local development dependency is preferred because the app's lockfile
-pins the CLI version; `remix.yaml` separately pins registry content:
+Install the CLI once globally; `remix.yaml` separately pins registry content:
 
 ```shell
-flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
-dart run remix_cli:remix init --prefix Acme --preset fortal
-dart run remix_cli:remix add button
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix init --prefix Acme --preset fortal
+remix add button
 ```
 
-Select the prerelease explicitly: the beta.14 registry's icon table requires
-CLI `1.0.0-beta.1` or later. An unversioned install can select stable `0.1.0`,
-which supports older schema 1 icon tables. Existing projects should update
-their CLI dependency before advancing to the new registry pin.
+Add Pub's `bin` directory to `PATH` if needed; Pub prints the instructions.
+
+Select the prerelease explicitly. An unversioned install can select stable
+`0.1.0`, which reads only schema 1 icon tables and fails on the official
+registry's schema 2 `icons.yaml`. A project that moves from `0.1.0` to this
+version also has no ownership record, so its first `add` needs the
+[legacy ownership migration](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record).
+
+For teams that want the CLI pinned in the app's lockfile, use
+`flutter pub add dev:remix_cli:^1.0.0-beta.1` instead. Prefix each command with
+`dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 
 To run an unreleased build, point at a checkout or staged package path:
 
@@ -78,16 +85,7 @@ dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
 The pinned catalog declares its required Remix version, which `add` records
-for you. Existing beta.13 catalog pins remain usable; the beta.14 catalog
-requires Remix `^1.0.0-beta.14`. Updating the CLI alone does not advance a
-project's catalog pin.
-
-Global activation is convenient for experiments. Registry content remains
-pinned per project in `remix.yaml`:
-
-```shell
-dart pub global activate remix_cli '^1.0.0-beta.1'
-```
+for you. Updating the CLI alone does not advance a project's catalog pin.
 
 `remix_cli` is versioned independently of `remix`, so its version does not
 match Remix's. Its registry is authored against one `remix`
@@ -127,7 +125,7 @@ To test local CLI edits, use a project-local path dependency instead.
 Run from a Flutter package root:
 
 ```shell
-dart run remix_cli:remix init
+remix init
 ```
 
 The default configuration is:
@@ -150,7 +148,7 @@ registries:
 Customize it only at initialization:
 
 ```shell
-dart run remix_cli:remix init --prefix Acme --preset fortal --ui-path lib/design_system
+remix init --prefix Acme --preset fortal --ui-path lib/design_system
 ```
 
 `init` validates the Flutter project, writes `remix.yaml`, and creates a barrel
@@ -204,16 +202,35 @@ theme files, not a complete app host or appearance picker. See the
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.
 
+## List the items you can add
+
+```shell
+remix list
+```
+
+`list` prints every item the pinned registries offer for the project's preset,
+grouped by the directory it installs to, with the items each one needs. Names
+print the way `add` accepts them: bare for the default registry, qualified
+(`@acme/card`) for every other registry in `remix.yaml`. `list` reads the
+pinned catalogs and changes nothing.
+
+For scripts and agents, `--json` prints one JSON document on stdout with
+qualified ids, `registryDependencies`, and the files each item installs:
+
+```shell
+remix list --json
+```
+
 ## Add a component
 
 ```shell
-dart run remix_cli:remix add button
+remix add button
 ```
 
 Several items can be named in one command:
 
 ```shell
-dart run remix_cli:remix add button card dialog
+remix add button card dialog
 ```
 
 A batch installs as one unit. The items and everything they depend on are
@@ -269,7 +286,7 @@ dependencies change.
 ### Add a dashboard shell
 
 ```shell
-dart run remix_cli:remix add dashboard_shell
+remix add dashboard_shell
 ```
 
 This installs the preset's sidebar, responsive sidebar layout, app bar, icon button,
@@ -293,9 +310,9 @@ Initialize the Vanilla or Fortal preset (HeroUI ships no dashboard), then use
 the same item and public dashboard API:
 
 ```shell
-dart run remix_cli:remix init --prefix Ui --preset vanilla
+remix init --prefix Ui --preset vanilla
 # Or initialize a separate app with: --preset fortal
-dart run remix_cli:remix add dashboard_demo
+remix add dashboard_demo
 ```
 
 `dashboard_demo` installs `UiDashboardDemo`, `UiDashboardOverview`, the
@@ -317,14 +334,14 @@ dashboard_demo` preserves local edits. Inspect a newer template with `--diff`, a
 use `--overwrite` only when deliberately replacing the installed recipe.
 
 Contributors can reproduce the isolated dashboard consumer gates for Vanilla
-and Fortal:
+and Fortal. Add `--keep` to keep the generated app; its path is printed.
 
 ```shell
 dart run tool/check_open_code.dart --preset vanilla --source checkout --item dashboard_demo --keep
 dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo --keep
 ```
 
-`dart run remix_cli:remix add icons` is the deliberate exception. It adds
+`remix add icons` is the deliberate exception. It adds
 `lib/ui/icons.dart`, declares the selected icon package and any per-icon
 fallback packages, and exposes a small, application-owned `UiIcons` alias set
 with no generated adapter. The
@@ -332,6 +349,12 @@ default Remix selection uses `remix_ui_icons`, plus `lucide_flutter` for the
 schema 2 official table's fallbacks. Add or rename
 aliases there as your interface evolves. Every Remix icon remains one direct
 `package:remix_ui_icons/remix_ui_icons.dart` import away.
+
+Vanilla additionally ships `calendar`, `range_calendar`, `date_picker` and
+`date_range_picker`. They are hand-written composites with no generated part:
+the calendars wire IconButton and Select recipes; the pickers add outline
+Button and elevated Popover recipes around the matching calendar. Each child
+styler override merges last. Calendar selectors grow with text scaling.
 
 Most Vanilla component items generate one widget. Four generate several:
 `checkbox` also generates
@@ -342,7 +365,7 @@ Most Vanilla component items generate one widget. Four generate several:
 ### Add application-owned charts
 
 ```shell
-dart run remix_cli:remix add chart
+remix add chart
 ```
 
 This installs one editable `components/chart.dart` recipe and adds
@@ -400,20 +423,30 @@ committed, but not edited by hand.
 Preview a new install without changing the project or running package tools:
 
 ```shell
-dart run remix_cli:remix add button --dry-run
+remix add button --dry-run
 ```
 
 Compare the requested item with the pinned registry source using Git's no-index diff:
 
 ```shell
-dart run remix_cli:remix add button --diff
+remix add button --diff
 ```
+
+`--diff` exits `0` whether or not it finds differences. To fail a CI step when
+installed source drifts from the pin, add `--exit-code`:
+
+```shell
+remix add button --diff --exit-code
+```
+
+The command then exits `2` when authored source differs, and `1` still means a
+failure.
 
 After reviewing the difference, replace only the requested item's authored
 files:
 
 ```shell
-dart run remix_cli:remix add button --overwrite
+remix add button --overwrite
 ```
 
 Overwriting Button preserves locally edited Theme files. With several items
@@ -437,12 +470,52 @@ CLI names the package and the section to move it to rather than editing your
 If generation or analysis fails after installation, the authored source stays
 in place for inspection. Fix the reported issue and rerun the same command.
 
+## Install agent skills
+
+Remix publishes two agent skills: `using-remix` for app UI and
+`building-remix-design-system` for registry authors. Copy them into your
+project from the commit your project is pinned to:
+
+```shell
+remix skills install
+```
+
+The command reads the `@remix` revision in `remix.yaml` and writes:
+
+- `.agents/skills/<skill>/`: the skill files from that commit.
+- `AGENTS.md`: one `remix_cli:skills` block that tells an agent when to read
+  each skill. Text outside the block is not changed.
+- `remix.skills.json`: the revision and a digest of each file.
+
+Commit all three. Run the command again after `remix registry update @remix`.
+
+Claude Code loads project skills from `.claude/skills`. Name the directory
+once; later runs remember it:
+
+```shell
+remix skills install --dir .claude/skills
+```
+
+To keep the block in `CLAUDE.md` or another instruction file, move the block
+there. The next run updates it in place.
+
+The command owns the files it vendors. If one was changed, the next run stops
+and names it. Restore or delete the file, then run the command again.
+
 ## Exit codes
 
 - `0`: success, including help, version, dry-run, diff, and no-op reruns
 - `64`: invalid command or command-line arguments
 - `1`: project/configuration, registry, dependency, process, generation,
   analysis, or filesystem failure
+- `2`: `--diff --exit-code` found authored-source differences
+
+Errors print as plain messages on stderr. An unexpected internal error prints a
+bug report with the `remix_cli` version and a stack trace instead. `add` prints
+one progress line on stderr before each slow phase, and `list` prints
+`Fetching registry items...` the same way, so stdout keeps only the plan, the
+diff, the listing, and the result. A successful run can still write to stderr,
+so check the exit code, not whether stderr is empty.
 
 ## Manual updates
 
@@ -467,7 +540,7 @@ complete [legacy ownership adoption](../../open_code/REGISTRIES.md#existing-sour
 for every existing item and dependency. Commit `remix.ownership.json` with the
 configuration and source, then update the theme:
 
-1. run `remix add theme --overwrite` (or `dart run remix_cli:remix add theme --overwrite`)
+1. run `remix add theme --overwrite`
    to update `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`;
 2. update installed components to use `<Prefix>Tokens` instead of `scale.dart`
    by re-adding them with `--overwrite` (for example, `remix add <component> --overwrite`)

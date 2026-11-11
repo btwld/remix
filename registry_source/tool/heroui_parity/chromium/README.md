@@ -29,8 +29,10 @@ writes one raw file to `reference/heroui_3_2_6/chromium/`.
 | `capture_selection.mjs` | `selection.*` | `selection.json` | Checkbox, Radio, Switch and their groups |
 | `capture_toggles.mjs` | `toggles.*` | `toggles.json` | ToggleButton, ToggleButtonGroup |
 | `capture_editors.mjs` | `editors.*` | `editors.json` | InputGroup, TextArea, SearchField |
+| `capture_range_slider.mjs` | `range_slider.*` | `range_slider.json` | Slider two-thumb range, both modes and widths, per-thumb hover/drag/focus, disabled and RTL at 200% |
 | `capture_families2.mjs` | `families2.*` | `families2.json` | Tooltip, Modal, Accordion, Disclosure, Slider, Toast, Alert, ProgressBar, Meter, Table |
 | `capture_tabs.mjs`, `capture_select.mjs`, `capture_menu.mjs`, `capture_dropdown.mjs` | `tabs.*`, `select.*`, `menu.*`, `dropdown.*` | `*_visual.json` | Tabs, Select, Menu, Dropdown: slots per state, mode, and width |
+| `capture_combobox.mjs` | `combobox.*` | `combobox_visual.json` | Editable ComboBox: both variants, modes and viewport sides, rest, keyboard, hover, press and disabled |
 | `capture_breadcrumbs.mjs` | `breadcrumbs.*` | `breadcrumbs_visual.json` | Breadcrumbs item rects and list gap, at rest and with keyboard focus |
 
 The matrix captures (`generate`, `foundation`, `selection`, `toggles`,
@@ -69,3 +71,24 @@ equals the matching ProgressBar case.
 `open_code/heroui_fixture/capture.mjs` captures the installed gallery for a
 side-by-side review; see that fixture's README. Upstream screenshots from the
 scripts here go to `out/`, which is not committed.
+
+For a range-only evidence refresh, run `node capture_range_slider.mjs`, then
+`dart run tool/heroui_parity/slim_measurements.dart --range-slider` from
+`registry_source`. This merges the isolated range matrix into the committed
+measurements without requiring the other ignored raw browser captures.
+The range fixture loads the repository's real Geist TTFs and records this
+font override and its browser environment separately from the older matrices.
+
+The range screenshots default to `out/range_slider/`. Set
+`SLIDER_CAPTURE_DIR` to write them into a review artifact directory.
+
+## Calendar family
+
+Run `node fetch_calendar_sources.mjs` to fetch the pinned tarballs and verify
+their SHA-512 integrity before refreshing calendar source files and hashes.
+Run `node capture_calendar.mjs`, then from `registry_source` run
+`dart run tool/heroui_parity/slim_measurements.dart --calendar` to merge only
+this evidence. `CALENDAR_CAPTURE_DIR` selects the upstream PNG directory.
+The fixture uses real Geist and covers Calendar, RangeCalendar, DatePicker and
+DateRangePicker in both modes, 375/1024 widths, pointer/focus/disabled states,
+and LTR/RTL at 200%. Picker DateFields are actual upstream segments.

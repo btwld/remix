@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "context": {
+    "prefix": "Playground",
+    "preset": "vanilla",
+    "uiPath": "lib/ui"
+  },
+  "targets": {
+    "lib/ui/components/button.dart": "btwld/remix/registry#vanilla/button",
+    "lib/ui/components/button.g.dart": "btwld/remix/registry#vanilla/button",
+    "lib/ui/components/calendar.dart": "btwld/remix/registry#vanilla/calendar",
+    "lib/ui/components/combobox.dart": "btwld/remix/registry#vanilla/combobox",
+    "lib/ui/components/combobox.g.dart": "btwld/remix/registry#vanilla/combobox",
+    "lib/ui/components/date_picker.dart": "btwld/remix/registry#vanilla/date_picker",
+    "lib/ui/components/date_range_picker.dart": "btwld/remix/registry#vanilla/date_range_picker",
+    "lib/ui/components/icon_button.dart": "btwld/remix/registry#vanilla/icon_button",
+    "lib/ui/components/icon_button.g.dart": "btwld/remix/registry#vanilla/icon_button",
+    "lib/ui/components/popover.dart": "btwld/remix/registry#vanilla/popover",
+    "lib/ui/components/popover.g.dart": "btwld/remix/registry#vanilla/popover",
+    "lib/ui/components/range_calendar.dart": "btwld/remix/registry#vanilla/range_calendar",
+    "lib/ui/components/range_slider.dart": "btwld/remix/registry#vanilla/range_slider",
+    "lib/ui/components/range_slider.g.dart": "btwld/remix/registry#vanilla/range_slider",
+    "lib/ui/components/select.dart": "btwld/remix/registry#vanilla/select",
+    "lib/ui/components/select.g.dart": "btwld/remix/registry#vanilla/select",
+    "lib/ui/components/slider.dart": "btwld/remix/registry#vanilla/slider",
+    "lib/ui/components/slider.g.dart": "btwld/remix/registry#vanilla/slider",
+    "lib/ui/components/textfield.dart": "btwld/remix/registry#vanilla/textfield",
+    "lib/ui/components/textfield.g.dart": "btwld/remix/registry#vanilla/textfield",
+    "lib/ui/theme/effects.dart": "btwld/remix/registry#vanilla/theme",
+    "lib/ui/theme/theme_data.dart": "btwld/remix/registry#vanilla/theme",
+    "lib/ui/theme/theme_scope.dart": "btwld/remix/registry#vanilla/theme",
+    "lib/ui/theme/tokens.dart": "btwld/remix/registry#vanilla/theme"
+  }
+}

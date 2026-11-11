@@ -93,6 +93,16 @@ families carry over.
   destructive }`; `<Prefix>ButtonSize { small, medium, large }` (32/36/40px).
   Every size sets its label in `textSm`. There is no pressed step: a press
   lands on the hover fill.
+- **Combobox** — install with `remix add combobox`. `<Prefix>Combobox<T>`
+  uses the TextField recipe for the editor and a Select-like rounded, elevated
+  popover panel, offset 8px, bounded at 320px high with a 128px width floor.
+  Suggestions use `controlSm` and `textSm`; keyboard highlight uses `accent`,
+  hover a lighter accent tint, and press a stronger primary tint. The editor fades when disabled.
+  Pass `optionsBuilder` and optionally `onSelected`; arbitrary text stays valid.
+  Custom field builders own their recipe, while custom option content inherits
+  the row's text style. Override nested `field`, `panel` and `option` through
+  `style`, with matching state fragments for state overrides. See
+  [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 - **Toggle** — on is `accent` with `accentForeground`; a ghost toggle hovers
   onto `muted` with `mutedForeground`. There is no selected border.
 - **Radio and Switch** — pass `label` for visible text. It is part of the
@@ -100,6 +110,21 @@ families carry over.
   as a form label: `textSm` at medium weight in `foreground`, 12px from a
   radio's circle and 8px from a switch's track. The focus ring wraps the circle
   or track only. Without a `label`, give a `semanticLabel`.
+- **Slider and RangeSlider** — install `slider` for `<Prefix>Slider`, or
+  `range_slider` for `<Prefix>RangeSlider` (which installs `slider` too).
+  Both recipes reserve a 48px interaction height. The single slider previously
+  occupied 22px; existing layouts must allow the additional 26px when updating
+  the installed recipe. The extra height accepts pointer input too.
+  Both use pill-shaped rails (`mutedForeground` in light, `ring` in dark), a
+  primary interval and white outlined thumbs. Hover draws a subtle opaque 2px
+  halo; press uses a stronger 6px halo. Keyboard focus draws a contiguous 3px
+  `primary` ring around the thumb, raised locally rather than through the
+  shared focus helper. Disabled fades the whole control. The range widget
+  takes two ordered, parent-owned `values`, `minSpacing`, `snapDivisions`, and
+  lower/upper `semanticLabels` and `focusNodes`. The generated adapters omit
+  Naked UI's semantic formatter typedefs; for custom announcements, use
+  `RemixRangeSlider` with `<prefix>RangeSliderStyle()`. See the
+  [Slider examples](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
 - **Tabs** — compose `RemixTabs` (the behavioral root) with `<Prefix>TabBar`,
   `<Prefix>Tab`, and `<Prefix>TabView`. `<Prefix>TabsVariant { filled, line }`:
   `filled` (the default) is a recessed pill list, `line` an underline.
@@ -118,6 +143,25 @@ families carry over.
   `FocusNode` as the popover's `triggerFocusNode` and the button's `focusNode`.
   Keep the controller and node in a `State` and dispose the node there. The
   button is then the only tab stop and gets focus back when the popover closes.
+- **Calendar / RangeCalendar** — install `calendar` or `range_calendar`.
+  `<Prefix>Calendar` and `<Prefix>RangeCalendar` are hand-written composites:
+  CalendarSpec has no generator target. They wire Vanilla icon navigation and
+  Select selectors, whose heights grow with text. Day targets are 48px; resting
+  days are transparent, unavailable dates strike through, disabled dates fade,
+  and keyboard focus paints an inset ring without reflow. The range uses solid
+  `primary` committed caps and `primary`-tinted interiors; an outlined tinted
+  draft de-emphasizes the old committed selection. Override `style`,
+  `navigationStyle` and `selectorStyle` last. See
+  [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx)
+  and [Range Calendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx).
+- **DatePicker / DateRangePicker** — install `date_picker` or
+  `date_range_picker`. These hand-written composites wire the outline Button,
+  elevated Popover and matching calendar recipes with a 4px panel offset.
+  They retain Remix's constructor parameters and five child-styler overrides;
+  no separate picker styler or generated part. Use `formatDate`/`formatRange`
+  for compact visible trigger text and caller-owned labels for localization.
+  See [Date Picker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)
+  and [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).
 - **Toast** — style lives on the scope:
   `RemixToastScope(style: uiToastStyle(), child: ...)`. A per-toast
   `RemixToastData.style` (for example `uiToastStyle(variant: .destructive)`)

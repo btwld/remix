@@ -46,7 +46,6 @@ void main() {
                       ).build(context).spec.trigger.spec.containerEffects,
                     fortalCheckboxStyle().build(context).spec.containerEffects,
                     fortalSwitchStyle().build(context).spec.trackEffects,
-                    fortalSliderStyle().build(context).spec.thumbFocusEffects,
                     fortalTextFieldStyle().build(context).spec.containerEffects,
                     fortalTextAreaStyle().build(context).spec.containerEffects,
                     fortalCardStyle().build(context).spec.containerEffects,
@@ -89,6 +88,15 @@ void main() {
                       .build(context)
                       .spec
                       .thumbFocusEffects!;
+                  expect(
+                    slider.outline.width,
+                    FortalTokens.focusRingWidth.resolve(context),
+                  );
+                  expect(slider.outlineOffset, 0);
+                  expect(
+                    slider.outline.color,
+                    FortalTokens.accent11.resolve(context),
+                  );
                   expect(slider.behindContent?.shadows ?? [], isEmpty);
                   expect(slider.overContent?.shadows ?? [], isEmpty);
                   return const SizedBox.shrink();

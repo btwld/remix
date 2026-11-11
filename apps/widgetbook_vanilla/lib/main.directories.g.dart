@@ -21,6 +21,8 @@ import 'package:widgetbook_vanilla/components/badge.dart'
     as _widgetbook_vanilla_components_badge;
 import 'package:widgetbook_vanilla/components/button.dart'
     as _widgetbook_vanilla_components_button;
+import 'package:widgetbook_vanilla/components/calendar.dart'
+    as _widgetbook_vanilla_components_calendar;
 import 'package:widgetbook_vanilla/components/callout.dart'
     as _widgetbook_vanilla_components_callout;
 import 'package:widgetbook_vanilla/components/card.dart'
@@ -31,10 +33,16 @@ import 'package:widgetbook_vanilla/components/checkbox.dart'
     as _widgetbook_vanilla_components_checkbox;
 import 'package:widgetbook_vanilla/components/checkbox_group.dart'
     as _widgetbook_vanilla_components_checkbox_group;
+import 'package:widgetbook_vanilla/components/combobox.dart'
+    as _widgetbook_vanilla_components_combobox;
 import 'package:widgetbook_vanilla/components/data_list.dart'
     as _widgetbook_vanilla_components_data_list;
 import 'package:widgetbook_vanilla/components/data_table.dart'
     as _widgetbook_vanilla_components_data_table;
+import 'package:widgetbook_vanilla/components/date_picker.dart'
+    as _widgetbook_vanilla_components_date_picker;
+import 'package:widgetbook_vanilla/components/date_range_picker.dart'
+    as _widgetbook_vanilla_components_date_range_picker;
 import 'package:widgetbook_vanilla/components/dialog.dart'
     as _widgetbook_vanilla_components_dialog;
 import 'package:widgetbook_vanilla/components/disclosure.dart'
@@ -53,6 +61,10 @@ import 'package:widgetbook_vanilla/components/progress.dart'
     as _widgetbook_vanilla_components_progress;
 import 'package:widgetbook_vanilla/components/radio.dart'
     as _widgetbook_vanilla_components_radio;
+import 'package:widgetbook_vanilla/components/range_calendar.dart'
+    as _widgetbook_vanilla_components_range_calendar;
+import 'package:widgetbook_vanilla/components/range_slider.dart'
+    as _widgetbook_vanilla_components_range_slider;
 import 'package:widgetbook_vanilla/components/segmented_control.dart'
     as _widgetbook_vanilla_components_segmented_control;
 import 'package:widgetbook_vanilla/components/select.dart'
@@ -139,6 +151,16 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'VanillaCalendar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Appointment date',
+            builder: _widgetbook_vanilla_components_calendar
+                .buildVanillaCalendarUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'VanillaCallout',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -179,6 +201,16 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'VanillaCombobox<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Combobox',
+            builder: _widgetbook_vanilla_components_combobox
+                .buildVanillaComboboxUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'VanillaDataList',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -195,6 +227,46 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'DataTable',
             builder: _widgetbook_vanilla_components_data_table
                 .buildVanillaDataTableUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaDatePicker',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Appointment date',
+            builder: _widgetbook_vanilla_components_date_picker
+                .buildVanillaDatePickerUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Bottom edge',
+            builder: _widgetbook_vanilla_components_date_picker
+                .buildVanillaDatePickerBottomEdge,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Left edge',
+            builder: _widgetbook_vanilla_components_date_picker
+                .buildVanillaDatePickerLeftEdge,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Right edge',
+            builder: _widgetbook_vanilla_components_date_picker
+                .buildVanillaDatePickerRightEdge,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaDateRangePicker',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Long range at 240px',
+            builder: _widgetbook_vanilla_components_date_range_picker
+                .buildVanillaDateRangePickerLongValue,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Reporting period',
+            builder: _widgetbook_vanilla_components_date_range_picker
+                .buildVanillaDateRangePickerUseCase,
           ),
         ],
       ),
@@ -295,6 +367,36 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Radio',
             builder:
                 _widgetbook_vanilla_components_radio.buildVanillaRadioUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaRangeCalendar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Reporting period',
+            builder: _widgetbook_vanilla_components_range_calendar
+                .buildVanillaRangeCalendarUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaRangeSlider',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Disabled',
+            builder: _widgetbook_vanilla_components_range_slider
+                .buildVanillaRangeSliderDisabledUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Interval',
+            builder: _widgetbook_vanilla_components_range_slider
+                .buildVanillaRangeSliderUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'RTL · 200% text',
+            builder: _widgetbook_vanilla_components_range_slider
+                .buildVanillaRangeSliderRtlUseCase,
           ),
         ],
       ),

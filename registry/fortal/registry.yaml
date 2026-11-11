@@ -3,7 +3,7 @@ schema: 2
 items:
   theme:
     dependencies:
-      remix: ^1.0.0-beta.16
+      remix: ^1.0.0-rc.1
     files:
       - source: templates/theme/computed.dart.tmpl
         target: "@ui/theme/computed.dart"
@@ -150,6 +150,17 @@ items:
     exports:
       - components/button.dart
 
+  calendar:
+    registryDependencies:
+      - theme
+      - icon_button
+      - select
+    files:
+      - source: templates/calendar/calendar.dart.tmpl
+        target: "@ui/components/calendar.dart"
+    exports:
+      - components/calendar.dart
+
   callout:
     registryDependencies:
       - theme
@@ -224,6 +235,23 @@ items:
         target: "@ui/components/code.dart"
     exports:
       - components/code.dart
+
+  combobox:
+    registryDependencies:
+      - theme
+      - textfield
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/combobox/combobox.dart.tmpl
+        target: "@ui/components/combobox.dart"
+    generated:
+      - "@ui/components/combobox.g.dart"
+    exports:
+      - components/combobox.dart
 
   composer_recipe:
     registryDependencies:
@@ -373,6 +401,31 @@ items:
       - "@ui/components/data_table.g.dart"
     exports:
       - components/data_table.dart
+
+  date_picker:
+    registryDependencies:
+      - theme
+      - button
+      - calendar
+      - popover
+    files:
+      - source: templates/date_picker/date_picker.dart.tmpl
+        target: "@ui/components/date_picker.dart"
+    exports:
+      - components/date_picker.dart
+
+  date_range_picker:
+    registryDependencies:
+      - theme
+      - button
+      - calendar
+      - popover
+      - range_calendar
+    files:
+      - source: templates/date_range_picker/date_range_picker.dart.tmpl
+        target: "@ui/components/date_range_picker.dart"
+    exports:
+      - components/date_range_picker.dart
 
   dialog:
     registryDependencies:
@@ -582,6 +635,32 @@ items:
       - "@ui/components/radio.g.dart"
     exports:
       - components/radio.dart
+
+  range_calendar:
+    registryDependencies:
+      - theme
+      - calendar
+    files:
+      - source: templates/range_calendar/range_calendar.dart.tmpl
+        target: "@ui/components/range_calendar.dart"
+    exports:
+      - components/range_calendar.dart
+
+  range_slider:
+    registryDependencies:
+      - slider
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/range_slider/range_slider.dart.tmpl
+        target: "@ui/components/range_slider.dart"
+    generated:
+      - "@ui/components/range_slider.g.dart"
+    exports:
+      - components/range_slider.dart
 
   segmented_control:
     registryDependencies:

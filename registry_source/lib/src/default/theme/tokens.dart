@@ -327,6 +327,9 @@ abstract final class VanillaTokens {
   /// The narrowest a floating list gets, so a one-word menu is still a target.
   static const double panelMinWidth = 128;
 
+  /// Shared height bound for Select and Combobox suggestion panels.
+  static const double panelMaxHeight = 320;
+
   /// A popover's width.
   static const double popoverWidth = 288;
 

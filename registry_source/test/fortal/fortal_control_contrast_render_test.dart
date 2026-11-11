@@ -38,6 +38,79 @@ void main() {
     'fortalError': fortalError,
   };
 
+  testWidgets(
+    'calendar and range cap label pixels retain 4.5:1 across palettes and modes',
+    (tester) async {
+      for (final dark in [false, true]) {
+        for (final palette in palettes.values) {
+          final probes = [
+            _Probe(
+              'calendar',
+              FortalCalendar(
+                value: DateTime(2026, 11, 12),
+                firstDate: DateTime(2026),
+                lastDate: DateTime(2027),
+                onChanged: (_) {},
+              ),
+              (_, _) => null,
+              width: 400,
+              height: 440,
+            ),
+            _Probe(
+              'range',
+              FortalRangeCalendar(
+                value: CivilDateRange(
+                  start: DateTime(2026, 11, 10),
+                  end: DateTime(2026, 11, 12),
+                ),
+                firstDate: DateTime(2026),
+                lastDate: DateTime(2027),
+                onChanged: (_) {},
+              ),
+              (_, _) => null,
+              width: 400,
+              height: 440,
+            ),
+          ];
+          final image = await _render(
+            tester,
+            palette: palette,
+            dark: dark,
+            surface: _Surface.page,
+            probes: probes,
+          );
+          final boundary = tester.renderObject<RenderBox>(
+            find.byKey(_boundaryKey),
+          );
+          for (final probe in probes) {
+            final day = find
+                .ancestor(
+                  of: find.descendant(
+                    of: find.byKey(probe.key),
+                    matching: find.text('12'),
+                  ),
+                  matching: find.byType(StyleSpecProvider<CalendarDaySpec>),
+                )
+                .first;
+            final box = tester.renderObject<RenderBox>(day);
+            final rect =
+                box.localToGlobal(Offset.zero, ancestor: boundary) & box.size;
+            final fill = image.pixel(rect.left + 4, rect.center.dy);
+            final ink = image.mostContrasting(
+              Rect.fromCenter(center: rect.center, width: 28, height: 12),
+              fill,
+            );
+            expect(
+              contrastRatio(ink, fill),
+              greaterThanOrEqualTo(4.5),
+              reason: '${probe.id} ${dark ? "dark" : "light"}',
+            );
+          }
+        }
+      }
+    },
+  );
+
   for (final dark in [false, true]) {
     for (final surface in _Surface.values) {
       final mode = dark ? 'dark' : 'light';
@@ -281,6 +354,29 @@ List<_Probe> _probes() {
         _sliderThumb,
         width: 144,
       ),
+    for (final variant in FortalSliderVariant.values)
+      for (final index in [0, 1])
+        _Probe(
+          'range-slider.${variant.name}.$index',
+          SizedBox(
+            width: 120,
+            child: FortalRangeSlider(
+              values: const [.25, .75],
+              variant: variant,
+              onChanged: _changed,
+            ),
+          ),
+          (image, rects) => _sliderThumb(image, (
+            cell: Rect.fromLTRB(
+              index == 0 ? rects.cell.left : rects.cell.center.dx,
+              rects.cell.top,
+              index == 0 ? rects.cell.center.dx : rects.cell.right,
+              rects.cell.bottom,
+            ),
+            child: rects.child,
+          )),
+          width: 144,
+        ),
     // A bare progress bar has no visible value text: the track's extent shows
     // the total and the filled extent shows the value, at 0, part and full.
     for (final variant in FortalProgressVariant.values)
