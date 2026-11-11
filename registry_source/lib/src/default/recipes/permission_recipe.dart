@@ -39,7 +39,12 @@ VanillaAgentPermissionRecipe vanillaAgentPermissionRecipe({
 }) => VanillaAgentPermissionRecipe(
   style: AgentPermissionStyler(
     header: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
-    actions: FlexBoxStyler().spacing(8).padding(.top(12)),
+    // Decisions sit at the trailing edge with the primary last, like Vanilla
+    // dialog actions.
+    actions: FlexBoxStyler()
+        .mainAxisAlignment(.end)
+        .spacing(8)
+        .padding(.top(12)),
     title: TextStyler()
         .color(VanillaTokens.foreground())
         .fontWeight(FontWeight.w600),
