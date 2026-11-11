@@ -16,12 +16,7 @@ scales, and the approved pairings. `tool/fortal_palettes/radix/extract.mjs` impo
 the package's structured exports. Geometry, components, behavior and contrast
 requirements remain Fortal's; this is a color-data adoption, not a Radix widget port.
 The [architecture decision](../../../ARCHITECTURE.md#fortal-owns-its-visual-contract-fortal-adr-0003)
-records this update. Remix Icons remain the icon source. Fortal sets no font
-family: text uses the application's face, and the polish-board goldens load
-Geist only for reproducible captures. `FortalCode` names the system monospace
-stack (Menlo, Consolas, Bitstream Vera Sans Mono, `monospace`), which Flutter
-cannot load on the web or where those faces are absent; there it falls back to
-the default face.
+records this update. Remix Icons remain the icon source.
 
 ## Paired themes
 
@@ -152,6 +147,9 @@ fill must identify the control. Check the actual component on its host surface.
   typography, and bounded agent viewports) remain named tokens or proportions.
 - Type: **12, 14, 16, 18, 20, 24, 28, 36, 60px**. Accordion and disclosure
   size 2 use `text2`, not an intermediate 15px style. Text8 has a 40px line box.
+  Fortal sets no font family; the application supplies it, as the
+  [registry contract](../../open_code/REGISTRIES.md#preset-and-generation-contract)
+  states.
 - Radius: `none`, `small`, `medium` (default), `large`, `full`; scaling:
   90, 95, 100 (default), 105, 110 percent. `highContrast` remains available.
 - Compact painted controls retain their sizes, inside a **40px minimum hit
