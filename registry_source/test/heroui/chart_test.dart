@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
@@ -235,6 +236,92 @@ void main() {
       expect(find.byType(LineChart), findsOneWidget);
       expect(find.byType(BarChart), findsOneWidget);
       expect(find.byType(PieChart), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('chart value formatters reach semantics', (tester) async {
+    final semantics = tester.ensureSemantics();
+    String format(double value) => 'USD ${value.round()}';
+    await tester.pumpHeroUi(
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 360,
+            height: 180,
+            child: HeroUiLineChart(
+              semanticsLabel: 'Line revenue',
+              valueFormatter: format,
+              series: [_lineSeries()],
+            ),
+          ),
+          SizedBox(
+            width: 360,
+            height: 180,
+            child: HeroUiBarChart(
+              semanticsLabel: 'Bar orders',
+              valueFormatter: format,
+              groups: [_barGroup()],
+            ),
+          ),
+        ],
+      ),
+    );
+    await tester.pump();
+
+    for (final (label, value) in [
+      ('Line revenue', 'USD 18'),
+      ('Bar orders', 'USD 42'),
+    ]) {
+      expect(
+        tester
+            .getSemantics(find.bySemanticsLabel(label))
+            .getSemanticsData()
+            .value,
+        contains(value),
+      );
+    }
+    expect(tester.takeException(), isNull);
+    semantics.dispose();
+  });
+
+  for (final isBar in [false, true]) {
+    testWidgets('${isBar ? 'bar' : 'line'} value ticks fit long labels', (
+      tester,
+    ) async {
+      final axis = ChartAxis.numeric(
+        min: 1050,
+        max: 1300,
+        interval: 50,
+        labelFormatter: (value) => 'USD ${value.toStringAsFixed(2)}',
+      );
+      await tester.pumpHeroUi(
+        SizedBox(
+          width: 360,
+          height: 200,
+          child: isBar
+              ? HeroUiBarChart(yAxis: axis, groups: [_barGroup()])
+              : HeroUiLineChart(yAxis: axis, series: [_lineSeries()]),
+        ),
+      );
+      await tester.pump();
+
+      final ticks = tester
+          .renderObjectList<RenderParagraph>(find.byType(RichText))
+          .where((tick) => tick.text.toPlainText().startsWith('USD '))
+          .toList();
+      expect(ticks, isNotEmpty);
+      for (final tick in ticks) {
+        // Each tick lays out on one line, as wide as its text.
+        expect(
+          tick.size.width,
+          greaterThanOrEqualTo(
+            tick.getMaxIntrinsicWidth(double.infinity) - 0.5,
+          ),
+          reason: '"${tick.text.toPlainText()}" was clipped',
+        );
+      }
       expect(tester.takeException(), isNull);
     });
   }

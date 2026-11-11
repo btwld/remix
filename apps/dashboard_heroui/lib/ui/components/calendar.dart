@@ -78,7 +78,10 @@ CalendarStyler uiCalendarStyle({
     .weekdaySpacing(12.0)
     .rowSpacing(4.0)
     .selectorSpacing(4.0)
-    .weekday(.style(UiTokens.textXs.mix()).color(UiTokens.muted()))
+    // `.calendar__header-cell`: `text-xs font-medium text-muted`.
+    .weekday(
+      .style(UiTokens.textXs.mix()).fontWeight(.w500).color(UiTokens.muted()),
+    )
     .day(
       CalendarDayStyler()
           .minWidth(36.0)

@@ -7,6 +7,9 @@ import '../theme/theme.dart';
 enum UiSurfaceVariant { transparent, defaultSurface, secondary, tertiary }
 
 /// HeroUI's `Surface`: a filled box that sets the text colour for its content.
+///
+/// `text-surface-*-foreground` is the CSS `color`, which `currentColor` icons
+/// inherit too, so the icon theme takes the same colour.
 class UiSurface extends StatelessWidget {
   const UiSurface({
     super.key,
@@ -36,11 +39,15 @@ class UiSurface extends StatelessWidget {
     var base = BoxStyler();
     if (fill != null) base = base.color(fill);
 
+    final color = foreground.resolve(context);
     return Box(
       style: base.merge(style),
       child: DefaultTextStyle.merge(
-        style: TextStyle(color: foreground.resolve(context)),
-        child: child,
+        style: TextStyle(color: color),
+        child: IconTheme.merge(
+          data: IconThemeData(color: color),
+          child: child,
+        ),
       ),
     );
   }

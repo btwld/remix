@@ -9,8 +9,8 @@ part of 'checkbox.dart';
 /// HeroUI recipe for [RemixCheckbox].
 ///
 /// [invalid] paints the error treatment; validation stays with the app.
-/// [minimumTapTargetSize] sets the widget's default tap target to HeroUI's 24px
-/// `touch-target`; the style itself does not read it.
+/// [minimumTapTargetSize] sets the widget's default tap target to 24px, the
+/// size of HeroUI's `touch-target` utility; the style itself does not read it.
 class UiCheckbox extends StatelessWidget {
   const UiCheckbox({
     super.key,

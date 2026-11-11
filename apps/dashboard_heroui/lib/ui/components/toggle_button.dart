@@ -146,6 +146,6 @@ ToggleStyler uiToggleButtonStyle({
       .merge(style);
 }
 
-/// `.toggle-button`: `gap-2`, between an icon and its label. Shared with
-/// `uiToggleButtonGroupStyle`.
-const uiToggleButtonGap = 8.0;
+/// `gap-2` less the icon's `-mx-0.5` on both sides, as on the button. Shared
+/// with `uiToggleButtonGroupStyle`.
+const uiToggleButtonGap = 8.0 - 2 * 2;

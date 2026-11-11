@@ -22,7 +22,7 @@ measurements:
   - {what: adjacent series, value: "accent / muted 1.31 light and 1.40 dark by luminance, separated by hue; muted / foreground 3.67 / 2.56; accent / foreground 4.81 / 3.59", cite: "same"}
   - {what: line, value: "2 wide, curved (smoothness 0.18), round caps and joins; optional 3px markers ringed 2px in surface", cite: "designed; the other presets' chart recipes"}
   - {what: bars, value: "16 wide, 6 between bars in a group, 12 between groups, radius-sm corners", cite: "designed: gap-3 between groups"}
-  - {what: pie, value: "2 between slices, 2px slice corners, a selected slice 4px out; labels hidden by default; the hole is transparent", cite: "designed; the other presets' chart recipes"}
+  - {what: pie, value: "2 between slices, 2px slice corners, a selected slice 4px out; labels hidden by default; the hole is transparent; the default ring is at most 80 and shrinks to fit the box with the hole and the selected slice (mix_chart 0.0.1), unless a slice radius is set", cite: "designed; the other presets' chart recipes"}
   - {what: axes, value: "left and bottom labels only, text-xs muted, 8 from the plot; horizontal grid only, 1px separator", cite: "designed"}
   - {what: tooltip, value: "overlay fill, 1px border outline, radius min(32, radius-xl) = 12, padding 8, max width 320, 8 from the mark, text-xs medium overlay-foreground", cite: "designed from tooltip.yaml"}
 approximations:
