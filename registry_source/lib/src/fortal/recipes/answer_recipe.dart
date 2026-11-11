@@ -35,7 +35,9 @@ FortalAgentAnswerRecipe fortalAgentAnswerRecipe({
     actions: FlexBoxStyler()
         .spacing(FortalTokens.space2())
         .padding(.top(FortalTokens.space3())),
-    feedback: BoxStyler().padding(.top(FortalTokens.space2())),
+    // The actions row centres its children; a top inset here dropped the
+    // feedback below the icons beside it.
+    feedback: BoxStyler(),
     sourcesLabel: TextStyler()
         .color(FortalTokens.gray12())
         .style(FortalTokens.text2.mix()),
