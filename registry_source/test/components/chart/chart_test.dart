@@ -1,12 +1,27 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 void main() {
+  setUpAll(() async {
+    final loader = FontLoader(RemixFonts.geist);
+    for (final weight in ['Regular', 'Medium', 'SemiBold', 'Bold']) {
+      loader.addFont(
+        rootBundle.load(
+          'packages/remix_ui_fonts/lib/fonts/geist/Geist-$weight.ttf',
+        ),
+      );
+    }
+    await loader.load();
+  });
+
   group('Fortal chart recipes', () {
     testWidgets('resolve the active Fortal theme and contextual palette', (
       tester,
@@ -105,6 +120,91 @@ void main() {
 
       expect(resolved.spec.selectedSliceRadiusOffset, expectedOffset);
     });
+
+    testWidgets('line and bar value axes share one scaled reservation', (
+      tester,
+    ) async {
+      late double expected;
+      late StyleSpec<LineChartSpec> line;
+      late StyleSpec<BarChartSpec> bar;
+
+      await tester.pumpWidget(
+        FortalTheme(
+          scaling: .percent110,
+          child: Builder(
+            builder: (context) {
+              expected = MixScope.tokenOf(FortalTokens.space8, context);
+              line = fortalLineChartStyle().build(context);
+              bar = fortalBarChartStyle().build(context);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      expect(line.spec.yAxis!.spec.reservedSize, expected);
+      expect(bar.spec.yAxis!.spec.reservedSize, expected);
+    });
+
+    for (final scaling in FortalScaling.values) {
+      testWidgets(
+        'value-axis ticks stay on one line at ${scaling.name} scaling',
+        (tester) async {
+          // The ticks fl_chart 1.3 prints for a 1088 to 1284 series: three
+          // fraction digits for a 50 interval, trailing zeros dropped. The
+          // six-character extremes wrapped in the package's fixed 44px.
+          String tick(double value) {
+            final digits = (value / 1000).toStringAsFixed(3);
+            return '${digits.replaceFirst(RegExp(r'\.?0+$'), '')}K';
+          }
+
+          await tester.pumpWidget(
+            _ChartHost(
+              scaling: scaling,
+              child: SizedBox(
+                height: 200,
+                child: FortalLineChart(
+                  yAxis: ChartAxis.numeric(interval: 50, labelFormatter: tick),
+                  series: [
+                    LineSeries(
+                      id: 'teams',
+                      label: 'Teams',
+                      points: [
+                        for (final (index, y) in const [
+                          1088.0,
+                          1150.0,
+                          1284.0,
+                        ].indexed)
+                          ChartPoint(id: index, x: index.toDouble(), y: y),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+          await tester.pump();
+
+          final lineHeight = 16 * scaling.factor;
+          final ticks = tester
+              .renderObjectList<RenderParagraph>(find.textContaining('K'))
+              .toList();
+          expect(
+            ticks.map((tick) => tick.text.toPlainText()),
+            containsAll(['1.088K', '1.284K']),
+          );
+          for (final paragraph in ticks) {
+            expect(
+              paragraph.size.height,
+              lessThan(lineHeight * 1.5),
+              reason:
+                  '"${paragraph.text.toPlainText()}" wrapped onto a second line',
+            );
+          }
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
   });
 
   group('Fortal chart widgets', () {
@@ -213,6 +313,30 @@ void main() {
       expect(remixPubspec, isNot(contains('mix_chart:')));
     });
   });
+}
+
+/// A Fortal page with the Geist face, so label widths match an application.
+class _ChartHost extends StatelessWidget {
+  const _ChartHost({required this.child, this.scaling = .percent100});
+
+  final FortalScaling scaling;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => FortalTheme(
+    scaling: scaling,
+    mode: .light,
+    child: Directionality(
+      textDirection: .ltr,
+      child: DefaultTextStyle(
+        style: const TextStyle(fontFamily: RemixFonts.geist),
+        child: Align(
+          alignment: .topLeft,
+          child: SizedBox(width: 360, child: child),
+        ),
+      ),
+    ),
+  );
 }
 
 LineSeries _lineSeries() => LineSeries(

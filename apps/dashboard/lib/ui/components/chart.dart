@@ -59,6 +59,7 @@ LineChartStyler uiLineChartStyle({
   final recipe = LineChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
+      .yAxis(_uiValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_uiGridStyle())
@@ -110,6 +111,7 @@ BarChartStyler uiBarChartStyle({
   final recipe = BarChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
+      .yAxis(_uiValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_uiGridStyle())
@@ -201,6 +203,12 @@ ChartAxisStyler _uiAxisStyle() => ChartAxisStyler()
     .fitInside(true)
     .fitInsideDistance(UiTokens.space1())
     .drawBelowEverything(true);
+
+/// The value axis reserves room for a six-character tick such as `1.284K`
+/// beside its label space, and grows with the theme's scaling like the label
+/// text does. The package's fixed 44px wraps such a tick onto two lines.
+ChartAxisStyler _uiValueAxisStyle() =>
+    ChartAxisStyler().reservedSize(UiTokens.space8());
 
 ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
 

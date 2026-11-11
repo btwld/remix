@@ -59,6 +59,7 @@ LineChartStyler fortalLineChartStyle({
   final recipe = LineChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
+      .yAxis(_fortalValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_fortalGridStyle())
@@ -110,6 +111,7 @@ BarChartStyler fortalBarChartStyle({
   final recipe = BarChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
+      .yAxis(_fortalValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_fortalGridStyle())
@@ -203,6 +205,12 @@ ChartAxisStyler _fortalAxisStyle() => ChartAxisStyler()
     .fitInside(true)
     .fitInsideDistance(FortalTokens.space1())
     .drawBelowEverything(true);
+
+/// The value axis reserves room for a six-character tick such as `1.284K`
+/// beside its label space, and grows with the theme's scaling like the label
+/// text does. The package's fixed 44px wraps such a tick onto two lines.
+ChartAxisStyler _fortalValueAxisStyle() =>
+    ChartAxisStyler().reservedSize(FortalTokens.space8());
 
 ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
 

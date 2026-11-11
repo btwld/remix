@@ -59,6 +59,7 @@ LineChartStyler {{valuePrefix}}LineChartStyle({
   final recipe = LineChartStyler()
       .frame(_{{valuePrefix}}FrameStyle())
       .axis(_{{valuePrefix}}AxisStyle())
+      .yAxis(_{{valuePrefix}}ValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_{{valuePrefix}}GridStyle())
@@ -110,6 +111,7 @@ BarChartStyler {{valuePrefix}}BarChartStyle({
   final recipe = BarChartStyler()
       .frame(_{{valuePrefix}}FrameStyle())
       .axis(_{{valuePrefix}}AxisStyle())
+      .yAxis(_{{valuePrefix}}ValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_{{valuePrefix}}GridStyle())
@@ -203,6 +205,12 @@ ChartAxisStyler _{{valuePrefix}}AxisStyle() => ChartAxisStyler()
     .fitInside(true)
     .fitInsideDistance({{typePrefix}}Tokens.space1())
     .drawBelowEverything(true);
+
+/// The value axis reserves room for a six-character tick such as `1.284K`
+/// beside its label space, and grows with the theme's scaling like the label
+/// text does. The package's fixed 44px wraps such a tick onto two lines.
+ChartAxisStyler _{{valuePrefix}}ValueAxisStyle() =>
+    ChartAxisStyler().reservedSize({{typePrefix}}Tokens.space8());
 
 ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
 
