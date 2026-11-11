@@ -80,9 +80,17 @@ using its widgets. See [setup and host requirements](skills/using-remix/SKILL.md
 
 ## Agent skills
 
-Install the [app UI](skills/using-remix/SKILL.md) and
-[design-system authoring](skills/building-remix-design-system/SKILL.md) skills:
+Copy the [app UI](skills/using-remix/SKILL.md) and
+[design-system authoring](skills/building-remix-design-system/SKILL.md) skills
+into a project that has run `remix init`. The copies come from the commit the
+project pins, so they describe the Remix the project installs:
 
 ```bash
-npx skills add btwld/remix
+remix skills install
 ```
+
+A registry author without a `remix.yaml` can still install the skills from
+`main` with `npx skills add btwld/remix`.
+
+To have a coding agent do the whole setup, paste the
+[Start with AI prompt](docs/getting-started.mdx#start-with-ai).

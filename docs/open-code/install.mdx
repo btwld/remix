@@ -191,3 +191,48 @@ class SignUpButton extends StatelessWidget {
   }
 }
 ```
+
+## Agent skills
+
+Remix publishes two agent skills: `using-remix` for app UI and
+`building-remix-design-system` for registry authors. Copy them into your
+project from the commit that `remix.yaml` pins for `@remix`:
+
+```bash
+remix skills install
+```
+
+```
+@remix skills revision <pinned commit>
+Added using-remix.
+Added building-remix-design-system.
+Created AGENTS.md.
+Commit .agents/skills, AGENTS.md, and remix.skills.json so every agent on the project reads the same skills.
+```
+
+The command writes three things:
+
+- `.agents/skills/<skill>/` holds the skill files from the pinned commit.
+- `AGENTS.md` gains one `remix_cli:skills` block that tells an agent when to
+  read each skill. The command does not change text outside the block.
+- `remix.skills.json` records the revision and a digest of each file.
+
+Claude Code loads project skills from `.claude/skills`. Name that directory
+once, and later runs remember it:
+
+```bash
+remix skills install --dir .claude/skills
+```
+
+To keep the block in `CLAUDE.md` or another instruction file, move the block
+there. The next run updates it in place.
+
+The command owns the files it copies. If you change one, the next run stops and
+names the file. Restore or delete it, then run the command again. Run the
+command again after you [move the registry pin](/open-code/updating), so the
+skills match the new commit.
+
+If you installed the skills earlier with `npx skills add btwld/remix`, delete
+`.agents/skills/using-remix` and `.agents/skills/building-remix-design-system`
+before the first run. Those copies come from `main`, not from your pin, so the
+command reports each file that differs and stops.
