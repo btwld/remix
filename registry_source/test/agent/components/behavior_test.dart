@@ -86,6 +86,70 @@ void main() {
     expect(focusNode.hasFocus, isTrue);
   });
 
+  testWidgets('Enter never falls through to a newline in a sending composer', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    final focusNode = FocusNode();
+    addTearDown(controller.dispose);
+    addTearDown(focusNode.dispose);
+    final submitted = <String>[];
+    var running = false;
+    late StateSetter update;
+    await pumpAgent(
+      tester,
+      StatefulBuilder(
+        builder: (context, setState) {
+          update = setState;
+          return AgentComposer(
+            controller: controller,
+            focusNode: focusNode,
+            running: running,
+            onStop: () {},
+            onSubmit: submitted.add,
+          );
+        },
+      ),
+      overlay: true,
+    );
+    focusNode.requestFocus();
+    await tester.pump();
+
+    // A handled key is not passed on to the platform's text input.
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.enter), isTrue);
+    expect(submitted, isEmpty);
+
+    controller.text = 'draft';
+    update(() => running = true);
+    await tester.pump();
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.enter), isTrue);
+    expect(submitted, isEmpty);
+    expect(controller.text, 'draft');
+
+    update(() => running = false);
+    await tester.pump();
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
+    expect(await tester.sendKeyRepeatEvent(LogicalKeyboardKey.enter), isTrue);
+    expect(await tester.sendKeyRepeatEvent(LogicalKeyboardKey.enter), isTrue);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.enter);
+    expect(submitted, ['draft'], reason: 'A held Enter sends once.');
+
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.enter), isFalse);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+  });
+
+  testWidgets('a composer without onSubmit leaves Enter to the field', (
+    tester,
+  ) async {
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await pumpAgent(tester, AgentComposer(focusNode: focusNode), overlay: true);
+    focusNode.requestFocus();
+    await tester.pump();
+    expect(await tester.sendKeyEvent(LogicalKeyboardKey.enter), isFalse);
+  });
+
   testWidgets('plan counts cancelled as settled and lifecycle reopens', (
     tester,
   ) async {

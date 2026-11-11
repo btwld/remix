@@ -52,6 +52,8 @@ reference_recipes:
 behavior:
   - Field and send/stop share one card
   - Enter submits when the field is not composing and Shift is not held
+  - Enter is consumed even when there is nothing to send (empty, running,
+    canSubmit false) and a held Enter sends once; only Shift+Enter adds a line
   - Shift+Enter inserts a newline
   - IME composition ignores Enter
   - Focus remains in the field after submit

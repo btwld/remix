@@ -154,16 +154,25 @@ class _AgentComposerState extends State<AgentComposer> {
     _focusNode.requestFocus();
   }
 
+  /// Enter belongs to sending whenever the composer can send at all.
+  ///
+  /// It submits when there is something to send, and otherwise does nothing:
+  /// an empty draft, a live run or `canSubmit: false` must not turn Enter into
+  /// a newline, and a held Enter must not add newlines after it sent. Shift+
+  /// Enter and IME composition keep the field's own handling, and a composer
+  /// without [AgentComposer.onSubmit] is a plain multiline field.
   KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
-    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    if (event is KeyUpEvent) return KeyEventResult.ignored;
     final isEnter =
         event.logicalKey == LogicalKeyboardKey.enter ||
         event.logicalKey == LogicalKeyboardKey.numpadEnter;
-    if (!isEnter || HardwareKeyboard.instance.isShiftPressed || _isComposing) {
+    if (!isEnter ||
+        widget.onSubmit == null ||
+        HardwareKeyboard.instance.isShiftPressed ||
+        _isComposing) {
       return KeyEventResult.ignored;
     }
-    if (!_canSubmit) return KeyEventResult.ignored;
-    _submit();
+    if (event is KeyDownEvent) _submit();
     return KeyEventResult.handled;
   }
 
