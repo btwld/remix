@@ -25,15 +25,16 @@ Future<ComboboxSpec> resolve(
             variant: variant,
             style: style,
           ).build(context).spec;
-          // A focused field takes `--field-focus` in either variant, which
-          // the field-fill test checks against the measurements.
-          if (!states.contains(WidgetState.focused)) {
-            final field = heroUiTextFieldStyle(
-              variant: HeroUiTextFieldVariant.values[variant.index],
-              style: TextFieldStyler().constraints(.minHeight(0)),
-            ).build(context);
-            expect(spec.field, field);
-          }
+          final field = heroUiTextFieldStyle(
+            variant: HeroUiTextFieldVariant.values[variant.index],
+            style: TextFieldStyler().constraints(.minHeight(0)),
+          ).build(context);
+          expect(
+            spec.field,
+            variant == .secondary && states.contains(WidgetState.focused)
+                ? _withFill(field, HeroUiTokens.fieldFocus.resolve(context))
+                : field,
+          );
           return const SizedBox.shrink();
         },
       ),
@@ -45,6 +46,20 @@ Future<ComboboxSpec> resolve(
 }
 
 BoxDecoration decoration(BoxSpec spec) => spec.decoration! as BoxDecoration;
+
+/// [field] with its container filled with [fill] instead.
+StyleSpec<TextFieldSpec> _withFill(StyleSpec<TextFieldSpec> field, Color fill) {
+  final box = field.spec.container;
+  return field.copyWith(
+    spec: field.spec.copyWith(
+      container: box.copyWith(
+        spec: box.spec.copyWith(
+          decoration: decoration(box.spec).copyWith(color: fill),
+        ),
+      ),
+    ),
+  );
+}
 
 void main() {
   for (final count in [7, 20]) {

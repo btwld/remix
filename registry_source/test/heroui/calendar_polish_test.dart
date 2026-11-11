@@ -141,26 +141,33 @@ void main() {
     testWidgets('$mode weekday labels and blue today match reference', (
       t,
     ) async {
-      await t.pumpHeroUi(calendar(), mode: mode);
-      await t.pumpAndSettle();
-      expect(find.text('Sun'), findsOneWidget);
-      final weekday = t
-          .widget<StyledText>(
-            find
-                .ancestor(
-                  of: find.text('Sun'),
-                  matching: find.byType(StyledText),
-                )
-                .first,
-          )
-          .styleSpec!
-          .spec
-          .style!;
-      final header = heroUiCase('calendar-header-cell', mode: mode);
-      expect(weekday.fontSize, header.px('fontSize'));
-      expect(weekday.fontWeight, FontWeight.w500);
-      expect(header.styles['fontWeight'], '500');
-      expectCssColor(weekday.color!, header.styles['color']!);
+      for (final range in [true, false]) {
+        await t.pumpHeroUi(calendar(range: range), mode: mode);
+        await t.pumpAndSettle();
+        expect(find.text('Sun'), findsOneWidget);
+        final weekday = t
+            .widget<StyledText>(
+              find
+                  .ancestor(
+                    of: find.text('Sun'),
+                    matching: find.byType(StyledText),
+                  )
+                  .first,
+            )
+            .styleSpec!
+            .spec
+            .style!;
+        final header = heroUiCase(
+          range ? 'range-calendar-header-cell' : 'calendar-header-cell',
+          mode: mode,
+        );
+        expect(weekday.fontSize, header.px('fontSize'));
+        expect(
+          weekday.fontWeight,
+          FontWeight.values[header.px('fontWeight') ~/ 100 - 1],
+        );
+        expectCssColor(weekday.color!, header.styles['color']!);
+      }
       final blue = heroUiToken(HeroUiTokens.accentSoftForeground, mode);
       expect(dayText(t, 6)!.color, blue);
       expect(dayBorder(t, 6).top.color, blue);
