@@ -45,9 +45,9 @@ String skillsGuidanceBlock({
   '',
   "Open a skill's `references/` files only when its `SKILL.md` sends you there.",
   'If `revision` in `remix.skills.json` differs from the `@remix` revision in',
-  '`remix.yaml`, run `dart run remix_cli:remix skills install` before relying on',
-  'the skills. Do not edit the listed skill directories; that command owns them.',
-  'It does not manage other skills under `$directory/`.',
+  '`remix.yaml`, run `remix skills install` before relying on the skills. Do not',
+  'edit the listed skill directories; that command owns them. It does not manage',
+  'other skills under `$directory/`.',
   managedSkillsEnd,
 ].join('\n');
 

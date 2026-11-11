@@ -477,7 +477,7 @@ Remix publishes two agent skills: `using-remix` for app UI and
 project from the commit your project is pinned to:
 
 ```shell
-dart run remix_cli:remix skills install
+remix skills install
 ```
 
 The command reads the `@remix` revision in `remix.yaml` and writes:
@@ -493,7 +493,7 @@ Claude Code loads project skills from `.claude/skills`. Name the directory
 once; later runs remember it:
 
 ```shell
-dart run remix_cli:remix skills install --dir .claude/skills
+remix skills install --dir .claude/skills
 ```
 
 To keep the block in `CLAUDE.md` or another instruction file, move the block
