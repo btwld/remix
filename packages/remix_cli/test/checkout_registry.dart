@@ -101,4 +101,18 @@ final class CheckoutSources implements RegistrySources {
   @override
   RegistryReader open(RegistrySource pin, String preset) =>
       CheckoutRegistry(distribution, preset);
+
+  @override
+  Future<String?> file(RegistrySource pin, String path) =>
+      readCheckoutFile(distribution, path);
+}
+
+/// [path] in the repository that holds [distribution], or null when the
+/// checkout has no such file, the way a pinned raw read answers a 404.
+///
+/// The pin is ignored: the checkout is the one commit this harness serves.
+Future<String?> readCheckoutFile(Directory distribution, String path) async {
+  validateRegistryPath(path);
+  final file = File.fromUri(distribution.uri.resolve('../$path'));
+  return file.existsSync() ? file.readAsString() : null;
 }

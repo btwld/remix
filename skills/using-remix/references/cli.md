@@ -33,6 +33,21 @@ moved, so read the hunks. Plain `--diff` exits 0. With `--exit-code` it exits
 2 when authored source differs and 1 on failure. Rolling back is
 `git checkout remix.yaml`, which restores the pin but not installed source.
 
+## Agent skills
+
+```bash
+remix skills install                       # copy the skills at the @remix pin into .agents/skills
+remix skills install --dir .claude/skills  # the directory Claude Code loads; later runs remember it
+```
+
+The command copies the skill files from the pinned `@remix` commit, writes one
+`remix_cli:skills` block into `AGENTS.md`, and records the revision and file
+digests in `remix.skills.json`. Run it again after `registry update @remix`:
+when `revision` in `remix.skills.json` differs from the `@remix` revision in
+`remix.yaml`, the copied skills describe an older commit. The command owns the
+files it copies and stops on one that changed; restore or delete that file,
+then rerun.
+
 ## Projects from an earlier prerelease
 
 `remix.yaml` schema 3 is the only readable configuration; an older file fails
@@ -42,7 +57,7 @@ to read with an explicit error. Recover a schema 1 or 2 project by deleting
 
 CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. An
 unversioned activation selects 0.1.0; upgrade first with
-`dart pub global activate remix_cli '^1.0.0-beta.1'`. The current
+`dart pub global activate remix_cli '^1.0.0-beta.2'`. The current
 CLI rejects unknown existing targets before mutation, including `--diff` and
 `--dry-run`. After verifying their source, name every existing dependency
 explicitly when adopting. For Vanilla Button, that is Theme and Button. Fortal

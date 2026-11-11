@@ -142,8 +142,10 @@ class UiDatePicker extends StatelessWidget {
     icon: RemixIcons.calendar,
     placeholderStyle: ButtonStyler()
         .labelColor(UiTokens.gray10())
-        .labelFontWeight(FontWeight.w400),
-    expandedStyle: ButtonStyler().border(.color(UiTokens.focus8()).width(1)),
+        .labelFontWeight(UiTokens.fontWeightRegular()),
+    expandedStyle: ButtonStyler().border(
+      .color(UiTokens.focus8()).width(UiTokens.borderWidth1()),
+    ),
     buttonStyle: uiButtonStyle(variant: .outline)
         .minHeight(uiCalendarTarget)
         .minWidth(MediaQuery.textScalerOf(context).scale(200))

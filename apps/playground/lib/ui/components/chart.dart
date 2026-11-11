@@ -227,9 +227,9 @@ ChartAxisStyler _chartAxisStyle() => ChartAxisStyler()
           .style(PlaygroundTokens.textXs.mix())
           .color(PlaygroundTokens.mutedForeground()),
     )
-    .labelSpace(8)
+    .labelSpace(PlaygroundTokens.s2)
     .fitInside(true)
-    .fitInsideDistance(4)
+    .fitInsideDistance(PlaygroundTokens.s1)
     .drawBelowEverything(true);
 
 ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
@@ -238,7 +238,11 @@ ChartGridStyler _chartGridStyle() => ChartGridStyler()
     .show(true)
     .showHorizontal(true)
     .showVertical(false)
-    .stroke(ChartStrokeStyler().color(PlaygroundTokens.border()).width(1));
+    .stroke(
+      ChartStrokeStyler()
+          .color(PlaygroundTokens.border())
+          .width(PlaygroundTokens.strokeHairline),
+    );
 
 ChartTooltipStyler _chartTooltipStyle() =>
     ChartTooltipStyler.create(
@@ -247,7 +251,7 @@ ChartTooltipStyler _chartTooltipStyle() =>
           padding: Prop.token(_tooltipPaddingToken),
         )
         .backgroundColor(PlaygroundTokens.background())
-        .margin(8)
+        .margin(PlaygroundTokens.s2)
         .maxWidth(280)
         .fitHorizontally(true)
         .fitVertically(true)

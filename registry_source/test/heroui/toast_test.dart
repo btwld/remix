@@ -235,6 +235,15 @@ void main() {
           }
           final close = _close(tester);
           expect(close.icon.spec.size, icon.size.width);
+          // The drawn cross keeps that size, centered as upstream's svg is.
+          final cross = find
+              .descendant(of: _closeButton, matching: find.byType(CustomPaint))
+              .first;
+          expect(tester.getSize(cross), icon.size);
+          expect(
+            tester.getTopLeft(cross) - tester.getTopLeft(_closeButton),
+            icon.rect.topLeft - upstream.rect.topLeft,
+          );
           // The icon stays the close button's `text-muted`.
           expectCssColor(close.icon.spec.color!, icon.styles['color']!);
         },
