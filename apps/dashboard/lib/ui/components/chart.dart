@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:mix_chart/mix_chart.dart';
@@ -26,55 +24,32 @@ const _highContrastLineWidthToken = ContextToken<double>(
   _resolveHighContrastLineWidth,
 );
 
-/// Returns the categorical palette used by Ui charts in the current scope.
+/// Returns the series colors for Ui charts in the current scope.
 ///
-/// The first entry is the accent's mark fill, `accentIndicator`. The other
-/// Ui color families follow, without the named accent's own family. Every
-/// entry is a graphical object that must stay visible on the page and on solid
-/// and translucent panels (WCAG 1.4.11), so each family uses its first source
-/// step from 9 that keeps the 3.05:1 mark margin on those surfaces, and an
-/// accent whose mark fill is luminous (Sol in light mode) does the same.
-///
-/// Set [highContrast] to use step 12 throughout instead.
+/// The accent's `accentIndicator` comes first, then the other named color
+/// families, each at a step that keeps 3:1 on the page and panels (see
+/// [computeChartSeries]). Set [highContrast] to use step 12 throughout.
 List<Color> resolveUiChartPalette(
   BuildContext context, {
   bool highContrast = false,
 }) {
   final theme = UiTheme.of(context);
   final colors = resolveUiTokens(theme);
-  final surfaces = [
-    colors.colorBackground,
-    colors.colorPanelSolid,
-    Color.alphaBlend(colors.colorPanelTranslucent, colors.colorBackground),
-  ];
   final namedAccent = theme.accentPalette == null ? theme.accent : null;
-  Color series(UiColorScale scale) =>
-      highContrast ? scale.step(12) : _seriesStep(scale, surfaces);
-  final indicator = colors.accent.indicator;
+  Color series(UiColorScale scale, {Color? preferred}) => highContrast
+      ? scale.step(12)
+      : computeChartSeries(scale, colors.markSurfaces, preferred: preferred);
 
-  final candidates = <Color>[
-    if (!highContrast && _keepsSeriesContrast(indicator, surfaces))
-      indicator
-    else
-      series(colors.accent.scale),
+  return List<Color>.unmodifiable({
+    series(colors.accent.scale, preferred: colors.accent.indicator),
     for (final (accent, family) in _seriesFamilies)
       if (accent != namedAccent)
         series((theme.isDark ? family.dark : family.light).scale),
-  ];
-
-  return List<Color>.unmodifiable(candidates.toSet());
+  });
 }
 
-/// The label color that reads on a pie slice filled with [slice].
-///
-/// Slice labels are 12px text, which needs 4.5:1 on its fill (WCAG 1.4.3),
-/// and no one color reaches that on every series color. This returns white
-/// or Orla's deepest ink, `#111111`, whichever contrasts more with [slice];
-/// on every Ui series color, standard or high contrast, the lower of the
-/// two choices is still 4.61:1.
-///
-/// Pie labels are off by default. A chart that turns them on sets each
-/// slice's label color from this, next to the fill the slice is drawn in:
+/// The label color for a pie slice filled with [slice]: white or Orla's
+/// `#111111` ink, whichever contrasts more.
 ///
 /// ```dart
 /// final palette = resolveUiChartPalette(context);
@@ -92,15 +67,13 @@ Color uiPieSliceLabelColor(Color slice) {
   const white = Color(0xFFFFFFFF);
   final ink = orla.dark.scale.step(1);
 
-  return _contrast(white, slice) >= _contrast(ink, slice) ? white : ink;
+  return computeContrastRatio(white, slice) >= computeContrastRatio(ink, slice)
+      ? white
+      : ink;
 }
 
-/// The color families that follow the accent, in series order.
-///
-/// Teal, orange and blue lead because they are the furthest apart, so the
-/// first four series stay distinct whichever accent goes first. The muted
-/// warm families come next and gray, the least distinct in either mode and
-/// the lowest-contrast series in dark mode, comes last.
+/// The color families after the accent. Teal, orange and blue lead because
+/// they are the most distinct from one another; gray, the least, is last.
 const _seriesFamilies = <(UiAccentColor, UiColorTheme)>[
   (.mar, mar),
   (.caju, caju),
@@ -110,30 +83,6 @@ const _seriesFamilies = <(UiAccentColor, UiColorTheme)>[
   (.duna, duna),
   (.orla, orla),
 ];
-
-/// The 3.05:1 margin Ui fits marks and focus rings to, over WCAG's 3:1.
-const _seriesContrast = 3.05;
-
-/// The first source step from 9 that keeps [_seriesContrast] on [surfaces].
-Color _seriesStep(UiColorScale scale, List<Color> surfaces) {
-  for (var step = 9; step < 12; step++) {
-    final color = scale.step(step);
-    if (_keepsSeriesContrast(color, surfaces)) return color;
-  }
-
-  return scale.step(12);
-}
-
-bool _keepsSeriesContrast(Color color, List<Color> surfaces) =>
-    surfaces.every((surface) => _contrast(color, surface) >= _seriesContrast);
-
-/// WCAG 2 contrast ratio between two opaque colors.
-double _contrast(Color a, Color b) {
-  final lighter = math.max(a.computeLuminance(), b.computeLuminance());
-  final darker = math.min(a.computeLuminance(), b.computeLuminance());
-
-  return (lighter + 0.05) / (darker + 0.05);
-}
 
 /// Ui presentation for a Mix line or area chart.
 ///
@@ -149,9 +98,8 @@ LineChartStyler uiLineChartStyle({
   final recipe = LineChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
-      // Each value tick stays centred on the value it names, so the end
-      // ticks overhang the plot by half a line rather than moving inward.
-      // The line chart clips only its marks, so the overhang stays visible.
+      // Value ticks stay centered on their values, so the end ticks overhang
+      // the plot by half a line.
       .yAxis(_uiValueAxisStyle().fitInside(false))
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
@@ -204,8 +152,8 @@ BarChartStyler uiBarChartStyle({
   final recipe = BarChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
-      // mix_chart clips the whole bar chart, labels included, so an end tick
-      // overhanging the plot would be cut in half: keep it fitted inside.
+      // mix_chart clips the whole bar chart, labels included, so the end
+      // ticks stay fitted inside it.
       .yAxis(_uiValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
@@ -228,9 +176,8 @@ BarChartStyler uiBarChartStyle({
 ///
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing
-/// low-contrast text onto arbitrary categorical colors. [showLabels] draws
-/// them in `accentContrast`, which no series color is fitted to: pair it with
-/// [uiPieSliceLabelColor] on each slice. Generates
+/// low-contrast text onto arbitrary categorical colors; with [showLabels], set
+/// each slice's label color with [uiPieSliceLabelColor]. Generates
 /// [UiPieChart] through `mix_generator`. For advanced chart-level geometry,
 /// pass this recipe directly to [PieChart.style] and merge a [PieSliceStyler].
 ///
@@ -258,10 +205,6 @@ PieChartStyler uiPieChartStyle({
         PieSliceStyler()
             .showLabel(showLabels)
             .cornerRadius(UiTokens.borderWidth2())
-            // Opt-in slice labels take the accent's label colour, which is
-            // fitted to the accent's labelled solid, not to every slice of
-            // the categorical palette. Callers set each slice's label colour
-            // from uiPieSliceLabelColor.
             .label(
               TextStyler()
                   .style(UiTokens.text1.mix())
