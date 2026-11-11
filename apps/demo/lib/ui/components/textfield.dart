@@ -52,7 +52,7 @@ TextFieldStyler fortalTextFieldStyle({
   FortalTextFieldSize size = .size2,
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
-  final metrics = _fortalTextFieldMetrics(size, bordered: variant != .soft);
+  final metrics = _fortalTextFieldMetrics(size);
   final base = _fortalTextInputBaseStyle(
     container: BoxStyler()
         .minHeight(metrics.height)
@@ -247,33 +247,32 @@ TextFieldStyler _fortalTextInputErrorStyle() => TextFieldStyler(
   Radius radius,
   TextStyleToken text,
 })
-_fortalTextFieldMetrics(FortalTextFieldSize size, {required bool bordered}) =>
-    switch (size) {
-      .size1 => (
-        height: FortalTokens.space5(),
-        paddingY: _textFieldPaddingY(size)(),
-        paddingX: bordered ? FortalTokens.space2() : FortalTokens.space2(),
-        spacing: FortalTokens.space2(),
-        radius: FortalTokens.radius2OrFull(),
-        text: FortalTokens.text1,
-      ),
-      .size2 => (
-        height: FortalTokens.space6(),
-        paddingY: _textFieldPaddingY(size)(),
-        paddingX: bordered ? FortalTokens.space2() : FortalTokens.space2(),
-        spacing: FortalTokens.space2(),
-        radius: FortalTokens.radius2OrFull(),
-        text: FortalTokens.text2,
-      ),
-      .size3 => (
-        height: FortalTokens.space7(),
-        paddingY: _textFieldPaddingY(size)(),
-        paddingX: bordered ? FortalTokens.space3() : FortalTokens.space3(),
-        spacing: FortalTokens.space3(),
-        radius: FortalTokens.radius3OrFull(),
-        text: FortalTokens.text3,
-      ),
-    };
+_fortalTextFieldMetrics(FortalTextFieldSize size) => switch (size) {
+  .size1 => (
+    height: FortalTokens.space5(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: FortalTokens.space2(),
+    spacing: FortalTokens.space2(),
+    radius: FortalTokens.radius2OrFull(),
+    text: FortalTokens.text1,
+  ),
+  .size2 => (
+    height: FortalTokens.space6(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: FortalTokens.space2(),
+    spacing: FortalTokens.space2(),
+    radius: FortalTokens.radius2OrFull(),
+    text: FortalTokens.text2,
+  ),
+  .size3 => (
+    height: FortalTokens.space7(),
+    paddingY: _textFieldPaddingY(size)(),
+    paddingX: FortalTokens.space3(),
+    spacing: FortalTokens.space3(),
+    radius: FortalTokens.radius3OrFull(),
+    text: FortalTokens.text3,
+  ),
+};
 
 // Keep the existing 24/32/40px chrome and centered baseline at 1x, while
 // leaving the text line unconstrained as MediaQuery text scaling increases.
