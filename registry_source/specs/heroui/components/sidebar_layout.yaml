@@ -1,0 +1,21 @@
+component: SidebarLayout
+widget: HeroUiSidebarLayout
+target: composition over RemixDialog and Mix boxes
+status: implemented
+extension: "No layout family in @heroui/react 3.2.6. The structure is the other presets' sidebar layout; only its sheet colours are HeroUI's."
+source:
+  ref: none
+  derivedFrom: ["specs/heroui/tokens.json", sidebar.yaml, modal.yaml]
+anatomy: [row, sidebar slot, column, header slot, body slot, compact sheet, scrim]
+variants: []
+sizes: {supported: [], default: null}
+states: [wide, wide collapsed, compact, compact open]
+tokens:
+  - background (compact sheet), separator (sheet end edge), backdrop (scrim, as the modal's route barrier)
+measurements:
+  - {what: compact breakpoint, value: "below 720 available width the sidebar moves into a start-edge sheet", cite: "designed; the other presets' default"}
+  - {what: widths, value: "256 expanded, 72 collapsed; the sheet is 256 wide, at most the width less a 56px scrim gutter", cite: "designed; the dashboard shell's rail"}
+  - {what: motion, value: "width animates over 200ms ease-in-out; the sheet slides in over 250ms; both are instant with reduced motion", cite: "designed; the other presets' layout"}
+approximations:
+  - "No upstream reference: @heroui/react 3.2.6 ships no sidebar layout, so the structure is shared with Vanilla and Fortal and only the colours come from HeroUI tokens. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "The sheet is a Remix dialog route with the backdrop barrier, not a HeroUI drawer; HeroUI 3.2.6 has none."

@@ -42,3 +42,5 @@ dev_dependencies:
   # Pins the HeroUI reference snapshot by sha256 (tool/heroui_parity/check.dart).
   crypto: ^3.0.7
   mix_generator: ^2.2.0-beta.3
+  # Parses worksheet fields (tool/heroui_parity/check.dart).
+  yaml: ^3.1.3

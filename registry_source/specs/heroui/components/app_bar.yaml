@@ -1,0 +1,24 @@
+component: AppBar
+widget: HeroUiAppBar
+target: RemixAppBar
+status: implemented
+extension: "No navbar or app bar family in @heroui/react 3.2.6. Built from the pinned tokens; nothing here is measured upstream."
+source:
+  ref: none
+  derivedFrom: ["specs/heroui/tokens.json", separator.yaml]
+anatomy: [container, toolbar, leading, title, actions, bottom]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest]
+tokens:
+  - background (container), separator (toolbar bottom edge)
+  - foreground, text-base (title)
+measurements:
+  - {what: toolbar height, value: "64, including the bottom separator", cite: "designed: h-16; heroUiAppBarToolbarHeight"}
+  - {what: toolbar padding, value: "16 horizontally", cite: "designed: px-4"}
+  - {what: title, value: "text-base (16/24) semibold in foreground, one line with an ellipsis", cite: "designed; HeroUiTypography headings are semibold"}
+  - {what: spacing, value: "12 between leading, title and actions, and between actions", cite: "designed: gap-3"}
+  - {what: bottom edge, value: "1px separator", cite: "designed: the separator.yaml line"}
+approximations:
+  - "No upstream reference: @heroui/react 3.2.6 ships no navbar or app bar, so every value above is designed from existing HeroUI tokens, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "The sidebar header in the dashboard shell uses the same 64px height and separator so the two rows line up."

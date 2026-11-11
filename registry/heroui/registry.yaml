@@ -26,6 +26,15 @@ items:
     exports:
       - theme/theme.dart
 
+  icons:
+    registryDependencies:
+      - theme
+    files:
+      - source: templates/icons/icons.dart.tmpl
+        target: "@ui/icons.dart"
+    exports:
+      - icons.dart
+
   accordion:
     registryDependencies:
       - theme
@@ -57,6 +66,22 @@ items:
       - "@ui/components/alert.g.dart"
     exports:
       - components/alert.dart
+
+  app_bar:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/app_bar/app_bar.dart.tmpl
+        target: "@ui/components/app_bar.dart"
+    generated:
+      - "@ui/components/app_bar.g.dart"
+    exports:
+      - components/app_bar.dart
 
   avatar:
     registryDependencies:
@@ -238,6 +263,22 @@ items:
       - "@ui/components/combobox.g.dart"
     exports:
       - components/combobox.dart
+
+  dashboard_shell:
+    registryDependencies:
+      - theme
+      - app_bar
+      - button
+      - search_field
+      - sidebar
+      - sidebar_layout
+    files:
+      - source: templates/dashboard_shell/dashboard_shell_base.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_shell_base.dart"
+      - source: templates/dashboard_shell/dashboard_shell.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_shell.dart"
+    exports:
+      - recipes/dashboard/dashboard_shell.dart
 
   date_picker:
     registryDependencies:
@@ -496,6 +537,34 @@ items:
       - "@ui/components/separator.g.dart"
     exports:
       - components/separator.dart
+
+  sidebar:
+    registryDependencies:
+      - theme
+      - toggle_button
+      - tooltip
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/sidebar/sidebar.dart.tmpl
+        target: "@ui/components/sidebar.dart"
+    generated:
+      - "@ui/components/sidebar.g.dart"
+    exports:
+      - components/sidebar.dart
+
+  sidebar_layout:
+    registryDependencies:
+      - theme
+      - sidebar
+    files:
+      - source: templates/sidebar_layout/sidebar_layout.dart.tmpl
+        target: "@ui/components/sidebar_layout.dart"
+    exports:
+      - components/sidebar_layout.dart
 
   skeleton:
     registryDependencies:

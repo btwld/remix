@@ -107,8 +107,14 @@ The `heroui` catalog follows HeroUI's names. Beside shared names such as
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
 `field_layout`, `input_group`, `modal`, `radio_group`, `search_field`,
 `separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
-and `toggle_button_group`. It ships no `app_bar`, `sidebar`, `sidebar_layout`,
-dashboard, `chart`, or `icons` items and no Agent items. Families that need
+and `toggle_button_group`. It also ships `app_bar`, `sidebar`,
+`sidebar_layout`, `icons`, and `dashboard_shell` as extensions: HeroUI web has
+no navbar, sidebar, or application shell, so these are styled from HeroUI's
+tokens and recipes (a destination is the ghost `toggle_button`, a rail label
+the `tooltip`) without an upstream reference. HeroUI's `sidebar` pulls in
+`toggle_button` and `tooltip`, and its `dashboard_shell` pulls in `button` and
+`search_field` for its icon buttons and search. It ships no `chart`,
+`dashboard_demo`, or Agent items. Families that need
 behavior Remix does not provide, such as Form and the separate popover-search Autocomplete, are not included.
 
 One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
@@ -190,8 +196,8 @@ selected package. Outline and Rounded each draw every icon the presets use, so
 neither adds Lucide. See [Icons in registry presets](/guides/icons#icons-in-registry-presets)
 for how presets size those icons.
 Four Vanilla and Fortal items use icons: `icons`, `dashboard_shell`,
-`dashboard_demo`, and `support`. HeroUI has no `icons` item; its three icon
-users are `breadcrumbs`, `close_button`, and `search_field`. To switch an
+`dashboard_demo`, and `support`. In HeroUI, `icons`, `dashboard_shell`,
+`breadcrumbs`, `close_button`, and `search_field` do. To switch an
 existing install, change `iconLibrary`, then reinstall every one of those you
 have installed in one command, reviewing first (`--overwrite` replaces only
 the items you name, so one left out keeps the old library):
@@ -204,8 +210,8 @@ remix add icons dashboard_shell dashboard_demo support --overwrite
 For HeroUI:
 
 ```shell
-remix add breadcrumbs close_button search_field --diff
-remix add breadcrumbs close_button search_field --overwrite
+remix add icons dashboard_shell breadcrumbs close_button search_field --diff
+remix add icons dashboard_shell breadcrumbs close_button search_field --overwrite
 ```
 
 Icons you reference in your own code stay as you wrote them. Import

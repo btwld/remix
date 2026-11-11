@@ -1380,10 +1380,13 @@ Future<void> main(List<String> arguments) async {
           'checkbox_group',
           'close_button',
           'combobox',
+          'dashboard_shell',
           'input_group',
           'radio_group',
           'range_slider',
           'search_field',
+          'sidebar',
+          'sidebar_layout',
           'switch_group',
           'table',
           'textarea',
@@ -1713,7 +1716,46 @@ import 'package:flutter/widgets.dart'
     );
     expect(inventory, isNot(contains('components/toast.dart')));
 
-    for (final file in ['search_field_main.dart', 'search_field_test.dart']) {
+    expect(
+      checker.parseConsumerCheckOptions([
+        '--preset',
+        'heroui',
+        '--source',
+        'checkout',
+        '--item',
+        'dashboard_shell',
+      ])!.item,
+      'dashboard_shell',
+    );
+    final shell = checker.focusedInventoryForTest(
+      'dashboard_shell',
+      preset: 'heroui',
+    );
+    expect(
+      shell,
+      containsAll([
+        'recipes/dashboard/dashboard_shell.dart',
+        'recipes/dashboard/dashboard_shell_base.dart',
+        'components/app_bar.dart',
+        'components/app_bar.g.dart',
+        'components/sidebar.dart',
+        'components/sidebar.g.dart',
+        'components/sidebar_layout.dart',
+        'components/toggle_button.dart',
+        'components/tooltip.dart',
+        'components/button.dart',
+        'components/search_field.dart',
+      ]),
+    );
+    expect(shell, isNot(contains('icons.dart')));
+    expect(shell, isNot(contains('components/typography.dart')));
+
+    for (final file in [
+      'search_field_main.dart',
+      'search_field_test.dart',
+      'dashboard_shell_main.dart',
+      'dashboard_shell_test.dart',
+    ]) {
       expect(
         File('open_code/heroui_fixture/focused/$file').existsSync(),
         isTrue,
@@ -1729,7 +1771,11 @@ import 'package:flutter/widgets.dart'
     for (final script in ['open-code:check', 'ci:open-code:heroui']) {
       expect(
         (scripts[script] as YamlMap)['steps'],
-        containsAll(['$full --item search_field', full]),
+        containsAll([
+          '$full --item search_field',
+          '$full --item dashboard_shell',
+          full,
+        ]),
         reason: script,
       );
     }

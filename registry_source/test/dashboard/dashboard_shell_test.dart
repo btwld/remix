@@ -9,10 +9,12 @@ import 'package:registry_source/src/default/theme/theme_data.dart';
 import 'package:registry_source/src/default/theme/theme_scope.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_shell.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
+import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_shell.dart';
+import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-enum _Preset { defaultPreset, fortal }
+enum _Preset { defaultPreset, fortal, heroui }
 
 const _sections = <RemixSidebarSection<String>>[
   RemixSidebarSection(
@@ -201,6 +203,7 @@ void main() {
       '$lib/src/dashboard/dashboard_shell_base.dart',
       '$lib/src/default/recipes/dashboard/dashboard_shell.dart',
       '$lib/src/fortal/recipes/dashboard/dashboard_shell.dart',
+      '$lib/src/heroui/recipes/dashboard/dashboard_shell.dart',
     ]) {
       expect(
         File(path).readAsStringSync(),
@@ -273,6 +276,12 @@ Future<void> _pump(
           : FortalThemeMode.dark,
       child: app,
     ),
+    .heroui => HeroUiTheme(
+      mode: brightness == Brightness.light
+          ? HeroUiThemeMode.light
+          : HeroUiThemeMode.dark,
+      child: app,
+    ),
   });
   await tester.pump();
 }
@@ -330,6 +339,20 @@ class _ShellHarnessState extends State<_ShellHarness> {
           onCollapsedChanged: (value) => widget.collapsed?.value = value,
         ),
         .fortal => FortalDashboardShell<String>(
+          sections: _sections,
+          selectedValue: selected,
+          onSelected: select,
+          body: body,
+          title: 'Overview',
+          headerTitle: widget.headerTitle,
+          brand: const Text('Acme brand'),
+          account: const Text('Workspace account'),
+          headerActions: widget.headerActions,
+          onSearchChanged: widget.onSearchChanged,
+          collapsed: collapsed,
+          onCollapsedChanged: (value) => widget.collapsed?.value = value,
+        ),
+        .heroui => HeroUiDashboardShell<String>(
           sections: _sections,
           selectedValue: selected,
           onSelected: select,

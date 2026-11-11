@@ -129,7 +129,14 @@ void main() {
           if (file.path.endsWith('.dart') && !file.path.endsWith('.g.dart'))
             file.uri.pathSegments.last.replaceAll('.dart', ''),
       };
-      expect(items.keys.toSet(), {'theme', ...components});
+      // Besides the components: the `icons` file item and the grouped
+      // `dashboard_shell` recipe.
+      expect(items.keys.toSet(), {
+        'theme',
+        'icons',
+        'dashboard_shell',
+        ...components,
+      });
       final checkbox = items['checkbox'] as YamlMap;
       expect(checkbox['generated'], ['@ui/components/checkbox.g.dart']);
       expect(
@@ -163,6 +170,55 @@ void main() {
       );
     },
   );
+
+  test('HeroUI derives the dashboard extensions like the other presets', () {
+    final output = PresetBuilder.forRepository(
+      Directory.current.absolute,
+      spec: herouiPreset,
+    ).derive();
+    final items =
+        (loadYaml(output.files['registry.yaml']!) as YamlMap)['items']
+            as YamlMap;
+    List<String> dependencies(String item) => [
+      ...((items[item] as YamlMap)['registryDependencies'] as YamlList)
+          .cast<String>(),
+    ];
+
+    expect(dependencies('sidebar'), ['theme', 'toggle_button', 'tooltip']);
+    expect(dependencies('sidebar_layout'), ['theme', 'sidebar']);
+    expect(dependencies('app_bar'), ['theme']);
+    expect(dependencies('icons'), ['theme']);
+    expect(
+      dependencies('dashboard_shell'),
+      unorderedEquals([
+        'theme',
+        'app_bar',
+        'button',
+        'search_field',
+        'sidebar',
+        'sidebar_layout',
+      ]),
+    );
+    expect((items['dashboard_shell'] as YamlMap)['exports'], [
+      'recipes/dashboard/dashboard_shell.dart',
+    ]);
+
+    final icons = output.files['templates/icons/icons.dart.tmpl']!;
+    expect(icons, contains('{{icon:import}}'));
+    expect(icons, contains('abstract final class {{typePrefix}}Icons'));
+    expect(icons, isNot(contains('RemixIcons')));
+
+    final base = output
+        .files['templates/dashboard_shell/dashboard_shell_base.dart.tmpl']!;
+    expect(base, contains('class {{typePrefix}}DashboardShellBase'));
+    expect(base, isNot(contains('Registry')));
+    final shell =
+        output.files['templates/dashboard_shell/dashboard_shell.dart.tmpl']!;
+    expect(shell, contains("import 'dashboard_shell_base.dart';"));
+    expect(shell, contains('{{icon:hamburgerMenu}}'));
+    expect(shell, isNot(contains('HeroUi')));
+    expect(shell, isNot(contains('package:registry_source')));
+  });
 
   test(
     'Fortal merges Agent behavior and recipes without changing base output',

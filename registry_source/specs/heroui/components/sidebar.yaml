@@ -1,0 +1,33 @@
+component: Sidebar
+widget: HeroUiSidebar
+target: RemixSidebar
+status: implemented
+extension: "No sidebar family in @heroui/react 3.2.6. Built from the pinned tokens and the mapped toggle_button and tooltip recipes; nothing here is measured upstream."
+source:
+  ref: none
+  derivedFrom: [toggle_button.yaml, tooltip.yaml, "specs/heroui/tokens.json"]
+anatomy: [panel, header, content, section label, destination, footer, rail tooltip]
+variants: []
+sizes: {supported: [], default: null}
+states: [rest, hover, pressed, selected, focus-visible, disabled, collapsed]
+tokens:
+  - background (panel), separator (end edge, footer top edge)
+  - muted, text-xs (section label)
+  - "destination: the ghost sm toggle_button tokens: default (hover), default-foreground (rest), accent-soft, accent-soft-hover, accent-soft-foreground (selected), radius-3xl"
+  - focus (inset ring)
+  - "rail tooltip: tooltip.yaml (overlay, foreground, radius-xl, text-xs)"
+measurements:
+  - {what: destination, value: "toggle_button sm: 36 high below 768px and 32 from it, px-3, text-sm medium, 16px icon, a 4px icon gap (gap-2 less the icon's -mx-0.5, as on the toggle button), full width with content at the start", cite: "designed: toggle_button.yaml sm"}
+  - {what: destination gap, value: 4, cite: "designed: gap-1"}
+  - {what: panel inset, value: "12 on every side of the destination region and the footer", cite: "designed: p-3"}
+  - {what: section gap, value: 16, cite: "designed: gap-4"}
+  - {what: section label, value: "text-xs (12/16) medium in muted, px-3 py-2 so it starts with an iconless destination label; 32 high", cite: "designed"}
+  - {what: separators, value: "1px separator on the panel's end edge and the footer's top edge", cite: "designed: the separator.yaml line"}
+  - {what: focus ring, value: "2px focus outline drawn 2px inside the destination, no background gap; no layout change", cite: "designed: the ring-inset of toggle_button_group.yaml"}
+approximations:
+  - "No upstream reference: @heroui/react 3.2.6 ships no sidebar or navigation panel, so every value above is designed from existing HeroUI tokens and recipes, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "A selected destination is a selected toggle button (accent-soft), not a separate navigation colour; the theme has no sidebar tokens."
+  - "The destination rings inside its edge, as joined toggle group items do, because the scrolling destination region would crop the toggle's outside ring."
+  - "The toggle's 100ms fill motion is omitted on destinations so a collapsing rail's per-frame padding is not eased twice."
+  - Width, header metrics and collapse motion are the host's; the dashboard shell sets them.
+  - "Rows keep the sm toggle button's 36px (phone) and 32px (desktop) heights, below the 48px touch-target guideline Fortal's sidebar meets; Vanilla's rows are 32px."
