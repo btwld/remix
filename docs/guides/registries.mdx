@@ -32,8 +32,8 @@ Two rules follow from this and explain most of the CLI's behavior:
 ## Install from the official registry
 
 ```shell
-dart run remix_cli:remix init
-dart run remix_cli:remix add button
+remix init
+remix add button
 ```
 
 `init` resolves the `registry-stable` branch of `btwld/remix` and stores
@@ -53,7 +53,7 @@ Omitting `--preset` selects `vanilla`. Pass `--preset fortal` for Fortal, and
 `--prefix`/`--ui-path` to control naming and location:
 
 ```shell
-dart run remix_cli:remix init --prefix Acme --preset fortal --ui-path lib/design_system
+remix init --prefix Acme --preset fortal --ui-path lib/design_system
 ```
 
 The result:
@@ -87,9 +87,9 @@ your `pubspec.yaml`, and only then writes. Your edits to already-installed
 files are preserved.
 
 ```shell
-dart run remix_cli:remix add button --dry-run   # print the plan, write nothing
-dart run remix_cli:remix add button --diff      # show what would change
-dart run remix_cli:remix add button --overwrite # replace just this item
+remix add button --dry-run   # print the plan, write nothing
+remix add button --diff      # show what would change
+remix add button --overwrite # replace just this item
 ```
 
 `--overwrite` replaces only the item you name. It never touches a dependency
@@ -105,9 +105,9 @@ Neither `--overwrite` nor `--adopt` can replace a known different owner.
 Changing a pin and installing source are separate steps, on purpose.
 
 ```shell
-dart run remix_cli:remix registry update @remix
-dart run remix_cli:remix add button --diff
-dart run remix_cli:remix add button --overwrite
+remix registry update @remix
+remix add button --diff
+remix add button --overwrite
 ```
 
 `registry update` resolves the recorded `ref` again. For the official registry
@@ -115,8 +115,8 @@ that is `registry-stable`, so it moves the pin to the newest promoted commit.
 Pass `--ref` to choose something else:
 
 ```shell
-dart run remix_cli:remix registry update @remix --ref <sha>            # pin that exact commit
-dart run remix_cli:remix registry update @remix --ref registry-stable  # follow the branch again
+remix registry update @remix --ref <sha>            # pin that exact commit
+remix registry update @remix --ref registry-stable  # follow the branch again
 ```
 
 A pin recorded with a SHA or a tag resolves to the same commit every time, so a
@@ -139,7 +139,7 @@ migrate a pin *from*, so such a project is reinitialized:
 
 ```shell
 rm remix.yaml
-dart run remix_cli:remix init --prefix Acme --preset vanilla
+remix init --prefix Acme --preset vanilla
 ```
 
 Pass the `--prefix`, `--preset` and `--ui-path` the old file recorded; `init`
@@ -147,7 +147,7 @@ writes configuration and preserves installed source and generated adapters.
 For schema 1, the old `default` preset corresponds to `vanilla`.
 
 CLI 0.1.0 and 1.0.0-beta.0 also wrote schema 3 without an ownership record.
-Keep that configuration. In either case, upgrade the project-local CLI, verify
+Keep that configuration. In either case, upgrade the CLI, verify
 which registry and preset each installed item came from, then explicitly adopt
 it. Plain `add button --diff` now rejects unknown existing targets, as do
 `--dry-run` and `--overwrite`.
@@ -156,8 +156,8 @@ For a Vanilla Button installation, name both Theme and Button because existing
 unknown dependencies must also be requested explicitly:
 
 ```shell
-dart run remix_cli:remix add theme button --adopt --diff
-dart run remix_cli:remix add theme button --adopt
+remix add theme button --adopt --diff
+remix add theme button --adopt
 ```
 
 The first command compares the pinned templates with your source without
@@ -324,13 +324,13 @@ Commit the `registry/` directory and push it to the ref your consumers follow.
 A consumer with a `vanilla` project then registers you and installs:
 
 ```shell
-dart run remix_cli:remix init                 # selects vanilla
-dart run remix_cli:remix registry add @acme \
+remix init                 # selects vanilla
+remix registry add @acme \
   --repository your-org/your-repo \
   --path registry \
   --ref stable
 
-dart run remix_cli:remix add @acme/button
+remix add @acme/button
 ```
 
 `registry add` resolves the ref to a commit and records both. Without `--ref`
@@ -363,12 +363,12 @@ change to a working branch, then install it in a scratch app initialized with
 the preset your consumers use:
 
 ```shell
-dart run remix_cli:remix registry add @acme \
+remix registry add @acme \
   --repository your-org/your-repo \
   --path registry \
   --ref my-change
-dart run remix_cli:remix add @acme/button --dry-run
-dart run remix_cli:remix add @acme/button
+remix add @acme/button --dry-run
+remix add @acme/button
 ```
 
 `--dry-run` resolves the whole dependency graph and renders every template

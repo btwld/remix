@@ -1,8 +1,12 @@
-## Unreleased
+## 1.0.0-rc.1
+
+First release candidate for 1.0.0. `1.0.0-beta.19` was prepared but never
+published; its change ships in this release.
 
 ### Features
 
-- Add `CalendarStyler.call` to build a `RemixCalendar` with the owning style.
+- Add `CalendarStyler.call` to build a `RemixCalendar` with the owning style
+  (#424).
 
 ## 1.0.0-beta.18
 

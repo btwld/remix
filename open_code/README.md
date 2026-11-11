@@ -6,20 +6,25 @@ installed Agent behavior. Choose one preset: neutral **Vanilla**, **Fortal**
 with its own visual contract, or **HeroUI** following HeroUI web 3.2.6.
 Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
 
-## Install the CLI in a project
+## Install the CLI
 
 ```shell
-flutter pub add dev:remix_cli:^1.0.0-beta.1
-dart run remix_cli:remix init --prefix Acme --preset vanilla
-dart run remix_cli:remix add button
+dart pub global activate remix_cli '^1.0.0-beta.1'
+remix init --prefix Acme --preset vanilla
+remix add button
 ```
+
+Install once globally. Keep the prerelease pin: an unversioned activation
+selects stable `0.1.0`, which fails on the official registry. Add Pub's `bin`
+directory to `PATH` if needed; Pub prints the instructions. For a CLI pinned
+in the app's lockfile, see the [project-local alternative](../docs/open-code/install.mdx#running-the-cli).
 
 Use `--preset fortal` for Fortal or `--preset heroui` for HeroUI at initialization.
 Preset, prefix and UI path
 are chosen once; `Ui` and `lib/ui` are defaults. `Remix` and `Mix` are reserved
 prefixes. Each `add` installs only the requested item and its dependency closure.
 `init` pins `registry-stable` to a full GitHub commit in `remix.yaml`; commit it
-alongside the app lockfile, which pins the project-local CLI separately.
+alongside the app lockfile.
 
 The resulting Vanilla layout is:
 
@@ -101,9 +106,9 @@ or earlier need explicit provenance verification and `--adopt`; see the
 Updating a pin and adopting source are separate operations:
 
 ```shell
-dart run remix_cli:remix registry update @remix
-dart run remix_cli:remix add button --diff
-dart run remix_cli:remix add button --overwrite
+remix registry update @remix
+remix add button --diff
+remix add button --overwrite
 ```
 
 `--diff` is read-only and requires Git. `--overwrite` replaces only named items,

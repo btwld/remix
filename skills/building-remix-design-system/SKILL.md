@@ -23,8 +23,8 @@ third-party registry. Third-party consumers register a namespace and install
 its items:
 
 ```shell
-dart run remix_cli:remix registry add @acme --repository acme/design-system --path registry --ref stable
-dart run remix_cli:remix add @acme/button
+remix registry add @acme --repository acme/design-system --path registry --ref stable
+remix add @acme/button
 ```
 
 Use `using-remix` for application UI that consumes Remix or an installed

@@ -117,7 +117,7 @@ class TutorialAssetTests(unittest.TestCase):
     def test_path_dependency_fails(self):
         def change(name, data):
             if name == "fortal_demo/pubspec.yaml":
-                changed = re.sub(rb"remix_cli: \S+", b"remix_cli:\n    path: ../remix_cli", data)
+                changed = re.sub(rb"remix: \S+", b"remix:\n    path: ../remix", data)
                 self.assertNotEqual(changed, data)
                 return changed
             return data
@@ -147,8 +147,9 @@ class TutorialAssetTests(unittest.TestCase):
         # Written against whatever pin the tutorial carries, so a release that
         # moves the pin does not break this test.
         text = self.tutorial.read_text()
-        bumped, count = re.subn(r"('dev:remix_cli:\^)[^']+'", r"\g<1>99.0.0-beta.9'", text)
-        self.assertEqual(count, 2)
+        bumped, count = re.subn(r"(pub global activate remix_cli '\^)[^']+'",
+                                r"\g<1>99.0.0-beta.9'", text)
+        self.assertEqual(count, 1)
         self.assertNotEqual(bumped, text)
         self.tutorial.write_text(bumped)
         self.assertEqual(check_content(self.root), [])
@@ -156,11 +157,11 @@ class TutorialAssetTests(unittest.TestCase):
     def test_install_command_change_beyond_the_pin_fails(self):
         original = self.tutorial.read_text()
         for pattern, replacement in [
-                (r"'dev:(remix_cli:\^[^']+')", r"'\1"),
-                (r"'(dev:remix_cli:)\^([^']+')", r"'\1\2"),
-                (r"'dev:remix_cli:\^[^']+'", "'dev:remix_cli:any'"),
+                (r"(pub global activate )remix_cli", r"\1other_package"),
+                (r"(pub global activate remix_cli ')\^", r"\1"),
+                (r"(pub global activate remix_cli )'\^[^']+'", r"\1'any'"),
                 (r"'(remix_ui_fonts:\^)[\d.]+'", r"'\g<1>99.0.0'"),
-                (r"flutter pub add '(dev:remix_cli)", r"flutter pub add --dry-run '\1")]:
+                (r"pub global activate remix_cli", "pub global activate --overwrite remix_cli")]:
             with self.subTest(pattern=pattern):
                 changed, count = re.subn(pattern, replacement, original)
                 self.assertGreater(count, 0)
@@ -181,6 +182,17 @@ class TutorialAssetTests(unittest.TestCase):
             with self.subTest(command=command):
                 self.assertNotEqual(block_sha256(f"flutter pub add '{command}'"),
                                     block_sha256(f"flutter pub add '{command.replace('^', '^9')}'"))
+
+    def test_global_activation_hash_ignores_only_the_pin(self):
+        command = "dart pub global activate remix_cli '^1.0.0-beta.1'"
+        self.assertEqual(block_sha256(command),
+                         block_sha256(command.replace('^1.0.0-beta.1', '^99.0.0')))
+        for changed in [command.replace('remix_cli', 'other_package'),
+                        command.replace('activate', 'activate --overwrite'),
+                        command.replace("'", '"'),
+                        command.replace('^', ''),
+                        command.replace('^1.0.0-beta.1', 'any')]:
+            self.assertNotEqual(block_sha256(command), block_sha256(changed))
 
     def test_pinned_packages_match_the_pin_sync_tool(self):
         source = (Path(__file__).resolve().parent / "install_pins.dart").read_text()
