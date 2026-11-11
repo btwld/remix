@@ -1,6 +1,10 @@
 ## 1.0.0-rc.2
 
- - **DOCS**: run the CLI as remix after a global install (#434).
+### Documentation
+
+- The README installs the CLI once with
+  `dart pub global activate remix_cli '^1.0.0-beta.1'` and runs it as
+  `remix init` and `remix add` (#434).
 
 ## 1.0.0-rc.1
 
