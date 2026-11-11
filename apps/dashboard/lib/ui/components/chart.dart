@@ -237,9 +237,7 @@ ChartFrameStyler _uiFrameStyle() => ChartFrameStyler()
 
 ChartAxisStyler _uiAxisStyle() => ChartAxisStyler()
     .showLabels(true)
-    .label(
-      TextStyler().style(UiTokens.text1.mix()).color(UiTokens.gray11()),
-    )
+    .label(TextStyler().style(UiTokens.text1.mix()).color(UiTokens.gray11()))
     .labelSpace(UiTokens.space2())
     .fitInside(true)
     .fitInsideDistance(UiTokens.space1())
