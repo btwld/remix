@@ -34,3 +34,19 @@ once the items reach a promoted registry.
 
 Open **Workspace → Chat** to review the Agent surfaces together. No model or
 tool service is contacted.
+
+## Screenshots
+
+`tool/capture.mjs` renders every destination at 1440 × 900 and Overview and
+Chat at 390 × 844, in light and dark (`<destination>-<mode>-<size>.png`). Chat
+is captured with the permission scenario running. Build the app first:
+
+```sh
+fvm flutter build web --no-web-resources-cdn
+(cd ../../registry_source/tool/heroui_parity/chromium && npm ci --ignore-scripts)
+node tool/capture.mjs "$PWD/build/web" /absolute/output/dir
+```
+
+Playwright comes from the HeroUI web reference's pinned dependencies, as for
+`open_code/heroui_fixture/capture.mjs`; set `CHROME_PATH` to use a browser
+other than macOS Google Chrome.
