@@ -38,6 +38,8 @@ FortalAgentExecutionRecipe fortalAgentExecutionRecipe({
         .color(FortalTokens.gray3())
         .borderRadius(.all(FortalTokens.radius3()))
         .padding(.all(FortalTokens.space3())),
+    // Long output scrolls inside the well instead of growing the card.
+    viewport: BoxStyler().maxHeight(FortalTokens.executionOutputMaxHeight()),
     actions: FlexBoxStyler()
         .spacing(FortalTokens.space2())
         .padding(.top(FortalTokens.space3())),

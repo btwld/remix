@@ -16,6 +16,9 @@ import 'theme_scope.dart' show FortalTheme;
 class FortalTokens {
   static const activityMaxHeight = DoubleToken('fortal.activity.max-height');
   static const planMaxHeight = DoubleToken('fortal.plan.max-height');
+  static const executionOutputMaxHeight = DoubleToken(
+    'fortal.execution.output-max-height',
+  );
   static const messageAvatarSize = DoubleToken('fortal.message.avatar-size');
   static const messageContentMaxWidth = DoubleToken(
     'fortal.message.content-max-width',
