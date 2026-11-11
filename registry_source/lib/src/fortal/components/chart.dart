@@ -59,7 +59,10 @@ LineChartStyler fortalLineChartStyle({
   final recipe = LineChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
-      .yAxis(_fortalValueAxisStyle())
+      // Each value tick stays centred on the value it names, so the end
+      // ticks overhang the plot by half a line rather than moving inward.
+      // The line chart clips only its marks, so the overhang stays visible.
+      .yAxis(_fortalValueAxisStyle().fitInside(false))
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_fortalGridStyle())
@@ -111,6 +114,8 @@ BarChartStyler fortalBarChartStyle({
   final recipe = BarChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
+      // mix_chart clips the whole bar chart, labels included, so an end tick
+      // overhanging the plot would be cut in half: keep it fitted inside.
       .yAxis(_fortalValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())

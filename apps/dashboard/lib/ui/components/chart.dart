@@ -59,7 +59,10 @@ LineChartStyler uiLineChartStyle({
   final recipe = LineChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
-      .yAxis(_uiValueAxisStyle())
+      // Each value tick stays centred on the value it names, so the end
+      // ticks overhang the plot by half a line rather than moving inward.
+      // The line chart clips only its marks, so the overhang stays visible.
+      .yAxis(_uiValueAxisStyle().fitInside(false))
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_uiGridStyle())
@@ -111,6 +114,8 @@ BarChartStyler uiBarChartStyle({
   final recipe = BarChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
+      // mix_chart clips the whole bar chart, labels included, so an end tick
+      // overhanging the plot would be cut in half: keep it fitted inside.
       .yAxis(_uiValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())

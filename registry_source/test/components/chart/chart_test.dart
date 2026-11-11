@@ -148,6 +148,93 @@ void main() {
       expect(bar.spec.yAxis!.spec.reservedSize, expected);
     });
 
+    testWidgets('line value ticks sit on the values they name', (tester) async {
+      const height = 200.0;
+      final chart = GlobalKey();
+
+      await tester.pumpWidget(
+        _ChartHost(
+          child: SizedBox(
+            key: chart,
+            height: height,
+            child: FortalLineChart(
+              yAxis: ChartAxis.numeric(
+                min: 0,
+                max: 10,
+                interval: 5,
+                labelFormatter: (value) => '${value.round()}',
+              ),
+              xAxis: ChartAxis.numeric(labelFormatter: (_) => ''),
+              series: [
+                LineSeries(
+                  id: 'a',
+                  label: 'A',
+                  points: [
+                    ChartPoint(id: 0, x: 0, y: 0),
+                    ChartPoint(id: 1, x: 1, y: 10),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // The plot spans the chart's top to the bottom axis's 30px band, so 10
+      // is at the top edge, 5 halfway and 0 at the bottom edge.
+      final top = tester.getTopLeft(find.byKey(chart)).dy;
+      const plot = height - 30;
+      for (final (label, y) in [('10', 0.0), ('5', plot / 2), ('0', plot)]) {
+        expect(
+          tester.getCenter(find.text(label)).dy - top,
+          moreOrLessEquals(y, epsilon: 0.5),
+          reason: 'the $label tick is drawn off its value',
+        );
+      }
+    });
+
+    testWidgets('bar value ticks stay inside the clipped bar chart', (
+      tester,
+    ) async {
+      final chart = GlobalKey();
+
+      await tester.pumpWidget(
+        _ChartHost(
+          child: SizedBox(
+            key: chart,
+            height: 200,
+            child: FortalBarChart(
+              yAxis: ChartAxis.numeric(
+                min: 0,
+                max: 10,
+                interval: 5,
+                labelFormatter: (value) => '${value.round()}',
+              ),
+              groups: [
+                BarGroup(
+                  id: 'q1',
+                  label: 'Q1',
+                  bars: [BarValue(id: 'a', label: 'A', toY: 10)],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final bounds = tester.getRect(find.byKey(chart));
+      for (final label in ['10', '5', '0']) {
+        final rect = tester.getRect(find.text(label));
+        expect(
+          rect.top >= bounds.top - 0.5 && rect.bottom <= bounds.bottom + 0.5,
+          isTrue,
+          reason: 'the $label tick is cut by the bar chart clip',
+        );
+      }
+    });
+
     for (final scaling in FortalScaling.values) {
       testWidgets(
         'value-axis ticks stay on one line at ${scaling.name} scaling',

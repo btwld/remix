@@ -319,3 +319,19 @@ pickers combine five independently overridable child stylers.
 The calendar regression suite exercises both modes, actual pointer and keyboard
 states, geometry, contrast and 200% RTL. The polish board adds all four families
 to Inputs, so its Linux Inputs master must be regenerated on Linux.
+
+## Charts
+
+The `chart` item styles `mix_chart`'s line, bar and pie charts; data, bounds,
+ticks, tooltips and semantics stay `mix_chart`'s. The plot is transparent and
+frameless and clips its marks to the plot.
+
+- Value axis: the y axis reserves `space8`, scaled, beside its `space2` label
+  space, room for a six-character tick such as `1.284K`. On line charts each
+  tick stays centred on the value it names (`fitInside` off), so the end
+  ticks overhang the plot by half a line rather than moving off their
+  values. Bar charts keep their end ticks fitted inside: `mix_chart` clips
+  the whole bar chart, labels included, so an overhanging tick would be cut
+  in half. The category axis keeps its edge labels inside the plot.
+- Labels are `text1` in `gray11`; the horizontal grid is `grayA5` at
+  `borderWidth1`.

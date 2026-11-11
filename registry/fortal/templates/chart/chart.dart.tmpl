@@ -59,7 +59,10 @@ LineChartStyler {{valuePrefix}}LineChartStyle({
   final recipe = LineChartStyler()
       .frame(_{{valuePrefix}}FrameStyle())
       .axis(_{{valuePrefix}}AxisStyle())
-      .yAxis(_{{valuePrefix}}ValueAxisStyle())
+      // Each value tick stays centred on the value it names, so the end
+      // ticks overhang the plot by half a line rather than moving inward.
+      // The line chart clips only its marks, so the overhang stays visible.
+      .yAxis(_{{valuePrefix}}ValueAxisStyle().fitInside(false))
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
       .grid(_{{valuePrefix}}GridStyle())
@@ -111,6 +114,8 @@ BarChartStyler {{valuePrefix}}BarChartStyle({
   final recipe = BarChartStyler()
       .frame(_{{valuePrefix}}FrameStyle())
       .axis(_{{valuePrefix}}AxisStyle())
+      // mix_chart clips the whole bar chart, labels included, so an end tick
+      // overhanging the plot would be cut in half: keep it fitted inside.
       .yAxis(_{{valuePrefix}}ValueAxisStyle())
       .topAxis(_hiddenAxisStyle())
       .rightAxis(_hiddenAxisStyle())
