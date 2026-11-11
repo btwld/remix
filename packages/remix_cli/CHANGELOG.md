@@ -1,21 +1,22 @@
 ## 1.0.0-rc.1
 
-First 1.0 release candidate of the GitHub-pinned registry installer.
-
-### Features
-
-- Add `remix list` and `remix list --json` to discover items in the pinned
-  registries without changing the project.
-- Resolve available presets from the registry catalog, including HeroUI.
-- Add `remix skills install` to install agent skills from the same registry
-  revision as the application-owned components. Record the installed source in
-  `remix.skills.json` and support custom skill directories.
-- Maintain an agent instruction block with the installed skill locations while
-  preserving existing project instructions and locally modified skill files.
+First 1.0 release candidate of the GitHub-pinned registry installer. Retains
+the functionality of 1.0.0-beta.2, including `remix skills install` and `remix list`.
 
 ### Documentation
 
-- Document the global CLI installation and plain `remix` commands.
+- Select the CLI release candidate in installation commands and agent guidance.
+
+## 1.0.0-beta.2
+
+### Features
+
+- Add `remix skills install` to copy agent skills from the project's pinned
+  registry revision, record file digests in `remix.skills.json`, and maintain
+  the project instruction block. Preserve unrelated files and refuse to
+  overwrite locally modified skill files.
+- Add `remix list`, command-specific help, and plain-language errors for
+  discovering and installing registry components.
 
 ## 1.0.0-beta.1
 
