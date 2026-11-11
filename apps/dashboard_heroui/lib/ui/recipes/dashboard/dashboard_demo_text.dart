@@ -161,10 +161,11 @@ const _segmentHeight = 32.0;
 const _segmentPaddingX = 16.0;
 const _hoverOpacity = .7;
 
-/// A secondary checkbox on a card, with a resting `border-tertiary` edge.
+/// A secondary checkbox on a card, with a resting `muted` edge.
 ///
 /// The secondary fill, `default`, is nearly the card's `surface` in both
-/// modes, so an unchecked box would show no edge. The outline sits inside the
+/// modes, so an unchecked box would show no edge. `muted` clears 3:1 against
+/// `surface` in both modes (4.83 light, 6.74 dark); no border token does. The outline sits inside the
 /// box, so it keeps its 16px, and goes once the box is checked or
 /// indeterminate, where the accent fill marks it. Keyboard focus still swaps
 /// it for the focus ring.
@@ -172,7 +173,7 @@ final uiDashboardCardCheckboxStyle = CheckboxStyler()
     .containerEffects(
       RemixBoxEffectsMix(
         outline: BorderSideMix(
-          color: UiTokens.borderTertiary(),
+          color: UiTokens.muted(),
           width: _checkboxEdgeWidth,
         ),
         outlineOffset: -_checkboxEdgeWidth,

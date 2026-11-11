@@ -362,9 +362,9 @@ void main() {
         final inside = pixel(center.translate(-4, -4));
         expectNearColor(card, heroUiToken(HeroUiTokens.surface, mode));
         expectNearColor(inside, heroUiToken(HeroUiTokens.defaultColor, mode));
-        expectNearColor(edge, heroUiToken(HeroUiTokens.borderTertiary, mode));
-        // Twice the contrast the bare `default` fill has against the card.
-        expect(contrastRatio(edge, card), greaterThan(2.3));
+        expectNearColor(edge, heroUiToken(HeroUiTokens.muted, mode));
+        // WCAG's 3:1 for a component boundary, against the card.
+        expect(contrastRatio(edge, card), greaterThanOrEqualTo(3));
         expect(contrastRatio(inside, card), lessThan(1.3));
       });
     }
