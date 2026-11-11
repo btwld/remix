@@ -156,7 +156,7 @@ class UiDateRangePicker extends StatelessWidget {
     icon: RemixIcons.calendar,
     placeholderStyle: ButtonStyler()
         .labelColor(UiTokens.gray10())
-        .labelFontWeight(FontWeight.w400),
+        .labelFontWeight(UiTokens.fontWeightRegular()),
     expandedStyle: ButtonStyler().border(
       .color(UiTokens.focus8()).width(UiTokens.borderWidth1()),
     ),

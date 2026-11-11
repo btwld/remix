@@ -39,7 +39,7 @@ CalendarStyler fortalRangeCalendarStyle({
                 .label(
                   TextStyler()
                       .color(FortalTokens.gray12())
-                      .fontWeight(FontWeight.w700),
+                      .fontWeight(FortalTokens.fontWeightBold()),
                 ),
           )
           .onSelected(

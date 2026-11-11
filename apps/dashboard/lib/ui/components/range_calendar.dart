@@ -35,7 +35,7 @@ CalendarStyler uiRangeCalendarStyle({
                 .label(
                   TextStyler()
                       .color(UiTokens.gray12())
-                      .fontWeight(FontWeight.w700),
+                      .fontWeight(UiTokens.fontWeightBold()),
                 ),
           )
           .onSelected(
