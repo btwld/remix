@@ -231,3 +231,8 @@ The command owns the files it copies. If you change one, the next run stops and
 names the file. Restore or delete it, then run the command again. Run the
 command again after you [move the registry pin](/open-code/updating), so the
 skills match the new commit.
+
+If you installed the skills earlier with `npx skills add btwld/remix`, delete
+`.agents/skills/using-remix` and `.agents/skills/building-remix-design-system`
+before the first run. Those copies come from `main`, not from your pin, so the
+command reports each file that differs and stops.

@@ -86,8 +86,11 @@ into a project that has run `remix init`. The copies come from the commit the
 project pins, so they describe the Remix the project installs:
 
 ```bash
-dart run remix_cli:remix skills install
+remix skills install
 ```
+
+A registry author without a `remix.yaml` can still install the skills from
+`main` with `npx skills add btwld/remix`.
 
 To have a coding agent do the whole setup, paste the
 [Start with AI prompt](docs/getting-started.mdx#start-with-ai).

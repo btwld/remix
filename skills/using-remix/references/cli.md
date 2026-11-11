@@ -36,8 +36,8 @@ moved, so read the hunks. Plain `--diff` exits 0. With `--exit-code` it exits
 ## Agent skills
 
 ```bash
-dart run remix_cli:remix skills install                       # copy the skills at the @remix pin into .agents/skills
-dart run remix_cli:remix skills install --dir .claude/skills  # the directory Claude Code loads; later runs remember it
+remix skills install                       # copy the skills at the @remix pin into .agents/skills
+remix skills install --dir .claude/skills  # the directory Claude Code loads; later runs remember it
 ```
 
 The command copies the skill files from the pinned `@remix` commit, writes one

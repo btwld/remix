@@ -18,20 +18,23 @@ project. The agent then works from guidance that matches the code it installs.
 Set up Remix, a Flutter component library, in this Flutter app.
 
 1. Run `flutter --version`. Stop and tell me if Flutter is older than 3.44.
-2. Add Remix and its CLI at these versions. An install without a version
-   selects an old 0.x release:
-   flutter pub add 'remix:^1.0.0-beta.18'
-   flutter pub add 'dev:remix_cli:^1.0.0-beta.1'
+2. Add Remix and install its CLI globally, at these versions. An install
+   without a version selects an old 0.x release:
+   flutter pub add 'remix:^1.0.0-rc.1'
+   dart pub global activate remix_cli '^1.0.0-beta.1'
+   If `remix` is not found afterward, add Pub's bin directory to PATH as the
+   activate output says.
 3. Pin the registry. Use `--preset fortal` or `--preset heroui` if I asked
    for one:
-   dart run remix_cli:remix init --preset vanilla
+   remix init --preset vanilla
 4. Install the Remix skills at that pin:
-   dart run remix_cli:remix skills install
+   remix skills install
    If you load project skills from another directory, add `--dir <path>`.
-   Claude Code uses `--dir .claude/skills`.
+   Claude Code uses `--dir .claude/skills`. If the command says to add
+   `@AGENTS.md` to CLAUDE.md, do it.
 5. Read the installed `using-remix/SKILL.md` and follow it for the rest:
-   add a button with `dart run remix_cli:remix add button`, place the theme
-   scope, and render the button on the first screen.
+   add a button with `remix add button`, place the theme scope, and render
+   the button on the first screen.
 
 Done when:
 - `remix.skills.json` and `remix.yaml` name the same `@remix` revision.
