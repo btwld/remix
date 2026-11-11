@@ -51,7 +51,9 @@ or `borderRounded`.
   workspace consumers pinned in their `remix.yaml`; `docs` is the docs site;
   `naked_ui_example`.
 - `docs/`: MDX documentation. `open_code/`: registry, preset, and release docs.
-- `skills/`: published agent skills (`npx skills add btwld/remix`).
+- `skills/`: published agent skills, installed with `remix skills install`.
+  `skills/index.yaml` is generated; run `dart run melos run skills:index` after
+  adding or removing a skill file.
 - `tool/`: contract checkers run by `ci:checks`.
 
 ## Commands

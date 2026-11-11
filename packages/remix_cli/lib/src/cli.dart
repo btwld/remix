@@ -3,6 +3,7 @@ import 'dart:io' show FileSystemException;
 import 'package:args/command_runner.dart';
 
 import 'process_runner.dart';
+import 'skills.dart';
 import 'suggest.dart';
 import 'version.dart';
 
@@ -94,6 +95,8 @@ String _bugReport(Object error, StackTrace stack) {
 typedef InitHandler = Future<void> Function(InitOptions options);
 typedef ListHandler = Future<void> Function(ListOptions options);
 typedef RegistryHandler = Future<void> Function(RegistryOptions options);
+typedef SkillsInstallHandler =
+    Future<void> Function(SkillsInstallOptions options);
 
 typedef AddHandler = Future<AddResult> Function(AddOptions options);
 
@@ -161,6 +164,17 @@ final class RegistryOptions {
   final String? ref;
 }
 
+final class SkillsInstallOptions {
+  const SkillsInstallOptions({this.directory});
+
+  /// The `--dir` value, or null when the flag is absent.
+  ///
+  /// Null is not the default directory. It means "the directory the last
+  /// install recorded, or `.agents/skills` on a first install", which only
+  /// the installer can resolve because it reads `remix.skills.json`.
+  final String? directory;
+}
+
 Future<int> runRemixCli(
   List<String> arguments, {
   required LineWriter writeOut,
@@ -169,12 +183,14 @@ Future<int> runRemixCli(
   AddHandler? onAdd,
   ListHandler? onList,
   RegistryHandler? onRegistry,
+  SkillsInstallHandler? onSkillsInstall,
 }) async {
   final runner = RemixCommandRunner(
     onInit: onInit,
     onAdd: onAdd,
     onList: onList,
     onRegistry: onRegistry,
+    onSkillsInstall: onSkillsInstall,
   );
 
   final helpCode = _writeRequestedHelp(
@@ -278,6 +294,7 @@ final class RemixCommandRunner extends CommandRunner<int> {
     AddHandler? onAdd,
     ListHandler? onList,
     RegistryHandler? onRegistry,
+    SkillsInstallHandler? onSkillsInstall,
   }) : super(
          'remix',
          'Install editable Remix UI source.',
@@ -293,15 +310,17 @@ final class RemixCommandRunner extends CommandRunner<int> {
     addCommand(_ListCommand(onList));
     addCommand(_AddCommand(onAdd));
     addCommand(_RegistryCommand(onRegistry));
+    addCommand(_SkillsCommand(onSkillsInstall));
   }
 
   @override
   String get usageFooter => '''
 
 Get started:
-  remix init          Pin the official registry and create lib/ui/ui.dart.
-  remix list          See the items you can add.
-  remix add button    Install an item and the items it needs.''';
+  remix init              Pin the official registry and create lib/ui/ui.dart.
+  remix list              See the items you can add.
+  remix add button        Install an item and the items it needs.
+  remix skills install    Give your coding agent the skills at your pin.''';
 }
 
 int? _writeRequestedHelp(
@@ -633,6 +652,75 @@ final class _RegistryActionCommand extends Command<int> {
         ref: argResults!.option('ref'),
       ),
     );
+    return successExitCode;
+  }
+}
+
+final class _SkillsCommand extends Command<int> {
+  _SkillsCommand(SkillsInstallHandler? handler) {
+    addSubcommand(_SkillsInstallCommand(handler));
+  }
+
+  @override
+  String get name => 'skills';
+
+  @override
+  String get description => 'Give coding agents the Remix skills at your pin.';
+
+  @override
+  String get usageFooter => '''
+
+Examples:
+  remix skills install                       Copy skills into .agents/skills.
+  remix skills install --dir .claude/skills  Copy them where Claude Code looks.''';
+}
+
+/// One option. `--dry-run` and `--overwrite` are absent on purpose: every
+/// effect is a text file under version control, and deleting a conflicting
+/// file is the explicit act that replaces it.
+final class _SkillsInstallCommand extends Command<int> {
+  _SkillsInstallCommand(this._handler) {
+    argParser.addOption(
+      'dir',
+      valueHelp: 'path',
+      help:
+          'Project directory your agent loads skills from. Defaults to the '
+          'directory of the last install, or $defaultSkillsDirectory.',
+    );
+  }
+
+  final SkillsInstallHandler? _handler;
+
+  @override
+  String get name => 'install';
+
+  @override
+  String get invocation => 'remix skills install [options]';
+
+  @override
+  String get description =>
+      'Copy the Remix skills from the pinned @remix commit into the project '
+      'and register them in AGENTS.md.';
+
+  @override
+  Future<int> run() async {
+    if (argResults!.rest.isNotEmpty) {
+      usageException('skills install accepts no positional arguments.');
+    }
+    final String? directory;
+    try {
+      directory = switch (argResults!.option('dir')) {
+        final value? => parseSkillsDirectory(value),
+        null => null,
+      };
+    } on FormatException catch (error) {
+      usageException('--dir ${error.message}');
+    }
+    final handler = _handler;
+    if (handler == null) {
+      throw StateError('The skills command is not available.');
+    }
+    await handler(SkillsInstallOptions(directory: directory));
     return successExitCode;
   }
 }
