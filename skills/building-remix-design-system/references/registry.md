@@ -242,7 +242,7 @@ the version it needs):
 
 ```shell
 flutter create --empty scratch && cd scratch
-dart pub global activate remix_cli '^1.0.0-beta.1'
+dart pub global activate remix_cli '^1.0.0-beta.2'
 remix init --prefix Ui
 remix registry add @acme \
   --repository acme/design-system --path registry --ref my-change
