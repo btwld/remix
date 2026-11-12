@@ -11,6 +11,7 @@ enum UiDashboardDemoSection {
 
   const UiDashboardDemoSection(this.label);
 
+  /// The heading shown above the section's destinations.
   final String label;
 }
 
@@ -24,8 +25,13 @@ enum UiDashboardDemoPage {
 
   const UiDashboardDemoPage(this.section, this.label, this.icon);
 
+  /// The navigation group the page belongs to.
   final UiDashboardDemoSection section;
+
+  /// The destination's label and the page title.
   final String label;
+
+  /// The destination's icon.
   final IconData icon;
 }
 
@@ -100,6 +106,7 @@ Set<UiDashboardDemoPage> uiDashboardMatchingPages(String query) {
   };
 }
 
+/// Builds the shell that frames the demo: navigation, title, search and [body].
 typedef UiDashboardDemoShellBuilder =
     Widget Function(
       BuildContext context, {
@@ -111,6 +118,7 @@ typedef UiDashboardDemoShellBuilder =
       required ValueChanged<String> onSearchChanged,
     });
 
+/// Builds one page of the demo for the current [searchQuery].
 typedef UiDashboardDemoPageBuilder =
     Widget Function(
       BuildContext context,
@@ -130,8 +138,13 @@ class UiDashboardDemoBase extends StatefulWidget {
     this.initialPage = UiDashboardDemoPage.overview,
   });
 
+  /// Builds the shell around the selected page.
   final UiDashboardDemoShellBuilder shellBuilder;
+
+  /// Builds each page, once it is first visited.
   final UiDashboardDemoPageBuilder pageBuilder;
+
+  /// The page selected first.
   final UiDashboardDemoPage initialPage;
 
   @override
@@ -239,6 +252,8 @@ class _UiDashboardDemoBaseState extends State<UiDashboardDemoBase> {
   );
 }
 
+/// Lays an inactive page out with the constraints it last had while active,
+/// and neither paints nor hit-tests it.
 class _FreezeInactiveConstraints extends SingleChildRenderObjectWidget {
   const _FreezeInactiveConstraints({
     required this.active,

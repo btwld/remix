@@ -3,10 +3,15 @@ import 'package:remix/remix.dart';
 
 import 'dashboard_sample_data.dart';
 
+/// Builds the page heading from a [title] and [description].
 typedef UiDashboardHeaderBuilder =
     Widget Function(BuildContext context, String title, String description);
+
+/// Builds the card for one headline metric.
 typedef UiDashboardMetricBuilder =
     Widget Function(BuildContext context, UiDashboardMetric metric);
+
+/// Builds a section from the overview's sample data.
 typedef UiDashboardDataBuilder =
     Widget Function(BuildContext context, UiDashboardSampleData data);
 
@@ -22,11 +27,22 @@ class UiDashboardOverviewBase extends StatelessWidget {
     this.scrollController,
   });
 
+  /// The content the overview shows.
   final UiDashboardSampleData data;
+
+  /// Builds the heading above the metrics.
   final UiDashboardHeaderBuilder headerBuilder;
+
+  /// Builds each metric card in the metrics grid.
   final UiDashboardMetricBuilder metricBuilder;
+
+  /// Builds the charts section.
   final UiDashboardDataBuilder chartBuilder;
+
+  /// Builds the recent-records table section.
   final UiDashboardDataBuilder tableBuilder;
+
+  /// Controls the page's vertical scroll position.
   final ScrollController? scrollController;
 
   @override

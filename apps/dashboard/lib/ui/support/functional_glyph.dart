@@ -25,11 +25,9 @@ abstract final class _Glyphs {
 
 /// Builds the chevron that reports a collapsible surface's state.
 ///
-/// Every collapsible surface offers the host the same escape hatch — a
-/// builder that replaces the glyph outright — over the same default. Each takes
-/// that builder under its own name, because a permission card discloses
-/// *details* and an answer discloses *sources*, so the shared part is this
-/// body and not the parameter.
+/// Every collapsible surface lets the host replace the glyph with a builder.
+/// Each surface names that builder for what it discloses (details, sources),
+/// so only this body is shared.
 class UiDisclosureIndicator extends StatelessWidget {
   const UiDisclosureIndicator({
     super.key,
@@ -38,8 +36,13 @@ class UiDisclosureIndicator extends StatelessWidget {
     this.builder,
   });
 
+  /// Icon style for the default chevron.
   final StyleSpec<IconSpec> styleSpec;
+
+  /// Whether the surface is open; the default chevron points up when it is.
   final bool expanded;
+
+  /// Replaces the default chevron.
   final Widget Function(BuildContext context, bool expanded)? builder;
 
   @override
@@ -55,30 +58,66 @@ class UiDisclosureIndicator extends StatelessWidget {
       );
 }
 
-/// Internal Material-free glyph set used by this preset's functional defaults.
+/// Material-free glyph set behind the Ui components' default icons.
 ///
 /// The types are intentionally not exported from the package barrel. Public
-/// icon/status builders remain the replacement mechanism.
+/// icon and status builders remain the way to replace a glyph.
 enum UiFunctionalGlyphKind {
+  /// Submit a message.
   send,
+
+  /// Stop a running turn.
   stop,
+
+  /// Copy content.
   copy,
+
+  /// Retry a turn or execution.
   retry,
+
+  /// Disclosure chevron; points up when expanded, down otherwise.
   chevron,
+
+  /// A plan or activity row that has not started.
   pending,
+
+  /// The plan or activity row currently underway.
   active,
+
+  /// A finished row.
   completed,
+
+  /// An abandoned row or a denied request.
   cancelled,
+
+  /// A failure.
   error,
+
+  /// A tool.
   tool,
+
+  /// Indeterminate progress; the only glyph that animates.
   loading,
+
+  /// A successful execution.
   completedCircle,
+
+  /// A canceled execution.
   cancelledCircle,
+
+  /// A failed execution.
   errorCircle,
+
+  /// A tool permission request.
   permission,
+
+  /// Jump to the newest transcript content.
   latest,
 }
 
+/// Paints one [UiFunctionalGlyphKind] with an [IconSpec].
+///
+/// Unset [spec] fields fall back to the ambient [IconTheme].
 class UiFunctionalGlyph extends StatelessWidget {
   const UiFunctionalGlyph({
     super.key,
@@ -87,8 +126,13 @@ class UiFunctionalGlyph extends StatelessWidget {
     this.expanded = false,
   });
 
+  /// Which glyph to draw.
   final UiFunctionalGlyphKind kind;
+
+  /// Resolved icon style.
   final IconSpec spec;
+
+  /// Selects the chevron direction; ignored by other kinds.
   final bool expanded;
 
   IconData get _icon => switch (kind) {

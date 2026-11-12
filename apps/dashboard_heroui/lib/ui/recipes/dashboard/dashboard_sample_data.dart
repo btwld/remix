@@ -9,11 +9,22 @@ final class UiDashboardMetric {
     this.progress,
   });
 
+  /// What the metric measures.
   final String label;
+
+  /// The headline figure.
   final String value;
+
+  /// The period or context the [delta] refers to.
   final String change;
+
+  /// The change since the previous period, such as `+12.4%`.
   final String? delta;
+
+  /// Whether [delta] is good news, which decides its tone.
   final bool positive;
+
+  /// Fraction from 0 to 1 shown as a progress bar; omitted when null.
   final double? progress;
 }
 
@@ -21,7 +32,10 @@ final class UiDashboardMetric {
 final class UiDashboardPoint {
   const UiDashboardPoint({required this.label, required this.value});
 
+  /// The x-axis label, such as a weekday.
   final String label;
+
+  /// The y-axis value.
   final double value;
 }
 
@@ -34,14 +48,33 @@ final class UiDashboardRecord {
     required this.amount,
   });
 
+  /// The order identifier.
   final String id;
+
+  /// The customer's name.
   final String customer;
+
+  /// The order's status, such as `Paid`.
   final String status;
+
+  /// The formatted amount.
   final String amount;
 }
 
 /// The category of an activity feed event.
-enum UiDashboardActivityKind { customer, order, payment, alert }
+enum UiDashboardActivityKind {
+  /// A customer joined or changed.
+  customer,
+
+  /// An order was placed or fulfilled.
+  order,
+
+  /// A payment or refund.
+  payment,
+
+  /// Something needs attention.
+  alert,
+}
 
 /// One event in the overview activity feed.
 final class UiDashboardActivity {
@@ -52,9 +85,16 @@ final class UiDashboardActivity {
     this.kind = UiDashboardActivityKind.customer,
   });
 
+  /// A short headline.
   final String title;
+
+  /// One line of supporting text.
   final String detail;
+
+  /// When it happened, relative to now, such as `12 min ago`.
   final String relativeTime;
+
+  /// The event's category.
   final UiDashboardActivityKind kind;
 }
 
@@ -67,9 +107,16 @@ final class UiDashboardSampleData {
     this.activities = const [],
   });
 
+  /// The headline metric cards.
   final List<UiDashboardMetric> metrics;
+
+  /// The primary time series.
   final List<UiDashboardPoint> revenue;
+
+  /// The recent-records table rows.
   final List<UiDashboardRecord> records;
+
+  /// The activity feed events, newest first.
   final List<UiDashboardActivity> activities;
 }
 

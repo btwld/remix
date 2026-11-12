@@ -3,10 +3,15 @@ import 'package:remix/remix.dart';
 
 import 'dashboard_sample_data.dart';
 
+/// Builds the page heading from a [title] and [description].
 typedef RegistryDashboardHeaderBuilder =
     Widget Function(BuildContext context, String title, String description);
+
+/// Builds the card for one headline metric.
 typedef RegistryDashboardMetricBuilder =
     Widget Function(BuildContext context, RegistryDashboardMetric metric);
+
+/// Builds a section from the overview's sample data.
 typedef RegistryDashboardDataBuilder =
     Widget Function(BuildContext context, RegistryDashboardSampleData data);
 
@@ -22,11 +27,22 @@ class RegistryDashboardOverviewBase extends StatelessWidget {
     this.scrollController,
   });
 
+  /// The content the overview shows.
   final RegistryDashboardSampleData data;
+
+  /// Builds the heading above the metrics.
   final RegistryDashboardHeaderBuilder headerBuilder;
+
+  /// Builds each metric card in the metrics grid.
   final RegistryDashboardMetricBuilder metricBuilder;
+
+  /// Builds the charts section.
   final RegistryDashboardDataBuilder chartBuilder;
+
+  /// Builds the recent-records table section.
   final RegistryDashboardDataBuilder tableBuilder;
+
+  /// Controls the page's vertical scroll position.
   final ScrollController? scrollController;
 
   @override

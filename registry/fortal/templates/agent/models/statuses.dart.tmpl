@@ -57,7 +57,7 @@ enum {{typePrefix}}ExecutionStatus {
   /// The tool failed.
   error,
 
-  /// The host or runtime cancelled the tool.
+  /// The host or runtime canceled the tool.
   cancelled,
 }
 
@@ -138,8 +138,10 @@ extension {{typePrefix}}AnswerStatusX on {{typePrefix}}AnswerStatus {
 
 /// Working vs settled for a plan item.
 extension {{typePrefix}}PlanItemStatusX on {{typePrefix}}PlanItemStatus {
+  /// True while this item is the one underway.
   bool get isActive => this == {{typePrefix}}PlanItemStatus.inProgress;
 
+  /// True once the item is finished or abandoned.
   bool get isDone =>
       this == {{typePrefix}}PlanItemStatus.completed ||
       this == {{typePrefix}}PlanItemStatus.cancelled;

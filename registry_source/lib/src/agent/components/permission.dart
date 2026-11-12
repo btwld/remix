@@ -9,10 +9,15 @@ import '../support/functional_glyph.dart';
 
 part 'permission.g.dart';
 
+/// Returns the status text shown and announced for a permission.
 typedef AgentPermissionStatusLabelBuilder =
     String Function(AgentPermissionStatus status);
+
+/// Builds the status icon in place of the default glyph.
 typedef AgentPermissionStatusBuilder =
     Widget Function(BuildContext context, AgentPermissionStatus status);
+
+/// Builds the details disclosure indicator in place of the default chevron.
 typedef AgentPermissionIndicatorBuilder =
     Widget Function(BuildContext context, bool expanded);
 
@@ -52,35 +57,97 @@ class AgentPermission extends StatefulWidget {
     this.styleSpec,
   });
 
+  /// Identifies this request; a new id while pending re-enables the actions.
   final Object? requestId;
+
+  /// The tool's identifier, such as `terminal.run`.
   final String tool;
+
+  /// The question the card asks.
   final String title;
+
+  /// Optional explanation of what the tool will do.
   final String? description;
+
+  /// Where the request is in its lifecycle.
+  ///
+  /// The decision actions show only while it is pending. Once decided, the
+  /// card collapses to a one-line receipt.
   final AgentPermissionStatus status;
+
+  /// The tool's arguments, listed in the details disclosure.
   final List<RemixDataListItem> parameters;
+
+  /// Whether the details disclosure is offered when [parameters] is not empty.
   final bool showParameters;
+
+  /// Controls the details disclosure. When null, the card manages it.
   final bool? detailsExpanded;
+
+  /// Whether the details start open when uncontrolled.
   final bool defaultDetailsExpanded;
+
+  /// Called when the details disclosure is asked to open or close.
   final ValueChanged<bool>? onDetailsExpandedChanged;
+
+  /// Called by the "Allow once" action, which is disabled when this is null.
   final VoidCallback? onAllowOnce;
+
+  /// Called by the "Always allow" action, which is shown only when this is set.
   final VoidCallback? onAlwaysAllow;
+
+  /// Called by the "Deny" action, which is disabled when this is null.
   final VoidCallback? onDeny;
+
+  /// Replaces the default status text.
   final AgentPermissionStatusLabelBuilder? statusLabelBuilder;
+
+  /// Replaces the default status icon.
   final AgentPermissionStatusBuilder? statusBuilder;
+
+  /// Replaces the details disclosure's default chevron.
   final AgentPermissionIndicatorBuilder? indicatorBuilder;
+
+  /// Label of the "Allow once" action.
   final String allowOnceLabel;
+
+  /// Label of the "Always allow" action.
   final String alwaysAllowLabel;
+
+  /// Label of the "Deny" action.
   final String denyLabel;
+
+  /// The details disclosure's trigger text and accessible label.
   final String detailsLabel;
+
+  /// Accessible label of the whole permission.
   final String semanticLabel;
+
+  /// Layout direction of each parameter's label and value.
   final Axis parameterOrientation;
+
+  /// Style of the card around the request.
   final CardStyler surfaceStyle;
+
+  /// Style of the details disclosure.
   final DisclosureStyler detailsStyle;
+
+  /// Style of the parameter list.
   final DataListStyler parametersStyle;
+
+  /// Style of the "Allow once" action.
   final ButtonStyler allowOnceStyle;
+
+  /// Style of the "Always allow" action.
   final ButtonStyler alwaysAllowStyle;
+
+  /// Style of the "Deny" action.
   final ButtonStyler denyStyle;
+
+  /// Style of the permission's own slots.
   final AgentPermissionStyler style;
+
+  /// A resolved spec that is used instead of resolving [style].
   final AgentPermissionSpec? styleSpec;
 
   @override
@@ -346,40 +413,75 @@ class _AgentPermissionState extends State<AgentPermission> {
 @MixableSpec(target: AgentPermission.new)
 @immutable
 final class AgentPermissionSpec with _$AgentPermissionSpec {
+  /// Wraps the card's content.
   @override
   final StyleSpec<BoxSpec> content;
+
+  /// Lays out the header row, and the one-line receipt after a decision.
   @override
   final StyleSpec<FlexBoxSpec> header;
+
+  /// Lays out the decision actions; horizontal unless a direction is set.
   @override
   final StyleSpec<FlexBoxSpec> actions;
+
+  /// The question text.
   @override
   final StyleSpec<TextSpec> title;
+
+  /// The tool identifier text.
   @override
   final StyleSpec<TextSpec> tool;
+
+  /// The description text.
   @override
   final StyleSpec<TextSpec> description;
+
+  /// The status text.
   @override
   final StyleSpec<TextSpec> status;
+
+  /// The details trigger text.
   @override
   final StyleSpec<TextSpec> detailsLabel;
+
+  /// The default tool icon.
   @override
   final StyleSpec<IconSpec> toolIcon;
+
+  /// The default status icon.
   @override
   final StyleSpec<IconSpec> statusIcon;
+
+  /// The details disclosure chevron.
   @override
   final StyleSpec<IconSpec> indicator;
+
+  /// The status badge while waiting for a decision.
   @override
   final StyleSpec<BoxSpec> pendingStatus;
+
+  /// The status badge while a decision is being recorded.
   @override
   final StyleSpec<BoxSpec> decidingStatus;
+
+  /// The status badge once the invocation is allowed.
   @override
   final StyleSpec<BoxSpec> allowedStatus;
+
+  /// The status badge while the approved tool runs.
   @override
   final StyleSpec<BoxSpec> runningStatus;
+
+  /// The status badge after the tool finishes.
   @override
   final StyleSpec<BoxSpec> completedStatus;
+
+  /// The status badge after a denial.
   @override
   final StyleSpec<BoxSpec> deniedStatus;
+
+  /// The status badge after an error.
   @override
   final StyleSpec<BoxSpec> errorStatus;
 

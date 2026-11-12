@@ -10,6 +10,7 @@ class UiDisclosureEngine {
   bool? _controlled;
   bool _uncontrolled;
 
+  /// The controlled value when the host supplies one, else the local value.
   bool get value => _controlled ?? _uncontrolled;
 
   /// Adopt the last controlled value when the host releases control.

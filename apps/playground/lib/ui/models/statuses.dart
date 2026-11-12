@@ -57,7 +57,7 @@ enum PlaygroundExecutionStatus {
   /// The tool failed.
   error,
 
-  /// The host or runtime cancelled the tool.
+  /// The host or runtime canceled the tool.
   cancelled,
 }
 
@@ -139,8 +139,10 @@ extension PlaygroundAnswerStatusX on PlaygroundAnswerStatus {
 
 /// Working vs settled for a plan item.
 extension PlaygroundPlanItemStatusX on PlaygroundPlanItemStatus {
+  /// True while this item is the one underway.
   bool get isActive => this == PlaygroundPlanItemStatus.inProgress;
 
+  /// True once the item is finished or abandoned.
   bool get isDone =>
       this == PlaygroundPlanItemStatus.completed ||
       this == PlaygroundPlanItemStatus.cancelled;

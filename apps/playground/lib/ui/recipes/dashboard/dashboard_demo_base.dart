@@ -11,6 +11,7 @@ enum PlaygroundDashboardDemoSection {
 
   const PlaygroundDashboardDemoSection(this.label);
 
+  /// The heading shown above the section's destinations.
   final String label;
 }
 
@@ -32,8 +33,13 @@ enum PlaygroundDashboardDemoPage {
 
   const PlaygroundDashboardDemoPage(this.section, this.label, this.icon);
 
+  /// The navigation group the page belongs to.
   final PlaygroundDashboardDemoSection section;
+
+  /// The destination's label and the page title.
   final String label;
+
+  /// The destination's icon.
   final IconData icon;
 }
 
@@ -110,6 +116,7 @@ Set<PlaygroundDashboardDemoPage> playgroundDashboardMatchingPages(
   };
 }
 
+/// Builds the shell that frames the demo: navigation, title, search and [body].
 typedef PlaygroundDashboardDemoShellBuilder =
     Widget Function(
       BuildContext context, {
@@ -121,6 +128,7 @@ typedef PlaygroundDashboardDemoShellBuilder =
       required ValueChanged<String> onSearchChanged,
     });
 
+/// Builds one page of the demo for the current [searchQuery].
 typedef PlaygroundDashboardDemoPageBuilder =
     Widget Function(
       BuildContext context,
@@ -140,8 +148,13 @@ class PlaygroundDashboardDemoBase extends StatefulWidget {
     this.initialPage = PlaygroundDashboardDemoPage.overview,
   });
 
+  /// Builds the shell around the selected page.
   final PlaygroundDashboardDemoShellBuilder shellBuilder;
+
+  /// Builds each page, once it is first visited.
   final PlaygroundDashboardDemoPageBuilder pageBuilder;
+
+  /// The page selected first.
   final PlaygroundDashboardDemoPage initialPage;
 
   @override
@@ -251,6 +264,8 @@ class _PlaygroundDashboardDemoBaseState
   );
 }
 
+/// Lays an inactive page out with the constraints it last had while active,
+/// and neither paints nor hit-tests it.
 class _FreezeInactiveConstraints extends SingleChildRenderObjectWidget {
   const _FreezeInactiveConstraints({
     required this.active,

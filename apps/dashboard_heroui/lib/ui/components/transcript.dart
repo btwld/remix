@@ -32,6 +32,7 @@ class UiTranscript extends StatefulWidget {
   }) : itemCount = null,
        itemBuilder = null;
 
+  /// Builds rows lazily, for transcripts too long to build at once.
   const UiTranscript.builder({
     super.key,
     required int this.itemCount,
@@ -52,16 +53,39 @@ class UiTranscript extends StatefulWidget {
     this.styleSpec,
   }) : children = null;
 
+  /// The rows, oldest first. Null for [UiTranscript.builder].
   final List<Widget>? children;
+
+  /// Number of rows built by [itemBuilder].
   final int? itemCount;
+
+  /// Builds the row at an index, for [UiTranscript.builder].
   final IndexedWidgetBuilder? itemBuilder;
+
+  /// Whether growing content keeps the newest row in view.
+  ///
+  /// A reader who scrolls away releases the edge until they return to it.
   final bool followOutput;
+
+  /// Distance from the end, in logical pixels, that still counts as near it.
   final double followThreshold;
+
+  /// Whether a turn is running; announced as [busyLabel].
   final bool busy;
+
+  /// Accessible value announced while [busy].
   final String busyLabel;
+
+  /// Accessible label of the transcript.
   final String label;
+
+  /// Called when the reader leaves or returns to the live edge.
   final ValueChanged<bool>? onFollowChanged;
+
+  /// Scroll controller. When null, the transcript owns one.
   final ScrollController? controller;
+
+  /// How the list clips its rows.
   final Clip clipBehavior;
 
   /// Whether a reader away from the live edge is offered a way back to it.
@@ -70,10 +94,20 @@ class UiTranscript extends StatefulWidget {
   /// the end and the transcript is not following, returns to the end
   /// (instantly when animations are disabled) and follows again.
   final bool showLatestButton;
+
+  /// Accessible label of the scroll-to-latest button.
   final String latestLabel;
+
+  /// Replaces the scroll-to-latest button's default icon.
   final RemixIconButtonIconBuilder? latestIconBuilder;
+
+  /// Style of the scroll-to-latest button.
   final IconButtonStyler latestStyle;
+
+  /// Style of the transcript's own slots.
   final UiTranscriptStyler style;
+
+  /// A resolved spec that is used instead of resolving [style].
   final UiTranscriptSpec? styleSpec;
 
   @override
@@ -92,15 +126,12 @@ class _UiTranscriptState extends State<UiTranscript> {
 
   /// Publishes this surface's focus to the styles resolved above it.
   ///
-  /// `focused` has no other source here: this preset's slots resolve above any
-  /// Naked control, so without this the `focus-visible` state the transcript
-  /// worksheet documents could never activate.
+  /// `focused` has no other source here: the slots resolve above any Naked
+  /// control, so without this the `focus-visible` state could never activate.
   ///
-  /// Only `focused`. The pointer-driven states do not resolve on this slot, and
-  /// did not before this controller existed either — a host's `onHovered` on
-  /// [UiTranscriptSpec.viewport] has never had an effect. Passing a
-  /// controller also means Mix will not mount its own pointer detector, so
-  /// restoring hover would be this object's job; nothing asks for it yet.
+  /// Only `focused`. Pointer states do not resolve on this slot, so a host's
+  /// `onHovered` on [UiTranscriptSpec.viewport] has no effect: passing a
+  /// controller stops Mix from mounting its own pointer detector.
   final WidgetStatesController _statesController = WidgetStatesController();
 
   @override
@@ -150,8 +181,7 @@ class _UiTranscriptState extends State<UiTranscript> {
   }
 
   /// Whether the reader is away from the end without the transcript
-  /// following them back, like the scroll button use-stick-to-bottom's
-  /// `isAtBottom` hides near the end.
+  /// following them back, so the scroll-to-latest button should show.
   bool _latestWanted(ScrollMetrics? metrics) {
     if (!widget.showLatestButton) return false;
     if (_liveEdge.sticks) return false;
@@ -373,10 +403,15 @@ const _transcriptShortcuts = <ShortcutActivator, Intent>{
 @MixableSpec(target: UiTranscript.new)
 @immutable
 final class UiTranscriptSpec with _$UiTranscriptSpec {
+  /// Wraps the scrolling list.
   @override
   final StyleSpec<BoxSpec> viewport;
+
+  /// Wraps each row.
   @override
   final StyleSpec<BoxSpec> item;
+
+  /// Gap between rows, in logical pixels; defaults to 0.
   @override
   final double? spacing;
 

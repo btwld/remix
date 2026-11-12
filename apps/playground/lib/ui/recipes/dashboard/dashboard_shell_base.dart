@@ -116,10 +116,19 @@ class PlaygroundDashboardShellBase<T extends Object> extends StatefulWidget {
        assert(searchWidth > 0),
        assert(headerSpacing >= 0);
 
+  /// The sidebar's navigation groups and destinations.
   final List<RemixSidebarSection<T>> sections;
+
+  /// The selected destination, or null when none is.
   final T? selectedValue;
+
+  /// Called when a destination is chosen.
   final ValueChanged<T> onSelected;
+
+  /// The page content.
   final Widget body;
+
+  /// The page title, shown in the header and used as its accessible label.
   final String title;
 
   /// The custom widget displayed in place of the page title.
@@ -127,16 +136,28 @@ class PlaygroundDashboardShellBase<T extends Object> extends StatefulWidget {
   /// When this is `null`, the header displays [title]. [title] always serves
   /// as the accessible label.
   final Widget? headerTitle;
+
+  /// The brand shown at the top of the sidebar.
   final Widget brand;
+
+  /// The footer content of the sidebar, such as the signed-in account.
   final Widget? account;
 
   /// The footer content shown while the desktop sidebar is collapsed.
   ///
   /// When `null`, the footer is hidden in the collapsed rail.
   final Widget? collapsedAccount;
+
+  /// Widgets at the trailing end of the header, after the search field.
   final List<Widget> headerActions;
+
+  /// Called with the search text. The search field is omitted when null.
   final ValueChanged<String>? onSearchChanged;
+
+  /// Placeholder of the search field.
   final String searchHintText;
+
+  /// Accessible label of the navigation sidebar.
   final String navigationSemanticLabel;
 
   /// Whether the desktop sidebar is collapsed.
@@ -159,12 +180,19 @@ class PlaygroundDashboardShellBase<T extends Object> extends StatefulWidget {
   /// The gap between the brand widget and the collapse button in the sidebar header.
   final double headerSpacing;
 
+  /// Builds the outer structure that places the sidebar, header and body.
   final PlaygroundDashboardLayoutBuilder layoutBuilder;
+
+  /// Builds the sidebar panel.
   final PlaygroundDashboardSidebarBuilder<T> sidebarBuilder;
 
   /// The builder that creates the page app bar.
   final PlaygroundDashboardAppBarBuilder appBarBuilder;
+
+  /// Builds the menu and collapse buttons.
   final PlaygroundDashboardIconButtonBuilder iconButtonBuilder;
+
+  /// Builds the header's search field.
   final PlaygroundDashboardSearchBuilder searchBuilder;
 
   /// The style applied to the sidebar header container.
@@ -172,9 +200,17 @@ class PlaygroundDashboardShellBase<T extends Object> extends StatefulWidget {
   /// Set this to match the app bar toolbar height and bottom border to align
   /// the sidebar and header rows across the shell.
   final BoxStyler sidebarHeaderStyle;
+
+  /// Icon of the button that opens the navigation in compact mode.
   final IconData menuIcon;
+
+  /// Icon at the start of the search field.
   final IconData searchIcon;
+
+  /// Collapse icon that points toward the start edge in a left-to-right layout.
   final IconData backwardIcon;
+
+  /// Collapse icon that points toward the end edge in a left-to-right layout.
   final IconData forwardIcon;
 
   @override
@@ -230,6 +266,9 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
           final expansion = motion?.expansion ?? (collapsed ? 0.0 : 1.0);
           final labelOpacity = motion?.labelOpacity ?? expansion;
           final showBrand = controls.isCompact || expansion > 0;
+          // The brand and the collapse button split a 2000-part row. Expanded,
+          // the brand takes all of it; collapsed, equal parts on each side
+          // center the button.
           final trailingFlex = controls.isCompact
               ? 0
               : ((1 - expansion) * 1000).round();
@@ -349,6 +388,8 @@ class _SidebarFooterSlot extends StatelessWidget {
     this.collapsedChild,
   });
 
+  /// Narrowest width the footer lays out at, so it does not reflow while the
+  /// sidebar animates narrower.
   static const _minChildWidth = 220.0;
 
   final bool collapsed;

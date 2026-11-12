@@ -16,8 +16,19 @@ import '../../models/activity_item.dart';
 import '../../models/plan_item.dart';
 import '../../models/statuses.dart';
 
-enum UiDashboardAgentButtonTone { primary, soft, outline }
+/// How prominent a demo button is.
+enum UiDashboardAgentButtonTone {
+  /// The filled, main action.
+  primary,
 
+  /// A tinted, secondary action.
+  soft,
+
+  /// An outlined, low-emphasis action.
+  outline,
+}
+
+/// Builds a demo button with a [label], an optional [onPressed] and a [tone].
 typedef UiDashboardAgentButtonBuilder =
     Widget Function(
       String label,
@@ -64,17 +75,40 @@ final class UiDashboardAgentStyles {
     required this.composerStopStyle,
   });
 
+  /// Builds the demo's buttons: starters and "New chat".
   final UiDashboardAgentButtonBuilder buttonBuilder;
+
+  /// Style of the page heading.
   final TextStyler heading;
+
+  /// Style of the page's supporting text.
   final TextStyler body;
+
+  /// Style of each [UiMessage].
   final UiMessageStyler messageStyle;
+
+  /// Style of each message's card.
   final CardStyler messageSurfaceStyle;
+
+  /// Style of each [UiAnswer].
   final UiAnswerStyler answerStyle;
+
+  /// Style of each answer's card.
   final CardStyler answerSurfaceStyle;
+
+  /// Style of each answer's sources disclosure.
   final DisclosureStyler answerSourcesStyle;
+
+  /// Style of each answer's copy action.
   final IconButtonStyler answerCopyStyle;
+
+  /// Style of each answer's retry action.
   final IconButtonStyler answerRetryStyle;
+
+  /// Style of the [UiTranscript].
   final UiTranscriptStyler transcriptStyle;
+
+  /// Style of the transcript's scroll-to-latest button.
   final IconButtonStyler transcriptLatestStyle;
 
   /// Lays out one turn: the prompt, the agent's work and its answer.
@@ -82,31 +116,84 @@ final class UiDashboardAgentStyles {
   /// The transcript's spacing separates turns, so keep a turn's own spacing
   /// the tighter of the two: each prompt then reads with the reply below it.
   final FlexBoxStyler turnStyle;
+
+  /// Style of the [UiPlan].
   final UiPlanStyler planStyle;
+
+  /// Style of the plan's disclosure.
   final DisclosureStyler planDisclosureStyle;
+
+  /// Style of the [UiActivity] ledger.
   final UiActivityStyler activityStyle;
+
+  /// Style of the ledger's disclosure.
   final DisclosureStyler activityDisclosureStyle;
+
+  /// Style of the [UiPermission].
   final UiPermissionStyler permissionStyle;
+
+  /// Style of the permission's card.
   final CardStyler permissionSurfaceStyle;
+
+  /// Style of the permission's details disclosure.
   final DisclosureStyler permissionDetailsStyle;
+
+  /// Style of the permission's parameter list.
   final DataListStyler permissionParametersStyle;
+
+  /// Style of the "Allow once" action.
   final ButtonStyler permissionAllowOnceStyle;
+
+  /// Style of the "Always allow" action.
   final ButtonStyler permissionAlwaysAllowStyle;
+
+  /// Style of the "Deny" action.
   final ButtonStyler permissionDenyStyle;
+
+  /// Style of the [UiExecution].
   final UiExecutionStyler executionStyle;
+
+  /// Style of the execution's card.
   final CardStyler executionSurfaceStyle;
+
+  /// Style of the execution's disclosure.
   final DisclosureStyler executionDisclosureStyle;
+
+  /// Style of the execution's copy action.
   final IconButtonStyler executionCopyStyle;
+
+  /// Style of the execution's retry action.
   final IconButtonStyler executionRetryStyle;
+
+  /// Style of the [UiComposer].
   final UiComposerStyler composerStyle;
+
+  /// Style of the composer's card.
   final CardStyler composerSurfaceStyle;
+
+  /// Style of the composer's text field.
   final TextFieldStyler composerFieldStyle;
+
+  /// Style of the composer's send action.
   final IconButtonStyler composerSubmitStyle;
+
+  /// Style of the composer's stop action.
   final IconButtonStyler composerStopStyle;
 }
 
-enum _Scenario { success, permission, failure }
+/// The scripted path a demo run takes.
+enum _Scenario {
+  /// Streams an answer without asking for permission.
+  success,
 
+  /// Asks for permission before the tool runs.
+  permission,
+
+  /// Fails partway through; retrying succeeds.
+  failure,
+}
+
+/// Where the current run is.
 enum _Stage {
   idle,
   preparing,
@@ -126,7 +213,10 @@ class UiDashboardChatPage extends StatefulWidget {
     this.stepDelay = const Duration(milliseconds: 320),
   });
 
+  /// The preset's styles for every Agent component on the page.
   final UiDashboardAgentStyles styles;
+
+  /// Pause between the scripted steps of a run.
   final Duration stepDelay;
 
   @override
@@ -390,8 +480,6 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
   );
 
   Widget _transcript({bool compact = false}) {
-    final requestId = _runId;
-    final narrow = MediaQuery.sizeOf(context).width < 600;
     final turns = <Widget>[
       for (final turn in _history)
         _turnGroup([
@@ -403,141 +491,8 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
             sources: turn.succeeded,
           ),
         ]),
+      if (_prompt.isNotEmpty) _currentTurn(),
     ];
-    if (_prompt.isNotEmpty) {
-      final children = <Widget>[_message(_prompt)];
-      children.add(
-        UiPlan(
-          style: styles.planStyle,
-          disclosureStyle: styles.planDisclosureStyle,
-          items: [
-            const UiPlanItem(
-              id: 'inspect',
-              title: 'Inspect the request',
-              status: .completed,
-            ),
-            UiPlanItem(
-              id: 'tool',
-              title: 'Run focused work',
-              status: _active
-                  ? .inProgress
-                  : _stage == _Stage.complete
-                  ? .completed
-                  : .cancelled,
-            ),
-          ],
-        ),
-      );
-      // Activity says what the agent is doing until a card says it instead.
-      if (_stage == _Stage.preparing) {
-        children.add(
-          UiActivity(
-            style: styles.activityStyle,
-            disclosureStyle: styles.activityDisclosureStyle,
-            status: _active ? .working : .complete,
-            items: [
-              UiActivityItem(
-                id: 'run',
-                title: _activityLabel,
-                status: _active ? .active : .complete,
-              ),
-            ],
-          ),
-        );
-      }
-      // A decided request that let the tool run is told by the tool row
-      // below it, so only a pending or denied request is shown.
-      if (_stage == _Stage.permission ||
-          (_scenario == _Scenario.permission && _stage == _Stage.denied)) {
-        children.add(
-          UiPermission(
-            requestId: _runId,
-            tool: 'terminal.run',
-            description: 'Run deterministic focused checks in this demo.',
-            status: _stage == _Stage.permission
-                ? .pending
-                : _stage == _Stage.denied
-                ? .denied
-                : _stage == _Stage.stopped
-                ? .allowed
-                : _stage == _Stage.failed
-                ? .error
-                : _active
-                ? .running
-                : .complete,
-            parameters: const [
-              RemixDataListItem(label: 'Command', value: 'flutter test'),
-            ],
-            style: styles.permissionStyle.merge(
-              UiPermissionStyler(
-                actions: FlexBoxStyler()
-                    .direction(narrow ? .vertical : .horizontal)
-                    .crossAxisAlignment(narrow ? .stretch : .center),
-              ),
-            ),
-            surfaceStyle: styles.permissionSurfaceStyle,
-            detailsStyle: styles.permissionDetailsStyle,
-            parametersStyle: styles.permissionParametersStyle,
-            allowOnceStyle: styles.permissionAllowOnceStyle,
-            alwaysAllowStyle: styles.permissionAlwaysAllowStyle,
-            denyStyle: styles.permissionDenyStyle,
-            onAllowOnce: () => _allow(requestId, always: false),
-            onAlwaysAllow: () => _allow(requestId, always: true),
-            onDeny: () {
-              if (requestId != _runId || _stage != _Stage.permission) return;
-              _cancelPending();
-              setState(() => _stage = _Stage.denied);
-            },
-          ),
-        );
-      }
-      if (_toolStarted &&
-          {
-            _Stage.running,
-            _Stage.complete,
-            _Stage.failed,
-            _Stage.stopped,
-          }.contains(_stage)) {
-        children.add(
-          UiExecution(
-            tool: 'terminal.run',
-            title: 'Focused checks',
-            status: _stage == _Stage.running
-                ? .running
-                : _stage == _Stage.complete
-                ? .success
-                : _stage == _Stage.failed
-                ? .error
-                : .cancelled,
-            style: styles.executionStyle,
-            surfaceStyle: styles.executionSurfaceStyle,
-            disclosureStyle: styles.executionDisclosureStyle,
-            copyStyle: styles.executionCopyStyle,
-            retryStyle: styles.executionRetryStyle,
-            onCopy: () =>
-                Clipboard.setData(ClipboardData(text: _executionOutput)),
-            onRetry: _retry,
-            child: StyledText(_executionOutput),
-          ),
-        );
-      }
-      if (_answer.isNotEmpty ||
-          {_Stage.denied, _Stage.stopped}.contains(_stage)) {
-        children.add(
-          _answerWidget(
-            _turn,
-            _visibleAnswer,
-            _stage == _Stage.running
-                ? .streaming
-                : _stage == _Stage.failed
-                ? .error
-                : .complete,
-            sources: _stage == _Stage.complete,
-          ),
-        );
-      }
-      turns.add(_turnGroup(children));
-    }
     return UiTranscript(
       controller: _scroll,
       followOutput: _following,
@@ -566,6 +521,138 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
           : turns,
     );
   }
+
+  /// The turn in progress: the prompt and whichever parts of the agent's work
+  /// the current stage has reached.
+  Widget _currentTurn() => _turnGroup([
+    _message(_prompt),
+    _plan(),
+    // Activity says what the agent is doing until a card says it instead.
+    if (_stage == _Stage.preparing) _activity(),
+    // A decided request that let the tool run is told by the tool row
+    // below it, so only a pending or denied request is shown.
+    if (_stage == _Stage.permission ||
+        (_scenario == _Scenario.permission && _stage == _Stage.denied))
+      _permission(),
+    if (_toolStarted &&
+        {
+          _Stage.running,
+          _Stage.complete,
+          _Stage.failed,
+          _Stage.stopped,
+        }.contains(_stage))
+      _execution(),
+    if (_answer.isNotEmpty || {_Stage.denied, _Stage.stopped}.contains(_stage))
+      _answerWidget(
+        _turn,
+        _visibleAnswer,
+        _answerStatus,
+        sources: _stage == _Stage.complete,
+      ),
+  ]);
+
+  Widget _plan() => UiPlan(
+    style: styles.planStyle,
+    disclosureStyle: styles.planDisclosureStyle,
+    items: [
+      const UiPlanItem(
+        id: 'inspect',
+        title: 'Inspect the request',
+        status: .completed,
+      ),
+      UiPlanItem(
+        id: 'tool',
+        title: 'Run focused work',
+        status: _active
+            ? .inProgress
+            : _stage == _Stage.complete
+            ? .completed
+            : .cancelled,
+      ),
+    ],
+  );
+
+  Widget _activity() => UiActivity(
+    style: styles.activityStyle,
+    disclosureStyle: styles.activityDisclosureStyle,
+    status: _active ? .working : .complete,
+    items: [
+      UiActivityItem(
+        id: 'run',
+        title: _activityLabel,
+        status: _active ? .active : .complete,
+      ),
+    ],
+  );
+
+  Widget _permission() {
+    final requestId = _runId;
+    final narrow = MediaQuery.sizeOf(context).width < 600;
+    return UiPermission(
+      requestId: requestId,
+      tool: 'terminal.run',
+      description: 'Run deterministic focused checks in this demo.',
+      status: _permissionStatus,
+      parameters: const [
+        RemixDataListItem(label: 'Command', value: 'flutter test'),
+      ],
+      style: styles.permissionStyle.merge(
+        UiPermissionStyler(
+          actions: FlexBoxStyler()
+              .direction(narrow ? .vertical : .horizontal)
+              .crossAxisAlignment(narrow ? .stretch : .center),
+        ),
+      ),
+      surfaceStyle: styles.permissionSurfaceStyle,
+      detailsStyle: styles.permissionDetailsStyle,
+      parametersStyle: styles.permissionParametersStyle,
+      allowOnceStyle: styles.permissionAllowOnceStyle,
+      alwaysAllowStyle: styles.permissionAlwaysAllowStyle,
+      denyStyle: styles.permissionDenyStyle,
+      onAllowOnce: () => _allow(requestId, always: false),
+      onAlwaysAllow: () => _allow(requestId, always: true),
+      onDeny: () {
+        if (requestId != _runId || _stage != _Stage.permission) return;
+        _cancelPending();
+        setState(() => _stage = _Stage.denied);
+      },
+    );
+  }
+
+  Widget _execution() => UiExecution(
+    tool: 'terminal.run',
+    title: 'Focused checks',
+    status: _executionStatus,
+    style: styles.executionStyle,
+    surfaceStyle: styles.executionSurfaceStyle,
+    disclosureStyle: styles.executionDisclosureStyle,
+    copyStyle: styles.executionCopyStyle,
+    retryStyle: styles.executionRetryStyle,
+    onCopy: () => Clipboard.setData(ClipboardData(text: _executionOutput)),
+    onRetry: _retry,
+    child: StyledText(_executionOutput),
+  );
+
+  UiPermissionStatus get _permissionStatus => switch (_stage) {
+    .permission => .pending,
+    .denied => .denied,
+    .stopped => .allowed,
+    .failed => .error,
+    _ => _active ? .running : .complete,
+  };
+
+  UiExecutionStatus get _executionStatus => switch (_stage) {
+    .running => .running,
+    .complete => .success,
+    .failed => .error,
+    _ => .cancelled,
+  };
+
+  UiAnswerStatus get _answerStatus => switch (_stage) {
+    .running => .streaming,
+    .failed => .error,
+    _ => .complete,
+  };
 
   // Each turn is one transcript item, so the transcript's spacing falls
   // between turns and the turn's own, tighter spacing within one.

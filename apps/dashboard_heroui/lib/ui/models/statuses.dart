@@ -57,7 +57,7 @@ enum UiExecutionStatus {
   /// The tool failed.
   error,
 
-  /// The host or runtime cancelled the tool.
+  /// The host or runtime canceled the tool.
   cancelled,
 }
 
@@ -138,8 +138,10 @@ extension UiAnswerStatusX on UiAnswerStatus {
 
 /// Working vs settled for a plan item.
 extension UiPlanItemStatusX on UiPlanItemStatus {
+  /// True while this item is the one underway.
   bool get isActive => this == UiPlanItemStatus.inProgress;
 
+  /// True once the item is finished or abandoned.
   bool get isDone =>
       this == UiPlanItemStatus.completed || this == UiPlanItemStatus.cancelled;
 }

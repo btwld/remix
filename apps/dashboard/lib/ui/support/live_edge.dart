@@ -17,6 +17,8 @@ class UiLiveEdgeEngine {
   });
 
   bool _enabled;
+
+  /// Whether following is on at all; the host's `followOutput`.
   bool get enabled => _enabled;
 
   set enabled(bool value) {
@@ -26,11 +28,18 @@ class UiLiveEdgeEngine {
     _enabled = value;
   }
 
+  /// Distance from the end, in logical pixels, that still counts as near it.
   double threshold;
+
+  /// Called when the reader releases or regains the live edge.
   ValueChanged<bool>? onChanged;
+
   bool _following = true;
+
+  /// True while [jumpToEnd] moves the position, so it is not read as a scroll.
   bool _programmatic = false;
 
+  /// Whether the reader is at, or has returned to, the end.
   bool get following => _following;
 
   /// Whether growing output should keep the end in view.
@@ -63,6 +72,7 @@ class UiLiveEdgeEngine {
   /// The reader asked for the newest output: follow again.
   void resume() => _setFollowing(true);
 
+  /// Jumps to the end when following is enabled and the reader is following.
   void follow(ScrollController controller) {
     if (!enabled || !following) return;
     jumpToEnd(controller);
@@ -98,6 +108,7 @@ const double _atEnd = 0.5;
 class UiLiveEdgeScrollPhysics extends ScrollPhysics {
   const UiLiveEdgeScrollPhysics({required this.liveEdge, super.parent});
 
+  /// The engine that decides whether the end stays in view.
   final UiLiveEdgeEngine liveEdge;
 
   @override
@@ -134,9 +145,16 @@ class UiLiveEdgeScrollView extends StatefulWidget {
     this.onFollowChanged,
   });
 
+  /// The content to scroll.
   final Widget child;
+
+  /// Whether growing content keeps the end in view.
   final bool followOutput;
+
+  /// Distance from the end, in logical pixels, that still counts as near it.
   final double followThreshold;
+
+  /// Called when the reader leaves or returns to the end.
   final ValueChanged<bool>? onFollowChanged;
 
   @override

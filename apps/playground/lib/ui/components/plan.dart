@@ -11,10 +11,15 @@ import '../support/live_edge.dart';
 
 part 'plan.g.dart';
 
+/// Builds an item's status icon in place of the default glyph.
 typedef PlaygroundPlanStatusBuilder =
     Widget Function(BuildContext context, PlaygroundPlanItem item);
+
+/// Returns the accessible status text announced for an item.
 typedef PlaygroundPlanStatusLabelBuilder =
     String Function(PlaygroundPlanItem item);
+
+/// Builds the disclosure indicator in place of the default chevron.
 typedef PlaygroundPlanIndicatorBuilder =
     Widget Function(BuildContext context, bool expanded);
 
@@ -41,25 +46,61 @@ class PlaygroundPlan extends StatefulWidget {
     this.styleSpec,
   });
 
+  /// The plan's rows, in display order.
   final List<PlaygroundPlanItem> items;
+
+  /// The disclosure's title and accessible label.
   final String title;
+
+  /// Shown in place of the rows when [items] is empty.
   final String emptyLabel;
+
+  /// Accessible label of the whole plan.
   final String semanticLabel;
+
+  /// Whether the plan closes itself when its last open item finishes.
   final bool collapseOnComplete;
+
+  /// Controls the disclosure. When null, the plan manages it.
   final bool? expanded;
+
+  /// Whether the disclosure starts open when uncontrolled.
   final bool defaultExpanded;
+
+  /// Called when the disclosure is asked to open or close.
   final ValueChanged<bool>? onExpandedChanged;
+
+  /// Replaces an item's default status icon.
   final PlaygroundPlanStatusBuilder? statusBuilder;
+
+  /// Replaces the default status text announced for an item.
   final PlaygroundPlanStatusLabelBuilder? statusLabelBuilder;
+
+  /// Replaces the disclosure's default chevron.
   final PlaygroundPlanIndicatorBuilder? indicatorBuilder;
+
+  /// Whether growing content keeps the newest row in view.
   final bool followOutput;
+
+  /// Distance from the end, in logical pixels, that still counts as near it.
   final double followThreshold;
+
+  /// Called when the reader leaves or returns to the end of the list.
   final ValueChanged<bool>? onFollowChanged;
+
+  /// Style of the disclosure.
   final DisclosureStyler disclosureStyle;
+
+  /// Style of the plan's own slots.
   final PlaygroundPlanStyler style;
+
+  /// A resolved spec that is used instead of resolving [style].
   final PlaygroundPlanSpec? styleSpec;
 
+  /// Number of items that are completed or canceled.
   int get settledCount => items.where((item) => item.status.isDone).length;
+
+  /// Whether any item is still pending or in progress.
   bool get isWorking => items.any((item) => !item.status.isDone);
 
   @override
@@ -243,34 +284,63 @@ class _PlaygroundPlanState extends State<PlaygroundPlan> {
 @MixableSpec(target: PlaygroundPlan.new)
 @immutable
 final class PlaygroundPlanSpec with _$PlaygroundPlanSpec {
+  /// Bounds the scrolling list of rows.
   @override
   final StyleSpec<BoxSpec> viewport;
+
+  /// Lays out one row: status icon, title and detail.
   @override
   final StyleSpec<FlexBoxSpec> item;
+
+  /// The title in the disclosure trigger.
   @override
   final StyleSpec<TextSpec> summaryTitle;
+
+  /// A row's title.
   @override
   final StyleSpec<TextSpec> itemTitle;
+
+  /// A row's detail, and the empty label.
   @override
   final StyleSpec<TextSpec> itemDetail;
+
+  /// The settled/total count in the trigger.
   @override
   final StyleSpec<TextSpec> count;
+
+  /// The disclosure chevron.
   @override
   final StyleSpec<IconSpec> indicator;
+
+  /// Wraps a pending row.
   @override
   final StyleSpec<BoxSpec> pendingItem;
+
+  /// Wraps the in-progress row.
   @override
   final StyleSpec<BoxSpec> activeItem;
+
+  /// Wraps a completed row.
   @override
   final StyleSpec<BoxSpec> completedItem;
+
+  /// Wraps a canceled row.
   @override
   final StyleSpec<BoxSpec> cancelledItem;
+
+  /// The status icon of a pending row.
   @override
   final StyleSpec<IconSpec> pendingStatus;
+
+  /// The status icon of the in-progress row.
   @override
   final StyleSpec<IconSpec> activeStatus;
+
+  /// The status icon of a completed row.
   @override
   final StyleSpec<IconSpec> completedStatus;
+
+  /// The status icon of a canceled row.
   @override
   final StyleSpec<IconSpec> cancelledStatus;
 

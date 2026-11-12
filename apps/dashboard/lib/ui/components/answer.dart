@@ -9,6 +9,7 @@ import '../support/functional_glyph.dart';
 
 part 'answer.g.dart';
 
+/// Builds the sources disclosure indicator in place of the default chevron.
 typedef UiAnswerSourcesIndicatorBuilder =
     Widget Function(BuildContext context, bool expanded);
 
@@ -42,29 +43,79 @@ class UiAnswer extends StatefulWidget {
     this.styleSpec,
   });
 
+  /// The answer body, rendered by the host.
   final Widget child;
+
+  /// Identifies the current stream; a new id while streaming closes sources.
   final Object? streamId;
+
+  /// Where the answer is in its lifecycle.
   final UiAnswerStatus status;
+
+  /// Called by the copy action, which is shown only when this is set.
   final VoidCallback? onCopy;
+
+  /// Called by the retry action, which is shown only when this is set.
   final VoidCallback? onRetry;
+
+  /// Replaces the copy action's default icon.
   final RemixIconButtonIconBuilder? copyIconBuilder;
+
+  /// Replaces the retry action's default icon.
   final RemixIconButtonIconBuilder? retryIconBuilder;
+
+  /// Replaces the sources disclosure's default chevron.
   final UiAnswerSourcesIndicatorBuilder? sourcesIndicatorBuilder;
+
+  /// Accessible label of the copy action.
   final String copyLabel;
+
+  /// Accessible label of the retry action.
   final String retryLabel;
+
+  /// Forces the actions on or off once streaming ends.
+  ///
+  /// When null, [status] decides.
   final bool? showActions;
+
+  /// A status message, such as "Copied", announced beside the actions once the
+  /// answer completes.
   final Widget? feedback;
+
+  /// The sources disclosure's content. The disclosure is omitted when null.
   final Widget? sourcesContent;
+
+  /// Controls the sources disclosure. When null, the answer manages it.
   final bool? sourcesExpanded;
+
+  /// Whether the sources disclosure starts open when uncontrolled.
   final bool defaultSourcesExpanded;
+
+  /// Called when the sources disclosure is asked to open or close.
   final ValueChanged<bool>? onSourcesExpandedChanged;
+
+  /// The sources disclosure's trigger text and accessible label.
   final String sourcesLabel;
+
+  /// Accessible label of the whole answer.
   final String semanticLabel;
+
+  /// Style of the card around the answer.
   final CardStyler surfaceStyle;
+
+  /// Style of the sources disclosure.
   final DisclosureStyler sourcesStyle;
+
+  /// Style of the copy action.
   final IconButtonStyler copyStyle;
+
+  /// Style of the retry action.
   final IconButtonStyler retryStyle;
+
+  /// Style of the answer's own slots.
   final UiAnswerStyler style;
+
+  /// A resolved spec that is used instead of resolving [style].
   final UiAnswerSpec? styleSpec;
 
   @override
@@ -200,14 +251,23 @@ class _UiAnswerState extends State<UiAnswer> {
 @MixableSpec(target: UiAnswer.new)
 @immutable
 final class UiAnswerSpec with _$UiAnswerSpec {
+  /// Wraps the answer body.
   @override
   final StyleSpec<BoxSpec> body;
+
+  /// Lays out the copy and retry actions and the feedback.
   @override
   final StyleSpec<FlexBoxSpec> actions;
+
+  /// Wraps the feedback message.
   @override
   final StyleSpec<BoxSpec> feedback;
+
+  /// The sources trigger text.
   @override
   final StyleSpec<TextSpec> sourcesLabel;
+
+  /// The sources disclosure chevron.
   @override
   final StyleSpec<IconSpec> indicator;
 
