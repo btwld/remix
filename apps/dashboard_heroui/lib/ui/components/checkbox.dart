@@ -6,9 +6,14 @@ import '../theme/theme.dart';
 
 part 'checkbox.g.dart';
 
-/// HeroUI checkbox variants: `primary` on the field surface with its shadow,
-/// `secondary` on the default fill.
-enum UiCheckboxVariant { primary, secondary }
+/// HeroUI checkbox variants.
+enum UiCheckboxVariant {
+  /// The field surface fill, with its shadow.
+  primary,
+
+  /// The `default` fill.
+  secondary,
+}
 
 /// HeroUI recipe for [RemixCheckbox].
 ///
@@ -30,7 +35,7 @@ CheckboxStyler uiCheckboxStyle({
   final mark = invalid ? UiTokens.dangerForeground : UiTokens.accentForeground;
   final label = invalid ? UiTokens.danger : UiTokens.foreground;
 
-  var result = CheckboxStyler()
+  return CheckboxStyler()
       .size(_control, _control)
       .alignment(.center)
       .borderRadius(.all(UiTokens.radiusMd()))
@@ -41,29 +46,30 @@ CheckboxStyler uiCheckboxStyle({
       .onSelected(.color(fill()))
       .onIndeterminate(.color(fill()).indicator(.size(_indeterminate)))
       .onFocusVisible(.containerEffects(uiFocusRing()))
-      .animate(UiTokens.selectionMotion);
-
-  if (variant == .primary) {
-    result = result.containerEffects(uiSurfaceEffects());
-    if (!invalid) {
-      result = result.onHovered(
-        CheckboxStyler().onSelected(.color(UiTokens.accentHover())),
-      );
-    }
-  }
-  if (invalid) {
-    // The 1px danger outline shows only while unselected.
-    result = result
-        .containerEffects(uiInvalidRing())
-        .onSelected(.containerEffects(.outline(.style(.none))))
-        .onIndeterminate(.containerEffects(.outline(.style(.none))));
-  } else {
-    result = result.onIndeterminate(
-      CheckboxStyler().onPressed(.color(UiTokens.accentHover())),
-    );
-  }
-
-  return result
+      .animate(UiTokens.selectionMotion)
+      .merge(
+        variant == .primary
+            ? CheckboxStyler().containerEffects(uiSurfaceEffects())
+            : null,
+      )
+      .merge(
+        variant == .primary && !invalid
+            ? CheckboxStyler().onHovered(
+                CheckboxStyler().onSelected(.color(UiTokens.accentHover())),
+              )
+            : null,
+      )
+      .merge(
+        invalid
+            // The 1px danger outline shows only while unselected.
+            ? CheckboxStyler()
+                  .containerEffects(uiInvalidRing())
+                  .onSelected(.containerEffects(.outline(.style(.none))))
+                  .onIndeterminate(.containerEffects(.outline(.style(.none))))
+            : CheckboxStyler().onIndeterminate(
+                CheckboxStyler().onPressed(.color(UiTokens.accentHover())),
+              ),
+      )
       .onDisabled(
         CheckboxStyler()
             .label(.color(uiDisabledLabelColor(danger: invalid)()))

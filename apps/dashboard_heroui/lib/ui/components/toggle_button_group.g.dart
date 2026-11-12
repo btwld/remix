@@ -32,6 +32,7 @@ class UiToggleButtonGroup<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The `default` fill.
   const UiToggleButtonGroup.defaultToggle({
     super.key,
     this.size = .md,
@@ -48,6 +49,7 @@ class UiToggleButtonGroup<T> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiToggleButtonVariant.defaultToggle;
 
+  /// Transparent until hovered.
   const UiToggleButtonGroup.ghost({
     super.key,
     this.size = .md,

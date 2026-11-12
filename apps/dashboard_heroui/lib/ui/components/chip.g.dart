@@ -19,6 +19,7 @@ class UiChip extends StatelessWidget {
     this.labelBuilder,
   });
 
+  /// The solid fill in the chip's color.
   const UiChip.primary({
     super.key,
     this.color = .defaultColor,
@@ -29,6 +30,7 @@ class UiChip extends StatelessWidget {
     this.labelBuilder,
   }) : variant = UiChipVariant.primary;
 
+  /// The neutral `default` fill under a colored label.
   const UiChip.secondary({
     super.key,
     this.color = .defaultColor,
@@ -39,6 +41,7 @@ class UiChip extends StatelessWidget {
     this.labelBuilder,
   }) : variant = UiChipVariant.secondary;
 
+  /// A tinted fill in the chip's color.
   const UiChip.soft({
     super.key,
     this.color = .defaultColor,
@@ -49,6 +52,7 @@ class UiChip extends StatelessWidget {
     this.labelBuilder,
   }) : variant = UiChipVariant.soft;
 
+  /// No fill, under a colored label.
   const UiChip.tertiary({
     super.key,
     this.color = .defaultColor,

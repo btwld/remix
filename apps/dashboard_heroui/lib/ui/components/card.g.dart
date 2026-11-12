@@ -18,24 +18,28 @@ class UiCard extends StatelessWidget {
     this.child,
   });
 
+  /// The `surface` fill.
   const UiCard.defaultCard({
     super.key,
     this.style = const CardStyler.create(),
     this.child,
   }) : variant = UiCardVariant.defaultCard;
 
+  /// The slightly darker `surface-secondary` fill.
   const UiCard.secondary({
     super.key,
     this.style = const CardStyler.create(),
     this.child,
   }) : variant = UiCardVariant.secondary;
 
+  /// The darkest `surface-tertiary` fill.
   const UiCard.tertiary({
     super.key,
     this.style = const CardStyler.create(),
     this.child,
   }) : variant = UiCardVariant.tertiary;
 
+  /// No fill and no shadow.
   const UiCard.transparent({
     super.key,
     this.style = const CardStyler.create(),

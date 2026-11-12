@@ -28,7 +28,7 @@ IconButtonStyler uiCloseButtonStyle({
     .onPressed(
       IconButtonStyler().scale(_pressedScale).animate(UiTokens.transformMotion),
     )
-    .onHovered(IconButtonStyler().color(UiTokens.defaultHover()))
+    .onHovered(.color(UiTokens.defaultHover()))
     .onFocusVisible(.containerEffects(uiFocusRing()))
     .animate(UiTokens.fillMotion)
     .onDisabled(IconButtonStyler().wrap(.opacity(UiTokens.disabledOpacity)))

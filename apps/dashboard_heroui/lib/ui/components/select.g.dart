@@ -32,6 +32,7 @@ class UiSelect<T> extends StatelessWidget {
     this.focusNode,
   });
 
+  /// The field surface fill, with its shadow.
   const UiSelect.primary({
     super.key,
     this.invalid = false,
@@ -53,6 +54,7 @@ class UiSelect<T> extends StatelessWidget {
     this.focusNode,
   }) : variant = UiSelectVariant.primary;
 
+  /// The `default` fill.
   const UiSelect.secondary({
     super.key,
     this.invalid = false,

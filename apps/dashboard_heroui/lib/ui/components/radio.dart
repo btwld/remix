@@ -6,9 +6,14 @@ import '../theme/theme.dart';
 
 part 'radio.g.dart';
 
-/// HeroUI radio variants: `primary` on the field surface with its shadow,
-/// `secondary` on the default fill.
-enum UiRadioVariant { primary, secondary }
+/// HeroUI radio variants.
+enum UiRadioVariant {
+  /// The field surface fill, with its shadow.
+  primary,
+
+  /// The `default` fill.
+  secondary,
+}
 
 /// HeroUI recipe for [RemixRadio].
 ///
@@ -27,43 +32,41 @@ RadioStyler uiRadioStyle({
   };
   final label = invalid ? UiTokens.danger : UiTokens.foreground;
 
-  var result =
-      RadioStyler(
-            container: BoxStyler()
-                .size(uiRadioSize, uiRadioSize)
-                .alignment(.center)
-                .borderRadius(.all(UiTokens.radiusLg())),
-            indicator: _dot(_dotScale),
-          )
-          .label(uiLabelText.color(label()))
-          .labelSpacing(uiControlGap)
-          .color(field.rest())
-          // The unselected dot is `bg-field-hover` while hovered, which fills the
-          // whole control.
-          .onHovered(.color(field.hover()))
-          .onSelected(RadioStyler().color(UiTokens.accent()))
-          .onPressed(
-            RadioStyler()
-                .scale(_pressedScale)
-                .onSelected(
-                  RadioStyler()
-                      .color(UiTokens.accentHover())
-                      .indicator(_dot(_pressedDotScale)),
-                ),
-          )
-          .onFocusVisible(.containerEffects(uiFocusRing()))
-          .animate(UiTokens.selectionMotion);
-
-  if (variant == .primary) {
-    result = result.containerEffects(uiSurfaceEffects());
-  }
-  if (invalid) {
-    // The 1px danger outline stays when selected; focus still shows the
-    // ordinary ring.
-    result = result.containerEffects(uiInvalidRing());
-  }
-
-  return result
+  return RadioStyler(
+        container: BoxStyler()
+            .size(uiRadioSize, uiRadioSize)
+            .alignment(.center)
+            .borderRadius(.all(UiTokens.radiusLg())),
+        indicator: _dot(_dotScale),
+      )
+      .label(uiLabelText.color(label()))
+      .labelSpacing(uiControlGap)
+      .color(field.rest())
+      // The unselected dot is `bg-field-hover` while hovered, which fills the
+      // whole control.
+      .onHovered(.color(field.hover()))
+      .onSelected(RadioStyler().color(UiTokens.accent()))
+      .onPressed(
+        RadioStyler()
+            .scale(_pressedScale)
+            .onSelected(
+              RadioStyler()
+                  .color(UiTokens.accentHover())
+                  .indicator(_dot(_pressedDotScale)),
+            ),
+      )
+      .onFocusVisible(.containerEffects(uiFocusRing()))
+      .animate(UiTokens.selectionMotion)
+      .merge(
+        variant == .primary
+            ? RadioStyler().containerEffects(uiSurfaceEffects())
+            : null,
+      )
+      .merge(
+        // The 1px danger outline stays when selected; focus still shows
+        // the ordinary ring.
+        invalid ? RadioStyler().containerEffects(uiInvalidRing()) : null,
+      )
       .onDisabled(
         RadioStyler()
             .label(.color(uiDisabledLabelColor(danger: invalid)()))

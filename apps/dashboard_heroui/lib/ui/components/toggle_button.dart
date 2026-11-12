@@ -7,15 +7,16 @@ import '../theme/theme.dart';
 part 'toggle_button.g.dart';
 
 /// HeroUI toggle button variants, with the `--toggle-button-bg`, `-bg-hover`,
-/// and `-fg` tokens of each. `defaultToggle` is the `default` variant, on the
-/// default fill; `ghost` is transparent until hovered. A null [fill] is
-/// transparent.
+/// and `-fg` tokens of each. A null [fill] is transparent.
 enum UiToggleButtonVariant {
+  /// The `default` fill.
   defaultToggle(
     fill: UiTokens.defaultColor,
     hover: UiTokens.defaultHover,
     foreground: UiTokens.foreground,
   ),
+
+  /// Transparent until hovered.
   ghost(hover: UiTokens.defaultColor, foreground: UiTokens.defaultForeground);
 
   const UiToggleButtonVariant({
@@ -33,7 +34,7 @@ enum UiToggleButtonVariant {
 /// metrics of each. Heights step down from `md` (768px), icons from `sm`
 /// (640px).
 enum UiToggleButtonSize {
-  // `h-9 px-3 md:h-8`, icons `size-4`, `scale(0.98)` while pressed.
+  /// `h-9 px-3 md:h-8`, icons `size-4`, `scale(0.98)` while pressed.
   sm(
     height: (mobile: 36, desktop: 32),
     paddingX: 12,
@@ -41,7 +42,8 @@ enum UiToggleButtonSize {
     icon: (mobile: 16, desktop: 16),
     pressedScale: 0.98,
   ),
-  // `h-10 px-4 md:h-9`, icons `size-5 sm:size-4`, `scale(0.97)`.
+
+  /// `h-10 px-4 md:h-9`, icons `size-5 sm:size-4`, `scale(0.97)`. The default.
   md(
     height: (mobile: 40, desktop: 36),
     paddingX: 16,
@@ -49,7 +51,8 @@ enum UiToggleButtonSize {
     icon: (mobile: 20, desktop: 16),
     pressedScale: 0.97,
   ),
-  // `h-11 px-4 text-base md:h-10`, icons as `md`, `scale(0.96)`.
+
+  /// `h-11 px-4 text-base md:h-10`, icons as `md`, `scale(0.96)`.
   lg(
     height: (mobile: 44, desktop: 40),
     paddingX: 16,
@@ -92,44 +95,42 @@ ToggleStyler uiToggleButtonStyle({
   final hover = variant.hover();
   final foreground = variant.foreground();
 
-  var result =
-      ToggleStyler(
-            container: FlexBoxStyler()
-                .mainAxisSize(.min)
-                .mainAxisAlignment(.center)
-                .spacing(uiToggleButtonGap),
-            label: TextStyler()
-                .style(size.text.mix())
-                .fontWeight(.w500)
-                .color(foreground)
-                .softWrap(false)
-                .maxLines(1)
-                .overflow(TextOverflow.ellipsis),
-            icon: IconStyler().size(size.icon.mobile).color(foreground),
-          )
-          .height(size.height.mobile)
-          .borderRadius(.all(UiTokens.radius3xl()))
-          .color(fill)
-          .onBreakpoint(
-            const Breakpoint.minWidth(UiTokens.breakpointSm),
-            ToggleStyler().icon(IconStyler().size(size.icon.desktop)),
-          )
-          .onBreakpoint(
-            const Breakpoint.minWidth(UiTokens.breakpointMd),
-            ToggleStyler().height(size.height.desktop),
-          );
-
-  // `p-0 w-10 md:w-9` square the icon-only button.
-  result = iconOnly
-      ? result
-            .width(size.height.mobile)
-            .onBreakpoint(
-              const Breakpoint.minWidth(UiTokens.breakpointMd),
-              ToggleStyler().width(size.height.desktop),
-            )
-      : result.padding(.horizontal(size.paddingX));
-
-  return result
+  return ToggleStyler(
+        container: FlexBoxStyler()
+            .mainAxisSize(.min)
+            .mainAxisAlignment(.center)
+            .spacing(uiToggleButtonGap),
+        label: TextStyler()
+            .style(size.text.mix())
+            .fontWeight(.w500)
+            .color(foreground)
+            .softWrap(false)
+            .maxLines(1)
+            .overflow(TextOverflow.ellipsis),
+        icon: IconStyler().size(size.icon.mobile).color(foreground),
+      )
+      .height(size.height.mobile)
+      .borderRadius(.all(UiTokens.radius3xl()))
+      .color(fill)
+      .onBreakpoint(
+        const Breakpoint.minWidth(UiTokens.breakpointSm),
+        ToggleStyler().icon(IconStyler().size(size.icon.desktop)),
+      )
+      .onBreakpoint(
+        const Breakpoint.minWidth(UiTokens.breakpointMd),
+        ToggleStyler().height(size.height.desktop),
+      )
+      // `p-0 w-10 md:w-9` square the icon-only button.
+      .merge(
+        iconOnly
+            ? ToggleStyler()
+                  .width(size.height.mobile)
+                  .onBreakpoint(
+                    const Breakpoint.minWidth(UiTokens.breakpointMd),
+                    ToggleStyler().width(size.height.desktop),
+                  )
+            : ToggleStyler().padding(.horizontal(size.paddingX)),
+      )
       .onHovered(ToggleStyler().color(hover))
       .onPressed(ToggleStyler().color(hover).scale(size.pressedScale))
       .onSelected(

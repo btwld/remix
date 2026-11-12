@@ -33,6 +33,7 @@ class UiCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// The field surface fill, with its shadow.
   const UiCheckbox.primary({
     super.key,
     this.invalid = false,
@@ -53,6 +54,7 @@ class UiCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiCheckboxVariant.primary;
 
+  /// The `default` fill.
   const UiCheckbox.secondary({
     super.key,
     this.invalid = false,

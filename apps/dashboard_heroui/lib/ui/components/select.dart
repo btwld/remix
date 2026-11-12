@@ -6,9 +6,14 @@ import '../theme/theme.dart';
 
 part 'select.g.dart';
 
-/// HeroUI select variants: `primary` on the field surface with its shadow,
-/// `secondary` on the default fill.
-enum UiSelectVariant { primary, secondary }
+/// HeroUI select variants.
+enum UiSelectVariant {
+  /// The field surface fill, with its shadow.
+  primary,
+
+  /// The `default` fill.
+  secondary,
+}
 
 /// HeroUI recipe for [RemixSelect]: a field trigger over an overlay list.
 ///
@@ -33,7 +38,7 @@ SelectTriggerStyler _trigger(UiSelectVariant variant, {required bool invalid}) {
     .secondary => uiSecondaryFieldFill,
   };
 
-  var result = SelectTriggerStyler()
+  return SelectTriggerStyler()
       .direction(.horizontal)
       .minHeight(_minHeight)
       .padding(.fromLTRB(_paddingX, _paddingY, _indicatorEnd, _paddingY))
@@ -52,18 +57,22 @@ SelectTriggerStyler _trigger(UiSelectVariant variant, {required bool invalid}) {
       .onDisabled(
         SelectTriggerStyler().wrap(.opacity(UiTokens.disabledOpacity)),
       )
-      .animate(UiTokens.smoothMotion);
-
-  if (variant == .primary) {
-    result = result.containerEffects(uiSurfaceEffects());
-  }
-  if (invalid) {
-    result = result
-        .color(field.focus())
-        .containerEffects(uiInvalidRing())
-        .onFocusVisible(.containerEffects(uiInvalidRing(focused: true)));
-  }
-  return result;
+      .animate(UiTokens.smoothMotion)
+      .merge(
+        variant == .primary
+            ? SelectTriggerStyler().containerEffects(uiSurfaceEffects())
+            : null,
+      )
+      .merge(
+        invalid
+            ? SelectTriggerStyler()
+                  .color(field.focus())
+                  .containerEffects(uiInvalidRing())
+                  .onFocusVisible(
+                    .containerEffects(uiInvalidRing(focused: true)),
+                  )
+            : null,
+      );
 }
 
 /// `.select__popover`: `min-w-(--trigger-width)`, `bg-overlay`,
@@ -85,8 +94,8 @@ final _item = SelectMenuItemStyler()
     // The selected check mark: `text-default-foreground`.
     .icon(.size(_itemMark).color(UiTokens.defaultForeground()))
     .onHovered(.color(UiTokens.defaultColor()))
-    .onPressed(SelectMenuItemStyler().scale(_itemPressedScale))
-    .onFocusVisible(SelectMenuItemStyler().containerEffects(uiFocusRing()))
+    .onPressed(.scale(_itemPressedScale))
+    .onFocusVisible(.containerEffects(uiFocusRing()))
     .onDisabled(
       SelectMenuItemStyler().wrap(.opacity(UiTokens.disabledOpacity)),
     );

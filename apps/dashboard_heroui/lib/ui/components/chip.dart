@@ -6,12 +6,32 @@ import '../theme/theme.dart';
 
 part 'chip.g.dart';
 
-/// HeroUI chip variants: solid (`primary`), default fill with a coloured label
-/// (`secondary`), tinted (`soft`), and unfilled (`tertiary`).
-enum UiChipVariant { primary, secondary, soft, tertiary }
+/// HeroUI chip variants.
+enum UiChipVariant {
+  /// The solid fill in the chip's color.
+  primary,
 
-/// HeroUI chip sizes: `sm` is 20px tall, `md` 24px, `lg` 28px.
-enum UiChipSize { sm, md, lg }
+  /// The neutral `default` fill under a colored label.
+  secondary,
+
+  /// A tinted fill in the chip's color.
+  soft,
+
+  /// No fill, under a colored label.
+  tertiary,
+}
+
+/// HeroUI chip sizes.
+enum UiChipSize {
+  /// 20px tall.
+  sm,
+
+  /// 24px tall. The default.
+  md,
+
+  /// 28px tall.
+  lg,
+}
 
 /// HeroUI recipe for [RemixBadge], used as a label-like chip.
 @MixWidget(target: RemixBadge.new)
@@ -63,7 +83,7 @@ const _lineHeight = 20.0;
 /// `.chip__label` adds `px-0.5` around the text.
 const _labelInset = 2.0;
 
-/// The `--chip-bg` and `--chip-fg` variables for a variant and colour.
+/// The `--chip-bg` and `--chip-fg` variables for a variant and color.
 UiColorPair _palette(UiChipVariant variant, UiColor color) => switch (variant) {
   .primary => uiSolid(color),
   .secondary => (

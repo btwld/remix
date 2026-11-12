@@ -40,6 +40,7 @@ class UiSearchField extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The field surface fill, with its shadow.
   const UiSearchField.primary({
     super.key,
     this.style = const TextFieldStyler.create(),
@@ -67,6 +68,7 @@ class UiSearchField extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiTextFieldVariant.primary;
 
+  /// The `default` fill.
   const UiSearchField.secondary({
     super.key,
     this.style = const TextFieldStyler.create(),

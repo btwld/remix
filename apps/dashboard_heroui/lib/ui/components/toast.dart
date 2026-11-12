@@ -9,7 +9,22 @@ import 'close_button.dart';
 part 'toast.g.dart';
 
 /// HeroUI toast tones: the title and the leading icon take the status color.
-enum UiToastVariant { defaultToast, accent, success, warning, danger }
+enum UiToastVariant {
+  /// Neutral: the `overlay-foreground` color.
+  defaultToast,
+
+  /// Informational, in the `accent` tint.
+  accent,
+
+  /// A positive outcome, in the `success` tint.
+  success,
+
+  /// Something that needs attention, in the `warning` tint.
+  warning,
+
+  /// An error or destructive outcome, in the `danger` tint.
+  danger,
+}
 
 /// HeroUI recipe for [RemixToast] and, as its `style`, [RemixToastScope].
 ///
@@ -88,7 +103,7 @@ final _closeButton = uiCloseButtonStyle()
     .size(_closeSize, _closeSize)
     .padding(.all(0))
     .icon(.size(_closeIcon))
-    .onHovered(IconButtonStyler().color(UiTokens.defaultColor()))
+    .onHovered(.color(UiTokens.defaultColor()))
     .onBreakpoint(
       const Breakpoint.minWidth(UiTokens.breakpointSm),
       IconButtonStyler()

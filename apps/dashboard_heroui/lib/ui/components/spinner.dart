@@ -6,10 +6,38 @@ import '../theme/theme.dart';
 
 part 'spinner.g.dart';
 
-enum UiSpinnerSize { sm, md, lg, xl }
+/// HeroUI spinner sizes.
+enum UiSpinnerSize {
+  /// 16px.
+  sm,
 
-/// [current] inherits the surrounding icon color, like CSS `color: inherit`.
-enum UiSpinnerColor { accent, current, danger, success, warning }
+  /// 24px. The default.
+  md,
+
+  /// 32px.
+  lg,
+
+  /// 40px.
+  xl,
+}
+
+/// HeroUI spinner colors.
+enum UiSpinnerColor {
+  /// The `accent` color.
+  accent,
+
+  /// Inherits the surrounding icon color, like CSS `color: inherit`.
+  current,
+
+  /// The `danger` color.
+  danger,
+
+  /// The `success` color.
+  success,
+
+  /// The `warning` color.
+  warning,
+}
 
 /// HeroUI recipe for [RemixSpinner].
 ///
@@ -36,18 +64,20 @@ SpinnerStyler uiSpinnerStyle({
     .warning => UiTokens.warning,
   };
 
-  var result = SpinnerStyler()
+  return SpinnerStyler()
       .size(dimension)
       .strokeWidth(dimension / 16)
       // `--animate-spin-fast: spin 0.75s linear infinite`.
-      .duration(const Duration(milliseconds: 750));
-  if (indicator != null) result = result.indicatorColor(indicator());
-  return result.merge(style);
+      .duration(const Duration(milliseconds: 750))
+      .merge(
+        indicator == null ? null : SpinnerStyler().indicatorColor(indicator()),
+      )
+      .merge(style);
 }
 
 /// HeroUI's `<Spinner color="current" size="sm"/>` inside a pending control.
 ///
 /// `.current` skips the accent default; [color] explicitly overrides the
-/// inherited icon colour that Remix's spinner otherwise uses.
+/// inherited icon color that Remix's spinner otherwise uses.
 SpinnerStyler uiInlineSpinnerStyle(Color color) =>
     uiSpinnerStyle(size: .sm, color: .current).indicatorColor(color);

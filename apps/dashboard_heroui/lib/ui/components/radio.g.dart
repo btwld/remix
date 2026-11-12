@@ -29,6 +29,7 @@ class UiRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The field surface fill, with its shadow.
   const UiRadio.primary({
     super.key,
     this.invalid = false,
@@ -45,6 +46,7 @@ class UiRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiRadioVariant.primary;
 
+  /// The `default` fill.
   const UiRadio.secondary({
     super.key,
     this.invalid = false,

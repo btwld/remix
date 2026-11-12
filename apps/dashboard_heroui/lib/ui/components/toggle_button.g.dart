@@ -34,6 +34,7 @@ class UiToggleButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// The `default` fill.
   const UiToggleButton.defaultToggle({
     super.key,
     this.size = .md,
@@ -52,6 +53,7 @@ class UiToggleButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiToggleButtonVariant.defaultToggle;
 
+  /// Transparent until hovered.
   const UiToggleButton.ghost({
     super.key,
     this.size = .md,

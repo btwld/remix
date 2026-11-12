@@ -15,7 +15,7 @@ class UiBreadcrumb {
 }
 
 /// HeroUI's `Breadcrumbs`: [RemixLink]s separated by chevrons. The last step
-/// is the current page: coloured as a link and not actionable.
+/// is the current page: colored as a link and not actionable.
 /// Steps wrap onto another line when needed; a step wider than the available
 /// space wraps its label so the current page remains readable.
 class UiBreadcrumbs extends StatelessWidget {
@@ -28,7 +28,7 @@ class UiBreadcrumbs extends StatelessWidget {
 
   final List<UiBreadcrumb> items;
 
-  /// Replaces the chevron, a 12px glyph in the muted colour.
+  /// Replaces the chevron, a 12px glyph in the muted color.
   final Widget? separator;
 
   /// Merged last into every step's link style.
@@ -84,7 +84,7 @@ const _itemGap = 6.0;
 const _separatorGap = 4.0;
 const _separatorSize = 12.0;
 
-/// A right-pointing chevron in the muted colour, mirrored in right-to-left
+/// A right-pointing chevron in the muted color, mirrored in right-to-left
 /// text (`rtl:rotate-180`).
 class _Chevron extends StatelessWidget {
   const _Chevron();

@@ -72,7 +72,7 @@ class UiButtonGroup extends StatelessWidget {
       : button;
 
   /// `rounded-none` with the outer corners restored on the first and last
-  /// button; outline buttons drop the borders their neighbours already draw.
+  /// button; outline buttons drop the borders their neighbors already draw.
   /// Corners and borders are physical, since Mix cannot merge directional ones
   /// into the recipe's.
   ButtonStyler _positionStyle(int index, int count, TextDirection direction) {
@@ -87,7 +87,11 @@ class UiButtonGroup extends StatelessWidget {
     final startRounded = first ? round : square;
     final endRounded = last ? round : square;
 
-    var style = ButtonStyler()
+    final none = BorderSideMix.none;
+    final dropStart = first ? null : none;
+    final dropEnd = last ? null : none;
+
+    return ButtonStyler()
         .borderRadius(
           horizontal
               ? ltr
@@ -111,21 +115,18 @@ class UiButtonGroup extends StatelessWidget {
                 ),
         )
         // Buttons in a group do not shrink on press.
-        .onPressed(ButtonStyler().scale(1));
-
-    if (variant == .outline) {
-      final none = BorderSideMix.none;
-      final dropStart = first ? null : none;
-      final dropEnd = last ? null : none;
-      style = style.border(
-        horizontal
-            ? BorderMix(
-                left: ltr ? dropStart : dropEnd,
-                right: ltr ? dropEnd : dropStart,
-              )
-            : BorderMix(top: dropStart, bottom: dropEnd),
-      );
-    }
-    return style;
+        .onPressed(ButtonStyler().scale(1))
+        .merge(
+          variant == .outline
+              ? ButtonStyler().border(
+                  horizontal
+                      ? BorderMix(
+                          left: ltr ? dropStart : dropEnd,
+                          right: ltr ? dropEnd : dropStart,
+                        )
+                      : BorderMix(top: dropStart, bottom: dropEnd),
+                )
+              : null,
+        );
   }
 }
