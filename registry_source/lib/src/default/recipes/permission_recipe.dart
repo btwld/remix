@@ -49,6 +49,7 @@ VanillaAgentPermissionRecipe vanillaAgentPermissionRecipe({
         .color(VanillaTokens.foreground())
         .fontWeight(FontWeight.w600),
     tool: TextStyler()
+        .style(VanillaTokens.textMono.mix())
         .color(VanillaTokens.mutedForeground())
         .fontSize(12)
         .wrap(.padding(.top(4))),
@@ -62,8 +63,9 @@ VanillaAgentPermissionRecipe vanillaAgentPermissionRecipe({
     // its glyph and label already name the outcome.
     statusIcon: IconStyler().size(12),
     indicator: IconStyler().color(VanillaTokens.foreground()).size(16),
-    pendingStatus: _statusMark(VanillaTokens.primary),
-    decidingStatus: _statusMark(VanillaTokens.primary),
+    // While it waits, the status is a secondary badge at the header's end.
+    pendingStatus: _waitingBadge(),
+    decidingStatus: _waitingBadge(),
     allowedStatus: _statusMark(VanillaTokens.primary),
     runningStatus: _statusMark(VanillaTokens.primary),
     completedStatus: _statusMark(VanillaTokens.primary),
@@ -98,3 +100,9 @@ VanillaAgentPermissionRecipe vanillaAgentPermissionRecipe({
 
 BoxStyler _statusMark(ColorToken color) =>
     BoxStyler().wrap(.iconTheme(color: color()));
+
+BoxStyler _waitingBadge() => BoxStyler()
+    .color(VanillaTokens.secondary())
+    .borderRadius(.all(VanillaTokens.radiusMd()))
+    .padding(.symmetric(horizontal: 8, vertical: 2))
+    .wrap(.iconTheme(color: VanillaTokens.secondaryForeground()));

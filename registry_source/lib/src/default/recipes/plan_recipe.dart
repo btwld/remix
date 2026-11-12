@@ -25,10 +25,12 @@ VanillaAgentPlanRecipe vanillaAgentPlanRecipe({
         .spacing(8)
         .crossAxisAlignment(.center)
         .padding(.symmetric(vertical: 6)),
+    // The agent's working steps are secondary to the conversation: a muted
+    // line, not a heading.
     summaryTitle: TextStyler()
-        .color(VanillaTokens.foreground())
-        .fontSize(14)
-        .fontWeight(FontWeight.w600),
+        .color(VanillaTokens.mutedForeground())
+        .fontSize(13)
+        .fontWeight(FontWeight.w500),
     itemTitle: TextStyler().color(VanillaTokens.foreground()).fontSize(14),
     itemDetail: TextStyler()
         .color(VanillaTokens.mutedForeground())

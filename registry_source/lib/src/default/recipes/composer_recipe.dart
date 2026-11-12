@@ -58,7 +58,7 @@ VanillaAgentComposerRecipe vanillaAgentComposerRecipe({
         .containerEffects(
           .behindContent(RemixBoxEffectLayerMix(shadows: const [])),
         )
-        .minHeight(56)
+        .minHeight(28)
         .padding(.all(4))
         .onFocused(
           .containerEffects(
@@ -71,8 +71,9 @@ VanillaAgentComposerRecipe vanillaAgentComposerRecipe({
     size: .small,
     style: IconButtonStyler().size(36, 36).merge(submitStyle),
   ),
+  // Stop is the send button's neutral twin: red would read as delete and
+  // outshout every decision on screen while a run works.
   stopStyle: vanillaIconButtonStyle(
-    variant: .destructive,
     size: .small,
     style: IconButtonStyler().size(36, 36).merge(stopStyle),
   ),

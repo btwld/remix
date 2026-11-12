@@ -49,6 +49,7 @@ PlaygroundAgentPermissionRecipe playgroundAgentPermissionRecipe({
         .color(PlaygroundTokens.foreground())
         .fontWeight(FontWeight.w600),
     tool: TextStyler()
+        .style(PlaygroundTokens.textMono.mix())
         .color(PlaygroundTokens.mutedForeground())
         .fontSize(12)
         .wrap(.padding(.top(4))),
@@ -64,8 +65,9 @@ PlaygroundAgentPermissionRecipe playgroundAgentPermissionRecipe({
     // its glyph and label already name the outcome.
     statusIcon: IconStyler().size(12),
     indicator: IconStyler().color(PlaygroundTokens.foreground()).size(16),
-    pendingStatus: _statusMark(PlaygroundTokens.primary),
-    decidingStatus: _statusMark(PlaygroundTokens.primary),
+    // While it waits, the status is a secondary badge at the header's end.
+    pendingStatus: _waitingBadge(),
+    decidingStatus: _waitingBadge(),
     allowedStatus: _statusMark(PlaygroundTokens.primary),
     runningStatus: _statusMark(PlaygroundTokens.primary),
     completedStatus: _statusMark(PlaygroundTokens.primary),
@@ -102,3 +104,9 @@ PlaygroundAgentPermissionRecipe playgroundAgentPermissionRecipe({
 
 BoxStyler _statusMark(ColorToken color) =>
     BoxStyler().wrap(.iconTheme(color: color()));
+
+BoxStyler _waitingBadge() => BoxStyler()
+    .color(PlaygroundTokens.secondary())
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
+    .padding(.symmetric(horizontal: 8, vertical: 2))
+    .wrap(.iconTheme(color: PlaygroundTokens.secondaryForeground()));

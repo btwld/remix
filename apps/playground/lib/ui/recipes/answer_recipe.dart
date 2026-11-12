@@ -34,7 +34,11 @@ PlaygroundAgentAnswerRecipe playgroundAgentAnswerRecipe({
     actions: FlexBoxStyler().spacing(6).padding(.top(8)),
     // The actions row centres its children; a top inset here dropped the
     // feedback below the icons beside it.
-    feedback: BoxStyler(),
+    feedback: BoxStyler().wrap(
+      .defaultText(
+        TextStyler().color(PlaygroundTokens.mutedForeground()).fontSize(12),
+      ),
+    ),
     sourcesLabel: TextStyler()
         .color(PlaygroundTokens.foreground())
         .fontSize(13),

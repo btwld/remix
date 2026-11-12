@@ -25,10 +25,12 @@ PlaygroundAgentPlanRecipe playgroundAgentPlanRecipe({
         .spacing(8)
         .crossAxisAlignment(.center)
         .padding(.symmetric(vertical: 6)),
+    // The agent's working steps are secondary to the conversation: a muted
+    // line, not a heading.
     summaryTitle: TextStyler()
-        .color(PlaygroundTokens.foreground())
-        .fontSize(14)
-        .fontWeight(FontWeight.w600),
+        .color(PlaygroundTokens.mutedForeground())
+        .fontSize(13)
+        .fontWeight(FontWeight.w500),
     itemTitle: TextStyler().color(PlaygroundTokens.foreground()).fontSize(14),
     itemDetail: TextStyler()
         .color(PlaygroundTokens.mutedForeground())
