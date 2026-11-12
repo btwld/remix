@@ -219,8 +219,13 @@ final _toolCallLayout = AgentToolCallStyler(
       .crossAxisAlignment(CrossAxisAlignment.stretch),
 );
 
-class _AgentToolCallState extends State<AgentToolCall> {
-  late final AgentApprovalGuard _guard;
+class _AgentToolCallState extends State<AgentToolCall>
+    with AutomaticKeepAliveClientMixin {
+  // Created on first read: the keep-alive mixin asks for it during initState.
+  late final AgentApprovalGuard _guard = AgentApprovalGuard(
+    id: widget.call.id,
+    status: widget.call.status,
+  );
   late final AgentDisclosureController _disclosure;
   late final AgentLiveEdgeController _outputEdge;
   final FocusNode _focus = FocusNode(debugLabel: 'AgentToolCall');
@@ -240,7 +245,6 @@ class _AgentToolCallState extends State<AgentToolCall> {
     final call = _call;
     final phase = call.status.phase;
     final policy = widget.policy;
-    _guard = AgentApprovalGuard(id: call.id, status: call.status);
     _disclosure = AgentDisclosureController(
       phase: phase,
       expanded: widget.expanded,
@@ -263,6 +267,7 @@ class _AgentToolCallState extends State<AgentToolCall> {
     super.didUpdateWidget(oldWidget);
     final call = _call;
     _guard.update(id: call.id, status: call.status);
+    updateKeepAlive();
     _disclosure
       ..policy = widget.policy
       ..onExpandedChanged = widget.onExpandedChanged
@@ -284,11 +289,19 @@ class _AgentToolCallState extends State<AgentToolCall> {
     if (mounted) setState(() {});
   }
 
+  // A lazy list disposes rows that scroll away. While a decision is taken but
+  // the host has not yet moved the call on, keep this one alive so the guard,
+  // and with it the one-decision-per-request contract, survives the scroll.
+  @override
+  bool get wantKeepAlive =>
+      _guard.decision != null && _call.status.needsDecision;
+
   void _decide(AgentApprovalDecision decision) {
     final onDecision = widget.onDecision;
     if (onDecision == null || !_guard.decide(decision)) return;
     _returnFocus = _focus.hasFocus;
     setState(() {});
+    updateKeepAlive();
     onDecision(decision);
   }
 
@@ -542,6 +555,7 @@ class _AgentToolCallState extends State<AgentToolCall> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final call = _call;
     if (!call.status.needsDecision) {
       final renderer = AgentToolRenderers.maybeOf(context, call.name);

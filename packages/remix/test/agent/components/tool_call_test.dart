@@ -191,6 +191,51 @@ void main() {
       expect(decisions.last, AgentApprovalDecision.alwaysAllow);
     });
 
+    testWidgets('keeps a pending decision when a lazy list recycles it', (
+      tester,
+    ) async {
+      final decisions = <AgentApprovalDecision>[];
+      final scroll = ScrollController();
+      addTearDown(scroll.dispose);
+      await pumpAgent(
+        tester,
+        SizedBox(
+          width: 768,
+          height: 400,
+          child: AgentConversation(
+            scrollController: scroll,
+            children: [
+              for (var i = 0; i < 30; i++) const SizedBox(height: 200),
+              AgentToolCall(
+                call: approvalCall,
+                onDecision: decisions.add,
+                glyphBuilder: testGlyphs,
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(_allowOnce));
+      await tester.pump();
+      expect(decisions, [AgentApprovalDecision.allowOnce]);
+
+      // The host has not recorded the decision yet. Scroll the card far out
+      // of the list and back: it must not offer the decision again.
+      scroll.jumpTo(0);
+      await tester.pumpAndSettle();
+      expect(find.byKey(_allowOnce), findsNothing);
+      scroll.jumpTo(scroll.position.maxScrollExtent);
+      await tester.pumpAndSettle();
+
+      expect(_isEnabled(tester, _allowOnce), isFalse);
+      await tester.tap(find.byKey(_allowOnce), warnIfMissed: false);
+      await tester.tap(find.byKey(_deny), warnIfMissed: false);
+      await tester.pump();
+      expect(decisions, [AgentApprovalDecision.allowOnce]);
+    });
+
     testWidgets('disables its actions without a decision handler', (
       tester,
     ) async {
