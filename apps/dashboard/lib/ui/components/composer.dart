@@ -44,32 +44,90 @@ class UiComposer extends StatefulWidget {
          'initialValue cannot be used with an external controller.',
        );
 
+  /// Holds the draft. When null, the composer owns one.
   final TextEditingController? controller;
+
+  /// The draft's starting text; not allowed together with [controller].
   final String? initialValue;
+
+  /// Focus of the text field. When null, the composer owns one.
   final FocusNode? focusNode;
+
+  /// Called with the new text whenever the draft changes.
   final ValueChanged<String>? onChanged;
+
+  /// Called with the trimmed draft when it is sent.
+  ///
+  /// Enter sends it. Without this callback the composer is a plain multiline
+  /// field and its send action stays disabled.
   final ValueChanged<String>? onSubmit;
+
+  /// Called by the stop action shown while [running].
   final VoidCallback? onStop;
+
+  /// Whether a turn is running; the stop action replaces send.
   final bool running;
+
+  /// Whether the field and actions accept input.
   final bool enabled;
+
+  /// An extra gate on sending, for example while an upload finishes.
+  ///
+  /// When null, a non-empty draft can be sent.
   final bool? canSubmit;
+
+  /// Whether sending clears the draft.
   final bool clearOnSubmit;
+
+  /// Whether the field takes focus when first built.
   final bool autofocus;
+
+  /// Placeholder shown while the draft is empty.
   final String hintText;
+
+  /// Accessible label of the composer and its field.
   final String semanticLabel;
+
+  /// Fewest lines the field shows.
   final int minLines;
+
+  /// Most lines the field grows to before it scrolls.
   final int maxLines;
+
+  /// Toolbar content before the actions, such as an attach button.
   final Widget? leading;
+
+  /// Toolbar content just before the send or stop action.
   final Widget? trailing;
+
+  /// Replaces the send action's default icon.
   final RemixIconButtonIconBuilder? submitIconBuilder;
+
+  /// Replaces the stop action's default icon.
   final RemixIconButtonIconBuilder? stopIconBuilder;
+
+  /// Accessible label of the send action.
   final String submitLabel;
+
+  /// Accessible label of the stop action.
   final String stopLabel;
+
+  /// Style of the card around the field and toolbar.
   final CardStyler surfaceStyle;
+
+  /// Style of the text field.
   final TextFieldStyler fieldStyle;
+
+  /// Style of the send action.
   final IconButtonStyler submitStyle;
+
+  /// Style of the stop action.
   final IconButtonStyler stopStyle;
+
+  /// Style of the composer's own slots.
   final UiComposerStyler style;
+
+  /// A resolved spec that is used instead of resolving [style].
   final UiComposerSpec? styleSpec;
 
   @override
@@ -308,6 +366,7 @@ class _UiComposerState extends State<UiComposer> {
 @MixableSpec(target: UiComposer.new)
 @immutable
 final class UiComposerSpec with _$UiComposerSpec {
+  /// Lays out the row below the field: leading, trailing and the action.
   @override
   final StyleSpec<FlexBoxSpec> toolbar;
 

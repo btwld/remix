@@ -82,8 +82,13 @@ final class UiChartLegendItem {
     this.detail,
   });
 
+  /// The series or slice name.
   final String label;
+
+  /// The swatch color.
   final ColorToken color;
+
+  /// Secondary text after the label, such as a value or share.
   final String? detail;
 }
 
@@ -96,8 +101,13 @@ class UiChartLegend extends StatelessWidget {
     required this.detailStyle,
   });
 
+  /// The entries, in display order.
   final List<UiChartLegendItem> items;
+
+  /// Style of each entry's label.
   final TextStyler labelStyle;
+
+  /// Style of each entry's detail.
   final TextStyler detailStyle;
 
   @override

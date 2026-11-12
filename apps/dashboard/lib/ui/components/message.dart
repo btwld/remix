@@ -13,7 +13,10 @@ part 'message.g.dart';
 class UiMessageGroup extends StatelessWidget {
   const UiMessageGroup({super.key, required this.children, this.spacing = 0});
 
+  /// The rows, oldest first.
   final List<Widget> children;
+
+  /// Gap between rows, in logical pixels.
   final double spacing;
 
   @override
@@ -44,18 +47,47 @@ class UiMessage extends StatelessWidget {
     this.styleSpec,
   });
 
+  /// Who wrote the message; decides the default alignment and label.
   final UiRole role;
+
+  /// The message body, rendered by the host.
   final Widget child;
+
+  /// Which edge the message sits on.
+  ///
+  /// When null, a user message sits at the end and an assistant message at
+  /// the start.
   final RemixPlacement? align;
+
+  /// The sender's avatar, shown when [showAvatar] is true.
   final Widget? avatar;
+
+  /// Whether [avatar] is shown beside the message.
   final bool showAvatar;
+
+  /// Reserves the avatar's space without drawing it, so consecutive rows from
+  /// one sender stay aligned.
   final bool placeholderAvatar;
+
+  /// Widest the message card grows. When null, the spec's `maxWidth` applies.
   final double? maxWidth;
+
+  /// Content above the card, such as the sender's name.
   final Widget? header;
+
+  /// Content below the card, such as a timestamp.
   final Widget? footer;
+
+  /// Accessible label. When null, "User message" or "Assistant message".
   final String? semanticLabel;
+
+  /// Style of the card around the body.
   final CardStyler surfaceStyle;
+
+  /// Style of the message's own slots.
   final UiMessageStyler style;
+
+  /// A resolved spec that is used instead of resolving [style].
   final UiMessageSpec? styleSpec;
 
   bool get _alignEnd =>
@@ -145,14 +177,31 @@ class UiMessageCollapsible extends StatefulWidget {
     this.styleSpec,
   });
 
+  /// The noninteractive content to clip.
   final Widget child;
+
+  /// Controls whether the content is open. When null, the widget manages it.
   final bool? expanded;
+
+  /// Whether the content starts open when uncontrolled.
   final bool defaultExpanded;
+
+  /// Called when the toggle asks to open or close the content.
   final ValueChanged<bool>? onExpandedChanged;
+
+  /// Toggle label while the content is clipped.
   final String showMoreLabel;
+
+  /// Toggle label while the content is open.
   final String showLessLabel;
+
+  /// Style of the toggle button.
   final ButtonStyler toggleStyle;
+
+  /// Style of the collapsible's own slots.
   final UiMessageCollapsibleStyler style;
+
+  /// A resolved spec that is used instead of resolving [style].
   final UiMessageCollapsibleSpec? styleSpec;
 
   @override
@@ -334,16 +383,27 @@ class _RenderOverflowClip extends RenderProxyBox {
 @MixableSpec(target: UiMessage.new)
 @immutable
 final class UiMessageSpec with _$UiMessageSpec {
+  /// Widest the message card grows; [UiMessage.maxWidth] overrides it.
   @override
   final double? maxWidth;
+
+  /// Lays out the avatar beside the message.
   @override
   final StyleSpec<FlexBoxSpec> row;
+
+  /// Wraps the avatar or its placeholder.
   @override
   final StyleSpec<BoxSpec> avatar;
+
+  /// Wraps the header.
   @override
   final StyleSpec<BoxSpec> header;
+
+  /// Wraps the body inside the card.
   @override
   final StyleSpec<BoxSpec> body;
+
+  /// Wraps the footer.
   @override
   final StyleSpec<BoxSpec> footer;
 
@@ -364,10 +424,15 @@ final class UiMessageSpec with _$UiMessageSpec {
 @MixableSpec(target: UiMessageCollapsible.new)
 @immutable
 final class UiMessageCollapsibleSpec with _$UiMessageCollapsibleSpec {
+  /// Height at which the content is clipped while closed; null never clips.
   @override
   final double? collapsedHeight;
+
+  /// Wraps the content and the toggle.
   @override
   final StyleSpec<BoxSpec> container;
+
+  /// Wraps the clipped content.
   @override
   final StyleSpec<BoxSpec> clipped;
 

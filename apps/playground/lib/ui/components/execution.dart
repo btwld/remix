@@ -10,10 +10,15 @@ import '../support/live_edge.dart';
 
 part 'execution.g.dart';
 
+/// Returns the status text shown and announced for an execution.
 typedef PlaygroundExecutionStatusLabelBuilder =
     String Function(PlaygroundExecutionStatus status);
+
+/// Builds the status icon in place of the default glyph.
 typedef PlaygroundExecutionStatusBuilder =
     Widget Function(BuildContext context, PlaygroundExecutionStatus status);
+
+/// Builds the disclosure indicator in place of the default chevron.
 typedef PlaygroundExecutionIndicatorBuilder =
     Widget Function(BuildContext context, bool expanded);
 
@@ -51,33 +56,90 @@ class PlaygroundExecution extends StatefulWidget {
     this.styleSpec,
   });
 
+  /// The tool's identifier, such as `terminal.run`.
   final String tool;
+
+  /// A human-readable name for this call.
   final String title;
+
+  /// The tool's output, rendered by the host.
   final Widget child;
+
+  /// Where the execution is in its lifecycle.
   final PlaygroundExecutionStatus status;
+
+  /// Compact trailing text in the header, such as elapsed time.
   final String? meta;
+
+  /// Replaces the default tool icon.
   final Widget? icon;
+
+  /// Called by the copy action, which is shown only when this is set.
   final VoidCallback? onCopy;
+
+  /// Called by the retry action, which is shown only when this is set.
   final VoidCallback? onRetry;
+
+  /// Replaces the copy action's default icon.
   final RemixIconButtonIconBuilder? copyIconBuilder;
+
+  /// Replaces the retry action's default icon.
   final RemixIconButtonIconBuilder? retryIconBuilder;
+
+  /// Replaces the disclosure's default chevron.
   final PlaygroundExecutionIndicatorBuilder? indicatorBuilder;
+
+  /// Replaces the default status icon.
   final PlaygroundExecutionStatusBuilder? statusBuilder;
+
+  /// Replaces the default status text.
   final PlaygroundExecutionStatusLabelBuilder? statusLabelBuilder;
+
+  /// Accessible label of the copy action.
   final String copyLabel;
+
+  /// Accessible label of the retry action.
   final String retryLabel;
+
+  /// Accessible label of the output region.
   final String outputLabel;
+
+  /// Whether the copy and retry actions appear once the execution settles.
   final bool showActions;
+
+  /// Whether the output closes itself when the tool finishes.
+  ///
+  /// A failed execution stays open.
   final bool collapseOnComplete;
+
+  /// Controls the disclosure. When null, the execution manages it.
   final bool? expanded;
+
+  /// Whether the disclosure starts open when uncontrolled.
   final bool defaultExpanded;
+
+  /// Called when the disclosure is asked to open or close.
   final ValueChanged<bool>? onExpandedChanged;
+
+  /// Accessible label of the whole execution.
   final String semanticLabel;
+
+  /// Style of the card around the execution.
   final CardStyler surfaceStyle;
+
+  /// Style of the disclosure.
   final DisclosureStyler disclosureStyle;
+
+  /// Style of the copy action.
   final IconButtonStyler copyStyle;
+
+  /// Style of the retry action.
   final IconButtonStyler retryStyle;
+
+  /// Style of the execution's own slots.
   final PlaygroundExecutionStyler style;
+
+  /// A resolved spec that is used instead of resolving [style].
   final PlaygroundExecutionSpec? styleSpec;
 
   @override
@@ -291,8 +353,11 @@ class _PlaygroundExecutionState extends State<PlaygroundExecution> {
 @MixableSpec(target: PlaygroundExecution.new)
 @immutable
 final class PlaygroundExecutionSpec with _$PlaygroundExecutionSpec {
+  /// Lays out the trigger: icon, title, tool, meta and status.
   @override
   final StyleSpec<FlexBoxSpec> header;
+
+  /// Wraps the disclosure's content: the output and the actions.
   @override
   final StyleSpec<BoxSpec> output;
 
@@ -300,28 +365,52 @@ final class PlaygroundExecutionSpec with _$PlaygroundExecutionSpec {
   /// maximum height.
   @override
   final StyleSpec<BoxSpec> viewport;
+
+  /// Lays out the copy and retry actions.
   @override
   final StyleSpec<FlexBoxSpec> actions;
+
+  /// The tool identifier text.
   @override
   final StyleSpec<TextSpec> tool;
+
+  /// The title text.
   @override
   final StyleSpec<TextSpec> title;
+
+  /// The trailing meta text.
   @override
   final StyleSpec<TextSpec> meta;
+
+  /// The status text.
   @override
   final StyleSpec<TextSpec> status;
+
+  /// The default tool icon.
   @override
   final StyleSpec<IconSpec> toolIcon;
+
+  /// The default status icon.
   @override
   final StyleSpec<IconSpec> statusIcon;
+
+  /// The disclosure chevron.
   @override
   final StyleSpec<IconSpec> indicator;
+
+  /// The status badge while running.
   @override
   final StyleSpec<BoxSpec> runningStatus;
+
+  /// The status badge after success.
   @override
   final StyleSpec<BoxSpec> successStatus;
+
+  /// The status badge after an error.
   @override
   final StyleSpec<BoxSpec> errorStatus;
+
+  /// The status badge after cancellation.
   @override
   final StyleSpec<BoxSpec> cancelledStatus;
 

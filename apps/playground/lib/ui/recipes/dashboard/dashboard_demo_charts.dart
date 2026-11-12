@@ -82,8 +82,13 @@ final class PlaygroundChartLegendItem {
     this.detail,
   });
 
+  /// The series or slice name.
   final String label;
+
+  /// The swatch color.
   final ColorToken color;
+
+  /// Secondary text after the label, such as a value or share.
   final String? detail;
 }
 
@@ -96,8 +101,13 @@ class PlaygroundChartLegend extends StatelessWidget {
     required this.detailStyle,
   });
 
+  /// The entries, in display order.
   final List<PlaygroundChartLegendItem> items;
+
+  /// Style of each entry's label.
   final TextStyler labelStyle;
+
+  /// Style of each entry's detail.
   final TextStyler detailStyle;
 
   @override

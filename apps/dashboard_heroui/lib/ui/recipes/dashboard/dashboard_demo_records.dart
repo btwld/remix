@@ -1,7 +1,31 @@
-enum UiDashboardCustomerStatus { active, invited, suspended }
+/// Where a customer is in their account lifecycle.
+enum UiDashboardCustomerStatus {
+  /// Has an active account.
+  active,
 
-enum UiDashboardOrderStatus { paid, pending, refunded, cancelled }
+  /// Invited but has not accepted.
+  invited,
 
+  /// Account is suspended.
+  suspended,
+}
+
+/// Where an order is in payment and fulfillment.
+enum UiDashboardOrderStatus {
+  /// Payment received.
+  paid,
+
+  /// Awaiting payment.
+  pending,
+
+  /// Payment returned to the customer.
+  refunded,
+
+  /// Canceled.
+  cancelled,
+}
+
+/// One row in the customers table.
 final class UiDashboardCustomer {
   const UiDashboardCustomer({
     required this.id,
@@ -12,17 +36,30 @@ final class UiDashboardCustomer {
     required this.joinedAt,
   });
 
+  /// The customer identifier.
   final String id;
+
+  /// The customer's full name.
   final String name;
+
+  /// The customer's email address.
   final String email;
+
+  /// The subscription plan name.
   final String plan;
+
+  /// The account status.
   final UiDashboardCustomerStatus status;
+
+  /// When the customer joined.
   final DateTime joinedAt;
 
+  /// The first letters of the first two words of [name], for an avatar.
   String get initials =>
       name.split(' ').take(2).map((part) => part.substring(0, 1)).join();
 }
 
+/// One row in the orders table.
 final class UiDashboardOrder {
   const UiDashboardOrder({
     required this.id,
@@ -32,13 +69,23 @@ final class UiDashboardOrder {
     required this.status,
   });
 
+  /// The order identifier.
   final String id;
+
+  /// The customer's name.
   final String customer;
+
+  /// When the order was placed.
   final DateTime date;
+
+  /// The order total in US dollars.
   final double amount;
+
+  /// The order status.
   final UiDashboardOrderStatus status;
 }
 
+/// Builds a customer who joined on [month] and [day] of 2025.
 UiDashboardCustomer _customer(
   String id,
   String name,
@@ -56,6 +103,7 @@ UiDashboardCustomer _customer(
   joinedAt: DateTime(2025, month, day),
 );
 
+/// The editable sample customers.
 final uiDashboardCustomers = <UiDashboardCustomer>[
   _customer(
     'cus_001',
@@ -275,6 +323,7 @@ final uiDashboardCustomers = <UiDashboardCustomer>[
   ),
 ];
 
+/// Builds an order placed on [month] and [day] of 2026.
 UiDashboardOrder _order(
   String id,
   String customer,
@@ -290,6 +339,7 @@ UiDashboardOrder _order(
   status: status,
 );
 
+/// The editable sample orders, newest first.
 final uiDashboardOrders = <UiDashboardOrder>[
   _order('ORD-1048', 'Olivia Martin', 7, 18, 1249, .paid),
   _order('ORD-1047', 'Jackson Lee', 7, 17, 349, .pending),
@@ -323,8 +373,24 @@ final uiDashboardOrders = <UiDashboardOrder>[
   _order('ORD-1019', 'Isabella Taylor', 5, 26, 299, .paid),
 ];
 
+const _monthAbbreviations = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+/// Formats [date] as a short US date, for example `Jul 18, 2026`.
 String uiDashboardShortDate(DateTime date) =>
-    '${const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.month - 1]} ${date.day}, ${date.year}';
+    '${_monthAbbreviations[date.month - 1]} ${date.day}, ${date.year}';
 
 /// Formats [value] as US dollars with thousands separators, for example
 /// `$1,249.00`. Every dashboard page uses this one format.
@@ -337,6 +403,10 @@ String uiDashboardCurrency(double value) {
   return '${value < 0 ? '-' : ''}\$$whole${fixed.substring(dot)}';
 }
 
+/// Returns the [items] on [page] with [rowsPerPage] rows per page.
+///
+/// A [page] past either end is clamped to the nearest page, and the returned
+/// `page` is the one actually used.
 ({int page, List<T> items}) uiDashboardPaginate<T>(
   List<T> items, {
   required int page,
