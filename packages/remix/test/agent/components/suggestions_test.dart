@@ -94,4 +94,41 @@ void main() {
     );
     semantics.dispose();
   });
+
+  testWidgets('suggestions are inert while disabled or while a run is live', (
+    tester,
+  ) async {
+    final controller = AgentComposerController();
+    addTearDown(controller.dispose);
+    final selected = <AgentSuggestion>[];
+    final enabled = ValueNotifier(false);
+    addTearDown(enabled.dispose);
+    await pumpAgent(
+      tester,
+      ValueListenableBuilder<bool>(
+        valueListenable: enabled,
+        builder: (context, enabled, _) => AgentSuggestions(
+          suggestions: _starters,
+          controller: controller,
+          enabled: enabled,
+          onSelected: selected.add,
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Run terminal checks'));
+    expect(selected, isEmpty);
+    expect(controller.text, isEmpty);
+
+    enabled.value = true;
+    controller.running = true;
+    await tester.pump();
+    await tester.tap(find.text('Run terminal checks'));
+    expect(selected, isEmpty);
+
+    controller.running = false;
+    await tester.pump();
+    await tester.tap(find.text('Run terminal checks'));
+    expect(selected, [_starters.last]);
+  });
 }
