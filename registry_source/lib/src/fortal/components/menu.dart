@@ -6,13 +6,29 @@ import '../theme/theme.dart';
 
 part 'menu.g.dart';
 
-/// Fortal menu content sizes.
-enum FortalMenuSize { size1, size2 }
+/// The sizes a menu comes in. Pixel values are at 100% theme scaling.
+enum FortalMenuSize {
+  /// 24px items with 12px text.
+  size1,
 
-/// Fortal menu content variants.
-enum FortalMenuVariant { solid, soft }
+  /// 32px items with 14px text. The default.
+  size2,
+}
 
-/// Fortal menu content with Fortal-owned size, variant, and contrast behavior.
+/// How a menu marks the item under the pointer or keyboard.
+enum FortalMenuVariant {
+  /// The accent's solid fill under its contrast text.
+  solid,
+
+  /// A tinted accent fill.
+  soft,
+}
+
+/// The Fortal Menu recipe: the trigger, the floating panel, its items,
+/// submenu items and dividers.
+///
+/// [highContrast] moves the highlighted item of the solid variant to accent
+/// step 12.
 @MixWidget(target: RemixMenu.new)
 MenuStyler fortalMenuStyle({
   FortalMenuVariant variant = .solid,
@@ -21,7 +37,8 @@ MenuStyler fortalMenuStyle({
   MenuStyler style = const MenuStyler.create(),
 }) {
   final metrics = _fortalMenuMetrics(size);
-  final base = MenuStyler()
+
+  return MenuStyler()
       .containerEffects(
         RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
       )
@@ -56,12 +73,14 @@ MenuStyler fortalMenuStyle({
           highContrast: highContrast,
         ),
       )
-      .divider(_fortalMenuDividerStyler(metrics));
-
-  return base.merge(style);
+      .divider(_fortalMenuDividerStyler(metrics))
+      .merge(style);
 }
 
-/// Fortal item recipe for per-item style overrides.
+/// The Fortal menu item recipe, for styling one item on its own.
+///
+/// It is the item style [fortalMenuStyle] gives every item, so a call site can
+/// match a menu's items outside the menu.
 MenuItemStyler fortalMenuItemStyle({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
