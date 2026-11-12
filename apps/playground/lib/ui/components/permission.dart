@@ -140,7 +140,7 @@ class _PlaygroundPermissionState extends State<PlaygroundPermission> {
   String get _statusLabel =>
       widget.statusLabelBuilder?.call(widget.status) ??
       switch (widget.status) {
-        PlaygroundPermissionStatus.pending => 'Permission required',
+        PlaygroundPermissionStatus.pending => 'Needs approval',
         PlaygroundPermissionStatus.deciding => 'Recording',
         PlaygroundPermissionStatus.allowed => 'Allowed',
         PlaygroundPermissionStatus.running => 'Running',

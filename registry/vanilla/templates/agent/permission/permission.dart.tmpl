@@ -140,7 +140,7 @@ class _{{typePrefix}}PermissionState extends State<{{typePrefix}}Permission> {
   String get _statusLabel =>
       widget.statusLabelBuilder?.call(widget.status) ??
       switch (widget.status) {
-        {{typePrefix}}PermissionStatus.pending => 'Permission required',
+        {{typePrefix}}PermissionStatus.pending => 'Needs approval',
         {{typePrefix}}PermissionStatus.deciding => 'Recording',
         {{typePrefix}}PermissionStatus.allowed => 'Allowed',
         {{typePrefix}}PermissionStatus.running => 'Running',
