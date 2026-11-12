@@ -5,13 +5,61 @@ import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 import '../theme/theme.dart';
 
 /// HeroUI's text styles: six headings, three body sizes, and inline `code`.
-enum HeroUiTypographyType { h1, h2, h3, h4, h5, h6, body, bodySm, bodyXs, code }
+enum HeroUiTypographyType {
+  /// A heading, 36px on 40px.
+  h1,
 
-/// The text color: `foreground`, or `muted` for secondary copy.
-enum HeroUiTypographyColor { defaultColor, muted }
+  /// A heading, 30px on 36px.
+  h2,
+
+  /// A heading, 24px on 32px.
+  h3,
+
+  /// A heading, 20px on 28px.
+  h4,
+
+  /// A heading, 18px on 28px.
+  h5,
+
+  /// A heading, 16px on 24px.
+  h6,
+
+  /// Body text, 16px on 28px. The default.
+  body,
+
+  /// Small body text, 14px on 24px.
+  bodySm,
+
+  /// Extra small body text, 12px on 20px.
+  bodyXs,
+
+  /// Inline code: 14px monospace on a `default` chip.
+  code,
+}
+
+/// The text color.
+enum HeroUiTypographyColor {
+  /// The `foreground` color.
+  defaultColor,
+
+  /// The `muted` color, for secondary copy.
+  muted,
+}
 
 /// An explicit font weight, replacing the type's own.
-enum HeroUiTypographyWeight { normal, medium, semibold, bold }
+enum HeroUiTypographyWeight {
+  /// Regular, 400.
+  normal,
+
+  /// Medium, 500.
+  medium,
+
+  /// Semibold, 600.
+  semibold,
+
+  /// Bold, 700.
+  bold,
+}
 
 /// HeroUI's `Typography`, `Heading`, `Paragraph`, and `Code` in one widget.
 ///
@@ -45,7 +93,11 @@ class HeroUiTypography extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final metrics = _metrics(type);
-    var result = TextStyler()
+    final heading = switch (type) {
+      .h1 || .h2 || .h3 || .h4 || .h5 || .h6 => true,
+      .body || .bodySm || .bodyXs || .code => false,
+    };
+    final result = TextStyler()
         .style(metrics.base.mix())
         .fontSize(metrics.fontSize)
         .height(metrics.lineHeight / metrics.fontSize)
@@ -54,24 +106,30 @@ class HeroUiTypography extends StatelessWidget {
           .medium => FontWeight.w500,
           .semibold => FontWeight.w600,
           .bold => FontWeight.w700,
-          null => metrics.heading ? FontWeight.w600 : FontWeight.w400,
+          null => heading ? FontWeight.w600 : FontWeight.w400,
         })
         .textAlign(align)
         .color(
           (color == .muted ? HeroUiTokens.muted : HeroUiTokens.foreground)(),
+        )
+        .merge(
+          heading
+              ? TextStyler().letterSpacing(_tracking * metrics.fontSize)
+              : null,
+        )
+        // CanvasKit does not resolve the CSS `monospace` family, so code
+        // carries a real fixed-width face.
+        .merge(
+          type == .code ? TextStyler().fontFamily(RemixFonts.geistMono) : null,
+        )
+        .merge(
+          truncate
+              ? TextStyler()
+                    .maxLines(1)
+                    .softWrap(false)
+                    .overflow(TextOverflow.ellipsis)
+              : null,
         );
-    if (metrics.heading) {
-      result = result.letterSpacing(_tracking * metrics.fontSize);
-    }
-    // CanvasKit does not resolve the CSS `monospace` family, so code carries a
-    // real fixed-width face.
-    if (type == .code) result = result.fontFamily(RemixFonts.geistMono);
-    if (truncate) {
-      result = result
-          .maxLines(1)
-          .softWrap(false)
-          .overflow(TextOverflow.ellipsis);
-    }
 
     final label = StyledText(text, style: result.merge(style));
     if (type != .code) return label;
@@ -87,76 +145,21 @@ class HeroUiTypography extends StatelessWidget {
   }
 }
 
-typedef _Metrics = ({
-  TextStyleToken base,
-  double fontSize,
-  double lineHeight,
-  bool heading,
-});
+typedef _Metrics = ({TextStyleToken base, double fontSize, double lineHeight});
 
 /// Tailwind's text scale as the typography classes use it: `text-4xl` through
 /// `text-base` for headings, `leading-7` / `-6` / `-5` for the body sizes.
 _Metrics _metrics(HeroUiTypographyType type) => switch (type) {
-  .h1 => (
-    base: HeroUiTokens.textBase,
-    fontSize: 36,
-    lineHeight: 40,
-    heading: true,
-  ),
-  .h2 => (
-    base: HeroUiTokens.textBase,
-    fontSize: 30,
-    lineHeight: 36,
-    heading: true,
-  ),
-  .h3 => (
-    base: HeroUiTokens.textBase,
-    fontSize: 24,
-    lineHeight: 32,
-    heading: true,
-  ),
-  .h4 => (
-    base: HeroUiTokens.textBase,
-    fontSize: 20,
-    lineHeight: 28,
-    heading: true,
-  ),
-  .h5 => (
-    base: HeroUiTokens.textBase,
-    fontSize: 18,
-    lineHeight: 28,
-    heading: true,
-  ),
-  .h6 => (
-    base: HeroUiTokens.textBase,
-    fontSize: 16,
-    lineHeight: 24,
-    heading: true,
-  ),
-  .body => (
-    base: HeroUiTokens.textBase,
-    fontSize: 16,
-    lineHeight: 28,
-    heading: false,
-  ),
-  .bodySm => (
-    base: HeroUiTokens.textSm,
-    fontSize: 14,
-    lineHeight: 24,
-    heading: false,
-  ),
-  .bodyXs => (
-    base: HeroUiTokens.textXs,
-    fontSize: 12,
-    lineHeight: 20,
-    heading: false,
-  ),
-  .code => (
-    base: HeroUiTokens.textSm,
-    fontSize: 14,
-    lineHeight: 20,
-    heading: false,
-  ),
+  .h1 => (base: HeroUiTokens.textBase, fontSize: 36, lineHeight: 40),
+  .h2 => (base: HeroUiTokens.textBase, fontSize: 30, lineHeight: 36),
+  .h3 => (base: HeroUiTokens.textBase, fontSize: 24, lineHeight: 32),
+  .h4 => (base: HeroUiTokens.textBase, fontSize: 20, lineHeight: 28),
+  .h5 => (base: HeroUiTokens.textBase, fontSize: 18, lineHeight: 28),
+  .h6 => (base: HeroUiTokens.textBase, fontSize: 16, lineHeight: 24),
+  .body => (base: HeroUiTokens.textBase, fontSize: 16, lineHeight: 28),
+  .bodySm => (base: HeroUiTokens.textSm, fontSize: 14, lineHeight: 24),
+  .bodyXs => (base: HeroUiTokens.textXs, fontSize: 12, lineHeight: 20),
+  .code => (base: HeroUiTokens.textSm, fontSize: 14, lineHeight: 20),
 };
 
 /// `tracking-tight`, in em.

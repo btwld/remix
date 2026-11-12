@@ -27,7 +27,7 @@ ToggleGroupStyler heroUiToggleButtonGroupStyle({
   final hover = variant.hover();
   final foreground = variant.foreground();
 
-  var item =
+  final item =
       ToggleGroupItemStyler(
             container: FlexBoxStyler()
                 .mainAxisSize(.min)
@@ -51,39 +51,41 @@ ToggleGroupStyler heroUiToggleButtonGroupStyle({
           .onBreakpoint(
             const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
             ToggleGroupItemStyler().height(size.height.desktop),
-          );
-
-  item = iconOnly
-      ? item
-            .width(size.height.mobile)
-            .onBreakpoint(
-              const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
-              ToggleGroupItemStyler().width(size.height.desktop),
-            )
-      : item.padding(.horizontal(size.paddingX));
-
-  item = item
-      .onHovered(ToggleGroupItemStyler().color(hover))
-      .onPressed(ToggleGroupItemStyler().color(hover))
-      .onSelected(
-        ToggleGroupItemStyler()
-            .color(HeroUiTokens.accentSoft())
-            .labelColor(HeroUiTokens.accentSoftForeground())
-            .iconColor(HeroUiTokens.accentSoftForeground())
-            .onHovered(
-              ToggleGroupItemStyler().color(HeroUiTokens.accentSoftHover()),
-            )
-            .onPressed(
-              ToggleGroupItemStyler().color(HeroUiTokens.accentSoftHover()),
+          )
+          // `p-0 w-10 md:w-9` square the icon-only button.
+          .merge(
+            iconOnly
+                ? ToggleGroupItemStyler()
+                      .width(size.height.mobile)
+                      .onBreakpoint(
+                        const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
+                        ToggleGroupItemStyler().width(size.height.desktop),
+                      )
+                : ToggleGroupItemStyler().padding(.horizontal(size.paddingX)),
+          )
+          .onHovered(ToggleGroupItemStyler().color(hover))
+          .onPressed(ToggleGroupItemStyler().color(hover))
+          .onSelected(
+            ToggleGroupItemStyler()
+                .color(HeroUiTokens.accentSoft())
+                .labelColor(HeroUiTokens.accentSoftForeground())
+                .iconColor(HeroUiTokens.accentSoftForeground())
+                .onHovered(
+                  ToggleGroupItemStyler().color(HeroUiTokens.accentSoftHover()),
+                )
+                .onPressed(
+                  ToggleGroupItemStyler().color(HeroUiTokens.accentSoftHover()),
+                ),
+          )
+          .onFocusVisible(
+            ToggleGroupItemStyler().containerEffects(heroUiInsetFocusRing),
+          )
+          .onDisabled(
+            ToggleGroupItemStyler().wrap(
+              .opacity(HeroUiTokens.disabledOpacity),
             ),
-      )
-      .onFocusVisible(
-        ToggleGroupItemStyler().containerEffects(heroUiInsetFocusRing),
-      )
-      .onDisabled(
-        ToggleGroupItemStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)),
-      )
-      .animate(HeroUiTokens.fillMotion);
+          )
+          .animate(HeroUiTokens.fillMotion);
 
   // Attached items are square inside one rounded, clipped pill.
   final container = detached
@@ -101,7 +103,11 @@ ToggleGroupStyler heroUiToggleButtonGroupStyle({
     // unbounded row still lays out. A vertical group scrolls the same axis:
     // its labels are the part that outgrows the width.
     container: container.wrap(.scrollView(scrollDirection: .horizontal)),
-    item: detached ? item.borderRadius(.all(HeroUiTokens.radius3xl())) : item,
+    item: item.merge(
+      detached
+          ? ToggleGroupItemStyler().borderRadius(.all(HeroUiTokens.radius3xl()))
+          : null,
+    ),
   ).merge(style);
 }
 

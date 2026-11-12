@@ -7,7 +7,16 @@ import '../theme/theme.dart';
 part 'separator.g.dart';
 
 /// HeroUI separator shades, from `separator` to the faintest, `tertiary`.
-enum HeroUiSeparatorVariant { defaultSeparator, secondary, tertiary }
+enum HeroUiSeparatorVariant {
+  /// The `separator` color.
+  defaultSeparator,
+
+  /// The fainter `separator-secondary` color.
+  secondary,
+
+  /// The faintest `separator-tertiary` color.
+  tertiary,
+}
 
 /// HeroUI recipe for [RemixDivider]: a 1px line that spans its container.
 @MixWidget(target: RemixDivider.new)

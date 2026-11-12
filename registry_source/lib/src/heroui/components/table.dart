@@ -8,9 +8,14 @@ import 'select.dart';
 
 part 'table.g.dart';
 
-/// HeroUI table looks: `primary` is a white card on a gray frame, `secondary`
-/// has a gray header over bare rows.
-enum HeroUiTableVariant { primary, secondary }
+/// HeroUI table looks.
+enum HeroUiTableVariant {
+  /// A white card on a gray frame.
+  primary,
+
+  /// A gray header over bare rows.
+  secondary,
+}
 
 /// HeroUI recipe for [RemixDataTable].
 ///

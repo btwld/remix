@@ -1,68 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+
 import '../theme/theme.dart';
 import 'select.dart';
-
-// calendar.css w-63 / seven columns; scales square tiles with text.
-const heroUiCalendarTarget = 36.0;
-double heroUiCalendarDayWidth(BuildContext context) =>
-    MediaQuery.textScalerOf(context).scale(heroUiCalendarTarget);
-CalendarStyler heroUiCalendarGeometry(BuildContext context) => CalendarStyler()
-    .minWidth(heroUiCalendarDayWidth(context) * DateTime.daysPerWeek + 24)
-    .day(
-      CalendarDayStyler()
-          .minWidth(heroUiCalendarDayWidth(context))
-          .minHeight(heroUiCalendarDayWidth(context)),
-    );
-IconButtonStyler heroUiCalendarNavigationStyle(BuildContext context) =>
-    IconButtonStyler()
-        .size(
-          MediaQuery.textScalerOf(context).scale(24),
-          MediaQuery.textScalerOf(context).scale(24),
-        )
-        .padding(.all(0))
-        .alignment(.center)
-        .borderRadius(.all(HeroUiTokens.radius2xl()))
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(context).scale(16),
-          ).color(HeroUiTokens.accentSoftForeground()),
-        )
-        .onHovered(IconButtonStyler().color(HeroUiTokens.defaultColor()))
-        .onPressed(IconButtonStyler().scale(.95))
-        .onFocusVisible(IconButtonStyler().containerEffects(heroUiFocusRing()))
-        .onDisabled(
-          IconButtonStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)),
-        );
-SelectStyler heroUiCalendarSelectorStyle(BuildContext context) =>
-    heroUiSelectStyle(variant: .secondary)
-        .trigger(
-          SelectTriggerStyler()
-              .minHeight(24)
-              .padding(.horizontal(8))
-              .width(MediaQuery.textScalerOf(context).scale(118))
-              .indicator(.size(MediaQuery.textScalerOf(context).scale(11))),
-        )
-        .content(
-          SelectContentStyler()
-              // Four complete day rows plus their gap below the selector.
-              .maxHeight(38 + MediaQuery.textScalerOf(context).scale(160))
-              .maxWidth(remixAnchorWidth())
-              .wrap(
-                WidgetModifierConfig.modifier(const _CalendarScrollCueMix()),
-              ),
-        )
-        // Keep full month names on one line at the trigger's narrow width.
-        .menuContainer(FlexBoxStyler().padding(.all(4)).spacing(4))
-        .item(
-          SelectMenuItemStyler()
-              .padding(.horizontal(4))
-              .spacing(4)
-              .icon(.size(12))
-              .onFocusVisible(
-                SelectMenuItemStyler().containerEffects(heroUiInsetFocusRing),
-              ),
-        );
 
 /// The application's Calendar style recipe.
 ///
@@ -86,8 +26,8 @@ CalendarStyler heroUiCalendarStyle({
     )
     .day(
       CalendarDayStyler()
-          .minWidth(36.0)
-          .minHeight(36.0)
+          .minWidth(heroUiCalendarTarget)
+          .minHeight(heroUiCalendarTarget)
           .alignment(.center)
           .color(_clear())
           .border(.color(_clear()).width(1.0))
@@ -130,40 +70,45 @@ CalendarStyler heroUiCalendarStyle({
             CalendarDayStyler()
                 .color(HeroUiTokens.defaultColor())
                 .label(.color(HeroUiTokens.foreground()))
-                .onSelected(_solidPointer(_primaryHover))
+                .onSelected(_solidPointer(HeroUiTokens.accent))
                 .onRangeMiddle(
                   CalendarDayStyler()
-                      .color(_middleHover())
+                      .color(HeroUiTokens.accentSoftHover())
                       .label(.color(HeroUiTokens.foreground())),
                 )
                 .onRangePreview(
                   CalendarDayStyler()
-                      .color(_draftHover())
+                      .color(HeroUiTokens.accentSoft())
                       .label(.color(HeroUiTokens.foreground())),
                 ),
           )
           .onPressed(
             CalendarDayStyler()
-                .color(_pressed())
+                .color(HeroUiTokens.defaultHover())
                 .label(.color(HeroUiTokens.foreground()))
-                .onSelected(_solidPointer(_primaryPressed))
+                .onSelected(_solidPointer(HeroUiTokens.accentHover))
                 .onRangeMiddle(
                   CalendarDayStyler()
-                      .color(_middlePressed())
+                      .color(HeroUiTokens.accentSoftHover())
                       .label(.color(HeroUiTokens.foreground())),
                 )
                 .onRangePreview(
                   CalendarDayStyler()
-                      .color(_draftPressed())
+                      .color(HeroUiTokens.accentSoftHover())
                       .label(.color(HeroUiTokens.foreground())),
                 ),
           )
+          // One inset outline follows the resolved day or range-cap shape,
+          // so the day's own border gives way to it.
           .onFocusVisible(
             CalendarDayStyler()
                 .border(.all(.color(_clear()).width(0).style(BorderStyle.none)))
                 .containerEffects(
                   RemixBoxEffectsMix(
-                    outline: BorderSideMix(color: _focusContour(), width: 2.0),
+                    outline: BorderSideMix(
+                      color: HeroUiTokens.foreground(),
+                      width: 2.0,
+                    ),
                     outlineOffset: -2.0,
                   ),
                 ),
@@ -205,15 +150,15 @@ CalendarStyler heroUiCalendarStyle({
     )
     .merge(style);
 
+/// A fully transparent `foreground`: resting days have no fill or border.
 final _clear = heroUiAlpha(HeroUiTokens.foreground, 0);
-final _pressed = ContextToken<Color>(
-  (c) => HeroUiTokens.defaultHover.resolve(c),
-);
-// One inset outline follows the resolved day or range-cap shape.
-final _focusContour = ContextToken<Color>(
-  (context) => HeroUiTokens.foreground.resolve(context),
-);
 
+/// A hovered or pressed selected day: a solid fill under the accent text.
+CalendarDayStyler _solidPointer(ColorToken fill) => CalendarDayStyler()
+    .color(fill())
+    .label(.color(HeroUiTokens.accentForeground()));
+
+/// Matches while the calendar, or the range calendar, is disabled.
 final _calendarDisabled = ContextVariant(
   'heroUi.calendar.disabled',
   (context) =>
@@ -222,27 +167,9 @@ final _calendarDisabled = ContextVariant(
               const <WidgetState>{})
           .contains(WidgetState.disabled),
 );
-CalendarDayStyler _solidPointer(ContextToken<Color> fill) => CalendarDayStyler()
-    .color(fill())
-    .label(.color(HeroUiTokens.accentForeground()));
-final _primaryHover = ContextToken<Color>(
-  (c) => HeroUiTokens.accent.resolve(c),
-);
-final _primaryPressed = ContextToken<Color>(
-  (c) => HeroUiTokens.accentHover.resolve(c),
-);
-final _middleHover = ContextToken<Color>(
-  (c) => HeroUiTokens.accentSoftHover.resolve(c),
-);
-final _middlePressed = ContextToken<Color>(
-  (c) => HeroUiTokens.accentSoftHover.resolve(c),
-);
-final _draftHover = ContextToken<Color>(
-  (c) => HeroUiTokens.accentSoft.resolve(c),
-);
-final _draftPressed = ContextToken<Color>(
-  (c) => HeroUiTokens.accentSoftHover.resolve(c),
-);
+
+/// The fill of a selected day that cannot be used: `surface-tertiary` on the
+/// endpoints of a range, `surface-secondary` elsewhere.
 final _quietSelected = ContextToken<Color>((context) {
   final value = NakedRangeCalendarState.maybeOf(context)?.value;
   final day = NakedCalendarDayState.maybeOf(context)?.date;
@@ -251,38 +178,119 @@ final _quietSelected = ContextToken<Color>((context) {
       day != null &&
       (compareCivilDates(day, value.start) == 0 ||
           compareCivilDates(day, value.end) == 0);
+
   return (cap ? HeroUiTokens.surfaceTertiary : HeroUiTokens.surfaceSecondary)
       .resolve(context);
 });
 
+/// The side of a day tile: `calendar.css` `w-63` over seven columns.
+const heroUiCalendarTarget = 36.0;
+
+/// A day tile's side at the current text scale, so tiles grow with text.
+double heroUiCalendarDayWidth(BuildContext context) =>
+    MediaQuery.textScalerOf(context).scale(heroUiCalendarTarget);
+
+/// Sizes a calendar to its day tiles: seven columns plus the 12px padding on
+/// each side.
+///
+/// The widgets merge the caller's style over this.
+CalendarStyler heroUiCalendarGeometry(BuildContext context) => CalendarStyler()
+    .minWidth(heroUiCalendarDayWidth(context) * DateTime.daysPerWeek + 2 * 12.0)
+    .day(
+      CalendarDayStyler()
+          .minWidth(heroUiCalendarDayWidth(context))
+          .minHeight(heroUiCalendarDayWidth(context)),
+    );
+
+/// The month navigation buttons: 24px ghost squares that grow with text.
+IconButtonStyler heroUiCalendarNavigationStyle(BuildContext context) {
+  final scaler = MediaQuery.textScalerOf(context);
+
+  return IconButtonStyler()
+      .size(scaler.scale(24), scaler.scale(24))
+      .padding(.all(0))
+      .alignment(.center)
+      .borderRadius(.all(HeroUiTokens.radius2xl()))
+      .icon(.size(scaler.scale(16)).color(HeroUiTokens.accentSoftForeground()))
+      .onHovered(.color(HeroUiTokens.defaultColor()))
+      .onPressed(IconButtonStyler().scale(.95))
+      .onFocusVisible(.containerEffects(heroUiFocusRing()))
+      .onDisabled(
+        IconButtonStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)),
+      );
+}
+
+/// The month and year selectors: the secondary select, shrunk to a 24px-tall
+/// trigger that grows with text.
+SelectStyler heroUiCalendarSelectorStyle(BuildContext context) {
+  final scaler = MediaQuery.textScalerOf(context);
+
+  return heroUiSelectStyle(variant: .secondary)
+      .trigger(
+        SelectTriggerStyler()
+            .minHeight(24)
+            .padding(.horizontal(8))
+            .width(scaler.scale(118))
+            .indicator(.size(scaler.scale(11))),
+      )
+      .content(
+        SelectContentStyler()
+            // Four complete day rows plus their gap below the selector.
+            .maxHeight(38 + scaler.scale(160))
+            .maxWidth(remixAnchorWidth())
+            .wrap(WidgetModifierConfig.modifier(const _CalendarScrollCueMix())),
+      )
+      // Keep full month names on one line at the trigger's narrow width.
+      .menuContainer(FlexBoxStyler().padding(.all(4)).spacing(4))
+      .item(
+        SelectMenuItemStyler()
+            .padding(.horizontal(4))
+            .spacing(4)
+            .icon(.size(12))
+            .onFocusVisible(
+              SelectMenuItemStyler().containerEffects(heroUiInsetFocusRing),
+            ),
+      );
+}
+
+/// A modifier that keeps the selector list's scrollbar visible, so a
+/// scrolling list is discoverable.
 final class _CalendarScrollCueMix extends ModifierMix<_CalendarScrollCue> {
   const _CalendarScrollCueMix();
+
   @override
   _CalendarScrollCue resolve(BuildContext context) =>
       const _CalendarScrollCue();
+
   @override
   _CalendarScrollCueMix merge(_CalendarScrollCueMix? other) => other ?? this;
+
   @override
   List<Object?> get props => const [];
 }
 
 final class _CalendarScrollCue extends WidgetModifier<_CalendarScrollCue> {
   const _CalendarScrollCue();
+
   @override
   Widget build(Widget child) => ScrollConfiguration(
     behavior: const _CalendarScrollBehavior(),
     child: child,
   );
+
   @override
   _CalendarScrollCue copyWith() => this;
+
   @override
   _CalendarScrollCue lerp(_CalendarScrollCue? other, double t) => this;
+
   @override
   List<Object?> get props => const [];
 }
 
 class _CalendarScrollBehavior extends ScrollBehavior {
   const _CalendarScrollBehavior();
+
   @override
   Widget buildScrollbar(
     BuildContext context,
@@ -299,6 +307,7 @@ class _CalendarScrollBehavior extends ScrollBehavior {
 
 /// HeroUI's three-letter English weekday headings; callers can localize labels.
 const heroUiCalendarLabels = RemixCalendarLabels(weekday: _heroUiWeekday);
+
 String _heroUiWeekday(int day) =>
     const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][day - 1];
 

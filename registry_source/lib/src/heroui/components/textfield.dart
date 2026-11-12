@@ -11,9 +11,14 @@ import '../theme/theme.dart';
 
 part 'textfield.g.dart';
 
-/// HeroUI field variants: `primary` on the field surface with its shadow,
-/// `secondary` on the default fill.
-enum HeroUiTextFieldVariant { primary, secondary }
+/// HeroUI field variants.
+enum HeroUiTextFieldVariant {
+  /// The field surface fill, with its shadow.
+  primary,
+
+  /// The `default` fill.
+  secondary,
+}
 
 /// HeroUI recipe for [RemixTextField]: label, input, and description or error.
 ///
@@ -34,7 +39,7 @@ TextFieldStyler heroUiTextFieldStyle({
     .secondary => heroUiSecondaryFieldFill,
   };
 
-  var result = TextFieldStyler()
+  return TextFieldStyler()
       .layout(FlexBoxStyler().spacing(_fieldGap))
       .padding(.horizontal(_paddingX))
       .padding(.vertical(_paddingY))
@@ -57,13 +62,12 @@ TextFieldStyler heroUiTextFieldStyle({
             .color(field.focus())
             .containerEffects(heroUiFocusRing(offset: 0)),
       )
-      .animate(HeroUiTokens.smoothMotion);
-
-  if (variant == .primary) {
-    result = result.containerEffects(heroUiSurfaceEffects());
-  }
-
-  return result
+      .animate(HeroUiTokens.smoothMotion)
+      .merge(
+        variant == .primary
+            ? TextFieldStyler().containerEffects(heroUiSurfaceEffects())
+            : null,
+      )
       .variant(
         ContextVariant.widgetState(.error),
         TextFieldStyler()

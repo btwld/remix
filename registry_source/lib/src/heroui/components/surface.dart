@@ -3,8 +3,20 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// HeroUI surface fills; `defaultSurface` is HeroUI's `default`.
-enum HeroUiSurfaceVariant { transparent, defaultSurface, secondary, tertiary }
+/// HeroUI surface fills.
+enum HeroUiSurfaceVariant {
+  /// No fill, under the `foreground` text color.
+  transparent,
+
+  /// The `surface` fill.
+  defaultSurface,
+
+  /// The `surface-secondary` fill.
+  secondary,
+
+  /// The `surface-tertiary` fill.
+  tertiary,
+}
 
 /// HeroUI's `Surface`: a filled box that sets the text color for its content.
 ///
@@ -39,12 +51,11 @@ class HeroUiSurface extends StatelessWidget {
         HeroUiTokens.surfaceTertiaryForeground,
       ),
     };
-    var base = BoxStyler();
-    if (fill != null) base = base.color(fill);
-
     final color = foreground.resolve(context);
     return Box(
-      style: base.merge(style),
+      style: BoxStyler()
+          .merge(fill == null ? null : BoxStyler().color(fill))
+          .merge(style),
       child: DefaultTextStyle.merge(
         style: TextStyle(color: color),
         child: IconTheme.merge(
