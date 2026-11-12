@@ -7,6 +7,8 @@ import '../components/disclosure.dart';
 import '../components/icon_button.dart';
 import '../theme/theme.dart';
 
+/// Styles for the answer surface: a card, a disclosure for its sources, and
+/// ghost icon buttons for copy and retry.
 @immutable
 final class UiAgentAnswerRecipe {
   const UiAgentAnswerRecipe({
@@ -16,13 +18,24 @@ final class UiAgentAnswerRecipe {
     required this.copyStyle,
     required this.retryStyle,
   });
+
+  /// Styles for the answer body, actions and feedback.
   final UiAnswerStyler style;
+
+  /// Styles for the card the answer sits in.
   final CardStyler surfaceStyle;
+
+  /// Styles for the disclosure that lists the sources.
   final DisclosureStyler sourcesStyle;
+
+  /// Styles for the copy icon button.
   final IconButtonStyler copyStyle;
+
+  /// Styles for the retry icon button.
   final IconButtonStyler retryStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 UiAgentAnswerRecipe uiAgentAnswerRecipe({
   UiAnswerStyler style = const UiAnswerStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),

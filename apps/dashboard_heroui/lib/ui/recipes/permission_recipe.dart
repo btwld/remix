@@ -23,15 +23,30 @@ final class UiAgentPermissionRecipe {
     required this.alwaysAllowStyle,
     required this.denyStyle,
   });
+
+  /// Styles for the header, actions, text and icons of a request.
   final UiPermissionStyler style;
+
+  /// Styles for the card the request sits in.
   final CardStyler surfaceStyle;
+
+  /// Styles for the disclosure that reveals the request details.
   final DisclosureStyler detailsStyle;
+
+  /// Styles for the list of request parameters.
   final DataListStyler parametersStyle;
+
+  /// Styles for the button that allows the request once.
   final ButtonStyler allowOnceStyle;
+
+  /// Styles for the button that always allows the request.
   final ButtonStyler alwaysAllowStyle;
+
+  /// Styles for the button that denies the request.
   final ButtonStyler denyStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 UiAgentPermissionRecipe uiAgentPermissionRecipe({
   UiPermissionStyler style = const UiPermissionStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),

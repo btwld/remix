@@ -4,8 +4,9 @@ import 'dashboard_demo_ui.dart';
 
 /// How much attention a run of text asks for.
 ///
-/// Ui ships the type scale, the weights, and the gray steps, but no opinion
-/// about which step carries content, so the example settles that once here.
+/// The preset ships the type scale, the weights, and the gray steps, but no
+/// opinion about which step carries content, so the example settles that once
+/// here.
 /// Three tiers is what the dashboard actually needs: an activity row puts all
 /// of them side by side.
 enum TextTone {
@@ -22,7 +23,7 @@ enum TextTone {
   final ColorToken _color;
 }
 
-/// Dashboard body text at a Ui [size].
+/// Dashboard body text at a [size].
 ///
 /// This starts from `uiTextStyle()` so the scale, weights, and flow
 /// behaviour stay the preset's; the only thing layered on top is the neutral

@@ -5,16 +5,22 @@ import '../components/activity.dart';
 import '../components/disclosure.dart';
 import '../theme/theme.dart';
 
+/// Styles for the activity surface: a disclosure around the agent activity list.
 @immutable
 final class {{typePrefix}}AgentActivityRecipe {
   const {{typePrefix}}AgentActivityRecipe({
     required this.style,
     required this.disclosureStyle,
   });
+
+  /// Styles for the activity rows, titles, counts and status icons.
   final {{typePrefix}}ActivityStyler style;
+
+  /// Styles for the disclosure that wraps the list.
   final DisclosureStyler disclosureStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 {{typePrefix}}AgentActivityRecipe {{valuePrefix}}AgentActivityRecipe({
   {{typePrefix}}ActivityStyler style = const {{typePrefix}}ActivityStyler.create(),
   DisclosureStyler disclosureStyle = const DisclosureStyler.create(),

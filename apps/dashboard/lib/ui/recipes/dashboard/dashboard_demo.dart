@@ -164,10 +164,11 @@ class UiDashboardSidebarAccountRail extends StatelessWidget {
   );
 }
 
-/// Application-owned toolbar actions supplied to the Ui dashboard shell.
+/// Application-owned toolbar actions supplied to the dashboard shell.
 class UiDashboardTopBar extends StatefulWidget {
   const UiDashboardTopBar({super.key, this.activities = const []});
 
+  /// The activities listed in the notifications menu.
   final List<UiDashboardActivity> activities;
 
   @override
@@ -437,8 +438,7 @@ final _toolbarButtonStyle = uiIconButtonStyle(variant: .ghost)
     .margin(.all(0))
     .container(.alignment(.center));
 
-/// Full Ui dashboard demo.
-///
+/// Full dashboard demo.
 class UiDashboardDemo extends StatefulWidget {
   const UiDashboardDemo({
     super.key,
@@ -456,17 +456,44 @@ class UiDashboardDemo extends StatefulWidget {
     this.chatStepDelay = const Duration(milliseconds: 320),
   });
 
+  /// The brand mark in the sidebar header.
   final Widget brand;
+
+  /// The account control in the sidebar footer. Defaults to a sample account
+  /// menu when [builtInChrome] is on.
   final Widget? account;
+
+  /// Actions shown in the header, after the built-in ones.
   final List<Widget> headerActions;
+
+  /// Called with the header search text as it changes.
   final ValueChanged<String>? onSearchChanged;
+
+  /// The metrics, revenue, records and activity the Overview page shows, and
+  /// the activity the notifications menu lists. The Customers and Orders
+  /// pages read their own lists.
   final UiDashboardSampleData data;
+
+  /// The page shown first.
   final UiDashboardDemoPage initialPage;
+
+  /// The theme settings the demo starts with.
   final UiThemeSettings initialSettings;
+
+  /// Whether the sidebar is collapsed, when the caller controls it.
   final bool? collapsed;
+
+  /// Whether the sidebar starts collapsed when [collapsed] is null.
   final bool initiallyCollapsed;
+
+  /// Called when the user collapses or expands the sidebar.
   final ValueChanged<bool>? onCollapsedChanged;
+
+  /// Whether to add the breadcrumb, search, appearance toggle, notifications,
+  /// theme settings and sample account.
   final bool builtInChrome;
+
+  /// The pause between the scripted steps of the chat page.
   final Duration chatStepDelay;
 
   @override

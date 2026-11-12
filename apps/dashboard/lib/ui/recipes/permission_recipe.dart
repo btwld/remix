@@ -8,6 +8,8 @@ import '../components/disclosure.dart';
 import '../components/permission.dart';
 import '../theme/theme.dart';
 
+/// Styles for a permission request: a card, a disclosure for its details, and
+/// solid, outline, and ghost buttons for its three answers.
 @immutable
 final class UiAgentPermissionRecipe {
   const UiAgentPermissionRecipe({
@@ -19,15 +21,30 @@ final class UiAgentPermissionRecipe {
     required this.alwaysAllowStyle,
     required this.denyStyle,
   });
+
+  /// Styles for the header, actions, text and icons of a request.
   final UiPermissionStyler style;
+
+  /// Styles for the card the request sits in.
   final CardStyler surfaceStyle;
+
+  /// Styles for the disclosure that reveals the request details.
   final DisclosureStyler detailsStyle;
+
+  /// Styles for the list of request parameters.
   final DataListStyler parametersStyle;
+
+  /// Styles for the button that allows the request once.
   final ButtonStyler allowOnceStyle;
+
+  /// Styles for the button that always allows the request.
   final ButtonStyler alwaysAllowStyle;
+
+  /// Styles for the button that denies the request.
   final ButtonStyler denyStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 UiAgentPermissionRecipe uiAgentPermissionRecipe({
   UiPermissionStyler style = const UiPermissionStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),

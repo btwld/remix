@@ -18,13 +18,24 @@ final class UiAgentExecutionRecipe {
     required this.copyStyle,
     required this.retryStyle,
   });
+
+  /// Styles for the header, output, actions, text and icons of an execution.
   final UiExecutionStyler style;
+
+  /// Styles for the card the execution sits in.
   final CardStyler surfaceStyle;
+
+  /// Styles for the disclosure that reveals the output.
   final DisclosureStyler disclosureStyle;
+
+  /// Styles for the copy icon button.
   final IconButtonStyler copyStyle;
+
+  /// Styles for the retry icon button.
   final IconButtonStyler retryStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 UiAgentExecutionRecipe uiAgentExecutionRecipe({
   UiExecutionStyler style = const UiExecutionStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),

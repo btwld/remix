@@ -13,6 +13,7 @@ EdgeInsets uiPagePadding(double width) => EdgeInsets.all(width < 600 ? 16 : 24);
 class UiPageScroll extends StatelessWidget {
   const UiPageScroll({super.key, required this.child});
 
+  /// The page content.
   final Widget child;
 
   @override
@@ -34,8 +35,13 @@ class UiPageHeader extends StatelessWidget {
     this.actions,
   });
 
+  /// The page title.
   final String title;
+
+  /// A line of supporting copy under the title.
   final String description;
+
+  /// Controls shown beside the title.
   final Widget? actions;
 
   @override
@@ -64,6 +70,8 @@ class UiPageHeader extends StatelessWidget {
 /// The title of a section inside a card.
 class UiSectionLabel extends StatelessWidget {
   const UiSectionLabel(this.label, {super.key});
+
+  /// The section name.
   final String label;
 
   @override
@@ -79,7 +87,10 @@ class UiCardHeading extends StatelessWidget {
     required this.description,
   });
 
+  /// The card title.
   final String title;
+
+  /// A line of supporting copy under the title.
   final String description;
 
   @override

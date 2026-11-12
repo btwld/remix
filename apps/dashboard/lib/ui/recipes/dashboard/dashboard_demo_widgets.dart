@@ -18,7 +18,7 @@ final uiStatTagsStyle = WrapBoxStyler()
     .runSpacing(6)
     .crossAxisAlignment(.center);
 
-/// Metric card used on the Ui dashboard overview page.
+/// Metric card used on the dashboard overview page.
 class UiStatCard extends StatelessWidget {
   const UiStatCard({
     super.key,
@@ -31,12 +31,25 @@ class UiStatCard extends StatelessWidget {
     this.progress,
   });
 
+  /// The metric name.
   final String label;
+
+  /// The metric's current value.
   final String value;
+
+  /// Text beside the delta, naming the period it compares to.
   final String caption;
+
+  /// The change over that period, shown as a badge. Omitted when null.
   final String? delta;
+
+  /// Whether the change is good. It chooses the badge color.
   final bool positive;
+
+  /// Replaces the icon otherwise chosen from [label].
   final IconData? icon;
+
+  /// Completion shown as a bar, as a fraction or a percentage. Omitted when null.
   final double? progress;
 
   @override
@@ -142,6 +155,7 @@ class UiStatusBadge extends StatelessWidget {
     );
   }
 
+  /// The status text.
   final String label;
 
   /// The status accent, or null for the dedicated error red.
@@ -168,7 +182,10 @@ class UiDataTableCellText extends StatelessWidget {
     tone: .muted,
   );
 
+  /// The cell text.
   final String text;
+
+  /// Whether the text is the row's main value, which is emphasized.
   final bool primary;
 
   @override
@@ -176,7 +193,7 @@ class UiDataTableCellText extends StatelessWidget {
       StyledText(text, style: primary ? _primary : _secondary);
 }
 
-/// Shared animation style for standalone Ui disclosures.
+/// Shared animation style for standalone disclosures.
 const uiDisclosureAnimationStyle = AnimationStyle(
   curve: Curves.ease,
   duration: Duration(milliseconds: 200),
@@ -191,7 +208,10 @@ class UiDisclosureTrigger extends StatelessWidget {
     required this.child,
   });
 
+  /// Whether the disclosure is open. An open disclosure turns the chevron.
   final bool expanded;
+
+  /// The trigger label, shown before the chevron.
   final Widget child;
 
   @override
@@ -226,8 +246,13 @@ class UiAction {
     this.dividerBefore = false,
   });
 
+  /// The value passed to [UiActionMenu.onSelected] when chosen.
   final String value;
+
+  /// The text shown for the action.
   final String label;
+
+  /// Whether a divider precedes the action.
   final bool dividerBefore;
 }
 
@@ -248,10 +273,19 @@ class UiActionMenu extends StatelessWidget {
     this.width = 180,
   });
 
+  /// The control that opens the menu.
   final RemixMenuTrigger trigger;
+
+  /// The actions listed in the menu.
   final List<UiAction> actions;
+
+  /// Called with the chosen action's value.
   final ValueChanged<String> onSelected;
+
+  /// Where the menu opens relative to the trigger.
   final OverlayPositionConfig positioning;
+
+  /// The menu width.
   final double width;
 
   @override
@@ -309,9 +343,16 @@ class UiEmptyState extends StatelessWidget {
     this.action,
   });
 
+  /// The icon above the message.
   final IconData icon;
+
+  /// The heading of the message.
   final String title;
+
+  /// The explanation under the heading.
   final String body;
+
+  /// A control shown under the message. Omitted when null.
   final Widget? action;
 
   @override
@@ -371,11 +412,22 @@ class UiChartCard extends StatelessWidget {
 
   static const _plotHeight = 220.0;
 
+  /// The card title.
   final String title;
+
+  /// A line of supporting copy under the title.
   final String description;
+
+  /// The chart, drawn in a plot area of fixed height.
   final Widget chart;
+
+  /// The legend shown under the chart. Omitted when null.
   final Widget? legend;
+
+  /// Padding around the chart. Defaults to a vertical inset.
   final EdgeInsets? chartPadding;
+
+  /// The key of the box that holds the chart and its padding.
   final Key? chartPaddingKey;
 
   @override
@@ -422,10 +474,19 @@ final class UiDashboardChartLegendItem {
     this.pattern = .solid,
   });
 
+  /// Identifies the item.
   final String id;
+
+  /// The name of the series.
   final String label;
+
+  /// A value shown after the label, such as a percentage.
   final String? value;
+
+  /// The swatch color.
   final Color color;
+
+  /// The swatch shape.
   final UiDashboardChartLegendPattern pattern;
 
   String get displayLabel => value == null ? label : '$label $value';
@@ -454,7 +515,7 @@ List<UiDashboardChartLegendItem> uiPercentagePieLegendItems({
   ]);
 }
 
-/// Accessible legend row for Ui dashboard charts.
+/// Accessible legend row for dashboard charts.
 class UiDashboardChartLegend extends StatelessWidget {
   const UiDashboardChartLegend({
     super.key,
@@ -462,7 +523,10 @@ class UiDashboardChartLegend extends StatelessWidget {
     required this.semanticLabel,
   });
 
+  /// The items listed, in order.
   final List<UiDashboardChartLegendItem> items;
+
+  /// The legend's accessible label.
   final String semanticLabel;
 
   @override

@@ -19,6 +19,7 @@ import 'dashboard_demo_text.dart';
 
 enum _Appearance { light, dark, system }
 
+/// The Settings page: appearance, corner radius and preference controls.
 class UiDashboardSettingsPage extends StatefulWidget {
   const UiDashboardSettingsPage({
     super.key,
@@ -27,7 +28,13 @@ class UiDashboardSettingsPage extends StatefulWidget {
     this.onRadiusChanged,
   });
 
+  /// Whether dark appearance is selected, or null for the system setting. Read
+  /// only when [onDarkModeChanged] is set; otherwise the page keeps its own
+  /// selection.
   final bool? darkMode;
+
+  /// Called when the user picks an appearance: true for dark, false for light,
+  /// null for the system setting.
   final ValueChanged<bool?>? onDarkModeChanged;
 
   /// Called with the base corner radius (`--radius`), in logical pixels, as
@@ -333,7 +340,10 @@ class UiDisclosureTrigger extends StatelessWidget {
     required this.child,
   });
 
+  /// Whether the disclosure is open. An open disclosure turns the chevron.
   final bool expanded;
+
+  /// The trigger label, shown before the chevron.
   final Widget child;
 
   @override

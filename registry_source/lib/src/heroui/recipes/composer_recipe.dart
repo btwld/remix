@@ -18,13 +18,24 @@ final class HeroUiAgentComposerRecipe {
     required this.submitStyle,
     required this.stopStyle,
   });
+
+  /// Styles for the composer toolbar.
   final AgentComposerStyler style;
+
+  /// Styles for the card around the field and toolbar.
   final CardStyler surfaceStyle;
+
+  /// Styles for the message text area.
   final TextFieldStyler fieldStyle;
+
+  /// Styles for the icon button that sends the message.
   final IconButtonStyler submitStyle;
+
+  /// Styles for the icon button that stops a running response.
   final IconButtonStyler stopStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 HeroUiAgentComposerRecipe heroUiAgentComposerRecipe({
   AgentComposerStyler style = const AgentComposerStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),

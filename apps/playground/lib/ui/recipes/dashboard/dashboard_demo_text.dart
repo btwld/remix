@@ -4,6 +4,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../theme/tokens.dart';
 
+/// A run of dashboard text in the preset's type scale.
 class PlaygroundDashboardText extends StatelessWidget {
   const PlaygroundDashboardText(
     this.value, {
@@ -13,9 +14,16 @@ class PlaygroundDashboardText extends StatelessWidget {
     this.muted = false,
   });
 
+  /// The text to show.
   final String value;
+
+  /// The text size token.
   final TextStyleToken token;
+
+  /// Whether to use the semibold weight.
   final bool emphasized;
+
+  /// Whether to use the muted foreground color.
   final bool muted;
 
   @override
@@ -32,6 +40,7 @@ class PlaygroundDashboardText extends StatelessWidget {
   );
 }
 
+/// Shows a confirmation toast with [title].
 void playgroundDashboardToast(BuildContext context, String title) =>
     showRemixToast(
       context,

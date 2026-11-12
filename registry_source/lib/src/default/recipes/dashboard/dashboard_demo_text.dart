@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 import '../../theme/tokens.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+/// A run of dashboard text in the preset's type scale.
 class VanillaDashboardText extends StatelessWidget {
   const VanillaDashboardText(
     this.value, {
@@ -13,9 +14,16 @@ class VanillaDashboardText extends StatelessWidget {
     this.muted = false,
   });
 
+  /// The text to show.
   final String value;
+
+  /// The text size token.
   final TextStyleToken token;
+
+  /// Whether to use the semibold weight.
   final bool emphasized;
+
+  /// Whether to use the muted foreground color.
   final bool muted;
 
   @override
@@ -30,6 +38,7 @@ class VanillaDashboardText extends StatelessWidget {
   );
 }
 
+/// Shows a confirmation toast with [title].
 void vanillaDashboardToast(BuildContext context, String title) =>
     showRemixToast(
       context,

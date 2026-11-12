@@ -13,10 +13,15 @@ final class HeroUiAgentActivityRecipe {
     required this.style,
     required this.disclosureStyle,
   });
+
+  /// Styles for the activity rows, titles, counts and status icons.
   final AgentActivityStyler style;
+
+  /// Styles for the disclosure that wraps the list.
   final DisclosureStyler disclosureStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 HeroUiAgentActivityRecipe heroUiAgentActivityRecipe({
   AgentActivityStyler style = const AgentActivityStyler.create(),
   DisclosureStyler disclosureStyle = const DisclosureStyler.create(),

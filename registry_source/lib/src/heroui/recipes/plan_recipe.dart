@@ -13,10 +13,15 @@ final class HeroUiAgentPlanRecipe {
     required this.style,
     required this.disclosureStyle,
   });
+
+  /// Styles for the plan rows, titles, counts and status icons.
   final AgentPlanStyler style;
+
+  /// Styles for the disclosure that wraps the list.
   final DisclosureStyler disclosureStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 HeroUiAgentPlanRecipe heroUiAgentPlanRecipe({
   AgentPlanStyler style = const AgentPlanStyler.create(),
   DisclosureStyler disclosureStyle = const DisclosureStyler.create(),

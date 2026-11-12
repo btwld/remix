@@ -7,9 +7,12 @@ import '../../agent/components/transcript.dart';
 @immutable
 final class HeroUiAgentTranscriptRecipe {
   const HeroUiAgentTranscriptRecipe({required this.style});
+
+  /// Styles for the spacing between transcript entries.
   final AgentTranscriptStyler style;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 HeroUiAgentTranscriptRecipe heroUiAgentTranscriptRecipe({
   AgentTranscriptStyler style = const AgentTranscriptStyler.create(),
 }) => HeroUiAgentTranscriptRecipe(

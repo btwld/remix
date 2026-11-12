@@ -21,8 +21,11 @@ final playgroundSelectedBadgesStyle = WrapBoxStyler()
     .spacing(PlaygroundTokens.s1_5)
     .crossAxisAlignment(.center);
 
+/// The Customers page: a searchable, sortable table of customers.
 class PlaygroundDashboardCustomersPage extends StatefulWidget {
   const PlaygroundDashboardCustomersPage({super.key, this.globalQuery = ''});
+
+  /// The header search text. Rows must match it as well as the page's own filter.
   final String globalQuery;
 
   @override
@@ -157,8 +160,11 @@ class _PlaygroundDashboardCustomersPageState
   }
 }
 
+/// The Orders page: a filterable, sortable table of orders.
 class PlaygroundDashboardOrdersPage extends StatefulWidget {
   const PlaygroundDashboardOrdersPage({super.key, this.globalQuery = ''});
+
+  /// The header search text. Rows must match it as well as the page's own filter.
   final String globalQuery;
 
   @override

@@ -15,12 +15,21 @@ final class HeroUiAgentMessageRecipe {
     required this.collapsibleStyle,
     required this.toggleStyle,
   });
+
+  /// Styles for the message row, avatar, header, body and footer.
   final AgentMessageStyler style;
+
+  /// Styles for the card the message sits in.
   final CardStyler surfaceStyle;
+
+  /// Styles for the collapsed height and clipping of a long message.
   final AgentMessageCollapsibleStyler collapsibleStyle;
+
+  /// Styles for the button that expands or collapses a long message.
   final ButtonStyler toggleStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 HeroUiAgentMessageRecipe heroUiAgentMessageRecipe({
   AgentMessageStyler style = const AgentMessageStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),

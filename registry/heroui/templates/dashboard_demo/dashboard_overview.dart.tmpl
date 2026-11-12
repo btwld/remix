@@ -28,8 +28,13 @@ class {{typePrefix}}DashboardOverview extends StatelessWidget {
     this.onViewOrders,
   });
 
+  /// The records the overview summarizes.
   final {{typePrefix}}DashboardSampleData data;
+
+  /// Controls the page's scroll position.
   final ScrollController? scrollController;
+
+  /// Called when the user asks to see all orders.
   final VoidCallback? onViewOrders;
 
   @override

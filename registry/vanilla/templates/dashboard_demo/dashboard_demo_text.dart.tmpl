@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 
 import '../../theme/tokens.dart';
 
+/// A run of dashboard text in the preset's type scale.
 class {{typePrefix}}DashboardText extends StatelessWidget {
   const {{typePrefix}}DashboardText(
     this.value, {
@@ -13,9 +14,16 @@ class {{typePrefix}}DashboardText extends StatelessWidget {
     this.muted = false,
   });
 
+  /// The text to show.
   final String value;
+
+  /// The text size token.
   final TextStyleToken token;
+
+  /// Whether to use the semibold weight.
   final bool emphasized;
+
+  /// Whether to use the muted foreground color.
   final bool muted;
 
   @override
@@ -30,6 +38,7 @@ class {{typePrefix}}DashboardText extends StatelessWidget {
   );
 }
 
+/// Shows a confirmation toast with [title].
 void {{valuePrefix}}DashboardToast(BuildContext context, String title) =>
     showRemixToast(
       context,

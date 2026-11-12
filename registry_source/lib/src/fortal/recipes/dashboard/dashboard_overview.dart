@@ -19,6 +19,7 @@ import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_widgets.dart';
 
+/// The Overview page: metric cards, charts and recent activity.
 class FortalDashboardOverview extends StatelessWidget {
   const FortalDashboardOverview({
     super.key,
@@ -27,8 +28,13 @@ class FortalDashboardOverview extends StatelessWidget {
     this.onViewOrders,
   });
 
+  /// The records the overview summarizes.
   final RegistryDashboardSampleData data;
+
+  /// Controls the page's scroll position.
   final ScrollController? scrollController;
+
+  /// Called when the user asks to see all orders.
   final VoidCallback? onViewOrders;
 
   @override
@@ -60,13 +66,14 @@ class FortalDashboardOverview extends StatelessWidget {
   }
 }
 
-/// Overview analytics chart grid for the Fortal dashboard.
+/// Overview analytics chart grid for the dashboard.
 class FortalAnalyticsCharts extends StatelessWidget {
   const FortalAnalyticsCharts({
     super.key,
     this.data = registryDashboardSampleData,
   });
 
+  /// The records the charts plot.
   final RegistryDashboardSampleData data;
 
   @override

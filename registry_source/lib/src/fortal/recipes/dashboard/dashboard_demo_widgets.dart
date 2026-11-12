@@ -18,7 +18,7 @@ final fortalStatTagsStyle = WrapBoxStyler()
     .runSpacing(6)
     .crossAxisAlignment(.center);
 
-/// Metric card used on the Fortal dashboard overview page.
+/// Metric card used on the dashboard overview page.
 class FortalStatCard extends StatelessWidget {
   const FortalStatCard({
     super.key,
@@ -31,12 +31,25 @@ class FortalStatCard extends StatelessWidget {
     this.progress,
   });
 
+  /// The metric name.
   final String label;
+
+  /// The metric's current value.
   final String value;
+
+  /// Text beside the delta, naming the period it compares to.
   final String caption;
+
+  /// The change over that period, shown as a badge. Omitted when null.
   final String? delta;
+
+  /// Whether the change is good. It chooses the badge color.
   final bool positive;
+
+  /// Replaces the icon otherwise chosen from [label].
   final IconData? icon;
+
+  /// Completion shown as a bar, as a fraction or a percentage. Omitted when null.
   final double? progress;
 
   @override
@@ -144,6 +157,7 @@ class FortalStatusBadge extends StatelessWidget {
     );
   }
 
+  /// The status text.
   final String label;
 
   /// The status accent, or null for the dedicated error red.
@@ -170,7 +184,10 @@ class FortalDataTableCellText extends StatelessWidget {
     tone: .muted,
   );
 
+  /// The cell text.
   final String text;
+
+  /// Whether the text is the row's main value, which is emphasized.
   final bool primary;
 
   @override
@@ -178,7 +195,7 @@ class FortalDataTableCellText extends StatelessWidget {
       StyledText(text, style: primary ? _primary : _secondary);
 }
 
-/// Shared animation style for standalone Fortal disclosures.
+/// Shared animation style for standalone disclosures.
 const fortalDisclosureAnimationStyle = AnimationStyle(
   curve: Curves.ease,
   duration: Duration(milliseconds: 200),
@@ -193,7 +210,10 @@ class FortalDisclosureTrigger extends StatelessWidget {
     required this.child,
   });
 
+  /// Whether the disclosure is open. An open disclosure turns the chevron.
   final bool expanded;
+
+  /// The trigger label, shown before the chevron.
   final Widget child;
 
   @override
@@ -228,8 +248,13 @@ class FortalAction {
     this.dividerBefore = false,
   });
 
+  /// The value passed to [FortalActionMenu.onSelected] when chosen.
   final String value;
+
+  /// The text shown for the action.
   final String label;
+
+  /// Whether a divider precedes the action.
   final bool dividerBefore;
 }
 
@@ -250,10 +275,19 @@ class FortalActionMenu extends StatelessWidget {
     this.width = 180,
   });
 
+  /// The control that opens the menu.
   final RemixMenuTrigger trigger;
+
+  /// The actions listed in the menu.
   final List<FortalAction> actions;
+
+  /// Called with the chosen action's value.
   final ValueChanged<String> onSelected;
+
+  /// Where the menu opens relative to the trigger.
   final OverlayPositionConfig positioning;
+
+  /// The menu width.
   final double width;
 
   @override
@@ -311,9 +345,16 @@ class FortalEmptyState extends StatelessWidget {
     this.action,
   });
 
+  /// The icon above the message.
   final IconData icon;
+
+  /// The heading of the message.
   final String title;
+
+  /// The explanation under the heading.
   final String body;
+
+  /// A control shown under the message. Omitted when null.
   final Widget? action;
 
   @override
@@ -373,11 +414,22 @@ class FortalChartCard extends StatelessWidget {
 
   static const _plotHeight = 220.0;
 
+  /// The card title.
   final String title;
+
+  /// A line of supporting copy under the title.
   final String description;
+
+  /// The chart, drawn in a plot area of fixed height.
   final Widget chart;
+
+  /// The legend shown under the chart. Omitted when null.
   final Widget? legend;
+
+  /// Padding around the chart. Defaults to a vertical inset.
   final EdgeInsets? chartPadding;
+
+  /// The key of the box that holds the chart and its padding.
   final Key? chartPaddingKey;
 
   @override
@@ -424,10 +476,19 @@ final class FortalDashboardChartLegendItem {
     this.pattern = .solid,
   });
 
+  /// Identifies the item.
   final String id;
+
+  /// The name of the series.
   final String label;
+
+  /// A value shown after the label, such as a percentage.
   final String? value;
+
+  /// The swatch color.
   final Color color;
+
+  /// The swatch shape.
   final FortalDashboardChartLegendPattern pattern;
 
   String get displayLabel => value == null ? label : '$label $value';
@@ -456,7 +517,7 @@ List<FortalDashboardChartLegendItem> fortalPercentagePieLegendItems({
   ]);
 }
 
-/// Accessible legend row for Fortal dashboard charts.
+/// Accessible legend row for dashboard charts.
 class FortalDashboardChartLegend extends StatelessWidget {
   const FortalDashboardChartLegend({
     super.key,
@@ -464,7 +525,10 @@ class FortalDashboardChartLegend extends StatelessWidget {
     required this.semanticLabel,
   });
 
+  /// The items listed, in order.
   final List<FortalDashboardChartLegendItem> items;
+
+  /// The legend's accessible label.
   final String semanticLabel;
 
   @override
