@@ -18,24 +18,18 @@ const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
 const _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
 const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
 
-/// Returns the categorical palette shared by this application's charts.
-///
-/// The colors are the theme's `chart1` through `chart5` tokens in series
-/// order, so editing them in `VanillaThemeData` restyles every chart.
-/// Pass `palette` to one recipe or generated widget for a local override.
+/// The categorical palette shared by the charts: the theme's `chart1` through
+/// `chart5` in series order. Pass `palette` to one chart to override it.
 List<Color> resolveVanillaChartPalette(BuildContext context) =>
     List<Color>.unmodifiable([
       for (final token in VanillaTokens.chart) token.resolve(context),
     ]);
 
-/// The label color that reads on a pie slice filled with [slice].
+/// Whichever of `foreground` and `background` contrasts more with [slice].
 ///
-/// The shipped palette is a gray ramp, so no one label color reads on every
-/// slice: `background` vanishes on the lightest gray and `foreground` on the
-/// darkest. This returns whichever of the two contrasts more with [slice].
-///
-/// Pie labels are off by default. A chart that turns them on sets each
-/// slice's label color from this, next to the fill the slice is drawn in:
+/// The shipped palette is a gray ramp, so no single label color reads on every
+/// slice. Pie labels are off by default; a chart that turns them on sets each
+/// slice's label color from this:
 ///
 /// ```dart
 /// final palette = resolveVanillaChartPalette(context);
@@ -68,12 +62,8 @@ double _contrast(Color a, Color b) {
 
 /// The application's line and area chart recipe.
 ///
-/// `mix_chart` owns the data model, rendering, interaction, and semantics.
-/// This file owns the palette, axes, grid, line, markers, and tooltip. Give the
-/// generated [VanillaLineChart] a bounded height because charts have no
+/// Give the generated [VanillaLineChart] a bounded height: charts have no
 /// intrinsic height.
-///
-/// [style] merges last, so one call site can replace any part of the recipe.
 @MixWidget(target: LineChart.new)
 LineChartStyler vanillaLineChartStyle({
   bool showMarkers = false,
@@ -92,13 +82,14 @@ LineChartStyler vanillaLineChartStyle({
           .preventCurveOvershooting(true)
           .roundStrokeCap(true)
           .roundStrokeJoin(true)
-          .stroke(ChartStrokeStyler().width(_lineWidth))
+          .stroke(ChartStrokeStyler().width(2))
           .marker(
             ChartMarkerStyler()
                 .show(showMarkers)
-                .radius(_markerRadius)
+                .radius(3)
+                // Separates the marker from the line behind it.
                 .borderColor(VanillaTokens.background())
-                .borderWidth(_markerBorderWidth),
+                .borderWidth(2),
           ),
     )
     .tooltip(_chartTooltipStyle())
@@ -107,11 +98,7 @@ LineChartStyler vanillaLineChartStyle({
 
 /// The application's grouped, stacked, and floating bar chart recipe.
 ///
-/// `mix_chart` owns the bar data and behavior. This recipe supplies the shared
-/// visual treatment. Give the generated [VanillaBarChart] a bounded
-/// height because charts have no intrinsic height.
-///
-/// [style] merges last, so one call site can replace any part of the recipe.
+/// Give the generated [VanillaBarChart] a bounded height.
 @MixWidget(target: BarChart.new)
 BarChartStyler vanillaBarChartStyle({
   List<Color>? palette,
@@ -122,31 +109,22 @@ BarChartStyler vanillaBarChartStyle({
     .topAxis(_hiddenAxisStyle())
     .rightAxis(_hiddenAxisStyle())
     .grid(_chartGridStyle())
-    .bar(
-      BarStyler.create(
-        borderRadius: Prop.token(_barRadiusToken),
-      ).width(_barWidth),
-    )
-    .groupSpacing(_barGroupSpacing)
-    .barSpacing(_barSpacing)
+    .bar(BarStyler.create(borderRadius: Prop.token(_barRadiusToken)).width(16))
+    .groupSpacing(12)
+    .barSpacing(6)
     .tooltip(_chartTooltipStyle())
     .merge(BarChartStyler.create(palette: _paletteProp(palette)))
     .merge(style);
 
 /// The application's pie and donut chart recipe.
 ///
-/// A positive [centerRadius] creates a donut. Labels stay hidden by default;
-/// a caller-owned legend keeps category names readable with any custom
-/// palette. [showLabels] draws them in `background`, which a gray palette
-/// cannot carry on every slice: pair it with [vanillaPieSliceLabelColor].
-/// Give the generated [VanillaPieChart] a bounded width and height because
-/// charts have no intrinsic size.
+/// A positive [centerRadius] makes a donut. Labels are hidden by default;
+/// [showLabels] draws them in `background`, which a gray palette cannot carry
+/// on every slice, so pair it with [vanillaPieSliceLabelColor]. Give the
+/// generated [VanillaPieChart] a bounded width and height.
 ///
-/// The default slice radius is at most 80 logical pixels and shrinks to fit
-/// the available box, accounting for the center hole and selection expansion.
-/// An explicit `PieSliceStyler().radius(...)` keeps caller-controlled sizing.
-///
-/// [style] merges last, so one call site can replace any part of the recipe.
+/// The default slice radius is at most 80px and shrinks to fit the box; an
+/// explicit `PieSliceStyler().radius(...)` overrides it.
 @MixWidget(target: PieChart.new)
 PieChartStyler vanillaPieChartStyle({
   double centerRadius = 0,
@@ -156,16 +134,15 @@ PieChartStyler vanillaPieChartStyle({
 }) => PieChartStyler()
     .frame(_chartFrameStyle())
     .centerRadius(centerRadius)
-    // The hole shows whatever the chart sits on. A page-colored hole would read
-    // as a hole punched through a dark card, which is a step lighter than the
-    // page.
+    // Transparent: a page-colored hole would read as punched through a dark
+    // card, which is a step lighter than the page.
     .centerColor(MixColors.transparent)
-    .sliceSpacing(_sliceSpacing)
-    .selectedSliceRadiusOffset(_selectedSliceOffset)
+    .sliceSpacing(2)
+    .selectedSliceRadiusOffset(4)
     .slice(
       PieSliceStyler()
           .showLabel(showLabels)
-          .cornerRadius(_sliceRadius)
+          .cornerRadius(2)
           .label(
             TextStyler()
                 .style(VanillaTokens.textXs.mix())
@@ -177,37 +154,9 @@ PieChartStyler vanillaPieChartStyle({
     .merge(PieChartStyler.create(palette: _paletteProp(palette)))
     .merge(style);
 
-/// Width of a line series.
-const _lineWidth = 2.0;
-
-/// Radius of an optional line marker.
-const _markerRadius = 3.0;
-
-/// Border that separates a line marker from the plot behind it.
-const _markerBorderWidth = 2.0;
-
-/// Width of each bar before a caller override.
-const _barWidth = 16.0;
-
-/// Space between bar groups.
-const _barGroupSpacing = 12.0;
-
-/// Space between bars in one group.
-const _barSpacing = 6.0;
-
-/// Gap between pie slices.
-const _sliceSpacing = 2.0;
-
-/// Extra radius applied to a selected pie slice.
-const _selectedSliceOffset = 4.0;
-
-/// Corner radius applied to each pie slice.
-const _sliceRadius = 2.0;
-
-/// Maximum corner radius for bars.
+/// The theme's radii are authored for 32-40px controls; they are clamped so a
+/// pill radius does not round a bar or a tooltip into a capsule.
 const _maxBarRadius = 4.0;
-
-/// Maximum corner radius for the tooltip surface.
 const _maxTooltipRadius = 12.0;
 
 Prop<List<Color>> _paletteProp(List<Color>? palette) => palette == null
@@ -261,20 +210,18 @@ ChartTooltipStyler _chartTooltipStyle() =>
               .color(VanillaTokens.foreground()),
         );
 
-/// The tooltip's outline: `border` at half strength.
+/// `border` at half strength.
 BorderSide _resolveTooltipBorder(BuildContext context) => BorderSide(
-  color: _tooltipBorderColor.resolve(context),
+  color: vanillaTint(VanillaTokens.border, 0.5).resolve(context),
   width: VanillaTokens.strokeHairline,
 );
 
-final _tooltipBorderColor = vanillaTint(VanillaTokens.border, 0.5);
-
-/// The tooltip's corners: `radiusLg`, at most 12px.
+/// `radiusLg`, at most 12px.
 BorderRadius _resolveTooltipRadius(BuildContext context) => BorderRadius.all(
   _clampedThemeRadius(context, VanillaTokens.radiusLg, _maxTooltipRadius),
 );
 
-/// The tooltip's inset: 10px at the sides, 6px above and below.
+/// 10px at the sides, 6px above and below.
 EdgeInsets _resolveTooltipPadding(BuildContext context) =>
     const EdgeInsets.symmetric(
       horizontal: VanillaTokens.s2_5,
