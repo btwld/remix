@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../models/statuses.dart';
 
@@ -81,6 +82,11 @@ class AgentDisclosurePolicy {
 /// [onExpandedChanged], even when it does not change the stored value: a
 /// controlled host decides for itself.
 ///
+/// A request from the reader reaches [onExpandedChanged] at once. A request
+/// from the lifecycle arrives while the host rebuilds the widget that owns
+/// this controller, so it reaches [onExpandedChanged] after the frame: the
+/// host can call `setState` in it without touching the tree mid-build.
+///
 /// Listeners hear about changes to [expanded].
 class AgentDisclosureController extends ChangeNotifier {
   /// Creates a disclosure in [phase].
@@ -107,6 +113,7 @@ class AgentDisclosureController extends ChangeNotifier {
   bool? _controlled;
   bool _uncontrolled;
   bool _readerToggled = false;
+  bool _disposed = false;
 
   /// Whether the surface is open.
   bool get expanded => _controlled ?? _uncontrolled;
@@ -145,7 +152,7 @@ class AgentDisclosureController extends ChangeNotifier {
     if (request == null || (policy.respectReaderToggle && _readerToggled)) {
       return;
     }
-    _request(request);
+    _request(request, fromLifecycle: true);
   }
 
   /// Records the reader's request to open ([expanded] true) or close.
@@ -154,11 +161,24 @@ class AgentDisclosureController extends ChangeNotifier {
     _request(expanded);
   }
 
-  void _request(bool next) {
+  void _request(bool next, {bool fromLifecycle = false}) {
     if (_controlled == null && next != _uncontrolled) {
       _uncontrolled = next;
       notifyListeners();
     }
-    onExpandedChanged?.call(next);
+    if (!fromLifecycle) {
+      onExpandedChanged?.call(next);
+      return;
+    }
+    // The lifecycle moves while the host builds; report it after the frame.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!_disposed) onExpandedChanged?.call(next);
+    });
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 }

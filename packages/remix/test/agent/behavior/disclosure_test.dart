@@ -16,6 +16,7 @@ import '../helpers/pump.dart';
 const _parity = AgentDisclosurePolicy(respectReaderToggle: false);
 
 void main() {
+  lifecycleCallbackTests();
   group('AgentDisclosurePolicy.request', () {
     const policy = AgentDisclosurePolicy();
 
@@ -554,4 +555,53 @@ class _PhaseHarnessState extends State<_PhaseHarness> {
     onExpandedChanged: requests.add,
     onController: (value) => controller = value,
   );
+}
+
+class _SetStateHost extends StatefulWidget {
+  const _SetStateHost();
+
+  @override
+  State<_SetStateHost> createState() => _SetStateHostState();
+}
+
+class _SetStateHostState extends State<_SetStateHost> {
+  var status = AgentToolCallStatus.running;
+  var requests = 0;
+
+  void advance() => setState(() => status = AgentToolCallStatus.succeeded);
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    height: 300,
+    width: 400,
+    child: ListView.builder(
+      itemCount: 1,
+      itemBuilder: (context, index) => AgentToolCall(
+        call: AgentToolCallPart(
+          id: 'call',
+          name: 'terminal.run',
+          status: status,
+          output: 'ok',
+        ),
+        // The host reacts to the lifecycle by rebuilding itself.
+        onExpandedChanged: (_) => setState(() => requests++),
+      ),
+    ),
+  );
+}
+
+void lifecycleCallbackTests() {
+  testWidgets('a lifecycle callback can set state on an ancestor', (
+    tester,
+  ) async {
+    await pumpAgent(tester, const _SetStateHost());
+    final host = tester.state<_SetStateHostState>(find.byType(_SetStateHost));
+
+    host.advance();
+    await tester.pump();
+    await tester.pump();
+
+    expect(tester.takeException(), isNull);
+    expect(host.requests, 1);
+  });
 }
