@@ -81,6 +81,28 @@ bool _isEnabled(WidgetTester tester, Key key) =>
 
 void main() {
   group('the approval card', () {
+    testWidgets(
+      'adopts a recorded decision on mount and re-arms when cleared',
+      (tester) async {
+        final decisions = <AgentApprovalDecision>[];
+        final notifier = await _pump(
+          tester,
+          approvalCall.copyWith(decision: AgentApprovalDecision.allowOnce),
+          onDecision: decisions.add,
+        );
+        for (final key in [_allowOnce, _deny, _alwaysAllow]) {
+          expect(_isEnabled(tester, key), isFalse);
+          await tester.tap(find.byKey(key), warnIfMissed: false);
+        }
+        expect(decisions, isEmpty);
+
+        await _move(tester, notifier, approvalCall);
+        expect(_isEnabled(tester, _deny), isTrue);
+        await tester.tap(find.byKey(_deny));
+        expect(decisions, [AgentApprovalDecision.deny]);
+      },
+    );
+
     testWidgets('asks the question with the tool, description and input', (
       tester,
     ) async {

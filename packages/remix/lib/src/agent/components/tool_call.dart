@@ -238,6 +238,7 @@ class _AgentToolCallState extends State<AgentToolCall>
   late final AgentApprovalGuard _guard = AgentApprovalGuard(
     id: widget.call.id,
     status: widget.call.status,
+    recorded: widget.call.decision,
   );
   late final AgentDisclosureController _disclosure;
   late final AgentLiveEdgeController _outputEdge;
