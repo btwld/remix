@@ -146,7 +146,6 @@ class _HeroUiDashboardDemoState extends State<HeroUiDashboardDemo> {
         ),
       },
     );
-    if (!widget.builtInChrome) return demo;
     return _HeroUiDemoTheme(
       dark: _isDark,
       radius: _radius,
@@ -165,6 +164,7 @@ class _HeroUiDashboardDemoState extends State<HeroUiDashboardDemo> {
       onPressed: () => setState(() => _dark = !_isDark),
     ),
     _HeroUiHeaderPopover(
+      dark: _isDark,
       icon: RemixIcons.bell,
       semanticLabel: 'Open notifications',
       showBadge: !_notificationsRead,
@@ -213,6 +213,7 @@ class _HeroUiDashboardDemoState extends State<HeroUiDashboardDemo> {
       ),
     ),
     _HeroUiHeaderPopover(
+      dark: _isDark,
       icon: RemixIcons.gear,
       semanticLabel: 'Open theme settings',
       popoverChild: Box(
@@ -299,7 +300,7 @@ class _HeroUiDemoTheme extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = this.radius;
     if (HeroUiTheme.maybeOf(context) == null) {
-      return HeroUiTheme(
+      return _HeroUiStableDemoTheme(
         mode: _mode,
         theme: radius == null ? null : HeroUiThemeData.light(radius: radius),
         darkTheme: radius == null ? null : HeroUiThemeData.dark(radius: radius),
@@ -316,7 +317,7 @@ class _HeroUiDemoTheme extends StatelessWidget {
             child: Builder(
               builder: (darkContext) {
                 final dark = HeroUiTheme.of(darkContext);
-                return HeroUiTheme(
+                return _HeroUiStableDemoTheme(
                   mode: _mode,
                   theme: radius == null ? null : light.copyWith(radius: radius),
                   darkTheme: radius == null
@@ -340,12 +341,14 @@ class _HeroUiDemoTheme extends StatelessWidget {
 /// what closing returns focus to.
 class _HeroUiHeaderPopover extends StatefulWidget {
   const _HeroUiHeaderPopover({
+    required this.dark,
     required this.icon,
     required this.semanticLabel,
     required this.popoverChild,
     this.showBadge = false,
   });
 
+  final bool dark;
   final IconData icon;
   final String semanticLabel;
   final Widget popoverChild;
@@ -358,6 +361,14 @@ class _HeroUiHeaderPopover extends StatefulWidget {
 class _HeroUiHeaderPopoverState extends State<_HeroUiHeaderPopover> {
   final _controller = MenuController();
   final _focusNode = FocusNode();
+
+  @override
+  void didUpdateWidget(covariant _HeroUiHeaderPopover oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Appearance changes used to dismiss the popover by remounting the demo.
+    // Keep that behavior while retaining the dashboard's page state.
+    if (widget.dark != oldWidget.dark) _controller.close();
+  }
 
   @override
   void dispose() {
@@ -428,9 +439,13 @@ class _HeroUiBreadcrumb extends StatelessWidget {
           ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
-      StyledIcon(
-        icon: RemixIcons.chevronRight,
-        style: IconStyler().size(12).color(HeroUiTokens.muted()),
+      Transform.flip(
+        key: const ValueKey('dashboard-breadcrumb-separator'),
+        flipX: Directionality.of(context) == TextDirection.rtl,
+        child: StyledIcon(
+          icon: RemixIcons.chevronRight,
+          style: IconStyler().size(12).color(HeroUiTokens.muted()),
+        ),
       ),
       Flexible(
         child: StyledText(
@@ -553,4 +568,49 @@ RegistryDashboardAgentStyles _heroUiAgentStyles() {
     composerSubmitStyle: composer.submitStyle,
     composerStopStyle: composer.stopStyle,
   );
+}
+
+/// Keeps the demo's theme, text and icon ancestors present in both appearances.
+/// The ordinary theme conditionally inserts recoloring widgets under a host.
+/// Reuse its resolved inherited scope via [InheritedTheme.wrap], which installs
+/// the theme and Mix tokens without those conditional presentation wrappers.
+/// The dashboard host supplies MediaQuery, as required by its shell.
+class _HeroUiStableDemoTheme extends HeroUiTheme {
+  const _HeroUiStableDemoTheme({
+    super.theme,
+    super.darkTheme,
+    super.mode,
+    required super.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final root = HeroUiTheme.maybeOf(context) == null;
+    final scope = super.build(context) as InheritedTheme;
+    return scope.wrap(
+      context,
+      Builder(
+        builder: (context) {
+          final theme = HeroUiTheme.of(context);
+          final foreground = theme.color(HeroUiTokens.foreground);
+          final body = root
+              ? MixScope.tokenOf(
+                  HeroUiTokens.textBase,
+                  context,
+                ).copyWith(fontWeight: FontWeight.w400)
+              : DefaultTextStyle.of(context).style;
+          return ColoredBox(
+            color: theme.color(HeroUiTokens.background),
+            child: DefaultTextStyle.merge(
+              style: body.copyWith(color: foreground),
+              child: IconTheme.merge(
+                data: IconThemeData(color: foreground),
+                child: child,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

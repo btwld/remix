@@ -146,7 +146,6 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
         ),
       },
     );
-    if (!widget.builtInChrome) return demo;
     return _UiDemoTheme(
       dark: _isDark,
       radius: _radius,
@@ -165,6 +164,7 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
       onPressed: () => setState(() => _dark = !_isDark),
     ),
     _UiHeaderPopover(
+      dark: _isDark,
       icon: RemixIcons.bell,
       semanticLabel: 'Open notifications',
       showBadge: !_notificationsRead,
@@ -213,6 +213,7 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
       ),
     ),
     _UiHeaderPopover(
+      dark: _isDark,
       icon: RemixIcons.gear,
       semanticLabel: 'Open theme settings',
       popoverChild: Box(
@@ -298,7 +299,7 @@ class _UiDemoTheme extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = this.radius;
     if (UiTheme.maybeOf(context) == null) {
-      return UiTheme(
+      return _UiStableDemoTheme(
         mode: _mode,
         theme: radius == null ? null : UiThemeData.light(radius: radius),
         darkTheme: radius == null ? null : UiThemeData.dark(radius: radius),
@@ -315,7 +316,7 @@ class _UiDemoTheme extends StatelessWidget {
             child: Builder(
               builder: (darkContext) {
                 final dark = UiTheme.of(darkContext);
-                return UiTheme(
+                return _UiStableDemoTheme(
                   mode: _mode,
                   theme: radius == null ? null : light.copyWith(radius: radius),
                   darkTheme: radius == null
@@ -339,12 +340,14 @@ class _UiDemoTheme extends StatelessWidget {
 /// what closing returns focus to.
 class _UiHeaderPopover extends StatefulWidget {
   const _UiHeaderPopover({
+    required this.dark,
     required this.icon,
     required this.semanticLabel,
     required this.popoverChild,
     this.showBadge = false,
   });
 
+  final bool dark;
   final IconData icon;
   final String semanticLabel;
   final Widget popoverChild;
@@ -357,6 +360,14 @@ class _UiHeaderPopover extends StatefulWidget {
 class _UiHeaderPopoverState extends State<_UiHeaderPopover> {
   final _controller = MenuController();
   final _focusNode = FocusNode();
+
+  @override
+  void didUpdateWidget(covariant _UiHeaderPopover oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Appearance changes used to dismiss the popover by remounting the demo.
+    // Keep that behavior while retaining the dashboard's page state.
+    if (widget.dark != oldWidget.dark) _controller.close();
+  }
 
   @override
   void dispose() {
@@ -427,9 +438,13 @@ class _UiBreadcrumb extends StatelessWidget {
           ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
-      StyledIcon(
-        icon: RemixIcons.chevronRight,
-        style: IconStyler().size(12).color(UiTokens.muted()),
+      Transform.flip(
+        key: const ValueKey('dashboard-breadcrumb-separator'),
+        flipX: Directionality.of(context) == TextDirection.rtl,
+        child: StyledIcon(
+          icon: RemixIcons.chevronRight,
+          style: IconStyler().size(12).color(UiTokens.muted()),
+        ),
       ),
       Flexible(
         child: StyledText(
@@ -550,4 +565,49 @@ UiDashboardAgentStyles _uiAgentStyles() {
     composerSubmitStyle: composer.submitStyle,
     composerStopStyle: composer.stopStyle,
   );
+}
+
+/// Keeps the demo's theme, text and icon ancestors present in both appearances.
+/// The ordinary theme conditionally inserts recoloring widgets under a host.
+/// Reuse its resolved inherited scope via [InheritedTheme.wrap], which installs
+/// the theme and Mix tokens without those conditional presentation wrappers.
+/// The dashboard host supplies MediaQuery, as required by its shell.
+class _UiStableDemoTheme extends UiTheme {
+  const _UiStableDemoTheme({
+    super.theme,
+    super.darkTheme,
+    super.mode,
+    required super.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final root = UiTheme.maybeOf(context) == null;
+    final scope = super.build(context) as InheritedTheme;
+    return scope.wrap(
+      context,
+      Builder(
+        builder: (context) {
+          final theme = UiTheme.of(context);
+          final foreground = theme.color(UiTokens.foreground);
+          final body = root
+              ? MixScope.tokenOf(
+                  UiTokens.textBase,
+                  context,
+                ).copyWith(fontWeight: FontWeight.w400)
+              : DefaultTextStyle.of(context).style;
+          return ColoredBox(
+            color: theme.color(UiTokens.background),
+            child: DefaultTextStyle.merge(
+              style: body.copyWith(color: foreground),
+              child: IconTheme.merge(
+                data: IconThemeData(color: foreground),
+                child: child,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

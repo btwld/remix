@@ -156,9 +156,8 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
         ),
       },
     );
-    if (!widget.builtInChrome) return demo;
     final radius = _radius;
-    return VanillaTheme(
+    return _VanillaDemoTheme(
       mode: _isDark ? VanillaThemeMode.dark : VanillaThemeMode.light,
       // One explicit half would be reused for the other brightness. Copy the
       // radius onto both so light and dark keep their own colors.
@@ -181,6 +180,7 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
       onPressed: () => setState(() => _dark = !_isDark),
     ),
     _VanillaHeaderPopover(
+      dark: _isDark,
       icon: RemixIcons.bell,
       semanticLabel: 'Open notifications',
       showBadge: !_notificationsRead,
@@ -234,6 +234,7 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
       ),
     ),
     _VanillaHeaderPopover(
+      dark: _isDark,
       icon: RemixIcons.gear,
       semanticLabel: 'Open theme settings',
       popoverChild: Box(
@@ -316,12 +317,14 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
 /// what closing returns focus to.
 class _VanillaHeaderPopover extends StatefulWidget {
   const _VanillaHeaderPopover({
+    required this.dark,
     required this.icon,
     required this.semanticLabel,
     required this.popoverChild,
     this.showBadge = false,
   });
 
+  final bool dark;
   final IconData icon;
   final String semanticLabel;
   final Widget popoverChild;
@@ -334,6 +337,14 @@ class _VanillaHeaderPopover extends StatefulWidget {
 class _VanillaHeaderPopoverState extends State<_VanillaHeaderPopover> {
   final _controller = MenuController();
   final _focusNode = FocusNode();
+
+  @override
+  void didUpdateWidget(covariant _VanillaHeaderPopover oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Appearance changes used to dismiss the popover by remounting the demo.
+    // Keep that behavior while retaining the dashboard's page state.
+    if (widget.dark != oldWidget.dark) _controller.close();
+  }
 
   @override
   void dispose() {
@@ -405,7 +416,14 @@ class _VanillaBreadcrumb extends StatelessWidget {
           ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
-      StyledText('/', style: _textStyle(muted: true)),
+      Transform.flip(
+        key: const ValueKey('dashboard-breadcrumb-separator'),
+        flipX: Directionality.of(context) == TextDirection.rtl,
+        child: StyledIcon(
+          icon: RemixIcons.chevronRight,
+          style: IconStyler().size(12).color(VanillaTokens.mutedForeground()),
+        ),
+      ),
       Flexible(
         child: StyledText(
           page.label,
@@ -550,4 +568,49 @@ RegistryDashboardAgentStyles _vanillaAgentStyles() {
     composerSubmitStyle: composer.submitStyle,
     composerStopStyle: composer.stopStyle,
   );
+}
+
+/// Keeps the demo's theme, text and icon ancestors present in both appearances.
+/// The ordinary theme conditionally inserts recoloring widgets under a host.
+/// Reuse its resolved inherited scope via [InheritedTheme.wrap], which installs
+/// the theme and Mix tokens without those conditional presentation wrappers.
+/// The dashboard host supplies MediaQuery, as required by its shell.
+class _VanillaDemoTheme extends VanillaTheme {
+  const _VanillaDemoTheme({
+    super.theme,
+    super.darkTheme,
+    super.mode,
+    required super.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final root = VanillaTheme.maybeOf(context) == null;
+    final scope = super.build(context) as InheritedTheme;
+    return scope.wrap(
+      context,
+      Builder(
+        builder: (context) {
+          final theme = VanillaTheme.of(context);
+          final foreground = theme.foreground;
+          final body = root
+              ? MixScope.tokenOf(
+                  VanillaTokens.textSm,
+                  context,
+                ).copyWith(fontWeight: FontWeight.w400)
+              : DefaultTextStyle.of(context).style;
+          return ColoredBox(
+            color: theme.background,
+            child: DefaultTextStyle.merge(
+              style: body.copyWith(color: foreground),
+              child: IconTheme.merge(
+                data: IconThemeData(color: foreground),
+                child: child,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

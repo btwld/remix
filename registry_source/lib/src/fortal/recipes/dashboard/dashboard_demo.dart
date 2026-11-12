@@ -135,6 +135,20 @@ class _FortalDashboardTopBarState extends State<FortalDashboardTopBar> {
   final _notificationsController = MenuController();
   final _themeController = MenuController();
   bool _notificationsRead = false;
+  bool? _wasDark;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final dark = FortalTheme.of(context).isDark;
+    // Appearance changes used to dismiss these by remounting the demo.
+    // Keep that behavior while retaining the dashboard's page state.
+    if (_wasDark != null && _wasDark != dark) {
+      _themeController.close();
+      _notificationsController.close();
+    }
+    _wasDark = dark;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -455,6 +469,9 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
             onSelected: onSelected,
             body: body,
             title: title,
+            headerTitle: widget.builtInChrome
+                ? _FortalBreadcrumb(page: selectedValue)
+                : null,
             brand: widget.brand,
             account:
                 widget.account ??
@@ -506,11 +523,11 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
         ),
       },
     );
-    if (!widget.builtInChrome || ambientScope != null) return demo;
+    if (ambientScope != null) return demo;
     return FortalDashboardThemeScope(
       settings: _settings,
       onChanged: onSettingsChanged,
-      child: FortalTheme(
+      child: _FortalDemoTheme(
         key: const ValueKey('dashboard-theme-scope'),
         mode: isDark ? FortalThemeMode.dark : FortalThemeMode.light,
         accent: _settings.accentColor,
@@ -570,4 +587,91 @@ RegistryDashboardAgentStyles _fortalAgentStyles() {
     composerSubmitStyle: composer.submitStyle,
     composerStopStyle: composer.stopStyle,
   );
+}
+
+class _FortalBreadcrumb extends StatelessWidget {
+  const _FortalBreadcrumb({required this.page});
+  final RegistryDashboardDemoPage page;
+
+  @override
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
+    children: [
+      Flexible(
+        child: StyledText(
+          page.section.label,
+          style: dashboardText(
+            .size2,
+            tone: .muted,
+          ).maxLines(1).softWrap(false).overflow(.ellipsis),
+        ),
+      ),
+      Transform.flip(
+        key: const ValueKey('dashboard-breadcrumb-separator'),
+        flipX: Directionality.of(context) == TextDirection.rtl,
+        child: StyledIcon(
+          icon: RemixIcons.chevronRight,
+          style: IconStyler().size(12).color(FortalTokens.gray11()),
+        ),
+      ),
+      Flexible(
+        child: StyledText(
+          page.label,
+          style: dashboardText(
+            .size2,
+          ).fontWeight(.w600).maxLines(1).softWrap(false).overflow(.ellipsis),
+        ),
+      ),
+    ],
+  );
+}
+
+/// Keeps the demo's theme, text and icon ancestors present in both appearances.
+/// The ordinary theme conditionally inserts recoloring widgets under a host.
+/// Reuse its resolved inherited scope via [InheritedTheme.wrap], which installs
+/// the theme and Mix tokens without those conditional presentation wrappers.
+/// The dashboard host supplies MediaQuery, as required by its shell.
+class _FortalDemoTheme extends FortalTheme {
+  const _FortalDemoTheme({
+    super.key,
+    super.mode,
+    super.accent,
+    super.panelBackground,
+    super.radius,
+    super.scaling,
+    required super.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final root = FortalTheme.maybeOf(context) == null;
+    final scope = super.build(context) as InheritedTheme;
+    return scope.wrap(
+      context,
+      Builder(
+        builder: (context) {
+          final theme = FortalTheme.of(context);
+          final foreground = MixScope.tokenOf(FortalTokens.gray12, context);
+          final body = root
+              ? MixScope.tokenOf(
+                  FortalTokens.text3,
+                  context,
+                ).copyWith(fontWeight: FontWeight.w400)
+              : DefaultTextStyle.of(context).style;
+          return ColoredBox(
+            color: theme.hasBackground
+                ? MixScope.tokenOf(FortalTokens.colorBackground, context)
+                : const Color(0x00000000),
+            child: DefaultTextStyle.merge(
+              style: body.copyWith(color: foreground),
+              child: IconTheme.merge(
+                data: IconThemeData(color: foreground),
+                child: child,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
