@@ -106,7 +106,9 @@ class _PlaygroundExecutionState extends State<PlaygroundExecution> {
       _request(true);
     } else if (oldWidget.status.isWorking &&
         !widget.status.isWorking &&
-        widget.collapseOnComplete) {
+        widget.collapseOnComplete &&
+        // A failure stays open: its output is what the reader needs next.
+        widget.status != PlaygroundExecutionStatus.error) {
       _request(false);
     }
   }

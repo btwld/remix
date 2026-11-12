@@ -853,8 +853,16 @@ void main() {
           height: 1400,
         );
         for (var run = 0; run < 2; run++) {
-          // The starter row comes before the transcript's echo of it.
-          await tester.tap(find.text('Review checkout').first);
+          // A starter opens the chat; later turns are typed and sent.
+          if (run == 0) {
+            await tester.tap(find.text('Review checkout').first);
+          } else {
+            await tester.enterText(
+              find.byType(EditableText).last,
+              'Review checkout',
+            );
+            await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          }
           for (var frame = 0; frame < 6; frame++) {
             await tester.pump(const Duration(milliseconds: 11));
           }
@@ -901,8 +909,16 @@ void main() {
         );
         // Two turns whose answers have the same text.
         for (var run = 0; run < 2; run++) {
-          // The starter row comes before the transcript's echo of it.
-          await tester.tap(find.text('Review checkout').first);
+          // A starter opens the chat; later turns are typed and sent.
+          if (run == 0) {
+            await tester.tap(find.text('Review checkout').first);
+          } else {
+            await tester.enterText(
+              find.byType(EditableText).last,
+              'Review checkout',
+            );
+            await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          }
           for (var frame = 0; frame < 6; frame++) {
             await tester.pump(const Duration(milliseconds: 11));
           }

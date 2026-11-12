@@ -24,6 +24,33 @@ void main() {
     expect(find.text('Focused tests'), findsOneWidget);
   });
 
+  testWidgets('a failure keeps its output open; a success collapses it', (
+    tester,
+  ) async {
+    Widget execution(AgentExecutionStatus status) => AgentExecution(
+      tool: 'tool',
+      title: 'Run',
+      status: status,
+      child: const Text('output'),
+    );
+
+    for (final (outcome, open) in [
+      (AgentExecutionStatus.error, true),
+      (AgentExecutionStatus.success, false),
+    ]) {
+      await pumpAgent(tester, const SizedBox());
+      await pumpAgent(tester, execution(AgentExecutionStatus.running));
+      expect(find.text('output'), findsOneWidget);
+      await pumpAgent(tester, execution(outcome));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('output').hitTestable(),
+        open ? findsOneWidget : findsNothing,
+        reason: '$outcome',
+      );
+    }
+  });
+
   testWidgets('copy and retry actions appear only after settlement', (
     tester,
   ) async {
