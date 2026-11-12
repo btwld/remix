@@ -2,6 +2,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
 import 'package:registry_source/agent.dart';
 
 import '../helpers/pump.dart';
@@ -21,6 +22,33 @@ void main() {
 
     expect(find.text('terminal.run'), findsOneWidget);
     expect(find.text('Focused tests'), findsOneWidget);
+  });
+
+  testWidgets('a failure keeps its output open; a success collapses it', (
+    tester,
+  ) async {
+    Widget execution(AgentExecutionStatus status) => AgentExecution(
+      tool: 'tool',
+      title: 'Run',
+      status: status,
+      child: const Text('output'),
+    );
+
+    for (final (outcome, open) in [
+      (AgentExecutionStatus.error, true),
+      (AgentExecutionStatus.success, false),
+    ]) {
+      await pumpAgent(tester, const SizedBox());
+      await pumpAgent(tester, execution(AgentExecutionStatus.running));
+      expect(find.text('output'), findsOneWidget);
+      await pumpAgent(tester, execution(outcome));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('output').hitTestable(),
+        open ? findsOneWidget : findsNothing,
+        reason: '$outcome',
+      );
+    }
   });
 
   testWidgets('copy and retry actions appear only after settlement', (
@@ -150,4 +178,59 @@ void main() {
 
     handle.dispose();
   });
+
+  testWidgets('long output scrolls inside a bounded viewport and follows', (
+    tester,
+  ) async {
+    final key = GlobalKey<_StreamingExecutionState>();
+    await pumpAgent(
+      tester,
+      SizedBox(width: 400, child: _StreamingExecution(key: key)),
+    );
+    await tester.pump();
+
+    final card = tester.getRect(find.byType(AgentExecution));
+    final output = find.descendant(
+      of: find.byType(AgentExecution),
+      matching: find.byType(SingleChildScrollView),
+    );
+    expect(tester.getSize(output).height, 100);
+    expect(card.height, lessThan(200));
+
+    key.currentState!.append(20);
+    await tester.pump();
+    expect(tester.getRect(find.byType(AgentExecution)), card);
+    expect(
+      tester.getRect(find.text('line 39', findRichText: true)).bottom,
+      lessThanOrEqualTo(tester.getRect(output).bottom + 0.5),
+      reason: 'A running tool keeps its newest line in view.',
+    );
+  });
+}
+
+class _StreamingExecution extends StatefulWidget {
+  const _StreamingExecution({super.key});
+
+  @override
+  State<_StreamingExecution> createState() => _StreamingExecutionState();
+}
+
+class _StreamingExecutionState extends State<_StreamingExecution> {
+  var lines = 20;
+
+  void append(int count) => setState(() => lines += count);
+
+  @override
+  Widget build(BuildContext context) => AgentExecution(
+    tool: 'flutter test',
+    title: 'Run tests',
+    style: AgentExecutionStyler(viewport: BoxStyler().maxHeight(100)),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var line = 0; line < lines; line++)
+          SizedBox(height: 20, child: Text('line $line')),
+      ],
+    ),
+  );
 }

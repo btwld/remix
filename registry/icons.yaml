@@ -30,6 +30,7 @@ icons:
   alignCenterHorizontally: {remix: alignCenter, rounded: alignCenter, lucide: alignCenter}
   alignLeft: {remix: alignLeft, rounded: alignLeft, lucide: alignLeft}
   alignRight: {remix: alignRight, rounded: alignRight, lucide: alignRight}
+  arrowDown: {remix: arrowDown, rounded: arrowDown, lucide: arrowDown}
   arrowUp: {remix: arrowUp, rounded: arrowUp, lucide: arrowUp}
   barChart: {remix: chart, rounded: chart, lucide: barChart3}
   bell: {remix: bell, rounded: bell, lucide: bell}

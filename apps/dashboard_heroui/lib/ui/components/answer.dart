@@ -130,9 +130,12 @@ class _UiAnswerState extends State<UiAnswer> {
                   semanticLabel: widget.sourcesLabel,
                   style: widget.sourcesStyle,
                   triggerBuilder: (context, state, trigger) => Row(
+                    // The indicator follows its label, as a link-like line,
+                    // rather than sitting at the far edge of the row.
+                    mainAxisSize: MainAxisSize.min,
                     spacing: 8,
                     children: [
-                      Expanded(child: trigger!),
+                      Flexible(child: trigger!),
                       UiDisclosureIndicator(
                         styleSpec: spec.indicator,
                         expanded: state.isExpanded,
@@ -174,7 +177,16 @@ class _UiAnswerState extends State<UiAnswer> {
                       ),
                     if (widget.status == UiAnswerStatus.complete &&
                         widget.feedback != null)
-                      Box(styleSpec: spec.feedback, child: widget.feedback),
+                      // A status message such as "Copied" is announced
+                      // without moving focus (WCAG 2.2 SC 4.1.3).
+                      Semantics(
+                        container: true,
+                        liveRegion: true,
+                        child: Box(
+                          styleSpec: spec.feedback,
+                          child: widget.feedback,
+                        ),
+                      ),
                   ],
                 ),
             ],

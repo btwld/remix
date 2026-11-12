@@ -199,7 +199,7 @@ void main() {
       expect(changes, [false, true]);
     });
 
-    testWidgets('activity stays open while working even under host control', (
+    testWidgets('activity defers to its host while working, then settles', (
       tester,
     ) async {
       final changes = <bool>[];
@@ -217,11 +217,11 @@ void main() {
       await pump(.working);
       await tester.tap(find.text('Activity'));
       await tester.pump();
-      expect(changes, isEmpty);
-      expect(find.text('Installed activity'), findsOneWidget);
+      expect(changes, [true]);
+      expect(find.text('Installed activity'), findsNothing);
       await pump(.complete);
       await tester.pumpAndSettle();
-      expect(changes, [false]);
+      expect(changes, [true, false]);
       expect(find.text('Installed activity'), findsNothing);
     });
 
@@ -241,7 +241,11 @@ void main() {
       );
       await pump(.running);
       expect(find.text('Command output'), findsOneWidget);
+      // A failure keeps its output open; the reader can still close it.
       await pump(.error);
+      await tester.pumpAndSettle();
+      expect(find.text('Command output'), findsOneWidget);
+      await tester.tap(find.text('Installed execution'));
       await tester.pumpAndSettle();
       expect(find.text('Command output'), findsNothing);
       await tester.tap(find.text('Installed execution'));

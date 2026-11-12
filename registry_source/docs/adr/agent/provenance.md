@@ -31,7 +31,10 @@ this repository's `remix_ui_icons` font, including its stop, pending, active,
 loading, and circled-outcome statuses. Domain specs have empty visual
 defaults; both presets supply installed recipe bundles. Agent defines its own
 controlled/uncontrolled, accessibility, keyboard, lifecycle and scroll ownership
-contracts rather than copying the benchmark API.
+contracts rather than copying the benchmark API. Permission actions put the
+primary decision last at the trailing edge, like each preset's dialogs, where
+the benchmark's tool approval leads with it; a working activity keeps its
+toggle rather than becoming a status line.
 
 ## License and NOTICE conclusion
 

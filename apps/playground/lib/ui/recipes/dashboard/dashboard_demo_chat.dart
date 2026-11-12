@@ -39,6 +39,8 @@ final class PlaygroundDashboardAgentStyles {
     required this.answerCopyStyle,
     required this.answerRetryStyle,
     required this.transcriptStyle,
+    this.transcriptLatestStyle = const IconButtonStyler.create(),
+    this.turnStyle = const FlexBoxStyler.create(),
     required this.planStyle,
     required this.planDisclosureStyle,
     required this.activityStyle,
@@ -73,6 +75,13 @@ final class PlaygroundDashboardAgentStyles {
   final IconButtonStyler answerCopyStyle;
   final IconButtonStyler answerRetryStyle;
   final PlaygroundTranscriptStyler transcriptStyle;
+  final IconButtonStyler transcriptLatestStyle;
+
+  /// Lays out one turn: the prompt, the agent's work and its answer.
+  ///
+  /// The transcript's spacing separates turns, so keep a turn's own spacing
+  /// the tighter of the two: each prompt then reads with the reply below it.
+  final FlexBoxStyler turnStyle;
   final PlaygroundPlanStyler planStyle;
   final DisclosureStyler planDisclosureStyle;
   final PlaygroundActivityStyler activityStyle;
@@ -144,7 +153,13 @@ class _PlaygroundDashboardChatPageState
   var _following = true;
   var _toolStarted = false;
   var _alwaysAllowTerminal = false;
-  final _history = <({String prompt, String answer})>[];
+  // Turns are numbered so a copy confirmation belongs to one answer: several
+  // answers can share the same text.
+  var _turn = 0;
+  int? _copiedTurn;
+  Timer? _copiedTimer;
+  final _history =
+      <({int turn, String prompt, String answer, bool succeeded})>[];
 
   PlaygroundDashboardAgentStyles get styles => widget.styles;
 
@@ -168,6 +183,7 @@ class _PlaygroundDashboardChatPageState
   @override
   void dispose() {
     _cancelPending();
+    _copiedTimer?.cancel();
     _scroll.dispose();
     _draft.dispose();
     super.dispose();
@@ -181,6 +197,7 @@ class _PlaygroundDashboardChatPageState
 
   void _reset() {
     _cancelPending();
+    _clearCopied();
     _draft.clear();
     setState(() {
       _stage = _Stage.idle;
@@ -193,6 +210,23 @@ class _PlaygroundDashboardChatPageState
     });
   }
 
+  Future<void> _copyAnswer(int turn, String text) async {
+    await Clipboard.setData(ClipboardData(text: text));
+    if (!mounted) return;
+    _copiedTimer?.cancel();
+    setState(() => _copiedTurn = turn);
+    _copiedTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _copiedTurn = null);
+    });
+  }
+
+  // A confirmation answers the last action; a new run replaces it.
+  void _clearCopied() {
+    _copiedTimer?.cancel();
+    _copiedTimer = null;
+    _copiedTurn = null;
+  }
+
   void _start(
     String prompt, {
     _Scenario scenario = _Scenario.success,
@@ -202,11 +236,20 @@ class _PlaygroundDashboardChatPageState
     _cancelPending();
     final id = _runId;
     setState(() {
+      _clearCopied();
       if (!keepMessage && _prompt.isNotEmpty) {
-        _history.add((prompt: _prompt, answer: _visibleAnswer));
+        _history.add((
+          turn: _turn,
+          prompt: _prompt,
+          answer: _visibleAnswer,
+          succeeded: _stage == _Stage.complete,
+        ));
       }
       _scenario = scenario;
-      if (!keepMessage) _prompt = prompt.trim();
+      if (!keepMessage) {
+        _turn++;
+        _prompt = prompt.trim();
+      }
       _answer = '';
       _toolStarted = false;
       _stage = _Stage.preparing;
@@ -267,20 +310,6 @@ class _PlaygroundDashboardChatPageState
     keepMessage: true,
   );
 
-  void _returnToLatest() {
-    setState(() => _following = true);
-    if (!_scroll.hasClients) return;
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _scroll.jumpTo(_scroll.position.maxScrollExtent);
-    } else {
-      _scroll.animateTo(
-        _scroll.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 180),
-        curve: Curves.easeOut,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final gutter = MediaQuery.sizeOf(context).width < 600 ? 16.0 : 20.0;
@@ -322,25 +351,19 @@ class _PlaygroundDashboardChatPageState
                       ],
                     ),
                     StyledText('Interactive demo', style: styles.body),
-                    if (!compact)
-                      StyledText(
-                        'Simulated responses and tools — no backend or credentials.',
-                        style: styles.body,
-                      ),
                   ],
                 ),
-                if (!compact && !_active) _starters(),
-                Expanded(child: _transcript()),
-                if (!_following)
+                // The transcript offers its own way back to the latest.
+                Expanded(child: _transcript(compact: compact)),
+                _composer(maxLines: compact ? 2 : 8),
+                if (!compact)
                   Box(
                     style: BoxStyler().alignment(.center),
-                    child: styles.buttonBuilder(
-                      'Return to latest',
-                      _returnToLatest,
-                      .soft,
+                    child: StyledText(
+                      'Simulated responses and tools — no backend or credentials.',
+                      style: styles.body,
                     ),
                   ),
-                _composer(maxLines: compact ? 2 : 8),
               ],
             );
           },
@@ -349,36 +372,42 @@ class _PlaygroundDashboardChatPageState
     );
   }
 
-  Widget _starters() => SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    child: RowBox(
-      style: FlexBoxStyler().spacing(8),
-      children: [
-        _starter('Review checkout', .success),
-        _starter('Run terminal checks', .permission),
-        _starter('Recover a failed command', .failure),
-      ],
-    ),
+  Widget _starters() => Wrap(
+    alignment: WrapAlignment.center,
+    spacing: 8,
+    runSpacing: 8,
+    children: [
+      _starter('Review checkout', .success),
+      _starter('Run terminal checks', .permission),
+      _starter('Recover a failed command', .failure),
+    ],
   );
 
   Widget _starter(String label, _Scenario scenario) => styles.buttonBuilder(
     label,
     () => _start(label, scenario: scenario),
-    .soft,
+    // Suggestions are outlined so the only filled shape in the
+    // conversation is the reader's own message.
+    .outline,
   );
 
-  Widget _transcript() {
+  Widget _transcript({bool compact = false}) {
     final requestId = _runId;
     final narrow = MediaQuery.sizeOf(context).width < 600;
-    final children = <Widget>[];
-    for (final turn in _history) {
-      children.addAll([
-        _message(turn.prompt),
-        _answerWidget(turn.answer, .complete),
-      ]);
-    }
+    final turns = <Widget>[
+      for (final turn in _history)
+        _turnGroup([
+          _message(turn.prompt),
+          _answerWidget(
+            turn.turn,
+            turn.answer,
+            .complete,
+            sources: turn.succeeded,
+          ),
+        ]),
+    ];
     if (_prompt.isNotEmpty) {
-      children.add(_message(_prompt));
+      final children = <Widget>[_message(_prompt)];
       children.add(
         PlaygroundPlan(
           style: styles.planStyle,
@@ -401,24 +430,27 @@ class _PlaygroundDashboardChatPageState
           ],
         ),
       );
-      children.add(
-        PlaygroundActivity(
-          style: styles.activityStyle,
-          disclosureStyle: styles.activityDisclosureStyle,
-          status: _active ? .working : .complete,
-          items: [
-            PlaygroundActivityItem(
-              id: 'run',
-              title: _activityLabel,
-              status: _active ? .active : .complete,
-            ),
-          ],
-        ),
-      );
+      // Activity says what the agent is doing until a card says it instead.
+      if (_stage == _Stage.preparing) {
+        children.add(
+          PlaygroundActivity(
+            style: styles.activityStyle,
+            disclosureStyle: styles.activityDisclosureStyle,
+            status: _active ? .working : .complete,
+            items: [
+              PlaygroundActivityItem(
+                id: 'run',
+                title: _activityLabel,
+                status: _active ? .active : .complete,
+              ),
+            ],
+          ),
+        );
+      }
+      // A decided request that let the tool run is told by the tool row
+      // below it, so only a pending or denied request is shown.
       if (_stage == _Stage.permission ||
-          (_scenario == _Scenario.permission &&
-              _stage != _Stage.preparing &&
-              (_stage != _Stage.stopped || _toolStarted))) {
+          (_scenario == _Scenario.permission && _stage == _Stage.denied)) {
         children.add(
           PlaygroundPermission(
             requestId: _runId,
@@ -495,15 +527,18 @@ class _PlaygroundDashboardChatPageState
           {_Stage.denied, _Stage.stopped}.contains(_stage)) {
         children.add(
           _answerWidget(
+            _turn,
             _visibleAnswer,
             _stage == _Stage.running
                 ? .streaming
                 : _stage == _Stage.failed
                 ? .error
                 : .complete,
+            sources: _stage == _Stage.complete,
           ),
         );
       }
+      turns.add(_turnGroup(children));
     }
     return PlaygroundTranscript(
       controller: _scroll,
@@ -513,16 +548,37 @@ class _PlaygroundDashboardChatPageState
         if (_following != value) setState(() => _following = value);
       },
       style: styles.transcriptStyle,
-      children: children.isEmpty
+      latestStyle: styles.transcriptLatestStyle,
+      children: turns.isEmpty
           ? [
               Box(
                 style: BoxStyler().alignment(.center).padding(.all(32)),
-                child: const StyledText('Choose a starter or write a message.'),
+                child: ColumnBox(
+                  style: FlexBoxStyler()
+                      .mainAxisSize(.min)
+                      .crossAxisAlignment(.center)
+                      .spacing(16),
+                  children: [
+                    const StyledText('Choose a starter or write a message.'),
+                    if (!compact) _starters(),
+                  ],
+                ),
               ),
             ]
-          : children,
+          : turns,
     );
   }
+
+  // Each turn is one transcript item, so the transcript's spacing falls
+  // between turns and the turn's own, tighter spacing within one.
+  Widget _turnGroup(List<Widget> children) => ColumnBox(
+    style: FlexBoxStyler()
+        .mainAxisSize(.min)
+        .crossAxisAlignment(.stretch)
+        .spacing(8)
+        .merge(styles.turnStyle),
+    children: children,
+  );
 
   Widget _message(String value) => PlaygroundMessage(
     role: .user,
@@ -531,7 +587,12 @@ class _PlaygroundDashboardChatPageState
     child: StyledText(value),
   );
 
-  Widget _answerWidget(String value, PlaygroundAnswerStatus status) {
+  Widget _answerWidget(
+    int turn,
+    String value,
+    PlaygroundAnswerStatus status, {
+    bool sources = true,
+  }) {
     return PlaygroundAnswer(
       streamId: _runId,
       status: status,
@@ -540,11 +601,13 @@ class _PlaygroundDashboardChatPageState
       sourcesStyle: styles.answerSourcesStyle,
       copyStyle: styles.answerCopyStyle,
       retryStyle: styles.answerRetryStyle,
-      onCopy: () => Clipboard.setData(ClipboardData(text: value)),
+      onCopy: () => _copyAnswer(turn, value),
+      feedback: _copiedTurn == turn ? const StyledText('Copied') : null,
       onRetry: _retry,
-      sourcesContent: const StyledText(
-        'Deterministic local fixture · no network',
-      ),
+      // Sources belong to an answer that used them, not to a failure.
+      sourcesContent: sources && status == .complete
+          ? const StyledText('Deterministic local fixture · no network')
+          : null,
       child: StyledText(value),
     );
   }

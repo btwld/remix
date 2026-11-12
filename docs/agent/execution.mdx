@@ -30,7 +30,7 @@ Import `ui/ui.dart` from your application and use the scope for your preset:
 
 ## Behavior
 
-Supply `tool`, `title`, and host-rendered output through `child`. Use `UiExecutionStatus.running`, `.success`, `.error`, or `.cancelled`. Copy and retry callbacks perform application actions; rendering this component does not execute a tool. `collapseOnComplete` controls lifecycle-driven collapse; controlled `expanded` state remains host-owned.
+Supply `tool`, `title`, and host-rendered output through `child`. Use `UiExecutionStatus.running`, `.success`, `.error`, or `.cancelled`. Copy and retry callbacks perform application actions; rendering this component does not execute a tool. `collapseOnComplete` controls lifecycle-driven collapse; controlled `expanded` state remains host-owned. The style's `viewport` slot bounds the output, which then scrolls inside its own box and keeps its newest line in view while the tool runs.
 
 ## Recipe bundle
 

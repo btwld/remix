@@ -106,7 +106,9 @@ class _UiExecutionState extends State<UiExecution> {
       _request(true);
     } else if (oldWidget.status.isWorking &&
         !widget.status.isWorking &&
-        widget.collapseOnComplete) {
+        widget.collapseOnComplete &&
+        // A failure stays open: its output is what the reader needs next.
+        widget.status != UiExecutionStatus.error) {
       _request(false);
     }
   }
@@ -231,9 +233,14 @@ class _UiExecutionState extends State<UiExecution> {
                   // second time. This is the primitive plan and activity use.
                   Semantics(
                     label: widget.outputLabel,
-                    child: UiLiveEdgeScrollView(
-                      followOutput: widget.status.isWorking,
-                      child: widget.child,
+                    // A bounded viewport keeps long output scrolling inside
+                    // its own box, following the end while the tool runs.
+                    child: Box(
+                      styleSpec: spec.viewport,
+                      child: UiLiveEdgeScrollView(
+                        followOutput: widget.status.isWorking,
+                        child: widget.child,
+                      ),
                     ),
                   ),
                   if (widget.showActions && widget.status.isSettled)
@@ -285,6 +292,11 @@ final class UiExecutionSpec with _$UiExecutionSpec {
   final StyleSpec<FlexBoxSpec> header;
   @override
   final StyleSpec<BoxSpec> output;
+
+  /// Bounds the scrolling output inside [output], for example with a
+  /// maximum height.
+  @override
+  final StyleSpec<BoxSpec> viewport;
   @override
   final StyleSpec<FlexBoxSpec> actions;
   @override
@@ -313,6 +325,7 @@ final class UiExecutionSpec with _$UiExecutionSpec {
   const UiExecutionSpec({
     StyleSpec<FlexBoxSpec>? header,
     StyleSpec<BoxSpec>? output,
+    StyleSpec<BoxSpec>? viewport,
     StyleSpec<FlexBoxSpec>? actions,
     StyleSpec<TextSpec>? tool,
     StyleSpec<TextSpec>? title,
@@ -327,6 +340,7 @@ final class UiExecutionSpec with _$UiExecutionSpec {
     StyleSpec<BoxSpec>? cancelledStatus,
   }) : header = header ?? const StyleSpec(spec: FlexBoxSpec()),
        output = output ?? const StyleSpec(spec: BoxSpec()),
+       viewport = viewport ?? const StyleSpec(spec: BoxSpec()),
        actions = actions ?? const StyleSpec(spec: FlexBoxSpec()),
        tool = tool ?? const StyleSpec(spec: TextSpec()),
        title = title ?? const StyleSpec(spec: TextSpec()),

@@ -30,7 +30,7 @@ Import `ui/ui.dart` from your application and use the scope for your preset:
 
 ## Behavior
 
-Provide host-rendered `child` content and `UiAnswerStatus.streaming`, `.complete`, or `.error`. Wire `onCopy` and `onRetry` to application behavior. `feedback` is shown only on completion; `sourcesContent` belongs to the sources disclosure. Change `streamId` for a new answer and manage `sourcesExpanded` only when controlling disclosure externally.
+Provide host-rendered `child` content and `UiAnswerStatus.streaming`, `.complete`, or `.error`. Wire `onCopy` and `onRetry` to application behavior. `feedback` is shown only on completion, beside the actions, and is announced to screen readers when it appears (for example "Copied"); `sourcesContent` belongs to the sources disclosure. Change `streamId` for a new answer and manage `sourcesExpanded` only when controlling disclosure externally.
 
 ## Recipe bundle
 

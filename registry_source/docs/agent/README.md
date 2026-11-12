@@ -71,9 +71,9 @@ does not. A model picker built with `RemixSelect` needs the same `Overlay`.
 
 | Widget | Role |
 | --- | --- |
-| `AgentComposer` | Growable prompt field. Enter submits, Shift+Enter inserts a newline, IME composition is ignored. Send becomes Stop while a run is live. |
+| `AgentComposer` | Growable prompt field. Enter submits (and never inserts a newline), Shift+Enter inserts a newline, IME composition is ignored. Send becomes Stop while a run is live. |
 | `AgentMessage` / `AgentMessageCollapsible` | Unclamped message card plus an explicit, noninteractive-content collapse wrapper. |
-| `AgentTranscript` | Static `children` or lazy `builder` viewport that styles both paths identically, follows growing output at the live edge, and releases when the reader scrolls away. |
+| `AgentTranscript` | Static `children` or lazy `builder` viewport that styles both paths identically, follows growing output at the live edge, releases when the reader scrolls away, and offers a way back to the latest. |
 | `AgentAnswer` | Streaming answer with callback-owned copy/retry controls, host feedback, and optional sources disclosure. |
 | `AgentPermission` | In-transcript tool permission: allow once, always allow, or deny. |
 | `AgentExecution` | Tool output with running / success / error / cancelled and collapse when done. |

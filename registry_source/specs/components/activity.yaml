@@ -38,11 +38,15 @@ behavior:
   - Items are id, title, status, optional child
   - No built-in item kinds
   - Host title is the live label and the completed summary
-  - Follows while working and collapses when complete
+  - Opens when work starts, follows while working, collapses when complete
+  - The reader may collapse or reopen it while working; the header is never
+    disabled
   - Opening a completed ledger pins the viewport to the top
   - Reduced motion snaps row enter, hover, and ledger reveal
 approximations:
   - No thinking shimmer; the host title is the live copy
+  - The working header stays the enabled disclosure trigger (benchmark shows a
+    non-interactive status line), so it matches plan and execution headers
   - Fade is a dstIn mask, not CSS mask-image
   - List viewport is own; no conversation 12px gutter
   - Completed chevron rest is muted/70 of host ink; group hover lifts it to ink

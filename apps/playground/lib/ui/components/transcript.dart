@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../support/functional_glyph.dart';
 import '../support/live_edge.dart';
 
 part 'transcript.g.dart';
@@ -21,6 +23,10 @@ class PlaygroundTranscript extends StatefulWidget {
     this.onFollowChanged,
     this.controller,
     this.clipBehavior = Clip.hardEdge,
+    this.showLatestButton = true,
+    this.latestLabel = 'Scroll to latest',
+    this.latestIconBuilder,
+    this.latestStyle = const IconButtonStyler.create(),
     this.style = const PlaygroundTranscriptStyler.create(),
     this.styleSpec,
   }) : itemCount = null,
@@ -38,6 +44,10 @@ class PlaygroundTranscript extends StatefulWidget {
     this.onFollowChanged,
     this.controller,
     this.clipBehavior = Clip.hardEdge,
+    this.showLatestButton = true,
+    this.latestLabel = 'Scroll to latest',
+    this.latestIconBuilder,
+    this.latestStyle = const IconButtonStyler.create(),
     this.style = const PlaygroundTranscriptStyler.create(),
     this.styleSpec,
   }) : children = null;
@@ -53,6 +63,16 @@ class PlaygroundTranscript extends StatefulWidget {
   final ValueChanged<bool>? onFollowChanged;
   final ScrollController? controller;
   final Clip clipBehavior;
+
+  /// Whether a reader away from the live edge is offered a way back to it.
+  ///
+  /// The button appears once the reader is more than [followThreshold] from
+  /// the end and the transcript is not following, returns to the end
+  /// (instantly when animations are disabled) and follows again.
+  final bool showLatestButton;
+  final String latestLabel;
+  final RemixIconButtonIconBuilder? latestIconBuilder;
+  final IconButtonStyler latestStyle;
   final PlaygroundTranscriptStyler style;
   final PlaygroundTranscriptSpec? styleSpec;
 
@@ -64,6 +84,13 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
   ScrollController? _ownedController;
   late ScrollController _controller;
   late final PlaygroundLiveEdgeEngine _liveEdge;
+  late final PlaygroundLiveEdgeScrollPhysics _physics;
+  final FocusNode _viewportFocus = FocusNode(
+    debugLabel: 'PlaygroundTranscript',
+  );
+  final FocusNode _latestFocus = FocusNode(debugLabel: 'Scroll to latest');
+  bool _showLatest = false;
+  bool _returning = false;
 
   /// Publishes this surface's focus to the styles resolved above it.
   ///
@@ -85,8 +112,13 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
     _liveEdge = PlaygroundLiveEdgeEngine(
       enabled: widget.followOutput,
       threshold: widget.followThreshold,
-      onChanged: widget.onFollowChanged,
+      onChanged: _handleFollowChanged,
     );
+    _physics = PlaygroundLiveEdgeScrollPhysics(
+      liveEdge: _liveEdge,
+      parent: const ClampingScrollPhysics(),
+    );
+    // Growth follows in layout; only the first extents need a jump.
     _scheduleFollow();
   }
 
@@ -95,8 +127,7 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
     super.didUpdateWidget(oldWidget);
     _liveEdge
       ..enabled = widget.followOutput
-      ..threshold = widget.followThreshold
-      ..onChanged = widget.onFollowChanged;
+      ..threshold = widget.followThreshold;
     if (!identical(oldWidget.controller, widget.controller)) {
       final offset = _controller.hasClients ? _controller.offset : 0.0;
       final oldOwned = _ownedController;
@@ -107,8 +138,67 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
       if (oldOwned != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) => oldOwned.dispose());
       }
+      _scheduleFollow();
+    } else if (!oldWidget.followOutput && widget.followOutput && !_returning) {
+      _scheduleFollow();
     }
-    _scheduleFollow();
+    // Build follows; a field write is enough.
+    _showLatest = _latestWanted(null);
+  }
+
+  void _handleFollowChanged(bool following) {
+    widget.onFollowChanged?.call(following);
+    _updateLatest(null);
+  }
+
+  /// Whether the reader is away from the end without the transcript
+  /// following them back, like the scroll button use-stick-to-bottom's
+  /// `isAtBottom` hides near the end.
+  bool _latestWanted(ScrollMetrics? metrics) {
+    if (!widget.showLatestButton) return false;
+    if (_liveEdge.sticks) return false;
+    final position = _controller.hasClients ? _controller.position : null;
+    final current =
+        metrics ??
+        (position != null && position.hasContentDimensions ? position : null);
+    if (current == null) return false;
+    return current.maxScrollExtent - current.pixels > _liveEdge.threshold;
+  }
+
+  void _updateLatest(ScrollMetrics? metrics) {
+    final next = _latestWanted(metrics);
+    if (next == _showLatest || !mounted) return;
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _updateLatest(null));
+      return;
+    }
+    setState(() => _showLatest = next);
+  }
+
+  void _returnToLatest() {
+    final hadFocus = _latestFocus.hasFocus;
+    _liveEdge.resume();
+    _updateLatest(null);
+    if (hadFocus) _viewportFocus.requestFocus();
+    if (!_controller.hasClients) return;
+    final position = _controller.position;
+    if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) {
+      _liveEdge.jumpToEnd(_controller);
+      return;
+    }
+    _returning = true;
+    position
+        .animateTo(
+          position.maxScrollExtent,
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+        )
+        .whenComplete(() {
+          _returning = false;
+          // Output may have grown while the animation ran.
+          if (mounted && _liveEdge.following) _liveEdge.jumpToEnd(_controller);
+        });
   }
 
   void _scheduleFollow() {
@@ -119,7 +209,8 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
 
   bool _handleScroll(ScrollNotification notification) {
     if (notification.depth != 0) return false;
-    _liveEdge.handleScroll(notification, _controller);
+    _liveEdge.handleScroll(notification);
+    _updateLatest(notification.metrics);
     return notification is OverscrollNotification;
   }
 
@@ -136,12 +227,13 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
       _TranscriptScrollKind.home => position.minScrollExtent,
       _TranscriptScrollKind.end => position.maxScrollExtent,
     };
+    // The jump reports a scroll update, which decides following like any
+    // other reader scroll.
     position.jumpTo(
       target
           .clamp(position.minScrollExtent, position.maxScrollExtent)
           .toDouble(),
     );
-    _liveEdge.handlePosition(position);
   }
 
   @override
@@ -156,6 +248,7 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
         label: widget.label,
         value: widget.busy ? widget.busyLabel : null,
         child: FocusableActionDetector(
+          focusNode: _viewportFocus,
           onFocusChange: (focused) =>
               _statesController.update(WidgetState.focused, focused),
           shortcuts: _transcriptShortcuts,
@@ -170,34 +263,57 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
           child: Box(
             styleSpec: spec.viewport,
             child: LayoutBuilder(
-              builder: (context, constraints) =>
-                  NotificationListener<ScrollMetricsNotification>(
-                    onNotification: (notification) {
-                      if (notification.depth == 0 && _liveEdge.following) {
+              builder: (context, constraints) {
+                final bounded = constraints.hasBoundedHeight;
+                final list = NotificationListener<ScrollMetricsNotification>(
+                  onNotification: (notification) {
+                    if (notification.depth == 0) {
+                      if (_liveEdge.needsFollow(notification.metrics)) {
                         _scheduleFollow();
                       }
-                      return false;
-                    },
-                    child: NotificationListener<ScrollNotification>(
-                      onNotification: _handleScroll,
-                      child: ScrollConfiguration(
-                        behavior: ScrollConfiguration.of(context).copyWith(
-                          overscroll: false,
-                          physics: const ClampingScrollPhysics(),
-                        ),
-                        child: _buildList(
-                          spec,
-                          shrinkWrap: !constraints.hasBoundedHeight,
-                        ),
+                      _updateLatest(notification.metrics);
+                    }
+                    return false;
+                  },
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: _handleScroll,
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(
+                        overscroll: false,
+                        physics: const ClampingScrollPhysics(),
                       ),
+                      child: _buildList(spec, shrinkWrap: !bounded),
                     ),
                   ),
+                );
+                if (!bounded || !widget.showLatestButton) return list;
+                return Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [list, if (_showLatest) _latestButton(spec)],
+                );
+              },
             ),
           ),
         ),
       ),
     );
   }
+
+  Widget _latestButton(PlaygroundTranscriptSpec spec) => Box(
+    styleSpec: spec.latest,
+    child: RemixIconButton(
+      key: const ValueKey('playground-transcript-latest'),
+      icon: null,
+      focusNode: _latestFocus,
+      iconBuilder:
+          widget.latestIconBuilder ??
+          (context, iconSpec, icon) =>
+              PlaygroundFunctionalGlyph(kind: .latest, spec: iconSpec),
+      semanticLabel: widget.latestLabel,
+      onPressed: _returnToLatest,
+      style: widget.latestStyle,
+    ),
+  );
 
   Widget _buildList(PlaygroundTranscriptSpec spec, {required bool shrinkWrap}) {
     final children = widget.children;
@@ -207,7 +323,7 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
     return ListView.separated(
       controller: _controller,
       shrinkWrap: shrinkWrap,
-      physics: const ClampingScrollPhysics(),
+      physics: _physics,
       clipBehavior: widget.clipBehavior,
       itemCount: count,
       itemBuilder: (context, index) => Box(
@@ -222,6 +338,8 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
   void dispose() {
     _ownedController?.dispose();
     _statesController.dispose();
+    _viewportFocus.dispose();
+    _latestFocus.dispose();
     super.dispose();
   }
 }
@@ -264,10 +382,16 @@ final class PlaygroundTranscriptSpec with _$PlaygroundTranscriptSpec {
   @override
   final double? spacing;
 
+  /// Places the scroll-to-latest button over the bottom of the viewport.
+  @override
+  final StyleSpec<BoxSpec> latest;
+
   const PlaygroundTranscriptSpec({
     StyleSpec<BoxSpec>? viewport,
     StyleSpec<BoxSpec>? item,
     this.spacing,
+    StyleSpec<BoxSpec>? latest,
   }) : viewport = viewport ?? const StyleSpec(spec: BoxSpec()),
-       item = item ?? const StyleSpec(spec: BoxSpec());
+       item = item ?? const StyleSpec(spec: BoxSpec()),
+       latest = latest ?? const StyleSpec(spec: BoxSpec());
 }

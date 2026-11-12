@@ -30,7 +30,7 @@ Import `ui/ui.dart` from your application and use the scope for your preset:
 
 ## Behavior
 
-Wire `onSubmit` to your runner and `onStop` to cancellation. The host owns running state and submission eligibility. Enter submits, Shift+Enter inserts a newline, and active IME composition does not submit. Keep model-provider calls, cancellation, and persistence outside the component.
+Wire `onSubmit` to your runner and `onStop` to cancellation. The host owns running state and submission eligibility. Enter submits, Shift+Enter inserts a newline, and active IME composition does not submit. While the composer has an `onSubmit`, Enter never inserts a newline: with an empty draft, a live run or `canSubmit: false` it does nothing, and holding it sends once. While the text field has focus, `surfaceStyle` resolves `onFocused`, so a recipe marks the whole card rather than the borderless field inside it. Keep model-provider calls, cancellation, and persistence outside the component.
 
 ## Recipe bundle
 

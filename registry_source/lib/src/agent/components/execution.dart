@@ -106,7 +106,9 @@ class _AgentExecutionState extends State<AgentExecution> {
       _request(true);
     } else if (oldWidget.status.isWorking &&
         !widget.status.isWorking &&
-        widget.collapseOnComplete) {
+        widget.collapseOnComplete &&
+        // A failure stays open: its output is what the reader needs next.
+        widget.status != AgentExecutionStatus.error) {
       _request(false);
     }
   }
@@ -232,9 +234,14 @@ class _AgentExecutionState extends State<AgentExecution> {
                   // second time. This is the primitive plan and activity use.
                   Semantics(
                     label: widget.outputLabel,
-                    child: AgentLiveEdgeScrollView(
-                      followOutput: widget.status.isWorking,
-                      child: widget.child,
+                    // A bounded viewport keeps long output scrolling inside
+                    // its own box, following the end while the tool runs.
+                    child: Box(
+                      styleSpec: spec.viewport,
+                      child: AgentLiveEdgeScrollView(
+                        followOutput: widget.status.isWorking,
+                        child: widget.child,
+                      ),
                     ),
                   ),
                   if (widget.showActions && widget.status.isSettled)
@@ -288,6 +295,11 @@ final class AgentExecutionSpec with _$AgentExecutionSpec {
   final StyleSpec<FlexBoxSpec> header;
   @override
   final StyleSpec<BoxSpec> output;
+
+  /// Bounds the scrolling output inside [output], for example with a
+  /// maximum height.
+  @override
+  final StyleSpec<BoxSpec> viewport;
   @override
   final StyleSpec<FlexBoxSpec> actions;
   @override
@@ -316,6 +328,7 @@ final class AgentExecutionSpec with _$AgentExecutionSpec {
   const AgentExecutionSpec({
     StyleSpec<FlexBoxSpec>? header,
     StyleSpec<BoxSpec>? output,
+    StyleSpec<BoxSpec>? viewport,
     StyleSpec<FlexBoxSpec>? actions,
     StyleSpec<TextSpec>? tool,
     StyleSpec<TextSpec>? title,
@@ -330,6 +343,7 @@ final class AgentExecutionSpec with _$AgentExecutionSpec {
     StyleSpec<BoxSpec>? cancelledStatus,
   }) : header = header ?? const StyleSpec(spec: FlexBoxSpec()),
        output = output ?? const StyleSpec(spec: BoxSpec()),
+       viewport = viewport ?? const StyleSpec(spec: BoxSpec()),
        actions = actions ?? const StyleSpec(spec: FlexBoxSpec()),
        tool = tool ?? const StyleSpec(spec: TextSpec()),
        title = title ?? const StyleSpec(spec: TextSpec()),

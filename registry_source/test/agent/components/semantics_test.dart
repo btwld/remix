@@ -82,7 +82,7 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('working activity has one disabled trigger and named status', (
+  testWidgets('working activity has one enabled trigger and named status', (
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
@@ -101,7 +101,7 @@ void main() {
     );
 
     final trigger = _buttons(tester, 'Activity').single.getSemanticsData();
-    expect(trigger.flagsCollection.isEnabled, Tristate.isFalse);
+    expect(trigger.flagsCollection.isEnabled, Tristate.isTrue);
     expect(_labeled(tester, 'Activity Activity'), isEmpty);
     expect(_labeled(tester, 'Reading, brief, Active'), hasLength(1));
     semantics.dispose();

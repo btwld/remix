@@ -30,7 +30,7 @@ void main() {
   });
 
   testWidgets(
-    'the count survives the working state, while the ledger is forced open',
+    'the count survives the working state, while the ledger is open',
     (tester) async {
       await pumpAgent(tester, const AgentActivity(items: _items));
 

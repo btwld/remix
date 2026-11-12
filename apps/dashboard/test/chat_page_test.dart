@@ -171,7 +171,9 @@ void main() {
     await tester.tap(copy);
     await tester.pump();
     expect(copied, 'Stopped before running the tool. No tool ran.');
-    await tester.tap(find.text('Review checkout'));
+    // Starters belong to the empty chat; a later turn is typed and sent.
+    await tester.enterText(find.byType(EditableText).last, 'Review checkout');
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     for (var i = 0; i < 5; i++) {
       await tester.pump(const Duration(milliseconds: 350));
     }
@@ -227,7 +229,13 @@ void main() {
     await tester.drag(transcript, const Offset(0, 300));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
-    await tester.tap(find.text('Return to latest'));
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is RemixIconButton &&
+            widget.semanticLabel == 'Scroll to latest',
+      ),
+    );
     expect(position.isScrollingNotifier.value, isFalse);
     await tester.pump();
     expect(tester.takeException(), isNull);
