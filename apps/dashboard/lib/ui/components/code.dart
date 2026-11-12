@@ -22,8 +22,10 @@ enum UiCodeVariant {
   ghost,
 }
 
-/// The style of inline code: monospace text at 95% of the size's text size,
-/// padded and filled per [variant].
+/// The style of inline code: monospace text, padded and filled per [variant].
+///
+/// The text is 95% of the size's text size for ghost and about 90% for the
+/// solid, soft and outline variants.
 ///
 /// Takes a [context] because its padding and corners are em-relative to the
 /// resolved font size.
@@ -211,6 +213,7 @@ final _ambientCodeForegroundFallbacks = Expando<bool>(
   'ui_code_ambient_foreground',
 );
 
+/// Inline monospace code, styled by [uiCodeStyle].
 ///
 /// Code carries no accessibility role: Flutter has no code semantics, and
 /// inventing one would misreport the content.

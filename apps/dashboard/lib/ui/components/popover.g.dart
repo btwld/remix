@@ -13,7 +13,7 @@ part of 'popover.dart';
 class UiPopover extends StatelessWidget {
   const UiPopover({
     super.key,
-    this.size = UiPopoverSize.size2,
+    this.size = .size2,
     this.style = const PopoverStyler.create(),
     required this.popoverChild,
     required this.child,

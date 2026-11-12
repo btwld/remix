@@ -14,7 +14,7 @@ part of 'dialog.dart';
 class FortalDialog extends StatelessWidget {
   const FortalDialog({
     super.key,
-    this.size = FortalDialogSize.size3,
+    this.size = .size3,
     this.align = Alignment.center,
     this.style = const DialogStyler.create(),
     this.child,

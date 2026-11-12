@@ -36,13 +36,13 @@ MenuStyler fortalMenuStyle({
   bool highContrast = false,
   MenuStyler style = const MenuStyler.create(),
 }) {
-  final metrics = _fortalMenuMetrics(size);
+  final metrics = _metrics(size);
 
   return MenuStyler()
       .containerEffects(
         RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
       )
-      .trigger(_fortalMenuTriggerStyler(metrics))
+      .trigger(_trigger(metrics))
       .overlay(
         FlexBoxStyler()
             .padding(.all(metrics.contentPadding))
@@ -65,15 +65,9 @@ MenuStyler fortalMenuStyle({
             )
             .clipBehavior(Clip.antiAlias),
       )
-      .item(_fortalMenuItemStyler(variant, metrics, highContrast: highContrast))
-      .submenuItem(
-        _fortalMenuSubmenuItemStyler(
-          variant,
-          metrics,
-          highContrast: highContrast,
-        ),
-      )
-      .divider(_fortalMenuDividerStyler(metrics))
+      .item(_item(variant, metrics, highContrast: highContrast))
+      .submenuItem(_submenuItem(variant, metrics, highContrast: highContrast))
+      .divider(_divider(metrics))
       .merge(style);
 }
 
@@ -85,32 +79,27 @@ MenuItemStyler fortalMenuItemStyle({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
   bool highContrast = false,
-}) => _fortalMenuItemStyler(
-  variant,
-  _fortalMenuMetrics(size),
-  highContrast: highContrast,
-);
+}) => _item(variant, _metrics(size), highContrast: highContrast);
 
-MenuTriggerStyler _fortalMenuTriggerStyler(_FortalMenuMetrics metrics) =>
-    MenuTriggerStyler()
-        .wrap(fortalTouchTarget())
-        .onFocusVisible(
-          MenuTriggerStyler().container(
-            FlexBoxStyler().wrap(fortalFocusRingModifier()),
-          ),
-        )
-        .onDisabled(
-          MenuTriggerStyler().container(
-            FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
-          ),
-        )
-        .spacing(metrics.triggerGap)
-        .label(.style(metrics.text.mix()).color(FortalTokens.gray12()))
-        .icon(.color(FortalTokens.gray12()).size(metrics.contentIconSize));
+MenuTriggerStyler _trigger(_Metrics metrics) => MenuTriggerStyler()
+    .wrap(fortalTouchTarget())
+    .onFocusVisible(
+      MenuTriggerStyler().container(
+        FlexBoxStyler().wrap(fortalFocusRingModifier()),
+      ),
+    )
+    .onDisabled(
+      MenuTriggerStyler().container(
+        FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
+      ),
+    )
+    .spacing(metrics.triggerGap)
+    .label(.style(metrics.text.mix()).color(FortalTokens.gray12()))
+    .icon(.color(FortalTokens.gray12()).size(metrics.contentIconSize));
 
-MenuItemStyler _fortalMenuItemStyler(
+MenuItemStyler _item(
   FortalMenuVariant variant,
-  _FortalMenuMetrics metrics, {
+  _Metrics metrics, {
   required bool highContrast,
 }) {
   final base = MenuItemStyler()
@@ -128,10 +117,7 @@ MenuItemStyler _fortalMenuItemStyler(
       // A shortcut or count follows the trailing icon's color in every state.
       .trailingText(.color(FortalTokens.grayA11()))
       .indicator(.color(FortalTokens.gray12()).size(metrics.indicatorSize));
-  final highlighted = _fortalMenuHighlightedItemStyler(
-    variant,
-    highContrast: highContrast,
-  );
+  final highlighted = _highlightedItem(variant, highContrast: highContrast);
   final disabled = MenuItemStyler()
       .container(FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)))
       .color(const Color(0x00000000))
@@ -153,7 +139,7 @@ MenuItemStyler _fortalMenuItemStyler(
       .onDisabled(disabled);
 }
 
-MenuItemStyler _fortalMenuHighlightedItemStyler(
+MenuItemStyler _highlightedItem(
   FortalMenuVariant variant, {
   required bool highContrast,
 }) {
@@ -180,15 +166,12 @@ MenuItemStyler _fortalMenuHighlightedItemStyler(
   };
 }
 
-MenuItemStyler _fortalMenuSubmenuItemStyler(
+MenuItemStyler _submenuItem(
   FortalMenuVariant variant,
-  _FortalMenuMetrics metrics, {
+  _Metrics metrics, {
   required bool highContrast,
 }) {
-  final highlighted = _fortalMenuHighlightedItemStyler(
-    variant,
-    highContrast: highContrast,
-  );
+  final highlighted = _highlightedItem(variant, highContrast: highContrast);
   final submenuOpen = MenuItemStyler()
       .color(switch (variant) {
         .solid => FortalTokens.grayA3(),
@@ -204,18 +187,17 @@ MenuItemStyler _fortalMenuSubmenuItemStyler(
       .onSelected(submenuOpen);
 }
 
-DividerStyler _fortalMenuDividerStyler(_FortalMenuMetrics metrics) =>
-    DividerStyler()
-        .height(FortalTokens.borderWidth1())
-        .margin(
-          .left(
-            metrics.leadingInset,
-          ).right(metrics.trailingInset).vertical(FortalTokens.space2()),
-        )
-        .color(FortalTokens.grayA6());
+DividerStyler _divider(_Metrics metrics) => DividerStyler()
+    .height(FortalTokens.borderWidth1())
+    .margin(
+      .left(
+        metrics.leadingInset,
+      ).right(metrics.trailingInset).vertical(FortalTokens.space2()),
+    )
+    .color(FortalTokens.grayA6());
 
-class _FortalMenuMetrics {
-  const _FortalMenuMetrics({
+class _Metrics {
+  const _Metrics({
     required this.contentPadding,
     required this.contentRadius,
     required this.itemHeight,
@@ -240,8 +222,8 @@ class _FortalMenuMetrics {
   final TextStyleToken text;
 }
 
-_FortalMenuMetrics _fortalMenuMetrics(FortalMenuSize size) => switch (size) {
-  .size1 => _FortalMenuMetrics(
+_Metrics _metrics(FortalMenuSize size) => switch (size) {
+  .size1 => _Metrics(
     contentPadding: FortalTokens.space1(),
     contentRadius: FortalTokens.radius3(),
     itemHeight: FortalTokens.space5(),
@@ -253,7 +235,7 @@ _FortalMenuMetrics _fortalMenuMetrics(FortalMenuSize size) => switch (size) {
     triggerGap: FortalTokens.space1(),
     text: FortalTokens.text1,
   ),
-  .size2 => _FortalMenuMetrics(
+  .size2 => _Metrics(
     contentPadding: FortalTokens.space2(),
     contentRadius: FortalTokens.radius4(),
     itemHeight: FortalTokens.space6(),

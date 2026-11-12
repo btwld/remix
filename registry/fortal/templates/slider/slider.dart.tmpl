@@ -190,20 +190,12 @@ List<RemixLinearGradientMix> _overlay(bool highContrast) => highContrast
 /// variant's colors were.
 SliderStyler _disabled({{typePrefix}}SliderVariant variant) {
   final track = switch (variant) {
-    .surface =>
-      SliderStyler()
-          .track(.color({{typePrefix}}Tokens.grayA3()))
-          .trackEffects(
-            .behindContent(
-              {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA4()]),
-            ),
-          ),
-    .soft =>
-      SliderStyler()
-          .track(.color({{typePrefix}}Tokens.grayA4()))
-          .trackEffects(
-            .behindContent(RemixBoxEffectLayerMix(gradients: const [])),
-          ),
+    .surface => SliderStyler().trackEffects(
+      .behindContent({{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA4()])),
+    ),
+    .soft => SliderStyler().trackEffects(
+      .behindContent(RemixBoxEffectLayerMix(gradients: const [])),
+    ),
   };
 
   return track

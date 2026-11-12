@@ -28,18 +28,18 @@ enum UiPopoverSize {
 /// 480-pixel maximum width, and no arrow.
 @MixWidget(target: RemixPopover.new)
 PopoverStyler uiPopoverStyle({
-  UiPopoverSize size = UiPopoverSize.size2,
+  UiPopoverSize size = .size2,
   PopoverStyler style = const PopoverStyler.create(),
 }) {
   final radius = switch (size) {
-    UiPopoverSize.size1 || UiPopoverSize.size2 => UiTokens.radius4(),
-    UiPopoverSize.size3 || UiPopoverSize.size4 => UiTokens.radius5(),
+    .size1 || .size2 => UiTokens.radius4(),
+    .size3 || .size4 => UiTokens.radius5(),
   };
   final padding = switch (size) {
-    UiPopoverSize.size1 => UiTokens.space3(),
-    UiPopoverSize.size2 => UiTokens.space4(),
-    UiPopoverSize.size3 => UiTokens.space5(),
-    UiPopoverSize.size4 => UiTokens.space6(),
+    .size1 => UiTokens.space3(),
+    .size2 => UiTokens.space4(),
+    .size3 => UiTokens.space5(),
+    .size4 => UiTokens.space6(),
   };
 
   return PopoverStyler()

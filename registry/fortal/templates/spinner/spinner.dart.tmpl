@@ -28,10 +28,10 @@ SpinnerStyler {{valuePrefix}}SpinnerStyle({
     opacity: 0.65,
     leafRadius: {{typePrefix}}Tokens.radius1(),
     duration: const Duration(milliseconds: 800),
-  ).merge(_{{valuePrefix}}SpinnerSizeStyler(size)).merge(style);
+  ).merge(_scale(size)).merge(style);
 }
 
-SpinnerStyler _{{valuePrefix}}SpinnerSizeStyler({{typePrefix}}SpinnerSize size) {
+SpinnerStyler _scale({{typePrefix}}SpinnerSize size) {
   return switch (size) {
     .size1 => SpinnerStyler(size: {{typePrefix}}Tokens.space3()),
     .size2 => SpinnerStyler(size: {{typePrefix}}Tokens.space4()),

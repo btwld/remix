@@ -60,14 +60,12 @@ ToastStyler uiToastStyle({
   UiToastIntent intent = .accent,
   ToastStyler style = const ToastStyler.create(),
 }) {
-  final metrics = _uiToastMetrics(size);
+  final metrics = _metrics(size);
 
   return ToastStyler(
         container: FlexBoxStyler().spacing(metrics.gap),
         content: FlexBoxStyler().spacing(UiTokens.space1()),
-        icon: IconStyler()
-            .size(metrics.iconSize)
-            .color(_uiToastIntentColor(intent)),
+        icon: IconStyler().size(metrics.iconSize).color(_intentColor(intent)),
         title: TextStyler(
           style: metrics.text.mix(),
         ).fontWeight(UiTokens.fontWeightMedium()).color(UiTokens.gray12()),
@@ -102,7 +100,7 @@ ToastStyler uiToastStyle({
   Radius radius,
   TextStyleToken text,
 })
-_uiToastMetrics(UiToastSize size) => switch (size) {
+_metrics(UiToastSize size) => switch (size) {
   .size1 => (
     padding: UiTokens.space3(),
     gap: UiTokens.space2(),
@@ -126,7 +124,7 @@ _uiToastMetrics(UiToastSize size) => switch (size) {
   ),
 };
 
-Color _uiToastIntentColor(UiToastIntent intent) => switch (intent) {
+Color _intentColor(UiToastIntent intent) => switch (intent) {
   .accent => UiTokens.accentContent(),
   .neutral => UiTokens.gray11(),
   .error => UiTokens.error11(),

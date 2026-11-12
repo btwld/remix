@@ -148,8 +148,9 @@ class FortalCheckbox extends StatelessWidget {
 /// The Fortal CheckboxGroupItem recipe: the checkbox recipe plus a label.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
-/// so unlike every other Remix item (menu, select, segmented control, toggle
-/// group) there is no parent recipe to push item styling down. Without this,
+/// so, unlike the menu, select, segmented control and toggle group items, there
+/// is no parent recipe to push item styling down. Radio group items are the
+/// same. Without this,
 /// callers hand-attach a styler to each item and a missed one in a loop renders
 /// unstyled beside its styled siblings.
 class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {

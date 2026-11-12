@@ -38,7 +38,7 @@ LinkStyler uiLinkStyle(
   LinkStyler style = const LinkStyler.create(),
 }) {
   LinkStyler styleFor({bool hovered = false, bool focused = false}) =>
-      _uiLinkStateStyle(
+      _stateStyle(
         context,
         size: size,
         weight: weight,
@@ -71,7 +71,7 @@ LinkStyler uiLinkStyle(
 /// Separate from [uiLinkStyle] because the public recipe returns a style
 /// carrying Mix variants, and building those variants needs the flat snapshots
 /// they are built from.
-LinkStyler _uiLinkStateStyle(
+LinkStyler _stateStyle(
   BuildContext context, {
   required UiTextSize? size,
   required UiTextWeight? weight,

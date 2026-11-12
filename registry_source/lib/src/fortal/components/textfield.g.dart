@@ -75,7 +75,7 @@ class FortalTextField extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// A near-white fill inside a 1px neutral frame, with neutral text.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   const FortalTextField.surface({
     super.key,
     this.size = .size2,
@@ -457,7 +457,7 @@ class FortalTextArea extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// A near-white fill inside a 1px neutral frame, with neutral text.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   const FortalTextArea.surface({
     super.key,
     this.size = .size2,

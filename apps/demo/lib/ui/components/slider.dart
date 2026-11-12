@@ -190,20 +190,12 @@ List<RemixLinearGradientMix> _overlay(bool highContrast) => highContrast
 /// variant's colors were.
 SliderStyler _disabled(FortalSliderVariant variant) {
   final track = switch (variant) {
-    .surface =>
-      SliderStyler()
-          .track(.color(FortalTokens.grayA3()))
-          .trackEffects(
-            .behindContent(
-              fortalInsetSurface(strokes: [FortalTokens.grayA4()]),
-            ),
-          ),
-    .soft =>
-      SliderStyler()
-          .track(.color(FortalTokens.grayA4()))
-          .trackEffects(
-            .behindContent(RemixBoxEffectLayerMix(gradients: const [])),
-          ),
+    .surface => SliderStyler().trackEffects(
+      .behindContent(fortalInsetSurface(strokes: [FortalTokens.grayA4()])),
+    ),
+    .soft => SliderStyler().trackEffects(
+      .behindContent(RemixBoxEffectLayerMix(gradients: const [])),
+    ),
   };
 
   return track

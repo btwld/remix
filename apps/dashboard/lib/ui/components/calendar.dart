@@ -5,10 +5,10 @@ import '../theme/theme.dart';
 import 'icon_button.dart';
 import 'select.dart';
 
-// Reviewed calendar geometry has no matching spacing-scale step.
-
 /// The side of a day cell and of a navigation button at 100% text scaling: 44px.
 const uiCalendarTarget = 44.0;
+
+// These calendar dimensions have no matching spacing-scale step.
 
 /// The width of the month and year selectors at 100% text scaling.
 const uiCalendarSelectorWidth = 146.0;
@@ -187,7 +187,7 @@ class _CalendarScrollBehavior extends ScrollBehavior {
   );
 }
 
-/// Ui's reviewed Calendar composition.
+/// Ui's Calendar composition.
 ///
 /// Remix owns civil-date selection, focus, keyboard navigation and semantics.
 /// Multiple independent child styles require a hand-written facade; caller
@@ -292,8 +292,8 @@ class UiCalendar extends StatelessWidget {
   );
 }
 
-/// The keyboard focus ring of a day. A brighter neutral step separates it from
-/// the dark draft edge.
+/// The keyboard focus ring color of a day: gray 11 in dark mode, focus 8 in
+/// light mode.
 final uiCalendarFocusColor = ContextToken<Color>(
   (context) => (UiTheme.of(context).isDark ? UiTokens.gray11 : UiTokens.focus8)
       .resolve(context),

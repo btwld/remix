@@ -51,7 +51,8 @@ class UiSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiSwitchVariant.surface;
 
-  /// A neutral tint, accent-tinted when on, with no frame.
+  /// A neutral tint, accent-tinted when on. The 1px frame shows only while off
+  /// and enabled.
   const UiSwitch.soft({
     super.key,
     this.size = .size2,

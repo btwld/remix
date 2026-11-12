@@ -53,7 +53,7 @@ TextStyler fortalHeadingStyle({
 /// Token-backed visual heading with an independent native heading level.
 ///
 /// [headingLevel] drives the accessibility level only; changing it never
-/// changes the visual [size], using Fortal tokens.
+/// changes the visual [size], using this design system's tokens.
 class FortalHeading extends StatelessWidget {
   const FortalHeading(
     this.text, {

@@ -36,11 +36,11 @@ MenuStyler uiMenuStyle({
   bool highContrast = false,
   MenuStyler style = const MenuStyler.create(),
 }) {
-  final metrics = _uiMenuMetrics(size);
+  final metrics = _metrics(size);
 
   return MenuStyler()
       .containerEffects(RemixBoxEffectsMix.backdropBlur(UiTokens.panelBlur()))
-      .trigger(_uiMenuTriggerStyler(metrics))
+      .trigger(_trigger(metrics))
       .overlay(
         FlexBoxStyler()
             .padding(.all(metrics.contentPadding))
@@ -63,11 +63,9 @@ MenuStyler uiMenuStyle({
             )
             .clipBehavior(Clip.antiAlias),
       )
-      .item(_uiMenuItemStyler(variant, metrics, highContrast: highContrast))
-      .submenuItem(
-        _uiMenuSubmenuItemStyler(variant, metrics, highContrast: highContrast),
-      )
-      .divider(_uiMenuDividerStyler(metrics))
+      .item(_item(variant, metrics, highContrast: highContrast))
+      .submenuItem(_submenuItem(variant, metrics, highContrast: highContrast))
+      .divider(_divider(metrics))
       .merge(style);
 }
 
@@ -79,32 +77,27 @@ MenuItemStyler uiMenuItemStyle({
   UiMenuVariant variant = .solid,
   UiMenuSize size = .size2,
   bool highContrast = false,
-}) => _uiMenuItemStyler(
-  variant,
-  _uiMenuMetrics(size),
-  highContrast: highContrast,
-);
+}) => _item(variant, _metrics(size), highContrast: highContrast);
 
-MenuTriggerStyler _uiMenuTriggerStyler(_UiMenuMetrics metrics) =>
-    MenuTriggerStyler()
-        .wrap(uiTouchTarget())
-        .onFocusVisible(
-          MenuTriggerStyler().container(
-            FlexBoxStyler().wrap(uiFocusRingModifier()),
-          ),
-        )
-        .onDisabled(
-          MenuTriggerStyler().container(
-            FlexBoxStyler().wrap(uiFocusRingModifier(visible: false)),
-          ),
-        )
-        .spacing(metrics.triggerGap)
-        .label(.style(metrics.text.mix()).color(UiTokens.gray12()))
-        .icon(.color(UiTokens.gray12()).size(metrics.contentIconSize));
+MenuTriggerStyler _trigger(_Metrics metrics) => MenuTriggerStyler()
+    .wrap(uiTouchTarget())
+    .onFocusVisible(
+      MenuTriggerStyler().container(
+        FlexBoxStyler().wrap(uiFocusRingModifier()),
+      ),
+    )
+    .onDisabled(
+      MenuTriggerStyler().container(
+        FlexBoxStyler().wrap(uiFocusRingModifier(visible: false)),
+      ),
+    )
+    .spacing(metrics.triggerGap)
+    .label(.style(metrics.text.mix()).color(UiTokens.gray12()))
+    .icon(.color(UiTokens.gray12()).size(metrics.contentIconSize));
 
-MenuItemStyler _uiMenuItemStyler(
+MenuItemStyler _item(
   UiMenuVariant variant,
-  _UiMenuMetrics metrics, {
+  _Metrics metrics, {
   required bool highContrast,
 }) {
   final base = MenuItemStyler()
@@ -120,10 +113,7 @@ MenuItemStyler _uiMenuItemStyler(
       // A shortcut or count follows the trailing icon's color in every state.
       .trailingText(.color(UiTokens.grayA11()))
       .indicator(.color(UiTokens.gray12()).size(metrics.indicatorSize));
-  final highlighted = _uiMenuHighlightedItemStyler(
-    variant,
-    highContrast: highContrast,
-  );
+  final highlighted = _highlightedItem(variant, highContrast: highContrast);
   final disabled = MenuItemStyler()
       .container(FlexBoxStyler().wrap(uiFocusRingModifier(visible: false)))
       .color(const Color(0x00000000))
@@ -145,7 +135,7 @@ MenuItemStyler _uiMenuItemStyler(
       .onDisabled(disabled);
 }
 
-MenuItemStyler _uiMenuHighlightedItemStyler(
+MenuItemStyler _highlightedItem(
   UiMenuVariant variant, {
   required bool highContrast,
 }) {
@@ -170,15 +160,12 @@ MenuItemStyler _uiMenuHighlightedItemStyler(
   };
 }
 
-MenuItemStyler _uiMenuSubmenuItemStyler(
+MenuItemStyler _submenuItem(
   UiMenuVariant variant,
-  _UiMenuMetrics metrics, {
+  _Metrics metrics, {
   required bool highContrast,
 }) {
-  final highlighted = _uiMenuHighlightedItemStyler(
-    variant,
-    highContrast: highContrast,
-  );
+  final highlighted = _highlightedItem(variant, highContrast: highContrast);
   final submenuOpen = MenuItemStyler()
       .color(switch (variant) {
         .solid => UiTokens.grayA3(),
@@ -194,7 +181,7 @@ MenuItemStyler _uiMenuSubmenuItemStyler(
       .onSelected(submenuOpen);
 }
 
-DividerStyler _uiMenuDividerStyler(_UiMenuMetrics metrics) => DividerStyler()
+DividerStyler _divider(_Metrics metrics) => DividerStyler()
     .height(UiTokens.borderWidth1())
     .margin(
       .left(
@@ -203,8 +190,8 @@ DividerStyler _uiMenuDividerStyler(_UiMenuMetrics metrics) => DividerStyler()
     )
     .color(UiTokens.grayA6());
 
-class _UiMenuMetrics {
-  const _UiMenuMetrics({
+class _Metrics {
+  const _Metrics({
     required this.contentPadding,
     required this.contentRadius,
     required this.itemHeight,
@@ -229,8 +216,8 @@ class _UiMenuMetrics {
   final TextStyleToken text;
 }
 
-_UiMenuMetrics _uiMenuMetrics(UiMenuSize size) => switch (size) {
-  .size1 => _UiMenuMetrics(
+_Metrics _metrics(UiMenuSize size) => switch (size) {
+  .size1 => _Metrics(
     contentPadding: UiTokens.space1(),
     contentRadius: UiTokens.radius3(),
     itemHeight: UiTokens.space5(),
@@ -242,7 +229,7 @@ _UiMenuMetrics _uiMenuMetrics(UiMenuSize size) => switch (size) {
     triggerGap: UiTokens.space1(),
     text: UiTokens.text1,
   ),
-  .size2 => _UiMenuMetrics(
+  .size2 => _Metrics(
     contentPadding: UiTokens.space2(),
     contentRadius: UiTokens.radius4(),
     itemHeight: UiTokens.space6(),

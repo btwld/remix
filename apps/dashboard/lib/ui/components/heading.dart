@@ -53,7 +53,7 @@ TextStyler uiHeadingStyle({
 /// Token-backed visual heading with an independent native heading level.
 ///
 /// [headingLevel] drives the accessibility level only; changing it never
-/// changes the visual [size], using Ui tokens.
+/// changes the visual [size], using this design system's tokens.
 class UiHeading extends StatelessWidget {
   const UiHeading(
     this.text, {

@@ -173,18 +173,12 @@ List<RemixLinearGradientMix> _overlay(bool highContrast) => highContrast
 /// variant's colors were.
 SliderStyler _disabled(UiSliderVariant variant) {
   final track = switch (variant) {
-    .surface =>
-      SliderStyler()
-          .track(.color(UiTokens.grayA3()))
-          .trackEffects(
-            .behindContent(uiInsetSurface(strokes: [UiTokens.grayA4()])),
-          ),
-    .soft =>
-      SliderStyler()
-          .track(.color(UiTokens.grayA4()))
-          .trackEffects(
-            .behindContent(RemixBoxEffectLayerMix(gradients: const [])),
-          ),
+    .surface => SliderStyler().trackEffects(
+      .behindContent(uiInsetSurface(strokes: [UiTokens.grayA4()])),
+    ),
+    .soft => SliderStyler().trackEffects(
+      .behindContent(RemixBoxEffectLayerMix(gradients: const [])),
+    ),
   };
 
   return track

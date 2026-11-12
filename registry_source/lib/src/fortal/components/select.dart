@@ -20,7 +20,7 @@ enum FortalSelectSize {
 
 /// The looks a select's trigger comes in.
 enum FortalSelectVariant {
-  /// A near-white fill inside a 1px gray frame.
+  /// The `gray2` fill inside a 1px gray frame.
   surface,
 
   /// An accent tint under accent text.
@@ -86,7 +86,8 @@ SelectTriggerStyler _trigger(
     })
     .onDisabled(.containerEffects(.outline(.style(.none))));
 
-/// The trigger's label, placeholder, icons and focus ring, in gray 12.
+/// The trigger's label, placeholder, icons and focus ring. The label and icons
+/// are gray 12; the placeholder is `grayA10`.
 SelectTriggerStyler _triggerBase(FortalSelectSize size) {
   final (:text, :icon, :indicator, :radius) = switch (size) {
     .size1 => (
@@ -237,7 +238,6 @@ SelectContentStyler _content(FortalSelectSize size) {
   return SelectContentStyler()
       .maxHeight(320)
       .border(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()))
-      // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
       .padding(.all(padding))
       .borderRadius(.all(radius))

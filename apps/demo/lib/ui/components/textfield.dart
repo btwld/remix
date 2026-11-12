@@ -25,7 +25,7 @@ enum FortalTextFieldSize {
 
 /// The looks a text field comes in.
 enum FortalTextFieldVariant {
-  /// A near-white fill inside a 1px neutral frame, with neutral text.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   surface,
 
   /// An accent tint inside a 1px accent ring, with accent-colored text.
@@ -63,7 +63,7 @@ enum FortalTextAreaSize {
 
 /// The looks a text area comes in.
 enum FortalTextAreaVariant {
-  /// A near-white fill inside a 1px neutral frame, with neutral text.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   surface,
 
   /// An accent tint inside a 1px accent ring, with accent-colored text.
@@ -249,7 +249,7 @@ ContextToken<double> _fieldPaddingY(FortalTextFieldSize size) =>
       return (height.resolve(context) - style.fontSize! * style.height!) / 2;
     });
 
-/// A near-white fill with a neutral frame and neutral text.
+/// The `gray2` fill with a neutral frame and neutral text.
 TextFieldStyler _surface() =>
     TextFieldStyler(
           text: .color(

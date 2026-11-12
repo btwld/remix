@@ -36,7 +36,7 @@ enum FortalTextSize {
 
 /// The font weights of the text scale.
 enum FortalTextWeight {
-  /// A thin stroke, for large display text.
+  /// Light, 300. For large display text.
   light,
 
   /// Body text.
@@ -50,7 +50,6 @@ enum FortalTextWeight {
 }
 
 /// The text style token of a [size] on the scale.
-
 TextStyleToken fortalTextSizeToken(FortalTextSize size) => switch (size) {
   .size1 => FortalTokens.text1,
   .size2 => FortalTokens.text2,
@@ -96,6 +95,8 @@ TextStyler fortalAccentForeground(
   highContrast ? FortalTokens.accent12() : FortalTokens.accentContentAlpha(),
 );
 
+/// The text style of [size], resolved against [context].
+///
 /// Code, Kbd, and Link derive em-relative geometry from the resolved font size,
 /// so unlike the other recipes they cannot stay context-free.
 TextStyle fortalResolveTextToken(BuildContext context, FortalTextSize size) =>
@@ -104,6 +105,8 @@ TextStyle fortalResolveTextToken(BuildContext context, FortalTextSize size) =>
 Color fortalResolveColor(BuildContext context, ColorToken token) =>
     MixScope.tokenOf(token, context);
 
+/// The theme's radius factor, read back from the resolved `radius1`.
+///
 /// Derived from the resolved `radius1` rather than duplicating this design
 /// system's radius table, so theme radius and scaling changes flow through.
 double fortalRadiusFactor(BuildContext context) {

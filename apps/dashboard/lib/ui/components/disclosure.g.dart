@@ -41,7 +41,7 @@ class UiDisclosure extends StatelessWidget {
     ),
   });
 
-  /// A near-white panel inside a 1px gray frame.
+  /// The `gray2` panel inside a 1px gray frame.
   const UiDisclosure.surface({
     super.key,
     this.size = .size2,

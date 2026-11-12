@@ -75,7 +75,7 @@ class UiTextField extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// A near-white fill inside a 1px neutral frame, with neutral text.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   const UiTextField.surface({
     super.key,
     this.size = .size2,
@@ -457,7 +457,7 @@ class UiTextArea extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// A near-white fill inside a 1px neutral frame, with neutral text.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   const UiTextArea.surface({
     super.key,
     this.size = .size2,

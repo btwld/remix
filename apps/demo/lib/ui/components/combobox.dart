@@ -24,7 +24,7 @@ enum FortalComboboxSize {
 
 /// The looks a combobox's field comes in, matching the text field.
 enum FortalComboboxVariant {
-  /// A near-white fill inside a 1px neutral frame.
+  /// The `gray2` fill inside a 1px neutral frame.
   surface,
 
   /// An accent tint inside a 1px accent ring.

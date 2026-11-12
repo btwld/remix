@@ -14,7 +14,7 @@ part of 'dialog.dart';
 class UiDialog extends StatelessWidget {
   const UiDialog({
     super.key,
-    this.size = UiDialogSize.size3,
+    this.size = .size3,
     this.align = Alignment.center,
     this.style = const DialogStyler.create(),
     this.child,

@@ -28,20 +28,18 @@ enum FortalPopoverSize {
 /// 480-pixel maximum width, and no arrow.
 @MixWidget(target: RemixPopover.new)
 PopoverStyler fortalPopoverStyle({
-  FortalPopoverSize size = FortalPopoverSize.size2,
+  FortalPopoverSize size = .size2,
   PopoverStyler style = const PopoverStyler.create(),
 }) {
   final radius = switch (size) {
-    FortalPopoverSize.size1 ||
-    FortalPopoverSize.size2 => FortalTokens.radius4(),
-    FortalPopoverSize.size3 ||
-    FortalPopoverSize.size4 => FortalTokens.radius5(),
+    .size1 || .size2 => FortalTokens.radius4(),
+    .size3 || .size4 => FortalTokens.radius5(),
   };
   final padding = switch (size) {
-    FortalPopoverSize.size1 => FortalTokens.space3(),
-    FortalPopoverSize.size2 => FortalTokens.space4(),
-    FortalPopoverSize.size3 => FortalTokens.space5(),
-    FortalPopoverSize.size4 => FortalTokens.space6(),
+    .size1 => FortalTokens.space3(),
+    .size2 => FortalTokens.space4(),
+    .size3 => FortalTokens.space5(),
+    .size4 => FortalTokens.space6(),
   };
 
   return PopoverStyler()

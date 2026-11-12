@@ -34,7 +34,7 @@ class UiAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   });
 
-  /// A near-white panel inside a 1px gray frame.
+  /// The `gray2` panel inside a 1px gray frame.
   const UiAccordion.surface({
     super.key,
     this.size = .size2,

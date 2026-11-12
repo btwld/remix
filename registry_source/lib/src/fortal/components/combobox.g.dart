@@ -39,7 +39,7 @@ class FortalCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// A near-white fill inside a 1px neutral frame.
+  /// The `gray2` fill inside a 1px neutral frame.
   const FortalCombobox.surface({
     super.key,
     this.size = .size2,

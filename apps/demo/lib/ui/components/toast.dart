@@ -60,14 +60,12 @@ ToastStyler fortalToastStyle({
   FortalToastIntent intent = .accent,
   ToastStyler style = const ToastStyler.create(),
 }) {
-  final metrics = _fortalToastMetrics(size);
+  final metrics = _metrics(size);
 
   return ToastStyler(
         container: FlexBoxStyler().spacing(metrics.gap),
         content: FlexBoxStyler().spacing(FortalTokens.space1()),
-        icon: IconStyler()
-            .size(metrics.iconSize)
-            .color(_fortalToastIntentColor(intent)),
+        icon: IconStyler().size(metrics.iconSize).color(_intentColor(intent)),
         title: TextStyler(style: metrics.text.mix())
             .fontWeight(FortalTokens.fontWeightMedium())
             .color(FortalTokens.gray12()),
@@ -108,7 +106,7 @@ ToastStyler fortalToastStyle({
   Radius radius,
   TextStyleToken text,
 })
-_fortalToastMetrics(FortalToastSize size) => switch (size) {
+_metrics(FortalToastSize size) => switch (size) {
   .size1 => (
     padding: FortalTokens.space3(),
     gap: FortalTokens.space2(),
@@ -132,7 +130,7 @@ _fortalToastMetrics(FortalToastSize size) => switch (size) {
   ),
 };
 
-Color _fortalToastIntentColor(FortalToastIntent intent) => switch (intent) {
+Color _intentColor(FortalToastIntent intent) => switch (intent) {
   .accent => FortalTokens.accentContent(),
   .neutral => FortalTokens.gray11(),
   .error => FortalTokens.error11(),

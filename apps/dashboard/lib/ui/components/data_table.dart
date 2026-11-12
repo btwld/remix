@@ -93,7 +93,7 @@ DataTableStyler _base(_Scale metrics) => DataTableStyler()
     .bodyRow(
       _rowDivider()
           .color(const Color(0x00000000))
-          // Hover and selection are Ui extensions. Both are pure color
+          // Hover and selection are extensions beyond the upstream table. Both are pure color
           // layers, so a row never changes geometry when either applies.
           .onHovered(.color(UiTokens.grayA3()))
           .onSelected(

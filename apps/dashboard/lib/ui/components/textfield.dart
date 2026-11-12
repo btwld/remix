@@ -25,7 +25,7 @@ enum UiTextFieldSize {
 
 /// The looks a text field comes in.
 enum UiTextFieldVariant {
-  /// A near-white fill inside a 1px neutral frame, with neutral text.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   surface,
 
   /// An accent tint inside a 1px accent ring, with accent-colored text.
@@ -63,7 +63,7 @@ enum UiTextAreaSize {
 
 /// The looks a text area comes in.
 enum UiTextAreaVariant {
-  /// A near-white fill inside a 1px neutral frame, with neutral text.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   surface,
 
   /// An accent tint inside a 1px accent ring, with accent-colored text.
@@ -247,7 +247,7 @@ ContextToken<double> _fieldPaddingY(UiTextFieldSize size) =>
       return (height.resolve(context) - style.fontSize! * style.height!) / 2;
     });
 
-/// A near-white fill with a neutral frame and neutral text.
+/// The `gray2` fill with a neutral frame and neutral text.
 TextFieldStyler _surface() =>
     TextFieldStyler(
           text: .color(UiTokens.gray12()).selectionColor(UiTokens.focusA5()),

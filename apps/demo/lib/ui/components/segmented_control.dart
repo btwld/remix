@@ -38,8 +38,8 @@ SegmentedControlStyler fortalSegmentedControlStyle({
   FortalSegmentedControlSize size = .size2,
   SegmentedControlStyler style = const SegmentedControlStyler.create(),
 }) {
-  final metrics = _fortalSegmentedControlMetrics(size);
-  final item = _fortalSegmentedControlItemStyle(variant, metrics);
+  final metrics = _metrics(size);
+  final item = _item(variant, metrics);
 
   return SegmentedControlStyler()
       .mainAxisSize(.min)
@@ -51,9 +51,9 @@ SegmentedControlStyler fortalSegmentedControlStyle({
       .merge(style);
 }
 
-SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
+SegmentedControlItemStyler _item(
   FortalSegmentedControlVariant variant,
-  _FortalSegmentedControlMetrics metrics,
+  _Metrics metrics,
 ) {
   final base = SegmentedControlItemStyler()
       .wrap(fortalTouchTarget())
@@ -77,7 +77,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
           overContent: RemixBoxEffectLayerMix(),
         ),
       );
-  final selected = _fortalSegmentedControlSelectedItem(variant, metrics);
+  final selected = _selectedItem(variant, metrics);
   final disabled = SegmentedControlItemStyler()
       .containerEffects(
         RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
@@ -89,7 +89,7 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
       .borderRadius(.all(metrics.radius))
       .containerEffects(
         RemixBoxEffectsMix(
-          behindContent: _fortalSegmentedControlFill(FortalTokens.grayA3()),
+          behindContent: _fill(FortalTokens.grayA3()),
           overContent: RemixBoxEffectLayerMix(shadows: const []),
         ),
       );
@@ -109,9 +109,9 @@ SegmentedControlItemStyler _fortalSegmentedControlItemStyle(
       .onDisabled(disabled.onSelected(disabledSelected));
 }
 
-SegmentedControlItemStyler _fortalSegmentedControlSelectedItem(
+SegmentedControlItemStyler _selectedItem(
   FortalSegmentedControlVariant variant,
-  _FortalSegmentedControlMetrics metrics,
+  _Metrics metrics,
 ) {
   final overContent = switch (variant) {
     .surface => RemixBoxEffectLayerMix(
@@ -136,7 +136,7 @@ SegmentedControlItemStyler _fortalSegmentedControlSelectedItem(
       )
       .containerEffects(
         RemixBoxEffectsMix(
-          behindContent: _fortalSegmentedControlFill(
+          behindContent: _fill(
             FortalTokens.segmentedControlIndicatorBackground(),
             inset: 1,
           ),
@@ -145,18 +145,16 @@ SegmentedControlItemStyler _fortalSegmentedControlSelectedItem(
       );
 }
 
-RemixBoxEffectLayerMix _fortalSegmentedControlFill(
-  Color color, {
-  double? inset,
-}) => RemixBoxEffectLayerMix(
-  gradients: [
-    RemixLinearGradientMix(colors: [color, color]),
-  ],
-  gradientInsets: inset == null ? const [] : [inset],
-);
+RemixBoxEffectLayerMix _fill(Color color, {double? inset}) =>
+    RemixBoxEffectLayerMix(
+      gradients: [
+        RemixLinearGradientMix(colors: [color, color]),
+      ],
+      gradientInsets: inset == null ? const [] : [inset],
+    );
 
-class _FortalSegmentedControlMetrics {
-  const _FortalSegmentedControlMetrics({
+class _Metrics {
+  const _Metrics({
     required this.height,
     required this.paddingX,
     required this.itemGap,
@@ -175,10 +173,8 @@ class _FortalSegmentedControlMetrics {
   final double iconSize;
 }
 
-_FortalSegmentedControlMetrics _fortalSegmentedControlMetrics(
-  FortalSegmentedControlSize size,
-) => switch (size) {
-  .size1 => _FortalSegmentedControlMetrics(
+_Metrics _metrics(FortalSegmentedControlSize size) => switch (size) {
+  .size1 => _Metrics(
     height: FortalTokens.space5(),
     paddingX: FortalTokens.space3(),
     itemGap: FortalTokens.space1(),
@@ -187,7 +183,7 @@ _FortalSegmentedControlMetrics _fortalSegmentedControlMetrics(
     activeLetterSpacing: FortalTokens.tabActiveLetterSpacing1(),
     iconSize: FortalTokens.space3(),
   ),
-  .size2 => _FortalSegmentedControlMetrics(
+  .size2 => _Metrics(
     height: FortalTokens.space6(),
     paddingX: FortalTokens.space4(),
     itemGap: FortalTokens.space2(),
@@ -196,7 +192,7 @@ _FortalSegmentedControlMetrics _fortalSegmentedControlMetrics(
     activeLetterSpacing: FortalTokens.tabActiveLetterSpacing2(),
     iconSize: FortalTokens.space4(),
   ),
-  .size3 => _FortalSegmentedControlMetrics(
+  .size3 => _Metrics(
     height: FortalTokens.space7(),
     paddingX: FortalTokens.space4(),
     itemGap: FortalTokens.space3(),

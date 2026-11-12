@@ -22,7 +22,7 @@ enum FortalAccordionSize {
 
 /// The looks an accordion comes in.
 enum FortalAccordionVariant {
-  /// A near-white panel inside a 1px gray frame.
+  /// The `gray2` panel inside a 1px gray frame.
   surface,
 
   /// An accent-tinted panel inside a 1px accent frame.
@@ -44,7 +44,8 @@ AccordionStyler fortalAccordionStyle({
       .surface => _surface(size),
       .soft => _soft(size),
     })
-    // Clip each painted part so its effects can extend beyond the panel.
+    // The container does not clip, so each part's effects can extend beyond the
+    // panel; the parts clip themselves.
     .container(BoxStyler().clipBehavior(.none))
     .merge(style);
 

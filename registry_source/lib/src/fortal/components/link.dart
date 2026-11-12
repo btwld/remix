@@ -38,7 +38,7 @@ LinkStyler fortalLinkStyle(
   LinkStyler style = const LinkStyler.create(),
 }) {
   LinkStyler styleFor({bool hovered = false, bool focused = false}) =>
-      _fortalLinkStateStyle(
+      _stateStyle(
         context,
         size: size,
         weight: weight,
@@ -71,7 +71,7 @@ LinkStyler fortalLinkStyle(
 /// Separate from [fortalLinkStyle] because the public recipe returns a style
 /// carrying Mix variants, and building those variants needs the flat snapshots
 /// they are built from.
-LinkStyler _fortalLinkStateStyle(
+LinkStyler _stateStyle(
   BuildContext context, {
   required FortalTextSize? size,
   required FortalTextWeight? weight,

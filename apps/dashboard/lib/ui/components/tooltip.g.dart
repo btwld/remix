@@ -6,8 +6,8 @@ part of 'tooltip.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Tooltip recipe: light 12px text on a dark pill that appears
-/// after a 200ms wait.
+/// The Ui Tooltip recipe: `gray1` text on a `gray12` fill with `radius2`
+/// corners, inverted from the page, that appears after a 200ms wait.
 class UiTooltip extends StatelessWidget {
   const UiTooltip({
     super.key,

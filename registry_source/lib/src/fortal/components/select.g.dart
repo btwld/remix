@@ -41,7 +41,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.focusNode,
   });
 
-  /// A near-white fill inside a 1px gray frame.
+  /// The `gray2` fill inside a 1px gray frame.
   const FortalSelect.surface({
     super.key,
     this.size = .size2,

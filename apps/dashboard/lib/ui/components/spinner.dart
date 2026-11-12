@@ -28,10 +28,10 @@ SpinnerStyler uiSpinnerStyle({
     opacity: 0.65,
     leafRadius: UiTokens.radius1(),
     duration: const Duration(milliseconds: 800),
-  ).merge(_uiSpinnerSizeStyler(size)).merge(style);
+  ).merge(_scale(size)).merge(style);
 }
 
-SpinnerStyler _uiSpinnerSizeStyler(UiSpinnerSize size) {
+SpinnerStyler _scale(UiSpinnerSize size) {
   return switch (size) {
     .size1 => SpinnerStyler(size: UiTokens.space3()),
     .size2 => SpinnerStyler(size: UiTokens.space4()),

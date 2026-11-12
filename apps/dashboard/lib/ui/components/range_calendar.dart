@@ -304,7 +304,7 @@ final _committedStart = _committedRole('start', .start);
 final _committedEnd = _committedRole('end', .end);
 final _committedSingle = _committedRole('single', .single);
 
-/// Ui's reviewed RangeCalendar composition.
+/// Ui's RangeCalendar composition.
 ///
 /// Remix owns civil-date selection, focus, keyboard navigation and semantics.
 /// Multiple independent child styles require a hand-written facade; caller

@@ -13,8 +13,9 @@ part of 'sidebar.dart';
 /// muted, separates sections with the `space2` token, and reuses the
 /// ghost `size2` toggle treatment inside full-width destinations with a
 /// 40-logical-pixel minimum height. The footer carries the divider that
-/// separates account content from navigation. [highContrast] strengthens
-/// section content without changing layout.
+/// separates account content from navigation.
+///
+/// [highContrast] strengthens section content without changing layout.
 /// [panelPadding] applies host-owned insets inside the painted panel surface.
 ///
 /// The recipe sets no panel width and no header padding. The host can supply

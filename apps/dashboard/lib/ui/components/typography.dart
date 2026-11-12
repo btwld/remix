@@ -36,7 +36,7 @@ enum UiTextSize {
 
 /// The font weights of the text scale.
 enum UiTextWeight {
-  /// A thin stroke, for large display text.
+  /// Light, 300. For large display text.
   light,
 
   /// Body text.
@@ -50,7 +50,6 @@ enum UiTextWeight {
 }
 
 /// The text style token of a [size] on the scale.
-
 TextStyleToken uiTextSizeToken(UiTextSize size) => switch (size) {
   .size1 => UiTokens.text1,
   .size2 => UiTokens.text2,
@@ -93,6 +92,8 @@ TextStyler uiAccentForeground(TextStyler style, {required bool highContrast}) =>
       highContrast ? UiTokens.accent12() : UiTokens.accentContentAlpha(),
     );
 
+/// The text style of [size], resolved against [context].
+///
 /// Code, Kbd, and Link derive em-relative geometry from the resolved font size,
 /// so unlike the other recipes they cannot stay context-free.
 TextStyle uiResolveTextToken(BuildContext context, UiTextSize size) =>
@@ -101,6 +102,8 @@ TextStyle uiResolveTextToken(BuildContext context, UiTextSize size) =>
 Color uiResolveColor(BuildContext context, ColorToken token) =>
     MixScope.tokenOf(token, context);
 
+/// The theme's radius factor, read back from the resolved `radius1`.
+///
 /// Derived from the resolved `radius1` rather than duplicating this design
 /// system's radius table, so theme radius and scaling changes flow through.
 double uiRadiusFactor(BuildContext context) {

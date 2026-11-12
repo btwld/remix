@@ -28,10 +28,10 @@ SpinnerStyler fortalSpinnerStyle({
     opacity: 0.65,
     leafRadius: FortalTokens.radius1(),
     duration: const Duration(milliseconds: 800),
-  ).merge(_fortalSpinnerSizeStyler(size)).merge(style);
+  ).merge(_scale(size)).merge(style);
 }
 
-SpinnerStyler _fortalSpinnerSizeStyler(FortalSpinnerSize size) {
+SpinnerStyler _scale(FortalSpinnerSize size) {
   return switch (size) {
     .size1 => SpinnerStyler(size: FortalTokens.space3()),
     .size2 => SpinnerStyler(size: FortalTokens.space4()),

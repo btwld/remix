@@ -38,8 +38,8 @@ SegmentedControlStyler uiSegmentedControlStyle({
   UiSegmentedControlSize size = .size2,
   SegmentedControlStyler style = const SegmentedControlStyler.create(),
 }) {
-  final metrics = _uiSegmentedControlMetrics(size);
-  final item = _uiSegmentedControlItemStyle(variant, metrics);
+  final metrics = _metrics(size);
+  final item = _item(variant, metrics);
 
   return SegmentedControlStyler()
       .mainAxisSize(.min)
@@ -51,9 +51,9 @@ SegmentedControlStyler uiSegmentedControlStyle({
       .merge(style);
 }
 
-SegmentedControlItemStyler _uiSegmentedControlItemStyle(
+SegmentedControlItemStyler _item(
   UiSegmentedControlVariant variant,
-  _UiSegmentedControlMetrics metrics,
+  _Metrics metrics,
 ) {
   final base = SegmentedControlItemStyler()
       .wrap(uiTouchTarget())
@@ -77,7 +77,7 @@ SegmentedControlItemStyler _uiSegmentedControlItemStyle(
           overContent: RemixBoxEffectLayerMix(),
         ),
       );
-  final selected = _uiSegmentedControlSelectedItem(variant, metrics);
+  final selected = _selectedItem(variant, metrics);
   final disabled = SegmentedControlItemStyler()
       .containerEffects(
         RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
@@ -89,7 +89,7 @@ SegmentedControlItemStyler _uiSegmentedControlItemStyle(
       .borderRadius(.all(metrics.radius))
       .containerEffects(
         RemixBoxEffectsMix(
-          behindContent: _uiSegmentedControlFill(UiTokens.grayA3()),
+          behindContent: _fill(UiTokens.grayA3()),
           overContent: RemixBoxEffectLayerMix(shadows: const []),
         ),
       );
@@ -109,9 +109,9 @@ SegmentedControlItemStyler _uiSegmentedControlItemStyle(
       .onDisabled(disabled.onSelected(disabledSelected));
 }
 
-SegmentedControlItemStyler _uiSegmentedControlSelectedItem(
+SegmentedControlItemStyler _selectedItem(
   UiSegmentedControlVariant variant,
-  _UiSegmentedControlMetrics metrics,
+  _Metrics metrics,
 ) {
   final overContent = switch (variant) {
     .surface => RemixBoxEffectLayerMix(
@@ -136,7 +136,7 @@ SegmentedControlItemStyler _uiSegmentedControlSelectedItem(
       )
       .containerEffects(
         RemixBoxEffectsMix(
-          behindContent: _uiSegmentedControlFill(
+          behindContent: _fill(
             UiTokens.segmentedControlIndicatorBackground(),
             inset: 1,
           ),
@@ -145,7 +145,7 @@ SegmentedControlItemStyler _uiSegmentedControlSelectedItem(
       );
 }
 
-RemixBoxEffectLayerMix _uiSegmentedControlFill(Color color, {double? inset}) =>
+RemixBoxEffectLayerMix _fill(Color color, {double? inset}) =>
     RemixBoxEffectLayerMix(
       gradients: [
         RemixLinearGradientMix(colors: [color, color]),
@@ -153,8 +153,8 @@ RemixBoxEffectLayerMix _uiSegmentedControlFill(Color color, {double? inset}) =>
       gradientInsets: inset == null ? const [] : [inset],
     );
 
-class _UiSegmentedControlMetrics {
-  const _UiSegmentedControlMetrics({
+class _Metrics {
+  const _Metrics({
     required this.height,
     required this.paddingX,
     required this.itemGap,
@@ -173,10 +173,8 @@ class _UiSegmentedControlMetrics {
   final double iconSize;
 }
 
-_UiSegmentedControlMetrics _uiSegmentedControlMetrics(
-  UiSegmentedControlSize size,
-) => switch (size) {
-  .size1 => _UiSegmentedControlMetrics(
+_Metrics _metrics(UiSegmentedControlSize size) => switch (size) {
+  .size1 => _Metrics(
     height: UiTokens.space5(),
     paddingX: UiTokens.space3(),
     itemGap: UiTokens.space1(),
@@ -185,7 +183,7 @@ _UiSegmentedControlMetrics _uiSegmentedControlMetrics(
     activeLetterSpacing: UiTokens.tabActiveLetterSpacing1(),
     iconSize: UiTokens.space3(),
   ),
-  .size2 => _UiSegmentedControlMetrics(
+  .size2 => _Metrics(
     height: UiTokens.space6(),
     paddingX: UiTokens.space4(),
     itemGap: UiTokens.space2(),
@@ -194,7 +192,7 @@ _UiSegmentedControlMetrics _uiSegmentedControlMetrics(
     activeLetterSpacing: UiTokens.tabActiveLetterSpacing2(),
     iconSize: UiTokens.space4(),
   ),
-  .size3 => _UiSegmentedControlMetrics(
+  .size3 => _Metrics(
     height: UiTokens.space7(),
     paddingX: UiTokens.space4(),
     itemGap: UiTokens.space3(),

@@ -14,7 +14,7 @@ enum FortalDataListSize {
   /// 14px text with 16px between rows. The default.
   size2,
 
-  /// 16px text with a wider gap between rows.
+  /// 16px text with 20px between rows.
   size3,
 }
 
@@ -27,7 +27,7 @@ DataListStyler fortalDataListStyle({
   bool highContrast = false,
   DataListStyler style = const DataListStyler.create(),
 }) {
-  final metrics = _fortalDataListMetrics(size);
+  final metrics = _metrics(size);
 
   return DataListStyler()
       .label(
@@ -51,13 +51,12 @@ DataListStyler fortalDataListStyle({
       .merge(style);
 }
 
-({TextStyleToken text, double rowSpacing}) _fortalDataListMetrics(
-  FortalDataListSize size,
-) => switch (size) {
-  .size1 => (text: FortalTokens.text1, rowSpacing: FortalTokens.space3()),
-  .size2 => (text: FortalTokens.text2, rowSpacing: FortalTokens.space4()),
-  .size3 => (
-    text: FortalTokens.text3,
-    rowSpacing: FortalTokens.dataListRowGap3(),
-  ),
-};
+({TextStyleToken text, double rowSpacing}) _metrics(FortalDataListSize size) =>
+    switch (size) {
+      .size1 => (text: FortalTokens.text1, rowSpacing: FortalTokens.space3()),
+      .size2 => (text: FortalTokens.text2, rowSpacing: FortalTokens.space4()),
+      .size3 => (
+        text: FortalTokens.text3,
+        rowSpacing: FortalTokens.dataListRowGap3(),
+      ),
+    };

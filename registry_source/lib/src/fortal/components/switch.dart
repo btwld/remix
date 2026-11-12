@@ -23,7 +23,8 @@ enum FortalSwitchVariant {
   /// A neutral track with a 1px frame, filled with the accent when on.
   surface,
 
-  /// A neutral tint, accent-tinted when on, with no frame.
+  /// A neutral tint, accent-tinted when on. The 1px frame shows only while off
+  /// and enabled.
   soft,
 }
 
@@ -48,7 +49,7 @@ SwitchStyler fortalSwitchStyle({
     .merge(style);
 
 /// The track and thumb sizes of each step, and the off look both variants
-/// start from: a gray track, a white thumb, and a focus ring.
+/// start from: a gray track with a 1px frame, a white thumb, and a focus ring.
 ///
 /// The empty effect layers give the variant's state fragments layers to
 /// replace.

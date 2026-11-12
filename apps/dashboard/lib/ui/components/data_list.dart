@@ -14,7 +14,7 @@ enum UiDataListSize {
   /// 14px text with 16px between rows. The default.
   size2,
 
-  /// 16px text with a wider gap between rows.
+  /// 16px text with 20px between rows.
   size3,
 }
 
@@ -27,7 +27,7 @@ DataListStyler uiDataListStyle({
   bool highContrast = false,
   DataListStyler style = const DataListStyler.create(),
 }) {
-  final metrics = _uiDataListMetrics(size);
+  final metrics = _metrics(size);
 
   return DataListStyler()
       .label(
@@ -49,10 +49,9 @@ DataListStyler uiDataListStyle({
       .merge(style);
 }
 
-({TextStyleToken text, double rowSpacing}) _uiDataListMetrics(
-  UiDataListSize size,
-) => switch (size) {
-  .size1 => (text: UiTokens.text1, rowSpacing: UiTokens.space3()),
-  .size2 => (text: UiTokens.text2, rowSpacing: UiTokens.space4()),
-  .size3 => (text: UiTokens.text3, rowSpacing: UiTokens.dataListRowGap3()),
-};
+({TextStyleToken text, double rowSpacing}) _metrics(UiDataListSize size) =>
+    switch (size) {
+      .size1 => (text: UiTokens.text1, rowSpacing: UiTokens.space3()),
+      .size2 => (text: UiTokens.text2, rowSpacing: UiTokens.space4()),
+      .size3 => (text: UiTokens.text3, rowSpacing: UiTokens.dataListRowGap3()),
+    };

@@ -25,7 +25,7 @@ enum FortalDialogSize {
 }
 
 /// Padding that keeps the dialog off the screen edges: 16px at the sides and
-/// 24px at the top and bottom, or the safe area when that is larger. The
+/// 32px at the top and bottom, or the safe area when that is larger. The
 /// bottom keeps at least 6% of the viewport height.
 final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
   final safeArea = MediaQuery.paddingOf(context);
@@ -48,19 +48,19 @@ final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
 /// viewport insets, and is modal.
 @MixWidget(target: RemixDialog.new)
 DialogStyler fortalDialogStyle({
-  FortalDialogSize size = FortalDialogSize.size3,
+  FortalDialogSize size = .size3,
   AlignmentGeometry align = Alignment.center,
   DialogStyler style = const DialogStyler.create(),
 }) {
   final radius = switch (size) {
-    FortalDialogSize.size1 || FortalDialogSize.size2 => FortalTokens.radius4(),
-    FortalDialogSize.size3 || FortalDialogSize.size4 => FortalTokens.radius5(),
+    .size1 || .size2 => FortalTokens.radius4(),
+    .size3 || .size4 => FortalTokens.radius5(),
   };
   final padding = switch (size) {
-    FortalDialogSize.size1 => FortalTokens.space3(),
-    FortalDialogSize.size2 => FortalTokens.space4(),
-    FortalDialogSize.size3 => FortalTokens.space5(),
-    FortalDialogSize.size4 => FortalTokens.space6(),
+    .size1 => FortalTokens.space3(),
+    .size2 => FortalTokens.space4(),
+    .size3 => FortalTokens.space5(),
+    .size4 => FortalTokens.space6(),
   };
 
   return DialogStyler()

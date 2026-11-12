@@ -20,7 +20,7 @@ enum UiDisclosureSize {
 
 /// The looks a disclosure comes in.
 enum UiDisclosureVariant {
-  /// A near-white panel inside a 1px gray frame.
+  /// The `gray2` panel inside a 1px gray frame.
   surface,
 
   /// An accent-tinted panel inside a 1px accent frame.
