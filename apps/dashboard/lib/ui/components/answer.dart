@@ -130,9 +130,12 @@ class _UiAnswerState extends State<UiAnswer> {
                   semanticLabel: widget.sourcesLabel,
                   style: widget.sourcesStyle,
                   triggerBuilder: (context, state, trigger) => Row(
+                    // The indicator follows its label, as a link-like line,
+                    // rather than sitting at the far edge of the row.
+                    mainAxisSize: MainAxisSize.min,
                     spacing: 8,
                     children: [
-                      Expanded(child: trigger!),
+                      Flexible(child: trigger!),
                       UiDisclosureIndicator(
                         styleSpec: spec.indicator,
                         expanded: state.isExpanded,

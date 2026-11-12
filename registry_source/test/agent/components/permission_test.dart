@@ -28,6 +28,36 @@ void main() {
     expect(find.text('Deny'), findsNothing);
   });
 
+  testWidgets('a decided request is a one-line receipt, without a card', (
+    tester,
+  ) async {
+    Widget permission(AgentPermissionStatus status) => AgentPermission(
+      tool: 'terminal.run',
+      title: 'Allow this tool to run?',
+      description: 'Run the checks.',
+      status: status,
+      onAllowOnce: () {},
+      onDeny: () {},
+    );
+
+    await pumpAgent(tester, permission(AgentPermissionStatus.pending));
+    expect(find.byType(RemixCard), findsOneWidget);
+    expect(find.text('Allow this tool to run?'), findsOneWidget);
+
+    for (final status in [
+      AgentPermissionStatus.allowed,
+      AgentPermissionStatus.complete,
+      AgentPermissionStatus.denied,
+    ]) {
+      await pumpAgent(tester, permission(status));
+      expect(find.byType(RemixCard), findsNothing, reason: '$status');
+      expect(find.text('Allow this tool to run?'), findsNothing);
+      expect(find.text('Run the checks.'), findsNothing);
+      expect(find.text('terminal.run'), findsOneWidget);
+    }
+    expect(find.text('Denied'), findsOneWidget);
+  });
+
   testWidgets('initial deciding status starts with details open', (
     tester,
   ) async {

@@ -156,7 +156,8 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
   var _turn = 0;
   int? _copiedTurn;
   Timer? _copiedTimer;
-  final _history = <({int turn, String prompt, String answer})>[];
+  final _history =
+      <({int turn, String prompt, String answer, bool succeeded})>[];
 
   UiDashboardAgentStyles get styles => widget.styles;
 
@@ -235,7 +236,12 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
     setState(() {
       _clearCopied();
       if (!keepMessage && _prompt.isNotEmpty) {
-        _history.add((turn: _turn, prompt: _prompt, answer: _visibleAnswer));
+        _history.add((
+          turn: _turn,
+          prompt: _prompt,
+          answer: _visibleAnswer,
+          succeeded: _stage == _Stage.complete,
+        ));
       }
       _scenario = scenario;
       if (!keepMessage) {
@@ -343,17 +349,19 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
                       ],
                     ),
                     StyledText('Interactive demo', style: styles.body),
-                    if (!compact)
-                      StyledText(
-                        'Simulated responses and tools — no backend or credentials.',
-                        style: styles.body,
-                      ),
                   ],
                 ),
-                if (!compact && !_active) _starters(),
                 // The transcript offers its own way back to the latest.
-                Expanded(child: _transcript()),
+                Expanded(child: _transcript(compact: compact)),
                 _composer(maxLines: compact ? 2 : 8),
+                if (!compact)
+                  Box(
+                    style: BoxStyler().alignment(.center),
+                    child: StyledText(
+                      'Simulated responses and tools — no backend or credentials.',
+                      style: styles.body,
+                    ),
+                  ),
               ],
             );
           },
@@ -362,32 +370,38 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
     );
   }
 
-  Widget _starters() => SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    child: RowBox(
-      style: FlexBoxStyler().spacing(8),
-      children: [
-        _starter('Review checkout', .success),
-        _starter('Run terminal checks', .permission),
-        _starter('Recover a failed command', .failure),
-      ],
-    ),
+  Widget _starters() => Wrap(
+    alignment: WrapAlignment.center,
+    spacing: 8,
+    runSpacing: 8,
+    children: [
+      _starter('Review checkout', .success),
+      _starter('Run terminal checks', .permission),
+      _starter('Recover a failed command', .failure),
+    ],
   );
 
   Widget _starter(String label, _Scenario scenario) => styles.buttonBuilder(
     label,
     () => _start(label, scenario: scenario),
-    .soft,
+    // Suggestions are outlined so the only filled shape in the
+    // conversation is the reader's own message.
+    .outline,
   );
 
-  Widget _transcript() {
+  Widget _transcript({bool compact = false}) {
     final requestId = _runId;
     final narrow = MediaQuery.sizeOf(context).width < 600;
     final turns = <Widget>[
       for (final turn in _history)
         _turnGroup([
           _message(turn.prompt),
-          _answerWidget(turn.turn, turn.answer, .complete),
+          _answerWidget(
+            turn.turn,
+            turn.answer,
+            .complete,
+            sources: turn.succeeded,
+          ),
         ]),
     ];
     if (_prompt.isNotEmpty) {
@@ -414,24 +428,26 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
           ],
         ),
       );
-      children.add(
-        UiActivity(
-          style: styles.activityStyle,
-          disclosureStyle: styles.activityDisclosureStyle,
-          status: _active ? .working : .complete,
-          items: [
-            UiActivityItem(
-              id: 'run',
-              title: _activityLabel,
-              status: _active ? .active : .complete,
-            ),
-          ],
-        ),
-      );
+      // Activity says what the agent is doing until a card says it instead.
+      if (_stage == _Stage.preparing)
+        children.add(
+          UiActivity(
+            style: styles.activityStyle,
+            disclosureStyle: styles.activityDisclosureStyle,
+            status: _active ? .working : .complete,
+            items: [
+              UiActivityItem(
+                id: 'run',
+                title: _activityLabel,
+                status: _active ? .active : .complete,
+              ),
+            ],
+          ),
+        );
+      // A decided request that let the tool run is told by the tool row
+      // below it, so only a pending or denied request is shown.
       if (_stage == _Stage.permission ||
-          (_scenario == _Scenario.permission &&
-              _stage != _Stage.preparing &&
-              (_stage != _Stage.stopped || _toolStarted))) {
+          (_scenario == _Scenario.permission && _stage == _Stage.denied)) {
         children.add(
           UiPermission(
             requestId: _runId,
@@ -515,6 +531,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
                 : _stage == _Stage.failed
                 ? .error
                 : .complete,
+            sources: _stage == _Stage.complete,
           ),
         );
       }
@@ -533,7 +550,16 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
           ? [
               Box(
                 style: BoxStyler().alignment(.center).padding(.all(32)),
-                child: const StyledText('Choose a starter or write a message.'),
+                child: ColumnBox(
+                  style: FlexBoxStyler()
+                      .mainAxisSize(.min)
+                      .crossAxisAlignment(.center)
+                      .spacing(16),
+                  children: [
+                    const StyledText('Choose a starter or write a message.'),
+                    if (!compact) _starters(),
+                  ],
+                ),
               ),
             ]
           : turns,
@@ -558,7 +584,12 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
     child: StyledText(value),
   );
 
-  Widget _answerWidget(int turn, String value, UiAnswerStatus status) {
+  Widget _answerWidget(
+    int turn,
+    String value,
+    UiAnswerStatus status, {
+    bool sources = true,
+  }) {
     return UiAnswer(
       streamId: _runId,
       status: status,
@@ -570,9 +601,10 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
       onCopy: () => _copyAnswer(turn, value),
       feedback: _copiedTurn == turn ? const StyledText('Copied') : null,
       onRetry: _retry,
-      sourcesContent: const StyledText(
-        'Deterministic local fixture · no network',
-      ),
+      // Sources belong to an answer that used them, not to a failure.
+      sourcesContent: sources && status == .complete
+          ? const StyledText('Deterministic local fixture · no network')
+          : null,
       child: StyledText(value),
     );
   }
