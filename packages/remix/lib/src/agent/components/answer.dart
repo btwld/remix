@@ -57,6 +57,7 @@ class AgentAnswer extends StatefulWidget {
     this.semanticLabel = 'Answer',
     this.glyphBuilder,
     this.actionStyle = const IconButtonStyler.create(),
+    this.selectedActionStyle = const IconButtonStyler.create(),
     this.style = const AgentAnswerStyler.create(),
     this.styleSpec,
   });
@@ -116,6 +117,9 @@ class AgentAnswer extends StatefulWidget {
   /// The style of every action.
   final IconButtonStyler actionStyle;
 
+  /// Merged into [actionStyle] for the selected feedback button.
+  final IconButtonStyler selectedActionStyle;
+
   /// The answer's style.
   final AgentAnswerStyler style;
 
@@ -174,6 +178,7 @@ class _AgentAnswerState extends State<AgentAnswer> {
     AgentGlyph? fallback,
     required String label,
     required VoidCallback onPressed,
+    bool selected = false,
   }) => RemixIconButton(
     key: ValueKey('agent-answer-$key'),
     icon: null,
@@ -188,7 +193,9 @@ class _AgentAnswerState extends State<AgentAnswer> {
     },
     semanticLabel: label,
     onPressed: onPressed,
-    style: widget.actionStyle,
+    style: selected
+        ? widget.actionStyle.merge(widget.selectedActionStyle)
+        : widget.actionStyle,
   );
 
   Widget _verdict(AgentAnswerFeedback value) {
@@ -202,6 +209,7 @@ class _AgentAnswerState extends State<AgentAnswer> {
           glyph: positive ? AgentGlyph.positive : AgentGlyph.negative,
           label: positive ? widget.positiveLabel : widget.negativeLabel,
           onPressed: () => _toggleFeedback(value),
+          selected: widget.feedback == value,
         ),
       ),
     );
