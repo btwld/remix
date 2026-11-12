@@ -8,7 +8,7 @@ enum UiSurfaceVariant {
   /// No fill, under the `foreground` text color.
   transparent,
 
-  /// The `surface` fill.
+  /// HeroUI's `default`: the `surface` fill.
   defaultSurface,
 
   /// The `surface-secondary` fill.
