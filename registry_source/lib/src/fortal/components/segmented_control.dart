@@ -6,47 +6,32 @@ import '../theme/theme.dart';
 
 part 'segmented_control.g.dart';
 
-double _resolveSegmentedControlActiveLetterSpacing3(BuildContext context) {
-  final fontSize = FortalTokens.text3.resolve(context).fontSize!;
-  return -0.01 * fontSize;
+/// The sizes a segmented control comes in. Pixel values are at 100% theme
+/// scaling.
+enum FortalSegmentedControlSize {
+  /// 24px tall, with 12px text and 12px icons.
+  size1,
+
+  /// 32px tall, with 14px text and 16px icons. The default.
+  size2,
+
+  /// 40px tall, with 16px text and 20px icons.
+  size3,
 }
 
-const _segmentedControlActiveLetterSpacing3 = ContextToken<double>(
-  _resolveSegmentedControlActiveLetterSpacing3,
-);
+/// The looks a segmented control comes in.
+enum FortalSegmentedControlVariant {
+  /// A gray track with a raised surface under the selected item.
+  surface,
+}
 
-Color _resolveSegmentedControlTrackBackground(BuildContext context) =>
-    Color.alphaBlend(
-      FortalTokens.grayA3.resolve(context),
-      FortalTokens.colorSurface.resolve(context),
-    );
-
-const _segmentedControlTrackBackground = ContextToken<Color>(
-  _resolveSegmentedControlTrackBackground,
-);
-
-/// The disabled root swaps only `background-color` to `gray-3`; the `gray-a3`
-/// background-image layer persists in the source, so it stays in the blend.
-Color _resolveSegmentedControlDisabledTrackBackground(BuildContext context) =>
-    Color.alphaBlend(
-      FortalTokens.grayA3.resolve(context),
-      FortalTokens.gray3.resolve(context),
-    );
-
-const _segmentedControlDisabledTrackBackground = ContextToken<Color>(
-  _resolveSegmentedControlDisabledTrackBackground,
-);
-
-/// Fortal SegmentedControl size presets.
-enum FortalSegmentedControlSize { size1, size2, size3 }
-
-/// Fortal SegmentedControl variants.
-enum FortalSegmentedControlVariant { surface }
-
-/// Fortal recipe for [RemixSegmentedControl].
+/// The Fortal SegmentedControl recipe.
 ///
-/// Content icons use size-matched 12/16/20 token defaults rather than the
-/// ambient icon size. Control and item styles may override these defaults.
+/// The track is a gray tint blended over the surface. The selected item sits
+/// on a raised fill with a 1px edge, and turns medium weight.
+///
+/// Content icons use the size's 12, 16 or 20px default rather than the ambient
+/// icon size. Control and item styles may override these defaults.
 @MixWidget(target: RemixSegmentedControl.new)
 SegmentedControlStyler fortalSegmentedControlStyle({
   FortalSegmentedControlVariant variant = .surface,
@@ -62,11 +47,7 @@ SegmentedControlStyler fortalSegmentedControlStyle({
       .borderRadius(.all(metrics.radius))
       .color(_segmentedControlTrackBackground())
       .item(item)
-      .onDisabled(
-        SegmentedControlStyler().color(
-          _segmentedControlDisabledTrackBackground(),
-        ),
-      )
+      .onDisabled(.color(_segmentedControlDisabledTrackBackground()))
       .merge(style);
 }
 
@@ -221,9 +202,31 @@ _FortalSegmentedControlMetrics _fortalSegmentedControlMetrics(
     itemGap: FortalTokens.space3(),
     radius: FortalTokens.radius3OrFull(),
     text: FortalTokens.text3,
-    // The pinned `-0.01em` is derived from the resolved size-3 text token so
-    // it remains exact at every Fortal scaling without adding an eighth token.
     activeLetterSpacing: _segmentedControlActiveLetterSpacing3(),
     iconSize: FortalTokens.spinnerSize3(),
   ),
 };
+
+/// The selected item's label tightens by 1% of the size-3 font size, so the
+/// bolder text keeps its width. It follows the resolved text token, so it stays
+/// exact at every theme scaling.
+final _segmentedControlActiveLetterSpacing3 = ContextToken<double>(
+  (context) => -0.01 * FortalTokens.text3.resolve(context).fontSize!,
+);
+
+/// The track: the gray tint blended over the surface.
+final _segmentedControlTrackBackground = ContextToken<Color>(
+  (context) => Color.alphaBlend(
+    FortalTokens.grayA3.resolve(context),
+    FortalTokens.colorSurface.resolve(context),
+  ),
+);
+
+/// The disabled track swaps only the base color to gray 3; the gray-alpha-3
+/// layer over it persists, so it stays in the blend.
+final _segmentedControlDisabledTrackBackground = ContextToken<Color>(
+  (context) => Color.alphaBlend(
+    FortalTokens.grayA3.resolve(context),
+    FortalTokens.gray3.resolve(context),
+  ),
+);
