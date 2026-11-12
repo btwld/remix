@@ -13,7 +13,7 @@ import 'select.dart';
 CalendarStyler heroUiCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => CalendarStyler()
-    .padding(.all(12.0))
+    .padding(.all(_calendarPadding))
     .headerSpacing(16.0)
     .weekdaySpacing(12.0)
     .rowSpacing(4.0)
@@ -190,12 +190,18 @@ const heroUiCalendarTarget = 36.0;
 double heroUiCalendarDayWidth(BuildContext context) =>
     MediaQuery.textScalerOf(context).scale(heroUiCalendarTarget);
 
-/// Sizes a calendar to its day tiles: seven columns plus the 12px padding on
-/// each side.
+/// The 12px inset around a calendar's grid.
+const _calendarPadding = 12.0;
+
+/// Sizes a calendar to its day tiles: seven columns plus the
+/// [heroUiCalendarStyle] padding on each side.
 ///
 /// The widgets merge the caller's style over this.
 CalendarStyler heroUiCalendarGeometry(BuildContext context) => CalendarStyler()
-    .minWidth(heroUiCalendarDayWidth(context) * DateTime.daysPerWeek + 2 * 12.0)
+    .minWidth(
+      heroUiCalendarDayWidth(context) * DateTime.daysPerWeek +
+          2 * _calendarPadding,
+    )
     .day(
       CalendarDayStyler()
           .minWidth(heroUiCalendarDayWidth(context))

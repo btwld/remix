@@ -13,7 +13,7 @@ import 'select.dart';
 CalendarStyler {{valuePrefix}}CalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => CalendarStyler()
-    .padding(.all(12.0))
+    .padding(.all(_calendarPadding))
     .headerSpacing(16.0)
     .weekdaySpacing(12.0)
     .rowSpacing(4.0)
@@ -190,12 +190,18 @@ const {{valuePrefix}}CalendarTarget = 36.0;
 double {{valuePrefix}}CalendarDayWidth(BuildContext context) =>
     MediaQuery.textScalerOf(context).scale({{valuePrefix}}CalendarTarget);
 
-/// Sizes a calendar to its day tiles: seven columns plus the 12px padding on
-/// each side.
+/// The 12px inset around a calendar's grid.
+const _calendarPadding = 12.0;
+
+/// Sizes a calendar to its day tiles: seven columns plus the
+/// [{{valuePrefix}}CalendarStyle] padding on each side.
 ///
 /// The widgets merge the caller's style over this.
 CalendarStyler {{valuePrefix}}CalendarGeometry(BuildContext context) => CalendarStyler()
-    .minWidth({{valuePrefix}}CalendarDayWidth(context) * DateTime.daysPerWeek + 2 * 12.0)
+    .minWidth(
+      {{valuePrefix}}CalendarDayWidth(context) * DateTime.daysPerWeek +
+          2 * _calendarPadding,
+    )
     .day(
       CalendarDayStyler()
           .minWidth({{valuePrefix}}CalendarDayWidth(context))
