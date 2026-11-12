@@ -48,7 +48,10 @@ UiAgentConversationRecipe uiAgentConversationRecipe({
     size: .size3,
     style: IconButtonStyler()
         .color(UiTokens.colorSurface())
-        .borderRadius(.all(UiTokens.radiusFull()))
+        .borderRadius(.circular(_pill))
         .merge(latestStyle),
   ),
 );
+
+/// Pill corners, whatever radius the theme chooses.
+const _pill = 999.0;

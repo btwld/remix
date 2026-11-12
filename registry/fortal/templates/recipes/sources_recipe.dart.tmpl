@@ -46,7 +46,7 @@ final class {{typePrefix}}AgentSourcesRecipe {
         .runSpacing({{typePrefix}}Tokens.space2()),
     source: BoxStyler()
         .color({{typePrefix}}Tokens.gray3())
-        .borderRadius(.all({{typePrefix}}Tokens.radiusFull()))
+        .borderRadius(.circular(_pill))
         .padding(
           .symmetric(
             horizontal: {{typePrefix}}Tokens.space2(),
@@ -86,3 +86,6 @@ DisclosureStyler _quietDisclosure() => {{valuePrefix}}DisclosureStyle(
       .onHovered(.trigger(.color(const Color(0x00000000))))
       .onPressed(.trigger(.color(const Color(0x00000000)))),
 );
+
+/// Pill corners, whatever radius the theme chooses.
+const _pill = 999.0;

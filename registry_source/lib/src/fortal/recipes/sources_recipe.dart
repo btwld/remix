@@ -46,7 +46,7 @@ FortalAgentSourcesRecipe fortalAgentSourcesRecipe({
         .runSpacing(FortalTokens.space2()),
     source: BoxStyler()
         .color(FortalTokens.gray3())
-        .borderRadius(.all(FortalTokens.radiusFull()))
+        .borderRadius(.circular(_pill))
         .padding(
           .symmetric(
             horizontal: FortalTokens.space2(),
@@ -86,3 +86,6 @@ DisclosureStyler _quietDisclosure() => fortalDisclosureStyle(
       .onHovered(.trigger(.color(const Color(0x00000000))))
       .onPressed(.trigger(.color(const Color(0x00000000)))),
 );
+
+/// Pill corners, whatever radius the theme chooses.
+const _pill = 999.0;

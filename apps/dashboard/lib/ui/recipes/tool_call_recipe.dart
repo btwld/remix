@@ -169,6 +169,7 @@ AgentToolCallStyler _card() => AgentToolCallStyler(
       .clipBehavior(.antiAlias)
       .border(.all(.color(UiTokens.gray6()).width(UiTokens.borderWidth1()))),
   cardBody: FlexBoxStyler()
+      .crossAxisAlignment(.start)
       .spacing(UiTokens.space3())
       .padding(.all(UiTokens.space4())),
   cardIcon: BoxStyler()

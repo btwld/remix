@@ -67,6 +67,16 @@ void main() {
     expect(composer.fieldMaxHeight, 240);
   });
 
+  testWidgets('the composer field draws no frame of its own', (tester) async {
+    final field = await _resolve(
+      tester,
+      fortalAgentComposerRecipe().fieldStyle,
+    );
+
+    expect(field.containerEffects?.overContent?.isEmpty, isTrue);
+    expect(field.containerEffects?.behindContent?.isEmpty, isTrue);
+  });
+
   testWidgets('the answer is plain text with 12 between its parts', (
     tester,
   ) async {

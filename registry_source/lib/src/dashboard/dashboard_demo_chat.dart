@@ -531,15 +531,18 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
     ),
   );
 
-  Widget _dock(Widget composer) => Box(
-    style: styles.dockStyle,
-    child: ColumnBox(
-      style: FlexBoxStyler()
-          .mainAxisSize(.min)
-          .crossAxisAlignment(.stretch)
-          .spacing(8)
-          .padding(.bottom(16)),
-      children: [composer, _disclaimer()],
+  Widget _dock(Widget composer) => Align(
+    alignment: Alignment.bottomCenter,
+    child: Box(
+      style: styles.dockStyle,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .mainAxisSize(.min)
+            .crossAxisAlignment(.stretch)
+            .spacing(8)
+            .padding(.bottom(16)),
+        children: [composer, _disclaimer()],
+      ),
     ),
   );
 

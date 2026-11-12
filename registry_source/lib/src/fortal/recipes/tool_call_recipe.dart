@@ -181,6 +181,7 @@ AgentToolCallStyler _card() => AgentToolCallStyler(
         .all(.color(FortalTokens.gray6()).width(FortalTokens.borderWidth1())),
       ),
   cardBody: FlexBoxStyler()
+      .crossAxisAlignment(.start)
       .spacing(FortalTokens.space3())
       .padding(.all(FortalTokens.space4())),
   cardIcon: BoxStyler()

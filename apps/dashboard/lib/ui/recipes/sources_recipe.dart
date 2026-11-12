@@ -44,7 +44,7 @@ UiAgentSourcesRecipe uiAgentSourcesRecipe({
         .runSpacing(UiTokens.space2()),
     source: BoxStyler()
         .color(UiTokens.gray3())
-        .borderRadius(.all(UiTokens.radiusFull()))
+        .borderRadius(.circular(_pill))
         .padding(
           .symmetric(
             horizontal: UiTokens.space2(),
@@ -80,3 +80,6 @@ DisclosureStyler _quietDisclosure() => uiDisclosureStyle(
       .onHovered(.trigger(.color(const Color(0x00000000))))
       .onPressed(.trigger(.color(const Color(0x00000000)))),
 );
+
+/// Pill corners, whatever radius the theme chooses.
+const _pill = 999.0;

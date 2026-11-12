@@ -76,6 +76,9 @@ FortalAgentComposerRecipe fortalAgentComposerRecipe({
         .border(.style(.none))
         .padding(.all(0))
         .minHeight(FortalTokens.space5())
+        // The surface draws the frame and the focus ring, not the field.
+        .containerEffects(_noEffects)
+        .onFocused(.containerEffects(.outline(.style(.none))))
         .merge(fieldStyle),
   ),
   submitStyle: _round(submitStyle),
@@ -89,7 +92,21 @@ const _fieldMaxHeight = 240.0;
 IconButtonStyler _round(IconButtonStyler style) => fortalIconButtonStyle(
   variant: .solid,
   size: .size2,
-  style: IconButtonStyler()
-      .borderRadius(.all(FortalTokens.radiusFull()))
-      .merge(style),
+  style: IconButtonStyler().borderRadius(.circular(_pill)).merge(style),
+);
+
+/// Pill corners, whatever radius the theme chooses.
+const _pill = 999.0;
+
+/// Empty layers behind and over the field: an explicit empty list replaces the
+/// text area's frame, where an unset layer would leave it.
+final _noEffects = RemixBoxEffectsMix(
+  behindContent: _emptyLayer,
+  overContent: _emptyLayer,
+);
+
+final _emptyLayer = RemixBoxEffectLayerMix(
+  gradients: const [],
+  gradientInsets: const [],
+  shadows: const [],
 );
