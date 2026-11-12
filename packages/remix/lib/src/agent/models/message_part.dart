@@ -142,6 +142,11 @@ final class AgentToolCallPart extends AgentMessagePart {
   ///
   /// The usual update moves [status] and fills in the result:
   /// `call.copyWith(status: AgentToolCallStatus.running)`.
+  ///
+  /// A null argument keeps the current value, so it cannot clear one. To
+  /// retry a failed call, set the matching `clear...` flag, such as
+  /// `call.copyWith(status: AgentToolCallStatus.running, clearError: true)`.
+  /// A `clear...` flag wins over its value.
   AgentToolCallPart copyWith({
     String? summary,
     String? description,
@@ -153,19 +158,27 @@ final class AgentToolCallPart extends AgentMessagePart {
     String? error,
     AgentApprovalDecision? decision,
     Duration? duration,
+    bool clearSummary = false,
+    bool clearDescription = false,
+    bool clearDetail = false,
+    bool clearOutput = false,
+    bool clearResult = false,
+    bool clearError = false,
+    bool clearDecision = false,
+    bool clearDuration = false,
   }) => AgentToolCallPart(
     id: id,
     name: name,
-    summary: summary ?? this.summary,
-    description: description ?? this.description,
-    detail: detail ?? this.detail,
+    summary: clearSummary ? null : summary ?? this.summary,
+    description: clearDescription ? null : description ?? this.description,
+    detail: clearDetail ? null : detail ?? this.detail,
     input: input ?? this.input,
     status: status ?? this.status,
-    output: output ?? this.output,
-    result: result ?? this.result,
-    error: error ?? this.error,
-    decision: decision ?? this.decision,
-    duration: duration ?? this.duration,
+    output: clearOutput ? null : output ?? this.output,
+    result: clearResult ? null : result ?? this.result,
+    error: clearError ? null : error ?? this.error,
+    decision: clearDecision ? null : decision ?? this.decision,
+    duration: clearDuration ? null : duration ?? this.duration,
   );
 
   @override

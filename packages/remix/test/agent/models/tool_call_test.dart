@@ -101,4 +101,42 @@ void main() {
       }
     });
   });
+
+  test('a failed call retries with its stale fields cleared', () {
+    const failed = AgentToolCallPart(
+      id: 'call-1',
+      name: 'terminal.run',
+      status: AgentToolCallStatus.failed,
+      output: 'partial',
+      error: 'exit 1',
+      decision: AgentApprovalDecision.allowOnce,
+      detail: '3 tests',
+      duration: Duration(seconds: 2),
+    );
+
+    // Without a flag, null keeps the value.
+    expect(failed.copyWith(error: null).error, 'exit 1');
+
+    final retry = failed.copyWith(
+      status: AgentToolCallStatus.running,
+      clearError: true,
+      clearOutput: true,
+      clearDecision: true,
+      clearDetail: true,
+      clearDuration: true,
+    );
+    expect(retry.status, AgentToolCallStatus.running);
+    expect(retry.error, isNull);
+    expect(retry.output, isNull);
+    expect(retry.decision, isNull);
+    expect(retry.detail, isNull);
+    expect(retry.duration, isNull);
+    expect(retry.id, 'call-1');
+  });
+
+  test('a step clears its detail', () {
+    const step = AgentStep(id: 's', title: 'Read', detail: '2s');
+    expect(step.copyWith(detail: null).detail, '2s');
+    expect(step.copyWith(clearDetail: true).detail, isNull);
+  });
 }

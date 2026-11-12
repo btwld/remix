@@ -266,7 +266,7 @@ class _AgentToolCallState extends State<AgentToolCall>
   void didUpdateWidget(AgentToolCall oldWidget) {
     super.didUpdateWidget(oldWidget);
     final call = _call;
-    _guard.update(id: call.id, status: call.status);
+    _guard.update(id: call.id, status: call.status, recorded: call.decision);
     updateKeepAlive();
     _disclosure
       ..policy = widget.policy
@@ -513,40 +513,44 @@ class _AgentToolCallState extends State<AgentToolCall>
           ),
           RowBox(
             styleSpec: spec.footer,
-            children: [
-              if (widget.offerAlwaysAllow)
-                RemixButton(
-                  key: const ValueKey('agent-tool-call-always-allow'),
-                  label: '${widget.alwaysAllowLabel} ${call.name}',
-                  textBuilder: (context, textSpec, text) => Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(text: '${widget.alwaysAllowLabel} '),
-                        TextSpan(text: call.name, style: toolStyle),
-                      ],
+            children: agentActionRowChildren(
+              gap: spec.footer.spec.flex?.spec.spacing ?? 0,
+              leading: !widget.offerAlwaysAllow
+                  ? null
+                  : RemixButton(
+                      key: const ValueKey('agent-tool-call-always-allow'),
+                      label: '${widget.alwaysAllowLabel} ${call.name}',
+                      textBuilder: (context, textSpec, text) => Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(text: '${widget.alwaysAllowLabel} '),
+                            TextSpan(text: call.name, style: toolStyle),
+                          ],
+                        ),
+                        style: textSpec.style,
+                      ),
+                      enabled: canDecide,
+                      onPressed: () =>
+                          _decide(AgentApprovalDecision.alwaysAllow),
+                      style: widget.alwaysAllowStyle,
                     ),
-                    style: textSpec.style,
-                  ),
+              trailing: [
+                RemixButton(
+                  key: const ValueKey('agent-tool-call-deny'),
+                  label: widget.denyLabel,
                   enabled: canDecide,
-                  onPressed: () => _decide(AgentApprovalDecision.alwaysAllow),
-                  style: widget.alwaysAllowStyle,
+                  onPressed: () => _decide(AgentApprovalDecision.deny),
+                  style: widget.denyStyle,
                 ),
-              const Spacer(),
-              RemixButton(
-                key: const ValueKey('agent-tool-call-deny'),
-                label: widget.denyLabel,
-                enabled: canDecide,
-                onPressed: () => _decide(AgentApprovalDecision.deny),
-                style: widget.denyStyle,
-              ),
-              RemixButton(
-                key: const ValueKey('agent-tool-call-allow-once'),
-                label: widget.allowOnceLabel,
-                enabled: canDecide,
-                onPressed: () => _decide(AgentApprovalDecision.allowOnce),
-                style: widget.allowOnceStyle,
-              ),
-            ],
+                RemixButton(
+                  key: const ValueKey('agent-tool-call-allow-once'),
+                  label: widget.allowOnceLabel,
+                  enabled: canDecide,
+                  onPressed: () => _decide(AgentApprovalDecision.allowOnce),
+                  style: widget.allowOnceStyle,
+                ),
+              ],
+            ),
           ),
         ],
       ),

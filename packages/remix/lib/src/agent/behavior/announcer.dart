@@ -62,6 +62,11 @@ final class AgentAnnouncement {
 ///
 /// Give one announcer the lifetime of a conversation. It reports to
 /// [onAnnouncement]; [announce] sends a message to the platform.
+///
+/// The host wires it. No Agent widget calls the announcer: a lazily built list
+/// never builds the rows that are off screen, so the widgets would miss them.
+/// Feed [updateToolCall] and [updateAnswer] from the host's message state, at
+/// the place that learns of each status change.
 class AgentAnnouncer {
   /// Creates an announcer that reports to [onAnnouncement].
   AgentAnnouncer({this.onAnnouncement});

@@ -124,7 +124,7 @@ class AgentSteps extends StatefulWidget {
       AgentRunStatus.working => 'Thinking…',
       AgentRunStatus.waiting => 'Waiting for approval$count',
       AgentRunStatus.complete =>
-        duration == null
+        duration == null || duration <= Duration.zero
             ? 'Thought for a few seconds$count'
             : 'Thought for ${_seconds(duration)}$count',
     };

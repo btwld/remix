@@ -46,6 +46,9 @@ final class AgentSuggestion {
 /// Tapping a suggestion fills the composer through [controller], with the
 /// cursor at the end, and focuses it through [focusNode]. It never sends:
 /// the reader reviews the prompt and sends it.
+///
+/// The suggestions are disabled while [enabled] is false and while
+/// [controller] is running, since a run in progress cannot take a new prompt.
 class AgentSuggestions extends StatelessWidget {
   /// Creates suggestions that fill [controller].
   const AgentSuggestions({
@@ -54,6 +57,7 @@ class AgentSuggestions extends StatelessWidget {
     required this.controller,
     this.focusNode,
     this.onSelected,
+    this.enabled = true,
     this.semanticLabel = 'Suggestions',
     this.suggestionStyle = const ButtonStyler.create(),
     this.style = const AgentSuggestionsStyler.create(),
@@ -71,6 +75,10 @@ class AgentSuggestions extends StatelessWidget {
 
   /// Receives the tapped suggestion, after it filled the composer.
   final ValueChanged<AgentSuggestion>? onSelected;
+
+  /// Whether the suggestions can be tapped. They are also disabled while
+  /// [controller] is [AgentComposerController.running].
+  final bool enabled;
 
   /// The group's accessible name.
   final String semanticLabel;
@@ -99,28 +107,36 @@ class AgentSuggestions extends StatelessWidget {
     return RemixStyleSpecBuilder<AgentSuggestionsSpec>(
       style: style,
       styleSpec: styleSpec,
-      builder: (context, spec) => Semantics(
-        container: true,
-        explicitChildNodes: true,
-        label: semanticLabel,
-        child: WrapBox(
-          styleSpec: spec.container,
-          children: [
-            for (final (index, suggestion) in suggestions.indexed)
-              RemixButton(
-                key: ValueKey('agent-suggestion-$index'),
-                label: suggestion.label,
-                leadingIconBuilder: suggestion.icon == null
-                    ? null
-                    : (context, iconSpec, icon) => RemixDefaultContentStyle(
-                        icon: StyleSpec(spec: iconSpec),
-                        child: suggestion.icon!,
-                      ),
-                onPressed: () => _select(suggestion),
-                style: suggestionStyle,
-              ),
-          ],
-        ),
+      builder: (context, spec) => ListenableBuilder(
+        listenable: controller,
+        builder: (context, _) {
+          final active = enabled && !controller.running;
+
+          return Semantics(
+            container: true,
+            explicitChildNodes: true,
+            label: semanticLabel,
+            child: WrapBox(
+              styleSpec: spec.container,
+              children: [
+                for (final (index, suggestion) in suggestions.indexed)
+                  RemixButton(
+                    key: ValueKey('agent-suggestion-$index'),
+                    label: suggestion.label,
+                    leadingIconBuilder: suggestion.icon == null
+                        ? null
+                        : (context, iconSpec, icon) => RemixDefaultContentStyle(
+                            icon: StyleSpec(spec: iconSpec),
+                            child: suggestion.icon!,
+                          ),
+                    enabled: active,
+                    onPressed: () => _select(suggestion),
+                    style: suggestionStyle,
+                  ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

@@ -266,4 +266,13 @@ void main() {
 
     expect(find.text('complete 1 2'), findsOneWidget);
   });
+
+  testWidgets('a zero duration reads like an unknown one', (tester) async {
+    await _pump(
+      tester,
+      _steps(AgentRunStatus.complete, duration: Duration.zero),
+    );
+
+    expect(find.text('Thought for a few seconds · 2 steps'), findsOneWidget);
+  });
 }

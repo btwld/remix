@@ -73,4 +73,28 @@ void main() {
     );
     semantics.dispose();
   });
+
+  testWidgets('no sources renders nothing', (tester) async {
+    await pumpAgent(tester, const AgentSources(sources: []));
+
+    expect(find.textContaining('referenced'), findsNothing);
+    expect(find.byType(RemixDisclosure), findsNothing);
+  });
+
+  testWidgets('duplicate source ids still render every source', (tester) async {
+    await pumpAgent(
+      tester,
+      const AgentSources(
+        sources: [
+          AgentSource(id: 'a', title: 'First'),
+          AgentSource(id: 'a', title: 'Second'),
+        ],
+        defaultExpanded: true,
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('First'), findsOneWidget);
+    expect(find.text('Second'), findsOneWidget);
+  });
 }
