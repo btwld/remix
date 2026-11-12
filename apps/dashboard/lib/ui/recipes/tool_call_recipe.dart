@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 import '../components/button.dart';
 import '../components/data_list.dart';
@@ -208,11 +207,17 @@ IconStyler _glyph({double? size, Color? color}) => IconStyler()
     .size(size ?? UiTokens.space4())
     .color(color ?? UiTokens.gray11());
 
-/// Bundled monospace keeps tool ids and output consistent on every platform.
+/// Tool ids, inputs and output use the same platform faces as inline code.
 TextStyler _mono(TextStyleToken size) => TextStyler()
     .style(size.mix())
-    .fontFamily(RemixFonts.geistMono)
-    .fontFamilyFallback(const ['Consolas', 'monospace'])
+    .fontFamily('Menlo')
+    .fontFamilyFallback(const [
+      'Consolas',
+      'Bitstream Vera Sans Mono',
+      'monospace',
+      'Apple Color Emoji',
+      'Segoe UI Emoji',
+    ])
     .color(UiTokens.gray11());
 
 /// A disclosure with no frame, fill or padding of its own.
