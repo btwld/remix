@@ -292,6 +292,79 @@ void main() {
   });
 
   group('the row', () {
+    for (final slot in ['summary', 'meta', 'toolId']) {
+      testWidgets('honors the row $slot text directive', (tester) async {
+        final uppercase = TextStyler().uppercase();
+        await _pump(
+          tester,
+          doneCall,
+          style: AgentToolCallStyler(
+            summary: slot == 'summary' ? uppercase : null,
+            meta: slot == 'meta' ? uppercase : null,
+            toolId: slot == 'toolId' ? uppercase : null,
+          ),
+        );
+        final summary = slot == 'summary' ? 'TESTS PASSED' : 'Tests passed';
+        final meta = slot == 'meta'
+            ? '31 TESTS · 2.9S · ALLOWED ONCE'
+            : '31 tests · 2.9s · Allowed once';
+        final toolId = slot == 'toolId' ? 'TERMINAL.RUN' : 'terminal.run';
+        expect(_rowText(summary), findsOneWidget);
+        expect(_rowText('$meta · $toolId'), findsOneWidget);
+      });
+    }
+
+    testWidgets('honors row paragraph configuration and keeps one ellipsis', (
+      tester,
+    ) async {
+      const scaler = TextScaler.linear(1.5);
+      const strut = StrutStyle(fontSize: 18);
+      const height = TextHeightBehavior(applyHeightToFirstAscent: false);
+      const color = Color(0xFF123456);
+      await _pump(
+        tester,
+        doneCall,
+        style: AgentToolCallStyler(
+          summary: TextStyler()
+              .textScaler(scaler)
+              .strutStyle(StrutStyleMix(fontSize: 18))
+              .textAlign(TextAlign.end)
+              .textDirection(TextDirection.rtl)
+              .locale(const Locale('ar'))
+              .textWidthBasis(TextWidthBasis.longestLine)
+              .textHeightBehavior(
+                TextHeightBehaviorMix(applyHeightToFirstAscent: false),
+              )
+              .selectionColor(color)
+              .maxLines(3)
+              .overflow(TextOverflow.visible),
+          meta: TextStyler().locale(const Locale('fr')),
+          toolId: TextStyler().locale(const Locale('en')),
+        ),
+      );
+      final text = tester.widget<Text>(
+        find.ancestor(
+          of: _rowText('Tests passed'),
+          matching: find.byType(Text),
+        ),
+      );
+      expect(text.textScaler, scaler);
+      expect(text.strutStyle, strut);
+      expect(text.textAlign, TextAlign.end);
+      expect(text.textDirection, TextDirection.rtl);
+      expect(text.locale, const Locale('ar'));
+      expect(text.textWidthBasis, TextWidthBasis.longestLine);
+      expect(text.textHeightBehavior, height);
+      expect(text.selectionColor, color);
+      expect(text.maxLines, 1);
+      expect(text.overflow, TextOverflow.ellipsis);
+      expect(text.softWrap, isFalse);
+      final spans = (text.textSpan! as TextSpan).children!;
+      final trailing = spans.last as TextSpan;
+      expect((trailing.children!.first as TextSpan).locale, const Locale('fr'));
+      expect((trailing.children!.last as TextSpan).locale, const Locale('en'));
+    });
+
     testWidgets('shows a running call with its output open', (tester) async {
       await _pump(tester, runningCall);
 

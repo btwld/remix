@@ -393,7 +393,21 @@ class _AgentToolCallState extends State<AgentToolCall>
     // Without a summary the tool id leads the row and is not repeated.
     final title = summary ?? call.name;
     final toolId = summary == null ? null : call.name;
-    final trailing = [if (meta.isNotEmpty) meta, ?toolId].join(' · ');
+    final summarySpec = spec.summary.spec;
+    TextSpan span(String text, TextSpec spec) => TextSpan(
+      text: spec.textDirectives?.apply(text) ?? text,
+      style: spec.style,
+      locale: spec.locale,
+      semanticsLabel: spec.semanticsLabel,
+    );
+    final titleSpan = span(title, summarySpec);
+    final metaSpan = meta.isEmpty ? null : span(meta, spec.meta.spec);
+    final toolSpan = toolId == null ? null : span(toolId, spec.toolId.spec);
+    final trailing = [
+      if (metaSpan != null) metaSpan.semanticsLabel ?? metaSpan.text!,
+      if (toolSpan != null) toolSpan.semanticsLabel ?? toolSpan.text!,
+    ].join(' · ');
+    final titleLabel = titleSpan.semanticsLabel ?? titleSpan.text!;
     final icon = widget.icon;
     final leading = icon == null
         ? agentToolIcon(context, call.name, spec.icon) ??
@@ -415,24 +429,34 @@ class _AgentToolCallState extends State<AgentToolCall>
           child: Text.rich(
             TextSpan(
               children: [
-                TextSpan(text: title, style: spec.summary.spec.style),
+                titleSpan,
                 if (trailing.isNotEmpty) ...[
                   // The gap matches the row's own spacing.
                   WidgetSpan(child: SizedBox(width: gap)),
                   TextSpan(
                     style: spec.meta.spec.style,
                     children: [
-                      if (meta.isNotEmpty) TextSpan(text: meta),
+                      ?metaSpan,
                       if (meta.isNotEmpty && toolId != null)
                         const TextSpan(text: ' · '),
-                      if (toolId != null)
-                        TextSpan(text: toolId, style: spec.toolId.spec.style),
+                      ?toolSpan,
                     ],
                   ),
                 ],
               ],
             ),
-            semanticsLabel: trailing.isEmpty ? title : '$title, $trailing',
+            semanticsLabel: trailing.isEmpty
+                ? titleLabel
+                : '$titleLabel, $trailing',
+            strutStyle: summarySpec.strutStyle,
+            textAlign: summarySpec.textAlign,
+            textDirection: summarySpec.textDirection,
+            locale: summarySpec.locale,
+            textScaler: summarySpec.textScaler,
+            textWidthBasis: summarySpec.textWidthBasis,
+            textHeightBehavior: summarySpec.textHeightBehavior,
+            selectionColor: summarySpec.selectionColor,
+            softWrap: false,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -760,15 +784,17 @@ final class AgentToolCallSpec with _$AgentToolCallSpec {
   @override
   final StyleSpec<IconSpec> icon;
 
-  /// The call's summary.
+  /// The call's summary and the row's paragraph configuration.
+  /// The row always uses one line with an ellipsis.
   @override
   final StyleSpec<TextSpec> summary;
 
-  /// The meta after the summary: detail, duration and decision.
+  /// The inline meta: style, directives, locale and semantics for the detail,
+  /// duration and decision.
   @override
   final StyleSpec<TextSpec> meta;
 
-  /// The tool id, in the meta and on the card.
+  /// The tool id, inline on the row and as a full text slot on the card.
   @override
   final StyleSpec<TextSpec> toolId;
 
