@@ -19,7 +19,7 @@ final class UiAgentMessageRecipe {
 
 /// Builds the recipe; each argument is merged last, so callers can override.
 ///
-/// A user message is a `gray3` bubble at most three quarters of the line wide.
+/// A user message occupies at most three quarters of the line.
 /// An assistant message adds nothing: its answer is the content.
 UiAgentMessageRecipe uiAgentMessageRecipe({
   AgentMessageStyler style = const AgentMessageStyler.create(),

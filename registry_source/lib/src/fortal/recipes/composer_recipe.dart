@@ -33,8 +33,8 @@ final class FortalAgentComposerRecipe {
 /// Builds the recipe; each argument is merged last, so callers can override.
 ///
 /// The surface is a `gray2` panel inside a `controlBorder` frame, with no
-/// shadow. It takes the focus color while the field has focus. The field
-/// grows from one line to 240px.
+/// shadow. Focus draws a 2px outline with a 2px gap. The field grows from
+/// one line to 240px.
 FortalAgentComposerRecipe fortalAgentComposerRecipe({
   AgentComposerStyler style = const AgentComposerStyler.create(),
   TextFieldStyler fieldStyle = const TextFieldStyler.create(),
@@ -63,8 +63,8 @@ FortalAgentComposerRecipe fortalAgentComposerRecipe({
           )
           .onFocused(
             AgentComposerStyler(
-              container: BoxStyler().border(
-                .all(.color(FortalTokens.focus8())),
+              container: BoxStyler().fortalFocusRing(
+                radius: FortalTokens.radius6(),
               ),
             ),
           )

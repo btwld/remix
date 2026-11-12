@@ -42,12 +42,8 @@ final class VanillaAgentToolCallRecipe {
 
 /// Builds the recipe; each argument is merged last, so callers can override.
 ///
-/// It reads top to bottom: the row, the status for each outcome, the output
-/// well, then the approval card. The row paints 32px tall inside the
-/// disclosure's 40px touch target. The well is a `gray2` panel with a `gray5`
-/// edge that scrolls past `activityMaxHeight`; a failed call frames it in
-/// `errorA7` and tints only the failing lines, which the call reports as its
-/// error.
+/// The 32px row opens an output well capped at 200px. A failed call colors
+/// the well's frame and tints only the failing lines, preserving the output.
 VanillaAgentToolCallRecipe vanillaAgentToolCallRecipe({
   AgentToolCallStyler style = const AgentToolCallStyler.create(),
   DisclosureStyler disclosureStyle = const DisclosureStyler.create(),

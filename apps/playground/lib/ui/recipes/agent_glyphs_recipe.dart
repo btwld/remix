@@ -18,8 +18,9 @@ Widget? playgroundAgentGlyph(
   // A call that waits for approval shows its status as a badge, without a
   // glyph.
   .toolWaiting => null,
-  .toolPreparing ||
-  .toolRunning => PlaygroundSpinner(style: SpinnerStyler(size: spec.size)),
+  .toolPreparing || .toolRunning => PlaygroundSpinner(
+    style: SpinnerStyler(size: spec.size, color: spec.color),
+  ),
   _ => Icon(_icon(glyph)),
 };
 

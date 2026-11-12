@@ -18,8 +18,9 @@ Widget? {{valuePrefix}}AgentGlyph(
   // A call that waits for approval shows its status as a badge, without a
   // glyph.
   .toolWaiting => null,
-  .toolPreparing ||
-  .toolRunning => {{typePrefix}}Spinner(style: SpinnerStyler(size: spec.size)),
+  .toolPreparing || .toolRunning => {{typePrefix}}Spinner(
+    style: SpinnerStyler(size: spec.size, color: spec.color),
+  ),
   _ => Icon(_icon(glyph)),
 };
 

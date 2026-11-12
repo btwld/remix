@@ -32,9 +32,8 @@ final class VanillaAgentComposerRecipe {
 
 /// Builds the recipe; each argument is merged last, so callers can override.
 ///
-/// The surface is a `gray2` panel inside a `controlBorder` frame, with no
-/// shadow. It takes the focus color while the field has focus. The field
-/// grows from one line to 240px.
+/// The field grows from one line to 240px inside the shared composer surface.
+/// Only that surface draws a frame and responds to focus.
 VanillaAgentComposerRecipe vanillaAgentComposerRecipe({
   AgentComposerStyler style = const AgentComposerStyler.create(),
   TextFieldStyler fieldStyle = const TextFieldStyler.create(),
@@ -73,6 +72,9 @@ VanillaAgentComposerRecipe vanillaAgentComposerRecipe({
         .border(.style(.none))
         .padding(.all(0))
         .minHeight(VanillaTokens.s6)
+        // The composer owns the surface, including the field's shadow and ring.
+        .containerEffects(_noEffects)
+        .onFocused(.containerEffects(.outline(.style(.none))))
         .merge(fieldStyle),
   ),
   submitStyle: _round(submitStyle),
@@ -89,4 +91,16 @@ IconButtonStyler _round(IconButtonStyler style) => vanillaIconButtonStyle(
   style: IconButtonStyler()
       .borderRadius(.circular(VanillaTokens.pill))
       .merge(style),
+);
+
+/// Empty lists replace the inherited layers rather than merging with them.
+final _noEffects = RemixBoxEffectsMix(
+  behindContent: _emptyLayer,
+  overContent: _emptyLayer,
+);
+
+final _emptyLayer = RemixBoxEffectLayerMix(
+  gradients: const [],
+  gradientInsets: const [],
+  shadows: const [],
 );

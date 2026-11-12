@@ -18,8 +18,9 @@ Widget? vanillaAgentGlyph(
   // A call that waits for approval shows its status as a badge, without a
   // glyph.
   .toolWaiting => null,
-  .toolPreparing ||
-  .toolRunning => VanillaSpinner(style: SpinnerStyler(size: spec.size)),
+  .toolPreparing || .toolRunning => VanillaSpinner(
+    style: SpinnerStyler(size: spec.size, color: spec.color),
+  ),
   _ => Icon(_icon(glyph)),
 };
 
