@@ -53,8 +53,9 @@ class AgentActivity extends StatefulWidget {
   /// The ledger's rows, in display order.
   final List<AgentActivityItem> items;
 
-  /// Whether work is running; the ledger opens when it starts and, with
-  /// [collapseOnComplete], closes when it completes.
+  /// The run's status. The ledger opens when it becomes
+  /// [AgentRunStatus.working] and, with [collapseOnComplete], closes when it
+  /// leaves that status.
   final AgentRunStatus status;
 
   /// The disclosure's title and accessible label.
@@ -63,7 +64,8 @@ class AgentActivity extends StatefulWidget {
   /// Accessible label of the whole ledger.
   final String semanticLabel;
 
-  /// Whether the ledger closes itself when [status] becomes complete.
+  /// Whether the ledger closes itself when [status] leaves
+  /// [AgentRunStatus.working].
   final bool collapseOnComplete;
 
   /// Controls the disclosure. When null, the ledger manages it.

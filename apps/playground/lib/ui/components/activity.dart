@@ -53,8 +53,9 @@ class PlaygroundActivity extends StatefulWidget {
   /// The ledger's rows, in display order.
   final List<PlaygroundActivityItem> items;
 
-  /// Whether work is running; the ledger opens when it starts and, with
-  /// [collapseOnComplete], closes when it completes.
+  /// The run's status. The ledger opens when it becomes
+  /// [PlaygroundRunStatus.working] and, with [collapseOnComplete], closes when it
+  /// leaves that status.
   final PlaygroundRunStatus status;
 
   /// The disclosure's title and accessible label.
@@ -63,7 +64,8 @@ class PlaygroundActivity extends StatefulWidget {
   /// Accessible label of the whole ledger.
   final String semanticLabel;
 
-  /// Whether the ledger closes itself when [status] becomes complete.
+  /// Whether the ledger closes itself when [status] leaves
+  /// [PlaygroundRunStatus.working].
   final bool collapseOnComplete;
 
   /// Controls the disclosure. When null, the ledger manages it.
