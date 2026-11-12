@@ -51,7 +51,10 @@ class FortalDashboardOverview extends StatelessWidget {
         style: GridBoxStyler.equalColumns(2)
             .gap(20)
             .onConstraints(const .maxWidth(1001), .equalColumns(1).gap(20)),
-        children: [_activityCard(data), _ordersCard(data, onViewOrders)],
+        children: [
+          _activityCard(data),
+          _ordersCard(context, data, onViewOrders),
+        ],
       ),
     );
   }
@@ -107,11 +110,20 @@ Widget _revenueCard(RegistryDashboardSampleData data, List<Color> palette) =>
             maxIncluded: false,
             labelFormatter: (value) => _pointLabel(data.revenue, value),
           ),
-          yAxis: registryDashboardNumericAxis(max: 100, interval: 20),
+          yAxis: registryDashboardDataAxis(
+            data.revenue.map((point) => point.value),
+          ),
           style: registryDashboardLineStyle(),
         ),
       ),
     );
+
+const _orderVolumes = [
+  ('q1', 'Q1', 52.0, 48.0),
+  ('q2', 'Q2', 68.0, 64.0),
+  ('q3', 'Q3', 74.0, 78.0),
+  ('q4', 'Q4', 88.0, 82.0),
+];
 
 Widget _orderVolumeCard(List<Color> palette) => FortalChartCard(
   title: 'Order volume',
@@ -139,12 +151,13 @@ Widget _orderVolumeCard(List<Color> palette) => FortalChartCard(
     palette: palette,
     semanticsLabel: 'Quarterly actual and planned orders',
     groups: [
-      _orderGroup('q1', 'Q1', 52, 48, palette),
-      _orderGroup('q2', 'Q2', 68, 64, palette),
-      _orderGroup('q3', 'Q3', 74, 78, palette),
-      _orderGroup('q4', 'Q4', 88, 82, palette),
+      for (final (id, label, actual, plan) in _orderVolumes)
+        _orderGroup(id, label, actual, plan, palette),
     ],
-    yAxis: registryDashboardNumericAxis(max: 100, interval: 25),
+    yAxis: registryDashboardDataAxis(
+      _orderVolumes.expand((quarter) => [quarter.$3, quarter.$4]),
+      targetIntervals: 4,
+    ),
     style: registryDashboardBarStyle(),
   ),
 );
@@ -272,6 +285,7 @@ class _FortalActivityIcon extends StatelessWidget {
 }
 
 Widget _ordersCard(
+  BuildContext context,
   RegistryDashboardSampleData data,
   VoidCallback? onViewOrders,
 ) => FortalCard(
@@ -287,7 +301,9 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .size1,
             label: 'View all',
-            trailingIcon: RemixIcons.chevronsRight,
+            trailingIcon: Directionality.of(context) == TextDirection.rtl
+                ? RemixIcons.chevronsLeft
+                : RemixIcons.chevronsRight,
             onPressed: onViewOrders,
           ),
         ],
@@ -308,7 +324,7 @@ LineSeries _revenueSeries(List<RegistryDashboardPoint> points) => LineSeries(
   label: 'Revenue',
   points: [
     for (final (index, point) in points.indexed)
-      ChartPoint(id: point.label, x: index.toDouble(), y: point.value),
+      ChartPoint(id: index, x: index.toDouble(), y: point.value),
   ],
 );
 

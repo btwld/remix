@@ -62,6 +62,16 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
       UiTheme.maybeOf(context)?.radius ??
       const UiThemeData.light().radius;
 
+  // Whole-pixel steps and labels share the same range, including a host's
+  // radius above the starter's usual 0–16 range.
+  double _radiusMax(BuildContext context) => math
+      .max(
+        16,
+        (UiTheme.maybeOf(context)?.radius ?? const UiThemeData.light().radius)
+            .ceil(),
+      )
+      .toDouble();
+
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
     padding: const EdgeInsets.all(32),
@@ -211,8 +221,8 @@ class _UiDashboardSettingsPageState extends State<UiDashboardSettingsPage> {
                       semanticLabel: 'Control radius',
                       value: _resolvedRadius(context),
                       min: 0,
-                      max: 16,
-                      snapDivisions: 16,
+                      max: _radiusMax(context),
+                      snapDivisions: _radiusMax(context).toInt(),
                       onChanged: (value) {
                         setState(() => _radius = value);
                         widget.onRadiusChanged?.call(value);

@@ -80,7 +80,11 @@ class {{typePrefix}}DashboardOverview extends StatelessWidget {
           ),
           {{typePrefix}}DashboardText(metric.value, type: .h3),
           if (metric.progress case final progress?)
-            {{typePrefix}}Progress(value: progress, size: .sm),
+            {{typePrefix}}Progress(
+              value: progress,
+              size: .sm,
+              semanticsLabel: metric.label,
+            ),
           {{typePrefix}}DashboardText(metric.change, type: .bodyXs, muted: true),
         ],
       ),
@@ -95,7 +99,7 @@ class {{typePrefix}}DashboardOverview extends StatelessWidget {
       style: GridBoxStyler.equalColumns(
         2,
       ).gap(20).onConstraints(const .maxWidth(899), .equalColumns(1).gap(20)),
-      children: [_activityCard(data), _ordersCard(data, onViewOrders)],
+      children: [_activityCard(data), _ordersCard(context, data, onViewOrders)],
     ),
   );
 }
@@ -142,12 +146,16 @@ Widget _revenueCard({{typePrefix}}DashboardSampleData data) => _chartCard(
         ),
         // Round steps, with room past each end so the end labels sit on
         // their gridlines.
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 100, interval: 20),
+        yAxis: {{valuePrefix}}DashboardDataAxis(
+          data.revenue.map((point) => point.value),
+        ),
         style: {{valuePrefix}}DashboardLineStyle(),
       ),
     ),
   ],
 );
+
+const _customerAcquisitionValues = [18.0, 24.0, 21.0, 32.0, 38.0, 44.0];
 
 Widget _customerChartCard() => _chartCard(
   title: 'Customer acquisition',
@@ -158,23 +166,14 @@ Widget _customerChartCard() => _chartCard(
       child: {{typePrefix}}BarChart(
         semanticsLabel: 'New accounts by month',
         groups: [
-          for (final (index, value) in const [
-            18.0,
-            24.0,
-            21.0,
-            32.0,
-            38.0,
-            44.0,
-          ].indexed)
+          for (final (index, value) in _customerAcquisitionValues.indexed)
             BarGroup(
               id: 'customers-$index',
               label: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'][index],
               bars: [BarValue(id: 'customers', label: 'Customers', toY: value)],
             ),
         ],
-        // Customers peak at 44; see the revenue chart above for why the
-        // maximum is pinned to a whole number of intervals.
-        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 50),
+        yAxis: {{valuePrefix}}DashboardDataAxis(_customerAcquisitionValues),
         style: {{valuePrefix}}DashboardBarStyle(),
       ),
     ),
@@ -288,6 +287,7 @@ IconData _activityIcon({{typePrefix}}DashboardActivityKind kind) => switch (kind
 };
 
 Widget _ordersCard(
+  BuildContext context,
   {{typePrefix}}DashboardSampleData data,
   VoidCallback? onViewOrders,
 ) => {{typePrefix}}Card(
@@ -302,7 +302,9 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .sm,
             label: 'View all',
-            trailingIcon: {{icon:doubleArrowRight}},
+            trailingIcon: Directionality.of(context) == TextDirection.rtl
+                ? {{icon:doubleArrowLeft}}
+                : {{icon:doubleArrowRight}},
             onPressed: onViewOrders,
           ),
         ],
@@ -340,7 +342,7 @@ LineSeries _revenueSeries(List<{{typePrefix}}DashboardPoint> points) => LineSeri
   label: 'Revenue',
   points: [
     for (final (index, point) in points.indexed)
-      ChartPoint(id: point.label, x: index.toDouble(), y: point.value),
+      ChartPoint(id: index, x: index.toDouble(), y: point.value),
   ],
 );
 

@@ -69,6 +69,7 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
                 key: const ValueKey('customer-search'),
                 leading: const StyledIcon(icon: RemixIcons.search),
                 hintText: 'Search customers…',
+                semanticLabel: 'Search customers',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
                   _page = 0;

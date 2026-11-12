@@ -65,6 +65,17 @@ class _VanillaDashboardSettingsPageState
       VanillaTheme.maybeOf(context)?.radius.x ??
       const VanillaThemeData.light().radius.x;
 
+  // Whole-pixel steps and labels share the same range, including a host's
+  // radius above the starter's usual 0–16 range.
+  double _radiusMax(BuildContext context) => math
+      .max(
+        16,
+        (VanillaTheme.maybeOf(context)?.radius.x ??
+                const VanillaThemeData.light().radius.x)
+            .ceil(),
+      )
+      .toDouble();
+
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
     padding: const EdgeInsets.all(VanillaTokens.s8),
@@ -229,8 +240,8 @@ class _VanillaDashboardSettingsPageState
                       semanticLabel: 'Control radius',
                       value: _resolvedRadius(context),
                       min: 0,
-                      max: 16,
-                      snapDivisions: 16,
+                      max: _radiusMax(context),
+                      snapDivisions: _radiusMax(context).toInt(),
                       onChanged: (value) {
                         setState(() => _radius = value);
                         widget.onRadiusChanged?.call(value);

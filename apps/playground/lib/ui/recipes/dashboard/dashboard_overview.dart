@@ -110,7 +110,7 @@ class PlaygroundDashboardOverview extends StatelessWidget {
                 .color(PlaygroundTokens.foreground()),
           ),
           if (metric.progress case final progress?)
-            PlaygroundProgress(value: progress),
+            PlaygroundProgress(value: progress, semanticsLabel: metric.label),
           StyledText(
             metric.change,
             style: TextStyler()
@@ -136,7 +136,7 @@ class PlaygroundDashboardOverview extends StatelessWidget {
             const .maxWidth(899),
             .equalColumns(1).gap(PlaygroundTokens.s5),
           ),
-      children: [_activityCard(data), _ordersCard(data, onViewOrders)],
+      children: [_activityCard(data), _ordersCard(context, data, onViewOrders)],
     ),
   );
 }
@@ -176,13 +176,17 @@ Widget _revenueCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
           ),
           // Round steps, with room past each end so the end labels sit on
           // their gridlines.
-          yAxis: playgroundDashboardNumericAxis(max: 100, interval: 20),
+          yAxis: playgroundDashboardDataAxis(
+            data.revenue.map((point) => point.value),
+          ),
           style: playgroundDashboardLineStyle(),
         ),
       ),
     ],
   ),
 );
+
+const _customerAcquisitionValues = [18.0, 24.0, 21.0, 32.0, 38.0, 44.0];
 
 Widget _customerChartCard() => PlaygroundCard(
   child: ColumnBox(
@@ -204,14 +208,7 @@ Widget _customerChartCard() => PlaygroundCard(
         child: PlaygroundBarChart(
           semanticsLabel: 'New accounts by month',
           groups: [
-            for (final (index, value) in const [
-              18.0,
-              24.0,
-              21.0,
-              32.0,
-              38.0,
-              44.0,
-            ].indexed)
+            for (final (index, value) in _customerAcquisitionValues.indexed)
               BarGroup(
                 id: 'customers-$index',
                 label: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'][index],
@@ -220,9 +217,7 @@ Widget _customerChartCard() => PlaygroundCard(
                 ],
               ),
           ],
-          // Customers peak at 44; see the revenue chart above for why the
-          // maximum is pinned to a whole number of intervals.
-          yAxis: playgroundDashboardNumericAxis(max: 50),
+          yAxis: playgroundDashboardDataAxis(_customerAcquisitionValues),
           style: playgroundDashboardBarStyle(),
         ),
       ),
@@ -352,6 +347,7 @@ IconData _activityIcon(PlaygroundDashboardActivityKind kind) => switch (kind) {
 };
 
 Widget _ordersCard(
+  BuildContext context,
   PlaygroundDashboardSampleData data,
   VoidCallback? onViewOrders,
 ) => PlaygroundCard(
@@ -368,7 +364,9 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .small,
             label: 'View all',
-            trailingIcon: RemixIcons.chevronsRight,
+            trailingIcon: Directionality.of(context) == TextDirection.rtl
+                ? RemixIcons.chevronsLeft
+                : RemixIcons.chevronsRight,
             onPressed: onViewOrders,
           ),
         ],
@@ -421,7 +419,7 @@ LineSeries _revenueSeries(List<PlaygroundDashboardPoint> points) => LineSeries(
   label: 'Revenue',
   points: [
     for (final (index, point) in points.indexed)
-      ChartPoint(id: point.label, x: index.toDouble(), y: point.value),
+      ChartPoint(id: index, x: index.toDouble(), y: point.value),
   ],
 );
 

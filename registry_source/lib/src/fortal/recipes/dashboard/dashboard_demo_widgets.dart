@@ -87,7 +87,7 @@ class FortalStatCard extends StatelessWidget {
           FortalProgress(
             value: value <= 1 ? value : value / 100,
             size: .size1,
-            semanticsLabel: '$label progress',
+            semanticsLabel: label,
           ),
       ],
     );
