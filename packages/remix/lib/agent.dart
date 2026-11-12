@@ -28,13 +28,18 @@
 /// [AgentComposerController]; [AgentApprovalGuard]; [AgentRunClock];
 /// [AgentAnnouncer] and [AgentAnnouncement].
 ///
-/// Widgets, each with a spec and a styler: `AgentConversation`,
-/// `AgentMessage`, `AgentSteps`, `AgentToolCall` (the row and the approval
-/// card), `AgentAnswer`, `AgentSources`, `AgentSuggestions`, `AgentComposer`,
-/// `AgentMarkdown` and `AgentCodeBlock`. The embed and highlighting hooks are
-/// `AgentToolRenderers`, `AgentFenceBuilder` and `AgentCodeHighlighter`.
+/// Widgets, each with a spec and a generated styler, and empty visual
+/// defaults: [AgentConversation] with [AgentTurn], [AgentMessage],
+/// [AgentSteps], [AgentToolCall] (the row and the approval card),
+/// [AgentAnswer], [AgentSources], [AgentSuggestions] and [AgentComposer].
+/// They draw no icons: each names an [AgentGlyph] for an [AgentGlyphBuilder],
+/// supplied per widget or by [AgentGlyphs]. [AgentToolRenderers] registers a
+/// renderer per tool name.
 ///
-/// A tool call's data is [AgentToolCallPart], so `AgentToolCall` names its
+/// Still to come: `AgentMarkdown` and `AgentCodeBlock`, with the
+/// `AgentFenceBuilder` and `AgentCodeHighlighter` hooks.
+///
+/// A tool call's data is [AgentToolCallPart], so [AgentToolCall] names its
 /// widget alone.
 library;
 
@@ -44,6 +49,15 @@ export 'src/agent/behavior/composer.dart';
 export 'src/agent/behavior/disclosure.dart';
 export 'src/agent/behavior/live_edge.dart';
 export 'src/agent/behavior/run_clock.dart';
+export 'src/agent/components/answer.dart';
+export 'src/agent/components/composer.dart';
+export 'src/agent/components/conversation.dart';
+export 'src/agent/components/glyphs.dart' hide agentGlyph;
+export 'src/agent/components/message.dart';
+export 'src/agent/components/sources.dart';
+export 'src/agent/components/steps.dart';
+export 'src/agent/components/suggestions.dart';
+export 'src/agent/components/tool_call.dart';
 export 'src/agent/models/activity_item.dart';
 export 'src/agent/models/message_part.dart';
 export 'src/agent/models/plan_item.dart';
