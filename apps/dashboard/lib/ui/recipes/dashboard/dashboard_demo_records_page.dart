@@ -349,10 +349,8 @@ final _orderColumns = <RemixDataTableColumn<UiDashboardOrder>>[
     sortable: true,
     width: const FixedColumnWidth(120),
     alignment: AlignmentDirectional.centerEnd,
-    cellBuilder: (_, order) => UiDataTableCellText(
-      '\$${order.amount.toStringAsFixed(2)}',
-      primary: true,
-    ),
+    cellBuilder: (_, order) =>
+        UiDataTableCellText(uiDashboardCurrency(order.amount), primary: true),
   ),
   RemixDataTableColumn(
     id: 'status',
@@ -393,8 +391,7 @@ class _Page extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
+  Widget build(BuildContext context) => UiPageScroll(
     child: ColumnBox(
       style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
       children: [

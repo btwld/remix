@@ -28,10 +28,14 @@ class _FortalDashboardSettingsPageState
     extends State<FortalDashboardSettingsPage> {
   final _nameController = TextEditingController(text: 'Leo Farias');
   final _emailController = TextEditingController(text: 'leo@remix.dev');
+  bool _emailEdited = false;
   String _language = 'English (US)';
   bool _productUpdates = true;
   bool _weeklyDigest = false;
   FortalThemeSettings _fallbackSettings = const FortalThemeSettings();
+
+  bool get _emailInvalid =>
+      _emailEdited && !_emailController.text.trim().contains('@');
 
   @override
   void dispose() {
@@ -56,8 +60,7 @@ class _FortalDashboardSettingsPageState
       2,
     ).gap(14).onConstraints(const .maxWidth(560), .equalColumns(1).gap(14));
 
-    final content = SingleChildScrollView(
-      padding: const EdgeInsets.all(32),
+    final content = FortalPageScroll(
       child: Box(
         style: BoxStyler().alignment(.topStart),
         child: ColumnBox(
@@ -91,31 +94,55 @@ class _FortalDashboardSettingsPageState
                       FortalTextField(
                         controller: _emailController,
                         label: 'Email',
-                        helperText: 'Domain verification is pending.',
-                        error: true,
+                        // Validation shows only after the person edits it.
+                        helperText: _emailInvalid
+                            ? 'Enter a valid email address.'
+                            : 'Domain verification is pending.',
+                        error: _emailInvalid,
+                        onChanged: (_) => setState(() => _emailEdited = true),
                         keyboardType: TextInputType.emailAddress,
                       ),
                     ],
                   ),
-                  FortalSelect<String>(
-                    semanticLabel: 'Language',
-                    trigger: const RemixSelectTrigger(placeholder: 'Language'),
-                    selectedValue: _language,
-                    items: const [
-                      RemixSelectItem(
-                        value: 'English (US)',
-                        label: 'English (US)',
+                  ColumnBox(
+                    style: FlexBoxStyler()
+                        .crossAxisAlignment(.stretch)
+                        .spacing(6),
+                    children: [
+                      // The select below carries the accessible name.
+                      const ExcludeSemantics(
+                        child: FortalText(
+                          'Language',
+                          size: .size2,
+                          weight: .medium,
+                        ),
                       ),
-                      RemixSelectItem(
-                        value: 'English (UK)',
-                        label: 'English (UK)',
+                      FortalSelect<String>(
+                        semanticLabel: 'Language',
+                        trigger: const RemixSelectTrigger(
+                          placeholder: 'Language',
+                        ),
+                        selectedValue: _language,
+                        items: const [
+                          RemixSelectItem(
+                            value: 'English (US)',
+                            label: 'English (US)',
+                          ),
+                          RemixSelectItem(
+                            value: 'English (UK)',
+                            label: 'English (UK)',
+                          ),
+                          RemixSelectItem(value: 'Spanish', label: 'Spanish'),
+                          RemixSelectItem(
+                            value: 'Portuguese',
+                            label: 'Portuguese',
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) setState(() => _language = value);
+                        },
                       ),
-                      RemixSelectItem(value: 'Spanish', label: 'Spanish'),
-                      RemixSelectItem(value: 'Portuguese', label: 'Portuguese'),
                     ],
-                    onChanged: (value) {
-                      if (value != null) setState(() => _language = value);
-                    },
                   ),
                   const FortalCardHeading(
                     title: 'Preferences',
@@ -165,8 +192,7 @@ class _FortalDashboardSettingsPageState
                 children: const [
                   FortalCardHeading(
                     title: 'Appearance',
-                    description:
-                        'Tune every Fortal theme parameter in real time.',
+                    description: 'Tune every theme parameter in real time.',
                   ),
                   FortalCallout(
                     icon: RemixIcons.wand,

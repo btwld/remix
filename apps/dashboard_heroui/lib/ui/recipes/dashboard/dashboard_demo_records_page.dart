@@ -352,10 +352,8 @@ List<RemixDataTableColumn<UiDashboardOrder>> _orderColumns(
     sortable: true,
     width: const FixedColumnWidth(120),
     alignment: AlignmentDirectional.centerEnd,
-    cellBuilder: (_, value) => UiDashboardText(
-      '\$${value.amount.toStringAsFixed(2)}',
-      emphasized: true,
-    ),
+    cellBuilder: (_, value) =>
+        UiDashboardText(uiDashboardCurrency(value.amount), emphasized: true),
   ),
   RemixDataTableColumn(
     id: 'status',

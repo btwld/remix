@@ -359,7 +359,7 @@ List<RemixDataTableColumn<PlaygroundDashboardOrder>> _orderColumns(
     width: const FixedColumnWidth(120),
     alignment: AlignmentDirectional.centerEnd,
     cellBuilder: (_, value) => PlaygroundDashboardText(
-      '\$${value.amount.toStringAsFixed(2)}',
+      playgroundDashboardCurrency(value.amount),
       emphasized: true,
     ),
   ),

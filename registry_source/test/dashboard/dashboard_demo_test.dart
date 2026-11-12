@@ -43,6 +43,23 @@ import 'package:remix/src/utilities/remix_path_icon.dart';
 enum _Preset { defaultPreset, fortal, heroui }
 
 void main() {
+  test('currency uses one format with thousands separators', () {
+    expect(registryDashboardCurrency(1249), r'$1,249.00');
+    expect(registryDashboardCurrency(64), r'$64.00');
+    expect(registryDashboardCurrency(3200.5), r'$3,200.50');
+    expect(registryDashboardCurrency(1234567), r'$1,234,567.00');
+  });
+
+  test('overview records match the Orders page records', () {
+    for (final record in registryDashboardSampleData.records) {
+      final order = registryDashboardOrders.firstWhere(
+        (order) => order.id == record.id,
+      );
+      expect(record.customer, order.customer);
+      expect(record.amount, registryDashboardCurrency(order.amount));
+    }
+  });
+
   test('shared dashboard contract matches the Fortal sample inventory', () {
     expect(RegistryDashboardDemoPage.values.map((page) => page.name), [
       'overview',
@@ -1084,7 +1101,7 @@ void main() {
         expect(find.text(r'$84,420'), findsOneWidget);
         expect(find.text('Mon'), findsWidgets);
         expect(find.text('ORD-1048'), findsOneWidget);
-        expect(find.text('Avery Stone'), findsOneWidget);
+        expect(find.text('Olivia Martin'), findsOneWidget);
         expect(find.byType(LineChart), findsOneWidget);
         expect(
           find.byType(RemixDataTable<RegistryDashboardRecord>),

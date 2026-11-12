@@ -326,6 +326,17 @@ final playgroundDashboardOrders = <PlaygroundDashboardOrder>[
 String playgroundDashboardShortDate(DateTime date) =>
     '${const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.month - 1]} ${date.day}, ${date.year}';
 
+/// Formats [value] as US dollars with thousands separators, for example
+/// `$1,249.00`. Every dashboard page uses this one format.
+String playgroundDashboardCurrency(double value) {
+  final fixed = value.abs().toStringAsFixed(2);
+  final dot = fixed.indexOf('.');
+  final whole = fixed
+      .substring(0, dot)
+      .replaceAllMapped(RegExp(r'\B(?=(\d{3})+$)'), (_) => ',');
+  return '${value < 0 ? '-' : ''}\$$whole${fixed.substring(dot)}';
+}
+
 ({int page, List<T> items}) playgroundDashboardPaginate<T>(
   List<T> items, {
   required int page,

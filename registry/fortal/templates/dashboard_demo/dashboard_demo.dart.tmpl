@@ -1,7 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
+import '../../components/sidebar_layout.dart';
+import '../../components/tooltip.dart';
 import '../activity_recipe.dart';
 import '../answer_recipe.dart';
 import '../composer_recipe.dart';
@@ -12,6 +16,7 @@ import '../plan_recipe.dart';
 import '../transcript_recipe.dart';
 import 'dashboard_demo_base.dart';
 import 'dashboard_demo_chat.dart';
+import 'dashboard_demo_page_header.dart';
 import 'dashboard_demo_records_page.dart';
 import 'dashboard_demo_settings.dart';
 import 'dashboard_demo_text.dart';
@@ -46,6 +51,22 @@ class {{typePrefix}}DashboardBrand extends StatelessWidget {
 /// Product account menu supplied through the installed shell's footer slot.
 class {{typePrefix}}DashboardSidebarAccount extends StatelessWidget {
   const {{typePrefix}}DashboardSidebarAccount({super.key});
+
+  static const _actions = [
+    {{typePrefix}}Action(value: 'profile', label: 'View profile'),
+    {{typePrefix}}Action(value: 'preferences', label: 'Preferences'),
+    {{typePrefix}}Action(value: 'signout', label: 'Sign out', dividerBefore: true),
+  ];
+
+  static void _onSelected(BuildContext context, String value) => showRemixToast(
+    context,
+    RemixToastData(
+      title: value == 'signout'
+          ? 'Signed out of demo'
+          : '${capitalize(value)} opened',
+      icon: {{icon:checkCircled}},
+    ),
+  );
 
   @override
   Widget build(BuildContext context) => Box(
@@ -103,20 +124,48 @@ class {{typePrefix}}DashboardSidebarAccount extends StatelessWidget {
           ),
         ),
       ),
-      actions: const [
-        {{typePrefix}}Action(value: 'profile', label: 'View profile'),
-        {{typePrefix}}Action(value: 'preferences', label: 'Preferences'),
-        {{typePrefix}}Action(value: 'signout', label: 'Sign out', dividerBefore: true),
-      ],
-      onSelected: (value) => showRemixToast(
-        context,
-        RemixToastData(
-          title: value == 'signout'
-              ? 'Signed out of demo'
-              : '${capitalize(value)} opened',
-          icon: {{icon:checkCircled}},
+      actions: _actions,
+      onSelected: (value) => _onSelected(context, value),
+    ),
+  );
+}
+
+/// The account menu as a lone avatar, supplied through the shell's
+/// `collapsedAccount` slot so the collapsed rail keeps the account.
+class {{typePrefix}}DashboardSidebarAccountRail extends StatelessWidget {
+  const {{typePrefix}}DashboardSidebarAccountRail({super.key});
+
+  @override
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler()
+        .alignment(.center)
+        .padding(.symmetric(vertical: {{typePrefix}}Tokens.space3())),
+    child: {{typePrefix}}ActionMenu(
+      key: const ValueKey('sidebar-account-rail-trigger'),
+      trigger: RemixMenuTrigger.control(
+        builder: (_, menu) => {{typePrefix}}Tooltip(
+          positioning: OverlayPositionConfig(
+            side: Directionality.of(context) == TextDirection.ltr
+                ? .right
+                : .left,
+            alignment: .center,
+            sideOffset: 8,
+          ),
+          tooltipChild: const StyledText('Leo Farias'),
+          child: RemixIconButton(
+            semanticLabel: 'Workspace account menu',
+            style: _toolbarButtonStyle,
+            focusNode: menu.focusNode,
+            onPressed: menu.toggle,
+            icon: null,
+            iconBuilder: (_, _, _) =>
+                const {{typePrefix}}Avatar(label: 'LF', size: .size2),
+          ),
         ),
       ),
+      actions: {{typePrefix}}DashboardSidebarAccount._actions,
+      onSelected: (value) =>
+          {{typePrefix}}DashboardSidebarAccount._onSelected(context, value),
     ),
   );
 }
@@ -264,32 +313,26 @@ class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardT
                 ],
               ),
             ),
-            child: RemixIconButton(
-              semanticLabel: 'Notifications',
-              style: _toolbarButtonStyle,
-              onPressed: _toggleNotifications,
-              icon: {{icon:bell}},
-              iconBuilder: (context, spec, icon) => StackBox(
-                style: StackBoxStyler().clipBehavior(.none),
-                children: [
-                  StyledIcon(
-                    icon: icon,
-                    styleSpec: StyleSpec(spec: spec),
-                  ),
-                  if (!_notificationsRead)
-                    Positioned(
-                      right: -1,
-                      top: -1,
-                      child: Box(
-                        style: BoxStyler()
-                            .width(7)
-                            .height(7)
-                            .color({{typePrefix}}Tokens.accentIndicator())
-                            .borderRadius(.circular(4)),
-                      ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                RemixIconButton(
+                  semanticLabel: 'Notifications',
+                  style: _toolbarButtonStyle,
+                  onPressed: _toggleNotifications,
+                  icon: {{icon:bell}},
+                ),
+                // Sits in the button's top-right corner, outside the glyph's
+                // box, so the icon builder's clip cannot cut it.
+                if (!_notificationsRead)
+                  const PositionedDirectional(
+                    end: 8,
+                    top: 8,
+                    child: ExcludeSemantics(
+                      child: IgnorePointer(child: _{{typePrefix}}UnreadDot()),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         {{typePrefix}}Popover(
@@ -302,7 +345,18 @@ class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardT
             sideOffset: 8,
           ),
           popoverChild: Box(
-            style: BoxStyler().width(400).maxHeight(650),
+            // The popover surface adds `space4` padding on each side; leave a
+            // 16px margin to the viewport edges on narrow phones.
+            style: BoxStyler()
+                .width(
+                  math.min(
+                    400,
+                    MediaQuery.sizeOf(context).width -
+                        32 -
+                        2 * {{typePrefix}}Tokens.space4.resolve(context),
+                  ),
+                )
+                .maxHeight(650),
             child: const SingleChildScrollView(child: {{typePrefix}}ThemePanel()),
           ),
           child: RemixIconButton(
@@ -366,6 +420,20 @@ class _{{typePrefix}}DashboardTopBarState extends State<{{typePrefix}}DashboardT
         ? _themeController.close()
         : _themeController.open();
   }
+}
+
+class _{{typePrefix}}UnreadDot extends StatelessWidget {
+  const _{{typePrefix}}UnreadDot();
+
+  @override
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler()
+        .width(8)
+        .height(8)
+        .color({{typePrefix}}Tokens.accentIndicator())
+        .borderRadius(.circular(4))
+        .border(.all(.color({{typePrefix}}Tokens.colorPanelSolid()).width(1.5))),
+  );
 }
 
 final _toolbarButtonStyle = {{valuePrefix}}IconButtonStyle(variant: .ghost)
@@ -478,6 +546,9 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
                 (widget.builtInChrome
                     ? const {{typePrefix}}DashboardSidebarAccount()
                     : null),
+            collapsedAccount: widget.account == null && widget.builtInChrome
+                ? const {{typePrefix}}DashboardSidebarAccountRail()
+                : null,
             headerActions: [
               if (widget.builtInChrome)
                 {{typePrefix}}DashboardTopBar(activities: widget.data.activities),
@@ -594,7 +665,20 @@ class _{{typePrefix}}Breadcrumb extends StatelessWidget {
   final {{typePrefix}}DashboardDemoPage page;
 
   @override
-  Widget build(BuildContext context) => RowBox(
+  Widget build(BuildContext context) => Padding(
+    // The app bar insets its toolbar by `space4`; the page body uses the
+    // wide page padding, so the difference lines the breadcrumb up with the
+    // page title. In compact mode the menu button leads, so there is none.
+    padding: EdgeInsetsDirectional.only(
+      start: {{typePrefix}}SidebarLayoutScope.of(context).isCompact
+          ? 0
+          : {{valuePrefix}}PagePadding(double.infinity).left -
+                {{typePrefix}}Tokens.space4.resolve(context),
+    ),
+    child: _breadcrumbRow(context),
+  );
+
+  Widget _breadcrumbRow(BuildContext context) => RowBox(
     style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
     children: [
       Flexible(
