@@ -29,15 +29,18 @@ remain maintained inputs.
 
 ## Agent behavior separate from preset appearance (Agent ADR-0001)
 
-2026-09-10 · Accepted; separate-package layout replaced 2026-09-17 · [Usage](registry_source/docs/agent/README.md) · [Provenance](registry_source/docs/adr/agent/provenance.md) · [Recipe checks](open_code/fixture/test/agent_recipe_contract_test.dart)
+2026-09-10 · Accepted; separate-package layout replaced 2026-09-17; widgets and behavior moved into Remix 2026-11-11 · [Usage](registry_source/docs/agent/README.md) · [Provenance](registry_source/docs/adr/agent/provenance.md) · [Recipe checks](open_code/fixture/test/agent_recipe_contract_test.dart)
 
-Keep conversation, permission and execution behavior in Agent domain source,
-installed as app-owned source without an Agent theme/runtime package, so generic
-Remix and visual presets do not own domain state machines. Presets provide
-bundles of unresolved child stylers because parent resolution loses each child
-control's interactive state, variants, animation and modifiers. Hosts own
-appearance/orchestration, Agent anatomy defaults stay empty, and installed
-`@MixableSpec` source requires scoped consumer `build.yaml` support.
+Ship conversation, tool-call and approval widgets, their specs and their
+behavior from `package:remix/agent.dart`, an experimental library outside
+Remix's stability promise that `remix.dart` does not export, so behavior fixes
+reach every application while presets keep each look in installed recipes and
+visual presets do not own domain state machines. Presets provide bundles of
+unresolved child stylers because parent resolution loses each child control's
+interactive state, variants, animation and modifiers. Hosts own
+appearance/orchestration and Agent anatomy defaults stay empty. Until the
+recipes move to the library, the registry's installed Agent source remains and
+requires scoped consumer `build.yaml` support.
 
 ## Registry reads use immutable GitHub pins
 
