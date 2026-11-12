@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../theme/theme.dart';
 
-/// Immutable Fortal theme configuration controlled by the dashboard demo.
+/// Immutable theme configuration controlled by the dashboard demo.
 @immutable
 class FortalThemeSettings {
   const FortalThemeSettings({
@@ -13,10 +13,19 @@ class FortalThemeSettings {
     this.scaling = .percent100,
   });
 
+  /// Light, dark or system appearance.
   final FortalThemeMode appearance;
+
+  /// The accent color.
   final FortalAccentColor accentColor;
+
+  /// Whether panels are solid or translucent.
   final FortalPanelBackground panelBackground;
+
+  /// The corner radius scale.
   final FortalRadius radius;
+
+  /// The size scale applied to the whole interface.
   final FortalScaling scaling;
 
   FortalThemeSettings copyWith({
@@ -57,7 +66,10 @@ class FortalDashboardThemeScope extends InheritedWidget {
     required super.child,
   });
 
+  /// The current theme settings.
   final FortalThemeSettings settings;
+
+  /// Called with the new settings when the user changes one.
   final ValueChanged<FortalThemeSettings> onChanged;
 
   static FortalDashboardThemeScope? maybeOf(BuildContext context) =>
@@ -77,7 +89,7 @@ class FortalDashboardThemeScope extends InheritedWidget {
       settings != oldWidget.settings || onChanged != oldWidget.onChanged;
 }
 
-/// Applies a local Fortal accent without painting a background surface.
+/// Applies a local accent without painting a background surface.
 class FortalAccentScope extends StatelessWidget {
   const FortalAccentScope({
     super.key,
@@ -92,6 +104,8 @@ class FortalAccentScope extends StatelessWidget {
 
   /// The local accent, or null for the error palette.
   final FortalAccentColor? accent;
+
+  /// The subtree that uses the accent.
   final Widget child;
 
   @override

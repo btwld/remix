@@ -15,8 +15,11 @@ final fortalSelectedBadgesStyle = WrapBoxStyler()
     .runSpacing(6)
     .crossAxisAlignment(.center);
 
+/// The Customers page: a searchable, sortable table of customers.
 class FortalDashboardCustomersPage extends StatefulWidget {
   const FortalDashboardCustomersPage({super.key, this.globalQuery = ''});
+
+  /// The header search text. Rows must match it as well as the page's own filter.
   final String globalQuery;
 
   @override
@@ -146,8 +149,11 @@ class _FortalDashboardCustomersPageState
   }
 }
 
+/// The Orders page: a filterable, sortable table of orders.
 class FortalDashboardOrdersPage extends StatefulWidget {
   const FortalDashboardOrdersPage({super.key, this.globalQuery = ''});
+
+  /// The header search text. Rows must match it as well as the page's own filter.
   final String globalQuery;
 
   @override

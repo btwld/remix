@@ -9,6 +9,7 @@ import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_ui.dart';
 import 'dashboard_demo_widgets.dart';
 
+/// The Settings page: appearance, corner radius and preference controls.
 class FortalDashboardSettingsPage extends StatefulWidget {
   const FortalDashboardSettingsPage({
     super.key,
@@ -16,7 +17,13 @@ class FortalDashboardSettingsPage extends StatefulWidget {
     this.onDarkModeChanged,
   });
 
+  /// Whether dark appearance is selected, or null for the system setting. Read
+  /// only when [onDarkModeChanged] is set; otherwise the page keeps its own
+  /// selection.
   final bool? darkMode;
+
+  /// Called when the user picks an appearance: true for dark, false for light,
+  /// null for the system setting.
   final ValueChanged<bool?>? onDarkModeChanged;
 
   @override

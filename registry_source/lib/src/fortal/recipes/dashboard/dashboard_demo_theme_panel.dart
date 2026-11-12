@@ -8,7 +8,7 @@ import 'dashboard_demo_text.dart';
 import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_ui.dart';
 
-/// Interactive Fortal theme customizer panel.
+/// Interactive theme customizer panel.
 class FortalThemePanel extends StatelessWidget {
   const FortalThemePanel({super.key});
 

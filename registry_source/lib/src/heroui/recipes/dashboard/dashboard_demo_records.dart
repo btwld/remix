@@ -21,8 +21,11 @@ final heroUiSelectedBadgesStyle = WrapBoxStyler()
     .spacing(6)
     .crossAxisAlignment(.center);
 
+/// The Customers page: a searchable, sortable table of customers.
 class HeroUiDashboardCustomersPage extends StatefulWidget {
   const HeroUiDashboardCustomersPage({super.key, this.globalQuery = ''});
+
+  /// The header search text. Rows must match it as well as the page's own filter.
   final String globalQuery;
 
   @override
@@ -167,8 +170,11 @@ class _HeroUiDashboardCustomersPageState
   }
 }
 
+/// The Orders page: a filterable, sortable table of orders.
 class HeroUiDashboardOrdersPage extends StatefulWidget {
   const HeroUiDashboardOrdersPage({super.key, this.globalQuery = ''});
+
+  /// The header search text. Rows must match it as well as the page's own filter.
   final String globalQuery;
 
   @override

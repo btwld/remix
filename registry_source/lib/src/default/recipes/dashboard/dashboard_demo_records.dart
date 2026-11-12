@@ -21,8 +21,11 @@ final vanillaSelectedBadgesStyle = WrapBoxStyler()
     .spacing(VanillaTokens.s1_5)
     .crossAxisAlignment(.center);
 
+/// The Customers page: a searchable, sortable table of customers.
 class VanillaDashboardCustomersPage extends StatefulWidget {
   const VanillaDashboardCustomersPage({super.key, this.globalQuery = ''});
+
+  /// The header search text. Rows must match it as well as the page's own filter.
   final String globalQuery;
 
   @override
@@ -157,8 +160,11 @@ class _VanillaDashboardCustomersPageState
   }
 }
 
+/// The Orders page: a filterable, sortable table of orders.
 class VanillaDashboardOrdersPage extends StatefulWidget {
   const VanillaDashboardOrdersPage({super.key, this.globalQuery = ''});
+
+  /// The header search text. Rows must match it as well as the page's own filter.
   final String globalQuery;
 
   @override
