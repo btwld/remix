@@ -170,8 +170,12 @@ void main() {
       );
       expect(find.text('Run the cart tests?'), findsOneWidget);
       expect(find.text('flutter test'), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('agent-tool-call-allow-once')));
-      await tester.tap(find.byKey(const ValueKey('agent-tool-call-allow-once')));
+      await tester.tap(
+        find.byKey(const ValueKey('agent-tool-call-allow-once')),
+      );
+      await tester.tap(
+        find.byKey(const ValueKey('agent-tool-call-allow-once')),
+      );
       await tester.pump();
       expect(decisions, [AgentApprovalDecision.allowOnce]);
     });
