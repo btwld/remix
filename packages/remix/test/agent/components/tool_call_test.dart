@@ -403,6 +403,57 @@ void main() {
       expect(findGlyph(AgentGlyph.tool), findsNothing);
     });
 
+    testWidgets('maps tool names to themed icons with fallback and override', (
+      tester,
+    ) async {
+      const color = Color(0xFF123456);
+      final names = <String>[];
+      await pumpAgent(
+        tester,
+        AgentGlyphs(
+          builder: testGlyphs,
+          toolIconBuilder: (context, name, spec) {
+            names.add(name);
+            expect(spec.color, color);
+            return name == 'terminal.run'
+                ? const Icon(IconData(0xe001), key: ValueKey('named-tool'))
+                : null;
+          },
+          child: Column(
+            children: [
+              AgentToolCall(
+                call: deniedCall,
+                style: AgentToolCallStyler(icon: IconStyler().color(color)),
+              ),
+              AgentToolCall(
+                call: const AgentToolCallPart(
+                  id: 'unknown',
+                  name: 'unknown',
+                  status: AgentToolCallStatus.denied,
+                ),
+                style: AgentToolCallStyler(icon: IconStyler().color(color)),
+              ),
+              const AgentToolCall(
+                call: deniedCall,
+                icon: SizedBox(key: ValueKey('explicit-tool')),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      expect(names, ['terminal.run', 'unknown']);
+      expect(find.byKey(const ValueKey('named-tool')), findsOneWidget);
+      expect(find.byKey(const ValueKey('explicit-tool')), findsOneWidget);
+      expect(findGlyph(AgentGlyph.tool), findsOneWidget);
+      expect(
+        IconTheme.of(
+          tester.element(find.byKey(const ValueKey('named-tool'))),
+        ).color,
+        color,
+      );
+    });
+
     testWidgets('labels the call and its output for assistive technology', (
       tester,
     ) async {

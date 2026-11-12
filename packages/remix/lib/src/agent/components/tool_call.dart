@@ -121,7 +121,8 @@ class AgentToolCall extends StatefulWidget {
   /// Whether the card offers to always allow this tool.
   final bool offerAlwaysAllow;
 
-  /// The tool's icon; defaults to [AgentGlyph.tool].
+  /// The tool's icon; defaults to [AgentGlyphs.toolIconBuilder], then
+  /// [AgentGlyph.tool].
   final Widget? icon;
 
   /// The card's question; defaults to the call's summary as a question.
@@ -351,7 +352,8 @@ class _AgentToolCallState extends State<AgentToolCall>
     final trailing = [if (meta.isNotEmpty) meta, ?toolId].join(' · ');
     final icon = widget.icon;
     final leading = icon == null
-        ? _glyph(AgentGlyph.tool, spec.icon)
+        ? agentToolIcon(context, call.name, spec.icon) ??
+              _glyph(AgentGlyph.tool, spec.icon)
         : RemixDefaultContentStyle(icon: spec.icon, child: icon);
     final indicator = expanded == null
         ? null
