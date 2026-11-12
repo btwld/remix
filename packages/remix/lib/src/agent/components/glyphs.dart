@@ -100,16 +100,29 @@ enum AgentGlyph {
 typedef AgentGlyphBuilder =
     Widget? Function(BuildContext context, AgentGlyph glyph, IconSpec spec);
 
+/// Draws a tool's leading icon from its [name] and resolved [spec].
+/// Returning null falls back to [AgentGlyph.tool].
+typedef AgentToolIconBuilder =
+    Widget? Function(BuildContext context, String name, IconSpec spec);
+
 /// Supplies the glyphs of the Agent widgets below it.
 ///
 /// A widget's own `glyphBuilder` wins over this one. Without either, the
 /// widgets draw no glyphs.
 class AgentGlyphs extends InheritedWidget {
   /// Supplies [builder] to the Agent widgets in [child].
-  const AgentGlyphs({super.key, required this.builder, required super.child});
+  const AgentGlyphs({
+    super.key,
+    required this.builder,
+    this.toolIconBuilder,
+    required super.child,
+  });
 
   /// Draws the glyphs.
   final AgentGlyphBuilder builder;
+
+  /// Maps tool names to leading icons, unless a call supplies its own icon.
+  final AgentToolIconBuilder? toolIconBuilder;
 
   /// The nearest builder above [context], if any.
   static AgentGlyphBuilder? maybeOf(BuildContext context) =>
@@ -117,7 +130,26 @@ class AgentGlyphs extends InheritedWidget {
 
   @override
   bool updateShouldNotify(AgentGlyphs oldWidget) =>
-      builder != oldWidget.builder;
+      builder != oldWidget.builder ||
+      toolIconBuilder != oldWidget.toolIconBuilder;
+}
+
+/// Builds a name-specific tool icon with the same theme as other glyphs.
+@internal
+Widget? agentToolIcon(
+  BuildContext context,
+  String name,
+  StyleSpec<IconSpec> spec,
+) {
+  final builder = context
+      .dependOnInheritedWidgetOfExactType<AgentGlyphs>()
+      ?.toolIconBuilder;
+  final widget = builder?.call(context, name, spec.spec);
+  if (widget == null) return null;
+
+  return ExcludeSemantics(
+    child: RemixDefaultContentStyle(icon: spec, child: widget),
+  );
 }
 
 /// Builds [glyph] with [override] or the nearest [AgentGlyphs], styled by

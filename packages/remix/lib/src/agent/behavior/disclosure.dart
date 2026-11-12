@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../models/statuses.dart';
 
@@ -81,6 +82,10 @@ class AgentDisclosurePolicy {
 /// [onExpandedChanged], even when it does not change the stored value: a
 /// controlled host decides for itself.
 ///
+/// A request from the reader reaches [onExpandedChanged] at once. A request
+/// from the lifecycle is deferred until after the frame during build or
+/// layout, so the host can call `setState` in it. Otherwise it arrives at once.
+///
 /// Listeners hear about changes to [expanded].
 class AgentDisclosureController extends ChangeNotifier {
   /// Creates a disclosure in [phase].
@@ -107,6 +112,7 @@ class AgentDisclosureController extends ChangeNotifier {
   bool? _controlled;
   bool _uncontrolled;
   bool _readerToggled = false;
+  bool _disposed = false;
 
   /// Whether the surface is open.
   bool get expanded => _controlled ?? _uncontrolled;
@@ -132,20 +138,21 @@ class AgentDisclosureController extends ChangeNotifier {
 
   /// Moves the work to [next] and applies the [policy]'s request, if any.
   ///
-  /// Entering [AgentWorkPhase.working] from a finished phase starts a new run
-  /// and forgets the reader's toggle. A pause for the reader does not.
+  /// Entering [AgentWorkPhase.working] or [AgentWorkPhase.waiting] from a
+  /// finished phase starts a new run and forgets the reader's toggle.
+  /// A pause for the reader within a run does not.
   void updatePhase(AgentWorkPhase next) {
     final previous = _phase;
     if (next == previous) return;
     _phase = next;
-    if (next == AgentWorkPhase.working && previous.isFinished) {
+    if (!next.isFinished && previous.isFinished) {
       _readerToggled = false;
     }
     final request = policy.request(previous, next);
     if (request == null || (policy.respectReaderToggle && _readerToggled)) {
       return;
     }
-    _request(request);
+    _request(request, fromLifecycle: true);
   }
 
   /// Records the reader's request to open ([expanded] true) or close.
@@ -154,11 +161,25 @@ class AgentDisclosureController extends ChangeNotifier {
     _request(expanded);
   }
 
-  void _request(bool next) {
+  void _request(bool next, {bool fromLifecycle = false}) {
     if (_controlled == null && next != _uncontrolled) {
       _uncontrolled = next;
       notifyListeners();
     }
-    onExpandedChanged?.call(next);
+    if (!fromLifecycle ||
+        SchedulerBinding.instance.schedulerPhase !=
+            SchedulerPhase.persistentCallbacks) {
+      onExpandedChanged?.call(next);
+      return;
+    }
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!_disposed) onExpandedChanged?.call(next);
+    });
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 }

@@ -12,9 +12,13 @@ const double _atEnd = 0.5;
 /// scrollbar or focus moving to an earlier message. A scroll that arrives at
 /// the end, or moves toward it and stops within [threshold], follows again,
 /// and so does content that shrinks while the reader is within [threshold] of
-/// the end. While a hold is active ([hold]), for example while a pointer is
-/// down or text is being selected, the edge does not move the content; it
-/// catches up when the last hold ends.
+/// the end. While a hold is active ([hold]), the edge does not move the
+/// content; it catches up when the last hold ends.
+///
+/// Holding is pointer-driven: [AgentLiveEdge] holds while a pointer is down
+/// on the scrollable. Nothing here sees a text selection, so a host that
+/// wants a selection to hold the edge calls [hold] when the selection starts
+/// and [unhold] when it ends.
 ///
 /// Wire a scrollable to it with [AgentLiveEdge], which reports the scrollable's
 /// notifications and gives it [AgentLiveEdgeScrollPhysics].
@@ -101,6 +105,9 @@ class AgentLiveEdgeController extends ChangeNotifier {
   }
 
   /// Keeps the content still until a matching [unhold].
+  ///
+  /// [AgentLiveEdge] calls it for a pointer that is down on the scrollable.
+  /// Call it yourself to hold for anything else, such as a text selection.
   ///
   /// Holds nest: the edge catches up when the last one ends.
   void hold() {
@@ -330,8 +337,9 @@ typedef AgentLiveEdgeBuilder =
 ///
 /// It reports the scrollable's own notifications (not those of nested
 /// scrollables) to [controller], holds the edge while a pointer is down on the
-/// scrollable, and supplies the scroll controller and physics. It paints
-/// nothing of its own.
+/// scrollable (and only then: a text selection does not hold, see
+/// [AgentLiveEdgeController.hold]), and supplies the scroll controller and
+/// physics. It paints nothing of its own.
 class AgentLiveEdge extends StatefulWidget {
   /// Creates a live-edge connection.
   const AgentLiveEdge({

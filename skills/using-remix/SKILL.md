@@ -37,7 +37,7 @@ assuming one preset's variants or sizes carry over.
 
 ## Set up dependencies and imports
 
-For base widgets: `flutter pub add remix:^1.0.0-rc.2`, then import
+For base widgets: `flutter pub add remix:^1.0.0-rc.3`, then import
 `package:remix/remix.dart` and widgets-layer Flutter. For editable source:
 
 ```bash
@@ -170,7 +170,7 @@ controller rules. See [Components](references/components.md#navigation).
 | Fortal scope/config, typography, and token rules | [Fortal](references/fortal.md) |
 | Vanilla tokens, theme values, and per-component rules | [Vanilla](references/vanilla.md) |
 | HeroUI recipes, compositions, theme overrides, and what is not included | [HeroUI](references/heroui.md) |
-| Fluent styling, state/context variants, animation, callable styles | [Styling](references/styling.md) |
+| Fluent styling, effects/gradient shorthand, state/context variants, animation, callable styles | [Styling](references/styling.md) |
 | Reference apps, product examples, variant matrices, and showcase audits | [Reference showcases](references/reference-showcases.md) |
 | A reusable design system published as a Remix registry | `building-remix-design-system` |
 

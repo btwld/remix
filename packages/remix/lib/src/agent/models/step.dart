@@ -47,15 +47,19 @@ final class AgentStep {
   final String? detail;
 
   /// Returns a copy with the given fields replaced.
+  ///
+  /// A null [detail] keeps the current one; [clearDetail] removes it and wins
+  /// over [detail].
   AgentStep copyWith({
     String? title,
     AgentStepStatus? status,
     String? detail,
+    bool clearDetail = false,
   }) => AgentStep(
     id: id,
     title: title ?? this.title,
     status: status ?? this.status,
-    detail: detail ?? this.detail,
+    detail: clearDetail ? null : detail ?? this.detail,
   );
 
   @override

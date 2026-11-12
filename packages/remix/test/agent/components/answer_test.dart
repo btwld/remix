@@ -53,6 +53,57 @@ Future<(ValueNotifier<AgentAnswerStatus>, _Log)> _pump(
 }
 
 void main() {
+  testWidgets('only the chosen thumb merges the selected action style', (
+    tester,
+  ) async {
+    const idle = Color(0xFF111111);
+    const selected = Color(0xFF222222);
+    final feedback = ValueNotifier<AgentAnswerFeedback?>(
+      AgentAnswerFeedback.positive,
+    );
+    addTearDown(feedback.dispose);
+    await pumpAgent(
+      tester,
+      ValueListenableBuilder<AgentAnswerFeedback?>(
+        valueListenable: feedback,
+        builder: (context, value, _) => AgentAnswer(
+          feedback: value,
+          onFeedback: (value) => feedback.value = value,
+          onCopy: () {},
+          onRetry: () {},
+          actionStyle: IconButtonStyler().iconColor(idle).iconSize(20),
+          selectedActionStyle: IconButtonStyler().iconColor(selected),
+          glyphBuilder: (context, glyph, spec) => Icon(
+            const IconData(0xe001),
+            key: ValueKey('styled-${glyph.name}'),
+            color: spec.color,
+            size: spec.size,
+          ),
+          child: _body,
+        ),
+      ),
+    );
+    Color? color(String glyph) =>
+        tester.widget<Icon>(find.byKey(ValueKey('styled-$glyph'))).color;
+    expect(color('positive'), selected);
+    expect(color('negative'), idle);
+    expect(color('copy'), idle);
+    expect(color('retry'), idle);
+    expect(
+      tester.widget<Icon>(find.byKey(const ValueKey('styled-positive'))).size,
+      20,
+    );
+
+    await tester.tap(find.byKey(_negative));
+    await tester.pump();
+    expect(color('positive'), idle);
+    expect(color('negative'), selected);
+    await tester.tap(find.byKey(_negative));
+    await tester.pump();
+    expect(color('positive'), idle);
+    expect(color('negative'), idle);
+  });
+
   testWidgets('a finished answer shows its body, sources and actions', (
     tester,
   ) async {

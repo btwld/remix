@@ -18,6 +18,8 @@ mixin _$AgentToolCallSpec implements Spec<AgentToolCallSpec>, Diagnosticable {
   StyleSpec<IconSpec> get indicator;
   StyleSpec<BoxSpec> get output;
   double? get outputMaxHeight;
+  StyleSpec<FlexBoxSpec> get outputToggle;
+  StyleSpec<TextSpec> get outputToggleLabel;
   StyleSpec<BoxSpec> get outputContent;
   StyleSpec<TextSpec> get outputText;
   StyleSpec<BoxSpec> get error;
@@ -49,6 +51,8 @@ mixin _$AgentToolCallSpec implements Spec<AgentToolCallSpec>, Diagnosticable {
     StyleSpec<IconSpec>? indicator,
     StyleSpec<BoxSpec>? output,
     double? outputMaxHeight,
+    StyleSpec<FlexBoxSpec>? outputToggle,
+    StyleSpec<TextSpec>? outputToggleLabel,
     StyleSpec<BoxSpec>? outputContent,
     StyleSpec<TextSpec>? outputText,
     StyleSpec<BoxSpec>? error,
@@ -76,6 +80,8 @@ mixin _$AgentToolCallSpec implements Spec<AgentToolCallSpec>, Diagnosticable {
       indicator: indicator ?? this.indicator,
       output: output ?? this.output,
       outputMaxHeight: outputMaxHeight ?? this.outputMaxHeight,
+      outputToggle: outputToggle ?? this.outputToggle,
+      outputToggleLabel: outputToggleLabel ?? this.outputToggleLabel,
       outputContent: outputContent ?? this.outputContent,
       outputText: outputText ?? this.outputText,
       error: error ?? this.error,
@@ -107,6 +113,8 @@ mixin _$AgentToolCallSpec implements Spec<AgentToolCallSpec>, Diagnosticable {
       indicator: indicator.lerp(other?.indicator, t),
       output: output.lerp(other?.output, t),
       outputMaxHeight: MixOps.lerp(outputMaxHeight, other?.outputMaxHeight, t),
+      outputToggle: outputToggle.lerp(other?.outputToggle, t),
+      outputToggleLabel: outputToggleLabel.lerp(other?.outputToggleLabel, t),
       outputContent: outputContent.lerp(other?.outputContent, t),
       outputText: outputText.lerp(other?.outputText, t),
       error: error.lerp(other?.error, t),
@@ -137,6 +145,8 @@ mixin _$AgentToolCallSpec implements Spec<AgentToolCallSpec>, Diagnosticable {
     indicator,
     output,
     outputMaxHeight,
+    outputToggle,
+    outputToggleLabel,
     outputContent,
     outputText,
     error,
@@ -204,6 +214,8 @@ mixin _$AgentToolCallSpec implements Spec<AgentToolCallSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('output', output))
       ..add(DoubleProperty('outputMaxHeight', outputMaxHeight))
+      ..add(DiagnosticsProperty('outputToggle', outputToggle))
+      ..add(DiagnosticsProperty('outputToggleLabel', outputToggleLabel))
       ..add(DiagnosticsProperty('outputContent', outputContent))
       ..add(DiagnosticsProperty('outputText', outputText))
       ..add(DiagnosticsProperty('error', error))
@@ -244,6 +256,8 @@ class AgentToolCallStyler
   final Prop<StyleSpec<IconSpec>>? $indicator;
   final Prop<StyleSpec<BoxSpec>>? $output;
   final Prop<double>? $outputMaxHeight;
+  final Prop<StyleSpec<FlexBoxSpec>>? $outputToggle;
+  final Prop<StyleSpec<TextSpec>>? $outputToggleLabel;
   final Prop<StyleSpec<BoxSpec>>? $outputContent;
   final Prop<StyleSpec<TextSpec>>? $outputText;
   final Prop<StyleSpec<BoxSpec>>? $error;
@@ -271,6 +285,8 @@ class AgentToolCallStyler
     Prop<StyleSpec<IconSpec>>? indicator,
     Prop<StyleSpec<BoxSpec>>? output,
     Prop<double>? outputMaxHeight,
+    Prop<StyleSpec<FlexBoxSpec>>? outputToggle,
+    Prop<StyleSpec<TextSpec>>? outputToggleLabel,
     Prop<StyleSpec<BoxSpec>>? outputContent,
     Prop<StyleSpec<TextSpec>>? outputText,
     Prop<StyleSpec<BoxSpec>>? error,
@@ -299,6 +315,8 @@ class AgentToolCallStyler
        $indicator = indicator,
        $output = output,
        $outputMaxHeight = outputMaxHeight,
+       $outputToggle = outputToggle,
+       $outputToggleLabel = outputToggleLabel,
        $outputContent = outputContent,
        $outputText = outputText,
        $error = error,
@@ -326,6 +344,8 @@ class AgentToolCallStyler
     IconStyler? indicator,
     BoxStyler? output,
     double? outputMaxHeight,
+    FlexBoxStyler? outputToggle,
+    TextStyler? outputToggleLabel,
     BoxStyler? outputContent,
     TextStyler? outputText,
     BoxStyler? error,
@@ -355,6 +375,8 @@ class AgentToolCallStyler
          indicator: Prop.maybeMix(indicator),
          output: Prop.maybeMix(output),
          outputMaxHeight: Prop.maybe(outputMaxHeight),
+         outputToggle: Prop.maybeMix(outputToggle),
+         outputToggleLabel: Prop.maybeMix(outputToggleLabel),
          outputContent: Prop.maybeMix(outputContent),
          outputText: Prop.maybeMix(outputText),
          error: Prop.maybeMix(error),
@@ -396,6 +418,10 @@ class AgentToolCallStyler
       AgentToolCallStyler().output(value);
   factory AgentToolCallStyler.outputMaxHeight(double value) =>
       AgentToolCallStyler().outputMaxHeight(value);
+  factory AgentToolCallStyler.outputToggle(FlexBoxStyler value) =>
+      AgentToolCallStyler().outputToggle(value);
+  factory AgentToolCallStyler.outputToggleLabel(TextStyler value) =>
+      AgentToolCallStyler().outputToggleLabel(value);
   factory AgentToolCallStyler.outputContent(BoxStyler value) =>
       AgentToolCallStyler().outputContent(value);
   factory AgentToolCallStyler.outputText(TextStyler value) =>
@@ -438,6 +464,8 @@ class AgentToolCallStyler
     'indicator',
     'output',
     'outputMaxHeight',
+    'outputToggle',
+    'outputToggleLabel',
     'outputContent',
     'outputText',
     'error',
@@ -510,6 +538,16 @@ class AgentToolCallStyler
   /// Sets the outputMaxHeight.
   AgentToolCallStyler outputMaxHeight(double value) {
     return merge(AgentToolCallStyler(outputMaxHeight: value));
+  }
+
+  /// Sets the outputToggle.
+  AgentToolCallStyler outputToggle(FlexBoxStyler value) {
+    return merge(AgentToolCallStyler(outputToggle: value));
+  }
+
+  /// Sets the outputToggleLabel.
+  AgentToolCallStyler outputToggleLabel(TextStyler value) {
+    return merge(AgentToolCallStyler(outputToggleLabel: value));
   }
 
   /// Sets the outputContent.
@@ -620,6 +658,11 @@ class AgentToolCallStyler
       indicator: MixOps.merge($indicator, other?.$indicator),
       output: MixOps.merge($output, other?.$output),
       outputMaxHeight: MixOps.merge($outputMaxHeight, other?.$outputMaxHeight),
+      outputToggle: MixOps.merge($outputToggle, other?.$outputToggle),
+      outputToggleLabel: MixOps.merge(
+        $outputToggleLabel,
+        other?.$outputToggleLabel,
+      ),
       outputContent: MixOps.merge($outputContent, other?.$outputContent),
       outputText: MixOps.merge($outputText, other?.$outputText),
       error: MixOps.merge($error, other?.$error),
@@ -655,6 +698,8 @@ class AgentToolCallStyler
       indicator: MixOps.resolve(context, $indicator),
       output: MixOps.resolve(context, $output),
       outputMaxHeight: MixOps.resolve(context, $outputMaxHeight),
+      outputToggle: MixOps.resolve(context, $outputToggle),
+      outputToggleLabel: MixOps.resolve(context, $outputToggleLabel),
       outputContent: MixOps.resolve(context, $outputContent),
       outputText: MixOps.resolve(context, $outputText),
       error: MixOps.resolve(context, $error),
@@ -693,6 +738,8 @@ class AgentToolCallStyler
       ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('output', $output))
       ..add(DiagnosticsProperty('outputMaxHeight', $outputMaxHeight))
+      ..add(DiagnosticsProperty('outputToggle', $outputToggle))
+      ..add(DiagnosticsProperty('outputToggleLabel', $outputToggleLabel))
       ..add(DiagnosticsProperty('outputContent', $outputContent))
       ..add(DiagnosticsProperty('outputText', $outputText))
       ..add(DiagnosticsProperty('error', $error))
@@ -722,6 +769,8 @@ class AgentToolCallStyler
     $indicator,
     $output,
     $outputMaxHeight,
+    $outputToggle,
+    $outputToggleLabel,
     $outputContent,
     $outputText,
     $error,

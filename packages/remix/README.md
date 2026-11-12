@@ -8,7 +8,7 @@ Remix is a `1.0.0` prerelease. Pin it, because an unversioned install
 resolves the older stable `0.x` line, which these docs do not describe.
 
 ```bash
-flutter pub add remix:^1.0.0-rc.2
+flutter pub add remix:^1.0.0-rc.3
 ```
 
 ```dart
@@ -58,6 +58,12 @@ See [host setup](https://github.com/btwld/remix/blob/main/skills/using-remix/SKI
 - [Fortal catalog](https://github.com/btwld/remix/blob/main/docs/fortal/catalog.mdx)
 - [Examples and core concepts](https://github.com/btwld/remix#remix)
 - [Material dependency boundary](https://github.com/btwld/remix/blob/main/open_code/README.md#material-boundary)
+
+## Experimental agent library
+
+`package:remix/agent.dart` provides agent conversation widgets and behavior.
+It is experimental and outside Remix's stability promise. Import it separately;
+`remix.dart` does not export it. Presets style it through registry recipes.
 
 Agent skills: run `remix skills install` in a project that has run
 `remix init`.

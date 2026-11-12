@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/agent.dart';
+import 'package:remix/remix.dart';
 
 import '../helpers/glyphs.dart';
+import '../helpers/mock.dart';
 import '../helpers/pump.dart';
 
 const _latest = ValueKey('agent-conversation-latest');
@@ -68,6 +70,24 @@ Future<void> _wheel(WidgetTester tester, double dy) async {
 
 Matcher _atEndOf(ScrollController controller) =>
     closeTo(controller.position.maxScrollExtent, 0.5);
+
+class _Counter extends StatefulWidget {
+  const _Counter({super.key});
+
+  @override
+  State<_Counter> createState() => _CounterState();
+}
+
+class _CounterState extends State<_Counter> {
+  int taps = 0;
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    onTap: () => setState(() => taps++),
+    child: const SizedBox(height: 50, width: 100),
+  );
+}
 
 void main() {
   testWidgets('spaces turns apart and the blocks of a turn closer', (
@@ -277,5 +297,129 @@ void main() {
     await _wheel(tester, -400);
     expect(liveEdge.showLatest, isTrue);
     expect(find.byKey(_latest), findsOneWidget);
+  });
+
+  testWidgets('a keyed turn keeps its state when history is prepended', (
+    tester,
+  ) async {
+    final ids = ValueNotifier<List<int>>([1, 2]);
+    addTearDown(ids.dispose);
+    await pumpAgent(
+      tester,
+      SizedBox(
+        width: 600,
+        height: 600,
+        child: ValueListenableBuilder<List<int>>(
+          valueListenable: ids,
+          builder: (context, ids, _) => AgentConversation.builder(
+            itemCount: ids.length,
+            itemBuilder: (context, index) =>
+                _Counter(key: ValueKey('turn-${ids[index]}')),
+            findChildIndexCallback: (key) {
+              final at = ids.indexWhere((id) => ValueKey('turn-$id') == key);
+              return at < 0 ? null : at;
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    // Turn 1 gains state.
+    await tester.tap(find.byKey(const ValueKey('turn-1')));
+    await tester.pump();
+    expect(
+      tester.state<_CounterState>(find.byKey(const ValueKey('turn-1'))).taps,
+      1,
+    );
+
+    ids.value = [0, 1, 2];
+    await tester.pump();
+
+    expect(
+      tester.state<_CounterState>(find.byKey(const ValueKey('turn-1'))).taps,
+      1,
+    );
+    expect(
+      tester.state<_CounterState>(find.byKey(const ValueKey('turn-0'))).taps,
+      0,
+    );
+    expect(
+      tester.state<_CounterState>(find.byKey(const ValueKey('turn-2'))).taps,
+      0,
+    );
+  });
+
+  testWidgets('a keyed child list keeps state when a turn is prepended', (
+    tester,
+  ) async {
+    final ids = ValueNotifier<List<int>>([1]);
+    addTearDown(ids.dispose);
+    await pumpAgent(
+      tester,
+      SizedBox(
+        width: 600,
+        height: 600,
+        child: ValueListenableBuilder<List<int>>(
+          valueListenable: ids,
+          builder: (context, ids, _) => AgentConversation(
+            children: [for (final id in ids) _Counter(key: ValueKey('t-$id'))],
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byKey(const ValueKey('t-1')));
+    await tester.pump();
+
+    ids.value = [0, 1];
+    await tester.pump();
+
+    expect(
+      tester.state<_CounterState>(find.byKey(const ValueKey('t-1'))).taps,
+      1,
+    );
+  });
+
+  testWidgets('a tool call keeps its decision when history is prepended', (
+    tester,
+  ) async {
+    final ids = ValueNotifier<List<int>>([1]);
+    addTearDown(ids.dispose);
+    await pumpAgent(
+      tester,
+      SizedBox(
+        width: 600,
+        height: 800,
+        child: ValueListenableBuilder<List<int>>(
+          valueListenable: ids,
+          builder: (context, ids, _) => AgentConversation(
+            children: [
+              for (final id in ids)
+                AgentToolCall(
+                  key: ValueKey('call-$id'),
+                  call: approvalCall,
+                  onDecision: (_) {},
+                  glyphBuilder: testGlyphs,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+    Finder allowOf(int id) => find.descendant(
+      of: find.byKey(ValueKey('call-$id')),
+      matching: find.byKey(const ValueKey('agent-tool-call-allow-once')),
+    );
+    bool enabled(int id) => tester.widget<RemixButton>(allowOf(id)).enabled;
+
+    await tester.tap(allowOf(1));
+    await tester.pump();
+    expect(enabled(1), isFalse);
+
+    ids.value = [0, 1];
+    await tester.pump();
+
+    expect(enabled(1), isFalse, reason: 'The decision stays with its turn.');
+    expect(enabled(0), isTrue);
   });
 }

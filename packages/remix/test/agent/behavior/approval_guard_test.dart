@@ -2,6 +2,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/agent.dart';
 
 void main() {
+  test('adopts a host decision while awaiting approval', () {
+    final guard = AgentApprovalGuard(
+      id: 'call',
+      status: AgentToolCallStatus.awaitingApproval,
+    );
+    guard.update(
+      id: 'call',
+      status: AgentToolCallStatus.awaitingApproval,
+      recorded: AgentApprovalDecision.deny,
+    );
+    expect(guard.decision, AgentApprovalDecision.deny);
+    expect(guard.decide(AgentApprovalDecision.allowOnce), isFalse);
+    guard.rearm();
+    expect(guard.decide(AgentApprovalDecision.allowOnce), isTrue);
+  });
+
   // Ported from registry_source/test/agent/components/behavior_test.dart
   // ("permission latch prevents duplicate decisions and resets").
   test('takes one decision and re-arms for a new request', () {
@@ -71,5 +87,35 @@ void main() {
     expect(guard.id, 'call-2');
     expect(guard.status, AgentToolCallStatus.running);
     expect(guard.canDecide, isFalse);
+  });
+
+  test('rearm lets the reader decide again after a failed request', () {
+    final guard = AgentApprovalGuard(
+      id: 'call-1',
+      status: AgentToolCallStatus.awaitingApproval,
+    )..decide(AgentApprovalDecision.allowOnce);
+    expect(guard.canDecide, isFalse);
+
+    guard.rearm();
+    expect(guard.decision, isNull);
+    expect(guard.decide(AgentApprovalDecision.deny), isTrue);
+  });
+
+  test('a host clearing its recorded decision re-arms the guard', () {
+    final guard = AgentApprovalGuard(
+      id: 'call-1',
+      status: AgentToolCallStatus.awaitingApproval,
+    )..decide(AgentApprovalDecision.allowOnce);
+
+    guard.update(
+      id: 'call-1',
+      status: AgentToolCallStatus.awaitingApproval,
+      recorded: AgentApprovalDecision.allowOnce,
+    );
+    expect(guard.canDecide, isFalse);
+
+    // The request failed: the host takes the decision back.
+    guard.update(id: 'call-1', status: AgentToolCallStatus.awaitingApproval);
+    expect(guard.canDecide, isTrue);
   });
 }

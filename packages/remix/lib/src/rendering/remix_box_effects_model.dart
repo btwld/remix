@@ -228,6 +228,9 @@ class RemixBoxShadowListToken extends MixToken<List<RemixBoxShadow>> {
 /// Unlike Flutter's `LinearGradientMix`, each color and stop is resolved as an
 /// individual Mix property. This allows multiple design-token references in a
 /// single gradient.
+///
+/// Named constructors and instance methods support the same fluent spelling:
+/// `.colors([start, end]).begin(.centerLeft).end(.centerRight)`.
 @immutable
 class RemixLinearGradientMix extends Mix<LinearGradient> {
   RemixLinearGradientMix({
@@ -274,12 +277,60 @@ class RemixLinearGradientMix extends Mix<LinearGradient> {
         transform: value.transform,
       );
 
+  /// The ordered colors of the gradient, including token references.
+  factory RemixLinearGradientMix.colors(List<Color> value) =>
+      RemixLinearGradientMix(colors: value);
+
+  /// The stop positions corresponding to [colors].
+  factory RemixLinearGradientMix.stops(List<double> value) =>
+      RemixLinearGradientMix(stops: value);
+
+  /// The alignment where the gradient starts.
+  factory RemixLinearGradientMix.begin(AlignmentGeometry value) =>
+      RemixLinearGradientMix(begin: value);
+
+  /// The alignment where the gradient ends.
+  factory RemixLinearGradientMix.end(AlignmentGeometry value) =>
+      RemixLinearGradientMix(end: value);
+
+  /// How the gradient repeats beyond its bounds.
+  factory RemixLinearGradientMix.tileMode(TileMode value) =>
+      RemixLinearGradientMix(tileMode: value);
+
+  /// The transform applied to the gradient.
+  factory RemixLinearGradientMix.transform(GradientTransform value) =>
+      RemixLinearGradientMix(transform: value);
+
   final List<Prop<Color>>? $colors;
   final List<Prop<double>>? $stops;
   final Prop<AlignmentGeometry>? $begin;
   final Prop<AlignmentGeometry>? $end;
   final Prop<TileMode>? $tileMode;
   final Prop<GradientTransform>? $transform;
+
+  /// Replaces the color list while preserving the other gradient properties.
+  RemixLinearGradientMix colors(List<Color> value) =>
+      merge(RemixLinearGradientMix(colors: value));
+
+  /// Replaces the stop list while preserving the other gradient properties.
+  RemixLinearGradientMix stops(List<double> value) =>
+      merge(RemixLinearGradientMix(stops: value));
+
+  /// Chainable counterpart of [RemixLinearGradientMix.begin].
+  RemixLinearGradientMix begin(AlignmentGeometry value) =>
+      merge(RemixLinearGradientMix(begin: value));
+
+  /// Chainable counterpart of [RemixLinearGradientMix.end].
+  RemixLinearGradientMix end(AlignmentGeometry value) =>
+      merge(RemixLinearGradientMix(end: value));
+
+  /// Chainable counterpart of [RemixLinearGradientMix.tileMode].
+  RemixLinearGradientMix tileMode(TileMode value) =>
+      merge(RemixLinearGradientMix(tileMode: value));
+
+  /// Chainable counterpart of [RemixLinearGradientMix.transform].
+  RemixLinearGradientMix transform(GradientTransform value) =>
+      merge(RemixLinearGradientMix(transform: value));
 
   @override
   RemixLinearGradientMix merge(RemixLinearGradientMix? other) {

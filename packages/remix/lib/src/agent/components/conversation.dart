@@ -46,13 +46,15 @@ class AgentConversation extends StatefulWidget {
     this.style = const AgentConversationStyler.create(),
     this.styleSpec,
   }) : itemCount = null,
-       itemBuilder = null;
+       itemBuilder = null,
+       findChildIndexCallback = null;
 
   /// Creates a transcript that builds its [itemCount] turns lazily.
   const AgentConversation.builder({
     super.key,
     required int this.itemCount,
     required IndexedWidgetBuilder this.itemBuilder,
+    this.findChildIndexCallback,
     this.empty,
     this.liveEdge,
     this.scrollController,
@@ -75,6 +77,14 @@ class AgentConversation extends StatefulWidget {
 
   /// Builds the turn at an index, oldest first.
   final IndexedWidgetBuilder? itemBuilder;
+
+  /// Finds the current index of the turn whose key is given, for the
+  /// [AgentConversation.builder] form.
+  ///
+  /// Give it when turns carry keys and history can be prepended or
+  /// reordered, so each turn keeps its state. It receives the key the host
+  /// put on the turn.
+  final ChildIndexGetter? findChildIndexCallback;
 
   /// Shown instead of the transcript while it has no turns.
   final Widget? empty;
@@ -201,6 +211,18 @@ class _AgentConversationState extends State<AgentConversation> {
     return position.hasContentDimensions ? position : null;
   }
 
+  /// Finds a keyed turn of the `children` form, so reordering keeps state.
+  ChildIndexGetter? get _findInChildren {
+    final children = widget.children;
+    if (children == null) return null;
+    final indexes = <Key, int>{
+      for (var i = 0; i < children.length; i++)
+        if (children[i].key case final key?) key: i,
+    };
+
+    return (key) => indexes[key];
+  }
+
   Widget _list(AgentConversationSpec spec, {required bool shrinkWrap}) {
     final maxWidth = spec.maxWidth;
     Widget turn(BuildContext context, int index) {
@@ -218,8 +240,17 @@ class _AgentConversationState extends State<AgentConversation> {
         );
       }
 
-      return current;
+      // The host's key on a turn keys the wrapper, so a turn keeps its state
+      // when history is prepended or reordered.
+      final key = child.key;
+
+      return KeyedSubtree(
+        key: key == null ? ValueKey<int>(index) : ValueKey<Key>(key),
+        child: current,
+      );
     }
+
+    final findChild = widget.findChildIndexCallback ?? _findInChildren;
 
     return AgentLiveEdge(
       controller: _liveEdge,
@@ -231,6 +262,9 @@ class _AgentConversationState extends State<AgentConversation> {
         padding: spec.padding,
         itemCount: _count,
         itemBuilder: turn,
+        findItemIndexCallback: findChild == null
+            ? null
+            : (key) => key is ValueKey<Key> ? findChild(key.value) : null,
         separatorBuilder: (context, index) =>
             SizedBox(height: spec.turnSpacing ?? 0),
       ),

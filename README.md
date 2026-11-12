@@ -34,7 +34,7 @@ Remix is a `1.0.0` prerelease. Pin it, because an unversioned install
 resolves the older stable `0.x` line, which these docs do not describe.
 
 ```bash
-flutter pub add remix:^1.0.0-rc.2
+flutter pub add remix:^1.0.0-rc.3
 ```
 
 ```dart

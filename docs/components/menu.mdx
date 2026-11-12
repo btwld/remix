@@ -172,11 +172,8 @@ class AccountMenuExample extends StatelessWidget {
           style: CardStyler()
               .borderRadius(.circular(999))
               .onFocusVisible(
-                CardStyler().containerEffects(
-                  RemixBoxEffectsMix(
-                    outline: BorderSideMix(color: Colors.indigo, width: 2),
-                    outlineOffset: 2,
-                  ),
+                .containerEffects(
+                  .outline(.color(Colors.indigo).width(2)).outlineOffset(2),
                 ),
               ),
           child: const FortalAvatar(label: 'LF'),
@@ -531,10 +528,9 @@ paints the popup panel.
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
-final menuRing = RemixBoxEffectsMix(
-  outline: BorderSideMix(color: Colors.indigo, width: 2),
-  outlineOffset: 2,
-);
+final menuRing = RemixBoxEffectsMix()
+    .outline(.color(Colors.indigo).width(2))
+    .outlineOffset(2);
 
 final ringedMenuStyle = MenuStyler()
     .trigger(

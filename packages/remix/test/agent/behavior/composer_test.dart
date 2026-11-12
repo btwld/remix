@@ -86,7 +86,7 @@ void main() {
       expect(composer.submit(), 'draft');
     });
 
-    test('an open IME composition is not sent', () {
+    test('the Send button sends an open IME composition', () {
       final composer = AgentComposerController.fromValue(
         const TextEditingValue(
           text: 'compose',
@@ -97,8 +97,9 @@ void main() {
       addTearDown(composer.dispose);
       expect(composer.isComposing, isTrue);
       expect(composer.canSubmit, isTrue, reason: 'Send stays available.');
-      expect(composer.submit(), isNull);
-      expect(composer.text, 'compose');
+      // Android keeps the last word composing; tapping Send must still send.
+      expect(composer.submit(), 'compose');
+      expect(composer.text, isEmpty);
     });
   });
 

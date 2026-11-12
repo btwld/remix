@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
+import 'package:naked_ui/naked_ui.dart';
 
 import '../../components/button/button.dart';
 import '../../components/data_list/data_list.dart';
@@ -71,6 +72,8 @@ class AgentToolRenderers extends InheritedWidget {
 /// line while the tool runs. The well opens while the call works, collapses
 /// when it succeeds and stays open when it fails, under [policy]; a reader's
 /// toggle wins for the rest of the run.
+/// Output taller than [AgentToolCallSpec.outputMaxHeight] offers "Show all"
+/// and "Show less" independently of opening or closing the well.
 ///
 /// While the call is [AgentToolCallStatus.awaitingApproval], it shows the
 /// approval card instead: a question, the tool id, the description, the
@@ -100,6 +103,8 @@ class AgentToolCall extends StatefulWidget {
     this.alwaysAllowLabel = 'Always allow',
     this.denyLabel = 'Deny',
     this.outputLabel = 'Tool output',
+    this.showAllLabel = 'Show all',
+    this.showLessLabel = 'Show less',
     this.semanticLabel = 'Tool call',
     this.glyphBuilder,
     this.disclosureStyle = const DisclosureStyler.create(),
@@ -121,7 +126,8 @@ class AgentToolCall extends StatefulWidget {
   /// Whether the card offers to always allow this tool.
   final bool offerAlwaysAllow;
 
-  /// The tool's icon; defaults to [AgentGlyph.tool].
+  /// The tool's icon; defaults to [AgentGlyphs.toolIconBuilder], then
+  /// [AgentGlyph.tool].
   final Widget? icon;
 
   /// The card's question; defaults to the call's summary as a question.
@@ -157,6 +163,12 @@ class AgentToolCall extends StatefulWidget {
 
   /// The accessible name of the output well.
   final String outputLabel;
+
+  /// The action that removes the output well's height limit.
+  final String showAllLabel;
+
+  /// The action that restores the output well's height limit.
+  final String showLessLabel;
 
   /// The call's accessible name.
   final String semanticLabel;
@@ -210,6 +222,7 @@ class AgentToolCall extends StatefulWidget {
 }
 
 final _toolCallLayout = AgentToolCallStyler(
+  outputToggle: FlexBoxStyler().mainAxisSize(MainAxisSize.min),
   status: FlexBoxStyler().mainAxisSize(MainAxisSize.min),
   cardContent: FlexBoxStyler()
       .mainAxisSize(MainAxisSize.min)
@@ -225,11 +238,17 @@ class _AgentToolCallState extends State<AgentToolCall>
   late final AgentApprovalGuard _guard = AgentApprovalGuard(
     id: widget.call.id,
     status: widget.call.status,
+    recorded: widget.call.decision,
   );
   late final AgentDisclosureController _disclosure;
   late final AgentLiveEdgeController _outputEdge;
   final FocusNode _focus = FocusNode(debugLabel: 'AgentToolCall');
   final FocusNode _rowFocus = FocusNode(debugLabel: 'AgentToolCall row');
+  final WidgetStatesController _rowStates = WidgetStatesController();
+  bool? _interactiveRow;
+  bool _retainDisclosure = false;
+  bool _showAllOutput = false;
+  bool _outputOverflows = false;
 
   /// Whether focus was inside the card when the reader decided, so it moves
   /// to the row that replaces the card.
@@ -244,19 +263,11 @@ class _AgentToolCallState extends State<AgentToolCall>
     super.initState();
     final call = _call;
     final phase = call.status.phase;
-    final policy = widget.policy;
     _disclosure = AgentDisclosureController(
       phase: phase,
       expanded: widget.expanded,
-      defaultExpanded:
-          widget.defaultExpanded ??
-          switch (phase) {
-            AgentWorkPhase.working => policy.openWhileWorking,
-            AgentWorkPhase.failed => policy.keepOpenOnFailure,
-            AgentWorkPhase.settled => !policy.collapseWhenSettled,
-            AgentWorkPhase.waiting => false,
-          },
-      policy: policy,
+      defaultExpanded: _defaultExpanded,
+      policy: widget.policy,
       onExpandedChanged: widget.onExpandedChanged,
     )..addListener(_changed);
     _outputEdge = AgentLiveEdgeController(enabled: call.status.isWorking);
@@ -266,13 +277,17 @@ class _AgentToolCallState extends State<AgentToolCall>
   void didUpdateWidget(AgentToolCall oldWidget) {
     super.didUpdateWidget(oldWidget);
     final call = _call;
-    _guard.update(id: call.id, status: call.status);
-    updateKeepAlive();
+    if (oldWidget.call.id != call.id) {
+      _showAllOutput = false;
+      _outputOverflows = false;
+    }
+    _guard.update(id: call.id, status: call.status, recorded: call.decision);
     _disclosure
       ..policy = widget.policy
       ..onExpandedChanged = widget.onExpandedChanged
       ..updateExpanded(widget.expanded)
       ..updatePhase(call.status.phase);
+    _updateDisclosureKeepAlive();
     _outputEdge.enabled = call.status.isWorking;
     if (oldWidget.call.status.needsDecision && !call.status.needsDecision) {
       if (_returnFocus) {
@@ -289,12 +304,35 @@ class _AgentToolCallState extends State<AgentToolCall>
     if (mounted) setState(() {});
   }
 
-  // A lazy list disposes rows that scroll away. While a decision is taken but
-  // the host has not yet moved the call on, keep this one alive so the guard,
-  // and with it the one-decision-per-request contract, survives the scroll.
+  bool get _defaultExpanded =>
+      widget.defaultExpanded ??
+      switch (_call.status.phase) {
+        AgentWorkPhase.working => widget.policy.openWhileWorking,
+        AgentWorkPhase.failed => widget.policy.keepOpenOnFailure,
+        AgentWorkPhase.settled => !widget.policy.collapseWhenSettled,
+        AgentWorkPhase.waiting => false,
+      };
+
+  void _toggle(bool expanded) {
+    _disclosure.toggle(expanded);
+    _updateDisclosureKeepAlive();
+  }
+
+  void _updateDisclosureKeepAlive() {
+    _retainDisclosure =
+        (_disclosure.readerToggled &&
+            widget.policy.respectReaderToggle &&
+            (!_call.status.phase.isFinished ||
+                _disclosure.expanded != _defaultExpanded)) ||
+        (_showAllOutput &&
+            (!_call.status.phase.isFinished || _disclosure.expanded));
+    updateKeepAlive();
+  }
+
   @override
   bool get wantKeepAlive =>
-      _guard.decision != null && _call.status.needsDecision;
+      _retainDisclosure ||
+      (_guard.decision != null && _call.status.needsDecision);
 
   void _decide(AgentApprovalDecision decision) {
     final onDecision = widget.onDecision;
@@ -327,7 +365,17 @@ class _AgentToolCallState extends State<AgentToolCall>
       styleSpec: spec.status,
       children: [
         ?glyph,
-        StyledText(_statusLabel(status), styleSpec: spec.statusLabel),
+        Flexible(
+          child: StyledText(
+            _statusLabel(status),
+            styleSpec: spec.statusLabel.copyWith(
+              spec: spec.statusLabel.spec.copyWith(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -348,10 +396,25 @@ class _AgentToolCallState extends State<AgentToolCall>
     // Without a summary the tool id leads the row and is not repeated.
     final title = summary ?? call.name;
     final toolId = summary == null ? null : call.name;
-    final trailing = [if (meta.isNotEmpty) meta, ?toolId].join(' · ');
+    final summarySpec = spec.summary.spec;
+    TextSpan span(String text, TextSpec spec) => TextSpan(
+      text: spec.textDirectives?.apply(text) ?? text,
+      style: spec.style,
+      locale: spec.locale,
+      semanticsLabel: spec.semanticsLabel,
+    );
+    final titleSpan = span(title, summarySpec);
+    final metaSpan = meta.isEmpty ? null : span(meta, spec.meta.spec);
+    final toolSpan = toolId == null ? null : span(toolId, spec.toolId.spec);
+    final trailingLabel = [
+      if (metaSpan != null) metaSpan.semanticsLabel ?? metaSpan.text!,
+      if (toolSpan != null) toolSpan.semanticsLabel ?? toolSpan.text!,
+    ].where((label) => label.isNotEmpty).join(' · ');
+    final titleLabel = titleSpan.semanticsLabel ?? titleSpan.text!;
     final icon = widget.icon;
     final leading = icon == null
-        ? _glyph(AgentGlyph.tool, spec.icon)
+        ? agentToolIcon(context, call.name, spec.icon) ??
+              _glyph(AgentGlyph.tool, spec.icon)
         : RemixDefaultContentStyle(icon: spec.icon, child: icon);
     final indicator = expanded == null
         ? null
@@ -369,24 +432,34 @@ class _AgentToolCallState extends State<AgentToolCall>
           child: Text.rich(
             TextSpan(
               children: [
-                TextSpan(text: title, style: spec.summary.spec.style),
-                if (trailing.isNotEmpty) ...[
+                titleSpan,
+                if (metaSpan != null || toolSpan != null) ...[
                   // The gap matches the row's own spacing.
                   WidgetSpan(child: SizedBox(width: gap)),
                   TextSpan(
                     style: spec.meta.spec.style,
                     children: [
-                      if (meta.isNotEmpty) TextSpan(text: meta),
-                      if (meta.isNotEmpty && toolId != null)
+                      ?metaSpan,
+                      if (metaSpan != null && toolSpan != null)
                         const TextSpan(text: ' · '),
-                      if (toolId != null)
-                        TextSpan(text: toolId, style: spec.toolId.spec.style),
+                      ?toolSpan,
                     ],
                   ),
                 ],
               ],
             ),
-            semanticsLabel: trailing.isEmpty ? title : '$title, $trailing',
+            semanticsLabel: trailingLabel.isEmpty
+                ? titleLabel
+                : '$titleLabel, $trailingLabel',
+            strutStyle: summarySpec.strutStyle,
+            textAlign: summarySpec.textAlign,
+            textDirection: summarySpec.textDirection,
+            locale: summarySpec.locale,
+            textScaler: summarySpec.textScaler,
+            textWidthBasis: summarySpec.textWidthBasis,
+            textHeightBehavior: summarySpec.textHeightBehavior,
+            selectionColor: summarySpec.selectionColor,
+            softWrap: false,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -404,51 +477,129 @@ class _AgentToolCallState extends State<AgentToolCall>
 
     return Semantics(
       container: true,
+      explicitChildNodes: true,
       label: widget.outputLabel,
       child: Box(
         styleSpec: spec.output,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: maxHeight ?? double.infinity),
-          child: AgentLiveEdge(
-            controller: _outputEdge,
-            builder: (context, scrollController, physics) =>
-                SingleChildScrollView(
-                  controller: scrollController,
-                  physics: physics,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (output != null && output.isNotEmpty)
-                        Box(
-                          styleSpec: spec.outputContent,
-                          child: StyledText(output, styleSpec: spec.outputText),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: _showAllOutput
+                    ? double.infinity
+                    : maxHeight ?? double.infinity,
+              ),
+              child: AgentLiveEdge(
+                controller: _outputEdge,
+                builder: (context, scrollController, physics) =>
+                    SingleChildScrollView(
+                      controller: scrollController,
+                      physics: physics,
+                      child: AgentOverflowClip(
+                        key: ValueKey(_call.id),
+                        maxHeight: maxHeight,
+                        clip: false,
+                        onOverflowChanged: _handleOutputOverflow,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (output != null && output.isNotEmpty)
+                              Box(
+                                styleSpec: spec.outputContent,
+                                child: StyledText(
+                                  output,
+                                  styleSpec: spec.outputText,
+                                ),
+                              ),
+                            if (error != null && error.isNotEmpty)
+                              Box(
+                                styleSpec: spec.error,
+                                child: StyledText(
+                                  error,
+                                  styleSpec: spec.errorText,
+                                ),
+                              ),
+                          ],
                         ),
-                      if (error != null && error.isNotEmpty)
-                        Box(
-                          styleSpec: spec.error,
-                          child: StyledText(error, styleSpec: spec.errorText),
-                        ),
-                    ],
-                  ),
-                ),
+                      ),
+                    ),
+              ),
+            ),
+            if (_outputOverflows && maxHeight != null)
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: _outputToggle(),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _handleOutputOverflow(bool overflows) {
+    if (mounted && overflows != _outputOverflows) {
+      setState(() => _outputOverflows = overflows);
+    }
+  }
+
+  Widget _outputToggle() {
+    final label = _showAllOutput ? widget.showLessLabel : widget.showAllLabel;
+    return NakedButton(
+      key: const ValueKey('agent-tool-call-output-toggle'),
+      semanticLabel: label,
+      onPressed: () {
+        setState(() => _showAllOutput = !_showAllOutput);
+        _updateDisclosureKeepAlive();
+      },
+      builder: (context, _, _) => RemixStyleSpecBuilder<AgentToolCallSpec>(
+        style: _toolCallLayout.merge(widget.style),
+        styleSpec: widget.styleSpec,
+        controller: NakedButtonState.controllerOf(context),
+        builder: (context, spec) => ExcludeSemantics(
+          child: RowBox(
+            styleSpec: spec.outputToggle,
+            children: [
+              Flexible(
+                child: StyledText(label, styleSpec: spec.outputToggleLabel),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
+  Widget _styledRow({bool? expanded}) =>
+      RemixStyleSpecBuilder<AgentToolCallSpec>(
+        style: _toolCallLayout.merge(widget.style),
+        styleSpec: widget.styleSpec,
+        controller: _rowStates,
+        builder: (context, spec) => _rowContent(spec, expanded: expanded),
+      );
+
   Widget _row(AgentToolCallSpec spec) {
-    if (!_expandable) return _rowContent(spec, expanded: null);
+    if (!_expandable) {
+      return MouseRegion(
+        onEnter: (_) => _rowStates.update(WidgetState.hovered, true),
+        onExit: (_) => _rowStates.update(WidgetState.hovered, false),
+        child: _styledRow(),
+      );
+    }
 
     return RemixDisclosure(
       expanded: _disclosure.expanded,
-      onExpandedChanged: _disclosure.toggle,
+      onExpandedChanged: _toggle,
       focusNode: _rowFocus,
+      onHoverChange: (value) => _rowStates.update(WidgetState.hovered, value),
+      onPressChange: (value) => _rowStates.update(WidgetState.pressed, value),
+      onFocusChange: (value) => _rowStates.update(WidgetState.focused, value),
       style: widget.disclosureStyle,
       trigger: const SizedBox.shrink(),
       triggerBuilder: (context, state, _) =>
-          _rowContent(spec, expanded: state.isExpanded),
+          _styledRow(expanded: state.isExpanded),
       content: _output(spec),
     );
   }
@@ -481,14 +632,21 @@ class _AgentToolCallState extends State<AgentToolCall>
                     ColumnBox(
                       styleSpec: spec.cardHeading,
                       children: [
-                        RowBox(
-                          styleSpec: spec.cardTitleRow,
-                          children: [
-                            Expanded(
-                              child: StyledText(title, styleSpec: spec.title),
-                            ),
-                            _status(spec),
-                          ],
+                        LayoutBuilder(
+                          builder: (context, constraints) => RowBox(
+                            styleSpec: spec.cardTitleRow,
+                            children: [
+                              Expanded(
+                                child: StyledText(title, styleSpec: spec.title),
+                              ),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: constraints.maxWidth / 2,
+                                ),
+                                child: _status(spec),
+                              ),
+                            ],
+                          ),
                         ),
                         StyledText(call.name, styleSpec: spec.toolId),
                       ],
@@ -513,40 +671,44 @@ class _AgentToolCallState extends State<AgentToolCall>
           ),
           RowBox(
             styleSpec: spec.footer,
-            children: [
-              if (widget.offerAlwaysAllow)
-                RemixButton(
-                  key: const ValueKey('agent-tool-call-always-allow'),
-                  label: '${widget.alwaysAllowLabel} ${call.name}',
-                  textBuilder: (context, textSpec, text) => Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(text: '${widget.alwaysAllowLabel} '),
-                        TextSpan(text: call.name, style: toolStyle),
-                      ],
+            children: agentActionRowChildren(
+              gap: spec.footer.spec.flex?.spec.spacing ?? 0,
+              leading: !widget.offerAlwaysAllow
+                  ? null
+                  : RemixButton(
+                      key: const ValueKey('agent-tool-call-always-allow'),
+                      label: '${widget.alwaysAllowLabel} ${call.name}',
+                      textBuilder: (context, textSpec, text) => Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(text: '${widget.alwaysAllowLabel} '),
+                            TextSpan(text: call.name, style: toolStyle),
+                          ],
+                        ),
+                        style: textSpec.style,
+                      ),
+                      enabled: canDecide,
+                      onPressed: () =>
+                          _decide(AgentApprovalDecision.alwaysAllow),
+                      style: widget.alwaysAllowStyle,
                     ),
-                    style: textSpec.style,
-                  ),
+              trailing: [
+                RemixButton(
+                  key: const ValueKey('agent-tool-call-deny'),
+                  label: widget.denyLabel,
                   enabled: canDecide,
-                  onPressed: () => _decide(AgentApprovalDecision.alwaysAllow),
-                  style: widget.alwaysAllowStyle,
+                  onPressed: () => _decide(AgentApprovalDecision.deny),
+                  style: widget.denyStyle,
                 ),
-              const Spacer(),
-              RemixButton(
-                key: const ValueKey('agent-tool-call-deny'),
-                label: widget.denyLabel,
-                enabled: canDecide,
-                onPressed: () => _decide(AgentApprovalDecision.deny),
-                style: widget.denyStyle,
-              ),
-              RemixButton(
-                key: const ValueKey('agent-tool-call-allow-once'),
-                label: widget.allowOnceLabel,
-                enabled: canDecide,
-                onPressed: () => _decide(AgentApprovalDecision.allowOnce),
-                style: widget.allowOnceStyle,
-              ),
-            ],
+                RemixButton(
+                  key: const ValueKey('agent-tool-call-allow-once'),
+                  label: widget.allowOnceLabel,
+                  enabled: canDecide,
+                  onPressed: () => _decide(AgentApprovalDecision.allowOnce),
+                  style: widget.allowOnceStyle,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -557,10 +719,21 @@ class _AgentToolCallState extends State<AgentToolCall>
   Widget build(BuildContext context) {
     super.build(context);
     final call = _call;
-    if (!call.status.needsDecision) {
-      final renderer = AgentToolRenderers.maybeOf(context, call.name);
-      if (renderer != null) return renderer(context, call);
+    final renderer = call.status.needsDecision
+        ? null
+        : AgentToolRenderers.maybeOf(context, call.name);
+    final interactiveRow = call.status.needsDecision || renderer != null
+        ? null
+        : _expandable;
+    if (_interactiveRow != interactiveRow) {
+      // Removed detectors do not report exit or release. Their transient
+      // states must not carry into the replacement row.
+      _rowStates
+        ..update(WidgetState.hovered, false)
+        ..update(WidgetState.pressed, false);
+      _interactiveRow = interactiveRow;
     }
+    if (renderer != null) return renderer(context, call);
 
     return AgentValueScope<AgentToolCallStatus>(
       value: call.status,
@@ -590,6 +763,7 @@ class _AgentToolCallState extends State<AgentToolCall>
     _outputEdge.dispose();
     _focus.dispose();
     _rowFocus.dispose();
+    _rowStates.dispose();
     super.dispose();
   }
 }
@@ -618,7 +792,8 @@ extension AgentToolCallStylerStatus on AgentToolCallStyler {
 @MixableSpec()
 @immutable
 final class AgentToolCallSpec with _$AgentToolCallSpec {
-  /// The row: icon, text, status and indicator.
+  /// The row: icon, text, status and indicator. Resolves hover, press and
+  /// focus variants from the row's interaction state.
   @override
   final StyleSpec<FlexBoxSpec> row;
 
@@ -626,15 +801,17 @@ final class AgentToolCallSpec with _$AgentToolCallSpec {
   @override
   final StyleSpec<IconSpec> icon;
 
-  /// The call's summary.
+  /// The call's summary and the row's paragraph configuration.
+  /// The row always uses one line with an ellipsis.
   @override
   final StyleSpec<TextSpec> summary;
 
-  /// The meta after the summary: detail, duration and decision.
+  /// The inline meta: style, directives, locale and semantics for the detail,
+  /// duration and decision.
   @override
   final StyleSpec<TextSpec> meta;
 
-  /// The tool id, in the meta and on the card.
+  /// The tool id, inline on the row and as a full text slot on the card.
   @override
   final StyleSpec<TextSpec> toolId;
 
@@ -658,9 +835,18 @@ final class AgentToolCallSpec with _$AgentToolCallSpec {
   @override
   final StyleSpec<BoxSpec> output;
 
-  /// The tallest the well's content grows before it scrolls.
+  /// The tallest the well's content grows before it scrolls and offers
+  /// "Show all". Null leaves the content unbounded.
   @override
   final double? outputMaxHeight;
+
+  /// The "Show all" / "Show less" button below overflowing output.
+  @override
+  final StyleSpec<FlexBoxSpec> outputToggle;
+
+  /// The output toggle's label.
+  @override
+  final StyleSpec<TextSpec> outputToggleLabel;
 
   /// Wraps the output text.
   @override
@@ -731,6 +917,8 @@ final class AgentToolCallSpec with _$AgentToolCallSpec {
     StyleSpec<IconSpec>? indicator,
     StyleSpec<BoxSpec>? output,
     this.outputMaxHeight,
+    StyleSpec<FlexBoxSpec>? outputToggle,
+    StyleSpec<TextSpec>? outputToggleLabel,
     StyleSpec<BoxSpec>? outputContent,
     StyleSpec<TextSpec>? outputText,
     StyleSpec<BoxSpec>? error,
@@ -755,6 +943,9 @@ final class AgentToolCallSpec with _$AgentToolCallSpec {
        statusLabel = statusLabel ?? const StyleSpec(spec: TextSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec()),
        output = output ?? const StyleSpec(spec: BoxSpec()),
+       outputToggle = outputToggle ?? const StyleSpec(spec: FlexBoxSpec()),
+       outputToggleLabel =
+           outputToggleLabel ?? const StyleSpec(spec: TextSpec()),
        outputContent = outputContent ?? const StyleSpec(spec: BoxSpec()),
        outputText = outputText ?? const StyleSpec(spec: TextSpec()),
        error = error ?? const StyleSpec(spec: BoxSpec()),

@@ -14,7 +14,9 @@ part 'sources.g.dart';
 /// The sources an answer refers to, as one line that opens a list.
 ///
 /// The line reads "2 files referenced" by default and opens the sources as
-/// chips. With [onSourcePressed], each chip is a button.
+/// chips. With [onSourcePressed], each chip is a button. An empty [sources]
+/// list renders nothing. Source ids need not be unique: each chip is keyed
+/// by its id and position.
 class AgentSources extends StatelessWidget {
   /// Creates the sources line for [sources].
   const AgentSources({
@@ -74,11 +76,11 @@ class AgentSources extends StatelessWidget {
     trigger: FlexBoxStyler().mainAxisSize(MainAxisSize.min),
   );
 
-  Widget _source(AgentSourcesSpec spec, AgentSource source) {
+  Widget _source(AgentSourcesSpec spec, AgentSource source, int index) {
     final onPressed = onSourcePressed;
     if (onPressed != null) {
       return RemixButton(
-        key: ValueKey('agent-source-${source.id}'),
+        key: ValueKey('agent-source-${source.id}-$index'),
         label: source.title,
         onPressed: () => onPressed(source),
         style: sourceStyle,
@@ -86,7 +88,7 @@ class AgentSources extends StatelessWidget {
     }
 
     return Box(
-      key: ValueKey('agent-source-${source.id}'),
+      key: ValueKey('agent-source-${source.id}-$index'),
       styleSpec: spec.source,
       child: StyledText(source.title, styleSpec: spec.sourceLabel),
     );
@@ -94,6 +96,8 @@ class AgentSources extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // No sources, no line: "0 files referenced" and an empty list say nothing.
+    if (sources.isEmpty) return const SizedBox.shrink();
     final label = (labelBuilder ?? defaultLabel)(sources.length);
 
     return RemixStyleSpecBuilder<AgentSourcesSpec>(
@@ -133,7 +137,10 @@ class AgentSources extends StatelessWidget {
         },
         content: WrapBox(
           styleSpec: spec.list,
-          children: [for (final source in sources) _source(spec, source)],
+          children: [
+            for (final (index, source) in sources.indexed)
+              _source(spec, source, index),
+          ],
         ),
       ),
     );

@@ -1,3 +1,23 @@
+## 1.0.0-rc.3
+
+### Features
+
+- Add the experimental `package:remix/agent.dart` library for agent chat
+  surfaces: a conversation that follows the live edge, messages, steps, tool
+  calls with an approval card and an expandable output well, answers,
+  sources, suggestions and a composer, with their models and behavior
+  controllers. Its widgets have Mix specs with empty visual defaults; presets
+  style them through registry recipes. It is outside Remix's stability
+  promise, and `remix.dart` does not export it (#455, #457, #467, #470).
+- Add named constructors and chainable methods for every
+  `RemixLinearGradientMix` property: `colors`, `stops`, `begin`, `end`,
+  `tileMode` and `transform` (#469).
+
+### Documentation
+
+- Introduce the experimental agent library in the README (#470), and add a
+  Start with AI prompt and the `remix skills install` command (#428).
+
 ## 1.0.0-rc.2
 
 ### Dependencies

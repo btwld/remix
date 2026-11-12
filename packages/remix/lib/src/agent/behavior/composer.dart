@@ -60,9 +60,11 @@ class AgentComposerController extends TextEditingController {
   ///
   /// Returns the trimmed text and, when [clearOnSubmit] is true, empties the
   /// field. Returns null and leaves the draft as it is when [canSubmit] is
-  /// false or an input method is composing.
+  /// false. It does not check for an input method's composition: a Send
+  /// button sends the draft as shown, and only the Enter key, in
+  /// [handleKeyEvent], defers to the composition.
   String? submit() {
-    if (!canSubmit || isComposing) return null;
+    if (!canSubmit) return null;
     final prompt = text.trim();
     if (clearOnSubmit) clear();
 
