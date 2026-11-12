@@ -1,0 +1,24 @@
+component: Activity recipe
+widget: heroUiAgentActivityRecipe
+target: "AgentActivityStyler and the child stylers of activity.yaml"
+status: implemented
+extension: "No Agent family in @heroui/react 3.2.6. HeroUI's own recipes passed into the shared Agent stylers, as Vanilla and Fortal pass theirs."
+source:
+  ref: none
+  derivedFrom: ["specs/components/activity.yaml", "specs/heroui/tokens.json"]
+recipes: "disclosure: heroUiDisclosureStyle"
+anatomy: "as activity.yaml"
+variants: []
+sizes: {supported: [], default: null}
+states: "the states of the HeroUI recipes it passes"
+tokens:
+  - "foreground (titles, chevron)"
+  - "muted (details, count, pending mark)"
+  - "accent (active and completed marks)"
+  - "text-sm (titles), text-xs (details, count)"
+measurements:
+  - {what: rows, value: "6 vertical padding, 8 between mark and title; the ledger caps at 200 high", cite: "designed"}
+  - {what: trigger, value: "12 vertical padding; the panel has no inset of its own", cite: "designed"}
+approximations:
+  - "No upstream reference: HeroUI web 3.2.6 has no Agent surfaces, so every value above is designed from existing HeroUI tokens and recipes, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "Spacing follows the Vanilla recipe; type uses HeroUI's text-xs and text-sm tokens in place of Vanilla's literal 12, 13 and 14."

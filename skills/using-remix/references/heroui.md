@@ -9,8 +9,8 @@ edit. For install commands, scope placement, and theme selection shared with
 the other presets, see the [main skill](../SKILL.md).
 
 Sections: [Recipes](#recipes) · [Compositions](#compositions) ·
-[Overlays](#overlays) · [Theme](#theme) · [Tokens](#tokens) ·
-[Not included](#not-included).
+[Overlays](#overlays) · [Dashboard extensions](#dashboard-extensions) ·
+[Theme](#theme) · [Tokens](#tokens) · [Not included](#not-included).
 
 ## Recipes
 
@@ -175,6 +175,64 @@ ToastStyler secondaryAction() => ToastStyler()
   resolved from context as the dialog's barrier color.
 - Overlays keep the theme through `HeroUiTheme`'s `InheritedTheme.wrap`;
   place the scope in `WidgetsApp.builder`, above the Navigator.
+
+## Dashboard extensions
+
+HeroUI web 3.2.6 has no navbar, sidebar, or application shell, so `app_bar`,
+`sidebar`, `sidebar_layout`, `icons`, and `dashboard_shell` are extensions:
+styled with HeroUI's tokens and recipes, with no upstream reference behind
+their geometry. A sidebar destination is the `sm` ghost `HeroUiToggleButton`
+(selected is `accent-soft`), a collapsed rail labels it with `HeroUiTooltip`,
+and the app bar and the sidebar's brand row share a 64px toolbar over a
+`separator` line. `HeroUiDashboardShell` takes the same parameters as the
+other presets' shells; the host owns navigation state and page content:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+Widget shell(String page, ValueChanged<String> select, Widget body) =>
+    HeroUiDashboardShell<String>(
+      sections: const [
+        RemixSidebarSection(
+          label: 'Workspace',
+          destinations: [
+            RemixSidebarDestination(
+              value: 'overview',
+              label: 'Overview',
+              icon: HeroUiIcons.dashboard,
+            ),
+          ],
+        ),
+      ],
+      selectedValue: page,
+      onSelected: select,
+      title: 'Overview',
+      brand: const Text('Northstar'),
+      onSearchChanged: (query) {},
+      body: body,
+    );
+```
+
+The shell's search is a `HeroUiSearchField`, and its icon buttons are ghost
+`HeroUiIconButton`s. Below 720 logical pixels the sidebar moves into a
+start-edge sheet over the `backdrop` scrim.
+
+`chart`, the eight Agent items, and `dashboard_demo` are extensions as well.
+`HeroUiLineChart`, `HeroUiBarChart`, and `HeroUiPieChart` draw series in
+`heroUiChartSeries`: `accent`, `muted`, `foreground`, then `border-tertiary`.
+These are existing tokens, never a status color; the theme has no chart
+tokens. The fourth series is under 3:1 against a card, so a chart with more
+than three series should label its marks or pass `palette`. The Agent recipes
+(`heroUiAgentComposerRecipe()` and the rest) pass HeroUI's card, button, icon
+button, disclosure, and text area styles to the shared Agent components.
+HeroUI has no data list, so the permission parameters are styled in that
+recipe. `HeroUiDashboardDemo` is the other presets' five-destination demo
+(the same data, copy, and behavior) drawn with HeroUI components. Its
+order filter and appearance choices are `RemixSegmentedControl`, as in
+Vanilla, drawn in the primary tabs pill: HeroUI has no segmented control, and
+a choice with no panels is not a tab list.
 
 ## Theme
 

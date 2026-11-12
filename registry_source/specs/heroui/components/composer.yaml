@@ -1,0 +1,16 @@
+component: Composer
+widget: HeroUiComposer
+target: "shared Agent behavior: AgentComposer (registry_source/lib/src/agent)"
+status: implemented
+extension: "No Agent family in @heroui/react 3.2.6. The shared Agent behavior installed unchanged into HeroUI; its appearance is composer_recipe.yaml."
+source:
+  ref: none
+  derivedFrom: ["specs/components/composer.yaml", composer_recipe.yaml]
+anatomy: "as specs/components/composer.yaml: the prompt field with submit and stop"
+variants: []
+sizes: {supported: [], default: null}
+states: "as specs/components/composer.yaml"
+tokens: []
+measurements: []
+approximations:
+  - "No upstream reference: HeroUI web 3.2.6 has no Agent surfaces. The behavior, semantics and anatomy are the shared Agent source Vanilla and Fortal install, byte for byte; it carries no visual defaults of its own. Listed under `extensions` in reference/heroui_3_2_6/families.json."

@@ -1,0 +1,16 @@
+component: Support
+widget: none
+target: "shared Agent source: support/disclosure.dart, support/functional_glyph.dart, support/live_edge.dart"
+status: implemented
+extension: "No Agent family in @heroui/react 3.2.6. Shared Agent source installed unchanged into HeroUI: private helpers of the Agent components: a disclosure shell, functional glyphs and the live edge."
+source:
+  ref: none
+  derivedFrom: [registry_source/lib/src/agent/support]
+anatomy: []
+variants: []
+sizes: {supported: [], default: null}
+states: []
+tokens: []
+measurements: []
+approximations:
+  - "No upstream reference and no appearance: this is the same source Vanilla and Fortal install. Listed under `extensions` in reference/heroui_3_2_6/families.json."

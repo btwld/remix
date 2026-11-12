@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -242,6 +243,9 @@ class _GalleryState extends State<Gallery> {
     (360, _accordions()),
     (300, _toastsAndAlerts()),
     (330, _table()),
+    (560, _charts()),
+    (620, _agent()),
+    (420, _dashboard()),
   ];
 
   Widget _card(String title, List<Widget> children) {
@@ -996,4 +1000,403 @@ class _GalleryState extends State<Gallery> {
         ),
     ]);
   }
+
+  Widget _charts() {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    return _card('Chart', [
+      _caption(
+        'An extension over mix_chart: the series are accent, muted, and '
+        'foreground, never a status colour.',
+      ),
+      SizedBox(
+        height: 160,
+        child: AcmeLineChart(
+          semanticsLabel: 'Visitors and signups',
+          showMarkers: true,
+          series: [
+            for (final (index, (id, values)) in const [
+              ('visitors', [32.0, 41.0, 38.0, 52.0, 49.0, 61.0]),
+              ('signups', [12.0, 18.0, 16.0, 24.0, 28.0, 30.0]),
+            ].indexed)
+              LineSeries(
+                id: id,
+                label: index == 0 ? 'Visitors' : 'Signups',
+                points: [
+                  for (final (x, y) in values.indexed)
+                    ChartPoint(id: '$id-$x', x: x.toDouble(), y: y),
+                ],
+              ),
+          ],
+          xAxis: ChartAxis.numeric(
+            min: -0.5,
+            max: months.length - 0.5,
+            interval: 1,
+            minIncluded: false,
+            maxIncluded: false,
+            labelFormatter: (value) {
+              final index = value.round();
+              return index >= 0 && index < months.length ? months[index] : '';
+            },
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 160,
+        child: AcmeBarChart(
+          semanticsLabel: 'Orders by channel',
+          groups: [
+            for (final (index, month) in months.take(4).indexed)
+              BarGroup(
+                id: month,
+                label: month,
+                bars: [
+                  BarValue(id: 'web', label: 'Web', toY: 20.0 + index * 6),
+                  BarValue(id: 'app', label: 'App', toY: 14.0 + index * 4),
+                  BarValue(id: 'store', label: 'Store', toY: 8.0 + index * 2),
+                ],
+              ),
+          ],
+        ),
+      ),
+      SizedBox(
+        height: 180,
+        child: AcmePieChart(
+          semanticsLabel: 'Order status',
+          centerRadius: 40,
+          style: PieChartStyler().slice(PieSliceStyler().radius(44)),
+          slices: [
+            PieSlice(id: 'fulfilled', label: 'Fulfilled', value: 72),
+            PieSlice(id: 'processing', label: 'Processing', value: 18),
+            PieSlice(id: 'review', label: 'Review', value: 10),
+          ],
+        ),
+      ),
+    ]);
+  }
+
+  Widget _agent() {
+    final message = acmeAgentMessageRecipe();
+    final answer = acmeAgentAnswerRecipe();
+    // Below 600 wide the actions stack, as the dashboard chat stacks them:
+    // three HeroUI buttons do not fit side by side inside a phone card.
+    final narrow = MediaQuery.sizeOf(context).width < 600;
+    final permission = acmeAgentPermissionRecipe(
+      style: AcmePermissionStyler(
+        actions: FlexBoxStyler()
+            .direction(narrow ? .vertical : .horizontal)
+            .crossAxisAlignment(narrow ? .stretch : .center),
+      ),
+    );
+    final composer = acmeAgentComposerRecipe();
+    return _card('Agent surfaces', [
+      _caption(
+        'The shared Agent behavior with HeroUI card, button, disclosure, '
+        'and text area recipes. An extension: HeroUI web has none.',
+      ),
+      AcmeMessage(
+        role: AcmeRole.user,
+        surfaceStyle: message.surfaceStyle,
+        style: message.style,
+        child: const Text('Run the checkout checks.'),
+      ),
+      AcmePermission(
+        tool: 'terminal',
+        title: 'Run flutter test?',
+        parameters: const [
+          RemixDataListItem(label: 'Command', value: 'flutter test'),
+        ],
+        onAllowOnce: () => setState(() => _lastAction = 'allow once'),
+        onAlwaysAllow: () => setState(() => _lastAction = 'always allow'),
+        onDeny: () => setState(() => _lastAction = 'deny'),
+        surfaceStyle: permission.surfaceStyle,
+        detailsStyle: permission.detailsStyle,
+        parametersStyle: permission.parametersStyle,
+        allowOnceStyle: permission.allowOnceStyle,
+        alwaysAllowStyle: permission.alwaysAllowStyle,
+        denyStyle: permission.denyStyle,
+        style: permission.style,
+      ),
+      AcmeAnswer(
+        status: AcmeAnswerStatus.complete,
+        onCopy: () => setState(() => _lastAction = 'copy'),
+        surfaceStyle: answer.surfaceStyle,
+        sourcesStyle: answer.sourcesStyle,
+        copyStyle: answer.copyStyle,
+        retryStyle: answer.retryStyle,
+        style: answer.style,
+        child: const Text('The checks pass. The flow is ready for review.'),
+      ),
+      AcmeComposer(
+        hintText: 'Ask a follow-up…',
+        onSubmit: (_) => setState(() => _lastAction = 'send'),
+        surfaceStyle: composer.surfaceStyle,
+        fieldStyle: composer.fieldStyle,
+        submitStyle: composer.submitStyle,
+        stopStyle: composer.stopStyle,
+        style: composer.style,
+      ),
+    ]);
+  }
+
+  Widget _dashboard() {
+    return _card('Dashboard shell', [
+      _caption(
+        'Sidebar, app bar, and layout extensions: HeroUI web has no '
+        'upstream family for these.',
+      ),
+      const AcmeAppBar(title: 'Overview', safeArea: false),
+      SizedBox(
+        height: 200,
+        child: AcmeSidebar<String>(
+          sections: _dashboardSections,
+          selectedValue: 'overview',
+          onSelected: (_) {},
+          semanticLabel: 'Sidebar preview',
+        ),
+      ),
+      AcmeButton.secondary(
+        label: 'Open dashboard',
+        onPressed: () => Navigator.of(context).push(
+          PageRouteBuilder<void>(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                DashboardReview(mode: widget.mode),
+          ),
+        ),
+      ),
+    ]);
+  }
+}
+
+const _dashboardSections = <RemixSidebarSection<String>>[
+  RemixSidebarSection(
+    label: 'Workspace',
+    destinations: [
+      RemixSidebarDestination(
+        value: 'overview',
+        label: 'Overview',
+        icon: AcmeIcons.dashboard,
+      ),
+      RemixSidebarDestination(
+        value: 'customers',
+        label: 'Customers',
+        icon: RemixIcons.group,
+      ),
+      RemixSidebarDestination(
+        value: 'orders',
+        label: 'Orders',
+        icon: RemixIcons.box,
+      ),
+    ],
+  ),
+  RemixSidebarSection(
+    label: 'Insights',
+    destinations: [
+      RemixSidebarDestination(
+        value: 'reports',
+        label: 'Reports',
+        icon: RemixIcons.chart,
+      ),
+      RemixSidebarDestination(
+        value: 'settings',
+        label: 'Settings',
+        icon: RemixIcons.gear,
+      ),
+    ],
+  ),
+];
+
+/// A full-window review of the installed dashboard shell: sidebar sections,
+/// app bar with search and a dark mode switch, and a simple overview page.
+class DashboardReview extends StatefulWidget {
+  /// Creates the review; [mode] drives the header switch.
+  const DashboardReview({super.key, required this.mode});
+
+  /// The app's theme mode, switched from the app bar.
+  final ValueNotifier<AcmeThemeMode> mode;
+
+  @override
+  State<DashboardReview> createState() => _DashboardReviewState();
+}
+
+class _DashboardReviewState extends State<DashboardReview> {
+  var _page = 'overview';
+
+  static const _titles = {
+    'overview': 'Overview',
+    'customers': 'Customers',
+    'orders': 'Orders',
+    'reports': 'Reports',
+    'settings': 'Settings',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return AcmeDashboardShell<String>(
+      sections: _dashboardSections,
+      selectedValue: _page,
+      onSelected: (value) => setState(() => _page = value),
+      title: _titles[_page]!,
+      brand: const _Brand(),
+      account: const _Account(),
+      onSearchChanged: (_) {},
+      headerActions: [
+        ValueListenableBuilder<AcmeThemeMode>(
+          valueListenable: widget.mode,
+          builder: (context, mode, _) => AcmeSwitch(
+            selected: mode == AcmeThemeMode.dark,
+            semanticLabel: 'Dark mode',
+            onChanged: (dark) => widget.mode.value = dark
+                ? AcmeThemeMode.dark
+                : AcmeThemeMode.light,
+          ),
+        ),
+      ],
+      body: _page == 'overview'
+          ? const _OverviewPage()
+          : Center(
+              child: AcmeTypography(
+                '${_titles[_page]} has no content in this review.',
+                type: .bodySm,
+                color: .muted,
+              ),
+            ),
+    );
+  }
+}
+
+class _Brand extends StatelessWidget {
+  const _Brand();
+
+  @override
+  Widget build(BuildContext context) => Row(
+    spacing: 8,
+    children: [
+      Box(
+        style: BoxStyler()
+            .size(24, 24)
+            .borderRadius(.circular(8))
+            .color(AcmeTokens.accent()),
+      ),
+      const Flexible(
+        child: AcmeTypography('Northstar', weight: .semibold, truncate: true),
+      ),
+    ],
+  );
+}
+
+class _Account extends StatelessWidget {
+  const _Account();
+
+  @override
+  Widget build(BuildContext context) => const Row(
+    spacing: 8,
+    children: [
+      AcmeAvatar.soft(label: 'AL', color: AcmeColor.accent, size: .sm),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AcmeTypography('Ada Lovelace', type: .bodySm, truncate: true),
+            AcmeTypography(
+              'ada@northstar.dev',
+              type: .bodyXs,
+              color: .muted,
+              truncate: true,
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+class _OverviewPage extends StatelessWidget {
+  const _OverviewPage();
+
+  static const _stats = [
+    ('Revenue', r'$48,210', '+12.4% this week'),
+    ('Orders', '1,284', '+3.1% this week'),
+    ('Customers', '312', '18 new this week'),
+  ];
+
+  static const _orders = [
+    ('Ada Lovelace', r'$1,240.00', 'Paid', AcmeColor.success),
+    ('Grace Hopper', r'$860.50', 'Pending', AcmeColor.warning),
+    ('Alan Turing', r'$2,105.00', 'Paid', AcmeColor.success),
+    ('Margaret Hamilton', r'$430.00', 'Refunded', AcmeColor.danger),
+  ];
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final wide = constraints.maxWidth >= 640;
+      final stats = [
+        for (final (label, value, change) in _stats)
+          AcmeCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4,
+              children: [
+                AcmeTypography(label, type: .bodySm, color: .muted),
+                AcmeTypography(value, type: .h4),
+                AcmeTypography(change, type: .bodyXs, color: .muted),
+              ],
+            ),
+          ),
+      ];
+      return SingleChildScrollView(
+        padding: EdgeInsets.all(wide ? 24 : 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 16,
+          children: [
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4,
+              children: [
+                AcmeTypography('Good morning, Ada', type: .h4),
+                AcmeTypography(
+                  'Here is what changed since yesterday.',
+                  type: .bodySm,
+                  color: .muted,
+                ),
+              ],
+            ),
+            if (wide)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16,
+                children: [for (final stat in stats) Expanded(child: stat)],
+              )
+            else
+              ...stats,
+            AcmeCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 12,
+                children: [
+                  const AcmeCardTitle('Recent orders'),
+                  for (final (name, amount, status, color) in _orders)
+                    Row(
+                      spacing: 12,
+                      children: [
+                        Expanded(
+                          child: AcmeTypography(
+                            name,
+                            type: .bodySm,
+                            truncate: true,
+                          ),
+                        ),
+                        AcmeTypography(amount, type: .bodySm),
+                        AcmeChip.soft(label: status, color: color),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

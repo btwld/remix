@@ -246,9 +246,15 @@ const _fortalPreset = _PresetContract(
   ],
 );
 
+/// HeroUI's items. `app_bar`, `chart`, `dashboard_demo`, `dashboard_shell`,
+/// `icons`, `sidebar`, `sidebar_layout` and the Agent items are extensions
+/// with no upstream family; see `extensions` in
+/// registry_source/reference/heroui_3_2_6/families.json.
 const _herouiRegistryItems = [
+  'icons',
   'accordion',
   'alert',
+  'app_bar',
   'avatar',
   'avatar_group',
   'badge',
@@ -260,6 +266,9 @@ const _herouiRegistryItems = [
   'range_calendar',
   'date_picker',
   'date_range_picker',
+  'chart',
+  'dashboard_demo',
+  'dashboard_shell',
   'checkbox',
   'checkbox_group',
   'chip',
@@ -280,6 +289,8 @@ const _herouiRegistryItems = [
   'select',
   'combobox',
   'separator',
+  'sidebar',
+  'sidebar_layout',
   'skeleton',
   'slider',
   'spinner',
@@ -295,18 +306,18 @@ const _herouiRegistryItems = [
   'toggle_button_group',
   'tooltip',
   'typography',
+  ..._agentRegistryItems,
 ];
 
 const _herouiPreset = _PresetContract(
   name: 'heroui',
   fixtureDirectory: 'heroui_fixture',
   registryItems: _herouiRegistryItems,
-  foundationItems: {'theme'},
   independentItems: null,
-  specStylerItems: [],
   requiredRuntimeDependencies: [
     'remix',
     'mix_annotations',
+    'mix_chart',
     'remix_ui_fonts',
     'remix_ui_icons',
   ],
@@ -314,6 +325,7 @@ const _herouiPreset = _PresetContract(
     'flutter',
     'remix',
     'mix_annotations',
+    'mix_chart',
     'remix_ui_fonts',
     'remix_ui_icons',
   ],
@@ -869,7 +881,8 @@ Future<void> main(List<String> arguments) async {
       'Usage: dart run tool/check_open_code.dart '
       '[--preset vanilla|fortal|heroui] [--source both|hosted|checkout] '
       '[--item dashboard_demo|dashboard_shell|icons|ownership|search_field (requires '
-      '--source checkout; icons/ownership are vanilla, search_field is heroui)] '
+      '--source checkout; icons/ownership are vanilla, search_field is '
+      'heroui only)] '
       '[--icon-library remix|rounded|lucide] '
       '[--hosted-cli (requires --source hosted)] [--jobs N (not with --item)] '
       '[--keep] [--verbose]\n'

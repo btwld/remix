@@ -1,0 +1,16 @@
+component: Icons
+widget: HeroUiIcons
+target: application-owned IconData aliases
+status: implemented
+extension: "An application-owned alias file over the registry icon table, as in Vanilla and Fortal. The upstream icon set stays deferred in families.json."
+source:
+  ref: none
+  derivedFrom: [registry/icons.yaml]
+anatomy: [aliases]
+variants: []
+sizes: {supported: [], default: null}
+states: []
+tokens: []
+measurements: []
+approximations:
+  - "No upstream reference: these are the project's icon library glyphs (Vector UI Outline by default, or the iconLibrary in remix.yaml), not HeroUI's own icon set. Listed under `extensions` in reference/heroui_3_2_6/families.json."

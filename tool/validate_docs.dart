@@ -198,6 +198,7 @@ final _agentTypeDeclaration = RegExp(
 
 const _exampleSourceDirectories = <String>[
   'apps/dashboard/lib',
+  'apps/dashboard_heroui/lib',
   'apps/demo/lib',
   'apps/playground/lib',
   'packages/remix/example',
@@ -217,6 +218,7 @@ const _packageLibraryDirectories = <String>[
 // are optional today but should be picked up automatically when added later.
 const _testSourceDirectories = <String>[
   'apps/dashboard/test',
+  'apps/dashboard_heroui/test',
   'apps/demo/test',
   'apps/playground/test',
   'packages/remix/test',

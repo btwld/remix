@@ -479,5 +479,119 @@
    "status": "deferred",
    "reason": "React Aria internals, not a component"
   }
+ ],
+ "extensionsNote": "Extensions are HeroUI-styled items with no upstream family in @heroui/react 3.2.6. They are built only from the pinned tokens and the mapped recipes, carry no reference evidence, and their worksheets say so (ARCHITECTURE.md, HeroUI dashboard items are labelled extensions).",
+ "extensions": [
+  {
+   "item": "activity",
+   "remix": "AgentActivity",
+   "reason": "No Agent family upstream; the shared Agent behavior for the tool and step ledger of a run, unchanged."
+  },
+  {
+   "item": "activity_recipe",
+   "reason": "No Agent family upstream; passes HeroUI recipes into the shared AgentActivity stylers."
+  },
+  {
+   "item": "answer",
+   "remix": "AgentAnswer",
+   "reason": "No Agent family upstream; the shared Agent behavior for the assistant answer with sources, copy and retry, unchanged."
+  },
+  {
+   "item": "answer_recipe",
+   "reason": "No Agent family upstream; passes HeroUI recipes into the shared AgentAnswer stylers."
+  },
+  {
+   "item": "app_bar",
+   "remix": "RemixAppBar",
+   "reason": "No navbar or app bar family upstream; the dashboard shell's page header."
+  },
+  {
+   "item": "chart",
+   "remix": "mix_chart LineChart, BarChart, PieChart",
+   "reason": "No chart family upstream; series colors are an accent and neutral token ramp, not new colors."
+  },
+  {
+   "item": "composer",
+   "remix": "AgentComposer",
+   "reason": "No Agent family upstream; the shared Agent behavior for the prompt field with submit and stop, unchanged."
+  },
+  {
+   "item": "composer_recipe",
+   "reason": "No Agent family upstream; passes HeroUI recipes into the shared AgentComposer stylers."
+  },
+  {
+   "item": "dashboard_demo",
+   "reason": "No dashboard upstream; the other presets' demo over the shared base with HeroUI recipes and the chart, Agent and shell extensions."
+  },
+  {
+   "item": "dashboard_shell",
+   "reason": "No application shell upstream; composes sidebar_layout, sidebar, app_bar, button and search_field over the shared dashboard base."
+  },
+  {
+   "item": "execution",
+   "remix": "AgentExecution",
+   "reason": "No Agent family upstream; the shared Agent behavior for a command run with its output, copy and retry, unchanged."
+  },
+  {
+   "item": "execution_recipe",
+   "reason": "No Agent family upstream; passes HeroUI recipes into the shared AgentExecution stylers."
+  },
+  {
+   "item": "icons",
+   "reason": "Application-owned aliases over the registry icon table; the upstream icon set stays deferred."
+  },
+  {
+   "item": "message",
+   "remix": "AgentMessage",
+   "reason": "No Agent family upstream; the shared Agent behavior for one transcript message, collapsible when long, unchanged."
+  },
+  {
+   "item": "message_recipe",
+   "reason": "No Agent family upstream; passes HeroUI recipes into the shared AgentMessage stylers."
+  },
+  {
+   "item": "models",
+   "reason": "Shared Agent data types the Agent components depend on."
+  },
+  {
+   "item": "permission",
+   "remix": "AgentPermission",
+   "reason": "No Agent family upstream; the shared Agent behavior for a tool permission request with its parameters and answers, unchanged."
+  },
+  {
+   "item": "permission_recipe",
+   "reason": "No Agent family upstream; passes HeroUI recipes into the shared AgentPermission stylers."
+  },
+  {
+   "item": "plan",
+   "remix": "AgentPlan",
+   "reason": "No Agent family upstream; the shared Agent behavior for the step plan of a run, unchanged."
+  },
+  {
+   "item": "plan_recipe",
+   "reason": "No Agent family upstream; passes HeroUI recipes into the shared AgentPlan stylers."
+  },
+  {
+   "item": "sidebar",
+   "remix": "RemixSidebar",
+   "reason": "No sidebar family upstream; destinations reuse the ghost toggle_button and tooltip recipes."
+  },
+  {
+   "item": "sidebar_layout",
+   "reason": "No layout family upstream; pairs the sidebar with page content and a compact sheet."
+  },
+  {
+   "item": "support",
+   "reason": "Shared private helpers the Agent components depend on."
+  },
+  {
+   "item": "transcript",
+   "remix": "AgentTranscript",
+   "reason": "No Agent family upstream; the shared Agent behavior for the scrolling conversation that holds the other surfaces, unchanged."
+  },
+  {
+   "item": "transcript_recipe",
+   "reason": "No Agent family upstream; passes HeroUI recipes into the shared AgentTranscript stylers."
+  }
  ]
 }

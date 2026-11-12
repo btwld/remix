@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:open_code_fixture/main.dart';
 import 'package:open_code_fixture/ui/ui.dart';
 import 'package:remix/remix.dart';
@@ -254,6 +256,57 @@ void main() {
     });
   });
 
+  group('dashboard shell', () {
+    setUpAll(_loadGeist);
+
+    for (final size in [const Size(1440, 900), const Size(390, 844)]) {
+      final wide = size.width >= 720;
+      testWidgets('opens from the gallery and navigates at '
+          '${size.width.round()} logical pixels', (tester) async {
+        tester.view
+          ..physicalSize = size
+          ..devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await tester.pumpWidget(const AcmeApp());
+        await tester.pump(const Duration(milliseconds: 100));
+        await _tap(tester, find.text('Open dashboard'));
+        await tester.pump(const Duration(milliseconds: 400));
+
+        final shell = find.byType(AcmeDashboardShell<String>);
+        expect(shell, findsOneWidget);
+        expect(find.text('Good morning, Ada'), findsOneWidget);
+        expect(find.text('Northstar'), wide ? findsOneWidget : findsNothing);
+        expect(tester.takeException(), isNull);
+
+        await tester.tap(
+          find.descendant(of: shell, matching: find.byType(AcmeSwitch)),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(AcmeTheme.of(tester.element(shell)).brightness, Brightness.dark);
+        expect(tester.takeException(), isNull);
+
+        if (!wide) {
+          await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
+          await _settleSheet(tester);
+          expect(find.text('Northstar'), findsOneWidget);
+        }
+        await tester.tap(
+          find.descendant(
+            of: find.byType(AcmeSidebar<String>),
+            matching: find.text('Customers'),
+          ),
+        );
+        await _settleSheet(tester);
+        expect(
+          find.text('Customers has no content in this review.'),
+          findsOneWidget,
+        );
+        expect(find.text('Northstar'), wide ? findsOneWidget : findsNothing);
+        expect(tester.takeException(), isNull);
+      });
+    }
+  });
+
   testWidgets('every installed Acme widget builds below AcmeTheme', (
     tester,
   ) async {
@@ -285,6 +338,138 @@ void main() {
     );
     await tester.pumpWidget(const SizedBox.shrink());
   });
+
+  // Installed Agent recipes keep caller overrides, hover included.
+  group('Agent recipes', () {
+    testWidgets('answer copy control resolves its own hover override', (
+      tester,
+    ) async {
+      const idle = Color(0xFF123456);
+      const hovered = Color(0xFFABCDEF);
+      final recipe = acmeAgentAnswerRecipe(
+        copyStyle: IconButtonStyler()
+            .color(idle)
+            .onHovered(IconButtonStyler().color(hovered)),
+      );
+      final answer = AcmeAnswer(
+        status: AcmeAnswerStatus.complete,
+        style: recipe.style,
+        surfaceStyle: recipe.surfaceStyle,
+        copyStyle: recipe.copyStyle,
+        onCopy: () {},
+        child: const Text('Local answer'),
+      );
+      await tester.pumpWidget(
+        WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          builder: (_, _) =>
+              AcmeTheme(mode: AcmeThemeMode.light, child: answer),
+        ),
+      );
+      final copy = find.byWidgetPredicate(
+        (widget) =>
+            widget is RemixIconButton && widget.semanticLabel == 'Copy answer',
+      );
+      Iterable<Color?> colors() => tester
+          .widgetList<DecoratedBox>(
+            find.descendant(of: copy, matching: find.byType(DecoratedBox)),
+          )
+          .map(
+            (box) => box.decoration is BoxDecoration
+                ? (box.decoration as BoxDecoration).color
+                : null,
+          );
+      expect(colors(), contains(idle));
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(mouse.removePointer);
+      await mouse.addPointer(location: Offset.zero);
+      await mouse.moveTo(tester.getCenter(copy));
+      await tester.pumpAndSettle();
+      expect(colors(), contains(hovered));
+      expect(colors(), isNot(contains(idle)));
+    });
+
+    testWidgets('composer recipe preserves the caller surface override', (
+      tester,
+    ) async {
+      final recipe = acmeAgentComposerRecipe(
+        style: AcmeComposerStyler(toolbar: FlexBoxStyler().spacing(37)),
+      );
+      final result = await _resolve(tester, recipe.style);
+      expect(result.spec.toolbar.spec.flex?.spec.spacing, 37);
+    });
+    testWidgets('message recipe preserves the caller surface override', (
+      tester,
+    ) async {
+      final recipe = acmeAgentMessageRecipe(
+        style: AcmeMessageStyler(maxWidth: 37),
+      );
+      final result = await _resolve(tester, recipe.style);
+      expect(result.spec.maxWidth, 37);
+    });
+    testWidgets('answer recipe preserves the caller surface override', (
+      tester,
+    ) async {
+      final recipe = acmeAgentAnswerRecipe(
+        style: AcmeAnswerStyler(actions: FlexBoxStyler().spacing(37)),
+      );
+      final result = await _resolve(tester, recipe.style);
+      expect(result.spec.actions.spec.flex?.spec.spacing, 37);
+    });
+    testWidgets('execution recipe preserves the caller surface override', (
+      tester,
+    ) async {
+      final recipe = acmeAgentExecutionRecipe(
+        style: AcmeExecutionStyler(header: FlexBoxStyler().spacing(37)),
+      );
+      final result = await _resolve(tester, recipe.style);
+      expect(result.spec.header.spec.flex?.spec.spacing, 37);
+    });
+    testWidgets('permission recipe preserves the caller surface override', (
+      tester,
+    ) async {
+      final recipe = acmeAgentPermissionRecipe(
+        style: AcmePermissionStyler(actions: FlexBoxStyler().spacing(37)),
+      );
+      final result = await _resolve(tester, recipe.style);
+      expect(result.spec.actions.spec.flex?.spec.spacing, 37);
+    });
+    testWidgets('plan recipe preserves the caller surface override', (
+      tester,
+    ) async {
+      final recipe = acmeAgentPlanRecipe(
+        style: AcmePlanStyler(viewport: BoxStyler().maxHeight(37)),
+      );
+      final result = await _resolve(tester, recipe.style);
+      expect(result.spec.viewport.spec.constraints?.maxHeight, 37);
+    });
+    testWidgets('activity recipe preserves the caller surface override', (
+      tester,
+    ) async {
+      final recipe = acmeAgentActivityRecipe(
+        style: AcmeActivityStyler(viewport: BoxStyler().maxHeight(37)),
+      );
+      final result = await _resolve(tester, recipe.style);
+      expect(result.spec.viewport.spec.constraints?.maxHeight, 37);
+    });
+    testWidgets('transcript recipe preserves the caller surface override', (
+      tester,
+    ) async {
+      final recipe = acmeAgentTranscriptRecipe(
+        style: AcmeTranscriptStyler(spacing: 37),
+      );
+      final result = await _resolve(tester, recipe.style);
+      expect(result.spec.spacing, 37);
+    });
+  });
+}
+
+/// The compact sheet is pushed after the frame that asks for it, then slides
+/// for 250ms; the gallery below animates forever, so never wait for a settle.
+Future<void> _settleSheet(WidgetTester tester) async {
+  for (var frame = 0; frame < 4; frame++) {
+    await tester.pump(const Duration(milliseconds: 150));
+  }
 }
 
 /// Tests draw every family as Ahem unless it is loaded. The gallery sets
@@ -413,6 +598,21 @@ final _cases = <_WidgetCase>[
     {AcmeAccordionGroup<String>, AcmeAccordion<String>},
   ),
   const _WidgetCase('alert', AcmeAlert(text: 'Notice'), {AcmeAlert}),
+  _WidgetCase(
+    'Agent message',
+    AcmeMessageGroup(
+      children: [
+        AcmeMessage(
+          role: AcmeRole.user,
+          surfaceStyle: acmeAgentMessageRecipe().surfaceStyle,
+          style: acmeAgentMessageRecipe().style,
+          child: const Text('Review the checkout flow.'),
+        ),
+      ],
+    ),
+    {AcmeMessageGroup, AcmeMessage},
+  ),
+  const _WidgetCase('app bar', AcmeAppBar(title: 'Orders'), {AcmeAppBar}),
   const _WidgetCase('avatar', AcmeAvatar(label: 'AB'), {AcmeAvatar}),
   const _WidgetCase(
     'avatar group',
@@ -451,6 +651,43 @@ final _cases = <_WidgetCase>[
       ),
     ),
     {AcmeCard, AcmeCardTitle, AcmeCardDescription},
+  ),
+  _WidgetCase(
+    'line chart',
+    AcmeLineChart(
+      series: [
+        LineSeries(
+          id: 'revenue',
+          label: 'Revenue',
+          points: [
+            ChartPoint(id: 'a', x: 0, y: 18),
+            ChartPoint(id: 'b', x: 1, y: 31),
+          ],
+        ),
+      ],
+    ),
+    {AcmeLineChart},
+  ),
+  _WidgetCase(
+    'bar chart',
+    AcmeBarChart(
+      groups: [
+        BarGroup(
+          id: 'q1',
+          label: 'Q1',
+          bars: [BarValue(id: 'actual', label: 'Actual', toY: 42)],
+        ),
+      ],
+    ),
+    {AcmeBarChart},
+  ),
+  _WidgetCase(
+    'pie chart',
+    AcmePieChart(
+      centerRadius: 40,
+      slices: [PieSlice(id: 'mobile', label: 'Mobile', value: 64)],
+    ),
+    {AcmePieChart},
   ),
   const _WidgetCase(
     'checkbox',
@@ -649,6 +886,33 @@ final _cases = <_WidgetCase>[
     ),
     {AcmeToggleButtonGroup<String>},
   ),
+  _WidgetCase(
+    'sidebar in its layout',
+    AcmeSidebarLayout(
+      // The host is 640 wide; keep the sidebar inline.
+      compactBreakpoint: 320,
+      header: const AcmeAppBar(title: 'Orders'),
+      sidebar: AcmeSidebar<String>(
+        sections: const [
+          RemixSidebarSection(
+            label: 'Workspace',
+            destinations: [
+              RemixSidebarDestination(
+                value: 'orders',
+                label: 'Orders',
+                icon: AcmeIcons.dashboard,
+              ),
+            ],
+          ),
+        ],
+        selectedValue: 'orders',
+        onSelected: (_) {},
+      ),
+      body: const Text('Body'),
+    ),
+    // The layout is a StatefulWidget, outside the stateless inventory.
+    {AcmeSidebar<String>, AcmeAppBar},
+  ),
   const _WidgetCase(
     'tooltip',
     AcmeTooltip(tooltipChild: Text('Help'), child: Text('Hover')),
@@ -668,3 +932,23 @@ final class _WidgetCase {
 }
 
 Widget _stringCell(BuildContext context, String value) => Text(value);
+
+Future<StyleSpec<S>> _resolve<S extends Spec<S>>(
+  WidgetTester tester,
+  Style<S> style,
+) async {
+  late StyleSpec<S> result;
+  final child = Builder(
+    builder: (context) {
+      result = style.build(context);
+      return const SizedBox.shrink();
+    },
+  );
+  await tester.pumpWidget(
+    WidgetsApp(
+      color: const Color(0xFFFFFFFF),
+      builder: (_, _) => AcmeTheme(mode: AcmeThemeMode.light, child: child),
+    ),
+  );
+  return result;
+}

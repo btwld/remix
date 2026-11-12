@@ -1,0 +1,25 @@
+component: DashboardShell
+widget: HeroUiDashboardShell
+target: composition over the shared dashboard shell base
+status: implemented
+extension: "No application shell in @heroui/react 3.2.6. Composes the sidebar_layout, sidebar and app_bar extensions with the mapped button and search_field recipes."
+source:
+  ref: none
+  derivedFrom: [sidebar_layout.yaml, sidebar.yaml, app_bar.yaml, button.yaml, search_field.yaml]
+anatomy: [sidebar, brand row, collapse button, section labels, destinations, account footer, app bar, menu button, title, search, header actions, page]
+variants: []
+sizes: {supported: [], default: null}
+states: [wide, collapsed rail, compact, compact sheet open, search shown]
+tokens:
+  - background, separator (brand row; as app_bar.yaml)
+  - "controls: button.yaml ghost icon button (default-hover, default-foreground), search_field.yaml primary field"
+measurements:
+  - {what: brand row, value: "64 high with a 1px separator beneath, px-3, on background: the app bar's toolbar row", cite: "designed: app_bar.yaml"}
+  - {what: icon buttons, value: "ghost md icon button: 40 square below 768px, 36 from it", cite: "button.yaml md"}
+  - {what: search, value: "search_field primary, 240 wide, shown when the header is at least 760 wide", cite: "search_field.yaml; the shared base's defaults"}
+  - {what: rail, value: "256 expanded, 72 collapsed; destination icons settle on the rail's center line (16px leading padding) and return to px-3 expanded", cite: "designed"}
+  - {what: footer, value: "the separator and 12px vertical padding fold away with the account as the rail collapses", cite: "designed; the other presets' shells"}
+approximations:
+  - "No upstream reference: @heroui/react 3.2.6 ships no dashboard or application shell, so the composition and every value above are designed from existing HeroUI tokens and recipes. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "Behavior (navigation state, collapse, compact sheet, search visibility, focus order) is the shared dashboard base's, unchanged from Vanilla and Fortal."
+  - "Search uses HeroUiSearchIcon as its leading glyph in place of the base's plain icon, so it reads as HeroUI's search field."

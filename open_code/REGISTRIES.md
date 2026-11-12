@@ -261,6 +261,7 @@ floors through the [package release workflow](RELEASING.md).
 | `apps/playground` | Vanilla / Playground | Full catalog, Agent recipes and installed dashboard demo |
 | `apps/demo` | Fortal / Fortal | Non-Agent review catalog |
 | `apps/dashboard` | Fortal / Ui | Full catalog; Chat combines Agent surfaces |
+| `apps/dashboard_heroui` | HeroUI / Ui | Full catalog and installed dashboard demo |
 | `apps/widgetbook_vanilla` | Vanilla / Vanilla | Non-Agent review catalog |
 
 `tool/check_consumer_apps.dart` checks these installed trees. Fresh checkout
