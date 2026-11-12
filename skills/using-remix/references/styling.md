@@ -11,6 +11,7 @@ Sections: [Component-part stylers](#component-part-stylers) ·
 [.onSelected()](#onselected) · [Callable styles](#callable-styles) ·
 [Styling with installed tokens](#styling-with-installed-tokens) ·
 [Canonical spellings](#canonical-spellings) ·
+[Effects shorthand](#effects-shorthand) ·
 [Reusable and dynamic app styles](#reusable-and-dynamic-app-styles).
 
 ## Component-part stylers
@@ -122,6 +123,65 @@ differs:
 | `.color()` | `.backgroundColor()` |
 | `items:` (Menu/Select) | `entries:` |
 | `ButtonStyler` | the deprecated `RemixButtonStyler` alias |
+
+## Effects shorthand
+
+Use `containerEffects(...)` for layered gradients, outer/inset shadows,
+backdrop blur, and outlines; accordion/disclosure trigger-only effects use
+`triggerEffects(...)`. Compose these token-aware values with matching named
+constructors and instance methods:
+
+| Value | Constructor/method pairs |
+| --- | --- |
+| `RemixBoxEffectsMix` | `behindContent`, `overContent`, `backdropBlur`, `outline`, `outlineOffset` |
+| `RemixBoxEffectLayerMix` | `gradients`, `gradientInsets`, `shadows`, `shadowToken` |
+| `RemixBoxShadowMix` | `kind`, `color`, `offset`, `blurRadius`, `spreadRadius`, `shapeInset` |
+| `RemixLinearGradientMix` | `colors`, `stops`, `begin`, `end`, `tileMode`, `transform` |
+
+Prefer contextual shorthand inside typed arguments/lists. Name the class once
+when no expected type exists, such as `RemixLinearGradientMix().colors([...])`.
+In documentation examples, align `.colors`, `.begin`, and `.end` at the same
+visual level: they configure one gradient. Project Dart files follow
+`dart format`.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+final cardStyle = CardStyler().containerEffects(
+  .behindContent(
+    .gradients([
+      .colors([FortalTokens.accentSolid(), FortalTokens.accentContrast()])
+      .begin(.centerLeft)
+      .end(.centerRight),
+    ]).gradientInsets([1]).shadows([
+      .kind(.inset)
+          .color(FortalTokens.accentSolid())
+          .offset(const Offset(0, 1))
+          .blurRadius(3),
+    ]),
+  ),
+);
+```
+
+- Chains preserve unspecified fields and unresolved token references. Gradient
+  colors and stops resolve individually; use token calls directly in lists.
+- Each supplied list replaces that entire list, including `colors`, `stops`,
+  `gradients`, `gradientInsets`, and `shadows`; entries do not merge by index.
+  A resolved gradient needs at least two colors and one stop per color when
+  stops are supplied.
+- `shadows` and `shadowToken` target the same property: the last chained call
+  wins. The unnamed layer constructor accepts one or the other, not both.
+- Unnamed constructors still accept optional nullable fields for partial mixes;
+  null leaves a field unspecified. Shorthand factories and setters take
+  non-null values, so they do not act as null-reset operations. Low-level
+  `.create(...)` constructors retain their `Prop`-based assembly API.
+- An empty layer preserves inherited paint when merged. To clear it, provide
+  explicit empty lists: `.gradients([]).shadows([])`, plus `.gradientInsets([])`
+  when clearing insets.
+- Remix shadow `offset` takes `Offset`, unlike the named `x`/`y` arguments of
+  Mix's ordinary `.shadow(...)`. Use `.kind(.inset)` for a true inset shadow.
 
 ## Reduced motion
 

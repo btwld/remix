@@ -81,29 +81,22 @@ class _ReportingPeriodControlState extends State<ReportingPeriodControl> {
               .labelColor(colors.onSurface)
               .iconColor(colors.onSurface)
               .containerEffects(
-                RemixBoxEffectsMix(
-                  behindContent: RemixBoxEffectLayerMix(
-                    shadows: [
-                      RemixBoxShadowMix(
-                        color: colors.shadow.withValues(alpha: 0.18),
-                        offset: const Offset(0, 1),
-                        blurRadius: 3,
-                      ),
-                    ],
-                  ),
+                .behindContent(
+                  .shadows([
+                    .color(colors.shadow.withValues(alpha: 0.18))
+                        .offset(const Offset(0, 1))
+                        .blurRadius(3),
+                  ]),
                 ),
               ),
         )
         .onFocusVisible(
           .containerEffects(
-            RemixBoxEffectsMix(
-              outline: BorderSideMix(
-                color: colors.primary,
-                width: 2,
-                strokeAlign: BorderSide.strokeAlignInside,
-              ),
-              outlineOffset: 2,
-            ),
+            .outline(
+              .color(colors.primary)
+                  .width(2)
+                  .strokeAlign(BorderSide.strokeAlignInside),
+            ).outlineOffset(2),
           ),
         )
         .onDisabled(

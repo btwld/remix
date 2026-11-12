@@ -152,10 +152,9 @@ inside instead: give `outlineOffset` the negative of the ring width.
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
-final insetRing = RemixBoxEffectsMix(
-  outline: BorderSideMix(color: Colors.indigo, width: 2),
-  outlineOffset: -2,
-);
+final insetRing = RemixBoxEffectsMix()
+    .outline(.color(Colors.indigo).width(2))
+    .outlineOffset(-2);
 
 final segmentedStyle = ToggleGroupStyler(
   container: FlexBoxStyler()

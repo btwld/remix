@@ -124,6 +124,65 @@ final checkboxStyle = CheckboxStyler()
     .onSelected(.color(Colors.green));
 ```
 
+## Effects, layers, shadows, and gradients
+
+The same factory/fluent symmetry applies inside `containerEffects`, not just
+to component stylers. Start with a contextual named constructor and continue
+with methods on that same value:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final cardStyle = CardStyler().containerEffects(
+  .behindContent(
+    .gradients([
+      .colors([Colors.indigo, Colors.blue])
+      .begin(.centerLeft)
+      .end(.centerRight),
+    ]).gradientInsets([1]).shadows([
+      .color(const Color(0x33000000))
+          .offset(const Offset(0, 2))
+          .blurRadius(8),
+    ]),
+  ).outline(.color(Colors.indigo).width(2)).outlineOffset(2),
+);
+```
+
+Here `.colors`, `.begin`, and `.end` configure one `RemixLinearGradientMix`;
+`gradientInsets` and `shadows` configure its containing layer. Effects augment
+the ordinary box decoration. `behindContent` paints below the content and
+`overContent` paints above it.
+
+Each operation below has both a named constructor and a chainable method:
+
+| Value | Operations |
+| --- | --- |
+| `RemixBoxEffectsMix` | `behindContent`, `overContent`, `backdropBlur`, `outline`, `outlineOffset` |
+| `RemixBoxEffectLayerMix` | `gradients`, `gradientInsets`, `shadows`, `shadowToken` |
+| `RemixBoxShadowMix` | `kind`, `color`, `offset`, `blurRadius`, `spreadRadius`, `shapeInset` |
+| `RemixLinearGradientMix` | `colors`, `stops`, `begin`, `end`, `tileMode`, `transform` |
+
+Without an expected type, name the class once, for example
+`RemixLinearGradientMix().colors([Colors.indigo, Colors.blue]).end(.centerRight)`.
+Use `.kind(.inset)` for an inset shadow; shadow `offset` takes an `Offset`,
+not the named `x`/`y` arguments of Mix's ordinary `.shadow(...)` API.
+
+Chains preserve properties they do not set, including unresolved Mix token
+references. Each supplied list replaces that whole list rather than appending
+or merging its entries. `shadows` and `shadowToken` select the same layer
+property: the last chained call wins; the unnamed constructor accepts only
+one of them at a time. Gradient colors resolve individually, so a single
+`.colors([...])` can contain multiple color token calls. A resolved gradient
+needs at least two colors and, when supplied, one stop per color.
+
+The unnamed constructors retain their nullable, optional fields for assembling
+partial values, and `.create(...)` retains low-level `Prop`-based assembly.
+A null field means unspecified, not reset; shorthand factories and fluent
+setters take non-null values. An empty layer does not erase an inherited layer
+when merged. Clear its paint explicitly with
+`.gradients([]).shadows([])` (and `.gradientInsets([])` when clearing insets).
+
 ## Component-specific operations
 
 Component-specific operations use explicit names when a canonical operation

@@ -263,6 +263,10 @@ ButtonStyler _focusRing() => ButtonStyler().containerEffects(
 Text inputs ring on any focus, as browsers do, so key their ring on
 `onFocused` instead.
 
+For layered fills, shadows, and token-preserving gradient chains, use the
+[effects shorthand](../../using-remix/references/styling.md#effects-shorthand)
+constructor/method pairs.
+
 Tab, toggle, toggle group item, select menu item, menu item, and menu trigger
 take `containerEffects` like a button, and so does a sidebar destination, which
 is a toggle. Accordion and disclosure take `triggerEffects`, because their

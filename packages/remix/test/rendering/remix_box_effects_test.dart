@@ -230,6 +230,159 @@ void main() {
     // form on purpose: if a static counterpart went missing the file would
     // stop compiling, which is the assertion.
 
+    test('every gradient property can start or continue shorthand', () {
+      const colors = [Colors.red, Colors.blue];
+      const stops = [0.0, 1.0];
+      const rotation = GradientRotation(0.5);
+      final fragments = <RemixLinearGradientMix>[
+        .colors(colors),
+        .stops(stops),
+        .begin(.centerLeft),
+        .end(.centerRight),
+        .tileMode(.mirror),
+        .transform(rotation),
+      ];
+
+      final expected = RemixLinearGradientMix(
+        colors: colors,
+        stops: stops,
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        tileMode: TileMode.mirror,
+        transform: rotation,
+      );
+      expect(fragments.reduce((a, b) => a.merge(b)), expected);
+      expect(
+        RemixLinearGradientMix()
+            .colors(colors)
+            .stops(stops)
+            .begin(.centerLeft)
+            .end(.centerRight)
+            .tileMode(.mirror)
+            .transform(rotation),
+        expected,
+      );
+    });
+
+    testWidgets('nested shorthand resolves tokens and preserves overrides', (
+      tester,
+    ) async {
+      const start = ColorToken('test.gradient.start');
+      const end = ColorToken('test.gradient.end');
+      const stop = DoubleToken('test.gradient.stop');
+      const inset = DoubleToken('test.gradient.inset');
+      final base = RemixLinearGradientMix()
+          .colors([Colors.black, Colors.white, Colors.black])
+          .stops([0, 0.5, 1])
+          .begin(.centerLeft);
+      final style = ButtonStyler().containerEffects(
+        .behindContent(
+          .gradients([
+            base.colors([start(), end()]).stops([stop(), 1]).end(.centerRight),
+            .colors([end(), start()]).tileMode(.mirror),
+          ]).gradientInsets([inset(), 0]).shadows([
+            .kind(.inset).color(start()).blurRadius(4),
+          ]),
+        ).outline(.color(end()).width(2)).outlineOffset(3),
+      );
+      late RemixBoxEffectsSpec resolved;
+      await tester.pumpWidget(
+        MixScope(
+          tokens: {start: Colors.red, end: Colors.blue, stop: 0.0, inset: 2.0},
+          child: Builder(
+            builder: (context) {
+              resolved = style.resolve(context).spec.containerEffects!;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      expect(resolved.behindContent!.gradients, [
+        const LinearGradient(
+          colors: [Colors.red, Colors.blue],
+          stops: [0, 1],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        const LinearGradient(
+          colors: [Colors.blue, Colors.red],
+          stops: [0, 1],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          tileMode: TileMode.mirror,
+        ),
+      ]);
+      expect(resolved.behindContent!.gradientInsets, [2.0, 0.0]);
+      expect(resolved.behindContent!.shadows, [
+        const RemixBoxShadow(kind: .inset, color: Colors.red, blurRadius: 4),
+      ]);
+      expect(resolved.outline, const BorderSide(color: Colors.blue, width: 2));
+      expect(resolved.outlineOffset, 3);
+      expect(
+        base,
+        RemixLinearGradientMix(
+          colors: [Colors.black, Colors.white, Colors.black],
+          stops: [0, 0.5, 1],
+          begin: Alignment.centerLeft,
+        ),
+      );
+    });
+
+    testWidgets('effect patches preserve layers and replace shadow sources', (
+      tester,
+    ) async {
+      const token = RemixBoxShadowListToken('test.shorthand.shadows');
+      const tokenShadows = [RemixBoxShadow(color: Colors.blue, blurRadius: 8)];
+      final RemixBoxEffectLayerMix layer = .shadowToken(token)
+          .gradients([
+            .colors([Colors.red, Colors.blue]),
+          ])
+          .gradientInsets([2])
+          .shadows([.color(Colors.red)])
+          .shadowToken(token);
+      final RemixBoxEffectsMix base = .backdropBlur(6)
+          .behindContent(layer)
+          .overContent(.shadows([.color(Colors.red)]))
+          .outline(.color(Colors.green).width(2))
+          .outlineOffset(3);
+      final patches = <RemixBoxEffectsMix>[
+        .overContent(.shadowToken(token)),
+        .outline(.width(4)),
+        .outlineOffset(5),
+      ];
+      final style = base
+          .merge(patches.reduce((a, b) => a.merge(b)))
+          .backdropBlur(8);
+      late RemixBoxEffectsSpec resolved;
+      await tester.pumpWidget(
+        MixScope(
+          tokens: {token: tokenShadows},
+          child: Builder(
+            builder: (context) {
+              resolved = style.resolve(context);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      expect(resolved.behindContent!.gradients, [
+        const LinearGradient(
+          colors: [Colors.red, Colors.blue],
+          stops: [0, 1],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ]);
+      expect(resolved.behindContent!.gradientInsets, [2]);
+      expect(resolved.behindContent!.shadows, tokenShadows);
+      expect(resolved.overContent!.shadows, tokenShadows);
+      expect(resolved.backdropBlur, 8);
+      expect(resolved.outline, const BorderSide(color: Colors.green, width: 4));
+      expect(resolved.outlineOffset, 5);
+    });
+
     test('a layer constructor sets its own field and nothing else', () {
       final shadow = RemixBoxShadowMix(blurRadius: 12);
       expect(
@@ -255,19 +408,30 @@ void main() {
         RemixBoxShadowMix.offset(const Offset(0, 4)),
         RemixBoxShadowMix(offset: const Offset(0, 4)),
       );
+      final fragments = <RemixBoxShadowMix>[.spreadRadius(2), .shapeInset(1)];
+      expect(fragments, [
+        RemixBoxShadowMix(spreadRadius: 2),
+        RemixBoxShadowMix(shapeInset: 1),
+      ]);
     });
 
     test('the chainable counterpart merges rather than replaces', () {
-      final chained = RemixBoxShadowMix.color(
-        const Color(0xFF00FF00),
-      ).blurRadius(12).offset(const Offset(0, 4));
+      final chained = RemixBoxShadowMix.color(const Color(0xFF00FF00))
+          .kind(.inset)
+          .blurRadius(12)
+          .offset(const Offset(0, 4))
+          .spreadRadius(2)
+          .shapeInset(1);
 
       expect(
         chained,
         RemixBoxShadowMix(
+          kind: .inset,
           color: const Color(0xFF00FF00),
           blurRadius: 12,
           offset: const Offset(0, 4),
+          spreadRadius: 2,
+          shapeInset: 1,
         ),
       );
     });
