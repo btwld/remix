@@ -8,16 +8,12 @@ part of 'toggle.dart';
 
 /// The application's Toggle recipe.
 ///
-/// A toggle is a button that stays pressed. Remix owns the rendering, the
-/// pointer and keyboard behavior, and the on/off semantics; this recipe owns
-/// the geometry and the off/hover/on/focus/disabled fragments.
-///
-/// A toggle that is on sits on `accent` in `accentForeground`; a ghost toggle
-/// under the pointer sits on `muted` in `mutedForeground`. In the shipped
-/// themes the two surfaces are the same gray, so "on" is told from "pointed at"
-/// by its full-strength content, and a toggle that is on stays on when hovered.
-/// An outline toggle hovers onto `accent` instead, and keeps its outline in
-/// every state.
+/// A button that stays pressed. Remix owns the on/off semantics. A toggle that
+/// is on sits on `accent` in `accentForeground`; a ghost toggle under the
+/// pointer sits on `muted`. In the shipped themes those are the same gray, so
+/// "on" is told from "pointed at" by its full-strength content, and a toggle
+/// that is on stays on under the pointer. An outline toggle hovers onto `accent`
+/// and keeps its outline in every state.
 class PlaygroundToggle extends StatelessWidget {
   const PlaygroundToggle({
     super.key,

@@ -8,12 +8,13 @@ part of 'tabs.dart';
 
 /// The application's tab-strip recipe.
 ///
-/// The strip is 36px tall with a 3px inset, hugging its tabs. The
-/// [PlaygroundTabsVariant.filled] list is a recessed `muted` surface with large
-/// corners; the [PlaygroundTabsVariant.line] list has no surface of its own.
+/// A 36px strip with a 3px inset, hugging its tabs. [PlaygroundTabsVariant.filled]
+/// is a recessed `muted` list with large corners; [PlaygroundTabsVariant.line] has
+/// no surface of its own.
 ///
-/// The strip does not scroll. Tabs wider than the container are a layout
-/// decision, and the scroll view belongs **outside** the bar:
+/// The strip does not scroll. Put a scroll view **outside** the bar: Flutter's
+/// tab-bar semantics role requires every direct semantics child to be a tab, so
+/// a scroll view inside it trips an assertion.
 ///
 /// ```dart
 /// SingleChildScrollView(
@@ -22,13 +23,8 @@ part of 'tabs.dart';
 /// )
 /// ```
 ///
-/// Not inside it. Flutter's tab-bar semantics role requires every direct
-/// semantics child of the bar to be a tab, and a scroll view inserted between
-/// them adds a node of its own, which trips that assertion at runtime.
-///
-/// `RemixTabs` — the behavioral root that owns selection, roving focus, and
-/// arrow-key traversal — carries no styler and therefore no recipe. Compose it
-/// directly around this bar:
+/// `RemixTabs`, which owns selection and roving focus, has no styler and no
+/// recipe. Wrap the bar and the views in it directly:
 ///
 /// ```dart
 /// RemixTabs(
@@ -90,23 +86,15 @@ class PlaygroundTabBar extends StatelessWidget {
 
 /// The application's Tab recipe.
 ///
-/// Everything visual about one tab lives in this function: geometry,
-/// typography, and the hover/selected/focus/disabled fragments. Remix keeps
-/// ownership of rendering, selection, keyboard traversal, and the tab
-/// accessibility semantics — this recipe never reimplements any of that.
+/// `textSm` at medium weight, 60% `foreground` until hovered or current
+/// (`mutedForeground` in the dark theme). In the filled list the current tab is
+/// lifted onto the page color with a small shadow; in the dark theme onto a
+/// faint `input` well with an `input` outline, since the dark page is darker
+/// than the list. In the line list it is underlined in `foreground` instead.
 ///
-/// A tab is `textSm` at medium weight, 60% `foreground` until it is hovered or
-/// current (`mutedForeground` in the dark theme). In the filled list the
-/// current tab is lifted onto the page color with a small shadow — in the dark
-/// theme onto a faint `input` well with an `input` outline, since the dark page
-/// is darker than the list it would lift out of. In the line list the current
-/// tab is underlined in `foreground` instead.
-///
-/// `builder` is deliberately not forwarded to the generated
-/// `PlaygroundTab`. Its type is `ValueWidgetBuilder<NakedTabState>`, and
-/// `NakedTabState` comes from `package:naked_ui`, which this layer does not
-/// depend on. Pass a `child` for custom content, or reach for `RemixTab`
-/// directly on the rare call site that needs the raw state.
+/// The generated widget omits `builder`: `NakedTabState` comes from
+/// `package:naked_ui`, which this layer does not import. Pass a `child` for
+/// custom content, or use `RemixTab` for the raw state.
 class PlaygroundTab extends StatelessWidget {
   const PlaygroundTab({
     super.key,
@@ -218,11 +206,8 @@ class PlaygroundTab extends StatelessWidget {
   }
 }
 
-/// The application's recipe for the panel a tab reveals.
-///
-/// It exists so the panel carries the application's prefix and has one place to
-/// edit, and it earns that by owning the gap between the strip and the content:
-/// 8px.
+/// The panel a tab reveals. It owns the 8px gap between the strip and the
+/// content.
 class PlaygroundTabView extends StatelessWidget {
   const PlaygroundTabView({
     super.key,

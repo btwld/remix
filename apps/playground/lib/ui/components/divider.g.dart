@@ -8,20 +8,12 @@ part of 'divider.dart';
 
 /// The application's Divider recipe.
 ///
-/// A divider is a hairline in the `border` token, the same color every other
-/// control outline uses, so a rule between two rows matches the edge of the
-/// card around them.
+/// A `border` hairline, the same color and weight as every control outline. It
+/// fills the axis it runs along; a shorter rule is a layout decision, made with
+/// padding.
 ///
-/// It always fills the axis it is laid along rather than offering length
-/// presets: a rule that stops short of its container is a decision for the
-/// layout that placed it, expressed with ordinary padding.
-///
-/// [orientation] is a plain Flutter [Axis] rather than an enum of this
-/// layer's own. There is nothing application-specific about which way a line
-/// runs, and a local enum would only need mapping back at every call site.
-/// It is also not named `variant`, so the generator emits no named
-/// constructors for it — an axis is a value a caller computes, not a
-/// hand-written choice.
+/// [orientation] is Flutter's [Axis] and is not named `variant`, so the
+/// generator emits no named constructors for it.
 class PlaygroundDivider extends StatelessWidget {
   const PlaygroundDivider({
     super.key,

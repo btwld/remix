@@ -8,23 +8,15 @@ part of 'skeleton.dart';
 
 /// The application's Skeleton recipe.
 ///
-/// A skeleton is a placeholder that keeps a layout the right shape while its
-/// content loads. Remix owns the pulse animation, the semantics, and the rule
-/// that a wrapped child keeps sizing the placeholder in both states; this
-/// recipe supplies only the two colors and the tempo.
-///
-/// It takes no size. A skeleton is measured by the content it stands in for —
-/// either the child it wraps, or explicit constraints on the caller's own
-/// [style]:
+/// An `accent` block with `radiusMd` corners that pulses to half strength, so a
+/// loading block reads as scenery rather than content. It takes no size: the
+/// child it wraps, or explicit constraints on [style], measure it:
 ///
 /// ```dart
 /// VanillaSkeleton(
 ///   style: SkeletonStyler().container(.size(160, 20)),
 /// )
 /// ```
-///
-/// It is an `accent` block with `radiusMd` corners that pulses to half
-/// strength, so a loading block reads as scenery rather than as content.
 class VanillaSkeleton extends StatelessWidget {
   const VanillaSkeleton({
     super.key,

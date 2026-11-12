@@ -22,10 +22,8 @@ enum VanillaToastVariant {
 
 /// The application's Toast recipe.
 ///
-/// Remix owns the queue, the timers, focus, and the announcement through
-/// `RemixToastScope`; this recipe owns the surface, the type, and the colors.
-/// Hand it to the scope once, above the app's `Navigator` so every route,
-/// including dialogs, can reach it:
+/// Hand it to `RemixToastScope` once, above the app's `Navigator`, so every
+/// route (dialogs included) can reach it:
 ///
 /// ```dart
 /// WidgetsApp(
@@ -55,52 +53,55 @@ enum VanillaToastVariant {
 /// );
 /// ```
 ///
-/// The action and the close button reuse this application's Button and
-/// IconButton recipes, so they keep their own hover, focus, and press states.
+/// The action and close button reuse the Button and IconButton recipes, with
+/// their own hover, focus and press states.
 @MixWidget(target: RemixToast.new)
 ToastStyler vanillaToastStyle({
   VanillaToastVariant variant = .neutral,
   ToastStyler style = const ToastStyler.create(),
-}) => _base().merge(_variantStyle(variant)).merge(style);
+}) {
+  // The tone shows in the glyph and, for `destructive`, the outline. The text
+  // stays `popoverForeground`, which reads on the toast's own surface.
+  final (:border, :icon) = switch (variant) {
+    .neutral => (
+      border: VanillaTokens.border(),
+      icon: VanillaTokens.mutedForeground(),
+    ),
+    .destructive => (
+      border: VanillaTokens.destructive(),
+      icon: VanillaTokens.destructive(),
+    ),
+  };
 
-/// The toast's lift: 4px down, a 12px blur, black at 10%. A toast floats over
-/// content that keeps scrolling beneath it, so it is heavier than a card's.
-final _shadow = BoxShadowMix(
-  color: const Color(0x1A000000),
-  offset: const Offset(0, 4),
-  blurRadius: 12,
-);
-
-/// Surface, layout, and typography shared by both tones: the `popover` surface
-/// with the theme's `radius`.
-ToastStyler _base() => ToastStyler()
-    .color(VanillaTokens.popover())
-    .border(.color(VanillaTokens.border()).width(VanillaTokens.strokeHairline))
-    .borderRadius(.all(VanillaTokens.radiusLg()))
-    .padding(.all(VanillaTokens.s4))
-    .maxWidth(VanillaTokens.toastWidth)
-    .shadow(_shadow)
-    .spacing(VanillaTokens.s3)
-    .content(FlexBoxStyler().spacing(VanillaTokens.s1))
-    .title(
-      .style(
-        VanillaTokens.textSm.mix(),
-      ).fontWeight(FontWeight.w500).color(VanillaTokens.popoverForeground()),
-    )
-    .description(
-      .style(VanillaTokens.textSm.mix()).color(VanillaTokens.mutedForeground()),
-    )
-    .icon(.size(VanillaTokens.icon))
-    .action(vanillaButtonStyle(variant: .outline, size: .small))
-    .closeButton(vanillaIconButtonStyle(variant: .ghost, size: .small));
-
-/// The tone shows in the glyph and, for `destructive`, the outline. The
-/// sentence stays in `popoverForeground`, the color it is readable in on the
-/// toast's own surface.
-ToastStyler _variantStyle(VanillaToastVariant variant) => switch (variant) {
-  .neutral => ToastStyler().icon(.color(VanillaTokens.mutedForeground())),
-  .destructive =>
-    ToastStyler()
-        .border(.color(VanillaTokens.destructive()))
-        .icon(.color(VanillaTokens.destructive())),
-};
+  return ToastStyler()
+      .color(VanillaTokens.popover())
+      .border(.color(border).width(VanillaTokens.strokeHairline))
+      .borderRadius(.all(VanillaTokens.radiusLg()))
+      .padding(.all(VanillaTokens.s4))
+      .maxWidth(VanillaTokens.toastWidth)
+      // Heavier than a card's: a toast floats over content that keeps scrolling
+      // beneath it. Black at 10%.
+      .shadow(
+        BoxShadowMix(
+          color: const Color(0x1A000000),
+          offset: const Offset(0, 4),
+          blurRadius: 12,
+        ),
+      )
+      .spacing(VanillaTokens.s3)
+      .content(FlexBoxStyler().spacing(VanillaTokens.s1))
+      .title(
+        .style(
+          VanillaTokens.textSm.mix(),
+        ).fontWeight(FontWeight.w500).color(VanillaTokens.popoverForeground()),
+      )
+      .description(
+        .style(
+          VanillaTokens.textSm.mix(),
+        ).color(VanillaTokens.mutedForeground()),
+      )
+      .icon(.size(VanillaTokens.icon).color(icon))
+      .action(vanillaButtonStyle(variant: .outline, size: .small))
+      .closeButton(vanillaIconButtonStyle(variant: .ghost, size: .small))
+      .merge(style);
+}

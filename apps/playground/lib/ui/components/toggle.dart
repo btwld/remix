@@ -36,24 +36,57 @@ enum PlaygroundToggleSize {
 
 /// The application's Toggle recipe.
 ///
-/// A toggle is a button that stays pressed. Remix owns the rendering, the
-/// pointer and keyboard behavior, and the on/off semantics; this recipe owns
-/// the geometry and the off/hover/on/focus/disabled fragments.
-///
-/// A toggle that is on sits on `accent` in `accentForeground`; a ghost toggle
-/// under the pointer sits on `muted` in `mutedForeground`. In the shipped
-/// themes the two surfaces are the same gray, so "on" is told from "pointed at"
-/// by its full-strength content, and a toggle that is on stays on when hovered.
-/// An outline toggle hovers onto `accent` instead, and keeps its outline in
-/// every state.
+/// A button that stays pressed. Remix owns the on/off semantics. A toggle that
+/// is on sits on `accent` in `accentForeground`; a ghost toggle under the
+/// pointer sits on `muted`. In the shipped themes those are the same gray, so
+/// "on" is told from "pointed at" by its full-strength content, and a toggle
+/// that is on stays on under the pointer. An outline toggle hovers onto `accent`
+/// and keeps its outline in every state.
 @MixWidget(target: RemixToggle.new)
 ToggleStyler playgroundToggleStyle({
   PlaygroundToggleVariant variant = .ghost,
   PlaygroundToggleSize size = .medium,
   ToggleStyler style = const ToggleStyler.create(),
 }) {
-  return _base(_metricsFor(size))
-      .merge(_variantStyle(variant))
+  final metrics = _metricsFor(size);
+
+  return _content(PlaygroundTokens.foreground())
+      .animate(PlaygroundTokens.motion)
+      .color(_transparent)
+      .direction(.horizontal)
+      .mainAxisSize(.min)
+      .mainAxisAlignment(.center)
+      .crossAxisAlignment(.center)
+      .minHeight(metrics.minHeight)
+      // Equal to the height, so an icon-only toggle is square.
+      .minWidth(metrics.minHeight)
+      .padding(.horizontal(metrics.paddingX))
+      .spacing(PlaygroundTokens.s2)
+      .borderRadius(.all(PlaygroundTokens.radiusMd()))
+      .label(.style(PlaygroundTokens.textSm.mix()).fontWeight(FontWeight.w500))
+      .icon(.size(PlaygroundTokens.icon))
+      .merge(switch (variant) {
+        .ghost => ToggleStyler().onHovered(
+          _content(
+            PlaygroundTokens.mutedForeground(),
+          ).color(PlaygroundTokens.muted()),
+        ),
+        .outline =>
+          ToggleStyler()
+              .border(
+                .color(
+                  PlaygroundTokens.input(),
+                ).width(PlaygroundTokens.strokeHairline),
+              )
+              // In the effects layer: the toggle is transparent, and a
+              // decoration shadow would show through it.
+              .containerEffects(.behindContent(PlaygroundShadow.xs.effects))
+              .onHovered(
+                _content(
+                  PlaygroundTokens.accentForeground(),
+                ).color(PlaygroundTokens.accent()),
+              ),
+      })
       // After the variant's hover, so a toggle that is on stays on under the
       // pointer.
       .onSelected(
@@ -61,18 +94,29 @@ ToggleStyler playgroundToggleStyle({
           PlaygroundTokens.accentForeground(),
         ).color(PlaygroundTokens.accent()),
       )
-      .onFocusVisible(_focusVisibleStyle(variant))
-      .onDisabled(_disabledStyle())
+      .onFocusVisible(
+        ToggleStyler()
+            .containerEffects(playgroundFocusRing())
+            .merge(
+              variant == .outline
+                  ? ToggleStyler().border(playgroundFocusBorder())
+                  : null,
+            ),
+      )
+      // Declared last so it wins; the ring is cleared because a disabled
+      // control that still rings reads as actionable.
+      .onDisabled(
+        ToggleStyler()
+            .containerEffects(.outline(.style(.none)))
+            .wrap(.opacity(PlaygroundTokens.disabledOpacity)),
+      )
       .merge(style);
 }
 
-/// A fill that paints nothing, used while the toggle is off.
-const _noFill = Color(0x00000000);
+const _transparent = Color(0x00000000);
 
-/// Geometry for one [PlaygroundToggleSize]: 32px with a 6px side inset, 36px with
-/// 8, and 40px with 10.
-///
-/// The minimum width equals the height, so an icon-only toggle is square.
+/// Height and side inset for one [PlaygroundToggleSize]: 32px with a 6px inset,
+/// 36px with 8, and 40px with 10.
 typedef _PlaygroundToggleMetrics = ({double minHeight, double paddingX});
 
 _PlaygroundToggleMetrics _metricsFor(PlaygroundToggleSize size) =>
@@ -91,73 +135,6 @@ _PlaygroundToggleMetrics _metricsFor(PlaygroundToggleSize size) =>
       ),
     };
 
-/// Layout, typography, and the off appearance shared by both variants.
-ToggleStyler _base(_PlaygroundToggleMetrics metrics) =>
-    _content(PlaygroundTokens.foreground())
-        .animate(PlaygroundTokens.motion)
-        .color(_noFill)
-        .direction(.horizontal)
-        .mainAxisSize(.min)
-        .mainAxisAlignment(.center)
-        .crossAxisAlignment(.center)
-        .minHeight(metrics.minHeight)
-        .minWidth(metrics.minHeight)
-        .padding(.horizontal(metrics.paddingX))
-        .spacing(PlaygroundTokens.s2)
-        .borderRadius(.all(PlaygroundTokens.radiusMd()))
-        .label(
-          .style(PlaygroundTokens.textSm.mix()).fontWeight(FontWeight.w500),
-        )
-        .icon(.size(PlaygroundTokens.icon));
-
-/// The variant's outline and its hover.
-ToggleStyler _variantStyle(PlaygroundToggleVariant variant) =>
-    switch (variant) {
-      .ghost => ToggleStyler().onHovered(
-        _content(
-          PlaygroundTokens.mutedForeground(),
-        ).color(PlaygroundTokens.muted()),
-      ),
-      .outline =>
-        ToggleStyler()
-            .border(
-              .color(
-                PlaygroundTokens.input(),
-              ).width(PlaygroundTokens.strokeHairline),
-            )
-            // In the effects layer rather than the decoration: the toggle is
-            // transparent, and a decoration shadow would show through it.
-            .containerEffects(.behindContent(PlaygroundShadow.xs.effects))
-            .onHovered(
-              _content(
-                PlaygroundTokens.accentForeground(),
-              ).color(PlaygroundTokens.accent()),
-            ),
-    };
-
-/// Applies one content color to the label and the icons.
+/// One content color for the label and the icons.
 ToggleStyler _content(Color foreground) =>
     ToggleStyler().label(.color(foreground)).icon(.color(foreground));
-
-/// The keyboard focus ring: a 3px band of `ring` at half strength.
-///
-/// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// toggle without taking layout space, so focusing one never reflows the row
-/// it sits in. The outline variant also turns its own border `ring`.
-ToggleStyler _focusVisibleStyle(PlaygroundToggleVariant variant) {
-  final ring = ToggleStyler().containerEffects(playgroundFocusRing());
-
-  return switch (variant) {
-    .ghost => ring,
-    .outline => ring.border(playgroundFocusBorder()),
-  };
-}
-
-/// Declared last so it wins over every other state fragment.
-///
-/// A disabled toggle keeps whatever surface its state gives it and simply
-/// fades; the focus ring is cleared because a disabled control that still
-/// draws a focus ring reads as actionable.
-ToggleStyler _disabledStyle() => ToggleStyler()
-    .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

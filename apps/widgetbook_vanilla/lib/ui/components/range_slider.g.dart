@@ -8,18 +8,13 @@ part of 'range_slider.dart';
 
 /// The application's two-bound Slider recipe.
 ///
-/// Remix owns rendering, independent thumb states, drag and keyboard behavior,
-/// spacing constraints, RTL placement, and accessibility semantics. This recipe
-/// supplies the shared Slider rail, filled interval, and both thumb treatments
-/// through [vanillaSliderStyle], including hover, press, focus and disabled.
-/// Both recipes share a 48px interaction height and pill-shaped rails.
-/// Pass [surfaceColor] on a card or tinted panel so its opaque interaction halos
-/// blend with the enclosing surface rather than the page background.
+/// It is [vanillaSliderStyle]: the same rail, filled interval and thumb states
+/// serve both thumbs. Pass [surfaceColor] on a card or tinted panel so the
+/// thumb halos blend with it rather than the page.
 ///
-/// Give each bound a distinct localized name in `semanticLabels`. The generated
-/// `VanillaRangeSlider` omits `semanticFormatterCallbacks`, whose Naked UI type
-/// is outside this layer's dependencies. Use `RemixRangeSlider` with this recipe
-/// when custom value announcements are needed.
+/// Give each bound a distinct name in `semanticLabels`. The generated
+/// `VanillaRangeSlider` omits `semanticFormatterCallbacks`, whose type comes
+/// from `package:naked_ui`; use `RemixRangeSlider` for custom announcements.
 class VanillaRangeSlider extends StatelessWidget {
   const VanillaRangeSlider({
     super.key,

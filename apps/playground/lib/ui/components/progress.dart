@@ -9,47 +9,32 @@ part 'progress.g.dart';
 
 /// The application's Progress recipe.
 ///
-/// Remix owns the geometry that maps a 0-1 value onto the filled width, and
-/// the progress semantics; this recipe supplies the track and the indicator.
-///
-/// One weight, not a scale. A progress bar has no size relationship to the
-/// controls around it — it spans its container and is read by length rather
-/// than by height — so a size axis would be numbers with nothing to anchor
-/// them. It is an 8px bar; a call site that wants a different weight sets
-/// `.height(...)` through [style], which is one line and says what it means.
-///
-/// The indicator is `primary` on a track of `primary` at 20%: the track reads
-/// as the same bar, not yet filled, rather than as a separate surface.
-///
-/// Both are fully rounded rather than sharing the theme's control radius. The
-/// theme radius is authored for 32-40px controls; on an 8px bar anything
-/// short of a full round reads as a rendering artifact.
+/// An 8px bar with a `primary` indicator on a track of `primary` at 20%, so the
+/// track reads as the same bar, not yet filled. Both ends are fully rounded:
+/// the theme radius is authored for 32-40px controls. Set `.height(...)`
+/// through [style] for another weight.
 @MixWidget(target: RemixProgress.new)
 ProgressStyler playgroundProgressStyle({
   ProgressStyler style = const ProgressStyler.create(),
 }) => ProgressStyler()
-    // The bar spans whatever it is given: progress is measured against the
-    // width of its container, so a shrink-wrapped bar would collapse to
-    // nothing. The clip is what rounds the indicator's leading edge as it
+    // Spans its container: progress is a fraction of the width, so a
+    // shrink-wrapped bar would collapse. The clip rounds the indicator as it
     // grows past the track's corner.
     .width(double.infinity)
     .height(_thickness)
     .borderRadius(.all(_radius))
     .clipBehavior(Clip.antiAlias)
-    .track(_bar().width(double.infinity).color(_track()))
+    .track(
+      _bar()
+          .width(double.infinity)
+          .color(playgroundTint(PlaygroundTokens.primary, 0.2)()),
+    )
     .indicator(_bar().color(PlaygroundTokens.primary()))
     .merge(style);
 
-/// The track: `primary` at 20%.
-final _track = playgroundTint(PlaygroundTokens.primary, _trackAlpha);
-
-/// See [_track].
-const _trackAlpha = 0.2;
-
-/// The bar's weight: 8px.
 const _thickness = PlaygroundTokens.s2;
 
-/// Half of [_thickness], which is what makes each end a semicircle.
+/// Half the thickness, so each end is a semicircle.
 const _radius = Radius.circular(_thickness / 2);
 
 /// One rounded bar, used for both the track and the fill.

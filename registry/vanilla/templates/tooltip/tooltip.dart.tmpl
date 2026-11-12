@@ -8,17 +8,10 @@ part 'tooltip.g.dart';
 
 /// The application's Tooltip recipe.
 ///
-/// Remix owns the rendering, the overlay, the anchor positioning, and the
-/// hover and focus timing; this recipe supplies the bubble and the three
-/// durations that decide when it appears and how long it stays.
-///
-/// It is `textXs` on a `foreground` bubble with `radiusMd` corners, shown the
-/// moment the pointer arrives.
-///
-/// It is the one floating surface here that does *not* use `popover`. A tooltip
-/// is a transient label, not a panel a reader can act in, and inverting it —
-/// `foreground` fill, `background` text — is what makes that difference legible
-/// at a glance without a second token.
+/// `textXs` on a `foreground` bubble with `radiusMd` corners, shown the moment
+/// the pointer arrives. It is the one floating surface that is not `popover`:
+/// inverted (`foreground` fill, `background` text), so a transient label reads
+/// differently from a panel a reader can act in.
 @MixWidget(target: RemixTooltip.new)
 TooltipStyler {{valuePrefix}}TooltipStyle({
   TooltipStyler style = const TooltipStyler.create(),
@@ -30,20 +23,10 @@ TooltipStyler {{valuePrefix}}TooltipStyle({
     )
     .label(.style({{typePrefix}}Tokens.textXs.mix()).color({{typePrefix}}Tokens.background()))
     .waitDuration(Duration.zero)
-    .showDuration(_showDuration)
-    .dismissDuration(_dismissDuration)
+    // Remix maps this onto Naked UI's `touchDelay`: how long a touch tooltip
+    // stays up after the press ends. A finger has no hover.
+    .showDuration(const Duration(milliseconds: 1500))
+    // Remix maps this onto `dismissDelay`. Short but not zero, so a pointer
+    // clipping the anchor's edge does not snap the bubble shut.
+    .dismissDuration(const Duration(milliseconds: 100))
     .merge(style);
-
-/// How long a *touch*-triggered tooltip stays up after the press ends.
-///
-/// Remix maps this onto Naked UI's `touchDelay`, so despite the name it has
-/// nothing to say about hovering: a finger has no hover state, and this is
-/// the whole time a touch user gets to read the bubble.
-const _showDuration = Duration(milliseconds: 1500);
-
-/// The grace period between the pointer leaving and the bubble closing.
-///
-/// Remix maps this onto Naked UI's `dismissDelay`. Short, but not zero: a
-/// pointer that clips the anchor's edge on its way somewhere else should not
-/// snap the bubble shut mid-sentence.
-const _dismissDuration = Duration(milliseconds: 100);

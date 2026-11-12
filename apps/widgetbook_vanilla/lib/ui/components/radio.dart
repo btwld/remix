@@ -9,13 +9,12 @@ part 'radio.g.dart';
 
 /// The application's Radio recipe.
 ///
-/// Remix owns the rendering, the single-selection behavior, arrow-key
-/// traversal within the group, and the radio accessibility role; this recipe
-/// supplies the circle, the dot, and the state fragments.
+/// A 16px ring with an 8px dot. The ring stays `input` whether or not the
+/// option is chosen; the dot carries the choice. There is no hover fragment:
+/// choosing is the feedback. The label is set like the checkbox's.
 ///
-/// `RemixRadioGroup` — the behavioral coordinator that owns `groupValue` and
-/// the change callback — carries no styler and therefore no recipe. Compose it
-/// directly around these:
+/// `RemixRadioGroup`, which owns `groupValue` and the change callback, has no
+/// styler and no recipe. Wrap the options in it directly:
 ///
 /// ```dart
 /// RemixRadioGroup<String>(
@@ -27,18 +26,6 @@ part 'radio.g.dart';
 ///   ]),
 /// )
 /// ```
-///
-/// Unlike the checkbox, a radio draws no glyph: the mark is a filled dot inside
-/// the ring, which is what tells the two controls apart at a glance even before
-/// their shapes register. The ring itself stays `input` whether or not the
-/// option is chosen; the dot carries the choice.
-///
-/// There is no hover fragment: choosing an option is the feedback, and the
-/// pointer cursor Remix sets says it can be chosen.
-///
-/// A radio takes a `label`, drawn beside the circle inside the radio's own tap,
-/// focus, and semantics target, and set like the checkbox's: `textSm` at medium
-/// weight, 12px from the circle. A radio without one needs a `semanticLabel`.
 @MixWidget(target: RemixRadio.new)
 RadioStyler vanillaRadioStyle({
   RadioStyler style = const RadioStyler.create(),
@@ -48,51 +35,38 @@ RadioStyler vanillaRadioStyle({
       .size(VanillaTokens.icon, VanillaTokens.icon)
       .alignment(.center)
       .borderRadius(.all(_circular))
-      .color(_fill())
+      // Transparent, or `input` at 30% in the dark theme.
+      .color(vanillaTint(VanillaTokens.input, 0, dark: 0.3)())
       .border(.color(VanillaTokens.input()).width(VanillaTokens.strokeHairline))
-      // In the effects layer rather than the decoration: the ring is
-      // transparent, and a decoration shadow would show through it.
+      // In the effects layer: the ring is transparent, and a decoration shadow
+      // would show through it.
       .containerEffects(.behindContent(VanillaShadow.xs.effects))
-      .indicator(BoxStyler().size(_dot, _dot).borderRadius(.all(_circular)))
+      .indicator(
+        BoxStyler()
+            .size(VanillaTokens.s2, VanillaTokens.s2)
+            .borderRadius(.all(_circular)),
+      )
       .labelSpacing(VanillaTokens.s3)
       .label(
         .style(
           VanillaTokens.textSm.mix(),
         ).fontWeight(FontWeight.w500).color(VanillaTokens.foreground()),
       )
-      .onFocusVisible(_focusVisibleStyle())
+      .onFocusVisible(
+        RadioStyler()
+            .containerEffects(vanillaFocusRing())
+            .border(vanillaFocusBorder()),
+      )
       .onSelected(RadioStyler().indicatorColor(VanillaTokens.primary()))
-      .onDisabled(_disabledStyle())
+      // Declared last so it wins; the ring is cleared because a disabled
+      // control that still rings reads as actionable.
+      .onDisabled(
+        RadioStyler()
+            .containerEffects(.outline(.style(.none)))
+            .wrap(.opacity(VanillaTokens.disabledOpacity)),
+      )
       .merge(style);
 }
 
-/// A radius that rounds the ring and the dot into circles.
+/// Rounds the ring and the dot into circles.
 const _circular = Radius.circular(VanillaTokens.pill);
-
-/// The chosen dot: 8px across.
-const _dot = VanillaTokens.s2;
-
-/// The ring's fill: transparent, or `input` at 30% in the dark.
-final _fill = vanillaTint(VanillaTokens.input, 0, dark: _darkFillAlpha);
-
-/// See [_fill].
-const _darkFillAlpha = 0.3;
-
-/// The keyboard focus ring: a 3px band of `ring` at half strength, with
-/// the circle's own outline turned `ring`.
-///
-/// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// circle without taking layout space, so focusing a radio never reflows the
-/// row it sits in.
-RadioStyler _focusVisibleStyle() => RadioStyler()
-    .containerEffects(vanillaFocusRing())
-    .border(vanillaFocusBorder());
-
-/// Declared last so it wins over every other state fragment.
-///
-/// A disabled radio keeps whatever ring its state gives it and simply fades;
-/// the focus ring is cleared because a disabled control that still draws a
-/// focus ring reads as actionable.
-RadioStyler _disabledStyle() => RadioStyler()
-    .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(VanillaTokens.disabledOpacity));

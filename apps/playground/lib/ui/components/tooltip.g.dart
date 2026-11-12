@@ -8,17 +8,10 @@ part of 'tooltip.dart';
 
 /// The application's Tooltip recipe.
 ///
-/// Remix owns the rendering, the overlay, the anchor positioning, and the
-/// hover and focus timing; this recipe supplies the bubble and the three
-/// durations that decide when it appears and how long it stays.
-///
-/// It is `textXs` on a `foreground` bubble with `radiusMd` corners, shown the
-/// moment the pointer arrives.
-///
-/// It is the one floating surface here that does *not* use `popover`. A tooltip
-/// is a transient label, not a panel a reader can act in, and inverting it —
-/// `foreground` fill, `background` text — is what makes that difference legible
-/// at a glance without a second token.
+/// `textXs` on a `foreground` bubble with `radiusMd` corners, shown the moment
+/// the pointer arrives. It is the one floating surface that is not `popover`:
+/// inverted (`foreground` fill, `background` text), so a transient label reads
+/// differently from a panel a reader can act in.
 class PlaygroundTooltip extends StatelessWidget {
   const PlaygroundTooltip({
     super.key,

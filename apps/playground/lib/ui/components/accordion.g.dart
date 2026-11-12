@@ -8,17 +8,13 @@ part of 'accordion.dart';
 
 /// The application's Accordion recipe.
 ///
-/// Remix owns the rendering, the expand and collapse animation, the group
-/// coordination, keyboard activation, and the accessibility semantics; this
-/// recipe supplies the row, the two icons, the title, and the panel.
+/// Sections are separated by a bottom hairline rather than a box, so a stack
+/// reads as one list.
 ///
-/// `RemixAccordionGroup` — the behavioral coordinator that owns which values
-/// are expanded — carries no styler and therefore no recipe. Compose it
-/// directly around these:
+/// `RemixAccordionGroup`, which owns which values are expanded, has no styler
+/// and no recipe. Wrap the sections in it directly:
 ///
 /// ```dart
-/// // `RemixAccordionController` is Remix's alias for the Naked UI type, so
-/// // the controller does not pull `package:naked_ui` into this layer.
 /// RemixAccordionGroup<String>(
 ///   controller: RemixAccordionController<String>(),
 ///   child: Column(children: const [
@@ -31,16 +27,8 @@ part of 'accordion.dart';
 /// )
 /// ```
 ///
-/// Each section is separated by a rule along its bottom edge rather than by a
-/// box of its own, so a stack of them reads as one list. The `border` token
-/// is the same hairline the divider draws, which is what makes a divider
-/// between sections indistinguishable from the sections' own edges.
-///
-/// `builder` is deliberately not forwarded to the generated
-/// `PlaygroundAccordion`. Its type is `NakedAccordionTriggerBuilder`,
-/// which comes from `package:naked_ui` — a package this layer does not depend
-/// on. Use `title` with the icons, or reach for `RemixAccordion` directly on
-/// the rare call site that needs to build its own trigger row.
+/// The generated widget omits `builder`: its type comes from `package:naked_ui`,
+/// which this layer does not import. Use `RemixAccordion` for a custom trigger.
 class PlaygroundAccordion<T> extends StatelessWidget {
   const PlaygroundAccordion({
     super.key,

@@ -9,34 +9,43 @@ part 'switch.g.dart';
 
 /// The application's Switch recipe.
 ///
-/// Remix owns the rendering, the toggle behavior, the switch accessibility
-/// role, and — importantly — the thumb's travel: it aligns the thumb to the
-/// leading edge when off and the trailing edge when on. This recipe supplies
-/// only the two boxes' geometry and their colors.
-///
-/// A switch takes a `label`, drawn beside the track inside the switch's own
-/// tap, focus, and semantics target, as a form label: `textSm` at medium
-/// weight, 8px from the track. A switch without one needs a `semanticLabel`.
+/// A 32px by 18.4px track and a 16px thumb. The height is off the 4px grid on
+/// purpose: the thumb, a 1px outline above and below, and 0.2px of air on each
+/// side. Remix owns the thumb's travel. The label is a form label, `textSm` at
+/// medium weight; a switch without one needs a `semanticLabel`.
 @MixWidget(target: RemixSwitch.new)
 SwitchStyler vanillaSwitchStyle({
   SwitchStyler style = const SwitchStyler.create(),
 }) {
   return SwitchStyler()
       .animate(VanillaTokens.motion)
-      .size(_trackWidth, _trackHeight)
+      .size(
+        VanillaTokens.s8,
+        VanillaTokens.icon + 2 * (VanillaTokens.strokeHairline + 0.2),
+      )
       .borderRadius(.all(_pill))
-      .trackColor(_offTrack())
-      // A transparent outline: it holds the pixel the focus fragment turns
-      // `ring`, so focusing a switch never changes its size.
-      .border(.color(_noEdge).width(VanillaTokens.strokeHairline))
-      // In the effects layer rather than the decoration: the dark off-track
-      // is translucent, and a decoration shadow would show through it.
+      // `input`, at 80% in the dark theme.
+      .trackColor(vanillaTint(VanillaTokens.input, 1, dark: 0.8)())
+      // A transparent outline holds the pixel the focus fragment turns `ring`,
+      // so focusing never changes the size.
+      .border(
+        .color(const Color(0x00000000)).width(VanillaTokens.strokeHairline),
+      )
+      // In the effects layer: the dark off-track is translucent, and a
+      // decoration shadow would show through it.
       .trackEffects(RemixBoxEffectsMix(behindContent: VanillaShadow.xs.effects))
       .thumb(
         BoxStyler()
             .size(VanillaTokens.icon, VanillaTokens.icon)
             .borderRadius(.all(_pill))
-            .color(_offThumb()),
+            // The page color, except in the dark theme, where it would vanish
+            // into the track.
+            .color(
+              vanillaByBrightness(
+                light: VanillaTokens.background,
+                dark: VanillaTokens.foreground,
+              )(),
+            ),
       )
       .labelSpacing(VanillaTokens.s2)
       .label(
@@ -47,68 +56,27 @@ SwitchStyler vanillaSwitchStyle({
       .onSelected(
         SwitchStyler()
             .trackColor(VanillaTokens.primary())
-            .thumbColor(_onThumb()),
+            // `primaryForeground` in the dark theme, where `primary` is light.
+            .thumbColor(
+              vanillaByBrightness(
+                light: VanillaTokens.background,
+                dark: VanillaTokens.primaryForeground,
+              )(),
+            ),
       )
-      .onFocusVisible(_focusVisibleStyle())
-      .onDisabled(_disabledStyle())
+      .onFocusVisible(
+        SwitchStyler()
+            .trackEffects(vanillaFocusRing())
+            .border(vanillaFocusBorder()),
+      )
+      // Declared last so it wins; the ring is cleared because a disabled
+      // control that still rings reads as actionable.
+      .onDisabled(
+        SwitchStyler()
+            .trackEffects(RemixBoxEffectsMix.outline(.style(.none)))
+            .wrap(.opacity(VanillaTokens.disabledOpacity)),
+      )
       .merge(style);
 }
 
-/// The track: 32 by 18.4.
-///
-/// The height is off the four-pixel grid on purpose: it is the 16px thumb, the
-/// 1px outline above and below it, and a fifth of a pixel of air on each side,
-/// so the thumb reads as filling the track. The thumb's travel is the track's
-/// inner width less its own, 14px.
-const _trackWidth = VanillaTokens.s8;
-const _trackHeight =
-    VanillaTokens.icon + 2 * (VanillaTokens.strokeHairline + _thumbAir);
-
-/// See [_trackHeight].
-const _thumbAir = 0.2;
-
-/// A radius large enough to round the track and the thumb.
 const _pill = Radius.circular(VanillaTokens.pill);
-
-/// A color that paints nothing, for the resting outline.
-const _noEdge = Color(0x00000000);
-
-/// The off track: `input`, at 80% in the dark theme.
-final _offTrack = vanillaTint(VanillaTokens.input, 1, dark: _darkOffTrackAlpha);
-
-/// See [_offTrack].
-const _darkOffTrackAlpha = 0.8;
-
-/// The thumb while off: the page color on a light page, and `foreground` on a
-/// dark one, where a page-colored thumb would vanish into the track.
-final _offThumb = vanillaByBrightness(
-  light: VanillaTokens.background,
-  dark: VanillaTokens.foreground,
-);
-
-/// The thumb while on: the page color on a light page, and
-/// `primaryForeground` on a dark one, the color that reads on the light dark
-/// `primary` track.
-final _onThumb = vanillaByBrightness(
-  light: VanillaTokens.background,
-  dark: VanillaTokens.primaryForeground,
-);
-
-/// The keyboard focus ring: a 3px band of `ring` at half strength, with
-/// the track's own outline turned `ring`.
-///
-/// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// track without taking layout space, so focusing a switch never reflows the
-/// row it sits in.
-SwitchStyler _focusVisibleStyle() => SwitchStyler()
-    .trackEffects(vanillaFocusRing())
-    .border(vanillaFocusBorder());
-
-/// Declared last so it wins over every other state fragment.
-///
-/// A disabled switch keeps whatever track its state gives it and simply
-/// fades; the focus ring is cleared because a disabled control that still
-/// draws a focus ring reads as actionable.
-SwitchStyler _disabledStyle() => SwitchStyler()
-    .trackEffects(RemixBoxEffectsMix.outline(.style(.none)))
-    .wrap(.opacity(VanillaTokens.disabledOpacity));

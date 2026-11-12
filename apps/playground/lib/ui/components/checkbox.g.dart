@@ -8,17 +8,9 @@ part of 'checkbox.dart';
 
 /// The application's Checkbox recipe.
 ///
-/// Everything visual about a checkbox lives in this function: the box
-/// geometry, the indicator, the label, and the
-/// checked/indeterminate/focus/disabled fragments. Remix keeps
-/// ownership of rendering, the tristate transition, pointer and keyboard
-/// behavior, the minimum tap target, and the checkbox accessibility
-/// semantics — this recipe never reimplements any of that.
-///
-/// There is deliberately no hover or pressed fragment. A button needs them
-/// because nothing else about it changes on tap; a checkbox flips its own
-/// state, and that is the feedback. The pointer cursor Remix sets says it can
-/// be clicked.
+/// A 16px box with 4px corners, an `input` outline and a 10px check. It has no
+/// hover or pressed fragment: a checkbox flips its own state, and that is the
+/// feedback. The label is a form label, `textSm` at medium weight.
 class PlaygroundCheckbox extends StatelessWidget {
   const PlaygroundCheckbox({
     super.key,
@@ -92,17 +84,10 @@ class PlaygroundCheckbox extends StatelessWidget {
   }
 }
 
-/// The application's Checkbox recipe for one option in a checkbox group.
+/// The Checkbox recipe for one option in a `RemixCheckboxGroup`.
 ///
-/// `RemixCheckboxGroup` is behavioral: it owns the selected set and the
-/// group-wide enabled and required configuration, and carries no styler of
-/// its own. Without this second adapter every option in a group would need
-/// the recipe attached by hand, and one missed option in a loop would render
-/// unstyled beside its styled siblings.
-///
-/// It delegates to [playgroundCheckboxStyle] rather than restating it:
-/// a group option is the same checkbox, so editing the recipe above restyles
-/// both.
+/// The group has no styler, so each option needs its own adapter. It is the
+/// same checkbox as [playgroundCheckboxStyle], so it delegates.
 class PlaygroundCheckboxGroupItem<T extends Object> extends StatelessWidget {
   const PlaygroundCheckboxGroupItem({
     super.key,

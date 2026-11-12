@@ -8,14 +8,10 @@ part of 'switch.dart';
 
 /// The application's Switch recipe.
 ///
-/// Remix owns the rendering, the toggle behavior, the switch accessibility
-/// role, and — importantly — the thumb's travel: it aligns the thumb to the
-/// leading edge when off and the trailing edge when on. This recipe supplies
-/// only the two boxes' geometry and their colors.
-///
-/// A switch takes a `label`, drawn beside the track inside the switch's own
-/// tap, focus, and semantics target, as a form label: `textSm` at medium
-/// weight, 8px from the track. A switch without one needs a `semanticLabel`.
+/// A 32px by 18.4px track and a 16px thumb. The height is off the 4px grid on
+/// purpose: the thumb, a 1px outline above and below, and 0.2px of air on each
+/// side. Remix owns the thumb's travel. The label is a form label, `textSm` at
+/// medium weight; a switch without one needs a `semanticLabel`.
 class PlaygroundSwitch extends StatelessWidget {
   const PlaygroundSwitch({
     super.key,

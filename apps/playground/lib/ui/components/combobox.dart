@@ -15,17 +15,12 @@ part 'combobox.g.dart';
 
 /// The application's Combobox recipe.
 ///
-/// Remix owns editing, filtering callbacks, suggestion traversal, acceptance,
-/// overlay geometry and accessibility semantics. This recipe supplies the
-/// field, floating suggestions panel and option rows. The field reuses
-/// [playgroundTextFieldStyle], including its focus, error and disabled treatments;
-/// the panel and rows follow the application's Select recipe.
+/// The field reuses [playgroundTextFieldStyle], with its focus, error and
+/// disabled treatments; the panel and rows follow the Select recipe.
 ///
-/// Keyboard highlight uses accent with a reserved ring border, hover a lighter
-/// tint, and press a stronger primary tint. Suggestions
-/// are eligible values only: Remix has no per-option disabled or selected
-/// state. The disabled treatment belongs to the editor. Custom field builders
-/// own their field recipe; custom option content inherits the row's text style.
+/// Keyboard highlight is `accent` with a `ring` border, hover a lighter tint,
+/// press a primary tint. Suggestions are eligible values only, so Remix has no
+/// per-option disabled or selected state.
 @MixWidget(target: RemixCombobox.new)
 ComboboxStyler playgroundComboboxStyle({
   ComboboxStyler style = const ComboboxStyler.create(),
@@ -74,7 +69,7 @@ ComboboxStyler playgroundComboboxStyle({
             _highlighted(playgroundTint(PlaygroundTokens.accent, 0.85)()),
           )
           .onFocused(
-            _highlighted().border(
+            _highlighted(PlaygroundTokens.accent()).border(
               .color(
                 PlaygroundTokens.ring(),
               ).width(PlaygroundTokens.strokeHairline),
@@ -88,6 +83,6 @@ ComboboxStyler playgroundComboboxStyle({
     )
     .merge(style);
 
-ComboboxOptionStyler _highlighted([Color? fill]) => ComboboxOptionStyler()
-    .color(fill ?? PlaygroundTokens.accent())
+ComboboxOptionStyler _highlighted(Color fill) => ComboboxOptionStyler()
+    .color(fill)
     .label(.color(PlaygroundTokens.accentForeground()));

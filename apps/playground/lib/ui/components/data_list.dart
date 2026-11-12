@@ -8,18 +8,9 @@ part 'data_list.g.dart';
 
 /// The application's DataList recipe.
 ///
-/// A data list is a set of label/value pairs — the "Status: Active" block on a
-/// detail page. Remix owns the rendering, the two layout orientations, the
-/// label-column alignment, and the accessibility semantics; this recipe
-/// supplies the two text roles and the spacing between them.
-///
-/// Both roles are body text, `textSm`. The label is `mutedForeground` and the
-/// value is `foreground`, which is the pairing that makes a list scannable: the
-/// eye lands on the answers, and the questions stay legible without competing.
-///
-/// It takes no size and no variant. A data list is typography and spacing, and
-/// both are decided by the page it sits on — a caller who wants a denser block
-/// overrides the spacings through [style].
+/// Label/value pairs in `textSm`: the label in `mutedForeground` and the value
+/// in `foreground`, so the eye lands on the answers. It has no size or variant;
+/// override the spacings through [style] for a denser block.
 ///
 /// ```dart
 /// PlaygroundDataList(
@@ -43,16 +34,10 @@ DataListStyler playgroundDataListStyle({
         PlaygroundTokens.textSm.mix(),
       ).color(PlaygroundTokens.foreground()),
     )
-    // One pair from the next, 12px; side by side, 24px; a label from its own
-    // value, 8px.
     .rowSpacing(PlaygroundTokens.s3)
     .columnSpacing(PlaygroundTokens.s6)
     .labelValueSpacing(PlaygroundTokens.s2)
-    // A floor rather than a fixed width: the labels line up into a column,
-    // but a long one is still allowed to be as long as it needs to be.
-    .minLabelWidth(_minLabelWidth)
+    // A floor, not a fixed width: short labels still line their values up,
+    // and a long one may grow.
+    .minLabelWidth(96)
     .merge(style);
-
-/// The narrowest the label column gets, so short labels still line their
-/// values up instead of leaving a ragged edge.
-const _minLabelWidth = 96.0;

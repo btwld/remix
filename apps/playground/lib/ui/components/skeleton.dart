@@ -9,23 +9,15 @@ part 'skeleton.g.dart';
 
 /// The application's Skeleton recipe.
 ///
-/// A skeleton is a placeholder that keeps a layout the right shape while its
-/// content loads. Remix owns the pulse animation, the semantics, and the rule
-/// that a wrapped child keeps sizing the placeholder in both states; this
-/// recipe supplies only the two colors and the tempo.
-///
-/// It takes no size. A skeleton is measured by the content it stands in for —
-/// either the child it wraps, or explicit constraints on the caller's own
-/// [style]:
+/// An `accent` block with `radiusMd` corners that pulses to half strength, so a
+/// loading block reads as scenery rather than content. It takes no size: the
+/// child it wraps, or explicit constraints on [style], measure it:
 ///
 /// ```dart
 /// PlaygroundSkeleton(
 ///   style: SkeletonStyler().container(.size(160, 20)),
 /// )
 /// ```
-///
-/// It is an `accent` block with `radiusMd` corners that pulses to half
-/// strength, so a loading block reads as scenery rather than as content.
 @MixWidget(target: RemixSkeleton.new)
 SkeletonStyler playgroundSkeletonStyle({
   SkeletonStyler style = const SkeletonStyler.create(),
@@ -35,19 +27,8 @@ SkeletonStyler playgroundSkeletonStyle({
           .color(PlaygroundTokens.accent())
           .borderRadius(.all(PlaygroundTokens.radiusMd())),
     )
-    .pulseColor(_pulse())
-    .duration(_pulseDuration)
+    .pulseColor(playgroundTint(PlaygroundTokens.accent, 0.5)())
+    // One leg; the reverse takes as long, so a full pulse is two seconds. Slow
+    // on purpose, so it does not compete with the content arriving beside it.
+    .duration(const Duration(milliseconds: 1000))
     .merge(style);
-
-/// The far end of the pulse: `accent` at half strength.
-final _pulse = playgroundTint(PlaygroundTokens.accent, _pulseAlpha);
-
-/// See [_pulse].
-const _pulseAlpha = 0.5;
-
-/// The length of one forward pulse leg; the reverse leg takes the same time, so
-/// one full pulse takes two seconds.
-///
-/// Slow on purpose. A placeholder that pulses at interaction speed competes
-/// with the content arriving beside it.
-const _pulseDuration = Duration(milliseconds: 1000);

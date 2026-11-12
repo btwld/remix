@@ -8,12 +8,8 @@ part of 'chart.dart';
 
 /// The application's line and area chart recipe.
 ///
-/// `mix_chart` owns the data model, rendering, interaction, and semantics.
-/// This file owns the palette, axes, grid, line, markers, and tooltip. Give the
-/// generated [PlaygroundLineChart] a bounded height because charts have no
+/// Give the generated [PlaygroundLineChart] a bounded height: charts have no
 /// intrinsic height.
-///
-/// [style] merges last, so one call site can replace any part of the recipe.
 class PlaygroundLineChart extends StatelessWidget {
   const PlaygroundLineChart({
     super.key,
@@ -115,11 +111,7 @@ class PlaygroundLineChart extends StatelessWidget {
 
 /// The application's grouped, stacked, and floating bar chart recipe.
 ///
-/// `mix_chart` owns the bar data and behavior. This recipe supplies the shared
-/// visual treatment. Give the generated [PlaygroundBarChart] a bounded
-/// height because charts have no intrinsic height.
-///
-/// [style] merges last, so one call site can replace any part of the recipe.
+/// Give the generated [PlaygroundBarChart] a bounded height.
 class PlaygroundBarChart extends StatelessWidget {
   const PlaygroundBarChart({
     super.key,
@@ -214,18 +206,13 @@ class PlaygroundBarChart extends StatelessWidget {
 
 /// The application's pie and donut chart recipe.
 ///
-/// A positive [centerRadius] creates a donut. Labels stay hidden by default;
-/// a caller-owned legend keeps category names readable with any custom
-/// palette. [showLabels] draws them in `background`, which a gray palette
-/// cannot carry on every slice: pair it with [playgroundPieSliceLabelColor].
-/// Give the generated [PlaygroundPieChart] a bounded width and height because
-/// charts have no intrinsic size.
+/// A positive [centerRadius] makes a donut. Labels are hidden by default;
+/// [showLabels] draws them in `background`, which a gray palette cannot carry
+/// on every slice, so pair it with [playgroundPieSliceLabelColor]. Give the
+/// generated [PlaygroundPieChart] a bounded width and height.
 ///
-/// The default slice radius is at most 80 logical pixels and shrinks to fit
-/// the available box, accounting for the center hole and selection expansion.
-/// An explicit `PieSliceStyler().radius(...)` keeps caller-controlled sizing.
-///
-/// [style] merges last, so one call site can replace any part of the recipe.
+/// The default slice radius is at most 80px and shrinks to fit the box; an
+/// explicit `PieSliceStyler().radius(...)` overrides it.
 class PlaygroundPieChart extends StatelessWidget {
   const PlaygroundPieChart({
     super.key,

@@ -9,113 +9,85 @@ part 'segmented_control.g.dart';
 
 /// The application's SegmentedControl recipe.
 ///
-/// A segmented control is one control divided into parts: the segments share a
-/// track, exactly one is chosen, and the chosen one is *lifted* out of the
-/// track rather than tinted on top of it. It is drawn as the filled tab list,
-/// so a segmented control and a tab strip on one page read as one family. Remix
-/// owns the rendering, the equal-width layout, the roving focus, and the group
-/// accessibility semantics.
+/// One control in parts: a recessed `muted` track with the chosen segment
+/// lifted onto it, drawn like the filled tab list so the two read as a family.
+/// It takes no variant; a second look would be a toggle group.
 ///
-/// One recipe covers the track and the segments, because
-/// `SegmentedControlSpec` carries the segment's style as a field: the
-/// control's `item` is the default every `RemixSegmentedControlItem` resolves
-/// against, so a segment in a loop cannot be left unstyled.
-///
-/// It takes no variant. The whole point of the component is one shape — a
-/// recessed track with a raised current segment — and a second look would be
-/// a toggle group wearing the wrong name.
+/// `item` is the default every `RemixSegmentedControlItem` resolves against, so
+/// one recipe styles the track and its segments.
 @MixWidget(target: RemixSegmentedControl.new)
 SegmentedControlStyler {{valuePrefix}}SegmentedControlStyle({
   SegmentedControlStyler style = const SegmentedControlStyler.create(),
 }) {
   return SegmentedControlStyler()
-      // The track is the filled tab list: `muted`, with large corners and a
-      // 3px inset. The chosen segment is lifted onto the page color.
       .color({{typePrefix}}Tokens.muted())
       .borderRadius(.all({{typePrefix}}Tokens.radiusLg()))
       .padding(.all(_trackInset))
       .mainAxisSize(.min)
       .spacing(0)
-      .item(_itemStyle())
+      .item(
+        // 60% `foreground`, or `mutedForeground` in the dark theme: the
+        // unchosen tab's color, 4.5:1 on the track.
+        _content(
+              {{valuePrefix}}ByBrightness(
+                light: {{valuePrefix}}Tint({{typePrefix}}Tokens.foreground, 0.6),
+                dark: {{typePrefix}}Tokens.mutedForeground,
+              )(),
+            )
+            .color(_transparent)
+            // The track's 36px less the inset on both sides, so it lands on
+            // the height of the button and field beside it.
+            .minHeight({{typePrefix}}Tokens.controlMd - 2 * _trackInset)
+            .padding(
+              .symmetric(
+                horizontal: {{typePrefix}}Tokens.s2,
+                vertical: {{typePrefix}}Tokens.s1,
+              ),
+            )
+            .spacing({{typePrefix}}Tokens.s1_5)
+            .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
+            // Holds the outline space the chosen segment paints.
+            .border(.color(_transparent).width({{typePrefix}}Tokens.strokeHairline))
+            .label(
+              .style({{typePrefix}}Tokens.textSm.mix()).fontWeight(FontWeight.w500),
+            )
+            .icon(.size({{typePrefix}}Tokens.icon))
+            .onHovered(_content({{typePrefix}}Tokens.foreground()))
+            .onSelected(
+              _content({{typePrefix}}Tokens.foreground())
+                  // The page color, or `input` at 30% in the dark theme.
+                  .color(
+                    {{valuePrefix}}ByBrightness(
+                      light: {{typePrefix}}Tokens.background,
+                      dark: {{valuePrefix}}Tint({{typePrefix}}Tokens.input, 0.3),
+                    )(),
+                  )
+                  // No outline in the light theme, `input` in the dark one.
+                  .border(
+                    .color({{valuePrefix}}Tint({{typePrefix}}Tokens.input, 0, dark: 1)()),
+                  )
+                  // In the effects layer: the dark fill is translucent, and a
+                  // decoration shadow would show through it.
+                  .containerEffects(.behindContent({{typePrefix}}Shadow.sm.effects)),
+            )
+            .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
+            // Declared last so it wins over every other state fragment.
+            .onDisabled(
+              SegmentedControlItemStyler()
+                  .containerEffects(.outline(.style(.none)))
+                  .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+            ),
+      )
       .merge(style);
 }
 
-/// Gap between the track edge and its segments, on every side.
+/// Gap between the track edge and its segments.
 const _trackInset = 3.0;
 
-/// A fill that paints nothing, used by an unchosen segment.
-const _noFill = Color(0x00000000);
+const _transparent = Color(0x00000000);
 
-/// An edge that paints nothing, holding the chosen segment's outline space.
-const _noEdge = Color(0x00000000);
-
-/// An unchosen segment's content: 60% `foreground`, or `mutedForeground` in
-/// the dark theme, exactly as an unchosen tab's. Both clear 4.5:1 on the
-/// `muted` track.
-final _restingContent = {{valuePrefix}}ByBrightness(
-  light: {{valuePrefix}}Tint({{typePrefix}}Tokens.foreground, _restingAlpha),
-  dark: {{typePrefix}}Tokens.mutedForeground,
-);
-
-/// See [_restingContent].
-const _restingAlpha = 0.6;
-
-/// The chosen segment's surface: the page color, or `input` at 30% in the
-/// dark theme, as the current tab's.
-final _chosenFill = {{valuePrefix}}ByBrightness(
-  light: {{typePrefix}}Tokens.background,
-  dark: {{valuePrefix}}Tint({{typePrefix}}Tokens.input, _darkChosenFillAlpha),
-);
-
-/// See [_chosenFill].
-const _darkChosenFillAlpha = 0.3;
-
-/// The chosen segment's outline: none in the light theme, `input` in the dark
-/// one, as the current tab's.
-final _chosenEdge = {{valuePrefix}}Tint({{typePrefix}}Tokens.input, 0, dark: 1);
-
-/// One segment: the filled tab, edge to edge in the track.
-///
-/// Its height is the track's 36px less the inset on both sides, so the track
-/// lands on the height of the button and field beside it.
-SegmentedControlItemStyler _itemStyle() => _content(_restingContent())
-    .color(_noFill)
-    .minHeight({{typePrefix}}Tokens.controlMd - 2 * _trackInset)
-    .padding(
-      .symmetric(horizontal: {{typePrefix}}Tokens.s2, vertical: {{typePrefix}}Tokens.s1),
-    )
-    .spacing({{typePrefix}}Tokens.s1_5)
-    .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
-    .border(.color(_noEdge).width({{typePrefix}}Tokens.strokeHairline))
-    .label(.style({{typePrefix}}Tokens.textSm.mix()).fontWeight(FontWeight.w500))
-    .icon(.size({{typePrefix}}Tokens.icon))
-    .onHovered(_content({{typePrefix}}Tokens.foreground()))
-    .onSelected(
-      _content({{typePrefix}}Tokens.foreground())
-          .color(_chosenFill())
-          .border(.color(_chosenEdge()))
-          // In the effects layer rather than the decoration: the dark chosen
-          // fill is translucent, and a decoration shadow would show through.
-          .containerEffects(.behindContent({{typePrefix}}Shadow.sm.effects)),
-    )
-    .onFocusVisible(_focusVisibleStyle())
-    .onDisabled(_disabledStyle());
-
-/// Applies one content color to the label and the icons.
+/// One content color for the label and the icons.
 SegmentedControlItemStyler _content(Color foreground) =>
     SegmentedControlItemStyler()
         .label(.color(foreground))
         .icon(.color(foreground));
-
-/// The keyboard focus ring: a 3px band of `ring` at half strength.
-///
-/// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// segment without taking layout space, so focusing one never widens the
-/// track.
-SegmentedControlItemStyler _focusVisibleStyle() =>
-    SegmentedControlItemStyler().containerEffects({{valuePrefix}}FocusRing());
-
-/// Declared last so it wins over every other state fragment.
-SegmentedControlItemStyler _disabledStyle() => SegmentedControlItemStyler()
-    .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity));

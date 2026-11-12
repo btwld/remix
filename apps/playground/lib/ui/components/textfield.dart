@@ -14,20 +14,12 @@ part 'textfield.g.dart';
 
 /// The application's TextField recipe.
 ///
-/// Remix owns the rendering, the editing behavior, the label/hint/helper
-/// composition, focus, selection, and the input accessibility semantics —
-/// including announcing the error state. This recipe supplies the surface, the
-/// text colors, and the focus/error/disabled fragments.
+/// There is no hover fragment: the I-beam cursor is the affordance, and tinting
+/// the box would compete with the focus ring that follows.
 ///
-/// There is deliberately no hover fragment: a text field's affordance is the
-/// I-beam cursor Remix already sets, and tinting the box on hover would only
-/// compete with the focus ring that follows a moment later.
-///
-/// One host requirement travels with it: `EditableText` asserts on an
-/// `Overlay` ancestor the moment the field takes focus, for its selection
-/// handles and magnifier. Any application with a `Navigator` — `MaterialApp`,
-/// `CupertinoApp`, or a `WidgetsApp` with routes — already has one. A bare
-/// `WidgetsApp(builder: ...)` does not, and has to supply an `Overlay` itself.
+/// `EditableText` asserts on an `Overlay` ancestor when the field takes focus.
+/// Any app with a `Navigator` has one; a bare `WidgetsApp(builder: ...)` has to
+/// supply its own.
 @MixWidget(target: RemixTextField.new)
 TextFieldStyler playgroundTextFieldStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
@@ -40,19 +32,14 @@ TextFieldStyler playgroundTextFieldStyle({
           vertical: PlaygroundTokens.s1,
         ),
       )
-      // A single line sits on the field's centre line; the accessories go with
-      // it.
       .crossAxisAlignment(.center)
       .merge(style);
 }
 
 /// The application's TextArea recipe.
 ///
-/// `RemixTextArea` is `RemixTextField` with multi-line defaults, and it shares
-/// the same styler, so this is the field's recipe with two changes: a taller
-/// resting box (at least 64px, with 8px above and below the text), and
-/// accessories pinned to the first line instead of floating in the middle of a
-/// growing one.
+/// The field's recipe with a taller resting box (at least 64px, 8px above and
+/// below the text) and accessories pinned to the first line.
 @MixWidget(target: RemixTextArea.new)
 TextFieldStyler playgroundTextAreaStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
@@ -69,26 +56,18 @@ TextFieldStyler playgroundTextAreaStyle({
       .merge(style);
 }
 
-/// The field's fill: transparent on a light page, and `input` at 30% on a dark
-/// one, so a dark field reads as a well rather than a hole.
-final _fill = playgroundTint(PlaygroundTokens.input, 0, dark: _darkFillAlpha);
-
-/// See [_fill].
-const _darkFillAlpha = 0.3;
-
-/// The surface, the four text roles, and every state fragment.
-///
-/// Both recipes share this whole body; only the box's height, its vertical
-/// inset, and the accessory alignment differ between them.
+/// The surface, the text roles and every state fragment, shared by the field
+/// and the area.
 TextFieldStyler _base() => TextFieldStyler()
     .animate(PlaygroundTokens.motion)
-    .color(_fill())
+    // Transparent, or `input` at 30% in the dark theme: a well, not a hole.
+    .color(playgroundTint(PlaygroundTokens.input, 0, dark: 0.3)())
     .border(
       .color(PlaygroundTokens.input()).width(PlaygroundTokens.strokeHairline),
     )
     .borderRadius(.all(PlaygroundTokens.radiusMd()))
-    // In the effects layer rather than the decoration: the fill is
-    // transparent, and a decoration shadow would show through it.
+    // In the effects layer: the fill is transparent, and a decoration shadow
+    // would show through it.
     .containerEffects(.behindContent(PlaygroundShadow.xs.effects))
     .spacing(PlaygroundTokens.s2)
     .text(
@@ -96,8 +75,7 @@ TextFieldStyler _base() => TextFieldStyler()
         PlaygroundTokens.textSm.mix(),
       ).color(PlaygroundTokens.foreground()),
     )
-    // The placeholder is not the value: it has to read as the quieter of the
-    // two, or an empty field looks filled in.
+    // Quieter than the value, or an empty field looks filled in.
     .hintText(
       .style(
         PlaygroundTokens.textSm.mix(),
@@ -121,64 +99,38 @@ TextFieldStyler _base() => TextFieldStyler()
         size: PlaygroundTokens.icon,
       ),
     )
-    .onFocused(_focusStyle())
-    .merge(_errorStyle())
-    .onDisabled(_disabledStyle());
-
-/// The focus ring: a 3px band of `ring` at half strength, with the field's own
-/// outline turned `ring`.
-///
-/// It follows any focus, not just keyboard focus: browsers treat a focused
-/// text input as `:focus-visible` even after a click, so shadcn's input rings
-/// on click too.
-///
-/// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// box without taking layout space, so focusing a field never reflows the form
-/// it sits in.
-TextFieldStyler _focusStyle() => TextFieldStyler()
-    .containerEffects(playgroundFocusRing())
-    .border(playgroundFocusBorder());
-
-/// The invalid field: a `destructive` outline and a `destructive` helper line.
-///
-/// Spelled with `variant` rather than one of the `on…` helpers because Mix
-/// ships no `onError`; the state itself is a standard `WidgetState` that
-/// `RemixTextField` drives from its own `error` flag.
-///
-/// Of this vocabulary's thirty-three tokens, `destructive` is the one that
-/// means danger, and the shipped themes keep it above the 4.5:1 text floor on
-/// the page — 4.8:1 in the light theme and 6.9:1 in the dark — so the message
-/// that explains the problem is set in it. Remix announces the error to
-/// assistive technology either way.
-TextFieldStyler _errorStyle() => TextFieldStyler().variant(
-  ContextVariant.widgetState(.error),
-  TextFieldStyler()
-      .border(.color(PlaygroundTokens.destructive()))
-      .helperText(.color(PlaygroundTokens.destructive()))
-      // An invalid field that takes focus rings in its own red and keeps its
-      // red outline.
-      .onFocused(
-        TextFieldStyler()
-            .containerEffects(
-              playgroundFocusRing(
-                color: PlaygroundTokens.destructive,
-                alpha: _errorRingAlpha,
-                dark: _darkErrorRingAlpha,
-              ),
-            )
-            .border(.color(PlaygroundTokens.destructive())),
-      ),
-);
-
-/// The invalid field's focus ring: `destructive` at 20%, 40% in the dark.
-const _errorRingAlpha = 0.2;
-const _darkErrorRingAlpha = 0.4;
-
-/// Declared last so it wins over every other state fragment.
-///
-/// A disabled field keeps its surface and simply fades; the focus ring is
-/// cleared because a disabled control that still draws a focus ring reads as
-/// editable.
-TextFieldStyler _disabledStyle() => TextFieldStyler()
-    .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundTokens.disabledOpacity));
+    // Any focus, not only keyboard focus: a browser treats a focused text input
+    // as `:focus-visible` even after a click, so shadcn's input rings on click.
+    .onFocused(
+      TextFieldStyler()
+          .containerEffects(playgroundFocusRing())
+          .border(playgroundFocusBorder()),
+    )
+    // Mix ships no `onError`; `RemixTextField` drives this standard
+    // `WidgetState` from its own `error` flag. `destructive` clears 4.5:1 on the
+    // page in both themes, so the helper line is set in it too.
+    .variant(
+      ContextVariant.widgetState(.error),
+      TextFieldStyler()
+          .border(.color(PlaygroundTokens.destructive()))
+          .helperText(.color(PlaygroundTokens.destructive()))
+          // Focus rings in the same red: `destructive` at 20%, 40% in the dark.
+          .onFocused(
+            TextFieldStyler()
+                .containerEffects(
+                  playgroundFocusRing(
+                    color: PlaygroundTokens.destructive,
+                    alpha: 0.2,
+                    dark: 0.4,
+                  ),
+                )
+                .border(.color(PlaygroundTokens.destructive())),
+          ),
+    )
+    // Declared last so it wins; the ring is cleared because a disabled control
+    // that still rings reads as editable.
+    .onDisabled(
+      TextFieldStyler()
+          .containerEffects(.outline(.style(.none)))
+          .wrap(.opacity(PlaygroundTokens.disabledOpacity)),
+    );
