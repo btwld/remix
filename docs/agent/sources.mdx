@@ -19,13 +19,14 @@ remix init --prefix Ui --preset fortal
 remix add sources_recipe agent_glyphs_recipe
 ```
 
-Existing apps keep their chosen preset. Vanilla and HeroUI provide the same recipe roles.
+Existing apps keep their chosen preset. All three presets provide the same recipe roles.
 No consumer `build.yaml` is needed for these Agent recipes.
 
 ## Behavior
 
 Pass `AgentSource` values through `sources`. An empty list renders nothing.
-The line expands to source buttons; `onOpen` receives the selected source.
+The line expands to source chips. Supplying `onSourcePressed` makes them actionable buttons;
+the callback receives the selected source.
 The host decides how to open its URI or navigate to its file.
 Use it in the `sources` slot of `AgentAnswer` or place it independently.
 
@@ -39,10 +40,11 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/agent.dart';
 import 'ui/ui.dart';
 
-Widget buildSources() {
+Widget buildSources(ValueChanged<AgentSource> onSourcePressed) {
   final recipe = uiAgentSourcesRecipe();
   return AgentSources(
     sources: const [AgentSource(id: 'cart', title: 'cart_test.dart')],
+    onSourcePressed: onSourcePressed,
     style: recipe.style,
     disclosureStyle: recipe.disclosureStyle,
     sourceStyle: recipe.sourceStyle,

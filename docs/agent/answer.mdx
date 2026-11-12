@@ -19,7 +19,7 @@ remix init --prefix Ui --preset fortal
 remix add answer_recipe agent_glyphs_recipe
 ```
 
-Existing apps keep their chosen preset. Vanilla and HeroUI provide the same recipe roles.
+Existing apps keep their chosen preset. All three presets provide the same recipe roles.
 No consumer `build.yaml` is needed for these Agent recipes.
 
 ## Behavior
@@ -48,6 +48,7 @@ Widget buildAnswer() {
     status: AgentAnswerStatus.complete,
     style: recipe.style,
     actionStyle: recipe.actionStyle,
+    selectedActionStyle: recipe.selectedActionStyle,
     child: const Text('All checkout tests pass.'),
   );
 }
@@ -60,6 +61,7 @@ child controls resolve hover, focus, and disabled state in their own context.
 | --- | --- |
 | `style` | `AgentAnswerStyler` |
 | `actionStyle` | `IconButtonStyler` |
+| `selectedActionStyle` | `IconButtonStyler` |
 
 Each factory merges same-named overrides after its preset defaults.
 Edit the installed recipe to customize it. `remix add answer_recipe --diff` previews upstream differences.
