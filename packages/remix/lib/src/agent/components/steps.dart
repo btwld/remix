@@ -156,8 +156,10 @@ final _stepsLayout = AgentStepsStyler(
       .crossAxisAlignment(CrossAxisAlignment.start),
 );
 
-class _AgentStepsState extends State<AgentSteps> {
+class _AgentStepsState extends State<AgentSteps>
+    with AutomaticKeepAliveClientMixin {
   late final AgentDisclosureController _disclosure;
+  bool _retainDisclosure = false;
 
   @override
   void initState() {
@@ -166,9 +168,7 @@ class _AgentStepsState extends State<AgentSteps> {
     _disclosure = AgentDisclosureController(
       phase: phase,
       expanded: widget.expanded,
-      defaultExpanded:
-          widget.defaultExpanded ??
-          (!phase.isFinished && widget.policy.openWhileWorking),
+      defaultExpanded: _defaultExpanded,
       policy: widget.policy,
       onExpandedChanged: widget.onExpandedChanged,
     )..addListener(_changed);
@@ -187,7 +187,29 @@ class _AgentStepsState extends State<AgentSteps> {
       ..onExpandedChanged = widget.onExpandedChanged
       ..updateExpanded(widget.expanded)
       ..updatePhase(widget.status.phase);
+    _updateDisclosureKeepAlive();
   }
+
+  bool get _defaultExpanded =>
+      widget.defaultExpanded ??
+      (!widget.status.phase.isFinished && widget.policy.openWhileWorking);
+
+  void _toggle(bool expanded) {
+    _disclosure.toggle(expanded);
+    _updateDisclosureKeepAlive();
+  }
+
+  void _updateDisclosureKeepAlive() {
+    _retainDisclosure =
+        _disclosure.readerToggled &&
+        widget.policy.respectReaderToggle &&
+        (!widget.status.phase.isFinished ||
+            _disclosure.expanded != _defaultExpanded);
+    updateKeepAlive();
+  }
+
+  @override
+  bool get wantKeepAlive => _retainDisclosure;
 
   void _changed() {
     if (mounted) setState(() {});
@@ -311,6 +333,7 @@ class _AgentStepsState extends State<AgentSteps> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return RemixReducedMotionBuilder(
       builder: (context, reduceMotion) => AgentValueScope<AgentRunStatus>(
         value: widget.status,
@@ -335,7 +358,7 @@ class _AgentStepsState extends State<AgentSteps> {
               styleSpec: spec.container,
               child: RemixDisclosure(
                 expanded: _disclosure.expanded,
-                onExpandedChanged: _disclosure.toggle,
+                onExpandedChanged: _toggle,
                 semanticLabel: _label,
                 style: widget.disclosureStyle,
                 trigger: const SizedBox.shrink(),

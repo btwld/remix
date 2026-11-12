@@ -9,10 +9,15 @@ import '../models/tool_call.dart';
 /// request failed can also leave the call awaiting approval and call
 /// [rearm].
 class AgentApprovalGuard {
-  /// Creates a guard for the call [id] in [status].
-  AgentApprovalGuard({required String id, required AgentToolCallStatus status})
-    : _id = id,
-      _status = status;
+  /// Creates a guard for the call [id] in [status], adopting [recorded].
+  AgentApprovalGuard({
+    required String id,
+    required AgentToolCallStatus status,
+    AgentApprovalDecision? recorded,
+  }) : _id = id,
+       _status = status,
+       _recorded = recorded,
+       _decision = status.needsDecision ? recorded : null;
 
   String _id;
   AgentToolCallStatus _status;
@@ -51,6 +56,7 @@ class AgentApprovalGuard {
     _status = status;
     _recorded = recorded;
     if (newRequest || returned || cleared) _decision = null;
+    if (awaiting && recorded != null) _decision = recorded;
   }
 
   /// Forgets the decision taken for the current request, so the reader can

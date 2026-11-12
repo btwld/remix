@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -80,6 +81,28 @@ bool _isEnabled(WidgetTester tester, Key key) =>
 
 void main() {
   group('the approval card', () {
+    testWidgets(
+      'adopts a recorded decision on mount and re-arms when cleared',
+      (tester) async {
+        final decisions = <AgentApprovalDecision>[];
+        final notifier = await _pump(
+          tester,
+          approvalCall.copyWith(decision: AgentApprovalDecision.allowOnce),
+          onDecision: decisions.add,
+        );
+        for (final key in [_allowOnce, _deny, _alwaysAllow]) {
+          expect(_isEnabled(tester, key), isFalse);
+          await tester.tap(find.byKey(key), warnIfMissed: false);
+        }
+        expect(decisions, isEmpty);
+
+        await _move(tester, notifier, approvalCall);
+        expect(_isEnabled(tester, _deny), isTrue);
+        await tester.tap(find.byKey(_deny));
+        expect(decisions, [AgentApprovalDecision.deny]);
+      },
+    );
+
     testWidgets('asks the question with the tool, description and input', (
       tester,
     ) async {
@@ -269,6 +292,120 @@ void main() {
   });
 
   group('the row', () {
+    for (final slot in ['toolId', 'meta', 'both']) {
+      testWidgets(
+        'an empty $slot semantics label keeps visible trailing text',
+        (tester) async {
+          final semantics = tester.ensureSemantics();
+          try {
+            final hideTool = slot != 'meta';
+            final hideMeta = slot != 'toolId';
+            final title = hideTool ? 'Tests passed' : 'terminal.run';
+            await _pump(
+              tester,
+              AgentToolCallPart(
+                id: 'empty-label',
+                name: 'terminal.run',
+                summary: hideTool ? title : null,
+                detail: hideMeta ? '31 tests' : null,
+                status: AgentToolCallStatus.succeeded,
+              ),
+              style: AgentToolCallStyler(
+                toolId: hideTool ? TextStyler().semanticsLabel('') : null,
+                meta: hideMeta ? TextStyler().semanticsLabel('') : null,
+              ),
+            );
+            final text = tester.widget<Text>(
+              find.ancestor(of: _rowText(title), matching: find.byType(Text)),
+            );
+            final visible = text.textSpan!.toPlainText(
+              includeSemanticsLabels: false,
+              includePlaceholders: false,
+            );
+            if (hideTool) expect(visible, contains('terminal.run'));
+            if (hideMeta) expect(visible, contains('31 tests'));
+            expect(text.semanticsLabel, title);
+            expect(find.bySemanticsLabel(title), findsOneWidget);
+          } finally {
+            semantics.dispose();
+          }
+        },
+      );
+    }
+
+    for (final slot in ['summary', 'meta', 'toolId']) {
+      testWidgets('honors the row $slot text directive', (tester) async {
+        final uppercase = TextStyler().uppercase();
+        await _pump(
+          tester,
+          doneCall,
+          style: AgentToolCallStyler(
+            summary: slot == 'summary' ? uppercase : null,
+            meta: slot == 'meta' ? uppercase : null,
+            toolId: slot == 'toolId' ? uppercase : null,
+          ),
+        );
+        final summary = slot == 'summary' ? 'TESTS PASSED' : 'Tests passed';
+        final meta = slot == 'meta'
+            ? '31 TESTS · 2.9S · ALLOWED ONCE'
+            : '31 tests · 2.9s · Allowed once';
+        final toolId = slot == 'toolId' ? 'TERMINAL.RUN' : 'terminal.run';
+        expect(_rowText(summary), findsOneWidget);
+        expect(_rowText('$meta · $toolId'), findsOneWidget);
+      });
+    }
+
+    testWidgets('honors row paragraph configuration and keeps one ellipsis', (
+      tester,
+    ) async {
+      const scaler = TextScaler.linear(1.5);
+      const strut = StrutStyle(fontSize: 18);
+      const height = TextHeightBehavior(applyHeightToFirstAscent: false);
+      const color = Color(0xFF123456);
+      await _pump(
+        tester,
+        doneCall,
+        style: AgentToolCallStyler(
+          summary: TextStyler()
+              .textScaler(scaler)
+              .strutStyle(StrutStyleMix(fontSize: 18))
+              .textAlign(TextAlign.end)
+              .textDirection(TextDirection.rtl)
+              .locale(const Locale('ar'))
+              .textWidthBasis(TextWidthBasis.longestLine)
+              .textHeightBehavior(
+                TextHeightBehaviorMix(applyHeightToFirstAscent: false),
+              )
+              .selectionColor(color)
+              .maxLines(3)
+              .overflow(TextOverflow.visible),
+          meta: TextStyler().locale(const Locale('fr')),
+          toolId: TextStyler().locale(const Locale('en')),
+        ),
+      );
+      final text = tester.widget<Text>(
+        find.ancestor(
+          of: _rowText('Tests passed'),
+          matching: find.byType(Text),
+        ),
+      );
+      expect(text.textScaler, scaler);
+      expect(text.strutStyle, strut);
+      expect(text.textAlign, TextAlign.end);
+      expect(text.textDirection, TextDirection.rtl);
+      expect(text.locale, const Locale('ar'));
+      expect(text.textWidthBasis, TextWidthBasis.longestLine);
+      expect(text.textHeightBehavior, height);
+      expect(text.selectionColor, color);
+      expect(text.maxLines, 1);
+      expect(text.overflow, TextOverflow.ellipsis);
+      expect(text.softWrap, isFalse);
+      final spans = (text.textSpan! as TextSpan).children!;
+      final trailing = spans.last as TextSpan;
+      expect((trailing.children!.first as TextSpan).locale, const Locale('fr'));
+      expect((trailing.children!.last as TextSpan).locale, const Locale('en'));
+    });
+
     testWidgets('shows a running call with its output open', (tester) async {
       await _pump(tester, runningCall);
 
@@ -389,6 +526,155 @@ void main() {
       expect(failed.style?.color, red);
     });
 
+    testWidgets('resolves hover, press and focus variants on the row', (
+      tester,
+    ) async {
+      const idle = Color(0xFF111111);
+      const hovered = Color(0xFF222222);
+      const pressed = Color(0xFF333333);
+      const focused = Color(0xFF444444);
+      await _pump(
+        tester,
+        runningCall,
+        style:
+            AgentToolCallStyler(
+                  row: FlexBoxStyler().color(idle).onPressed(.color(pressed)),
+                )
+                .onHovered(
+                  AgentToolCallStyler(row: FlexBoxStyler().color(hovered)),
+                )
+                .onFocused(
+                  AgentToolCallStyler(row: FlexBoxStyler().color(focused)),
+                ),
+      );
+      Color? rowColor() => tester
+          .widgetList<DecoratedBox>(
+            find.descendant(
+              of: find.byType(RemixDisclosure),
+              matching: find.byType(DecoratedBox),
+            ),
+          )
+          .map((box) => box.decoration)
+          .whereType<BoxDecoration>()
+          .map((decoration) => decoration.color)
+          .where((color) => [idle, hovered, pressed, focused].contains(color))
+          .single;
+
+      expect(rowColor(), idle);
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: const Offset(799, 599));
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(tester.getCenter(_rowText('Running the cart tests')));
+      await tester.pump();
+      expect(rowColor(), hovered);
+      await mouse.down(tester.getCenter(_rowText('Running the cart tests')));
+      await tester.pump(const Duration(milliseconds: 150));
+      expect(rowColor(), pressed);
+      await mouse.up();
+      await mouse.moveTo(const Offset(799, 599));
+      await tester.pumpAndSettle();
+      await _tab(tester, 1);
+      expect(rowColor(), focused);
+    });
+
+    for (final replacement in ['approval', 'non-interactive', 'renderer']) {
+      for (final press in [false, true]) {
+        testWidgets(
+          'clears row ${press ? 'press' : 'hover'} after $replacement replacement',
+          (tester) async {
+            const idle = Color(0xFF111111);
+            const hovered = Color(0xFF222222);
+            const pressed = Color(0xFF333333);
+            final notifier = await _pump(
+              tester,
+              runningCall,
+              style: AgentToolCallStyler(
+                row: FlexBoxStyler()
+                    .color(idle)
+                    .onHovered(.color(hovered))
+                    .onPressed(.color(pressed)),
+              ),
+              renderers: {'custom': (_, _) => const SizedBox(height: 100)},
+            );
+            Color? rowColor() => tester
+                .widgetList<DecoratedBox>(
+                  find.descendant(
+                    of: find.byType(AgentToolCall),
+                    matching: find.byType(DecoratedBox),
+                  ),
+                )
+                .map((box) => box.decoration)
+                .whereType<BoxDecoration>()
+                .map((decoration) => decoration.color)
+                .where((color) => [idle, hovered, pressed].contains(color))
+                .single;
+
+            expect(rowColor(), idle);
+            final mouse = await tester.createGesture(
+              kind: PointerDeviceKind.mouse,
+            );
+            await mouse.addPointer(location: const Offset(799, 599));
+            addTearDown(mouse.removePointer);
+            final row = _rowText('Running the cart tests');
+            await mouse.moveTo(tester.getCenter(row));
+            await tester.pump();
+            expect(rowColor(), hovered);
+            if (press) {
+              await mouse.down(tester.getCenter(row));
+              await tester.pump(const Duration(milliseconds: 150));
+              expect(rowColor(), pressed);
+            }
+
+            await _move(tester, notifier, switch (replacement) {
+              'approval' => approvalCall,
+              'renderer' => AgentToolCallPart(
+                id: runningCall.id,
+                name: 'custom',
+                status: AgentToolCallStatus.running,
+              ),
+              _ => AgentToolCallPart(
+                id: runningCall.id,
+                name: runningCall.name,
+                summary: runningCall.summary,
+                status: AgentToolCallStatus.running,
+              ),
+            });
+            await mouse.moveTo(const Offset(799, 599));
+            if (press) await mouse.up();
+            await tester.pumpAndSettle();
+            await _move(tester, notifier, runningCall);
+            expect(rowColor(), idle);
+          },
+        );
+      }
+    }
+
+    testWidgets('a row without output still resolves hover styling', (
+      tester,
+    ) async {
+      const hovered = Color(0xFF222222);
+      await _pump(
+        tester,
+        deniedCall,
+        style: AgentToolCallStyler(
+          row: FlexBoxStyler().onHovered(.color(hovered)),
+        ),
+      );
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: const Offset(799, 599));
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(tester.getCenter(_rowText('Run the cart tests')));
+      await tester.pump();
+      expect(
+        tester
+            .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+            .map((box) => box.decoration)
+            .whereType<BoxDecoration>()
+            .any((decoration) => decoration.color == hovered),
+        isTrue,
+      );
+    });
+
     testWidgets('a host icon replaces the tool glyph', (tester) async {
       await pumpAgent(
         tester,
@@ -401,6 +687,57 @@ void main() {
 
       expect(find.byKey(const ValueKey('terminal')), findsOneWidget);
       expect(findGlyph(AgentGlyph.tool), findsNothing);
+    });
+
+    testWidgets('maps tool names to themed icons with fallback and override', (
+      tester,
+    ) async {
+      const color = Color(0xFF123456);
+      final names = <String>[];
+      await pumpAgent(
+        tester,
+        AgentGlyphs(
+          builder: testGlyphs,
+          toolIconBuilder: (context, name, spec) {
+            names.add(name);
+            expect(spec.color, color);
+            return name == 'terminal.run'
+                ? const Icon(IconData(0xe001), key: ValueKey('named-tool'))
+                : null;
+          },
+          child: Column(
+            children: [
+              AgentToolCall(
+                call: deniedCall,
+                style: AgentToolCallStyler(icon: IconStyler().color(color)),
+              ),
+              AgentToolCall(
+                call: const AgentToolCallPart(
+                  id: 'unknown',
+                  name: 'unknown',
+                  status: AgentToolCallStatus.denied,
+                ),
+                style: AgentToolCallStyler(icon: IconStyler().color(color)),
+              ),
+              const AgentToolCall(
+                call: deniedCall,
+                icon: SizedBox(key: ValueKey('explicit-tool')),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      expect(names, ['terminal.run', 'unknown']);
+      expect(find.byKey(const ValueKey('named-tool')), findsOneWidget);
+      expect(find.byKey(const ValueKey('explicit-tool')), findsOneWidget);
+      expect(findGlyph(AgentGlyph.tool), findsOneWidget);
+      expect(
+        IconTheme.of(
+          tester.element(find.byKey(const ValueKey('named-tool'))),
+        ).color,
+        color,
+      );
     });
 
     testWidgets('labels the call and its output for assistive technology', (
@@ -494,40 +831,44 @@ void main() {
     );
   });
 
-  testWidgets('the approval footer wraps at a narrow width and large text', (
-    tester,
-  ) async {
-    final decisions = <AgentApprovalDecision>[];
-    await pumpAgent(
-      tester,
-      Builder(
-        builder: (context) => MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(textScaler: const TextScaler.linear(2)),
-          child: SizedBox(
-            width: 300,
-            child: AgentToolCall(
-              call: approvalCall,
-              onDecision: decisions.add,
-              // The title row's status is outside this test's subject.
-              statusLabelBuilder: (_) => 'Wait',
-              glyphBuilder: testGlyphs,
+  testWidgets(
+    'the approval heading and footer fit at a narrow width and large text',
+    (tester) async {
+      final decisions = <AgentApprovalDecision>[];
+      await pumpAgent(
+        tester,
+        Builder(
+          builder: (context) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: const TextScaler.linear(2)),
+            child: SizedBox(
+              width: 300,
+              child: AgentToolCall(
+                call: approvalCall,
+                onDecision: decisions.add,
+                glyphBuilder: testGlyphs,
+              ),
             ),
           ),
         ),
-      ),
-      surface: const Size(800, 4000),
-    );
+        surface: const Size(800, 4000),
+      );
 
-    expect(tester.takeException(), isNull);
-    for (final key in [_alwaysAllow, _deny, _allowOnce]) {
-      expect(find.byKey(key), findsOneWidget);
-      final rect = tester.getRect(find.byKey(key));
-      expect(rect.left, greaterThanOrEqualTo(0));
-      expect(rect.right, lessThanOrEqualTo(300));
-    }
-    await tester.tap(find.byKey(_allowOnce));
-    expect(decisions, [AgentApprovalDecision.allowOnce]);
-  });
+      expect(tester.takeException(), isNull);
+      final title = tester.getRect(find.text('Run the cart tests?'));
+      expect(title.width, greaterThan(0));
+      expect(title.left, greaterThanOrEqualTo(0));
+      expect(title.right, lessThanOrEqualTo(300));
+      expect(find.text('Needs approval'), findsOneWidget);
+      for (final key in [_alwaysAllow, _deny, _allowOnce]) {
+        expect(find.byKey(key), findsOneWidget);
+        final rect = tester.getRect(find.byKey(key));
+        expect(rect.left, greaterThanOrEqualTo(0));
+        expect(rect.right, lessThanOrEqualTo(300));
+      }
+      await tester.tap(find.byKey(_allowOnce));
+      expect(decisions, [AgentApprovalDecision.allowOnce]);
+    },
+  );
 }

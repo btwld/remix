@@ -83,9 +83,8 @@ class AgentDisclosurePolicy {
 /// controlled host decides for itself.
 ///
 /// A request from the reader reaches [onExpandedChanged] at once. A request
-/// from the lifecycle arrives while the host rebuilds the widget that owns
-/// this controller, so it reaches [onExpandedChanged] after the frame: the
-/// host can call `setState` in it without touching the tree mid-build.
+/// from the lifecycle is deferred until after the frame during build or
+/// layout, so the host can call `setState` in it. Otherwise it arrives at once.
 ///
 /// Listeners hear about changes to [expanded].
 class AgentDisclosureController extends ChangeNotifier {
@@ -139,13 +138,14 @@ class AgentDisclosureController extends ChangeNotifier {
 
   /// Moves the work to [next] and applies the [policy]'s request, if any.
   ///
-  /// Entering [AgentWorkPhase.working] from a finished phase starts a new run
-  /// and forgets the reader's toggle. A pause for the reader does not.
+  /// Entering [AgentWorkPhase.working] or [AgentWorkPhase.waiting] from a
+  /// finished phase starts a new run and forgets the reader's toggle.
+  /// A pause for the reader within a run does not.
   void updatePhase(AgentWorkPhase next) {
     final previous = _phase;
     if (next == previous) return;
     _phase = next;
-    if (next == AgentWorkPhase.working && previous.isFinished) {
+    if (!next.isFinished && previous.isFinished) {
       _readerToggled = false;
     }
     final request = policy.request(previous, next);
@@ -166,11 +166,12 @@ class AgentDisclosureController extends ChangeNotifier {
       _uncontrolled = next;
       notifyListeners();
     }
-    if (!fromLifecycle) {
+    if (!fromLifecycle ||
+        SchedulerBinding.instance.schedulerPhase !=
+            SchedulerPhase.persistentCallbacks) {
       onExpandedChanged?.call(next);
       return;
     }
-    // The lifecycle moves while the host builds; report it after the frame.
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!_disposed) onExpandedChanged?.call(next);
     });

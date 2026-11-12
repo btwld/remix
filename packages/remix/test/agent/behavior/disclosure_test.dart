@@ -16,6 +16,44 @@ import '../helpers/pump.dart';
 const _parity = AgentDisclosurePolicy(respectReaderToggle: false);
 
 void main() {
+  test('a retry through approval resets the reader toggle', () {
+    final controller = AgentDisclosureController(phase: AgentWorkPhase.working);
+    addTearDown(controller.dispose);
+    controller.toggle(false);
+    controller.updatePhase(AgentWorkPhase.failed);
+    controller.updatePhase(AgentWorkPhase.waiting);
+    expect(controller.readerToggled, isFalse);
+    controller.updatePhase(AgentWorkPhase.working);
+    expect(controller.expanded, isTrue);
+  });
+
+  test('an approval pause within a run preserves the reader toggle', () {
+    final controller = AgentDisclosureController(phase: AgentWorkPhase.working);
+    addTearDown(controller.dispose);
+    controller.toggle(false);
+    controller.updatePhase(AgentWorkPhase.waiting);
+    expect(controller.readerToggled, isTrue);
+    controller.updatePhase(AgentWorkPhase.working);
+    expect(controller.readerToggled, isTrue);
+    expect(controller.expanded, isFalse);
+  });
+
+  testWidgets('an idle lifecycle change reports without another frame', (
+    tester,
+  ) async {
+    await pumpAgent(tester, const SizedBox());
+    await tester.pumpAndSettle();
+    final requests = <bool>[];
+    final controller = AgentDisclosureController(
+      phase: AgentWorkPhase.working,
+      expanded: true,
+      onExpandedChanged: requests.add,
+    );
+    addTearDown(controller.dispose);
+    controller.updatePhase(AgentWorkPhase.settled);
+    expect(requests, [false]);
+  });
+
   lifecycleCallbackTests();
   group('AgentDisclosurePolicy.request', () {
     const policy = AgentDisclosurePolicy();

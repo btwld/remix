@@ -33,7 +33,8 @@
 /// [AgentSteps], [AgentToolCall] (the row and the approval card),
 /// [AgentAnswer], [AgentSources], [AgentSuggestions] and [AgentComposer].
 /// They draw no icons: each names an [AgentGlyph] for an [AgentGlyphBuilder],
-/// supplied per widget or by [AgentGlyphs]. [AgentToolRenderers] registers a
+/// supplied per widget or by [AgentGlyphs], whose [AgentToolIconBuilder] can
+/// choose a leading icon by tool name. [AgentToolRenderers] registers a
 /// renderer per tool name.
 ///
 /// Screen-reader announcements are wired by the host: [AgentAnnouncer] decides
@@ -55,7 +56,7 @@ export 'src/agent/behavior/run_clock.dart';
 export 'src/agent/components/answer.dart';
 export 'src/agent/components/composer.dart';
 export 'src/agent/components/conversation.dart';
-export 'src/agent/components/glyphs.dart' hide agentGlyph;
+export 'src/agent/components/glyphs.dart' hide agentGlyph, agentToolIcon;
 export 'src/agent/components/message.dart';
 export 'src/agent/components/sources.dart';
 export 'src/agent/components/steps.dart';

@@ -97,7 +97,7 @@ class _RenderAgentOverflowClip extends RenderProxyBox {
   double? _maxHeight;
   bool _clip;
   ValueChanged<bool> onOverflowChanged;
-  bool _overflows = false;
+  bool? _overflows;
 
   set maxHeight(double? value) {
     if (value == _maxHeight) return;
