@@ -140,7 +140,7 @@ class _UiPermissionState extends State<UiPermission> {
   String get _statusLabel =>
       widget.statusLabelBuilder?.call(widget.status) ??
       switch (widget.status) {
-        UiPermissionStatus.pending => 'Permission required',
+        UiPermissionStatus.pending => 'Needs approval',
         UiPermissionStatus.deciding => 'Recording',
         UiPermissionStatus.allowed => 'Allowed',
         UiPermissionStatus.running => 'Running',

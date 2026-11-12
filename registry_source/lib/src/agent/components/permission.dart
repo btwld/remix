@@ -140,7 +140,7 @@ class _AgentPermissionState extends State<AgentPermission> {
   String get _statusLabel =>
       widget.statusLabelBuilder?.call(widget.status) ??
       switch (widget.status) {
-        AgentPermissionStatus.pending => 'Permission required',
+        AgentPermissionStatus.pending => 'Needs approval',
         AgentPermissionStatus.deciding => 'Recording',
         AgentPermissionStatus.allowed => 'Allowed',
         AgentPermissionStatus.running => 'Running',
