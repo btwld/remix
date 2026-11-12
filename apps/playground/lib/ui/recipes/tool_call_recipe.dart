@@ -275,7 +275,7 @@ IconStyler _glyph({double? size, Color? color}) => IconStyler()
     .size(size ?? PlaygroundTokens.s4)
     .color(color ?? PlaygroundTokens.mutedForeground());
 
-/// Tool ids, commands and output in the Playground monospace face at [size].
+/// Tool ids, commands and output in the theme monospace face at [size].
 TextStyler _mono(double size) => TextStyler()
     .style(PlaygroundTokens.textMono.mix())
     .fontSize(size)

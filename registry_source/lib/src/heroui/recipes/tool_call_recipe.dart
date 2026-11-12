@@ -228,7 +228,7 @@ const _wellMaxHeight = 200.0;
 IconStyler _glyph({double? size, Color? color}) =>
     IconStyler().size(size ?? 16).color(color ?? HeroUiTokens.muted());
 
-/// Tool ids, commands and output in the HeroUi monospace face.
+/// Tool ids, commands and output in the platform monospace stack.
 TextStyler _mono(TextStyleToken size) => TextStyler()
     .style(size.mix())
     .fontFamily('Menlo')
