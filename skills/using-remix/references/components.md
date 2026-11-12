@@ -202,11 +202,12 @@ HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, `dashboard_shell`, and
   `sidebar_layout`. Provides slots for brand, search, page title (or custom
   `headerTitle`), account, and header actions. Contains no generated adapter.
   The HeroUI shell also installs `button` and `search_field`.
-- **dashboard_demo** — showcase recipe assembling the five product dashboard
-  screens (Overview, Chat, Customers, Orders, and Settings) into a runnable
-  demo; see [Reference showcases](reference-showcases.md) for product-example
-  and coverage-gallery conventions. The HeroUI demo also installs `chart`,
-  `table`, `tabs`, `chip`, and the Agent items.
+- **dashboard_demo** — showcase recipe assembling the product dashboard
+  screens into a runnable demo: Overview, Chat, Customers, Orders, and
+  Settings in Vanilla and HeroUI; those plus Analytics, Schedule, an
+  image-card Collection and Themes in Fortal. See [Reference showcases](reference-showcases.md) for
+  product-example and coverage-gallery conventions. The HeroUI demo also
+  installs `chart`, `table`, `tabs`, `chip`, and the Agent items.
 
 ## Agent surfaces
 
