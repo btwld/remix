@@ -4,11 +4,17 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// Fortal Kbd variants.
-enum FortalKbdVariant { soft }
+/// The looks a keyboard key comes in.
+enum FortalKbdVariant {
+  /// A gray-tinted key cap.
+  soft,
+}
 
-/// Fortal-themed keyboard key.
+/// The style of a keyboard key, sized from the surrounding text.
 ///
+/// Without [size] it follows the 16px body text at 75%; with one it takes 80%
+/// of that text size. It pins its own weight and line box, so a key stays a
+/// key cap whatever copy surrounds it.
 BadgeStyler fortalKbdStyle(
   BuildContext context, {
   FortalTextSize? size,
@@ -55,8 +61,7 @@ BadgeStyler fortalKbdStyle(
   return recipe.merge(style);
 }
 
-/// Token-backed representation of one keyboard key or shortcut.
-///
+/// One keyboard key or shortcut, drawn as a key cap.
 class FortalKbd extends StatelessWidget {
   const FortalKbd(
     this.text, {
