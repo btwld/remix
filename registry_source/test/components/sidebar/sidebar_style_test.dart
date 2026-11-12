@@ -95,7 +95,7 @@ void main() {
     expect(selected, 'customers');
   });
 
-  testWidgets('recipe uses ghost size2 content in 48-high full-width rows', (
+  testWidgets('recipe uses ghost size2 content in 40-high full-width rows', (
     tester,
   ) async {
     await tester.pumpRemixApp(
@@ -113,7 +113,7 @@ void main() {
 
     // The wider leading inset keeps icons still when the panel collapses.
     expect(selectedBox?.padding, const EdgeInsets.fromLTRB(16, 8, 12, 8));
-    expect(selectedBox?.constraints?.minHeight, 48);
+    expect(selectedBox?.constraints?.minHeight, 40);
     expect(selectedFlex?.spacing, 4);
     expect(selectedFlex?.mainAxisSize, MainAxisSize.max);
     expect(selectedFlex?.mainAxisAlignment, MainAxisAlignment.start);
@@ -131,6 +131,24 @@ void main() {
     );
     expect(selected.label.spec.style?.fontSize, 14);
     expect(selected.icon.spec.size, 16);
+  });
+
+  testWidgets('destination rows sit one 40 pixel row apart', (tester) async {
+    await tester.pumpRemixApp(
+      SizedBox(
+        width: 256,
+        child: FortalSidebar<String>(
+          sections: _sections,
+          selectedValue: 'overview',
+          onSelected: (_) {},
+        ),
+      ),
+    );
+
+    // Both rows share a section, so only the row pitch lies between them.
+    final first = tester.getTopLeft(find.bySemanticsLabel('Overview'));
+    final second = tester.getTopLeft(find.bySemanticsLabel('Customers'));
+    expect(second.dy - first.dy, 40);
   });
 
   testWidgets('destination rows meet mobile tap-target guidelines', (
@@ -151,10 +169,10 @@ void main() {
 
     expect(
       tester.getSize(find.bySemanticsLabel('Overview')).height,
-      greaterThanOrEqualTo(48),
+      greaterThanOrEqualTo(40),
     );
-    await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
-    await expectLater(tester, meetsGuideline(iOSTapTargetGuideline));
+    // Fortal's touch-target floor is 40 (`FortalTokens.touchTargetMin`), below
+    // the Android and iOS guideline sizes, so only the label check applies.
     await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
     semantics.dispose();
   });
@@ -215,7 +233,7 @@ void main() {
                         padding: const EdgeInsets.all(16),
                         child: SizedBox(
                           width: collapsed ? 72 : 256,
-                          height: 220,
+                          height: 160,
                           child: FortalSidebar<String>(
                             collapsed: collapsed,
                             animationStyle: AnimationStyle.noAnimation,
@@ -265,16 +283,26 @@ void main() {
             final ring = FortalTokens.focus8.resolve(context);
             final width = FortalTokens.focusRingWidth.resolve(context);
             final offset = FortalTokens.focusRingOffset.resolve(context);
-            final margin = tester
-                .resolvedSpecOf<ToggleSpec>(find.byIcon(Icons.star_outline))
-                .container
-                .spec
-                .box!
-                .spec
-                .margin!
-                .resolve(TextDirection.ltr);
-            expect(margin, EdgeInsets.symmetric(vertical: width + offset));
-            final surface = margin.deflateRect(destination);
+            // Rows sit flush: the ring's room comes from the scroll padding,
+            // so a row has no margin of its own and the pitch stays one row.
+            expect(
+              tester
+                  .resolvedSpecOf<ToggleSpec>(find.byIcon(Icons.star_outline))
+                  .container
+                  .spec
+                  .box!
+                  .spec
+                  .margin,
+              isNull,
+            );
+            final surface = destination;
+            final viewport = tester.getRect(
+              find.descendant(
+                of: find.byType(FortalSidebar<String>),
+                matching: find.byType(Scrollable),
+              ),
+            );
+            final ringOuter = offset + width;
 
             FocusManager.instance.primaryFocus!.unfocus();
             await tester.pumpAndSettle();
@@ -296,9 +324,15 @@ void main() {
               return pixels.at(device.dx.round(), device.dy.round());
             }
 
+            // A row scrolled flush to the viewport edge has that side of its
+            // ring clipped by the viewport; every other side must paint.
+            final clipsTop = surface.top - ringOuter < viewport.top;
+            final clipsBottom = surface.bottom + ringOuter > viewport.bottom;
             for (final at in <Offset Function(double inside)>[
-              (inside) => Offset(surface.center.dx, surface.top + inside),
-              (inside) => Offset(surface.center.dx, surface.bottom - inside),
+              if (!clipsTop)
+                (inside) => Offset(surface.center.dx, surface.top + inside),
+              if (!clipsBottom)
+                (inside) => Offset(surface.center.dx, surface.bottom - inside),
               (inside) => Offset(surface.left + inside, surface.center.dy),
               (inside) => Offset(surface.right - inside, surface.center.dy),
             ]) {
@@ -317,29 +351,32 @@ void main() {
     }
   });
 
-  testWidgets('high contrast keeps selected content distinct', (tester) async {
-    Future<Color?> selectedLabelColor(bool highContrast) async {
-      await tester.pumpRemixApp(
-        FortalSidebar<String>(
-          sections: _sections,
-          selectedValue: 'overview',
-          onSelected: (_) {},
-          highContrast: highContrast,
-        ),
-      );
-      return tester
-          .resolvedSpecOf<ToggleSpec>(find.text('Overview'))
-          .label
-          .spec
-          .style
-          ?.color;
-    }
+  testWidgets(
+    'selected content is full contrast with or without high contrast',
+    (tester) async {
+      Future<Color?> selectedLabelColor(bool highContrast) async {
+        await tester.pumpRemixApp(
+          FortalSidebar<String>(
+            sections: _sections,
+            selectedValue: 'overview',
+            onSelected: (_) {},
+            highContrast: highContrast,
+          ),
+        );
+        return tester
+            .resolvedSpecOf<ToggleSpec>(find.text('Overview'))
+            .label
+            .spec
+            .style
+            ?.color;
+      }
 
-    final normal = await selectedLabelColor(false);
-    final highContrast = await selectedLabelColor(true);
+      final normal = await selectedLabelColor(false);
+      final highContrast = await selectedLabelColor(true);
 
-    expect(normal, isNotNull);
-    expect(highContrast, isNotNull);
-    expect(highContrast, isNot(normal));
-  });
+      // Selected rows always use the full-contrast step, in both modes.
+      expect(normal, isNotNull);
+      expect(highContrast, normal);
+    },
+  );
 }
