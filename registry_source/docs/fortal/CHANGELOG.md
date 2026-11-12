@@ -1,5 +1,18 @@
 ## Unreleased
 
+- Rewrite the Button and IconButton recipes so each reads top to bottom in its
+  own file: shared defaults, size, then every variant's colours per state.
+  Resolved styles are unchanged. `base_button` now holds only the computed
+  solid fills, exposed as `fortalSolidPressedFill`,
+  `fortalHighContrastHoverFill` and `fortalHighContrastPressedFill`, and the
+  mode-aware filter.
+- **Breaking:** remove the shared BaseButton layer: `FortalBaseButtonSize`,
+  `FortalBaseButtonVariant`, `fortalBaseButtonMetrics`,
+  `fortalBaseButtonIconSize`, `fortalBaseButtonGhostMetrics`,
+  `fortalIconButtonGhostMetrics`, `fortalBaseButtonActiveMotion` and
+  `fortalBaseButtonRestMotion`. Read sizes from `FortalTokens`, as the recipes
+  now do.
+
 - Strengthen Orla primary roles to dark/white fills while retaining exact Radix
   scales and subtle neutral surfaces. Add `accentMarkHover` for coherent selected
   control and theme-swatch interaction states, retain visible white-thumb rings,

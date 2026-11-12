@@ -136,8 +136,10 @@ route. Four names are easy to confuse:
    For a new measurable visual contract, record anatomy, variants, states,
    measurements and deviations before implementing; extend an existing spec
    when it already owns that contract. An ordinary fix needs no new worksheet.
-   See [components](references/components.md) for loading/focus, unresolved child
-   styles, merge order and overlay scope hazards.
+   Installed source is the product a consumer reads and edits: write each
+   recipe to the [readable source](references/components.md#readable-source)
+   rules. See [components](references/components.md) for loading/focus,
+   unresolved child styles, merge order and overlay scope hazards.
 5. **Publish and verify.** Analyze/test authored code, derive and check for
    drift. First-party presets use the checkout consumer harness and their
    parity gates; verify hosted publication separately per `open_code/RELEASING.md`.
@@ -160,7 +162,7 @@ named items. [Registry](references/registry.md#6-publish-and-test) owns that loo
   public-GitHub limits, target ownership and scratch installs.
 - [Tokens](references/tokens.md): inventory, provenance, source tiers, conflicts
   and deliberate upgrades.
-- [Components](references/components.md): scope/recipe shapes, concrete runtime
-  pitfalls, contract worksheets and tests.
+- [Components](references/components.md): scope/recipe shapes, readable-source
+  rules, concrete runtime pitfalls, contract worksheets and tests.
 - [Reference ports](references/reference-parity.md): family mapping, extension
   order, appearance evidence and acceptance for a web design system.

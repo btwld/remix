@@ -3,150 +3,140 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// The Fortal BaseButton size scale shared by Button and IconButton.
-///
-/// Deliberate: this mirrors [FortalBaseButtonVariant]. Button and IconButton
-/// each own a size enum, so the shared metrics need a common type — passing the
-/// raw `size.index + 1` instead would drop every switch below to a wildcard and
-/// defer an unknown size to a runtime throw.
-enum FortalBaseButtonSize { size1, size2, size3, size4 }
+// The computed fills of the solid Button and IconButton.
+//
+// Everything else about the two controls is written out in their own recipes.
+// These fills are shared because they are calculated rather than picked: each
+// one runs a hover or press adjustment over a theme color, so it follows any
+// palette, including a custom one.
 
-/// Transition into hover and press, the same 40ms ease as `FortalCard`.
-final fortalBaseButtonActiveMotion = AnimationConfig.ease(
-  const Duration(milliseconds: 40),
+/// A solid button's fill while pressed.
+///
+/// The hover fill, darkened under a light label and lightened under a dark
+/// one, so the label keeps its contrast either way.
+const fortalSolidPressedFill = ContextToken<Color>(_solidPressedFill);
+
+Color _solidPressedFill(BuildContext context) {
+  final label = FortalTokens.accentContrast.resolve(context);
+  final fill = FortalTokens.accentSolid.resolve(context);
+  final hover = FortalTokens.accentSolidHover.resolve(context);
+
+  final labelIsLight = label.computeLuminance() > fill.computeLuminance();
+  if (labelIsLight) {
+    return _filtered(hover, const [.brightness(0.92), .saturate(1.1)]);
+  }
+
+  // Lightening a bright hover fill can land back on the idle fill, and the
+  // press would then show nothing. Darken it instead.
+  final lightened = _filtered(hover, const [.brightness(1.08)]);
+
+  return _isSameFill(lightened, fill)
+      ? _filtered(hover, const [.brightness(0.92)])
+      : lightened;
+}
+
+/// Whether two fills are within two 8-bit steps of each other on every
+/// channel, which the eye reads as one color.
+bool _isSameFill(Color first, Color second) {
+  const tolerance = 2 / 255;
+
+  return (first.r - second.r).abs() <= tolerance &&
+      (first.g - second.g).abs() <= tolerance &&
+      (first.b - second.b).abs() <= tolerance;
+}
+
+/// A high-contrast solid button's fill while hovered: accent step 12 through
+/// the hover filter of the active brightness.
+const fortalHighContrastHoverFill = ContextToken<Color>(_highContrastHoverFill);
+
+Color _highContrastHoverFill(BuildContext context) => _filtered(
+  FortalTokens.accent12.resolve(context),
+  FortalTheme.of(context).isDark
+      ? const [.contrast(0.88), .saturate(1.3), .brightness(1.18)]
+      : const [.contrast(0.88), .saturate(1.1), .brightness(1.1)],
 );
 
-/// Transition back to rest and into focus or disabled, the same 120ms ease as
-/// `FortalCard`.
-final fortalBaseButtonRestMotion = AnimationConfig.ease(
-  const Duration(milliseconds: 120),
+/// A high-contrast solid button's fill while pressed: accent step 12 through
+/// the press filter of the active brightness.
+const fortalHighContrastPressedFill = ContextToken<Color>(
+  _highContrastPressedFill,
 );
 
-/// Shared Fortal BaseButton metrics used by Button and IconButton recipes.
-({
-  double height,
-  double paddingX,
-  double gap,
-  Radius radius,
-  TextStyleToken text,
-  double spinnerSize,
-})
-fortalBaseButtonMetrics(FortalBaseButtonSize size) => switch (size) {
-  .size1 => (
-    height: FortalTokens.space5(),
-    paddingX: FortalTokens.space2(),
-    gap: FortalTokens.space1(),
-    radius: FortalTokens.radius1OrFull(),
-    text: FortalTokens.text1,
-    spinnerSize: FortalTokens.space3(),
-  ),
-  .size2 => (
-    height: FortalTokens.space6(),
-    paddingX: FortalTokens.space3(),
-    gap: FortalTokens.space2(),
-    radius: FortalTokens.radius2OrFull(),
-    text: FortalTokens.text2,
-    spinnerSize: FortalTokens.space4(),
-  ),
-  .size3 => (
-    height: FortalTokens.space7(),
-    paddingX: FortalTokens.space4(),
-    gap: FortalTokens.space3(),
-    radius: FortalTokens.radius3OrFull(),
-    text: FortalTokens.text3,
-    spinnerSize: FortalTokens.space4(),
-  ),
-  .size4 => (
-    height: FortalTokens.space8(),
-    paddingX: FortalTokens.space5(),
-    gap: FortalTokens.space3(),
-    radius: FortalTokens.radius4OrFull(),
-    text: FortalTokens.text4,
-    spinnerSize: FortalTokens.spinnerSize3(),
-  ),
-};
+Color _highContrastPressedFill(BuildContext context) => _filtered(
+  FortalTokens.accent12.resolve(context),
+  FortalTheme.of(context).isDark
+      ? const [.brightness(0.95), .saturate(1.2)]
+      : const [.contrast(0.82), .saturate(1.2), .brightness(1.16)],
+);
 
-/// Default icon dimensions shared by text and icon-only button presets.
-double fortalBaseButtonIconSize(FortalBaseButtonSize size) => switch (size) {
-  .size1 => FortalTokens.space3(),
-  .size2 => FortalTokens.space4(),
-  .size3 => FortalTokens.spinnerSize3(),
-  .size4 => FortalTokens.space5(),
-};
-
-/// Content-box metrics for the ghost BaseButton variant.
-({double paddingX, double paddingY, double marginX, double marginY, double gap})
-fortalBaseButtonGhostMetrics(FortalBaseButtonSize size) => switch (size) {
-  .size1 => (
-    paddingX: FortalTokens.space2(),
-    paddingY: FortalTokens.space1(),
-    marginX: FortalTokens.baseButtonGhostMarginX12(),
-    marginY: FortalTokens.baseButtonGhostMarginY12(),
-    gap: FortalTokens.space1(),
-  ),
-  .size2 => (
-    paddingX: FortalTokens.space2(),
-    paddingY: FortalTokens.space1(),
-    marginX: FortalTokens.baseButtonGhostMarginX12(),
-    marginY: FortalTokens.baseButtonGhostMarginY12(),
-    gap: FortalTokens.space1(),
-  ),
-  .size3 => (
-    paddingX: FortalTokens.space3(),
-    paddingY: FortalTokens.space2(),
-    marginX: FortalTokens.baseButtonGhostMarginX3(),
-    marginY: FortalTokens.baseButtonGhostMarginY3(),
-    gap: FortalTokens.space2(),
-  ),
-  .size4 => (
-    paddingX: FortalTokens.space4(),
-    paddingY: FortalTokens.space2(),
-    marginX: FortalTokens.baseButtonGhostMarginX4(),
-    marginY: FortalTokens.baseButtonGhostMarginY4(),
-    gap: FortalTokens.space2(),
-  ),
-};
-
-/// Content-box metrics for the ghost IconButton variant.
-({double padding, double margin}) fortalIconButtonGhostMetrics(
-  FortalBaseButtonSize size,
-) => switch (size) {
-  .size1 => (
-    padding: FortalTokens.space1(),
-    margin: FortalTokens.iconButtonGhostMargin1(),
-  ),
-  .size2 => (
-    padding: FortalTokens.space2(),
-    margin: FortalTokens.iconButtonGhostMargin2(),
-  ),
-  .size3 => (
-    padding: FortalTokens.space2(),
-    margin: FortalTokens.iconButtonGhostMargin3(),
-  ),
-  .size4 => (
-    padding: FortalTokens.space3(),
-    margin: FortalTokens.iconButtonGhostMargin4(),
-  ),
-};
-
-/// Resolves a mode-aware ordered CSS filter at the component build context.
+/// [color] after the CSS filter [operations], applied in order.
 ///
-/// Fortal's own solid states recolor fills rather than filtering the painted
-/// subtree; this remains for callers that deliberately filter a button.
+/// The arithmetic `RemixOrderedColorFilterModifier` applies to a painted
+/// subtree, applied to a single color: each operation is a 4×5 color matrix
+/// over 0–255 channels, clamped before the next one runs.
+Color _filtered(Color color, List<RemixCssColorFilterOperation> operations) {
+  var red = color.r * 255;
+  var green = color.g * 255;
+  var blue = color.b * 255;
+  final alpha = color.a * 255;
+
+  for (final operation in operations) {
+    if (operation.isIdentity) continue;
+
+    final matrix = operation.matrix;
+    double channel(int row) {
+      final offset = row * 5;
+
+      return (matrix[offset] * red +
+              matrix[offset + 1] * green +
+              matrix[offset + 2] * blue +
+              matrix[offset + 3] * alpha +
+              matrix[offset + 4])
+          .clamp(0.0, 255.0);
+    }
+
+    (red, green, blue) = (channel(0), channel(1), channel(2));
+  }
+
+  return Color.from(
+    alpha: color.a,
+    red: red / 255,
+    green: green / 255,
+    blue: blue / 255,
+  );
+}
+
+/// A CSS filter over a whole button that differs between light and dark.
+///
+/// The recipes never filter a button: their states recolor the fill, so the
+/// label and focus ring keep their own colors. This is for a call site that
+/// wants a filter anyway, passed through `style`:
+///
+/// ```dart
+/// ButtonStyler().wrap(
+///   fortalModeAwareFilter(
+///     light: const [.brightness(0.9)],
+///     dark: const [.brightness(1.1)],
+///   ),
+/// )
+/// ```
 WidgetModifierConfig fortalModeAwareFilter({
   required List<RemixCssColorFilterOperation> light,
   required List<RemixCssColorFilterOperation> dark,
 }) => WidgetModifierConfig.modifier(
-  _FortalModeAwareFilterMix(light: light, dark: dark),
+  _ModeAwareFilterMix(light: light, dark: dark),
 );
 
-/// Explicit identity filter used to clear a higher-priority state filter.
+/// Removes a filter set by [fortalModeAwareFilter] in a later state.
+///
+/// A disabled solid button applies it, so a caller's filter never tints the
+/// disabled fill.
 WidgetModifierConfig fortalClearFilter() =>
     fortalModeAwareFilter(light: const [], dark: const []);
 
-final class _FortalModeAwareFilterMix
+final class _ModeAwareFilterMix
     extends ModifierMix<RemixOrderedColorFilterModifier> {
-  const _FortalModeAwareFilterMix({required this.light, required this.dark});
+  const _ModeAwareFilterMix({required this.light, required this.dark});
 
   final List<RemixCssColorFilterOperation> light;
   final List<RemixCssColorFilterOperation> dark;
@@ -157,316 +147,10 @@ final class _FortalModeAwareFilterMix
         FortalTheme.of(context).isDark ? dark : light,
       );
 
+  /// A later filter replaces an earlier one; filters do not stack.
   @override
-  _FortalModeAwareFilterMix merge(_FortalModeAwareFilterMix? other) =>
-      other ?? this;
+  _ModeAwareFilterMix merge(_ModeAwareFilterMix? other) => other ?? this;
 
   @override
   List<Object?> get props => [light, dark];
-}
-
-/// Shared Fortal BaseButton variants implemented by Button and IconButton.
-enum FortalBaseButtonVariant { solid, soft, surface, outline, ghost }
-
-/// One visual-state style fragment from the shared BaseButton recipe.
-final class FortalBaseButtonStateStyle {
-  const FortalBaseButtonStateStyle({
-    this.foreground,
-    this.background,
-    this.effects,
-    this.modifier,
-    this.spinnerOpacity,
-  });
-
-  final Color? foreground;
-  final Color? background;
-  final RemixBoxEffectsMix? effects;
-  final WidgetModifierConfig? modifier;
-  final double? spinnerOpacity;
-}
-
-/// Visual state styles shared by the concrete Button and IconButton stylers.
-final class FortalBaseButtonStateStyles {
-  const FortalBaseButtonStateStyles({
-    required this.idle,
-    required this.hovered,
-    required this.pressed,
-    required this.disabled,
-    required this.focusVisible,
-    required this.disabledFocus,
-  });
-
-  final FortalBaseButtonStateStyle idle;
-  final FortalBaseButtonStateStyle hovered;
-  final FortalBaseButtonStateStyle pressed;
-  final FortalBaseButtonStateStyle disabled;
-  final FortalBaseButtonStateStyle focusVisible;
-  final FortalBaseButtonStateStyle disabledFocus;
-}
-
-FortalBaseButtonStateStyles fortalBaseButtonStateStyles({
-  required FortalBaseButtonVariant variant,
-  required bool highContrast,
-}) {
-  final states = switch (variant) {
-    .solid => _solidStateStyles(highContrast: highContrast),
-    .soft => _softStateStyles(highContrast: highContrast),
-    .surface => _surfaceStateStyles(highContrast: highContrast),
-    .outline => _outlineStateStyles(highContrast: highContrast),
-    .ghost => _ghostStateStyles(highContrast: highContrast),
-  };
-
-  return FortalBaseButtonStateStyles(
-    idle: states.idle,
-    hovered: states.hovered,
-    pressed: states.pressed,
-    disabled: states.disabled,
-    focusVisible: FortalBaseButtonStateStyle(effects: fortalFocusOutline()),
-    disabledFocus: FortalBaseButtonStateStyle(
-      effects: RemixBoxEffectsMix.outline(
-        BorderSideMix(style: BorderStyle.none),
-      ),
-    ),
-  );
-}
-
-typedef _InteractionStateStyles = ({
-  FortalBaseButtonStateStyle idle,
-  FortalBaseButtonStateStyle hovered,
-  FortalBaseButtonStateStyle pressed,
-  FortalBaseButtonStateStyle disabled,
-});
-
-// Solid hover and press recolor only the fill. The brightness, saturation and
-// contrast operations are applied to the fill color itself, never to the
-// painted subtree, so the label, icon, spinner and 2px focus ring keep their
-// colors (a subtree filter would also dim or lighten the focus ring against the
-// unfiltered page) and caller foreground overrides stay in force.
-_InteractionStateStyles _solidStateStyles({required bool highContrast}) {
-  final foreground = highContrast
-      ? FortalTokens.gray1()
-      : FortalTokens.accentContrast();
-
-  return (
-    idle: FortalBaseButtonStateStyle(
-      foreground: foreground,
-      background: highContrast
-          ? FortalTokens.accent12()
-          : FortalTokens.accentSolid(),
-    ),
-    hovered: FortalBaseButtonStateStyle(
-      background: highContrast
-          ? _highContrastHoveredFill()
-          : FortalTokens.accentSolidHover(),
-    ),
-    pressed: FortalBaseButtonStateStyle(
-      background: highContrast
-          ? _highContrastPressedFill()
-          : _solidPressedFill(),
-    ),
-    disabled: FortalBaseButtonStateStyle(
-      foreground: FortalTokens.grayA8(),
-      background: FortalTokens.grayA3(),
-      spinnerOpacity: 1,
-      modifier: fortalClearFilter(),
-    ),
-  );
-}
-
-_InteractionStateStyles _softStateStyles({required bool highContrast}) => (
-  idle: FortalBaseButtonStateStyle(
-    foreground: highContrast
-        ? FortalTokens.accent12()
-        : FortalTokens.accentContentAlpha(),
-    background: FortalTokens.accentA3(),
-  ),
-  hovered: FortalBaseButtonStateStyle(background: FortalTokens.accentA4()),
-  pressed: FortalBaseButtonStateStyle(background: FortalTokens.accentA5()),
-  disabled: FortalBaseButtonStateStyle(
-    foreground: FortalTokens.grayA8(),
-    background: FortalTokens.grayA3(),
-    spinnerOpacity: 1,
-  ),
-);
-
-_InteractionStateStyles _surfaceStateStyles({required bool highContrast}) => (
-  idle: FortalBaseButtonStateStyle(
-    foreground: highContrast
-        ? FortalTokens.accent12()
-        : FortalTokens.accentContentAlpha(),
-    background: FortalTokens.accentSurface(),
-    effects: RemixBoxEffectsMix.behindContent(
-      fortalInsetSurface(strokes: [FortalTokens.accentA7()]),
-    ),
-  ),
-  hovered: FortalBaseButtonStateStyle(
-    background: FortalTokens.accentSurface(),
-    effects: RemixBoxEffectsMix.behindContent(
-      fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
-    ),
-  ),
-  pressed: FortalBaseButtonStateStyle(
-    background: FortalTokens.accentA3(),
-    effects: RemixBoxEffectsMix.behindContent(
-      fortalInsetSurface(strokes: [FortalTokens.accentA8()]),
-    ),
-  ),
-  disabled: FortalBaseButtonStateStyle(
-    foreground: FortalTokens.grayA8(),
-    background: FortalTokens.grayA2(),
-    effects: RemixBoxEffectsMix.behindContent(
-      fortalInsetSurface(strokes: [FortalTokens.grayA6()]),
-    ),
-    spinnerOpacity: 1,
-  ),
-);
-
-_InteractionStateStyles _outlineStateStyles({required bool highContrast}) {
-  final strokes = highContrast
-      ? [FortalTokens.accentA7(), FortalTokens.grayA11()]
-      : [FortalTokens.accentA8()];
-  final effects = RemixBoxEffectsMix.behindContent(
-    fortalInsetSurface(strokes: strokes),
-  );
-
-  return (
-    idle: FortalBaseButtonStateStyle(
-      foreground: highContrast
-          ? FortalTokens.accent12()
-          : FortalTokens.accentContentAlpha(),
-      effects: effects,
-    ),
-    hovered: FortalBaseButtonStateStyle(
-      background: FortalTokens.accentA2(),
-      effects: effects,
-    ),
-    pressed: FortalBaseButtonStateStyle(
-      background: FortalTokens.accentA3(),
-      effects: effects,
-    ),
-    disabled: FortalBaseButtonStateStyle(
-      foreground: FortalTokens.grayA8(),
-      background: const Color(0x00000000),
-      effects: RemixBoxEffectsMix.behindContent(
-        fortalInsetSurface(strokes: [FortalTokens.grayA7()]),
-      ),
-      spinnerOpacity: 1,
-    ),
-  );
-}
-
-_InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
-  idle: FortalBaseButtonStateStyle(
-    foreground: highContrast
-        ? FortalTokens.accent12()
-        : FortalTokens.accentContentAlpha(),
-    background: const Color(0x00000000),
-  ),
-  hovered: FortalBaseButtonStateStyle(background: FortalTokens.accentA3()),
-  pressed: FortalBaseButtonStateStyle(background: FortalTokens.accentA4()),
-  disabled: FortalBaseButtonStateStyle(
-    foreground: FortalTokens.grayA8(),
-    background: const Color(0x00000000),
-    spinnerOpacity: 1,
-  ),
-);
-
-/// Ordinary solid press: the labelled hover fill darkens under a light label
-/// and lightens under a dark ink, so the label keeps its contrast in both
-/// modes and for every palette, including custom ones. If lightening a bright
-/// hover returns to the idle fill, darken it instead to retain a visible press.
-const _solidPressedFill = ContextToken<Color>(_resolveSolidPressedFill);
-
-Color _resolveSolidPressedFill(BuildContext context) {
-  final label = FortalTokens.accentContrast.resolve(context);
-  final fill = FortalTokens.accentSolid.resolve(context);
-  final hover = FortalTokens.accentSolidHover.resolve(context);
-  final lightLabel = label.computeLuminance() > fill.computeLuminance();
-  final pressed = _fortalFilteredColor(
-    hover,
-    lightLabel
-        ? const [
-            RemixCssColorFilterOperation.brightness(0.92),
-            RemixCssColorFilterOperation.saturate(1.1),
-          ]
-        : const [RemixCssColorFilterOperation.brightness(1.08)],
-  );
-  if (!lightLabel &&
-      (pressed.r - fill.r).abs() <= 2 / 255 &&
-      (pressed.g - fill.g).abs() <= 2 / 255 &&
-      (pressed.b - fill.b).abs() <= 2 / 255) {
-    return _fortalFilteredColor(hover, const [
-      RemixCssColorFilterOperation.brightness(0.92),
-    ]);
-  }
-  return pressed;
-}
-
-const _highContrastHoveredFill = ContextToken<Color>(
-  _resolveHighContrastHoveredFill,
-);
-
-Color _resolveHighContrastHoveredFill(BuildContext context) =>
-    _fortalFilteredColor(
-      FortalTokens.accent12.resolve(context),
-      FortalTheme.of(context).isDark
-          ? const [
-              RemixCssColorFilterOperation.contrast(0.88),
-              RemixCssColorFilterOperation.saturate(1.3),
-              RemixCssColorFilterOperation.brightness(1.18),
-            ]
-          : const [
-              RemixCssColorFilterOperation.contrast(0.88),
-              RemixCssColorFilterOperation.saturate(1.1),
-              RemixCssColorFilterOperation.brightness(1.1),
-            ],
-    );
-
-const _highContrastPressedFill = ContextToken<Color>(
-  _resolveHighContrastPressedFill,
-);
-
-Color _resolveHighContrastPressedFill(BuildContext context) =>
-    _fortalFilteredColor(
-      FortalTokens.accent12.resolve(context),
-      FortalTheme.of(context).isDark
-          ? const [
-              RemixCssColorFilterOperation.brightness(0.95),
-              RemixCssColorFilterOperation.saturate(1.2),
-            ]
-          : const [
-              RemixCssColorFilterOperation.contrast(0.82),
-              RemixCssColorFilterOperation.saturate(1.2),
-              RemixCssColorFilterOperation.brightness(1.16),
-            ],
-    );
-
-/// Applies ordered CSS color-filter [operations] to one color with the same
-/// matrices and per-function clamping that [RemixOrderedColorFilterModifier]
-/// applies to a painted subtree.
-Color _fortalFilteredColor(
-  Color color,
-  List<RemixCssColorFilterOperation> operations,
-) {
-  var channels = [color.r * 255, color.g * 255, color.b * 255];
-  final alpha = color.a * 255;
-  for (final operation in operations) {
-    if (operation.isIdentity) continue;
-    final matrix = operation.matrix;
-    channels = [
-      for (var row = 0; row < 3; row++)
-        (matrix[row * 5] * channels[0] +
-                matrix[row * 5 + 1] * channels[1] +
-                matrix[row * 5 + 2] * channels[2] +
-                matrix[row * 5 + 3] * alpha +
-                matrix[row * 5 + 4])
-            .clamp(0.0, 255.0),
-    ];
-  }
-  return Color.from(
-    alpha: color.a,
-    red: channels[0] / 255,
-    green: channels[1] / 255,
-    blue: channels[2] / 255,
-  );
 }

@@ -21,11 +21,7 @@ export 'src/fortal/theme/fortal_colors.dart'
         fortalSandNeutral;
 export 'src/fortal/theme/palette.dart';
 export 'src/fortal/theme/theme.dart';
-export 'src/fortal/components/base_button.dart'
-    hide
-        FortalBaseButtonStateStyle,
-        FortalBaseButtonStateStyles,
-        fortalBaseButtonStateStyles;
+export 'src/fortal/components/base_button.dart';
 
 /// RECIPES
 export 'src/fortal/components/accordion.dart';

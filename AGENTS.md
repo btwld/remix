@@ -59,7 +59,8 @@ or `borderRounded`.
 ## Commands
 
 The Flutter SDK is pinned in `.fvmrc`; prefix commands with `fvm` when the
-system SDK is older.
+system SDK differs. A newer SDK rewrites `pubspec.lock` and makes
+`open-code:apps:check` report drift that is not there.
 
 - `dart run melos bootstrap`
 - `dart run melos run generate`: rerun `build_runner` in `remix` and

@@ -2,21 +2,59 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import 'base_button.dart';
 import '../theme/theme.dart';
+import 'base_button.dart';
 
 part 'button.g.dart';
 
-/// {{typePrefix}} Button size presets.
-enum {{typePrefix}}ButtonSize { size1, size2, size3, size4 }
-
-/// {{typePrefix}} Button variants.
-enum {{typePrefix}}ButtonVariant { solid, soft, surface, outline, ghost }
-
-/// {{typePrefix}}-themed Button with {{typePrefix}} sizes, variants, and overrides.
+/// The sizes a button comes in.
 ///
-/// Default icon slots use the preset's icon size, not the ambient IconTheme.
-/// An explicit icon size in [style] overrides that default.
+/// Type, icon and corner sizes step with the height. Pixel values are at 100%
+/// theme scaling. A ghost button has no minimum height: it is as tall as its
+/// text and padding.
+enum {{typePrefix}}ButtonSize {
+  /// 24px tall, with 12px text.
+  size1,
+
+  /// 32px tall, with 14px text. The default.
+  size2,
+
+  /// 40px tall, with 16px text.
+  size3,
+
+  /// 48px tall, with 18px text.
+  size4,
+}
+
+/// The visual weights a button comes in, from most to least emphasis.
+enum {{typePrefix}}ButtonVariant {
+  /// The accent's solid fill under its contrast label.
+  solid,
+
+  /// A tinted accent fill under accent text.
+  soft,
+
+  /// A faint accent surface inside a 1px accent frame.
+  surface,
+
+  /// No fill inside a 1px accent frame.
+  outline,
+
+  /// Accent text alone, with a tint under the pointer.
+  ghost,
+}
+
+/// The {{typePrefix}} Button recipe.
+///
+/// It reads top to bottom: what every button shares, then the size, then the
+/// variant's colors for each state, then focus and disabled. [style] merges
+/// last, so a call site can override any part of it.
+///
+/// [highContrast] strengthens a variant: the solid fill, and the text of every
+/// other variant, move to accent step 12.
+///
+/// An icon takes the size's icon size rather than the ambient `IconTheme`. An
+/// icon size in [style] overrides it.
 @MixWidget(target: RemixButton.new)
 ButtonStyler {{valuePrefix}}ButtonStyle({
   {{typePrefix}}ButtonVariant variant = .solid,
@@ -24,127 +62,258 @@ ButtonStyler {{valuePrefix}}ButtonStyle({
   bool highContrast = false,
   ButtonStyler style = const ButtonStyler.create(),
 }) {
-  final base = _{{valuePrefix}}ButtonBaseStyler(variant, _{{valuePrefix}}BaseButtonSize(size));
-  final stateStyles = {{valuePrefix}}BaseButtonStateStyles(
-    variant: _{{valuePrefix}}BaseButtonVariant(variant),
-    highContrast: highContrast,
-  );
-
-  return _apply{{typePrefix}}ButtonStateStyles(base, stateStyles)
+  return _base()
+      .merge(_scale(size))
+      .merge(variant == .ghost ? _ghostLayout(size) : _controlLayout(size))
+      .merge(switch (variant) {
+        .solid => _solid(highContrast),
+        .soft => _soft(highContrast),
+        .surface => _surface(highContrast),
+        .outline => _outline(highContrast),
+        .ghost => _ghost(highContrast),
+      })
+      // Hover and press arrive quickly. These merge into the variant's own
+      // hover and press fragments, which set the colors.
+      .onHovered(ButtonStyler().animate(_activeMotion))
+      .onPressed(ButtonStyler().animate(_activeMotion))
+      .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()))
+      // A disabled button never rings: this switches the outline off,
+      // whatever color and width the focus fragment gives it.
+      .onDisabled(.containerEffects(.outline(.style(.none))))
       .wrap({{valuePrefix}}TouchTarget())
-      .onDisabled(
-        ButtonStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
       .merge(style);
 }
 
-ButtonStyler _{{valuePrefix}}ButtonBaseStyler(
-  {{typePrefix}}ButtonVariant variant,
-  {{typePrefix}}BaseButtonSize size,
-) {
-  final metrics = {{valuePrefix}}BaseButtonMetrics(size);
-  var style = ButtonStyler(
-    icon: .size({{valuePrefix}}BaseButtonIconSize(size)),
-    container: .direction(.horizontal).mainAxisSize(.min).spacing(metrics.gap),
-    label: .style(metrics.text.mix()).fontWeight(
-      variant == .ghost
-          ? {{typePrefix}}Tokens.fontWeightRegular()
-          : {{typePrefix}}Tokens.fontWeightMedium(),
-    ),
-    spinner: .size(metrics.spinnerSize)
-        .opacity(0.65)
-        .leafRadius({{typePrefix}}Tokens.radius1())
-        .duration(const Duration(milliseconds: 800)),
-  ).borderRadius(.all(metrics.radius));
+/// How fast hover and press arrive.
+final _activeMotion = AnimationConfig.ease(const Duration(milliseconds: 40));
 
-  if (variant == .ghost) {
-    final ghost = {{valuePrefix}}BaseButtonGhostMetrics(size);
-    style = style
-        .spacing(ghost.gap)
-        .padding(
-          .symmetric(horizontal: ghost.paddingX, vertical: ghost.paddingY),
-        )
-        .margin(.symmetric(horizontal: ghost.marginX, vertical: ghost.marginY));
-  } else {
-    style = style
-        .minHeight(metrics.height)
-        .padding(.horizontal(metrics.paddingX))
-        .icon(.opacity(0.9));
-  }
-  return style;
+/// How fast every other change settles: the return to rest, focus, disabled.
+final _restMotion = AnimationConfig.ease(const Duration(milliseconds: 120));
+
+/// The loading spinner sits back from the label it replaces.
+const _spinnerOpacity = 0.65;
+
+/// One full spinner revolution.
+const _spinnerRevolution = Duration(milliseconds: 800);
+
+/// A fill that paints nothing.
+const _transparent = Color(0x00000000);
+
+/// What every button shares, whatever its size or variant.
+ButtonStyler _base() => ButtonStyler()
+    .animate(_restMotion)
+    .direction(.horizontal)
+    .mainAxisSize(.min)
+    .spinner(
+      SpinnerStyler()
+          .opacity(_spinnerOpacity)
+          .leafRadius({{typePrefix}}Tokens.radius1())
+          .duration(_spinnerRevolution),
+    );
+
+/// The text, icon, spinner and corner sizes of each step.
+///
+/// The corners turn into a pill when the theme radius is `full`.
+ButtonStyler _scale({{typePrefix}}ButtonSize size) => switch (size) {
+  .size1 =>
+    ButtonStyler()
+        .label(.style({{typePrefix}}Tokens.text1.mix()))
+        .icon(.size({{typePrefix}}Tokens.space3()))
+        .spinner(.size({{typePrefix}}Tokens.space3()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius1OrFull())),
+  .size2 =>
+    ButtonStyler()
+        .label(.style({{typePrefix}}Tokens.text2.mix()))
+        .icon(.size({{typePrefix}}Tokens.space4()))
+        .spinner(.size({{typePrefix}}Tokens.space4()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius2OrFull())),
+  // `spinnerSize3` is the 20px step the spacing scale has no name for.
+  .size3 =>
+    ButtonStyler()
+        .label(.style({{typePrefix}}Tokens.text3.mix()))
+        .icon(.size({{typePrefix}}Tokens.spinnerSize3()))
+        .spinner(.size({{typePrefix}}Tokens.space4()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius3OrFull())),
+  .size4 =>
+    ButtonStyler()
+        .label(.style({{typePrefix}}Tokens.text4.mix()))
+        .icon(.size({{typePrefix}}Tokens.space5()))
+        .spinner(.size({{typePrefix}}Tokens.spinnerSize3()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius4OrFull())),
+};
+
+/// The box of a solid, soft, surface or outline button: a minimum height,
+/// padding on the sides only, a medium label and slightly quieter icons.
+ButtonStyler _controlLayout({{typePrefix}}ButtonSize size) {
+  final box = switch (size) {
+    .size1 =>
+      ButtonStyler()
+          .minHeight({{typePrefix}}Tokens.space5())
+          .padding(.horizontal({{typePrefix}}Tokens.space2()))
+          .spacing({{typePrefix}}Tokens.space1()),
+    .size2 =>
+      ButtonStyler()
+          .minHeight({{typePrefix}}Tokens.space6())
+          .padding(.horizontal({{typePrefix}}Tokens.space3()))
+          .spacing({{typePrefix}}Tokens.space2()),
+    .size3 =>
+      ButtonStyler()
+          .minHeight({{typePrefix}}Tokens.space7())
+          .padding(.horizontal({{typePrefix}}Tokens.space4()))
+          .spacing({{typePrefix}}Tokens.space3()),
+    .size4 =>
+      ButtonStyler()
+          .minHeight({{typePrefix}}Tokens.space8())
+          .padding(.horizontal({{typePrefix}}Tokens.space5()))
+          .spacing({{typePrefix}}Tokens.space3()),
+  };
+
+  return box
+      .label(.fontWeight({{typePrefix}}Tokens.fontWeightMedium()))
+      .icon(.opacity(0.9));
 }
 
-{{typePrefix}}BaseButtonVariant _{{valuePrefix}}BaseButtonVariant({{typePrefix}}ButtonVariant variant) =>
-    switch (variant) {
-      .solid => .solid,
-      .soft => .soft,
-      .surface => .surface,
-      .outline => .outline,
-      .ghost => .ghost,
-    };
+/// The box of a ghost button, which sits in a line of content like text.
+///
+/// It has no minimum height and a regular-weight label. Its padding gives the
+/// hover tint room, and a negative margin of the same size cancels that
+/// padding in layout, so the label lines up with the content around it.
+ButtonStyler _ghostLayout({{typePrefix}}ButtonSize size) {
+  final box = switch (size) {
+    .size1 || .size2 =>
+      ButtonStyler()
+          .padding(
+            .symmetric(
+              horizontal: {{typePrefix}}Tokens.space2(),
+              vertical: {{typePrefix}}Tokens.space1(),
+            ),
+          )
+          .margin(
+            .symmetric(
+              horizontal: {{typePrefix}}Tokens.baseButtonGhostMarginX12(),
+              vertical: {{typePrefix}}Tokens.baseButtonGhostMarginY12(),
+            ),
+          )
+          .spacing({{typePrefix}}Tokens.space1()),
+    .size3 =>
+      ButtonStyler()
+          .padding(
+            .symmetric(
+              horizontal: {{typePrefix}}Tokens.space3(),
+              vertical: {{typePrefix}}Tokens.space2(),
+            ),
+          )
+          .margin(
+            .symmetric(
+              horizontal: {{typePrefix}}Tokens.baseButtonGhostMarginX3(),
+              vertical: {{typePrefix}}Tokens.baseButtonGhostMarginY3(),
+            ),
+          )
+          .spacing({{typePrefix}}Tokens.space2()),
+    .size4 =>
+      ButtonStyler()
+          .padding(
+            .symmetric(
+              horizontal: {{typePrefix}}Tokens.space4(),
+              vertical: {{typePrefix}}Tokens.space2(),
+            ),
+          )
+          .margin(
+            .symmetric(
+              horizontal: {{typePrefix}}Tokens.baseButtonGhostMarginX4(),
+              vertical: {{typePrefix}}Tokens.baseButtonGhostMarginY4(),
+            ),
+          )
+          .spacing({{typePrefix}}Tokens.space2()),
+  };
 
-{{typePrefix}}BaseButtonSize _{{valuePrefix}}BaseButtonSize({{typePrefix}}ButtonSize size) =>
-    switch (size) {
-      .size1 => .size1,
-      .size2 => .size2,
-      .size3 => .size3,
-      .size4 => .size4,
-    };
-
-ButtonStyler _apply{{typePrefix}}ButtonStateStyles(
-  ButtonStyler base,
-  {{typePrefix}}BaseButtonStateStyles stateStyles,
-) {
-  final pressed = _apply{{typePrefix}}ButtonState(
-    ButtonStyler().animate({{valuePrefix}}BaseButtonActiveMotion),
-    stateStyles.pressed,
-  );
-
-  return _apply{{typePrefix}}ButtonState(
-        base.animate({{valuePrefix}}BaseButtonRestMotion),
-        stateStyles.idle,
-      )
-      .onHovered(
-        _apply{{typePrefix}}ButtonState(
-          ButtonStyler().animate({{valuePrefix}}BaseButtonActiveMotion),
-          stateStyles.hovered,
-        ),
-      )
-      .onPressed(pressed)
-      .onDisabled(_apply{{typePrefix}}ButtonState(ButtonStyler(), stateStyles.disabled))
-      .onFocusVisible(
-        _apply{{typePrefix}}ButtonState(ButtonStyler(), stateStyles.focusVisible),
-      )
-      .onDisabled(
-        _apply{{typePrefix}}ButtonState(ButtonStyler(), stateStyles.disabledFocus),
-      );
+  return box.label(.fontWeight({{typePrefix}}Tokens.fontWeightRegular()));
 }
 
-ButtonStyler _apply{{typePrefix}}ButtonState(
-  ButtonStyler style,
-  {{typePrefix}}BaseButtonStateStyle state,
-) {
-  var result = style;
-  final foreground = state.foreground;
-  if (foreground != null) {
-    result = result
-        .label(.color(foreground))
-        .icon(.color(foreground))
-        .spinner(.color(foreground));
-  }
-  if (state.background != null) {
-    result = result.color(state.background!);
-  }
-  if (state.effects != null) {
-    result = result.containerEffects(state.effects!);
-  }
-  if (state.spinnerOpacity != null) {
-    result = result.spinner(.opacity(state.spinnerOpacity!));
-  }
-  if (state.modifier != null) {
-    result = result.wrap(state.modifier!);
-  }
-  return result;
-}
+/// Solid: the accent's labelled fill, or its strongest step at high contrast.
+///
+/// Hover and press recolor the fill and nothing else, so the label, icons,
+/// spinner and focus ring keep their colors.
+ButtonStyler _solid(bool highContrast) => highContrast
+    ? _content({{typePrefix}}Tokens.gray1())
+          .color({{typePrefix}}Tokens.accent12())
+          .onHovered(.color({{valuePrefix}}HighContrastHoverFill()))
+          .onPressed(.color({{valuePrefix}}HighContrastPressedFill()))
+          .onDisabled(_solidDisabled())
+    : _content({{typePrefix}}Tokens.accentContrast())
+          .color({{typePrefix}}Tokens.accentSolid())
+          .onHovered(.color({{typePrefix}}Tokens.accentSolidHover()))
+          .onPressed(.color({{valuePrefix}}SolidPressedFill()))
+          .onDisabled(_solidDisabled());
+
+/// A disabled solid button, which also drops any filter the caller added.
+ButtonStyler _solidDisabled() =>
+    _disabledContent().color({{typePrefix}}Tokens.grayA3()).wrap({{valuePrefix}}ClearFilter());
+
+/// Soft: a tinted accent fill that deepens a step on hover and on press.
+ButtonStyler _soft(bool highContrast) => _content(_accentText(highContrast))
+    .color({{typePrefix}}Tokens.accentA3())
+    .onHovered(.color({{typePrefix}}Tokens.accentA4()))
+    .onPressed(.color({{typePrefix}}Tokens.accentA5()))
+    .onDisabled(_disabledContent().color({{typePrefix}}Tokens.grayA3()));
+
+/// Surface: a faint accent surface inside a frame that strengthens on hover.
+ButtonStyler _surface(bool highContrast) => _content(_accentText(highContrast))
+    .color({{typePrefix}}Tokens.accentSurface())
+    .containerEffects(_frame([{{typePrefix}}Tokens.accentA7()]))
+    .onHovered(.containerEffects(_frame([{{typePrefix}}Tokens.accentA8()])))
+    .onPressed(
+      ButtonStyler()
+          .color({{typePrefix}}Tokens.accentA3())
+          .containerEffects(_frame([{{typePrefix}}Tokens.accentA8()])),
+    )
+    .onDisabled(
+      _disabledContent()
+          .color({{typePrefix}}Tokens.grayA2())
+          .containerEffects(_frame([{{typePrefix}}Tokens.grayA6()])),
+    );
+
+/// Outline: a frame with no fill, tinted on hover and on press.
+///
+/// High contrast adds a gray line to the accent one.
+ButtonStyler _outline(bool highContrast) => _content(_accentText(highContrast))
+    .containerEffects(
+      _frame(
+        highContrast
+            ? [{{typePrefix}}Tokens.accentA7(), {{typePrefix}}Tokens.grayA11()]
+            : [{{typePrefix}}Tokens.accentA8()],
+      ),
+    )
+    .onHovered(.color({{typePrefix}}Tokens.accentA2()))
+    .onPressed(.color({{typePrefix}}Tokens.accentA3()))
+    .onDisabled(
+      _disabledContent()
+          .color(_transparent)
+          .containerEffects(_frame([{{typePrefix}}Tokens.grayA7()])),
+    );
+
+/// Ghost: accent text alone, with a tint under the pointer.
+ButtonStyler _ghost(bool highContrast) => _content(_accentText(highContrast))
+    .color(_transparent)
+    .onHovered(.color({{typePrefix}}Tokens.accentA3()))
+    .onPressed(.color({{typePrefix}}Tokens.accentA4()))
+    .onDisabled(_disabledContent().color(_transparent));
+
+/// One color for the label, the icons and the spinner.
+ButtonStyler _content(Color color) => ButtonStyler()
+    .label(.color(color))
+    .icon(.color(color))
+    .spinner(.color(color));
+
+/// The text color of the soft, surface, outline and ghost variants.
+Color _accentText(bool highContrast) =>
+    highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentContentAlpha();
+
+/// Disabled content: gray, with the spinner at full strength rather than its
+/// usual 65%.
+ButtonStyler _disabledContent() =>
+    _content({{typePrefix}}Tokens.grayA8()).spinner(.opacity(1));
+
+/// A crisp 1px line just inside the button's edge, one for each of [colors].
+RemixBoxEffectsMix _frame(List<Color> colors) =>
+    .behindContent({{valuePrefix}}InsetSurface(strokes: colors));

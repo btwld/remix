@@ -78,6 +78,9 @@ For each component, write its worksheet, then the `@MixWidget` recipe or
 composition, regenerate adapters, and test: every variant × size × mode builds,
 geometry matches the measurements, the focus ring does not shift layout, and
 disabled/loading visuals match the worksheet. Merge caller overrides last.
+Each recipe follows the design-system skill's
+[readable source](../skills/building-remix-design-system/references/components.md#readable-source)
+rules: installed source is read and edited by its consumer.
 Fonts and icons reach fresh consumers through declared packages or documented
 setup.
 

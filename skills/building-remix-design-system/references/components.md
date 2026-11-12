@@ -17,11 +17,9 @@ control draws). Anything a recipe needs from the theme belongs in the item, so
 a component never imports another component to get it.
 
 **`tokens.dart` — token identities and fixed scale constants.** A Mix token names
-an environment-dependent value; the active `MixScope` supplies it. Fixed scales
-(spacing, sizes, strokes, opacity, and motion) are declared directly on `<Prefix>Tokens`
-as plain `const` values alongside token identities so every recipe reads from one place
-without dynamic scope lookup or arithmetic limitations. Token IDs use the value word
-so they render per consumer.
+an environment-dependent value; the active `MixScope` supplies it. A fixed scale
+is a plain `const` beside the token identities: it needs no scope lookup and
+supports arithmetic. Token IDs use the value word so they render per consumer.
 
 ```dart
 import 'package:remix/remix.dart';
@@ -147,6 +145,56 @@ Keep `part 'button.g.dart'`, enum definitions and helpers in the authored file.
 - Display components (badge, card, callout) need only tokens, variants, and
   geometry; the state pitfalls in §3 apply to interactive components.
 
+### Readable source
+
+Installed source is the product: the consumer owns it, reads it, and edits it.
+Write each recipe so a reader who opens that one file learns the component.
+The [Vanilla button](https://github.com/btwld/remix/blob/main/registry_source/lib/src/default/components/button.dart)
+is the reference for a variant × size recipe and the
+[Fortal button](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/button.dart)
+for one that adds a `highContrast` axis.
+
+- **The recipe function is the table of contents.** It merges, in order,
+  what every instance shares, the size, the variant, focus, disabled, then the
+  caller's `style`. Helpers follow in the order it names them.
+- **A variant is one chain that names every state it changes.** Rest, hover,
+  press and disabled sit together in styler calls, so one screen answers
+  "what does a pressed outline button look like".
+
+<!-- dart-excerpt: one variant; tokens and helpers are in the linked source -->
+
+```dart
+ButtonStyler _soft() => _content(AcmeTokens.accentText())
+    .color(AcmeTokens.accentA3())
+    .onHovered(.color(AcmeTokens.accentA4()))
+    .onPressed(.color(AcmeTokens.accentA5()))
+    .onDisabled(_disabledContent().color(AcmeTokens.grayA3()));
+```
+
+- **Express state in stylers.** A styler already is the description of a
+  state. A data object holding `foreground`/`background`/`effects` that a
+  second function translates back into styler calls is a second style system
+  for the reader to learn.
+- **One recipe, one file; restate what two components share.** Button and
+  IconButton each write out their variants, so each reads and edits alone.
+  Keep the pair equal with a test that resolves both and compares (§5). A
+  shared file is for computed logic only, such as color arithmetic, and is its
+  own catalog item.
+- **One enum per public choice.** A mirror enum joined by a `.solid => .solid`
+  switch exists for the code's sake, not the reader's.
+- **A helper removes repetition inside the file without hiding a value.**
+  `_content(color)`, which paints label, icon and spinner, earns its name; a
+  helper that only forwards its arguments does not.
+- **Start a chain with the concrete styler; use dot shorthand for a one-call
+  fragment** (`.onHovered(.color(x))`). A fragment with several calls starts
+  with the styler too, so the formatter breaks it one call per line.
+- **A doc comment says what the code cannot.** The design intent, the pixel
+  value behind a token, or the Mix or Remix behavior that makes a line
+  necessary, in a line or two. Leave out history, a defense of the
+  implementation, and a restatement of the next line.
+- **Ship only live code.** Remove ignored parameters, deprecated aliases and
+  helpers nothing calls before a recipe is published.
+
 The `mix` skill's code-generation reference owns the rest of the `@MixWidget`
 contract (`name`, `widgetParameters`, `factoryParameters`, generic targets).
 Install it with `npx skills add btwld/mix --skill mix`; without it, read
@@ -237,21 +285,32 @@ final _primaryHoverFill = _dimmed(AcmeTokens.interactivePrimary, 0.9);
 final _primaryPressedFill = _dimmed(AcmeTokens.interactivePrimary, 0.8);
 ```
 
-**State fragments merge by state.** A caller override that must beat the
-recipe's hover fill must itself be an `.onHovered(...)` fragment. Declare
-`.onDisabled` last so it wins over every other state.
+**State fragments merge by state and keep their first position.** Mix merges
+every fragment declared for one state into the place that state was first
+declared: `.onDisabled(a).onFocusVisible(f).onDisabled(b)` resolves as
+disabled (`a` and `b`), then focus. Among active states the later position
+wins, but only on the properties both set; a Mix value such as an outline
+merges field by field.
 
-**Calendar range variants keep their first position.** Mix retains a variant
-key's first-declaration position when later style layers merge that key.
-Declare `CalendarDayStyler.onRangeStart`, `onRangeMiddle`, `onRangeEnd`,
-`onRangeSingle` and `onRangePreview` after `onSelected` in the preset's base
-style. Repeating a range variant in a caller override changes its properties,
-not its priority position. Range variants apply only to `RemixRangeCalendar`.
+- Declare each state once, in priority order: hover, press, focus, then
+  disabled, so disabled wins.
+- A caller override that must beat the recipe's hover fill must itself be an
+  `.onHovered(...)` fragment. It changes that fragment's properties, never its
+  position.
+- Clear the focus ring of a disabled control with
+  `.onDisabled(.containerEffects(.outline(.style(.none))))`. It switches the
+  outline's style off whatever color and width the focus fragment sets, so it
+  holds from any position.
+- In a calendar, declare `CalendarDayStyler.onRangeStart`, `onRangeMiddle`,
+  `onRangeEnd`, `onRangeSingle` and `onRangePreview` after `onSelected` in the
+  preset's base style. Range variants apply only to `RemixRangeCalendar`.
 
-**Set foreground with fill in every state.** When hover or press changes the
-fill, set label, icon, and spinner colors in the same fragment. Touch devices
-never report hover, so a press fragment that changes only the fill paints the
-pressed surface under the rest foreground.
+**A state that changes the foreground sets it in hover and in press.** When a
+hover fill needs a different label, icon, and spinner color, repeat those
+colors in the press fragment. Touch devices never report hover, so a press
+fragment with the fill alone paints the pressed surface under the rest
+foreground. A variant whose foreground is the same in every state sets it once
+at rest.
 
 **Icon placement is style-driven.** `ButtonStyler().iconAlignment(RemixPlacement.end)`
 moves a single icon, whichever slot the caller used; with both icons, Remix
@@ -308,6 +367,15 @@ In the authoring package, pumping a `WidgetsApp` whose `builder` installs
 For reference ports, assert geometry against measured upstream values at each
 breakpoint the source defines, and review a side-by-side capture
 (`references/reference-parity.md` §3–4).
+
+Two recipes that restate each other (Button and IconButton) get one test that
+resolves both for every variant × state × mode and compares fill, effects, and
+foreground.
+
+To prove a recipe rewrite changes nothing, copy the previous implementation
+beside a temporary test, call `.build(context)` on old and new for every
+variant × size × state × mode, with and without a caller `style`, and expect
+the two `StyleSpec`s equal. Delete the copy and the test once they pass.
 
 A spinner animates forever, so `pumpAndSettle` never returns in loading tests;
 use `tester.pump(const Duration(milliseconds: 100))`. Assert token-derived

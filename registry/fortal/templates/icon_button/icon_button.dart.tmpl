@@ -2,18 +2,62 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import 'base_button.dart';
 import '../theme/theme.dart';
+import 'base_button.dart';
 
 part 'icon_button.g.dart';
 
-/// {{typePrefix}} IconButton size presets.
-enum {{typePrefix}}IconButtonSize { size1, size2, size3, size4 }
+/// The sizes an icon button comes in.
+///
+/// Square at the heights the labelled button is tall, so the two line up in a
+/// row. Pixel values are at 100% theme scaling. A ghost icon button has no
+/// fixed square: it is the icon and its padding.
+enum {{typePrefix}}IconButtonSize {
+  /// A 24px square around a 12px icon.
+  size1,
 
-/// {{typePrefix}} IconButton variants.
-enum {{typePrefix}}IconButtonVariant { solid, soft, surface, outline, ghost }
+  /// A 32px square around a 16px icon. The default.
+  size2,
 
-/// {{typePrefix}}-themed IconButton with {{typePrefix}} sizes, variants, and overrides.
+  /// A 40px square around a 20px icon.
+  size3,
+
+  /// A 48px square around a 24px icon.
+  size4,
+}
+
+/// The visual weights an icon button comes in, from most to least emphasis.
+///
+/// The same five the labelled button offers, so a toolbar can mix the two.
+enum {{typePrefix}}IconButtonVariant {
+  /// The accent's solid fill under its contrast icon.
+  solid,
+
+  /// A tinted accent fill under an accent icon.
+  soft,
+
+  /// A faint accent surface inside a 1px accent frame.
+  surface,
+
+  /// No fill inside a 1px accent frame.
+  outline,
+
+  /// An accent icon alone, with a tint under the pointer.
+  ghost,
+}
+
+/// The {{typePrefix}} IconButton recipe.
+///
+/// It reads top to bottom: what every icon button shares, then the size, then
+/// the variant's colors for each state, then focus and disabled. [style]
+/// merges last, so a call site can override any part of it.
+///
+/// The variants restate the labelled button's colors rather than sharing
+/// them, so each recipe can be read and edited on its own. Change one and
+/// change the other to keep the two a family.
+///
+/// [highContrast] strengthens a variant: the solid fill, and the icon of every
+/// other variant, move to accent step 12.
 @MixWidget(target: RemixIconButton.new)
 IconButtonStyler {{valuePrefix}}IconButtonStyle({
   {{typePrefix}}IconButtonVariant variant = .solid,
@@ -21,125 +65,203 @@ IconButtonStyler {{valuePrefix}}IconButtonStyle({
   bool highContrast = false,
   IconButtonStyler style = const IconButtonStyler.create(),
 }) {
-  final base = _{{valuePrefix}}IconButtonBaseStyler(
-    variant,
-    _{{valuePrefix}}BaseButtonSize(size),
-  );
-  final stateStyles = {{valuePrefix}}BaseButtonStateStyles(
-    variant: _{{valuePrefix}}BaseButtonVariant(variant),
-    highContrast: highContrast,
-  );
-
-  return _apply{{typePrefix}}IconButtonStateStyles(base, stateStyles)
+  return _base()
+      .merge(_scale(size))
+      .merge(variant == .ghost ? _ghostLayout(size) : _squareLayout(size))
+      .merge(switch (variant) {
+        .solid => _solid(highContrast),
+        .soft => _soft(highContrast),
+        .surface => _surface(highContrast),
+        .outline => _outline(highContrast),
+        .ghost => _ghost(highContrast),
+      })
+      // Hover and press arrive quickly. These merge into the variant's own
+      // hover and press fragments, which set the colors.
+      .onHovered(IconButtonStyler().animate(_activeMotion))
+      .onPressed(IconButtonStyler().animate(_activeMotion))
+      .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()))
+      // A disabled icon button never rings: this switches the outline off,
+      // whatever color and width the focus fragment gives it.
+      .onDisabled(.containerEffects(.outline(.style(.none))))
       .wrap({{valuePrefix}}TouchTarget())
-      .onDisabled(
-        IconButtonStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
       .merge(style);
 }
 
-IconButtonStyler _{{valuePrefix}}IconButtonBaseStyler(
-  {{typePrefix}}IconButtonVariant variant,
-  {{typePrefix}}BaseButtonSize size,
-) {
-  final metrics = {{valuePrefix}}BaseButtonMetrics(size);
-  var style = IconButtonStyler(
-    icon: .size({{valuePrefix}}BaseButtonIconSize(size)),
-    spinner: .size(metrics.spinnerSize)
-        .opacity(0.65)
-        .leafRadius({{typePrefix}}Tokens.radius1())
-        .duration(const Duration(milliseconds: 800)),
-  ).borderRadius(.all(metrics.radius));
+/// How fast hover and press arrive.
+final _activeMotion = AnimationConfig.ease(const Duration(milliseconds: 40));
 
-  if (variant == .ghost) {
-    final ghost = {{valuePrefix}}IconButtonGhostMetrics(size);
-    style = style.padding(.all(ghost.padding)).margin(.all(ghost.margin));
-  } else {
-    style = style
-        .container(.alignment(.center))
-        .width(metrics.height)
-        .height(metrics.height);
-  }
-  return style;
-}
+/// How fast every other change settles: the return to rest, focus, disabled.
+final _restMotion = AnimationConfig.ease(const Duration(milliseconds: 120));
 
-{{typePrefix}}BaseButtonVariant _{{valuePrefix}}BaseButtonVariant(
-  {{typePrefix}}IconButtonVariant variant,
-) => switch (variant) {
-  .solid => .solid,
-  .soft => .soft,
-  .surface => .surface,
-  .outline => .outline,
-  .ghost => .ghost,
+/// The loading spinner sits back from the icon it replaces.
+const _spinnerOpacity = 0.65;
+
+/// One full spinner revolution.
+const _spinnerRevolution = Duration(milliseconds: 800);
+
+/// A fill that paints nothing.
+const _transparent = Color(0x00000000);
+
+/// What every icon button shares, whatever its size or variant.
+IconButtonStyler _base() => IconButtonStyler()
+    .animate(_restMotion)
+    .spinner(
+      SpinnerStyler()
+          .opacity(_spinnerOpacity)
+          .leafRadius({{typePrefix}}Tokens.radius1())
+          .duration(_spinnerRevolution),
+    );
+
+/// The icon, spinner and corner sizes of each step.
+///
+/// The corners turn into a circle when the theme radius is `full`.
+IconButtonStyler _scale({{typePrefix}}IconButtonSize size) => switch (size) {
+  .size1 =>
+    IconButtonStyler()
+        .icon(.size({{typePrefix}}Tokens.space3()))
+        .spinner(.size({{typePrefix}}Tokens.space3()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius1OrFull())),
+  .size2 =>
+    IconButtonStyler()
+        .icon(.size({{typePrefix}}Tokens.space4()))
+        .spinner(.size({{typePrefix}}Tokens.space4()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius2OrFull())),
+  // `spinnerSize3` is the 20px step the spacing scale has no name for.
+  .size3 =>
+    IconButtonStyler()
+        .icon(.size({{typePrefix}}Tokens.spinnerSize3()))
+        .spinner(.size({{typePrefix}}Tokens.space4()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius3OrFull())),
+  .size4 =>
+    IconButtonStyler()
+        .icon(.size({{typePrefix}}Tokens.space5()))
+        .spinner(.size({{typePrefix}}Tokens.spinnerSize3()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius4OrFull())),
 };
 
-{{typePrefix}}BaseButtonSize _{{valuePrefix}}BaseButtonSize({{typePrefix}}IconButtonSize size) =>
-    switch (size) {
-      .size1 => .size1,
-      .size2 => .size2,
-      .size3 => .size3,
-      .size4 => .size4,
-    };
+/// The box of a solid, soft, surface or outline icon button: a square with
+/// the icon in its center.
+IconButtonStyler _squareLayout({{typePrefix}}IconButtonSize size) {
+  final edge = switch (size) {
+    .size1 => {{typePrefix}}Tokens.space5(),
+    .size2 => {{typePrefix}}Tokens.space6(),
+    .size3 => {{typePrefix}}Tokens.space7(),
+    .size4 => {{typePrefix}}Tokens.space8(),
+  };
 
-IconButtonStyler _apply{{typePrefix}}IconButtonStateStyles(
-  IconButtonStyler base,
-  {{typePrefix}}BaseButtonStateStyles stateStyles,
-) {
-  final pressed = _apply{{typePrefix}}IconButtonState(
-    IconButtonStyler().animate({{valuePrefix}}BaseButtonActiveMotion),
-    stateStyles.pressed,
-  );
-
-  return _apply{{typePrefix}}IconButtonState(
-        base.animate({{valuePrefix}}BaseButtonRestMotion),
-        stateStyles.idle,
-      )
-      .onHovered(
-        _apply{{typePrefix}}IconButtonState(
-          IconButtonStyler().animate({{valuePrefix}}BaseButtonActiveMotion),
-          stateStyles.hovered,
-        ),
-      )
-      .onPressed(pressed)
-      .onDisabled(
-        _apply{{typePrefix}}IconButtonState(IconButtonStyler(), stateStyles.disabled),
-      )
-      .onFocusVisible(
-        _apply{{typePrefix}}IconButtonState(
-          IconButtonStyler(),
-          stateStyles.focusVisible,
-        ),
-      )
-      .onDisabled(
-        _apply{{typePrefix}}IconButtonState(
-          IconButtonStyler(),
-          stateStyles.disabledFocus,
-        ),
-      );
+  return IconButtonStyler().size(edge, edge).alignment(.center);
 }
 
-IconButtonStyler _apply{{typePrefix}}IconButtonState(
-  IconButtonStyler style,
-  {{typePrefix}}BaseButtonStateStyle state,
-) {
-  var result = style;
-  final foreground = state.foreground;
-  if (foreground != null) {
-    result = result.icon(.color(foreground)).spinner(.color(foreground));
-  }
-  if (state.background != null) {
-    result = result.color(state.background!);
-  }
-  if (state.effects != null) {
-    result = result.containerEffects(state.effects!);
-  }
-  if (state.spinnerOpacity != null) {
-    result = result.spinner(.opacity(state.spinnerOpacity!));
-  }
-  if (state.modifier != null) {
-    result = result.wrap(state.modifier!);
-  }
-  return result;
-}
+/// The box of a ghost icon button, which sits in a line of content like text.
+///
+/// Its padding gives the hover tint room, and a negative margin of the same
+/// size cancels that padding in layout, so the icon lines up with the content
+/// around it.
+IconButtonStyler _ghostLayout({{typePrefix}}IconButtonSize size) => switch (size) {
+  .size1 =>
+    IconButtonStyler()
+        .padding(.all({{typePrefix}}Tokens.space1()))
+        .margin(.all({{typePrefix}}Tokens.iconButtonGhostMargin1())),
+  .size2 =>
+    IconButtonStyler()
+        .padding(.all({{typePrefix}}Tokens.space2()))
+        .margin(.all({{typePrefix}}Tokens.iconButtonGhostMargin2())),
+  .size3 =>
+    IconButtonStyler()
+        .padding(.all({{typePrefix}}Tokens.space2()))
+        .margin(.all({{typePrefix}}Tokens.iconButtonGhostMargin3())),
+  .size4 =>
+    IconButtonStyler()
+        .padding(.all({{typePrefix}}Tokens.space3()))
+        .margin(.all({{typePrefix}}Tokens.iconButtonGhostMargin4())),
+};
+
+/// Solid: the accent's labelled fill, or its strongest step at high contrast.
+///
+/// Hover and press recolor the fill and nothing else, so the icon, spinner
+/// and focus ring keep their colors.
+IconButtonStyler _solid(bool highContrast) => highContrast
+    ? _content({{typePrefix}}Tokens.gray1())
+          .color({{typePrefix}}Tokens.accent12())
+          .onHovered(.color({{valuePrefix}}HighContrastHoverFill()))
+          .onPressed(.color({{valuePrefix}}HighContrastPressedFill()))
+          .onDisabled(_solidDisabled())
+    : _content({{typePrefix}}Tokens.accentContrast())
+          .color({{typePrefix}}Tokens.accentSolid())
+          .onHovered(.color({{typePrefix}}Tokens.accentSolidHover()))
+          .onPressed(.color({{valuePrefix}}SolidPressedFill()))
+          .onDisabled(_solidDisabled());
+
+/// A disabled solid icon button, which also drops any filter the caller
+/// added.
+IconButtonStyler _solidDisabled() =>
+    _disabledContent().color({{typePrefix}}Tokens.grayA3()).wrap({{valuePrefix}}ClearFilter());
+
+/// Soft: a tinted accent fill that deepens a step on hover and on press.
+IconButtonStyler _soft(bool highContrast) => _content(_accentIcon(highContrast))
+    .color({{typePrefix}}Tokens.accentA3())
+    .onHovered(.color({{typePrefix}}Tokens.accentA4()))
+    .onPressed(.color({{typePrefix}}Tokens.accentA5()))
+    .onDisabled(_disabledContent().color({{typePrefix}}Tokens.grayA3()));
+
+/// Surface: a faint accent surface inside a frame that strengthens on hover.
+IconButtonStyler _surface(bool highContrast) =>
+    _content(_accentIcon(highContrast))
+        .color({{typePrefix}}Tokens.accentSurface())
+        .containerEffects(_frame([{{typePrefix}}Tokens.accentA7()]))
+        .onHovered(.containerEffects(_frame([{{typePrefix}}Tokens.accentA8()])))
+        .onPressed(
+          IconButtonStyler()
+              .color({{typePrefix}}Tokens.accentA3())
+              .containerEffects(_frame([{{typePrefix}}Tokens.accentA8()])),
+        )
+        .onDisabled(
+          _disabledContent()
+              .color({{typePrefix}}Tokens.grayA2())
+              .containerEffects(_frame([{{typePrefix}}Tokens.grayA6()])),
+        );
+
+/// Outline: a frame with no fill, tinted on hover and on press.
+///
+/// High contrast adds a gray line to the accent one.
+IconButtonStyler _outline(bool highContrast) =>
+    _content(_accentIcon(highContrast))
+        .containerEffects(
+          _frame(
+            highContrast
+                ? [{{typePrefix}}Tokens.accentA7(), {{typePrefix}}Tokens.grayA11()]
+                : [{{typePrefix}}Tokens.accentA8()],
+          ),
+        )
+        .onHovered(.color({{typePrefix}}Tokens.accentA2()))
+        .onPressed(.color({{typePrefix}}Tokens.accentA3()))
+        .onDisabled(
+          _disabledContent()
+              .color(_transparent)
+              .containerEffects(_frame([{{typePrefix}}Tokens.grayA7()])),
+        );
+
+/// Ghost: an accent icon alone, with a tint under the pointer.
+IconButtonStyler _ghost(bool highContrast) =>
+    _content(_accentIcon(highContrast))
+        .color(_transparent)
+        .onHovered(.color({{typePrefix}}Tokens.accentA3()))
+        .onPressed(.color({{typePrefix}}Tokens.accentA4()))
+        .onDisabled(_disabledContent().color(_transparent));
+
+/// One color for the icon and the spinner.
+IconButtonStyler _content(Color color) =>
+    IconButtonStyler().icon(.color(color)).spinner(.color(color));
+
+/// The icon color of the soft, surface, outline and ghost variants.
+Color _accentIcon(bool highContrast) =>
+    highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentContentAlpha();
+
+/// Disabled content: gray, with the spinner at full strength rather than its
+/// usual 65%.
+IconButtonStyler _disabledContent() =>
+    _content({{typePrefix}}Tokens.grayA8()).spinner(.opacity(1));
+
+/// A crisp 1px line just inside the button's edge, one for each of [colors].
+RemixBoxEffectsMix _frame(List<Color> colors) =>
+    .behindContent({{valuePrefix}}InsetSurface(strokes: colors));

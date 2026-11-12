@@ -6,7 +6,18 @@ part of 'icon_button.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed IconButton with Fortal sizes, variants, and overrides.
+/// The Fortal IconButton recipe.
+///
+/// It reads top to bottom: what every icon button shares, then the size, then
+/// the variant's colors for each state, then focus and disabled. [style]
+/// merges last, so a call site can override any part of it.
+///
+/// The variants restate the labelled button's colors rather than sharing
+/// them, so each recipe can be read and edited on its own. Change one and
+/// change the other to keep the two a family.
+///
+/// [highContrast] strengthens a variant: the solid fill, and the icon of every
+/// other variant, move to accent step 12.
 class FortalIconButton extends StatelessWidget {
   const FortalIconButton({
     super.key,
@@ -30,6 +41,7 @@ class FortalIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// The accent's solid fill under its contrast icon.
   const FortalIconButton.solid({
     super.key,
     this.size = .size2,
@@ -51,6 +63,7 @@ class FortalIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalIconButtonVariant.solid;
 
+  /// A tinted accent fill under an accent icon.
   const FortalIconButton.soft({
     super.key,
     this.size = .size2,
@@ -72,6 +85,7 @@ class FortalIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalIconButtonVariant.soft;
 
+  /// A faint accent surface inside a 1px accent frame.
   const FortalIconButton.surface({
     super.key,
     this.size = .size2,
@@ -93,6 +107,7 @@ class FortalIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalIconButtonVariant.surface;
 
+  /// No fill inside a 1px accent frame.
   const FortalIconButton.outline({
     super.key,
     this.size = .size2,
@@ -114,6 +129,7 @@ class FortalIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalIconButtonVariant.outline;
 
+  /// An accent icon alone, with a tint under the pointer.
   const FortalIconButton.ghost({
     super.key,
     this.size = .size2,
