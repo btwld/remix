@@ -69,6 +69,9 @@ system SDK differs. A newer SDK rewrites `pubspec.lock` and makes
 - `dart run melos run docs:check`: after editing `docs/` or `skills/`; rejects
   retired APIs and compiles published Dart examples.
 - `dart run melos run ci`: the local scripts, in sequence. The `icons`, `icons-tree-shake`, and `cli-windows` jobs are CI-only.
+- `dart run melos run ci:open-code:<preset>`: the 15 to 25 minute fresh-consumer
+  check, not part of `ci:checks`. It compares `open_code/fixture/expected/*.g.dart`,
+  which embed the doc comments of the Vanilla button, chart and tabs recipes.
 - `dart run melos run icons:generate` and `icons:check`: regenerate and verify
   `remix_ui_icons` from `packages/remix_ui_icons/tool/icons/manifest.yaml` and
   the `design/icons` masters (needs uv 0.11.24).

@@ -150,9 +150,11 @@ Keep `part 'button.g.dart'`, enum definitions and helpers in the authored file.
 Installed source is the product: the consumer owns it, reads it, and edits it.
 Write each recipe so a reader who opens that one file learns the component.
 The [Vanilla button](https://github.com/btwld/remix/blob/main/registry_source/lib/src/default/components/button.dart)
-is the reference for a variant × size recipe and the
+is the reference for a variant × size recipe, the
 [Fortal button](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/button.dart)
-for one that adds a `highContrast` axis.
+for one that adds a `highContrast` axis, and the
+[HeroUI button](https://github.com/btwld/remix/blob/main/registry_source/lib/src/heroui/components/button.dart)
+for one whose variants are a table of values.
 
 - **The recipe function is the table of contents.** It merges, in order,
   what every instance shares, the size, the variant, focus, disabled, then the
@@ -171,10 +173,17 @@ ButtonStyler _soft() => _content(AcmeTokens.accentText())
     .onDisabled(_disabledContent().color(AcmeTokens.grayA3()));
 ```
 
+- **Variants that differ in shape get a chain each; variants that differ only
+  in values share one chain and a table.** Vanilla's outline adds a border and
+  a shadow and Fortal's surface adds a frame, so each variant is its own
+  chain. Every HeroUI variant sets the same four colors, so the recipe states
+  the states once and a record gives each variant a row of named values.
 - **Express state in stylers.** A styler already is the description of a
-  state. A data object holding `foreground`/`background`/`effects` that a
-  second function translates back into styler calls is a second style system
-  for the reader to learn.
+  state. A table whose fields are nullable, or that needs a second function
+  with `if (x != null)` to turn it back into styler calls, holds variants that
+  differ in shape: write them as chains.
+- **Add a conditional part with `.merge(condition ? patch : null)`** rather
+  than reassigning a `var` in an `if`, so the recipe stays one expression.
 - **One recipe, one file; restate what two components share.** Button and
   IconButton each write out their variants, so each reads and edits alone.
   Keep the pair equal with a test that resolves both and compares (§5). A
