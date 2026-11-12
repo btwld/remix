@@ -215,17 +215,33 @@ void main() {
       final submitted = <String>[];
       final controller = AgentComposerController();
       addTearDown(controller.dispose);
+      final composer = acmeAgentComposerRecipe();
       final suggestions = acmeAgentSuggestionsRecipe();
       await _pumpInstalledAgent(
         tester,
         SizedBox(
           width: 600,
           child: scope(
-            AgentSuggestions(
-              controller: controller,
-              suggestions: const [AgentSuggestion(label: 'Review checkout')],
-              style: suggestions.style,
-              suggestionStyle: suggestions.suggestionStyle,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AgentSuggestions(
+                  controller: controller,
+                  suggestions: const [
+                    AgentSuggestion(label: 'Review checkout'),
+                  ],
+                  style: suggestions.style,
+                  suggestionStyle: suggestions.suggestionStyle,
+                ),
+                AgentComposer(
+                  controller: controller,
+                  onSubmit: submitted.add,
+                  style: composer.style,
+                  fieldStyle: composer.fieldStyle,
+                  submitStyle: composer.submitStyle,
+                  stopStyle: composer.stopStyle,
+                ),
+              ],
             ),
           ),
         ),
@@ -234,6 +250,9 @@ void main() {
       await tester.pump();
       expect(controller.text, 'Review checkout');
       expect(submitted, isEmpty);
+      await tester.tap(find.byKey(const ValueKey('agent-composer-send')));
+      await tester.pump();
+      expect(submitted, ['Review checkout']);
     });
 
     testWidgets('steps, the answer and its sources draw with the glyph set', (
