@@ -8,21 +8,10 @@ part of 'progress.dart';
 
 /// The application's Progress recipe.
 ///
-/// Remix owns the geometry that maps a 0-1 value onto the filled width, and
-/// the progress semantics; this recipe supplies the track and the indicator.
-///
-/// One weight, not a scale. A progress bar has no size relationship to the
-/// controls around it — it spans its container and is read by length rather
-/// than by height — so a size axis would be numbers with nothing to anchor
-/// them. It is an 8px bar; a call site that wants a different weight sets
-/// `.height(...)` through [style], which is one line and says what it means.
-///
-/// The indicator is `primary` on a track of `primary` at 20%: the track reads
-/// as the same bar, not yet filled, rather than as a separate surface.
-///
-/// Both are fully rounded rather than sharing the theme's control radius. The
-/// theme radius is authored for 32-40px controls; on an 8px bar anything
-/// short of a full round reads as a rendering artifact.
+/// An 8px bar with a `primary` indicator on a track of `primary` at 20%, so the
+/// track reads as the same bar, not yet filled. Both ends are fully rounded:
+/// the theme radius is authored for 32-40px controls. Set `.height(...)`
+/// through [style] for another weight.
 class PlaygroundProgress extends StatelessWidget {
   const PlaygroundProgress({
     super.key,

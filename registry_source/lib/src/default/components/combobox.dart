@@ -15,17 +15,15 @@ part 'combobox.g.dart';
 
 /// The application's Combobox recipe.
 ///
-/// Remix owns editing, filtering callbacks, suggestion traversal, acceptance,
-/// overlay geometry and accessibility semantics. This recipe supplies the
-/// field, floating suggestions panel and option rows. The field reuses
-/// [vanillaTextFieldStyle], including its focus, error and disabled treatments;
-/// the panel and rows follow the application's Select recipe.
+/// The field reuses [vanillaTextFieldStyle], with its focus, error and
+/// disabled treatments; the panel and rows follow the Select recipe.
 ///
-/// Keyboard highlight uses accent with a reserved ring border, hover a lighter
-/// tint, and press a stronger primary tint. Suggestions
-/// are eligible values only: Remix has no per-option disabled or selected
-/// state. The disabled treatment belongs to the editor. Custom field builders
-/// own their field recipe; custom option content inherits the row's text style.
+/// Keyboard highlight is `accent` with a `ring` border, hover a lighter tint,
+/// press a primary tint. Suggestions are eligible values only, so Remix has no
+/// per-option disabled or selected state.
+///
+/// A custom `fieldBuilder` owns its field recipe; custom `optionBuilder`
+/// content inherits the row's text style.
 @MixWidget(target: RemixCombobox.new)
 ComboboxStyler vanillaComboboxStyle({
   ComboboxStyler style = const ComboboxStyler.create(),
@@ -68,7 +66,7 @@ ComboboxStyler vanillaComboboxStyle({
           )
           .onHovered(_highlighted(vanillaTint(VanillaTokens.accent, 0.85)()))
           .onFocused(
-            _highlighted().border(
+            _highlighted(VanillaTokens.accent()).border(
               .color(VanillaTokens.ring()).width(VanillaTokens.strokeHairline),
             ),
           )
@@ -78,6 +76,6 @@ ComboboxStyler vanillaComboboxStyle({
     )
     .merge(style);
 
-ComboboxOptionStyler _highlighted([Color? fill]) => ComboboxOptionStyler()
-    .color(fill ?? VanillaTokens.accent())
+ComboboxOptionStyler _highlighted(Color fill) => ComboboxOptionStyler()
+    .color(fill)
     .label(.color(VanillaTokens.accentForeground()));

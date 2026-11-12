@@ -8,10 +8,8 @@ part of 'toast.dart';
 
 /// The application's Toast recipe.
 ///
-/// Remix owns the queue, the timers, focus, and the announcement through
-/// `RemixToastScope`; this recipe owns the surface, the type, and the colors.
-/// Hand it to the scope once, above the app's `Navigator` so every route,
-/// including dialogs, can reach it:
+/// Hand it to `RemixToastScope` once, above the app's `Navigator`, so every
+/// route (dialogs included) can reach it:
 ///
 /// ```dart
 /// WidgetsApp(
@@ -41,8 +39,8 @@ part of 'toast.dart';
 /// );
 /// ```
 ///
-/// The action and the close button reuse this application's Button and
-/// IconButton recipes, so they keep their own hover, focus, and press states.
+/// The action and close button reuse the Button and IconButton recipes, with
+/// their own hover, focus and press states.
 class VanillaToast extends StatelessWidget {
   const VanillaToast({
     super.key,

@@ -8,20 +8,12 @@ part of 'textfield.dart';
 
 /// The application's TextField recipe.
 ///
-/// Remix owns the rendering, the editing behavior, the label/hint/helper
-/// composition, focus, selection, and the input accessibility semantics —
-/// including announcing the error state. This recipe supplies the surface, the
-/// text colors, and the focus/error/disabled fragments.
+/// There is no hover fragment: the I-beam cursor is the affordance, and tinting
+/// the box would compete with the focus ring that follows.
 ///
-/// There is deliberately no hover fragment: a text field's affordance is the
-/// I-beam cursor Remix already sets, and tinting the box on hover would only
-/// compete with the focus ring that follows a moment later.
-///
-/// One host requirement travels with it: `EditableText` asserts on an
-/// `Overlay` ancestor the moment the field takes focus, for its selection
-/// handles and magnifier. Any application with a `Navigator` — `MaterialApp`,
-/// `CupertinoApp`, or a `WidgetsApp` with routes — already has one. A bare
-/// `WidgetsApp(builder: ...)` does not, and has to supply an `Overlay` itself.
+/// `EditableText` asserts on an `Overlay` ancestor when the field takes focus.
+/// Any app with a `Navigator` has one; a bare `WidgetsApp(builder: ...)` has to
+/// supply its own.
 class VanillaTextField extends StatelessWidget {
   const VanillaTextField({
     super.key,
@@ -269,11 +261,8 @@ class VanillaTextField extends StatelessWidget {
 
 /// The application's TextArea recipe.
 ///
-/// `RemixTextArea` is `RemixTextField` with multi-line defaults, and it shares
-/// the same styler, so this is the field's recipe with two changes: a taller
-/// resting box (at least 64px, with 8px above and below the text), and
-/// accessories pinned to the first line instead of floating in the middle of a
-/// growing one.
+/// The field's recipe with a taller resting box (at least 64px, 8px above and
+/// below the text) and accessories pinned to the first line.
 class VanillaTextArea extends StatelessWidget {
   const VanillaTextArea({
     super.key,

@@ -8,21 +8,12 @@ part of 'segmented_control.dart';
 
 /// The application's SegmentedControl recipe.
 ///
-/// A segmented control is one control divided into parts: the segments share a
-/// track, exactly one is chosen, and the chosen one is *lifted* out of the
-/// track rather than tinted on top of it. It is drawn as the filled tab list,
-/// so a segmented control and a tab strip on one page read as one family. Remix
-/// owns the rendering, the equal-width layout, the roving focus, and the group
-/// accessibility semantics.
+/// One control in parts: a recessed `muted` track with the chosen segment
+/// lifted onto it, drawn like the filled tab list so the two read as a family.
+/// It takes no variant; a second look would be a toggle group.
 ///
-/// One recipe covers the track and the segments, because
-/// `SegmentedControlSpec` carries the segment's style as a field: the
-/// control's `item` is the default every `RemixSegmentedControlItem` resolves
-/// against, so a segment in a loop cannot be left unstyled.
-///
-/// It takes no variant. The whole point of the component is one shape — a
-/// recessed track with a raised current segment — and a second look would be
-/// a toggle group wearing the wrong name.
+/// `item` is the default every `RemixSegmentedControlItem` resolves against, so
+/// one recipe styles the track and its segments.
 class VanillaSegmentedControl<T extends Object> extends StatelessWidget {
   const VanillaSegmentedControl({
     super.key,

@@ -8,17 +8,15 @@ part of 'combobox.dart';
 
 /// The application's Combobox recipe.
 ///
-/// Remix owns editing, filtering callbacks, suggestion traversal, acceptance,
-/// overlay geometry and accessibility semantics. This recipe supplies the
-/// field, floating suggestions panel and option rows. The field reuses
-/// [playgroundTextFieldStyle], including its focus, error and disabled treatments;
-/// the panel and rows follow the application's Select recipe.
+/// The field reuses [playgroundTextFieldStyle], with its focus, error and
+/// disabled treatments; the panel and rows follow the Select recipe.
 ///
-/// Keyboard highlight uses accent with a reserved ring border, hover a lighter
-/// tint, and press a stronger primary tint. Suggestions
-/// are eligible values only: Remix has no per-option disabled or selected
-/// state. The disabled treatment belongs to the editor. Custom field builders
-/// own their field recipe; custom option content inherits the row's text style.
+/// Keyboard highlight is `accent` with a `ring` border, hover a lighter tint,
+/// press a primary tint. Suggestions are eligible values only, so Remix has no
+/// per-option disabled or selected state.
+///
+/// A custom `fieldBuilder` owns its field recipe; custom `optionBuilder`
+/// content inherits the row's text style.
 class PlaygroundCombobox<T extends Object> extends StatelessWidget {
   const PlaygroundCombobox({
     super.key,

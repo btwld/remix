@@ -8,34 +8,19 @@ part of 'sidebar.dart';
 
 /// The application's Sidebar recipe.
 ///
-/// A sidebar is the navigation panel down one edge of an application shell.
-/// Remix owns the rendering, the header/content/footer stacking, Tab traversal
-/// across destinations, the selection semantics, and the navigation
-/// landmark; this recipe owns the panel surface, the region insets, the
-/// section rhythm, and the label type.
+/// The navigation panel down one edge of a shell: the `sidebar` surface with a
+/// `sidebarBorder` edge, 32px destinations that sit on `sidebarAccent` while
+/// hovered or current, and one 8px inset so labels, destinations and the footer
+/// share a left edge.
 ///
-/// It takes no variant and no size. There is one panel per shell, and the
-/// thing that actually varies between applications — how wide it is — is not
-/// the recipe's to decide: the host sizes the panel, because the same panel
-/// is usually presented as a drawer at narrow widths and the drawer's width
-/// is a layout decision. Nothing here sets a width, and nothing here pads the
-/// header, whose metrics normally have to line up with the app bar beside it:
-/// give the header the `app_bar` item's toolbar height and bottom hairline.
+/// It sets no width: the host sizes the panel, which is often also a drawer. It
+/// does not pad the header either, whose metrics should line up with the app
+/// bar: give it the `app_bar` item's toolbar height and bottom hairline.
 ///
-/// This recipe **depends on the `toggle` and `tooltip` items**, which is why
-/// its registry entry lists both beside `theme`. A destination is a toggle: it
-/// is a control that stays pressed, and `SidebarSpec` takes its style as a
-/// `ToggleStyler` field. Handing it the application's own ghost toggle recipe
-/// is what keeps a selected destination and a selected toggle the same colour
-/// without restating one component inside another. The same reasoning covers
-/// the tooltip: when the host collapses the panel to an icon rail, each
-/// destination's label appears in the application's own tooltip recipe.
-///
-/// The panel is the `sidebar` surface, a step apart from the page, with a
-/// `sidebarBorder` edge. Destinations are 32px rows that sit on `sidebarAccent`
-/// while hovered or current, and the current one is set at medium weight.
-/// Everything shares one 8px inset, so labels, destinations, and the footer
-/// line up on one left edge.
+/// It depends on the `toggle` and `tooltip` items. A destination is a toggle
+/// (`SidebarSpec` takes a `ToggleStyler`), so the ghost toggle recipe keeps a
+/// selected destination and a selected toggle the same color; in a collapsed
+/// icon rail each label appears in the application's tooltip recipe.
 class PlaygroundSidebar<T extends Object> extends StatelessWidget {
   const PlaygroundSidebar({
     super.key,

@@ -8,15 +8,10 @@ part of 'link.dart';
 
 /// The application's Link recipe.
 ///
-/// Remix owns the link role, the destination, focus, activation, and the rule
-/// that a link with no callback is a disabled link; this recipe supplies its
-/// type, its color, and its states.
-///
-/// It is `textSm` at medium weight in `primary`, underlined while the pointer
-/// is on it, and ringed like every other control when it has keyboard focus.
-/// That suits a link standing on its own — "Forgot password?", "View all". A
-/// link set inside running prose should stay identifiable without the pointer;
-/// give that call site an underline at rest through [style]:
+/// `textSm` at medium weight in `primary`, underlined under the pointer and
+/// ringed on keyboard focus. That suits a link that stands alone; a link inside
+/// running prose should stay identifiable without the pointer, so underline it
+/// at rest through [style]:
 ///
 /// ```dart
 /// PlaygroundLink(
@@ -26,10 +21,8 @@ part of 'link.dart';
 /// )
 /// ```
 ///
-/// There is no pressed fragment. A link's press is over in the time it takes
-/// to navigate, and the destination arriving is the feedback — the same reason
-/// the checkbox has none, arrived at from the other direction: a checkbox
-/// flips its own state, and a link replaces the page.
+/// There is no pressed fragment: a link replaces the page, and the destination
+/// arriving is the feedback.
 class PlaygroundLink extends StatelessWidget {
   const PlaygroundLink({
     super.key,

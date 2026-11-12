@@ -8,13 +8,10 @@ part of 'spinner.dart';
 
 /// The application's Spinner recipe.
 ///
-/// The spinner is the one component here that is pure motion: Remix owns the
-/// eight-leaf geometry, the animation, and the progress semantics, and this
-/// recipe supplies only its size, color, and tempo.
-///
-/// The content color is `foreground` rather than `primary`. A spinner most
-/// often replaces text while something loads, so it should read at the same
-/// weight as the text it stands in for.
+/// The standalone spinner: 16px, the size of the icons it sits among (a button
+/// draws its own). It is `foreground`, not `primary`, because it usually
+/// replaces text and should read at that weight. Set `.size(...)` through
+/// [style] for another size.
 class VanillaSpinner extends StatelessWidget {
   const VanillaSpinner({
     super.key,

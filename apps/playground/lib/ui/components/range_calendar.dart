@@ -9,11 +9,10 @@ import 'calendar.dart';
 
 /// The application's RangeCalendar style recipe.
 ///
-/// Remix owns the complete range, local draft and range roles. This recipe
-/// paints committed endpoints in primary, interiors in a distinct tint, and the draft
-/// with a tinted fill and primary outline. While drafting, the old committed
-/// value keeps only its quiet selected treatment. Unavailable draft days use
-/// the full-strength destructive text role and remain struck through.
+/// Committed endpoints are `primary`, interiors a tint, and the draft a tinted
+/// fill with a `primary` outline. While drafting, the old committed value keeps
+/// only a quiet selected look. Unavailable draft days are struck through in
+/// full-strength `destructive`.
 CalendarStyler playgroundRangeCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => playgroundCalendarStyle()
@@ -21,20 +20,16 @@ CalendarStyler playgroundRangeCalendarStyle({
       CalendarDayStyler()
           .onSelected(
             _muted()
-                .variant(
-                  _committedStart,
-                  _shape(start: true).color(_quietCap()),
-                )
+                .variant(_committedStart, _quietCap(start: true))
                 .variant(_committedMiddle, _shape())
-                .variant(_committedEnd, _shape(end: true).color(_quietCap()))
-                .variant(
-                  _committedSingle,
-                  _shape(start: true, end: true).color(_quietCap()),
-                ),
+                .variant(_committedEnd, _quietCap(end: true))
+                .variant(_committedSingle, _quietCap(start: true, end: true)),
           )
           .onRangeMiddle(
             _shape()
-                .color(_middle())
+                .color(
+                  playgroundTint(PlaygroundTokens.primary, 0.09, dark: 0.24)(),
+                )
                 .label(.color(PlaygroundTokens.foreground())),
           )
           .onRangeStart(_endpoint().merge(_shape(start: true)))
@@ -42,7 +37,9 @@ CalendarStyler playgroundRangeCalendarStyle({
           .onRangeSingle(_endpoint().merge(_shape(start: true, end: true)))
           .onRangePreview(
             CalendarDayStyler()
-                .color(_draft())
+                .color(
+                  playgroundTint(PlaygroundTokens.primary, 0.12, dark: 0.28)(),
+                )
                 .border(
                   BorderMix(
                     top: _draftStroke,
@@ -80,18 +77,25 @@ CalendarStyler playgroundRangeCalendarStyle({
     .merge(style);
 
 CalendarDayStyler _blockedPreview() => CalendarDayStyler()
-    .color(_blocked())
+    .color(playgroundTint(PlaygroundTokens.destructive, 0, dark: 0)())
     .label(.color(PlaygroundTokens.destructive()))
     .wrap(.opacity(1));
 
 CalendarDayStyler _muted() => CalendarDayStyler()
-    .color(_quietCommitted())
+    .color(playgroundTint(PlaygroundTokens.primary, 0.07, dark: 0.12)())
     .label(.color(PlaygroundTokens.mutedForeground()));
 
 CalendarDayStyler _endpoint() => CalendarDayStyler()
     .color(PlaygroundTokens.primary())
     .label(.color(PlaygroundTokens.primaryForeground()));
 
+/// A committed endpoint while a draft is in progress: the quiet cap tint.
+CalendarDayStyler _quietCap({bool start = false, bool end = false}) => _shape(
+  start: start,
+  end: end,
+).color(playgroundTint(PlaygroundTokens.primary, 0.09, dark: 0.16)());
+
+/// Rounds the corners at the ends of a range and squares the rest.
 CalendarDayStyler _shape({bool start = false, bool end = false}) {
   final radius = BorderRadiusGeometryMix.only(
     topStart: start ? PlaygroundTokens.radiusSm() : Radius.zero,
@@ -102,8 +106,8 @@ CalendarDayStyler _shape({bool start = false, bool end = false}) {
   return CalendarDayStyler().borderRadius(radius);
 }
 
-// The headless role tracks the draft while drafting. Read the committed
-// snapshot only for the old selection's geometry, reusing the same shapes.
+// The headless role tracks the draft while drafting, so these read the
+// committed snapshot, only for the old selection's geometry.
 ContextVariant _committedRole(String name, NakedRangePosition position) =>
     ContextVariant('playground.calendar.committed-$name', (context) {
       final value = NakedRangeCalendarState.maybeOf(context)?.value;
@@ -124,8 +128,8 @@ final _committedStart = _committedRole('start', .start);
 final _committedMiddle = _committedRole('middle', .middle);
 final _committedEnd = _committedRole('end', .end);
 final _committedSingle = _committedRole('single', .single);
-// Rank the directional override with the draft role it refines; plain
-// context variants run before widget-state-ranked range variants in Mix.
+// Ranked with the draft role they refine: Mix runs plain context variants
+// before widget-state-ranked range variants.
 final _rtlDraftStart = _RtlDraftEdge(NakedRangePosition.start);
 final _rtlDraftEnd = _RtlDraftEdge(NakedRangePosition.end);
 
@@ -141,29 +145,25 @@ final class _RtlDraftEdge extends ContextVariant {
   Set<WidgetState> get widgetStateDependencies => const {WidgetState.selected};
 }
 
-final _middle = playgroundTint(PlaygroundTokens.primary, 0.09, dark: 0.24);
-final _draft = playgroundTint(PlaygroundTokens.primary, 0.12, dark: 0.28);
-final _draftBorder = playgroundTint(PlaygroundTokens.primary, 0.6);
-final _blocked = playgroundTint(PlaygroundTokens.destructive, 0, dark: 0);
+/// The draft's `primary` outline at 60%.
 final _draftStroke = BorderSideMix(
-  color: _draftBorder(),
+  color: playgroundTint(PlaygroundTokens.primary, 0.6)(),
   width: PlaygroundTokens.strokeHairline,
   style: BorderStyle.solid,
 );
+
+/// The same color with no width, for the edges that draw none.
 final _none = BorderSideMix(
-  color: _draftBorder(),
+  color: playgroundTint(PlaygroundTokens.primary, 0.6)(),
   width: 0,
   style: BorderStyle.none,
 );
 
-/// The application's RangeCalendar recipe.
+/// The application's RangeCalendar recipe, wiring [playgroundRangeCalendarStyle],
+/// the ghost icon button and the Select recipe.
 ///
-/// Remix owns rendering, civil-date selection, keyboard navigation, focus and
-/// semantics. This recipe supplies the day states, typography, Playground icon
-/// navigation and Select selectors. Selectors retain intrinsic text height.
-///
-/// CalendarSpec has no generator target, so this facade composes the child
-/// recipes by hand and deliberately has no generated part.
+/// `CalendarSpec` has no generator target, so this facade composes the child
+/// recipes by hand and has no generated part.
 class PlaygroundRangeCalendar extends StatelessWidget {
   const PlaygroundRangeCalendar({
     super.key,
@@ -326,10 +326,3 @@ class PlaygroundRangeCalendar extends StatelessWidget {
     summaryBuilder: summaryBuilder,
   );
 }
-
-final _quietCommitted = playgroundTint(
-  PlaygroundTokens.primary,
-  .07,
-  dark: .12,
-);
-final _quietCap = playgroundTint(PlaygroundTokens.primary, .09, dark: .16);

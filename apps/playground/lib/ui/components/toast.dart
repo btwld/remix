@@ -22,10 +22,8 @@ enum PlaygroundToastVariant {
 
 /// The application's Toast recipe.
 ///
-/// Remix owns the queue, the timers, focus, and the announcement through
-/// `RemixToastScope`; this recipe owns the surface, the type, and the colors.
-/// Hand it to the scope once, above the app's `Navigator` so every route,
-/// including dialogs, can reach it:
+/// Hand it to `RemixToastScope` once, above the app's `Navigator`, so every
+/// route (dialogs included) can reach it:
 ///
 /// ```dart
 /// WidgetsApp(
@@ -55,56 +53,55 @@ enum PlaygroundToastVariant {
 /// );
 /// ```
 ///
-/// The action and the close button reuse this application's Button and
-/// IconButton recipes, so they keep their own hover, focus, and press states.
+/// The action and close button reuse the Button and IconButton recipes, with
+/// their own hover, focus and press states.
 @MixWidget(target: RemixToast.new)
 ToastStyler playgroundToastStyle({
   PlaygroundToastVariant variant = .neutral,
   ToastStyler style = const ToastStyler.create(),
-}) => _base().merge(_variantStyle(variant)).merge(style);
+}) {
+  // The tone shows in the glyph and, for `destructive`, the outline. The text
+  // stays `popoverForeground`, which reads on the toast's own surface.
+  final (:border, :icon) = switch (variant) {
+    .neutral => (
+      border: PlaygroundTokens.border(),
+      icon: PlaygroundTokens.mutedForeground(),
+    ),
+    .destructive => (
+      border: PlaygroundTokens.destructive(),
+      icon: PlaygroundTokens.destructive(),
+    ),
+  };
 
-/// The toast's lift: 4px down, a 12px blur, black at 10%. A toast floats over
-/// content that keeps scrolling beneath it, so it is heavier than a card's.
-final _shadow = BoxShadowMix(
-  color: const Color(0x1A000000),
-  offset: const Offset(0, 4),
-  blurRadius: 12,
-);
-
-/// Surface, layout, and typography shared by both tones: the `popover` surface
-/// with the theme's `radius`.
-ToastStyler _base() => ToastStyler()
-    .color(PlaygroundTokens.popover())
-    .border(
-      .color(PlaygroundTokens.border()).width(PlaygroundTokens.strokeHairline),
-    )
-    .borderRadius(.all(PlaygroundTokens.radiusLg()))
-    .padding(.all(PlaygroundTokens.s4))
-    .maxWidth(PlaygroundTokens.toastWidth)
-    .shadow(_shadow)
-    .spacing(PlaygroundTokens.s3)
-    .content(FlexBoxStyler().spacing(PlaygroundTokens.s1))
-    .title(
-      .style(
-        PlaygroundTokens.textSm.mix(),
-      ).fontWeight(FontWeight.w500).color(PlaygroundTokens.popoverForeground()),
-    )
-    .description(
-      .style(
-        PlaygroundTokens.textSm.mix(),
-      ).color(PlaygroundTokens.mutedForeground()),
-    )
-    .icon(.size(PlaygroundTokens.icon))
-    .action(playgroundButtonStyle(variant: .outline, size: .small))
-    .closeButton(playgroundIconButtonStyle(variant: .ghost, size: .small));
-
-/// The tone shows in the glyph and, for `destructive`, the outline. The
-/// sentence stays in `popoverForeground`, the color it is readable in on the
-/// toast's own surface.
-ToastStyler _variantStyle(PlaygroundToastVariant variant) => switch (variant) {
-  .neutral => ToastStyler().icon(.color(PlaygroundTokens.mutedForeground())),
-  .destructive =>
-    ToastStyler()
-        .border(.color(PlaygroundTokens.destructive()))
-        .icon(.color(PlaygroundTokens.destructive())),
-};
+  return ToastStyler()
+      .color(PlaygroundTokens.popover())
+      .border(.color(border).width(PlaygroundTokens.strokeHairline))
+      .borderRadius(.all(PlaygroundTokens.radiusLg()))
+      .padding(.all(PlaygroundTokens.s4))
+      .maxWidth(PlaygroundTokens.toastWidth)
+      // Heavier than a card's: a toast floats over content that keeps scrolling
+      // beneath it. Black at 10%.
+      .shadow(
+        BoxShadowMix(
+          color: const Color(0x1A000000),
+          offset: const Offset(0, 4),
+          blurRadius: 12,
+        ),
+      )
+      .spacing(PlaygroundTokens.s3)
+      .content(FlexBoxStyler().spacing(PlaygroundTokens.s1))
+      .title(
+        .style(PlaygroundTokens.textSm.mix())
+            .fontWeight(FontWeight.w500)
+            .color(PlaygroundTokens.popoverForeground()),
+      )
+      .description(
+        .style(
+          PlaygroundTokens.textSm.mix(),
+        ).color(PlaygroundTokens.mutedForeground()),
+      )
+      .icon(.size(PlaygroundTokens.icon).color(icon))
+      .action(playgroundButtonStyle(variant: .outline, size: .small))
+      .closeButton(playgroundIconButtonStyle(variant: .ghost, size: .small))
+      .merge(style);
+}

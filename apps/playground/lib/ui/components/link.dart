@@ -9,15 +9,10 @@ part 'link.g.dart';
 
 /// The application's Link recipe.
 ///
-/// Remix owns the link role, the destination, focus, activation, and the rule
-/// that a link with no callback is a disabled link; this recipe supplies its
-/// type, its color, and its states.
-///
-/// It is `textSm` at medium weight in `primary`, underlined while the pointer
-/// is on it, and ringed like every other control when it has keyboard focus.
-/// That suits a link standing on its own — "Forgot password?", "View all". A
-/// link set inside running prose should stay identifiable without the pointer;
-/// give that call site an underline at rest through [style]:
+/// `textSm` at medium weight in `primary`, underlined under the pointer and
+/// ringed on keyboard focus. That suits a link that stands alone; a link inside
+/// running prose should stay identifiable without the pointer, so underline it
+/// at rest through [style]:
 ///
 /// ```dart
 /// PlaygroundLink(
@@ -27,10 +22,8 @@ part 'link.g.dart';
 /// )
 /// ```
 ///
-/// There is no pressed fragment. A link's press is over in the time it takes
-/// to navigate, and the destination arriving is the feedback — the same reason
-/// the checkbox has none, arrived at from the other direction: a checkbox
-/// flips its own state, and a link replaces the page.
+/// There is no pressed fragment: a link replaces the page, and the destination
+/// arriving is the feedback.
 @MixWidget(target: RemixLink.new)
 LinkStyler playgroundLinkStyle({
   LinkStyler style = const LinkStyler.create(),
@@ -43,14 +36,11 @@ LinkStyler playgroundLinkStyle({
     )
     .onHovered(.label(.decoration(TextDecoration.underline)))
     .onFocusVisible(.containerEffects(playgroundFocusRing()))
-    .onDisabled(_disabledStyle())
+    // Declared last so it wins. Remix disables a link with no `onPressed`,
+    // so this is also how a decorative link looks.
+    .onDisabled(
+      LinkStyler()
+          .containerEffects(.outline(.style(.none)))
+          .wrap(.opacity(PlaygroundTokens.disabledOpacity)),
+    )
     .merge(style);
-
-/// Declared last so it wins over every other state fragment.
-///
-/// A link with no `onPressed` is disabled by Remix, which is the same meaning
-/// `onPressed: null` carries on every other Flutter control, so this fragment
-/// is also what a decorative link looks like.
-LinkStyler _disabledStyle() => LinkStyler()
-    .containerEffects(.outline(.style(.none)))
-    .wrap(.opacity(PlaygroundTokens.disabledOpacity));

@@ -5,14 +5,10 @@ import 'package:remix/remix.dart';
 
 import '../theme/tokens.dart';
 
-/// Accessible name for the compact navigation sheet's dialog barrier.
 const _closeNavigationLabel = 'Close navigation';
-
-/// Accessible name for the compact navigation sheet itself.
 const _navigationSemanticLabel = 'Navigation';
 
-/// A width, in logical pixels, reserved outside the compact sheet so its
-/// scrim stays reachable on narrow screens.
+/// Width left outside the compact sheet so its scrim stays reachable.
 const _compactSheetBarrierGutter = 56.0;
 
 /// A layout widget that pairs a [sidebar] with a [body].
@@ -107,14 +103,13 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
   bool _selfOpen = false;
   bool _sheetShowing = false;
 
-  /// The layout's presentation as of its most recent build, so [_openCompact]
-  /// can no-op while wide even when called outside that build.
+  /// The presentation as of the last build, so [_openCompact] can no-op while
+  /// wide even when called outside a build.
   bool _isCompact = false;
 
-  /// The route [showRemixDialog] pushed for the open sheet, captured from
-  /// inside its own builder via `ModalRoute.of` so [_removeSheetRoute] can
-  /// close exactly that route on the Navigator that actually owns it,
-  /// rather than popping whatever a bare `Navigator.of(context)` finds.
+  /// The route [showRemixDialog] pushed for the sheet, captured in its builder
+  /// so [_removeSheetRoute] closes exactly that route on the Navigator that
+  /// owns it.
   Route<void>? _sheetRoute;
 
   bool get _effectiveOpen => widget.compactOpen ?? _selfOpen;
@@ -186,8 +181,7 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
             closeCompact: _closeCompact,
             child: Box(
               style: BoxStyler().alignment(.centerStart),
-              // A foreground border paints the panel edge without shrinking
-              // `width` by the border's own stroke width.
+              // A foreground border, so the edge does not shrink `width`.
               child: Box(
                 style: BoxStyler()
                     .width(width)
@@ -212,8 +206,7 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
         );
       },
     );
-    // Reached once, however the route completed: a user dismissal or
-    // _removeSheetRoute above.
+    // Reached once, however the route completed.
     _sheetRoute = null;
     _sheetShowing = false;
     if (mounted) _setOpen(false);
@@ -286,12 +279,10 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
     final header = widget.header;
     final ltr = Directionality.of(context) == TextDirection.ltr;
 
-    // Beside the sidebar, the column never touches the start edge, so it
-    // must not keep clear of a start inset such as a landscape notch. A header
-    // sits against the top edge and keeps clear of the top inset itself, so
-    // the body below must not reserve it a second time: a scroll view
-    // otherwise pads its content by MediaQuery's top inset. Both wrappers
-    // read this widget's MediaQuery, so neither undoes the other.
+    // Beside the sidebar the column never touches the start edge, so it drops
+    // that inset (a landscape notch). A header keeps clear of the top inset
+    // itself, so the body below drops it, or a scroll view would pad twice.
+    // Both wrappers read this widget's MediaQuery, so neither undoes the other.
     Widget inset(Widget child, {bool removeTop = false}) =>
         MediaQuery.removePadding(
           context: context,
@@ -305,8 +296,8 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
       style: FlexBoxStyler().crossAxisAlignment(.stretch),
       children: [
         if (header != null) inset(header),
-        // The body's wrapper stays mounted either way so its state survives
-        // a header coming or going.
+        // Stays mounted either way, so its state survives a header coming or
+        // going.
         Expanded(
           child: RepaintBoundary(
             child: inset(widget.body, removeTop: header != null),

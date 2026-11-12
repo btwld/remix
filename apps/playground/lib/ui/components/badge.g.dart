@@ -8,13 +8,8 @@ part of 'badge.dart';
 
 /// The application's Badge recipe.
 ///
-/// A badge is a static label: no interaction, no states. That is why this
-/// recipe has no hover, focus, or disabled fragments — there is nothing to
-/// report.
-///
-/// It takes no size. A badge sits inline beside other content and reads at
-/// one scale; a size axis would have to be threaded through every call site
-/// for no gain.
+/// A badge is a static label, so it has no state fragments and no size: it
+/// sits inline and reads at one scale.
 class PlaygroundBadge extends StatelessWidget {
   const PlaygroundBadge({
     super.key,

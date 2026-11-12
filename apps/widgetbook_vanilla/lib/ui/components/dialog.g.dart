@@ -8,16 +8,11 @@ part of 'dialog.dart';
 
 /// The application's Dialog recipe.
 ///
-/// Remix owns the rendering, the modal barrier, focus trapping, the escape
-/// and barrier dismissal rules, and the dialog accessibility semantics; this
-/// recipe supplies the panel, the two text roles, and the action row.
-///
-/// It is the page's `background` fill with a `border` hairline, `radiusLg`
-/// corners, the heaviest shadow in the scale, and a 24px inset. The panel is
-/// centered in the viewport with 16px to spare on every side, and fills the
-/// width up to 512px. The title is `textLg` semibold and set tight, the description `textSm`
-/// in `mutedForeground` 8px below it, and the decisions sit at the trailing
-/// edge 16px below that.
+/// The page's `background` fill with a `border` hairline, `radiusLg` corners,
+/// the heaviest shadow in the scale and a 24px inset. The panel is centered
+/// with 16px to spare and fills the width up to 512px. The title is `textLg`
+/// semibold, the description `textSm` in `mutedForeground` 8px below it, and
+/// the actions sit at the trailing edge 16px below that.
 class VanillaDialog extends StatelessWidget {
   const VanillaDialog({
     super.key,

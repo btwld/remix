@@ -8,21 +8,12 @@ part of 'menu.dart';
 
 /// The application's Menu recipe.
 ///
-/// Remix owns the rendering, the overlay, the anchor positioning, keyboard
-/// traversal, submenu timing, dismissal, and the menu accessibility
-/// semantics; this recipe supplies the trigger, the floating panel, and every
-/// kind of row inside it.
+/// One recipe covers every row kind: `MenuSpec` falls back to `item` for
+/// `checkboxItem`, `radioItem` and `submenuItem`, so styling only `item` keeps
+/// the menu one list.
 ///
-/// One recipe covers all of them, because `MenuSpec` carries each row kind as
-/// a field: `item` is the default, and `checkboxItem`, `radioItem`, and
-/// `submenuItem` fall back to it unless a recipe says otherwise. Setting only
-/// `item` is what keeps a menu looking like one list rather than four.
-///
-/// The panel is the same `popover` fill and `border` hairline the popover and
-/// the select's options use. The files are deliberately separate — the
-/// components have separate update stories — but the values are meant to
-/// match, so a menu and a popover anchored to adjacent buttons do not read as
-/// two systems.
+/// The panel matches the popover's `popover` fill and `border` hairline, so a
+/// menu and a popover beside each other do not read as two systems.
 class PlaygroundMenu<T> extends StatelessWidget {
   const PlaygroundMenu({
     super.key,

@@ -6,13 +6,10 @@ part of 'app_bar.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates the default [AppBarStyler] for the Vanilla app bar.
+/// The application's AppBar recipe: a `background` surface over a toolbar row
+/// with a bottom hairline and a semibold `textLg` title.
 ///
-/// Configures a `background` surface, a [vanillaAppBarToolbarHeight] toolbar row
-/// with an inset bottom hairline border, horizontal padding, semibold `textLg`
-/// title text, and 12px spacing between elements.
-///
-/// Merges [style] after the default styling to allow caller overrides:
+/// [style] merges last:
 ///
 /// ```dart
 /// VanillaAppBar(

@@ -9,28 +9,17 @@ part 'disclosure.g.dart';
 
 /// The application's Disclosure recipe.
 ///
-/// A single collapsible section: a trigger row and the content it reveals.
-/// Remix owns the rendering, the expand and collapse animation, keyboard
-/// activation, and the accessibility semantics — including announcing the
-/// expanded state; this recipe supplies the trigger row, the content inset,
-/// and the state fragments.
+/// A single collapsible section. It is the accordion's trigger without the
+/// frame: 16px above and below, `textSm` at medium weight, underlined under the
+/// pointer. A lone disclosure has no neighbors to separate, so it draws no rule.
 ///
-/// It is the accordion's trigger without the accordion's frame: 16px above and
-/// below with no side inset, `textSm` at medium weight, underlined under the
-/// pointer. The accordion draws a rule under each section because its rows have
-/// neighbours to separate; a lone disclosure has none, so a frame would only
-/// box in whatever the caller already placed it inside.
+/// The spec carries plain boxes, not text, so the trigger's type is a default
+/// text style: a bare `Text` trigger takes it and one with its own style keeps
+/// it.
 ///
-/// The spec carries plain boxes (`trigger`, `content`), not text: the caller
-/// passes whole widgets for both. The recipe sets the trigger's type through a
-/// default text style instead, so a bare `Text` trigger takes it and a caller
-/// who styles their own text keeps theirs.
-///
-/// Two constructor parameters are deliberately not forwarded to the generated
-/// `{{typePrefix}}Disclosure`: `triggerBuilder` and `transitionBuilder`. Both
-/// are typed by `package:naked_ui`, which this layer does not depend on.
-/// Reach for `RemixDisclosure` directly on the rare call site that needs a
-/// state-aware trigger or a custom transition.
+/// The generated widget omits `triggerBuilder` and `transitionBuilder`: their
+/// types come from `package:naked_ui`, which this layer does not import. Use
+/// `RemixDisclosure` for a state-aware trigger or a custom transition.
 @MixWidget(
   target: RemixDisclosure.new,
   widgetParameters: .only({
@@ -57,8 +46,7 @@ DisclosureStyler {{valuePrefix}}DisclosureStyle({
   DisclosureStyler style = const DisclosureStyler.create(),
 }) => DisclosureStyler()
     .animate({{typePrefix}}Tokens.motion)
-    // These are the forwarded box shorthand, so they land on `trigger`: the
-    // row a reader clicks to open the section.
+    // Forwarded to `trigger`, the row that opens the section.
     .width(double.infinity)
     .alignment(.centerLeft)
     .padding(.vertical({{typePrefix}}Tokens.s4))
@@ -73,9 +61,7 @@ DisclosureStyler {{valuePrefix}}DisclosureStyle({
         ),
       ),
     )
-    // `content` has to be reached by name; a bare `.padding(...)` would inset
-    // the trigger instead. It has no side inset either, so the revealed
-    // content lines up under the trigger's own text.
+    // By name: a bare `.padding(...)` would inset the trigger.
     .content(.padding(.bottom({{typePrefix}}Tokens.s4)))
     .onHovered(
       DisclosureStyler().trigger(
@@ -84,24 +70,14 @@ DisclosureStyler {{valuePrefix}}DisclosureStyle({
         ),
       ),
     )
-    .onFocusVisible(_focusVisibleStyle())
-    .onDisabled(_disabledStyle())
+    // On the trigger alone: a container ring would claim the revealed content
+    // is focused too, and grow with it.
+    .onFocusVisible(.triggerEffects({{valuePrefix}}FocusRing()))
+    // Declared last so it wins; the ring is cleared because a disabled control
+    // that still rings reads as reachable.
+    .onDisabled(
+      DisclosureStyler()
+          .triggerEffects(.outline(.style(.none)))
+          .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+    )
     .merge(style);
-
-/// The keyboard focus ring, drawn on the trigger alone.
-///
-/// Not on the container, whose effects cover the trigger *plus* everything it
-/// revealed: a ring there claims the content is focused too, and grows with
-/// it. `triggerEffects` is an outline around the trigger, so it takes no
-/// layout space and opening the section never reflows the page. The ring is a
-/// 3px band of `ring` at half strength.
-DisclosureStyler _focusVisibleStyle() =>
-    DisclosureStyler().triggerEffects({{valuePrefix}}FocusRing());
-
-/// Declared last so it wins over every other state fragment.
-///
-/// The ring is cleared as well as faded: a disabled control that still draws
-/// a focus ring reads as reachable.
-DisclosureStyler _disabledStyle() => DisclosureStyler()
-    .triggerEffects(.outline(.style(.none)))
-    .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity));

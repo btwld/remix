@@ -11,17 +11,13 @@ part 'accordion.g.dart';
 
 /// The application's Accordion recipe.
 ///
-/// Remix owns the rendering, the expand and collapse animation, the group
-/// coordination, keyboard activation, and the accessibility semantics; this
-/// recipe supplies the row, the two icons, the title, and the panel.
+/// Sections are separated by a bottom hairline rather than a box, so a stack
+/// reads as one list.
 ///
-/// `RemixAccordionGroup` — the behavioral coordinator that owns which values
-/// are expanded — carries no styler and therefore no recipe. Compose it
-/// directly around these:
+/// `RemixAccordionGroup`, which owns which values are expanded, has no styler
+/// and no recipe. Wrap the sections in it directly:
 ///
 /// ```dart
-/// // `RemixAccordionController` is Remix's alias for the Naked UI type, so
-/// // the controller does not pull `package:naked_ui` into this layer.
 /// RemixAccordionGroup<String>(
 ///   controller: RemixAccordionController<String>(),
 ///   child: Column(children: const [
@@ -34,16 +30,8 @@ part 'accordion.g.dart';
 /// )
 /// ```
 ///
-/// Each section is separated by a rule along its bottom edge rather than by a
-/// box of its own, so a stack of them reads as one list. The `border` token
-/// is the same hairline the divider draws, which is what makes a divider
-/// between sections indistinguishable from the sections' own edges.
-///
-/// `builder` is deliberately not forwarded to the generated
-/// `VanillaAccordion`. Its type is `NakedAccordionTriggerBuilder`,
-/// which comes from `package:naked_ui` — a package this layer does not depend
-/// on. Use `title` with the icons, or reach for `RemixAccordion` directly on
-/// the rare call site that needs to build its own trigger row.
+/// The generated widget omits `builder`: its type comes from `package:naked_ui`,
+/// which this layer does not import. Use `RemixAccordion` for a custom trigger.
 @MixWidget(
   target: RemixAccordion.new,
   widgetParameters: .only({
@@ -68,10 +56,8 @@ AccordionStyler vanillaAccordionStyle({
   AccordionStyler style = const AccordionStyler.create(),
 }) => AccordionStyler()
     .animate(VanillaTokens.motion)
-    // `container` has to be reached by name. `AccordionStyler` forwards its
-    // box shorthand to `trigger`, so a bare `.border(...)` would outline the
-    // clickable row rather than the section, and the rule between sections
-    // would move with the panel as it opens.
+    // By name: the box shorthand below is forwarded to `trigger`, so a bare
+    // `.border(...)` would outline the clickable row, not the section.
     .container(
       .border(
         .bottom(
@@ -79,10 +65,8 @@ AccordionStyler vanillaAccordionStyle({
         ),
       ),
     )
-    // These *are* the forwarded shorthand, so they land on `trigger`: the row a
-    // reader clicks to open the section, 16px above and below with a 16px gap
-    // and no side inset, so the title lines up with the content above and below
-    // the list.
+    // Forwarded to `trigger`: the row that opens the section, 16px above and
+    // below with no side inset, so the title aligns with the content around it.
     .direction(.horizontal)
     .crossAxisAlignment(.center)
     .padding(.vertical(VanillaTokens.s4))
@@ -100,20 +84,17 @@ AccordionStyler vanillaAccordionStyle({
       .size(VanillaTokens.icon).color(VanillaTokens.mutedForeground()),
     )
     .content(.padding(.bottom(VanillaTokens.s4)))
-    .onHovered(_hoverStyle())
-    .onExpanded(_openStyle())
-    .onSelected(_openStyle())
-    .onFocusVisible(_focusVisibleStyle())
-    .onDisabled(_disabledStyle())
+    .onHovered(.title(.decoration(TextDecoration.underline)))
+    .onExpanded(_open())
+    .onSelected(_open())
+    // On the trigger, not the section: the section also holds the revealed
+    // panel, and a ring there would grow with it.
+    .onFocusVisible(.triggerEffects(vanillaFocusRing()))
+    .onDisabled(_disabled())
     .merge(style);
 
-/// Hovering underlines the title.
-AccordionStyler _hoverStyle() =>
-    AccordionStyler().title(.decoration(TextDecoration.underline));
-
-/// The open section promotes its icons to `foreground` and rotates the
-/// trailing chevron 180 degrees.
-AccordionStyler _openStyle() => AccordionStyler()
+/// The open section promotes its icons to `foreground` and flips the chevron.
+AccordionStyler _open() => AccordionStyler()
     .leadingIcon(.color(VanillaTokens.foreground()))
     .trailingIcon(
       IconStyler()
@@ -126,16 +107,7 @@ AccordionStyler _openStyle() => AccordionStyler()
           ),
     );
 
-/// The keyboard focus ring: a 3px band of `ring` at half strength.
-///
-/// An outline rather than a border: `RemixBoxEffects` paints it outside the
-/// trigger without taking layout space. It is on the trigger, not the section:
-/// the section also holds the revealed panel, and a ring there would grow with
-/// it.
-AccordionStyler _focusVisibleStyle() =>
-    AccordionStyler().triggerEffects(vanillaFocusRing());
-
 /// Declared last so it wins over every other state fragment.
-AccordionStyler _disabledStyle() => AccordionStyler()
+AccordionStyler _disabled() => AccordionStyler()
     .triggerEffects(.outline(.style(.none)))
     .wrap(.opacity(VanillaTokens.disabledOpacity));

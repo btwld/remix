@@ -24,79 +24,58 @@ enum PlaygroundBadgeVariant {
 
 /// The application's Badge recipe.
 ///
-/// A badge is a static label: no interaction, no states. That is why this
-/// recipe has no hover, focus, or disabled fragments — there is nothing to
-/// report.
-///
-/// It takes no size. A badge sits inline beside other content and reads at
-/// one scale; a size axis would have to be threaded through every call site
-/// for no gain.
+/// A badge is a static label, so it has no state fragments and no size: it
+/// sits inline and reads at one scale.
 @MixWidget(target: RemixBadge.new)
 BadgeStyler playgroundBadgeStyle({
   PlaygroundBadgeVariant variant = .primary,
   BadgeStyler style = const BadgeStyler.create(),
-}) => _base().merge(_variantStyle(variant)).merge(style);
+}) {
+  // Every variant draws the same hairline, transparent unless `outline`, so
+  // badges of different variants share one height.
+  final (:fill, :foreground, :outline) = switch (variant) {
+    .primary => (
+      fill: PlaygroundTokens.primary(),
+      foreground: PlaygroundTokens.primaryForeground(),
+      outline: _transparent,
+    ),
+    .secondary => (
+      fill: PlaygroundTokens.secondary(),
+      foreground: PlaygroundTokens.secondaryForeground(),
+      outline: _transparent,
+    ),
+    // 60% in the dark theme, where `destructive` is too light to carry a
+    // white label as a solid fill.
+    .destructive => (
+      fill: playgroundTint(PlaygroundTokens.destructive, 1, dark: 0.6)(),
+      foreground: PlaygroundTokens.destructiveForeground(),
+      outline: _transparent,
+    ),
+    .outline => (
+      fill: _transparent,
+      foreground: PlaygroundTokens.foreground(),
+      outline: PlaygroundTokens.border(),
+    ),
+  };
 
-/// A radius that rounds any badge into a pill.
+  return BadgeStyler()
+      .padding(
+        .symmetric(
+          horizontal: PlaygroundTokens.s2,
+          vertical: PlaygroundTokens.s0_5,
+        ),
+      )
+      .borderRadius(.all(_pill))
+      .color(fill)
+      .border(.color(outline).width(PlaygroundTokens.strokeHairline))
+      .label(
+        .style(
+          PlaygroundTokens.textXs.mix(),
+        ).fontWeight(FontWeight.w500).color(foreground),
+      )
+      .merge(style);
+}
+
 const _pill = Radius.circular(PlaygroundTokens.pill);
 
-/// A fill that paints nothing, used by `outline` and by every other variant's
-/// outline.
-const _noFill = Color(0x00000000);
-
-/// The destructive fill, at 60% in the dark theme: the dark `destructive` is
-/// too light to carry a white label as a solid fill.
-final _destructiveFill = playgroundTint(
-  PlaygroundTokens.destructive,
-  1,
-  dark: _darkDestructiveAlpha,
-);
-
-/// See [_destructiveFill].
-const _darkDestructiveAlpha = 0.6;
-
-/// Geometry and typography shared by every variant: a pill with an 8px side
-/// inset and 2px above and below, set in `textXs` at medium weight.
-BadgeStyler _base() => BadgeStyler()
-    .padding(
-      .symmetric(
-        horizontal: PlaygroundTokens.s2,
-        vertical: PlaygroundTokens.s0_5,
-      ),
-    )
-    .borderRadius(.all(_pill))
-    .label(.style(PlaygroundTokens.textXs.mix()).fontWeight(FontWeight.w500));
-
-BadgeStyler _variantStyle(PlaygroundBadgeVariant variant) => switch (variant) {
-  .primary => _filled(
-    fill: PlaygroundTokens.primary(),
-    foreground: PlaygroundTokens.primaryForeground(),
-  ),
-  .secondary => _filled(
-    fill: PlaygroundTokens.secondary(),
-    foreground: PlaygroundTokens.secondaryForeground(),
-  ),
-  .destructive => _filled(
-    fill: _destructiveFill(),
-    foreground: PlaygroundTokens.destructiveForeground(),
-  ),
-  .outline => _filled(
-    fill: _noFill,
-    foreground: PlaygroundTokens.foreground(),
-    outline: PlaygroundTokens.border(),
-  ),
-};
-
-/// One surface, one content color, and the outline.
-///
-/// Every variant draws the same 1px outline, transparent unless the variant is
-/// `outline`: badges of different variants side by side then share one height
-/// and one text line.
-BadgeStyler _filled({
-  required Color fill,
-  required Color foreground,
-  Color outline = _noFill,
-}) => BadgeStyler()
-    .color(fill)
-    .border(.color(outline).width(PlaygroundTokens.strokeHairline))
-    .label(.color(foreground));
+const _transparent = Color(0x00000000);

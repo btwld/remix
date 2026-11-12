@@ -6,19 +6,14 @@ import '../theme/tokens.dart';
 
 part 'app_bar.g.dart';
 
-/// The height of the {{typePrefix}} app bar toolbar row, including its bottom hairline.
-///
-/// Adjacent components that align with the app bar, such as the sidebar brand
-/// row, use this value.
+/// Height of the toolbar row, including its bottom hairline. The sidebar
+/// brand row uses it to line up with the app bar.
 const {{valuePrefix}}AppBarToolbarHeight = {{typePrefix}}Tokens.s16;
 
-/// Creates the default [AppBarStyler] for the {{typePrefix}} app bar.
+/// The application's AppBar recipe: a `background` surface over a toolbar row
+/// with a bottom hairline and a semibold `textLg` title.
 ///
-/// Configures a `background` surface, a [{{valuePrefix}}AppBarToolbarHeight] toolbar row
-/// with an inset bottom hairline border, horizontal padding, semibold `textLg`
-/// title text, and 12px spacing between elements.
-///
-/// Merges [style] after the default styling to allow caller overrides:
+/// [style] merges last:
 ///
 /// ```dart
 /// {{typePrefix}}AppBar(

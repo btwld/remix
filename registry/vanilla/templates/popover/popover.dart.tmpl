@@ -9,22 +9,14 @@ part 'popover.g.dart';
 
 /// The application's Popover recipe.
 ///
-/// Remix owns the rendering, the overlay, the anchor positioning, the
-/// dismiss-on-outside-tap behavior, focus, and the popover accessibility
-/// semantics; this recipe supplies only the floating panel's surface.
-///
-/// A popover sits *over* arbitrary content, so its edge is doing real work: it
-/// is what tells a reader where the panel stops and the page resumes. That edge
-/// is a `border` hairline plus the `md` shadow. The fill is `popover`, the
-/// surface every floating panel shares: the page color in the light theme and a
-/// step lighter than the page in the dark one.
+/// The floating panel's surface: the `popover` fill, a `border` hairline and
+/// the `md` shadow, which together tell a reader where the panel stops and the
+/// page resumes.
 ///
 /// `RemixPopover` opens on a tap of its own `child`, which a button with its
 /// own `onPressed` consumes first. For a button trigger, set `openOnTap:
-/// false`, toggle a `MenuController` from the button, and give the popover and
-/// the button one `FocusNode`, so the button is the only tab stop and takes
-/// focus back when the popover closes. Keep the controller and the node in a
-/// `State` and dispose the node there:
+/// false`, toggle a `MenuController` from the button, and share one `FocusNode`
+/// so the button is the only tab stop and regains focus on close:
 ///
 /// ```dart
 /// class _FiltersState extends State<Filters> {
@@ -59,9 +51,7 @@ PopoverStyler {{valuePrefix}}PopoverStyle({
     .color({{typePrefix}}Tokens.popover())
     .border(.color({{typePrefix}}Tokens.border()).width({{typePrefix}}Tokens.strokeHairline))
     .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
-    // 288px: a popover holds a short form or a few lines, and a fixed width
-    // keeps it from resizing as that content changes. A call site with wider
-    // content sets `.width(...)` through [style].
+    // 288px, fixed so the panel does not resize as its content changes.
     .width({{typePrefix}}Tokens.popoverWidth)
     .padding(.all({{typePrefix}}Tokens.s4))
     .shadows({{typePrefix}}Shadow.md.box)

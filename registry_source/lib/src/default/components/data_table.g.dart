@@ -8,30 +8,14 @@ part of 'data_table.dart';
 
 /// The application's DataTable recipe.
 ///
-/// Remix owns the rendering, sorting, selection, pagination, the empty state,
-/// and the table accessibility semantics; this recipe supplies the frame, the
-/// rows, the cells, and the three text roles.
+/// A table in a frame: `background` fill, `border` hairline and `radiusMd`
+/// corners around a header with no surface of its own. A row under the pointer
+/// sits on `muted` at half strength and a selected row on `muted`.
 ///
-/// It is the one recipe in this layer that **depends on other items**, and it
-/// is the reason its registry entry lists `checkbox`, `icon_button`, and
-/// `select` beside `theme`. A table's selection column is a checkbox, its
-/// pager is a pair of icon buttons, and its page-size control is a select —
-/// literally, not by analogy. `DataTableSpec` takes each of those as a styler,
-/// so the honest thing is to hand it the application's own recipes rather than
-/// restate three components inside a fourth. Change the checkbox recipe and
-/// this table's checkboxes change with it, which is what a reader expects.
-///
-/// That is a deliberate exception to the rule that these files are
-/// self-contained. It earns it: the alternative is either three duplicated
-/// recipes that drift, or a table whose controls do not match the rest of the
-/// application.
-///
-/// It is a table inside a frame: the page's `background` fill, a `border`
-/// hairline, and `radiusMd` corners around a header with no surface of its own.
-/// Header and body rows are separated by the same hairline, and the last body
-/// row drops it so the table does not draw a second line on top of its own
-/// bottom edge. A row under the pointer sits on `muted` at half strength and a
-/// selected row on `muted`.
+/// This recipe depends on other items (`checkbox`, `icon_button`, `select`):
+/// the selection column is a checkbox, the pager a pair of icon buttons and the
+/// page-size control a select, so the table is handed the application's own
+/// recipes rather than restating them.
 class VanillaDataTable<T> extends StatelessWidget {
   const VanillaDataTable({
     super.key,

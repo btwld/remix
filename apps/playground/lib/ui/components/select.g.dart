@@ -8,18 +8,9 @@ part of 'select.dart';
 
 /// The application's Select recipe.
 ///
-/// Remix owns the rendering, the overlay, keyboard traversal, the open and
-/// close behavior, and the listbox accessibility semantics; this recipe
-/// supplies the trigger, the floating panel, and the option rows.
-///
-/// One recipe covers all three, because `SelectSpec` carries them as fields:
-/// `trigger`, `content` with `menuContainer`, and `item`. An option in a loop
-/// therefore cannot be left unstyled.
-///
-/// The trigger is styled as a field rather than as a button — same border,
-/// same radius, same heights as the text field — because that is what it is.
-/// The panel matches the menu's, so a select and a menu opened side by side
-/// do not read as two systems.
+/// One recipe covers the trigger, the floating panel and the option rows,
+/// because `SelectSpec` carries all three. The trigger is styled as a field,
+/// like the text field; the panel matches the menu's.
 class PlaygroundSelect<T> extends StatelessWidget {
   const PlaygroundSelect({
     super.key,
