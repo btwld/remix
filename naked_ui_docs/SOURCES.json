@@ -1,0 +1,78 @@
+{
+  "repository": "btwld/naked_ui",
+  "commit": "90f8560cb121e8b9a07dfe6284575502e4437672",
+  "pages": {
+    "index": {
+      "path": "docs/index.mdx",
+      "sha256": "acc19381715c6d85ad1c345018f7720972454734a3ae627715488c960dcd9a8d"
+    },
+    "widget/accordion": {
+      "path": "docs/widget/accordion.mdx",
+      "sha256": "749d0f277c46f1b57c84b151493afef4b4369462d05e5f5cd7935b6d92184486"
+    },
+    "widget/button": {
+      "path": "docs/widget/button.mdx",
+      "sha256": "cb338bd2f3a168393ac972539eda52b0086a1fc3150dbb44117061fa63f078fa"
+    },
+    "widget/checkbox": {
+      "path": "docs/widget/checkbox.mdx",
+      "sha256": "3e781a9ed3d63368b2a7855b11fccb1db4a067ae277073864d796f207aff3590"
+    },
+    "widget/dialog": {
+      "path": "docs/widget/dialog.mdx",
+      "sha256": "54df6871ff77effb96f467e44c3d109a0660db4d53121dfa4027fc32dfb3df11"
+    },
+    "widget/disclosure": {
+      "path": "docs/widget/disclosure.mdx",
+      "sha256": "16f8b83388d0c8cb0edfeb81bfb13192a96df73bab302b22fd23fc9abf9c4439"
+    },
+    "widget/link": {
+      "path": "docs/widget/link.mdx",
+      "sha256": "76f6d09b45ace8ad6184891c06b3c041bc18f017ed2fb4d8902059f57142d3f5"
+    },
+    "widget/menu": {
+      "path": "docs/widget/menu.mdx",
+      "sha256": "d557f547c36ab6a447d8bc9717c67f6a4da0f17ccef5a15e8cc8c3b9a2e04d39"
+    },
+    "widget/popover": {
+      "path": "docs/widget/popover.mdx",
+      "sha256": "c6aaa296fcd0c556fa66911cb12d12ca546409310b08aa3440f38aae4cbe368a"
+    },
+    "widget/radio": {
+      "path": "docs/widget/radio.mdx",
+      "sha256": "229d134ad0204109b64005edcd2e632ba0affec804492fcaad3b6b972f0351c6"
+    },
+    "widget/select": {
+      "path": "docs/widget/select.mdx",
+      "sha256": "c9465db324771d30e475f3a7135a62e1a9c6ef9ac1416b36762915ab997d40c1"
+    },
+    "widget/slider": {
+      "path": "docs/widget/slider.mdx",
+      "sha256": "9a3587fa471b419204987fd0cb5d2ef086af0ab78c55d471fc02ccb92e293b5f"
+    },
+    "widget/switch": {
+      "path": "docs/widget/switch.mdx",
+      "sha256": "a2ce372788edb8e7b2e351ea35a19fb4bb7449545b6fcf22304e4982fc59f63d"
+    },
+    "widget/tabs": {
+      "path": "docs/widget/tabs.mdx",
+      "sha256": "836520d8b0ccf380d0519a08c6dffae17e5a5e796b4137153b83a1d53d61bba4"
+    },
+    "widget/textfield": {
+      "path": "docs/widget/textfield.mdx",
+      "sha256": "371c73c2ac3e53b3c48369d901b47f15c1569bd048b4488a505b3cb66d65813e"
+    },
+    "widget/toast": {
+      "path": "docs/widget/toast.mdx",
+      "sha256": "0d523363fa994b8dcdfedd0d619348b236c04a0b2ba0e48ac9fea9872a813c3c"
+    },
+    "widget/toggle": {
+      "path": "docs/widget/toggle.mdx",
+      "sha256": "74109dfed816d9cf300fdcb78644efede8db3d91081f189a359088006960e2b9"
+    },
+    "widget/tooltip": {
+      "path": "docs/widget/tooltip.mdx",
+      "sha256": "ce8ab092c60e3d4e20eb89262988561bacdc889440f6a3395b8fa4750c54b3c9"
+    }
+  }
+}

@@ -13,7 +13,9 @@ Naked UI uses Flutter's widget primitives and does not require a Material host.
 
 ## Documentation
 
-📚 **[View Full Documentation](https://docs.page/btwld/naked_ui)**
+📚 **[Canonical documentation source](../../naked_ui_docs/README.md)**
+
+The consolidated site publishes these docs at `/naked-ui/docs/` after cutover. The existing [docs.page site](https://docs.page/btwld/naked_ui) remains available during migration.
 
 ## Supported Components
 
@@ -24,12 +26,12 @@ Naked UI uses Flutter's widget primitives and does not require a Material host.
 - NakedCheckbox — toggle behavior and semantics
 - NakedCombobox — autocomplete field on Flutter's RawAutocomplete
 - NakedRadio / NakedRadioGroup — single‑select radio on RawRadio with group management
-- NakedSelect — controlled/uncontrolled dropdown with keyboard navigation
+- NakedSelect — caller-controlled selection and controlled/uncontrolled opening with keyboard navigation
 - NakedScrollbar — styleable scrollbar thumb and track
 - NakedSlider — arbitrary multi-thumb slider with per-thumb focus + semantics
 - NakedTextField — headless text input on EditableText with observable interaction states
 - NakedTextMagnifier — headless text magnifier on RawMagnifier with line-jump animation
-- NakedToggle / NakedToggleGroup — toggle button or switch behavior and single/multi-select groups
+- NakedToggle / NakedToggleGroup — toggle button or switch behavior and single-select groups
 - NakedTabs — tablist + roving focus
 - NakedAccordion — expandable/collapsible sections
 - NakedDisclosure — standalone show/hide button and panel

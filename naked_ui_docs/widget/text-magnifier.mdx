@@ -1,0 +1,27 @@
+---
+title: NakedTextMagnifier
+description: Adaptive touch magnification for editable text
+keywords: [flutter, headless, text-magnifier]
+---
+
+`NakedTextMagnifier.configuration()` produces a `TextMagnifierConfiguration` for an editable field. Customize `size`, `magnificationScale`, `decoration`, `verticalFocalPointShift` and `lineJumpDuration`. The widget constructor requires `magnifierInfo`, normally supplied by Flutter’s magnifier builder.
+
+`adaptiveConfiguration()` enables the lens on Android, iOS and Fuchsia and returns the disabled configuration on desktop targets. On the web it follows the browser platform. Selection handles and the context menu remain separate caller-owned controls.
+
+## Basic implementation
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget editableWithMagnifier(TextEditingController controller) {
+  return NakedTextField(
+    controller: controller,
+    magnifierConfiguration: NakedTextMagnifier.adaptiveConfiguration(),
+  );
+}
+```
+
+## Source and accessibility
+
+See the [package implementation](https://github.com/btwld/remix/tree/main/packages/naked_ui/lib/src) for the complete API. Keep visible labels, focus indication and sufficient contrast in your presentation layer.

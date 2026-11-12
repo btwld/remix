@@ -1,0 +1,23 @@
+name: Naked UI documentation
+on:
+  pull_request:
+    paths: ['naked_ui_docs/**', 'packages/naked_ui/**', 'apps/naked_ui_example/**', 'tool/*naked_ui_docs.py', '.github/workflows/naked-ui-docs.yml']
+  push:
+    branches: [main]
+    paths: ['naked_ui_docs/**', 'packages/naked_ui/**', 'apps/naked_ui_example/**', 'tool/*naked_ui_docs.py', '.github/workflows/naked-ui-docs.yml']
+permissions:
+  contents: read
+jobs:
+  docs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: .fvmrc
+          channel: stable
+      - run: flutter pub get --enforce-lockfile
+      - run: python3 tool/check_naked_ui_docs.py
