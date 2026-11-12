@@ -11,6 +11,7 @@ final class {{typePrefix}}AgentAnswerRecipe {
   const {{typePrefix}}AgentAnswerRecipe({
     required this.style,
     required this.actionStyle,
+    required this.selectedActionStyle,
   });
 
   /// Styles for the body, the spacing of its parts and the actions bar.
@@ -18,6 +19,9 @@ final class {{typePrefix}}AgentAnswerRecipe {
 
   /// Styles for every action: copy, feedback and retry.
   final IconButtonStyler actionStyle;
+
+  /// The chosen feedback action, merged over the ordinary action.
+  final IconButtonStyler selectedActionStyle;
 }
 
 /// Builds the recipe; each argument is merged last, so callers can override.
@@ -28,6 +32,7 @@ final class {{typePrefix}}AgentAnswerRecipe {
 {{typePrefix}}AgentAnswerRecipe {{valuePrefix}}AgentAnswerRecipe({
   AgentAnswerStyler style = const AgentAnswerStyler.create(),
   IconButtonStyler actionStyle = const IconButtonStyler.create(),
+  IconButtonStyler selectedActionStyle = const IconButtonStyler.create(),
 }) => {{typePrefix}}AgentAnswerRecipe(
   style: AgentAnswerStyler(
     container: FlexBoxStyler().spacing(12),
@@ -49,6 +54,12 @@ final class {{typePrefix}}AgentAnswerRecipe {
         .icon(.color({{typePrefix}}Tokens.muted()))
         .merge(actionStyle),
   ),
+  selectedActionStyle: IconButtonStyler()
+      .color({{typePrefix}}Tokens.defaultColor())
+      .icon(.color({{typePrefix}}Tokens.foreground()))
+      .onHovered(.color({{typePrefix}}Tokens.defaultHover()))
+      .onPressed(.color({{typePrefix}}Tokens.defaultHover()))
+      .merge(selectedActionStyle),
 );
 
 /// How far the action buttons shift left: the 8px between a 32px

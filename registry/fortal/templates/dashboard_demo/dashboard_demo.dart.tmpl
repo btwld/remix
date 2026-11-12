@@ -655,6 +655,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       .outline => {{typePrefix}}Button.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: {{valuePrefix}}AgentGlyph,
+    toolIconBuilder: {{valuePrefix}}AgentToolIcon,
     composerLeadingBuilder: (onPressed) => {{typePrefix}}IconButton.outline(
       icon: {{icon:plus}},
       semanticLabel: 'Add checkout context',
@@ -685,6 +686,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
     answerActionStyle: answer.actionStyle,
+    answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,
     sourcesDisclosureStyle: sources.disclosureStyle,
     sourceStyle: sources.sourceStyle,

@@ -11,6 +11,7 @@ final class VanillaAgentAnswerRecipe {
   const VanillaAgentAnswerRecipe({
     required this.style,
     required this.actionStyle,
+    required this.selectedActionStyle,
   });
 
   /// Styles for the body, the spacing of its parts and the actions bar.
@@ -18,6 +19,9 @@ final class VanillaAgentAnswerRecipe {
 
   /// Styles for every action: copy, feedback and retry.
   final IconButtonStyler actionStyle;
+
+  /// The chosen feedback action, merged over the ordinary action.
+  final IconButtonStyler selectedActionStyle;
 }
 
 /// Builds the recipe; each argument is merged last, so callers can override.
@@ -28,6 +32,7 @@ final class VanillaAgentAnswerRecipe {
 VanillaAgentAnswerRecipe vanillaAgentAnswerRecipe({
   AgentAnswerStyler style = const AgentAnswerStyler.create(),
   IconButtonStyler actionStyle = const IconButtonStyler.create(),
+  IconButtonStyler selectedActionStyle = const IconButtonStyler.create(),
 }) => VanillaAgentAnswerRecipe(
   style: AgentAnswerStyler(
     container: FlexBoxStyler().spacing(VanillaTokens.s3),
@@ -49,6 +54,12 @@ VanillaAgentAnswerRecipe vanillaAgentAnswerRecipe({
         .icon(.color(VanillaTokens.mutedForeground()))
         .merge(actionStyle),
   ),
+  selectedActionStyle: IconButtonStyler()
+      .color(VanillaTokens.accent())
+      .icon(.color(VanillaTokens.foreground()))
+      .onHovered(.color(VanillaTokens.accent()))
+      .onPressed(.color(VanillaTokens.accent()))
+      .merge(selectedActionStyle),
 );
 
 /// How far the action buttons shift left: the 8px between a 32px

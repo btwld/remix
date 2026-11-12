@@ -79,20 +79,29 @@ UiAgentToolCallRecipe uiAgentToolCallRecipe({
 );
 
 /// The row: tool icon, summary, then the meta with the tool id in monospace.
-AgentToolCallStyler _row() => AgentToolCallStyler(
-  row: FlexBoxStyler()
-      .spacing(UiTokens.space2())
-      .crossAxisAlignment(.center)
-      .minHeight(UiTokens.space6()),
-  icon: _glyph(),
-  summary: TextStyler()
-      .style(UiTokens.text2.mix())
-      .fontWeight(UiTokens.fontWeightMedium())
-      .color(UiTokens.gray12()),
-  meta: TextStyler().style(UiTokens.text1.mix()).color(UiTokens.gray11()),
-  toolId: _mono(UiTokens.text1),
-  indicator: _glyph(),
-);
+AgentToolCallStyler _row() =>
+    AgentToolCallStyler(
+          row: FlexBoxStyler()
+              .spacing(UiTokens.space2())
+              .crossAxisAlignment(.center)
+              .minHeight(UiTokens.space6())
+              .padding(.horizontal(UiTokens.space2()))
+              .transform(Matrix4.translationValues(-UiTokens.space2(), 0, 0))
+              .borderRadius(.all(UiTokens.radius4())),
+          icon: _glyph(),
+          summary: TextStyler()
+              .style(UiTokens.text2.mix())
+              .fontWeight(UiTokens.fontWeightMedium())
+              .color(UiTokens.gray12()),
+          meta: TextStyler()
+              .style(UiTokens.text1.mix())
+              .color(UiTokens.gray11()),
+          toolId: _mono(UiTokens.text1),
+          indicator: _glyph(),
+        )
+        .onFocused(.row(.color(UiTokens.grayA3())))
+        .onHovered(.row(.color(UiTokens.grayA3())))
+        .onPressed(.row(.color(UiTokens.grayA4())));
 
 /// The status word and glyph: quiet gray, red when the call failed, and a
 /// badge on the approval card.
@@ -133,31 +142,52 @@ AgentToolCallStyler _status() =>
 /// reach the well's edges.
 AgentToolCallStyler _well() =>
     AgentToolCallStyler(
-      output: BoxStyler()
-          .margin(.only(left: UiTokens.space5(), top: UiTokens.space1()))
-          .padding(.vertical(UiTokens.space2()))
-          .color(UiTokens.gray2())
-          .borderRadius(.all(UiTokens.radius3()))
-          .border(
-            .all(.color(UiTokens.gray5()).width(UiTokens.borderWidth1())),
+          output: BoxStyler()
+              .margin(.only(left: UiTokens.space5(), top: UiTokens.space1()))
+              .padding(.vertical(UiTokens.space2()))
+              .color(UiTokens.gray2())
+              .borderRadius(.all(UiTokens.radius3()))
+              .border(
+                .all(.color(UiTokens.gray5()).width(UiTokens.borderWidth1())),
+              ),
+          outputToggle: FlexBoxStyler()
+              .minHeight(UiTokens.space6())
+              .padding(.horizontal(UiTokens.space2()))
+              .borderRadius(.all(UiTokens.radius4())),
+          outputToggleLabel: TextStyler()
+              .style(UiTokens.text1.mix())
+              .color(UiTokens.gray11()),
+          outputMaxHeight: UiTokens.activityMaxHeight(),
+          outputContent: BoxStyler().padding(.horizontal(UiTokens.space3())),
+          outputText: _mono(
+            UiTokens.text1,
+          ).color(UiTokens.gray12()).height(_wellLineHeight),
+          error: BoxStyler()
+              .color(UiTokens.error3())
+              .padding(.horizontal(UiTokens.space3())),
+          errorText: _mono(
+            UiTokens.text1,
+          ).color(UiTokens.error11()).height(_wellLineHeight),
+        )
+        .onHovered(
+          AgentToolCallStyler(
+            outputToggle: FlexBoxStyler().color(UiTokens.grayA3()),
+            outputToggleLabel: TextStyler().color(UiTokens.gray12()),
           ),
-      outputMaxHeight: UiTokens.activityMaxHeight(),
-      outputContent: BoxStyler().padding(.horizontal(UiTokens.space3())),
-      outputText: _mono(
-        UiTokens.text1,
-      ).color(UiTokens.gray12()).height(_wellLineHeight),
-      error: BoxStyler()
-          .color(UiTokens.error3())
-          .padding(.horizontal(UiTokens.space3())),
-      errorText: _mono(
-        UiTokens.text1,
-      ).color(UiTokens.error11()).height(_wellLineHeight),
-    ).onStatus(
-      .failed,
-      AgentToolCallStyler(
-        output: BoxStyler().border(.all(.color(UiTokens.errorA7()))),
-      ),
-    );
+        )
+        .onPressed(
+          AgentToolCallStyler(
+            outputToggle: FlexBoxStyler().color(UiTokens.grayA4()),
+            outputToggleLabel: TextStyler().color(UiTokens.gray12()),
+          ),
+        )
+        .onFocused(.outputToggleLabel(.decoration(TextDecoration.underline)))
+        .onStatus(
+          .failed,
+          AgentToolCallStyler(
+            output: BoxStyler().border(.all(.color(UiTokens.errorA7()))),
+          ),
+        );
 
 /// The approval card: a flat panel with no shadow, an icon tile beside the
 /// question, tool id, description and inputs, and a footer rule above the

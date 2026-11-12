@@ -83,22 +83,31 @@ FortalAgentToolCallRecipe fortalAgentToolCallRecipe({
 );
 
 /// The row: tool icon, summary, then the meta with the tool id in monospace.
-AgentToolCallStyler _row() => AgentToolCallStyler(
-  row: FlexBoxStyler()
-      .spacing(FortalTokens.space2())
-      .crossAxisAlignment(.center)
-      .minHeight(FortalTokens.space6()),
-  icon: _glyph(),
-  summary: TextStyler()
-      .style(FortalTokens.text2.mix())
-      .fontWeight(FortalTokens.fontWeightMedium())
-      .color(FortalTokens.gray12()),
-  meta: TextStyler()
-      .style(FortalTokens.text1.mix())
-      .color(FortalTokens.gray11()),
-  toolId: _mono(FortalTokens.text1),
-  indicator: _glyph(),
-);
+AgentToolCallStyler _row() =>
+    AgentToolCallStyler(
+          row: FlexBoxStyler()
+              .spacing(FortalTokens.space2())
+              .crossAxisAlignment(.center)
+              .minHeight(FortalTokens.space6())
+              .padding(.horizontal(FortalTokens.space2()))
+              .transform(
+                Matrix4.translationValues(-FortalTokens.space2(), 0, 0),
+              )
+              .borderRadius(.all(FortalTokens.radius4())),
+          icon: _glyph(),
+          summary: TextStyler()
+              .style(FortalTokens.text2.mix())
+              .fontWeight(FortalTokens.fontWeightMedium())
+              .color(FortalTokens.gray12()),
+          meta: TextStyler()
+              .style(FortalTokens.text1.mix())
+              .color(FortalTokens.gray11()),
+          toolId: _mono(FortalTokens.text1),
+          indicator: _glyph(),
+        )
+        .onFocused(.row(.color(FortalTokens.grayA3())))
+        .onHovered(.row(.color(FortalTokens.grayA3())))
+        .onPressed(.row(.color(FortalTokens.grayA4())));
 
 /// The status word and glyph: quiet gray, red when the call failed, and a
 /// badge on the approval card.
@@ -139,35 +148,60 @@ AgentToolCallStyler _status() =>
 /// reach the well's edges.
 AgentToolCallStyler _well() =>
     AgentToolCallStyler(
-      output: BoxStyler()
-          .margin(
-            .only(left: FortalTokens.space5(), top: FortalTokens.space1()),
-          )
-          .padding(.vertical(FortalTokens.space2()))
-          .color(FortalTokens.gray2())
-          .borderRadius(.all(FortalTokens.radius3()))
-          .border(
-            .all(
-              .color(FortalTokens.gray5()).width(FortalTokens.borderWidth1()),
-            ),
+          output: BoxStyler()
+              .margin(
+                .only(left: FortalTokens.space5(), top: FortalTokens.space1()),
+              )
+              .padding(.vertical(FortalTokens.space2()))
+              .color(FortalTokens.gray2())
+              .borderRadius(.all(FortalTokens.radius3()))
+              .border(
+                .all(
+                  .color(
+                    FortalTokens.gray5(),
+                  ).width(FortalTokens.borderWidth1()),
+                ),
+              ),
+          outputToggle: FlexBoxStyler()
+              .minHeight(FortalTokens.space6())
+              .padding(.horizontal(FortalTokens.space2()))
+              .borderRadius(.all(FortalTokens.radius4())),
+          outputToggleLabel: TextStyler()
+              .style(FortalTokens.text1.mix())
+              .color(FortalTokens.gray11()),
+          outputMaxHeight: FortalTokens.activityMaxHeight(),
+          outputContent: BoxStyler().padding(
+            .horizontal(FortalTokens.space3()),
           ),
-      outputMaxHeight: FortalTokens.activityMaxHeight(),
-      outputContent: BoxStyler().padding(.horizontal(FortalTokens.space3())),
-      outputText: _mono(
-        FortalTokens.text1,
-      ).color(FortalTokens.gray12()).height(_wellLineHeight),
-      error: BoxStyler()
-          .color(FortalTokens.error3())
-          .padding(.horizontal(FortalTokens.space3())),
-      errorText: _mono(
-        FortalTokens.text1,
-      ).color(FortalTokens.error11()).height(_wellLineHeight),
-    ).onStatus(
-      .failed,
-      AgentToolCallStyler(
-        output: BoxStyler().border(.all(.color(FortalTokens.errorA7()))),
-      ),
-    );
+          outputText: _mono(
+            FortalTokens.text1,
+          ).color(FortalTokens.gray12()).height(_wellLineHeight),
+          error: BoxStyler()
+              .color(FortalTokens.error3())
+              .padding(.horizontal(FortalTokens.space3())),
+          errorText: _mono(
+            FortalTokens.text1,
+          ).color(FortalTokens.error11()).height(_wellLineHeight),
+        )
+        .onHovered(
+          AgentToolCallStyler(
+            outputToggle: FlexBoxStyler().color(FortalTokens.grayA3()),
+            outputToggleLabel: TextStyler().color(FortalTokens.gray12()),
+          ),
+        )
+        .onPressed(
+          AgentToolCallStyler(
+            outputToggle: FlexBoxStyler().color(FortalTokens.grayA4()),
+            outputToggleLabel: TextStyler().color(FortalTokens.gray12()),
+          ),
+        )
+        .onFocused(.outputToggleLabel(.decoration(TextDecoration.underline)))
+        .onStatus(
+          .failed,
+          AgentToolCallStyler(
+            output: BoxStyler().border(.all(.color(FortalTokens.errorA7()))),
+          ),
+        );
 
 /// The approval card: a flat panel with no shadow, an icon tile beside the
 /// question, tool id, description and inputs, and a footer rule above the

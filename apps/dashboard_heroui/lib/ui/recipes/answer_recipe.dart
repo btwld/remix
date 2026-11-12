@@ -8,13 +8,20 @@ import '../theme/theme.dart';
 /// Styles for an answer: its body, its sources and a bar of actions.
 @immutable
 final class UiAgentAnswerRecipe {
-  const UiAgentAnswerRecipe({required this.style, required this.actionStyle});
+  const UiAgentAnswerRecipe({
+    required this.style,
+    required this.actionStyle,
+    required this.selectedActionStyle,
+  });
 
   /// Styles for the body, the spacing of its parts and the actions bar.
   final AgentAnswerStyler style;
 
   /// Styles for every action: copy, feedback and retry.
   final IconButtonStyler actionStyle;
+
+  /// The chosen feedback action, merged over the ordinary action.
+  final IconButtonStyler selectedActionStyle;
 }
 
 /// Builds the recipe; each argument is merged last, so callers can override.
@@ -25,6 +32,7 @@ final class UiAgentAnswerRecipe {
 UiAgentAnswerRecipe uiAgentAnswerRecipe({
   AgentAnswerStyler style = const AgentAnswerStyler.create(),
   IconButtonStyler actionStyle = const IconButtonStyler.create(),
+  IconButtonStyler selectedActionStyle = const IconButtonStyler.create(),
 }) => UiAgentAnswerRecipe(
   style: AgentAnswerStyler(
     container: FlexBoxStyler().spacing(12),
@@ -42,6 +50,12 @@ UiAgentAnswerRecipe uiAgentAnswerRecipe({
     size: .sm,
     style: IconButtonStyler().icon(.color(UiTokens.muted())).merge(actionStyle),
   ),
+  selectedActionStyle: IconButtonStyler()
+      .color(UiTokens.defaultColor())
+      .icon(.color(UiTokens.foreground()))
+      .onHovered(.color(UiTokens.defaultHover()))
+      .onPressed(.color(UiTokens.defaultHover()))
+      .merge(selectedActionStyle),
 );
 
 /// How far the action buttons shift left: the 8px between a 32px

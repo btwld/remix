@@ -22,6 +22,14 @@ Widget? uiAgentGlyph(BuildContext context, AgentGlyph glyph, IconSpec spec) =>
       _ => Icon(_icon(glyph)),
     };
 
+/// Picks named tool icons; null keeps the generic tool glyph as the fallback.
+/// Pass this to `AgentGlyphs.toolIconBuilder` beside `uiAgentGlyph`.
+Widget? uiAgentToolIcon(BuildContext context, String name, IconSpec spec) =>
+    switch (name) {
+      'terminal.run' => const Icon(RemixIcons.terminal),
+      _ => null,
+    };
+
 IconData _icon(AgentGlyph glyph) => switch (glyph) {
   .disclosureClosed => RemixIcons.chevronRight,
   .disclosureOpen => RemixIcons.chevronDown,

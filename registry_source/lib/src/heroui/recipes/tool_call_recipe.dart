@@ -80,19 +80,29 @@ HeroUiAgentToolCallRecipe heroUiAgentToolCallRecipe({
 );
 
 /// The row: tool icon, summary, then the meta with the tool id in monospace.
-AgentToolCallStyler _row() => AgentToolCallStyler(
-  row: FlexBoxStyler().spacing(8).crossAxisAlignment(.center).minHeight(32),
-  icon: _glyph(),
-  summary: TextStyler()
-      .style(HeroUiTokens.textSm.mix())
-      .fontWeight(FontWeight.w500)
-      .color(HeroUiTokens.foreground()),
-  meta: TextStyler()
-      .style(HeroUiTokens.textXs.mix())
-      .color(HeroUiTokens.muted()),
-  toolId: _mono(HeroUiTokens.textXs),
-  indicator: _glyph(),
-);
+AgentToolCallStyler _row() =>
+    AgentToolCallStyler(
+          row: FlexBoxStyler()
+              .spacing(8)
+              .crossAxisAlignment(.center)
+              .minHeight(32)
+              .padding(.horizontal(8))
+              .transform(Matrix4.translationValues(-8, 0, 0))
+              .borderRadius(.all(HeroUiTokens.radiusMd())),
+          icon: _glyph(),
+          summary: TextStyler()
+              .style(HeroUiTokens.textSm.mix())
+              .fontWeight(FontWeight.w500)
+              .color(HeroUiTokens.foreground()),
+          meta: TextStyler()
+              .style(HeroUiTokens.textXs.mix())
+              .color(HeroUiTokens.muted()),
+          toolId: _mono(HeroUiTokens.textXs),
+          indicator: _glyph(),
+        )
+        .onFocused(.row(.color(HeroUiTokens.defaultColor())))
+        .onHovered(.row(.color(HeroUiTokens.defaultColor())))
+        .onPressed(.row(.color(HeroUiTokens.defaultHover())));
 
 /// The status word and glyph: quiet gray, red when the call failed, and a
 /// badge on the approval card.
@@ -130,29 +140,50 @@ AgentToolCallStyler _status() =>
 /// reach the well's edges.
 AgentToolCallStyler _well() =>
     AgentToolCallStyler(
-      output: BoxStyler()
-          .margin(.only(left: 24, top: 4))
-          .padding(.vertical(8))
-          .color(HeroUiTokens.surfaceSecondary())
-          .borderRadius(.all(HeroUiTokens.radiusMd()))
-          .border(.all(.color(HeroUiTokens.separator()).width(1))),
-      outputMaxHeight: _wellMaxHeight,
-      outputContent: BoxStyler().padding(.horizontal(12)),
-      outputText: _mono(
-        HeroUiTokens.textXs,
-      ).color(HeroUiTokens.foreground()).height(_wellLineHeight),
-      error: BoxStyler()
-          .color(HeroUiTokens.dangerSoft())
-          .padding(.horizontal(12)),
-      errorText: _mono(
-        HeroUiTokens.textXs,
-      ).color(HeroUiTokens.danger()).height(_wellLineHeight),
-    ).onStatus(
-      .failed,
-      AgentToolCallStyler(
-        output: BoxStyler().border(.all(.color(HeroUiTokens.danger()))),
-      ),
-    );
+          output: BoxStyler()
+              .margin(.only(left: 24, top: 4))
+              .padding(.vertical(8))
+              .color(HeroUiTokens.surfaceSecondary())
+              .borderRadius(.all(HeroUiTokens.radiusMd()))
+              .border(.all(.color(HeroUiTokens.separator()).width(1))),
+          outputToggle: FlexBoxStyler()
+              .minHeight(32)
+              .padding(.horizontal(8))
+              .borderRadius(.all(HeroUiTokens.radiusMd())),
+          outputToggleLabel: TextStyler()
+              .style(HeroUiTokens.textXs.mix())
+              .color(HeroUiTokens.muted()),
+          outputMaxHeight: _wellMaxHeight,
+          outputContent: BoxStyler().padding(.horizontal(12)),
+          outputText: _mono(
+            HeroUiTokens.textXs,
+          ).color(HeroUiTokens.foreground()).height(_wellLineHeight),
+          error: BoxStyler()
+              .color(HeroUiTokens.dangerSoft())
+              .padding(.horizontal(12)),
+          errorText: _mono(
+            HeroUiTokens.textXs,
+          ).color(HeroUiTokens.danger()).height(_wellLineHeight),
+        )
+        .onHovered(
+          AgentToolCallStyler(
+            outputToggle: FlexBoxStyler().color(HeroUiTokens.defaultColor()),
+            outputToggleLabel: TextStyler().color(HeroUiTokens.foreground()),
+          ),
+        )
+        .onPressed(
+          AgentToolCallStyler(
+            outputToggle: FlexBoxStyler().color(HeroUiTokens.defaultHover()),
+            outputToggleLabel: TextStyler().color(HeroUiTokens.foreground()),
+          ),
+        )
+        .onFocused(.outputToggleLabel(.decoration(TextDecoration.underline)))
+        .onStatus(
+          .failed,
+          AgentToolCallStyler(
+            output: BoxStyler().border(.all(.color(HeroUiTokens.danger()))),
+          ),
+        );
 
 /// The approval card: a flat panel with no shadow, an icon tile beside the
 /// question, tool id, description and inputs, and a footer rule above the

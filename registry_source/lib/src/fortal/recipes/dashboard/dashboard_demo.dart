@@ -655,6 +655,7 @@ RegistryDashboardAgentStyles _fortalAgentStyles() {
       .outline => FortalButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: fortalAgentGlyph,
+    toolIconBuilder: fortalAgentToolIcon,
     composerLeadingBuilder: (onPressed) => FortalIconButton.outline(
       icon: RemixIcons.plus,
       semanticLabel: 'Add checkout context',
@@ -685,6 +686,7 @@ RegistryDashboardAgentStyles _fortalAgentStyles() {
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
     answerActionStyle: answer.actionStyle,
+    answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,
     sourcesDisclosureStyle: sources.disclosureStyle,
     sourceStyle: sources.sourceStyle,

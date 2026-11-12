@@ -25,6 +25,14 @@ Widget? heroUiAgentGlyph(
   _ => Icon(_icon(glyph)),
 };
 
+/// Picks named tool icons; null keeps the generic tool glyph as the fallback.
+/// Pass this to `AgentGlyphs.toolIconBuilder` beside `heroUiAgentGlyph`.
+Widget? heroUiAgentToolIcon(BuildContext context, String name, IconSpec spec) =>
+    switch (name) {
+      'terminal.run' => const Icon(RemixIcons.terminal),
+      _ => null,
+    };
+
 IconData _icon(AgentGlyph glyph) => switch (glyph) {
   .disclosureClosed => RemixIcons.chevronRight,
   .disclosureOpen => RemixIcons.chevronDown,

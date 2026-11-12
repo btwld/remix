@@ -562,6 +562,7 @@ class _{{typePrefix}}Account extends StatelessWidget {
       .outline => {{typePrefix}}Button.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: {{valuePrefix}}AgentGlyph,
+    toolIconBuilder: {{valuePrefix}}AgentToolIcon,
     composerLeadingBuilder: (onPressed) => {{typePrefix}}IconButton.outline(
       icon: {{icon:plus}},
       semanticLabel: 'Add checkout context',
@@ -586,6 +587,7 @@ class _{{typePrefix}}Account extends StatelessWidget {
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
     answerActionStyle: answer.actionStyle,
+    answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,
     sourcesDisclosureStyle: sources.disclosureStyle,
     sourceStyle: sources.sourceStyle,

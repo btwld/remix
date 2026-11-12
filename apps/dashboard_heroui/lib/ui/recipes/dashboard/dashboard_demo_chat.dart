@@ -30,6 +30,7 @@ final class UiDashboardAgentStyles {
   const UiDashboardAgentStyles({
     required this.buttonBuilder,
     required this.glyphBuilder,
+    required this.toolIconBuilder,
     required this.composerLeadingBuilder,
     required this.heading,
     required this.body,
@@ -49,6 +50,7 @@ final class UiDashboardAgentStyles {
     required this.denyStyle,
     required this.answerStyle,
     required this.answerActionStyle,
+    required this.answerSelectedActionStyle,
     required this.sourcesStyle,
     required this.sourcesDisclosureStyle,
     required this.sourceStyle,
@@ -68,6 +70,9 @@ final class UiDashboardAgentStyles {
 
   /// Draws every glyph of the Agent widgets.
   final AgentGlyphBuilder glyphBuilder;
+
+  /// Draws tool icons by their ui name.
+  final AgentToolIconBuilder toolIconBuilder;
 
   /// Style of the empty state's question.
   final TextStyler heading;
@@ -122,6 +127,9 @@ final class UiDashboardAgentStyles {
 
   /// Style of every answer action.
   final IconButtonStyler answerActionStyle;
+
+  /// Style of the chosen feedback action.
+  final IconButtonStyler answerSelectedActionStyle;
 
   /// Style of the [AgentSources] line and list.
   final AgentSourcesStyler sourcesStyle;
@@ -471,6 +479,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
 
     return AgentGlyphs(
       builder: styles.glyphBuilder,
+      toolIconBuilder: styles.toolIconBuilder,
       // The keyboard lifts the composer: nothing above it resizes for it.
       child: Padding(
         padding: EdgeInsets.only(
@@ -760,6 +769,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
       status: status,
       style: styles.answerStyle,
       actionStyle: styles.answerActionStyle,
+      selectedActionStyle: styles.answerSelectedActionStyle,
       sources: complete
           ? AgentSources(
               sources: _sources,

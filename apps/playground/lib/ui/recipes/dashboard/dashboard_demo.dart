@@ -574,6 +574,7 @@ PlaygroundDashboardAgentStyles _playgroundAgentStyles() {
       .outline => PlaygroundButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: playgroundAgentGlyph,
+    toolIconBuilder: playgroundAgentToolIcon,
     composerLeadingBuilder: (onPressed) => PlaygroundIconButton.outline(
       icon: RemixIcons.plus,
       semanticLabel: 'Add checkout context',
@@ -601,6 +602,7 @@ PlaygroundDashboardAgentStyles _playgroundAgentStyles() {
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
     answerActionStyle: answer.actionStyle,
+    answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,
     sourcesDisclosureStyle: sources.disclosureStyle,
     sourceStyle: sources.sourceStyle,

@@ -84,22 +84,29 @@ PlaygroundAgentToolCallRecipe playgroundAgentToolCallRecipe({
 );
 
 /// The row: tool icon, summary, then the meta with the tool id in monospace.
-AgentToolCallStyler _row() => AgentToolCallStyler(
-  row: FlexBoxStyler()
-      .spacing(PlaygroundTokens.s2)
-      .crossAxisAlignment(.center)
-      .minHeight(PlaygroundTokens.s8),
-  icon: _glyph(),
-  summary: TextStyler()
-      .style(PlaygroundTokens.textSm.mix())
-      .fontWeight(FontWeight.w500)
-      .color(PlaygroundTokens.foreground()),
-  meta: TextStyler()
-      .style(PlaygroundTokens.textXs.mix())
-      .color(PlaygroundTokens.mutedForeground()),
-  toolId: _mono(12),
-  indicator: _glyph(),
-);
+AgentToolCallStyler _row() =>
+    AgentToolCallStyler(
+          row: FlexBoxStyler()
+              .spacing(PlaygroundTokens.s2)
+              .crossAxisAlignment(.center)
+              .minHeight(PlaygroundTokens.s8)
+              .padding(.horizontal(PlaygroundTokens.s2))
+              .transform(Matrix4.translationValues(-PlaygroundTokens.s2, 0, 0))
+              .borderRadius(.all(PlaygroundTokens.radiusMd())),
+          icon: _glyph(),
+          summary: TextStyler()
+              .style(PlaygroundTokens.textSm.mix())
+              .fontWeight(FontWeight.w500)
+              .color(PlaygroundTokens.foreground()),
+          meta: TextStyler()
+              .style(PlaygroundTokens.textXs.mix())
+              .color(PlaygroundTokens.mutedForeground()),
+          toolId: _mono(12),
+          indicator: _glyph(),
+        )
+        .onFocused(.row(.color(PlaygroundTokens.accent())))
+        .onHovered(.row(.color(PlaygroundTokens.accent())))
+        .onPressed(.row(.color(PlaygroundTokens.accent())));
 
 /// The status word and glyph: quiet gray, red when the call failed, and a
 /// badge on the approval card.
@@ -142,37 +149,66 @@ AgentToolCallStyler _status() =>
 /// reach the well's edges.
 AgentToolCallStyler _well() =>
     AgentToolCallStyler(
-      output: BoxStyler()
-          .margin(.only(left: PlaygroundTokens.s6, top: PlaygroundTokens.s1))
-          .padding(.vertical(PlaygroundTokens.s2))
-          .color(PlaygroundTokens.muted())
-          .borderRadius(.all(PlaygroundTokens.radiusMd()))
-          .border(
-            .all(
+          output: BoxStyler()
+              .margin(
+                .only(left: PlaygroundTokens.s6, top: PlaygroundTokens.s1),
+              )
+              .padding(.vertical(PlaygroundTokens.s2))
+              .color(PlaygroundTokens.muted())
+              .borderRadius(.all(PlaygroundTokens.radiusMd()))
+              .border(
+                .all(
+                  .color(
+                    PlaygroundTokens.border(),
+                  ).width(PlaygroundTokens.strokeHairline),
+                ),
+              ),
+          outputToggle: FlexBoxStyler()
+              .minHeight(PlaygroundTokens.s8)
+              .padding(.horizontal(PlaygroundTokens.s2))
+              .borderRadius(.all(PlaygroundTokens.radiusMd())),
+          outputToggleLabel: TextStyler()
+              .style(PlaygroundTokens.textXs.mix())
+              .color(PlaygroundTokens.mutedForeground()),
+          outputMaxHeight: _wellMaxHeight,
+          outputContent: BoxStyler().padding(.horizontal(PlaygroundTokens.s3)),
+          outputText: _mono(
+            12,
+          ).color(PlaygroundTokens.foreground()).height(_wellLineHeight),
+          error: BoxStyler()
               .color(
-                PlaygroundTokens.border(),
-              ).width(PlaygroundTokens.strokeHairline),
+                playgroundTint(PlaygroundTokens.destructive, 0.1, dark: 0.2)(),
+              )
+              .padding(.horizontal(PlaygroundTokens.s3)),
+          errorText: _mono(
+            12,
+          ).color(PlaygroundTokens.destructive()).height(_wellLineHeight),
+        )
+        .onHovered(
+          AgentToolCallStyler(
+            outputToggle: FlexBoxStyler().color(PlaygroundTokens.accent()),
+            outputToggleLabel: TextStyler().color(
+              PlaygroundTokens.foreground(),
             ),
           ),
-      outputMaxHeight: _wellMaxHeight,
-      outputContent: BoxStyler().padding(.horizontal(PlaygroundTokens.s3)),
-      outputText: _mono(
-        12,
-      ).color(PlaygroundTokens.foreground()).height(_wellLineHeight),
-      error: BoxStyler()
-          .color(playgroundTint(PlaygroundTokens.destructive, 0.1, dark: 0.2)())
-          .padding(.horizontal(PlaygroundTokens.s3)),
-      errorText: _mono(
-        12,
-      ).color(PlaygroundTokens.destructive()).height(_wellLineHeight),
-    ).onStatus(
-      .failed,
-      AgentToolCallStyler(
-        output: BoxStyler().border(
-          .all(.color(PlaygroundTokens.destructive())),
-        ),
-      ),
-    );
+        )
+        .onPressed(
+          AgentToolCallStyler(
+            outputToggle: FlexBoxStyler().color(PlaygroundTokens.accent()),
+            outputToggleLabel: TextStyler().color(
+              PlaygroundTokens.foreground(),
+            ),
+          ),
+        )
+        .onFocused(.outputToggleLabel(.decoration(TextDecoration.underline)))
+        .onStatus(
+          .failed,
+          AgentToolCallStyler(
+            output: BoxStyler().border(
+              .all(.color(PlaygroundTokens.destructive())),
+            ),
+          ),
+        );
 
 /// The approval card: a flat panel with no shadow, an icon tile beside the
 /// question, tool id, description and inputs, and a footer rule above the

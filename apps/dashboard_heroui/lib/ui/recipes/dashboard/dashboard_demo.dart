@@ -559,6 +559,7 @@ UiDashboardAgentStyles _uiAgentStyles() {
       .outline => UiButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: uiAgentGlyph,
+    toolIconBuilder: uiAgentToolIcon,
     composerLeadingBuilder: (onPressed) => UiIconButton.outline(
       icon: RemixIcons.plus,
       semanticLabel: 'Add checkout context',
@@ -583,6 +584,7 @@ UiDashboardAgentStyles _uiAgentStyles() {
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
     answerActionStyle: answer.actionStyle,
+    answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,
     sourcesDisclosureStyle: sources.disclosureStyle,
     sourceStyle: sources.sourceStyle,

@@ -80,19 +80,29 @@ final class {{typePrefix}}AgentToolCallRecipe {
 );
 
 /// The row: tool icon, summary, then the meta with the tool id in monospace.
-AgentToolCallStyler _row() => AgentToolCallStyler(
-  row: FlexBoxStyler().spacing(8).crossAxisAlignment(.center).minHeight(32),
-  icon: _glyph(),
-  summary: TextStyler()
-      .style({{typePrefix}}Tokens.textSm.mix())
-      .fontWeight(FontWeight.w500)
-      .color({{typePrefix}}Tokens.foreground()),
-  meta: TextStyler()
-      .style({{typePrefix}}Tokens.textXs.mix())
-      .color({{typePrefix}}Tokens.muted()),
-  toolId: _mono({{typePrefix}}Tokens.textXs),
-  indicator: _glyph(),
-);
+AgentToolCallStyler _row() =>
+    AgentToolCallStyler(
+          row: FlexBoxStyler()
+              .spacing(8)
+              .crossAxisAlignment(.center)
+              .minHeight(32)
+              .padding(.horizontal(8))
+              .transform(Matrix4.translationValues(-8, 0, 0))
+              .borderRadius(.all({{typePrefix}}Tokens.radiusMd())),
+          icon: _glyph(),
+          summary: TextStyler()
+              .style({{typePrefix}}Tokens.textSm.mix())
+              .fontWeight(FontWeight.w500)
+              .color({{typePrefix}}Tokens.foreground()),
+          meta: TextStyler()
+              .style({{typePrefix}}Tokens.textXs.mix())
+              .color({{typePrefix}}Tokens.muted()),
+          toolId: _mono({{typePrefix}}Tokens.textXs),
+          indicator: _glyph(),
+        )
+        .onFocused(.row(.color({{typePrefix}}Tokens.defaultColor())))
+        .onHovered(.row(.color({{typePrefix}}Tokens.defaultColor())))
+        .onPressed(.row(.color({{typePrefix}}Tokens.defaultHover())));
 
 /// The status word and glyph: quiet gray, red when the call failed, and a
 /// badge on the approval card.
@@ -130,29 +140,50 @@ AgentToolCallStyler _status() =>
 /// reach the well's edges.
 AgentToolCallStyler _well() =>
     AgentToolCallStyler(
-      output: BoxStyler()
-          .margin(.only(left: 24, top: 4))
-          .padding(.vertical(8))
-          .color({{typePrefix}}Tokens.surfaceSecondary())
-          .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
-          .border(.all(.color({{typePrefix}}Tokens.separator()).width(1))),
-      outputMaxHeight: _wellMaxHeight,
-      outputContent: BoxStyler().padding(.horizontal(12)),
-      outputText: _mono(
-        {{typePrefix}}Tokens.textXs,
-      ).color({{typePrefix}}Tokens.foreground()).height(_wellLineHeight),
-      error: BoxStyler()
-          .color({{typePrefix}}Tokens.dangerSoft())
-          .padding(.horizontal(12)),
-      errorText: _mono(
-        {{typePrefix}}Tokens.textXs,
-      ).color({{typePrefix}}Tokens.danger()).height(_wellLineHeight),
-    ).onStatus(
-      .failed,
-      AgentToolCallStyler(
-        output: BoxStyler().border(.all(.color({{typePrefix}}Tokens.danger()))),
-      ),
-    );
+          output: BoxStyler()
+              .margin(.only(left: 24, top: 4))
+              .padding(.vertical(8))
+              .color({{typePrefix}}Tokens.surfaceSecondary())
+              .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
+              .border(.all(.color({{typePrefix}}Tokens.separator()).width(1))),
+          outputToggle: FlexBoxStyler()
+              .minHeight(32)
+              .padding(.horizontal(8))
+              .borderRadius(.all({{typePrefix}}Tokens.radiusMd())),
+          outputToggleLabel: TextStyler()
+              .style({{typePrefix}}Tokens.textXs.mix())
+              .color({{typePrefix}}Tokens.muted()),
+          outputMaxHeight: _wellMaxHeight,
+          outputContent: BoxStyler().padding(.horizontal(12)),
+          outputText: _mono(
+            {{typePrefix}}Tokens.textXs,
+          ).color({{typePrefix}}Tokens.foreground()).height(_wellLineHeight),
+          error: BoxStyler()
+              .color({{typePrefix}}Tokens.dangerSoft())
+              .padding(.horizontal(12)),
+          errorText: _mono(
+            {{typePrefix}}Tokens.textXs,
+          ).color({{typePrefix}}Tokens.danger()).height(_wellLineHeight),
+        )
+        .onHovered(
+          AgentToolCallStyler(
+            outputToggle: FlexBoxStyler().color({{typePrefix}}Tokens.defaultColor()),
+            outputToggleLabel: TextStyler().color({{typePrefix}}Tokens.foreground()),
+          ),
+        )
+        .onPressed(
+          AgentToolCallStyler(
+            outputToggle: FlexBoxStyler().color({{typePrefix}}Tokens.defaultHover()),
+            outputToggleLabel: TextStyler().color({{typePrefix}}Tokens.foreground()),
+          ),
+        )
+        .onFocused(.outputToggleLabel(.decoration(TextDecoration.underline)))
+        .onStatus(
+          .failed,
+          AgentToolCallStyler(
+            output: BoxStyler().border(.all(.color({{typePrefix}}Tokens.danger()))),
+          ),
+        );
 
 /// The approval card: a flat panel with no shadow, an icon tile beside the
 /// question, tool id, description and inputs, and a footer rule above the

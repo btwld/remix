@@ -35,6 +35,14 @@ Widget? {{valuePrefix}}AgentGlyph(
   _ => Icon(_icon(glyph)),
 };
 
+/// Picks named tool icons; null keeps the generic tool glyph as the fallback.
+/// Pass this to `AgentGlyphs.toolIconBuilder` beside `{{valuePrefix}}AgentGlyph`.
+Widget? {{valuePrefix}}AgentToolIcon(BuildContext context, String name, IconSpec spec) =>
+    switch (name) {
+      'terminal.run' => const Icon({{icon:terminal}}),
+      _ => null,
+    };
+
 IconData _icon(AgentGlyph glyph) => switch (glyph) {
   .disclosureClosed => {{icon:chevronRight}},
   .disclosureOpen => {{icon:chevronDown}},

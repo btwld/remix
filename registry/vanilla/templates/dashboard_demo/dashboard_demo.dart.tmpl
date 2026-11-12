@@ -567,6 +567,7 @@ TextStyler _textStyle({
       .outline => {{typePrefix}}Button.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: {{valuePrefix}}AgentGlyph,
+    toolIconBuilder: {{valuePrefix}}AgentToolIcon,
     composerLeadingBuilder: (onPressed) => {{typePrefix}}IconButton.outline(
       icon: {{icon:plus}},
       semanticLabel: 'Add checkout context',
@@ -591,6 +592,7 @@ TextStyler _textStyle({
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
     answerActionStyle: answer.actionStyle,
+    answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,
     sourcesDisclosureStyle: sources.disclosureStyle,
     sourceStyle: sources.sourceStyle,

@@ -11,6 +11,7 @@ final class FortalAgentAnswerRecipe {
   const FortalAgentAnswerRecipe({
     required this.style,
     required this.actionStyle,
+    required this.selectedActionStyle,
   });
 
   /// Styles for the body, the spacing of its parts and the actions bar.
@@ -18,6 +19,9 @@ final class FortalAgentAnswerRecipe {
 
   /// Styles for every action: copy, feedback and retry.
   final IconButtonStyler actionStyle;
+
+  /// The chosen feedback action, merged over the ordinary action.
+  final IconButtonStyler selectedActionStyle;
 }
 
 /// Builds the recipe; each argument is merged last, so callers can override.
@@ -28,6 +32,7 @@ final class FortalAgentAnswerRecipe {
 FortalAgentAnswerRecipe fortalAgentAnswerRecipe({
   AgentAnswerStyler style = const AgentAnswerStyler.create(),
   IconButtonStyler actionStyle = const IconButtonStyler.create(),
+  IconButtonStyler selectedActionStyle = const IconButtonStyler.create(),
 }) => FortalAgentAnswerRecipe(
   style: AgentAnswerStyler(
     container: FlexBoxStyler().spacing(FortalTokens.space3()),
@@ -49,6 +54,12 @@ FortalAgentAnswerRecipe fortalAgentAnswerRecipe({
         .icon(.color(FortalTokens.gray11()))
         .merge(actionStyle),
   ),
+  selectedActionStyle: IconButtonStyler()
+      .color(FortalTokens.grayA3())
+      .icon(.color(FortalTokens.gray12()))
+      .onHovered(.color(FortalTokens.grayA4()))
+      .onPressed(.color(FortalTokens.grayA4()))
+      .merge(selectedActionStyle),
 );
 
 /// How far the action buttons shift left: the 8px between a 32px

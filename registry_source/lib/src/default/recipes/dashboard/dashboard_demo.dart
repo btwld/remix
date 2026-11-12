@@ -567,6 +567,7 @@ RegistryDashboardAgentStyles _vanillaAgentStyles() {
       .outline => VanillaButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: vanillaAgentGlyph,
+    toolIconBuilder: vanillaAgentToolIcon,
     composerLeadingBuilder: (onPressed) => VanillaIconButton.outline(
       icon: RemixIcons.plus,
       semanticLabel: 'Add checkout context',
@@ -591,6 +592,7 @@ RegistryDashboardAgentStyles _vanillaAgentStyles() {
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
     answerActionStyle: answer.actionStyle,
+    answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,
     sourcesDisclosureStyle: sources.disclosureStyle,
     sourceStyle: sources.sourceStyle,

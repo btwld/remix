@@ -562,6 +562,7 @@ RegistryDashboardAgentStyles _heroUiAgentStyles() {
       .outline => HeroUiButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: heroUiAgentGlyph,
+    toolIconBuilder: heroUiAgentToolIcon,
     composerLeadingBuilder: (onPressed) => HeroUiIconButton.outline(
       icon: RemixIcons.plus,
       semanticLabel: 'Add checkout context',
@@ -586,6 +587,7 @@ RegistryDashboardAgentStyles _heroUiAgentStyles() {
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
     answerActionStyle: answer.actionStyle,
+    answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,
     sourcesDisclosureStyle: sources.disclosureStyle,
     sourceStyle: sources.sourceStyle,
