@@ -8,6 +8,19 @@ vocabulary benchmark, pinned to:
 - Commit: `1942f3f93d8d36dba8a0dd8366699a933f56b135`
 - License at that commit: MIT, copyright 2026 Saurabh Chauhan
 
+## Design references for `remix_agent` (2026-11)
+
+The rebuild in [Agent ADR-0002](../../../../ARCHITECTURE.md#agent-widgets-in-a-published-package-agent-adr-0002)
+takes its turn anatomy, streaming and composer behavior from prompt-kit, and
+keeps BeUI's approval-card and tool-row structure, pinned to:
+
+- Repository: <https://github.com/ibelick/prompt-kit>
+- Commit: `5a9496635cc0e1bf7679fe2a9e35d9b36b99c08a`
+- License at that commit: MIT (`LICENCE.md`)
+
+Both are observation references in the same sense as below: no source, asset
+or branding is copied.
+
 ## Source mapping
 
 | Remix Agent surface | Benchmark source |

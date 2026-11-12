@@ -29,7 +29,7 @@ remain maintained inputs.
 
 ## Agent behavior separate from preset appearance (Agent ADR-0001)
 
-2026-09-10 · Accepted; separate-package layout replaced 2026-09-17 · [Usage](registry_source/docs/agent/README.md) · [Provenance](registry_source/docs/adr/agent/provenance.md) · [Recipe checks](open_code/fixture/test/agent_recipe_contract_test.dart)
+2026-09-10 · Accepted; separate-package layout replaced 2026-09-17; widget placement superseded by [Agent ADR-0002](#agent-widgets-in-a-published-package-agent-adr-0002) · [Usage](registry_source/docs/agent/README.md) · [Provenance](registry_source/docs/adr/agent/provenance.md) · [Recipe checks](open_code/fixture/test/agent_recipe_contract_test.dart)
 
 Keep conversation, permission and execution behavior in Agent domain source,
 installed as app-owned source without an Agent theme/runtime package, so generic
@@ -38,6 +38,22 @@ bundles of unresolved child stylers because parent resolution loses each child
 control's interactive state, variants, animation and modifiers. Hosts own
 appearance/orchestration, Agent anatomy defaults stay empty, and installed
 `@MixableSpec` source requires scoped consumer `build.yaml` support.
+
+## Agent widgets in a published package (Agent ADR-0002)
+
+2026-11-11 · Proposed · Supersedes the widget placement of Agent ADR-0001 · [Provenance](registry_source/docs/adr/agent/provenance.md)
+
+Publish the Agent widgets, their Mix specs and their behavior as an
+independently versioned `remix_agent` package, and keep each preset's
+appearance in installed recipes, because fixes to shared behavior (the live
+edge, composer keys, single-submit approval) never reached applications that
+had already installed the source, and installed `@MixableSpec` source forced
+every consumer to configure `build_runner`. The package depends only on
+`remix`, `mix` and `markdown`, keeps empty visual defaults and glyph slots, and
+renders tool calls through per-tool renderers; generic `remix` still owns no
+Agent state. Recipes import the package and declare its hosted floor, so a
+preset release follows a package release. Previously installed Agent source
+keeps compiling until each application migrates.
 
 ## Registry reads use immutable GitHub pins
 
