@@ -304,16 +304,28 @@ void main() {
     }
   });
 
-  test('Agent recipes declare directly imported font dependencies', () {
+  test('Fortal items leave bundled fonts to the application', () {
     final output = PresetBuilder.forRepository(
       Directory.current.absolute,
       spec: fortalPreset,
     ).derive();
     final items = loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
-    expect(
-      items['tool_call_recipe']['dependencies']['remix_ui_fonts'],
-      '^0.1.0',
-    );
+    for (final name in items.keys) {
+      final dependencies = items[name]['dependencies'] as YamlMap?;
+      expect(
+        dependencies?.keys ?? const <String>[],
+        isNot(contains('remix_ui_fonts')),
+        reason: name as String,
+      );
+    }
+    for (final entry in output.files.entries) {
+      if (!entry.key.endsWith('.dart.tmpl')) continue;
+      expect(
+        entry.value,
+        isNot(contains('package:remix_ui_fonts/')),
+        reason: entry.key,
+      );
+    }
   });
 
   test('Agent recipes style the published library, not the authoring one', () {
