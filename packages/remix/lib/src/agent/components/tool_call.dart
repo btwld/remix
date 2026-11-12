@@ -319,10 +319,12 @@ class _AgentToolCallState extends State<AgentToolCall>
 
   void _updateDisclosureKeepAlive() {
     _retainDisclosure =
-        _disclosure.readerToggled &&
-        widget.policy.respectReaderToggle &&
-        (!_call.status.phase.isFinished ||
-            _disclosure.expanded != _defaultExpanded);
+        (_disclosure.readerToggled &&
+            widget.policy.respectReaderToggle &&
+            (!_call.status.phase.isFinished ||
+                _disclosure.expanded != _defaultExpanded)) ||
+        (_showAllOutput &&
+            (!_call.status.phase.isFinished || _disclosure.expanded));
     updateKeepAlive();
   }
 
@@ -547,7 +549,10 @@ class _AgentToolCallState extends State<AgentToolCall>
     return NakedButton(
       key: const ValueKey('agent-tool-call-output-toggle'),
       semanticLabel: label,
-      onPressed: () => setState(() => _showAllOutput = !_showAllOutput),
+      onPressed: () {
+        setState(() => _showAllOutput = !_showAllOutput);
+        _updateDisclosureKeepAlive();
+      },
       builder: (context, _, _) => RemixStyleSpecBuilder<AgentToolCallSpec>(
         style: _toolCallLayout.merge(widget.style),
         styleSpec: widget.styleSpec,
