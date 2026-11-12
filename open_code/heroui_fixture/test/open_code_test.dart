@@ -553,16 +553,6 @@ final _cases = <_WidgetCase>[
     {AcmeAccordionGroup<String>, AcmeAccordion<String>},
   ),
   const _WidgetCase('alert', AcmeAlert(text: 'Notice'), {AcmeAlert}),
-  _WidgetCase(
-    'Agent message',
-    AgentMessage(
-      role: AgentRole.user,
-      style: acmeAgentMessageRecipe().style,
-      toggleStyle: acmeAgentMessageRecipe().toggleStyle,
-      child: const Text('Review the checkout flow.'),
-    ),
-    {AgentMessage},
-  ),
   const _WidgetCase('app bar', AcmeAppBar(title: 'Orders'), {AcmeAppBar}),
   const _WidgetCase('avatar', AcmeAvatar(label: 'AB'), {AcmeAvatar}),
   const _WidgetCase(
