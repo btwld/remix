@@ -37,7 +37,7 @@ assuming one preset's variants or sizes carry over.
 
 ## Set up dependencies and imports
 
-For base widgets: `flutter pub add remix:^1.0.0-rc.2`, then import
+For base widgets: `flutter pub add remix:^1.0.0-rc.3`, then import
 `package:remix/remix.dart` and widgets-layer Flutter. For editable source:
 
 ```bash

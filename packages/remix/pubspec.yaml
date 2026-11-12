@@ -12,7 +12,7 @@ topics:
   - styling
   - mix
 
-version: 1.0.0-rc.2
+version: 1.0.0-rc.3
 
 # Consumer floor, matching `mix` 2.3.1, the oldest Mix this package accepts.
 # Enforced by tool/check_toolchain.dart.

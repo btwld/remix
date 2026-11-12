@@ -1,3 +1,12 @@
+## 1.0.0-rc.3
+
+ - **FIX**(remix): agent library fixes from review (#467).
+ - **FEAT**(remix): finish the agent library for the rc.3 release (#470).
+ - **FEAT**(remix): complete effects dot-shorthand APIs (#469).
+ - **FEAT**(remix): add the experimental agent widgets (#457).
+ - **FEAT**(remix): add the experimental agent library (models and behavior) (#455).
+ - **DOCS**: add a Start with AI prompt and document remix skills install (#428).
+
 ## 1.0.0-rc.2
 
 ### Dependencies
