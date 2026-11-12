@@ -6,10 +6,17 @@ part of 'button.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Button with Ui sizes, variants, and overrides.
+/// The Ui Button recipe.
 ///
-/// Default icon slots use the preset's icon size, not the ambient IconTheme.
-/// An explicit icon size in [style] overrides that default.
+/// It reads top to bottom: what every button shares, then the size, then the
+/// variant's colors for each state, then focus and disabled. [style] merges
+/// last, so a call site can override any part of it.
+///
+/// [highContrast] strengthens a variant: the solid fill, and the text of every
+/// other variant, move to accent step 12.
+///
+/// An icon takes the size's icon size rather than the ambient `IconTheme`. An
+/// icon size in [style] overrides it.
 class UiButton extends StatelessWidget {
   const UiButton({
     super.key,
@@ -37,6 +44,7 @@ class UiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// The accent's solid fill under its contrast label.
   const UiButton.solid({
     super.key,
     this.size = .size2,
@@ -62,6 +70,7 @@ class UiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiButtonVariant.solid;
 
+  /// A tinted accent fill under accent text.
   const UiButton.soft({
     super.key,
     this.size = .size2,
@@ -87,6 +96,7 @@ class UiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiButtonVariant.soft;
 
+  /// A faint accent surface inside a 1px accent frame.
   const UiButton.surface({
     super.key,
     this.size = .size2,
@@ -112,6 +122,7 @@ class UiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiButtonVariant.surface;
 
+  /// No fill inside a 1px accent frame.
   const UiButton.outline({
     super.key,
     this.size = .size2,
@@ -137,6 +148,7 @@ class UiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiButtonVariant.outline;
 
+  /// Accent text alone, with a tint under the pointer.
   const UiButton.ghost({
     super.key,
     this.size = .size2,

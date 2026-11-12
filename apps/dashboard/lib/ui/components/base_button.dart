@@ -3,150 +3,138 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// The Ui BaseButton size scale shared by Button and IconButton.
-///
-/// Deliberate: this mirrors [UiBaseButtonVariant]. Button and IconButton
-/// each own a size enum, so the shared metrics need a common type — passing the
-/// raw `size.index + 1` instead would drop every switch below to a wildcard and
-/// defer an unknown size to a runtime throw.
-enum UiBaseButtonSize { size1, size2, size3, size4 }
+// The computed fills of the solid Button and IconButton.
+//
+// Everything else about the two controls is written out in their own recipes.
+// These fills are shared because they are calculated rather than picked: each
+// one runs a hover or press adjustment over a theme color, so it follows any
+// palette, including a custom one.
 
-/// Transition into hover and press, the same 40ms ease as `UiCard`.
-final uiBaseButtonActiveMotion = AnimationConfig.ease(
-  const Duration(milliseconds: 40),
+/// A solid button's fill while pressed.
+///
+/// The hover fill, darkened under a light label and lightened under a dark
+/// one, so the label keeps its contrast either way.
+const uiSolidPressedFill = ContextToken<Color>(_solidPressedFill);
+
+Color _solidPressedFill(BuildContext context) {
+  final label = UiTokens.accentContrast.resolve(context);
+  final fill = UiTokens.accentSolid.resolve(context);
+  final hover = UiTokens.accentSolidHover.resolve(context);
+
+  final labelIsLight = label.computeLuminance() > fill.computeLuminance();
+  if (labelIsLight) {
+    return _filtered(hover, const [.brightness(0.92), .saturate(1.1)]);
+  }
+
+  // Lightening a bright hover fill can land back on the idle fill, and the
+  // press would then show nothing. Darken it instead.
+  final lightened = _filtered(hover, const [.brightness(1.08)]);
+
+  return _isSameFill(lightened, fill)
+      ? _filtered(hover, const [.brightness(0.92)])
+      : lightened;
+}
+
+/// Whether two fills are within two 8-bit steps of each other on every
+/// channel, which the eye reads as one color.
+bool _isSameFill(Color first, Color second) {
+  const tolerance = 2 / 255;
+
+  return (first.r - second.r).abs() <= tolerance &&
+      (first.g - second.g).abs() <= tolerance &&
+      (first.b - second.b).abs() <= tolerance;
+}
+
+/// A high-contrast solid button's fill while hovered: accent step 12 through
+/// the hover filter of the active brightness.
+const uiHighContrastHoverFill = ContextToken<Color>(_highContrastHoverFill);
+
+Color _highContrastHoverFill(BuildContext context) => _filtered(
+  UiTokens.accent12.resolve(context),
+  UiTheme.of(context).isDark
+      ? const [.contrast(0.88), .saturate(1.3), .brightness(1.18)]
+      : const [.contrast(0.88), .saturate(1.1), .brightness(1.1)],
 );
 
-/// Transition back to rest and into focus or disabled, the same 120ms ease as
-/// `UiCard`.
-final uiBaseButtonRestMotion = AnimationConfig.ease(
-  const Duration(milliseconds: 120),
+/// A high-contrast solid button's fill while pressed: accent step 12 through
+/// the press filter of the active brightness.
+const uiHighContrastPressedFill = ContextToken<Color>(_highContrastPressedFill);
+
+Color _highContrastPressedFill(BuildContext context) => _filtered(
+  UiTokens.accent12.resolve(context),
+  UiTheme.of(context).isDark
+      ? const [.brightness(0.95), .saturate(1.2)]
+      : const [.contrast(0.82), .saturate(1.2), .brightness(1.16)],
 );
 
-/// Shared Ui BaseButton metrics used by Button and IconButton recipes.
-({
-  double height,
-  double paddingX,
-  double gap,
-  Radius radius,
-  TextStyleToken text,
-  double spinnerSize,
-})
-uiBaseButtonMetrics(UiBaseButtonSize size) => switch (size) {
-  .size1 => (
-    height: UiTokens.space5(),
-    paddingX: UiTokens.space2(),
-    gap: UiTokens.space1(),
-    radius: UiTokens.radius1OrFull(),
-    text: UiTokens.text1,
-    spinnerSize: UiTokens.space3(),
-  ),
-  .size2 => (
-    height: UiTokens.space6(),
-    paddingX: UiTokens.space3(),
-    gap: UiTokens.space2(),
-    radius: UiTokens.radius2OrFull(),
-    text: UiTokens.text2,
-    spinnerSize: UiTokens.space4(),
-  ),
-  .size3 => (
-    height: UiTokens.space7(),
-    paddingX: UiTokens.space4(),
-    gap: UiTokens.space3(),
-    radius: UiTokens.radius3OrFull(),
-    text: UiTokens.text3,
-    spinnerSize: UiTokens.space4(),
-  ),
-  .size4 => (
-    height: UiTokens.space8(),
-    paddingX: UiTokens.space5(),
-    gap: UiTokens.space3(),
-    radius: UiTokens.radius4OrFull(),
-    text: UiTokens.text4,
-    spinnerSize: UiTokens.spinnerSize3(),
-  ),
-};
-
-/// Default icon dimensions shared by text and icon-only button presets.
-double uiBaseButtonIconSize(UiBaseButtonSize size) => switch (size) {
-  .size1 => UiTokens.space3(),
-  .size2 => UiTokens.space4(),
-  .size3 => UiTokens.spinnerSize3(),
-  .size4 => UiTokens.space5(),
-};
-
-/// Content-box metrics for the ghost BaseButton variant.
-({double paddingX, double paddingY, double marginX, double marginY, double gap})
-uiBaseButtonGhostMetrics(UiBaseButtonSize size) => switch (size) {
-  .size1 => (
-    paddingX: UiTokens.space2(),
-    paddingY: UiTokens.space1(),
-    marginX: UiTokens.baseButtonGhostMarginX12(),
-    marginY: UiTokens.baseButtonGhostMarginY12(),
-    gap: UiTokens.space1(),
-  ),
-  .size2 => (
-    paddingX: UiTokens.space2(),
-    paddingY: UiTokens.space1(),
-    marginX: UiTokens.baseButtonGhostMarginX12(),
-    marginY: UiTokens.baseButtonGhostMarginY12(),
-    gap: UiTokens.space1(),
-  ),
-  .size3 => (
-    paddingX: UiTokens.space3(),
-    paddingY: UiTokens.space2(),
-    marginX: UiTokens.baseButtonGhostMarginX3(),
-    marginY: UiTokens.baseButtonGhostMarginY3(),
-    gap: UiTokens.space2(),
-  ),
-  .size4 => (
-    paddingX: UiTokens.space4(),
-    paddingY: UiTokens.space2(),
-    marginX: UiTokens.baseButtonGhostMarginX4(),
-    marginY: UiTokens.baseButtonGhostMarginY4(),
-    gap: UiTokens.space2(),
-  ),
-};
-
-/// Content-box metrics for the ghost IconButton variant.
-({double padding, double margin}) uiIconButtonGhostMetrics(
-  UiBaseButtonSize size,
-) => switch (size) {
-  .size1 => (
-    padding: UiTokens.space1(),
-    margin: UiTokens.iconButtonGhostMargin1(),
-  ),
-  .size2 => (
-    padding: UiTokens.space2(),
-    margin: UiTokens.iconButtonGhostMargin2(),
-  ),
-  .size3 => (
-    padding: UiTokens.space2(),
-    margin: UiTokens.iconButtonGhostMargin3(),
-  ),
-  .size4 => (
-    padding: UiTokens.space3(),
-    margin: UiTokens.iconButtonGhostMargin4(),
-  ),
-};
-
-/// Resolves a mode-aware ordered CSS filter at the component build context.
+/// [color] after the CSS filter [operations], applied in order.
 ///
-/// Ui's own solid states recolor fills rather than filtering the painted
-/// subtree; this remains for callers that deliberately filter a button.
+/// The arithmetic `RemixOrderedColorFilterModifier` applies to a painted
+/// subtree, applied to a single color: each operation is a 4×5 color matrix
+/// over 0–255 channels, clamped before the next one runs.
+Color _filtered(Color color, List<RemixCssColorFilterOperation> operations) {
+  var red = color.r * 255;
+  var green = color.g * 255;
+  var blue = color.b * 255;
+  final alpha = color.a * 255;
+
+  for (final operation in operations) {
+    if (operation.isIdentity) continue;
+
+    final matrix = operation.matrix;
+    double channel(int row) {
+      final offset = row * 5;
+
+      return (matrix[offset] * red +
+              matrix[offset + 1] * green +
+              matrix[offset + 2] * blue +
+              matrix[offset + 3] * alpha +
+              matrix[offset + 4])
+          .clamp(0.0, 255.0);
+    }
+
+    (red, green, blue) = (channel(0), channel(1), channel(2));
+  }
+
+  return Color.from(
+    alpha: color.a,
+    red: red / 255,
+    green: green / 255,
+    blue: blue / 255,
+  );
+}
+
+/// A CSS filter over a whole button that differs between light and dark.
+///
+/// The recipes never filter a button: their states recolor the fill, so the
+/// label and focus ring keep their own colors. This is for a call site that
+/// wants a filter anyway, passed through `style`:
+///
+/// ```dart
+/// ButtonStyler().wrap(
+///   uiModeAwareFilter(
+///     light: const [.brightness(0.9)],
+///     dark: const [.brightness(1.1)],
+///   ),
+/// )
+/// ```
 WidgetModifierConfig uiModeAwareFilter({
   required List<RemixCssColorFilterOperation> light,
   required List<RemixCssColorFilterOperation> dark,
 }) => WidgetModifierConfig.modifier(
-  _UiModeAwareFilterMix(light: light, dark: dark),
+  _ModeAwareFilterMix(light: light, dark: dark),
 );
 
-/// Explicit identity filter used to clear a higher-priority state filter.
+/// Removes a filter set by [uiModeAwareFilter] in a later state.
+///
+/// A disabled solid button applies it, so a caller's filter never tints the
+/// disabled fill.
 WidgetModifierConfig uiClearFilter() =>
     uiModeAwareFilter(light: const [], dark: const []);
 
-final class _UiModeAwareFilterMix
+final class _ModeAwareFilterMix
     extends ModifierMix<RemixOrderedColorFilterModifier> {
-  const _UiModeAwareFilterMix({required this.light, required this.dark});
+  const _ModeAwareFilterMix({required this.light, required this.dark});
 
   final List<RemixCssColorFilterOperation> light;
   final List<RemixCssColorFilterOperation> dark;
@@ -157,311 +145,10 @@ final class _UiModeAwareFilterMix
         UiTheme.of(context).isDark ? dark : light,
       );
 
+  /// A later filter replaces an earlier one; filters do not stack.
   @override
-  _UiModeAwareFilterMix merge(_UiModeAwareFilterMix? other) => other ?? this;
+  _ModeAwareFilterMix merge(_ModeAwareFilterMix? other) => other ?? this;
 
   @override
   List<Object?> get props => [light, dark];
-}
-
-/// Shared Ui BaseButton variants implemented by Button and IconButton.
-enum UiBaseButtonVariant { solid, soft, surface, outline, ghost }
-
-/// One visual-state style fragment from the shared BaseButton recipe.
-final class UiBaseButtonStateStyle {
-  const UiBaseButtonStateStyle({
-    this.foreground,
-    this.background,
-    this.effects,
-    this.modifier,
-    this.spinnerOpacity,
-  });
-
-  final Color? foreground;
-  final Color? background;
-  final RemixBoxEffectsMix? effects;
-  final WidgetModifierConfig? modifier;
-  final double? spinnerOpacity;
-}
-
-/// Visual state styles shared by the concrete Button and IconButton stylers.
-final class UiBaseButtonStateStyles {
-  const UiBaseButtonStateStyles({
-    required this.idle,
-    required this.hovered,
-    required this.pressed,
-    required this.disabled,
-    required this.focusVisible,
-    required this.disabledFocus,
-  });
-
-  final UiBaseButtonStateStyle idle;
-  final UiBaseButtonStateStyle hovered;
-  final UiBaseButtonStateStyle pressed;
-  final UiBaseButtonStateStyle disabled;
-  final UiBaseButtonStateStyle focusVisible;
-  final UiBaseButtonStateStyle disabledFocus;
-}
-
-UiBaseButtonStateStyles uiBaseButtonStateStyles({
-  required UiBaseButtonVariant variant,
-  required bool highContrast,
-}) {
-  final states = switch (variant) {
-    .solid => _solidStateStyles(highContrast: highContrast),
-    .soft => _softStateStyles(highContrast: highContrast),
-    .surface => _surfaceStateStyles(highContrast: highContrast),
-    .outline => _outlineStateStyles(highContrast: highContrast),
-    .ghost => _ghostStateStyles(highContrast: highContrast),
-  };
-
-  return UiBaseButtonStateStyles(
-    idle: states.idle,
-    hovered: states.hovered,
-    pressed: states.pressed,
-    disabled: states.disabled,
-    focusVisible: UiBaseButtonStateStyle(effects: uiFocusOutline()),
-    disabledFocus: UiBaseButtonStateStyle(
-      effects: RemixBoxEffectsMix.outline(
-        BorderSideMix(style: BorderStyle.none),
-      ),
-    ),
-  );
-}
-
-typedef _InteractionStateStyles = ({
-  UiBaseButtonStateStyle idle,
-  UiBaseButtonStateStyle hovered,
-  UiBaseButtonStateStyle pressed,
-  UiBaseButtonStateStyle disabled,
-});
-
-// Solid hover and press recolor only the fill. The brightness, saturation and
-// contrast operations are applied to the fill color itself, never to the
-// painted subtree, so the label, icon, spinner and 2px focus ring keep their
-// colors (a subtree filter would also dim or lighten the focus ring against the
-// unfiltered page) and caller foreground overrides stay in force.
-_InteractionStateStyles _solidStateStyles({required bool highContrast}) {
-  final foreground = highContrast
-      ? UiTokens.gray1()
-      : UiTokens.accentContrast();
-
-  return (
-    idle: UiBaseButtonStateStyle(
-      foreground: foreground,
-      background: highContrast ? UiTokens.accent12() : UiTokens.accentSolid(),
-    ),
-    hovered: UiBaseButtonStateStyle(
-      background: highContrast
-          ? _highContrastHoveredFill()
-          : UiTokens.accentSolidHover(),
-    ),
-    pressed: UiBaseButtonStateStyle(
-      background: highContrast
-          ? _highContrastPressedFill()
-          : _solidPressedFill(),
-    ),
-    disabled: UiBaseButtonStateStyle(
-      foreground: UiTokens.grayA8(),
-      background: UiTokens.grayA3(),
-      spinnerOpacity: 1,
-      modifier: uiClearFilter(),
-    ),
-  );
-}
-
-_InteractionStateStyles _softStateStyles({required bool highContrast}) => (
-  idle: UiBaseButtonStateStyle(
-    foreground: highContrast
-        ? UiTokens.accent12()
-        : UiTokens.accentContentAlpha(),
-    background: UiTokens.accentA3(),
-  ),
-  hovered: UiBaseButtonStateStyle(background: UiTokens.accentA4()),
-  pressed: UiBaseButtonStateStyle(background: UiTokens.accentA5()),
-  disabled: UiBaseButtonStateStyle(
-    foreground: UiTokens.grayA8(),
-    background: UiTokens.grayA3(),
-    spinnerOpacity: 1,
-  ),
-);
-
-_InteractionStateStyles _surfaceStateStyles({required bool highContrast}) => (
-  idle: UiBaseButtonStateStyle(
-    foreground: highContrast
-        ? UiTokens.accent12()
-        : UiTokens.accentContentAlpha(),
-    background: UiTokens.accentSurface(),
-    effects: RemixBoxEffectsMix.behindContent(
-      uiInsetSurface(strokes: [UiTokens.accentA7()]),
-    ),
-  ),
-  hovered: UiBaseButtonStateStyle(
-    background: UiTokens.accentSurface(),
-    effects: RemixBoxEffectsMix.behindContent(
-      uiInsetSurface(strokes: [UiTokens.accentA8()]),
-    ),
-  ),
-  pressed: UiBaseButtonStateStyle(
-    background: UiTokens.accentA3(),
-    effects: RemixBoxEffectsMix.behindContent(
-      uiInsetSurface(strokes: [UiTokens.accentA8()]),
-    ),
-  ),
-  disabled: UiBaseButtonStateStyle(
-    foreground: UiTokens.grayA8(),
-    background: UiTokens.grayA2(),
-    effects: RemixBoxEffectsMix.behindContent(
-      uiInsetSurface(strokes: [UiTokens.grayA6()]),
-    ),
-    spinnerOpacity: 1,
-  ),
-);
-
-_InteractionStateStyles _outlineStateStyles({required bool highContrast}) {
-  final strokes = highContrast
-      ? [UiTokens.accentA7(), UiTokens.grayA11()]
-      : [UiTokens.accentA8()];
-  final effects = RemixBoxEffectsMix.behindContent(
-    uiInsetSurface(strokes: strokes),
-  );
-
-  return (
-    idle: UiBaseButtonStateStyle(
-      foreground: highContrast
-          ? UiTokens.accent12()
-          : UiTokens.accentContentAlpha(),
-      effects: effects,
-    ),
-    hovered: UiBaseButtonStateStyle(
-      background: UiTokens.accentA2(),
-      effects: effects,
-    ),
-    pressed: UiBaseButtonStateStyle(
-      background: UiTokens.accentA3(),
-      effects: effects,
-    ),
-    disabled: UiBaseButtonStateStyle(
-      foreground: UiTokens.grayA8(),
-      background: const Color(0x00000000),
-      effects: RemixBoxEffectsMix.behindContent(
-        uiInsetSurface(strokes: [UiTokens.grayA7()]),
-      ),
-      spinnerOpacity: 1,
-    ),
-  );
-}
-
-_InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
-  idle: UiBaseButtonStateStyle(
-    foreground: highContrast
-        ? UiTokens.accent12()
-        : UiTokens.accentContentAlpha(),
-    background: const Color(0x00000000),
-  ),
-  hovered: UiBaseButtonStateStyle(background: UiTokens.accentA3()),
-  pressed: UiBaseButtonStateStyle(background: UiTokens.accentA4()),
-  disabled: UiBaseButtonStateStyle(
-    foreground: UiTokens.grayA8(),
-    background: const Color(0x00000000),
-    spinnerOpacity: 1,
-  ),
-);
-
-/// Ordinary solid press: the labelled hover fill darkens under a light label
-/// and lightens under a dark ink, so the label keeps its contrast in both
-/// modes and for every palette, including custom ones. If lightening a bright
-/// hover returns to the idle fill, darken it instead to retain a visible press.
-const _solidPressedFill = ContextToken<Color>(_resolveSolidPressedFill);
-
-Color _resolveSolidPressedFill(BuildContext context) {
-  final label = UiTokens.accentContrast.resolve(context);
-  final fill = UiTokens.accentSolid.resolve(context);
-  final hover = UiTokens.accentSolidHover.resolve(context);
-  final lightLabel = label.computeLuminance() > fill.computeLuminance();
-  final pressed = _uiFilteredColor(
-    hover,
-    lightLabel
-        ? const [
-            RemixCssColorFilterOperation.brightness(0.92),
-            RemixCssColorFilterOperation.saturate(1.1),
-          ]
-        : const [RemixCssColorFilterOperation.brightness(1.08)],
-  );
-  if (!lightLabel &&
-      (pressed.r - fill.r).abs() <= 2 / 255 &&
-      (pressed.g - fill.g).abs() <= 2 / 255 &&
-      (pressed.b - fill.b).abs() <= 2 / 255) {
-    return _uiFilteredColor(hover, const [
-      RemixCssColorFilterOperation.brightness(0.92),
-    ]);
-  }
-  return pressed;
-}
-
-const _highContrastHoveredFill = ContextToken<Color>(
-  _resolveHighContrastHoveredFill,
-);
-
-Color _resolveHighContrastHoveredFill(BuildContext context) => _uiFilteredColor(
-  UiTokens.accent12.resolve(context),
-  UiTheme.of(context).isDark
-      ? const [
-          RemixCssColorFilterOperation.contrast(0.88),
-          RemixCssColorFilterOperation.saturate(1.3),
-          RemixCssColorFilterOperation.brightness(1.18),
-        ]
-      : const [
-          RemixCssColorFilterOperation.contrast(0.88),
-          RemixCssColorFilterOperation.saturate(1.1),
-          RemixCssColorFilterOperation.brightness(1.1),
-        ],
-);
-
-const _highContrastPressedFill = ContextToken<Color>(
-  _resolveHighContrastPressedFill,
-);
-
-Color _resolveHighContrastPressedFill(BuildContext context) => _uiFilteredColor(
-  UiTokens.accent12.resolve(context),
-  UiTheme.of(context).isDark
-      ? const [
-          RemixCssColorFilterOperation.brightness(0.95),
-          RemixCssColorFilterOperation.saturate(1.2),
-        ]
-      : const [
-          RemixCssColorFilterOperation.contrast(0.82),
-          RemixCssColorFilterOperation.saturate(1.2),
-          RemixCssColorFilterOperation.brightness(1.16),
-        ],
-);
-
-/// Applies ordered CSS color-filter [operations] to one color with the same
-/// matrices and per-function clamping that [RemixOrderedColorFilterModifier]
-/// applies to a painted subtree.
-Color _uiFilteredColor(
-  Color color,
-  List<RemixCssColorFilterOperation> operations,
-) {
-  var channels = [color.r * 255, color.g * 255, color.b * 255];
-  final alpha = color.a * 255;
-  for (final operation in operations) {
-    if (operation.isIdentity) continue;
-    final matrix = operation.matrix;
-    channels = [
-      for (var row = 0; row < 3; row++)
-        (matrix[row * 5] * channels[0] +
-                matrix[row * 5 + 1] * channels[1] +
-                matrix[row * 5 + 2] * channels[2] +
-                matrix[row * 5 + 3] * alpha +
-                matrix[row * 5 + 4])
-            .clamp(0.0, 255.0),
-    ];
-  }
-  return Color.from(
-    alpha: color.a,
-    red: channels[0] / 255,
-    green: channels[1] / 255,
-    blue: channels[2] / 255,
-  );
 }

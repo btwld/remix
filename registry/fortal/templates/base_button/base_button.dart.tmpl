@@ -3,150 +3,140 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// The {{typePrefix}} BaseButton size scale shared by Button and IconButton.
-///
-/// Deliberate: this mirrors [{{typePrefix}}BaseButtonVariant]. Button and IconButton
-/// each own a size enum, so the shared metrics need a common type — passing the
-/// raw `size.index + 1` instead would drop every switch below to a wildcard and
-/// defer an unknown size to a runtime throw.
-enum {{typePrefix}}BaseButtonSize { size1, size2, size3, size4 }
+// The computed fills of the solid Button and IconButton.
+//
+// Everything else about the two controls is written out in their own recipes.
+// These fills are shared because they are calculated rather than picked: each
+// one runs a hover or press adjustment over a theme color, so it follows any
+// palette, including a custom one.
 
-/// Transition into hover and press, the same 40ms ease as `{{typePrefix}}Card`.
-final {{valuePrefix}}BaseButtonActiveMotion = AnimationConfig.ease(
-  const Duration(milliseconds: 40),
+/// A solid button's fill while pressed.
+///
+/// The hover fill, darkened under a light label and lightened under a dark
+/// one, so the label keeps its contrast either way.
+const {{valuePrefix}}SolidPressedFill = ContextToken<Color>(_solidPressedFill);
+
+Color _solidPressedFill(BuildContext context) {
+  final label = {{typePrefix}}Tokens.accentContrast.resolve(context);
+  final fill = {{typePrefix}}Tokens.accentSolid.resolve(context);
+  final hover = {{typePrefix}}Tokens.accentSolidHover.resolve(context);
+
+  final labelIsLight = label.computeLuminance() > fill.computeLuminance();
+  if (labelIsLight) {
+    return _filtered(hover, const [.brightness(0.92), .saturate(1.1)]);
+  }
+
+  // Lightening a bright hover fill can land back on the idle fill, and the
+  // press would then show nothing. Darken it instead.
+  final lightened = _filtered(hover, const [.brightness(1.08)]);
+
+  return _isSameFill(lightened, fill)
+      ? _filtered(hover, const [.brightness(0.92)])
+      : lightened;
+}
+
+/// Whether two fills are within two 8-bit steps of each other on every
+/// channel, which the eye reads as one color.
+bool _isSameFill(Color first, Color second) {
+  const tolerance = 2 / 255;
+
+  return (first.r - second.r).abs() <= tolerance &&
+      (first.g - second.g).abs() <= tolerance &&
+      (first.b - second.b).abs() <= tolerance;
+}
+
+/// A high-contrast solid button's fill while hovered: accent step 12 through
+/// the hover filter of the active brightness.
+const {{valuePrefix}}HighContrastHoverFill = ContextToken<Color>(_highContrastHoverFill);
+
+Color _highContrastHoverFill(BuildContext context) => _filtered(
+  {{typePrefix}}Tokens.accent12.resolve(context),
+  {{typePrefix}}Theme.of(context).isDark
+      ? const [.contrast(0.88), .saturate(1.3), .brightness(1.18)]
+      : const [.contrast(0.88), .saturate(1.1), .brightness(1.1)],
 );
 
-/// Transition back to rest and into focus or disabled, the same 120ms ease as
-/// `{{typePrefix}}Card`.
-final {{valuePrefix}}BaseButtonRestMotion = AnimationConfig.ease(
-  const Duration(milliseconds: 120),
+/// A high-contrast solid button's fill while pressed: accent step 12 through
+/// the press filter of the active brightness.
+const {{valuePrefix}}HighContrastPressedFill = ContextToken<Color>(
+  _highContrastPressedFill,
 );
 
-/// Shared {{typePrefix}} BaseButton metrics used by Button and IconButton recipes.
-({
-  double height,
-  double paddingX,
-  double gap,
-  Radius radius,
-  TextStyleToken text,
-  double spinnerSize,
-})
-{{valuePrefix}}BaseButtonMetrics({{typePrefix}}BaseButtonSize size) => switch (size) {
-  .size1 => (
-    height: {{typePrefix}}Tokens.space5(),
-    paddingX: {{typePrefix}}Tokens.space2(),
-    gap: {{typePrefix}}Tokens.space1(),
-    radius: {{typePrefix}}Tokens.radius1OrFull(),
-    text: {{typePrefix}}Tokens.text1,
-    spinnerSize: {{typePrefix}}Tokens.space3(),
-  ),
-  .size2 => (
-    height: {{typePrefix}}Tokens.space6(),
-    paddingX: {{typePrefix}}Tokens.space3(),
-    gap: {{typePrefix}}Tokens.space2(),
-    radius: {{typePrefix}}Tokens.radius2OrFull(),
-    text: {{typePrefix}}Tokens.text2,
-    spinnerSize: {{typePrefix}}Tokens.space4(),
-  ),
-  .size3 => (
-    height: {{typePrefix}}Tokens.space7(),
-    paddingX: {{typePrefix}}Tokens.space4(),
-    gap: {{typePrefix}}Tokens.space3(),
-    radius: {{typePrefix}}Tokens.radius3OrFull(),
-    text: {{typePrefix}}Tokens.text3,
-    spinnerSize: {{typePrefix}}Tokens.space4(),
-  ),
-  .size4 => (
-    height: {{typePrefix}}Tokens.space8(),
-    paddingX: {{typePrefix}}Tokens.space5(),
-    gap: {{typePrefix}}Tokens.space3(),
-    radius: {{typePrefix}}Tokens.radius4OrFull(),
-    text: {{typePrefix}}Tokens.text4,
-    spinnerSize: {{typePrefix}}Tokens.spinnerSize3(),
-  ),
-};
+Color _highContrastPressedFill(BuildContext context) => _filtered(
+  {{typePrefix}}Tokens.accent12.resolve(context),
+  {{typePrefix}}Theme.of(context).isDark
+      ? const [.brightness(0.95), .saturate(1.2)]
+      : const [.contrast(0.82), .saturate(1.2), .brightness(1.16)],
+);
 
-/// Default icon dimensions shared by text and icon-only button presets.
-double {{valuePrefix}}BaseButtonIconSize({{typePrefix}}BaseButtonSize size) => switch (size) {
-  .size1 => {{typePrefix}}Tokens.space3(),
-  .size2 => {{typePrefix}}Tokens.space4(),
-  .size3 => {{typePrefix}}Tokens.spinnerSize3(),
-  .size4 => {{typePrefix}}Tokens.space5(),
-};
-
-/// Content-box metrics for the ghost BaseButton variant.
-({double paddingX, double paddingY, double marginX, double marginY, double gap})
-{{valuePrefix}}BaseButtonGhostMetrics({{typePrefix}}BaseButtonSize size) => switch (size) {
-  .size1 => (
-    paddingX: {{typePrefix}}Tokens.space2(),
-    paddingY: {{typePrefix}}Tokens.space1(),
-    marginX: {{typePrefix}}Tokens.baseButtonGhostMarginX12(),
-    marginY: {{typePrefix}}Tokens.baseButtonGhostMarginY12(),
-    gap: {{typePrefix}}Tokens.space1(),
-  ),
-  .size2 => (
-    paddingX: {{typePrefix}}Tokens.space2(),
-    paddingY: {{typePrefix}}Tokens.space1(),
-    marginX: {{typePrefix}}Tokens.baseButtonGhostMarginX12(),
-    marginY: {{typePrefix}}Tokens.baseButtonGhostMarginY12(),
-    gap: {{typePrefix}}Tokens.space1(),
-  ),
-  .size3 => (
-    paddingX: {{typePrefix}}Tokens.space3(),
-    paddingY: {{typePrefix}}Tokens.space2(),
-    marginX: {{typePrefix}}Tokens.baseButtonGhostMarginX3(),
-    marginY: {{typePrefix}}Tokens.baseButtonGhostMarginY3(),
-    gap: {{typePrefix}}Tokens.space2(),
-  ),
-  .size4 => (
-    paddingX: {{typePrefix}}Tokens.space4(),
-    paddingY: {{typePrefix}}Tokens.space2(),
-    marginX: {{typePrefix}}Tokens.baseButtonGhostMarginX4(),
-    marginY: {{typePrefix}}Tokens.baseButtonGhostMarginY4(),
-    gap: {{typePrefix}}Tokens.space2(),
-  ),
-};
-
-/// Content-box metrics for the ghost IconButton variant.
-({double padding, double margin}) {{valuePrefix}}IconButtonGhostMetrics(
-  {{typePrefix}}BaseButtonSize size,
-) => switch (size) {
-  .size1 => (
-    padding: {{typePrefix}}Tokens.space1(),
-    margin: {{typePrefix}}Tokens.iconButtonGhostMargin1(),
-  ),
-  .size2 => (
-    padding: {{typePrefix}}Tokens.space2(),
-    margin: {{typePrefix}}Tokens.iconButtonGhostMargin2(),
-  ),
-  .size3 => (
-    padding: {{typePrefix}}Tokens.space2(),
-    margin: {{typePrefix}}Tokens.iconButtonGhostMargin3(),
-  ),
-  .size4 => (
-    padding: {{typePrefix}}Tokens.space3(),
-    margin: {{typePrefix}}Tokens.iconButtonGhostMargin4(),
-  ),
-};
-
-/// Resolves a mode-aware ordered CSS filter at the component build context.
+/// [color] after the CSS filter [operations], applied in order.
 ///
-/// {{typePrefix}}'s own solid states recolor fills rather than filtering the painted
-/// subtree; this remains for callers that deliberately filter a button.
+/// The arithmetic `RemixOrderedColorFilterModifier` applies to a painted
+/// subtree, applied to a single color: each operation is a 4×5 color matrix
+/// over 0–255 channels, clamped before the next one runs.
+Color _filtered(Color color, List<RemixCssColorFilterOperation> operations) {
+  var red = color.r * 255;
+  var green = color.g * 255;
+  var blue = color.b * 255;
+  final alpha = color.a * 255;
+
+  for (final operation in operations) {
+    if (operation.isIdentity) continue;
+
+    final matrix = operation.matrix;
+    double channel(int row) {
+      final offset = row * 5;
+
+      return (matrix[offset] * red +
+              matrix[offset + 1] * green +
+              matrix[offset + 2] * blue +
+              matrix[offset + 3] * alpha +
+              matrix[offset + 4])
+          .clamp(0.0, 255.0);
+    }
+
+    (red, green, blue) = (channel(0), channel(1), channel(2));
+  }
+
+  return Color.from(
+    alpha: color.a,
+    red: red / 255,
+    green: green / 255,
+    blue: blue / 255,
+  );
+}
+
+/// A CSS filter over a whole button that differs between light and dark.
+///
+/// The recipes never filter a button: their states recolor the fill, so the
+/// label and focus ring keep their own colors. This is for a call site that
+/// wants a filter anyway, passed through `style`:
+///
+/// ```dart
+/// ButtonStyler().wrap(
+///   {{valuePrefix}}ModeAwareFilter(
+///     light: const [.brightness(0.9)],
+///     dark: const [.brightness(1.1)],
+///   ),
+/// )
+/// ```
 WidgetModifierConfig {{valuePrefix}}ModeAwareFilter({
   required List<RemixCssColorFilterOperation> light,
   required List<RemixCssColorFilterOperation> dark,
 }) => WidgetModifierConfig.modifier(
-  _{{typePrefix}}ModeAwareFilterMix(light: light, dark: dark),
+  _ModeAwareFilterMix(light: light, dark: dark),
 );
 
-/// Explicit identity filter used to clear a higher-priority state filter.
+/// Removes a filter set by [{{valuePrefix}}ModeAwareFilter] in a later state.
+///
+/// A disabled solid button applies it, so a caller's filter never tints the
+/// disabled fill.
 WidgetModifierConfig {{valuePrefix}}ClearFilter() =>
     {{valuePrefix}}ModeAwareFilter(light: const [], dark: const []);
 
-final class _{{typePrefix}}ModeAwareFilterMix
+final class _ModeAwareFilterMix
     extends ModifierMix<RemixOrderedColorFilterModifier> {
-  const _{{typePrefix}}ModeAwareFilterMix({required this.light, required this.dark});
+  const _ModeAwareFilterMix({required this.light, required this.dark});
 
   final List<RemixCssColorFilterOperation> light;
   final List<RemixCssColorFilterOperation> dark;
@@ -157,316 +147,10 @@ final class _{{typePrefix}}ModeAwareFilterMix
         {{typePrefix}}Theme.of(context).isDark ? dark : light,
       );
 
+  /// A later filter replaces an earlier one; filters do not stack.
   @override
-  _{{typePrefix}}ModeAwareFilterMix merge(_{{typePrefix}}ModeAwareFilterMix? other) =>
-      other ?? this;
+  _ModeAwareFilterMix merge(_ModeAwareFilterMix? other) => other ?? this;
 
   @override
   List<Object?> get props => [light, dark];
-}
-
-/// Shared {{typePrefix}} BaseButton variants implemented by Button and IconButton.
-enum {{typePrefix}}BaseButtonVariant { solid, soft, surface, outline, ghost }
-
-/// One visual-state style fragment from the shared BaseButton recipe.
-final class {{typePrefix}}BaseButtonStateStyle {
-  const {{typePrefix}}BaseButtonStateStyle({
-    this.foreground,
-    this.background,
-    this.effects,
-    this.modifier,
-    this.spinnerOpacity,
-  });
-
-  final Color? foreground;
-  final Color? background;
-  final RemixBoxEffectsMix? effects;
-  final WidgetModifierConfig? modifier;
-  final double? spinnerOpacity;
-}
-
-/// Visual state styles shared by the concrete Button and IconButton stylers.
-final class {{typePrefix}}BaseButtonStateStyles {
-  const {{typePrefix}}BaseButtonStateStyles({
-    required this.idle,
-    required this.hovered,
-    required this.pressed,
-    required this.disabled,
-    required this.focusVisible,
-    required this.disabledFocus,
-  });
-
-  final {{typePrefix}}BaseButtonStateStyle idle;
-  final {{typePrefix}}BaseButtonStateStyle hovered;
-  final {{typePrefix}}BaseButtonStateStyle pressed;
-  final {{typePrefix}}BaseButtonStateStyle disabled;
-  final {{typePrefix}}BaseButtonStateStyle focusVisible;
-  final {{typePrefix}}BaseButtonStateStyle disabledFocus;
-}
-
-{{typePrefix}}BaseButtonStateStyles {{valuePrefix}}BaseButtonStateStyles({
-  required {{typePrefix}}BaseButtonVariant variant,
-  required bool highContrast,
-}) {
-  final states = switch (variant) {
-    .solid => _solidStateStyles(highContrast: highContrast),
-    .soft => _softStateStyles(highContrast: highContrast),
-    .surface => _surfaceStateStyles(highContrast: highContrast),
-    .outline => _outlineStateStyles(highContrast: highContrast),
-    .ghost => _ghostStateStyles(highContrast: highContrast),
-  };
-
-  return {{typePrefix}}BaseButtonStateStyles(
-    idle: states.idle,
-    hovered: states.hovered,
-    pressed: states.pressed,
-    disabled: states.disabled,
-    focusVisible: {{typePrefix}}BaseButtonStateStyle(effects: {{valuePrefix}}FocusOutline()),
-    disabledFocus: {{typePrefix}}BaseButtonStateStyle(
-      effects: RemixBoxEffectsMix.outline(
-        BorderSideMix(style: BorderStyle.none),
-      ),
-    ),
-  );
-}
-
-typedef _InteractionStateStyles = ({
-  {{typePrefix}}BaseButtonStateStyle idle,
-  {{typePrefix}}BaseButtonStateStyle hovered,
-  {{typePrefix}}BaseButtonStateStyle pressed,
-  {{typePrefix}}BaseButtonStateStyle disabled,
-});
-
-// Solid hover and press recolor only the fill. The brightness, saturation and
-// contrast operations are applied to the fill color itself, never to the
-// painted subtree, so the label, icon, spinner and 2px focus ring keep their
-// colors (a subtree filter would also dim or lighten the focus ring against the
-// unfiltered page) and caller foreground overrides stay in force.
-_InteractionStateStyles _solidStateStyles({required bool highContrast}) {
-  final foreground = highContrast
-      ? {{typePrefix}}Tokens.gray1()
-      : {{typePrefix}}Tokens.accentContrast();
-
-  return (
-    idle: {{typePrefix}}BaseButtonStateStyle(
-      foreground: foreground,
-      background: highContrast
-          ? {{typePrefix}}Tokens.accent12()
-          : {{typePrefix}}Tokens.accentSolid(),
-    ),
-    hovered: {{typePrefix}}BaseButtonStateStyle(
-      background: highContrast
-          ? _highContrastHoveredFill()
-          : {{typePrefix}}Tokens.accentSolidHover(),
-    ),
-    pressed: {{typePrefix}}BaseButtonStateStyle(
-      background: highContrast
-          ? _highContrastPressedFill()
-          : _solidPressedFill(),
-    ),
-    disabled: {{typePrefix}}BaseButtonStateStyle(
-      foreground: {{typePrefix}}Tokens.grayA8(),
-      background: {{typePrefix}}Tokens.grayA3(),
-      spinnerOpacity: 1,
-      modifier: {{valuePrefix}}ClearFilter(),
-    ),
-  );
-}
-
-_InteractionStateStyles _softStateStyles({required bool highContrast}) => (
-  idle: {{typePrefix}}BaseButtonStateStyle(
-    foreground: highContrast
-        ? {{typePrefix}}Tokens.accent12()
-        : {{typePrefix}}Tokens.accentContentAlpha(),
-    background: {{typePrefix}}Tokens.accentA3(),
-  ),
-  hovered: {{typePrefix}}BaseButtonStateStyle(background: {{typePrefix}}Tokens.accentA4()),
-  pressed: {{typePrefix}}BaseButtonStateStyle(background: {{typePrefix}}Tokens.accentA5()),
-  disabled: {{typePrefix}}BaseButtonStateStyle(
-    foreground: {{typePrefix}}Tokens.grayA8(),
-    background: {{typePrefix}}Tokens.grayA3(),
-    spinnerOpacity: 1,
-  ),
-);
-
-_InteractionStateStyles _surfaceStateStyles({required bool highContrast}) => (
-  idle: {{typePrefix}}BaseButtonStateStyle(
-    foreground: highContrast
-        ? {{typePrefix}}Tokens.accent12()
-        : {{typePrefix}}Tokens.accentContentAlpha(),
-    background: {{typePrefix}}Tokens.accentSurface(),
-    effects: RemixBoxEffectsMix.behindContent(
-      {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA7()]),
-    ),
-  ),
-  hovered: {{typePrefix}}BaseButtonStateStyle(
-    background: {{typePrefix}}Tokens.accentSurface(),
-    effects: RemixBoxEffectsMix.behindContent(
-      {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA8()]),
-    ),
-  ),
-  pressed: {{typePrefix}}BaseButtonStateStyle(
-    background: {{typePrefix}}Tokens.accentA3(),
-    effects: RemixBoxEffectsMix.behindContent(
-      {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA8()]),
-    ),
-  ),
-  disabled: {{typePrefix}}BaseButtonStateStyle(
-    foreground: {{typePrefix}}Tokens.grayA8(),
-    background: {{typePrefix}}Tokens.grayA2(),
-    effects: RemixBoxEffectsMix.behindContent(
-      {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA6()]),
-    ),
-    spinnerOpacity: 1,
-  ),
-);
-
-_InteractionStateStyles _outlineStateStyles({required bool highContrast}) {
-  final strokes = highContrast
-      ? [{{typePrefix}}Tokens.accentA7(), {{typePrefix}}Tokens.grayA11()]
-      : [{{typePrefix}}Tokens.accentA8()];
-  final effects = RemixBoxEffectsMix.behindContent(
-    {{valuePrefix}}InsetSurface(strokes: strokes),
-  );
-
-  return (
-    idle: {{typePrefix}}BaseButtonStateStyle(
-      foreground: highContrast
-          ? {{typePrefix}}Tokens.accent12()
-          : {{typePrefix}}Tokens.accentContentAlpha(),
-      effects: effects,
-    ),
-    hovered: {{typePrefix}}BaseButtonStateStyle(
-      background: {{typePrefix}}Tokens.accentA2(),
-      effects: effects,
-    ),
-    pressed: {{typePrefix}}BaseButtonStateStyle(
-      background: {{typePrefix}}Tokens.accentA3(),
-      effects: effects,
-    ),
-    disabled: {{typePrefix}}BaseButtonStateStyle(
-      foreground: {{typePrefix}}Tokens.grayA8(),
-      background: const Color(0x00000000),
-      effects: RemixBoxEffectsMix.behindContent(
-        {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA7()]),
-      ),
-      spinnerOpacity: 1,
-    ),
-  );
-}
-
-_InteractionStateStyles _ghostStateStyles({required bool highContrast}) => (
-  idle: {{typePrefix}}BaseButtonStateStyle(
-    foreground: highContrast
-        ? {{typePrefix}}Tokens.accent12()
-        : {{typePrefix}}Tokens.accentContentAlpha(),
-    background: const Color(0x00000000),
-  ),
-  hovered: {{typePrefix}}BaseButtonStateStyle(background: {{typePrefix}}Tokens.accentA3()),
-  pressed: {{typePrefix}}BaseButtonStateStyle(background: {{typePrefix}}Tokens.accentA4()),
-  disabled: {{typePrefix}}BaseButtonStateStyle(
-    foreground: {{typePrefix}}Tokens.grayA8(),
-    background: const Color(0x00000000),
-    spinnerOpacity: 1,
-  ),
-);
-
-/// Ordinary solid press: the labelled hover fill darkens under a light label
-/// and lightens under a dark ink, so the label keeps its contrast in both
-/// modes and for every palette, including custom ones. If lightening a bright
-/// hover returns to the idle fill, darken it instead to retain a visible press.
-const _solidPressedFill = ContextToken<Color>(_resolveSolidPressedFill);
-
-Color _resolveSolidPressedFill(BuildContext context) {
-  final label = {{typePrefix}}Tokens.accentContrast.resolve(context);
-  final fill = {{typePrefix}}Tokens.accentSolid.resolve(context);
-  final hover = {{typePrefix}}Tokens.accentSolidHover.resolve(context);
-  final lightLabel = label.computeLuminance() > fill.computeLuminance();
-  final pressed = _{{valuePrefix}}FilteredColor(
-    hover,
-    lightLabel
-        ? const [
-            RemixCssColorFilterOperation.brightness(0.92),
-            RemixCssColorFilterOperation.saturate(1.1),
-          ]
-        : const [RemixCssColorFilterOperation.brightness(1.08)],
-  );
-  if (!lightLabel &&
-      (pressed.r - fill.r).abs() <= 2 / 255 &&
-      (pressed.g - fill.g).abs() <= 2 / 255 &&
-      (pressed.b - fill.b).abs() <= 2 / 255) {
-    return _{{valuePrefix}}FilteredColor(hover, const [
-      RemixCssColorFilterOperation.brightness(0.92),
-    ]);
-  }
-  return pressed;
-}
-
-const _highContrastHoveredFill = ContextToken<Color>(
-  _resolveHighContrastHoveredFill,
-);
-
-Color _resolveHighContrastHoveredFill(BuildContext context) =>
-    _{{valuePrefix}}FilteredColor(
-      {{typePrefix}}Tokens.accent12.resolve(context),
-      {{typePrefix}}Theme.of(context).isDark
-          ? const [
-              RemixCssColorFilterOperation.contrast(0.88),
-              RemixCssColorFilterOperation.saturate(1.3),
-              RemixCssColorFilterOperation.brightness(1.18),
-            ]
-          : const [
-              RemixCssColorFilterOperation.contrast(0.88),
-              RemixCssColorFilterOperation.saturate(1.1),
-              RemixCssColorFilterOperation.brightness(1.1),
-            ],
-    );
-
-const _highContrastPressedFill = ContextToken<Color>(
-  _resolveHighContrastPressedFill,
-);
-
-Color _resolveHighContrastPressedFill(BuildContext context) =>
-    _{{valuePrefix}}FilteredColor(
-      {{typePrefix}}Tokens.accent12.resolve(context),
-      {{typePrefix}}Theme.of(context).isDark
-          ? const [
-              RemixCssColorFilterOperation.brightness(0.95),
-              RemixCssColorFilterOperation.saturate(1.2),
-            ]
-          : const [
-              RemixCssColorFilterOperation.contrast(0.82),
-              RemixCssColorFilterOperation.saturate(1.2),
-              RemixCssColorFilterOperation.brightness(1.16),
-            ],
-    );
-
-/// Applies ordered CSS color-filter [operations] to one color with the same
-/// matrices and per-function clamping that [RemixOrderedColorFilterModifier]
-/// applies to a painted subtree.
-Color _{{valuePrefix}}FilteredColor(
-  Color color,
-  List<RemixCssColorFilterOperation> operations,
-) {
-  var channels = [color.r * 255, color.g * 255, color.b * 255];
-  final alpha = color.a * 255;
-  for (final operation in operations) {
-    if (operation.isIdentity) continue;
-    final matrix = operation.matrix;
-    channels = [
-      for (var row = 0; row < 3; row++)
-        (matrix[row * 5] * channels[0] +
-                matrix[row * 5 + 1] * channels[1] +
-                matrix[row * 5 + 2] * channels[2] +
-                matrix[row * 5 + 3] * alpha +
-                matrix[row * 5 + 4])
-            .clamp(0.0, 255.0),
-    ];
-  }
-  return Color.from(
-    alpha: color.a,
-    red: channels[0] / 255,
-    green: channels[1] / 255,
-    blue: channels[2] / 255,
-  );
 }
