@@ -8,9 +8,25 @@ import '../theme/theme.dart';
 
 part 'dialog.g.dart';
 
-/// Fortal dialog size presets on the shared scale.
-enum FortalDialogSize { size1, size2, size3, size4 }
+/// The sizes a dialog comes in, from its padding and corners. Pixel values are
+/// at 100% theme scaling.
+enum FortalDialogSize {
+  /// 12px padding.
+  size1,
 
+  /// 16px padding.
+  size2,
+
+  /// 24px padding. The default.
+  size3,
+
+  /// 32px padding.
+  size4,
+}
+
+/// Padding that keeps the dialog off the screen edges: 16px at the sides and
+/// 24px at the top and bottom, or the safe area when that is larger. The
+/// bottom keeps at least 6% of the viewport height.
 final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
   final safeArea = MediaQuery.paddingOf(context);
   final viewportHeight = MediaQuery.sizeOf(context).height;
@@ -25,7 +41,7 @@ final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
   );
 });
 
-/// Fortal-themed preset for [RemixDialog].
+/// The Fortal Dialog recipe: a raised, blurred panel with a bold title.
 ///
 /// The generated [FortalDialog] defaults to [FortalDialogSize.size3],
 /// [Alignment.center], fills up to 600 logical pixels, preserves safe

@@ -6,7 +6,8 @@ part of 'tooltip.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixTooltip].
+/// The Fortal Tooltip recipe: light 12px text on a dark pill that appears
+/// after a 200ms wait.
 class FortalTooltip extends StatelessWidget {
   const FortalTooltip({
     super.key,

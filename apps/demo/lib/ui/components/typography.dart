@@ -3,22 +3,53 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// The nine-step Fortal text scale supplied by [FortalTokens].
+/// The nine steps of this design system's text scale, from [FortalTokens].
+/// Pixel values are at 100% theme scaling.
 enum FortalTextSize {
+  /// 12px.
   size1,
+
+  /// 14px.
   size2,
+
+  /// 16px. The default for body text.
   size3,
+
+  /// 18px.
   size4,
+
+  /// 20px.
   size5,
+
+  /// 24px.
   size6,
+
+  /// 28px.
   size7,
+
+  /// 36px.
   size8,
+
+  /// 60px.
   size9,
 }
 
-/// Font weights supported by the Fortal typography scale.
-///
-enum FortalTextWeight { light, regular, medium, bold }
+/// The font weights of the text scale.
+enum FortalTextWeight {
+  /// A thin stroke, for large display text.
+  light,
+
+  /// Body text.
+  regular,
+
+  /// Labels and emphasis.
+  medium,
+
+  /// Headings.
+  bold,
+}
+
+/// The text style token of a [size] on the scale.
 
 TextStyleToken fortalTextSizeToken(FortalTextSize size) => switch (size) {
   .size1 => FortalTokens.text1,
@@ -32,6 +63,7 @@ TextStyleToken fortalTextSizeToken(FortalTextSize size) => switch (size) {
   .size9 => FortalTokens.text9,
 };
 
+/// The font weight token of a [weight].
 FontWeightToken fortalTextWeightToken(FortalTextWeight weight) =>
     switch (weight) {
       .light => FortalTokens.fontWeightLight,
@@ -55,6 +87,8 @@ TextStyler fortalApplyTextFlow(
   return style.softWrap(softWrap);
 }
 
+/// [style] with the accent's text color, or accent step 12 under
+/// [highContrast].
 TextStyler fortalAccentForeground(
   TextStyler style, {
   required bool highContrast,
@@ -70,8 +104,8 @@ TextStyle fortalResolveTextToken(BuildContext context, FortalTextSize size) =>
 Color fortalResolveColor(BuildContext context, ColorToken token) =>
     MixScope.tokenOf(token, context);
 
-/// Derived from the resolved `radius1` rather than duplicating the Fortal
-/// radius enum table, so theme radius and scaling changes flow through.
+/// Derived from the resolved `radius1` rather than duplicating this design
+/// system's radius table, so theme radius and scaling changes flow through.
 double fortalRadiusFactor(BuildContext context) {
   final scaling = FortalTheme.of(context).scaling.factor;
   final radius = MixScope.tokenOf(FortalTokens.radius1, context);

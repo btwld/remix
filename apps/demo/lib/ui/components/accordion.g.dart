@@ -6,7 +6,10 @@ part of 'accordion.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixAccordion].
+/// The Fortal Accordion recipe.
+///
+/// It reads top to bottom: what every accordion shares, then the size, then
+/// the variant's panel colors for rest, hover, press, focus and disabled.
 class FortalAccordion<T> extends StatelessWidget {
   const FortalAccordion({
     super.key,
@@ -31,6 +34,7 @@ class FortalAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   });
 
+  /// A near-white panel inside a 1px gray frame.
   const FortalAccordion.surface({
     super.key,
     this.size = .size2,
@@ -53,6 +57,7 @@ class FortalAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   }) : variant = FortalAccordionVariant.surface;
 
+  /// An accent-tinted panel inside a 1px accent frame.
   const FortalAccordion.soft({
     super.key,
     this.size = .size2,

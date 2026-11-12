@@ -6,59 +6,70 @@ import '../theme/theme.dart';
 
 part 'radio.g.dart';
 
-/// Ui radio size presets.
+/// The sizes a radio comes in. Pixel values are at 100% theme scaling.
 enum UiRadioSize {
-  /// Compact radio.
+  /// A 14px circle with a 5.6px dot.
   size1,
 
-  /// Default radio.
+  /// A 16px circle with a 6.4px dot. The default.
   size2,
 
-  /// Large radio.
+  /// A 20px circle with an 8px dot.
   size3,
 }
 
-/// Ui radio color variants.
+/// The looks a radio comes in.
 enum UiRadioVariant {
-  /// Surface treatment with neutral border.
+  /// A surface fill inside a 1px neutral frame, filled with the accent when
+  /// selected.
   surface,
 
-  /// Soft accent treatment.
+  /// An accent tint inside a 1px accent ring, with an accent-colored dot.
   soft,
 }
 
-/// Ui-themed preset for [RemixRadio].
+/// The Ui Radio recipe.
+///
+/// It reads top to bottom: the circle and its focus ring, then the variant's
+/// colors for rest, selected and disabled, then the touch target.
+///
+/// [highContrast] moves the selected fill (surface) or dot (soft) to accent
+/// step 12.
 @MixWidget(target: RemixRadio.new)
 RadioStyler uiRadioStyle({
   UiRadioVariant variant = .surface,
   UiRadioSize size = .size2,
   bool highContrast = false,
   RadioStyler style = const RadioStyler.create(),
-}) {
-  return (switch (variant) {
-        .surface => _uiRadioSurfaceStyler(size, highContrast: highContrast),
-        .soft => _uiRadioSoftStyler(size, highContrast: highContrast),
-      })
-      .wrap(uiTouchTarget())
-      .onDisabled(
-        RadioStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
-      .merge(style);
-}
+}) => _circle(size)
+    .merge(switch (variant) {
+      .surface => _surface(highContrast),
+      .soft => _soft(highContrast),
+    })
+    .wrap(uiTouchTarget())
+    .onDisabled(.containerEffects(.outline(.style(.none))))
+    .merge(style);
 
-RadioStyler _uiRadioBaseStyler(UiRadioSize size) {
-  final metrics = _uiRadioMetrics(size);
+/// The circle and dot sizes of each step, with the focus ring and no effects.
+///
+/// The empty effect layers give the variant's state fragments layers to
+/// replace.
+RadioStyler _circle(UiRadioSize size) {
+  final (:circle, :dot) = switch (size) {
+    .size1 => (
+      circle: UiTokens.checkboxSize1(),
+      dot: UiTokens.radioIndicatorSize1(),
+    ),
+    .size2 => (circle: UiTokens.space4(), dot: UiTokens.radioIndicatorSize2()),
+    .size3 => (circle: UiTokens.checkboxSize3(), dot: UiTokens.space2()),
+  };
+
   return RadioStyler(
     container: .size(
-      metrics.size,
-      metrics.size,
+      circle,
+      circle,
     ).alignment(.center).borderRadius(.all(UiTokens.radiusCircle())),
-    indicator: .size(
-      metrics.indicatorSize,
-      metrics.indicatorSize,
-    ).borderRadius(.all(UiTokens.radiusCircle())),
+    indicator: .size(dot, dot).borderRadius(.all(UiTokens.radiusCircle())),
     containerEffects: RemixBoxEffectsMix(
       behindContent: RemixBoxEffectLayerMix(),
       overContent: RemixBoxEffectLayerMix(),
@@ -66,110 +77,61 @@ RadioStyler _uiRadioBaseStyler(UiRadioSize size) {
   ).onFocusVisible(.containerEffects(uiFocusOutline()));
 }
 
-RadioStyler _uiRadioSurfaceStyler(
-  UiRadioSize size, {
-  required bool highContrast,
-}) {
-  return _uiRadioBaseStyler(size)
-      .color(UiTokens.colorSurface())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          uiInsetSurface(strokes: [UiTokens.controlBorder()]),
-        ),
-      )
-      .indicator(
-        .color(
-          UiTokens.accentIndicator(),
-        ).borderRadius(.all(UiTokens.radiusCircle())),
-      )
-      .onSelected(
-        .color(highContrast ? UiTokens.accent12() : UiTokens.accentIndicator())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                RemixBoxEffectLayerMix(shadows: const []),
-              ),
-            )
-            .indicatorColor(
-              highContrast
-                  ? UiTokens.accent1()
-                  : UiTokens.accentIndicatorContrast(),
-            ),
-      )
-      .onDisabled(
-        .color(UiTokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                uiInsetSurface(strokes: [UiTokens.grayA6()]),
-              ),
-            )
-            .indicatorColor(UiTokens.grayA8()),
-      );
-}
+/// A surface fill with a neutral frame; the accent fill when selected.
+RadioStyler _surface(bool highContrast) => RadioStyler()
+    .color(UiTokens.colorSurface())
+    .merge(_effects(over: uiInsetSurface(strokes: [UiTokens.controlBorder()])))
+    .indicatorColor(UiTokens.accentIndicator())
+    .onSelected(
+      RadioStyler()
+          .color(
+            highContrast ? UiTokens.accent12() : UiTokens.accentIndicator(),
+          )
+          .merge(_effects(over: RemixBoxEffectLayerMix(shadows: const [])))
+          .indicatorColor(
+            highContrast
+                ? UiTokens.accent1()
+                : UiTokens.accentIndicatorContrast(),
+          ),
+    )
+    .onDisabled(_disabled(frame: UiTokens.grayA6()));
 
-RadioStyler _uiRadioSoftStyler(UiRadioSize size, {required bool highContrast}) {
-  return _uiRadioBaseStyler(size)
+/// An accent tint with an accent ring and an accent dot.
+RadioStyler _soft(bool highContrast) {
+  final dot = highContrast ? UiTokens.accent12() : UiTokens.accentContent();
+
+  return RadioStyler()
       .color(UiTokens.accentA4())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-      )
       // The tint alone is too faint to show an empty control; the accent-8
       // ring keeps a 3:1 boundary in every enabled state.
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          uiInsetSurface(strokes: [UiTokens.focus8()]),
-        ),
-      )
-      .indicator(
-        .color(
-          highContrast ? UiTokens.accent12() : UiTokens.accentContent(),
-        ).borderRadius(.all(UiTokens.radiusCircle())),
-      )
+      .merge(_effects(over: uiInsetSurface(strokes: [UiTokens.focus8()])))
+      .indicatorColor(dot)
       .onSelected(
-        .color(UiTokens.accentA4())
+        RadioStyler()
+            .color(UiTokens.accentA4())
             .containerEffects(
               RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
             )
-            .indicator(
-              .color(
-                highContrast ? UiTokens.accent12() : UiTokens.accentContent(),
-              ),
-            ),
+            .indicatorColor(dot),
       )
-      .onDisabled(
-        .color(UiTokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                RemixBoxEffectLayerMix(shadows: const []),
-              ),
-            )
-            .indicatorColor(UiTokens.grayA8()),
-      );
+      .onDisabled(_disabled());
 }
 
-({double size, double indicatorSize}) _uiRadioMetrics(UiRadioSize size) =>
-    switch (size) {
-      .size1 => (
-        size: UiTokens.checkboxSize1(),
-        indicatorSize: UiTokens.radioIndicatorSize1(),
+/// A gray fill and dot. The surface variant keeps a [frame]; soft has none.
+RadioStyler _disabled({Color? frame}) => RadioStyler()
+    .color(UiTokens.grayA3())
+    .merge(
+      _effects(
+        over: frame == null
+            ? RemixBoxEffectLayerMix(shadows: const [])
+            : uiInsetSurface(strokes: [frame]),
       ),
-      .size2 => (
-        size: UiTokens.space4(),
-        indicatorSize: UiTokens.radioIndicatorSize2(),
-      ),
-      .size3 => (
-        size: UiTokens.checkboxSize3(),
-        indicatorSize: UiTokens.space2(),
-      ),
-    };
+    )
+    .indicatorColor(UiTokens.grayA8());
+
+/// Sets the layer over the content and empties the one behind it.
+RadioStyler _effects({required RemixBoxEffectLayerMix over}) => RadioStyler()
+    .containerEffects(
+      RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+    )
+    .containerEffects(RemixBoxEffectsMix.overContent(over));

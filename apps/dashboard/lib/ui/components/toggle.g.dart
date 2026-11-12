@@ -6,7 +6,12 @@ part of 'toggle.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixToggle].
+/// The Ui Toggle recipe.
+///
+/// It reads top to bottom: what every toggle shares, then the size, then the
+/// variant's colors for rest, hover, press, on, focus and disabled.
+///
+/// [highContrast] moves the label and icon of the on state to accent step 12.
 class UiToggle extends StatelessWidget {
   const UiToggle({
     super.key,
@@ -27,6 +32,7 @@ class UiToggle extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// No fill or frame until hovered; an accent tint when on.
   const UiToggle.ghost({
     super.key,
     this.size = .size2,
@@ -45,6 +51,7 @@ class UiToggle extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiToggleVariant.ghost;
 
+  /// A 1px gray frame; an accent tint and frame when on.
   const UiToggle.outline({
     super.key,
     this.size = .size2,

@@ -6,10 +6,21 @@ import '../theme/theme.dart';
 
 part 'data_list.g.dart';
 
-/// Ui DataList size presets.
-enum UiDataListSize { size1, size2, size3 }
+/// The sizes a data list comes in. Pixel values are at 100% theme scaling.
+enum UiDataListSize {
+  /// 12px text with 12px between rows.
+  size1,
 
-/// Ui recipe for [RemixDataList].
+  /// 14px text with 16px between rows. The default.
+  size2,
+
+  /// 16px text with a wider gap between rows.
+  size3,
+}
+
+/// The Ui DataList recipe: gray labels beside values in gray 12.
+///
+/// [highContrast] moves the labels to gray 12.
 @MixWidget(target: RemixDataList.new)
 DataListStyler uiDataListStyle({
   UiDataListSize size = .size2,

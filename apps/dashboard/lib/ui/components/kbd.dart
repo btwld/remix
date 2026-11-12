@@ -4,11 +4,17 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// Ui Kbd variants.
-enum UiKbdVariant { soft }
+/// The looks a keyboard key comes in.
+enum UiKbdVariant {
+  /// A gray-tinted key cap.
+  soft,
+}
 
-/// Ui-themed keyboard key.
+/// The style of a keyboard key, sized from the surrounding text.
 ///
+/// Without [size] it follows the 16px body text at 75%; with one it takes 80%
+/// of that text size. It pins its own weight and line box, so a key stays a
+/// key cap whatever copy surrounds it.
 BadgeStyler uiKbdStyle(
   BuildContext context, {
   UiTextSize? size,
@@ -55,8 +61,7 @@ BadgeStyler uiKbdStyle(
   return recipe.merge(style);
 }
 
-/// Token-backed representation of one keyboard key or shortcut.
-///
+/// One keyboard key or shortcut, drawn as a key cap.
 class UiKbd extends StatelessWidget {
   const UiKbd(
     this.text, {

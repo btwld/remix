@@ -6,13 +6,29 @@ import '../theme/theme.dart';
 
 part 'menu.g.dart';
 
-/// Ui menu content sizes.
-enum UiMenuSize { size1, size2 }
+/// The sizes a menu comes in. Pixel values are at 100% theme scaling.
+enum UiMenuSize {
+  /// 24px items with 12px text.
+  size1,
 
-/// Ui menu content variants.
-enum UiMenuVariant { solid, soft }
+  /// 32px items with 14px text. The default.
+  size2,
+}
 
-/// Ui menu content with Ui-owned size, variant, and contrast behavior.
+/// How a menu marks the item under the pointer or keyboard.
+enum UiMenuVariant {
+  /// The accent's solid fill under its contrast text.
+  solid,
+
+  /// A tinted accent fill.
+  soft,
+}
+
+/// The Ui Menu recipe: the trigger, the floating panel, its items,
+/// submenu items and dividers.
+///
+/// [highContrast] moves the highlighted item of the solid variant to accent
+/// step 12.
 @MixWidget(target: RemixMenu.new)
 MenuStyler uiMenuStyle({
   UiMenuVariant variant = .solid,
@@ -21,7 +37,8 @@ MenuStyler uiMenuStyle({
   MenuStyler style = const MenuStyler.create(),
 }) {
   final metrics = _uiMenuMetrics(size);
-  final base = MenuStyler()
+
+  return MenuStyler()
       .containerEffects(RemixBoxEffectsMix.backdropBlur(UiTokens.panelBlur()))
       .trigger(_uiMenuTriggerStyler(metrics))
       .overlay(
@@ -50,12 +67,14 @@ MenuStyler uiMenuStyle({
       .submenuItem(
         _uiMenuSubmenuItemStyler(variant, metrics, highContrast: highContrast),
       )
-      .divider(_uiMenuDividerStyler(metrics));
-
-  return base.merge(style);
+      .divider(_uiMenuDividerStyler(metrics))
+      .merge(style);
 }
 
-/// Ui item recipe for per-item style overrides.
+/// The Ui menu item recipe, for styling one item on its own.
+///
+/// It is the item style [uiMenuStyle] gives every item, so a call site can
+/// match a menu's items outside the menu.
 MenuItemStyler uiMenuItemStyle({
   UiMenuVariant variant = .solid,
   UiMenuSize size = .size2,

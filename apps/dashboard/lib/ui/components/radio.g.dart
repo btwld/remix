@@ -6,7 +6,13 @@ part of 'radio.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixRadio].
+/// The Ui Radio recipe.
+///
+/// It reads top to bottom: the circle and its focus ring, then the variant's
+/// colors for rest, selected and disabled, then the touch target.
+///
+/// [highContrast] moves the selected fill (surface) or dot (soft) to accent
+/// step 12.
 class UiRadio<T> extends StatelessWidget {
   const UiRadio({
     super.key,
@@ -26,7 +32,8 @@ class UiRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// Surface treatment with neutral border.
+  /// A surface fill inside a 1px neutral frame, filled with the accent when
+  /// selected.
   const UiRadio.surface({
     super.key,
     this.size = .size2,
@@ -44,7 +51,7 @@ class UiRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiRadioVariant.surface;
 
-  /// Soft accent treatment.
+  /// An accent tint inside a 1px accent ring, with an accent-colored dot.
   const UiRadio.soft({
     super.key,
     this.size = .size2,

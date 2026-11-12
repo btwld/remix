@@ -6,7 +6,12 @@ part of 'switch.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixSwitch].
+/// The Fortal Switch recipe.
+///
+/// It reads top to bottom: the track, thumb and focus ring, then the variant's
+/// colors for on, pressed and disabled, then the touch target.
+///
+/// [highContrast] moves the on state to accent step 12.
 class FortalSwitch extends StatelessWidget {
   const FortalSwitch({
     super.key,
@@ -27,7 +32,7 @@ class FortalSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  /// Surface treatment with a visible border.
+  /// A neutral track with a 1px frame, filled with the accent when on.
   const FortalSwitch.surface({
     super.key,
     this.size = .size2,
@@ -46,7 +51,7 @@ class FortalSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalSwitchVariant.surface;
 
-  /// Softer accent treatment.
+  /// A neutral tint, accent-tinted when on, with no frame.
   const FortalSwitch.soft({
     super.key,
     this.size = .size2,

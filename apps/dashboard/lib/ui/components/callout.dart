@@ -6,81 +6,103 @@ import '../theme/theme.dart';
 
 part 'callout.g.dart';
 
-/// Ui Callout size presets.
-enum UiCalloutSize { size1, size2, size3 }
+/// The sizes a callout comes in. Pixel values are at 100% theme scaling.
+enum UiCalloutSize {
+  /// 14px text with 12px padding and an 8px gap.
+  size1,
 
-/// Ui Callout variants.
-enum UiCalloutVariant { soft, surface, outline }
+  /// 14px text with 16px padding and a 12px gap. The default.
+  size2,
 
-/// Ui-themed Callout with Ui sizes, variants, and overrides.
+  /// 16px text with 24px padding and a 16px gap.
+  size3,
+}
+
+/// The looks a callout comes in.
+enum UiCalloutVariant {
+  /// A tinted accent fill.
+  soft,
+
+  /// A faint accent fill inside a 1px accent frame.
+  surface,
+
+  /// No fill inside a 1px accent frame.
+  outline,
+}
+
+/// The Ui Callout recipe.
+///
+/// It reads top to bottom: the size, the color the icon and text share, then
+/// the variant's fill and frame.
+///
+/// [highContrast] moves the text and icon to accent step 12.
 @MixWidget(target: RemixCallout.new)
 CalloutStyler uiCalloutStyle({
   UiCalloutVariant variant = .soft,
   UiCalloutSize size = .size2,
   bool highContrast = false,
   CalloutStyler style = const CalloutStyler.create(),
-}) {
-  final contentColor = highContrast
-      ? UiTokens.accent12()
-      : UiTokens.accentContentAlpha();
-  final base = _uiCalloutBaseStyler(
-    size,
-  ).iconColor(contentColor).textColor(contentColor);
-  return (switch (variant) {
-    .soft => base.color(UiTokens.accentA3()),
-    .surface =>
-      base
-          .color(UiTokens.accentA2())
-          .containerEffects(
-            RemixBoxEffectsMix.behindContent(
-              uiInsetSurface(strokes: [UiTokens.accentA6()]),
-            ),
-          ),
-    .outline => base.containerEffects(
-      RemixBoxEffectsMix.behindContent(
-        uiInsetSurface(strokes: [UiTokens.accentA7()]),
-      ),
-    ),
-  }).merge(style);
-}
+}) => _scale(size)
+    .merge(_content(highContrast))
+    .merge(switch (variant) {
+      .soft => CalloutStyler().color(UiTokens.accentA3()),
+      .surface => _surface(),
+      .outline => _outline(),
+    })
+    .merge(style);
 
-CalloutStyler _uiCalloutBaseStyler(UiCalloutSize size) {
-  final radius = _uiCalloutRadius(size);
+/// The text, icon, padding, gap and corner size of each step.
+CalloutStyler _scale(UiCalloutSize size) {
+  final (:padding, :gap, :text, :icon, :radius) = switch (size) {
+    .size1 => (
+      padding: UiTokens.space3(),
+      gap: UiTokens.space2(),
+      text: UiTokens.text2,
+      icon: UiTokens.space4(),
+      radius: UiTokens.radius3(),
+    ),
+    .size2 => (
+      padding: UiTokens.space4(),
+      gap: UiTokens.space3(),
+      text: UiTokens.text2,
+      icon: UiTokens.space4(),
+      radius: UiTokens.radius4(),
+    ),
+    .size3 => (
+      padding: UiTokens.space5(),
+      gap: UiTokens.space4(),
+      text: UiTokens.text3,
+      icon: UiTokens.spinnerSize3(),
+      radius: UiTokens.radius5(),
+    ),
+  };
+
   return CalloutStyler(
     container: .direction(.horizontal)
         .mainAxisSize(.min)
         .crossAxisAlignment(.start)
-        .spacing(_uiCalloutGap(size))
-        .padding(EdgeInsetsGeometryMix.all(_uiCalloutPadding(size))),
-    text: .style(_uiCalloutText(size).mix()),
-    icon: .size(_uiCalloutIconSize(size)),
+        .spacing(gap)
+        .padding(EdgeInsetsGeometryMix.all(padding)),
+    text: .style(text.mix()),
+    icon: .size(icon),
   ).borderRadius(.all(radius));
 }
 
-double _uiCalloutPadding(UiCalloutSize size) => switch (size) {
-  .size1 => UiTokens.space3(),
-  .size2 => UiTokens.space4(),
-  .size3 => UiTokens.space5(),
-};
+/// The one color the icon and text share.
+CalloutStyler _content(bool highContrast) {
+  final color = highContrast
+      ? UiTokens.accent12()
+      : UiTokens.accentContentAlpha();
 
-double _uiCalloutGap(UiCalloutSize size) => switch (size) {
-  .size1 => UiTokens.space2(),
-  .size2 => UiTokens.space3(),
-  .size3 => UiTokens.space4(),
-};
+  return CalloutStyler().iconColor(color).textColor(color);
+}
 
-TextStyleToken _uiCalloutText(UiCalloutSize size) => switch (size) {
-  .size1 || .size2 => UiTokens.text2,
-  .size3 => UiTokens.text3,
-};
+CalloutStyler _surface() => CalloutStyler()
+    .color(UiTokens.accentA2())
+    .containerEffects(
+      .behindContent(uiInsetSurface(strokes: [UiTokens.accentA6()])),
+    );
 
-double _uiCalloutIconSize(UiCalloutSize size) => switch (size) {
-  .size1 || .size2 => UiTokens.space4(),
-  .size3 => UiTokens.spinnerSize3(),
-};
-
-Radius _uiCalloutRadius(UiCalloutSize size) => switch (size) {
-  .size1 => UiTokens.radius3(),
-  .size2 => UiTokens.radius4(),
-  .size3 => UiTokens.radius5(),
-};
+CalloutStyler _outline() => CalloutStyler().containerEffects(
+  .behindContent(uiInsetSurface(strokes: [UiTokens.accentA7()])),
+);

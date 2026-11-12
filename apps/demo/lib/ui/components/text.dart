@@ -7,7 +7,11 @@ import 'typography.dart';
 
 part 'text.g.dart';
 
-/// Fortal-themed body text on the Fortal nine-step scale.
+/// The Fortal Text recipe: body text on the nine-step text scale.
+///
+/// Neutral text is gray 12; [accent] takes the accent's text color, and
+/// [highContrast] moves that to accent step 12. [truncate] wins over
+/// [softWrap] and forces one ellipsized line.
 @MixWidget()
 TextStyler fortalTextStyle({
   FortalTextSize? size,
@@ -19,19 +23,15 @@ TextStyler fortalTextStyle({
   bool highContrast = false,
   TextStyler style = const TextStyler.create(),
 }) {
-  var recipe = TextStyler().style(
-    fortalTextSizeToken(size ?? FortalTextSize.size3).mix(),
-  );
-  recipe = recipe.fontWeight(
-    fortalTextWeightToken(weight ?? FortalTextWeight.regular)(),
-  );
-  recipe = accent
-      ? fortalAccentForeground(recipe, highContrast: highContrast)
-      : recipe.color(FortalTokens.gray12());
-  recipe = recipe.inherit(false);
+  final text = TextStyler()
+      .style(fortalTextSizeToken(size ?? FortalTextSize.size3).mix())
+      .fontWeight(fortalTextWeightToken(weight ?? FortalTextWeight.regular)());
+  final colored = accent
+      ? fortalAccentForeground(text, highContrast: highContrast)
+      : text.color(FortalTokens.gray12());
 
   return fortalApplyTextFlow(
-    recipe,
+    colored.inherit(false),
     align: align,
     softWrap: softWrap,
     truncate: truncate,

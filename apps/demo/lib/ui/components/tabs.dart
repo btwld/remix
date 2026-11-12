@@ -6,30 +6,40 @@ import '../theme/theme.dart';
 
 part 'tabs.g.dart';
 
-/// Fortal tab-list size presets on the shared scale.
-enum FortalTabsSize { size1, size2 }
+/// The sizes a tab comes in. Pixel values are at 100% theme scaling.
+enum FortalTabsSize {
+  /// 32px tall, with 12px text.
+  size1,
 
-/// Fortal-themed preset for [RemixTabBar].
+  /// 40px tall, with 14px text. The default.
+  size2,
+}
+
+/// The Fortal TabBar recipe: the row of tabs over a 1px gray line.
 @MixWidget(target: RemixTabBar.new)
 TabBarStyler fortalTabBarStyle({
   TabBarStyler style = const TabBarStyler.create(),
-}) {
-  return TabBarStyler()
-      .border(
-        .bottom(
-          .color(FortalTokens.grayA5()).width(FortalTokens.borderWidth1()),
-        ),
-      )
-      .merge(style);
-}
+}) => TabBarStyler()
+    .border(
+      .bottom(.color(FortalTokens.grayA5()).width(FortalTokens.borderWidth1())),
+    )
+    .merge(style);
 
-/// Fortal-themed preset for [RemixTabView].
+/// The Fortal TabView recipe: the panel under the tabs, which it leaves
+/// unstyled.
 @MixWidget(target: RemixTabView.new)
 TabViewStyler fortalTabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
 }) => TabViewStyler().merge(style);
 
-/// Fortal-themed preset for [RemixTab].
+/// The Fortal Tab recipe.
+///
+/// A tab is gray text, darker under the pointer, with a 2px underline in the
+/// accent when selected. The underline is a transparent border at rest, so
+/// selecting a tab does not move it. The selected label is medium weight, and
+/// its letter spacing is adjusted so the bolder label keeps its width.
+///
+/// [highContrast] moves the underline to accent step 12.
 @MixWidget(target: RemixTab.new)
 TabStyler fortalTabStyle({
   FortalTabsSize size = FortalTabsSize.size2,
@@ -91,7 +101,7 @@ TabStyler fortalTabStyle({
             .color(FortalTokens.grayA3())
             .onFocusVisible(.color(FortalTokens.accentA3())),
       )
-      .onFocusVisible(TabStyler().containerEffects(fortalFocusOutline()))
+      .onFocusVisible(.containerEffects(fortalFocusOutline()))
       .onSelected(
         .label(
               .color(FortalTokens.gray12())
@@ -114,10 +124,6 @@ TabStyler fortalTabStyle({
             ),
       )
       .wrap(fortalTouchTarget())
-      .onDisabled(
-        TabStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
+      .onDisabled(.containerEffects(.outline(.style(.none))))
       .merge(style);
 }

@@ -6,7 +6,8 @@ import '../theme/theme.dart';
 
 part 'tooltip.g.dart';
 
-/// Ui-themed preset for [RemixTooltip].
+/// The Ui Tooltip recipe: light 12px text on a dark pill that appears
+/// after a 200ms wait.
 @MixWidget(target: RemixTooltip.new)
 TooltipStyler uiTooltipStyle({
   TooltipStyler style = const TooltipStyler.create(),

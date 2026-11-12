@@ -8,24 +8,47 @@ import 'icon_button.dart';
 
 part 'toast.g.dart';
 
-/// Ui toast size presets.
-enum UiToastSize { size1, size2, size3 }
+/// The sizes a toast comes in. Pixel values are at 100% theme scaling.
+enum UiToastSize {
+  /// 12px text with 12px padding.
+  size1,
 
-/// Ui toast surfaces, with quiet and elevated floating treatments.
-enum UiToastVariant { surface, classic }
+  /// 14px text with 16px padding. The default.
+  size2,
+
+  /// 16px text with 24px padding.
+  size3,
+}
+
+/// How far a toast floats above the page.
+enum UiToastVariant {
+  /// A quiet shadow.
+  surface,
+
+  /// A deeper shadow. The default.
+  classic,
+}
 
 /// The color role of the leading icon.
 ///
 /// Visual only: it never changes [RemixToastData.priority]. Choose
 /// [RemixToastPriority.assertive] explicitly when a message needs an
 /// immediate announcement.
-enum UiToastIntent { accent, neutral, error }
+enum UiToastIntent {
+  /// The accent's text color.
+  accent,
 
-/// Ui-themed toast surface for [RemixToast] and [RemixToastScope].
+  /// Gray.
+  neutral,
+
+  /// The error color.
+  error,
+}
+
+/// The Ui Toast recipe, for [RemixToast] and [RemixToastScope].
 ///
-/// Toasts use the shared floating-layer elevation scale. The surface caps at
-/// 360 logical pixels and
-/// shrinks with the available width.
+/// A toast is a raised, blurred panel in a 1px frame, with a ghost action and
+/// close button. It caps at 360px and shrinks with the available width.
 ///
 /// ```dart
 /// RemixToastScope(style: uiToastStyle(), child: const Shell())
@@ -38,32 +61,29 @@ ToastStyler uiToastStyle({
   ToastStyler style = const ToastStyler.create(),
 }) {
   final metrics = _uiToastMetrics(size);
-  final base =
-      ToastStyler(
-            container: FlexBoxStyler().spacing(metrics.gap),
-            content: FlexBoxStyler().spacing(UiTokens.space1()),
-            icon: IconStyler()
-                .size(metrics.iconSize)
-                .color(_uiToastIntentColor(intent)),
-            title: TextStyler(
-              style: metrics.text.mix(),
-            ).fontWeight(UiTokens.fontWeightMedium()).color(UiTokens.gray12()),
-            description: TextStyler(
-              style: metrics.text.mix(),
-            ).color(UiTokens.gray11()),
-            action: uiButtonStyle(variant: .ghost, size: .size1),
-            closeButton: uiIconButtonStyle(variant: .ghost, size: .size1).merge(
-              IconButtonStyler().icon(IconStyler().color(UiTokens.gray11())),
-            ),
-          )
-          .padding(.all(metrics.padding))
-          .borderRadius(.all(metrics.radius))
-          .maxWidth(UiTokens.toastMaxWidth())
-          .containerEffects(
-            RemixBoxEffectsMix.backdropBlur(UiTokens.panelBlur()),
-          );
 
-  return base
+  return ToastStyler(
+        container: FlexBoxStyler().spacing(metrics.gap),
+        content: FlexBoxStyler().spacing(UiTokens.space1()),
+        icon: IconStyler()
+            .size(metrics.iconSize)
+            .color(_uiToastIntentColor(intent)),
+        title: TextStyler(
+          style: metrics.text.mix(),
+        ).fontWeight(UiTokens.fontWeightMedium()).color(UiTokens.gray12()),
+        description: TextStyler(
+          style: metrics.text.mix(),
+        ).color(UiTokens.gray11()),
+        action: uiButtonStyle(variant: .ghost, size: .size1),
+        closeButton: uiIconButtonStyle(
+          variant: .ghost,
+          size: .size1,
+        ).merge(IconButtonStyler().icon(IconStyler().color(UiTokens.gray11()))),
+      )
+      .padding(.all(metrics.padding))
+      .borderRadius(.all(metrics.radius))
+      .maxWidth(UiTokens.toastMaxWidth())
+      .containerEffects(RemixBoxEffectsMix.backdropBlur(UiTokens.panelBlur()))
       .color(UiTokens.colorPanel())
       .border(.all(.color(UiTokens.gray6()).width(UiTokens.borderWidth1())))
       .decoration(

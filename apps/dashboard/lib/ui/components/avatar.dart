@@ -6,23 +6,52 @@ import '../theme/theme.dart';
 
 part 'avatar.g.dart';
 
-/// Ui Avatar size presets.
+/// The sizes an avatar comes in. Pixel values are at 100% theme scaling.
 enum UiAvatarSize {
+  /// 24px square.
   size1,
+
+  /// 32px square.
   size2,
+
+  /// 40px square. The default.
   size3,
+
+  /// 48px square.
   size4,
+
+  /// 64px square.
   size5,
+
+  /// 80px square.
   size6,
+
+  /// 96px square.
   size7,
+
+  /// 128px square.
   size8,
+
+  /// 160px square.
   size9,
 }
 
-/// Ui Avatar variants.
-enum UiAvatarVariant { soft, solid }
+/// The looks an avatar comes in.
+enum UiAvatarVariant {
+  /// A tinted accent fill under accent text.
+  soft,
 
-/// Ui-themed Avatar with Ui sizes, variants, and overrides.
+  /// The accent's solid fill under its contrast text.
+  solid,
+}
+
+/// The Ui Avatar recipe.
+///
+/// It reads top to bottom: the size and fallback text, then the variant's
+/// colors. The corners turn into a circle when the theme radius is `full`.
+///
+/// [highContrast] moves the solid fill, and the text of the soft variant, to
+/// accent step 12.
 ///
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.
@@ -33,79 +62,78 @@ AvatarStyler uiAvatarStyle({
   bool highContrast = false,
   int fallbackLength = 1,
   AvatarStyler style = const AvatarStyler.create(),
-}) {
-  final base = _uiAvatarBaseStyler(size, fallbackLength: fallbackLength);
-  final softContent = highContrast
-      ? UiTokens.accent12()
-      : UiTokens.accentContentAlpha();
-  final solidContent = highContrast
-      ? UiTokens.accent1()
-      : UiTokens.accentContrast();
-  return (switch (variant) {
-    .soft =>
-      base
-          .color(UiTokens.accentA3())
-          .labelColor(softContent)
-          .iconColor(softContent),
-    .solid =>
-      base
-          .color(highContrast ? UiTokens.accent12() : UiTokens.accentSolid())
-          .labelColor(solidContent)
-          .iconColor(solidContent),
-  }).merge(style);
-}
+}) => _base(size, fallbackLength: fallbackLength)
+    .merge(switch (variant) {
+      .soft => _soft(highContrast),
+      .solid => _solid(highContrast),
+    })
+    .merge(style);
 
-AvatarStyler _uiAvatarBaseStyler(
-  UiAvatarSize size, {
-  required int fallbackLength,
-}) {
-  final fallbackText = _uiAvatarFallbackText(size, fallbackLength);
-  final dimension = _uiAvatarDimension(size);
+/// The square, corner, fallback text and icon size of each step.
+AvatarStyler _base(UiAvatarSize size, {required int fallbackLength}) {
+  final (:dimension, :icon, :radius) = switch (size) {
+    .size1 => (
+      dimension: UiTokens.space5(),
+      icon: UiTokens.space3(),
+      radius: UiTokens.radius2OrFull(),
+    ),
+    .size2 => (
+      dimension: UiTokens.space6(),
+      icon: UiTokens.space4(),
+      radius: UiTokens.radius2OrFull(),
+    ),
+    .size3 => (
+      dimension: UiTokens.space7(),
+      icon: UiTokens.avatarIconSize3(),
+      radius: UiTokens.radius3OrFull(),
+    ),
+    .size4 => (
+      dimension: UiTokens.space8(),
+      icon: UiTokens.space5(),
+      radius: UiTokens.radius3OrFull(),
+    ),
+    .size5 => (
+      dimension: UiTokens.space9(),
+      icon: UiTokens.space6(),
+      radius: UiTokens.radius4OrFull(),
+    ),
+    .size6 => (
+      dimension: UiTokens.avatarSize6(),
+      icon: UiTokens.space7(),
+      radius: UiTokens.radius5OrFull(),
+    ),
+    .size7 => (
+      dimension: UiTokens.avatarSize7(),
+      icon: UiTokens.space8(),
+      radius: UiTokens.radius5OrFull(),
+    ),
+    .size8 => (
+      dimension: UiTokens.avatarSize8(),
+      icon: UiTokens.space9(),
+      radius: UiTokens.radius6OrFull(),
+    ),
+    .size9 => (
+      dimension: UiTokens.avatarSize9(),
+      icon: UiTokens.avatarIconSize9(),
+      radius: UiTokens.radius6OrFull(),
+    ),
+  };
+
   return AvatarStyler()
       .clipBehavior(.hardEdge)
       .label(
         TextStyler(
-          style: fallbackText.mix(),
+          style: _fallbackText(size, fallbackLength).mix(),
         ).fontWeight(UiTokens.fontWeightMedium()),
       )
-      .icon(.size(_uiAvatarIconSize(size)).color(UiTokens.accentContentAlpha()))
+      .icon(.size(icon).color(UiTokens.accentContentAlpha()))
       .size(dimension, dimension)
-      .borderRadius(.all(_uiAvatarRadius(size)));
+      .borderRadius(.all(radius));
 }
 
-double _uiAvatarDimension(UiAvatarSize size) => switch (size) {
-  .size1 => UiTokens.space5(),
-  .size2 => UiTokens.space6(),
-  .size3 => UiTokens.space7(),
-  .size4 => UiTokens.space8(),
-  .size5 => UiTokens.space9(),
-  .size6 => UiTokens.avatarSize6(),
-  .size7 => UiTokens.avatarSize7(),
-  .size8 => UiTokens.avatarSize8(),
-  .size9 => UiTokens.avatarSize9(),
-};
-
-double _uiAvatarIconSize(UiAvatarSize size) => switch (size) {
-  .size1 => UiTokens.space3(),
-  .size2 => UiTokens.space4(),
-  .size3 => UiTokens.avatarIconSize3(),
-  .size4 => UiTokens.space5(),
-  .size5 => UiTokens.space6(),
-  .size6 => UiTokens.space7(),
-  .size7 => UiTokens.space8(),
-  .size8 => UiTokens.space9(),
-  .size9 => UiTokens.avatarIconSize9(),
-};
-
-Radius _uiAvatarRadius(UiAvatarSize size) => switch (size) {
-  .size1 || .size2 => UiTokens.radius2OrFull(),
-  .size3 || .size4 => UiTokens.radius3OrFull(),
-  .size5 => UiTokens.radius4OrFull(),
-  .size6 || .size7 => UiTokens.radius5OrFull(),
-  .size8 || .size9 => UiTokens.radius6OrFull(),
-};
-
-TextStyleToken _uiAvatarFallbackText(UiAvatarSize size, int fallbackLength) =>
+/// The fallback text style. The first four sizes have a one-character and a
+/// two-character style; larger sizes have one.
+TextStyleToken _fallbackText(UiAvatarSize size, int fallbackLength) =>
     switch ((size, fallbackLength == 2)) {
       (.size1, false) => UiTokens.avatarFallback1One,
       (.size1, true) => UiTokens.avatarFallback1Two,
@@ -121,3 +149,23 @@ TextStyleToken _uiAvatarFallbackText(UiAvatarSize size, int fallbackLength) =>
       (.size8, _) => UiTokens.avatarFallback8,
       (.size9, _) => UiTokens.avatarFallback9,
     };
+
+AvatarStyler _soft(bool highContrast) {
+  final content = highContrast
+      ? UiTokens.accent12()
+      : UiTokens.accentContentAlpha();
+
+  return AvatarStyler()
+      .color(UiTokens.accentA3())
+      .labelColor(content)
+      .iconColor(content);
+}
+
+AvatarStyler _solid(bool highContrast) {
+  final content = highContrast ? UiTokens.accent1() : UiTokens.accentContrast();
+
+  return AvatarStyler()
+      .color(highContrast ? UiTokens.accent12() : UiTokens.accentSolid())
+      .labelColor(content)
+      .iconColor(content);
+}

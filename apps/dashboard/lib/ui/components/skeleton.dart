@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 
 part 'skeleton.g.dart';
 
-/// Ui recipe for [RemixSkeleton].
+/// The Ui Skeleton recipe: a gray placeholder block that pulses.
 @MixWidget(target: RemixSkeleton.new)
 SkeletonStyler uiSkeletonStyle({
   SkeletonStyler style = const SkeletonStyler.create(),

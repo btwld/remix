@@ -6,7 +6,7 @@ part of 'chart.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui presentation for a Mix line or area chart.
+/// The Ui LineChart recipe, for a Mix line or area chart.
 ///
 /// Generates [UiLineChart] through `mix_generator`. The plot remains
 /// transparent so callers can compose it inside any surface.
@@ -113,7 +113,7 @@ class UiLineChart extends StatelessWidget {
   }
 }
 
-/// Ui presentation for a Mix grouped, stacked, or floating bar chart.
+/// The Ui BarChart recipe: grouped, stacked or floating bars.
 ///
 /// Generates [UiBarChart] through `mix_generator`.
 class UiBarChart extends StatelessWidget {
@@ -215,7 +215,7 @@ class UiBarChart extends StatelessWidget {
   }
 }
 
-/// Ui presentation for a Mix pie or donut chart.
+/// The Ui PieChart recipe, for a Mix pie or donut chart.
 ///
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing

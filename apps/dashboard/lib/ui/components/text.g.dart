@@ -6,7 +6,11 @@ part of 'text.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed body text on the Ui nine-step scale.
+/// The Ui Text recipe: body text on the nine-step text scale.
+///
+/// Neutral text is gray 12; [accent] takes the accent's text color, and
+/// [highContrast] moves that to accent step 12. [truncate] wins over
+/// [softWrap] and forces one ellipsized line.
 class UiText extends StatelessWidget {
   const UiText(
     this.text, {

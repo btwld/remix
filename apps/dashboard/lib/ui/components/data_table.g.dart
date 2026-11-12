@@ -6,7 +6,10 @@ part of 'data_table.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui recipe for [RemixDataTable].
+/// The Ui DataTable recipe.
+///
+/// It reads top to bottom: the cells, rows, footer and the controls inside
+/// them at the size, then the variant's panel.
 class UiDataTable<T> extends StatelessWidget {
   const UiDataTable({
     super.key,
@@ -38,6 +41,7 @@ class UiDataTable<T> extends StatelessWidget {
     this.nextPageIcon,
   });
 
+  /// A panel with a 1px frame and a tinted header.
   const UiDataTable.surface({
     super.key,
     this.size = .size2,
@@ -67,6 +71,7 @@ class UiDataTable<T> extends StatelessWidget {
     this.nextPageIcon,
   }) : variant = UiDataTableVariant.surface;
 
+  /// No panel or frame: rows on the page.
   const UiDataTable.ghost({
     super.key,
     this.size = .size2,

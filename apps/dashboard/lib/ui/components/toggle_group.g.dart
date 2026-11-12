@@ -6,7 +6,13 @@ part of 'toggle_group.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed segmented-control preset for [RemixToggleGroup].
+/// The Ui ToggleGroup recipe: a segmented control, a 1px gray frame around
+/// items that share it.
+///
+/// It reads top to bottom: the frame, the item's colors for rest, hover,
+/// press, selected, focus and disabled, then the size.
+///
+/// [highContrast] moves the selected item's label and icon to accent step 12.
 class UiToggleGroup<T> extends StatelessWidget {
   const UiToggleGroup({
     super.key,
@@ -24,6 +30,7 @@ class UiToggleGroup<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// An accent tint behind the selected item.
   const UiToggleGroup.soft({
     super.key,
     this.size = .size2,
@@ -39,6 +46,7 @@ class UiToggleGroup<T> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiToggleGroupVariant.soft;
 
+  /// A faint accent surface behind the selected item.
   const UiToggleGroup.surface({
     super.key,
     this.size = .size2,

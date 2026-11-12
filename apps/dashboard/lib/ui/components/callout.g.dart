@@ -6,7 +6,12 @@ part of 'callout.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Callout with Ui sizes, variants, and overrides.
+/// The Ui Callout recipe.
+///
+/// It reads top to bottom: the size, the color the icon and text share, then
+/// the variant's fill and frame.
+///
+/// [highContrast] moves the text and icon to accent step 12.
 class UiCallout extends StatelessWidget {
   const UiCallout({
     super.key,
@@ -19,6 +24,7 @@ class UiCallout extends StatelessWidget {
     this.child,
   });
 
+  /// A tinted accent fill.
   const UiCallout.soft({
     super.key,
     this.size = .size2,
@@ -29,6 +35,7 @@ class UiCallout extends StatelessWidget {
     this.child,
   }) : variant = UiCalloutVariant.soft;
 
+  /// A faint accent fill inside a 1px accent frame.
   const UiCallout.surface({
     super.key,
     this.size = .size2,
@@ -39,6 +46,7 @@ class UiCallout extends StatelessWidget {
     this.child,
   }) : variant = UiCalloutVariant.surface;
 
+  /// No fill inside a 1px accent frame.
   const UiCallout.outline({
     super.key,
     this.size = .size2,

@@ -6,7 +6,11 @@ part of 'menu.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal menu content with Fortal-owned size, variant, and contrast behavior.
+/// The Fortal Menu recipe: the trigger, the floating panel, its items,
+/// submenu items and dividers.
+///
+/// [highContrast] moves the highlighted item of the solid variant to accent
+/// step 12.
 class FortalMenu<T> extends StatelessWidget {
   const FortalMenu({
     super.key,
@@ -32,6 +36,7 @@ class FortalMenu<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The accent's solid fill under its contrast text.
   const FortalMenu.solid({
     super.key,
     this.size = .size2,
@@ -55,6 +60,7 @@ class FortalMenu<T> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalMenuVariant.solid;
 
+  /// A tinted accent fill.
   const FortalMenu.soft({
     super.key,
     this.size = .size2,

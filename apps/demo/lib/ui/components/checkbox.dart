@@ -6,48 +6,51 @@ import '../theme/theme.dart';
 
 part 'checkbox.g.dart';
 
-/// Fortal Checkbox size presets.
-enum FortalCheckboxSize { size1, size2, size3 }
+/// The sizes a checkbox comes in. Pixel values are at 100% theme scaling.
+enum FortalCheckboxSize {
+  /// A 14px box with a 9px check.
+  size1,
 
-/// Fortal Checkbox variants.
-enum FortalCheckboxVariant { surface, soft }
+  /// A 16px box with a 10px check. The default.
+  size2,
 
-/// Fortal recipe for [RemixCheckbox].
+  /// A 20px box with a 12px check.
+  size3,
+}
+
+/// The looks a checkbox comes in.
+enum FortalCheckboxVariant {
+  /// A surface fill inside a 1px neutral frame, filled with the accent when
+  /// selected.
+  surface,
+
+  /// An accent tint inside a 1px accent ring, with an accent-colored mark.
+  soft,
+}
+
+/// The Fortal Checkbox recipe.
+///
+/// It reads top to bottom: the box and its focus ring, then the variant's
+/// colors for rest, selected and disabled, then the touch target.
+///
+/// [highContrast] moves the selected fill (surface) or mark (soft) to accent
+/// step 12.
 @MixWidget(target: RemixCheckbox.new)
 CheckboxStyler fortalCheckboxStyle({
   FortalCheckboxVariant variant = .surface,
   FortalCheckboxSize size = .size2,
   bool highContrast = false,
   CheckboxStyler style = const CheckboxStyler.create(),
-}) {
-  final metrics = _fortalCheckboxMetrics(size);
-  final base = CheckboxStyler(
-    container: .size(
-      metrics.size,
-      metrics.size,
-    ).alignment(.center).borderRadius(.all(metrics.radius)),
-    indicator: .size(metrics.indicatorSize),
-    containerEffects: RemixBoxEffectsMix(
-      behindContent: RemixBoxEffectLayerMix(),
-      overContent: RemixBoxEffectLayerMix(),
-    ),
-  ).onFocusVisible(.containerEffects(fortalFocusOutline()));
+}) => _box(size)
+    .merge(switch (variant) {
+      .surface => _surface(highContrast),
+      .soft => _soft(highContrast),
+    })
+    .wrap(fortalTouchTarget())
+    .onDisabled(.containerEffects(.outline(.style(.none))))
+    .merge(style);
 
-  return (switch (variant) {
-        .surface => _fortalCheckboxSurface(base, highContrast),
-        .soft => _fortalCheckboxSoft(base, highContrast),
-      })
-      .wrap(fortalTouchTarget())
-      .onDisabled(
-        CheckboxStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
-      .merge(style);
-}
-
-/// Fortal recipe for [RemixCheckboxGroupItem].
-///
+/// The Fortal CheckboxGroupItem recipe: the checkbox recipe plus a label.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
 /// so unlike every other Remix item (menu, select, segmented control, toggle
@@ -60,130 +63,116 @@ CheckboxStyler fortalCheckboxGroupItemStyle({
   FortalCheckboxSize size = .size2,
   bool highContrast = false,
   CheckboxStyler style = const CheckboxStyler.create(),
-}) {
-  final checkbox = fortalCheckboxStyle(
-    variant: variant,
-    size: size,
-    highContrast: highContrast,
-  );
+}) =>
+    fortalCheckboxStyle(
+          variant: variant,
+          size: size,
+          highContrast: highContrast,
+        )
+        .merge(switch (size) {
+          .size1 => _label(FortalTokens.text1, FortalTokens.space1),
+          .size2 => _label(FortalTokens.text2, FortalTokens.space2),
+          .size3 => _label(FortalTokens.text3, FortalTokens.space2),
+        })
+        .merge(style);
 
-  return (switch (size) {
-        .size1 =>
-          checkbox
-              .label(.style(FortalTokens.text1.mix()))
-              .labelSpacing(FortalTokens.space1()),
-        .size2 =>
-          checkbox
-              .label(.style(FortalTokens.text2.mix()))
-              .labelSpacing(FortalTokens.space2()),
-        .size3 =>
-          checkbox
-              .label(.style(FortalTokens.text3.mix()))
-              .labelSpacing(FortalTokens.space2()),
-      })
-      .wrap(fortalTouchTarget())
-      .onDisabled(
-        CheckboxStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
-      .merge(style);
+/// The box and check sizes of each step, with the focus ring and no effects.
+///
+/// The empty effect layers give the variant's state fragments layers to
+/// replace.
+CheckboxStyler _box(FortalCheckboxSize size) {
+  final (:box, :check, :radius) = switch (size) {
+    .size1 => (
+      box: FortalTokens.checkboxSize1(),
+      check: FortalTokens.checkboxIndicatorSize1(),
+      radius: FortalTokens.checkboxRadius1(),
+    ),
+    .size2 => (
+      box: FortalTokens.space4(),
+      check: FortalTokens.checkboxIndicatorSize2(),
+      radius: FortalTokens.radius1(),
+    ),
+    .size3 => (
+      box: FortalTokens.checkboxSize3(),
+      check: FortalTokens.space3(),
+      radius: FortalTokens.checkboxRadius3(),
+    ),
+  };
+
+  return CheckboxStyler(
+    container: .size(box, box).alignment(.center).borderRadius(.all(radius)),
+    indicator: .size(check),
+    containerEffects: RemixBoxEffectsMix(
+      behindContent: RemixBoxEffectLayerMix(),
+      overContent: RemixBoxEffectLayerMix(),
+    ),
+  ).onFocusVisible(.containerEffects(fortalFocusOutline()));
 }
 
-({double size, double indicatorSize, Radius radius}) _fortalCheckboxMetrics(
-  FortalCheckboxSize size,
-) => switch (size) {
-  .size1 => (
-    size: FortalTokens.checkboxSize1(),
-    indicatorSize: FortalTokens.checkboxIndicatorSize1(),
-    radius: FortalTokens.checkboxRadius1(),
-  ),
-  .size2 => (
-    size: FortalTokens.space4(),
-    indicatorSize: FortalTokens.checkboxIndicatorSize2(),
-    radius: FortalTokens.radius1(),
-  ),
-  .size3 => (
-    size: FortalTokens.checkboxSize3(),
-    indicatorSize: FortalTokens.space3(),
-    radius: FortalTokens.checkboxRadius3(),
-  ),
-};
+/// The label's text style and its gap to the box.
+CheckboxStyler _label(TextStyleToken text, SpaceToken gap) =>
+    CheckboxStyler().label(.style(text.mix())).labelSpacing(gap());
 
-CheckboxStyler _fortalCheckboxSurface(CheckboxStyler base, bool highContrast) {
+/// A surface fill with a neutral frame; the accent fill when selected.
+CheckboxStyler _surface(bool highContrast) {
   final selected = CheckboxStyler()
       .color(
         highContrast ? FortalTokens.accent12() : FortalTokens.accentIndicator(),
       )
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(shadows: const []),
-        ),
-      )
+      .merge(_effects(over: RemixBoxEffectLayerMix(shadows: const [])))
       .indicatorColor(
         highContrast
             ? FortalTokens.accent1()
             : FortalTokens.accentIndicatorContrast(),
       );
 
-  return base
+  return CheckboxStyler()
       .color(FortalTokens.colorSurface())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          fortalInsetSurface(strokes: [FortalTokens.controlBorder()]),
+      .merge(
+        _effects(
+          over: fortalInsetSurface(strokes: [FortalTokens.controlBorder()]),
         ),
       )
       .onSelected(selected)
       .onIndeterminate(selected)
-      .onDisabled(
-        .color(FortalTokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                fortalInsetSurface(strokes: [FortalTokens.grayA6()]),
-              ),
-            )
-            .indicatorColor(FortalTokens.grayA8()),
-      );
+      .onDisabled(_disabled(frame: FortalTokens.grayA6()));
 }
 
-CheckboxStyler _fortalCheckboxSoft(CheckboxStyler base, bool highContrast) {
+/// An accent tint with an accent ring; the mark takes the accent when
+/// selected.
+CheckboxStyler _soft(bool highContrast) {
   final selected = CheckboxStyler().indicatorColor(
     highContrast ? FortalTokens.accent12() : FortalTokens.accentContentAlpha(),
   );
 
-  return base
+  return CheckboxStyler()
       .color(FortalTokens.accentA5())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-      )
       // The tint alone is too faint to show an empty control; the accent-8
       // ring keeps a 3:1 boundary in every enabled state.
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          fortalInsetSurface(strokes: [FortalTokens.focus8()]),
-        ),
+      .merge(
+        _effects(over: fortalInsetSurface(strokes: [FortalTokens.focus8()])),
       )
       .onSelected(selected)
       .onIndeterminate(selected)
-      .onDisabled(
-        .color(FortalTokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                RemixBoxEffectLayerMix(shadows: const []),
-              ),
-            )
-            .indicatorColor(FortalTokens.grayA8()),
-      );
+      .onDisabled(_disabled());
 }
+
+/// A gray fill and mark. The surface variant keeps a [frame]; soft has none.
+CheckboxStyler _disabled({Color? frame}) => CheckboxStyler()
+    .color(FortalTokens.grayA3())
+    .merge(
+      _effects(
+        over: frame == null
+            ? RemixBoxEffectLayerMix(shadows: const [])
+            : fortalInsetSurface(strokes: [frame]),
+      ),
+    )
+    .indicatorColor(FortalTokens.grayA8());
+
+/// Sets the layer over the content and empties the one behind it.
+CheckboxStyler _effects({required RemixBoxEffectLayerMix over}) =>
+    CheckboxStyler()
+        .containerEffects(
+          RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+        )
+        .containerEffects(RemixBoxEffectsMix.overContent(over));

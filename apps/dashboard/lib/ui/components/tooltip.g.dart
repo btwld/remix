@@ -6,7 +6,8 @@ part of 'tooltip.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixTooltip].
+/// The Ui Tooltip recipe: light 12px text on a dark pill that appears
+/// after a 200ms wait.
 class UiTooltip extends StatelessWidget {
   const UiTooltip({
     super.key,

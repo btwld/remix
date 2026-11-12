@@ -6,11 +6,27 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// Ui Code variants.
-enum UiCodeVariant { solid, soft, outline, ghost }
+/// The looks inline code comes in, from most to least emphasis.
+enum UiCodeVariant {
+  /// The accent's solid fill under its contrast text.
+  solid,
 
-/// Ui-themed inline code on the Ui nine-step scale.
+  /// A tinted accent fill under accent text.
+  soft,
+
+  /// No fill inside a 1px accent frame.
+  outline,
+
+  /// No fill or frame: monospace text in the surrounding color, or in the
+  /// accent when `accent` is set.
+  ghost,
+}
+
+/// The style of inline code: monospace text at 95% of the size's text size,
+/// padded and filled per [variant].
 ///
+/// Takes a [context] because its padding and corners are em-relative to the
+/// resolved font size.
 BadgeStyler uiCodeStyle(
   BuildContext context, {
   UiTextSize? size,

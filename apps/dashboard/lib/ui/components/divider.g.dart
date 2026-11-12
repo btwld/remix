@@ -6,7 +6,7 @@ part of 'divider.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixDivider].
+/// The Ui Divider recipe: a 1px gray line, horizontal or vertical.
 class UiDivider extends StatelessWidget {
   const UiDivider({
     super.key,

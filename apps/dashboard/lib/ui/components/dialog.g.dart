@@ -6,7 +6,7 @@ part of 'dialog.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixDialog].
+/// The Ui Dialog recipe: a raised, blurred panel with a bold title.
 ///
 /// The generated [UiDialog] defaults to [UiDialogSize.size3],
 /// [Alignment.center], fills up to 600 logical pixels, preserves safe
