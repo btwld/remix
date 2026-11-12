@@ -8,9 +8,13 @@ part of 'button.dart';
 
 /// HeroUI recipe for [RemixButton].
 ///
+/// One chain sets every state. The values come from two tables below:
+/// [_metrics] has a row per size and [_palette] a row per variant, because
+/// every variant sets the same four colors and nothing else.
+///
 /// HeroUI's pending state is Remix's `loading`: the button dims like a
 /// disabled one, as upstream does, and shows Remix's spinner in place of its
-/// content. [fullWidth] is HeroUI's `w-full`.
+/// content. [fullWidth] is HeroUI's `w-full`. [style] merges last.
 class HeroUiButton extends StatelessWidget {
   const HeroUiButton({
     super.key,
@@ -38,6 +42,7 @@ class HeroUiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// The `accent` fill: the main action.
   const HeroUiButton.primary({
     super.key,
     this.size = .md,
@@ -63,6 +68,7 @@ class HeroUiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.primary;
 
+  /// The neutral `default` fill under accent-tinted text.
   const HeroUiButton.secondary({
     super.key,
     this.size = .md,
@@ -88,6 +94,7 @@ class HeroUiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.secondary;
 
+  /// The neutral `default` fill under the ordinary text color.
   const HeroUiButton.tertiary({
     super.key,
     this.size = .md,
@@ -113,6 +120,7 @@ class HeroUiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.tertiary;
 
+  /// No fill, inside a 1px `border` line.
   const HeroUiButton.outline({
     super.key,
     this.size = .md,
@@ -138,6 +146,7 @@ class HeroUiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.outline;
 
+  /// No fill and no border until the pointer arrives.
   const HeroUiButton.ghost({
     super.key,
     this.size = .md,
@@ -163,6 +172,7 @@ class HeroUiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.ghost;
 
+  /// The `danger` fill, for a destructive action.
   const HeroUiButton.danger({
     super.key,
     this.size = .md,
@@ -188,6 +198,7 @@ class HeroUiButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.danger;
 
+  /// A soft `danger` tint, for a destructive action of lower emphasis.
   const HeroUiButton.dangerSoft({
     super.key,
     this.size = .md,
@@ -291,8 +302,8 @@ class HeroUiButton extends StatelessWidget {
 
 /// HeroUI's icon-only button, as a recipe for [RemixIconButton].
 ///
-/// Same variants and sizes as [heroUiButtonStyle]; the control is square at the
-/// button's height.
+/// The same variants, sizes and states as [heroUiButtonStyle], from the same
+/// two tables. The control is square at the button's height.
 class HeroUiIconButton extends StatelessWidget {
   const HeroUiIconButton({
     super.key,
@@ -315,6 +326,7 @@ class HeroUiIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// The `accent` fill: the main action.
   const HeroUiIconButton.primary({
     super.key,
     this.size = .md,
@@ -335,6 +347,7 @@ class HeroUiIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.primary;
 
+  /// The neutral `default` fill under accent-tinted text.
   const HeroUiIconButton.secondary({
     super.key,
     this.size = .md,
@@ -355,6 +368,7 @@ class HeroUiIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.secondary;
 
+  /// The neutral `default` fill under the ordinary text color.
   const HeroUiIconButton.tertiary({
     super.key,
     this.size = .md,
@@ -375,6 +389,7 @@ class HeroUiIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.tertiary;
 
+  /// No fill, inside a 1px `border` line.
   const HeroUiIconButton.outline({
     super.key,
     this.size = .md,
@@ -395,6 +410,7 @@ class HeroUiIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.outline;
 
+  /// No fill and no border until the pointer arrives.
   const HeroUiIconButton.ghost({
     super.key,
     this.size = .md,
@@ -415,6 +431,7 @@ class HeroUiIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.ghost;
 
+  /// The `danger` fill, for a destructive action.
   const HeroUiIconButton.danger({
     super.key,
     this.size = .md,
@@ -435,6 +452,7 @@ class HeroUiIconButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiButtonVariant.danger;
 
+  /// A soft `danger` tint, for a destructive action of lower emphasis.
   const HeroUiIconButton.dangerSoft({
     super.key,
     this.size = .md,

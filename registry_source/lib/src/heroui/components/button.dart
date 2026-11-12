@@ -7,15 +7,27 @@ import 'spinner.dart';
 
 part 'button.g.dart';
 
-/// HeroUI button variants: solid (`primary`, `danger`), tinted (`secondary`,
-/// `tertiary`, `dangerSoft`), and bare (`outline`, `ghost`).
+/// The emphasis levels of a HeroUI button.
 enum HeroUiButtonVariant {
+  /// The `accent` fill: the main action.
   primary,
+
+  /// The neutral `default` fill under accent-tinted text.
   secondary,
+
+  /// The neutral `default` fill under the ordinary text color.
   tertiary,
+
+  /// No fill, inside a 1px `border` line.
   outline,
+
+  /// No fill and no border until the pointer arrives.
   ghost,
+
+  /// The `danger` fill, for a destructive action.
   danger,
+
+  /// A soft `danger` tint, for a destructive action of lower emphasis.
   dangerSoft,
 }
 
@@ -25,13 +37,26 @@ enum HeroUiButtonVariant {
 /// merge order: a caller's `style: ButtonStyler().height(50)` is ignored from
 /// 768px up. Override with
 /// `onBreakpoint(Breakpoint.minWidth(HeroUiTokens.breakpointMd), ...)`.
-enum HeroUiButtonSize { sm, md, lg }
+enum HeroUiButtonSize {
+  /// 36px tall, 32px from 768px up.
+  sm,
+
+  /// 40px tall, 36px from 768px up. The default.
+  md,
+
+  /// 44px tall, 40px from 768px up.
+  lg,
+}
 
 /// HeroUI recipe for [RemixButton].
 ///
+/// One chain sets every state. The values come from two tables below:
+/// [_metrics] has a row per size and [_palette] a row per variant, because
+/// every variant sets the same four colors and nothing else.
+///
 /// HeroUI's pending state is Remix's `loading`: the button dims like a
 /// disabled one, as upstream does, and shows Remix's spinner in place of its
-/// content. [fullWidth] is HeroUI's `w-full`.
+/// content. [fullWidth] is HeroUI's `w-full`. [style] merges last.
 @MixWidget(target: RemixButton.new)
 ButtonStyler heroUiButtonStyle({
   HeroUiButtonVariant variant = .primary,
@@ -42,7 +67,8 @@ ButtonStyler heroUiButtonStyle({
   final metrics = _metrics(size);
   final palette = _palette(variant);
 
-  var result = ButtonStyler()
+  return ButtonStyler()
+      .animate(HeroUiTokens.fillMotion)
       .height(metrics.height.mobile)
       .padding(.horizontal(metrics.paddingX))
       .mainAxisAlignment(.center)
@@ -61,38 +87,34 @@ ButtonStyler heroUiButtonStyle({
       .spinner(heroUiInlineSpinnerStyle(palette.foreground))
       .onBreakpoint(
         const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
-        ButtonStyler().icon(.size(_iconFromSm)),
+        .icon(.size(_iconFromSm)),
       )
       .onBreakpoint(
         const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
-        ButtonStyler().height(metrics.height.desktop),
+        .height(metrics.height.desktop),
       )
-      // `:active` is declared before `:hover`, so a pointer press shows the
-      // hover fill while the scale still applies.
+      // Press is declared before hover, as upstream declares `:active` before
+      // `:hover`: a pointer press shows the hover fill while the scale applies.
       .onPressed(
         ButtonStyler()
             .color(palette.pressed)
             .scale(metrics.pressedScale)
             .animate(_pressMotion),
       )
-      .onHovered(ButtonStyler().color(palette.hover))
+      .onHovered(.color(palette.hover))
       .onFocusVisible(.containerEffects(heroUiFocusRing()))
-      .animate(HeroUiTokens.fillMotion);
-
-  if (palette.bordered) {
-    result = result.border(.color(HeroUiTokens.border()).width(_borderWidth));
-  }
-  if (fullWidth) result = result.width(double.infinity);
-
-  return result
       .onDisabled(ButtonStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)))
+      .merge(
+        variant == .outline ? ButtonStyler().border(_outlineBorder()) : null,
+      )
+      .merge(fullWidth ? ButtonStyler().width(double.infinity) : null)
       .merge(style);
 }
 
 /// HeroUI's icon-only button, as a recipe for [RemixIconButton].
 ///
-/// Same variants and sizes as [heroUiButtonStyle]; the control is square at the
-/// button's height.
+/// The same variants, sizes and states as [heroUiButtonStyle], from the same
+/// two tables. The control is square at the button's height.
 @MixWidget(target: RemixIconButton.new)
 IconButtonStyler heroUiIconButtonStyle({
   HeroUiButtonVariant variant = .primary,
@@ -102,7 +124,8 @@ IconButtonStyler heroUiIconButtonStyle({
   final metrics = _metrics(size);
   final palette = _palette(variant);
 
-  var result = IconButtonStyler()
+  return IconButtonStyler()
+      .animate(HeroUiTokens.fillMotion)
       .size(metrics.height.mobile, metrics.height.mobile)
       .alignment(.center)
       .borderRadius(.all(HeroUiTokens.radius3xl()))
@@ -111,29 +134,29 @@ IconButtonStyler heroUiIconButtonStyle({
       .spinner(heroUiInlineSpinnerStyle(palette.foreground))
       .onBreakpoint(
         const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
-        IconButtonStyler().icon(.size(_iconFromSm)),
+        .icon(.size(_iconFromSm)),
       )
       .onBreakpoint(
         const Breakpoint.minWidth(HeroUiTokens.breakpointMd),
-        IconButtonStyler().size(metrics.height.desktop, metrics.height.desktop),
+        .size(metrics.height.desktop, metrics.height.desktop),
       )
+      // Press is declared before hover, as upstream declares `:active` before
+      // `:hover`: a pointer press shows the hover fill while the scale applies.
       .onPressed(
         IconButtonStyler()
             .color(palette.pressed)
             .scale(metrics.pressedScale)
             .animate(_pressMotion),
       )
-      .onHovered(IconButtonStyler().color(palette.hover))
+      .onHovered(.color(palette.hover))
       .onFocusVisible(.containerEffects(heroUiFocusRing()))
-      .animate(HeroUiTokens.fillMotion);
-
-  if (palette.bordered) {
-    result = result.border(.color(HeroUiTokens.border()).width(_borderWidth));
-  }
-
-  return result
       .onDisabled(
         IconButtonStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)),
+      )
+      .merge(
+        variant == .outline
+            ? IconButtonStyler().border(_outlineBorder())
+            : null,
       )
       .merge(style);
 }
@@ -172,13 +195,7 @@ _Metrics _metrics(HeroUiButtonSize size) => switch (size) {
   ),
 };
 
-typedef _Palette = ({
-  Color fill,
-  Color hover,
-  Color pressed,
-  Color foreground,
-  bool bordered,
-});
+typedef _Palette = ({Color fill, Color hover, Color pressed, Color foreground});
 
 /// The `--button-bg`, `-hover`, `-pressed`, and `-fg` variables per variant.
 _Palette _palette(HeroUiButtonVariant variant) => switch (variant) {
@@ -187,14 +204,12 @@ _Palette _palette(HeroUiButtonVariant variant) => switch (variant) {
     hover: HeroUiTokens.accentHover(),
     pressed: HeroUiTokens.accentHover(),
     foreground: HeroUiTokens.accentForeground(),
-    bordered: false,
   ),
   .secondary => (
     fill: HeroUiTokens.defaultColor(),
     hover: HeroUiTokens.defaultHover(),
     pressed: HeroUiTokens.defaultHover(),
     foreground: HeroUiTokens.accentSoftForeground(),
-    bordered: false,
   ),
   // `--button-fg` is unset, so the label keeps the inherited text colour.
   .tertiary => (
@@ -202,35 +217,30 @@ _Palette _palette(HeroUiButtonVariant variant) => switch (variant) {
     hover: HeroUiTokens.defaultHover(),
     pressed: HeroUiTokens.defaultHover(),
     foreground: HeroUiTokens.foreground(),
-    bordered: false,
   ),
   .outline => (
     fill: HeroUiTokens.transparent,
     hover: _outlineHover(),
     pressed: HeroUiTokens.defaultColor(),
     foreground: HeroUiTokens.defaultForeground(),
-    bordered: true,
   ),
   .ghost => (
     fill: HeroUiTokens.transparent,
     hover: HeroUiTokens.defaultColor(),
     pressed: HeroUiTokens.defaultColor(),
     foreground: HeroUiTokens.defaultForeground(),
-    bordered: false,
   ),
   .danger => (
     fill: HeroUiTokens.danger(),
     hover: HeroUiTokens.dangerHover(),
     pressed: HeroUiTokens.dangerHover(),
     foreground: HeroUiTokens.dangerForeground(),
-    bordered: false,
   ),
   .dangerSoft => (
     fill: HeroUiTokens.dangerSoft(),
     hover: HeroUiTokens.dangerSoftHover(),
     pressed: HeroUiTokens.dangerSoftHover(),
     foreground: HeroUiTokens.dangerSoftForeground(),
-    bordered: false,
   ),
 };
 
@@ -238,7 +248,7 @@ _Palette _palette(HeroUiButtonVariant variant) => switch (variant) {
 final _outlineHover = heroUiAlpha(HeroUiTokens.defaultColor, .6);
 
 /// `border border-border` on the outline variant.
-const _borderWidth = 1.0;
+BoxBorderMix _outlineBorder() => .color(HeroUiTokens.border()).width(1);
 
 /// `svg`: `size-5 sm:size-4` (`size-4` always on `--sm`).
 const _iconUpToSm = 20.0;

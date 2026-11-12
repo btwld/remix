@@ -7,15 +7,27 @@ import 'spinner.dart';
 
 part 'button.g.dart';
 
-/// HeroUI button variants: solid (`primary`, `danger`), tinted (`secondary`,
-/// `tertiary`, `dangerSoft`), and bare (`outline`, `ghost`).
+/// The emphasis levels of a HeroUI button.
 enum UiButtonVariant {
+  /// The `accent` fill: the main action.
   primary,
+
+  /// The neutral `default` fill under accent-tinted text.
   secondary,
+
+  /// The neutral `default` fill under the ordinary text color.
   tertiary,
+
+  /// No fill, inside a 1px `border` line.
   outline,
+
+  /// No fill and no border until the pointer arrives.
   ghost,
+
+  /// The `danger` fill, for a destructive action.
   danger,
+
+  /// A soft `danger` tint, for a destructive action of lower emphasis.
   dangerSoft,
 }
 
@@ -25,13 +37,26 @@ enum UiButtonVariant {
 /// merge order: a caller's `style: ButtonStyler().height(50)` is ignored from
 /// 768px up. Override with
 /// `onBreakpoint(Breakpoint.minWidth(UiTokens.breakpointMd), ...)`.
-enum UiButtonSize { sm, md, lg }
+enum UiButtonSize {
+  /// 36px tall, 32px from 768px up.
+  sm,
+
+  /// 40px tall, 36px from 768px up. The default.
+  md,
+
+  /// 44px tall, 40px from 768px up.
+  lg,
+}
 
 /// HeroUI recipe for [RemixButton].
 ///
+/// One chain sets every state. The values come from two tables below:
+/// [_metrics] has a row per size and [_palette] a row per variant, because
+/// every variant sets the same four colors and nothing else.
+///
 /// HeroUI's pending state is Remix's `loading`: the button dims like a
 /// disabled one, as upstream does, and shows Remix's spinner in place of its
-/// content. [fullWidth] is HeroUI's `w-full`.
+/// content. [fullWidth] is HeroUI's `w-full`. [style] merges last.
 @MixWidget(target: RemixButton.new)
 ButtonStyler uiButtonStyle({
   UiButtonVariant variant = .primary,
@@ -42,7 +67,8 @@ ButtonStyler uiButtonStyle({
   final metrics = _metrics(size);
   final palette = _palette(variant);
 
-  var result = ButtonStyler()
+  return ButtonStyler()
+      .animate(UiTokens.fillMotion)
       .height(metrics.height.mobile)
       .padding(.horizontal(metrics.paddingX))
       .mainAxisAlignment(.center)
@@ -61,38 +87,34 @@ ButtonStyler uiButtonStyle({
       .spinner(uiInlineSpinnerStyle(palette.foreground))
       .onBreakpoint(
         const Breakpoint.minWidth(UiTokens.breakpointSm),
-        ButtonStyler().icon(.size(_iconFromSm)),
+        .icon(.size(_iconFromSm)),
       )
       .onBreakpoint(
         const Breakpoint.minWidth(UiTokens.breakpointMd),
-        ButtonStyler().height(metrics.height.desktop),
+        .height(metrics.height.desktop),
       )
-      // `:active` is declared before `:hover`, so a pointer press shows the
-      // hover fill while the scale still applies.
+      // Press is declared before hover, as upstream declares `:active` before
+      // `:hover`: a pointer press shows the hover fill while the scale applies.
       .onPressed(
         ButtonStyler()
             .color(palette.pressed)
             .scale(metrics.pressedScale)
             .animate(_pressMotion),
       )
-      .onHovered(ButtonStyler().color(palette.hover))
+      .onHovered(.color(palette.hover))
       .onFocusVisible(.containerEffects(uiFocusRing()))
-      .animate(UiTokens.fillMotion);
-
-  if (palette.bordered) {
-    result = result.border(.color(UiTokens.border()).width(_borderWidth));
-  }
-  if (fullWidth) result = result.width(double.infinity);
-
-  return result
       .onDisabled(ButtonStyler().wrap(.opacity(UiTokens.disabledOpacity)))
+      .merge(
+        variant == .outline ? ButtonStyler().border(_outlineBorder()) : null,
+      )
+      .merge(fullWidth ? ButtonStyler().width(double.infinity) : null)
       .merge(style);
 }
 
 /// HeroUI's icon-only button, as a recipe for [RemixIconButton].
 ///
-/// Same variants and sizes as [uiButtonStyle]; the control is square at the
-/// button's height.
+/// The same variants, sizes and states as [uiButtonStyle], from the same
+/// two tables. The control is square at the button's height.
 @MixWidget(target: RemixIconButton.new)
 IconButtonStyler uiIconButtonStyle({
   UiButtonVariant variant = .primary,
@@ -102,7 +124,8 @@ IconButtonStyler uiIconButtonStyle({
   final metrics = _metrics(size);
   final palette = _palette(variant);
 
-  var result = IconButtonStyler()
+  return IconButtonStyler()
+      .animate(UiTokens.fillMotion)
       .size(metrics.height.mobile, metrics.height.mobile)
       .alignment(.center)
       .borderRadius(.all(UiTokens.radius3xl()))
@@ -111,28 +134,28 @@ IconButtonStyler uiIconButtonStyle({
       .spinner(uiInlineSpinnerStyle(palette.foreground))
       .onBreakpoint(
         const Breakpoint.minWidth(UiTokens.breakpointSm),
-        IconButtonStyler().icon(.size(_iconFromSm)),
+        .icon(.size(_iconFromSm)),
       )
       .onBreakpoint(
         const Breakpoint.minWidth(UiTokens.breakpointMd),
-        IconButtonStyler().size(metrics.height.desktop, metrics.height.desktop),
+        .size(metrics.height.desktop, metrics.height.desktop),
       )
+      // Press is declared before hover, as upstream declares `:active` before
+      // `:hover`: a pointer press shows the hover fill while the scale applies.
       .onPressed(
         IconButtonStyler()
             .color(palette.pressed)
             .scale(metrics.pressedScale)
             .animate(_pressMotion),
       )
-      .onHovered(IconButtonStyler().color(palette.hover))
+      .onHovered(.color(palette.hover))
       .onFocusVisible(.containerEffects(uiFocusRing()))
-      .animate(UiTokens.fillMotion);
-
-  if (palette.bordered) {
-    result = result.border(.color(UiTokens.border()).width(_borderWidth));
-  }
-
-  return result
       .onDisabled(IconButtonStyler().wrap(.opacity(UiTokens.disabledOpacity)))
+      .merge(
+        variant == .outline
+            ? IconButtonStyler().border(_outlineBorder())
+            : null,
+      )
       .merge(style);
 }
 
@@ -170,13 +193,7 @@ _Metrics _metrics(UiButtonSize size) => switch (size) {
   ),
 };
 
-typedef _Palette = ({
-  Color fill,
-  Color hover,
-  Color pressed,
-  Color foreground,
-  bool bordered,
-});
+typedef _Palette = ({Color fill, Color hover, Color pressed, Color foreground});
 
 /// The `--button-bg`, `-hover`, `-pressed`, and `-fg` variables per variant.
 _Palette _palette(UiButtonVariant variant) => switch (variant) {
@@ -185,14 +202,12 @@ _Palette _palette(UiButtonVariant variant) => switch (variant) {
     hover: UiTokens.accentHover(),
     pressed: UiTokens.accentHover(),
     foreground: UiTokens.accentForeground(),
-    bordered: false,
   ),
   .secondary => (
     fill: UiTokens.defaultColor(),
     hover: UiTokens.defaultHover(),
     pressed: UiTokens.defaultHover(),
     foreground: UiTokens.accentSoftForeground(),
-    bordered: false,
   ),
   // `--button-fg` is unset, so the label keeps the inherited text colour.
   .tertiary => (
@@ -200,35 +215,30 @@ _Palette _palette(UiButtonVariant variant) => switch (variant) {
     hover: UiTokens.defaultHover(),
     pressed: UiTokens.defaultHover(),
     foreground: UiTokens.foreground(),
-    bordered: false,
   ),
   .outline => (
     fill: UiTokens.transparent,
     hover: _outlineHover(),
     pressed: UiTokens.defaultColor(),
     foreground: UiTokens.defaultForeground(),
-    bordered: true,
   ),
   .ghost => (
     fill: UiTokens.transparent,
     hover: UiTokens.defaultColor(),
     pressed: UiTokens.defaultColor(),
     foreground: UiTokens.defaultForeground(),
-    bordered: false,
   ),
   .danger => (
     fill: UiTokens.danger(),
     hover: UiTokens.dangerHover(),
     pressed: UiTokens.dangerHover(),
     foreground: UiTokens.dangerForeground(),
-    bordered: false,
   ),
   .dangerSoft => (
     fill: UiTokens.dangerSoft(),
     hover: UiTokens.dangerSoftHover(),
     pressed: UiTokens.dangerSoftHover(),
     foreground: UiTokens.dangerSoftForeground(),
-    bordered: false,
   ),
 };
 
@@ -236,7 +246,7 @@ _Palette _palette(UiButtonVariant variant) => switch (variant) {
 final _outlineHover = uiAlpha(UiTokens.defaultColor, .6);
 
 /// `border border-border` on the outline variant.
-const _borderWidth = 1.0;
+BoxBorderMix _outlineBorder() => .color(UiTokens.border()).width(1);
 
 /// `svg`: `size-5 sm:size-4` (`size-4` always on `--sm`).
 const _iconUpToSm = 20.0;
