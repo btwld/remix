@@ -184,8 +184,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 
 
 Vanilla and Fortal also ship layout items beyond the core component set.
-HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, and `dashboard_shell` as
-extensions with no upstream HeroUI reference, and no `dashboard_demo`:
+HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, `dashboard_shell`, and
+`dashboard_demo` as extensions with no upstream HeroUI reference:
 
 - **app_bar** — `RemixAppBar`: provides slots for leading widgets, title headings,
   actions, and bottom content. By default, `safeArea` is enabled (`true`). Wrap
@@ -205,14 +205,16 @@ extensions with no upstream HeroUI reference, and no `dashboard_demo`:
 - **dashboard_demo** — showcase recipe assembling the five product dashboard
   screens (Overview, Chat, Customers, Orders, and Settings) into a runnable
   demo; see [Reference showcases](reference-showcases.md) for product-example
-  and coverage-gallery conventions.
+  and coverage-gallery conventions. The HeroUI demo also installs `chart`,
+  `table`, `tabs`, `chip`, and the Agent items.
 
 ## Agent surfaces
 
 
 For agent-run surfaces — `activity`, `answer`, `composer`, `execution`,
-`message`, `permission`, `plan`, `transcript` — install Vanilla's or Fortal's
-bare item (HeroUI ships none), which is unstyled by default, plus the matching `<item>_recipe` for a
+`message`, `permission`, `plan`, `transcript` — install the preset's bare item
+(HeroUI's are extensions, as HeroUI web has no Agent surfaces), which is
+unstyled by default, plus the matching `<item>_recipe` for a
 complete, preset-specific styler bundle. Even a bare item is not Remix-only:
 the shared `support` item brings in the preset `theme` and the selected icon library.
 Each agent item also declares its own `mix_annotations` dependency and

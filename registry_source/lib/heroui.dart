@@ -14,6 +14,7 @@ export 'src/heroui/components/breadcrumbs.dart';
 export 'src/heroui/components/button.dart';
 export 'src/heroui/components/button_group.dart';
 export 'src/heroui/components/card.dart';
+export 'src/heroui/components/chart.dart';
 export 'src/heroui/components/checkbox.dart';
 export 'src/heroui/components/checkbox_group.dart';
 export 'src/heroui/components/chip.dart';

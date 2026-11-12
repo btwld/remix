@@ -5,6 +5,11 @@ import 'package:registry_source/fortal.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_theme.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_widgets.dart';
+import 'package:registry_source/src/dashboard/dashboard_demo_base.dart';
+import 'package:registry_source/src/heroui/components/avatar.dart';
+import 'package:registry_source/src/heroui/components/button.dart';
+import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_demo.dart';
+import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
 
 import '../helpers/pixels.dart';
@@ -289,5 +294,178 @@ void main() {
       ),
     );
     semantics.dispose();
+  });
+
+  group('HeroUI', () {
+    /// Pumps the HeroUI demo on [page] inside a capturable boundary.
+    Future<GlobalKey> pumpDemo(
+      WidgetTester tester, {
+      RegistryDashboardDemoPage page = RegistryDashboardDemoPage.overview,
+      String mode = 'light',
+    }) async {
+      tester.view
+        ..devicePixelRatio = 1
+        ..physicalSize = const Size(1280, 900);
+      addTearDown(tester.view.reset);
+      final boundary = GlobalKey();
+      await tester.pumpWidget(
+        RepaintBoundary(
+          key: boundary,
+          child: HeroUiTheme(
+            mode: HeroUiThemeMode.values.byName(mode),
+            child: WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+                settings: settings,
+                pageBuilder: (context, _, _) => builder(context),
+              ),
+              home: HeroUiDashboardDemo(initialPage: page),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return boundary;
+    }
+
+    Color pixelAt(
+      WidgetTester tester,
+      GlobalKey boundary,
+      Pixels pixels,
+      Offset p,
+    ) {
+      final device =
+          (p - tester.getTopLeft(find.byKey(boundary))) * pixelScale.toDouble();
+      return pixels.at(device.dx.round(), device.dy.round());
+    }
+
+    for (final mode in ['light', 'dark']) {
+      testWidgets('the data-table kebab rings on keyboard focus in $mode', (
+        tester,
+      ) async {
+        final boundary = await pumpDemo(
+          tester,
+          page: RegistryDashboardDemoPage.orders,
+          mode: mode,
+        );
+        final trigger = find.byWidgetPredicate(
+          (widget) =>
+              widget is HeroUiIconButton &&
+              widget.semanticLabel == 'Actions for ORD-1048',
+        );
+        final surface = find.descendant(
+          of: trigger,
+          matching: find.byKey(const ValueKey('remix-icon-button-surface')),
+        );
+        final painted = surface.evaluate().isEmpty ? trigger : surface;
+        final rect = tester.getRect(painted);
+        final idle = await capturePixels(tester, boundary);
+
+        tester
+            .widget<RemixIconButton>(
+              find.descendant(
+                of: trigger,
+                matching: find.byType(RemixIconButton),
+              ),
+            )
+            .focusNode!
+            .requestFocus();
+        await tester.pumpAndSettle();
+        final focused = await capturePixels(tester, boundary);
+        final ring = MixScope.tokenOf(
+          HeroUiTokens.focus,
+          tester.element(trigger),
+        );
+
+        // The 2px ring sits 2px off the button: 3px out is ring, and the
+        // button's own pixels are untouched.
+        const out = HeroUiTokens.ringOffset + HeroUiTokens.focusWidth / 2;
+        for (final at in <Offset Function(double inside)>[
+          (inside) => Offset(rect.center.dx, rect.top + inside),
+          (inside) => Offset(rect.center.dx, rect.bottom - inside),
+          (inside) => Offset(rect.left + inside, rect.center.dy),
+          (inside) => Offset(rect.right - inside, rect.center.dy),
+        ]) {
+          expectNearColor(pixelAt(tester, boundary, focused, at(-out)), ring);
+          expectNearColor(
+            pixelAt(tester, boundary, focused, at(3)),
+            pixelAt(tester, boundary, idle, at(3)),
+          );
+        }
+        expect(tester.getRect(painted), rect);
+      });
+
+      testWidgets('the sidebar account row rings inside its edge without '
+          'covering its content in $mode', (tester) async {
+        final boundary = await pumpDemo(tester, mode: mode);
+        final card = find
+            .ancestor(
+              of: find.text('Ada Chen'),
+              matching: find.byType(RemixCard),
+            )
+            .first;
+        final row = tester.getRect(card);
+        final avatar = find.byType(HeroUiAvatar);
+        final avatarRect = tester.getRect(avatar);
+        final avatarElement = tester.element(avatar);
+        final idle = await capturePixels(tester, boundary);
+
+        Focus.of(tester.element(card)).requestFocus();
+        await tester.pumpAndSettle();
+        final focused = await capturePixels(tester, boundary);
+        final ring = MixScope.tokenOf(HeroUiTokens.focus, tester.element(card));
+        Color before(Offset p) => pixelAt(tester, boundary, idle, p);
+        Color after(Offset p) => pixelAt(tester, boundary, focused, p);
+
+        // `ring-inset`: the 2px ring is the row's outer 2px, and nothing
+        // paints outside it.
+        for (final edge in <Offset Function(double inside)>[
+          (inside) => Offset(row.center.dx, row.top + inside),
+          (inside) => Offset(row.center.dx, row.bottom - inside),
+          (inside) => Offset(row.left + inside, row.center.dy),
+          (inside) => Offset(row.right - inside, row.center.dy),
+        ]) {
+          expectNearColor(after(edge(HeroUiTokens.focusWidth / 2)), ring);
+          expectNearColor(after(edge(-1)), before(edge(-1)));
+        }
+        for (final inside in [
+          avatarRect.centerLeft.translate(1, 0),
+          avatarRect.center,
+          avatarRect.centerRight.translate(-1, 0),
+        ]) {
+          expectNearColor(after(inside), before(inside));
+        }
+        expect(tester.getRect(avatar), avatarRect);
+        expect(tester.element(avatar), same(avatarElement));
+      });
+    }
+
+    testWidgets('the sidebar account row is one named, expandable button', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await pumpDemo(tester);
+
+      final account = find.semantics.byLabel('Ada Chen');
+      expect(account, findsOne);
+      expect(
+        tester.getSemantics(
+          find
+              .ancestor(
+                of: find.text('Ada Chen'),
+                matching: find.byType(RemixCard),
+              )
+              .first,
+        ),
+        isSemantics(
+          label: 'Ada Chen',
+          isButton: true,
+          hasTapAction: true,
+          hasExpandedState: true,
+          isExpanded: false,
+        ),
+      );
+      semantics.dispose();
+    });
   });
 }

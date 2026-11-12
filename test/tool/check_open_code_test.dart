@@ -1310,6 +1310,16 @@ Future<void> main(List<String> arguments) async {
       fortalDemo.where((path) => path.startsWith('recipes/dashboard/')),
       hasLength(19),
     );
+    // HeroUI mirrors Vanilla's file set: the shared base and five preset
+    // files, plus the shell's two.
+    final herouiDemo = checker.focusedInventoryForTest(
+      'dashboard_demo',
+      preset: 'heroui',
+    );
+    expect(
+      herouiDemo.where((path) => path.startsWith('recipes/dashboard/')),
+      hasLength(13),
+    );
   });
 
   test('focused dashboard_demo inventory rejects a missing recipe file', () {
@@ -1392,6 +1402,15 @@ Future<void> main(List<String> arguments) async {
           'textarea',
           'toast',
           'toggle_button_group',
+          'activity_recipe',
+          'answer_recipe',
+          'composer_recipe',
+          'execution_recipe',
+          'message_recipe',
+          'permission_recipe',
+          'plan_recipe',
+          'transcript_recipe',
+          'dashboard_demo',
         ]),
       );
     });
@@ -1654,18 +1673,23 @@ import 'package:flutter/widgets.dart'
         unorderedEquals([
           'remix',
           'mix_annotations',
+          'mix_chart',
           'remix_ui_fonts',
           'remix_ui_icons',
         ]),
       );
+      // The Agent components are `@MixableSpec` source, so HeroUI installs
+      // the same scoped spec builder as the other presets.
       final app = Directory('${sandbox.path}/heroui');
       _writeInstalledUi(app, preset: 'heroui');
       expect(checker.installedUiProblem(app, preset: 'heroui'), isNull);
       File('${app.path}/build.yaml').writeAsStringSync('targets: {}\n');
       expect(
         checker.installedUiProblem(app, preset: 'heroui'),
-        contains('unnecessary'),
+        contains('scoped Agent builder contract'),
       );
+      // HeroUI now ships the demo, as an extension; only Vanilla checks
+      // its icon aliases and ownership alone.
       expect(
         checker.parseConsumerCheckOptions([
           '--preset',
@@ -1674,6 +1698,17 @@ import 'package:flutter/widgets.dart'
           'checkout',
           '--item',
           'dashboard_demo',
+        ])!.item,
+        'dashboard_demo',
+      );
+      expect(
+        checker.parseConsumerCheckOptions([
+          '--preset',
+          'heroui',
+          '--source',
+          'checkout',
+          '--item',
+          'icons',
         ]),
         isNull,
       );
@@ -1750,11 +1785,34 @@ import 'package:flutter/widgets.dart'
     expect(shell, isNot(contains('icons.dart')));
     expect(shell, isNot(contains('components/typography.dart')));
 
+    final demo = checker.focusedInventoryForTest(
+      'dashboard_demo',
+      preset: 'heroui',
+    );
+    expect(
+      demo,
+      containsAll([
+        'recipes/dashboard/dashboard_demo.dart',
+        'recipes/dashboard/dashboard_demo_records_page.dart',
+        'recipes/activity_recipe.dart',
+        'components/activity.dart',
+        'components/chart.dart',
+        'components/table.dart',
+        'models/statuses.dart',
+        'support/functional_glyph.dart',
+      ]),
+    );
+    expect(demo, isNot(contains('components/typography.dart')));
+    // Its segmented choices are RemixSegmentedControl, not a tab list.
+    expect(demo, isNot(contains('components/tabs.dart')));
+
     for (final file in [
       'search_field_main.dart',
       'search_field_test.dart',
       'dashboard_shell_main.dart',
       'dashboard_shell_test.dart',
+      'dashboard_demo_main.dart',
+      'dashboard_demo_test.dart',
     ]) {
       expect(
         File('open_code/heroui_fixture/focused/$file').existsSync(),
@@ -1774,6 +1832,7 @@ import 'package:flutter/widgets.dart'
         containsAll([
           '$full --item search_field',
           '$full --item dashboard_shell',
+          '$full --item dashboard_demo',
           full,
         ]),
         reason: script,
@@ -2025,8 +2084,7 @@ dev_dependencies:
 void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
   final files = checker.installedUiFilesForTest(preset: preset);
   app.createSync(recursive: true);
-  if (preset != 'heroui') {
-    File('${app.path}/build.yaml').writeAsStringSync('''targets:
+  File('${app.path}/build.yaml').writeAsStringSync('''targets:
   \$default:
     builders:
       mix_generator:spec_styler_generator:
@@ -2041,7 +2099,6 @@ void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
           - lib/ui/components/plan.dart
           - lib/ui/components/transcript.dart
 ''');
-  }
   for (final relative in files) {
     final file = File('${app.path}/lib/ui/$relative');
     file.parent.createSync(recursive: true);

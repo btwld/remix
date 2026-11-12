@@ -4,9 +4,10 @@
 /// dart run tool/check_consumer_apps.dart
 /// ```
 ///
-/// Playground and dashboard expect the full manifest for their configured
-/// preset (`vanilla` and `fortal`); demo and widgetbook_vanilla install the
-/// non-recipe, non-agent component catalog for their preset.
+/// Playground, dashboard and dashboard_heroui expect the full manifest for
+/// their configured preset (`vanilla`, `fortal` and `heroui`); demo and
+/// widgetbook_vanilla install the non-recipe, non-agent component catalog for
+/// their preset.
 /// Check expected items even when their files are missing. The CLI owns config parsing, template rendering, and diffing.
 ///
 /// Application-owned source may be customized. Each deliberate edit belongs in
@@ -40,6 +41,7 @@ const _consumers = <String, _ItemFilter?>{
   'apps/demo': _isComponentCatalogItem,
   'apps/widgetbook_vanilla': _isComponentCatalogItem,
   'apps/dashboard': null,
+  'apps/dashboard_heroui': null,
 };
 
 bool _isComponentCatalogItem(String key, YamlMap item) {

@@ -1,0 +1,16 @@
+component: Models
+widget: none
+target: "shared Agent source: models/activity_item.dart, models/plan_item.dart, models/statuses.dart"
+status: implemented
+extension: "No Agent family in @heroui/react 3.2.6. Shared Agent source installed unchanged into HeroUI: Agent data types: activity items, plan items and statuses."
+source:
+  ref: none
+  derivedFrom: [registry_source/lib/src/agent/models]
+anatomy: []
+variants: []
+sizes: {supported: [], default: null}
+states: []
+tokens: []
+measurements: []
+approximations:
+  - "No upstream reference and no appearance: this is the same source Vanilla and Fortal install. Listed under `extensions` in reference/heroui_3_2_6/families.json."

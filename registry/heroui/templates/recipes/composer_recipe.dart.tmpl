@@ -1,0 +1,60 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../components/button.dart';
+import '../components/card.dart';
+import '../components/composer.dart';
+import '../components/textarea.dart';
+import '../theme/theme.dart';
+
+/// Styles for the composer: a HeroUI card around a text area with no fill of
+/// its own, a primary submit icon button, and a danger stop icon button.
+@immutable
+final class {{typePrefix}}AgentComposerRecipe {
+  const {{typePrefix}}AgentComposerRecipe({
+    required this.style,
+    required this.surfaceStyle,
+    required this.fieldStyle,
+    required this.submitStyle,
+    required this.stopStyle,
+  });
+  final {{typePrefix}}ComposerStyler style;
+  final CardStyler surfaceStyle;
+  final TextFieldStyler fieldStyle;
+  final IconButtonStyler submitStyle;
+  final IconButtonStyler stopStyle;
+}
+
+{{typePrefix}}AgentComposerRecipe {{valuePrefix}}AgentComposerRecipe({
+  {{typePrefix}}ComposerStyler style = const {{typePrefix}}ComposerStyler.create(),
+  CardStyler surfaceStyle = const CardStyler.create(),
+  TextFieldStyler fieldStyle = const TextFieldStyler.create(),
+  IconButtonStyler submitStyle = const IconButtonStyler.create(),
+  IconButtonStyler stopStyle = const IconButtonStyler.create(),
+}) => {{typePrefix}}AgentComposerRecipe(
+  style: {{typePrefix}}ComposerStyler(
+    toolbar: FlexBoxStyler()
+        .direction(.horizontal)
+        .mainAxisSize(.max)
+        .crossAxisAlignment(.center)
+        .spacing(8)
+        .padding(.top(8)),
+  ).merge(style),
+  surfaceStyle: {{valuePrefix}}CardStyle(
+    style: CardStyler().padding(.all(12)).merge(surfaceStyle),
+  ),
+  // The card is the field's surface: the secondary text area, which carries
+  // no shadow, with its fill cleared in every state. It keeps its focus ring.
+  fieldStyle: {{valuePrefix}}TextAreaStyle(
+    variant: .secondary,
+    style: TextFieldStyler()
+        .color({{typePrefix}}Tokens.transparent)
+        .minHeight(56)
+        .padding(.all(4))
+        .onHovered(.color({{typePrefix}}Tokens.transparent))
+        .onFocused(.color({{typePrefix}}Tokens.transparent))
+        .merge(fieldStyle),
+  ),
+  submitStyle: {{valuePrefix}}IconButtonStyle(style: submitStyle),
+  stopStyle: {{valuePrefix}}IconButtonStyle(variant: .danger, style: stopStyle),
+);

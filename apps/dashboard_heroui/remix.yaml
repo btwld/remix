@@ -1,0 +1,12 @@
+schema: 3
+prefix: Ui
+preset: heroui
+paths:
+  ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: "btwld/remix"
+    path: "registry"
+    ref: "main"
+    revision: "9a78f59a775658f949a6f7dc720547cac1427884"

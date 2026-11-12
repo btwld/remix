@@ -24,10 +24,16 @@ import 'package:registry_source/src/default/theme/tokens.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
+import 'package:registry_source/src/heroui/components/button.dart';
+import 'package:registry_source/src/heroui/components/dropdown.dart';
+import 'package:registry_source/src/heroui/components/popover.dart';
+import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_demo.dart';
+import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_overview.dart';
+import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/utilities/remix_path_icon.dart';
 
-enum _Preset { defaultPreset, fortal }
+enum _Preset { defaultPreset, fortal, heroui }
 
 void main() {
   test('shared dashboard contract matches the Fortal sample inventory', () {
@@ -181,24 +187,106 @@ void main() {
     });
   }
 
-  for (final (label, panelText) in const [
-    ('Open notifications', 'Order ORD-1047 requires review.'),
-    ('Open theme settings', 'Theme settings'),
-  ]) {
-    testWidgets('the $label button is its popover\'s one focus stop and '
-        'toggles it', (tester) async {
+  for (final preset in const [_Preset.defaultPreset, _Preset.heroui])
+    for (final (label, panelText) in const [
+      ('Open notifications', 'Order ORD-1047 requires review.'),
+      ('Open theme settings', 'Theme settings'),
+    ]) {
+      testWidgets('${preset == .heroui ? 'HeroUI: ' : ''}the $label button '
+          'is its popover\'s one focus stop and toggles it', (tester) async {
+        final semantics = tester.ensureSemantics();
+        await _pumpDashboard(tester, preset: preset);
+        final button = find.byWidgetPredicate(
+          (widget) => switch (preset) {
+            .heroui =>
+              widget is HeroUiIconButton && widget.semanticLabel == label,
+            _ => widget is VanillaIconButton && widget.semanticLabel == label,
+          },
+        );
+        final popover = find.ancestor(
+          of: button,
+          matching: find.byType(switch (preset) {
+            .heroui => HeroUiPopover,
+            _ => VanillaPopover,
+          }),
+        );
+
+        expect(_focusStops(tester, popover), 1);
+        expect(
+          tester.getSemantics(button),
+          isSemantics(
+            label: label,
+            isButton: true,
+            isFocusable: true,
+            hasEnabledState: true,
+            isEnabled: true,
+            hasTapAction: true,
+            hasExpandedState: true,
+            isExpanded: false,
+          ),
+        );
+
+        await tester.tap(button);
+        await tester.pumpAndSettle();
+        expect(find.text(panelText), findsOneWidget);
+        expect(
+          tester.getSemantics(button),
+          isSemantics(label: label, hasExpandedState: true, isExpanded: true),
+        );
+
+        await tester.tap(button);
+        await tester.pumpAndSettle();
+        expect(find.text(panelText), findsNothing, reason: 'it closes again');
+        expect(
+          tester.getSemantics(button),
+          isSemantics(label: label, hasExpandedState: true, isExpanded: false),
+        );
+
+        await tester.tap(button);
+        await tester.pumpAndSettle();
+        expect(find.text(panelText), findsOneWidget);
+        expect(_hasFocusWithin(tester, button), isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(find.text(panelText), findsNothing);
+        expect(_hasFocusWithin(tester, button), isTrue);
+        semantics.dispose();
+      });
+    }
+
+  group('HeroUI row actions', () {
+    Finder kebab(String label) => find.byWidgetPredicate(
+      (widget) => widget is HeroUiIconButton && widget.semanticLabel == label,
+    );
+
+    testWidgets('an order row opens its actions from a real icon button', (
+      tester,
+    ) async {
       final semantics = tester.ensureSemantics();
-      await _pumpDashboard(tester, preset: .defaultPreset);
-      final button = find.byWidgetPredicate(
-        (widget) =>
-            widget is VanillaIconButton && widget.semanticLabel == label,
+      await _pumpDashboard(
+        tester,
+        preset: .heroui,
+        initialPage: RegistryDashboardDemoPage.orders,
       );
-      final popover = find.ancestor(
+      const label = 'Actions for ORD-1048';
+      final button = kebab(label);
+      expect(button, findsOneWidget);
+      final menu = find.ancestor(
         of: button,
-        matching: find.byType(VanillaPopover),
+        matching: find.byType(HeroUiDropdown<String>),
       );
 
-      expect(_focusStops(tester, popover), 1);
+      Color? fill() => _fillOf(_specOf(tester, button));
+      final open = MixScope.tokenOf(
+        HeroUiTokens.defaultColor,
+        tester.element(button),
+      );
+
+      expect(find.semantics.byLabel(label), findsOne);
+      expect(_focusStops(tester, menu), 1);
+      expect(fill(), isNot(open));
       expect(
         tester.getSemantics(button),
         isSemantics(
@@ -207,6 +295,129 @@ void main() {
           isFocusable: true,
           hasEnabledState: true,
           isEnabled: true,
+          hasExpandedState: true,
+          isExpanded: false,
+        ),
+      );
+
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Archive'), findsOneWidget);
+      expect(
+        fill(),
+        open,
+        reason: 'the button is filled while its menu is open',
+      );
+      expect(find.semantics.byLabel(label), findsOne);
+      expect(
+        tester.getSemantics(button),
+        isSemantics(label: label, hasExpandedState: true, isExpanded: true),
+      );
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Archive'), findsNothing);
+      expect(fill(), isNot(open), reason: 'the fill goes with the menu');
+      expect(
+        tester.getSemantics(button),
+        isSemantics(label: label, isFocused: true),
+      );
+      semantics.dispose();
+    });
+
+    for (final dark in const [false, true]) {
+      testWidgets('the open kebab keeps its look under the pointer in '
+          '${dark ? 'dark' : 'light'}', (tester) async {
+        await _pumpDashboard(
+          tester,
+          preset: .heroui,
+          initialPage: RegistryDashboardDemoPage.orders,
+        );
+        if (dark) {
+          await tester.tap(
+            find.byKey(const ValueKey('dashboard-appearance-toggle')).first,
+          );
+          await tester.pumpAndSettle();
+        }
+        final button = kebab('Actions for ORD-1048');
+        final context = tester.element(button);
+        expect(
+          HeroUiTheme.of(context).brightness,
+          dark ? Brightness.dark : Brightness.light,
+        );
+        Color token(ColorToken token) => MixScope.tokenOf(token, context);
+
+        final pointer = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        addTearDown(pointer.removePointer);
+        await pointer.addPointer(location: Offset.zero);
+        await pointer.moveTo(tester.getCenter(button));
+        await tester.pumpAndSettle();
+        final hovered = _specOf(tester, button);
+        expect(_fillOf(hovered), token(HeroUiTokens.defaultColor));
+        expect(
+          hovered.icon.spec.color,
+          token(HeroUiTokens.muted),
+          reason: 'the pointer is on the closed button',
+        );
+
+        await pointer.down(tester.getCenter(button));
+        await pointer.up();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Archive'), findsOneWidget);
+        final open = _specOf(tester, button);
+        expect(_fillOf(open), token(HeroUiTokens.defaultColor));
+        expect(open.icon.spec.color, token(HeroUiTokens.defaultForeground));
+
+        await pointer.down(tester.getCenter(button));
+        await tester.pump();
+        final pressed = _specOf(tester, button);
+        expect(
+          _fillOf(pressed),
+          token(HeroUiTokens.defaultColor),
+          reason: 'pressed while open',
+        );
+        expect(pressed.icon.spec.color, token(HeroUiTokens.defaultForeground));
+        await pointer.up();
+        await tester.pumpAndSettle();
+      });
+    }
+
+    Future<({Finder button, String name})> pumpCustomerKebab(
+      WidgetTester tester,
+    ) async {
+      await _pumpDashboard(
+        tester,
+        preset: .heroui,
+        initialPage: RegistryDashboardDemoPage.customers,
+      );
+      final customer = tester
+          .widget<RemixDataTable<RegistryDashboardCustomer>>(
+            find.byType(RemixDataTable<RegistryDashboardCustomer>),
+          )
+          .rows
+          .first;
+      final name = 'Actions for ${customer.name}';
+      return (button: kebab(name), name: name);
+    }
+
+    testWidgets('a customer kebab is announced once, with the expanded state', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      final (:button, :name) = await pumpCustomerKebab(tester);
+
+      expect(button, findsOneWidget);
+      expect(find.semantics.byLabel(name), findsOne);
+      expect(
+        tester.getSemantics(button),
+        isSemantics(
+          label: name,
+          isButton: true,
           hasTapAction: true,
           hasExpandedState: true,
           isExpanded: false,
@@ -215,33 +426,63 @@ void main() {
 
       await tester.tap(button);
       await tester.pumpAndSettle();
-      expect(find.text(panelText), findsOneWidget);
+
+      expect(find.text('View'), findsOneWidget);
+      expect(find.semantics.byLabel(name), findsOne);
       expect(
         tester.getSemantics(button),
-        isSemantics(label: label, hasExpandedState: true, isExpanded: true),
+        isSemantics(label: name, hasExpandedState: true, isExpanded: true),
       );
+      expect(tester.takeException(), isNull);
+      semantics.dispose();
+    });
 
-      await tester.tap(button);
-      await tester.pumpAndSettle();
-      expect(find.text(panelText), findsNothing, reason: 'it closes again');
-      expect(
-        tester.getSemantics(button),
-        isSemantics(label: label, hasExpandedState: true, isExpanded: false),
+    testWidgets('a customer kebab is one tab stop that Enter opens and '
+        'Escape returns to', (tester) async {
+      final (:button, name: _) = await pumpCustomerKebab(tester);
+      final menu = find.ancestor(
+        of: button,
+        matching: find.byType(HeroUiDropdown<String>),
       );
+      expect(_focusStops(tester, menu), 1);
+      bool inKebab() => _hasFocusWithin(tester, button);
+      final control =
+          tester
+                .widget<RemixIconButton>(
+                  find.descendant(
+                    of: button,
+                    matching: find.byType(RemixIconButton),
+                  ),
+                )
+                .focusNode!
+            ..requestFocus();
+      await tester.pump();
+      expect(inKebab(), isTrue);
 
-      await tester.tap(button);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(inKebab(), isFalse);
+
+      control.requestFocus();
+      await tester.pump();
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.pump();
+      expect(inKebab(), isFalse);
+
+      control.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
-      expect(find.text(panelText), findsOneWidget);
-      expect(_hasFocusWithin(tester, button), isFalse);
+      expect(find.text('View'), findsOneWidget);
 
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
-
-      expect(find.text(panelText), findsNothing);
-      expect(_hasFocusWithin(tester, button), isTrue);
-      semantics.dispose();
+      expect(find.text('View'), findsNothing);
+      expect(control.hasPrimaryFocus, isTrue);
     });
-  }
+  });
 
   group('Fortal data-table kebab', () {
     Future<({Finder kebab, Finder button, String name})> pumpKebab(
@@ -459,14 +700,14 @@ void main() {
         expect(find.bySemanticsLabel('Use light appearance'), findsOneWidget);
 
         final notifications = switch (preset) {
-          .defaultPreset => 'Open notifications',
+          .defaultPreset || .heroui => 'Open notifications',
           .fortal => 'Notifications',
         };
         await tester.tap(find.bySemanticsLabel(notifications).first);
         await tester.pump();
         expect(
           find.text(switch (preset) {
-            .defaultPreset => 'Order ORD-1047 requires review.',
+            .defaultPreset || .heroui => 'Order ORD-1047 requires review.',
             .fortal => 'Inventory alert',
           }),
           findsWidgets,
@@ -927,7 +1168,7 @@ void main() {
           expect(language, findsOne);
           expect(
             language.evaluate().single.getSemanticsData().value,
-            preset == .defaultPreset ? 'English' : 'English (US)',
+            preset == .fortal ? 'English (US)' : 'English',
           );
 
           final select = find.byType(RemixSelect<String>);
@@ -1135,6 +1376,7 @@ Future<void> _pumpOverview(
   final overview = switch (preset) {
     .defaultPreset => VanillaDashboardOverview(data: data),
     .fortal => FortalDashboardOverview(data: data),
+    .heroui => HeroUiDashboardOverview(data: data),
   };
   await _pump(
     tester,
@@ -1179,6 +1421,14 @@ Future<void> _pumpDashboard(
       builtInChrome: builtInChrome,
       account: account,
     ),
+    .heroui => HeroUiDashboardDemo(
+      key: ValueKey(initialPage),
+      brand: const Text('Acme starter'),
+      initialPage: initialPage,
+      chatStepDelay: chatStepDelay,
+      builtInChrome: builtInChrome,
+      account: account,
+    ),
   },
 );
 
@@ -1216,6 +1466,7 @@ Future<void> _pump(
       child: app,
     ),
     .fortal => FortalTheme(child: app),
+    .heroui => HeroUiTheme(mode: HeroUiThemeMode.light, child: app),
   });
   await tester.pump();
 }

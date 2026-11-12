@@ -1,0 +1,179 @@
+/// One headline value shown by the dashboard overview.
+final class {{typePrefix}}DashboardMetric {
+  const {{typePrefix}}DashboardMetric({
+    required this.label,
+    required this.value,
+    required this.change,
+    this.delta,
+    this.positive = true,
+    this.progress,
+  });
+
+  final String label;
+  final String value;
+  final String change;
+  final String? delta;
+  final bool positive;
+  final double? progress;
+}
+
+/// One point in the overview's primary time series.
+final class {{typePrefix}}DashboardPoint {
+  const {{typePrefix}}DashboardPoint({required this.label, required this.value});
+
+  final String label;
+  final double value;
+}
+
+/// One row in the overview's recent-records table.
+final class {{typePrefix}}DashboardRecord {
+  const {{typePrefix}}DashboardRecord({
+    required this.id,
+    required this.customer,
+    required this.status,
+    required this.amount,
+  });
+
+  final String id;
+  final String customer;
+  final String status;
+  final String amount;
+}
+
+/// The category of an activity feed event.
+enum {{typePrefix}}DashboardActivityKind { customer, order, payment, alert }
+
+/// One event in the overview activity feed.
+final class {{typePrefix}}DashboardActivity {
+  const {{typePrefix}}DashboardActivity({
+    required this.title,
+    required this.detail,
+    required this.relativeTime,
+    this.kind = {{typePrefix}}DashboardActivityKind.customer,
+  });
+
+  final String title;
+  final String detail;
+  final String relativeTime;
+  final {{typePrefix}}DashboardActivityKind kind;
+}
+
+/// Local, deterministic starter content intended to be edited after install.
+final class {{typePrefix}}DashboardSampleData {
+  const {{typePrefix}}DashboardSampleData({
+    required this.metrics,
+    required this.revenue,
+    required this.records,
+    this.activities = const [],
+  });
+
+  final List<{{typePrefix}}DashboardMetric> metrics;
+  final List<{{typePrefix}}DashboardPoint> revenue;
+  final List<{{typePrefix}}DashboardRecord> records;
+  final List<{{typePrefix}}DashboardActivity> activities;
+}
+
+/// The editable data rendered by [{{typePrefix}}DashboardOverview] by default.
+const {{valuePrefix}}DashboardSampleData = {{typePrefix}}DashboardSampleData(
+  metrics: [
+    {{typePrefix}}DashboardMetric(
+      label: 'Revenue',
+      value: r'$84,420',
+      change: '+12.4% this month',
+      delta: '+12.4%',
+    ),
+    {{typePrefix}}DashboardMetric(
+      label: 'Active customers',
+      value: '2,420',
+      change: '+8.2% this month',
+      delta: '+8.2%',
+    ),
+    {{typePrefix}}DashboardMetric(
+      label: 'Open orders',
+      value: '184',
+      change: '12 awaiting review',
+      delta: '-2.3%',
+      positive: false,
+    ),
+    {{typePrefix}}DashboardMetric(
+      label: 'Fulfillment',
+      value: '94.2%',
+      change: '+4.1% this month',
+      delta: '+4.1%',
+      progress: 0.942,
+    ),
+  ],
+  revenue: [
+    {{typePrefix}}DashboardPoint(label: 'Mon', value: 42),
+    {{typePrefix}}DashboardPoint(label: 'Tue', value: 54),
+    {{typePrefix}}DashboardPoint(label: 'Wed', value: 48),
+    {{typePrefix}}DashboardPoint(label: 'Thu', value: 66),
+    {{typePrefix}}DashboardPoint(label: 'Fri', value: 62),
+    {{typePrefix}}DashboardPoint(label: 'Sat', value: 78),
+    {{typePrefix}}DashboardPoint(label: 'Sun', value: 84),
+  ],
+  records: [
+    {{typePrefix}}DashboardRecord(
+      id: 'ORD-1048',
+      customer: 'Avery Stone',
+      status: 'Paid',
+      amount: r'$1,280',
+    ),
+    {{typePrefix}}DashboardRecord(
+      id: 'ORD-1047',
+      customer: 'Mina Patel',
+      status: 'Pending',
+      amount: r'$860',
+    ),
+    {{typePrefix}}DashboardRecord(
+      id: 'ORD-1046',
+      customer: 'Jordan Lee',
+      status: 'Paid',
+      amount: r'$2,140',
+    ),
+    {{typePrefix}}DashboardRecord(
+      id: 'ORD-1045',
+      customer: 'Riley Chen',
+      status: 'Refunded',
+      amount: r'$640',
+    ),
+  ],
+  activities: [
+    {{typePrefix}}DashboardActivity(
+      title: 'New customer',
+      detail: 'Camila joined the Business plan',
+      relativeTime: '12 min ago',
+      kind: .customer,
+    ),
+    {{typePrefix}}DashboardActivity(
+      title: 'Payment received',
+      detail: r'ORD-1048 · $1,249.00',
+      relativeTime: '38 min ago',
+      kind: .payment,
+    ),
+    {{typePrefix}}DashboardActivity(
+      title: 'Inventory alert',
+      detail: 'SKU-402 fell below the reorder threshold.',
+      relativeTime: '1 hr ago',
+      kind: .alert,
+    ),
+    {{typePrefix}}DashboardActivity(
+      title: 'Order fulfilled',
+      detail: 'ORD-1046 shipped to Ava Wilson',
+      relativeTime: '3 hrs ago',
+      kind: .order,
+    ),
+    {{typePrefix}}DashboardActivity(
+      title: 'New customer',
+      detail: 'Henry accepted his invitation',
+      relativeTime: '5 hrs ago',
+      kind: .customer,
+    ),
+    {{typePrefix}}DashboardActivity(
+      title: 'Refund processed',
+      detail: r'ORD-1045 · $189.00',
+      relativeTime: 'Yesterday',
+      kind: .payment,
+    ),
+  ],
+);

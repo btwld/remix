@@ -10,6 +10,9 @@ import 'package:registry_source/src/default/theme/tokens.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_shell.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
+import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_overview.dart';
+import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_shell.dart';
+import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -242,7 +245,8 @@ const _sections = <RemixSidebarSection<String>>[
 
 enum _Preset {
   fortal,
-  vanilla;
+  vanilla,
+  heroui;
 
   Widget theme({required bool dark, required Widget child}) => switch (this) {
     .fortal => FortalTheme(
@@ -251,6 +255,10 @@ enum _Preset {
     ),
     .vanilla => VanillaTheme(
       mode: dark ? VanillaThemeMode.dark : VanillaThemeMode.light,
+      child: child,
+    ),
+    .heroui => HeroUiTheme(
+      mode: dark ? HeroUiThemeMode.dark : HeroUiThemeMode.light,
       child: child,
     ),
   };
@@ -272,24 +280,36 @@ enum _Preset {
       brand: const Text('Northstar'),
       body: VanillaDashboardOverview(onViewOrders: onViewOrders),
     ),
+    .heroui => HeroUiDashboardShell<String>(
+      sections: _sections,
+      selectedValue: 'overview',
+      onSelected: (_) {},
+      title: 'Overview',
+      brand: const Text('Northstar'),
+      body: HeroUiDashboardOverview(onViewOrders: onViewOrders),
+    ),
   };
 
   /// The resting foreground of a ghost control.
   Color ink(BuildContext context) => switch (this) {
     .fortal => MixScope.tokenOf(FortalTokens.accentContentAlpha, context),
     .vanilla => MixScope.tokenOf(VanillaTokens.foreground, context),
+    .heroui => MixScope.tokenOf(HeroUiTokens.defaultForeground, context),
   };
 
   /// The foreground under the pointer or a press.
   Color highlightedInk(BuildContext context) => switch (this) {
     .fortal => MixScope.tokenOf(FortalTokens.accentContentAlpha, context),
     .vanilla => MixScope.tokenOf(VanillaTokens.accentForeground, context),
+    // The ghost button changes only its fill under the pointer or a press.
+    .heroui => MixScope.tokenOf(HeroUiTokens.defaultForeground, context),
   };
 
   /// The surface behind a resting ghost control.
   Color panel(BuildContext context) => switch (this) {
     .fortal => MixScope.tokenOf(FortalTokens.colorPanelSolid, context),
     .vanilla => MixScope.tokenOf(VanillaTokens.card, context),
+    .heroui => MixScope.tokenOf(HeroUiTokens.surface, context),
   };
 
   void expectDisabled(WidgetTester tester, ValueKey<String> key) {
@@ -299,7 +319,7 @@ enum _Preset {
         final disabled = MixScope.tokenOf(FortalTokens.grayA8, context);
         expect(disabled, isNot(ink(context)));
         expect(_paintedColors(tester, key), everyElement(disabled));
-      case .vanilla:
+      case .vanilla || .heroui:
         expect(_paintedColors(tester, key), everyElement(ink(context)));
         final faded = find.descendant(
           of: _control(key),

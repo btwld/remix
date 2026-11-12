@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -242,6 +243,8 @@ class _GalleryState extends State<Gallery> {
     (360, _accordions()),
     (300, _toastsAndAlerts()),
     (330, _table()),
+    (560, _charts()),
+    (620, _agent()),
     (420, _dashboard()),
   ];
 
@@ -995,6 +998,143 @@ class _GalleryState extends State<Gallery> {
             ),
           ],
         ),
+    ]);
+  }
+
+  Widget _charts() {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    return _card('Chart', [
+      _caption(
+        'An extension over mix_chart: the series are accent, muted, and '
+        'foreground, never a status colour.',
+      ),
+      SizedBox(
+        height: 160,
+        child: AcmeLineChart(
+          semanticsLabel: 'Visitors and signups',
+          showMarkers: true,
+          series: [
+            for (final (index, (id, values)) in const [
+              ('visitors', [32.0, 41.0, 38.0, 52.0, 49.0, 61.0]),
+              ('signups', [12.0, 18.0, 16.0, 24.0, 28.0, 30.0]),
+            ].indexed)
+              LineSeries(
+                id: id,
+                label: index == 0 ? 'Visitors' : 'Signups',
+                points: [
+                  for (final (x, y) in values.indexed)
+                    ChartPoint(id: '$id-$x', x: x.toDouble(), y: y),
+                ],
+              ),
+          ],
+          xAxis: ChartAxis.numeric(
+            min: -0.5,
+            max: months.length - 0.5,
+            interval: 1,
+            minIncluded: false,
+            maxIncluded: false,
+            labelFormatter: (value) {
+              final index = value.round();
+              return index >= 0 && index < months.length ? months[index] : '';
+            },
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 160,
+        child: AcmeBarChart(
+          semanticsLabel: 'Orders by channel',
+          groups: [
+            for (final (index, month) in months.take(4).indexed)
+              BarGroup(
+                id: month,
+                label: month,
+                bars: [
+                  BarValue(id: 'web', label: 'Web', toY: 20.0 + index * 6),
+                  BarValue(id: 'app', label: 'App', toY: 14.0 + index * 4),
+                  BarValue(id: 'store', label: 'Store', toY: 8.0 + index * 2),
+                ],
+              ),
+          ],
+        ),
+      ),
+      SizedBox(
+        height: 180,
+        child: AcmePieChart(
+          semanticsLabel: 'Order status',
+          centerRadius: 40,
+          style: PieChartStyler().slice(PieSliceStyler().radius(44)),
+          slices: [
+            PieSlice(id: 'fulfilled', label: 'Fulfilled', value: 72),
+            PieSlice(id: 'processing', label: 'Processing', value: 18),
+            PieSlice(id: 'review', label: 'Review', value: 10),
+          ],
+        ),
+      ),
+    ]);
+  }
+
+  Widget _agent() {
+    final message = acmeAgentMessageRecipe();
+    final answer = acmeAgentAnswerRecipe();
+    // Below 600 wide the actions stack, as the dashboard chat stacks them:
+    // three HeroUI buttons do not fit side by side inside a phone card.
+    final narrow = MediaQuery.sizeOf(context).width < 600;
+    final permission = acmeAgentPermissionRecipe(
+      style: AcmePermissionStyler(
+        actions: FlexBoxStyler()
+            .direction(narrow ? .vertical : .horizontal)
+            .crossAxisAlignment(narrow ? .stretch : .center),
+      ),
+    );
+    final composer = acmeAgentComposerRecipe();
+    return _card('Agent surfaces', [
+      _caption(
+        'The shared Agent behavior with HeroUI card, button, disclosure, '
+        'and text area recipes. An extension: HeroUI web has none.',
+      ),
+      AcmeMessage(
+        role: AcmeRole.user,
+        surfaceStyle: message.surfaceStyle,
+        style: message.style,
+        child: const Text('Run the checkout checks.'),
+      ),
+      AcmePermission(
+        tool: 'terminal',
+        title: 'Run flutter test?',
+        parameters: const [
+          RemixDataListItem(label: 'Command', value: 'flutter test'),
+        ],
+        onAllowOnce: () => setState(() => _lastAction = 'allow once'),
+        onAlwaysAllow: () => setState(() => _lastAction = 'always allow'),
+        onDeny: () => setState(() => _lastAction = 'deny'),
+        surfaceStyle: permission.surfaceStyle,
+        detailsStyle: permission.detailsStyle,
+        parametersStyle: permission.parametersStyle,
+        allowOnceStyle: permission.allowOnceStyle,
+        alwaysAllowStyle: permission.alwaysAllowStyle,
+        denyStyle: permission.denyStyle,
+        style: permission.style,
+      ),
+      AcmeAnswer(
+        status: AcmeAnswerStatus.complete,
+        onCopy: () => setState(() => _lastAction = 'copy'),
+        surfaceStyle: answer.surfaceStyle,
+        sourcesStyle: answer.sourcesStyle,
+        copyStyle: answer.copyStyle,
+        retryStyle: answer.retryStyle,
+        style: answer.style,
+        child: const Text('The checks pass. The flow is ready for review.'),
+      ),
+      AcmeComposer(
+        hintText: 'Ask a follow-up…',
+        onSubmit: (_) => setState(() => _lastAction = 'send'),
+        surfaceStyle: composer.surfaceStyle,
+        fieldStyle: composer.fieldStyle,
+        submitStyle: composer.submitStyle,
+        stopStyle: composer.stopStyle,
+        style: composer.style,
+      ),
     ]);
   }
 

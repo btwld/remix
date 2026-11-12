@@ -1,0 +1,24 @@
+component: Message recipe
+widget: heroUiAgentMessageRecipe
+target: "AgentMessageStyler and the child stylers of message.yaml"
+status: implemented
+extension: "No Agent family in @heroui/react 3.2.6. HeroUI's own recipes passed into the shared Agent stylers, as Vanilla and Fortal pass theirs."
+source:
+  ref: none
+  derivedFrom: ["specs/components/message.yaml", "specs/heroui/tokens.json"]
+recipes: "surface: heroUiCardStyle; expand toggle: heroUiButtonStyle ghost sm"
+anatomy: "as message.yaml"
+variants: []
+sizes: {supported: [], default: null}
+states: "the states of the HeroUI recipes it passes"
+tokens:
+  - "the card recipe"
+  - "the ghost sm button tokens"
+measurements:
+  - {what: surface, value: "the card with 16 horizontal and 12 vertical padding, at most 640 wide", cite: "designed"}
+  - {what: row, value: "8 between avatar and message; a 28 square avatar", cite: "designed"}
+  - {what: collapsed, value: "72 high until expanded", cite: "designed"}
+approximations:
+  - "No upstream reference: HeroUI web 3.2.6 has no Agent surfaces, so every value above is designed from existing HeroUI tokens and recipes, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "Spacing follows the Vanilla recipe; type uses HeroUI's text-xs and text-sm tokens in place of Vanilla's literal 12, 13 and 14."
+  - "The card keeps radius-panel (24 at the default radius), rounder than the other presets' message surfaces."

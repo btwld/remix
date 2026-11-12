@@ -1,0 +1,170 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+/// `.label`, `text-danger` inside an invalid field.
+TextStyler _label({required bool invalid}) =>
+    invalid ? uiLabelText.color(UiTokens.danger()) : uiLabelText;
+
+/// A group's [label] and [items], its [helperText] description, and its
+/// [errorText].
+///
+/// Vertically they stack with `mt-4` before each item, as the CSS gives each
+/// radio and checkbox; the description follows the last item, then the error.
+/// Upstream lays a horizontal group out as one wrapping row, label and help
+/// included, and so does this.
+///
+/// While [invalid] the label turns danger and [errorText] shows beside the
+/// description, which stays (`radio-group.css` has no hide rule).
+class UiFieldLayout extends StatelessWidget {
+  const UiFieldLayout({
+    super.key,
+    required this.items,
+    this.axis = Axis.vertical,
+    this.label,
+    this.controlProvidesName = false,
+    this.helperText,
+    this.errorText,
+    this.invalid = false,
+    this.enabled = true,
+  });
+
+  final List<Widget> items;
+  final Axis axis;
+  final String? label;
+
+  /// Whether the control supplies [label] as its accessible name.
+  ///
+  /// When true, this layout adds neither a name nor a semantics container.
+  /// The painted label is always excluded from semantics.
+  final bool controlProvidesName;
+  final String? helperText;
+  final String? errorText;
+  final bool invalid;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    final semanticLabel = controlProvidesName ? null : label;
+    final hasName = semanticLabel?.isNotEmpty ?? false;
+
+    return Semantics(
+      container: hasName,
+      // Preserve separate help/error announcements even when the control's
+      // semantic boundary (such as RadioGroup) is above this layout.
+      explicitChildNodes: true,
+      label: hasName ? semanticLabel : null,
+      child: _buildContent(context),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    final labelStyle = _label(invalid: invalid);
+    final labelText = label == null
+        ? null
+        : StyledText(
+            label!,
+            // `[data-disabled] .label` is `status-disabled`.
+            style: enabled
+                ? labelStyle
+                : labelStyle.wrap(.opacity(UiTokens.disabledOpacity)),
+          );
+    final description = helperText == null
+        ? null
+        : StyledText(helperText!, style: uiDescriptionText);
+    final error = invalid && errorText != null
+        ? StyledText(errorText!, style: uiErrorText)
+        : null;
+
+    if (axis == Axis.horizontal) {
+      return Wrap(
+        spacing: _groupGap,
+        runSpacing: _groupGap,
+        children: [
+          if (labelText != null) ExcludeSemantics(child: labelText),
+          ...items,
+          ?description,
+          ?error,
+        ],
+      );
+    }
+    return FlexBox(
+      style: FlexBoxStyler()
+          .direction(.vertical)
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.start),
+      children: [
+        if (labelText != null) ExcludeSemantics(child: labelText),
+        for (var i = 0; i < items.length; i++)
+          Box(
+            style: BoxStyler().padding(
+              .top(i == 0 && labelText == null ? 0 : _groupGap),
+            ),
+            child: items[i],
+          ),
+        ?description,
+        ?error,
+      ],
+    );
+  }
+}
+
+/// A labeled radio or switch with an optional [description] beneath.
+///
+/// [descriptionInset] indents the description under the label: the control's
+/// width plus its label gap. The control dims itself and its label when
+/// disabled; this dims the description.
+class UiDescribedControl extends StatelessWidget {
+  const UiDescribedControl({
+    super.key,
+    required this.control,
+    required this.descriptionInset,
+    this.description,
+    this.enabled = true,
+  });
+
+  final Widget control;
+  final double descriptionInset;
+  final String? description;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    final description = this.description;
+    if (description == null) return control;
+    return FlexBox(
+      // `.radio` and `.switch`: `flex-col items-start gap-1`.
+      style: FlexBoxStyler()
+          .direction(.vertical)
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.start)
+          .spacing(_fieldGap),
+      children: [
+        control,
+        Box(
+          style: BoxStyler().padding(.start(descriptionInset)),
+          child: StyledText(
+            description,
+            style: enabled
+                ? uiDescriptionText
+                : uiDescriptionText.wrap(
+                    WidgetModifierConfig.opacity(_disabledTwice),
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// `[data-slot="radio"]` and `[data-slot="checkbox"]`: `mt-4`; horizontal
+/// groups and `.switch-group__items`: `gap-4`.
+const _groupGap = 16.0;
+
+/// `.radio` and `.switch`: `gap-1`.
+const _fieldGap = 4.0;
+
+/// A disabled item is `status-disabled`, and so is its description, so it dims
+/// twice.
+const _disabledTwice = UiTokens.disabledOpacity * UiTokens.disabledOpacity;

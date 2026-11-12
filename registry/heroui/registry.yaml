@@ -51,6 +51,17 @@ items:
     exports:
       - components/accordion.dart
 
+  activity_recipe:
+    registryDependencies:
+      - theme
+      - activity
+      - disclosure
+    files:
+      - source: templates/recipes/activity_recipe.dart.tmpl
+        target: "@ui/recipes/activity_recipe.dart"
+    exports:
+      - recipes/activity_recipe.dart
+
   alert:
     registryDependencies:
       - theme
@@ -66,6 +77,19 @@ items:
       - "@ui/components/alert.g.dart"
     exports:
       - components/alert.dart
+
+  answer_recipe:
+    registryDependencies:
+      - theme
+      - answer
+      - button
+      - card
+      - disclosure
+    files:
+      - source: templates/recipes/answer_recipe.dart.tmpl
+        target: "@ui/recipes/answer_recipe.dart"
+    exports:
+      - recipes/answer_recipe.dart
 
   app_bar:
     registryDependencies:
@@ -181,6 +205,23 @@ items:
     exports:
       - components/card.dart
 
+  chart:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+      mix_chart: ^0.0.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/chart/chart.dart.tmpl
+        target: "@ui/components/chart.dart"
+    generated:
+      - "@ui/components/chart.g.dart"
+    exports:
+      - components/chart.dart
+
   checkbox:
     registryDependencies:
       - theme
@@ -264,6 +305,89 @@ items:
     exports:
       - components/combobox.dart
 
+  composer_recipe:
+    registryDependencies:
+      - theme
+      - button
+      - card
+      - composer
+      - textarea
+    files:
+      - source: templates/recipes/composer_recipe.dart.tmpl
+        target: "@ui/recipes/composer_recipe.dart"
+    exports:
+      - recipes/composer_recipe.dart
+
+  dashboard_demo:
+    registryDependencies:
+      - theme
+      - activity
+      - activity_recipe
+      - alert
+      - answer
+      - answer_recipe
+      - avatar
+      - button
+      - card
+      - chart
+      - checkbox
+      - chip
+      - composer
+      - composer_recipe
+      - dashboard_shell
+      - disclosure
+      - dropdown
+      - execution
+      - execution_recipe
+      - message
+      - message_recipe
+      - modal
+      - permission
+      - permission_recipe
+      - plan
+      - plan_recipe
+      - popover
+      - progress
+      - search_field
+      - select
+      - separator
+      - slider
+      - switch
+      - table
+      - textfield
+      - toast
+      - transcript
+      - transcript_recipe
+    dependencies:
+      mix_chart: ^0.0.1
+    files:
+      - source: templates/dashboard_demo/dashboard_sample_data.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_sample_data.dart"
+      - source: templates/dashboard_demo/dashboard_overview_base.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_overview_base.dart"
+      - source: templates/dashboard_demo/dashboard_demo_base.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_base.dart"
+      - source: templates/dashboard_demo/dashboard_demo_chat.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_chat.dart"
+      - source: templates/dashboard_demo/dashboard_demo_charts.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_charts.dart"
+      - source: templates/dashboard_demo/dashboard_demo_records.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_records.dart"
+      - source: templates/dashboard_demo/dashboard_overview.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_overview.dart"
+      - source: templates/dashboard_demo/dashboard_demo_text.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_text.dart"
+      - source: templates/dashboard_demo/dashboard_demo_records_page.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_records_page.dart"
+      - source: templates/dashboard_demo/dashboard_demo_settings.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_settings.dart"
+      - source: templates/dashboard_demo/dashboard_demo.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo.dart"
+    exports:
+      - recipes/dashboard/dashboard_sample_data.dart
+      - recipes/dashboard/dashboard_overview.dart
+      - recipes/dashboard/dashboard_demo.dart
+
   dashboard_shell:
     registryDependencies:
       - theme
@@ -336,6 +460,19 @@ items:
     exports:
       - components/dropdown.dart
 
+  execution_recipe:
+    registryDependencies:
+      - theme
+      - button
+      - card
+      - disclosure
+      - execution
+    files:
+      - source: templates/recipes/execution_recipe.dart.tmpl
+        target: "@ui/recipes/execution_recipe.dart"
+    exports:
+      - recipes/execution_recipe.dart
+
   field_layout:
     registryDependencies:
       - theme
@@ -387,6 +524,17 @@ items:
     exports:
       - components/link.dart
 
+  message_recipe:
+    registryDependencies:
+      - button
+      - card
+      - message
+    files:
+      - source: templates/recipes/message_recipe.dart.tmpl
+        target: "@ui/recipes/message_recipe.dart"
+    exports:
+      - recipes/message_recipe.dart
+
   modal:
     registryDependencies:
       - theme
@@ -402,6 +550,30 @@ items:
       - "@ui/components/modal.g.dart"
     exports:
       - components/modal.dart
+
+  permission_recipe:
+    registryDependencies:
+      - theme
+      - button
+      - card
+      - disclosure
+      - permission
+    files:
+      - source: templates/recipes/permission_recipe.dart.tmpl
+        target: "@ui/recipes/permission_recipe.dart"
+    exports:
+      - recipes/permission_recipe.dart
+
+  plan_recipe:
+    registryDependencies:
+      - theme
+      - disclosure
+      - plan
+    files:
+      - source: templates/recipes/plan_recipe.dart.tmpl
+        target: "@ui/recipes/plan_recipe.dart"
+    exports:
+      - recipes/plan_recipe.dart
 
   popover:
     registryDependencies:
@@ -783,6 +955,15 @@ items:
     exports:
       - components/tooltip.dart
 
+  transcript_recipe:
+    registryDependencies:
+      - transcript
+    files:
+      - source: templates/recipes/transcript_recipe.dart.tmpl
+        target: "@ui/recipes/transcript_recipe.dart"
+    exports:
+      - recipes/transcript_recipe.dart
+
   typography:
     registryDependencies:
       - theme
@@ -793,3 +974,161 @@ items:
         target: "@ui/components/typography.dart"
     exports:
       - components/typography.dart
+
+  models:
+    files:
+      - source: templates/agent/models/activity_item.dart.tmpl
+        target: "@ui/models/activity_item.dart"
+      - source: templates/agent/models/plan_item.dart.tmpl
+        target: "@ui/models/plan_item.dart"
+      - source: templates/agent/models/statuses.dart.tmpl
+        target: "@ui/models/statuses.dart"
+    exports:
+      - models/activity_item.dart
+      - models/plan_item.dart
+      - models/statuses.dart
+
+  support:
+    registryDependencies:
+      - theme
+    files:
+      - source: templates/agent/support/disclosure.dart.tmpl
+        target: "@ui/support/disclosure.dart"
+      - source: templates/agent/support/functional_glyph.dart.tmpl
+        target: "@ui/support/functional_glyph.dart"
+      - source: templates/agent/support/live_edge.dart.tmpl
+        target: "@ui/support/live_edge.dart"
+
+  activity:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/activity/activity.dart.tmpl
+        target: "@ui/components/activity.dart"
+    generated:
+      - "@ui/components/activity.g.dart"
+    exports:
+      - components/activity.dart
+
+  answer:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/answer/answer.dart.tmpl
+        target: "@ui/components/answer.dart"
+    generated:
+      - "@ui/components/answer.g.dart"
+    exports:
+      - components/answer.dart
+
+  composer:
+    registryDependencies:
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/composer/composer.dart.tmpl
+        target: "@ui/components/composer.dart"
+    generated:
+      - "@ui/components/composer.g.dart"
+    exports:
+      - components/composer.dart
+
+  execution:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/execution/execution.dart.tmpl
+        target: "@ui/components/execution.dart"
+    generated:
+      - "@ui/components/execution.g.dart"
+    exports:
+      - components/execution.dart
+
+  message:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/message/message.dart.tmpl
+        target: "@ui/components/message.dart"
+    generated:
+      - "@ui/components/message.g.dart"
+    exports:
+      - components/message.dart
+
+  permission:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/permission/permission.dart.tmpl
+        target: "@ui/components/permission.dart"
+    generated:
+      - "@ui/components/permission.g.dart"
+    exports:
+      - components/permission.dart
+
+  plan:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/plan/plan.dart.tmpl
+        target: "@ui/components/plan.dart"
+    generated:
+      - "@ui/components/plan.g.dart"
+    exports:
+      - components/plan.dart
+
+  transcript:
+    registryDependencies:
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/transcript/transcript.dart.tmpl
+        target: "@ui/components/transcript.dart"
+    generated:
+      - "@ui/components/transcript.g.dart"
+    exports:
+      - components/transcript.dart
