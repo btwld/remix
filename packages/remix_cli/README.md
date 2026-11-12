@@ -554,6 +554,7 @@ All scale constants (`s0_5` .. `s16`, `controlSm` .. `pill`, `strokeHairline`,
 `strokeIndicator`, `strokeRing`, `disabledOpacity`, and `motion`) now reside on
 `<Prefix>Tokens` in `lib/ui/theme/tokens.dart`.
 
-Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
-`execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and
-`transcript_recipe`. Each installs only its component and styled-control closure.
+Available styled items: `agent_glyphs_recipe`, `answer_recipe`, `composer_recipe`, `conversation_recipe`,
+`message_recipe`, `sources_recipe`, `steps_recipe`, `suggestions_recipe`, and
+`tool_call_recipe`. Each styles one widget of `package:remix/agent.dart` with the
+preset's own components.

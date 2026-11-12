@@ -1,25 +1,21 @@
 component: Answer recipe
 widget: heroUiAgentAnswerRecipe
-target: "AgentAnswerStyler and the child stylers of answer.yaml"
+target: "AgentAnswerStyler of package:remix/agent.dart"
 status: implemented
-extension: "No Agent family in @heroui/react 3.2.6. HeroUI's own recipes passed into the shared Agent stylers, as Vanilla and Fortal pass theirs."
+extension: "No Agent family in @heroui/react 3.2.6. HeroUI's own tokens and recipes passed into the Agent widgets of package:remix/agent.dart, as Vanilla and Fortal pass theirs."
 source:
   ref: none
-  derivedFrom: ["specs/components/answer.yaml", "specs/heroui/tokens.json"]
-recipes: "surface: heroUiCardStyle (default card); sources: heroUiDisclosureStyle; copy and retry: heroUiIconButtonStyle ghost sm"
-anatomy: "as answer.yaml"
+  derivedFrom: ["specs/heroui/tokens.json"]
+recipes: "actions: heroUiIconButtonStyle ghost sm"
+anatomy: "the slots of the widget's spec"
 variants: []
 sizes: {supported: [], default: null}
 states: "the states of the HeroUI recipes it passes"
 tokens:
-  - "the card recipe (surface, surface shadow, radius-panel)"
-  - "foreground, text-sm (sources label)"
-  - "the ghost icon button tokens (default on hover, default-foreground)"
+  - "foreground, muted, surface-secondary, separator, danger, accent-soft"
+  - "text-xs, text-sm, text-base"
 measurements:
-  - {what: surface, value: "the card: padding 16, radius-panel", cite: "designed"}
-  - {what: actions, value: "4 between the copy and retry buttons, 8 above them", cite: "designed"}
-  - {what: copy and retry, value: "ghost sm icon buttons: 36 square below 768px, 32 from it", cite: "designed"}
+  - {what: layout, value: "768 column, 48 between turns, 24 between blocks, 12 inside a block", cite: "designed"}
 approximations:
-  - "No upstream reference: HeroUI web 3.2.6 has no Agent surfaces, so every value above is designed from existing HeroUI tokens and recipes, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
-  - "Spacing follows the Vanilla recipe; type uses HeroUI's text-xs and text-sm tokens in place of Vanilla's literal 12, 13 and 14."
-  - "Vanilla forces its copy and retry buttons to 28 square; HeroUI keeps the sm button sizes because its height is an onBreakpoint fragment that a caller size does not override from 768px."
+  - "No upstream reference: HeroUI web 3.2.6 has no Agent surfaces, so every value is designed from existing HeroUI tokens and recipes, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "Structure and spacing port the Fortal recipe; colors and radii use HeroUI tokens."

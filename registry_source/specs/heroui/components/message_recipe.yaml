@@ -1,24 +1,21 @@
 component: Message recipe
 widget: heroUiAgentMessageRecipe
-target: "AgentMessageStyler and the child stylers of message.yaml"
+target: "AgentMessageStyler of package:remix/agent.dart"
 status: implemented
-extension: "No Agent family in @heroui/react 3.2.6. HeroUI's own recipes passed into the shared Agent stylers, as Vanilla and Fortal pass theirs."
+extension: "No Agent family in @heroui/react 3.2.6. HeroUI's own tokens and recipes passed into the Agent widgets of package:remix/agent.dart, as Vanilla and Fortal pass theirs."
 source:
   ref: none
-  derivedFrom: ["specs/components/message.yaml", "specs/heroui/tokens.json"]
-recipes: "surface: heroUiCardStyle; expand toggle: heroUiButtonStyle ghost sm"
-anatomy: "as message.yaml"
+  derivedFrom: ["specs/heroui/tokens.json"]
+recipes: "toggle: heroUiButtonStyle ghost sm"
+anatomy: "the slots of the widget's spec"
 variants: []
 sizes: {supported: [], default: null}
 states: "the states of the HeroUI recipes it passes"
 tokens:
-  - "the card recipe"
-  - "the ghost sm button tokens"
+  - "foreground, muted, surface-secondary, separator, danger, accent-soft"
+  - "text-xs, text-sm, text-base"
 measurements:
-  - {what: surface, value: "the card with 16 horizontal and 12 vertical padding, at most 640 wide", cite: "designed"}
-  - {what: row, value: "8 between avatar and message; a 28 square avatar", cite: "designed"}
-  - {what: collapsed, value: "72 high until expanded", cite: "designed"}
+  - {what: layout, value: "768 column, 48 between turns, 24 between blocks, 12 inside a block", cite: "designed"}
 approximations:
-  - "No upstream reference: HeroUI web 3.2.6 has no Agent surfaces, so every value above is designed from existing HeroUI tokens and recipes, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
-  - "Spacing follows the Vanilla recipe; type uses HeroUI's text-xs and text-sm tokens in place of Vanilla's literal 12, 13 and 14."
-  - "The card keeps radius-panel (24 at the default radius), rounder than the other presets' message surfaces."
+  - "No upstream reference: HeroUI web 3.2.6 has no Agent surfaces, so every value is designed from existing HeroUI tokens and recipes, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "Structure and spacing port the Fortal recipe; colors and radii use HeroUI tokens."

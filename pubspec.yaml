@@ -218,7 +218,7 @@ melos:
 
     open-code:registry:check:
       steps:
-        - dart test test/tool/build_registry_test.dart test/tool/build_registry_agent_test.dart
+        - dart test test/tool/build_registry_test.dart
         - dart run tool/build_registry.dart --check
         - dart run tool/check_registry_icons.dart
       description: Test preset derivation and fail on committed registry drift

@@ -663,7 +663,6 @@ void main() {
       'check_dependency_constraints.dart',
       'check_version_alignment.dart',
       'build_registry_test.dart',
-      'build_registry_agent_test.dart',
       'dart test',
     ]) {
       expect(staticSteps, contains(command));

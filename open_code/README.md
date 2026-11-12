@@ -182,8 +182,8 @@ Its installed-source
 gallery is `open_code/heroui_fixture`; see [Presets](PRESETS.md) and
 [Adding a preset](ADDING_PRESETS.md).
 
-Agent source in all three presets: `activity`, `answer`, `composer`, `execution`, `message`,
-`permission`, `plan`, `transcript`; shared `models` and `support` install
-transitively. Styled bundles: `activity_recipe`, `answer_recipe`,
-`composer_recipe`, `execution_recipe`, `message_recipe`, `permission_recipe`,
-`plan_recipe`, `transcript_recipe`.
+Agent recipes in all three presets, styling `package:remix/agent.dart`:
+`agent_glyphs_recipe`, `answer_recipe`, `composer_recipe`, `conversation_recipe`,
+`message_recipe`, `sources_recipe`, `steps_recipe`, `suggestions_recipe`, and
+`tool_call_recipe`. Each styles one widget of `package:remix/agent.dart` with the
+preset's own components.

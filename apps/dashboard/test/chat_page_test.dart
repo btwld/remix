@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/agent.dart';
-import 'package:remix/remix.dart';
 
 const _send = ValueKey('agent-composer-send');
 
