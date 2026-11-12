@@ -536,6 +536,78 @@ void main() {
       expect(rowColor(), focused);
     });
 
+    for (final replacement in ['approval', 'non-interactive', 'renderer']) {
+      for (final press in [false, true]) {
+        testWidgets(
+          'clears row ${press ? 'press' : 'hover'} after $replacement replacement',
+          (tester) async {
+            const idle = Color(0xFF111111);
+            const hovered = Color(0xFF222222);
+            const pressed = Color(0xFF333333);
+            final notifier = await _pump(
+              tester,
+              runningCall,
+              style: AgentToolCallStyler(
+                row: FlexBoxStyler()
+                    .color(idle)
+                    .onHovered(.color(hovered))
+                    .onPressed(.color(pressed)),
+              ),
+              renderers: {'custom': (_, _) => const SizedBox(height: 100)},
+            );
+            Color? rowColor() => tester
+                .widgetList<DecoratedBox>(
+                  find.descendant(
+                    of: find.byType(AgentToolCall),
+                    matching: find.byType(DecoratedBox),
+                  ),
+                )
+                .map((box) => box.decoration)
+                .whereType<BoxDecoration>()
+                .map((decoration) => decoration.color)
+                .where((color) => [idle, hovered, pressed].contains(color))
+                .single;
+
+            expect(rowColor(), idle);
+            final mouse = await tester.createGesture(
+              kind: PointerDeviceKind.mouse,
+            );
+            await mouse.addPointer(location: const Offset(799, 599));
+            addTearDown(mouse.removePointer);
+            final row = _rowText('Running the cart tests');
+            await mouse.moveTo(tester.getCenter(row));
+            await tester.pump();
+            expect(rowColor(), hovered);
+            if (press) {
+              await mouse.down(tester.getCenter(row));
+              await tester.pump(const Duration(milliseconds: 150));
+              expect(rowColor(), pressed);
+            }
+
+            await _move(tester, notifier, switch (replacement) {
+              'approval' => approvalCall,
+              'renderer' => AgentToolCallPart(
+                id: runningCall.id,
+                name: 'custom',
+                status: AgentToolCallStatus.running,
+              ),
+              _ => AgentToolCallPart(
+                id: runningCall.id,
+                name: runningCall.name,
+                summary: runningCall.summary,
+                status: AgentToolCallStatus.running,
+              ),
+            });
+            await mouse.moveTo(const Offset(799, 599));
+            if (press) await mouse.up();
+            await tester.pumpAndSettle();
+            await _move(tester, notifier, runningCall);
+            expect(rowColor(), idle);
+          },
+        );
+      }
+    }
+
     testWidgets('a row without output still resolves hover styling', (
       tester,
     ) async {

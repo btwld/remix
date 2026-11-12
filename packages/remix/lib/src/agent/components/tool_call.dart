@@ -245,6 +245,7 @@ class _AgentToolCallState extends State<AgentToolCall>
   final FocusNode _focus = FocusNode(debugLabel: 'AgentToolCall');
   final FocusNode _rowFocus = FocusNode(debugLabel: 'AgentToolCall row');
   final WidgetStatesController _rowStates = WidgetStatesController();
+  bool? _interactiveRow;
   bool _retainDisclosure = false;
   bool _showAllOutput = false;
   bool _outputOverflows = false;
@@ -718,10 +719,21 @@ class _AgentToolCallState extends State<AgentToolCall>
   Widget build(BuildContext context) {
     super.build(context);
     final call = _call;
-    if (!call.status.needsDecision) {
-      final renderer = AgentToolRenderers.maybeOf(context, call.name);
-      if (renderer != null) return renderer(context, call);
+    final renderer = call.status.needsDecision
+        ? null
+        : AgentToolRenderers.maybeOf(context, call.name);
+    final interactiveRow = call.status.needsDecision || renderer != null
+        ? null
+        : _expandable;
+    if (_interactiveRow != interactiveRow) {
+      // Removed detectors do not report exit or release. Their transient
+      // states must not carry into the replacement row.
+      _rowStates
+        ..update(WidgetState.hovered, false)
+        ..update(WidgetState.pressed, false);
+      _interactiveRow = interactiveRow;
     }
+    if (renderer != null) return renderer(context, call);
 
     return AgentValueScope<AgentToolCallStatus>(
       value: call.status,
