@@ -8,22 +8,17 @@ part of 'icon_button.dart';
 
 /// The application's IconButton recipe.
 ///
-/// Everything visual about an icon button lives in this function: geometry, the
-/// five variants, hover and press motion, and the hover/pressed/focus/disabled
-/// fragments. Every state change settles over 150ms on the shared curve
-/// (`PlaygroundTokens.motion`). Remix keeps ownership of rendering, pointer and
-/// keyboard behavior, accessibility semantics, and the loading/disabled
-/// interaction rules — this recipe never reimplements any of that.
+/// It reads top to bottom: what every icon button shares, the size, then each
+/// variant's colors at rest, under the pointer and on focus, then disabled.
+/// Remix owns rendering, input, semantics, and the loading and disabled rules.
 ///
-/// It restates the button's fills rather than sharing them. That is
-/// deliberate: the two components have separate update stories, and a shared
-/// table would make every change to one a change to the other. The scale and
-/// the tints they draw on are shared, through `PlaygroundTokens` and `playgroundTint`.
+/// The variants restate the labelled button's colors rather than sharing
+/// them, so each recipe can be read and edited on its own. Change one and
+/// change the other to keep the two a family.
 ///
-/// `RemixIconButton` requires a `semanticLabel` because an icon has no
-/// accessible name of its own. That is a Remix rule, not a recipe choice, and
-/// it is why the generated widget has one required named argument beyond the
-/// icon.
+/// `RemixIconButton` requires a `semanticLabel`, because an icon has no
+/// accessible name of its own. That is why the generated widget has one
+/// required named argument beyond the icon.
 class PlaygroundIconButton extends StatelessWidget {
   const PlaygroundIconButton({
     super.key,
