@@ -29,6 +29,7 @@ class HeroUiRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The field surface fill, with its shadow.
   const HeroUiRadio.primary({
     super.key,
     this.invalid = false,
@@ -45,6 +46,7 @@ class HeroUiRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = HeroUiRadioVariant.primary;
 
+  /// The `default` fill.
   const HeroUiRadio.secondary({
     super.key,
     this.invalid = false,

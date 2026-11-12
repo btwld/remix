@@ -75,6 +75,7 @@ class HeroUiInputGroup extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The field surface fill, with its shadow.
   const HeroUiInputGroup.primary({
     super.key,
     this.maxLines = 1,
@@ -137,6 +138,7 @@ class HeroUiInputGroup extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = HeroUiTextFieldVariant.primary;
 
+  /// The `default` fill.
   const HeroUiInputGroup.secondary({
     super.key,
     this.maxLines = 1,

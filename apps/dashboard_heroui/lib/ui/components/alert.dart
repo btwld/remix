@@ -7,7 +7,22 @@ import '../theme/theme.dart';
 part 'alert.g.dart';
 
 /// HeroUI alert statuses: the title and the icon take the status color.
-enum UiAlertStatus { defaultStatus, accent, success, warning, danger }
+enum UiAlertStatus {
+  /// Neutral: the title keeps the `foreground` color.
+  defaultStatus,
+
+  /// Informational, in the `accent` tint.
+  accent,
+
+  /// A positive outcome, in the `success` tint.
+  success,
+
+  /// Something that needs attention, in the `warning` tint.
+  warning,
+
+  /// An error or destructive outcome, in the `danger` tint.
+  danger,
+}
 
 /// HeroUI recipe for [RemixCallout]: an icon and a title on a surface.
 ///

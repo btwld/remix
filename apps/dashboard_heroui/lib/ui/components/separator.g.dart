@@ -15,18 +15,21 @@ class UiSeparator extends StatelessWidget {
     this.style = const DividerStyler.create(),
   });
 
+  /// The `separator` color.
   const UiSeparator.defaultSeparator({
     super.key,
     this.orientation = Axis.horizontal,
     this.style = const DividerStyler.create(),
   }) : variant = UiSeparatorVariant.defaultSeparator;
 
+  /// The `separator-secondary` color.
   const UiSeparator.secondary({
     super.key,
     this.orientation = Axis.horizontal,
     this.style = const DividerStyler.create(),
   }) : variant = UiSeparatorVariant.secondary;
 
+  /// The `separator-tertiary` color.
   const UiSeparator.tertiary({
     super.key,
     this.orientation = Axis.horizontal,

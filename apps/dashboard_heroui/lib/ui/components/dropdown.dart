@@ -6,8 +6,14 @@ import '../theme/theme.dart';
 
 part 'dropdown.g.dart';
 
-/// HeroUI menu-item tones: the default item, or `menu-item--danger`.
-enum UiDropdownItemVariant { defaultItem, danger }
+/// HeroUI menu-item tones.
+enum UiDropdownItemVariant {
+  /// The ordinary item.
+  defaultItem,
+
+  /// `menu-item--danger`: a destructive action, in the `danger` color.
+  danger,
+}
 
 /// HeroUI recipe for [RemixMenu]: the dropdown trigger and its popover menu.
 ///
@@ -54,8 +60,8 @@ MenuItemStyler uiDropdownItemStyle({
       // A shortcut or count: `text-xs text-muted`, like the trailing icon.
       .trailingText(.style(UiTokens.textXs.mix()).color(UiTokens.muted()))
       .onHovered(.color(UiTokens.defaultColor()))
-      .onPressed(MenuItemStyler().scale(_itemPressedScale))
-      .onFocusVisible(MenuItemStyler().containerEffects(uiFocusRing()))
+      .onPressed(.scale(_itemPressedScale))
+      .onFocusVisible(.containerEffects(uiFocusRing()))
       .animate(UiTokens.transformMotion)
       .onDisabled(
         MenuItemStyler()
@@ -67,8 +73,8 @@ MenuItemStyler uiDropdownItemStyle({
 /// `.dropdown__trigger`: a bare trigger that scales on press and shows the
 /// focus ring.
 final _trigger = MenuTriggerStyler()
-    .onPressed(MenuTriggerStyler().scale(_triggerPressedScale))
-    .onFocusVisible(MenuTriggerStyler().containerEffects(uiFocusRing()))
+    .onPressed(.scale(_triggerPressedScale))
+    .onFocusVisible(.containerEffects(uiFocusRing()))
     .animate(UiTokens.transformMotion);
 
 /// `.dropdown__popover` around `.dropdown__menu`: `bg-overlay` and the panel

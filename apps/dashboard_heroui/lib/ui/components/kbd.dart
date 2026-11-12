@@ -3,8 +3,14 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// HeroUI keyboard-key variants: the `default` fill, or `light` without one.
-enum UiKbdVariant { defaultKbd, light }
+/// HeroUI keyboard-key variants.
+enum UiKbdVariant {
+  /// The `default` fill.
+  defaultKbd,
+
+  /// No fill.
+  light,
+}
 
 /// HeroUI's `Kbd`: a shortcut drawn as a row of [keys], such as `['⌘', 'K']`.
 class UiKbd extends StatelessWidget {

@@ -7,11 +7,26 @@ import '../theme/theme.dart';
 part 'avatar.g.dart';
 
 /// HeroUI avatar variants: the `default` fill, or a tinted (`soft`) fill in
-/// the avatar's colour.
-enum HeroUiAvatarVariant { defaultAvatar, soft }
+/// the avatar's color.
+enum HeroUiAvatarVariant {
+  /// The neutral `default` fill.
+  defaultAvatar,
+
+  /// A tinted fill in the avatar's color.
+  soft,
+}
 
 /// HeroUI avatar sizes: 32px, 40px, and 48px.
-enum HeroUiAvatarSize { sm, md, lg }
+enum HeroUiAvatarSize {
+  /// 32px.
+  sm,
+
+  /// 40px. The default.
+  md,
+
+  /// 48px.
+  lg,
+}
 
 /// HeroUI recipe for [RemixAvatar].
 ///

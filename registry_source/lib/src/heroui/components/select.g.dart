@@ -32,6 +32,7 @@ class HeroUiSelect<T> extends StatelessWidget {
     this.focusNode,
   });
 
+  /// The field surface fill, with its shadow.
   const HeroUiSelect.primary({
     super.key,
     this.invalid = false,
@@ -53,6 +54,7 @@ class HeroUiSelect<T> extends StatelessWidget {
     this.focusNode,
   }) : variant = HeroUiSelectVariant.primary;
 
+  /// The `default` fill.
   const HeroUiSelect.secondary({
     super.key,
     this.invalid = false,

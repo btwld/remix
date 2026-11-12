@@ -6,9 +6,20 @@ import '../theme/theme.dart';
 
 part 'card.g.dart';
 
-/// HeroUI card fills: `defaultCard` is HeroUI's `default` on the surface
-/// colour; `transparent` has neither fill nor shadow.
-enum UiCardVariant { defaultCard, secondary, tertiary, transparent }
+/// HeroUI card fills, each a surface level of the theme.
+enum UiCardVariant {
+  /// The `surface` fill.
+  defaultCard,
+
+  /// The `surface-secondary` fill, one step from `surface`.
+  secondary,
+
+  /// The `surface-tertiary` fill, two steps from `surface`.
+  tertiary,
+
+  /// No fill and no shadow.
+  transparent,
+}
 
 /// HeroUI recipe for [RemixCard].
 ///
@@ -19,20 +30,23 @@ CardStyler uiCardStyle({
   UiCardVariant variant = .defaultCard,
   CardStyler style = const CardStyler.create(),
 }) {
-  var result = CardStyler()
-      .padding(.all(_padding))
-      .borderRadius(.all(UiTokens.radiusPanel()));
   final fill = switch (variant) {
     .defaultCard => UiTokens.surface(),
     .secondary => UiTokens.surfaceSecondary(),
     .tertiary => UiTokens.surfaceTertiary(),
     .transparent => null,
   };
-  // The transparent card has neither fill nor `shadow-surface`.
-  if (fill != null) {
-    result = result.color(fill).containerEffects(uiSurfaceEffects());
-  }
-  return result.merge(style);
+
+  return CardStyler()
+      .padding(.all(_padding))
+      .borderRadius(.all(UiTokens.radiusPanel()))
+      // The transparent card has neither fill nor `shadow-surface`.
+      .merge(
+        fill == null
+            ? null
+            : CardStyler().color(fill).containerEffects(uiSurfaceEffects()),
+      )
+      .merge(style);
 }
 
 /// `p-4`.

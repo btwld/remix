@@ -32,6 +32,7 @@ class UiToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   });
 
+  /// Neutral: the `overlay-foreground` color.
   const UiToast.defaultToast({
     super.key,
     this.style = const ToastStyler.create(),
@@ -44,6 +45,8 @@ class UiToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   }) : variant = UiToastVariant.defaultToast;
 
+  /// Informational: only the title takes the `accent` tint; the icon keeps
+  /// `overlay-foreground`.
   const UiToast.accent({
     super.key,
     this.style = const ToastStyler.create(),
@@ -56,6 +59,7 @@ class UiToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   }) : variant = UiToastVariant.accent;
 
+  /// A positive outcome, in the `success` tint.
   const UiToast.success({
     super.key,
     this.style = const ToastStyler.create(),
@@ -68,6 +72,7 @@ class UiToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   }) : variant = UiToastVariant.success;
 
+  /// Something that needs attention, in the `warning` tint.
   const UiToast.warning({
     super.key,
     this.style = const ToastStyler.create(),
@@ -80,6 +85,7 @@ class UiToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   }) : variant = UiToastVariant.warning;
 
+  /// An error or destructive outcome, in the `danger` tint.
   const UiToast.danger({
     super.key,
     this.style = const ToastStyler.create(),

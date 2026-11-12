@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 import 'calendar.dart';
 import 'popover.dart';
 
-/// Ui's reviewed DatePicker composition.
+/// HeroUI's reviewed DatePicker composition.
 ///
 /// Remix owns civil-date selection, focus, keyboard navigation and semantics.
 /// Multiple independent child styles require a hand-written facade; caller
@@ -190,9 +190,9 @@ ButtonStyler uiDatePickerButtonStyle(BuildContext context) => ButtonStyler()
       ).color(UiTokens.fieldPlaceholder()),
     )
     .containerEffects(uiSurfaceEffects())
-    .onHovered(ButtonStyler().color(UiTokens.defaultColor()))
-    .onPressed(ButtonStyler().color(UiTokens.defaultHover()))
-    .onFocusVisible(ButtonStyler().containerEffects(uiFocusRing()))
+    .onHovered(.color(UiTokens.defaultColor()))
+    .onPressed(.color(UiTokens.defaultHover()))
+    .onFocusVisible(.containerEffects(uiFocusRing()))
     .onDisabled(ButtonStyler().wrap(.opacity(UiTokens.disabledOpacity)));
 
 /// date-picker.css: min(32px, radius * 2.5).

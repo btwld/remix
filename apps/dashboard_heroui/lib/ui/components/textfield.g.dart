@@ -77,6 +77,7 @@ class UiTextField extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The field surface fill, with its shadow.
   const UiTextField.primary({
     super.key,
     this.maxLines = 1,
@@ -139,6 +140,7 @@ class UiTextField extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiTextFieldVariant.primary;
 
+  /// The `default` fill.
   const UiTextField.secondary({
     super.key,
     this.maxLines = 1,

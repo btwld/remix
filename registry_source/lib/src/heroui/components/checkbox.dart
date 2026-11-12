@@ -6,9 +6,14 @@ import '../theme/theme.dart';
 
 part 'checkbox.g.dart';
 
-/// HeroUI checkbox variants: `primary` on the field surface with its shadow,
-/// `secondary` on the default fill.
-enum HeroUiCheckboxVariant { primary, secondary }
+/// HeroUI checkbox variants.
+enum HeroUiCheckboxVariant {
+  /// The field surface fill, with its shadow.
+  primary,
+
+  /// The `default` fill.
+  secondary,
+}
 
 /// HeroUI recipe for [RemixCheckbox].
 ///
@@ -32,7 +37,7 @@ CheckboxStyler heroUiCheckboxStyle({
       : HeroUiTokens.accentForeground;
   final label = invalid ? HeroUiTokens.danger : HeroUiTokens.foreground;
 
-  var result = CheckboxStyler()
+  return CheckboxStyler()
       .size(_control, _control)
       .alignment(.center)
       .borderRadius(.all(HeroUiTokens.radiusMd()))
@@ -43,29 +48,30 @@ CheckboxStyler heroUiCheckboxStyle({
       .onSelected(.color(fill()))
       .onIndeterminate(.color(fill()).indicator(.size(_indeterminate)))
       .onFocusVisible(.containerEffects(heroUiFocusRing()))
-      .animate(HeroUiTokens.selectionMotion);
-
-  if (variant == .primary) {
-    result = result.containerEffects(heroUiSurfaceEffects());
-    if (!invalid) {
-      result = result.onHovered(
-        CheckboxStyler().onSelected(.color(HeroUiTokens.accentHover())),
-      );
-    }
-  }
-  if (invalid) {
-    // The 1px danger outline shows only while unselected.
-    result = result
-        .containerEffects(heroUiInvalidRing())
-        .onSelected(.containerEffects(.outline(.style(.none))))
-        .onIndeterminate(.containerEffects(.outline(.style(.none))));
-  } else {
-    result = result.onIndeterminate(
-      CheckboxStyler().onPressed(.color(HeroUiTokens.accentHover())),
-    );
-  }
-
-  return result
+      .animate(HeroUiTokens.selectionMotion)
+      .merge(
+        variant == .primary
+            ? CheckboxStyler().containerEffects(heroUiSurfaceEffects())
+            : null,
+      )
+      .merge(
+        variant == .primary && !invalid
+            ? CheckboxStyler().onHovered(
+                CheckboxStyler().onSelected(.color(HeroUiTokens.accentHover())),
+              )
+            : null,
+      )
+      .merge(
+        invalid
+            // The 1px danger outline shows only while unselected.
+            ? CheckboxStyler()
+                  .containerEffects(heroUiInvalidRing())
+                  .onSelected(.containerEffects(.outline(.style(.none))))
+                  .onIndeterminate(.containerEffects(.outline(.style(.none))))
+            : CheckboxStyler().onIndeterminate(
+                CheckboxStyler().onPressed(.color(HeroUiTokens.accentHover())),
+              ),
+      )
       .onDisabled(
         CheckboxStyler()
             .label(.color(heroUiDisabledLabelColor(danger: invalid)()))

@@ -75,6 +75,7 @@ class UiInputGroup extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The field surface fill, with its shadow.
   const UiInputGroup.primary({
     super.key,
     this.maxLines = 1,
@@ -137,6 +138,7 @@ class UiInputGroup extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiTextFieldVariant.primary;
 
+  /// The `default` fill.
   const UiInputGroup.secondary({
     super.key,
     this.maxLines = 1,

@@ -3,15 +3,45 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// HeroUI badge variants: solid (`primary`), default fill with a coloured
+/// HeroUI badge variants: solid (`primary`), default fill with a colored
 /// label (`secondary`), and tinted (`soft`).
-enum HeroUiBadgeVariant { primary, secondary, soft }
+enum HeroUiBadgeVariant {
+  /// The solid fill in the badge's color.
+  primary,
+
+  /// The neutral `default` fill under a colored label.
+  secondary,
+
+  /// A tinted fill in the badge's color.
+  soft,
+}
 
 /// HeroUI badge sizes: `sm` is 16px at least, `md` 28px, `lg` 32px.
-enum HeroUiBadgeSize { sm, md, lg }
+enum HeroUiBadgeSize {
+  /// At least 16px square, with a 10px label.
+  sm,
+
+  /// At least 28px square. The default.
+  md,
+
+  /// At least 32px square.
+  lg,
+}
 
 /// The corner of the anchored content a badge sits on.
-enum HeroUiBadgePlacement { topRight, topLeft, bottomRight, bottomLeft }
+enum HeroUiBadgePlacement {
+  /// The top right corner.
+  topRight,
+
+  /// The top left corner.
+  topLeft,
+
+  /// The bottom right corner.
+  bottomRight,
+
+  /// The bottom left corner.
+  bottomLeft,
+}
 
 /// HeroUI's notification badge: a [RemixBadge] pinned to a corner of [child].
 ///
@@ -104,15 +134,15 @@ BadgeStyler _style({
 }) {
   final metrics = _metrics(size);
   final palette = _palette(variant, color);
-  var label = TextStyler()
+  final label = TextStyler()
       .style(metrics.text.mix())
       .height(metrics.lineHeight)
       .fontWeight(.w500)
       .color(palette.foreground)
       .softWrap(false)
       .maxLines(1)
-      .overflow(TextOverflow.ellipsis);
-  if (size == .sm) label = label.fontSize(_smFontSize);
+      .overflow(TextOverflow.ellipsis)
+      .merge(size == .sm ? TextStyler().fontSize(_smFontSize) : null);
 
   return BadgeStyler()
       .alignment(.center)
@@ -164,7 +194,7 @@ const _smFontSize = 10.0;
 const _labelInset = 2.0;
 const _borderWidth = 1.0;
 
-/// The `--badge-bg` and `--badge-fg` variables for a variant and colour.
+/// The `--badge-bg` and `--badge-fg` variables for a variant and color.
 HeroUiColorPair _palette(HeroUiBadgeVariant variant, HeroUiColor color) =>
     switch (variant) {
       .primary => heroUiSolid(color),

@@ -6,8 +6,14 @@ import '../theme/theme.dart';
 
 part 'tabs.g.dart';
 
-/// HeroUI tab styles: a segmented pill list, or an underlined row.
-enum {{typePrefix}}TabsVariant { primary, secondary }
+/// HeroUI tab styles.
+enum {{typePrefix}}TabsVariant {
+  /// A segmented pill list; the selected tab is a raised pill.
+  primary,
+
+  /// An underlined row; the selected tab has an accent underline.
+  secondary,
+}
 
 /// A one-line tab strip that scrolls within its available width.
 ///
@@ -74,7 +80,7 @@ TabStyler {{valuePrefix}}TabStyle({
   {{typePrefix}}TabsVariant variant = .primary,
   TabStyler style = const TabStyler.create(),
 }) {
-  final result = TabStyler()
+  return TabStyler()
       .height(_height)
       .padding(.horizontal(_paddingX))
       .mainAxisAlignment(.center)
@@ -85,33 +91,32 @@ TabStyler {{valuePrefix}}TabStyle({
       )
       // Unselected tabs fade on hover; selected tabs restore it below.
       .onHovered(TabStyler().wrap(.opacity(_hoverOpacity)))
-      .animate({{typePrefix}}Tokens.smoothMotion);
-
-  final styled = switch (variant) {
-    .primary =>
-      result
-          .borderRadius(.all({{typePrefix}}Tokens.radius3xl()))
-          .onSelected(
-            _selected({{typePrefix}}Tokens.segmentForeground)
-                .color({{typePrefix}}Tokens.segment())
-                .containerEffects({{valuePrefix}}SurfaceEffects()),
-          ),
-    // The `h-0.5` indicator is the bottom edge, transparent until selected;
-    // the top padding keeps the label centered in the tab.
-    .secondary =>
-      result
-          .padding(.top(_indicatorWidth))
-          .border(
-            .bottom(.color({{typePrefix}}Tokens.transparent).width(_indicatorWidth)),
-          )
-          .onSelected(
-            _selected(
-              {{typePrefix}}Tokens.foreground,
-            ).border(.bottom(.color({{typePrefix}}Tokens.accent()))),
-          ),
-  };
-
-  return styled
+      .animate({{typePrefix}}Tokens.smoothMotion)
+      .merge(switch (variant) {
+        .primary =>
+          TabStyler()
+              .borderRadius(.all({{typePrefix}}Tokens.radius3xl()))
+              .onSelected(
+                _selected({{typePrefix}}Tokens.segmentForeground)
+                    .color({{typePrefix}}Tokens.segment())
+                    .containerEffects({{valuePrefix}}SurfaceEffects()),
+              ),
+        // The `h-0.5` indicator is the bottom edge, transparent until
+        // selected; the top padding keeps the label centered in the tab.
+        .secondary =>
+          TabStyler()
+              .padding(.top(_indicatorWidth))
+              .border(
+                .bottom(
+                  .color({{typePrefix}}Tokens.transparent).width(_indicatorWidth),
+                ),
+              )
+              .onSelected(
+                _selected(
+                  {{typePrefix}}Tokens.foreground,
+                ).border(.bottom(.color({{typePrefix}}Tokens.accent()))),
+              ),
+      })
       .onFocusVisible(TabStyler().containerEffects({{valuePrefix}}FocusRing()))
       .onDisabled(TabStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))
       .merge(style);

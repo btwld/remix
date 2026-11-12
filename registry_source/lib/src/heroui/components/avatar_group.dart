@@ -5,8 +5,14 @@ import '../theme/theme.dart';
 import 'avatar.dart';
 
 /// How stacked avatars separate: `clip` cuts a seam out of each avatar's edge;
-/// `ring` draws a background-coloured ring around each.
-enum HeroUiAvatarGroupOverlap { clip, ring }
+/// `ring` draws a background-colored ring around each.
+enum HeroUiAvatarGroupOverlap {
+  /// A circular seam is cut out of the avatar under the next one.
+  clip,
+
+  /// A `background` ring surrounds each avatar.
+  ring,
+}
 
 /// HeroUI's `AvatarGroup`: avatars overlapping by 8px, or a wrapped grid.
 ///
@@ -98,7 +104,7 @@ class _Ring extends StatelessWidget {
 }
 
 /// The mask of `.avatar-group--clip`: a circle the size of the next avatar plus
-/// the seam, centred on that avatar, removed from this one.
+/// the seam, centered on that avatar, removed from this one.
 class _SeamClipper extends CustomClipper<Path> {
   const _SeamClipper(this.direction);
 

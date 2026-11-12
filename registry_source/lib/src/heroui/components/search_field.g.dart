@@ -40,6 +40,7 @@ class HeroUiSearchField extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The field surface fill, with its shadow.
   const HeroUiSearchField.primary({
     super.key,
     this.style = const TextFieldStyler.create(),
@@ -67,6 +68,7 @@ class HeroUiSearchField extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = HeroUiTextFieldVariant.primary;
 
+  /// The `default` fill.
   const HeroUiSearchField.secondary({
     super.key,
     this.style = const TextFieldStyler.create(),

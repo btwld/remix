@@ -96,12 +96,12 @@ class UiFieldLayout extends StatelessWidget {
           .crossAxisAlignment(.start),
       children: [
         if (labelText != null) ExcludeSemantics(child: labelText),
-        for (var i = 0; i < items.length; i++)
+        for (final (index, item) in items.indexed)
           Box(
             style: BoxStyler().padding(
-              .top(i == 0 && labelText == null ? 0 : _groupGap),
+              .top(index == 0 && labelText == null ? 0 : _groupGap),
             ),
-            child: items[i],
+            child: item,
           ),
         ?description,
         ?error,

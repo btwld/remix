@@ -40,6 +40,7 @@ class UiTable<T> extends StatelessWidget {
     this.nextPageIcon,
   });
 
+  /// A white card on a gray frame.
   const UiTable.primary({
     super.key,
     this.style = const DataTableStyler.create(),
@@ -68,6 +69,7 @@ class UiTable<T> extends StatelessWidget {
     this.nextPageIcon,
   }) : variant = UiTableVariant.primary;
 
+  /// A gray header over bare rows.
   const UiTable.secondary({
     super.key,
     this.style = const DataTableStyler.create(),

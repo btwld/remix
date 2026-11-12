@@ -28,6 +28,7 @@ class HeroUiAvatar extends StatelessWidget {
     this.iconBuilder,
   });
 
+  /// The neutral `default` fill.
   const HeroUiAvatar.defaultAvatar({
     super.key,
     this.color = .defaultColor,
@@ -44,6 +45,7 @@ class HeroUiAvatar extends StatelessWidget {
     this.iconBuilder,
   }) : variant = HeroUiAvatarVariant.defaultAvatar;
 
+  /// A tinted fill in the avatar's color.
   const HeroUiAvatar.soft({
     super.key,
     this.color = .defaultColor,

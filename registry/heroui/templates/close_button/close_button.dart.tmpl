@@ -30,7 +30,7 @@ IconButtonStyler {{valuePrefix}}CloseButtonStyle({
           .scale(_pressedScale)
           .animate({{typePrefix}}Tokens.transformMotion),
     )
-    .onHovered(IconButtonStyler().color({{typePrefix}}Tokens.defaultHover()))
+    .onHovered(.color({{typePrefix}}Tokens.defaultHover()))
     .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
     .animate({{typePrefix}}Tokens.fillMotion)
     .onDisabled(IconButtonStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))

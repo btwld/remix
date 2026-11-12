@@ -6,8 +6,14 @@ import '../theme/theme.dart';
 
 part 'tabs.g.dart';
 
-/// HeroUI tab styles: a segmented pill list, or an underlined row.
-enum UiTabsVariant { primary, secondary }
+/// HeroUI tab styles.
+enum UiTabsVariant {
+  /// A segmented pill list; the selected tab is a raised pill.
+  primary,
+
+  /// An underlined row; the selected tab has an accent underline.
+  secondary,
+}
 
 /// A one-line tab strip that scrolls within its available width.
 ///
@@ -74,7 +80,7 @@ TabStyler uiTabStyle({
   UiTabsVariant variant = .primary,
   TabStyler style = const TabStyler.create(),
 }) {
-  final result = TabStyler()
+  return TabStyler()
       .height(_height)
       .padding(.horizontal(_paddingX))
       .mainAxisAlignment(.center)
@@ -83,31 +89,30 @@ TabStyler uiTabStyle({
       )
       // Unselected tabs fade on hover; selected tabs restore it below.
       .onHovered(TabStyler().wrap(.opacity(_hoverOpacity)))
-      .animate(UiTokens.smoothMotion);
-
-  final styled = switch (variant) {
-    .primary =>
-      result
-          .borderRadius(.all(UiTokens.radius3xl()))
-          .onSelected(
-            _selected(
-              UiTokens.segmentForeground,
-            ).color(UiTokens.segment()).containerEffects(uiSurfaceEffects()),
-          ),
-    // The `h-0.5` indicator is the bottom edge, transparent until selected;
-    // the top padding keeps the label centered in the tab.
-    .secondary =>
-      result
-          .padding(.top(_indicatorWidth))
-          .border(.bottom(.color(UiTokens.transparent).width(_indicatorWidth)))
-          .onSelected(
-            _selected(
-              UiTokens.foreground,
-            ).border(.bottom(.color(UiTokens.accent()))),
-          ),
-  };
-
-  return styled
+      .animate(UiTokens.smoothMotion)
+      .merge(switch (variant) {
+        .primary =>
+          TabStyler()
+              .borderRadius(.all(UiTokens.radius3xl()))
+              .onSelected(
+                _selected(UiTokens.segmentForeground)
+                    .color(UiTokens.segment())
+                    .containerEffects(uiSurfaceEffects()),
+              ),
+        // The `h-0.5` indicator is the bottom edge, transparent until
+        // selected; the top padding keeps the label centered in the tab.
+        .secondary =>
+          TabStyler()
+              .padding(.top(_indicatorWidth))
+              .border(
+                .bottom(.color(UiTokens.transparent).width(_indicatorWidth)),
+              )
+              .onSelected(
+                _selected(
+                  UiTokens.foreground,
+                ).border(.bottom(.color(UiTokens.accent()))),
+              ),
+      })
       .onFocusVisible(TabStyler().containerEffects(uiFocusRing()))
       .onDisabled(TabStyler().wrap(.opacity(UiTokens.disabledOpacity)))
       .merge(style);

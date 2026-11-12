@@ -35,6 +35,8 @@ class UiAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   });
 
+  /// Items sit directly on the page, each with a 1px `separator` rule
+  /// under it.
   const UiAccordion.defaultAccordion({
     super.key,
     this.style = const AccordionStyler.create(),
@@ -56,6 +58,7 @@ class UiAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   }) : variant = UiAccordionVariant.defaultAccordion;
 
+  /// Items share one `surface` card; see [UiAccordionGroup].
   const UiAccordion.surface({
     super.key,
     this.style = const AccordionStyler.create(),

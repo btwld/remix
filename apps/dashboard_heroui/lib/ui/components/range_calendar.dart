@@ -1,15 +1,17 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+
 import '../theme/theme.dart';
 import 'calendar.dart';
 
 /// The application's RangeCalendar style recipe.
 ///
 /// Remix owns the complete range, local draft and range roles. This recipe
-/// paints committed endpoints in primary, interiors in a distinct tint, and the draft
-/// with a tinted fill and primary outline. While drafting, the old committed
-/// value keeps only its quiet selected treatment. Unavailable draft days use
-/// the full-strength destructive text role and remain struck through.
+/// paints committed endpoints in primary, interiors in a distinct tint, and
+/// the draft with a tinted fill and an `accentSoftForeground` outline. While
+/// drafting, the old committed value keeps only its quiet selected treatment.
+/// Unavailable draft days use the full-strength destructive text role and
+/// remain struck through.
 CalendarStyler uiRangeCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => uiCalendarStyle()
@@ -19,24 +21,32 @@ CalendarStyler uiRangeCalendarStyle({
             _muted()
                 .variant(
                   _committedStart,
-                  _shape(start: true).color(_quietCap()),
+                  _shape(start: true).color(UiTokens.surfaceTertiary()),
                 )
                 .variant(_committedMiddle, _shape())
-                .variant(_committedEnd, _shape(end: true).color(_quietCap()))
+                .variant(
+                  _committedEnd,
+                  _shape(end: true).color(UiTokens.surfaceTertiary()),
+                )
                 .variant(
                   _committedSingle,
-                  _shape(start: true, end: true).color(_quietCap()),
+                  _shape(
+                    start: true,
+                    end: true,
+                  ).color(UiTokens.surfaceTertiary()),
                 ),
           )
           .onRangeMiddle(
-            _shape().color(_middle()).label(.color(UiTokens.foreground())),
+            _shape()
+                .color(UiTokens.accentSoft())
+                .label(.color(UiTokens.foreground())),
           )
           .onRangeStart(_endpoint().merge(_shape(start: true)))
           .onRangeEnd(_endpoint().merge(_shape(end: true)))
           .onRangeSingle(_endpoint().merge(_shape(start: true, end: true)))
           .onRangePreview(
             CalendarDayStyler()
-                .color(_draft())
+                .color(UiTokens.accentSoft())
                 .border(
                   BorderMix(
                     top: _draftStroke,
@@ -73,19 +83,24 @@ CalendarStyler uiRangeCalendarStyle({
     )
     .merge(style);
 
+/// A draft that cannot be completed: full-strength `danger` text, no fill.
 CalendarDayStyler _blockedPreview() => CalendarDayStyler()
     .color(_blocked())
     .label(.color(UiTokens.danger()))
     .wrap(.opacity(1));
 
+/// The committed range while a new draft is in progress.
 CalendarDayStyler _muted() => CalendarDayStyler()
     .color(_quietCommitted())
     .label(.color(UiTokens.muted()));
 
+/// A range endpoint: the solid `accent` fill.
 CalendarDayStyler _endpoint() => CalendarDayStyler()
     .color(UiTokens.accent())
     .label(.color(UiTokens.accentForeground()));
 
+/// Rounds the corners at the start and the end of a range; interior days stay
+/// square.
 CalendarDayStyler _shape({bool start = false, bool end = false}) {
   final radius = BorderRadiusGeometryMix.only(
     topStart: start ? UiTokens.radius3xl() : Radius.zero,
@@ -96,8 +111,10 @@ CalendarDayStyler _shape({bool start = false, bool end = false}) {
   return CalendarDayStyler().borderRadius(radius);
 }
 
-// The headless role tracks the draft while drafting. Read the committed
-// snapshot only for the old selection's geometry, reusing the same shapes.
+/// Matches a day in the committed range at [position].
+///
+/// The headless role tracks the draft while drafting, so this reads the
+/// committed value instead, for the old selection's geometry.
 ContextVariant _committedRole(String name, NakedRangePosition position) =>
     ContextVariant('ui.calendar.committed-$name', (context) {
       final value = NakedRangeCalendarState.maybeOf(context)?.value;
@@ -114,15 +131,21 @@ ContextVariant _committedRole(String name, NakedRangePosition position) =>
           : NakedRangePosition.middle;
       return role == position;
     });
+
 final _committedStart = _committedRole('start', .start);
 final _committedMiddle = _committedRole('middle', .middle);
 final _committedEnd = _committedRole('end', .end);
 final _committedSingle = _committedRole('single', .single);
-// Rank the directional override with the draft role it refines; plain
-// context variants run before widget-state-ranked range variants in Mix.
+
 final _rtlDraftStart = _RtlDraftEdge(NakedRangePosition.start);
 final _rtlDraftEnd = _RtlDraftEdge(NakedRangePosition.end);
 
+/// Matches the draft endpoint at [role] in right-to-left text, where the open
+/// edge is on the other side.
+///
+/// It depends on the selected widget state so Mix ranks it with the draft role
+/// it refines; plain context variants run before widget-state-ranked range
+/// variants.
 final class _RtlDraftEdge extends ContextVariant {
   _RtlDraftEdge(NakedRangePosition role)
     : super(
@@ -135,26 +158,24 @@ final class _RtlDraftEdge extends ContextVariant {
   Set<WidgetState> get widgetStateDependencies => const {WidgetState.selected};
 }
 
-final _middle = ContextToken<Color>((c) => UiTokens.accentSoft.resolve(c));
-final _draft = ContextToken<Color>((c) => UiTokens.accentSoft.resolve(c));
-final _draftBorder = ContextToken<Color>(
-  (c) => UiTokens.accentSoftForeground.resolve(c),
-);
 final _blocked = uiAlpha(UiTokens.danger, 0);
+
+/// The 1px outline of a draft day, on the edges that face outside the draft.
 final _draftStroke = BorderSideMix(
-  color: _draftBorder(),
+  color: UiTokens.accentSoftForeground(),
   width: 1.0,
   style: BorderStyle.solid,
 );
+
+/// No outline, on the edges that face the rest of the draft.
 final _none = BorderSideMix(
-  color: _draftBorder(),
+  color: UiTokens.accentSoftForeground(),
   width: 0,
   style: BorderStyle.none,
 );
 
-final _quietCap = ContextToken<Color>(
-  (c) => UiTokens.surfaceTertiary.resolve(c),
-);
+/// The fill of a committed day while a draft is in progress:
+/// `surface-tertiary` on the endpoints, `surface-secondary` between them.
 final _quietCommitted = ContextToken<Color>((context) {
   final value = NakedRangeCalendarState.maybeOf(context)?.value;
   final day = NakedCalendarDayState.maybeOf(context)?.date;
@@ -163,6 +184,7 @@ final _quietCommitted = ContextToken<Color>((context) {
       day != null &&
       (compareCivilDates(day, value.start) == 0 ||
           compareCivilDates(day, value.end) == 0);
+
   return (cap ? UiTokens.surfaceTertiary : UiTokens.surfaceSecondary).resolve(
     context,
   );
