@@ -1,6 +1,15 @@
+import 'package:flutter/foundation.dart';
+
 /// Title-cases a single lower-camel or lowercase identifier for display.
 String capitalize(String value) =>
     value.isEmpty ? value : '${value[0].toUpperCase()}${value.substring(1)}';
+
+/// The quick-find shortcut as its keys are labelled on this platform: `⌘K`
+/// on Apple keyboards and `Ctrl K` elsewhere.
+String get uiQuickFindShortcut => switch (defaultTargetPlatform) {
+  TargetPlatform.macOS || TargetPlatform.iOS => '⌘K',
+  _ => 'Ctrl K',
+};
 
 final _wordBoundary = RegExp('([A-Z])');
 

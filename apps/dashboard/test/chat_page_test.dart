@@ -21,6 +21,8 @@ void main() {
       await tester.pumpWidget(const DashboardApp());
       await tester.tap(find.text('Chat').first);
       await tester.pump();
+      // The entering page fades in over 200ms and joins semantics once visible.
+      await tester.pump(const Duration(milliseconds: 250));
       tester.view.physicalSize = Size(scenario.width, scenario.height);
       await tester.pump();
       final field = find.descendant(
@@ -78,6 +80,8 @@ void main() {
       await tester.pumpWidget(const DashboardApp());
       await tester.tap(find.text('Chat').first);
       await tester.pump();
+      // The entering page fades in over 200ms and joins semantics once visible.
+      await tester.pump(const Duration(milliseconds: 250));
       tester.view.physicalSize = const Size(430, 844);
       await tester.pump();
       final field = find.descendant(
@@ -119,6 +123,8 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.text('Chat').first);
     await tester.pump();
+    // The entering page fades in over 200ms and joins semantics once visible.
+    await tester.pump(const Duration(milliseconds: 250));
     final field = find.descendant(
       of: find.byType(UiComposer),
       matching: find.byType(EditableText),
@@ -161,6 +167,8 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.text('Chat').first);
     await tester.pump();
+    // The entering page fades in over 200ms and joins semantics once visible.
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.tap(find.text('Run terminal checks'));
     await tester.pump(const Duration(milliseconds: 350));
     await tester.tap(find.bySemanticsLabel('Stop'));
@@ -215,6 +223,8 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.text('Chat').first);
     await tester.pump();
+    // The entering page fades in over 200ms and joins semantics once visible.
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.tap(find.text('Review checkout'));
     for (var i = 0; i < 5; i++) {
       await tester.pump(const Duration(milliseconds: 350));
@@ -250,6 +260,8 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.text('Chat').first);
     await tester.pump();
+    // The entering page fades in over 200ms and joins semantics once visible.
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.tap(find.text('Run terminal checks'));
     await tester.pump(const Duration(milliseconds: 350));
     final firstRequest = tester
@@ -280,6 +292,8 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.text('Chat').first);
     await tester.pump();
+    // The entering page fades in over 200ms and joins semantics once visible.
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.tap(find.text('Run terminal checks'));
     await tester.pump(const Duration(milliseconds: 350));
     final requestId = tester
@@ -315,6 +329,8 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.text('Chat').first);
     await tester.pump();
+    // The entering page fades in over 200ms and joins semantics once visible.
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.tap(find.text('Run terminal checks'));
     await tester.pump(const Duration(milliseconds: 350));
     final requestId = tester
@@ -334,7 +350,11 @@ void main() {
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
-    final scope = tester.widget<UiTheme>(find.byType(UiTheme));
+    // The Overview's inverse revenue surface nests its own UiTheme, so name
+    // the dashboard's scope by key.
+    final scope = tester.widget<UiTheme>(
+      find.byKey(const ValueKey('dashboard-theme-scope')),
+    );
     expect(scope.mode, UiThemeMode.dark);
     expect(scope.accent, UiAccentColor.mar);
     expect(scope.panelBackground, UiPanelBackground.translucent);
@@ -355,6 +375,8 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.text('Chat').first);
     await tester.pump();
+    // The entering page fades in over 200ms and joins semantics once visible.
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.tap(find.text('Run terminal checks'));
     await tester.pump(const Duration(milliseconds: 350));
     final stop = find.byWidgetPredicate(
@@ -390,6 +412,8 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.text('Chat').first);
     await tester.pump();
+    // The entering page fades in over 200ms and joins semantics once visible.
+    await tester.pump(const Duration(milliseconds: 250));
 
     expect(find.text('Interactive demo'), findsOneWidget);
     await tester.tap(find.text('Run terminal checks'));
@@ -411,6 +435,8 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('Chat').first);
     await tester.pump();
+    // The entering page fades in over 200ms and joins semantics once visible.
+    await tester.pump(const Duration(milliseconds: 250));
     expect(find.text('Agent chat'), findsOneWidget);
 
     for (var i = 0; i < 3; i++) {
@@ -429,6 +455,8 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
     await tester.tap(find.text('Chat').first);
     await tester.pump();
+    // The entering page fades in over 200ms and joins semantics once visible.
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.tap(find.text('Recover a failed command'));
     for (var i = 0; i < 3; i++) {
       await tester.pump(const Duration(milliseconds: 350));

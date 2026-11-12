@@ -44,7 +44,7 @@ class _DashboardAppState extends State<DashboardApp> {
       settings: _settings,
       onChanged: (settings) => setState(() => _settings = settings),
       child: WidgetsApp(
-        title: 'Dashboard',
+        title: 'Northstar',
         debugShowCheckedModeBanner: false,
         color: const Color(0xFFF8FAFC),
         pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
