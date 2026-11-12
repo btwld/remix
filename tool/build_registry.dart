@@ -594,9 +594,8 @@ const fortalPreset = PresetSpec(
     'build_runner',
     'mix_generator',
     'mix_chart',
-    'remix_ui_fonts',
   },
-  detectedPackages: ['mix_chart', 'remix_ui_fonts'],
+  detectedPackages: ['mix_chart'],
   composedRegistryDependencies: {
     'sidebar_layout': ['sidebar'],
   },

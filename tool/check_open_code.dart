@@ -230,9 +230,6 @@ const _fortalPreset = _PresetContract(
   name: 'fortal',
   fixtureDirectory: 'fortal_fixture',
   registryItems: _fortalRegistryItems,
-  // Agent tool ids and output use bundled Geist Mono.
-  requiredRuntimeDependencies: [..._baseRuntimeDependencies, 'remix_ui_fonts'],
-  allowedImportPackages: [..._baseImportPackages, 'remix_ui_fonts'],
   independentItems: [
     ..._independentRegistryItems,
     'range_slider',
@@ -1677,15 +1674,12 @@ _Failure? _verifyFocusedDependencies(
   // theme's packages. The chart package follows the item, and the icon alias
   // alone installs no generated component. HeroUI's theme leaves the fonts
   // package to its `typography` item, which no focused item depends on.
-  // Fortal's tool-call recipe brings fonts into the focused dashboard demo.
   final runtimeExpected = {
     'flutter',
     for (final package in preset.requiredRuntimeDependencies)
       if ((package != 'mix_chart' || item == 'dashboard_demo') &&
           (package != 'mix_annotations' || item != 'icons') &&
-          (package != 'remix_ui_fonts' ||
-              preset.name == 'vanilla' ||
-              (preset.name == 'fortal' && item == 'dashboard_demo')))
+          (package != 'remix_ui_fonts' || preset.name != 'heroui'))
         package,
   };
   final developmentExpected = {

@@ -1714,16 +1714,20 @@ import 'package:remix_ui_fonts/remix_ui_fonts.dart';
       expect(checker.installedUiProblem(app), isNull);
     });
 
-    test('permits Fortal Agent recipes to import their bundled fonts', () {
+    test('does not let Fortal import the fonts package', () {
       final app = Directory('${sandbox.path}/app');
       _writeInstalledUi(app, preset: 'fortal');
-      File(
-        '${app.path}/lib/ui/recipes/tool_call_recipe.dart',
-      ).writeAsStringSync('''
+      File('${app.path}/lib/ui/theme/theme_data.dart').writeAsStringSync('''
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 ''');
 
-      expect(checker.installedUiProblem(app, preset: 'fortal'), isNull);
+      expect(
+        checker.installedUiProblem(app, preset: 'fortal'),
+        contains(
+          'theme/theme_data.dart: imports package:remix_ui_fonts, which is '
+          'outside the registry contract',
+        ),
+      );
     });
 
     test('checks every URI in conditional directives', () {
@@ -1742,20 +1746,23 @@ import 'package:flutter/widgets.dart'
     });
   });
 
-  test('Every preset requires its delivered fonts in a full install', () {
-    expect(
-      checker.requiredRuntimeDependenciesForTest('vanilla'),
-      contains('remix_ui_fonts'),
-    );
-    expect(
-      checker.requiredRuntimeDependenciesForTest('heroui'),
-      contains('remix_ui_fonts'),
-    );
-    expect(
-      checker.requiredRuntimeDependenciesForTest('fortal'),
-      contains('remix_ui_fonts'),
-    );
-  });
+  test(
+    'Vanilla and HeroUI require their delivered fonts in a full install',
+    () {
+      expect(
+        checker.requiredRuntimeDependenciesForTest('vanilla'),
+        contains('remix_ui_fonts'),
+      );
+      expect(
+        checker.requiredRuntimeDependenciesForTest('heroui'),
+        contains('remix_ui_fonts'),
+      );
+      expect(
+        checker.requiredRuntimeDependenciesForTest('fortal'),
+        isNot(contains('remix_ui_fonts')),
+      );
+    },
+  );
 
   test(
     'HeroUI has its own small fixture, catalog, and dependency contract',

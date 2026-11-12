@@ -881,8 +881,6 @@ items:
       - button
       - data_list
       - disclosure
-    dependencies:
-      remix_ui_fonts: ^0.1.0
     files:
       - source: templates/recipes/tool_call_recipe.dart.tmpl
         target: "@ui/recipes/tool_call_recipe.dart"
