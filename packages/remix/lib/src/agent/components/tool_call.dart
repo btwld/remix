@@ -406,10 +406,10 @@ class _AgentToolCallState extends State<AgentToolCall>
     final titleSpan = span(title, summarySpec);
     final metaSpan = meta.isEmpty ? null : span(meta, spec.meta.spec);
     final toolSpan = toolId == null ? null : span(toolId, spec.toolId.spec);
-    final trailing = [
+    final trailingLabel = [
       if (metaSpan != null) metaSpan.semanticsLabel ?? metaSpan.text!,
       if (toolSpan != null) toolSpan.semanticsLabel ?? toolSpan.text!,
-    ].join(' · ');
+    ].where((label) => label.isNotEmpty).join(' · ');
     final titleLabel = titleSpan.semanticsLabel ?? titleSpan.text!;
     final icon = widget.icon;
     final leading = icon == null
@@ -433,14 +433,14 @@ class _AgentToolCallState extends State<AgentToolCall>
             TextSpan(
               children: [
                 titleSpan,
-                if (trailing.isNotEmpty) ...[
+                if (metaSpan != null || toolSpan != null) ...[
                   // The gap matches the row's own spacing.
                   WidgetSpan(child: SizedBox(width: gap)),
                   TextSpan(
                     style: spec.meta.spec.style,
                     children: [
                       ?metaSpan,
-                      if (meta.isNotEmpty && toolId != null)
+                      if (metaSpan != null && toolSpan != null)
                         const TextSpan(text: ' · '),
                       ?toolSpan,
                     ],
@@ -448,9 +448,9 @@ class _AgentToolCallState extends State<AgentToolCall>
                 ],
               ],
             ),
-            semanticsLabel: trailing.isEmpty
+            semanticsLabel: trailingLabel.isEmpty
                 ? titleLabel
-                : '$titleLabel, $trailing',
+                : '$titleLabel, $trailingLabel',
             strutStyle: summarySpec.strutStyle,
             textAlign: summarySpec.textAlign,
             textDirection: summarySpec.textDirection,

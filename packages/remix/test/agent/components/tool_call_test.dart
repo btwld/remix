@@ -292,6 +292,47 @@ void main() {
   });
 
   group('the row', () {
+    for (final slot in ['toolId', 'meta', 'both']) {
+      testWidgets(
+        'an empty $slot semantics label keeps visible trailing text',
+        (tester) async {
+          final semantics = tester.ensureSemantics();
+          try {
+            final hideTool = slot != 'meta';
+            final hideMeta = slot != 'toolId';
+            final title = hideTool ? 'Tests passed' : 'terminal.run';
+            await _pump(
+              tester,
+              AgentToolCallPart(
+                id: 'empty-label',
+                name: 'terminal.run',
+                summary: hideTool ? title : null,
+                detail: hideMeta ? '31 tests' : null,
+                status: AgentToolCallStatus.succeeded,
+              ),
+              style: AgentToolCallStyler(
+                toolId: hideTool ? TextStyler().semanticsLabel('') : null,
+                meta: hideMeta ? TextStyler().semanticsLabel('') : null,
+              ),
+            );
+            final text = tester.widget<Text>(
+              find.ancestor(of: _rowText(title), matching: find.byType(Text)),
+            );
+            final visible = text.textSpan!.toPlainText(
+              includeSemanticsLabels: false,
+              includePlaceholders: false,
+            );
+            if (hideTool) expect(visible, contains('terminal.run'));
+            if (hideMeta) expect(visible, contains('31 tests'));
+            expect(text.semanticsLabel, title);
+            expect(find.bySemanticsLabel(title), findsOneWidget);
+          } finally {
+            semantics.dispose();
+          }
+        },
+      );
+    }
+
     for (final slot in ['summary', 'meta', 'toolId']) {
       testWidgets('honors the row $slot text directive', (tester) async {
         final uppercase = TextStyler().uppercase();
