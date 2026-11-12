@@ -190,11 +190,6 @@ final _placeholderEllipsis = RegExp(r'\.\.\.(?![\w\[({?])');
 final _heroUiApiReference = RegExp(r'\b(?:HeroUi|heroUi)[A-Z]\w*');
 final _fortalApiReference = RegExp(r'\b(?:Fortal|fortal)[A-Z]\w*');
 final _applicationTypeName = RegExp(r'\bUi([A-Z]\w*)');
-final _agentTypeDeclaration = RegExp(
-  r'^(?:(?:abstract|final|sealed|base|mixin)\s+)*'
-  r'(?:class|enum|typedef|extension type|mixin)\s+Agent(\w+)',
-  multiLine: true,
-);
 
 const _exampleSourceDirectories = <String>[
   'apps/dashboard/lib',
@@ -432,12 +427,11 @@ Future<void> main() async {
   );
   tempRoot.createSync(recursive: true);
   try {
-    final agentTypes = _agentTypeNames(workspaceRoot);
     for (final (index, snippet) in snippets.indexed) {
       final file = File('${tempRoot.path}/snippet_$index.dart');
       file.writeAsStringSync(
         '// Generated temporarily by tool/validate_docs.dart.\n'
-        '${_validationSource(snippet.source, agentTypes)}\n',
+        '${_validationSource(snippet.source)}\n',
       );
     }
 
@@ -893,37 +887,10 @@ String _fenceBody(RegExpMatch match) {
       .join('\n');
 }
 
-/// The suffixes of every type the Agent surfaces declare under their
-/// authoring word, so `UiMessage` can be told apart from `UiButton`.
-Set<String> _agentTypeNames(Directory workspaceRoot) {
-  final names = <String>{};
-  final agentSource = Directory(
-    '${workspaceRoot.path}/registry_source/lib/src/agent',
-  );
-  for (final file in agentSource.listSync(recursive: true).whereType<File>()) {
-    if (!file.path.endsWith('.dart') || file.path.endsWith('.g.dart')) continue;
-    for (final match in _agentTypeDeclaration.allMatches(
-      file.readAsStringSync(),
-    )) {
-      names.add(match.group(1)!);
-    }
-  }
-  return names;
-}
-
-/// Points a snippet that imports the application-owned `ui/ui.dart` barrel at
-/// the analyzer-checked authoring source that barrel is installed from.
-///
-/// The temporary validation directory has no application package. `Fortal*`
-/// and `fortal*` names match `package:registry_source/fortal.dart`; likewise
-/// `HeroUi*`/`heroUi*` match `package:registry_source/heroui.dart`
-/// byte-for-byte. `Ui*` is the prefix `remix init` installs under, so each
-/// such type name is renamed back to its authoring word: an Agent surface's
-/// word is `Agent`; every other name belongs to the named HeroUI/Fortal
-/// preset, or the default Vanilla preset otherwise. Value names under `ui*`
-/// have no example yet, so they are left alone and fail as undefined. The
-/// derivation round trip separately proves that the prefixed APIs match.
-String _validationSource(String snippet, Set<String> agentTypes) {
+/// Resolves consumer-prefixed examples against the analyzed preset source.
+/// Package Agent types retain their names; only installed recipe and control
+/// names use the application's prefix.
+String _validationSource(String snippet) {
   if (!_applicationBarrelImport.hasMatch(snippet)) return snippet;
   final preset = _heroUiApiReference.hasMatch(snippet)
       ? 'heroui'
@@ -933,23 +900,20 @@ String _validationSource(String snippet, Set<String> agentTypes) {
   final typeWord = preset == 'heroui'
       ? 'HeroUi'
       : '${preset[0].toUpperCase()}${preset.substring(1)}';
-  var usesAgent = false;
-  var usesPreset = preset != 'vanilla';
-  final renamed = snippet.replaceAllMapped(_applicationTypeName, (match) {
-    final name = match.group(1)!;
-    if (agentTypes.contains(name)) {
-      usesAgent = true;
-      return 'Agent$name';
-    }
-    usesPreset = true;
-    return '$typeWord$name';
-  });
-  final imports = [
-    if (usesPreset || !usesAgent)
-      "import 'package:registry_source/$preset.dart';",
-    if (usesAgent) "import 'package:registry_source/agent.dart';",
-  ];
-  return renamed.replaceAll(_applicationBarrelImport, imports.join('\n'));
+  final valueWord = preset == 'heroui' ? 'heroUi' : preset;
+  final renamed = snippet
+      .replaceAllMapped(
+        _applicationTypeName,
+        (match) => '$typeWord${match.group(1)}',
+      )
+      .replaceAllMapped(
+        RegExp(r'\bui([A-Z]\w*)'),
+        (match) => '$valueWord${match.group(1)}',
+      );
+  return renamed.replaceAll(
+    _applicationBarrelImport,
+    "import 'package:registry_source/$preset.dart';",
+  );
 }
 
 String _relativePath(Directory root, File file) => _relative(file.path, root);

@@ -1,0 +1,64 @@
+---
+title: Sources
+description: A compact reference count that opens a list of sources.
+---
+
+A compact reference count that opens a list of sources.
+
+The widgets live in experimental `package:remix/agent.dart`, outside Remix's stability promise.
+Import it explicitly; `package:remix/remix.dart` does not export it.
+The registry installs editable preset recipes and their dependencies into your app.
+Widget, model, and styler names keep the `Agent` prefix. Recipe names use your app's prefix.
+
+## Install
+
+For a new app, initialize one preset, then add the recipe and glyphs:
+
+```shell
+remix init --prefix Ui --preset fortal
+remix add sources_recipe agent_glyphs_recipe
+```
+
+Existing apps keep their chosen preset. Vanilla and HeroUI provide the same recipe roles.
+No consumer `build.yaml` is needed for these Agent recipes.
+
+## Behavior
+
+Pass `AgentSource` values through `sources`. An empty list renders nothing.
+The line expands to source buttons; `onOpen` receives the selected source.
+The host decides how to open its URI or navigate to its file.
+Use it in the `sources` slot of `AgentAnswer` or place it independently.
+
+## Use the recipe
+
+This example assumes prefix `Ui` and the installed `UiTheme` above the widget.
+Wrap the conversation in `AgentGlyphs(builder: uiAgentGlyph, child: ...)` to draw preset glyphs.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
+import 'ui/ui.dart';
+
+Widget buildSources() {
+  final recipe = uiAgentSourcesRecipe();
+  return AgentSources(
+    sources: const [AgentSource(id: 'cart', title: 'cart_test.dart')],
+    style: recipe.style,
+    disclosureStyle: recipe.disclosureStyle,
+    sourceStyle: recipe.sourceStyle,
+  );
+}
+```
+
+The recipe returns these unresolved styles. Pass each into its matching widget parameter;
+child controls resolve hover, focus, and disabled state in their own context.
+
+| Bundle field | Style type |
+| --- | --- |
+| `style` | `AgentSourcesStyler` |
+| `disclosureStyle` | `DisclosureStyler` |
+| `sourceStyle` | `ButtonStyler` |
+
+Each factory merges same-named overrides after its preset defaults.
+Edit the installed recipe to customize it. `remix add sources_recipe --diff` previews upstream differences.
+See [migration](/agent/migrating) for the previous registry API.

@@ -2,7 +2,7 @@
 
 `remix_cli` installs editable preset source into your app. Remix retains
 rendering, interaction and accessibility; you own the theme, recipes and
-installed Agent behavior. Choose one preset: neutral **Vanilla**, **Fortal**
+package Agent widgets. Choose one preset: neutral **Vanilla**, **Fortal**
 with its own visual contract, or **HeroUI** following HeroUI web 3.2.6.
 Rationale lives in [ARCHITECTURE.md](../ARCHITECTURE.md).
 
@@ -121,12 +121,12 @@ For additional registries and retired configurations, use the
 
 ## Styling a package on top of the catalog
 
-Agent's `composer_recipe` installs behavior plus a bundle of parent and child
-stylers. Pass the bundle's `style`, `surfaceStyle`, `fieldStyle`, `submitStyle`
-and `stopStyle` to the installed composer; child controls resolve their own
-interactive states. See [Agent usage](../registry_source/docs/agent/README.md).
-Agent installs also enable the scoped spec-styler builder in consumer
-`build.yaml`; incompatible existing configuration fails preflight.
+Agent's `composer_recipe` installs a bundle of unresolved parent and child
+stylers for `AgentComposer` from experimental `package:remix/agent.dart`.
+Pass `style`, `fieldStyle`, `submitStyle`, and `stopStyle` to the package widget.
+Child controls resolve their own interactive states. These recipes need no
+consumer `build.yaml`. See [Agent usage](../registry_source/docs/agent/README.md)
+and [migration](../docs/agent/migrating.mdx).
 
 ## Charts without Fortal
 

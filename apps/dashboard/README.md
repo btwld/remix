@@ -14,7 +14,7 @@ dashboard is the copyable product implementation.
 ## Registry ownership
 
 The dashboard selects the Fortal preset with prefix `Ui` in `remix.yaml`.
-Its full component catalog, eight Agent recipe bundles, and the Fortal
+Its full component catalog, Agent recipe bundles and glyphs, and the Fortal
 `dashboard_demo` recipe are installed under `lib/ui/`; `tool/check_consumer_apps.dart`
 compares them with the bundled registry. `apps/dashboard/lib/main.dart` is a
 thin entry point that mounts `UiDashboardDemo` inside a `UiDashboardThemeScope`
@@ -22,8 +22,9 @@ and `UiTheme` with a local simulated chat runner. The separate
 `dashboard_shell` item remains the minimal shell starter for custom pages.
 
 Open **Workspace → Chat** to review the Agent surfaces together. No model or
-tool service is contacted. The [Agent component docs](../../docs/agent/transcript.mdx)
-describe installation and host responsibilities.
+tool service is contacted. The [Agent component docs](../../docs/agent/conversation.mdx)
+describe installation and host responsibilities. The widgets and models
+come from experimental `package:remix/agent.dart`.
 
 ## Reference rules
 

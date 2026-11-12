@@ -45,13 +45,13 @@ The `heroui` preset follows HeroUI's names, adding `alert`, `avatar_group`,
 `toggle_button`, and `toggle_button_group` to shared names such as `button` and
 `select`.
 
-The Vanilla and Fortal presets additionally distribute the unstyled Agent items:
-`activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
-and `transcript`, with shared `models` and `support` dependencies. These are
-application-owned source, not a dependency on the private authoring source.
-Each surface has an opt-in `<component>_recipe` item that installs a complete,
-preset-specific styler bundle under `lib/ui/recipes/`; bare components remain
-unstyled and backward compatible.
+Vanilla, Fortal, and HeroUI distribute Agent recipe bundles under
+`lib/ui/recipes/`, styling the experimental widgets in
+`package:remix/agent.dart`. The widgets, models, and controllers come from
+Remix; apps own the installed recipes and orchestration. Install
+`agent_glyphs_recipe` for preset glyphs. See [Agent migration](../../docs/agent/migrating.mdx)
+for the old-to-new map and commands. Previously installed behavior source
+keeps compiling because it belongs to the app.
 
 ## Install
 
@@ -243,7 +243,7 @@ The command installs Theme before Button, adds missing compatible hosted
 dependencies, formats the authored files, runs generation only for the
 declared adapters (including previously installed adapters), and analyzes the
 installed UI path. Recipe-only installs do not need `build.yaml`. Installing
-Agent `@MixableSpec` source enables Mix's opt-in spec-styler builder there,
+An item with `@MixableSpec` source enables Mix's opt-in spec-styler builder there,
 scoped to the installed files. The CLI preserves comments and unrelated
 settings; it refuses explicit builder disablement, excluded source, or
 conflicting target ownership before writing. `--dry-run` reports the required

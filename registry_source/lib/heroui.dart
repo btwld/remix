@@ -57,3 +57,14 @@ export 'src/heroui/components/range_calendar.dart';
 export 'src/heroui/components/date_picker.dart';
 export 'src/heroui/components/date_range_picker.dart';
 export 'src/heroui/recipes/dashboard/dashboard_shell.dart';
+
+/// AGENT RECIPES
+export 'src/heroui/recipes/agent_glyphs_recipe.dart';
+export 'src/heroui/recipes/answer_recipe.dart';
+export 'src/heroui/recipes/composer_recipe.dart';
+export 'src/heroui/recipes/conversation_recipe.dart';
+export 'src/heroui/recipes/message_recipe.dart';
+export 'src/heroui/recipes/sources_recipe.dart';
+export 'src/heroui/recipes/steps_recipe.dart';
+export 'src/heroui/recipes/suggestions_recipe.dart';
+export 'src/heroui/recipes/tool_call_recipe.dart';

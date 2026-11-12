@@ -13,7 +13,8 @@ family, with a header switch between light and dark (`AcmeThemeMode`). Its
 `AcmeDashboardShell` with sidebar sections, search, a dark mode switch in the
 app bar, and a simple overview page. The "Chart" card draws the line, bar and
 pie recipes, and "Agent surfaces" a message, a permission request, an answer
-and the composer with the HeroUI Agent recipes. The dashboard, chart and Agent
+and the composer from experimental `package:remix/agent.dart`, styled by the
+HeroUI Agent recipes. The dashboard, chart and Agent
 items are extensions with no upstream HeroUI family. It
 imports the installed `ui/ui.dart` plus Remix and `mix_chart` for the part
 types it passes (`RemixSelectItem`, `RemixMenuItem`, `RemixDataTableColumn`,

@@ -172,11 +172,12 @@ nothing claims they still match the newly pinned source. That is what the
 Choose one preset and prefix at initialization; the official presets own the
 same installed paths, so their source trees cannot be mixed. `Fortal` is an
 authoring word, not a required installed prefix. A recipe installs only its
-item dependency closure. Agent surfaces may install bare or through their
-`*_recipe` bundles; shared models/support install transitively.
+item dependency closure. Agent recipes style the widgets and models from
+experimental `package:remix/agent.dart`; no Agent behavior source is installed.
 
-Applications own theme/recipes and Agent domain source, never depend on
-`registry_source`, and generate adapters against their resolved dependencies.
+Applications own theme/recipes, never depend on `registry_source`, and
+generate adapters against their resolved dependencies. Agent recipes need no
+consumer code generation.
 `style` comes from the recipe with the caller override merged last;
 `styleSpec` is not a generated visual override because it bypasses resolution.
 Existing authored files are preserved, and `--diff` is read-only.
@@ -237,9 +238,9 @@ internal authoring directory remains `registry_source/lib/src/default/`.
 
 ## Authoring and derivation
 
-`registry_source/lib/src/default`, `fortal`, `heroui`, `agent` and `dashboard` own the
+`registry_source/lib/src/default`, `fortal`, `heroui` and `dashboard` own the
 analyzed Dart. Edit it, never `.tmpl` output. The builder asserts prefix round
-trips and rewrites shared Agent imports to installed relative paths. Imports
+trips and rewrites shared dashboard imports to installed relative paths. Imports
 determine item dependencies; parts determine adapter targets. Whole-tree checks
 reject missing, unexpected or changed files.
 

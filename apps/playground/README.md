@@ -14,9 +14,10 @@ fvm flutter run -d chrome
 
 ## Installed registry source
 
-All UI components, Agent surfaces, charts, and the `dashboard_demo` recipe are
+All UI components, Agent recipes, charts, and the `dashboard_demo` recipe are
 installed under `lib/ui/`; `tool/check_consumer_apps.dart` verifies that the
-installed tree stays in sync with the `vanilla` registry.
+installed tree stays in sync with the `vanilla` registry. Agent widgets and
+models come from experimental `package:remix/agent.dart`.
 
 For the Fortal polish board (all sizes, variants, modes, palettes, and states),
 see [the Fortal playground](../demo/README.md).
