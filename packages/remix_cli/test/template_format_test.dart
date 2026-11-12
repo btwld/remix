@@ -20,7 +20,7 @@ const _referencePrefix = 'Vanilla';
 void main() {
   // Every default template is derived from formatted source by
   // `tool/build_registry.dart`, which holds it byte-identical through a
-  // round-trip assertion: the Agent subtree from `registry_source/lib/src/agent`,
+  // round-trip assertion: shared dashboard source and package Agent recipes,
   // the rest from `lib/src/default`. So is `fortal`, from `lib/src/fortal`.
   // This test is what makes that claim checkable
   // for the current remote distribution. Frozen bundles have separate regression coverage.
