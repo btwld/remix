@@ -285,6 +285,10 @@ final _primaryHoverFill = _dimmed(AcmeTokens.interactivePrimary, 0.9);
 final _primaryPressedFill = _dimmed(AcmeTokens.interactivePrimary, 0.8);
 ```
 
+A helper that caches its tokens by argument, as Vanilla's `vanillaTint` does,
+returns the same token for the same arguments. Call it where the color is used
+(`vanillaTint(VanillaTokens.primary, 0.9)()`) so the variant reads in one place.
+
 **State fragments merge by state and keep their first position.** Mix merges
 every fragment declared for one state into the place that state was first
 declared: `.onDisabled(a).onFocusVisible(f).onDisabled(b)` resolves as

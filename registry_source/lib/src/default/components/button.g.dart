@@ -8,27 +8,14 @@ part of 'button.dart';
 
 /// The application's Button recipe.
 ///
-/// Everything visual about a button lives in this function: geometry,
-/// typography, the five variants, hover and press motion, and the
-/// hover/pressed/focus/disabled fragments. Every state change settles over
-/// 150ms on the shared curve (`VanillaTokens.motion`). Remix keeps ownership
-/// of rendering, pointer and keyboard behavior, accessibility semantics, and
-/// the loading/disabled interaction rules — this recipe never reimplements any
-/// of that.
+/// It reads top to bottom: what every button shares, the size, then each
+/// variant's colors at rest, under the pointer and on focus, then disabled.
+/// Remix owns rendering, input, semantics, and the loading and disabled rules.
 ///
-/// `@MixWidget(target: RemixButton.new)` generates `VanillaButton` into
-/// `button.g.dart`: an adapter whose constructor is this function's
-/// parameters plus every safe `RemixButton` parameter, and whose `build`
-/// calls `RemixButton(style: vanillaButtonStyle(...), ...)`. Because
-/// [variant] is a non-nullable enum, the generator also emits one named
-/// constructor per enum value.
+/// `@MixWidget` generates `VanillaButton` into `button.g.dart`, with one named
+/// constructor per variant. Renaming this function renames the widget.
 ///
-/// The widget's name comes from this function's name — the generator drops a
-/// trailing `Style` and capitalises what is left — so renaming the recipe
-/// renames the widget. There is nothing to keep in sync.
-///
-/// [style] is merged **last**, so a single call site can override any part of
-/// the resolved recipe without forking it:
+/// [style] merges last, so one call site can override any part:
 ///
 /// ```dart
 /// VanillaButton.primary(
@@ -38,9 +25,8 @@ part of 'button.dart';
 /// )
 /// ```
 ///
-/// State fragments merge by state, not by depth: an override that must beat
-/// the recipe's hover fill has to be declared as a hover fragment too
-/// (`ButtonStyler().onHovered(...)`).
+/// An override that must beat a hover fill has to be a hover fragment too:
+/// `ButtonStyler().onHovered(...)`.
 class VanillaButton extends StatelessWidget {
   const VanillaButton({
     super.key,
