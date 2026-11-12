@@ -48,6 +48,6 @@ SpinnerStyler heroUiSpinnerStyle({
 /// HeroUI's `<Spinner color="current" size="sm"/>` inside a pending control.
 ///
 /// `.current` skips the accent default; [color] explicitly overrides the
-/// inherited icon colour that Remix's spinner otherwise uses.
+/// inherited icon color that Remix's spinner otherwise uses.
 SpinnerStyler heroUiInlineSpinnerStyle(Color color) =>
     heroUiSpinnerStyle(size: .sm, color: .current).indicatorColor(color);

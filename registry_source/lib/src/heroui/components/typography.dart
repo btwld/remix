@@ -7,7 +7,7 @@ import '../theme/theme.dart';
 /// HeroUI's text styles: six headings, three body sizes, and inline `code`.
 enum HeroUiTypographyType { h1, h2, h3, h4, h5, h6, body, bodySm, bodyXs, code }
 
-/// The text colour: `foreground`, or `muted` for secondary copy.
+/// The text color: `foreground`, or `muted` for secondary copy.
 enum HeroUiTypographyColor { defaultColor, muted }
 
 /// An explicit font weight, replacing the type's own.

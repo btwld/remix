@@ -6,13 +6,41 @@ import '../theme/theme.dart';
 
 part 'modal.g.dart';
 
-/// HeroUI modal widths: `max-w-xs` to `max-w-lg`, the full-size `cover`, and
-/// the edge-to-edge `full`.
-enum HeroUiModalSize { xs, sm, md, lg, cover, full }
+/// HeroUI modal widths.
+enum HeroUiModalSize {
+  /// `max-w-xs`: 320px.
+  xs,
 
-/// Where the dialog sits in the viewport. `auto` is a bottom sheet below the
-/// `sm` breakpoint and centered from it up.
-enum HeroUiModalPlacement { auto, center, top, bottom }
+  /// `max-w-sm`: 384px.
+  sm,
+
+  /// `max-w-md`: 448px. The default.
+  md,
+
+  /// `max-w-lg`: 512px.
+  lg,
+
+  /// Fills the viewport inside the container's inset, keeping the rounded card.
+  cover,
+
+  /// Fills the viewport edge to edge, without inset or rounded corners.
+  full,
+}
+
+/// Where the dialog sits in the viewport.
+enum HeroUiModalPlacement {
+  /// A bottom sheet below the `sm` breakpoint, centered from it up.
+  auto,
+
+  /// Centered.
+  center,
+
+  /// Against the top edge.
+  top,
+
+  /// Against the bottom edge.
+  bottom,
+}
 
 /// HeroUI recipe for [RemixDialog], the modal surface.
 ///
@@ -32,7 +60,7 @@ DialogStyler heroUiModalStyle({
     .top => Alignment.topCenter,
   };
 
-  var result = DialogStyler()
+  return DialogStyler()
       .wrap(_frame(full ? 0 : _inset, alignment))
       .onBreakpoint(
         const Breakpoint.minWidth(HeroUiTokens.breakpointSm),
@@ -68,22 +96,22 @@ DialogStyler heroUiModalStyle({
             .crossAxisAlignment(.center)
             .spacing(_actionsGap)
             .margin(.top(_footerGap)),
-      );
-
-  result = switch (size) {
-    .xs => result.maxWidth(_maxWidthXs),
-    .sm => result.maxWidth(_maxWidthSm),
-    .md => result.maxWidth(_maxWidthMd),
-    .lg => result.maxWidth(_maxWidthLg),
-    .cover || .full => result.width(.infinity).height(.infinity),
-  };
-  if (!full) {
-    result = result
-        .borderRadius(.all(HeroUiTokens.radiusPanel()))
-        .containerEffects(heroUiSurfaceEffects(overlay: true));
-  }
-
-  return result.merge(style);
+      )
+      .merge(switch (size) {
+        .xs => DialogStyler().maxWidth(_maxWidthXs),
+        .sm => DialogStyler().maxWidth(_maxWidthSm),
+        .md => DialogStyler().maxWidth(_maxWidthMd),
+        .lg => DialogStyler().maxWidth(_maxWidthLg),
+        .cover || .full => DialogStyler().width(.infinity).height(.infinity),
+      })
+      .merge(
+        full
+            ? null
+            : DialogStyler()
+                  .borderRadius(.all(HeroUiTokens.radiusPanel()))
+                  .containerEffects(heroUiSurfaceEffects(overlay: true)),
+      )
+      .merge(style);
 }
 
 /// The positioning wrapper `.modal__container`: inset by its padding, then

@@ -6,10 +6,10 @@ import '../theme/theme.dart';
 /// HeroUI surface fills; `defaultSurface` is HeroUI's `default`.
 enum HeroUiSurfaceVariant { transparent, defaultSurface, secondary, tertiary }
 
-/// HeroUI's `Surface`: a filled box that sets the text colour for its content.
+/// HeroUI's `Surface`: a filled box that sets the text color for its content.
 ///
 /// `text-surface-*-foreground` is the CSS `color`, which `currentColor` icons
-/// inherit too, so the icon theme takes the same colour.
+/// inherit too, so the icon theme takes the same color.
 class HeroUiSurface extends StatelessWidget {
   const HeroUiSurface({
     super.key,

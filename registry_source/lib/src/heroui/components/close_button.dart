@@ -30,7 +30,7 @@ IconButtonStyler heroUiCloseButtonStyle({
           .scale(_pressedScale)
           .animate(HeroUiTokens.transformMotion),
     )
-    .onHovered(IconButtonStyler().color(HeroUiTokens.defaultHover()))
+    .onHovered(.color(HeroUiTokens.defaultHover()))
     .onFocusVisible(.containerEffects(heroUiFocusRing()))
     .animate(HeroUiTokens.fillMotion)
     .onDisabled(IconButtonStyler().wrap(.opacity(HeroUiTokens.disabledOpacity)))

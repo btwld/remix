@@ -9,7 +9,13 @@ import '../theme/theme.dart';
 part 'accordion.g.dart';
 
 /// HeroUI accordion looks: on the page, or on a `surface` card.
-enum HeroUiAccordionVariant { defaultAccordion, surface }
+enum HeroUiAccordionVariant {
+  /// Items sit directly on the page, each over a 1px `separator` rule.
+  defaultAccordion,
+
+  /// Items share one `surface` card; see [HeroUiAccordionGroup].
+  surface,
+}
 
 /// HeroUI recipe for [RemixAccordion], one item.
 ///
@@ -62,7 +68,7 @@ AccordionStyler heroUiAccordionStyle({
       // The hover fill is for collapsed items only.
       .onCollapsed(
         AccordionStyler().onHovered(
-          AccordionStyler().trigger(FlexBoxStyler().color(hoverFill)),
+          AccordionStyler().trigger(.color(hoverFill)),
         ),
       )
       .onExpanded(
@@ -137,14 +143,16 @@ class HeroUiAccordionGroup<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Box(
-    style:
-        (variant == .surface
-                ? BoxStyler()
-                      .color(HeroUiTokens.surface())
-                      .borderRadius(.all(HeroUiTokens.radiusPanel()))
-                      .clipBehavior(.antiAlias)
-                : BoxStyler())
-            .merge(style),
+    style: BoxStyler()
+        .merge(
+          variant == .surface
+              ? BoxStyler()
+                    .color(HeroUiTokens.surface())
+                    .borderRadius(.all(HeroUiTokens.radiusPanel()))
+                    .clipBehavior(.antiAlias)
+              : null,
+        )
+        .merge(style),
     child: RemixAccordionGroup<T>(
       controller: controller,
       initialExpandedValues: initialExpandedValues,
