@@ -40,6 +40,7 @@ final class RegistryDashboardAgentStyles {
     required this.answerRetryStyle,
     required this.transcriptStyle,
     this.transcriptLatestStyle = const IconButtonStyler.create(),
+    this.turnStyle = const FlexBoxStyler.create(),
     required this.planStyle,
     required this.planDisclosureStyle,
     required this.activityStyle,
@@ -75,6 +76,12 @@ final class RegistryDashboardAgentStyles {
   final IconButtonStyler answerRetryStyle;
   final AgentTranscriptStyler transcriptStyle;
   final IconButtonStyler transcriptLatestStyle;
+
+  /// Lays out one turn: the prompt, the agent's work and its answer.
+  ///
+  /// The transcript's spacing separates turns, so keep a turn's own spacing
+  /// the tighter of the two: each prompt then reads with the reply below it.
+  final FlexBoxStyler turnStyle;
   final AgentPlanStyler planStyle;
   final DisclosureStyler planDisclosureStyle;
   final AgentActivityStyler activityStyle;
@@ -145,7 +152,12 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
   var _following = true;
   var _toolStarted = false;
   var _alwaysAllowTerminal = false;
-  final _history = <({String prompt, String answer})>[];
+  // Turns are numbered so a copy confirmation belongs to one answer: several
+  // answers can share the same text.
+  var _turn = 0;
+  int? _copiedTurn;
+  Timer? _copiedTimer;
+  final _history = <({int turn, String prompt, String answer})>[];
 
   RegistryDashboardAgentStyles get styles => widget.styles;
 
@@ -169,6 +181,7 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
   @override
   void dispose() {
     _cancelPending();
+    _copiedTimer?.cancel();
     _scroll.dispose();
     _draft.dispose();
     super.dispose();
@@ -182,6 +195,7 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
 
   void _reset() {
     _cancelPending();
+    _clearCopied();
     _draft.clear();
     setState(() {
       _stage = _Stage.idle;
@@ -194,6 +208,23 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
     });
   }
 
+  Future<void> _copyAnswer(int turn, String text) async {
+    await Clipboard.setData(ClipboardData(text: text));
+    if (!mounted) return;
+    _copiedTimer?.cancel();
+    setState(() => _copiedTurn = turn);
+    _copiedTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _copiedTurn = null);
+    });
+  }
+
+  // A confirmation answers the last action; a new run replaces it.
+  void _clearCopied() {
+    _copiedTimer?.cancel();
+    _copiedTimer = null;
+    _copiedTurn = null;
+  }
+
   void _start(
     String prompt, {
     _Scenario scenario = _Scenario.success,
@@ -203,11 +234,15 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
     _cancelPending();
     final id = _runId;
     setState(() {
+      _clearCopied();
       if (!keepMessage && _prompt.isNotEmpty) {
-        _history.add((prompt: _prompt, answer: _visibleAnswer));
+        _history.add((turn: _turn, prompt: _prompt, answer: _visibleAnswer));
       }
       _scenario = scenario;
-      if (!keepMessage) _prompt = prompt.trim();
+      if (!keepMessage) {
+        _turn++;
+        _prompt = prompt.trim();
+      }
       _answer = '';
       _toolStarted = false;
       _stage = _Stage.preparing;
@@ -349,15 +384,15 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
   Widget _transcript() {
     final requestId = _runId;
     final narrow = MediaQuery.sizeOf(context).width < 600;
-    final children = <Widget>[];
-    for (final turn in _history) {
-      children.addAll([
-        _message(turn.prompt),
-        _answerWidget(turn.answer, .complete),
-      ]);
-    }
+    final turns = <Widget>[
+      for (final turn in _history)
+        _turnGroup([
+          _message(turn.prompt),
+          _answerWidget(turn.turn, turn.answer, .complete),
+        ]),
+    ];
     if (_prompt.isNotEmpty) {
-      children.add(_message(_prompt));
+      final children = <Widget>[_message(_prompt)];
       children.add(
         AgentPlan(
           style: styles.planStyle,
@@ -474,6 +509,7 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
           {_Stage.denied, _Stage.stopped}.contains(_stage)) {
         children.add(
           _answerWidget(
+            _turn,
             _visibleAnswer,
             _stage == _Stage.running
                 ? .streaming
@@ -483,6 +519,7 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
           ),
         );
       }
+      turns.add(_turnGroup(children));
     }
     return AgentTranscript(
       controller: _scroll,
@@ -493,16 +530,27 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
       },
       style: styles.transcriptStyle,
       latestStyle: styles.transcriptLatestStyle,
-      children: children.isEmpty
+      children: turns.isEmpty
           ? [
               Box(
                 style: BoxStyler().alignment(.center).padding(.all(32)),
                 child: const StyledText('Choose a starter or write a message.'),
               ),
             ]
-          : children,
+          : turns,
     );
   }
+
+  // Each turn is one transcript item, so the transcript's spacing falls
+  // between turns and the turn's own, tighter spacing within one.
+  Widget _turnGroup(List<Widget> children) => ColumnBox(
+    style: FlexBoxStyler()
+        .mainAxisSize(.min)
+        .crossAxisAlignment(.stretch)
+        .spacing(8)
+        .merge(styles.turnStyle),
+    children: children,
+  );
 
   Widget _message(String value) => AgentMessage(
     role: .user,
@@ -511,7 +559,7 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
     child: StyledText(value),
   );
 
-  Widget _answerWidget(String value, AgentAnswerStatus status) {
+  Widget _answerWidget(int turn, String value, AgentAnswerStatus status) {
     return AgentAnswer(
       streamId: _runId,
       status: status,
@@ -520,7 +568,8 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
       sourcesStyle: styles.answerSourcesStyle,
       copyStyle: styles.answerCopyStyle,
       retryStyle: styles.answerRetryStyle,
-      onCopy: () => Clipboard.setData(ClipboardData(text: value)),
+      onCopy: () => _copyAnswer(turn, value),
+      feedback: _copiedTurn == turn ? const StyledText('Copied') : null,
       onRetry: _retry,
       sourcesContent: const StyledText(
         'Deterministic local fixture · no network',
