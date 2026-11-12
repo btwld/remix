@@ -6,15 +6,16 @@ import '../theme/theme.dart';
 
 part 'separator.g.dart';
 
-/// HeroUI separator shades, from `separator` to the faintest, `tertiary`.
+/// HeroUI separator shades: `separator`, `separator-secondary` and
+/// `separator-tertiary`.
 enum UiSeparatorVariant {
   /// The `separator` color.
   defaultSeparator,
 
-  /// The fainter `separator-secondary` color.
+  /// The `separator-secondary` color.
   secondary,
 
-  /// The faintest `separator-tertiary` color.
+  /// The `separator-tertiary` color.
   tertiary,
 }
 

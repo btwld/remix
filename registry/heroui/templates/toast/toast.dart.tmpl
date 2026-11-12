@@ -8,12 +8,14 @@ import 'close_button.dart';
 
 part 'toast.g.dart';
 
-/// HeroUI toast tones: the title and the leading icon take the status color.
+/// HeroUI toast tones: the title takes the status color, and so does the
+/// leading icon, except `accent`, whose icon stays `overlay-foreground`.
 enum {{typePrefix}}ToastVariant {
   /// Neutral: the `overlay-foreground` color.
   defaultToast,
 
-  /// Informational, in the `accent` tint.
+  /// Informational: only the title takes the `accent` tint; the icon keeps
+  /// `overlay-foreground`.
   accent,
 
   /// A positive outcome, in the `success` tint.

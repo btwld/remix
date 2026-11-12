@@ -8,8 +8,8 @@ import 'calendar.dart';
 ///
 /// Remix owns the complete range, local draft and range roles. This recipe
 /// paints committed endpoints in primary, interiors in a distinct tint, and
-/// the draft with a tinted fill and primary outline. While drafting, the old committed
-/// value keeps only its quiet selected treatment. Unavailable draft days use
+/// the draft with a tinted fill and an `accentSoftForeground` outline. While
+/// drafting, the old committed value keeps only its quiet selected treatment. Unavailable draft days use
 /// the full-strength destructive text role and remain struck through.
 CalendarStyler heroUiRangeCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),

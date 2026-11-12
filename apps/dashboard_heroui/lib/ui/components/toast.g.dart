@@ -45,7 +45,8 @@ class UiToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   }) : variant = UiToastVariant.defaultToast;
 
-  /// Informational, in the `accent` tint.
+  /// Informational: only the title takes the `accent` tint; the icon keeps
+  /// `overlay-foreground`.
   const UiToast.accent({
     super.key,
     this.style = const ToastStyler.create(),

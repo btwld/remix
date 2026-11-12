@@ -202,7 +202,8 @@ CalendarStyler heroUiCalendarGeometry(BuildContext context) => CalendarStyler()
           .minHeight(heroUiCalendarDayWidth(context)),
     );
 
-/// The month navigation buttons: 24px ghost squares that grow with text.
+/// The month navigation buttons: 24px squares with `radius2xl` corners and a
+/// 16px accent icon, that grow with text.
 IconButtonStyler heroUiCalendarNavigationStyle(BuildContext context) {
   final scaler = MediaQuery.textScalerOf(context);
 

@@ -35,7 +35,8 @@ class UiAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   });
 
-  /// Items sit directly on the page, each over a 1px `separator` rule.
+  /// Items sit directly on the page, each with a 1px `separator` rule
+  /// under it.
   const UiAccordion.defaultAccordion({
     super.key,
     this.style = const AccordionStyler.create(),
