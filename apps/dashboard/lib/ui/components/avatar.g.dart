@@ -6,7 +6,13 @@ part of 'avatar.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Avatar with Ui sizes, variants, and overrides.
+/// The Ui Avatar recipe.
+///
+/// It reads top to bottom: the size and fallback text, then the variant's
+/// colors. The corners turn into a circle when the theme radius is `full`.
+///
+/// [highContrast] moves the solid fill, and the text of the soft variant, to
+/// accent step 12.
 ///
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.
@@ -29,6 +35,7 @@ class UiAvatar extends StatelessWidget {
     this.iconBuilder,
   });
 
+  /// A tinted accent fill under accent text.
   const UiAvatar.soft({
     super.key,
     this.size = .size3,
@@ -46,6 +53,7 @@ class UiAvatar extends StatelessWidget {
     this.iconBuilder,
   }) : variant = UiAvatarVariant.soft;
 
+  /// The accent's solid fill under its contrast text.
   const UiAvatar.solid({
     super.key,
     this.size = .size3,

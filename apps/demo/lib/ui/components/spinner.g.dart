@@ -6,7 +6,7 @@ part of 'spinner.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixSpinner] using the inherited foreground color.
+/// The Fortal Spinner recipe, drawn in the inherited foreground color.
 class FortalSpinner extends StatelessWidget {
   const FortalSpinner({
     super.key,

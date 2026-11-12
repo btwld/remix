@@ -6,7 +6,7 @@ part of 'skeleton.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui recipe for [RemixSkeleton].
+/// The Ui Skeleton recipe: a gray placeholder block that pulses.
 class UiSkeleton extends StatelessWidget {
   const UiSkeleton({
     super.key,

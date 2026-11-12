@@ -6,7 +6,7 @@ part of 'spinner.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixSpinner] using the inherited foreground color.
+/// The Ui Spinner recipe, drawn in the inherited foreground color.
 class UiSpinner extends StatelessWidget {
   const UiSpinner({
     super.key,

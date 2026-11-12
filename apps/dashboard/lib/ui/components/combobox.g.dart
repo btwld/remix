@@ -6,7 +6,7 @@ part of 'combobox.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui's editable suggestions recipe, promoted from the demo's polish story.
+/// The Ui Combobox recipe: an editable field with a panel of suggestions.
 ///
 /// The field shares TextField's recipe. Suggestions use the Select panel's
 /// token roles with growing rows and separate hover, keyboard and press fills.
@@ -39,6 +39,7 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The `gray2` fill inside a 1px neutral frame.
   const UiCombobox.surface({
     super.key,
     this.size = .size2,
@@ -62,6 +63,7 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiComboboxVariant.surface;
 
+  /// An accent tint inside a 1px accent ring.
   const UiCombobox.soft({
     super.key,
     this.size = .size2,

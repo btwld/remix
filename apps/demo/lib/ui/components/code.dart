@@ -6,11 +6,29 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// Fortal Code variants.
-enum FortalCodeVariant { solid, soft, outline, ghost }
+/// The looks inline code comes in, from most to least emphasis.
+enum FortalCodeVariant {
+  /// The accent's solid fill under its contrast text.
+  solid,
 
-/// Fortal-themed inline code on the Fortal nine-step scale.
+  /// A tinted accent fill under accent text.
+  soft,
+
+  /// No fill inside a 1px accent frame.
+  outline,
+
+  /// No fill or frame: monospace text in the surrounding color, or in the
+  /// accent when `accent` is set.
+  ghost,
+}
+
+/// The style of inline code: monospace text, padded and filled per [variant].
 ///
+/// The text is 95% of the size's text size for ghost and about 90% for the
+/// solid, soft and outline variants.
+///
+/// Takes a [context] because its padding and corners are em-relative to the
+/// resolved font size.
 BadgeStyler fortalCodeStyle(
   BuildContext context, {
   FortalTextSize? size,
@@ -201,6 +219,7 @@ final _ambientCodeForegroundFallbacks = Expando<bool>(
   'fortal_code_ambient_foreground',
 );
 
+/// Inline monospace code, styled by [fortalCodeStyle].
 ///
 /// Code carries no accessibility role: Flutter has no code semantics, and
 /// inventing one would misreport the content.

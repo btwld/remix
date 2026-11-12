@@ -6,11 +6,10 @@ part of 'toast.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed toast surface for [RemixToast] and [RemixToastScope].
+/// The Ui Toast recipe, for [RemixToast] and [RemixToastScope].
 ///
-/// Toasts use the shared floating-layer elevation scale. The surface caps at
-/// 360 logical pixels and
-/// shrinks with the available width.
+/// A toast is a raised, blurred panel in a 1px frame, with a ghost action and
+/// close button. It caps at 360px and shrinks with the available width.
 ///
 /// ```dart
 /// RemixToastScope(style: uiToastStyle(), child: const Shell())
@@ -31,6 +30,7 @@ class UiToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   });
 
+  /// A quiet shadow.
   const UiToast.surface({
     super.key,
     this.size = .size2,
@@ -45,6 +45,7 @@ class UiToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   }) : variant = UiToastVariant.surface;
 
+  /// A deeper shadow. The default.
   const UiToast.classic({
     super.key,
     this.size = .size2,

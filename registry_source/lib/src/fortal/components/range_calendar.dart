@@ -4,7 +4,9 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'calendar.dart';
 
-/// Range styling shared by the range calendar and date range picker stories.
+/// The range calendar's padding, text and day states: today, the committed
+/// range, the draft preview, hover, press and focus. Shared by the range
+/// calendar and the date range picker.
 CalendarStyler fortalRangeCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => CalendarStyler()
@@ -174,15 +176,18 @@ CalendarStyler fortalRangeCalendarStyle({
     )
     .merge(style);
 
+/// A range's first and last day: the solid fill, muted when disabled.
 final _endpoint = CalendarDayStyler()
     .color(FortalTokens.accentSolid())
     .label(TextStyler().color(FortalTokens.accentContrast()))
     .onDisabled(_mutedRange);
 
+/// A disabled day in the middle of a range.
 final _mutedMiddle = CalendarDayStyler()
     .color(FortalTokens.gray3())
     .label(TextStyler().color(FortalTokens.gray11()));
 
+/// A disabled first or last day of a range.
 final _mutedRange = CalendarDayStyler()
     .color(FortalTokens.gray4())
     .label(TextStyler().color(FortalTokens.gray11()));
@@ -193,12 +198,15 @@ final _draftStroke = BorderSideMix(
   width: 2,
   style: .solid,
 );
+
 final _draftNone = BorderSideMix(
   color: FortalTokens.accent8(),
   width: 0,
   style: .none,
 );
 
+/// The fill under the pointer (or pressed), for each place a day can have in
+/// the range.
 CalendarDayStyler _pointer({required bool pressed}) => CalendarDayStyler()
     .color(pressed ? FortalTokens.gray6() : FortalTokens.gray4())
     .onSelected(
@@ -225,12 +233,17 @@ CalendarDayStyler _pointer({required bool pressed}) => CalendarDayStyler()
         pressed ? FortalTokens.accent5() : FortalTokens.accent4(),
       ),
     );
+
+/// A range cap's fill while hovered: the solid fill at 90%.
 final _capHover = ContextToken<Color>(
   (context) => FortalTokens.accentSolid.resolve(context).withValues(alpha: .9),
 );
+
+/// A range cap's fill while pressed: the solid fill at 80%.
 final _capPressed = ContextToken<Color>(
   (context) => FortalTokens.accentSolid.resolve(context).withValues(alpha: .8),
 );
+
 final _focusStroke = BorderSideMix(
   color: fortalCalendarFocusColor(),
   width: 2,
@@ -258,7 +271,8 @@ CalendarDayStyler _focusEdges({bool start = false, bool end = false}) =>
           ),
         );
 
-// The live roles follow the draft; use the parent-owned value for stale geometry.
+/// The committed range's fill. The live roles follow the draft, so this reads
+/// the parent-owned value to keep the old range's geometry while drafting.
 final _quietCommitted = ContextToken<Color>((context) {
   final value = NakedRangeCalendarState.maybeOf(context)?.value;
   final day = NakedCalendarDayState.maybeOf(context)?.date;
@@ -273,6 +287,8 @@ final _quietCommitted = ContextToken<Color>((context) {
           : (dark ? _quietDarkMiddle : FortalTokens.gray3))
       .resolve(context);
 });
+
+/// Matches a day that has [position] in the committed range.
 ContextVariant _committedRole(String name, NakedRangePosition position) =>
     ContextVariant('fortal.calendar.committed-$name', (context) {
       final value = NakedRangeCalendarState.maybeOf(context)?.value;
@@ -289,11 +305,12 @@ ContextVariant _committedRole(String name, NakedRangePosition position) =>
               : NakedRangePosition.middle) ==
           position;
     });
+
 final _committedStart = _committedRole('start', .start);
 final _committedEnd = _committedRole('end', .end);
 final _committedSingle = _committedRole('single', .single);
 
-/// Fortal's reviewed RangeCalendar composition.
+/// Fortal's RangeCalendar composition.
 ///
 /// Remix owns civil-date selection, focus, keyboard navigation and semantics.
 /// Multiple independent child styles require a hand-written facade; caller

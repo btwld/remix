@@ -8,24 +8,47 @@ import 'icon_button.dart';
 
 part 'toast.g.dart';
 
-/// {{typePrefix}} toast size presets.
-enum {{typePrefix}}ToastSize { size1, size2, size3 }
+/// The sizes a toast comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}ToastSize {
+  /// 12px text with 12px padding.
+  size1,
 
-/// {{typePrefix}} toast surfaces, with quiet and elevated floating treatments.
-enum {{typePrefix}}ToastVariant { surface, classic }
+  /// 14px text with 16px padding. The default.
+  size2,
+
+  /// 16px text with 24px padding.
+  size3,
+}
+
+/// How far a toast floats above the page.
+enum {{typePrefix}}ToastVariant {
+  /// A quiet shadow.
+  surface,
+
+  /// A deeper shadow. The default.
+  classic,
+}
 
 /// The color role of the leading icon.
 ///
 /// Visual only: it never changes [RemixToastData.priority]. Choose
 /// [RemixToastPriority.assertive] explicitly when a message needs an
 /// immediate announcement.
-enum {{typePrefix}}ToastIntent { accent, neutral, error }
+enum {{typePrefix}}ToastIntent {
+  /// The accent's text color.
+  accent,
 
-/// {{typePrefix}}-themed toast surface for [RemixToast] and [RemixToastScope].
+  /// Gray.
+  neutral,
+
+  /// The error color.
+  error,
+}
+
+/// The {{typePrefix}} Toast recipe, for [RemixToast] and [RemixToastScope].
 ///
-/// Toasts use the shared floating-layer elevation scale. The surface caps at
-/// 360 logical pixels and
-/// shrinks with the available width.
+/// A toast is a raised, blurred panel in a 1px frame, with a ghost action and
+/// close button. It caps at 360px and shrinks with the available width.
 ///
 /// ```dart
 /// RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: const Shell())
@@ -37,36 +60,29 @@ ToastStyler {{valuePrefix}}ToastStyle({
   {{typePrefix}}ToastIntent intent = .accent,
   ToastStyler style = const ToastStyler.create(),
 }) {
-  final metrics = _{{valuePrefix}}ToastMetrics(size);
-  final base =
-      ToastStyler(
-            container: FlexBoxStyler().spacing(metrics.gap),
-            content: FlexBoxStyler().spacing({{typePrefix}}Tokens.space1()),
-            icon: IconStyler()
-                .size(metrics.iconSize)
-                .color(_{{valuePrefix}}ToastIntentColor(intent)),
-            title: TextStyler(style: metrics.text.mix())
-                .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
-                .color({{typePrefix}}Tokens.gray12()),
-            description: TextStyler(
-              style: metrics.text.mix(),
-            ).color({{typePrefix}}Tokens.gray11()),
-            action: {{valuePrefix}}ButtonStyle(variant: .ghost, size: .size1),
-            closeButton: {{valuePrefix}}IconButtonStyle(variant: .ghost, size: .size1)
-                .merge(
-                  IconButtonStyler().icon(
-                    IconStyler().color({{typePrefix}}Tokens.gray11()),
-                  ),
-                ),
-          )
-          .padding(.all(metrics.padding))
-          .borderRadius(.all(metrics.radius))
-          .maxWidth({{typePrefix}}Tokens.toastMaxWidth())
-          .containerEffects(
-            RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
-          );
+  final metrics = _metrics(size);
 
-  return base
+  return ToastStyler(
+        container: FlexBoxStyler().spacing(metrics.gap),
+        content: FlexBoxStyler().spacing({{typePrefix}}Tokens.space1()),
+        icon: IconStyler().size(metrics.iconSize).color(_intentColor(intent)),
+        title: TextStyler(style: metrics.text.mix())
+            .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
+            .color({{typePrefix}}Tokens.gray12()),
+        description: TextStyler(
+          style: metrics.text.mix(),
+        ).color({{typePrefix}}Tokens.gray11()),
+        action: {{valuePrefix}}ButtonStyle(variant: .ghost, size: .size1),
+        closeButton: {{valuePrefix}}IconButtonStyle(variant: .ghost, size: .size1).merge(
+          IconButtonStyler().icon(IconStyler().color({{typePrefix}}Tokens.gray11())),
+        ),
+      )
+      .padding(.all(metrics.padding))
+      .borderRadius(.all(metrics.radius))
+      .maxWidth({{typePrefix}}Tokens.toastMaxWidth())
+      .containerEffects(
+        RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
+      )
       .color({{typePrefix}}Tokens.colorPanel())
       .border(
         .all(.color({{typePrefix}}Tokens.gray6()).width({{typePrefix}}Tokens.borderWidth1())),
@@ -90,7 +106,7 @@ ToastStyler {{valuePrefix}}ToastStyle({
   Radius radius,
   TextStyleToken text,
 })
-_{{valuePrefix}}ToastMetrics({{typePrefix}}ToastSize size) => switch (size) {
+_metrics({{typePrefix}}ToastSize size) => switch (size) {
   .size1 => (
     padding: {{typePrefix}}Tokens.space3(),
     gap: {{typePrefix}}Tokens.space2(),
@@ -114,7 +130,7 @@ _{{valuePrefix}}ToastMetrics({{typePrefix}}ToastSize size) => switch (size) {
   ),
 };
 
-Color _{{valuePrefix}}ToastIntentColor({{typePrefix}}ToastIntent intent) => switch (intent) {
+Color _intentColor({{typePrefix}}ToastIntent intent) => switch (intent) {
   .accent => {{typePrefix}}Tokens.accentContent(),
   .neutral => {{typePrefix}}Tokens.gray11(),
   .error => {{typePrefix}}Tokens.error11(),

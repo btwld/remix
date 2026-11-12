@@ -3,23 +3,53 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// The nine-step Ui text scale supplied by [UiTokens].
+/// The nine steps of this design system's text scale, from [UiTokens].
+/// Pixel values are at 100% theme scaling.
 enum UiTextSize {
+  /// 12px.
   size1,
+
+  /// 14px.
   size2,
+
+  /// 16px. The default for body text.
   size3,
+
+  /// 18px.
   size4,
+
+  /// 20px.
   size5,
+
+  /// 24px.
   size6,
+
+  /// 28px.
   size7,
+
+  /// 36px.
   size8,
+
+  /// 60px.
   size9,
 }
 
-/// Font weights supported by the Ui typography scale.
-///
-enum UiTextWeight { light, regular, medium, bold }
+/// The font weights of the text scale.
+enum UiTextWeight {
+  /// Light, 300. For large display text.
+  light,
 
+  /// Body text.
+  regular,
+
+  /// Labels and emphasis.
+  medium,
+
+  /// Headings.
+  bold,
+}
+
+/// The text style token of a [size] on the scale.
 TextStyleToken uiTextSizeToken(UiTextSize size) => switch (size) {
   .size1 => UiTokens.text1,
   .size2 => UiTokens.text2,
@@ -32,6 +62,7 @@ TextStyleToken uiTextSizeToken(UiTextSize size) => switch (size) {
   .size9 => UiTokens.text9,
 };
 
+/// The font weight token of a [weight].
 FontWeightToken uiTextWeightToken(UiTextWeight weight) => switch (weight) {
   .light => UiTokens.fontWeightLight,
   .regular => UiTokens.fontWeightRegular,
@@ -54,11 +85,15 @@ TextStyler uiApplyTextFlow(
   return style.softWrap(softWrap);
 }
 
+/// [style] with the accent's text color, or accent step 12 under
+/// [highContrast].
 TextStyler uiAccentForeground(TextStyler style, {required bool highContrast}) =>
     style.color(
       highContrast ? UiTokens.accent12() : UiTokens.accentContentAlpha(),
     );
 
+/// The text style of [size], resolved against [context].
+///
 /// Code, Kbd, and Link derive em-relative geometry from the resolved font size,
 /// so unlike the other recipes they cannot stay context-free.
 TextStyle uiResolveTextToken(BuildContext context, UiTextSize size) =>
@@ -67,8 +102,10 @@ TextStyle uiResolveTextToken(BuildContext context, UiTextSize size) =>
 Color uiResolveColor(BuildContext context, ColorToken token) =>
     MixScope.tokenOf(token, context);
 
-/// Derived from the resolved `radius1` rather than duplicating the Ui
-/// radius enum table, so theme radius and scaling changes flow through.
+/// The theme's radius factor, read back from the resolved `radius1`.
+///
+/// Derived from the resolved `radius1` rather than duplicating this design
+/// system's radius table, so theme radius and scaling changes flow through.
 double uiRadiusFactor(BuildContext context) {
   final scaling = UiTheme.of(context).scaling.factor;
   final radius = MixScope.tokenOf(UiTokens.radius1, context);

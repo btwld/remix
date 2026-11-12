@@ -6,10 +6,19 @@ import '../theme/theme.dart';
 
 part 'spinner.g.dart';
 
-/// Ui spinner size presets.
-enum UiSpinnerSize { size1, size2, size3 }
+/// The sizes a spinner comes in. Pixel values are at 100% theme scaling.
+enum UiSpinnerSize {
+  /// 12px.
+  size1,
 
-/// Ui-themed preset for [RemixSpinner] using the inherited foreground color.
+  /// 16px. The default.
+  size2,
+
+  /// 20px.
+  size3,
+}
+
+/// The Ui Spinner recipe, drawn in the inherited foreground color.
 @MixWidget(target: RemixSpinner.new)
 SpinnerStyler uiSpinnerStyle({
   UiSpinnerSize size = .size2,
@@ -19,10 +28,10 @@ SpinnerStyler uiSpinnerStyle({
     opacity: 0.65,
     leafRadius: UiTokens.radius1(),
     duration: const Duration(milliseconds: 800),
-  ).merge(_uiSpinnerSizeStyler(size)).merge(style);
+  ).merge(_scale(size)).merge(style);
 }
 
-SpinnerStyler _uiSpinnerSizeStyler(UiSpinnerSize size) {
+SpinnerStyler _scale(UiSpinnerSize size) {
   return switch (size) {
     .size1 => SpinnerStyler(size: UiTokens.space3()),
     .size2 => SpinnerStyler(size: UiTokens.space4()),

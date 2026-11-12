@@ -6,10 +6,19 @@ import '../theme/theme.dart';
 
 part 'spinner.g.dart';
 
-/// Fortal spinner size presets.
-enum FortalSpinnerSize { size1, size2, size3 }
+/// The sizes a spinner comes in. Pixel values are at 100% theme scaling.
+enum FortalSpinnerSize {
+  /// 12px.
+  size1,
 
-/// Fortal-themed preset for [RemixSpinner] using the inherited foreground color.
+  /// 16px. The default.
+  size2,
+
+  /// 20px.
+  size3,
+}
+
+/// The Fortal Spinner recipe, drawn in the inherited foreground color.
 @MixWidget(target: RemixSpinner.new)
 SpinnerStyler fortalSpinnerStyle({
   FortalSpinnerSize size = .size2,
@@ -19,10 +28,10 @@ SpinnerStyler fortalSpinnerStyle({
     opacity: 0.65,
     leafRadius: FortalTokens.radius1(),
     duration: const Duration(milliseconds: 800),
-  ).merge(_fortalSpinnerSizeStyler(size)).merge(style);
+  ).merge(_scale(size)).merge(style);
 }
 
-SpinnerStyler _fortalSpinnerSizeStyler(FortalSpinnerSize size) {
+SpinnerStyler _scale(FortalSpinnerSize size) {
   return switch (size) {
     .size1 => SpinnerStyler(size: FortalTokens.space3()),
     .size2 => SpinnerStyler(size: FortalTokens.space4()),

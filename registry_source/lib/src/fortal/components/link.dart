@@ -6,14 +6,26 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// Underline visibility for [FortalLink].
-enum FortalLinkUnderline { auto, always, hover, none }
+/// When a [FortalLink] is underlined.
+enum FortalLinkUnderline {
+  /// On hover, and always under [FortalLink.highContrast].
+  auto,
 
-/// Fortal-themed link style.
+  /// Always.
+  always,
+
+  /// Only on hover.
+  hover,
+
+  /// Never.
+  none,
+}
+
+/// The style of a link: accent text that underlines per [underline], and rings
+/// on keyboard focus.
 ///
 /// Takes a [context] because the focus outline's radius is em-relative to the
 /// resolved font size.
-///
 LinkStyler fortalLinkStyle(
   BuildContext context, {
   FortalTextSize? size,
@@ -26,7 +38,7 @@ LinkStyler fortalLinkStyle(
   LinkStyler style = const LinkStyler.create(),
 }) {
   LinkStyler styleFor({bool hovered = false, bool focused = false}) =>
-      _fortalLinkStateStyle(
+      _stateStyle(
         context,
         size: size,
         weight: weight,
@@ -59,7 +71,7 @@ LinkStyler fortalLinkStyle(
 /// Separate from [fortalLinkStyle] because the public recipe returns a style
 /// carrying Mix variants, and building those variants needs the flat snapshots
 /// they are built from.
-LinkStyler _fortalLinkStateStyle(
+LinkStyler _stateStyle(
   BuildContext context, {
   required FortalTextSize? size,
   required FortalTextWeight? weight,

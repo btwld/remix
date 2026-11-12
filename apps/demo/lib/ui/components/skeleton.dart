@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 
 part 'skeleton.g.dart';
 
-/// Fortal recipe for [RemixSkeleton].
+/// The Fortal Skeleton recipe: a gray placeholder block that pulses.
 @MixWidget(target: RemixSkeleton.new)
 SkeletonStyler fortalSkeletonStyle({
   SkeletonStyler style = const SkeletonStyler.create(),

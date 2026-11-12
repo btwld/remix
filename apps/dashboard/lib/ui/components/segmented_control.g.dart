@@ -6,10 +6,13 @@ part of 'segmented_control.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui recipe for [RemixSegmentedControl].
+/// The Ui SegmentedControl recipe.
 ///
-/// Content icons use size-matched 12/16/20 token defaults rather than the
-/// ambient icon size. Control and item styles may override these defaults.
+/// The track is a gray tint blended over the surface. The selected item sits
+/// on a raised fill with a 1px edge, and turns medium weight.
+///
+/// Content icons use the size's 12, 16 or 20px default rather than the ambient
+/// icon size. Control and item styles may override these defaults.
 class UiSegmentedControl<T extends Object> extends StatelessWidget {
   const UiSegmentedControl({
     super.key,
@@ -26,6 +29,7 @@ class UiSegmentedControl<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// A gray track with a raised surface under the selected item.
   const UiSegmentedControl.surface({
     super.key,
     this.size = .size2,

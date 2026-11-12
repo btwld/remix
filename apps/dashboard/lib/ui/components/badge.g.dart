@@ -6,7 +6,12 @@ part of 'badge.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Badge with Ui sizes, variants, and overrides.
+/// The Ui Badge recipe.
+///
+/// It reads top to bottom: the size, then the variant's colors.
+///
+/// [highContrast] strengthens a variant: the solid fill, and the text of every
+/// other variant, move to accent step 12.
 class UiBadge extends StatelessWidget {
   const UiBadge({
     super.key,
@@ -19,6 +24,7 @@ class UiBadge extends StatelessWidget {
     this.labelBuilder,
   });
 
+  /// The accent's solid fill under its contrast label.
   const UiBadge.solid({
     super.key,
     this.size = .size1,
@@ -29,6 +35,7 @@ class UiBadge extends StatelessWidget {
     this.labelBuilder,
   }) : variant = UiBadgeVariant.solid;
 
+  /// A tinted accent fill under accent text.
   const UiBadge.soft({
     super.key,
     this.size = .size1,
@@ -39,6 +46,7 @@ class UiBadge extends StatelessWidget {
     this.labelBuilder,
   }) : variant = UiBadgeVariant.soft;
 
+  /// A faint accent surface inside a 1px accent frame.
   const UiBadge.surface({
     super.key,
     this.size = .size1,
@@ -49,6 +57,7 @@ class UiBadge extends StatelessWidget {
     this.labelBuilder,
   }) : variant = UiBadgeVariant.surface;
 
+  /// No fill inside a 1px accent frame.
   const UiBadge.outline({
     super.key,
     this.size = .size1,

@@ -6,7 +6,10 @@ part of 'disclosure.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixDisclosure].
+/// The Fortal Disclosure recipe.
+///
+/// It reads top to bottom: what every disclosure shares, then the variant's
+/// panel colors for rest, hover, press, focus and disabled.
 class FortalDisclosure extends StatelessWidget {
   const FortalDisclosure({
     super.key,
@@ -38,6 +41,7 @@ class FortalDisclosure extends StatelessWidget {
     ),
   });
 
+  /// The `gray2` panel inside a 1px gray frame.
   const FortalDisclosure.surface({
     super.key,
     this.size = .size2,
@@ -67,6 +71,7 @@ class FortalDisclosure extends StatelessWidget {
     ),
   }) : variant = FortalDisclosureVariant.surface;
 
+  /// An accent-tinted panel inside a 1px accent frame.
   const FortalDisclosure.soft({
     super.key,
     this.size = .size2,

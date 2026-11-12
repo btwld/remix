@@ -9,21 +9,6 @@ import '../theme/theme.dart';
 
 part 'chart.g.dart';
 
-const _standardPaletteToken = ContextToken<List<Color>>(
-  _resolveStandardPalette,
-);
-const _highContrastPaletteToken = ContextToken<List<Color>>(
-  _resolveHighContrastPalette,
-);
-const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
-const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
-const _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
-const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
-const _lineWidthToken = ContextToken<double>(_resolveLineWidth);
-const _highContrastLineWidthToken = ContextToken<double>(
-  _resolveHighContrastLineWidth,
-);
-
 /// Returns the series colors for {{typePrefix}} charts in the current scope.
 ///
 /// The accent's `accentIndicator` comes first, then the other named color
@@ -84,7 +69,7 @@ const _seriesFamilies = <({{typePrefix}}AccentColor, {{typePrefix}}ColorTheme)>[
   (.orla, orla),
 ];
 
-/// {{typePrefix}} presentation for a Mix line or area chart.
+/// The {{typePrefix}} LineChart recipe, for a Mix line or area chart.
 ///
 /// Generates [{{typePrefix}}LineChart] through `mix_generator`. The plot remains
 /// transparent so callers can compose it inside any surface.
@@ -95,7 +80,7 @@ LineChartStyler {{valuePrefix}}LineChartStyle({
   List<Color>? palette,
   LineChartStyler style = const LineChartStyler.create(),
 }) {
-  final recipe = LineChartStyler()
+  return LineChartStyler()
       .frame(_{{valuePrefix}}FrameStyle())
       .axis(_{{valuePrefix}}AxisStyle())
       // Value ticks stay centered on their values, so the end ticks overhang
@@ -126,9 +111,7 @@ LineChartStyler {{valuePrefix}}LineChartStyle({
                   .borderWidth({{typePrefix}}Tokens.borderWidth2()),
             ),
       )
-      .tooltip(_{{valuePrefix}}TooltipStyle());
-
-  return recipe
+      .tooltip(_{{valuePrefix}}TooltipStyle())
       .merge(
         LineChartStyler.create(
           palette: _paletteProp(highContrast: highContrast, palette: palette),
@@ -137,7 +120,7 @@ LineChartStyler {{valuePrefix}}LineChartStyle({
       .merge(style);
 }
 
-/// {{typePrefix}} presentation for a Mix grouped, stacked, or floating bar chart.
+/// The {{typePrefix}} BarChart recipe: grouped, stacked or floating bars.
 ///
 /// Generates [{{typePrefix}}BarChart] through `mix_generator`.
 @MixWidget(target: BarChart.new)
@@ -149,7 +132,7 @@ BarChartStyler {{valuePrefix}}BarChartStyle({
   final bar = BarStyler.create(
     borderRadius: Prop.token(_barRadiusToken),
   ).width({{typePrefix}}Tokens.space4());
-  final recipe = BarChartStyler()
+  return BarChartStyler()
       .frame(_{{valuePrefix}}FrameStyle())
       .axis(_{{valuePrefix}}AxisStyle())
       .topAxis(_hiddenAxisStyle())
@@ -158,9 +141,7 @@ BarChartStyler {{valuePrefix}}BarChartStyle({
       .bar(bar)
       .groupSpacing({{typePrefix}}Tokens.space4())
       .barSpacing({{typePrefix}}Tokens.space2())
-      .tooltip(_{{valuePrefix}}TooltipStyle());
-
-  return recipe
+      .tooltip(_{{valuePrefix}}TooltipStyle())
       .merge(
         BarChartStyler.create(
           palette: _paletteProp(highContrast: highContrast, palette: palette),
@@ -169,7 +150,7 @@ BarChartStyler {{valuePrefix}}BarChartStyle({
       .merge(style);
 }
 
-/// {{typePrefix}} presentation for a Mix pie or donut chart.
+/// The {{typePrefix}} PieChart recipe, for a Mix pie or donut chart.
 ///
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing
@@ -189,7 +170,7 @@ PieChartStyler {{valuePrefix}}PieChartStyle({
   List<Color>? palette,
   PieChartStyler style = const PieChartStyler.create(),
 }) {
-  final recipe = PieChartStyler()
+  return PieChartStyler()
       .frame(_{{valuePrefix}}FrameStyle())
       .centerRadius(centerRadius)
       // The hole shows whatever the chart sits on. A panel-colored disc stands
@@ -208,9 +189,7 @@ PieChartStyler {{valuePrefix}}PieChartStyle({
                   .color({{typePrefix}}Tokens.accentContrast()),
             ),
       )
-      .tooltip(_{{valuePrefix}}TooltipStyle());
-
-  return recipe
+      .tooltip(_{{valuePrefix}}TooltipStyle())
       .merge(
         PieChartStyler.create(
           palette: _paletteProp(highContrast: highContrast, palette: palette),
@@ -275,30 +254,45 @@ ChartTooltipStyler _{{valuePrefix}}TooltipStyle() =>
               .color({{typePrefix}}Tokens.gray12()),
         );
 
-List<Color> _resolveStandardPalette(BuildContext context) =>
-    resolve{{typePrefix}}ChartPalette(context);
-
-List<Color> _resolveHighContrastPalette(BuildContext context) =>
-    resolve{{typePrefix}}ChartPalette(context, highContrast: true);
-
-BorderSide _resolveTooltipBorder(BuildContext context) => BorderSide(
-  color: {{typePrefix}}Tokens.grayStroke6.resolve(context),
-  width: {{typePrefix}}Tokens.borderWidth1.resolve(context),
+/// The series colors of the active theme.
+final _standardPaletteToken = ContextToken<List<Color>>(
+  (context) => resolve{{typePrefix}}ChartPalette(context),
 );
 
-BorderRadius _resolveTooltipRadius(BuildContext context) =>
-    BorderRadius.all({{typePrefix}}Tokens.radius3.resolve(context));
-
-EdgeInsets _resolveTooltipPadding(BuildContext context) => EdgeInsets.symmetric(
-  horizontal: {{typePrefix}}Tokens.space3.resolve(context),
-  vertical: {{typePrefix}}Tokens.space2.resolve(context),
+/// The series colors of the active theme, all at step 12.
+final _highContrastPaletteToken = ContextToken<List<Color>>(
+  (context) => resolve{{typePrefix}}ChartPalette(context, highContrast: true),
 );
 
-BorderRadius _resolveBarRadius(BuildContext context) =>
-    BorderRadius.all({{typePrefix}}Tokens.radius2.resolve(context));
+/// The tooltip's 1px frame.
+final _tooltipBorderToken = ContextToken<BorderSide>(
+  (context) => BorderSide(
+    color: {{typePrefix}}Tokens.grayStroke6.resolve(context),
+    width: {{typePrefix}}Tokens.borderWidth1.resolve(context),
+  ),
+);
 
-double _resolveLineWidth(BuildContext context) =>
-    2 * {{typePrefix}}Theme.of(context).scaling.factor;
+final _tooltipRadiusToken = ContextToken<BorderRadius>(
+  (context) => BorderRadius.all({{typePrefix}}Tokens.radius3.resolve(context)),
+);
 
-double _resolveHighContrastLineWidth(BuildContext context) =>
-    3 * {{typePrefix}}Theme.of(context).scaling.factor;
+final _tooltipPaddingToken = ContextToken<EdgeInsets>(
+  (context) => EdgeInsets.symmetric(
+    horizontal: {{typePrefix}}Tokens.space3.resolve(context),
+    vertical: {{typePrefix}}Tokens.space2.resolve(context),
+  ),
+);
+
+final _barRadiusToken = ContextToken<BorderRadius>(
+  (context) => BorderRadius.all({{typePrefix}}Tokens.radius2.resolve(context)),
+);
+
+/// A line's width: 2px at 100% theme scaling.
+final _lineWidthToken = ContextToken<double>(
+  (context) => 2 * {{typePrefix}}Theme.of(context).scaling.factor,
+);
+
+/// A line's width under high contrast: 3px at 100% theme scaling.
+final _highContrastLineWidthToken = ContextToken<double>(
+  (context) => 3 * {{typePrefix}}Theme.of(context).scaling.factor,
+);

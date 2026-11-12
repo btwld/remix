@@ -6,7 +6,7 @@ part of 'chart.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal presentation for a Mix line or area chart.
+/// The Fortal LineChart recipe, for a Mix line or area chart.
 ///
 /// Generates [FortalLineChart] through `mix_generator`. The plot remains
 /// transparent so callers can compose it inside any surface.
@@ -113,7 +113,7 @@ class FortalLineChart extends StatelessWidget {
   }
 }
 
-/// Fortal presentation for a Mix grouped, stacked, or floating bar chart.
+/// The Fortal BarChart recipe: grouped, stacked or floating bars.
 ///
 /// Generates [FortalBarChart] through `mix_generator`.
 class FortalBarChart extends StatelessWidget {
@@ -215,7 +215,7 @@ class FortalBarChart extends StatelessWidget {
   }
 }
 
-/// Fortal presentation for a Mix pie or donut chart.
+/// The Fortal PieChart recipe, for a Mix pie or donut chart.
 ///
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing

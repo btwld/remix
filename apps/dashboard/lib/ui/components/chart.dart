@@ -9,21 +9,6 @@ import '../theme/theme.dart';
 
 part 'chart.g.dart';
 
-const _standardPaletteToken = ContextToken<List<Color>>(
-  _resolveStandardPalette,
-);
-const _highContrastPaletteToken = ContextToken<List<Color>>(
-  _resolveHighContrastPalette,
-);
-const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
-const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
-const _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
-const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
-const _lineWidthToken = ContextToken<double>(_resolveLineWidth);
-const _highContrastLineWidthToken = ContextToken<double>(
-  _resolveHighContrastLineWidth,
-);
-
 /// Returns the series colors for Ui charts in the current scope.
 ///
 /// The accent's `accentIndicator` comes first, then the other named color
@@ -84,7 +69,7 @@ const _seriesFamilies = <(UiAccentColor, UiColorTheme)>[
   (.orla, orla),
 ];
 
-/// Ui presentation for a Mix line or area chart.
+/// The Ui LineChart recipe, for a Mix line or area chart.
 ///
 /// Generates [UiLineChart] through `mix_generator`. The plot remains
 /// transparent so callers can compose it inside any surface.
@@ -95,7 +80,7 @@ LineChartStyler uiLineChartStyle({
   List<Color>? palette,
   LineChartStyler style = const LineChartStyler.create(),
 }) {
-  final recipe = LineChartStyler()
+  return LineChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
       // Value ticks stay centered on their values, so the end ticks overhang
@@ -126,9 +111,7 @@ LineChartStyler uiLineChartStyle({
                   .borderWidth(UiTokens.borderWidth2()),
             ),
       )
-      .tooltip(_uiTooltipStyle());
-
-  return recipe
+      .tooltip(_uiTooltipStyle())
       .merge(
         LineChartStyler.create(
           palette: _paletteProp(highContrast: highContrast, palette: palette),
@@ -137,7 +120,7 @@ LineChartStyler uiLineChartStyle({
       .merge(style);
 }
 
-/// Ui presentation for a Mix grouped, stacked, or floating bar chart.
+/// The Ui BarChart recipe: grouped, stacked or floating bars.
 ///
 /// Generates [UiBarChart] through `mix_generator`.
 @MixWidget(target: BarChart.new)
@@ -149,7 +132,7 @@ BarChartStyler uiBarChartStyle({
   final bar = BarStyler.create(
     borderRadius: Prop.token(_barRadiusToken),
   ).width(UiTokens.space4());
-  final recipe = BarChartStyler()
+  return BarChartStyler()
       .frame(_uiFrameStyle())
       .axis(_uiAxisStyle())
       .topAxis(_hiddenAxisStyle())
@@ -158,9 +141,7 @@ BarChartStyler uiBarChartStyle({
       .bar(bar)
       .groupSpacing(UiTokens.space4())
       .barSpacing(UiTokens.space2())
-      .tooltip(_uiTooltipStyle());
-
-  return recipe
+      .tooltip(_uiTooltipStyle())
       .merge(
         BarChartStyler.create(
           palette: _paletteProp(highContrast: highContrast, palette: palette),
@@ -169,7 +150,7 @@ BarChartStyler uiBarChartStyle({
       .merge(style);
 }
 
-/// Ui presentation for a Mix pie or donut chart.
+/// The Ui PieChart recipe, for a Mix pie or donut chart.
 ///
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing
@@ -189,7 +170,7 @@ PieChartStyler uiPieChartStyle({
   List<Color>? palette,
   PieChartStyler style = const PieChartStyler.create(),
 }) {
-  final recipe = PieChartStyler()
+  return PieChartStyler()
       .frame(_uiFrameStyle())
       .centerRadius(centerRadius)
       // The hole shows whatever the chart sits on. A panel-colored disc stands
@@ -208,9 +189,7 @@ PieChartStyler uiPieChartStyle({
                   .color(UiTokens.accentContrast()),
             ),
       )
-      .tooltip(_uiTooltipStyle());
-
-  return recipe
+      .tooltip(_uiTooltipStyle())
       .merge(
         PieChartStyler.create(
           palette: _paletteProp(highContrast: highContrast, palette: palette),
@@ -273,30 +252,45 @@ ChartTooltipStyler _uiTooltipStyle() =>
               .color(UiTokens.gray12()),
         );
 
-List<Color> _resolveStandardPalette(BuildContext context) =>
-    resolveUiChartPalette(context);
-
-List<Color> _resolveHighContrastPalette(BuildContext context) =>
-    resolveUiChartPalette(context, highContrast: true);
-
-BorderSide _resolveTooltipBorder(BuildContext context) => BorderSide(
-  color: UiTokens.grayStroke6.resolve(context),
-  width: UiTokens.borderWidth1.resolve(context),
+/// The series colors of the active theme.
+final _standardPaletteToken = ContextToken<List<Color>>(
+  (context) => resolveUiChartPalette(context),
 );
 
-BorderRadius _resolveTooltipRadius(BuildContext context) =>
-    BorderRadius.all(UiTokens.radius3.resolve(context));
-
-EdgeInsets _resolveTooltipPadding(BuildContext context) => EdgeInsets.symmetric(
-  horizontal: UiTokens.space3.resolve(context),
-  vertical: UiTokens.space2.resolve(context),
+/// The series colors of the active theme, all at step 12.
+final _highContrastPaletteToken = ContextToken<List<Color>>(
+  (context) => resolveUiChartPalette(context, highContrast: true),
 );
 
-BorderRadius _resolveBarRadius(BuildContext context) =>
-    BorderRadius.all(UiTokens.radius2.resolve(context));
+/// The tooltip's 1px frame.
+final _tooltipBorderToken = ContextToken<BorderSide>(
+  (context) => BorderSide(
+    color: UiTokens.grayStroke6.resolve(context),
+    width: UiTokens.borderWidth1.resolve(context),
+  ),
+);
 
-double _resolveLineWidth(BuildContext context) =>
-    2 * UiTheme.of(context).scaling.factor;
+final _tooltipRadiusToken = ContextToken<BorderRadius>(
+  (context) => BorderRadius.all(UiTokens.radius3.resolve(context)),
+);
 
-double _resolveHighContrastLineWidth(BuildContext context) =>
-    3 * UiTheme.of(context).scaling.factor;
+final _tooltipPaddingToken = ContextToken<EdgeInsets>(
+  (context) => EdgeInsets.symmetric(
+    horizontal: UiTokens.space3.resolve(context),
+    vertical: UiTokens.space2.resolve(context),
+  ),
+);
+
+final _barRadiusToken = ContextToken<BorderRadius>(
+  (context) => BorderRadius.all(UiTokens.radius2.resolve(context)),
+);
+
+/// A line's width: 2px at 100% theme scaling.
+final _lineWidthToken = ContextToken<double>(
+  (context) => 2 * UiTheme.of(context).scaling.factor,
+);
+
+/// A line's width under high contrast: 3px at 100% theme scaling.
+final _highContrastLineWidthToken = ContextToken<double>(
+  (context) => 3 * UiTheme.of(context).scaling.factor,
+);

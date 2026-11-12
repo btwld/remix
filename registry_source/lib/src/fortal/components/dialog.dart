@@ -8,9 +8,25 @@ import '../theme/theme.dart';
 
 part 'dialog.g.dart';
 
-/// Fortal dialog size presets on the shared scale.
-enum FortalDialogSize { size1, size2, size3, size4 }
+/// The sizes a dialog comes in, from its padding and corners. Pixel values are
+/// at 100% theme scaling.
+enum FortalDialogSize {
+  /// 12px padding.
+  size1,
 
+  /// 16px padding.
+  size2,
+
+  /// 24px padding. The default.
+  size3,
+
+  /// 32px padding.
+  size4,
+}
+
+/// Padding that keeps the dialog off the screen edges: 16px at the sides and
+/// 32px at the top and bottom, or the safe area when that is larger. The
+/// bottom keeps at least 6% of the viewport height.
 final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
   final safeArea = MediaQuery.paddingOf(context);
   final viewportHeight = MediaQuery.sizeOf(context).height;
@@ -25,26 +41,26 @@ final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
   );
 });
 
-/// Fortal-themed preset for [RemixDialog].
+/// The Fortal Dialog recipe: a raised, blurred panel with a bold title.
 ///
 /// The generated [FortalDialog] defaults to [FortalDialogSize.size3],
 /// [Alignment.center], fills up to 600 logical pixels, preserves safe
 /// viewport insets, and is modal.
 @MixWidget(target: RemixDialog.new)
 DialogStyler fortalDialogStyle({
-  FortalDialogSize size = FortalDialogSize.size3,
+  FortalDialogSize size = .size3,
   AlignmentGeometry align = Alignment.center,
   DialogStyler style = const DialogStyler.create(),
 }) {
   final radius = switch (size) {
-    FortalDialogSize.size1 || FortalDialogSize.size2 => FortalTokens.radius4(),
-    FortalDialogSize.size3 || FortalDialogSize.size4 => FortalTokens.radius5(),
+    .size1 || .size2 => FortalTokens.radius4(),
+    .size3 || .size4 => FortalTokens.radius5(),
   };
   final padding = switch (size) {
-    FortalDialogSize.size1 => FortalTokens.space3(),
-    FortalDialogSize.size2 => FortalTokens.space4(),
-    FortalDialogSize.size3 => FortalTokens.space5(),
-    FortalDialogSize.size4 => FortalTokens.space6(),
+    .size1 => FortalTokens.space3(),
+    .size2 => FortalTokens.space4(),
+    .size3 => FortalTokens.space5(),
+    .size4 => FortalTokens.space6(),
   };
 
   return DialogStyler()

@@ -6,7 +6,12 @@ part of 'slider.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal slider with Fortal-owned size, variant, and component overrides.
+/// The Fortal Slider recipe.
+///
+/// It reads top to bottom: the track and thumb sizes, then the variant's
+/// colors, then the dark-mode thumb edge, hover, press and disabled.
+///
+/// [highContrast] darkens the range with an overlay.
 class FortalSlider extends StatelessWidget {
   const FortalSlider({
     super.key,
@@ -30,6 +35,7 @@ class FortalSlider extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// A gray track and a solid accent range.
   const FortalSlider.surface({
     super.key,
     this.size = .size2,
@@ -51,6 +57,7 @@ class FortalSlider extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalSliderVariant.surface;
 
+  /// A gray track and a softer accent range.
   const FortalSlider.soft({
     super.key,
     this.size = .size2,

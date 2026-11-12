@@ -6,7 +6,7 @@ part of 'divider.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixDivider].
+/// The Fortal Divider recipe: a 1px gray line, horizontal or vertical.
 class FortalDivider extends StatelessWidget {
   const FortalDivider({
     super.key,

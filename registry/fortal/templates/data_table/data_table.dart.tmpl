@@ -9,13 +9,28 @@ import 'select.dart';
 
 part 'data_table.g.dart';
 
-/// {{typePrefix}} Table size presets.
-enum {{typePrefix}}DataTableSize { size1, size2, size3 }
+/// The sizes a data table comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}DataTableSize {
+  /// 8px cell padding and 14px text, in rows at least 40px tall.
+  size1,
 
-/// {{typePrefix}} Table variants.
-enum {{typePrefix}}DataTableVariant { surface, ghost }
+  /// 12px cell padding and 14px text, in rows at least 48px tall. The default.
+  size2,
 
-typedef _{{typePrefix}}DataTableMetrics = ({
+  /// 16px by 12px cell padding and 16px text, in rows at least 48px tall.
+  size3,
+}
+
+/// The looks a data table comes in.
+enum {{typePrefix}}DataTableVariant {
+  /// A panel with a 1px frame and a tinted header.
+  surface,
+
+  /// No panel or frame: rows on the page.
+  ghost,
+}
+
+typedef _Scale = ({
   double paddingX,
   double paddingY,
   double minHeight,
@@ -24,131 +39,137 @@ typedef _{{typePrefix}}DataTableMetrics = ({
   TextStyleToken text,
 });
 
-/// {{typePrefix}} recipe for [RemixDataTable].
+/// The {{typePrefix}} DataTable recipe.
+///
+/// It reads top to bottom: the cells, rows, footer and the controls inside
+/// them at the size, then the variant's panel.
 @MixWidget(target: RemixDataTable.new)
 DataTableStyler {{valuePrefix}}DataTableStyle({
   {{typePrefix}}DataTableSize size = .size2,
   {{typePrefix}}DataTableVariant variant = .ghost,
   DataTableStyler style = const DataTableStyler.create(),
 }) {
-  final metrics = _{{valuePrefix}}DataTableMetrics(size);
-  final base = DataTableStyler()
-      .cellText(
-        TextStyler(style: metrics.text.mix()).color({{typePrefix}}Tokens.gray12()),
-      )
-      .headerLabel(
-        TextStyler(style: metrics.text.mix())
-            .fontWeight({{typePrefix}}Tokens.fontWeightBold())
-            .color({{typePrefix}}Tokens.gray12()),
-      )
-      .footerLabel(
-        TextStyler(style: {{typePrefix}}Tokens.text1.mix())
-            .fontWeight({{typePrefix}}Tokens.fontWeightRegular())
-            .color({{typePrefix}}Tokens.gray11()),
-      )
-      .headerCell(
-        _{{valuePrefix}}DataTableCell(metrics)
-            // Keep the painter mounted so focusing a custom header preserves
-            // its element and state.
-            .wrap(
-              {{valuePrefix}}FocusRingModifier(
-                visible: false,
-                inset: {{typePrefix}}Tokens.space2(),
-              ),
-            )
-            .onFocusVisible(
-              // Keep the common outline inside the padding of clipped tables.
-              BoxStyler().{{valuePrefix}}FocusRing(inset: {{typePrefix}}Tokens.space2()),
-            ),
-      )
-      .bodyCell(_{{valuePrefix}}DataTableCell(metrics))
-      .selectionCell(BoxStyler().alignment(Alignment.center))
-      .headerMinHeight(metrics.minHeight)
-      .rowMinHeight(metrics.minHeight)
-      .selectionColumnWidth({{typePrefix}}Tokens.space8())
-      .sortIconSpacing({{typePrefix}}Tokens.space1())
-      .sortIcon(
-        IconStyler(color: {{typePrefix}}Tokens.gray11(), size: metrics.sortIconSize),
-      )
-      .headerRow(_{{valuePrefix}}DataTableRowDivider())
-      .bodyRow(
-        _{{valuePrefix}}DataTableRowDivider()
-            .color(const Color(0x00000000))
-            // Hover and selection are {{typePrefix}} extensions. Both are pure color
-            // layers, so a row never changes geometry when either applies.
-            .onHovered(.color({{typePrefix}}Tokens.grayA3()))
-            .onSelected(
-              .color(
-                {{typePrefix}}Tokens.accentA3(),
-              ).onHovered(.color({{typePrefix}}Tokens.accentA4())),
-            ),
-      )
-      .footer(_{{valuePrefix}}DataTableFooter())
-      .selectionCheckbox({{valuePrefix}}CheckboxStyle(size: .size1))
-      .pageButton({{valuePrefix}}IconButtonStyle(variant: .ghost, size: .size1))
-      .pageSizeSelect({{valuePrefix}}SelectStyle(variant: .ghost, size: .size1));
+  final metrics = _scale(size);
 
-  return (switch (variant) {
-    .surface => _{{valuePrefix}}DataTableSurface(base, metrics.radius),
-    .ghost => base.color(const Color(0x00000000)),
-  }).merge(style);
+  return _base(metrics)
+      .merge(switch (variant) {
+        .surface => _surface(metrics.radius),
+        .ghost => DataTableStyler().color(const Color(0x00000000)),
+      })
+      .merge(style);
 }
 
-_{{typePrefix}}DataTableMetrics _{{valuePrefix}}DataTableMetrics({{typePrefix}}DataTableSize size) =>
-    switch (size) {
-      .size1 => (
-        paddingX: {{typePrefix}}Tokens.space2(),
-        paddingY: {{typePrefix}}Tokens.space2(),
-        minHeight: {{typePrefix}}Tokens.touchTargetMin(),
-        sortIconSize: {{typePrefix}}Tokens.dataTableSortIconSize1(),
-        radius: {{typePrefix}}Tokens.radius3(),
-        text: {{typePrefix}}Tokens.text2,
-      ),
-      .size2 => (
-        paddingX: {{typePrefix}}Tokens.space3(),
-        paddingY: {{typePrefix}}Tokens.space3(),
-        minHeight: {{typePrefix}}Tokens.space8(),
-        sortIconSize: {{typePrefix}}Tokens.space4(),
-        radius: {{typePrefix}}Tokens.radius4(),
-        text: {{typePrefix}}Tokens.text2,
-      ),
-      .size3 => (
-        paddingX: {{typePrefix}}Tokens.space4(),
-        paddingY: {{typePrefix}}Tokens.space3(),
-        minHeight: {{typePrefix}}Tokens.space8(),
-        sortIconSize: {{typePrefix}}Tokens.dataTableSortIconSize3(),
-        radius: {{typePrefix}}Tokens.radius4(),
-        text: {{typePrefix}}Tokens.text3,
-      ),
-    };
+/// The cells, rows, footer and controls every data table shares.
+DataTableStyler _base(_Scale metrics) => DataTableStyler()
+    .cellText(
+      TextStyler(style: metrics.text.mix()).color({{typePrefix}}Tokens.gray12()),
+    )
+    .headerLabel(
+      TextStyler(
+        style: metrics.text.mix(),
+      ).fontWeight({{typePrefix}}Tokens.fontWeightBold()).color({{typePrefix}}Tokens.gray12()),
+    )
+    .footerLabel(
+      TextStyler(style: {{typePrefix}}Tokens.text1.mix())
+          .fontWeight({{typePrefix}}Tokens.fontWeightRegular())
+          .color({{typePrefix}}Tokens.gray11()),
+    )
+    .headerCell(
+      _cell(metrics)
+          // Keep the painter mounted so focusing a custom header preserves
+          // its element and state.
+          .wrap(
+            {{valuePrefix}}FocusRingModifier(
+              visible: false,
+              inset: {{typePrefix}}Tokens.space2(),
+            ),
+          )
+          .onFocusVisible(
+            // Keep the common outline inside the padding of clipped tables.
+            BoxStyler().{{valuePrefix}}FocusRing(inset: {{typePrefix}}Tokens.space2()),
+          ),
+    )
+    .bodyCell(_cell(metrics))
+    .selectionCell(BoxStyler().alignment(Alignment.center))
+    .headerMinHeight(metrics.minHeight)
+    .rowMinHeight(metrics.minHeight)
+    .selectionColumnWidth({{typePrefix}}Tokens.space8())
+    .sortIconSpacing({{typePrefix}}Tokens.space1())
+    .sortIcon(
+      IconStyler(color: {{typePrefix}}Tokens.gray11(), size: metrics.sortIconSize),
+    )
+    .headerRow(_rowDivider())
+    .bodyRow(
+      _rowDivider()
+          .color(const Color(0x00000000))
+          // Hover and selection go beyond the upstream table. Both are pure
+          // color layers, so a row never changes geometry when either applies.
+          .onHovered(.color({{typePrefix}}Tokens.grayA3()))
+          .onSelected(
+            .color(
+              {{typePrefix}}Tokens.accentA3(),
+            ).onHovered(.color({{typePrefix}}Tokens.accentA4())),
+          ),
+    )
+    .footer(_footer())
+    .selectionCheckbox({{valuePrefix}}CheckboxStyle(size: .size1))
+    .pageButton({{valuePrefix}}IconButtonStyle(variant: .ghost, size: .size1))
+    .pageSizeSelect({{valuePrefix}}SelectStyle(variant: .ghost, size: .size1));
 
-BoxStyler _{{valuePrefix}}DataTableCell(_{{typePrefix}}DataTableMetrics metrics) => BoxStyler()
+_Scale _scale({{typePrefix}}DataTableSize size) => switch (size) {
+  .size1 => (
+    paddingX: {{typePrefix}}Tokens.space2(),
+    paddingY: {{typePrefix}}Tokens.space2(),
+    minHeight: {{typePrefix}}Tokens.touchTargetMin(),
+    sortIconSize: {{typePrefix}}Tokens.dataTableSortIconSize1(),
+    radius: {{typePrefix}}Tokens.radius3(),
+    text: {{typePrefix}}Tokens.text2,
+  ),
+  .size2 => (
+    paddingX: {{typePrefix}}Tokens.space3(),
+    paddingY: {{typePrefix}}Tokens.space3(),
+    minHeight: {{typePrefix}}Tokens.space8(),
+    sortIconSize: {{typePrefix}}Tokens.space4(),
+    radius: {{typePrefix}}Tokens.radius4(),
+    text: {{typePrefix}}Tokens.text2,
+  ),
+  .size3 => (
+    paddingX: {{typePrefix}}Tokens.space4(),
+    paddingY: {{typePrefix}}Tokens.space3(),
+    minHeight: {{typePrefix}}Tokens.space8(),
+    sortIconSize: {{typePrefix}}Tokens.dataTableSortIconSize3(),
+    radius: {{typePrefix}}Tokens.radius4(),
+    text: {{typePrefix}}Tokens.text3,
+  ),
+};
+
+BoxStyler _cell(_Scale metrics) => BoxStyler()
     .padding(.horizontal(metrics.paddingX))
     .padding(.vertical(metrics.paddingY));
 
-BoxStyler _{{valuePrefix}}DataTableRowDivider() => BoxStyler().foregroundDecoration(
-  BoxDecorationMix(border: BoxBorderMix.bottom(_{{valuePrefix}}DataTableDividerSide())),
+BoxStyler _rowDivider() => BoxStyler().foregroundDecoration(
+  BoxDecorationMix(border: BoxBorderMix.bottom(_dividerSide())),
 );
 
 /// The `gray-a5` 1px edge shared by the row divider and the footer's top
 /// border, so the footer reads as a continuation of the last row's divider.
-BorderSideMix _{{valuePrefix}}DataTableDividerSide() => BorderSideMix(
+BorderSideMix _dividerSide() => BorderSideMix(
   color: {{typePrefix}}Tokens.grayA5(),
   width: {{typePrefix}}Tokens.borderWidth1(),
 );
 
-FlexBoxStyler _{{valuePrefix}}DataTableFooter() => FlexBoxStyler()
+FlexBoxStyler _footer() => FlexBoxStyler()
     .direction(.horizontal)
     // The compact pager keeps full touch targets without crowding its labels.
     .spacing({{typePrefix}}Tokens.space1())
     .padding(.horizontal({{typePrefix}}Tokens.space4()))
     .padding(.vertical({{typePrefix}}Tokens.space2()))
     .foregroundDecoration(
-      BoxDecorationMix(border: BoxBorderMix.top(_{{valuePrefix}}DataTableDividerSide())),
+      BoxDecorationMix(border: BoxBorderMix.top(_dividerSide())),
     );
 
-DataTableStyler _{{valuePrefix}}DataTableSurface(DataTableStyler base, Radius radius) {
-  return base
+DataTableStyler _surface(Radius radius) {
+  return DataTableStyler()
       .container(
         {{valuePrefix}}SurfaceFrame(
           fillColor: {{typePrefix}}Tokens.colorPanel(),

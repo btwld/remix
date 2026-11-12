@@ -6,7 +6,10 @@ part of 'textfield.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixTextField].
+/// The Fortal TextField recipe.
+///
+/// It reads top to bottom: what every text input shares, then the size, then
+/// the variant's colors for rest and disabled, then the error state.
 class FortalTextField extends StatelessWidget {
   const FortalTextField({
     super.key,
@@ -72,7 +75,7 @@ class FortalTextField extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// Surface treatment with neutral border and text colors.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   const FortalTextField.surface({
     super.key,
     this.size = .size2,
@@ -136,7 +139,7 @@ class FortalTextField extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalTextFieldVariant.surface;
 
-  /// Soft accent treatment.
+  /// An accent tint inside a 1px accent ring, with accent-colored text.
   const FortalTextField.soft({
     super.key,
     this.size = .size2,
@@ -390,7 +393,8 @@ class FortalTextField extends StatelessWidget {
   }
 }
 
-/// Fortal recipe for [RemixTextArea].
+/// The Fortal TextArea recipe: the text field's looks on a taller box whose
+/// content starts at the top.
 class FortalTextArea extends StatelessWidget {
   const FortalTextArea({
     super.key,
@@ -453,6 +457,7 @@ class FortalTextArea extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   const FortalTextArea.surface({
     super.key,
     this.size = .size2,
@@ -513,6 +518,7 @@ class FortalTextArea extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalTextAreaVariant.surface;
 
+  /// An accent tint inside a 1px accent ring, with accent-colored text.
   const FortalTextArea.soft({
     super.key,
     this.size = .size2,

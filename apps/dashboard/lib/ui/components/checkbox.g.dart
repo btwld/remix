@@ -6,7 +6,13 @@ part of 'checkbox.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui recipe for [RemixCheckbox].
+/// The Ui Checkbox recipe.
+///
+/// It reads top to bottom: the box and its focus ring, then the variant's
+/// colors for rest, selected and disabled, then the touch target.
+///
+/// [highContrast] moves the selected fill (surface) or mark (soft) to accent
+/// step 12.
 class UiCheckbox extends StatelessWidget {
   const UiCheckbox({
     super.key,
@@ -30,6 +36,8 @@ class UiCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// A surface fill inside a 1px neutral frame, filled with the accent when
+  /// selected.
   const UiCheckbox.surface({
     super.key,
     this.size = .size2,
@@ -51,6 +59,7 @@ class UiCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiCheckboxVariant.surface;
 
+  /// An accent tint inside a 1px accent ring, with an accent-colored mark.
   const UiCheckbox.soft({
     super.key,
     this.size = .size2,
@@ -136,12 +145,12 @@ class UiCheckbox extends StatelessWidget {
   }
 }
 
-/// Ui recipe for [RemixCheckboxGroupItem].
-///
+/// The Ui CheckboxGroupItem recipe: the checkbox recipe plus a label.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
-/// so unlike every other Remix item (menu, select, segmented control, toggle
-/// group) there is no parent recipe to push item styling down. Without this,
+/// so, unlike the menu, select, segmented control and toggle group items, there
+/// is no parent recipe to push item styling down. Radio group items are the
+/// same. Without this,
 /// callers hand-attach a styler to each item and a missed one in a loop renders
 /// unstyled beside its styled siblings.
 class UiCheckboxGroupItem<T extends Object> extends StatelessWidget {
@@ -164,6 +173,8 @@ class UiCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// A surface fill inside a 1px neutral frame, filled with the accent when
+  /// selected.
   const UiCheckboxGroupItem.surface({
     super.key,
     this.size = .size2,
@@ -182,6 +193,7 @@ class UiCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiCheckboxVariant.surface;
 
+  /// An accent tint inside a 1px accent ring, with an accent-colored mark.
   const UiCheckboxGroupItem.soft({
     super.key,
     this.size = .size2,

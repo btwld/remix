@@ -6,13 +6,32 @@ import '../theme/theme.dart';
 
 part 'select.g.dart';
 
-/// Ui Select root size presets.
-enum UiSelectSize { size1, size2, size3 }
+/// The sizes a select comes in. Pixel values are at 100% theme scaling.
+enum UiSelectSize {
+  /// A 24px trigger with 12px text.
+  size1,
 
-/// Ui Select variants.
-enum UiSelectVariant { surface, soft, ghost }
+  /// A 32px trigger with 14px text. The default.
+  size2,
 
-/// Ui-themed Select with Ui-owned trigger and content configuration.
+  /// A 40px trigger with 16px text.
+  size3,
+}
+
+/// The looks a select's trigger comes in.
+enum UiSelectVariant {
+  /// The `gray2` fill inside a 1px gray frame.
+  surface,
+
+  /// An accent tint under accent text.
+  soft,
+
+  /// No fill until hovered. It sits in a negative margin, so its text lines up
+  /// with the text around it.
+  ghost,
+}
+
+/// The Ui Select recipe: the trigger, the floating panel and its items.
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Override the trigger icon through [style] when needed.
@@ -20,102 +39,108 @@ enum UiSelectVariant { surface, soft, ghost }
 /// The panel is at least as wide as its trigger. A [style] that gives the
 /// content a `maxWidth` below the trigger's width must also set `minWidth`,
 /// which replaces the minimum, because a minimum above a maximum is invalid.
+///
+/// [highContrast] moves the highlighted item of the surface and ghost variants
+/// to accent step 12.
 @MixWidget(target: RemixSelect.new)
 SelectStyler uiSelectStyle({
   UiSelectVariant variant = .surface,
   UiSelectSize size = .size2,
   bool highContrast = false,
   SelectStyler style = const SelectStyler.create(),
-}) {
-  return SelectStyler()
-      .trigger(_uiSelectTriggerStyler(variant, size))
-      .content(_uiSelectContentStyler(size))
-      .item(_uiSelectItemStyler(variant, size, highContrast: highContrast))
-      .merge(style);
-}
+}) => SelectStyler()
+    .trigger(_trigger(variant, size))
+    .content(_content(size))
+    .item(_item(variant, size, highContrast: highContrast))
+    .merge(style);
 
-/// Creates the established combined-variant Select item recipe.
+/// The Ui select item recipe, for styling one item on its own.
+///
+/// It is the item style [uiSelectStyle] gives every item, so a call site
+/// can match a select's items outside the select.
 SelectMenuItemStyler uiSelectMenuItemStyle({
   UiSelectVariant variant = .surface,
   UiSelectSize size = .size2,
   bool highContrast = false,
-}) => _uiSelectItemStyler(variant, size, highContrast: highContrast);
+}) => _item(variant, size, highContrast: highContrast);
 
-SelectTriggerStyler _uiSelectTriggerStyler(
-  UiSelectVariant variant,
-  UiSelectSize size,
-) {
-  final radius = _uiSelectTriggerRadius(size);
-  final base = SelectTriggerStyler()
+/// The trigger: its shape and text, then the variant's colors.
+SelectTriggerStyler _trigger(UiSelectVariant variant, UiSelectSize size) =>
+    _triggerBase(size)
+        .merge(_triggerScale(variant, size))
+        .wrap(uiTouchTarget())
+        .merge(switch (variant) {
+          .surface => _surfaceTrigger(),
+          .soft => _tintedTrigger(
+            color: UiTokens.accentA3(),
+            hover: UiTokens.accentA4(),
+            disabled: UiTokens.grayA3(),
+          ),
+          .ghost => _tintedTrigger(
+            color: const Color(0x00000000),
+            hover: UiTokens.accentA3(),
+            disabled: const Color(0x00000000),
+          ),
+        })
+        .onDisabled(.containerEffects(.outline(.style(.none))));
+
+/// The trigger's label, placeholder, icons and focus ring. The label and icons
+/// are gray 12; the placeholder is `grayA10`.
+SelectTriggerStyler _triggerBase(UiSelectSize size) {
+  final (:text, :icon, :indicator, :radius) = switch (size) {
+    .size1 => (
+      text: UiTokens.text1,
+      icon: UiTokens.space3(),
+      indicator: UiTokens.selectTriggerIndicatorSize12(),
+      radius: UiTokens.radius1OrFull(),
+    ),
+    .size2 => (
+      text: UiTokens.text2,
+      icon: UiTokens.space4(),
+      indicator: UiTokens.selectTriggerIndicatorSize12(),
+      radius: UiTokens.radius2OrFull(),
+    ),
+    .size3 => (
+      text: UiTokens.text3,
+      icon: UiTokens.spinnerSize3(),
+      indicator: UiTokens.selectTriggerIndicatorSize3(),
+      radius: UiTokens.radius3OrFull(),
+    ),
+  };
+  TextStyler regular(Color color) => TextStyler(
+    style: text.mix(),
+  ).fontWeight(UiTokens.fontWeightRegular()).color(color);
+
+  return SelectTriggerStyler()
       .direction(.horizontal)
       .mainAxisAlignment(.spaceBetween)
       .borderRadius(.all(radius))
-      .label(_uiSelectTriggerText(size, color: UiTokens.gray12()))
-      .placeholder(_uiSelectTriggerText(size, color: UiTokens.grayA10()))
-      .icon(
-        .color(UiTokens.gray12()).size(switch (size) {
-          .size1 => UiTokens.space3(),
-          .size2 => UiTokens.space4(),
-          .size3 => UiTokens.spinnerSize3(),
-        }),
-      )
-      .indicator(
-        .color(UiTokens.gray12()).size(switch (size) {
-          .size1 || .size2 => UiTokens.selectTriggerIndicatorSize12(),
-          .size3 => UiTokens.selectTriggerIndicatorSize3(),
-        }),
-      )
-      .onFocusVisible(.containerEffects(uiFocusOutline()))
-      .merge(_uiSelectTriggerSizeStyler(variant, size))
-      .wrap(uiTouchTarget());
-
-  return (switch (variant) {
-    .surface => _uiSelectSurfaceTrigger(base),
-    .soft => _uiSelectSoftTrigger(base),
-    .ghost => _uiSelectGhostTrigger(base),
-  }).onDisabled(
-    SelectTriggerStyler().containerEffects(
-      RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-    ),
-  );
+      .label(regular(UiTokens.gray12()))
+      .placeholder(regular(UiTokens.grayA10()))
+      .icon(.color(UiTokens.gray12()).size(icon))
+      .indicator(.color(UiTokens.gray12()).size(indicator))
+      .onFocusVisible(.containerEffects(uiFocusOutline()));
 }
 
-TextStyler _uiSelectTriggerText(UiSelectSize size, {Color? color}) {
-  final token = switch (size) {
-    .size1 => UiTokens.text1,
-    .size2 => UiTokens.text2,
-    .size3 => UiTokens.text3,
-  };
-  return TextStyler(
-    style: token.mix(),
-  ).fontWeight(UiTokens.fontWeightRegular()).color(color ?? UiTokens.gray12());
-}
-
-Radius _uiSelectTriggerRadius(UiSelectSize size) => switch (size) {
-  .size1 => UiTokens.radius1OrFull(),
-  .size2 => UiTokens.radius2OrFull(),
-  .size3 => UiTokens.radius3OrFull(),
-};
-
-SelectTriggerStyler _uiSelectTriggerSizeStyler(
-  UiSelectVariant variant,
-  UiSelectSize size,
-) {
-  final style = SelectTriggerStyler().spacing(switch (size) {
+/// The gap, padding and height of the trigger. A ghost trigger has no height;
+/// it takes its padding and cancels it with a negative margin.
+SelectTriggerStyler _triggerScale(UiSelectVariant variant, UiSelectSize size) {
+  final trigger = SelectTriggerStyler().spacing(switch (size) {
     .size1 => UiTokens.space1(),
     .size2 => UiTokens.space2(),
     .size3 => UiTokens.space2(),
   });
+
   return switch (variant) {
     .ghost => switch (size) {
       .size1 || .size2 =>
-        style
+        trigger
             .padding(.horizontal(UiTokens.space2()))
             .padding(.vertical(UiTokens.space1()))
             .margin(.horizontal(UiTokens.selectGhostMarginX12()))
             .margin(.vertical(UiTokens.selectGhostMarginY12())),
       .size3 =>
-        style
+        trigger
             .padding(.horizontal(UiTokens.space3()))
             .padding(.vertical(UiTokens.space2()))
             .margin(.horizontal(UiTokens.selectGhostMarginX3()))
@@ -123,161 +148,158 @@ SelectTriggerStyler _uiSelectTriggerSizeStyler(
     },
     .surface || .soft => switch (size) {
       .size1 =>
-        style.height(UiTokens.space5()).padding(.horizontal(UiTokens.space2())),
+        trigger
+            .height(UiTokens.space5())
+            .padding(.horizontal(UiTokens.space2())),
       .size2 =>
-        style.height(UiTokens.space6()).padding(.horizontal(UiTokens.space3())),
+        trigger
+            .height(UiTokens.space6())
+            .padding(.horizontal(UiTokens.space3())),
       .size3 =>
-        style.height(UiTokens.space7()).padding(.horizontal(UiTokens.space4())),
+        trigger
+            .height(UiTokens.space7())
+            .padding(.horizontal(UiTokens.space4())),
     },
   };
 }
 
-SelectTriggerStyler _uiSelectSurfaceTrigger(SelectTriggerStyler base) {
-  return base
-      .indicatorOpacity(0.9)
-      .color(UiTokens.gray2())
+SelectTriggerStyler _surfaceTrigger() => SelectTriggerStyler()
+    .indicatorOpacity(0.9)
+    .color(UiTokens.gray2())
+    .containerEffects(
+      .behindContent(uiInsetSurface(strokes: [UiTokens.gray7()])),
+    )
+    .onHovered(
       .containerEffects(
-        RemixBoxEffectsMix.behindContent(
-          uiInsetSurface(strokes: [UiTokens.gray7()]),
-        ),
-      )
-      .onHovered(
-        .containerEffects(
-          RemixBoxEffectsMix.behindContent(
-            uiInsetSurface(strokes: [UiTokens.grayA8()]),
-          ),
-        ),
-      )
-      .onSelected(
-        .containerEffects(
-          RemixBoxEffectsMix.behindContent(
-            uiInsetSurface(strokes: [UiTokens.grayA8()]),
-          ),
-        ),
-      )
-      .onDisabled(
-        .color(UiTokens.gray2())
-            .label(.color(UiTokens.grayA11()))
-            .icon(.color(UiTokens.grayA9()))
-            .indicator(.color(UiTokens.grayA9()))
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(
-                uiInsetSurface(strokes: [UiTokens.grayA6()]).merge(
-                  RemixBoxEffectLayerMix(
-                    gradients: [
-                      RemixLinearGradientMix(
-                        colors: [UiTokens.grayA2(), UiTokens.grayA2()],
-                      ),
-                    ],
-                  ),
+        .behindContent(uiInsetSurface(strokes: [UiTokens.grayA8()])),
+      ),
+    )
+    .onSelected(
+      .containerEffects(
+        .behindContent(uiInsetSurface(strokes: [UiTokens.grayA8()])),
+      ),
+    )
+    .onDisabled(
+      .color(UiTokens.gray2())
+          .label(.color(UiTokens.grayA11()))
+          .icon(.color(UiTokens.grayA9()))
+          .indicator(.color(UiTokens.grayA9()))
+          .containerEffects(
+            .behindContent(
+              uiInsetSurface(strokes: [UiTokens.grayA6()]).merge(
+                RemixBoxEffectLayerMix(
+                  gradients: [
+                    RemixLinearGradientMix(
+                      colors: [UiTokens.grayA2(), UiTokens.grayA2()],
+                    ),
+                  ],
                 ),
               ),
             ),
-      );
-}
+          ),
+    );
 
-SelectTriggerStyler _uiSelectSoftTrigger(SelectTriggerStyler base) {
-  return base
-      .label(.color(UiTokens.accent12()))
-      .placeholder(.color(UiTokens.accent12()))
-      .placeholderOpacity(0.6)
-      .icon(.color(UiTokens.accent12()))
-      .indicator(.color(UiTokens.accent12()))
-      .color(UiTokens.accentA3())
-      .onHovered(.color(UiTokens.accentA4()))
-      .onSelected(.color(UiTokens.accentA4()))
-      .onDisabled(
-        .label(.color(UiTokens.grayA11()))
-            .icon(.color(UiTokens.grayA9()))
-            .indicator(.color(UiTokens.grayA9()))
-            .color(UiTokens.grayA3()),
-      );
-}
+/// Accent text on a [color] fill that takes [hover] while hovered or open.
+/// Disabled turns the text gray and the fill [disabled].
+SelectTriggerStyler _tintedTrigger({
+  required Color color,
+  required Color hover,
+  required Color disabled,
+}) => SelectTriggerStyler()
+    .label(.color(UiTokens.accent12()))
+    .placeholder(.color(UiTokens.accent12()))
+    .placeholderOpacity(0.6)
+    .icon(.color(UiTokens.accent12()))
+    .indicator(.color(UiTokens.accent12()))
+    .color(color)
+    .onHovered(.color(hover))
+    .onSelected(.color(hover))
+    .onDisabled(
+      .label(.color(UiTokens.grayA11()))
+          .icon(.color(UiTokens.grayA9()))
+          .indicator(.color(UiTokens.grayA9()))
+          .color(disabled),
+    );
 
-SelectTriggerStyler _uiSelectGhostTrigger(SelectTriggerStyler base) {
-  return base
-      .label(.color(UiTokens.accent12()))
-      .placeholder(.color(UiTokens.accent12()))
-      .placeholderOpacity(0.6)
-      .icon(.color(UiTokens.accent12()))
-      .indicator(.color(UiTokens.accent12()))
-      .color(const Color(0x00000000))
-      .onHovered(.color(UiTokens.accentA3()))
-      .onSelected(.color(UiTokens.accentA3()))
-      .onDisabled(
-        .label(.color(UiTokens.grayA11()))
-            .icon(.color(UiTokens.grayA9()))
-            .indicator(.color(UiTokens.grayA9()))
-            .color(const Color(0x00000000)),
-      );
-}
-
-SelectContentStyler _uiSelectContentStyler(UiSelectSize size) {
-  final radius = switch (size) {
-    .size1 => UiTokens.radius3(),
-    .size2 || .size3 => UiTokens.radius4(),
+/// The floating panel: a raised, blurred panel at least as wide as the
+/// trigger.
+SelectContentStyler _content(UiSelectSize size) {
+  final (:padding, :radius) = switch (size) {
+    .size1 => (padding: UiTokens.space1(), radius: UiTokens.radius3()),
+    .size2 ||
+    .size3 => (padding: UiTokens.space2(), radius: UiTokens.radius4()),
   };
+
   return SelectContentStyler()
       .maxHeight(320)
       .border(.color(UiTokens.gray7()).width(UiTokens.borderWidth1()))
-      // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
-      .padding(
-        .all(switch (size) {
-          .size1 => UiTokens.space1(),
-          .size2 || .size3 => UiTokens.space2(),
-        }),
-      )
+      .padding(.all(padding))
       .borderRadius(.all(radius))
       .color(UiTokens.colorPanel())
       .decoration(BoxDecorationMix.create(boxShadow: UiTokens.shadow5.mix()))
       .clipBehavior(Clip.antiAlias)
-      .containerEffects(RemixBoxEffectsMix.backdropBlur(UiTokens.panelBlur()));
+      .containerEffects(.backdropBlur(UiTokens.panelBlur()));
 }
 
-SelectMenuItemStyler _uiSelectItemStyler(
+/// An item in the panel: gray text, with the variant's highlight under the
+/// pointer, keyboard focus and press.
+SelectMenuItemStyler _item(
   UiSelectVariant variant,
   UiSelectSize size, {
-  bool highContrast = false,
+  required bool highContrast,
 }) {
-  final metrics = _uiSelectContentMetrics(size);
-  final base = SelectMenuItemStyler()
+  final (
+    :height,
+    :indicatorWidth,
+    :indicatorSize,
+    :radius,
+    :text,
+  ) = switch (size) {
+    .size1 => (
+      height: UiTokens.space5(),
+      indicatorWidth: UiTokens.selectIndicatorWidth1(),
+      indicatorSize: UiTokens.space2(),
+      radius: UiTokens.radius1(),
+      text: UiTokens.text1,
+    ),
+    .size2 => (
+      height: UiTokens.space6(),
+      indicatorWidth: UiTokens.space5(),
+      indicatorSize: UiTokens.selectIndicatorSize2(),
+      radius: UiTokens.radius2(),
+      text: UiTokens.text2,
+    ),
+    .size3 => (
+      height: UiTokens.space6(),
+      indicatorWidth: UiTokens.space5(),
+      indicatorSize: UiTokens.selectIndicatorSize2(),
+      radius: UiTokens.radius2(),
+      text: UiTokens.text3,
+    ),
+  };
+  final highlighted = _highlighted(variant, highContrast: highContrast);
+
+  return SelectMenuItemStyler()
       .wrap(uiTouchTarget())
       .direction(.horizontal)
-      .height(metrics.itemHeight)
-      .padding(.horizontal(metrics.indicatorWidth))
-      .borderRadius(.all(metrics.itemRadius))
-      .text(TextStyler(style: metrics.itemText.mix()).color(UiTokens.gray12()))
+      .height(height)
+      .padding(.horizontal(indicatorWidth))
+      .borderRadius(.all(radius))
+      .text(TextStyler(style: text.mix()).color(UiTokens.gray12()))
       .indicator(
         BoxStyler(
           alignment: .center,
-          constraints: BoxConstraintsMix.width(metrics.indicatorWidth),
+          constraints: BoxConstraintsMix.width(indicatorWidth),
         ),
       )
-      .icon(IconStyler(color: UiTokens.gray12(), size: metrics.indicatorSize));
-
-  final highlighted = switch (variant) {
-    .surface || .ghost =>
-      SelectMenuItemStyler()
-          .color(highContrast ? UiTokens.accent12() : UiTokens.accentSolid())
-          .text(
-            TextStyler().color(
-              highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),
-            ),
-          )
-          .iconColor(
-            highContrast ? UiTokens.accent1() : UiTokens.accentContrast(),
-          ),
-    .soft => SelectMenuItemStyler().color(UiTokens.accentA4()),
-  };
-
-  return base
+      .icon(IconStyler(color: UiTokens.gray12(), size: indicatorSize))
       .onHovered(highlighted)
       .onFocused(highlighted)
       .onPressed(highlighted)
       .onFocusVisible(
         SelectMenuItemStyler().container(
-          FlexBoxStyler().uiFocusRing(radius: metrics.itemRadius),
+          FlexBoxStyler().uiFocusRing(radius: radius),
         ),
       )
       .onDisabled(
@@ -291,33 +313,20 @@ SelectMenuItemStyler _uiSelectItemStyler(
       );
 }
 
-({
-  double itemHeight,
-  double indicatorWidth,
-  double indicatorSize,
-  Radius itemRadius,
-  TextStyleToken itemText,
-})
-_uiSelectContentMetrics(UiSelectSize size) => switch (size) {
-  .size1 => (
-    itemHeight: UiTokens.space5(),
-    indicatorWidth: UiTokens.selectIndicatorWidth1(),
-    indicatorSize: UiTokens.space2(),
-    itemRadius: UiTokens.radius1(),
-    itemText: UiTokens.text1,
-  ),
-  .size2 => (
-    itemHeight: UiTokens.space6(),
-    indicatorWidth: UiTokens.space5(),
-    indicatorSize: UiTokens.selectIndicatorSize2(),
-    itemRadius: UiTokens.radius2(),
-    itemText: UiTokens.text2,
-  ),
-  .size3 => (
-    itemHeight: UiTokens.space6(),
-    indicatorWidth: UiTokens.space5(),
-    indicatorSize: UiTokens.selectIndicatorSize2(),
-    itemRadius: UiTokens.radius2(),
-    itemText: UiTokens.text3,
-  ),
-};
+/// The item under the pointer or keyboard: the accent's solid fill under its
+/// contrast text, or a tint for the soft variant.
+SelectMenuItemStyler _highlighted(
+  UiSelectVariant variant, {
+  required bool highContrast,
+}) {
+  final content = highContrast ? UiTokens.accent1() : UiTokens.accentContrast();
+
+  return switch (variant) {
+    .surface || .ghost =>
+      SelectMenuItemStyler()
+          .color(highContrast ? UiTokens.accent12() : UiTokens.accentSolid())
+          .text(.color(content))
+          .iconColor(content),
+    .soft => SelectMenuItemStyler().color(UiTokens.accentA4()),
+  };
+}

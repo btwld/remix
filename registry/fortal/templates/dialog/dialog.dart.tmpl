@@ -8,9 +8,25 @@ import '../theme/theme.dart';
 
 part 'dialog.g.dart';
 
-/// {{typePrefix}} dialog size presets on the shared scale.
-enum {{typePrefix}}DialogSize { size1, size2, size3, size4 }
+/// The sizes a dialog comes in, from its padding and corners. Pixel values are
+/// at 100% theme scaling.
+enum {{typePrefix}}DialogSize {
+  /// 12px padding.
+  size1,
 
+  /// 16px padding.
+  size2,
+
+  /// 24px padding. The default.
+  size3,
+
+  /// 32px padding.
+  size4,
+}
+
+/// Padding that keeps the dialog off the screen edges: 16px at the sides and
+/// 32px at the top and bottom, or the safe area when that is larger. The
+/// bottom keeps at least 6% of the viewport height.
 final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
   final safeArea = MediaQuery.paddingOf(context);
   final viewportHeight = MediaQuery.sizeOf(context).height;
@@ -25,26 +41,26 @@ final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
   );
 });
 
-/// {{typePrefix}}-themed preset for [RemixDialog].
+/// The {{typePrefix}} Dialog recipe: a raised, blurred panel with a bold title.
 ///
 /// The generated [{{typePrefix}}Dialog] defaults to [{{typePrefix}}DialogSize.size3],
 /// [Alignment.center], fills up to 600 logical pixels, preserves safe
 /// viewport insets, and is modal.
 @MixWidget(target: RemixDialog.new)
 DialogStyler {{valuePrefix}}DialogStyle({
-  {{typePrefix}}DialogSize size = {{typePrefix}}DialogSize.size3,
+  {{typePrefix}}DialogSize size = .size3,
   AlignmentGeometry align = Alignment.center,
   DialogStyler style = const DialogStyler.create(),
 }) {
   final radius = switch (size) {
-    {{typePrefix}}DialogSize.size1 || {{typePrefix}}DialogSize.size2 => {{typePrefix}}Tokens.radius4(),
-    {{typePrefix}}DialogSize.size3 || {{typePrefix}}DialogSize.size4 => {{typePrefix}}Tokens.radius5(),
+    .size1 || .size2 => {{typePrefix}}Tokens.radius4(),
+    .size3 || .size4 => {{typePrefix}}Tokens.radius5(),
   };
   final padding = switch (size) {
-    {{typePrefix}}DialogSize.size1 => {{typePrefix}}Tokens.space3(),
-    {{typePrefix}}DialogSize.size2 => {{typePrefix}}Tokens.space4(),
-    {{typePrefix}}DialogSize.size3 => {{typePrefix}}Tokens.space5(),
-    {{typePrefix}}DialogSize.size4 => {{typePrefix}}Tokens.space6(),
+    .size1 => {{typePrefix}}Tokens.space3(),
+    .size2 => {{typePrefix}}Tokens.space4(),
+    .size3 => {{typePrefix}}Tokens.space5(),
+    .size4 => {{typePrefix}}Tokens.space6(),
   };
 
   return DialogStyler()

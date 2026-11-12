@@ -10,13 +10,28 @@ import 'textfield.dart';
 
 part 'combobox.g.dart';
 
-/// {{typePrefix}} editable-field sizes, matching TextField.
-enum {{typePrefix}}ComboboxSize { size1, size2, size3 }
+/// The sizes a combobox's field comes in, matching the text field.
+enum {{typePrefix}}ComboboxSize {
+  /// A 24px field with 12px text.
+  size1,
 
-/// {{typePrefix}} editable-field treatments.
-enum {{typePrefix}}ComboboxVariant { surface, soft }
+  /// A 32px field with 14px text. The default.
+  size2,
 
-/// {{typePrefix}}'s editable suggestions recipe, promoted from the demo's polish story.
+  /// A 40px field with 16px text.
+  size3,
+}
+
+/// The looks a combobox's field comes in, matching the text field.
+enum {{typePrefix}}ComboboxVariant {
+  /// The `gray2` fill inside a 1px neutral frame.
+  surface,
+
+  /// An accent tint inside a 1px accent ring.
+  soft,
+}
+
+/// The {{typePrefix}} Combobox recipe: an editable field with a panel of suggestions.
 ///
 /// The field shares TextField's recipe. Suggestions use the Select panel's
 /// token roles with growing rows and separate hover, keyboard and press fills.
@@ -35,6 +50,7 @@ ComboboxStyler {{valuePrefix}}ComboboxStyle({
     .size2 => {{typePrefix}}Tokens.text2,
     .size3 => {{typePrefix}}Tokens.text3,
   };
+
   return ComboboxStyler()
       .field(
         {{valuePrefix}}TextFieldStyle(
@@ -106,11 +122,8 @@ final _optionPaddingY = ContextToken<double>(
   (context) => {{typePrefix}}Tokens.space3.resolve(context) / 2,
 );
 
-// Resolve before merging so the transparent reservation cannot tint a later
+// Resolved before merging so the transparent reservation cannot tint a later
 // keyboard ring or caller border override.
-Color _resolveOptionReservedBorderColor(BuildContext context) =>
-    {{typePrefix}}Tokens.accent8.resolve(context).withValues(alpha: 0);
-
-const _optionReservedBorderColor = ContextToken<Color>(
-  _resolveOptionReservedBorderColor,
+final _optionReservedBorderColor = ContextToken<Color>(
+  (context) => {{typePrefix}}Tokens.accent8.resolve(context).withValues(alpha: 0),
 );

@@ -4,8 +4,8 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// Ui-themed heading style on the Ui nine-step scale.
-///
+/// The style of a heading on the nine-step text scale, with its own line
+/// height per size.
 ///
 /// This is a plain recipe rather than a `@MixWidget`: a generated widget only
 /// renders the styler, and [UiHeading] must additionally publish a native
@@ -53,7 +53,7 @@ TextStyler uiHeadingStyle({
 /// Token-backed visual heading with an independent native heading level.
 ///
 /// [headingLevel] drives the accessibility level only; changing it never
-/// changes the visual [size], using Ui tokens.
+/// changes the visual [size], using this design system's tokens.
 class UiHeading extends StatelessWidget {
   const UiHeading(
     this.text, {

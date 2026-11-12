@@ -6,7 +6,12 @@ part of 'slider.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui slider with Ui-owned size, variant, and component overrides.
+/// The Ui Slider recipe.
+///
+/// It reads top to bottom: the track and thumb sizes, then the variant's
+/// colors, then the dark-mode thumb edge, hover, press and disabled.
+///
+/// [highContrast] darkens the range with an overlay.
 class UiSlider extends StatelessWidget {
   const UiSlider({
     super.key,
@@ -30,6 +35,7 @@ class UiSlider extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// A gray track and a solid accent range.
   const UiSlider.surface({
     super.key,
     this.size = .size2,
@@ -51,6 +57,7 @@ class UiSlider extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiSliderVariant.surface;
 
+  /// A gray track and a softer accent range.
   const UiSlider.soft({
     super.key,
     this.size = .size2,

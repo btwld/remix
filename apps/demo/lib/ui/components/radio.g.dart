@@ -6,7 +6,13 @@ part of 'radio.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixRadio].
+/// The Fortal Radio recipe.
+///
+/// It reads top to bottom: the circle and its focus ring, then the variant's
+/// colors for rest, selected and disabled, then the touch target.
+///
+/// [highContrast] moves the selected fill (surface) or dot (soft) to accent
+/// step 12.
 class FortalRadio<T> extends StatelessWidget {
   const FortalRadio({
     super.key,
@@ -26,7 +32,8 @@ class FortalRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// Surface treatment with neutral border.
+  /// A surface fill inside a 1px neutral frame, filled with the accent when
+  /// selected.
   const FortalRadio.surface({
     super.key,
     this.size = .size2,
@@ -44,7 +51,7 @@ class FortalRadio<T> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalRadioVariant.surface;
 
-  /// Soft accent treatment.
+  /// An accent tint inside a 1px accent ring, with an accent-colored dot.
   const FortalRadio.soft({
     super.key,
     this.size = .size2,

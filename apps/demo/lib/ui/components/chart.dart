@@ -9,21 +9,6 @@ import '../theme/theme.dart';
 
 part 'chart.g.dart';
 
-const _standardPaletteToken = ContextToken<List<Color>>(
-  _resolveStandardPalette,
-);
-const _highContrastPaletteToken = ContextToken<List<Color>>(
-  _resolveHighContrastPalette,
-);
-const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
-const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
-const _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
-const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
-const _lineWidthToken = ContextToken<double>(_resolveLineWidth);
-const _highContrastLineWidthToken = ContextToken<double>(
-  _resolveHighContrastLineWidth,
-);
-
 /// Returns the series colors for Fortal charts in the current scope.
 ///
 /// The accent's `accentIndicator` comes first, then the other named color
@@ -84,7 +69,7 @@ const _seriesFamilies = <(FortalAccentColor, FortalColorTheme)>[
   (.orla, orla),
 ];
 
-/// Fortal presentation for a Mix line or area chart.
+/// The Fortal LineChart recipe, for a Mix line or area chart.
 ///
 /// Generates [FortalLineChart] through `mix_generator`. The plot remains
 /// transparent so callers can compose it inside any surface.
@@ -95,7 +80,7 @@ LineChartStyler fortalLineChartStyle({
   List<Color>? palette,
   LineChartStyler style = const LineChartStyler.create(),
 }) {
-  final recipe = LineChartStyler()
+  return LineChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
       // Value ticks stay centered on their values, so the end ticks overhang
@@ -126,9 +111,7 @@ LineChartStyler fortalLineChartStyle({
                   .borderWidth(FortalTokens.borderWidth2()),
             ),
       )
-      .tooltip(_fortalTooltipStyle());
-
-  return recipe
+      .tooltip(_fortalTooltipStyle())
       .merge(
         LineChartStyler.create(
           palette: _paletteProp(highContrast: highContrast, palette: palette),
@@ -137,7 +120,7 @@ LineChartStyler fortalLineChartStyle({
       .merge(style);
 }
 
-/// Fortal presentation for a Mix grouped, stacked, or floating bar chart.
+/// The Fortal BarChart recipe: grouped, stacked or floating bars.
 ///
 /// Generates [FortalBarChart] through `mix_generator`.
 @MixWidget(target: BarChart.new)
@@ -149,7 +132,7 @@ BarChartStyler fortalBarChartStyle({
   final bar = BarStyler.create(
     borderRadius: Prop.token(_barRadiusToken),
   ).width(FortalTokens.space4());
-  final recipe = BarChartStyler()
+  return BarChartStyler()
       .frame(_fortalFrameStyle())
       .axis(_fortalAxisStyle())
       .topAxis(_hiddenAxisStyle())
@@ -158,9 +141,7 @@ BarChartStyler fortalBarChartStyle({
       .bar(bar)
       .groupSpacing(FortalTokens.space4())
       .barSpacing(FortalTokens.space2())
-      .tooltip(_fortalTooltipStyle());
-
-  return recipe
+      .tooltip(_fortalTooltipStyle())
       .merge(
         BarChartStyler.create(
           palette: _paletteProp(highContrast: highContrast, palette: palette),
@@ -169,7 +150,7 @@ BarChartStyler fortalBarChartStyle({
       .merge(style);
 }
 
-/// Fortal presentation for a Mix pie or donut chart.
+/// The Fortal PieChart recipe, for a Mix pie or donut chart.
 ///
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing
@@ -189,7 +170,7 @@ PieChartStyler fortalPieChartStyle({
   List<Color>? palette,
   PieChartStyler style = const PieChartStyler.create(),
 }) {
-  final recipe = PieChartStyler()
+  return PieChartStyler()
       .frame(_fortalFrameStyle())
       .centerRadius(centerRadius)
       // The hole shows whatever the chart sits on. A panel-colored disc stands
@@ -208,9 +189,7 @@ PieChartStyler fortalPieChartStyle({
                   .color(FortalTokens.accentContrast()),
             ),
       )
-      .tooltip(_fortalTooltipStyle());
-
-  return recipe
+      .tooltip(_fortalTooltipStyle())
       .merge(
         PieChartStyler.create(
           palette: _paletteProp(highContrast: highContrast, palette: palette),
@@ -275,30 +254,45 @@ ChartTooltipStyler _fortalTooltipStyle() =>
               .color(FortalTokens.gray12()),
         );
 
-List<Color> _resolveStandardPalette(BuildContext context) =>
-    resolveFortalChartPalette(context);
-
-List<Color> _resolveHighContrastPalette(BuildContext context) =>
-    resolveFortalChartPalette(context, highContrast: true);
-
-BorderSide _resolveTooltipBorder(BuildContext context) => BorderSide(
-  color: FortalTokens.grayStroke6.resolve(context),
-  width: FortalTokens.borderWidth1.resolve(context),
+/// The series colors of the active theme.
+final _standardPaletteToken = ContextToken<List<Color>>(
+  (context) => resolveFortalChartPalette(context),
 );
 
-BorderRadius _resolveTooltipRadius(BuildContext context) =>
-    BorderRadius.all(FortalTokens.radius3.resolve(context));
-
-EdgeInsets _resolveTooltipPadding(BuildContext context) => EdgeInsets.symmetric(
-  horizontal: FortalTokens.space3.resolve(context),
-  vertical: FortalTokens.space2.resolve(context),
+/// The series colors of the active theme, all at step 12.
+final _highContrastPaletteToken = ContextToken<List<Color>>(
+  (context) => resolveFortalChartPalette(context, highContrast: true),
 );
 
-BorderRadius _resolveBarRadius(BuildContext context) =>
-    BorderRadius.all(FortalTokens.radius2.resolve(context));
+/// The tooltip's 1px frame.
+final _tooltipBorderToken = ContextToken<BorderSide>(
+  (context) => BorderSide(
+    color: FortalTokens.grayStroke6.resolve(context),
+    width: FortalTokens.borderWidth1.resolve(context),
+  ),
+);
 
-double _resolveLineWidth(BuildContext context) =>
-    2 * FortalTheme.of(context).scaling.factor;
+final _tooltipRadiusToken = ContextToken<BorderRadius>(
+  (context) => BorderRadius.all(FortalTokens.radius3.resolve(context)),
+);
 
-double _resolveHighContrastLineWidth(BuildContext context) =>
-    3 * FortalTheme.of(context).scaling.factor;
+final _tooltipPaddingToken = ContextToken<EdgeInsets>(
+  (context) => EdgeInsets.symmetric(
+    horizontal: FortalTokens.space3.resolve(context),
+    vertical: FortalTokens.space2.resolve(context),
+  ),
+);
+
+final _barRadiusToken = ContextToken<BorderRadius>(
+  (context) => BorderRadius.all(FortalTokens.radius2.resolve(context)),
+);
+
+/// A line's width: 2px at 100% theme scaling.
+final _lineWidthToken = ContextToken<double>(
+  (context) => 2 * FortalTheme.of(context).scaling.factor,
+);
+
+/// A line's width under high contrast: 3px at 100% theme scaling.
+final _highContrastLineWidthToken = ContextToken<double>(
+  (context) => 3 * FortalTheme.of(context).scaling.factor,
+);

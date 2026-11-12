@@ -6,81 +6,103 @@ import '../theme/theme.dart';
 
 part 'callout.g.dart';
 
-/// Fortal Callout size presets.
-enum FortalCalloutSize { size1, size2, size3 }
+/// The sizes a callout comes in. Pixel values are at 100% theme scaling.
+enum FortalCalloutSize {
+  /// 14px text with 12px padding and an 8px gap.
+  size1,
 
-/// Fortal Callout variants.
-enum FortalCalloutVariant { soft, surface, outline }
+  /// 14px text with 16px padding and a 12px gap. The default.
+  size2,
 
-/// Fortal-themed Callout with Fortal sizes, variants, and overrides.
+  /// 16px text with 24px padding and a 16px gap.
+  size3,
+}
+
+/// The looks a callout comes in.
+enum FortalCalloutVariant {
+  /// A tinted accent fill.
+  soft,
+
+  /// A faint accent fill inside a 1px accent frame.
+  surface,
+
+  /// No fill inside a 1px accent frame.
+  outline,
+}
+
+/// The Fortal Callout recipe.
+///
+/// It reads top to bottom: the size, the color the icon and text share, then
+/// the variant's fill and frame.
+///
+/// [highContrast] moves the text and icon to accent step 12.
 @MixWidget(target: RemixCallout.new)
 CalloutStyler fortalCalloutStyle({
   FortalCalloutVariant variant = .soft,
   FortalCalloutSize size = .size2,
   bool highContrast = false,
   CalloutStyler style = const CalloutStyler.create(),
-}) {
-  final contentColor = highContrast
-      ? FortalTokens.accent12()
-      : FortalTokens.accentContentAlpha();
-  final base = _fortalCalloutBaseStyler(
-    size,
-  ).iconColor(contentColor).textColor(contentColor);
-  return (switch (variant) {
-    .soft => base.color(FortalTokens.accentA3()),
-    .surface =>
-      base
-          .color(FortalTokens.accentA2())
-          .containerEffects(
-            RemixBoxEffectsMix.behindContent(
-              fortalInsetSurface(strokes: [FortalTokens.accentA6()]),
-            ),
-          ),
-    .outline => base.containerEffects(
-      RemixBoxEffectsMix.behindContent(
-        fortalInsetSurface(strokes: [FortalTokens.accentA7()]),
-      ),
-    ),
-  }).merge(style);
-}
+}) => _scale(size)
+    .merge(_content(highContrast))
+    .merge(switch (variant) {
+      .soft => CalloutStyler().color(FortalTokens.accentA3()),
+      .surface => _surface(),
+      .outline => _outline(),
+    })
+    .merge(style);
 
-CalloutStyler _fortalCalloutBaseStyler(FortalCalloutSize size) {
-  final radius = _fortalCalloutRadius(size);
+/// The text, icon, padding, gap and corner size of each step.
+CalloutStyler _scale(FortalCalloutSize size) {
+  final (:padding, :gap, :text, :icon, :radius) = switch (size) {
+    .size1 => (
+      padding: FortalTokens.space3(),
+      gap: FortalTokens.space2(),
+      text: FortalTokens.text2,
+      icon: FortalTokens.space4(),
+      radius: FortalTokens.radius3(),
+    ),
+    .size2 => (
+      padding: FortalTokens.space4(),
+      gap: FortalTokens.space3(),
+      text: FortalTokens.text2,
+      icon: FortalTokens.space4(),
+      radius: FortalTokens.radius4(),
+    ),
+    .size3 => (
+      padding: FortalTokens.space5(),
+      gap: FortalTokens.space4(),
+      text: FortalTokens.text3,
+      icon: FortalTokens.spinnerSize3(),
+      radius: FortalTokens.radius5(),
+    ),
+  };
+
   return CalloutStyler(
     container: .direction(.horizontal)
         .mainAxisSize(.min)
         .crossAxisAlignment(.start)
-        .spacing(_fortalCalloutGap(size))
-        .padding(EdgeInsetsGeometryMix.all(_fortalCalloutPadding(size))),
-    text: .style(_fortalCalloutText(size).mix()),
-    icon: .size(_fortalCalloutIconSize(size)),
+        .spacing(gap)
+        .padding(EdgeInsetsGeometryMix.all(padding)),
+    text: .style(text.mix()),
+    icon: .size(icon),
   ).borderRadius(.all(radius));
 }
 
-double _fortalCalloutPadding(FortalCalloutSize size) => switch (size) {
-  .size1 => FortalTokens.space3(),
-  .size2 => FortalTokens.space4(),
-  .size3 => FortalTokens.space5(),
-};
+/// The one color the icon and text share.
+CalloutStyler _content(bool highContrast) {
+  final color = highContrast
+      ? FortalTokens.accent12()
+      : FortalTokens.accentContentAlpha();
 
-double _fortalCalloutGap(FortalCalloutSize size) => switch (size) {
-  .size1 => FortalTokens.space2(),
-  .size2 => FortalTokens.space3(),
-  .size3 => FortalTokens.space4(),
-};
+  return CalloutStyler().iconColor(color).textColor(color);
+}
 
-TextStyleToken _fortalCalloutText(FortalCalloutSize size) => switch (size) {
-  .size1 || .size2 => FortalTokens.text2,
-  .size3 => FortalTokens.text3,
-};
+CalloutStyler _surface() => CalloutStyler()
+    .color(FortalTokens.accentA2())
+    .containerEffects(
+      .behindContent(fortalInsetSurface(strokes: [FortalTokens.accentA6()])),
+    );
 
-double _fortalCalloutIconSize(FortalCalloutSize size) => switch (size) {
-  .size1 || .size2 => FortalTokens.space4(),
-  .size3 => FortalTokens.spinnerSize3(),
-};
-
-Radius _fortalCalloutRadius(FortalCalloutSize size) => switch (size) {
-  .size1 => FortalTokens.radius3(),
-  .size2 => FortalTokens.radius4(),
-  .size3 => FortalTokens.radius5(),
-};
+CalloutStyler _outline() => CalloutStyler().containerEffects(
+  .behindContent(fortalInsetSurface(strokes: [FortalTokens.accentA7()])),
+);

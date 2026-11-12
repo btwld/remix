@@ -6,7 +6,11 @@ part of 'card.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Flat panels. Elevation is reserved for floating layers, never cards.
+/// The Ui Card recipe: a flat panel. Elevation is reserved for floating
+/// layers, never cards.
+///
+/// It reads top to bottom: the size and focus ring, then the variant's colors
+/// for rest, hover, press and selected, then disabled.
 class UiCard extends StatelessWidget {
   const UiCard({
     super.key,
@@ -16,6 +20,7 @@ class UiCard extends StatelessWidget {
     this.child,
   });
 
+  /// A panel fill inside a 1px gray frame.
   const UiCard.surface({
     super.key,
     this.size = .size1,
@@ -23,6 +28,8 @@ class UiCard extends StatelessWidget {
     this.child,
   }) : variant = UiCardVariant.surface;
 
+  /// No fill or frame until hovered. It sits in a negative margin equal to its
+  /// padding, so its content lines up with the content around it.
   const UiCard.ghost({
     super.key,
     this.size = .size1,

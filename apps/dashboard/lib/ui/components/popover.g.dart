@@ -6,14 +6,14 @@ part of 'popover.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixPopover].
+/// The Ui Popover recipe: a raised, blurred panel in a 1px frame.
 ///
 /// The generated [UiPopover] defaults to [UiPopoverSize.size2], a
 /// 480-pixel maximum width, and no arrow.
 class UiPopover extends StatelessWidget {
   const UiPopover({
     super.key,
-    this.size = UiPopoverSize.size2,
+    this.size = .size2,
     this.style = const PopoverStyler.create(),
     required this.popoverChild,
     required this.child,

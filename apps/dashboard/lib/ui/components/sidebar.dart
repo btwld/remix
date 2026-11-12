@@ -11,15 +11,16 @@ part 'sidebar.g.dart';
 
 const _sectionLabelLetterSpacing = 0.7;
 
-/// Ui-themed preset for [RemixSidebar].
+/// The Ui Sidebar recipe.
 ///
-/// The recipe paints the solid panel surface with a trailing edge border,
+/// It paints the solid panel surface with a trailing edge border,
 /// pads the scrolling destination region, keeps section labels compact and
 /// muted, separates sections with the `space2` token, and reuses the
 /// ghost `size2` toggle treatment inside full-width destinations with a
 /// 40-logical-pixel minimum height. The footer carries the divider that
-/// separates account content from navigation. [highContrast] strengthens
-/// section content without changing layout.
+/// separates account content from navigation.
+///
+/// [highContrast] strengthens section content without changing layout.
 /// [panelPadding] applies host-owned insets inside the painted panel surface.
 ///
 /// The recipe sets no panel width and no header padding. The host can supply
@@ -34,8 +35,8 @@ SidebarStyler uiSidebarStyle({
   SidebarStyler style = const SidebarStyler.create(),
 }) {
   final horizontalPadding = collapsed
-      ? _sidebarHorizontalPaddingCollapsed()
-      : _sidebarHorizontalPaddingExpanded();
+      ? _horizontalPaddingCollapsed()
+      : _horizontalPaddingExpanded();
   final destinationLeftPadding = collapsed
       ? _destinationLeftPaddingCollapsed()
       : _destinationLeftPaddingExpanded();
@@ -43,6 +44,7 @@ SidebarStyler uiSidebarStyle({
       ? _destinationRightPaddingCollapsed()
       : _destinationRightPaddingExpanded();
   final selectedContent = UiTokens.accent12();
+
   return SidebarStyler(
     container:
         FlexBoxStyler(padding: EdgeInsetsGeometryMix.maybeValue(panelPadding))
@@ -107,29 +109,20 @@ SidebarStyler uiSidebarStyle({
   ).merge(style);
 }
 
-/// Resolve both endpoints before interpolation so theme scaling stays live.
-double _resolveSidebarHorizontalPadding(BuildContext context, bool collapsed) {
+/// The panel's inset on both sides, between the rail's `space2` and the
+/// expanded `space3`.
+///
+/// Both endpoints resolve before interpolation, so theme scaling stays live.
+/// While the sidebar animates, the inset follows its expansion.
+double _inset(BuildContext context, {required bool collapsed}) {
   final expansion =
       RemixSidebar.maybeAnimationOf(context)?.expansion ??
       (collapsed ? 0.0 : 1.0);
   final rail = UiTokens.space2.resolve(context);
   final expanded = UiTokens.space3.resolve(context);
+
   return rail + (expanded - rail) * expansion;
 }
-
-double _resolveSidebarHorizontalPaddingExpanded(BuildContext context) =>
-    _resolveSidebarHorizontalPadding(context, false);
-
-double _resolveSidebarHorizontalPaddingCollapsed(BuildContext context) =>
-    _resolveSidebarHorizontalPadding(context, true);
-
-const _sidebarHorizontalPaddingExpanded = ContextToken<double>(
-  _resolveSidebarHorizontalPaddingExpanded,
-);
-
-const _sidebarHorizontalPaddingCollapsed = ContextToken<double>(
-  _resolveSidebarHorizontalPaddingCollapsed,
-);
 
 /// Repays the narrowing panel inset on the leading side so icons hold still.
 ///
@@ -138,7 +131,7 @@ const _sidebarHorizontalPaddingCollapsed = ContextToken<double>(
 /// dashboard rail then settles each icon on its center line. The trailing side
 /// keeps the toggle's `space3`. Sides are physical so this merges with the
 /// toggle's own horizontal padding; the text direction picks the leading one.
-double _resolveDestinationInlinePadding(
+double _destinationInset(
   BuildContext context, {
   required bool collapsed,
   required bool left,
@@ -146,35 +139,32 @@ double _resolveDestinationInlinePadding(
   final trailing = UiTokens.space3.resolve(context);
   final leading = (Directionality.of(context) == TextDirection.ltr) == left;
   if (!leading) return trailing;
+
   return trailing +
       UiTokens.space4.resolve(context) -
-      _resolveSidebarHorizontalPadding(context, collapsed);
+      _inset(context, collapsed: collapsed);
 }
 
-double _resolveDestinationLeftPaddingExpanded(BuildContext context) =>
-    _resolveDestinationInlinePadding(context, collapsed: false, left: true);
-
-double _resolveDestinationLeftPaddingCollapsed(BuildContext context) =>
-    _resolveDestinationInlinePadding(context, collapsed: true, left: true);
-
-double _resolveDestinationRightPaddingExpanded(BuildContext context) =>
-    _resolveDestinationInlinePadding(context, collapsed: false, left: false);
-
-double _resolveDestinationRightPaddingCollapsed(BuildContext context) =>
-    _resolveDestinationInlinePadding(context, collapsed: true, left: false);
-
-const _destinationLeftPaddingExpanded = ContextToken<double>(
-  _resolveDestinationLeftPaddingExpanded,
+final _horizontalPaddingExpanded = ContextToken<double>(
+  (context) => _inset(context, collapsed: false),
 );
 
-const _destinationLeftPaddingCollapsed = ContextToken<double>(
-  _resolveDestinationLeftPaddingCollapsed,
+final _horizontalPaddingCollapsed = ContextToken<double>(
+  (context) => _inset(context, collapsed: true),
 );
 
-const _destinationRightPaddingExpanded = ContextToken<double>(
-  _resolveDestinationRightPaddingExpanded,
+final _destinationLeftPaddingExpanded = ContextToken<double>(
+  (context) => _destinationInset(context, collapsed: false, left: true),
 );
 
-const _destinationRightPaddingCollapsed = ContextToken<double>(
-  _resolveDestinationRightPaddingCollapsed,
+final _destinationLeftPaddingCollapsed = ContextToken<double>(
+  (context) => _destinationInset(context, collapsed: true, left: true),
+);
+
+final _destinationRightPaddingExpanded = ContextToken<double>(
+  (context) => _destinationInset(context, collapsed: false, left: false),
+);
+
+final _destinationRightPaddingCollapsed = ContextToken<double>(
+  (context) => _destinationInset(context, collapsed: true, left: false),
 );

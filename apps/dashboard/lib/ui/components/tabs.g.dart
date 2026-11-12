@@ -6,7 +6,7 @@ part of 'tabs.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixTabBar].
+/// The Ui TabBar recipe: the row of tabs over a 1px gray line.
 class UiTabBar extends StatelessWidget {
   const UiTabBar({
     super.key,
@@ -28,7 +28,8 @@ class UiTabBar extends StatelessWidget {
   }
 }
 
-/// Ui-themed preset for [RemixTabView].
+/// The Ui TabView recipe: the panel under the tabs, which it leaves
+/// unstyled.
 class UiTabView extends StatelessWidget {
   const UiTabView({
     super.key,
@@ -58,7 +59,14 @@ class UiTabView extends StatelessWidget {
   }
 }
 
-/// Ui-themed preset for [RemixTab].
+/// The Ui Tab recipe.
+///
+/// A tab is gray text, darker under the pointer, with a 2px underline in the
+/// accent when selected. The underline is a transparent border at rest, so
+/// selecting a tab does not move it. The selected label is medium weight, and
+/// its letter spacing is adjusted so the bolder label keeps its width.
+///
+/// [highContrast] moves the underline to accent step 12.
 class UiTab extends StatelessWidget {
   const UiTab({
     super.key,

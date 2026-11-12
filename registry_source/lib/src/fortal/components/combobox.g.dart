@@ -6,7 +6,7 @@ part of 'combobox.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal's editable suggestions recipe, promoted from the demo's polish story.
+/// The Fortal Combobox recipe: an editable field with a panel of suggestions.
 ///
 /// The field shares TextField's recipe. Suggestions use the Select panel's
 /// token roles with growing rows and separate hover, keyboard and press fills.
@@ -39,6 +39,7 @@ class FortalCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The `gray2` fill inside a 1px neutral frame.
   const FortalCombobox.surface({
     super.key,
     this.size = .size2,
@@ -62,6 +63,7 @@ class FortalCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalComboboxVariant.surface;
 
+  /// An accent tint inside a 1px accent ring.
   const FortalCombobox.soft({
     super.key,
     this.size = .size2,

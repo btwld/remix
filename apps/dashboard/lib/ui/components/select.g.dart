@@ -6,7 +6,7 @@ part of 'select.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed Select with Ui-owned trigger and content configuration.
+/// The Ui Select recipe: the trigger, the floating panel and its items.
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Override the trigger icon through [style] when needed.
@@ -14,6 +14,9 @@ part of 'select.dart';
 /// The panel is at least as wide as its trigger. A [style] that gives the
 /// content a `maxWidth` below the trigger's width must also set `minWidth`,
 /// which replaces the minimum, because a minimum above a maximum is invalid.
+///
+/// [highContrast] moves the highlighted item of the surface and ghost variants
+/// to accent step 12.
 class UiSelect<T> extends StatelessWidget {
   const UiSelect({
     super.key,
@@ -38,6 +41,7 @@ class UiSelect<T> extends StatelessWidget {
     this.focusNode,
   });
 
+  /// The `gray2` fill inside a 1px gray frame.
   const UiSelect.surface({
     super.key,
     this.size = .size2,
@@ -60,6 +64,7 @@ class UiSelect<T> extends StatelessWidget {
     this.focusNode,
   }) : variant = UiSelectVariant.surface;
 
+  /// An accent tint under accent text.
   const UiSelect.soft({
     super.key,
     this.size = .size2,
@@ -82,6 +87,8 @@ class UiSelect<T> extends StatelessWidget {
     this.focusNode,
   }) : variant = UiSelectVariant.soft;
 
+  /// No fill until hovered. It sits in a negative margin, so its text lines up
+  /// with the text around it.
   const UiSelect.ghost({
     super.key,
     this.size = .size2,

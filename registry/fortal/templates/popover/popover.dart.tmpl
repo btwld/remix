@@ -6,29 +6,40 @@ import '../theme/theme.dart';
 
 part 'popover.g.dart';
 
-/// {{typePrefix}} popover size presets on the shared scale.
-enum {{typePrefix}}PopoverSize { size1, size2, size3, size4 }
+/// The sizes a popover comes in, from its padding and corners. Pixel values
+/// are at 100% theme scaling.
+enum {{typePrefix}}PopoverSize {
+  /// 12px padding.
+  size1,
 
-/// {{typePrefix}}-themed preset for [RemixPopover].
+  /// 16px padding. The default.
+  size2,
+
+  /// 24px padding.
+  size3,
+
+  /// 32px padding.
+  size4,
+}
+
+/// The {{typePrefix}} Popover recipe: a raised, blurred panel in a 1px frame.
 ///
 /// The generated [{{typePrefix}}Popover] defaults to [{{typePrefix}}PopoverSize.size2], a
 /// 480-pixel maximum width, and no arrow.
 @MixWidget(target: RemixPopover.new)
 PopoverStyler {{valuePrefix}}PopoverStyle({
-  {{typePrefix}}PopoverSize size = {{typePrefix}}PopoverSize.size2,
+  {{typePrefix}}PopoverSize size = .size2,
   PopoverStyler style = const PopoverStyler.create(),
 }) {
   final radius = switch (size) {
-    {{typePrefix}}PopoverSize.size1 ||
-    {{typePrefix}}PopoverSize.size2 => {{typePrefix}}Tokens.radius4(),
-    {{typePrefix}}PopoverSize.size3 ||
-    {{typePrefix}}PopoverSize.size4 => {{typePrefix}}Tokens.radius5(),
+    .size1 || .size2 => {{typePrefix}}Tokens.radius4(),
+    .size3 || .size4 => {{typePrefix}}Tokens.radius5(),
   };
   final padding = switch (size) {
-    {{typePrefix}}PopoverSize.size1 => {{typePrefix}}Tokens.space3(),
-    {{typePrefix}}PopoverSize.size2 => {{typePrefix}}Tokens.space4(),
-    {{typePrefix}}PopoverSize.size3 => {{typePrefix}}Tokens.space5(),
-    {{typePrefix}}PopoverSize.size4 => {{typePrefix}}Tokens.space6(),
+    .size1 => {{typePrefix}}Tokens.space3(),
+    .size2 => {{typePrefix}}Tokens.space4(),
+    .size3 => {{typePrefix}}Tokens.space5(),
+    .size4 => {{typePrefix}}Tokens.space6(),
   };
 
   return PopoverStyler()

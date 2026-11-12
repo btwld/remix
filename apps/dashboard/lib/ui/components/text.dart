@@ -7,7 +7,11 @@ import 'typography.dart';
 
 part 'text.g.dart';
 
-/// Ui-themed body text on the Ui nine-step scale.
+/// The Ui Text recipe: body text on the nine-step text scale.
+///
+/// Neutral text is gray 12; [accent] takes the accent's text color, and
+/// [highContrast] moves that to accent step 12. [truncate] wins over
+/// [softWrap] and forces one ellipsized line.
 @MixWidget()
 TextStyler uiTextStyle({
   UiTextSize? size,
@@ -19,19 +23,15 @@ TextStyler uiTextStyle({
   bool highContrast = false,
   TextStyler style = const TextStyler.create(),
 }) {
-  var recipe = TextStyler().style(
-    uiTextSizeToken(size ?? UiTextSize.size3).mix(),
-  );
-  recipe = recipe.fontWeight(
-    uiTextWeightToken(weight ?? UiTextWeight.regular)(),
-  );
-  recipe = accent
-      ? uiAccentForeground(recipe, highContrast: highContrast)
-      : recipe.color(UiTokens.gray12());
-  recipe = recipe.inherit(false);
+  final text = TextStyler()
+      .style(uiTextSizeToken(size ?? UiTextSize.size3).mix())
+      .fontWeight(uiTextWeightToken(weight ?? UiTextWeight.regular)());
+  final colored = accent
+      ? uiAccentForeground(text, highContrast: highContrast)
+      : text.color(UiTokens.gray12());
 
   return uiApplyTextFlow(
-    recipe,
+    colored.inherit(false),
     align: align,
     softWrap: softWrap,
     truncate: truncate,

@@ -6,7 +6,7 @@ part of 'tabs.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixTabBar].
+/// The Fortal TabBar recipe: the row of tabs over a 1px gray line.
 class FortalTabBar extends StatelessWidget {
   const FortalTabBar({
     super.key,
@@ -28,7 +28,8 @@ class FortalTabBar extends StatelessWidget {
   }
 }
 
-/// Fortal-themed preset for [RemixTabView].
+/// The Fortal TabView recipe: the panel under the tabs, which it leaves
+/// unstyled.
 class FortalTabView extends StatelessWidget {
   const FortalTabView({
     super.key,
@@ -58,7 +59,14 @@ class FortalTabView extends StatelessWidget {
   }
 }
 
-/// Fortal-themed preset for [RemixTab].
+/// The Fortal Tab recipe.
+///
+/// A tab is gray text, darker under the pointer, with a 2px underline in the
+/// accent when selected. The underline is a transparent border at rest, so
+/// selecting a tab does not move it. The selected label is medium weight, and
+/// its letter spacing is adjusted so the bolder label keeps its width.
+///
+/// [highContrast] moves the underline to accent step 12.
 class FortalTab extends StatelessWidget {
   const FortalTab({
     super.key,

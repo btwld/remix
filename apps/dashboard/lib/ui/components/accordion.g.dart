@@ -6,7 +6,10 @@ part of 'accordion.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixAccordion].
+/// The Ui Accordion recipe.
+///
+/// It reads top to bottom: what every accordion shares, then the size, then
+/// the variant's panel colors for rest, hover, press, focus and disabled.
 class UiAccordion<T> extends StatelessWidget {
   const UiAccordion({
     super.key,
@@ -31,6 +34,7 @@ class UiAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   });
 
+  /// The `gray2` panel inside a 1px gray frame.
   const UiAccordion.surface({
     super.key,
     this.size = .size2,
@@ -53,6 +57,7 @@ class UiAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   }) : variant = UiAccordionVariant.surface;
 
+  /// An accent-tinted panel inside a 1px accent frame.
   const UiAccordion.soft({
     super.key,
     this.size = .size2,

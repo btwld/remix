@@ -6,11 +6,10 @@ part of 'toast.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed toast surface for [RemixToast] and [RemixToastScope].
+/// The Fortal Toast recipe, for [RemixToast] and [RemixToastScope].
 ///
-/// Toasts use the shared floating-layer elevation scale. The surface caps at
-/// 360 logical pixels and
-/// shrinks with the available width.
+/// A toast is a raised, blurred panel in a 1px frame, with a ghost action and
+/// close button. It caps at 360px and shrinks with the available width.
 ///
 /// ```dart
 /// RemixToastScope(style: fortalToastStyle(), child: const Shell())
@@ -31,6 +30,7 @@ class FortalToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   });
 
+  /// A quiet shadow.
   const FortalToast.surface({
     super.key,
     this.size = .size2,
@@ -45,6 +45,7 @@ class FortalToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   }) : variant = FortalToastVariant.surface;
 
+  /// A deeper shadow. The default.
   const FortalToast.classic({
     super.key,
     this.size = .size2,

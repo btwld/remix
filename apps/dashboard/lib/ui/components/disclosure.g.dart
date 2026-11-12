@@ -6,7 +6,10 @@ part of 'disclosure.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixDisclosure].
+/// The Ui Disclosure recipe.
+///
+/// It reads top to bottom: what every disclosure shares, then the variant's
+/// panel colors for rest, hover, press, focus and disabled.
 class UiDisclosure extends StatelessWidget {
   const UiDisclosure({
     super.key,
@@ -38,6 +41,7 @@ class UiDisclosure extends StatelessWidget {
     ),
   });
 
+  /// The `gray2` panel inside a 1px gray frame.
   const UiDisclosure.surface({
     super.key,
     this.size = .size2,
@@ -67,6 +71,7 @@ class UiDisclosure extends StatelessWidget {
     ),
   }) : variant = UiDisclosureVariant.surface;
 
+  /// An accent-tinted panel inside a 1px accent frame.
   const UiDisclosure.soft({
     super.key,
     this.size = .size2,

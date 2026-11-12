@@ -6,7 +6,7 @@ part of 'skeleton.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for [RemixSkeleton].
+/// The Fortal Skeleton recipe: a gray placeholder block that pulses.
 class FortalSkeleton extends StatelessWidget {
   const FortalSkeleton({
     super.key,

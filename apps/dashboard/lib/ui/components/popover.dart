@@ -6,27 +6,40 @@ import '../theme/theme.dart';
 
 part 'popover.g.dart';
 
-/// Ui popover size presets on the shared scale.
-enum UiPopoverSize { size1, size2, size3, size4 }
+/// The sizes a popover comes in, from its padding and corners. Pixel values
+/// are at 100% theme scaling.
+enum UiPopoverSize {
+  /// 12px padding.
+  size1,
 
-/// Ui-themed preset for [RemixPopover].
+  /// 16px padding. The default.
+  size2,
+
+  /// 24px padding.
+  size3,
+
+  /// 32px padding.
+  size4,
+}
+
+/// The Ui Popover recipe: a raised, blurred panel in a 1px frame.
 ///
 /// The generated [UiPopover] defaults to [UiPopoverSize.size2], a
 /// 480-pixel maximum width, and no arrow.
 @MixWidget(target: RemixPopover.new)
 PopoverStyler uiPopoverStyle({
-  UiPopoverSize size = UiPopoverSize.size2,
+  UiPopoverSize size = .size2,
   PopoverStyler style = const PopoverStyler.create(),
 }) {
   final radius = switch (size) {
-    UiPopoverSize.size1 || UiPopoverSize.size2 => UiTokens.radius4(),
-    UiPopoverSize.size3 || UiPopoverSize.size4 => UiTokens.radius5(),
+    .size1 || .size2 => UiTokens.radius4(),
+    .size3 || .size4 => UiTokens.radius5(),
   };
   final padding = switch (size) {
-    UiPopoverSize.size1 => UiTokens.space3(),
-    UiPopoverSize.size2 => UiTokens.space4(),
-    UiPopoverSize.size3 => UiTokens.space5(),
-    UiPopoverSize.size4 => UiTokens.space6(),
+    .size1 => UiTokens.space3(),
+    .size2 => UiTokens.space4(),
+    .size3 => UiTokens.space5(),
+    .size4 => UiTokens.space6(),
   };
 
   return PopoverStyler()

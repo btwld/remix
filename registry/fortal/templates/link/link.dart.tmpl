@@ -6,14 +6,26 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// Underline visibility for [{{typePrefix}}Link].
-enum {{typePrefix}}LinkUnderline { auto, always, hover, none }
+/// When a [{{typePrefix}}Link] is underlined.
+enum {{typePrefix}}LinkUnderline {
+  /// On hover, and always under [{{typePrefix}}Link.highContrast].
+  auto,
 
-/// {{typePrefix}}-themed link style.
+  /// Always.
+  always,
+
+  /// Only on hover.
+  hover,
+
+  /// Never.
+  none,
+}
+
+/// The style of a link: accent text that underlines per [underline], and rings
+/// on keyboard focus.
 ///
 /// Takes a [context] because the focus outline's radius is em-relative to the
 /// resolved font size.
-///
 LinkStyler {{valuePrefix}}LinkStyle(
   BuildContext context, {
   {{typePrefix}}TextSize? size,
@@ -26,7 +38,7 @@ LinkStyler {{valuePrefix}}LinkStyle(
   LinkStyler style = const LinkStyler.create(),
 }) {
   LinkStyler styleFor({bool hovered = false, bool focused = false}) =>
-      _{{valuePrefix}}LinkStateStyle(
+      _stateStyle(
         context,
         size: size,
         weight: weight,
@@ -59,7 +71,7 @@ LinkStyler {{valuePrefix}}LinkStyle(
 /// Separate from [{{valuePrefix}}LinkStyle] because the public recipe returns a style
 /// carrying Mix variants, and building those variants needs the flat snapshots
 /// they are built from.
-LinkStyler _{{valuePrefix}}LinkStateStyle(
+LinkStyler _stateStyle(
   BuildContext context, {
   required {{typePrefix}}TextSize? size,
   required {{typePrefix}}TextWeight? weight,

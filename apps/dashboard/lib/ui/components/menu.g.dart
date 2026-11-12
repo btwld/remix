@@ -6,7 +6,11 @@ part of 'menu.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui menu content with Ui-owned size, variant, and contrast behavior.
+/// The Ui Menu recipe: the trigger, the floating panel, its items,
+/// submenu items and dividers.
+///
+/// [highContrast] moves the highlighted item of the solid variant to accent
+/// step 12.
 class UiMenu<T> extends StatelessWidget {
   const UiMenu({
     super.key,
@@ -32,6 +36,7 @@ class UiMenu<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The accent's solid fill under its contrast text.
   const UiMenu.solid({
     super.key,
     this.size = .size2,
@@ -55,6 +60,7 @@ class UiMenu<T> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiMenuVariant.solid;
 
+  /// A tinted accent fill.
   const UiMenu.soft({
     super.key,
     this.size = .size2,

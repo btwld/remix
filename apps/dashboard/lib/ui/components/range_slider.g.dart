@@ -33,6 +33,7 @@ class UiRangeSlider extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// A gray track and a solid accent range.
   const UiRangeSlider.surface({
     super.key,
     this.size = .size2,
@@ -54,6 +55,7 @@ class UiRangeSlider extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiSliderVariant.surface;
 
+  /// A gray track and a softer accent range.
   const UiRangeSlider.soft({
     super.key,
     this.size = .size2,

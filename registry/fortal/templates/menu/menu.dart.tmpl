@@ -6,13 +6,29 @@ import '../theme/theme.dart';
 
 part 'menu.g.dart';
 
-/// {{typePrefix}} menu content sizes.
-enum {{typePrefix}}MenuSize { size1, size2 }
+/// The sizes a menu comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}MenuSize {
+  /// 24px items with 12px text.
+  size1,
 
-/// {{typePrefix}} menu content variants.
-enum {{typePrefix}}MenuVariant { solid, soft }
+  /// 32px items with 14px text. The default.
+  size2,
+}
 
-/// {{typePrefix}} menu content with {{typePrefix}}-owned size, variant, and contrast behavior.
+/// How a menu marks the item under the pointer or keyboard.
+enum {{typePrefix}}MenuVariant {
+  /// The accent's solid fill under its contrast text.
+  solid,
+
+  /// A tinted accent fill.
+  soft,
+}
+
+/// The {{typePrefix}} Menu recipe: the trigger, the floating panel, its items,
+/// submenu items and dividers.
+///
+/// [highContrast] moves the highlighted item of the solid variant to accent
+/// step 12.
 @MixWidget(target: RemixMenu.new)
 MenuStyler {{valuePrefix}}MenuStyle({
   {{typePrefix}}MenuVariant variant = .solid,
@@ -20,12 +36,13 @@ MenuStyler {{valuePrefix}}MenuStyle({
   bool highContrast = false,
   MenuStyler style = const MenuStyler.create(),
 }) {
-  final metrics = _{{valuePrefix}}MenuMetrics(size);
-  final base = MenuStyler()
+  final metrics = _metrics(size);
+
+  return MenuStyler()
       .containerEffects(
         RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
       )
-      .trigger(_{{valuePrefix}}MenuTriggerStyler(metrics))
+      .trigger(_trigger(metrics))
       .overlay(
         FlexBoxStyler()
             .padding(.all(metrics.contentPadding))
@@ -48,50 +65,41 @@ MenuStyler {{valuePrefix}}MenuStyle({
             )
             .clipBehavior(Clip.antiAlias),
       )
-      .item(_{{valuePrefix}}MenuItemStyler(variant, metrics, highContrast: highContrast))
-      .submenuItem(
-        _{{valuePrefix}}MenuSubmenuItemStyler(
-          variant,
-          metrics,
-          highContrast: highContrast,
-        ),
-      )
-      .divider(_{{valuePrefix}}MenuDividerStyler(metrics));
-
-  return base.merge(style);
+      .item(_item(variant, metrics, highContrast: highContrast))
+      .submenuItem(_submenuItem(variant, metrics, highContrast: highContrast))
+      .divider(_divider(metrics))
+      .merge(style);
 }
 
-/// {{typePrefix}} item recipe for per-item style overrides.
+/// The {{typePrefix}} menu item recipe, for styling one item on its own.
+///
+/// It is the item style [{{valuePrefix}}MenuStyle] gives every item, so a call site can
+/// match a menu's items outside the menu.
 MenuItemStyler {{valuePrefix}}MenuItemStyle({
   {{typePrefix}}MenuVariant variant = .solid,
   {{typePrefix}}MenuSize size = .size2,
   bool highContrast = false,
-}) => _{{valuePrefix}}MenuItemStyler(
-  variant,
-  _{{valuePrefix}}MenuMetrics(size),
-  highContrast: highContrast,
-);
+}) => _item(variant, _metrics(size), highContrast: highContrast);
 
-MenuTriggerStyler _{{valuePrefix}}MenuTriggerStyler(_{{typePrefix}}MenuMetrics metrics) =>
-    MenuTriggerStyler()
-        .wrap({{valuePrefix}}TouchTarget())
-        .onFocusVisible(
-          MenuTriggerStyler().container(
-            FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier()),
-          ),
-        )
-        .onDisabled(
-          MenuTriggerStyler().container(
-            FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)),
-          ),
-        )
-        .spacing(metrics.triggerGap)
-        .label(.style(metrics.text.mix()).color({{typePrefix}}Tokens.gray12()))
-        .icon(.color({{typePrefix}}Tokens.gray12()).size(metrics.contentIconSize));
+MenuTriggerStyler _trigger(_Metrics metrics) => MenuTriggerStyler()
+    .wrap({{valuePrefix}}TouchTarget())
+    .onFocusVisible(
+      MenuTriggerStyler().container(
+        FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier()),
+      ),
+    )
+    .onDisabled(
+      MenuTriggerStyler().container(
+        FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)),
+      ),
+    )
+    .spacing(metrics.triggerGap)
+    .label(.style(metrics.text.mix()).color({{typePrefix}}Tokens.gray12()))
+    .icon(.color({{typePrefix}}Tokens.gray12()).size(metrics.contentIconSize));
 
-MenuItemStyler _{{valuePrefix}}MenuItemStyler(
+MenuItemStyler _item(
   {{typePrefix}}MenuVariant variant,
-  _{{typePrefix}}MenuMetrics metrics, {
+  _Metrics metrics, {
   required bool highContrast,
 }) {
   final base = MenuItemStyler()
@@ -109,10 +117,7 @@ MenuItemStyler _{{valuePrefix}}MenuItemStyler(
       // A shortcut or count follows the trailing icon's color in every state.
       .trailingText(.color({{typePrefix}}Tokens.grayA11()))
       .indicator(.color({{typePrefix}}Tokens.gray12()).size(metrics.indicatorSize));
-  final highlighted = _{{valuePrefix}}MenuHighlightedItemStyler(
-    variant,
-    highContrast: highContrast,
-  );
+  final highlighted = _highlightedItem(variant, highContrast: highContrast);
   final disabled = MenuItemStyler()
       .container(FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)))
       .color(const Color(0x00000000))
@@ -134,7 +139,7 @@ MenuItemStyler _{{valuePrefix}}MenuItemStyler(
       .onDisabled(disabled);
 }
 
-MenuItemStyler _{{valuePrefix}}MenuHighlightedItemStyler(
+MenuItemStyler _highlightedItem(
   {{typePrefix}}MenuVariant variant, {
   required bool highContrast,
 }) {
@@ -161,15 +166,12 @@ MenuItemStyler _{{valuePrefix}}MenuHighlightedItemStyler(
   };
 }
 
-MenuItemStyler _{{valuePrefix}}MenuSubmenuItemStyler(
+MenuItemStyler _submenuItem(
   {{typePrefix}}MenuVariant variant,
-  _{{typePrefix}}MenuMetrics metrics, {
+  _Metrics metrics, {
   required bool highContrast,
 }) {
-  final highlighted = _{{valuePrefix}}MenuHighlightedItemStyler(
-    variant,
-    highContrast: highContrast,
-  );
+  final highlighted = _highlightedItem(variant, highContrast: highContrast);
   final submenuOpen = MenuItemStyler()
       .color(switch (variant) {
         .solid => {{typePrefix}}Tokens.grayA3(),
@@ -185,18 +187,17 @@ MenuItemStyler _{{valuePrefix}}MenuSubmenuItemStyler(
       .onSelected(submenuOpen);
 }
 
-DividerStyler _{{valuePrefix}}MenuDividerStyler(_{{typePrefix}}MenuMetrics metrics) =>
-    DividerStyler()
-        .height({{typePrefix}}Tokens.borderWidth1())
-        .margin(
-          .left(
-            metrics.leadingInset,
-          ).right(metrics.trailingInset).vertical({{typePrefix}}Tokens.space2()),
-        )
-        .color({{typePrefix}}Tokens.grayA6());
+DividerStyler _divider(_Metrics metrics) => DividerStyler()
+    .height({{typePrefix}}Tokens.borderWidth1())
+    .margin(
+      .left(
+        metrics.leadingInset,
+      ).right(metrics.trailingInset).vertical({{typePrefix}}Tokens.space2()),
+    )
+    .color({{typePrefix}}Tokens.grayA6());
 
-class _{{typePrefix}}MenuMetrics {
-  const _{{typePrefix}}MenuMetrics({
+class _Metrics {
+  const _Metrics({
     required this.contentPadding,
     required this.contentRadius,
     required this.itemHeight,
@@ -221,8 +222,8 @@ class _{{typePrefix}}MenuMetrics {
   final TextStyleToken text;
 }
 
-_{{typePrefix}}MenuMetrics _{{valuePrefix}}MenuMetrics({{typePrefix}}MenuSize size) => switch (size) {
-  .size1 => _{{typePrefix}}MenuMetrics(
+_Metrics _metrics({{typePrefix}}MenuSize size) => switch (size) {
+  .size1 => _Metrics(
     contentPadding: {{typePrefix}}Tokens.space1(),
     contentRadius: {{typePrefix}}Tokens.radius3(),
     itemHeight: {{typePrefix}}Tokens.space5(),
@@ -234,7 +235,7 @@ _{{typePrefix}}MenuMetrics _{{valuePrefix}}MenuMetrics({{typePrefix}}MenuSize si
     triggerGap: {{typePrefix}}Tokens.space1(),
     text: {{typePrefix}}Tokens.text1,
   ),
-  .size2 => _{{typePrefix}}MenuMetrics(
+  .size2 => _Metrics(
     contentPadding: {{typePrefix}}Tokens.space2(),
     contentRadius: {{typePrefix}}Tokens.radius4(),
     itemHeight: {{typePrefix}}Tokens.space6(),

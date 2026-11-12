@@ -5,13 +5,20 @@ import '../theme/theme.dart';
 import 'icon_button.dart';
 import 'select.dart';
 
-// Reviewed calendar geometry has no matching spacing-scale step.
+/// The side of a day cell and of a navigation button: 44px at 100% text
+/// scaling.
 const uiCalendarTarget = 44.0;
+
+// These calendar dimensions have no matching spacing-scale step.
+
+/// The width of the month and year selectors at 100% text scaling.
 const uiCalendarSelectorWidth = 146.0;
 
+/// The width of a day cell, scaled with the text.
 double uiCalendarDayWidth(BuildContext context) =>
     MediaQuery.textScalerOf(context).scale(uiCalendarTarget);
 
+/// The calendar's text-scaled size: seven day columns plus the padding.
 CalendarStyler uiCalendarGeometry(BuildContext context) => CalendarStyler()
     .minWidth(
       uiCalendarDayWidth(context) * DateTime.daysPerWeek +
@@ -23,29 +30,26 @@ CalendarStyler uiCalendarGeometry(BuildContext context) => CalendarStyler()
           .minHeight(uiCalendarDayWidth(context)),
     );
 
-IconButtonStyler uiCalendarNavigationStyle(BuildContext context) =>
-    uiIconButtonStyle(variant: .ghost)
-        .size(
-          MediaQuery.textScalerOf(context)
-              .scale(UiTokens.space5.resolve(context))
-              .clamp(uiCalendarTarget, double.infinity),
-          MediaQuery.textScalerOf(context)
-              .scale(UiTokens.space5.resolve(context))
-              .clamp(uiCalendarTarget, double.infinity),
-        )
-        // Keep ghost padding from overriding the requested vector size.
-        .padding(.all(0))
-        .margin(.all(0))
-        .alignment(.center)
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale(UiTokens.space5.resolve(context)),
-          ),
-        );
+/// The previous and next month buttons: ghost icon buttons that grow with the
+/// text and never go below the 44px touch target.
+IconButtonStyler uiCalendarNavigationStyle(BuildContext context) {
+  final icon = MediaQuery.textScalerOf(
+    context,
+  ).scale(UiTokens.space5.resolve(context));
+  final button = icon.clamp(uiCalendarTarget, double.infinity);
 
-/// Shared geometry and day states for the inline and picker stories.
+  return uiIconButtonStyle(variant: .ghost)
+      .size(button, button)
+      // Keep ghost padding from overriding the requested vector size.
+      .padding(.all(0))
+      .margin(.all(0))
+      .alignment(.center)
+      .icon(.size(icon));
+}
+
+/// The calendar's padding, text and day states: today, selected, hover,
+/// press, focus, disabled and unavailable. Shared by the inline calendar and
+/// the pickers.
 CalendarStyler uiCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => CalendarStyler()
@@ -101,14 +105,18 @@ CalendarStyler uiCalendarStyle({
     )
     .merge(style);
 
+/// The selected day's fill while hovered: the solid fill at 90%.
 final _selectedHover = ContextToken<Color>(
   (context) => UiTokens.accentSolid.resolve(context).withValues(alpha: .9),
 );
+
+/// The selected day's fill while pressed: the solid fill at 80%.
 final _selectedPressed = ContextToken<Color>(
   (context) => UiTokens.accentSolid.resolve(context).withValues(alpha: .8),
 );
 
-/// Keep overflow discoverable in the capped month and year panels.
+/// The month and year selectors: select triggers sized to the calendar, whose
+/// capped panels always show a scrollbar so overflow stays discoverable.
 SelectStyler uiCalendarSelectorStyle(BuildContext context) => uiSelectStyle()
     .trigger(
       SelectTriggerStyler()
@@ -133,26 +141,33 @@ SelectStyler uiCalendarSelectorStyle(BuildContext context) => uiSelectStyle()
 
 final class _CalendarScrollCueMix extends ModifierMix<_CalendarScrollCue> {
   const _CalendarScrollCueMix();
+
   @override
   _CalendarScrollCue resolve(BuildContext context) =>
       const _CalendarScrollCue();
+
   @override
   _CalendarScrollCueMix merge(_CalendarScrollCueMix? other) => other ?? this;
+
   @override
   List<Object?> get props => const [];
 }
 
 final class _CalendarScrollCue extends WidgetModifier<_CalendarScrollCue> {
   const _CalendarScrollCue();
+
   @override
   Widget build(Widget child) => ScrollConfiguration(
     behavior: const _CalendarScrollBehavior(),
     child: child,
   );
+
   @override
   _CalendarScrollCue copyWith() => this;
+
   @override
   _CalendarScrollCue lerp(_CalendarScrollCue? other, double t) => this;
+
   @override
   List<Object?> get props => const [];
 }
@@ -173,7 +188,7 @@ class _CalendarScrollBehavior extends ScrollBehavior {
   );
 }
 
-/// Ui's reviewed Calendar composition.
+/// Ui's Calendar composition.
 ///
 /// Remix owns civil-date selection, focus, keyboard navigation and semantics.
 /// Multiple independent child styles require a hand-written facade; caller
@@ -278,7 +293,8 @@ class UiCalendar extends StatelessWidget {
   );
 }
 
-// A brighter neutral step separates keyboard focus from the dark draft edge.
+/// The keyboard focus ring color of a day: gray 11 in dark mode, focus 8 in
+/// light mode.
 final uiCalendarFocusColor = ContextToken<Color>(
   (context) => (UiTheme.of(context).isDark ? UiTokens.gray11 : UiTokens.focus8)
       .resolve(context),

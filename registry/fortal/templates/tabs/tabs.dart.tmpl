@@ -6,30 +6,40 @@ import '../theme/theme.dart';
 
 part 'tabs.g.dart';
 
-/// {{typePrefix}} tab-list size presets on the shared scale.
-enum {{typePrefix}}TabsSize { size1, size2 }
+/// The sizes a tab comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}TabsSize {
+  /// 32px tall, with 12px text.
+  size1,
 
-/// {{typePrefix}}-themed preset for [RemixTabBar].
+  /// 40px tall, with 14px text. The default.
+  size2,
+}
+
+/// The {{typePrefix}} TabBar recipe: the row of tabs over a 1px gray line.
 @MixWidget(target: RemixTabBar.new)
 TabBarStyler {{valuePrefix}}TabBarStyle({
   TabBarStyler style = const TabBarStyler.create(),
-}) {
-  return TabBarStyler()
-      .border(
-        .bottom(
-          .color({{typePrefix}}Tokens.grayA5()).width({{typePrefix}}Tokens.borderWidth1()),
-        ),
-      )
-      .merge(style);
-}
+}) => TabBarStyler()
+    .border(
+      .bottom(.color({{typePrefix}}Tokens.grayA5()).width({{typePrefix}}Tokens.borderWidth1())),
+    )
+    .merge(style);
 
-/// {{typePrefix}}-themed preset for [RemixTabView].
+/// The {{typePrefix}} TabView recipe: the panel under the tabs, which it leaves
+/// unstyled.
 @MixWidget(target: RemixTabView.new)
 TabViewStyler {{valuePrefix}}TabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
 }) => TabViewStyler().merge(style);
 
-/// {{typePrefix}}-themed preset for [RemixTab].
+/// The {{typePrefix}} Tab recipe.
+///
+/// A tab is gray text, darker under the pointer, with a 2px underline in the
+/// accent when selected. The underline is a transparent border at rest, so
+/// selecting a tab does not move it. The selected label is medium weight, and
+/// its letter spacing is adjusted so the bolder label keeps its width.
+///
+/// [highContrast] moves the underline to accent step 12.
 @MixWidget(target: RemixTab.new)
 TabStyler {{valuePrefix}}TabStyle({
   {{typePrefix}}TabsSize size = {{typePrefix}}TabsSize.size2,
@@ -91,7 +101,7 @@ TabStyler {{valuePrefix}}TabStyle({
             .color({{typePrefix}}Tokens.grayA3())
             .onFocusVisible(.color({{typePrefix}}Tokens.accentA3())),
       )
-      .onFocusVisible(TabStyler().containerEffects({{valuePrefix}}FocusOutline()))
+      .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()))
       .onSelected(
         .label(
               .color({{typePrefix}}Tokens.gray12())
@@ -114,10 +124,6 @@ TabStyler {{valuePrefix}}TabStyle({
             ),
       )
       .wrap({{valuePrefix}}TouchTarget())
-      .onDisabled(
-        TabStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
+      .onDisabled(.containerEffects(.outline(.style(.none))))
       .merge(style);
 }

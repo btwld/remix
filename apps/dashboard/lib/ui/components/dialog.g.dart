@@ -6,7 +6,7 @@ part of 'dialog.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixDialog].
+/// The Ui Dialog recipe: a raised, blurred panel with a bold title.
 ///
 /// The generated [UiDialog] defaults to [UiDialogSize.size3],
 /// [Alignment.center], fills up to 600 logical pixels, preserves safe
@@ -14,7 +14,7 @@ part of 'dialog.dart';
 class UiDialog extends StatelessWidget {
   const UiDialog({
     super.key,
-    this.size = UiDialogSize.size3,
+    this.size = .size3,
     this.align = Alignment.center,
     this.style = const DialogStyler.create(),
     this.child,

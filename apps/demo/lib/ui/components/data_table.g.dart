@@ -6,7 +6,10 @@ part of 'data_table.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for [RemixDataTable].
+/// The Fortal DataTable recipe.
+///
+/// It reads top to bottom: the cells, rows, footer and the controls inside
+/// them at the size, then the variant's panel.
 class FortalDataTable<T> extends StatelessWidget {
   const FortalDataTable({
     super.key,
@@ -38,6 +41,7 @@ class FortalDataTable<T> extends StatelessWidget {
     this.nextPageIcon,
   });
 
+  /// A panel with a 1px frame and a tinted header.
   const FortalDataTable.surface({
     super.key,
     this.size = .size2,
@@ -67,6 +71,7 @@ class FortalDataTable<T> extends StatelessWidget {
     this.nextPageIcon,
   }) : variant = FortalDataTableVariant.surface;
 
+  /// No panel or frame: rows on the page.
   const FortalDataTable.ghost({
     super.key,
     this.size = .size2,

@@ -6,7 +6,7 @@ part of 'dialog.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixDialog].
+/// The Fortal Dialog recipe: a raised, blurred panel with a bold title.
 ///
 /// The generated [FortalDialog] defaults to [FortalDialogSize.size3],
 /// [Alignment.center], fills up to 600 logical pixels, preserves safe
@@ -14,7 +14,7 @@ part of 'dialog.dart';
 class FortalDialog extends StatelessWidget {
   const FortalDialog({
     super.key,
-    this.size = FortalDialogSize.size3,
+    this.size = .size3,
     this.align = Alignment.center,
     this.style = const DialogStyler.create(),
     this.child,

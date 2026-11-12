@@ -6,13 +6,32 @@ import '../theme/theme.dart';
 
 part 'select.g.dart';
 
-/// Fortal Select root size presets.
-enum FortalSelectSize { size1, size2, size3 }
+/// The sizes a select comes in. Pixel values are at 100% theme scaling.
+enum FortalSelectSize {
+  /// A 24px trigger with 12px text.
+  size1,
 
-/// Fortal Select variants.
-enum FortalSelectVariant { surface, soft, ghost }
+  /// A 32px trigger with 14px text. The default.
+  size2,
 
-/// Fortal-themed Select with Fortal-owned trigger and content configuration.
+  /// A 40px trigger with 16px text.
+  size3,
+}
+
+/// The looks a select's trigger comes in.
+enum FortalSelectVariant {
+  /// The `gray2` fill inside a 1px gray frame.
+  surface,
+
+  /// An accent tint under accent text.
+  soft,
+
+  /// No fill until hovered. It sits in a negative margin, so its text lines up
+  /// with the text around it.
+  ghost,
+}
+
+/// The Fortal Select recipe: the trigger, the floating panel and its items.
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Override the trigger icon through [style] when needed.
@@ -20,104 +39,113 @@ enum FortalSelectVariant { surface, soft, ghost }
 /// The panel is at least as wide as its trigger. A [style] that gives the
 /// content a `maxWidth` below the trigger's width must also set `minWidth`,
 /// which replaces the minimum, because a minimum above a maximum is invalid.
+///
+/// [highContrast] moves the highlighted item of the surface and ghost variants
+/// to accent step 12.
 @MixWidget(target: RemixSelect.new)
 SelectStyler fortalSelectStyle({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
   bool highContrast = false,
   SelectStyler style = const SelectStyler.create(),
-}) {
-  return SelectStyler()
-      .trigger(_fortalSelectTriggerStyler(variant, size))
-      .content(_fortalSelectContentStyler(size))
-      .item(_fortalSelectItemStyler(variant, size, highContrast: highContrast))
-      .merge(style);
-}
+}) => SelectStyler()
+    .trigger(_trigger(variant, size))
+    .content(_content(size))
+    .item(_item(variant, size, highContrast: highContrast))
+    .merge(style);
 
-/// Creates the established combined-variant Select item recipe.
+/// The Fortal select item recipe, for styling one item on its own.
+///
+/// It is the item style [fortalSelectStyle] gives every item, so a call site
+/// can match a select's items outside the select.
 SelectMenuItemStyler fortalSelectMenuItemStyle({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
   bool highContrast = false,
-}) => _fortalSelectItemStyler(variant, size, highContrast: highContrast);
+}) => _item(variant, size, highContrast: highContrast);
 
-SelectTriggerStyler _fortalSelectTriggerStyler(
+/// The trigger: its shape and text, then the variant's colors.
+SelectTriggerStyler _trigger(
   FortalSelectVariant variant,
   FortalSelectSize size,
-) {
-  final radius = _fortalSelectTriggerRadius(size);
-  final base = SelectTriggerStyler()
+) => _triggerBase(size)
+    .merge(_triggerScale(variant, size))
+    .wrap(fortalTouchTarget())
+    .merge(switch (variant) {
+      .surface => _surfaceTrigger(),
+      .soft => _tintedTrigger(
+        color: FortalTokens.accentA3(),
+        hover: FortalTokens.accentA4(),
+        disabled: FortalTokens.grayA3(),
+      ),
+      .ghost => _tintedTrigger(
+        color: const Color(0x00000000),
+        hover: FortalTokens.accentA3(),
+        disabled: const Color(0x00000000),
+      ),
+    })
+    .onDisabled(.containerEffects(.outline(.style(.none))));
+
+/// The trigger's label, placeholder, icons and focus ring. The label and icons
+/// are gray 12; the placeholder is `grayA10`.
+SelectTriggerStyler _triggerBase(FortalSelectSize size) {
+  final (:text, :icon, :indicator, :radius) = switch (size) {
+    .size1 => (
+      text: FortalTokens.text1,
+      icon: FortalTokens.space3(),
+      indicator: FortalTokens.selectTriggerIndicatorSize12(),
+      radius: FortalTokens.radius1OrFull(),
+    ),
+    .size2 => (
+      text: FortalTokens.text2,
+      icon: FortalTokens.space4(),
+      indicator: FortalTokens.selectTriggerIndicatorSize12(),
+      radius: FortalTokens.radius2OrFull(),
+    ),
+    .size3 => (
+      text: FortalTokens.text3,
+      icon: FortalTokens.spinnerSize3(),
+      indicator: FortalTokens.selectTriggerIndicatorSize3(),
+      radius: FortalTokens.radius3OrFull(),
+    ),
+  };
+  TextStyler regular(Color color) => TextStyler(
+    style: text.mix(),
+  ).fontWeight(FortalTokens.fontWeightRegular()).color(color);
+
+  return SelectTriggerStyler()
       .direction(.horizontal)
       .mainAxisAlignment(.spaceBetween)
       .borderRadius(.all(radius))
-      .label(_fortalSelectTriggerText(size, color: FortalTokens.gray12()))
-      .placeholder(
-        _fortalSelectTriggerText(size, color: FortalTokens.grayA10()),
-      )
-      .icon(
-        .color(FortalTokens.gray12()).size(switch (size) {
-          .size1 => FortalTokens.space3(),
-          .size2 => FortalTokens.space4(),
-          .size3 => FortalTokens.spinnerSize3(),
-        }),
-      )
-      .indicator(
-        .color(FortalTokens.gray12()).size(switch (size) {
-          .size1 || .size2 => FortalTokens.selectTriggerIndicatorSize12(),
-          .size3 => FortalTokens.selectTriggerIndicatorSize3(),
-        }),
-      )
-      .onFocusVisible(.containerEffects(fortalFocusOutline()))
-      .merge(_fortalSelectTriggerSizeStyler(variant, size))
-      .wrap(fortalTouchTarget());
-
-  return (switch (variant) {
-    .surface => _fortalSelectSurfaceTrigger(base),
-    .soft => _fortalSelectSoftTrigger(base),
-    .ghost => _fortalSelectGhostTrigger(base),
-  }).onDisabled(
-    SelectTriggerStyler().containerEffects(
-      RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-    ),
-  );
+      .label(regular(FortalTokens.gray12()))
+      .placeholder(regular(FortalTokens.grayA10()))
+      .icon(.color(FortalTokens.gray12()).size(icon))
+      .indicator(.color(FortalTokens.gray12()).size(indicator))
+      .onFocusVisible(.containerEffects(fortalFocusOutline()));
 }
 
-TextStyler _fortalSelectTriggerText(FortalSelectSize size, {Color? color}) {
-  final token = switch (size) {
-    .size1 => FortalTokens.text1,
-    .size2 => FortalTokens.text2,
-    .size3 => FortalTokens.text3,
-  };
-  return TextStyler(style: token.mix())
-      .fontWeight(FortalTokens.fontWeightRegular())
-      .color(color ?? FortalTokens.gray12());
-}
-
-Radius _fortalSelectTriggerRadius(FortalSelectSize size) => switch (size) {
-  .size1 => FortalTokens.radius1OrFull(),
-  .size2 => FortalTokens.radius2OrFull(),
-  .size3 => FortalTokens.radius3OrFull(),
-};
-
-SelectTriggerStyler _fortalSelectTriggerSizeStyler(
+/// The gap, padding and height of the trigger. A ghost trigger has no height;
+/// it takes its padding and cancels it with a negative margin.
+SelectTriggerStyler _triggerScale(
   FortalSelectVariant variant,
   FortalSelectSize size,
 ) {
-  final style = SelectTriggerStyler().spacing(switch (size) {
+  final trigger = SelectTriggerStyler().spacing(switch (size) {
     .size1 => FortalTokens.space1(),
     .size2 => FortalTokens.space2(),
     .size3 => FortalTokens.space2(),
   });
+
   return switch (variant) {
     .ghost => switch (size) {
       .size1 || .size2 =>
-        style
+        trigger
             .padding(.horizontal(FortalTokens.space2()))
             .padding(.vertical(FortalTokens.space1()))
             .margin(.horizontal(FortalTokens.selectGhostMarginX12()))
             .margin(.vertical(FortalTokens.selectGhostMarginY12())),
       .size3 =>
-        style
+        trigger
             .padding(.horizontal(FortalTokens.space3()))
             .padding(.vertical(FortalTokens.space2()))
             .margin(.horizontal(FortalTokens.selectGhostMarginX3()))
@@ -125,181 +153,160 @@ SelectTriggerStyler _fortalSelectTriggerSizeStyler(
     },
     .surface || .soft => switch (size) {
       .size1 =>
-        style
+        trigger
             .height(FortalTokens.space5())
             .padding(.horizontal(FortalTokens.space2())),
       .size2 =>
-        style
+        trigger
             .height(FortalTokens.space6())
             .padding(.horizontal(FortalTokens.space3())),
       .size3 =>
-        style
+        trigger
             .height(FortalTokens.space7())
             .padding(.horizontal(FortalTokens.space4())),
     },
   };
 }
 
-SelectTriggerStyler _fortalSelectSurfaceTrigger(SelectTriggerStyler base) {
-  return base
-      .indicatorOpacity(0.9)
-      .color(FortalTokens.gray2())
+SelectTriggerStyler _surfaceTrigger() => SelectTriggerStyler()
+    .indicatorOpacity(0.9)
+    .color(FortalTokens.gray2())
+    .containerEffects(
+      .behindContent(fortalInsetSurface(strokes: [FortalTokens.gray7()])),
+    )
+    .onHovered(
       .containerEffects(
-        RemixBoxEffectsMix.behindContent(
-          fortalInsetSurface(strokes: [FortalTokens.gray7()]),
-        ),
-      )
-      .onHovered(
-        .containerEffects(
-          RemixBoxEffectsMix.behindContent(
-            fortalInsetSurface(strokes: [FortalTokens.grayA8()]),
-          ),
-        ),
-      )
-      .onSelected(
-        .containerEffects(
-          RemixBoxEffectsMix.behindContent(
-            fortalInsetSurface(strokes: [FortalTokens.grayA8()]),
-          ),
-        ),
-      )
-      .onDisabled(
-        .color(FortalTokens.gray2())
-            .label(.color(FortalTokens.grayA11()))
-            .icon(.color(FortalTokens.grayA9()))
-            .indicator(.color(FortalTokens.grayA9()))
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(
-                fortalInsetSurface(strokes: [FortalTokens.grayA6()]).merge(
-                  RemixBoxEffectLayerMix(
-                    gradients: [
-                      RemixLinearGradientMix(
-                        colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
-                      ),
-                    ],
-                  ),
+        .behindContent(fortalInsetSurface(strokes: [FortalTokens.grayA8()])),
+      ),
+    )
+    .onSelected(
+      .containerEffects(
+        .behindContent(fortalInsetSurface(strokes: [FortalTokens.grayA8()])),
+      ),
+    )
+    .onDisabled(
+      .color(FortalTokens.gray2())
+          .label(.color(FortalTokens.grayA11()))
+          .icon(.color(FortalTokens.grayA9()))
+          .indicator(.color(FortalTokens.grayA9()))
+          .containerEffects(
+            .behindContent(
+              fortalInsetSurface(strokes: [FortalTokens.grayA6()]).merge(
+                RemixBoxEffectLayerMix(
+                  gradients: [
+                    RemixLinearGradientMix(
+                      colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
+                    ),
+                  ],
                 ),
               ),
             ),
-      );
-}
+          ),
+    );
 
-SelectTriggerStyler _fortalSelectSoftTrigger(SelectTriggerStyler base) {
-  return base
-      .label(.color(FortalTokens.accent12()))
-      .placeholder(.color(FortalTokens.accent12()))
-      .placeholderOpacity(0.6)
-      .icon(.color(FortalTokens.accent12()))
-      .indicator(.color(FortalTokens.accent12()))
-      .color(FortalTokens.accentA3())
-      .onHovered(.color(FortalTokens.accentA4()))
-      .onSelected(.color(FortalTokens.accentA4()))
-      .onDisabled(
-        .label(.color(FortalTokens.grayA11()))
-            .icon(.color(FortalTokens.grayA9()))
-            .indicator(.color(FortalTokens.grayA9()))
-            .color(FortalTokens.grayA3()),
-      );
-}
+/// Accent text on a [color] fill that takes [hover] while hovered or open.
+/// Disabled turns the text gray and the fill [disabled].
+SelectTriggerStyler _tintedTrigger({
+  required Color color,
+  required Color hover,
+  required Color disabled,
+}) => SelectTriggerStyler()
+    .label(.color(FortalTokens.accent12()))
+    .placeholder(.color(FortalTokens.accent12()))
+    .placeholderOpacity(0.6)
+    .icon(.color(FortalTokens.accent12()))
+    .indicator(.color(FortalTokens.accent12()))
+    .color(color)
+    .onHovered(.color(hover))
+    .onSelected(.color(hover))
+    .onDisabled(
+      .label(.color(FortalTokens.grayA11()))
+          .icon(.color(FortalTokens.grayA9()))
+          .indicator(.color(FortalTokens.grayA9()))
+          .color(disabled),
+    );
 
-SelectTriggerStyler _fortalSelectGhostTrigger(SelectTriggerStyler base) {
-  return base
-      .label(.color(FortalTokens.accent12()))
-      .placeholder(.color(FortalTokens.accent12()))
-      .placeholderOpacity(0.6)
-      .icon(.color(FortalTokens.accent12()))
-      .indicator(.color(FortalTokens.accent12()))
-      .color(const Color(0x00000000))
-      .onHovered(.color(FortalTokens.accentA3()))
-      .onSelected(.color(FortalTokens.accentA3()))
-      .onDisabled(
-        .label(.color(FortalTokens.grayA11()))
-            .icon(.color(FortalTokens.grayA9()))
-            .indicator(.color(FortalTokens.grayA9()))
-            .color(const Color(0x00000000)),
-      );
-}
-
-SelectContentStyler _fortalSelectContentStyler(FortalSelectSize size) {
-  final radius = switch (size) {
-    .size1 => FortalTokens.radius3(),
-    .size2 || .size3 => FortalTokens.radius4(),
+/// The floating panel: a raised, blurred panel at least as wide as the
+/// trigger.
+SelectContentStyler _content(FortalSelectSize size) {
+  final (:padding, :radius) = switch (size) {
+    .size1 => (padding: FortalTokens.space1(), radius: FortalTokens.radius3()),
+    .size2 ||
+    .size3 => (padding: FortalTokens.space2(), radius: FortalTokens.radius4()),
   };
+
   return SelectContentStyler()
       .maxHeight(320)
       .border(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()))
-      // The panel is never narrower than its trigger.
       .minWidth(remixAnchorWidth())
-      .padding(
-        .all(switch (size) {
-          .size1 => FortalTokens.space1(),
-          .size2 || .size3 => FortalTokens.space2(),
-        }),
-      )
+      .padding(.all(padding))
       .borderRadius(.all(radius))
       .color(FortalTokens.colorPanel())
       .decoration(
         BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
       )
       .clipBehavior(Clip.antiAlias)
-      .containerEffects(
-        RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
-      );
+      .containerEffects(.backdropBlur(FortalTokens.panelBlur()));
 }
 
-SelectMenuItemStyler _fortalSelectItemStyler(
+/// An item in the panel: gray text, with the variant's highlight under the
+/// pointer, keyboard focus and press.
+SelectMenuItemStyler _item(
   FortalSelectVariant variant,
   FortalSelectSize size, {
-  bool highContrast = false,
+  required bool highContrast,
 }) {
-  final metrics = _fortalSelectContentMetrics(size);
-  final base = SelectMenuItemStyler()
+  final (
+    :height,
+    :indicatorWidth,
+    :indicatorSize,
+    :radius,
+    :text,
+  ) = switch (size) {
+    .size1 => (
+      height: FortalTokens.space5(),
+      indicatorWidth: FortalTokens.selectIndicatorWidth1(),
+      indicatorSize: FortalTokens.space2(),
+      radius: FortalTokens.radius1(),
+      text: FortalTokens.text1,
+    ),
+    .size2 => (
+      height: FortalTokens.space6(),
+      indicatorWidth: FortalTokens.space5(),
+      indicatorSize: FortalTokens.selectIndicatorSize2(),
+      radius: FortalTokens.radius2(),
+      text: FortalTokens.text2,
+    ),
+    .size3 => (
+      height: FortalTokens.space6(),
+      indicatorWidth: FortalTokens.space5(),
+      indicatorSize: FortalTokens.selectIndicatorSize2(),
+      radius: FortalTokens.radius2(),
+      text: FortalTokens.text3,
+    ),
+  };
+  final highlighted = _highlighted(variant, highContrast: highContrast);
+
+  return SelectMenuItemStyler()
       .wrap(fortalTouchTarget())
       .direction(.horizontal)
-      .height(metrics.itemHeight)
-      .padding(.horizontal(metrics.indicatorWidth))
-      .borderRadius(.all(metrics.itemRadius))
-      .text(
-        TextStyler(style: metrics.itemText.mix()).color(FortalTokens.gray12()),
-      )
+      .height(height)
+      .padding(.horizontal(indicatorWidth))
+      .borderRadius(.all(radius))
+      .text(TextStyler(style: text.mix()).color(FortalTokens.gray12()))
       .indicator(
         BoxStyler(
           alignment: .center,
-          constraints: BoxConstraintsMix.width(metrics.indicatorWidth),
+          constraints: BoxConstraintsMix.width(indicatorWidth),
         ),
       )
-      .icon(
-        IconStyler(color: FortalTokens.gray12(), size: metrics.indicatorSize),
-      );
-
-  final highlighted = switch (variant) {
-    .surface || .ghost =>
-      SelectMenuItemStyler()
-          .color(
-            highContrast ? FortalTokens.accent12() : FortalTokens.accentSolid(),
-          )
-          .text(
-            TextStyler().color(
-              highContrast
-                  ? FortalTokens.accent1()
-                  : FortalTokens.accentContrast(),
-            ),
-          )
-          .iconColor(
-            highContrast
-                ? FortalTokens.accent1()
-                : FortalTokens.accentContrast(),
-          ),
-    .soft => SelectMenuItemStyler().color(FortalTokens.accentA4()),
-  };
-
-  return base
+      .icon(IconStyler(color: FortalTokens.gray12(), size: indicatorSize))
       .onHovered(highlighted)
       .onFocused(highlighted)
       .onPressed(highlighted)
       .onFocusVisible(
         SelectMenuItemStyler().container(
-          FlexBoxStyler().fortalFocusRing(radius: metrics.itemRadius),
+          FlexBoxStyler().fortalFocusRing(radius: radius),
         ),
       )
       .onDisabled(
@@ -313,33 +320,24 @@ SelectMenuItemStyler _fortalSelectItemStyler(
       );
 }
 
-({
-  double itemHeight,
-  double indicatorWidth,
-  double indicatorSize,
-  Radius itemRadius,
-  TextStyleToken itemText,
-})
-_fortalSelectContentMetrics(FortalSelectSize size) => switch (size) {
-  .size1 => (
-    itemHeight: FortalTokens.space5(),
-    indicatorWidth: FortalTokens.selectIndicatorWidth1(),
-    indicatorSize: FortalTokens.space2(),
-    itemRadius: FortalTokens.radius1(),
-    itemText: FortalTokens.text1,
-  ),
-  .size2 => (
-    itemHeight: FortalTokens.space6(),
-    indicatorWidth: FortalTokens.space5(),
-    indicatorSize: FortalTokens.selectIndicatorSize2(),
-    itemRadius: FortalTokens.radius2(),
-    itemText: FortalTokens.text2,
-  ),
-  .size3 => (
-    itemHeight: FortalTokens.space6(),
-    indicatorWidth: FortalTokens.space5(),
-    indicatorSize: FortalTokens.selectIndicatorSize2(),
-    itemRadius: FortalTokens.radius2(),
-    itemText: FortalTokens.text3,
-  ),
-};
+/// The item under the pointer or keyboard: the accent's solid fill under its
+/// contrast text, or a tint for the soft variant.
+SelectMenuItemStyler _highlighted(
+  FortalSelectVariant variant, {
+  required bool highContrast,
+}) {
+  final content = highContrast
+      ? FortalTokens.accent1()
+      : FortalTokens.accentContrast();
+
+  return switch (variant) {
+    .surface || .ghost =>
+      SelectMenuItemStyler()
+          .color(
+            highContrast ? FortalTokens.accent12() : FortalTokens.accentSolid(),
+          )
+          .text(.color(content))
+          .iconColor(content),
+    .soft => SelectMenuItemStyler().color(FortalTokens.accentA4()),
+  };
+}

@@ -6,7 +6,11 @@ part of 'text.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed body text on the Fortal nine-step scale.
+/// The Fortal Text recipe: body text on the nine-step text scale.
+///
+/// Neutral text is gray 12; [accent] takes the accent's text color, and
+/// [highContrast] moves that to accent step 12. [truncate] wins over
+/// [softWrap] and forces one ellipsized line.
 class FortalText extends StatelessWidget {
   const FortalText(
     this.text, {

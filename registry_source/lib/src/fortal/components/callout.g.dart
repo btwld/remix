@@ -6,7 +6,12 @@ part of 'callout.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed Callout with Fortal sizes, variants, and overrides.
+/// The Fortal Callout recipe.
+///
+/// It reads top to bottom: the size, the color the icon and text share, then
+/// the variant's fill and frame.
+///
+/// [highContrast] moves the text and icon to accent step 12.
 class FortalCallout extends StatelessWidget {
   const FortalCallout({
     super.key,
@@ -19,6 +24,7 @@ class FortalCallout extends StatelessWidget {
     this.child,
   });
 
+  /// A tinted accent fill.
   const FortalCallout.soft({
     super.key,
     this.size = .size2,
@@ -29,6 +35,7 @@ class FortalCallout extends StatelessWidget {
     this.child,
   }) : variant = FortalCalloutVariant.soft;
 
+  /// A faint accent fill inside a 1px accent frame.
   const FortalCallout.surface({
     super.key,
     this.size = .size2,
@@ -39,6 +46,7 @@ class FortalCallout extends StatelessWidget {
     this.child,
   }) : variant = FortalCalloutVariant.surface;
 
+  /// No fill inside a 1px accent frame.
   const FortalCallout.outline({
     super.key,
     this.size = .size2,

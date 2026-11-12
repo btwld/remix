@@ -6,7 +6,12 @@ part of 'switch.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixSwitch].
+/// The Ui Switch recipe.
+///
+/// It reads top to bottom: the track, thumb and focus ring, then the variant's
+/// colors for on, pressed and disabled, then the touch target.
+///
+/// [highContrast] moves the on state to accent step 12.
 class UiSwitch extends StatelessWidget {
   const UiSwitch({
     super.key,
@@ -27,7 +32,7 @@ class UiSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  /// Surface treatment with a visible border.
+  /// A neutral track with a 1px frame, filled with the accent when on.
   const UiSwitch.surface({
     super.key,
     this.size = .size2,
@@ -46,7 +51,8 @@ class UiSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiSwitchVariant.surface;
 
-  /// Softer accent treatment.
+  /// A neutral tint, accent-tinted when on. The 1px frame shows only while off
+  /// and enabled.
   const UiSwitch.soft({
     super.key,
     this.size = .size2,

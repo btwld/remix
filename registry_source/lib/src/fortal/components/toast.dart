@@ -8,24 +8,47 @@ import 'icon_button.dart';
 
 part 'toast.g.dart';
 
-/// Fortal toast size presets.
-enum FortalToastSize { size1, size2, size3 }
+/// The sizes a toast comes in. Pixel values are at 100% theme scaling.
+enum FortalToastSize {
+  /// 12px text with 12px padding.
+  size1,
 
-/// Fortal toast surfaces, with quiet and elevated floating treatments.
-enum FortalToastVariant { surface, classic }
+  /// 14px text with 16px padding. The default.
+  size2,
+
+  /// 16px text with 24px padding.
+  size3,
+}
+
+/// How far a toast floats above the page.
+enum FortalToastVariant {
+  /// A quiet shadow.
+  surface,
+
+  /// A deeper shadow. The default.
+  classic,
+}
 
 /// The color role of the leading icon.
 ///
 /// Visual only: it never changes [RemixToastData.priority]. Choose
 /// [RemixToastPriority.assertive] explicitly when a message needs an
 /// immediate announcement.
-enum FortalToastIntent { accent, neutral, error }
+enum FortalToastIntent {
+  /// The accent's text color.
+  accent,
 
-/// Fortal-themed toast surface for [RemixToast] and [RemixToastScope].
+  /// Gray.
+  neutral,
+
+  /// The error color.
+  error,
+}
+
+/// The Fortal Toast recipe, for [RemixToast] and [RemixToastScope].
 ///
-/// Toasts use the shared floating-layer elevation scale. The surface caps at
-/// 360 logical pixels and
-/// shrinks with the available width.
+/// A toast is a raised, blurred panel in a 1px frame, with a ghost action and
+/// close button. It caps at 360px and shrinks with the available width.
 ///
 /// ```dart
 /// RemixToastScope(style: fortalToastStyle(), child: const Shell())
@@ -37,36 +60,29 @@ ToastStyler fortalToastStyle({
   FortalToastIntent intent = .accent,
   ToastStyler style = const ToastStyler.create(),
 }) {
-  final metrics = _fortalToastMetrics(size);
-  final base =
-      ToastStyler(
-            container: FlexBoxStyler().spacing(metrics.gap),
-            content: FlexBoxStyler().spacing(FortalTokens.space1()),
-            icon: IconStyler()
-                .size(metrics.iconSize)
-                .color(_fortalToastIntentColor(intent)),
-            title: TextStyler(style: metrics.text.mix())
-                .fontWeight(FortalTokens.fontWeightMedium())
-                .color(FortalTokens.gray12()),
-            description: TextStyler(
-              style: metrics.text.mix(),
-            ).color(FortalTokens.gray11()),
-            action: fortalButtonStyle(variant: .ghost, size: .size1),
-            closeButton: fortalIconButtonStyle(variant: .ghost, size: .size1)
-                .merge(
-                  IconButtonStyler().icon(
-                    IconStyler().color(FortalTokens.gray11()),
-                  ),
-                ),
-          )
-          .padding(.all(metrics.padding))
-          .borderRadius(.all(metrics.radius))
-          .maxWidth(FortalTokens.toastMaxWidth())
-          .containerEffects(
-            RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
-          );
+  final metrics = _metrics(size);
 
-  return base
+  return ToastStyler(
+        container: FlexBoxStyler().spacing(metrics.gap),
+        content: FlexBoxStyler().spacing(FortalTokens.space1()),
+        icon: IconStyler().size(metrics.iconSize).color(_intentColor(intent)),
+        title: TextStyler(style: metrics.text.mix())
+            .fontWeight(FortalTokens.fontWeightMedium())
+            .color(FortalTokens.gray12()),
+        description: TextStyler(
+          style: metrics.text.mix(),
+        ).color(FortalTokens.gray11()),
+        action: fortalButtonStyle(variant: .ghost, size: .size1),
+        closeButton: fortalIconButtonStyle(variant: .ghost, size: .size1).merge(
+          IconButtonStyler().icon(IconStyler().color(FortalTokens.gray11())),
+        ),
+      )
+      .padding(.all(metrics.padding))
+      .borderRadius(.all(metrics.radius))
+      .maxWidth(FortalTokens.toastMaxWidth())
+      .containerEffects(
+        RemixBoxEffectsMix.backdropBlur(FortalTokens.panelBlur()),
+      )
       .color(FortalTokens.colorPanel())
       .border(
         .all(.color(FortalTokens.gray6()).width(FortalTokens.borderWidth1())),
@@ -90,7 +106,7 @@ ToastStyler fortalToastStyle({
   Radius radius,
   TextStyleToken text,
 })
-_fortalToastMetrics(FortalToastSize size) => switch (size) {
+_metrics(FortalToastSize size) => switch (size) {
   .size1 => (
     padding: FortalTokens.space3(),
     gap: FortalTokens.space2(),
@@ -114,7 +130,7 @@ _fortalToastMetrics(FortalToastSize size) => switch (size) {
   ),
 };
 
-Color _fortalToastIntentColor(FortalToastIntent intent) => switch (intent) {
+Color _intentColor(FortalToastIntent intent) => switch (intent) {
   .accent => FortalTokens.accentContent(),
   .neutral => FortalTokens.gray11(),
   .error => FortalTokens.error11(),
