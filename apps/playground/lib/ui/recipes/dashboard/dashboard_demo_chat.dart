@@ -49,6 +49,7 @@ final class PlaygroundDashboardAgentStyles {
     required this.alwaysAllowStyle,
     required this.denyStyle,
     required this.answerStyle,
+    required this.answerBodyStyle,
     required this.answerActionStyle,
     required this.answerSelectedActionStyle,
     required this.sourcesStyle,
@@ -124,6 +125,9 @@ final class PlaygroundDashboardAgentStyles {
 
   /// Style of the [AgentAnswer].
   final AgentAnswerStyler answerStyle;
+
+  /// Paragraph layout within the answer body.
+  final FlexBoxStyler answerBodyStyle;
 
   /// Style of every answer action.
   final IconButtonStyler answerActionStyle;
@@ -251,7 +255,12 @@ const _sources = [
 
 /// One question and the run that answers it.
 final class _Turn {
-  _Turn({required this.id, required this.prompt, required this.scenario});
+  _Turn({
+    required this.id,
+    required this.prompt,
+    required this.scenario,
+    Duration Function()? now,
+  }) : clock = AgentRunClock(now: now);
 
   final int id;
   final String prompt;
@@ -260,9 +269,10 @@ final class _Turn {
   AgentApprovalDecision? decision;
   int outputLines = 0;
   int answerChunks = 0;
+  AgentAnswerFeedback? feedback;
 
   /// Measures how long the run worked, for "Thought for 4s".
-  final clock = AgentRunClock();
+  final AgentRunClock clock;
 
   /// Whether the tool started, so a stopped run reports what it left behind.
   bool toolStarted = false;
@@ -288,6 +298,7 @@ class PlaygroundDashboardChatPage extends StatefulWidget {
     super.key,
     required this.styles,
     this.stepDelay = const Duration(milliseconds: 320),
+    this.now,
   });
 
   /// The preset's styles for every Agent widget on the page.
@@ -295,6 +306,9 @@ class PlaygroundDashboardChatPage extends StatefulWidget {
 
   /// Pause between the scripted steps of a run.
   final Duration stepDelay;
+
+  /// Monotonic time source for measuring work; null uses the run clock default.
+  final Duration Function()? now;
 
   @override
   State<PlaygroundDashboardChatPage> createState() =>
@@ -311,7 +325,7 @@ class _PlaygroundDashboardChatPageState
   var _runId = 0;
   var _nextTurn = 0;
   var _alwaysAllowTerminal = false;
-  AgentAnswerFeedback? _feedback;
+  late final _announcer = AgentAnnouncer(onAnnouncement: _announce);
 
   PlaygroundDashboardAgentStyles get styles => widget.styles;
 
@@ -343,11 +357,11 @@ class _PlaygroundDashboardChatPageState
     for (final turn in _turns) {
       turn.clock.dispose();
     }
+    _announcer.reset();
     _composer.clear();
     setState(() {
       _turns.clear();
       _alwaysAllowTerminal = false;
-      _feedback = null;
       _syncComposer();
     });
   }
@@ -365,10 +379,10 @@ class _PlaygroundDashboardChatPageState
       id: _nextTurn++,
       prompt: prompt.trim(),
       scenario: _scenarioFor(prompt.trim()),
+      now: widget.now,
     );
     setState(() {
       _turns.add(turn);
-      _feedback = null;
     });
     _begin(turn);
   }
@@ -379,7 +393,7 @@ class _PlaygroundDashboardChatPageState
     final id = _runId;
     setState(() {
       turn
-        ..stage = _Stage.preparing
+        ..feedback = null
         ..decision = null
         ..outputLines = 0
         ..answerChunks = 0
@@ -387,12 +401,15 @@ class _PlaygroundDashboardChatPageState
         ..stepsExpanded = null
         ..clock.reset()
         ..clock.start();
-      _syncComposer();
+      _transition(turn, .preparing);
     });
     _timer = Timer(widget.stepDelay, () {
       if (!mounted || id != _runId) return;
       if (turn.scenario != _Scenario.success && !_alwaysAllowTerminal) {
-        setState(() => turn.stage = _Stage.permission);
+        setState(() {
+          turn.clock.stop();
+          _transition(turn, .permission);
+        });
       } else {
         _run(turn, id);
       }
@@ -405,8 +422,9 @@ class _PlaygroundDashboardChatPageState
     setState(() {
       turn
         ..toolStarted = true
-        ..stage = _Stage.running
+        ..clock.start()
         ..outputLines = 1;
+      _transition(turn, .running);
     });
     _timer = Timer.periodic(widget.stepDelay, (timer) {
       if (!mounted || id != _runId) {
@@ -419,17 +437,15 @@ class _PlaygroundDashboardChatPageState
         } else if (failing) {
           timer.cancel();
           turn.clock.stop();
-          turn.stage = _Stage.failed;
-          _syncComposer();
+          _transition(turn, .failed);
         } else if (turn.stage == _Stage.running) {
-          turn.stage = _Stage.answering;
+          _transition(turn, .answering);
         } else if (turn.answerChunks < _answerChunks.length) {
           turn.answerChunks++;
         } else {
           timer.cancel();
           turn.clock.stop();
-          turn.stage = _Stage.complete;
-          _syncComposer();
+          _transition(turn, .complete);
         }
       });
     });
@@ -442,9 +458,8 @@ class _PlaygroundDashboardChatPageState
       setState(() {
         turn
           ..decision = decision
-          ..clock.stop()
-          ..stage = _Stage.denied;
-        _syncComposer();
+          ..clock.stop();
+        _transition(turn, .denied);
       });
       return;
     }
@@ -460,18 +475,37 @@ class _PlaygroundDashboardChatPageState
     if (turn == null) return;
     _cancelPending();
     setState(() {
-      turn
-        ..clock.stop()
-        ..stage = _Stage.stopped;
-      _syncComposer();
+      turn.clock.stop();
+      _transition(turn, .stopped);
     });
   }
 
   void _retry(_Turn turn) {
-    if (_active) return;
+    if (_active || turn != _current) return;
     // A failure retries into success; a denied or stopped run asks again.
     if (turn.scenario == _Scenario.failure) turn.scenario = _Scenario.success;
     _begin(turn);
+  }
+
+  /// Publishes host state transitions independently of which rows are visible.
+  void _transition(_Turn turn, _Stage stage) {
+    turn.stage = stage;
+    _syncComposer();
+    final call = _toolCall(turn);
+    if (call != null) _announcer.updateToolCall(call);
+    _announcer.updateAnswer(
+      'turn-${turn.id}-answer',
+      turn.active ? .streaming : .complete,
+    );
+  }
+
+  void _announce(AgentAnnouncement announcement) {
+    final message = switch (announcement.kind) {
+      .approvalNeeded => 'Approval needed for ${announcement.tool}.',
+      .toolFailed => '${announcement.tool} failed.',
+      .answerReady => 'Answer ready.',
+    };
+    unawaited(AgentAnnouncer.announce(context, message));
   }
 
   @override
@@ -683,12 +717,12 @@ class _PlaygroundDashboardChatPageState
     final lines = (failing ? _failedOutput : _output)
         .take(turn.outputLines)
         .join('\n');
-    const id = 'call';
+    final id = 'turn-${turn.id}-call';
     const name = 'terminal.run';
 
     return switch (turn.stage) {
       .preparing => null,
-      .permission => const AgentToolCallPart(
+      .permission => AgentToolCallPart(
         id: id,
         name: name,
         summary: 'Run the cart tests',
@@ -728,7 +762,7 @@ class _PlaygroundDashboardChatPageState
         decision: turn.decision,
         duration: const Duration(milliseconds: 3100),
       ),
-      .denied => const AgentToolCallPart(
+      .denied => AgentToolCallPart(
         id: id,
         name: name,
         summary: 'Run the cart tests',
@@ -781,10 +815,16 @@ class _PlaygroundDashboardChatPageState
             )
           : null,
       onCopy: () => Clipboard.setData(ClipboardData(text: text)),
-      feedback: _feedback,
-      onFeedback: (value) => setState(() => _feedback = value),
-      onRetry: () => _retry(turn),
-      child: Text(text),
+      feedback: turn.feedback,
+      onFeedback: (value) => setState(() => turn.feedback = value),
+      onRetry: turn == _current ? () => _retry(turn) : null,
+      child: ColumnBox(
+        style: styles.answerBodyStyle,
+        children: [
+          for (final paragraph in text.split('\n\n'))
+            if (paragraph.isNotEmpty) Text(paragraph),
+        ],
+      ),
     );
   }
 }

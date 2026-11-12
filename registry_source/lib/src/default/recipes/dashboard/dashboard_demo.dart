@@ -591,6 +591,9 @@ RegistryDashboardAgentStyles _vanillaAgentStyles() {
     alwaysAllowStyle: toolCall.alwaysAllowStyle,
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
+    answerBodyStyle: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(VanillaTokens.s3),
     answerActionStyle: answer.actionStyle,
     answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,

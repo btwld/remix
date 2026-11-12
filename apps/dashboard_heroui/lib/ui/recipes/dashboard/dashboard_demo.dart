@@ -583,6 +583,7 @@ UiDashboardAgentStyles _uiAgentStyles() {
     alwaysAllowStyle: toolCall.alwaysAllowStyle,
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
+    answerBodyStyle: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
     answerActionStyle: answer.actionStyle,
     answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,

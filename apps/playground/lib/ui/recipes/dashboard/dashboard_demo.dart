@@ -601,6 +601,9 @@ PlaygroundDashboardAgentStyles _playgroundAgentStyles() {
     alwaysAllowStyle: toolCall.alwaysAllowStyle,
     denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
+    answerBodyStyle: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(PlaygroundTokens.s3),
     answerActionStyle: answer.actionStyle,
     answerSelectedActionStyle: answer.selectedActionStyle,
     sourcesStyle: sources.style,
