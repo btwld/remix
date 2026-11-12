@@ -59,5 +59,11 @@ See [host setup](https://github.com/btwld/remix/blob/main/skills/using-remix/SKI
 - [Examples and core concepts](https://github.com/btwld/remix#remix)
 - [Material dependency boundary](https://github.com/btwld/remix/blob/main/open_code/README.md#material-boundary)
 
+## Experimental agent library
+
+`package:remix/agent.dart` provides agent conversation widgets and behavior.
+It is experimental and outside Remix's stability promise. Import it separately;
+`remix.dart` does not export it. Presets style it through registry recipes.
+
 Agent skills: run `remix skills install` in a project that has run
 `remix init`.
