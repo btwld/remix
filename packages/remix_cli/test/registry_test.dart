@@ -329,9 +329,10 @@ items:
     ).allMatches(await registry.template(themeData)).length;
     expect(tokenCount, 33);
 
-    // Two templates state that size in prose, and templates are copied verbatim
-    // into consumer source. `chart1`-`chart5` were added for the chart item and
-    // both sentences stayed at fifteen, because nothing compared them.
+    // Templates are copied verbatim into consumer source. Two of them once
+    // stated that size in prose: `chart1`-`chart5` were added for the chart
+    // item and both sentences stayed at fifteen, because nothing compared
+    // them. Neither states it now; if one does again, it must be right.
     const spellings = {
       15: 'fifteen',
       16: 'sixteen',
@@ -349,10 +350,10 @@ items:
       final source = await registry.template(catalog.items[name]!.files.single);
       expect(
         spelled.allMatches(source).map((match) => match[1]).toSet(),
-        {expected},
+        anyOf(isEmpty, {expected}),
         reason:
-            "$name's prose must say the vocabulary has $tokenCount tokens, and "
-            'say it once',
+            "$name's prose may state the vocabulary's size only as "
+            '$tokenCount tokens',
       );
     }
   });
