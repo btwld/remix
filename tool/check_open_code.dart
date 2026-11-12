@@ -496,6 +496,15 @@ final class _PresetContract {
   final List<String> registryItems;
   final Map<String, String> generatedSnapshots;
 
+  /// The same inventory drives fixture validation and consumer staging.
+  List<String> get fixtureAppFiles => [
+    ..._fixtureAppFiles,
+    if (name == 'vanilla') ...[
+      'test/agent_recipe_contract_test.dart',
+      'test/composer_recipe_test.dart',
+    ],
+  ];
+
   /// Hosted runtime dependencies the CLI must add to the consumer, exactly.
   final List<String> requiredRuntimeDependencies;
 
@@ -1139,6 +1148,7 @@ Future<_Failure?> _checkInTemporaryApp({
   _replaceSkeleton(
     app: app,
     fixtureRoot: fixtureRoot,
+    preset: preset,
     registrySmoke: stableRegistry,
   );
   _step(
@@ -2175,7 +2185,7 @@ _Failure? _verifyFixtureContract(
 ) {
   final problems = <String>[];
   for (final relative in [
-    ..._fixtureAppFiles,
+    ...preset.fixtureAppFiles,
     ...preset.generatedSnapshots.values,
   ]) {
     if (!File('${fixtureRoot.path}/$relative').existsSync()) {
@@ -2492,6 +2502,7 @@ _Failure? _verifyCheckoutPackages({
 void _replaceSkeleton({
   required Directory app,
   required Directory fixtureRoot,
+  required _PresetContract preset,
   bool registrySmoke = false,
 }) {
   final lib = Directory('${app.path}/lib');
@@ -2503,7 +2514,7 @@ void _replaceSkeleton({
   final build = File('${app.path}/build.yaml');
   if (build.existsSync()) build.deleteSync();
 
-  for (final relative in _fixtureAppFiles) {
+  for (final relative in preset.fixtureAppFiles) {
     if (registrySmoke &&
         (relative.startsWith('lib/') || relative.startsWith('test/')))
       continue;

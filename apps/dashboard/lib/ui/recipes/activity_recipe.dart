@@ -38,7 +38,7 @@ UiAgentActivityRecipe uiAgentActivityRecipe({
     count: TextStyler()
         .color(UiTokens.gray11())
         .style(UiTokens.text1.mix())
-        .wrap(.padding(.right(UiTokens.space2()))),
+        .wrap(.padding(.end(UiTokens.space2()))),
     indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
     pendingStatus: IconStyler().color(UiTokens.gray9()).size(UiTokens.space4()),
     activeStatus: IconStyler()

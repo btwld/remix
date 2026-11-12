@@ -201,24 +201,23 @@ surface. Registry templates resolve the `iconLibrary` in `remix.yaml` to either
 selected package. Outline and Rounded each draw every icon the presets use, so
 neither adds Lucide. See [Icons in registry presets](/guides/icons#icons-in-registry-presets)
 for how presets size those icons.
-Four Vanilla and Fortal items use icons: `icons`, `dashboard_shell`,
-`dashboard_demo`, and `support`. In HeroUI, `icons`, `dashboard_shell`,
-`dashboard_demo`, `support`, `breadcrumbs`, `close_button`, and `search_field`
-do. To switch an
-existing install, change `iconLibrary`, then reinstall every one of those you
-have installed in one command, reviewing first (`--overwrite` replaces only
-the items you name, so one left out keeps the old library):
+Six Vanilla and Fortal items use icon placeholders: `icons`, `dashboard_shell`,
+`dashboard_demo`, `support`, `date_picker`, and `date_range_picker`. HeroUI uses
+the same six plus `breadcrumbs`, `close_button`, and `search_field`.
+To switch an existing install, change `iconLibrary`, then reinstall every one
+of those you have installed in one command, reviewing first (`--overwrite`
+replaces only the items you name, so one left out keeps the old library):
 
 ```shell
-remix add icons dashboard_shell dashboard_demo support --diff
-remix add icons dashboard_shell dashboard_demo support --overwrite
+remix add icons dashboard_shell dashboard_demo support date_picker date_range_picker --diff
+remix add icons dashboard_shell dashboard_demo support date_picker date_range_picker --overwrite
 ```
 
 For HeroUI:
 
 ```shell
-remix add icons dashboard_shell dashboard_demo support breadcrumbs close_button search_field --diff
-remix add icons dashboard_shell dashboard_demo support breadcrumbs close_button search_field --overwrite
+remix add icons dashboard_shell dashboard_demo support date_picker date_range_picker breadcrumbs close_button search_field --diff
+remix add icons dashboard_shell dashboard_demo support date_picker date_range_picker breadcrumbs close_button search_field --overwrite
 ```
 
 Icons you reference in your own code stay as you wrote them. Import

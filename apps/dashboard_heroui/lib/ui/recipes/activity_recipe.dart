@@ -40,7 +40,7 @@ UiAgentActivityRecipe uiAgentActivityRecipe({
     count: TextStyler()
         .style(UiTokens.textXs.mix())
         .color(UiTokens.muted())
-        .wrap(.padding(.right(8))),
+        .wrap(.padding(.end(8))),
     indicator: IconStyler().color(UiTokens.foreground()).size(16),
     pendingStatus: IconStyler().color(UiTokens.muted()).size(16),
     activeStatus: IconStyler().color(UiTokens.accent()).size(16),

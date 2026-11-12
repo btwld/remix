@@ -36,7 +36,7 @@ PlaygroundAgentPlanRecipe playgroundAgentPlanRecipe({
     count: TextStyler()
         .color(PlaygroundTokens.mutedForeground())
         .fontSize(12)
-        .wrap(.padding(.right(8))),
+        .wrap(.padding(.end(8))),
     indicator: IconStyler().color(PlaygroundTokens.foreground()).size(16),
     pendingStatus: IconStyler()
         .color(PlaygroundTokens.mutedForeground())
