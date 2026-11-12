@@ -5,16 +5,22 @@ import '../../agent/components/plan.dart';
 import '../components/disclosure.dart';
 import '../theme/tokens.dart';
 
+/// Styles for the plan surface: a disclosure around the agent plan list.
 @immutable
 final class VanillaAgentPlanRecipe {
   const VanillaAgentPlanRecipe({
     required this.style,
     required this.disclosureStyle,
   });
+
+  /// Styles for the plan rows, titles, counts and status icons.
   final AgentPlanStyler style;
+
+  /// Styles for the disclosure that wraps the list.
   final DisclosureStyler disclosureStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 VanillaAgentPlanRecipe vanillaAgentPlanRecipe({
   AgentPlanStyler style = const AgentPlanStyler.create(),
   DisclosureStyler disclosureStyle = const DisclosureStyler.create(),

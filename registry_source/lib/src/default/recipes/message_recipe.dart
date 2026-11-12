@@ -5,6 +5,7 @@ import '../../agent/components/message.dart';
 import '../components/button.dart';
 import '../components/card.dart';
 
+/// Styles for a message: a card and a ghost button that expands a long message.
 @immutable
 final class VanillaAgentMessageRecipe {
   const VanillaAgentMessageRecipe({
@@ -13,12 +14,21 @@ final class VanillaAgentMessageRecipe {
     required this.collapsibleStyle,
     required this.toggleStyle,
   });
+
+  /// Styles for the message row, avatar, header, body and footer.
   final AgentMessageStyler style;
+
+  /// Styles for the card the message sits in.
   final CardStyler surfaceStyle;
+
+  /// Styles for the collapsed height and clipping of a long message.
   final AgentMessageCollapsibleStyler collapsibleStyle;
+
+  /// Styles for the button that expands or collapses a long message.
   final ButtonStyler toggleStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 VanillaAgentMessageRecipe vanillaAgentMessageRecipe({
   AgentMessageStyler style = const AgentMessageStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),

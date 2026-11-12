@@ -18,13 +18,24 @@ final class HeroUiAgentAnswerRecipe {
     required this.copyStyle,
     required this.retryStyle,
   });
+
+  /// Styles for the answer body, actions and feedback.
   final AgentAnswerStyler style;
+
+  /// Styles for the card the answer sits in.
   final CardStyler surfaceStyle;
+
+  /// Styles for the disclosure that lists the sources.
   final DisclosureStyler sourcesStyle;
+
+  /// Styles for the copy icon button.
   final IconButtonStyler copyStyle;
+
+  /// Styles for the retry icon button.
   final IconButtonStyler retryStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 HeroUiAgentAnswerRecipe heroUiAgentAnswerRecipe({
   AgentAnswerStyler style = const AgentAnswerStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),

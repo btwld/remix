@@ -6,6 +6,8 @@ import '../components/card.dart';
 import '../components/icon_button.dart';
 import '../components/textfield.dart';
 
+/// Styles for the composer: a card around a text area with no fill of its own,
+/// a submit icon button, and a stop icon button.
 @immutable
 final class VanillaAgentComposerRecipe {
   const VanillaAgentComposerRecipe({
@@ -15,13 +17,24 @@ final class VanillaAgentComposerRecipe {
     required this.submitStyle,
     required this.stopStyle,
   });
+
+  /// Styles for the composer toolbar.
   final AgentComposerStyler style;
+
+  /// Styles for the card around the field and toolbar.
   final CardStyler surfaceStyle;
+
+  /// Styles for the message text area.
   final TextFieldStyler fieldStyle;
+
+  /// Styles for the icon button that sends the message.
   final IconButtonStyler submitStyle;
+
+  /// Styles for the icon button that stops a running response.
   final IconButtonStyler stopStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 VanillaAgentComposerRecipe vanillaAgentComposerRecipe({
   AgentComposerStyler style = const AgentComposerStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),
