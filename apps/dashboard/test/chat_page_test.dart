@@ -172,15 +172,20 @@ void main() {
     await _openChat(tester);
     await _ask(tester, 'Run terminal checks');
     await tester.pump(const Duration(milliseconds: 350));
-    // The approval footer's own overflow below ~500 is fixed in the library;
-    // this checks that the page keeps its state across a breakpoint.
-    for (final width in [700.0, 1280.0]) {
+    for (final width in [390.0, 1280.0]) {
       tester.view.physicalSize = Size(width, 900);
       await tester.pump();
       await tester.pump();
       expect(_call(tester).call.status, AgentToolCallStatus.awaitingApproval);
       expect(tester.takeException(), isNull);
     }
+    tester.platformDispatcher.textScaleFactorTestValue = 1.5;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    tester.view.physicalSize = const Size(390, 900);
+    await tester.pump();
+    await tester.pump();
+    expect(_call(tester).call.status, AgentToolCallStatus.awaitingApproval);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('live theme changes preserve the paused conversation', (
