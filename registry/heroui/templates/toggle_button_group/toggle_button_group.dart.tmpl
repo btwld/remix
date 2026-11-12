@@ -27,7 +27,7 @@ ToggleGroupStyler {{valuePrefix}}ToggleButtonGroupStyle({
   final hover = variant.hover();
   final foreground = variant.foreground();
 
-  var item =
+  final item =
       ToggleGroupItemStyler(
             container: FlexBoxStyler()
                 .mainAxisSize(.min)
@@ -51,39 +51,41 @@ ToggleGroupStyler {{valuePrefix}}ToggleButtonGroupStyle({
           .onBreakpoint(
             const Breakpoint.minWidth({{typePrefix}}Tokens.breakpointMd),
             ToggleGroupItemStyler().height(size.height.desktop),
-          );
-
-  item = iconOnly
-      ? item
-            .width(size.height.mobile)
-            .onBreakpoint(
-              const Breakpoint.minWidth({{typePrefix}}Tokens.breakpointMd),
-              ToggleGroupItemStyler().width(size.height.desktop),
-            )
-      : item.padding(.horizontal(size.paddingX));
-
-  item = item
-      .onHovered(ToggleGroupItemStyler().color(hover))
-      .onPressed(ToggleGroupItemStyler().color(hover))
-      .onSelected(
-        ToggleGroupItemStyler()
-            .color({{typePrefix}}Tokens.accentSoft())
-            .labelColor({{typePrefix}}Tokens.accentSoftForeground())
-            .iconColor({{typePrefix}}Tokens.accentSoftForeground())
-            .onHovered(
-              ToggleGroupItemStyler().color({{typePrefix}}Tokens.accentSoftHover()),
-            )
-            .onPressed(
-              ToggleGroupItemStyler().color({{typePrefix}}Tokens.accentSoftHover()),
+          )
+          // `p-0 w-10 md:w-9` square the icon-only button.
+          .merge(
+            iconOnly
+                ? ToggleGroupItemStyler()
+                      .width(size.height.mobile)
+                      .onBreakpoint(
+                        const Breakpoint.minWidth({{typePrefix}}Tokens.breakpointMd),
+                        ToggleGroupItemStyler().width(size.height.desktop),
+                      )
+                : ToggleGroupItemStyler().padding(.horizontal(size.paddingX)),
+          )
+          .onHovered(ToggleGroupItemStyler().color(hover))
+          .onPressed(ToggleGroupItemStyler().color(hover))
+          .onSelected(
+            ToggleGroupItemStyler()
+                .color({{typePrefix}}Tokens.accentSoft())
+                .labelColor({{typePrefix}}Tokens.accentSoftForeground())
+                .iconColor({{typePrefix}}Tokens.accentSoftForeground())
+                .onHovered(
+                  ToggleGroupItemStyler().color({{typePrefix}}Tokens.accentSoftHover()),
+                )
+                .onPressed(
+                  ToggleGroupItemStyler().color({{typePrefix}}Tokens.accentSoftHover()),
+                ),
+          )
+          .onFocusVisible(
+            ToggleGroupItemStyler().containerEffects({{valuePrefix}}InsetFocusRing),
+          )
+          .onDisabled(
+            ToggleGroupItemStyler().wrap(
+              .opacity({{typePrefix}}Tokens.disabledOpacity),
             ),
-      )
-      .onFocusVisible(
-        ToggleGroupItemStyler().containerEffects({{valuePrefix}}InsetFocusRing),
-      )
-      .onDisabled(
-        ToggleGroupItemStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
-      )
-      .animate({{typePrefix}}Tokens.fillMotion);
+          )
+          .animate({{typePrefix}}Tokens.fillMotion);
 
   // Attached items are square inside one rounded, clipped pill.
   final container = detached
@@ -101,7 +103,11 @@ ToggleGroupStyler {{valuePrefix}}ToggleButtonGroupStyle({
     // unbounded row still lays out. A vertical group scrolls the same axis:
     // its labels are the part that outgrows the width.
     container: container.wrap(.scrollView(scrollDirection: .horizontal)),
-    item: detached ? item.borderRadius(.all({{typePrefix}}Tokens.radius3xl())) : item,
+    item: item.merge(
+      detached
+          ? ToggleGroupItemStyler().borderRadius(.all({{typePrefix}}Tokens.radius3xl()))
+          : null,
+    ),
   ).merge(style);
 }
 

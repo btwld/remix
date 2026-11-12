@@ -6,8 +6,17 @@ import '../theme/theme.dart';
 
 part 'progress.g.dart';
 
-/// HeroUI progress heights: `h-1`, `h-2`, `h-3`.
-enum {{typePrefix}}ProgressSize { sm, md, lg }
+/// HeroUI progress heights.
+enum {{typePrefix}}ProgressSize {
+  /// `h-1`: 4px.
+  sm,
+
+  /// `h-2`: 8px. The default.
+  md,
+
+  /// `h-3`: 12px.
+  lg,
+}
 
 /// HeroUI recipe for [RemixProgress], also the look of HeroUI's Meter, which
 /// shares every progress-bar style.

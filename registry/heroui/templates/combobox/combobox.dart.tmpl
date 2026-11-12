@@ -10,8 +10,14 @@ import 'textfield.dart';
 
 part 'combobox.g.dart';
 
-/// HeroUI's editable field variants.
-enum {{typePrefix}}ComboboxVariant { primary, secondary }
+/// HeroUI's editable field variants, the same as the text field's.
+enum {{typePrefix}}ComboboxVariant {
+  /// The field surface fill, with its shadow.
+  primary,
+
+  /// The `default` fill.
+  secondary,
+}
 
 /// HeroUI v3 ComboBox appearance over Remix's editable suggestions API.
 ///
