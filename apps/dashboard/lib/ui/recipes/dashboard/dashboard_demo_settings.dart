@@ -17,13 +17,15 @@ class UiDashboardSettingsPage extends StatefulWidget {
     this.onDarkModeChanged,
   });
 
-  /// Whether dark appearance is selected, or null for the system setting. Read
-  /// only when [onDarkModeChanged] is set; otherwise the page keeps its own
-  /// selection.
+  /// Whether dark appearance is selected: true for dark, false for light, or
+  /// null to start from the page's own selection, which is the system setting
+  /// until the user picks one. Ignored when a [UiDashboardThemeScope] is
+  /// above the page, which then owns the appearance.
   final bool? darkMode;
 
   /// Called when the user picks an appearance: true for dark, false for light,
-  /// null for the system setting.
+  /// null for the system setting. Never called when a
+  /// [UiDashboardThemeScope] is above the page.
   final ValueChanged<bool?>? onDarkModeChanged;
 
   @override

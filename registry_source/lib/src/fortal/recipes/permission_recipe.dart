@@ -9,7 +9,7 @@ import '../components/disclosure.dart';
 import '../theme/theme.dart';
 
 /// Styles for a permission request: a card, a disclosure for its details, and
-/// primary, outline, and ghost buttons for its three answers.
+/// solid, outline, and ghost buttons for its three answers.
 @immutable
 final class FortalAgentPermissionRecipe {
   const FortalAgentPermissionRecipe({

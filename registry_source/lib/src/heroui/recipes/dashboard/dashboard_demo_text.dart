@@ -30,7 +30,7 @@ class HeroUiDashboardText extends StatelessWidget {
   /// The text size and weight preset.
   final HeroUiDashboardTextType type;
 
-  /// Whether to use the semibold weight.
+  /// Whether to use the medium weight. Headings are always semibold.
   final bool emphasized;
 
   /// Whether to use the muted foreground color.
@@ -88,8 +88,8 @@ void heroUiDashboardToast(BuildContext context, String title) => showRemixToast(
 /// HeroUI has no segmented control, and a choice that only changes a value
 /// has no panels for a tab list to control, so this is a
 /// [RemixSegmentedControl]: one labelled group of options, as the
-/// other presets' demos use. It wears the `tabs` recipe's primary look, restated from the
-/// same tokens: the `default` list with its `p-1` inset and
+/// other presets' demos use. It wears the `tabs` recipe's primary look,
+/// restated from the same tokens: the `default` list with its `p-1` inset and
 /// `calc(var(--radius) * 2.5)` corners, and `h-8 px-4` `text-sm` medium
 /// segments in `muted`, the chosen one raised on `segment` with
 /// `segment-foreground` and the surface shadow. Segments share one width, as
@@ -103,6 +103,7 @@ class HeroUiDashboardSegments<T extends Object> extends StatelessWidget {
     this.semanticLabel,
   });
 
+  /// The options, each a value and the label shown for it.
   final List<({T value, String label})> items;
 
   /// The value of the chosen item.

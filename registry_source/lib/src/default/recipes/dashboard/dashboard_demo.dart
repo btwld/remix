@@ -60,7 +60,8 @@ class VanillaDashboardDemo extends StatefulWidget {
   /// Called with the header search text as it changes.
   final ValueChanged<String>? onSearchChanged;
 
-  /// The records the pages display.
+  /// The metrics, revenue, records and activity the Overview page shows. The
+  /// Customers and Orders pages read their own lists.
   final RegistryDashboardSampleData data;
 
   /// The page shown first.
