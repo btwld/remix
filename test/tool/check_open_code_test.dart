@@ -1530,6 +1530,47 @@ items:
   });
 
   group('fixture contract', () {
+    test('full Vanilla staging includes every committed fixture test', () {
+      final fixture = Directory('open_code/fixture');
+      checker.stageFixtureForTest(app: sandbox, fixtureRoot: fixture);
+
+      for (final file in Directory('${fixture.path}/test').listSync()) {
+        if (file is! File || !file.path.endsWith('_test.dart')) continue;
+        final target = File(
+          '${sandbox.path}/test/${file.uri.pathSegments.last}',
+        );
+        expect(target.readAsStringSync(), file.readAsStringSync());
+      }
+    });
+
+    for (final preset in ['vanilla', 'fortal', 'heroui']) {
+      test('$preset focused staging excludes gallery-only recipe tests', () {
+        final directory = preset == 'vanilla' ? 'fixture' : '${preset}_fixture';
+        final fixture = Directory('open_code/$directory');
+        for (final item in [
+          if (preset == 'vanilla') ...['icons', 'ownership'],
+          if (preset == 'heroui') 'search_field',
+          'dashboard_shell',
+          'dashboard_demo',
+        ]) {
+          checker.stageFixtureForTest(
+            app: sandbox,
+            fixtureRoot: fixture,
+            preset: preset,
+            item: item,
+          );
+
+          expect(
+            Directory(
+              '${sandbox.path}/test',
+            ).listSync().map((file) => file.uri.pathSegments.last),
+            unorderedEquals(['open_code_test.dart', 'theme_modes_test.dart']),
+            reason: '$preset --item $item',
+          );
+        }
+      });
+    }
+
     for (final preset in ['vanilla', 'fortal', 'heroui']) {
       test('$preset requires every committed fixture test', () {
         final directory = preset == 'vanilla' ? 'fixture' : '${preset}_fixture';

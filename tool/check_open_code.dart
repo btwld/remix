@@ -496,10 +496,11 @@ final class _PresetContract {
   final List<String> registryItems;
   final Map<String, String> generatedSnapshots;
 
-  /// The same inventory drives fixture validation and consumer staging.
-  List<String> get fixtureAppFiles => [
+  /// Validation uses the full gallery inventory. Focused installs supply their
+  /// own main/test pair and must not stage tests requiring other registry items.
+  List<String> fixtureAppFiles({String? item}) => [
     ..._fixtureAppFiles,
-    if (name == 'vanilla') ...[
+    if (name == 'vanilla' && item == null) ...[
       'test/agent_recipe_contract_test.dart',
       'test/composer_recipe_test.dart',
     ],
@@ -1149,6 +1150,7 @@ Future<_Failure?> _checkInTemporaryApp({
     app: app,
     fixtureRoot: fixtureRoot,
     preset: preset,
+    item: item,
     registrySmoke: stableRegistry,
   );
   _step(
@@ -2185,7 +2187,7 @@ _Failure? _verifyFixtureContract(
 ) {
   final problems = <String>[];
   for (final relative in [
-    ...preset.fixtureAppFiles,
+    ...preset.fixtureAppFiles(),
     ...preset.generatedSnapshots.values,
   ]) {
     if (!File('${fixtureRoot.path}/$relative').existsSync()) {
@@ -2503,6 +2505,7 @@ void _replaceSkeleton({
   required Directory app,
   required Directory fixtureRoot,
   required _PresetContract preset,
+  required String? item,
   bool registrySmoke = false,
 }) {
   final lib = Directory('${app.path}/lib');
@@ -2514,7 +2517,7 @@ void _replaceSkeleton({
   final build = File('${app.path}/build.yaml');
   if (build.existsSync()) build.deleteSync();
 
-  for (final relative in preset.fixtureAppFiles) {
+  for (final relative in preset.fixtureAppFiles(item: item)) {
     if (registrySmoke &&
         (relative.startsWith('lib/') || relative.startsWith('test/')))
       continue;
@@ -2670,6 +2673,19 @@ String? fixtureContractProblem(
   Directory fixtureRoot, {
   String preset = 'vanilla',
 }) => _verifyFixtureContract(fixtureRoot, _presetByName(preset))?.message;
+
+/// Stages the production fixture inventory for checker regression tests.
+void stageFixtureForTest({
+  required Directory app,
+  required Directory fixtureRoot,
+  String preset = 'vanilla',
+  String? item,
+}) => _replaceSkeleton(
+  app: app,
+  fixtureRoot: fixtureRoot,
+  preset: _presetByName(preset),
+  item: item,
+);
 
 /// Returns the catalog-drift error for focused regression tests.
 String? registryCoverageProblem(
