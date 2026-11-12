@@ -102,8 +102,8 @@ DataTableStyler _base(_Scale metrics) => DataTableStyler()
     .bodyRow(
       _rowDivider()
           .color(const Color(0x00000000))
-          // Hover and selection are extensions beyond the upstream table. Both are pure color
-          // layers, so a row never changes geometry when either applies.
+          // Hover and selection go beyond the upstream table. Both are pure
+          // color layers, so a row never changes geometry when either applies.
           .onHovered(.color(FortalTokens.grayA3()))
           .onSelected(
             .color(

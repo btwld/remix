@@ -5,7 +5,8 @@ import '../theme/theme.dart';
 import 'icon_button.dart';
 import 'select.dart';
 
-/// The side of a day cell and of a navigation button at 100% text scaling: 44px.
+/// The side of a day cell and of a navigation button: 44px at 100% text
+/// scaling.
 const fortalCalendarTarget = 44.0;
 
 // These calendar dimensions have no matching spacing-scale step.
