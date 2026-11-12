@@ -1486,7 +1486,120 @@ items:
     });
   });
 
+  group('icon reinstall documentation', () {
+    for (final preset in ['vanilla', 'fortal', 'heroui']) {
+      test('$preset commands cover every item with icon placeholders', () {
+        final registry = File('registry/$preset/registry.yaml');
+        final catalog = loadYaml(registry.readAsStringSync()) as YamlMap;
+        final items = catalog['items'] as YamlMap;
+        final expected = <String>{};
+        for (final entry in items.entries) {
+          final item = entry.value as YamlMap;
+          final files = item['files'] as YamlList? ?? [];
+          if (files.any(
+            (file) => File(
+              'registry/$preset/${file['source']}',
+            ).readAsStringSync().contains('{{icon:'),
+          )) {
+            expected.add(entry.key as String);
+          }
+        }
+        expect(expected, containsAll(['date_picker', 'date_range_picker']));
+        for (final path in [
+          'docs/open-code/catalog.mdx',
+          'skills/using-remix/references/cli.md',
+        ]) {
+          final commands = RegExp(
+            r'^remix add (icons .+) --(diff|overwrite)',
+            multiLine: true,
+          ).allMatches(File(path).readAsStringSync()).toList();
+          final selected = preset == 'heroui'
+              ? commands.skip(2)
+              : commands.take(2);
+          expect(selected, hasLength(2), reason: '$path/$preset');
+          for (final command in selected) {
+            expect(
+              command.group(1)!.split(' ').toSet(),
+              expected,
+              reason: '$path/$preset/${command.group(2)}',
+            );
+          }
+        }
+      });
+    }
+  });
+
   group('fixture contract', () {
+    test('full Vanilla staging includes every committed fixture test', () {
+      final fixture = Directory('open_code/fixture');
+      checker.stageFixtureForTest(app: sandbox, fixtureRoot: fixture);
+
+      for (final file in Directory('${fixture.path}/test').listSync()) {
+        if (file is! File || !file.path.endsWith('_test.dart')) continue;
+        final target = File(
+          '${sandbox.path}/test/${file.uri.pathSegments.last}',
+        );
+        expect(target.readAsStringSync(), file.readAsStringSync());
+      }
+    });
+
+    for (final preset in ['vanilla', 'fortal', 'heroui']) {
+      test('$preset focused staging excludes gallery-only recipe tests', () {
+        final directory = preset == 'vanilla' ? 'fixture' : '${preset}_fixture';
+        final fixture = Directory('open_code/$directory');
+        for (final item in [
+          if (preset == 'vanilla') ...['icons', 'ownership'],
+          if (preset == 'heroui') 'search_field',
+          'dashboard_shell',
+          'dashboard_demo',
+        ]) {
+          checker.stageFixtureForTest(
+            app: sandbox,
+            fixtureRoot: fixture,
+            preset: preset,
+            item: item,
+          );
+
+          expect(
+            Directory(
+              '${sandbox.path}/test',
+            ).listSync().map((file) => file.uri.pathSegments.last),
+            unorderedEquals(['open_code_test.dart', 'theme_modes_test.dart']),
+            reason: '$preset --item $item',
+          );
+        }
+      });
+    }
+
+    for (final preset in ['vanilla', 'fortal', 'heroui']) {
+      test('$preset requires every committed fixture test', () {
+        final directory = preset == 'vanilla' ? 'fixture' : '${preset}_fixture';
+        final source = Directory('open_code/$directory');
+        final fixture = Directory('${sandbox.path}/$directory');
+        for (final entity
+            in source.listSync(recursive: true).whereType<File>()) {
+          final relative = entity.path.substring(source.path.length + 1);
+          final target = File('${fixture.path}/$relative');
+          target.parent.createSync(recursive: true);
+          entity.copySync(target.path);
+        }
+        final tests = Directory('${fixture.path}/test')
+            .listSync()
+            .whereType<File>()
+            .where((file) => file.path.endsWith('_test.dart'));
+        for (final file in tests) {
+          final contents = file.readAsBytesSync();
+          file.deleteSync();
+          expect(
+            checker.fixtureContractProblem(fixture, preset: preset),
+            contains('${file.uri.pathSegments.last} is missing'),
+            reason: file.path,
+          );
+          file.writeAsBytesSync(contents);
+        }
+      });
+    }
+
     test('requires every committed generated adapter', () {
       const snapshots = [
         'expected/acme_button.g.dart',
@@ -2061,6 +2174,9 @@ void _writeValidFixture(Directory fixture) {
     'analysis_options.yaml',
     'lib/main.dart',
     'test/open_code_test.dart',
+    'test/theme_modes_test.dart',
+    'test/agent_recipe_contract_test.dart',
+    'test/composer_recipe_test.dart',
     'expected/acme_button.g.dart',
     'expected/acme_chart.g.dart',
     'expected/acme_tabs.g.dart',

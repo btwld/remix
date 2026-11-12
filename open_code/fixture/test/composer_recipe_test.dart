@@ -15,10 +15,10 @@ const _dark = AcmeThemeData.dark();
 /// A standalone installed control for comparing the send button's dimensions.
 /// The glyph is incidental to the geometry assertion.
 final _referenceIconButton = AcmeIconButton(
-  icon: IconData(0x2192),
+  icon: const IconData(0x2192),
   semanticLabel: 'Reference',
   size: AcmeIconButtonSize.small,
-  style: IconButtonStyler().size(48, 48),
+  style: IconButtonStyler().size(36, 36),
 );
 
 Iterable<Color> _decorationColors(WidgetTester tester, Finder root) sync* {
@@ -97,7 +97,7 @@ Widget _composer({
 
 void main() {
   group('the installed recipes style Agent', () {
-    testWidgets('send matches installed IconButton size and color', (
+    testWidgets('send uses a 36px installed IconButton and primary color', (
       tester,
     ) async {
       await _pump(
@@ -118,7 +118,7 @@ void main() {
       final reference = find.byType(AcmeIconButton);
 
       expect(_decorationColors(tester, send), contains(_light.primary));
-      // Compare dimensions without hard-coding the installed recipe's size.
+      // The composer uses a 36px override of the small IconButton recipe.
       expect(tester.getSize(send), tester.getSize(reference));
     });
 
@@ -136,7 +136,7 @@ void main() {
 
       expect(
         _decorationColors(tester, find.byType(RemixCard)),
-        contains(_light.background),
+        contains(_light.card),
       );
     });
 
@@ -154,7 +154,11 @@ void main() {
       expect(_decorationColors(tester, send), isNot(contains(_light.primary)));
       expect(
         _decorationColors(tester, find.byType(RemixCard)),
-        contains(_dark.background),
+        contains(_dark.card),
+      );
+      expect(
+        _decorationColors(tester, find.byType(RemixCard)),
+        isNot(contains(_dark.background)),
       );
     });
 

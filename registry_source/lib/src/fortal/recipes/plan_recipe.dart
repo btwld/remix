@@ -38,7 +38,7 @@ FortalAgentPlanRecipe fortalAgentPlanRecipe({
     count: TextStyler()
         .color(FortalTokens.gray11())
         .style(FortalTokens.text1.mix())
-        .wrap(.padding(.right(FortalTokens.space2()))),
+        .wrap(.padding(.end(FortalTokens.space2()))),
     indicator: IconStyler()
         .color(FortalTokens.gray12())
         .size(FortalTokens.space4()),

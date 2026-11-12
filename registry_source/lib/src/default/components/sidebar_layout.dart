@@ -253,35 +253,31 @@ class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
   }
 
   Widget _wideRow() {
-    final reduceMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     final policy = FocusTraversalGroup.maybeOf(context);
-    return RowBox(
-      style: FlexBoxStyler().crossAxisAlignment(.stretch),
-      children: [
-        Box(
-          style: BoxStyler()
-              .width(
-                widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
-              )
-              .animate(
-                .easeInOut(
-                  reduceMotion
-                      ? Duration.zero
-                      : const Duration(milliseconds: 200),
-                ),
-              ),
-          // Grouped so Tab finishes one pane before the other, rather than
-          // zigzagging between controls that sit at similar heights.
-          child: FocusTraversalGroup(policy: policy, child: widget.sidebar),
-        ),
-        Expanded(
-          child: FocusTraversalGroup(
-            policy: policy,
-            child: _body(besideSidebar: true),
+    return RemixReducedMotionBuilder(
+      builder: (context, reduceMotion) => RowBox(
+        style: FlexBoxStyler().crossAxisAlignment(.stretch),
+        children: [
+          AnimatedContainer(
+            width: widget.collapsed
+                ? widget.collapsedWidth
+                : widget.sidebarWidth,
+            duration: reduceMotion
+                ? Duration.zero
+                : const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            // Grouped so Tab finishes one pane before the other, rather than
+            // zigzagging between controls that sit at similar heights.
+            child: FocusTraversalGroup(policy: policy, child: widget.sidebar),
           ),
-        ),
-      ],
+          Expanded(
+            child: FocusTraversalGroup(
+              policy: policy,
+              child: _body(besideSidebar: true),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

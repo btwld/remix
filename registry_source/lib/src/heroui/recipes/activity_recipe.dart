@@ -40,7 +40,7 @@ HeroUiAgentActivityRecipe heroUiAgentActivityRecipe({
     count: TextStyler()
         .style(HeroUiTokens.textXs.mix())
         .color(HeroUiTokens.muted())
-        .wrap(.padding(.right(8))),
+        .wrap(.padding(.end(8))),
     indicator: IconStyler().color(HeroUiTokens.foreground()).size(16),
     pendingStatus: IconStyler().color(HeroUiTokens.muted()).size(16),
     activeStatus: IconStyler().color(HeroUiTokens.accent()).size(16),
