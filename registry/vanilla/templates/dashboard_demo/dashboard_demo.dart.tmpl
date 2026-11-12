@@ -156,9 +156,8 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
         ),
       },
     );
-    if (!widget.builtInChrome) return demo;
     final radius = _radius;
-    return {{typePrefix}}Theme(
+    return _{{typePrefix}}DemoTheme(
       mode: _isDark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
       // One explicit half would be reused for the other brightness. Copy the
       // radius onto both so light and dark keep their own colors.
@@ -181,6 +180,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       onPressed: () => setState(() => _dark = !_isDark),
     ),
     _{{typePrefix}}HeaderPopover(
+      dark: _isDark,
       icon: {{icon:bell}},
       semanticLabel: 'Open notifications',
       showBadge: !_notificationsRead,
@@ -234,6 +234,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       ),
     ),
     _{{typePrefix}}HeaderPopover(
+      dark: _isDark,
       icon: {{icon:gear}},
       semanticLabel: 'Open theme settings',
       popoverChild: Box(
@@ -316,12 +317,14 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
 /// what closing returns focus to.
 class _{{typePrefix}}HeaderPopover extends StatefulWidget {
   const _{{typePrefix}}HeaderPopover({
+    required this.dark,
     required this.icon,
     required this.semanticLabel,
     required this.popoverChild,
     this.showBadge = false,
   });
 
+  final bool dark;
   final IconData icon;
   final String semanticLabel;
   final Widget popoverChild;
@@ -334,6 +337,14 @@ class _{{typePrefix}}HeaderPopover extends StatefulWidget {
 class _{{typePrefix}}HeaderPopoverState extends State<_{{typePrefix}}HeaderPopover> {
   final _controller = MenuController();
   final _focusNode = FocusNode();
+
+  @override
+  void didUpdateWidget(covariant _{{typePrefix}}HeaderPopover oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Appearance changes used to dismiss the popover by remounting the demo.
+    // Keep that behavior while retaining the dashboard's page state.
+    if (widget.dark != oldWidget.dark) _controller.close();
+  }
 
   @override
   void dispose() {
@@ -405,7 +416,14 @@ class _{{typePrefix}}Breadcrumb extends StatelessWidget {
           ).maxLines(1).softWrap(false).overflow(.ellipsis),
         ),
       ),
-      StyledText('/', style: _textStyle(muted: true)),
+      Transform.flip(
+        key: const ValueKey('dashboard-breadcrumb-separator'),
+        flipX: Directionality.of(context) == TextDirection.rtl,
+        child: StyledIcon(
+          icon: {{icon:chevronRight}},
+          style: IconStyler().size(12).color({{typePrefix}}Tokens.mutedForeground()),
+        ),
+      ),
       Flexible(
         child: StyledText(
           page.label,
@@ -550,4 +568,49 @@ TextStyler _textStyle({
     composerSubmitStyle: composer.submitStyle,
     composerStopStyle: composer.stopStyle,
   );
+}
+
+/// Keeps the demo's theme, text and icon ancestors present in both appearances.
+/// The ordinary theme conditionally inserts recoloring widgets under a host.
+/// Reuse its resolved inherited scope via [InheritedTheme.wrap], which installs
+/// the theme and Mix tokens without those conditional presentation wrappers.
+/// The dashboard host supplies MediaQuery, as required by its shell.
+class _{{typePrefix}}DemoTheme extends {{typePrefix}}Theme {
+  const _{{typePrefix}}DemoTheme({
+    super.theme,
+    super.darkTheme,
+    super.mode,
+    required super.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final root = {{typePrefix}}Theme.maybeOf(context) == null;
+    final scope = super.build(context) as InheritedTheme;
+    return scope.wrap(
+      context,
+      Builder(
+        builder: (context) {
+          final theme = {{typePrefix}}Theme.of(context);
+          final foreground = theme.foreground;
+          final body = root
+              ? MixScope.tokenOf(
+                  {{typePrefix}}Tokens.textSm,
+                  context,
+                ).copyWith(fontWeight: FontWeight.w400)
+              : DefaultTextStyle.of(context).style;
+          return ColoredBox(
+            color: theme.background,
+            child: DefaultTextStyle.merge(
+              style: body.copyWith(color: foreground),
+              child: IconTheme.merge(
+                data: IconThemeData(color: foreground),
+                child: child,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

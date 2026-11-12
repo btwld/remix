@@ -31,6 +31,7 @@ import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_demo.dart
 import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 import 'package:remix/src/utilities/remix_path_icon.dart';
 
 enum _Preset { defaultPreset, fortal, heroui }
@@ -588,6 +589,207 @@ void main() {
 
   for (final preset in _Preset.values) {
     group(preset.name, () {
+      for (final change in [
+        'header appearance',
+        'Settings appearance',
+        'radius',
+      ]) {
+        testWidgets('hosted demo retains pages and edits after $change', (
+          tester,
+        ) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            chatStepDelay: const Duration(milliseconds: 10),
+          );
+          final base = tester.state(find.byType(RegistryDashboardDemoBase));
+          List<Type> ancestors() {
+            final types = <Type>[];
+            tester
+                .element(find.byType(RegistryDashboardDemoBase))
+                .visitAncestorElements((element) {
+                  types.add(element.widget.runtimeType);
+                  return true;
+                });
+            return types;
+          }
+
+          final parents = ancestors();
+          await tester.tap(find.text('Chat').first);
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Review checkout'));
+          for (var frame = 0; frame < 5; frame++) {
+            await tester.pump(const Duration(milliseconds: 11));
+          }
+          expect(find.textContaining('ready for review'), findsWidgets);
+          await tester.tap(find.text('Settings').first);
+          await tester.pumpAndSettle();
+          final profile = find
+              .descendant(
+                of: find.byKey(const ValueKey('dashboard-page-settings')),
+                matching: find.byType(EditableText),
+              )
+              .first;
+          await tester.enterText(profile, 'Retained profile');
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Customers').first);
+          await tester.pumpAndSettle();
+          final search = find.descendant(
+            of: find.byKey(const ValueKey('customer-search')),
+            matching: find.byType(EditableText),
+          );
+          await tester.enterText(search, 'olivia');
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Orders').first);
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Pending').first);
+          await tester.pumpAndSettle();
+
+          if (change == 'header appearance') {
+            await tester.tap(
+              find.byKey(const ValueKey('dashboard-appearance-toggle')).first,
+            );
+          } else {
+            await tester.tap(find.text('Settings').first);
+            await tester.pumpAndSettle();
+            if (change == 'radius') {
+              await _changeRadius(tester, preset);
+            } else {
+              await tester.ensureVisible(find.text('Dark').last);
+              await tester.tap(find.text('Dark').last);
+            }
+          }
+          await tester.pumpAndSettle();
+          final pages = tester.widget<IndexedStack>(
+            find.byKey(const ValueKey('dashboard-demo-pages')),
+          );
+          expect(
+            pages.index,
+            change == 'header appearance'
+                ? RegistryDashboardDemoPage.orders.index
+                : RegistryDashboardDemoPage.settings.index,
+          );
+          expect(
+            tester.state(find.byType(RegistryDashboardDemoBase)),
+            same(base),
+          );
+          expect(
+            ancestors(),
+            parents,
+            reason: 'theme changes keep the ancestor structure stable',
+          );
+          await tester.tap(find.text('Customers').first);
+          await tester.pumpAndSettle();
+          expect(tester.widget<EditableText>(search).controller.text, 'olivia');
+          await tester.tap(find.text('Orders').first);
+          await tester.pumpAndSettle();
+          final orders = tester.widget<RemixDataTable<RegistryDashboardOrder>>(
+            find.byType(RemixDataTable<RegistryDashboardOrder>),
+          );
+          expect(orders.rows, isNotEmpty);
+          expect(
+            orders.rows.map((order) => order.status),
+            everyElement(RegistryDashboardOrderStatus.pending),
+          );
+          await tester.tap(find.text('Settings').first);
+          await tester.pumpAndSettle();
+          expect(
+            tester.widget<EditableText>(profile).controller.text,
+            'Retained profile',
+          );
+          await tester.tap(find.text('Chat').first);
+          await tester.pumpAndSettle();
+          expect(find.textContaining('ready for review'), findsWidgets);
+          expect(tester.takeException(), isNull);
+        });
+      }
+
+      for (final control in ['appearance', 'radius']) {
+        testWidgets('Settings $control applies without built-in chrome', (
+          tester,
+        ) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            builtInChrome: false,
+            initialPage: RegistryDashboardDemoPage.settings,
+          );
+          BuildContext pageContext() => tester.element(
+            find.byKey(const ValueKey('dashboard-demo-pages')),
+          );
+          expect(_brightness(preset, pageContext()), Brightness.light);
+          final before = _radius(preset, pageContext());
+          if (control == 'appearance') {
+            await tester.ensureVisible(find.text('Dark').last);
+            await tester.tap(find.text('Dark').last);
+            await tester.pumpAndSettle();
+            expect(_brightness(preset, pageContext()), Brightness.dark);
+            await tester.tap(find.text('System').last);
+            await tester.pumpAndSettle();
+            expect(_brightness(preset, pageContext()), Brightness.light);
+          } else {
+            await _changeRadius(tester, preset);
+            expect(_radius(preset, pageContext()), isNot(before));
+          }
+          expect(
+            find.byKey(const ValueKey('dashboard-appearance-toggle')),
+            findsNothing,
+          );
+          expect(tester.takeException(), isNull);
+        });
+      }
+
+      testWidgets('theme popover closes on appearance changes', (tester) async {
+        await _pumpDashboard(tester, preset: preset);
+        final trigger = preset == .fortal
+            ? find.byKey(const ValueKey('theme-panel-trigger'))
+            : find.bySemanticsLabel('Open theme settings');
+        final panel = preset == .fortal
+            ? find.byKey(const ValueKey('theme-panel'))
+            : find.text('Theme settings');
+        for (final label in ['Dark', 'Light']) {
+          await tester.tap(trigger);
+          await tester.pumpAndSettle();
+          expect(panel, findsOneWidget);
+          await tester.tap(find.text(label).last);
+          await tester.pumpAndSettle();
+          expect(panel, findsNothing);
+        }
+        expect(tester.takeException(), isNull);
+      });
+
+      for (final direction in TextDirection.values) {
+        testWidgets('header breadcrumb follows ${direction.name} direction', (
+          tester,
+        ) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            textDirection: direction,
+          );
+          final separator = find.byKey(
+            const ValueKey('dashboard-breadcrumb-separator'),
+          );
+          expect(separator, findsOneWidget);
+          expect(
+            tester.widget<Transform>(separator).transform.entry(0, 0),
+            direction == TextDirection.rtl ? -1 : 1,
+          );
+          expect(
+            tester
+                .widget<StyledIcon>(
+                  find.descendant(
+                    of: separator,
+                    matching: find.byType(StyledIcon),
+                  ),
+                )
+                .icon,
+            RemixIcons.chevronRight,
+          );
+          expect(tester.takeException(), isNull);
+        });
+      }
+
       testWidgets('overview renders coherent sample data', (tester) async {
         await _pumpOverview(tester, preset: preset, width: 1280);
 
@@ -1398,12 +1600,14 @@ Future<void> _pumpDashboard(
   double width = 1200,
   double height = 800,
   VanillaThemeData? darkTheme,
+  TextDirection textDirection = TextDirection.ltr,
 }) => _pump(
   tester,
   preset: preset,
   width: width,
   height: height,
   darkTheme: darkTheme,
+  textDirection: textDirection,
   child: switch (preset) {
     .defaultPreset => VanillaDashboardDemo(
       key: ValueKey(initialPage),
@@ -1440,6 +1644,7 @@ Future<void> _pump(
   required Widget child,
   TextScaler textScaler = TextScaler.noScaling,
   VanillaThemeData? darkTheme,
+  TextDirection textDirection = TextDirection.ltr,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = Size(width, height);
@@ -1454,7 +1659,7 @@ Future<void> _pump(
     ),
     builder: (context, child) => MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaler: textScaler),
-      child: Directionality(textDirection: TextDirection.ltr, child: child!),
+      child: Directionality(textDirection: textDirection, child: child!),
     ),
     home: SizedBox(width: width, height: height, child: child),
   );
@@ -1527,4 +1732,29 @@ bool _isInside(BuildContext? context, Element root) {
   });
 
   return inside;
+}
+
+Brightness _brightness(_Preset preset, BuildContext context) =>
+    switch (preset) {
+      .defaultPreset => VanillaTheme.of(context).brightness,
+      .fortal => FortalTheme.of(context).brightness,
+      .heroui => HeroUiTheme.of(context).brightness,
+    };
+
+Object _radius(_Preset preset, BuildContext context) => switch (preset) {
+  .defaultPreset => VanillaTheme.of(context).radius,
+  .fortal => FortalTheme.of(context).radius,
+  .heroui => HeroUiTheme.of(context).radius,
+};
+
+Future<void> _changeRadius(WidgetTester tester, _Preset preset) async {
+  if (preset == .fortal) {
+    await tester.ensureVisible(find.text('Full').last);
+    await tester.tap(find.text('Full').last);
+  } else {
+    final slider = find.byType(RemixSlider);
+    await tester.ensureVisible(slider);
+    await tester.drag(slider, const Offset(160, 0));
+  }
+  await tester.pumpAndSettle();
 }
