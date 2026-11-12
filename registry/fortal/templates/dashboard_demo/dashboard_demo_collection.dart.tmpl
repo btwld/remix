@@ -1,0 +1,741 @@
+import 'dart:math' as math;
+
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+{{icon:import}}
+
+import '../../components/accordion.dart';
+import '../../components/range_slider.dart';
+import '../../components/toggle_group.dart';
+import 'dashboard_demo_data.dart';
+import 'dashboard_demo_page_header.dart';
+import 'dashboard_demo_typography.dart';
+import 'dashboard_demo_ui.dart';
+import 'dashboard_demo_widgets.dart';
+import 'dashboard_overview.dart';
+
+/// The statuses the Collection page filters by, after everything.
+enum _StatusFilter {
+  all('All'),
+  live('Live'),
+  lowStock('Low stock'),
+  soldOut('Sold out'),
+  draft('Draft');
+
+  const _StatusFilter(this.label);
+
+  final String label;
+
+  bool matches({{typePrefix}}DashboardEditionStatus status) =>
+      this == all || name == status.name;
+}
+
+/// How the Collection page lays out its editions.
+enum {{typePrefix}}CollectionLayout { grid, list }
+
+/// The Collection page: every edition as a cover card or a table row.
+///
+/// The featured edition leads on a wide split card. Below it, a status
+/// filter, a search field and a layout switch narrow and re-present the rest.
+/// Activating a card opens the edition in a dialog.
+class {{typePrefix}}DashboardCollectionPage extends StatefulWidget {
+  const {{typePrefix}}DashboardCollectionPage({
+    super.key,
+    this.data,
+    this.searchController,
+  });
+
+  /// The records the page shows. Defaults to [{{valuePrefix}}DashboardSampleData].
+  final {{typePrefix}}DashboardData? data;
+
+  /// Controls the search field, so a host can fill it. The page creates its
+  /// own when null.
+  final TextEditingController? searchController;
+
+  @override
+  State<{{typePrefix}}DashboardCollectionPage> createState() =>
+      _{{typePrefix}}DashboardCollectionPageState();
+}
+
+class _{{typePrefix}}DashboardCollectionPageState
+    extends State<{{typePrefix}}DashboardCollectionPage> {
+  static final _grid = GridBoxStyler.equalColumns(4)
+      .gap({{valuePrefix}}DashboardGap)
+      .onConstraints(
+        const .maxWidth(1079),
+        .equalColumns(3).gap({{valuePrefix}}DashboardGap),
+      )
+      .onConstraints(
+        const .maxWidth(799),
+        .equalColumns(2).gap({{valuePrefix}}DashboardGap),
+      )
+      .onConstraints(
+        const .maxWidth(499),
+        .equalColumns(1).gap({{valuePrefix}}DashboardGap),
+      );
+
+  TextEditingController? _ownSearch;
+  _StatusFilter _status = .all;
+  {{typePrefix}}CollectionLayout _layout = .grid;
+
+  /// The price range shown, as fractions of the collection's own range.
+  List<double> _price = const [0, 1];
+
+  TextEditingController get _search =>
+      widget.searchController ?? (_ownSearch ??= TextEditingController());
+
+  @override
+  void initState() {
+    super.initState();
+    _search.addListener(_onSearchChanged);
+  }
+
+  @override
+  void didUpdateWidget({{typePrefix}}DashboardCollectionPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.searchController == oldWidget.searchController) return;
+    (oldWidget.searchController ?? _ownSearch)?.removeListener(
+      _onSearchChanged,
+    );
+    _search.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _search.removeListener(_onSearchChanged);
+    _ownSearch?.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() => setState(() {});
+
+  @override
+  Widget build(BuildContext context) {
+    final data = widget.data ?? {{valuePrefix}}DashboardSampleData;
+    final query = _search.text.trim().toLowerCase();
+    final prices = [for (final edition in data.editions) edition.price];
+    final cheapest = prices.fold(double.infinity, math.min);
+    final dearest = prices.fold(0.0, math.max);
+    double priceAt(double fraction) =>
+        prices.isEmpty ? 0 : cheapest + (dearest - cheapest) * fraction;
+    final editions = [
+      for (final edition in data.editions)
+        if (_status.matches(edition.status) &&
+            edition.price >= priceAt(_price.first) - 0.5 &&
+            edition.price <= priceAt(_price.last) + 0.5 &&
+            '${edition.title} ${edition.artist} ${edition.series}'
+                .toLowerCase()
+                .contains(query))
+          edition,
+    ];
+    final series = {for (final edition in data.editions) edition.series};
+
+    return {{typePrefix}}Page(
+      key: const ValueKey('dashboard-collection'),
+      title: 'Collection',
+      description:
+          '${data.editions.length} editions across ${series.length} series.',
+      actions: [
+        {{typePrefix}}Button(
+          label: 'New edition',
+          leadingIcon: {{icon:plus}},
+          onPressed: () =>
+              {{valuePrefix}}DashboardToast(context, 'Draft edition created'),
+        ),
+      ],
+      children: [
+        if (data.editions.isNotEmpty)
+          {{typePrefix}}EditionSpotlight(
+            edition: data.editions.first,
+            onPressed: () =>
+                show{{typePrefix}}EditionDialog(context, data.editions.first),
+          ),
+        WrapBox(
+          style: WrapBoxStyler()
+              .wrapAlignment(.spaceBetween)
+              .crossAxisAlignment(.center)
+              .spacing({{typePrefix}}Tokens.space3())
+              .runSpacing({{typePrefix}}Tokens.space3()),
+          children: [
+            {{typePrefix}}FilterTabs<_StatusFilter>(
+              key: const ValueKey('collection-status'),
+              semanticLabel: 'Filter editions by status',
+              values: _StatusFilter.values,
+              selected: _status,
+              labelOf: (status) => status.label,
+              onChanged: (status) => setState(() => _status = status),
+            ),
+            WrapBox(
+              style: WrapBoxStyler()
+                  .crossAxisAlignment(.center)
+                  .spacing({{typePrefix}}Tokens.space3())
+                  .runSpacing({{typePrefix}}Tokens.space3()),
+              children: [
+                Box(
+                  style: BoxStyler().width(240),
+                  child: {{typePrefix}}TextField(
+                    key: const ValueKey('collection-search'),
+                    controller: _search,
+                    leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
+                    hintText: 'Search editions…',
+                    semanticLabel: 'Search editions',
+                  ),
+                ),
+                {{typePrefix}}ToggleGroup<{{typePrefix}}CollectionLayout>(
+                  key: const ValueKey('collection-layout'),
+                  semanticLabel: 'Collection layout',
+                  selectedValue: _layout,
+                  items: const [
+                    RemixToggleGroupItem(value: .grid, label: 'Grid'),
+                    RemixToggleGroupItem(value: .list, label: 'List'),
+                  ],
+                  onChanged: (layout) {
+                    if (layout != null) setState(() => _layout = layout);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+        if (prices.length > 1)
+          RowBox(
+            key: const ValueKey('collection-price'),
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.center)
+                .spacing({{typePrefix}}Tokens.space4()),
+            children: [
+              StyledText(
+                'Price',
+                style: dashboardText(.size2, weight: .medium),
+              ),
+              Flexible(
+                child: Box(
+                  style: BoxStyler().maxWidth(320),
+                  child: {{typePrefix}}RangeSlider(
+                    values: _price,
+                    snapDivisions: 13,
+                    semanticLabels: const ['Lowest price', 'Highest price'],
+                    onChanged: (values) => setState(() => _price = values),
+                  ),
+                ),
+              ),
+              Flexible(
+                child: StyledText(
+                  '${{{valuePrefix}}DashboardCurrency(priceAt(_price.first), cents: false)}'
+                  ' – '
+                  '${{{valuePrefix}}DashboardCurrency(priceAt(_price.last), cents: false)}',
+                  style: dashboardTextLine(.size2, tone: .muted),
+                ),
+              ),
+            ],
+          ),
+        if (editions.isEmpty)
+          {{typePrefix}}Surface(
+            emphasis: .quiet,
+            child: {{typePrefix}}EmptyState(
+              icon: {{icon:magnifyingGlass}},
+              title: 'No editions found',
+              body: 'Try another title, artist, status or price.',
+              action: {{typePrefix}}Button.soft(
+                size: .size1,
+                label: 'Clear filters',
+                onPressed: () {
+                  _search.clear();
+                  setState(() {
+                    _status = .all;
+                    _price = const [0, 1];
+                  });
+                },
+              ),
+            ),
+          )
+        else if (_layout == .grid)
+          GridBox(
+            key: const ValueKey('collection-grid'),
+            style: _grid,
+            children: [
+              for (final edition in editions)
+                {{typePrefix}}EditionCard(
+                  key: ValueKey('edition-${edition.id}'),
+                  edition: edition,
+                  onPressed: () => show{{typePrefix}}EditionDialog(context, edition),
+                ),
+            ],
+          )
+        else
+          {{typePrefix}}EditionTable(
+            editions: editions,
+            onOpen: (edition) => show{{typePrefix}}EditionDialog(context, edition),
+          ),
+      ],
+    );
+  }
+}
+
+/// The featured edition on a wide card: its cover on one side, its story and
+/// sales on the other. They stack when the card is narrow.
+class {{typePrefix}}EditionSpotlight extends StatelessWidget {
+  const {{typePrefix}}EditionSpotlight({
+    super.key,
+    required this.edition,
+    required this.onPressed,
+  });
+
+  static final _split = GridBoxStyler.columns(const [
+    .fr(5),
+    .fr(6),
+  ]).onConstraints(const .maxWidth(719), .equalColumns(1));
+
+  /// The edition featured.
+  final {{typePrefix}}DashboardEdition edition;
+
+  /// Called when the user asks for the edition's details.
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) => {{typePrefix}}Surface(
+    key: const ValueKey('collection-spotlight'),
+    size: .size3,
+    padded: false,
+    child: GridBox(
+      style: _split,
+      children: [
+        Stack(
+          children: [
+            SizedBox(height: 260 * {{typePrefix}}Theme.of(context).scaling.factor),
+            Positioned.fill(
+              child: {{typePrefix}}EditionCover(edition, described: true),
+            ),
+          ],
+        ),
+        Box(
+          style: BoxStyler().padding(.all({{typePrefix}}Tokens.space5())),
+          child: ColumnBox(
+            style: FlexBoxStyler()
+                .crossAxisAlignment(.start)
+                .spacing({{typePrefix}}Tokens.space4()),
+            children: [
+              ColumnBox(
+                style: FlexBoxStyler()
+                    .crossAxisAlignment(.start)
+                    .spacing({{typePrefix}}Tokens.space2()),
+                children: [
+                  WrapBox(
+                    style: WrapBoxStyler()
+                        .spacing({{typePrefix}}Tokens.space2())
+                        .runSpacing({{typePrefix}}Tokens.space2()),
+                    children: [
+                      const {{typePrefix}}Badge.solid(label: 'Featured'),
+                      {{typePrefix}}StatusBadge.edition(edition.status),
+                    ],
+                  ),
+                  {{typePrefix}}Heading(
+                    edition.title,
+                    headingLevel: 2,
+                    size: .size7,
+                    weight: .bold,
+                  ),
+                  StyledText(
+                    edition.description,
+                    style: dashboardText(.size3, tone: .muted),
+                  ),
+                ],
+              ),
+              {{typePrefix}}DataList(
+                size: .size1,
+                semanticLabel: '${edition.title} details',
+                items: [
+                  RemixDataListItem(label: 'Artist', value: edition.artist),
+                  RemixDataListItem(label: 'Format', value: edition.format),
+                  RemixDataListItem(
+                    label: 'Price',
+                    value: {{valuePrefix}}DashboardCurrency(edition.price, cents: false),
+                  ),
+                ],
+              ),
+              {{typePrefix}}EditionProgress(edition),
+              WrapBox(
+                style: WrapBoxStyler()
+                    .spacing({{typePrefix}}Tokens.space2())
+                    .runSpacing({{typePrefix}}Tokens.space2()),
+                children: [
+                  {{typePrefix}}Button(
+                    key: const ValueKey('collection-spotlight-open'),
+                    label: 'View edition',
+                    onPressed: onPressed,
+                  ),
+                  {{typePrefix}}Button.soft(
+                    label: 'Share',
+                    onPressed: () => {{valuePrefix}}DashboardToast(
+                      context,
+                      'Link to ${edition.title} copied',
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// How much of an edition has sold: a bar, and the count beside what is left.
+class {{typePrefix}}EditionProgress extends StatelessWidget {
+  const {{typePrefix}}EditionProgress(this.edition, {super.key});
+
+  /// The edition measured.
+  final {{typePrefix}}DashboardEdition edition;
+
+  @override
+  Widget build(BuildContext context) => ColumnBox(
+    style: FlexBoxStyler()
+        .mainAxisSize(.min)
+        .crossAxisAlignment(.stretch)
+        .spacing({{typePrefix}}Tokens.space2()),
+    children: [
+      {{typePrefix}}Progress(
+        value: edition.soldFraction,
+        size: .size1,
+        semanticsLabel: '${edition.title} edition sold',
+      ),
+      RowBox(
+        children: [
+          Expanded(
+            child: StyledText(
+              '${edition.sold} of ${edition.editionSize} sold',
+              style: dashboardTextLine(.size1, tone: .muted),
+            ),
+          ),
+          StyledText(
+            edition.remaining == 0 ? 'None left' : '${edition.remaining} left',
+            style: dashboardText(.size1, tone: .subtle),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+/// One edition as a cover card. The whole card is a button.
+class {{typePrefix}}EditionCard extends StatelessWidget {
+  const {{typePrefix}}EditionCard({
+    super.key,
+    required this.edition,
+    required this.onPressed,
+  });
+
+  /// The edition shown.
+  final {{typePrefix}}DashboardEdition edition;
+
+  /// Called when the card is activated.
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final inset = {{typePrefix}}Tokens.space2.resolve(context);
+    return {{typePrefix}}PressableSurface(
+      onPressed: onPressed,
+      semanticLabel:
+          '${edition.title} by ${edition.artist}, '
+          '${{{valuePrefix}}DashboardCurrency(edition.price, cents: false)}, '
+          '${edition.status.label}, '
+          '${edition.sold} of ${edition.editionSize} sold',
+      padded: false,
+      child: ColumnBox(
+        style: FlexBoxStyler().crossAxisAlignment(.stretch),
+        children: [
+          AspectRatio(
+            aspectRatio: 4 / 3,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                {{typePrefix}}EditionCover(edition),
+                PositionedDirectional(
+                  top: inset,
+                  start: inset,
+                  child: {{typePrefix}}StatusBadge.edition(edition.status),
+                ),
+              ],
+            ),
+          ),
+          Box(
+            style: BoxStyler().padding(.all({{typePrefix}}Tokens.space3())),
+            child: ColumnBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.stretch)
+                  .spacing({{typePrefix}}Tokens.space3()),
+              children: [
+                RowBox(
+                  style: FlexBoxStyler()
+                      .crossAxisAlignment(.start)
+                      .spacing({{typePrefix}}Tokens.space2()),
+                  children: [
+                    Expanded(
+                      child: ColumnBox(
+                        style: FlexBoxStyler().crossAxisAlignment(.start),
+                        children: [
+                          {{typePrefix}}Text(
+                            edition.title,
+                            size: .size3,
+                            weight: .medium,
+                            truncate: true,
+                          ),
+                          StyledText(
+                            '${edition.artist} · ${edition.series}',
+                            style: dashboardTextLine(.size1, tone: .muted),
+                          ),
+                        ],
+                      ),
+                    ),
+                    {{typePrefix}}Text(
+                      {{valuePrefix}}DashboardCurrency(edition.price, cents: false),
+                      size: .size3,
+                      weight: .medium,
+                    ),
+                  ],
+                ),
+                {{typePrefix}}EditionProgress(edition),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The collection as a table, one edition per row.
+class {{typePrefix}}EditionTable extends StatelessWidget {
+  const {{typePrefix}}EditionTable({
+    super.key,
+    required this.editions,
+    required this.onOpen,
+  });
+
+  /// The editions listed.
+  final List<{{typePrefix}}DashboardEdition> editions;
+
+  /// Called with the edition whose row asks to be opened.
+  final ValueChanged<{{typePrefix}}DashboardEdition> onOpen;
+
+  @override
+  Widget build(BuildContext context) =>
+      {{typePrefix}}DataTable<{{typePrefix}}DashboardEdition>.surface(
+        key: const ValueKey('collection-table'),
+        semanticLabel: 'Editions',
+        rows: editions,
+        minimumWidth: 860,
+        columns: [
+          RemixDataTableColumn(
+            id: 'edition',
+            label: 'Edition',
+            width: const FlexColumnWidth(3),
+            cellBuilder: (_, edition) => RowBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.center)
+                  .spacing({{typePrefix}}Tokens.space3()),
+              children: [
+                {{typePrefix}}EditionThumbnail(edition, extent: 36),
+                Flexible(
+                  child: {{typePrefix}}DataTableCellText(edition.title, primary: true),
+                ),
+              ],
+            ),
+          ),
+          RemixDataTableColumn(
+            id: 'artist',
+            label: 'Artist',
+            width: const FlexColumnWidth(2),
+            cellBuilder: (_, edition) =>
+                {{typePrefix}}DataTableCellText(edition.artist),
+          ),
+          RemixDataTableColumn(
+            id: 'price',
+            label: 'Price',
+            width: const FixedColumnWidth(96),
+            alignment: AlignmentDirectional.centerEnd,
+            cellBuilder: (_, edition) => {{typePrefix}}DataTableCellText(
+              {{valuePrefix}}DashboardCurrency(edition.price, cents: false),
+              primary: true,
+            ),
+          ),
+          RemixDataTableColumn(
+            id: 'sold',
+            label: 'Sold',
+            width: const FixedColumnWidth(180),
+            cellBuilder: (_, edition) => RowBox(
+              style: FlexBoxStyler()
+                  .crossAxisAlignment(.center)
+                  .spacing({{typePrefix}}Tokens.space2()),
+              children: [
+                Expanded(
+                  child: {{typePrefix}}Progress(
+                    value: edition.soldFraction,
+                    size: .size1,
+                    semanticsLabel: '${edition.title} edition sold',
+                  ),
+                ),
+                {{typePrefix}}DataTableCellText(
+                  '${edition.sold}/${edition.editionSize}',
+                ),
+              ],
+            ),
+          ),
+          RemixDataTableColumn(
+            id: 'status',
+            label: 'Status',
+            width: const FixedColumnWidth(116),
+            cellBuilder: (_, edition) =>
+                {{typePrefix}}StatusBadge.edition(edition.status),
+          ),
+          RemixDataTableColumn(
+            id: 'actions',
+            header: const SizedBox.shrink(),
+            semanticLabel: 'Actions',
+            width: const FixedColumnWidth(64),
+            alignment: AlignmentDirectional.centerEnd,
+            cellBuilder: (context, edition) => {{typePrefix}}ActionMenu(
+              key: ValueKey('edition-actions-${edition.id}'),
+              positioning: {{valuePrefix}}DataTableActionsPositioning,
+              trigger: {{valuePrefix}}DataTableActionsTrigger(
+                'Actions for ${edition.title}',
+              ),
+              actions: const [
+                {{typePrefix}}Action(value: 'view', label: 'View edition'),
+                {{typePrefix}}Action(value: 'duplicate', label: 'Duplicate'),
+                {{typePrefix}}Action(
+                  value: 'archive',
+                  label: 'Archive',
+                  dividerBefore: true,
+                ),
+              ],
+              onSelected: (value) => value == 'view'
+                  ? onOpen(edition)
+                  : {{valuePrefix}}DashboardToast(
+                      context,
+                      '$value selected for ${edition.title}',
+                    ),
+            ),
+          ),
+        ],
+      );
+}
+
+/// Opens [edition] in a dialog: its cover, its story and its numbers.
+Future<void> show{{typePrefix}}EditionDialog(
+  BuildContext context,
+  {{typePrefix}}DashboardEdition edition,
+) => showRemixDialog<void>(
+  context: context,
+  barrierLabel: 'Dismiss',
+  builder: (context) => {{typePrefix}}Dialog(
+    key: const ValueKey('edition-dialog'),
+    title: edition.title,
+    description: '${edition.artist} · ${edition.series}',
+    scrollable: true,
+    actions: [
+      {{typePrefix}}Button.soft(
+        label: 'Close',
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      {{typePrefix}}Button(
+        label: 'Edit edition',
+        onPressed: () {
+          Navigator.of(context).pop();
+          {{valuePrefix}}DashboardToast(context, 'Editing ${edition.title}');
+        },
+      ),
+    ],
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.stretch)
+          .spacing({{typePrefix}}Tokens.space4()),
+      children: [
+        Box(
+          style: BoxStyler()
+              .borderRadius(.all({{typePrefix}}Tokens.radius3()))
+              .clipBehavior(.antiAlias),
+          child: AspectRatio(
+            aspectRatio: 16 / 9,
+            child: {{typePrefix}}EditionCover(edition, described: true),
+          ),
+        ),
+        StyledText(
+          edition.description,
+          style: dashboardText(.size2, tone: .muted),
+        ),
+        {{typePrefix}}EditionProgress(edition),
+        const _EditionNotes(),
+        {{typePrefix}}DataList(
+          size: .size1,
+          semanticLabel: '${edition.title} details',
+          items: [
+            RemixDataListItem(label: 'Format', value: edition.format),
+            RemixDataListItem(
+              label: 'Price',
+              value: {{valuePrefix}}DashboardCurrency(edition.price, cents: false),
+            ),
+            RemixDataListItem(
+              label: 'Revenue',
+              value: {{valuePrefix}}DashboardCurrency(edition.revenue, cents: false),
+            ),
+            RemixDataListItem(label: 'Status', value: edition.status.label),
+          ],
+        ),
+      ],
+    ),
+  ),
+);
+
+/// What every edition shares, folded away until asked for.
+class _EditionNotes extends StatefulWidget {
+  const _EditionNotes();
+
+  @override
+  State<_EditionNotes> createState() => _EditionNotesState();
+}
+
+class _EditionNotesState extends State<_EditionNotes> {
+  final _controller = RemixAccordionController<String>(min: 0, max: 1);
+
+  static const _notes = [
+    (
+      'signing',
+      'Signed and numbered',
+      'Each print is signed and numbered by the artist, with a certificate.',
+    ),
+    (
+      'shipping',
+      'Shipping',
+      'Rolled in a tube within five working days, tracked worldwide.',
+    ),
+    ('care', 'Care', 'Frame behind UV glass and keep out of direct sun.'),
+  ];
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => RemixAccordionGroup(
+    controller: _controller,
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.stretch)
+          .spacing({{typePrefix}}Tokens.space2()),
+      children: [
+        for (final (value, title, body) in _notes)
+          {{typePrefix}}Accordion<String>(
+            value: value,
+            title: title,
+            child: StyledText(body, style: dashboardText(.size2, tone: .muted)),
+          ),
+      ],
+    ),
+  );
+}

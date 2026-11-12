@@ -2,25 +2,92 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
+import 'dashboard_demo_data.dart';
 import 'dashboard_demo_page_header.dart';
-import 'dashboard_demo_records.dart';
+import 'dashboard_demo_text.dart';
+import 'dashboard_demo_theme.dart';
+import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_ui.dart';
 import 'dashboard_demo_widgets.dart';
+import 'dashboard_overview.dart';
 
-enum _OrderFilter { all, paid, pending, refunded, cancelled }
+/// The tiers the Customers page filters by, after everyone.
+enum _TierFilter {
+  all('All'),
+  patron('Patron'),
+  collector('Collector'),
+  member('Member');
 
-/// Shared layout for the selected-row badge cluster in the records toolbar.
-final {{valuePrefix}}SelectedBadgesStyle = WrapBoxStyler()
-    .spacing(6)
-    .runSpacing(6)
-    .crossAxisAlignment(.center);
+  const _TierFilter(this.label);
 
-/// The Customers page: a searchable, sortable table of customers.
+  final String label;
+
+  bool matches({{typePrefix}}DashboardCustomerTier tier) =>
+      this == all || name == tier.name;
+}
+
+/// The statuses the Orders page filters by, after everything.
+enum _OrderFilter {
+  all,
+  paid,
+  pending,
+  shipped,
+  refunded,
+  cancelled;
+
+  bool matches({{typePrefix}}DashboardOrderStatus status) =>
+      this == all || name == status.name;
+}
+
+/// One figure summarizing a table, on a quiet surface.
+class {{typePrefix}}RecordStat extends StatelessWidget {
+  const {{typePrefix}}RecordStat({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.detail,
+  });
+
+  /// What the figure counts.
+  final String label;
+
+  /// The figure, already formatted.
+  final String value;
+
+  /// A line of context under the figure.
+  final String detail;
+
+  @override
+  Widget build(BuildContext context) => {{typePrefix}}Surface(
+    emphasis: .quiet,
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .crossAxisAlignment(.start)
+          .spacing({{typePrefix}}Tokens.space1()),
+      children: [
+        StyledText(label, style: dashboardTextLine(.size2, tone: .muted)),
+        {{typePrefix}}Text(value, size: .size6, weight: .bold, truncate: true),
+        StyledText(detail, style: dashboardTextLine(.size1, tone: .subtle)),
+      ],
+    ),
+  );
+}
+
+/// The Customers page: a searchable, sortable, selectable table of
+/// collectors under four summary figures.
 class {{typePrefix}}DashboardCustomersPage extends StatefulWidget {
-  const {{typePrefix}}DashboardCustomersPage({super.key, this.globalQuery = ''});
+  const {{typePrefix}}DashboardCustomersPage({
+    super.key,
+    this.data,
+    this.searchController,
+  });
 
-  /// The header search text. Rows must match it as well as the page's own filter.
-  final String globalQuery;
+  /// The records the page shows. Defaults to [{{valuePrefix}}DashboardSampleData].
+  final {{typePrefix}}DashboardData? data;
+
+  /// Controls the search field, so a host can fill it. The page creates its
+  /// own when null.
+  final TextEditingController? searchController;
 
   @override
   State<{{typePrefix}}DashboardCustomersPage> createState() =>
@@ -29,7 +96,8 @@ class {{typePrefix}}DashboardCustomersPage extends StatefulWidget {
 
 class _{{typePrefix}}DashboardCustomersPageState
     extends State<{{typePrefix}}DashboardCustomersPage> {
-  String _query = '';
+  TextEditingController? _ownSearch;
+  _TierFilter _tier = .all;
   RemixDataTableSort _sort = const RemixDataTableSort(
     columnId: 'joined',
     direction: .descending,
@@ -38,50 +106,160 @@ class _{{typePrefix}}DashboardCustomersPageState
   int _page = 0;
   int _rowsPerPage = 10;
 
+  /// The filtered, sorted rows. Kept until a filter or the sort changes, so a
+  /// rebuild for any other reason, such as a theme change, does not redo it.
+  List<{{typePrefix}}DashboardCustomer>? _rows;
+
+  {{typePrefix}}DashboardData get _data => widget.data ?? {{valuePrefix}}DashboardSampleData;
+
+  TextEditingController get _search =>
+      widget.searchController ?? (_ownSearch ??= TextEditingController());
+
+  @override
+  void initState() {
+    super.initState();
+    _search.addListener(_onFilterChanged);
+  }
+
+  @override
+  void didUpdateWidget({{typePrefix}}DashboardCustomersPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.data != oldWidget.data) _rows = null;
+    if (widget.searchController == oldWidget.searchController) return;
+    (oldWidget.searchController ?? _ownSearch)?.removeListener(
+      _onFilterChanged,
+    );
+    _search.addListener(_onFilterChanged);
+    _rows = null;
+  }
+
+  @override
+  void dispose() {
+    _search.removeListener(_onFilterChanged);
+    _ownSearch?.dispose();
+    super.dispose();
+  }
+
+  void _onFilterChanged() => setState(() {
+    _rows = null;
+    _page = 0;
+  });
+
+  List<{{typePrefix}}DashboardCustomer> _computeRows() {
+    final query = _search.text.trim().toLowerCase();
+    return [
+      for (final customer in _data.customers)
+        if (_tier.matches(customer.tier) &&
+            '${customer.name} ${customer.email} ${customer.city}'
+                .toLowerCase()
+                .contains(query))
+          customer,
+    ]..sort((a, b) {
+      final result = switch (_sort.columnId) {
+        'name' => a.name.compareTo(b.name),
+        'spent' => a.spent.compareTo(b.spent),
+        _ => a.joinedAt.compareTo(b.joinedAt),
+      };
+      return _sort.direction == .ascending ? result : -result;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final globalQuery = widget.globalQuery.toLowerCase();
-    final filtered = {{valuePrefix}}DashboardCustomers.where((customer) {
-      final haystack = '${customer.name} ${customer.email} ${customer.plan}'
-          .toLowerCase();
-      return haystack.contains(_query) && haystack.contains(globalQuery);
-    }).toList()..sort(_compare);
+    final customers = _data.customers;
+    final rows = _rows ??= _computeRows();
     final page = {{valuePrefix}}DashboardPaginate(
-      filtered,
+      rows,
       page: _page,
       rowsPerPage: _rowsPerPage,
     );
-    return _Page(
+    final spent = customers.fold(0.0, (sum, customer) => sum + customer.spent);
+    int count(bool Function({{typePrefix}}DashboardCustomer) test) =>
+        customers.where(test).length;
+
+    return {{typePrefix}}Page(
+      key: const ValueKey('dashboard-customers'),
       title: 'Customers',
-      description: 'Manage customer access, plans, and account status.',
-      action: {{typePrefix}}Button(
-        label: 'Add customer',
-        leadingIcon: {{icon:plus}},
-        onPressed: () => _toast(context, 'Customer invitation started'),
-      ),
+      description: 'The collectors behind every edition.',
+      actions: [
+        {{typePrefix}}Button(
+          label: 'Invite collector',
+          leadingIcon: {{icon:plus}},
+          onPressed: () =>
+              {{valuePrefix}}DashboardToast(context, 'Collector invitation started'),
+        ),
+      ],
       children: [
+        GridBox(
+          key: const ValueKey('customers-summary'),
+          style: {{valuePrefix}}MetricsGrid,
+          children: [
+            {{typePrefix}}RecordStat(
+              label: 'Collectors',
+              value: {{valuePrefix}}DashboardCount(customers.length),
+              detail: '${count((c) => c.status == .active)} active',
+            ),
+            {{typePrefix}}RecordStat(
+              label: 'Patrons',
+              value: {{valuePrefix}}DashboardCount(count((c) => c.tier == .patron)),
+              detail: 'The top collecting tier',
+            ),
+            {{typePrefix}}RecordStat(
+              label: 'Invitations',
+              value: {{valuePrefix}}DashboardCount(count((c) => c.status == .invited)),
+              detail: 'Waiting to be accepted',
+            ),
+            {{typePrefix}}RecordStat(
+              label: 'Lifetime value',
+              value: {{valuePrefix}}DashboardCurrency(spent, cents: false),
+              detail: 'Across every collector',
+            ),
+          ],
+        ),
         WrapBox(
           style: WrapBoxStyler()
               .wrapAlignment(.spaceBetween)
               .crossAxisAlignment(.center)
-              .spacing(12)
-              .runSpacing(10),
+              .spacing({{typePrefix}}Tokens.space3())
+              .runSpacing({{typePrefix}}Tokens.space3()),
           children: [
-            Box(
-              style: BoxStyler().maxWidth(300),
-              child: {{typePrefix}}TextField(
-                key: const ValueKey('customer-search'),
-                leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
-                hintText: 'Search customers…',
-                semanticLabel: 'Search customers',
-                onChanged: (value) => setState(() {
-                  _query = value.trim().toLowerCase();
-                  _page = 0;
-                }),
-              ),
+            WrapBox(
+              style: WrapBoxStyler()
+                  .crossAxisAlignment(.center)
+                  .spacing({{typePrefix}}Tokens.space3())
+                  .runSpacing({{typePrefix}}Tokens.space3()),
+              children: [
+                Box(
+                  style: BoxStyler().width(280),
+                  child: {{typePrefix}}TextField(
+                    key: const ValueKey('customer-search'),
+                    controller: _search,
+                    leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
+                    hintText: 'Search customers…',
+                    semanticLabel: 'Search customers',
+                  ),
+                ),
+                {{typePrefix}}FilterTabs<_TierFilter>(
+                  key: const ValueKey('customer-tier'),
+                  semanticLabel: 'Filter customers by tier',
+                  values: _TierFilter.values,
+                  selected: _tier,
+                  labelOf: (tier) => tier.label,
+                  onChanged: (tier) => setState(() {
+                    _tier = tier;
+                    _rows = null;
+                    _page = 0;
+                  }),
+                ),
+              ],
             ),
             if (_selectedIds.isNotEmpty)
-              {{valuePrefix}}SelectedBadgesStyle(
+              WrapBox(
+                key: const ValueKey('customer-selection-actions'),
+                style: WrapBoxStyler()
+                    .crossAxisAlignment(.center)
+                    .spacing({{typePrefix}}Tokens.space2())
+                    .runSpacing({{typePrefix}}Tokens.space2()),
                 children: [
                   {{typePrefix}}Badge(
                     size: .size2,
@@ -91,7 +269,7 @@ class _{{typePrefix}}DashboardCustomersPageState
                   {{typePrefix}}Button.ghost(
                     size: .size1,
                     label: 'Export',
-                    onPressed: () => _toast(
+                    onPressed: () => {{valuePrefix}}DashboardToast(
                       context,
                       'Export prepared for ${_selectedIds.length} customers',
                     ),
@@ -99,7 +277,7 @@ class _{{typePrefix}}DashboardCustomersPageState
                   {{typePrefix}}Button.ghost(
                     size: .size1,
                     label: 'Archive',
-                    onPressed: () => _toast(
+                    onPressed: () => {{valuePrefix}}DashboardToast(
                       context,
                       '${_selectedIds.length} customers archived',
                     ),
@@ -113,16 +291,17 @@ class _{{typePrefix}}DashboardCustomersPageState
           rows: page.items,
           columns: _customerColumns,
           semanticLabel: 'Customers',
-          minimumWidth: 840,
+          minimumWidth: 940,
           sort: _sort,
           onSortChanged: (sort) => setState(() {
             _sort = sort;
+            _rows = null;
             _page = 0;
           }),
           rowId: (customer) => customer.id,
           selectedRowIds: _selectedIds,
           onSelectionChanged: (ids) => setState(() => _selectedIds = ids),
-          totalRows: filtered.length,
+          totalRows: rows.length,
           pageIndex: page.page,
           pageSize: _rowsPerPage,
           pageSizeOptions: const [5, 10, 20],
@@ -131,30 +310,43 @@ class _{{typePrefix}}DashboardCustomersPageState
             _rowsPerPage = value;
             _page = 0;
           }),
-          emptyBuilder: (_) => const {{typePrefix}}EmptyState(
+          emptyBuilder: (_) => {{typePrefix}}EmptyState(
             icon: {{icon:magnifyingGlass}},
             title: 'No customers found',
-            body: 'Try a different name or email address.',
+            body: 'Try a different name, email or city.',
+            action: {{typePrefix}}Button.soft(
+              size: .size1,
+              label: 'Clear filters',
+              onPressed: () {
+                _search.clear();
+                setState(() {
+                  _tier = .all;
+                  _rows = null;
+                });
+              },
+            ),
           ),
         ),
       ],
     );
   }
-
-  int _compare({{typePrefix}}DashboardCustomer a, {{typePrefix}}DashboardCustomer b) {
-    final result = _sort.columnId == 'name'
-        ? a.name.compareTo(b.name)
-        : a.joinedAt.compareTo(b.joinedAt);
-    return _sort.direction == .ascending ? result : -result;
-  }
 }
 
-/// The Orders page: a filterable, sortable table of orders.
+/// The Orders page: a filterable, sortable table of orders under four
+/// summary figures.
 class {{typePrefix}}DashboardOrdersPage extends StatefulWidget {
-  const {{typePrefix}}DashboardOrdersPage({super.key, this.globalQuery = ''});
+  const {{typePrefix}}DashboardOrdersPage({
+    super.key,
+    this.data,
+    this.searchController,
+  });
 
-  /// The header search text. Rows must match it as well as the page's own filter.
-  final String globalQuery;
+  /// The records the page shows. Defaults to [{{valuePrefix}}DashboardSampleData].
+  final {{typePrefix}}DashboardData? data;
+
+  /// Controls the search field, so a host can fill it. The page creates its
+  /// own when null.
+  final TextEditingController? searchController;
 
   @override
   State<{{typePrefix}}DashboardOrdersPage> createState() =>
@@ -162,7 +354,8 @@ class {{typePrefix}}DashboardOrdersPage extends StatefulWidget {
 }
 
 class _{{typePrefix}}DashboardOrdersPageState extends State<{{typePrefix}}DashboardOrdersPage> {
-  _OrderFilter _filter = .all;
+  TextEditingController? _ownSearch;
+  _OrderFilter _status = .all;
   RemixDataTableSort _sort = const RemixDataTableSort(
     columnId: 'date',
     direction: .descending,
@@ -170,67 +363,170 @@ class _{{typePrefix}}DashboardOrdersPageState extends State<{{typePrefix}}Dashbo
   int _page = 0;
   int _rowsPerPage = 10;
 
+  /// See `_{{typePrefix}}DashboardCustomersPageState._rows`.
+  List<{{typePrefix}}DashboardOrder>? _rows;
+
+  /// The table columns. Built once per data set: the edition column looks a
+  /// cover up by title.
+  List<RemixDataTableColumn<{{typePrefix}}DashboardOrder>>? _columns;
+
+  {{typePrefix}}DashboardData get _data => widget.data ?? {{valuePrefix}}DashboardSampleData;
+
+  TextEditingController get _search =>
+      widget.searchController ?? (_ownSearch ??= TextEditingController());
+
+  @override
+  void initState() {
+    super.initState();
+    _search.addListener(_onFilterChanged);
+  }
+
+  @override
+  void didUpdateWidget({{typePrefix}}DashboardOrdersPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.data != oldWidget.data) {
+      _rows = null;
+      _columns = null;
+    }
+    if (widget.searchController == oldWidget.searchController) return;
+    (oldWidget.searchController ?? _ownSearch)?.removeListener(
+      _onFilterChanged,
+    );
+    _search.addListener(_onFilterChanged);
+    _rows = null;
+  }
+
+  @override
+  void dispose() {
+    _search.removeListener(_onFilterChanged);
+    _ownSearch?.dispose();
+    super.dispose();
+  }
+
+  void _onFilterChanged() => setState(() {
+    _rows = null;
+    _page = 0;
+  });
+
+  List<{{typePrefix}}DashboardOrder> _computeRows() {
+    final query = _search.text.trim().toLowerCase();
+    return [
+      for (final order in _data.orders)
+        if (_status.matches(order.status) &&
+            '${order.id} ${order.customer} ${order.edition} ${order.channel}'
+                .toLowerCase()
+                .contains(query))
+          order,
+    ]..sort((a, b) {
+      final result = _sort.columnId == 'amount'
+          ? a.amount.compareTo(b.amount)
+          : a.date.compareTo(b.date);
+      return _sort.direction == .ascending ? result : -result;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final filtered = {{valuePrefix}}DashboardOrders.where((order) {
-      final statusMatches =
-          _filter == .all || order.status.name == _filter.name;
-      final query = widget.globalQuery.toLowerCase();
-      return statusMatches &&
-          '${order.id} ${order.customer} ${order.status.name}'
-              .toLowerCase()
-              .contains(query);
-    }).toList()..sort(_compare);
+    final orders = _data.orders;
+    final rows = _rows ??= _computeRows();
     final page = {{valuePrefix}}DashboardPaginate(
-      filtered,
+      rows,
       page: _page,
       rowsPerPage: _rowsPerPage,
     );
-    return _Page(
+    Iterable<{{typePrefix}}DashboardOrder> having({{typePrefix}}DashboardOrderStatus status) =>
+        orders.where((order) => order.status == status);
+    double total(Iterable<{{typePrefix}}DashboardOrder> orders) =>
+        orders.fold(0, (sum, order) => sum + order.amount);
+
+    return {{typePrefix}}Page(
+      key: const ValueKey('dashboard-orders'),
       title: 'Orders',
-      description: 'Review transactions and fulfillment status.',
-      action: {{typePrefix}}Button.soft(
-        label: 'Export',
-        leadingIcon: {{icon:download}},
-        onPressed: () => _toast(context, 'Order export prepared'),
-      ),
+      description: 'Every order, from payment to the collector’s door.',
+      actions: [
+        {{typePrefix}}Button.soft(
+          label: 'Export',
+          leadingIcon: {{icon:download}},
+          onPressed: () =>
+              {{valuePrefix}}DashboardToast(context, 'Order export prepared'),
+        ),
+      ],
       children: [
-        Box(
-          style: BoxStyler().alignment(.centerStart),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: {{typePrefix}}SegmentedControl<_OrderFilter>(
+        GridBox(
+          key: const ValueKey('orders-summary'),
+          style: {{valuePrefix}}MetricsGrid,
+          children: [
+            {{typePrefix}}RecordStat(
+              label: 'Orders',
+              value: {{valuePrefix}}DashboardCount(orders.length),
+              detail:
+                  '${{{valuePrefix}}DashboardCurrency(total(orders), cents: false)} in total',
+            ),
+            {{typePrefix}}RecordStat(
+              label: 'Awaiting payment',
+              value: {{valuePrefix}}DashboardCount(having(.pending).length),
+              detail:
+                  '${{{valuePrefix}}DashboardCurrency(total(having(.pending)), cents: false)} outstanding',
+            ),
+            {{typePrefix}}RecordStat(
+              label: 'On the way',
+              value: {{valuePrefix}}DashboardCount(having(.shipped).length),
+              detail: 'Shipped, not yet delivered',
+            ),
+            {{typePrefix}}RecordStat(
+              label: 'Refunded',
+              value: {{valuePrefix}}DashboardCurrency(
+                total(having(.refunded)),
+                cents: false,
+              ),
+              detail: '${having(.refunded).length} orders returned',
+            ),
+          ],
+        ),
+        WrapBox(
+          style: WrapBoxStyler()
+              .wrapAlignment(.spaceBetween)
+              .crossAxisAlignment(.center)
+              .spacing({{typePrefix}}Tokens.space3())
+              .runSpacing({{typePrefix}}Tokens.space3()),
+          children: [
+            {{typePrefix}}FilterTabs<_OrderFilter>(
+              key: const ValueKey('order-status'),
               semanticLabel: 'Filter orders by status',
-              selectedValue: _filter,
-              items: const [
-                RemixSegmentedControlItem(value: .all, label: 'All'),
-                RemixSegmentedControlItem(value: .paid, label: 'Paid'),
-                RemixSegmentedControlItem(value: .pending, label: 'Pending'),
-                RemixSegmentedControlItem(value: .refunded, label: 'Refunded'),
-                RemixSegmentedControlItem(
-                  value: .cancelled,
-                  label: 'Cancelled',
-                ),
-              ],
-              onChanged: (value) => setState(() {
-                _filter = value;
+              values: _OrderFilter.values,
+              selected: _status,
+              labelOf: (status) => capitalize(status.name),
+              onChanged: (status) => setState(() {
+                _status = status;
+                _rows = null;
                 _page = 0;
               }),
             ),
-          ),
+            Box(
+              style: BoxStyler().width(280),
+              child: {{typePrefix}}TextField(
+                key: const ValueKey('order-search'),
+                controller: _search,
+                leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
+                hintText: 'Search orders…',
+                semanticLabel: 'Search orders',
+              ),
+            ),
+          ],
         ),
         {{typePrefix}}DataTable<{{typePrefix}}DashboardOrder>.surface(
           key: const ValueKey('data-grid-orders'),
           rows: page.items,
-          columns: _orderColumns,
+          columns: _columns ??= _orderColumns(_data.editions),
           semanticLabel: 'Orders',
-          minimumWidth: 840,
+          minimumWidth: 980,
           sort: _sort,
           onSortChanged: (sort) => setState(() {
             _sort = sort;
+            _rows = null;
             _page = 0;
           }),
-          totalRows: filtered.length,
+          totalRows: rows.length,
           pageIndex: page.page,
           pageSize: _rowsPerPage,
           pageSizeOptions: const [5, 10, 20],
@@ -242,69 +538,125 @@ class _{{typePrefix}}DashboardOrdersPageState extends State<{{typePrefix}}Dashbo
           emptyBuilder: (_) => {{typePrefix}}EmptyState(
             icon: {{icon:table}},
             title: 'No matching orders',
-            body: 'Choose another status to see more orders.',
-            action: _filter == .all
-                ? null
-                : {{typePrefix}}Button.soft(
-                    size: .size1,
-                    label: 'Clear filters',
-                    onPressed: () => setState(() => _filter = .all),
-                  ),
+            body: 'Try another status or search term.',
+            action: {{typePrefix}}Button.soft(
+              size: .size1,
+              label: 'Clear filters',
+              onPressed: () {
+                _search.clear();
+                setState(() {
+                  _status = .all;
+                  _rows = null;
+                });
+              },
+            ),
           ),
         ),
       ],
     );
   }
-
-  int _compare({{typePrefix}}DashboardOrder a, {{typePrefix}}DashboardOrder b) {
-    final result = _sort.columnId == 'amount'
-        ? a.amount.compareTo(b.amount)
-        : a.date.compareTo(b.date);
-    return _sort.direction == .ascending ? result : -result;
-  }
 }
+
+/// Returns the [items] on [page] with [rowsPerPage] rows per page.
+///
+/// A [page] past either end is clamped to the nearest page, and the returned
+/// `page` is the one actually used.
+({int page, List<T> items}) {{valuePrefix}}DashboardPaginate<T>(
+  List<T> items, {
+  required int page,
+  required int rowsPerPage,
+}) {
+  final pages = (items.length / rowsPerPage).ceil();
+  final safePage = pages == 0 ? 0 : page.clamp(0, pages - 1);
+  final start = safePage * rowsPerPage;
+  final end = (start + rowsPerPage).clamp(0, items.length);
+  return (page: safePage, items: items.sublist(start, end));
+}
+
+/// The accents customer avatars cycle through, so a long table is not one
+/// flat column of gray tiles.
+const _avatarAccents = <{{typePrefix}}AccentColor>[
+  .ceu,
+  .mar,
+  .caju,
+  .sol,
+  .duna,
+  .serra,
+];
 
 final _customerColumns = <RemixDataTableColumn<{{typePrefix}}DashboardCustomer>>[
   RemixDataTableColumn(
     id: 'name',
     label: 'Customer',
     sortable: true,
-    width: const FlexColumnWidth(2),
+    width: const FlexColumnWidth(3),
     cellBuilder: (_, customer) => RowBox(
       style: FlexBoxStyler()
-          .mainAxisSize(.min)
           .crossAxisAlignment(.center)
-          .spacing(9),
+          .spacing({{typePrefix}}Tokens.space3()),
       children: [
-        {{typePrefix}}Avatar(size: .size2, label: customer.initials),
-        Flexible(child: {{typePrefix}}DataTableCellText(customer.name, primary: true)),
+        {{typePrefix}}AccentScope(
+          accent:
+              _avatarAccents[customer.name.codeUnitAt(0) %
+                  _avatarAccents.length],
+          child: {{typePrefix}}Avatar(
+            size: .size2,
+            label: customer.initials,
+            fallbackLength: 2,
+          ),
+        ),
+        Flexible(
+          child: ColumnBox(
+            style: FlexBoxStyler()
+                .mainAxisSize(.min)
+                .crossAxisAlignment(.start),
+            children: [
+              {{typePrefix}}DataTableCellText(customer.name, primary: true),
+              StyledText(
+                customer.email,
+                style: dashboardTextLine(.size1, tone: .muted),
+              ),
+            ],
+          ),
+        ),
       ],
     ),
   ),
   RemixDataTableColumn(
-    id: 'email',
-    label: 'Email',
+    id: 'city',
+    label: 'City',
     width: const FlexColumnWidth(2),
-    cellBuilder: (_, customer) => {{typePrefix}}DataTableCellText(customer.email),
+    cellBuilder: (_, customer) => {{typePrefix}}DataTableCellText(customer.city),
   ),
   RemixDataTableColumn(
-    id: 'plan',
-    label: 'Plan',
-    width: const FixedColumnWidth(110),
+    id: 'tier',
+    label: 'Tier',
+    width: const FixedColumnWidth(108),
     cellBuilder: (_, customer) =>
-        {{typePrefix}}DataTableCellText(customer.plan, primary: true),
+        {{typePrefix}}Badge.outline(label: customer.tier.label),
+  ),
+  RemixDataTableColumn(
+    id: 'spent',
+    label: 'Spent',
+    sortable: true,
+    width: const FixedColumnWidth(112),
+    alignment: AlignmentDirectional.centerEnd,
+    cellBuilder: (_, customer) => {{typePrefix}}DataTableCellText(
+      {{valuePrefix}}DashboardCurrency(customer.spent, cents: false),
+      primary: true,
+    ),
   ),
   RemixDataTableColumn(
     id: 'status',
     label: 'Status',
-    width: const FixedColumnWidth(110),
+    width: const FixedColumnWidth(104),
     cellBuilder: (_, customer) => {{typePrefix}}StatusBadge.customer(customer.status),
   ),
   RemixDataTableColumn(
     id: 'joined',
     label: 'Joined',
     sortable: true,
-    width: const FixedColumnWidth(118),
+    width: const FixedColumnWidth(124),
     cellBuilder: (_, customer) =>
         {{typePrefix}}DataTableCellText({{valuePrefix}}DashboardShortDate(customer.joinedAt)),
   ),
@@ -324,103 +676,99 @@ final _customerColumns = <RemixDataTableColumn<{{typePrefix}}DashboardCustomer>>
         {{typePrefix}}Action(value: 'archive', label: 'Archive', dividerBefore: true),
       ],
       onSelected: (value) =>
-          _toast(context, '$value selected for ${customer.name}'),
+          {{valuePrefix}}DashboardToast(context, '$value selected for ${customer.name}'),
     ),
   ),
 ];
 
-final _orderColumns = <RemixDataTableColumn<{{typePrefix}}DashboardOrder>>[
-  RemixDataTableColumn(
-    id: 'id',
-    label: 'Order',
-    width: const FixedColumnWidth(120),
-    cellBuilder: (_, order) => {{typePrefix}}DataTableCellText(order.id, primary: true),
-  ),
-  RemixDataTableColumn(
-    id: 'customer',
-    label: 'Customer',
-    width: const FlexColumnWidth(2),
-    cellBuilder: (_, order) =>
-        {{typePrefix}}DataTableCellText(order.customer, primary: true),
-  ),
-  RemixDataTableColumn(
-    id: 'date',
-    label: 'Date',
-    sortable: true,
-    width: const FixedColumnWidth(120),
-    cellBuilder: (_, order) =>
-        {{typePrefix}}DataTableCellText({{valuePrefix}}DashboardShortDate(order.date)),
-  ),
-  RemixDataTableColumn(
-    id: 'amount',
-    label: 'Amount',
-    sortable: true,
-    width: const FixedColumnWidth(120),
-    alignment: AlignmentDirectional.centerEnd,
-    cellBuilder: (_, order) => {{typePrefix}}DataTableCellText(
-      {{valuePrefix}}DashboardCurrency(order.amount),
-      primary: true,
+List<RemixDataTableColumn<{{typePrefix}}DashboardOrder>> _orderColumns(
+  List<{{typePrefix}}DashboardEdition> editions,
+) {
+  final byTitle = {for (final edition in editions) edition.title: edition};
+  return [
+    RemixDataTableColumn(
+      id: 'id',
+      label: 'Order',
+      width: const FixedColumnWidth(108),
+      cellBuilder: (_, order) =>
+          {{typePrefix}}DataTableCellText(order.id, primary: true),
     ),
-  ),
-  RemixDataTableColumn(
-    id: 'status',
-    label: 'Status',
-    width: const FixedColumnWidth(118),
-    cellBuilder: (_, order) => {{typePrefix}}StatusBadge.order(order.status),
-  ),
-  RemixDataTableColumn(
-    id: 'actions',
-    header: const SizedBox.shrink(),
-    semanticLabel: 'Actions',
-    width: const FixedColumnWidth(64),
-    alignment: AlignmentDirectional.centerEnd,
-    cellBuilder: (context, order) => {{typePrefix}}ActionMenu(
-      key: ValueKey('order-actions-${order.id}'),
-      positioning: {{valuePrefix}}DataTableActionsPositioning,
-      trigger: {{valuePrefix}}DataTableActionsTrigger('Actions for ${order.id}'),
-      actions: const [
-        {{typePrefix}}Action(value: 'view', label: 'View order'),
-        {{typePrefix}}Action(value: 'receipt', label: 'Download receipt'),
-        {{typePrefix}}Action(
-          value: 'refund',
-          label: 'Issue refund',
-          dividerBefore: true,
-        ),
-      ],
-      onSelected: (value) => _toast(context, '$value selected for ${order.id}'),
+    RemixDataTableColumn(
+      id: 'edition',
+      label: 'Edition',
+      width: const FlexColumnWidth(3),
+      cellBuilder: (_, order) => RowBox(
+        style: FlexBoxStyler()
+            .crossAxisAlignment(.center)
+            .spacing({{typePrefix}}Tokens.space3()),
+        children: [
+          if (byTitle[order.edition] case final edition?)
+            {{typePrefix}}EditionThumbnail(edition, extent: 32),
+          Flexible(
+            child: {{typePrefix}}DataTableCellText(order.edition, primary: true),
+          ),
+        ],
+      ),
     ),
-  ),
-];
-
-class _Page extends StatelessWidget {
-  const _Page({
-    required this.title,
-    required this.description,
-    required this.action,
-    required this.children,
-  });
-  final String title;
-  final String description;
-  final Widget action;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) => {{typePrefix}}PageScroll(
-    child: ColumnBox(
-      style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
-      children: [
-        {{typePrefix}}PageHeader(
-          title: title,
-          description: description,
-          actions: action,
-        ),
-        ...children,
-      ],
+    RemixDataTableColumn(
+      id: 'customer',
+      label: 'Customer',
+      width: const FlexColumnWidth(2),
+      cellBuilder: (_, order) => {{typePrefix}}DataTableCellText(order.customer),
     ),
-  );
+    RemixDataTableColumn(
+      id: 'date',
+      label: 'Date',
+      sortable: true,
+      width: const FixedColumnWidth(124),
+      cellBuilder: (_, order) =>
+          {{typePrefix}}DataTableCellText({{valuePrefix}}DashboardShortDate(order.date)),
+    ),
+    RemixDataTableColumn(
+      id: 'channel',
+      label: 'Channel',
+      width: const FixedColumnWidth(124),
+      cellBuilder: (_, order) => {{typePrefix}}DataTableCellText(order.channel),
+    ),
+    RemixDataTableColumn(
+      id: 'amount',
+      label: 'Amount',
+      sortable: true,
+      width: const FixedColumnWidth(116),
+      alignment: AlignmentDirectional.centerEnd,
+      cellBuilder: (_, order) => {{typePrefix}}DataTableCellText(
+        {{valuePrefix}}DashboardCurrency(order.amount),
+        primary: true,
+      ),
+    ),
+    RemixDataTableColumn(
+      id: 'status',
+      label: 'Status',
+      width: const FixedColumnWidth(108),
+      cellBuilder: (_, order) => {{typePrefix}}StatusBadge.order(order.status),
+    ),
+    RemixDataTableColumn(
+      id: 'actions',
+      header: const SizedBox.shrink(),
+      semanticLabel: 'Actions',
+      width: const FixedColumnWidth(64),
+      alignment: AlignmentDirectional.centerEnd,
+      cellBuilder: (context, order) => {{typePrefix}}ActionMenu(
+        key: ValueKey('order-actions-${order.id}'),
+        positioning: {{valuePrefix}}DataTableActionsPositioning,
+        trigger: {{valuePrefix}}DataTableActionsTrigger('Actions for ${order.id}'),
+        actions: const [
+          {{typePrefix}}Action(value: 'view', label: 'View order'),
+          {{typePrefix}}Action(value: 'receipt', label: 'Download receipt'),
+          {{typePrefix}}Action(
+            value: 'refund',
+            label: 'Issue refund',
+            dividerBefore: true,
+          ),
+        ],
+        onSelected: (value) =>
+            {{valuePrefix}}DashboardToast(context, '$value selected for ${order.id}'),
+      ),
+    ),
+  ];
 }
-
-void _toast(BuildContext context, String title) => showRemixToast(
-  context,
-  RemixToastData(title: title, icon: {{icon:checkCircled}}),
-);
