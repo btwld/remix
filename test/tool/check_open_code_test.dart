@@ -1306,9 +1306,10 @@ Future<void> main(List<String> arguments) async {
       'dashboard_demo',
       preset: 'fortal',
     );
+    // Fortal's nineteen demo files and the shell's two.
     expect(
       fortalDemo.where((path) => path.startsWith('recipes/dashboard/')),
-      hasLength(19),
+      hasLength(21),
     );
     // HeroUI mirrors Vanilla's file set: the shared base and five preset
     // files, plus the shell's two.
