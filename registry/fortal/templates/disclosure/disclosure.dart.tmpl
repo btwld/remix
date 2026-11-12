@@ -6,54 +6,87 @@ import '../theme/theme.dart';
 
 part 'disclosure.g.dart';
 
-/// {{typePrefix}} disclosure size presets.
-enum {{typePrefix}}DisclosureSize { size1, size2, size3 }
+/// The sizes a disclosure comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}DisclosureSize {
+  /// 14px trigger text, 16px icons and 8px padding.
+  size1,
 
-/// {{typePrefix}} disclosure color variants.
-enum {{typePrefix}}DisclosureVariant { surface, soft }
+  /// 14px trigger text, 20px icons and 12px padding. The default.
+  size2,
 
-/// {{typePrefix}}-themed preset for [RemixDisclosure].
+  /// 16px trigger text, 24px icons and 16px padding.
+  size3,
+}
+
+/// The looks a disclosure comes in.
+enum {{typePrefix}}DisclosureVariant {
+  /// A near-white panel inside a 1px gray frame.
+  surface,
+
+  /// An accent-tinted panel inside a 1px accent frame.
+  soft,
+}
+
+/// The {{typePrefix}} Disclosure recipe.
+///
+/// It reads top to bottom: what every disclosure shares, then the variant's
+/// panel colors for rest, hover, press, focus and disabled.
 @MixWidget(target: RemixDisclosure.new)
 DisclosureStyler {{valuePrefix}}DisclosureStyle({
   {{typePrefix}}DisclosureVariant variant = .surface,
   {{typePrefix}}DisclosureSize size = .size2,
   DisclosureStyler style = const DisclosureStyler.create(),
-}) {
-  return (switch (variant) {
-    .surface => _{{valuePrefix}}DisclosureSurfaceStyler(size),
-    .soft => _{{valuePrefix}}DisclosureSoftStyler(size),
-  }).container(BoxStyler().clipBehavior(.none)).merge(style);
-}
+}) => _base(size)
+    .merge(switch (variant) {
+      .surface => _surface(size),
+      .soft => _soft(size),
+    })
+    .container(BoxStyler().clipBehavior(.none))
+    .merge(style);
 
-// The frame paints above the parts, whose own clips leave focus outlines free
-// to extend outside the container without changing layout.
-DisclosureStyler _{{valuePrefix}}DisclosureBaseStyler({{typePrefix}}DisclosureSize size) {
-  final metrics = _{{valuePrefix}}DisclosureMetrics(size);
+/// The trigger and content shapes every disclosure shares, with the gray text
+/// and icons, and the open state's flat joint.
+///
+/// The frame paints above the parts, whose own clips leave focus outlines free
+/// to extend outside the container without changing layout.
+DisclosureStyler _base({{typePrefix}}DisclosureSize size) {
+  final (:padding, :triggerText, :iconSize) = switch (size) {
+    .size1 => (
+      padding: {{typePrefix}}Tokens.space2(),
+      triggerText: {{typePrefix}}Tokens.text2,
+      iconSize: {{typePrefix}}Tokens.space4(),
+    ),
+    .size2 => (
+      padding: {{typePrefix}}Tokens.space3(),
+      triggerText: {{typePrefix}}Tokens.text2,
+      iconSize: {{typePrefix}}Tokens.spinnerSize3(),
+    ),
+    .size3 => (
+      padding: {{typePrefix}}Tokens.space4(),
+      triggerText: {{typePrefix}}Tokens.text3,
+      iconSize: {{typePrefix}}Tokens.space5(),
+    ),
+  };
+
+  final radius = _radius(size);
 
   return DisclosureStyler()
       .trigger(
         BoxStyler()
             .width(.infinity)
-            .borderRadius(.all(metrics.radius))
+            .borderRadius(.all(radius))
             .clipBehavior(.antiAlias)
             .minHeight({{typePrefix}}Tokens.touchTargetMin())
             .alignment(.centerLeft)
-            .padding(.all(metrics.padding))
-            .wrap(
-              _{{valuePrefix}}DisclosureTypography(
-                style: metrics.triggerText,
-                color: {{typePrefix}}Tokens.gray12(),
-                iconColor: {{typePrefix}}Tokens.gray11(),
-                iconSize: metrics.iconSize,
-              ),
-            ),
+            .padding(.all(padding))
+            .wrap(_text(triggerText, iconSize: iconSize)),
       )
       .onExpanded(
         DisclosureStyler().trigger(
           BoxStyler().borderRadius(
             BorderRadiusMix(
-              topLeft: metrics.radius,
-              topRight: metrics.radius,
+              topLeft: radius,
+              topRight: radius,
               bottomLeft: Radius.zero,
               bottomRight: Radius.zero,
             ),
@@ -64,152 +97,100 @@ DisclosureStyler _{{valuePrefix}}DisclosureBaseStyler({{typePrefix}}DisclosureSi
         BoxStyler()
             .width(.infinity)
             .borderRadius(
-              BorderRadiusMix(
-                bottomLeft: metrics.radius,
-                bottomRight: metrics.radius,
-              ),
+              BorderRadiusMix(bottomLeft: radius, bottomRight: radius),
             )
             .clipBehavior(.antiAlias)
-            .padding(.all(metrics.padding))
-            .wrap(
-              _{{valuePrefix}}DisclosureTypography(
-                style: {{typePrefix}}Tokens.text2,
-                color: {{typePrefix}}Tokens.gray12(),
-                iconColor: {{typePrefix}}Tokens.gray11(),
-                iconSize: metrics.iconSize,
-              ),
-            ),
+            .padding(.all(padding))
+            .wrap(_text({{typePrefix}}Tokens.text2, iconSize: iconSize)),
       );
 }
 
-DisclosureStyler _{{valuePrefix}}DisclosureSurfaceStyler({{typePrefix}}DisclosureSize size) {
-  final metrics = _{{valuePrefix}}DisclosureMetrics(size);
-  return _{{valuePrefix}}DisclosureBaseStyler(size)
-      .container(
-        {{valuePrefix}}SurfaceFrame(
-          fillColor: {{typePrefix}}Tokens.gray2(),
-          borderColor: {{typePrefix}}Tokens.gray6(),
-          borderWidth: {{typePrefix}}Tokens.borderWidth1(),
-          radius: metrics.radius,
-        ),
-      )
-      .trigger(.color({{typePrefix}}Tokens.gray1()))
-      .content(
-        .foregroundDecoration(
-          BoxDecorationMix(
-            border: BoxBorderMix.top(
-              _{{valuePrefix}}DisclosureBorderSide({{typePrefix}}Tokens.gray6()),
+DisclosureStyler _surface({{typePrefix}}DisclosureSize size) => DisclosureStyler()
+    .container(
+      {{valuePrefix}}SurfaceFrame(
+        fillColor: {{typePrefix}}Tokens.gray2(),
+        borderColor: {{typePrefix}}Tokens.gray6(),
+        borderWidth: {{typePrefix}}Tokens.borderWidth1(),
+        radius: _radius(size),
+      ),
+    )
+    .trigger(.color({{typePrefix}}Tokens.gray1()))
+    .content(.foregroundDecoration(_dividerAbove({{typePrefix}}Tokens.gray6())))
+    .onHovered(.trigger(.color({{typePrefix}}Tokens.gray2())))
+    .onPressed(.trigger(.color({{typePrefix}}Tokens.gray3())))
+    .onFocusVisible(.triggerEffects({{valuePrefix}}FocusOutline()))
+    .onDisabled(_disabled());
+
+DisclosureStyler _soft({{typePrefix}}DisclosureSize size) => DisclosureStyler()
+    .container(
+      {{valuePrefix}}SurfaceFrame(
+        fillColor: {{typePrefix}}Tokens.accent2(),
+        borderColor: {{typePrefix}}Tokens.accent6(),
+        borderWidth: {{typePrefix}}Tokens.borderWidth1(),
+        radius: _radius(size),
+      ),
+    )
+    .trigger(
+      BoxStyler()
+          .color({{typePrefix}}Tokens.accent2())
+          .wrap(
+            _tint(
+              color: {{typePrefix}}Tokens.accent12(),
+              iconColor: {{typePrefix}}Tokens.accentContent(),
             ),
           ),
-        ),
-      )
-      .onHovered(.trigger(.color({{typePrefix}}Tokens.gray2())))
-      .onPressed(.trigger(.color({{typePrefix}}Tokens.gray3())))
-      .onFocusVisible(DisclosureStyler().triggerEffects({{valuePrefix}}FocusOutline()))
-      .onDisabled(_{{valuePrefix}}DisclosureDisabledStyler());
-}
-
-DisclosureStyler _{{valuePrefix}}DisclosureSoftStyler({{typePrefix}}DisclosureSize size) {
-  final metrics = _{{valuePrefix}}DisclosureMetrics(size);
-  return _{{valuePrefix}}DisclosureBaseStyler(size)
-      .container(
-        {{valuePrefix}}SurfaceFrame(
-          fillColor: {{typePrefix}}Tokens.accent2(),
-          borderColor: {{typePrefix}}Tokens.accent6(),
-          borderWidth: {{typePrefix}}Tokens.borderWidth1(),
-          radius: metrics.radius,
-        ),
-      )
-      .trigger(
-        BoxStyler()
-            .color({{typePrefix}}Tokens.accent2())
-            .wrap(
-              _{{valuePrefix}}DisclosureForeground(
-                color: {{typePrefix}}Tokens.accent12(),
-                iconColor: {{typePrefix}}Tokens.accentContent(),
-              ),
+    )
+    .content(
+      BoxStyler()
+          .foregroundDecoration(_dividerAbove({{typePrefix}}Tokens.accent6()))
+          .wrap(
+            _tint(
+              color: {{typePrefix}}Tokens.accent12(),
+              iconColor: {{typePrefix}}Tokens.accentContent(),
             ),
-      )
-      .content(
-        BoxStyler()
-            .foregroundDecoration(
-              BoxDecorationMix(
-                border: BoxBorderMix.top(
-                  _{{valuePrefix}}DisclosureBorderSide({{typePrefix}}Tokens.accent6()),
-                ),
-              ),
-            )
-            .wrap(
-              _{{valuePrefix}}DisclosureForeground(
-                color: {{typePrefix}}Tokens.accent12(),
-                iconColor: {{typePrefix}}Tokens.accentContent(),
-              ),
-            ),
-      )
-      .onHovered(.trigger(.color({{typePrefix}}Tokens.accent3())))
-      .onPressed(.trigger(.color({{typePrefix}}Tokens.accent4())))
-      .onFocusVisible(DisclosureStyler().triggerEffects({{valuePrefix}}FocusOutline()))
-      .onDisabled(_{{valuePrefix}}DisclosureDisabledStyler());
-}
+          ),
+    )
+    .onHovered(.trigger(.color({{typePrefix}}Tokens.accent3())))
+    .onPressed(.trigger(.color({{typePrefix}}Tokens.accent4())))
+    .onFocusVisible(.triggerEffects({{valuePrefix}}FocusOutline()))
+    .onDisabled(_disabled());
 
-DisclosureStyler _{{valuePrefix}}DisclosureDisabledStyler() {
-  return DisclosureStyler()
-      .triggerEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
-      .trigger(
-        BoxStyler()
-            .color({{typePrefix}}Tokens.grayA3())
-            .wrap(
-              _{{valuePrefix}}DisclosureForeground(
-                color: {{typePrefix}}Tokens.gray8(),
-                iconColor: {{typePrefix}}Tokens.gray8(),
-              ),
-            ),
-      );
-}
+DisclosureStyler _disabled() => DisclosureStyler()
+    .triggerEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
+    .trigger(
+      BoxStyler()
+          .color({{typePrefix}}Tokens.grayA3())
+          .wrap(
+            _tint(color: {{typePrefix}}Tokens.gray8(), iconColor: {{typePrefix}}Tokens.gray8()),
+          ),
+    );
 
-BorderSideMix _{{valuePrefix}}DisclosureBorderSide(Color color) =>
-    BorderSideMix(color: color, width: {{typePrefix}}Tokens.borderWidth1());
+/// The 1px line between the trigger and the content.
+BoxDecorationMix _dividerAbove(Color color) => BoxDecorationMix(
+  border: BoxBorderMix.top(
+    BorderSideMix(color: color, width: {{typePrefix}}Tokens.borderWidth1()),
+  ),
+);
 
-WidgetModifierConfig _{{valuePrefix}}DisclosureTypography({
-  required TextStyleToken style,
-  required Color color,
-  required Color iconColor,
-  required double iconSize,
-}) {
-  return WidgetModifierConfig.defaultTextStyle(style: style.mix())
-      .defaultTextStyle(style: TextStyleMix().color(color))
-      .merge(WidgetModifierConfig.iconTheme(color: iconColor, size: iconSize));
-}
+/// A text style, the gray text color and gray icons of a part's default look.
+WidgetModifierConfig _text(TextStyleToken style, {required double iconSize}) =>
+    WidgetModifierConfig.defaultTextStyle(style: style.mix())
+        .defaultTextStyle(style: TextStyleMix().color({{typePrefix}}Tokens.gray12()))
+        .merge(
+          WidgetModifierConfig.iconTheme(
+            color: {{typePrefix}}Tokens.gray11(),
+            size: iconSize,
+          ),
+        );
 
-WidgetModifierConfig _{{valuePrefix}}DisclosureForeground({
-  required Color color,
-  required Color iconColor,
-}) {
-  return WidgetModifierConfig.defaultTextStyle(
-    style: TextStyleMix().color(color),
-  ).merge(WidgetModifierConfig.iconTheme(color: iconColor));
-}
+/// Text and icon colors, leaving the size alone.
+WidgetModifierConfig _tint({required Color color, required Color iconColor}) =>
+    WidgetModifierConfig.defaultTextStyle(
+      style: TextStyleMix().color(color),
+    ).merge(WidgetModifierConfig.iconTheme(color: iconColor));
 
-({double padding, Radius radius, TextStyleToken triggerText, double iconSize})
-_{{valuePrefix}}DisclosureMetrics({{typePrefix}}DisclosureSize size) {
-  return switch (size) {
-    .size1 => (
-      padding: {{typePrefix}}Tokens.space2(),
-      radius: {{typePrefix}}Tokens.radius3(),
-      triggerText: {{typePrefix}}Tokens.text2,
-      iconSize: {{typePrefix}}Tokens.space4(),
-    ),
-    .size2 => (
-      padding: {{typePrefix}}Tokens.space3(),
-      radius: {{typePrefix}}Tokens.radius4(),
-      triggerText: {{typePrefix}}Tokens.text2,
-      iconSize: {{typePrefix}}Tokens.spinnerSize3(),
-    ),
-    .size3 => (
-      padding: {{typePrefix}}Tokens.space4(),
-      radius: {{typePrefix}}Tokens.radius5(),
-      triggerText: {{typePrefix}}Tokens.text3,
-      iconSize: {{typePrefix}}Tokens.space5(),
-    ),
-  };
-}
+Radius _radius({{typePrefix}}DisclosureSize size) => switch (size) {
+  .size1 => {{typePrefix}}Tokens.radius3(),
+  .size2 => {{typePrefix}}Tokens.radius4(),
+  .size3 => {{typePrefix}}Tokens.radius5(),
+};

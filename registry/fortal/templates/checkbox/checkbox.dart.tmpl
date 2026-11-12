@@ -6,48 +6,51 @@ import '../theme/theme.dart';
 
 part 'checkbox.g.dart';
 
-/// {{typePrefix}} Checkbox size presets.
-enum {{typePrefix}}CheckboxSize { size1, size2, size3 }
+/// The sizes a checkbox comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}CheckboxSize {
+  /// A 14px box with a 9px check.
+  size1,
 
-/// {{typePrefix}} Checkbox variants.
-enum {{typePrefix}}CheckboxVariant { surface, soft }
+  /// A 16px box with a 10px check. The default.
+  size2,
 
-/// {{typePrefix}} recipe for [RemixCheckbox].
+  /// A 20px box with a 12px check.
+  size3,
+}
+
+/// The looks a checkbox comes in.
+enum {{typePrefix}}CheckboxVariant {
+  /// A surface fill inside a 1px neutral frame, filled with the accent when
+  /// selected.
+  surface,
+
+  /// An accent tint inside a 1px accent ring, with an accent-colored mark.
+  soft,
+}
+
+/// The {{typePrefix}} Checkbox recipe.
+///
+/// It reads top to bottom: the box and its focus ring, then the variant's
+/// colors for rest, selected and disabled, then the touch target.
+///
+/// [highContrast] moves the selected fill (surface) or mark (soft) to accent
+/// step 12.
 @MixWidget(target: RemixCheckbox.new)
 CheckboxStyler {{valuePrefix}}CheckboxStyle({
   {{typePrefix}}CheckboxVariant variant = .surface,
   {{typePrefix}}CheckboxSize size = .size2,
   bool highContrast = false,
   CheckboxStyler style = const CheckboxStyler.create(),
-}) {
-  final metrics = _{{valuePrefix}}CheckboxMetrics(size);
-  final base = CheckboxStyler(
-    container: .size(
-      metrics.size,
-      metrics.size,
-    ).alignment(.center).borderRadius(.all(metrics.radius)),
-    indicator: .size(metrics.indicatorSize),
-    containerEffects: RemixBoxEffectsMix(
-      behindContent: RemixBoxEffectLayerMix(),
-      overContent: RemixBoxEffectLayerMix(),
-    ),
-  ).onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()));
+}) => _box(size)
+    .merge(switch (variant) {
+      .surface => _surface(highContrast),
+      .soft => _soft(highContrast),
+    })
+    .wrap({{valuePrefix}}TouchTarget())
+    .onDisabled(.containerEffects(.outline(.style(.none))))
+    .merge(style);
 
-  return (switch (variant) {
-        .surface => _{{valuePrefix}}CheckboxSurface(base, highContrast),
-        .soft => _{{valuePrefix}}CheckboxSoft(base, highContrast),
-      })
-      .wrap({{valuePrefix}}TouchTarget())
-      .onDisabled(
-        CheckboxStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
-      .merge(style);
-}
-
-/// {{typePrefix}} recipe for [RemixCheckboxGroupItem].
-///
+/// The {{typePrefix}} CheckboxGroupItem recipe: the checkbox recipe plus a label.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
 /// so unlike every other Remix item (menu, select, segmented control, toggle
@@ -60,130 +63,116 @@ CheckboxStyler {{valuePrefix}}CheckboxGroupItemStyle({
   {{typePrefix}}CheckboxSize size = .size2,
   bool highContrast = false,
   CheckboxStyler style = const CheckboxStyler.create(),
-}) {
-  final checkbox = {{valuePrefix}}CheckboxStyle(
-    variant: variant,
-    size: size,
-    highContrast: highContrast,
-  );
+}) =>
+    {{valuePrefix}}CheckboxStyle(
+          variant: variant,
+          size: size,
+          highContrast: highContrast,
+        )
+        .merge(switch (size) {
+          .size1 => _label({{typePrefix}}Tokens.text1, {{typePrefix}}Tokens.space1),
+          .size2 => _label({{typePrefix}}Tokens.text2, {{typePrefix}}Tokens.space2),
+          .size3 => _label({{typePrefix}}Tokens.text3, {{typePrefix}}Tokens.space2),
+        })
+        .merge(style);
 
-  return (switch (size) {
-        .size1 =>
-          checkbox
-              .label(.style({{typePrefix}}Tokens.text1.mix()))
-              .labelSpacing({{typePrefix}}Tokens.space1()),
-        .size2 =>
-          checkbox
-              .label(.style({{typePrefix}}Tokens.text2.mix()))
-              .labelSpacing({{typePrefix}}Tokens.space2()),
-        .size3 =>
-          checkbox
-              .label(.style({{typePrefix}}Tokens.text3.mix()))
-              .labelSpacing({{typePrefix}}Tokens.space2()),
-      })
-      .wrap({{valuePrefix}}TouchTarget())
-      .onDisabled(
-        CheckboxStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
-      .merge(style);
+/// The box and check sizes of each step, with the focus ring and no effects.
+///
+/// The empty effect layers give the variant's state fragments layers to
+/// replace.
+CheckboxStyler _box({{typePrefix}}CheckboxSize size) {
+  final (:box, :check, :radius) = switch (size) {
+    .size1 => (
+      box: {{typePrefix}}Tokens.checkboxSize1(),
+      check: {{typePrefix}}Tokens.checkboxIndicatorSize1(),
+      radius: {{typePrefix}}Tokens.checkboxRadius1(),
+    ),
+    .size2 => (
+      box: {{typePrefix}}Tokens.space4(),
+      check: {{typePrefix}}Tokens.checkboxIndicatorSize2(),
+      radius: {{typePrefix}}Tokens.radius1(),
+    ),
+    .size3 => (
+      box: {{typePrefix}}Tokens.checkboxSize3(),
+      check: {{typePrefix}}Tokens.space3(),
+      radius: {{typePrefix}}Tokens.checkboxRadius3(),
+    ),
+  };
+
+  return CheckboxStyler(
+    container: .size(box, box).alignment(.center).borderRadius(.all(radius)),
+    indicator: .size(check),
+    containerEffects: RemixBoxEffectsMix(
+      behindContent: RemixBoxEffectLayerMix(),
+      overContent: RemixBoxEffectLayerMix(),
+    ),
+  ).onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()));
 }
 
-({double size, double indicatorSize, Radius radius}) _{{valuePrefix}}CheckboxMetrics(
-  {{typePrefix}}CheckboxSize size,
-) => switch (size) {
-  .size1 => (
-    size: {{typePrefix}}Tokens.checkboxSize1(),
-    indicatorSize: {{typePrefix}}Tokens.checkboxIndicatorSize1(),
-    radius: {{typePrefix}}Tokens.checkboxRadius1(),
-  ),
-  .size2 => (
-    size: {{typePrefix}}Tokens.space4(),
-    indicatorSize: {{typePrefix}}Tokens.checkboxIndicatorSize2(),
-    radius: {{typePrefix}}Tokens.radius1(),
-  ),
-  .size3 => (
-    size: {{typePrefix}}Tokens.checkboxSize3(),
-    indicatorSize: {{typePrefix}}Tokens.space3(),
-    radius: {{typePrefix}}Tokens.checkboxRadius3(),
-  ),
-};
+/// The label's text style and its gap to the box.
+CheckboxStyler _label(TextStyleToken text, SpaceToken gap) =>
+    CheckboxStyler().label(.style(text.mix())).labelSpacing(gap());
 
-CheckboxStyler _{{valuePrefix}}CheckboxSurface(CheckboxStyler base, bool highContrast) {
+/// A surface fill with a neutral frame; the accent fill when selected.
+CheckboxStyler _surface(bool highContrast) {
   final selected = CheckboxStyler()
       .color(
         highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentIndicator(),
       )
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          RemixBoxEffectLayerMix(shadows: const []),
-        ),
-      )
+      .merge(_effects(over: RemixBoxEffectLayerMix(shadows: const [])))
       .indicatorColor(
         highContrast
             ? {{typePrefix}}Tokens.accent1()
             : {{typePrefix}}Tokens.accentIndicatorContrast(),
       );
 
-  return base
+  return CheckboxStyler()
       .color({{typePrefix}}Tokens.colorSurface())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.controlBorder()]),
+      .merge(
+        _effects(
+          over: {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.controlBorder()]),
         ),
       )
       .onSelected(selected)
       .onIndeterminate(selected)
-      .onDisabled(
-        .color({{typePrefix}}Tokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA6()]),
-              ),
-            )
-            .indicatorColor({{typePrefix}}Tokens.grayA8()),
-      );
+      .onDisabled(_disabled(frame: {{typePrefix}}Tokens.grayA6()));
 }
 
-CheckboxStyler _{{valuePrefix}}CheckboxSoft(CheckboxStyler base, bool highContrast) {
+/// An accent tint with an accent ring; the mark takes the accent when
+/// selected.
+CheckboxStyler _soft(bool highContrast) {
   final selected = CheckboxStyler().indicatorColor(
     highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentContentAlpha(),
   );
 
-  return base
+  return CheckboxStyler()
       .color({{typePrefix}}Tokens.accentA5())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-      )
       // The tint alone is too faint to show an empty control; the accent-8
       // ring keeps a 3:1 boundary in every enabled state.
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.focus8()]),
-        ),
+      .merge(
+        _effects(over: {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.focus8()])),
       )
       .onSelected(selected)
       .onIndeterminate(selected)
-      .onDisabled(
-        .color({{typePrefix}}Tokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                RemixBoxEffectLayerMix(shadows: const []),
-              ),
-            )
-            .indicatorColor({{typePrefix}}Tokens.grayA8()),
-      );
+      .onDisabled(_disabled());
 }
+
+/// A gray fill and mark. The surface variant keeps a [frame]; soft has none.
+CheckboxStyler _disabled({Color? frame}) => CheckboxStyler()
+    .color({{typePrefix}}Tokens.grayA3())
+    .merge(
+      _effects(
+        over: frame == null
+            ? RemixBoxEffectLayerMix(shadows: const [])
+            : {{valuePrefix}}InsetSurface(strokes: [frame]),
+      ),
+    )
+    .indicatorColor({{typePrefix}}Tokens.grayA8());
+
+/// Sets the layer over the content and empties the one behind it.
+CheckboxStyler _effects({required RemixBoxEffectLayerMix over}) =>
+    CheckboxStyler()
+        .containerEffects(
+          RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+        )
+        .containerEffects(RemixBoxEffectsMix.overContent(over));

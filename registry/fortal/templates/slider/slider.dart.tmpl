@@ -6,130 +6,144 @@ import '../theme/theme.dart';
 
 part 'slider.g.dart';
 
-/// {{typePrefix}} slider sizes.
-enum {{typePrefix}}SliderSize { size1, size2, size3 }
+/// The sizes a slider comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}SliderSize {
+  /// A 6px track with a 13px thumb.
+  size1,
 
-/// {{typePrefix}} slider variants.
-enum {{typePrefix}}SliderVariant { surface, soft }
+  /// An 8px track with a 16px thumb. The default.
+  size2,
 
-/// {{typePrefix}} slider with {{typePrefix}}-owned size, variant, and component overrides.
+  /// A 10px track with a 19px thumb.
+  size3,
+}
+
+/// The looks a slider comes in.
+enum {{typePrefix}}SliderVariant {
+  /// A gray track and a solid accent range.
+  surface,
+
+  /// A gray track and a softer accent range.
+  soft,
+}
+
+/// The {{typePrefix}} Slider recipe.
+///
+/// It reads top to bottom: the track and thumb sizes, then the variant's
+/// colors, then the dark-mode thumb edge, hover, press and disabled.
+///
+/// [highContrast] darkens the range with an overlay.
 @MixWidget(target: RemixSlider.new)
 SliderStyler {{valuePrefix}}SliderStyle({
   {{typePrefix}}SliderVariant variant = .surface,
   {{typePrefix}}SliderSize size = .size2,
   bool highContrast = false,
   SliderStyler style = const SliderStyler.create(),
-}) {
-  final metrics = _{{valuePrefix}}SliderMetrics(size);
-  final radius = BorderRadiusMix.all(metrics.trackRadius);
-  final thumbRadius = BorderRadiusMix.all({{typePrefix}}Tokens.radius1OrThumb());
-  final base = SliderStyler()
+}) => _base(size)
+    .merge(switch (variant) {
+      .surface => _surface(highContrast),
+      .soft => _soft(highContrast),
+    })
+    .variant(
+      ContextVariant(
+        '{{valuePrefix}}SliderDark',
+        (context) => {{typePrefix}}Theme.of(context).isDark,
+      ),
+      SliderStyler().thumb(
+        .border(
+          .all(.color({{typePrefix}}Tokens.gray3()).width({{typePrefix}}Tokens.borderWidth2())),
+        ),
+      ),
+    )
+    .onHovered(
+      SliderStyler().thumbEffects(
+        RemixBoxEffectsMix(
+          outline: .color(
+            {{typePrefix}}Tokens.accentA7(),
+          ).width({{typePrefix}}Tokens.borderWidth2()),
+        ),
+      ),
+    )
+    .onPressed(
+      SliderStyler()
+          .thumbEffects(
+            RemixBoxEffectsMix(
+              outline: .color(
+                {{typePrefix}}Tokens.accentA6(),
+              ).width({{typePrefix}}Tokens.space1()),
+            ),
+          )
+          .thumb(
+            .border(
+              .all(
+                .color(
+                  {{typePrefix}}Tokens.accent12(),
+                ).width({{typePrefix}}Tokens.borderWidth2()),
+              ),
+            ),
+          ),
+    )
+    .onDisabled(_disabled(variant))
+    .wrap(.sizedBox(height: {{typePrefix}}Tokens.space8()))
+    .wrap({{valuePrefix}}TouchTarget())
+    .merge(style);
+
+/// The track and thumb sizes of each step, and the focus ring.
+SliderStyler _base({{typePrefix}}SliderSize size) {
+  final (:track, :thumb, :trackRadius) = switch (size) {
+    .size1 => (
+      track: {{typePrefix}}Tokens.sliderTrackSize1(),
+      thumb: {{typePrefix}}Tokens.sliderThumbSize1(),
+      trackRadius: {{typePrefix}}Tokens.sliderTrackRadius1(),
+    ),
+    .size2 => (
+      track: {{typePrefix}}Tokens.space2(),
+      thumb: {{typePrefix}}Tokens.space4(),
+      trackRadius: {{typePrefix}}Tokens.sliderTrackRadius2(),
+    ),
+    .size3 => (
+      track: {{typePrefix}}Tokens.sliderTrackSize3(),
+      thumb: {{typePrefix}}Tokens.sliderThumbSize3(),
+      trackRadius: {{typePrefix}}Tokens.sliderTrackRadius3(),
+    ),
+  };
+  final radius = BorderRadiusMix.all(trackRadius);
+
+  return SliderStyler()
       .track(.borderRadius(radius))
       .range(.borderRadius(radius))
       .thumb(
-        .size(metrics.thumbSize, metrics.thumbSize).borderRadius(thumbRadius),
+        .size(
+          thumb,
+          thumb,
+        ).borderRadius(BorderRadiusMix.all({{typePrefix}}Tokens.radius1OrThumb())),
       )
-      .thickness(metrics.trackSize)
+      .thickness(track)
       .thumbFocusEffects({{valuePrefix}}SliderFocusOutline());
-
-  final styled = switch (variant) {
-    .surface => _{{valuePrefix}}SliderSurface(
-      base,
-      trackRadius: radius,
-      thumbRadius: thumbRadius,
-      highContrast: highContrast,
-    ),
-    .soft => _{{valuePrefix}}SliderSoft(
-      base,
-      trackRadius: radius,
-      thumbRadius: thumbRadius,
-      highContrast: highContrast,
-    ),
-  };
-  return styled
-      .variant(
-        ContextVariant(
-          '{{valuePrefix}}SliderDark',
-          (context) => {{typePrefix}}Theme.of(context).isDark,
-        ),
-        SliderStyler().thumb(
-          .border(
-            .all(
-              .color({{typePrefix}}Tokens.gray3()).width({{typePrefix}}Tokens.borderWidth2()),
-            ),
-          ),
-        ),
-      )
-      .onHovered(
-        SliderStyler().thumbEffects(
-          RemixBoxEffectsMix(
-            outline: .color(
-              {{typePrefix}}Tokens.accentA7(),
-            ).width({{typePrefix}}Tokens.borderWidth2()),
-          ),
-        ),
-      )
-      .onPressed(
-        SliderStyler()
-            .thumbEffects(
-              RemixBoxEffectsMix(
-                outline: .color(
-                  {{typePrefix}}Tokens.accentA6(),
-                ).width({{typePrefix}}Tokens.space1()),
-              ),
-            )
-            .thumb(
-              .border(
-                .all(
-                  .color(
-                    {{typePrefix}}Tokens.accent12(),
-                  ).width({{typePrefix}}Tokens.borderWidth2()),
-                ),
-              ),
-            ),
-      )
-      .onDisabled(_{{valuePrefix}}SliderDisabled(variant))
-      .wrap(.sizedBox(height: {{typePrefix}}Tokens.space8()))
-      .wrap({{valuePrefix}}TouchTarget())
-      .merge(style);
 }
 
-SliderStyler _{{valuePrefix}}SliderSurface(
-  SliderStyler base, {
-  required BorderRadiusMix trackRadius,
-  required BorderRadiusMix thumbRadius,
-  required bool highContrast,
-}) => base
+SliderStyler _surface(bool highContrast) => SliderStyler()
     .track(.color({{typePrefix}}Tokens.grayA3()))
     .range(.color({{typePrefix}}Tokens.accentTrack()))
     .thumbColor(const Color(0xFFFFFFFF))
     .trackEffects(
-      RemixBoxEffectsMix.behindContent(
-        {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA5()]),
-      ),
+      .behindContent({{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA5()])),
     )
     .rangeEffects(
-      RemixBoxEffectsMix.behindContent(
-        {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA5()]).merge(
-          RemixBoxEffectLayerMix(
-            gradients: _{{valuePrefix}}SliderHighContrastGradients(highContrast),
-          ),
-        ),
+      .behindContent(
+        {{valuePrefix}}InsetSurface(
+          strokes: [{{typePrefix}}Tokens.grayA5()],
+        ).merge(RemixBoxEffectLayerMix(gradients: _overlay(highContrast))),
       ),
     )
-    .thumb(_{{valuePrefix}}SliderThumbRing());
+    .thumb(_thumbRing());
 
-SliderStyler _{{valuePrefix}}SliderSoft(
-  SliderStyler base, {
-  required BorderRadiusMix trackRadius,
-  required BorderRadiusMix thumbRadius,
-  required bool highContrast,
-}) => base
+SliderStyler _soft(bool highContrast) => SliderStyler()
     .track(.color({{typePrefix}}Tokens.grayA4()))
     .range(.color({{typePrefix}}Tokens.accent6()))
     .thumbColor(const Color(0xFFFFFFFF))
     .trackEffects(
-      RemixBoxEffectsMix.behindContent(
+      .behindContent(
         RemixBoxEffectLayerMix(
           gradients: [
             RemixLinearGradientMix(
@@ -143,19 +157,15 @@ SliderStyler _{{valuePrefix}}SliderSoft(
     // page and can be opaque, so layering accent alpha 5 here would replace
     // step 6 rather than deepen it.
     .rangeEffects(
-      RemixBoxEffectsMix.behindContent(
-        RemixBoxEffectLayerMix(
-          gradients: _{{valuePrefix}}SliderHighContrastGradients(highContrast),
-        ),
-      ),
+      .behindContent(RemixBoxEffectLayerMix(gradients: _overlay(highContrast))),
     )
-    .thumb(_{{valuePrefix}}SliderThumbRing());
+    .thumb(_thumbRing());
 
-/// The white thumb's ring ([{{typePrefix}}Tokens.accentThumbRing]): the range colour
+/// The white thumb's ring ([{{typePrefix}}Tokens.accentThumbRing]): the range color
 /// where white stands out on it and it keeps 3:1 on the page and panels, the
 /// neutral control border where it does not, and a dark ink on bright ranges.
 /// The thumb overhangs the track, so the ring and white face carry it.
-BoxStyler _{{valuePrefix}}SliderThumbRing() => BoxStyler().decoration(
+BoxStyler _thumbRing() => BoxStyler().decoration(
   .border(
     .all(
       .color({{typePrefix}}Tokens.accentThumbRing()).width({{typePrefix}}Tokens.borderWidth2()),
@@ -163,13 +173,28 @@ BoxStyler _{{valuePrefix}}SliderThumbRing() => BoxStyler().decoration(
   ),
 );
 
-SliderStyler _{{valuePrefix}}SliderDisabled({{typePrefix}}SliderVariant variant) {
+/// The overlay that darkens the range under [highContrast], and nothing
+/// otherwise.
+List<RemixLinearGradientMix> _overlay(bool highContrast) => highContrast
+    ? [
+        RemixLinearGradientMix(
+          colors: [
+            {{typePrefix}}Tokens.sliderHighContrastOverlay(),
+            {{typePrefix}}Tokens.sliderHighContrastOverlay(),
+          ],
+        ),
+      ]
+    : const [];
+
+/// Gray track, range and thumb, with no ring and no overlay, whatever the
+/// variant's colors were.
+SliderStyler _disabled({{typePrefix}}SliderVariant variant) {
   final track = switch (variant) {
     .surface =>
       SliderStyler()
           .track(.color({{typePrefix}}Tokens.grayA3()))
           .trackEffects(
-            RemixBoxEffectsMix.behindContent(
+            .behindContent(
               {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA4()]),
             ),
           ),
@@ -177,23 +202,22 @@ SliderStyler _{{valuePrefix}}SliderDisabled({{typePrefix}}SliderVariant variant)
       SliderStyler()
           .track(.color({{typePrefix}}Tokens.grayA4()))
           .trackEffects(
-            RemixBoxEffectsMix.behindContent(
-              RemixBoxEffectLayerMix(gradients: const []),
-            ),
+            .behindContent(RemixBoxEffectLayerMix(gradients: const [])),
           ),
   };
+
   return track
       .track(.color({{typePrefix}}Tokens.gray5()))
       .range(.color({{typePrefix}}Tokens.gray8()))
       .thumbColor(_disabledThumbFill())
-      .thumbEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)))
+      .thumbEffects(.outline(.style(.none)))
       .rangeEffects(
-        RemixBoxEffectsMix.behindContent(
+        .behindContent(
           RemixBoxEffectLayerMix(gradients: const [], shadows: const []),
         ),
       )
       .rangeEffects(
-        RemixBoxEffectsMix.overContent(
+        .overContent(
           RemixBoxEffectLayerMix(gradients: const [], shadows: const []),
         ),
       )
@@ -206,57 +230,12 @@ SliderStyler _{{valuePrefix}}SliderDisabled({{typePrefix}}SliderVariant variant)
           ),
         ),
       )
-      .thumbFocusEffects(
-        RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-      )
+      .thumbFocusEffects(.outline(.style(.none)))
       .blendMode(BlendMode.srcOver);
 }
 
-List<RemixLinearGradientMix> _{{valuePrefix}}SliderHighContrastGradients(
-  bool highContrast,
-) => highContrast
-    ? [
-        RemixLinearGradientMix(
-          colors: [
-            {{typePrefix}}Tokens.sliderHighContrastOverlay(),
-            {{typePrefix}}Tokens.sliderHighContrastOverlay(),
-          ],
-        ),
-      ]
-    : const [];
-
-class _{{typePrefix}}SliderMetrics {
-  const _{{typePrefix}}SliderMetrics({
-    required this.trackSize,
-    required this.thumbSize,
-    required this.trackRadius,
-  });
-
-  final double trackSize;
-  final double thumbSize;
-  final Radius trackRadius;
-}
-
-_{{typePrefix}}SliderMetrics _{{valuePrefix}}SliderMetrics({{typePrefix}}SliderSize size) =>
-    switch (size) {
-      .size1 => _{{typePrefix}}SliderMetrics(
-        trackSize: {{typePrefix}}Tokens.sliderTrackSize1(),
-        thumbSize: {{typePrefix}}Tokens.sliderThumbSize1(),
-        trackRadius: {{typePrefix}}Tokens.sliderTrackRadius1(),
-      ),
-      .size2 => _{{typePrefix}}SliderMetrics(
-        trackSize: {{typePrefix}}Tokens.space2(),
-        thumbSize: {{typePrefix}}Tokens.space4(),
-        trackRadius: {{typePrefix}}Tokens.sliderTrackRadius2(),
-      ),
-      .size3 => _{{typePrefix}}SliderMetrics(
-        trackSize: {{typePrefix}}Tokens.sliderTrackSize3(),
-        thumbSize: {{typePrefix}}Tokens.sliderThumbSize3(),
-        trackRadius: {{typePrefix}}Tokens.sliderTrackRadius3(),
-      ),
-    };
-
-// Resolve inside the disabled fragment, whose priority is higher than dark mode.
+// Resolved inside the disabled fragment, whose priority is higher than dark
+// mode.
 final _disabledThumbFill = ContextToken<Color>(
   (context) =>
       ({{typePrefix}}Theme.of(context).isDark ? {{typePrefix}}Tokens.gray9 : {{typePrefix}}Tokens.gray4)

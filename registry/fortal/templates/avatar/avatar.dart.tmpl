@@ -6,23 +6,52 @@ import '../theme/theme.dart';
 
 part 'avatar.g.dart';
 
-/// {{typePrefix}} Avatar size presets.
+/// The sizes an avatar comes in. Pixel values are at 100% theme scaling.
 enum {{typePrefix}}AvatarSize {
+  /// 24px square.
   size1,
+
+  /// 32px square.
   size2,
+
+  /// 40px square. The default.
   size3,
+
+  /// 48px square.
   size4,
+
+  /// 64px square.
   size5,
+
+  /// 80px square.
   size6,
+
+  /// 96px square.
   size7,
+
+  /// 128px square.
   size8,
+
+  /// 160px square.
   size9,
 }
 
-/// {{typePrefix}} Avatar variants.
-enum {{typePrefix}}AvatarVariant { soft, solid }
+/// The looks an avatar comes in.
+enum {{typePrefix}}AvatarVariant {
+  /// A tinted accent fill under accent text.
+  soft,
 
-/// {{typePrefix}}-themed Avatar with {{typePrefix}} sizes, variants, and overrides.
+  /// The accent's solid fill under its contrast text.
+  solid,
+}
+
+/// The {{typePrefix}} Avatar recipe.
+///
+/// It reads top to bottom: the size and fallback text, then the variant's
+/// colors. The corners turn into a circle when the theme radius is `full`.
+///
+/// [highContrast] moves the solid fill, and the text of the soft variant, to
+/// accent step 12.
 ///
 /// [fallbackLength] selects the pinned one- or two-character fallback
 /// typography. Pass `2` when [RemixAvatar.label] contains two initials.
@@ -33,99 +62,114 @@ AvatarStyler {{valuePrefix}}AvatarStyle({
   bool highContrast = false,
   int fallbackLength = 1,
   AvatarStyler style = const AvatarStyler.create(),
-}) {
-  final base = _{{valuePrefix}}AvatarBaseStyler(size, fallbackLength: fallbackLength);
-  final softContent = highContrast
-      ? {{typePrefix}}Tokens.accent12()
-      : {{typePrefix}}Tokens.accentContentAlpha();
-  final solidContent = highContrast
-      ? {{typePrefix}}Tokens.accent1()
-      : {{typePrefix}}Tokens.accentContrast();
-  return (switch (variant) {
-    .soft =>
-      base
-          .color({{typePrefix}}Tokens.accentA3())
-          .labelColor(softContent)
-          .iconColor(softContent),
-    .solid =>
-      base
-          .color(
-            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentSolid(),
-          )
-          .labelColor(solidContent)
-          .iconColor(solidContent),
-  }).merge(style);
-}
+}) => _base(size, fallbackLength: fallbackLength)
+    .merge(switch (variant) {
+      .soft => _soft(highContrast),
+      .solid => _solid(highContrast),
+    })
+    .merge(style);
 
-AvatarStyler _{{valuePrefix}}AvatarBaseStyler(
-  {{typePrefix}}AvatarSize size, {
-  required int fallbackLength,
-}) {
-  final fallbackText = _{{valuePrefix}}AvatarFallbackText(size, fallbackLength);
-  final dimension = _{{valuePrefix}}AvatarDimension(size);
+/// The square, corner, fallback text and icon size of each step.
+AvatarStyler _base({{typePrefix}}AvatarSize size, {required int fallbackLength}) {
+  final (:dimension, :icon, :radius) = switch (size) {
+    .size1 => (
+      dimension: {{typePrefix}}Tokens.space5(),
+      icon: {{typePrefix}}Tokens.space3(),
+      radius: {{typePrefix}}Tokens.radius2OrFull(),
+    ),
+    .size2 => (
+      dimension: {{typePrefix}}Tokens.space6(),
+      icon: {{typePrefix}}Tokens.space4(),
+      radius: {{typePrefix}}Tokens.radius2OrFull(),
+    ),
+    .size3 => (
+      dimension: {{typePrefix}}Tokens.space7(),
+      icon: {{typePrefix}}Tokens.avatarIconSize3(),
+      radius: {{typePrefix}}Tokens.radius3OrFull(),
+    ),
+    .size4 => (
+      dimension: {{typePrefix}}Tokens.space8(),
+      icon: {{typePrefix}}Tokens.space5(),
+      radius: {{typePrefix}}Tokens.radius3OrFull(),
+    ),
+    .size5 => (
+      dimension: {{typePrefix}}Tokens.space9(),
+      icon: {{typePrefix}}Tokens.space6(),
+      radius: {{typePrefix}}Tokens.radius4OrFull(),
+    ),
+    .size6 => (
+      dimension: {{typePrefix}}Tokens.avatarSize6(),
+      icon: {{typePrefix}}Tokens.space7(),
+      radius: {{typePrefix}}Tokens.radius5OrFull(),
+    ),
+    .size7 => (
+      dimension: {{typePrefix}}Tokens.avatarSize7(),
+      icon: {{typePrefix}}Tokens.space8(),
+      radius: {{typePrefix}}Tokens.radius5OrFull(),
+    ),
+    .size8 => (
+      dimension: {{typePrefix}}Tokens.avatarSize8(),
+      icon: {{typePrefix}}Tokens.space9(),
+      radius: {{typePrefix}}Tokens.radius6OrFull(),
+    ),
+    .size9 => (
+      dimension: {{typePrefix}}Tokens.avatarSize9(),
+      icon: {{typePrefix}}Tokens.avatarIconSize9(),
+      radius: {{typePrefix}}Tokens.radius6OrFull(),
+    ),
+  };
+
   return AvatarStyler()
       .clipBehavior(.hardEdge)
       .label(
         TextStyler(
-          style: fallbackText.mix(),
+          style: _fallbackText(size, fallbackLength).mix(),
         ).fontWeight({{typePrefix}}Tokens.fontWeightMedium()),
       )
-      .icon(
-        .size(
-          _{{valuePrefix}}AvatarIconSize(size),
-        ).color({{typePrefix}}Tokens.accentContentAlpha()),
-      )
+      .icon(.size(icon).color({{typePrefix}}Tokens.accentContentAlpha()))
       .size(dimension, dimension)
-      .borderRadius(.all(_{{valuePrefix}}AvatarRadius(size)));
+      .borderRadius(.all(radius));
 }
 
-double _{{valuePrefix}}AvatarDimension({{typePrefix}}AvatarSize size) => switch (size) {
-  .size1 => {{typePrefix}}Tokens.space5(),
-  .size2 => {{typePrefix}}Tokens.space6(),
-  .size3 => {{typePrefix}}Tokens.space7(),
-  .size4 => {{typePrefix}}Tokens.space8(),
-  .size5 => {{typePrefix}}Tokens.space9(),
-  .size6 => {{typePrefix}}Tokens.avatarSize6(),
-  .size7 => {{typePrefix}}Tokens.avatarSize7(),
-  .size8 => {{typePrefix}}Tokens.avatarSize8(),
-  .size9 => {{typePrefix}}Tokens.avatarSize9(),
-};
+/// The fallback text style. The first four sizes have a one-character and a
+/// two-character style; larger sizes have one.
+TextStyleToken _fallbackText({{typePrefix}}AvatarSize size, int fallbackLength) =>
+    switch ((size, fallbackLength == 2)) {
+      (.size1, false) => {{typePrefix}}Tokens.avatarFallback1One,
+      (.size1, true) => {{typePrefix}}Tokens.avatarFallback1Two,
+      (.size2, false) => {{typePrefix}}Tokens.avatarFallback2One,
+      (.size2, true) => {{typePrefix}}Tokens.avatarFallback2Two,
+      (.size3, false) => {{typePrefix}}Tokens.avatarFallback3One,
+      (.size3, true) => {{typePrefix}}Tokens.avatarFallback3Two,
+      (.size4, false) => {{typePrefix}}Tokens.avatarFallback4One,
+      (.size4, true) => {{typePrefix}}Tokens.avatarFallback4Two,
+      (.size5, _) => {{typePrefix}}Tokens.avatarFallback5,
+      (.size6, _) => {{typePrefix}}Tokens.avatarFallback6,
+      (.size7, _) => {{typePrefix}}Tokens.avatarFallback7,
+      (.size8, _) => {{typePrefix}}Tokens.avatarFallback8,
+      (.size9, _) => {{typePrefix}}Tokens.avatarFallback9,
+    };
 
-double _{{valuePrefix}}AvatarIconSize({{typePrefix}}AvatarSize size) => switch (size) {
-  .size1 => {{typePrefix}}Tokens.space3(),
-  .size2 => {{typePrefix}}Tokens.space4(),
-  .size3 => {{typePrefix}}Tokens.avatarIconSize3(),
-  .size4 => {{typePrefix}}Tokens.space5(),
-  .size5 => {{typePrefix}}Tokens.space6(),
-  .size6 => {{typePrefix}}Tokens.space7(),
-  .size7 => {{typePrefix}}Tokens.space8(),
-  .size8 => {{typePrefix}}Tokens.space9(),
-  .size9 => {{typePrefix}}Tokens.avatarIconSize9(),
-};
+AvatarStyler _soft(bool highContrast) {
+  final content = highContrast
+      ? {{typePrefix}}Tokens.accent12()
+      : {{typePrefix}}Tokens.accentContentAlpha();
 
-Radius _{{valuePrefix}}AvatarRadius({{typePrefix}}AvatarSize size) => switch (size) {
-  .size1 || .size2 => {{typePrefix}}Tokens.radius2OrFull(),
-  .size3 || .size4 => {{typePrefix}}Tokens.radius3OrFull(),
-  .size5 => {{typePrefix}}Tokens.radius4OrFull(),
-  .size6 || .size7 => {{typePrefix}}Tokens.radius5OrFull(),
-  .size8 || .size9 => {{typePrefix}}Tokens.radius6OrFull(),
-};
+  return AvatarStyler()
+      .color({{typePrefix}}Tokens.accentA3())
+      .labelColor(content)
+      .iconColor(content);
+}
 
-TextStyleToken _{{valuePrefix}}AvatarFallbackText(
-  {{typePrefix}}AvatarSize size,
-  int fallbackLength,
-) => switch ((size, fallbackLength == 2)) {
-  (.size1, false) => {{typePrefix}}Tokens.avatarFallback1One,
-  (.size1, true) => {{typePrefix}}Tokens.avatarFallback1Two,
-  (.size2, false) => {{typePrefix}}Tokens.avatarFallback2One,
-  (.size2, true) => {{typePrefix}}Tokens.avatarFallback2Two,
-  (.size3, false) => {{typePrefix}}Tokens.avatarFallback3One,
-  (.size3, true) => {{typePrefix}}Tokens.avatarFallback3Two,
-  (.size4, false) => {{typePrefix}}Tokens.avatarFallback4One,
-  (.size4, true) => {{typePrefix}}Tokens.avatarFallback4Two,
-  (.size5, _) => {{typePrefix}}Tokens.avatarFallback5,
-  (.size6, _) => {{typePrefix}}Tokens.avatarFallback6,
-  (.size7, _) => {{typePrefix}}Tokens.avatarFallback7,
-  (.size8, _) => {{typePrefix}}Tokens.avatarFallback8,
-  (.size9, _) => {{typePrefix}}Tokens.avatarFallback9,
-};
+AvatarStyler _solid(bool highContrast) {
+  final content = highContrast
+      ? {{typePrefix}}Tokens.accent1()
+      : {{typePrefix}}Tokens.accentContrast();
+
+  return AvatarStyler()
+      .color(
+        highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentSolid(),
+      )
+      .labelColor(content)
+      .iconColor(content);
+}

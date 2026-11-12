@@ -6,52 +6,80 @@ import '../theme/theme.dart';
 
 part 'switch.g.dart';
 
-/// {{typePrefix}} switch size presets.
+/// The sizes a switch comes in. Pixel values are at 100% theme scaling.
 enum {{typePrefix}}SwitchSize {
-  /// Compact switch.
+  /// A 28px by 16px track.
   size1,
 
-  /// Default switch.
+  /// A 36px by 20px track. The default.
   size2,
 
-  /// Large switch.
+  /// A 44px by 24px track.
   size3,
 }
 
-/// {{typePrefix}} switch color variants.
+/// The looks a switch comes in.
 enum {{typePrefix}}SwitchVariant {
-  /// Surface treatment with a visible border.
+  /// A neutral track with a 1px frame, filled with the accent when on.
   surface,
 
-  /// Softer accent treatment.
+  /// A neutral tint, accent-tinted when on, with no frame.
   soft,
 }
 
-/// {{typePrefix}}-themed preset for [RemixSwitch].
+/// The {{typePrefix}} Switch recipe.
+///
+/// It reads top to bottom: the track, thumb and focus ring, then the variant's
+/// colors for on, pressed and disabled, then the touch target.
+///
+/// [highContrast] moves the on state to accent step 12.
 @MixWidget(target: RemixSwitch.new)
 SwitchStyler {{valuePrefix}}SwitchStyle({
   {{typePrefix}}SwitchVariant variant = .surface,
   {{typePrefix}}SwitchSize size = .size2,
   bool highContrast = false,
   SwitchStyler style = const SwitchStyler.create(),
-}) {
-  return (switch (variant) {
-    .surface => _{{valuePrefix}}SwitchSurfaceStyler(size, highContrast: highContrast),
-    .soft => _{{valuePrefix}}SwitchSoftStyler(size, highContrast: highContrast),
-  }).wrap({{valuePrefix}}TouchTarget()).merge(style);
-}
+}) => _track(size)
+    .merge(switch (variant) {
+      .surface => _surface(highContrast),
+      .soft => _soft(highContrast),
+    })
+    .wrap({{valuePrefix}}TouchTarget())
+    .merge(style);
 
-SwitchStyler _{{valuePrefix}}SwitchBaseStyler({{typePrefix}}SwitchSize size) {
-  final metrics = _{{valuePrefix}}SwitchMetrics(size);
+/// The track and thumb sizes of each step, and the off look both variants
+/// start from: a gray track, a white thumb, and a focus ring.
+///
+/// The empty effect layers give the variant's state fragments layers to
+/// replace.
+SwitchStyler _track({{typePrefix}}SwitchSize size) {
+  final (:width, :height, :thumb, :radius) = switch (size) {
+    .size1 => (
+      width: {{typePrefix}}Tokens.switchWidth1(),
+      height: {{typePrefix}}Tokens.space4(),
+      thumb: {{typePrefix}}Tokens.switchThumbSize1(),
+      radius: {{typePrefix}}Tokens.radius1OrThumb(),
+    ),
+    .size2 => (
+      width: {{typePrefix}}Tokens.switchWidth2(),
+      height: {{typePrefix}}Tokens.switchHeight2(),
+      thumb: {{typePrefix}}Tokens.switchThumbSize2(),
+      radius: {{typePrefix}}Tokens.radius2OrThumb(),
+    ),
+    .size3 => (
+      width: {{typePrefix}}Tokens.switchWidth3(),
+      height: {{typePrefix}}Tokens.space5(),
+      thumb: {{typePrefix}}Tokens.switchThumbSize3(),
+      radius: {{typePrefix}}Tokens.radius2OrThumb(),
+    ),
+  };
+
   return SwitchStyler(
         container: .size(
-          metrics.width,
-          metrics.height,
-        ).padding(.all(1)).borderRadius(.all(metrics.radius)),
-        thumb: .size(
-          metrics.thumbSize,
-          metrics.thumbSize,
-        ).borderRadius(.all(metrics.radius)),
+          width,
+          height,
+        ).padding(.all(1)).borderRadius(.all(radius)),
+        thumb: .size(thumb, thumb).borderRadius(.all(radius)),
         trackEffects: RemixBoxEffectsMix(
           behindContent: RemixBoxEffectLayerMix(),
           overContent: RemixBoxEffectLayerMix(),
@@ -60,146 +88,65 @@ SwitchStyler _{{valuePrefix}}SwitchBaseStyler({{typePrefix}}SwitchSize size) {
       .thumbColor(const Color(0xFFFFFFFF))
       .onFocusVisible(.trackEffects({{valuePrefix}}FocusOutline()))
       .trackColor({{typePrefix}}Tokens.grayA3())
-      .trackEffects(RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()))
-      .trackEffects(
-        RemixBoxEffectsMix.overContent(
-          _{{valuePrefix}}SwitchInsetRing({{typePrefix}}Tokens.controlBorder()),
-        ),
-      )
-      .thumb(_{{valuePrefix}}SwitchOffThumbStyler());
-}
-
-SwitchStyler _{{valuePrefix}}SwitchSurfaceStyler(
-  {{typePrefix}}SwitchSize size, {
-  required bool highContrast,
-}) {
-  return _{{valuePrefix}}SwitchBaseStyler(size)
-      .onSelected(
-        SwitchStyler()
-            .trackColor(
-              highContrast
-                  ? {{typePrefix}}Tokens.accent12()
-                  : {{typePrefix}}Tokens.accentTrack(),
-            )
-            .trackEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .trackEffects(
-              RemixBoxEffectsMix.overContent(
-                _{{valuePrefix}}SwitchInsetRing({{typePrefix}}Tokens.grayA5()),
+      .merge(_trackRing({{typePrefix}}Tokens.controlBorder()))
+      // The off thumb is a light surface; its neutral ring separates it from
+      // the off track in light mode, where white alone is too close to it.
+      .thumb(
+        BoxStyler()
+            .color(const Color(0xFFFFFFFF))
+            .border(
+              .all(
+                .color(
+                  {{typePrefix}}Tokens.controlBorder(),
+                ).width({{typePrefix}}Tokens.borderWidth1()),
               ),
-            )
-            .thumb(_{{valuePrefix}}SwitchSelectedThumbStyler(highContrast)),
-      )
-      .onPressed(
-        SwitchStyler()
-            .trackColor({{typePrefix}}Tokens.grayA4())
-            .onSelected(
-              SwitchStyler().trackColor(
-                highContrast
-                    ? {{typePrefix}}Tokens.accent12()
-                    : {{typePrefix}}Tokens.accentMarkHover(),
-              ),
-            )
-            .trackEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
             ),
-      )
-      .onDisabled(_{{valuePrefix}}SwitchDisabledStyler());
+      );
 }
 
-SwitchStyler _{{valuePrefix}}SwitchSoftStyler(
-  {{typePrefix}}SwitchSize size, {
-  required bool highContrast,
-}) {
-  return _{{valuePrefix}}SwitchBaseStyler(size)
-      .onSelected(
-        SwitchStyler()
-            .trackColor(
-              highContrast ? {{typePrefix}}Tokens.accentA6() : {{typePrefix}}Tokens.accentA4(),
-            )
-            .trackEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .trackEffects(
-              RemixBoxEffectsMix.overContent(_{{valuePrefix}}SwitchInsetRing(null)),
-            )
-            .thumb(_{{valuePrefix}}SwitchSoftSelectedThumbStyler(highContrast)),
-      )
-      .onPressed(
-        SwitchStyler()
-            .trackColor({{typePrefix}}Tokens.grayA4())
-            .onSelected(
-              SwitchStyler().trackColor(
-                highContrast
-                    ? {{typePrefix}}Tokens.accentA7()
-                    : {{typePrefix}}Tokens.accentA5(),
-              ),
-            )
-            .trackEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            ),
-      )
-      .onDisabled(_{{valuePrefix}}SwitchDisabledStyler(soft: true));
-}
-
-({double width, double height, double thumbSize, Radius radius})
-_{{valuePrefix}}SwitchMetrics({{typePrefix}}SwitchSize size) {
-  final height = switch (size) {
-    .size1 => {{typePrefix}}Tokens.space4(),
-    .size2 => {{typePrefix}}Tokens.switchHeight2(),
-    .size3 => {{typePrefix}}Tokens.space5(),
-  };
-  final width = switch (size) {
-    .size1 => {{typePrefix}}Tokens.switchWidth1(),
-    .size2 => {{typePrefix}}Tokens.switchWidth2(),
-    .size3 => {{typePrefix}}Tokens.switchWidth3(),
-  };
-  final thumbSize = switch (size) {
-    .size1 => {{typePrefix}}Tokens.switchThumbSize1(),
-    .size2 => {{typePrefix}}Tokens.switchThumbSize2(),
-    .size3 => {{typePrefix}}Tokens.switchThumbSize3(),
-  };
-  final radius = switch (size) {
-    .size1 => {{typePrefix}}Tokens.radius1OrThumb(),
-    .size2 || .size3 => {{typePrefix}}Tokens.radius2OrThumb(),
-  };
-  return (width: width, height: height, thumbSize: thumbSize, radius: radius);
-}
-
-/// Disabled switches stay muted: the active off-track boundary is replaced by
-/// the quiet gray-alpha-5 edge (surface) or removed (soft), whatever the
-/// selection, focus or press state.
-SwitchStyler _{{valuePrefix}}SwitchDisabledStyler({bool soft = false}) => SwitchStyler()
-    .trackColor(soft ? {{typePrefix}}Tokens.grayA4() : {{typePrefix}}Tokens.grayA3())
-    .trackEffects(
-      RemixBoxEffectsMix.overContent(
-        _{{valuePrefix}}SwitchInsetRing(soft ? null : {{typePrefix}}Tokens.grayA5()),
+/// The accent track when on, and the gray press fill when off.
+SwitchStyler _surface(bool highContrast) => SwitchStyler()
+    .onSelected(
+      SwitchStyler()
+          .trackColor(
+            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentTrack(),
+          )
+          .merge(_trackRing({{typePrefix}}Tokens.grayA5()))
+          .thumb(_surfaceOnThumb(highContrast)),
+    )
+    .merge(
+      _pressed(
+        on: highContrast
+            ? {{typePrefix}}Tokens.accent12()
+            : {{typePrefix}}Tokens.accentMarkHover(),
       ),
     )
-    .thumbColor({{typePrefix}}Tokens.gray2())
-    .thumb(
-      .border(
-        .all(.color({{typePrefix}}Tokens.gray6()).width({{typePrefix}}Tokens.borderWidth1())),
-      ),
-    )
-    .trackEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)));
-
-/// The off thumb is a light surface; its neutral ring separates it from the
-/// off track in light mode, where white alone is too close to the track.
-BoxStyler _{{valuePrefix}}SwitchOffThumbStyler() => BoxStyler()
-    .color(const Color(0xFFFFFFFF))
-    .border(
-      .all(
-        .color({{typePrefix}}Tokens.controlBorder()).width({{typePrefix}}Tokens.borderWidth1()),
-      ),
+    .onDisabled(
+      _disabled(track: {{typePrefix}}Tokens.grayA3(), ring: {{typePrefix}}Tokens.grayA5()),
     );
+
+/// An accent-tinted track when on, with an accent-colored thumb.
+SwitchStyler _soft(bool highContrast) => SwitchStyler()
+    .onSelected(
+      SwitchStyler()
+          .trackColor(
+            highContrast ? {{typePrefix}}Tokens.accentA6() : {{typePrefix}}Tokens.accentA4(),
+          )
+          .merge(_trackRing(null))
+          .thumb(_softOnThumb(highContrast)),
+    )
+    .merge(
+      _pressed(
+        on: highContrast ? {{typePrefix}}Tokens.accentA7() : {{typePrefix}}Tokens.accentA5(),
+      ),
+    )
+    .onDisabled(_disabled(track: {{typePrefix}}Tokens.grayA4()));
 
 /// The selected surface thumb stays a light surface rather than a disc of ink.
 /// Its 2px [{{typePrefix}}Tokens.accentThumbRing] follows the track wherever white
 /// already stands out on it, and carries the contrast on bright tracks. High
 /// contrast keeps its deliberate step-1 knockout thumb.
-BoxStyler _{{valuePrefix}}SwitchSelectedThumbStyler(bool highContrast) => highContrast
+BoxStyler _surfaceOnThumb(bool highContrast) => highContrast
     ? BoxStyler()
           .color({{typePrefix}}Tokens.accent1())
           .border(
@@ -217,8 +164,8 @@ BoxStyler _{{valuePrefix}}SwitchSelectedThumbStyler(bool highContrast) => highCo
             ),
           );
 
-/// Selected soft thumbs keep their accent content role on the tinted track.
-BoxStyler _{{valuePrefix}}SwitchSoftSelectedThumbStyler(bool highContrast) => BoxStyler()
+/// Soft thumbs keep their accent content role on the tinted track.
+BoxStyler _softOnThumb(bool highContrast) => BoxStyler()
     .color(
       highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentContent(),
     )
@@ -226,15 +173,42 @@ BoxStyler _{{valuePrefix}}SwitchSoftSelectedThumbStyler(bool highContrast) => Bo
       .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
     );
 
-/// A 1px inset track ring, or none when [color] is null.
-RemixBoxEffectLayerMix _{{valuePrefix}}SwitchInsetRing(Color? color) =>
-    RemixBoxEffectLayerMix(
-      shadows: [
-        if (color != null)
-          RemixBoxShadowMix(
-            kind: .inset,
-            color: color,
-            spreadRadius: {{typePrefix}}Tokens.borderWidth1(),
-          ),
-      ],
-    );
+/// A gray press fill, or [on] while the switch is on.
+SwitchStyler _pressed({required Color on}) => SwitchStyler().onPressed(
+  SwitchStyler()
+      .trackColor({{typePrefix}}Tokens.grayA4())
+      .onSelected(SwitchStyler().trackColor(on))
+      .trackEffects(RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix())),
+);
+
+/// Disabled switches stay muted: the active off-track boundary is replaced by
+/// a quiet [ring] (surface) or removed (soft), whatever the selection, focus or
+/// press state.
+SwitchStyler _disabled({required Color track, Color? ring}) => SwitchStyler()
+    .trackColor(track)
+    .trackEffects(RemixBoxEffectsMix.overContent(_ringLayer(ring)))
+    .thumbColor({{typePrefix}}Tokens.gray2())
+    .thumb(
+      .border(
+        .all(.color({{typePrefix}}Tokens.gray6()).width({{typePrefix}}Tokens.borderWidth1())),
+      ),
+    )
+    .trackEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)));
+
+/// Empties the layer behind the track and sets a 1px inset [ring] over it, or
+/// none when [ring] is null.
+SwitchStyler _trackRing(Color? ring) => SwitchStyler()
+    .trackEffects(RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()))
+    .trackEffects(RemixBoxEffectsMix.overContent(_ringLayer(ring)));
+
+/// A 1px inset ring, or no shadow when [color] is null.
+RemixBoxEffectLayerMix _ringLayer(Color? color) => RemixBoxEffectLayerMix(
+  shadows: [
+    if (color != null)
+      RemixBoxShadowMix(
+        kind: .inset,
+        color: color,
+        spreadRadius: {{typePrefix}}Tokens.borderWidth1(),
+      ),
+  ],
+);

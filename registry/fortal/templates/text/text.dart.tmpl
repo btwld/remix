@@ -7,7 +7,11 @@ import 'typography.dart';
 
 part 'text.g.dart';
 
-/// {{typePrefix}}-themed body text on the {{typePrefix}} nine-step scale.
+/// The {{typePrefix}} Text recipe: body text on the nine-step text scale.
+///
+/// Neutral text is gray 12; [accent] takes the accent's text color, and
+/// [highContrast] moves that to accent step 12. [truncate] wins over
+/// [softWrap] and forces one ellipsized line.
 @MixWidget()
 TextStyler {{valuePrefix}}TextStyle({
   {{typePrefix}}TextSize? size,
@@ -19,19 +23,15 @@ TextStyler {{valuePrefix}}TextStyle({
   bool highContrast = false,
   TextStyler style = const TextStyler.create(),
 }) {
-  var recipe = TextStyler().style(
-    {{valuePrefix}}TextSizeToken(size ?? {{typePrefix}}TextSize.size3).mix(),
-  );
-  recipe = recipe.fontWeight(
-    {{valuePrefix}}TextWeightToken(weight ?? {{typePrefix}}TextWeight.regular)(),
-  );
-  recipe = accent
-      ? {{valuePrefix}}AccentForeground(recipe, highContrast: highContrast)
-      : recipe.color({{typePrefix}}Tokens.gray12());
-  recipe = recipe.inherit(false);
+  final text = TextStyler()
+      .style({{valuePrefix}}TextSizeToken(size ?? {{typePrefix}}TextSize.size3).mix())
+      .fontWeight({{valuePrefix}}TextWeightToken(weight ?? {{typePrefix}}TextWeight.regular)());
+  final colored = accent
+      ? {{valuePrefix}}AccentForeground(text, highContrast: highContrast)
+      : text.color({{typePrefix}}Tokens.gray12());
 
   return {{valuePrefix}}ApplyTextFlow(
-    recipe,
+    colored.inherit(false),
     align: align,
     softWrap: softWrap,
     truncate: truncate,

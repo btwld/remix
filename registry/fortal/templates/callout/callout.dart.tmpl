@@ -6,81 +6,103 @@ import '../theme/theme.dart';
 
 part 'callout.g.dart';
 
-/// {{typePrefix}} Callout size presets.
-enum {{typePrefix}}CalloutSize { size1, size2, size3 }
+/// The sizes a callout comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}CalloutSize {
+  /// 14px text with 12px padding and an 8px gap.
+  size1,
 
-/// {{typePrefix}} Callout variants.
-enum {{typePrefix}}CalloutVariant { soft, surface, outline }
+  /// 14px text with 16px padding and a 12px gap. The default.
+  size2,
 
-/// {{typePrefix}}-themed Callout with {{typePrefix}} sizes, variants, and overrides.
+  /// 16px text with 24px padding and a 16px gap.
+  size3,
+}
+
+/// The looks a callout comes in.
+enum {{typePrefix}}CalloutVariant {
+  /// A tinted accent fill.
+  soft,
+
+  /// A faint accent fill inside a 1px accent frame.
+  surface,
+
+  /// No fill inside a 1px accent frame.
+  outline,
+}
+
+/// The {{typePrefix}} Callout recipe.
+///
+/// It reads top to bottom: the size, the color the icon and text share, then
+/// the variant's fill and frame.
+///
+/// [highContrast] moves the text and icon to accent step 12.
 @MixWidget(target: RemixCallout.new)
 CalloutStyler {{valuePrefix}}CalloutStyle({
   {{typePrefix}}CalloutVariant variant = .soft,
   {{typePrefix}}CalloutSize size = .size2,
   bool highContrast = false,
   CalloutStyler style = const CalloutStyler.create(),
-}) {
-  final contentColor = highContrast
-      ? {{typePrefix}}Tokens.accent12()
-      : {{typePrefix}}Tokens.accentContentAlpha();
-  final base = _{{valuePrefix}}CalloutBaseStyler(
-    size,
-  ).iconColor(contentColor).textColor(contentColor);
-  return (switch (variant) {
-    .soft => base.color({{typePrefix}}Tokens.accentA3()),
-    .surface =>
-      base
-          .color({{typePrefix}}Tokens.accentA2())
-          .containerEffects(
-            RemixBoxEffectsMix.behindContent(
-              {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA6()]),
-            ),
-          ),
-    .outline => base.containerEffects(
-      RemixBoxEffectsMix.behindContent(
-        {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA7()]),
-      ),
-    ),
-  }).merge(style);
-}
+}) => _scale(size)
+    .merge(_content(highContrast))
+    .merge(switch (variant) {
+      .soft => CalloutStyler().color({{typePrefix}}Tokens.accentA3()),
+      .surface => _surface(),
+      .outline => _outline(),
+    })
+    .merge(style);
 
-CalloutStyler _{{valuePrefix}}CalloutBaseStyler({{typePrefix}}CalloutSize size) {
-  final radius = _{{valuePrefix}}CalloutRadius(size);
+/// The text, icon, padding, gap and corner size of each step.
+CalloutStyler _scale({{typePrefix}}CalloutSize size) {
+  final (:padding, :gap, :text, :icon, :radius) = switch (size) {
+    .size1 => (
+      padding: {{typePrefix}}Tokens.space3(),
+      gap: {{typePrefix}}Tokens.space2(),
+      text: {{typePrefix}}Tokens.text2,
+      icon: {{typePrefix}}Tokens.space4(),
+      radius: {{typePrefix}}Tokens.radius3(),
+    ),
+    .size2 => (
+      padding: {{typePrefix}}Tokens.space4(),
+      gap: {{typePrefix}}Tokens.space3(),
+      text: {{typePrefix}}Tokens.text2,
+      icon: {{typePrefix}}Tokens.space4(),
+      radius: {{typePrefix}}Tokens.radius4(),
+    ),
+    .size3 => (
+      padding: {{typePrefix}}Tokens.space5(),
+      gap: {{typePrefix}}Tokens.space4(),
+      text: {{typePrefix}}Tokens.text3,
+      icon: {{typePrefix}}Tokens.spinnerSize3(),
+      radius: {{typePrefix}}Tokens.radius5(),
+    ),
+  };
+
   return CalloutStyler(
     container: .direction(.horizontal)
         .mainAxisSize(.min)
         .crossAxisAlignment(.start)
-        .spacing(_{{valuePrefix}}CalloutGap(size))
-        .padding(EdgeInsetsGeometryMix.all(_{{valuePrefix}}CalloutPadding(size))),
-    text: .style(_{{valuePrefix}}CalloutText(size).mix()),
-    icon: .size(_{{valuePrefix}}CalloutIconSize(size)),
+        .spacing(gap)
+        .padding(EdgeInsetsGeometryMix.all(padding)),
+    text: .style(text.mix()),
+    icon: .size(icon),
   ).borderRadius(.all(radius));
 }
 
-double _{{valuePrefix}}CalloutPadding({{typePrefix}}CalloutSize size) => switch (size) {
-  .size1 => {{typePrefix}}Tokens.space3(),
-  .size2 => {{typePrefix}}Tokens.space4(),
-  .size3 => {{typePrefix}}Tokens.space5(),
-};
+/// The one color the icon and text share.
+CalloutStyler _content(bool highContrast) {
+  final color = highContrast
+      ? {{typePrefix}}Tokens.accent12()
+      : {{typePrefix}}Tokens.accentContentAlpha();
 
-double _{{valuePrefix}}CalloutGap({{typePrefix}}CalloutSize size) => switch (size) {
-  .size1 => {{typePrefix}}Tokens.space2(),
-  .size2 => {{typePrefix}}Tokens.space3(),
-  .size3 => {{typePrefix}}Tokens.space4(),
-};
+  return CalloutStyler().iconColor(color).textColor(color);
+}
 
-TextStyleToken _{{valuePrefix}}CalloutText({{typePrefix}}CalloutSize size) => switch (size) {
-  .size1 || .size2 => {{typePrefix}}Tokens.text2,
-  .size3 => {{typePrefix}}Tokens.text3,
-};
+CalloutStyler _surface() => CalloutStyler()
+    .color({{typePrefix}}Tokens.accentA2())
+    .containerEffects(
+      .behindContent({{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA6()])),
+    );
 
-double _{{valuePrefix}}CalloutIconSize({{typePrefix}}CalloutSize size) => switch (size) {
-  .size1 || .size2 => {{typePrefix}}Tokens.space4(),
-  .size3 => {{typePrefix}}Tokens.spinnerSize3(),
-};
-
-Radius _{{valuePrefix}}CalloutRadius({{typePrefix}}CalloutSize size) => switch (size) {
-  .size1 => {{typePrefix}}Tokens.radius3(),
-  .size2 => {{typePrefix}}Tokens.radius4(),
-  .size3 => {{typePrefix}}Tokens.radius5(),
-};
+CalloutStyler _outline() => CalloutStyler().containerEffects(
+  .behindContent({{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.accentA7()])),
+);

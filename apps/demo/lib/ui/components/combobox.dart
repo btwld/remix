@@ -10,13 +10,28 @@ import 'textfield.dart';
 
 part 'combobox.g.dart';
 
-/// Fortal editable-field sizes, matching TextField.
-enum FortalComboboxSize { size1, size2, size3 }
+/// The sizes a combobox's field comes in, matching the text field.
+enum FortalComboboxSize {
+  /// A 24px field with 12px text.
+  size1,
 
-/// Fortal editable-field treatments.
-enum FortalComboboxVariant { surface, soft }
+  /// A 32px field with 14px text. The default.
+  size2,
 
-/// Fortal's editable suggestions recipe, promoted from the demo's polish story.
+  /// A 40px field with 16px text.
+  size3,
+}
+
+/// The looks a combobox's field comes in, matching the text field.
+enum FortalComboboxVariant {
+  /// A near-white fill inside a 1px neutral frame.
+  surface,
+
+  /// An accent tint inside a 1px accent ring.
+  soft,
+}
+
+/// The Fortal Combobox recipe: an editable field with a panel of suggestions.
 ///
 /// The field shares TextField's recipe. Suggestions use the Select panel's
 /// token roles with growing rows and separate hover, keyboard and press fills.
@@ -35,6 +50,7 @@ ComboboxStyler fortalComboboxStyle({
     .size2 => FortalTokens.text2,
     .size3 => FortalTokens.text3,
   };
+
   return ComboboxStyler()
       .field(
         fortalTextFieldStyle(
@@ -106,11 +122,8 @@ final _optionPaddingY = ContextToken<double>(
   (context) => FortalTokens.space3.resolve(context) / 2,
 );
 
-// Resolve before merging so the transparent reservation cannot tint a later
+// Resolved before merging so the transparent reservation cannot tint a later
 // keyboard ring or caller border override.
-Color _resolveOptionReservedBorderColor(BuildContext context) =>
-    FortalTokens.accent8.resolve(context).withValues(alpha: 0);
-
-const _optionReservedBorderColor = ContextToken<Color>(
-  _resolveOptionReservedBorderColor,
+final _optionReservedBorderColor = ContextToken<Color>(
+  (context) => FortalTokens.accent8.resolve(context).withValues(alpha: 0),
 );

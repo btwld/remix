@@ -6,13 +6,29 @@ import '../theme/theme.dart';
 
 part 'menu.g.dart';
 
-/// {{typePrefix}} menu content sizes.
-enum {{typePrefix}}MenuSize { size1, size2 }
+/// The sizes a menu comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}MenuSize {
+  /// 24px items with 12px text.
+  size1,
 
-/// {{typePrefix}} menu content variants.
-enum {{typePrefix}}MenuVariant { solid, soft }
+  /// 32px items with 14px text. The default.
+  size2,
+}
 
-/// {{typePrefix}} menu content with {{typePrefix}}-owned size, variant, and contrast behavior.
+/// How a menu marks the item under the pointer or keyboard.
+enum {{typePrefix}}MenuVariant {
+  /// The accent's solid fill under its contrast text.
+  solid,
+
+  /// A tinted accent fill.
+  soft,
+}
+
+/// The {{typePrefix}} Menu recipe: the trigger, the floating panel, its items,
+/// submenu items and dividers.
+///
+/// [highContrast] moves the highlighted item of the solid variant to accent
+/// step 12.
 @MixWidget(target: RemixMenu.new)
 MenuStyler {{valuePrefix}}MenuStyle({
   {{typePrefix}}MenuVariant variant = .solid,
@@ -21,7 +37,8 @@ MenuStyler {{valuePrefix}}MenuStyle({
   MenuStyler style = const MenuStyler.create(),
 }) {
   final metrics = _{{valuePrefix}}MenuMetrics(size);
-  final base = MenuStyler()
+
+  return MenuStyler()
       .containerEffects(
         RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
       )
@@ -56,12 +73,14 @@ MenuStyler {{valuePrefix}}MenuStyle({
           highContrast: highContrast,
         ),
       )
-      .divider(_{{valuePrefix}}MenuDividerStyler(metrics));
-
-  return base.merge(style);
+      .divider(_{{valuePrefix}}MenuDividerStyler(metrics))
+      .merge(style);
 }
 
-/// {{typePrefix}} item recipe for per-item style overrides.
+/// The {{typePrefix}} menu item recipe, for styling one item on its own.
+///
+/// It is the item style [{{valuePrefix}}MenuStyle] gives every item, so a call site can
+/// match a menu's items outside the menu.
 MenuItemStyler {{valuePrefix}}MenuItemStyle({
   {{typePrefix}}MenuVariant variant = .solid,
   {{typePrefix}}MenuSize size = .size2,

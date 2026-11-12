@@ -6,13 +6,34 @@ import '../theme/theme.dart';
 
 part 'toggle_group.g.dart';
 
-/// {{typePrefix}} toggle-group size presets.
-enum {{typePrefix}}ToggleGroupSize { size1, size2, size3 }
+/// The sizes a toggle group comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}ToggleGroupSize {
+  /// 12px text with 8px by 4px item padding.
+  size1,
 
-/// {{typePrefix}} toggle-group color treatments.
-enum {{typePrefix}}ToggleGroupVariant { soft, surface }
+  /// 14px text with 12px by 8px item padding. The default.
+  size2,
 
-/// {{typePrefix}}-themed segmented-control preset for [RemixToggleGroup].
+  /// 16px text with 16px by 8px item padding.
+  size3,
+}
+
+/// The looks a toggle group's selected item comes in.
+enum {{typePrefix}}ToggleGroupVariant {
+  /// An accent tint behind the selected item.
+  soft,
+
+  /// A faint accent surface behind the selected item.
+  surface,
+}
+
+/// The {{typePrefix}} ToggleGroup recipe: a segmented control, a 1px gray frame around
+/// items that share it.
+///
+/// It reads top to bottom: the frame, the item's colors for rest, hover,
+/// press, selected, focus and disabled, then the size.
+///
+/// [highContrast] moves the selected item's label and icon to accent step 12.
 @MixWidget(target: RemixToggleGroup.new)
 ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
   {{typePrefix}}ToggleGroupVariant variant = .soft,
@@ -20,11 +41,7 @@ ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
   bool highContrast = false,
   ToggleGroupStyler style = const ToggleGroupStyler.create(),
 }) {
-  final (
-    selectedColor,
-    selectedHoverColor,
-    selectedPressedColor,
-  ) = switch (variant) {
+  final (selected, selectedHover, selectedPressed) = switch (variant) {
     .soft => (
       {{typePrefix}}Tokens.accent3(),
       {{typePrefix}}Tokens.accent4(),
@@ -36,7 +53,7 @@ ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
       {{typePrefix}}Tokens.accentA5(),
     ),
   };
-  final selectedForeground = highContrast
+  final selectedContent = highContrast
       ? {{typePrefix}}Tokens.accent12()
       : {{typePrefix}}Tokens.accentContent();
 
@@ -60,68 +77,63 @@ ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
         .labelColor({{typePrefix}}Tokens.gray11())
         .iconColor({{typePrefix}}Tokens.gray11())
         .labelFontWeight({{typePrefix}}Tokens.fontWeightMedium())
-        .onHovered(ToggleGroupItemStyler().color({{typePrefix}}Tokens.grayA3()))
-        .onPressed(ToggleGroupItemStyler().color({{typePrefix}}Tokens.grayA4()))
+        .onHovered(.color({{typePrefix}}Tokens.grayA3()))
+        .onPressed(.color({{typePrefix}}Tokens.grayA4()))
         .onSelected(
           ToggleGroupItemStyler()
-              .color(selectedColor)
-              .labelColor(selectedForeground)
-              .iconColor(selectedForeground)
-              .onHovered(ToggleGroupItemStyler().color(selectedHoverColor))
-              .onPressed(ToggleGroupItemStyler().color(selectedPressedColor)),
+              .color(selected)
+              .labelColor(selectedContent)
+              .iconColor(selectedContent)
+              .onHovered(.color(selectedHover))
+              .onPressed(.color(selectedPressed)),
         )
-        .onFocusVisible(
-          ToggleGroupItemStyler().containerEffects({{valuePrefix}}FocusOutline()),
-        )
+        .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()))
         .onDisabled(
           ToggleGroupItemStyler()
-              .containerEffects(
-                RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-              )
+              .containerEffects(.outline(.style(.none)))
               .color({{typePrefix}}Tokens.grayA3())
               .labelColor({{typePrefix}}Tokens.gray8())
               .iconColor({{typePrefix}}Tokens.gray8()),
         ),
-  ).merge(_{{valuePrefix}}ToggleGroupSizeStyler(size)).merge(style);
+  ).merge(_scale(size)).merge(style);
 }
 
-ToggleGroupStyler _{{valuePrefix}}ToggleGroupSizeStyler({{typePrefix}}ToggleGroupSize size) {
-  return switch (size) {
-    .size1 => ToggleGroupStyler(
-      container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius2())),
-      item:
-          .container(
-                FlexBoxStyler()
-                    .padding(.horizontal({{typePrefix}}Tokens.space2()))
-                    .padding(.vertical({{typePrefix}}Tokens.space1()))
-                    .spacing({{typePrefix}}Tokens.space1()),
-              )
-              .label(.style({{typePrefix}}Tokens.text1.mix()))
-              .icon(.size({{typePrefix}}Tokens.space3())),
-    ),
-    .size2 => ToggleGroupStyler(
-      container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius2())),
-      item:
-          .container(
-                FlexBoxStyler()
-                    .padding(.horizontal({{typePrefix}}Tokens.space3()))
-                    .padding(.vertical({{typePrefix}}Tokens.space2()))
-                    .spacing({{typePrefix}}Tokens.space1()),
-              )
-              .label(.style({{typePrefix}}Tokens.text2.mix()))
-              .icon(.size({{typePrefix}}Tokens.space4())),
-    ),
-    .size3 => ToggleGroupStyler(
-      container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius3())),
-      item:
-          .container(
-                FlexBoxStyler()
-                    .padding(.horizontal({{typePrefix}}Tokens.space4()))
-                    .padding(.vertical({{typePrefix}}Tokens.space2()))
-                    .spacing({{typePrefix}}Tokens.space2()),
-              )
-              .label(.style({{typePrefix}}Tokens.text3.mix()))
-              .icon(.size({{typePrefix}}Tokens.spinnerSize3())),
-    ),
-  };
-}
+/// The corner, item padding, text and icon size of each step.
+ToggleGroupStyler _scale({{typePrefix}}ToggleGroupSize size) => switch (size) {
+  .size1 => ToggleGroupStyler(
+    container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius2())),
+    item:
+        .container(
+              FlexBoxStyler()
+                  .padding(.horizontal({{typePrefix}}Tokens.space2()))
+                  .padding(.vertical({{typePrefix}}Tokens.space1()))
+                  .spacing({{typePrefix}}Tokens.space1()),
+            )
+            .label(.style({{typePrefix}}Tokens.text1.mix()))
+            .icon(.size({{typePrefix}}Tokens.space3())),
+  ),
+  .size2 => ToggleGroupStyler(
+    container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius2())),
+    item:
+        .container(
+              FlexBoxStyler()
+                  .padding(.horizontal({{typePrefix}}Tokens.space3()))
+                  .padding(.vertical({{typePrefix}}Tokens.space2()))
+                  .spacing({{typePrefix}}Tokens.space1()),
+            )
+            .label(.style({{typePrefix}}Tokens.text2.mix()))
+            .icon(.size({{typePrefix}}Tokens.space4())),
+  ),
+  .size3 => ToggleGroupStyler(
+    container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius3())),
+    item:
+        .container(
+              FlexBoxStyler()
+                  .padding(.horizontal({{typePrefix}}Tokens.space4()))
+                  .padding(.vertical({{typePrefix}}Tokens.space2()))
+                  .spacing({{typePrefix}}Tokens.space2()),
+            )
+            .label(.style({{typePrefix}}Tokens.text3.mix()))
+            .icon(.size({{typePrefix}}Tokens.spinnerSize3())),
+  ),
+};

@@ -6,140 +6,137 @@ import '../theme/theme.dart';
 
 part 'toggle.g.dart';
 
-/// {{typePrefix}} toggle size presets.
-enum {{typePrefix}}ToggleSize { size1, size2, size3 }
+/// The sizes a toggle comes in. Pixel values are at 100% theme scaling.
+enum {{typePrefix}}ToggleSize {
+  /// 24px tall, with 12px text.
+  size1,
 
-/// {{typePrefix}} toggle color and border variants.
-enum {{typePrefix}}ToggleVariant { ghost, outline }
+  /// 32px tall, with 14px text. The default.
+  size2,
 
-/// {{typePrefix}}-themed preset for [RemixToggle].
+  /// 40px tall, with 16px text.
+  size3,
+}
+
+/// The looks a toggle comes in.
+enum {{typePrefix}}ToggleVariant {
+  /// No fill or frame until hovered; an accent tint when on.
+  ghost,
+
+  /// A 1px gray frame; an accent tint and frame when on.
+  outline,
+}
+
+/// The {{typePrefix}} Toggle recipe.
+///
+/// It reads top to bottom: what every toggle shares, then the size, then the
+/// variant's colors for rest, hover, press, on, focus and disabled.
+///
+/// [highContrast] moves the label and icon of the on state to accent step 12.
 @MixWidget(target: RemixToggle.new)
 ToggleStyler {{valuePrefix}}ToggleStyle({
   {{typePrefix}}ToggleVariant variant = .ghost,
   {{typePrefix}}ToggleSize size = .size2,
   bool highContrast = false,
   ToggleStyler style = const ToggleStyler.create(),
-}) {
-  return (switch (variant) {
-        .ghost => _{{valuePrefix}}ToggleGhostStyler(size, highContrast: highContrast),
-        .outline => _{{valuePrefix}}ToggleOutlineStyler(
-          size,
-          highContrast: highContrast,
-        ),
-      })
-      .wrap({{valuePrefix}}TouchTarget())
-      .onDisabled(
-        ToggleStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
-      .merge(style);
-}
+}) => _base()
+    .merge(_scale(size))
+    .merge(switch (variant) {
+      .ghost => _ghost(highContrast),
+      .outline => _outline(highContrast),
+    })
+    .wrap({{valuePrefix}}TouchTarget())
+    .onDisabled(.containerEffects(.outline(.style(.none))))
+    .merge(style);
 
-ToggleStyler _{{valuePrefix}}ToggleBaseStyler({{typePrefix}}ToggleSize size) {
-  return ToggleStyler()
-      .container(.mainAxisSize(.min))
-      .labelColor({{typePrefix}}Tokens.gray12())
-      .iconColor({{typePrefix}}Tokens.gray12())
-      .labelFontWeight({{typePrefix}}Tokens.fontWeightMedium())
-      .merge(_{{valuePrefix}}ToggleSizeStyler(size));
-}
+/// What every toggle shares: a medium-weight label and icon in gray 12.
+ToggleStyler _base() => ToggleStyler()
+    .container(.mainAxisSize(.min))
+    .labelColor({{typePrefix}}Tokens.gray12())
+    .iconColor({{typePrefix}}Tokens.gray12())
+    .labelFontWeight({{typePrefix}}Tokens.fontWeightMedium());
 
-ToggleStyler _{{valuePrefix}}ToggleFocusStyler() =>
-    ToggleStyler().containerEffects({{valuePrefix}}FocusOutline());
+/// The height, padding, corner, text and icon size of each step.
+///
+/// The heights are the Button height scale, with content centered in it.
+ToggleStyler _scale({{typePrefix}}ToggleSize size) => switch (size) {
+  .size1 => ToggleStyler(
+    container: FlexBoxStyler()
+        .padding(.horizontal({{typePrefix}}Tokens.space2()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius2()))
+        .spacing({{typePrefix}}Tokens.space1()),
+    label: .style({{typePrefix}}Tokens.text1.mix()),
+    icon: .size({{typePrefix}}Tokens.space3()),
+  ).minHeight({{typePrefix}}Tokens.space5()),
+  .size2 => ToggleStyler(
+    container: FlexBoxStyler()
+        .padding(.horizontal({{typePrefix}}Tokens.space3()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius2()))
+        .spacing({{typePrefix}}Tokens.space1()),
+    label: .style({{typePrefix}}Tokens.text2.mix()),
+    icon: .size({{typePrefix}}Tokens.space4()),
+  ).minHeight({{typePrefix}}Tokens.space6()),
+  .size3 => ToggleStyler(
+    container: FlexBoxStyler()
+        .padding(.horizontal({{typePrefix}}Tokens.space4()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius3()))
+        .spacing({{typePrefix}}Tokens.space2()),
+    label: .style({{typePrefix}}Tokens.text3.mix()),
+    icon: .size({{typePrefix}}Tokens.spinnerSize3()),
+  ).minHeight({{typePrefix}}Tokens.space7()),
+};
 
-ToggleStyler _{{valuePrefix}}ToggleDisabledStyler({bool outlined = false}) {
-  final style = ToggleStyler()
-      .color({{typePrefix}}Tokens.grayA3())
-      .labelColor({{typePrefix}}Tokens.gray8())
-      .iconColor({{typePrefix}}Tokens.gray8());
-  return outlined
-      ? style.border(
-          .color({{typePrefix}}Tokens.grayA6())
-              .width({{typePrefix}}Tokens.borderWidth1())
-              .strokeAlign(BorderSide.strokeAlignInside),
-        )
-      : style;
-}
+ToggleStyler _ghost(bool highContrast) => ToggleStyler()
+    .color(const Color(0x00000000))
+    .onHovered(.color({{typePrefix}}Tokens.grayA3()))
+    .onPressed(.color({{typePrefix}}Tokens.grayA4()))
+    .onSelected(
+      ToggleStyler()
+          .color({{typePrefix}}Tokens.accent3())
+          .merge(_onContent(highContrast))
+          .onHovered(.color({{typePrefix}}Tokens.accent4()))
+          .onPressed(.color({{typePrefix}}Tokens.accent5())),
+    )
+    .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()))
+    .onDisabled(_disabled());
 
-ToggleStyler _{{valuePrefix}}ToggleGhostStyler(
-  {{typePrefix}}ToggleSize size, {
-  required bool highContrast,
-}) {
-  final selectedContent = highContrast
-      ? {{typePrefix}}Tokens.accent12()
-      : {{typePrefix}}Tokens.accentContent();
-  return _{{valuePrefix}}ToggleBaseStyler(size)
-      .color(const Color(0x00000000))
-      .onHovered(ToggleStyler().color({{typePrefix}}Tokens.grayA3()))
-      .onPressed(ToggleStyler().color({{typePrefix}}Tokens.grayA4()))
-      .onSelected(
-        ToggleStyler()
-            .color({{typePrefix}}Tokens.accent3())
-            .labelColor(selectedContent)
-            .iconColor(selectedContent)
-            .onHovered(ToggleStyler().color({{typePrefix}}Tokens.accent4()))
-            .onPressed(ToggleStyler().color({{typePrefix}}Tokens.accent5())),
-      )
-      .onFocusVisible(_{{valuePrefix}}ToggleFocusStyler())
-      .onDisabled(_{{valuePrefix}}ToggleDisabledStyler());
-}
-
-ToggleStyler _{{valuePrefix}}ToggleOutlineStyler(
-  {{typePrefix}}ToggleSize size, {
-  required bool highContrast,
-}) {
-  final selectedContent = highContrast
-      ? {{typePrefix}}Tokens.accent12()
-      : {{typePrefix}}Tokens.accentContent();
-  return _{{valuePrefix}}ToggleBaseStyler(size)
-      .color(const Color(0x00000000))
-      .border(
-        .color({{typePrefix}}Tokens.gray7())
+ToggleStyler _outline(bool highContrast) => ToggleStyler()
+    .color(const Color(0x00000000))
+    .border(
+      .color({{typePrefix}}Tokens.gray7())
+          .width({{typePrefix}}Tokens.borderWidth1())
+          .strokeAlign(BorderSide.strokeAlignInside),
+    )
+    .onHovered(.color({{typePrefix}}Tokens.grayA3()))
+    .onPressed(.color({{typePrefix}}Tokens.grayA4()))
+    .onSelected(
+      ToggleStyler()
+          .color({{typePrefix}}Tokens.accentA3())
+          .merge(_onContent(highContrast))
+          .border(.color({{typePrefix}}Tokens.accentA5()))
+          .onHovered(.color({{typePrefix}}Tokens.accentA4()))
+          .onPressed(.color({{typePrefix}}Tokens.accentA5())),
+    )
+    .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()))
+    .onDisabled(
+      _disabled().border(
+        .color({{typePrefix}}Tokens.grayA6())
             .width({{typePrefix}}Tokens.borderWidth1())
             .strokeAlign(BorderSide.strokeAlignInside),
-      )
-      .onHovered(ToggleStyler().color({{typePrefix}}Tokens.grayA3()))
-      .onPressed(ToggleStyler().color({{typePrefix}}Tokens.grayA4()))
-      .onSelected(
-        ToggleStyler()
-            .color({{typePrefix}}Tokens.accentA3())
-            .labelColor(selectedContent)
-            .iconColor(selectedContent)
-            .border(.color({{typePrefix}}Tokens.accentA5()))
-            .onHovered(ToggleStyler().color({{typePrefix}}Tokens.accentA4()))
-            .onPressed(ToggleStyler().color({{typePrefix}}Tokens.accentA5())),
-      )
-      .onFocusVisible(_{{valuePrefix}}ToggleFocusStyler())
-      .onDisabled(_{{valuePrefix}}ToggleDisabledStyler(outlined: true));
+      ),
+    );
+
+/// The accent label and icon of the on state.
+ToggleStyler _onContent(bool highContrast) {
+  final color = highContrast
+      ? {{typePrefix}}Tokens.accent12()
+      : {{typePrefix}}Tokens.accentContent();
+
+  return ToggleStyler().labelColor(color).iconColor(color);
 }
 
-ToggleStyler _{{valuePrefix}}ToggleSizeStyler({{typePrefix}}ToggleSize size) {
-  // The Button height scale, with content centred in it.
-  return switch (size) {
-    .size1 => ToggleStyler(
-      container: FlexBoxStyler()
-          .padding(.horizontal({{typePrefix}}Tokens.space2()))
-          .borderRadius(.all({{typePrefix}}Tokens.radius2()))
-          .spacing({{typePrefix}}Tokens.space1()),
-      label: .style({{typePrefix}}Tokens.text1.mix()),
-      icon: .size({{typePrefix}}Tokens.space3()),
-    ).minHeight({{typePrefix}}Tokens.space5()),
-    .size2 => ToggleStyler(
-      container: FlexBoxStyler()
-          .padding(.horizontal({{typePrefix}}Tokens.space3()))
-          .borderRadius(.all({{typePrefix}}Tokens.radius2()))
-          .spacing({{typePrefix}}Tokens.space1()),
-      label: .style({{typePrefix}}Tokens.text2.mix()),
-      icon: .size({{typePrefix}}Tokens.space4()),
-    ).minHeight({{typePrefix}}Tokens.space6()),
-    .size3 => ToggleStyler(
-      container: FlexBoxStyler()
-          .padding(.horizontal({{typePrefix}}Tokens.space4()))
-          .borderRadius(.all({{typePrefix}}Tokens.radius3()))
-          .spacing({{typePrefix}}Tokens.space2()),
-      label: .style({{typePrefix}}Tokens.text3.mix()),
-      icon: .size({{typePrefix}}Tokens.spinnerSize3()),
-    ).minHeight({{typePrefix}}Tokens.space7()),
-  };
-}
+/// A gray fill, label and icon.
+ToggleStyler _disabled() => ToggleStyler()
+    .color({{typePrefix}}Tokens.grayA3())
+    .labelColor({{typePrefix}}Tokens.gray8())
+    .iconColor({{typePrefix}}Tokens.gray8());

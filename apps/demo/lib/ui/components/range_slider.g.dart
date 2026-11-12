@@ -33,6 +33,7 @@ class FortalRangeSlider extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// A gray track and a solid accent range.
   const FortalRangeSlider.surface({
     super.key,
     this.size = .size2,
@@ -54,6 +55,7 @@ class FortalRangeSlider extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalSliderVariant.surface;
 
+  /// A gray track and a softer accent range.
   const FortalRangeSlider.soft({
     super.key,
     this.size = .size2,

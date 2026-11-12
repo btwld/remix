@@ -6,10 +6,23 @@ import '../theme/theme.dart';
 
 part 'popover.g.dart';
 
-/// Ui popover size presets on the shared scale.
-enum UiPopoverSize { size1, size2, size3, size4 }
+/// The sizes a popover comes in, from its padding and corners. Pixel values
+/// are at 100% theme scaling.
+enum UiPopoverSize {
+  /// 12px padding.
+  size1,
 
-/// Ui-themed preset for [RemixPopover].
+  /// 16px padding. The default.
+  size2,
+
+  /// 24px padding.
+  size3,
+
+  /// 32px padding.
+  size4,
+}
+
+/// The Ui Popover recipe: a raised, blurred panel in a 1px frame.
 ///
 /// The generated [UiPopover] defaults to [UiPopoverSize.size2], a
 /// 480-pixel maximum width, and no arrow.

@@ -6,7 +6,10 @@ part of 'textfield.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Ui-themed preset for [RemixTextField].
+/// The Ui TextField recipe.
+///
+/// It reads top to bottom: what every text input shares, then the size, then
+/// the variant's colors for rest and disabled, then the error state.
 class UiTextField extends StatelessWidget {
   const UiTextField({
     super.key,
@@ -72,7 +75,7 @@ class UiTextField extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// Surface treatment with neutral border and text colors.
+  /// A near-white fill inside a 1px neutral frame, with neutral text.
   const UiTextField.surface({
     super.key,
     this.size = .size2,
@@ -136,7 +139,7 @@ class UiTextField extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiTextFieldVariant.surface;
 
-  /// Soft accent treatment.
+  /// An accent tint inside a 1px accent ring, with accent-colored text.
   const UiTextField.soft({
     super.key,
     this.size = .size2,
@@ -390,7 +393,8 @@ class UiTextField extends StatelessWidget {
   }
 }
 
-/// Ui recipe for [RemixTextArea].
+/// The Ui TextArea recipe: the text field's looks on a taller box whose
+/// content starts at the top.
 class UiTextArea extends StatelessWidget {
   const UiTextArea({
     super.key,
@@ -453,6 +457,7 @@ class UiTextArea extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// A near-white fill inside a 1px neutral frame, with neutral text.
   const UiTextArea.surface({
     super.key,
     this.size = .size2,
@@ -513,6 +518,7 @@ class UiTextArea extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiTextAreaVariant.surface;
 
+  /// An accent tint inside a 1px accent ring, with accent-colored text.
   const UiTextArea.soft({
     super.key,
     this.size = .size2,
