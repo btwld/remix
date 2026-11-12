@@ -48,6 +48,7 @@ class _VanillaDashboardSettingsPageState
   String _language = 'en';
   _Appearance _appearance = .system;
   double? _radius;
+  double? _initialRadiusMax;
   bool _dangerZoneExpanded = false;
 
   _Appearance get _resolvedAppearance => widget.onDarkModeChanged == null
@@ -66,8 +67,9 @@ class _VanillaDashboardSettingsPageState
       const VanillaThemeData.light().radius.x;
 
   // Whole-pixel steps and labels share the same range, including a host's
-  // radius above the starter's usual 0–16 range.
-  double _radiusMax(BuildContext context) => math
+  // initial radius above the starter's usual 0–16 range. Keep that bound when
+  // the demo writes the selected radius back into the theme.
+  double _radiusMax(BuildContext context) => _initialRadiusMax ??= math
       .max(
         16,
         (VanillaTheme.maybeOf(context)?.radius.x ??

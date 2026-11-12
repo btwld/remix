@@ -839,6 +839,58 @@ void main() {
         }
       });
 
+      if (preset != .fortal) {
+        testWidgets(
+          'regression: full demo preserves the host radius slider maximum',
+          (tester) async {
+            final semantics = tester.ensureSemantics();
+            try {
+              await _pumpDashboard(
+                tester,
+                preset: preset,
+                initialPage: .settings,
+                hostRadius: 24,
+              );
+              final slider = find.byType(RemixSlider);
+              await tester.ensureVisible(slider);
+
+              void expectRadius(double value) {
+                final control = tester.widget<RemixSlider>(slider);
+                expect(control.value, value);
+                expect(control.max, 24);
+                expect(control.snapDivisions, 24);
+                expect(
+                  find.text('Control radius · ${value.round()}px'),
+                  findsOneWidget,
+                );
+                expect(
+                  _radius(preset, tester.element(slider)),
+                  preset == .defaultPreset ? Radius.circular(value) : value,
+                );
+              }
+
+              expectRadius(24);
+              tester.semantics.performAction(
+                find.semantics.byLabel('Control radius'),
+                SemanticsAction.decrease,
+              );
+              await tester.pumpAndSettle();
+              expectRadius(23);
+
+              tester.semantics.performAction(
+                find.semantics.byLabel('Control radius'),
+                SemanticsAction.increase,
+              );
+              await tester.pumpAndSettle();
+              expectRadius(24);
+              expect(tester.takeException(), isNull);
+            } finally {
+              semantics.dispose();
+            }
+          },
+        );
+      }
+
       testWidgets('regression: revenue accepts duplicate display labels', (
         tester,
       ) async {
@@ -1836,6 +1888,7 @@ Future<void> _pumpDashboard(
   double width = 1200,
   double height = 800,
   VanillaThemeData? darkTheme,
+  double? hostRadius,
   TextDirection textDirection = TextDirection.ltr,
 }) => _pump(
   tester,
@@ -1843,6 +1896,7 @@ Future<void> _pumpDashboard(
   width: width,
   height: height,
   darkTheme: darkTheme,
+  hostRadius: hostRadius,
   textDirection: textDirection,
   child: switch (preset) {
     .defaultPreset => VanillaDashboardDemo(
