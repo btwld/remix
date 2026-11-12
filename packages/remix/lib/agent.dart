@@ -36,6 +36,9 @@
 /// supplied per widget or by [AgentGlyphs]. [AgentToolRenderers] registers a
 /// renderer per tool name.
 ///
+/// Screen-reader announcements are wired by the host: [AgentAnnouncer] decides
+/// what to announce, but no widget calls it. See [AgentAnnouncer].
+///
 /// Still to come: `AgentMarkdown` and `AgentCodeBlock`, with the
 /// `AgentFenceBuilder` and `AgentCodeHighlighter` hooks.
 ///
