@@ -77,6 +77,7 @@ class _HeroUiDashboardCustomersPageState
                 key: const ValueKey('customer-search'),
                 leading: const HeroUiSearchIcon(),
                 hintText: 'Search customers…',
+                semanticLabel: 'Search customers',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
                   _page = 0;

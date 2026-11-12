@@ -110,7 +110,7 @@ class VanillaDashboardOverview extends StatelessWidget {
                 .color(VanillaTokens.foreground()),
           ),
           if (metric.progress case final progress?)
-            VanillaProgress(value: progress),
+            VanillaProgress(value: progress, semanticsLabel: metric.label),
           StyledText(
             metric.change,
             style: TextStyler()
@@ -136,7 +136,7 @@ class VanillaDashboardOverview extends StatelessWidget {
             const .maxWidth(899),
             .equalColumns(1).gap(VanillaTokens.s5),
           ),
-      children: [_activityCard(data), _ordersCard(data, onViewOrders)],
+      children: [_activityCard(data), _ordersCard(context, data, onViewOrders)],
     ),
   );
 }
@@ -176,13 +176,17 @@ Widget _revenueCard(RegistryDashboardSampleData data) => VanillaCard(
           ),
           // Round steps, with room past each end so the end labels sit on
           // their gridlines.
-          yAxis: registryDashboardNumericAxis(max: 100, interval: 20),
+          yAxis: registryDashboardDataAxis(
+            data.revenue.map((point) => point.value),
+          ),
           style: registryDashboardLineStyle(),
         ),
       ),
     ],
   ),
 );
+
+const _customerAcquisitionValues = [18.0, 24.0, 21.0, 32.0, 38.0, 44.0];
 
 Widget _customerChartCard() => VanillaCard(
   child: ColumnBox(
@@ -204,14 +208,7 @@ Widget _customerChartCard() => VanillaCard(
         child: VanillaBarChart(
           semanticsLabel: 'New accounts by month',
           groups: [
-            for (final (index, value) in const [
-              18.0,
-              24.0,
-              21.0,
-              32.0,
-              38.0,
-              44.0,
-            ].indexed)
+            for (final (index, value) in _customerAcquisitionValues.indexed)
               BarGroup(
                 id: 'customers-$index',
                 label: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'][index],
@@ -220,9 +217,7 @@ Widget _customerChartCard() => VanillaCard(
                 ],
               ),
           ],
-          // Customers peak at 44; see the revenue chart above for why the
-          // maximum is pinned to a whole number of intervals.
-          yAxis: registryDashboardNumericAxis(max: 50),
+          yAxis: registryDashboardDataAxis(_customerAcquisitionValues),
           style: registryDashboardBarStyle(),
         ),
       ),
@@ -352,6 +347,7 @@ IconData _activityIcon(RegistryDashboardActivityKind kind) => switch (kind) {
 };
 
 Widget _ordersCard(
+  BuildContext context,
   RegistryDashboardSampleData data,
   VoidCallback? onViewOrders,
 ) => VanillaCard(
@@ -368,7 +364,9 @@ Widget _ordersCard(
             key: const ValueKey('overview-view-orders'),
             size: .small,
             label: 'View all',
-            trailingIcon: RemixIcons.chevronsRight,
+            trailingIcon: Directionality.of(context) == TextDirection.rtl
+                ? RemixIcons.chevronsLeft
+                : RemixIcons.chevronsRight,
             onPressed: onViewOrders,
           ),
         ],
@@ -421,7 +419,7 @@ LineSeries _revenueSeries(List<RegistryDashboardPoint> points) => LineSeries(
   label: 'Revenue',
   points: [
     for (final (index, point) in points.indexed)
-      ChartPoint(id: point.label, x: index.toDouble(), y: point.value),
+      ChartPoint(id: index, x: index.toDouble(), y: point.value),
   ],
 );
 

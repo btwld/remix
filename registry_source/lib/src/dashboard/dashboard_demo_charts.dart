@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
@@ -24,6 +26,43 @@ ChartAxis registryDashboardNumericAxis({
   minIncluded: false,
   maxIncluded: false,
 );
+
+/// A zero-inclusive value axis fitted to caller data, with about
+/// [targetIntervals] round intervals and the same half-step padding as
+/// [registryDashboardNumericAxis].
+/// Empty or all-zero data uses the starter revenue axis (0–100 by 20).
+ChartAxis registryDashboardDataAxis(
+  Iterable<double> values, {
+  int targetIntervals = 5,
+}) {
+  assert(targetIntervals > 0);
+  var min = 0.0;
+  var max = 0.0;
+  for (final value in values) {
+    min = math.min(min, value);
+    max = math.max(max, value);
+  }
+  if (min == max) {
+    return registryDashboardNumericAxis(max: 100, interval: 20);
+  }
+
+  final rawInterval = (max - min) / targetIntervals;
+  final magnitude = math.pow(10, (math.log(rawInterval) / math.ln10).floor());
+  final fraction = rawInterval / magnitude;
+  final step = switch (fraction) {
+    <= 1 => 1.0,
+    <= 2 => 2.0,
+    <= 2.5 => 2.5,
+    <= 5 => 5.0,
+    _ => 10.0,
+  };
+  final interval = step * magnitude;
+  return registryDashboardNumericAxis(
+    min: (min / interval).floor() * interval,
+    max: (max / interval).ceil() * interval,
+    interval: interval,
+  );
+}
 
 /// The chart style for a [registryDashboardNumericAxis]: that axis already has
 /// room past each end, so its value labels are left on their gridlines rather

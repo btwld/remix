@@ -17,17 +17,21 @@ import 'package:registry_source/src/default/components/icon_button.dart';
 import 'package:registry_source/src/default/components/menu.dart';
 import 'package:registry_source/src/default/components/popover.dart';
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_demo.dart';
+import 'package:registry_source/src/default/recipes/dashboard/dashboard_demo_settings.dart';
 import 'package:registry_source/src/default/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/default/theme/theme_data.dart';
 import 'package:registry_source/src/default/theme/theme_scope.dart';
 import 'package:registry_source/src/default/theme/tokens.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart';
+import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_settings.dart';
+import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_theme.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
 import 'package:registry_source/src/heroui/components/button.dart';
 import 'package:registry_source/src/heroui/components/dropdown.dart';
 import 'package:registry_source/src/heroui/components/popover.dart';
 import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_demo.dart';
+import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_demo_settings.dart';
 import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/heroui/theme/theme.dart';
 import 'package:remix/remix.dart';
@@ -789,6 +793,288 @@ void main() {
           expect(tester.takeException(), isNull);
         });
       }
+
+      testWidgets('regression: Settings accepts a large host radius', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await _pump(
+            tester,
+            preset: preset,
+            width: 1200,
+            height: 1600,
+            hostRadius: 24,
+            child: switch (preset) {
+              .defaultPreset => const VanillaDashboardSettingsPage(),
+              .heroui => const HeroUiDashboardSettingsPage(),
+              // Fortal exposes named radii instead of a numeric slider.
+              .fortal => FortalDashboardThemeScope(
+                settings: const FortalThemeSettings(radius: .full),
+                onChanged: (_) {},
+                child: const FortalDashboardSettingsPage(),
+              ),
+            },
+          );
+          expect(tester.takeException(), isNull);
+          if (preset == .fortal) {
+            expect(find.text('Full'), findsOneWidget);
+            expect(find.byType(RemixSlider), findsNothing);
+          } else {
+            expect(find.text('Control radius · 24px'), findsOneWidget);
+            final slider = tester.widget<RemixSlider>(find.byType(RemixSlider));
+            expect(slider.value, 24);
+            expect(slider.max, greaterThanOrEqualTo(24));
+            expect(slider.snapDivisions, slider.max.toInt());
+            await tester.ensureVisible(find.byType(RemixSlider));
+            tester.semantics.performAction(
+              find.semantics.byLabel('Control radius'),
+              SemanticsAction.decrease,
+            );
+            await tester.pump();
+            expect(find.text('Control radius · 23px'), findsOneWidget);
+          }
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      if (preset != .fortal) {
+        testWidgets(
+          'regression: full demo preserves the host radius slider maximum',
+          (tester) async {
+            final semantics = tester.ensureSemantics();
+            try {
+              await _pumpDashboard(
+                tester,
+                preset: preset,
+                initialPage: .settings,
+                hostRadius: 24,
+              );
+              final slider = find.byType(RemixSlider);
+              await tester.ensureVisible(slider);
+
+              void expectRadius(double value) {
+                final control = tester.widget<RemixSlider>(slider);
+                expect(control.value, value);
+                expect(control.max, 24);
+                expect(control.snapDivisions, 24);
+                expect(
+                  find.text('Control radius · ${value.round()}px'),
+                  findsOneWidget,
+                );
+                expect(
+                  _radius(preset, tester.element(slider)),
+                  preset == .defaultPreset ? Radius.circular(value) : value,
+                );
+              }
+
+              expectRadius(24);
+              tester.semantics.performAction(
+                find.semantics.byLabel('Control radius'),
+                SemanticsAction.decrease,
+              );
+              await tester.pumpAndSettle();
+              expectRadius(23);
+
+              tester.semantics.performAction(
+                find.semantics.byLabel('Control radius'),
+                SemanticsAction.increase,
+              );
+              await tester.pumpAndSettle();
+              expectRadius(24);
+              expect(tester.takeException(), isNull);
+            } finally {
+              semantics.dispose();
+            }
+          },
+        );
+      }
+
+      testWidgets('regression: revenue accepts duplicate display labels', (
+        tester,
+      ) async {
+        await _pumpOverview(
+          tester,
+          preset: preset,
+          width: 1280,
+          data: const RegistryDashboardSampleData(
+            metrics: [],
+            records: [],
+            revenue: [
+              RegistryDashboardPoint(label: 'Same day', value: 12),
+              RegistryDashboardPoint(label: 'Same day', value: 34),
+            ],
+          ),
+        );
+        expect(tester.takeException(), isNull);
+        final chart = tester.widget<LineChart>(find.byType(LineChart));
+        expect(
+          chart.series.single.points.map((p) => p.id).toSet(),
+          hasLength(2),
+        );
+        expect(chart.series.single.points.map((p) => p.y), [12, 34]);
+        expect(chart.xAxis!.labelFormatter!(0), 'Same day');
+        expect(chart.xAxis!.labelFormatter!(1), 'Same day');
+      });
+
+      for (final values in <List<double>>[
+        [],
+        [300, 650],
+        [-125, 325],
+        [0],
+        [0.12, 0.24],
+      ]) {
+        testWidgets('regression: revenue axis contains caller values $values', (
+          tester,
+        ) async {
+          await _pumpOverview(
+            tester,
+            preset: preset,
+            width: 1280,
+            data: RegistryDashboardSampleData(
+              metrics: const [],
+              records: const [],
+              revenue: [
+                for (final (i, value) in values.indexed)
+                  RegistryDashboardPoint(label: 'Day $i', value: value),
+              ],
+            ),
+          );
+          expect(tester.takeException(), isNull);
+          final axis = tester.widget<LineChart>(find.byType(LineChart)).yAxis!;
+          expect(axis.interval, greaterThan(0));
+          if (values.isNotEmpty &&
+              values.every((value) => value > 0 && value < 1)) {
+            expect(axis.interval, lessThan(1));
+          }
+          expect(axis.max! - axis.min!, lessThanOrEqualTo(10 * axis.interval!));
+          for (final value in values) {
+            expect(axis.min! + axis.interval! / 2, lessThanOrEqualTo(value));
+            expect(axis.max! - axis.interval! / 2, greaterThanOrEqualTo(value));
+          }
+          if (values.isEmpty) {
+            expect((axis.min, axis.max, axis.interval), (-10, 110, 20));
+          }
+        });
+      }
+
+      testWidgets('regression: stock chart bounds and ticks stay unchanged', (
+        tester,
+      ) async {
+        await _pumpOverview(tester, preset: preset, width: 1280);
+        final revenue = tester.widget<LineChart>(find.byType(LineChart)).yAxis!;
+        expect((revenue.min, revenue.max, revenue.interval), (-10, 110, 20));
+        expect(revenue.minIncluded, isFalse);
+        expect(revenue.maxIncluded, isFalse);
+        final bars = tester.widget<BarChart>(find.byType(BarChart)).yAxis!;
+        expect((
+          bars.min,
+          bars.max,
+          bars.interval,
+        ), preset == .fortal ? (-12.5, 112.5, 25) : (-5, 55, 10));
+        expect(bars.minIncluded, isFalse);
+        expect(bars.maxIncluded, isFalse);
+        for (final tick in const ['0', '20', '40', '60', '80', '100']) {
+          expect(
+            find.descendant(
+              of: find.byType(LineChart),
+              matching: find.text(tick),
+            ),
+            findsOneWidget,
+          );
+        }
+        final barTicks = preset == .fortal
+            ? ['0', '25', '50', '75', '100']
+            : ['0', '10', '20', '30', '40', '50'];
+        for (final tick in barTicks) {
+          expect(
+            find.descendant(
+              of: find.byType(BarChart),
+              matching: find.text(tick),
+            ),
+            findsOneWidget,
+          );
+        }
+      });
+
+      testWidgets('regression: View all follows RTL direction', (tester) async {
+        await _pumpOverview(
+          tester,
+          preset: preset,
+          width: 1280,
+          textDirection: .rtl,
+        );
+        final action = find.byKey(const ValueKey('overview-view-orders'));
+        expect(
+          find.descendant(
+            of: action,
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is StyledIcon &&
+                  widget.icon == RemixIcons.chevronsLeft,
+            ),
+          ),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets(
+        'regression: metric progress has its metric accessible name',
+        (tester) async {
+          final semantics = tester.ensureSemantics();
+          try {
+            await _pumpOverview(tester, preset: preset, width: 1280);
+            final progress = find.byType(RemixProgress);
+            expect(progress, findsOneWidget);
+            expect(tester.getSemantics(progress).label, 'Fulfillment');
+            expect(tester.getSemantics(progress).value, '94');
+          } finally {
+            semantics.dispose();
+          }
+        },
+      );
+
+      testWidgets('regression: customer search has an accessible name', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await _pumpDashboard(tester, preset: preset, initialPage: .customers);
+          final search = find.semantics.byLabel('Search customers');
+          expect(search, findsOne);
+          expect(
+            search
+                .evaluate()
+                .single
+                .getSemanticsData()
+                .flagsCollection
+                .isTextField,
+            isTrue,
+          );
+          await tester.enterText(
+            find.byKey(const ValueKey('customer-search')),
+            'Olivia',
+          );
+          await tester.pump();
+          expect(search.evaluate().single.getSemanticsData().value, 'Olivia');
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('regression: Orders status filter has an accessible name', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await _pumpDashboard(tester, preset: preset, initialPage: .orders);
+          expect(find.semantics.byLabel('Filter orders by status'), findsOne);
+        } finally {
+          semantics.dispose();
+        }
+      });
 
       testWidgets('overview renders coherent sample data', (tester) async {
         await _pumpOverview(tester, preset: preset, width: 1280);
@@ -1574,6 +1860,7 @@ Future<void> _pumpOverview(
   double height = 800,
   TextScaler textScaler = TextScaler.noScaling,
   RegistryDashboardSampleData data = registryDashboardSampleData,
+  TextDirection textDirection = TextDirection.ltr,
 }) async {
   final overview = switch (preset) {
     .defaultPreset => VanillaDashboardOverview(data: data),
@@ -1586,6 +1873,7 @@ Future<void> _pumpOverview(
     width: width,
     height: height,
     textScaler: textScaler,
+    textDirection: textDirection,
     child: overview,
   );
 }
@@ -1600,6 +1888,7 @@ Future<void> _pumpDashboard(
   double width = 1200,
   double height = 800,
   VanillaThemeData? darkTheme,
+  double? hostRadius,
   TextDirection textDirection = TextDirection.ltr,
 }) => _pump(
   tester,
@@ -1607,6 +1896,7 @@ Future<void> _pumpDashboard(
   width: width,
   height: height,
   darkTheme: darkTheme,
+  hostRadius: hostRadius,
   textDirection: textDirection,
   child: switch (preset) {
     .defaultPreset => VanillaDashboardDemo(
@@ -1644,6 +1934,8 @@ Future<void> _pump(
   required Widget child,
   TextScaler textScaler = TextScaler.noScaling,
   VanillaThemeData? darkTheme,
+
+  double? hostRadius,
   TextDirection textDirection = TextDirection.ltr,
 }) async {
   tester.view.devicePixelRatio = 1;
@@ -1668,10 +1960,26 @@ Future<void> _pump(
     .defaultPreset => VanillaTheme(
       mode: VanillaThemeMode.light,
       darkTheme: darkTheme,
+      theme: hostRadius == null
+          ? null
+          : const VanillaThemeData.light().copyWith(
+              radius: Radius.circular(hostRadius),
+            ),
       child: app,
     ),
-    .fortal => FortalTheme(child: app),
-    .heroui => HeroUiTheme(mode: HeroUiThemeMode.light, child: app),
+    .fortal => FortalTheme(
+      theme: hostRadius == null
+          ? null
+          : const FortalThemeData.light(radius: .full),
+      child: app,
+    ),
+    .heroui => HeroUiTheme(
+      mode: HeroUiThemeMode.light,
+      theme: hostRadius == null
+          ? null
+          : HeroUiThemeData.light(radius: hostRadius),
+      child: app,
+    ),
   });
   await tester.pump();
 }

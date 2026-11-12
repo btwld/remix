@@ -46,6 +46,7 @@ class _HeroUiDashboardSettingsPageState
   String _language = 'en';
   _Appearance _appearance = .system;
   double? _radius;
+  double? _initialRadiusMax;
   bool _dangerZoneExpanded = false;
 
   _Appearance get _resolvedAppearance => widget.onDarkModeChanged == null
@@ -62,6 +63,18 @@ class _HeroUiDashboardSettingsPageState
       _radius ??
       HeroUiTheme.maybeOf(context)?.radius ??
       const HeroUiThemeData.light().radius;
+
+  // Whole-pixel steps and labels share the same range, including a host's
+  // initial radius above the starter's usual 0–16 range. Keep that bound when
+  // the demo writes the selected radius back into the theme.
+  double _radiusMax(BuildContext context) => _initialRadiusMax ??= math
+      .max(
+        16,
+        (HeroUiTheme.maybeOf(context)?.radius ??
+                const HeroUiThemeData.light().radius)
+            .ceil(),
+      )
+      .toDouble();
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
@@ -212,8 +225,8 @@ class _HeroUiDashboardSettingsPageState
                       semanticLabel: 'Control radius',
                       value: _resolvedRadius(context),
                       min: 0,
-                      max: 16,
-                      snapDivisions: 16,
+                      max: _radiusMax(context),
+                      snapDivisions: _radiusMax(context).toInt(),
                       onChanged: (value) {
                         setState(() => _radius = value);
                         widget.onRadiusChanged?.call(value);

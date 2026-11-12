@@ -77,6 +77,7 @@ class _{{typePrefix}}DashboardCustomersPageState
                 key: const ValueKey('customer-search'),
                 leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
                 hintText: 'Search customers…',
+                semanticLabel: 'Search customers',
                 onChanged: (value) => setState(() {
                   _query = value.trim().toLowerCase();
                   _page = 0;
