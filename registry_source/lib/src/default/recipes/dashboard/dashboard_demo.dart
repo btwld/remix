@@ -527,7 +527,9 @@ RegistryDashboardAgentStyles _vanillaAgentStyles() {
     answerSourcesStyle: answer.sourcesStyle,
     answerCopyStyle: answer.copyStyle,
     answerRetryStyle: answer.retryStyle,
-    transcriptStyle: transcript.style,
+    // Turns sit further apart than the items inside one.
+    transcriptStyle: transcript.style.spacing(VanillaTokens.s8),
+    turnStyle: FlexBoxStyler().spacing(VanillaTokens.s3),
     transcriptLatestStyle: transcript.latestStyle,
     planStyle: plan.style,
     planDisclosureStyle: plan.disclosureStyle,

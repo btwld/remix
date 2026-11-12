@@ -60,7 +60,6 @@ items:
     registryDependencies:
       - theme
       - answer
-      - card
       - disclosure
       - icon_button
     files:
@@ -441,7 +440,6 @@ items:
   execution_recipe:
     registryDependencies:
       - theme
-      - card
       - disclosure
       - execution
       - icon_button
@@ -501,8 +499,8 @@ items:
 
   message_recipe:
     registryDependencies:
+      - theme
       - button
-      - card
       - message
     files:
       - source: templates/recipes/message_recipe.dart.tmpl

@@ -70,8 +70,16 @@ VanillaAgentPermissionRecipe vanillaAgentPermissionRecipe({
     deniedStatus: _statusMark(VanillaTokens.mutedForeground),
     errorStatus: _statusMark(VanillaTokens.destructive),
   ).merge(style),
+  // The one card in a turn that waits on the reader: it keeps the card's
+  // shadow and is framed in the ring color, while the tool calls around it
+  // are flat.
   surfaceStyle: vanillaCardStyle(
-    style: CardStyler().padding(.all(VanillaTokens.s4)).merge(surfaceStyle),
+    style: CardStyler()
+        .border(
+          .color(VanillaTokens.ring()).width(VanillaTokens.strokeHairline),
+        )
+        .padding(.all(VanillaTokens.s4))
+        .merge(surfaceStyle),
   ),
   detailsStyle: vanillaDisclosureStyle(
     style: DisclosureStyler()

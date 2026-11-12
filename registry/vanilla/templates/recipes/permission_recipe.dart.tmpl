@@ -70,8 +70,16 @@ final class {{typePrefix}}AgentPermissionRecipe {
     deniedStatus: _statusMark({{typePrefix}}Tokens.mutedForeground),
     errorStatus: _statusMark({{typePrefix}}Tokens.destructive),
   ).merge(style),
+  // The one card in a turn that waits on the reader: it keeps the card's
+  // shadow and is framed in the ring color, while the tool calls around it
+  // are flat.
   surfaceStyle: {{valuePrefix}}CardStyle(
-    style: CardStyler().padding(.all({{typePrefix}}Tokens.s4)).merge(surfaceStyle),
+    style: CardStyler()
+        .border(
+          .color({{typePrefix}}Tokens.ring()).width({{typePrefix}}Tokens.strokeHairline),
+        )
+        .padding(.all({{typePrefix}}Tokens.s4))
+        .merge(surfaceStyle),
   ),
   detailsStyle: {{valuePrefix}}DisclosureStyle(
     style: DisclosureStyler()

@@ -72,8 +72,18 @@ PlaygroundAgentPermissionRecipe playgroundAgentPermissionRecipe({
     deniedStatus: _statusMark(PlaygroundTokens.mutedForeground),
     errorStatus: _statusMark(PlaygroundTokens.destructive),
   ).merge(style),
+  // The one card in a turn that waits on the reader: it keeps the card's
+  // shadow and is framed in the ring color, while the tool calls around it
+  // are flat.
   surfaceStyle: playgroundCardStyle(
-    style: CardStyler().padding(.all(PlaygroundTokens.s4)).merge(surfaceStyle),
+    style: CardStyler()
+        .border(
+          .color(
+            PlaygroundTokens.ring(),
+          ).width(PlaygroundTokens.strokeHairline),
+        )
+        .padding(.all(PlaygroundTokens.s4))
+        .merge(surfaceStyle),
   ),
   detailsStyle: playgroundDisclosureStyle(
     style: DisclosureStyler()

@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../components/answer.dart';
-import '../components/card.dart';
 import '../components/disclosure.dart';
 import '../components/icon_button.dart';
 import '../theme/tokens.dart';
@@ -39,9 +38,11 @@ final class {{typePrefix}}AgentAnswerRecipe {
     sourcesLabel: TextStyler().color({{typePrefix}}Tokens.foreground()).fontSize(13),
     indicator: IconStyler().color({{typePrefix}}Tokens.foreground()).size(16),
   ).merge(style),
-  surfaceStyle: {{valuePrefix}}CardStyle(
-    style: CardStyler().padding(.all({{typePrefix}}Tokens.s4)).merge(surfaceStyle),
-  ),
+  // The answer is the conversation itself, so it sits on the page as prose,
+  // aligned with the transcript, rather than in a card like the work around it.
+  // No fill, frame or shadow: a card's shadow would show through as a gray
+  // wash behind a transparent fill.
+  surfaceStyle: CardStyler().merge(surfaceStyle),
   sourcesStyle: {{valuePrefix}}DisclosureStyle(
     style: DisclosureStyler()
         .container(BoxStyler().margin(.top(4)))

@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
 import '../components/button.dart';
-import '../components/card.dart';
 import '../components/message.dart';
+import '../theme/tokens.dart';
 
 @immutable
 final class PlaygroundAgentMessageRecipe {
@@ -34,11 +34,14 @@ PlaygroundAgentMessageRecipe playgroundAgentMessageRecipe({
     footer: BoxStyler().padding(.top(4)),
     maxWidth: 640,
   ).merge(style),
-  surfaceStyle: playgroundCardStyle(
-    style: CardStyler()
-        .padding(.symmetric(horizontal: 16, vertical: 12))
-        .merge(surfaceStyle),
-  ),
+  // A muted bubble without a frame or shadow: the reader's own words, set
+  // apart from the agent's work by fill rather than by another card.
+  // Built without the card's frame and shadow rather than merged over them.
+  surfaceStyle: CardStyler()
+      .color(PlaygroundTokens.muted())
+      .borderRadius(.all(PlaygroundTokens.radiusXl()))
+      .padding(.symmetric(horizontal: 16, vertical: 12))
+      .merge(surfaceStyle),
   collapsibleStyle: PlaygroundMessageCollapsibleStyler(
     collapsedHeight: 72,
     container: BoxStyler(),

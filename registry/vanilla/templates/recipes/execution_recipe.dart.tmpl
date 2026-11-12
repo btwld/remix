@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
-import '../components/card.dart';
 import '../components/disclosure.dart';
 import '../components/execution.dart';
 import '../components/icon_button.dart';
@@ -40,7 +39,11 @@ final class {{typePrefix}}AgentExecutionRecipe {
     // plan's own limit.
     viewport: BoxStyler().maxHeight(220),
     actions: FlexBoxStyler().spacing(6).padding(.top(6)),
-    tool: TextStyler().color({{typePrefix}}Tokens.mutedForeground()).fontSize(12),
+    // The tool is an identifier, so it is set in the theme's mono face.
+    tool: TextStyler()
+        .style({{typePrefix}}Tokens.textMono.mix())
+        .color({{typePrefix}}Tokens.mutedForeground())
+        .fontSize(12),
     title: TextStyler()
         .color({{typePrefix}}Tokens.foreground())
         .fontWeight(FontWeight.w600),
@@ -56,9 +59,16 @@ final class {{typePrefix}}AgentExecutionRecipe {
     errorStatus: _statusMark({{typePrefix}}Tokens.destructive),
     cancelledStatus: _statusMark({{typePrefix}}Tokens.mutedForeground),
   ).merge(style),
-  surfaceStyle: {{valuePrefix}}CardStyle(
-    style: CardStyler().padding(.all({{typePrefix}}Tokens.s4)).merge(surfaceStyle),
-  ),
+  // A compact row with a hairline frame and no shadow: a tool call is a
+  // record of work, lighter than the card that asks for a decision.
+  surfaceStyle: CardStyler()
+      .color({{typePrefix}}Tokens.card())
+      .border(
+        .color({{typePrefix}}Tokens.border()).width({{typePrefix}}Tokens.strokeHairline),
+      )
+      .borderRadius(.all({{typePrefix}}Tokens.radiusXl()))
+      .padding(.all({{typePrefix}}Tokens.s3))
+      .merge(surfaceStyle),
   disclosureStyle: {{valuePrefix}}DisclosureStyle(
     style: DisclosureStyler()
         .padding(.vertical(0))

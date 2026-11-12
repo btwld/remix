@@ -535,7 +535,9 @@ PlaygroundDashboardAgentStyles _playgroundAgentStyles() {
     answerSourcesStyle: answer.sourcesStyle,
     answerCopyStyle: answer.copyStyle,
     answerRetryStyle: answer.retryStyle,
-    transcriptStyle: transcript.style,
+    // Turns sit further apart than the items inside one.
+    transcriptStyle: transcript.style.spacing(PlaygroundTokens.s8),
+    turnStyle: FlexBoxStyler().spacing(PlaygroundTokens.s3),
     transcriptLatestStyle: transcript.latestStyle,
     planStyle: plan.style,
     planDisclosureStyle: plan.disclosureStyle,

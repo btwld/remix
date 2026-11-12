@@ -3,7 +3,7 @@ import 'package:remix/remix.dart';
 import '../../agent/components/message.dart';
 
 import '../components/button.dart';
-import '../components/card.dart';
+import '../theme/tokens.dart';
 
 @immutable
 final class VanillaAgentMessageRecipe {
@@ -34,11 +34,14 @@ VanillaAgentMessageRecipe vanillaAgentMessageRecipe({
     footer: BoxStyler().padding(.top(4)),
     maxWidth: 640,
   ).merge(style),
-  surfaceStyle: vanillaCardStyle(
-    style: CardStyler()
-        .padding(.symmetric(horizontal: 16, vertical: 12))
-        .merge(surfaceStyle),
-  ),
+  // A muted bubble without a frame or shadow: the reader's own words, set
+  // apart from the agent's work by fill rather than by another card.
+  // Built without the card's frame and shadow rather than merged over them.
+  surfaceStyle: CardStyler()
+      .color(VanillaTokens.muted())
+      .borderRadius(.all(VanillaTokens.radiusXl()))
+      .padding(.symmetric(horizontal: 16, vertical: 12))
+      .merge(surfaceStyle),
   collapsibleStyle: AgentMessageCollapsibleStyler(
     collapsedHeight: 72,
     container: BoxStyler(),
