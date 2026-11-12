@@ -6,59 +6,76 @@ import '../theme/theme.dart';
 
 part 'radio.g.dart';
 
-/// Fortal radio size presets.
+/// The sizes a radio comes in. Pixel values are at 100% theme scaling.
 enum FortalRadioSize {
-  /// Compact radio.
+  /// A 14px circle with a 5.6px dot.
   size1,
 
-  /// Default radio.
+  /// A 16px circle with a 6.4px dot. The default.
   size2,
 
-  /// Large radio.
+  /// A 20px circle with an 8px dot.
   size3,
 }
 
-/// Fortal radio color variants.
+/// The looks a radio comes in.
 enum FortalRadioVariant {
-  /// Surface treatment with neutral border.
+  /// A surface fill inside a 1px neutral frame, filled with the accent when
+  /// selected.
   surface,
 
-  /// Soft accent treatment.
+  /// An accent tint inside a 1px accent ring, with an accent-colored dot.
   soft,
 }
 
-/// Fortal-themed preset for [RemixRadio].
+/// The Fortal Radio recipe.
+///
+/// It reads top to bottom: the circle and its focus ring, then the variant's
+/// colors for rest, selected and disabled, then the touch target.
+///
+/// [highContrast] moves the selected fill (surface) or dot (soft) to accent
+/// step 12.
 @MixWidget(target: RemixRadio.new)
 RadioStyler fortalRadioStyle({
   FortalRadioVariant variant = .surface,
   FortalRadioSize size = .size2,
   bool highContrast = false,
   RadioStyler style = const RadioStyler.create(),
-}) {
-  return (switch (variant) {
-        .surface => _fortalRadioSurfaceStyler(size, highContrast: highContrast),
-        .soft => _fortalRadioSoftStyler(size, highContrast: highContrast),
-      })
-      .wrap(fortalTouchTarget())
-      .onDisabled(
-        RadioStyler().containerEffects(
-          RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
-        ),
-      )
-      .merge(style);
-}
+}) => _circle(size)
+    .merge(switch (variant) {
+      .surface => _surface(highContrast),
+      .soft => _soft(highContrast),
+    })
+    .wrap(fortalTouchTarget())
+    .onDisabled(.containerEffects(.outline(.style(.none))))
+    .merge(style);
 
-RadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
-  final metrics = _fortalRadioMetrics(size);
+/// The circle and dot sizes of each step, with the focus ring and no effects.
+///
+/// The empty effect layers give the variant's state fragments layers to
+/// replace.
+RadioStyler _circle(FortalRadioSize size) {
+  final (:circle, :dot) = switch (size) {
+    .size1 => (
+      circle: FortalTokens.checkboxSize1(),
+      dot: FortalTokens.radioIndicatorSize1(),
+    ),
+    .size2 => (
+      circle: FortalTokens.space4(),
+      dot: FortalTokens.radioIndicatorSize2(),
+    ),
+    .size3 => (
+      circle: FortalTokens.checkboxSize3(),
+      dot: FortalTokens.space2(),
+    ),
+  };
+
   return RadioStyler(
     container: .size(
-      metrics.size,
-      metrics.size,
+      circle,
+      circle,
     ).alignment(.center).borderRadius(.all(FortalTokens.radiusCircle())),
-    indicator: .size(
-      metrics.indicatorSize,
-      metrics.indicatorSize,
-    ).borderRadius(.all(FortalTokens.radiusCircle())),
+    indicator: .size(dot, dot).borderRadius(.all(FortalTokens.radiusCircle())),
     containerEffects: RemixBoxEffectsMix(
       behindContent: RemixBoxEffectLayerMix(),
       overContent: RemixBoxEffectLayerMix(),
@@ -66,120 +83,71 @@ RadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
   ).onFocusVisible(.containerEffects(fortalFocusOutline()));
 }
 
-RadioStyler _fortalRadioSurfaceStyler(
-  FortalRadioSize size, {
-  required bool highContrast,
-}) {
-  return _fortalRadioBaseStyler(size)
-      .color(FortalTokens.colorSurface())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          fortalInsetSurface(strokes: [FortalTokens.controlBorder()]),
-        ),
-      )
-      .indicator(
-        .color(
-          FortalTokens.accentIndicator(),
-        ).borderRadius(.all(FortalTokens.radiusCircle())),
-      )
-      .onSelected(
-        .color(
-              highContrast
-                  ? FortalTokens.accent12()
-                  : FortalTokens.accentIndicator(),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                RemixBoxEffectLayerMix(shadows: const []),
-              ),
-            )
-            .indicatorColor(
-              highContrast
-                  ? FortalTokens.accent1()
-                  : FortalTokens.accentIndicatorContrast(),
-            ),
-      )
-      .onDisabled(
-        .color(FortalTokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                fortalInsetSurface(strokes: [FortalTokens.grayA6()]),
-              ),
-            )
-            .indicatorColor(FortalTokens.grayA8()),
-      );
-}
+/// A surface fill with a neutral frame; the accent fill when selected.
+RadioStyler _surface(bool highContrast) => RadioStyler()
+    .color(FortalTokens.colorSurface())
+    .merge(
+      _effects(
+        over: fortalInsetSurface(strokes: [FortalTokens.controlBorder()]),
+      ),
+    )
+    .indicatorColor(FortalTokens.accentIndicator())
+    .onSelected(
+      RadioStyler()
+          .color(
+            highContrast
+                ? FortalTokens.accent12()
+                : FortalTokens.accentIndicator(),
+          )
+          .merge(_effects(over: RemixBoxEffectLayerMix(shadows: const [])))
+          .indicatorColor(
+            highContrast
+                ? FortalTokens.accent1()
+                : FortalTokens.accentIndicatorContrast(),
+          ),
+    )
+    .onDisabled(_disabled(frame: FortalTokens.grayA6()));
 
-RadioStyler _fortalRadioSoftStyler(
-  FortalRadioSize size, {
-  required bool highContrast,
-}) {
-  return _fortalRadioBaseStyler(size)
+/// An accent tint with an accent ring and an accent dot.
+RadioStyler _soft(bool highContrast) {
+  final dot = highContrast
+      ? FortalTokens.accent12()
+      : FortalTokens.accentContent();
+
+  return RadioStyler()
       .color(FortalTokens.accentA4())
-      .containerEffects(
-        RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-      )
       // The tint alone is too faint to show an empty control; the accent-8
       // ring keeps a 3:1 boundary in every enabled state.
-      .containerEffects(
-        RemixBoxEffectsMix.overContent(
-          fortalInsetSurface(strokes: [FortalTokens.focus8()]),
-        ),
+      .merge(
+        _effects(over: fortalInsetSurface(strokes: [FortalTokens.focus8()])),
       )
-      .indicator(
-        .color(
-          highContrast ? FortalTokens.accent12() : FortalTokens.accentContent(),
-        ).borderRadius(.all(FortalTokens.radiusCircle())),
-      )
+      .indicatorColor(dot)
       .onSelected(
-        .color(FortalTokens.accentA4())
+        RadioStyler()
+            .color(FortalTokens.accentA4())
             .containerEffects(
               RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
             )
-            .indicator(
-              .color(
-                highContrast
-                    ? FortalTokens.accent12()
-                    : FortalTokens.accentContent(),
-              ),
-            ),
+            .indicatorColor(dot),
       )
-      .onDisabled(
-        .color(FortalTokens.grayA3())
-            .containerEffects(
-              RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
-            )
-            .containerEffects(
-              RemixBoxEffectsMix.overContent(
-                RemixBoxEffectLayerMix(shadows: const []),
-              ),
-            )
-            .indicatorColor(FortalTokens.grayA8()),
-      );
+      .onDisabled(_disabled());
 }
 
-({double size, double indicatorSize}) _fortalRadioMetrics(
-  FortalRadioSize size,
-) => switch (size) {
-  .size1 => (
-    size: FortalTokens.checkboxSize1(),
-    indicatorSize: FortalTokens.radioIndicatorSize1(),
-  ),
-  .size2 => (
-    size: FortalTokens.space4(),
-    indicatorSize: FortalTokens.radioIndicatorSize2(),
-  ),
-  .size3 => (
-    size: FortalTokens.checkboxSize3(),
-    indicatorSize: FortalTokens.space2(),
-  ),
-};
+/// A gray fill and dot. The surface variant keeps a [frame]; soft has none.
+RadioStyler _disabled({Color? frame}) => RadioStyler()
+    .color(FortalTokens.grayA3())
+    .merge(
+      _effects(
+        over: frame == null
+            ? RemixBoxEffectLayerMix(shadows: const [])
+            : fortalInsetSurface(strokes: [frame]),
+      ),
+    )
+    .indicatorColor(FortalTokens.grayA8());
+
+/// Sets the layer over the content and empties the one behind it.
+RadioStyler _effects({required RemixBoxEffectLayerMix over}) => RadioStyler()
+    .containerEffects(
+      RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
+    )
+    .containerEffects(RemixBoxEffectsMix.overContent(over));
