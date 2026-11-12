@@ -9,7 +9,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:registry_source/src/agent/components/answer.dart';
 import 'package:registry_source/src/agent/components/composer.dart';
+import 'package:registry_source/src/agent/components/message.dart';
 import 'package:registry_source/src/agent/components/permission.dart';
+import 'package:registry_source/src/agent/components/plan.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_base.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_records.dart';
 import 'package:registry_source/src/dashboard/dashboard_sample_data.dart';
@@ -837,6 +839,93 @@ void main() {
           tester.widget<AgentAnswer>(find.byType(AgentAnswer)).onRetry,
           isNotNull,
         );
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('Agent turns are spaced apart more than their items', (
+        tester,
+      ) async {
+        await _pumpDashboard(
+          tester,
+          preset: preset,
+          initialPage: RegistryDashboardDemoPage.chat,
+          chatStepDelay: const Duration(milliseconds: 10),
+          height: 1400,
+        );
+        for (var run = 0; run < 2; run++) {
+          // The starter row comes before the transcript's echo of it.
+          await tester.tap(find.text('Review checkout').first);
+          for (var frame = 0; frame < 6; frame++) {
+            await tester.pump(const Duration(milliseconds: 11));
+          }
+        }
+        await tester.pumpAndSettle();
+
+        final firstAnswer = tester.getRect(find.byType(AgentAnswer).first);
+        final secondPrompt = tester.getRect(find.byType(AgentMessage).last);
+        final secondPlan = tester.getRect(find.byType(AgentPlan).last);
+        final betweenTurns = secondPrompt.top - firstAnswer.bottom;
+        final withinTurn = secondPlan.top - secondPrompt.bottom;
+        expect(withinTurn, greaterThan(0));
+        expect(
+          betweenTurns,
+          greaterThan(withinTurn),
+          reason: 'A prompt groups with its reply, not the turn above.',
+        );
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('Agent copy confirms the copied answer only, briefly', (
+        tester,
+      ) async {
+        final copied = <Object?>[];
+        tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          (call) async {
+            if (call.method == 'Clipboard.setData') copied.add(call.arguments);
+            return null;
+          },
+        );
+        addTearDown(
+          () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+            SystemChannels.platform,
+            null,
+          ),
+        );
+        await _pumpDashboard(
+          tester,
+          preset: preset,
+          initialPage: RegistryDashboardDemoPage.chat,
+          chatStepDelay: const Duration(milliseconds: 10),
+          height: 1400,
+        );
+        // Two turns whose answers have the same text.
+        for (var run = 0; run < 2; run++) {
+          // The starter row comes before the transcript's echo of it.
+          await tester.tap(find.text('Review checkout').first);
+          for (var frame = 0; frame < 6; frame++) {
+            await tester.pump(const Duration(milliseconds: 11));
+          }
+        }
+        await tester.pumpAndSettle();
+        final answers = find.byType(AgentAnswer);
+        expect(answers, findsNWidgets(2));
+
+        tester.widget<AgentAnswer>(answers.first).onCopy!();
+        await tester.pump();
+        await tester.pump();
+        expect(copied, hasLength(1));
+        expect(
+          find.descendant(of: answers.first, matching: find.text('Copied')),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(of: answers.last, matching: find.text('Copied')),
+          findsNothing,
+        );
+
+        await tester.pump(const Duration(seconds: 2));
+        expect(find.text('Copied'), findsNothing);
         expect(tester.takeException(), isNull);
       });
 
