@@ -43,9 +43,16 @@ FortalAgentExecutionRecipe fortalAgentExecutionRecipe({
     actions: FlexBoxStyler()
         .spacing(FortalTokens.space2())
         .padding(.top(FortalTokens.space3())),
+    // The tool is an identifier, so it is set in Fortal's code face.
     tool: TextStyler()
         .color(FortalTokens.gray11())
-        .style(FortalTokens.text1.mix()),
+        .style(FortalTokens.text1.mix())
+        .fontFamily('Menlo')
+        .fontFamilyFallback(const [
+          'Consolas',
+          'Bitstream Vera Sans Mono',
+          'monospace',
+        ]),
     title: TextStyler()
         .color(FortalTokens.gray12())
         .fontWeight(FortalTokens.fontWeightSemibold()),
@@ -69,7 +76,9 @@ FortalAgentExecutionRecipe fortalAgentExecutionRecipe({
     errorStatus: _statusMark(FortalTokens.error11),
     cancelledStatus: _statusMark(FortalTokens.gray11),
   ).merge(style),
-  surfaceStyle: fortalCardStyle(size: .size2, style: surfaceStyle),
+  // A compact row with a hairline frame: a tool call is a record of work,
+  // lighter than the decision cards around it.
+  surfaceStyle: fortalCardStyle(style: surfaceStyle),
   disclosureStyle: fortalDisclosureStyle(
     style: DisclosureStyler()
         .container(

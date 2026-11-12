@@ -80,7 +80,17 @@ final class {{typePrefix}}AgentPermissionRecipe {
     deniedStatus: _statusMark({{typePrefix}}Tokens.gray11),
     errorStatus: _statusMark({{typePrefix}}Tokens.error11),
   ).merge(style),
-  surfaceStyle: {{valuePrefix}}CardStyle(size: .size2, style: surfaceStyle),
+  // The one card in a turn that waits on the reader: an accent tint and
+  // frame mark it. {{typePrefix}} keeps elevation for floating layers, so emphasis
+  // comes from color, not a shadow.
+  surfaceStyle: {{valuePrefix}}CardStyle(
+    size: .size2,
+    style: CardStyler()
+        .color({{typePrefix}}Tokens.accent2())
+        .border(.all(.color({{typePrefix}}Tokens.accent8())))
+        .onHovered(.border(.all(.color({{typePrefix}}Tokens.accent8()))))
+        .merge(surfaceStyle),
+  ),
   detailsStyle: {{valuePrefix}}DisclosureStyle(
     size: .size1,
     style: DisclosureStyler()

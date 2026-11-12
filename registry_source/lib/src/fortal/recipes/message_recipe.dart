@@ -38,7 +38,16 @@ FortalAgentMessageRecipe fortalAgentMessageRecipe({
     footer: BoxStyler().padding(.top(FortalTokens.space1())),
     maxWidth: FortalTokens.messageContentMaxWidth(),
   ).merge(style),
-  surfaceStyle: fortalCardStyle(style: surfaceStyle),
+  // A filled bubble without a frame: the reader's own words, set apart
+  // from the agent's work by fill rather than by another bordered card.
+  surfaceStyle: fortalCardStyle(
+    size: .size2,
+    style: CardStyler()
+        .color(FortalTokens.grayA3())
+        .border(BoxBorderMix.none)
+        .onHovered(CardStyler().border(BoxBorderMix.none))
+        .merge(surfaceStyle),
+  ),
   collapsibleStyle: AgentMessageCollapsibleStyler(
     collapsedHeight: FortalTokens.messageCollapsedHeight(),
     container: BoxStyler(),

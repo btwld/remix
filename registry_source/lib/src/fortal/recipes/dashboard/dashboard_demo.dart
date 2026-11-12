@@ -547,7 +547,9 @@ RegistryDashboardAgentStyles _fortalAgentStyles() {
     answerSourcesStyle: answer.sourcesStyle,
     answerCopyStyle: answer.copyStyle,
     answerRetryStyle: answer.retryStyle,
-    transcriptStyle: transcript.style,
+    // Turns sit further apart than the items inside one.
+    transcriptStyle: transcript.style.spacing(FortalTokens.space6()),
+    turnStyle: FlexBoxStyler().spacing(FortalTokens.space3()),
     transcriptLatestStyle: transcript.latestStyle,
     planStyle: plan.style,
     planDisclosureStyle: plan.disclosureStyle,

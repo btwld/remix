@@ -80,7 +80,17 @@ FortalAgentPermissionRecipe fortalAgentPermissionRecipe({
     deniedStatus: _statusMark(FortalTokens.gray11),
     errorStatus: _statusMark(FortalTokens.error11),
   ).merge(style),
-  surfaceStyle: fortalCardStyle(size: .size2, style: surfaceStyle),
+  // The one card in a turn that waits on the reader: an accent tint and
+  // frame mark it. Fortal keeps elevation for floating layers, so emphasis
+  // comes from color, not a shadow.
+  surfaceStyle: fortalCardStyle(
+    size: .size2,
+    style: CardStyler()
+        .color(FortalTokens.accent2())
+        .border(.all(.color(FortalTokens.accent8())))
+        .onHovered(.border(.all(.color(FortalTokens.accent8()))))
+        .merge(surfaceStyle),
+  ),
   detailsStyle: fortalDisclosureStyle(
     size: .size1,
     style: DisclosureStyler()

@@ -48,5 +48,23 @@ UiAgentPlanRecipe uiAgentPlanRecipe({
         .color(UiTokens.gray9())
         .size(UiTokens.space4()),
   ).merge(style),
-  disclosureStyle: uiDisclosureStyle(style: disclosureStyle),
+  disclosureStyle: uiDisclosureStyle(
+    style: DisclosureStyler()
+        // The agent's working steps are secondary to the conversation: a
+        // soft tint without a frame sets them apart from the cards that ask
+        // for something.
+        .container(
+          BoxStyler()
+              .color(UiTokens.grayA2())
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .trigger(BoxStyler().color(const Color(0x00000000)))
+        .content(
+          BoxStyler().foregroundDecoration(
+            BoxDecorationMix.border(.style(.none)),
+          ),
+        )
+        .onHovered(.trigger(.color(UiTokens.grayA2())))
+        .merge(disclosureStyle),
+  ),
 );

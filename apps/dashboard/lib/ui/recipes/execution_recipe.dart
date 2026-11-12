@@ -43,7 +43,16 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
     actions: FlexBoxStyler()
         .spacing(UiTokens.space2())
         .padding(.top(UiTokens.space3())),
-    tool: TextStyler().color(UiTokens.gray11()).style(UiTokens.text1.mix()),
+    // The tool is an identifier, so it is set in Ui's code face.
+    tool: TextStyler()
+        .color(UiTokens.gray11())
+        .style(UiTokens.text1.mix())
+        .fontFamily('Menlo')
+        .fontFamilyFallback(const [
+          'Consolas',
+          'Bitstream Vera Sans Mono',
+          'monospace',
+        ]),
     title: TextStyler()
         .color(UiTokens.gray12())
         .fontWeight(UiTokens.fontWeightSemibold()),
@@ -59,7 +68,9 @@ UiAgentExecutionRecipe uiAgentExecutionRecipe({
     errorStatus: _statusMark(UiTokens.error11),
     cancelledStatus: _statusMark(UiTokens.gray11),
   ).merge(style),
-  surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
+  // A compact row with a hairline frame: a tool call is a record of work,
+  // lighter than the decision cards around it.
+  surfaceStyle: uiCardStyle(style: surfaceStyle),
   disclosureStyle: uiDisclosureStyle(
     style: DisclosureStyler()
         .container(

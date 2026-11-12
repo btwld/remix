@@ -38,7 +38,16 @@ final class {{typePrefix}}AgentMessageRecipe {
     footer: BoxStyler().padding(.top({{typePrefix}}Tokens.space1())),
     maxWidth: {{typePrefix}}Tokens.messageContentMaxWidth(),
   ).merge(style),
-  surfaceStyle: {{valuePrefix}}CardStyle(style: surfaceStyle),
+  // A filled bubble without a frame: the reader's own words, set apart
+  // from the agent's work by fill rather than by another bordered card.
+  surfaceStyle: {{valuePrefix}}CardStyle(
+    size: .size2,
+    style: CardStyler()
+        .color({{typePrefix}}Tokens.grayA3())
+        .border(BoxBorderMix.none)
+        .onHovered(CardStyler().border(BoxBorderMix.none))
+        .merge(surfaceStyle),
+  ),
   collapsibleStyle: {{typePrefix}}MessageCollapsibleStyler(
     collapsedHeight: {{typePrefix}}Tokens.messageCollapsedHeight(),
     container: BoxStyler(),

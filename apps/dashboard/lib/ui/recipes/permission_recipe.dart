@@ -74,7 +74,17 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
     deniedStatus: _statusMark(UiTokens.gray11),
     errorStatus: _statusMark(UiTokens.error11),
   ).merge(style),
-  surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
+  // The one card in a turn that waits on the reader: an accent tint and
+  // frame mark it. Ui keeps elevation for floating layers, so emphasis
+  // comes from color, not a shadow.
+  surfaceStyle: uiCardStyle(
+    size: .size2,
+    style: CardStyler()
+        .color(UiTokens.accent2())
+        .border(.all(.color(UiTokens.accent8())))
+        .onHovered(.border(.all(.color(UiTokens.accent8()))))
+        .merge(surfaceStyle),
+  ),
   detailsStyle: uiDisclosureStyle(
     size: .size1,
     style: DisclosureStyler()

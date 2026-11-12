@@ -43,11 +43,37 @@ UiAgentAnswerRecipe uiAgentAnswerRecipe({
         .style(UiTokens.text2.mix()),
     indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
   ).merge(style),
-  surfaceStyle: uiCardStyle(size: .size2, style: surfaceStyle),
+  // The answer is the conversation itself, so it sits on the page as prose,
+  // aligned with the transcript, rather than in a card like the work around it.
+  surfaceStyle: uiCardStyle(
+    variant: .ghost,
+    style: CardStyler()
+        .margin(.all(0))
+        .padding(.all(0))
+        .onHovered(.color(const Color(0x00000000)))
+        .onPressed(.color(const Color(0x00000000)))
+        .merge(surfaceStyle),
+  ),
+  // Sources reads as a quiet line under the answer, not a field.
   sourcesStyle: uiDisclosureStyle(
     size: .size1,
     style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(UiTokens.space3())))
+        .container(
+          BoxStyler()
+              .margin(.top(UiTokens.space2()))
+              .color(const Color(0x00000000))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .trigger(
+          BoxStyler().color(const Color(0x00000000)).padding(.horizontal(0)),
+        )
+        .content(
+          BoxStyler()
+              .padding(.fromLTRB(0, UiTokens.space1(), 0, 0))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .onHovered(.trigger(.color(const Color(0x00000000))))
+        .onPressed(.trigger(.color(const Color(0x00000000))))
         .merge(sourcesStyle),
   ),
   copyStyle: uiIconButtonStyle(variant: .ghost, size: .size1, style: copyStyle),

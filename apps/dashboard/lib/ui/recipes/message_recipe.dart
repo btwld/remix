@@ -38,7 +38,16 @@ UiAgentMessageRecipe uiAgentMessageRecipe({
     footer: BoxStyler().padding(.top(UiTokens.space1())),
     maxWidth: UiTokens.messageContentMaxWidth(),
   ).merge(style),
-  surfaceStyle: uiCardStyle(style: surfaceStyle),
+  // A filled bubble without a frame: the reader's own words, set apart
+  // from the agent's work by fill rather than by another bordered card.
+  surfaceStyle: uiCardStyle(
+    size: .size2,
+    style: CardStyler()
+        .color(UiTokens.grayA3())
+        .border(BoxBorderMix.none)
+        .onHovered(CardStyler().border(BoxBorderMix.none))
+        .merge(surfaceStyle),
+  ),
   collapsibleStyle: UiMessageCollapsibleStyler(
     collapsedHeight: UiTokens.messageCollapsedHeight(),
     container: BoxStyler(),

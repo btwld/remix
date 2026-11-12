@@ -55,5 +55,23 @@ FortalAgentPlanRecipe fortalAgentPlanRecipe({
         .color(FortalTokens.gray9())
         .size(FortalTokens.space4()),
   ).merge(style),
-  disclosureStyle: fortalDisclosureStyle(style: disclosureStyle),
+  disclosureStyle: fortalDisclosureStyle(
+    style: DisclosureStyler()
+        // The agent's working steps are secondary to the conversation: a
+        // soft tint without a frame sets them apart from the cards that ask
+        // for something.
+        .container(
+          BoxStyler()
+              .color(FortalTokens.grayA2())
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .trigger(BoxStyler().color(const Color(0x00000000)))
+        .content(
+          BoxStyler().foregroundDecoration(
+            BoxDecorationMix.border(.style(.none)),
+          ),
+        )
+        .onHovered(.trigger(.color(FortalTokens.grayA2())))
+        .merge(disclosureStyle),
+  ),
 );
