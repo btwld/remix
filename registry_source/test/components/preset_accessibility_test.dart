@@ -6,7 +6,6 @@ import 'package:registry_source/src/fortal/components/sidebar_layout.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
 import 'package:registry_source/src/heroui/components/sidebar_layout.dart';
 import 'package:registry_source/src/heroui/theme/theme.dart';
-import 'package:remix/remix.dart';
 
 const _sidebar = ValueKey('sidebar');
 

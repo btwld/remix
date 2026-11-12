@@ -598,7 +598,7 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
             alwaysAllowStyle: styles.alwaysAllowStyle,
             denyStyle: styles.denyStyle,
           ),
-        if (answer != null) answer,
+        ?answer,
       ],
     );
   }

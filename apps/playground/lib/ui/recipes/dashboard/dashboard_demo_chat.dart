@@ -599,7 +599,7 @@ class _PlaygroundDashboardChatPageState
             alwaysAllowStyle: styles.alwaysAllowStyle,
             denyStyle: styles.denyStyle,
           ),
-        if (answer != null) answer,
+        ?answer,
       ],
     );
   }

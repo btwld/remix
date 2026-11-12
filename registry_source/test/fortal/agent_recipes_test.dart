@@ -6,7 +6,6 @@ import 'package:registry_source/src/fortal/recipes/conversation_recipe.dart';
 import 'package:registry_source/src/fortal/recipes/steps_recipe.dart';
 import 'package:registry_source/src/fortal/recipes/tool_call_recipe.dart';
 import 'package:registry_source/src/fortal/theme/theme.dart';
-import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 
 // The measurements of the approved mock (shots 01-06) on Fortal tokens.

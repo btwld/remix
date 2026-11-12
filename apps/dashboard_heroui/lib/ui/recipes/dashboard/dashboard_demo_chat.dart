@@ -597,7 +597,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
             alwaysAllowStyle: styles.alwaysAllowStyle,
             denyStyle: styles.denyStyle,
           ),
-        if (answer != null) answer,
+        ?answer,
       ],
     );
   }
