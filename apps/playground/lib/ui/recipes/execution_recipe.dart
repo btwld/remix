@@ -7,6 +7,8 @@ import '../components/execution.dart';
 import '../components/icon_button.dart';
 import '../theme/tokens.dart';
 
+/// Styles for the execution surface: a card, a disclosure for its output, and
+/// ghost icon buttons for copy and retry.
 @immutable
 final class PlaygroundAgentExecutionRecipe {
   const PlaygroundAgentExecutionRecipe({
@@ -16,13 +18,24 @@ final class PlaygroundAgentExecutionRecipe {
     required this.copyStyle,
     required this.retryStyle,
   });
+
+  /// Styles for the header, output, actions, text and icons of an execution.
   final PlaygroundExecutionStyler style;
+
+  /// Styles for the card the execution sits in.
   final CardStyler surfaceStyle;
+
+  /// Styles for the disclosure that reveals the output.
   final DisclosureStyler disclosureStyle;
+
+  /// Styles for the copy icon button.
   final IconButtonStyler copyStyle;
+
+  /// Styles for the retry icon button.
   final IconButtonStyler retryStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 PlaygroundAgentExecutionRecipe playgroundAgentExecutionRecipe({
   PlaygroundExecutionStyler style = const PlaygroundExecutionStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),

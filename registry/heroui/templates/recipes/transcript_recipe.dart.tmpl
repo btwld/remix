@@ -8,9 +8,12 @@ import '../components/transcript.dart';
 @immutable
 final class {{typePrefix}}AgentTranscriptRecipe {
   const {{typePrefix}}AgentTranscriptRecipe({required this.style});
+
+  /// Styles for the spacing between transcript entries.
   final {{typePrefix}}TranscriptStyler style;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 {{typePrefix}}AgentTranscriptRecipe {{valuePrefix}}AgentTranscriptRecipe({
   {{typePrefix}}TranscriptStyler style = const {{typePrefix}}TranscriptStyler.create(),
 }) => {{typePrefix}}AgentTranscriptRecipe(

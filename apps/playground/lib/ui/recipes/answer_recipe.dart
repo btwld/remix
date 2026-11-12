@@ -7,6 +7,8 @@ import '../components/disclosure.dart';
 import '../components/icon_button.dart';
 import '../theme/tokens.dart';
 
+/// Styles for the answer surface: a card, a disclosure for its sources, and
+/// ghost icon buttons for copy and retry.
 @immutable
 final class PlaygroundAgentAnswerRecipe {
   const PlaygroundAgentAnswerRecipe({
@@ -16,13 +18,24 @@ final class PlaygroundAgentAnswerRecipe {
     required this.copyStyle,
     required this.retryStyle,
   });
+
+  /// Styles for the answer body, actions and feedback.
   final PlaygroundAnswerStyler style;
+
+  /// Styles for the card the answer sits in.
   final CardStyler surfaceStyle;
+
+  /// Styles for the disclosure that lists the sources.
   final DisclosureStyler sourcesStyle;
+
+  /// Styles for the copy icon button.
   final IconButtonStyler copyStyle;
+
+  /// Styles for the retry icon button.
   final IconButtonStyler retryStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 PlaygroundAgentAnswerRecipe playgroundAgentAnswerRecipe({
   PlaygroundAnswerStyler style = const PlaygroundAnswerStyler.create(),
   CardStyler surfaceStyle = const CardStyler.create(),

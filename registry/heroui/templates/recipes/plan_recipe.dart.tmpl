@@ -13,10 +13,15 @@ final class {{typePrefix}}AgentPlanRecipe {
     required this.style,
     required this.disclosureStyle,
   });
+
+  /// Styles for the plan rows, titles, counts and status icons.
   final {{typePrefix}}PlanStyler style;
+
+  /// Styles for the disclosure that wraps the list.
   final DisclosureStyler disclosureStyle;
 }
 
+/// Builds the recipe; each argument is merged last, so callers can override.
 {{typePrefix}}AgentPlanRecipe {{valuePrefix}}AgentPlanRecipe({
   {{typePrefix}}PlanStyler style = const {{typePrefix}}PlanStyler.create(),
   DisclosureStyler disclosureStyle = const DisclosureStyler.create(),
