@@ -493,4 +493,41 @@ void main() {
       400,
     );
   });
+
+  testWidgets('the approval footer wraps at a narrow width and large text', (
+    tester,
+  ) async {
+    final decisions = <AgentApprovalDecision>[];
+    await pumpAgent(
+      tester,
+      Builder(
+        builder: (context) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: const TextScaler.linear(2)),
+          child: SizedBox(
+            width: 300,
+            child: AgentToolCall(
+              call: approvalCall,
+              onDecision: decisions.add,
+              // The title row's status is outside this test's subject.
+              statusLabelBuilder: (_) => 'Wait',
+              glyphBuilder: testGlyphs,
+            ),
+          ),
+        ),
+      ),
+      surface: const Size(800, 4000),
+    );
+
+    expect(tester.takeException(), isNull);
+    for (final key in [_alwaysAllow, _deny, _allowOnce]) {
+      expect(find.byKey(key), findsOneWidget);
+      final rect = tester.getRect(find.byKey(key));
+      expect(rect.left, greaterThanOrEqualTo(0));
+      expect(rect.right, lessThanOrEqualTo(300));
+    }
+    await tester.tap(find.byKey(_allowOnce));
+    expect(decisions, [AgentApprovalDecision.allowOnce]);
+  });
 }

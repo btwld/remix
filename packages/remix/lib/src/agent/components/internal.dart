@@ -154,3 +154,37 @@ class _RenderAgentOverflowClip extends RenderProxyBox {
     );
   }
 }
+
+/// The children of an actions row: [leading] at the start and [trailing] at
+/// the end of one line, both wrapping onto their own lines when the line is
+/// too narrow, so no action overflows or leaves the reader's reach.
+///
+/// Returns the children for a row: put them in a `RowBox`. [gap] separates
+/// actions horizontally and lines vertically.
+@internal
+List<Widget> agentActionRowChildren({
+  required Widget? leading,
+  required List<Widget> trailing,
+  double gap = 0,
+}) {
+  final group = Wrap(
+    alignment: WrapAlignment.end,
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: gap,
+    runSpacing: gap,
+    children: trailing,
+  );
+
+  return [
+    Expanded(
+      child: leading == null
+          ? group
+          : Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              runSpacing: gap,
+              children: [leading, group],
+            ),
+    ),
+  ];
+}

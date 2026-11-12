@@ -9,6 +9,7 @@ import '../../components/textfield/textfield.dart';
 import '../../utilities/remix_style.dart';
 import '../behavior/composer.dart';
 import 'glyphs.dart';
+import 'internal.dart';
 
 part 'composer.g.dart';
 
@@ -158,6 +159,7 @@ class _AgentComposerState extends State<AgentComposer> {
         _ownedFocusNode = null;
       }
       _focusNode.addListener(_handleFocus);
+      _handleFocus();
     }
     _states.update(WidgetState.disabled, !widget.enabled);
   }
@@ -192,6 +194,12 @@ class _AgentComposerState extends State<AgentComposer> {
     _focusNode.requestFocus();
   }
 
+  void _stop() {
+    widget.onStop?.call();
+    // Stop becomes Send, a new button; keep the keyboard in the field.
+    _focusNode.requestFocus();
+  }
+
   KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
     final onSubmit = widget.onSubmit;
 
@@ -219,7 +227,7 @@ class _AgentComposerState extends State<AgentComposer> {
           const SizedBox.shrink(),
       semanticLabel: running ? widget.stopLabel : widget.submitLabel,
       enabled: running ? widget.enabled && widget.onStop != null : _sendEnabled,
-      onPressed: running ? widget.onStop : _send,
+      onPressed: running ? _stop : _send,
       style: running ? widget.stopStyle : widget.submitStyle,
     );
   }
@@ -238,7 +246,8 @@ class _AgentComposerState extends State<AgentComposer> {
         return Semantics(
           container: true,
           explicitChildNodes: true,
-          label: widget.semanticLabel,
+          // The field carries the accessible name; naming the surface too
+          // would announce it twice.
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             excludeFromSemantics: true,
@@ -279,12 +288,11 @@ class _AgentComposerState extends State<AgentComposer> {
                     ),
                     RowBox(
                       styleSpec: spec.toolbar,
-                      children: [
-                        ?leading,
-                        const Spacer(),
-                        ?trailing,
-                        _action(),
-                      ],
+                      children: agentActionRowChildren(
+                        leading: leading,
+                        trailing: [?trailing, _action()],
+                        gap: spec.toolbar.spec.flex?.spec.spacing ?? 0,
+                      ),
                     ),
                   ],
                 ),
