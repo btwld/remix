@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
+import 'package:naked_ui/naked_ui.dart';
 
 import '../../components/button/button.dart';
 import '../../components/data_list/data_list.dart';
@@ -71,6 +72,8 @@ class AgentToolRenderers extends InheritedWidget {
 /// line while the tool runs. The well opens while the call works, collapses
 /// when it succeeds and stays open when it fails, under [policy]; a reader's
 /// toggle wins for the rest of the run.
+/// Output taller than [AgentToolCallSpec.outputMaxHeight] offers "Show all"
+/// and "Show less" independently of opening or closing the well.
 ///
 /// While the call is [AgentToolCallStatus.awaitingApproval], it shows the
 /// approval card instead: a question, the tool id, the description, the
@@ -100,6 +103,8 @@ class AgentToolCall extends StatefulWidget {
     this.alwaysAllowLabel = 'Always allow',
     this.denyLabel = 'Deny',
     this.outputLabel = 'Tool output',
+    this.showAllLabel = 'Show all',
+    this.showLessLabel = 'Show less',
     this.semanticLabel = 'Tool call',
     this.glyphBuilder,
     this.disclosureStyle = const DisclosureStyler.create(),
@@ -159,6 +164,12 @@ class AgentToolCall extends StatefulWidget {
   /// The accessible name of the output well.
   final String outputLabel;
 
+  /// The action that removes the output well's height limit.
+  final String showAllLabel;
+
+  /// The action that restores the output well's height limit.
+  final String showLessLabel;
+
   /// The call's accessible name.
   final String semanticLabel;
 
@@ -211,6 +222,7 @@ class AgentToolCall extends StatefulWidget {
 }
 
 final _toolCallLayout = AgentToolCallStyler(
+  outputToggle: FlexBoxStyler().mainAxisSize(MainAxisSize.min),
   status: FlexBoxStyler().mainAxisSize(MainAxisSize.min),
   cardContent: FlexBoxStyler()
       .mainAxisSize(MainAxisSize.min)
@@ -232,6 +244,8 @@ class _AgentToolCallState extends State<AgentToolCall>
   final FocusNode _focus = FocusNode(debugLabel: 'AgentToolCall');
   final FocusNode _rowFocus = FocusNode(debugLabel: 'AgentToolCall row');
   final WidgetStatesController _rowStates = WidgetStatesController();
+  bool _showAllOutput = false;
+  bool _outputOverflows = false;
 
   /// Whether focus was inside the card when the reader decided, so it moves
   /// to the row that replaces the card.
@@ -268,6 +282,10 @@ class _AgentToolCallState extends State<AgentToolCall>
   void didUpdateWidget(AgentToolCall oldWidget) {
     super.didUpdateWidget(oldWidget);
     final call = _call;
+    if (oldWidget.call.id != call.id) {
+      _showAllOutput = false;
+      _outputOverflows = false;
+    }
     _guard.update(id: call.id, status: call.status, recorded: call.decision);
     updateKeepAlive();
     _disclosure
@@ -407,34 +425,92 @@ class _AgentToolCallState extends State<AgentToolCall>
 
     return Semantics(
       container: true,
+      explicitChildNodes: true,
       label: widget.outputLabel,
       child: Box(
         styleSpec: spec.output,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: maxHeight ?? double.infinity),
-          child: AgentLiveEdge(
-            controller: _outputEdge,
-            builder: (context, scrollController, physics) =>
-                SingleChildScrollView(
-                  controller: scrollController,
-                  physics: physics,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (output != null && output.isNotEmpty)
-                        Box(
-                          styleSpec: spec.outputContent,
-                          child: StyledText(output, styleSpec: spec.outputText),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: _showAllOutput
+                    ? double.infinity
+                    : maxHeight ?? double.infinity,
+              ),
+              child: AgentLiveEdge(
+                controller: _outputEdge,
+                builder: (context, scrollController, physics) =>
+                    SingleChildScrollView(
+                      controller: scrollController,
+                      physics: physics,
+                      child: AgentOverflowClip(
+                        key: ValueKey(_call.id),
+                        maxHeight: maxHeight,
+                        clip: false,
+                        onOverflowChanged: _handleOutputOverflow,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (output != null && output.isNotEmpty)
+                              Box(
+                                styleSpec: spec.outputContent,
+                                child: StyledText(
+                                  output,
+                                  styleSpec: spec.outputText,
+                                ),
+                              ),
+                            if (error != null && error.isNotEmpty)
+                              Box(
+                                styleSpec: spec.error,
+                                child: StyledText(
+                                  error,
+                                  styleSpec: spec.errorText,
+                                ),
+                              ),
+                          ],
                         ),
-                      if (error != null && error.isNotEmpty)
-                        Box(
-                          styleSpec: spec.error,
-                          child: StyledText(error, styleSpec: spec.errorText),
-                        ),
-                    ],
-                  ),
-                ),
+                      ),
+                    ),
+              ),
+            ),
+            if (_outputOverflows && maxHeight != null)
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: _outputToggle(),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _handleOutputOverflow(bool overflows) {
+    if (mounted && overflows != _outputOverflows) {
+      setState(() => _outputOverflows = overflows);
+    }
+  }
+
+  Widget _outputToggle() {
+    final label = _showAllOutput ? widget.showLessLabel : widget.showAllLabel;
+    return NakedButton(
+      key: const ValueKey('agent-tool-call-output-toggle'),
+      semanticLabel: label,
+      onPressed: () => setState(() => _showAllOutput = !_showAllOutput),
+      builder: (context, _, _) => RemixStyleSpecBuilder<AgentToolCallSpec>(
+        style: _toolCallLayout.merge(widget.style),
+        styleSpec: widget.styleSpec,
+        controller: NakedButtonState.controllerOf(context),
+        builder: (context, spec) => ExcludeSemantics(
+          child: RowBox(
+            styleSpec: spec.outputToggle,
+            children: [
+              Flexible(
+                child: StyledText(label, styleSpec: spec.outputToggleLabel),
+              ),
+            ],
           ),
         ),
       ),
@@ -684,9 +760,18 @@ final class AgentToolCallSpec with _$AgentToolCallSpec {
   @override
   final StyleSpec<BoxSpec> output;
 
-  /// The tallest the well's content grows before it scrolls.
+  /// The tallest the well's content grows before it scrolls and offers
+  /// "Show all". Null leaves the content unbounded.
   @override
   final double? outputMaxHeight;
+
+  /// The "Show all" / "Show less" button below overflowing output.
+  @override
+  final StyleSpec<FlexBoxSpec> outputToggle;
+
+  /// The output toggle's label.
+  @override
+  final StyleSpec<TextSpec> outputToggleLabel;
 
   /// Wraps the output text.
   @override
@@ -757,6 +842,8 @@ final class AgentToolCallSpec with _$AgentToolCallSpec {
     StyleSpec<IconSpec>? indicator,
     StyleSpec<BoxSpec>? output,
     this.outputMaxHeight,
+    StyleSpec<FlexBoxSpec>? outputToggle,
+    StyleSpec<TextSpec>? outputToggleLabel,
     StyleSpec<BoxSpec>? outputContent,
     StyleSpec<TextSpec>? outputText,
     StyleSpec<BoxSpec>? error,
@@ -781,6 +868,9 @@ final class AgentToolCallSpec with _$AgentToolCallSpec {
        statusLabel = statusLabel ?? const StyleSpec(spec: TextSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec()),
        output = output ?? const StyleSpec(spec: BoxSpec()),
+       outputToggle = outputToggle ?? const StyleSpec(spec: FlexBoxSpec()),
+       outputToggleLabel =
+           outputToggleLabel ?? const StyleSpec(spec: TextSpec()),
        outputContent = outputContent ?? const StyleSpec(spec: BoxSpec()),
        outputText = outputText ?? const StyleSpec(spec: TextSpec()),
        error = error ?? const StyleSpec(spec: BoxSpec()),
