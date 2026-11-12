@@ -245,6 +245,7 @@ class _AgentToolCallState extends State<AgentToolCall>
   final FocusNode _focus = FocusNode(debugLabel: 'AgentToolCall');
   final FocusNode _rowFocus = FocusNode(debugLabel: 'AgentToolCall row');
   final WidgetStatesController _rowStates = WidgetStatesController();
+  bool _retainDisclosure = false;
   bool _showAllOutput = false;
   bool _outputOverflows = false;
 
@@ -261,19 +262,11 @@ class _AgentToolCallState extends State<AgentToolCall>
     super.initState();
     final call = _call;
     final phase = call.status.phase;
-    final policy = widget.policy;
     _disclosure = AgentDisclosureController(
       phase: phase,
       expanded: widget.expanded,
-      defaultExpanded:
-          widget.defaultExpanded ??
-          switch (phase) {
-            AgentWorkPhase.working => policy.openWhileWorking,
-            AgentWorkPhase.failed => policy.keepOpenOnFailure,
-            AgentWorkPhase.settled => !policy.collapseWhenSettled,
-            AgentWorkPhase.waiting => false,
-          },
-      policy: policy,
+      defaultExpanded: _defaultExpanded,
+      policy: widget.policy,
       onExpandedChanged: widget.onExpandedChanged,
     )..addListener(_changed);
     _outputEdge = AgentLiveEdgeController(enabled: call.status.isWorking);
@@ -288,12 +281,12 @@ class _AgentToolCallState extends State<AgentToolCall>
       _outputOverflows = false;
     }
     _guard.update(id: call.id, status: call.status, recorded: call.decision);
-    updateKeepAlive();
     _disclosure
       ..policy = widget.policy
       ..onExpandedChanged = widget.onExpandedChanged
       ..updateExpanded(widget.expanded)
       ..updatePhase(call.status.phase);
+    _updateDisclosureKeepAlive();
     _outputEdge.enabled = call.status.isWorking;
     if (oldWidget.call.status.needsDecision && !call.status.needsDecision) {
       if (_returnFocus) {
@@ -310,12 +303,33 @@ class _AgentToolCallState extends State<AgentToolCall>
     if (mounted) setState(() {});
   }
 
-  // A lazy list disposes rows that scroll away. While a decision is taken but
-  // the host has not yet moved the call on, keep this one alive so the guard,
-  // and with it the one-decision-per-request contract, survives the scroll.
+  bool get _defaultExpanded =>
+      widget.defaultExpanded ??
+      switch (_call.status.phase) {
+        AgentWorkPhase.working => widget.policy.openWhileWorking,
+        AgentWorkPhase.failed => widget.policy.keepOpenOnFailure,
+        AgentWorkPhase.settled => !widget.policy.collapseWhenSettled,
+        AgentWorkPhase.waiting => false,
+      };
+
+  void _toggle(bool expanded) {
+    _disclosure.toggle(expanded);
+    _updateDisclosureKeepAlive();
+  }
+
+  void _updateDisclosureKeepAlive() {
+    _retainDisclosure =
+        _disclosure.readerToggled &&
+        widget.policy.respectReaderToggle &&
+        (!_call.status.phase.isFinished ||
+            _disclosure.expanded != _defaultExpanded);
+    updateKeepAlive();
+  }
+
   @override
   bool get wantKeepAlive =>
-      _guard.decision != null && _call.status.needsDecision;
+      _retainDisclosure ||
+      (_guard.decision != null && _call.status.needsDecision);
 
   void _decide(AgentApprovalDecision decision) {
     final onDecision = widget.onDecision;
@@ -537,7 +551,7 @@ class _AgentToolCallState extends State<AgentToolCall>
 
     return RemixDisclosure(
       expanded: _disclosure.expanded,
-      onExpandedChanged: _disclosure.toggle,
+      onExpandedChanged: _toggle,
       focusNode: _rowFocus,
       onHoverChange: (value) => _rowStates.update(WidgetState.hovered, value),
       onPressChange: (value) => _rowStates.update(WidgetState.pressed, value),
