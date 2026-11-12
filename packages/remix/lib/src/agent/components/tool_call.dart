@@ -362,7 +362,17 @@ class _AgentToolCallState extends State<AgentToolCall>
       styleSpec: spec.status,
       children: [
         ?glyph,
-        StyledText(_statusLabel(status), styleSpec: spec.statusLabel),
+        Flexible(
+          child: StyledText(
+            _statusLabel(status),
+            styleSpec: spec.statusLabel.copyWith(
+              spec: spec.statusLabel.spec.copyWith(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -592,14 +602,21 @@ class _AgentToolCallState extends State<AgentToolCall>
                     ColumnBox(
                       styleSpec: spec.cardHeading,
                       children: [
-                        RowBox(
-                          styleSpec: spec.cardTitleRow,
-                          children: [
-                            Expanded(
-                              child: StyledText(title, styleSpec: spec.title),
-                            ),
-                            _status(spec),
-                          ],
+                        LayoutBuilder(
+                          builder: (context, constraints) => RowBox(
+                            styleSpec: spec.cardTitleRow,
+                            children: [
+                              Expanded(
+                                child: StyledText(title, styleSpec: spec.title),
+                              ),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: constraints.maxWidth / 2,
+                                ),
+                                child: _status(spec),
+                              ),
+                            ],
+                          ),
                         ),
                         StyledText(call.name, styleSpec: spec.toolId),
                       ],
