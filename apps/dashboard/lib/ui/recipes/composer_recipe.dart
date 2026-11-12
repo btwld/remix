@@ -53,12 +53,30 @@ UiAgentComposerRecipe uiAgentComposerRecipe({
   ).merge(style),
   surfaceStyle: uiCardStyle(
     size: .size2,
-    style: CardStyler().padding(.all(UiTokens.space3())).merge(surfaceStyle),
+    style: CardStyler()
+        .padding(.all(UiTokens.space3()))
+        // The field reports focus to the card; ring the whole input group.
+        .onFocused(.containerEffects(uiFocusOutline()))
+        .merge(surfaceStyle),
   ),
   fieldStyle: uiTextAreaStyle(
     style: TextFieldStyler()
         .color(const Color(0x00000000))
         .border(.style(.none))
+        // Text areas paint their frame as an inset effect, not a border.
+        // The surrounding card owns both the frame and the focus outline.
+        .containerEffects(
+          RemixBoxEffectsMix(
+            overContent: RemixBoxEffectLayerMix(shadows: const []),
+            outline: .style(.none),
+          ),
+        )
+        .onFocused(.containerEffects(.outline(.style(.none))))
+        .onDisabled(
+          .containerEffects(
+            .overContent(RemixBoxEffectLayerMix(shadows: const [])),
+          ),
+        )
         .minHeight(UiTokens.composerFieldMinHeight())
         .padding(.all(UiTokens.space1()))
         .merge(fieldStyle),

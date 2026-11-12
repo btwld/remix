@@ -55,12 +55,28 @@ FortalAgentComposerRecipe fortalAgentComposerRecipe({
     size: .size2,
     style: CardStyler()
         .padding(.all(FortalTokens.space3()))
+        // The field reports focus to the card; ring the whole input group.
+        .onFocused(.containerEffects(fortalFocusOutline()))
         .merge(surfaceStyle),
   ),
   fieldStyle: fortalTextAreaStyle(
     style: TextFieldStyler()
         .color(const Color(0x00000000))
         .border(.style(.none))
+        // Text areas paint their frame as an inset effect, not a border.
+        // The surrounding card owns both the frame and the focus outline.
+        .containerEffects(
+          RemixBoxEffectsMix(
+            overContent: RemixBoxEffectLayerMix(shadows: const []),
+            outline: .style(.none),
+          ),
+        )
+        .onFocused(.containerEffects(.outline(.style(.none))))
+        .onDisabled(
+          .containerEffects(
+            .overContent(RemixBoxEffectLayerMix(shadows: const [])),
+          ),
+        )
         .minHeight(FortalTokens.composerFieldMinHeight())
         .padding(.all(FortalTokens.space1()))
         .merge(fieldStyle),
