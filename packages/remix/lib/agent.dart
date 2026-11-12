@@ -44,6 +44,8 @@ export 'src/agent/behavior/composer.dart';
 export 'src/agent/behavior/disclosure.dart';
 export 'src/agent/behavior/live_edge.dart';
 export 'src/agent/behavior/run_clock.dart';
+export 'src/agent/components/conversation.dart';
+export 'src/agent/components/glyphs.dart' hide agentGlyph;
 export 'src/agent/models/activity_item.dart';
 export 'src/agent/models/message_part.dart';
 export 'src/agent/models/plan_item.dart';
