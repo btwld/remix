@@ -649,6 +649,16 @@ UiDashboardAgentStyles _uiAgentStyles() {
       .outline => UiButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: uiAgentGlyph,
+    composerLeadingBuilder: (onPressed) => UiIconButton.outline(
+      icon: RemixIcons.plus,
+      semanticLabel: 'Add checkout context',
+      onPressed: onPressed,
+      style: IconButtonStyler()
+          .wrap(WidgetModifierConfig.reset())
+          .size(UiTokens.space6(), UiTokens.space6())
+          .icon(.size(UiTokens.space4()).color(UiTokens.gray11()))
+          .borderRadius(.circular(999)),
+    ),
     heading: uiTextStyle(size: .size6, weight: .bold),
     body: uiTextStyle(size: .size1, highContrast: false),
     dockStyle: BoxStyler()

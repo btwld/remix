@@ -304,6 +304,18 @@ void main() {
     }
   });
 
+  test('Agent recipes declare directly imported font dependencies', () {
+    final output = PresetBuilder.forRepository(
+      Directory.current.absolute,
+      spec: fortalPreset,
+    ).derive();
+    final items = loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+    expect(
+      items['tool_call_recipe']['dependencies']['remix_ui_fonts'],
+      '^0.1.0',
+    );
+  });
+
   test('Agent recipes style the published library, not the authoring one', () {
     for (final spec in [defaultPreset, fortalPreset, herouiPreset]) {
       final builder = PresetBuilder.forRepository(

@@ -1537,6 +1537,31 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
+      testWidgets(
+        'Agent leading action adds checkout context without sending',
+        (tester) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.chat,
+          );
+          if (preset == _Preset.fortal) {
+            expect(tester.getSize(find.byType(AgentComposer)).height, 94);
+          }
+          await tester.tap(find.bySemanticsLabel('Add checkout context'));
+          await tester.pump();
+          final composer = tester.widget<AgentComposer>(
+            find.byType(AgentComposer),
+          );
+          expect(
+            composer.controller!.text,
+            'Review packages/checkout and its cart tests.',
+          );
+          expect(composer.focusNode!.hasFocus, isTrue);
+          expect(find.byType(AgentMessage), findsNothing);
+        },
+      );
+
       testWidgets('Agent suggestions fill the composer and do not send', (
         tester,
       ) async {

@@ -71,9 +71,11 @@ UiAgentComposerRecipe uiAgentComposerRecipe({
     size: .size3,
     style: TextFieldStyler()
         .color(const Color(0x00000000))
-        .border(.style(.none))
+        .border(.all(.width(0).style(.none)))
         .padding(.all(0))
         .minHeight(UiTokens.space5())
+        // The whole composer is a focus target; the inner field needs no 40px wrapper.
+        .container(BoxStyler().wrap(WidgetModifierConfig.reset()))
         // The surface draws the frame and the focus ring, not the field.
         .containerEffects(_noEffects)
         .onFocused(.containerEffects(.outline(.style(.none))))
@@ -90,7 +92,13 @@ const _fieldMaxHeight = 240.0;
 IconButtonStyler _round(IconButtonStyler style) => uiIconButtonStyle(
   variant: .solid,
   size: .size2,
-  style: IconButtonStyler().borderRadius(.circular(_pill)).merge(style),
+  style: IconButtonStyler()
+      .wrap(WidgetModifierConfig.reset())
+      .size(UiTokens.space6(), UiTokens.space6())
+      .borderRadius(.circular(_pill))
+      .icon(.size(UiTokens.space4()))
+      .onDisabled(.icon(.color(UiTokens.gray8())))
+      .merge(style),
 );
 
 /// Pill corners, whatever radius the theme chooses.

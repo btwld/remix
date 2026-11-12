@@ -567,6 +567,12 @@ TextStyler _textStyle({
       .outline => {{typePrefix}}Button.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: {{valuePrefix}}AgentGlyph,
+    composerLeadingBuilder: (onPressed) => {{typePrefix}}IconButton.outline(
+      icon: {{icon:plus}},
+      semanticLabel: 'Add checkout context',
+      onPressed: onPressed,
+      style: IconButtonStyler().borderRadius(.circular(999)),
+    ),
     heading: _textStyle(token: {{typePrefix}}Tokens.text2xl, weight: FontWeight.w700),
     body: _textStyle(muted: true),
     dockStyle: BoxStyler().maxWidth(768).padding(.horizontal(16)),

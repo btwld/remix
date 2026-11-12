@@ -655,6 +655,16 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       .outline => {{typePrefix}}Button.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: {{valuePrefix}}AgentGlyph,
+    composerLeadingBuilder: (onPressed) => {{typePrefix}}IconButton.outline(
+      icon: {{icon:plus}},
+      semanticLabel: 'Add checkout context',
+      onPressed: onPressed,
+      style: IconButtonStyler()
+          .wrap(WidgetModifierConfig.reset())
+          .size({{typePrefix}}Tokens.space6(), {{typePrefix}}Tokens.space6())
+          .icon(.size({{typePrefix}}Tokens.space4()).color({{typePrefix}}Tokens.gray11()))
+          .borderRadius(.circular(999)),
+    ),
     heading: {{valuePrefix}}TextStyle(size: .size6, weight: .bold),
     body: {{valuePrefix}}TextStyle(size: .size1, highContrast: false),
     dockStyle: BoxStyler()

@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/agent.dart';
+import 'package:registry_source/src/fortal/recipes/agent_glyphs_recipe.dart';
 import 'package:registry_source/src/fortal/recipes/answer_recipe.dart';
 import 'package:registry_source/src/fortal/recipes/composer_recipe.dart';
 import 'package:registry_source/src/fortal/recipes/conversation_recipe.dart';
@@ -35,7 +37,7 @@ void main() {
     final call = await _resolve(tester, fortalAgentToolCallRecipe().style);
 
     final decoration = call.card.spec.decoration as BoxDecoration;
-    expect(decoration.color, isNotNull);
+    expect(decoration.color, _color(FortalTokens.grayContrast));
     expect(decoration.border, isNotNull);
     expect(decoration.boxShadow, isNull);
   });
@@ -75,6 +77,38 @@ void main() {
     expect(field.containerEffects?.overContent?.isEmpty, isTrue);
     expect(field.containerEffects?.behindContent?.isEmpty, isTrue);
   });
+
+  testWidgets(
+    'the one-line composer matches the 94px mock and round 32px send',
+    (tester) async {
+      final recipe = fortalAgentComposerRecipe();
+      await tester.pumpWidget(
+        WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          builder: (_, _) => FortalTheme(
+            child: Center(
+              child: SizedBox(
+                width: 768,
+                child: AgentGlyphs(
+                  builder: fortalAgentGlyph,
+                  child: AgentComposer(
+                    hintText: 'Ask the agent…',
+                    onSubmit: (_) {},
+                    style: recipe.style,
+                    fieldStyle: recipe.fieldStyle,
+                    submitStyle: recipe.submitStyle,
+                    stopStyle: recipe.stopStyle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.getSize(find.byType(AgentComposer)).height, 94);
+      expect(tester.getSize(find.byType(RemixIconButton)), const Size(32, 32));
+    },
+  );
 
   testWidgets('the answer is plain text with 12 between its parts', (
     tester,

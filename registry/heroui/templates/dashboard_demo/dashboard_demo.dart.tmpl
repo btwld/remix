@@ -562,6 +562,12 @@ class _{{typePrefix}}Account extends StatelessWidget {
       .outline => {{typePrefix}}Button.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: {{valuePrefix}}AgentGlyph,
+    composerLeadingBuilder: (onPressed) => {{typePrefix}}IconButton.outline(
+      icon: {{icon:plus}},
+      semanticLabel: 'Add checkout context',
+      onPressed: onPressed,
+      style: IconButtonStyler().borderRadius(.circular(999)),
+    ),
     heading: {{valuePrefix}}DashboardTextStyle(type: .h3),
     body: {{valuePrefix}}DashboardTextStyle(muted: true),
     dockStyle: BoxStyler().maxWidth(768).padding(.horizontal(16)),

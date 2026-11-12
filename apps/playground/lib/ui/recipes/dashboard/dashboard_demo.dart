@@ -574,6 +574,12 @@ PlaygroundDashboardAgentStyles _playgroundAgentStyles() {
       .outline => PlaygroundButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: playgroundAgentGlyph,
+    composerLeadingBuilder: (onPressed) => PlaygroundIconButton.outline(
+      icon: RemixIcons.plus,
+      semanticLabel: 'Add checkout context',
+      onPressed: onPressed,
+      style: IconButtonStyler().borderRadius(.circular(999)),
+    ),
     heading: _textStyle(
       token: PlaygroundTokens.text2xl,
       weight: FontWeight.w700,

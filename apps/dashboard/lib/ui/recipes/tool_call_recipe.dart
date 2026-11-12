@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 import '../components/button.dart';
 import '../components/data_list.dart';
@@ -164,7 +165,7 @@ AgentToolCallStyler _well() =>
 /// actions.
 AgentToolCallStyler _card() => AgentToolCallStyler(
   card: BoxStyler()
-      .color(UiTokens.colorPanel())
+      .color(_approvalSurface())
       .borderRadius(.all(UiTokens.radius5()))
       .clipBehavior(.antiAlias)
       .border(.all(.color(UiTokens.gray6()).width(UiTokens.borderWidth1()))),
@@ -207,10 +208,10 @@ IconStyler _glyph({double? size, Color? color}) => IconStyler()
     .size(size ?? UiTokens.space4())
     .color(color ?? UiTokens.gray11());
 
-/// Tool ids, commands and output in the Ui monospace face.
+/// Bundled monospace keeps tool ids and output consistent on every platform.
 TextStyler _mono(TextStyleToken size) => TextStyler()
     .style(size.mix())
-    .fontFamily('Menlo')
+    .fontFamily(RemixFonts.geistMono)
     .fontFamilyFallback(const ['Consolas', 'monospace'])
     .color(UiTokens.gray11());
 
@@ -230,4 +231,11 @@ DisclosureStyler _quietDisclosure() => uiDisclosureStyle(
       )
       .onHovered(.trigger(.color(const Color(0x00000000))))
       .onPressed(.trigger(.color(const Color(0x00000000)))),
+);
+
+/// White in light mode, with the panel role retained in dark mode.
+final _approvalSurface = ContextToken<Color>(
+  (context) =>
+      (UiTheme.of(context).isDark ? UiTokens.colorPanel : UiTokens.grayContrast)
+          .resolve(context),
 );

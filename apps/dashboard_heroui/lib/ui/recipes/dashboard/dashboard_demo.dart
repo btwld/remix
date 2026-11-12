@@ -559,6 +559,12 @@ UiDashboardAgentStyles _uiAgentStyles() {
       .outline => UiButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: uiAgentGlyph,
+    composerLeadingBuilder: (onPressed) => UiIconButton.outline(
+      icon: RemixIcons.plus,
+      semanticLabel: 'Add checkout context',
+      onPressed: onPressed,
+      style: IconButtonStyler().borderRadius(.circular(999)),
+    ),
     heading: uiDashboardTextStyle(type: .h3),
     body: uiDashboardTextStyle(muted: true),
     dockStyle: BoxStyler().maxWidth(768).padding(.horizontal(16)),

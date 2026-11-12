@@ -655,6 +655,16 @@ RegistryDashboardAgentStyles _fortalAgentStyles() {
       .outline => FortalButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: fortalAgentGlyph,
+    composerLeadingBuilder: (onPressed) => FortalIconButton.outline(
+      icon: RemixIcons.plus,
+      semanticLabel: 'Add checkout context',
+      onPressed: onPressed,
+      style: IconButtonStyler()
+          .wrap(WidgetModifierConfig.reset())
+          .size(FortalTokens.space6(), FortalTokens.space6())
+          .icon(.size(FortalTokens.space4()).color(FortalTokens.gray11()))
+          .borderRadius(.circular(999)),
+    ),
     heading: fortalTextStyle(size: .size6, weight: .bold),
     body: fortalTextStyle(size: .size1, highContrast: false),
     dockStyle: BoxStyler()

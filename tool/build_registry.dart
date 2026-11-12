@@ -363,14 +363,8 @@ final class FileItemSpec {
   final List<String> exports;
 }
 
-/// Behavior a preset's recipes style: the sibling source directory it is
-/// authored in, and the word that source is authored under.
-///
-/// A recipe is analyzed against that source, so it names
-/// `AgentComposerStyler` and imports `../../agent/components/composer.dart`.
-/// The installed recipe sits beside the installed behavior instead, so the
-/// derivation rewrites that import to `../components/` and the identifier
-/// prefix `Agent` to the consumer prefix, before the preset's own word goes.
+/// Optional sibling behavior source used by a preset's local compositions.
+/// Published widget libraries are imported directly and need no rewrite.
 final class BehaviorSpec {
   const BehaviorSpec({
     required this.directory,
@@ -600,8 +594,9 @@ const fortalPreset = PresetSpec(
     'build_runner',
     'mix_generator',
     'mix_chart',
+    'remix_ui_fonts',
   },
-  detectedPackages: ['mix_chart'],
+  detectedPackages: ['mix_chart', 'remix_ui_fonts'],
   composedRegistryDependencies: {
     'sidebar_layout': ['sidebar'],
   },
@@ -1269,6 +1264,13 @@ final class PresetBuilder {
           // validated when the preset outputs merge rather than here.
           allowForeignComponents: true,
         ),
+        dependencies: {
+          for (final package in spec.detectedPackages)
+            if (_imports(
+              source,
+            ).any((uri) => uri.startsWith('package:$package/')))
+              package: floors[package]!,
+        },
         files: [_RegistryFileDraft(source: templatePath, target: '@ui/$path')],
         exports: [path],
       );

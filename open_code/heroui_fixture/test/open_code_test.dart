@@ -555,17 +555,13 @@ final _cases = <_WidgetCase>[
   const _WidgetCase('alert', AcmeAlert(text: 'Notice'), {AcmeAlert}),
   _WidgetCase(
     'Agent message',
-    AcmeMessageGroup(
-      children: [
-        AcmeMessage(
-          role: AcmeRole.user,
-          surfaceStyle: acmeAgentMessageRecipe().surfaceStyle,
-          style: acmeAgentMessageRecipe().style,
-          child: const Text('Review the checkout flow.'),
-        ),
-      ],
+    AgentMessage(
+      role: AgentRole.user,
+      style: acmeAgentMessageRecipe().style,
+      toggleStyle: acmeAgentMessageRecipe().toggleStyle,
+      child: const Text('Review the checkout flow.'),
     ),
-    {AcmeMessageGroup, AcmeMessage},
+    {AgentMessage},
   ),
   const _WidgetCase('app bar', AcmeAppBar(title: 'Orders'), {AcmeAppBar}),
   const _WidgetCase('avatar', AcmeAvatar(label: 'AB'), {AcmeAvatar}),

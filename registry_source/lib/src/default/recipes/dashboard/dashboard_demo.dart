@@ -567,6 +567,12 @@ RegistryDashboardAgentStyles _vanillaAgentStyles() {
       .outline => VanillaButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: vanillaAgentGlyph,
+    composerLeadingBuilder: (onPressed) => VanillaIconButton.outline(
+      icon: RemixIcons.plus,
+      semanticLabel: 'Add checkout context',
+      onPressed: onPressed,
+      style: IconButtonStyler().borderRadius(.circular(999)),
+    ),
     heading: _textStyle(token: VanillaTokens.text2xl, weight: FontWeight.w700),
     body: _textStyle(muted: true),
     dockStyle: BoxStyler().maxWidth(768).padding(.horizontal(16)),

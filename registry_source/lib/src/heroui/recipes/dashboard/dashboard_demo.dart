@@ -562,6 +562,12 @@ RegistryDashboardAgentStyles _heroUiAgentStyles() {
       .outline => HeroUiButton.outline(label: label, onPressed: onPressed),
     },
     glyphBuilder: heroUiAgentGlyph,
+    composerLeadingBuilder: (onPressed) => HeroUiIconButton.outline(
+      icon: RemixIcons.plus,
+      semanticLabel: 'Add checkout context',
+      onPressed: onPressed,
+      style: IconButtonStyler().borderRadius(.circular(999)),
+    ),
     heading: heroUiDashboardTextStyle(type: .h3),
     body: heroUiDashboardTextStyle(muted: true),
     dockStyle: BoxStyler().maxWidth(768).padding(.horizontal(16)),

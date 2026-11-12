@@ -30,6 +30,7 @@ final class UiDashboardAgentStyles {
   const UiDashboardAgentStyles({
     required this.buttonBuilder,
     required this.glyphBuilder,
+    required this.composerLeadingBuilder,
     required this.heading,
     required this.body,
     required this.dockStyle,
@@ -61,6 +62,9 @@ final class UiDashboardAgentStyles {
 
   /// Builds the demo's buttons: "New chat".
   final UiDashboardAgentButtonBuilder buttonBuilder;
+
+  /// Builds the host action that adds checkout context to the draft.
+  final Widget Function(VoidCallback onPressed) composerLeadingBuilder;
 
   /// Draws every glyph of the Agent widgets.
   final AgentGlyphBuilder glyphBuilder;
@@ -255,6 +259,9 @@ final class _Turn {
   /// Whether the tool started, so a stopped run reports what it left behind.
   bool toolStarted = false;
 
+  /// A reader's rail toggle takes precedence over the scripted layout.
+  bool? stepsExpanded;
+
   bool get active => const {
     _Stage.preparing,
     _Stage.permission,
@@ -367,6 +374,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
         ..outputLines = 0
         ..answerChunks = 0
         ..toolStarted = false
+        ..stepsExpanded = null
         ..clock.reset()
         ..clock.start();
       _syncComposer();
@@ -558,6 +566,10 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
     focusNode: _composerFocus,
     onSubmit: _start,
     onStop: _stop,
+    leading: styles.composerLeadingBuilder(() {
+      _composer.text = 'Review packages/checkout and its cart tests.';
+      _composerFocus.requestFocus();
+    }),
     hintText: _turns.isEmpty ? 'Ask the agent…' : 'Ask a follow-up…',
     style: styles.composerStyle,
     fieldStyle: styles.composerFieldStyle,
@@ -617,7 +629,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
           title: 'Found 4 test files for the cart',
           status: .complete,
         ),
-      if (turn.toolStarted)
+      if (turn.toolStarted && turn.stage != _Stage.running)
         AgentStep(
           id: 'ran',
           title: 'Ran the cart tests',
@@ -638,6 +650,17 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
           ? .complete
           : .working,
       clock: turn.clock,
+      policy: const AgentDisclosurePolicy(
+        openWhileWorking: false,
+        collapseWhenSettled: false,
+      ),
+      expanded:
+          turn.stepsExpanded ?? (waiting || turn.stage == _Stage.preparing),
+      onExpandedChanged: (value) => setState(() => turn.stepsExpanded = value),
+      labelBuilder: (status, count, duration) =>
+          status == AgentRunStatus.working
+          ? 'Working · $count steps'
+          : AgentSteps.defaultLabel(status, count, duration),
       style: styles.stepsStyle,
       stepStyle: styles.stepStyle,
       disclosureStyle: styles.stepsDisclosureStyle,
@@ -670,7 +693,6 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
         input: _toolInput,
         status: .running,
         output: lines,
-        decision: turn.decision,
       ),
       .answering || .complete => AgentToolCallPart(
         id: id,
