@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -387,6 +388,83 @@ void main() {
 
       final failed = tester.widget<Text>(find.text('Failed'));
       expect(failed.style?.color, red);
+    });
+
+    testWidgets('resolves hover, press and focus variants on the row', (
+      tester,
+    ) async {
+      const idle = Color(0xFF111111);
+      const hovered = Color(0xFF222222);
+      const pressed = Color(0xFF333333);
+      const focused = Color(0xFF444444);
+      await _pump(
+        tester,
+        runningCall,
+        style:
+            AgentToolCallStyler(
+                  row: FlexBoxStyler().color(idle).onPressed(.color(pressed)),
+                )
+                .onHovered(
+                  AgentToolCallStyler(row: FlexBoxStyler().color(hovered)),
+                )
+                .onFocused(
+                  AgentToolCallStyler(row: FlexBoxStyler().color(focused)),
+                ),
+      );
+      Color? rowColor() => tester
+          .widgetList<DecoratedBox>(
+            find.descendant(
+              of: find.byType(RemixDisclosure),
+              matching: find.byType(DecoratedBox),
+            ),
+          )
+          .map((box) => box.decoration)
+          .whereType<BoxDecoration>()
+          .map((decoration) => decoration.color)
+          .where((color) => [idle, hovered, pressed, focused].contains(color))
+          .single;
+
+      expect(rowColor(), idle);
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: const Offset(799, 599));
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(tester.getCenter(_rowText('Running the cart tests')));
+      await tester.pump();
+      expect(rowColor(), hovered);
+      await mouse.down(tester.getCenter(_rowText('Running the cart tests')));
+      await tester.pump(const Duration(milliseconds: 150));
+      expect(rowColor(), pressed);
+      await mouse.up();
+      await mouse.moveTo(const Offset(799, 599));
+      await tester.pumpAndSettle();
+      await _tab(tester, 1);
+      expect(rowColor(), focused);
+    });
+
+    testWidgets('a row without output still resolves hover styling', (
+      tester,
+    ) async {
+      const hovered = Color(0xFF222222);
+      await _pump(
+        tester,
+        deniedCall,
+        style: AgentToolCallStyler(
+          row: FlexBoxStyler().onHovered(.color(hovered)),
+        ),
+      );
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: const Offset(799, 599));
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(tester.getCenter(_rowText('Run the cart tests')));
+      await tester.pump();
+      expect(
+        tester
+            .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+            .map((box) => box.decoration)
+            .whereType<BoxDecoration>()
+            .any((decoration) => decoration.color == hovered),
+        isTrue,
+      );
     });
 
     testWidgets('a host icon replaces the tool glyph', (tester) async {

@@ -231,6 +231,7 @@ class _AgentToolCallState extends State<AgentToolCall>
   late final AgentLiveEdgeController _outputEdge;
   final FocusNode _focus = FocusNode(debugLabel: 'AgentToolCall');
   final FocusNode _rowFocus = FocusNode(debugLabel: 'AgentToolCall row');
+  final WidgetStatesController _rowStates = WidgetStatesController();
 
   /// Whether focus was inside the card when the reader decided, so it moves
   /// to the row that replaces the card.
@@ -440,17 +441,34 @@ class _AgentToolCallState extends State<AgentToolCall>
     );
   }
 
+  Widget _styledRow({bool? expanded}) =>
+      RemixStyleSpecBuilder<AgentToolCallSpec>(
+        style: _toolCallLayout.merge(widget.style),
+        styleSpec: widget.styleSpec,
+        controller: _rowStates,
+        builder: (context, spec) => _rowContent(spec, expanded: expanded),
+      );
+
   Widget _row(AgentToolCallSpec spec) {
-    if (!_expandable) return _rowContent(spec, expanded: null);
+    if (!_expandable) {
+      return MouseRegion(
+        onEnter: (_) => _rowStates.update(WidgetState.hovered, true),
+        onExit: (_) => _rowStates.update(WidgetState.hovered, false),
+        child: _styledRow(),
+      );
+    }
 
     return RemixDisclosure(
       expanded: _disclosure.expanded,
       onExpandedChanged: _disclosure.toggle,
       focusNode: _rowFocus,
+      onHoverChange: (value) => _rowStates.update(WidgetState.hovered, value),
+      onPressChange: (value) => _rowStates.update(WidgetState.pressed, value),
+      onFocusChange: (value) => _rowStates.update(WidgetState.focused, value),
       style: widget.disclosureStyle,
       trigger: const SizedBox.shrink(),
       triggerBuilder: (context, state, _) =>
-          _rowContent(spec, expanded: state.isExpanded),
+          _styledRow(expanded: state.isExpanded),
       content: _output(spec),
     );
   }
@@ -596,6 +614,7 @@ class _AgentToolCallState extends State<AgentToolCall>
     _outputEdge.dispose();
     _focus.dispose();
     _rowFocus.dispose();
+    _rowStates.dispose();
     super.dispose();
   }
 }
@@ -624,7 +643,8 @@ extension AgentToolCallStylerStatus on AgentToolCallStyler {
 @MixableSpec()
 @immutable
 final class AgentToolCallSpec with _$AgentToolCallSpec {
-  /// The row: icon, text, status and indicator.
+  /// The row: icon, text, status and indicator. Resolves hover, press and
+  /// focus variants from the row's interaction state.
   @override
   final StyleSpec<FlexBoxSpec> row;
 
