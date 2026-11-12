@@ -15,11 +15,11 @@ const _sectionLabelLetterSpacing = 0.7;
 ///
 /// The recipe paints the solid panel surface with a trailing edge border,
 /// pads the scrolling destination region, keeps section labels compact and
-/// muted, separates sections with the `space3` token, and reuses the
+/// muted, separates sections with the `space2` token, and reuses the
 /// ghost `size2` toggle treatment inside full-width destinations with a
-/// 48-logical-pixel minimum height. The footer carries the divider that
+/// 40-logical-pixel minimum height. The footer carries the divider that
 /// separates account content from navigation. [highContrast] strengthens
-/// section and selected destination content without changing layout.
+/// section content without changing layout.
 /// [panelPadding] applies host-owned insets inside the painted panel surface.
 ///
 /// The recipe sets no panel width and no header padding. The host can supply
@@ -42,6 +42,7 @@ SidebarStyler uiSidebarStyle({
   final destinationRightPadding = collapsed
       ? _destinationRightPaddingCollapsed()
       : _destinationRightPaddingExpanded();
+  final selectedContent = UiTokens.accent12();
   return SidebarStyler(
     container:
         FlexBoxStyler(padding: EdgeInsetsGeometryMix.maybeValue(panelPadding))
@@ -50,7 +51,7 @@ SidebarStyler uiSidebarStyle({
               .end(.color(UiTokens.grayA5()).width(UiTokens.borderWidth1())),
             ),
     content: FlexBoxStyler()
-        .spacing(UiTokens.space3())
+        .spacing(UiTokens.space2())
         .padding(
           .only(
             left: horizontalPadding,
@@ -75,10 +76,21 @@ SidebarStyler uiSidebarStyle({
           ),
         ),
     tooltip: uiTooltipStyle(),
-    destinations: FlexBoxStyler().spacing(UiTokens.space1()),
+    destinations: FlexBoxStyler().spacing(0),
     destination:
         uiToggleStyle(variant: .ghost, size: .size2, highContrast: highContrast)
             .minHeight(UiTokens.sidebarDestinationMinHeight())
+            // Selected rows sit a step above the hover fill with full-contrast
+            // content. The shared ghost toggle's accent3 fill matches the
+            // gray hover fill under the default accent.
+            .onSelected(
+              ToggleStyler()
+                  .color(UiTokens.accent5())
+                  .labelColor(selectedContent)
+                  .iconColor(selectedContent)
+                  .onHovered(ToggleStyler().color(UiTokens.accent6()))
+                  .onPressed(ToggleStyler().color(UiTokens.accent7())),
+            )
             // Keeps labels clear of the row edges once text outgrows the
             // minimum height.
             .padding(
@@ -90,24 +102,10 @@ SidebarStyler uiSidebarStyle({
               ),
             )
             .container(
-              FlexBoxStyler()
-                  .mainAxisSize(.max)
-                  .mainAxisAlignment(.start)
-                  // Include the outward ring in the destination's scroll
-                  // target even when traversal reveals it at a viewport edge.
-                  .margin(.vertical(_destinationFocusRoom())),
+              FlexBoxStyler().mainAxisSize(.max).mainAxisAlignment(.start),
             ),
   ).merge(style);
 }
-
-double _resolveDestinationFocusRoom(BuildContext context) {
-  final outline = uiFocusOutline().resolve(context);
-  return outline.outline.width + outline.outlineOffset;
-}
-
-const _destinationFocusRoom = ContextToken<double>(
-  _resolveDestinationFocusRoom,
-);
 
 /// Resolve both endpoints before interpolation so theme scaling stays live.
 double _resolveSidebarHorizontalPadding(BuildContext context, bool collapsed) {

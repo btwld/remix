@@ -45,7 +45,7 @@ class UiThemePanel extends StatelessWidget {
     return Box(
       key: const ValueKey('theme-panel'),
       style: BoxStyler()
-          .width(360 + 2 * ringReach)
+          .maxWidth(360 + 2 * ringReach)
           .padding(.horizontal(ringReach)),
       child: ColumnBox(
         style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(18),

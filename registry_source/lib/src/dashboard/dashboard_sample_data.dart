@@ -79,13 +79,13 @@ const registryDashboardSampleData = RegistryDashboardSampleData(
     RegistryDashboardMetric(
       label: 'Revenue',
       value: r'$84,420',
-      change: '+12.4% this month',
+      change: 'this month',
       delta: '+12.4%',
     ),
     RegistryDashboardMetric(
       label: 'Active customers',
       value: '2,420',
-      change: '+8.2% this month',
+      change: 'this month',
       delta: '+8.2%',
     ),
     RegistryDashboardMetric(
@@ -98,7 +98,7 @@ const registryDashboardSampleData = RegistryDashboardSampleData(
     RegistryDashboardMetric(
       label: 'Fulfillment',
       value: '94.2%',
-      change: '+4.1% this month',
+      change: 'this month',
       delta: '+4.1%',
       progress: 0.942,
     ),
@@ -115,27 +115,27 @@ const registryDashboardSampleData = RegistryDashboardSampleData(
   records: [
     RegistryDashboardRecord(
       id: 'ORD-1048',
-      customer: 'Avery Stone',
+      customer: 'Olivia Martin',
       status: 'Paid',
-      amount: r'$1,280',
+      amount: r'$1,249.00',
     ),
     RegistryDashboardRecord(
       id: 'ORD-1047',
-      customer: 'Mina Patel',
+      customer: 'Jackson Lee',
       status: 'Pending',
-      amount: r'$860',
+      amount: r'$349.00',
     ),
     RegistryDashboardRecord(
       id: 'ORD-1046',
-      customer: 'Jordan Lee',
+      customer: 'Ava Wilson',
       status: 'Paid',
-      amount: r'$2,140',
+      amount: r'$2,780.00',
     ),
     RegistryDashboardRecord(
       id: 'ORD-1045',
-      customer: 'Riley Chen',
+      customer: 'Emma Davis',
       status: 'Refunded',
-      amount: r'$640',
+      amount: r'$189.00',
     ),
   ],
   activities: [

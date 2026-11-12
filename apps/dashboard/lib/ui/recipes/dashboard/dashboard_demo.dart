@@ -1,7 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../../components/sidebar_layout.dart';
+import '../../components/tooltip.dart';
 import '../activity_recipe.dart';
 import '../answer_recipe.dart';
 import '../composer_recipe.dart';
@@ -12,6 +16,7 @@ import '../plan_recipe.dart';
 import '../transcript_recipe.dart';
 import 'dashboard_demo_base.dart';
 import 'dashboard_demo_chat.dart';
+import 'dashboard_demo_page_header.dart';
 import 'dashboard_demo_records_page.dart';
 import 'dashboard_demo_settings.dart';
 import 'dashboard_demo_text.dart';
@@ -46,6 +51,22 @@ class UiDashboardBrand extends StatelessWidget {
 /// Product account menu supplied through the installed shell's footer slot.
 class UiDashboardSidebarAccount extends StatelessWidget {
   const UiDashboardSidebarAccount({super.key});
+
+  static const _actions = [
+    UiAction(value: 'profile', label: 'View profile'),
+    UiAction(value: 'preferences', label: 'Preferences'),
+    UiAction(value: 'signout', label: 'Sign out', dividerBefore: true),
+  ];
+
+  static void _onSelected(BuildContext context, String value) => showRemixToast(
+    context,
+    RemixToastData(
+      title: value == 'signout'
+          ? 'Signed out of demo'
+          : '${capitalize(value)} opened',
+      icon: RemixIcons.checkCircle,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) => Box(
@@ -98,20 +119,47 @@ class UiDashboardSidebarAccount extends StatelessWidget {
           ),
         ),
       ),
-      actions: const [
-        UiAction(value: 'profile', label: 'View profile'),
-        UiAction(value: 'preferences', label: 'Preferences'),
-        UiAction(value: 'signout', label: 'Sign out', dividerBefore: true),
-      ],
-      onSelected: (value) => showRemixToast(
-        context,
-        RemixToastData(
-          title: value == 'signout'
-              ? 'Signed out of demo'
-              : '${capitalize(value)} opened',
-          icon: RemixIcons.checkCircle,
+      actions: _actions,
+      onSelected: (value) => _onSelected(context, value),
+    ),
+  );
+}
+
+/// The account menu as a lone avatar, supplied through the shell's
+/// `collapsedAccount` slot so the collapsed rail keeps the account.
+class UiDashboardSidebarAccountRail extends StatelessWidget {
+  const UiDashboardSidebarAccountRail({super.key});
+
+  @override
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler()
+        .alignment(.center)
+        .padding(.symmetric(vertical: UiTokens.space3())),
+    child: UiActionMenu(
+      key: const ValueKey('sidebar-account-rail-trigger'),
+      trigger: RemixMenuTrigger.control(
+        builder: (_, menu) => UiTooltip(
+          positioning: OverlayPositionConfig(
+            side: Directionality.of(context) == TextDirection.ltr
+                ? .right
+                : .left,
+            alignment: .center,
+            sideOffset: 8,
+          ),
+          tooltipChild: const StyledText('Leo Farias'),
+          child: RemixIconButton(
+            semanticLabel: 'Workspace account menu',
+            style: _toolbarButtonStyle,
+            focusNode: menu.focusNode,
+            onPressed: menu.toggle,
+            icon: null,
+            iconBuilder: (_, _, _) => const UiAvatar(label: 'LF', size: .size2),
+          ),
         ),
       ),
+      actions: UiDashboardSidebarAccount._actions,
+      onSelected: (value) =>
+          UiDashboardSidebarAccount._onSelected(context, value),
     ),
   );
 }
@@ -259,32 +307,26 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
                 ],
               ),
             ),
-            child: RemixIconButton(
-              semanticLabel: 'Notifications',
-              style: _toolbarButtonStyle,
-              onPressed: _toggleNotifications,
-              icon: RemixIcons.bell,
-              iconBuilder: (context, spec, icon) => StackBox(
-                style: StackBoxStyler().clipBehavior(.none),
-                children: [
-                  StyledIcon(
-                    icon: icon,
-                    styleSpec: StyleSpec(spec: spec),
-                  ),
-                  if (!_notificationsRead)
-                    Positioned(
-                      right: -1,
-                      top: -1,
-                      child: Box(
-                        style: BoxStyler()
-                            .width(7)
-                            .height(7)
-                            .color(UiTokens.accentIndicator())
-                            .borderRadius(.circular(4)),
-                      ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                RemixIconButton(
+                  semanticLabel: 'Notifications',
+                  style: _toolbarButtonStyle,
+                  onPressed: _toggleNotifications,
+                  icon: RemixIcons.bell,
+                ),
+                // Sits in the button's top-right corner, outside the glyph's
+                // box, so the icon builder's clip cannot cut it.
+                if (!_notificationsRead)
+                  const PositionedDirectional(
+                    end: 8,
+                    top: 8,
+                    child: ExcludeSemantics(
+                      child: IgnorePointer(child: _UiUnreadDot()),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         UiPopover(
@@ -297,7 +339,18 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
             sideOffset: 8,
           ),
           popoverChild: Box(
-            style: BoxStyler().width(400).maxHeight(650),
+            // The popover surface adds `space4` padding on each side; leave a
+            // 16px margin to the viewport edges on narrow phones.
+            style: BoxStyler()
+                .width(
+                  math.min(
+                    400,
+                    MediaQuery.sizeOf(context).width -
+                        32 -
+                        2 * UiTokens.space4.resolve(context),
+                  ),
+                )
+                .maxHeight(650),
             child: const SingleChildScrollView(child: UiThemePanel()),
           ),
           child: RemixIconButton(
@@ -361,6 +414,20 @@ class _UiDashboardTopBarState extends State<UiDashboardTopBar> {
         ? _themeController.close()
         : _themeController.open();
   }
+}
+
+class _UiUnreadDot extends StatelessWidget {
+  const _UiUnreadDot();
+
+  @override
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler()
+        .width(8)
+        .height(8)
+        .color(UiTokens.accentIndicator())
+        .borderRadius(.circular(4))
+        .border(.all(.color(UiTokens.colorPanelSolid()).width(1.5))),
+  );
 }
 
 final _toolbarButtonStyle = uiIconButtonStyle(variant: .ghost)
@@ -473,6 +540,9 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
                 (widget.builtInChrome
                     ? const UiDashboardSidebarAccount()
                     : null),
+            collapsedAccount: widget.account == null && widget.builtInChrome
+                ? const UiDashboardSidebarAccountRail()
+                : null,
             headerActions: [
               if (widget.builtInChrome)
                 UiDashboardTopBar(activities: widget.data.activities),
@@ -589,7 +659,20 @@ class _UiBreadcrumb extends StatelessWidget {
   final UiDashboardDemoPage page;
 
   @override
-  Widget build(BuildContext context) => RowBox(
+  Widget build(BuildContext context) => Padding(
+    // The app bar insets its toolbar by `space4`; the page body uses the
+    // wide page padding, so the difference lines the breadcrumb up with the
+    // page title. In compact mode the menu button leads, so there is none.
+    padding: EdgeInsetsDirectional.only(
+      start: UiSidebarLayoutScope.of(context).isCompact
+          ? 0
+          : uiPagePadding(double.infinity).left -
+                UiTokens.space4.resolve(context),
+    ),
+    child: _breadcrumbRow(context),
+  );
+
+  Widget _breadcrumbRow(BuildContext context) => RowBox(
     style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
     children: [
       Flexible(

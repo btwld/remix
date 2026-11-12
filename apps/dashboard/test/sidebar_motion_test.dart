@@ -112,12 +112,12 @@ void main() {
   testWidgets('short viewport keeps navigation scroll valid after collapse', (
     tester,
   ) async {
-    await mount(tester, size: const Size(1100, 500));
+    await mount(tester, size: const Size(1100, 300));
     final scroll = find.descendant(
       of: sidebar(),
       matching: find.byType(Scrollable),
     );
-    await tester.drag(scroll, const Offset(0, -230));
+    await tester.drag(scroll, const Offset(0, -100));
     await tester.pump(const Duration(milliseconds: 200));
     final position = tester.state<ScrollableState>(scroll).position;
     final before = position.pixels;

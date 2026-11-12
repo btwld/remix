@@ -366,7 +366,7 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.messageCollapsedHeight: 72.0 * scaling,
     UiTokens.composerFieldMinHeight: 56.0 * scaling,
     UiTokens.touchTargetMin: 40.0 * math.max(1.0, scaling),
-    UiTokens.sidebarDestinationMinHeight: 48.0 * math.max(1.0, scaling),
+    UiTokens.sidebarDestinationMinHeight: 40.0 * math.max(1.0, scaling),
     UiTokens.popoverMaxWidth: 480.0 * scaling,
     UiTokens.dialogMaxWidth: 600.0 * scaling,
     UiTokens.toastMaxWidth: 360.0 * scaling,

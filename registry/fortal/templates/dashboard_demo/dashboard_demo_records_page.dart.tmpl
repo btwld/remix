@@ -352,7 +352,7 @@ final _orderColumns = <RemixDataTableColumn<{{typePrefix}}DashboardOrder>>[
     width: const FixedColumnWidth(120),
     alignment: AlignmentDirectional.centerEnd,
     cellBuilder: (_, order) => {{typePrefix}}DataTableCellText(
-      '\$${order.amount.toStringAsFixed(2)}',
+      {{valuePrefix}}DashboardCurrency(order.amount),
       primary: true,
     ),
   ),
@@ -399,8 +399,7 @@ class _Page extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
+  Widget build(BuildContext context) => {{typePrefix}}PageScroll(
     child: ColumnBox(
       style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(20),
       children: [

@@ -86,8 +86,8 @@ void main() {
       );
       final target = tester.getRect(find.bySemanticsLabel('Overview'));
       final icon = tester.getRect(find.byIcon(Icons.home));
-      expect(target.width, greaterThanOrEqualTo(48));
-      expect(target.height, greaterThanOrEqualTo(48));
+      expect(target.width, greaterThanOrEqualTo(40));
+      expect(target.height, greaterThanOrEqualTo(40));
       expect(icon.center.dx, closeTo(target.center.dx, .5));
       final node = tester.getSemantics(find.bySemanticsLabel('Overview'));
       expect(node.getSemanticsData().tooltip, isEmpty);
@@ -221,8 +221,8 @@ void main() {
           final target = tester.getRect(
             find.bySemanticsLabel('A very long localized destination label'),
           );
-          expect(target.width, greaterThanOrEqualTo(48));
-          expect(target.height, greaterThanOrEqualTo(48 - .001));
+          expect(target.width, greaterThanOrEqualTo(40));
+          expect(target.height, greaterThanOrEqualTo(40 - .001));
           expect(
             target.contains(tester.getCenter(find.byIcon(Icons.home))),
             isTrue,

@@ -4,6 +4,26 @@ import 'package:remix/remix.dart';
 import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_ui.dart';
 
+/// The one gutter every dashboard page uses: 24 wide, 16 under 600 wide.
+///
+/// Pass the page's available width, or [double.infinity] for the wide value.
+EdgeInsets uiPagePadding(double width) => EdgeInsets.all(width < 600 ? 16 : 24);
+
+/// A vertically scrolling page body inset by [uiPagePadding].
+class UiPageScroll extends StatelessWidget {
+  const UiPageScroll({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => SingleChildScrollView(
+      padding: uiPagePadding(constraints.maxWidth),
+      child: child,
+    ),
+  );
+}
+
 /// The title, description, and optional actions at the top of a page.
 ///
 class UiPageHeader extends StatelessWidget {

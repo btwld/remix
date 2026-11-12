@@ -1,5 +1,17 @@
 ## Unreleased
 
+- Polish the dashboard. Sidebar rows now sit one 40px row apart with no
+  margin or spacing (`sidebarDestinationMinHeight` is 40, the touch-target
+  floor, and sections are separated by `space2`); selected rows use
+  `accent5` with `accent12` content so they read stronger than hover under
+  every accent, and `highContrast` no longer changes the selected content.
+  The brand lines up with the destination icons. The notification dot sits
+  inside the button's corner, the theme popover keeps a 16px viewport margin,
+  every page uses one 24px (16 compact) gutter, and the collapsed rail keeps
+  the account as an avatar with the same menu (`collapsedAccount` on the
+  shell). Overview records agree with the Orders page, and amounts use one
+  `$1,249.00` format. Settings drops the type-prefix leak, labels Language and
+  shows the Email error only after editing.
 - Rewrite the Button and IconButton recipes so each reads top to bottom in its
   own file: shared defaults, size, then every variant's colours per state.
   Resolved styles are unchanged. `base_button` now holds only the computed

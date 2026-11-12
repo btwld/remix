@@ -25,6 +25,7 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
     required this.brand,
     this.headerTitle,
     this.account,
+    this.collapsedAccount,
     this.headerActions = const [],
     this.onSearchChanged,
     this.searchHintText = 'Search…',
@@ -44,6 +45,9 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
   final Widget? headerTitle;
   final Widget brand;
   final Widget? account;
+
+  /// The footer content shown in the collapsed rail; hidden when `null`.
+  final Widget? collapsedAccount;
   final List<Widget> headerActions;
   final ValueChanged<String>? onSearchChanged;
   final String searchHintText;
@@ -73,8 +77,16 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
       body: body,
       title: title,
       headerTitle: headerTitle,
-      brand: brand,
+      brand: Builder(
+        builder: (context) => Padding(
+          padding: EdgeInsetsDirectional.only(
+            start: _brandLeadingInset(context),
+          ),
+          child: brand,
+        ),
+      ),
       account: account,
+      collapsedAccount: collapsedAccount,
       headerActions: headerActions,
       onSearchChanged: onSearchChanged,
       searchHintText: searchHintText,
@@ -129,7 +141,9 @@ class UiDashboardShell<T extends Object> extends StatelessWidget {
               BoxStyler().border(
                 .top(
                   .color(UiTokens.gray6()).width(
-                    (collapsed
+                    (collapsedAccount != null
+                        ? _footerBorderWidthAlways
+                        : collapsed
                         ? _footerBorderWidthCollapsed
                         : _footerBorderWidthExpanded)(),
                   ),
@@ -205,6 +219,15 @@ final class _UiDashboardLayoutControls implements UiDashboardLayoutControls {
   void openCompact() => scope.openCompact();
 }
 
+/// Lines the brand up with the destination icons below it.
+///
+/// Icons sit `space3 + space4` from the panel edge (the panel inset plus the
+/// destination's leading padding); the header already supplies `space2`.
+double _brandLeadingInset(BuildContext context) =>
+    UiTokens.space3.resolve(context) +
+    UiTokens.space4.resolve(context) -
+    UiTokens.space2.resolve(context);
+
 double _resolveFooterBorderWidth(
   BuildContext context, {
   required bool collapsed,
@@ -228,3 +251,11 @@ const _footerBorderWidthExpanded = ContextToken<double>(
 const _footerBorderWidthCollapsed = ContextToken<double>(
   _resolveFooterBorderWidthCollapsed,
 );
+
+/// The divider stays when a collapsed rail keeps its account avatar.
+const _footerBorderWidthAlways = ContextToken<double>(
+  _resolveFooterBorderWidthAlways,
+);
+
+double _resolveFooterBorderWidthAlways(BuildContext context) =>
+    UiTokens.borderWidth1.resolve(context);

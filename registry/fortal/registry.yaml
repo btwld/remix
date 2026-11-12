@@ -302,10 +302,12 @@ items:
       - progress
       - segmented_control
       - select
+      - sidebar_layout
       - switch
       - text
       - textfield
       - toast
+      - tooltip
       - transcript
       - transcript_recipe
       - typography

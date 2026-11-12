@@ -356,7 +356,7 @@ List<RemixDataTableColumn<RegistryDashboardOrder>> _orderColumns(
     width: const FixedColumnWidth(120),
     alignment: AlignmentDirectional.centerEnd,
     cellBuilder: (_, value) => VanillaDashboardText(
-      '\$${value.amount.toStringAsFixed(2)}',
+      registryDashboardCurrency(value.amount),
       emphasized: true,
     ),
   ),
