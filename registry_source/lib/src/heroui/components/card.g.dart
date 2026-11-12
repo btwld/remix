@@ -18,24 +18,28 @@ class HeroUiCard extends StatelessWidget {
     this.child,
   });
 
+  /// The `surface` fill.
   const HeroUiCard.defaultCard({
     super.key,
     this.style = const CardStyler.create(),
     this.child,
   }) : variant = HeroUiCardVariant.defaultCard;
 
+  /// The slightly darker `surface-secondary` fill.
   const HeroUiCard.secondary({
     super.key,
     this.style = const CardStyler.create(),
     this.child,
   }) : variant = HeroUiCardVariant.secondary;
 
+  /// The darkest `surface-tertiary` fill.
   const HeroUiCard.tertiary({
     super.key,
     this.style = const CardStyler.create(),
     this.child,
   }) : variant = HeroUiCardVariant.tertiary;
 
+  /// No fill and no shadow.
   const HeroUiCard.transparent({
     super.key,
     this.style = const CardStyler.create(),

@@ -77,6 +77,7 @@ class HeroUiTextField extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The field surface fill, with its shadow.
   const HeroUiTextField.primary({
     super.key,
     this.maxLines = 1,
@@ -139,6 +140,7 @@ class HeroUiTextField extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = HeroUiTextFieldVariant.primary;
 
+  /// The `default` fill.
   const HeroUiTextField.secondary({
     super.key,
     this.maxLines = 1,

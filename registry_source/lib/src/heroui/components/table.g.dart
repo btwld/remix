@@ -40,6 +40,7 @@ class HeroUiTable<T> extends StatelessWidget {
     this.nextPageIcon,
   });
 
+  /// A white card on a gray frame.
   const HeroUiTable.primary({
     super.key,
     this.style = const DataTableStyler.create(),
@@ -68,6 +69,7 @@ class HeroUiTable<T> extends StatelessWidget {
     this.nextPageIcon,
   }) : variant = HeroUiTableVariant.primary;
 
+  /// A gray header over bare rows.
   const HeroUiTable.secondary({
     super.key,
     this.style = const DataTableStyler.create(),

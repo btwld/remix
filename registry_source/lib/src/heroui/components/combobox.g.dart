@@ -40,6 +40,7 @@ class HeroUiCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
+  /// The field surface fill, with its shadow.
   const HeroUiCombobox.primary({
     super.key,
     this.style = const ComboboxStyler.create(),
@@ -62,6 +63,7 @@ class HeroUiCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = HeroUiComboboxVariant.primary;
 
+  /// The `default` fill.
   const HeroUiCombobox.secondary({
     super.key,
     this.style = const ComboboxStyler.create(),

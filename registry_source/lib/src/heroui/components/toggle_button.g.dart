@@ -34,6 +34,7 @@ class HeroUiToggleButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// The `default` fill.
   const HeroUiToggleButton.defaultToggle({
     super.key,
     this.size = .md,
@@ -52,6 +53,7 @@ class HeroUiToggleButton extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiToggleButtonVariant.defaultToggle;
 
+  /// Transparent until hovered.
   const HeroUiToggleButton.ghost({
     super.key,
     this.size = .md,

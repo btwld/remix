@@ -35,6 +35,7 @@ class HeroUiAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   });
 
+  /// Items sit directly on the page, each over a 1px `separator` rule.
   const HeroUiAccordion.defaultAccordion({
     super.key,
     this.style = const AccordionStyler.create(),
@@ -56,6 +57,7 @@ class HeroUiAccordion<T> extends StatelessWidget {
     this.transitionBuilder,
   }) : variant = HeroUiAccordionVariant.defaultAccordion;
 
+  /// Items share one `surface` card; see [HeroUiAccordionGroup].
   const HeroUiAccordion.surface({
     super.key,
     this.style = const AccordionStyler.create(),

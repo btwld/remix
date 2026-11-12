@@ -31,6 +31,7 @@ class HeroUiTab extends StatelessWidget {
     this.semanticLabel,
   });
 
+  /// A segmented pill list; the selected tab is a raised pill.
   const HeroUiTab.primary({
     super.key,
     this.style = const TabStyler.create(),
@@ -50,6 +51,7 @@ class HeroUiTab extends StatelessWidget {
     this.semanticLabel,
   }) : variant = HeroUiTabsVariant.primary;
 
+  /// An underlined row; the selected tab has an accent underline.
   const HeroUiTab.secondary({
     super.key,
     this.style = const TabStyler.create(),

@@ -30,6 +30,7 @@ class HeroUiCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// The field surface fill, with its shadow.
   const HeroUiCheckboxGroupItem.primary({
     super.key,
     this.invalid = false,
@@ -47,6 +48,7 @@ class HeroUiCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiCheckboxVariant.primary;
 
+  /// The `default` fill.
   const HeroUiCheckboxGroupItem.secondary({
     super.key,
     this.invalid = false,
