@@ -8,28 +8,17 @@ part of 'disclosure.dart';
 
 /// The application's Disclosure recipe.
 ///
-/// A single collapsible section: a trigger row and the content it reveals.
-/// Remix owns the rendering, the expand and collapse animation, keyboard
-/// activation, and the accessibility semantics — including announcing the
-/// expanded state; this recipe supplies the trigger row, the content inset,
-/// and the state fragments.
+/// A single collapsible section. It is the accordion's trigger without the
+/// frame: 16px above and below, `textSm` at medium weight, underlined under the
+/// pointer. A lone disclosure has no neighbors to separate, so it draws no rule.
 ///
-/// It is the accordion's trigger without the accordion's frame: 16px above and
-/// below with no side inset, `textSm` at medium weight, underlined under the
-/// pointer. The accordion draws a rule under each section because its rows have
-/// neighbours to separate; a lone disclosure has none, so a frame would only
-/// box in whatever the caller already placed it inside.
+/// The spec carries plain boxes, not text, so the trigger's type is a default
+/// text style: a bare `Text` trigger takes it and one with its own style keeps
+/// it.
 ///
-/// The spec carries plain boxes (`trigger`, `content`), not text: the caller
-/// passes whole widgets for both. The recipe sets the trigger's type through a
-/// default text style instead, so a bare `Text` trigger takes it and a caller
-/// who styles their own text keeps theirs.
-///
-/// Two constructor parameters are deliberately not forwarded to the generated
-/// `VanillaDisclosure`: `triggerBuilder` and `transitionBuilder`. Both
-/// are typed by `package:naked_ui`, which this layer does not depend on.
-/// Reach for `RemixDisclosure` directly on the rare call site that needs a
-/// state-aware trigger or a custom transition.
+/// The generated widget omits `triggerBuilder` and `transitionBuilder`: their
+/// types come from `package:naked_ui`, which this layer does not import. Use
+/// `RemixDisclosure` for a state-aware trigger or a custom transition.
 class VanillaDisclosure extends StatelessWidget {
   const VanillaDisclosure({
     super.key,

@@ -8,18 +8,9 @@ part of 'data_list.dart';
 
 /// The application's DataList recipe.
 ///
-/// A data list is a set of label/value pairs — the "Status: Active" block on a
-/// detail page. Remix owns the rendering, the two layout orientations, the
-/// label-column alignment, and the accessibility semantics; this recipe
-/// supplies the two text roles and the spacing between them.
-///
-/// Both roles are body text, `textSm`. The label is `mutedForeground` and the
-/// value is `foreground`, which is the pairing that makes a list scannable: the
-/// eye lands on the answers, and the questions stay legible without competing.
-///
-/// It takes no size and no variant. A data list is typography and spacing, and
-/// both are decided by the page it sits on — a caller who wants a denser block
-/// overrides the spacings through [style].
+/// Label/value pairs in `textSm`: the label in `mutedForeground` and the value
+/// in `foreground`, so the eye lands on the answers. It has no size or variant;
+/// override the spacings through [style] for a denser block.
 ///
 /// ```dart
 /// VanillaDataList(

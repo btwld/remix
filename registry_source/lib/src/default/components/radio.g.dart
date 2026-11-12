@@ -8,13 +8,12 @@ part of 'radio.dart';
 
 /// The application's Radio recipe.
 ///
-/// Remix owns the rendering, the single-selection behavior, arrow-key
-/// traversal within the group, and the radio accessibility role; this recipe
-/// supplies the circle, the dot, and the state fragments.
+/// A 16px ring with an 8px dot. The ring stays `input` whether or not the
+/// option is chosen; the dot carries the choice. There is no hover fragment:
+/// choosing is the feedback. The label is set like the checkbox's.
 ///
-/// `RemixRadioGroup` — the behavioral coordinator that owns `groupValue` and
-/// the change callback — carries no styler and therefore no recipe. Compose it
-/// directly around these:
+/// `RemixRadioGroup`, which owns `groupValue` and the change callback, has no
+/// styler and no recipe. Wrap the options in it directly:
 ///
 /// ```dart
 /// RemixRadioGroup<String>(
@@ -26,18 +25,6 @@ part of 'radio.dart';
 ///   ]),
 /// )
 /// ```
-///
-/// Unlike the checkbox, a radio draws no glyph: the mark is a filled dot inside
-/// the ring, which is what tells the two controls apart at a glance even before
-/// their shapes register. The ring itself stays `input` whether or not the
-/// option is chosen; the dot carries the choice.
-///
-/// There is no hover fragment: choosing an option is the feedback, and the
-/// pointer cursor Remix sets says it can be chosen.
-///
-/// A radio takes a `label`, drawn beside the circle inside the radio's own tap,
-/// focus, and semantics target, and set like the checkbox's: `textSm` at medium
-/// weight, 12px from the circle. A radio without one needs a `semanticLabel`.
 class VanillaRadio<T> extends StatelessWidget {
   const VanillaRadio({
     super.key,

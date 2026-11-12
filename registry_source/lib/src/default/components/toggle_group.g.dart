@@ -8,21 +8,13 @@ part of 'toggle_group.dart';
 
 /// The application's ToggleGroup recipe.
 ///
-/// A toggle group is a set of toggles that share one selection. Remix owns the
-/// rendering, the roving focus and arrow-key traversal, the single- or
-/// multi-select rules, and the group accessibility semantics; this recipe
-/// owns the strip's layout and every option's appearance.
+/// Toggles that share one selection, drawn as one control: options edge to edge
+/// with no gap, the strip rounded and clipped as a whole, and the outline
+/// variant drawing one outline around the strip. Each option has the single
+/// toggle's states: `muted` under the pointer, `accent` while on.
 ///
-/// The group is drawn as one control: the options sit edge to edge with no gap,
-/// the strip is rounded and clipped as a whole, and the outline variant draws
-/// one outline around the strip rather than one per option. Each option carries
-/// the single toggle's states — `muted` under the pointer, `accent` while on.
-///
-/// One recipe covers both, because `ToggleGroupSpec` carries the option's
-/// style as a field: the group's `item` is the default every
-/// `RemixToggleGroupItem` resolves against. That is what makes an option in a
-/// loop impossible to leave unstyled, and it is why this file has one
-/// `@MixWidget` rather than two.
+/// `item` is the default every `RemixToggleGroupItem` resolves against, so one
+/// recipe styles the strip and its options.
 class VanillaToggleGroup<T> extends StatelessWidget {
   const VanillaToggleGroup({
     super.key,
