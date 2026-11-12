@@ -11,6 +11,7 @@ enum RegistryDashboardDemoSection {
 
   const RegistryDashboardDemoSection(this.label);
 
+  /// The heading shown above the section's destinations.
   final String label;
 }
 
@@ -28,8 +29,13 @@ enum RegistryDashboardDemoPage {
 
   const RegistryDashboardDemoPage(this.section, this.label, this.icon);
 
+  /// The navigation group the page belongs to.
   final RegistryDashboardDemoSection section;
+
+  /// The destination's label and the page title.
   final String label;
+
+  /// The destination's icon.
   final IconData icon;
 }
 
@@ -104,6 +110,7 @@ Set<RegistryDashboardDemoPage> registryDashboardMatchingPages(String query) {
   };
 }
 
+/// Builds the shell that frames the demo: navigation, title, search and [body].
 typedef RegistryDashboardDemoShellBuilder =
     Widget Function(
       BuildContext context, {
@@ -115,6 +122,7 @@ typedef RegistryDashboardDemoShellBuilder =
       required ValueChanged<String> onSearchChanged,
     });
 
+/// Builds one page of the demo for the current [searchQuery].
 typedef RegistryDashboardDemoPageBuilder =
     Widget Function(
       BuildContext context,
@@ -134,8 +142,13 @@ class RegistryDashboardDemoBase extends StatefulWidget {
     this.initialPage = RegistryDashboardDemoPage.overview,
   });
 
+  /// Builds the shell around the selected page.
   final RegistryDashboardDemoShellBuilder shellBuilder;
+
+  /// Builds each page, once it is first visited.
   final RegistryDashboardDemoPageBuilder pageBuilder;
+
+  /// The page selected first.
   final RegistryDashboardDemoPage initialPage;
 
   @override
@@ -244,6 +257,8 @@ class _RegistryDashboardDemoBaseState extends State<RegistryDashboardDemoBase> {
   );
 }
 
+/// Lays an inactive page out with the constraints it last had while active,
+/// and neither paints nor hit-tests it.
 class _FreezeInactiveConstraints extends SingleChildRenderObjectWidget {
   const _FreezeInactiveConstraints({
     required this.active,
