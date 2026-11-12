@@ -11,10 +11,15 @@ import '../support/live_edge.dart';
 
 part 'activity.g.dart';
 
+/// Builds a row's status icon in place of the default glyph.
 typedef AgentActivityStatusBuilder =
     Widget Function(BuildContext context, AgentActivityItem item);
+
+/// Returns the accessible status text announced for a row.
 typedef AgentActivityStatusLabelBuilder =
     String Function(AgentActivityItem item);
+
+/// Builds the disclosure indicator in place of the default chevron.
 typedef AgentActivityIndicatorBuilder =
     Widget Function(BuildContext context, bool expanded);
 
@@ -45,24 +50,59 @@ class AgentActivity extends StatefulWidget {
     this.styleSpec,
   });
 
+  /// The ledger's rows, in display order.
   final List<AgentActivityItem> items;
+
+  /// Whether work is running; the ledger opens when it starts and, with
+  /// [collapseOnComplete], closes when it completes.
   final AgentRunStatus status;
+
+  /// The disclosure's title and accessible label.
   final String title;
+
+  /// Accessible label of the whole ledger.
   final String semanticLabel;
+
+  /// Whether the ledger closes itself when [status] becomes complete.
   final bool collapseOnComplete;
+
+  /// Controls the disclosure. When null, the ledger manages it.
   final bool? expanded;
+
+  /// Whether the disclosure starts open when uncontrolled.
   final bool defaultExpanded;
+
+  /// Called when the disclosure is asked to open or close.
   final ValueChanged<bool>? onExpandedChanged;
+
+  /// Replaces a row's default status icon.
   final AgentActivityStatusBuilder? statusBuilder;
+
+  /// Replaces the default status text announced for a row.
   final AgentActivityStatusLabelBuilder? statusLabelBuilder;
+
+  /// Replaces the disclosure's default chevron.
   final AgentActivityIndicatorBuilder? indicatorBuilder;
+
+  /// Whether growing content keeps the newest row in view.
   final bool followOutput;
+
+  /// Distance from the end, in logical pixels, that still counts as near it.
   final double followThreshold;
+
+  /// Called when the reader leaves or returns to the end of the list.
   final ValueChanged<bool>? onFollowChanged;
+
+  /// Style of the disclosure.
   final DisclosureStyler disclosureStyle;
+
+  /// Style of the ledger's own slots.
   final AgentActivityStyler style;
+
+  /// A resolved spec that is used instead of resolving [style].
   final AgentActivitySpec? styleSpec;
 
+  /// Whether [status] is [AgentRunStatus.working].
   bool get isWorking => status == AgentRunStatus.working;
 
   /// Number of completed rows in the activity ledger.
@@ -253,30 +293,55 @@ class _AgentActivityState extends State<AgentActivity> {
 @MixableSpec(target: AgentActivity.new)
 @immutable
 final class AgentActivitySpec with _$AgentActivitySpec {
+  /// Bounds the scrolling list of rows.
   @override
   final StyleSpec<BoxSpec> viewport;
+
+  /// Lays out one row: status icon, title, detail and child.
   @override
   final StyleSpec<FlexBoxSpec> item;
+
+  /// The title in the disclosure trigger.
   @override
   final StyleSpec<TextSpec> summaryTitle;
+
+  /// A row's title.
   @override
   final StyleSpec<TextSpec> itemTitle;
+
+  /// A row's detail text.
   @override
   final StyleSpec<TextSpec> itemDetail;
+
+  /// The complete/total count in the trigger.
   @override
   final StyleSpec<TextSpec> count;
+
+  /// The disclosure chevron.
   @override
   final StyleSpec<IconSpec> indicator;
+
+  /// Wraps a pending row.
   @override
   final StyleSpec<BoxSpec> pendingItem;
+
+  /// Wraps the active row.
   @override
   final StyleSpec<BoxSpec> activeItem;
+
+  /// Wraps a complete row.
   @override
   final StyleSpec<BoxSpec> completedItem;
+
+  /// The status icon of a pending row.
   @override
   final StyleSpec<IconSpec> pendingStatus;
+
+  /// The status icon of the active row.
   @override
   final StyleSpec<IconSpec> activeStatus;
+
+  /// The status icon of a complete row.
   @override
   final StyleSpec<IconSpec> completedStatus;
 
