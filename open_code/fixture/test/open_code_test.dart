@@ -241,7 +241,11 @@ void main() {
       );
       await pump(.running);
       expect(find.text('Command output'), findsOneWidget);
+      // A failure keeps its output open; the reader can still close it.
       await pump(.error);
+      await tester.pumpAndSettle();
+      expect(find.text('Command output'), findsOneWidget);
+      await tester.tap(find.text('Installed execution'));
       await tester.pumpAndSettle();
       expect(find.text('Command output'), findsNothing);
       await tester.tap(find.text('Installed execution'));
