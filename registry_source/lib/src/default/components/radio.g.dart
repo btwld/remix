@@ -10,7 +10,8 @@ part of 'radio.dart';
 ///
 /// A 16px ring with an 8px dot. The ring stays `input` whether or not the
 /// option is chosen; the dot carries the choice. There is no hover fragment:
-/// choosing is the feedback. The label is set like the checkbox's.
+/// choosing is the feedback. The label is set like the checkbox's; a radio
+/// without one needs a `semanticLabel`.
 ///
 /// `RemixRadioGroup`, which owns `groupValue` and the change callback, has no
 /// styler and no recipe. Wrap the options in it directly:

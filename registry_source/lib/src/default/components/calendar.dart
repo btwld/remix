@@ -365,16 +365,17 @@ class VanillaCalendar extends StatelessWidget {
 
 final _quietSelected = ContextToken<Color>((context) {
   final value = NakedRangeCalendarState.maybeOf(context)?.value;
-  if (value == null)
-    return vanillaTint(VanillaTokens.primary, .12, dark: .2).resolve(context);
+  if (value == null) {
+    return vanillaTint(VanillaTokens.primary, 0.12, dark: 0.2).resolve(context);
+  }
   final day = NakedCalendarDayState.maybeOf(context)?.date;
   final cap =
       day != null &&
       (compareCivilDates(day, value.start) == 0 ||
           compareCivilDates(day, value.end) == 0);
   return (cap
-          ? vanillaTint(VanillaTokens.primary, .09, dark: .16)
-          : vanillaTint(VanillaTokens.primary, .07, dark: .12))
+          ? vanillaTint(VanillaTokens.primary, 0.09, dark: 0.16)
+          : vanillaTint(VanillaTokens.primary, 0.07, dark: 0.12))
       .resolve(context);
 });
 

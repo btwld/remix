@@ -9,9 +9,9 @@ part of 'slider.dart';
 /// The application's Slider recipe.
 ///
 /// A pill-shaped rail (`mutedForeground`, `ring` in the dark theme) with a
-/// `primary` range and a white thumb with a `primary` outline, a dark one in
-/// the dark theme so overlapping handles stay distinct. Both slider recipes
-/// reserve a 48px interaction height.
+/// `primary` range and a white thumb in both themes, outlined in `primary`
+/// (`primaryForeground` in the dark theme) so overlapping handles stay
+/// distinct. Both slider recipes reserve a 48px interaction height.
 ///
 /// Set [surfaceColor] to the enclosing surface on cards or tinted panels (for
 /// example `VanillaTokens.card.resolve(context)`); the hover and press halos

@@ -78,7 +78,7 @@ CalendarDayStyler _blockedPreview() => CalendarDayStyler()
     .wrap(.opacity(1));
 
 CalendarDayStyler _muted() => CalendarDayStyler()
-    .color(vanillaTint(VanillaTokens.primary, .07, dark: .12)())
+    .color(vanillaTint(VanillaTokens.primary, 0.07, dark: 0.12)())
     .label(.color(VanillaTokens.mutedForeground()));
 
 CalendarDayStyler _endpoint() => CalendarDayStyler()
@@ -89,7 +89,7 @@ CalendarDayStyler _endpoint() => CalendarDayStyler()
 CalendarDayStyler _quietCap({bool start = false, bool end = false}) => _shape(
   start: start,
   end: end,
-).color(vanillaTint(VanillaTokens.primary, .09, dark: .16)());
+).color(vanillaTint(VanillaTokens.primary, 0.09, dark: 0.16)());
 
 /// Rounds the corners at the ends of a range and squares the rest.
 CalendarDayStyler _shape({bool start = false, bool end = false}) {
@@ -141,13 +141,14 @@ final class _RtlDraftEdge extends ContextVariant {
   Set<WidgetState> get widgetStateDependencies => const {WidgetState.selected};
 }
 
-/// The draft's `primary` outline at 60%, and the same color with no width for
-/// the edges that draw none.
+/// The draft's `primary` outline at 60%.
 final _draftStroke = BorderSideMix(
   color: vanillaTint(VanillaTokens.primary, 0.6)(),
   width: VanillaTokens.strokeHairline,
   style: BorderStyle.solid,
 );
+
+/// The same color with no width, for the edges that draw none.
 final _none = BorderSideMix(
   color: vanillaTint(VanillaTokens.primary, 0.6)(),
   width: 0,

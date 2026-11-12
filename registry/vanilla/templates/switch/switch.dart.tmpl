@@ -28,9 +28,7 @@ SwitchStyler {{valuePrefix}}SwitchStyle({
       .trackColor({{valuePrefix}}Tint({{typePrefix}}Tokens.input, 1, dark: 0.8)())
       // A transparent outline holds the pixel the focus fragment turns `ring`,
       // so focusing never changes the size.
-      .border(
-        .color(const Color(0x00000000)).width({{typePrefix}}Tokens.strokeHairline),
-      )
+      .border(.color(_transparent).width({{typePrefix}}Tokens.strokeHairline))
       // In the effects layer: the dark off-track is translucent, and a
       // decoration shadow would show through it.
       .trackEffects(RemixBoxEffectsMix(behindContent: {{typePrefix}}Shadow.xs.effects))
@@ -79,4 +77,5 @@ SwitchStyler {{valuePrefix}}SwitchStyle({
       .merge(style);
 }
 
+const _transparent = Color(0x00000000);
 const _pill = Radius.circular({{typePrefix}}Tokens.pill);

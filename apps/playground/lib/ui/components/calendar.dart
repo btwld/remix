@@ -381,20 +381,21 @@ class PlaygroundCalendar extends StatelessWidget {
 
 final _quietSelected = ContextToken<Color>((context) {
   final value = NakedRangeCalendarState.maybeOf(context)?.value;
-  if (value == null)
+  if (value == null) {
     return playgroundTint(
       PlaygroundTokens.primary,
-      .12,
-      dark: .2,
+      0.12,
+      dark: 0.2,
     ).resolve(context);
+  }
   final day = NakedCalendarDayState.maybeOf(context)?.date;
   final cap =
       day != null &&
       (compareCivilDates(day, value.start) == 0 ||
           compareCivilDates(day, value.end) == 0);
   return (cap
-          ? playgroundTint(PlaygroundTokens.primary, .09, dark: .16)
-          : playgroundTint(PlaygroundTokens.primary, .07, dark: .12))
+          ? playgroundTint(PlaygroundTokens.primary, 0.09, dark: 0.16)
+          : playgroundTint(PlaygroundTokens.primary, 0.07, dark: 0.12))
       .resolve(context);
 });
 

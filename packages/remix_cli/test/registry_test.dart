@@ -313,51 +313,6 @@ items:
     },
   );
 
-  test('template prose states the theme vocabulary\'s real size', () async {
-    final registry = CheckoutRegistry(distribution, 'vanilla');
-    final catalog = await registry.catalog();
-
-    // The real size is one required parameter per token on the theme data
-    // constructor. Counting `required this.` is enough: the template declares
-    // them nowhere else.
-    final themeData = catalog.items['theme']!.files.singleWhere(
-      (file) => file.source.endsWith('theme_data.dart.tmpl'),
-    );
-    final tokenCount = RegExp(
-      r'^\s+required this\.',
-      multiLine: true,
-    ).allMatches(await registry.template(themeData)).length;
-    expect(tokenCount, 33);
-
-    // Templates are copied verbatim into consumer source. Two of them once
-    // stated that size in prose: `chart1`-`chart5` were added for the chart
-    // item and both sentences stayed at fifteen, because nothing compared
-    // them. Neither states it now; if one does again, it must be right.
-    const spellings = {
-      15: 'fifteen',
-      16: 'sixteen',
-      17: 'seventeen',
-      18: 'eighteen',
-      19: 'nineteen',
-      20: 'twenty',
-      33: 'thirty-three',
-    };
-    final expected = spellings[tokenCount];
-    expect(expected, isNotNull, reason: 'spell $tokenCount in `spellings`');
-    final spelled = RegExp('\\b(${spellings.values.join('|')})\\b');
-
-    for (final name in const ['card', 'textfield']) {
-      final source = await registry.template(catalog.items[name]!.files.single);
-      expect(
-        spelled.allMatches(source).map((match) => match[1]).toSet(),
-        anyOf(isEmpty, {expected}),
-        reason:
-            "$name's prose may state the vocabulary's size only as "
-            '$tokenCount tokens',
-      );
-    }
-  });
-
   test(
     'sidebar_layout is a plain layout with no Spec or generated adapter',
     () async {

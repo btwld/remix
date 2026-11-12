@@ -14,6 +14,9 @@ part of 'combobox.dart';
 /// Keyboard highlight is `accent` with a `ring` border, hover a lighter tint,
 /// press a primary tint. Suggestions are eligible values only, so Remix has no
 /// per-option disabled or selected state.
+///
+/// A custom `fieldBuilder` owns its field recipe; custom `optionBuilder`
+/// content inherits the row's text style.
 class PlaygroundCombobox<T extends Object> extends StatelessWidget {
   const PlaygroundCombobox({
     super.key,

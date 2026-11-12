@@ -28,9 +28,7 @@ SwitchStyler playgroundSwitchStyle({
       .trackColor(playgroundTint(PlaygroundTokens.input, 1, dark: 0.8)())
       // A transparent outline holds the pixel the focus fragment turns `ring`,
       // so focusing never changes the size.
-      .border(
-        .color(const Color(0x00000000)).width(PlaygroundTokens.strokeHairline),
-      )
+      .border(.color(_transparent).width(PlaygroundTokens.strokeHairline))
       // In the effects layer: the dark off-track is translucent, and a
       // decoration shadow would show through it.
       .trackEffects(
@@ -81,4 +79,5 @@ SwitchStyler playgroundSwitchStyle({
       .merge(style);
 }
 
+const _transparent = Color(0x00000000);
 const _pill = Radius.circular(PlaygroundTokens.pill);
