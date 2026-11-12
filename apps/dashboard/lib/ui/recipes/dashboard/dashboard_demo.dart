@@ -534,7 +534,10 @@ UiDashboardAgentStyles _uiAgentStyles() {
       .outline => UiButton.outline(label: label, onPressed: onPressed),
     },
     heading: uiTextStyle(size: .size6, weight: .bold),
-    body: uiTextStyle(size: .size2, highContrast: false),
+    body: uiTextStyle(
+      size: .size2,
+      highContrast: false,
+    ).color(UiTokens.gray11()),
     messageStyle: message.style,
     messageSurfaceStyle: message.surfaceStyle,
     answerStyle: answer.style,

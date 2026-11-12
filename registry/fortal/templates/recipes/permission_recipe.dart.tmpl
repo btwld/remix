@@ -53,6 +53,12 @@ final class {{typePrefix}}AgentPermissionRecipe {
     tool: TextStyler()
         .color({{typePrefix}}Tokens.gray11())
         .style({{typePrefix}}Tokens.text1.mix())
+        .fontFamily('Menlo')
+        .fontFamilyFallback(const [
+          'Consolas',
+          'Bitstream Vera Sans Mono',
+          'monospace',
+        ])
         .wrap(.padding(.top({{typePrefix}}Tokens.space1()))),
     description: TextStyler()
         .color({{typePrefix}}Tokens.gray11())
@@ -72,8 +78,10 @@ final class {{typePrefix}}AgentPermissionRecipe {
     indicator: IconStyler()
         .color({{typePrefix}}Tokens.gray12())
         .size({{typePrefix}}Tokens.space4()),
-    pendingStatus: _statusMark({{typePrefix}}Tokens.accentIndicator),
-    decidingStatus: _statusMark({{typePrefix}}Tokens.accentIndicator),
+    // While it waits, the status is an amber badge: attention that does not
+    // depend on the accent, which may be gray.
+    pendingStatus: _attentionBadge(),
+    decidingStatus: _attentionBadge(),
     allowedStatus: _statusMark({{typePrefix}}Tokens.accentIndicator),
     runningStatus: _statusMark({{typePrefix}}Tokens.accentIndicator),
     completedStatus: _statusMark({{typePrefix}}Tokens.accentIndicator),
@@ -91,10 +99,26 @@ final class {{typePrefix}}AgentPermissionRecipe {
         .onHovered(.border(.all(.color({{typePrefix}}Tokens.accent8()))))
         .merge(surfaceStyle),
   ),
+  // Details read as a quiet line, not a field inside the card.
   detailsStyle: {{valuePrefix}}DisclosureStyle(
     size: .size1,
     style: DisclosureStyler()
-        .container(BoxStyler().margin(.top({{typePrefix}}Tokens.space1())))
+        .container(
+          BoxStyler()
+              .margin(.top({{typePrefix}}Tokens.space1()))
+              .color(const Color(0x00000000))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .trigger(
+          BoxStyler().color(const Color(0x00000000)).padding(.horizontal(0)),
+        )
+        .content(
+          BoxStyler()
+              .padding(.horizontal(0))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .onHovered(.trigger(.color(const Color(0x00000000))))
+        .onPressed(.trigger(.color(const Color(0x00000000))))
         .merge(detailsStyle),
   ),
   parametersStyle: {{valuePrefix}}DataListStyle(style: parametersStyle),
@@ -108,3 +132,10 @@ final class {{typePrefix}}AgentPermissionRecipe {
 
 BoxStyler _statusMark(ColorToken color) =>
     BoxStyler().wrap(.iconTheme(color: color()));
+
+BoxStyler _attentionBadge() => BoxStyler()
+    .color({{typePrefix}}Tokens.attention3())
+    .borderRadius(.all({{typePrefix}}Tokens.radiusFull()))
+    .padding(.symmetric(horizontal: {{typePrefix}}Tokens.space2(), vertical: 2))
+    .wrap(.iconTheme(color: {{typePrefix}}Tokens.attention11()))
+    .wrap(.defaultText(TextStyler().color({{typePrefix}}Tokens.attention11())));

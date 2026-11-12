@@ -539,7 +539,10 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       .outline => {{typePrefix}}Button.outline(label: label, onPressed: onPressed),
     },
     heading: {{valuePrefix}}TextStyle(size: .size6, weight: .bold),
-    body: {{valuePrefix}}TextStyle(size: .size2, highContrast: false),
+    body: {{valuePrefix}}TextStyle(
+      size: .size2,
+      highContrast: false,
+    ).color({{typePrefix}}Tokens.gray11()),
     messageStyle: message.style,
     messageSurfaceStyle: message.surfaceStyle,
     answerStyle: answer.style,

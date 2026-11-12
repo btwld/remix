@@ -237,6 +237,10 @@ Map<MixToken<Object?>, Object> build{{typePrefix}}ScopeTokens({{typePrefix}}Them
   final error = theme.isDark
       ? colors.{{valuePrefix}}Error.dark.scale
       : colors.{{valuePrefix}}Error.light.scale;
+  // Attention is Radix amber, the scale of {{typePrefix}}'s sol theme.
+  final attention = theme.isDark
+      ? colors.sol.dark.scale
+      : colors.sol.light.scale;
 
   final colorTokens = {
     // Role and functional tokens
@@ -256,6 +260,8 @@ Map<MixToken<Object?>, Object> build{{typePrefix}}ScopeTokens({{typePrefix}}Them
     {{typePrefix}}Tokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
+    {{typePrefix}}Tokens.attention3: attention.step(3),
+    {{typePrefix}}Tokens.attention11: attention.step(11),
     {{typePrefix}}Tokens.error3: error.step(3),
     {{typePrefix}}Tokens.error7: error.step(7),
     {{typePrefix}}Tokens.error8: error.step(8),
@@ -364,7 +370,7 @@ Map<MixToken<Object?>, Object> build{{typePrefix}}ScopeTokens({{typePrefix}}Them
     {{typePrefix}}Tokens.messageAvatarSize: 28.0 * scaling,
     {{typePrefix}}Tokens.messageContentMaxWidth: 640.0 * scaling,
     {{typePrefix}}Tokens.messageCollapsedHeight: 72.0 * scaling,
-    {{typePrefix}}Tokens.composerFieldMinHeight: 56.0 * scaling,
+    {{typePrefix}}Tokens.composerFieldMinHeight: 28.0 * scaling,
     {{typePrefix}}Tokens.touchTargetMin: 40.0 * math.max(1.0, scaling),
     {{typePrefix}}Tokens.sidebarDestinationMinHeight: 48.0 * math.max(1.0, scaling),
     {{typePrefix}}Tokens.popoverMaxWidth: 480.0 * scaling,

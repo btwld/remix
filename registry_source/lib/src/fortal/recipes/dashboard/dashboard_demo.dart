@@ -539,7 +539,10 @@ RegistryDashboardAgentStyles _fortalAgentStyles() {
       .outline => FortalButton.outline(label: label, onPressed: onPressed),
     },
     heading: fortalTextStyle(size: .size6, weight: .bold),
-    body: fortalTextStyle(size: .size2, highContrast: false),
+    body: fortalTextStyle(
+      size: .size2,
+      highContrast: false,
+    ).color(FortalTokens.gray11()),
     messageStyle: message.style,
     messageSurfaceStyle: message.surfaceStyle,
     answerStyle: answer.style,

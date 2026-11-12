@@ -53,6 +53,12 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
     tool: TextStyler()
         .color(UiTokens.gray11())
         .style(UiTokens.text1.mix())
+        .fontFamily('Menlo')
+        .fontFamilyFallback(const [
+          'Consolas',
+          'Bitstream Vera Sans Mono',
+          'monospace',
+        ])
         .wrap(.padding(.top(UiTokens.space1()))),
     description: TextStyler()
         .color(UiTokens.gray11())
@@ -66,8 +72,10 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
     // its glyph and label already name the outcome.
     statusIcon: IconStyler().size(UiTokens.space3()),
     indicator: IconStyler().color(UiTokens.gray12()).size(UiTokens.space4()),
-    pendingStatus: _statusMark(UiTokens.accentIndicator),
-    decidingStatus: _statusMark(UiTokens.accentIndicator),
+    // While it waits, the status is an amber badge: attention that does not
+    // depend on the accent, which may be gray.
+    pendingStatus: _attentionBadge(),
+    decidingStatus: _attentionBadge(),
     allowedStatus: _statusMark(UiTokens.accentIndicator),
     runningStatus: _statusMark(UiTokens.accentIndicator),
     completedStatus: _statusMark(UiTokens.accentIndicator),
@@ -85,10 +93,26 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
         .onHovered(.border(.all(.color(UiTokens.accent8()))))
         .merge(surfaceStyle),
   ),
+  // Details read as a quiet line, not a field inside the card.
   detailsStyle: uiDisclosureStyle(
     size: .size1,
     style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(UiTokens.space1())))
+        .container(
+          BoxStyler()
+              .margin(.top(UiTokens.space1()))
+              .color(const Color(0x00000000))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .trigger(
+          BoxStyler().color(const Color(0x00000000)).padding(.horizontal(0)),
+        )
+        .content(
+          BoxStyler()
+              .padding(.horizontal(0))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .onHovered(.trigger(.color(const Color(0x00000000))))
+        .onPressed(.trigger(.color(const Color(0x00000000))))
         .merge(detailsStyle),
   ),
   parametersStyle: uiDataListStyle(style: parametersStyle),
@@ -99,3 +123,10 @@ UiAgentPermissionRecipe uiAgentPermissionRecipe({
 
 BoxStyler _statusMark(ColorToken color) =>
     BoxStyler().wrap(.iconTheme(color: color()));
+
+BoxStyler _attentionBadge() => BoxStyler()
+    .color(UiTokens.attention3())
+    .borderRadius(.all(UiTokens.radiusFull()))
+    .padding(.symmetric(horizontal: UiTokens.space2(), vertical: 2))
+    .wrap(.iconTheme(color: UiTokens.attention11()))
+    .wrap(.defaultText(TextStyler().color(UiTokens.attention11())));

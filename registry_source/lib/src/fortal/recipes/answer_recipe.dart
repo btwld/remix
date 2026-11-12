@@ -37,7 +37,13 @@ FortalAgentAnswerRecipe fortalAgentAnswerRecipe({
         .padding(.top(FortalTokens.space3())),
     // The actions row centres its children; a top inset here dropped the
     // feedback below the icons beside it.
-    feedback: BoxStyler(),
+    feedback: BoxStyler().wrap(
+      .defaultText(
+        TextStyler()
+            .color(FortalTokens.gray11())
+            .style(FortalTokens.text1.mix()),
+      ),
+    ),
     sourcesLabel: TextStyler()
         .color(FortalTokens.gray12())
         .style(FortalTokens.text2.mix()),

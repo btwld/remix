@@ -39,7 +39,8 @@ void main() {
   });
 
   for (final (status, token) in [
-    (AgentPermissionStatus.pending, FortalTokens.accentIndicator),
+    // Waiting is amber, independent of the accent.
+    (AgentPermissionStatus.pending, FortalTokens.attention11),
     (AgentPermissionStatus.complete, FortalTokens.accentIndicator),
     (AgentPermissionStatus.denied, FortalTokens.gray11),
     (AgentPermissionStatus.error, FortalTokens.error11),

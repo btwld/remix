@@ -26,9 +26,8 @@ UiAgentActivityRecipe uiAgentActivityRecipe({
         .crossAxisAlignment(.center)
         .padding(.vertical(UiTokens.space2())),
     summaryTitle: TextStyler()
-        .color(UiTokens.gray12())
-        .style(UiTokens.text2.mix())
-        .fontWeight(UiTokens.fontWeightSemibold()),
+        .color(UiTokens.gray11())
+        .style(UiTokens.text2.mix()),
     itemTitle: TextStyler()
         .color(UiTokens.gray12())
         .style(UiTokens.text2.mix()),
@@ -50,21 +49,22 @@ UiAgentActivityRecipe uiAgentActivityRecipe({
   ).merge(style),
   disclosureStyle: uiDisclosureStyle(
     style: DisclosureStyler()
-        // The agent's working steps are secondary to the conversation: a
-        // soft tint without a frame sets them apart from the cards that ask
-        // for something.
+        // The agent's working steps are secondary to the conversation: one
+        // muted line, without a fill or frame, that opens on demand.
         .container(
           BoxStyler()
-              .color(UiTokens.grayA2())
+              .color(const Color(0x00000000))
               .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
         )
-        .trigger(BoxStyler().color(const Color(0x00000000)))
-        .content(
-          BoxStyler().foregroundDecoration(
-            BoxDecorationMix.border(.style(.none)),
-          ),
+        .trigger(
+          BoxStyler().color(const Color(0x00000000)).padding(.horizontal(0)),
         )
-        .onHovered(.trigger(.color(UiTokens.grayA2())))
+        .content(
+          BoxStyler()
+              .padding(.horizontal(0))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .onHovered(.trigger(.color(const Color(0x00000000))))
         .content(
           BoxStyler().padding(
             .symmetric(

@@ -77,8 +77,9 @@ FortalAgentComposerRecipe fortalAgentComposerRecipe({
   ),
   stopStyle: fortalIconButtonStyle(
     size: .size2,
+    // Stop is the send button's neutral twin: red would read as delete and
+    // outshout every decision on screen while a run works.
     style: IconButtonStyler()
-        .color(FortalTokens.error9())
         .size(FortalTokens.space7(), FortalTokens.space7())
         .merge(stopStyle),
   ),

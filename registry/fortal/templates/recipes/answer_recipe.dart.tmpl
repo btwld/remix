@@ -37,7 +37,13 @@ final class {{typePrefix}}AgentAnswerRecipe {
         .padding(.top({{typePrefix}}Tokens.space3())),
     // The actions row centres its children; a top inset here dropped the
     // feedback below the icons beside it.
-    feedback: BoxStyler(),
+    feedback: BoxStyler().wrap(
+      .defaultText(
+        TextStyler()
+            .color({{typePrefix}}Tokens.gray11())
+            .style({{typePrefix}}Tokens.text1.mix()),
+      ),
+    ),
     sourcesLabel: TextStyler()
         .color({{typePrefix}}Tokens.gray12())
         .style({{typePrefix}}Tokens.text2.mix()),

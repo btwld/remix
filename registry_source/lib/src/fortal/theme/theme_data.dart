@@ -237,6 +237,10 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
   final error = theme.isDark
       ? colors.fortalError.dark.scale
       : colors.fortalError.light.scale;
+  // Attention is Radix amber, the scale of Fortal's sol theme.
+  final attention = theme.isDark
+      ? colors.sol.dark.scale
+      : colors.sol.light.scale;
 
   final colorTokens = {
     // Role and functional tokens
@@ -256,6 +260,8 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
+    FortalTokens.attention3: attention.step(3),
+    FortalTokens.attention11: attention.step(11),
     FortalTokens.error3: error.step(3),
     FortalTokens.error7: error.step(7),
     FortalTokens.error8: error.step(8),
@@ -364,7 +370,7 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
     FortalTokens.messageAvatarSize: 28.0 * scaling,
     FortalTokens.messageContentMaxWidth: 640.0 * scaling,
     FortalTokens.messageCollapsedHeight: 72.0 * scaling,
-    FortalTokens.composerFieldMinHeight: 56.0 * scaling,
+    FortalTokens.composerFieldMinHeight: 28.0 * scaling,
     FortalTokens.touchTargetMin: 40.0 * math.max(1.0, scaling),
     FortalTokens.sidebarDestinationMinHeight: 48.0 * math.max(1.0, scaling),
     FortalTokens.popoverMaxWidth: 480.0 * scaling,

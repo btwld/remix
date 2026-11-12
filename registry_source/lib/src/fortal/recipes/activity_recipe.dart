@@ -26,9 +26,8 @@ FortalAgentActivityRecipe fortalAgentActivityRecipe({
         .crossAxisAlignment(.center)
         .padding(.vertical(FortalTokens.space2())),
     summaryTitle: TextStyler()
-        .color(FortalTokens.gray12())
-        .style(FortalTokens.text2.mix())
-        .fontWeight(FortalTokens.fontWeightSemibold()),
+        .color(FortalTokens.gray11())
+        .style(FortalTokens.text2.mix()),
     itemTitle: TextStyler()
         .color(FortalTokens.gray12())
         .style(FortalTokens.text2.mix()),
@@ -54,21 +53,22 @@ FortalAgentActivityRecipe fortalAgentActivityRecipe({
   ).merge(style),
   disclosureStyle: fortalDisclosureStyle(
     style: DisclosureStyler()
-        // The agent's working steps are secondary to the conversation: a
-        // soft tint without a frame sets them apart from the cards that ask
-        // for something.
+        // The agent's working steps are secondary to the conversation: one
+        // muted line, without a fill or frame, that opens on demand.
         .container(
           BoxStyler()
-              .color(FortalTokens.grayA2())
+              .color(const Color(0x00000000))
               .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
         )
-        .trigger(BoxStyler().color(const Color(0x00000000)))
-        .content(
-          BoxStyler().foregroundDecoration(
-            BoxDecorationMix.border(.style(.none)),
-          ),
+        .trigger(
+          BoxStyler().color(const Color(0x00000000)).padding(.horizontal(0)),
         )
-        .onHovered(.trigger(.color(FortalTokens.grayA2())))
+        .content(
+          BoxStyler()
+              .padding(.horizontal(0))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .onHovered(.trigger(.color(const Color(0x00000000))))
         .content(
           BoxStyler().padding(
             .symmetric(

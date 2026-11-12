@@ -125,6 +125,11 @@ class UiTokens {
   /// Translucent focus ring color with alpha transparency.
   static const focusA8 = ColorToken('ui.focus.a8');
 
+  /// Mode-aware amber roles for a state that waits on the reader, such as
+  /// an agent's permission request. They never follow the accent.
+  static const attention3 = ColorToken('ui.attention.3');
+  static const attention11 = ColorToken('ui.attention.11');
+
   /// Mode-aware red roles used by documented validation extensions.
   static const error3 = ColorToken('ui.error.3');
   static const error7 = ColorToken('ui.error.7');

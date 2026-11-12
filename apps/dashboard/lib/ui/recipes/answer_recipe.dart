@@ -37,7 +37,11 @@ UiAgentAnswerRecipe uiAgentAnswerRecipe({
         .padding(.top(UiTokens.space3())),
     // The actions row centres its children; a top inset here dropped the
     // feedback below the icons beside it.
-    feedback: BoxStyler(),
+    feedback: BoxStyler().wrap(
+      .defaultText(
+        TextStyler().color(UiTokens.gray11()).style(UiTokens.text1.mix()),
+      ),
+    ),
     sourcesLabel: TextStyler()
         .color(UiTokens.gray12())
         .style(UiTokens.text2.mix()),

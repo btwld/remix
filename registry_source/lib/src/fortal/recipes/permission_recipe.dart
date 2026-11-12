@@ -53,6 +53,12 @@ FortalAgentPermissionRecipe fortalAgentPermissionRecipe({
     tool: TextStyler()
         .color(FortalTokens.gray11())
         .style(FortalTokens.text1.mix())
+        .fontFamily('Menlo')
+        .fontFamilyFallback(const [
+          'Consolas',
+          'Bitstream Vera Sans Mono',
+          'monospace',
+        ])
         .wrap(.padding(.top(FortalTokens.space1()))),
     description: TextStyler()
         .color(FortalTokens.gray11())
@@ -72,8 +78,10 @@ FortalAgentPermissionRecipe fortalAgentPermissionRecipe({
     indicator: IconStyler()
         .color(FortalTokens.gray12())
         .size(FortalTokens.space4()),
-    pendingStatus: _statusMark(FortalTokens.accentIndicator),
-    decidingStatus: _statusMark(FortalTokens.accentIndicator),
+    // While it waits, the status is an amber badge: attention that does not
+    // depend on the accent, which may be gray.
+    pendingStatus: _attentionBadge(),
+    decidingStatus: _attentionBadge(),
     allowedStatus: _statusMark(FortalTokens.accentIndicator),
     runningStatus: _statusMark(FortalTokens.accentIndicator),
     completedStatus: _statusMark(FortalTokens.accentIndicator),
@@ -91,10 +99,26 @@ FortalAgentPermissionRecipe fortalAgentPermissionRecipe({
         .onHovered(.border(.all(.color(FortalTokens.accent8()))))
         .merge(surfaceStyle),
   ),
+  // Details read as a quiet line, not a field inside the card.
   detailsStyle: fortalDisclosureStyle(
     size: .size1,
     style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(FortalTokens.space1())))
+        .container(
+          BoxStyler()
+              .margin(.top(FortalTokens.space1()))
+              .color(const Color(0x00000000))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .trigger(
+          BoxStyler().color(const Color(0x00000000)).padding(.horizontal(0)),
+        )
+        .content(
+          BoxStyler()
+              .padding(.horizontal(0))
+              .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+        )
+        .onHovered(.trigger(.color(const Color(0x00000000))))
+        .onPressed(.trigger(.color(const Color(0x00000000))))
         .merge(detailsStyle),
   ),
   parametersStyle: fortalDataListStyle(style: parametersStyle),
@@ -108,3 +132,10 @@ FortalAgentPermissionRecipe fortalAgentPermissionRecipe({
 
 BoxStyler _statusMark(ColorToken color) =>
     BoxStyler().wrap(.iconTheme(color: color()));
+
+BoxStyler _attentionBadge() => BoxStyler()
+    .color(FortalTokens.attention3())
+    .borderRadius(.all(FortalTokens.radiusFull()))
+    .padding(.symmetric(horizontal: FortalTokens.space2(), vertical: 2))
+    .wrap(.iconTheme(color: FortalTokens.attention11()))
+    .wrap(.defaultText(TextStyler().color(FortalTokens.attention11())));

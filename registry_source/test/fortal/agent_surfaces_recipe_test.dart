@@ -11,7 +11,7 @@ import '../helpers/test_helpers.dart';
 
 // Each kind of item in a turn is told apart by its surface, not by another
 // identical bordered card: the reader's message is a filled bubble, the
-// agent's working steps a quiet tint, a tool call a framed row, a permission
+// agent's working steps one quiet line, a tool call a framed row, a permission
 // request the one accent-framed card, and the answer plain prose.
 
 Future<BoxDecoration?> _cardAsync(WidgetTester tester, CardStyler style) =>
@@ -81,14 +81,16 @@ void main() {
     ('plan', fortalAgentPlanRecipe().disclosureStyle),
     ('activity', fortalAgentActivityRecipe().disclosureStyle),
   ]) {
-    testWidgets('the $name is a quiet tint without a frame', (tester) async {
+    testWidgets('the $name is one quiet line, without a fill or frame', (
+      tester,
+    ) async {
       final container = await resolveInFortalTheme(
         tester,
         (context) => style.build(context).spec.container.spec,
       );
       final fill = container.decoration as BoxDecoration?;
       final frame = container.foregroundDecoration as BoxDecoration?;
-      expect(_visible(fill?.color), isTrue);
+      expect(_visible(fill?.color), isFalse);
       expect(_edge(frame), isNull);
     });
   }

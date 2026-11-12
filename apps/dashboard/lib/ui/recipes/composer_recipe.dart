@@ -77,8 +77,9 @@ UiAgentComposerRecipe uiAgentComposerRecipe({
   ),
   stopStyle: uiIconButtonStyle(
     size: .size2,
+    // Stop is the send button's neutral twin: red would read as delete and
+    // outshout every decision on screen while a run works.
     style: IconButtonStyler()
-        .color(UiTokens.error9())
         .size(UiTokens.space7(), UiTokens.space7())
         .merge(stopStyle),
   ),

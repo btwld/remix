@@ -237,6 +237,10 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
   final error = theme.isDark
       ? colors.uiError.dark.scale
       : colors.uiError.light.scale;
+  // Attention is Radix amber, the scale of Ui's sol theme.
+  final attention = theme.isDark
+      ? colors.sol.dark.scale
+      : colors.sol.light.scale;
 
   final colorTokens = {
     // Role and functional tokens
@@ -256,6 +260,8 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
+    UiTokens.attention3: attention.step(3),
+    UiTokens.attention11: attention.step(11),
     UiTokens.error3: error.step(3),
     UiTokens.error7: error.step(7),
     UiTokens.error8: error.step(8),
@@ -365,7 +371,7 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.messageAvatarSize: 28.0 * scaling,
     UiTokens.messageContentMaxWidth: 640.0 * scaling,
     UiTokens.messageCollapsedHeight: 72.0 * scaling,
-    UiTokens.composerFieldMinHeight: 56.0 * scaling,
+    UiTokens.composerFieldMinHeight: 28.0 * scaling,
     UiTokens.touchTargetMin: 40.0 * math.max(1.0, scaling),
     UiTokens.sidebarDestinationMinHeight: 48.0 * math.max(1.0, scaling),
     UiTokens.popoverMaxWidth: 480.0 * scaling,
