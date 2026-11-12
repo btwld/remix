@@ -24,9 +24,16 @@ class UiDashboardText extends StatelessWidget {
     this.muted = false,
   });
 
+  /// The text to show.
   final String value;
+
+  /// The text size and weight preset.
   final UiDashboardTextType type;
+
+  /// Whether to use the semibold weight.
   final bool emphasized;
+
+  /// Whether to use the muted foreground color.
   final bool muted;
 
   @override
@@ -54,7 +61,7 @@ TextStyler uiDashboardTextStyle({
     .bodySm => (UiTokens.textSm, 14.0, 20.0, false),
     .bodyXs => (UiTokens.textXs, 12.0, 16.0, false),
   };
-  var style = TextStyler()
+  return TextStyler()
       .style(token.mix())
       .fontSize(size)
       .height(height / size)
@@ -63,9 +70,8 @@ TextStyler uiDashboardTextStyle({
             ? FontWeight.w600
             : (emphasized ? FontWeight.w500 : FontWeight.w400),
       )
-      .color(muted ? UiTokens.muted() : UiTokens.foreground());
-  if (heading) style = style.letterSpacing(_tracking * size);
-  return style;
+      .color(muted ? UiTokens.muted() : UiTokens.foreground())
+      .merge(heading ? TextStyler().letterSpacing(_tracking * size) : null);
 }
 
 /// `tracking-tight` on headings.
@@ -81,8 +87,8 @@ void uiDashboardToast(BuildContext context, String title) => showRemixToast(
 ///
 /// HeroUI has no segmented control, and a choice that only changes a value
 /// has no panels for a tab list to control, so this is a
-/// [RemixSegmentedControl]: one labelled group of options, as Vanilla's demo
-/// uses here. It wears the `tabs` recipe's primary look, restated from the
+/// [RemixSegmentedControl]: one labelled group of options, as the
+/// other presets' demos use. It wears the `tabs` recipe's primary look, restated from the
 /// same tokens: the `default` list with its `p-1` inset and
 /// `calc(var(--radius) * 2.5)` corners, and `h-8 px-4` `text-sm` medium
 /// segments in `muted`, the chosen one raised on `segment` with
@@ -98,8 +104,14 @@ class UiDashboardSegments<T extends Object> extends StatelessWidget {
   });
 
   final List<({T value, String label})> items;
+
+  /// The value of the chosen item.
   final T selectedValue;
+
+  /// Called with the value of the item the user picks.
   final ValueChanged<T> onChanged;
+
+  /// The group's accessible label.
   final String? semanticLabel;
 
   @override

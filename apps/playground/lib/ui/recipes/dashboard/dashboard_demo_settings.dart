@@ -22,6 +22,7 @@ import 'dashboard_demo_text.dart';
 
 enum _Appearance { light, dark, system }
 
+/// The Settings page: appearance, corner radius and preference controls.
 class PlaygroundDashboardSettingsPage extends StatefulWidget {
   const PlaygroundDashboardSettingsPage({
     super.key,
@@ -30,7 +31,13 @@ class PlaygroundDashboardSettingsPage extends StatefulWidget {
     this.onRadiusChanged,
   });
 
+  /// Whether dark appearance is selected, or null for the system setting. Read
+  /// only when [onDarkModeChanged] is set; otherwise the page keeps its own
+  /// selection.
   final bool? darkMode;
+
+  /// Called when the user picks an appearance: true for dark, false for light,
+  /// null for the system setting.
   final ValueChanged<bool?>? onDarkModeChanged;
 
   /// Called with the base corner radius, in logical pixels, as the slider moves.
@@ -366,6 +373,7 @@ Widget _preference(String title, String description, Widget trailing) => RowBox(
   ],
 );
 
+/// A disclosure trigger with a chevron that turns when the disclosure opens.
 class PlaygroundDisclosureTrigger extends StatelessWidget {
   const PlaygroundDisclosureTrigger({
     super.key,
@@ -373,7 +381,10 @@ class PlaygroundDisclosureTrigger extends StatelessWidget {
     required this.child,
   });
 
+  /// Whether the disclosure is open. An open disclosure turns the chevron.
   final bool expanded;
+
+  /// The trigger label, shown before the chevron.
   final Widget child;
 
   @override

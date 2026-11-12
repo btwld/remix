@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../theme/theme.dart';
 
-/// Immutable Ui theme configuration controlled by the dashboard demo.
+/// Immutable theme configuration controlled by the dashboard demo.
 @immutable
 class UiThemeSettings {
   const UiThemeSettings({
@@ -13,10 +13,19 @@ class UiThemeSettings {
     this.scaling = .percent100,
   });
 
+  /// Light, dark or system appearance.
   final UiThemeMode appearance;
+
+  /// The accent color.
   final UiAccentColor accentColor;
+
+  /// Whether panels are solid or translucent.
   final UiPanelBackground panelBackground;
+
+  /// The corner radius scale.
   final UiRadius radius;
+
+  /// The size scale applied to the whole interface.
   final UiScaling scaling;
 
   UiThemeSettings copyWith({
@@ -57,7 +66,10 @@ class UiDashboardThemeScope extends InheritedWidget {
     required super.child,
   });
 
+  /// The current theme settings.
   final UiThemeSettings settings;
+
+  /// Called with the new settings when the user changes one.
   final ValueChanged<UiThemeSettings> onChanged;
 
   static UiDashboardThemeScope? maybeOf(BuildContext context) =>
@@ -77,7 +89,7 @@ class UiDashboardThemeScope extends InheritedWidget {
       settings != oldWidget.settings || onChanged != oldWidget.onChanged;
 }
 
-/// Applies a local Ui accent without painting a background surface.
+/// Applies a local accent without painting a background surface.
 class UiAccentScope extends StatelessWidget {
   const UiAccentScope({
     super.key,
@@ -91,6 +103,8 @@ class UiAccentScope extends StatelessWidget {
 
   /// The local accent, or null for the error palette.
   final UiAccentColor? accent;
+
+  /// The subtree that uses the accent.
   final Widget child;
 
   @override

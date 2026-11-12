@@ -14,6 +14,7 @@ EdgeInsets {{valuePrefix}}PagePadding(double width) =>
 class {{typePrefix}}PageScroll extends StatelessWidget {
   const {{typePrefix}}PageScroll({super.key, required this.child});
 
+  /// The page content.
   final Widget child;
 
   @override
@@ -35,8 +36,13 @@ class {{typePrefix}}PageHeader extends StatelessWidget {
     this.actions,
   });
 
+  /// The page title.
   final String title;
+
+  /// A line of supporting copy under the title.
   final String description;
+
+  /// Controls shown beside the title.
   final Widget? actions;
 
   @override
@@ -65,6 +71,8 @@ class {{typePrefix}}PageHeader extends StatelessWidget {
 /// The title of a section inside a card.
 class {{typePrefix}}SectionLabel extends StatelessWidget {
   const {{typePrefix}}SectionLabel(this.label, {super.key});
+
+  /// The section name.
   final String label;
 
   @override
@@ -80,7 +88,10 @@ class {{typePrefix}}CardHeading extends StatelessWidget {
     required this.description,
   });
 
+  /// The card title.
   final String title;
+
+  /// A line of supporting copy under the title.
   final String description;
 
   @override

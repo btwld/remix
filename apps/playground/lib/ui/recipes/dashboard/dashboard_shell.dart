@@ -38,22 +38,56 @@ class PlaygroundDashboardShell<T extends Object> extends StatelessWidget {
     this.collapsedWidth = 72,
   });
 
+  /// The navigation sections listed in the sidebar.
   final List<RemixSidebarSection<T>> sections;
+
+  /// The value of the selected destination, or null when none is selected.
   final T? selectedValue;
+
+  /// Called with the value of the destination the user picks.
   final ValueChanged<T> onSelected;
+
+  /// The page shown beside the sidebar.
   final Widget body;
+
+  /// The page title. It is always the header's accessible label.
   final String title;
+
+  /// Replaces the visible title text in the header.
   final Widget? headerTitle;
+
+  /// The brand mark in the sidebar header.
   final Widget brand;
+
+  /// The account control in the sidebar footer.
   final Widget? account;
+
+  /// Actions shown at the end of the header.
   final List<Widget> headerActions;
+
+  /// Called with the search text as it changes. The search field is shown
+  /// only when this is set.
   final ValueChanged<String>? onSearchChanged;
+
+  /// The hint text of the search field.
   final String searchHintText;
+
+  /// Whether the sidebar is collapsed, when the caller controls it.
   final bool? collapsed;
+
+  /// Whether the sidebar starts collapsed when [collapsed] is null.
   final bool initiallyCollapsed;
+
+  /// Called when the user collapses or expands the sidebar.
   final ValueChanged<bool>? onCollapsedChanged;
+
+  /// The width below which the inline sidebar is hidden and opens on demand.
   final double compactBreakpoint;
+
+  /// The width of the expanded sidebar.
   final double sidebarWidth;
+
+  /// The width of the collapsed sidebar rail.
   final double collapsedWidth;
 
   @override
@@ -356,6 +390,9 @@ double _resolveFooterBorderWidthExpanded(BuildContext context) =>
 double _resolveFooterBorderWidthCollapsed(BuildContext context) =>
     _resolveFooterBorderWidth(context, collapsed: true);
 
+// Tokens for the default 72px rail. `ContextToken` equality is resolver
+// identity, so each is a constant over a top-level function and stays equal
+// across rebuilds.
 const _destinationLeftPaddingExpanded = ContextToken<double>(
   _resolveDestinationLeftPaddingExpanded,
 );

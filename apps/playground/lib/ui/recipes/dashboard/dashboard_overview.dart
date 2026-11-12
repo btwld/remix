@@ -27,8 +27,13 @@ class PlaygroundDashboardOverview extends StatelessWidget {
     this.onViewOrders,
   });
 
+  /// The records the overview summarizes.
   final PlaygroundDashboardSampleData data;
+
+  /// Controls the page's scroll position.
   final ScrollController? scrollController;
+
+  /// Called when the user asks to see all orders.
   final VoidCallback? onViewOrders;
 
   @override

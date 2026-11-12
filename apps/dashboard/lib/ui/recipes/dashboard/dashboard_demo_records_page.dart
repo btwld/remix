@@ -15,8 +15,11 @@ final uiSelectedBadgesStyle = WrapBoxStyler()
     .runSpacing(6)
     .crossAxisAlignment(.center);
 
+/// The Customers page: a searchable, sortable table of customers.
 class UiDashboardCustomersPage extends StatefulWidget {
   const UiDashboardCustomersPage({super.key, this.globalQuery = ''});
+
+  /// The header search text. Rows must match it as well as the page's own filter.
   final String globalQuery;
 
   @override
@@ -145,8 +148,11 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
   }
 }
 
+/// The Orders page: a filterable, sortable table of orders.
 class UiDashboardOrdersPage extends StatefulWidget {
   const UiDashboardOrdersPage({super.key, this.globalQuery = ''});
+
+  /// The header search text. Rows must match it as well as the page's own filter.
   final String globalQuery;
 
   @override

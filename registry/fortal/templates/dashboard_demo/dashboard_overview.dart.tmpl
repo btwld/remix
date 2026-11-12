@@ -19,6 +19,7 @@ import 'dashboard_demo_widgets.dart';
 import 'dashboard_overview_base.dart';
 import 'dashboard_sample_data.dart';
 
+/// The Overview page: metric cards, charts and recent activity.
 class {{typePrefix}}DashboardOverview extends StatelessWidget {
   const {{typePrefix}}DashboardOverview({
     super.key,
@@ -27,8 +28,13 @@ class {{typePrefix}}DashboardOverview extends StatelessWidget {
     this.onViewOrders,
   });
 
+  /// The records the overview summarizes.
   final {{typePrefix}}DashboardSampleData data;
+
+  /// Controls the page's scroll position.
   final ScrollController? scrollController;
+
+  /// Called when the user asks to see all orders.
   final VoidCallback? onViewOrders;
 
   @override
@@ -60,13 +66,14 @@ class {{typePrefix}}DashboardOverview extends StatelessWidget {
   }
 }
 
-/// Overview analytics chart grid for the {{typePrefix}} dashboard.
+/// Overview analytics chart grid for the dashboard.
 class {{typePrefix}}AnalyticsCharts extends StatelessWidget {
   const {{typePrefix}}AnalyticsCharts({
     super.key,
     this.data = {{valuePrefix}}DashboardSampleData,
   });
 
+  /// The records the charts plot.
   final {{typePrefix}}DashboardSampleData data;
 
   @override

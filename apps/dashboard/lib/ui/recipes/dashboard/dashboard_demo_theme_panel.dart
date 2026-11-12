@@ -8,7 +8,7 @@ import 'dashboard_demo_text.dart';
 import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_ui.dart';
 
-/// Interactive Ui theme customizer panel.
+/// Interactive theme customizer panel.
 class UiThemePanel extends StatelessWidget {
   const UiThemePanel({super.key});
 
