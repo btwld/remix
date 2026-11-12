@@ -6,7 +6,11 @@ part of 'card.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Flat panels. Elevation is reserved for floating layers, never cards.
+/// The Fortal Card recipe: a flat panel. Elevation is reserved for floating
+/// layers, never cards.
+///
+/// It reads top to bottom: the size and focus ring, then the variant's colors
+/// for rest, hover, press and selected, then disabled.
 class FortalCard extends StatelessWidget {
   const FortalCard({
     super.key,
@@ -16,6 +20,7 @@ class FortalCard extends StatelessWidget {
     this.child,
   });
 
+  /// A panel fill inside a 1px gray frame.
   const FortalCard.surface({
     super.key,
     this.size = .size1,
@@ -23,6 +28,8 @@ class FortalCard extends StatelessWidget {
     this.child,
   }) : variant = FortalCardVariant.surface;
 
+  /// No fill or frame until hovered. It sits in a negative margin equal to its
+  /// padding, so its content lines up with the content around it.
   const FortalCard.ghost({
     super.key,
     this.size = .size1,

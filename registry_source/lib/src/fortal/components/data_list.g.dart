@@ -6,7 +6,9 @@ part of 'data_list.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for [RemixDataList].
+/// The Fortal DataList recipe: gray labels beside values in gray 12.
+///
+/// [highContrast] moves the labels to gray 12.
 class FortalDataList extends StatelessWidget {
   const FortalDataList({
     super.key,

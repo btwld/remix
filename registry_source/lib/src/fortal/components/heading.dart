@@ -4,8 +4,8 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// Fortal-themed heading style on the Fortal nine-step scale.
-///
+/// The style of a heading on the nine-step text scale, with its own line
+/// height per size.
 ///
 /// This is a plain recipe rather than a `@MixWidget`: a generated widget only
 /// renders the styler, and [FortalHeading] must additionally publish a native

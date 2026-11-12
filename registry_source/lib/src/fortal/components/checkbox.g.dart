@@ -6,7 +6,13 @@ part of 'checkbox.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal recipe for [RemixCheckbox].
+/// The Fortal Checkbox recipe.
+///
+/// It reads top to bottom: the box and its focus ring, then the variant's
+/// colors for rest, selected and disabled, then the touch target.
+///
+/// [highContrast] moves the selected fill (surface) or mark (soft) to accent
+/// step 12.
 class FortalCheckbox extends StatelessWidget {
   const FortalCheckbox({
     super.key,
@@ -30,6 +36,8 @@ class FortalCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// A surface fill inside a 1px neutral frame, filled with the accent when
+  /// selected.
   const FortalCheckbox.surface({
     super.key,
     this.size = .size2,
@@ -51,6 +59,7 @@ class FortalCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalCheckboxVariant.surface;
 
+  /// An accent tint inside a 1px accent ring, with an accent-colored mark.
   const FortalCheckbox.soft({
     super.key,
     this.size = .size2,
@@ -136,8 +145,7 @@ class FortalCheckbox extends StatelessWidget {
   }
 }
 
-/// Fortal recipe for [RemixCheckboxGroupItem].
-///
+/// The Fortal CheckboxGroupItem recipe: the checkbox recipe plus a label.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
 /// so unlike every other Remix item (menu, select, segmented control, toggle
@@ -164,6 +172,8 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// A surface fill inside a 1px neutral frame, filled with the accent when
+  /// selected.
   const FortalCheckboxGroupItem.surface({
     super.key,
     this.size = .size2,
@@ -182,6 +192,7 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalCheckboxVariant.surface;
 
+  /// An accent tint inside a 1px accent ring, with an accent-colored mark.
   const FortalCheckboxGroupItem.soft({
     super.key,
     this.size = .size2,

@@ -6,7 +6,7 @@ part of 'popover.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixPopover].
+/// The Fortal Popover recipe: a raised, blurred panel in a 1px frame.
 ///
 /// The generated [FortalPopover] defaults to [FortalPopoverSize.size2], a
 /// 480-pixel maximum width, and no arrow.

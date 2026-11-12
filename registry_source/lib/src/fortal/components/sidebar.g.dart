@@ -6,9 +6,9 @@ part of 'sidebar.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixSidebar].
+/// The Fortal Sidebar recipe.
 ///
-/// The recipe paints the solid panel surface with a trailing edge border,
+/// It paints the solid panel surface with a trailing edge border,
 /// pads the scrolling destination region, keeps section labels compact and
 /// muted, separates sections with the `space2` token, and reuses the
 /// ghost `size2` toggle treatment inside full-width destinations with a
