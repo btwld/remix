@@ -48,6 +48,7 @@ export 'src/agent/components/conversation.dart';
 export 'src/agent/components/glyphs.dart' hide agentGlyph;
 export 'src/agent/components/message.dart';
 export 'src/agent/components/steps.dart';
+export 'src/agent/components/tool_call.dart';
 export 'src/agent/models/activity_item.dart';
 export 'src/agent/models/message_part.dart';
 export 'src/agent/models/plan_item.dart';
