@@ -1,71 +1,88 @@
 import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 
 import '../components/button.dart';
-import '../components/card.dart';
-import '../components/composer.dart';
 import '../components/textarea.dart';
 import '../theme/theme.dart';
 
-/// Styles for the composer: a HeroUI card around a text area with no fill of
-/// its own, a primary submit icon button, and a danger stop icon button.
+/// Styles for the composer: a rounded surface holding a text area over a
+/// toolbar.
 @immutable
 final class {{typePrefix}}AgentComposerRecipe {
   const {{typePrefix}}AgentComposerRecipe({
     required this.style,
-    required this.surfaceStyle,
     required this.fieldStyle,
     required this.submitStyle,
     required this.stopStyle,
   });
 
-  /// Styles for the composer toolbar.
-  final {{typePrefix}}ComposerStyler style;
+  /// Styles for the surface, the field's frame and the toolbar.
+  final AgentComposerStyler style;
 
-  /// Styles for the card around the field and toolbar.
-  final CardStyler surfaceStyle;
-
-  /// Styles for the message text area.
+  /// Styles for the text area, which has no frame of its own.
   final TextFieldStyler fieldStyle;
 
-  /// Styles for the icon button that sends the message.
+  /// Styles for the button that sends the message.
   final IconButtonStyler submitStyle;
 
-  /// Styles for the icon button that stops a running response.
+  /// Styles for the button that stops a running response.
   final IconButtonStyler stopStyle;
 }
 
 /// Builds the recipe; each argument is merged last, so callers can override.
+///
+/// The surface is a `gray2` panel inside a `controlBorder` frame, with no
+/// shadow. It takes the focus color while the field has focus. The field
+/// grows from one line to 240px.
 {{typePrefix}}AgentComposerRecipe {{valuePrefix}}AgentComposerRecipe({
-  {{typePrefix}}ComposerStyler style = const {{typePrefix}}ComposerStyler.create(),
-  CardStyler surfaceStyle = const CardStyler.create(),
+  AgentComposerStyler style = const AgentComposerStyler.create(),
   TextFieldStyler fieldStyle = const TextFieldStyler.create(),
   IconButtonStyler submitStyle = const IconButtonStyler.create(),
   IconButtonStyler stopStyle = const IconButtonStyler.create(),
 }) => {{typePrefix}}AgentComposerRecipe(
-  style: {{typePrefix}}ComposerStyler(
-    toolbar: FlexBoxStyler()
-        .direction(.horizontal)
-        .mainAxisSize(.max)
-        .crossAxisAlignment(.center)
-        .spacing(8)
-        .padding(.top(8)),
-  ).merge(style),
-  surfaceStyle: {{valuePrefix}}CardStyle(
-    style: CardStyler().padding(.all(12)).merge(surfaceStyle),
-  ),
-  // The card is the field's surface: the secondary text area, which carries
-  // no shadow, with its fill cleared in every state. It keeps its focus ring.
+  style:
+      AgentComposerStyler(
+            container: BoxStyler()
+                .color({{typePrefix}}Tokens.surfaceSecondary())
+                .borderRadius(.all({{typePrefix}}Tokens.radius2xl()))
+                .padding(.all(12))
+                .border(.all(.color({{typePrefix}}Tokens.fieldBorder()).width(1))),
+            field: BoxStyler().padding(.horizontal(4)),
+            fieldMaxHeight: _fieldMaxHeight,
+            toolbar: FlexBoxStyler()
+                .spacing(8)
+                .crossAxisAlignment(.center)
+                .padding(.top(12)),
+          )
+          .onFocused(
+            AgentComposerStyler(
+              container: BoxStyler().border(.all(.color({{typePrefix}}Tokens.focus()))),
+            ),
+          )
+          .merge(style),
   fieldStyle: {{valuePrefix}}TextAreaStyle(
     variant: .secondary,
+    minLines: 1,
     style: TextFieldStyler()
-        .color({{typePrefix}}Tokens.transparent)
-        .minHeight(56)
-        .padding(.all(4))
-        .onHovered(.color({{typePrefix}}Tokens.transparent))
-        .onFocused(.color({{typePrefix}}Tokens.transparent))
+        .color(const Color(0x00000000))
+        .border(.style(.none))
+        .padding(.all(0))
+        .minHeight(24)
         .merge(fieldStyle),
   ),
-  submitStyle: {{valuePrefix}}IconButtonStyle(style: submitStyle),
-  stopStyle: {{valuePrefix}}IconButtonStyle(variant: .danger, style: stopStyle),
+  submitStyle: _round(submitStyle),
+  stopStyle: _round(stopStyle),
+);
+
+/// The tallest the field grows before it scrolls.
+const _fieldMaxHeight = 240.0;
+
+/// A solid, round 32px icon button.
+IconButtonStyler _round(IconButtonStyler style) => {{valuePrefix}}IconButtonStyle(
+  variant: .primary,
+  size: .sm,
+  style: IconButtonStyler()
+      .borderRadius(.all({{typePrefix}}Tokens.radius4xl()))
+      .merge(style),
 );

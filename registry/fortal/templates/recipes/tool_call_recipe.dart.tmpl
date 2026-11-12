@@ -1,0 +1,249 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
+import 'package:remix/remix.dart';
+
+import '../components/button.dart';
+import '../components/data_list.dart';
+import '../components/disclosure.dart';
+import '../theme/theme.dart';
+
+/// Styles for a tool call: the quiet row, its output well and the approval
+/// card.
+@immutable
+final class {{typePrefix}}AgentToolCallRecipe {
+  const {{typePrefix}}AgentToolCallRecipe({
+    required this.style,
+    required this.disclosureStyle,
+    required this.inputStyle,
+    required this.allowOnceStyle,
+    required this.alwaysAllowStyle,
+    required this.denyStyle,
+  });
+
+  /// Styles for the row, the output well and the approval card.
+  final AgentToolCallStyler style;
+
+  /// Styles for the disclosure that opens and closes the output well.
+  final DisclosureStyler disclosureStyle;
+
+  /// Styles for the list of inputs on the approval card.
+  final DataListStyler inputStyle;
+
+  /// Styles for the card's primary action.
+  final ButtonStyler allowOnceStyle;
+
+  /// Styles for the card's scoped action.
+  final ButtonStyler alwaysAllowStyle;
+
+  /// Styles for the card's refusal.
+  final ButtonStyler denyStyle;
+}
+
+/// Builds the recipe; each argument is merged last, so callers can override.
+///
+/// It reads top to bottom: the row, the status for each outcome, the output
+/// well, then the approval card. The row paints 32px tall inside the
+/// disclosure's 40px touch target. The well is a `gray2` panel with a `gray5`
+/// edge that scrolls past `activityMaxHeight`; a failed call frames it in
+/// `errorA7` and tints only the failing lines, which the call reports as its
+/// error.
+{{typePrefix}}AgentToolCallRecipe {{valuePrefix}}AgentToolCallRecipe({
+  AgentToolCallStyler style = const AgentToolCallStyler.create(),
+  DisclosureStyler disclosureStyle = const DisclosureStyler.create(),
+  DataListStyler inputStyle = const DataListStyler.create(),
+  ButtonStyler allowOnceStyle = const ButtonStyler.create(),
+  ButtonStyler alwaysAllowStyle = const ButtonStyler.create(),
+  ButtonStyler denyStyle = const ButtonStyler.create(),
+}) => {{typePrefix}}AgentToolCallRecipe(
+  style: _row().merge(_status()).merge(_well()).merge(_card()).merge(style),
+  disclosureStyle: _quietDisclosure().merge(disclosureStyle),
+  inputStyle: {{valuePrefix}}DataListStyle(
+    style: DataListStyler()
+        .rowSpacing({{typePrefix}}Tokens.space1())
+        .value(_mono({{typePrefix}}Tokens.text2))
+        .merge(inputStyle),
+  ),
+  allowOnceStyle: {{valuePrefix}}ButtonStyle(
+    variant: .solid,
+    size: .size2,
+    style: allowOnceStyle,
+  ),
+  alwaysAllowStyle: {{valuePrefix}}ButtonStyle(
+    variant: .ghost,
+    size: .size2,
+    style: ButtonStyler()
+        .label(.color({{typePrefix}}Tokens.gray11()))
+        .merge(alwaysAllowStyle),
+  ),
+  denyStyle: {{valuePrefix}}ButtonStyle(
+    variant: .outline,
+    size: .size2,
+    style: denyStyle,
+  ),
+);
+
+/// The row: tool icon, summary, then the meta with the tool id in monospace.
+AgentToolCallStyler _row() => AgentToolCallStyler(
+  row: FlexBoxStyler()
+      .spacing({{typePrefix}}Tokens.space2())
+      .crossAxisAlignment(.center)
+      .minHeight({{typePrefix}}Tokens.space6()),
+  icon: _glyph(),
+  summary: TextStyler()
+      .style({{typePrefix}}Tokens.text2.mix())
+      .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
+      .color({{typePrefix}}Tokens.gray12()),
+  meta: TextStyler()
+      .style({{typePrefix}}Tokens.text1.mix())
+      .color({{typePrefix}}Tokens.gray11()),
+  toolId: _mono({{typePrefix}}Tokens.text1),
+  indicator: _glyph(),
+);
+
+/// The status word and glyph: quiet gray, red when the call failed, and a
+/// badge on the approval card.
+AgentToolCallStyler _status() =>
+    AgentToolCallStyler(
+          status: FlexBoxStyler()
+              .spacing({{typePrefix}}Tokens.space1())
+              .crossAxisAlignment(.center),
+          statusIcon: _glyph(size: {{typePrefix}}Tokens.space3()),
+          statusLabel: TextStyler()
+              .style({{typePrefix}}Tokens.text1.mix())
+              .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
+              .color({{typePrefix}}Tokens.gray11()),
+        )
+        .onStatus(
+          .failed,
+          AgentToolCallStyler(
+            statusIcon: _glyph(
+              size: {{typePrefix}}Tokens.space3(),
+              color: {{typePrefix}}Tokens.error11(),
+            ),
+            statusLabel: TextStyler().color({{typePrefix}}Tokens.error11()),
+          ),
+        )
+        .onStatus(
+          .awaitingApproval,
+          AgentToolCallStyler(
+            status: FlexBoxStyler()
+                .color({{typePrefix}}Tokens.accentA3())
+                .borderRadius(.all({{typePrefix}}Tokens.radius1OrFull()))
+                .padding(.symmetric(horizontal: {{typePrefix}}Tokens.space2()))
+                .minHeight({{typePrefix}}Tokens.space5()),
+            statusLabel: TextStyler().color({{typePrefix}}Tokens.accent11()),
+          ),
+        );
+
+/// The output well. Its padding sits on the text, so the tinted failing lines
+/// reach the well's edges.
+AgentToolCallStyler _well() =>
+    AgentToolCallStyler(
+      output: BoxStyler()
+          .margin(
+            .only(left: {{typePrefix}}Tokens.space5(), top: {{typePrefix}}Tokens.space1()),
+          )
+          .padding(.vertical({{typePrefix}}Tokens.space2()))
+          .color({{typePrefix}}Tokens.gray2())
+          .borderRadius(.all({{typePrefix}}Tokens.radius3()))
+          .border(
+            .all(
+              .color({{typePrefix}}Tokens.gray5()).width({{typePrefix}}Tokens.borderWidth1()),
+            ),
+          ),
+      outputMaxHeight: {{typePrefix}}Tokens.activityMaxHeight(),
+      outputContent: BoxStyler().padding(.horizontal({{typePrefix}}Tokens.space3())),
+      outputText: _mono(
+        {{typePrefix}}Tokens.text1,
+      ).color({{typePrefix}}Tokens.gray12()).height(_wellLineHeight),
+      error: BoxStyler()
+          .color({{typePrefix}}Tokens.error3())
+          .padding(.horizontal({{typePrefix}}Tokens.space3())),
+      errorText: _mono(
+        {{typePrefix}}Tokens.text1,
+      ).color({{typePrefix}}Tokens.error11()).height(_wellLineHeight),
+    ).onStatus(
+      .failed,
+      AgentToolCallStyler(
+        output: BoxStyler().border(.all(.color({{typePrefix}}Tokens.errorA7()))),
+      ),
+    );
+
+/// The approval card: a flat panel with no shadow, an icon tile beside the
+/// question, tool id, description and inputs, and a footer rule above the
+/// actions.
+AgentToolCallStyler _card() => AgentToolCallStyler(
+  card: BoxStyler()
+      .color({{typePrefix}}Tokens.colorPanel())
+      .borderRadius(.all({{typePrefix}}Tokens.radius5()))
+      .clipBehavior(.antiAlias)
+      .border(
+        .all(.color({{typePrefix}}Tokens.gray6()).width({{typePrefix}}Tokens.borderWidth1())),
+      ),
+  cardBody: FlexBoxStyler()
+      .spacing({{typePrefix}}Tokens.space3())
+      .padding(.all({{typePrefix}}Tokens.space4())),
+  cardIcon: BoxStyler()
+      .width({{typePrefix}}Tokens.space6())
+      .height({{typePrefix}}Tokens.space6())
+      .color({{typePrefix}}Tokens.grayA3())
+      .borderRadius(.all({{typePrefix}}Tokens.radius4()))
+      .alignment(.center),
+  cardGlyph: _glyph(color: {{typePrefix}}Tokens.gray12()),
+  cardContent: FlexBoxStyler().spacing({{typePrefix}}Tokens.space2()),
+  cardTitleRow: FlexBoxStyler()
+      .spacing({{typePrefix}}Tokens.space2())
+      .crossAxisAlignment(.center),
+  title: TextStyler()
+      .style({{typePrefix}}Tokens.text2.mix())
+      .fontWeight({{typePrefix}}Tokens.fontWeightSemibold())
+      .color({{typePrefix}}Tokens.gray12()),
+  description: TextStyler()
+      .style({{typePrefix}}Tokens.text2.mix())
+      .color({{typePrefix}}Tokens.gray11()),
+  footer: FlexBoxStyler()
+      .spacing({{typePrefix}}Tokens.space2())
+      .crossAxisAlignment(.center)
+      .padding(
+        .symmetric(
+          horizontal: {{typePrefix}}Tokens.space4(),
+          vertical: {{typePrefix}}Tokens.space3(),
+        ),
+      )
+      .border(
+        .top(.color({{typePrefix}}Tokens.gray5()).width({{typePrefix}}Tokens.borderWidth1())),
+      ),
+);
+
+/// The well's line box is 18px at 12px type.
+const _wellLineHeight = 1.5;
+
+/// A 16px glyph in quiet gray, unless [size] or [color] say otherwise.
+IconStyler _glyph({double? size, Color? color}) => IconStyler()
+    .size(size ?? {{typePrefix}}Tokens.space4())
+    .color(color ?? {{typePrefix}}Tokens.gray11());
+
+/// Tool ids, commands and output in the {{typePrefix}} monospace face.
+TextStyler _mono(TextStyleToken size) => TextStyler()
+    .style(size.mix())
+    .fontFamily('Menlo')
+    .fontFamilyFallback(const ['Consolas', 'monospace'])
+    .color({{typePrefix}}Tokens.gray11());
+
+/// A disclosure with no frame, fill or padding of its own.
+DisclosureStyler _quietDisclosure() => {{valuePrefix}}DisclosureStyle(
+  style: DisclosureStyler()
+      .container(
+        BoxStyler()
+            .color(const Color(0x00000000))
+            .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+      )
+      .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
+      .content(
+        BoxStyler()
+            .padding(.all(0))
+            .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
+      )
+      .onHovered(.trigger(.color(const Color(0x00000000))))
+      .onPressed(.trigger(.color(const Color(0x00000000)))),
+);

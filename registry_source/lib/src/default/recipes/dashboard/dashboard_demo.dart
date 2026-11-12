@@ -13,14 +13,15 @@ import '../../components/menu.dart';
 import '../../components/popover.dart';
 import '../../components/segmented_control.dart';
 import '../../components/toast.dart';
-import '../activity_recipe.dart';
+import '../agent_glyphs_recipe.dart';
 import '../answer_recipe.dart';
 import '../composer_recipe.dart';
-import '../execution_recipe.dart';
+import '../conversation_recipe.dart';
 import '../message_recipe.dart';
-import '../permission_recipe.dart';
-import '../plan_recipe.dart';
-import '../transcript_recipe.dart';
+import '../sources_recipe.dart';
+import '../steps_recipe.dart';
+import '../suggestions_recipe.dart';
+import '../tool_call_recipe.dart';
 import '../../theme/effects.dart';
 import '../../theme/tokens.dart';
 import '../../theme/theme_data.dart';
@@ -551,13 +552,13 @@ TextStyler _textStyle({
     );
 
 RegistryDashboardAgentStyles _vanillaAgentStyles() {
+  final conversation = vanillaAgentConversationRecipe();
   final message = vanillaAgentMessageRecipe();
+  final steps = vanillaAgentStepsRecipe();
+  final toolCall = vanillaAgentToolCallRecipe();
   final answer = vanillaAgentAnswerRecipe();
-  final transcript = vanillaAgentTranscriptRecipe();
-  final plan = vanillaAgentPlanRecipe();
-  final activity = vanillaAgentActivityRecipe();
-  final permission = vanillaAgentPermissionRecipe();
-  final execution = vanillaAgentExecutionRecipe();
+  final sources = vanillaAgentSourcesRecipe();
+  final suggestions = vanillaAgentSuggestionsRecipe();
   final composer = vanillaAgentComposerRecipe();
   return RegistryDashboardAgentStyles(
     buttonBuilder: (label, onPressed, tone) => switch (tone) {
@@ -565,37 +566,34 @@ RegistryDashboardAgentStyles _vanillaAgentStyles() {
       .soft => VanillaButton.secondary(label: label, onPressed: onPressed),
       .outline => VanillaButton.outline(label: label, onPressed: onPressed),
     },
+    glyphBuilder: vanillaAgentGlyph,
     heading: _textStyle(token: VanillaTokens.text2xl, weight: FontWeight.w700),
     body: _textStyle(muted: true),
+    dockStyle: BoxStyler().maxWidth(768).padding(.horizontal(16)),
+    conversationStyle: conversation.style,
+    latestStyle: conversation.latestStyle,
     messageStyle: message.style,
-    messageSurfaceStyle: message.surfaceStyle,
+    messageToggleStyle: message.toggleStyle,
+    stepsStyle: steps.style,
+    stepStyle: steps.stepStyle,
+    stepsDisclosureStyle: steps.disclosureStyle,
+    toolCallStyle: toolCall.style,
+    toolCallDisclosureStyle: toolCall.disclosureStyle,
+    toolInputStyle: toolCall.inputStyle,
+    allowOnceStyle: toolCall.allowOnceStyle,
+    alwaysAllowStyle: toolCall.alwaysAllowStyle,
+    denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
-    answerSurfaceStyle: answer.surfaceStyle,
-    answerSourcesStyle: answer.sourcesStyle,
-    answerCopyStyle: answer.copyStyle,
-    answerRetryStyle: answer.retryStyle,
-    transcriptStyle: transcript.style,
-    planStyle: plan.style,
-    planDisclosureStyle: plan.disclosureStyle,
-    activityStyle: activity.style,
-    activityDisclosureStyle: activity.disclosureStyle,
-    permissionStyle: permission.style,
-    permissionSurfaceStyle: permission.surfaceStyle,
-    permissionDetailsStyle: permission.detailsStyle,
-    permissionParametersStyle: permission.parametersStyle,
-    permissionAllowOnceStyle: permission.allowOnceStyle,
-    permissionAlwaysAllowStyle: permission.alwaysAllowStyle,
-    permissionDenyStyle: permission.denyStyle,
-    executionStyle: execution.style,
-    executionSurfaceStyle: execution.surfaceStyle,
-    executionDisclosureStyle: execution.disclosureStyle,
-    executionCopyStyle: execution.copyStyle,
-    executionRetryStyle: execution.retryStyle,
+    answerActionStyle: answer.actionStyle,
+    sourcesStyle: sources.style,
+    sourcesDisclosureStyle: sources.disclosureStyle,
+    sourceStyle: sources.sourceStyle,
+    suggestionsStyle: suggestions.style,
+    suggestionStyle: suggestions.suggestionStyle,
     composerStyle: composer.style,
-    composerSurfaceStyle: composer.surfaceStyle,
     composerFieldStyle: composer.fieldStyle,
-    composerSubmitStyle: composer.submitStyle,
-    composerStopStyle: composer.stopStyle,
+    submitStyle: composer.submitStyle,
+    stopStyle: composer.stopStyle,
   );
 }
 

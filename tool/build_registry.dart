@@ -220,7 +220,8 @@ final class PresetSpec {
   final Map<String, List<String>> composedRegistryDependencies;
 
   /// Items derived from `recipes/<name>.dart`: preset-specific stylings of
-  /// [behavior], composed from this preset's own components and theme.
+  /// [behavior] or a published library, composed from this preset's own
+  /// components and theme.
   final List<String> recipeItems;
 
   /// Multi-file recipe items assembled from explicitly mapped authored files.
@@ -230,7 +231,7 @@ final class PresetSpec {
   final List<GroupedRecipeItemSpec> groupedRecipeItems;
 
   /// The behavior the recipes style while authoring, and how its import lands
-  /// in installed source. Required once [recipeItems] is non-empty.
+  /// in installed source. Null when the recipes style a published library.
   final BehaviorSpec? behavior;
 
   /// Source directories this preset reads, shared items first.
@@ -388,25 +389,19 @@ final class BehaviorSpec {
   String get importPrefix => '../../$directory/';
 }
 
-/// Agent behavior as recipes reach it: `registry_source/lib/src/agent`.
-const agentBehavior = BehaviorSpec(
-  directory: 'agent',
-  typeWord: 'Agent',
-  valueWord: 'agent',
-  componentDirectory: 'components',
-);
-
-/// The eight Agent surfaces each preset styles. Dependencies are inferred
-/// from each recipe's imports.
+/// The Agent recipes each preset ships: one per widget of
+/// `package:remix/agent.dart`, plus the glyph set that draws their icons.
+/// Dependencies are inferred from each recipe's imports.
 const agentRecipes = [
-  'activity_recipe',
+  'agent_glyphs_recipe',
   'answer_recipe',
   'composer_recipe',
-  'execution_recipe',
+  'conversation_recipe',
   'message_recipe',
-  'permission_recipe',
-  'plan_recipe',
-  'transcript_recipe',
+  'sources_recipe',
+  'steps_recipe',
+  'suggestions_recipe',
+  'tool_call_recipe',
 ];
 
 /// The default preset as application-owned registry source.
@@ -483,22 +478,15 @@ const defaultPreset = PresetSpec(
     GroupedRecipeItemSpec(
       name: 'dashboard_demo',
       registryDependencies: [
-        'activity',
-        'activity_recipe',
-        'answer',
+        'agent_glyphs_recipe',
         'answer_recipe',
-        'composer',
         'composer_recipe',
-        'execution',
-        'execution_recipe',
-        'message',
+        'conversation_recipe',
         'message_recipe',
-        'permission',
-        'permission_recipe',
-        'plan',
-        'plan_recipe',
-        'transcript',
-        'transcript_recipe',
+        'sources_recipe',
+        'steps_recipe',
+        'suggestions_recipe',
+        'tool_call_recipe',
       ],
       files: [
         GroupedRecipeFileSpec(
@@ -575,7 +563,6 @@ const defaultPreset = PresetSpec(
       ],
     ),
   ],
-  behavior: agentBehavior,
 );
 
 /// The Fortal design system as application-owned registry source.
@@ -641,22 +628,15 @@ const fortalPreset = PresetSpec(
     GroupedRecipeItemSpec(
       name: 'dashboard_demo',
       registryDependencies: [
-        'activity',
-        'activity_recipe',
-        'answer',
+        'agent_glyphs_recipe',
         'answer_recipe',
-        'composer',
         'composer_recipe',
-        'execution',
-        'execution_recipe',
-        'message',
+        'conversation_recipe',
         'message_recipe',
-        'permission',
-        'permission_recipe',
-        'plan',
-        'plan_recipe',
-        'transcript',
-        'transcript_recipe',
+        'sources_recipe',
+        'steps_recipe',
+        'suggestions_recipe',
+        'tool_call_recipe',
       ],
       files: [
         GroupedRecipeFileSpec(
@@ -769,84 +749,6 @@ const fortalPreset = PresetSpec(
       ],
     ),
   ],
-  behavior: agentBehavior,
-);
-
-/// Agent behavior merged into the Fortal preset. The Fortal spec owns the
-/// tree; this extension only derives into `templates/agent/`.
-const fortalAgentExtension = PresetSpec(
-  name: 'fortal',
-  sourceRoot: 'registry_source/lib/src/agent',
-  sourcePackage: 'registry_source',
-  typeWord: 'Agent',
-  valueWord: 'agent',
-  componentDirectory: 'components',
-  extensionDirectory: 'templates/agent',
-  sharedItems: [
-    SharedItemSpec(
-      name: 'models',
-      directory: 'models',
-      requiredFile: 'models/statuses.dart',
-      packages: {},
-      exports: [
-        'models/activity_item.dart',
-        'models/plan_item.dart',
-        'models/statuses.dart',
-      ],
-    ),
-    SharedItemSpec(
-      name: 'support',
-      directory: 'support',
-      requiredFile: 'support/functional_glyph.dart',
-      packages: {},
-      registryDependencies: ['theme'],
-      exports: [],
-    ),
-  ],
-  copiedItems: [],
-  ignoredSourceFiles: {},
-  floorPackages: {'mix_annotations', 'build_runner', 'mix_generator'},
-  detectedPackages: const [],
-  composedRegistryDependencies: {},
-);
-
-/// Agent behavior merged into the default preset, as above.
-const defaultAgentExtension = PresetSpec(
-  name: 'vanilla',
-  sourceRoot: 'registry_source/lib/src/agent',
-  sourcePackage: 'registry_source',
-  typeWord: 'Agent',
-  valueWord: 'agent',
-  componentDirectory: 'components',
-  extensionDirectory: 'templates/agent',
-  sharedItems: [
-    SharedItemSpec(
-      name: 'models',
-      directory: 'models',
-      requiredFile: 'models/statuses.dart',
-      packages: {},
-      exports: [
-        'models/activity_item.dart',
-        'models/plan_item.dart',
-        'models/statuses.dart',
-      ],
-    ),
-    SharedItemSpec(
-      name: 'support',
-      directory: 'support',
-      requiredFile: 'support/functional_glyph.dart',
-      packages: {},
-      // The source imports Remix primitives, not the installed theme, but the
-      // existing theme item is the sole owner of the default Remix floor.
-      registryDependencies: ['theme'],
-      exports: [],
-    ),
-  ],
-  copiedItems: [],
-  ignoredSourceFiles: {},
-  floorPackages: {'mix_annotations', 'build_runner', 'mix_generator'},
-  detectedPackages: const [],
-  composedRegistryDependencies: {},
 );
 
 /// The HeroUI web design system: a theme and recipes over Remix components.
@@ -917,22 +819,15 @@ const herouiPreset = PresetSpec(
     GroupedRecipeItemSpec(
       name: 'dashboard_demo',
       registryDependencies: [
-        'activity',
-        'activity_recipe',
-        'answer',
+        'agent_glyphs_recipe',
         'answer_recipe',
-        'composer',
         'composer_recipe',
-        'execution',
-        'execution_recipe',
-        'message',
+        'conversation_recipe',
         'message_recipe',
-        'permission',
-        'permission_recipe',
-        'plan',
-        'plan_recipe',
-        'transcript',
-        'transcript_recipe',
+        'sources_recipe',
+        'steps_recipe',
+        'suggestions_recipe',
+        'tool_call_recipe',
       ],
       files: [
         GroupedRecipeFileSpec(
@@ -1009,48 +904,9 @@ const herouiPreset = PresetSpec(
       ],
     ),
   ],
-  // The Agent recipes are extensions too: HeroUI's card, button, disclosure
-  // and text area styles passed into the shared Agent stylers.
+  // The Agent recipes style `package:remix/agent.dart` with HeroUI's own
+  // buttons, disclosure, spinner and text area.
   recipeItems: agentRecipes,
-  behavior: agentBehavior,
-);
-
-/// Agent behavior merged into the HeroUI preset, as above.
-const herouiAgentExtension = PresetSpec(
-  name: 'heroui',
-  sourceRoot: 'registry_source/lib/src/agent',
-  sourcePackage: 'registry_source',
-  typeWord: 'Agent',
-  valueWord: 'agent',
-  componentDirectory: 'components',
-  extensionDirectory: 'templates/agent',
-  sharedItems: [
-    SharedItemSpec(
-      name: 'models',
-      directory: 'models',
-      requiredFile: 'models/statuses.dart',
-      packages: {},
-      exports: [
-        'models/activity_item.dart',
-        'models/plan_item.dart',
-        'models/statuses.dart',
-      ],
-    ),
-    SharedItemSpec(
-      name: 'support',
-      directory: 'support',
-      requiredFile: 'support/functional_glyph.dart',
-      packages: {},
-      // As in the default extension: the theme item owns the Remix floor.
-      registryDependencies: ['theme'],
-      exports: [],
-    ),
-  ],
-  copiedItems: [],
-  ignoredSourceFiles: {},
-  floorPackages: {'mix_annotations', 'build_runner', 'mix_generator'},
-  detectedPackages: const [],
-  composedRegistryDependencies: {},
 );
 
 /// Every remote preset and the specs that derive it, writer first.
@@ -1058,9 +914,9 @@ const herouiAgentExtension = PresetSpec(
 /// The first spec owns the preset. Any spec after it is an extension whose
 /// items derive from a second source package into the same tree.
 const presetSpecs = <String, List<PresetSpec>>{
-  'vanilla': [defaultPreset, defaultAgentExtension],
-  'fortal': [fortalPreset, fortalAgentExtension],
-  'heroui': [herouiPreset, herouiAgentExtension],
+  'vanilla': [defaultPreset],
+  'fortal': [fortalPreset],
+  'heroui': [herouiPreset],
 };
 
 PresetOutput mergePresetOutputs(PresetOutput base, PresetOutput extension) {
@@ -1875,9 +1731,6 @@ final class PresetBuilder {
           failures.add('$path: forbidden installed-source import $uri');
         }
       }
-      if (recipe && behavior == null) {
-        failures.add('$path: ${spec.name} declares no behavior to style');
-      }
       if (!groupedRecipe &&
           !spec.ignoredSourceFiles.contains(path) &&
           !spec.fileItems.any((item) => item.file == path) &&
@@ -1947,9 +1800,9 @@ final class PresetBuilder {
   /// rewritten import changes group.
   String _recipeSource(String path, String authored) {
     final behavior = spec.behavior;
-    if (behavior == null) {
-      throw StateError('${spec.name} recipes need a behavior spec.');
-    }
+    // A recipe that styles a published library has no sibling behavior to
+    // rebase; only its directives need sorting.
+    if (behavior == null) return sortDirectives(path, authored);
     final rewritten = authored
         .replaceAll(behavior.importPrefix, '../')
         .replaceAllMapped(

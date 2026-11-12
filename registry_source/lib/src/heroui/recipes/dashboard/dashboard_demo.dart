@@ -11,14 +11,15 @@ import '../../components/dropdown.dart';
 import '../../components/popover.dart';
 import '../../components/separator.dart';
 import '../../components/toast.dart';
-import '../activity_recipe.dart';
+import '../agent_glyphs_recipe.dart';
 import '../answer_recipe.dart';
 import '../composer_recipe.dart';
-import '../execution_recipe.dart';
+import '../conversation_recipe.dart';
 import '../message_recipe.dart';
-import '../permission_recipe.dart';
-import '../plan_recipe.dart';
-import '../transcript_recipe.dart';
+import '../sources_recipe.dart';
+import '../steps_recipe.dart';
+import '../suggestions_recipe.dart';
+import '../tool_call_recipe.dart';
 import '../../theme/theme.dart';
 import 'dashboard_demo_records.dart';
 import 'dashboard_demo_settings.dart';
@@ -546,13 +547,13 @@ class _HeroUiAccount extends StatelessWidget {
 }
 
 RegistryDashboardAgentStyles _heroUiAgentStyles() {
+  final conversation = heroUiAgentConversationRecipe();
   final message = heroUiAgentMessageRecipe();
+  final steps = heroUiAgentStepsRecipe();
+  final toolCall = heroUiAgentToolCallRecipe();
   final answer = heroUiAgentAnswerRecipe();
-  final transcript = heroUiAgentTranscriptRecipe();
-  final plan = heroUiAgentPlanRecipe();
-  final activity = heroUiAgentActivityRecipe();
-  final permission = heroUiAgentPermissionRecipe();
-  final execution = heroUiAgentExecutionRecipe();
+  final sources = heroUiAgentSourcesRecipe();
+  final suggestions = heroUiAgentSuggestionsRecipe();
   final composer = heroUiAgentComposerRecipe();
   return RegistryDashboardAgentStyles(
     buttonBuilder: (label, onPressed, tone) => switch (tone) {
@@ -560,37 +561,34 @@ RegistryDashboardAgentStyles _heroUiAgentStyles() {
       .soft => HeroUiButton.secondary(label: label, onPressed: onPressed),
       .outline => HeroUiButton.outline(label: label, onPressed: onPressed),
     },
+    glyphBuilder: heroUiAgentGlyph,
     heading: heroUiDashboardTextStyle(type: .h3),
     body: heroUiDashboardTextStyle(muted: true),
+    dockStyle: BoxStyler().maxWidth(768).padding(.horizontal(16)),
+    conversationStyle: conversation.style,
+    latestStyle: conversation.latestStyle,
     messageStyle: message.style,
-    messageSurfaceStyle: message.surfaceStyle,
+    messageToggleStyle: message.toggleStyle,
+    stepsStyle: steps.style,
+    stepStyle: steps.stepStyle,
+    stepsDisclosureStyle: steps.disclosureStyle,
+    toolCallStyle: toolCall.style,
+    toolCallDisclosureStyle: toolCall.disclosureStyle,
+    toolInputStyle: toolCall.inputStyle,
+    allowOnceStyle: toolCall.allowOnceStyle,
+    alwaysAllowStyle: toolCall.alwaysAllowStyle,
+    denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
-    answerSurfaceStyle: answer.surfaceStyle,
-    answerSourcesStyle: answer.sourcesStyle,
-    answerCopyStyle: answer.copyStyle,
-    answerRetryStyle: answer.retryStyle,
-    transcriptStyle: transcript.style,
-    planStyle: plan.style,
-    planDisclosureStyle: plan.disclosureStyle,
-    activityStyle: activity.style,
-    activityDisclosureStyle: activity.disclosureStyle,
-    permissionStyle: permission.style,
-    permissionSurfaceStyle: permission.surfaceStyle,
-    permissionDetailsStyle: permission.detailsStyle,
-    permissionParametersStyle: permission.parametersStyle,
-    permissionAllowOnceStyle: permission.allowOnceStyle,
-    permissionAlwaysAllowStyle: permission.alwaysAllowStyle,
-    permissionDenyStyle: permission.denyStyle,
-    executionStyle: execution.style,
-    executionSurfaceStyle: execution.surfaceStyle,
-    executionDisclosureStyle: execution.disclosureStyle,
-    executionCopyStyle: execution.copyStyle,
-    executionRetryStyle: execution.retryStyle,
+    answerActionStyle: answer.actionStyle,
+    sourcesStyle: sources.style,
+    sourcesDisclosureStyle: sources.disclosureStyle,
+    sourceStyle: sources.sourceStyle,
+    suggestionsStyle: suggestions.style,
+    suggestionStyle: suggestions.suggestionStyle,
     composerStyle: composer.style,
-    composerSurfaceStyle: composer.surfaceStyle,
     composerFieldStyle: composer.fieldStyle,
-    composerSubmitStyle: composer.submitStyle,
-    composerStopStyle: composer.stopStyle,
+    submitStyle: composer.submitStyle,
+    stopStyle: composer.stopStyle,
   );
 }
 
