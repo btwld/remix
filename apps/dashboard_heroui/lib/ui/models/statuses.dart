@@ -1,6 +1,6 @@
 /// Status of a long-running turn or activity ledger.
 enum UiRunStatus {
-  /// Work is in progress. Disclosures stay open.
+  /// Work is in progress. Disclosures open when work starts.
   working,
 
   /// Work finished. Disclosures may collapse.

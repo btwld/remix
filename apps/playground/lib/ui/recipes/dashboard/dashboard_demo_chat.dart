@@ -431,7 +431,7 @@ class _PlaygroundDashboardChatPageState
         ),
       );
       // Activity says what the agent is doing until a card says it instead.
-      if (_stage == _Stage.preparing)
+      if (_stage == _Stage.preparing) {
         children.add(
           PlaygroundActivity(
             style: styles.activityStyle,
@@ -446,6 +446,7 @@ class _PlaygroundDashboardChatPageState
             ],
           ),
         );
+      }
       // A decided request that let the tool run is told by the tool row
       // below it, so only a pending or denied request is shown.
       if (_stage == _Stage.permission ||

@@ -140,7 +140,7 @@ class _UiPermissionState extends State<UiPermission> {
   String get _statusLabel =>
       widget.statusLabelBuilder?.call(widget.status) ??
       switch (widget.status) {
-        UiPermissionStatus.pending => 'Permission required',
+        UiPermissionStatus.pending => 'Needs approval',
         UiPermissionStatus.deciding => 'Recording',
         UiPermissionStatus.allowed => 'Allowed',
         UiPermissionStatus.running => 'Running',
@@ -186,6 +186,27 @@ class _UiPermissionState extends State<UiPermission> {
     );
   }
 
+  bool get _awaitingDecision =>
+      widget.status == UiPermissionStatus.pending ||
+      widget.status == UiPermissionStatus.deciding;
+
+  Widget _status(BuildContext context, UiPermissionSpec spec) => Box(
+    styleSpec: _statusContainer(spec),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 6,
+      children: [
+        widget.statusBuilder?.call(context, widget.status) ??
+            StyleSpecBuilder<IconSpec>(
+              styleSpec: spec.statusIcon,
+              builder: (context, iconSpec) =>
+                  UiFunctionalGlyph(kind: _statusGlyph, spec: iconSpec),
+            ),
+        Flexible(child: StyledText(_statusLabel, styleSpec: spec.status)),
+      ],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return RemixStyleSpecBuilder<UiPermissionSpec>(
@@ -195,113 +216,123 @@ class _UiPermissionState extends State<UiPermission> {
         container: true,
         explicitChildNodes: true,
         label: widget.semanticLabel,
-        child: RemixCard(
-          style: widget.surfaceStyle,
-          child: Box(
-            styleSpec: spec.content,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                RowBox(
-                  styleSpec: spec.header,
-                  children: [
-                    StyleSpecBuilder<IconSpec>(
-                      styleSpec: spec.toolIcon,
-                      builder: (context, iconSpec) =>
-                          UiFunctionalGlyph(kind: .tool, spec: iconSpec),
-                    ),
-                    Expanded(
-                      child: StyledText(widget.title, styleSpec: spec.title),
-                    ),
-                  ],
-                ),
-                StyledText(widget.tool, styleSpec: spec.tool),
-                if (widget.description != null)
-                  StyledText(widget.description!, styleSpec: spec.description),
-                Box(
-                  styleSpec: _statusContainer(spec),
-                  child: Row(
+        // Once decided, the request is history: a one-line receipt of the
+        // decision, without the card, so it does not repeat the tool call
+        // that follows it.
+        child: !_awaitingDecision
+            ? RowBox(
+                styleSpec: spec.header,
+                children: [
+                  _status(context, spec),
+                  Flexible(
+                    child: StyledText(widget.tool, styleSpec: spec.tool),
+                  ),
+                ],
+              )
+            : RemixCard(
+                style: widget.surfaceStyle,
+                child: Box(
+                  styleSpec: spec.content,
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    spacing: 6,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      widget.statusBuilder?.call(context, widget.status) ??
+                      RowBox(
+                        styleSpec: spec.header,
+                        children: [
                           StyleSpecBuilder<IconSpec>(
-                            styleSpec: spec.statusIcon,
-                            builder: (context, iconSpec) => UiFunctionalGlyph(
-                              kind: _statusGlyph,
-                              spec: iconSpec,
+                            styleSpec: spec.toolIcon,
+                            builder: (context, iconSpec) =>
+                                UiFunctionalGlyph(kind: .tool, spec: iconSpec),
+                          ),
+                          Expanded(
+                            child: StyledText(
+                              widget.title,
+                              styleSpec: spec.title,
                             ),
                           ),
-                      Flexible(
-                        child: StyledText(_statusLabel, styleSpec: spec.status),
+                          // The state reads as a badge at the header's trailing
+                          // edge, where the eye lands after the question.
+                          _status(context, spec),
+                        ],
                       ),
+                      StyledText(widget.tool, styleSpec: spec.tool),
+                      if (widget.description != null)
+                        StyledText(
+                          widget.description!,
+                          styleSpec: spec.description,
+                        ),
+                      if (widget.showParameters && widget.parameters.isNotEmpty)
+                        RemixDisclosure(
+                          expanded: _detailsExpanded,
+                          onExpandedChanged: _requestDetails,
+                          semanticLabel: widget.detailsLabel,
+                          style: widget.detailsStyle,
+                          triggerBuilder: (context, state, trigger) => Row(
+                            // The indicator follows its label, as a link-like line,
+                            // rather than sitting at the far edge of the row.
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: 8,
+                            children: [
+                              Flexible(child: trigger!),
+                              UiDisclosureIndicator(
+                                styleSpec: spec.indicator,
+                                expanded: state.isExpanded,
+                                builder: widget.indicatorBuilder,
+                              ),
+                            ],
+                          ),
+                          trigger: StyledText(
+                            widget.detailsLabel,
+                            styleSpec: spec.detailsLabel,
+                          ),
+                          content: RemixDataList(
+                            items: widget.parameters,
+                            orientation: widget.parameterOrientation,
+                            style: widget.parametersStyle,
+                          ),
+                        ),
+                      if (widget.status == UiPermissionStatus.pending)
+                        // The primary decision comes last, in reading and focus
+                        // order, like the dialog footers of every preset; recipes
+                        // place the row at the trailing edge.
+                        FlexBox(
+                          styleSpec: _actionsStyle(spec),
+                          children: [
+                            RemixButton(
+                              key: const ValueKey('ui-permission-deny'),
+                              label: widget.denyLabel,
+                              enabled: !_decisionSubmitted,
+                              onPressed: widget.onDeny == null
+                                  ? null
+                                  : () => _submit(widget.onDeny),
+                              style: widget.denyStyle,
+                            ),
+                            if (widget.onAlwaysAllow != null)
+                              RemixButton(
+                                key: const ValueKey(
+                                  'ui-permission-always-allow',
+                                ),
+                                label: widget.alwaysAllowLabel,
+                                enabled: !_decisionSubmitted,
+                                onPressed: () => _submit(widget.onAlwaysAllow),
+                                style: widget.alwaysAllowStyle,
+                              ),
+                            RemixButton(
+                              key: const ValueKey('ui-permission-allow-once'),
+                              label: widget.allowOnceLabel,
+                              enabled: !_decisionSubmitted,
+                              onPressed: widget.onAllowOnce == null
+                                  ? null
+                                  : () => _submit(widget.onAllowOnce),
+                              style: widget.allowOnceStyle,
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
-                if (widget.showParameters && widget.parameters.isNotEmpty)
-                  RemixDisclosure(
-                    expanded: _detailsExpanded,
-                    onExpandedChanged: _requestDetails,
-                    semanticLabel: widget.detailsLabel,
-                    style: widget.detailsStyle,
-                    triggerBuilder: (context, state, trigger) => Row(
-                      spacing: 8,
-                      children: [
-                        Expanded(child: trigger!),
-                        UiDisclosureIndicator(
-                          styleSpec: spec.indicator,
-                          expanded: state.isExpanded,
-                          builder: widget.indicatorBuilder,
-                        ),
-                      ],
-                    ),
-                    trigger: StyledText(
-                      widget.detailsLabel,
-                      styleSpec: spec.detailsLabel,
-                    ),
-                    content: RemixDataList(
-                      items: widget.parameters,
-                      orientation: widget.parameterOrientation,
-                      style: widget.parametersStyle,
-                    ),
-                  ),
-                if (widget.status == UiPermissionStatus.pending)
-                  FlexBox(
-                    styleSpec: _actionsStyle(spec),
-                    children: [
-                      RemixButton(
-                        key: const ValueKey('ui-permission-allow-once'),
-                        label: widget.allowOnceLabel,
-                        enabled: !_decisionSubmitted,
-                        onPressed: widget.onAllowOnce == null
-                            ? null
-                            : () => _submit(widget.onAllowOnce),
-                        style: widget.allowOnceStyle,
-                      ),
-                      if (widget.onAlwaysAllow != null)
-                        RemixButton(
-                          key: const ValueKey('ui-permission-always-allow'),
-                          label: widget.alwaysAllowLabel,
-                          enabled: !_decisionSubmitted,
-                          onPressed: () => _submit(widget.onAlwaysAllow),
-                          style: widget.alwaysAllowStyle,
-                        ),
-                      RemixButton(
-                        key: const ValueKey('ui-permission-deny'),
-                        label: widget.denyLabel,
-                        enabled: !_decisionSubmitted,
-                        onPressed: widget.onDeny == null
-                            ? null
-                            : () => _submit(widget.onDeny),
-                        style: widget.denyStyle,
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }

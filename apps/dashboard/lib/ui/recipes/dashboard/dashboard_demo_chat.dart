@@ -429,7 +429,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
         ),
       );
       // Activity says what the agent is doing until a card says it instead.
-      if (_stage == _Stage.preparing)
+      if (_stage == _Stage.preparing) {
         children.add(
           UiActivity(
             style: styles.activityStyle,
@@ -444,6 +444,7 @@ class _UiDashboardChatPageState extends State<UiDashboardChatPage> {
             ],
           ),
         );
+      }
       // A decided request that let the tool run is told by the tool row
       // below it, so only a pending or denied request is shown.
       if (_stage == _Stage.permission ||
