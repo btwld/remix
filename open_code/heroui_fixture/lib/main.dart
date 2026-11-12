@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_chart/mix_chart.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -1076,64 +1077,61 @@ class _GalleryState extends State<Gallery> {
 
   Widget _agent() {
     final message = acmeAgentMessageRecipe();
+    final toolCall = acmeAgentToolCallRecipe();
     final answer = acmeAgentAnswerRecipe();
-    // Below 600 wide the actions stack, as the dashboard chat stacks them:
-    // three HeroUI buttons do not fit side by side inside a phone card.
-    final narrow = MediaQuery.sizeOf(context).width < 600;
-    final permission = acmeAgentPermissionRecipe(
-      style: AcmePermissionStyler(
-        actions: FlexBoxStyler()
-            .direction(narrow ? .vertical : .horizontal)
-            .crossAxisAlignment(narrow ? .stretch : .center),
-      ),
-    );
     final composer = acmeAgentComposerRecipe();
     return _card('Agent surfaces', [
       _caption(
-        'The shared Agent behavior with HeroUI card, button, disclosure, '
-        'and text area recipes. An extension: HeroUI web has none.',
+        'The Agent widgets of package:remix/agent.dart with HeroUI card, '
+        'button, disclosure, and text area recipes. An extension: HeroUI web '
+        'has none.',
       ),
-      AcmeMessage(
-        role: AcmeRole.user,
-        surfaceStyle: message.surfaceStyle,
-        style: message.style,
-        child: const Text('Run the checkout checks.'),
-      ),
-      AcmePermission(
-        tool: 'terminal',
-        title: 'Run flutter test?',
-        parameters: const [
-          RemixDataListItem(label: 'Command', value: 'flutter test'),
-        ],
-        onAllowOnce: () => setState(() => _lastAction = 'allow once'),
-        onAlwaysAllow: () => setState(() => _lastAction = 'always allow'),
-        onDeny: () => setState(() => _lastAction = 'deny'),
-        surfaceStyle: permission.surfaceStyle,
-        detailsStyle: permission.detailsStyle,
-        parametersStyle: permission.parametersStyle,
-        allowOnceStyle: permission.allowOnceStyle,
-        alwaysAllowStyle: permission.alwaysAllowStyle,
-        denyStyle: permission.denyStyle,
-        style: permission.style,
-      ),
-      AcmeAnswer(
-        status: AcmeAnswerStatus.complete,
-        onCopy: () => setState(() => _lastAction = 'copy'),
-        surfaceStyle: answer.surfaceStyle,
-        sourcesStyle: answer.sourcesStyle,
-        copyStyle: answer.copyStyle,
-        retryStyle: answer.retryStyle,
-        style: answer.style,
-        child: const Text('The checks pass. The flow is ready for review.'),
-      ),
-      AcmeComposer(
-        hintText: 'Ask a follow-up…',
-        onSubmit: (_) => setState(() => _lastAction = 'send'),
-        surfaceStyle: composer.surfaceStyle,
-        fieldStyle: composer.fieldStyle,
-        submitStyle: composer.submitStyle,
-        stopStyle: composer.stopStyle,
-        style: composer.style,
+      AgentGlyphs(
+        builder: acmeAgentGlyph,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 16,
+          children: [
+            AgentMessage(
+              role: AgentRole.user,
+              style: message.style,
+              toggleStyle: message.toggleStyle,
+              child: const Text('Run the checkout checks.'),
+            ),
+            AgentToolCall(
+              call: const AgentToolCallPart(
+                id: 'call',
+                name: 'terminal',
+                summary: 'Run flutter test',
+                input: [(label: 'Command', value: 'flutter test')],
+                status: AgentToolCallStatus.awaitingApproval,
+              ),
+              onDecision: (decision) =>
+                  setState(() => _lastAction = decision.name),
+              style: toolCall.style,
+              disclosureStyle: toolCall.disclosureStyle,
+              inputStyle: toolCall.inputStyle,
+              allowOnceStyle: toolCall.allowOnceStyle,
+              alwaysAllowStyle: toolCall.alwaysAllowStyle,
+              denyStyle: toolCall.denyStyle,
+            ),
+            AgentAnswer(
+              onCopy: () => setState(() => _lastAction = 'copy'),
+              style: answer.style,
+              actionStyle: answer.actionStyle,
+              child: const Text('The checks pass. The flow is ready.'),
+            ),
+            AgentComposer(
+              hintText: 'Ask a follow-up…',
+              onSubmit: (_) => setState(() => _lastAction = 'send'),
+              style: composer.style,
+              fieldStyle: composer.fieldStyle,
+              submitStyle: composer.submitStyle,
+              stopStyle: composer.stopStyle,
+            ),
+          ],
+        ),
       ),
     ]);
   }

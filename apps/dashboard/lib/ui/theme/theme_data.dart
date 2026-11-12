@@ -362,7 +362,7 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
     UiTokens.dataTableSortIconSize3: 18.0 * scaling,
     UiTokens.planMaxHeight: 220.0 * scaling,
     UiTokens.messageAvatarSize: 28.0 * scaling,
-    UiTokens.messageContentMaxWidth: 640.0 * scaling,
+    UiTokens.messageContentMaxWidth: 768.0 * scaling,
     UiTokens.messageCollapsedHeight: 72.0 * scaling,
     UiTokens.composerFieldMinHeight: 56.0 * scaling,
     UiTokens.touchTargetMin: 40.0 * math.max(1.0, scaling),

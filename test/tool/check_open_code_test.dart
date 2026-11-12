@@ -1351,7 +1351,7 @@ Future<void> main(List<String> arguments) async {
       for (final preset in ['vanilla', 'fortal']) {
         final items = checker.independentInstallsForTest(preset);
 
-        expect(items, hasLength(preset == 'fortal' ? 23 : 19), reason: preset);
+        expect(items, hasLength(preset == 'fortal' ? 16 : 12), reason: preset);
         if (preset == 'fortal') {
           expect(
             items,
@@ -1366,7 +1366,7 @@ Future<void> main(List<String> arguments) async {
         expect(items, contains('range_slider'));
         expect(
           items,
-          containsAll(['activity', 'transcript_recipe', 'dashboard_demo']),
+          containsAll(['steps_recipe', 'tool_call_recipe', 'dashboard_demo']),
           reason: preset,
         );
       }
@@ -1402,14 +1402,15 @@ Future<void> main(List<String> arguments) async {
           'textarea',
           'toast',
           'toggle_button_group',
-          'activity_recipe',
+          'agent_glyphs_recipe',
           'answer_recipe',
           'composer_recipe',
-          'execution_recipe',
+          'conversation_recipe',
           'message_recipe',
-          'permission_recipe',
-          'plan_recipe',
-          'transcript_recipe',
+          'sources_recipe',
+          'steps_recipe',
+          'suggestions_recipe',
+          'tool_call_recipe',
           'dashboard_demo',
         ]),
       );
@@ -1675,15 +1676,12 @@ dependency_overrides:
   });
 
   group('installed UI boundary', () {
-    test(
-      'accepts exact registry output and scoped Agent builder configuration',
-      () {
-        final app = Directory('${sandbox.path}/app');
-        _writeInstalledUi(app);
+    test('accepts exact registry output without any builder configuration', () {
+      final app = Directory('${sandbox.path}/app');
+      _writeInstalledUi(app);
 
-        expect(checker.installedUiProblem(app), isNull);
-      },
-    );
+      expect(checker.installedUiProblem(app), isNull);
+    });
 
     test('rejects unexpected consumer builder configuration', () {
       final app = Directory('${sandbox.path}/app');
@@ -1692,7 +1690,7 @@ dependency_overrides:
 
       expect(
         checker.installedUiProblem(app),
-        contains('does not match the scoped Agent builder contract'),
+        contains('consumer build.yaml is unnecessary'),
       );
     });
 
@@ -1791,15 +1789,15 @@ import 'package:flutter/widgets.dart'
           'remix_ui_icons',
         ]),
       );
-      // The Agent components are `@MixableSpec` source, so HeroUI installs
-      // the same scoped spec builder as the other presets.
+      // The Agent widgets ship in package:remix, so no installed source is
+      // `@MixableSpec` and no consumer builder configuration is needed.
       final app = Directory('${sandbox.path}/heroui');
       _writeInstalledUi(app, preset: 'heroui');
       expect(checker.installedUiProblem(app, preset: 'heroui'), isNull);
       File('${app.path}/build.yaml').writeAsStringSync('targets: {}\n');
       expect(
         checker.installedUiProblem(app, preset: 'heroui'),
-        contains('scoped Agent builder contract'),
+        contains('consumer build.yaml is unnecessary'),
       );
       // HeroUI now ships the demo, as an extension; only Vanilla checks
       // its icon aliases and ownership alone.
@@ -1907,12 +1905,10 @@ import 'package:flutter/widgets.dart'
       containsAll([
         'recipes/dashboard/dashboard_demo.dart',
         'recipes/dashboard/dashboard_demo_records_page.dart',
-        'recipes/activity_recipe.dart',
-        'components/activity.dart',
+        'recipes/tool_call_recipe.dart',
+        'recipes/agent_glyphs_recipe.dart',
         'components/chart.dart',
         'components/table.dart',
-        'models/statuses.dart',
-        'support/functional_glyph.dart',
       ]),
     );
     expect(demo, isNot(contains('components/typography.dart')));
@@ -2176,7 +2172,6 @@ void _writeValidFixture(Directory fixture) {
     'test/open_code_test.dart',
     'test/theme_modes_test.dart',
     'test/agent_recipe_contract_test.dart',
-    'test/composer_recipe_test.dart',
     'expected/acme_button.g.dart',
     'expected/acme_chart.g.dart',
     'expected/acme_tabs.g.dart',
@@ -2200,21 +2195,6 @@ dev_dependencies:
 void _writeInstalledUi(Directory app, {String preset = 'vanilla'}) {
   final files = checker.installedUiFilesForTest(preset: preset);
   app.createSync(recursive: true);
-  File('${app.path}/build.yaml').writeAsStringSync('''targets:
-  \$default:
-    builders:
-      mix_generator:spec_styler_generator:
-        enabled: true
-        generate_for:
-          - lib/ui/components/activity.dart
-          - lib/ui/components/answer.dart
-          - lib/ui/components/composer.dart
-          - lib/ui/components/execution.dart
-          - lib/ui/components/message.dart
-          - lib/ui/components/permission.dart
-          - lib/ui/components/plan.dart
-          - lib/ui/components/transcript.dart
-''');
   for (final relative in files) {
     final file = File('${app.path}/lib/ui/$relative');
     file.parent.createSync(recursive: true);

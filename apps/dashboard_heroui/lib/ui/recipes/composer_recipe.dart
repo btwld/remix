@@ -1,71 +1,88 @@
 import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 
 import '../components/button.dart';
-import '../components/card.dart';
-import '../components/composer.dart';
 import '../components/textarea.dart';
 import '../theme/theme.dart';
 
-/// Styles for the composer: a HeroUI card around a text area with no fill of
-/// its own, a primary submit icon button, and a danger stop icon button.
+/// Styles for the composer: a rounded surface holding a text area over a
+/// toolbar.
 @immutable
 final class UiAgentComposerRecipe {
   const UiAgentComposerRecipe({
     required this.style,
-    required this.surfaceStyle,
     required this.fieldStyle,
     required this.submitStyle,
     required this.stopStyle,
   });
 
-  /// Styles for the composer toolbar.
-  final UiComposerStyler style;
+  /// Styles for the surface, the field's frame and the toolbar.
+  final AgentComposerStyler style;
 
-  /// Styles for the card around the field and toolbar.
-  final CardStyler surfaceStyle;
-
-  /// Styles for the message text area.
+  /// Styles for the text area, which has no frame of its own.
   final TextFieldStyler fieldStyle;
 
-  /// Styles for the icon button that sends the message.
+  /// Styles for the button that sends the message.
   final IconButtonStyler submitStyle;
 
-  /// Styles for the icon button that stops a running response.
+  /// Styles for the button that stops a running response.
   final IconButtonStyler stopStyle;
 }
 
 /// Builds the recipe; each argument is merged last, so callers can override.
+///
+/// The surface is a `gray2` panel inside a `controlBorder` frame, with no
+/// shadow. It takes the focus color while the field has focus. The field
+/// grows from one line to 240px.
 UiAgentComposerRecipe uiAgentComposerRecipe({
-  UiComposerStyler style = const UiComposerStyler.create(),
-  CardStyler surfaceStyle = const CardStyler.create(),
+  AgentComposerStyler style = const AgentComposerStyler.create(),
   TextFieldStyler fieldStyle = const TextFieldStyler.create(),
   IconButtonStyler submitStyle = const IconButtonStyler.create(),
   IconButtonStyler stopStyle = const IconButtonStyler.create(),
 }) => UiAgentComposerRecipe(
-  style: UiComposerStyler(
-    toolbar: FlexBoxStyler()
-        .direction(.horizontal)
-        .mainAxisSize(.max)
-        .crossAxisAlignment(.center)
-        .spacing(8)
-        .padding(.top(8)),
-  ).merge(style),
-  surfaceStyle: uiCardStyle(
-    style: CardStyler().padding(.all(12)).merge(surfaceStyle),
-  ),
-  // The card is the field's surface: the secondary text area, which carries
-  // no shadow, with its fill cleared in every state. It keeps its focus ring.
+  style:
+      AgentComposerStyler(
+            container: BoxStyler()
+                .color(UiTokens.surfaceSecondary())
+                .borderRadius(.all(UiTokens.radius2xl()))
+                .padding(.all(12))
+                .border(.all(.color(UiTokens.fieldBorder()).width(1))),
+            field: BoxStyler().padding(.horizontal(4)),
+            fieldMaxHeight: _fieldMaxHeight,
+            toolbar: FlexBoxStyler()
+                .spacing(8)
+                .crossAxisAlignment(.center)
+                .padding(.top(12)),
+          )
+          .onFocused(
+            AgentComposerStyler(
+              container: BoxStyler().border(.all(.color(UiTokens.focus()))),
+            ),
+          )
+          .merge(style),
   fieldStyle: uiTextAreaStyle(
     variant: .secondary,
+    minLines: 1,
     style: TextFieldStyler()
-        .color(UiTokens.transparent)
-        .minHeight(56)
-        .padding(.all(4))
-        .onHovered(.color(UiTokens.transparent))
-        .onFocused(.color(UiTokens.transparent))
+        .color(const Color(0x00000000))
+        .border(.style(.none))
+        .padding(.all(0))
+        .minHeight(24)
         .merge(fieldStyle),
   ),
-  submitStyle: uiIconButtonStyle(style: submitStyle),
-  stopStyle: uiIconButtonStyle(variant: .danger, style: stopStyle),
+  submitStyle: _round(submitStyle),
+  stopStyle: _round(stopStyle),
+);
+
+/// The tallest the field grows before it scrolls.
+const _fieldMaxHeight = 240.0;
+
+/// A solid, round 32px icon button.
+IconButtonStyler _round(IconButtonStyler style) => uiIconButtonStyle(
+  variant: .primary,
+  size: .sm,
+  style: IconButtonStyler()
+      .borderRadius(.all(UiTokens.radius4xl()))
+      .merge(style),
 );

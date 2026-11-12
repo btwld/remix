@@ -131,8 +131,7 @@ void main() {
       };
       // Besides the components: the `icons` file item, the grouped
       // `dashboard_shell` and `dashboard_demo` recipes, and the Agent
-      // recipes. The Agent behavior they style merges in from
-      // `herouiAgentExtension`.
+      // recipes, which style `package:remix/agent.dart`.
       expect(items.keys.toSet(), {
         'theme',
         'icons',
@@ -230,7 +229,6 @@ void main() {
       demo,
       containsAll([
         ...agentRecipes,
-        ...agentRecipes.map((name) => name.replaceAll('_recipe', '')),
         'chart',
         'dashboard_shell',
         'table',
@@ -267,139 +265,91 @@ void main() {
     expect(page, isNot(contains('RemixIcons')));
   });
 
-  test(
-    'Fortal merges Agent behavior and recipes without changing base output',
-    () {
-      final root = Directory.current.absolute;
-      final baseBuilder = PresetBuilder.forRepository(root);
-      final agentBuilder = PresetBuilder.forRepository(
-        root,
-        spec: fortalAgentExtension,
-      );
-      final base = baseBuilder.derive();
-      final merged = mergePresetOutputs(base, agentBuilder.derive());
-
-      for (final entry in base.files.entries) {
-        if (entry.key == 'registry.yaml') continue;
-        expect(merged.files[entry.key], entry.value, reason: entry.key);
-      }
-      final registry = merged.files['registry.yaml']!;
-      expect(registry, contains('  composer_recipe:'));
-      expect(registry, contains('  transcript_recipe:'));
-      expect(
-        merged.files,
-        contains('templates/agent/composer/composer.dart.tmpl'),
-      );
-      expect(
-        merged.files,
-        contains('templates/recipes/composer_recipe.dart.tmpl'),
-      );
-      expect(
-        merged.files.keys.where((path) => path.startsWith('templates/agent/')),
-        isNot(anyElement(contains('/recipes/'))),
-      );
-    },
-  );
-
-  test(
-    'HeroUI merges Agent behavior and recipes without changing base output',
-    () {
-      final root = Directory.current.absolute;
-      final base = PresetBuilder.forRepository(
-        root,
-        spec: herouiPreset,
+  test('every preset ships the Agent recipes and no Agent behavior', () {
+    for (final spec in [defaultPreset, fortalPreset, herouiPreset]) {
+      final output = PresetBuilder.forRepository(
+        Directory.current.absolute,
+        spec: spec,
       ).derive();
-      final agent = PresetBuilder.forRepository(
-        root,
-        spec: herouiAgentExtension,
-      ).derive();
-      final merged = mergePresetOutputs(base, agent);
-
-      for (final entry in base.files.entries) {
-        if (entry.key == 'registry.yaml') continue;
-        expect(merged.files[entry.key], entry.value, reason: entry.key);
-      }
-      // The behavior is the same source Vanilla installs, byte for byte.
-      final vanilla = mergePresetOutputs(
-        PresetBuilder.forRepository(root).derive(),
-        PresetBuilder.forRepository(root, spec: defaultAgentExtension).derive(),
-      );
-      final behavior = agent.files.keys.where(
-        (path) => path.startsWith('templates/agent/'),
-      );
-      expect(behavior, isNotEmpty);
-      for (final path in behavior) {
-        expect(merged.files[path], vanilla.files[path], reason: path);
-      }
-
       final items =
-          (loadYaml(merged.files['registry.yaml']!) as YamlMap)['items']
-              as YamlMap;
-      expect(_strings((items['support'] as YamlMap)['registryDependencies']), [
-        'theme',
-      ]);
-      List<String> dependencies(String item) =>
-          _strings((items[item] as YamlMap)['registryDependencies']);
-      // Each recipe styles its behavior with HeroUI's own recipes.
-      expect(
-        dependencies('answer_recipe'),
-        unorderedEquals(['theme', 'answer', 'button', 'card', 'disclosure']),
-      );
-      expect(
-        dependencies('composer_recipe'),
-        unorderedEquals(['theme', 'composer', 'button', 'card', 'textarea']),
-      );
-      expect(
-        dependencies('permission_recipe'),
-        unorderedEquals([
-          'theme',
-          'permission',
-          'button',
-          'card',
-          'disclosure',
-        ]),
-      );
-      expect(dependencies('transcript_recipe'), ['transcript']);
-      final recipe = merged.files['templates/recipes/answer_recipe.dart.tmpl']!;
-      expect(recipe, contains('{{valuePrefix}}IconButtonStyle'));
-      expect(recipe, contains('{{valuePrefix}}CardStyle'));
-      expect(recipe, isNot(contains('HeroUi')));
-    },
-  );
+          loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
 
-  test(
-    'recipes derive against installed behavior, not the authoring import',
-    () {
-      for (final spec in [defaultPreset, fortalPreset, herouiPreset]) {
-        final output = PresetBuilder.forRepository(
-          Directory.current.absolute,
-          spec: spec,
-        ).derive();
-        final items =
-            loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
-        for (final name in agentRecipes) {
-          final template = output.files['templates/recipes/$name.dart.tmpl']!;
-          expect(
-            template,
-            isNot(contains('package:remix_agent')),
-            reason: name,
-          );
-          expect(
-            RegExp(r'(?<![A-Za-z0-9_}])Agent[A-Z]').hasMatch(template),
-            isFalse,
-            reason: '$name still names a behavior type by its authoring word',
-          );
-          // The domain name survives: the recipe is the Agent composer recipe.
-          expect(template, contains('{{typePrefix}}Agent'), reason: name);
-          final dependencies = _strings(
-            (items[name] as YamlMap)['registryDependencies'],
-          );
-          expect(dependencies, contains(name.replaceAll('_recipe', '')));
-          expect(dependencies, isNot(contains('models')));
-        }
+      expect(items.keys, containsAll(agentRecipes), reason: spec.name);
+      // The widgets live in package:remix/agent.dart, so nothing of the old
+      // Agent source installs.
+      for (final retired in [
+        'models',
+        'support',
+        'activity',
+        'activity_recipe',
+        'execution',
+        'execution_recipe',
+        'permission',
+        'permission_recipe',
+        'plan',
+        'plan_recipe',
+        'transcript',
+        'transcript_recipe',
+        'message',
+        'answer',
+        'composer',
+      ]) {
+        expect(items.keys, isNot(contains(retired)), reason: spec.name);
       }
-    },
-  );
+      expect(
+        output.files.keys,
+        isNot(anyElement(startsWith('templates/agent/'))),
+        reason: spec.name,
+      );
+    }
+  });
+
+  test('Agent recipes style the published library, not the authoring one', () {
+    for (final spec in [defaultPreset, fortalPreset, herouiPreset]) {
+      final builder = PresetBuilder.forRepository(
+        Directory.current.absolute,
+        spec: spec,
+      );
+      final output = builder.derive();
+      final items =
+          loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+      for (final name in agentRecipes) {
+        final template = output.files['templates/recipes/$name.dart.tmpl']!;
+        expect(template, contains("import 'package:remix/agent.dart';"));
+        expect(template, isNot(contains('package:registry_source')));
+        expect(template, isNot(contains("'../../")), reason: name);
+        final dependencies = _strings(
+          (items[name] as YamlMap)['registryDependencies'],
+        );
+        expect(dependencies, isNot(contains('models')), reason: name);
+        expect(dependencies, isNot(contains('support')), reason: name);
+        // The domain name survives the prefix swap: `AgentGlyph` is the
+        // library's, `{{typePrefix}}Agent...Recipe` is the preset's.
+        if (name != 'agent_glyphs_recipe') {
+          expect(template, contains('{{typePrefix}}Agent'), reason: name);
+        }
+        // The template renders back to the authored recipe.
+        final rendered = const TemplateRenderer().render(
+          template,
+          typePrefix: spec.typeWord,
+          valuePrefix: spec.valueWord,
+          icons: builder.icons,
+        );
+        expect(
+          rendered,
+          output.sourceByTemplate['templates/recipes/$name.dart.tmpl'],
+          reason: name,
+        );
+      }
+      expect(
+        _strings(
+          (items['tool_call_recipe'] as YamlMap)['registryDependencies'],
+        ),
+        containsAll(['button', 'disclosure']),
+        reason: spec.name,
+      );
+    }
+  });
 
   test('preset output merge rejects file collisions', () {
     const left = PresetOutput(

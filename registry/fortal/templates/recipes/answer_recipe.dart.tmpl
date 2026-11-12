@@ -37,7 +37,7 @@ final class {{typePrefix}}AgentAnswerRecipe {
     actions: FlexBoxStyler()
         .spacing({{typePrefix}}Tokens.space2())
         .crossAxisAlignment(.center)
-        .margin(.left(-_actionsHang)),
+        .transform(Matrix4.translationValues(-_actionsHang, 0, 0)),
     feedback: TextStyler()
         .style({{typePrefix}}Tokens.text1.mix())
         .color({{typePrefix}}Tokens.gray11()),
@@ -51,6 +51,6 @@ final class {{typePrefix}}AgentAnswerRecipe {
   ),
 );
 
-/// How far the action buttons hang into the margin: the 8px between a 32px
+/// How far the action buttons shift left: the 8px between a 32px
 /// button's edge and its 16px glyph.
 const _actionsHang = 8.0;

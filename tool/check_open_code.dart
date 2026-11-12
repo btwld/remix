@@ -114,26 +114,20 @@ const _defaultRegistryItems = <String>[
   ..._agentRegistryItems,
 ];
 
-const _agentComponentItems = <String>[
-  'activity',
-  'answer',
-  'composer',
-  'execution',
-  'message',
-  'permission',
-  'plan',
-  'transcript',
-];
+/// The Agent widgets live in `package:remix/agent.dart`, so no behavior
+/// installs; only the preset's recipes for them do.
+const _agentComponentItems = <String>[];
 
 const _agentRecipeItems = <String>[
-  'activity_recipe',
+  'agent_glyphs_recipe',
   'answer_recipe',
   'composer_recipe',
-  'execution_recipe',
+  'conversation_recipe',
   'message_recipe',
-  'permission_recipe',
-  'plan_recipe',
-  'transcript_recipe',
+  'sources_recipe',
+  'steps_recipe',
+  'suggestions_recipe',
+  'tool_call_recipe',
 ];
 
 const _agentRegistryItems = <String>[
@@ -147,7 +141,7 @@ const _independentRegistryItems = <String>[
   'dashboard_shell',
 ];
 
-const _foundationItems = <String>{'theme', 'models', 'support'};
+const _foundationItems = <String>{'theme'};
 
 /// Generated adapters compared byte-for-byte against a committed snapshot.
 ///
@@ -502,7 +496,6 @@ final class _PresetContract {
     ..._fixtureAppFiles,
     if (name == 'vanilla' && item == null) ...[
       'test/agent_recipe_contract_test.dart',
-      'test/composer_recipe_test.dart',
     ],
   ];
 

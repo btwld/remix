@@ -132,20 +132,19 @@ void main() {
 
     await tester.tap(find.text('Chat').first);
     await tester.pump();
-    expect(find.text('Agent chat'), findsOneWidget);
+    expect(find.text('What should we work on?'), findsOneWidget);
 
     await tester.tap(find.text('Review checkout'));
-    for (var frame = 0; frame < 5; frame++) {
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('agent-composer-send')));
+    for (var frame = 0; frame < 10; frame++) {
       await tester.pump(const Duration(milliseconds: 350));
     }
-    expect(find.textContaining('ready for review'), findsWidgets);
+    expect(find.textContaining('The cart flow is ready'), findsWidgets);
 
-    final copyAnswer = find.bySemanticsLabel('Copy answer');
-    if (copyAnswer.evaluate().isNotEmpty) {
-      await tester.tap(copyAnswer.first);
-      await tester.pump();
-      expect(copied, isNotEmpty);
-    }
+    await tester.tap(find.byKey(const ValueKey('agent-answer-copy')));
+    await tester.pump();
+    expect(copied, startsWith('The cart flow is ready'));
     expect(tester.takeException(), isNull);
   });
 }

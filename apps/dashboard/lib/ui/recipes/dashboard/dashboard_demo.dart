@@ -6,14 +6,15 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../components/sidebar_layout.dart';
 import '../../components/tooltip.dart';
-import '../activity_recipe.dart';
+import '../agent_glyphs_recipe.dart';
 import '../answer_recipe.dart';
 import '../composer_recipe.dart';
-import '../execution_recipe.dart';
+import '../conversation_recipe.dart';
 import '../message_recipe.dart';
-import '../permission_recipe.dart';
-import '../plan_recipe.dart';
-import '../transcript_recipe.dart';
+import '../sources_recipe.dart';
+import '../steps_recipe.dart';
+import '../suggestions_recipe.dart';
+import '../tool_call_recipe.dart';
 import 'dashboard_demo_base.dart';
 import 'dashboard_demo_chat.dart';
 import 'dashboard_demo_page_header.dart';
@@ -633,13 +634,13 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
 }
 
 UiDashboardAgentStyles _uiAgentStyles() {
+  final conversation = uiAgentConversationRecipe();
   final message = uiAgentMessageRecipe();
+  final steps = uiAgentStepsRecipe();
+  final toolCall = uiAgentToolCallRecipe();
   final answer = uiAgentAnswerRecipe();
-  final transcript = uiAgentTranscriptRecipe();
-  final plan = uiAgentPlanRecipe();
-  final activity = uiAgentActivityRecipe();
-  final permission = uiAgentPermissionRecipe();
-  final execution = uiAgentExecutionRecipe();
+  final sources = uiAgentSourcesRecipe();
+  final suggestions = uiAgentSuggestionsRecipe();
   final composer = uiAgentComposerRecipe();
   return UiDashboardAgentStyles(
     buttonBuilder: (label, onPressed, tone) => switch (tone) {
@@ -647,37 +648,36 @@ UiDashboardAgentStyles _uiAgentStyles() {
       .soft => UiButton.soft(label: label, onPressed: onPressed),
       .outline => UiButton.outline(label: label, onPressed: onPressed),
     },
+    glyphBuilder: uiAgentGlyph,
     heading: uiTextStyle(size: .size6, weight: .bold),
-    body: uiTextStyle(size: .size2, highContrast: false),
+    body: uiTextStyle(size: .size1, highContrast: false),
+    dockStyle: BoxStyler()
+        .maxWidth(UiTokens.messageContentMaxWidth())
+        .padding(.horizontal(UiTokens.space4())),
+    conversationStyle: conversation.style,
+    latestStyle: conversation.latestStyle,
     messageStyle: message.style,
-    messageSurfaceStyle: message.surfaceStyle,
+    messageToggleStyle: message.toggleStyle,
+    stepsStyle: steps.style,
+    stepStyle: steps.stepStyle,
+    stepsDisclosureStyle: steps.disclosureStyle,
+    toolCallStyle: toolCall.style,
+    toolCallDisclosureStyle: toolCall.disclosureStyle,
+    toolInputStyle: toolCall.inputStyle,
+    allowOnceStyle: toolCall.allowOnceStyle,
+    alwaysAllowStyle: toolCall.alwaysAllowStyle,
+    denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
-    answerSurfaceStyle: answer.surfaceStyle,
-    answerSourcesStyle: answer.sourcesStyle,
-    answerCopyStyle: answer.copyStyle,
-    answerRetryStyle: answer.retryStyle,
-    transcriptStyle: transcript.style,
-    planStyle: plan.style,
-    planDisclosureStyle: plan.disclosureStyle,
-    activityStyle: activity.style,
-    activityDisclosureStyle: activity.disclosureStyle,
-    permissionStyle: permission.style,
-    permissionSurfaceStyle: permission.surfaceStyle,
-    permissionDetailsStyle: permission.detailsStyle,
-    permissionParametersStyle: permission.parametersStyle,
-    permissionAllowOnceStyle: permission.allowOnceStyle,
-    permissionAlwaysAllowStyle: permission.alwaysAllowStyle,
-    permissionDenyStyle: permission.denyStyle,
-    executionStyle: execution.style,
-    executionSurfaceStyle: execution.surfaceStyle,
-    executionDisclosureStyle: execution.disclosureStyle,
-    executionCopyStyle: execution.copyStyle,
-    executionRetryStyle: execution.retryStyle,
+    answerActionStyle: answer.actionStyle,
+    sourcesStyle: sources.style,
+    sourcesDisclosureStyle: sources.disclosureStyle,
+    sourceStyle: sources.sourceStyle,
+    suggestionsStyle: suggestions.style,
+    suggestionStyle: suggestions.suggestionStyle,
     composerStyle: composer.style,
-    composerSurfaceStyle: composer.surfaceStyle,
     composerFieldStyle: composer.fieldStyle,
-    composerSubmitStyle: composer.submitStyle,
-    composerStopStyle: composer.stopStyle,
+    submitStyle: composer.submitStyle,
+    stopStyle: composer.stopStyle,
   );
 }
 

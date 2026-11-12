@@ -1,73 +1,94 @@
 import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 
-import '../components/card.dart';
-import '../components/composer.dart';
 import '../components/icon_button.dart';
 import '../components/textfield.dart';
+import '../theme/tokens.dart';
 
-/// Styles for the composer: a card around a text area with no fill of its own,
-/// a submit icon button, and a stop icon button.
+/// Styles for the composer: a rounded surface holding a text area over a
+/// toolbar.
 @immutable
 final class PlaygroundAgentComposerRecipe {
   const PlaygroundAgentComposerRecipe({
     required this.style,
-    required this.surfaceStyle,
     required this.fieldStyle,
     required this.submitStyle,
     required this.stopStyle,
   });
 
-  /// Styles for the composer toolbar.
-  final PlaygroundComposerStyler style;
+  /// Styles for the surface, the field's frame and the toolbar.
+  final AgentComposerStyler style;
 
-  /// Styles for the card around the field and toolbar.
-  final CardStyler surfaceStyle;
-
-  /// Styles for the message text area.
+  /// Styles for the text area, which has no frame of its own.
   final TextFieldStyler fieldStyle;
 
-  /// Styles for the icon button that sends the message.
+  /// Styles for the button that sends the message.
   final IconButtonStyler submitStyle;
 
-  /// Styles for the icon button that stops a running response.
+  /// Styles for the button that stops a running response.
   final IconButtonStyler stopStyle;
 }
 
 /// Builds the recipe; each argument is merged last, so callers can override.
+///
+/// The surface is a `gray2` panel inside a `controlBorder` frame, with no
+/// shadow. It takes the focus color while the field has focus. The field
+/// grows from one line to 240px.
 PlaygroundAgentComposerRecipe playgroundAgentComposerRecipe({
-  PlaygroundComposerStyler style = const PlaygroundComposerStyler.create(),
-  CardStyler surfaceStyle = const CardStyler.create(),
+  AgentComposerStyler style = const AgentComposerStyler.create(),
   TextFieldStyler fieldStyle = const TextFieldStyler.create(),
   IconButtonStyler submitStyle = const IconButtonStyler.create(),
   IconButtonStyler stopStyle = const IconButtonStyler.create(),
 }) => PlaygroundAgentComposerRecipe(
-  style: PlaygroundComposerStyler(
-    toolbar: FlexBoxStyler()
-        .direction(.horizontal)
-        .mainAxisSize(.max)
-        .crossAxisAlignment(.center)
-        .spacing(8)
-        .padding(.top(8)),
-  ).merge(style),
-  surfaceStyle: playgroundCardStyle(
-    style: CardStyler().padding(.all(12)).merge(surfaceStyle),
-  ),
+  style:
+      AgentComposerStyler(
+            container: BoxStyler()
+                .color(PlaygroundTokens.muted())
+                .borderRadius(.all(PlaygroundTokens.radiusXl()))
+                .padding(.all(PlaygroundTokens.s3))
+                .border(
+                  .all(
+                    .color(
+                      PlaygroundTokens.input(),
+                    ).width(PlaygroundTokens.strokeHairline),
+                  ),
+                ),
+            field: BoxStyler().padding(.horizontal(PlaygroundTokens.s1)),
+            fieldMaxHeight: _fieldMaxHeight,
+            toolbar: FlexBoxStyler()
+                .spacing(PlaygroundTokens.s2)
+                .crossAxisAlignment(.center)
+                .padding(.top(PlaygroundTokens.s3)),
+          )
+          .onFocused(
+            AgentComposerStyler(
+              container: BoxStyler().border(
+                .all(.color(PlaygroundTokens.ring())),
+              ),
+            ),
+          )
+          .merge(style),
   fieldStyle: playgroundTextAreaStyle(
     style: TextFieldStyler()
         .color(const Color(0x00000000))
         .border(.style(.none))
-        .minHeight(56)
-        .padding(.all(4))
+        .padding(.all(0))
+        .minHeight(PlaygroundTokens.s6)
         .merge(fieldStyle),
   ),
-  submitStyle: playgroundIconButtonStyle(
-    size: .small,
-    style: IconButtonStyler().size(36, 36).merge(submitStyle),
-  ),
-  stopStyle: playgroundIconButtonStyle(
-    variant: .destructive,
-    size: .small,
-    style: IconButtonStyler().size(36, 36).merge(stopStyle),
-  ),
+  submitStyle: _round(submitStyle),
+  stopStyle: _round(stopStyle),
+);
+
+/// The tallest the field grows before it scrolls.
+const _fieldMaxHeight = 240.0;
+
+/// A solid, round 32px icon button.
+IconButtonStyler _round(IconButtonStyler style) => playgroundIconButtonStyle(
+  variant: .primary,
+  size: .small,
+  style: IconButtonStyler()
+      .borderRadius(.circular(PlaygroundTokens.pill))
+      .merge(style),
 );

@@ -327,6 +327,7 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
     for (final turn in _turns) {
       turn.clock.dispose();
     }
+    _composer.clear();
     setState(() {
       _turns.clear();
       _alwaysAllowTerminal = false;
@@ -451,7 +452,8 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
 
   void _retry(_Turn turn) {
     if (_active) return;
-    turn.scenario = _Scenario.success;
+    // A failure retries into success; a denied or stopped run asks again.
+    if (turn.scenario == _Scenario.failure) turn.scenario = _Scenario.success;
     _begin(turn);
   }
 
@@ -462,19 +464,25 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
 
     return AgentGlyphs(
       builder: styles.glyphBuilder,
-      child: ColumnBox(
-        style: FlexBoxStyler().crossAxisAlignment(.stretch),
-        children: [
-          if (!empty)
-            Box(
-              style: BoxStyler()
-                  .alignment(.centerRight)
-                  .padding(.fromLTRB(20, 12, 20, 0)),
-              child: styles.buttonBuilder('New chat', _reset, .outline),
-            ),
-          Expanded(child: empty ? _emptyState(composer) : _conversation()),
-          if (!empty) _dock(composer),
-        ],
+      // The keyboard lifts the composer: nothing above it resizes for it.
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.stretch),
+          children: [
+            if (!empty)
+              Box(
+                style: BoxStyler()
+                    .alignment(.centerRight)
+                    .padding(.fromLTRB(20, 12, 20, 0)),
+                child: styles.buttonBuilder('New chat', _reset, .outline),
+              ),
+            Expanded(child: empty ? _emptyState(composer) : _conversation()),
+            if (!empty) _dock(composer),
+          ],
+        ),
       ),
     );
   }

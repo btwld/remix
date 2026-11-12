@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:open_code_fixture/main.dart';
 import 'package:open_code_fixture/ui/ui.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
@@ -136,219 +137,150 @@ void main() {
     }
   });
 
-  group('installed Agent behavior', () {
-    testWidgets('composer submits and clears through Remix controls', (
+  group('installed Agent recipes', () {
+    Widget scope(Widget child) =>
+        AgentGlyphs(builder: acmeAgentGlyph, child: child);
+
+    testWidgets('a tool call asks once and sends one decision', (tester) async {
+      final decisions = <AgentApprovalDecision>[];
+      final recipe = acmeAgentToolCallRecipe();
+      await _pumpInstalledAgent(
+        tester,
+        SizedBox(
+          width: 600,
+          child: scope(
+            AgentToolCall(
+              call: const AgentToolCallPart(
+                id: 'call',
+                name: 'terminal.run',
+                summary: 'Run the cart tests',
+                input: [(label: 'Command', value: 'flutter test')],
+                status: AgentToolCallStatus.awaitingApproval,
+              ),
+              onDecision: decisions.add,
+              style: recipe.style,
+              disclosureStyle: recipe.disclosureStyle,
+              inputStyle: recipe.inputStyle,
+              allowOnceStyle: recipe.allowOnceStyle,
+              alwaysAllowStyle: recipe.alwaysAllowStyle,
+              denyStyle: recipe.denyStyle,
+            ),
+          ),
+        ),
+      );
+      expect(find.text('Run the cart tests?'), findsOneWidget);
+      expect(find.text('flutter test'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('agent-tool-call-allow-once')));
+      await tester.tap(find.byKey(const ValueKey('agent-tool-call-allow-once')));
+      await tester.pump();
+      expect(decisions, [AgentApprovalDecision.allowOnce]);
+    });
+
+    testWidgets('the composer sends and clears through Remix controls', (
       tester,
     ) async {
       final submitted = <String>[];
-      await _pumpInstalledAgent(
-        tester,
-        AcmeComposer(initialValue: '  Explain this  ', onSubmit: submitted.add),
-      );
-      await tester.tap(find.byType(RemixIconButton));
-      await tester.pump();
-      expect(submitted, ['Explain this']);
-      expect(
-        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
-        isEmpty,
-      );
-    });
-
-    testWidgets('message collapse retains body and toggles explicit overflow', (
-      tester,
-    ) async {
-      await _pumpInstalledAgent(
-        tester,
-        AcmeMessage(
-          role: AcmeRole.assistant,
-          child: AcmeMessageCollapsible(
-            style: AcmeMessageCollapsibleStyler(collapsedHeight: 20),
-            child: const SizedBox(height: 100, child: Text('Full message')),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Full message'), findsOneWidget);
-      expect(find.text('Show more'), findsOneWidget);
-      await tester.tap(find.text('Show more'));
-      await tester.pumpAndSettle();
-      expect(find.text('Show less'), findsOneWidget);
-    });
-
-    testWidgets('plan collapses on completion and can be reopened', (
-      tester,
-    ) async {
-      final changes = <bool>[];
-      Future<void> pump(AcmePlanItemStatus status) => _pumpInstalledAgent(
-        tester,
-        AcmePlan(
-          items: [
-            AcmePlanItem(id: 'step', title: 'Installed step', status: status),
-          ],
-          onExpandedChanged: changes.add,
-        ),
-      );
-      await pump(.inProgress);
-      expect(find.text('Installed step'), findsOneWidget);
-      await pump(.completed);
-      await tester.pumpAndSettle();
-      expect(find.text('Installed step'), findsNothing);
-      await tester.tap(find.text('Plan'));
-      await tester.pumpAndSettle();
-      expect(find.text('Installed step'), findsOneWidget);
-      expect(changes, [false, true]);
-    });
-
-    testWidgets('activity defers to its host while working, then settles', (
-      tester,
-    ) async {
-      final changes = <bool>[];
-      Future<void> pump(AcmeRunStatus status) => _pumpInstalledAgent(
-        tester,
-        AcmeActivity(
-          status: status,
-          expanded: false,
-          onExpandedChanged: changes.add,
-          items: const [
-            AcmeActivityItem(id: 'step', title: 'Installed activity'),
-          ],
-        ),
-      );
-      await pump(.working);
-      await tester.tap(find.text('Activity'));
-      await tester.pump();
-      expect(changes, [true]);
-      expect(find.text('Installed activity'), findsNothing);
-      await pump(.complete);
-      await tester.pumpAndSettle();
-      expect(changes, [true, false]);
-      expect(find.text('Installed activity'), findsNothing);
-    });
-
-    testWidgets('execution settles its disclosure and exposes retry', (
-      tester,
-    ) async {
-      var retries = 0;
-      Future<void> pump(AcmeExecutionStatus status) => _pumpInstalledAgent(
-        tester,
-        AcmeExecution(
-          tool: 'terminal.run',
-          title: 'Installed execution',
-          status: status,
-          onRetry: () => retries++,
-          child: const Text('Command output'),
-        ),
-      );
-      await pump(.running);
-      expect(find.text('Command output'), findsOneWidget);
-      // A failure keeps its output open; the reader can still close it.
-      await pump(.error);
-      await tester.pumpAndSettle();
-      expect(find.text('Command output'), findsOneWidget);
-      await tester.tap(find.text('Installed execution'));
-      await tester.pumpAndSettle();
-      expect(find.text('Command output'), findsNothing);
-      await tester.tap(find.text('Installed execution'));
-      await tester.pumpAndSettle();
-      expect(find.text('Command output'), findsOneWidget);
-      await tester.tap(find.bySemanticsLabel('Retry execution'));
-      expect(retries, 1);
-    });
-
-    testWidgets(
-      'answer requests a source reset without overriding host state',
-      (tester) async {
-        final requests = <bool>[];
-        Future<void> pump(int stream, AcmeAnswerStatus status) =>
-            _pumpInstalledAgent(
-              tester,
-              AcmeAnswer(
-                streamId: stream,
-                status: status,
-                sourcesExpanded: true,
-                onSourcesExpandedChanged: requests.add,
-                sourcesContent: const Text('Installed source'),
-                child: const Text('Answer'),
-              ),
-            );
-        await pump(0, .complete);
-        await pump(1, .streaming);
-        expect(requests, [false]);
-        expect(find.text('Installed source'), findsOneWidget);
-      },
-    );
-
-    testWidgets('permission submits once for each request identity', (
-      tester,
-    ) async {
-      var allows = 0;
-      Future<void> pump(int requestId) => _pumpInstalledAgent(
-        tester,
-        AcmePermission(
-          requestId: requestId,
-          tool: 'terminal.run',
-          onAllowOnce: () => allows++,
-        ),
-      );
-      await pump(0);
-      await tester.tap(find.text('Allow once'));
-      await tester.pump();
-      await tester.tap(find.text('Allow once'));
-      expect(allows, 1);
-      await pump(1);
-      await tester.tap(find.text('Allow once'));
-      expect(allows, 2);
-    });
-
-    testWidgets('transcript releases the live edge while the reader scrolls', (
-      tester,
-    ) async {
-      final controller = ScrollController();
+      final controller = AgentComposerController(text: '  Explain this  ');
       addTearDown(controller.dispose);
-      final changes = <bool>[];
-      Future<void> pump(int count) => _pumpInstalledAgent(
+      final recipe = acmeAgentComposerRecipe();
+      await _pumpInstalledAgent(
         tester,
         SizedBox(
-          width: 300,
-          height: 120,
-          child: AcmeTranscript(
-            controller: controller,
-            onFollowChanged: changes.add,
-            children: [
-              for (var index = 0; index < count; index++)
-                SizedBox(height: 30, child: Text('Row $index')),
-            ],
+          width: 600,
+          child: scope(
+            AgentComposer(
+              controller: controller,
+              onSubmit: submitted.add,
+              style: recipe.style,
+              fieldStyle: recipe.fieldStyle,
+              submitStyle: recipe.submitStyle,
+              stopStyle: recipe.stopStyle,
+            ),
           ),
         ),
       );
-      await pump(20);
+      await tester.tap(find.byKey(const ValueKey('agent-composer-send')));
       await tester.pump();
-      expect(
-        controller.offset,
-        closeTo(controller.position.maxScrollExtent, 0.5),
-      );
-      await tester.drag(find.byType(ListView), const Offset(0, 160));
-      await tester.pump();
-      expect(changes, [false]);
-      final reading = controller.offset;
-      await pump(25);
-      await tester.pump();
-      expect(controller.offset, closeTo(reading, 0.5));
-      await tester.drag(find.byType(ListView), const Offset(0, -2000));
-      await tester.pump();
-      expect(changes, [false, true]);
+      expect(submitted, ['Explain this']);
+      expect(controller.text, isEmpty);
     });
 
-    test('public model exports retain value semantics after renaming', () {
-      expect(
-        const AcmePlanItem(id: 'one', title: 'Step'),
-        const AcmePlanItem(id: 'one', title: 'Step'),
+    testWidgets('a suggestion fills the composer and does not send', (
+      tester,
+    ) async {
+      final submitted = <String>[];
+      final controller = AgentComposerController();
+      addTearDown(controller.dispose);
+      final suggestions = acmeAgentSuggestionsRecipe();
+      await _pumpInstalledAgent(
+        tester,
+        SizedBox(
+          width: 600,
+          child: scope(
+            AgentSuggestions(
+              controller: controller,
+              suggestions: const [AgentSuggestion(label: 'Review checkout')],
+              style: suggestions.style,
+              suggestionStyle: suggestions.suggestionStyle,
+            ),
+          ),
+        ),
       );
-      const child = SizedBox(height: 12);
-      expect(
-        const AcmeActivityItem(id: 'one', title: 'Step', child: child),
-        const AcmeActivityItem(id: 'one', title: 'Step', child: child),
+      await tester.tap(find.text('Review checkout'));
+      await tester.pump();
+      expect(controller.text, 'Review checkout');
+      expect(submitted, isEmpty);
+    });
+
+    testWidgets('steps, the answer and its sources draw with the glyph set', (
+      tester,
+    ) async {
+      final steps = acmeAgentStepsRecipe();
+      final answer = acmeAgentAnswerRecipe();
+      final sources = acmeAgentSourcesRecipe();
+      await _pumpInstalledAgent(
+        tester,
+        SizedBox(
+          width: 600,
+          child: scope(
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AgentSteps(
+                  status: AgentRunStatus.complete,
+                  duration: const Duration(seconds: 4),
+                  steps: const [
+                    AgentStep(
+                      id: 'read',
+                      title: 'Read the module',
+                      status: AgentStepStatus.complete,
+                    ),
+                  ],
+                  style: steps.style,
+                  stepStyle: steps.stepStyle,
+                  disclosureStyle: steps.disclosureStyle,
+                ),
+                AgentAnswer(
+                  style: answer.style,
+                  actionStyle: answer.actionStyle,
+                  onCopy: () {},
+                  sources: AgentSources(
+                    sources: const [AgentSource(id: 'a', title: 'cart.dart')],
+                    style: sources.style,
+                    disclosureStyle: sources.disclosureStyle,
+                    sourceStyle: sources.sourceStyle,
+                  ),
+                  child: const Text('Local answer'),
+                ),
+              ],
+            ),
+          ),
+        ),
       );
+      expect(find.text('Thought for 4s · 1 step'), findsOneWidget);
+      expect(find.text('1 file referenced'), findsOneWidget);
+      expect(find.text('Local answer'), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
   });
 

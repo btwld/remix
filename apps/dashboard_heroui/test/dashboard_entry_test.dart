@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' show MaterialApp;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
+import 'package:remix/agent.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 void main() {
@@ -34,7 +35,7 @@ void main() {
     await tester.pump();
 
     for (final (destination, text) in const [
-      ('Chat', 'Agent chat'),
+      ('Chat', 'What should we work on?'),
       ('Customers', 'Search customers…'),
       ('Orders', 'Refunded'),
       ('Settings', 'Danger zone'),
@@ -91,11 +92,13 @@ void main() {
     await tester.tap(find.text('Chat').first);
     await tester.pump();
     await tester.tap(find.text('Review checkout'));
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('agent-composer-send')));
     for (var frame = 0; frame < 40; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
-    expect(find.textContaining('ready for review'), findsWidgets);
-    expect(find.byType(UiAnswer), findsOneWidget);
+    expect(find.textContaining('The cart flow is ready'), findsWidgets);
+    expect(find.byType(AgentAnswer), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
