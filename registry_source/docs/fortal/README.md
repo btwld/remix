@@ -184,7 +184,7 @@ There is no separate `gray:` option or `FortalGrayColor` enum.
 
 The data comes from @radix-ui/colors 3.0.0, including the MIT notice in installed
 source. Raw steps remain exact; functional content, labelled fills, marks and
-focus roles retain Fortal's contrast contract. See the [Fortal guide](https://docs.page/btwld/remix/fortal)
+focus roles retain Fortal's contrast contract. See the [Fortal guide](https://fluttermix.com/remix/docs/fortal/)
 for light/dark swatches and migration details. A custom `accentPalette` inherits
 the selected named theme's neutral, defaulting to Orla.
 
@@ -276,7 +276,7 @@ Every Remix component has a matching Fortal recipe and preset widget:
 
 These five families exist only in Fortal — base Remix ships no `RemixText` — and
 they share one nine-step `FortalTextSize` scale plus one `FortalTextWeight`
-enum. See the [Typography guide](https://docs.page/btwld/remix/fortal/typography)
+enum. See the [Typography guide](https://fluttermix.com/remix/docs/fortal/typography/)
 for controls, semantics, and composition guidance.
 
 ### Interactive Elements
@@ -328,7 +328,7 @@ visual contract; the pinned Radix snapshot checks exact source color data.
 Run `fvm flutter run -d chrome -t lib/polish_main.dart` in `apps/demo` for the
 39-family board: every size and variant, seven accents, both modes, a 4px
 grid, and hover/pressed/focused/disabled review states. See the
-[Fortal guide](https://docs.page/btwld/remix/fortal) for palettes, contrast,
+[Fortal guide](https://fluttermix.com/remix/docs/fortal/) for palettes, contrast,
 and custom seed generation.
 
 ## Built on Remix
@@ -339,7 +339,7 @@ recipe. Anything you can do with Remix, you can do with Fortal — and you can d
 down to plain Remix stylers at any point.
 
 - [Remix CLI on pub.dev](https://pub.dev/packages/remix_cli)
-- [Documentation](https://docs.page/btwld/remix/fortal)
+- [Documentation](https://fluttermix.com/remix/docs/fortal/)
 - [GitHub](https://github.com/btwld/remix)
 
 ## License

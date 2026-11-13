@@ -12,6 +12,11 @@
 
 Flutter components with Naked UI behavior and Mix styling.
 
+[Website](https://fluttermix.com/remix/) ·
+[Documentation](https://fluttermix.com/remix/docs/) ·
+[Naked UI documentation](https://fluttermix.com/naked-ui/docs/) ·
+[Mix documentation](https://fluttermix.com/mix/docs/)
+
 ## Core concepts
 
 - Naked UI owns interaction: focus, keyboard input, interaction state and accessibility.
@@ -70,9 +75,9 @@ with `dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 Place the installed theme above your Navigator in the host's builder before
 using its widgets. See [setup and host requirements](skills/using-remix/SKILL.md#place-the-theme-scope).
 
-- [Style components directly](docs/guides/styling-components.mdx).
-- [Install, customize and update editable source](open_code/README.md).
-- [Component catalog](docs/index.mdx) · [Fortal catalog](docs/fortal/catalog.mdx).
+- [Style components directly](https://fluttermix.com/remix/docs/guides/styling-components/).
+- [Install, customize and update editable source](https://fluttermix.com/remix/docs/open-code/).
+- [Component catalog](https://fluttermix.com/remix/docs/) · [Fortal catalog](https://fluttermix.com/remix/docs/fortal/catalog/).
 - Examples: [Vanilla playground](apps/playground), [Fortal catalog](apps/demo),
   [dashboard](apps/dashboard).
 - [Architecture decisions](ARCHITECTURE.md) preserve rationale and tradeoffs;
@@ -93,4 +98,4 @@ A registry author without a `remix.yaml` can still install the skills from
 `main` with `npx skills add btwld/remix`.
 
 To have a coding agent do the whole setup, paste the
-[Start with AI prompt](docs/getting-started.mdx#start-with-ai).
+[Start with AI prompt](https://fluttermix.com/remix/docs/getting-started/#start-with-ai).

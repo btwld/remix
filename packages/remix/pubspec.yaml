@@ -1,7 +1,8 @@
 name: remix
 description: Remix is a modern, expressive design system built on top of Naked and Mix.
 repository: https://github.com/btwld/remix
-documentation: https://docs.page/btwld/remix
+homepage: https://fluttermix.com/remix/
+documentation: https://fluttermix.com/remix/docs/
 issue_tracker: https://github.com/btwld/remix/issues
 license: BSD-3-Clause
 resolution: workspace
