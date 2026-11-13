@@ -347,22 +347,22 @@ directions are mirrored automatically in right-to-left layouts.
 | Left arrow in LTR / Right arrow in RTL | Close the current submenu and focus its trigger |
 | Escape | Close the current menu level and restore trigger focus |
 
-The root `items` list, each radio group's `items`, and every submenu's `items`
+The root `items` list and the `items` of each radio group, submenu, and section
 are copied to immutable snapshots when their panel is built. Rebuild the menu
 after changing a source list; do not rely on mutating a visible panel in place.
 
 For dynamic menus, including lists that are filtered, have items inserted, or
 are reordered, supply a stable caller-owned `key:` on each ordinary item,
-checkbox item, radio group, radio item, submenu, label, and divider. Build
+checkbox item, radio group, radio item, submenu, section, and divider. Build
 keys from application-owned item identity and keep them stable across
 rebuilds. Item keys are not derived automatically from labels or values.
 
-## Labels
+## Sections
 
-`RemixMenuLabel` puts a heading above a group of items, such as "Recent" or
-"Density". It is not an item: it cannot be focused, selected, or activated, so
-the arrow keys move past it. Assistive technology reads it as plain text, not
-as a menu item.
+`RemixMenuSection` groups entries under a heading, such as "Recent" or
+"Density". The heading is not an item: it cannot be focused, selected, or
+activated, so the arrow keys move past it. Assistive technology reads the
+section as one group, named by its heading, that holds the section's items.
 
 ```dart
 import 'package:flutter/material.dart';
@@ -370,25 +370,32 @@ import 'package:remix/remix.dart';
 
 final workspaceMenu = RemixMenu<String>(
   trigger: const RemixMenuTrigger(label: 'Workspace'),
-  style: MenuStyler().labelItem(
+  style: MenuStyler().sectionLabel(
     MenuItemStyler().label(TextStyler().fontSize(12).color(Colors.black54)),
   ),
   onSelected: (value) => debugPrint(value),
   items: const [
-    RemixMenuLabel(label: 'Recent'),
-    RemixMenuItem(value: 'alpha', label: 'Alpha'),
-    RemixMenuItem(value: 'beta', label: 'Beta'),
+    RemixMenuSection(
+      label: 'Recent',
+      items: [
+        RemixMenuItem(value: 'alpha', label: 'Alpha'),
+        RemixMenuItem(value: 'beta', label: 'Beta'),
+      ],
+    ),
     RemixMenuDivider(),
-    RemixMenuLabel(label: 'Shared'),
-    RemixMenuItem(value: 'gamma', label: 'Gamma'),
+    RemixMenuSection(
+      label: 'Shared',
+      items: [RemixMenuItem(value: 'gamma', label: 'Gamma')],
+    ),
   ],
 );
 ```
 
-A label row starts from `item`, so it lines up with the items below it,
-including the reserved choice slot. `labelItem` merges after `item`, and the
-label's own `style` merges last. Hover, focus, and pressed variants never
-apply, because a label has no interaction states.
+A section holds any entries, including a radio group. It adds no spacing or
+divider of its own. The heading row starts from `item`, so it lines up with
+the items below it, including the reserved choice slot. `sectionLabel` merges
+after `item`, and the section's own `labelStyle` merges last. Hover, focus,
+and pressed variants never apply, because a heading has no interaction states.
 
 ## Compound-item styling
 
@@ -722,7 +729,7 @@ trigger; it is `null` for a control trigger. The same object works with
 
 #### `items` → `List<RemixMenuItemData<T>>`
 
-**Required**. The list of ordinary items, checkbox items, radio groups, submenus, labels, and dividers.
+**Required**. The list of ordinary items, checkbox items, radio groups, submenus, sections, and dividers.
 
 #### `controller` → `MenuController?`
 
@@ -823,9 +830,9 @@ Configures the menu-wide radio-row override after `item`.
 
 Configures the menu-wide submenu-trigger override after `item`.
 
-#### `labelItem(MenuItemStyler value)`
+#### `sectionLabel(MenuItemStyler value)`
 
-Configures the menu-wide label-row override after `item`.
+Configures the menu-wide section-heading override after `item`.
 
 #### `divider(DividerStyler value)`
 

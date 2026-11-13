@@ -3,7 +3,7 @@ part of 'menu.dart';
 /// Base sealed class for all menu item types.
 ///
 /// This ensures type safety and exhaustive pattern matching when
-/// handling ordinary, checkbox, radio, submenu, label, and divider data.
+/// handling ordinary, checkbox, radio, submenu, section, and divider data.
 sealed class RemixMenuItemData<T> {
   const RemixMenuItemData({this.key});
 
@@ -315,38 +315,49 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
       : positioning;
 }
 
-/// A non-interactive heading row in a [RemixMenu], such as the name of the
-/// group of items below it.
+/// A labelled group of entries in a [RemixMenu], such as "Recent" or
+/// "Density".
 ///
-/// A label cannot be focused, selected or activated, so keyboard navigation
-/// moves past it. Assistive technology reads it as plain text, not as a menu
-/// item. Style it menu-wide with [MenuStyler.labelItem], which merges after
-/// [MenuStyler.item], or per label with [style].
+/// The [label] is a heading row above [items]. It cannot be focused, selected
+/// or activated, so keyboard navigation moves past it. Assistive technology
+/// reads the section as one group named [label] that holds its items.
+/// Style the heading menu-wide with [MenuStyler.sectionLabel], which merges
+/// after [MenuStyler.item], or per section with [labelStyle].
+///
+/// The list must not be mutated while a panel is being built.
 ///
 /// ```dart
 /// RemixMenu<String>(
 ///   trigger: const RemixMenuTrigger(label: 'Workspace'),
 ///   items: const [
-///     RemixMenuLabel(label: 'Recent'),
-///     RemixMenuItem(value: 'alpha', label: 'Alpha'),
-///     RemixMenuItem(value: 'beta', label: 'Beta'),
+///     RemixMenuSection(
+///       label: 'Recent',
+///       items: [
+///         RemixMenuItem(value: 'alpha', label: 'Alpha'),
+///         RemixMenuItem(value: 'beta', label: 'Beta'),
+///       ],
+///     ),
 ///   ],
 ///   onSelected: (value) => debugPrint(value),
 /// )
 /// ```
-final class RemixMenuLabel<T> extends RemixMenuItemData<T> {
-  const RemixMenuLabel({
+final class RemixMenuSection<T> extends RemixMenuItemData<T> {
+  const RemixMenuSection({
     super.key,
     required this.label,
-    this.style = const MenuItemStyler.create(),
-  }) : assert(label != '', 'Menu labels must not be empty');
+    required this.items,
+    this.labelStyle = const MenuItemStyler.create(),
+  }) : assert(label != '', 'Section labels must not be empty');
 
-  /// The visible text, also read by assistive technology.
+  /// The visible heading and the group's accessible name.
   final String label;
 
-  /// Per-label visual style applied after the menu-wide shared and label
+  /// The entries in this section.
+  final List<RemixMenuItemData<T>> items;
+
+  /// Heading style applied after the menu-wide shared and section-label
   /// styles.
-  final MenuItemStyler style;
+  final MenuItemStyler labelStyle;
 }
 
 /// Data class representing a menu divider.
@@ -434,7 +445,7 @@ class RemixMenu<T> extends StatefulWidget {
   /// content, or [RemixMenuTrigger.control] for a caller-owned button.
   final RemixMenuTrigger trigger;
 
-  /// The declarative ordinary, compound, submenu, label, and divider data.
+  /// The declarative ordinary, compound, submenu, section, and divider data.
   final List<RemixMenuItemData<T>> items;
 
   /// Optional controller for programmatic control of the menu state.
@@ -652,7 +663,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
   }
 }
 
-enum _RemixMenuItemKind { ordinary, checkbox, radio, submenu, label }
+enum _RemixMenuItemKind { ordinary, checkbox, radio, submenu, sectionLabel }
 
 /// The row's accessible name: an explicit [semanticLabel] wins; otherwise the
 /// visible [label] and [trailingText], one per line, so a shortcut is read.
@@ -687,7 +698,7 @@ final class _RemixMenuItemStyles {
         .checkbox => resolvedSpec.checkboxItem ?? resolvedSpec.item,
         .radio => resolvedSpec.radioItem ?? resolvedSpec.item,
         .submenu => resolvedSpec.submenuItem ?? resolvedSpec.item,
-        .label => resolvedSpec.labelItem ?? resolvedSpec.item,
+        .sectionLabel => resolvedSpec.sectionLabel ?? resolvedSpec.item,
       };
     }
 
@@ -719,7 +730,7 @@ final class _MenuItemProjection extends MenuStyler {
       .checkbox => source.$checkboxItem,
       .radio => source.$radioItem,
       .submenu => source.$submenuItem,
-      .label => source.$labelItem,
+      .sectionLabel => source.$sectionLabel,
     };
     final mergedStyle = MixOps.merge(
       MixOps.merge(source.$item, semanticStyle),
@@ -760,10 +771,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final snapshot = List<RemixMenuItemData<T>>.unmodifiable(items);
-    final hasChoiceItems = snapshot.any(
-      (item) =>
-          item is RemixMenuCheckboxItem<T> || item is RemixMenuRadioGroup<T>,
-    );
+    final hasChoiceItems = _hasChoiceItems(snapshot);
 
     return RemixFlexBoxAdapter(
       styleSpec: overlayStyleSpec,
@@ -771,32 +779,52 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       containerEffects: containerEffects,
       scrollable: true,
       children: snapshot
-          .map(
-            (item) => switch (item) {
-              RemixMenuItem<T>() => _buildOrdinaryItem(item, hasChoiceItems),
-              RemixMenuCheckboxItem<T>() => _buildCheckboxItem(
-                item,
-                hasChoiceItems,
-              ),
-              RemixMenuRadioGroup<T>() => _buildRadioGroup(
-                item,
-                hasChoiceItems,
-              ),
-              RemixMenuSubmenu<T>() => _buildSubmenu(
-                context,
-                item,
-                hasChoiceItems,
-              ),
-              RemixMenuLabel<T>() => _buildLabel(item, hasChoiceItems),
-              RemixMenuDivider<T>() => StyleSpecBuilder(
-                key: item.key,
-                styleSpec: dividerStyleSpec,
-                builder: (context, dividerSpec) =>
-                    RemixDivider(styleSpec: dividerSpec),
-              ),
-            },
-          )
+          .map((item) => _buildEntry(context, item, hasChoiceItems))
           .toList(growable: false),
+    );
+  }
+
+  /// Whether any row in the panel, including rows inside sections, reserves
+  /// the leading choice slot.
+  static bool _hasChoiceItems<T>(Iterable<RemixMenuItemData<T>> items) =>
+      items.any(
+        (item) => switch (item) {
+          RemixMenuCheckboxItem<T>() || RemixMenuRadioGroup<T>() => true,
+          RemixMenuSection<T>(:final items) => _hasChoiceItems(items),
+          _ => false,
+        },
+      );
+
+  Widget _buildEntry(
+    BuildContext context,
+    RemixMenuItemData<T> item,
+    bool reserveChoiceSlot,
+  ) {
+    return switch (item) {
+      RemixMenuItem<T>() => _buildOrdinaryItem(item, reserveChoiceSlot),
+      RemixMenuCheckboxItem<T>() => _buildCheckboxItem(item, reserveChoiceSlot),
+      RemixMenuRadioGroup<T>() => _buildRadioGroup(item, reserveChoiceSlot),
+      RemixMenuSubmenu<T>() => _buildSubmenu(context, item, reserveChoiceSlot),
+      RemixMenuSection<T>() => _buildSection(context, item, reserveChoiceSlot),
+      RemixMenuDivider<T>() => StyleSpecBuilder(
+        key: item.key,
+        styleSpec: dividerStyleSpec,
+        builder: (context, dividerSpec) => RemixDivider(styleSpec: dividerSpec),
+      ),
+    };
+  }
+
+  /// Stacks grouped rows with the panel's own spacing and direction, so a
+  /// group never changes the layout.
+  Widget _group(List<Widget> children) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: overlayStyleSpec.spec.flex?.spec.spacing ?? 0,
+      verticalDirection:
+          overlayStyleSpec.spec.flex?.spec.verticalDirection ??
+          VerticalDirection.down,
+      children: children,
     );
   }
 
@@ -827,20 +855,37 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
     );
   }
 
-  Widget _buildLabel(RemixMenuLabel<T> label, bool reserveChoiceSlot) {
-    // Its own node, with no role: ARIA lets a menu own only items, groups
-    // and separators, so a heading role would not be valid here.
+  Widget _buildSection(
+    BuildContext context,
+    RemixMenuSection<T> section,
+    bool reserveChoiceSlot,
+  ) {
+    final entries = List<RemixMenuItemData<T>>.unmodifiable(section.items);
+    assert(entries.isNotEmpty, 'Menu sections must contain at least one item');
+
+    // One node, named by the heading, that holds the section's items. Flutter
+    // web exposes a labelled node with children as an ARIA group, which a
+    // menu may own; a heading role would not be. The visible heading is
+    // excluded so the name is read once.
     return Semantics(
-      key: label.key,
+      key: section.key,
       container: true,
-      child: _RemixMenuItemContent(
-        label: label.label,
-        style: label.style,
-        kind: .label,
-        controller: null,
-        reserveChoiceSlot: reserveChoiceSlot,
-        itemStyles: itemStyles,
-      ),
+      explicitChildNodes: true,
+      label: section.label,
+      child: _group([
+        ExcludeSemantics(
+          child: _RemixMenuItemContent(
+            label: section.label,
+            style: section.labelStyle,
+            kind: .sectionLabel,
+            controller: null,
+            reserveChoiceSlot: reserveChoiceSlot,
+            itemStyles: itemStyles,
+          ),
+        ),
+        for (final entry in entries)
+          _buildEntry(context, entry, reserveChoiceSlot),
+      ]),
     );
   }
 
@@ -903,14 +948,8 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       value: group.value,
       onChanged: group.onChanged,
       enabled: group.enabled,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: overlayStyleSpec.spec.flex?.spec.spacing ?? 0,
-        verticalDirection:
-            overlayStyleSpec.spec.flex?.spec.verticalDirection ??
-            VerticalDirection.down,
-        children: radioItems
+      child: _group(
+        radioItems
             .map(
               (item) => NakedMenuRadioItem<T>(
                 key: item.key,
@@ -1014,7 +1053,8 @@ class _RemixMenuItemContent extends StatelessWidget {
   final MenuItemStyler style;
   final _RemixMenuItemKind kind;
 
-  /// The row's interaction states, or `null` for a label, which has none.
+  /// The row's interaction states, or `null` for a section heading, which
+  /// has none.
   final WidgetStatesController? controller;
   final bool reserveChoiceSlot;
   final _RemixMenuItemStyles itemStyles;
