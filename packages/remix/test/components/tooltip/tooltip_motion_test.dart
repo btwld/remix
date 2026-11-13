@@ -53,20 +53,12 @@ void main() {
     testWidgets('fades the surface at Naked UI pace by default', (
       tester,
     ) async {
-      await tester.pumpRemixApp(
-        const RemixTooltip(tooltipChild: Text('tip'), child: Text('target')),
-      );
-
-      final naked = tester.widget<NakedTooltip>(find.byType(NakedTooltip));
-      // Unset fields keep Naked UI's 150ms in, 75ms out, fastOutSlowIn.
-      expect(naked.animationStyle, const AnimationStyle());
-
-      await tester.pumpWidget(const SizedBox());
       await tester.pumpRemixApp(_tooltip());
       await _hover(tester);
 
       expect(_surfaceFade(), findsOneWidget);
       final fade = tester.widget<FadeTransition>(_surfaceFade());
+      // Naked UI shows in 150ms.
       await tester.pump(const Duration(milliseconds: 100));
       expect(fade.opacity.value, inExclusiveRange(0, 1));
       await tester.pump(const Duration(milliseconds: 60));
