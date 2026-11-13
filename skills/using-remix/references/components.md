@@ -256,7 +256,10 @@ for Overlay, Navigator and toast scope placement.
   `RemixMenuItem<T>`, `RemixMenuCheckboxItem<T>`, `RemixMenuRadioGroup<T>`
   (holding `RemixMenuRadioItem<T>` entries, which are only valid nested
   inside it), `RemixMenuSubmenu<T>` (recursive, holding its own
-  `RemixMenuItemData<T>` list), and `RemixMenuDivider<T>`. Use
+  `RemixMenuItemData<T>` list), `RemixMenuLabel<T>` (a heading above a
+  group: not focusable or selectable, read as plain text, styled by
+  `MenuStyler().labelItem(...)` after `item`), and `RemixMenuDivider<T>`.
+  Never fake a heading with a disabled `RemixMenuItem`. Use
   `RemixMenuTrigger.builder(label:, icon:, builder:)` for custom visual
   content; the builder receives `NakedMenuState` and must return
   non-interactive content — never a nested button. Use

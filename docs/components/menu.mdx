@@ -353,9 +353,42 @@ after changing a source list; do not rely on mutating a visible panel in place.
 
 For dynamic menus, including lists that are filtered, have items inserted, or
 are reordered, supply a stable caller-owned `key:` on each ordinary item,
-checkbox item, radio group, radio item, submenu, and divider. Build keys from
-application-owned item identity and keep them stable across rebuilds. Item keys
-are not derived automatically from labels or values.
+checkbox item, radio group, radio item, submenu, label, and divider. Build
+keys from application-owned item identity and keep them stable across
+rebuilds. Item keys are not derived automatically from labels or values.
+
+## Labels
+
+`RemixMenuLabel` puts a heading above a group of items, such as "Recent" or
+"Density". It is not an item: it cannot be focused, selected, or activated, so
+the arrow keys move past it. Assistive technology reads it as plain text, not
+as a menu item.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final workspaceMenu = RemixMenu<String>(
+  trigger: const RemixMenuTrigger(label: 'Workspace'),
+  style: MenuStyler().labelItem(
+    MenuItemStyler().label(TextStyler().fontSize(12).color(Colors.black54)),
+  ),
+  onSelected: (value) => debugPrint(value),
+  items: const [
+    RemixMenuLabel(label: 'Recent'),
+    RemixMenuItem(value: 'alpha', label: 'Alpha'),
+    RemixMenuItem(value: 'beta', label: 'Beta'),
+    RemixMenuDivider(),
+    RemixMenuLabel(label: 'Shared'),
+    RemixMenuItem(value: 'gamma', label: 'Gamma'),
+  ],
+);
+```
+
+A label row starts from `item`, so it lines up with the items below it,
+including the reserved choice slot. `labelItem` merges after `item`, and the
+label's own `style` merges last. Hover, focus, and pressed variants never
+apply, because a label has no interaction states.
 
 ## Compound-item styling
 
@@ -689,7 +722,7 @@ trigger; it is `null` for a control trigger. The same object works with
 
 #### `items` → `List<RemixMenuItemData<T>>`
 
-**Required**. The list of ordinary items, checkbox items, radio groups, submenus, and dividers.
+**Required**. The list of ordinary items, checkbox items, radio groups, submenus, labels, and dividers.
 
 #### `controller` → `MenuController?`
 
@@ -789,6 +822,10 @@ Configures the menu-wide radio-row override after `item`.
 #### `submenuItem(MenuItemStyler value)`
 
 Configures the menu-wide submenu-trigger override after `item`.
+
+#### `labelItem(MenuItemStyler value)`
+
+Configures the menu-wide label-row override after `item`.
 
 #### `divider(DividerStyler value)`
 

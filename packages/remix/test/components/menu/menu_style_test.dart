@@ -331,6 +331,7 @@ void main() {
         final checkboxItem = Prop.maybeMix(MenuItemStyler());
         final radioItem = Prop.maybeMix(MenuItemStyler());
         final submenuItem = Prop.maybeMix(MenuItemStyler());
+        final labelItem = Prop.maybeMix(MenuItemStyler());
         final divider = Prop.maybeMix(DividerStyler());
         final variants = <VariantStyle<MenuSpec>>[];
 
@@ -341,6 +342,7 @@ void main() {
           checkboxItem: checkboxItem,
           radioItem: radioItem,
           submenuItem: submenuItem,
+          labelItem: labelItem,
           divider: divider,
           variants: variants,
         );
@@ -352,6 +354,7 @@ void main() {
         expect(style.$checkboxItem, equals(checkboxItem));
         expect(style.$radioItem, equals(radioItem));
         expect(style.$submenuItem, equals(submenuItem));
+        expect(style.$labelItem, equals(labelItem));
         expect(style.$divider, equals(divider));
         expect(style.$variants, equals(variants));
       });
@@ -363,6 +366,7 @@ void main() {
         final checkboxItemStyle = MenuItemStyler();
         final radioItemStyle = MenuItemStyler();
         final submenuItemStyle = MenuItemStyler();
+        final labelItemStyle = MenuItemStyler();
         final dividerStyle = DividerStyler();
 
         final style = MenuStyler(
@@ -372,6 +376,7 @@ void main() {
           checkboxItem: checkboxItemStyle,
           radioItem: radioItemStyle,
           submenuItem: submenuItemStyle,
+          labelItem: labelItemStyle,
           divider: dividerStyle,
         );
 
@@ -382,6 +387,7 @@ void main() {
         expect(style.$checkboxItem, isNotNull);
         expect(style.$radioItem, isNotNull);
         expect(style.$submenuItem, isNotNull);
+        expect(style.$labelItem, isNotNull);
         expect(style.$divider, isNotNull);
       });
     });
@@ -438,6 +444,15 @@ void main() {
         modify: (style) => style.submenuItem(MenuItemStyler()),
         expect: (style) {
           expect(style.$submenuItem, equals(Prop.maybeMix(MenuItemStyler())));
+        },
+      );
+
+      styleMethodTest(
+        'labelItem',
+        initial: MenuStyler(),
+        modify: (style) => style.labelItem(MenuItemStyler()),
+        expect: (style) {
+          expect(style.$labelItem, equals(Prop.maybeMix(MenuItemStyler())));
         },
       );
 
@@ -563,6 +578,7 @@ void main() {
                 expect(spec.spec.checkboxItem, isNull);
                 expect(spec.spec.radioItem, isNull);
                 expect(spec.spec.submenuItem, isNull);
+                expect(spec.spec.labelItem, isNull);
                 expect(spec.spec.divider, isA<StyleSpec<DividerSpec>>());
 
                 return Container();

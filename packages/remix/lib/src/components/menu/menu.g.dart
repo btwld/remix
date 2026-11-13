@@ -107,6 +107,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
   StyleSpec<MenuItemSpec>? get checkboxItem;
   StyleSpec<MenuItemSpec>? get radioItem;
   StyleSpec<MenuItemSpec>? get submenuItem;
+  StyleSpec<MenuItemSpec>? get labelItem;
   StyleSpec<DividerSpec> get divider;
 
   @override
@@ -121,6 +122,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     StyleSpec<MenuItemSpec>? checkboxItem,
     StyleSpec<MenuItemSpec>? radioItem,
     StyleSpec<MenuItemSpec>? submenuItem,
+    StyleSpec<MenuItemSpec>? labelItem,
     StyleSpec<DividerSpec>? divider,
   }) {
     return MenuSpec(
@@ -131,6 +133,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       checkboxItem: checkboxItem ?? this.checkboxItem,
       radioItem: radioItem ?? this.radioItem,
       submenuItem: submenuItem ?? this.submenuItem,
+      labelItem: labelItem ?? this.labelItem,
       divider: divider ?? this.divider,
     );
   }
@@ -149,6 +152,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       checkboxItem: checkboxItem?.lerp(other?.checkboxItem, t),
       radioItem: radioItem?.lerp(other?.radioItem, t),
       submenuItem: submenuItem?.lerp(other?.submenuItem, t),
+      labelItem: labelItem?.lerp(other?.labelItem, t),
       divider: divider.lerp(other?.divider, t),
     );
   }
@@ -162,6 +166,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     checkboxItem,
     radioItem,
     submenuItem,
+    labelItem,
     divider,
   ];
 
@@ -212,6 +217,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('checkboxItem', checkboxItem))
       ..add(DiagnosticsProperty('radioItem', radioItem))
       ..add(DiagnosticsProperty('submenuItem', submenuItem))
+      ..add(DiagnosticsProperty('labelItem', labelItem))
       ..add(DiagnosticsProperty('divider', divider));
   }
 }
@@ -1066,6 +1072,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
   final Prop<StyleSpec<MenuItemSpec>>? $checkboxItem;
   final Prop<StyleSpec<MenuItemSpec>>? $radioItem;
   final Prop<StyleSpec<MenuItemSpec>>? $submenuItem;
+  final Prop<StyleSpec<MenuItemSpec>>? $labelItem;
   final Prop<StyleSpec<DividerSpec>>? $divider;
 
   const MenuStyler.create({
@@ -1076,6 +1083,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     Prop<StyleSpec<MenuItemSpec>>? checkboxItem,
     Prop<StyleSpec<MenuItemSpec>>? radioItem,
     Prop<StyleSpec<MenuItemSpec>>? submenuItem,
+    Prop<StyleSpec<MenuItemSpec>>? labelItem,
     Prop<StyleSpec<DividerSpec>>? divider,
     super.variants,
     super.modifier,
@@ -1087,6 +1095,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
        $checkboxItem = checkboxItem,
        $radioItem = radioItem,
        $submenuItem = submenuItem,
+       $labelItem = labelItem,
        $divider = divider;
 
   MenuStyler({
@@ -1097,6 +1106,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     MenuItemStyler? checkboxItem,
     MenuItemStyler? radioItem,
     MenuItemStyler? submenuItem,
+    MenuItemStyler? labelItem,
     DividerStyler? divider,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -1109,6 +1119,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
          checkboxItem: Prop.maybeMix(checkboxItem),
          radioItem: Prop.maybeMix(radioItem),
          submenuItem: Prop.maybeMix(submenuItem),
+         labelItem: Prop.maybeMix(labelItem),
          divider: Prop.maybeMix(divider),
          variants: variants,
          modifier: modifier,
@@ -1128,6 +1139,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       MenuStyler().radioItem(value);
   factory MenuStyler.submenuItem(MenuItemStyler value) =>
       MenuStyler().submenuItem(value);
+  factory MenuStyler.labelItem(MenuItemStyler value) =>
+      MenuStyler().labelItem(value);
   factory MenuStyler.divider(DividerStyler value) =>
       MenuStyler().divider(value);
 
@@ -1140,6 +1153,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     'checkboxItem',
     'radioItem',
     'submenuItem',
+    'labelItem',
     'divider',
     'animation',
     'modifier',
@@ -1179,6 +1193,11 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
   /// Sets the submenuItem.
   MenuStyler submenuItem(MenuItemStyler value) {
     return merge(MenuStyler(submenuItem: value));
+  }
+
+  /// Sets the labelItem.
+  MenuStyler labelItem(MenuItemStyler value) {
+    return merge(MenuStyler(labelItem: value));
   }
 
   /// Sets the divider.
@@ -1264,6 +1283,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       checkboxItem: MixOps.merge($checkboxItem, other?.$checkboxItem),
       radioItem: MixOps.merge($radioItem, other?.$radioItem),
       submenuItem: MixOps.merge($submenuItem, other?.$submenuItem),
+      labelItem: MixOps.merge($labelItem, other?.$labelItem),
       divider: MixOps.merge($divider, other?.$divider),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -1282,6 +1302,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       checkboxItem: MixOps.resolve(context, $checkboxItem),
       radioItem: MixOps.resolve(context, $radioItem),
       submenuItem: MixOps.resolve(context, $submenuItem),
+      labelItem: MixOps.resolve(context, $labelItem),
       divider: MixOps.resolve(context, $divider),
     );
 
@@ -1303,6 +1324,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       ..add(DiagnosticsProperty('checkboxItem', $checkboxItem))
       ..add(DiagnosticsProperty('radioItem', $radioItem))
       ..add(DiagnosticsProperty('submenuItem', $submenuItem))
+      ..add(DiagnosticsProperty('labelItem', $labelItem))
       ..add(DiagnosticsProperty('divider', $divider));
   }
 
@@ -1315,6 +1337,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     $checkboxItem,
     $radioItem,
     $submenuItem,
+    $labelItem,
     $divider,
     $animation,
     $modifier,

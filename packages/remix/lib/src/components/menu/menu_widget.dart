@@ -3,7 +3,7 @@ part of 'menu.dart';
 /// Base sealed class for all menu item types.
 ///
 /// This ensures type safety and exhaustive pattern matching when
-/// handling ordinary, checkbox, radio, submenu, and divider data.
+/// handling ordinary, checkbox, radio, submenu, label, and divider data.
 sealed class RemixMenuItemData<T> {
   const RemixMenuItemData({this.key});
 
@@ -315,6 +315,40 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
       : positioning;
 }
 
+/// A non-interactive heading row in a [RemixMenu], such as the name of the
+/// group of items below it.
+///
+/// A label cannot be focused, selected or activated, so keyboard navigation
+/// moves past it. Assistive technology reads it as plain text, not as a menu
+/// item. Style it menu-wide with [MenuStyler.labelItem], which merges after
+/// [MenuStyler.item], or per label with [style].
+///
+/// ```dart
+/// RemixMenu<String>(
+///   trigger: const RemixMenuTrigger(label: 'Workspace'),
+///   items: const [
+///     RemixMenuLabel(label: 'Recent'),
+///     RemixMenuItem(value: 'alpha', label: 'Alpha'),
+///     RemixMenuItem(value: 'beta', label: 'Beta'),
+///   ],
+///   onSelected: (value) => debugPrint(value),
+/// )
+/// ```
+final class RemixMenuLabel<T> extends RemixMenuItemData<T> {
+  const RemixMenuLabel({
+    super.key,
+    required this.label,
+    this.style = const MenuItemStyler.create(),
+  }) : assert(label != '', 'Menu labels must not be empty');
+
+  /// The visible text, also read by assistive technology.
+  final String label;
+
+  /// Per-label visual style applied after the menu-wide shared and label
+  /// styles.
+  final MenuItemStyler style;
+}
+
 /// Data class representing a menu divider.
 ///
 /// Used with [RemixMenu]'s items list to visually separate groups of items.
@@ -400,7 +434,7 @@ class RemixMenu<T> extends StatefulWidget {
   /// content, or [RemixMenuTrigger.control] for a caller-owned button.
   final RemixMenuTrigger trigger;
 
-  /// The declarative ordinary, compound, submenu, and divider data.
+  /// The declarative ordinary, compound, submenu, label, and divider data.
   final List<RemixMenuItemData<T>> items;
 
   /// Optional controller for programmatic control of the menu state.
@@ -618,7 +652,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
   }
 }
 
-enum _RemixMenuItemKind { ordinary, checkbox, radio, submenu }
+enum _RemixMenuItemKind { ordinary, checkbox, radio, submenu, label }
 
 /// The row's accessible name: an explicit [semanticLabel] wins; otherwise the
 /// visible [label] and [trailingText], one per line, so a shortcut is read.
@@ -653,6 +687,7 @@ final class _RemixMenuItemStyles {
         .checkbox => resolvedSpec.checkboxItem ?? resolvedSpec.item,
         .radio => resolvedSpec.radioItem ?? resolvedSpec.item,
         .submenu => resolvedSpec.submenuItem ?? resolvedSpec.item,
+        .label => resolvedSpec.labelItem ?? resolvedSpec.item,
       };
     }
 
@@ -684,6 +719,7 @@ final class _MenuItemProjection extends MenuStyler {
       .checkbox => source.$checkboxItem,
       .radio => source.$radioItem,
       .submenu => source.$submenuItem,
+      .label => source.$labelItem,
     };
     final mergedStyle = MixOps.merge(
       MixOps.merge(source.$item, semanticStyle),
@@ -751,6 +787,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
                 item,
                 hasChoiceItems,
               ),
+              RemixMenuLabel<T>() => _buildLabel(item, hasChoiceItems),
               RemixMenuDivider<T>() => StyleSpecBuilder(
                 key: item.key,
                 styleSpec: dividerStyleSpec,
@@ -784,6 +821,23 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
         style: item.style,
         kind: .ordinary,
         controller: NakedMenuItemState.controllerOf<T>(context),
+        reserveChoiceSlot: reserveChoiceSlot,
+        itemStyles: itemStyles,
+      ),
+    );
+  }
+
+  Widget _buildLabel(RemixMenuLabel<T> label, bool reserveChoiceSlot) {
+    // Its own node, with no role: ARIA lets a menu own only items, groups
+    // and separators, so a heading role would not be valid here.
+    return Semantics(
+      key: label.key,
+      container: true,
+      child: _RemixMenuItemContent(
+        label: label.label,
+        style: label.style,
+        kind: .label,
+        controller: null,
         reserveChoiceSlot: reserveChoiceSlot,
         itemStyles: itemStyles,
       ),
@@ -959,7 +1013,9 @@ class _RemixMenuItemContent extends StatelessWidget {
   final bool submenuOpen;
   final MenuItemStyler style;
   final _RemixMenuItemKind kind;
-  final WidgetStatesController controller;
+
+  /// The row's interaction states, or `null` for a label, which has none.
+  final WidgetStatesController? controller;
   final bool reserveChoiceSlot;
   final _RemixMenuItemStyles itemStyles;
 
@@ -968,26 +1024,30 @@ class _RemixMenuItemContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = this.controller;
+    if (controller == null) return _buildStyled(const <WidgetState>{});
+
     // Keeps onFocusVisible item styles in step with pointer and keyboard
     // input, which the manual WidgetStateProvider below does not track.
     return FocusVisibilityScope(
       child: ListenableBuilder(
         listenable: controller,
-        builder: (context, child) {
-          final states = <WidgetState>{
-            ...controller.value,
-            if (submenuOpen) WidgetState.selected,
-          };
-          return WidgetStateProvider(
-            states: states,
-            child: Builder(
-              builder: (context) => StyleSpecBuilder<MenuItemSpec>(
-                styleSpec: _resolveStyle(context),
-                builder: (context, spec) => _buildRow(context, spec),
-              ),
-            ),
-          );
-        },
+        builder: (context, child) => _buildStyled({
+          ...controller.value,
+          if (submenuOpen) WidgetState.selected,
+        }),
+      ),
+    );
+  }
+
+  Widget _buildStyled(Set<WidgetState> states) {
+    return WidgetStateProvider(
+      states: states,
+      child: Builder(
+        builder: (context) => StyleSpecBuilder<MenuItemSpec>(
+          styleSpec: _resolveStyle(context),
+          builder: (context, spec) => _buildRow(context, spec),
+        ),
       ),
     );
   }
