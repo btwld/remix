@@ -51,20 +51,12 @@ Widget _fade(
 double _fadeOpacity(WidgetTester tester) =>
     tester.widget<FadeTransition>(find.byKey(_fadeKey)).opacity.value;
 
-class _TransitionHost extends StatelessWidget {
-  const _TransitionHost({required this.onContext});
+const _homeKey = Key('home');
 
-  final ValueChanged<BuildContext> onContext;
-
-  @override
-  Widget build(BuildContext context) => MaterialApp(
-    home: Builder(
-      builder: (context) {
-        onContext(context);
-        return const SizedBox.shrink();
-      },
-    ),
-  );
+/// Pumps an empty app and returns a context under its navigator.
+Future<BuildContext> _pumpHost(WidgetTester tester) async {
+  await tester.pumpWidget(const MaterialApp(home: SizedBox(key: _homeKey)));
+  return tester.element(find.byKey(_homeKey));
 }
 
 /// Opens over 400 ms, then expects the exit to take 100 ms.
@@ -333,10 +325,7 @@ void main() {
     });
 
     testWidgets('closes over the reverse transition duration', (tester) async {
-      late BuildContext hostContext;
-      await tester.pumpWidget(
-        _TransitionHost(onContext: (c) => hostContext = c),
-      );
+      final hostContext = await _pumpHost(tester);
 
       unawaited(
         showRemixAlertDialog<void>(
@@ -354,10 +343,7 @@ void main() {
 
   group('showRemixDialog', () {
     testWidgets('closes over the reverse transition duration', (tester) async {
-      late BuildContext hostContext;
-      await tester.pumpWidget(
-        _TransitionHost(onContext: (c) => hostContext = c),
-      );
+      final hostContext = await _pumpHost(tester);
 
       unawaited(
         showRemixDialog<void>(
@@ -375,10 +361,7 @@ void main() {
     testWidgets('closes over the transition duration by default', (
       tester,
     ) async {
-      late BuildContext hostContext;
-      await tester.pumpWidget(
-        _TransitionHost(onContext: (c) => hostContext = c),
-      );
+      final hostContext = await _pumpHost(tester);
 
       unawaited(
         showRemixDialog<void>(
