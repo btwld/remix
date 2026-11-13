@@ -1,65 +1,63 @@
 import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 
-import '../components/answer.dart';
 import '../components/button.dart';
-import '../components/card.dart';
-import '../components/disclosure.dart';
 import '../theme/theme.dart';
 
-/// Styles for the answer surface: a HeroUI card, a disclosure for its
-/// sources, and ghost `sm` icon buttons for copy and retry.
+/// Styles for an answer: its body, its sources and a bar of actions.
 @immutable
 final class UiAgentAnswerRecipe {
   const UiAgentAnswerRecipe({
     required this.style,
-    required this.surfaceStyle,
-    required this.sourcesStyle,
-    required this.copyStyle,
-    required this.retryStyle,
+    required this.actionStyle,
+    required this.selectedActionStyle,
   });
 
-  /// Styles for the answer body, actions and feedback.
-  final UiAnswerStyler style;
+  /// Styles for the body, the spacing of its parts and the actions bar.
+  final AgentAnswerStyler style;
 
-  /// Styles for the card the answer sits in.
-  final CardStyler surfaceStyle;
+  /// Styles for every action: copy, feedback and retry.
+  final IconButtonStyler actionStyle;
 
-  /// Styles for the disclosure that lists the sources.
-  final DisclosureStyler sourcesStyle;
-
-  /// Styles for the copy icon button.
-  final IconButtonStyler copyStyle;
-
-  /// Styles for the retry icon button.
-  final IconButtonStyler retryStyle;
+  /// The chosen feedback action, merged over the ordinary action.
+  final IconButtonStyler selectedActionStyle;
 }
 
 /// Builds the recipe; each argument is merged last, so callers can override.
+///
+/// The answer is plain text on the page, with no card: 16px type, 12px between
+/// the body, the sources and the actions. The 32px action buttons hang 8px
+/// into the margin so their glyphs line up with the text edge.
 UiAgentAnswerRecipe uiAgentAnswerRecipe({
-  UiAnswerStyler style = const UiAnswerStyler.create(),
-  CardStyler surfaceStyle = const CardStyler.create(),
-  DisclosureStyler sourcesStyle = const DisclosureStyler.create(),
-  IconButtonStyler copyStyle = const IconButtonStyler.create(),
-  IconButtonStyler retryStyle = const IconButtonStyler.create(),
+  AgentAnswerStyler style = const AgentAnswerStyler.create(),
+  IconButtonStyler actionStyle = const IconButtonStyler.create(),
+  IconButtonStyler selectedActionStyle = const IconButtonStyler.create(),
 }) => UiAgentAnswerRecipe(
-  style: UiAnswerStyler(
-    body: BoxStyler(),
-    actions: FlexBoxStyler().spacing(4).padding(.top(8)),
-    feedback: BoxStyler().padding(.top(6)),
-    sourcesLabel: TextStyler()
-        .style(UiTokens.textSm.mix())
+  style: AgentAnswerStyler(
+    container: FlexBoxStyler().spacing(12),
+    text: TextStyler()
+        .style(UiTokens.textBase.mix())
         .color(UiTokens.foreground()),
-    indicator: IconStyler().color(UiTokens.foreground()).size(16),
+    actions: FlexBoxStyler()
+        .spacing(8)
+        .crossAxisAlignment(.center)
+        .transform(Matrix4.translationValues(-_actionsHang, 0, 0)),
+    feedback: TextStyler().style(UiTokens.textXs.mix()).color(UiTokens.muted()),
   ).merge(style),
-  surfaceStyle: uiCardStyle(style: surfaceStyle),
-  sourcesStyle: uiDisclosureStyle(
-    style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(4)))
-        .padding(.symmetric(vertical: 10))
-        .content(BoxStyler().padding(.bottom(8)))
-        .merge(sourcesStyle),
+  actionStyle: uiIconButtonStyle(
+    variant: .ghost,
+    size: .sm,
+    style: IconButtonStyler().icon(.color(UiTokens.muted())).merge(actionStyle),
   ),
-  copyStyle: uiIconButtonStyle(variant: .ghost, size: .sm, style: copyStyle),
-  retryStyle: uiIconButtonStyle(variant: .ghost, size: .sm, style: retryStyle),
+  selectedActionStyle: IconButtonStyler()
+      .color(UiTokens.defaultColor())
+      .icon(.color(UiTokens.foreground()))
+      .onHovered(.color(UiTokens.defaultHover()))
+      .onPressed(.color(UiTokens.defaultHover()))
+      .merge(selectedActionStyle),
 );
+
+/// How far the action buttons shift left: the 8px between a 32px
+/// button's edge and its 16px glyph.
+const _actionsHang = 8.0;

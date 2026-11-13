@@ -1,3 +1,4 @@
+# Historical registry API benchmark; current API: docs/agent/migrating.mdx.
 # Agent behavior supplies slots, not visual defaults. These measurements are
 # reference benchmarks, not the shipped default/Fortal recipe contract.
 # See ../README.md for reconciliation with the authored recipes and

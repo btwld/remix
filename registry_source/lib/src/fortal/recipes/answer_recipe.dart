@@ -1,76 +1,67 @@
 import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
-import '../../agent/components/answer.dart';
 
-import '../components/card.dart';
-import '../components/disclosure.dart';
 import '../components/icon_button.dart';
 import '../theme/theme.dart';
 
-/// Styles for the answer surface: a card, a disclosure for its sources, and
-/// ghost icon buttons for copy and retry.
+/// Styles for an answer: its body, its sources and a bar of actions.
 @immutable
 final class FortalAgentAnswerRecipe {
   const FortalAgentAnswerRecipe({
     required this.style,
-    required this.surfaceStyle,
-    required this.sourcesStyle,
-    required this.copyStyle,
-    required this.retryStyle,
+    required this.actionStyle,
+    required this.selectedActionStyle,
   });
 
-  /// Styles for the answer body, actions and feedback.
+  /// Styles for the body, the spacing of its parts and the actions bar.
   final AgentAnswerStyler style;
 
-  /// Styles for the card the answer sits in.
-  final CardStyler surfaceStyle;
+  /// Styles for every action: copy, feedback and retry.
+  final IconButtonStyler actionStyle;
 
-  /// Styles for the disclosure that lists the sources.
-  final DisclosureStyler sourcesStyle;
-
-  /// Styles for the copy icon button.
-  final IconButtonStyler copyStyle;
-
-  /// Styles for the retry icon button.
-  final IconButtonStyler retryStyle;
+  /// The chosen feedback action, merged over the ordinary action.
+  final IconButtonStyler selectedActionStyle;
 }
 
 /// Builds the recipe; each argument is merged last, so callers can override.
+///
+/// The answer is plain text on the page, with no card: 16px type, 12px between
+/// the body, the sources and the actions. The 32px action buttons hang 8px
+/// into the margin so their glyphs line up with the text edge.
 FortalAgentAnswerRecipe fortalAgentAnswerRecipe({
   AgentAnswerStyler style = const AgentAnswerStyler.create(),
-  CardStyler surfaceStyle = const CardStyler.create(),
-  DisclosureStyler sourcesStyle = const DisclosureStyler.create(),
-  IconButtonStyler copyStyle = const IconButtonStyler.create(),
-  IconButtonStyler retryStyle = const IconButtonStyler.create(),
+  IconButtonStyler actionStyle = const IconButtonStyler.create(),
+  IconButtonStyler selectedActionStyle = const IconButtonStyler.create(),
 }) => FortalAgentAnswerRecipe(
   style: AgentAnswerStyler(
-    body: BoxStyler(),
+    container: FlexBoxStyler().spacing(FortalTokens.space3()),
+    text: TextStyler()
+        .style(FortalTokens.text3.mix())
+        .color(FortalTokens.gray12()),
     actions: FlexBoxStyler()
         .spacing(FortalTokens.space2())
-        .padding(.top(FortalTokens.space3())),
-    feedback: BoxStyler().padding(.top(FortalTokens.space2())),
-    sourcesLabel: TextStyler()
-        .color(FortalTokens.gray12())
-        .style(FortalTokens.text2.mix()),
-    indicator: IconStyler()
-        .color(FortalTokens.gray12())
-        .size(FortalTokens.space4()),
+        .crossAxisAlignment(.center)
+        .transform(Matrix4.translationValues(-_actionsHang, 0, 0)),
+    feedback: TextStyler()
+        .style(FortalTokens.text1.mix())
+        .color(FortalTokens.gray11()),
   ).merge(style),
-  surfaceStyle: fortalCardStyle(size: .size2, style: surfaceStyle),
-  sourcesStyle: fortalDisclosureStyle(
-    size: .size1,
-    style: DisclosureStyler()
-        .container(BoxStyler().margin(.top(FortalTokens.space3())))
-        .merge(sourcesStyle),
-  ),
-  copyStyle: fortalIconButtonStyle(
+  actionStyle: fortalIconButtonStyle(
     variant: .ghost,
-    size: .size1,
-    style: copyStyle,
+    size: .size2,
+    style: IconButtonStyler()
+        .icon(.color(FortalTokens.gray11()))
+        .merge(actionStyle),
   ),
-  retryStyle: fortalIconButtonStyle(
-    variant: .ghost,
-    size: .size1,
-    style: retryStyle,
-  ),
+  selectedActionStyle: IconButtonStyler()
+      .color(FortalTokens.grayA3())
+      .icon(.color(FortalTokens.gray12()))
+      .onHovered(.color(FortalTokens.grayA4()))
+      .onPressed(.color(FortalTokens.grayA4()))
+      .merge(selectedActionStyle),
 );
+
+/// How far the action buttons shift left: the 8px between a 32px
+/// button's edge and its 16px glyph.
+const _actionsHang = 8.0;

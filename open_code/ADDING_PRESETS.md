@@ -51,7 +51,8 @@ variant and size enums in the upstream vocabulary and keep Remix's parameter
 names and shapes for everything else; document Dart name translations. Do not
 borrow Fortal's design decisions. Use preset-specific worksheets
 (`registry_source/specs/<preset>/tokens.json`, `components/<name>.yaml`); the
-existing `specs/components/` worksheets describe shared Agent surfaces.
+existing `specs/components/` worksheets preserve historical Agent benchmarks;
+current Agent widgets come from experimental `package:remix/agent.dart`.
 
 **Pass:** sources are reproducible and every family has a mapping.
 

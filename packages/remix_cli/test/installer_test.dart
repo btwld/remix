@@ -8,6 +8,7 @@ import 'package:remix_cli/src/registry.dart';
 import 'package:test/test.dart';
 
 import 'checkout_registry.dart';
+import 'spec_styler_resolver.dart';
 import 'test_support.dart';
 
 void main() {
@@ -72,19 +73,19 @@ void main() {
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
-        sources: const FixtureOfficialResolver(),
+        sources: const SpecStylerResolver(),
       );
       await installer.add(
-        const AddOptions(items: ['activity'], mode: AddMode.write),
+        const AddOptions(items: ['spec_demo'], mode: AddMode.write),
       );
       final config = File(p.join(root.path, 'build.yaml'));
       expect(
         config.readAsStringSync(),
-        contains('lib/ui/components/activity.dart'),
+        contains('lib/ui/components/spec_demo.dart'),
       );
       final before = snapshotFiles(root);
       await installer.add(
-        const AddOptions(items: ['activity'], mode: AddMode.write),
+        const AddOptions(items: ['spec_demo'], mode: AddMode.write),
       );
       expect(snapshotFiles(root), before);
       config.deleteSync();
@@ -92,7 +93,7 @@ void main() {
           .where((call) => call.arguments.contains('build_runner'))
           .length;
       await installer.add(
-        const AddOptions(items: ['activity'], mode: AddMode.write),
+        const AddOptions(items: ['spec_demo'], mode: AddMode.write),
       );
       expect(config.existsSync(), isTrue);
       expect(
@@ -115,16 +116,16 @@ void main() {
         runRealFormatter: true,
         runRealGit: true,
       ),
-      sources: const FixtureOfficialResolver(),
+      sources: const SpecStylerResolver(),
     );
     await installer.add(
-      const AddOptions(items: ['activity'], mode: AddMode.dryRun),
+      const AddOptions(items: ['spec_demo'], mode: AddMode.dryRun),
     );
     expect(output.join('\n'), contains('build.yaml'));
     expect(snapshotFiles(root), before);
     output.clear();
     await installer.add(
-      const AddOptions(items: ['activity'], mode: AddMode.diff),
+      const AddOptions(items: ['spec_demo'], mode: AddMode.diff),
     );
     expect(output.join('\n'), contains('mix_generator:spec_styler_generator'));
     expect(snapshotFiles(root), before);
@@ -149,26 +150,26 @@ void main() {
           projectRoot: root,
           writeOut: output.add,
           processRunner: runner,
-          sources: const FixtureOfficialResolver(),
+          sources: const SpecStylerResolver(),
         );
         final before = snapshotFiles(root);
         for (final mode in [AddMode.dryRun, AddMode.diff]) {
-          await installer.add(AddOptions(items: ['activity'], mode: mode));
+          await installer.add(AddOptions(items: ['spec_demo'], mode: mode));
           expect(snapshotFiles(root), before);
         }
         await installer.add(
-          const AddOptions(items: ['activity'], mode: AddMode.write),
+          const AddOptions(items: ['spec_demo'], mode: AddMode.write),
         );
         expect(config.readAsStringSync(), contains(target));
         expect(config.readAsStringSync(), isNot(contains(r'$default')));
         final installed = snapshotFiles(root);
         output.clear();
         await installer.add(
-          const AddOptions(items: ['activity'], mode: AddMode.diff),
+          const AddOptions(items: ['spec_demo'], mode: AddMode.diff),
         );
         expect(output.join('\n'), contains('No authored-source differences.'));
         await installer.add(
-          const AddOptions(items: ['activity'], mode: AddMode.write),
+          const AddOptions(items: ['spec_demo'], mode: AddMode.write),
         );
         expect(snapshotFiles(root), installed);
       },
@@ -187,11 +188,11 @@ void main() {
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
-        sources: const FixtureOfficialResolver(),
+        sources: const SpecStylerResolver(),
       );
       await expectLater(
         installer.add(
-          const AddOptions(items: ['activity'], mode: AddMode.write),
+          const AddOptions(items: ['spec_demo'], mode: AddMode.write),
         ),
         throwsFormatException,
       );
@@ -745,7 +746,7 @@ packages:
       );
       expect(
         File(
-          p.join(caseRoot.path, uiPath, 'components', 'activity.dart'),
+          p.join(caseRoot.path, uiPath, 'recipes', 'answer_recipe.dart'),
         ).existsSync(),
         isFalse,
       );
@@ -1765,10 +1766,10 @@ dev_dependencies:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
-        sources: const FixtureOfficialResolver(),
+        sources: const SpecStylerResolver(),
       ).add(
         const AddOptions(
-          items: ['activity', 'answer', 'message'],
+          items: ['spec_demo', 'button', 'card'],
           mode: AddMode.write,
         ),
       );
@@ -1782,7 +1783,7 @@ dev_dependencies:
       );
       expect(callsMatching((call) => call.arguments.first == 'format'), 1);
       expect(callsMatching((call) => call.arguments.first == 'analyze'), 1);
-      for (final item in ['activity', 'answer', 'message']) {
+      for (final item in ['spec_demo', 'button', 'card']) {
         expect(
           File(p.join(root.path, 'lib/ui/components/$item.dart')).existsSync(),
           isTrue,

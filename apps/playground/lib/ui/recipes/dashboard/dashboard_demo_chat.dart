@@ -2,19 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
-
-import '../../components/activity.dart';
-import '../../components/answer.dart';
-import '../../components/composer.dart';
-import '../../components/execution.dart';
-import '../../components/message.dart';
-import '../../components/permission.dart';
-import '../../components/plan.dart';
-import '../../components/transcript.dart';
-import '../../models/activity_item.dart';
-import '../../models/plan_item.dart';
-import '../../models/statuses.dart';
 
 /// How prominent a demo button is.
 enum PlaygroundDashboardAgentButtonTone {
@@ -40,184 +29,286 @@ typedef PlaygroundDashboardAgentButtonBuilder =
 final class PlaygroundDashboardAgentStyles {
   const PlaygroundDashboardAgentStyles({
     required this.buttonBuilder,
+    required this.glyphBuilder,
+    required this.toolIconBuilder,
+    required this.composerLeadingBuilder,
     required this.heading,
     required this.body,
+    required this.dockStyle,
+    required this.conversationStyle,
+    required this.latestStyle,
     required this.messageStyle,
-    required this.messageSurfaceStyle,
+    required this.messageToggleStyle,
+    required this.stepsStyle,
+    required this.stepStyle,
+    required this.stepsDisclosureStyle,
+    required this.toolCallStyle,
+    required this.toolCallDisclosureStyle,
+    required this.toolInputStyle,
+    required this.allowOnceStyle,
+    required this.alwaysAllowStyle,
+    required this.denyStyle,
     required this.answerStyle,
-    required this.answerSurfaceStyle,
-    required this.answerSourcesStyle,
-    required this.answerCopyStyle,
-    required this.answerRetryStyle,
-    required this.transcriptStyle,
-    this.transcriptLatestStyle = const IconButtonStyler.create(),
-    this.turnStyle = const FlexBoxStyler.create(),
-    required this.planStyle,
-    required this.planDisclosureStyle,
-    required this.activityStyle,
-    required this.activityDisclosureStyle,
-    required this.permissionStyle,
-    required this.permissionSurfaceStyle,
-    required this.permissionDetailsStyle,
-    required this.permissionParametersStyle,
-    required this.permissionAllowOnceStyle,
-    required this.permissionAlwaysAllowStyle,
-    required this.permissionDenyStyle,
-    required this.executionStyle,
-    required this.executionSurfaceStyle,
-    required this.executionDisclosureStyle,
-    required this.executionCopyStyle,
-    required this.executionRetryStyle,
+    required this.answerBodyStyle,
+    required this.answerActionStyle,
+    required this.answerSelectedActionStyle,
+    required this.sourcesStyle,
+    required this.sourcesDisclosureStyle,
+    required this.sourceStyle,
+    required this.suggestionsStyle,
+    required this.suggestionStyle,
     required this.composerStyle,
-    required this.composerSurfaceStyle,
     required this.composerFieldStyle,
-    required this.composerSubmitStyle,
-    required this.composerStopStyle,
+    required this.submitStyle,
+    required this.stopStyle,
   });
 
-  /// Builds the demo's buttons: starters and "New chat".
+  /// Builds the demo's buttons: "New chat".
   final PlaygroundDashboardAgentButtonBuilder buttonBuilder;
 
-  /// Style of the page heading.
+  /// Builds the host action that adds checkout context to the draft.
+  final Widget Function(VoidCallback onPressed) composerLeadingBuilder;
+
+  /// Draws every glyph of the Agent widgets.
+  final AgentGlyphBuilder glyphBuilder;
+
+  /// Draws tool icons by their playground name.
+  final AgentToolIconBuilder toolIconBuilder;
+
+  /// Style of the empty state's question.
   final TextStyler heading;
 
   /// Style of the page's supporting text.
   final TextStyler body;
 
-  /// Style of each [PlaygroundMessage].
-  final PlaygroundMessageStyler messageStyle;
+  /// Bounds the composer to the conversation's column.
+  final BoxStyler dockStyle;
 
-  /// Style of each message's card.
-  final CardStyler messageSurfaceStyle;
+  /// Style of the [AgentConversation].
+  final AgentConversationStyler conversationStyle;
 
-  /// Style of each [PlaygroundAnswer].
-  final PlaygroundAnswerStyler answerStyle;
+  /// Style of the button that returns to the latest output.
+  final IconButtonStyler latestStyle;
 
-  /// Style of each answer's card.
-  final CardStyler answerSurfaceStyle;
+  /// Style of the reader's [AgentMessage].
+  final AgentMessageStyler messageStyle;
 
-  /// Style of each answer's sources disclosure.
-  final DisclosureStyler answerSourcesStyle;
+  /// Style of the button that expands a long message.
+  final ButtonStyler messageToggleStyle;
 
-  /// Style of each answer's copy action.
-  final IconButtonStyler answerCopyStyle;
+  /// Style of the [AgentSteps] line and rail.
+  final AgentStepsStyler stepsStyle;
 
-  /// Style of each answer's retry action.
-  final IconButtonStyler answerRetryStyle;
+  /// Style of each step on the rail.
+  final AgentStepStyler stepStyle;
 
-  /// Style of the [PlaygroundTranscript].
-  final PlaygroundTranscriptStyler transcriptStyle;
+  /// Style of the steps' disclosure.
+  final DisclosureStyler stepsDisclosureStyle;
 
-  /// Style of the transcript's scroll-to-latest button.
-  final IconButtonStyler transcriptLatestStyle;
+  /// Style of the [AgentToolCall].
+  final AgentToolCallStyler toolCallStyle;
 
-  /// Lays out one turn: the prompt, the agent's work and its answer.
-  ///
-  /// The transcript's spacing separates turns, so keep a turn's own spacing
-  /// the tighter of the two: each prompt then reads with the reply below it.
-  final FlexBoxStyler turnStyle;
+  /// Style of the tool call's output disclosure.
+  final DisclosureStyler toolCallDisclosureStyle;
 
-  /// Style of the [PlaygroundPlan].
-  final PlaygroundPlanStyler planStyle;
-
-  /// Style of the plan's disclosure.
-  final DisclosureStyler planDisclosureStyle;
-
-  /// Style of the [PlaygroundActivity] ledger.
-  final PlaygroundActivityStyler activityStyle;
-
-  /// Style of the ledger's disclosure.
-  final DisclosureStyler activityDisclosureStyle;
-
-  /// Style of the [PlaygroundPermission].
-  final PlaygroundPermissionStyler permissionStyle;
-
-  /// Style of the permission's card.
-  final CardStyler permissionSurfaceStyle;
-
-  /// Style of the permission's details disclosure.
-  final DisclosureStyler permissionDetailsStyle;
-
-  /// Style of the permission's parameter list.
-  final DataListStyler permissionParametersStyle;
+  /// Style of the approval card's inputs.
+  final DataListStyler toolInputStyle;
 
   /// Style of the "Allow once" action.
-  final ButtonStyler permissionAllowOnceStyle;
+  final ButtonStyler allowOnceStyle;
 
   /// Style of the "Always allow" action.
-  final ButtonStyler permissionAlwaysAllowStyle;
+  final ButtonStyler alwaysAllowStyle;
 
   /// Style of the "Deny" action.
-  final ButtonStyler permissionDenyStyle;
+  final ButtonStyler denyStyle;
 
-  /// Style of the [PlaygroundExecution].
-  final PlaygroundExecutionStyler executionStyle;
+  /// Style of the [AgentAnswer].
+  final AgentAnswerStyler answerStyle;
 
-  /// Style of the execution's card.
-  final CardStyler executionSurfaceStyle;
+  /// Paragraph layout within the answer body.
+  final FlexBoxStyler answerBodyStyle;
 
-  /// Style of the execution's disclosure.
-  final DisclosureStyler executionDisclosureStyle;
+  /// Style of every answer action.
+  final IconButtonStyler answerActionStyle;
 
-  /// Style of the execution's copy action.
-  final IconButtonStyler executionCopyStyle;
+  /// Style of the chosen feedback action.
+  final IconButtonStyler answerSelectedActionStyle;
 
-  /// Style of the execution's retry action.
-  final IconButtonStyler executionRetryStyle;
+  /// Style of the [AgentSources] line and list.
+  final AgentSourcesStyler sourcesStyle;
 
-  /// Style of the [PlaygroundComposer].
-  final PlaygroundComposerStyler composerStyle;
+  /// Style of the sources' disclosure.
+  final DisclosureStyler sourcesDisclosureStyle;
 
-  /// Style of the composer's card.
-  final CardStyler composerSurfaceStyle;
+  /// Style of a source the reader can open.
+  final ButtonStyler sourceStyle;
+
+  /// Style of the [AgentSuggestions] row.
+  final AgentSuggestionsStyler suggestionsStyle;
+
+  /// Style of each suggestion.
+  final ButtonStyler suggestionStyle;
+
+  /// Style of the [AgentComposer].
+  final AgentComposerStyler composerStyle;
 
   /// Style of the composer's text field.
   final TextFieldStyler composerFieldStyle;
 
   /// Style of the composer's send action.
-  final IconButtonStyler composerSubmitStyle;
+  final IconButtonStyler submitStyle;
 
   /// Style of the composer's stop action.
-  final IconButtonStyler composerStopStyle;
+  final IconButtonStyler stopStyle;
 }
 
 /// The scripted path a demo run takes.
 enum _Scenario {
-  /// Streams an answer without asking for permission.
+  /// Runs the tool without asking, then answers.
   success,
 
-  /// Asks for permission before the tool runs.
+  /// Asks for permission, runs the tool, then answers.
   permission,
 
-  /// Fails partway through; retrying succeeds.
+  /// Asks for permission and the tool fails; retrying succeeds.
   failure,
 }
 
-/// Where the current run is.
+/// Where a run is.
 enum _Stage {
-  idle,
   preparing,
   permission,
   running,
+  answering,
   complete,
   failed,
   stopped,
   denied,
 }
 
-/// Complete local-only Agent demonstration shared by both dashboard presets.
+/// What each suggestion sends once the reader submits it.
+const _suggestions = [
+  (
+    label: 'Review checkout',
+    prompt: 'Review the checkout flow and tell me if the cart is ready.',
+    scenario: _Scenario.success,
+  ),
+  (
+    label: 'Run terminal checks',
+    prompt: 'Run the checkout tests and tell me if the cart flow is ready.',
+    scenario: _Scenario.permission,
+  ),
+  (
+    label: 'Recover a failed command',
+    prompt: 'Run the checkout tests again and recover if one fails.',
+    scenario: _Scenario.failure,
+  ),
+];
+
+const _command = r'$ flutter test test/cart';
+
+const _output = [
+  _command,
+  '00:01 +12: cart_state_test.dart: adds an item',
+  '00:02 +27: cart_totals_test.dart: applies a discount',
+  '00:03 +31: checkout_flow_test.dart: submits the order…',
+];
+
+const _failedOutput = [
+  _command,
+  '00:02 +30: cart_totals_test.dart: applies a discount',
+];
+
+const _failedError =
+    '00:03 +30 -1: checkout_flow_test.dart: submits the order [E]\n'
+    '  Expected: OrderStatus.placed\n'
+    '    Actual: OrderStatus.pending';
+
+const _answerChunks = [
+  'The cart flow is ready. ',
+  'All 31 checkout tests pass, including the discount and order-submission '
+      'paths.\n\n',
+  'One thing to watch: cart_totals_test.dart only covers single-currency '
+      'carts, so a multi-currency case is worth adding before launch.',
+];
+
+const _failedAnswer =
+    'One test fails: the order stays pending after submission. I can look at '
+    'the payment stub that resolves it.';
+
+const _deniedAnswer =
+    "Understood, I won't run anything. From reading the code, the cart flow "
+    "looks complete, but I can't confirm the tests pass without running them.";
+
+const _stoppedAnswer = 'Run stopped; partial output was preserved.';
+
+const _toolInput = <AgentToolInput>[
+  (label: 'Command', value: 'flutter test test/cart'),
+  (label: 'Directory', value: 'packages/checkout'),
+];
+
+const _sources = [
+  AgentSource(id: 'totals', title: 'cart_totals_test.dart'),
+  AgentSource(id: 'flow', title: 'checkout_flow_test.dart'),
+];
+
+/// One question and the run that answers it.
+final class _Turn {
+  _Turn({
+    required this.id,
+    required this.prompt,
+    required this.scenario,
+    Duration Function()? now,
+  }) : clock = AgentRunClock(now: now);
+
+  final int id;
+  final String prompt;
+  _Scenario scenario;
+  _Stage stage = _Stage.preparing;
+  AgentApprovalDecision? decision;
+  int outputLines = 0;
+  int answerChunks = 0;
+  AgentAnswerFeedback? feedback;
+
+  /// Measures how long the run worked, for "Thought for 4s".
+  final AgentRunClock clock;
+
+  /// Whether the tool started, so a stopped run reports what it left behind.
+  bool toolStarted = false;
+
+  /// A reader's rail toggle takes precedence over the scripted layout.
+  bool? stepsExpanded;
+
+  bool get active => const {
+    _Stage.preparing,
+    _Stage.permission,
+    _Stage.running,
+    _Stage.answering,
+  }.contains(stage);
+}
+
+/// Complete local-only Agent demonstration shared by every dashboard preset.
+///
+/// It scripts the states of an agent turn: the empty conversation with
+/// suggestions that fill the composer, a tool call that asks for approval,
+/// the run, the answer, a failed command and a denied request.
 class PlaygroundDashboardChatPage extends StatefulWidget {
   const PlaygroundDashboardChatPage({
     super.key,
     required this.styles,
     this.stepDelay = const Duration(milliseconds: 320),
+    this.now,
   });
 
-  /// The preset's styles for every Agent component on the page.
+  /// The preset's styles for every Agent widget on the page.
   final PlaygroundDashboardAgentStyles styles;
 
   /// Pause between the scripted steps of a run.
   final Duration stepDelay;
+
+  /// Monotonic time source for measuring work; null uses the run clock default.
+  final Duration Function()? now;
 
   @override
   State<PlaygroundDashboardChatPage> createState() =>
@@ -226,56 +317,30 @@ class PlaygroundDashboardChatPage extends StatefulWidget {
 
 class _PlaygroundDashboardChatPageState
     extends State<PlaygroundDashboardChatPage> {
-  static const _chunks = [
-    'I inspected the checkout flow. ',
-    'The cart state is shared correctly, ',
-    'and the focused checks pass. The flow is ready for review.',
-  ];
-
-  final _scroll = ScrollController();
-  final _draft = TextEditingController();
+  final _composer = AgentComposerController();
+  final _composerFocus = FocusNode();
+  final _composerKey = GlobalKey();
+  final _turns = <_Turn>[];
   Timer? _timer;
   var _runId = 0;
-  var _stage = _Stage.idle;
-  var _scenario = _Scenario.success;
-  var _prompt = '';
-  var _answer = '';
-  var _following = true;
-  var _toolStarted = false;
+  var _nextTurn = 0;
   var _alwaysAllowTerminal = false;
-  // Turns are numbered so a copy confirmation belongs to one answer: several
-  // answers can share the same text.
-  var _turn = 0;
-  int? _copiedTurn;
-  Timer? _copiedTimer;
-  final _history =
-      <({int turn, String prompt, String answer, bool succeeded})>[];
+  late final _announcer = AgentAnnouncer(onAnnouncement: _announce);
 
   PlaygroundDashboardAgentStyles get styles => widget.styles;
 
-  String get _visibleAnswer => _answer.isNotEmpty
-      ? _answer
-      : _stage == _Stage.denied
-      ? 'Permission denied. No tool ran.'
-      : !_toolStarted
-      ? 'Stopped before running the tool. No tool ran.'
-      : 'Run stopped; partial output was preserved.';
+  _Turn? get _current => _turns.isEmpty ? null : _turns.last;
 
-  String get _executionOutput =>
-      _answer.isEmpty ? r'$ flutter test' : '${r'$ flutter test'}\n$_answer';
-
-  bool get _active => const {
-    _Stage.preparing,
-    _Stage.permission,
-    _Stage.running,
-  }.contains(_stage);
+  bool get _active => _current?.active ?? false;
 
   @override
   void dispose() {
     _cancelPending();
-    _copiedTimer?.cancel();
-    _scroll.dispose();
-    _draft.dispose();
+    for (final turn in _turns) {
+      turn.clock.dispose();
+    }
+    _composer.dispose();
+    _composerFocus.dispose();
     super.dispose();
   }
 
@@ -285,442 +350,481 @@ class _PlaygroundDashboardChatPageState
     _timer = null;
   }
 
+  void _syncComposer() => _composer.running = _active;
+
   void _reset() {
     _cancelPending();
-    _clearCopied();
-    _draft.clear();
+    for (final turn in _turns) {
+      turn.clock.dispose();
+    }
+    _announcer.reset();
+    _composer.clear();
     setState(() {
-      _stage = _Stage.idle;
-      _prompt = '';
-      _answer = '';
-      _following = true;
+      _turns.clear();
       _alwaysAllowTerminal = false;
-      _toolStarted = false;
-      _history.clear();
+      _syncComposer();
     });
   }
 
-  Future<void> _copyAnswer(int turn, String text) async {
-    await Clipboard.setData(ClipboardData(text: text));
-    if (!mounted) return;
-    _copiedTimer?.cancel();
-    setState(() => _copiedTurn = turn);
-    _copiedTimer = Timer(const Duration(seconds: 2), () {
-      if (mounted) setState(() => _copiedTurn = null);
-    });
+  _Scenario _scenarioFor(String prompt) {
+    for (final suggestion in _suggestions) {
+      if (suggestion.prompt == prompt) return suggestion.scenario;
+    }
+    return _Scenario.permission;
   }
 
-  // A confirmation answers the last action; a new run replaces it.
-  void _clearCopied() {
-    _copiedTimer?.cancel();
-    _copiedTimer = null;
-    _copiedTurn = null;
-  }
-
-  void _start(
-    String prompt, {
-    _Scenario scenario = _Scenario.success,
-    bool keepMessage = false,
-  }) {
+  void _start(String prompt) {
     if (_active || prompt.trim().isEmpty) return;
+    final turn = _Turn(
+      id: _nextTurn++,
+      prompt: prompt.trim(),
+      scenario: _scenarioFor(prompt.trim()),
+      now: widget.now,
+    );
+    setState(() {
+      _turns.add(turn);
+    });
+    _begin(turn);
+  }
+
+  /// Starts, or restarts after a retry, the run of [turn].
+  void _begin(_Turn turn) {
     _cancelPending();
     final id = _runId;
     setState(() {
-      _clearCopied();
-      if (!keepMessage && _prompt.isNotEmpty) {
-        _history.add((
-          turn: _turn,
-          prompt: _prompt,
-          answer: _visibleAnswer,
-          succeeded: _stage == _Stage.complete,
-        ));
-      }
-      _scenario = scenario;
-      if (!keepMessage) {
-        _turn++;
-        _prompt = prompt.trim();
-      }
-      _answer = '';
-      _toolStarted = false;
-      _stage = _Stage.preparing;
-      _following = true;
+      turn
+        ..feedback = null
+        ..decision = null
+        ..outputLines = 0
+        ..answerChunks = 0
+        ..toolStarted = false
+        ..stepsExpanded = null
+        ..clock.reset()
+        ..clock.start();
+      _transition(turn, .preparing);
     });
     _timer = Timer(widget.stepDelay, () {
       if (!mounted || id != _runId) return;
-      if (scenario == _Scenario.permission && !_alwaysAllowTerminal) {
-        setState(() => _stage = _Stage.permission);
+      if (turn.scenario != _Scenario.success && !_alwaysAllowTerminal) {
+        setState(() {
+          turn.clock.stop();
+          _transition(turn, .permission);
+        });
       } else {
-        _stream(id);
+        _run(turn, id);
       }
     });
   }
 
-  void _stream(int id) {
-    var chunk = 0;
+  void _run(_Turn turn, int id) {
+    final failing = turn.scenario == _Scenario.failure;
+    final lines = failing ? _failedOutput : _output;
     setState(() {
-      _toolStarted = true;
-      _stage = _Stage.running;
+      turn
+        ..toolStarted = true
+        ..clock.start()
+        ..outputLines = 1;
+      _transition(turn, .running);
     });
     _timer = Timer.periodic(widget.stepDelay, (timer) {
       if (!mounted || id != _runId) {
         timer.cancel();
         return;
       }
-      if (_scenario == _Scenario.failure && chunk == 1) {
-        timer.cancel();
-        setState(() {
-          _stage = _Stage.failed;
-          _answer =
-              'The simulated command failed. Retry to run the recovery path.';
-        });
-        return;
-      }
-      setState(() => _answer += _chunks[chunk++]);
-      if (chunk == _chunks.length) {
-        timer.cancel();
-        setState(() => _stage = _Stage.complete);
-      }
+      setState(() {
+        if (turn.outputLines < lines.length) {
+          turn.outputLines++;
+        } else if (failing) {
+          timer.cancel();
+          turn.clock.stop();
+          _transition(turn, .failed);
+        } else if (turn.stage == _Stage.running) {
+          _transition(turn, .answering);
+        } else if (turn.answerChunks < _answerChunks.length) {
+          turn.answerChunks++;
+        } else {
+          timer.cancel();
+          turn.clock.stop();
+          _transition(turn, .complete);
+        }
+      });
     });
   }
 
-  void _allow(int requestId, {required bool always}) {
-    if (requestId != _runId || _stage != _Stage.permission) return;
-    if (always) _alwaysAllowTerminal = true;
-    _stream(_runId);
+  void _decide(_Turn turn, AgentApprovalDecision decision) {
+    if (turn.stage != _Stage.permission) return;
+    if (decision == AgentApprovalDecision.deny) {
+      _cancelPending();
+      setState(() {
+        turn
+          ..decision = decision
+          ..clock.stop();
+        _transition(turn, .denied);
+      });
+      return;
+    }
+    if (decision == AgentApprovalDecision.alwaysAllow) {
+      _alwaysAllowTerminal = true;
+    }
+    setState(() => turn.decision = decision);
+    _run(turn, _runId);
   }
 
   void _stop() {
+    final turn = _current;
+    if (turn == null) return;
     _cancelPending();
-    setState(() => _stage = _Stage.stopped);
+    setState(() {
+      turn.clock.stop();
+      _transition(turn, .stopped);
+    });
   }
 
-  void _retry() => _start(
-    _prompt,
-    scenario: _scenario == .failure ? .success : _scenario,
-    keepMessage: true,
-  );
+  void _retry(_Turn turn) {
+    if (_active || turn != _current) return;
+    // A failure retries into success; a denied or stopped run asks again.
+    if (turn.scenario == _Scenario.failure) turn.scenario = _Scenario.success;
+    _begin(turn);
+  }
+
+  /// Publishes host state transitions independently of which rows are visible.
+  void _transition(_Turn turn, _Stage stage) {
+    turn.stage = stage;
+    _syncComposer();
+    final call = _toolCall(turn);
+    if (call != null) _announcer.updateToolCall(call);
+    _announcer.updateAnswer(
+      'turn-${turn.id}-answer',
+      turn.active ? .streaming : .complete,
+    );
+  }
+
+  void _announce(AgentAnnouncement announcement) {
+    final message = switch (announcement.kind) {
+      .approvalNeeded => 'Approval needed for ${announcement.tool}.',
+      .toolFailed => '${announcement.tool} failed.',
+      .answerReady => 'Answer ready.',
+    };
+    unawaited(AgentAnnouncer.announce(context, message));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final gutter = MediaQuery.sizeOf(context).width < 600 ? 16.0 : 20.0;
-    return Box(
-      style: BoxStyler()
-          .padding(
-            .fromLTRB(
-              gutter,
-              gutter,
-              gutter,
-              gutter + MediaQuery.viewInsetsOf(context).bottom,
-            ),
-          )
-          .alignment(.center),
-      child: Box(
-        style: BoxStyler().maxWidth(800),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final compact = constraints.maxHeight < 500;
-            return ColumnBox(
-              style: FlexBoxStyler().crossAxisAlignment(.stretch).spacing(12),
-              children: [
-                ColumnBox(
-                  style: FlexBoxStyler()
-                      .mainAxisSize(.min)
-                      .crossAxisAlignment(.stretch)
-                      .spacing(4),
-                  children: [
-                    RowBox(
-                      style: FlexBoxStyler().spacing(12),
-                      children: [
-                        Expanded(
-                          child: StyledText(
-                            'Agent chat',
-                            style: styles.heading,
-                          ),
-                        ),
-                        styles.buttonBuilder('New chat', _reset, .outline),
-                      ],
-                    ),
-                    StyledText('Interactive demo', style: styles.body),
-                  ],
-                ),
-                // The transcript offers its own way back to the latest.
-                Expanded(child: _transcript(compact: compact)),
-                _composer(maxLines: compact ? 2 : 8),
-                if (!compact)
-                  Box(
-                    style: BoxStyler().alignment(.center),
-                    child: StyledText(
-                      'Simulated responses and tools — no backend or credentials.',
-                      style: styles.body,
-                    ),
-                  ),
-              ],
-            );
-          },
+    final composer = KeyedSubtree(key: _composerKey, child: _composerBox());
+    final empty = _turns.isEmpty;
+
+    return AgentGlyphs(
+      builder: styles.glyphBuilder,
+      toolIconBuilder: styles.toolIconBuilder,
+      // The keyboard lifts the composer: nothing above it resizes for it.
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
         ),
-      ),
-    );
-  }
-
-  Widget _starters() => Wrap(
-    alignment: WrapAlignment.center,
-    spacing: 8,
-    runSpacing: 8,
-    children: [
-      _starter('Review checkout', .success),
-      _starter('Run terminal checks', .permission),
-      _starter('Recover a failed command', .failure),
-    ],
-  );
-
-  Widget _starter(String label, _Scenario scenario) => styles.buttonBuilder(
-    label,
-    () => _start(label, scenario: scenario),
-    // Suggestions are outlined so the only filled shape in the
-    // conversation is the reader's own message.
-    .outline,
-  );
-
-  Widget _transcript({bool compact = false}) {
-    final turns = <Widget>[
-      for (final turn in _history)
-        _turnGroup([
-          _message(turn.prompt),
-          _answerWidget(
-            turn.turn,
-            turn.answer,
-            .complete,
-            sources: turn.succeeded,
-          ),
-        ]),
-      if (_prompt.isNotEmpty) _currentTurn(),
-    ];
-    return PlaygroundTranscript(
-      controller: _scroll,
-      followOutput: _following,
-      busy: _active,
-      onFollowChanged: (value) {
-        if (_following != value) setState(() => _following = value);
-      },
-      style: styles.transcriptStyle,
-      latestStyle: styles.transcriptLatestStyle,
-      children: turns.isEmpty
-          ? [
+        child: ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.stretch),
+          children: [
+            if (!empty)
               Box(
-                style: BoxStyler().alignment(.center).padding(.all(32)),
-                child: ColumnBox(
-                  style: FlexBoxStyler()
-                      .mainAxisSize(.min)
-                      .crossAxisAlignment(.center)
-                      .spacing(16),
-                  children: [
-                    const StyledText('Choose a starter or write a message.'),
-                    if (!compact) _starters(),
-                  ],
-                ),
+                style: BoxStyler()
+                    .alignment(.centerRight)
+                    .padding(.fromLTRB(20, 12, 20, 0)),
+                child: styles.buttonBuilder('New chat', _reset, .outline),
               ),
-            ]
-          : turns,
-    );
-  }
-
-  /// The turn in progress: the prompt and whichever parts of the agent's work
-  /// the current stage has reached.
-  Widget _currentTurn() => _turnGroup([
-    _message(_prompt),
-    _plan(),
-    // Activity says what the agent is doing until a card says it instead.
-    if (_stage == _Stage.preparing) _activity(),
-    // A decided request that let the tool run is told by the tool row
-    // below it, so only a pending or denied request is shown.
-    if (_stage == _Stage.permission ||
-        (_scenario == _Scenario.permission && _stage == _Stage.denied))
-      _permission(),
-    if (_toolStarted &&
-        {
-          _Stage.running,
-          _Stage.complete,
-          _Stage.failed,
-          _Stage.stopped,
-        }.contains(_stage))
-      _execution(),
-    if (_answer.isNotEmpty || {_Stage.denied, _Stage.stopped}.contains(_stage))
-      _answerWidget(
-        _turn,
-        _visibleAnswer,
-        _answerStatus,
-        sources: _stage == _Stage.complete,
-      ),
-  ]);
-
-  Widget _plan() => PlaygroundPlan(
-    style: styles.planStyle,
-    disclosureStyle: styles.planDisclosureStyle,
-    items: [
-      const PlaygroundPlanItem(
-        id: 'inspect',
-        title: 'Inspect the request',
-        status: .completed,
-      ),
-      PlaygroundPlanItem(
-        id: 'tool',
-        title: 'Run focused work',
-        status: _active
-            ? .inProgress
-            : _stage == _Stage.complete
-            ? .completed
-            : .cancelled,
-      ),
-    ],
-  );
-
-  Widget _activity() => PlaygroundActivity(
-    style: styles.activityStyle,
-    disclosureStyle: styles.activityDisclosureStyle,
-    status: _active ? .working : .complete,
-    items: [
-      PlaygroundActivityItem(
-        id: 'run',
-        title: _activityLabel,
-        status: _active ? .active : .complete,
-      ),
-    ],
-  );
-
-  Widget _permission() {
-    final requestId = _runId;
-    final narrow = MediaQuery.sizeOf(context).width < 600;
-    return PlaygroundPermission(
-      requestId: requestId,
-      tool: 'terminal.run',
-      description: 'Run deterministic focused checks in this demo.',
-      status: _permissionStatus,
-      parameters: const [
-        RemixDataListItem(label: 'Command', value: 'flutter test'),
-      ],
-      style: styles.permissionStyle.merge(
-        PlaygroundPermissionStyler(
-          actions: FlexBoxStyler()
-              .direction(narrow ? .vertical : .horizontal)
-              .crossAxisAlignment(narrow ? .stretch : .center),
+            Expanded(child: empty ? _emptyState(composer) : _conversation()),
+            if (!empty) _dock(composer),
+          ],
         ),
       ),
-      surfaceStyle: styles.permissionSurfaceStyle,
-      detailsStyle: styles.permissionDetailsStyle,
-      parametersStyle: styles.permissionParametersStyle,
-      allowOnceStyle: styles.permissionAllowOnceStyle,
-      alwaysAllowStyle: styles.permissionAlwaysAllowStyle,
-      denyStyle: styles.permissionDenyStyle,
-      onAllowOnce: () => _allow(requestId, always: false),
-      onAlwaysAllow: () => _allow(requestId, always: true),
-      onDeny: () {
-        if (requestId != _runId || _stage != _Stage.permission) return;
-        _cancelPending();
-        setState(() => _stage = _Stage.denied);
-      },
     );
   }
 
-  Widget _execution() => PlaygroundExecution(
-    tool: 'terminal.run',
-    title: 'Focused checks',
-    status: _executionStatus,
-    style: styles.executionStyle,
-    surfaceStyle: styles.executionSurfaceStyle,
-    disclosureStyle: styles.executionDisclosureStyle,
-    copyStyle: styles.executionCopyStyle,
-    retryStyle: styles.executionRetryStyle,
-    onCopy: () => Clipboard.setData(ClipboardData(text: _executionOutput)),
-    onRetry: _retry,
-    child: StyledText(_executionOutput),
+  /// The question, the composer and the suggestions, centered.
+  Widget _emptyState(Widget composer) => LayoutBuilder(
+    builder: (context, constraints) => SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: constraints.maxHeight),
+        child: Center(
+          child: Box(
+            style: styles.dockStyle,
+            child: ColumnBox(
+              style: FlexBoxStyler()
+                  .mainAxisSize(.min)
+                  .crossAxisAlignment(.stretch)
+                  .spacing(12),
+              children: [
+                Box(
+                  style: BoxStyler().alignment(.center).padding(.bottom(12)),
+                  child: StyledText(
+                    'What should we work on?',
+                    style: styles.heading,
+                  ),
+                ),
+                composer,
+                AgentSuggestions(
+                  controller: _composer,
+                  focusNode: _composerFocus,
+                  suggestions: [
+                    for (final suggestion in _suggestions)
+                      AgentSuggestion(
+                        label: suggestion.label,
+                        prompt: suggestion.prompt,
+                      ),
+                  ],
+                  style: styles.suggestionsStyle,
+                  suggestionStyle: styles.suggestionStyle,
+                ),
+                _disclaimer(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
   );
 
-  PlaygroundPermissionStatus get _permissionStatus => switch (_stage) {
-    .permission => .pending,
-    .denied => .denied,
-    .stopped => .allowed,
-    .failed => .error,
-    _ => _active ? .running : .complete,
-  };
-
-  PlaygroundExecutionStatus get _executionStatus => switch (_stage) {
-    .running => .running,
-    .complete => .success,
-    .failed => .error,
-    _ => .cancelled,
-  };
-
-  PlaygroundAnswerStatus get _answerStatus => switch (_stage) {
-    .running => .streaming,
-    .failed => .error,
-    _ => .complete,
-  };
-
-  // Each turn is one transcript item, so the transcript's spacing falls
-  // between turns and the turn's own, tighter spacing within one.
-  Widget _turnGroup(List<Widget> children) => ColumnBox(
-    style: FlexBoxStyler()
-        .mainAxisSize(.min)
-        .crossAxisAlignment(.stretch)
-        .spacing(8)
-        .merge(styles.turnStyle),
-    children: children,
+  Widget _dock(Widget composer) => Align(
+    alignment: Alignment.bottomCenter,
+    child: Box(
+      style: styles.dockStyle,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .mainAxisSize(.min)
+            .crossAxisAlignment(.stretch)
+            .spacing(8)
+            .padding(.bottom(16)),
+        children: [composer, _disclaimer()],
+      ),
+    ),
   );
 
-  Widget _message(String value) => PlaygroundMessage(
-    role: .user,
-    style: styles.messageStyle,
-    surfaceStyle: styles.messageSurfaceStyle,
-    child: StyledText(value),
+  Widget _disclaimer() => Box(
+    style: BoxStyler().alignment(.center),
+    child: StyledText(
+      'Simulated responses and tools — no backend or credentials.',
+      style: styles.body,
+    ),
   );
 
-  Widget _answerWidget(
-    int turn,
-    String value,
-    PlaygroundAnswerStatus status, {
-    bool sources = true,
-  }) {
-    return PlaygroundAnswer(
-      streamId: _runId,
-      status: status,
-      style: styles.answerStyle,
-      surfaceStyle: styles.answerSurfaceStyle,
-      sourcesStyle: styles.answerSourcesStyle,
-      copyStyle: styles.answerCopyStyle,
-      retryStyle: styles.answerRetryStyle,
-      onCopy: () => _copyAnswer(turn, value),
-      feedback: _copiedTurn == turn ? const StyledText('Copied') : null,
-      onRetry: _retry,
-      // Sources belong to an answer that used them, not to a failure.
-      sourcesContent: sources && status == .complete
-          ? const StyledText('Deterministic local fixture · no network')
-          : null,
-      child: StyledText(value),
-    );
-  }
-
-  Widget _composer({required int maxLines}) => PlaygroundComposer(
-    controller: _draft,
-    maxLines: maxLines,
-    running: _active,
+  Widget _composerBox() => AgentComposer(
+    controller: _composer,
+    focusNode: _composerFocus,
     onSubmit: _start,
     onStop: _stop,
-    hintText: _active ? 'Run in progress…' : 'Ask the demo agent…',
+    leading: styles.composerLeadingBuilder(() {
+      _composer.text = 'Review packages/checkout and its cart tests.';
+      _composerFocus.requestFocus();
+    }),
+    hintText: _turns.isEmpty ? 'Ask the agent…' : 'Ask a follow-up…',
     style: styles.composerStyle,
-    surfaceStyle: styles.composerSurfaceStyle,
     fieldStyle: styles.composerFieldStyle,
-    submitStyle: styles.composerSubmitStyle,
-    stopStyle: styles.composerStopStyle,
+    submitStyle: styles.submitStyle,
+    stopStyle: styles.stopStyle,
   );
 
-  String get _activityLabel => switch (_stage) {
-    .preparing => 'Preparing the run',
-    .permission => 'Waiting for permission',
-    .running => 'Streaming simulated output',
-    .complete => 'Run complete',
-    .failed => 'Command failed',
-    .stopped => 'Run stopped',
-    .denied => 'Permission denied',
-    .idle => 'Ready',
-  };
+  Widget _conversation() => AgentConversation(
+    busy: _active,
+    style: styles.conversationStyle,
+    latestStyle: styles.latestStyle,
+    children: [for (final turn in _turns) _turn(turn)],
+  );
+
+  Widget _turn(_Turn turn) {
+    final call = _toolCall(turn);
+    final answer = _answer(turn);
+
+    return AgentTurn(
+      key: ValueKey(turn.id),
+      children: [
+        AgentMessage(
+          role: .user,
+          style: styles.messageStyle,
+          toggleStyle: styles.messageToggleStyle,
+          child: Text(turn.prompt),
+        ),
+        _steps(turn),
+        if (call != null)
+          AgentToolCall(
+            call: call,
+            onDecision: (decision) => _decide(turn, decision),
+            style: styles.toolCallStyle,
+            disclosureStyle: styles.toolCallDisclosureStyle,
+            inputStyle: styles.toolInputStyle,
+            allowOnceStyle: styles.allowOnceStyle,
+            alwaysAllowStyle: styles.alwaysAllowStyle,
+            denyStyle: styles.denyStyle,
+          ),
+        ?answer,
+      ],
+    );
+  }
+
+  Widget _steps(_Turn turn) {
+    final waiting = turn.stage == _Stage.permission;
+    final settled = !turn.active;
+    final steps = <AgentStep>[
+      AgentStep(
+        id: 'read',
+        title: 'Read the checkout module',
+        status: turn.stage == _Stage.preparing ? .active : .complete,
+      ),
+      if (turn.stage != _Stage.preparing)
+        const AgentStep(
+          id: 'found',
+          title: 'Found 4 test files for the cart',
+          status: .complete,
+        ),
+      if (turn.toolStarted && turn.stage != _Stage.running)
+        AgentStep(
+          id: 'ran',
+          title: 'Ran the cart tests',
+          status: switch (turn.stage) {
+            .running => .active,
+            .stopped || .failed => .cancelled,
+            _ => .complete,
+          },
+        ),
+    ];
+
+    return AgentSteps(
+      key: ValueKey('steps-${turn.id}-${turn.scenario.name}'),
+      steps: steps,
+      status: waiting
+          ? .waiting
+          : settled
+          ? .complete
+          : .working,
+      clock: turn.clock,
+      policy: const AgentDisclosurePolicy(
+        openWhileWorking: false,
+        collapseWhenSettled: false,
+      ),
+      expanded:
+          turn.stepsExpanded ?? (waiting || turn.stage == _Stage.preparing),
+      onExpandedChanged: (value) => setState(() => turn.stepsExpanded = value),
+      labelBuilder: (status, count, duration) =>
+          status == AgentRunStatus.working
+          ? 'Working · $count steps'
+          : AgentSteps.defaultLabel(status, count, duration),
+      style: styles.stepsStyle,
+      stepStyle: styles.stepStyle,
+      disclosureStyle: styles.stepsDisclosureStyle,
+    );
+  }
+
+  AgentToolCallPart? _toolCall(_Turn turn) {
+    final failing = turn.scenario == _Scenario.failure;
+    final lines = (failing ? _failedOutput : _output)
+        .take(turn.outputLines)
+        .join('\n');
+    final id = 'turn-${turn.id}-call';
+    const name = 'terminal.run';
+
+    return switch (turn.stage) {
+      .preparing => null,
+      .permission => AgentToolCallPart(
+        id: id,
+        name: name,
+        summary: 'Run the cart tests',
+        description:
+            'The agent wants to run the checkout test suite in this workspace.',
+        input: _toolInput,
+        status: .awaitingApproval,
+      ),
+      .running => AgentToolCallPart(
+        id: id,
+        name: name,
+        summary: 'Running the cart tests',
+        input: _toolInput,
+        status: .running,
+        output: lines,
+      ),
+      .answering || .complete => AgentToolCallPart(
+        id: id,
+        name: name,
+        summary: 'Tests passed',
+        detail: '31 tests',
+        input: _toolInput,
+        status: .succeeded,
+        output: _output.join('\n'),
+        decision: turn.decision,
+        duration: const Duration(milliseconds: 2900),
+      ),
+      .failed => AgentToolCallPart(
+        id: id,
+        name: name,
+        summary: '1 test failed',
+        detail: '30 of 31 passed',
+        input: _toolInput,
+        status: .failed,
+        output: _failedOutput.join('\n'),
+        error: _failedError,
+        decision: turn.decision,
+        duration: const Duration(milliseconds: 3100),
+      ),
+      .denied => AgentToolCallPart(
+        id: id,
+        name: name,
+        summary: 'Run the cart tests',
+        input: _toolInput,
+        status: .denied,
+        decision: .deny,
+      ),
+      .stopped =>
+        turn.toolStarted
+            ? AgentToolCallPart(
+                id: id,
+                name: name,
+                summary: 'Run the cart tests',
+                input: _toolInput,
+                status: .cancelled,
+                output: lines,
+                decision: turn.decision,
+              )
+            : null,
+    };
+  }
+
+  Widget? _answer(_Turn turn) {
+    final (text, status) = switch (turn.stage) {
+      .answering => (
+        _answerChunks.take(turn.answerChunks).join(),
+        AgentAnswerStatus.streaming,
+      ),
+      .complete => (_answerChunks.join(), AgentAnswerStatus.complete),
+      .failed => (_failedAnswer, AgentAnswerStatus.complete),
+      .denied => (_deniedAnswer, AgentAnswerStatus.complete),
+      .stopped => (_stoppedAnswer, AgentAnswerStatus.complete),
+      _ => ('', AgentAnswerStatus.complete),
+    };
+    if (text.isEmpty) return null;
+    final complete = turn.stage == _Stage.complete;
+
+    return AgentAnswer(
+      id: turn.id,
+      status: status,
+      style: styles.answerStyle,
+      actionStyle: styles.answerActionStyle,
+      selectedActionStyle: styles.answerSelectedActionStyle,
+      sources: complete
+          ? AgentSources(
+              sources: _sources,
+              style: styles.sourcesStyle,
+              disclosureStyle: styles.sourcesDisclosureStyle,
+              sourceStyle: styles.sourceStyle,
+            )
+          : null,
+      onCopy: () => Clipboard.setData(ClipboardData(text: text)),
+      feedback: turn.feedback,
+      onFeedback: (value) => setState(() => turn.feedback = value),
+      onRetry: turn == _current ? () => _retry(turn) : null,
+      child: ColumnBox(
+        style: styles.answerBodyStyle,
+        children: [
+          for (final paragraph in text.split('\n\n'))
+            if (paragraph.isNotEmpty) Text(paragraph),
+        ],
+      ),
+    );
+  }
 }

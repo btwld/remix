@@ -66,7 +66,9 @@ stylers or data classes that the owned barrel does not export.
 
 Recipes are `<prefix>ButtonStyle(...)` functions returning a `*Styler`;
 `@MixWidget` generates `<Prefix>Button` adapters. Agent `<item>_recipe` items
-instead bundle parent and child stylers for an installed domain surface.
+instead bundle parent and child stylers for the experimental widgets in
+`package:remix/agent.dart`. Import that library explicitly; widgets and models
+keep their `Agent` names while recipes use the app prefix.
 
 ## Place the theme scope
 

@@ -16,11 +16,12 @@ fvm flutter run -d chrome
 ## Installed registry source
 
 The app selects the `heroui` preset with prefix `Ui` in `remix.yaml` and
-installs the full HeroUI catalog under `lib/ui/`, including the chart, Agent,
+installs the full HeroUI catalog under `lib/ui/`, including the chart, Agent recipes,
 `dashboard_shell`, and `dashboard_demo` items. `lib/main.dart` mounts
 `UiDashboardDemo` at the root below `UiTheme`, with the Geist face from
 `remix_ui_fonts`; it adds nothing else. `tool/check_consumer_apps.dart` checks
 that the installed tree still matches the `heroui` registry in this checkout.
+Agent widgets and models come from experimental `package:remix/agent.dart`.
 
 HeroUI web 3.2.6 has no dashboard, sidebar, app bar, chart, or Agent surfaces,
 so those items are extensions: built from HeroUI's tokens and recipes, with no

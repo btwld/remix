@@ -1,0 +1,71 @@
+---
+title: Conversation
+description: A viewport that follows output and lets the reader return to the latest turn.
+---
+
+A viewport that follows output and lets the reader return to the latest turn.
+
+The widgets live in experimental `package:remix/agent.dart`, outside Remix's stability promise.
+Import it explicitly; `package:remix/remix.dart` does not export it.
+The registry installs editable preset recipes and their dependencies into your app.
+Widget, model, and styler names keep the `Agent` prefix. Recipe names use your app's prefix.
+
+## Install
+
+For a new app, initialize one preset, then add the recipe and glyphs:
+
+```shell
+remix init --prefix Ui --preset fortal
+remix add conversation_recipe agent_glyphs_recipe
+```
+
+Existing apps keep their chosen preset. Vanilla and HeroUI provide the same recipe roles.
+No consumer `build.yaml` is needed for these Agent recipes.
+
+## Behavior
+
+Give `AgentConversation` bounded height, such as an `Expanded` child in a finite-height column.
+Its `children` are turns in oldest-first order. `AgentConversation.builder` builds turns lazily;
+provide keys and `findChildIndexCallback` when prepending or reordering history.
+
+The viewport follows growing output until the reader scrolls away. Its latest button returns
+to the end, with reduced motion respected. Supply `liveEdge` to control this behavior from the host.
+`busy` describes work for assistive technology; it does not start a runner.
+
+## Use the recipe
+
+This example assumes prefix `Ui` and the installed `UiTheme` above the widget.
+Wrap the conversation in `AgentGlyphs(builder: uiAgentGlyph, child: ...)` to draw preset glyphs.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
+import 'ui/ui.dart';
+
+Widget buildConversation() {
+  final recipe = uiAgentConversationRecipe();
+  return AgentConversation(
+    style: recipe.style,
+    latestStyle: recipe.latestStyle,
+    children: const [
+      AgentTurn(
+        children: [
+          AgentMessage(role: AgentRole.user, child: Text('Review the cart')),
+        ],
+      ),
+    ],
+  );
+}
+```
+
+The recipe returns these unresolved styles. Pass each into its matching widget parameter;
+child controls resolve hover, focus, and disabled state in their own context.
+
+| Bundle field | Style type |
+| --- | --- |
+| `style` | `AgentConversationStyler` |
+| `latestStyle` | `IconButtonStyler` |
+
+Each factory merges same-named overrides after its preset defaults.
+Edit the installed recipe to customize it. `remix add conversation_recipe --diff` previews upstream differences.
+See [migration](/agent/migrating) for the previous registry API.

@@ -29,6 +29,6 @@ approximations:
   - "No upstream reference: @heroui/react 3.2.6 ships no dashboard, so the composition and every value above are designed from existing HeroUI tokens and recipes. Listed under `extensions` in reference/heroui_3_2_6/families.json."
   - "Sample data, navigation, copy, keys and behavior are the shared base's, unchanged from Vanilla and Fortal; only components and their variants differ."
   - "HeroUI has no segmented control. The orders filter and the light/dark choices are RemixSegmentedControl, as in Vanilla, so they announce as one labelled group of options rather than a tab list with no panels; they wear the primary tabs look, restated from its tokens, and size their segments equally where tabs fit their labels."
-  - "HeroUI has no data list or callout: the permission parameters are styled in permission_recipe.yaml and the Settings note is the default alert."
+  - "HeroUI has no data list or callout: the permission parameters are styled in tool_call_recipe.yaml and the Settings note is the default alert."
   - "The theme exposes only its selected data, so the radius from Settings reaches both brightnesses through two probe scopes that read the host's light and dark themes."
   - "Headings follow HeroUiTypography's sizes without the typography item, which would add the remix_ui_fonts package to the demo."

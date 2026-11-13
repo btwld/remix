@@ -1,0 +1,61 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
+import 'package:remix/remix.dart';
+{{icon:import}}
+
+import '../components/spinner.dart';
+
+/// Draws the glyphs of the Agent widgets from this preset's icon set.
+///
+/// Wrap the conversation in `AgentGlyphs(builder: {{valuePrefix}}AgentGlyph, ...)`.
+/// Each Agent widget sizes and colors its glyph through its own style, so this
+/// only picks the shape. Returning null draws nothing there.
+Widget? {{valuePrefix}}AgentGlyph(
+  BuildContext context,
+  AgentGlyph glyph,
+  IconSpec spec,
+) => switch (glyph) {
+  // A call that waits for approval shows its status as a badge, without a
+  // glyph.
+  .toolWaiting => null,
+  .toolPreparing || .toolRunning => {{typePrefix}}Spinner(
+    color: .current,
+    style: SpinnerStyler(size: spec.size),
+  ),
+  _ => Icon(_icon(glyph)),
+};
+
+/// Picks named tool icons; null keeps the generic tool glyph as the fallback.
+/// Pass this to `AgentGlyphs.toolIconBuilder` beside `{{valuePrefix}}AgentGlyph`.
+Widget? {{valuePrefix}}AgentToolIcon(BuildContext context, String name, IconSpec spec) =>
+    switch (name) {
+      'terminal.run' => const Icon({{icon:terminal}}),
+      _ => null,
+    };
+
+IconData _icon(AgentGlyph glyph) => switch (glyph) {
+  .disclosureClosed => {{icon:chevronRight}},
+  .disclosureOpen => {{icon:chevronDown}},
+  .latest => {{icon:arrowDown}},
+  .send => {{icon:arrowUp}},
+  .stop => {{icon:square}},
+  .thinking || .thought => {{icon:magicWand}},
+  .waiting => {{icon:pause}},
+  .stepPending => {{icon:circle}},
+  .stepActive => {{icon:dotFilled}},
+  .stepComplete => {{icon:check}},
+  .stepCancelled => {{icon:cross2}},
+  .tool => {{icon:terminal}},
+  .approval => {{icon:shield}},
+  .toolSucceeded => {{icon:checkCircled}},
+  .toolFailed => {{icon:crossCircled}},
+  .toolDenied || .toolCancelled => {{icon:circleBackslash}},
+  .copy => {{icon:copy}},
+  .copied => {{icon:check}},
+  // remix_ui_icons draws no thumbs, so feedback reads as a vote.
+  .positive => {{icon:arrowUp}},
+  .negative => {{icon:arrowDown}},
+  .retry => {{icon:reload}},
+  .sources => {{icon:file}},
+  .toolPreparing || .toolRunning || .toolWaiting => {{icon:update}},
+};

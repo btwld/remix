@@ -56,6 +56,7 @@ icons:
   doubleArrowRight: {remix: chevronsRight, rounded: chevronsRight, lucide: chevronsRight}
   download: {remix: download, rounded: download, lucide: download}
   exclamationTriangle: {remix: warning, rounded: warning, lucide: triangleAlert}
+  file: {remix: file, rounded: file, lucide: file}
   fontBold: {remix: bold, rounded: bold, lucide: bold}
   fontSize: {remix: type, rounded: type, lucide: type}
   gear: {remix: gear, rounded: gear, lucide: settings}
@@ -71,9 +72,11 @@ icons:
   mixerHorizontal: {remix: sliders, rounded: sliders, lucide: slidersHorizontal}
   mobile: {remix: smartphone, rounded: smartphone, lucide: smartphone}
   moon: {remix: moon, rounded: moon, lucide: moon}
+  pause: {remix: pause, rounded: pause, lucide: pause}
   person: {remix: user, rounded: user, lucide: user}
   plus: {remix: plus, rounded: plus, lucide: plus}
   reload: {remix: refresh, rounded: refresh, lucide: rotateCcw}
+  shield: {remix: shield, rounded: shield, lucide: shield}
   square: {remix: square, rounded: square, lucide: square}
   stack: {remix: layers, rounded: layers, lucide: layers}
   sun: {remix: sun, rounded: sun, lucide: sun}
