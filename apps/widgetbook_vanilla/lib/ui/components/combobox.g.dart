@@ -35,6 +35,7 @@ class VanillaCombobox<T extends Object> extends StatelessWidget {
     this.fieldBuilder,
     this.optionBuilder,
     this.optionsViewOpenDirection = OptionsViewOpenDirection.down,
+    this.isOptionDisabled,
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
@@ -70,6 +71,8 @@ class VanillaCombobox<T extends Object> extends StatelessWidget {
 
   final OptionsViewOpenDirection optionsViewOpenDirection;
 
+  final bool Function(T option)? isOptionDisabled;
+
   final VoidCallback? onOpen;
 
   final VoidCallback? onClose;
@@ -95,6 +98,7 @@ class VanillaCombobox<T extends Object> extends StatelessWidget {
       fieldBuilder: this.fieldBuilder,
       optionBuilder: this.optionBuilder,
       optionsViewOpenDirection: this.optionsViewOpenDirection,
+      isOptionDisabled: this.isOptionDisabled,
       onOpen: this.onOpen,
       onClose: this.onClose,
       excludeSemantics: this.excludeSemantics,

@@ -51,7 +51,7 @@ Place `UiTheme` above the Navigator, inside the app builder. The recipe reuses
 Vanilla TextField's light/dark fill, focus ring and disabled opacity. Suggestions
 sit in a rounded, bordered `popover` surface with a medium effects shadow and 8px gap.
 Keyboard highlight uses `accent`; hover uses an 85% accent tint, and press uses a stronger primary tint. Labels use `accentForeground` and keep the same weight across states so wrapped text stays stable. A 1px gap separates rounded rows.
-Rows grow with wrapped text from Select’s 32px minimum and padding. The panel has a 320px height bound and a 128px width floor; RawAutocomplete anchors its width to the field. There is no per-option selected or disabled state.
+Rows grow with wrapped text from Select’s 32px minimum and padding. The panel has a 320px height bound and a 128px width floor; RawAutocomplete anchors its width to the field. The recipe has no selected-row style, and no disabled-row style yet: add an option `onDisabled` style for rows that `isOptionDisabled` marks.
 
 Use `style: ComboboxStyler().field(...).panel(...).option(...)` for overrides;
 state overrides belong in matching state fragments. A custom `fieldBuilder`
@@ -79,7 +79,8 @@ highlight paints an inset focus ring that stays visible inside the scroll viewpo
 
 This maps the inline editable ComboBox family. Upstream Autocomplete's separate
 search field inside a popover remains deferred. Remix has no trigger glyph slot,
-per-option disabled state, persistent selection mark or multiple selection.
+persistent selection mark or multiple selection, and the recipe has no
+disabled-row style yet.
 Overflow cues, panel bounds and immediate press scaling follow Remix. Review the
 worksheet for remaining font, shadow and motion approximations.
 
@@ -161,7 +162,7 @@ final cityStyle = ComboboxStyler()
 
 `ComboboxPanelStyler` supplies panel constraints, `containerEffects`, `scrollbarColor`, and `scrollbarThickness`. The component owns a persistent overflow thumb (painted only when scrolling is possible); its default is 4px wide with the inherited text color at 35% opacity. Panel scrolling clamps and stays isolated from the page, as in Select/Menu. Set option `.minHeight(...)` to size rows including padding; the unstyled default is 48px.
 
-`container` controls editor-root layout; `field` and `panel` style the editor and suggestions surface. The nested `option: ComboboxOptionSpec` groups `container` and `label`; use `ComboboxOptionStyler` for row styling and `.label(TextStyler(...))` for its text. An option's focused state denotes RawAutocomplete's keyboard highlight. Hover styles a row independently and does not move that highlight. Root modifiers and animation apply once around the editor. Direct `styleSpec: ComboboxSpec(...)` bypasses fluent styling and defaults. `RemixCombobox.styleFrom(...)` and generated `ComboboxStyler.call<T>()` are supported.
+`container` controls editor-root layout; `field` and `panel` style the editor and suggestions surface. The nested `option: ComboboxOptionSpec` groups `container` and `label`; use `ComboboxOptionStyler` for row styling and `.label(TextStyler(...))` for its text. An option's focused state denotes RawAutocomplete's keyboard highlight, and its disabled state marks a suggestion that `isOptionDisabled` returned true for. Hover styles a row independently and does not move that highlight. Root modifiers and animation apply once around the editor. Direct `styleSpec: ComboboxSpec(...)` bypasses fluent styling and defaults. `RemixCombobox.styleFrom(...)` and generated `ComboboxStyler.call<T>()` are supported.
 
 The root exposes focus and disabled state. Put hover and press styles on the `field` or `option` slots, whose interactive widgets supply those states.
 
@@ -171,7 +172,31 @@ Unstyled rows default to a 48px minimum and grow with wrapped labels; option sty
 
 Arrow keys move the highlighted suggestion while focus stays in the editor. Enter accepts; Escape dismisses while preserving text. Tab and Shift-Tab leave without committing. Pointer, touch and stylus release activate an option; scrolling and canceled presses do not select it.
 
-Return eligible suggestions only. There is no per-option disabled API. Callers own fetching, filtering, debounce and errors; no results closes the panel. RawAutocomplete handles stale asynchronous responses. `onOpen` and `onClose` observe options-subtree mounting after a frame; they do not control visibility.
+Filter out unavailable suggestions, or keep them visible with `isOptionDisabled`. Arrow, page, first and last moves skip a disabled suggestion, and Enter and pointer activation never accept it. Its row is a disabled button for assistive technology. A result whose suggestions are all disabled keeps the panel open with nothing to accept. The function runs once per suggestion when results arrive; return new results to change availability.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+typedef Workspace = ({String name, bool archived});
+
+Widget workspaceSearch(List<Workspace> workspaces) => RemixCombobox<Workspace>(
+  label: 'Workspace',
+  optionsBuilder: (query) => workspaces.where(
+    (workspace) =>
+        workspace.name.toLowerCase().contains(query.text.toLowerCase()),
+  ),
+  displayStringForOption: (workspace) => workspace.name,
+  isOptionDisabled: (workspace) => workspace.archived,
+  style: ComboboxStyler().option(
+    ComboboxOptionStyler().onDisabled(
+      .label(.color(const Color(0xFF8A9991))),
+    ),
+  ),
+);
+```
+
+Callers own fetching, filtering, debounce and errors; no results closes the panel. RawAutocomplete handles stale asynchronous responses. `onOpen` and `onClose` observe options-subtree mounting after a frame; they do not control visibility.
 
 Option equality identifies an entity. Equal values are shown once, retaining the first occurrence; distinct unequal entities can share the same display string and remain separate suggestions.
 
@@ -203,6 +228,7 @@ RemixCombobox<T> remixComboboxConstructor<T extends Object>({
   Widget Function(BuildContext, T)? optionBuilder,
   OptionsViewOpenDirection optionsViewOpenDirection =
       OptionsViewOpenDirection.down,
+  bool Function(T)? isOptionDisabled,
   VoidCallback? onOpen,
   VoidCallback? onClose,
   bool excludeSemantics = false,
@@ -233,6 +259,7 @@ RemixCombobox<T> remixComboboxConstructor<T extends Object>({
 | `fieldBuilder` | `NakedComboboxFieldBuilder<T>?` | Replaces the default editor. Forward the supplied controller, focus node and submit callback. |
 | `optionBuilder` | `Widget Function(BuildContext, T)?` | Builds visual content inside a named interactive suggestion wrapper. |
 | `optionsViewOpenDirection` | `OptionsViewOpenDirection` | Preferred opening direction: `down` (default), `up` or `mostSpace`. |
+| `isOptionDisabled` | `bool Function(T)?` | Marks suggestions that stay visible but cannot be highlighted or accepted. Called once per suggestion when results arrive. |
 | `onOpen` | `VoidCallback?` | Observes suggestion-subtree mounting after a frame. |
 | `onClose` | `VoidCallback?` | Observes suggestion-subtree unmounting after a frame. |
 | `excludeSemantics` | `bool` | Hides the editor and suggestions from assistive technology. Defaults to `false`. |
