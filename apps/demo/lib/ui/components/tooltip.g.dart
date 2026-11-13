@@ -18,6 +18,8 @@ class FortalTooltip extends StatelessWidget {
     this.onOpenChanged,
     this.tooltipSemantics,
     this.positioning = const OverlayPositionConfig(),
+    this.transitionBuilder,
+    this.animationStyle = const AnimationStyle(),
   });
 
   final TooltipStyler style;
@@ -34,6 +36,15 @@ class FortalTooltip extends StatelessWidget {
 
   final OverlayPositionConfig positioning;
 
+  final Widget Function(
+    BuildContext context,
+    Animation<double> animation,
+    Widget child,
+  )?
+  transitionBuilder;
+
+  final AnimationStyle animationStyle;
+
   @override
   Widget build(BuildContext context) {
     return RemixTooltip(
@@ -45,6 +56,8 @@ class FortalTooltip extends StatelessWidget {
       onOpenChanged: this.onOpenChanged,
       tooltipSemantics: this.tooltipSemantics,
       positioning: this.positioning,
+      transitionBuilder: this.transitionBuilder,
+      animationStyle: this.animationStyle,
     );
   }
 }

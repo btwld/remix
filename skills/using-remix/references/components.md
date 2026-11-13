@@ -250,7 +250,11 @@ for Overlay, Navigator and toast scope placement.
   default `waitDuration` is 300ms (200ms in the Fortal recipe; see
   [Fortal](fortal.md)); it paces hover only, and is skipped within 300ms after
   another tooltip closes. Keyboard focus opens at once. One tooltip is visible
-  at a time.
+  at a time. The surface fades in 150ms and out in 75ms; `animationStyle`
+  (`AnimationStyle`) changes those durations and curves, and
+  `transitionBuilder` (`(context, animation, child)`) replaces the fade around
+  the styled surface. Read the placed side with `OverlayPlacement.of(context)`
+  inside the builder rather than looking up Remix's `FadeTransition`.
 - **RemixMenu\<T\>** — `RemixMenuTrigger` and every entry type are
   **configuration objects, not widgets**. The sealed entry hierarchy is
   `RemixMenuItem<T>`, `RemixMenuCheckboxItem<T>`, `RemixMenuRadioGroup<T>`

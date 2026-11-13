@@ -4,6 +4,10 @@ part of 'tooltip.dart';
 ///
 /// Renders [tooltipChild] inside the overlay. Users hover, focus by keyboard,
 /// or long-press [child] to reveal the tooltip.
+///
+/// The styled surface fades in and out by default. Set [animationStyle] to
+/// change the show and hide durations and curves, and [transitionBuilder] to
+/// replace the fade.
 class RemixTooltip extends StatelessWidget {
   /// Creates a [RemixTooltip].
   const RemixTooltip({
@@ -14,9 +18,16 @@ class RemixTooltip extends StatelessWidget {
     this.onOpenChanged,
     this.tooltipSemantics,
     this.positioning = const OverlayPositionConfig(),
+    Widget Function(
+      BuildContext context,
+      Animation<double> animation,
+      Widget child,
+    )?
+    transitionBuilder,
+    this.animationStyle = const AnimationStyle(),
     this.style = const TooltipStyler.create(),
     this.styleSpec,
-  });
+  }) : transitionBuilder = transitionBuilder ?? defaultTooltipTransitionBuilder;
 
   /// The style configuration for the tooltip.
   final TooltipStyler style;
@@ -42,8 +53,40 @@ class RemixTooltip extends StatelessWidget {
   /// The overlay positioning configuration.
   final OverlayPositionConfig positioning;
 
+  /// Wraps the styled tooltip surface in a transition.
+  ///
+  /// `animation` runs from `0.0` to `1.0` while the tooltip shows and back
+  /// while it hides, paced by [animationStyle]. `child` is the whole styled
+  /// surface. `context` is inside the overlay, so
+  /// [OverlayPlacement.of] gives the side the tooltip was placed on.
+  ///
+  /// Defaults to [defaultTooltipTransitionBuilder], a fade.
+  final Widget Function(
+    BuildContext context,
+    Animation<double> animation,
+    Widget child,
+  )
+  transitionBuilder;
+
+  /// The show and hide durations and curves, passed to
+  /// [NakedTooltip.animationStyle].
+  ///
+  /// Unset fields keep Naked UI's defaults: 150ms to show, 75ms to hide, on
+  /// [Curves.fastOutSlowIn]. While the user asks to reduce motion, the tooltip
+  /// shows and hides at once whatever the durations.
+  final AnimationStyle animationStyle;
+
   /// The style factory for [RemixTooltip].
   static final styleFrom = TooltipStyler.new;
+
+  /// The default [transitionBuilder]: fades [child] with [animation].
+  static Widget defaultTooltipTransitionBuilder(
+    BuildContext context,
+    Animation<double> animation,
+    Widget child,
+  ) {
+    return FadeTransition(opacity: animation, child: child);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +100,10 @@ class RemixTooltip extends StatelessWidget {
           // Keyboard focus shows the tooltip; focus a closing menu or dialog
           // returns after a click does not (WAI-ARIA tooltip pattern).
           isFocusVisible: () => FocusVisibility.isVisible,
-          overlayBuilder: (context, animation) => FadeTransition(
-            opacity: animation,
-            child: Box(
+          overlayBuilder: (context, animation) => transitionBuilder(
+            context,
+            animation,
+            Box(
               styleSpec: spec.container,
               child: StyleSpecBuilder(
                 styleSpec: spec.label,
@@ -85,6 +129,7 @@ class RemixTooltip extends StatelessWidget {
           // How long after a tooltip closes hover still skips waitDuration.
           skipDelayDuration:
               spec.skipDelayDuration ?? const Duration(milliseconds: 300),
+          animationStyle: animationStyle,
           positioning: positioning,
           semanticLabel: tooltipSemantics,
           child: child,
