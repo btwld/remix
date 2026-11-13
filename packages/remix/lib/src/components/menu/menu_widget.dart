@@ -248,6 +248,7 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
     this.semanticLabel,
     this.onOpen,
     this.onClose,
+    this.onCloseRequested,
     this.style = const MenuItemStyler.create(),
   }) : positioning = positioning ?? _defaultLtrPositioning,
        _usesDefaultPositioning = positioning == null,
@@ -304,6 +305,15 @@ final class RemixMenuSubmenu<T> extends RemixMenuItemData<T> {
 
   /// Called after the submenu closes.
   final VoidCallback? onClose;
+
+  /// Intercepts close requests so the submenu can play an exit transition,
+  /// like [RemixMenu.onCloseRequested] for the root panel.
+  ///
+  /// The panel stays mounted and [MenuController.isOpen] stays true until
+  /// `hideOverlay` is called; then [onClose] runs and focus returns as usual.
+  /// When the whole menu closes, the submenu hides with the root panel. When
+  /// null, the submenu hides at once.
+  final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
 
   /// Per-trigger visual style applied after the menu-wide shared and submenu
   /// item styles.
@@ -910,6 +920,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       ),
       onOpen: submenu.onOpen,
       onClose: submenu.onClose,
+      onCloseRequested: submenu.onCloseRequested,
       overlayBuilder: (context, info) => _RemixMenuItemsPanel<T>(
         items: submenu.items,
         overlayStyleSpec: overlayStyleSpec,

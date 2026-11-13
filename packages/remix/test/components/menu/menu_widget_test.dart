@@ -2674,6 +2674,47 @@ void main() {
       expect(find.text('More'), findsNothing);
     });
 
+    testWidgets('onCloseRequested holds the submenu until hideOverlay', (
+      tester,
+    ) async {
+      final submenuController = MenuController();
+      final requests = <VoidCallback>[];
+      final calls = <String>[];
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: [
+            RemixMenuSubmenu(
+              label: 'More',
+              controller: submenuController,
+              onCloseRequested: requests.add,
+              onClose: () => calls.add('close'),
+              items: const [RemixMenuItem(value: 'archive', label: 'Archive')],
+            ),
+          ],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pump();
+      await tester.tap(find.text('More'));
+      await tester.pump();
+      expect(find.text('Archive'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+      expect(requests, hasLength(1));
+      expect(find.text('Archive'), findsOneWidget);
+      expect(submenuController.isOpen, isTrue);
+      expect(calls, isEmpty);
+
+      requests.single();
+      await tester.pump();
+      expect(find.text('Archive'), findsNothing);
+      expect(submenuController.isOpen, isFalse);
+      expect(calls, ['close']);
+      expect(find.text('More'), findsOneWidget);
+    });
+
     testWidgets('caller-owned focus nodes remain usable after unmount', (
       tester,
     ) async {

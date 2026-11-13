@@ -276,6 +276,9 @@ for Overlay, Navigator and toast scope placement.
   checkbox, radio, and submenu items) rather than a hand-built row; style it
   with `MenuItemStyler().trailingText(...)`, which inherits the label style.
   An icon-only `RemixMenuItem` omits `label` and sets `semanticLabel`.
+  To animate a panel's exit, use `onCloseRequested` on `RemixMenu` (root
+  panel) or `RemixMenuSubmenu` (that submenu) and call `hideOverlay` when the
+  transition ends; the panel stays open until then.
 - **Toast** — base Remix exposes `RemixToastScope` and
   `showRemixToast(context, RemixToastData(title: ...))`, which returns a
   `RemixToastHandle` (`closed`, `dismiss()`). A toast with the same non-null
