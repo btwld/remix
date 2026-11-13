@@ -279,6 +279,106 @@ void main() {
       expect(spec.size, 13);
     }
   });
+
+  _fortalComposerFrameTests();
+}
+
+/// The resolved text field spec inside the composer.
+TextFieldSpec _fieldSpec(WidgetTester tester) => tester
+    .widget<StyleSpecProvider<TextFieldSpec>>(
+      find.byType(StyleSpecProvider<TextFieldSpec>).first,
+    )
+    .spec
+    .spec;
+
+/// Folded from #468: the Fortal text area paints its frame as an inset effect,
+/// so the composer field must clear it in every state, disabled included.
+void _fortalComposerFrameTests() {
+  for (final dark in [false, true]) {
+    for (final enabled in [true, false]) {
+      testWidgets(
+        'Fortal composer field draws no inner frame, dark=$dark, enabled=$enabled',
+        (tester) async {
+          final focus = FocusNode();
+          addTearDown(focus.dispose);
+          final recipe = fortalAgentComposerRecipe();
+          await tester.pumpWidget(
+            _host(
+              (child) => FortalTheme(mode: dark ? .dark : .light, child: child),
+              SizedBox(
+                width: 420,
+                child: AgentComposer(
+                  enabled: enabled,
+                  focusNode: focus,
+                  onSubmit: (_) {},
+                  style: recipe.style,
+                  fieldStyle: recipe.fieldStyle,
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          void expectFrameless() {
+            final effects = _fieldSpec(tester).containerEffects;
+            expect(
+              effects?.overContent?.isEmpty ?? true,
+              isTrue,
+              reason: 'an inset stroke inside the surface is a second frame',
+            );
+            expect(effects?.behindContent?.isEmpty ?? true, isTrue);
+            expect(
+              effects == null ||
+                  effects.outline.style == BorderStyle.none ||
+                  effects.outline.width == 0,
+              isTrue,
+              reason: 'focus belongs on the whole composer',
+            );
+          }
+
+          expectFrameless();
+          if (enabled) {
+            focus.requestFocus();
+            await tester.pumpAndSettle();
+            expect(focus.hasFocus, isTrue);
+            expectFrameless();
+          }
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  }
+
+  testWidgets('caller field styling still overrides the Fortal composer', (
+    tester,
+  ) async {
+    const custom = Color(0xFFFF0000);
+    final focus = FocusNode();
+    addTearDown(focus.dispose);
+    final recipe = fortalAgentComposerRecipe(
+      fieldStyle: TextFieldStyler().onFocused(
+        .containerEffects(.outline(.color(custom).width(5))),
+      ),
+    );
+    await tester.pumpWidget(
+      _host(
+        (child) => FortalTheme(child: child),
+        SizedBox(
+          width: 420,
+          child: AgentComposer(
+            focusNode: focus,
+            onSubmit: (_) {},
+            style: recipe.style,
+            fieldStyle: recipe.fieldStyle,
+          ),
+        ),
+      ),
+    );
+    focus.requestFocus();
+    await tester.pumpAndSettle();
+    final outline = _fieldSpec(tester).containerEffects!.outline;
+    expect(outline.color, custom);
+    expect(outline.width, 5);
+  });
 }
 
 Widget _host(Widget Function(Widget) theme, Widget child) => WidgetsApp(
