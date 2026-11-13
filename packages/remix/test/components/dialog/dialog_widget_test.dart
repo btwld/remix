@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -35,6 +37,51 @@ SemanticsData _dialogSemantics(WidgetTester tester) {
     root,
     (node) => node.getSemanticsData().role == SemanticsRole.dialog,
   ).single.getSemanticsData();
+}
+
+const _fadeKey = Key('dialog-fade');
+
+Widget _fade(
+  BuildContext context,
+  Animation<double> animation,
+  Animation<double> secondaryAnimation,
+  Widget child,
+) => FadeTransition(key: _fadeKey, opacity: animation, child: child);
+
+double _fadeOpacity(WidgetTester tester) =>
+    tester.widget<FadeTransition>(find.byKey(_fadeKey)).opacity.value;
+
+class _TransitionHost extends StatelessWidget {
+  const _TransitionHost({required this.onContext});
+
+  final ValueChanged<BuildContext> onContext;
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+    home: Builder(
+      builder: (context) {
+        onContext(context);
+        return const SizedBox.shrink();
+      },
+    ),
+  );
+}
+
+/// Opens over 400 ms, then expects the exit to take 100 ms.
+Future<void> _expectExitTiming(WidgetTester tester, String text) async {
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 200));
+  expect(_fadeOpacity(tester), closeTo(0.5, 0.01));
+  await tester.pumpAndSettle();
+
+  Navigator.of(tester.element(find.text(text))).pop();
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 50));
+  expect(_fadeOpacity(tester), closeTo(0.5, 0.01));
+  await tester.pump(const Duration(milliseconds: 50));
+  expect(_fadeOpacity(tester), 0);
+  await tester.pumpAndSettle();
+  expect(find.text(text), findsNothing);
 }
 
 void main() {
@@ -284,9 +331,74 @@ void main() {
         semantics.dispose();
       }
     });
+
+    testWidgets('closes over the reverse transition duration', (tester) async {
+      late BuildContext hostContext;
+      await tester.pumpWidget(
+        _TransitionHost(onContext: (c) => hostContext = c),
+      );
+
+      unawaited(
+        showRemixAlertDialog<void>(
+          context: hostContext,
+          semanticLabel: 'Delete project',
+          transitionDuration: const Duration(milliseconds: 400),
+          reverseTransitionDuration: const Duration(milliseconds: 100),
+          transitionBuilder: _fade,
+          builder: (context) => const Text('Timed alert'),
+        ),
+      );
+      await _expectExitTiming(tester, 'Timed alert');
+    });
   });
 
   group('showRemixDialog', () {
+    testWidgets('closes over the reverse transition duration', (tester) async {
+      late BuildContext hostContext;
+      await tester.pumpWidget(
+        _TransitionHost(onContext: (c) => hostContext = c),
+      );
+
+      unawaited(
+        showRemixDialog<void>(
+          context: hostContext,
+          barrierLabel: 'Dismiss',
+          transitionDuration: const Duration(milliseconds: 400),
+          reverseTransitionDuration: const Duration(milliseconds: 100),
+          transitionBuilder: _fade,
+          builder: (context) => const Text('Timed dialog'),
+        ),
+      );
+      await _expectExitTiming(tester, 'Timed dialog');
+    });
+
+    testWidgets('closes over the transition duration by default', (
+      tester,
+    ) async {
+      late BuildContext hostContext;
+      await tester.pumpWidget(
+        _TransitionHost(onContext: (c) => hostContext = c),
+      );
+
+      unawaited(
+        showRemixDialog<void>(
+          context: hostContext,
+          barrierLabel: 'Dismiss',
+          transitionDuration: const Duration(milliseconds: 200),
+          transitionBuilder: _fade,
+          builder: (context) => const Text('Default dialog'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Navigator.of(tester.element(find.text('Default dialog'))).pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(_fadeOpacity(tester), closeTo(0.5, 0.01));
+      await tester.pumpAndSettle();
+      expect(find.text('Default dialog'), findsNothing);
+    });
+
     testWidgets('opens without a MixScope ancestor', (tester) async {
       await tester.pumpWidget(
         MaterialApp(

@@ -148,6 +148,7 @@ Future<T?> showRemixDialog<T>({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
   Duration transitionDuration = const Duration(milliseconds: 400),
+  Duration? reverseTransitionDuration,
   RouteTransitionsBuilder? transitionBuilder,
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
@@ -169,6 +170,7 @@ Future<T?> showRemixAlertDialog<T>({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
   Duration transitionDuration = const Duration(milliseconds: 400),
+  Duration? reverseTransitionDuration,
   RouteTransitionsBuilder? transitionBuilder,
   FocusNode? initialFocusNode,
 })
@@ -184,12 +186,38 @@ focusable widget inside the alert. If it is omitted, focus uses an autofocus
 request or the first traversable descendant. Escape and platform Back dismiss
 the alert with a `null` result.
 
+### Transition durations
+
+`transitionDuration` sets how long the dialog takes to open, and
+`reverseTransitionDuration` how long it takes to close. When
+`reverseTransitionDuration` is omitted, the dialog closes over
+`transitionDuration`. `Duration.zero` closes it at once. Use a shorter exit for
+a dialog that opens slowly but must get out of the way quickly:
+
+<CodeGroup title="Quick exit" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Future<void> showSettingsDialog(BuildContext context) async {
+  await showRemixDialog<void>(
+    context: context,
+    barrierLabel: 'Dismiss',
+    transitionDuration: const Duration(milliseconds: 500),
+    reverseTransitionDuration: const Duration(milliseconds: 150),
+    builder: (context) => const RemixDialog(title: 'Settings'),
+  );
+}
+```
+</CodeGroup>
+
 ### Reduced motion
 
 Both functions open and close the dialog at once when the user asks to reduce
 motion: `MediaQuery.disableAnimations` is set, or the platform's Reduce Motion
-setting is on (iOS reports it separately). `transitionDuration` is then ignored
-and `transitionBuilder` receives a completed animation. The setting is read when
+setting is on (iOS reports it separately). `transitionDuration` and
+`reverseTransitionDuration` are then ignored and `transitionBuilder` receives a
+completed animation. The setting is read when
 the dialog opens and again when it is dismissed. A dialog that opened without
 motion also closes without it, and a request made while it is open skips the
 exit.
