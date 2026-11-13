@@ -155,15 +155,19 @@ class _NakedComboboxScope<T extends Object> extends OverlayScope<T> {
 
 /// A selectable option inside [NakedCombobox.overlayBuilder].
 ///
-/// The option is disabled when [enabled] is false or when
-/// [NakedCombobox.isOptionDisabled] marks its value. Only the second also
-/// removes it from keyboard navigation and Enter.
+/// The option is disabled when [NakedCombobox.isOptionDisabled] marks its
+/// value.
 class NakedComboboxOption<T extends Object>
     extends OverlayItem<T, NakedComboboxOptionState<T>> {
   /// Creates a selectable option associated with [value].
   const NakedComboboxOption({
     super.key,
     required super.value,
+    @Deprecated(
+      'Use NakedCombobox.isOptionDisabled, which also removes the option from '
+      'keyboard navigation and Enter. This flag only blocks pointer and '
+      'semantic activation.',
+    )
     super.enabled = true,
     super.semanticLabel,
     super.child,
@@ -257,9 +261,8 @@ class _OverlayLifecycleState extends State<_OverlayLifecycle> {
 /// - On Flutter 3.41, a selection-only caret change after picking an option
 ///   can reopen the options list. Replacing selected text with the exact prior
 ///   query may not reopen it until the text changes again.
-/// - An option's `enabled` flag disables its pointer/semantic activation, but
-///   does not remove it from RawAutocomplete's keyboard navigation or submit.
-///   Use [isOptionDisabled] for results that stay visible but unavailable.
+/// - Keyboard navigation and Enter follow results, not option widgets. Mark
+///   results that stay visible but unavailable with [isOptionDisabled].
 ///
 /// The highlighted option scrolls just far enough into view when the highlight
 /// moves and when the options view opens, without moving focus.
@@ -304,7 +307,7 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
   /// Type alias for [NakedComboboxOption].
   static final Option = NakedComboboxOption.new;
 
-  /// Supplies eligible entities for the current field value.
+  /// Supplies entities for the current field value.
   ///
   /// Equal values are one entity: the first occurrence is retained. Distinct
   /// unequal values may share a display string and remain separate options.
@@ -339,8 +342,8 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
   /// Keyboard navigation, including first, last and page moves, skips them,
   /// and Enter and pointer activation never accept them. [overlayBuilder]
   /// still receives them in result order, and their [NakedComboboxOption]s
-  /// are disabled. A result whose options are all disabled keeps the options
-  /// view open, with nothing to accept.
+  /// are disabled. A result with no enabled option closes the options view,
+  /// as an empty result does.
   ///
   /// Called once per option when a result arrives. To change availability,
   /// return a new result from [optionsBuilder].
@@ -383,13 +386,8 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
 // acceptance after that selection is cleared is distinct to Raw; ordinary
 // reentry and a still-selected entity retain equality. The public API sees T.
 class _RawComboboxOption<T extends Object> {
-  const _RawComboboxOption(T this.value, this.selectionEpoch);
-
-  /// Keeps Raw's options view open for a result with no enabled option. It is
-  /// never rendered, and Naked never lets Raw accept it.
-  const _RawComboboxOption.placeholder() : value = null, selectionEpoch = 0;
-
-  final T? value;
+  const _RawComboboxOption(this.value, this.selectionEpoch);
+  final T value;
   final int selectionEpoch;
 
   @override
@@ -404,9 +402,8 @@ class _RawComboboxOption<T extends Object> {
 
 // Raw navigates, highlights and submits whatever its options contain. Hand it
 // only the enabled options, so it skips disabled ones without any override of
-// its private highlight, and hand the options view every result. Raw shows the
-// view only for a non-empty result, so a result whose options are all disabled
-// yields one placeholder instead.
+// its private highlight, and hand the options view every result. A result with
+// no enabled option is empty to Raw, so it closes the view as for no results.
 class _RawComboboxResults<T extends Object>
     extends Iterable<_RawComboboxOption<T>> {
   _RawComboboxResults({
@@ -431,16 +428,11 @@ class _RawComboboxResults<T extends Object>
   final int Function() _selectionEpoch;
 
   @override
-  Iterator<_RawComboboxOption<T>> get iterator {
-    if (enabledOptions.isEmpty && options.isNotEmpty) {
-      return [_RawComboboxOption<T>.placeholder()].iterator;
-    }
-    // Map lazily: Raw's retained iterable must use the live selection
-    // identity, without changing the equality of an already delivered option.
-    return enabledOptions
-        .map((value) => _RawComboboxOption(value, _selectionEpoch()))
-        .iterator;
-  }
+  // Map lazily: Raw's retained iterable must use the live selection identity,
+  // without changing the equality of an already delivered option.
+  Iterator<_RawComboboxOption<T>> get iterator => enabledOptions
+      .map((value) => _RawComboboxOption(value, _selectionEpoch()))
+      .iterator;
 }
 
 class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
@@ -471,9 +463,6 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   String? _optionsText;
   bool _waitingForOptions = false;
   bool _suppressCachedOptions = false;
-  // The result the options view last showed. Raw submits from that same
-  // result, so it tells whether Enter has anything to accept.
-  _RawComboboxResults<T>? _shownResults;
 
   @override
   void didUpdateWidget(covariant NakedCombobox<T> oldWidget) {
@@ -582,8 +571,6 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
 
   void _submit(VoidCallback onFieldSubmitted) {
     if (_composing) return;
-    // Raw would accept the placeholder of a result with no enabled option.
-    if (_shownResults?.enabledOptions.isEmpty ?? false) return;
     _invokeSelection(onFieldSubmitted);
   }
 
@@ -605,10 +592,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   }
 
   void _handleSelected(_RawComboboxOption<T> option) {
-    // Raw can reach the placeholder only if Enter lands between a result's
-    // arrival and the frame that shows it. It wrote the current text back.
     final value = option.value;
-    if (value == null) return;
     // Cached options can be accepted while a newer query is still pending.
     // Its completion must not reopen suggestions after this acceptance.
     _optionsGeneration++;
@@ -745,20 +729,20 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   ) {
     // Raw has no public enabled/cache control. Suppress the actual options
     // subtree while retaining its editor, highlight and overlay ownership.
-    // Raw shows only results that _optionsBuilder produced.
-    if (!widget.enabled ||
-        _suppressCachedOptions ||
-        options is! _RawComboboxResults<T>) {
+    if (!widget.enabled || _suppressCachedOptions) {
       return const SizedBox.shrink();
     }
-    _shownResults = options;
+    // Raw retains the iterable _optionsBuilder resolved and hands it back here,
+    // which the lazy selection identity above already relies on. It shows the
+    // view only for a non-empty result, so it is always one of ours.
+    final results = options as _RawComboboxResults<T>;
     final generation = _optionsGeneration;
     return _OverlayLifecycle(
       onMount: _handleMount,
       onUnmount: _handleUnmount,
       child: _NakedComboboxScope<T>(
-        options: options.enabledOptions,
-        disabledOptions: options.disabledOptions,
+        options: results.enabledOptions,
+        disabledOptions: results.disabledOptions,
         onSelected: (value) {
           if (generation == _optionsGeneration) {
             _invokeSelection(
@@ -777,7 +761,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
             container: true,
             explicitChildNodes: true,
             child: ExcludeFocus(
-              child: widget.overlayBuilder(context, options.options),
+              child: widget.overlayBuilder(context, results.options),
             ),
           ),
         ),
@@ -791,11 +775,8 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
       excluding: widget.excludeSemantics,
       child: RawAutocomplete<_RawComboboxOption<T>>(
         optionsBuilder: _optionsBuilder,
-        displayStringForOption: (option) => switch (option.value) {
-          final value? => widget.displayStringForOption(value),
-          // Writing the current text back leaves the editor unchanged.
-          null => _listenedController?.text ?? '',
-        },
+        displayStringForOption: (option) =>
+            widget.displayStringForOption(option.value),
         optionsViewOpenDirection: widget.optionsViewOpenDirection,
         textEditingController: widget.controller,
         focusNode: widget.focusNode,

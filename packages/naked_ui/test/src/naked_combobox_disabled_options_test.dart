@@ -151,39 +151,61 @@ void main() {
     expect(find.text('off:banana'), findsOneWidget);
   });
 
-  testWidgets(
-    'only disabled results keep the panel open and Enter accepts nothing',
-    (tester) async {
-      await pumpCombobox(
-        tester,
-        options: ['apple', 'banana'],
-        isOptionDisabled: (option) => true,
-      );
+  testWidgets('one enabled option keeps the highlight on every move', (
+    tester,
+  ) async {
+    await pumpCombobox(
+      tester,
+      options: ['apple', 'banana', 'cherry'],
+      isOptionDisabled: (option) => option != 'banana',
+    );
+    expect(find.text('hi:banana'), findsOneWidget);
 
-      expect(shown.last, ['apple', 'banana']);
-      expect(find.text('off:apple'), findsOneWidget);
-      expect(find.text('off:banana'), findsOneWidget);
-      expect(find.textContaining('hi:'), findsNothing);
+    for (final key in [
+      LogicalKeyboardKey.arrowDown,
+      LogicalKeyboardKey.arrowUp,
+      LogicalKeyboardKey.pageDown,
+    ]) {
+      await tester.sendKeyEvent(key);
+      await tester.pump();
+      expect(find.text('hi:banana'), findsOneWidget);
+    }
 
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pump();
-      expect(find.textContaining('hi:'), findsNothing);
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    expect(selected, ['banana']);
+  });
 
-      // Accepting would rewrite the text, move the caret and close the panel.
-      final controller = tester
-          .widget<TextField>(find.byType(TextField))
-          .controller!;
-      controller.selection = const TextSelection.collapsed(offset: 0);
-      await tester.pump();
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pump();
-      await tester.pump();
-      expect(selected, isEmpty);
-      expect(controller.text, 'a');
-      expect(controller.selection, const TextSelection.collapsed(offset: 0));
-      expect(find.text('off:apple'), findsOneWidget);
-    },
-  );
+  testWidgets('a result with no enabled option closes the panel', (
+    tester,
+  ) async {
+    var allDisabled = true;
+    await pumpCombobox(
+      tester,
+      options: ['apple', 'banana'],
+      isOptionDisabled: (option) => allDisabled,
+    );
+    expect(shown, isEmpty);
+    expect(find.byType(NakedComboboxOption<String>), findsNothing);
+
+    // Nothing to accept: the text and caret stay as typed.
+    final controller = tester
+        .widget<TextField>(find.byType(TextField))
+        .controller!;
+    controller.selection = const TextSelection.collapsed(offset: 0);
+    await tester.pump();
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    expect(selected, isEmpty);
+    expect(controller.text, 'a');
+    expect(controller.selection, const TextSelection.collapsed(offset: 0));
+
+    allDisabled = false;
+    await tester.enterText(find.byType(TextField), 'ap');
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('hi:apple'), findsOneWidget);
+  });
 
   testWidgets('availability is read when results arrive', (tester) async {
     var unavailable = 'banana';
@@ -194,7 +216,13 @@ void main() {
     );
     expect(find.text('off:banana'), findsOneWidget);
 
+    // A rebuild keeps the shown result's availability.
     unavailable = 'cherry';
+    tester.binding.buildOwner!.reassemble(tester.binding.rootElement!);
+    await tester.pump();
+    expect(find.text('off:banana'), findsOneWidget);
+    expect(find.text('cherry'), findsOneWidget);
+
     await tester.enterText(find.byType(TextField), 'ap');
     await tester.pump();
     await tester.pump();

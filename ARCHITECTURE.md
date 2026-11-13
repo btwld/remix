@@ -143,3 +143,16 @@ so installed presets can express form-field states without owning behavior.
 and selectors. Presets can draw inset focus bands with each range tile's resolved
 radius, without duplicating geometry in a foreground decoration or changing
 layout. Rendering and behavior remain in Remix; recipes own colors and effects.
+
+## Combobox availability is a result predicate
+
+2026-11-13 · Accepted
+
+`NakedCombobox.isOptionDisabled` is the one definition of a disabled combobox
+option. RawAutocomplete navigates, highlights and accepts by result index, so
+Naked gives it only enabled results and gives the options view every result.
+A row widget cannot leave that list, unlike Select and Menu items, which focus
+traversal skips, so `NakedComboboxOption.enabled` is deprecated. Availability
+is read once per result, so Raw's list cannot change under its highlight. A
+result with no enabled option is empty to Raw and closes the panel, as no
+results does.

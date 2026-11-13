@@ -172,7 +172,7 @@ Unstyled rows default to a 48px minimum and grow with wrapped labels; option sty
 
 Arrow keys move the highlighted suggestion while focus stays in the editor. Enter accepts; Escape dismisses while preserving text. Tab and Shift-Tab leave without committing. Pointer, touch and stylus release activate an option; scrolling and canceled presses do not select it.
 
-Filter out unavailable suggestions, or keep them visible with `isOptionDisabled`. Arrow, page, first and last moves skip a disabled suggestion, and Enter and pointer activation never accept it. Its row is a disabled button for assistive technology. A result whose suggestions are all disabled keeps the panel open with nothing to accept. The function runs once per suggestion when results arrive; return new results to change availability.
+Filter out unavailable suggestions, or keep them visible with `isOptionDisabled`. Arrow, page, first and last moves skip a disabled suggestion, and Enter and pointer activation never accept it. Its row is a disabled button for assistive technology. A result with no enabled suggestion closes the panel, as no results does. The function runs once per suggestion when results arrive; return new results to change availability.
 
 ```dart
 import 'package:flutter/widgets.dart';

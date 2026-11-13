@@ -88,7 +88,8 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
   /// Marks suggestions that stay visible but cannot be highlighted or
   /// accepted. Keyboard navigation skips them; Enter and pointer activation
   /// never accept them. Their rows resolve the option style with
-  /// `WidgetState.disabled`, so style them with `onDisabled`.
+  /// `WidgetState.disabled`, so style them with `onDisabled`. Results with
+  /// no enabled suggestion close the panel, as no results do.
   ///
   /// Called once per suggestion when results arrive.
   final bool Function(T option)? isOptionDisabled;
