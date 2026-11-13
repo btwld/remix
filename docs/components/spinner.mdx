@@ -56,6 +56,33 @@ class SpinnerExample extends StatelessWidget {
 ```
 </CodeGroup>
 
+## Arc shape
+
+The circular indicator draws a third of a turn with flat ends. Set
+`sweepAngle` (in radians) and `strokeCap` to change its shape, for example a
+three-quarter arc with round ends:
+
+<CodeGroup title="Arc shape" defaultLanguage="dart">
+```dart
+import 'dart:math';
+
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final roundArc = SpinnerStyler()
+    .sweepAngle(3 * pi / 2)
+    .strokeCap(StrokeCap.round);
+
+Widget savingSpinner() => RemixSpinner(
+  semanticsLabel: 'Saving',
+  style: roundArc,
+);
+```
+</CodeGroup>
+
+Both apply to the circular indicator only. The leaf spinner, selected by
+`color`, `opacity` or `leafRadius`, ignores them.
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
@@ -159,6 +186,15 @@ Sets the stroke width of the track.
 #### `duration(Duration value)`
 
 Sets the duration of one full rotation.
+
+#### `sweepAngle(double value)`
+
+Sets the length of the indicator arc, in radians. The default is a third of a
+turn (`2 * pi / 3`). A full turn or more draws a closed ring.
+
+#### `strokeCap(StrokeCap value)`
+
+Sets the shape of the indicator arc's ends. The default is `StrokeCap.butt`.
 
 #### `animate(AnimationConfig value)`
 

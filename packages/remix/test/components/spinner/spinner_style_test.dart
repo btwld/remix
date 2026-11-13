@@ -121,6 +121,24 @@ void main() {
       );
 
       styleMethodTest(
+        'sweepAngle',
+        initial: SpinnerStyler(),
+        modify: (style) => style.sweepAngle(4.5),
+        expect: (style) {
+          expect(style.$sweepAngle, equals(Prop.maybe(4.5)));
+        },
+      );
+
+      styleMethodTest(
+        'strokeCap',
+        initial: SpinnerStyler(),
+        modify: (style) => style.strokeCap(StrokeCap.round),
+        expect: (style) {
+          expect(style.$strokeCap, equals(Prop.maybe(StrokeCap.round)));
+        },
+      );
+
+      styleMethodTest(
         'variants',
         initial: SpinnerStyler(),
         modify: (style) => style.variants(<VariantStyle<SpinnerSpec>>[]),
@@ -233,7 +251,7 @@ void main() {
       test('props list contains all properties', () {
         final style = SpinnerStyler();
 
-        expect(style.props, hasLength(12));
+        expect(style.props, hasLength(14));
         expect(style.props, contains(style.$size));
         expect(style.props, contains(style.$strokeWidth));
         expect(style.props, contains(style.$indicatorColor));

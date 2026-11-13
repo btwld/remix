@@ -16,6 +16,8 @@ mixin _$SpinnerSpec implements Spec<SpinnerSpec>, Diagnosticable {
   double? get opacity;
   Radius? get leafRadius;
   Duration? get duration;
+  double? get sweepAngle;
+  StrokeCap? get strokeCap;
 
   @override
   Type get type => SpinnerSpec;
@@ -31,6 +33,8 @@ mixin _$SpinnerSpec implements Spec<SpinnerSpec>, Diagnosticable {
     double? opacity,
     Radius? leafRadius,
     Duration? duration,
+    double? sweepAngle,
+    StrokeCap? strokeCap,
   }) {
     return SpinnerSpec(
       size: size ?? this.size,
@@ -42,6 +46,8 @@ mixin _$SpinnerSpec implements Spec<SpinnerSpec>, Diagnosticable {
       opacity: opacity ?? this.opacity,
       leafRadius: leafRadius ?? this.leafRadius,
       duration: duration ?? this.duration,
+      sweepAngle: sweepAngle ?? this.sweepAngle,
+      strokeCap: strokeCap ?? this.strokeCap,
     );
   }
 
@@ -61,6 +67,8 @@ mixin _$SpinnerSpec implements Spec<SpinnerSpec>, Diagnosticable {
       opacity: MixOps.lerp(opacity, other?.opacity, t),
       leafRadius: MixOps.lerpSnap(leafRadius, other?.leafRadius, t),
       duration: MixOps.lerpSnap(duration, other?.duration, t),
+      sweepAngle: MixOps.lerp(sweepAngle, other?.sweepAngle, t),
+      strokeCap: MixOps.lerpSnap(strokeCap, other?.strokeCap, t),
     );
   }
 
@@ -75,6 +83,8 @@ mixin _$SpinnerSpec implements Spec<SpinnerSpec>, Diagnosticable {
     opacity,
     leafRadius,
     duration,
+    sweepAngle,
+    strokeCap,
   ];
 
   @override
@@ -125,7 +135,9 @@ mixin _$SpinnerSpec implements Spec<SpinnerSpec>, Diagnosticable {
       ..add(ColorProperty('color', color))
       ..add(DoubleProperty('opacity', opacity))
       ..add(DiagnosticsProperty('leafRadius', leafRadius))
-      ..add(DiagnosticsProperty('duration', duration));
+      ..add(DiagnosticsProperty('duration', duration))
+      ..add(DoubleProperty('sweepAngle', sweepAngle))
+      ..add(DiagnosticsProperty('strokeCap', strokeCap));
   }
 }
 
@@ -149,6 +161,8 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
   final Prop<double>? $opacity;
   final Prop<Radius>? $leafRadius;
   final Prop<Duration>? $duration;
+  final Prop<double>? $sweepAngle;
+  final Prop<StrokeCap>? $strokeCap;
 
   const SpinnerStyler.create({
     Prop<double>? size,
@@ -160,6 +174,8 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
     Prop<double>? opacity,
     Prop<Radius>? leafRadius,
     Prop<Duration>? duration,
+    Prop<double>? sweepAngle,
+    Prop<StrokeCap>? strokeCap,
     super.variants,
     super.modifier,
     super.animation,
@@ -171,7 +187,9 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
        $color = color,
        $opacity = opacity,
        $leafRadius = leafRadius,
-       $duration = duration;
+       $duration = duration,
+       $sweepAngle = sweepAngle,
+       $strokeCap = strokeCap;
 
   SpinnerStyler({
     double? size,
@@ -183,6 +201,8 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
     double? opacity,
     Radius? leafRadius,
     Duration? duration,
+    double? sweepAngle,
+    StrokeCap? strokeCap,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<SpinnerSpec>>? variants,
@@ -196,6 +216,8 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
          opacity: Prop.maybe(opacity),
          leafRadius: Prop.maybe(leafRadius),
          duration: Prop.maybe(duration),
+         sweepAngle: Prop.maybe(sweepAngle),
+         strokeCap: Prop.maybe(strokeCap),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -216,6 +238,10 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
       SpinnerStyler().leafRadius(value);
   factory SpinnerStyler.duration(Duration value) =>
       SpinnerStyler().duration(value);
+  factory SpinnerStyler.sweepAngle(double value) =>
+      SpinnerStyler().sweepAngle(value);
+  factory SpinnerStyler.strokeCap(StrokeCap value) =>
+      SpinnerStyler().strokeCap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {
@@ -228,6 +254,8 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
     'opacity',
     'leafRadius',
     'duration',
+    'sweepAngle',
+    'strokeCap',
     'animation',
     'modifier',
     'variants',
@@ -276,6 +304,16 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
   /// Sets the duration.
   SpinnerStyler duration(Duration value) {
     return merge(SpinnerStyler(duration: value));
+  }
+
+  /// Sets the sweepAngle.
+  SpinnerStyler sweepAngle(double value) {
+    return merge(SpinnerStyler(sweepAngle: value));
+  }
+
+  /// Sets the strokeCap.
+  SpinnerStyler strokeCap(StrokeCap value) {
+    return merge(SpinnerStyler(strokeCap: value));
   }
 
   /// Sets the animation configuration.
@@ -330,6 +368,8 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
       opacity: MixOps.merge($opacity, other?.$opacity),
       leafRadius: MixOps.merge($leafRadius, other?.$leafRadius),
       duration: MixOps.merge($duration, other?.$duration),
+      sweepAngle: MixOps.merge($sweepAngle, other?.$sweepAngle),
+      strokeCap: MixOps.merge($strokeCap, other?.$strokeCap),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -349,6 +389,8 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
       opacity: MixOps.resolve(context, $opacity),
       leafRadius: MixOps.resolve(context, $leafRadius),
       duration: MixOps.resolve(context, $duration),
+      sweepAngle: MixOps.resolve(context, $sweepAngle),
+      strokeCap: MixOps.resolve(context, $strokeCap),
     );
 
     return StyleSpec(
@@ -370,7 +412,9 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
       ..add(DiagnosticsProperty('color', $color))
       ..add(DiagnosticsProperty('opacity', $opacity))
       ..add(DiagnosticsProperty('leafRadius', $leafRadius))
-      ..add(DiagnosticsProperty('duration', $duration));
+      ..add(DiagnosticsProperty('duration', $duration))
+      ..add(DiagnosticsProperty('sweepAngle', $sweepAngle))
+      ..add(DiagnosticsProperty('strokeCap', $strokeCap));
   }
 
   @override
@@ -384,6 +428,8 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
     $opacity,
     $leafRadius,
     $duration,
+    $sweepAngle,
+    $strokeCap,
     $animation,
     $modifier,
     $variants,

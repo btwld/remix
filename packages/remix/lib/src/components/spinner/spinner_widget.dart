@@ -133,6 +133,8 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
             indicatorColor: indicatorColor,
             trackColor: trackColor,
             trackStrokeWidth: spec.trackStrokeWidth,
+            sweepAngle: spec.sweepAngle ?? _defaultSweepAngle,
+            strokeCap: spec.strokeCap ?? StrokeCap.butt,
           );
 
     return AnimatedBuilder(
