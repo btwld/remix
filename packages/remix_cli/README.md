@@ -1,5 +1,7 @@
 # remix_cli
 
+[Documentation](https://fluttermix.com/remix/docs/open-code/cli/)
+
 See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, revision updates,
 migration, and independent registry releases.
 
