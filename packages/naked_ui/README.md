@@ -13,9 +13,10 @@ Naked UI uses Flutter's widget primitives and does not require a Material host.
 
 ## Documentation
 
-📚 **[Canonical documentation source](../../naked_ui_docs/README.md)**
+📚 **[View full documentation](https://fluttermix.com/naked-ui/docs/)**
 
-The consolidated site publishes these docs at `/naked-ui/docs/` after cutover. The existing [docs.page site](https://docs.page/btwld/naked_ui) remains available during migration.
+Explore the [Naked UI website](https://fluttermix.com/naked-ui/) for an overview,
+or see the [documentation source](../../naked_ui_docs/README.md) to contribute.
 
 ## Supported Components
 
