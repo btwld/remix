@@ -891,6 +891,7 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
     OptionsViewOpenDirection optionsViewOpenDirection =
         OptionsViewOpenDirection.down,
     bool Function(T option)? isOptionDisabled,
+    WidgetBuilder? emptyBuilder,
     VoidCallback? onOpen,
     VoidCallback? onClose,
     bool excludeSemantics = false,
@@ -913,6 +914,7 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
       optionBuilder: optionBuilder,
       optionsViewOpenDirection: optionsViewOpenDirection,
       isOptionDisabled: isOptionDisabled,
+      emptyBuilder: emptyBuilder,
       onOpen: onOpen,
       onClose: onClose,
       excludeSemantics: excludeSemantics,

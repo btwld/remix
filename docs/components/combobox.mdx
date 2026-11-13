@@ -196,7 +196,25 @@ Widget workspaceSearch(List<Workspace> workspaces) => RemixCombobox<Workspace>(
 );
 ```
 
-Callers own fetching, filtering, debounce and errors; no results closes the panel. RawAutocomplete handles stale asynchronous responses. `onOpen` and `onClose` observe options-subtree mounting after a frame; they do not control visibility.
+Callers own fetching, filtering, debounce and errors. No results closes the panel unless `emptyBuilder` is set. With it, the panel stays open and shows the built content, which inherits the suggestion label's text style. The content and its semantics are yours; Enter accepts nothing, and Escape closes the panel. Result announcements still say when results become empty or return. An empty query that returns no suggestions also shows the content as soon as the editor is focused, so return suggestions for an empty query or build a prompt such as "Type to search".
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Widget fruitSearchWithEmptyState() => RemixCombobox<String>(
+  label: 'Fruit',
+  optionsBuilder: (query) => ['Apple', 'Apricot', 'Avocado'].where(
+    (fruit) => fruit.toLowerCase().startsWith(query.text.toLowerCase()),
+  ),
+  emptyBuilder: (context) => const Padding(
+    padding: EdgeInsets.all(12),
+    child: Text('No fruit found.'),
+  ),
+);
+```
+
+RawAutocomplete handles stale asynchronous responses. `onOpen` and `onClose` observe options-subtree mounting after a frame; they do not control visibility.
 
 Option equality identifies an entity. Equal values are shown once, retaining the first occurrence; distinct unequal entities can share the same display string and remain separate suggestions.
 
@@ -229,6 +247,7 @@ RemixCombobox<T> remixComboboxConstructor<T extends Object>({
   OptionsViewOpenDirection optionsViewOpenDirection =
       OptionsViewOpenDirection.down,
   bool Function(T)? isOptionDisabled,
+  WidgetBuilder? emptyBuilder,
   VoidCallback? onOpen,
   VoidCallback? onClose,
   bool excludeSemantics = false,
@@ -260,6 +279,7 @@ RemixCombobox<T> remixComboboxConstructor<T extends Object>({
 | `optionBuilder` | `Widget Function(BuildContext, T)?` | Builds visual content inside a named interactive suggestion wrapper. |
 | `optionsViewOpenDirection` | `OptionsViewOpenDirection` | Preferred opening direction: `down` (default), `up` or `mostSpace`. |
 | `isOptionDisabled` | `bool Function(T)?` | Marks suggestions that stay visible but cannot be highlighted or accepted. Called once per suggestion when results arrive. |
+| `emptyBuilder` | `WidgetBuilder?` | Builds panel content for a result with no suggestions, keeping the panel open. When null, no results closes the panel. |
 | `onOpen` | `VoidCallback?` | Observes suggestion-subtree mounting after a frame. |
 | `onClose` | `VoidCallback?` | Observes suggestion-subtree unmounting after a frame. |
 | `excludeSemantics` | `bool` | Hides the editor and suggestions from assistive technology. Defaults to `false`. |

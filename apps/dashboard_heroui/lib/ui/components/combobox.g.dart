@@ -36,6 +36,7 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.optionBuilder,
     this.optionsViewOpenDirection = OptionsViewOpenDirection.down,
     this.isOptionDisabled,
+    this.emptyBuilder,
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
@@ -60,6 +61,7 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.optionBuilder,
     this.optionsViewOpenDirection = OptionsViewOpenDirection.down,
     this.isOptionDisabled,
+    this.emptyBuilder,
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
@@ -84,6 +86,7 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.optionBuilder,
     this.optionsViewOpenDirection = OptionsViewOpenDirection.down,
     this.isOptionDisabled,
+    this.emptyBuilder,
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
@@ -123,6 +126,8 @@ class UiCombobox<T extends Object> extends StatelessWidget {
 
   final bool Function(T option)? isOptionDisabled;
 
+  final WidgetBuilder? emptyBuilder;
+
   final VoidCallback? onOpen;
 
   final VoidCallback? onClose;
@@ -149,6 +154,7 @@ class UiCombobox<T extends Object> extends StatelessWidget {
       optionBuilder: this.optionBuilder,
       optionsViewOpenDirection: this.optionsViewOpenDirection,
       isOptionDisabled: this.isOptionDisabled,
+      emptyBuilder: this.emptyBuilder,
       onOpen: this.onOpen,
       onClose: this.onClose,
       excludeSemantics: this.excludeSemantics,

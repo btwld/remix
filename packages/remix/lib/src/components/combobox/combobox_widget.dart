@@ -5,7 +5,8 @@ part of 'combobox.dart';
 /// RawAutocomplete owns editing, overlay geometry, keyboard navigation and
 /// acceptance. Applications own filtering, asynchronous errors and debounce.
 /// Supply small result sets: all rows are built eagerly so keyboard navigation
-/// can reveal any suggestion. No results closes the panel.
+/// can reveal any suggestion. No results closes the panel unless
+/// [emptyBuilder] is set.
 class RemixCombobox<T extends Object> extends StatelessWidget {
   /// Creates an editable field with eligible suggestions.
   const RemixCombobox({
@@ -25,6 +26,7 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
     this.optionBuilder,
     this.optionsViewOpenDirection = OptionsViewOpenDirection.down,
     this.isOptionDisabled,
+    this.emptyBuilder,
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
@@ -93,6 +95,14 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
   /// Called once per suggestion when results arrive.
   final bool Function(T option)? isOptionDisabled;
 
+  /// Builds the panel content shown while the latest result has no
+  /// suggestions. When null, no results closes the panel.
+  ///
+  /// The content inherits the suggestion label's text style. It and its
+  /// semantics are caller-owned. An empty query that returns no suggestions
+  /// shows it as soon as the editor is focused.
+  final WidgetBuilder? emptyBuilder;
+
   /// Called after the suggestions subtree mounts.
   final VoidCallback? onOpen;
 
@@ -115,6 +125,7 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
   Widget build(BuildContext context) {
     final fieldBuilder = this.fieldBuilder;
     final optionBuilder = this.optionBuilder;
+    final emptyBuilder = this.emptyBuilder;
     final base = ComboboxStyler()
         .field(TextFieldStyler().constraints(.minHeight(48)))
         .option(ComboboxOptionStyler().minHeight(48))
@@ -134,6 +145,7 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
       enabled: enabled,
       optionsViewOpenDirection: optionsViewOpenDirection,
       isOptionDisabled: isOptionDisabled,
+      showWhenEmpty: emptyBuilder != null,
       onOpen: onOpen,
       onClose: onClose,
       excludeSemantics: excludeSemantics,
@@ -194,6 +206,19 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  if (options.isEmpty && emptyBuilder != null)
+                    RemixDefaultContentStyle(
+                      text:
+                          (styleSpec ??
+                                  _ComboboxProjection(
+                                    effective,
+                                    .option,
+                                  ).build(context).spec)
+                              .option
+                              .spec
+                              .label,
+                      child: Builder(builder: emptyBuilder),
+                    ),
                   for (final (index, option) in options.indexed)
                     NakedComboboxOption<T>(
                       // Replacing or moving a pressed option cancels its

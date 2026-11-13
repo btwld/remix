@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' show SemanticsRole;
 
+import 'package:flutter/semantics.dart' show SemanticsService;
 import 'package:flutter/widgets.dart';
 
 import 'base/overlay_base.dart';
@@ -284,6 +285,7 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
     this.displayStringForOption = RawAutocomplete.defaultStringForOption,
     this.optionsViewOpenDirection = OptionsViewOpenDirection.down,
     this.isOptionDisabled,
+    this.showWhenEmpty = false,
     this.controller,
     this.focusNode,
     this.initialValue,
@@ -346,6 +348,17 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
   /// return a new result from [optionsBuilder].
   final bool Function(T option)? isOptionDisabled;
 
+  /// Whether a result with no options still shows the options view.
+  ///
+  /// [overlayBuilder] then receives an empty iterable, for an empty state.
+  /// Enter accepts nothing, and Escape closes the view. An empty query that
+  /// returns no options also shows it, as soon as the field is focused.
+  ///
+  /// RawAutocomplete announces results only when its options become empty or
+  /// non-empty, which they no longer do. This widget then sends the same
+  /// announcements when the shown result becomes empty or non-empty.
+  final bool showWhenEmpty;
+
   /// Optional field controller. Must be paired with [focusNode].
   final TextEditingController? controller;
 
@@ -405,13 +418,14 @@ class _RawComboboxOption<T extends Object> {
 // Raw navigates, highlights and submits whatever its options contain. Hand it
 // only the enabled options, so it skips disabled ones without any override of
 // its private highlight, and hand the options view every result. Raw shows the
-// view only for a non-empty result, so a result whose options are all disabled
-// yields one placeholder instead.
+// view only for a non-empty result, so a result whose options are all disabled,
+// or an empty result with showWhenEmpty, yields one placeholder instead.
 class _RawComboboxResults<T extends Object>
     extends Iterable<_RawComboboxOption<T>> {
   _RawComboboxResults({
     required this.options,
     required this.disabledOptions,
+    required this.showWhenEmpty,
     required int Function() selectionEpoch,
   }) : enabledOptions = [
          for (final option in options)
@@ -428,11 +442,14 @@ class _RawComboboxResults<T extends Object>
   /// Results Raw may highlight and accept.
   final List<T> enabledOptions;
 
+  /// Whether an empty result keeps the options view open.
+  final bool showWhenEmpty;
+
   final int Function() _selectionEpoch;
 
   @override
   Iterator<_RawComboboxOption<T>> get iterator {
-    if (enabledOptions.isEmpty && options.isNotEmpty) {
+    if (enabledOptions.isEmpty && (options.isNotEmpty || showWhenEmpty)) {
       return [_RawComboboxOption<T>.placeholder()].iterator;
     }
     // Map lazily: Raw's retained iterable must use the live selection
@@ -474,6 +491,10 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   // The result the options view last showed. Raw submits from that same
   // result, so it tells whether Enter has anything to accept.
   _RawComboboxResults<T>? _shownResults;
+  // With showWhenEmpty, Raw's options never become empty again, so Raw cannot
+  // announce results. Raw starts empty; so does this.
+  bool _announcedEmpty = true;
+  bool _supportsAnnounce = false;
 
   @override
   void didUpdateWidget(covariant NakedCombobox<T> oldWidget) {
@@ -690,6 +711,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
             for (final option in unique)
               if (isOptionDisabled(option)) option,
         },
+        showWhenEmpty: widget.showWhenEmpty,
         selectionEpoch: () => _selectionEpoch,
       );
     });
@@ -730,12 +752,40 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
       ),
     );
 
-    if (widget.semanticLabel == null) return field;
-    return Semantics(
-      container: true,
-      label: widget.semanticLabel,
-      child: field,
-    );
+    final named = widget.semanticLabel == null
+        ? field
+        : Semantics(container: true, label: widget.semanticLabel, child: field);
+    return _restoreAnnounceSupport(named);
+  }
+
+  // With showWhenEmpty, Raw sees announcements as unsupported. Give the
+  // caller's field and options view the support their context has.
+  Widget _restoreAnnounceSupport(Widget child) => _AnnounceSupport(
+    supported: widget.showWhenEmpty ? _supportsAnnounce : null,
+    child: child,
+  );
+
+  void _announceEmptiness(bool empty) {
+    if (empty == _announcedEmpty) return;
+    _announcedEmpty = empty;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_supportsAnnounce) return;
+      final localizations = WidgetsLocalizations.of(context);
+      SemanticsService.sendAnnouncement(
+        View.of(context),
+        empty ? localizations.noResultsFound : localizations.searchResultsFound,
+        localizations.textDirection,
+      ).catchError((Object exception, StackTrace stack) {
+        FlutterError.reportError(
+          FlutterErrorDetails(
+            exception: exception,
+            stack: stack,
+            library: 'naked_ui',
+            context: ErrorDescription('while announcing combobox results'),
+          ),
+        );
+      });
+    });
   }
 
   Widget _buildOptionsView(
@@ -752,6 +802,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
       return const SizedBox.shrink();
     }
     _shownResults = options;
+    if (widget.showWhenEmpty) _announceEmptiness(options.options.isEmpty);
     final generation = _optionsGeneration;
     return _OverlayLifecycle(
       onMount: _handleMount,
@@ -777,7 +828,12 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
             container: true,
             explicitChildNodes: true,
             child: ExcludeFocus(
-              child: widget.overlayBuilder(context, options.options),
+              child: _restoreAnnounceSupport(
+                Builder(
+                  builder: (context) =>
+                      widget.overlayBuilder(context, options.options),
+                ),
+              ),
             ),
           ),
         ),
@@ -787,23 +843,58 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
 
   @override
   Widget build(BuildContext context) {
+    _supportsAnnounce = MediaQuery.maybeSupportsAnnounceOf(context) ?? false;
+    final autocomplete = RawAutocomplete<_RawComboboxOption<T>>(
+      optionsBuilder: _optionsBuilder,
+      displayStringForOption: (option) => switch (option.value) {
+        final value? => widget.displayStringForOption(value),
+        // Writing the current text back leaves the editor unchanged.
+        null => _listenedController?.text ?? '',
+      },
+      optionsViewOpenDirection: widget.optionsViewOpenDirection,
+      textEditingController: widget.controller,
+      focusNode: widget.focusNode,
+      initialValue: widget.initialValue,
+      onSelected: _handleSelected,
+      fieldViewBuilder: _buildFieldView,
+      optionsViewBuilder: _buildOptionsView,
+    );
+
     return ExcludeSemantics(
       excluding: widget.excludeSemantics,
-      child: RawAutocomplete<_RawComboboxOption<T>>(
-        optionsBuilder: _optionsBuilder,
-        displayStringForOption: (option) => switch (option.value) {
-          final value? => widget.displayStringForOption(value),
-          // Writing the current text back leaves the editor unchanged.
-          null => _listenedController?.text ?? '',
-        },
-        optionsViewOpenDirection: widget.optionsViewOpenDirection,
-        textEditingController: widget.controller,
-        focusNode: widget.focusNode,
-        initialValue: widget.initialValue,
-        onSelected: _handleSelected,
-        fieldViewBuilder: _buildFieldView,
-        optionsViewBuilder: _buildOptionsView,
+      // With showWhenEmpty this widget announces results instead of Raw.
+      child: _AnnounceSupport(
+        supported: widget.showWhenEmpty ? false : null,
+        child: autocomplete,
       ),
+    );
+  }
+}
+
+/// Sets only [MediaQueryData.supportsAnnounce] for [child], or nothing when
+/// [supported] is null.
+///
+/// The tree has the same shape either way, so toggling
+/// [NakedCombobox.showWhenEmpty] keeps RawAutocomplete and its editor state.
+/// [child] is built by the caller, so a change to other media query data
+/// rebuilds just the dependents inside it.
+class _AnnounceSupport extends StatelessWidget {
+  const _AnnounceSupport({required this.supported, required this.child});
+
+  final bool? supported;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final data = MediaQuery.maybeOf(context);
+    if (data == null) return child;
+    final supported = this.supported;
+
+    return MediaQuery(
+      data: supported == null
+          ? data
+          : data.copyWith(supportsAnnounce: supported),
+      child: child,
     );
   }
 }

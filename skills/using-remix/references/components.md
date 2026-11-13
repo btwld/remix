@@ -63,8 +63,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   uses `onSelected` instead of `onChanged`. Observe the controller for edits;
   callback controller edits are preserved. Callers own filtering, debounce and errors. `isOptionDisabled`
   keeps unavailable rows visible: keyboard moves skip them, Enter and pointer
-  never accept them, and rows resolve option `onDisabled` styles. No chips or
-  multiselect API. Custom fields forward the exact editor pair and
+  never accept them, and rows resolve option `onDisabled` styles.
+  `emptyBuilder` keeps the panel open on no results and shows caller-owned
+  content; without it, no results closes the panel. No chips or multiselect
+  API. Custom fields forward the exact editor pair and
   submit callback, and own labels/disablement; custom option builders provide
   visuals beneath one named interactive wrapper. Style `field`, `panel(ComboboxPanelStyler())`,
   and `option(ComboboxOptionStyler())`; the nested `ComboboxOptionSpec` has

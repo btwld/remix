@@ -10,6 +10,8 @@ Keep option values stable across filtering. Dispose your text and focus controll
 
 To show a result that people cannot choose, return it and mark it with `isOptionDisabled`. Keyboard navigation skips it, Enter and pointer activation do not accept it, and its `NakedComboboxOption` is disabled. An option's own `enabled: false` only blocks pointer and semantic activation.
 
+Set `showWhenEmpty` to keep the options view open for a result with no options. `overlayBuilder` then receives an empty iterable, so it can build an empty state. The combobox announces when results become empty or return.
+
 ## Basic implementation
 
 <NakedSource file="naked_combobox.0.dart" />
