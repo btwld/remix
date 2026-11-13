@@ -88,6 +88,9 @@ final class {{typePrefix}}AgentComposerRecipe {
         // The surface draws the frame and the focus ring, not the field.
         .containerEffects(_noEffects)
         .onFocused(.containerEffects(.outline(.style(.none))))
+        // The text area's disabled variant sets its own inset frame; clear it
+        // there too, or a disabled composer shows a second frame.
+        .onDisabled(.containerEffects(_noEffects))
         .merge(fieldStyle),
   ),
   submitStyle: _round(submitStyle),
