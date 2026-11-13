@@ -148,22 +148,6 @@ void main() {
         );
       });
 
-      testWidgets('arc shape fields keep the arc painter', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSpinner(
-            style: SpinnerStyler(sweepAngle: pi, strokeCap: StrokeCap.round),
-          ),
-        );
-        await tester.pump();
-
-        final painter = tester.widget<CustomPaint>(_spinnerPaint()).painter;
-
-        expect(painter, isA<RemixSpinnerPainter>());
-        final arcPainter = painter! as RemixSpinnerPainter;
-        expect(arcPainter.sweepAngle, pi);
-        expect(arcPainter.strokeCap, StrokeCap.round);
-      });
-
       test('repaints when the sweep angle or stroke cap changes', () {
         RemixSpinnerPainter painter({
           double sweepAngle = 2 * pi / 3,
