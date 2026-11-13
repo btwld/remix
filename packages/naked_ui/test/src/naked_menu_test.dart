@@ -803,6 +803,92 @@ void main() {
         expect(submenuController.isOpen, isFalse);
       });
 
+      testWidgets('a submenu already hidden with its root gets no close hook', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        final submenuController = MenuController();
+        var submenuRequests = 0;
+
+        await tester.pumpMaterialWidget(
+          NakedMenu<String>(
+            controller: controller,
+            builder: (context, state, child) => const Text('Open'),
+            overlayBuilder: (context, info) => NakedMenuSubmenu<String>(
+              controller: submenuController,
+              onCloseRequested: (hideOverlay) {
+                submenuRequests++;
+                hideOverlay();
+              },
+              child: const SizedBox(
+                width: 120,
+                height: 40,
+                child: Text('More'),
+              ),
+              overlayBuilder: _submenuContent,
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+        submenuController.open();
+        await tester.pump();
+
+        // A resize closes the menus during a build, so Flutter defers every
+        // close request to after the frame. The root's runs first and hides
+        // the submenu with it.
+        tester.view.physicalSize = tester.view.physicalSize * 1.1;
+        addTearDown(tester.view.resetPhysicalSize);
+        await tester.pumpAndSettle();
+
+        expect(controller.isOpen, isFalse);
+        expect(submenuController.isOpen, isFalse);
+        expect(submenuRequests, 0);
+      });
+
+      testWidgets('onOpenRequested can defer showing a submenu', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        final submenuController = MenuController();
+        final requests = <VoidCallback>[];
+        var opens = 0;
+
+        await tester.pumpMaterialWidget(
+          NakedMenu<String>(
+            controller: controller,
+            builder: (context, state, child) => const Text('Open'),
+            overlayBuilder: (context, info) => NakedMenuSubmenu<String>(
+              controller: submenuController,
+              onOpenRequested: (position, showOverlay) =>
+                  requests.add(showOverlay),
+              onOpen: () => opens++,
+              child: const SizedBox(
+                width: 120,
+                height: 40,
+                child: Text('More'),
+              ),
+              overlayBuilder: _submenuContent,
+            ),
+          ),
+        );
+        controller.open();
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('More'));
+        await tester.pumpAndSettle();
+        expect(requests, hasLength(1));
+        expect(find.text('Child item'), findsNothing);
+        expect(submenuController.isOpen, isFalse);
+        expect(opens, 0);
+
+        requests.single();
+        await tester.pumpAndSettle();
+        expect(find.text('Child item'), findsOneWidget);
+        expect(submenuController.isOpen, isTrue);
+        expect(opens, 1);
+      });
+
       testWidgets('submenu direction handoff follows RTL', (tester) async {
         final controller = MenuController();
         final submenuFocus = FocusNode();

@@ -311,6 +311,7 @@ class NakedMenuSubmenu<T> extends StatefulWidget {
     this.semanticLabel,
     this.onOpen,
     this.onClose,
+    this.onOpenRequested,
     this.onCloseRequested,
   }) : assert(
          child != null || builder != null,
@@ -350,15 +351,23 @@ class NakedMenuSubmenu<T> extends StatefulWidget {
   /// Called after the submenu closes.
   final VoidCallback? onClose;
 
-  /// Intercepts close requests so callers can play an exit transition.
+  /// Intercepts open requests so callers can coordinate custom transitions.
   ///
-  /// Runs whenever the submenu is asked to close while open: by the back
-  /// arrow, Escape, the pointer leaving, a sibling submenu opening, the
-  /// trigger becoming disabled, or its [controller]. The panel stays mounted
-  /// and [MenuController.isOpen] stays true until `hideOverlay` is called;
-  /// then [onClose] runs and focus returns as usual. A closing panel should
-  /// not take focus or input. When the whole menu closes, the submenu hides
-  /// with the root panel even if `hideOverlay` has not been called yet.
+  /// The panel shows when `showOverlay` is called; then [onOpen] runs. When
+  /// null, the submenu shows at once.
+  final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
+
+  /// Intercepts close requests so callers can coordinate custom transitions.
+  ///
+  /// Runs whenever the open submenu is asked to close: by the back arrow,
+  /// Escape, the pointer leaving, a sibling submenu opening, the trigger
+  /// becoming disabled, or its [controller]. The panel stays mounted and
+  /// [MenuController.isOpen] stays true until `hideOverlay` is called; then
+  /// [onClose] runs and focus returns as usual. A closing panel should not
+  /// take focus or input. Because the submenu is still open, its own hover and
+  /// keys do not reopen it until then, as on [NakedMenu]. When the whole menu
+  /// closes, the submenu hides with the root panel even if `hideOverlay` has
+  /// not been called yet.
   ///
   /// When null, the submenu hides at once.
   final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
@@ -514,12 +523,11 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
   }
 
   void _handleCloseRequested(VoidCallback hideOverlay) {
-    final onCloseRequested = widget.onCloseRequested;
-    if (onCloseRequested == null) {
-      hideOverlay();
-    } else {
-      onCloseRequested(hideOverlay);
-    }
+    handleCloseRequested(
+      controller: _controller,
+      onCloseRequested: widget.onCloseRequested,
+      hideOverlay: hideOverlay,
+    );
   }
 
   Map<ShortcutActivator, Intent> _shortcuts(TextDirection direction) => {
@@ -603,6 +611,8 @@ class _NakedMenuSubmenuState<T> extends State<NakedMenuSubmenu<T>> {
       childFocusNode: _focusNode,
       onOpen: _handleOpen,
       onClose: _handleClose,
+      onOpenRequested:
+          widget.onOpenRequested ?? (_, showOverlay) => showOverlay(),
       onCloseRequested: _handleCloseRequested,
       overlayBuilder: (context, info) {
         return AnchoredOverlay(
