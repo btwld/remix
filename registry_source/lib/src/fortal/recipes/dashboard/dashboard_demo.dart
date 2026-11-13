@@ -787,6 +787,11 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
   final _customerSearch = TextEditingController();
   final _orderSearch = TextEditingController();
 
+  /// Fired for a page when quick find fills its search to show one record.
+  final _collectionReset = _FilterReset();
+  final _customerReset = _FilterReset();
+  final _orderReset = _FilterReset();
+
   FortalDashboardData get _data => widget.data ?? fortalDashboardSampleData;
 
   @override
@@ -820,6 +825,9 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
     _collectionSearch.dispose();
     _customerSearch.dispose();
     _orderSearch.dispose();
+    _collectionReset.dispose();
+    _customerReset.dispose();
+    _orderReset.dispose();
     super.dispose();
   }
 
@@ -830,13 +838,17 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
   }
 
   void _jumpTo(FortalQuickFindEntry entry) {
-    final search = switch (entry.page) {
-      .collection => _collectionSearch,
-      .customers => _customerSearch,
-      .orders => _orderSearch,
-      _ => null,
+    final (search, reset) = switch (entry.page) {
+      .collection => (_collectionSearch, _collectionReset),
+      .customers => (_customerSearch, _customerReset),
+      .orders => (_orderSearch, _orderReset),
+      _ => (null, null),
     };
-    if (entry.query.isNotEmpty) search?.text = entry.query;
+    if (entry.query.isNotEmpty) {
+      // A filter left on from earlier would hide the record being opened.
+      search?.text = entry.query;
+      reset?.fire();
+    }
     if (entry.accent case final accent?) {
       final theme = FortalDashboardThemeScope.maybeOf(context);
       if (theme != null) {
@@ -865,14 +877,17 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
     .collection => FortalDashboardCollectionPage(
       data: _data,
       searchController: _collectionSearch,
+      filterReset: _collectionReset,
     ),
     .customers => FortalDashboardCustomersPage(
       data: _data,
       searchController: _customerSearch,
+      filterReset: _customerReset,
     ),
     .orders => FortalDashboardOrdersPage(
       data: _data,
       searchController: _orderSearch,
+      filterReset: _orderReset,
     ),
     .themes => const FortalDashboardThemesPage(),
     .settings => FortalDashboardSettingsPage(data: _data),
@@ -935,6 +950,11 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
       ),
     );
   }
+}
+
+/// Tells a records page to drop every filter but its search.
+final class _FilterReset extends ChangeNotifier {
+  void fire() => notifyListeners();
 }
 
 /// Shows [selected] from [pages] and keeps the others alive behind it.

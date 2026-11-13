@@ -76,7 +76,12 @@ class UiRecordStat extends StatelessWidget {
 /// The Customers page: a searchable, sortable, selectable table of
 /// collectors under four summary figures.
 class UiDashboardCustomersPage extends StatefulWidget {
-  const UiDashboardCustomersPage({super.key, this.data, this.searchController});
+  const UiDashboardCustomersPage({
+    super.key,
+    this.data,
+    this.searchController,
+    this.filterReset,
+  });
 
   /// The records the page shows. Defaults to [uiDashboardSampleData].
   final UiDashboardData? data;
@@ -84,6 +89,11 @@ class UiDashboardCustomersPage extends StatefulWidget {
   /// Controls the search field, so a host can fill it. The page creates its
   /// own when null.
   final TextEditingController? searchController;
+
+  /// Notifies when the page should drop every filter but its search. A host
+  /// that fills the search to show one record fires it, so a filter left on
+  /// from earlier cannot hide that record.
+  final Listenable? filterReset;
 
   @override
   State<UiDashboardCustomersPage> createState() =>
@@ -114,12 +124,17 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
   void initState() {
     super.initState();
     _search.addListener(_onFilterChanged);
+    widget.filterReset?.addListener(_resetFilters);
   }
 
   @override
   void didUpdateWidget(UiDashboardCustomersPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.data != oldWidget.data) _rows = null;
+    if (widget.filterReset != oldWidget.filterReset) {
+      oldWidget.filterReset?.removeListener(_resetFilters);
+      widget.filterReset?.addListener(_resetFilters);
+    }
     if (widget.searchController == oldWidget.searchController) return;
     (oldWidget.searchController ?? _ownSearch)?.removeListener(
       _onFilterChanged,
@@ -131,6 +146,7 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
   @override
   void dispose() {
     _search.removeListener(_onFilterChanged);
+    widget.filterReset?.removeListener(_resetFilters);
     _ownSearch?.dispose();
     super.dispose();
   }
@@ -139,6 +155,15 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
     _rows = null;
     _page = 0;
   });
+
+  void _resetFilters() {
+    if (_tier == .all) return;
+    setState(() {
+      _tier = .all;
+      _rows = null;
+      _page = 0;
+    });
+  }
 
   List<UiDashboardCustomer> _computeRows() {
     final query = _search.text.trim().toLowerCase();
@@ -330,7 +355,12 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
 /// The Orders page: a filterable, sortable table of orders under four
 /// summary figures.
 class UiDashboardOrdersPage extends StatefulWidget {
-  const UiDashboardOrdersPage({super.key, this.data, this.searchController});
+  const UiDashboardOrdersPage({
+    super.key,
+    this.data,
+    this.searchController,
+    this.filterReset,
+  });
 
   /// The records the page shows. Defaults to [uiDashboardSampleData].
   final UiDashboardData? data;
@@ -338,6 +368,11 @@ class UiDashboardOrdersPage extends StatefulWidget {
   /// Controls the search field, so a host can fill it. The page creates its
   /// own when null.
   final TextEditingController? searchController;
+
+  /// Notifies when the page should drop every filter but its search. A host
+  /// that fills the search to show one record fires it, so a filter left on
+  /// from earlier cannot hide that record.
+  final Listenable? filterReset;
 
   @override
   State<UiDashboardOrdersPage> createState() => _UiDashboardOrdersPageState();
@@ -369,6 +404,7 @@ class _UiDashboardOrdersPageState extends State<UiDashboardOrdersPage> {
   void initState() {
     super.initState();
     _search.addListener(_onFilterChanged);
+    widget.filterReset?.addListener(_resetFilters);
   }
 
   @override
@@ -377,6 +413,10 @@ class _UiDashboardOrdersPageState extends State<UiDashboardOrdersPage> {
     if (widget.data != oldWidget.data) {
       _rows = null;
       _columns = null;
+    }
+    if (widget.filterReset != oldWidget.filterReset) {
+      oldWidget.filterReset?.removeListener(_resetFilters);
+      widget.filterReset?.addListener(_resetFilters);
     }
     if (widget.searchController == oldWidget.searchController) return;
     (oldWidget.searchController ?? _ownSearch)?.removeListener(
@@ -389,6 +429,7 @@ class _UiDashboardOrdersPageState extends State<UiDashboardOrdersPage> {
   @override
   void dispose() {
     _search.removeListener(_onFilterChanged);
+    widget.filterReset?.removeListener(_resetFilters);
     _ownSearch?.dispose();
     super.dispose();
   }
@@ -397,6 +438,15 @@ class _UiDashboardOrdersPageState extends State<UiDashboardOrdersPage> {
     _rows = null;
     _page = 0;
   });
+
+  void _resetFilters() {
+    if (_status == .all) return;
+    setState(() {
+      _status = .all;
+      _rows = null;
+      _page = 0;
+    });
+  }
 
   List<UiDashboardOrder> _computeRows() {
     final query = _search.text.trim().toLowerCase();

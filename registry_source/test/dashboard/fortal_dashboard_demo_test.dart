@@ -567,6 +567,73 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    testWidgets('drops an order filter that would hide the record', (
+      tester,
+    ) async {
+      await _pumpDemo(tester, page: .orders);
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const ValueKey('order-status')),
+          matching: find.text('Refunded'),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(_onPage(.orders, 'ORD-1048'), findsNothing);
+
+      // ORD-1048 is paid, so the refund filter would leave the table empty.
+      await tester.enterText(_field('dashboard-search'), 'ord-1048');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.textContaining('Order · '));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(
+        tester.widget<EditableText>(_field('order-search')).controller.text,
+        'ORD-1048',
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('data-grid-orders')),
+          matching: find.text('ORD-1048'),
+        ),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('drops a collection filter that would hide the edition', (
+      tester,
+    ) async {
+      await _pumpDemo(tester, page: .collection);
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const ValueKey('collection-status')),
+          matching: find.text('Sold out'),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FortalEditionCard), findsOneWidget);
+
+      // Duna Branca is live, so the sold-out filter would show no card.
+      await tester.enterText(_field('dashboard-search'), 'duna br');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.textContaining('Edition · '));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(
+        find.descendant(
+          of: find.byType(FortalEditionCard),
+          matching: find.text('Duna Branca'),
+        ),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('jumps to a page', (tester) async {
       await _pumpDemo(tester);
       await tester.enterText(_field('dashboard-search'), 'analy');

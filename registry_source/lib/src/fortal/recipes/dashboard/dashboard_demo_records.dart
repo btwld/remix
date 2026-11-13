@@ -80,6 +80,7 @@ class FortalDashboardCustomersPage extends StatefulWidget {
     super.key,
     this.data,
     this.searchController,
+    this.filterReset,
   });
 
   /// The records the page shows. Defaults to [fortalDashboardSampleData].
@@ -88,6 +89,11 @@ class FortalDashboardCustomersPage extends StatefulWidget {
   /// Controls the search field, so a host can fill it. The page creates its
   /// own when null.
   final TextEditingController? searchController;
+
+  /// Notifies when the page should drop every filter but its search. A host
+  /// that fills the search to show one record fires it, so a filter left on
+  /// from earlier cannot hide that record.
+  final Listenable? filterReset;
 
   @override
   State<FortalDashboardCustomersPage> createState() =>
@@ -119,12 +125,17 @@ class _FortalDashboardCustomersPageState
   void initState() {
     super.initState();
     _search.addListener(_onFilterChanged);
+    widget.filterReset?.addListener(_resetFilters);
   }
 
   @override
   void didUpdateWidget(FortalDashboardCustomersPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.data != oldWidget.data) _rows = null;
+    if (widget.filterReset != oldWidget.filterReset) {
+      oldWidget.filterReset?.removeListener(_resetFilters);
+      widget.filterReset?.addListener(_resetFilters);
+    }
     if (widget.searchController == oldWidget.searchController) return;
     (oldWidget.searchController ?? _ownSearch)?.removeListener(
       _onFilterChanged,
@@ -136,6 +147,7 @@ class _FortalDashboardCustomersPageState
   @override
   void dispose() {
     _search.removeListener(_onFilterChanged);
+    widget.filterReset?.removeListener(_resetFilters);
     _ownSearch?.dispose();
     super.dispose();
   }
@@ -144,6 +156,15 @@ class _FortalDashboardCustomersPageState
     _rows = null;
     _page = 0;
   });
+
+  void _resetFilters() {
+    if (_tier == .all) return;
+    setState(() {
+      _tier = .all;
+      _rows = null;
+      _page = 0;
+    });
+  }
 
   List<FortalDashboardCustomer> _computeRows() {
     final query = _search.text.trim().toLowerCase();
@@ -339,6 +360,7 @@ class FortalDashboardOrdersPage extends StatefulWidget {
     super.key,
     this.data,
     this.searchController,
+    this.filterReset,
   });
 
   /// The records the page shows. Defaults to [fortalDashboardSampleData].
@@ -347,6 +369,11 @@ class FortalDashboardOrdersPage extends StatefulWidget {
   /// Controls the search field, so a host can fill it. The page creates its
   /// own when null.
   final TextEditingController? searchController;
+
+  /// Notifies when the page should drop every filter but its search. A host
+  /// that fills the search to show one record fires it, so a filter left on
+  /// from earlier cannot hide that record.
+  final Listenable? filterReset;
 
   @override
   State<FortalDashboardOrdersPage> createState() =>
@@ -379,6 +406,7 @@ class _FortalDashboardOrdersPageState extends State<FortalDashboardOrdersPage> {
   void initState() {
     super.initState();
     _search.addListener(_onFilterChanged);
+    widget.filterReset?.addListener(_resetFilters);
   }
 
   @override
@@ -387,6 +415,10 @@ class _FortalDashboardOrdersPageState extends State<FortalDashboardOrdersPage> {
     if (widget.data != oldWidget.data) {
       _rows = null;
       _columns = null;
+    }
+    if (widget.filterReset != oldWidget.filterReset) {
+      oldWidget.filterReset?.removeListener(_resetFilters);
+      widget.filterReset?.addListener(_resetFilters);
     }
     if (widget.searchController == oldWidget.searchController) return;
     (oldWidget.searchController ?? _ownSearch)?.removeListener(
@@ -399,6 +431,7 @@ class _FortalDashboardOrdersPageState extends State<FortalDashboardOrdersPage> {
   @override
   void dispose() {
     _search.removeListener(_onFilterChanged);
+    widget.filterReset?.removeListener(_resetFilters);
     _ownSearch?.dispose();
     super.dispose();
   }
@@ -407,6 +440,15 @@ class _FortalDashboardOrdersPageState extends State<FortalDashboardOrdersPage> {
     _rows = null;
     _page = 0;
   });
+
+  void _resetFilters() {
+    if (_status == .all) return;
+    setState(() {
+      _status = .all;
+      _rows = null;
+      _page = 0;
+    });
+  }
 
   List<FortalDashboardOrder> _computeRows() {
     final query = _search.text.trim().toLowerCase();

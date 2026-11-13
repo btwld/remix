@@ -775,6 +775,11 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
   final _customerSearch = TextEditingController();
   final _orderSearch = TextEditingController();
 
+  /// Fired for a page when quick find fills its search to show one record.
+  final _collectionReset = _FilterReset();
+  final _customerReset = _FilterReset();
+  final _orderReset = _FilterReset();
+
   UiDashboardData get _data => widget.data ?? uiDashboardSampleData;
 
   @override
@@ -808,6 +813,9 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
     _collectionSearch.dispose();
     _customerSearch.dispose();
     _orderSearch.dispose();
+    _collectionReset.dispose();
+    _customerReset.dispose();
+    _orderReset.dispose();
     super.dispose();
   }
 
@@ -818,13 +826,17 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
   }
 
   void _jumpTo(UiQuickFindEntry entry) {
-    final search = switch (entry.page) {
-      .collection => _collectionSearch,
-      .customers => _customerSearch,
-      .orders => _orderSearch,
-      _ => null,
+    final (search, reset) = switch (entry.page) {
+      .collection => (_collectionSearch, _collectionReset),
+      .customers => (_customerSearch, _customerReset),
+      .orders => (_orderSearch, _orderReset),
+      _ => (null, null),
     };
-    if (entry.query.isNotEmpty) search?.text = entry.query;
+    if (entry.query.isNotEmpty) {
+      // A filter left on from earlier would hide the record being opened.
+      search?.text = entry.query;
+      reset?.fire();
+    }
     if (entry.accent case final accent?) {
       final theme = UiDashboardThemeScope.maybeOf(context);
       if (theme != null) {
@@ -853,14 +865,17 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
     .collection => UiDashboardCollectionPage(
       data: _data,
       searchController: _collectionSearch,
+      filterReset: _collectionReset,
     ),
     .customers => UiDashboardCustomersPage(
       data: _data,
       searchController: _customerSearch,
+      filterReset: _customerReset,
     ),
     .orders => UiDashboardOrdersPage(
       data: _data,
       searchController: _orderSearch,
+      filterReset: _orderReset,
     ),
     .themes => const UiDashboardThemesPage(),
     .settings => UiDashboardSettingsPage(data: _data),
@@ -922,6 +937,11 @@ class _UiDashboardDemoState extends State<UiDashboardDemo> {
       ),
     );
   }
+}
+
+/// Tells a records page to drop every filter but its search.
+final class _FilterReset extends ChangeNotifier {
+  void fire() => notifyListeners();
 }
 
 /// Shows [selected] from [pages] and keeps the others alive behind it.

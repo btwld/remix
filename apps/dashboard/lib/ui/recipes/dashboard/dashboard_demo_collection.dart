@@ -43,6 +43,7 @@ class UiDashboardCollectionPage extends StatefulWidget {
     super.key,
     this.data,
     this.searchController,
+    this.filterReset,
   });
 
   /// The records the page shows. Defaults to [uiDashboardSampleData].
@@ -51,6 +52,11 @@ class UiDashboardCollectionPage extends StatefulWidget {
   /// Controls the search field, so a host can fill it. The page creates its
   /// own when null.
   final TextEditingController? searchController;
+
+  /// Notifies when the page should drop every filter but its search. A host
+  /// that fills the search to show one record fires it, so a filter left on
+  /// from earlier cannot hide that record.
+  final Listenable? filterReset;
 
   @override
   State<UiDashboardCollectionPage> createState() =>
@@ -84,11 +90,16 @@ class _UiDashboardCollectionPageState extends State<UiDashboardCollectionPage> {
   void initState() {
     super.initState();
     _search.addListener(_onSearchChanged);
+    widget.filterReset?.addListener(_resetFilters);
   }
 
   @override
   void didUpdateWidget(UiDashboardCollectionPage oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.filterReset != oldWidget.filterReset) {
+      oldWidget.filterReset?.removeListener(_resetFilters);
+      widget.filterReset?.addListener(_resetFilters);
+    }
     if (widget.searchController == oldWidget.searchController) return;
     (oldWidget.searchController ?? _ownSearch)?.removeListener(
       _onSearchChanged,
@@ -99,11 +110,17 @@ class _UiDashboardCollectionPageState extends State<UiDashboardCollectionPage> {
   @override
   void dispose() {
     _search.removeListener(_onSearchChanged);
+    widget.filterReset?.removeListener(_resetFilters);
     _ownSearch?.dispose();
     super.dispose();
   }
 
   void _onSearchChanged() => setState(() {});
+
+  void _resetFilters() => setState(() {
+    _status = .all;
+    _price = const [0, 1];
+  });
 
   @override
   Widget build(BuildContext context) {

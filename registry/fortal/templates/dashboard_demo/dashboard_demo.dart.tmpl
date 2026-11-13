@@ -787,6 +787,11 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
   final _customerSearch = TextEditingController();
   final _orderSearch = TextEditingController();
 
+  /// Fired for a page when quick find fills its search to show one record.
+  final _collectionReset = _FilterReset();
+  final _customerReset = _FilterReset();
+  final _orderReset = _FilterReset();
+
   {{typePrefix}}DashboardData get _data => widget.data ?? {{valuePrefix}}DashboardSampleData;
 
   @override
@@ -820,6 +825,9 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     _collectionSearch.dispose();
     _customerSearch.dispose();
     _orderSearch.dispose();
+    _collectionReset.dispose();
+    _customerReset.dispose();
+    _orderReset.dispose();
     super.dispose();
   }
 
@@ -830,13 +838,17 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
   }
 
   void _jumpTo({{typePrefix}}QuickFindEntry entry) {
-    final search = switch (entry.page) {
-      .collection => _collectionSearch,
-      .customers => _customerSearch,
-      .orders => _orderSearch,
-      _ => null,
+    final (search, reset) = switch (entry.page) {
+      .collection => (_collectionSearch, _collectionReset),
+      .customers => (_customerSearch, _customerReset),
+      .orders => (_orderSearch, _orderReset),
+      _ => (null, null),
     };
-    if (entry.query.isNotEmpty) search?.text = entry.query;
+    if (entry.query.isNotEmpty) {
+      // A filter left on from earlier would hide the record being opened.
+      search?.text = entry.query;
+      reset?.fire();
+    }
     if (entry.accent case final accent?) {
       final theme = {{typePrefix}}DashboardThemeScope.maybeOf(context);
       if (theme != null) {
@@ -865,14 +877,17 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     .collection => {{typePrefix}}DashboardCollectionPage(
       data: _data,
       searchController: _collectionSearch,
+      filterReset: _collectionReset,
     ),
     .customers => {{typePrefix}}DashboardCustomersPage(
       data: _data,
       searchController: _customerSearch,
+      filterReset: _customerReset,
     ),
     .orders => {{typePrefix}}DashboardOrdersPage(
       data: _data,
       searchController: _orderSearch,
+      filterReset: _orderReset,
     ),
     .themes => const {{typePrefix}}DashboardThemesPage(),
     .settings => {{typePrefix}}DashboardSettingsPage(data: _data),
@@ -935,6 +950,11 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
       ),
     );
   }
+}
+
+/// Tells a records page to drop every filter but its search.
+final class _FilterReset extends ChangeNotifier {
+  void fire() => notifyListeners();
 }
 
 /// Shows [selected] from [pages] and keeps the others alive behind it.
