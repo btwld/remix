@@ -1,0 +1,85 @@
+---
+title: Tool call
+description: One tool call that changes from an approval card to a status row and output well.
+---
+
+One tool call that changes from an approval card to a status row and output well.
+
+The widgets live in experimental `package:remix/agent.dart`, outside Remix's stability promise.
+Import it explicitly; `package:remix/remix.dart` does not export it.
+The registry installs editable preset recipes and their dependencies into your app.
+Widget, model, and styler names keep the `Agent` prefix. Recipe names use your app's prefix.
+
+## Install
+
+For a new app, initialize one preset, then add the recipe and glyphs:
+
+```shell
+remix init --prefix Ui --preset fortal
+remix add tool_call_recipe agent_glyphs_recipe
+```
+
+Existing apps keep their chosen preset. Vanilla and HeroUI provide the same recipe roles.
+No consumer `build.yaml` is needed for these Agent recipes.
+
+## Behavior
+
+Keep the `AgentToolCallPart.id` stable as its status changes:
+`inputStreaming`, `awaitingApproval`, `denied`, `running`, `succeeded`, `failed`, or `cancelled`.
+The approval card reports one `AgentApprovalDecision` per request through `onDecision`.
+The host records that decision and executes or cancels the tool.
+
+Supply `output` and `error` as strings. The bounded output well follows new lines while running.
+It collapses on success and stays open on failure under the default disclosure policy.
+A reader's toggle takes precedence for that run.
+
+`AgentToolRenderers` registers a builder per tool name. Registered renderers receive the call,
+including input, output, and status. They replace the standard row; approval always uses the guarded card.
+Unregistered tools use the standard row.
+
+## Use the recipe
+
+This example assumes prefix `Ui` and the installed `UiTheme` above the widget.
+Wrap the conversation in `AgentGlyphs(builder: uiAgentGlyph, child: ...)` to draw preset glyphs.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
+import 'ui/ui.dart';
+
+Widget buildToolCall(void Function(AgentApprovalDecision) onDecision) {
+  final recipe = uiAgentToolCallRecipe();
+  return AgentToolCall(
+    call: const AgentToolCallPart(
+      id: 'cart-tests',
+      name: 'terminal.run',
+      summary: 'Run the cart tests',
+      status: AgentToolCallStatus.awaitingApproval,
+      input: [(label: 'Command', value: 'flutter test test/cart')],
+    ),
+    onDecision: onDecision,
+    style: recipe.style,
+    disclosureStyle: recipe.disclosureStyle,
+    inputStyle: recipe.inputStyle,
+    allowOnceStyle: recipe.allowOnceStyle,
+    alwaysAllowStyle: recipe.alwaysAllowStyle,
+    denyStyle: recipe.denyStyle,
+  );
+}
+```
+
+The recipe returns these unresolved styles. Pass each into its matching widget parameter;
+child controls resolve hover, focus, and disabled state in their own context.
+
+| Bundle field | Style type |
+| --- | --- |
+| `style` | `AgentToolCallStyler` |
+| `disclosureStyle` | `DisclosureStyler` |
+| `inputStyle` | `DataListStyler` |
+| `allowOnceStyle` | `ButtonStyler` |
+| `alwaysAllowStyle` | `ButtonStyler` |
+| `denyStyle` | `ButtonStyler` |
+
+Each factory merges same-named overrides after its preset defaults.
+Edit the installed recipe to customize it. `remix add tool_call_recipe --diff` previews upstream differences.
+See [migration](/agent/migrating) for the previous registry API.

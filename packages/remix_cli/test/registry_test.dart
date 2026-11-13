@@ -377,7 +377,11 @@ items:
           closure,
           everyElement(
             isNot(
-              anyOf(equals('chart'), equals('data_table'), equals('activity')),
+              anyOf(
+                equals('chart'),
+                equals('data_table'),
+                equals('tool_call_recipe'),
+              ),
             ),
           ),
         );
@@ -437,8 +441,8 @@ items:
           expect(joined, contains('class {{typePrefix}}DashboardThemesPage'));
         }
         expect(joined, contains('{{typePrefix}}DashboardChatPage'));
-        expect(joined, contains('{{typePrefix}}Message('));
-        expect(joined, contains("import '../../components/message.dart';"));
+        expect(joined, contains('AgentConversation('));
+        expect(joined, contains("import 'package:remix/agent.dart';"));
         expect(joined, isNot(contains('package:flutter/material.dart')));
         expect(joined, isNot(contains('registry_source')));
       }
@@ -635,28 +639,17 @@ items:
       // new registry item ship with no surface pinned and no rendering asserted.
       expect(catalog.items.keys.toSet(), {
         'theme',
-        'models',
-        'support',
         ..._componentSurfaces.keys,
-        ..._agentSurfaces.keys,
         ..._agentRecipeNames,
         'dashboard_demo',
         'dashboard_shell',
       });
 
-      for (final name in [..._componentSurfaces.keys, ..._agentSurfaces.keys]) {
+      for (final name in _componentSurfaces.keys) {
         final item = catalog.items[name];
         expect(item, isNotNull, reason: name);
-        // Agent model foundations can precede theme. Every component still
-        // reaches the single Remix floor through theme, in dependency order.
+        // Every component reaches the single Remix floor through theme, in dependency order.
         expect(catalog.resolve(name).map((item) => item.name), switch (name) {
-          'composer' || 'transcript' => ['theme', 'support', name],
-          'activity' ||
-          'answer' ||
-          'execution' ||
-          'message' ||
-          'permission' ||
-          'plan' => ['models', 'theme', 'support', name],
           'combobox' => ['theme', 'textfield', name],
           'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
           'calendar' => ['theme', 'icon_button', 'select', name],
@@ -723,50 +716,6 @@ items:
     },
   );
 
-  test(
-    'Agent foundations export only public models and preserve source layout',
-    () async {
-      final registry = CheckoutRegistry(distribution, 'vanilla');
-      final catalog = await registry.catalog();
-      expect(catalog.items['models']!.files.map((file) => file.target), [
-        '@ui/models/activity_item.dart',
-        '@ui/models/plan_item.dart',
-        '@ui/models/statuses.dart',
-      ]);
-      expect(catalog.items['support']!.files.map((file) => file.target), [
-        '@ui/support/disclosure.dart',
-        '@ui/support/functional_glyph.dart',
-        '@ui/support/live_edge.dart',
-      ]);
-      expect(catalog.items['support']!.exports, isEmpty);
-      expect(catalog.items['models']!.exports, [
-        'models/activity_item.dart',
-        'models/plan_item.dart',
-        'models/statuses.dart',
-      ]);
-      for (final entry in _agentSurfaces.entries) {
-        final source = await registry.template(
-          catalog.items[entry.key]!.files.single,
-        );
-        for (final prefix in ['Acme', 'Ui']) {
-          final rendered = const TemplateRenderer().render(
-            source,
-            typePrefix: prefix,
-            valuePrefix: prefix.toLowerCase(),
-          );
-          for (final widget in entry.value) {
-            expect(
-              rendered,
-              contains(
-                RegExp('^class $prefix$widget extends ', multiLine: true),
-              ),
-            );
-          }
-        }
-      }
-    },
-  );
-
   test('both prefixes render every configured public surface', () async {
     final registry = CheckoutRegistry(distribution, 'vanilla');
     final catalog = await registry.catalog();
@@ -824,24 +773,30 @@ items:
     }
   });
 
-  test('both presets render prefixed Agent recipe bundles', () async {
+  test('every preset renders prefixed Agent recipe bundles', () async {
     for (final preset in ['vanilla', 'fortal']) {
       final registry = CheckoutRegistry(distribution, preset);
       final catalog = await registry.catalog();
-      for (final name in _agentRecipeNames) {
+      for (final entry in _agentRecipeWidgets.entries) {
         final source = await registry.template(
-          catalog.items[name]!.files.single,
+          catalog.items[entry.key]!.files.single,
         );
         final rendered = const TemplateRenderer().render(
           source,
           typePrefix: 'Acme',
           valuePrefix: 'acme',
+          icons: icons,
         );
-        final component = name.split('_').first;
-        final type = '${component[0].toUpperCase()}${component.substring(1)}';
-        expect(rendered, contains('class AcmeAgent${type}Recipe'));
-        expect(rendered, contains('acmeAgent${type}Recipe('));
+        final type = entry.value;
+        expect(rendered, contains("import 'package:remix/agent.dart';"));
+        if (type == null) {
+          expect(rendered, contains('acmeAgentGlyph('), reason: entry.key);
+        } else {
+          expect(rendered, contains('class AcmeAgent${type}Recipe'));
+          expect(rendered, contains('acmeAgent${type}Recipe('));
+        }
         expect(rendered, isNot(contains('package:remix_agent')));
+        expect(rendered, isNot(contains('{{')), reason: entry.key);
       }
     }
   });
@@ -959,27 +914,21 @@ const _componentSurfaces =
 RegistryCatalog parse(String source) =>
     RegistryCatalog.parse(source, preset: 'test');
 
-const _agentRecipeNames = <String>{
-  'activity_recipe',
-  'answer_recipe',
-  'composer_recipe',
-  'execution_recipe',
-  'message_recipe',
-  'permission_recipe',
-  'plan_recipe',
-  'transcript_recipe',
+/// The Agent recipes of every preset, and the widget each styles; the glyph
+/// set styles none.
+const _agentRecipeWidgets = <String, String?>{
+  'agent_glyphs_recipe': null,
+  'answer_recipe': 'Answer',
+  'composer_recipe': 'Composer',
+  'conversation_recipe': 'Conversation',
+  'message_recipe': 'Message',
+  'sources_recipe': 'Sources',
+  'steps_recipe': 'Steps',
+  'suggestions_recipe': 'Suggestions',
+  'tool_call_recipe': 'ToolCall',
 };
 
-const _agentSurfaces = <String, List<String>>{
-  'activity': ['Activity'],
-  'answer': ['Answer'],
-  'composer': ['Composer'],
-  'execution': ['Execution'],
-  'message': ['Message', 'MessageGroup', 'MessageCollapsible'],
-  'permission': ['Permission'],
-  'plan': ['Plan'],
-  'transcript': ['Transcript'],
-};
+final _agentRecipeNames = _agentRecipeWidgets.keys.toSet();
 
 /// Whether `index.yaml` maps [preset] to a catalog, without reading it.
 bool _isIndexed(Directory distribution, String preset) {

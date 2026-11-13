@@ -385,7 +385,7 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(FortalThemeData theme) {
     FortalTokens.dataTableSortIconSize3: 18.0 * scaling,
     FortalTokens.planMaxHeight: 220.0 * scaling,
     FortalTokens.messageAvatarSize: 28.0 * scaling,
-    FortalTokens.messageContentMaxWidth: 640.0 * scaling,
+    FortalTokens.messageContentMaxWidth: 768.0 * scaling,
     FortalTokens.messageCollapsedHeight: 72.0 * scaling,
     FortalTokens.composerFieldMinHeight: 56.0 * scaling,
     FortalTokens.touchTargetMin: 40.0 * math.max(1.0, scaling),

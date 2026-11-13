@@ -1,79 +1,125 @@
 import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 
-import '../components/card.dart';
-import '../components/composer.dart';
 import '../components/icon_button.dart';
 import '../components/textfield.dart';
 import '../theme/theme.dart';
 
-/// Styles for the composer: a card around a text area with no fill of its own,
-/// a submit icon button, and a stop icon button.
+/// Styles for the composer: a rounded surface holding a text area over a
+/// toolbar.
 @immutable
 final class UiAgentComposerRecipe {
   const UiAgentComposerRecipe({
     required this.style,
-    required this.surfaceStyle,
     required this.fieldStyle,
     required this.submitStyle,
     required this.stopStyle,
   });
 
-  /// Styles for the composer toolbar.
-  final UiComposerStyler style;
+  /// Styles for the surface, the field's frame and the toolbar.
+  final AgentComposerStyler style;
 
-  /// Styles for the card around the field and toolbar.
-  final CardStyler surfaceStyle;
-
-  /// Styles for the message text area.
+  /// Styles for the text area, which has no frame of its own.
   final TextFieldStyler fieldStyle;
 
-  /// Styles for the icon button that sends the message.
+  /// Styles for the button that sends the message.
   final IconButtonStyler submitStyle;
 
-  /// Styles for the icon button that stops a running response.
+  /// Styles for the button that stops a running response.
   final IconButtonStyler stopStyle;
 }
 
 /// Builds the recipe; each argument is merged last, so callers can override.
+///
+/// The surface is a `gray2` panel inside a `controlBorder` frame, with no
+/// shadow. Focus draws a 2px outline with a 2px gap. The field grows from
+/// one line to 240px.
 UiAgentComposerRecipe uiAgentComposerRecipe({
-  UiComposerStyler style = const UiComposerStyler.create(),
-  CardStyler surfaceStyle = const CardStyler.create(),
+  AgentComposerStyler style = const AgentComposerStyler.create(),
   TextFieldStyler fieldStyle = const TextFieldStyler.create(),
   IconButtonStyler submitStyle = const IconButtonStyler.create(),
   IconButtonStyler stopStyle = const IconButtonStyler.create(),
 }) => UiAgentComposerRecipe(
-  style: UiComposerStyler(
-    toolbar: FlexBoxStyler()
-        .direction(.horizontal)
-        .mainAxisSize(.max)
-        .crossAxisAlignment(.center)
-        .spacing(UiTokens.space2())
-        .padding(.top(UiTokens.space2())),
-  ).merge(style),
-  surfaceStyle: uiCardStyle(
-    size: .size2,
-    style: CardStyler().padding(.all(UiTokens.space3())).merge(surfaceStyle),
-  ),
+  style:
+      AgentComposerStyler(
+            container: BoxStyler()
+                // Keep the field mounted when focus changes; only toggle ink.
+                .wrap(
+                  uiFocusRingModifier(
+                    radius: UiTokens.radius6(),
+                    visible: false,
+                  ),
+                )
+                .color(UiTokens.gray2())
+                .borderRadius(.all(UiTokens.radius6()))
+                .padding(.all(UiTokens.space3()))
+                .border(
+                  .all(
+                    .color(
+                      UiTokens.controlBorder(),
+                    ).width(UiTokens.borderWidth1()),
+                  ),
+                ),
+            field: BoxStyler().padding(.horizontal(UiTokens.space1())),
+            fieldMaxHeight: _fieldMaxHeight,
+            toolbar: FlexBoxStyler()
+                .spacing(UiTokens.space2())
+                .crossAxisAlignment(.center)
+                .padding(.top(UiTokens.space3())),
+          )
+          .onFocused(
+            AgentComposerStyler(
+              container: BoxStyler().uiFocusRing(radius: UiTokens.radius6()),
+            ),
+          )
+          .merge(style),
   fieldStyle: uiTextAreaStyle(
+    size: .size3,
     style: TextFieldStyler()
         .color(const Color(0x00000000))
-        .border(.style(.none))
-        .minHeight(UiTokens.composerFieldMinHeight())
-        .padding(.all(UiTokens.space1()))
+        .border(.all(.width(0).style(.none)))
+        .padding(.all(0))
+        .minHeight(UiTokens.space5())
+        // The whole composer is a focus target; the inner field needs no 40px wrapper.
+        .container(BoxStyler().wrap(WidgetModifierConfig.reset()))
+        // The surface draws the frame and the focus ring, not the field.
+        .containerEffects(_noEffects)
+        .onFocused(.containerEffects(.outline(.style(.none))))
         .merge(fieldStyle),
   ),
-  submitStyle: uiIconButtonStyle(
-    size: .size2,
-    style: IconButtonStyler()
-        .size(UiTokens.space7(), UiTokens.space7())
-        .merge(submitStyle),
-  ),
-  stopStyle: uiIconButtonStyle(
-    size: .size2,
-    style: IconButtonStyler()
-        .color(UiTokens.error9())
-        .size(UiTokens.space7(), UiTokens.space7())
-        .merge(stopStyle),
-  ),
+  submitStyle: _round(submitStyle),
+  stopStyle: _round(stopStyle),
+);
+
+/// The tallest the field grows before it scrolls.
+const _fieldMaxHeight = 240.0;
+
+/// A solid, round 32px icon button.
+IconButtonStyler _round(IconButtonStyler style) => uiIconButtonStyle(
+  variant: .solid,
+  size: .size2,
+  style: IconButtonStyler()
+      .wrap(WidgetModifierConfig.reset())
+      .size(UiTokens.space6(), UiTokens.space6())
+      .borderRadius(.circular(_pill))
+      .icon(.size(UiTokens.space4()))
+      .onDisabled(.icon(.color(UiTokens.gray8())))
+      .merge(style),
+);
+
+/// Pill corners, whatever radius the theme chooses.
+const _pill = 999.0;
+
+/// Empty layers behind and over the field: an explicit empty list replaces the
+/// text area's frame, where an unset layer would leave it.
+final _noEffects = RemixBoxEffectsMix(
+  behindContent: _emptyLayer,
+  overContent: _emptyLayer,
+);
+
+final _emptyLayer = RemixBoxEffectLayerMix(
+  gradients: const [],
+  gradientInsets: const [],
+  shadows: const [],
 );

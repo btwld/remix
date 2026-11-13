@@ -1,0 +1,63 @@
+---
+title: Migrating Agent surfaces
+description: Move from application-owned Agent behavior to package widgets and editable preset recipes.
+---
+
+Agent behavior now lives in experimental `package:remix/agent.dart`.
+It ships with Remix and is outside its stability promise; its API can change in any release.
+Import it explicitly beside your local UI barrel. There is no separate Agent package or preset.
+
+Your app still owns the installed recipes, theme, and orchestration. The package supplies widgets,
+models, controllers, specs, and stylers. It does not run tools or connect to a model provider.
+
+## Old to new
+
+| Previous registry role | Package widget | Registry recipe |
+| --- | --- | --- |
+| Transcript | `AgentConversation` with `AgentTurn` | `conversation_recipe` |
+| Plan + Activity | `AgentSteps` with `AgentStep` | `steps_recipe` |
+| Execution + Permission | `AgentToolCall` with `AgentToolCallPart` | `tool_call_recipe` |
+| Message | `AgentMessage` | `message_recipe` |
+| Answer | `AgentAnswer` | `answer_recipe` |
+| Composer | `AgentComposer` | `composer_recipe` |
+| New: Suggestions | `AgentSuggestions` | `suggestions_recipe` |
+| New: Sources | `AgentSources` | `sources_recipe` |
+
+The new widget and model names keep `Agent`; only installed recipe names use the consumer prefix.
+For example, prefix `Ui` produces `uiAgentComposerRecipe()`, used with `AgentComposer` and `AgentComposerStyler`.
+
+## Install the recipes
+
+Keep the app's existing preset and update its registry pin to the revision containing these items
+with `remix registry update @remix`. Preview replacements before applying them:
+
+```shell
+remix add conversation_recipe message_recipe steps_recipe tool_call_recipe answer_recipe composer_recipe suggestions_recipe sources_recipe agent_glyphs_recipe --diff
+remix add conversation_recipe message_recipe steps_recipe tool_call_recipe answer_recipe composer_recipe suggestions_recipe sources_recipe agent_glyphs_recipe --overwrite
+```
+
+Review local customizations before `--overwrite` replaces matching recipe files.
+The recipe dependencies include Remix; no separate package install or Agent code generation is required.
+Use the same commands in Vanilla, Fortal, and HeroUI apps.
+
+## Update call sites
+
+Import `package:remix/agent.dart` for widgets, models, and stylers, and your local `ui/ui.dart` for recipes.
+Wrap the conversation in `AgentGlyphs(builder: uiAgentGlyph, child: ...)`.
+Pass each bundle field to the matching parameter; the old `surfaceStyle` is now part of the widget's own anatomy style.
+
+Use `AgentComposerController` for the draft and running state. Share it with suggestions.
+Use a stable `AgentToolCallPart.id` across approval, running, and completion, with `AgentApprovalDecision`
+returned through `onDecision`. The host executes the tool and records its decision.
+
+See [Conversation](/agent/conversation), [Steps](/agent/steps), [Tool call](/agent/tool-call),
+and [Composer](/agent/composer) for complete call sites and recipe fields.
+Answer bodies remain host-rendered widgets; the recipes do not parse response text.
+
+## Previously installed source
+
+Previously installed source keeps compiling because your app owns it.
+Updating Remix or the registry pin does not replace those files automatically.
+Migrate call sites at your own pace, then remove old widgets, generated parts, models, and support files
+only after confirming your app no longer imports them. Remove old scoped Agent builder entries from
+`build.yaml` when no remaining local spec needs them. Keep unrelated builder settings.

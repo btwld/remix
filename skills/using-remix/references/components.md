@@ -212,14 +212,24 @@ HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, `dashboard_shell`, and
 ## Agent surfaces
 
 
-For agent-run surfaces — `activity`, `answer`, `composer`, `execution`,
-`message`, `permission`, `plan`, `transcript` — install the preset's bare item
-(HeroUI's are extensions, as HeroUI web has no Agent surfaces), which is
-unstyled by default, plus the matching `<item>_recipe` for a
-complete, preset-specific styler bundle. Even a bare item is not Remix-only:
-the shared `support` item brings in the preset `theme` and the selected icon library.
-Each agent item also declares its own `mix_annotations` dependency and
-`build_runner`/`mix_generator` dev dependencies for codegen.
+Import experimental `package:remix/agent.dart` for `AgentConversation`,
+`AgentMessage`, `AgentSteps`, `AgentToolCall`, `AgentAnswer`, `AgentSources`,
+`AgentSuggestions`, and `AgentComposer`. These widgets, models, and stylers
+keep their package names; they are not installed or prefixed.
+
+Install `conversation_recipe`, `message_recipe`, `steps_recipe`,
+`tool_call_recipe`, `answer_recipe`, `sources_recipe`, `suggestions_recipe`,
+and `composer_recipe` for the selected preset's unresolved styler bundles.
+Install `agent_glyphs_recipe` and wrap the conversation in
+`AgentGlyphs(builder: uiAgentGlyph, child: ...)` (prefix `Ui`).
+These recipes need no consumer `build.yaml`. The app owns the theme, recipes,
+runner, decisions, and announcements. HeroUI's agent recipes are extensions
+because its upstream library has no Agent family.
+
+The old Transcript maps to Conversation; Plan and Activity to Steps;
+Execution and Permission to ToolCall. Previously installed source stays
+app-owned and keeps compiling. See the repository's `docs/agent/migrating.mdx`
+for installation and call-site migration.
 
 ## Overlays
 

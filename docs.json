@@ -277,36 +277,40 @@
       "collapsible": true,
       "pages": [
         {
-          "title": "Activity",
-          "href": "/agent/activity"
-        },
-        {
-          "title": "Answer",
-          "href": "/agent/answer"
-        },
-        {
-          "title": "Composer",
-          "href": "/agent/composer"
-        },
-        {
-          "title": "Execution",
-          "href": "/agent/execution"
+          "title": "Conversation",
+          "href": "/agent/conversation"
         },
         {
           "title": "Message",
           "href": "/agent/message"
         },
         {
-          "title": "Permission",
-          "href": "/agent/permission"
+          "title": "Steps",
+          "href": "/agent/steps"
         },
         {
-          "title": "Plan",
-          "href": "/agent/plan"
+          "title": "Tool call",
+          "href": "/agent/tool-call"
         },
         {
-          "title": "Transcript",
-          "href": "/agent/transcript"
+          "title": "Answer",
+          "href": "/agent/answer"
+        },
+        {
+          "title": "Sources",
+          "href": "/agent/sources"
+        },
+        {
+          "title": "Suggestions",
+          "href": "/agent/suggestions"
+        },
+        {
+          "title": "Composer",
+          "href": "/agent/composer"
+        },
+        {
+          "title": "Migration",
+          "href": "/agent/migrating"
         }
       ]
     }

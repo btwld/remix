@@ -1,142 +1,31 @@
-# Remix Agent
+# Agent recipes
 
-Unstyled Flutter widgets for long-running agent work: compose a prompt, follow
-a transcript, pause for permission, and inspect execution and plans.
+Agent widgets, models, controllers, specs, and stylers live in experimental
+`package:remix/agent.dart`. Import that library explicitly. It ships with Remix,
+outside its stability promise. The private authoring package supplies only
+preset recipes; apps never depend on `registry_source`.
 
-The eight surfaces are application-owned source in the default CLI registry.
-See [ADR 0001](../adr/agent/0001-package-boundary.md) for the private authoring
-package boundary and the runtime/recipe split. They are available from both
-existing presets; there is no separate Agent preset.
-
-Agent domain source composes [remix](https://pub.dev/packages/remix), Mix
-styling and remix_ui_icons inside the private authoring package. The domain
-itself defines no theme, token scope or model SDK. Every visual surface exposes
-a generated `Agent*Spec` and `Agent*Styler`; every visual field is empty until the host
-supplies a style.
-Those specs describe Agent-owned, noninteractive anatomy. Remix child controls
-receive independent unresolved stylers such as `submitStyle`, `detailsStyle`,
-and `disclosureStyle`, so their hover, press, focus, selected variants,
-animations, and modifiers resolve against the child control's own state.
-
-Functional glyphs (send, stop, copy, retry, disclosure, tool, and statuses)
-have neutral Material-free defaults from `remix_ui_icons`. Their public builders remain the
-replacement point; visual color and size still come from host styles.
-
-A `MixScope` is not an Agent requirement. Add one only when the host's own
-styles resolve scoped Mix tokens. The playground and dashboard use installed
-preset recipe bundles and their theme for all eight surfaces.
-
-## Install
-
-The package remains unpublished authoring/test source. Install individual
-surfaces through the global CLI (see [open-code setup](../../../open_code/README.md)):
+The eight widgets are `AgentConversation`, `AgentMessage`, `AgentSteps`,
+`AgentToolCall`, `AgentAnswer`, `AgentSources`, `AgentSuggestions`, and
+`AgentComposer`. `AgentTurn` groups a prompt and its response blocks.
+Widgets have empty visual defaults and glyph slots. Each preset's recipes
+supply unresolved styles; `agent_glyphs_recipe` supplies its glyph builder.
 
 ```shell
-remix init --prefix Ui --preset vanilla
-remix add composer
+remix add conversation_recipe message_recipe steps_recipe tool_call_recipe answer_recipe composer_recipe sources_recipe suggestions_recipe agent_glyphs_recipe
 ```
 
-The CLI installs shared `models` and `support` when needed, enables Mix's
-spec-styler builder for the installed source in `build.yaml`, and generates
-adapters in the application. Existing builder settings are preserved; explicit
-exclusions or disabled generation must be resolved by the host. Public models
-are exported from the UI barrel, internal support helpers are not.
+No consumer Agent code generation is needed. Widget and model names keep the
+`Agent` prefix; installed recipe names use the app prefix. Pass each recipe's
+fields into the matching widget parameters. Wrap the conversation in
+`AgentGlyphs(builder: uiAgentGlyph, child: ...)` for prefix `Ui`.
 
-Consumers import their local barrel, not the private package. Authoring names
-in the table below use `Agent`; installed names follow the chosen prefix:
-`AgentComposer` becomes `UiComposer`.
+The host owns model-provider calls, tool execution, approval persistence,
+clipboard writes, feedback, and announcements. Supply an Overlay when a
+composer can focus: a routed WidgetsApp already provides one, while a bare
+WidgetsApp builder can use `Overlay.wrap`.
 
-```dart
-import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
-import 'ui/ui.dart';
-```
-
-For work on the private authoring package itself, its barrel remains:
-
-```dart
-import 'package:flutter/widgets.dart';
-import 'package:remix/remix.dart';
-import 'package:registry_source/agent.dart';
-```
-
-Ordinary surfaces need only a normal Flutter host. `AgentComposer` is the one
-exception, and the requirement is the text field's rather than Agent's:
-`EditableText` asserts on an `Overlay` ancestor the moment it takes focus, for
-its selection handles and magnifier. `MaterialApp`, `CupertinoApp`, and any
-`WidgetsApp` with routes already provide one; a bare `WidgetsApp(builder: ...)`
-does not. A model picker built with `RemixSelect` needs the same `Overlay`.
-
-## What this is
-
-| Widget | Role |
-| --- | --- |
-| `AgentComposer` | Growable prompt field. Enter submits (and never inserts a newline), Shift+Enter inserts a newline, IME composition is ignored. Send becomes Stop while a run is live. |
-| `AgentMessage` / `AgentMessageCollapsible` | Unclamped message card plus an explicit, noninteractive-content collapse wrapper. |
-| `AgentTranscript` | Static `children` or lazy `builder` viewport that styles both paths identically, follows growing output at the live edge, releases when the reader scrolls away, and offers a way back to the latest. |
-| `AgentAnswer` | Streaming answer with callback-owned copy/retry controls, host feedback, and optional sources disclosure. |
-| `AgentPermission` | In-transcript tool permission: allow once, always allow, or deny. |
-| `AgentExecution` | Tool output with running / success / error / cancelled and collapse when done. |
-| `AgentPlan` | Task plan with pending / in-progress / completed / cancelled and a completion count. |
-| `AgentActivity` | Slim activity ledger. Hosts supply each item’s child. |
-
-There is no runtime chat shell, sidebar, or file tree. The dashboard and
-playground compose them into an interactive simulated chat; applications retain
-ownership of that orchestration.
-
-## What this is not
-
-- A visual preset. Remix Agent does not ship colors as a design system.
-- A markdown renderer, syntax highlighter, or citation engine.
-- An LLM client or tool runtime.
-
-## Styling with installed recipes
-
-An application styles these surfaces with the same `remix_cli` source it
-installs for the rest of its UI. There is no Agent theme and no Agent preset.
-
-A surface can take more than one styler, so each opt-in recipe returns a
-**bundle** and the call site spreads it. `AgentComposer` takes five: its own anatomy, plus
-unresolved stylers for the card, the field, and the two buttons.
-
-```dart
-final recipe = uiAgentComposerRecipe();
-
-UiComposer(
-  onSubmit: submit,
-  style: recipe.style,
-  surfaceStyle: recipe.surfaceStyle,
-  fieldStyle: recipe.fieldStyle,
-  submitStyle: recipe.submitStyle,
-  stopStyle: recipe.stopStyle,
-)
-```
-
-The bundle calls the application's installed `uiCardStyle`, `uiTextAreaStyle`,
-and `uiIconButtonStyle` and adds only Agent-specific geometry, so editing one
-of those files changes the composer with it. Install a bundle with
-`remix add composer_recipe`; all eight follow the same `<component>_recipe`
-convention. Default recipes use default tokens and Fortal recipes use Fortal
-tokens and controls without crossing presets.
-
-## Host
-
-```dart
-WidgetsApp(
-  color: const Color(0xFFFFFFFF),
-  builder: (_, _) => const MyTranscript(),
-);
-```
-
-Do not wrap the tree in a package-owned app or overlay host. Provide
-`Overlay.wrap` yourself around any subtree holding a composer or a picker:
-
-```dart
-WidgetsApp(
-  color: const Color(0xFFFFFFFF),
-  builder: (_, _) => Overlay.wrap(child: const MyComposerPage()),
-);
-```
-
-See [provenance](../adr/agent/provenance.md) for the behavioral benchmark
-record.
+See the [component guides](../../../docs/agent/conversation.mdx) and
+[migration guide](../../../docs/agent/migrating.mdx) for call sites, recipe
+fields, and the old-to-new map. Previously installed behavior source keeps
+compiling because it belongs to the app.

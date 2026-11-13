@@ -1,55 +1,11 @@
 ---
-title: Activity
-description: A live activity ledger that follows work and can collapse when complete.
+title: Activity migration
+description: Move the previous activity surface to the package Agent widgets.
 ---
 
-A live activity ledger that follows work and can collapse when complete.
+The previous `activity` and `activity_recipe` registry items have been replaced by
+[Steps](/agent/steps), using `package:remix/agent.dart`.
+Previously installed source belongs to your app and keeps compiling until you replace or remove it.
 
-This is an [Open Code](/open-code) component: it installs into your application,
-not as a separate Agent runtime package. The names below assume prefix `Ui`.
-
-## Install
-
-In a Flutter application with the global CLI installed:
-
-```shell
-remix init --prefix Ui --preset fortal
-remix add activity_recipe
-```
-
-Use `--preset vanilla` when initializing a Vanilla-preset application. Do not
-reinitialize an existing application with a different preset. Installing
-`activity_recipe` includes its component and required theme/control dependencies.
-Use `add activity` instead when you want the bare component and will provide styles.
-
-Import `ui/ui.dart` from your application and use the scope for your preset:
-
-- **Fortal:** `UiTheme(child: ...)`.
-- **Default:** `UiTheme(theme: const UiThemeData.light(), child: ...)` (or
-  `UiThemeData.dark()` for a dark theme).
-
-## Behavior
-
-Pass `UiActivityItem` values to `items`. Row states are `pending`, `active`, and `complete`; the ledger uses `UiRunStatus.working` or `.complete`. It opens when work starts and collapses when it completes (unless `collapseOnComplete` is false); the reader can collapse or reopen it at any time, as with a plan. Use `onFollowChanged` to observe reader release and `expanded` with `onExpandedChanged` for controlled disclosure.
-
-## Recipe bundle
-
-`uiAgentActivityRecipe()` returns these styles:
-
-| Bundle field | Style type |
-|---|---|
-| `style` | `UiActivityStyler` |
-| `disclosureStyle` | `DisclosureStyler` |
-
-Pass the bundle's styles to the corresponding component parameters. Each
-factory accepts same-named overrides, merged after the preset defaults.
-Child-control styles must be passed through unchanged so hover, focus, and
-disabled styles resolve in the child's context.
-
-## Review and customize
-
-The dashboard's **Workspace → Chat** demonstrates this surface alongside the
-other Agent components. Its responses and tool activity are simulated locally.
-Edit your installed source to customize it; `remix add
-activity_recipe --diff` previews authored-source differences without overwriting
-local edits.
+Follow the [Agent migration guide](/agent/migrating) for the old-to-new map,
+installation commands, and the change from prefixed widgets to package widgets.

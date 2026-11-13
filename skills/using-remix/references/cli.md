@@ -112,17 +112,17 @@ icon. `lucide` adds `lucide_flutter` instead. Projects still on `remix_ui_icons`
 references using the package’s `MIGRATION.md`.
 
 The choice applies at install. Six Vanilla and Fortal items use icon placeholders:
-`icons`, `dashboard_shell`, `dashboard_demo`, `support`, `date_picker`, and
+`icons`, `dashboard_shell`, `dashboard_demo`, `agent_glyphs_recipe`, `date_picker`, and
 `date_range_picker`. HeroUI uses the same six plus `breadcrumbs`, `close_button`,
 and `search_field`.
 To switch an installed project, change the setting and reinstall every one of
 them you have, in one command; `--overwrite` rewrites only the items named:
 
 ```bash
-remix add icons dashboard_shell dashboard_demo support date_picker date_range_picker --diff       # Vanilla, Fortal
-remix add icons dashboard_shell dashboard_demo support date_picker date_range_picker --overwrite
-remix add icons dashboard_shell dashboard_demo support date_picker date_range_picker breadcrumbs close_button search_field --diff   # HeroUI
-remix add icons dashboard_shell dashboard_demo support date_picker date_range_picker breadcrumbs close_button search_field --overwrite
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker --diff       # Vanilla, Fortal
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker --overwrite
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs close_button search_field --diff   # HeroUI
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs close_button search_field --overwrite
 ```
 
 Icons referenced in application code are not rewritten. The CLI that

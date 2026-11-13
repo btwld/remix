@@ -10,14 +10,15 @@ import '../../../dashboard/dashboard_demo_chat.dart';
 import '../../components/combobox.dart';
 import '../../components/kbd.dart';
 import '../../components/sidebar_layout.dart';
-import '../activity_recipe.dart';
+import '../agent_glyphs_recipe.dart';
 import '../answer_recipe.dart';
 import '../composer_recipe.dart';
-import '../execution_recipe.dart';
+import '../conversation_recipe.dart';
 import '../message_recipe.dart';
-import '../permission_recipe.dart';
-import '../plan_recipe.dart';
-import '../transcript_recipe.dart';
+import '../sources_recipe.dart';
+import '../steps_recipe.dart';
+import '../suggestions_recipe.dart';
+import '../tool_call_recipe.dart';
 import 'dashboard_demo_analytics.dart';
 import 'dashboard_demo_collection.dart';
 import 'dashboard_demo_data.dart';
@@ -1191,13 +1192,13 @@ class _RenderKeepLastLayout extends RenderBox
 }
 
 RegistryDashboardAgentStyles _fortalAgentStyles() {
+  final conversation = fortalAgentConversationRecipe();
   final message = fortalAgentMessageRecipe();
+  final steps = fortalAgentStepsRecipe();
+  final toolCall = fortalAgentToolCallRecipe();
   final answer = fortalAgentAnswerRecipe();
-  final transcript = fortalAgentTranscriptRecipe();
-  final plan = fortalAgentPlanRecipe();
-  final activity = fortalAgentActivityRecipe();
-  final permission = fortalAgentPermissionRecipe();
-  final execution = fortalAgentExecutionRecipe();
+  final sources = fortalAgentSourcesRecipe();
+  final suggestions = fortalAgentSuggestionsRecipe();
   final composer = fortalAgentComposerRecipe();
   return RegistryDashboardAgentStyles(
     buttonBuilder: (label, onPressed, tone) => switch (tone) {
@@ -1205,37 +1206,51 @@ RegistryDashboardAgentStyles _fortalAgentStyles() {
       .soft => FortalButton.soft(label: label, onPressed: onPressed),
       .outline => FortalButton.outline(label: label, onPressed: onPressed),
     },
+    glyphBuilder: fortalAgentGlyph,
+    toolIconBuilder: fortalAgentToolIcon,
+    composerLeadingBuilder: (onPressed) => FortalIconButton.outline(
+      icon: RemixIcons.plus,
+      semanticLabel: 'Add checkout context',
+      onPressed: onPressed,
+      style: IconButtonStyler()
+          .wrap(WidgetModifierConfig.reset())
+          .size(FortalTokens.space6(), FortalTokens.space6())
+          .icon(.size(FortalTokens.space4()).color(FortalTokens.gray11()))
+          .borderRadius(.circular(999)),
+    ),
     heading: fortalTextStyle(size: .size6, weight: .bold),
-    body: fortalTextStyle(size: .size2, highContrast: false),
+    body: fortalTextStyle(size: .size1, highContrast: false),
+    dockStyle: BoxStyler()
+        .maxWidth(FortalTokens.messageContentMaxWidth())
+        .padding(.horizontal(FortalTokens.space4())),
+    conversationStyle: conversation.style,
+    latestStyle: conversation.latestStyle,
     messageStyle: message.style,
-    messageSurfaceStyle: message.surfaceStyle,
+    messageToggleStyle: message.toggleStyle,
+    stepsStyle: steps.style,
+    stepStyle: steps.stepStyle,
+    stepsDisclosureStyle: steps.disclosureStyle,
+    toolCallStyle: toolCall.style,
+    toolCallDisclosureStyle: toolCall.disclosureStyle,
+    toolInputStyle: toolCall.inputStyle,
+    allowOnceStyle: toolCall.allowOnceStyle,
+    alwaysAllowStyle: toolCall.alwaysAllowStyle,
+    denyStyle: toolCall.denyStyle,
     answerStyle: answer.style,
-    answerSurfaceStyle: answer.surfaceStyle,
-    answerSourcesStyle: answer.sourcesStyle,
-    answerCopyStyle: answer.copyStyle,
-    answerRetryStyle: answer.retryStyle,
-    transcriptStyle: transcript.style,
-    planStyle: plan.style,
-    planDisclosureStyle: plan.disclosureStyle,
-    activityStyle: activity.style,
-    activityDisclosureStyle: activity.disclosureStyle,
-    permissionStyle: permission.style,
-    permissionSurfaceStyle: permission.surfaceStyle,
-    permissionDetailsStyle: permission.detailsStyle,
-    permissionParametersStyle: permission.parametersStyle,
-    permissionAllowOnceStyle: permission.allowOnceStyle,
-    permissionAlwaysAllowStyle: permission.alwaysAllowStyle,
-    permissionDenyStyle: permission.denyStyle,
-    executionStyle: execution.style,
-    executionSurfaceStyle: execution.surfaceStyle,
-    executionDisclosureStyle: execution.disclosureStyle,
-    executionCopyStyle: execution.copyStyle,
-    executionRetryStyle: execution.retryStyle,
+    answerBodyStyle: FlexBoxStyler()
+        .crossAxisAlignment(.stretch)
+        .spacing(FortalTokens.space3()),
+    answerActionStyle: answer.actionStyle,
+    answerSelectedActionStyle: answer.selectedActionStyle,
+    sourcesStyle: sources.style,
+    sourcesDisclosureStyle: sources.disclosureStyle,
+    sourceStyle: sources.sourceStyle,
+    suggestionsStyle: suggestions.style,
+    suggestionStyle: suggestions.suggestionStyle,
     composerStyle: composer.style,
-    composerSurfaceStyle: composer.surfaceStyle,
     composerFieldStyle: composer.fieldStyle,
-    composerSubmitStyle: composer.submitStyle,
-    composerStopStyle: composer.stopStyle,
+    submitStyle: composer.submitStyle,
+    stopStyle: composer.stopStyle,
   );
 }
 

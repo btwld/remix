@@ -41,7 +41,7 @@ void main() {
     await tester.pump();
 
     for (final (destination, text) in const [
-      ('Chat', 'Agent chat'),
+      ('Chat', 'What should we work on?'),
       ('Customers', 'Search customers…'),
       ('Orders', 'Refunded'),
       ('Settings', 'Danger zone'),

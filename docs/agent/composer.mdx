@@ -1,58 +1,78 @@
 ---
 title: Composer
-description: A prompt field and send or stop controls in one surface.
+description: A growing prompt field with host actions and Send or Stop.
 ---
 
-A prompt field and send or stop controls in one surface.
+A growing prompt field with host actions and Send or Stop.
 
-This is an [Open Code](/open-code) component: it installs into your application,
-not as a separate Agent runtime package. The names below assume prefix `Ui`.
+The widgets live in experimental `package:remix/agent.dart`, outside Remix's stability promise.
+Import it explicitly; `package:remix/remix.dart` does not export it.
+The registry installs editable preset recipes and their dependencies into your app.
+Widget, model, and styler names keep the `Agent` prefix. Recipe names use your app's prefix.
 
 ## Install
 
-In a Flutter application with the global CLI installed:
+For a new app, initialize one preset, then add the recipe and glyphs:
 
 ```shell
 remix init --prefix Ui --preset fortal
-remix add composer_recipe
+remix add composer_recipe agent_glyphs_recipe
 ```
 
-Use `--preset vanilla` when initializing a Vanilla-preset application. Do not
-reinitialize an existing application with a different preset. Installing
-`composer_recipe` includes its component and required theme/control dependencies.
-Use `add composer` instead when you want the bare component and will provide styles.
-
-Import `ui/ui.dart` from your application and use the scope for your preset:
-
-- **Fortal:** `UiTheme(child: ...)`.
-- **Default:** `UiTheme(theme: const UiThemeData.light(), child: ...)` (or
-  `UiThemeData.dark()` for a dark theme).
+Existing apps keep their chosen preset. Vanilla and HeroUI provide the same recipe roles.
+No consumer `build.yaml` is needed for these Agent recipes.
 
 ## Behavior
 
-Wire `onSubmit` to your runner and `onStop` to cancellation. The host owns running state and submission eligibility. Enter submits, Shift+Enter inserts a newline, and active IME composition does not submit. While the composer has an `onSubmit`, Enter never inserts a newline: with an empty draft, a live run or `canSubmit: false` it does nothing, and holding it sends once. While the text field has focus, `surfaceStyle` resolves `onFocused`, so a recipe marks the whole card rather than the borderless field inside it. Keep model-provider calls, cancellation, and persistence outside the component.
+Share an `AgentComposerController` with suggestions or other host controls.
+Set `controller.running` while work is active. Wire `onSubmit` to your runner and `onStop` to cancellation.
+The field grows to the recipe's maximum height and then scrolls.
 
-## Recipe bundle
+Enter submits, Shift+Enter inserts a newline, and active IME composition does not submit.
+A surface tap focuses the field. The surface resolves focused styling while the field has focus.
+`leading` and `trailing` accept host-owned toolbar widgets.
 
-`uiAgentComposerRecipe()` returns these styles:
+The field needs an `Overlay` when focused for selection handles.
+A routed `WidgetsApp`, `MaterialApp`, or `CupertinoApp` supplies one;
+with a bare `WidgetsApp(builder: ...)`, wrap the composer subtree in `Overlay.wrap`.
+Dispose controllers and focus nodes that your host creates.
+
+## Use the recipe
+
+This example assumes prefix `Ui` and the installed `UiTheme` above the widget.
+Wrap the conversation in `AgentGlyphs(builder: uiAgentGlyph, child: ...)` to draw preset glyphs.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
+import 'ui/ui.dart';
+
+Widget buildComposer(
+  AgentComposerController controller,
+  void Function(String) onSubmit,
+) {
+  final recipe = uiAgentComposerRecipe();
+  return AgentComposer(
+    controller: controller,
+    onSubmit: onSubmit,
+    style: recipe.style,
+    fieldStyle: recipe.fieldStyle,
+    submitStyle: recipe.submitStyle,
+    stopStyle: recipe.stopStyle,
+  );
+}
+```
+
+The recipe returns these unresolved styles. Pass each into its matching widget parameter;
+child controls resolve hover, focus, and disabled state in their own context.
 
 | Bundle field | Style type |
-|---|---|
-| `style` | `UiComposerStyler` |
-| `surfaceStyle` | `CardStyler` |
+| --- | --- |
+| `style` | `AgentComposerStyler` |
 | `fieldStyle` | `TextFieldStyler` |
 | `submitStyle` | `IconButtonStyler` |
 | `stopStyle` | `IconButtonStyler` |
 
-Pass the bundle's styles to the corresponding component parameters. Each
-factory accepts same-named overrides, merged after the preset defaults.
-Child-control styles must be passed through unchanged so hover, focus, and
-disabled styles resolve in the child's context.
-
-## Review and customize
-
-The dashboard's **Workspace → Chat** demonstrates this surface alongside the
-other Agent components. Its responses and tool activity are simulated locally.
-Edit your installed source to customize it; `remix add
-composer_recipe --diff` previews authored-source differences without overwriting
-local edits.
+Each factory merges same-named overrides after its preset defaults.
+Edit the installed recipe to customize it. `remix add composer_recipe --diff` previews upstream differences.
+See [migration](/agent/migrating) for the previous registry API.

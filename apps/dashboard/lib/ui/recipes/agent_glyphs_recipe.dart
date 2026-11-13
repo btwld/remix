@@ -1,0 +1,172 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/agent.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+import '../components/spinner.dart';
+
+/// Draws the glyphs of the Agent widgets from this preset's icon set.
+///
+/// Wrap the conversation in `AgentGlyphs(builder: uiAgentGlyph, ...)`.
+/// Each Agent widget sizes and colors its glyph through its own style, so this
+/// only picks the shape. Returning null draws nothing there.
+Widget? uiAgentGlyph(BuildContext context, AgentGlyph glyph, IconSpec spec) =>
+    switch (glyph) {
+      // A call that waits for approval shows its status as a badge, without a
+      // glyph.
+      .toolWaiting => null,
+      .toolPreparing ||
+      .toolRunning => UiSpinner(style: SpinnerStyler(size: spec.size)),
+      .send ||
+      .stop ||
+      .waiting ||
+      .thinking ||
+      .thought ||
+      .positive ||
+      .negative => SizedBox.square(
+        dimension: spec.size ?? 16,
+        child: CustomPaint(
+          painter: _ChatGlyph(
+            glyph,
+            spec.color ?? IconTheme.of(context).color!,
+          ),
+        ),
+      ),
+      _ => Icon(_icon(glyph)),
+    };
+
+/// Picks named tool icons; null keeps the generic tool glyph as the fallback.
+/// Pass this to `AgentGlyphs.toolIconBuilder` beside `uiAgentGlyph`.
+Widget? uiAgentToolIcon(BuildContext context, String name, IconSpec spec) =>
+    switch (name) {
+      'terminal.run' => const Icon(RemixIcons.terminal),
+      _ => null,
+    };
+
+IconData _icon(AgentGlyph glyph) => switch (glyph) {
+  .disclosureClosed => RemixIcons.chevronRight,
+  .disclosureOpen => RemixIcons.chevronDown,
+  .latest => RemixIcons.arrowDown,
+  .send => RemixIcons.arrowUp,
+  .stop => RemixIcons.square,
+  .thinking || .thought => RemixIcons.wand,
+  .waiting => RemixIcons.pause,
+  .stepPending => RemixIcons.circle,
+  .stepActive => RemixIcons.dotFilled,
+  .stepComplete => RemixIcons.check,
+  .stepCancelled => RemixIcons.close,
+  .tool => RemixIcons.terminal,
+  .approval => RemixIcons.shield,
+  .toolSucceeded => RemixIcons.checkCircle,
+  .toolFailed => RemixIcons.closeCircle,
+  .toolDenied || .toolCancelled => RemixIcons.ban,
+  .copy => RemixIcons.copy,
+  .copied => RemixIcons.check,
+  .positive => RemixIcons.arrowUp,
+  .negative => RemixIcons.arrowDown,
+  .retry => RemixIcons.refresh,
+  .sources => RemixIcons.file,
+  .toolPreparing || .toolRunning || .toolWaiting => RemixIcons.loader,
+};
+
+/// Optical 24-unit paths for chat actions absent from the preset icon set.
+class _ChatGlyph extends CustomPainter {
+  const _ChatGlyph(this.glyph, this.color);
+
+  final AgentGlyph glyph;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.scale(size.width / 24, size.height / 24);
+    final ink = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = glyph == AgentGlyph.send ? 2.2 : 2
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+    switch (glyph) {
+      case .send:
+        canvas.drawPath(
+          Path()
+            ..moveTo(12, 19)
+            ..lineTo(12, 5)
+            ..moveTo(5, 12)
+            ..lineTo(12, 5)
+            ..lineTo(19, 12),
+          ink,
+        );
+      case .stop:
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(
+            const Rect.fromLTWH(7, 7, 10, 10),
+            const Radius.circular(1.5),
+          ),
+          ink..style = PaintingStyle.fill,
+        );
+      case .waiting:
+        canvas.drawCircle(const Offset(12, 12), 9, ink);
+        canvas.drawPath(
+          Path()
+            ..moveTo(10, 9)
+            ..lineTo(10, 15)
+            ..moveTo(14, 9)
+            ..lineTo(14, 15),
+          ink,
+        );
+      case .thinking || .thought:
+        canvas.drawPath(
+          Path()
+            ..moveTo(12, 3)
+            ..lineTo(12, 7)
+            ..moveTo(12, 17)
+            ..lineTo(12, 21)
+            ..moveTo(3, 12)
+            ..lineTo(7, 12)
+            ..moveTo(17, 12)
+            ..lineTo(21, 12)
+            ..moveTo(6, 6)
+            ..lineTo(8.5, 8.5)
+            ..moveTo(15.5, 15.5)
+            ..lineTo(18, 18)
+            ..moveTo(6, 18)
+            ..lineTo(8.5, 15.5)
+            ..moveTo(15.5, 8.5)
+            ..lineTo(18, 6),
+          ink,
+        );
+      case .positive || .negative:
+        if (glyph == AgentGlyph.negative) {
+          canvas.translate(24, 24);
+          canvas.rotate(3.141592653589793);
+        }
+        canvas.drawPath(
+          Path()
+            ..moveTo(7, 10)
+            ..lineTo(7, 22)
+            ..moveTo(15, 5.9)
+            ..lineTo(14, 10)
+            ..lineTo(19.8, 10)
+            ..cubicTo(21.1, 10, 22.1, 11.3, 21.7, 12.6)
+            ..lineTo(19.4, 20.6)
+            ..quadraticBezierTo(19, 22, 17.5, 22)
+            ..lineTo(4, 22)
+            ..quadraticBezierTo(2, 22, 2, 20)
+            ..lineTo(2, 12)
+            ..quadraticBezierTo(2, 10, 4, 10)
+            ..lineTo(6.8, 10)
+            ..quadraticBezierTo(8, 10, 8.6, 8.9)
+            ..lineTo(12, 2)
+            ..cubicTo(14, 2, 15.7, 3.8, 15, 5.9)
+            ..close(),
+          ink,
+        );
+      default:
+        break;
+    }
+  }
+
+  @override
+  bool shouldRepaint(_ChatGlyph oldDelegate) =>
+      glyph != oldDelegate.glyph || color != oldDelegate.color;
+}

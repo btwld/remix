@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -610,7 +611,7 @@ void main() {
         find.byKey(const ValueKey('dashboard-schedule')),
         find.byKey(const ValueKey('schedule-calendar')),
       ),
-      .chat: (find.byType(UiDashboardChatPage), find.byType(UiComposer)),
+      .chat: (find.byType(UiDashboardChatPage), find.byType(AgentComposer)),
       .collection: (
         find.byKey(const ValueKey('dashboard-collection')),
         find.byKey(const ValueKey('collection-spotlight')),

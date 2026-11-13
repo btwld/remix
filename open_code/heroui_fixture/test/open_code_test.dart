@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:open_code_fixture/main.dart';
 import 'package:open_code_fixture/ui/ui.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -341,35 +342,34 @@ void main() {
 
   // Installed Agent recipes keep caller overrides, hover included.
   group('Agent recipes', () {
-    testWidgets('answer copy control resolves its own hover override', (
+    testWidgets('answer actions resolve their own hover override', (
       tester,
     ) async {
       const idle = Color(0xFF123456);
       const hovered = Color(0xFFABCDEF);
       final recipe = acmeAgentAnswerRecipe(
-        copyStyle: IconButtonStyler()
+        actionStyle: IconButtonStyler()
             .color(idle)
             .onHovered(IconButtonStyler().color(hovered)),
-      );
-      final answer = AcmeAnswer(
-        status: AcmeAnswerStatus.complete,
-        style: recipe.style,
-        surfaceStyle: recipe.surfaceStyle,
-        copyStyle: recipe.copyStyle,
-        onCopy: () {},
-        child: const Text('Local answer'),
       );
       await tester.pumpWidget(
         WidgetsApp(
           color: const Color(0xFFFFFFFF),
-          builder: (_, _) =>
-              AcmeTheme(mode: AcmeThemeMode.light, child: answer),
+          builder: (_, _) => AcmeTheme(
+            mode: AcmeThemeMode.light,
+            child: AgentGlyphs(
+              builder: acmeAgentGlyph,
+              child: AgentAnswer(
+                style: recipe.style,
+                actionStyle: recipe.actionStyle,
+                onCopy: () {},
+                child: const Text('Local answer'),
+              ),
+            ),
+          ),
         ),
       );
-      final copy = find.byWidgetPredicate(
-        (widget) =>
-            widget is RemixIconButton && widget.semanticLabel == 'Copy answer',
-      );
+      final copy = find.byKey(const ValueKey('agent-answer-copy'));
       Iterable<Color?> colors() => tester
           .widgetList<DecoratedBox>(
             find.descendant(of: copy, matching: find.byType(DecoratedBox)),
@@ -389,77 +389,32 @@ void main() {
       expect(colors(), isNot(contains(idle)));
     });
 
-    testWidgets('composer recipe preserves the caller surface override', (
+    testWidgets('the conversation recipe keeps the caller spacing', (
       tester,
     ) async {
+      final recipe = acmeAgentConversationRecipe(
+        style: AgentConversationStyler(turnSpacing: 37),
+      );
+      final result = await _resolve(tester, recipe.style);
+      expect(result.spec.turnSpacing, 37);
+    });
+
+    testWidgets('the composer recipe keeps the caller toolbar', (tester) async {
       final recipe = acmeAgentComposerRecipe(
-        style: AcmeComposerStyler(toolbar: FlexBoxStyler().spacing(37)),
+        style: AgentComposerStyler(toolbar: FlexBoxStyler().spacing(37)),
       );
       final result = await _resolve(tester, recipe.style);
       expect(result.spec.toolbar.spec.flex?.spec.spacing, 37);
     });
-    testWidgets('message recipe preserves the caller surface override', (
+
+    testWidgets('the tool call recipe keeps the caller well height', (
       tester,
     ) async {
-      final recipe = acmeAgentMessageRecipe(
-        style: AcmeMessageStyler(maxWidth: 37),
+      final recipe = acmeAgentToolCallRecipe(
+        style: AgentToolCallStyler(outputMaxHeight: 37),
       );
       final result = await _resolve(tester, recipe.style);
-      expect(result.spec.maxWidth, 37);
-    });
-    testWidgets('answer recipe preserves the caller surface override', (
-      tester,
-    ) async {
-      final recipe = acmeAgentAnswerRecipe(
-        style: AcmeAnswerStyler(actions: FlexBoxStyler().spacing(37)),
-      );
-      final result = await _resolve(tester, recipe.style);
-      expect(result.spec.actions.spec.flex?.spec.spacing, 37);
-    });
-    testWidgets('execution recipe preserves the caller surface override', (
-      tester,
-    ) async {
-      final recipe = acmeAgentExecutionRecipe(
-        style: AcmeExecutionStyler(header: FlexBoxStyler().spacing(37)),
-      );
-      final result = await _resolve(tester, recipe.style);
-      expect(result.spec.header.spec.flex?.spec.spacing, 37);
-    });
-    testWidgets('permission recipe preserves the caller surface override', (
-      tester,
-    ) async {
-      final recipe = acmeAgentPermissionRecipe(
-        style: AcmePermissionStyler(actions: FlexBoxStyler().spacing(37)),
-      );
-      final result = await _resolve(tester, recipe.style);
-      expect(result.spec.actions.spec.flex?.spec.spacing, 37);
-    });
-    testWidgets('plan recipe preserves the caller surface override', (
-      tester,
-    ) async {
-      final recipe = acmeAgentPlanRecipe(
-        style: AcmePlanStyler(viewport: BoxStyler().maxHeight(37)),
-      );
-      final result = await _resolve(tester, recipe.style);
-      expect(result.spec.viewport.spec.constraints?.maxHeight, 37);
-    });
-    testWidgets('activity recipe preserves the caller surface override', (
-      tester,
-    ) async {
-      final recipe = acmeAgentActivityRecipe(
-        style: AcmeActivityStyler(viewport: BoxStyler().maxHeight(37)),
-      );
-      final result = await _resolve(tester, recipe.style);
-      expect(result.spec.viewport.spec.constraints?.maxHeight, 37);
-    });
-    testWidgets('transcript recipe preserves the caller surface override', (
-      tester,
-    ) async {
-      final recipe = acmeAgentTranscriptRecipe(
-        style: AcmeTranscriptStyler(spacing: 37),
-      );
-      final result = await _resolve(tester, recipe.style);
-      expect(result.spec.spacing, 37);
+      expect(result.spec.outputMaxHeight, 37);
     });
   });
 }
@@ -598,20 +553,6 @@ final _cases = <_WidgetCase>[
     {AcmeAccordionGroup<String>, AcmeAccordion<String>},
   ),
   const _WidgetCase('alert', AcmeAlert(text: 'Notice'), {AcmeAlert}),
-  _WidgetCase(
-    'Agent message',
-    AcmeMessageGroup(
-      children: [
-        AcmeMessage(
-          role: AcmeRole.user,
-          surfaceStyle: acmeAgentMessageRecipe().surfaceStyle,
-          style: acmeAgentMessageRecipe().style,
-          child: const Text('Review the checkout flow.'),
-        ),
-      ],
-    ),
-    {AcmeMessageGroup, AcmeMessage},
-  ),
   const _WidgetCase('app bar', AcmeAppBar(title: 'Orders'), {AcmeAppBar}),
   const _WidgetCase('avatar', AcmeAvatar(label: 'AB'), {AcmeAvatar}),
   const _WidgetCase(

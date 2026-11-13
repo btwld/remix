@@ -7,11 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
-import 'package:registry_source/src/agent/components/answer.dart';
-import 'package:registry_source/src/agent/components/composer.dart';
-import 'package:registry_source/src/agent/components/message.dart';
-import 'package:registry_source/src/agent/components/permission.dart';
-import 'package:registry_source/src/agent/components/plan.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_base.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_records.dart';
 import 'package:registry_source/src/dashboard/dashboard_sample_data.dart';
@@ -37,6 +32,7 @@ import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_demo.dart
 import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_demo_settings.dart';
 import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_overview.dart';
 import 'package:registry_source/src/heroui/theme/theme.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 import 'package:remix/src/utilities/remix_path_icon.dart';
@@ -649,11 +645,11 @@ void main() {
           final parents = ancestors();
           await tester.tap(find.text('Chat').first);
           await tester.pumpAndSettle();
-          await tester.tap(find.text('Review checkout'));
-          for (var frame = 0; frame < 5; frame++) {
+          await _ask(tester, 'Review checkout');
+          for (var frame = 0; frame < 12; frame++) {
             await tester.pump(const Duration(milliseconds: 11));
           }
-          expect(find.textContaining('ready for review'), findsWidgets);
+          expect(find.textContaining('The cart flow is ready'), findsWidgets);
           await tester.tap(find.text('Settings').first);
           await tester.pumpAndSettle();
           final profile = find
@@ -766,7 +762,7 @@ void main() {
           );
           await tester.tap(find.text('Chat').first);
           await tester.pumpAndSettle();
-          expect(find.textContaining('ready for review'), findsWidgets);
+          expect(find.textContaining('The cart flow is ready'), findsWidgets);
           expect(tester.takeException(), isNull);
         });
       }
@@ -1273,8 +1269,8 @@ void main() {
         await tester.tap(find.text('Chat').first);
         await tester.pump();
 
-        expect(find.text('Agent chat'), findsOneWidget);
-        expect(find.text('Ask the demo agent…'), findsOneWidget);
+        expect(find.text('What should we work on?'), findsOneWidget);
+        expect(find.text('Ask the agent…'), findsOneWidget);
         expect(find.text('Acme starter'), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
@@ -1359,7 +1355,10 @@ void main() {
               'Recent activity',
               'Recent orders',
             ],
-            RegistryDashboardDemoPage.chat: ['Agent chat', 'Interactive demo'],
+            RegistryDashboardDemoPage.chat: [
+              'What should we work on?',
+              'Review checkout',
+            ],
             RegistryDashboardDemoPage.customers: [
               'Customers',
               'Search customers…',
@@ -1663,7 +1662,32 @@ void main() {
           expect(tester.takeException(), isNull);
         });
 
-      testWidgets('Agent success, permission, stop, and retry are local', (
+      testWidgets(
+        'Agent leading action adds checkout context without sending',
+        (tester) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.chat,
+          );
+          if (preset == _Preset.fortal) {
+            expect(tester.getSize(find.byType(AgentComposer)).height, 94);
+          }
+          await tester.tap(find.bySemanticsLabel('Add checkout context'));
+          await tester.pump();
+          final composer = tester.widget<AgentComposer>(
+            find.byType(AgentComposer),
+          );
+          expect(
+            composer.controller!.text,
+            'Review packages/checkout and its cart tests.',
+          );
+          expect(composer.focusNode!.hasFocus, isTrue);
+          expect(find.byType(AgentMessage), findsNothing);
+        },
+      );
+
+      testWidgets('Agent suggestions fill the composer and do not send', (
         tester,
       ) async {
         await _pumpDashboard(
@@ -1673,11 +1697,32 @@ void main() {
           chatStepDelay: const Duration(milliseconds: 10),
         );
 
-        await tester.tap(find.text('Review checkout'));
-        for (var frame = 0; frame < 5; frame++) {
+        await tester.tap(find.text('Run terminal checks'));
+        await tester.pump();
+
+        final composer = tester.widget<AgentComposer>(
+          find.byType(AgentComposer),
+        );
+        expect(composer.controller!.text, startsWith('Run the checkout tests'));
+        expect(find.byType(AgentTurn), findsNothing);
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('Agent success, approval, stop, and retry are local', (
+        tester,
+      ) async {
+        await _pumpDashboard(
+          tester,
+          preset: preset,
+          initialPage: RegistryDashboardDemoPage.chat,
+          chatStepDelay: const Duration(milliseconds: 10),
+        );
+
+        await _ask(tester, 'Review checkout');
+        for (var frame = 0; frame < 12; frame++) {
           await tester.pump(const Duration(milliseconds: 11));
         }
-        expect(find.textContaining('ready for review'), findsWidgets);
+        expect(find.textContaining('The cart flow is ready'), findsWidgets);
         expect(
           tester.widget<AgentAnswer>(find.byType(AgentAnswer)).onCopy,
           isNotNull,
@@ -1685,25 +1730,25 @@ void main() {
 
         await tester.tap(find.text('New chat'));
         await tester.pump();
-        await tester.tap(find.text('Run terminal checks'));
+        await _ask(tester, 'Run terminal checks');
         await tester.pump(const Duration(milliseconds: 12));
-        final permission = tester.widget<AgentPermission>(
-          find.byType(AgentPermission),
-        );
-        expect(permission.onAllowOnce, isNotNull);
-        expect(permission.onAlwaysAllow, isNotNull);
-        expect(permission.onDeny, isNotNull);
-        permission.onAllowOnce!();
+        final call = tester.widget<AgentToolCall>(find.byType(AgentToolCall));
+        expect(call.call.status, AgentToolCallStatus.awaitingApproval);
+        expect(call.onDecision, isNotNull);
+        call.onDecision!(AgentApprovalDecision.allowOnce);
         await tester.pump(const Duration(milliseconds: 12));
         final composer = tester.widget<AgentComposer>(
           find.byType(AgentComposer),
         );
-        expect(composer.running, isTrue);
+        expect(composer.controller!.running, isTrue);
         expect(composer.onStop, isNotNull);
         composer.onStop!();
         await tester.pump();
         expect(
-          tester.widget<AgentComposer>(find.byType(AgentComposer)).running,
+          tester
+              .widget<AgentComposer>(find.byType(AgentComposer))
+              .controller!
+              .running,
           isFalse,
         );
         expect(
@@ -1713,7 +1758,52 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('Agent turns are spaced apart more than their items', (
+      testWidgets('Agent denial, failure and retry script the mock states', (
+        tester,
+      ) async {
+        await _pumpDashboard(
+          tester,
+          preset: preset,
+          initialPage: RegistryDashboardDemoPage.chat,
+          chatStepDelay: const Duration(milliseconds: 10),
+        );
+
+        await _ask(tester, 'Run terminal checks');
+        await tester.pump(const Duration(milliseconds: 12));
+        expect(find.text('Waiting for approval · 2 steps'), findsOneWidget);
+        tester.widget<AgentToolCall>(find.byType(AgentToolCall)).onDecision!(
+          AgentApprovalDecision.deny,
+        );
+        await tester.pump();
+        expect(
+          tester.widget<AgentToolCall>(find.byType(AgentToolCall)).call.status,
+          AgentToolCallStatus.denied,
+        );
+        expect(find.textContaining("won't run anything"), findsOneWidget);
+
+        await tester.tap(find.text('New chat'));
+        await tester.pump();
+        await _ask(tester, 'Recover a failed command');
+        await tester.pump(const Duration(milliseconds: 12));
+        tester.widget<AgentToolCall>(find.byType(AgentToolCall)).onDecision!(
+          AgentApprovalDecision.allowOnce,
+        );
+        for (var frame = 0; frame < 6; frame++) {
+          await tester.pump(const Duration(milliseconds: 11));
+        }
+        final failed = tester.widget<AgentToolCall>(find.byType(AgentToolCall));
+        expect(failed.call.status, AgentToolCallStatus.failed);
+        expect(failed.call.error, contains('Expected: OrderStatus.placed'));
+
+        tester.widget<AgentAnswer>(find.byType(AgentAnswer)).onRetry!();
+        for (var frame = 0; frame < 14; frame++) {
+          await tester.pump(const Duration(milliseconds: 11));
+        }
+        expect(find.textContaining('The cart flow is ready'), findsWidgets);
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('Agent turns are spaced apart more than their blocks', (
         tester,
       ) async {
         await _pumpDashboard(
@@ -1724,17 +1814,8 @@ void main() {
           height: 1400,
         );
         for (var run = 0; run < 2; run++) {
-          // A starter opens the chat; later turns are typed and sent.
-          if (run == 0) {
-            await tester.tap(find.text('Review checkout').first);
-          } else {
-            await tester.enterText(
-              find.byType(EditableText).last,
-              'Review checkout',
-            );
-            await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-          }
-          for (var frame = 0; frame < 6; frame++) {
+          await _ask(tester, 'Review checkout');
+          for (var frame = 0; frame < 14; frame++) {
             await tester.pump(const Duration(milliseconds: 11));
           }
         }
@@ -1742,9 +1823,9 @@ void main() {
 
         final firstAnswer = tester.getRect(find.byType(AgentAnswer).first);
         final secondPrompt = tester.getRect(find.byType(AgentMessage).last);
-        final secondPlan = tester.getRect(find.byType(AgentPlan).last);
+        final secondSteps = tester.getRect(find.byType(AgentSteps).last);
         final betweenTurns = secondPrompt.top - firstAnswer.bottom;
-        final withinTurn = secondPlan.top - secondPrompt.bottom;
+        final withinTurn = secondSteps.top - secondPrompt.bottom;
         expect(withinTurn, greaterThan(0));
         expect(
           betweenTurns,
@@ -1780,17 +1861,8 @@ void main() {
         );
         // Two turns whose answers have the same text.
         for (var run = 0; run < 2; run++) {
-          // A starter opens the chat; later turns are typed and sent.
-          if (run == 0) {
-            await tester.tap(find.text('Review checkout').first);
-          } else {
-            await tester.enterText(
-              find.byType(EditableText).last,
-              'Review checkout',
-            );
-            await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-          }
-          for (var frame = 0; frame < 6; frame++) {
+          await _ask(tester, 'Review checkout');
+          for (var frame = 0; frame < 14; frame++) {
             await tester.pump(const Duration(milliseconds: 11));
           }
         }
@@ -1798,7 +1870,12 @@ void main() {
         final answers = find.byType(AgentAnswer);
         expect(answers, findsNWidgets(2));
 
-        tester.widget<AgentAnswer>(answers.first).onCopy!();
+        await tester.tap(
+          find.descendant(
+            of: answers.first,
+            matching: find.byKey(const ValueKey('agent-answer-copy')),
+          ),
+        );
         await tester.pump();
         await tester.pump();
         expect(copied, hasLength(1));
@@ -2014,7 +2091,7 @@ void main() {
           'Insights',
         ],
         .schedule: ['Schedule', 'New event', 'Agenda'],
-        .chat: ['Agent chat', 'Interactive demo'],
+        .chat: ['What should we work on?', 'Review checkout'],
         .collection: ['Collection', 'New edition', 'View edition'],
         .customers: ['Customers', 'Collectors', 'Customer'],
         .orders: ['Orders', 'Awaiting payment', 'Paid'],
@@ -2694,3 +2771,31 @@ Future<void> _changeRadius(WidgetTester tester, _Preset preset) async {
   }
   await tester.pumpAndSettle();
 }
+
+/// Asks the demo agent as a reader does: a suggestion fills the composer in
+/// the empty conversation, and Send submits what the composer holds.
+Future<void> _ask(WidgetTester tester, String suggestion) async {
+  final starter = find.text(suggestion);
+  if (starter.evaluate().isNotEmpty) {
+    await tester.tap(starter.first);
+  } else {
+    // Later turns are typed; the prompt is what the suggestion would fill.
+    await tester.enterText(
+      find.byType(EditableText).last,
+      _suggestionPrompts[suggestion]!,
+    );
+  }
+  await tester.pump();
+  await tester.tap(find.byKey(const ValueKey('agent-composer-send')));
+  await tester.pump();
+}
+
+/// What each of the demo's suggestions fills into the composer.
+const _suggestionPrompts = {
+  'Review checkout':
+      'Review the checkout flow and tell me if the cart is ready.',
+  'Run terminal checks':
+      'Run the checkout tests and tell me if the cart flow is ready.',
+  'Recover a failed command':
+      'Run the checkout tests again and recover if one fails.',
+};

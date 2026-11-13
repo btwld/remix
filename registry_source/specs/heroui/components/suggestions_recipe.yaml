@@ -1,0 +1,21 @@
+component: Suggestions recipe
+widget: heroUiAgentSuggestionsRecipe
+target: "AgentSuggestionsStyler of package:remix/agent.dart"
+status: implemented
+extension: "No Agent family in @heroui/react 3.2.6. HeroUI's own tokens and recipes passed into the Agent widgets of package:remix/agent.dart, as Vanilla and Fortal pass theirs."
+source:
+  ref: none
+  derivedFrom: ["specs/heroui/tokens.json"]
+recipes: "suggestion: heroUiButtonStyle outline sm"
+anatomy: "the slots of the widget's spec"
+variants: []
+sizes: {supported: [], default: null}
+states: "the states of the HeroUI recipes it passes"
+tokens:
+  - "foreground, muted, surface-secondary, separator, danger, accent-soft"
+  - "text-xs, text-sm, text-base"
+measurements:
+  - {what: layout, value: "768 column, 48 between turns, 24 between blocks, 12 inside a block", cite: "designed"}
+approximations:
+  - "No upstream reference: HeroUI web 3.2.6 has no Agent surfaces, so every value is designed from existing HeroUI tokens and recipes, not measured. Listed under `extensions` in reference/heroui_3_2_6/families.json."
+  - "Structure and spacing port the Fortal recipe; colors and radii use HeroUI tokens."
