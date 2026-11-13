@@ -1,5 +1,8 @@
 # Remix
 
+[Website](https://fluttermix.com/remix/) ·
+[Documentation](https://fluttermix.com/remix/docs/)
+
 Flutter components combining Naked UI interaction and accessibility with Mix
 styling. Remix supplies component anatomy and behavior; your app supplies its
 visual language, state and navigation.
@@ -51,12 +54,12 @@ Menus, select, popovers, tooltips and focused text fields need an Overlay;
 dialog helpers need a Navigator; toasts need a `RemixToastScope` and overlay.
 See [host setup](https://github.com/btwld/remix/blob/main/skills/using-remix/SKILL.md#provide-only-the-host-capabilities-in-use).
 
-- [Getting started](https://github.com/btwld/remix/blob/main/docs/getting-started.mdx)
-- [Styling and states](https://github.com/btwld/remix/blob/main/docs/guides/styling-components.mdx)
-- [Editable-source walkthrough](https://github.com/btwld/remix/blob/main/open_code/README.md)
-- [Component docs](https://github.com/btwld/remix/tree/main/docs/components)
-- [Fortal catalog](https://github.com/btwld/remix/blob/main/docs/fortal/catalog.mdx)
-- [Examples and core concepts](https://github.com/btwld/remix#remix)
+- [Getting started](https://fluttermix.com/remix/docs/getting-started/)
+- [Styling and states](https://fluttermix.com/remix/docs/guides/styling-components/)
+- [Editable-source walkthrough](https://fluttermix.com/remix/docs/open-code/)
+- [Component docs](https://fluttermix.com/remix/docs/components/)
+- [Fortal catalog](https://fluttermix.com/remix/docs/fortal/catalog/)
+- [Examples and core concepts](https://fluttermix.com/remix/)
 - [Material dependency boundary](https://github.com/btwld/remix/blob/main/open_code/README.md#material-boundary)
 
 ## Experimental agent library
