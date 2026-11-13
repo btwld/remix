@@ -44,6 +44,13 @@ UiAgentComposerRecipe uiAgentComposerRecipe({
   style:
       AgentComposerStyler(
             container: BoxStyler()
+                // Keep the field mounted when focus changes; only toggle ink.
+                .wrap(
+                  uiFocusRingModifier(
+                    radius: UiTokens.radius6(),
+                    visible: false,
+                  ),
+                )
                 .color(UiTokens.gray2())
                 .borderRadius(.all(UiTokens.radius6()))
                 .padding(.all(UiTokens.space3()))

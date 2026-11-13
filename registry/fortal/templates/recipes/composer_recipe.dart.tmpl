@@ -44,6 +44,13 @@ final class {{typePrefix}}AgentComposerRecipe {
   style:
       AgentComposerStyler(
             container: BoxStyler()
+                // Keep the field mounted when focus changes; only toggle ink.
+                .wrap(
+                  {{valuePrefix}}FocusRingModifier(
+                    radius: {{typePrefix}}Tokens.radius6(),
+                    visible: false,
+                  ),
+                )
                 .color({{typePrefix}}Tokens.gray2())
                 .borderRadius(.all({{typePrefix}}Tokens.radius6()))
                 .padding(.all({{typePrefix}}Tokens.space3()))

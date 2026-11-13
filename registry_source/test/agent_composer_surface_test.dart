@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
@@ -99,6 +100,57 @@ void main() {
   }
 
   for (final dark in [false, true]) {
+    testWidgets(
+      'Fortal composer keeps text input attached across focus changes, dark=$dark',
+      (tester) async {
+        final controller = AgentComposerController();
+        final focus = FocusNode();
+        addTearDown(controller.dispose);
+        addTearDown(focus.dispose);
+        final submitted = <String>[];
+        final recipe = fortalAgentComposerRecipe();
+        await tester.pumpWidget(
+          _host(
+            (child) => FortalTheme(mode: dark ? .dark : .light, child: child),
+            SizedBox(
+              width: 400,
+              child: AgentComposer(
+                controller: controller,
+                focusNode: focus,
+                onSubmit: submitted.add,
+                style: recipe.style,
+                fieldStyle: recipe.fieldStyle,
+              ),
+            ),
+          ),
+        );
+        final field = find.byType(EditableText);
+        final state = tester.state<EditableTextState>(field);
+        await tester.enterText(field, 'First draft');
+        await tester.pump();
+        expect(tester.state<EditableTextState>(field), same(state));
+        expect(controller.text, 'First draft');
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pump();
+        expect(submitted, ['First draft']);
+        expect(controller.text, isEmpty);
+
+        focus.unfocus();
+        await tester.pumpAndSettle();
+        await tester.tap(field);
+        await tester.pumpAndSettle();
+        expect(tester.state<EditableTextState>(field), same(state));
+        expect(focus.hasFocus, isTrue);
+        // Deliver through the connection opened by the tap, without refocusing.
+        tester.testTextInput.enterText('Draft after refocusing');
+        await tester.pump();
+        expect(controller.text, 'Draft after refocusing');
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pump();
+        expect(submitted, ['First draft', 'Draft after refocusing']);
+      },
+    );
+
     testWidgets(
       'composer paints the 2px focus outline 2px outside its surface, dark=$dark',
       (tester) async {

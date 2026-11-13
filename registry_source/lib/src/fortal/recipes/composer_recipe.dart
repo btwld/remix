@@ -44,6 +44,13 @@ FortalAgentComposerRecipe fortalAgentComposerRecipe({
   style:
       AgentComposerStyler(
             container: BoxStyler()
+                // Keep the field mounted when focus changes; only toggle ink.
+                .wrap(
+                  fortalFocusRingModifier(
+                    radius: FortalTokens.radius6(),
+                    visible: false,
+                  ),
+                )
                 .color(FortalTokens.gray2())
                 .borderRadius(.all(FortalTokens.radius6()))
                 .padding(.all(FortalTokens.space3()))
