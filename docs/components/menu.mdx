@@ -354,15 +354,55 @@ call `hideOverlay` when it ends. The submenu stays open, and its `onClose`
 waits, until then; hover and keys do not reopen it in that time. When the whole
 menu closes, the submenu hides with the root panel.
 
-The root `items` list, each radio group's `items`, and every submenu's `items`
+The root `items` list and the `items` of each radio group, submenu, and section
 are copied to immutable snapshots when their panel is built. Rebuild the menu
 after changing a source list; do not rely on mutating a visible panel in place.
 
 For dynamic menus, including lists that are filtered, have items inserted, or
 are reordered, supply a stable caller-owned `key:` on each ordinary item,
-checkbox item, radio group, radio item, submenu, and divider. Build keys from
-application-owned item identity and keep them stable across rebuilds. Item keys
-are not derived automatically from labels or values.
+checkbox item, radio group, radio item, submenu, section, and divider. Build
+keys from application-owned item identity and keep them stable across
+rebuilds. Item keys are not derived automatically from labels or values.
+
+## Sections
+
+`RemixMenuSection` groups entries under a heading, such as "Recent" or
+"Density". The heading is not an item: it cannot be focused, selected, or
+activated, so the arrow keys move past it. Assistive technology reads the
+section as one group, named by its heading, that holds the section's items.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final workspaceMenu = RemixMenu<String>(
+  trigger: const RemixMenuTrigger(label: 'Workspace'),
+  style: MenuStyler().sectionLabel(
+    MenuItemStyler().label(TextStyler().fontSize(12).color(Colors.black54)),
+  ),
+  onSelected: (value) => debugPrint(value),
+  items: const [
+    RemixMenuSection(
+      label: 'Recent',
+      items: [
+        RemixMenuItem(value: 'alpha', label: 'Alpha'),
+        RemixMenuItem(value: 'beta', label: 'Beta'),
+      ],
+    ),
+    RemixMenuDivider(),
+    RemixMenuSection(
+      label: 'Shared',
+      items: [RemixMenuItem(value: 'gamma', label: 'Gamma')],
+    ),
+  ],
+);
+```
+
+A section holds any entries, including a radio group. It adds no spacing or
+divider of its own. The heading row starts from `item`, so it lines up with
+the items below it, including the reserved choice slot. `sectionLabel` merges
+after `item`, and the section's own `labelStyle` merges last. Hover, focus,
+and pressed variants never apply, because a heading has no interaction states.
 
 ## Compound-item styling
 
@@ -696,7 +736,7 @@ trigger; it is `null` for a control trigger. The same object works with
 
 #### `items` → `List<RemixMenuItemData<T>>`
 
-**Required**. The list of ordinary items, checkbox items, radio groups, submenus, and dividers.
+**Required**. The list of ordinary items, checkbox items, radio groups, submenus, sections, and dividers.
 
 #### `controller` → `MenuController?`
 
@@ -796,6 +836,10 @@ Configures the menu-wide radio-row override after `item`.
 #### `submenuItem(MenuItemStyler value)`
 
 Configures the menu-wide submenu-trigger override after `item`.
+
+#### `sectionLabel(MenuItemStyler value)`
+
+Configures the menu-wide section-heading override after `item`.
 
 #### `divider(DividerStyler value)`
 

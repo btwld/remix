@@ -156,3 +156,17 @@ traversal skips, so `NakedComboboxOption.enabled` is deprecated. Availability
 is read once per result, so Raw's list cannot change under its highlight. A
 result with no enabled option is empty to Raw and closes the panel, as no
 results does.
+
+## Menu headings are labelled sections
+
+2026-11-13 · Accepted · [Menu sections](docs/components/menu.mdx#sections)
+
+A menu heading is `RemixMenuSection`, an entry that owns its items, not a flat
+label row between them. Only an owner can name its group for assistive
+technology: Flutter web exposes a labelled semantics node with children as an
+ARIA `group`, which a menu may own, while a heading role may not sit in a menu
+and a flat row cannot say which items it names. This follows WAI-ARIA, React
+Aria and HeroUI sections and `RemixSidebarSection`. Keyboard focus traversal is
+unchanged, and the heading reuses the item row through `MenuSpec.sectionLabel`
+so it stays aligned. Adding the sealed subtype breaks exhaustive switches over
+`RemixMenuItemData`.

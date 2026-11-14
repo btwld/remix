@@ -169,6 +169,7 @@ void main() {
         expect(spec.checkboxItem, isNull);
         expect(spec.radioItem, isNull);
         expect(spec.submenuItem, isNull);
+        expect(spec.sectionLabel, isNull);
         expect(spec.divider, isA<StyleSpec<DividerSpec>>());
       });
 
@@ -185,6 +186,9 @@ void main() {
         final submenuItem = StyleSpec(
           spec: MenuItemSpec(trailingIcon: StyleSpec(spec: IconSpec(size: 12))),
         );
+        final sectionLabel = StyleSpec(
+          spec: MenuItemSpec(leadingIcon: StyleSpec(spec: IconSpec(size: 13))),
+        );
         final divider = StyleSpec(spec: DividerSpec());
 
         final spec = MenuSpec(
@@ -194,6 +198,7 @@ void main() {
           checkboxItem: checkboxItem,
           radioItem: radioItem,
           submenuItem: submenuItem,
+          sectionLabel: sectionLabel,
           divider: divider,
         );
 
@@ -203,6 +208,7 @@ void main() {
         expect(spec.checkboxItem, equals(checkboxItem));
         expect(spec.radioItem, equals(radioItem));
         expect(spec.submenuItem, equals(submenuItem));
+        expect(spec.sectionLabel, equals(sectionLabel));
         expect(spec.divider, equals(divider));
       });
     });
@@ -244,6 +250,9 @@ void main() {
         final newSubmenuItem = StyleSpec(
           spec: MenuItemSpec(trailingIcon: StyleSpec(spec: IconSpec(size: 12))),
         );
+        final newSectionLabel = StyleSpec(
+          spec: MenuItemSpec(leadingIcon: StyleSpec(spec: IconSpec(size: 13))),
+        );
         final newDivider = StyleSpec(spec: DividerSpec());
 
         final updatedSpec = originalSpec.copyWith(
@@ -253,6 +262,7 @@ void main() {
           checkboxItem: newCheckboxItem,
           radioItem: newRadioItem,
           submenuItem: newSubmenuItem,
+          sectionLabel: newSectionLabel,
           divider: newDivider,
         );
 
@@ -262,6 +272,7 @@ void main() {
         expect(updatedSpec.checkboxItem, equals(newCheckboxItem));
         expect(updatedSpec.radioItem, equals(newRadioItem));
         expect(updatedSpec.submenuItem, equals(newSubmenuItem));
+        expect(updatedSpec.sectionLabel, equals(newSectionLabel));
         expect(updatedSpec.divider, equals(newDivider));
       });
     });
@@ -306,31 +317,48 @@ void main() {
         const submenuItem = StyleSpec(
           spec: MenuItemSpec(trailingIcon: StyleSpec(spec: IconSpec(size: 12))),
         );
+        const sectionLabel = StyleSpec(
+          spec: MenuItemSpec(leadingIcon: StyleSpec(spec: IconSpec(size: 13))),
+        );
         const absent = MenuSpec();
         const present = MenuSpec(
           checkboxItem: checkboxItem,
           radioItem: radioItem,
           submenuItem: submenuItem,
+          sectionLabel: sectionLabel,
         );
 
         List<StyleSpec<MenuItemSpec>?> semanticStyles(MenuSpec spec) => [
           spec.checkboxItem,
           spec.radioItem,
           spec.submenuItem,
+          spec.sectionLabel,
         ];
 
-        expect(semanticStyles(absent.lerp(present, 0)), [null, null, null]);
+        expect(semanticStyles(absent.lerp(present, 0)), [
+          null,
+          null,
+          null,
+          null,
+        ]);
         expect(semanticStyles(absent.lerp(present, 1)), [
           checkboxItem,
           radioItem,
           submenuItem,
+          sectionLabel,
         ]);
         expect(semanticStyles(present.lerp(absent, 0)), [
           checkboxItem,
           radioItem,
           submenuItem,
+          sectionLabel,
         ]);
-        expect(semanticStyles(present.lerp(absent, 1)), [null, null, null]);
+        expect(semanticStyles(present.lerp(absent, 1)), [
+          null,
+          null,
+          null,
+          null,
+        ]);
       });
 
       test('extrapolates before zero using the item fallback', () {
@@ -393,7 +421,32 @@ void main() {
         expect(middle.checkboxItem, isNull);
         expect(middle.radioItem, isNull);
         expect(middle.submenuItem, isNull);
+        expect(middle.sectionLabel, isNull);
       });
+
+      test(
+        'interpolates an absent section-label style from the item fallback',
+        () {
+          const start = MenuSpec(
+            item: StyleSpec(
+              spec: MenuItemSpec(
+                leadingIcon: StyleSpec(spec: IconSpec(size: 4)),
+              ),
+            ),
+          );
+          const end = MenuSpec(
+            sectionLabel: StyleSpec(
+              spec: MenuItemSpec(
+                leadingIcon: StyleSpec(spec: IconSpec(size: 20)),
+              ),
+            ),
+          );
+
+          final middle = start.lerp(end, 0.5);
+
+          expect(middle.sectionLabel?.spec.leadingIcon.spec.size, 12);
+        },
+      );
 
       test('interpolates semantic styles when both endpoints define them', () {
         const start = MenuSpec(
@@ -439,13 +492,14 @@ void main() {
       test('props list contains all properties', () {
         const spec = MenuSpec();
 
-        expect(spec.props, hasLength(8));
+        expect(spec.props, hasLength(9));
         expect(spec.props, contains(spec.trigger));
         expect(spec.props, contains(spec.overlay));
         expect(spec.props, contains(spec.item));
         expect(spec.props, contains(spec.checkboxItem));
         expect(spec.props, contains(spec.radioItem));
         expect(spec.props, contains(spec.submenuItem));
+        expect(spec.props, contains(spec.sectionLabel));
         expect(spec.props, contains(spec.divider));
       });
     });
@@ -465,6 +519,7 @@ void main() {
             'checkboxItem',
             'radioItem',
             'submenuItem',
+            'sectionLabel',
             'divider',
           ]),
         );

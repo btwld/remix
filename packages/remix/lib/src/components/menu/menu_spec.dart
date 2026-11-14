@@ -62,7 +62,8 @@ typedef RemixMenuTriggerSpec = MenuTriggerSpec;
 /// Resolved visual properties for a [RemixMenu].
 ///
 /// The menu spec owns the trigger, overlay, shared and semantic item styles,
-/// and divider style used when rendering the menu and its popup content.
+/// section-label and divider styles used when rendering the menu and its
+/// popup content.
 @MixableSpec(target: RemixMenu.new)
 class MenuSpec with _$MenuSpec {
   /// Style spec for the trigger content.
@@ -103,6 +104,15 @@ class MenuSpec with _$MenuSpec {
   @override
   final StyleSpec<MenuItemSpec>? submenuItem;
 
+  /// Optional menu-wide override for the heading row of a [RemixMenuSection].
+  ///
+  /// Fluent styles merge this after [item], so a heading lines up with the
+  /// item rows by default. In a raw spec, `null` inherits [item] and a
+  /// non-null value is the complete heading-row style. A heading has no
+  /// interaction states, so state variants never apply to it.
+  @override
+  final StyleSpec<MenuItemSpec>? sectionLabel;
+
   /// Default style spec applied to menu dividers.
   @override
   final StyleSpec<DividerSpec> divider;
@@ -116,6 +126,7 @@ class MenuSpec with _$MenuSpec {
     this.checkboxItem,
     this.radioItem,
     this.submenuItem,
+    this.sectionLabel,
     StyleSpec<DividerSpec>? divider,
   }) : trigger = trigger ?? const StyleSpec(spec: MenuTriggerSpec()),
        overlay = overlay ?? const StyleSpec(spec: FlexBoxSpec()),
@@ -160,6 +171,12 @@ class MenuSpec with _$MenuSpec {
       submenuItem: lerpOptionalItem(
         submenuItem,
         other.submenuItem,
+        item,
+        other.item,
+      ),
+      sectionLabel: lerpOptionalItem(
+        sectionLabel,
+        other.sectionLabel,
         item,
         other.item,
       ),
