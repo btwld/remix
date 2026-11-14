@@ -33,6 +33,10 @@ WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
 
 /// Shows a customizable dialog.
 ///
+/// [transitionDuration] times the entrance and [reverseTransitionDuration]
+/// the exit; the exit defaults to [transitionDuration]. Both are skipped while
+/// the user asks to reduce motion.
+///
 /// ## Example
 ///
 /// ```dart
@@ -65,6 +69,7 @@ Future<T?> showRemixDialog<T>({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
   Duration transitionDuration = const Duration(milliseconds: 400),
+  Duration? reverseTransitionDuration,
   RouteTransitionsBuilder? transitionBuilder,
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
@@ -82,6 +87,7 @@ Future<T?> showRemixDialog<T>({
     routeSettings: routeSettings,
     anchorPoint: anchorPoint,
     transitionDuration: transitionDuration,
+    reverseTransitionDuration: reverseTransitionDuration,
     transitionBuilder: transitionBuilder,
     requestFocus: requestFocus,
     traversalEdgeBehavior: traversalEdgeBehavior,
@@ -98,6 +104,9 @@ Future<T?> showRemixDialog<T>({
 /// focusable descendant of [builder]. Without one, focus falls back to an
 /// autofocus or the first traversable descendant. Escape and platform Back
 /// dismiss the alert with a null result.
+///
+/// As with [showRemixDialog], [reverseTransitionDuration] times the exit and
+/// defaults to [transitionDuration].
 Future<T?> showRemixAlertDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
@@ -109,6 +118,7 @@ Future<T?> showRemixAlertDialog<T>({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
   Duration transitionDuration = const Duration(milliseconds: 400),
+  Duration? reverseTransitionDuration,
   RouteTransitionsBuilder? transitionBuilder,
   FocusNode? initialFocusNode,
 }) {
@@ -122,6 +132,7 @@ Future<T?> showRemixAlertDialog<T>({
     routeSettings: routeSettings,
     anchorPoint: anchorPoint,
     transitionDuration: transitionDuration,
+    reverseTransitionDuration: reverseTransitionDuration,
     transitionBuilder: transitionBuilder,
     initialFocusNode: initialFocusNode,
     builder: _captureMixScope(context, builder),

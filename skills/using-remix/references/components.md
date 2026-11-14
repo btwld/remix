@@ -240,8 +240,12 @@ for Overlay, Navigator and toast scope placement.
   `MixScope`; when one exists, it clones that scope's tokens and modifier
   order into the dialog route. Default `barrierColor` is `Color(0x8A000000)`.
   `RemixDialog` also takes `scrollable` (default `false`).
+  `transitionDuration` (default 400ms) times the entrance;
+  `reverseTransitionDuration` times the exit and defaults to
+  `transitionDuration`. Reduced motion skips both.
 - **showRemixAlertDialog** — requires a nonempty, localized `semanticLabel`;
-  the barrier is non-dismissible by default.
+  the barrier is non-dismissible by default. Takes the same
+  `transitionDuration` and `reverseTransitionDuration`.
 - **RemixTooltip** — opens on hover, focus, or long-press. Accepts `tooltipKey`
   (`GlobalKey<RawTooltipState>?`) for imperative display via
   `ensureTooltipVisible()`, and `onOpenChanged` to observe visibility. Applies
