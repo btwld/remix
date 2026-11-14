@@ -1,3 +1,32 @@
+## 2.0.0-rc.2
+
+### Features
+
+- Add `reverseTransitionDuration` to `showNakedDialog` and
+  `showNakedAlertDialog` to time the exit separately from the entrance. It
+  defaults to `transitionDuration` and, like it, is skipped while reduced
+  motion is requested.
+- Add `NakedCombobox.isOptionDisabled` to keep a result visible but
+  unavailable. Keyboard navigation, including first, last and page moves,
+  skips it, and Enter and pointer activation never accept it. A result with no
+  enabled option closes the options view, as an empty result does.
+- Add `onOpenRequested` and `onCloseRequested` to `NakedMenuSubmenu`, so a
+  submenu can run its own open and close transitions, as `NakedMenu` does.
+  `onCloseRequested` runs only while the submenu is open, and the submenu
+  still hides with the root panel when the whole menu closes.
+
+### Deprecations
+
+- Deprecate `NakedComboboxOption.enabled`. It blocks only pointer and semantic
+  activation; use `NakedCombobox.isOptionDisabled`, which also removes the
+  option from keyboard navigation and Enter.
+
+### Documentation
+
+- Point the package homepage, documentation link and README to
+  fluttermix.com, and correct the README summaries of `NakedSelect` and
+  `NakedToggleGroup`.
+
 ## 2.0.0-rc.1
 
 First release candidate for 2.0.0. Retains the behavior and public API of
