@@ -61,8 +61,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   and `focusNode` or neither; `initialValue` initializes text, not an entity.
   `onSelected(T)` reports acceptance rather than arbitrary text changes, so it
   uses `onSelected` instead of `onChanged`. Observe the controller for edits;
-  callback controller edits are preserved. Callers own filtering, debounce and errors. No unavailable rows,
-  chips or multiselect API. Custom fields forward the exact editor pair and
+  callback controller edits are preserved. Callers own filtering, debounce and errors. `isOptionDisabled`
+  keeps unavailable rows visible: keyboard moves skip them, Enter and pointer
+  never accept them, and rows resolve option `onDisabled` styles. No chips or
+  multiselect API. Custom fields forward the exact editor pair and
   submit callback, and own labels/disablement; custom option builders provide
   visuals beneath one named interactive wrapper. Style `field`, `panel(ComboboxPanelStyler())`,
   and `option(ComboboxOptionStyler())`; the nested `ComboboxOptionSpec` has

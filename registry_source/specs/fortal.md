@@ -256,8 +256,9 @@ scrolling. Rows grow from 24/32/32px minima, with space3 horizontal and 6px
 vertical padding, radius2, text1/2/3 and gray12 labels. A transparent 1px
 accent8 border reserves keyboard highlight geometry. Hover uses accentA3,
 keyboard highlight accentA5 with the accent8 border, and press accentA7.
-Acceptance appears as the field value; there is no persistent selected or
-per-option disabled state. No preset behavior is added. Test coverage includes
+Acceptance appears as the field value; there is no persistent selected state,
+and rows that `isOptionDisabled` marks have no disabled style yet. No preset
+behavior is added. Test coverage includes
 both modes, every accent, field matrices, contrast and RTL at 200% text.
 
 ## Enforcement

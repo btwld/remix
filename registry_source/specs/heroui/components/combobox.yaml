@@ -30,7 +30,7 @@ apiMapping:
   - "Upstream variant maps to the same primary/secondary field recipes as HeroUiTextField, apart from the focused fill above. No React props or collection state are introduced."
   - "Autocomplete's trigger with a search field inside its popover is a separate deferred family; this recipe covers inline editable ComboBox."
 approximations:
-  - "RemixCombobox has no trailing-indicator slot for upstream's trailing chevron, trigger button slot, persistent option selection/checkmark, per-option disabled state or multiple selection. Accepted values appear in the editor; supply eligible suggestions only."
+  - "RemixCombobox has no trailing-indicator slot for upstream's trailing chevron, trigger button slot, persistent option selection/checkmark or multiple selection. Accepted values appear in the editor. Rows that isOptionDisabled marks have no disabled style yet."
   - "The input has symmetric 12px padding because no optional trigger glyph occupies its end."
   - "Keyboard traversal stays in the editor. The scroll viewport clips outer row rings, so the focused row paints a 2px inset foreground border without consuming layout space, instead of the upstream outer ring and background gap."
   - "The panel uses an 8px gap and an explicit 288px maximum derived from seven measured rows with six inter-row gaps and symmetric list insets, also bounded by available space; upstream ComboBox/Select have no explicit CSS height cap and follow React Aria's placement and available-space policy. Overflow fades and the 35%-muted directional thumb are Remix adaptations."

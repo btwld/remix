@@ -8,6 +8,8 @@ Use a combobox when users should type to filter choices. Keep the text controlle
 
 Keep option values stable across filtering. Dispose your text and focus controllers. Provide an accessible label for the editable field and a visible label for every option.
 
+To show a result that people cannot choose, return it and mark it with `isOptionDisabled`. Keyboard navigation skips it, Enter and pointer activation do not accept it, and its `NakedComboboxOption` is disabled. A result with no enabled option closes the panel. The option's own `enabled` flag is deprecated: it blocks only pointer and semantic activation.
+
 ## Basic implementation
 
 <NakedSource file="naked_combobox.0.dart" />
