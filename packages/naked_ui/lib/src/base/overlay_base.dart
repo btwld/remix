@@ -255,19 +255,21 @@ mixin OverlayStateMixin<T extends StatefulWidget> on State<T> {
   void markSelectionMade() {
     _selectionMadeDuringSession = true;
   }
+}
 
-  /// Forwards [hideOverlay] to [onCloseRequested] only while [controller] is
-  /// open, ignoring close requests sent to already-closed anchors.
-  @protected
-  void handleCloseRequested({
-    required MenuController controller,
-    required RawMenuAnchorCloseRequestedCallback? onCloseRequested,
-    required VoidCallback hideOverlay,
-  }) {
-    if (!controller.isOpen || onCloseRequested == null) {
-      hideOverlay();
-    } else {
-      onCloseRequested(hideOverlay);
-    }
+/// Forwards [hideOverlay] to [onCloseRequested] only while [controller] is
+/// open, ignoring close requests sent to already-closed anchors.
+///
+/// Flutter can deliver a close request after the anchor has closed, such as
+/// one deferred past a frame in which an ancestor hid it.
+void handleCloseRequested({
+  required MenuController controller,
+  required RawMenuAnchorCloseRequestedCallback? onCloseRequested,
+  required VoidCallback hideOverlay,
+}) {
+  if (!controller.isOpen || onCloseRequested == null) {
+    hideOverlay();
+  } else {
+    onCloseRequested(hideOverlay);
   }
 }
