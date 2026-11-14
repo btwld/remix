@@ -17,12 +17,14 @@ class _Host {
 
   Future<void> open({
     Duration transitionDuration = const Duration(milliseconds: 400),
+    Duration? reverseTransitionDuration,
     String? barrierLabel,
   }) => showNakedDialog<void>(
     context: context,
     barrierColor: Colors.black54,
     barrierLabel: barrierLabel,
     transitionDuration: transitionDuration,
+    reverseTransitionDuration: reverseTransitionDuration,
     transitionBuilder: _fade,
     builder: (_) => const NakedDialog(
       semanticLabel: 'Confirm',
@@ -60,6 +62,76 @@ double _opacity(WidgetTester tester) =>
     tester.widget<FadeTransition>(find.byKey(_fadeKey)).opacity.value;
 
 void main() {
+  group('reverseTransitionDuration', () {
+    testWidgets('fades out over the reverse transition duration', (
+      tester,
+    ) async {
+      final host = await _pumpHost(tester);
+
+      unawaited(
+        host.open(reverseTransitionDuration: const Duration(milliseconds: 100)),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(_opacity(tester), closeTo(0.5, 0.01));
+      await tester.pumpAndSettle();
+
+      host.pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(_opacity(tester), closeTo(0.5, 0.01));
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(_opacity(tester), 0);
+      await tester.pumpAndSettle();
+      expect(find.byKey(_contentKey), findsNothing);
+    });
+
+    testWidgets('closes at once with a zero reverse transition duration', (
+      tester,
+    ) async {
+      final host = await _pumpHost(tester);
+
+      unawaited(host.open(reverseTransitionDuration: Duration.zero));
+      await tester.pumpAndSettle();
+      expect(_opacity(tester), 1);
+
+      host.pop();
+      await tester.pump();
+      expect(find.byKey(_contentKey), findsNothing);
+    });
+
+    testWidgets(
+      'showNakedAlertDialog fades out over the reverse transition duration',
+      (tester) async {
+        final host = await _pumpHost(tester);
+
+        unawaited(
+          showNakedAlertDialog<void>(
+            context: host.context,
+            barrierColor: Colors.black54,
+            semanticLabel: 'Delete file',
+            reverseTransitionDuration: const Duration(milliseconds: 100),
+            transitionBuilder: _fade,
+            builder: (_) => const SizedBox(key: _contentKey, width: 200),
+          ),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 200));
+        expect(_opacity(tester), closeTo(0.5, 0.01));
+        await tester.pumpAndSettle();
+
+        host.pop();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(_opacity(tester), closeTo(0.5, 0.01));
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(_opacity(tester), 0);
+        await tester.pumpAndSettle();
+        expect(find.byKey(_contentKey), findsNothing);
+      },
+    );
+  });
+
   group('showNakedDialog reduced motion', () {
     testWidgets('fades over the transition duration by default', (
       tester,
@@ -91,7 +163,12 @@ void main() {
           host.reducedMotion.set(request, on: true);
           await tester.pump();
 
-          unawaited(host.open(transitionDuration: const Duration(seconds: 2)));
+          unawaited(
+            host.open(
+              transitionDuration: const Duration(seconds: 2),
+              reverseTransitionDuration: const Duration(seconds: 3),
+            ),
+          );
           await tester.pump();
           expect(find.byKey(_contentKey), findsOneWidget);
           expect(_opacity(tester), 1);
@@ -103,7 +180,9 @@ void main() {
 
         testWidgets('closes at once when requested while open', (tester) async {
           final host = await _pumpHost(tester);
-          unawaited(host.open());
+          unawaited(
+            host.open(reverseTransitionDuration: const Duration(seconds: 3)),
+          );
           await tester.pumpAndSettle();
 
           host.reducedMotion.set(request, on: true);
@@ -233,6 +312,7 @@ void main() {
             barrierColor: Colors.black54,
             semanticLabel: 'Delete file',
             transitionDuration: const Duration(seconds: 2),
+            reverseTransitionDuration: const Duration(seconds: 3),
             transitionBuilder: _fade,
             builder: (_) => const SizedBox(key: _contentKey, width: 200),
           ),

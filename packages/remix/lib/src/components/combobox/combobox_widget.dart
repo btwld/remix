@@ -24,6 +24,7 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
     this.fieldBuilder,
     this.optionBuilder,
     this.optionsViewOpenDirection = OptionsViewOpenDirection.down,
+    this.isOptionDisabled,
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
@@ -35,7 +36,8 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
        ),
        assert(controller == null || initialValue == null);
 
-  /// Returns eligible suggestions only; unavailable results must be filtered.
+  /// Returns suggestions for the editing value. Filter out unavailable
+  /// results, or keep them visible with [isOptionDisabled].
   final AutocompleteOptionsBuilder<T> optionsBuilder;
 
   /// Selection notification after the display string is written to the editor.
@@ -83,6 +85,15 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
   /// Preferred direction for opening the suggestions panel.
   final OptionsViewOpenDirection optionsViewOpenDirection;
 
+  /// Marks suggestions that stay visible but cannot be highlighted or
+  /// accepted. Keyboard navigation skips them; Enter and pointer activation
+  /// never accept them. Their rows resolve the option style with
+  /// `WidgetState.disabled`, so style them with `onDisabled`. Results with
+  /// no enabled suggestion close the panel, as no results do.
+  ///
+  /// Called once per suggestion when results arrive.
+  final bool Function(T option)? isOptionDisabled;
+
   /// Called after the suggestions subtree mounts.
   final VoidCallback? onOpen;
 
@@ -123,6 +134,7 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
       initialValue: initialValue,
       enabled: enabled,
       optionsViewOpenDirection: optionsViewOpenDirection,
+      isOptionDisabled: isOptionDisabled,
       onOpen: onOpen,
       onClose: onClose,
       excludeSemantics: excludeSemantics,

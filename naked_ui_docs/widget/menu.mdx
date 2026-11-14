@@ -239,3 +239,5 @@ Set `closeOnActivate` to `false` for menus that keep focus while toggling option
 - Arrow keys work automatically; ensure your overlay contains focusable descendants
 
 Use `NakedMenuCheckboxItem`, `NakedMenuRadioGroup`/`NakedMenuRadioItem` and `NakedMenuSubmenu` for checkable actions and nested menus. See [NakedMenubar](/widget/menubar) for a horizontal menu system. With `openOnTap: false`, keep `semanticLabel` null and provide your own accessible trigger.
+
+`NakedMenuSubmenu` also takes `onOpenRequested` and `onCloseRequested`, with the same signatures as the menu's. Use `onCloseRequested` to play an exit transition and call `hideOverlay` when it ends. The submenu stays open until then, so hover and keys do not reopen it; when the whole menu closes, it hides with the root panel.

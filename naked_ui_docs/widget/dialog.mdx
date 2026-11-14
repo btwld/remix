@@ -103,6 +103,7 @@ bool useRootNavigator = true,
 RouteSettings? routeSettings,
 Offset? anchorPoint,
 Duration transitionDuration = const Duration(milliseconds: 400),
+Duration? reverseTransitionDuration,
 RouteTransitionsBuilder? transitionBuilder,
 bool requestFocus = true,
 TraversalEdgeBehavior? traversalEdgeBehavior,
@@ -113,6 +114,7 @@ TraversalEdgeBehavior? traversalEdgeBehavior,
 - barrierLabel: Announced by screen readers when the barrier appears; pass `MaterialLocalizations.of(context).modalBarrierDismissLabel` for localization.
 - barrierDismissible: Tap outside to dismiss (default true).
 - transitionDuration / transitionBuilder: Customize entry/exit animations.
+- reverseTransitionDuration: Exit duration; defaults to `transitionDuration`. `Duration.zero` closes the dialog at once.
 - anchorPoint: Supply a pointer offset to anchor desktop-style dialogs near the invocation point.
 - requestFocus: Whether the dialog route should grab focus when it enters.
 - traversalEdgeBehavior: Defaults to `TraversalEdgeBehavior.closedLoop` to keep focus inside the dialog; override for custom traversal.
@@ -134,6 +136,7 @@ bool useRootNavigator = true,
 RouteSettings? routeSettings,
 Offset? anchorPoint,
 Duration transitionDuration = const Duration(milliseconds: 400),
+Duration? reverseTransitionDuration,
 RouteTransitionsBuilder? transitionBuilder,
 FocusNode? initialFocusNode,
 })

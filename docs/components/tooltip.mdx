@@ -111,13 +111,76 @@ When closed, the tooltip delegates the Escape key to enclosing `DismissIntent`
 actions, allowing a parent drawer or menu to close. When open, pressing Escape
 closes the tooltip and keeps focus on the trigger.
 
+## Motion
+
+The styled surface fades in and out. By default it shows in 150ms and hides in
+75ms on `Curves.fastOutSlowIn`, Naked UI's tooltip timing.
+
+- `animationStyle` sets the show and hide durations and curves. Fields you
+  leave unset keep the defaults.
+- `transitionBuilder` replaces the fade. It receives the animation, which runs
+  from 0 to 1 while the tooltip shows and back while it hides, and the styled
+  surface as `child`. Its `context` is inside the overlay, so
+  `OverlayPlacement.of(context)` gives the side the tooltip was placed on.
+
+<CodeGroup title="Motion" defaultLanguage="dart">
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+class ScaledTooltip extends StatelessWidget {
+  const ScaledTooltip({super.key, required this.message, required this.child});
+
+  final String message;
+  final Widget child;
+
+  static Widget _scaleFromTrigger(
+    BuildContext context,
+    Animation<double> animation,
+    Widget child,
+  ) {
+    final origin = switch (OverlayPlacement.of(context).side) {
+      OverlaySide.top => Alignment.bottomCenter,
+      OverlaySide.bottom => Alignment.topCenter,
+      OverlaySide.left => Alignment.centerRight,
+      OverlaySide.right => Alignment.centerLeft,
+    };
+
+    return FadeTransition(
+      opacity: animation,
+      child: ScaleTransition(
+        scale: Tween<double>(begin: 0.94, end: 1).animate(animation),
+        alignment: origin,
+        child: child,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixTooltip(
+      tooltipChild: Text(message),
+      animationStyle: const AnimationStyle(
+        curve: Curves.easeOut,
+        duration: Duration(milliseconds: 180),
+        reverseDuration: Duration(milliseconds: 120),
+      ),
+      transitionBuilder: _scaleFromTrigger,
+      child: child,
+    );
+  }
+}
+```
+</CodeGroup>
+
 ## Reduced motion
 
 The tooltip shows and hides at once when the user asks to reduce motion:
 `MediaQuery.disableAnimations` is set, or the platform's Reduce Motion setting is
 on (iOS reports it separately). A change applies to the next show or hide, and a
 tooltip that has not been shown yet when the setting is turned off may still show
-once without motion.
+once without motion. A `transitionBuilder` then receives an animation that is
+already complete.
 
 ## Fortal widgets
 
@@ -169,6 +232,12 @@ RemixTooltip remixTooltipConstructor({
   ValueChanged<bool>? onOpenChanged,
   String? tooltipSemantics,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
+  Widget Function(
+    BuildContext context,
+    Animation<double> animation,
+    Widget child,
+  )? transitionBuilder,
+  AnimationStyle animationStyle = const AnimationStyle(),
   TooltipStyler style = const TooltipStyler.create(),
   TooltipSpec? styleSpec,
 }) => throw UnimplementedError();
@@ -214,6 +283,18 @@ Optional. The semantic label for the tooltip.
 #### `positioning` → `OverlayPositionConfig`
 
 Optional. The overlay positioning configuration.
+
+#### `transitionBuilder` → `Widget Function(BuildContext context, Animation<double> animation, Widget child)?`
+
+Optional. Wraps the styled surface in a transition that receives the show and
+hide animation. Defaults to `RemixTooltip.defaultTooltipTransitionBuilder`, a
+fade. See [Motion](#motion).
+
+#### `animationStyle` → `AnimationStyle`
+
+Optional. The show and hide durations and curves, passed to
+`NakedTooltip.animationStyle`. Unset fields keep 150ms to show, 75ms to hide,
+on `Curves.fastOutSlowIn`.
 
 
 ### Style Methods
@@ -297,6 +378,6 @@ Applies a matrix transformation to the component.
 
 Sets the widget modifier.
 
-#### `call({Key? key, required Widget tooltipChild, required Widget child, GlobalKey<RawTooltipState>? tooltipKey, ValueChanged<bool>? onOpenChanged, String? tooltipSemantics, OverlayPositionConfig positioning = const OverlayPositionConfig()})`
+#### `call({Key? key, required Widget tooltipChild, required Widget child, GlobalKey<RawTooltipState>? tooltipKey, ValueChanged<bool>? onOpenChanged, String? tooltipSemantics, OverlayPositionConfig positioning = const OverlayPositionConfig(), Widget Function(BuildContext context, Animation<double> animation, Widget child)? transitionBuilder, AnimationStyle animationStyle = const AnimationStyle()})`
 
 Creates a `RemixTooltip` widget with this style applied.

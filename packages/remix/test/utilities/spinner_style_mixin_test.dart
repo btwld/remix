@@ -80,6 +80,21 @@ void main() {
       expect(modifiedStyle.$spinner, equals(expectedSpinner));
     });
 
+    test('spinner arc shape can be set through nested shorthand', () {
+      final style = ButtonStyler().spinner(
+        .sweepAngle(4.5).strokeCap(StrokeCap.round),
+      );
+
+      expect(
+        style.$spinner,
+        equals(
+          Prop.maybeMix(
+            SpinnerStyler(sweepAngle: 4.5, strokeCap: StrokeCap.round),
+          ),
+        ),
+      );
+    });
+
     testWidgets('spinner styles can be chained together', (tester) async {
       final originalStyle = ButtonStyler();
       final chainedStyle = originalStyle

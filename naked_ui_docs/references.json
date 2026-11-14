@@ -28,24 +28,24 @@
     "symbol": "NakedCheckbox"
   },
   "widget/dialog.mdx#2": {
-    "codeSha256": "c5d47930cfefb0ccd18ed265a97fdea176a0b8dfdd974e6df922497e9624f20c",
+    "codeSha256": "84a8caff0a0625cbf04dc0254fcfd0ba208301210429c24097666361505cc62f",
     "reason": "API signature for showNakedDialog; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_dialog.dart",
-    "sourceSha256": "a39e7a21f9624c40a4ab6299bc11840e3e1781d5c71b383c42ec9ab2d225c76d",
+    "sourceSha256": "792b70e4e41de3c4ec96803b5db9b0d39b000e0c412b8d1c599daa0b134bbdcb",
     "symbol": "showNakedDialog"
   },
   "widget/dialog.mdx#3": {
-    "codeSha256": "1744ec71d5a07b719226e48f75f1fd98e9e1ace69ae67ef983c6d8ee927e4477",
+    "codeSha256": "bd7cbc063766dc1d3abfa4d0a13644b3db1c93338234ffb93451b9420ddfd5eb",
     "reason": "API signature for showNakedAlertDialog; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_dialog.dart",
-    "sourceSha256": "a39e7a21f9624c40a4ab6299bc11840e3e1781d5c71b383c42ec9ab2d225c76d",
+    "sourceSha256": "792b70e4e41de3c4ec96803b5db9b0d39b000e0c412b8d1c599daa0b134bbdcb",
     "symbol": "showNakedAlertDialog"
   },
   "widget/dialog.mdx#4": {
     "codeSha256": "ba05cd25e7356bb774e205fe7e473cd5b696ec7bcf73e662b8b0d1c63d2cecb3",
     "reason": "API signature for NakedDialog; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_dialog.dart",
-    "sourceSha256": "a39e7a21f9624c40a4ab6299bc11840e3e1781d5c71b383c42ec9ab2d225c76d",
+    "sourceSha256": "792b70e4e41de3c4ec96803b5db9b0d39b000e0c412b8d1c599daa0b134bbdcb",
     "symbol": "NakedDialog"
   },
   "widget/disclosure.mdx#4": {
@@ -66,14 +66,14 @@
     "codeSha256": "d98ed24a778f7bd5431eedd7876f6c80a45f3d33f9ad0240327e791fe25f1f17",
     "reason": "API signature for NakedMenu; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_menu.dart",
-    "sourceSha256": "436223ea46dbeb532f66ed1f65fe816d6720a9d4a22fb4d176955ac88c6833d8",
+    "sourceSha256": "1dd627b587d6e93f19bd056d0335417a0df5b1e9edf379f553211dcc94e17d60",
     "symbol": "NakedMenu"
   },
   "widget/menu.mdx#2": {
     "codeSha256": "d0b0fae5dad3f300c4594ae22aa5ef53f96b0cccc666df1ca46c480d7be76fb6",
     "reason": "API signature for NakedMenuItem; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_menu.dart",
-    "sourceSha256": "436223ea46dbeb532f66ed1f65fe816d6720a9d4a22fb4d176955ac88c6833d8",
+    "sourceSha256": "1dd627b587d6e93f19bd056d0335417a0df5b1e9edf379f553211dcc94e17d60",
     "symbol": "NakedMenuItem"
   },
   "widget/popover.mdx#2": {

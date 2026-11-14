@@ -38,6 +38,19 @@ class SpinnerSpec with _$SpinnerSpec {
   @override
   final Duration? duration;
 
+  /// Length of the circular indicator's arc, in radians.
+  ///
+  /// Defaults to a third of a turn (`2 * pi / 3`). A full turn or more draws a
+  /// closed ring. The leaf spinner ignores it.
+  @override
+  final double? sweepAngle;
+
+  /// Shape of the circular indicator's arc ends.
+  ///
+  /// Defaults to [StrokeCap.butt]. The leaf spinner ignores it.
+  @override
+  final StrokeCap? strokeCap;
+
   const SpinnerSpec({
     this.size,
     this.strokeWidth,
@@ -48,6 +61,8 @@ class SpinnerSpec with _$SpinnerSpec {
     this.opacity,
     this.leafRadius,
     this.duration,
+    this.sweepAngle,
+    this.strokeCap,
   });
 }
 

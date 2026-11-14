@@ -61,8 +61,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   and `focusNode` or neither; `initialValue` initializes text, not an entity.
   `onSelected(T)` reports acceptance rather than arbitrary text changes, so it
   uses `onSelected` instead of `onChanged`. Observe the controller for edits;
-  callback controller edits are preserved. Callers own filtering, debounce and errors. No unavailable rows,
-  chips or multiselect API. Custom fields forward the exact editor pair and
+  callback controller edits are preserved. Callers own filtering, debounce and errors. `isOptionDisabled`
+  keeps unavailable rows visible: keyboard moves skip them, Enter and pointer
+  never accept them, and rows resolve option `onDisabled` styles. No chips or
+  multiselect API. Custom fields forward the exact editor pair and
   submit callback, and own labels/disablement; custom option builders provide
   visuals beneath one named interactive wrapper. Style `field`, `panel(ComboboxPanelStyler())`,
   and `option(ComboboxOptionStyler())`; the nested `ComboboxOptionSpec` has
@@ -240,8 +242,12 @@ for Overlay, Navigator and toast scope placement.
   `MixScope`; when one exists, it clones that scope's tokens and modifier
   order into the dialog route. Default `barrierColor` is `Color(0x8A000000)`.
   `RemixDialog` also takes `scrollable` (default `false`).
+  `transitionDuration` (default 400ms) times the entrance;
+  `reverseTransitionDuration` times the exit and defaults to
+  `transitionDuration`. Reduced motion skips both.
 - **showRemixAlertDialog** — requires a nonempty, localized `semanticLabel`;
-  the barrier is non-dismissible by default.
+  the barrier is non-dismissible by default. Takes the same
+  `transitionDuration` and `reverseTransitionDuration`.
 - **RemixTooltip** — opens on hover, focus, or long-press. Accepts `tooltipKey`
   (`GlobalKey<RawTooltipState>?`) for imperative display via
   `ensureTooltipVisible()`, and `onOpenChanged` to observe visibility. Applies
@@ -250,7 +256,11 @@ for Overlay, Navigator and toast scope placement.
   default `waitDuration` is 300ms (200ms in the Fortal recipe; see
   [Fortal](fortal.md)); it paces hover only, and is skipped within 300ms after
   another tooltip closes. Keyboard focus opens at once. One tooltip is visible
-  at a time.
+  at a time. The surface fades in 150ms and out in 75ms; `animationStyle`
+  (`AnimationStyle`) changes those durations and curves, and
+  `transitionBuilder` (`(context, animation, child)`) replaces the fade around
+  the styled surface; inside it, `OverlayPlacement.of(context)` gives the
+  placed side.
 - **RemixMenu\<T\>** — `RemixMenuTrigger` and every entry type are
   **configuration objects, not widgets**. The sealed entry hierarchy is
   `RemixMenuItem<T>`, `RemixMenuCheckboxItem<T>`, `RemixMenuRadioGroup<T>`
@@ -280,6 +290,9 @@ for Overlay, Navigator and toast scope placement.
   checkbox, radio, and submenu items) rather than a hand-built row; style it
   with `MenuItemStyler().trailingText(...)`, which inherits the label style.
   An icon-only `RemixMenuItem` omits `label` and sets `semanticLabel`.
+  `RemixMenu` (root panel) and `RemixMenuSubmenu` (that submenu) both take
+  `onOpenRequested` and `onCloseRequested`. To animate an exit, call
+  `hideOverlay` when the transition ends; the panel stays open until then.
 - **Toast** — base Remix exposes `RemixToastScope` and
   `showRemixToast(context, RemixToastData(title: ...))`, which returns a
   `RemixToastHandle` (`closed`, `dismiss()`). A toast with the same non-null

@@ -23,7 +23,8 @@ import 'utilities/reduced_motion.dart';
 /// focus target near its beginning.
 ///
 /// Like [showNakedDialog], the route's transitions are skipped while reduced
-/// motion is requested.
+/// motion is requested, and [reverseTransitionDuration] sets the exit
+/// duration, defaulting to [transitionDuration].
 Future<T?> showNakedAlertDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
@@ -35,6 +36,7 @@ Future<T?> showNakedAlertDialog<T>({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
   Duration transitionDuration = const Duration(milliseconds: 400),
+  Duration? reverseTransitionDuration,
   RouteTransitionsBuilder? transitionBuilder,
   FocusNode? initialFocusNode,
 }) {
@@ -63,6 +65,7 @@ Future<T?> showNakedAlertDialog<T>({
     routeSettings: routeSettings,
     anchorPoint: anchorPoint,
     transitionDuration: transitionDuration,
+    reverseTransitionDuration: reverseTransitionDuration,
     transitionBuilder: transitionBuilder,
     requestFocus: true,
     builder: (context) {
@@ -158,11 +161,16 @@ class _NakedAlertDialogFocusState extends State<_NakedAlertDialogFocus> {
 ///
 /// Returns a [Future] with the value passed to [Navigator.pop], or null if dismissed.
 ///
+/// [transitionDuration] times the entrance. [reverseTransitionDuration] times
+/// the exit and defaults to [transitionDuration]; [Duration.zero] closes the
+/// dialog at once.
+///
 /// The route's transitions, including the barrier fade, are skipped while the
 /// user asks to reduce motion: when [MediaQueryData.disableAnimations] is set
 /// or the platform reports `AccessibilityFeatures.reduceMotion`, which iOS
-/// sets for Reduce Motion. [transitionDuration] is then ignored and
-/// [transitionBuilder] sees a completed animation.
+/// sets for Reduce Motion. [transitionDuration] and
+/// [reverseTransitionDuration] are then ignored and [transitionBuilder] sees a
+/// completed animation.
 ///
 /// The setting is read from [context] when the dialog opens and from the
 /// dialog's own subtree when it is dismissed. A dialog that opened without
@@ -195,6 +203,7 @@ Future<T?> showNakedDialog<T>({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
   Duration transitionDuration = const Duration(milliseconds: 400),
+  Duration? reverseTransitionDuration,
   RouteTransitionsBuilder? transitionBuilder,
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
@@ -208,6 +217,7 @@ Future<T?> showNakedDialog<T>({
   return navigator.push<T>(
     _NakedDialogRoute<T>(
       reducedMotion: reducedMotionOf(context),
+      reverseTransitionDuration: reverseTransitionDuration,
       pageBuilder:
           (
             BuildContext routeContext,
@@ -246,6 +256,7 @@ Future<T?> showNakedDialog<T>({
 class _NakedDialogRoute<T> extends RawDialogRoute<T> {
   _NakedDialogRoute({
     required bool reducedMotion,
+    required Duration? reverseTransitionDuration,
     required super.pageBuilder,
     required super.barrierDismissible,
     required super.barrierColor,
@@ -256,13 +267,20 @@ class _NakedDialogRoute<T> extends RawDialogRoute<T> {
     required super.requestFocus,
     required super.anchorPoint,
     required super.traversalEdgeBehavior,
-  }) : _reducedMotion = reducedMotion;
+  }) : _reducedMotion = reducedMotion,
+       _reverseTransitionDuration = reverseTransitionDuration;
 
   bool _reducedMotion;
+  final Duration? _reverseTransitionDuration;
 
   @override
   Duration get transitionDuration =>
       _reducedMotion ? Duration.zero : super.transitionDuration;
+
+  @override
+  Duration get reverseTransitionDuration => _reducedMotion
+      ? Duration.zero
+      : _reverseTransitionDuration ?? super.transitionDuration;
 
   @override
   bool didPop(T? result) {

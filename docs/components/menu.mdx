@@ -347,6 +347,13 @@ directions are mirrored automatically in right-to-left layouts.
 | Left arrow in LTR / Right arrow in RTL | Close the current submenu and focus its trigger |
 | Escape | Close the current menu level and restore trigger focus |
 
+A submenu shows and hides at once by default. Like `RemixMenu`,
+`RemixMenuSubmenu` takes `onOpenRequested` and `onCloseRequested` to coordinate
+transitions. To play an exit transition, start it in `onCloseRequested`, then
+call `hideOverlay` when it ends. The submenu stays open, and its `onClose`
+waits, until then; hover and keys do not reopen it in that time. When the whole
+menu closes, the submenu hides with the root panel.
+
 The root `items` list and the `items` of each radio group, submenu, and section
 are copied to immutable snapshots when their panel is built. Rebuild the menu
 after changing a source list; do not rely on mutating a visible panel in place.

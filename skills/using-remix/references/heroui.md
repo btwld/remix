@@ -294,10 +294,10 @@ no size axis upstream. The field matches TextField, except that a focused
 secondary field takes the `fieldFocus` fill, as upstream does. Suggestions
 follow ComboBox/ListBox with growing rows, hover fill, keyboard ring, pressed
 scale, and Remix's overflow fades and directional thumb. Accept through
-`onSelected`; observe the controller for edits. Supply eligible suggestions
-only. No trigger glyph, per-option disabled state, persistent selected row or
-multi-selection API is added. The upstream Autocomplete with popover search
-remains deferred.
+`onSelected`; observe the controller for edits. Rows that
+`isOptionDisabled` marks have no disabled-row style yet. No trigger glyph,
+persistent selected row or multi-selection API is added. The upstream
+Autocomplete with popover search remains deferred.
 See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 
 ## Calendars and date pickers
