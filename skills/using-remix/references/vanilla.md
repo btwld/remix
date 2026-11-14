@@ -99,6 +99,7 @@ families carry over.
   Suggestions use `controlSm` and `textSm`; keyboard highlight uses `accent`,
   hover a lighter accent tint, and press a stronger primary tint. The editor fades when disabled.
   Pass `optionsBuilder` and optionally `onSelected`; arbitrary text stays valid.
+  Rows that `isOptionDisabled` marks have no disabled-row style yet.
   Custom field builders own their recipe, while custom option content inherits
   the row's text style. Override nested `field`, `panel` and `option` through
   `style`, with matching state fragments for state overrides. See
