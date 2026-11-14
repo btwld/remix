@@ -749,6 +749,13 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     ValueChanged<bool>? onOpenChanged,
     String? tooltipSemantics,
     OverlayPositionConfig positioning = const OverlayPositionConfig(),
+    Widget Function(
+      BuildContext context,
+      Animation<double> animation,
+      Widget child,
+    )?
+    transitionBuilder,
+    AnimationStyle animationStyle = const AnimationStyle(),
   }) {
     return RemixTooltip(
       key: key,
@@ -759,6 +766,8 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
       onOpenChanged: onOpenChanged,
       tooltipSemantics: tooltipSemantics,
       positioning: positioning,
+      transitionBuilder: transitionBuilder,
+      animationStyle: animationStyle,
     );
   }
 
