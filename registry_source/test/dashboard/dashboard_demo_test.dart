@@ -20,6 +20,7 @@ import 'package:registry_source/src/default/theme/theme_data.dart';
 import 'package:registry_source/src/default/theme/theme_scope.dart';
 import 'package:registry_source/src/default/theme/tokens.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart';
+import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_data.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_settings.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_theme.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_overview.dart';
@@ -56,22 +57,25 @@ void main() {
     }
   });
 
-  test('shared dashboard contract matches the Fortal sample inventory', () {
-    expect(RegistryDashboardDemoPage.values.map((page) => page.name), [
-      'overview',
-      'chat',
-      'customers',
-      'orders',
-      'settings',
-    ]);
-    expect(
-      registryDashboardDemoSectionIds.keys,
-      RegistryDashboardDemoPage.values,
-    );
-    expect(registryDashboardDemoSectionIds.values, everyElement(isNotEmpty));
-    expect(registryDashboardCustomers, hasLength(24));
-    expect(registryDashboardOrders, hasLength(30));
-  });
+  test(
+    'shared dashboard contract matches the Vanilla and HeroUI sample inventory',
+    () {
+      expect(RegistryDashboardDemoPage.values.map((page) => page.name), [
+        'overview',
+        'chat',
+        'customers',
+        'orders',
+        'settings',
+      ]);
+      expect(
+        registryDashboardDemoSectionIds.keys,
+        RegistryDashboardDemoPage.values,
+      );
+      expect(registryDashboardDemoSectionIds.values, everyElement(isNotEmpty));
+      expect(registryDashboardCustomers, hasLength(24));
+      expect(registryDashboardOrders, hasLength(30));
+    },
+  );
 
   testWidgets('alert notification uses the sample event title', (tester) async {
     await _pumpDashboard(tester, preset: .fortal);
@@ -81,7 +85,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byKey(const ValueKey('topbar-notifications-content')),
-        matching: find.text('Inventory alert'),
+        matching: find.text('Edition running low'),
       ),
       findsOneWidget,
     );
@@ -514,8 +518,8 @@ void main() {
         initialPage: RegistryDashboardDemoPage.customers,
       );
       final customer = tester
-          .widget<RemixDataTable<RegistryDashboardCustomer>>(
-            find.byType(RemixDataTable<RegistryDashboardCustomer>),
+          .widget<RemixDataTable<FortalDashboardCustomer>>(
+            find.byType(RemixDataTable<FortalDashboardCustomer>),
           )
           .rows
           .first;
@@ -549,6 +553,9 @@ void main() {
         ),
       );
 
+      // The summary cards push the first row below the fold.
+      await tester.ensureVisible(kebab);
+      await tester.pumpAndSettle();
       await tester.tap(kebab);
       await tester.pumpAndSettle();
 
@@ -621,15 +628,17 @@ void main() {
             preset: preset,
             chatStepDelay: const Duration(milliseconds: 10),
           );
-          final base = tester.state(find.byType(RegistryDashboardDemoBase));
+          // Fortal's demo owns its state; the others share a base.
+          final host = preset == .fortal
+              ? find.byType(FortalDashboardDemo)
+              : find.byType(RegistryDashboardDemoBase);
+          final base = tester.state(host);
           List<Type> ancestors() {
             final types = <Type>[];
-            tester
-                .element(find.byType(RegistryDashboardDemoBase))
-                .visitAncestorElements((element) {
-                  types.add(element.widget.runtimeType);
-                  return true;
-                });
+            tester.element(host).visitAncestorElements((element) {
+              types.add(element.widget.runtimeType);
+              return true;
+            });
             return types;
           }
 
@@ -661,7 +670,15 @@ void main() {
           await tester.pumpAndSettle();
           await tester.tap(find.text('Orders').first);
           await tester.pumpAndSettle();
-          await tester.tap(find.text('Pending').first);
+          // Fortal keeps visited pages built, so the filter is scoped.
+          await tester.tap(
+            preset == .fortal
+                ? find.descendant(
+                    of: find.byKey(const ValueKey('order-status')),
+                    matching: find.text('Pending'),
+                  )
+                : find.text('Pending').first,
+          );
           await tester.pumpAndSettle();
 
           if (change == 'header appearance') {
@@ -671,6 +688,7 @@ void main() {
           } else {
             await tester.tap(find.text('Settings').first);
             await tester.pumpAndSettle();
+            if (preset == .fortal) await _openFortalAppearance(tester);
             if (change == 'radius') {
               await _changeRadius(tester, preset);
             } else {
@@ -679,19 +697,29 @@ void main() {
             }
           }
           await tester.pumpAndSettle();
-          final pages = tester.widget<IndexedStack>(
-            find.byKey(const ValueKey('dashboard-demo-pages')),
-          );
-          expect(
-            pages.index,
-            change == 'header appearance'
-                ? RegistryDashboardDemoPage.orders.index
-                : RegistryDashboardDemoPage.settings.index,
-          );
-          expect(
-            tester.state(find.byType(RegistryDashboardDemoBase)),
-            same(base),
-          );
+          final selected = change == 'header appearance'
+              ? RegistryDashboardDemoPage.orders
+              : RegistryDashboardDemoPage.settings;
+          if (preset == .fortal) {
+            // The page stack keeps every visited page, and only the selected
+            // one takes hits.
+            final slots = find.byKey(const ValueKey('dashboard-demo-pages'));
+            expect(slots, findsOneWidget);
+            for (final page in FortalDashboardDemoPage.values) {
+              final slot = find.byKey(ValueKey('dashboard-page-${page.name}'));
+              if (page.name == selected.name) {
+                expect(slot.hitTestable(), findsOneWidget, reason: page.name);
+              } else {
+                expect(slot.hitTestable(), findsNothing, reason: page.name);
+              }
+            }
+          } else {
+            final pages = tester.widget<IndexedStack>(
+              find.byKey(const ValueKey('dashboard-demo-pages')),
+            );
+            expect(pages.index, selected.index);
+          }
+          expect(tester.state(host), same(base));
           expect(
             ancestors(),
             parents,
@@ -702,16 +730,32 @@ void main() {
           expect(tester.widget<EditableText>(search).controller.text, 'olivia');
           await tester.tap(find.text('Orders').first);
           await tester.pumpAndSettle();
-          final orders = tester.widget<RemixDataTable<RegistryDashboardOrder>>(
-            find.byType(RemixDataTable<RegistryDashboardOrder>),
-          );
-          expect(orders.rows, isNotEmpty);
-          expect(
-            orders.rows.map((order) => order.status),
-            everyElement(RegistryDashboardOrderStatus.pending),
-          );
+          if (preset == .fortal) {
+            final orders = tester.widget<RemixDataTable<FortalDashboardOrder>>(
+              find.descendant(
+                of: find.byKey(const ValueKey('dashboard-page-orders')),
+                matching: find.byType(RemixDataTable<FortalDashboardOrder>),
+              ),
+            );
+            expect(orders.rows, isNotEmpty);
+            expect(
+              orders.rows.map((order) => order.status),
+              everyElement(FortalDashboardOrderStatus.pending),
+            );
+          } else {
+            final orders = tester
+                .widget<RemixDataTable<RegistryDashboardOrder>>(
+                  find.byType(RemixDataTable<RegistryDashboardOrder>),
+                );
+            expect(orders.rows, isNotEmpty);
+            expect(
+              orders.rows.map((order) => order.status),
+              everyElement(RegistryDashboardOrderStatus.pending),
+            );
+          }
           await tester.tap(find.text('Settings').first);
           await tester.pumpAndSettle();
+          if (preset == .fortal) await _openFortalTab(tester, 'profile');
           expect(
             tester.widget<EditableText>(profile).controller.text,
             'Retained profile',
@@ -738,6 +782,7 @@ void main() {
           );
           expect(_brightness(preset, pageContext()), Brightness.light);
           final before = _radius(preset, pageContext());
+          if (preset == .fortal) await _openFortalAppearance(tester);
           if (control == 'appearance') {
             await tester.ensureVisible(find.text('Dark').last);
             await tester.tap(find.text('Dark').last);
@@ -827,7 +872,9 @@ void main() {
               .fortal => FortalDashboardThemeScope(
                 settings: const FortalThemeSettings(radius: .full),
                 onChanged: (_) {},
-                child: const FortalDashboardSettingsPage(),
+                child: const FortalDashboardSettingsPage(
+                  initialSection: .appearance,
+                ),
               ),
             },
           );
@@ -921,14 +968,16 @@ void main() {
               RegistryDashboardPoint(label: 'Same day', value: 34),
             ],
           ),
+          fortalData: _fortalRevenue([
+            for (final value in const [12.0, 34.0])
+              FortalDashboardPoint('Same day', value, value),
+          ]),
         );
         expect(tester.takeException(), isNull);
         final chart = tester.widget<LineChart>(find.byType(LineChart));
-        expect(
-          chart.series.single.points.map((p) => p.id).toSet(),
-          hasLength(2),
-        );
-        expect(chart.series.single.points.map((p) => p.y), [12, 34]);
+        final series = _currentSeries(preset, chart);
+        expect(series.points.map((p) => p.id).toSet(), hasLength(2));
+        expect(series.points.map((p) => p.y), [12, 34]);
         expect(chart.xAxis!.labelFormatter!(0), 'Same day');
         expect(chart.xAxis!.labelFormatter!(1), 'Same day');
       });
@@ -955,6 +1004,10 @@ void main() {
                   RegistryDashboardPoint(label: 'Day $i', value: value),
               ],
             ),
+            fortalData: _fortalRevenue([
+              for (final (i, value) in values.indexed)
+                FortalDashboardPoint('Day $i', value, value),
+            ]),
           );
           expect(tester.takeException(), isNull);
           final axis = tester.widget<LineChart>(find.byType(LineChart)).yAxis!;
@@ -979,18 +1032,25 @@ void main() {
       ) async {
         await _pumpOverview(tester, preset: preset, width: 1280);
         final revenue = tester.widget<LineChart>(find.byType(LineChart)).yAxis!;
-        expect((revenue.min, revenue.max, revenue.interval), (-10, 110, 20));
+        // Fortal's week of sample revenue tops out at 14.8, so its axis is the
+        // same helper's answer for that data.
+        expect((
+          revenue.min,
+          revenue.max,
+          revenue.interval,
+        ), preset == .fortal ? (-2.5, 17.5, 5) : (-10, 110, 20));
         expect(revenue.minIncluded, isFalse);
         expect(revenue.maxIncluded, isFalse);
-        final bars = tester.widget<BarChart>(find.byType(BarChart)).yAxis!;
-        expect((
-          bars.min,
-          bars.max,
-          bars.interval,
-        ), preset == .fortal ? (-12.5, 112.5, 25) : (-5, 55, 10));
-        expect(bars.minIncluded, isFalse);
-        expect(bars.maxIncluded, isFalse);
-        for (final tick in const ['0', '20', '40', '60', '80', '100']) {
+        if (preset != .fortal) {
+          final bars = tester.widget<BarChart>(find.byType(BarChart)).yAxis!;
+          expect((bars.min, bars.max, bars.interval), (-5, 55, 10));
+          expect(bars.minIncluded, isFalse);
+          expect(bars.maxIncluded, isFalse);
+        }
+        for (final tick
+            in preset == .fortal
+                ? const ['0', '5', '10', '15']
+                : const ['0', '20', '40', '60', '80', '100']) {
           expect(
             find.descendant(
               of: find.byType(LineChart),
@@ -999,41 +1059,44 @@ void main() {
             findsOneWidget,
           );
         }
-        final barTicks = preset == .fortal
-            ? ['0', '25', '50', '75', '100']
-            : ['0', '10', '20', '30', '40', '50'];
-        for (final tick in barTicks) {
-          expect(
-            find.descendant(
-              of: find.byType(BarChart),
-              matching: find.text(tick),
-            ),
-            findsOneWidget,
-          );
+        if (preset != .fortal) {
+          for (final tick in const ['0', '10', '20', '30', '40', '50']) {
+            expect(
+              find.descendant(
+                of: find.byType(BarChart),
+                matching: find.text(tick),
+              ),
+              findsOneWidget,
+            );
+          }
         }
       });
 
-      testWidgets('regression: View all follows RTL direction', (tester) async {
-        await _pumpOverview(
+      // Fortal's "View all" is a text-only ghost button; see its own group.
+      if (preset != .fortal)
+        testWidgets('regression: View all follows RTL direction', (
           tester,
-          preset: preset,
-          width: 1280,
-          textDirection: .rtl,
-        );
-        final action = find.byKey(const ValueKey('overview-view-orders'));
-        expect(
-          find.descendant(
-            of: action,
-            matching: find.byWidgetPredicate(
-              (widget) =>
-                  widget is StyledIcon &&
-                  widget.icon == RemixIcons.chevronsLeft,
+        ) async {
+          await _pumpOverview(
+            tester,
+            preset: preset,
+            width: 1280,
+            textDirection: .rtl,
+          );
+          final action = find.byKey(const ValueKey('overview-view-orders'));
+          expect(
+            find.descendant(
+              of: action,
+              matching: find.byWidgetPredicate(
+                (widget) =>
+                    widget is StyledIcon &&
+                    widget.icon == RemixIcons.chevronsLeft,
+              ),
             ),
-          ),
-          findsOneWidget,
-        );
-        expect(tester.takeException(), isNull);
-      });
+            findsOneWidget,
+          );
+          expect(tester.takeException(), isNull);
+        });
 
       testWidgets(
         'regression: metric progress has its metric accessible name',
@@ -1041,9 +1104,17 @@ void main() {
           final semantics = tester.ensureSemantics();
           try {
             await _pumpOverview(tester, preset: preset, width: 1280);
-            final progress = find.byType(RemixProgress);
+            final progress = preset == .fortal
+                ? find.descendant(
+                    of: find.byKey(const ValueKey('dashboard-metrics')),
+                    matching: find.byType(RemixProgress),
+                  )
+                : find.byType(RemixProgress);
             expect(progress, findsOneWidget);
-            expect(tester.getSemantics(progress).label, 'Fulfillment');
+            expect(
+              tester.getSemantics(progress).label,
+              preset == .fortal ? 'Shipped on time' : 'Fulfillment',
+            );
             expect(tester.getSemantics(progress).value, '94');
           } finally {
             semantics.dispose();
@@ -1091,47 +1162,49 @@ void main() {
         }
       });
 
-      testWidgets('overview renders coherent sample data', (tester) async {
-        await _pumpOverview(tester, preset: preset, width: 1280);
+      if (preset != .fortal)
+        testWidgets('overview renders coherent sample data', (tester) async {
+          await _pumpOverview(tester, preset: preset, width: 1280);
 
-        expect(find.text(r'$84,420'), findsOneWidget);
-        expect(find.text('Mon'), findsWidgets);
-        expect(find.text('ORD-1048'), findsOneWidget);
-        expect(find.text('Olivia Martin'), findsOneWidget);
-        expect(find.byType(LineChart), findsOneWidget);
-        expect(
-          find.byType(RemixDataTable<RegistryDashboardRecord>),
-          findsOneWidget,
-        );
-        expect(tester.takeException(), isNull);
-      });
+          expect(find.text(r'$84,420'), findsOneWidget);
+          expect(find.text('Mon'), findsWidgets);
+          expect(find.text('ORD-1048'), findsOneWidget);
+          expect(find.text('Olivia Martin'), findsOneWidget);
+          expect(find.byType(LineChart), findsOneWidget);
+          expect(
+            find.byType(RemixDataTable<RegistryDashboardRecord>),
+            findsOneWidget,
+          );
+          expect(tester.takeException(), isNull);
+        });
 
-      testWidgets('overview uses caller-owned data', (tester) async {
-        const data = RegistryDashboardSampleData(
-          metrics: [
-            RegistryDashboardMetric(
-              label: 'Retained metric',
-              value: '17',
-              change: 'Edited locally',
-            ),
-          ],
-          revenue: [RegistryDashboardPoint(label: 'Now', value: 17)],
-          records: [
-            RegistryDashboardRecord(
-              id: 'LOCAL-1',
-              customer: 'Local customer',
-              status: 'Ready',
-              amount: r'$17',
-            ),
-          ],
-        );
-        await _pumpOverview(tester, preset: preset, width: 760, data: data);
+      if (preset != .fortal)
+        testWidgets('overview uses caller-owned data', (tester) async {
+          const data = RegistryDashboardSampleData(
+            metrics: [
+              RegistryDashboardMetric(
+                label: 'Retained metric',
+                value: '17',
+                change: 'Edited locally',
+              ),
+            ],
+            revenue: [RegistryDashboardPoint(label: 'Now', value: 17)],
+            records: [
+              RegistryDashboardRecord(
+                id: 'LOCAL-1',
+                customer: 'Local customer',
+                status: 'Ready',
+                amount: r'$17',
+              ),
+            ],
+          );
+          await _pumpOverview(tester, preset: preset, width: 760, data: data);
 
-        expect(find.text('Retained metric'), findsOneWidget);
-        expect(find.text('LOCAL-1'), findsOneWidget);
-        expect(find.text('ORD-1048'), findsNothing);
-        expect(tester.takeException(), isNull);
-      });
+          expect(find.text('Retained metric'), findsOneWidget);
+          expect(find.text('LOCAL-1'), findsOneWidget);
+          expect(find.text('ORD-1048'), findsNothing);
+          expect(tester.takeException(), isNull);
+        });
 
       testWidgets('narrow enlarged layout scrolls without overflow', (
         tester,
@@ -1144,11 +1217,28 @@ void main() {
           textScaler: const TextScaler.linear(1.8),
         );
 
-        expect(
-          find.byKey(const ValueKey('dashboard-overview-scroll')),
-          findsOneWidget,
-        );
-        expect(find.text('Revenue trend'), findsOneWidget);
+        if (preset == .fortal) {
+          expect(
+            find.descendant(
+              of: find.byKey(const ValueKey('dashboard-overview')),
+              matching: find.byType(Scrollable),
+            ),
+            findsWidgets,
+          );
+          expect(
+            find.descendant(
+              of: find.byKey(const ValueKey('overview-revenue')),
+              matching: find.text('Revenue'),
+            ),
+            findsOneWidget,
+          );
+        } else {
+          expect(
+            find.byKey(const ValueKey('dashboard-overview-scroll')),
+            findsOneWidget,
+          );
+          expect(find.text('Revenue trend'), findsOneWidget);
+        }
         expect(tester.takeException(), isNull);
       });
 
@@ -1166,13 +1256,13 @@ void main() {
       ) async {
         await _pumpDashboard(tester, preset: preset);
 
-        for (final label in [
-          'Overview',
-          'Chat',
-          'Customers',
-          'Orders',
-          'Settings',
-        ]) {
+        for (final label
+            in preset == .fortal
+                ? [
+                    for (final page in FortalDashboardDemoPage.values)
+                      page.label,
+                  ]
+                : ['Overview', 'Chat', 'Customers', 'Orders', 'Settings']) {
           expect(find.text(label), findsWidgets, reason: label);
         }
 
@@ -1194,7 +1284,12 @@ void main() {
           find.byKey(const ValueKey('dashboard-appearance-toggle')),
           findsWidgets,
         );
-        expect(find.text('Northstar workspace'), findsOneWidget);
+        expect(
+          find.text(
+            preset == .fortal ? 'Northstar Editions' : 'Northstar workspace',
+          ),
+          findsOneWidget,
+        );
 
         await tester.tap(
           find.byKey(const ValueKey('dashboard-appearance-toggle')).first,
@@ -1211,7 +1306,7 @@ void main() {
         expect(
           find.text(switch (preset) {
             .defaultPreset || .heroui => 'Order ORD-1047 requires review.',
-            .fortal => 'Inventory alert',
+            .fortal => 'Edition running low',
           }),
           findsWidgets,
         );
@@ -1219,7 +1314,7 @@ void main() {
           expect(
             find.descendant(
               of: find.byKey(const ValueKey('topbar-notifications-content')),
-              matching: find.text('Inventory alert'),
+              matching: find.text('Edition running low'),
             ),
             findsOneWidget,
           );
@@ -1240,65 +1335,72 @@ void main() {
           findsNothing,
         );
         expect(find.text('Caller account'), findsOneWidget);
-        expect(find.text('Northstar workspace'), findsNothing);
+        expect(
+          find.text(
+            preset == .fortal ? 'Northstar Editions' : 'Northstar workspace',
+          ),
+          findsNothing,
+        );
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('all five screens expose the shared section inventory', (
-        tester,
-      ) async {
-        const expected = <RegistryDashboardDemoPage, List<String>>{
-          RegistryDashboardDemoPage.overview: [
-            'Revenue trend',
-            'Recent activity',
-            'Recent orders',
-          ],
-          RegistryDashboardDemoPage.chat: [
-            'What should we work on?',
-            'Review checkout',
-          ],
-          RegistryDashboardDemoPage.customers: [
-            'Customers',
-            'Search customers…',
-            'Email',
-          ],
-          RegistryDashboardDemoPage.orders: ['Orders', 'Paid', 'ORD-1048'],
-          RegistryDashboardDemoPage.settings: [
-            'Profile',
-            'Preferences',
-            'Appearance',
-            'Danger zone',
-          ],
-        };
+      // Fortal has seven pages with their own inventory, see its group below.
+      if (preset != .fortal)
+        testWidgets('all five screens expose the shared section inventory', (
+          tester,
+        ) async {
+          const expected = <RegistryDashboardDemoPage, List<String>>{
+            RegistryDashboardDemoPage.overview: [
+              'Revenue trend',
+              'Recent activity',
+              'Recent orders',
+            ],
+            RegistryDashboardDemoPage.chat: [
+              'What should we work on?',
+              'Review checkout',
+            ],
+            RegistryDashboardDemoPage.customers: [
+              'Customers',
+              'Search customers…',
+              'Email',
+            ],
+            RegistryDashboardDemoPage.orders: ['Orders', 'Paid', 'ORD-1048'],
+            RegistryDashboardDemoPage.settings: [
+              'Profile',
+              'Preferences',
+              'Appearance',
+              'Danger zone',
+            ],
+          };
 
-        final mixWarnings = <String>[];
-        final originalDebugPrint = debugPrint;
-        debugPrint = (String? message, {int? wrapWidth}) {
-          if (message != null && message.contains('Mix: could not convert')) {
-            mixWarnings.add(message);
-          }
-        };
-        try {
-          for (final entry in expected.entries) {
-            await _pumpDashboard(
-              tester,
-              preset: preset,
-              initialPage: entry.key,
-            );
-            for (final label in entry.value) {
-              expect(
-                find.text(label),
-                findsWidgets,
-                reason: '${entry.key.name}: $label',
-              );
+          final mixWarnings = <String>[];
+          final originalDebugPrint = debugPrint;
+          debugPrint = (String? message, {int? wrapWidth}) {
+            if (message != null && message.contains('Mix: could not convert')) {
+              mixWarnings.add(message);
             }
-            expect(tester.takeException(), isNull, reason: entry.key.name);
-            expect(mixWarnings, isEmpty, reason: entry.key.name);
+          };
+          try {
+            for (final entry in expected.entries) {
+              await _pumpDashboard(
+                tester,
+                preset: preset,
+                initialPage: entry.key,
+              );
+              for (final label in entry.value) {
+                expect(
+                  find.text(label),
+                  findsWidgets,
+                  reason: '${entry.key.name}: $label',
+                );
+              }
+              expect(tester.takeException(), isNull, reason: entry.key.name);
+              expect(mixWarnings, isEmpty, reason: entry.key.name);
+            }
+          } finally {
+            debugPrint = originalDebugPrint;
           }
-        } finally {
-          debugPrint = originalDebugPrint;
-        }
-      });
+        });
 
       testWidgets(
         'sidebar collapse and expand animate across frames without overflow, jumps, or Mix warnings',
@@ -1384,8 +1486,21 @@ void main() {
         // gridlines they are evenly spaced; an end label pulled in off its
         // value shortens the gap beside it.
         final centers = [
-          for (final label in const ['100', '80', '60', '40', '20', '0'])
-            tester.getCenter(find.text(label).first).dy,
+          for (final label
+              in preset == .fortal
+                  ? const ['15', '10', '5', '0']
+                  : const ['100', '80', '60', '40', '20', '0'])
+            tester
+                .getCenter(
+                  (preset == .fortal
+                          ? find.descendant(
+                              of: find.byType(LineChart),
+                              matching: find.text(label),
+                            )
+                          : find.text(label))
+                      .first,
+                )
+                .dy,
         ];
         final gaps = [
           for (var i = 1; i < centers.length; i++) centers[i] - centers[i - 1],
@@ -1415,127 +1530,137 @@ void main() {
           'Olivia',
         );
         await tester.pump();
-        expect(find.text('Olivia Martin'), findsOneWidget);
-        expect(find.text('Jackson Lee'), findsNothing);
+        // Fortal keeps every visited page built, so scope to the page shown.
+        Finder shown(String text) => preset == .fortal
+            ? find.descendant(
+                of: find.byKey(const ValueKey('dashboard-page-customers')),
+                matching: find.text(text),
+              )
+            : find.text(text);
+        expect(shown('Olivia Martin'), findsOneWidget);
+        expect(shown('Jackson Lee'), findsNothing);
 
         await tester.tap(find.text('Orders').first);
         await tester.pump();
         await tester.tap(find.text('Customers').first);
         await tester.pump();
 
-        expect(find.text('Olivia Martin'), findsOneWidget);
-        expect(find.text('Jackson Lee'), findsNothing);
+        expect(shown('Olivia Martin'), findsOneWidget);
+        expect(shown('Jackson Lee'), findsNothing);
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('global search finds real screens by section id', (
-        tester,
-      ) async {
-        await _pumpDashboard(tester, preset: preset);
-
-        await tester.enterText(
-          find.descendant(
-            of: find.byKey(const ValueKey('dashboard-search')),
-            matching: find.byType(EditableText),
-          ),
-          'profile',
-        );
-        await tester.pump();
-
-        expect(find.text('Settings'), findsWidgets);
-        expect(find.text('Profile'), findsWidgets);
-        expect(tester.takeException(), isNull);
-      });
-
-      testWidgets('tables expose full controlled interaction contracts', (
-        tester,
-      ) async {
-        await _pumpDashboard(
+      // Fortal's header search is the quick-find combobox, see its group below.
+      if (preset != .fortal)
+        testWidgets('global search finds real screens by section id', (
           tester,
-          preset: preset,
-          initialPage: RegistryDashboardDemoPage.customers,
-        );
-        var customers = tester
-            .widget<RemixDataTable<RegistryDashboardCustomer>>(
-              find.byType(RemixDataTable<RegistryDashboardCustomer>),
-            );
-        expect(customers.columns.map((column) => column.id), [
-          'name',
-          'email',
-          'plan',
-          'status',
-          'joined',
-          'actions',
-        ]);
-        expect(customers.totalRows, 24);
-        expect(customers.rows, hasLength(10));
-        expect(customers.onSortChanged, isNotNull);
-        expect(customers.onSelectionChanged, isNotNull);
-        expect(customers.onPageChanged, isNotNull);
-        expect(customers.onPageSizeChanged, isNotNull);
+        ) async {
+          await _pumpDashboard(tester, preset: preset);
 
-        customers.onSelectionChanged!({customers.rows.first.id});
-        await tester.pump();
-        expect(find.text('1 selected'), findsOneWidget);
-
-        customers = tester.widget(
-          find.byType(RemixDataTable<RegistryDashboardCustomer>),
-        );
-        customers.onPageChanged!(1);
-        await tester.pump();
-        customers = tester.widget(
-          find.byType(RemixDataTable<RegistryDashboardCustomer>),
-        );
-        expect(customers.pageIndex, 1);
-        expect(customers.rows, hasLength(10));
-
-        await tester.tap(find.text('Orders').first);
-        await tester.pump();
-        var orders = tester.widget<RemixDataTable<RegistryDashboardOrder>>(
-          find.byType(RemixDataTable<RegistryDashboardOrder>),
-        );
-        expect(orders.columns.map((column) => column.id), [
-          'id',
-          'customer',
-          'date',
-          'amount',
-          'status',
-          'actions',
-        ]);
-        expect(orders.totalRows, 30);
-        orders.onSortChanged!(
-          const RemixDataTableSort(
-            columnId: 'amount',
-            direction: RemixDataTableSortDirection.ascending,
-          ),
-        );
-        await tester.pump();
-        orders = tester.widget(
-          find.byType(RemixDataTable<RegistryDashboardOrder>),
-        );
-        expect(orders.sort?.columnId, 'amount');
-        expect(
-          orders.rows.first.amount,
-          lessThanOrEqualTo(orders.rows.last.amount),
-        );
-
-        await tester.tap(find.text('Pending').first);
-        await tester.pump();
-        orders = tester.widget(
-          find.byType(RemixDataTable<RegistryDashboardOrder>),
-        );
-        expect(
-          orders.rows,
-          everyElement(
-            isA<RegistryDashboardOrder>().having(
-              (order) => order.status,
-              'status',
-              RegistryDashboardOrderStatus.pending,
+          await tester.enterText(
+            find.descendant(
+              of: find.byKey(const ValueKey('dashboard-search')),
+              matching: find.byType(EditableText),
             ),
-          ),
-        );
-        expect(tester.takeException(), isNull);
-      });
+            'profile',
+          );
+          await tester.pump();
+
+          expect(find.text('Settings'), findsWidgets);
+          expect(find.text('Profile'), findsWidgets);
+          expect(tester.takeException(), isNull);
+        });
+
+      if (preset != .fortal)
+        testWidgets('tables expose full controlled interaction contracts', (
+          tester,
+        ) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.customers,
+          );
+          var customers = tester
+              .widget<RemixDataTable<RegistryDashboardCustomer>>(
+                find.byType(RemixDataTable<RegistryDashboardCustomer>),
+              );
+          expect(customers.columns.map((column) => column.id), [
+            'name',
+            'email',
+            'plan',
+            'status',
+            'joined',
+            'actions',
+          ]);
+          expect(customers.totalRows, 24);
+          expect(customers.rows, hasLength(10));
+          expect(customers.onSortChanged, isNotNull);
+          expect(customers.onSelectionChanged, isNotNull);
+          expect(customers.onPageChanged, isNotNull);
+          expect(customers.onPageSizeChanged, isNotNull);
+
+          customers.onSelectionChanged!({customers.rows.first.id});
+          await tester.pump();
+          expect(find.text('1 selected'), findsOneWidget);
+
+          customers = tester.widget(
+            find.byType(RemixDataTable<RegistryDashboardCustomer>),
+          );
+          customers.onPageChanged!(1);
+          await tester.pump();
+          customers = tester.widget(
+            find.byType(RemixDataTable<RegistryDashboardCustomer>),
+          );
+          expect(customers.pageIndex, 1);
+          expect(customers.rows, hasLength(10));
+
+          await tester.tap(find.text('Orders').first);
+          await tester.pump();
+          var orders = tester.widget<RemixDataTable<RegistryDashboardOrder>>(
+            find.byType(RemixDataTable<RegistryDashboardOrder>),
+          );
+          expect(orders.columns.map((column) => column.id), [
+            'id',
+            'customer',
+            'date',
+            'amount',
+            'status',
+            'actions',
+          ]);
+          expect(orders.totalRows, 30);
+          orders.onSortChanged!(
+            const RemixDataTableSort(
+              columnId: 'amount',
+              direction: RemixDataTableSortDirection.ascending,
+            ),
+          );
+          await tester.pump();
+          orders = tester.widget(
+            find.byType(RemixDataTable<RegistryDashboardOrder>),
+          );
+          expect(orders.sort?.columnId, 'amount');
+          expect(
+            orders.rows.first.amount,
+            lessThanOrEqualTo(orders.rows.last.amount),
+          );
+
+          await tester.tap(find.text('Pending').first);
+          await tester.pump();
+          orders = tester.widget(
+            find.byType(RemixDataTable<RegistryDashboardOrder>),
+          );
+          expect(
+            orders.rows,
+            everyElement(
+              isA<RegistryDashboardOrder>().having(
+                (order) => order.status,
+                'status',
+                RegistryDashboardOrderStatus.pending,
+              ),
+            ),
+          );
+          expect(tester.takeException(), isNull);
+        });
 
       testWidgets(
         'Agent leading action adds checkout context without sending',
@@ -1775,26 +1900,43 @@ void main() {
             tester,
             preset: preset,
             initialPage: RegistryDashboardDemoPage.customers,
-            height: 1200,
+            // Fortal's summary cards sit above the table.
+            height: preset == .fortal ? 1800 : 1200,
           );
 
-          final table = find.byType(RemixDataTable<RegistryDashboardCustomer>);
+          final table = find.byType(
+            preset == .fortal
+                ? RemixDataTable<FortalDashboardCustomer>
+                : RemixDataTable<RegistryDashboardCustomer>,
+          );
+          // Fortal sorts by Customer, Spent and Joined; the others by
+          // Customer and Joined.
+          final unsorted = preset == .fortal ? 2 : 1;
           expect(_glyphIn(table, RemixPathGlyph.caretDown), findsOneWidget);
-          expect(_glyphIn(table, RemixPathGlyph.caretSort), findsOneWidget);
+          expect(
+            _glyphIn(table, RemixPathGlyph.caretSort),
+            findsNWidgets(unsorted),
+          );
 
           await tester.tap(
             find.descendant(of: table, matching: find.text('Customer')),
           );
           await tester.pumpAndSettle();
           expect(_glyphIn(table, RemixPathGlyph.caretUp), findsOneWidget);
-          expect(_glyphIn(table, RemixPathGlyph.caretSort), findsOneWidget);
+          expect(
+            _glyphIn(table, RemixPathGlyph.caretSort),
+            findsNWidgets(unsorted),
+          );
 
           await tester.tap(
             find.descendant(of: table, matching: find.text('Customer')),
           );
           await tester.pumpAndSettle();
           expect(_glyphIn(table, RemixPathGlyph.caretDown), findsOneWidget);
-          expect(_glyphIn(table, RemixPathGlyph.caretSort), findsOneWidget);
+          expect(
+            _glyphIn(table, RemixPathGlyph.caretSort),
+            findsNWidgets(unsorted),
+          );
 
           final checkboxes = find.descendant(
             of: table,
@@ -1841,69 +1983,392 @@ void main() {
         },
       );
 
-      testWidgets(
-        'Settings Select, Checkbox, and Danger zone Disclosure work',
-        (tester) async {
-          final semantics = tester.ensureSemantics();
-          await _pumpDashboard(
-            tester,
-            preset: preset,
-            initialPage: RegistryDashboardDemoPage.settings,
-          );
+      if (preset != .fortal)
+        testWidgets(
+          'Settings Select, Checkbox, and Danger zone Disclosure work',
+          (tester) async {
+            final semantics = tester.ensureSemantics();
+            await _pumpDashboard(
+              tester,
+              preset: preset,
+              initialPage: RegistryDashboardDemoPage.settings,
+            );
 
-          final language = find.semantics.byLabel('Language');
-          expect(language, findsOne);
-          expect(
-            language.evaluate().single.getSemanticsData().value,
-            preset == .fortal ? 'English (US)' : 'English',
-          );
+            final language = find.semantics.byLabel('Language');
+            expect(language, findsOne);
+            expect(
+              language.evaluate().single.getSemanticsData().value,
+              'English',
+            );
 
-          final select = find.byType(RemixSelect<String>);
-          expect(_glyphIn(select, RemixPathGlyph.chevronDown), findsOneWidget);
-          expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
+            final select = find.byType(RemixSelect<String>);
+            expect(
+              _glyphIn(select, RemixPathGlyph.chevronDown),
+              findsOneWidget,
+            );
+            expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
 
-          tester.semantics.tap(language);
-          await tester.pumpAndSettle();
-          expect(_transformAngleIn(tester, select), closeTo(math.pi, 0.01));
-          expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
+            tester.semantics.tap(language);
+            await tester.pumpAndSettle();
+            expect(_transformAngleIn(tester, select), closeTo(math.pi, 0.01));
+            expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
 
-          await tester.tap(find.text('Spanish').last);
-          await tester.pumpAndSettle();
-          expect(
-            find.descendant(of: select, matching: find.text('Spanish')),
-            findsOneWidget,
-          );
-          expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
-          expect(
-            language.evaluate().single.getSemanticsData().value,
-            'Spanish',
-          );
+            await tester.tap(find.text('Spanish').last);
+            await tester.pumpAndSettle();
+            expect(
+              find.descendant(of: select, matching: find.text('Spanish')),
+              findsOneWidget,
+            );
+            expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
+            expect(
+              language.evaluate().single.getSemanticsData().value,
+              'Spanish',
+            );
 
-          final checkbox = find.byType(RemixCheckbox);
-          expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsNothing);
-          await tester.ensureVisible(checkbox);
-          await tester.tap(checkbox);
-          await tester.pumpAndSettle();
-          expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsOneWidget);
+            final checkbox = find.byType(RemixCheckbox);
+            expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsNothing);
+            await tester.ensureVisible(checkbox);
+            await tester.tap(checkbox);
+            await tester.pumpAndSettle();
+            expect(
+              _glyphIn(checkbox, RemixPathGlyph.thickCheck),
+              findsOneWidget,
+            );
 
-          final dangerZone = find
-              .byKey(const ValueKey('settings-danger-zone'))
-              .first;
-          expect(find.text('Delete workspace'), findsNothing);
-          expect(_transformAngleIn(tester, dangerZone), closeTo(0, 0.01));
+            final dangerZone = find
+                .byKey(const ValueKey('settings-danger-zone'))
+                .first;
+            expect(find.text('Delete workspace'), findsNothing);
+            expect(_transformAngleIn(tester, dangerZone), closeTo(0, 0.01));
 
-          await tester.ensureVisible(dangerZone);
-          await tester.tap(find.text('Danger zone'));
-          await tester.pumpAndSettle();
-          expect(find.text('Delete workspace'), findsOneWidget);
-          expect(_transformAngleIn(tester, dangerZone), closeTo(math.pi, 0.01));
-          expect(tester.takeException(), isNull);
+            await tester.ensureVisible(dangerZone);
+            await tester.tap(find.text('Danger zone'));
+            await tester.pumpAndSettle();
+            expect(find.text('Delete workspace'), findsOneWidget);
+            expect(
+              _transformAngleIn(tester, dangerZone),
+              closeTo(math.pi, 0.01),
+            );
+            expect(tester.takeException(), isNull);
 
-          semantics.dispose();
-        },
-      );
+            semantics.dispose();
+          },
+        );
     });
   }
+
+  group('Fortal pages', () {
+    testWidgets('the sidebar lists every page under its section', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await _pumpDashboard(tester, preset: .fortal);
+
+      // The headings paint in capitals; their accessible names do not.
+      for (final section in ['Workspace', 'Catalog', 'Manage']) {
+        expect(find.semantics.byLabel(section), findsWidgets, reason: section);
+      }
+      for (final page in FortalDashboardDemoPage.values) {
+        expect(
+          find.byKey(ValueKey(page)),
+          findsOneWidget,
+          reason: '${page.name} destination',
+        );
+      }
+      expect(tester.takeException(), isNull);
+      semantics.dispose();
+    });
+
+    testWidgets('every Fortal screen exposes its section inventory', (
+      tester,
+    ) async {
+      const expected = <FortalDashboardDemoPage, List<String>>{
+        .overview: ['Revenue', 'Sales by channel', 'Recent orders', 'Activity'],
+        .analytics: [
+          'Orders by channel',
+          'Sell-through',
+          'Channel performance',
+          'Insights',
+        ],
+        .schedule: ['Schedule', 'New event', 'Agenda'],
+        .chat: ['What should we work on?', 'Review checkout'],
+        .collection: ['Collection', 'New edition', 'View edition'],
+        .customers: ['Customers', 'Collectors', 'Customer'],
+        .orders: ['Orders', 'Awaiting payment', 'Paid'],
+        .themes: ['Themes', 'Appearance'],
+        .settings: ['Profile', 'Notifications', 'Appearance', 'Plan'],
+      };
+      // A new page needs an inventory here.
+      expect(expected.keys, unorderedEquals(FortalDashboardDemoPage.values));
+
+      final mixWarnings = <String>[];
+      final originalDebugPrint = debugPrint;
+      debugPrint = (String? message, {int? wrapWidth}) {
+        if (message != null && message.contains('Mix: could not convert')) {
+          mixWarnings.add(message);
+        }
+      };
+      try {
+        for (final entry in expected.entries) {
+          await _pumpDashboard(tester, preset: .fortal, fortalPage: entry.key);
+          final page = find.byKey(ValueKey('dashboard-page-${entry.key.name}'));
+          expect(page, findsOneWidget, reason: entry.key.name);
+          for (final label in entry.value) {
+            expect(
+              find.descendant(of: page, matching: find.text(label)),
+              findsWidgets,
+              reason: '${entry.key.name}: $label',
+            );
+          }
+          expect(tester.takeException(), isNull, reason: entry.key.name);
+          expect(mixWarnings, isEmpty, reason: entry.key.name);
+        }
+      } finally {
+        debugPrint = originalDebugPrint;
+      }
+    });
+
+    testWidgets('overview renders coherent sample data', (tester) async {
+      await _pumpOverview(tester, preset: .fortal, width: 1280);
+
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('overview-revenue-total')),
+          matching: find.text(r'$84.4K'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Mon'), findsWidgets);
+      expect(find.text('ORD-1048'), findsOneWidget);
+      expect(find.text('Olivia Martin'), findsOneWidget);
+      expect(find.byType(LineChart), findsOneWidget);
+      expect(find.byType(RemixDataTable<FortalDashboardOrder>), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('overview uses caller-owned data', (tester) async {
+      final sample = fortalDashboardSampleData;
+      final data = FortalDashboardData(
+        metrics: const [
+          FortalDashboardMetric(
+            id: 'retained',
+            label: 'Retained metric',
+            value: '17',
+            delta: '+1.0%',
+            trend: [1, 2, 3],
+          ),
+        ],
+        revenue: sample.revenue,
+        channels: sample.channels,
+        weeks: sample.weeks,
+        editions: sample.editions,
+        customers: sample.customers,
+        orders: [
+          FortalDashboardOrder(
+            id: 'LOCAL-1',
+            customer: 'Local customer',
+            edition: 'Local edition',
+            date: DateTime(2026, 1, 2),
+            amount: 17,
+            status: .paid,
+            channel: 'Studio store',
+          ),
+        ],
+        activities: sample.activities,
+        goals: sample.goals,
+        team: sample.team,
+        events: sample.events,
+        today: sample.today,
+      );
+      await _pumpOverview(
+        tester,
+        preset: .fortal,
+        width: 760,
+        fortalData: data,
+      );
+
+      expect(find.text('Retained metric'), findsOneWidget);
+      expect(find.text('LOCAL-1'), findsOneWidget);
+      expect(find.text('ORD-1048'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('overview lays out in RTL with its View all actions', (
+      tester,
+    ) async {
+      await _pumpOverview(
+        tester,
+        preset: .fortal,
+        width: 1280,
+        textDirection: .rtl,
+      );
+
+      expect(find.byKey(const ValueKey('overview-view-orders')), findsWidgets);
+      expect(
+        find.byKey(const ValueKey('overview-view-collection')),
+        findsWidgets,
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('tables expose full controlled interaction contracts', (
+      tester,
+    ) async {
+      await _pumpDashboard(
+        tester,
+        preset: .fortal,
+        initialPage: RegistryDashboardDemoPage.customers,
+      );
+      var customers = tester.widget<RemixDataTable<FortalDashboardCustomer>>(
+        find.byType(RemixDataTable<FortalDashboardCustomer>),
+      );
+      expect(customers.columns.map((column) => column.id), [
+        'name',
+        'city',
+        'tier',
+        'spent',
+        'status',
+        'joined',
+        'actions',
+      ]);
+      expect(customers.totalRows, 24);
+      expect(customers.rows, hasLength(10));
+      expect(customers.onSortChanged, isNotNull);
+      expect(customers.onSelectionChanged, isNotNull);
+      expect(customers.onPageChanged, isNotNull);
+      expect(customers.onPageSizeChanged, isNotNull);
+
+      customers.onSelectionChanged!({customers.rows.first.id});
+      await tester.pump();
+      expect(find.text('1 selected'), findsOneWidget);
+
+      customers = tester.widget(
+        find.byType(RemixDataTable<FortalDashboardCustomer>),
+      );
+      customers.onPageChanged!(1);
+      await tester.pump();
+      customers = tester.widget(
+        find.byType(RemixDataTable<FortalDashboardCustomer>),
+      );
+      expect(customers.pageIndex, 1);
+      expect(customers.rows, hasLength(10));
+
+      await tester.tap(find.text('Orders').first);
+      await tester.pump();
+      final ordersTable = find.descendant(
+        of: find.byKey(const ValueKey('dashboard-page-orders')),
+        matching: find.byType(RemixDataTable<FortalDashboardOrder>),
+      );
+      var orders = tester.widget<RemixDataTable<FortalDashboardOrder>>(
+        ordersTable,
+      );
+      expect(orders.columns.map((column) => column.id), [
+        'id',
+        'edition',
+        'customer',
+        'date',
+        'channel',
+        'amount',
+        'status',
+        'actions',
+      ]);
+      expect(orders.totalRows, 30);
+      orders.onSortChanged!(
+        const RemixDataTableSort(
+          columnId: 'amount',
+          direction: RemixDataTableSortDirection.ascending,
+        ),
+      );
+      await tester.pump();
+      orders = tester.widget(ordersTable);
+      expect(orders.sort?.columnId, 'amount');
+      expect(
+        orders.rows.first.amount,
+        lessThanOrEqualTo(orders.rows.last.amount),
+      );
+
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const ValueKey('order-status')),
+          matching: find.text('Pending'),
+        ),
+      );
+      await tester.pump();
+      orders = tester.widget(ordersTable);
+      expect(
+        orders.rows,
+        everyElement(
+          isA<FortalDashboardOrder>().having(
+            (order) => order.status,
+            'status',
+            FortalDashboardOrderStatus.pending,
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('Settings Select, Checkbox, and Danger zone Disclosure work', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await _pumpDashboard(
+        tester,
+        preset: .fortal,
+        initialPage: RegistryDashboardDemoPage.settings,
+      );
+
+      final language = find.semantics.byLabel('Language');
+      expect(language, findsOne);
+      expect(
+        language.evaluate().single.getSemanticsData().value,
+        'English (US)',
+      );
+
+      final select = find.byType(RemixSelect<String>);
+      expect(_glyphIn(select, RemixPathGlyph.chevronDown), findsOneWidget);
+      expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
+
+      tester.semantics.tap(language);
+      await tester.pumpAndSettle();
+      expect(_transformAngleIn(tester, select), closeTo(math.pi, 0.01));
+      expect(_pathGlyph(RemixPathGlyph.thickCheck), findsOneWidget);
+
+      await tester.tap(find.text('Spanish').last);
+      await tester.pumpAndSettle();
+      expect(
+        find.descendant(of: select, matching: find.text('Spanish')),
+        findsOneWidget,
+      );
+      expect(_transformAngleIn(tester, select), closeTo(0, 0.01));
+      expect(language.evaluate().single.getSemanticsData().value, 'Spanish');
+
+      final dangerZone = find
+          .byKey(const ValueKey('settings-danger-zone'))
+          .first;
+      expect(find.text('Delete workspace'), findsNothing);
+      expect(_transformAngleIn(tester, dangerZone), closeTo(0, 0.01));
+
+      await tester.ensureVisible(dangerZone);
+      await tester.tap(find.text('Danger zone'));
+      await tester.pumpAndSettle();
+      expect(find.text('Delete workspace'), findsOneWidget);
+      expect(_transformAngleIn(tester, dangerZone), closeTo(math.pi, 0.01));
+
+      // The product-updates checkbox now lives on the Notifications tab.
+      await _openFortalTab(tester, 'notifications');
+      final checkbox = find.byType(RemixCheckbox);
+      expect(checkbox, findsOneWidget);
+      expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsNothing);
+      await tester.ensureVisible(checkbox);
+      await tester.tap(checkbox);
+      await tester.pumpAndSettle();
+      expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      semantics.dispose();
+    });
+  });
 
   testWidgets('settings radius keeps a host\'s custom dark theme', (
     tester,
@@ -2059,11 +2524,12 @@ Future<void> _pumpOverview(
   double height = 800,
   TextScaler textScaler = TextScaler.noScaling,
   RegistryDashboardSampleData data = registryDashboardSampleData,
+  FortalDashboardData? fortalData,
   TextDirection textDirection = TextDirection.ltr,
 }) async {
   final overview = switch (preset) {
     .defaultPreset => VanillaDashboardOverview(data: data),
-    .fortal => FortalDashboardOverview(data: data),
+    .fortal => FortalDashboardOverview(data: fortalData),
     .heroui => HeroUiDashboardOverview(data: data),
   };
   await _pump(
@@ -2081,6 +2547,8 @@ Future<void> _pumpDashboard(
   WidgetTester tester, {
   required _Preset preset,
   RegistryDashboardDemoPage initialPage = RegistryDashboardDemoPage.overview,
+  // Fortal's pages are its own; this overrides [initialPage] for it.
+  FortalDashboardDemoPage? fortalPage,
   Duration chatStepDelay = const Duration(milliseconds: 320),
   bool builtInChrome = true,
   Widget? account,
@@ -2109,7 +2577,8 @@ Future<void> _pumpDashboard(
     .fortal => FortalDashboardDemo(
       key: ValueKey(initialPage),
       brand: const Text('Acme starter'),
-      initialPage: initialPage,
+      initialPage:
+          fortalPage ?? FortalDashboardDemoPage.values.byName(initialPage.name),
       chatStepDelay: chatStepDelay,
       builtInChrome: builtInChrome,
       account: account,
@@ -2253,6 +2722,43 @@ Object _radius(_Preset preset, BuildContext context) => switch (preset) {
   .fortal => FortalTheme.of(context).radius,
   .heroui => HeroUiTheme.of(context).radius,
 };
+
+/// The Fortal sample data with [points] as the revenue of every range.
+FortalDashboardData _fortalRevenue(List<FortalDashboardPoint> points) {
+  final sample = fortalDashboardSampleData;
+  return FortalDashboardData(
+    metrics: sample.metrics,
+    revenue: {for (final range in FortalDashboardRange.values) range: points},
+    channels: sample.channels,
+    weeks: sample.weeks,
+    editions: sample.editions,
+    customers: sample.customers,
+    orders: sample.orders,
+    activities: sample.activities,
+    goals: sample.goals,
+    team: sample.team,
+    events: sample.events,
+    today: sample.today,
+  );
+}
+
+/// The series that plots the current period of a revenue [chart].
+LineSeries _currentSeries(_Preset preset, LineChart chart) => preset == .fortal
+    ? chart.series.firstWhere((series) => series.id == 'current')
+    : chart.series.single;
+
+/// Opens the Fortal Settings tab [name], such as `appearance`.
+Future<void> _openFortalTab(WidgetTester tester, String name) async {
+  // The page may have scrolled the tab bar out of reach.
+  final tab = find.byKey(ValueKey('settings-tab-$name')).first;
+  await tester.ensureVisible(tab);
+  await tester.pumpAndSettle();
+  await tester.tap(tab);
+  await tester.pumpAndSettle();
+}
+
+Future<void> _openFortalAppearance(WidgetTester tester) =>
+    _openFortalTab(tester, 'appearance');
 
 Future<void> _changeRadius(WidgetTester tester, _Preset preset) async {
   if (preset == .fortal) {

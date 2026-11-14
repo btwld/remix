@@ -92,42 +92,46 @@ void main() {
   testWidgets('overview metrics collapse 4 to 2 to 1 and stretch in-row', (
     tester,
   ) async {
+    // The grid is 4 wide from 1000 of content, 2 wide from 520, else 1. The
+    // page adds 48 of padding (32 under a 600 wide window).
     final wide = await _pumpOverview(tester, width: 1200);
     expect(wide[1].top, closeTo(wide[0].top, 0.5));
     expect(wide[2].top, closeTo(wide[0].top, 0.5));
     expect(wide[3].top, closeTo(wide[0].top, 0.5));
     expect(wide[0].height, closeTo(wide[3].height, 0.5));
+    expect(wide[0].height, closeTo(wide[1].height, 0.5));
 
     final medium = await _pumpOverview(tester, width: 800);
     expect(medium[1].top, closeTo(medium[0].top, 0.5));
     expect(medium[2].top, greaterThan(medium[0].bottom));
     expect(medium[3].top, closeTo(medium[2].top, 0.5));
+    expect(medium[0].height, closeTo(medium[1].height, 0.5));
     expect(medium[2].height, closeTo(medium[3].height, 0.5));
-    expect(medium[3].height, greaterThan(medium[0].height));
 
     final compact = await _pumpOverview(tester, width: 500);
     expect(compact[1].top, greaterThan(compact[0].bottom));
     expect(compact[2].top, greaterThan(compact[1].bottom));
     expect(compact[3].top, greaterThan(compact[2].bottom));
-    expect(compact[3].height, greaterThan(compact[0].height));
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('activity and recent orders sit side-by-side then stack', (
+  testWidgets('recent orders and activity sit side-by-side then stack', (
     tester,
   ) async {
-    await _pumpOverview(tester, width: 1050);
-    final wideActivity = _cardAround(tester, find.text('Recent activity'));
+    // Two thirds and one third, in one column under 900 of content.
+    await _pumpOverview(tester, width: 948);
     final wideOrders = _cardAround(tester, find.text('Recent orders'));
-    expect(wideOrders.top, closeTo(wideActivity.top, 0.5));
-    expect(wideOrders.height, closeTo(wideActivity.height, 0.5));
-    expect(wideOrders.left, greaterThan(wideActivity.right));
+    final wideActivity = _cardAround(tester, find.text('Activity'));
+    expect(wideActivity.top, closeTo(wideOrders.top, 0.5));
+    expect(wideActivity.height, closeTo(wideOrders.height, 0.5));
+    expect(wideActivity.left, greaterThan(wideOrders.right));
+    expect(wideOrders.width, greaterThan(wideActivity.width));
 
-    await _pumpOverview(tester, width: 1049);
-    final stackedActivity = _cardAround(tester, find.text('Recent activity'));
+    await _pumpOverview(tester, width: 947);
     final stackedOrders = _cardAround(tester, find.text('Recent orders'));
-    expect(stackedOrders.top, greaterThan(stackedActivity.bottom));
-    expect(stackedOrders.left, closeTo(stackedActivity.left, 0.5));
+    final stackedActivity = _cardAround(tester, find.text('Activity'));
+    expect(stackedActivity.top, greaterThan(stackedOrders.bottom));
+    expect(stackedActivity.left, closeTo(stackedOrders.left, 0.5));
     expect(tester.takeException(), isNull);
   });
 
@@ -144,50 +148,27 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    await tester.pumpWidget(
-      UiDashboardThemeScope(
-        settings: const UiThemeSettings(),
-        onChanged: (_) {},
-        child: UiTheme(
-          child: WidgetsApp(
-            color: const Color(0xFFFFFFFF),
-            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-              settings: settings,
-              pageBuilder: (context, _, _) => builder(context),
-            ),
-            home: UiDashboardSettingsPage(
-              darkMode: null,
-              onDarkModeChanged: (_) {},
-            ),
+    // The profile tab is the page's first tab.
+    Future<void> pumpSettings() => tester.pumpWidget(
+      UiTheme(
+        child: WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+            settings: settings,
+            pageBuilder: (context, _, _) => builder(context),
           ),
+          home: const UiDashboardSettingsPage(),
         ),
       ),
     );
+    await pumpSettings();
     final wideName = field('Name');
     final wideEmail = field('Email');
     expect(wideEmail.top, closeTo(wideName.top, 0.5));
     expect(wideEmail.left, greaterThan(wideName.right));
 
     tester.view.physicalSize = const Size(500, 1600);
-    await tester.pumpWidget(
-      UiDashboardThemeScope(
-        settings: const UiThemeSettings(),
-        onChanged: (_) {},
-        child: UiTheme(
-          child: WidgetsApp(
-            color: const Color(0xFFFFFFFF),
-            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-              settings: settings,
-              pageBuilder: (context, _, _) => builder(context),
-            ),
-            home: UiDashboardSettingsPage(
-              darkMode: null,
-              onDarkModeChanged: (_) {},
-            ),
-          ),
-        ),
-      ),
-    );
+    await pumpSettings();
     final stackedName = field('Name');
     final stackedEmail = field('Email');
     expect(stackedEmail.top, greaterThan(stackedName.bottom));
@@ -195,50 +176,36 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets(
-    'overview chart cells stretch in a row and size rows to content',
-    (tester) async {
-      tester.view.physicalSize = const Size(1400, 1800);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets('overview cards stretch in a row and size rows to content', (
+    tester,
+  ) async {
+    // Revenue leads a row beside the featured edition; the channel, top
+    // editions and goals cards share the row below the metrics.
+    Future<List<Rect>> cards() async => [
+      _cardAround(tester, find.text('Revenue')),
+      // The keyed widget is the card itself.
+      tester.getRect(find.byKey(const ValueKey('overview-featured')).first),
+      _cardAround(tester, find.text('Sales by channel')),
+      _cardAround(tester, find.text('Top editions')),
+      _cardAround(tester, find.text('Studio goals')),
+    ];
 
-      Future<List<Rect>> pumpAt(double width) async {
-        await tester.pumpWidget(
-          UiTheme(
-            child: WidgetsApp(
-              color: const Color(0xFFFFFFFF),
-              pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-                settings: settings,
-                pageBuilder: (context, _, _) => builder(context),
-              ),
-              home: Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(width: width, child: const UiAnalyticsCharts()),
-              ),
-            ),
-          ),
-        );
-        return [
-          _cardAround(tester, find.text('Revenue trend')),
-          _cardAround(tester, find.text('Order volume')),
-          _cardAround(tester, find.text('Channel mix')),
-        ];
-      }
+    await _pumpOverview(tester, width: 1200);
+    final wide = await cards();
+    expect(wide[1].top, closeTo(wide[0].top, 0.5));
+    expect(wide[1].height, closeTo(wide[0].height, 0.5));
+    expect(wide[3].top, closeTo(wide[2].top, 0.5));
+    expect(wide[4].top, closeTo(wide[2].top, 0.5));
+    expect(wide[3].height, closeTo(wide[2].height, 0.5));
+    expect(wide[4].height, closeTo(wide[2].height, 0.5));
 
-      final wide = await pumpAt(1200);
-      expect(wide[1].top, closeTo(wide[0].top, 0.5));
-      expect(wide[2].top, closeTo(wide[0].top, 0.5));
-      expect(wide[1].height, closeTo(wide[0].height, 0.5));
-      expect(wide[2].height, closeTo(wide[0].height, 0.5));
-
-      final compact = await pumpAt(700);
-      expect(compact[1].top, greaterThan(compact[0].bottom));
-      expect(compact[2].top, greaterThan(compact[1].bottom));
-      expect(compact[1].height, greaterThan(compact[0].height));
-      expect(tester.takeException(), isNull);
-    },
-  );
+    await _pumpOverview(tester, width: 700);
+    final compact = await cards();
+    expect(compact[1].top, greaterThan(compact[0].bottom));
+    expect(compact[3].top, greaterThan(compact[2].bottom));
+    expect(compact[4].top, greaterThan(compact[3].bottom));
+    expect(tester.takeException(), isNull);
+  });
 }
 
 Future<List<Rect>> _pumpOverview(
@@ -258,20 +225,20 @@ Future<List<Rect>> _pumpOverview(
           settings: settings,
           pageBuilder: (context, _, _) => builder(context),
         ),
-        home: UiDashboardOverview(onViewOrders: () {}),
+        home: const UiDashboardOverview(),
       ),
     ),
   );
   return [
-    _cardAround(tester, find.text('Revenue')),
-    _cardAround(tester, find.text('Active customers')),
-    _cardAround(tester, find.text('Open orders')),
-    _cardAround(tester, find.text('Fulfillment')),
+    _cardAround(tester, find.text('Orders')),
+    _cardAround(tester, find.text('Active collectors')),
+    _cardAround(tester, find.text('Avg. order value')),
+    _cardAround(tester, find.text('Shipped on time')),
   ];
 }
 
 Rect _cardAround(WidgetTester tester, Finder label) {
   return tester.getRect(
-    find.ancestor(of: label, matching: find.byType(UiCard)).first,
+    find.ancestor(of: label, matching: find.byType(UiSurface)).first,
   );
 }

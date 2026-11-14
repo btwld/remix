@@ -827,14 +827,23 @@ packages:
         final overview = File(
           p.join(dashboardDirectory.path, 'dashboard_overview.dart'),
         );
+        // Fortal's demo is its own product: it installs its own data and
+        // none of the bases Vanilla shares with HeroUI.
+        final fortal = preset == 'fortal';
         final overviewBase = File(
           p.join(dashboardDirectory.path, 'dashboard_overview_base.dart'),
         );
+        final sampleDataName = fortal
+            ? 'dashboard_demo_data.dart'
+            : 'dashboard_sample_data.dart';
         final sampleData = File(
-          p.join(dashboardDirectory.path, 'dashboard_sample_data.dart'),
+          p.join(dashboardDirectory.path, sampleDataName),
         );
         final demoBase = File(
           p.join(dashboardDirectory.path, 'dashboard_demo_base.dart'),
+        );
+        final demoArtwork = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_artwork.dart'),
         );
         final demoChat = File(
           p.join(dashboardDirectory.path, 'dashboard_demo_chat.dart'),
@@ -852,17 +861,18 @@ packages:
           p.join(dashboardDirectory.path, 'dashboard_demo_settings.dart'),
         );
         expect(dashboardDemo.existsSync(), isTrue);
-        expect(demoBase.existsSync(), isTrue);
+        expect(demoBase.existsSync(), !fortal);
         expect(demoChat.existsSync(), isTrue);
         expect(demoCharts.existsSync(), isTrue);
-        expect(demoRecords.existsSync(), isTrue);
+        expect(demoRecords.existsSync(), !fortal);
         expect(demoRecordsPage.existsSync(), isTrue);
         expect(demoSettings.existsSync(), isTrue);
         expect(overview.existsSync(), isTrue);
-        expect(overviewBase.existsSync(), isTrue);
+        expect(overviewBase.existsSync(), !fortal);
+        expect(demoArtwork.existsSync(), fortal);
         expect(
           sampleData.readAsStringSync(),
-          contains('AcmeDashboardSampleData'),
+          contains(fortal ? 'AcmeDashboardData' : 'AcmeDashboardSampleData'),
         );
         expect(
           File(
@@ -881,7 +891,7 @@ packages:
           allOf(
             contains("export 'recipes/dashboard/dashboard_demo.dart';"),
             contains("export 'recipes/dashboard/dashboard_overview.dart';"),
-            contains("export 'recipes/dashboard/dashboard_sample_data.dart';"),
+            contains("export 'recipes/dashboard/$sampleDataName';"),
           ),
         );
         for (final entry in hostBefore.entries) {
@@ -905,7 +915,7 @@ packages:
           isNot(contains('retained local metric')),
         );
 
-        overviewBase.deleteSync();
+        (fortal ? demoArtwork : overviewBase).deleteSync();
         final beforePartial = snapshotFiles(caseRoot);
         await expectLater(
           installer.add(

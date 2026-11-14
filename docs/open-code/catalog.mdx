@@ -31,11 +31,16 @@ primitives, with `app_bar` as its page header (`title`, an optional `Widget?`
 `headerActions`), into a host-controlled responsive shell (`collapsedWidth`
 defaults to `72` vs `48` on standalone `UiSidebarLayout`). It installs no
 charts, tables, sample data, routes, or application entry point.
-`dashboard_demo` adds the five-destination reference application: Overview,
-Chat, Customers, Orders, and Settings. Product content and navigation match
-across presets while rendering each preset's own components and variants. The
-starter includes deterministic Agent flows, complete customer and order tables,
-overview charts, appearance and notification chrome, and local toast feedback.
+`dashboard_demo` adds the reference application. Vanilla and HeroUI ship five
+destinations (Overview, Chat, Customers, Orders, and Settings) whose product
+content and navigation match while each renders its own components and
+variants. Fortal ships nine (Overview, Analytics, Schedule, Chat, Collection,
+Customers, Orders, Themes, and Settings) around one product: an overview bento
+with an emphasis hierarchy, an image-card collection with generated cover art,
+a calendar, a page for its seven palettes, and a quick-find field in the
+header. Every starter includes deterministic Agent flows, complete
+customer and order tables, charts, appearance and notification chrome, and
+local toast feedback.
 Built-in chrome can be disabled; caller actions append to it and caller account
 content replaces the default. It leaves the application, routes,
 authentication, persistence, and backend search behavior with the host.

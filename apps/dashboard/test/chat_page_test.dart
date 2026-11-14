@@ -15,6 +15,8 @@ Future<void> _openChat(WidgetTester tester, {Size? size}) async {
   await tester.pumpWidget(const DashboardApp());
   await tester.tap(find.text('Chat').first);
   await tester.pump();
+  // The entering page fades in over 200ms and joins semantics once visible.
+  await tester.pump(const Duration(milliseconds: 250));
 }
 
 /// A suggestion fills the composer; Send submits it, as a reader does.
@@ -208,7 +210,10 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
-    final scope = tester.widget<UiTheme>(find.byType(UiTheme));
+    // Each kept page holds a theme of its own, so name the application's.
+    final scope = tester.widget<UiTheme>(
+      find.byKey(const ValueKey('dashboard-theme-scope')),
+    );
     expect(scope.mode, UiThemeMode.dark);
     expect(scope.accent, UiAccentColor.mar);
     expect(_call(tester).call.status, AgentToolCallStatus.awaitingApproval);

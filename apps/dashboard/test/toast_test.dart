@@ -27,7 +27,8 @@ void main() {
     final before = tester.widget<Icon>(toastIcon).color;
 
     final themeScope = tester.widget<UiDashboardThemeScope>(
-      find.byType(UiDashboardThemeScope),
+      // The application's scope. Each kept page holds one below it.
+      find.byType(UiDashboardThemeScope).first,
     );
     themeScope.onChanged(
       themeScope.settings.copyWith(accentColor: UiAccentColor.serra),

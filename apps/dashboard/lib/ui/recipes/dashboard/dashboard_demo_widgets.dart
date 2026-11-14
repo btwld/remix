@@ -1,115 +1,227 @@
 import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
-import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-import 'dashboard_demo_page_header.dart';
-import 'dashboard_demo_records.dart';
+import 'dashboard_demo_artwork.dart';
+import 'dashboard_demo_data.dart';
 import 'dashboard_demo_text.dart';
 import 'dashboard_demo_theme.dart';
 import 'dashboard_demo_typography.dart';
 import 'dashboard_demo_ui.dart';
 
-/// Tag row under a stat card's value: delta badge plus caption.
-final uiStatTagsStyle = WrapBoxStyler()
-    .spacing(8)
-    .runSpacing(6)
-    .crossAxisAlignment(.center);
+/// How loudly a [UiSurface] speaks.
+///
+/// The preset's card has one resting look, so a page built from it alone is
+/// flat: every block asks for the same attention. The dashboard settles the
+/// hierarchy here, once, instead of restyling cards page by page. Ui cards
+/// never cast a shadow, so emphasis comes from fill and contrast alone.
+enum UiSurfaceEmphasis {
+  /// The preset's surface card: a panel inside a hairline frame. The default
+  /// for content of ordinary weight.
+  standard,
 
-/// Metric card used on the dashboard overview page.
-class UiStatCard extends StatelessWidget {
-  const UiStatCard({
+  /// An accent wash, for supporting content that belongs to the accent: a
+  /// goal, a tip, a plan.
+  tinted,
+
+  /// A faint neutral wash, for content that should recede behind its
+  /// neighbours.
+  quiet,
+
+  /// The opposite appearance: a dark panel in light mode and a light one in
+  /// dark mode. Reserve it for the one thing a page leads with.
+  ///
+  /// Everything inside resolves its tokens for that opposite appearance, so
+  /// text, controls and charts keep their contrast without special cases.
+  inverse,
+}
+
+/// A card at one of the dashboard's [UiSurfaceEmphasis] levels.
+class UiSurface extends StatelessWidget {
+  const UiSurface({
     super.key,
-    required this.label,
-    required this.value,
-    this.caption = 'vs last month',
-    this.delta,
-    this.positive = true,
-    this.icon,
-    this.progress,
+    this.emphasis = .standard,
+    this.size = .size2,
+    this.padded = true,
+    required this.child,
   });
 
-  /// The metric name.
-  final String label;
+  static final _tinted = CardStyler()
+      .color(UiTokens.accentA3())
+      .border(.all(.color(UiTokens.accentA4())));
 
-  /// The metric's current value.
-  final String value;
+  static final _quiet = CardStyler()
+      .color(UiTokens.grayA2())
+      .border(.all(.color(UiTokens.grayA3())));
 
-  /// Text beside the delta, naming the period it compares to.
-  final String caption;
+  static final _flush = CardStyler().padding(.all(0));
 
-  /// The change over that period, shown as a badge. Omitted when null.
-  final String? delta;
+  /// How much attention the surface asks for.
+  final UiSurfaceEmphasis emphasis;
 
-  /// Whether the change is good. It chooses the badge color.
-  final bool positive;
+  /// The padding and corner size, as for [UiCard].
+  final UiCardSize size;
 
-  /// Replaces the icon otherwise chosen from [label].
-  final IconData? icon;
+  /// Whether the surface pads its [child]. Turn it off for content that runs
+  /// to the edge, such as a cover image or a table.
+  final bool padded;
 
-  /// Completion shown as a bar, as a fraction or a percentage. Omitted when null.
-  final double? progress;
+  /// The surface's content.
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final resolvedIcon =
-        icon ??
-        switch (label) {
-          'Revenue' => RemixIcons.chart,
-          'Active customers' => RemixIcons.user,
-          'Open orders' => RemixIcons.box,
-          'Fulfillment' => RemixIcons.activity,
-          _ => RemixIcons.activity,
-        };
-    final column = ColumnBox(
-      style: FlexBoxStyler()
-          .mainAxisSize(.min)
-          .crossAxisAlignment(.stretch)
-          .spacing(12),
-      children: [
-        RowBox(
-          style: FlexBoxStyler().crossAxisAlignment(.center),
-          children: [
-            Expanded(
-              child: StyledText(
-                label,
-                style: dashboardText(.size2, tone: .muted),
-              ),
-            ),
-            UiAvatar.soft(icon: resolvedIcon, size: .size2),
-          ],
-        ),
-        UiText(value, size: .size7, weight: .bold),
-        uiStatTagsStyle(
-          children: [
-            if (delta case final delta?)
-              positive
-                  ? UiAccentScope(
-                      accent: .serra,
-                      child: UiBadge(highContrast: true, label: delta),
-                    )
-                  : UiAccentScope.error(
-                      child: UiBadge(highContrast: true, label: delta),
-                    ),
-            StyledText(caption, style: dashboardText(.size1, tone: .muted)),
-          ],
-        ),
-        if (progress case final value?)
-          UiProgress(
-            value: value <= 1 ? value : value / 100,
-            size: .size1,
-            semanticsLabel: label,
-          ),
-      ],
+    final card = UiCard(
+      size: size,
+      style: switch (emphasis) {
+        .tinted => _tinted,
+        .quiet => _quiet,
+        .standard || .inverse => const CardStyler.create(),
+      }.merge(padded ? null : _flush),
+      child: child,
     );
+    if (emphasis != .inverse) return card;
 
-    return UiCard(size: .size2, child: column);
+    return UiTheme(
+      mode: UiTheme.of(context).isDark ? .light : .dark,
+      hasBackground: false,
+      child: card,
+    );
   }
 }
 
-/// Domain status badge. Its text label carries the status; the color only
+/// A [UiCard] that is one button: the whole surface takes the press, the
+/// hover and the focus ring.
+class UiPressableSurface extends StatelessWidget {
+  const UiPressableSurface({
+    super.key,
+    required this.onPressed,
+    required this.semanticLabel,
+    this.size = .size2,
+    this.padded = true,
+    required this.child,
+  });
+
+  static final _flush = CardStyler().padding(.all(0));
+
+  /// Called when the surface is activated.
+  final VoidCallback onPressed;
+
+  /// The button's accessible name.
+  final String semanticLabel;
+
+  /// The padding and corner size, as for [UiCard].
+  final UiCardSize size;
+
+  /// Whether the surface pads its [child].
+  final bool padded;
+
+  /// The surface's content. It is described by [semanticLabel], so its own
+  /// text is hidden from assistive technology.
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Pressable(
+    onPress: onPressed,
+    semanticsLabel: semanticLabel,
+    mouseCursor: SystemMouseCursors.click,
+    child: ExcludeSemantics(
+      child: UiCard(
+        size: size,
+        style: padded ? const CardStyler.create() : _flush,
+        child: child,
+      ),
+    ),
+  );
+}
+
+/// Confirms an action with a toast. The demo has no backend, so this is how
+/// every action on every page reports that it ran.
+void uiDashboardToast(BuildContext context, String title) => showRemixToast(
+  context,
+  RemixToastData(title: title, icon: RemixIcons.checkCircle),
+);
+
+/// The title of a card, with optional supporting copy and a trailing control.
+class UiCardHeader extends StatelessWidget {
+  const UiCardHeader({
+    super.key,
+    required this.title,
+    this.description,
+    this.trailing,
+  });
+
+  /// The card title, published as a level-two heading.
+  final String title;
+
+  /// A line of supporting copy under the title.
+  final String? description;
+
+  /// A control at the end of the header, such as a range switch or a link.
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.start)
+        .spacing(UiTokens.space3()),
+    children: [
+      Expanded(
+        child: UiCardTitle(title: title, description: description),
+      ),
+      ?trailing,
+    ],
+  );
+}
+
+/// A card's title over its supporting copy: the text of a
+/// [UiCardHeader], for a header laid out another way.
+class UiCardTitle extends StatelessWidget {
+  const UiCardTitle({super.key, required this.title, this.description});
+
+  /// The card title, published as a level-two heading.
+  final String title;
+
+  /// A line of supporting copy under the title.
+  final String? description;
+
+  @override
+  Widget build(BuildContext context) => ColumnBox(
+    style: FlexBoxStyler()
+        .mainAxisSize(.min)
+        .crossAxisAlignment(.start)
+        .spacing(2),
+    children: [
+      UiHeading(title, headingLevel: 2, size: .size3, weight: .medium),
+      if (description case final description?)
+        StyledText(description, style: dashboardText(.size2, tone: .muted)),
+    ],
+  );
+}
+
+/// A change over a period. Its sign carries the meaning; the color only
+/// reinforces it: the Mar accent for good news, the error red for bad.
+class UiDeltaBadge extends StatelessWidget {
+  const UiDeltaBadge(this.delta, {super.key, this.positive = true});
+
+  /// The change, such as `+12.4%`.
+  final String delta;
+
+  /// Whether the change is good news.
+  final bool positive;
+
+  @override
+  Widget build(BuildContext context) {
+    final badge = UiBadge(highContrast: true, label: delta);
+    return positive
+        ? UiAccentScope(accent: .mar, child: badge)
+        : UiAccentScope.error(child: badge);
+  }
+}
+
+/// A status as a badge. Its text label carries the status; the color only
 /// reinforces it. Negative statuses use the dedicated error red.
 class UiStatusBadge extends StatelessWidget {
   const UiStatusBadge._({super.key, required this.label, this.accent});
@@ -119,8 +231,9 @@ class UiStatusBadge extends StatelessWidget {
         key: key,
         label: capitalize(status.name),
         accent: switch (status) {
-          .paid => .serra,
+          .paid => .mar,
           .pending => .sol,
+          .shipped => .ceu,
           .refunded => null,
           .cancelled => .orla,
         },
@@ -133,27 +246,23 @@ class UiStatusBadge extends StatelessWidget {
     key: key,
     label: capitalize(status.name),
     accent: switch (status) {
-      .active => .serra,
+      .active => .mar,
       .invited => .ceu,
-      .suspended => null,
+      .paused => .orla,
     },
   );
 
-  factory UiStatusBadge.label(String status, {Key? key}) {
-    final normalized = status.trim().toLowerCase();
-    return UiStatusBadge._(
-      key: key,
-      label: capitalize(normalized),
-      accent: switch (normalized) {
-        'paid' || 'active' || 'fulfilled' || 'ready' => .serra,
-        'pending' || 'processing' || 'review' => .sol,
-        'refunded' || 'suspended' => null,
-        'cancelled' => .orla,
-        'invited' => .ceu,
-        _ => .mar,
-      },
-    );
-  }
+  factory UiStatusBadge.edition(UiDashboardEditionStatus status, {Key? key}) =>
+      UiStatusBadge._(
+        key: key,
+        label: status.label,
+        accent: switch (status) {
+          .live => .mar,
+          .lowStock => .sol,
+          .soldOut => .orla,
+          .draft => .ceu,
+        },
+      );
 
   /// The status text.
   final String label;
@@ -169,6 +278,368 @@ class UiStatusBadge extends StatelessWidget {
       null => UiAccentScope.error(child: badge),
     };
   }
+}
+
+/// A headline figure with its change, trend line and optional progress.
+class UiStatCard extends StatelessWidget {
+  const UiStatCard({super.key, required this.metric});
+
+  /// The figure the card reports.
+  final UiDashboardMetric metric;
+
+  @override
+  Widget build(BuildContext context) => UiSurface(
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.stretch)
+          .spacing(UiTokens.space3()),
+      children: [
+        RowBox(
+          style: FlexBoxStyler()
+              .crossAxisAlignment(.center)
+              .spacing(UiTokens.space2()),
+          children: [
+            Expanded(
+              child: StyledText(
+                metric.label,
+                style: dashboardTextLine(.size2, tone: .muted),
+              ),
+            ),
+            UiDeltaBadge(metric.delta, positive: metric.positive),
+          ],
+        ),
+        UiText(metric.value, size: .size7, weight: .bold, truncate: true),
+        UiSparkline(
+          values: metric.trend,
+          semanticLabel: '${metric.label} trend',
+        ),
+        if (metric.progress case final progress?)
+          UiProgress(
+            value: progress,
+            size: .size1,
+            semanticsLabel: metric.label,
+          )
+        else
+          StyledText(
+            metric.caption,
+            style: dashboardTextLine(.size1, tone: .subtle),
+          ),
+      ],
+    ),
+  );
+}
+
+/// A small trend line with a soft fill beneath it and a dot on the last
+/// value.
+///
+/// It draws [values] in the accent's mark color unless [color] is set, sits in
+/// its own layer, and repaints only when the values or the color change.
+class UiSparkline extends StatelessWidget {
+  const UiSparkline({
+    super.key,
+    required this.values,
+    this.color,
+    this.height = 36,
+    this.semanticLabel,
+  });
+
+  /// The values to plot, oldest first.
+  final List<double> values;
+
+  /// The line color. Defaults to the accent's mark color.
+  final Color? color;
+
+  /// The height of the plot, before theme scaling.
+  final double height;
+
+  /// Names the trend for assistive technology. Hidden from it when null.
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final plot = RepaintBoundary(
+      child: CustomPaint(
+        size: Size(
+          double.infinity,
+          height * UiTheme.of(context).scaling.factor,
+        ),
+        painter: _SparklinePainter(
+          values: values,
+          color: color ?? MixScope.tokenOf(UiTokens.accentIndicator, context),
+        ),
+      ),
+    );
+
+    return switch (semanticLabel) {
+      final label? => Semantics(image: true, label: label, child: plot),
+      null => ExcludeSemantics(child: plot),
+    };
+  }
+}
+
+class _SparklinePainter extends CustomPainter {
+  const _SparklinePainter({required this.values, required this.color});
+
+  final List<double> values;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (values.length < 2 || size.isEmpty) return;
+    const stroke = 1.75;
+    const dot = 3.0;
+    final low = values.reduce(math.min);
+    final span = math.max(values.reduce(math.max) - low, 1e-9);
+    final plot = Rect.fromLTRB(
+      stroke,
+      dot,
+      size.width - dot,
+      size.height - stroke,
+    );
+    final points = [
+      for (final (index, value) in values.indexed)
+        Offset(
+          plot.left + plot.width * index / (values.length - 1),
+          plot.bottom - plot.height * (value - low) / span,
+        ),
+    ];
+
+    // Each segment eases through the midpoint of its ends, so the line bends
+    // without overshooting a value.
+    final line = Path()..moveTo(points.first.dx, points.first.dy);
+    for (var index = 1; index < points.length; index++) {
+      final from = points[index - 1];
+      final to = points[index];
+      final middle = (from.dx + to.dx) / 2;
+      line.cubicTo(middle, from.dy, middle, to.dy, to.dx, to.dy);
+    }
+
+    canvas.drawPath(
+      Path.from(line)
+        ..lineTo(points.last.dx, size.height)
+        ..lineTo(points.first.dx, size.height)
+        ..close(),
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [color.withValues(alpha: 0.2), color.withValues(alpha: 0)],
+        ).createShader(Offset.zero & size),
+    );
+    canvas.drawPath(
+      line,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round,
+    );
+    canvas.drawCircle(points.last, dot, Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(_SparklinePainter oldDelegate) =>
+      color != oldDelegate.color || !identical(values, oldDelegate.values);
+}
+
+/// An edition's cover: its photograph when it has one, or the cover generated
+/// from its motif and palette.
+class UiEditionCover extends StatelessWidget {
+  const UiEditionCover(this.edition, {super.key, this.described = false});
+
+  /// The edition pictured.
+  final UiDashboardEdition edition;
+
+  /// Whether the cover names the work to assistive technology. Leave it off
+  /// when the title is read from text beside the cover.
+  final bool described;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = described ? 'Cover of ${edition.title}' : null;
+    return switch (edition.image) {
+      final image? => Image(
+        image: image,
+        fit: BoxFit.cover,
+        semanticLabel: label,
+        excludeFromSemantics: !described,
+      ),
+      null => UiArtwork(
+        motif: edition.motif,
+        accent: edition.accent,
+        seed: edition.seed,
+        semanticLabel: label,
+      ),
+    };
+  }
+}
+
+/// A small square [UiEditionCover] for a list row or a table cell.
+class UiEditionThumbnail extends StatelessWidget {
+  const UiEditionThumbnail(this.edition, {super.key, this.extent = 44});
+
+  /// The edition pictured.
+  final UiDashboardEdition edition;
+
+  /// The side of the square, before theme scaling.
+  final double extent;
+
+  @override
+  Widget build(BuildContext context) {
+    final side = extent * UiTheme.of(context).scaling.factor;
+    return Box(
+      style: BoxStyler()
+          .size(side, side)
+          .borderRadius(.all(UiTokens.radius3()))
+          .clipBehavior(.antiAlias),
+      child: UiEditionCover(edition),
+    );
+  }
+}
+
+/// A row of small avatars, each tinted with its member's accent. Members past
+/// [limit] collapse into a count.
+class UiAvatarStack extends StatelessWidget {
+  const UiAvatarStack({super.key, required this.members, this.limit = 4});
+
+  /// The people shown, in order.
+  final List<UiDashboardMember> members;
+
+  /// How many avatars to show before the rest collapse into a count.
+  final int limit;
+
+  @override
+  Widget build(BuildContext context) {
+    final rest = members.length - limit;
+    return Semantics(
+      label: members.map((member) => member.name).join(', '),
+      container: true,
+      child: ExcludeSemantics(
+        child: RowBox(
+          style: FlexBoxStyler().mainAxisSize(.min).spacing(UiTokens.space1()),
+          children: [
+            for (final member in members.take(limit))
+              UiAccentScope(
+                accent: member.accent,
+                child: UiAvatar(
+                  label: member.initials,
+                  size: .size1,
+                  fallbackLength: 2,
+                ),
+              ),
+            if (rest > 0) UiAvatar.solid(label: '+$rest', size: .size1),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A row of underlined tabs that filters the list below it.
+///
+/// A segmented control suits two or three short options. Past that its
+/// equal segments read as a strip of words, and the selected one is easy to
+/// lose, so the dashboard filters longer sets with tabs: the selected filter
+/// carries the accent underline in both appearances.
+class UiFilterTabs<T extends Object> extends StatelessWidget {
+  const UiFilterTabs({
+    super.key,
+    required this.values,
+    required this.selected,
+    required this.labelOf,
+    required this.onChanged,
+    required this.semanticLabel,
+  });
+
+  /// The filters, in display order.
+  final List<T> values;
+
+  /// The filter in effect.
+  final T selected;
+
+  /// The label of a filter.
+  final String Function(T value) labelOf;
+
+  /// Called with the filter the user picks.
+  final ValueChanged<T> onChanged;
+
+  /// Names the group for assistive technology.
+  final String semanticLabel;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    container: true,
+    label: semanticLabel,
+    child: RemixTabs(
+      selectedTabId: '${values.indexOf(selected)}',
+      onChanged: (id) => onChanged(values[int.parse(id)]),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: UiTabBar(
+          child: RowBox(
+            style: FlexBoxStyler().mainAxisSize(.min),
+            children: [
+              for (final (index, value) in values.indexed)
+                UiTab(tabId: '$index', label: labelOf(value)),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/// One calendar event: its day on a tile, then what and when.
+class UiEventTile extends StatelessWidget {
+  const UiEventTile(this.event, {super.key, this.showKind = false});
+
+  /// The event shown.
+  final UiDashboardEvent event;
+
+  /// Whether to end the row with the event's kind as a badge.
+  final bool showKind;
+
+  @override
+  Widget build(BuildContext context) => RowBox(
+    style: FlexBoxStyler()
+        .crossAxisAlignment(.center)
+        .spacing(UiTokens.space3()),
+    children: [
+      Box(
+        style: BoxStyler()
+            .width(44)
+            .padding(.vertical(UiTokens.space1()))
+            .color(UiTokens.colorPanelSolid())
+            .border(.all(.color(UiTokens.gray6())))
+            .borderRadius(.all(UiTokens.radius3())),
+        child: ColumnBox(
+          style: FlexBoxStyler().mainAxisSize(.min),
+          children: [
+            StyledText(
+              uiDashboardMonth(event.date).toUpperCase(),
+              style: dashboardText(.size1, weight: .medium, tone: .muted),
+            ),
+            UiText('${event.date.day}', size: .size3, weight: .bold),
+          ],
+        ),
+      ),
+      Expanded(
+        child: ColumnBox(
+          style: FlexBoxStyler().crossAxisAlignment(.start),
+          children: [
+            UiText(event.title, size: .size2, weight: .medium, truncate: true),
+            StyledText(
+              '${uiDashboardDay(event.date)} · ${event.time}',
+              style: dashboardTextLine(.size1, tone: .muted),
+            ),
+          ],
+        ),
+      ),
+      if (showKind) UiBadge.outline(label: event.kind.label),
+    ],
+  );
 }
 
 /// Compact single-line cell text for a [RemixDataTable] body cell.
@@ -333,7 +804,7 @@ RemixMenuTrigger uiDataTableActionsTrigger(String semanticLabel) =>
       ),
     );
 
-/// Empty state card used when search or filter queries match no rows.
+/// Empty state shown when a search or filter matches nothing.
 class UiEmptyState extends StatelessWidget {
   const UiEmptyState({
     super.key,
@@ -356,114 +827,39 @@ class UiEmptyState extends StatelessWidget {
   final Widget? action;
 
   @override
-  Widget build(BuildContext context) {
-    return Box(
-      style: BoxStyler().alignment(.center),
-      child: ColumnBox(
-        style: FlexBoxStyler()
-            .maxWidth(340)
-            .padding(.symmetric(vertical: 44, horizontal: 24))
-            .mainAxisSize(.min)
-            .crossAxisAlignment(.center)
-            .spacing(10),
-        children: [
-          Box(
-            style: BoxStyler()
-                .width(46)
-                .height(46)
-                .alignment(.center)
-                .color(UiTokens.gray4())
-                .shape(.circle()),
-            child: StyledIcon(
-              icon: icon,
-              style: IconStyler().color(UiTokens.gray9()),
-            ),
-          ),
-          UiHeading(
-            title,
-            headingLevel: 2,
-            size: .size3,
-            weight: .medium,
-            align: .center,
-          ),
-          StyledText(
-            body,
-            style: dashboardText(.size2, tone: .muted).textAlign(.center),
-          ),
-          if (action case final action?)
-            Box(style: BoxStyler().padding(.top(4)), child: action),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Box(
+    style: BoxStyler().alignment(.center),
+    child: ColumnBox(
+      style: FlexBoxStyler()
+          .maxWidth(340)
+          .padding(.symmetric(vertical: 44, horizontal: 24))
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.center)
+          .spacing(10),
+      children: [
+        UiAvatar.soft(icon: icon, size: .size4),
+        UiHeading(
+          title,
+          headingLevel: 2,
+          size: .size3,
+          weight: .medium,
+          align: .center,
+        ),
+        StyledText(
+          body,
+          style: dashboardText(.size2, tone: .muted).textAlign(.center),
+        ),
+        if (action case final action?)
+          Box(style: BoxStyler().padding(.top(4)), child: action),
+      ],
+    ),
+  );
 }
 
-/// Dashboard chart card surface shared by overview and analytics charts.
-class UiChartCard extends StatelessWidget {
-  const UiChartCard({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.chart,
-    this.legend,
-    this.chartPadding,
-    this.chartPaddingKey,
-  });
+/// How a [UiDashboardChartLegendItem] draws its swatch.
+enum UiDashboardChartLegendPattern { solid, dashed, dot }
 
-  static const _plotHeight = 220.0;
-
-  /// The card title.
-  final String title;
-
-  /// A line of supporting copy under the title.
-  final String description;
-
-  /// The chart, drawn in a plot area of fixed height.
-  final Widget chart;
-
-  /// The legend shown under the chart. Omitted when null.
-  final Widget? legend;
-
-  /// Padding around the chart. Defaults to a vertical inset.
-  final EdgeInsets? chartPadding;
-
-  /// The key of the box that holds the chart and its padding.
-  final Key? chartPaddingKey;
-
-  @override
-  Widget build(BuildContext context) {
-    final scaledPlot = _plotHeight * UiTheme.of(context).scaling.factor;
-
-    return UiCard(
-      size: .size2,
-      child: ColumnBox(
-        style: FlexBoxStyler()
-            .mainAxisSize(.min)
-            .crossAxisAlignment(.stretch)
-            .spacing(UiTokens.space4()),
-        children: [
-          UiCardHeading(title: title, description: description),
-          Box(
-            key: chartPaddingKey,
-            style: BoxStyler()
-                .height(scaledPlot)
-                .padding(
-                  EdgeInsetsGeometryMix.maybeValue(chartPadding) ??
-                      .symmetric(vertical: UiTokens.space2()),
-                ),
-            child: chart,
-          ),
-          ?legend,
-        ],
-      ),
-    );
-  }
-}
-
-/// Visual swatch style for a [UiDashboardChartLegendItem].
-enum UiDashboardChartLegendPattern { solid, dashed, outlined, dot }
-
-/// Single legend item rendered in a [UiDashboardChartLegend].
+/// One series or slice named by a [UiDashboardChartLegend].
 @immutable
 final class UiDashboardChartLegendItem {
   const UiDashboardChartLegendItem({
@@ -471,7 +867,7 @@ final class UiDashboardChartLegendItem {
     required this.label,
     required this.color,
     this.value,
-    this.pattern = .solid,
+    this.pattern = .dot,
   });
 
   /// Identifies the item.
@@ -488,39 +884,15 @@ final class UiDashboardChartLegendItem {
 
   /// The swatch shape.
   final UiDashboardChartLegendPattern pattern;
-
-  String get displayLabel => value == null ? label : '$label $value';
 }
 
-/// Builds legend items for percentage pie/donut charts.
-List<UiDashboardChartLegendItem> uiPercentagePieLegendItems({
-  required List<PieSlice> slices,
-  required List<Color> palette,
-  UiDashboardChartLegendPattern pattern = .dot,
-}) {
-  assert(
-    palette.length >= slices.length,
-    'The palette must provide a color for every pie slice.',
-  );
-
-  return List.unmodifiable([
-    for (final (index, slice) in slices.indexed)
-      UiDashboardChartLegendItem(
-        id: slice.id.toString(),
-        label: slice.label,
-        value: '${slice.value.toInt()}%',
-        color: palette[index],
-        pattern: pattern,
-      ),
-  ]);
-}
-
-/// Accessible legend row for dashboard charts.
+/// The key to a chart's series: one swatch, name and optional value each.
 class UiDashboardChartLegend extends StatelessWidget {
   const UiDashboardChartLegend({
     super.key,
     required this.items,
     required this.semanticLabel,
+    this.axis = Axis.horizontal,
   });
 
   /// The items listed, in order.
@@ -529,43 +901,54 @@ class UiDashboardChartLegend extends StatelessWidget {
   /// The legend's accessible label.
   final String semanticLabel;
 
+  /// Whether the items wrap in a row or stack in a column with each value at
+  /// the far edge.
+  final Axis axis;
+
   @override
   Widget build(BuildContext context) {
-    final itemGap = MixScope.tokenOf(UiTokens.space2, context);
-    final groupGap = MixScope.tokenOf(UiTokens.space4, context);
-
+    final rows = [for (final item in items) _row(item)];
     return Semantics(
       container: true,
-      label: semanticLabel,
+      label:
+          '$semanticLabel: '
+          '${items.map((item) => [item.label, ?item.value].join(' ')).join(', ')}',
       child: ExcludeSemantics(
-        child: WrapBox(
-          style: WrapBoxStyler().spacing(groupGap).runSpacing(itemGap),
-          children: [
-            for (final item in items)
-              RowBox(
+        child: axis == Axis.horizontal
+            ? WrapBox(
+                style: WrapBoxStyler()
+                    .spacing(UiTokens.space4())
+                    .runSpacing(UiTokens.space2()),
+                children: rows,
+              )
+            : ColumnBox(
                 style: FlexBoxStyler()
-                    .spacing(itemGap)
-                    .mainAxisSize(.min)
-                    .crossAxisAlignment(.center),
-                children: [
-                  _LegendMark(item),
-                  Flexible(
-                    child: StyledText(
-                      item.displayLabel,
-                      style: dashboardText(
-                        .size1,
-                        weight: .medium,
-                        tone: .muted,
-                      ),
-                    ),
-                  ),
-                ],
+                    .crossAxisAlignment(.stretch)
+                    .spacing(UiTokens.space2()),
+                children: rows,
               ),
-          ],
-        ),
       ),
     );
   }
+
+  Widget _row(UiDashboardChartLegendItem item) => RowBox(
+    style: FlexBoxStyler()
+        .spacing(UiTokens.space2())
+        .mainAxisSize(axis == Axis.horizontal ? .min : .max)
+        .crossAxisAlignment(.center),
+    children: [
+      _LegendMark(item),
+      Flexible(
+        fit: axis == Axis.horizontal ? .loose : .tight,
+        child: StyledText(
+          item.label,
+          style: dashboardTextLine(.size1, weight: .medium, tone: .muted),
+        ),
+      ),
+      if (item.value case final value?)
+        StyledText(value, style: dashboardText(.size1, weight: .medium)),
+    ],
+  );
 }
 
 class _LegendMark extends StatelessWidget {
@@ -575,46 +958,22 @@ class _LegendMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = MixScope.tokenOf(UiTokens.radius2, context).x;
     final key = ValueKey('legend-pattern-${item.id}-${item.pattern.name}');
+    BoxStyler mark(double width, double height) => BoxStyler()
+        .size(width, height)
+        .color(item.color)
+        .borderRadius(.circular(height / 2));
 
     return switch (item.pattern) {
-      .solid => Box(
-        key: key,
-        style: BoxStyler()
-            .size(18, 4)
-            .color(item.color)
-            .borderRadius(.circular(radius)),
-      ),
+      .solid => Box(key: key, style: mark(16, 4)),
+      .dot => Box(key: key, style: mark(8, 8)),
       .dashed => RowBox(
         key: key,
-        style: FlexBoxStyler()
-            .mainAxisSize(.min)
-            .spacing(3)
-            .crossAxisAlignment(.center),
+        style: FlexBoxStyler().mainAxisSize(.min).spacing(3),
         children: [
-          for (var index = 0; index < 2; index++)
-            Box(
-              style: BoxStyler()
-                  .size(7, 4)
-                  .color(item.color)
-                  .borderRadius(.circular(radius)),
-            ),
+          Box(style: mark(6, 4)),
+          Box(style: mark(6, 4)),
         ],
-      ),
-      .outlined => Box(
-        key: key,
-        style: BoxStyler()
-            .size(14, 14)
-            .border(.color(item.color).width(2))
-            .borderRadius(.circular(radius)),
-      ),
-      .dot => Box(
-        key: key,
-        style: BoxStyler()
-            .size(10, 10)
-            .color(item.color)
-            .borderRadius(.circular(99)),
       ),
     };
   }

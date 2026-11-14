@@ -243,8 +243,11 @@ void main() {
       'recipes/dashboard/dashboard_overview.dart',
       'recipes/dashboard/dashboard_demo.dart',
     ]);
+    // Compared with Vanilla by name: Fortal's demo no longer installs the
+    // shared bases, and the builder's default spec is Fortal.
     final vanilla = PresetBuilder.forRepository(
       Directory.current.absolute,
+      spec: defaultPreset,
     ).derive();
     for (final shared in [
       'dashboard_sample_data',

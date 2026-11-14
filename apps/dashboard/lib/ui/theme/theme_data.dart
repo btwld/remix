@@ -228,8 +228,32 @@ class UiThemeData extends UiThemeConfig {
   );
 }
 
-/// Builds the token map for a Ui scope. Used by [UiTheme].
+/// The token maps already built, by theme.
+///
+/// A scope rebuilds whenever its parent does, and nested scopes are common: a
+/// table of status badges holds one per row. Building a map resolves every
+/// computed role, so each distinct theme is built once and then shared. The
+/// same instance also lets Mix skip comparing the map entry by entry.
+final _scopeTokens = <UiThemeData, Map<MixToken<Object?>, Object>>{};
+
+/// Themes kept before the cache starts over. An application has two
+/// appearances and a handful of nested accents; a theme animated through
+/// custom palettes must not grow the cache without bound.
+const _scopeTokensLimit = 64;
+
+/// Returns the token map for a Ui scope. Used by [UiTheme].
+///
+/// The map is shared between scopes with an equal [theme] and cannot be
+/// modified.
 Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
+  final cached = _scopeTokens[theme];
+  if (cached != null) return cached;
+  if (_scopeTokens.length >= _scopeTokensLimit) _scopeTokens.clear();
+
+  return _scopeTokens[theme] = Map.unmodifiable(_buildScopeTokens(theme));
+}
+
+Map<MixToken<Object?>, Object> _buildScopeTokens(UiThemeData theme) {
   final tokens = resolveUiTokens(theme);
   final scaling = theme.scaling.factor;
   final shadows = buildUiShadows(isDark: theme.isDark, colors: tokens);
