@@ -114,7 +114,8 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
     final size = spec.size ?? 24;
 
     // Leaf-only fields opt into the Radix leaf painter; duration still applies
-    // to both painters, and indicatorColor is deliberately a no-op in leaf mode.
+    // to both painters, and indicatorColor, sweepAngle and strokeCap are
+    // deliberately no-ops in leaf mode.
     final useLeafPainter =
         spec.color != null || spec.opacity != null || spec.leafRadius != null;
     final painter = useLeafPainter
@@ -133,6 +134,8 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
             indicatorColor: indicatorColor,
             trackColor: trackColor,
             trackStrokeWidth: spec.trackStrokeWidth,
+            sweepAngle: spec.sweepAngle ?? _defaultSweepAngle,
+            strokeCap: spec.strokeCap ?? StrokeCap.butt,
           );
 
     return AnimatedBuilder(

@@ -57,6 +57,9 @@ class RemixLeafSpinnerPainter extends CustomPainter {
       leafRadius != oldDelegate.leafRadius;
 }
 
+/// The indicator arc's length when the spec leaves it unset: a third of a turn.
+const _defaultSweepAngle = 2 * pi / 3;
+
 /// Paints the established rotating circular indicator and optional track.
 class RemixSpinnerPainter extends CustomPainter {
   RemixSpinnerPainter({
@@ -65,6 +68,8 @@ class RemixSpinnerPainter extends CustomPainter {
     required this.indicatorColor,
     this.trackColor,
     this.trackStrokeWidth,
+    this.sweepAngle = _defaultSweepAngle,
+    this.strokeCap = StrokeCap.butt,
   }) : super(repaint: animation);
 
   final Animation<double> animation;
@@ -72,6 +77,12 @@ class RemixSpinnerPainter extends CustomPainter {
   final Color indicatorColor;
   final Color? trackColor;
   final double? trackStrokeWidth;
+
+  /// Length of the indicator arc, in radians.
+  final double sweepAngle;
+
+  /// Shape of the indicator arc's ends.
+  final StrokeCap strokeCap;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -97,11 +108,12 @@ class RemixSpinnerPainter extends CustomPainter {
     canvas.drawArc(
       Rect.fromCircle(center: .zero, radius: radius),
       pi / 3 + animation.value * 2 * pi,
-      2 * pi / 3,
+      sweepAngle,
       false,
       Paint()
         ..style = .stroke
         ..strokeWidth = indicatorThickness
+        ..strokeCap = strokeCap
         ..color = indicatorColor,
     );
   }
@@ -112,5 +124,7 @@ class RemixSpinnerPainter extends CustomPainter {
       strokeWidth != oldDelegate.strokeWidth ||
       indicatorColor != oldDelegate.indicatorColor ||
       trackColor != oldDelegate.trackColor ||
-      trackStrokeWidth != oldDelegate.trackStrokeWidth;
+      trackStrokeWidth != oldDelegate.trackStrokeWidth ||
+      sweepAngle != oldDelegate.sweepAngle ||
+      strokeCap != oldDelegate.strokeCap;
 }

@@ -176,6 +176,38 @@ void main() {
       });
     });
 
+    group('Arc shape', () {
+      test('copyWith sets the sweep angle and stroke cap', () {
+        final spec = const SpinnerSpec().copyWith(
+          sweepAngle: 4.5,
+          strokeCap: StrokeCap.round,
+        );
+
+        expect(spec.sweepAngle, 4.5);
+        expect(spec.strokeCap, StrokeCap.round);
+      });
+
+      test('lerp interpolates the sweep angle and snaps the stroke cap', () {
+        const from = SpinnerSpec(sweepAngle: 2, strokeCap: StrokeCap.butt);
+        const to = SpinnerSpec(sweepAngle: 4, strokeCap: StrokeCap.round);
+
+        expect(from.lerp(to, 0.25).sweepAngle, 2.5);
+        expect(from.lerp(to, 0.25).strokeCap, StrokeCap.butt);
+        expect(from.lerp(to, 0.75).strokeCap, StrokeCap.round);
+      });
+
+      test('specs that differ only in arc shape are not equal', () {
+        expect(
+          const SpinnerSpec(sweepAngle: 2),
+          isNot(equals(const SpinnerSpec(sweepAngle: 3))),
+        );
+        expect(
+          const SpinnerSpec(strokeCap: StrokeCap.round),
+          isNot(equals(const SpinnerSpec(strokeCap: StrokeCap.square))),
+        );
+      });
+    });
+
     group('Equality and Props', () {
       test('two specs with same properties are equal', () {
         const spec1 = SpinnerSpec();
@@ -195,7 +227,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = SpinnerSpec();
 
-        expect(spec.props, hasLength(9));
+        expect(spec.props, hasLength(11));
         expect(spec.props, contains(spec.size));
         expect(spec.props, contains(spec.strokeWidth));
         expect(spec.props, contains(spec.indicatorColor));
@@ -222,6 +254,8 @@ void main() {
             'opacity',
             'leafRadius',
             'duration',
+            'sweepAngle',
+            'strokeCap',
           ]),
         );
       });
@@ -272,6 +306,8 @@ void main() {
         expect(spec.trackColor, isNull);
         expect(spec.trackStrokeWidth, isNull);
         expect(spec.duration, isNull);
+        expect(spec.sweepAngle, isNull);
+        expect(spec.strokeCap, isNull);
       });
     });
   });

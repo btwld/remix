@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -112,6 +114,58 @@ void main() {
 
         expect(painter, isA<RemixLeafSpinnerPainter>());
         expect((painter! as RemixLeafSpinnerPainter).color, iconColor);
+      });
+    });
+
+    group('Arc shape', () {
+      testWidgets('keeps the 120 degree arc with flat ends by default', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(const RemixSpinner());
+        await tester.pump();
+
+        expect(
+          tester.renderObject(_spinnerPaint()),
+          paints..arc(sweepAngle: 2 * pi / 3, strokeCap: StrokeCap.butt),
+        );
+      });
+
+      testWidgets('draws the styled sweep angle and stroke cap', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixSpinner(
+            style: SpinnerStyler()
+                .sweepAngle(3 * pi / 2)
+                .strokeCap(StrokeCap.round),
+          ),
+        );
+        await tester.pump();
+
+        expect(
+          tester.renderObject(_spinnerPaint()),
+          paints..arc(sweepAngle: 3 * pi / 2, strokeCap: StrokeCap.round),
+        );
+      });
+
+      test('repaints when the sweep angle or stroke cap changes', () {
+        RemixSpinnerPainter painter({
+          double sweepAngle = 2 * pi / 3,
+          StrokeCap strokeCap = StrokeCap.butt,
+        }) => RemixSpinnerPainter(
+          animation: kAlwaysCompleteAnimation,
+          strokeWidth: 1.5,
+          indicatorColor: const Color(0xFF000000),
+          sweepAngle: sweepAngle,
+          strokeCap: strokeCap,
+        );
+
+        expect(painter().shouldRepaint(painter()), isFalse);
+        expect(painter(sweepAngle: pi).shouldRepaint(painter()), isTrue);
+        expect(
+          painter(strokeCap: StrokeCap.round).shouldRepaint(painter()),
+          isTrue,
+        );
       });
     });
 
