@@ -1,3 +1,44 @@
+## 1.0.0-rc.4
+
+### Breaking changes
+
+- Add `RemixMenuSection` to the sealed `RemixMenuItemData` hierarchy (#479).
+  Code that switches exhaustively over `RemixMenuItemData` must handle
+  `RemixMenuSection` or add a wildcard; no runtime migration is required.
+
+### Features
+
+- Add `RemixMenuSection`, a labelled group of menu entries. Its heading
+  cannot be focused or activated, and assistive technology reads the section
+  as one group named by its label. Style headings menu-wide with the new
+  `sectionLabel` slot on `MenuStyler` and `MenuSpec`, which merges after
+  `item`, or per section with `labelStyle` (#479).
+- Add `onOpenRequested` and `onCloseRequested` to `RemixMenuSubmenu`, so a
+  submenu can play open and close transitions like the root menu (#482).
+- Add `isOptionDisabled` to `RemixCombobox` and `ComboboxStyler.call` to keep
+  unavailable suggestions visible. Keyboard navigation skips them, Enter and
+  pointer activation never accept them, and their rows resolve with
+  `WidgetState.disabled`. Results with no enabled suggestion close the panel
+  (#480).
+- Add `reverseTransitionDuration` to `showRemixDialog` and
+  `showRemixAlertDialog` to time the exit separately; it defaults to
+  `transitionDuration` (#476).
+- Add `sweepAngle` and `strokeCap` to `SpinnerSpec` and `SpinnerStyler` for
+  the circular indicator's arc length and ends. The leaf spinner ignores them
+  (#477).
+- Add `animationStyle` and `transitionBuilder` to `RemixTooltip` and
+  `TooltipStyler.call` to set the show and hide timing and replace the
+  default fade, `RemixTooltip.defaultTooltipTransitionBuilder` (#478).
+
+### Dependencies
+
+- Require Naked UI ^2.0.0-rc.2.
+
+### Documentation
+
+- Point the package homepage, documentation link and README links to
+  fluttermix.com (#475).
+
 ## 1.0.0-rc.3
 
 ### Features
