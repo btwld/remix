@@ -63,8 +63,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   uses `onSelected` instead of `onChanged`. Observe the controller for edits;
   callback controller edits are preserved. Callers own filtering, debounce and errors. `isOptionDisabled`
   keeps unavailable rows visible: keyboard moves skip them, Enter and pointer
-  never accept them, and rows resolve option `onDisabled` styles. No chips or
-  multiselect API. Custom fields forward the exact editor pair and
+  never accept them, and rows resolve option `onDisabled` styles. It is read
+  once when a result arrives, so return a new result from `optionsBuilder` to
+  change availability. A result with no enabled row closes the panel, as no
+  results does. No chips or multiselect API. Custom fields forward the exact editor pair and
   submit callback, and own labels/disablement; custom option builders provide
   visuals beneath one named interactive wrapper. Style `field`, `panel(ComboboxPanelStyler())`,
   and `option(ComboboxOptionStyler())`; the nested `ComboboxOptionSpec` has
@@ -181,6 +183,14 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   geometry and local state. While `loading`, the child cannot paint, receive
   input or focus, tick, or appear in semantics — announce loading state
   separately when it matters.
+- **Spinner** — `SpinnerStyler().sweepAngle(...)` (radians; default a third of
+  a turn) and `.strokeCap(...)` (default `StrokeCap.butt`) shape the circular
+  indicator's arc. The leaf spinner, selected by `color`, `opacity` or
+  `leafRadius`, ignores both. A component with a spinner part takes them
+  nested, for example
+  `ButtonStyler().spinner(SpinnerStyler().sweepAngle(3 * pi / 2).strokeCap(.round))`;
+  there is no `.spinnerSweepAngle()` shorthand. See
+  [Spinner](https://github.com/btwld/remix/blob/main/docs/components/spinner.mdx).
 
 ## Layout and dashboard recipes
 
@@ -260,7 +270,8 @@ for Overlay, Navigator and toast scope placement.
   (`AnimationStyle`) changes those durations and curves, and
   `transitionBuilder` (`(context, animation, child)`) replaces the fade around
   the styled surface; inside it, `OverlayPlacement.of(context)` gives the
-  placed side.
+  placed side. Reduced motion shows and hides it at once, whatever the
+  durations.
 - **RemixMenu\<T\>** — `RemixMenuTrigger` and every entry type are
   **configuration objects, not widgets**. The sealed entry hierarchy is
   `RemixMenuItem<T>`, `RemixMenuCheckboxItem<T>`, `RemixMenuRadioGroup<T>`
@@ -293,6 +304,8 @@ for Overlay, Navigator and toast scope placement.
   `RemixMenu` (root panel) and `RemixMenuSubmenu` (that submenu) both take
   `onOpenRequested` and `onCloseRequested`. To animate an exit, call
   `hideOverlay` when the transition ends; the panel stays open until then.
+  Hover and keys do not reopen a panel whose close is pending, and when the
+  whole menu closes a submenu hides with the root panel.
 - **Toast** — base Remix exposes `RemixToastScope` and
   `showRemixToast(context, RemixToastData(title: ...))`, which returns a
   `RemixToastHandle` (`closed`, `dismiss()`). A toast with the same non-null
