@@ -1,3 +1,20 @@
+## 2.0.0-rc.2
+
+### Features
+
+- Dialog: add `reverseTransitionDuration` to `showNakedDialog` and
+  `showNakedAlertDialog` to time the exit separately.
+- Combobox: add `NakedCombobox.isOptionDisabled` to show an option that cannot
+  be chosen. Keys skip it, and Enter and taps do not accept it. A result with
+  no enabled option closes the options view.
+- Menu: add `onOpenRequested` and `onCloseRequested` to `NakedMenuSubmenu`, so
+  a submenu can run its own open and close transitions.
+
+### Deprecations
+
+- Deprecate `NakedComboboxOption.enabled`; use
+  `NakedCombobox.isOptionDisabled`.
+
 ## 2.0.0-rc.1
 
 First release candidate for 2.0.0. Retains the behavior and public API of

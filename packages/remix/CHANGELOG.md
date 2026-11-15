@@ -1,3 +1,28 @@
+## 1.0.0-rc.4
+
+### Breaking changes
+
+- `RemixMenuItemData` has a new entry, `RemixMenuSection`. An exhaustive
+  `switch` over it must handle the new entry or add a wildcard (#479).
+
+### Features
+
+- Menu: add `RemixMenuSection`, a labelled group of entries. Style its heading
+  with `MenuStyler.sectionLabel` or the section's `labelStyle` (#479).
+- Menu: add `onOpenRequested` and `onCloseRequested` to `RemixMenuSubmenu`, so
+  a submenu can run its own open and close transitions (#482).
+- Combobox: add `isOptionDisabled` to show an option that cannot be chosen.
+  Keys skip it, and Enter and taps do not accept it (#480).
+- Dialog: add `reverseTransitionDuration` to `showRemixDialog` and
+  `showRemixAlertDialog` to time the exit separately (#476).
+- Spinner: add `sweepAngle` and `strokeCap` to `SpinnerStyler` (#477).
+- Tooltip: add `animationStyle` and `transitionBuilder` to `RemixTooltip` to
+  set its timing and replace the fade (#478).
+
+### Dependencies
+
+- Require Naked UI ^2.0.0-rc.2.
+
 ## 1.0.0-rc.3
 
 ### Features

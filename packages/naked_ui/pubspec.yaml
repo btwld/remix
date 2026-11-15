@@ -5,7 +5,7 @@ documentation: https://fluttermix.com/naked-ui/docs/
 repository: https://github.com/btwld/remix/tree/main/packages/naked_ui
 issue_tracker: https://github.com/btwld/remix/issues
 license: BSD-3-Clause
-version: 2.0.0-rc.1
+version: 2.0.0-rc.2
 resolution: workspace
 
 environment:
