@@ -2,42 +2,26 @@
 
 ### Breaking changes
 
-- Add `RemixMenuSection` to the sealed `RemixMenuItemData` hierarchy (#479).
-  Code that switches exhaustively over `RemixMenuItemData` must handle
-  `RemixMenuSection` or add a wildcard; no runtime migration is required.
+- `RemixMenuItemData` has a new entry, `RemixMenuSection`. An exhaustive
+  `switch` over it must handle the new entry or add a wildcard (#479).
 
 ### Features
 
-- Add `RemixMenuSection`, a labelled group of menu entries. Its heading
-  cannot be focused or activated, and assistive technology reads the section
-  as one group named by its label. Style headings menu-wide with the new
-  `sectionLabel` slot on `MenuStyler` and `MenuSpec`, which merges after
-  `item`, or per section with `labelStyle` (#479).
-- Add `onOpenRequested` and `onCloseRequested` to `RemixMenuSubmenu`, so a
-  submenu can play open and close transitions like the root menu (#482).
-- Add `isOptionDisabled` to `RemixCombobox` and `ComboboxStyler.call` to keep
-  unavailable suggestions visible. Keyboard navigation skips them, Enter and
-  pointer activation never accept them, and their rows resolve with
-  `WidgetState.disabled`. Results with no enabled suggestion close the panel
-  (#480).
-- Add `reverseTransitionDuration` to `showRemixDialog` and
-  `showRemixAlertDialog` to time the exit separately; it defaults to
-  `transitionDuration` (#476).
-- Add `sweepAngle` and `strokeCap` to `SpinnerSpec` and `SpinnerStyler` for
-  the circular indicator's arc length and ends. The leaf spinner ignores them
-  (#477).
-- Add `animationStyle` and `transitionBuilder` to `RemixTooltip` and
-  `TooltipStyler.call` to set the show and hide timing and replace the
-  default fade, `RemixTooltip.defaultTooltipTransitionBuilder` (#478).
+- Menu: add `RemixMenuSection`, a labelled group of entries. Style its heading
+  with `MenuStyler.sectionLabel` or the section's `labelStyle` (#479).
+- Menu: add `onOpenRequested` and `onCloseRequested` to `RemixMenuSubmenu`, so
+  a submenu can run its own open and close transitions (#482).
+- Combobox: add `isOptionDisabled` to show an option that cannot be chosen.
+  Keys skip it, and Enter and taps do not accept it (#480).
+- Dialog: add `reverseTransitionDuration` to `showRemixDialog` and
+  `showRemixAlertDialog` to time the exit separately (#476).
+- Spinner: add `sweepAngle` and `strokeCap` to `SpinnerStyler` (#477).
+- Tooltip: add `animationStyle` and `transitionBuilder` to `RemixTooltip` to
+  set its timing and replace the fade (#478).
 
 ### Dependencies
 
 - Require Naked UI ^2.0.0-rc.2.
-
-### Documentation
-
-- Point the package homepage, documentation link and README links to
-  fluttermix.com (#475).
 
 ## 1.0.0-rc.3
 
