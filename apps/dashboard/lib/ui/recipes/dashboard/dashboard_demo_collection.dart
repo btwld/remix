@@ -378,7 +378,7 @@ class UiEditionSpotlight extends StatelessWidget {
                     label: 'Share',
                     onPressed: () => uiDashboardCopy(
                       context,
-                      'https://northstar.co/editions/${edition.id}',
+                      'https://northstar.example/editions/${edition.id}',
                       'Link to ${edition.title} copied',
                     ),
                   ),

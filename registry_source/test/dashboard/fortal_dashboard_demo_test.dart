@@ -324,6 +324,21 @@ void main() {
       expect(_entranceOpacity(tester, .orders), 1);
     });
 
+    testWidgets('a dashboard opened with reduced motion closes cleanly', (
+      tester,
+    ) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(reduceMotion: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      await _pumpDemo(tester);
+
+      // No page change has run the entrance before the dashboard goes away.
+      await tester.pumpWidget(const SizedBox());
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('an entering page settles when reduced motion turns on', (
       tester,
     ) async {
@@ -729,6 +744,22 @@ void main() {
       expect(chart.valueFormatter!(12.5), r'$12.5K');
     });
 
+    testWidgets('the revenue chart holds still with iOS Reduce Motion', (
+      tester,
+    ) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(reduceMotion: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      await _pumpDemo(tester);
+
+      final chart = tester.widget<FortalLineChart>(
+        find.byKey(const ValueKey('dashboard-revenue-chart')).first,
+      );
+      expect(chart.dataTransition, ChartDataTransition.none);
+    });
+
     testWidgets('leads with revenue on the one inverse surface', (
       tester,
     ) async {
@@ -841,7 +872,7 @@ void main() {
       );
       await tester.pump();
 
-      expect(copied, ['https://northstar.co/editions/${featured.id}']);
+      expect(copied, ['https://northstar.example/editions/${featured.id}']);
       expect(find.text('Link to ${featured.title} copied'), findsOneWidget);
       await _dismissToast(tester);
     });
@@ -1163,6 +1194,30 @@ void main() {
 
       expect(copied, ['nst_live_7f3a2c58e1b94d06a3f5c91e']);
       expect(find.text('API key copied'), findsOneWidget);
+      await _dismissToast(tester);
+    });
+
+    testWidgets('a refused copy says so instead of confirming', (tester) async {
+      final messenger = tester.binding.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') {
+          throw PlatformException(code: 'copy_fail');
+        }
+        return null;
+      });
+      addTearDown(
+        () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+      );
+      await _pumpDemo(tester, page: .settings);
+      await tester.tap(find.byKey(const ValueKey('settings-tab-plan')).first);
+      await tester.pumpAndSettle();
+      final copy = find.byKey(const ValueKey('settings-copy-api-key')).first;
+      await tester.ensureVisible(copy);
+      await tester.tap(copy);
+      await tester.pump();
+
+      expect(find.text('API key copied'), findsNothing);
+      expect(find.text('Couldn’t copy to the clipboard'), findsOneWidget);
       await _dismissToast(tester);
     });
   });

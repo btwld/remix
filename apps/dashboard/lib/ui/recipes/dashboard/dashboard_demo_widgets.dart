@@ -148,13 +148,27 @@ void uiDashboardToast(BuildContext context, String title) => showRemixToast(
 /// Puts [text] on the clipboard, then confirms with a [title] toast.
 ///
 /// The toast waits for the clipboard, so it never reports a copy that did not
-/// happen.
+/// happen. A refused write, which a browser makes without a secure origin or
+/// page focus, says so instead.
 Future<void> uiDashboardCopy(
   BuildContext context,
   String text,
   String title,
 ) async {
-  await Clipboard.setData(ClipboardData(text: text));
+  try {
+    await Clipboard.setData(ClipboardData(text: text));
+  } on PlatformException {
+    if (!context.mounted) return;
+    showRemixToast(
+      context,
+      const RemixToastData(
+        title: 'Couldn’t copy to the clipboard',
+        icon: RemixIcons.warning,
+        priority: .assertive,
+      ),
+    );
+    return;
+  }
   if (context.mounted) uiDashboardToast(context, title);
 }
 

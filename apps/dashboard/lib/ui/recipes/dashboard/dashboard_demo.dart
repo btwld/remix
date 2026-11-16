@@ -971,16 +971,27 @@ class UiDashboardPageStack extends StatefulWidget {
 
 class _UiDashboardPageStackState extends State<UiDashboardPageStack>
     with SingleTickerProviderStateMixin {
-  late final _enter = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 200),
-    value: 1,
-  );
-  late final _fade = CurvedAnimation(parent: _enter, curve: Curves.easeOut);
-  late final _rise = Tween(
-    begin: const Offset(0, 0.012),
-    end: Offset.zero,
-  ).animate(CurvedAnimation(parent: _enter, curve: Curves.easeOutCubic));
+  // Made in initState, not lazily: under reduced motion the build never reads
+  // them, and making the controller first in dispose would look up the ticker
+  // mode through an element already deactivated.
+  late final AnimationController _enter;
+  late final CurvedAnimation _fade;
+  late final Animation<Offset> _rise;
+
+  @override
+  void initState() {
+    super.initState();
+    _enter = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+      value: 1,
+    );
+    _fade = CurvedAnimation(parent: _enter, curve: Curves.easeOut);
+    _rise = Tween(
+      begin: const Offset(0, 0.012),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _enter, curve: Curves.easeOutCubic));
+  }
 
   @override
   void didUpdateWidget(UiDashboardPageStack oldWidget) {

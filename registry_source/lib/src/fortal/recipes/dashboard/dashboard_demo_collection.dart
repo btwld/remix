@@ -386,7 +386,7 @@ class FortalEditionSpotlight extends StatelessWidget {
                     label: 'Share',
                     onPressed: () => fortalDashboardCopy(
                       context,
-                      'https://northstar.co/editions/${edition.id}',
+                      'https://northstar.example/editions/${edition.id}',
                       'Link to ${edition.title} copied',
                     ),
                   ),
