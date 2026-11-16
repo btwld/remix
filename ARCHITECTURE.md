@@ -118,6 +118,15 @@ worksheet to say `extension:`, and the worksheets record their geometry as
 designed rather than measured. They never claim upstream parity; a later
 upstream family replaces its extension through the normal port.
 
+2026-11-13 · Dashboard update ([#472](https://github.com/btwld/remix/pull/472)):
+Fortal's `dashboard_demo` becomes Northstar Editions, a distinct nine-page
+product showcase with its own data model and retained page stack. Vanilla and
+HeroUI keep the shared dashboard base, and all three presets keep the shared
+Agent chat behavior. This replaces the shared-dashboard requirement above;
+the HeroUI extension and reference-parity boundaries remain as recorded.
+See the [Fortal showcase](apps/dashboard/README.md) for its composition and
+the [catalog](docs/open-code/catalog.mdx) for each preset's installed items.
+
 ## Retain the private Fortal package (Fortal ADR-0001, superseded)
 
 2026-09-14 · Superseded by [Fortal ADR-0002](#one-analyzed-authoring-tree-fortal-adr-0002)
