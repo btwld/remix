@@ -374,9 +374,11 @@ class UiEditionSpotlight extends StatelessWidget {
                     onPressed: onPressed,
                   ),
                   UiButton.soft(
+                    key: const ValueKey('collection-spotlight-share'),
                     label: 'Share',
-                    onPressed: () => uiDashboardToast(
+                    onPressed: () => uiDashboardCopy(
                       context,
+                      'https://northstar.co/editions/${edition.id}',
                       'Link to ${edition.title} copied',
                     ),
                   ),

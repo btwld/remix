@@ -382,9 +382,11 @@ class {{typePrefix}}EditionSpotlight extends StatelessWidget {
                     onPressed: onPressed,
                   ),
                   {{typePrefix}}Button.soft(
+                    key: const ValueKey('collection-spotlight-share'),
                     label: 'Share',
-                    onPressed: () => {{valuePrefix}}DashboardToast(
+                    onPressed: () => {{valuePrefix}}DashboardCopy(
                       context,
+                      'https://northstar.co/editions/${edition.id}',
                       'Link to ${edition.title} copied',
                     ),
                   ),

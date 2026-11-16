@@ -131,17 +131,41 @@ class _ProfileSectionState extends State<_ProfileSection> {
   final _bioController = TextEditingController(
     text: 'Runs the studio, signs every certificate.',
   );
-  bool _emailEdited = false;
+  final _emailFocus = FocusNode();
+
+  /// Whether the email has been edited or submitted. Its error shows only
+  /// after one of those.
+  bool _emailTouched = false;
   String _language = 'English (US)';
 
-  bool get _emailInvalid =>
-      _emailEdited && !_emailController.text.trim().contains('@');
+  /// No spaces, one `@`, and a dot in the domain: enough for a demo form,
+  /// not a full address grammar.
+  static final _emailPattern = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+
+  bool get _emailValid => _emailPattern.hasMatch(_emailController.text.trim());
+
+  bool get _emailInvalid => _emailTouched && !_emailValid;
+
+  /// Saves the profile, or shows the email's error and moves focus to it.
+  void _save() {
+    if (!_emailValid) {
+      setState(() => _emailTouched = true);
+      // After the frame, once the press that called this has finished: on
+      // the web, focus taken during it loses the next keystroke.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _emailFocus.requestFocus();
+      });
+      return;
+    }
+    fortalDashboardToast(context, 'Profile settings saved');
+  }
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
     _bioController.dispose();
+    _emailFocus.dispose();
     super.dispose();
   }
 
@@ -200,14 +224,15 @@ class _ProfileSectionState extends State<_ProfileSection> {
                   hintText: 'Your name',
                 ),
                 FortalTextField(
+                  key: const ValueKey('settings-email'),
                   controller: _emailController,
+                  focusNode: _emailFocus,
                   label: 'Email',
-                  // Validation shows only after the person edits it.
                   helperText: _emailInvalid
                       ? 'Enter a valid email address.'
                       : 'Used for receipts and sign-in.',
                   error: _emailInvalid,
-                  onChanged: (_) => setState(() => _emailEdited = true),
+                  onChanged: (_) => setState(() => _emailTouched = true),
                   keyboardType: TextInputType.emailAddress,
                 ),
               ],
@@ -252,8 +277,7 @@ class _ProfileSectionState extends State<_ProfileSection> {
               style: BoxStyler().alignment(.centerStart),
               child: FortalButton(
                 key: const ValueKey('settings-save'),
-                onPressed: () =>
-                    fortalDashboardToast(context, 'Profile settings saved'),
+                onPressed: _save,
                 label: 'Save changes',
               ),
             ),
@@ -510,6 +534,9 @@ class _AppearanceSection extends StatelessWidget {
   );
 }
 
+/// The sample workspace's API key. The page shows only its two ends.
+const _apiKey = 'nst_live_7f3a2c58e1b94d06a3f5c91e';
+
 class _PlanSection extends StatelessWidget {
   const _PlanSection({required this.data});
 
@@ -580,16 +607,24 @@ class _PlanSection extends StatelessWidget {
                     .crossAxisAlignment(.center)
                     .spacing(FortalTokens.space2()),
                 children: [
-                  const Expanded(
-                    child: FortalCode('nst_live_7f3a…c91e', truncate: true),
+                  Expanded(
+                    child: FortalCode(
+                      '${_apiKey.substring(0, 13)}…'
+                      '${_apiKey.substring(_apiKey.length - 4)}',
+                      truncate: true,
+                    ),
                   ),
                   FortalTooltip(
                     tooltipChild: const StyledText('Copy key'),
                     child: FortalIconButton.ghost(
+                      key: const ValueKey('settings-copy-api-key'),
                       icon: RemixIcons.copy,
                       semanticLabel: 'Copy API key',
-                      onPressed: () =>
-                          fortalDashboardToast(context, 'API key copied'),
+                      onPressed: () => fortalDashboardCopy(
+                        context,
+                        _apiKey,
+                        'API key copied',
+                      ),
                     ),
                   ),
                 ],

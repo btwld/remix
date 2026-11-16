@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
@@ -143,6 +144,19 @@ void fortalDashboardToast(BuildContext context, String title) => showRemixToast(
   context,
   RemixToastData(title: title, icon: RemixIcons.checkCircle),
 );
+
+/// Puts [text] on the clipboard, then confirms with a [title] toast.
+///
+/// The toast waits for the clipboard, so it never reports a copy that did not
+/// happen.
+Future<void> fortalDashboardCopy(
+  BuildContext context,
+  String text,
+  String title,
+) async {
+  await Clipboard.setData(ClipboardData(text: text));
+  if (context.mounted) fortalDashboardToast(context, title);
+}
 
 /// The title of a card, with optional supporting copy and a trailing control.
 class FortalCardHeader extends StatelessWidget {

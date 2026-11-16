@@ -135,6 +135,28 @@ Finder _field(String key) => find.descendant(
   matching: find.byType(EditableText),
 );
 
+/// Records what is written to the clipboard for the rest of the test.
+List<String> _recordClipboard(WidgetTester tester) {
+  final copied = <String>[];
+  final messenger = tester.binding.defaultBinaryMessenger;
+  messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+    if (call.method == 'Clipboard.setData') {
+      copied.add((call.arguments as Map)['text'] as String);
+    }
+    return null;
+  });
+  addTearDown(
+    () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+  );
+  return copied;
+}
+
+/// Lets a confirmation toast leave, so no timer outlives the test.
+Future<void> _dismissToast(WidgetTester tester) async {
+  await tester.pump(const Duration(seconds: 5));
+  await tester.pumpAndSettle();
+}
+
 /// Counts every build of a widget matching [watched] while [action] runs,
 /// first builds included.
 Future<int> _buildsDuring(
@@ -762,6 +784,21 @@ void main() {
   });
 
   group('collection', () {
+    testWidgets('Share copies the featured edition link', (tester) async {
+      final copied = _recordClipboard(tester);
+      await _pumpDemo(tester, page: .collection);
+      final featured = fortalDashboardSampleData.editions.first;
+
+      await tester.tap(
+        find.byKey(const ValueKey('collection-spotlight-share')).first,
+      );
+      await tester.pump();
+
+      expect(copied, ['https://northstar.co/editions/${featured.id}']);
+      expect(find.text('Link to ${featured.title} copied'), findsOneWidget);
+      await _dismissToast(tester);
+    });
+
     Finder cards() => find.byType(FortalEditionCard);
     Finder inFilter(String label) => find.descendant(
       of: find.byKey(const ValueKey('collection-status')),
@@ -1029,6 +1066,57 @@ void main() {
       await tester.pump(const Duration(seconds: 5));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('settings', () {
+    testWidgets('Save checks the email before it reports success', (
+      tester,
+    ) async {
+      await _pumpDemo(tester, page: .settings);
+      final email = _field('settings-email');
+      final save = find.byKey(const ValueKey('settings-save')).first;
+
+      await tester.enterText(email, 'leo@');
+      await tester.pump();
+      expect(find.text('Enter a valid email address.'), findsOneWidget);
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pump();
+
+      await tester.ensureVisible(save);
+      await tester.tap(save);
+      await tester.pump();
+      await tester.pump();
+      expect(find.text('Profile settings saved'), findsNothing);
+      expect(tester.widget<EditableText>(email).focusNode.hasFocus, isTrue);
+
+      await tester.enterText(email, ' leo@northstar.co ');
+      await tester.pump();
+      expect(find.text('Enter a valid email address.'), findsNothing);
+      await tester.tap(save);
+      await tester.pump();
+      expect(find.text('Profile settings saved'), findsOneWidget);
+      await _dismissToast(tester);
+    });
+
+    testWidgets('copying the API key puts the whole key on the clipboard', (
+      tester,
+    ) async {
+      final copied = _recordClipboard(tester);
+      await _pumpDemo(tester, page: .settings);
+      await tester.tap(find.byKey(const ValueKey('settings-tab-plan')).first);
+      await tester.pumpAndSettle();
+
+      // The page shows only the key's ends; the copy is the full key.
+      expect(find.text('nst_live_7f3a…c91e'), findsOneWidget);
+      final copy = find.byKey(const ValueKey('settings-copy-api-key')).first;
+      await tester.ensureVisible(copy);
+      await tester.tap(copy);
+      await tester.pump();
+
+      expect(copied, ['nst_live_7f3a2c58e1b94d06a3f5c91e']);
+      expect(find.text('API key copied'), findsOneWidget);
+      await _dismissToast(tester);
     });
   });
 

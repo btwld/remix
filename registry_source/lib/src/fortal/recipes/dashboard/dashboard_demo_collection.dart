@@ -382,9 +382,11 @@ class FortalEditionSpotlight extends StatelessWidget {
                     onPressed: onPressed,
                   ),
                   FortalButton.soft(
+                    key: const ValueKey('collection-spotlight-share'),
                     label: 'Share',
-                    onPressed: () => fortalDashboardToast(
+                    onPressed: () => fortalDashboardCopy(
                       context,
+                      'https://northstar.co/editions/${edition.id}',
                       'Link to ${edition.title} copied',
                     ),
                   ),
