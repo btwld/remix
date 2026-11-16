@@ -946,7 +946,8 @@ final class _FilterReset extends ChangeNotifier {
 
 /// Shows [selected] from [pages] and keeps the others alive behind it.
 ///
-/// The page shown fades and rises into place. The others are not painted,
+/// The page shown fades and rises into place, or appears in place when the
+/// person asks for reduced motion. The others are not painted,
 /// hit-tested, focusable or announced, and their animations are paused. They
 /// also keep the size and the theme they last had on screen, so resizing the
 /// window, collapsing the sidebar or changing the palette works on one page
@@ -984,12 +985,7 @@ class _UiDashboardPageStackState extends State<UiDashboardPageStack>
   @override
   void didUpdateWidget(UiDashboardPageStack oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selected == oldWidget.selected) return;
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _enter.value = 1;
-    } else {
-      _enter.forward(from: 0);
-    }
+    if (widget.selected != oldWidget.selected) _enter.forward(from: 0);
   }
 
   @override
@@ -1000,20 +996,26 @@ class _UiDashboardPageStackState extends State<UiDashboardPageStack>
   }
 
   @override
-  Widget build(BuildContext context) => Stack(
-    key: const ValueKey('dashboard-demo-pages'),
-    fit: StackFit.expand,
-    children: [
-      for (final page in UiDashboardDemoPage.values)
-        if (widget.pages[page] case final child?)
-          _PageSlot(
-            key: ValueKey('dashboard-page-${page.name}'),
-            active: page == widget.selected,
-            fade: _fade,
-            rise: _rise,
-            child: child,
-          ),
-    ],
+  Widget build(BuildContext context) => RemixReducedMotionBuilder(
+    // Reduced motion shows the entrance's last frame, so a page entering when
+    // the preference turns on settles at once.
+    builder: (context, reduceMotion) => Stack(
+      key: const ValueKey('dashboard-demo-pages'),
+      fit: StackFit.expand,
+      children: [
+        for (final page in UiDashboardDemoPage.values)
+          if (widget.pages[page] case final child?)
+            _PageSlot(
+              key: ValueKey('dashboard-page-${page.name}'),
+              active: page == widget.selected,
+              fade: reduceMotion ? kAlwaysCompleteAnimation : _fade,
+              rise: reduceMotion
+                  ? const AlwaysStoppedAnimation(Offset.zero)
+                  : _rise,
+              child: child,
+            ),
+      ],
+    ),
   );
 }
 

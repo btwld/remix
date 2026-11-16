@@ -360,88 +360,96 @@ class UiRevenueChart extends StatelessWidget {
     return SizedBox(
       height: height * UiTheme.of(context).scaling.factor,
       child: RepaintBoundary(
-        child: UiLineChart(
-          key: const ValueKey('dashboard-revenue-chart'),
-          // Series take the palette in order; the comparison paints first so
-          // the current period sits on top of it.
-          palette: [previous, accent],
-          semanticsLabel: semanticLabel,
-          dataTransition: MediaQuery.disableAnimationsOf(context)
-              ? ChartDataTransition.none
-              : const ChartDataTransition(
-                  duration: Duration(milliseconds: 280),
-                  curve: Curves.easeOutCubic,
-                ),
-          series: [
-            LineSeries(
-              id: 'previous',
-              label: 'Previous period',
-              points: [
-                for (final (index, point) in points.indexed)
-                  ChartPoint(id: index, x: index.toDouble(), y: point.previous),
-              ],
-              style: LineSeriesStyler().stroke(
-                ChartStrokeStyler().width(1.5).dashArray([4, 4]),
-              ),
-            ),
-            LineSeries(
-              id: 'current',
-              label: 'This period',
-              points: [
-                for (final (index, point) in points.indexed)
-                  ChartPoint(id: index, x: index.toDouble(), y: point.value),
-              ],
-              style: LineSeriesStyler().belowArea(
-                ChartAreaStyler()
-                    .show(true)
-                    // The axis runs half a step below zero; stop the fill at
-                    // the zero line instead of the plot's edge.
-                    .cutoffY(0)
-                    .applyCutoff(true)
-                    .gradient(
-                      LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          accent.withValues(alpha: 0.24),
-                          accent.withValues(alpha: 0),
-                        ],
-                      ),
+        child: RemixReducedMotionBuilder(
+          builder: (context, reduceMotion) => UiLineChart(
+            key: const ValueKey('dashboard-revenue-chart'),
+            // Series take the palette in order; the comparison paints first so
+            // the current period sits on top of it.
+            palette: [previous, accent],
+            semanticsLabel: semanticLabel,
+            dataTransition: reduceMotion
+                ? ChartDataTransition.none
+                : const ChartDataTransition(
+                    duration: Duration(milliseconds: 280),
+                    curve: Curves.easeOutCubic,
+                  ),
+            series: [
+              LineSeries(
+                id: 'previous',
+                label: 'Previous period',
+                points: [
+                  for (final (index, point) in points.indexed)
+                    ChartPoint(
+                      id: index,
+                      x: index.toDouble(),
+                      y: point.previous,
                     ),
+                ],
+                style: LineSeriesStyler().stroke(
+                  ChartStrokeStyler().width(1.5).dashArray([4, 4]),
+                ),
               ),
+              LineSeries(
+                id: 'current',
+                label: 'This period',
+                points: [
+                  for (final (index, point) in points.indexed)
+                    ChartPoint(id: index, x: index.toDouble(), y: point.value),
+                ],
+                style: LineSeriesStyler().belowArea(
+                  ChartAreaStyler()
+                      .show(true)
+                      // The axis runs half a step below zero; stop the fill at
+                      // the zero line instead of the plot's edge.
+                      .cutoffY(0)
+                      .applyCutoff(true)
+                      .gradient(
+                        LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            accent.withValues(alpha: 0.24),
+                            accent.withValues(alpha: 0),
+                          ],
+                        ),
+                      ),
+                ),
+              ),
+            ],
+            xAxis: ChartAxis.numeric(
+              min: -0.5,
+              max: points.length > 1 ? points.length - 0.5 : 1.5,
+              interval: 1,
+              minIncluded: false,
+              maxIncluded: false,
+              labelFormatter: (value) {
+                final index = value.round();
+                return index >= 0 &&
+                        index < points.length &&
+                        index % labelEvery == 0
+                    ? points[index].label
+                    : '';
+              },
             ),
-          ],
-          xAxis: ChartAxis.numeric(
-            min: -0.5,
-            max: points.length > 1 ? points.length - 0.5 : 1.5,
-            interval: 1,
-            minIncluded: false,
-            maxIncluded: false,
-            labelFormatter: (value) {
-              final index = value.round();
-              return index >= 0 &&
-                      index < points.length &&
-                      index % labelEvery == 0
-                  ? points[index].label
-                  : '';
-            },
+            yAxis: uiDashboardDataAxis(
+              points.expand((point) => [point.value, point.previous]),
+              targetIntervals: 4,
+              labelFormatter: _thousands,
+            ),
+            valueFormatter: _thousands,
+            style: uiDashboardLineStyle(),
           ),
-          yAxis: uiDashboardDataAxis(
-            points.expand((point) => [point.value, point.previous]),
-            targetIntervals: 4,
-          ),
-          valueFormatter: (value) => '\$${_trim(value)}K',
-          style: uiDashboardLineStyle(),
         ),
       ),
     );
   }
 }
 
-/// [value] without a trailing `.0`.
-String _trim(double value) => value == value.roundToDouble()
-    ? value.toStringAsFixed(0)
-    : value.toStringAsFixed(1);
+/// [value], in thousands of dollars, as an amount: 12.5 reads `$12.5K` and
+/// zero reads `$0`.
+String _thousands(double value) => value == 0
+    ? r'$0'
+    : '\$${value.toStringAsFixed(value == value.roundToDouble() ? 0 : 1)}K';
 
 /// The featured edition as a full-bleed cover with its sales on a panel over
 /// the picture. The whole card is one button when [onPressed] is set.

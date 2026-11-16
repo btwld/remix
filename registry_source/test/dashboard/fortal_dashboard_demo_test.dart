@@ -135,6 +135,20 @@ Finder _field(String key) => find.descendant(
   matching: find.byType(EditableText),
 );
 
+/// The opacity [page] is painted at as it enters.
+double _entranceOpacity(WidgetTester tester, FortalDashboardDemoPage page) =>
+    tester
+        .widget<FadeTransition>(
+          find
+              .descendant(
+                of: _slot(page),
+                matching: find.byType(FadeTransition),
+              )
+              .first,
+        )
+        .opacity
+        .value;
+
 /// Records what is written to the clipboard for the rest of the test.
 List<String> _recordClipboard(WidgetTester tester) {
   final copied = <String>[];
@@ -273,21 +287,9 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 60));
 
-      double opacityOf(FortalDashboardDemoPage page) => tester
-          .widget<FadeTransition>(
-            find
-                .descendant(
-                  of: _slot(page),
-                  matching: find.byType(FadeTransition),
-                )
-                .first,
-          )
-          .opacity
-          .value;
-
-      expect(opacityOf(.orders), inExclusiveRange(0, 1));
+      expect(_entranceOpacity(tester, .orders), inExclusiveRange(0, 1));
       await tester.pump(const Duration(milliseconds: 300));
-      expect(opacityOf(.orders), 1);
+      expect(_entranceOpacity(tester, .orders), 1);
       expect(tester.takeException(), isNull);
     });
 
@@ -300,15 +302,47 @@ void main() {
       );
       await tester.pump();
 
-      final fade = tester.widget<FadeTransition>(
-        find
-            .descendant(
-              of: _slot(.orders),
-              matching: find.byType(FadeTransition),
-            )
-            .first,
+      expect(_entranceOpacity(tester, .orders), 1);
+    });
+
+    testWidgets('the entering page appears at once with iOS Reduce Motion', (
+      tester,
+    ) async {
+      // iOS reports Reduce Motion only through the platform's accessibility
+      // features, never through MediaQuery.
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(reduceMotion: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
       );
-      expect(fade.opacity.value, 1);
+      await _pumpDemo(tester);
+      await tester.tap(
+        find.byKey(const ValueKey(FortalDashboardDemoPage.orders)).first,
+      );
+      await tester.pump();
+
+      expect(_entranceOpacity(tester, .orders), 1);
+    });
+
+    testWidgets('an entering page settles when reduced motion turns on', (
+      tester,
+    ) async {
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      await _pumpDemo(tester);
+      await tester.tap(
+        find.byKey(const ValueKey(FortalDashboardDemoPage.orders)).first,
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 60));
+      expect(_entranceOpacity(tester, .orders), lessThan(1));
+
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(reduceMotion: true);
+      await tester.pump();
+
+      expect(_entranceOpacity(tester, .orders), 1);
     });
 
     testWidgets('resizing the window lays out only the page on screen', (
@@ -682,6 +716,19 @@ void main() {
   });
 
   group('overview', () {
+    testWidgets('labels revenue in thousands of dollars', (tester) async {
+      await _pumpDemo(tester);
+      final chart = tester.widget<FortalLineChart>(
+        find.byKey(const ValueKey('dashboard-revenue-chart')).first,
+      );
+
+      // A point holds thousands of dollars: a tick at 10 is $10K, not 10.
+      expect(chart.yAxis!.labelFormatter!(0), r'$0');
+      expect(chart.yAxis!.labelFormatter!(10), r'$10K');
+      expect(chart.yAxis!.labelFormatter!(12.5), r'$12.5K');
+      expect(chart.valueFormatter!(12.5), r'$12.5K');
+    });
+
     testWidgets('leads with revenue on the one inverse surface', (
       tester,
     ) async {

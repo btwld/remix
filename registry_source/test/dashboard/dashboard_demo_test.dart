@@ -1049,7 +1049,7 @@ void main() {
         }
         for (final tick
             in preset == .fortal
-                ? const ['0', '5', '10', '15']
+                ? const [r'$0', r'$5K', r'$10K', r'$15K']
                 : const ['0', '20', '40', '60', '80', '100']) {
           expect(
             find.descendant(
@@ -1488,7 +1488,7 @@ void main() {
         final centers = [
           for (final label
               in preset == .fortal
-                  ? const ['15', '10', '5', '0']
+                  ? const [r'$15K', r'$10K', r'$5K', r'$0']
                   : const ['100', '80', '60', '40', '20', '0'])
             tester
                 .getCenter(
