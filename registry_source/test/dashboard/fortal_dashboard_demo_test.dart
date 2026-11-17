@@ -674,6 +674,36 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    testWidgets('drops a customer tier filter that would hide the record', (
+      tester,
+    ) async {
+      await _pumpDemo(tester, page: .customers);
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const ValueKey('customer-tier')),
+          matching: find.text('Member'),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      // Ava Wilson is a patron, so the member filter hides her.
+      expect(_onPage(.customers, 'ava@brightpath.com'), findsNothing);
+
+      await tester.enterText(_field('dashboard-search'), 'ava w');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.text('Customer · New York'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(
+        tester.widget<EditableText>(_field('customer-search')).controller.text,
+        'Ava Wilson',
+      );
+      expect(_onPage(.customers, 'ava@brightpath.com'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('drops a collection filter that would hide the edition', (
       tester,
     ) async {
@@ -701,6 +731,47 @@ void main() {
           matching: find.text('Duna Branca'),
         ),
         findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('drops a collection price filter that would hide the edition', (
+      tester,
+    ) async {
+      await _pumpDemo(tester, page: .collection);
+      // Through the slider's own callback: $280 to $410 leaves out the $480
+      // Duna Branca.
+      tester
+          .widget<FortalRangeSlider>(find.byType(FortalRangeSlider).first)
+          .onChanged!([0, 0.5]);
+      await tester.pump();
+      expect(
+        find.descendant(
+          of: find.byType(FortalEditionCard),
+          matching: find.text('Duna Branca'),
+        ),
+        findsNothing,
+      );
+
+      await tester.enterText(_field('dashboard-search'), 'duna br');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.textContaining('Edition · '));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(
+        find.descendant(
+          of: find.byType(FortalEditionCard),
+          matching: find.text('Duna Branca'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        tester
+            .widget<FortalRangeSlider>(find.byType(FortalRangeSlider).first)
+            .values,
+        const [0.0, 1.0],
       );
       expect(tester.takeException(), isNull);
     });
