@@ -77,6 +77,7 @@ const _defaultRegistryItems = <String>[
   'app_bar',
   'avatar',
   'badge',
+  'breadcrumbs',
   'button',
   'callout',
   'card',
@@ -97,6 +98,7 @@ const _defaultRegistryItems = <String>[
   'progress',
   'radio',
   'range_slider',
+  'search_field',
   'segmented_control',
   'select',
   'sidebar',
@@ -831,6 +833,9 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   if (item != null && jobs != null) return null;
   if ((item == 'icons' || item == 'ownership') && preset.name != 'vanilla')
     return null;
+  // Vanilla ships `search_field` too, but only HeroUI has its focused web
+  // build fixture.
+  if (item == 'search_field' && preset.name != 'heroui') return null;
   if (item != null &&
       item != 'ownership' &&
       !preset.registryItems.contains(item)) {

@@ -650,6 +650,7 @@ items:
         expect(item, isNotNull, reason: name);
         // Every component reaches the single Remix floor through theme, in dependency order.
         expect(catalog.resolve(name).map((item) => item.name), switch (name) {
+          'breadcrumbs' => ['theme', 'link', name],
           'combobox' => ['theme', 'textfield', name],
           'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
           'calendar' => ['theme', 'icon_button', 'select', name],
@@ -680,6 +681,7 @@ items:
             name,
           ],
           'range_slider' => ['theme', 'slider', name],
+          'search_field' => ['theme', 'icon_button', 'textfield', name],
           'sidebar' => ['theme', 'toggle', 'tooltip', name],
           'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
           'toast' => ['theme', 'button', 'icon_button', name],
@@ -691,6 +693,8 @@ items:
           expect(item.exports, ['icons.dart']);
         } else if (const {
           'sidebar_layout',
+          'breadcrumbs',
+          'search_field',
           'calendar',
           'date_picker',
           'range_calendar',
@@ -738,14 +742,16 @@ items:
 
         for (final widget in entry.value.widgets) {
           // Generated widgets take their name from the recipe. Handwritten
-          // composites declare the widget class directly. Match declarations
-          // so a reference in prose cannot satisfy the public-surface pin.
+          // composites declare the widget class directly, stateful when they
+          // own a controller. Match declarations so a reference in prose
+          // cannot satisfy the public-surface pin.
           expect(
             rendered,
             contains(
               RegExp(
                 item.generated.isEmpty
-                    ? '^class ${prefix.type}$widget extends StatelessWidget '
+                    ? '^class ${prefix.type}$widget extends '
+                          '(?:StatelessWidget|StatefulWidget) '
                     : '^\\w+ ${prefix.value}${widget}Style\\(',
                 multiLine: true,
               ),
@@ -864,6 +870,7 @@ const _componentSurfaces =
       'app_bar': (widgets: ['AppBar'], types: []),
       'avatar': (widgets: ['Avatar'], types: []),
       'badge': (widgets: ['Badge'], types: ['BadgeVariant']),
+      'breadcrumbs': (widgets: ['Breadcrumbs'], types: []),
       'button': (widgets: ['Button'], types: ['ButtonVariant', 'ButtonSize']),
       'calendar': (widgets: ['Calendar'], types: []),
       'callout': (widgets: ['Callout'], types: ['CalloutVariant']),
@@ -889,6 +896,7 @@ const _componentSurfaces =
       'radio': (widgets: ['Radio'], types: []),
       'range_calendar': (widgets: ['RangeCalendar'], types: []),
       'range_slider': (widgets: ['RangeSlider'], types: []),
+      'search_field': (widgets: ['SearchField'], types: []),
       'segmented_control': (widgets: ['SegmentedControl'], types: []),
       'select': (widgets: ['Select'], types: []),
       'sidebar': (widgets: ['Sidebar'], types: []),

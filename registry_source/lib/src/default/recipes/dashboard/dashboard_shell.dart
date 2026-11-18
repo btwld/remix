@@ -7,9 +7,9 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import '../../../dashboard/dashboard_shell_base.dart';
 import '../../components/app_bar.dart';
 import '../../components/icon_button.dart';
+import '../../components/search_field.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
-import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
 
 /// Sidebar, top bar, and the page beside them.
@@ -206,6 +206,7 @@ class VanillaDashboardShell<T extends Object> extends StatelessWidget {
             semanticLabel: semanticLabel,
             onPressed: onPressed,
           ),
+      // The search field draws its own search icon, so the shell's is unused.
       searchBuilder:
           (
             context, {
@@ -213,11 +214,10 @@ class VanillaDashboardShell<T extends Object> extends StatelessWidget {
             required hintText,
             required leading,
             required onChanged,
-          }) => VanillaTextField(
+          }) => VanillaSearchField(
             key: key,
             hintText: hintText,
             semanticLabel: hintText,
-            leading: leading,
             onChanged: onChanged,
           ),
     );

@@ -10,6 +10,7 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_base.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_records.dart';
 import 'package:registry_source/src/dashboard/dashboard_sample_data.dart';
+import 'package:registry_source/src/default/components/breadcrumbs.dart';
 import 'package:registry_source/src/default/components/icon_button.dart';
 import 'package:registry_source/src/default/components/menu.dart';
 import 'package:registry_source/src/default/components/popover.dart';
@@ -831,9 +832,23 @@ void main() {
             preset: preset,
             textDirection: direction,
           );
-          final separator = find.byKey(
-            const ValueKey('dashboard-breadcrumb-separator'),
-          );
+          // Vanilla's trail is the `breadcrumbs` component, whose chevron
+          // carries no dashboard key.
+          final separator = preset == .defaultPreset
+              ? find
+                    .ancestor(
+                      of: find.descendant(
+                        of: find.byType(VanillaBreadcrumbs),
+                        matching: find.byWidgetPredicate(
+                          (widget) =>
+                              widget is StyledIcon &&
+                              widget.icon == RemixIcons.chevronRight,
+                        ),
+                      ),
+                      matching: find.byType(Transform),
+                    )
+                    .first
+              : find.byKey(const ValueKey('dashboard-breadcrumb-separator'));
           expect(separator, findsOneWidget);
           expect(
             tester.widget<Transform>(separator).transform.entry(0, 0),
@@ -1549,6 +1564,57 @@ void main() {
         expect(shown('Jackson Lee'), findsNothing);
         expect(tester.takeException(), isNull);
       });
+
+      // Vanilla's searches are the `search_field` component, which clears.
+      if (preset == .defaultPreset)
+        testWidgets('customer search clears by button and by Escape', (
+          tester,
+        ) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.customers,
+          );
+          final search = find.byKey(const ValueKey('customer-search'));
+          List<String?> rows() => [
+            for (final text in tester.widgetList<Text>(
+              find.descendant(
+                of: find.byKey(const ValueKey('data-grid-customers')),
+                matching: find.byType(Text),
+              ),
+            ))
+              text.data,
+          ];
+          final unfiltered = rows();
+
+          await tester.enterText(search, 'Olivia');
+          await tester.pump();
+          expect(rows(), isNot(unfiltered));
+          await tester.tap(
+            find.descendant(of: search, matching: find.byType(RemixIconButton)),
+          );
+          await tester.pump();
+          expect(rows(), unfiltered);
+
+          await tester.enterText(search, 'Olivia');
+          await tester.pump();
+          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+          await tester.pump();
+          expect(rows(), unfiltered);
+          expect(
+            tester
+                .widget<EditableText>(
+                  find.descendant(
+                    of: search,
+                    matching: find.byType(EditableText),
+                  ),
+                )
+                .controller
+                .text,
+            isEmpty,
+          );
+          expect(tester.takeException(), isNull);
+        });
 
       // Fortal's header search is the quick-find combobox, see its group below.
       if (preset != .fortal)

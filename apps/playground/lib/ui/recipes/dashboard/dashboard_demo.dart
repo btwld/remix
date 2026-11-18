@@ -3,6 +3,7 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../../components/avatar.dart';
+import '../../components/breadcrumbs.dart';
 import '../../components/button.dart';
 import '../../components/divider.dart';
 import '../../components/icon_button.dart';
@@ -148,7 +149,12 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
             body: body,
             title: title,
             headerTitle: widget.builtInChrome
-                ? _PlaygroundBreadcrumb(page: selectedValue)
+                ? PlaygroundBreadcrumbs(
+                    items: [
+                      PlaygroundBreadcrumbItem(selectedValue.section.label),
+                      PlaygroundBreadcrumbItem(selectedValue.label),
+                    ],
+                  )
                 : null,
             brand: widget.brand,
             account:
@@ -427,47 +433,6 @@ class _PlaygroundBrand extends StatelessWidget {
     style: _textStyle(
       weight: FontWeight.w600,
     ).maxLines(1).softWrap(false).overflow(.ellipsis),
-  );
-}
-
-class _PlaygroundBreadcrumb extends StatelessWidget {
-  const _PlaygroundBreadcrumb({required this.page});
-  final PlaygroundDashboardDemoPage page;
-
-  @override
-  Widget build(BuildContext context) => RowBox(
-    style: FlexBoxStyler()
-        .crossAxisAlignment(.center)
-        .spacing(PlaygroundTokens.s2),
-    children: [
-      Flexible(
-        child: StyledText(
-          page.section.label,
-          style: _textStyle(
-            muted: true,
-          ).maxLines(1).softWrap(false).overflow(.ellipsis),
-        ),
-      ),
-      Transform.flip(
-        key: const ValueKey('dashboard-breadcrumb-separator'),
-        flipX: Directionality.of(context) == TextDirection.rtl,
-        child: StyledIcon(
-          icon: RemixIcons.chevronRight,
-          style: IconStyler()
-              .size(12)
-              .color(PlaygroundTokens.mutedForeground()),
-        ),
-      ),
-      Flexible(
-        child: StyledText(
-          page.label,
-          style: _textStyle(
-            token: PlaygroundTokens.textBase,
-            weight: FontWeight.w600,
-          ).maxLines(1).softWrap(false).overflow(.ellipsis),
-        ),
-      ),
-    ],
   );
 }
 

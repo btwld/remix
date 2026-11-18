@@ -8,8 +8,8 @@ import '../../components/button.dart';
 import '../../components/data_table.dart';
 import '../../components/icon_button.dart';
 import '../../components/menu.dart';
+import '../../components/search_field.dart';
 import '../../components/segmented_control.dart';
-import '../../components/textfield.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_demo_records.dart';
 import 'dashboard_demo_text.dart';
@@ -76,9 +76,8 @@ class _{{typePrefix}}DashboardCustomersPageState
           children: [
             Box(
               style: BoxStyler().maxWidth(300),
-              child: {{typePrefix}}TextField(
+              child: {{typePrefix}}SearchField(
                 key: const ValueKey('customer-search'),
-                leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
                 hintText: 'Search customers…',
                 semanticLabel: 'Search customers',
                 onChanged: (value) => setState(() {

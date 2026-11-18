@@ -1289,6 +1289,10 @@ Future<void> main(List<String> arguments) async {
         'recipes/dashboard/dashboard_shell_base.dart',
         'recipes/dashboard/dashboard_shell.dart',
         'components/sidebar_layout.dart',
+        // The header search, and the field and button it composes.
+        'components/search_field.dart',
+        'components/textfield.dart',
+        'components/icon_button.dart',
       ]),
     );
     expect(
@@ -1514,9 +1518,12 @@ items:
             r'^remix add (icons .+) --(diff|overwrite)',
             multiLine: true,
           ).allMatches(File(path).readAsStringSync()).toList();
-          final selected = preset == 'heroui'
-              ? commands.skip(2)
-              : commands.take(2);
+          // Vanilla's pair comes first, then Fortal's, then HeroUI's.
+          final selected = switch (preset) {
+            'vanilla' => commands.take(2),
+            'fortal' => commands.skip(2).take(2),
+            _ => commands.skip(4),
+          };
           expect(selected, hasLength(2), reason: '$path/$preset');
           for (final command in selected) {
             expect(
