@@ -40,6 +40,7 @@ export 'src/default/components/popover.dart';
 export 'src/default/components/progress.dart';
 export 'src/default/components/radio.dart';
 export 'src/default/components/range_slider.dart';
+export 'src/default/components/search_field.dart';
 export 'src/default/components/segmented_control.dart';
 export 'src/default/components/select.dart';
 export 'src/default/components/sidebar.dart';

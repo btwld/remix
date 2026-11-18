@@ -277,6 +277,7 @@ items:
       - message_recipe
       - popover
       - progress
+      - search_field
       - segmented_control
       - select
       - slider
@@ -322,9 +323,9 @@ items:
       - theme
       - app_bar
       - icon_button
+      - search_field
       - sidebar
       - sidebar_layout
-      - textfield
     files:
       - source: templates/dashboard_shell/dashboard_shell_base.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_shell_base.dart"
@@ -578,6 +579,17 @@ items:
       - "@ui/components/range_slider.g.dart"
     exports:
       - components/range_slider.dart
+
+  search_field:
+    registryDependencies:
+      - theme
+      - icon_button
+      - textfield
+    files:
+      - source: templates/search_field/search_field.dart.tmpl
+        target: "@ui/components/search_field.dart"
+    exports:
+      - components/search_field.dart
 
   segmented_control:
     registryDependencies:

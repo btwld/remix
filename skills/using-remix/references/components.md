@@ -85,6 +85,18 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `expands`/`obscureText` fixed to `false`. Vanilla, Fortal, and HeroUI recipes
   ring the field with `onFocused`, so a click shows the ring. Other controls use
   `onFocusVisible`.
+- **SearchField** — Remix has no search widget; presets compose one over their
+  text field. Vanilla's `remix add search_field` installs the stateful
+  `<Prefix>SearchField(semanticLabel: ...)` with `controller`, `focusNode`,
+  `hintText`, `enabled`, `readOnly`, `autofocus`, `onChanged`, `onSubmitted`,
+  `onCleared`, `clearSemanticLabel` (default `'Clear search'`),
+  `textInputAction` (default `search`) and `style`. It owns its controller
+  and focus node when none is given and draws its own search icon. The clear
+  button shows only while the field is enabled, editable and not empty;
+  clearing reports `''` to `onChanged`, calls `onCleared` and keeps focus.
+  Escape clears too, but only with text and no IME composition; otherwise it
+  passes up, so an enclosing dialog still closes. HeroUI's `search_field` is a
+  recipe instead: the app passes its icon and clear button and wires them.
 - **RangeSlider** — `RemixRangeSlider` takes exactly two ordered, parent-owned
   values. Give the lower and upper thumbs distinct `semanticLabels` in that
   order. `onChanged` requests values; the parent decides whether to accept them.
@@ -213,7 +225,8 @@ HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, `dashboard_shell`, and
 - **dashboard_shell** — compound recipe combining `app_bar`, `sidebar`, and
   `sidebar_layout`. Provides slots for brand, search, page title (or custom
   `headerTitle`), account, and header actions. Contains no generated adapter.
-  The HeroUI shell also installs `button` and `search_field`.
+  The Vanilla shell's header search is `search_field`; the HeroUI shell also
+  installs `button` and `search_field`.
 - **dashboard_demo** — showcase recipe assembling the product dashboard
   screens into a runnable demo: Overview, Chat, Customers, Orders, and
   Settings in Vanilla and HeroUI; those plus Analytics, Schedule, an

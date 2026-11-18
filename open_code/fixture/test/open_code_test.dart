@@ -169,6 +169,48 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('installed search field clears by button and by Escape', (
+    tester,
+  ) async {
+    final changes = <String>[];
+    var cleared = 0;
+    await _pumpInScope(
+      tester,
+      _overlaid(
+        Center(
+          child: SizedBox(
+            width: 320,
+            child: AcmeSearchField(
+              semanticLabel: 'Search customers',
+              hintText: 'Search customers…',
+              onChanged: changes.add,
+              onCleared: () => cleared += 1,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final field = find.byType(EditableText);
+    expect(tester.getSize(find.byType(AcmeSearchField)).height, 36);
+    expect(find.byType(RemixIconButton), findsNothing);
+
+    await tester.enterText(field, 'ada');
+    await tester.pump();
+    await tester.tap(find.byType(RemixIconButton));
+    await tester.pump();
+    expect(tester.widget<EditableText>(field).controller.text, isEmpty);
+
+    await tester.enterText(field, 'ada');
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+    expect(tester.widget<EditableText>(field).controller.text, isEmpty);
+    expect(changes, ['ada', '', 'ada', '']);
+    expect(cleared, 2);
+    expect(tester.takeException(), isNull);
+  });
+
   group('installed Agent recipes', () {
     Widget scope(Widget child) =>
         AgentGlyphs(builder: acmeAgentGlyph, child: child);

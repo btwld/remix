@@ -449,6 +449,7 @@ void main() {
           children: [
             for (final control in [
               const VanillaTextField(hintText: 'Name'),
+              const VanillaSearchField(semanticLabel: 'Search'),
               VanillaSelect<String>(
                 trigger: const RemixSelectTrigger(placeholder: 'Plan'),
                 items: const [RemixSelectItem(value: 'free', label: 'Free')],
@@ -474,14 +475,87 @@ void main() {
 
     for (final type in [
       VanillaTextField,
+      VanillaSearchField,
       VanillaSelect<String>,
       VanillaCombobox<String>,
       VanillaButton,
       VanillaDatePicker,
     ]) {
-      expect(tester.getSize(find.byType(type)).height, 36, reason: '$type');
+      // `.first`: the search field holds a text field of its own.
+      expect(
+        tester.getSize(find.byType(type).first).height,
+        36,
+        reason: '$type',
+      );
     }
   });
+
+  for (final rtl in [false, true]) {
+    testWidgets(
+      'a search field is as tall as a text field at 200%, with and without '
+      'its clear button; RTL=$rtl',
+      (tester) async {
+        final controller = TextEditingController(text: 'Northstar');
+        addTearDown(controller.dispose);
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            builder: (context, _) => VanillaTheme(
+              child: MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: const TextScaler.linear(2)),
+                child: Directionality(
+                  textDirection: rtl ? .rtl : .ltr,
+                  child: Overlay.wrap(
+                    child: Center(
+                      child: SizedBox(
+                        width: 280,
+                        child: Column(
+                          mainAxisSize: .min,
+                          children: [
+                            const VanillaTextField(hintText: 'Name'),
+                            const VanillaSearchField(
+                              key: ValueKey('empty'),
+                              semanticLabel: 'Search',
+                              hintText: 'Search…',
+                            ),
+                            VanillaSearchField(
+                              key: const ValueKey('query'),
+                              semanticLabel: 'Search',
+                              controller: controller,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(tester.takeException(), isNull);
+        final height = tester
+            .getSize(find.byType(VanillaTextField).first)
+            .height;
+        expect(height, greaterThan(36));
+        for (final key in ['empty', 'query']) {
+          expect(
+            tester.getSize(find.byKey(ValueKey(key))).height,
+            height,
+            reason: key,
+          );
+        }
+        final field = tester.getRect(find.byKey(const ValueKey('query')));
+        final clear = tester.getRect(find.byType(RemixIconButton));
+        expect(clear.size, const Size.square(24));
+        expect(clear.center.dy, field.center.dy);
+        expect(rtl ? clear.left - field.left : field.right - clear.right, 5);
+      },
+    );
+  }
 
   testWidgets('a segmented control stays 36px tall inside a taller row', (
     tester,

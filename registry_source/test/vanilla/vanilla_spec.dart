@@ -965,6 +965,167 @@ final _textFieldTargets = <SpecTarget>[
   ),
 ];
 
+// -- search field -------------------------------------------------------------
+
+/// Pumps a search field holding a query, so its clear button shows, then
+/// hovers the clear button or focuses the field when asked, and reads it.
+SpecTarget _searchField(
+  String property, {
+  required String source,
+  bool hoverClear = false,
+  bool focusField = false,
+  required Object? Function(WidgetTester tester) read,
+  required Object? Function(VanillaThemeData theme) expected,
+}) => SpecTarget._(
+  component: 'search field',
+  property: property,
+  source: source,
+  actual: (tester, theme) async {
+    final controller = TextEditingController(text: 'ada');
+    addTearDown(controller.dispose);
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      VanillaTheme(
+        theme: theme,
+        child: hostOf(
+          Overlay.wrap(
+            child: Center(
+              child: SizedBox(
+                width: 320,
+                child: VanillaSearchField(
+                  semanticLabel: 'Search',
+                  controller: controller,
+                  focusNode: focusNode,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    if (focusField) {
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+    }
+    if (hoverClear) {
+      final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(pointer.removePointer);
+      await pointer.addPointer(location: Offset.zero);
+      await pointer.moveTo(tester.getCenter(find.byType(RemixIconButton)));
+      await tester.pumpAndSettle();
+    }
+
+    return read(tester);
+  },
+  expected: expected,
+);
+
+TextFieldSpec _searchFieldSpec(WidgetTester tester) => tester
+    .widget<StyleSpecProvider<TextFieldSpec>>(
+      find.byType(StyleSpecProvider<TextFieldSpec>),
+    )
+    .spec
+    .spec;
+
+IconButtonSpec _searchClearSpec(WidgetTester tester) => tester
+    .widget<StyleSpecProvider<IconButtonSpec>>(
+      find.byType(StyleSpecProvider<IconButtonSpec>),
+    )
+    .spec
+    .spec;
+
+final _searchFieldTargets = <SpecTarget>[
+  _searchField(
+    'field box',
+    source:
+        'input-group.tsx: InputGroup h-9 rounded-md border-input dark:bg-input/30',
+    read: (tester) {
+      final box = _searchFieldSpec(tester).container.spec;
+      final decoration = box.decoration as BoxDecoration?;
+      return (
+        box.constraints?.minHeight,
+        decoration?.border,
+        decoration?.borderRadius,
+        decoration?.color,
+      );
+    },
+    expected: (theme) => (
+      36.0,
+      _hairline(theme.input),
+      _rounded(theme, VanillaTokens.radiusMd),
+      _fieldFill(theme),
+    ),
+  ),
+  _searchField(
+    'insets and gap',
+    source:
+        'input-group.tsx: addon pl-3, input pl-2 / pr-2, end addon pr-3 -mr-[0.45rem]',
+    read: (tester) => (
+      _searchFieldSpec(tester).container.spec.padding,
+      _searchFieldSpec(tester).spacing,
+    ),
+    expected: (_) => (const EdgeInsets.fromLTRB(12, 4, 4, 4), 8.0),
+  ),
+  _searchField(
+    'search icon',
+    source:
+        'input-group.tsx: InputGroupAddon text-muted-foreground [&>svg]:size-4',
+    read: (tester) {
+      final icon = find.byIcon(RemixIcons.search);
+      final glyph = tester.widget<RichText>(
+        find.descendant(of: icon, matching: find.byType(RichText)),
+      );
+      return (tester.getSize(icon), glyph.text.style?.color);
+    },
+    expected: (theme) => (const Size.square(16), theme.mutedForeground),
+  ),
+  _searchField(
+    'clear button',
+    source:
+        'input-group.tsx: InputGroupButton icon-xs size-6, ghost, svg size-4',
+    read: (tester) {
+      final spec = _searchClearSpec(tester);
+      return (
+        tester.getSize(find.byType(RemixIconButton)),
+        (spec.container.spec.decoration as BoxDecoration?)?.borderRadius,
+        spec.icon.spec.size,
+        spec.icon.spec.color,
+      );
+    },
+    expected: (theme) => (
+      const Size.square(24),
+      _rounded(theme, VanillaTokens.radiusSm),
+      16.0,
+      theme.mutedForeground,
+    ),
+  ),
+  _searchField(
+    'clear button hover',
+    hoverClear: true,
+    source: 'button.tsx: ghost hover:bg-accent hover:text-accent-foreground',
+    read: (tester) => (
+      (_searchClearSpec(tester).container.spec.decoration as BoxDecoration?)
+          ?.color,
+      _searchClearSpec(tester).icon.spec.color,
+    ),
+    expected: (theme) =>
+        (tint(theme.accent, _isDark(theme) ? 0.5 : 1), theme.accentForeground),
+  ),
+  _searchField(
+    'focus ring',
+    focusField: true,
+    source:
+        'input-group.tsx: control focus-visible ring-[3px] ring-ring/50 border-ring',
+    read: (tester) => (
+      _searchFieldSpec(tester).containerEffects?.outline,
+      (_searchFieldSpec(tester).container.spec.decoration as BoxDecoration?)
+          ?.border,
+    ),
+    expected: (theme) => (_focusRing(theme), _hairline(theme.ring)),
+  ),
+];
+
 // -- select -------------------------------------------------------------------
 
 SpecTarget _select(
@@ -2288,6 +2449,7 @@ final vanillaSpecTargets = <SpecTarget>[
   ..._toggleTargets,
   ..._toggleGroupTargets,
   ..._textFieldTargets,
+  ..._searchFieldTargets,
   _target<ComboboxSpec>(
     'combobox',
     'field metrics',

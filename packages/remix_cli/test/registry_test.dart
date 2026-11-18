@@ -681,6 +681,7 @@ items:
             name,
           ],
           'range_slider' => ['theme', 'slider', name],
+          'search_field' => ['theme', 'icon_button', 'textfield', name],
           'sidebar' => ['theme', 'toggle', 'tooltip', name],
           'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
           'toast' => ['theme', 'button', 'icon_button', name],
@@ -693,6 +694,7 @@ items:
         } else if (const {
           'sidebar_layout',
           'breadcrumbs',
+          'search_field',
           'calendar',
           'date_picker',
           'range_calendar',
@@ -740,14 +742,16 @@ items:
 
         for (final widget in entry.value.widgets) {
           // Generated widgets take their name from the recipe. Handwritten
-          // composites declare the widget class directly. Match declarations
-          // so a reference in prose cannot satisfy the public-surface pin.
+          // composites declare the widget class directly, stateful when they
+          // own a controller. Match declarations so a reference in prose
+          // cannot satisfy the public-surface pin.
           expect(
             rendered,
             contains(
               RegExp(
                 item.generated.isEmpty
-                    ? '^class ${prefix.type}$widget extends StatelessWidget '
+                    ? '^class ${prefix.type}$widget extends '
+                          '(?:StatelessWidget|StatefulWidget) '
                     : '^\\w+ ${prefix.value}${widget}Style\\(',
                 multiLine: true,
               ),
@@ -892,6 +896,7 @@ const _componentSurfaces =
       'radio': (widgets: ['Radio'], types: []),
       'range_calendar': (widgets: ['RangeCalendar'], types: []),
       'range_slider': (widgets: ['RangeSlider'], types: []),
+      'search_field': (widgets: ['SearchField'], types: []),
       'segmented_control': (widgets: ['SegmentedControl'], types: []),
       'select': (widgets: ['Select'], types: []),
       'sidebar': (widgets: ['Sidebar'], types: []),

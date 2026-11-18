@@ -145,6 +145,60 @@ void main() {
         );
       });
 
+      testWidgets('a search field rings without moving its neighbor', (
+        tester,
+      ) async {
+        final probe = await _pump(
+          tester,
+          theme.data,
+          (node) => Overlay.wrap(
+            clipBehavior: Clip.none,
+            child: VanillaSearchField(semanticLabel: 'Search', focusNode: node),
+          ),
+        );
+        await probe.expectRing(
+          part: find.byType(RemixTextField),
+          includes: (part) => [part.centerLeft.translate(-1.5, 0)],
+          excludes: (part) => [part.centerLeft.translate(-4.5, 0)],
+        );
+      });
+
+      testWidgets('a search clear button rings inside the field without '
+          'reflow', (tester) async {
+        final controller = TextEditingController(text: 'ada');
+        addTearDown(controller.dispose);
+        await _pump(
+          tester,
+          theme.data,
+          (_) => Overlay.wrap(
+            clipBehavior: Clip.none,
+            child: VanillaSearchField(
+              semanticLabel: 'Search',
+              controller: controller,
+            ),
+          ),
+        );
+        // The button takes no focus node, so the probe drives its own.
+        final button = find.byType(RemixIconButton);
+        final root = tester.element(button);
+        final probe = _Probe(
+          tester,
+          theme.data,
+          FocusManager.instance.rootScope.descendants.firstWhere(
+            (node) => node.canRequestFocus && _isInside(node.context, root),
+          ),
+        );
+        final text = tester.getRect(find.byType(EditableText));
+
+        await probe.expectRing(
+          part: button,
+          neighbor: find.byType(EditableText),
+          includes: (part) => [part.centerRight.translate(1.5, 0)],
+          excludes: (part) => [part.centerRight.translate(3.5, 0)],
+        );
+        expect(tester.getRect(find.byType(EditableText)), text);
+      });
+
       testWidgets('a toggle rings outside itself', (tester) async {
         final probe = await _pump(
           tester,

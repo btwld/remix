@@ -67,6 +67,8 @@ import 'package:widgetbook_vanilla/components/range_calendar.dart'
     as _widgetbook_vanilla_components_range_calendar;
 import 'package:widgetbook_vanilla/components/range_slider.dart'
     as _widgetbook_vanilla_components_range_slider;
+import 'package:widgetbook_vanilla/components/search_field.dart'
+    as _widgetbook_vanilla_components_search_field;
 import 'package:widgetbook_vanilla/components/segmented_control.dart'
     as _widgetbook_vanilla_components_segmented_control;
 import 'package:widgetbook_vanilla/components/select.dart'
@@ -409,6 +411,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'RTL · 200% text',
             builder: _widgetbook_vanilla_components_range_slider
                 .buildVanillaRangeSliderRtlUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaSearchField',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Search Field',
+            builder: _widgetbook_vanilla_components_search_field
+                .buildVanillaSearchFieldUseCase,
           ),
         ],
       ),

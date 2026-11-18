@@ -1556,6 +1556,57 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
+      // Vanilla's searches are the `search_field` component, which clears.
+      if (preset == .defaultPreset)
+        testWidgets('customer search clears by button and by Escape', (
+          tester,
+        ) async {
+          await _pumpDashboard(
+            tester,
+            preset: preset,
+            initialPage: RegistryDashboardDemoPage.customers,
+          );
+          final search = find.byKey(const ValueKey('customer-search'));
+          List<String?> rows() => [
+            for (final text in tester.widgetList<Text>(
+              find.descendant(
+                of: find.byKey(const ValueKey('data-grid-customers')),
+                matching: find.byType(Text),
+              ),
+            ))
+              text.data,
+          ];
+          final unfiltered = rows();
+
+          await tester.enterText(search, 'Olivia');
+          await tester.pump();
+          expect(rows(), isNot(unfiltered));
+          await tester.tap(
+            find.descendant(of: search, matching: find.byType(RemixIconButton)),
+          );
+          await tester.pump();
+          expect(rows(), unfiltered);
+
+          await tester.enterText(search, 'Olivia');
+          await tester.pump();
+          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+          await tester.pump();
+          expect(rows(), unfiltered);
+          expect(
+            tester
+                .widget<EditableText>(
+                  find.descendant(
+                    of: search,
+                    matching: find.byType(EditableText),
+                  ),
+                )
+                .controller
+                .text,
+            isEmpty,
+          );
+          expect(tester.takeException(), isNull);
+        });
+
       // Fortal's header search is the quick-find combobox, see its group below.
       if (preset != .fortal)
         testWidgets('global search finds real screens by section id', (

@@ -1289,6 +1289,10 @@ Future<void> main(List<String> arguments) async {
         'recipes/dashboard/dashboard_shell_base.dart',
         'recipes/dashboard/dashboard_shell.dart',
         'components/sidebar_layout.dart',
+        // The header search, and the field and button it composes.
+        'components/search_field.dart',
+        'components/textfield.dart',
+        'components/icon_button.dart',
       ]),
     );
     expect(

@@ -80,6 +80,7 @@ The installer rejects older resolved versions before it writes source.
 | `progress` | `UiProgress` | — |
 | `radio` | `UiRadio` | — |
 | `range_slider` | `UiRangeSlider` (depends on `slider`) | — |
+| `search_field` | `UiSearchField` (Vanilla; installs `theme`, `textfield`, and `icon_button`) | — |
 | `segmented_control` | `UiSegmentedControl` | — |
 | `select` | `UiSelect` | — |
 | `sidebar` | `UiSidebar` | — |
@@ -101,9 +102,12 @@ range day states. The pickers compose outline Button, elevated Popover and the
 matching calendar, retaining all five child-styler overrides. `breadcrumbs` is
 one too: a one-line trail of Link recipes with chevron separators, the current
 page as plain text, and a navigation landmark around it. The Vanilla
-`dashboard_demo` header uses it.
+`dashboard_demo` header uses it. So is `search_field`: a stateful text field
+with a search icon and a clear button that shows for text, clears on Escape,
+and owns its controller when you pass none. The Vanilla `dashboard_shell`
+header search and the demo's customer search use it.
 
-The `fortal` catalog contains the items above except `breadcrumbs`, and adds `base_button`, `code`,
+The `fortal` catalog contains the items above except `breadcrumbs` and `search_field`, and adds `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`. `base_button` and
 `typography` are shared authored recipes that arrive transitively with the
 components that use them. Fortal's component names use the configured prefix,
@@ -112,9 +116,9 @@ so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
 
 The `heroui` catalog follows HeroUI's names. Beside shared names such as
 `button`, `combobox`, `select`, `range_slider`, `calendar`, `range_calendar`,
-`date_picker`, `date_range_picker`, `breadcrumbs`, and `tabs`, it adds `alert`, `avatar_group`,
+`date_picker`, `date_range_picker`, `breadcrumbs`, `search_field`, and `tabs`, it adds `alert`, `avatar_group`,
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
-`field_layout`, `input_group`, `modal`, `radio_group`, `search_field`,
+`field_layout`, `input_group`, `modal`, `radio_group`,
 `separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
 and `toggle_button_group`. It also ships `app_bar`, `sidebar`,
 `sidebar_layout`, `icons`, and `dashboard_shell` as extensions: HeroUI web has
@@ -212,16 +216,16 @@ neither adds Lucide. See [Icons in registry presets](/guides/icons#icons-in-regi
 for how presets size those icons.
 Six Fortal items use icon placeholders: `icons`, `dashboard_shell`,
 `dashboard_demo`, `agent_glyphs_recipe`, `date_picker`, and `date_range_picker`. Vanilla uses
-the same six plus `breadcrumbs`, and HeroUI the same six plus `breadcrumbs`,
-`close_button`, and `search_field`.
+the same six plus `breadcrumbs` and `search_field`, and HeroUI the same six plus
+`breadcrumbs`, `close_button`, and `search_field`.
 To switch an existing install, change `iconLibrary`, then reinstall every one
 of those you have installed in one command, reviewing first (`--overwrite`
 replaces only the items you name, so one left out keeps the old library).
 For Vanilla:
 
 ```shell
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs --diff
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs --overwrite
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --diff
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --overwrite
 ```
 
 For Fortal:

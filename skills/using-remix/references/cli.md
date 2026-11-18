@@ -113,14 +113,15 @@ references using the package’s `MIGRATION.md`.
 
 The choice applies at install. Six Fortal items use icon placeholders:
 `icons`, `dashboard_shell`, `dashboard_demo`, `agent_glyphs_recipe`, `date_picker`, and
-`date_range_picker`. Vanilla uses the same six plus `breadcrumbs`, and HeroUI the
-same six plus `breadcrumbs`, `close_button`, and `search_field`.
+`date_range_picker`. Vanilla uses the same six plus `breadcrumbs` and
+`search_field`, and HeroUI the same six plus `breadcrumbs`, `close_button`, and
+`search_field`.
 To switch an installed project, change the setting and reinstall every one of
 them you have, in one command; `--overwrite` rewrites only the items named:
 
 ```bash
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs --diff   # Vanilla
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs --overwrite
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --diff   # Vanilla
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --overwrite
 remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker --diff       # Fortal
 remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker --overwrite
 remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs close_button search_field --diff   # HeroUI

@@ -46,6 +46,30 @@ void main() {
       );
     },
   );
+  test('Vanilla search field composes the field and the icon button', () {
+    final output = PresetBuilder.forRepository(
+      Directory.current,
+      spec: defaultPreset,
+    ).derive();
+    final items = loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+    final item = items['search_field'] as YamlMap;
+    expect(_strings(item['registryDependencies']), [
+      'theme',
+      'icon_button',
+      'textfield',
+    ]);
+    expect(item.containsKey('generated'), isFalse);
+    final template =
+        output.files['templates/search_field/search_field.dart.tmpl'];
+    expect(template, contains('class {{typePrefix}}SearchField extends'));
+    expect(template, contains('{{icon:magnifyingGlass}}'));
+    expect(template, contains('{{icon:cross2}}'));
+    // The dashboard shell's header search is the installed component.
+    expect(
+      _strings((items['dashboard_shell'] as YamlMap)['registryDependencies']),
+      allOf(contains('search_field'), isNot(contains('textfield'))),
+    );
+  });
   test(
     'Vanilla calendar composites infer complete install closures without generated parts',
     () {

@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_vanilla/components/calendar_labels.dart';
 import 'package:widgetbook_vanilla/components/checkbox.dart';
+import 'package:widgetbook_vanilla/components/search_field.dart';
 import 'package:widgetbook_vanilla/components/select.dart';
 import 'package:widgetbook_vanilla/components/switch.dart';
 import 'package:widgetbook_vanilla/components/toggle.dart';
@@ -34,8 +35,8 @@ void main() {
 
   final useCases = _collectUseCases(directories);
 
-  test('catalog registers all 49 Vanilla component use cases', () {
-    expect(useCases, hasLength(49));
+  test('catalog registers all 50 Vanilla component use cases', () {
+    expect(useCases, hasLength(50));
   });
 
   for (final entry in useCases) {
@@ -93,6 +94,14 @@ void main() {
     await tester.tap(find.text('Apple').last);
     await tester.pumpAndSettle();
     expect(find.text('Apple'), findsOneWidget);
+  });
+  testWidgets('the search field use case clears its query', (tester) async {
+    await _pumpUseCase(tester, buildVanillaSearchFieldUseCase);
+    expect(find.text('Northstar'), findsOneWidget);
+    await tester.tap(find.byType(RemixIconButton));
+    await tester.pump();
+    expect(find.text('Northstar'), findsNothing);
+    expect(find.byType(RemixIconButton), findsNothing);
   });
 }
 
