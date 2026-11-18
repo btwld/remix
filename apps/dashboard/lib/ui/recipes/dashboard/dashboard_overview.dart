@@ -1078,6 +1078,9 @@ class UiTeamCard extends StatelessWidget {
             description: '$online of ${team.length} online now',
             trailing: UiAvatarGroup(
               size: .size1,
+              // Five slots: the sample team of five shows in full, and a
+              // larger one counts the rest in the fifth.
+              max: 5,
               members: [
                 for (final member in team)
                   UiAvatarGroupMember(

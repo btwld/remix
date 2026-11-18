@@ -116,11 +116,17 @@ void main() {
           );
           expect(icon.size, Size.square(glyph));
           expect(icon.center, target.center);
-          // The editor stops a spacing step short of the glyph.
+          // The editor stops where the clear target starts, at least a
+          // spacing step short of the glyph, so a tap on the text never
+          // lands on the button.
           final spacing = size == .size3 ? 12.0 : 8.0;
           expect(
+            rtl ? editor.left - target.right : target.left - editor.right,
+            closeTo(0, 0.01),
+          );
+          expect(
             rtl ? editor.left - icon.right : icon.left - editor.right,
-            closeTo(spacing, 0.01),
+            greaterThanOrEqualTo(spacing),
           );
           // The leading glyph keeps the field's own inset.
           final search = tester.getRect(find.byIcon(RemixIcons.search));
@@ -283,6 +289,40 @@ void main() {
       expect(_editable(tester).focusNode.hasFocus, isTrue);
       expect(find.byType(FortalIconButton), findsNothing);
     });
+
+    for (final size in FortalSearchFieldSize.values) {
+      testWidgets('${size.name}: a tap just inside the text end places the '
+          'caret and keeps the search', (tester) async {
+        for (final direction in TextDirection.values) {
+          final controller = TextEditingController(text: 'Mar');
+          addTearDown(controller.dispose);
+          var cleared = 0;
+          await tester.pumpRemixApp(
+            SizedBox(
+              width: 320,
+              child: FortalSearchField(
+                size: size,
+                semanticLabel: 'Search',
+                controller: controller,
+                onCleared: () => cleared++,
+              ),
+            ),
+            textDirection: direction,
+          );
+
+          final editor = tester.getRect(find.byType(EditableText));
+          final end = direction == TextDirection.ltr
+              ? Offset(editor.right - 1, editor.center.dy)
+              : Offset(editor.left + 1, editor.center.dy);
+          await tester.tapAt(end);
+          await tester.pump(const Duration(milliseconds: 500));
+
+          expect(controller.text, 'Mar', reason: direction.name);
+          expect(cleared, 0, reason: direction.name);
+          expect(_editable(tester).focusNode.hasFocus, isTrue);
+        }
+      });
+    }
 
     testWidgets('a caller controller and focus node are used, and a change '
         'from outside shows the button', (tester) async {
@@ -490,7 +530,46 @@ void main() {
       await tester.pump();
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
+      // The input method keeps the key: nothing clears and nothing closes.
       expect(controller.text, 'かな');
+      expect(dismissed, 0);
+    });
+
+    testWidgets('holding Escape clears once and closes nothing', (
+      tester,
+    ) async {
+      var cleared = 0;
+      var dismissed = 0;
+      await tester.pumpRemixApp(
+        Actions(
+          actions: {
+            DismissIntent: CallbackAction<DismissIntent>(
+              onInvoke: (_) => dismissed++,
+            ),
+          },
+          child: SizedBox(
+            width: 320,
+            child: FortalSearchField(
+              semanticLabel: 'Search',
+              onCleared: () => cleared++,
+            ),
+          ),
+        ),
+      );
+
+      await tester.enterText(find.byType(EditableText), 'mar');
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.escape);
+      await tester.sendKeyRepeatEvent(LogicalKeyboardKey.escape);
+      await tester.sendKeyRepeatEvent(LogicalKeyboardKey.escape);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+      expect(_editable(tester).controller.text, isEmpty);
+      expect(cleared, 1);
+      expect(dismissed, 0);
+
+      // A fresh press on the empty field passes on.
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
       expect(dismissed, 1);
     });
 

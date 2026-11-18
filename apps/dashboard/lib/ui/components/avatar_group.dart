@@ -44,8 +44,9 @@ class UiAvatarGroupMember {
   final UiAccentColor? accent;
 }
 
-/// A row of soft avatars for the people behind something. Members past [max]
-/// are counted in one closing solid `+N` avatar.
+/// A row of soft avatars for the people behind something, at most [max]
+/// wide. When there are more members than that, the last slot is one solid
+/// `+N` avatar counting the rest.
 ///
 /// The avatars stand a spacing step apart instead of overlapping. Overlapping
 /// avatars need a seam to stay distinct, a ring in the page color or a cut
@@ -73,7 +74,11 @@ class UiAvatarGroup extends StatelessWidget {
   /// The avatar size, and the space between avatars.
   final UiAvatarGroupSize size;
 
-  /// How many avatars show before the rest collapse into the count.
+  /// How many avatars the row shows, the count included.
+  ///
+  /// Up to [max] members all show. With more, the first `max - 1` show and
+  /// a solid `+N` counts the rest, up to `99+`, so `max: 1` shows only the
+  /// count.
   final int max;
 
   /// Strengthens every avatar as [UiAvatar.highContrast] does.
@@ -95,7 +100,9 @@ class UiAvatarGroup extends StatelessWidget {
       .size3 => (UiAvatarSize.size3, UiTokens.space2()),
       .size4 => (UiAvatarSize.size4, UiTokens.space2()),
     };
-    final rest = members.length - max;
+    final shown = members.length <= max ? members.length : max - 1;
+    final rest = members.length - shown;
+    final count = rest > 99 ? '99+' : '+$rest';
 
     return Semantics(
       container: true,
@@ -104,7 +111,7 @@ class UiAvatarGroup extends StatelessWidget {
         child: RowBox(
           style: FlexBoxStyler().mainAxisSize(.min).spacing(gap),
           children: [
-            for (final member in members.take(max))
+            for (final member in members.take(shown))
               _tinted(
                 member.accent,
                 UiAvatar.soft(
@@ -118,10 +125,10 @@ class UiAvatarGroup extends StatelessWidget {
               ),
             if (rest > 0)
               UiAvatar.solid(
-                label: '+$rest',
+                label: count,
                 size: avatarSize,
                 highContrast: highContrast,
-                fallbackLength: _fallbackLength('+$rest'),
+                fallbackLength: _fallbackLength(count),
                 style: style,
               ),
           ],

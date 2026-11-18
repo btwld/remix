@@ -183,8 +183,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `labelBuilder`/`label` > `iconBuilder`/`icon`.
 - **AvatarGroup** — a preset composition, not a Remix widget. HeroUI's
   `avatar_group` overlaps the avatars you pass. Fortal's spaces avatars built
-  from `<Prefix>AvatarGroupMember` values, counts those past `max` in `+N`, and
-  announces one label for the whole row. See [Fortal](fortal.md#avatar-group).
+  from `<Prefix>AvatarGroupMember` values, counts `+N` in the last of `max`
+  slots, and announces one label for the whole row. See [Fortal](fortal.md#avatar-group).
 - **DataTable** — fully controlled: the caller supplies the current page in
   final order, and sort/selection/pagination callbacks report intent only —
   they never mutate or fetch rows. Its styler has a generic `call<T>()`

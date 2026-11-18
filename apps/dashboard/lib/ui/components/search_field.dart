@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
@@ -39,11 +41,11 @@ enum UiSearchFieldVariant {
 /// The clear button shows while the field is enabled, editable and not
 /// empty. It sits over the field's end, centered in the last 40px so its
 /// whole 40px target is inside the field, and the text area always stops
-/// short of it. Pressing it clears the text, reports `onChanged('')` and
+/// where that target starts. Pressing it clears the text, reports `onChanged('')` and
 /// [onCleared], and returns focus to the field. It is its own semantics node
-/// and takes no Tab stop: Escape clears from the keyboard. Escape passes on,
-/// to close a dialog for example, when there is nothing to clear or while an
-/// input method is composing.
+/// and takes no Tab stop: Escape clears from the keyboard, its repeats
+/// included. Escape passes on, to close a dialog for example, when there is
+/// nothing to clear, and is left to an input method that is composing.
 ///
 /// The field creates its own controller and focus node when none are given.
 /// When a caller's controller is withdrawn, the owned one starts from its
@@ -210,27 +212,50 @@ class _UiSearchFieldState extends State<UiSearchField> {
     _focusNode.requestFocus();
   }
 
-  /// Escape clears, unless there is nothing to clear or an input method is
-  /// still composing; then it passes on.
+  /// Whether the Escape press now held down cleared the field.
+  bool _escapeCleared = false;
+
+  /// Escape clears when there is something to clear, and otherwise passes
+  /// on, to close a dialog for example.
+  ///
+  /// The repeats and release of a press that cleared are consumed with it:
+  /// the field is empty after the first, so holding Escape would otherwise
+  /// close the dialog too. While an input method is composing, the key is
+  /// left to it alone.
   KeyEventResult _onKeyEvent(FocusNode _, KeyEvent event) {
-    if (event is! KeyDownEvent ||
-        event.logicalKey != LogicalKeyboardKey.escape ||
-        !_canClear) {
-      return .ignored;
+    if (event.logicalKey != LogicalKeyboardKey.escape) return .ignored;
+    if (event is KeyDownEvent) {
+      _escapeCleared = false;
+    } else if (_escapeCleared) {
+      if (event is KeyUpEvent) _escapeCleared = false;
+      return .handled;
     }
     final composing = _controller.value.composing;
-    if (composing.isValid && !composing.isCollapsed) return .ignored;
+    if (composing.isValid && !composing.isCollapsed) {
+      return .skipRemainingHandlers;
+    }
+    if (event is! KeyDownEvent || !_canClear) return .ignored;
     _clear();
+    _escapeCleared = true;
 
     return .handled;
   }
 
   @override
   Widget build(BuildContext context) {
-    final (fieldSize, buttonSize, paddingX, glyph) = switch (widget.size) {
+    // The field's own end padding and the spacing before a trailing widget,
+    // as the text field sets them for each size.
+    final (
+      fieldSize,
+      buttonSize,
+      paddingX,
+      spacing,
+      glyph,
+    ) = switch (widget.size) {
       .size1 => (
         UiTextFieldSize.size1,
         UiIconButtonSize.size1,
+        UiTokens.space2,
         UiTokens.space2,
         UiTokens.space3,
       ),
@@ -238,20 +263,26 @@ class _UiSearchFieldState extends State<UiSearchField> {
         UiTextFieldSize.size2,
         UiIconButtonSize.size1,
         UiTokens.space2,
+        UiTokens.space2,
         UiTokens.space3,
       ),
       .size3 => (
         UiTextFieldSize.size3,
         UiIconButtonSize.size2,
         UiTokens.space3,
+        UiTokens.space3,
         UiTokens.space4,
       ),
     };
     final target = UiTokens.touchTargetMin.resolve(context);
-    // The input stops where the clear glyph starts, minus the field's own
-    // spacing, exactly as it would beside a trailing icon of that size.
-    final reserved =
-        target / 2 + glyph.resolve(context) / 2 - paddingX.resolve(context);
+    final inset = paddingX.resolve(context) + spacing.resolve(context);
+    // The input stops where the clear button's target starts, so a tap on
+    // the text never clears it, and at least one spacing step short of the
+    // glyph, as it would beside a trailing icon of that size.
+    final reserved = math.max(
+      target - inset,
+      target / 2 + glyph.resolve(context) / 2 - paddingX.resolve(context),
+    );
 
     return Focus(
       canRequestFocus: false,

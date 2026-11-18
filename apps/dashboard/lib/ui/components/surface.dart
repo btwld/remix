@@ -198,8 +198,16 @@ class UiSurface extends StatelessWidget {
       child: child,
     );
     if (variant == .inverse) {
+      // Only the brightness is configured, for both of the parent's themes,
+      // so the scope follows whichever the parent uses and inherits its
+      // accent, radius and scaling. A `mode` would pick one of the parent's
+      // themes instead, and an app that gives only `theme` has one.
+      final opposite = UiThemeConfig(
+        brightness: UiTheme.of(context).isDark ? .light : .dark,
+      );
       surface = UiTheme(
-        mode: UiTheme.of(context).isDark ? .light : .dark,
+        theme: opposite,
+        darkTheme: opposite,
         hasBackground: false,
         child: surface,
       );

@@ -223,8 +223,9 @@ and [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components
 `<Prefix>Avatar`s with no generated part. Pass
 `<Prefix>AvatarGroupMember(name, initials: ..., image: ..., accent: ...)`
 values; each member is a soft avatar under its own accent. `size: .size1`–`.size4`
-picks avatar sizes 1–4 (default size2) and the gap; `max` (default 4) collapses
-the rest into a solid `+N`. The avatars never overlap, because Fortal has no
+picks avatar sizes 1–4 (default size2) and the gap. `max` (default 4) counts
+every visible slot: more members than `max` show `max - 1` avatars and a solid
+`+N` for the rest, capped at `99+`. The avatars never overlap, because Fortal has no
 seam ring or corner cut to separate them. The row is one semantics node
 naming every member unless you pass `semanticLabel`.
 
@@ -237,7 +238,8 @@ naming every member unless you pass `semanticLabel`.
 muted text. The last step is the current page in strong medium text and is
 never a link. Chevrons mirror in right-to-left text and are hidden from
 assistive technology. Steps keep their width while the trail fits; past
-that, short steps stay whole and the longer ones ellipsize. Pass `semanticLabel` to group the trail under one name.
+that, short steps stay whole and the longer ones ellipsize. The trail is a
+navigation landmark named "Breadcrumb"; pass a localized `semanticLabel`.
 
 ## Search field
 
@@ -249,10 +251,11 @@ helper text. It owns a controller and focus node only when you pass none, and
 defaults `textInputAction` to search. The clear button appears while the field
 is enabled, editable and not empty; it clears, calls `onChanged('')` and
 `onCleared`, and refocuses the field. It is an overlay centred in the field's
-last 40px, so a 24/32px field keeps its height, and it is no Tab stop: Escape
-clears instead, unless the field is empty or an input method is composing, in
-which case Escape passes on (a dialog still closes). Localize
-`clearSemanticLabel`.
+last 40px, so a 24/32px field keeps its height, and the text stops where its
+target starts. It is no Tab stop: Escape clears instead, and holding it clears
+once without closing a dialog. On an empty field Escape passes on (a dialog
+still closes); during input-method composition it is left to the IME.
+Localize `clearSemanticLabel`.
 
 ## Surface
 

@@ -66,8 +66,9 @@ class {{typePrefix}}Breadcrumbs extends StatelessWidget {
   /// The text size, and the chevrons and space that go with it.
   final {{typePrefix}}BreadcrumbsSize size;
 
-  /// Names the trail as one group, such as "Breadcrumbs". Without it, the
-  /// steps join their surroundings.
+  /// Names the trail's navigation landmark. Defaults to "Breadcrumb"; give
+  /// a localized name, and a distinct one when a page has more than one
+  /// trail.
   final String? semanticLabel;
 
   @override
@@ -99,12 +100,13 @@ class {{typePrefix}}Breadcrumbs extends StatelessWidget {
         ],
       ],
     );
-    if (semanticLabel == null) return trail;
-
+    // A navigation landmark, as an HTML breadcrumb is a `<nav>`; its steps
+    // stay their own nodes inside it.
     return Semantics(
       container: true,
       explicitChildNodes: true,
-      label: semanticLabel,
+      role: SemanticsRole.navigation,
+      label: semanticLabel ?? 'Breadcrumb',
       child: trail,
     );
   }
@@ -248,53 +250,79 @@ class _RenderTrail extends RenderBox
   );
 
   @override
-  Size computeDryLayout(BoxConstraints constraints) =>
-      _layout(constraints, place: false);
+  Size computeDryLayout(BoxConstraints constraints) {
+    final children = _children;
+    final childConstraints = _childConstraints(constraints);
+    return _sizeAround(constraints, [
+      for (final (index, child) in children.indexed)
+        child.getDryLayout(childConstraints[index]),
+    ]);
+  }
 
   @override
-  void performLayout() => size = _layout(constraints, place: true);
-
-  /// Sizes every child, and positions them when [place] is set.
-  Size _layout(BoxConstraints constraints, {required bool place}) {
+  double? computeDryBaseline(
+    BoxConstraints constraints,
+    TextBaseline baseline,
+  ) {
     final children = _children;
-    final widths = _fit([
-      for (final child in children) child.getMaxIntrinsicWidth(double.infinity),
-    ], constraints.maxWidth - _gaps);
-    final sizes = <Size>[];
+    final childConstraints = _childConstraints(constraints);
+    final sizes = [
+      for (final (index, child) in children.indexed)
+        child.getDryLayout(childConstraints[index]),
+    ];
+    final height = _sizeAround(constraints, sizes).height;
     for (final (index, child) in children.indexed) {
-      final childConstraints = BoxConstraints(
-        maxWidth: widths[index],
-        maxHeight: constraints.maxHeight,
-      );
-      if (place) {
-        child.layout(childConstraints, parentUsesSize: true);
-        sizes.add(child.size);
-      } else {
-        sizes.add(child.getDryLayout(childConstraints));
+      final distance = child.getDryBaseline(childConstraints[index], baseline);
+      if (distance != null) {
+        return (height - sizes[index].height) / 2 + distance;
       }
     }
-    final size = constraints.constrain(
-      Size(
-        sizes.fold(_gaps, (sum, size) => sum + size.width),
-        sizes.fold(0, (tallest, size) => math.max(tallest, size.height)),
-      ),
-    );
-    if (!place) return size;
+
+    return null;
+  }
+
+  @override
+  void performLayout() {
+    final children = _children;
+    final childConstraints = _childConstraints(constraints);
+    for (final (index, child) in children.indexed) {
+      child.layout(childConstraints[index], parentUsesSize: true);
+    }
+    size = _sizeAround(constraints, [for (final child in children) child.size]);
 
     var start = 0.0;
-    for (final (index, child) in children.indexed) {
-      final width = sizes[index].width;
+    for (final child in children) {
+      final width = child.size.width;
       (child.parentData! as _TrailParentData).offset = Offset(
         _textDirection == TextDirection.ltr
             ? start
             : size.width - start - width,
-        (size.height - sizes[index].height) / 2,
+        (size.height - child.size.height) / 2,
       );
       start += width + _gap;
     }
-
-    return size;
+    // Chevrons and gaps never shrink, so a narrow enough box overflows.
+    _overflows = start - _gap > size.width;
   }
+
+  /// Each child's share of the width, at most the trail's height.
+  List<BoxConstraints> _childConstraints(BoxConstraints constraints) => [
+    for (final width in _fit([
+      for (final child in _children)
+        child.getMaxIntrinsicWidth(double.infinity),
+    ], constraints.maxWidth - _gaps))
+      BoxConstraints(maxWidth: width, maxHeight: constraints.maxHeight),
+  ];
+
+  /// The trail around children of [sizes]: their widths and gaps, and the
+  /// tallest of them.
+  Size _sizeAround(BoxConstraints constraints, List<Size> sizes) =>
+      constraints.constrain(
+        Size(
+          sizes.fold(_gaps, (sum, size) => sum + size.width),
+          sizes.fold(0, (tallest, size) => math.max(tallest, size.height)),
+        ),
+      );
 
   /// The width of each child: [natural] while the children fit [available];
   /// otherwise the chevrons, at odd indices, keep theirs, and the steps take
@@ -320,15 +348,44 @@ class _RenderTrail extends RenderBox
     return widths;
   }
 
+  /// The first step's baseline, as a row's first baseline is its first
+  /// item's: the chevron glyphs sit on their own.
   @override
   double? computeDistanceToActualBaseline(TextBaseline baseline) =>
-      defaultComputeDistanceToHighestActualBaseline(baseline);
+      defaultComputeDistanceToFirstActualBaseline(baseline);
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>
       defaultHitTestChildren(result, position: position);
 
+  /// Whether the children are wider than the box.
+  bool _overflows = false;
+
+  final _clip = LayerHandle<ClipRectLayer>();
+
   @override
-  void paint(PaintingContext context, Offset offset) =>
+  void paint(PaintingContext context, Offset offset) {
+    if (!_overflows) {
+      _clip.layer = null;
       defaultPaint(context, offset);
+      return;
+    }
+    _clip.layer = context.pushClipRect(
+      needsCompositing,
+      offset,
+      Offset.zero & size,
+      defaultPaint,
+      oldLayer: _clip.layer,
+    );
+  }
+
+  @override
+  Rect? describeApproximatePaintClip(RenderObject child) =>
+      _overflows ? Offset.zero & size : null;
+
+  @override
+  void dispose() {
+    _clip.layer = null;
+    super.dispose();
+  }
 }

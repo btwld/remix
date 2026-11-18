@@ -80,50 +80,75 @@ void main() {
   });
 
   group('members', () {
-    testWidgets('shows max avatars and counts the rest in a solid avatar', (
+    // `max` counts every visible slot, the count included.
+    testWidgets('more members than max show max - 1 and a solid count', (
       tester,
     ) async {
       await tester.pumpRemixApp(const FortalAvatarGroup(members: _team));
 
       final avatars = _avatars(tester);
-      expect(avatars, hasLength(5));
-      expect(avatars.map((avatar) => avatar.label), [
-        'AL',
-        'BR',
-        'CM',
-        'D',
-        '+2',
-      ]);
+      expect(avatars, hasLength(4));
+      expect(avatars.map((avatar) => avatar.label), ['AL', 'BR', 'CM', '+3']);
       expect(avatars.map((avatar) => avatar.variant), [
-        ...List.filled(4, FortalAvatarVariant.soft),
+        ...List.filled(3, FortalAvatarVariant.soft),
         FortalAvatarVariant.solid,
       ]);
       // Two characters, the count included, take the two-character type.
-      expect(avatars.map((avatar) => avatar.fallbackLength), [2, 2, 2, 1, 2]);
+      expect(avatars.map((avatar) => avatar.fallbackLength), [2, 2, 2, 2]);
     });
 
-    testWidgets('a group within max has no count', (tester) async {
-      await tester.pumpRemixApp(
-        FortalAvatarGroup(members: _team.take(4).toList()),
+    for (final (name, count, max, labels) in const [
+      ('exactly max members show them all', 4, 4, ['AL', 'BR', 'CM', 'D']),
+      (
+        'one more than max shows a count of two',
+        5,
+        4,
+        ['AL', 'BR', 'CM', '+2'],
+      ),
+      ('max one shows only the count', 6, 1, ['+6']),
+      ('max one with one member shows it', 1, 1, ['AL']),
+      (
+        'a max above the members shows them all',
+        6,
+        8,
+        ['AL', 'BR', 'CM', 'D', 'EP', 'FS'],
+      ),
+    ]) {
+      testWidgets(name, (tester) async {
+        await tester.pumpRemixApp(
+          FortalAvatarGroup(members: _team.take(count).toList(), max: max),
+        );
+
+        expect(_avatars(tester).map((avatar) => avatar.label), labels);
+      });
+    }
+
+    testWidgets('the count stops at 99+', (tester) async {
+      final crowd = [
+        for (var index = 0; index < 150; index++)
+          FortalAvatarGroupMember('Member $index', initials: 'M'),
+      ];
+      final semantics = tester.ensureSemantics();
+      await tester.pumpRemixApp(FortalAvatarGroup(members: crowd));
+
+      final avatars = _avatars(tester);
+      expect(avatars.map((avatar) => avatar.label), ['M', 'M', 'M', '99+']);
+      expect(avatars.last.fallbackLength, 2);
+      expect(tester.takeException(), isNull);
+      // Every name is still announced, past the cap as well.
+      expect(
+        find.bySemanticsLabel(crowd.map((member) => member.name).join(', ')),
+        findsOneWidget,
       );
+      semantics.dispose();
 
-      expect(_avatars(tester), hasLength(4));
-      expect(find.text('+0'), findsNothing);
-
-      await tester.pumpRemixApp(
-        const FortalAvatarGroup(members: _team, max: 6),
-      );
-      expect(_avatars(tester), hasLength(6));
-    });
-
-    testWidgets('max one keeps a single avatar beside the count', (
-      tester,
-    ) async {
-      await tester.pumpRemixApp(
-        const FortalAvatarGroup(members: _team, max: 1),
-      );
-
-      expect(_avatars(tester).map((avatar) => avatar.label), ['AL', '+5']);
+      // 102 members leave 99 past the three shown; one more passes the cap.
+      for (final (count, label) in const [(102, '+99'), (103, '99+')]) {
+        await tester.pumpRemixApp(
+          FortalAvatarGroup(members: crowd.take(count).toList()),
+        );
+        expect(_avatars(tester).last.label, label, reason: '$count');
+      }
     });
 
     testWidgets('an empty group draws nothing', (tester) async {
@@ -157,8 +182,10 @@ void main() {
       testWidgets('each member takes its own accent in ${mode.name}', (
         tester,
       ) async {
+        // Four members and a count of two: an accent-less member and the
+        // count both keep the ambient accent.
         await tester.pumpRemixApp(
-          const FortalAvatarGroup(members: _team),
+          const FortalAvatarGroup(members: _team, max: 5),
           accent: .mar,
           mode: mode,
         );
@@ -212,7 +239,7 @@ void main() {
       await tester.pumpRemixApp(
         FortalAvatarGroup(
           members: _team,
-          max: 2,
+          max: 3,
           style: AvatarStyler().color(fill),
         ),
       );

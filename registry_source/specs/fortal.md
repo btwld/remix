@@ -268,9 +268,11 @@ hand-written row of the avatar recipe, so it adds no colors or radii of its own.
 `FortalAvatarGroupSize` size1–size4 select avatar sizes 1–4 (24/32/40/48px),
 with a space1 gap at sizes 1–2 and space2 at sizes 3–4. Each
 `FortalAvatarGroupMember` is a soft avatar showing its image over its initials,
-under its own accent when it names one. Members past `max` (default 4) collapse
-into one solid `+N` avatar in the ambient accent. Two-character labels, `+N`
-included, use the two-character fallback type.
+under its own accent when it names one. `max` (default 4) counts every visible
+slot, the count included: a group of up to `max` members shows them all; a
+larger one shows the first `max − 1` and one solid `+N` avatar in the ambient
+accent for the rest, capped at `99+`. Labels of two or more characters, the
+count included, use the two-character fallback type.
 
 The avatars never overlap. An overlapping stack needs a seam to keep each
 avatar distinct: a page-colored ring, which is a shadow outside a floating
@@ -279,7 +281,8 @@ radius the avatar recipe keeps private. Fortal therefore spaces them. The row
 is one semantics node labelled with every member's name, the counted ones
 included, or with `semanticLabel`; it has no focus stop. `highContrast`
 reaches every avatar, and a caller `style` merges last into each. Tests cover
-both modes, per-member accents, images, the count, RTL order and 200% text.
+both modes, per-member accents, images, the count and its edges (`max` 1,
+exactly `max`, one more, 150 members), RTL order and 200% text.
 
 ## Breadcrumbs
 
@@ -299,8 +302,10 @@ natural width while the trail fits; past that, the chevrons and gaps keep
 theirs and the steps take fair shares of the rest, so a short step stays
 whole and the longer ones ellipsize. Even shares, as flexible row children
 take, would cut a long step beside a short one when the whole trail fits.
-Item `semanticLabel`s replace their labels; the trail's `semanticLabel` adds
-one named container, and without it the steps join the surrounding node.
+Item `semanticLabel`s replace their labels. The trail is a navigation landmark
+whose steps stay their own nodes, named by its `semanticLabel` or
+"Breadcrumb". The layout reports its first step's baseline, dry and laid out,
+and clips its painting when even its chevrons and gaps are wider than the box.
 Tests cover both modes, sizes, keyboard focus and activation, fitting and
 truncation, RTL and 200% text.
 
@@ -322,9 +327,10 @@ and size2 fields and size2 (16px) on size3, gray11 with grayA3/grayA4 hover
 and press on surface, accent content on soft. A 40px target would make a
 24/32px field 40px tall if it sat in the field's row, so it is an overlay:
 the button is centred in the field's last `touchTargetMin` (40px, never less),
-its whole target inside the field. A trailing spacer of the button's width is
-always present, so the input stops one field spacing short of its glyph and
-keeps one width and structure whether or not there is text. It shows only
+its whole target inside the field. A trailing spacer is always present, so
+the input stops where that target starts, at least one field spacing short of
+its glyph, and keeps one width and structure whether or not there is text; a
+tap on the text never lands on the button. It shows only
 while the field is enabled, editable and not empty. Pressing it clears the
 text, calls `onChanged('')` and `onCleared`, and returns focus to the field;
 it sits inside the field's tap region and excludes focus, so it is no Tab
@@ -333,8 +339,10 @@ field, it would turn that node into a button once there is text, and Flutter
 web, whose input element hangs from the semantics tree, then drops every key
 after the first. A caller controller that is withdrawn leaves its last value
 in the field's own controller. Escape is the keyboard path: it clears when
-there is text to clear and no input-method composition, and otherwise passes
-on, so a dialog still closes. A caller `style` merges last into the field.
+there is text to clear, and the repeats and release of that press are
+consumed with it, so holding Escape never also closes a dialog. With nothing
+to clear it passes on, so a dialog still closes. During input-method
+composition it skips the remaining handlers, leaving the key to the IME. A caller `style` merges last into the field.
 Tests cover both modes and variants, every size at 100% and 200% text in both
 directions, the clear target, keyboard focus and Escape, composition,
 controller swaps, semantics, and the editor and its semantics node surviving

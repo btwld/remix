@@ -261,6 +261,79 @@ void main() {
       }
     }
 
+    // Apps that configure Fortal through `theme`, rather than `mode`, still
+    // get the opposite appearance inside, with everything else inherited.
+    for (final (name, root, dark, accent) in [
+      (
+        'a theme-only root',
+        const FortalTheme(
+          theme: FortalThemeConfig(accent: .mar),
+          mode: .light,
+          child: SizedBox(),
+        ),
+        false,
+        FortalAccentColor.mar,
+      ),
+      (
+        'a dark-brightness theme root',
+        const FortalTheme(
+          theme: FortalThemeConfig(accent: .sol, brightness: .dark),
+          child: SizedBox(),
+        ),
+        true,
+        FortalAccentColor.sol,
+      ),
+      (
+        'a root in its dark theme',
+        const FortalTheme(
+          theme: FortalThemeConfig(accent: .mar),
+          darkTheme: FortalThemeConfig(accent: .ceu, brightness: .dark),
+          mode: .dark,
+          child: SizedBox(),
+        ),
+        true,
+        FortalAccentColor.ceu,
+      ),
+    ]) {
+      testWidgets('flips under $name and inherits the rest', (tester) async {
+        late BuildContext inside;
+        late BuildContext outside;
+        await tester.pumpWidget(
+          FortalTheme(
+            theme: root.theme,
+            darkTheme: root.darkTheme,
+            mode: root.mode,
+            radius: .large,
+            scaling: .percent110,
+            child: WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              builder: (context, _) {
+                outside = context;
+                return Center(
+                  child: FortalSurface.inverse(
+                    child: Builder(
+                      builder: (context) {
+                        inside = context;
+                        return const SizedBox(width: 40, height: 40);
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+
+        expect(FortalTheme.of(outside).isDark, dark);
+        final flipped = FortalTheme.of(inside);
+        expect(flipped.isDark, !dark);
+        expect(flipped.accent, accent);
+        expect(flipped.radius, FortalRadius.large);
+        expect(flipped.scaling, FortalScaling.percent110);
+        expect(flipped.hasBackground, isFalse);
+      });
+    }
+
     testWidgets('the other variants keep the ambient appearance', (
       tester,
     ) async {

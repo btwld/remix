@@ -358,6 +358,177 @@ void main() {
       );
       semantics.dispose();
     });
+
+    testWidgets('the trail is a navigation landmark named Breadcrumb unless '
+        'given a name', (tester) async {
+      final semantics = tester.ensureSemantics();
+      for (final (label, expected) in const [
+        (null, 'Breadcrumb'),
+        ('Collection path', 'Collection path'),
+      ]) {
+        await tester.pumpRemixApp(
+          SizedBox(
+            width: 600,
+            child: FortalBreadcrumbs(
+              semanticLabel: label,
+              items: const [
+                FortalBreadcrumbItem('Catalog'),
+                FortalBreadcrumbItem('Editions'),
+              ],
+            ),
+          ),
+        );
+
+        final node = tester.getSemantics(find.bySemanticsLabel(expected));
+        expect(node.getSemanticsData().role, SemanticsRole.navigation);
+        // The steps stay their own nodes inside the landmark.
+        expect(node.childrenCount, greaterThan(0));
+        expect(find.bySemanticsLabel('Editions'), findsOneWidget);
+      }
+      semantics.dispose();
+    });
+  });
+
+  group('render box', () {
+    testWidgets('a measured baseline row lays the trail out without errors', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const SizedBox(
+          width: 400,
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                FortalText('Path', size: .size2),
+                Expanded(
+                  child: FortalBreadcrumbs(
+                    items: [
+                      FortalBreadcrumbItem('Catalog'),
+                      FortalBreadcrumbItem('Editions'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      // The trail sits on the row's baseline by its first step; the two
+      // texts share their size, so their tops line up too.
+      expect(
+        tester.getTopLeft(find.text('Catalog')).dy,
+        tester.getTopLeft(find.text('Path')).dy,
+      );
+    });
+
+    testWidgets('the dry baseline matches the laid-out one', (tester) async {
+      await tester.pumpRemixApp(
+        const SizedBox(
+          width: 300,
+          child: FortalBreadcrumbs(
+            size: .size3,
+            items: [
+              FortalBreadcrumbItem('Catalog'),
+              FortalBreadcrumbItem('Editions of the year'),
+            ],
+          ),
+        ),
+      );
+
+      final trail = tester.renderObject<RenderBox>(
+        find.descendant(
+          of: find.byType(FortalBreadcrumbs),
+          matching: find.byWidgetPredicate(
+            (widget) => widget.runtimeType.toString() == '_Trail',
+          ),
+        ),
+      );
+      // The first step's baseline, where layout put it.
+      final first = tester.renderObject<RenderParagraph>(find.text('Catalog'));
+      final expected =
+          first.localToGlobal(Offset.zero).dy -
+          trail.localToGlobal(Offset.zero).dy +
+          first.getDryBaseline(first.constraints, TextBaseline.alphabetic)!;
+      expect(
+        trail.getDryBaseline(trail.constraints, TextBaseline.alphabetic),
+        closeTo(expected, 1e-9),
+      );
+    });
+
+    for (final direction in TextDirection.values) {
+      testWidgets('a trail too narrow even for its chevrons is clipped in '
+          '${direction.name}', (tester) async {
+        await tester.pumpRemixApp(
+          const SizedBox(
+            width: 20,
+            child: FortalBreadcrumbs(
+              items: [
+                FortalBreadcrumbItem('Studio'),
+                FortalBreadcrumbItem('Catalog'),
+                FortalBreadcrumbItem('Editions'),
+              ],
+            ),
+          ),
+          textDirection: direction,
+        );
+
+        expect(tester.takeException(), isNull);
+        final trail = find.descendant(
+          of: find.byType(FortalBreadcrumbs),
+          matching: find.byWidgetPredicate(
+            (widget) => widget.runtimeType.toString() == '_Trail',
+          ),
+        );
+        final box = tester.getRect(trail);
+        expect(box.width, 20);
+        // The chevrons and gaps alone are wider than the box...
+        final chevrons = find.byType(StyledIcon);
+        expect(
+          chevrons.evaluate().any((element) {
+            final rect = tester.getRect(
+              find.byElementPredicate((e) => e == element),
+            );
+            return rect.left < box.left || rect.right > box.right;
+          }),
+          isTrue,
+        );
+        // ...so the trail clips its painting to its own box.
+        expect(
+          tester.renderObject(trail),
+          paints..clipRect(rect: Offset.zero & box.size),
+        );
+      });
+    }
+
+    testWidgets('a trail that fits paints without a clip', (tester) async {
+      await tester.pumpRemixApp(
+        const SizedBox(
+          width: 400,
+          child: FortalBreadcrumbs(
+            items: [
+              FortalBreadcrumbItem('Catalog'),
+              FortalBreadcrumbItem('Editions'),
+            ],
+          ),
+        ),
+      );
+
+      expect(
+        tester.renderObject(
+          find.descendant(
+            of: find.byType(FortalBreadcrumbs),
+            matching: find.byWidgetPredicate(
+              (widget) => widget.runtimeType.toString() == '_Trail',
+            ),
+          ),
+        ),
+        isNot(paints..clipRect()),
+      );
+    });
   });
 }
 
