@@ -238,3 +238,18 @@ muted text. The last step is the current page in strong medium text and is
 never a link. Chevrons mirror in right-to-left text and are hidden from
 assistive technology. Steps keep their width while the trail fits; past
 that, short steps stay whole and the longer ones ellipsize. Pass `semanticLabel` to group the trail under one name.
+
+## Search field
+
+`remix add search_field` installs `<Prefix>SearchField`, a stateful
+composition over `<Prefix>TextField` with the same `variant` (`.surface`,
+`.soft`) and `size` (`.size1`–`.size3`, default size2), so it matches a text
+field's height and look. `semanticLabel` is required; there is no label or
+helper text. It owns a controller and focus node only when you pass none, and
+defaults `textInputAction` to search. The clear button appears while the field
+is enabled, editable and not empty; it clears, calls `onChanged('')` and
+`onCleared`, and refocuses the field. It is an overlay centred in the field's
+last 40px, so a 24/32px field keeps its height, and it is no Tab stop: Escape
+clears instead, unless the field is empty or an input method is composing, in
+which case Escape passes on (a dialog still closes). Localize
+`clearSemanticLabel`.

@@ -190,10 +190,9 @@ class _FortalDashboardCollectionPageState
               children: [
                 Box(
                   style: BoxStyler().width(240),
-                  child: FortalTextField(
+                  child: FortalSearchField(
                     key: const ValueKey('collection-search'),
                     controller: _search,
-                    leading: const StyledIcon(icon: RemixIcons.search),
                     hintText: 'Search editions…',
                     semanticLabel: 'Search editions',
                   ),

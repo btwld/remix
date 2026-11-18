@@ -19,6 +19,7 @@ import 'package:demo/components/kbd.dart' as kbd;
 import 'package:demo/components/link.dart' as link;
 import 'package:demo/components/progress.dart' as progress;
 import 'package:demo/components/radio.dart' as radio;
+import 'package:demo/components/search_field.dart' as search_field;
 import 'package:demo/components/segmented_control.dart' as segmented_control;
 import 'package:demo/components/select.dart' as select;
 import 'package:demo/components/slider.dart' as slider;
@@ -68,6 +69,7 @@ final catalogs = <String, WidgetBuilder>{
   'link': link.buildLinkCatalogUseCase,
   'progress': progress.buildProgressCatalogUseCase,
   'radio': radio.buildRadioCatalogUseCase,
+  'search field': search_field.buildSearchFieldCatalogUseCase,
   'segmented control': segmented_control.buildSegmentedControlCatalogUseCase,
   'select': select.buildSelectCatalogUseCase,
   'slider': slider.buildSliderCatalogUseCase,

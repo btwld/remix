@@ -190,10 +190,9 @@ class _{{typePrefix}}DashboardCollectionPageState
               children: [
                 Box(
                   style: BoxStyler().width(240),
-                  child: {{typePrefix}}TextField(
+                  child: {{typePrefix}}SearchField(
                     key: const ValueKey('collection-search'),
                     controller: _search,
-                    leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
                     hintText: 'Search editions…',
                     semanticLabel: 'Search editions',
                   ),

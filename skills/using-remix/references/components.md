@@ -85,6 +85,12 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `expands`/`obscureText` fixed to `false`. Vanilla, Fortal, and HeroUI recipes
   ring the field with `onFocused`, so a click shows the ring. Other controls use
   `onFocusVisible`.
+- **SearchField** — a preset composition over TextField, not a Remix widget.
+  HeroUI's recipe takes the search icon and clear button as `leading` and
+  `trailing`, and the app decides when to clear. Fortal's owns them: the clear
+  button shows while there is text to clear, Escape clears too, and the field
+  keeps the TextField height at every size. See
+  [Fortal](fortal.md#search-field).
 - **RangeSlider** — `RemixRangeSlider` takes exactly two ordered, parent-owned
   values. Give the lower and upper thumbs distinct `semanticLabels` in that
   order. `onChanged` requests values; the parent decides whether to accept them.

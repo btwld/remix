@@ -184,10 +184,9 @@ class _UiDashboardCollectionPageState extends State<UiDashboardCollectionPage> {
               children: [
                 Box(
                   style: BoxStyler().width(240),
-                  child: UiTextField(
+                  child: UiSearchField(
                     key: const ValueKey('collection-search'),
                     controller: _search,
-                    leading: const StyledIcon(icon: RemixIcons.search),
                     hintText: 'Search editions…',
                     semanticLabel: 'Search editions',
                   ),

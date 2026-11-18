@@ -18,6 +18,7 @@ export '../../components/menu.dart';
 export '../../components/popover.dart';
 export '../../components/progress.dart';
 export '../../components/radio.dart';
+export '../../components/search_field.dart';
 export '../../components/segmented_control.dart';
 export '../../components/select.dart';
 export '../../components/skeleton.dart';

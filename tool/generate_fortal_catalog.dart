@@ -134,6 +134,7 @@ String _render(Map<String, Object?> manifest, Directory packageRoot) {
 const _unpagedFamilies = {
   'avatar_group': 'Data display',
   'breadcrumbs': 'Navigation',
+  'search_field': 'Actions and inputs',
 };
 
 /// Reuse sidebar categories and fail if a new family has no navigation home.

@@ -304,6 +304,35 @@ one named container, and without it the steps join the surrounding node.
 Tests cover both modes, sizes, keyboard focus and activation, fitting and
 truncation, RTL and 200% text.
 
+## Search field
+
+Search field promotes the dashboard's three hand-built search inputs into the
+registry. `FortalSearchField` is a hand-written stateful composition over
+`FortalTextField`: its `FortalSearchFieldSize` size1–size3 and
+`FortalSearchFieldVariant` surface/soft select the text field's own size and
+variant, so height, padding, frame, fill, focus ring, hint and disabled
+colors are the text field's at every size and text scale. There is no label
+or helper text; the required `semanticLabel` names the field. The leading
+`search` glyph takes the field's icon theme (16px, gray11 on surface, accent
+content on soft), and `textInputAction` defaults to search. The field owns a
+controller and focus node only when the caller gives none.
+
+The clear button is a ghost icon button: size1 (12px `close` glyph) on size1
+and size2 fields and size2 (16px) on size3, gray11 with grayA3/grayA4 hover
+and press on surface, accent content on soft. A 40px target would make a
+24/32px field 40px tall if it sat in the field's row, so it is an overlay:
+the button is centred in the field's last `touchTargetMin` (40px, never less),
+its whole target inside the field, and a trailing spacer stops the input one
+field spacing short of its glyph. It shows only while the field is enabled,
+editable and not empty. Pressing it clears the text, calls `onChanged('')`
+and `onCleared`, and returns focus to the field; it sits inside the field's
+tap region and excludes focus, so it is no Tab stop. Escape is the keyboard
+path: it clears when there is text to clear and no input-method composition,
+and otherwise passes on, so a dialog still closes. A caller `style` merges
+last into the field. Tests cover both modes and variants, every size at 100%
+and 200% text in both directions, the clear target, keyboard focus and
+Escape, composition, controller swaps and semantics.
+
 ## Enforcement
 
 - `tool/check_fortal.dart` (`melos run fortal:check`) holds the catalog against

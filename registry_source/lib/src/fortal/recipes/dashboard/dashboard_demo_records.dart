@@ -252,10 +252,9 @@ class _FortalDashboardCustomersPageState
               children: [
                 Box(
                   style: BoxStyler().width(280),
-                  child: FortalTextField(
+                  child: FortalSearchField(
                     key: const ValueKey('customer-search'),
                     controller: _search,
-                    leading: const StyledIcon(icon: RemixIcons.search),
                     hintText: 'Search customers…',
                     semanticLabel: 'Search customers',
                   ),
@@ -546,10 +545,9 @@ class _FortalDashboardOrdersPageState extends State<FortalDashboardOrdersPage> {
             ),
             Box(
               style: BoxStyler().width(280),
-              child: FortalTextField(
+              child: FortalSearchField(
                 key: const ValueKey('order-search'),
                 controller: _search,
-                leading: const StyledIcon(icon: RemixIcons.search),
                 hintText: 'Search orders…',
                 semanticLabel: 'Search orders',
               ),

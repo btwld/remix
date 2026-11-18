@@ -20,6 +20,7 @@ import 'components/select.dart' as select;
 import 'components/combobox.dart' as combobox;
 import 'components/segmented_control.dart' as segmented_control;
 import 'components/textfield.dart' as textfield;
+import 'components/search_field.dart' as search_field;
 import 'components/textarea.dart' as textarea;
 import 'components/card.dart' as card;
 import 'components/accordion.dart' as accordion;
@@ -226,6 +227,11 @@ final _families = <_Family>[
     id: 'textfield',
     group: 'Inputs',
     build: textfield.buildTextFieldCatalogUseCase,
+  ),
+  (
+    id: 'search_field',
+    group: 'Inputs',
+    build: search_field.buildSearchFieldCatalogUseCase,
   ),
   (
     id: 'textarea',

@@ -23,6 +23,7 @@
     "lib/ui/components/range_calendar.dart": "btwld/remix/registry#fortal/range_calendar",
     "lib/ui/components/range_slider.dart": "btwld/remix/registry#fortal/range_slider",
     "lib/ui/components/range_slider.g.dart": "btwld/remix/registry#fortal/range_slider",
+    "lib/ui/components/search_field.dart": "btwld/remix/registry#fortal/search_field",
     "lib/ui/components/select.dart": "btwld/remix/registry#fortal/select",
     "lib/ui/components/select.g.dart": "btwld/remix/registry#fortal/select",
     "lib/ui/components/slider.dart": "btwld/remix/registry#fortal/slider",

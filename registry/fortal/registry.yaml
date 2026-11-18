@@ -329,6 +329,7 @@ items:
       - progress
       - radio
       - range_slider
+      - search_field
       - segmented_control
       - select
       - sidebar_layout
@@ -663,6 +664,17 @@ items:
       - "@ui/components/range_slider.g.dart"
     exports:
       - components/range_slider.dart
+
+  search_field:
+    registryDependencies:
+      - theme
+      - icon_button
+      - textfield
+    files:
+      - source: templates/search_field/search_field.dart.tmpl
+        target: "@ui/components/search_field.dart"
+    exports:
+      - components/search_field.dart
 
   segmented_control:
     registryDependencies:

@@ -252,10 +252,9 @@ class _{{typePrefix}}DashboardCustomersPageState
               children: [
                 Box(
                   style: BoxStyler().width(280),
-                  child: {{typePrefix}}TextField(
+                  child: {{typePrefix}}SearchField(
                     key: const ValueKey('customer-search'),
                     controller: _search,
-                    leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
                     hintText: 'Search customers…',
                     semanticLabel: 'Search customers',
                   ),
@@ -546,10 +545,9 @@ class _{{typePrefix}}DashboardOrdersPageState extends State<{{typePrefix}}Dashbo
             ),
             Box(
               style: BoxStyler().width(280),
-              child: {{typePrefix}}TextField(
+              child: {{typePrefix}}SearchField(
                 key: const ValueKey('order-search'),
                 controller: _search,
-                leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
                 hintText: 'Search orders…',
                 semanticLabel: 'Search orders',
               ),

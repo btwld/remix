@@ -1114,6 +1114,51 @@
       ]
     },
     {
+      "id": "search_field",
+      "fortalType": "FortalSearchField",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true,
+        "readOnly": false,
+        "autofocus": false,
+        "clearSemanticLabel": "Clear search",
+        "textInputAction": "search"
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "idle",
+        "focused",
+        "filled",
+        "cleared",
+        "disabled",
+        "readOnly",
+        "composing",
+        "rtl"
+      ],
+      "tests": [
+        "test/components/search_field/search_field_fortal_test.dart"
+      ]
+    },
+    {
       "id": "skeleton",
       "fortalType": "FortalSkeleton",
       "enums": {},

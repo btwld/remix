@@ -197,6 +197,7 @@ const _fortalRegistryItems = <String>[
   'progress',
   'radio',
   'range_slider',
+  'search_field',
   'segmented_control',
   'select',
   'combobox',
@@ -833,6 +834,8 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   if (item != null && jobs != null) return null;
   if ((item == 'icons' || item == 'ownership') && preset.name != 'vanilla')
     return null;
+  // Only HeroUI has a focused search-field fixture and web build.
+  if (item == 'search_field' && preset.name != 'heroui') return null;
   if (item != null &&
       item != 'ownership' &&
       !preset.registryItems.contains(item)) {

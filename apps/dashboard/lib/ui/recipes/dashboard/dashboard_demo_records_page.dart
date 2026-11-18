@@ -251,10 +251,9 @@ class _UiDashboardCustomersPageState extends State<UiDashboardCustomersPage> {
               children: [
                 Box(
                   style: BoxStyler().width(280),
-                  child: UiTextField(
+                  child: UiSearchField(
                     key: const ValueKey('customer-search'),
                     controller: _search,
-                    leading: const StyledIcon(icon: RemixIcons.search),
                     hintText: 'Search customers…',
                     semanticLabel: 'Search customers',
                   ),
@@ -543,10 +542,9 @@ class _UiDashboardOrdersPageState extends State<UiDashboardOrdersPage> {
             ),
             Box(
               style: BoxStyler().width(280),
-              child: UiTextField(
+              child: UiSearchField(
                 key: const ValueKey('order-search'),
                 controller: _search,
-                leading: const StyledIcon(icon: RemixIcons.search),
                 hintText: 'Search orders…',
                 semanticLabel: 'Search orders',
               ),
