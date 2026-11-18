@@ -54,7 +54,11 @@ void main() {
               reason: '$key',
             );
           }
-          expect(_paintedColors(tester, _viewAll), hasLength(2));
+          // The glyph and the label; Fortal's rebuilt "View all" is text only.
+          expect(
+            _paintedColors(tester, _viewAll),
+            hasLength(preset == _Preset.fortal ? 1 : 2),
+          );
         });
 
         testWidgets('hover and press keep the recipe foreground', (

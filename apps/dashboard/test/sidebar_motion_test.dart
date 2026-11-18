@@ -72,6 +72,7 @@ void main() {
       find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
     );
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 250));
     expect(find.text('Customers'), findsWidgets);
     expect(tester.getSize(sidebar()).width, 72);
     expect(tester.takeException(), isNull);

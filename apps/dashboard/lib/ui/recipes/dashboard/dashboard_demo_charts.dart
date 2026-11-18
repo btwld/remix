@@ -15,16 +15,20 @@ import 'package:remix/remix.dart';
 /// [min] and [max] labels on their gridlines: flush against the plot's edge,
 /// the chart pulls an end label inward, off the value it names. The padded
 /// bounds are not labels themselves.
+///
+/// [labelFormatter] writes each step's label, for example with its unit.
 ChartAxis uiDashboardNumericAxis({
   double min = 0,
   double max = 70,
   double interval = 10,
+  ChartAxisLabelFormatter? labelFormatter,
 }) => ChartAxis.numeric(
   min: min - interval / 2,
   max: max + interval / 2,
   interval: interval,
   minIncluded: false,
   maxIncluded: false,
+  labelFormatter: labelFormatter,
 );
 
 /// A zero-inclusive value axis fitted to caller data, with about
@@ -34,6 +38,7 @@ ChartAxis uiDashboardNumericAxis({
 ChartAxis uiDashboardDataAxis(
   Iterable<double> values, {
   int targetIntervals = 5,
+  ChartAxisLabelFormatter? labelFormatter,
 }) {
   assert(targetIntervals > 0);
   var min = 0.0;
@@ -43,7 +48,11 @@ ChartAxis uiDashboardDataAxis(
     max = math.max(max, value);
   }
   if (min == max) {
-    return uiDashboardNumericAxis(max: 100, interval: 20);
+    return uiDashboardNumericAxis(
+      max: 100,
+      interval: 20,
+      labelFormatter: labelFormatter,
+    );
   }
 
   final rawInterval = (max - min) / targetIntervals;
@@ -61,6 +70,7 @@ ChartAxis uiDashboardDataAxis(
     min: (min / interval).floor() * interval,
     max: (max / interval).ceil() * interval,
     interval: interval,
+    labelFormatter: labelFormatter,
   );
 }
 

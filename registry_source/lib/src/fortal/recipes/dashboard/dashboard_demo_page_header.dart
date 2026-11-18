@@ -1,105 +1,119 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'dashboard_demo_ui.dart';
 
 import 'dashboard_demo_typography.dart';
+import 'dashboard_demo_ui.dart';
 
-/// The one gutter every dashboard page uses: 24 wide, 16 under 600 wide.
+/// The widest a page's content grows, so lines stay readable on a large
+/// display.
+const fortalPageMaxWidth = 1440.0;
+
+/// The one gutter every dashboard page uses: 24 wide, 16 on a phone.
 ///
-/// Pass the page's available width, or [double.infinity] for the wide value.
-EdgeInsets fortalPagePadding(double width) =>
-    EdgeInsets.all(width < 600 ? 16 : 24);
+/// It follows the window, not the page's own width, so a page does not
+/// rebuild on every frame while the sidebar beside it animates.
+EdgeInsets fortalPagePadding(BuildContext context) =>
+    EdgeInsets.all(MediaQuery.sizeOf(context).width < 600 ? 16 : 24);
 
-/// A vertically scrolling page body inset by [fortalPagePadding].
-class FortalPageScroll extends StatelessWidget {
-  const FortalPageScroll({super.key, required this.child});
+/// A dashboard page: a title block above a column of sections, scrolling
+/// together inside [fortalPagePadding].
+class FortalPage extends StatelessWidget {
+  const FortalPage({
+    super.key,
+    required this.title,
+    required this.description,
+    this.actions = const [],
+    this.maxWidth = fortalPageMaxWidth,
+    this.scrollController,
+    required this.children,
+  });
 
-  /// The page content.
-  final Widget child;
+  /// The page title, published as the page's level-one heading.
+  final String title;
+
+  /// A line of supporting copy under the title.
+  final String description;
+
+  /// Controls beside the title. They wrap under it when space runs out.
+  final List<Widget> actions;
+
+  /// The widest the content grows.
+  final double maxWidth;
+
+  /// Controls the page's scroll position.
+  final ScrollController? scrollController;
+
+  /// The page's sections, top to bottom.
+  final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) => SingleChildScrollView(
-      padding: fortalPagePadding(constraints.maxWidth),
-      child: child,
+  Widget build(BuildContext context) => SingleChildScrollView(
+    controller: scrollController,
+    padding: fortalPagePadding(context),
+    child: Box(
+      style: BoxStyler().alignment(.topStart),
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .maxWidth(maxWidth)
+            .crossAxisAlignment(.stretch)
+            .spacing(FortalTokens.space5()),
+        children: [
+          FortalPageHeader(
+            title: title,
+            description: description,
+            actions: actions,
+          ),
+          ...children,
+        ],
+      ),
     ),
   );
 }
 
-/// The title, description, and optional actions at the top of a page.
-///
+/// The title, description and actions at the top of a page.
 class FortalPageHeader extends StatelessWidget {
   const FortalPageHeader({
     super.key,
     required this.title,
     required this.description,
-    this.actions,
+    this.actions = const [],
   });
 
-  /// The page title.
+  /// The page title, published as the page's level-one heading.
   final String title;
 
   /// A line of supporting copy under the title.
   final String description;
 
-  /// Controls shown beside the title.
-  final Widget? actions;
+  /// Controls beside the title. They wrap under it when space runs out.
+  final List<Widget> actions;
 
   @override
-  Widget build(BuildContext context) {
-    return RowBox(
-      style: FlexBoxStyler().crossAxisAlignment(.start),
-      children: [
-        Expanded(
-          child: ColumnBox(
-            style: FlexBoxStyler().crossAxisAlignment(.start).spacing(4),
-            children: [
-              FortalHeading(title, size: .size6, weight: .bold),
-              StyledText(
-                description,
-                style: dashboardText(.size2, tone: .muted),
-              ),
-            ],
-          ),
-        ),
-        ?actions,
-      ],
-    );
-  }
-}
-
-/// The title of a section inside a card.
-class FortalSectionLabel extends StatelessWidget {
-  const FortalSectionLabel(this.label, {super.key});
-
-  /// The section name.
-  final String label;
-
-  @override
-  Widget build(BuildContext context) =>
-      FortalHeading(label, headingLevel: 2, size: .size4, weight: .medium);
-}
-
-/// A [FortalSectionLabel] with supporting copy beneath it.
-class FortalCardHeading extends StatelessWidget {
-  const FortalCardHeading({
-    super.key,
-    required this.title,
-    required this.description,
-  });
-
-  /// The card title.
-  final String title;
-
-  /// A line of supporting copy under the title.
-  final String description;
-
-  @override
-  Widget build(BuildContext context) => ColumnBox(
-    style: FlexBoxStyler().crossAxisAlignment(.start).spacing(3),
+  Widget build(BuildContext context) => WrapBox(
+    style: WrapBoxStyler()
+        .wrapAlignment(.spaceBetween)
+        .crossAxisAlignment(.end)
+        .spacing(FortalTokens.space4())
+        .runSpacing(FortalTokens.space3()),
     children: [
-      FortalSectionLabel(title),
-      StyledText(description, style: dashboardText(.size2, tone: .muted)),
+      ColumnBox(
+        style: FlexBoxStyler()
+            .mainAxisSize(.min)
+            .crossAxisAlignment(.start)
+            .spacing(FortalTokens.space1()),
+        children: [
+          FortalHeading(title, size: .size6, weight: .bold),
+          StyledText(description, style: dashboardText(.size2, tone: .muted)),
+        ],
+      ),
+      if (actions.isNotEmpty)
+        WrapBox(
+          style: WrapBoxStyler()
+              .crossAxisAlignment(.center)
+              .spacing(FortalTokens.space2())
+              .runSpacing(FortalTokens.space2()),
+          children: actions,
+        ),
     ],
   );
 }

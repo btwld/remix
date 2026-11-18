@@ -1,0 +1,351 @@
+import 'dart:math' as math;
+
+import 'package:flutter/widgets.dart';
+
+import '../../theme/fortal_colors.dart';
+import '../../theme/palette.dart';
+import '../../theme/theme.dart';
+
+/// The compositions [FortalArtwork] can draw.
+enum FortalArtworkMotif {
+  /// Layered dunes under a low sun.
+  dunes,
+
+  /// Bands of water below a rising sun.
+  waves,
+
+  /// Three mountain ranges in front of a moon.
+  peaks,
+
+  /// A sun of concentric rings over its reflection.
+  sun,
+
+  /// Nested arches.
+  arches,
+
+  /// A wall of cobogó breeze blocks.
+  cobogo,
+}
+
+/// The light and dark scales of a named [accent].
+FortalColorTheme fortalAccentPalette(FortalAccentColor accent) =>
+    switch (accent) {
+      .orla => orla,
+      .mar => mar,
+      .ceu => ceu,
+      .serra => serra,
+      .sol => sol,
+      .duna => duna,
+      .caju => caju,
+    };
+
+/// A generated cover image, painted from one accent palette.
+///
+/// The dashboard ships no bitmap assets, so every cover is drawn: a [motif]
+/// composed from the twelve steps of [accent]'s scale, in the active
+/// appearance. The same [motif], [accent] and [seed] always paint the same
+/// picture, on every platform.
+///
+/// The painting fills the box it is given, so size it with an [AspectRatio]
+/// or a fixed height. It sits in its own layer and repaints only when its
+/// inputs change, not when a neighbour hovers or the page scrolls.
+class FortalArtwork extends StatelessWidget {
+  const FortalArtwork({
+    super.key,
+    required this.motif,
+    required this.accent,
+    this.seed = 0,
+    this.semanticLabel,
+  });
+
+  /// The composition.
+  final FortalArtworkMotif motif;
+
+  /// The palette the composition is painted from.
+  final FortalAccentColor accent;
+
+  /// Varies the composition between covers that share a [motif].
+  final int seed;
+
+  /// Describes the picture to assistive technology. The picture is
+  /// decorative, and hidden from it, when null.
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = fortalAccentPalette(accent);
+    final isDark = FortalTheme.of(context).isDark;
+    final art = RepaintBoundary(
+      child: CustomPaint(
+        isComplex: true,
+        size: Size.infinite,
+        painter: _ArtworkPainter(
+          motif: motif,
+          scale: (isDark ? palette.dark : palette.light).scale,
+          seed: seed,
+        ),
+      ),
+    );
+
+    return switch (semanticLabel) {
+      final label? => Semantics(image: true, label: label, child: art),
+      null => ExcludeSemantics(child: art),
+    };
+  }
+}
+
+class _ArtworkPainter extends CustomPainter {
+  const _ArtworkPainter({
+    required this.motif,
+    required this.scale,
+    required this.seed,
+  });
+
+  final FortalArtworkMotif motif;
+  final FortalColorScale scale;
+  final int seed;
+
+  /// A repeatable value from 0 to 1 for the [index]th decision of this cover.
+  ///
+  /// `dart:math`'s seeded generator differs between the VM and the web, and
+  /// the products here stay small enough to be exact in a JavaScript number.
+  double _chance(int index) {
+    final mixed = (seed * 97 + index * 57 + motif.index * 131 + 13) % 1013;
+    return ((mixed * mixed * 31) % 1009) / 1009;
+  }
+
+  Paint _fill(int step) => Paint()..color = scale.step(step);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (size.isEmpty) return;
+    final rect = Offset.zero & size;
+    canvas.save();
+    canvas.clipRect(rect);
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [scale.step(3), scale.step(5)],
+        ).createShader(rect),
+    );
+    switch (motif) {
+      case .dunes:
+        _paintDunes(canvas, size);
+      case .waves:
+        _paintWaves(canvas, size);
+      case .peaks:
+        _paintPeaks(canvas, size);
+      case .sun:
+        _paintSun(canvas, size);
+      case .arches:
+        _paintArches(canvas, size);
+      case .cobogo:
+        _paintCobogo(canvas, size);
+    }
+    canvas.restore();
+  }
+
+  /// A filled band whose top edge is [edge], sampled across the width.
+  Path _band(Size size, double Function(double t) edge) {
+    const samples = 48;
+    final path = Path()..moveTo(0, edge(0));
+    for (var index = 1; index <= samples; index++) {
+      final t = index / samples;
+      path.lineTo(size.width * t, edge(t));
+    }
+    return path
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+  }
+
+  void _paintDunes(Canvas canvas, Size size) {
+    final unit = size.shortestSide;
+    canvas.drawCircle(
+      Offset(
+        size.width * (0.58 + 0.24 * _chance(0)),
+        size.height * (0.24 + 0.1 * _chance(1)),
+      ),
+      unit * 0.13,
+      _fill(8),
+    );
+    for (var layer = 0; layer < 4; layer++) {
+      final base = size.height * (0.5 + layer * 0.13);
+      final swell = size.height * (0.1 - layer * 0.012);
+      final phase = math.pi * 2 * _chance(2 + layer);
+      final stretch = 1.1 + layer * 0.45;
+      canvas.drawPath(
+        _band(
+          size,
+          (t) =>
+              base +
+              swell * math.sin(t * math.pi * stretch + phase) +
+              swell * 0.35 * math.sin(t * math.pi * stretch * 2.3 + phase),
+        ),
+        _fill(6 + layer),
+      );
+    }
+  }
+
+  void _paintWaves(Canvas canvas, Size size) {
+    final unit = size.shortestSide;
+    final horizon = size.height * 0.44;
+    canvas.drawCircle(
+      Offset(size.width * (0.28 + 0.44 * _chance(0)), horizon),
+      unit * 0.17,
+      _fill(8),
+    );
+    const bands = 5;
+    for (var band = 0; band < bands; band++) {
+      final top = horizon + (size.height - horizon) * band / bands;
+      final swell = unit * 0.008 * (band + 1);
+      final phase = math.pi * 2 * _chance(1 + band);
+      final ripples = 7.0 - band;
+      canvas.drawPath(
+        _band(
+          size,
+          (t) => top + swell * math.sin(t * math.pi * ripples + phase),
+        ),
+        _fill(6 + band),
+      );
+    }
+  }
+
+  void _paintPeaks(Canvas canvas, Size size) {
+    final unit = size.shortestSide;
+    canvas.drawCircle(
+      Offset(
+        size.width * (0.62 + 0.2 * _chance(0)),
+        size.height * (0.3 + 0.06 * _chance(1)),
+      ),
+      unit * 0.2,
+      _fill(6),
+    );
+    for (var range = 0; range < 3; range++) {
+      final base = size.height * (0.58 + range * 0.14);
+      final reach = size.height * (0.3 - range * 0.06);
+      final summits = 3 + range;
+      final path = Path()..moveTo(0, base);
+      for (var summit = 0; summit <= summits * 2; summit++) {
+        final x = size.width * summit / (summits * 2);
+        final height = summit.isOdd
+            ? reach * (0.55 + 0.45 * _chance(2 + range * 11 + summit))
+            : reach * 0.18 * _chance(40 + range * 11 + summit);
+        path.lineTo(x, base - height);
+      }
+      canvas.drawPath(
+        path
+          ..lineTo(size.width, size.height)
+          ..lineTo(0, size.height)
+          ..close(),
+        _fill(7 + range * 2 - (range == 2 ? 1 : 0)),
+      );
+    }
+  }
+
+  void _paintSun(Canvas canvas, Size size) {
+    final unit = size.shortestSide;
+    final horizon = size.height * 0.64;
+    final center = Offset(size.width * (0.4 + 0.2 * _chance(0)), horizon);
+    for (var ring = 0; ring < 5; ring++) {
+      canvas.drawCircle(center, unit * (0.52 - ring * 0.09), _fill(5 + ring));
+    }
+    canvas.drawRect(
+      Rect.fromLTRB(0, horizon, size.width, size.height),
+      _fill(10),
+    );
+    final line = unit * 0.022;
+    for (var stripe = 0; stripe < 5; stripe++) {
+      final width = unit * (0.62 - stripe * 0.1);
+      final top = horizon + line * 1.6 + stripe * line * 2.6;
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(center.dx - width / 2, top, width, line),
+          Radius.circular(line),
+        ),
+        _fill(8 - (stripe.isOdd ? 1 : 0)),
+      );
+    }
+  }
+
+  void _paintArches(Canvas canvas, Size size) {
+    final unit = size.shortestSide;
+    canvas.drawCircle(
+      Offset(
+        size.width * (0.14 + 0.1 * _chance(0)),
+        size.height * (0.2 + 0.08 * _chance(1)),
+      ),
+      unit * 0.07,
+      _fill(9),
+    );
+    final center = size.width * (0.52 + 0.1 * _chance(2));
+    for (var arch = 0; arch < 5; arch++) {
+      final width = size.width * (0.88 - arch * 0.16);
+      final height = size.height * (0.8 - arch * 0.14);
+      canvas.drawRRect(
+        RRect.fromRectAndCorners(
+          Rect.fromLTWH(
+            center - width / 2,
+            size.height - height,
+            width,
+            height + 1,
+          ),
+          topLeft: Radius.circular(math.min(width / 2, height)),
+          topRight: Radius.circular(math.min(width / 2, height)),
+        ),
+        _fill(5 + arch),
+      );
+    }
+  }
+
+  void _paintCobogo(Canvas canvas, Size size) {
+    final rows = size.height > 260 ? 4 : 3;
+    final tile = size.height / rows;
+    final columns = (size.width / tile).ceil();
+    final inset = (size.width - columns * tile) / 2;
+    final joint = math.max(1.0, tile * 0.025);
+    canvas.drawRect(Offset.zero & size, _fill(7));
+    for (var row = 0; row < rows; row++) {
+      for (var column = 0; column < columns; column++) {
+        final block = Rect.fromLTWH(
+          inset + column * tile,
+          row * tile,
+          tile,
+          tile,
+        ).deflate(joint);
+        final pick = _chance(row * 31 + column * 17);
+        canvas.save();
+        canvas.clipRect(block);
+        canvas.drawRect(block, _fill(4));
+        if (pick < 0.16) {
+          canvas.drawCircle(block.center, block.width * 0.36, _fill(9));
+          canvas.drawCircle(block.center, block.width * 0.18, _fill(4));
+        } else {
+          final falling = pick < 0.58;
+          final shade = _fill(pick < 0.4 || pick > 0.8 ? 9 : 8);
+          final radius = block.width / 2;
+          canvas.drawCircle(
+            falling ? block.topLeft : block.topRight,
+            radius,
+            shade,
+          );
+          canvas.drawCircle(
+            falling ? block.bottomRight : block.bottomLeft,
+            radius,
+            shade,
+          );
+        }
+        canvas.restore();
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_ArtworkPainter oldDelegate) =>
+      motif != oldDelegate.motif ||
+      seed != oldDelegate.seed ||
+      !identical(scale, oldDelegate.scale);
+}

@@ -556,7 +556,9 @@ final class _DataTableRegionProjection extends DataTableStyler {
 ///
 /// Stateful because row hover is shared by every cell of a row. Flutter's
 /// [Table] has no per-row widget to host a [MouseRegion], so each cell reports
-/// its row index here and the whole body repaints with the new row states.
+/// its row index here. The index is published through a notifier that each
+/// cell listens to for its own row, so moving the pointer rebuilds the cells
+/// of the row it left and the row it entered, not the table.
 class _RemixDataTableView<T> extends StatefulWidget {
   const _RemixDataTableView({
     required this.table,
@@ -589,7 +591,7 @@ class _RemixDataTableView<T> extends StatefulWidget {
 }
 
 class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
-  int? _hoveredRow;
+  final _hoveredRow = ValueNotifier<int?>(null);
 
   @override
   void didUpdateWidget(covariant _RemixDataTableView<T> oldWidget) {
@@ -598,9 +600,15 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
     // a region unmounted while hovered, so new row content invalidates the
     // index. The mouse tracker re-enters the correct row on the next frame
     // when the pointer is still over one.
-    if (_hoveredRow != null && !listEquals(widget.rows, oldWidget.rows)) {
-      _hoveredRow = null;
+    if (_hoveredRow.value != null && !listEquals(widget.rows, oldWidget.rows)) {
+      _hoveredRow.value = null;
     }
+  }
+
+  @override
+  void dispose() {
+    _hoveredRow.dispose();
+    super.dispose();
   }
 
   RemixDataTable<T> get _table => widget.table;
@@ -610,9 +618,11 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
   DataTableSpec get _spec => widget.styles.spec;
 
   void _setHoveredRow(int index, bool hovered) {
-    final next = hovered ? index : (_hoveredRow == index ? null : _hoveredRow);
-    if (next == _hoveredRow) return;
-    setState(() => _hoveredRow = next);
+    if (hovered) {
+      _hoveredRow.value = index;
+    } else if (_hoveredRow.value == index) {
+      _hoveredRow.value = null;
+    }
   }
 
   void _sortBy(RemixDataTableColumn<T> column) {
@@ -810,18 +820,15 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
     final id = widget.rowIds?[index];
     final isLast = index == widget.rows.length - 1;
     final selected = id != null && widget.selectedRowIds.contains(id);
-    final states = <WidgetState>{
-      if (_hoveredRow == index) WidgetState.hovered,
-      if (selected) WidgetState.selected,
-    };
-
     return TableRow(
       key: id == null ? null : ValueKey<Object>(id),
       children: [
         if (_selectable)
           _DataTableBodyCell(
             styles: widget.styles,
-            states: states,
+            rowIndex: index,
+            hoveredRow: _hoveredRow,
+            selected: selected,
             isLastRow: isLast,
             minHeight: _spec.rowMinHeight,
             useSelectionCell: true,
@@ -838,7 +845,9 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
         for (final column in widget.columns)
           _DataTableBodyCell(
             styles: widget.styles,
-            states: states,
+            rowIndex: index,
+            hoveredRow: _hoveredRow,
+            selected: selected,
             isLastRow: isLast,
             minHeight: _spec.rowMinHeight,
             alignment: column.alignment,
@@ -919,7 +928,14 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
     return RowBox(
       styleSpec: _spec.footer,
       children: [
-        StyledText(_table.labels.rowsPerPage, styleSpec: _spec.footerLabel),
+        // The labels yield before the controls do: a long translation or a
+        // narrow table wraps the text instead of overflowing the footer.
+        Flexible(
+          child: StyledText(
+            _table.labels.rowsPerPage,
+            styleSpec: _spec.footerLabel,
+          ),
+        ),
         _inheritStyle<SelectSpec>(
           _spec.pageSizeSelect,
           RemixSelect<int>(
@@ -937,9 +953,11 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
           ),
         ),
         const Spacer(),
-        StyledText(
-          _table.pageRangeFormatter(start: start, end: end, total: total),
-          styleSpec: _spec.footerLabel,
+        Flexible(
+          child: StyledText(
+            _table.pageRangeFormatter(start: start, end: end, total: total),
+            styleSpec: _spec.footerLabel,
+          ),
         ),
         _inheritStyle<IconButtonSpec>(
           _spec.pageButton,
@@ -1125,7 +1143,9 @@ class _DataTableHeaderCell extends StatelessWidget {
 class _DataTableBodyCell extends StatelessWidget {
   const _DataTableBodyCell({
     required this.styles,
-    required this.states,
+    required this.rowIndex,
+    required this.hoveredRow,
+    required this.selected,
     required this.isLastRow,
     required this.minHeight,
     required this.onHoverChanged,
@@ -1135,7 +1155,9 @@ class _DataTableBodyCell extends StatelessWidget {
   });
 
   final _DataTableStyles styles;
-  final Set<WidgetState> states;
+  final int rowIndex;
+  final ValueListenable<int?> hoveredRow;
+  final bool selected;
   final bool isLastRow;
   final double? minHeight;
   final ValueChanged<bool> onHoverChanged;
@@ -1148,8 +1170,10 @@ class _DataTableBodyCell extends StatelessWidget {
     return MouseRegion(
       onEnter: (_) => onHoverChanged(true),
       onExit: (_) => onHoverChanged(false),
-      child: WidgetStateProvider(
-        states: states,
+      child: _DataTableRowStates(
+        rowIndex: rowIndex,
+        hoveredRow: hoveredRow,
+        selected: selected,
         child: Builder(
           builder: (context) {
             final resolved = styles.resolve(context);
@@ -1172,6 +1196,67 @@ class _DataTableBodyCell extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Publishes a body row's hovered and selected states to one of its cells.
+///
+/// It listens to the table's hovered row and rebuilds only when that row
+/// becomes, or stops being, its own.
+class _DataTableRowStates extends StatefulWidget {
+  const _DataTableRowStates({
+    required this.rowIndex,
+    required this.hoveredRow,
+    required this.selected,
+    required this.child,
+  });
+
+  final int rowIndex;
+  final ValueListenable<int?> hoveredRow;
+  final bool selected;
+  final Widget child;
+
+  @override
+  State<_DataTableRowStates> createState() => _DataTableRowStatesState();
+}
+
+class _DataTableRowStatesState extends State<_DataTableRowStates> {
+  late bool _hovered = widget.hoveredRow.value == widget.rowIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.hoveredRow.addListener(_onHoveredRowChanged);
+  }
+
+  @override
+  void didUpdateWidget(covariant _DataTableRowStates oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.hoveredRow != oldWidget.hoveredRow) {
+      oldWidget.hoveredRow.removeListener(_onHoveredRowChanged);
+      widget.hoveredRow.addListener(_onHoveredRowChanged);
+    }
+    _hovered = widget.hoveredRow.value == widget.rowIndex;
+  }
+
+  @override
+  void dispose() {
+    widget.hoveredRow.removeListener(_onHoveredRowChanged);
+    super.dispose();
+  }
+
+  void _onHoveredRowChanged() {
+    final hovered = widget.hoveredRow.value == widget.rowIndex;
+    if (hovered != _hovered) setState(() => _hovered = hovered);
+  }
+
+  @override
+  Widget build(BuildContext context) => WidgetStateProvider(
+    states: {
+      if (_hovered) WidgetState.hovered,
+      if (widget.selected) WidgetState.selected,
+    },
+    child: widget.child,
+  );
 }
 
 /// The two boxes every cell paints: row chrome outside, cell padding inside.

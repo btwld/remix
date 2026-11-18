@@ -410,14 +410,15 @@ items:
             .map((dependency) => dependency.name)
             .toList();
 
-        expect(
-          item.files,
-          hasLength(preset == 'vanilla' ? 11 : 17),
-          reason: preset,
-        );
+        // Fortal's demo is its own product, with its own data file and none
+        // of the bases Vanilla shares with HeroUI.
+        final fortal = preset == 'fortal';
+        expect(item.files, hasLength(fortal ? 19 : 11), reason: preset);
         expect(item.generated, isEmpty, reason: preset);
         expect(item.exports, [
-          'recipes/dashboard/dashboard_sample_data.dart',
+          fortal
+              ? 'recipes/dashboard/dashboard_demo_data.dart'
+              : 'recipes/dashboard/dashboard_sample_data.dart',
           'recipes/dashboard/dashboard_overview.dart',
           'recipes/dashboard/dashboard_demo.dart',
         ]);
@@ -435,6 +436,10 @@ items:
         expect(joined, contains('enum {{typePrefix}}DashboardDemoPage'));
         expect(joined, contains('class {{typePrefix}}DashboardOverview'));
         expect(joined, contains('{{valuePrefix}}DashboardSampleData'));
+        if (fortal) {
+          expect(joined, contains('class {{typePrefix}}Artwork'));
+          expect(joined, contains('class {{typePrefix}}DashboardThemesPage'));
+        }
         expect(joined, contains('{{typePrefix}}DashboardChatPage'));
         expect(joined, contains('AgentConversation('));
         expect(joined, contains("import 'package:remix/agent.dart';"));

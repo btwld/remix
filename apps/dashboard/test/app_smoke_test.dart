@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
+import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
@@ -20,6 +21,36 @@ bool _isCompactSheetOpen(WidgetTester tester) => UiSidebarLayoutScope.of(
   tester.element(find.byType(UiDashboardTopBar)),
 ).isCompactOpen;
 
+/// The page transition fades the entering page in over 200ms and keeps it out
+/// of the semantics tree until it has opacity, so tests pump past it.
+const _pageEntered = Duration(milliseconds: 250);
+
+/// Taps a sidebar destination and lets the entering page finish its fade.
+Future<void> _openPage(WidgetTester tester, UiDashboardDemoPage page) async {
+  final nav = find.byKey(ValueKey(page)).first;
+  await tester.ensureVisible(nav);
+  await tester.tap(nav);
+  await tester.pump();
+  await tester.pump(_pageEntered);
+}
+
+/// Opens a Settings tab. Settings is `RemixTabs`: Profile, Notifications,
+/// Appearance and Plan.
+Future<void> _openSettingsTab(WidgetTester tester, String name) async {
+  final tab = find.byKey(ValueKey('settings-tab-$name')).first;
+  await tester.ensureVisible(tab);
+  await tester.tap(tab);
+  await tester.pump();
+  await tester.pump(_pageEntered);
+}
+
+/// The active page's root, for finders that must not match a page kept
+/// mounted behind it.
+Finder _inPage(UiDashboardDemoPage page, Finder matching) => find.descendant(
+  of: find.byKey(ValueKey('dashboard-page-${page.name}')),
+  matching: matching,
+);
+
 void main() {
   testWidgets('renders the dashboard inside one app and one shell', (
     tester,
@@ -32,18 +63,19 @@ void main() {
     expect(find.text('Overview'), findsWidgets);
   });
 
-  testWidgets('uses a text-only Dashboard brand', (tester) async {
+  testWidgets('uses a mark and the Northstar brand', (tester) async {
     await tester.pumpWidget(const DashboardApp());
 
     final app = tester.widget<WidgetsApp>(find.byType(WidgetsApp));
-    expect(app.title, 'Dashboard');
+    expect(app.title, 'Northstar');
 
     final brand = find.byKey(const ValueKey('dashboard-brand'));
     expect(brand, findsOneWidget);
     expect(
-      find.descendant(of: brand, matching: find.text('Dashboard')),
+      find.descendant(of: brand, matching: find.text('Northstar')),
       findsOneWidget,
     );
+    // The mark is painted from boxes, not an icon glyph.
     expect(
       find.descendant(of: brand, matching: find.byType(Icon)),
       findsNothing,
@@ -73,10 +105,7 @@ void main() {
 
   testWidgets('customer rows retain compact kebab actions', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
-    );
-    await tester.pump();
+    await _openPage(tester, UiDashboardDemoPage.customers);
 
     final trigger = find.byKey(const ValueKey('customer-actions-cus_024'));
     expect(trigger, findsOneWidget);
@@ -94,10 +123,7 @@ void main() {
 
   testWidgets('order rows retain compact kebab actions', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.orders)).first,
-    );
-    await tester.pump();
+    await _openPage(tester, UiDashboardDemoPage.orders);
 
     final trigger = find.byKey(const ValueKey('order-actions-ORD-1048'));
     expect(trigger, findsOneWidget);
@@ -140,7 +166,7 @@ void main() {
     }
 
     expect(
-      find.text('Manage your profile, preferences, and workspace.'),
+      find.text('Your profile, your notifications and how it all looks.'),
       findsOneWidget,
     );
     expect(_isCompactSheetOpen(tester), isFalse);
@@ -225,6 +251,7 @@ void main() {
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
+    await _openSettingsTab(tester, 'appearance');
 
     expect(find.byKey(const ValueKey('theme-panel')), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -312,10 +339,7 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
-    );
-    await tester.pump();
+    await _openPage(tester, UiDashboardDemoPage.customers);
 
     // UiDataTable forwards the key to the Remix widget it builds, so the
     // key matches both.
@@ -328,34 +352,65 @@ void main() {
     (tester) async {
       await tester.pumpWidget(const DashboardApp());
 
-      expect(find.text('\$84,420'), findsOneWidget);
-      expect(find.text('Revenue trend'), findsOneWidget);
-      expect(find.text('Order volume'), findsOneWidget);
-      expect(find.text('Channel mix'), findsOneWidget);
+      // The lead card totals the week's revenue (in thousands of dollars).
+      // UiText forwards its key to the widget it builds, so it matches twice.
+      expect(
+        find.byKey(const ValueKey('overview-revenue-total')),
+        findsWidgets,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('overview-revenue')),
+          matching: find.text('\$84.4K'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Sales by channel'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('dashboard-revenue-chart')),
+        findsWidgets,
+      );
       expect(find.byType(UiLineChart), findsOneWidget);
-      expect(find.byType(UiBarChart), findsOneWidget);
       expect(find.byType(PieChart), findsOneWidget);
-      expect(find.text('Recent activity'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('overview-channel-chart')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('overview-channel-legend')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const ValueKey('dashboard-metrics')), findsOneWidget);
+      expect(find.text('Activity'), findsOneWidget);
       expect(find.text('Recent orders'), findsOneWidget);
-      expect(find.text('View all'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('dashboard-records-table')),
+        findsWidgets,
+      );
+      // "View all" opens the collection from Top editions and the orders
+      // page from Recent orders.
+      expect(find.text('View all'), findsNWidgets(2));
     },
   );
 
   testWidgets('a status reads the same on every page that shows it', (
     tester,
   ) async {
-    // ORD-1045 is refunded and appears in the overview's five-row preview, so
+    // ORD-1045 is refunded and appears in the overview's six-row preview, so
     // an overview-local status mapping would disagree with the orders page.
     await tester.pumpWidget(const DashboardApp());
-    expect(find.text('Refunded'), findsOneWidget);
-
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.orders)).first,
+    Finder inTable(String key, String text) => find.descendant(
+      of: find.byKey(ValueKey(key)),
+      matching: find.text(text),
     );
-    await tester.pump();
+    expect(inTable('dashboard-records-table', 'ORD-1045'), findsOneWidget);
+    expect(inTable('dashboard-records-table', 'Refunded'), findsOneWidget);
 
-    // The filter offers "Refunded" too, so the badge is the second match.
-    expect(find.text('Refunded'), findsNWidgets(2));
+    await _openPage(tester, UiDashboardDemoPage.orders);
+
+    // The filter and the summary offer "Refunded" too, so scope to the table.
+    expect(inTable('data-grid-orders', 'ORD-1045'), findsOneWidget);
+    expect(inTable('data-grid-orders', 'Refunded'), findsOneWidget);
   });
 
   testWidgets('settings exposes every live Fortal theme parameter', (
@@ -363,10 +418,8 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
-    );
-    await tester.pump();
+    await _openPage(tester, UiDashboardDemoPage.settings);
+    await _openSettingsTab(tester, 'appearance');
 
     final panel = find.byKey(const ValueKey('theme-panel'));
     expect(panel, findsOneWidget);
@@ -389,10 +442,8 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
-    );
-    await tester.pump();
+    await _openPage(tester, UiDashboardDemoPage.settings);
+    await _openSettingsTab(tester, 'appearance');
 
     final translucent = find.text('Translucent');
     await tester.ensureVisible(translucent);
@@ -517,10 +568,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
-    );
-    await tester.pump();
+    await _openPage(tester, UiDashboardDemoPage.settings);
 
     final dangerZone = find.byKey(const ValueKey('settings-danger-zone'));
     await tester.ensureVisible(dangerZone.first);
@@ -546,24 +594,75 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const DashboardApp());
+    final shell = tester.element(find.byType(UiDashboardDemo));
 
-    const destinations = <UiDashboardDemoPage, String>{
-      UiDashboardDemoPage.overview: 'A snapshot of your workspace performance.',
-      UiDashboardDemoPage.customers:
-          'Manage customer access, plans, and account status.',
-      UiDashboardDemoPage.orders: 'Review transactions and fulfillment status.',
-      UiDashboardDemoPage.settings:
-          'Manage your profile, preferences, and workspace.',
+    // Each destination's own root, and a line only that page shows. Chat has
+    // no page header: its composer is the proof.
+    final destinations = <UiDashboardDemoPage, (Finder, Finder)>{
+      .overview: (
+        find.byKey(const ValueKey('dashboard-overview')),
+        find.text('How the studio is doing, as of a moment ago.'),
+      ),
+      .analytics: (
+        find.byKey(const ValueKey('dashboard-analytics')),
+        find.text('Where revenue comes from and how each edition sells.'),
+      ),
+      .schedule: (
+        find.byKey(const ValueKey('dashboard-schedule')),
+        find.byKey(const ValueKey('schedule-calendar')),
+      ),
+      .chat: (find.byType(UiDashboardChatPage), find.byType(AgentComposer)),
+      .collection: (
+        find.byKey(const ValueKey('dashboard-collection')),
+        find.byKey(const ValueKey('collection-spotlight')),
+      ),
+      .customers: (
+        find.byKey(const ValueKey('dashboard-customers')),
+        find.byKey(const ValueKey('data-grid-customers')),
+      ),
+      .orders: (
+        find.byKey(const ValueKey('dashboard-orders')),
+        find.byKey(const ValueKey('data-grid-orders')),
+      ),
+      .themes: (
+        find.byKey(const ValueKey('dashboard-themes')),
+        find.byKey(const ValueKey('themes-palettes')),
+      ),
+      .settings: (
+        find.byKey(const ValueKey('dashboard-settings')),
+        find.text('Your profile, your notifications and how it all looks.'),
+      ),
     };
+    expect(destinations.keys, UiDashboardDemoPage.values);
 
     for (final entry in destinations.entries) {
-      final nav = find.byKey(ValueKey(entry.key)).first;
-      await tester.ensureVisible(nav);
-      await tester.tap(nav);
-      await tester.pump();
+      await _openPage(tester, entry.key);
+      final (root, marker) = entry.value;
 
-      expect(find.byType(UiDashboardDemo), findsOneWidget);
-      expect(find.text(entry.value), findsOneWidget);
+      // The shell, the app and the theme scope are the ones mounted at the
+      // start: a destination swaps the page, not the shell.
+      expect(
+        find.byType(UiDashboardDemo),
+        findsOneWidget,
+        reason: '${entry.key}',
+      );
+      expect(
+        tester.element(find.byType(UiDashboardDemo)),
+        same(shell),
+        reason: '${entry.key}',
+      );
+      expect(find.byType(WidgetsApp), findsOneWidget);
+      expect(find.byType(UiSidebarLayout), findsOneWidget);
+      expect(root, findsOneWidget, reason: '${entry.key}');
+      expect(marker, findsWidgets, reason: '${entry.key}');
+      expect(
+        tester
+            .getRect(find.byKey(ValueKey('dashboard-page-${entry.key.name}')))
+            .isEmpty,
+        isFalse,
+        reason: '${entry.key}',
+      );
+      expect(tester.takeException(), isNull, reason: '${entry.key}');
     }
   });
 
@@ -608,10 +707,8 @@ void main() {
       await tester.pump();
       expect(isDark(), isFalse);
 
-      await tester.tap(
-        find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
-      );
-      await tester.pump();
+      await _openPage(tester, UiDashboardDemoPage.settings);
+      await _openSettingsTab(tester, 'appearance');
       final reset = find.byKey(const ValueKey('theme-reset')).first;
       await tester.ensureVisible(reset);
       await tester.tap(reset);
@@ -635,10 +732,8 @@ void main() {
 
   testWidgets('theme panel changes the resolved accent live', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
-    );
-    await tester.pump();
+    await _openPage(tester, UiDashboardDemoPage.settings);
+    await _openSettingsTab(tester, 'appearance');
 
     final serra = find.byKey(const ValueKey('accent-serra'));
     await tester.ensureVisible(serra);
@@ -651,10 +746,8 @@ void main() {
 
   testWidgets('theme swatch centers its selected checkmark', (tester) async {
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.settings)).first,
-    );
-    await tester.pump();
+    await _openPage(tester, UiDashboardDemoPage.settings);
+    await _openSettingsTab(tester, 'appearance');
 
     final swatch = find.byKey(const ValueKey('accent-orla'));
     final toggle = find.descendant(
@@ -710,27 +803,37 @@ void main() {
   });
 
   testWidgets('grid sorts, selects the page, and paginates', (tester) async {
+    // The summary cards push the table below the fold of the default window;
+    // a tall one keeps the header and pager under the pointer.
+    tester.view.physicalSize = const Size(1400, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
-    );
-    await tester.pump();
+    await _openPage(tester, UiDashboardDemoPage.customers);
 
-    final sortName = find.text('Customer').first;
+    // Overview keeps its own "Customer" column mounted behind this page.
+    final sortName = _inPage(.customers, find.text('Customer')).first;
     await tester.tap(sortName);
     await tester.pump();
+    // Ascending by name: Sofia Young is past the first ten.
+    expect(_inPage(.customers, find.text('Sofia Young')), findsNothing);
     await tester.tap(sortName);
     await tester.pump();
-    expect(find.text('Sofia Young'), findsOneWidget);
+    expect(_inPage(.customers, find.text('Sofia Young')), findsOneWidget);
 
-    final selectAll = find
-        .byKey(const ValueKey('remix-data-table-select-all'))
-        .first;
+    final selectAll = _inPage(
+      .customers,
+      find.byKey(const ValueKey('remix-data-table-select-all')),
+    ).first;
     await tester.tap(selectAll);
     await tester.pump();
     expect(find.text('10 selected'), findsOneWidget);
 
-    final next = find.byKey(const ValueKey('remix-data-table-next-page')).first;
+    final next = _inPage(
+      .customers,
+      find.byKey(const ValueKey('remix-data-table-next-page')),
+    ).first;
     await tester.ensureVisible(next);
     await tester.tap(next);
     await tester.pump();
@@ -746,10 +849,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
-    );
-    await tester.pump();
+    await _openPage(tester, UiDashboardDemoPage.customers);
 
     final selectAll = find
         .byKey(const ValueKey('remix-data-table-select-all'))
@@ -796,7 +896,7 @@ void main() {
     expect(title.getSemanticsData().flagsCollection.isHeader, isTrue);
     expect(title.getSemanticsData().headingLevel, 1);
 
-    for (final section in const ['Recent activity', 'Recent orders']) {
+    for (final section in const ['Revenue', 'Recent orders', 'Activity']) {
       final node = tester.getSemantics(find.text(section));
       expect(
         node.getSemanticsData().flagsCollection.isHeader,
@@ -834,7 +934,8 @@ void main() {
       expect(painted(activityTitle), light);
 
       final themeScope = tester.widget<UiDashboardThemeScope>(
-        find.byType(UiDashboardThemeScope),
+        // The application's scope. Each kept page holds one below it.
+        find.byType(UiDashboardThemeScope).first,
       );
       themeScope.onChanged(
         themeScope.settings.copyWith(appearance: UiThemeMode.dark),
@@ -864,7 +965,7 @@ void main() {
 
     final brand = find.descendant(
       of: find.byKey(const ValueKey('dashboard-brand')),
-      matching: find.text('Dashboard'),
+      matching: find.text('Northstar'),
     );
     expect(
       tester.renderObject<RenderParagraph>(brand).text.style!.color,
@@ -875,27 +976,98 @@ void main() {
     );
   });
 
-  testWidgets('top bar search filters the active data page', (tester) async {
+  testWidgets(
+    'quick find jumps to the chosen record and fills that page\'s search',
+    (tester) async {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(const DashboardApp());
+
+      // UiCombobox forwards its key to the Remix widget it builds.
+      final search = find.byKey(const ValueKey('dashboard-search')).first;
+      expect(search, findsOneWidget);
+      await tester.enterText(
+        find.descendant(of: search, matching: find.byType(EditableText)),
+        'olivia',
+      );
+      await tester.pump();
+
+      // The only match is the customer; choosing it opens Customers with the
+      // name in that page's own search field.
+      // The option's detail line is unique; the name also sits in Recent
+      // orders on the Overview behind it.
+      final option = find.text('Customer · Lisbon');
+      expect(option, findsOneWidget);
+      await tester.tap(option);
+      await tester.pump();
+      await tester.pump(_pageEntered);
+
+      final page = find.byKey(const ValueKey('dashboard-page-customers'));
+      expect(page, findsOneWidget);
+      final field = find.descendant(
+        of: find.byKey(const ValueKey('customer-search')),
+        matching: find.byType(EditableText),
+      );
+      expect(
+        tester.widget<EditableText>(field).controller.text,
+        'Olivia Martin',
+      );
+      expect(_inPage(.customers, find.text('1–1 of 1')), findsOneWidget);
+      expect(
+        _inPage(.customers, find.text('olivia@northstar.co')),
+        findsOneWidget,
+      );
+
+      // The quick-find field clears, ready for the next search.
+      expect(
+        tester
+            .widget<EditableText>(
+              find.descendant(of: search, matching: find.byType(EditableText)),
+            )
+            .controller
+            .text,
+        isEmpty,
+      );
+    },
+  );
+
+  testWidgets('quick find lists pages and opens the chosen one', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1400, 900);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(
-      find.byKey(const ValueKey(UiDashboardDemoPage.customers)).first,
-    );
-    await tester.pump();
 
-    final search = find.byKey(const ValueKey('dashboard-search'));
-    expect(search, findsWidgets);
     await tester.enterText(
-      find.descendant(of: search, matching: find.byType(EditableText)),
-      'northstar',
+      find.descendant(
+        of: find.byKey(const ValueKey('dashboard-search')).first,
+        matching: find.byType(EditableText),
+      ),
+      'analyt',
     );
     await tester.pump();
+    final option = find.text('Analytics');
+    expect(find.text('Page'), findsOneWidget);
+    await tester.tap(option.last);
+    await tester.pump();
+    await tester.pump(_pageEntered);
 
-    expect(find.text('1–1 of 1'), findsOneWidget);
-    expect(find.text('Olivia Martin'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('dashboard-page-analytics')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('dashboard-analytics')).hitTestable(),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('dashboard-overview')).hitTestable(),
+      findsNothing,
+    );
   });
 }
 

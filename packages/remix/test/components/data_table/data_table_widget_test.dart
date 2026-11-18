@@ -1,4 +1,4 @@
-import 'dart:ui' show CheckedState, SemanticsRole;
+import 'dart:ui' show CheckedState, PointerDeviceKind, SemanticsRole;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart' hide SemanticsRole;
@@ -825,6 +825,137 @@ void main() {
         ),
       );
 
+      expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('RemixDataTable row hover', () {
+    Future<TestGesture> hover(WidgetTester tester) async {
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await gesture.addPointer(location: Offset.zero);
+      addTearDown(gesture.removePointer);
+
+      return gesture;
+    }
+
+    testWidgets('moving between rows does not rebuild the table cells', (
+      tester,
+    ) async {
+      final builds = <String, int>{};
+      await tester.pumpRemixApp(
+        RemixDataTable<_Record>(
+          rows: _records,
+          columns: [
+            RemixDataTableColumn<_Record>(
+              id: 'name',
+              label: 'Name',
+              cellBuilder: (context, row) {
+                builds[row.id] = (builds[row.id] ?? 0) + 1;
+
+                return Text(row.name);
+              },
+            ),
+          ],
+        ),
+      );
+      expect(builds, {'a': 1, 'b': 1, 'c': 1});
+      builds.clear();
+
+      final gesture = await hover(tester);
+      await gesture.moveTo(tester.getCenter(find.text('Ada')));
+      await tester.pump();
+      await gesture.moveTo(tester.getCenter(find.text('Curie')));
+      await tester.pump();
+      await gesture.moveTo(Offset.zero);
+      await tester.pump();
+
+      // The cell builders belong to the table's build. Hover is published to
+      // the cells of the rows involved and never rebuilds the table itself.
+      expect(builds, isEmpty);
+    });
+
+    testWidgets('publishes the hovered state to that row and no other', (
+      tester,
+    ) async {
+      final hovered = <String, bool>{};
+      await tester.pumpRemixApp(
+        RemixDataTable<_Record>(
+          rows: _records,
+          columns: [
+            RemixDataTableColumn<_Record>(
+              id: 'name',
+              label: 'Name',
+              cellBuilder: (context, row) => Builder(
+                builder: (context) {
+                  hovered[row.id] = WidgetStateProvider.hasStateOf(
+                    context,
+                    WidgetState.hovered,
+                  );
+
+                  return Text(row.name);
+                },
+              ),
+            ),
+            RemixDataTableColumn<_Record>(
+              id: 'amount',
+              label: 'Amount',
+              cellBuilder: (context, row) => Text('${row.amount}'),
+            ),
+          ],
+        ),
+      );
+      expect(hovered, {'a': false, 'b': false, 'c': false});
+
+      // Entering the row through its other column still marks every cell.
+      final gesture = await hover(tester);
+      await gesture.moveTo(tester.getCenter(find.text('1')));
+      await tester.pump();
+      expect(hovered, {'a': false, 'b': true, 'c': false});
+
+      await gesture.moveTo(tester.getCenter(find.text('Curie')));
+      await tester.pump();
+      expect(hovered, {'a': false, 'b': false, 'c': true});
+
+      await gesture.moveTo(Offset.zero);
+      await tester.pump();
+      expect(hovered, {'a': false, 'b': false, 'c': false});
+    });
+
+    testWidgets('new rows clear a hover the pointer has not re-entered', (
+      tester,
+    ) async {
+      final hovered = <String, bool>{};
+      Widget table(List<_Record> rows) => RemixDataTable<_Record>(
+        rows: rows,
+        columns: [
+          RemixDataTableColumn<_Record>(
+            id: 'name',
+            label: 'Name',
+            cellBuilder: (context, row) => Builder(
+              builder: (context) {
+                hovered[row.id] = WidgetStateProvider.hasStateOf(
+                  context,
+                  WidgetState.hovered,
+                );
+
+                return Text(row.name);
+              },
+            ),
+          ),
+        ],
+      );
+      await tester.pumpRemixApp(table(_records));
+      final gesture = await hover(tester);
+      await gesture.moveTo(tester.getCenter(find.text('Curie')));
+      await tester.pump();
+      expect(hovered['c'], isTrue);
+
+      // The third row goes away under the pointer, and a region unmounted
+      // while hovered reports no exit. The stale index must not survive.
+      hovered.clear();
+      await tester.pumpRemixApp(table(const [_Record('z', 'Zuse', 9)]));
+      await tester.pump();
+      expect(hovered['z'], isFalse);
       expect(tester.takeException(), isNull);
     });
   });

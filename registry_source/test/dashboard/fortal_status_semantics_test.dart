@@ -36,15 +36,18 @@ void main() {
       tester,
     ) async {
       final cases = <(Widget, String, FortalColorTheme)>[
-        (FortalStatusBadge.order(.paid), 'Paid', serra),
+        (FortalStatusBadge.order(.paid), 'Paid', mar),
         (FortalStatusBadge.order(.pending), 'Pending', sol),
+        (FortalStatusBadge.order(.shipped), 'Shipped', ceu),
         (FortalStatusBadge.order(.refunded), 'Refunded', fortalError),
         (FortalStatusBadge.order(.cancelled), 'Cancelled', orla),
-        (FortalStatusBadge.customer(.active), 'Active', serra),
+        (FortalStatusBadge.customer(.active), 'Active', mar),
         (FortalStatusBadge.customer(.invited), 'Invited', ceu),
-        (FortalStatusBadge.customer(.suspended), 'Suspended', fortalError),
-        (FortalStatusBadge.label(' Fulfilled '), 'Fulfilled', serra),
-        (FortalStatusBadge.label('suspended'), 'Suspended', fortalError),
+        (FortalStatusBadge.customer(.paused), 'Paused', orla),
+        (FortalStatusBadge.edition(.live), 'Live', mar),
+        (FortalStatusBadge.edition(.lowStock), 'Low stock', sol),
+        (FortalStatusBadge.edition(.soldOut), 'Sold out', orla),
+        (FortalStatusBadge.edition(.draft), 'Draft', ceu),
       ];
       for (final (badge, label, palette) in cases) {
         final accent = await resolvedAccent(tester, badge, dark: dark);
