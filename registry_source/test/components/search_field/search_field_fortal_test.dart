@@ -134,6 +134,120 @@ void main() {
     }
   });
 
+  group('typing', () {
+    // The clear button appears after the first character. If that changed
+    // the structure around the editor, the editor would be rebuilt with a
+    // new input connection, and on the web every later key would be lost.
+    testWidgets('the editor survives the clear button appearing and going', (
+      tester,
+    ) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 320,
+          child: FortalSearchField(
+            semanticLabel: 'Search',
+            controller: controller,
+          ),
+        ),
+      );
+      await tester.showKeyboard(find.byType(EditableText));
+      final editor = tester.state<EditableTextState>(find.byType(EditableText));
+
+      tester.testTextInput.enterText('o');
+      await tester.pump();
+      expect(find.byType(FortalIconButton), findsOneWidget);
+      expect(
+        tester.state<EditableTextState>(find.byType(EditableText)),
+        same(editor),
+      );
+      expect(tester.testTextInput.hasAnyClients, isTrue);
+
+      tester.testTextInput.enterText('ol');
+      await tester.pump();
+      expect(controller.text, 'ol');
+
+      tester.testTextInput.enterText('');
+      await tester.pump();
+      expect(find.byType(FortalIconButton), findsNothing);
+      expect(
+        tester.state<EditableTextState>(find.byType(EditableText)),
+        same(editor),
+      );
+
+      tester.testTextInput.enterText('m');
+      await tester.pump();
+      expect(controller.text, 'm');
+      expect(
+        tester.state<EditableTextState>(find.byType(EditableText)),
+        same(editor),
+      );
+    });
+
+    // On the web the editor's input element hangs off the semantics tree.
+    // A clear button merged into the node around the field turned that node
+    // into a "Clear search" button after the first key, and the browser
+    // dropped every key after it.
+    testWidgets('the clear button is its own semantics node, so the field '
+        'and its surroundings keep theirs', (tester) async {
+      final semantics = tester.ensureSemantics();
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 320,
+          child: FortalSearchField(
+            semanticLabel: 'Search',
+            controller: controller,
+          ),
+        ),
+      );
+      await tester.showKeyboard(find.byType(EditableText));
+      final field = tester.getSemantics(find.byType(EditableText));
+      final surroundings = field.parent!;
+      final before = surroundings.getSemanticsData();
+
+      tester.testTextInput.enterText('o');
+      await tester.pump();
+
+      final typed = tester.getSemantics(find.byType(EditableText));
+      expect(typed.id, field.id);
+      expect(typed.parent!.id, surroundings.id);
+      expect(typed.parent!.getSemanticsData(), before);
+      final clear = tester.getSemantics(find.bySemanticsLabel('Clear search'));
+      expect(clear.id, isNot(surroundings.id));
+      expect(clear, isSemantics(isButton: true, hasTapAction: true));
+      expect(clear.childrenCount, 0);
+
+      tester.testTextInput.enterText('');
+      await tester.pump();
+      expect(tester.getSemantics(find.byType(EditableText)).id, field.id);
+      expect(surroundings.getSemanticsData(), before);
+      semantics.dispose();
+    });
+
+    testWidgets('the text area keeps its width whether or not there is text '
+        'to clear', (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 320,
+          child: FortalSearchField(
+            semanticLabel: 'Search',
+            controller: controller,
+          ),
+        ),
+      );
+      final empty = tester.getRect(find.byType(EditableText));
+
+      controller.text = 'olivia';
+      await tester.pump();
+      expect(tester.getRect(find.byType(EditableText)), empty);
+    });
+  });
+
   group('clearing', () {
     testWidgets('the clear button clears, reports and refocuses', (
       tester,
@@ -197,6 +311,34 @@ void main() {
       expect(focusNode.hasFocus, isTrue);
     });
 
+    testWidgets('dropping the caller controller keeps the text in the owned '
+        'one', (tester) async {
+      final caller = TextEditingController(text: 'Ava');
+      addTearDown(caller.dispose);
+      Future<void> pump(TextEditingController? controller) =>
+          tester.pumpRemixApp(
+            SizedBox(
+              width: 320,
+              child: FortalSearchField(
+                semanticLabel: 'Search',
+                controller: controller,
+              ),
+            ),
+          );
+
+      await pump(caller);
+      await pump(null);
+
+      final owned = _editable(tester).controller;
+      expect(owned, isNot(same(caller)));
+      expect(owned.text, 'Ava');
+      expect(find.byType(FortalIconButton), findsOneWidget);
+      // The owned controller is independent of the one it was copied from.
+      caller.text = 'Bruno';
+      await tester.pump();
+      expect(owned.text, 'Ava');
+    });
+
     testWidgets('swapping controllers follows the new one', (tester) async {
       final first = TextEditingController(text: 'one');
       final second = TextEditingController();
@@ -223,8 +365,12 @@ void main() {
       first.text = '';
       await tester.pump();
       expect(find.byType(FortalIconButton), findsOneWidget);
+      // The owned controller starts from the caller's last text.
       await pump(null);
-      expect(find.byType(FortalIconButton), findsNothing);
+      expect(_editable(tester).controller.text, 'two');
+      second.text = '';
+      await tester.pump();
+      expect(find.byType(FortalIconButton), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 

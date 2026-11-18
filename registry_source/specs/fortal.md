@@ -322,16 +322,23 @@ and size2 fields and size2 (16px) on size3, gray11 with grayA3/grayA4 hover
 and press on surface, accent content on soft. A 40px target would make a
 24/32px field 40px tall if it sat in the field's row, so it is an overlay:
 the button is centred in the field's last `touchTargetMin` (40px, never less),
-its whole target inside the field, and a trailing spacer stops the input one
-field spacing short of its glyph. It shows only while the field is enabled,
-editable and not empty. Pressing it clears the text, calls `onChanged('')`
-and `onCleared`, and returns focus to the field; it sits inside the field's
-tap region and excludes focus, so it is no Tab stop. Escape is the keyboard
-path: it clears when there is text to clear and no input-method composition,
-and otherwise passes on, so a dialog still closes. A caller `style` merges
-last into the field. Tests cover both modes and variants, every size at 100%
-and 200% text in both directions, the clear target, keyboard focus and
-Escape, composition, controller swaps and semantics.
+its whole target inside the field. A trailing spacer of the button's width is
+always present, so the input stops one field spacing short of its glyph and
+keeps one width and structure whether or not there is text. It shows only
+while the field is enabled, editable and not empty. Pressing it clears the
+text, calls `onChanged('')` and `onCleared`, and returns focus to the field;
+it sits inside the field's tap region and excludes focus, so it is no Tab
+stop. It is its own semantics container: merged into the node around the
+field, it would turn that node into a button once there is text, and Flutter
+web, whose input element hangs from the semantics tree, then drops every key
+after the first. A caller controller that is withdrawn leaves its last value
+in the field's own controller. Escape is the keyboard path: it clears when
+there is text to clear and no input-method composition, and otherwise passes
+on, so a dialog still closes. A caller `style` merges last into the field.
+Tests cover both modes and variants, every size at 100% and 200% text in both
+directions, the clear target, keyboard focus and Escape, composition,
+controller swaps, semantics, and the editor and its semantics node surviving
+the clear button's arrival and departure.
 
 ## Surface
 
