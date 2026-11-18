@@ -253,3 +253,14 @@ last 40px, so a 24/32px field keeps its height, and it is no Tab stop: Escape
 clears instead, unless the field is empty or an input method is composing, in
 which case Escape passes on (a dialog still closes). Localize
 `clearSemanticLabel`.
+
+## Surface
+
+`remix add surface` installs `<Prefix>Surface` and `<prefix>SurfaceStyle()`,
+the card recipe at four levels of emphasis: `.surface` (the card), `.soft`
+(accent wash), `.quiet` (faint neutral wash) and `.inverse` (the card in the
+opposite appearance, for the one block a page leads with; everything inside
+resolves in that appearance). Sizes `.size1`–`.size5` take the card's padding
+and corners (default size2), and `padded: false` runs content to the frame.
+None casts a shadow. With `onPressed` the whole surface is one button and its
+required `semanticLabel` replaces the child's semantics.

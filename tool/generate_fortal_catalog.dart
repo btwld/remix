@@ -135,6 +135,7 @@ const _unpagedFamilies = {
   'avatar_group': 'Data display',
   'breadcrumbs': 'Navigation',
   'search_field': 'Actions and inputs',
+  'surface': 'Layout',
 };
 
 /// Reuse sidebar categories and fail if a new family has no navigation home.

@@ -333,6 +333,38 @@ last into the field. Tests cover both modes and variants, every size at 100%
 and 200% text in both directions, the clear target, keyboard focus and
 Escape, composition, controller swaps and semantics.
 
+## Surface
+
+Surface promotes the dashboard's emphasis surfaces into the registry. The card
+has one resting look, so a page built from cards alone asks the same
+attention of every block; `FortalSurfaceVariant` settles that hierarchy once.
+`fortalSurfaceStyle()` is the card recipe at the matching `FortalSurfaceSize`
+(size1–size5: 12/16/24/32/48px padding, radius4/4/5/5/6; default size2) with
+the variant's fill and hairline. Emphasis comes from fill and contrast alone:
+no variant casts a shadow.
+
+| Variant | Rest | Hover | Press |
+| --- | --- | --- | --- |
+| `surface` | colorPanel, gray6 frame | gray7 frame | gray3 fill |
+| `soft` | accentA3, accentA4 frame | accentA5 frame | accentA4 fill |
+| `quiet` | grayA2, grayA3 frame | grayA4 frame | grayA3 fill |
+| `inverse` | the surface card in the opposite appearance | | |
+
+`FortalSurface` renders `inverse` inside a nested theme in the other mode with
+no background, so its text, controls and charts resolve their own tokens and
+keep their contrast: a dark panel in light mode and a light one in dark mode,
+for the one block a page leads with. `padded: false` runs content to the
+frame, as a cover image or a table needs.
+
+With `onPressed` the whole surface is one button: it takes the hover, press,
+the card's focus ring and Enter/Space, and its required `semanticLabel`
+replaces the child's own semantics. Without `onPressed`, a `semanticLabel`
+names the surface as a container. A caller `style` merges last. This absorbs
+the dashboard's pressable surface; its `standard` and `tinted` emphases are
+`surface` and `soft`. Tests cover every variant in both modes, sizes,
+interaction fills, inverse contrast for every accent, keyboard focus, RTL and
+200% text, and `spec_conformance` holds every variant flat.
+
 ## Enforcement
 
 - `tool/check_fortal.dart` (`melos run fortal:check`) holds the catalog against

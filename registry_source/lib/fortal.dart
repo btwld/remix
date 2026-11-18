@@ -58,6 +58,7 @@ export 'src/fortal/components/sidebar_layout.dart';
 export 'src/fortal/components/skeleton.dart';
 export 'src/fortal/components/slider.dart';
 export 'src/fortal/components/spinner.dart';
+export 'src/fortal/components/surface.dart';
 export 'src/fortal/components/switch.dart';
 export 'src/fortal/components/tabs.dart';
 export 'src/fortal/components/text.dart';

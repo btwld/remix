@@ -59,7 +59,7 @@ class UiRecordStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => UiSurface(
-    emphasis: .quiet,
+    variant: .quiet,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.start)

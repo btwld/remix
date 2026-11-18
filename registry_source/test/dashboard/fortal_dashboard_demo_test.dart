@@ -838,7 +838,7 @@ void main() {
 
       final inverse = tester
           .widgetList<FortalSurface>(find.byType(FortalSurface))
-          .where((surface) => surface.emphasis == .inverse);
+          .where((surface) => surface.variant == .inverse);
       expect(inverse, hasLength(1));
       expect(inverse.single.key, const ValueKey('overview-revenue'));
 

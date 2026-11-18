@@ -247,7 +247,7 @@ class _{{typePrefix}}DashboardCollectionPageState
           ),
         if (editions.isEmpty)
           {{typePrefix}}Surface(
-            emphasis: .quiet,
+            variant: .quiet,
             child: {{typePrefix}}EmptyState(
               icon: {{icon:magnifyingGlass}},
               title: 'No editions found',
@@ -453,7 +453,7 @@ class {{typePrefix}}EditionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inset = {{typePrefix}}Tokens.space2.resolve(context);
-    return {{typePrefix}}PressableSurface(
+    return {{typePrefix}}Surface(
       onPressed: onPressed,
       semanticLabel:
           '${edition.title} by ${edition.artist}, '

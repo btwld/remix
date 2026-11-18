@@ -241,7 +241,7 @@ class _UiDashboardCollectionPageState extends State<UiDashboardCollectionPage> {
           ),
         if (editions.isEmpty)
           UiSurface(
-            emphasis: .quiet,
+            variant: .quiet,
             child: UiEmptyState(
               icon: RemixIcons.search,
               title: 'No editions found',
@@ -445,7 +445,7 @@ class UiEditionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inset = UiTokens.space2.resolve(context);
-    return UiPressableSurface(
+    return UiSurface(
       onPressed: onPressed,
       semanticLabel:
           '${edition.title} by ${edition.artist}, '

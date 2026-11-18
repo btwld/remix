@@ -40,11 +40,7 @@ class FortalDashboardAnalyticsPage extends StatelessWidget {
       ],
       children: [
         FortalSummaryStrip(metrics: data.metrics),
-        FortalRevenueCard(
-          data: data,
-          emphasis: .standard,
-          initialRange: .month,
-        ),
+        FortalRevenueCard(data: data, variant: .surface, initialRange: .month),
         GridBox(
           key: const ValueKey('analytics-breakdown'),
           style: fortalHalvesGrid,
@@ -402,7 +398,7 @@ class FortalInsightsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FortalSurface(
-    emphasis: .tinted,
+    variant: .soft,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)

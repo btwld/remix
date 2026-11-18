@@ -557,7 +557,7 @@ class _PlanSection extends StatelessWidget {
       style: _sectionColumn,
       children: [
         FortalSurface(
-          emphasis: .tinted,
+          variant: .soft,
           size: .size3,
           child: ColumnBox(
             style: _sectionColumn,
@@ -591,7 +591,7 @@ class _PlanSection extends StatelessWidget {
           ),
         ),
         FortalSurface(
-          emphasis: .quiet,
+          variant: .quiet,
           size: .size3,
           child: ColumnBox(
             style: FlexBoxStyler()

@@ -247,7 +247,7 @@ class FortalPaletteCard extends StatelessWidget {
         '${selected ? ', in use' : ''}';
 
     return switch (onPressed) {
-      final onPressed? => FortalPressableSurface(
+      final onPressed? => FortalSurface(
         onPressed: onPressed,
         semanticLabel: label,
         padded: false,
@@ -272,7 +272,7 @@ class _BrandPaletteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FortalSurface(
     key: const ValueKey('palette-brand'),
-    emphasis: .quiet,
+    variant: .quiet,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.start)

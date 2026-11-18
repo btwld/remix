@@ -40,11 +40,7 @@ class {{typePrefix}}DashboardAnalyticsPage extends StatelessWidget {
       ],
       children: [
         {{typePrefix}}SummaryStrip(metrics: data.metrics),
-        {{typePrefix}}RevenueCard(
-          data: data,
-          emphasis: .standard,
-          initialRange: .month,
-        ),
+        {{typePrefix}}RevenueCard(data: data, variant: .surface, initialRange: .month),
         GridBox(
           key: const ValueKey('analytics-breakdown'),
           style: {{valuePrefix}}HalvesGrid,
@@ -402,7 +398,7 @@ class {{typePrefix}}InsightsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => {{typePrefix}}Surface(
-    emphasis: .tinted,
+    variant: .soft,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)

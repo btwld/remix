@@ -247,7 +247,7 @@ class _FortalDashboardCollectionPageState
           ),
         if (editions.isEmpty)
           FortalSurface(
-            emphasis: .quiet,
+            variant: .quiet,
             child: FortalEmptyState(
               icon: RemixIcons.search,
               title: 'No editions found',
@@ -453,7 +453,7 @@ class FortalEditionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inset = FortalTokens.space2.resolve(context);
-    return FortalPressableSurface(
+    return FortalSurface(
       onPressed: onPressed,
       semanticLabel:
           '${edition.title} by ${edition.artist}, '

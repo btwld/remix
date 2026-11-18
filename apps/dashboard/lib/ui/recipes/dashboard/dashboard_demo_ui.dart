@@ -22,6 +22,7 @@ export '../../components/search_field.dart';
 export '../../components/segmented_control.dart';
 export '../../components/select.dart';
 export '../../components/skeleton.dart';
+export '../../components/surface.dart';
 export '../../components/switch.dart';
 export '../../components/tabs.dart';
 export '../../components/text.dart';

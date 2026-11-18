@@ -41,6 +41,7 @@ export 'components/sidebar_layout.dart';
 export 'components/skeleton.dart';
 export 'components/slider.dart';
 export 'components/spinner.dart';
+export 'components/surface.dart';
 export 'components/switch.dart';
 export 'components/tabs.dart';
 export 'components/text.dart';

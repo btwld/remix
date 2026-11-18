@@ -223,7 +223,7 @@ class FortalRevenueCard extends StatefulWidget {
   const FortalRevenueCard({
     super.key,
     required this.data,
-    this.emphasis = .inverse,
+    this.variant = .inverse,
     this.initialRange = .week,
   });
 
@@ -231,7 +231,7 @@ class FortalRevenueCard extends StatefulWidget {
   final FortalDashboardData data;
 
   /// How loudly the card speaks.
-  final FortalSurfaceEmphasis emphasis;
+  final FortalSurfaceVariant variant;
 
   /// The window shown first.
   final FortalDashboardRange initialRange;
@@ -249,7 +249,7 @@ class _FortalRevenueCardState extends State<FortalRevenueCard> {
     final delta = data.revenueDelta(_range);
     return FortalSurface(
       key: const ValueKey('overview-revenue'),
-      emphasis: widget.emphasis,
+      variant: widget.variant,
       size: .size3,
       child: ColumnBox(
         style: FlexBoxStyler()
@@ -557,7 +557,7 @@ class FortalFeaturedEditionCard extends StatelessWidget {
     );
 
     return switch (onPressed) {
-      final onPressed? => FortalPressableSurface(
+      final onPressed? => FortalSurface(
         key: const ValueKey('overview-featured'),
         onPressed: onPressed,
         semanticLabel:
@@ -752,7 +752,7 @@ class FortalGoalsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FortalSurface(
-    emphasis: .tinted,
+    variant: .soft,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)
@@ -984,7 +984,7 @@ class FortalUpcomingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FortalSurface(
-    emphasis: .quiet,
+    variant: .quiet,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)
@@ -1024,7 +1024,7 @@ class FortalPalettesCard extends StatelessWidget {
         scope?.settings.accentColor ?? FortalTheme.of(context).accent;
     return FortalSurface(
       key: const ValueKey('overview-palettes'),
-      emphasis: .quiet,
+      variant: .quiet,
       child: ColumnBox(
         style: FlexBoxStyler()
             .crossAxisAlignment(.stretch)
@@ -1087,7 +1087,7 @@ class FortalTeamCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final online = team.where((member) => member.online).length;
     return FortalSurface(
-      emphasis: .quiet,
+      variant: .quiet,
       child: ColumnBox(
         style: FlexBoxStyler()
             .crossAxisAlignment(.stretch)

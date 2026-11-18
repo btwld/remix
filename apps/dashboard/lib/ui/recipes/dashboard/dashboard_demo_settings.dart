@@ -548,7 +548,7 @@ class _PlanSection extends StatelessWidget {
       style: _sectionColumn,
       children: [
         UiSurface(
-          emphasis: .tinted,
+          variant: .soft,
           size: .size3,
           child: ColumnBox(
             style: _sectionColumn,
@@ -582,7 +582,7 @@ class _PlanSection extends StatelessWidget {
           ),
         ),
         UiSurface(
-          emphasis: .quiet,
+          variant: .quiet,
           size: .size3,
           child: ColumnBox(
             style: FlexBoxStyler()

@@ -339,6 +339,7 @@ items:
       - spinner
       - steps_recipe
       - suggestions_recipe
+      - surface
       - switch
       - tabs
       - text
@@ -815,6 +816,16 @@ items:
         target: "@ui/recipes/suggestions_recipe.dart"
     exports:
       - recipes/suggestions_recipe.dart
+
+  surface:
+    registryDependencies:
+      - theme
+      - card
+    files:
+      - source: templates/surface/surface.dart.tmpl
+        target: "@ui/components/surface.dart"
+    exports:
+      - components/surface.dart
 
   switch:
     registryDependencies:

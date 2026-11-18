@@ -206,6 +206,7 @@ const _fortalRegistryItems = <String>[
   'skeleton',
   'slider',
   'spinner',
+  'surface',
   'switch',
   'tabs',
   'text',

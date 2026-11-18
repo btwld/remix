@@ -59,7 +59,7 @@ class FortalRecordStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FortalSurface(
-    emphasis: .quiet,
+    variant: .quiet,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.start)

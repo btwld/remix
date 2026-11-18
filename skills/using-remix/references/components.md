@@ -230,6 +230,10 @@ HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, `dashboard_shell`, and
   image-card Collection and Themes in Fortal. See [Reference showcases](reference-showcases.md) for
   product-example and coverage-gallery conventions. The HeroUI demo also
   installs `chart`, `table`, `tabs`, `chip`, and the Agent items.
+- **Surface** — a preset composition, not a Remix widget. HeroUI's `surface` is
+  a filled box that sets its text color. Fortal's is the card at four levels of
+  emphasis (`surface`, `soft`, `quiet`, `inverse`), optionally one pressable
+  button. See [Fortal](fortal.md#surface).
 
 ## Agent surfaces
 

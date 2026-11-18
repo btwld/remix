@@ -23,6 +23,7 @@ import 'components/textfield.dart' as textfield;
 import 'components/search_field.dart' as search_field;
 import 'components/textarea.dart' as textarea;
 import 'components/card.dart' as card;
+import 'components/surface.dart' as surface;
 import 'components/accordion.dart' as accordion;
 import 'components/disclosure.dart' as disclosure;
 import 'components/data_table.dart' as data_table;
@@ -239,6 +240,18 @@ final _families = <_Family>[
     build: textarea.buildTextAreaCatalogUseCase,
   ),
   (id: 'card', group: 'Containers', build: card.buildCardCatalogUseCase),
+  (
+    id: 'surface',
+    group: 'Containers',
+    // An inverse surface nests a complete FortalTheme, which restores the
+    // theme's own text tokens, so the review typeface is applied again inside.
+    build: (context) => surface.surfaceCatalog(
+      content: (child) => PolishTypography(
+        fontFamily: PolishTypography.familyOf(context),
+        child: child,
+      ),
+    ),
+  ),
   (
     id: 'accordion',
     group: 'Containers',
@@ -679,45 +692,62 @@ class PolishTypography extends StatelessWidget {
   const PolishTypography({super.key, this.fontFamily, required this.child});
   final String? fontFamily;
   final Widget child;
+
+  /// The review typeface of the nearest board, or null outside one.
+  static String? familyOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_PolishFont>()?.family;
+
   @override
   Widget build(BuildContext context) {
+    final fontFamily = this.fontFamily;
     if (fontFamily == null) return child;
-    return MixScope.inherit(
-      textStyles: {
-        for (final token in [
-          FortalTokens.text1,
-          FortalTokens.text2,
-          FortalTokens.text3,
-          FortalTokens.text4,
-          FortalTokens.text5,
-          FortalTokens.text6,
-          FortalTokens.text7,
-          FortalTokens.text8,
-          FortalTokens.text9,
-          FortalTokens.avatarFallback1One,
-          FortalTokens.avatarFallback1Two,
-          FortalTokens.avatarFallback2One,
-          FortalTokens.avatarFallback2Two,
-          FortalTokens.avatarFallback3One,
-          FortalTokens.avatarFallback3Two,
-          FortalTokens.avatarFallback4One,
-          FortalTokens.avatarFallback4Two,
-          FortalTokens.avatarFallback5,
-          FortalTokens.avatarFallback6,
-          FortalTokens.avatarFallback7,
-          FortalTokens.avatarFallback8,
-          FortalTokens.avatarFallback9,
-        ])
-          token: token.resolve(context).copyWith(fontFamily: fontFamily),
-      },
-      // A nested FortalTheme, such as a per-member accent, resolves its own
-      // tokens without the overrides above; its text inherits this family.
-      child: DefaultTextStyle.merge(
-        style: TextStyle(fontFamily: fontFamily),
-        child: child,
+    return _PolishFont(
+      family: fontFamily,
+      child: MixScope.inherit(
+        textStyles: {
+          for (final token in [
+            FortalTokens.text1,
+            FortalTokens.text2,
+            FortalTokens.text3,
+            FortalTokens.text4,
+            FortalTokens.text5,
+            FortalTokens.text6,
+            FortalTokens.text7,
+            FortalTokens.text8,
+            FortalTokens.text9,
+            FortalTokens.avatarFallback1One,
+            FortalTokens.avatarFallback1Two,
+            FortalTokens.avatarFallback2One,
+            FortalTokens.avatarFallback2Two,
+            FortalTokens.avatarFallback3One,
+            FortalTokens.avatarFallback3Two,
+            FortalTokens.avatarFallback4One,
+            FortalTokens.avatarFallback4Two,
+            FortalTokens.avatarFallback5,
+            FortalTokens.avatarFallback6,
+            FortalTokens.avatarFallback7,
+            FortalTokens.avatarFallback8,
+            FortalTokens.avatarFallback9,
+          ])
+            token: token.resolve(context).copyWith(fontFamily: fontFamily),
+        },
+        // A nested FortalTheme, such as a per-member accent, resolves its
+        // own tokens without the overrides above; text that inherits the
+        // ambient style still takes this family.
+        child: DefaultTextStyle.merge(
+          style: TextStyle(fontFamily: fontFamily),
+          child: child,
+        ),
       ),
     );
   }
+}
+
+class _PolishFont extends InheritedWidget {
+  const _PolishFont({required this.family, required super.child});
+  final String family;
+  @override
+  bool updateShouldNotify(_PolishFont oldWidget) => family != oldWidget.family;
 }
 
 // Calendar families expose a single size and recipe. Review enabled/disabled

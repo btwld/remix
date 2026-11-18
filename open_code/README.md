@@ -169,8 +169,8 @@ generated part; selection and overlay behavior stay in Remix.
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`,
 and the hand-written compositions `avatar_group` (depends on `theme` and
 `avatar`), `breadcrumbs` (depends on `theme`, `link`, `text` and
-`typography`) and `search_field` (depends on `theme`, `textfield` and
-`icon_button`).
+`typography`), `search_field` (depends on `theme`, `textfield` and
+`icon_button`) and `surface` (depends on `theme` and `card`).
 
 HeroUI follows HeroUI's names, adding `alert`, `avatar_group`, `breadcrumbs`,
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,

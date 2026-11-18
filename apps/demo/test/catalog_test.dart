@@ -24,6 +24,7 @@ import 'package:demo/components/segmented_control.dart' as segmented_control;
 import 'package:demo/components/select.dart' as select;
 import 'package:demo/components/slider.dart' as slider;
 import 'package:demo/components/spinner.dart' as spinner;
+import 'package:demo/components/surface.dart' as surface;
 import 'package:demo/components/switch.dart' as switch_;
 import 'package:demo/components/tabs.dart' as tabs;
 import 'package:demo/components/text.dart' as text;
@@ -74,6 +75,7 @@ final catalogs = <String, WidgetBuilder>{
   'select': select.buildSelectCatalogUseCase,
   'slider': slider.buildSliderCatalogUseCase,
   'spinner': spinner.buildSpinnerCatalogUseCase,
+  'surface': surface.buildSurfaceCatalogUseCase,
   'switch': switch_.buildSwitchCatalogUseCase,
   'tabs': tabs.buildTabsCatalogUseCase,
   'text': text.buildTextCatalogUseCase,

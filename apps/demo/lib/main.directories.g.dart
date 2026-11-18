@@ -56,6 +56,7 @@ import 'package:demo/components/sidebar.dart' as _demo_components_sidebar;
 import 'package:demo/components/skeleton.dart' as _demo_components_skeleton;
 import 'package:demo/components/slider.dart' as _demo_components_slider;
 import 'package:demo/components/spinner.dart' as _demo_components_spinner;
+import 'package:demo/components/surface.dart' as _demo_components_surface;
 import 'package:demo/components/switch.dart' as _demo_components_switch;
 import 'package:demo/components/tabs.dart' as _demo_components_tabs;
 import 'package:demo/components/text.dart' as _demo_components_text;
@@ -147,6 +148,19 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Search Field Component',
             builder: _demo_components_search_field.buildSearchFieldUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'FortalSurface',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder: _demo_components_surface.buildSurfaceCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Surface Component',
+            builder: _demo_components_surface.buildSurfaceUseCase,
           ),
         ],
       ),
