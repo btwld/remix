@@ -85,12 +85,21 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `expands`/`obscureText` fixed to `false`. Vanilla, Fortal, and HeroUI recipes
   ring the field with `onFocused`, so a click shows the ring. Other controls use
   `onFocusVisible`.
-- **SearchField** — a preset composition over TextField, not a Remix widget.
-  HeroUI's recipe takes the search icon and clear button as `leading` and
-  `trailing`, and the app decides when to clear. Fortal's owns them: the clear
-  button shows while there is text to clear, Escape clears too, and the field
-  keeps the TextField height at every size. See
-  [Fortal](fortal.md#search-field).
+- **SearchField** — Remix has no search widget; presets compose one over their
+  text field. Vanilla's `remix add search_field` installs the stateful
+  `<Prefix>SearchField(semanticLabel: ...)` with `controller`, `focusNode`,
+  `hintText`, `enabled`, `readOnly`, `autofocus`, `onChanged`, `onSubmitted`,
+  `onCleared`, `clearSemanticLabel` (default `'Clear search'`),
+  `textInputAction` (default `search`) and `style`. It owns its controller
+  and focus node when none is given and draws its own search icon. The clear
+  button shows only while the field is enabled, editable and not empty;
+  clearing reports `''` to `onChanged`, calls `onCleared` and keeps focus.
+  Escape clears too, and holding it does not then close an enclosing dialog;
+  during IME composition Escape stays with the input method. With nothing to
+  clear, Escape passes up, so the dialog closes. Fortal's field has the same
+  contract and also keeps the TextField height at every size; see
+  [Fortal](fortal.md#search-field). HeroUI's `search_field` is a recipe
+  instead: the app passes its icon and clear button and wires them.
 - **RangeSlider** — `RemixRangeSlider` takes exactly two ordered, parent-owned
   values. Give the lower and upper thumbs distinct `semanticLabels` in that
   order. `onChanged` requests values; the parent decides whether to accept them.
@@ -223,7 +232,8 @@ HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, `dashboard_shell`, and
 - **dashboard_shell** — compound recipe combining `app_bar`, `sidebar`, and
   `sidebar_layout`. Provides slots for brand, search, page title (or custom
   `headerTitle`), account, and header actions. Contains no generated adapter.
-  The HeroUI shell also installs `button` and `search_field`.
+  The Vanilla shell's header search is `search_field`; the HeroUI shell also
+  installs `button` and `search_field`.
 - **dashboard_demo** — showcase recipe assembling the product dashboard
   screens into a runnable demo: Overview, Chat, Customers, Orders, and
   Settings in Vanilla and HeroUI; those plus Analytics, Schedule, an
@@ -334,6 +344,17 @@ for Overlay, Navigator and toast scope placement.
 ## Navigation
 
 
+- **Breadcrumbs** — Remix has no breadcrumb widget; presets compose one from
+  their link. Vanilla's `remix add breadcrumbs` installs
+  `<Prefix>Breadcrumbs(items: [...])` with
+  `<Prefix>BreadcrumbItem(label, {onPressed, semanticLabel})`. A step with
+  `onPressed` is a `<Prefix>Link` (a tab stop that Enter activates); a step
+  without is muted text; the last step is the current page and never a link.
+  The trail stays on one line: steps keep their width while it fits, then
+  share what the chevrons leave, so a short step stays whole and the longer
+  ones ellipsize. The chevrons are outside semantics and mirror in
+  right-to-left text. `semanticLabel`
+  (default `'Breadcrumb'`) names the navigation landmark.
 - **RemixTabs** — the behavioral root; no `style`/`styleSpec`. Takes
   `activationMode` (default automatic). There is no `FortalTabs` — compose
   `RemixTabs` with `FortalTabBar`, `FortalTab`, `FortalTabView`. A

@@ -137,6 +137,80 @@ void main() {
     }
   });
 
+  testWidgets('installed breadcrumbs link earlier steps and end on the page', (
+    tester,
+  ) async {
+    var pressed = 0;
+    await _pumpInScope(
+      tester,
+      AcmeBreadcrumbs(
+        items: [
+          AcmeBreadcrumbItem('Home', onPressed: () => pressed += 1),
+          const AcmeBreadcrumbItem('Breadcrumb'),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+    const theme = AcmeThemeData.light();
+
+    expect(find.byType(AcmeLink), findsOneWidget);
+    expect(
+      _resolvedSpecOf<LinkSpec>(tester).spec.label.spec.style?.color,
+      theme.mutedForeground,
+    );
+    expect(
+      tester.widget<Text>(find.text('Breadcrumb')).style?.color,
+      theme.foreground,
+    );
+    expect(tester.widget<Icon>(find.byType(Icon)).size, 14);
+    await tester.tap(find.text('Home'));
+    await tester.tap(find.text('Breadcrumb'));
+    expect(pressed, 1);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('installed search field clears by button and by Escape', (
+    tester,
+  ) async {
+    final changes = <String>[];
+    var cleared = 0;
+    await _pumpInScope(
+      tester,
+      _overlaid(
+        Center(
+          child: SizedBox(
+            width: 320,
+            child: AcmeSearchField(
+              semanticLabel: 'Search customers',
+              hintText: 'Search customers…',
+              onChanged: changes.add,
+              onCleared: () => cleared += 1,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final field = find.byType(EditableText);
+    expect(tester.getSize(find.byType(AcmeSearchField)).height, 36);
+    expect(find.byType(RemixIconButton), findsNothing);
+
+    await tester.enterText(field, 'ada');
+    await tester.pump();
+    await tester.tap(find.byType(RemixIconButton));
+    await tester.pump();
+    expect(tester.widget<EditableText>(field).controller.text, isEmpty);
+
+    await tester.enterText(field, 'ada');
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+    expect(tester.widget<EditableText>(field).controller.text, isEmpty);
+    expect(changes, ['ada', '', 'ada', '']);
+    expect(cleared, 2);
+    expect(tester.takeException(), isNull);
+  });
+
   group('installed Agent recipes', () {
     Widget scope(Widget child) =>
         AgentGlyphs(builder: acmeAgentGlyph, child: child);

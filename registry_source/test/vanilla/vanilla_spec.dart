@@ -1,8 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import 'support.dart';
 
@@ -440,6 +442,119 @@ final _linkTargets = <SpecTarget>[
   ),
 ];
 
+// -- breadcrumbs --------------------------------------------------------------
+
+/// Pumps a two-step trail, a link and the current page, and reads it.
+SpecTarget _breadcrumbs(
+  String property, {
+  required String source,
+  bool hovered = false,
+  required Object? Function(WidgetTester tester) read,
+  required Object? Function(VanillaThemeData theme) expected,
+}) => SpecTarget._(
+  component: 'breadcrumbs',
+  property: property,
+  source: source,
+  actual: (tester, theme) async {
+    await tester.pumpWidget(
+      VanillaTheme(
+        theme: theme,
+        child: hostOf(
+          Center(
+            child: VanillaBreadcrumbs(
+              items: [
+                VanillaBreadcrumbItem('Home', onPressed: () {}),
+                const VanillaBreadcrumbItem('Breadcrumb'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    if (hovered) {
+      final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(pointer.removePointer);
+      await pointer.addPointer(location: Offset.zero);
+      await pointer.moveTo(tester.getCenter(find.text('Home')));
+      await tester.pumpAndSettle();
+    }
+
+    return read(tester);
+  },
+  expected: expected,
+);
+
+TextStyle? _crumbLink(WidgetTester tester) => tester
+    .widget<StyleSpecProvider<LinkSpec>>(
+      find.byType(StyleSpecProvider<LinkSpec>),
+    )
+    .spec
+    .spec
+    .label
+    .spec
+    .style;
+
+final _breadcrumbsTargets = <SpecTarget>[
+  _breadcrumbs(
+    'link text',
+    source: 'breadcrumb.tsx: BreadcrumbList text-sm text-muted-foreground',
+    read: (tester) {
+      final style = _crumbLink(tester);
+      return (
+        style?.fontSize,
+        style == null ? null : style.fontSize! * style.height!,
+        style?.color,
+      );
+    },
+    expected: (theme) => (14.0, closeTo(20, 1e-9), theme.mutedForeground),
+  ),
+  _breadcrumbs(
+    'link weight and decoration',
+    source: 'breadcrumb.tsx: BreadcrumbLink, a plain `a`',
+    read: (tester) =>
+        (_crumbLink(tester)?.fontWeight, _crumbLink(tester)?.decoration),
+    expected: (_) => (FontWeight.w400, anyOf(isNull, TextDecoration.none)),
+  ),
+  _breadcrumbs(
+    'link hover',
+    hovered: true,
+    source: 'breadcrumb.tsx: BreadcrumbLink hover:text-foreground',
+    read: (tester) =>
+        (_crumbLink(tester)?.color, _crumbLink(tester)?.decoration),
+    expected: (theme) => (theme.foreground, anyOf(isNull, TextDecoration.none)),
+  ),
+  _breadcrumbs(
+    'current page',
+    source: 'breadcrumb.tsx: BreadcrumbPage font-normal text-foreground',
+    read: (tester) {
+      final style = tester.widget<Text>(find.text('Breadcrumb')).style;
+      return (style?.fontSize, style?.fontWeight, style?.color);
+    },
+    expected: (theme) => (14.0, FontWeight.w400, theme.foreground),
+  ),
+  _breadcrumbs(
+    'separator',
+    source: 'breadcrumb.tsx: BreadcrumbSeparator ChevronRight [&>svg]:size-3.5',
+    read: (tester) {
+      final icon = tester.widget<Icon>(find.byIcon(RemixIcons.chevronRight));
+      return (icon.size, icon.color);
+    },
+    expected: (theme) => (14.0, theme.mutedForeground),
+  ),
+  _breadcrumbs(
+    'gap',
+    source: 'breadcrumb.tsx: BreadcrumbList sm:gap-2.5',
+    read: (tester) {
+      final chevron = tester.getRect(find.byIcon(RemixIcons.chevronRight));
+      return (
+        chevron.left - tester.getRect(find.text('Home')).right,
+        tester.getRect(find.text('Breadcrumb')).left - chevron.right,
+      );
+    },
+    expected: (_) => (10.0, 10.0),
+  ),
+];
+
 // -- badge --------------------------------------------------------------------
 
 SpecTarget _badge(
@@ -847,6 +962,167 @@ final _textFieldTargets = <SpecTarget>[
     source: 'input.tsx: focus-visible:border-ring',
     read: (spec) => decorationOf(spec.spec.container)?.border,
     expected: (theme) => _hairline(theme.ring),
+  ),
+];
+
+// -- search field -------------------------------------------------------------
+
+/// Pumps a search field holding a query, so its clear button shows, then
+/// hovers the clear button or focuses the field when asked, and reads it.
+SpecTarget _searchField(
+  String property, {
+  required String source,
+  bool hoverClear = false,
+  bool focusField = false,
+  required Object? Function(WidgetTester tester) read,
+  required Object? Function(VanillaThemeData theme) expected,
+}) => SpecTarget._(
+  component: 'search field',
+  property: property,
+  source: source,
+  actual: (tester, theme) async {
+    final controller = TextEditingController(text: 'ada');
+    addTearDown(controller.dispose);
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      VanillaTheme(
+        theme: theme,
+        child: hostOf(
+          Overlay.wrap(
+            child: Center(
+              child: SizedBox(
+                width: 320,
+                child: VanillaSearchField(
+                  semanticLabel: 'Search',
+                  controller: controller,
+                  focusNode: focusNode,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    if (focusField) {
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+    }
+    if (hoverClear) {
+      final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(pointer.removePointer);
+      await pointer.addPointer(location: Offset.zero);
+      await pointer.moveTo(tester.getCenter(find.byType(RemixIconButton)));
+      await tester.pumpAndSettle();
+    }
+
+    return read(tester);
+  },
+  expected: expected,
+);
+
+TextFieldSpec _searchFieldSpec(WidgetTester tester) => tester
+    .widget<StyleSpecProvider<TextFieldSpec>>(
+      find.byType(StyleSpecProvider<TextFieldSpec>),
+    )
+    .spec
+    .spec;
+
+IconButtonSpec _searchClearSpec(WidgetTester tester) => tester
+    .widget<StyleSpecProvider<IconButtonSpec>>(
+      find.byType(StyleSpecProvider<IconButtonSpec>),
+    )
+    .spec
+    .spec;
+
+final _searchFieldTargets = <SpecTarget>[
+  _searchField(
+    'field box',
+    source:
+        'input-group.tsx: InputGroup h-9 rounded-md border-input dark:bg-input/30',
+    read: (tester) {
+      final box = _searchFieldSpec(tester).container.spec;
+      final decoration = box.decoration as BoxDecoration?;
+      return (
+        box.constraints?.minHeight,
+        decoration?.border,
+        decoration?.borderRadius,
+        decoration?.color,
+      );
+    },
+    expected: (theme) => (
+      36.0,
+      _hairline(theme.input),
+      _rounded(theme, VanillaTokens.radiusMd),
+      _fieldFill(theme),
+    ),
+  ),
+  _searchField(
+    'insets and gap',
+    source:
+        'input-group.tsx: addon pl-3, input pl-2 / pr-2, end addon pr-3 -mr-[0.45rem]',
+    read: (tester) => (
+      _searchFieldSpec(tester).container.spec.padding,
+      _searchFieldSpec(tester).spacing,
+    ),
+    expected: (_) => (const EdgeInsets.fromLTRB(12, 4, 4, 4), 8.0),
+  ),
+  _searchField(
+    'search icon',
+    source:
+        'input-group.tsx: InputGroupAddon text-muted-foreground [&>svg]:size-4',
+    read: (tester) {
+      final icon = find.byIcon(RemixIcons.search);
+      final glyph = tester.widget<RichText>(
+        find.descendant(of: icon, matching: find.byType(RichText)),
+      );
+      return (tester.getSize(icon), glyph.text.style?.color);
+    },
+    expected: (theme) => (const Size.square(16), theme.mutedForeground),
+  ),
+  _searchField(
+    'clear button',
+    source:
+        'input-group.tsx: InputGroupButton icon-xs size-6, ghost, svg size-4',
+    read: (tester) {
+      final spec = _searchClearSpec(tester);
+      return (
+        tester.getSize(find.byType(RemixIconButton)),
+        (spec.container.spec.decoration as BoxDecoration?)?.borderRadius,
+        spec.icon.spec.size,
+        spec.icon.spec.color,
+      );
+    },
+    expected: (theme) => (
+      const Size.square(24),
+      _rounded(theme, VanillaTokens.radiusSm),
+      16.0,
+      theme.mutedForeground,
+    ),
+  ),
+  _searchField(
+    'clear button hover',
+    hoverClear: true,
+    source: 'button.tsx: ghost hover:bg-accent hover:text-accent-foreground',
+    read: (tester) => (
+      (_searchClearSpec(tester).container.spec.decoration as BoxDecoration?)
+          ?.color,
+      _searchClearSpec(tester).icon.spec.color,
+    ),
+    expected: (theme) =>
+        (tint(theme.accent, _isDark(theme) ? 0.5 : 1), theme.accentForeground),
+  ),
+  _searchField(
+    'focus ring',
+    focusField: true,
+    source:
+        'input-group.tsx: control focus-visible ring-[3px] ring-ring/50 border-ring',
+    read: (tester) => (
+      _searchFieldSpec(tester).containerEffects?.outline,
+      (_searchFieldSpec(tester).container.spec.decoration as BoxDecoration?)
+          ?.border,
+    ),
+    expected: (theme) => (_focusRing(theme), _hairline(theme.ring)),
   ),
 ];
 
@@ -2168,10 +2444,12 @@ final vanillaSpecTargets = <SpecTarget>[
   ..._buttonTargets,
   ..._iconButtonTargets,
   ..._linkTargets,
+  ..._breadcrumbsTargets,
   ..._badgeTargets,
   ..._toggleTargets,
   ..._toggleGroupTargets,
   ..._textFieldTargets,
+  ..._searchFieldTargets,
   _target<ComboboxSpec>(
     'combobox',
     'field metrics',

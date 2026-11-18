@@ -19,6 +19,8 @@ import 'package:widgetbook_vanilla/components/avatar.dart'
     as _widgetbook_vanilla_components_avatar;
 import 'package:widgetbook_vanilla/components/badge.dart'
     as _widgetbook_vanilla_components_badge;
+import 'package:widgetbook_vanilla/components/breadcrumbs.dart'
+    as _widgetbook_vanilla_components_breadcrumbs;
 import 'package:widgetbook_vanilla/components/button.dart'
     as _widgetbook_vanilla_components_button;
 import 'package:widgetbook_vanilla/components/calendar.dart'
@@ -65,6 +67,8 @@ import 'package:widgetbook_vanilla/components/range_calendar.dart'
     as _widgetbook_vanilla_components_range_calendar;
 import 'package:widgetbook_vanilla/components/range_slider.dart'
     as _widgetbook_vanilla_components_range_slider;
+import 'package:widgetbook_vanilla/components/search_field.dart'
+    as _widgetbook_vanilla_components_search_field;
 import 'package:widgetbook_vanilla/components/segmented_control.dart'
     as _widgetbook_vanilla_components_segmented_control;
 import 'package:widgetbook_vanilla/components/select.dart'
@@ -137,6 +141,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Badge',
             builder:
                 _widgetbook_vanilla_components_badge.buildVanillaBadgeUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaBreadcrumbs',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Breadcrumbs',
+            builder: _widgetbook_vanilla_components_breadcrumbs
+                .buildVanillaBreadcrumbsUseCase,
           ),
         ],
       ),
@@ -397,6 +411,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'RTL · 200% text',
             builder: _widgetbook_vanilla_components_range_slider
                 .buildVanillaRangeSliderRtlUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaSearchField',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Search Field',
+            builder: _widgetbook_vanilla_components_search_field
+                .buildVanillaSearchFieldUseCase,
           ),
         ],
       ),

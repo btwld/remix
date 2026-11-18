@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
@@ -213,6 +214,164 @@ void main() {
     }
   }
 
+  testWidgets('a breadcrumb trail is one 20px line with 10px gaps', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      host(
+        Center(
+          child: VanillaBreadcrumbs(
+            items: [
+              VanillaBreadcrumbItem('Home', onPressed: () {}),
+              const VanillaBreadcrumbItem('Workspace'),
+              const VanillaBreadcrumbItem('Breadcrumb'),
+            ],
+          ),
+        ),
+      ),
+    );
+    final chevrons = find.byIcon(RemixIcons.chevronRight);
+    final home = tester.getRect(find.text('Home'));
+    final first = tester.getRect(chevrons.first);
+    final workspace = tester.getRect(find.text('Workspace'));
+    final last = tester.getRect(chevrons.last);
+    final page = tester.getRect(find.text('Breadcrumb'));
+
+    expect(tester.getSize(find.byType(VanillaBreadcrumbs)).height, 20);
+    expect(first.size, const Size.square(14));
+    expect(first.left - home.right, 10);
+    expect(workspace.left - first.right, 10);
+    expect(last.left - workspace.right, 10);
+    expect(page.left - last.right, 10);
+    for (final rect in [first, workspace, last, page]) {
+      expect(rect.center.dy, home.center.dy);
+    }
+  });
+
+  group('a breadcrumb trail that does not fit', () {
+    Future<Rect> pumpTrail(
+      WidgetTester tester,
+      List<VanillaBreadcrumbItem> items,
+    ) async {
+      await tester.pumpWidget(
+        host(
+          Center(
+            child: SizedBox(
+              width: 260,
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: VanillaBreadcrumbs(items: items),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+
+      return tester.getRect(find.byType(VanillaBreadcrumbs));
+    }
+
+    bool ellipsized(WidgetTester tester, String label) => tester
+        .renderObject<RenderParagraph>(find.text(label))
+        .didExceedMaxLines;
+
+    testWidgets('keeps a short step whole and gives the rest to the long '
+        'page', (tester) async {
+      const page = 'Customer accounts and billing overview';
+      final trail = await pumpTrail(tester, [
+        VanillaBreadcrumbItem('Home', onPressed: () {}),
+        const VanillaBreadcrumbItem(page),
+      ]);
+      final home = tester.getRect(find.text('Home'));
+      final chevron = tester.getRect(find.byIcon(RemixIcons.chevronRight));
+      final current = tester.getRect(find.text(page));
+
+      expect(ellipsized(tester, 'Home'), isFalse);
+      expect(ellipsized(tester, page), isTrue);
+      expect(trail.width, 260, reason: 'no space is left unused');
+      expect(current.left - chevron.right, 10);
+      expect(current.right, trail.right);
+      expect(home.width + 10 + 14 + 10 + current.width, 260);
+    });
+
+    testWidgets('splits the space evenly between long steps', (tester) async {
+      const parent = 'Northstar workspace administration';
+      const page = 'Customer accounts and billing overview';
+      final trail = await pumpTrail(tester, [
+        VanillaBreadcrumbItem('Home', onPressed: () {}),
+        VanillaBreadcrumbItem(parent, onPressed: () {}),
+        const VanillaBreadcrumbItem(page),
+      ]);
+
+      expect(ellipsized(tester, 'Home'), isFalse);
+      expect(ellipsized(tester, parent), isTrue);
+      expect(ellipsized(tester, page), isTrue);
+      expect(trail.width, 260);
+      expect(
+        tester.getSize(find.text(parent)).width,
+        tester.getSize(find.text(page)).width,
+      );
+    });
+  });
+
+  for (final rtl in [false, true]) {
+    testWidgets('a long breadcrumb trail stays on one line at 200%; RTL=$rtl', (
+      tester,
+    ) async {
+      const first = 'Northstar workspace administration';
+      const page = 'Customer accounts and billing';
+      await tester.pumpWidget(
+        WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          builder: (context, _) => VanillaTheme(
+            child: MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: const TextScaler.linear(2)),
+              child: Directionality(
+                textDirection: rtl ? .rtl : .ltr,
+                child: Center(
+                  child: SizedBox(
+                    width: 240,
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: VanillaBreadcrumbs(
+                        items: [
+                          VanillaBreadcrumbItem(first, onPressed: () {}),
+                          const VanillaBreadcrumbItem(page),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      final trail = tester.getRect(find.byType(VanillaBreadcrumbs));
+      expect(trail.width, lessThanOrEqualTo(240));
+      expect(trail.height, 40, reason: 'one 20px line at 200%');
+      for (final label in [first, page]) {
+        final text = tester.getRect(find.text(label));
+        expect(text.height, 40, reason: label);
+        expect(text.left, greaterThanOrEqualTo(trail.left), reason: label);
+        expect(text.right, lessThanOrEqualTo(trail.right), reason: label);
+        final widget = tester.widget<Text>(find.text(label));
+        expect(widget.maxLines, 1, reason: label);
+        expect(widget.overflow, TextOverflow.ellipsis, reason: label);
+      }
+      final start = rtl ? trail.right : trail.left;
+      expect(
+        (tester.getRect(find.text(first)).center.dx - start).abs(),
+        lessThan((tester.getRect(find.text(page)).center.dx - start).abs()),
+        reason: 'the trail starts at the leading edge',
+      );
+    });
+  }
+
   testWidgets('a dialog is centered and fills at most 512px', (tester) async {
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1;
@@ -357,6 +516,7 @@ void main() {
           children: [
             for (final control in [
               const VanillaTextField(hintText: 'Name'),
+              const VanillaSearchField(semanticLabel: 'Search'),
               VanillaSelect<String>(
                 trigger: const RemixSelectTrigger(placeholder: 'Plan'),
                 items: const [RemixSelectItem(value: 'free', label: 'Free')],
@@ -382,14 +542,87 @@ void main() {
 
     for (final type in [
       VanillaTextField,
+      VanillaSearchField,
       VanillaSelect<String>,
       VanillaCombobox<String>,
       VanillaButton,
       VanillaDatePicker,
     ]) {
-      expect(tester.getSize(find.byType(type)).height, 36, reason: '$type');
+      // `.first`: the search field holds a text field of its own.
+      expect(
+        tester.getSize(find.byType(type).first).height,
+        36,
+        reason: '$type',
+      );
     }
   });
+
+  for (final rtl in [false, true]) {
+    testWidgets(
+      'a search field is as tall as a text field at 200%, with and without '
+      'its clear button; RTL=$rtl',
+      (tester) async {
+        final controller = TextEditingController(text: 'Northstar');
+        addTearDown(controller.dispose);
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            builder: (context, _) => VanillaTheme(
+              child: MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: const TextScaler.linear(2)),
+                child: Directionality(
+                  textDirection: rtl ? .rtl : .ltr,
+                  child: Overlay.wrap(
+                    child: Center(
+                      child: SizedBox(
+                        width: 280,
+                        child: Column(
+                          mainAxisSize: .min,
+                          children: [
+                            const VanillaTextField(hintText: 'Name'),
+                            const VanillaSearchField(
+                              key: ValueKey('empty'),
+                              semanticLabel: 'Search',
+                              hintText: 'Search…',
+                            ),
+                            VanillaSearchField(
+                              key: const ValueKey('query'),
+                              semanticLabel: 'Search',
+                              controller: controller,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(tester.takeException(), isNull);
+        final height = tester
+            .getSize(find.byType(VanillaTextField).first)
+            .height;
+        expect(height, greaterThan(36));
+        for (final key in ['empty', 'query']) {
+          expect(
+            tester.getSize(find.byKey(ValueKey(key))).height,
+            height,
+            reason: key,
+          );
+        }
+        final field = tester.getRect(find.byKey(const ValueKey('query')));
+        final clear = tester.getRect(find.byType(RemixIconButton));
+        expect(clear.size, const Size.square(24));
+        expect(clear.center.dy, field.center.dy);
+        expect(rtl ? clear.left - field.left : field.right - clear.right, 5);
+      },
+    );
+  }
 
   testWidgets('a segmented control stays 36px tall inside a taller row', (
     tester,

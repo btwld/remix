@@ -6,6 +6,7 @@ import '../../../dashboard/dashboard_demo_base.dart';
 import '../../../dashboard/dashboard_demo_chat.dart';
 import '../../../dashboard/dashboard_sample_data.dart';
 import '../../components/avatar.dart';
+import '../../components/breadcrumbs.dart';
 import '../../components/button.dart';
 import '../../components/divider.dart';
 import '../../components/icon_button.dart';
@@ -146,7 +147,12 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
             body: body,
             title: title,
             headerTitle: widget.builtInChrome
-                ? _VanillaBreadcrumb(page: selectedValue)
+                ? VanillaBreadcrumbs(
+                    items: [
+                      VanillaBreadcrumbItem(selectedValue.section.label),
+                      VanillaBreadcrumbItem(selectedValue.label),
+                    ],
+                  )
                 : null,
             brand: widget.brand,
             account:
@@ -424,45 +430,6 @@ class _VanillaBrand extends StatelessWidget {
     style: _textStyle(
       weight: FontWeight.w600,
     ).maxLines(1).softWrap(false).overflow(.ellipsis),
-  );
-}
-
-class _VanillaBreadcrumb extends StatelessWidget {
-  const _VanillaBreadcrumb({required this.page});
-  final RegistryDashboardDemoPage page;
-
-  @override
-  Widget build(BuildContext context) => RowBox(
-    style: FlexBoxStyler()
-        .crossAxisAlignment(.center)
-        .spacing(VanillaTokens.s2),
-    children: [
-      Flexible(
-        child: StyledText(
-          page.section.label,
-          style: _textStyle(
-            muted: true,
-          ).maxLines(1).softWrap(false).overflow(.ellipsis),
-        ),
-      ),
-      Transform.flip(
-        key: const ValueKey('dashboard-breadcrumb-separator'),
-        flipX: Directionality.of(context) == TextDirection.rtl,
-        child: StyledIcon(
-          icon: RemixIcons.chevronRight,
-          style: IconStyler().size(12).color(VanillaTokens.mutedForeground()),
-        ),
-      ),
-      Flexible(
-        child: StyledText(
-          page.label,
-          style: _textStyle(
-            token: VanillaTokens.textBase,
-            weight: FontWeight.w600,
-          ).maxLines(1).softWrap(false).overflow(.ellipsis),
-        ),
-      ),
-    ],
   );
 }
 

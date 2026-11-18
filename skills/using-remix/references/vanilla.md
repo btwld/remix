@@ -93,6 +93,20 @@ families carry over.
   destructive }`; `<Prefix>ButtonSize { small, medium, large }` (32/36/40px).
   Every size sets its label in `textSm`. There is no pressed step: a press
   lands on the hover fill.
+- **Breadcrumbs** — install with `remix add breadcrumbs` (installs `link`).
+  `<Prefix>Breadcrumbs` follows shadcn/ui's Breadcrumb: steps in `textSm`
+  `mutedForeground` at regular weight, a link turning `foreground` under the
+  pointer (no underline) and ringing on keyboard focus, the current page in
+  `foreground`, and a 14px chevron 10px from the steps on each side. It has no
+  `style` parameter or ellipsis item: edit the installed `_linkStyle()` to
+  restyle the links, and compose a `<Prefix>Menu` for a collapsed trail.
+- **Search field** — install with `remix add search_field` (installs
+  `textfield` and `icon_button`). `<Prefix>SearchField` follows shadcn/ui's
+  Input Group: the TextField recipe's 36px box and focus ring, a 16px
+  `mutedForeground` search icon 12px in, and a 24px ghost clear button 4px
+  from the end with the small radius. `style` merges last into the field; edit
+  the installed `_clearButtonStyle()` to restyle the button. The dashboard's
+  customer and header searches use it.
 - **Combobox** — install with `remix add combobox`. `<Prefix>Combobox<T>`
   uses the TextField recipe for the editor and a Select-like rounded, elevated
   popover panel, offset 8px, bounded at 320px high with a 128px width floor.

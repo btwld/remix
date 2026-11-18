@@ -166,17 +166,24 @@ Vanilla also: `calendar`, `range_calendar`, `date_picker`, `date_range_picker`.
 These hand-written composites wire the Vanilla child recipes and have no
 generated part; selection and overlay behavior stay in Remix.
 
+Vanilla also: `breadcrumbs`, a hand-written trail of `link` recipes after
+shadcn/ui's Breadcrumb (depends on `theme` and `link`; no generated part), and
+`search_field`, a stateful text field with a search icon and a clear button
+after shadcn/ui's Input Group (depends on `theme`, `textfield`, and
+`icon_button`; no generated part).
+
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`,
 and the hand-written compositions `avatar_group` (depends on `theme` and
 `avatar`), `breadcrumbs` (depends on `theme`, `link`, `text` and
 `typography`), `search_field` (depends on `theme`, `textfield` and
 `icon_button`) and `surface` (depends on `theme` and `card`).
 
-HeroUI follows HeroUI's names, adding `alert`, `avatar_group`, `breadcrumbs`,
+HeroUI follows HeroUI's names, adding `alert`, `avatar_group`,
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
-`field_layout`, `input_group`, `modal`, `radio_group`, `search_field`,
+`field_layout`, `input_group`, `modal`, `radio_group`,
 `separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
-and `toggle_button_group` to shared names such as `button` and `select`.
+and `toggle_button_group` to shared names such as `button`, `select`,
+`breadcrumbs`, and `search_field`.
 It also ships `icons`, `sidebar`, `sidebar_layout`, `app_bar`,
 `dashboard_shell`, `chart`, `dashboard_demo`, and the Agent items below as
 labelled extensions: HeroUI web has no counterpart to port, so they are
