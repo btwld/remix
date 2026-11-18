@@ -285,6 +285,18 @@ void main() {
     );
   });
 
+  testWidgets('a trail can be const', (tester) async {
+    // The whole trail, not only its items, constructs as a constant.
+    const trail = VanillaBreadcrumbs(
+      items: [VanillaBreadcrumbItem('Settings')],
+    );
+    await tester.pumpWidget(
+      VanillaTheme(child: hostOf(const Center(child: trail))),
+    );
+    expect(find.text('Settings'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('a single step is just the current page', (tester) async {
     await pump(tester, items: const [VanillaBreadcrumbItem('Overview')]);
     expect(chevrons(), findsNothing);

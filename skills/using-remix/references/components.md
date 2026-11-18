@@ -339,8 +339,10 @@ for Overlay, Navigator and toast scope placement.
   `<Prefix>BreadcrumbItem(label, {onPressed, semanticLabel})`. A step with
   `onPressed` is a `<Prefix>Link` (a tab stop that Enter activates); a step
   without is muted text; the last step is the current page and never a link.
-  The trail stays on one line and ellipsizes long steps; the chevrons are
-  outside semantics and mirror in right-to-left text. `semanticLabel`
+  The trail stays on one line: steps keep their width while it fits, then
+  share what the chevrons leave, so a short step stays whole and the longer
+  ones ellipsize. The chevrons are outside semantics and mirror in
+  right-to-left text. `semanticLabel`
   (default `'Breadcrumb'`) names the navigation landmark.
 - **RemixTabs** — the behavioral root; no `style`/`styleSpec`. Takes
   `activationMode` (default automatic). There is no `FortalTabs` — compose

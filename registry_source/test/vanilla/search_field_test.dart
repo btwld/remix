@@ -470,6 +470,88 @@ void main() {
     expect(clearButton(), findsOneWidget, reason: 'the caller has text again');
   });
 
+  testWidgets('typing the first character and clearing keep the same editor', (
+    tester,
+  ) async {
+    await pump(tester, const VanillaSearchField(semanticLabel: 'Search'));
+    await tester.showKeyboard(editable());
+    final editor = tester.state<EditableTextState>(editable());
+
+    // Through the text input channel, as a keyboard delivers it.
+    tester.testTextInput.updateEditingValue(
+      const TextEditingValue(
+        text: 'a',
+        selection: TextSelection.collapsed(offset: 1),
+      ),
+    );
+    await tester.pump();
+    expect(clearButton(), findsOneWidget);
+    expect(tester.state<EditableTextState>(editable()), same(editor));
+    expect(tester.testTextInput.hasAnyClients, isTrue);
+
+    tester.testTextInput.updateEditingValue(TextEditingValue.empty);
+    await tester.pump();
+    expect(clearButton(), findsNothing);
+    expect(tester.state<EditableTextState>(editable()), same(editor));
+
+    tester.testTextInput.enterText('ab');
+    await tester.pump();
+    await tester.tap(clearButton());
+    await tester.pump();
+    expect(clearButton(), findsNothing);
+    expect(tester.state<EditableTextState>(editable()), same(editor));
+    expect(editor.widget.focusNode.hasFocus, isTrue);
+    expect(tester.testTextInput.hasAnyClients, isTrue);
+  });
+
+  testWidgets('the field hands its own controller over to a caller', (
+    tester,
+  ) async {
+    final controller = TextEditingController(text: 'given');
+    addTearDown(controller.dispose);
+    final given = ValueNotifier(false);
+    addTearDown(given.dispose);
+    final changes = <String>[];
+
+    await pump(
+      tester,
+      ValueListenableBuilder<bool>(
+        valueListenable: given,
+        builder: (_, given, _) => VanillaSearchField(
+          semanticLabel: 'Search',
+          controller: given ? controller : null,
+          onChanged: changes.add,
+        ),
+      ),
+    );
+    await tester.enterText(editable(), 'own');
+    await tester.pump();
+    final owned = tester.widget<EditableText>(editable()).controller;
+    expect(owned.text, 'own');
+
+    given.value = true;
+    await tester.pump();
+    expect(
+      tester.widget<EditableText>(editable()).controller,
+      same(controller),
+    );
+    expect(controller.text, 'given', reason: 'the caller keeps its own text');
+    expect(clearButton(), findsOneWidget);
+
+    // The field now follows the caller's controller, not its own.
+    owned.text = '';
+    await tester.pump();
+    expect(clearButton(), findsOneWidget);
+    controller.clear();
+    await tester.pump();
+    expect(clearButton(), findsNothing);
+    await tester.enterText(editable(), 'next');
+    await tester.pump();
+    expect(controller.text, 'next');
+    expect(clearButton(), findsOneWidget);
+    expect(changes, ['own', 'next']);
+  });
+
   testWidgets('a disabled field fades as the text field does', (tester) async {
     await pump(
       tester,

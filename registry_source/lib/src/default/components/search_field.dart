@@ -13,8 +13,8 @@ import 'textfield.dart';
 /// A composition of [VanillaTextField] and [VanillaIconButton] in the shape
 /// of shadcn/ui's Input Group with a search addon and an `InputGroupButton`.
 /// The field keeps the TextField recipe's 36px height, border, focus ring,
-/// error, and disabled treatment. The icon sits 12px in and 8px before the
-/// text in the field's muted accessory color. The clear button, a 24px ghost
+/// and disabled treatment. The icon sits 12px in and 8px before the text in
+/// the field's muted accessory color. The clear button, a 24px ghost
 /// square 4px from the end, shows only while the field is enabled, editable,
 /// and not empty.
 ///

@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
@@ -245,6 +246,72 @@ void main() {
     for (final rect in [first, workspace, last, page]) {
       expect(rect.center.dy, home.center.dy);
     }
+  });
+
+  group('a breadcrumb trail that does not fit', () {
+    Future<Rect> pumpTrail(
+      WidgetTester tester,
+      List<VanillaBreadcrumbItem> items,
+    ) async {
+      await tester.pumpWidget(
+        host(
+          Center(
+            child: SizedBox(
+              width: 260,
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: VanillaBreadcrumbs(items: items),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+
+      return tester.getRect(find.byType(VanillaBreadcrumbs));
+    }
+
+    bool ellipsized(WidgetTester tester, String label) => tester
+        .renderObject<RenderParagraph>(find.text(label))
+        .didExceedMaxLines;
+
+    testWidgets('keeps a short step whole and gives the rest to the long '
+        'page', (tester) async {
+      const page = 'Customer accounts and billing overview';
+      final trail = await pumpTrail(tester, [
+        VanillaBreadcrumbItem('Home', onPressed: () {}),
+        const VanillaBreadcrumbItem(page),
+      ]);
+      final home = tester.getRect(find.text('Home'));
+      final chevron = tester.getRect(find.byIcon(RemixIcons.chevronRight));
+      final current = tester.getRect(find.text(page));
+
+      expect(ellipsized(tester, 'Home'), isFalse);
+      expect(ellipsized(tester, page), isTrue);
+      expect(trail.width, 260, reason: 'no space is left unused');
+      expect(current.left - chevron.right, 10);
+      expect(current.right, trail.right);
+      expect(home.width + 10 + 14 + 10 + current.width, 260);
+    });
+
+    testWidgets('splits the space evenly between long steps', (tester) async {
+      const parent = 'Northstar workspace administration';
+      const page = 'Customer accounts and billing overview';
+      final trail = await pumpTrail(tester, [
+        VanillaBreadcrumbItem('Home', onPressed: () {}),
+        VanillaBreadcrumbItem(parent, onPressed: () {}),
+        const VanillaBreadcrumbItem(page),
+      ]);
+
+      expect(ellipsized(tester, 'Home'), isFalse);
+      expect(ellipsized(tester, parent), isTrue);
+      expect(ellipsized(tester, page), isTrue);
+      expect(trail.width, 260);
+      expect(
+        tester.getSize(find.text(parent)).width,
+        tester.getSize(find.text(page)).width,
+      );
+    });
   });
 
   for (final rtl in [false, true]) {

@@ -835,10 +835,19 @@ void main() {
           // Vanilla's trail is the `breadcrumbs` component, whose chevron
           // carries no dashboard key.
           final separator = preset == .defaultPreset
-              ? find.descendant(
-                  of: find.byType(VanillaBreadcrumbs),
-                  matching: find.byType(Transform),
-                )
+              ? find
+                    .ancestor(
+                      of: find.descendant(
+                        of: find.byType(VanillaBreadcrumbs),
+                        matching: find.byWidgetPredicate(
+                          (widget) =>
+                              widget is StyledIcon &&
+                              widget.icon == RemixIcons.chevronRight,
+                        ),
+                      ),
+                      matching: find.byType(Transform),
+                    )
+                    .first
               : find.byKey(const ValueKey('dashboard-breadcrumb-separator'));
           expect(separator, findsOneWidget);
           expect(
