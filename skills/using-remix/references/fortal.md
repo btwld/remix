@@ -216,3 +216,14 @@ See [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar
 [Range Calendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx),
 [Date Picker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)
 and [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).
+
+## Avatar group
+
+`remix add avatar_group` installs `<Prefix>AvatarGroup`, a hand-written row of
+`<Prefix>Avatar`s with no generated part. Pass
+`<Prefix>AvatarGroupMember(name, initials: ..., image: ..., accent: ...)`
+values; each member is a soft avatar under its own accent. `size: .size1`–`.size4`
+picks avatar sizes 1–4 (default size2) and the gap; `max` (default 4) collapses
+the rest into a solid `+N`. The avatars never overlap, because Fortal has no
+seam ring or corner cut to separate them. The row is one semantics node
+naming every member unless you pass `semanticLabel`.

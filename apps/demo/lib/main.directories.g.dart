@@ -13,6 +13,8 @@
 import 'package:demo/components/accordion.dart' as _demo_components_accordion;
 import 'package:demo/components/app_bar.dart' as _demo_components_app_bar;
 import 'package:demo/components/avatar.dart' as _demo_components_avatar;
+import 'package:demo/components/avatar_group.dart'
+    as _demo_components_avatar_group;
 import 'package:demo/components/badge.dart' as _demo_components_badge;
 import 'package:demo/components/button.dart' as _demo_components_button;
 import 'package:demo/components/calendar.dart' as _demo_components_calendar;
@@ -66,6 +68,20 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: 'components',
     children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'FortalAvatarGroup',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Avatar Group Component',
+            builder: _demo_components_avatar_group.buildAvatarGroupUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder:
+                _demo_components_avatar_group.buildAvatarGroupCatalogUseCase,
+          ),
+        ],
+      ),
       _widgetbook.WidgetbookComponent(
         name: 'FortalCode',
         useCases: [

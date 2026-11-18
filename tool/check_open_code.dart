@@ -171,6 +171,7 @@ const _fortalRegistryItems = <String>[
   'accordion',
   'app_bar',
   'avatar',
+  'avatar_group',
   'badge',
   'base_button',
   'button',

@@ -261,6 +261,26 @@ and rows that `isOptionDisabled` marks have no disabled style yet. No preset
 behavior is added. Test coverage includes
 both modes, every accent, field matrices, contrast and RTL at 200% text.
 
+## Avatar group
+
+Avatar group promotes the dashboard's avatar stack into the registry. It is a
+hand-written row of the avatar recipe, so it adds no colors or radii of its own.
+`FortalAvatarGroupSize` size1–size4 select avatar sizes 1–4 (24/32/40/48px),
+with a space1 gap at sizes 1–2 and space2 at sizes 3–4. Each
+`FortalAvatarGroupMember` is a soft avatar showing its image over its initials,
+under its own accent when it names one. Members past `max` (default 4) collapse
+into one solid `+N` avatar in the ambient accent. Two-character labels, `+N`
+included, use the two-character fallback type.
+
+The avatars never overlap. An overlapping stack needs a seam to keep each
+avatar distinct: a page-colored ring, which is a shadow outside a floating
+layer, or a cut that follows the next avatar's corner, which would read the
+radius the avatar recipe keeps private. Fortal therefore spaces them. The row
+is one semantics node labelled with every member's name, the counted ones
+included, or with `semanticLabel`; it has no focus stop. `highContrast`
+reaches every avatar, and a caller `style` merges last into each. Tests cover
+both modes, per-member accents, images, the count, RTL order and 200% text.
+
 ## Enforcement
 
 - `tool/check_fortal.dart` (`melos run fortal:check`) holds the catalog against

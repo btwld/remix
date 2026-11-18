@@ -31,6 +31,7 @@ import 'components/heading.dart' as heading;
 import 'components/code.dart' as code;
 import 'components/kbd.dart' as kbd;
 import 'components/avatar.dart' as avatar;
+import 'components/avatar_group.dart' as avatar_group;
 import 'components/badge.dart' as badge;
 import 'components/callout.dart' as callout;
 import 'components/progress.dart' as progress;
@@ -260,6 +261,11 @@ final _families = <_Family>[
   (id: 'code', group: 'Typography', build: code.buildCodeCatalogUseCase),
   (id: 'kbd', group: 'Typography', build: kbd.buildKbdCatalogUseCase),
   (id: 'avatar', group: 'Typography', build: avatar.buildAvatarCatalogUseCase),
+  (
+    id: 'avatar_group',
+    group: 'Typography',
+    build: avatar_group.buildAvatarGroupCatalogUseCase,
+  ),
   (id: 'badge', group: 'Typography', build: badge.buildBadgeCatalogUseCase),
   (id: 'callout', group: 'Feedback', build: callout.buildCalloutCatalogUseCase),
   (
@@ -692,7 +698,12 @@ class PolishTypography extends StatelessWidget {
         ])
           token: token.resolve(context).copyWith(fontFamily: fontFamily),
       },
-      child: child,
+      // A nested FortalTheme, such as a per-member accent, resolves its own
+      // tokens without the overrides above; its text inherits this family.
+      child: DefaultTextStyle.merge(
+        style: TextStyle(fontFamily: fontFamily),
+        child: child,
+      ),
     );
   }
 }

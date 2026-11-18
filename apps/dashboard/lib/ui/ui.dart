@@ -4,6 +4,7 @@ library;
 export 'components/accordion.dart';
 export 'components/app_bar.dart';
 export 'components/avatar.dart';
+export 'components/avatar_group.dart';
 export 'components/badge.dart';
 export 'components/base_button.dart';
 export 'components/button.dart';

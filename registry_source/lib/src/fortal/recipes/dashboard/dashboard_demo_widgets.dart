@@ -532,46 +532,6 @@ class FortalEditionThumbnail extends StatelessWidget {
   }
 }
 
-/// A row of small avatars, each tinted with its member's accent. Members past
-/// [limit] collapse into a count.
-class FortalAvatarStack extends StatelessWidget {
-  const FortalAvatarStack({super.key, required this.members, this.limit = 4});
-
-  /// The people shown, in order.
-  final List<FortalDashboardMember> members;
-
-  /// How many avatars to show before the rest collapse into a count.
-  final int limit;
-
-  @override
-  Widget build(BuildContext context) {
-    final rest = members.length - limit;
-    return Semantics(
-      label: members.map((member) => member.name).join(', '),
-      container: true,
-      child: ExcludeSemantics(
-        child: RowBox(
-          style: FlexBoxStyler()
-              .mainAxisSize(.min)
-              .spacing(FortalTokens.space1()),
-          children: [
-            for (final member in members.take(limit))
-              FortalAccentScope(
-                accent: member.accent,
-                child: FortalAvatar(
-                  label: member.initials,
-                  size: .size1,
-                  fallbackLength: 2,
-                ),
-              ),
-            if (rest > 0) FortalAvatar.solid(label: '+$rest', size: .size1),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 /// A row of underlined tabs that filters the list below it.
 ///
 /// A segmented control suits two or three short options. Past that its

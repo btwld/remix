@@ -129,6 +129,10 @@ String _render(Map<String, Object?> manifest, Directory packageRoot) {
   return buffer.toString();
 }
 
+/// Fortal compositions with no Remix component page of their own, filed under
+/// the sidebar group they belong with.
+const _unpagedFamilies = {'avatar_group': 'Data display'};
+
 /// Reuse sidebar categories and fail if a new family has no navigation home.
 Map<String, List<Map<String, Object?>>> _categories(
   List<Map<String, Object?>> families,
@@ -154,6 +158,10 @@ Map<String, List<Map<String, Object?>>> _categories(
         if (remaining.remove('range_slider') case final range?)
           members.add(range);
       }
+    }
+    for (final entry in _unpagedFamilies.entries) {
+      if (entry.value != group['group']) continue;
+      if (remaining.remove(entry.key) case final family?) members.add(family);
     }
     if (members.isNotEmpty) result[group['group']! as String] = members;
   }

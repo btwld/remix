@@ -148,6 +148,40 @@
       ]
     },
     {
+      "id": "avatar_group",
+      "fortalType": "FortalAvatarGroup",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4"
+          ],
+          "default": "size2"
+        }
+      },
+      "defaults": {
+        "max": 4,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "image",
+        "overflow",
+        "highContrast",
+        "rtl"
+      ],
+      "tests": [
+        "test/components/avatar_group/avatar_group_fortal_test.dart"
+      ]
+    },
+    {
       "id": "badge",
       "fortalType": "FortalBadge",
       "enums": {

@@ -1096,7 +1096,17 @@ class FortalTeamCard extends StatelessWidget {
           FortalCardHeader(
             title: 'Team',
             description: '$online of ${team.length} online now',
-            trailing: FortalAvatarStack(members: team),
+            trailing: FortalAvatarGroup(
+              size: .size1,
+              members: [
+                for (final member in team)
+                  FortalAvatarGroupMember(
+                    member.name,
+                    initials: member.initials,
+                    accent: member.accent,
+                  ),
+              ],
+            ),
           ),
           for (final member in team.take(3))
             RowBox(

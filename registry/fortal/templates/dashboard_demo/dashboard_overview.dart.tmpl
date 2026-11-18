@@ -1096,7 +1096,17 @@ class {{typePrefix}}TeamCard extends StatelessWidget {
           {{typePrefix}}CardHeader(
             title: 'Team',
             description: '$online of ${team.length} online now',
-            trailing: {{typePrefix}}AvatarStack(members: team),
+            trailing: {{typePrefix}}AvatarGroup(
+              size: .size1,
+              members: [
+                for (final member in team)
+                  {{typePrefix}}AvatarGroupMember(
+                    member.name,
+                    initials: member.initials,
+                    accent: member.accent,
+                  ),
+              ],
+            ),
           ),
           for (final member in team.take(3))
             RowBox(

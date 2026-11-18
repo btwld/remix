@@ -103,6 +103,16 @@ items:
     exports:
       - components/avatar.dart
 
+  avatar_group:
+    registryDependencies:
+      - theme
+      - avatar
+    files:
+      - source: templates/avatar_group/avatar_group.dart.tmpl
+        target: "@ui/components/avatar_group.dart"
+    exports:
+      - components/avatar_group.dart
+
   badge:
     registryDependencies:
       - theme
@@ -276,6 +286,7 @@ items:
       - agent_glyphs_recipe
       - answer_recipe
       - avatar
+      - avatar_group
       - badge
       - button
       - calendar

@@ -1076,7 +1076,17 @@ class UiTeamCard extends StatelessWidget {
           UiCardHeader(
             title: 'Team',
             description: '$online of ${team.length} online now',
-            trailing: UiAvatarStack(members: team),
+            trailing: UiAvatarGroup(
+              size: .size1,
+              members: [
+                for (final member in team)
+                  UiAvatarGroupMember(
+                    member.name,
+                    initials: member.initials,
+                    accent: member.accent,
+                  ),
+              ],
+            ),
           ),
           for (final member in team.take(3))
             RowBox(

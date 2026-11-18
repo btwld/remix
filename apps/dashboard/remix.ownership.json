@@ -6,6 +6,7 @@
     "uiPath": "lib/ui"
   },
   "targets": {
+    "lib/ui/components/avatar_group.dart": "btwld/remix/registry#fortal/avatar_group",
     "lib/ui/components/base_button.dart": "btwld/remix/registry#fortal/base_button",
     "lib/ui/components/button.dart": "btwld/remix/registry#fortal/button",
     "lib/ui/components/button.g.dart": "btwld/remix/registry#fortal/button",

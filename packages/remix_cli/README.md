@@ -19,8 +19,8 @@ core Remix component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button
 `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`, `toggle`,
 `toggle_group`, and `tooltip`, each with a `theme` dependency. Vanilla also
 ships `combobox`, with `theme` and `textfield` dependencies. The Fortal
-preset also includes `base_button`, `code`, `heading`, `kbd`, `text`, and
-`typography`. Vanilla also provides `range_slider`, which installs
+preset also includes `base_button`, `code`, `heading`, `kbd`, `text`,
+`typography`, and `avatar_group`, a spaced row of `avatar`s. Vanilla also provides `range_slider`, which installs
 `slider` and generates a two-bound `<Prefix>RangeSlider`. The `data_table` item
 uses `checkbox`, `icon_button`, and `select` for its controls; `toast` uses `button` and `icon_button` for its
 action and close control. The default `sidebar` item uses the application's
