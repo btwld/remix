@@ -21,6 +21,7 @@ export 'components/dialog.dart';
 export 'components/disclosure.dart';
 export 'components/divider.dart';
 export 'components/icon_button.dart';
+export 'components/kbd.dart';
 export 'components/link.dart';
 export 'components/menu.dart';
 export 'components/popover.dart';

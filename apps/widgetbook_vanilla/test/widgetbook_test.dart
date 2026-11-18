@@ -35,8 +35,8 @@ void main() {
 
   final useCases = _collectUseCases(directories);
 
-  test('catalog registers all 50 Vanilla component use cases', () {
-    expect(useCases, hasLength(50));
+  test('catalog registers all 51 Vanilla component use cases', () {
+    expect(useCases, hasLength(51));
   });
 
   for (final entry in useCases) {

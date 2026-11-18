@@ -16,6 +16,8 @@
     "lib/ui/components/date_range_picker.dart": "btwld/remix/registry#vanilla/date_range_picker",
     "lib/ui/components/icon_button.dart": "btwld/remix/registry#vanilla/icon_button",
     "lib/ui/components/icon_button.g.dart": "btwld/remix/registry#vanilla/icon_button",
+    "lib/ui/components/kbd.dart": "btwld/remix/registry#vanilla/kbd",
+    "lib/ui/components/kbd.g.dart": "btwld/remix/registry#vanilla/kbd",
     "lib/ui/components/link.dart": "btwld/remix/registry#vanilla/link",
     "lib/ui/components/link.g.dart": "btwld/remix/registry#vanilla/link",
     "lib/ui/components/popover.dart": "btwld/remix/registry#vanilla/popover",

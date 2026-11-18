@@ -74,6 +74,7 @@ The installer rejects older resolved versions before it writes source.
 | `disclosure` | `UiDisclosure` | — |
 | `divider` | `UiDivider` | — |
 | `icon_button` | `UiIconButton` | variant, size |
+| `kbd` | `UiKbd`, `UiKbdGroup` (Vanilla) | variant |
 | `link` | `UiLink` | — |
 | `menu` | `UiMenu` | — |
 | `popover` | `UiPopover` | — |
@@ -106,11 +107,16 @@ page as plain text, and a navigation landmark around it. The Vanilla
 with a search icon and a clear button that shows for text, clears on Escape,
 and owns its controller when you pass none. The Vanilla `dashboard_shell`
 header search and the demo's customer search use it.
+`kbd` is a generated text recipe, one key drawn as a key cap, beside a
+hand-written `UiKbdGroup` that sets the keys of a shortcut 4px apart and reads
+them as one phrase. Its `tooltip` variant inverts the cap for a tooltip's
+content.
 
 The `fortal` catalog contains the items above and adds `base_button`,
-`code`, `heading`, `kbd`, `text`, `typography`, `avatar_group`, and
-`surface`. `base_button` and `typography` are shared authored recipes that
-arrive transitively with the components that use them. Fortal's own
+`code`, `heading`, `text`, `typography`, `avatar_group`, and `surface`.
+Fortal's `kbd` is one key with a size axis and no group. `base_button` and
+`typography` are shared authored recipes that arrive transitively with the
+components that use them. Fortal's own
 `avatar_group` (`UiAvatarGroup`, size axis; installs `avatar`),
 `breadcrumbs` (`UiBreadcrumbs`, size axis; installs `link` and `text`),
 `search_field` (`UiSearchField`, variant and size axes; installs `textfield`

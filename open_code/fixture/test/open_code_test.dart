@@ -211,6 +211,31 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('installed kbd draws key caps and groups a shortcut', (
+    tester,
+  ) async {
+    await _pumpInScope(
+      tester,
+      const AcmeKbdGroup(children: [AcmeKbd('Ctrl'), AcmeKbd.tooltip('B')]),
+    );
+    const theme = AcmeThemeData.light();
+    Box cap(String key) => tester.widget<Box>(
+      find.ancestor(of: find.text(key), matching: find.byType(Box)).first,
+    );
+
+    expect(
+      (cap('Ctrl').styleSpec!.spec.decoration! as BoxDecoration).color,
+      theme.muted,
+    );
+    expect(
+      tester.widget<Text>(find.text('Ctrl')).style?.color,
+      theme.mutedForeground,
+    );
+    expect(tester.widget<Text>(find.text('B')).style?.color, theme.background);
+    expect(tester.getSize(find.byType(AcmeKbdGroup)).height, 20);
+    expect(tester.takeException(), isNull);
+  });
+
   group('installed Agent recipes', () {
     Widget scope(Widget child) =>
         AgentGlyphs(builder: acmeAgentGlyph, child: child);

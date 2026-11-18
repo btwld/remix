@@ -389,10 +389,13 @@ for Overlay, Navigator and toast scope placement.
 ## Typography
 
 
-`FortalText`, `FortalHeading`, `FortalCode`, and `FortalKbd` exist only in
-the Fortal preset. `RemixLink` is base Remix — the Vanilla preset also ships
-a `link` item generating `<Prefix>Link`, and Fortal ships `FortalLink`. See
-[Fortal typography](fortal.md#typography).
+`FortalText`, `FortalHeading`, and `FortalCode` exist only in the Fortal
+preset. Both Fortal and Vanilla ship `kbd`: `FortalKbd` takes Fortal's size
+axis, and Vanilla's `<Prefix>Kbd` a `muted` or `tooltip` variant, with
+`<Prefix>KbdGroup` for the keys of one shortcut. `RemixLink` is base Remix —
+the Vanilla preset also ships a `link` item generating `<Prefix>Link`, and
+Fortal ships `FortalLink`. See [Fortal typography](fortal.md#typography) and
+[Vanilla](vanilla.md#components).
 
 ### HeroUI calendar family
 

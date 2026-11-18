@@ -107,6 +107,16 @@ families carry over.
   from the end with the small radius. `style` merges last into the field; edit
   the installed `_clearButtonStyle()` to restyle the button. The dashboard's
   customer and header searches use it.
+- **Kbd** — install with `remix add kbd`. `<Prefix>Kbd('K')` follows
+  shadcn/ui's Kbd: `textXs` at medium weight in `mutedForeground` on a `muted`
+  cap with the small radius, at least 20px square and 4px beside the label.
+  The cap is the line plus 2px above and below, so it grows with the text
+  scale. `<Prefix>Kbd.tooltip` is the inverted cap for a tooltip's content,
+  which shadcn/ui applies through the ancestor and a recipe cannot.
+  `<Prefix>KbdGroup(children: [...])` sets a shortcut's keys 4px apart and
+  reads them as one phrase. A key is plain text to assistive technology; name
+  a symbol through `style: TextStyler().semanticsLabel('Command')`. Keys are
+  text, and Geist has no ⌘, ⌥, ⌃, or ⏎, so the platform font draws those.
 - **Combobox** — install with `remix add combobox`. `<Prefix>Combobox<T>`
   uses the TextField recipe for the editor and a Select-like rounded, elevated
   popover panel, offset 8px, bounded at 320px high with a 128px width floor.

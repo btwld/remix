@@ -172,6 +172,9 @@ shadcn/ui's Breadcrumb (depends on `theme` and `link`; no generated part), and
 after shadcn/ui's Input Group (depends on `theme`, `textfield`, and
 `icon_button`; no generated part).
 
+Vanilla also: `kbd`, a key cap after shadcn/ui's Kbd, with a hand-written
+`<Prefix>KbdGroup` for the keys of one shortcut (depends on `theme`).
+
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`,
 and the hand-written compositions `avatar_group` (depends on `theme` and
 `avatar`), `breadcrumbs` (depends on `theme`, `link`, `text` and

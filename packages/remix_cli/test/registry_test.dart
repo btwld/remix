@@ -889,6 +889,7 @@ const _componentSurfaces =
         widgets: ['IconButton'],
         types: ['IconButtonVariant', 'IconButtonSize'],
       ),
+      'kbd': (widgets: ['Kbd'], types: ['KbdVariant']),
       'link': (widgets: ['Link'], types: []),
       'menu': (widgets: ['Menu'], types: []),
       'popover': (widgets: ['Popover'], types: []),

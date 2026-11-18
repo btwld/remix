@@ -1,0 +1,97 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/effects.dart';
+import '../theme/tokens.dart';
+
+part 'kbd.g.dart';
+
+/// Where a key cap sits, which decides its colors.
+enum VanillaKbdVariant {
+  /// On the page, a card, or a popover: a `muted` cap under `mutedForeground`
+  /// text.
+  muted,
+
+  /// Inside a tooltip's content, which inverts the page: `background` at 20%
+  /// (10% in the dark theme) under `background` text.
+  tooltip,
+}
+
+/// The application's Kbd recipe: one keyboard key drawn as a key cap.
+///
+/// `textXs` at medium weight on a `radiusSm` cap at least 20px square, with
+/// 4px beside the label. The cap is the 16px line plus 2px above and below,
+/// so it grows with the text scale instead of clipping it. Put the keys of
+/// one shortcut in a [VanillaKbdGroup].
+///
+/// Assistive technology reads the key as the text it shows. Name a symbol
+/// key through [style]:
+///
+/// ```dart
+/// VanillaKbd('⌘', style: TextStyler().semanticsLabel('Command'))
+/// ```
+@MixWidget()
+TextStyler vanillaKbdStyle({
+  VanillaKbdVariant variant = .muted,
+  TextStyler style = const TextStyler.create(),
+}) {
+  final (:fill, :foreground) = switch (variant) {
+    .muted => (
+      fill: VanillaTokens.muted(),
+      foreground: VanillaTokens.mutedForeground(),
+    ),
+    .tooltip => (
+      fill: vanillaTint(VanillaTokens.background, 0.2, dark: 0.1)(),
+      foreground: VanillaTokens.background(),
+    ),
+  };
+
+  return TextStyler()
+      .style(VanillaTokens.textXs.mix())
+      .fontWeight(FontWeight.w500)
+      .color(foreground)
+      // Centers a one-character key inside the 20px minimum width.
+      .textAlign(.center)
+      .wrap(
+        .box(
+          BoxStyler()
+              .minWidth(VanillaTokens.s5)
+              .padding(
+                .symmetric(
+                  horizontal: VanillaTokens.s1,
+                  vertical: VanillaTokens.s0_5,
+                ),
+              )
+              .borderRadius(.all(VanillaTokens.radiusSm()))
+              .color(fill),
+        ),
+      )
+      .merge(style);
+}
+
+/// The keys of one shortcut, such as Ctrl and B, 4px apart.
+///
+/// Assistive technology reads the group as one phrase rather than one key at
+/// a time. Text between the keys, such as a `+`, is a child like the keys.
+///
+/// ```dart
+/// VanillaKbdGroup(children: [VanillaKbd('Ctrl'), VanillaKbd('B')])
+/// ```
+class VanillaKbdGroup extends StatelessWidget {
+  const VanillaKbdGroup({super.key, required this.children});
+
+  /// The keys, and any text between them, in reading order.
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => MergeSemantics(
+    child: RowBox(
+      style: FlexBoxStyler()
+          .mainAxisSize(.min)
+          .crossAxisAlignment(.center)
+          .spacing(VanillaTokens.s1),
+      children: children,
+    ),
+  );
+}

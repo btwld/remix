@@ -34,6 +34,7 @@ export 'src/default/components/dialog.dart';
 export 'src/default/components/disclosure.dart';
 export 'src/default/components/divider.dart';
 export 'src/default/components/icon_button.dart';
+export 'src/default/components/kbd.dart';
 export 'src/default/components/link.dart';
 export 'src/default/components/menu.dart';
 export 'src/default/components/popover.dart';

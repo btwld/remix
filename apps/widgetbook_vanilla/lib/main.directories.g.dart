@@ -53,6 +53,8 @@ import 'package:widgetbook_vanilla/components/divider.dart'
     as _widgetbook_vanilla_components_divider;
 import 'package:widgetbook_vanilla/components/icon_button.dart'
     as _widgetbook_vanilla_components_icon_button;
+import 'package:widgetbook_vanilla/components/kbd.dart'
+    as _widgetbook_vanilla_components_kbd;
 import 'package:widgetbook_vanilla/components/link.dart'
     as _widgetbook_vanilla_components_link;
 import 'package:widgetbook_vanilla/components/menu.dart'
@@ -321,6 +323,15 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Icon Button',
             builder: _widgetbook_vanilla_components_icon_button
                 .buildVanillaIconButtonUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaKbd',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Kbd',
+            builder: _widgetbook_vanilla_components_kbd.buildVanillaKbdUseCase,
           ),
         ],
       ),

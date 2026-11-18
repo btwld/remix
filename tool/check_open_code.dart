@@ -92,6 +92,7 @@ const _defaultRegistryItems = <String>[
   'disclosure',
   'divider',
   'icon_button',
+  'kbd',
   'link',
   'menu',
   'popover',
