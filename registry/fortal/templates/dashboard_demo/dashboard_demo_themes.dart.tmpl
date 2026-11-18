@@ -247,7 +247,7 @@ class {{typePrefix}}PaletteCard extends StatelessWidget {
         '${selected ? ', in use' : ''}';
 
     return switch (onPressed) {
-      final onPressed? => {{typePrefix}}PressableSurface(
+      final onPressed? => {{typePrefix}}Surface(
         onPressed: onPressed,
         semanticLabel: label,
         padded: false,
@@ -272,7 +272,7 @@ class _BrandPaletteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => {{typePrefix}}Surface(
     key: const ValueKey('palette-brand'),
-    emphasis: .quiet,
+    variant: .quiet,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.start)

@@ -216,3 +216,54 @@ See [Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar
 [Range Calendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx),
 [Date Picker](https://github.com/btwld/remix/blob/main/docs/components/date_picker.mdx)
 and [Date Range Picker](https://github.com/btwld/remix/blob/main/docs/components/date_range_picker.mdx).
+
+## Avatar group
+
+`remix add avatar_group` installs `<Prefix>AvatarGroup`, a hand-written row of
+`<Prefix>Avatar`s with no generated part. Pass
+`<Prefix>AvatarGroupMember(name, initials: ..., image: ..., accent: ...)`
+values; each member is a soft avatar under its own accent. `size: .size1`–`.size4`
+picks avatar sizes 1–4 (default size2) and the gap. `max` (default 4) counts
+every visible slot: more members than `max` show `max - 1` avatars and a solid
+`+N` for the rest, capped at `99+`. The avatars never overlap, because Fortal has no
+seam ring or corner cut to separate them. The row is one semantics node
+naming every member unless you pass `semanticLabel`.
+
+## Breadcrumbs
+
+`remix add breadcrumbs` installs `<Prefix>Breadcrumbs`, a one-line trail of
+`<Prefix>BreadcrumbItem(label, onPressed: ..., semanticLabel: ...)` steps with
+`size: .size1`–`.size3` (default size2). A step with `onPressed` is a
+`<Prefix>Link`, with its focus ring and Enter activation; a step without one is
+muted text. The last step is the current page in strong medium text and is
+never a link. Chevrons mirror in right-to-left text and are hidden from
+assistive technology. Steps keep their width while the trail fits; past
+that, short steps stay whole and the longer ones ellipsize. The trail is a
+navigation landmark named "Breadcrumb"; pass a localized `semanticLabel`.
+
+## Search field
+
+`remix add search_field` installs `<Prefix>SearchField`, a stateful
+composition over `<Prefix>TextField` with the same `variant` (`.surface`,
+`.soft`) and `size` (`.size1`–`.size3`, default size2), so it matches a text
+field's height and look. `semanticLabel` is required; there is no label or
+helper text. It owns a controller and focus node only when you pass none, and
+defaults `textInputAction` to search. The clear button appears while the field
+is enabled, editable and not empty; it clears, calls `onChanged('')` and
+`onCleared`, and refocuses the field. It is an overlay centred in the field's
+last 40px, so a 24/32px field keeps its height, and the text stops where its
+target starts. It is no Tab stop: Escape clears instead, and holding it clears
+once without closing a dialog. On an empty field Escape passes on (a dialog
+still closes); during input-method composition it is left to the IME.
+Localize `clearSemanticLabel`.
+
+## Surface
+
+`remix add surface` installs `<Prefix>Surface` and `<prefix>SurfaceStyle()`,
+the card recipe at four levels of emphasis: `.surface` (the card), `.soft`
+(accent wash), `.quiet` (faint neutral wash) and `.inverse` (the card in the
+opposite appearance, for the one block a page leads with; everything inside
+resolves in that appearance). Sizes `.size1`–`.size5` take the card's padding
+and corners (default size2), and `padded: false` runs content to the frame.
+None casts a shadow. With `onPressed` the whole surface is one button and its
+required `semanticLabel` replaces the child's semantics.

@@ -11,6 +11,7 @@ import 'components/toggle.dart' as toggle;
 import 'components/toggle_group.dart' as toggle_group;
 import 'components/tabs.dart' as tabs;
 import 'components/link.dart' as link;
+import 'components/breadcrumbs.dart' as breadcrumbs;
 import 'components/checkbox.dart' as checkbox;
 import 'components/radio.dart' as radio;
 import 'components/switch.dart' as switch_story;
@@ -19,8 +20,10 @@ import 'components/select.dart' as select;
 import 'components/combobox.dart' as combobox;
 import 'components/segmented_control.dart' as segmented_control;
 import 'components/textfield.dart' as textfield;
+import 'components/search_field.dart' as search_field;
 import 'components/textarea.dart' as textarea;
 import 'components/card.dart' as card;
+import 'components/surface.dart' as surface;
 import 'components/accordion.dart' as accordion;
 import 'components/disclosure.dart' as disclosure;
 import 'components/data_table.dart' as data_table;
@@ -31,6 +34,7 @@ import 'components/heading.dart' as heading;
 import 'components/code.dart' as code;
 import 'components/kbd.dart' as kbd;
 import 'components/avatar.dart' as avatar;
+import 'components/avatar_group.dart' as avatar_group;
 import 'components/badge.dart' as badge;
 import 'components/callout.dart' as callout;
 import 'components/progress.dart' as progress;
@@ -184,6 +188,11 @@ final _families = <_Family>[
   (id: 'tabs', group: 'Actions', build: tabs.buildTabsCatalogUseCase),
   (id: 'link', group: 'Actions', build: link.buildLinkCatalogUseCase),
   (
+    id: 'breadcrumbs',
+    group: 'Actions',
+    build: breadcrumbs.buildBreadcrumbsCatalogUseCase,
+  ),
+  (
     id: 'checkbox',
     group: 'Inputs',
     build: checkbox.buildCheckboxCatalogUseCase,
@@ -221,11 +230,28 @@ final _families = <_Family>[
     build: textfield.buildTextFieldCatalogUseCase,
   ),
   (
+    id: 'search_field',
+    group: 'Inputs',
+    build: search_field.buildSearchFieldCatalogUseCase,
+  ),
+  (
     id: 'textarea',
     group: 'Inputs',
     build: textarea.buildTextAreaCatalogUseCase,
   ),
   (id: 'card', group: 'Containers', build: card.buildCardCatalogUseCase),
+  (
+    id: 'surface',
+    group: 'Containers',
+    // An inverse surface nests a complete FortalTheme, which restores the
+    // theme's own text tokens, so the review typeface is applied again inside.
+    build: (context) => surface.surfaceCatalog(
+      content: (child) => PolishTypography(
+        fontFamily: PolishTypography.familyOf(context),
+        child: child,
+      ),
+    ),
+  ),
   (
     id: 'accordion',
     group: 'Containers',
@@ -260,6 +286,11 @@ final _families = <_Family>[
   (id: 'code', group: 'Typography', build: code.buildCodeCatalogUseCase),
   (id: 'kbd', group: 'Typography', build: kbd.buildKbdCatalogUseCase),
   (id: 'avatar', group: 'Typography', build: avatar.buildAvatarCatalogUseCase),
+  (
+    id: 'avatar_group',
+    group: 'Typography',
+    build: avatar_group.buildAvatarGroupCatalogUseCase,
+  ),
   (id: 'badge', group: 'Typography', build: badge.buildBadgeCatalogUseCase),
   (id: 'callout', group: 'Feedback', build: callout.buildCalloutCatalogUseCase),
   (
@@ -661,40 +692,62 @@ class PolishTypography extends StatelessWidget {
   const PolishTypography({super.key, this.fontFamily, required this.child});
   final String? fontFamily;
   final Widget child;
+
+  /// The review typeface of the nearest board, or null outside one.
+  static String? familyOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_PolishFont>()?.family;
+
   @override
   Widget build(BuildContext context) {
+    final fontFamily = this.fontFamily;
     if (fontFamily == null) return child;
-    return MixScope.inherit(
-      textStyles: {
-        for (final token in [
-          FortalTokens.text1,
-          FortalTokens.text2,
-          FortalTokens.text3,
-          FortalTokens.text4,
-          FortalTokens.text5,
-          FortalTokens.text6,
-          FortalTokens.text7,
-          FortalTokens.text8,
-          FortalTokens.text9,
-          FortalTokens.avatarFallback1One,
-          FortalTokens.avatarFallback1Two,
-          FortalTokens.avatarFallback2One,
-          FortalTokens.avatarFallback2Two,
-          FortalTokens.avatarFallback3One,
-          FortalTokens.avatarFallback3Two,
-          FortalTokens.avatarFallback4One,
-          FortalTokens.avatarFallback4Two,
-          FortalTokens.avatarFallback5,
-          FortalTokens.avatarFallback6,
-          FortalTokens.avatarFallback7,
-          FortalTokens.avatarFallback8,
-          FortalTokens.avatarFallback9,
-        ])
-          token: token.resolve(context).copyWith(fontFamily: fontFamily),
-      },
-      child: child,
+    return _PolishFont(
+      family: fontFamily,
+      child: MixScope.inherit(
+        textStyles: {
+          for (final token in [
+            FortalTokens.text1,
+            FortalTokens.text2,
+            FortalTokens.text3,
+            FortalTokens.text4,
+            FortalTokens.text5,
+            FortalTokens.text6,
+            FortalTokens.text7,
+            FortalTokens.text8,
+            FortalTokens.text9,
+            FortalTokens.avatarFallback1One,
+            FortalTokens.avatarFallback1Two,
+            FortalTokens.avatarFallback2One,
+            FortalTokens.avatarFallback2Two,
+            FortalTokens.avatarFallback3One,
+            FortalTokens.avatarFallback3Two,
+            FortalTokens.avatarFallback4One,
+            FortalTokens.avatarFallback4Two,
+            FortalTokens.avatarFallback5,
+            FortalTokens.avatarFallback6,
+            FortalTokens.avatarFallback7,
+            FortalTokens.avatarFallback8,
+            FortalTokens.avatarFallback9,
+          ])
+            token: token.resolve(context).copyWith(fontFamily: fontFamily),
+        },
+        // A nested FortalTheme, such as a per-member accent, resolves its
+        // own tokens without the overrides above; text that inherits the
+        // ambient style still takes this family.
+        child: DefaultTextStyle.merge(
+          style: TextStyle(fontFamily: fontFamily),
+          child: child,
+        ),
+      ),
     );
   }
+}
+
+class _PolishFont extends InheritedWidget {
+  const _PolishFont({required this.family, required super.child});
+  final String family;
+  @override
+  bool updateShouldNotify(_PolishFont oldWidget) => family != oldWidget.family;
 }
 
 // Calendar families expose a single size and recipe. Review enabled/disabled

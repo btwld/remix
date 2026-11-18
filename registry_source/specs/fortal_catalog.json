@@ -148,6 +148,40 @@
       ]
     },
     {
+      "id": "avatar_group",
+      "fortalType": "FortalAvatarGroup",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4"
+          ],
+          "default": "size2"
+        }
+      },
+      "defaults": {
+        "max": 4,
+        "highContrast": false
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "image",
+        "overflow",
+        "highContrast",
+        "rtl"
+      ],
+      "tests": [
+        "test/components/avatar_group/avatar_group_fortal_test.dart"
+      ]
+    },
+    {
       "id": "badge",
       "fortalType": "FortalBadge",
       "enums": {
@@ -185,6 +219,35 @@
         "test/components/badge/badge_fortal_test.dart",
         "test/fortal/fortal_high_contrast_test.dart",
         "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "breadcrumbs",
+      "fortalType": "FortalBreadcrumbs",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        }
+      },
+      "defaults": {},
+      "supportedStyleProps": [
+        "color"
+      ],
+      "states": [
+        "idle",
+        "link",
+        "current",
+        "focused",
+        "truncated",
+        "rtl"
+      ],
+      "tests": [
+        "test/components/breadcrumbs/breadcrumbs_fortal_test.dart"
       ]
     },
     {
@@ -905,6 +968,52 @@
       ]
     },
     {
+      "id": "surface",
+      "fortalType": "FortalSurface",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3",
+            "size4",
+            "size5"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft",
+            "quiet",
+            "inverse"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "padded": true
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius",
+        "panelBackground"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "pressed",
+        "focused",
+        "inverse",
+        "unpadded",
+        "pressable"
+      ],
+      "tests": [
+        "test/components/surface/surface_fortal_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
       "id": "switch",
       "fortalType": "FortalSwitch",
       "enums": {
@@ -1048,6 +1157,51 @@
         "test/fortal/fortal_control_matrix_test.dart",
         "test/fortal/spec_conformance_test.dart",
         "test/components/textfield/fortal_input_content_contrast_test.dart"
+      ]
+    },
+    {
+      "id": "search_field",
+      "fortalType": "FortalSearchField",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        },
+        "variant": {
+          "values": [
+            "surface",
+            "soft"
+          ],
+          "default": "surface"
+        }
+      },
+      "defaults": {
+        "enabled": true,
+        "readOnly": false,
+        "autofocus": false,
+        "clearSemanticLabel": "Clear search",
+        "textInputAction": "search"
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "idle",
+        "focused",
+        "filled",
+        "cleared",
+        "disabled",
+        "readOnly",
+        "composing",
+        "rtl"
+      ],
+      "tests": [
+        "test/components/search_field/search_field_fortal_test.dart"
       ]
     },
     {

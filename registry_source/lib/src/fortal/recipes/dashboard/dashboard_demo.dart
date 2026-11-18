@@ -913,7 +913,7 @@ class _FortalDashboardDemoState extends State<FortalDashboardDemo> {
       selectedValue: _selected,
       onSelected: _select,
       title: _selected.label,
-      headerTitle: chrome ? FortalDashboardBreadcrumb(page: _selected) : null,
+      headerTitle: chrome ? _PageTrail(page: _selected) : null,
       brand: widget.brand,
       account:
           widget.account ??
@@ -1288,8 +1288,8 @@ RegistryDashboardAgentStyles _fortalAgentStyles() {
 }
 
 /// The header title: the page's section, then the page.
-class FortalDashboardBreadcrumb extends StatelessWidget {
-  const FortalDashboardBreadcrumb({super.key, required this.page});
+class _PageTrail extends StatelessWidget {
+  const _PageTrail({required this.page});
 
   /// The page on screen.
   final FortalDashboardDemoPage page;
@@ -1297,36 +1297,17 @@ class FortalDashboardBreadcrumb extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     // The app bar insets its toolbar by `space4`; the page body uses the
-    // wide page padding, so the difference lines the breadcrumb up with the
+    // wide page padding, so the difference lines the trail up with the
     // page title. In compact mode the menu button leads, so there is none.
     padding: EdgeInsetsDirectional.only(
       start: FortalSidebarLayoutScope.of(context).isCompact
           ? 0
           : 24 - FortalTokens.space4.resolve(context),
     ),
-    child: RowBox(
-      style: FlexBoxStyler().crossAxisAlignment(.center).spacing(8),
-      children: [
-        Flexible(
-          child: StyledText(
-            page.section.label,
-            style: dashboardTextLine(.size2, tone: .muted),
-          ),
-        ),
-        Transform.flip(
-          key: const ValueKey('dashboard-breadcrumb-separator'),
-          flipX: Directionality.of(context) == TextDirection.rtl,
-          child: StyledIcon(
-            icon: RemixIcons.chevronRight,
-            style: IconStyler().size(12).color(FortalTokens.gray11()),
-          ),
-        ),
-        Flexible(
-          child: StyledText(
-            page.label,
-            style: dashboardTextLine(.size2, weight: .medium),
-          ),
-        ),
+    child: FortalBreadcrumbs(
+      items: [
+        FortalBreadcrumbItem(page.section.label),
+        FortalBreadcrumbItem(page.label),
       ],
     ),
   );

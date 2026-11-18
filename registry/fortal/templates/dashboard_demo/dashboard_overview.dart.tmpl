@@ -223,7 +223,7 @@ class {{typePrefix}}RevenueCard extends StatefulWidget {
   const {{typePrefix}}RevenueCard({
     super.key,
     required this.data,
-    this.emphasis = .inverse,
+    this.variant = .inverse,
     this.initialRange = .week,
   });
 
@@ -231,7 +231,7 @@ class {{typePrefix}}RevenueCard extends StatefulWidget {
   final {{typePrefix}}DashboardData data;
 
   /// How loudly the card speaks.
-  final {{typePrefix}}SurfaceEmphasis emphasis;
+  final {{typePrefix}}SurfaceVariant variant;
 
   /// The window shown first.
   final {{typePrefix}}DashboardRange initialRange;
@@ -249,7 +249,7 @@ class _{{typePrefix}}RevenueCardState extends State<{{typePrefix}}RevenueCard> {
     final delta = data.revenueDelta(_range);
     return {{typePrefix}}Surface(
       key: const ValueKey('overview-revenue'),
-      emphasis: widget.emphasis,
+      variant: widget.variant,
       size: .size3,
       child: ColumnBox(
         style: FlexBoxStyler()
@@ -557,7 +557,7 @@ class {{typePrefix}}FeaturedEditionCard extends StatelessWidget {
     );
 
     return switch (onPressed) {
-      final onPressed? => {{typePrefix}}PressableSurface(
+      final onPressed? => {{typePrefix}}Surface(
         key: const ValueKey('overview-featured'),
         onPressed: onPressed,
         semanticLabel:
@@ -752,7 +752,7 @@ class {{typePrefix}}GoalsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => {{typePrefix}}Surface(
-    emphasis: .tinted,
+    variant: .soft,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)
@@ -984,7 +984,7 @@ class {{typePrefix}}UpcomingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => {{typePrefix}}Surface(
-    emphasis: .quiet,
+    variant: .quiet,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)
@@ -1024,7 +1024,7 @@ class {{typePrefix}}PalettesCard extends StatelessWidget {
         scope?.settings.accentColor ?? {{typePrefix}}Theme.of(context).accent;
     return {{typePrefix}}Surface(
       key: const ValueKey('overview-palettes'),
-      emphasis: .quiet,
+      variant: .quiet,
       child: ColumnBox(
         style: FlexBoxStyler()
             .crossAxisAlignment(.stretch)
@@ -1087,7 +1087,7 @@ class {{typePrefix}}TeamCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final online = team.where((member) => member.online).length;
     return {{typePrefix}}Surface(
-      emphasis: .quiet,
+      variant: .quiet,
       child: ColumnBox(
         style: FlexBoxStyler()
             .crossAxisAlignment(.stretch)
@@ -1096,7 +1096,20 @@ class {{typePrefix}}TeamCard extends StatelessWidget {
           {{typePrefix}}CardHeader(
             title: 'Team',
             description: '$online of ${team.length} online now',
-            trailing: {{typePrefix}}AvatarStack(members: team),
+            trailing: {{typePrefix}}AvatarGroup(
+              size: .size1,
+              // Five slots: the sample team of five shows in full, and a
+              // larger one counts the rest in the fifth.
+              max: 5,
+              members: [
+                for (final member in team)
+                  {{typePrefix}}AvatarGroupMember(
+                    member.name,
+                    initials: member.initials,
+                    accent: member.accent,
+                  ),
+              ],
+            ),
           ),
           for (final member in team.take(3))
             RowBox(

@@ -184,10 +184,9 @@ class _UiDashboardCollectionPageState extends State<UiDashboardCollectionPage> {
               children: [
                 Box(
                   style: BoxStyler().width(240),
-                  child: UiTextField(
+                  child: UiSearchField(
                     key: const ValueKey('collection-search'),
                     controller: _search,
-                    leading: const StyledIcon(icon: RemixIcons.search),
                     hintText: 'Search editions…',
                     semanticLabel: 'Search editions',
                   ),
@@ -242,7 +241,7 @@ class _UiDashboardCollectionPageState extends State<UiDashboardCollectionPage> {
           ),
         if (editions.isEmpty)
           UiSurface(
-            emphasis: .quiet,
+            variant: .quiet,
             child: UiEmptyState(
               icon: RemixIcons.search,
               title: 'No editions found',
@@ -446,7 +445,7 @@ class UiEditionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inset = UiTokens.space2.resolve(context);
-    return UiPressableSurface(
+    return UiSurface(
       onPressed: onPressed,
       semanticLabel:
           '${edition.title} by ${edition.artist}, '

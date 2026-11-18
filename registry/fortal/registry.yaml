@@ -103,6 +103,16 @@ items:
     exports:
       - components/avatar.dart
 
+  avatar_group:
+    registryDependencies:
+      - theme
+      - avatar
+    files:
+      - source: templates/avatar_group/avatar_group.dart.tmpl
+        target: "@ui/components/avatar_group.dart"
+    exports:
+      - components/avatar_group.dart
+
   badge:
     registryDependencies:
       - theme
@@ -127,6 +137,18 @@ items:
         target: "@ui/components/base_button.dart"
     exports:
       - components/base_button.dart
+
+  breadcrumbs:
+    registryDependencies:
+      - theme
+      - link
+      - text
+      - typography
+    files:
+      - source: templates/breadcrumbs/breadcrumbs.dart.tmpl
+        target: "@ui/components/breadcrumbs.dart"
+    exports:
+      - components/breadcrumbs.dart
 
   button:
     registryDependencies:
@@ -276,7 +298,9 @@ items:
       - agent_glyphs_recipe
       - answer_recipe
       - avatar
+      - avatar_group
       - badge
+      - breadcrumbs
       - button
       - calendar
       - callout
@@ -305,6 +329,7 @@ items:
       - progress
       - radio
       - range_slider
+      - search_field
       - segmented_control
       - select
       - sidebar_layout
@@ -314,6 +339,7 @@ items:
       - spinner
       - steps_recipe
       - suggestions_recipe
+      - surface
       - switch
       - tabs
       - text
@@ -640,6 +666,17 @@ items:
     exports:
       - components/range_slider.dart
 
+  search_field:
+    registryDependencies:
+      - theme
+      - icon_button
+      - textfield
+    files:
+      - source: templates/search_field/search_field.dart.tmpl
+        target: "@ui/components/search_field.dart"
+    exports:
+      - components/search_field.dart
+
   segmented_control:
     registryDependencies:
       - theme
@@ -779,6 +816,16 @@ items:
         target: "@ui/recipes/suggestions_recipe.dart"
     exports:
       - recipes/suggestions_recipe.dart
+
+  surface:
+    registryDependencies:
+      - theme
+      - card
+    files:
+      - source: templates/surface/surface.dart.tmpl
+        target: "@ui/components/surface.dart"
+    exports:
+      - components/surface.dart
 
   switch:
     registryDependencies:

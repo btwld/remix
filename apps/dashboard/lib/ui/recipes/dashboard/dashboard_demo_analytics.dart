@@ -40,7 +40,7 @@ class UiDashboardAnalyticsPage extends StatelessWidget {
       ],
       children: [
         UiSummaryStrip(metrics: data.metrics),
-        UiRevenueCard(data: data, emphasis: .standard, initialRange: .month),
+        UiRevenueCard(data: data, variant: .surface, initialRange: .month),
         GridBox(
           key: const ValueKey('analytics-breakdown'),
           style: uiHalvesGrid,
@@ -392,7 +392,7 @@ class UiInsightsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => UiSurface(
-    emphasis: .tinted,
+    variant: .soft,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)

@@ -11,7 +11,7 @@ This is the API reference. Start with the [Fortal overview](/fortal) for install
 
 A `—` value means the widget does not expose that axis. When values are listed but their default is `—`, the parameter is nullable with no pinned value. That is the typography path: an omitted size or weight resolves from the active scope's tokens (`text3`, regular) rather than from an enum, so a host text run cannot resize Fortal text. See [Typography](/fortal/typography).
 
-<CatalogSearch items={["FortalAccordion","FortalAppBar","FortalAvatar","FortalBadge","FortalButton","FortalCalendar","FortalCallout","FortalCard","FortalCheckbox","FortalCode","FortalCombobox","FortalDataList","FortalDataTable","FortalDatePicker","FortalDateRangePicker","FortalDialog","FortalDisclosure","FortalDivider","FortalHeading","FortalIconButton","FortalKbd","FortalLineChart","FortalLink","FortalMenu","FortalPopover","FortalProgress","FortalRadio","FortalRangeCalendar","FortalRangeSlider","FortalSegmentedControl","FortalSelect","FortalSidebar","FortalSidebarLayout","FortalSkeleton","FortalSlider","FortalSpinner","FortalSwitch","FortalTabBar","FortalText","FortalTextArea","FortalTextField","FortalToast","FortalToggle","FortalToggleGroup","FortalTooltip"]} />
+<CatalogSearch items={["FortalAccordion","FortalAppBar","FortalAvatar","FortalAvatarGroup","FortalBadge","FortalBreadcrumbs","FortalButton","FortalCalendar","FortalCallout","FortalCard","FortalCheckbox","FortalCode","FortalCombobox","FortalDataList","FortalDataTable","FortalDatePicker","FortalDateRangePicker","FortalDialog","FortalDisclosure","FortalDivider","FortalHeading","FortalIconButton","FortalKbd","FortalLineChart","FortalLink","FortalMenu","FortalPopover","FortalProgress","FortalRadio","FortalRangeCalendar","FortalRangeSlider","FortalSearchField","FortalSegmentedControl","FortalSelect","FortalSidebar","FortalSidebarLayout","FortalSkeleton","FortalSlider","FortalSpinner","FortalSurface","FortalSwitch","FortalTabBar","FortalText","FortalTextArea","FortalTextField","FortalToast","FortalToggle","FortalToggleGroup","FortalTooltip"]} />
 
 ## At a glance
 
@@ -20,7 +20,9 @@ A `—` value means the widget does not expose that axis. When values are listed
 | `FortalAccordion` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalAppBar` | — | — | — | — |
 | `FortalAvatar` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | `size3` | `soft`, `solid` | `soft` |
+| `FortalAvatarGroup` | `size1`, `size2`, `size3`, `size4` | `size2` | — | — |
 | `FortalBadge` | `size1`, `size2`, `size3` | `size1` | `solid`, `soft`, `surface`, `outline` | `soft` |
+| `FortalBreadcrumbs` | `size1`, `size2`, `size3` | `size2` | — | — |
 | `FortalButton` | `size1`, `size2`, `size3`, `size4` | `size2` | `solid`, `soft`, `surface`, `outline`, `ghost` | `solid` |
 | `FortalCalendar` | — | — | — | — |
 | `FortalCallout` | `size1`, `size2`, `size3` | `size2` | `soft`, `surface`, `outline` | `soft` |
@@ -46,6 +48,7 @@ A `—` value means the widget does not expose that axis. When values are listed
 | `FortalRadio` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalRangeCalendar` | — | — | — | — |
 | `FortalRangeSlider` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
+| `FortalSearchField` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalSegmentedControl` | `size1`, `size2`, `size3` | `size2` | `surface` | `surface` |
 | `FortalSelect` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft`, `ghost` | `surface` |
 | `FortalSidebar` | — | — | — | — |
@@ -53,6 +56,7 @@ A `—` value means the widget does not expose that axis. When values are listed
 | `FortalSkeleton` | — | — | — | — |
 | `FortalSlider` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalSpinner` | `size1`, `size2`, `size3` | `size2` | — | — |
+| `FortalSurface` | `size1`, `size2`, `size3`, `size4`, `size5` | `size2` | `surface`, `soft`, `quiet`, `inverse` | `surface` |
 | `FortalSwitch` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalTabBar` | `size1`, `size2` | `size2` (on `FortalTab`) | — | — |
 | `FortalText` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — | — | — |
@@ -341,6 +345,23 @@ Recipe `registry_source/lib/src/fortal/components/toggle_group.dart`
 
 **States:** `unselected`, `selected`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`, `rtl`
 
+### FortalSearchField
+
+Recipe `registry_source/lib/src/fortal/components/search_field.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalSearchField.soft`, `FortalSearchField.surface`
+
+**Other defaults:** `autofocus: false`, `clearSemanticLabel: Clear search`, `enabled: true`, `readOnly: false`, `textInputAction: search`
+
+**Style props:** `color`, `radius`
+
+**States:** `idle`, `focused`, `filled`, `cleared`, `disabled`, `readOnly`, `composing`, `rtl`
+
 ## Navigation
 
 ### FortalAppBar
@@ -416,6 +437,18 @@ Recipe `registry_source/lib/src/fortal/components/tabs.dart`
 **Style props:** `color`, `highContrast`
 
 **States:** `inactive`, `active`, `hovered`, `pressed`, `focused`, `disabled`, `automatic`, `manual`, `rtl`, `highContrast`
+
+### FortalBreadcrumbs
+
+Recipe `registry_source/lib/src/fortal/components/breadcrumbs.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+
+**Style props:** `color`
+
+**States:** `idle`, `link`, `current`, `focused`, `truncated`, `rtl`
 
 ## Overlays
 
@@ -586,6 +619,23 @@ Recipe `registry_source/lib/src/fortal/components/divider.dart`
 
 **States:** `decorative`, `semantic`
 
+### FortalSurface
+
+Recipe `registry_source/lib/src/fortal/components/surface.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3`, `size4`, `size5` | `size2` |
+| `variant` | `surface`, `soft`, `quiet`, `inverse` | `surface` |
+
+**Named constructors:** `FortalSurface.inverse`, `FortalSurface.quiet`, `FortalSurface.soft`, `FortalSurface.surface`
+
+**Other defaults:** `padded: true`
+
+**Style props:** `color`, `radius`, `panelBackground`
+
+**States:** `idle`, `hovered`, `pressed`, `focused`, `inverse`, `unpadded`, `pressable`
+
 ## Data display
 
 ### FortalAvatar
@@ -652,6 +702,20 @@ Recipe `registry_source/lib/src/fortal/components/data_table.dart`
 **Other defaults:** `enabled: true`
 
 **States:** `idle`, `passive`, `hovered`, `selected`
+
+### FortalAvatarGroup
+
+Recipe `registry_source/lib/src/fortal/components/avatar_group.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3`, `size4` | `size2` |
+
+**Other defaults:** `highContrast: false`, `max: 4`
+
+**Style props:** `color`, `radius`, `highContrast`
+
+**States:** `idle`, `image`, `overflow`, `highContrast`, `rtl`
 
 ## Layout and charts
 

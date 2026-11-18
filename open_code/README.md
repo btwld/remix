@@ -172,7 +172,11 @@ shadcn/ui's Breadcrumb (depends on `theme` and `link`; no generated part), and
 after shadcn/ui's Input Group (depends on `theme`, `textfield`, and
 `icon_button`; no generated part).
 
-Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`.
+Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`,
+and the hand-written compositions `avatar_group` (depends on `theme` and
+`avatar`), `breadcrumbs` (depends on `theme`, `link`, `text` and
+`typography`), `search_field` (depends on `theme`, `textfield` and
+`icon_button`) and `surface` (depends on `theme` and `card`).
 
 HeroUI follows HeroUI's names, adding `alert`, `avatar_group`,
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,

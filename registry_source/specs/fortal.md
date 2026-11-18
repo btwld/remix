@@ -261,6 +261,125 @@ and rows that `isOptionDisabled` marks have no disabled style yet. No preset
 behavior is added. Test coverage includes
 both modes, every accent, field matrices, contrast and RTL at 200% text.
 
+## Avatar group
+
+Avatar group promotes the dashboard's avatar stack into the registry. It is a
+hand-written row of the avatar recipe, so it adds no colors or radii of its own.
+`FortalAvatarGroupSize` size1–size4 select avatar sizes 1–4 (24/32/40/48px),
+with a space1 gap at sizes 1–2 and space2 at sizes 3–4. Each
+`FortalAvatarGroupMember` is a soft avatar showing its image over its initials,
+under its own accent when it names one. `max` (default 4) counts every visible
+slot, the count included: a group of up to `max` members shows them all; a
+larger one shows the first `max − 1` and one solid `+N` avatar in the ambient
+accent for the rest, capped at `99+`. Labels of two or more characters, the
+count included, use the two-character fallback type.
+
+The avatars never overlap. An overlapping stack needs a seam to keep each
+avatar distinct: a page-colored ring, which is a shadow outside a floating
+layer, or a cut that follows the next avatar's corner, which would read the
+radius the avatar recipe keeps private. Fortal therefore spaces them. The row
+is one semantics node labelled with every member's name, the counted ones
+included, or with `semanticLabel`; it has no focus stop. `highContrast`
+reaches every avatar, and a caller `style` merges last into each. Tests cover
+both modes, per-member accents, images, the count and its edges (`max` 1,
+exactly `max`, one more, 150 members), RTL order and 200% text.
+
+## Breadcrumbs
+
+Breadcrumbs promote the dashboard header's trail into the registry: a
+hand-written row of `FortalBreadcrumbItem(label, onPressed:, semanticLabel:)`
+steps. `FortalBreadcrumbsSize` size1–size3 set text1/text2/text3, with
+12/12/16px (space3/space3/space4) chevrons a space1/space2/space2 gap from
+the steps; size2 is the default and the dashboard's. A step with `onPressed` is
+a `FortalLink` at the trail's size, so it keeps the link's accent text, hover
+underline, 40px target, focus ring and Enter activation. A step without one
+is gray11 regular text. The last step is the current page in gray12 medium
+and is never a link, whatever its `onPressed`.
+
+Chevrons are gray11 `chevronRight` glyphs, mirrored in right-to-left text and
+excluded from semantics. The trail keeps to one line. Every step keeps its
+natural width while the trail fits; past that, the chevrons and gaps keep
+theirs and the steps take fair shares of the rest, so a short step stays
+whole and the longer ones ellipsize. Even shares, as flexible row children
+take, would cut a long step beside a short one when the whole trail fits.
+Item `semanticLabel`s replace their labels. The trail is a navigation landmark
+whose steps stay their own nodes, named by its `semanticLabel` or
+"Breadcrumb". The layout reports its first step's baseline, dry and laid out,
+and clips its painting when even its chevrons and gaps are wider than the box.
+Tests cover both modes, sizes, keyboard focus and activation, fitting and
+truncation, RTL and 200% text.
+
+## Search field
+
+Search field promotes the dashboard's three hand-built search inputs into the
+registry. `FortalSearchField` is a hand-written stateful composition over
+`FortalTextField`: its `FortalSearchFieldSize` size1–size3 and
+`FortalSearchFieldVariant` surface/soft select the text field's own size and
+variant, so height, padding, frame, fill, focus ring, hint and disabled
+colors are the text field's at every size and text scale. There is no label
+or helper text; the required `semanticLabel` names the field. The leading
+`search` glyph takes the field's icon theme (16px, gray11 on surface, accent
+content on soft), and `textInputAction` defaults to search. The field owns a
+controller and focus node only when the caller gives none.
+
+The clear button is a ghost icon button: size1 (12px `close` glyph) on size1
+and size2 fields and size2 (16px) on size3, gray11 with grayA3/grayA4 hover
+and press on surface, accent content on soft. A 40px target would make a
+24/32px field 40px tall if it sat in the field's row, so it is an overlay:
+the button is centred in the field's last `touchTargetMin` (40px, never less),
+its whole target inside the field. A trailing spacer is always present, so
+the input stops where that target starts, at least one field spacing short of
+its glyph, and keeps one width and structure whether or not there is text; a
+tap on the text never lands on the button. It shows only
+while the field is enabled, editable and not empty. Pressing it clears the
+text, calls `onChanged('')` and `onCleared`, and returns focus to the field;
+it sits inside the field's tap region and excludes focus, so it is no Tab
+stop. It is its own semantics container: merged into the node around the
+field, it would turn that node into a button once there is text, and Flutter
+web, whose input element hangs from the semantics tree, then drops every key
+after the first. A caller controller that is withdrawn leaves its last value
+in the field's own controller. Escape is the keyboard path: it clears when
+there is text to clear, and the repeats and release of that press are
+consumed with it, so holding Escape never also closes a dialog. With nothing
+to clear it passes on, so a dialog still closes. During input-method
+composition it skips the remaining handlers, leaving the key to the IME. A caller `style` merges last into the field.
+Tests cover both modes and variants, every size at 100% and 200% text in both
+directions, the clear target, keyboard focus and Escape, composition,
+controller swaps, semantics, and the editor and its semantics node surviving
+the clear button's arrival and departure.
+
+## Surface
+
+Surface promotes the dashboard's emphasis surfaces into the registry. The card
+has one resting look, so a page built from cards alone asks the same
+attention of every block; `FortalSurfaceVariant` settles that hierarchy once.
+`fortalSurfaceStyle()` is the card recipe at the matching `FortalSurfaceSize`
+(size1–size5: 12/16/24/32/48px padding, radius4/4/5/5/6; default size2) with
+the variant's fill and hairline. Emphasis comes from fill and contrast alone:
+no variant casts a shadow.
+
+| Variant | Rest | Hover | Press |
+| --- | --- | --- | --- |
+| `surface` | colorPanel, gray6 frame | gray7 frame | gray3 fill |
+| `soft` | accentA3, accentA4 frame | accentA5 frame | accentA4 fill |
+| `quiet` | grayA2, grayA3 frame | grayA4 frame | grayA3 fill |
+| `inverse` | the surface card in the opposite appearance | | |
+
+`FortalSurface` renders `inverse` inside a nested theme in the other mode with
+no background, so its text, controls and charts resolve their own tokens and
+keep their contrast: a dark panel in light mode and a light one in dark mode,
+for the one block a page leads with. `padded: false` runs content to the
+frame, as a cover image or a table needs.
+
+With `onPressed` the whole surface is one button: it takes the hover, press,
+the card's focus ring and Enter/Space, and its required `semanticLabel`
+replaces the child's own semantics. Without `onPressed`, a `semanticLabel`
+names the surface as a container. A caller `style` merges last. This absorbs
+the dashboard's pressable surface; its `standard` and `tinted` emphases are
+`surface` and `soft`. Tests cover every variant in both modes, sizes,
+interaction fills, inverse contrast for every accent, keyboard focus, RTL and
+200% text, and `spec_conformance` holds every variant flat.
+
 ## Enforcement
 
 - `tool/check_fortal.dart` (`melos run fortal:check`) holds the catalog against

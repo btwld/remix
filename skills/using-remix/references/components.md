@@ -96,8 +96,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   clearing reports `''` to `onChanged`, calls `onCleared` and keeps focus.
   Escape clears too, and holding it does not then close an enclosing dialog;
   during IME composition Escape stays with the input method. With nothing to
-  clear, Escape passes up, so the dialog closes. HeroUI's `search_field` is a
-  recipe instead: the app passes its icon and clear button and wires them.
+  clear, Escape passes up, so the dialog closes. Fortal's field has the same
+  contract and also keeps the TextField height at every size; see
+  [Fortal](fortal.md#search-field). HeroUI's `search_field` is a recipe
+  instead: the app passes its icon and clear button and wires them.
 - **RangeSlider** — `RemixRangeSlider` takes exactly two ordered, parent-owned
   values. Give the lower and upper thumbs distinct `semanticLabels` in that
   order. `onChanged` requests values; the parent decides whether to accept them.
@@ -188,6 +190,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 
 - **Avatar** — purely presentational; content precedence is `child` >
   `labelBuilder`/`label` > `iconBuilder`/`icon`.
+- **AvatarGroup** — a preset composition, not a Remix widget. HeroUI's
+  `avatar_group` overlaps the avatars you pass. Fortal's spaces avatars built
+  from `<Prefix>AvatarGroupMember` values, counts `+N` in the last of `max`
+  slots, and announces one label for the whole row. See [Fortal](fortal.md#avatar-group).
 - **DataTable** — fully controlled: the caller supplies the current page in
   final order, and sort/selection/pagination callbacks report intent only —
   they never mutate or fetch rows. Its styler has a generic `call<T>()`
@@ -234,6 +240,10 @@ HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, `dashboard_shell`, and
   image-card Collection and Themes in Fortal. See [Reference showcases](reference-showcases.md) for
   product-example and coverage-gallery conventions. The HeroUI demo also
   installs `chart`, `table`, `tabs`, `chip`, and the Agent items.
+- **Surface** — a preset composition, not a Remix widget. HeroUI's `surface` is
+  a filled box that sets its text color. Fortal's is the card at four levels of
+  emphasis (`surface`, `soft`, `quiet`, `inverse`), optionally one pressable
+  button. See [Fortal](fortal.md#surface).
 
 ## Agent surfaces
 
@@ -366,6 +376,10 @@ for Overlay, Navigator and toast scope placement.
   frame. Widget-state variants (`onHovered`, `onPressed`, `onFocused`,
   `onFocusVisible`, `onDisabled`) describe interaction with the trigger but
   resolve once for the whole item, so they may style `container` too.
+- **Breadcrumbs** — a preset composition, not a Remix widget. HeroUI's
+  `breadcrumbs` wraps onto more lines; Fortal's keeps one line, ellipsizes its
+  steps and renders actionable ones as `<Prefix>Link`. The last step is the
+  current page and never a link. See [Fortal](fortal.md#breadcrumbs).
 - **RemixDisclosure** — standalone trigger and one inline panel for items
   that do not need `RemixAccordionGroup` coordination. Same top-level
   shorthand-forwards-to-`trigger` rule as Accordion. `FortalDisclosure` has

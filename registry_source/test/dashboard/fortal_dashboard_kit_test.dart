@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
@@ -9,150 +8,10 @@ import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_artw
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_data.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_records.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_widgets.dart';
-import 'package:remix/remix.dart';
 
-import '../helpers/contrast.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {
-  group('FortalSurface', () {
-    for (final accent in FortalAccentColor.values) {
-      for (final mode in const [FortalThemeMode.light, FortalThemeMode.dark]) {
-        testWidgets('inverse flips ${accent.name} ${mode.name} and keeps '
-            'its text readable', (tester) async {
-          late BuildContext inside;
-          late BuildContext outside;
-          await tester.pumpRemixApp(
-            Builder(
-              builder: (context) {
-                outside = context;
-                return FortalSurface(
-                  emphasis: .inverse,
-                  child: Builder(
-                    builder: (context) {
-                      inside = context;
-                      return const FortalText('Revenue');
-                    },
-                  ),
-                );
-              },
-            ),
-            accent: accent,
-            mode: mode,
-          );
-
-          expect(
-            FortalTheme.of(inside).isDark,
-            isNot(FortalTheme.of(outside).isDark),
-          );
-          // Everything but the appearance is inherited.
-          expect(FortalTheme.of(inside).accent, accent);
-
-          final panel = MixScope.tokenOf(FortalTokens.colorPanelSolid, inside);
-          for (final ink in [
-            FortalTokens.gray12,
-            FortalTokens.gray11,
-            FortalTokens.accentContent,
-          ]) {
-            expect(
-              contrastRatio(MixScope.tokenOf(ink, inside), panel),
-              greaterThanOrEqualTo(4.5),
-              reason: ink.name,
-            );
-          }
-          // The surface paints the panel its content resolved against.
-          final card = tester.widget<FortalCard>(find.byType(FortalCard));
-          final fill = tester
-              .widgetList<DecoratedBox>(
-                find.descendant(
-                  of: find.byWidget(card),
-                  matching: find.byType(DecoratedBox),
-                ),
-              )
-              .map((box) => box.decoration)
-              .whereType<BoxDecoration>()
-              .map((decoration) => decoration.color)
-              .firstWhere((color) => color != null);
-          expect(fill, MixScope.tokenOf(FortalTokens.colorPanel, inside));
-        });
-      }
-    }
-
-    testWidgets('the other emphases keep the ambient appearance', (
-      tester,
-    ) async {
-      for (final emphasis in const [
-        FortalSurfaceEmphasis.standard,
-        FortalSurfaceEmphasis.tinted,
-        FortalSurfaceEmphasis.quiet,
-      ]) {
-        late BuildContext inside;
-        await tester.pumpRemixApp(
-          FortalSurface(
-            emphasis: emphasis,
-            child: Builder(
-              builder: (context) {
-                inside = context;
-                return const FortalText('Goals');
-              },
-            ),
-          ),
-          mode: .light,
-        );
-        expect(FortalTheme.of(inside).isDark, isFalse, reason: emphasis.name);
-        expect(find.byType(FortalTheme), findsOneWidget, reason: emphasis.name);
-      }
-    });
-
-    testWidgets('padded false runs its content to the edge', (tester) async {
-      await tester.pumpRemixApp(
-        const FortalSurface(
-          padded: false,
-          child: SizedBox(key: ValueKey('content'), width: 120, height: 80),
-        ),
-      );
-
-      final surface = tester.getRect(find.byType(FortalSurface));
-      final content = tester.getRect(find.byKey(const ValueKey('content')));
-      // Only the one-pixel frame separates them.
-      expect(content.left - surface.left, lessThanOrEqualTo(1));
-      expect(content.top - surface.top, lessThanOrEqualTo(1));
-    });
-  });
-
-  group('FortalPressableSurface', () {
-    testWidgets('is one named button for pointer, keyboard and assistive '
-        'technology', (tester) async {
-      final semantics = tester.ensureSemantics();
-      var presses = 0;
-      await tester.pumpRemixApp(
-        FortalPressableSurface(
-          onPressed: () => presses += 1,
-          semanticLabel: 'Open Mar Aberto',
-          child: const FortalText('Mar Aberto'),
-        ),
-      );
-
-      final node = tester.getSemantics(
-        find.bySemanticsLabel('Open Mar Aberto'),
-      );
-      expect(node, isSemantics(isButton: true, hasTapAction: true));
-      // The label names the whole card; its text is not announced again.
-      expect(find.bySemanticsLabel('Mar Aberto'), findsNothing);
-
-      await tester.tap(find.byType(FortalPressableSurface));
-      await tester.pump();
-      expect(presses, 1);
-
-      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-      await tester.pump();
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-      await tester.pump();
-      expect(presses, 2);
-      semantics.dispose();
-    });
-  });
-
   group('FortalArtwork', () {
     testWidgets('paints every motif in every palette and appearance', (
       tester,

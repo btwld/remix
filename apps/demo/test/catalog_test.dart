@@ -1,6 +1,8 @@
 import 'package:demo/components/accordion.dart' as accordion;
 import 'package:demo/components/avatar.dart' as avatar;
+import 'package:demo/components/avatar_group.dart' as avatar_group;
 import 'package:demo/components/badge.dart' as badge;
+import 'package:demo/components/breadcrumbs.dart' as breadcrumbs;
 import 'package:demo/components/button.dart' as button;
 import 'package:demo/components/callout.dart' as callout;
 import 'package:demo/components/card.dart' as card;
@@ -17,10 +19,12 @@ import 'package:demo/components/kbd.dart' as kbd;
 import 'package:demo/components/link.dart' as link;
 import 'package:demo/components/progress.dart' as progress;
 import 'package:demo/components/radio.dart' as radio;
+import 'package:demo/components/search_field.dart' as search_field;
 import 'package:demo/components/segmented_control.dart' as segmented_control;
 import 'package:demo/components/select.dart' as select;
 import 'package:demo/components/slider.dart' as slider;
 import 'package:demo/components/spinner.dart' as spinner;
+import 'package:demo/components/surface.dart' as surface;
 import 'package:demo/components/switch.dart' as switch_;
 import 'package:demo/components/tabs.dart' as tabs;
 import 'package:demo/components/text.dart' as text;
@@ -47,7 +51,9 @@ import 'package:demo/ui/ui.dart';
 final catalogs = <String, WidgetBuilder>{
   'accordion': accordion.buildAccordionCatalogUseCase,
   'avatar': avatar.buildAvatarCatalogUseCase,
+  'avatar group': avatar_group.buildAvatarGroupCatalogUseCase,
   'badge': badge.buildBadgeCatalogUseCase,
+  'breadcrumbs': breadcrumbs.buildBreadcrumbsCatalogUseCase,
   'button': button.buildButtonCatalogUseCase,
   'callout': callout.buildCalloutCatalogUseCase,
   'card': card.buildCardCatalogUseCase,
@@ -64,10 +70,12 @@ final catalogs = <String, WidgetBuilder>{
   'link': link.buildLinkCatalogUseCase,
   'progress': progress.buildProgressCatalogUseCase,
   'radio': radio.buildRadioCatalogUseCase,
+  'search field': search_field.buildSearchFieldCatalogUseCase,
   'segmented control': segmented_control.buildSegmentedControlCatalogUseCase,
   'select': select.buildSelectCatalogUseCase,
   'slider': slider.buildSliderCatalogUseCase,
   'spinner': spinner.buildSpinnerCatalogUseCase,
+  'surface': surface.buildSurfaceCatalogUseCase,
   'switch': switch_.buildSwitchCatalogUseCase,
   'tabs': tabs.buildTabsCatalogUseCase,
   'text': text.buildTextCatalogUseCase,

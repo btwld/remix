@@ -13,7 +13,11 @@
 import 'package:demo/components/accordion.dart' as _demo_components_accordion;
 import 'package:demo/components/app_bar.dart' as _demo_components_app_bar;
 import 'package:demo/components/avatar.dart' as _demo_components_avatar;
+import 'package:demo/components/avatar_group.dart'
+    as _demo_components_avatar_group;
 import 'package:demo/components/badge.dart' as _demo_components_badge;
+import 'package:demo/components/breadcrumbs.dart'
+    as _demo_components_breadcrumbs;
 import 'package:demo/components/button.dart' as _demo_components_button;
 import 'package:demo/components/calendar.dart' as _demo_components_calendar;
 import 'package:demo/components/callout.dart' as _demo_components_callout;
@@ -43,6 +47,8 @@ import 'package:demo/components/progress.dart' as _demo_components_progress;
 import 'package:demo/components/radio.dart' as _demo_components_radio;
 import 'package:demo/components/range_calendar.dart'
     as _demo_components_range_calendar;
+import 'package:demo/components/search_field.dart'
+    as _demo_components_search_field;
 import 'package:demo/components/segmented_control.dart'
     as _demo_components_segmented_control;
 import 'package:demo/components/select.dart' as _demo_components_select;
@@ -50,6 +56,7 @@ import 'package:demo/components/sidebar.dart' as _demo_components_sidebar;
 import 'package:demo/components/skeleton.dart' as _demo_components_skeleton;
 import 'package:demo/components/slider.dart' as _demo_components_slider;
 import 'package:demo/components/spinner.dart' as _demo_components_spinner;
+import 'package:demo/components/surface.dart' as _demo_components_surface;
 import 'package:demo/components/switch.dart' as _demo_components_switch;
 import 'package:demo/components/tabs.dart' as _demo_components_tabs;
 import 'package:demo/components/text.dart' as _demo_components_text;
@@ -66,6 +73,34 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: 'components',
     children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'FortalAvatarGroup',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Avatar Group Component',
+            builder: _demo_components_avatar_group.buildAvatarGroupUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder:
+                _demo_components_avatar_group.buildAvatarGroupCatalogUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'FortalBreadcrumbs',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Breadcrumbs Component',
+            builder: _demo_components_breadcrumbs.buildBreadcrumbsUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder:
+                _demo_components_breadcrumbs.buildBreadcrumbsCatalogUseCase,
+          ),
+        ],
+      ),
       _widgetbook.WidgetbookComponent(
         name: 'FortalCode',
         useCases: [
@@ -99,6 +134,33 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Catalog',
             builder: _demo_components_link.buildLinkCatalogUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'FortalSearchField',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder:
+                _demo_components_search_field.buildSearchFieldCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Search Field Component',
+            builder: _demo_components_search_field.buildSearchFieldUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'FortalSurface',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder: _demo_components_surface.buildSurfaceCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Surface Component',
+            builder: _demo_components_surface.buildSurfaceUseCase,
           ),
         ],
       ),

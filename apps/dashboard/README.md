@@ -43,8 +43,8 @@ come from experimental `package:remix/agent.dart`.
 
 ## Reference rules
 
-- Emphasis is a dashboard-owned policy, `UiSurface`, with four levels:
-  `standard`, `tinted`, `quiet` and `inverse`. Fortal cards never cast a
+- Emphasis comes from the preset's `UiSurface`, with four variants:
+  `surface`, `soft`, `quiet` and `inverse`. Fortal cards never cast a
   shadow, so hierarchy comes from fill and contrast. The inverse surface nests
   a theme of the opposite appearance, so everything inside keeps its contrast
   without special cases. A page uses it once.

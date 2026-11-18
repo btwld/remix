@@ -207,7 +207,7 @@ class UiRevenueCard extends StatefulWidget {
   const UiRevenueCard({
     super.key,
     required this.data,
-    this.emphasis = .inverse,
+    this.variant = .inverse,
     this.initialRange = .week,
   });
 
@@ -215,7 +215,7 @@ class UiRevenueCard extends StatefulWidget {
   final UiDashboardData data;
 
   /// How loudly the card speaks.
-  final UiSurfaceEmphasis emphasis;
+  final UiSurfaceVariant variant;
 
   /// The window shown first.
   final UiDashboardRange initialRange;
@@ -233,7 +233,7 @@ class _UiRevenueCardState extends State<UiRevenueCard> {
     final delta = data.revenueDelta(_range);
     return UiSurface(
       key: const ValueKey('overview-revenue'),
-      emphasis: widget.emphasis,
+      variant: widget.variant,
       size: .size3,
       child: ColumnBox(
         style: FlexBoxStyler()
@@ -541,7 +541,7 @@ class UiFeaturedEditionCard extends StatelessWidget {
     );
 
     return switch (onPressed) {
-      final onPressed? => UiPressableSurface(
+      final onPressed? => UiSurface(
         key: const ValueKey('overview-featured'),
         onPressed: onPressed,
         semanticLabel:
@@ -736,7 +736,7 @@ class UiGoalsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => UiSurface(
-    emphasis: .tinted,
+    variant: .soft,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)
@@ -965,7 +965,7 @@ class UiUpcomingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => UiSurface(
-    emphasis: .quiet,
+    variant: .quiet,
     child: ColumnBox(
       style: FlexBoxStyler()
           .crossAxisAlignment(.stretch)
@@ -1004,7 +1004,7 @@ class UiPalettesCard extends StatelessWidget {
     final active = scope?.settings.accentColor ?? UiTheme.of(context).accent;
     return UiSurface(
       key: const ValueKey('overview-palettes'),
-      emphasis: .quiet,
+      variant: .quiet,
       child: ColumnBox(
         style: FlexBoxStyler()
             .crossAxisAlignment(.stretch)
@@ -1067,7 +1067,7 @@ class UiTeamCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final online = team.where((member) => member.online).length;
     return UiSurface(
-      emphasis: .quiet,
+      variant: .quiet,
       child: ColumnBox(
         style: FlexBoxStyler()
             .crossAxisAlignment(.stretch)
@@ -1076,7 +1076,20 @@ class UiTeamCard extends StatelessWidget {
           UiCardHeader(
             title: 'Team',
             description: '$online of ${team.length} online now',
-            trailing: UiAvatarStack(members: team),
+            trailing: UiAvatarGroup(
+              size: .size1,
+              // Five slots: the sample team of five shows in full, and a
+              // larger one counts the rest in the fifth.
+              max: 5,
+              members: [
+                for (final member in team)
+                  UiAvatarGroupMember(
+                    member.name,
+                    initials: member.initials,
+                    accent: member.accent,
+                  ),
+              ],
+            ),
           ),
           for (final member in team.take(3))
             RowBox(

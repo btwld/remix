@@ -20,6 +20,7 @@ import 'package:registry_source/src/default/recipes/dashboard/dashboard_overview
 import 'package:registry_source/src/default/theme/theme_data.dart';
 import 'package:registry_source/src/default/theme/theme_scope.dart';
 import 'package:registry_source/src/default/theme/tokens.dart';
+import 'package:registry_source/src/fortal/components/breadcrumbs.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_data.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_settings.dart';
@@ -832,23 +833,28 @@ void main() {
             preset: preset,
             textDirection: direction,
           );
-          // Vanilla's trail is the `breadcrumbs` component, whose chevron
-          // carries no dashboard key.
-          final separator = preset == .defaultPreset
-              ? find
-                    .ancestor(
-                      of: find.descendant(
-                        of: find.byType(VanillaBreadcrumbs),
-                        matching: find.byWidgetPredicate(
-                          (widget) =>
-                              widget is StyledIcon &&
-                              widget.icon == RemixIcons.chevronRight,
-                        ),
-                      ),
-                      matching: find.byType(Transform),
-                    )
-                    .first
-              : find.byKey(const ValueKey('dashboard-breadcrumb-separator'));
+          // Vanilla's and Fortal's trails are the presets' `breadcrumbs`
+          // components, whose chevrons carry no dashboard key.
+          Finder chevronIn(Type trail) => find
+              .ancestor(
+                of: find.descendant(
+                  of: find.byType(trail),
+                  matching: find.byWidgetPredicate(
+                    (widget) =>
+                        widget is StyledIcon &&
+                        widget.icon == RemixIcons.chevronRight,
+                  ),
+                ),
+                matching: find.byType(Transform),
+              )
+              .first;
+          final separator = switch (preset) {
+            .defaultPreset => chevronIn(VanillaBreadcrumbs),
+            .fortal => chevronIn(FortalBreadcrumbs),
+            .heroui => find.byKey(
+              const ValueKey('dashboard-breadcrumb-separator'),
+            ),
+          };
           expect(separator, findsOneWidget);
           expect(
             tester.widget<Transform>(separator).transform.entry(0, 0),

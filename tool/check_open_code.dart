@@ -173,8 +173,10 @@ const _fortalRegistryItems = <String>[
   'accordion',
   'app_bar',
   'avatar',
+  'avatar_group',
   'badge',
   'base_button',
+  'breadcrumbs',
   'button',
   'callout',
   'card',
@@ -197,6 +199,7 @@ const _fortalRegistryItems = <String>[
   'progress',
   'radio',
   'range_slider',
+  'search_field',
   'segmented_control',
   'select',
   'combobox',
@@ -205,6 +208,7 @@ const _fortalRegistryItems = <String>[
   'skeleton',
   'slider',
   'spinner',
+  'surface',
   'switch',
   'tabs',
   'text',
@@ -833,8 +837,8 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   if (item != null && jobs != null) return null;
   if ((item == 'icons' || item == 'ownership') && preset.name != 'vanilla')
     return null;
-  // Vanilla ships `search_field` too, but only HeroUI has its focused web
-  // build fixture.
+  // Vanilla and Fortal ship `search_field` too, but only HeroUI has its
+  // focused web build fixture.
   if (item == 'search_field' && preset.name != 'heroui') return null;
   if (item != null &&
       item != 'ownership' &&

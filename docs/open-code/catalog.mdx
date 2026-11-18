@@ -107,10 +107,15 @@ with a search icon and a clear button that shows for text, clears on Escape,
 and owns its controller when you pass none. The Vanilla `dashboard_shell`
 header search and the demo's customer search use it.
 
-The `fortal` catalog contains the items above except `breadcrumbs` and `search_field`, and adds `base_button`, `code`,
-`heading`, `kbd`, `text`, and `typography`. `base_button` and
-`typography` are shared authored recipes that arrive transitively with the
-components that use them. Fortal's component names use the configured prefix,
+The `fortal` catalog contains the items above and adds `base_button`,
+`code`, `heading`, `kbd`, `text`, `typography`, `avatar_group`, and
+`surface`. `base_button` and `typography` are shared authored recipes that
+arrive transitively with the components that use them. Fortal's own
+`avatar_group` (`UiAvatarGroup`, size axis; installs `avatar`),
+`breadcrumbs` (`UiBreadcrumbs`, size axis; installs `link` and `text`),
+`search_field` (`UiSearchField`, variant and size axes; installs `textfield`
+and `icon_button`) and `surface` (`UiSurface`, variant and size axes;
+installs `card`) are hand-written compositions with no generated part. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
 `AcmeText` alongside its generated controls.
 
@@ -214,9 +219,9 @@ surface. Registry templates resolve the `iconLibrary` in `remix.yaml` to either
 selected package. Outline and Rounded each draw every icon the presets use, so
 neither adds Lucide. See [Icons in registry presets](/guides/icons#icons-in-registry-presets)
 for how presets size those icons.
-Six Fortal items use icon placeholders: `icons`, `dashboard_shell`,
-`dashboard_demo`, `agent_glyphs_recipe`, `date_picker`, and `date_range_picker`. Vanilla uses
-the same six plus `breadcrumbs` and `search_field`, and HeroUI the same six plus
+Six items use icon placeholders in every preset: `icons`, `dashboard_shell`,
+`dashboard_demo`, `agent_glyphs_recipe`, `date_picker`, and `date_range_picker`.
+Vanilla and Fortal add `breadcrumbs` and `search_field`; HeroUI adds
 `breadcrumbs`, `close_button`, and `search_field`.
 To switch an existing install, change `iconLibrary`, then reinstall every one
 of those you have installed in one command, reviewing first (`--overwrite`
@@ -231,8 +236,8 @@ remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker d
 For Fortal:
 
 ```shell
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker --diff
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker --overwrite
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --diff
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --overwrite
 ```
 
 For HeroUI:

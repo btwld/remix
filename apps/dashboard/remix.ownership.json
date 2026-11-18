@@ -6,7 +6,9 @@
     "uiPath": "lib/ui"
   },
   "targets": {
+    "lib/ui/components/avatar_group.dart": "btwld/remix/registry#fortal/avatar_group",
     "lib/ui/components/base_button.dart": "btwld/remix/registry#fortal/base_button",
+    "lib/ui/components/breadcrumbs.dart": "btwld/remix/registry#fortal/breadcrumbs",
     "lib/ui/components/button.dart": "btwld/remix/registry#fortal/button",
     "lib/ui/components/button.g.dart": "btwld/remix/registry#fortal/button",
     "lib/ui/components/calendar.dart": "btwld/remix/registry#fortal/calendar",
@@ -21,10 +23,12 @@
     "lib/ui/components/range_calendar.dart": "btwld/remix/registry#fortal/range_calendar",
     "lib/ui/components/range_slider.dart": "btwld/remix/registry#fortal/range_slider",
     "lib/ui/components/range_slider.g.dart": "btwld/remix/registry#fortal/range_slider",
+    "lib/ui/components/search_field.dart": "btwld/remix/registry#fortal/search_field",
     "lib/ui/components/select.dart": "btwld/remix/registry#fortal/select",
     "lib/ui/components/select.g.dart": "btwld/remix/registry#fortal/select",
     "lib/ui/components/slider.dart": "btwld/remix/registry#fortal/slider",
     "lib/ui/components/slider.g.dart": "btwld/remix/registry#fortal/slider",
+    "lib/ui/components/surface.dart": "btwld/remix/registry#fortal/surface",
     "lib/ui/components/textfield.dart": "btwld/remix/registry#fortal/textfield",
     "lib/ui/components/textfield.g.dart": "btwld/remix/registry#fortal/textfield",
     "lib/ui/recipes/agent_glyphs_recipe.dart": "btwld/remix/registry#fortal/agent_glyphs_recipe",

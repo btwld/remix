@@ -137,6 +137,27 @@ void main() {
                     card.containerEffects?.overContent?.shadows ?? [],
                     isEmpty,
                   );
+                  // Surfaces speak through fill and contrast, never elevation.
+                  for (final variant in FortalSurfaceVariant.values) {
+                    final surface = fortalSurfaceStyle(
+                      variant: variant,
+                    ).build(context).spec;
+                    final effects = surface.containerEffects;
+                    expect(
+                      (surface.container.spec.decoration! as BoxDecoration)
+                          .boxShadow,
+                      isNull,
+                      reason: variant.name,
+                    );
+                    expect(
+                      [
+                        ...?effects?.behindContent?.shadows,
+                        ...?effects?.overContent?.shadows,
+                      ],
+                      isEmpty,
+                      reason: variant.name,
+                    );
+                  }
                   for (final style in [
                     fortalTextFieldStyle(),
                     fortalTextAreaStyle(),
