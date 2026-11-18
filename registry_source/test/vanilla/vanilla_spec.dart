@@ -1,8 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import 'support.dart';
 
@@ -437,6 +439,119 @@ final _linkTargets = <SpecTarget>[
     source: 'button.tsx: link, hover:underline',
     read: (spec) => spec.spec.label.spec.style?.decoration,
     expected: (_) => TextDecoration.underline,
+  ),
+];
+
+// -- breadcrumbs --------------------------------------------------------------
+
+/// Pumps a two-step trail, a link and the current page, and reads it.
+SpecTarget _breadcrumbs(
+  String property, {
+  required String source,
+  bool hovered = false,
+  required Object? Function(WidgetTester tester) read,
+  required Object? Function(VanillaThemeData theme) expected,
+}) => SpecTarget._(
+  component: 'breadcrumbs',
+  property: property,
+  source: source,
+  actual: (tester, theme) async {
+    await tester.pumpWidget(
+      VanillaTheme(
+        theme: theme,
+        child: hostOf(
+          Center(
+            child: VanillaBreadcrumbs(
+              items: [
+                VanillaBreadcrumbItem('Home', onPressed: () {}),
+                const VanillaBreadcrumbItem('Breadcrumb'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    if (hovered) {
+      final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(pointer.removePointer);
+      await pointer.addPointer(location: Offset.zero);
+      await pointer.moveTo(tester.getCenter(find.text('Home')));
+      await tester.pumpAndSettle();
+    }
+
+    return read(tester);
+  },
+  expected: expected,
+);
+
+TextStyle? _crumbLink(WidgetTester tester) => tester
+    .widget<StyleSpecProvider<LinkSpec>>(
+      find.byType(StyleSpecProvider<LinkSpec>),
+    )
+    .spec
+    .spec
+    .label
+    .spec
+    .style;
+
+final _breadcrumbsTargets = <SpecTarget>[
+  _breadcrumbs(
+    'link text',
+    source: 'breadcrumb.tsx: BreadcrumbList text-sm text-muted-foreground',
+    read: (tester) {
+      final style = _crumbLink(tester);
+      return (
+        style?.fontSize,
+        style == null ? null : style.fontSize! * style.height!,
+        style?.color,
+      );
+    },
+    expected: (theme) => (14.0, closeTo(20, 1e-9), theme.mutedForeground),
+  ),
+  _breadcrumbs(
+    'link weight and decoration',
+    source: 'breadcrumb.tsx: BreadcrumbLink, a plain `a`',
+    read: (tester) =>
+        (_crumbLink(tester)?.fontWeight, _crumbLink(tester)?.decoration),
+    expected: (_) => (FontWeight.w400, anyOf(isNull, TextDecoration.none)),
+  ),
+  _breadcrumbs(
+    'link hover',
+    hovered: true,
+    source: 'breadcrumb.tsx: BreadcrumbLink hover:text-foreground',
+    read: (tester) =>
+        (_crumbLink(tester)?.color, _crumbLink(tester)?.decoration),
+    expected: (theme) => (theme.foreground, anyOf(isNull, TextDecoration.none)),
+  ),
+  _breadcrumbs(
+    'current page',
+    source: 'breadcrumb.tsx: BreadcrumbPage font-normal text-foreground',
+    read: (tester) {
+      final style = tester.widget<Text>(find.text('Breadcrumb')).style;
+      return (style?.fontSize, style?.fontWeight, style?.color);
+    },
+    expected: (theme) => (14.0, FontWeight.w400, theme.foreground),
+  ),
+  _breadcrumbs(
+    'separator',
+    source: 'breadcrumb.tsx: BreadcrumbSeparator ChevronRight [&>svg]:size-3.5',
+    read: (tester) {
+      final icon = tester.widget<Icon>(find.byIcon(RemixIcons.chevronRight));
+      return (icon.size, icon.color);
+    },
+    expected: (theme) => (14.0, theme.mutedForeground),
+  ),
+  _breadcrumbs(
+    'gap',
+    source: 'breadcrumb.tsx: BreadcrumbList sm:gap-2.5',
+    read: (tester) {
+      final chevron = tester.getRect(find.byIcon(RemixIcons.chevronRight));
+      return (
+        chevron.left - tester.getRect(find.text('Home')).right,
+        tester.getRect(find.text('Breadcrumb')).left - chevron.right,
+      );
+    },
+    expected: (_) => (10.0, 10.0),
   ),
 ];
 
@@ -2168,6 +2283,7 @@ final vanillaSpecTargets = <SpecTarget>[
   ..._buttonTargets,
   ..._iconButtonTargets,
   ..._linkTargets,
+  ..._breadcrumbsTargets,
   ..._badgeTargets,
   ..._toggleTargets,
   ..._toggleGroupTargets,

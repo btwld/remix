@@ -1,0 +1,153 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+{{icon:import}}
+
+import '../theme/tokens.dart';
+import 'link.dart';
+
+/// One step of a [{{typePrefix}}Breadcrumbs] trail.
+///
+/// A step with [onPressed] is a link back to that page; one without is plain
+/// muted text, for a level that has no page of its own. The last step is the
+/// current page and is never a link, so its [onPressed] is not used.
+@immutable
+class {{typePrefix}}BreadcrumbItem {
+  const {{typePrefix}}BreadcrumbItem(this.label, {this.onPressed, this.semanticLabel});
+
+  /// The visible text.
+  final String label;
+
+  /// Navigates to this step's page.
+  final VoidCallback? onPressed;
+
+  /// Replaces [label] for assistive technology.
+  final String? semanticLabel;
+}
+
+/// The application's Breadcrumbs: the pages above the current one, then the
+/// current page.
+///
+/// A composition of [{{typePrefix}}Link]s rather than a recipe, because Remix has no
+/// breadcrumb widget. The trail is `textSm` in `mutedForeground`; a link
+/// turns `foreground` under the pointer and rings on keyboard focus, and the
+/// current page is `foreground` at regular weight. A 14px chevron sits 10px
+/// from the steps on either side, mirrored in right-to-left text. The trail
+/// stays on one line, and a step ellipsizes when the row runs out of room.
+///
+/// ```dart
+/// {{typePrefix}}Breadcrumbs(
+///   items: [
+///     {{typePrefix}}BreadcrumbItem('Home', onPressed: openHome),
+///     {{typePrefix}}BreadcrumbItem('Components', onPressed: openComponents),
+///     const {{typePrefix}}BreadcrumbItem('Breadcrumb'),
+///   ],
+/// )
+/// ```
+class {{typePrefix}}Breadcrumbs extends StatelessWidget {
+  const {{typePrefix}}Breadcrumbs({
+    super.key,
+    required this.items,
+    this.semanticLabel = 'Breadcrumb',
+  }) : assert(items.length > 0, 'A trail needs at least the current page.');
+
+  /// The steps from the top level down; the last is the current page.
+  final List<{{typePrefix}}BreadcrumbItem> items;
+
+  /// Names the trail's navigation landmark for assistive technology.
+  final String semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final current = items.length - 1;
+
+    return Semantics(
+      container: true,
+      explicitChildNodes: true,
+      role: .navigation,
+      label: semanticLabel,
+      child: RowBox(
+        style: FlexBoxStyler()
+            .mainAxisSize(.min)
+            .crossAxisAlignment(.center)
+            .spacing({{typePrefix}}Tokens.s2_5),
+        children: [
+          for (final (index, item) in items.indexed) ...[
+            if (index > 0) const _{{typePrefix}}BreadcrumbSeparator(),
+            Flexible(
+              child: index == current || item.onPressed == null
+                  ? _step(item, current: index == current)
+                  : {{typePrefix}}Link(
+                      label: item.label,
+                      semanticLabel: item.semanticLabel,
+                      onPressed: item.onPressed,
+                      style: _linkStyle(),
+                    ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// A step that is not a link: the current page in `foreground`, or a level
+  /// with no page in the trail's muted color.
+  Widget _step({{typePrefix}}BreadcrumbItem item, {required bool current}) {
+    final text = StyledText(
+      item.label,
+      style: _oneLine(
+        TextStyler()
+            .style({{typePrefix}}Tokens.textSm.mix())
+            .fontWeight(FontWeight.w400)
+            .color(
+              current
+                  ? {{typePrefix}}Tokens.foreground()
+                  : {{typePrefix}}Tokens.mutedForeground(),
+            ),
+      ),
+    );
+    final semanticLabel = item.semanticLabel;
+
+    return semanticLabel == null
+        ? text
+        : Semantics(label: semanticLabel, excludeSemantics: true, child: text);
+  }
+}
+
+/// The trail's colors over the Link recipe: regular weight in
+/// `mutedForeground`, turning `foreground` under the pointer instead of
+/// underlining, on one line. The recipe's focus ring and motion stay.
+LinkStyler _linkStyle() => LinkStyler()
+    .label(
+      _oneLine(
+        TextStyler()
+            .fontWeight(FontWeight.w400)
+            .color({{typePrefix}}Tokens.mutedForeground()),
+      ),
+    )
+    .onHovered(
+      .label(
+        .color({{typePrefix}}Tokens.foreground()).decoration(TextDecoration.none),
+      ),
+    );
+
+/// [text] on a single line that ellipsizes when the trail runs out of room.
+TextStyler _oneLine(TextStyler text) =>
+    text.maxLines(1).softWrap(false).overflow(.ellipsis);
+
+/// The chevron between two steps, mirrored in right-to-left text.
+class _{{typePrefix}}BreadcrumbSeparator extends StatelessWidget {
+  const _{{typePrefix}}BreadcrumbSeparator();
+
+  @override
+  Widget build(BuildContext context) => ExcludeSemantics(
+    child: Transform.flip(
+      flipX: Directionality.of(context) == TextDirection.rtl,
+      child: StyledIcon(
+        icon: {{icon:chevronRight}},
+        style: IconStyler()
+            .size({{typePrefix}}Tokens.iconSm)
+            .color({{typePrefix}}Tokens.mutedForeground()),
+      ),
+    ),
+  );
+}

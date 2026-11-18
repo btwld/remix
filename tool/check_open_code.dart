@@ -77,6 +77,7 @@ const _defaultRegistryItems = <String>[
   'app_bar',
   'avatar',
   'badge',
+  'breadcrumbs',
   'button',
   'callout',
   'card',

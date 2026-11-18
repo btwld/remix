@@ -3,6 +3,7 @@ import 'package:remix/remix.dart';
 {{icon:import}}
 
 import '../../components/avatar.dart';
+import '../../components/breadcrumbs.dart';
 import '../../components/button.dart';
 import '../../components/divider.dart';
 import '../../components/icon_button.dart';
@@ -146,7 +147,12 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
             body: body,
             title: title,
             headerTitle: widget.builtInChrome
-                ? _{{typePrefix}}Breadcrumb(page: selectedValue)
+                ? {{typePrefix}}Breadcrumbs(
+                    items: [
+                      {{typePrefix}}BreadcrumbItem(selectedValue.section.label),
+                      {{typePrefix}}BreadcrumbItem(selectedValue.label),
+                    ],
+                  )
                 : null,
             brand: widget.brand,
             account:
@@ -424,45 +430,6 @@ class _{{typePrefix}}Brand extends StatelessWidget {
     style: _textStyle(
       weight: FontWeight.w600,
     ).maxLines(1).softWrap(false).overflow(.ellipsis),
-  );
-}
-
-class _{{typePrefix}}Breadcrumb extends StatelessWidget {
-  const _{{typePrefix}}Breadcrumb({required this.page});
-  final {{typePrefix}}DashboardDemoPage page;
-
-  @override
-  Widget build(BuildContext context) => RowBox(
-    style: FlexBoxStyler()
-        .crossAxisAlignment(.center)
-        .spacing({{typePrefix}}Tokens.s2),
-    children: [
-      Flexible(
-        child: StyledText(
-          page.section.label,
-          style: _textStyle(
-            muted: true,
-          ).maxLines(1).softWrap(false).overflow(.ellipsis),
-        ),
-      ),
-      Transform.flip(
-        key: const ValueKey('dashboard-breadcrumb-separator'),
-        flipX: Directionality.of(context) == TextDirection.rtl,
-        child: StyledIcon(
-          icon: {{icon:chevronRight}},
-          style: IconStyler().size(12).color({{typePrefix}}Tokens.mutedForeground()),
-        ),
-      ),
-      Flexible(
-        child: StyledText(
-          page.label,
-          style: _textStyle(
-            token: {{typePrefix}}Tokens.textBase,
-            weight: FontWeight.w600,
-          ).maxLines(1).softWrap(false).overflow(.ellipsis),
-        ),
-      ),
-    ],
   );
 }
 

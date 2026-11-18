@@ -6,6 +6,7 @@
     "uiPath": "lib/ui"
   },
   "targets": {
+    "lib/ui/components/breadcrumbs.dart": "btwld/remix/registry#vanilla/breadcrumbs",
     "lib/ui/components/button.dart": "btwld/remix/registry#vanilla/button",
     "lib/ui/components/button.g.dart": "btwld/remix/registry#vanilla/button",
     "lib/ui/components/calendar.dart": "btwld/remix/registry#vanilla/calendar",
@@ -15,6 +16,8 @@
     "lib/ui/components/date_range_picker.dart": "btwld/remix/registry#vanilla/date_range_picker",
     "lib/ui/components/icon_button.dart": "btwld/remix/registry#vanilla/icon_button",
     "lib/ui/components/icon_button.g.dart": "btwld/remix/registry#vanilla/icon_button",
+    "lib/ui/components/link.dart": "btwld/remix/registry#vanilla/link",
+    "lib/ui/components/link.g.dart": "btwld/remix/registry#vanilla/link",
     "lib/ui/components/popover.dart": "btwld/remix/registry#vanilla/popover",
     "lib/ui/components/popover.g.dart": "btwld/remix/registry#vanilla/popover",
     "lib/ui/components/range_calendar.dart": "btwld/remix/registry#vanilla/range_calendar",

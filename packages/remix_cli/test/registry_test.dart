@@ -650,6 +650,7 @@ items:
         expect(item, isNotNull, reason: name);
         // Every component reaches the single Remix floor through theme, in dependency order.
         expect(catalog.resolve(name).map((item) => item.name), switch (name) {
+          'breadcrumbs' => ['theme', 'link', name],
           'combobox' => ['theme', 'textfield', name],
           'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
           'calendar' => ['theme', 'icon_button', 'select', name],
@@ -691,6 +692,7 @@ items:
           expect(item.exports, ['icons.dart']);
         } else if (const {
           'sidebar_layout',
+          'breadcrumbs',
           'calendar',
           'date_picker',
           'range_calendar',
@@ -864,6 +866,7 @@ const _componentSurfaces =
       'app_bar': (widgets: ['AppBar'], types: []),
       'avatar': (widgets: ['Avatar'], types: []),
       'badge': (widgets: ['Badge'], types: ['BadgeVariant']),
+      'breadcrumbs': (widgets: ['Breadcrumbs'], types: []),
       'button': (widgets: ['Button'], types: ['ButtonVariant', 'ButtonSize']),
       'calendar': (widgets: ['Calendar'], types: []),
       'callout': (widgets: ['Callout'], types: ['CalloutVariant']),

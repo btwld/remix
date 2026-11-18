@@ -213,6 +213,98 @@ void main() {
     }
   }
 
+  testWidgets('a breadcrumb trail is one 20px line with 10px gaps', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      host(
+        Center(
+          child: VanillaBreadcrumbs(
+            items: [
+              VanillaBreadcrumbItem('Home', onPressed: () {}),
+              const VanillaBreadcrumbItem('Workspace'),
+              const VanillaBreadcrumbItem('Breadcrumb'),
+            ],
+          ),
+        ),
+      ),
+    );
+    final chevrons = find.byIcon(RemixIcons.chevronRight);
+    final home = tester.getRect(find.text('Home'));
+    final first = tester.getRect(chevrons.first);
+    final workspace = tester.getRect(find.text('Workspace'));
+    final last = tester.getRect(chevrons.last);
+    final page = tester.getRect(find.text('Breadcrumb'));
+
+    expect(tester.getSize(find.byType(VanillaBreadcrumbs)).height, 20);
+    expect(first.size, const Size.square(14));
+    expect(first.left - home.right, 10);
+    expect(workspace.left - first.right, 10);
+    expect(last.left - workspace.right, 10);
+    expect(page.left - last.right, 10);
+    for (final rect in [first, workspace, last, page]) {
+      expect(rect.center.dy, home.center.dy);
+    }
+  });
+
+  for (final rtl in [false, true]) {
+    testWidgets('a long breadcrumb trail stays on one line at 200%; RTL=$rtl', (
+      tester,
+    ) async {
+      const first = 'Northstar workspace administration';
+      const page = 'Customer accounts and billing';
+      await tester.pumpWidget(
+        WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          builder: (context, _) => VanillaTheme(
+            child: MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: const TextScaler.linear(2)),
+              child: Directionality(
+                textDirection: rtl ? .rtl : .ltr,
+                child: Center(
+                  child: SizedBox(
+                    width: 240,
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: VanillaBreadcrumbs(
+                        items: [
+                          VanillaBreadcrumbItem(first, onPressed: () {}),
+                          const VanillaBreadcrumbItem(page),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      final trail = tester.getRect(find.byType(VanillaBreadcrumbs));
+      expect(trail.width, lessThanOrEqualTo(240));
+      expect(trail.height, 40, reason: 'one 20px line at 200%');
+      for (final label in [first, page]) {
+        final text = tester.getRect(find.text(label));
+        expect(text.height, 40, reason: label);
+        expect(text.left, greaterThanOrEqualTo(trail.left), reason: label);
+        expect(text.right, lessThanOrEqualTo(trail.right), reason: label);
+        final widget = tester.widget<Text>(find.text(label));
+        expect(widget.maxLines, 1, reason: label);
+        expect(widget.overflow, TextOverflow.ellipsis, reason: label);
+      }
+      final start = rtl ? trail.right : trail.left;
+      expect(
+        (tester.getRect(find.text(first)).center.dx - start).abs(),
+        lessThan((tester.getRect(find.text(page)).center.dx - start).abs()),
+        reason: 'the trail starts at the leading edge',
+      );
+    });
+  }
+
   testWidgets('a dialog is centered and fills at most 512px', (tester) async {
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1;

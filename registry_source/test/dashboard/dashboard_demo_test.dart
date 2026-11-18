@@ -10,6 +10,7 @@ import 'package:mix_chart/mix_chart.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_base.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_records.dart';
 import 'package:registry_source/src/dashboard/dashboard_sample_data.dart';
+import 'package:registry_source/src/default/components/breadcrumbs.dart';
 import 'package:registry_source/src/default/components/icon_button.dart';
 import 'package:registry_source/src/default/components/menu.dart';
 import 'package:registry_source/src/default/components/popover.dart';
@@ -831,9 +832,14 @@ void main() {
             preset: preset,
             textDirection: direction,
           );
-          final separator = find.byKey(
-            const ValueKey('dashboard-breadcrumb-separator'),
-          );
+          // Vanilla's trail is the `breadcrumbs` component, whose chevron
+          // carries no dashboard key.
+          final separator = preset == .defaultPreset
+              ? find.descendant(
+                  of: find.byType(VanillaBreadcrumbs),
+                  matching: find.byType(Transform),
+                )
+              : find.byKey(const ValueKey('dashboard-breadcrumb-separator'));
           expect(separator, findsOneWidget);
           expect(
             tester.widget<Transform>(separator).transform.entry(0, 0),

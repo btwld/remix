@@ -112,6 +112,16 @@ items:
     exports:
       - components/badge.dart
 
+  breadcrumbs:
+    registryDependencies:
+      - theme
+      - link
+    files:
+      - source: templates/breadcrumbs/breadcrumbs.dart.tmpl
+        target: "@ui/components/breadcrumbs.dart"
+    exports:
+      - components/breadcrumbs.dart
+
   button:
     registryDependencies:
       - theme
@@ -249,6 +259,7 @@ items:
       - answer_recipe
       - avatar
       - badge
+      - breadcrumbs
       - button
       - callout
       - card

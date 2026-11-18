@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/vanilla.dart';
@@ -270,6 +271,19 @@ final _cases = <_Case>[
       effects: spec.spec.containerEffects,
     ),
   ),
+  _Case(
+    'breadcrumb link',
+    states: const [WidgetState.hovered, WidgetState.focused],
+    look: (tester, theme, states) async {
+      final spec = await _breadcrumbLink(tester, theme, states);
+
+      return _boxLook(
+        spec.spec.container,
+        label: spec.spec.label.spec.style,
+        effects: spec.spec.containerEffects,
+      );
+    },
+  ),
   for (final variant in VanillaToggleVariant.values)
     _resolved<ToggleSpec>(
       'toggle ${variant.name}',
@@ -527,3 +541,53 @@ final _cases = <_Case>[
     read: (spec) => _boxLook(spec.spec.bodyRow),
   ),
 ];
+
+/// The link of a two-step trail, hovered or keyboard-focused as [states] ask.
+///
+/// The trail takes no focus node, so focus goes to the link's own node.
+Future<StyleSpec<LinkSpec>> _breadcrumbLink(
+  WidgetTester tester,
+  VanillaThemeData theme,
+  Set<WidgetState> states,
+) async {
+  final previous = FocusManager.instance.highlightStrategy;
+  FocusManager.instance.highlightStrategy =
+      FocusHighlightStrategy.alwaysTraditional;
+  addTearDown(() => FocusManager.instance.highlightStrategy = previous);
+
+  await tester.pumpWidget(
+    VanillaTheme(
+      theme: theme,
+      child: hostOf(
+        Center(
+          child: VanillaBreadcrumbs(
+            items: [
+              VanillaBreadcrumbItem('Home', onPressed: () {}),
+              const VanillaBreadcrumbItem('Breadcrumb'),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+  if (states.contains(WidgetState.focused)) {
+    Focus.of(tester.element(find.text('Home'))).requestFocus();
+    await tester.pumpAndSettle();
+  }
+  TestGesture? pointer;
+  if (states.contains(WidgetState.hovered)) {
+    pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await pointer.addPointer(location: Offset.zero);
+    await pointer.moveTo(tester.getCenter(find.text('Home')));
+    await tester.pumpAndSettle();
+  }
+  final spec = tester
+      .widget<StyleSpecProvider<LinkSpec>>(
+        find.byType(StyleSpecProvider<LinkSpec>),
+      )
+      .spec;
+  // Off the trail again, so the next state starts without the pointer.
+  await pointer?.removePointer();
+
+  return spec;
+}

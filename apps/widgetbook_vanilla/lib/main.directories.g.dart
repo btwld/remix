@@ -19,6 +19,8 @@ import 'package:widgetbook_vanilla/components/avatar.dart'
     as _widgetbook_vanilla_components_avatar;
 import 'package:widgetbook_vanilla/components/badge.dart'
     as _widgetbook_vanilla_components_badge;
+import 'package:widgetbook_vanilla/components/breadcrumbs.dart'
+    as _widgetbook_vanilla_components_breadcrumbs;
 import 'package:widgetbook_vanilla/components/button.dart'
     as _widgetbook_vanilla_components_button;
 import 'package:widgetbook_vanilla/components/calendar.dart'
@@ -137,6 +139,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Badge',
             builder:
                 _widgetbook_vanilla_components_badge.buildVanillaBadgeUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaBreadcrumbs',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Breadcrumbs',
+            builder: _widgetbook_vanilla_components_breadcrumbs
+                .buildVanillaBreadcrumbsUseCase,
           ),
         ],
       ),

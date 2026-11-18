@@ -113,6 +113,38 @@ void main() {
           includes: (part) => [part.centerLeft.translate(-1.5, 0)],
         );
       });
+      testWidgets('a breadcrumb link rings outside itself', (tester) async {
+        await _pump(
+          tester,
+          theme.data,
+          (_) => VanillaBreadcrumbs(
+            items: [
+              VanillaBreadcrumbItem('Home', onPressed: () {}),
+              const VanillaBreadcrumbItem('Breadcrumb'),
+            ],
+          ),
+        );
+        // The trail takes no focus node, so the probe drives the link's own.
+        final link = find.byType(RemixLink);
+        final probe = _Probe(
+          tester,
+          theme.data,
+          Focus.of(tester.element(find.text('Home'))),
+        );
+        final page = tester.getRect(find.text('Breadcrumb'));
+
+        await probe.expectRing(
+          part: link,
+          includes: (part) => [part.centerLeft.translate(-1.5, 0)],
+          excludes: (part) => [part.centerLeft.translate(-4.5, 0)],
+        );
+        expect(
+          tester.getRect(find.text('Breadcrumb')),
+          page,
+          reason: 'the current page stays put',
+        );
+      });
+
       testWidgets('a toggle rings outside itself', (tester) async {
         final probe = await _pump(
           tester,

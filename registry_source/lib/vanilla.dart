@@ -21,6 +21,7 @@ export 'src/default/components/accordion.dart';
 export 'src/default/components/app_bar.dart';
 export 'src/default/components/avatar.dart';
 export 'src/default/components/badge.dart';
+export 'src/default/components/breadcrumbs.dart';
 export 'src/default/components/button.dart';
 export 'src/default/components/callout.dart';
 export 'src/default/components/card.dart';

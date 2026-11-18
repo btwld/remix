@@ -24,6 +24,29 @@ void main() {
     );
   });
   test(
+    'Vanilla breadcrumbs compose the link recipe with no generated part',
+    () {
+      final output = PresetBuilder.forRepository(
+        Directory.current,
+        spec: defaultPreset,
+      ).derive();
+      final items =
+          loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+      final item = items['breadcrumbs'] as YamlMap;
+      expect(_strings(item['registryDependencies']), ['theme', 'link']);
+      expect(item.containsKey('generated'), isFalse);
+      final template =
+          output.files['templates/breadcrumbs/breadcrumbs.dart.tmpl'];
+      expect(template, contains('class {{typePrefix}}Breadcrumbs extends'));
+      expect(template, contains('{{icon:chevronRight}}'));
+      // The dashboard demo's header trail is the installed component.
+      expect(
+        _strings((items['dashboard_demo'] as YamlMap)['registryDependencies']),
+        contains('breadcrumbs'),
+      );
+    },
+  );
+  test(
     'Vanilla calendar composites infer complete install closures without generated parts',
     () {
       final output = PresetBuilder.forRepository(

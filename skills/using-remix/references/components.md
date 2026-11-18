@@ -320,6 +320,15 @@ for Overlay, Navigator and toast scope placement.
 ## Navigation
 
 
+- **Breadcrumbs** — Remix has no breadcrumb widget; presets compose one from
+  their link. Vanilla's `remix add breadcrumbs` installs
+  `<Prefix>Breadcrumbs(items: [...])` with
+  `<Prefix>BreadcrumbItem(label, {onPressed, semanticLabel})`. A step with
+  `onPressed` is a `<Prefix>Link` (a tab stop that Enter activates); a step
+  without is muted text; the last step is the current page and never a link.
+  The trail stays on one line and ellipsizes long steps; the chevrons are
+  outside semantics and mirror in right-to-left text. `semanticLabel`
+  (default `'Breadcrumb'`) names the navigation landmark.
 - **RemixTabs** — the behavioral root; no `style`/`styleSpec`. Takes
   `activationMode` (default automatic). There is no `FortalTabs` — compose
   `RemixTabs` with `FortalTabBar`, `FortalTab`, `FortalTabView`. A

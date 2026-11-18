@@ -137,6 +137,38 @@ void main() {
     }
   });
 
+  testWidgets('installed breadcrumbs link earlier steps and end on the page', (
+    tester,
+  ) async {
+    var pressed = 0;
+    await _pumpInScope(
+      tester,
+      AcmeBreadcrumbs(
+        items: [
+          AcmeBreadcrumbItem('Home', onPressed: () => pressed += 1),
+          const AcmeBreadcrumbItem('Breadcrumb'),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+    const theme = AcmeThemeData.light();
+
+    expect(find.byType(AcmeLink), findsOneWidget);
+    expect(
+      _resolvedSpecOf<LinkSpec>(tester).spec.label.spec.style?.color,
+      theme.mutedForeground,
+    );
+    expect(
+      tester.widget<Text>(find.text('Breadcrumb')).style?.color,
+      theme.foreground,
+    );
+    expect(tester.widget<Icon>(find.byType(Icon)).size, 14);
+    await tester.tap(find.text('Home'));
+    await tester.tap(find.text('Breadcrumb'));
+    expect(pressed, 1);
+    expect(tester.takeException(), isNull);
+  });
+
   group('installed Agent recipes', () {
     Widget scope(Widget child) =>
         AgentGlyphs(builder: acmeAgentGlyph, child: child);
