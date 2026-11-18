@@ -20,8 +20,11 @@ import 'textfield.dart';
 ///
 /// Clearing, by the button or by Escape, empties the text, reports `''` to
 /// [onChanged], calls [onCleared], and keeps focus in the field. Escape clears
-/// only when there is text and no input-method composition in progress;
-/// otherwise it passes up, so an enclosing dialog still closes.
+/// when there is text, and the key repeats of that press are spent on it, so
+/// holding Escape does not go on to close an enclosing dialog. During an
+/// input-method composition Escape belongs to the input method and reaches
+/// nothing above the field. With nothing to clear it passes up, so an
+/// enclosing dialog closes.
 ///
 /// ```dart
 /// VanillaSearchField(
@@ -98,7 +101,9 @@ class _VanillaSearchFieldState extends State<VanillaSearchField> {
   TextEditingController? _ownController;
   FocusNode? _ownFocusNode;
   late bool _hasText;
-  late final _clearAction = _ClearSearchAction(this);
+
+  /// Whether the Escape press now held down cleared the field.
+  bool _escapeCleared = false;
 
   TextEditingController get _controller =>
       widget.controller ?? (_ownController ??= TextEditingController());
@@ -152,47 +157,64 @@ class _VanillaSearchFieldState extends State<VanillaSearchField> {
     _focusNode.requestFocus();
   }
 
+  KeyEventResult _onKeyEvent(FocusNode node, KeyEvent event) {
+    if (event.logicalKey != LogicalKeyboardKey.escape) return .ignored;
+    // Composition owns the key: skip the dialog's shortcut, and leave the
+    // event unhandled so the platform's input method still receives it.
+    if (_controller.value.isComposingRangeValid) return .skipRemainingHandlers;
+    switch (event) {
+      case KeyDownEvent():
+        _escapeCleared = _canClear;
+        if (!_escapeCleared) return .ignored;
+        _clear();
+        return .handled;
+      case KeyRepeatEvent():
+        return _escapeCleared ? .handled : .ignored;
+      case KeyUpEvent():
+        final cleared = _escapeCleared;
+        _escapeCleared = false;
+        return cleared ? .handled : .ignored;
+    }
+    return .ignored;
+  }
+
   @override
-  Widget build(BuildContext context) => Shortcuts(
-    shortcuts: const {
-      SingleActivator(LogicalKeyboardKey.escape): _ClearSearchIntent(),
-    },
-    child: Actions(
-      actions: {_ClearSearchIntent: _clearAction},
-      child: VanillaTextField(
-        controller: _controller,
-        focusNode: _focusNode,
-        hintText: widget.hintText,
-        enabled: widget.enabled,
-        readOnly: widget.readOnly,
-        autofocus: widget.autofocus,
-        textInputAction: widget.textInputAction,
-        onChanged: widget.onChanged,
-        onSubmitted: widget.onSubmitted,
-        semanticLabel: widget.semanticLabel,
-        style: _fieldStyle(Directionality.of(context)).merge(widget.style),
-        // In the recipe's accessory icon theme: `mutedForeground`, 16px.
-        leading: const ExcludeSemantics(
-          child: StyledIcon(icon: RemixIcons.search),
-        ),
-        // Always present, so the 8px gap before it plus the 4px end inset
-        // make the 12px text inset the field has without the button.
-        trailing: _canClear
-            // Its own semantics node: a button's semantics are not a
-            // container, so it would otherwise merge into whatever node
-            // encloses the field.
-            ? Semantics(
-                container: true,
-                child: VanillaIconButton.ghost(
-                  size: .small,
-                  icon: RemixIcons.close,
-                  semanticLabel: widget.clearSemanticLabel,
-                  onPressed: _clear,
-                  style: _clearButtonStyle(),
-                ),
-              )
-            : const SizedBox.shrink(),
+  Widget build(BuildContext context) => Focus(
+    canRequestFocus: false,
+    onKeyEvent: _onKeyEvent,
+    child: VanillaTextField(
+      controller: _controller,
+      focusNode: _focusNode,
+      hintText: widget.hintText,
+      enabled: widget.enabled,
+      readOnly: widget.readOnly,
+      autofocus: widget.autofocus,
+      textInputAction: widget.textInputAction,
+      onChanged: widget.onChanged,
+      onSubmitted: widget.onSubmitted,
+      semanticLabel: widget.semanticLabel,
+      style: _fieldStyle(Directionality.of(context)).merge(widget.style),
+      // In the recipe's accessory icon theme: `mutedForeground`, 16px.
+      leading: const ExcludeSemantics(
+        child: StyledIcon(icon: RemixIcons.search),
       ),
+      // Always present, so the 8px gap before it plus the 4px end inset
+      // make the 12px text inset the field has without the button.
+      trailing: _canClear
+          // Its own semantics node: a button's semantics are not a
+          // container, so it would otherwise merge into whatever node
+          // encloses the field.
+          ? Semantics(
+              container: true,
+              child: VanillaIconButton.ghost(
+                size: .small,
+                icon: RemixIcons.close,
+                semanticLabel: widget.clearSemanticLabel,
+                onPressed: _clear,
+                style: _clearButtonStyle(),
+              ),
+            )
+          : const SizedBox.shrink(),
     ),
   );
 }
@@ -219,28 +241,3 @@ IconButtonStyler _clearButtonStyle() => IconButtonStyler()
     .size(VanillaTokens.s6, VanillaTokens.s6)
     .borderRadius(.all(VanillaTokens.radiusSm()))
     .icon(.color(VanillaTokens.mutedForeground()));
-
-/// Escape inside the field.
-class _ClearSearchIntent extends Intent {
-  const _ClearSearchIntent();
-}
-
-/// Clears on Escape while there is text and no composition in progress.
-///
-/// Disabled otherwise, so the key goes on to the enclosing shortcuts: an open
-/// dialog still closes on Escape from an empty search field.
-class _ClearSearchAction extends Action<_ClearSearchIntent> {
-  _ClearSearchAction(this.field);
-
-  final _VanillaSearchFieldState field;
-
-  @override
-  bool isEnabled(_ClearSearchIntent intent) =>
-      field._canClear && !field._controller.value.isComposingRangeValid;
-
-  @override
-  Object? invoke(_ClearSearchIntent intent) {
-    field._clear();
-    return null;
-  }
-}

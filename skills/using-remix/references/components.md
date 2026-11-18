@@ -94,8 +94,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   and focus node when none is given and draws its own search icon. The clear
   button shows only while the field is enabled, editable and not empty;
   clearing reports `''` to `onChanged`, calls `onCleared` and keeps focus.
-  Escape clears too, but only with text and no IME composition; otherwise it
-  passes up, so an enclosing dialog still closes. HeroUI's `search_field` is a
+  Escape clears too, and holding it does not then close an enclosing dialog;
+  during IME composition Escape stays with the input method. With nothing to
+  clear, Escape passes up, so the dialog closes. HeroUI's `search_field` is a
   recipe instead: the app passes its icon and clear button and wires them.
 - **RangeSlider** — `RemixRangeSlider` takes exactly two ordered, parent-owned
   values. Give the lower and upper thumbs distinct `semanticLabels` in that

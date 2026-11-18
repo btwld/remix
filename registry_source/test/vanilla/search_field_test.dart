@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -344,7 +346,8 @@ void main() {
     expect(focusNode.hasFocus, isTrue);
   });
 
-  testWidgets('Escape clears text and otherwise passes up', (tester) async {
+  testWidgets('Escape clears text, and passes up when there is nothing to '
+      'clear', (tester) async {
     final controller = TextEditingController();
     addTearDown(controller.dispose);
     final changes = <String>[];
@@ -374,18 +377,97 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pump();
     expect((cleared, dismissed), (1, 1));
+  });
 
-    // An input method's composition owns Escape.
-    controller.value = const TextEditingValue(
-      text: 'に',
-      selection: TextSelection.collapsed(offset: 1),
-      composing: TextRange(start: 0, end: 1),
-    );
-    await tester.pump();
-    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pump();
-    expect(controller.text, 'に');
-    expect((cleared, dismissed), (1, 2));
+  group('in a dialog', () {
+    /// Opens a dismissible dialog holding [field] over the test app.
+    Future<void> openDialog(WidgetTester tester, Widget field) async {
+      await pump(tester, const SizedBox(key: ValueKey('page')));
+      unawaited(
+        Navigator.of(tester.element(find.byKey(const ValueKey('page')))).push(
+          RawDialogRoute<void>(
+            barrierDismissible: true,
+            barrierLabel: 'Dismiss',
+            pageBuilder: (_, _, _) =>
+                Center(child: SizedBox(width: 320, child: field)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    Finder dialogField() => find.byType(VanillaSearchField);
+
+    testWidgets('holding Escape clears once and leaves the dialog open, and '
+        'a fresh Escape then closes it', (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+      var cleared = 0;
+      await openDialog(
+        tester,
+        VanillaSearchField(
+          semanticLabel: 'Search',
+          controller: controller,
+          onCleared: () => cleared++,
+        ),
+      );
+      await tester.enterText(editable(), 'ada');
+      await tester.pump();
+
+      expect(await tester.sendKeyDownEvent(LogicalKeyboardKey.escape), isTrue);
+      await tester.pump();
+      for (var repeat = 0; repeat < 3; repeat++) {
+        expect(
+          await tester.sendKeyRepeatEvent(LogicalKeyboardKey.escape),
+          isTrue,
+          reason: 'repeat $repeat belongs to the press that cleared',
+        );
+        await tester.pump();
+      }
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(controller.text, isEmpty);
+      expect(cleared, 1);
+      expect(dialogField(), findsOneWidget, reason: 'the dialog stays open');
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(cleared, 1);
+      expect(dialogField(), findsNothing, reason: 'an empty field passes up');
+    });
+
+    testWidgets('Escape during composition stays with the input method', (
+      tester,
+    ) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+      var cleared = 0;
+      await openDialog(
+        tester,
+        VanillaSearchField(
+          semanticLabel: 'Search',
+          controller: controller,
+          onCleared: () => cleared++,
+        ),
+      );
+      await tester.showKeyboard(editable());
+      controller.value = const TextEditingValue(
+        text: 'に',
+        selection: TextSelection.collapsed(offset: 1),
+        composing: TextRange(start: 0, end: 1),
+      );
+      await tester.pump();
+
+      // Unhandled by the framework, so the platform's input method gets it,
+      // and no handler above the field sees it.
+      expect(await tester.sendKeyDownEvent(LogicalKeyboardKey.escape), isFalse);
+      await tester.sendKeyRepeatEvent(LogicalKeyboardKey.escape);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(controller.text, 'に');
+      expect(cleared, 0);
+      expect(dialogField(), findsOneWidget, reason: 'the dialog stays open');
+    });
   });
 
   testWidgets('a read-only field passes Escape up', (tester) async {
