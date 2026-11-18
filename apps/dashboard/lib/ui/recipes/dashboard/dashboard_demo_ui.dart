@@ -1,6 +1,7 @@
 export '../../components/avatar.dart';
 export '../../components/avatar_group.dart';
 export '../../components/badge.dart';
+export '../../components/breadcrumbs.dart';
 export '../../components/button.dart';
 export '../../components/callout.dart';
 export '../../components/card.dart';

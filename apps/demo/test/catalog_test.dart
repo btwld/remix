@@ -2,6 +2,7 @@ import 'package:demo/components/accordion.dart' as accordion;
 import 'package:demo/components/avatar.dart' as avatar;
 import 'package:demo/components/avatar_group.dart' as avatar_group;
 import 'package:demo/components/badge.dart' as badge;
+import 'package:demo/components/breadcrumbs.dart' as breadcrumbs;
 import 'package:demo/components/button.dart' as button;
 import 'package:demo/components/callout.dart' as callout;
 import 'package:demo/components/card.dart' as card;
@@ -50,6 +51,7 @@ final catalogs = <String, WidgetBuilder>{
   'avatar': avatar.buildAvatarCatalogUseCase,
   'avatar group': avatar_group.buildAvatarGroupCatalogUseCase,
   'badge': badge.buildBadgeCatalogUseCase,
+  'breadcrumbs': breadcrumbs.buildBreadcrumbsCatalogUseCase,
   'button': button.buildButtonCatalogUseCase,
   'callout': callout.buildCalloutCatalogUseCase,
   'card': card.buildCardCatalogUseCase,

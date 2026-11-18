@@ -281,6 +281,29 @@ included, or with `semanticLabel`; it has no focus stop. `highContrast`
 reaches every avatar, and a caller `style` merges last into each. Tests cover
 both modes, per-member accents, images, the count, RTL order and 200% text.
 
+## Breadcrumbs
+
+Breadcrumbs promote the dashboard header's trail into the registry: a
+hand-written row of `FortalBreadcrumbItem(label, onPressed:, semanticLabel:)`
+steps. `FortalBreadcrumbsSize` size1–size3 set text1/text2/text3, with
+12/12/16px (space3/space3/space4) chevrons a space1/space2/space2 gap from
+the steps; size2 is the default and the dashboard's. A step with `onPressed` is
+a `FortalLink` at the trail's size, so it keeps the link's accent text, hover
+underline, 40px target, focus ring and Enter activation. A step without one
+is gray11 regular text. The last step is the current page in gray12 medium
+and is never a link, whatever its `onPressed`.
+
+Chevrons are gray11 `chevronRight` glyphs, mirrored in right-to-left text and
+excluded from semantics. The trail keeps to one line. Every step keeps its
+natural width while the trail fits; past that, the chevrons and gaps keep
+theirs and the steps take fair shares of the rest, so a short step stays
+whole and the longer ones ellipsize. Even shares, as flexible row children
+take, would cut a long step beside a short one when the whole trail fits.
+Item `semanticLabel`s replace their labels; the trail's `semanticLabel` adds
+one named container, and without it the steps join the surrounding node.
+Tests cover both modes, sizes, keyboard focus and activation, fitting and
+truncation, RTL and 200% text.
+
 ## Enforcement
 
 - `tool/check_fortal.dart` (`melos run fortal:check`) holds the catalog against

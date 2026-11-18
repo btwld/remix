@@ -227,3 +227,14 @@ picks avatar sizes 1–4 (default size2) and the gap; `max` (default 4) collapse
 the rest into a solid `+N`. The avatars never overlap, because Fortal has no
 seam ring or corner cut to separate them. The row is one semantics node
 naming every member unless you pass `semanticLabel`.
+
+## Breadcrumbs
+
+`remix add breadcrumbs` installs `<Prefix>Breadcrumbs`, a one-line trail of
+`<Prefix>BreadcrumbItem(label, onPressed: ..., semanticLabel: ...)` steps with
+`size: .size1`–`.size3` (default size2). A step with `onPressed` is a
+`<Prefix>Link`, with its focus ring and Enter activation; a step without one is
+muted text. The last step is the current page in strong medium text and is
+never a link. Chevrons mirror in right-to-left text and are hidden from
+assistive technology. Steps keep their width while the trail fits; past
+that, short steps stay whole and the longer ones ellipsize. Pass `semanticLabel` to group the trail under one name.

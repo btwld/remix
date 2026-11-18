@@ -11,6 +11,7 @@ import 'components/toggle.dart' as toggle;
 import 'components/toggle_group.dart' as toggle_group;
 import 'components/tabs.dart' as tabs;
 import 'components/link.dart' as link;
+import 'components/breadcrumbs.dart' as breadcrumbs;
 import 'components/checkbox.dart' as checkbox;
 import 'components/radio.dart' as radio;
 import 'components/switch.dart' as switch_story;
@@ -184,6 +185,11 @@ final _families = <_Family>[
   ),
   (id: 'tabs', group: 'Actions', build: tabs.buildTabsCatalogUseCase),
   (id: 'link', group: 'Actions', build: link.buildLinkCatalogUseCase),
+  (
+    id: 'breadcrumbs',
+    group: 'Actions',
+    build: breadcrumbs.buildBreadcrumbsCatalogUseCase,
+  ),
   (
     id: 'checkbox',
     group: 'Inputs',

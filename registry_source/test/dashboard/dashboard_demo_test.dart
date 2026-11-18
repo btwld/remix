@@ -19,6 +19,7 @@ import 'package:registry_source/src/default/recipes/dashboard/dashboard_overview
 import 'package:registry_source/src/default/theme/theme_data.dart';
 import 'package:registry_source/src/default/theme/theme_scope.dart';
 import 'package:registry_source/src/default/theme/tokens.dart';
+import 'package:registry_source/src/fortal/components/breadcrumbs.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_data.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_settings.dart';
@@ -831,9 +832,17 @@ void main() {
             preset: preset,
             textDirection: direction,
           );
-          final separator = find.byKey(
-            const ValueKey('dashboard-breadcrumb-separator'),
-          );
+          // Fortal's trail is the preset's breadcrumbs, which flip their
+          // chevron the same way.
+          final separator = preset == .fortal
+              ? find.ancestor(
+                  of: find.descendant(
+                    of: find.byType(FortalBreadcrumbs),
+                    matching: find.byType(StyledIcon),
+                  ),
+                  matching: find.byType(Transform),
+                )
+              : find.byKey(const ValueKey('dashboard-breadcrumb-separator'));
           expect(separator, findsOneWidget);
           expect(
             tester.widget<Transform>(separator).transform.entry(0, 0),

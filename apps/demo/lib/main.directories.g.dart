@@ -16,6 +16,8 @@ import 'package:demo/components/avatar.dart' as _demo_components_avatar;
 import 'package:demo/components/avatar_group.dart'
     as _demo_components_avatar_group;
 import 'package:demo/components/badge.dart' as _demo_components_badge;
+import 'package:demo/components/breadcrumbs.dart'
+    as _demo_components_breadcrumbs;
 import 'package:demo/components/button.dart' as _demo_components_button;
 import 'package:demo/components/calendar.dart' as _demo_components_calendar;
 import 'package:demo/components/callout.dart' as _demo_components_callout;
@@ -79,6 +81,20 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Catalog',
             builder:
                 _demo_components_avatar_group.buildAvatarGroupCatalogUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'FortalBreadcrumbs',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Breadcrumbs Component',
+            builder: _demo_components_breadcrumbs.buildBreadcrumbsUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder:
+                _demo_components_breadcrumbs.buildBreadcrumbsCatalogUseCase,
           ),
         ],
       ),

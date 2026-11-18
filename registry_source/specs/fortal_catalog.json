@@ -222,6 +222,35 @@
       ]
     },
     {
+      "id": "breadcrumbs",
+      "fortalType": "FortalBreadcrumbs",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        }
+      },
+      "defaults": {},
+      "supportedStyleProps": [
+        "color"
+      ],
+      "states": [
+        "idle",
+        "link",
+        "current",
+        "focused",
+        "truncated",
+        "rtl"
+      ],
+      "tests": [
+        "test/components/breadcrumbs/breadcrumbs_fortal_test.dart"
+      ]
+    },
+    {
       "id": "button",
       "fortalType": "FortalButton",
       "enums": {

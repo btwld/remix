@@ -131,7 +131,10 @@ String _render(Map<String, Object?> manifest, Directory packageRoot) {
 
 /// Fortal compositions with no Remix component page of their own, filed under
 /// the sidebar group they belong with.
-const _unpagedFamilies = {'avatar_group': 'Data display'};
+const _unpagedFamilies = {
+  'avatar_group': 'Data display',
+  'breadcrumbs': 'Navigation',
+};
 
 /// Reuse sidebar categories and fail if a new family has no navigation home.
 Map<String, List<Map<String, Object?>>> _categories(

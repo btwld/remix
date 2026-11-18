@@ -103,8 +103,9 @@ The `fortal` catalog contains the items above and adds `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`. `base_button` and
 `typography` are shared authored recipes that arrive transitively with the
 components that use them. Fortal also ships `avatar_group`
-(`UiAvatarGroup`, size axis; installs `avatar`), a hand-written composition
-with no generated part. Fortal's component names use the configured prefix,
+(`UiAvatarGroup`, size axis; installs `avatar`) and `breadcrumbs`
+(`UiBreadcrumbs`, size axis; installs `link` and `text`), hand-written
+compositions with no generated part. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
 `AcmeText` alongside its generated controls.
 
@@ -208,9 +209,10 @@ surface. Registry templates resolve the `iconLibrary` in `remix.yaml` to either
 selected package. Outline and Rounded each draw every icon the presets use, so
 neither adds Lucide. See [Icons in registry presets](/guides/icons#icons-in-registry-presets)
 for how presets size those icons.
-Six Vanilla and Fortal items use icon placeholders: `icons`, `dashboard_shell`,
-`dashboard_demo`, `agent_glyphs_recipe`, `date_picker`, and `date_range_picker`. HeroUI uses
-the same six plus `breadcrumbs`, `close_button`, and `search_field`.
+Six Vanilla items use icon placeholders: `icons`, `dashboard_shell`,
+`dashboard_demo`, `agent_glyphs_recipe`, `date_picker`, and `date_range_picker`. Fortal uses
+the same six plus `breadcrumbs`. HeroUI uses the same six plus `breadcrumbs`,
+`close_button`, and `search_field`.
 To switch an existing install, change `iconLibrary`, then reinstall every one
 of those you have installed in one command, reviewing first (`--overwrite`
 replaces only the items you name, so one left out keeps the old library):
@@ -218,6 +220,13 @@ replaces only the items you name, so one left out keeps the old library):
 ```shell
 remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker --diff
 remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker --overwrite
+```
+
+For Fortal:
+
+```shell
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs --diff
+remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs --overwrite
 ```
 
 For HeroUI:

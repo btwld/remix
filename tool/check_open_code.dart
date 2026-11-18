@@ -174,6 +174,7 @@ const _fortalRegistryItems = <String>[
   'avatar_group',
   'badge',
   'base_button',
+  'breadcrumbs',
   'button',
   'callout',
   'card',

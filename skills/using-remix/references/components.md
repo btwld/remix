@@ -345,6 +345,10 @@ for Overlay, Navigator and toast scope placement.
   frame. Widget-state variants (`onHovered`, `onPressed`, `onFocused`,
   `onFocusVisible`, `onDisabled`) describe interaction with the trigger but
   resolve once for the whole item, so they may style `container` too.
+- **Breadcrumbs** — a preset composition, not a Remix widget. HeroUI's
+  `breadcrumbs` wraps onto more lines; Fortal's keeps one line, ellipsizes its
+  steps and renders actionable ones as `<Prefix>Link`. The last step is the
+  current page and never a link. See [Fortal](fortal.md#breadcrumbs).
 - **RemixDisclosure** — standalone trigger and one inline panel for items
   that do not need `RemixAccordionGroup` coordination. Same top-level
   shorthand-forwards-to-`trigger` rule as Accordion. `FortalDisclosure` has

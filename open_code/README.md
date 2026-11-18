@@ -167,8 +167,9 @@ These hand-written composites wire the Vanilla child recipes and have no
 generated part; selection and overlay behavior stay in Remix.
 
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`,
-and the hand-written composition `avatar_group` (depends on `theme` and
-`avatar`).
+and the hand-written compositions `avatar_group` (depends on `theme` and
+`avatar`) and `breadcrumbs` (depends on `theme`, `link`, `text` and
+`typography`).
 
 HeroUI follows HeroUI's names, adding `alert`, `avatar_group`, `breadcrumbs`,
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
