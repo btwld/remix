@@ -58,6 +58,7 @@ export 'package:naked_ui/naked_ui.dart'
         NakedRangeCalendarState,
         NakedRangePosition,
         NakedSearchField,
+        NakedSearchFieldBindings,
         NakedSliderSemanticFormatterCallback,
         NakedTabState,
         OverlayAlignment,
