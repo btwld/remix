@@ -537,9 +537,14 @@ class RemixMenu<T> extends StatefulWidget {
   State<RemixMenu<T>> createState() => _RemixMenuState<T>();
 }
 
-class _RemixMenuState<T> extends State<RemixMenu<T>> {
+class _RemixMenuState<T> extends State<RemixMenu<T>>
+    with SingleTickerProviderStateMixin {
   late final MenuController _internalController;
-  final _panelTransition = RemixPanelTransitionHandle();
+  late final _panelTransition = RemixPanelTransitionHandle(
+    vsync: this,
+    resolve: _resolvePanelTransition,
+    reduceMotion: () => remixReducedMotionOf(context),
+  );
   FocusNode? _ownedControlFocusNode;
 
   @override
@@ -550,6 +555,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 
   @override
   void dispose() {
+    _panelTransition.dispose();
     _ownedControlFocusNode?.dispose();
     super.dispose();
   }
@@ -561,6 +567,17 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
         .trigger(MenuTriggerStyler().mainAxisSize(.min))
         .overlay(FlexBoxStyler().mainAxisSize(.min).wrap(.intrinsicWidth()))
         .merge(widget.style);
+  }
+
+  /// The transition the style gives the panel about to open, resolved where
+  /// the menu is, because the panel itself has not been built yet.
+  RemixPanelTransition? _resolvePanelTransition() {
+    final styleSpec = widget.styleSpec;
+    if (styleSpec != null) return styleSpec.panelTransition;
+    final inherited = Style.maybeOf<MenuSpec>(context);
+    final style = _buildStyle();
+    final effective = inherited is MenuStyler ? inherited.merge(style) : style;
+    return effective.build(context).spec.panelTransition;
   }
 
   MenuController get _effectiveController =>
@@ -642,7 +659,8 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       onOpen: widget.onOpen,
       onClose: widget.onClose,
       onCanceled: widget.onCanceled,
-      onOpenRequested: widget.onOpenRequested,
+      onOpenRequested: (position, showOverlay) => _panelTransition
+          .openRequested(position, showOverlay, widget.onOpenRequested),
       onCloseRequested: (hideOverlay) =>
           _panelTransition.closeRequested(hideOverlay, widget.onCloseRequested),
       consumeOutsideTaps: widget.consumeOutsideTaps,

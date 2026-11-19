@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart' show internal;
+import 'package:flutter/foundation.dart' show ChangeNotifier, internal;
 import 'package:flutter/widgets.dart';
-
-import 'remix_reduced_motion.dart';
 
 /// What a [RemixPanelTransitionBuilder] receives for one overlay panel.
 @immutable
@@ -93,22 +91,74 @@ final class RemixPanelTransition {
       'reverseDuration: $reverseDuration)';
 }
 
-/// Lets a component's close request reach the panel it opened.
+/// Runs the open and close animation of one overlay component's panel.
 ///
-/// The component owns one, passes [closeRequested] as the anchor's
-/// `onCloseRequested`, and builds its panel with [RemixPanelTransitionHost].
+/// The component owns one (it is the [TickerProvider]), passes [openRequested]
+/// and [closeRequested] as the anchor's request callbacks, and builds its
+/// panel with [RemixPanelTransitionHost]. The animation starts when the open
+/// is requested, not when the panel first builds, so it is a frame ahead of
+/// the panel.
 @internal
-final class RemixPanelTransitionHandle {
-  _RemixPanelTransitionHostState? _host;
+final class RemixPanelTransitionHandle extends ChangeNotifier {
+  RemixPanelTransitionHandle({
+    required this.vsync,
+    required this.resolve,
+    required this.reduceMotion,
+  });
 
-  /// Plays the exit, then calls [hideOverlay]; hides at once when no panel
-  /// with a transition is mounted.
-  void _close(VoidCallback hideOverlay) {
-    final host = _host;
-    if (host == null) {
-      hideOverlay();
+  final TickerProvider vsync;
+
+  /// The transition the style gives the panel about to open, or `null`.
+  final RemixPanelTransition? Function() resolve;
+
+  /// Whether the user asks to reduce motion.
+  final bool Function() reduceMotion;
+
+  AnimationController? _controller;
+  RemixPanelTransition? _transition;
+  bool _closing = false;
+
+  /// The animation of the open or closing panel, or `null` without a
+  /// transition.
+  Animation<double>? get animation => _transition == null ? null : _controller;
+
+  /// Whether the exit is playing.
+  bool get closing => _closing;
+
+  /// An `onOpenRequested` that starts the transition when the panel shows.
+  ///
+  /// A caller-supplied [userRequested] runs first and keeps its contract: the
+  /// panel shows when it calls `showOverlay`, and that call starts the open.
+  void openRequested(
+    Offset? position,
+    VoidCallback showOverlay,
+    void Function(Offset? position, VoidCallback showOverlay)? userRequested,
+  ) {
+    void show() {
+      _begin();
+      showOverlay();
+    }
+
+    if (userRequested == null) {
+      show();
     } else {
-      host._close(hideOverlay);
+      userRequested(position, show);
+    }
+  }
+
+  void _begin() {
+    final transition = resolve();
+    _closing = false;
+    _transition = transition;
+    if (transition == null) return;
+    final controller = _controller ??= AnimationController(vsync: vsync);
+    controller
+      ..duration = transition.duration
+      ..reverseDuration = transition.reverseDuration ?? transition.duration;
+    if (reduceMotion()) {
+      controller.value = 1;
+    } else {
+      controller.forward(from: 0);
     }
   }
 
@@ -127,15 +177,36 @@ final class RemixPanelTransitionHandle {
       userRequested(() => _close(hideOverlay));
     }
   }
+
+  void _close(VoidCallback hideOverlay) {
+    final controller = _controller;
+    if (_transition == null || controller == null || reduceMotion()) {
+      _transition = null;
+      hideOverlay();
+      return;
+    }
+    // A second request while the exit plays keeps the first one's hide.
+    if (_closing) return;
+    _closing = true;
+    notifyListeners();
+    controller.reverse().then((_) {
+      _transition = null;
+      _closing = false;
+      hideOverlay();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
 }
 
-/// Owns the open and close animation of one mounted overlay panel.
-///
-/// Builds [child] through [transition] when set, and otherwise returns it
-/// unchanged. The animation starts after the first frame, so the panel is
-/// painted at `0.0` before it opens.
+/// Builds [child] through the transition the [handle] is running, and returns
+/// it unchanged when there is none.
 @internal
-final class RemixPanelTransitionHost extends StatefulWidget {
+final class RemixPanelTransitionHost extends StatelessWidget {
   const RemixPanelTransitionHost({
     super.key,
     required this.handle,
@@ -150,107 +221,26 @@ final class RemixPanelTransitionHost extends StatefulWidget {
   final Widget child;
 
   @override
-  State<RemixPanelTransitionHost> createState() =>
-      _RemixPanelTransitionHostState();
-}
-
-class _RemixPanelTransitionHostState extends State<RemixPanelTransitionHost>
-    with SingleTickerProviderStateMixin {
-  // Created only for a panel that has a transition, so a plain panel never
-  // builds a ticker.
-  AnimationController? _animation;
-  AnimationController get _controller =>
-      _animation ??= AnimationController(vsync: this);
-  bool _closing = false;
-  bool _started = false;
-
-  RemixPanelTransition? get _transition => widget.transition;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.handle._host = this;
-    if (_transition == null) return;
-    _syncDurations();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && !_closing) _open();
-    });
-  }
-
-  @override
-  void didUpdateWidget(RemixPanelTransitionHost oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.handle != widget.handle) {
-      oldWidget.handle._host = null;
-      widget.handle._host = this;
-    }
-    _syncDurations();
-    if (oldWidget.transition == null && widget.transition != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && !_closing) _open();
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    if (widget.handle._host == this) widget.handle._host = null;
-    _animation?.dispose();
-    super.dispose();
-  }
-
-  void _syncDurations() {
-    final transition = _transition;
-    if (transition == null) return;
-    _controller.duration = transition.duration;
-    _controller.reverseDuration =
-        transition.reverseDuration ?? transition.duration;
-  }
-
-  void _open() {
-    _started = true;
-    if (remixReducedMotionOf(context)) {
-      _controller.value = 1;
-    } else {
-      _controller.forward();
-    }
-  }
-
-  void _close(VoidCallback hideOverlay) {
-    if (_transition == null || remixReducedMotionOf(context)) {
-      hideOverlay();
-      return;
-    }
-    // A second request while the exit plays keeps the first one's hide.
-    if (_closing) return;
-    setState(() => _closing = true);
-    // Closed before the open frame ran: nothing is visible to animate.
-    if (!_started) {
-      hideOverlay();
-      return;
-    }
-    _controller.reverse().then((_) {
-      if (mounted) hideOverlay();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final transition = _transition;
-    if (transition == null) return widget.child;
+    final animation = handle.animation;
+    final transition = this.transition;
+    if (animation == null || transition == null) return child;
 
     // A closing panel takes no input, so a click cannot select an item that
     // is already leaving.
-    return IgnorePointer(
-      ignoring: _closing,
-      child: Builder(
-        builder: (context) => transition.builder(
-          context,
-          RemixPanelTransitionInfo(
-            animation: _controller,
-            anchorRect: widget.anchorRect,
+    return ListenableBuilder(
+      listenable: handle,
+      builder: (context, _) => IgnorePointer(
+        ignoring: handle.closing,
+        child: Builder(
+          builder: (context) => transition.builder(
+            context,
+            RemixPanelTransitionInfo(
+              animation: animation,
+              anchorRect: anchorRect,
+            ),
+            child,
           ),
-          widget.child,
         ),
       ),
     );
