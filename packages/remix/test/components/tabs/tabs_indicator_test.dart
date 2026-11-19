@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:flutter/physics.dart' show SpringDescription;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -256,6 +257,72 @@ void main() {
         tester.widget<RemixBoxAdapter>(_indicator).containerEffects?.outline,
         const BorderSide(color: Colors.red, width: 2),
       );
+    });
+
+    testWidgets('paints the pill over the bar fill and under the label', (
+      tester,
+    ) async {
+      final boundary = GlobalKey();
+      await tester.pumpRemixApp(
+        RepaintBoundary(
+          key: boundary,
+          child: RemixTabs(
+            selectedTabId: 'a',
+            onChanged: (_) {},
+            child: RemixTabBar(
+              style: TabBarStyler()
+                  .color(const Color(0xFFFF0000))
+                  .padding(.all(8))
+                  .indicator(BoxStyler().color(const Color(0xFF0000FF))),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 80,
+                    child: RemixTab(tabId: 'a', label: 'Alpha'),
+                  ),
+                  SizedBox(
+                    width: 80,
+                    child: RemixTab(tabId: 'b', label: 'Beta'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final pill = tester.getRect(_indicator);
+      final bar = tester.getRect(find.byKey(boundary));
+      final pixels = (await tester.runAsync(() async {
+        final render =
+            boundary.currentContext!.findRenderObject()!
+                as RenderRepaintBoundary;
+        final image = await render.toImage();
+        return image.toByteData();
+      }))!;
+      Color at(Offset p) {
+        final x = (p.dx - bar.left).round();
+        final y = (p.dy - bar.top).round();
+        final i = (y * bar.width.round() + x) * 4;
+        return Color.fromARGB(
+          pixels.getUint8(i + 3),
+          pixels.getUint8(i),
+          pixels.getUint8(i + 1),
+          pixels.getUint8(i + 2),
+        );
+      }
+
+      // Near the pill's corner, clear of the label.
+      final inside = at(pill.topLeft + const Offset(3, 3));
+      expect(inside.b, greaterThan(.4));
+      expect(inside.r, lessThan(.2));
+      // The bar's padding, outside the pill, keeps the fill.
+      final outside = at(pill.topLeft - const Offset(4, 4));
+      expect(outside.r, greaterThan(.9));
+      expect(outside.b, lessThan(.1));
+      expect(pill.left, greaterThan(bar.left));
     });
 
     testWidgets('no indicator by default: nothing extra is built', (

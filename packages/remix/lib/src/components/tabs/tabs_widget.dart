@@ -112,15 +112,23 @@ class RemixTabBar extends StatelessWidget {
         style: style,
         styleSpec: styleSpec,
         builder: (context, spec) {
-          final bar = FlexBox(styleSpec: spec.container, children: [child]);
           final indicator = spec.indicator;
-          if (indicator == null) return bar;
+          if (indicator == null) {
+            return FlexBox(styleSpec: spec.container, children: [child]);
+          }
 
-          return _TabIndicatorHost(
-            indicator: indicator,
-            indicatorEffects: spec.indicatorEffects,
-            motion: spec.indicatorMotion,
-            child: bar,
+          // The indicator lives inside the bar's box, so it paints over the
+          // bar's own fill and border and under the tabs.
+          return FlexBox(
+            styleSpec: spec.container,
+            children: [
+              _TabIndicatorHost(
+                indicator: indicator,
+                indicatorEffects: spec.indicatorEffects,
+                motion: spec.indicatorMotion,
+                child: child,
+              ),
+            ],
           );
         },
       ),

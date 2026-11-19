@@ -7,7 +7,8 @@ class TabBarSpec with _$TabBarSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
-  /// A surface shared by the tabs that sits behind the selected tab and glides
+  /// A surface shared by the tabs that sits behind the selected tab, over the
+  /// bar's own fill and border, and glides
   /// to the next one when the selection changes.
   ///
   /// It takes the selected tab's bounds, so `margin` insets it and the
