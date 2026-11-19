@@ -8,12 +8,13 @@ part of 'disclosure.dart';
 
 /// Deui recipe for [RemixDisclosure].
 ///
-/// [animationStyle] defaults to the panel's `200ms var(--ease-out-quad)`.
+/// [animationStyle] defaults to Deui's accordion timing: 200 ms in and out on
+/// [Curves.ease], which is also Remix's own default.
 class DeuiDisclosure extends StatelessWidget {
   const DeuiDisclosure({
     super.key,
     this.animationStyle = const AnimationStyle(
-      curve: DeuiTokens.easeOutQuad,
+      curve: Curves.ease,
       duration: _panelDuration,
       reverseDuration: _panelDuration,
     ),

@@ -8,11 +8,12 @@ part 'disclosure.g.dart';
 
 /// {{typePrefix}} recipe for [RemixDisclosure].
 ///
-/// [animationStyle] defaults to the panel's `200ms var(--ease-out-quad)`.
+/// [animationStyle] defaults to {{typePrefix}}'s accordion timing: 200 ms in and out on
+/// [Curves.ease], which is also Remix's own default.
 @MixWidget(target: RemixDisclosure.new)
 DisclosureStyler {{valuePrefix}}DisclosureStyle({
   AnimationStyle animationStyle = const AnimationStyle(
-    curve: {{typePrefix}}Tokens.easeOutQuad,
+    curve: Curves.ease,
     duration: _panelDuration,
     reverseDuration: _panelDuration,
   ),
@@ -27,7 +28,7 @@ DisclosureStyler {{valuePrefix}}DisclosureStyle({
     )
     .merge(style);
 
-/// `.disclosure__content` `height 200ms`, `opacity 200ms`.
+/// The panel's height and opacity, 200 ms both ways.
 const _panelDuration = Duration(milliseconds: 200);
 
 /// `.disclosure__body`: `p-2`.

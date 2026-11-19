@@ -84,6 +84,7 @@ TabStyler deuiTabStyle({
       .height(_height)
       .padding(.horizontal(_paddingX))
       .mainAxisAlignment(.center)
+      .icon(.size(_iconSize).color(DeuiTokens.muted()))
       .label(
         .style(
           DeuiTokens.textSm.mix(),
@@ -127,12 +128,15 @@ TabViewStyler deuiTabViewStyle({
 }) => TabViewStyler().padding(.all(_panelPadding)).merge(style);
 
 /// A selected tab's foreground, at full opacity even while hovered.
-TabStyler _selected(ColorToken foreground) =>
-    TabStyler().label(.color(foreground())).wrap(.opacity(1));
+TabStyler _selected(ColorToken foreground) => TabStyler()
+    .label(.color(foreground()))
+    .icon(.color(foreground()))
+    .wrap(.opacity(1));
 
 /// `.tabs__tab`: `h-8 px-4`, and `opacity-70` while hovered.
 const _height = 32.0;
 const _paddingX = 16.0;
+const _iconSize = 16.0;
 const _hoverOpacity = .7;
 
 /// `.tabs__list`: `p-1`; the secondary list's `border-b` and its `h-0.5`

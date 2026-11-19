@@ -1,3 +1,6 @@
+import 'dart:ui' show ImageFilter;
+
+import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
@@ -113,6 +116,101 @@ DialogStyler {{valuePrefix}}ModalStyle({
       )
       .merge(style);
 }
+
+/// Opens [builder] with {{typePrefix}}'s modal motion: a 650 ms spring in (opacity, an
+/// 8px rise and a .96 to 1 scale), a blur of 24 that follows the opacity, and
+/// a 150 ms ease-out back. [{{typePrefix}}Tokens.backdrop] is the barrier.
+///
+/// This is `showRemixDialog` with its `transitionDuration`,
+/// `reverseTransitionDuration` and `transitionBuilder` set; it adds no route of
+/// its own. With reduced motion (`MediaQuery.disableAnimations`) the modal
+/// appears and leaves at once. Dismissing mid-entrance returns from the current
+/// pose over the reverse duration.
+Future<T?> show{{typePrefix}}Modal<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  bool barrierDismissible = true,
+  String? barrierLabel,
+  bool useRootNavigator = true,
+  RouteSettings? routeSettings,
+}) {
+  final reduced = MediaQuery.disableAnimationsOf(context);
+
+  return showRemixDialog<T>(
+    context: context,
+    builder: builder,
+    barrierColor: {{typePrefix}}Tokens.backdrop.resolve(context),
+    barrierDismissible: barrierDismissible,
+    barrierLabel: barrierLabel ?? 'Dismiss dialog',
+    useRootNavigator: useRootNavigator,
+    routeSettings: routeSettings,
+    transitionDuration: reduced ? Duration.zero : _enter,
+    reverseTransitionDuration: reduced ? Duration.zero : _exit,
+    transitionBuilder: (context, animation, secondary, child) {
+      if (reduced) return child;
+
+      return AnimatedBuilder(
+        animation: animation,
+        builder: (context, _) {
+          final reverse = animation.status == AnimationStatus.reverse;
+          final progress = reverse
+              ? 1 - _easeOut.transform(1 - animation.value)
+              : _spring.x(animation.value * _springSpan);
+          final blur = reverse
+              ? progress
+              : _easeOut.transform((animation.value * 3.25).clamp(0.0, 1.0));
+          final shown = progress.clamp(0.0, 1.0);
+
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              IgnorePointer(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: _blur * blur,
+                    sigmaY: _blur * blur,
+                  ),
+                  child: const SizedBox.expand(),
+                ),
+              ),
+              Opacity(
+                opacity: shown,
+                child: Transform.translate(
+                  offset: Offset(
+                    0,
+                    (reverse ? _riseOut : _rise) * (1 - progress),
+                  ),
+                  child: Transform.scale(
+                    scale: _scaleFrom + (1 - _scaleFrom) * progress,
+                    child: child,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+const _enter = Duration(milliseconds: 650);
+const _exit = Duration(milliseconds: 150);
+const _easeOut = Cubic(.16, 1, .3, 1);
+const _blur = 24.0;
+const _rise = 8.0;
+const _riseOut = 6.0;
+const _scaleFrom = .96;
+
+/// The panel spring (mass .5, stiffness 420, damping 40) settles in about
+/// 0.65 s of its own time; the 650 ms route runs it over that span.
+const _springSpan = .65;
+final _spring = SpringSimulation(
+  const SpringDescription(mass: .5, stiffness: 420, damping: 40),
+  0,
+  1,
+  0,
+);
 
 /// The positioning wrapper `.modal__container`: inset by its padding, then
 /// aligned.
