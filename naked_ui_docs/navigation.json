@@ -70,6 +70,10 @@
           "href": "/widget/checkbox"
         },
         {
+          "title": "NakedCheckboxGroup",
+          "href": "/widget/checkbox-group"
+        },
+        {
           "title": "NakedDialog",
           "href": "/widget/dialog"
         },

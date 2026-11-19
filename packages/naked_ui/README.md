@@ -26,6 +26,7 @@ or see the [documentation source](../../naked_ui_docs/README.md) to contribute.
 - NakedLink — link semantics and Enter-only activation
 - NakedListbox — visible single- or multi-selection with keyboard focus independent of selection
 - NakedCheckbox — toggle behavior and semantics
+- NakedCheckboxGroup / NakedCheckboxGroupItem — controlled multi-selection with independent checkbox options
 - NakedCombobox — autocomplete field on Flutter's RawAutocomplete
 - NakedRadio / NakedRadioGroup — single‑select radio on RawRadio with group management
 - NakedSelect — caller-controlled selection and controlled/uncontrolled opening with keyboard navigation
