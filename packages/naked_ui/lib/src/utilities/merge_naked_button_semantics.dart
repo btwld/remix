@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 
-/// Allows a composite trigger to own the semantics of its buttons.
+/// Lets an enclosing trigger own the semantics of nested buttons and triggers.
 class MergeNakedButtonSemantics extends InheritedWidget {
   /// Creates a merge scope for the trigger subtree.
   const MergeNakedButtonSemantics({required super.child, this.enabled = true});
 
-  /// Whether descendant buttons defer their boundary to the trigger.
+  /// Whether descendants defer their boundary to the enclosing trigger.
   final bool enabled;
 
   /// Whether the nearest trigger scope requests merging.

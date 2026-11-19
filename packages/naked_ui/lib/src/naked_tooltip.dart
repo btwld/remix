@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -19,8 +20,8 @@ const _defaultTooltipAnimationStyle = AnimationStyle(
 /// [RawTooltip] manages trigger handling, delays, feedback, animation,
 /// hoverable content, and overlay lifetime. This widget provides the headless
 /// overlay builder, collision-aware positioning, and optional semantics
-/// filtering. [overlayBuilder] maps to [RawTooltip.tooltipBuilder], and
-/// [semanticLabel] maps to [RawTooltip.semanticsTooltip].
+/// filtering. [overlayBuilder] maps to [RawTooltip.tooltipBuilder].
+/// [semanticLabel] describes the trigger and is announced when the tooltip opens.
 ///
 /// Pass a [GlobalKey] to [tooltipKey] to show the tooltip imperatively via
 /// [RawTooltipState.ensureTooltipVisible]. [onOpenChanged] reports visibility
@@ -191,6 +192,11 @@ class _NakedTooltipState extends State<NakedTooltip>
 
   GlobalKey<RawTooltipState> get _tooltipKey =>
       widget.tooltipKey ?? _internalTooltipKey;
+
+  String? get _semanticsTooltip =>
+      widget.excludeSemantics || widget.semanticLabel?.trim().isEmpty == true
+      ? null
+      : widget.semanticLabel;
 
   static OverlayPlacement _initialPlacement(OverlayPositionConfig config) =>
       OverlayPlacement(
@@ -409,8 +415,14 @@ class _NakedTooltipState extends State<NakedTooltip>
     // The overlay can first report its status during build. Deliver from the
     // owner so closing survives overlay removal, but not tooltip disposal.
     final skipDelay = widget.skipDelayDuration;
+    final announcement = visible ? _semanticsTooltip : null;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) widget.onOpenChanged?.call(visible);
+      if (mounted) {
+        if (announcement != null && _visible) {
+          unawaited(SemanticsService.tooltip(announcement));
+        }
+        widget.onOpenChanged?.call(visible);
+      }
       _updateWarmth(skipDelay);
     });
   }
@@ -498,17 +510,12 @@ class _NakedTooltipState extends State<NakedTooltip>
   Widget build(BuildContext context) {
     final textDirection = Directionality.of(context);
     final animationStyle = _animationStyle;
-    // RawTooltip treats an empty semantics label as "no tooltip". Preserve
-    // NakedTooltip's ability to show visual content without a label.
-    final semanticsTooltip =
-        widget.excludeSemantics || widget.semanticLabel?.trim().isEmpty == true
-        ? null
-        : widget.semanticLabel;
+    final semanticsTooltip = _semanticsTooltip;
     final parentOwnsTrigger = MergeNakedButtonSemantics.isRequested(context);
     final ownsTrigger = semanticsTooltip != null && !parentOwnsTrigger;
     Widget result = RawTooltip(
       key: _tooltipKey,
-      semanticsTooltip: semanticsTooltip,
+      semanticsTooltip: null,
       tooltipBuilder: (context, animation) {
         _captureRawAnimation(animation);
         return OverlayPlacementScope(
@@ -556,7 +563,11 @@ class _NakedTooltipState extends State<NakedTooltip>
       },
       child: MergeNakedButtonSemantics(
         enabled: ownsTrigger || parentOwnsTrigger,
-        child: widget.child,
+        child: Semantics(
+          container: ownsTrigger,
+          tooltip: semanticsTooltip,
+          child: widget.child,
+        ),
       ),
     );
     result = MouseRegion(

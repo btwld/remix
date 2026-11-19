@@ -66,21 +66,21 @@
     "codeSha256": "d98ed24a778f7bd5431eedd7876f6c80a45f3d33f9ad0240327e791fe25f1f17",
     "reason": "API signature for NakedMenu; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_menu.dart",
-    "sourceSha256": "52dadf9a0fb279c60823d22a3ee4c7d0824f473406d3ec2e132d3a0445a1c46c",
+    "sourceSha256": "44891fdf958c4cf182dcf8c729aaff0190b29d15b22cb55cd5a311bac5cea9c3",
     "symbol": "NakedMenu"
   },
   "widget/menu.mdx#2": {
     "codeSha256": "d0b0fae5dad3f300c4594ae22aa5ef53f96b0cccc666df1ca46c480d7be76fb6",
     "reason": "API signature for NakedMenuItem; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_menu.dart",
-    "sourceSha256": "52dadf9a0fb279c60823d22a3ee4c7d0824f473406d3ec2e132d3a0445a1c46c",
+    "sourceSha256": "44891fdf958c4cf182dcf8c729aaff0190b29d15b22cb55cd5a311bac5cea9c3",
     "symbol": "NakedMenuItem"
   },
   "widget/popover.mdx#2": {
     "codeSha256": "ef0cad23defe53871061adff5ebb13a141f57a6bad35ed8f1acce3dc34679523",
     "reason": "API signature for NakedPopover; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_popover.dart",
-    "sourceSha256": "60d8db73c7dcb463ffdd31c78badcfd913511ca11a1ad18748b1a4881a541269",
+    "sourceSha256": "be1030375b5b32bc92f06417181d2f061cc2d06cce998e94e58f6015cb3841de",
     "symbol": "NakedPopover"
   },
   "widget/radio.mdx#1": {
@@ -171,7 +171,7 @@
     "codeSha256": "88e65915fbefb2402b663370547343f84dc2204dd28b48457b3febf568bcf802",
     "reason": "API signature for NakedTooltip; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_tooltip.dart",
-    "sourceSha256": "c392b96716293916d31bd864edc4a2499e8581250b6cb2f35f809c2598db3561",
+    "sourceSha256": "0bbd91acee834e79678f3c476332117e2bca478ea76e5501c79d0b158f64a529",
     "symbol": "NakedTooltip"
   },
   "widget/slider.mdx#1": {

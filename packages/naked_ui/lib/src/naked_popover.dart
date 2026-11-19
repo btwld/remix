@@ -345,7 +345,7 @@ class _NakedPopoverState extends State<NakedPopover>
     });
   }
 
-  Widget _buildChildOwnedTrigger(FocusNode childFocusNode) {
+  Widget _buildChildOwnedTrigger({required bool ownsSemantics}) {
     final state = NakedPopoverState(
       states: widgetStates,
       isOpen: _menuController.isOpen,
@@ -366,7 +366,7 @@ class _NakedPopoverState extends State<NakedPopover>
       child: content,
     );
     trigger = Semantics(
-      container: true,
+      container: ownsSemantics,
       enabled: true,
       button: true,
       // Disclosure state: announce open/closed alongside the button role, so AT
@@ -400,14 +400,15 @@ class _NakedPopoverState extends State<NakedPopover>
         widget.child is Focus && !identical(returnNode, childFocusNode);
 
     if (widget.openOnTap) {
+      final ownsSemantics = !MergeNakedButtonSemantics.isRequested(context);
       if (identical(returnNode, childFocusNode)) {
-        return _buildChildOwnedTrigger(childFocusNode!);
+        return _buildChildOwnedTrigger(ownsSemantics: ownsSemantics);
       }
 
       // Wrap NakedButton (rather than extend it with an `expanded` param) so the
       // disclosure state merges onto the button's node. Mirrors NakedMenu.
       return Semantics(
-        container: true,
+        container: ownsSemantics,
         expanded: _menuController.isOpen,
         child: MergeNakedButtonSemantics(
           child: NakedButton(

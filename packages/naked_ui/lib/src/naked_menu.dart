@@ -1075,7 +1075,11 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
         : menubar != null
         ? trigger
         : widget.openOnTap
-        ? Semantics(container: true, expanded: _isOpen, child: trigger)
+        ? Semantics(
+            container: !MergeNakedButtonSemantics.isRequested(context),
+            expanded: _isOpen,
+            child: trigger,
+          )
         : _MenuControlSemantics(expanded: _isOpen, child: trigger);
 
     return RawMenuAnchor(
