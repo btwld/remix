@@ -10,7 +10,7 @@ mixin _$TabBarSpec implements Spec<TabBarSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<BoxSpec>? get indicator;
   RemixBoxEffectsSpec? get indicatorEffects;
-  RemixTabIndicatorMotion? get indicatorMotion;
+  AnimationConfig? get indicatorMotion;
 
   @override
   Type get type => TabBarSpec;
@@ -20,7 +20,7 @@ mixin _$TabBarSpec implements Spec<TabBarSpec>, Diagnosticable {
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<BoxSpec>? indicator,
     RemixBoxEffectsSpec? indicatorEffects,
-    RemixTabIndicatorMotion? indicatorMotion,
+    AnimationConfig? indicatorMotion,
   }) {
     return TabBarSpec(
       container: container ?? this.container,
@@ -278,13 +278,13 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
   final Prop<RemixBoxEffectsSpec>? $indicatorEffects;
-  final Prop<RemixTabIndicatorMotion>? $indicatorMotion;
+  final Prop<AnimationConfig>? $indicatorMotion;
 
   const TabBarStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? indicator,
     Prop<RemixBoxEffectsSpec>? indicatorEffects,
-    Prop<RemixTabIndicatorMotion>? indicatorMotion,
+    Prop<AnimationConfig>? indicatorMotion,
     super.variants,
     super.modifier,
     super.animation,
@@ -297,7 +297,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     FlexBoxStyler? container,
     BoxStyler? indicator,
     RemixBoxEffectsMix? indicatorEffects,
-    RemixTabIndicatorMotion? indicatorMotion,
+    AnimationConfig? indicatorMotion,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<TabBarSpec>>? variants,
@@ -317,7 +317,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
       TabBarStyler().indicator(value);
   factory TabBarStyler.indicatorEffects(RemixBoxEffectsMix value) =>
       TabBarStyler().indicatorEffects(value);
-  factory TabBarStyler.indicatorMotion(RemixTabIndicatorMotion value) =>
+  factory TabBarStyler.indicatorMotion(AnimationConfig value) =>
       TabBarStyler().indicatorMotion(value);
   factory TabBarStyler.color(Color value) => TabBarStyler().color(value);
   factory TabBarStyler.gradient(GradientMix value) =>
@@ -891,7 +891,7 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
   }
 
   /// Sets the indicatorMotion.
-  TabBarStyler indicatorMotion(RemixTabIndicatorMotion value) {
+  TabBarStyler indicatorMotion(AnimationConfig value) {
     return merge(TabBarStyler(indicatorMotion: value));
   }
 

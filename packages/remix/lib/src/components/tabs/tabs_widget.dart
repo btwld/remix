@@ -243,29 +243,32 @@ class RemixTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _TabIndicatorAnchor(
+    final tab = NakedTab(
       tabId: tabId,
-      child: NakedTab(
-        tabId: tabId,
-        enabled: enabled,
-        mouseCursor: mouseCursor,
-        enableFeedback: enableFeedback,
-        focusNode: focusNode,
-        autofocus: autofocus,
-        onFocusChange: onFocusChange,
-        onHoverChange: onHoverChange,
-        onPressChange: onPressChange,
-        semanticLabel: semanticLabel ?? label,
-        builder: (context, state, _) {
-          return RemixStyleSpecBuilder<TabSpec>(
-            style: style,
-            styleSpec: styleSpec,
-            controller: NakedTabState.controllerOf(context),
-            builder: (context, spec) => _buildTabContent(context, spec, state),
-          );
-        },
-      ),
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      semanticLabel: semanticLabel ?? label,
+      builder: (context, state, _) {
+        return RemixStyleSpecBuilder<TabSpec>(
+          style: style,
+          styleSpec: styleSpec,
+          controller: NakedTabState.controllerOf(context),
+          builder: (context, spec) => _buildTabContent(context, spec, state),
+        );
+      },
     );
+
+    // Only a bar with an indicator needs to know where its tabs are; without
+    // one the tab is built exactly as before.
+    final registry = _TabIndicatorScope.maybeOf(context);
+    if (registry == null) return tab;
+    return _TabIndicatorAnchor(registry: registry, tabId: tabId, child: tab);
   }
 }
 

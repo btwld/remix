@@ -1,9 +1,10 @@
 library remix_tabs;
 
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
-import 'package:flutter/physics.dart' show SpringDescription, SpringSimulation;
+import 'package:flutter/physics.dart' show SpringSimulation;
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
