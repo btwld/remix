@@ -8,6 +8,11 @@ part of 'dropdown.dart';
 
 /// Deui recipe for [RemixMenu]: the dropdown trigger and its popover menu.
 ///
+/// The panel opens in 360 ms and closes in 260 ms through Remix's panel
+/// transition: [deuiDropdownTransition] fades it, scales it from .96 and wipes
+/// it open from the corner at the trigger. Replace it with
+/// `MenuStyler.panelTransition`.
+///
 /// Style a single row with [deuiDropdownItemStyle], for example a danger item
 /// in `RemixMenuItem.style`.
 class DeuiDropdown<T> extends StatelessWidget {

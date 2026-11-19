@@ -24,7 +24,9 @@ controls and a blue primary, with no shadows. Its catalog is deliberately small
 checkbox, disclosure, dropdown, link, modal, popover, progress, select,
 separator, skeleton, spinner, switch, tabs, text field and tooltip). Agent,
 dashboard, chart, calendar, data table, search field, combobox and toolbar
-recipes are not part of it yet. Motion that needs new Remix capability (overlay
-enter/exit, anchor-origin grow, staggered rows, disclosure timing) is not
-expressed; recipes carry the style only. `open_code/deui_fixture` is its
+recipes are not part of it yet. The dropdown opens and closes through Remix's
+panel transition (a 360 ms clip wipe from the trigger, 260 ms out) and the tab
+bar's indicator glides between tabs on deui's spring. Motion that needs more
+Remix capability (anchor-origin grow of other overlays, staggered rows) is not
+expressed; those recipes carry the style only. `open_code/deui_fixture` is its
 installed-source gallery; run `--preset deui --source checkout --keep`.

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
@@ -54,6 +56,9 @@ class DeuiTabBar extends StatelessWidget {
 }
 
 /// Deui recipe for [RemixTabBar], the tab list container.
+///
+/// The selected indicator is one surface that glides between tabs on a 470 ms
+/// overdamped spring; replace the motion with `TabBarStyler.indicatorMotion`.
 TabBarStyler deuiTabBarStyle({
   DeuiTabsVariant variant = .primary,
   TabBarStyler style = const TabBarStyler.create(),
@@ -63,18 +68,30 @@ TabBarStyler deuiTabBarStyle({
       TabBarStyler()
           .color(DeuiTokens.defaultColor())
           .borderRadius(.all(_listRadius()))
-          .padding(.all(_listPadding)),
-    .secondary => TabBarStyler().border(
-      .bottom(.color(DeuiTokens.border()).width(_ruleWidth)),
-    ),
+          .padding(.all(_listPadding))
+          .indicator(
+            BoxStyler()
+                .color(DeuiTokens.segment())
+                .borderRadius(.all(DeuiTokens.radius3xl())),
+          )
+          .indicatorEffects(deuiSurfaceEffects()),
+    .secondary =>
+      TabBarStyler()
+          .border(.bottom(.color(DeuiTokens.border()).width(_ruleWidth)))
+          // The `h-0.5` indicator is the bottom edge of the selected tab.
+          .indicator(
+            BoxStyler().border(
+              .bottom(.color(DeuiTokens.accent()).width(_indicatorWidth)),
+            ),
+          ),
   };
-  return result.merge(style);
+  return result.indicatorMotion(_glide).merge(style);
 }
 
 /// Deui recipe for [RemixTab].
 ///
-/// The selected tab paints the indicator itself; upstream slides one shared
-/// indicator between tabs.
+/// The selected tab changes its foreground only; the pill or underline is the
+/// tab bar's shared indicator, so it glides between tabs.
 @MixWidget(target: RemixTab.new)
 TabStyler deuiTabStyle({
   DeuiTabsVariant variant = .primary,
@@ -97,24 +114,16 @@ TabStyler deuiTabStyle({
         .primary =>
           TabStyler()
               .borderRadius(.all(DeuiTokens.radius3xl()))
-              .onSelected(
-                _selected(DeuiTokens.segmentForeground)
-                    .color(DeuiTokens.segment())
-                    .containerEffects(deuiSurfaceEffects()),
-              ),
-        // The `h-0.5` indicator is the bottom edge, transparent until
-        // selected; the top padding keeps the label centered in the tab.
+              .onSelected(_selected(DeuiTokens.segmentForeground)),
+        // The `h-0.5` indicator is the bottom edge of the bar's indicator;
+        // this transparent edge and the top padding keep the label centered.
         .secondary =>
           TabStyler()
               .padding(.top(_indicatorWidth))
               .border(
                 .bottom(.color(DeuiTokens.transparent).width(_indicatorWidth)),
               )
-              .onSelected(
-                _selected(
-                  DeuiTokens.foreground,
-                ).border(.bottom(.color(DeuiTokens.accent()))),
-              ),
+              .onSelected(_selected(DeuiTokens.foreground)),
       })
       .onFocusVisible(TabStyler().containerEffects(deuiFocusRing()))
       .onDisabled(TabStyler().wrap(.opacity(DeuiTokens.disabledOpacity)))
@@ -126,6 +135,34 @@ TabStyler deuiTabStyle({
 TabViewStyler deuiTabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
 }) => TabViewStyler().padding(.all(_panelPadding)).merge(style);
+
+const _glide = RemixTabIndicatorMotion(
+  duration: Duration(milliseconds: 470),
+  curve: _TabGlide(slow: -10.4356, fast: -19.5644, seconds: .47),
+);
+
+/// The unit-step response of an overdamped spring, normalized at its stop
+/// time: the glide of Deui's selected pill.
+class _TabGlide extends Curve {
+  const _TabGlide({
+    required this.slow,
+    required this.fast,
+    required this.seconds,
+  });
+
+  final double slow;
+  final double fast;
+  final double seconds;
+
+  double _response(double elapsed) =>
+      1 -
+      (fast * math.exp(slow * elapsed) - slow * math.exp(fast * elapsed)) /
+          (fast - slow);
+
+  @override
+  double transformInternal(double t) =>
+      _response(t * seconds) / _response(seconds);
+}
 
 /// A selected tab's foreground, at full opacity even while hovered.
 TabStyler _selected(ColorToken foreground) => TabStyler()

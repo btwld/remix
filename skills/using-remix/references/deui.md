@@ -35,7 +35,9 @@ deui's blue `primary`, and `highlight` is its teal accent. Raised surfaces
 ## Not included
 
 Search field, combobox, toolbar, listbox, data table, calendar, charts and the
-Agent and dashboard recipes. Motion that Remix cannot express yet is not
-reproduced: overlay enter and exit, anchor-origin grow, staggered rows,
-separate disclosure open and close timing, and checkbox or switch indicator
-progress. Build those in your app until Remix supports them.
+Agent and dashboard recipes. The dropdown's wipe (`MenuStyler.panelTransition`)
+and the tab indicator's glide (`TabBarStyler.indicator`) are Remix hooks, so a
+call can replace either. Motion that Remix cannot express yet is not
+reproduced: anchor-origin grow of other overlays, staggered rows, and checkbox
+or switch indicator progress. Build those in your app until Remix supports
+them.

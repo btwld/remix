@@ -8,8 +8,8 @@ part of 'tabs.dart';
 
 /// Deui recipe for [RemixTab].
 ///
-/// The selected tab paints the indicator itself; upstream slides one shared
-/// indicator between tabs.
+/// The selected tab changes its foreground only; the pill or underline is the
+/// tab bar's shared indicator, so it glides between tabs.
 class DeuiTab extends StatelessWidget {
   const DeuiTab({
     super.key,
