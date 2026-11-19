@@ -171,7 +171,7 @@
     "codeSha256": "88e65915fbefb2402b663370547343f84dc2204dd28b48457b3febf568bcf802",
     "reason": "API signature for NakedTooltip; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_tooltip.dart",
-    "sourceSha256": "0bbd91acee834e79678f3c476332117e2bca478ea76e5501c79d0b158f64a529",
+    "sourceSha256": "e89ffbb52ca8397cd46baef36db247f977277b88254d20015456ed2c2ac80bea",
     "symbol": "NakedTooltip"
   },
   "widget/slider.mdx#1": {

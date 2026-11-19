@@ -50,7 +50,7 @@ void main() {
           if (message case {
             'type': 'tooltip',
             'data': {'message': String text},
-          } when text.isNotEmpty) {
+          }) {
             announcements.add(text);
           }
           return null;
@@ -129,6 +129,13 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.semantics.byLabel('Tooltip content'), findsOne);
         expect(expectTrigger(Tristate.isFalse), triggerId);
+        expect(announcements, [description]);
+
+        tester.semantics.tap(trigger);
+        await tester.pumpAndSettle();
+        expect(expectTrigger(Tristate.isTrue), triggerId);
+        expect(overlay, findsOne);
+        expect(find.semantics.byLabel('Tooltip content'), findsOne);
         expect(announcements, [description]);
       } finally {
         handle.dispose();

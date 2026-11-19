@@ -116,6 +116,7 @@ const NakedTooltip({
 - The tooltip dismisses on outside tap (controllable via `enableTapToDismiss`)
 - Only one tooltip is shown at a time when using nested tooltips
 - Visual overlay content is semantics-excluded automatically when a non-empty `semanticLabel` describes it on the trigger; set `excludeOverlaySemantics` explicitly to override this behavior
+- Attach a labeled tooltip directly to the control it describes. When it wraps a group, a nested menu or popover trigger can merge its button role and actions into an enclosing field's semantics instead of remaining separately accessible.
 
 ## Positioning Tips
 

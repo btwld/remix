@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart' show RenderProxyBox;
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -415,14 +416,8 @@ class _NakedTooltipState extends State<NakedTooltip>
     // The overlay can first report its status during build. Deliver from the
     // owner so closing survives overlay removal, but not tooltip disposal.
     final skipDelay = widget.skipDelayDuration;
-    final announcement = visible ? _semanticsTooltip : null;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        if (announcement != null && _visible) {
-          unawaited(SemanticsService.tooltip(announcement));
-        }
-        widget.onOpenChanged?.call(visible);
-      }
+      if (mounted) widget.onOpenChanged?.call(visible);
       _updateWarmth(skipDelay);
     });
   }
@@ -515,7 +510,7 @@ class _NakedTooltipState extends State<NakedTooltip>
     final ownsTrigger = semanticsTooltip != null && !parentOwnsTrigger;
     Widget result = RawTooltip(
       key: _tooltipKey,
-      semanticsTooltip: null,
+      semanticsTooltip: semanticsTooltip,
       tooltipBuilder: (context, animation) {
         _captureRawAnimation(animation);
         return OverlayPlacementScope(
@@ -563,11 +558,13 @@ class _NakedTooltipState extends State<NakedTooltip>
       },
       child: MergeNakedButtonSemantics(
         enabled: ownsTrigger || parentOwnsTrigger,
-        child: Semantics(
-          container: ownsTrigger,
-          tooltip: semanticsTooltip,
-          child: widget.child,
-        ),
+        child: ownsTrigger
+            ? Semantics(
+                container: true,
+                tooltip: semanticsTooltip,
+                child: widget.child,
+              )
+            : widget.child,
       ),
     );
     result = MouseRegion(
@@ -593,9 +590,36 @@ class _NakedTooltipState extends State<NakedTooltip>
       child: result,
     );
 
-    return widget.excludeSemantics
-        ? ExcludeSemantics(child: result)
-        : Semantics(container: ownsTrigger, child: result);
+    if (widget.excludeSemantics) return ExcludeSemantics(child: result);
+    return ownsTrigger ? _TooltipPortalSemantics(child: result) : result;
+  }
+}
+
+/// Keeps RawTooltip's portal traversal anchor separate from the trigger's.
+/// RawTooltip announces the label itself; only the trigger exposes it in the
+/// tree.
+class _TooltipPortalSemantics extends SingleChildRenderObjectWidget {
+  const _TooltipPortalSemantics({required super.child});
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderTooltipPortalSemantics();
+}
+
+class _RenderTooltipPortalSemantics extends RenderProxyBox {
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config.isSemanticBoundary = true;
+  }
+
+  @override
+  void assembleSemanticsNode(
+    SemanticsNode node,
+    SemanticsConfiguration config,
+    Iterable<SemanticsNode> children,
+  ) {
+    super.assembleSemanticsNode(node, config.copy()..tooltip = '', children);
   }
 }
 
