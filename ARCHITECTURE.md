@@ -190,5 +190,5 @@ It is a style value, not a widget parameter like `RemixTooltip.transitionBuilder
 because a preset recipe can set a style but not a widget argument that every
 caller would have to repeat. Select's former private 150 ms controller is the
 default of that value, so its motion is unchanged. The cost: a builder compares
-by identity, so callers pass a top-level function. Submenu panels and the
-combobox are not on it yet; the combobox needs a Naked hook first.
+by identity, so callers pass a top-level function. Submenu panels are not on it yet. The combobox is: RawAutocomplete hides its
+panel directly, so `NakedCombobox.exitBuilder` holds the last panel for the exit.

@@ -12,6 +12,8 @@ import 'package:naked_ui/naked_ui.dart';
 
 import '../textfield/textfield.dart';
 import '../../rendering/remix_box_effects.dart';
+import '../../utilities/remix_panel_transition.dart';
+import '../../utilities/remix_reduced_motion.dart';
 import '../../utilities/remix_style.dart';
 import '../../style/style.dart';
 

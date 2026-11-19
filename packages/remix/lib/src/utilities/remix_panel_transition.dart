@@ -180,9 +180,20 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
   ///
   /// Called by [RemixPanelTransitionHost] when the panel mounts or its
   /// transition changes. It starts the animation when the request did not, and
-  /// stops it when the panel has none.
-  void adopt(RemixPanelTransition? transition) {
-    if (_closing) return;
+  /// stops it when the panel has none. A panel that mounts while an exit plays
+  /// (a combobox that opens again) turns the exit around from where it is.
+  void adopt(RemixPanelTransition? transition, {bool mounting = false}) {
+    if (_closing) {
+      final controller = _controller;
+      if (mounting && transition != null && controller != null) {
+        _closing = false;
+        _transition = transition;
+        _pace(controller, transition);
+        // The canceled exit never completes, so its hide never runs.
+        controller.forward();
+      }
+      return;
+    }
     if (transition == null) {
       _transition = null;
       _controller?.stop();
@@ -284,7 +295,7 @@ class _RemixPanelTransitionHostState extends State<RemixPanelTransitionHost> {
   @override
   void initState() {
     super.initState();
-    widget.handle.adopt(widget.transition);
+    widget.handle.adopt(widget.transition, mounting: true);
   }
 
   @override
