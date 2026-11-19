@@ -42,6 +42,6 @@ Widget peopleSearch(ValueChanged<String> onQueryChanged) => NakedSearchField(
 
 Give the editor and clear button separate accessible names. Wire `field.onChanged` to the editor's user-edit callback, not to a controller listener: typing reports the new query, clearing calls `onChanged('')` and then `onCleared`, and external edits do neither. Set `onSubmitted` on the editor if search runs only on submission.
 
-The clear action is absent when the query is empty, disabled, or read-only. Clearing returns focus to the editor. Holding Escape clears once; a new press on an empty field can dismiss the enclosing dialog. During text composition, Escape is left to the input method without reaching ancestor shortcuts.
+The clear action is absent when the query is empty, disabled, or read-only. Clearing returns focus to the editor. Holding Escape clears once; a new press on an empty field can dismiss the enclosing dialog. A press that begins during active composition in an enabled, editable field stays with the input method through repeats and release, even if the field becomes read-only during the press. A fresh Escape in a read-only field can dismiss the dialog even if the editor retained a composing range.
 
 Supply a `controller` or `focusNode` to share it with your application; you keep ownership. Removing an external controller gives the field its own controller with the same text, selection, and composing range.
