@@ -121,6 +121,67 @@ typedef NakedComboboxExitBuilder =
       VoidCallback dismiss,
     );
 
+/// The exit layer's content: [builder] runs again when [exiting] changes, and
+/// [onActive] reports whether the slot is in the tree, so a change is only
+/// made while something is there to hear it.
+class _ExitSlot extends StatefulWidget {
+  const _ExitSlot({
+    required this.exiting,
+    required this.onActive,
+    required this.builder,
+  });
+
+  final ValueNotifier<bool> exiting;
+  final ValueChanged<bool> onActive;
+  final Widget Function(BuildContext context, bool exiting) builder;
+
+  @override
+  State<_ExitSlot> createState() => _ExitSlotState();
+}
+
+class _ExitSlotState extends State<_ExitSlot> {
+  @override
+  void initState() {
+    super.initState();
+    widget.exiting.addListener(_changed);
+    widget.onActive(true);
+  }
+
+  @override
+  void activate() {
+    super.activate();
+    widget.onActive(true);
+  }
+
+  @override
+  void deactivate() {
+    widget.onActive(false);
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    widget.exiting.removeListener(_changed);
+    super.dispose();
+  }
+
+  void _changed() {
+    try {
+      setState(() {});
+    } on FlutterError {
+      // The change came while a different part of the tree was building, where
+      // this element may not be marked dirty. Show it a frame later instead.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() {});
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      widget.builder(context, widget.exiting.value);
+}
+
 /// Reports the global bounds of its child each time it paints.
 class _PanelBounds extends SingleChildRenderObjectWidget {
   const _PanelBounds({required this.onBounds, required super.child});
@@ -545,6 +606,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   // The exit layer: the last options view's bounds and content.
   final _exitController = OverlayPortalController();
   final _exitHighlight = ValueNotifier<int>(-1);
+  bool _exitSlotActive = false;
   Rect? _panelBounds;
   _RawComboboxResults<T>? _lastResults;
   final _exiting = ValueNotifier<bool>(false);
@@ -726,7 +788,9 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   void _startExit() {
     if (widget.exitBuilder == null ||
         _panelBounds == null ||
-        _lastResults == null) {
+        _lastResults == null ||
+        !_exitController.isShowing ||
+        !_exitSlotActive) {
       return;
     }
     _exiting.value = true;
@@ -906,9 +970,10 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   }
 
   Widget _buildExit(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: _exiting,
-      builder: (context, exiting, _) =>
+    return _ExitSlot(
+      exiting: _exiting,
+      onActive: (active) => _exitSlotActive = active,
+      builder: (context, exiting) =>
           exiting ? _buildExitView(context) : const SizedBox.shrink(),
     );
   }
