@@ -7,8 +7,48 @@ class TabBarSpec with _$TabBarSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
-  const TabBarSpec({StyleSpec<FlexBoxSpec>? container})
-    : container = container ?? const StyleSpec(spec: FlexBoxSpec());
+  /// A surface shared by the tabs that sits behind the selected tab and glides
+  /// to the next one when the selection changes.
+  ///
+  /// It takes the selected tab's bounds, so `margin` insets it and the
+  /// decoration draws it. `null`, the default, draws none and leaves each
+  /// tab's own selected style in charge. The tab content must be laid out in
+  /// the bar's own layout: a scrollable inside the bar moves the tabs without
+  /// moving the indicator, so scroll around the bar instead.
+  @override
+  final StyleSpec<BoxSpec>? indicator;
+
+  /// Paint layers behind [indicator], such as a shadow.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? indicatorEffects;
+
+  /// How [indicator] moves between tabs. `null` glides along
+  /// `Curves.easeOutCubic` over 250 ms.
+  @override
+  final RemixTabIndicatorMotion? indicatorMotion;
+
+  const TabBarSpec({
+    StyleSpec<FlexBoxSpec>? container,
+    this.indicator,
+    this.indicatorEffects,
+    this.indicatorMotion,
+  }) : container = container ?? const StyleSpec(spec: FlexBoxSpec());
+
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
+  @override
+  TabBarSpec lerp(TabBarSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      indicatorEffects: RemixBoxEffectsSpec.lerpNullable(
+        indicatorEffects,
+        other.indicatorEffects,
+        t,
+      ),
+    );
+  }
 }
 
 /// Backward-compatible name for [TabBarSpec].

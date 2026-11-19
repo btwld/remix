@@ -587,6 +587,9 @@ void main() {
           'TabSpec': (from, to, t) => TabSpec(
             containerEffects: from,
           ).lerp(TabSpec(containerEffects: to), t).containerEffects,
+          'TabBarSpec.indicatorEffects': (from, to, t) => TabBarSpec(
+            indicatorEffects: from,
+          ).lerp(TabBarSpec(indicatorEffects: to), t).indicatorEffects,
           'ToggleSpec': (from, to, t) => ToggleSpec(
             containerEffects: from,
           ).lerp(ToggleSpec(containerEffects: to), t).containerEffects,

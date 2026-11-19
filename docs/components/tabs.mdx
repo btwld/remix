@@ -117,6 +117,61 @@ class _TabsExampleState extends State<TabsExample> {
 ```
 </CodeGroup>
 
+## Shared indicator
+
+Each tab paints its own selected style by default. Set `indicator` on the
+`TabBarStyler` to draw one surface behind the tabs instead, such as a pill or
+an underline, that glides to the selected tab. The indicator takes the
+selected tab's bounds, so `margin` insets it and the decoration draws it. Leave
+the tab's own selected background clear so only the indicator shows.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
+import 'package:remix/remix.dart';
+
+final pillTabs = RemixTabs(
+  selectedTabId: 'overview',
+  onChanged: (id) {},
+  child: Column(
+    children: [
+      RemixTabBar(
+        style: TabBarStyler()
+            .container(FlexBoxStyler().direction(.horizontal).padding(.all(4)))
+            .indicator(
+              BoxStyler()
+                  .color(Colors.white)
+                  .borderRadius(.circular(8))
+                  .margin(.all(0)),
+            )
+            .indicatorMotion(
+              const RemixTabIndicatorMotion.spring(
+                SpringDescription(mass: 1, stiffness: 400, damping: 36),
+              ),
+            ),
+        child: const Row(
+          children: [
+            RemixTab(tabId: 'overview', label: 'Overview'),
+            RemixTab(tabId: 'activity', label: 'Activity'),
+          ],
+        ),
+      ),
+      const RemixTabView(tabId: 'overview', child: Text('Overview')),
+      const RemixTabView(tabId: 'activity', child: Text('Activity')),
+    ],
+  ),
+);
+```
+
+`RemixTabIndicatorMotion` moves the indicator along a curve over a duration
+(250 ms on `Curves.easeOutCubic` by default) or, with
+`RemixTabIndicatorMotion.spring`, under a spring that may overshoot. The
+indicator jumps when the user asks to reduce motion, follows its tab when the
+bar resizes, and is excluded from semantics and hit testing. Without an
+`indicator` nothing is added. Lay the tabs out in the bar itself: a scrollable
+inside the bar moves the tabs without moving the indicator, so scroll around
+the bar instead.
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
@@ -291,6 +346,19 @@ Methods on `TabBarStyler` configure the tab-list container.
 #### `container(FlexBoxStyler value)`
 
 Configures the tab bar flex box style.
+
+#### `indicator(BoxStyler value)`
+
+Draws a shared surface behind the selected tab that glides between tabs.
+`null` draws none.
+
+#### `indicatorEffects(RemixBoxEffectsMix value)`
+
+Adds paint layers behind the indicator, such as a shadow.
+
+#### `indicatorMotion(RemixTabIndicatorMotion value)`
+
+Sets how the indicator moves: a curve and duration, or a spring.
 
 #### `alignment(Alignment value)`
 
