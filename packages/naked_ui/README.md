@@ -29,6 +29,7 @@ or see the [documentation source](../../naked_ui_docs/README.md) to contribute.
 - NakedRadio / NakedRadioGroup — single‑select radio on RawRadio with group management
 - NakedSelect — caller-controlled selection and controlled/uncontrolled opening with keyboard navigation
 - NakedScrollbar — styleable scrollbar thumb and track
+- NakedSearchField — clearable search input behavior for a caller-built editor, with focus restoration and IME-safe Escape
 - NakedSlider — arbitrary multi-thumb slider with per-thumb focus + semantics
 - NakedTextField — headless text input on EditableText with observable interaction states
 - NakedTextMagnifier — headless text magnifier on RawMagnifier with line-jump animation

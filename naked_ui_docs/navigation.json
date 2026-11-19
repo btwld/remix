@@ -143,6 +143,10 @@
           "href": "/widget/scrollbar"
         },
         {
+          "title": "NakedSearchField",
+          "href": "/widget/search-field"
+        },
+        {
           "title": "NakedToggleGroup",
           "href": "/widget/toggle-group"
         },
