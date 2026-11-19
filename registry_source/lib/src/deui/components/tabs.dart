@@ -107,9 +107,14 @@ TabStyler deuiTabStyle({
           DeuiTokens.textSm.mix(),
         ).fontWeight(.w500).color(DeuiTokens.muted()),
       )
-      // Unselected tabs fade on hover; selected tabs restore it below. The
-      // colors follow the indicator's glide, as in Deui.
-      .onHovered(TabStyler().wrap(.opacity(_hoverOpacity)))
+      // Unselected tabs fade on hover, on the 150 ms smooth motion; selected
+      // tabs restore it below. Selection colors follow the indicator's glide,
+      // as in Deui, where hover is not part of the glide.
+      .onHovered(
+        TabStyler()
+            .wrap(.opacity(_hoverOpacity))
+            .animate(DeuiTokens.smoothMotion),
+      )
       .animate(_foregroundGlide)
       .merge(switch (variant) {
         .primary =>

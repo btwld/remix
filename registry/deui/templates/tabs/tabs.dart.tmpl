@@ -107,9 +107,14 @@ TabStyler {{valuePrefix}}TabStyle({
           {{typePrefix}}Tokens.textSm.mix(),
         ).fontWeight(.w500).color({{typePrefix}}Tokens.muted()),
       )
-      // Unselected tabs fade on hover; selected tabs restore it below. The
-      // colors follow the indicator's glide, as in {{typePrefix}}.
-      .onHovered(TabStyler().wrap(.opacity(_hoverOpacity)))
+      // Unselected tabs fade on hover, on the 150 ms smooth motion; selected
+      // tabs restore it below. Selection colors follow the indicator's glide,
+      // as in {{typePrefix}}, where hover is not part of the glide.
+      .onHovered(
+        TabStyler()
+            .wrap(.opacity(_hoverOpacity))
+            .animate({{typePrefix}}Tokens.smoothMotion),
+      )
       .animate(_foregroundGlide)
       .merge(switch (variant) {
         .primary =>
