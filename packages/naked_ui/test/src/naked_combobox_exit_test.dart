@@ -101,6 +101,30 @@ void main() {
       await tester.pump();
     });
 
+    testWidgets('builds the exit in the hiding frame whatever hides the view', (
+      tester,
+    ) async {
+      for (final hide in <Future<void> Function(WidgetTester)>[
+        (t) => t.sendKeyEvent(LogicalKeyboardKey.escape),
+        (t) => t.enterText(find.byType(TextField), ''),
+        (t) async => FocusManager.instance.primaryFocus?.unfocus(),
+        (t) => t.tap(find.byKey(const ValueKey('option-apple'))),
+      ]) {
+        final exit = _Exit();
+        await _pump(tester, exit);
+        await _open(tester);
+        expect(exit.built, 0);
+
+        await hide(tester);
+        await tester.pump(Duration.zero);
+
+        // Zero time passed, so nothing but the hiding frame itself ran.
+        expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
+        expect(exit.built, greaterThan(0));
+        await tester.pumpWidget(const SizedBox());
+      }
+    });
+
     testWidgets('the exit view takes no pointer input and no semantics', (
       tester,
     ) async {
