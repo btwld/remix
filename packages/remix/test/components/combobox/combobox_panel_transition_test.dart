@@ -148,6 +148,58 @@ void main() {
       );
     });
 
+    testWidgets('announces the field and the options, and not the exit copy', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        comboboxHost(
+          RemixCombobox<String>(
+            optionsBuilder: (_) => suggestions,
+            label: 'Fruit',
+            style: testComboboxStyle().panel(
+              ComboboxPanelStyler().panelTransition(
+                RemixPanelTransition(
+                  duration: _enter,
+                  reverseDuration: _exit,
+                  builder: (context, info, panel) =>
+                      FadeTransition(opacity: info.animation, child: panel),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await _open(tester);
+      await tester.pump(_enter ~/ 2);
+
+      // Mid-open: the field keeps its name and the options are named buttons.
+      expect(find.bySemanticsLabel('Fruit'), findsOneWidget);
+      for (final option in suggestions) {
+        expect(
+          tester.getSemantics(find.bySemanticsLabel(option)),
+          isSemantics(
+            isButton: true,
+            isEnabled: true,
+            isFocusable: true,
+            hasEnabledState: true,
+            hasTapAction: true,
+            hasFocusAction: true,
+          ),
+        );
+      }
+
+      await tester.pump(_enter);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump(Duration.zero);
+      await tester.pump(_exit ~/ 2);
+      // Mid-exit the panel is drawn, but the copy takes no part in semantics.
+      expect(find.text('Apple'), findsOneWidget);
+      expect(find.bySemanticsLabel('Apple'), findsNothing);
+      expect(find.bySemanticsLabel('Fruit'), findsOneWidget);
+      handle.dispose();
+    });
+
     testWidgets('a panel with no transition hides at once', (tester) async {
       await tester.pumpWidget(
         comboboxHost(
