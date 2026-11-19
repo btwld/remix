@@ -279,12 +279,17 @@ final class RemixPanelTransitionHost extends StatefulWidget {
     required this.transition,
     required this.anchorRect,
     required this.child,
+    this.exiting = false,
   });
 
   final RemixPanelTransitionHandle handle;
   final RemixPanelTransition? transition;
   final Rect anchorRect;
   final Widget child;
+
+  /// Whether this host shows a panel that already left: it follows the exit
+  /// the [handle] plays, and mounting it is not a panel opening again.
+  final bool exiting;
 
   @override
   State<RemixPanelTransitionHost> createState() =>
@@ -295,7 +300,7 @@ class _RemixPanelTransitionHostState extends State<RemixPanelTransitionHost> {
   @override
   void initState() {
     super.initState();
-    widget.handle.adopt(widget.transition, mounting: true);
+    widget.handle.adopt(widget.transition, mounting: !widget.exiting);
   }
 
   @override

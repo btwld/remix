@@ -102,6 +102,52 @@ void main() {
       expect(find.text('Apple'), findsNothing);
     });
 
+    testWidgets('the open runs in the frame the panel mounts', (tester) async {
+      final probe = _Probe();
+      await tester.pumpWidget(comboboxHost(_combobox(probe)));
+      await tester.tap(find.byType(EditableText));
+      await tester.pump(Duration.zero);
+
+      // The first frame already has the panel and its transition running.
+      expect(find.text('Apple'), findsOneWidget);
+      expect(probe.animations.last.status, AnimationStatus.forward);
+      expect(probe.animations.last.value, 0);
+
+      // One long step is measured from that frame, not from the next one.
+      await tester.pump(_enter ~/ 2);
+      expect(probe.animations.last.value, closeTo(.5, .01));
+    });
+
+    testWidgets('the exit runs in the frame the panel is dropped', (
+      tester,
+    ) async {
+      final probe = _Probe();
+      await tester.pumpWidget(comboboxHost(_combobox(probe)));
+      await _open(tester);
+      await tester.pump(_enter + _tick);
+      expect(probe.animations.last.value, 1);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump(Duration.zero);
+
+      // The panel is held and its exit is already running, not a frame away.
+      expect(find.text('Apple'), findsOneWidget);
+      expect(probe.animations.last.status, AnimationStatus.reverse);
+
+      // The transition is applied once: a second host would square the fade.
+      await tester.pump(_exit ~/ 2);
+      expect(probe.animations.last.value, closeTo(.5, .01));
+      final fades = find.ancestor(
+        of: find.text('Apple'),
+        matching: find.byType(FadeTransition),
+      );
+      expect(fades, findsOneWidget);
+      expect(
+        tester.widget<FadeTransition>(fades).opacity.value,
+        closeTo(.5, .01),
+      );
+    });
+
     testWidgets('a panel with no transition hides at once', (tester) async {
       await tester.pumpWidget(
         comboboxHost(
