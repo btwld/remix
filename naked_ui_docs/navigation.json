@@ -135,6 +135,10 @@
           "href": "/widget/combobox"
         },
         {
+          "title": "NakedListbox",
+          "href": "/widget/listbox"
+        },
+        {
           "title": "NakedMenubar",
           "href": "/widget/menubar"
         },

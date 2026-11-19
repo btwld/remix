@@ -15,6 +15,8 @@ import 'api/naked_dialog.0.dart' as dialog_basic_example;
 import 'api/naked_disclosure.0.dart' as disclosure_example;
 // Link
 import 'api/naked_link.0.dart' as link_example;
+// Listbox
+import 'api/naked_listbox.0.dart' as listbox_example;
 // Menu
 import 'api/naked_menu.0.dart' as menu_example;
 // Menubar
@@ -96,6 +98,13 @@ class DemoRegistry {
       category: 'Radio',
       builder: (_) => const radio_basic_example.RadioExample(),
       tags: ['radio'],
+    ),
+    Demo(
+      id: 'listbox-reviewers',
+      title: 'Listbox – Project Reviewers',
+      category: 'Listbox',
+      builder: (_) => const listbox_example.ReviewerPickerExample(),
+      tags: ['listbox', 'selection'],
     ),
     Demo(
       id: 'scrollbar-basic',
