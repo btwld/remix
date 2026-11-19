@@ -327,10 +327,11 @@ After publication, verify the exact hosted CLI:
 fvm dart run tool/check_open_code.dart --source hosted --hosted-cli --install batch --independent none
 fvm dart run tool/check_open_code.dart --preset fortal --source hosted --hosted-cli --install batch --independent none
 fvm dart run tool/check_open_code.dart --preset heroui --source hosted --hosted-cli --install batch --independent none
+fvm dart run tool/check_open_code.dart --preset deui --source hosted --hosted-cli --install batch --independent none
 ```
 
 Each branch-based `init` makes one unauthenticated GitHub API request; GitHub
-allows 60 an hour. These smoke commands use three requests total, one per preset.
+allows 60 an hour. These smoke commands use four requests total, one per preset.
 The default hosted plan includes one independent canary per preset and plans six
 inits total. Candidate SHAs need no API call to resolve their revision.
 Use `--independent all` for a full isolation investigation; checkout and `both`

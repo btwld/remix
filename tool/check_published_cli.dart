@@ -40,7 +40,7 @@ Future<String?> checkPublishedCliCandidate({
   PubFloorClient? pubClient,
   StringSink? out,
 }) async {
-  if (!['vanilla', 'fortal', 'heroui'].contains(preset) ||
+  if (!['vanilla', 'fortal', 'heroui', 'deui'].contains(preset) ||
       !RegExp(r'^[0-9a-f]{40}$').hasMatch(sha)) {
     return 'Expected a supported preset and a full lowercase candidate SHA.';
   }
@@ -130,9 +130,11 @@ Future<String?> checkPublishedCliCandidate({
   if (create != null) return create;
   final floor = registryRemixFloor(repositoryRoot, preset);
   writeHostedFloorOverride(app, floor: floor);
-  final items = preset == 'heroui'
-      ? ['search_field', 'button']
-      : ['dashboard_shell', 'button'];
+  final items = switch (preset) {
+    'heroui' => ['search_field', 'button'],
+    'deui' => ['textfield', 'button'],
+    _ => ['dashboard_shell', 'button'],
+  };
   for (final command in [
     ['pub', 'get'],
     [
@@ -190,10 +192,10 @@ Future<void> main(List<String> arguments) async {
   if (arguments.length != 4 ||
       arguments[0] != '--preset' ||
       arguments[2] != '--ref' ||
-      !['vanilla', 'fortal', 'heroui'].contains(arguments[1]) ||
+      !['vanilla', 'fortal', 'heroui', 'deui'].contains(arguments[1]) ||
       !RegExp(r'^[0-9a-f]{40}$').hasMatch(arguments[3])) {
     stderr.writeln(
-      'Usage: dart run tool/check_published_cli.dart --preset vanilla|fortal|heroui --ref <40-hex-SHA>',
+      'Usage: dart run tool/check_published_cli.dart --preset vanilla|fortal|heroui|deui --ref <40-hex-SHA>',
     );
     exitCode = 64;
     return;

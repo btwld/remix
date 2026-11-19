@@ -14,6 +14,7 @@ skills:
       - agents/openai.yaml
       - references/cli.md
       - references/components.md
+      - references/deui.md
       - references/fortal.md
       - references/heroui.md
       - references/reference-showcases.md

@@ -12,7 +12,7 @@ repository does not commit installed skills; the index points at the sources.
 ```
 [Remix skills]|root: ./skills
 |IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning for Remix, Mix, and Naked UI tasks
-|using-remix:{SKILL.md,references/{cli.md,components.md,fortal.md,heroui.md,reference-showcases.md,styling.md,vanilla.md}}
+|using-remix:{SKILL.md,references/{cli.md,components.md,deui.md,fortal.md,heroui.md,reference-showcases.md,styling.md,vanilla.md}}
 |building-remix-design-system:{SKILL.md,references/{components.md,registry.md,tokens.md,reference-parity.md}}
 [Mix skill]|root: https://raw.githubusercontent.com/btwld/mix/main/skills/mix
 |mix:{SKILL.md,references/{animations.md,architecture.md,code-generation.md,design-tokens.md,development-workflow.md,examples.md,fluent-api.md,layout.md,styler-api-policy.md,testing.md,variants.md,widget-modifiers-directives.md}}

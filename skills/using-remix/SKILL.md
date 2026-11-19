@@ -2,7 +2,7 @@
 name: using-remix
 description: >-
   Builds Flutter UI with the Remix component library: hand-styled `Remix*`
-  widgets or an app-installed Vanilla, Fortal, or HeroUI preset (`remix_cli`,
+  widgets or an app-installed Vanilla, Fortal, HeroUI, or Deui preset (`remix_cli`,
   `remix.yaml`, generated `<Prefix>Button`,
   `<Prefix>Theme`). Use when setting up or updating
   preset items and registry pins, placing the theme scope, wiring overlays,
@@ -55,6 +55,7 @@ with `dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 
 Choose Fortal at initialization with `init --prefix Fortal --preset fortal`.
 Choose HeroUI with `init --prefix HeroUi --preset heroui`.
+Choose Deui with `init --prefix Deui --preset deui`; see [Deui](references/deui.md).
 `init` pins `registry-stable` to a full GitHub SHA in schema-3 `remix.yaml`.
 `add` installs each item's dependency closure, including its theme.
 [CLI](references/cli.md) owns pin updates and old-schema recovery.
@@ -172,6 +173,7 @@ controller rules. See [Components](references/components.md#navigation).
 | Fortal scope/config, typography, and token rules | [Fortal](references/fortal.md) |
 | Vanilla tokens, theme values, and per-component rules | [Vanilla](references/vanilla.md) |
 | HeroUI recipes, compositions, theme overrides, and what is not included | [HeroUI](references/heroui.md) |
+| Deui recipes, theme, and what is not included | [Deui](references/deui.md) |
 | Fluent styling, effects/gradient shorthand, state/context variants, animation, callable styles | [Styling](references/styling.md) |
 | Reference apps, product examples, variant matrices, and showcase audits | [Reference showcases](references/reference-showcases.md) |
 | A reusable design system published as a Remix registry | `building-remix-design-system` |
