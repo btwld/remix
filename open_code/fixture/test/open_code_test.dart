@@ -211,6 +211,49 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('installed typography preserves style and heading level', (
+    tester,
+  ) async {
+    await _pumpInScope(
+      tester,
+      const Column(
+        children: [
+          AcmeHeading.h3('Summary', headingLevel: 2),
+          AcmeText.lead('A short introduction.'),
+        ],
+      ),
+    );
+
+    final heading = tester.getSemantics(find.bySemanticsLabel('Summary'));
+    expect(heading, matchesSemantics(label: 'Summary', isHeader: true));
+    expect(heading.getSemanticsData().headingLevel, 2);
+    const theme = AcmeThemeData.light();
+    final lead = tester.widget<Text>(find.text('A short introduction.'));
+    expect(lead.style?.fontSize, 20);
+    expect(lead.style?.color, theme.mutedForeground);
+  });
+
+  testWidgets('installed code draws a monospace chip', (tester) async {
+    await _pumpInScope(tester, const AcmeCode('main.dart'));
+    const theme = AcmeThemeData.light();
+    final chip = tester.widget<Box>(
+      find
+          .ancestor(of: find.text('main.dart'), matching: find.byType(Box))
+          .first,
+    );
+
+    expect(
+      (chip.styleSpec!.spec.decoration! as BoxDecoration).color,
+      theme.muted,
+    );
+    expect(
+      tester.widget<Text>(find.text('main.dart')).style?.fontFamily,
+      theme.monoFontFamily,
+    );
+    expect(tester.getSize(find.byWidget(chip)).height, 24);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('installed kbd draws key caps and groups a shortcut', (
     tester,
   ) async {
@@ -547,6 +590,7 @@ void main() {
         'xl': (20, 28),
         '2xl': (24, 32),
         '3xl': (30, 36),
+        '4xl': (36, 40),
         'mono': (14, 20),
       };
       final theme = const AcmeThemeData.light().copyWith(

@@ -214,6 +214,22 @@ items:
     exports:
       - components/checkbox.dart
 
+  code:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/code/code.dart.tmpl
+        target: "@ui/components/code.dart"
+    generated:
+      - "@ui/components/code.g.dart"
+    exports:
+      - components/code.dart
+
   combobox:
     registryDependencies:
       - theme
@@ -285,6 +301,7 @@ items:
       - steps_recipe
       - suggestions_recipe
       - switch
+      - text
       - textfield
       - toast
       - tool_call_recipe
@@ -445,6 +462,15 @@ items:
       - "@ui/components/divider.g.dart"
     exports:
       - components/divider.dart
+
+  heading:
+    registryDependencies:
+      - theme
+    files:
+      - source: templates/heading/heading.dart.tmpl
+        target: "@ui/components/heading.dart"
+    exports:
+      - components/heading.dart
 
   icon_button:
     registryDependencies:
@@ -777,6 +803,22 @@ items:
       - "@ui/components/tabs.g.dart"
     exports:
       - components/tabs.dart
+
+  text:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/text/text.dart.tmpl
+        target: "@ui/components/text.dart"
+    generated:
+      - "@ui/components/text.g.dart"
+    exports:
+      - components/text.dart
 
   textfield:
     registryDependencies:

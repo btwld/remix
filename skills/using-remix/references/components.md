@@ -389,9 +389,11 @@ for Overlay, Navigator and toast scope placement.
 ## Typography
 
 
-`FortalText`, `FortalHeading`, and `FortalCode` exist only in the Fortal
-preset. Both Fortal and Vanilla ship `kbd`: `FortalKbd` takes Fortal's size
-axis, and Vanilla's `<Prefix>Kbd` a `muted` or `tooltip` variant, with
+Fortal and Vanilla both ship `heading`, `text`, `code`, and `kbd`. Vanilla
+heading and text follow shadcn/ui's typography variants rather than Fortal's
+size and weight axes. `FortalCode` and `FortalKbd` take
+Fortal's size axis, Vanilla's `<Prefix>Code` is one inline-code chip, and
+Vanilla's `<Prefix>Kbd` takes a `muted` or `tooltip` variant, with
 `<Prefix>KbdGroup` for the keys of one shortcut. `RemixLink` is base Remix —
 the Vanilla preset also ships a `link` item generating `<Prefix>Link`, and
 Fortal ships `FortalLink`. See [Fortal typography](fortal.md#typography) and

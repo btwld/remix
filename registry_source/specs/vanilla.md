@@ -14,6 +14,7 @@ geometry, and states, rendered by Flutter rather than by a browser.
 | Commit | `db2db460a26fa84fb65c8d903b213925fbdee9ed` (2026-09-28) |
 | Theme | `apps/v4/registry/themes.ts`, entry `neutral` (the same values as `public/r/colors/neutral.json`) |
 | Components | `apps/v4/registry/new-york-v4/ui/*.tsx` |
+| Typography | `apps/v4/registry/new-york-v4/examples/typography-*.tsx`, the Typography page's examples: utility classes on plain elements, with no `ui/` component |
 | Utilities | Tailwind CSS v4.3.3 defaults (spacing, type scale, shadows, transition) |
 
 The canonical theme is the registry's `neutral` entry, not the docs site's own
@@ -82,7 +83,8 @@ derived from it, and never go below zero:
 **Type.** Tailwind's `text-*` sizes and line heights, with no tracking. Each
 step is a `TextStyleToken` carrying the family, size, and line height, with
 `TextLeadingDistribution.even` so text sits in its line box as CSS places it.
-Weights are 400, 500 (`font-medium`), and 600 (`font-semibold`).
+Recipes choose weights independently: most use 400, 500 (`font-medium`),
+or 600 (`font-semibold`), and h1 asks for 800 (`font-extrabold`).
 
 | Token | Size / line height |
 |---|---|
@@ -93,6 +95,7 @@ Weights are 400, 500 (`font-medium`), and 600 (`font-semibold`).
 | `textXl` | 20 / 28 |
 | `text2xl` | 24 / 32 |
 | `text3xl` | 30 / 36 |
+| `text4xl` | 36 / 40 |
 | `textMono` | 14 / 20 in `monoFontFamily` |
 
 **Font.** Geist and Geist Mono, from `package:remix_ui_fonts`.
@@ -134,7 +137,8 @@ draws the band inside itself (see Deviations).
 
 Heights, padding, and gaps are logical pixels. "md", "sm", and "xl" radii are
 the steps above. The source column names the file under
-`apps/v4/registry/new-york-v4/ui/`.
+`apps/v4/registry/new-york-v4/ui/`, or under `apps/v4/registry/new-york-v4/`
+for an `examples/` file, with the lines the values come from.
 
 | Component | Target | Source |
 |---|---|---|
@@ -145,6 +149,9 @@ the steps above. The source column names the file under
 | Link | `text-sm`, underline on hover | `button.tsx` (`link`) |
 | Breadcrumbs | list `text-sm` muted-fg on one line; gap 10 between steps and separators; steps keep their width while the trail fits, then share what the separators leave, shortest first; link `font-normal`, hover foreground with no underline, the Link focus ring; a step without a page muted-fg; current page `font-normal` foreground, never a link; separator ChevronRight 14 muted-fg, outside semantics, mirrored in RTL (see Deviations); a navigation landmark labelled `Breadcrumb` | `breadcrumb.tsx` (`Breadcrumb`, `BreadcrumbList`, `BreadcrumbLink`, `BreadcrumbPage`, `BreadcrumbSeparator`) |
 | Badge | radius full; 1px border on every variant, transparent except outline; `text-xs` w500; px 8, py 2 | `badge.tsx` |
+| Heading | `h1` `text4xl` w800 centered; `h2` `text3xl` w600 with a 1px `border` rule below 8px of padding; `h3` `text2xl` w600; `h4` `textXl` w600. All use `foreground` and −0.025em tracking; semantics default to levels 1–4. | `examples/typography-h1.tsx` through `typography-h4.tsx`, L3 |
+| Text | `p` `textBase` on a 28px line, `lead` `textXl` muted-fg, `large` `textLg` w600, `small` `textSm` w500 on a 14px line, `muted` `textSm` muted-fg, `blockquote` `textBase` italic with a 2px `border` rule at the start and 24px between the rule and text. Other weights are w400; other colors are `foreground`. | `examples/typography-p.tsx`, `typography-lead.tsx`, `typography-small.tsx`, `typography-muted.tsx`, `typography-blockquote.tsx` L3; `typography-large.tsx` L2 |
+| Code | `textMono` (14 / 20) w600 (see Deviations) `foreground` on a `muted` chip; px 4, py 2, radius 4 (see Deviations); plain text to assistive technology | `examples/typography-inline-code.tsx` L3 |
 | Kbd | h 20 (see Deviations), min-w 20, px 4, radius sm; `muted` fill; `text-xs` w500 muted-fg in the sans family, centered; inside a tooltip (the `tooltip` variant) `background`/20 fill (dark /10) and `background` text; plain text to assistive technology | `kbd.tsx` L3–16 (`Kbd`: classes L8, tooltip rule L10) |
 | Kbd group | keys in a row, gap 4, centered on one line; one semantics node | `kbd.tsx` L18–26 (`KbdGroup`: classes L22) |
 | Toggle | h 32/36/40, min-w equal to h; px 6/8/10; `text-sm` w500; hover muted + muted-fg; on accent + accent-fg; outline adds an `input` border and `shadow-xs` | `toggle.tsx` |
@@ -212,6 +219,13 @@ the steps above. The source column names the file under
 | Breadcrumb link focus and current page | `BreadcrumbLink` has no focus style (the browser outline); `BreadcrumbPage` is `role="link" aria-disabled aria-current="page"` | the Link recipe's 3px `ring/50` band; the current page is plain text | Vanilla rings every keyboard-focused control. Flutter semantics have no current-page state, and a disabled link adds a link role with nothing to follow. |
 | Search field clearing | an `InputGroupButton` the caller shows and wires; Escape is the browser's | built in: the button shows only while the field is enabled, editable, and not empty; clearing reports `''` to `onChanged` and keeps focus in the field; Escape clears when there is text and spends that press's key repeats, so holding it does not go on to the dialog; during an input-method composition it stays with the input method; with nothing to clear it passes up | A search field nearly always wants a way to clear the query, so Vanilla builds the button and Escape in instead of leaving every caller to wire the addon, track emptiness, and restore focus. Passing Escape up only when there is nothing to clear keeps an enclosing dialog closable without one press doing both. |
 | Search field clear button | `icon-xs`: `size-6`, `rounded-[calc(var(--radius)-5px)]` (5), 4.8 from the end (`pr-3` less `-mr-[0.45rem]`) | 24 square, `radiusSm` (6), 4 (`s1`) from the end | Vanilla's radius steps start at radius − 4 and its spacing steps are whole 2px multiples, so the nearest steps stand in. The 24px square meets the WCAG 2.5.8 minimum but not touch guidance; a larger one would grow the field past the text field's 36px. |
+| Heading, Text, and Code | no `ui/` components; the Typography page styles plain elements | `heading`, `text`, and `code` | Vanilla gives the styles reusable recipes and the item names Fortal already uses. |
+| Typography layout | scroll anchor offsets, vertical margins, and `text-balance` on h1 | normal Flutter wrapping; scroll and spacing left to the parent | The recipe does not own the scrolling container, neighboring blocks, or line-breaking strategy. Pass a width constraint to make an h2 rule span the content. |
+| Typography color and direction | ordinary text inherits page foreground; blockquote rule stays on the left | explicit `foreground` and a rule on the leading side | The color does not depend on the host's default text style; the rule mirrors in RTL. |
+| Typography list and table | `typography-list.tsx` and `typography-table.tsx` examples | not part of `text` | Lists lay out markers beside wrapped items, and tables are covered by `data_table`. |
+| Code padding | `px-[0.3rem] py-[0.2rem]` (4.8 / 3.2) around an inline box | 4 (`s1`) across and 2 (`s0_5`) down, around the 20px line | Vanilla's spacing steps are whole 2px multiples. CSS paints an inline element's fill around the font's content area, 18.2px for Geist Mono at 14px, so the reference chip is about 25px tall; Flutter's box wraps the 20px line, and 2px above and below gives 24 where 4 would give 28. |
+| Code radius | `rounded`, a fixed 0.25rem (4) that `--radius` does not move | `radiusSm` clamped to 4 | The same 4 at the shipped radius; following the theme below 4 keeps a square theme square, as the checkbox does. |
+| Code color and wrapping | inherits the paragraph's color; the chip breaks with the line | `foreground`; one chip that wraps inside itself | In running text the chip is a `WidgetSpan`, which does not pass the paragraph's style down and lays its child out as one box. |
 | Kbd height | `h-5`: a fixed 20px box, the 16px line centered by `items-center` | 2px (`s0_5`) above and below the 16px line, 20px at 100% text | CSS fixes the box and lets the line sit inside it; Flutter lays the line out inside the padding, so a fixed 20px box would clip the label once the text scales. The padding gives the same 20px cap and grows with the text. |
 | Kbd in a tooltip | `[[data-slot=tooltip-content]_&]:bg-background/20 text-background dark:bg-background/10`, applied by the ancestor | the `tooltip` variant (`VanillaKbd.tooltip`) | A recipe cannot see its ancestors, so the caller picks the inverted cap inside a tooltip's content. |
 | Kbd icons | `[&_svg:not([class*='size-'])]:size-3` and `gap-1` for an icon child | not ported: a key is text | Every reference example (`examples/kbd-*.tsx`) draws its keys as text or Unicode key symbols (⌘ ⇧ ⌥ ⌃ ⏎), which a `Text` draws too. Geist has no ⌘, ⌥, ⌃, or ⏎, so those come from the platform's fallback font. |
@@ -223,7 +237,7 @@ the steps above. The source column names the file under
 | Sidebar destination padding | `h-8 p-2` | 32 min height, 8px across and 6px down | CSS fixes the height and lets the 20px line overrun the padding; Flutter lays the line out inside it, so `p-2` would make a 36px row. |
 | Sidebar layout, dashboard shell | 48 collapsed | 48 for `sidebar_layout`; the dashboard shell keeps its own 72 | The dashboard shell is out of this spec's scope. |
 | Tooltip delay | `delayDuration = 0` on the provider | 0 | Matches; recorded because Vanilla used to wait 500ms. |
-| Font | Geist and Geist Mono | Geist and Geist Mono from `remix_ui_fonts` | Matches; recorded because the fonts are static files (Geist 400, 500, 600, 700; Geist Mono 400, 500) rather than shadcn's variable fonts. Vanilla uses 400, 500, and 600. |
+| Font | Geist and Geist Mono | Geist and Geist Mono from `remix_ui_fonts` | The bundled faces are static (Geist 400, 500, 600, 700; Geist Mono 400, 500). The closest bundled weights are 700 for h1's 800 and 500 for inline code's 600. Blockquote italics use synthesized slant. |
 
 ## Calendar recipes (designed from the Vanilla scale)
 

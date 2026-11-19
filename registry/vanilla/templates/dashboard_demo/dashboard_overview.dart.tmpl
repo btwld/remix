@@ -10,6 +10,7 @@ import '../../components/chart.dart';
 import '../../components/data_table.dart';
 import '../../components/divider.dart';
 import '../../components/progress.dart';
+import '../../components/text.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_demo_charts.dart';
 import 'dashboard_overview_base.dart';
@@ -52,12 +53,7 @@ class {{typePrefix}}DashboardOverview extends StatelessWidget {
               .fontWeight(FontWeight.w700)
               .color({{typePrefix}}Tokens.foreground()),
         ),
-        StyledText(
-          description,
-          style: TextStyler()
-              .style({{typePrefix}}Tokens.textSm.mix())
-              .color({{typePrefix}}Tokens.mutedForeground()),
-        ),
+        {{typePrefix}}Text.muted(description),
       ],
     ),
     metricBuilder: (context, metric) => {{typePrefix}}Card(
@@ -157,8 +153,8 @@ Widget _revenueCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Car
             .crossAxisAlignment(.start)
             .spacing({{typePrefix}}Tokens.s1),
         children: [
-          _sectionTitle('Revenue trend'),
-          _sectionDescription('Seven-day net revenue'),
+          const {{typePrefix}}Text.large('Revenue trend'),
+          const {{typePrefix}}Text.muted('Seven-day net revenue'),
         ],
       ),
       Box(
@@ -204,8 +200,8 @@ Widget _customerChartCard() => {{typePrefix}}Card(
             .crossAxisAlignment(.start)
             .spacing({{typePrefix}}Tokens.s1),
         children: [
-          _sectionTitle('Customer acquisition'),
-          _sectionDescription('New accounts by month'),
+          const {{typePrefix}}Text.large('Customer acquisition'),
+          const {{typePrefix}}Text.muted('New accounts by month'),
         ],
       ),
       Box(
@@ -241,8 +237,8 @@ Widget _fulfillmentCard() => {{typePrefix}}Card(
             .crossAxisAlignment(.start)
             .spacing({{typePrefix}}Tokens.s1),
         children: [
-          _sectionTitle('Fulfillment mix'),
-          _sectionDescription('Current order status'),
+          const {{typePrefix}}Text.large('Fulfillment mix'),
+          const {{typePrefix}}Text.muted('Current order status'),
         ],
       ),
       {{typePrefix}}ChartLegend(
@@ -296,7 +292,7 @@ Widget _activityCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Ca
         .crossAxisAlignment(.stretch)
         .spacing({{typePrefix}}Tokens.s2),
     children: [
-      _sectionTitle('Recent activity'),
+      const {{typePrefix}}Text.large('Recent activity'),
       ColumnBox(
         style: FlexBoxStyler().crossAxisAlignment(.stretch),
         children: [
@@ -328,11 +324,11 @@ Widget _activityCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Ca
                           .spacing({{typePrefix}}Tokens.s0_5),
                       children: [
                         _cell(event.title, emphasized: true),
-                        _sectionDescription(event.detail),
+                        {{typePrefix}}Text.muted(event.detail),
                       ],
                     ),
                   ),
-                  _sectionDescription(event.relativeTime),
+                  {{typePrefix}}Text.muted(event.relativeTime),
                 ],
               ),
             ),
@@ -364,7 +360,7 @@ Widget _ordersCard(
       RowBox(
         style: FlexBoxStyler().crossAxisAlignment(.center),
         children: [
-          Expanded(child: _sectionTitle('Recent orders')),
+          const Expanded(child: {{typePrefix}}Text.large('Recent orders')),
           {{typePrefix}}Button.ghost(
             key: const ValueKey('overview-view-orders'),
             size: .small,
@@ -387,21 +383,6 @@ Widget _ordersCard(
       ),
     ],
   ),
-);
-
-Widget _sectionTitle(String text) => StyledText(
-  text,
-  style: TextStyler()
-      .style({{typePrefix}}Tokens.textLg.mix())
-      .fontWeight(FontWeight.w600)
-      .color({{typePrefix}}Tokens.foreground()),
-);
-
-Widget _sectionDescription(String text) => StyledText(
-  text,
-  style: TextStyler()
-      .style({{typePrefix}}Tokens.textSm.mix())
-      .color({{typePrefix}}Tokens.mutedForeground()),
 );
 
 Widget _cell(String text, {bool emphasized = false}) => StyledText(

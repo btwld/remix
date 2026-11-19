@@ -10,6 +10,7 @@ import '../../components/icon_button.dart';
 import '../../components/menu.dart';
 import '../../components/search_field.dart';
 import '../../components/segmented_control.dart';
+import '../../components/text.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_demo_records.dart';
 import 'dashboard_demo_text.dart';
@@ -461,7 +462,7 @@ class _Page extends StatelessWidget {
                     token: PlaygroundTokens.text3xl,
                     emphasized: true,
                   ),
-                  PlaygroundDashboardText(description, muted: true),
+                  PlaygroundText.muted(description),
                 ],
               ),
             ),
@@ -506,7 +507,7 @@ class _Empty extends StatelessWidget {
               .spacing(PlaygroundTokens.s1),
           children: [
             PlaygroundDashboardText(title, emphasized: true),
-            PlaygroundDashboardText(body, muted: true),
+            PlaygroundText.muted(body),
           ],
         ),
         ?action,

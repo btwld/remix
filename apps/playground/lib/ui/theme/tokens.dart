@@ -196,6 +196,9 @@ abstract final class PlaygroundTokens {
   /// 30px text on a 36px line. See [textXs].
   static const text3xl = TextStyleToken('playground.text.3xl');
 
+  /// 36px text on a 40px line. See [textXs].
+  static const text4xl = TextStyleToken('playground.text.4xl');
+
   /// Code: [textSm]'s size and line height in the theme's monospace family.
   static const textMono = TextStyleToken('playground.text.mono');
 
@@ -253,6 +256,7 @@ abstract final class PlaygroundTokens {
     textXl,
     text2xl,
     text3xl,
+    text4xl,
     textMono,
   ];
 

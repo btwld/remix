@@ -46,6 +46,37 @@ void main() {
       );
     },
   );
+  test('Vanilla code is a generated text recipe', () {
+    final output = PresetBuilder.forRepository(
+      Directory.current,
+      spec: defaultPreset,
+    ).derive();
+    final items = loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+    final item = items['code'] as YamlMap;
+    expect(_strings(item['registryDependencies']), ['theme']);
+    expect(_strings(item['generated']), ['@ui/components/code.g.dart']);
+    expect(
+      output.files['templates/code/code.dart.tmpl'],
+      contains('TextStyler {{valuePrefix}}CodeStyle('),
+    );
+  });
+  test('Vanilla typography is installable as independent items', () {
+    final output = PresetBuilder.forRepository(
+      Directory.current,
+      spec: defaultPreset,
+    ).derive();
+    final items = loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+    final heading = items['heading'] as YamlMap;
+    final text = items['text'] as YamlMap;
+    expect(_strings(heading['registryDependencies']), ['theme']);
+    expect(heading['generated'], isNull);
+    expect(_strings(text['registryDependencies']), ['theme']);
+    expect(_strings(text['generated']), ['@ui/components/text.g.dart']);
+    expect(
+      _strings((items['dashboard_demo'] as YamlMap)['registryDependencies']),
+      contains('text'),
+    );
+  });
   test('Vanilla kbd is a generated text recipe beside a written group', () {
     final output = PresetBuilder.forRepository(
       Directory.current,

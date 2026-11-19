@@ -312,6 +312,7 @@ class PlaygroundThemeData {
         PlaygroundTokens.textXl: _text(20, 28),
         PlaygroundTokens.text2xl: _text(24, 32),
         PlaygroundTokens.text3xl: _text(30, 36),
+        PlaygroundTokens.text4xl: _text(36, 40),
         PlaygroundTokens.textMono: _text(14, 20, family: monoFontFamily),
       });
 

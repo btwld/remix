@@ -615,6 +615,88 @@ final _badgeTargets = <SpecTarget>[
   ),
 ];
 
+final _headingTargets = <SpecTarget>[
+  _target<TextSpec>(
+    'heading',
+    'h2 rule',
+    source: 'examples/typography-h2.tsx: border-b pb-2',
+    style: () => vanillaHeadingStyle(variant: .h2),
+    read: (spec) {
+      final box = spec.widgetModifiers!.whereType<BoxModifier>().single.spec;
+      return (box.padding, (box.decoration as BoxDecoration).border);
+    },
+    expected: (theme) => (
+      const EdgeInsets.only(bottom: 8),
+      Border(bottom: BorderSide(color: theme.border)),
+    ),
+  ),
+];
+
+final _textTargets = <SpecTarget>[
+  _target<TextSpec>(
+    'text',
+    'paragraph line',
+    source: 'examples/typography-p.tsx: leading-7',
+    style: vanillaTextStyle,
+    read: (spec) {
+      final style = spec.spec.style!;
+      return (style.fontSize, style.fontSize! * style.height!);
+    },
+    expected: (_) => (16.0, closeTo(28, 1e-9)),
+  ),
+];
+
+// -- code ---------------------------------------------------------------------
+
+/// The chip: the box the recipe wraps around its text.
+BoxSpec _codeChip(StyleSpec<TextSpec> spec) =>
+    spec.widgetModifiers!.whereType<BoxModifier>().single.spec;
+
+final _codeTargets = <SpecTarget>[
+  _target<TextSpec>(
+    'code',
+    'chip',
+    source:
+        'examples/typography-inline-code.tsx: rounded bg-muted '
+        'px-[0.3rem] py-[0.2rem]',
+    style: vanillaCodeStyle,
+    read: (spec) => (
+      _codeChip(spec).padding,
+      (_codeChip(spec).decoration as BoxDecoration?)?.borderRadius,
+      (_codeChip(spec).decoration as BoxDecoration?)?.color,
+    ),
+    expected: (theme) => (
+      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      const BorderRadius.all(Radius.circular(4)),
+      theme.muted,
+    ),
+  ),
+  _target<TextSpec>(
+    'code',
+    'text',
+    source:
+        'examples/typography-inline-code.tsx: font-mono text-sm font-semibold',
+    style: vanillaCodeStyle,
+    read: (spec) {
+      final style = spec.spec.style;
+      return (
+        style?.fontFamily,
+        style?.fontSize,
+        style == null ? null : style.fontSize! * style.height!,
+        style?.fontWeight,
+        style?.color,
+      );
+    },
+    expected: (theme) => (
+      theme.monoFontFamily,
+      14.0,
+      closeTo(20, 1e-9),
+      FontWeight.w600,
+      theme.foreground,
+    ),
+  ),
+];
+
 // -- kbd ----------------------------------------------------------------------
 
 SpecTarget _kbd(
@@ -2549,6 +2631,9 @@ final vanillaSpecTargets = <SpecTarget>[
   ..._linkTargets,
   ..._breadcrumbsTargets,
   ..._badgeTargets,
+  ..._headingTargets,
+  ..._textTargets,
+  ..._codeTargets,
   ..._kbdTargets,
   ..._toggleTargets,
   ..._toggleGroupTargets,

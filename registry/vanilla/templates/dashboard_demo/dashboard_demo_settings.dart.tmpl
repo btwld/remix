@@ -14,6 +14,7 @@ import '../../components/segmented_control.dart';
 import '../../components/select.dart';
 import '../../components/slider.dart';
 import '../../components/switch.dart';
+import '../../components/text.dart';
 import '../../components/textfield.dart';
 import '../../theme/theme_data.dart';
 import '../../theme/theme_scope.dart';
@@ -106,9 +107,8 @@ class _{{typePrefix}}DashboardSettingsPageState
                 token: {{typePrefix}}Tokens.text3xl,
                 emphasized: true,
               ),
-              {{typePrefix}}DashboardText(
+              {{typePrefix}}Text.muted(
                 'Manage your profile, preferences, and workspace.',
-                muted: true,
               ),
             ],
           ),
@@ -332,14 +332,7 @@ Widget _section(String title, String description, Widget child) => {{typePrefix}
         style: FlexBoxStyler()
             .crossAxisAlignment(.start)
             .spacing({{typePrefix}}Tokens.s1),
-        children: [
-          {{typePrefix}}DashboardText(
-            title,
-            token: {{typePrefix}}Tokens.textLg,
-            emphasized: true,
-          ),
-          {{typePrefix}}DashboardText(description, muted: true),
-        ],
+        children: [{{typePrefix}}Text.large(title), {{typePrefix}}Text.muted(description)],
       ),
       child,
     ],
@@ -356,7 +349,7 @@ Widget _preference(String title, String description, Widget trailing) => RowBox(
             .spacing({{typePrefix}}Tokens.s0_5),
         children: [
           {{typePrefix}}DashboardText(title, emphasized: true),
-          {{typePrefix}}DashboardText(description, muted: true),
+          {{typePrefix}}Text.muted(description),
         ],
       ),
     ),

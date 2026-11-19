@@ -65,6 +65,7 @@ The installer rejects older resolved versions before it writes source.
 | `card` | `UiCard` | — |
 | `chart` | `UiLineChart`, `UiBarChart`, `UiPieChart` | — |
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | — |
+| `code` | `UiCode` (Vanilla) | — |
 | `combobox` | `UiCombobox` (every preset; installs `theme` and `textfield`) | — |
 | `dashboard_demo` | `UiDashboardDemo`, `UiDashboardOverview` | — |
 | `dashboard_shell` | `UiDashboardShell` | — |
@@ -73,6 +74,7 @@ The installer rejects older resolved versions before it writes source.
 | `dialog` | `UiDialog` | — |
 | `disclosure` | `UiDisclosure` | — |
 | `divider` | `UiDivider` | — |
+| `heading` | `UiHeading` (Vanilla) | variant |
 | `icon_button` | `UiIconButton` | variant, size |
 | `kbd` | `UiKbd`, `UiKbdGroup` (Vanilla) | variant |
 | `link` | `UiLink` | — |
@@ -91,6 +93,7 @@ The installer rejects older resolved versions before it writes source.
 | `spinner` | `UiSpinner` | — |
 | `switch` | `UiSwitch` | — |
 | `tabs` | `UiTabBar`, `UiTab`, `UiTabView` | variant |
+| `text` | `UiText` (Vanilla) | variant |
 | `textfield` | `UiTextField`, `UiTextArea` | — |
 | `toast` | `UiToast` | variant |
 | `toggle` | `UiToggle` | variant, size |
@@ -107,16 +110,23 @@ page as plain text, and a navigation landmark around it. The Vanilla
 with a search icon and a clear button that shows for text, clears on Escape,
 and owns its controller when you pass none. The Vanilla `dashboard_shell`
 header search and the demo's customer search use it.
+`code` is a generated text recipe too: inline code in the monospace step on a
+`muted` chip, which sits in a `WidgetSpan` in running text.
+`heading` provides four levels of headings with heading semantics. `text`
+provides paragraph, lead, large, small, muted, and blockquote styles. Both
+follow the typography examples in shadcn/ui; the Vanilla dashboard uses
+`text` for matching section labels and descriptions.
 `kbd` is a generated text recipe, one key drawn as a key cap, beside a
 hand-written `UiKbdGroup` that sets the keys of a shortcut 4px apart and reads
 them as one phrase. Its `tooltip` variant inverts the cap for a tooltip's
 content.
 
 The `fortal` catalog contains the items above and adds `base_button`,
-`code`, `heading`, `text`, `typography`, `avatar_group`, and `surface`.
-Fortal's `kbd` is one key with a size axis and no group. `base_button` and
-`typography` are shared authored recipes that arrive transitively with the
-components that use them. Fortal's own
+`typography`, `avatar_group`, and `surface`. Fortal's `heading` and `text`
+use the Fortal size and weight axes instead of Vanilla's typography variants. Its
+`code` has four variants and a size axis, and its `kbd` is one key with a size
+axis and no group. `base_button` and `typography` are shared authored recipes
+that arrive transitively with the components that use them. Fortal's own
 `avatar_group` (`UiAvatarGroup`, size axis; installs `avatar`),
 `breadcrumbs` (`UiBreadcrumbs`, size axis; installs `link` and `text`),
 `search_field` (`UiSearchField`, variant and size axes; installs `textfield`

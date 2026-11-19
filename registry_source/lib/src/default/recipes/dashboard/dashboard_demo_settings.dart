@@ -14,6 +14,7 @@ import '../../components/segmented_control.dart';
 import '../../components/select.dart';
 import '../../components/slider.dart';
 import '../../components/switch.dart';
+import '../../components/text.dart';
 import '../../components/textfield.dart';
 import '../../theme/theme_data.dart';
 import '../../theme/theme_scope.dart';
@@ -106,9 +107,8 @@ class _VanillaDashboardSettingsPageState
                 token: VanillaTokens.text3xl,
                 emphasized: true,
               ),
-              VanillaDashboardText(
+              VanillaText.muted(
                 'Manage your profile, preferences, and workspace.',
-                muted: true,
               ),
             ],
           ),
@@ -332,14 +332,7 @@ Widget _section(String title, String description, Widget child) => VanillaCard(
         style: FlexBoxStyler()
             .crossAxisAlignment(.start)
             .spacing(VanillaTokens.s1),
-        children: [
-          VanillaDashboardText(
-            title,
-            token: VanillaTokens.textLg,
-            emphasized: true,
-          ),
-          VanillaDashboardText(description, muted: true),
-        ],
+        children: [VanillaText.large(title), VanillaText.muted(description)],
       ),
       child,
     ],
@@ -356,7 +349,7 @@ Widget _preference(String title, String description, Widget trailing) => RowBox(
             .spacing(VanillaTokens.s0_5),
         children: [
           VanillaDashboardText(title, emphasized: true),
-          VanillaDashboardText(description, muted: true),
+          VanillaText.muted(description),
         ],
       ),
     ),
