@@ -457,7 +457,7 @@ void main() {
     });
 
     testWidgets(
-      'semanticLabel overrides visible trigger text on both trigger paths',
+      'both trigger paths own their accessible name independently of the parent',
       (tester) async {
         final handle = tester.ensureSemantics();
         final focusNode = FocusNode();
@@ -469,17 +469,23 @@ void main() {
         ]) {
           await tester.pumpWidget(
             _buildTestApp(
-              NakedPopover(
-                semanticLabel: 'Filter options',
-                popoverBuilder: (context, info) => const Text('Content'),
-                child: child,
+              Semantics(
+                container: true,
+                label: 'Workspace',
+                child: NakedPopover(
+                  semanticLabel: 'Filter options',
+                  popoverBuilder: (context, info) => const Text('Content'),
+                  child: child,
+                ),
               ),
             ),
           );
 
-          final data = tester
-              .getSemantics(find.text('Visible Trigger'))
-              .getSemanticsData();
+          final parent = find.semantics.byLabel('Workspace').evaluate().single;
+          final trigger = tester.getSemantics(find.text('Visible Trigger'));
+          expect(trigger.id, isNot(parent.id));
+          expect(parent.getSemanticsData().flagsCollection.isButton, isFalse);
+          final data = trigger.getSemanticsData();
           expect(data.label, 'Filter options');
           expect(data.flagsCollection.isButton, isTrue);
           expect(data.flagsCollection.isExpanded, Tristate.isFalse);

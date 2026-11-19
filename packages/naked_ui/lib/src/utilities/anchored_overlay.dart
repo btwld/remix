@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import 'focus_in_view.dart';
 import 'intents.dart';
+import 'merge_naked_button_semantics.dart';
 import 'positioning.dart';
 
 /// The overlay half of a [RawMenuAnchor]: return it from
@@ -293,7 +294,10 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
                   child: _AnchoredOverlayScope(
                     containerFocusNode: _containerFocusNode,
                     avoidViewInsets: avoidViewInsets,
-                    child: panel,
+                    child: MergeNakedButtonSemantics(
+                      enabled: false,
+                      child: panel,
+                    ),
                   ),
                 ),
               ),

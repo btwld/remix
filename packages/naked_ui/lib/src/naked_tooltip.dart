@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart' show RenderProxyBox;
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'utilities/merge_naked_button_semantics.dart';
 import 'utilities/positioning.dart';
 import 'utilities/reduced_motion.dart';
 
@@ -18,8 +21,8 @@ const _defaultTooltipAnimationStyle = AnimationStyle(
 /// [RawTooltip] manages trigger handling, delays, feedback, animation,
 /// hoverable content, and overlay lifetime. This widget provides the headless
 /// overlay builder, collision-aware positioning, and optional semantics
-/// filtering. [overlayBuilder] maps to [RawTooltip.tooltipBuilder], and
-/// [semanticLabel] maps to [RawTooltip.semanticsTooltip].
+/// filtering. [overlayBuilder] maps to [RawTooltip.tooltipBuilder].
+/// [semanticLabel] describes the trigger and is announced when the tooltip opens.
 ///
 /// Pass a [GlobalKey] to [tooltipKey] to show the tooltip imperatively via
 /// [RawTooltipState.ensureTooltipVisible]. [onOpenChanged] reports visibility
@@ -190,6 +193,11 @@ class _NakedTooltipState extends State<NakedTooltip>
 
   GlobalKey<RawTooltipState> get _tooltipKey =>
       widget.tooltipKey ?? _internalTooltipKey;
+
+  String? get _semanticsTooltip =>
+      widget.excludeSemantics || widget.semanticLabel?.trim().isEmpty == true
+      ? null
+      : widget.semanticLabel;
 
   static OverlayPlacement _initialPlacement(OverlayPositionConfig config) =>
       OverlayPlacement(
@@ -497,15 +505,12 @@ class _NakedTooltipState extends State<NakedTooltip>
   Widget build(BuildContext context) {
     final textDirection = Directionality.of(context);
     final animationStyle = _animationStyle;
+    final semanticsTooltip = _semanticsTooltip;
+    final parentOwnsTrigger = MergeNakedButtonSemantics.isRequested(context);
+    final ownsTrigger = semanticsTooltip != null && !parentOwnsTrigger;
     Widget result = RawTooltip(
       key: _tooltipKey,
-      // RawTooltip treats an empty semantics label as "no tooltip". Preserve
-      // NakedTooltip's ability to show visual content without a label.
-      semanticsTooltip:
-          widget.excludeSemantics ||
-              widget.semanticLabel?.trim().isEmpty == true
-          ? null
-          : widget.semanticLabel,
+      semanticsTooltip: semanticsTooltip,
       tooltipBuilder: (context, animation) {
         _captureRawAnimation(animation);
         return OverlayPlacementScope(
@@ -551,7 +556,14 @@ class _NakedTooltipState extends State<NakedTooltip>
 
         return placement.offset;
       },
-      child: widget.child,
+      child: MergeNakedButtonSemantics(
+        enabled: ownsTrigger || parentOwnsTrigger,
+        child: Semantics(
+          container: ownsTrigger,
+          tooltip: ownsTrigger ? semanticsTooltip : null,
+          child: widget.child,
+        ),
+      ),
     );
     result = MouseRegion(
       opaque: false,
@@ -576,7 +588,36 @@ class _NakedTooltipState extends State<NakedTooltip>
       child: result,
     );
 
-    return widget.excludeSemantics ? ExcludeSemantics(child: result) : result;
+    if (widget.excludeSemantics) return ExcludeSemantics(child: result);
+    return ownsTrigger ? _TooltipPortalSemantics(child: result) : result;
+  }
+}
+
+/// Keeps RawTooltip's portal traversal anchor separate from the trigger's.
+/// RawTooltip announces the label itself; only the trigger exposes it in the
+/// tree.
+class _TooltipPortalSemantics extends SingleChildRenderObjectWidget {
+  const _TooltipPortalSemantics({required super.child});
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderTooltipPortalSemantics();
+}
+
+class _RenderTooltipPortalSemantics extends RenderProxyBox {
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config.isSemanticBoundary = true;
+  }
+
+  @override
+  void assembleSemanticsNode(
+    SemanticsNode node,
+    SemanticsConfiguration config,
+    Iterable<SemanticsNode> children,
+  ) {
+    super.assembleSemanticsNode(node, config.copy()..tooltip = '', children);
   }
 }
 

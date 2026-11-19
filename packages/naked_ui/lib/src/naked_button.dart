@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
 import 'utilities/intents.dart';
+import 'utilities/merge_naked_button_semantics.dart';
 import 'utilities/naked_focusable_detector.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/state.dart';
@@ -35,6 +36,8 @@ class NakedButtonState extends NakedState {
 /// A headless button without visuals that provides interaction states.
 ///
 /// The [builder] receives a [NakedButtonState] with interaction states.
+/// A standalone button owns its accessibility actions and keyboard focus in
+/// one semantics node, unless [excludeSemantics] is true.
 ///
 /// See also:
 /// - [GestureDetector], for direct gesture handling without button semantics.
@@ -223,7 +226,7 @@ class _NakedButtonState extends State<NakedButton>
   Widget build(BuildContext context) {
     final buttonState = NakedButtonState(states: widgetStates);
 
-    Widget gestureDetector = GestureDetector(
+    final gestureDetector = GestureDetector(
       onTapDown: _isInteractive ? _onPressStart : null,
       onTapUp: _isInteractive ? (_) => _onPressEnd() : null,
       onTap: _isInteractive ? _handleTap : null,
@@ -242,21 +245,7 @@ class _NakedButtonState extends State<NakedButton>
       ),
     );
 
-    Widget result = widget.excludeSemantics
-        ? ExcludeSemantics(child: gestureDetector)
-        : Semantics(
-            enabled: _isInteractive,
-            button: true,
-            label: widget.semanticLabel,
-            hint: widget.semanticHint,
-            tooltip: widget.tooltip,
-            excludeSemantics: widget.semanticLabel != null,
-            onTap: widget.onPressed != null ? _handleTap : null,
-            onLongPress: widget.onLongPress != null ? _handleLongPress : null,
-            child: gestureDetector,
-          );
-
-    return NakedFocusableDetector(
+    final focusable = NakedFocusableDetector(
       enabled: _isInteractive,
       autofocus: widget.autofocus,
       onFocusChange: (focused) {
@@ -273,7 +262,25 @@ class _NakedButtonState extends State<NakedButton>
       actions: NakedIntentActions.button.actions(
         onPressed: _handleKeyboardActivation,
       ),
-      child: result,
+      child: ExcludeSemantics(
+        excluding: widget.semanticLabel != null,
+        child: gestureDetector,
+      ),
+    );
+
+    return ExcludeSemantics(
+      excluding: widget.excludeSemantics,
+      child: Semantics(
+        container: !MergeNakedButtonSemantics.isRequested(context),
+        enabled: _isInteractive,
+        button: true,
+        label: widget.semanticLabel,
+        hint: widget.semanticHint,
+        tooltip: widget.tooltip,
+        onTap: widget.onPressed != null ? _handleTap : null,
+        onLongPress: widget.onLongPress != null ? _handleLongPress : null,
+        child: focusable,
+      ),
     );
   }
 }

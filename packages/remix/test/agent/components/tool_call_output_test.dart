@@ -203,37 +203,57 @@ void main() {
       final semantics = tester.ensureSemantics();
       final start = FocusNode(debugLabel: 'start');
       addTearDown(start.dispose);
-      await _pump(tester, start: start);
-      start.requestFocus();
-      await tester.pump();
-      expect(
-        tester.getSemantics(find.byKey(_toggle)),
-        matchesSemantics(
-          label: 'Show all',
-          isButton: true,
-          hasEnabledState: true,
-          isEnabled: true,
-          isFocusable: true,
-          hasTapAction: true,
-          hasFocusAction: true,
-        ),
-      );
-      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-      await tester.pump();
-      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-      await tester.pump();
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-      await tester.pumpAndSettle();
-      expect(find.text('Show less'), findsOneWidget);
-      expect(_viewportHeight(tester), greaterThan(60));
-      expect(
-        tester.getSemantics(find.byKey(_toggle)).getSemanticsData().label,
-        'Show less',
-      );
-      await tester.sendKeyEvent(LogicalKeyboardKey.space);
-      await tester.pumpAndSettle();
-      expect(_viewportHeight(tester), 60);
-      semantics.dispose();
+
+      int expectToggle(String label, {required bool focused}) {
+        final toggle = find.semantics.byLabel(label);
+        expect(toggle, findsOne);
+        final node = toggle.evaluate().single;
+        expect(
+          node,
+          matchesSemantics(
+            label: label,
+            isButton: true,
+            hasEnabledState: true,
+            isEnabled: true,
+            isFocusable: true,
+            isFocused: focused,
+            hasTapAction: true,
+            hasFocusAction: true,
+          ),
+        );
+        return node.id;
+      }
+
+      try {
+        await _pump(tester, start: start);
+        start.requestFocus();
+        await tester.pump();
+
+        final output = find.semantics.byLabel('Tool output');
+        expect(output, findsOne);
+        final toggleId = expectToggle('Show all', focused: false);
+        expect(output.evaluate().single.id, isNot(toggleId));
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+        expect(expectToggle('Show all', focused: true), toggleId);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(_viewportHeight(tester), greaterThan(60));
+        expect(find.semantics.byLabel('Show all'), findsNothing);
+        expect(expectToggle('Show less', focused: true), toggleId);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.space);
+        await tester.pumpAndSettle();
+        expect(_viewportHeight(tester), 60);
+        expect(find.semantics.byLabel('Show less'), findsNothing);
+        expect(expectToggle('Show all', focused: true), toggleId);
+      } finally {
+        semantics.dispose();
+      }
     },
   );
 

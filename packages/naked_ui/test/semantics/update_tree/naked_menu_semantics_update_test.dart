@@ -1,6 +1,7 @@
 import 'dart:ui' show Tristate;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 
@@ -36,6 +37,8 @@ void main() {
                   openOnTap: false,
                   child: NakedTooltip(
                     tooltipKey: tooltip,
+                    semanticLabel: 'Show actions',
+                    excludeOverlaySemantics: false,
                     overlayBuilder: (context, animation) => const Text('Tip'),
                     child: control(
                       () => menu.isOpen ? menu.close() : menu.open(),
@@ -106,30 +109,36 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: NakedMenu<String>(
-            controller: menu,
-            openOnTap: false,
-            child: ValueListenableBuilder<bool>(
-              valueListenable: loading,
-              builder: (context, isLoading, child) => Stack(
-                children: [
-                  NakedButton(
-                    enabled: !isLoading,
-                    onPressed: menu.open,
-                    semanticLabel: 'Account actions',
-                    child: const SizedBox(width: 160, height: 40),
-                  ),
-                  if (isLoading)
-                    Semantics(
-                      liveRegion: true,
-                      label: 'Account actions, loading',
-                      child: const SizedBox.square(dimension: 1),
+          body: Semantics(
+            container: true,
+            label: 'Workspace',
+            child: NakedMenu<String>(
+              controller: menu,
+              openOnTap: false,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: loading,
+                builder: (context, isLoading, child) => Stack(
+                  children: [
+                    NakedButton(
+                      enabled: !isLoading,
+                      onPressed: menu.open,
+                      semanticLabel: 'Account actions',
+                      child: const SizedBox(width: 160, height: 40),
                     ),
-                ],
+                    if (isLoading)
+                      Semantics(
+                        liveRegion: true,
+                        label: 'Account actions, loading',
+                        child: const SizedBox.square(dimension: 1),
+                      ),
+                  ],
+                ),
+              ),
+              overlayBuilder: (context, info) => const NakedMenuItem<String>(
+                value: 'item',
+                child: Text('Item'),
               ),
             ),
-            overlayBuilder: (context, info) =>
-                const NakedMenuItem<String>(value: 'item', child: Text('Item')),
           ),
         ),
       ),
@@ -142,8 +151,12 @@ void main() {
           .byLabel('Account actions')
           .evaluate()
           .single;
+      final parent = find.semantics.byLabel('Workspace').evaluate().single;
+      expect(button.id, isNot(parent.id));
       expect(button.isMergedIntoParent, isFalse);
-      expect(button.getSemanticsData().flagsCollection.isLiveRegion, isFalse);
+      final data = button.getSemanticsData();
+      expect(data.flagsCollection.isLiveRegion, isFalse);
+      expect(data.hasAction(SemanticsAction.focus), !isLoading);
       final announcements = find.semantics.byLabel('Account actions, loading');
       expect(announcements, isLoading ? findsOne : findsNothing);
       if (isLoading) {

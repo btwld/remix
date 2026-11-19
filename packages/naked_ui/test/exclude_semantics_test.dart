@@ -12,39 +12,56 @@ void main() {
     testWidgets('NakedButton respects excludeSemantics', (tester) async {
       final semanticsHandle = tester.ensureSemantics();
 
-      // Test with excludeSemantics: false (default)
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: NakedButton(
-              onPressed: () {},
-              semanticLabel: 'Test Button',
-              child: const Text('Button'),
+      Future<void> pumpButton({bool excludeSemantics = false}) =>
+          tester.pumpWidget(
+            MaterialApp(
+              home: Scaffold(
+                body: NakedButton(
+                  onPressed: () {},
+                  semanticLabel: 'Test Button',
+                  excludeSemantics: excludeSemantics,
+                  child: const Text('Button'),
+                ),
+              ),
+            ),
+          );
+
+      try {
+        await pumpButton();
+        final button = find.semantics.byLabel(RegExp(r'Test Button'));
+        expect(button, findsOne);
+        expect(
+          button.evaluate().single,
+          isSemantics(
+            label: 'Test Button',
+            isButton: true,
+            hasTapAction: true,
+            hasFocusAction: true,
+          ),
+        );
+
+        await pumpButton(excludeSemantics: true);
+        expect(button, findsNothing);
+        expect(find.semantics.byLabel('Button'), findsNothing);
+        expect(
+          tester.semantics.simulatedAccessibilityTraversal().map(
+            (node) => node.getSemanticsData(),
+          ),
+          isNot(
+            contains(
+              predicate<SemanticsData>(
+                (data) =>
+                    data.flagsCollection.isButton ||
+                    data.hasAction(SemanticsAction.tap) ||
+                    data.hasAction(SemanticsAction.focus),
+                'a button role, tap action, or focus action',
+              ),
             ),
           ),
-        ),
-      );
-
-      // The semantic label includes both the label and the child text
-      expect(find.bySemanticsLabel(RegExp(r'Test Button')), findsOneWidget);
-
-      // Test with excludeSemantics: true
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: NakedButton(
-              onPressed: () {},
-              semanticLabel: 'Test Button',
-              excludeSemantics: true,
-              child: const Text('Button'),
-            ),
-          ),
-        ),
-      );
-
-      expect(find.bySemanticsLabel(RegExp(r'Test Button')), findsNothing);
-
-      semanticsHandle.dispose();
+        );
+      } finally {
+        semanticsHandle.dispose();
+      }
     });
 
     testWidgets('NakedCheckbox respects excludeSemantics', (tester) async {

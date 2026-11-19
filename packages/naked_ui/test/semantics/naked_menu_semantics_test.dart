@@ -73,36 +73,45 @@ void main() {
       handle.dispose();
     });
 
-    testWidgets('trigger exposes expanded state instead of toggled', (
+    testWidgets('trigger owns expanded state independently of its parent', (
       tester,
     ) async {
       final handle = tester.ensureSemantics();
 
-      await tester.pumpWidget(_buildTestApp(_buildNakedMenu()));
+      await tester.pumpWidget(
+        _buildTestApp(
+          Semantics(
+            container: true,
+            label: 'Workspace',
+            child: _buildNakedMenu(),
+          ),
+        ),
+      );
 
-      var triggerData = tester
-          .getSemantics(find.text('Show Menu'))
-          .getSemanticsData();
-      expect(triggerData.flagsCollection.isExpanded, Tristate.isFalse);
-      expect(triggerData.flagsCollection.isToggled, Tristate.none);
+      final parent = find.semantics.byLabel('Workspace');
+      final trigger = find.semantics.byLabel('Show Menu');
 
-      await tester.tap(find.text('Show Menu'));
+      void expectTrigger(Tristate expanded) {
+        final parentNode = parent.evaluate().single;
+        final triggerNode = trigger.evaluate().single;
+        expect(triggerNode.id, isNot(parentNode.id));
+        final parentData = parentNode.getSemanticsData();
+        expect(parentData.flagsCollection.isButton, isFalse);
+        expect(parentData.flagsCollection.isExpanded, Tristate.none);
+        final triggerData = triggerNode.getSemanticsData();
+        expect(triggerData.flagsCollection.isButton, isTrue);
+        expect(triggerData.flagsCollection.isExpanded, expanded);
+        expect(triggerData.flagsCollection.isToggled, Tristate.none);
+        expect(triggerData.hasAction(SemanticsAction.focus), isTrue);
+      }
+
+      expectTrigger(Tristate.isFalse);
+      tester.semantics.tap(trigger);
       await tester.pumpAndSettle();
-
-      triggerData = tester
-          .getSemantics(find.text('Show Menu'))
-          .getSemanticsData();
-      expect(triggerData.flagsCollection.isExpanded, Tristate.isTrue);
-      expect(triggerData.flagsCollection.isToggled, Tristate.none);
-
-      await tester.tap(find.text('Show Menu'));
+      expectTrigger(Tristate.isTrue);
+      tester.semantics.tap(trigger);
       await tester.pumpAndSettle();
-
-      triggerData = tester
-          .getSemantics(find.text('Show Menu'))
-          .getSemanticsData();
-      expect(triggerData.flagsCollection.isExpanded, Tristate.isFalse);
-      expect(triggerData.flagsCollection.isToggled, Tristate.none);
+      expectTrigger(Tristate.isFalse);
 
       handle.dispose();
     });

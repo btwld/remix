@@ -108,17 +108,22 @@ void main() {
       try {
         await tester.pumpWidget(
           _buildTestApp(
-            NakedTooltip(
-              semanticLabel: label,
-              hoverDelay: Duration.zero,
-              dismissDelay: Duration.zero,
-              animationStyle: AnimationStyle.noAnimation,
-              overlayBuilder: (context, animation) => const Text(label),
-              child: NakedButton(
-                key: const Key('naked-trigger'),
+            Semantics(
+              container: true,
+              label: 'Search chats',
+              textField: true,
+              child: NakedTooltip(
                 semanticLabel: label,
-                onPressed: () {},
-                child: const SizedBox.square(dimension: 40),
+                hoverDelay: Duration.zero,
+                dismissDelay: Duration.zero,
+                animationStyle: AnimationStyle.noAnimation,
+                overlayBuilder: (context, animation) => const Text(label),
+                child: NakedButton(
+                  key: const Key('naked-trigger'),
+                  semanticLabel: label,
+                  onPressed: () {},
+                  child: const SizedBox.square(dimension: 40),
+                ),
               ),
             ),
           ),
@@ -137,6 +142,9 @@ void main() {
 
         final openNodes = _nodesWithLabel(tester, label);
         labelCounts.add(openNodes.length);
+        final field = _nodesWithLabel(tester, 'Search chats').single;
+        expect(openNodes.single.id, isNot(field.id));
+        expect(field.getSemanticsData().flagsCollection.isButton, isFalse);
         final data = openNodes.single.getSemanticsData();
         expect(data.tooltip, label);
         expect(data.flagsCollection.isButton, isTrue);
@@ -161,6 +169,90 @@ void main() {
         handle.dispose();
       }
     });
+
+    const description = 'Manage workspace actions';
+    for (final initialLabel in <String?>[null, description]) {
+      final change = initialLabel == null ? 'adding' : 'removing';
+      final updatedLabel = initialLabel == null ? description : null;
+
+      testWidgets('$change a tooltip label preserves trigger focus', (
+        tester,
+      ) async {
+        final handle = tester.ensureSemantics();
+        try {
+          Future<void> pumpTooltip(String? label) => tester.pumpWidget(
+            _buildTestApp(
+              NakedTooltip(
+                semanticLabel: label,
+                isFocusVisible: () => false,
+                overlayBuilder: (context, animation) => const Text('Help'),
+                child: NakedButton(
+                  onPressed: () {},
+                  child: const Text('Actions'),
+                ),
+              ),
+            ),
+          );
+
+          await pumpTooltip(initialLabel);
+          final trigger = find.semantics.byLabel('Actions');
+          tester.semantics.performAction(trigger, SemanticsAction.focus);
+          await tester.pumpAndSettle();
+          final focus = FocusManager.instance.primaryFocus!;
+          expect(
+            trigger
+                .evaluate()
+                .single
+                .getSemanticsData()
+                .flagsCollection
+                .isFocused,
+            Tristate.isTrue,
+          );
+
+          await pumpTooltip(updatedLabel);
+          await tester.pumpAndSettle();
+          expect(focus.hasPrimaryFocus, isTrue);
+          final data = trigger.evaluate().single.getSemanticsData();
+          expect(data.flagsCollection.isFocused, Tristate.isTrue);
+          expect(data.tooltip, updatedLabel ?? '');
+        } finally {
+          handle.dispose();
+        }
+      });
+
+      testWidgets('$change a tooltip label leaves an open menu open', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        Future<void> pumpTooltip(String? label) => tester.pumpWidget(
+          _buildTestApp(
+            NakedTooltip(
+              semanticLabel: label,
+              isFocusVisible: () => false,
+              overlayBuilder: (context, animation) => const Text('Help'),
+              child: NakedMenu<String>(
+                controller: controller,
+                overlayBuilder: (context, info) => const NakedMenuItem<String>(
+                  value: 'item',
+                  child: Text('Overlay item'),
+                ),
+                child: const Text('Actions'),
+              ),
+            ),
+          ),
+        );
+
+        await pumpTooltip(initialLabel);
+        await tester.tap(find.text('Actions'));
+        await tester.pumpAndSettle();
+        expect(find.text('Overlay item'), findsOneWidget);
+
+        await pumpTooltip(updatedLabel);
+        await tester.pumpAndSettle();
+        expect(controller.isOpen, isTrue);
+        expect(find.text('Overlay item'), findsOneWidget);
+      });
+    }
 
     testWidgets('can include meaningful custom overlay semantics', (
       tester,
