@@ -1,3 +1,4 @@
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,6 +12,7 @@ Future<void> _pump(
   FocusNode? focusNode,
   bool enabled = true,
   bool readOnly = false,
+  String? parentLabel,
   ValueChanged<String>? onChanged,
   VoidCallback? onCleared,
   VoidCallback? onEscape,
@@ -20,8 +22,12 @@ Future<void> _pump(
       color: const Color(0xff000000),
       pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
         settings: settings,
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            builder(context),
+        pageBuilder: (context, animation, secondaryAnimation) {
+          final page = builder(context);
+          return parentLabel == null
+              ? page
+              : Semantics(container: true, label: parentLabel, child: page);
+        },
       ),
       home: Center(
         child: Focus(
@@ -107,6 +113,59 @@ void main() {
     await tester.pump();
     expect(find.byType(NakedButton), findsOneWidget);
     expect(calls, hasLength(3));
+  });
+
+  testWidgets('semantic clear stays actionable inside a labelled parent', (
+    tester,
+  ) async {
+    const parentLabel = 'People search';
+    final calls = <String>[];
+    await _pump(
+      tester,
+      parentLabel: parentLabel,
+      onChanged: (value) => calls.add('edit:$value'),
+      onCleared: () => calls.add('clear'),
+    );
+    final editable = find.byType(EditableText);
+    await tester.enterText(editable, 'Ada');
+    final editor = tester.widget<EditableText>(editable);
+    editor.focusNode.nextFocus();
+    await tester.pump();
+    expect(editor.focusNode.hasFocus, isFalse);
+
+    SemanticsNode parent() => collectSemanticsNodes(
+      semanticsRootOf(tester),
+      (node) => node.getSemanticsData().label == parentLabel,
+    ).single;
+    SemanticsData editorData(SemanticsNode parent) => collectSemanticsNodes(
+      parent,
+      (node) => node.getSemanticsData().flagsCollection.isTextField,
+    ).single.getSemanticsData();
+    final before = parent();
+    expect(editorData(before).label, 'Find people');
+    expect(editorData(before).value, 'Ada');
+    final clear = collectSemanticsNodes(
+      before,
+      (node) => node.getSemanticsData().flagsCollection.isButton,
+    ).single;
+    expect(clear.getSemanticsData().label, 'Clear search');
+    expect(clear.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+
+    clear.owner!.performAction(clear.id, SemanticsAction.tap);
+    await tester.pump();
+    expect(editor.controller.text, isEmpty);
+    expect(editor.focusNode.hasFocus, isTrue);
+    expect(calls, ['edit:Ada', 'edit:', 'clear']);
+    final after = parent();
+    expect(editorData(after).label, 'Find people');
+    expect(editorData(after).value, isEmpty);
+    expect(
+      collectSemanticsNodes(
+        semanticsRootOf(tester),
+        (node) => node.getSemanticsData().label == 'Clear search',
+      ),
+      isEmpty,
+    );
   });
 
   testWidgets('one held Escape clears once; the next empty Escape bubbles', (
