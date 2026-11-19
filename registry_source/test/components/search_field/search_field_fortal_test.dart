@@ -1,3 +1,4 @@
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -712,28 +713,48 @@ void main() {
   });
 
   group('semantics', () {
-    testWidgets('the field and its clear button are named', (tester) async {
-      final semantics = tester.ensureSemantics();
+    testWidgets('semantic Clear empties the named editor and returns focus', (
+      tester,
+    ) async {
+      addTearDown(tester.ensureSemantics().dispose);
+      final controller = TextEditingController(text: 'mar');
+      addTearDown(controller.dispose);
+      final calls = <String>[];
       await tester.pumpRemixApp(
         SizedBox(
           width: 320,
           child: FortalSearchField(
             semanticLabel: 'Search editions',
             clearSemanticLabel: 'Clear the search',
-            controller: TextEditingController(text: 'mar'),
+            controller: controller,
+            onChanged: (value) => calls.add('change:$value'),
+            onCleared: () => calls.add('clear'),
           ),
         ),
       );
 
+      final field = find.byType(EditableText);
+      final editor = tester.state<EditableTextState>(field);
+      final clear = find.semantics.byLabel('Clear the search');
+      expect(clear, findsOne);
+      final clearNode = clear.evaluate().single;
       expect(
-        tester.getSemantics(find.byType(EditableText)),
+        tester.getSemantics(field),
         isSemantics(label: 'Search editions', isTextField: true, value: 'mar'),
       );
+      expect(clearNode, isSemantics(isButton: true, hasTapAction: true));
+
+      clearNode.owner!.performAction(clearNode.id, SemanticsAction.tap);
+      await tester.pump();
+      expect(controller.text, isEmpty);
+      expect(calls, ['change:', 'clear']);
+      expect(tester.state<EditableTextState>(field), same(editor));
+      expect(editor.widget.focusNode.hasFocus, isTrue);
+      expect(clear, findsNothing);
       expect(
-        tester.getSemantics(find.bySemanticsLabel('Clear the search')),
-        isSemantics(isButton: true, hasTapAction: true),
+        tester.getSemantics(field),
+        isSemantics(label: 'Search editions', isTextField: true, value: ''),
       );
-      semantics.dispose();
     });
   });
 }
