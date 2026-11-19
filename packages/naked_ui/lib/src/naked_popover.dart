@@ -7,6 +7,7 @@ import 'mixins/naked_mixins.dart';
 import 'naked_button.dart';
 import 'utilities/anchored_overlay.dart';
 import 'utilities/intents.dart';
+import 'utilities/merge_naked_button_semantics.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/positioning.dart';
 import 'utilities/state.dart';
@@ -365,6 +366,7 @@ class _NakedPopoverState extends State<NakedPopover>
       child: content,
     );
     trigger = Semantics(
+      container: true,
       enabled: true,
       button: true,
       // Disclosure state: announce open/closed alongside the button role, so AT
@@ -405,24 +407,27 @@ class _NakedPopoverState extends State<NakedPopover>
       // Wrap NakedButton (rather than extend it with an `expanded` param) so the
       // disclosure state merges onto the button's node. Mirrors NakedMenu.
       return Semantics(
+        container: true,
         expanded: _menuController.isOpen,
-        child: NakedButton(
-          onPressed: _toggle,
-          focusNode: returnNode,
-          semanticLabel: widget.semanticLabel,
-          child: excludeChildTraversal
-              ? ExcludeFocusTraversal(child: widget.child!)
-              : widget.child,
-          builder: (context, buttonState, child) {
-            return NakedStateScopeBuilder(
-              value: NakedPopoverState(
-                states: buttonState.states,
-                isOpen: _menuController.isOpen,
-              ),
-              child: child,
-              builder: widget.builder,
-            );
-          },
+        child: MergeNakedButtonSemantics(
+          child: NakedButton(
+            onPressed: _toggle,
+            focusNode: returnNode,
+            semanticLabel: widget.semanticLabel,
+            child: excludeChildTraversal
+                ? ExcludeFocusTraversal(child: widget.child!)
+                : widget.child,
+            builder: (context, buttonState, child) {
+              return NakedStateScopeBuilder(
+                value: NakedPopoverState(
+                  states: buttonState.states,
+                  isOpen: _menuController.isOpen,
+                ),
+                child: child,
+                builder: widget.builder,
+              );
+            },
+          ),
         ),
       );
     }

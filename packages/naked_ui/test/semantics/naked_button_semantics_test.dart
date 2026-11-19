@@ -18,6 +18,81 @@ void main() {
   }
 
   group('NakedButton Semantics', () {
+    testWidgets('owns button and focus semantics inside another control', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      var taps = 0;
+
+      try {
+        await tester.pumpWidget(
+          _buildTestApp(
+            Semantics(
+              container: true,
+              label: 'Search customers',
+              textField: true,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(width: 200, height: 40),
+                  NakedButton(
+                    focusNode: focusNode,
+                    semanticLabel: 'Clear search',
+                    onPressed: () => taps++,
+                    child: const Text('Clear'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        final field = find.semantics.byLabel('Search customers');
+        final button = find.semantics.byLabel('Clear search');
+        expect(field, findsOne);
+        expect(button, findsOne);
+        final fieldNode = field.evaluate().single;
+        final buttonNode = button.evaluate().single;
+        expect(buttonNode.id, isNot(fieldNode.id));
+        expect(
+          fieldNode,
+          isSemantics(
+            label: 'Search customers',
+            isTextField: true,
+            isButton: false,
+            hasTapAction: false,
+            hasFocusAction: false,
+          ),
+        );
+        expect(
+          buttonNode,
+          isSemantics(
+            label: 'Clear search',
+            isTextField: false,
+            isButton: true,
+            hasTapAction: true,
+            hasFocusAction: true,
+          ),
+        );
+        expect(buttonNode.rect.size, tester.getSize(find.byType(NakedButton)));
+
+        tester.semantics.tap(button);
+        expect(taps, 1);
+        tester.semantics.performAction(button, SemanticsAction.focus);
+        await tester.pump();
+        expect(focusNode.hasPrimaryFocus, isTrue);
+        expect(button.evaluate().single.id, buttonNode.id);
+        expect(
+          buttonNode.getSemanticsData().flagsCollection.isFocused,
+          Tristate.isTrue,
+        );
+      } finally {
+        handle.dispose();
+      }
+    });
+
     testWidgets('parity with MaterialButton (enabled)', (tester) async {
       final handle = tester.ensureSemantics();
       await expectSemanticsParity(

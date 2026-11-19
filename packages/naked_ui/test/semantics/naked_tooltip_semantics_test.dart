@@ -108,17 +108,22 @@ void main() {
       try {
         await tester.pumpWidget(
           _buildTestApp(
-            NakedTooltip(
-              semanticLabel: label,
-              hoverDelay: Duration.zero,
-              dismissDelay: Duration.zero,
-              animationStyle: AnimationStyle.noAnimation,
-              overlayBuilder: (context, animation) => const Text(label),
-              child: NakedButton(
-                key: const Key('naked-trigger'),
+            Semantics(
+              container: true,
+              label: 'Search chats',
+              textField: true,
+              child: NakedTooltip(
                 semanticLabel: label,
-                onPressed: () {},
-                child: const SizedBox.square(dimension: 40),
+                hoverDelay: Duration.zero,
+                dismissDelay: Duration.zero,
+                animationStyle: AnimationStyle.noAnimation,
+                overlayBuilder: (context, animation) => const Text(label),
+                child: NakedButton(
+                  key: const Key('naked-trigger'),
+                  semanticLabel: label,
+                  onPressed: () {},
+                  child: const SizedBox.square(dimension: 40),
+                ),
               ),
             ),
           ),
@@ -137,6 +142,9 @@ void main() {
 
         final openNodes = _nodesWithLabel(tester, label);
         labelCounts.add(openNodes.length);
+        final field = _nodesWithLabel(tester, 'Search chats').single;
+        expect(openNodes.single.id, isNot(field.id));
+        expect(field.getSemanticsData().flagsCollection.isButton, isFalse);
         final data = openNodes.single.getSemanticsData();
         expect(data.tooltip, label);
         expect(data.flagsCollection.isButton, isTrue);

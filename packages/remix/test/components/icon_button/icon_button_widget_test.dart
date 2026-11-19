@@ -1,4 +1,7 @@
+import 'dart:ui' show Tristate;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
@@ -278,6 +281,82 @@ void main() {
     });
 
     group('Accessibility', () {
+      testWidgets('owns semantics independently of an enclosing text field', (
+        tester,
+      ) async {
+        final handle = tester.ensureSemantics();
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+        var taps = 0;
+
+        try {
+          await tester.pumpRemixApp(
+            Semantics(
+              container: true,
+              label: 'Search customers',
+              textField: true,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(width: 200, height: 40),
+                  RemixIconButton(
+                    icon: Icons.close,
+                    focusNode: focusNode,
+                    semanticLabel: 'Clear search',
+                    onPressed: () => taps++,
+                  ),
+                ],
+              ),
+            ),
+          );
+
+          final field = find.semantics.byLabel('Search customers');
+          final button = find.semantics.byLabel('Clear search');
+          expect(field, findsOne);
+          expect(button, findsOne);
+          final fieldNode = field.evaluate().single;
+          final buttonNode = button.evaluate().single;
+          expect(buttonNode.id, isNot(fieldNode.id));
+          expect(
+            fieldNode,
+            isSemantics(
+              label: 'Search customers',
+              isTextField: true,
+              isButton: false,
+              hasTapAction: false,
+              hasFocusAction: false,
+            ),
+          );
+          expect(
+            buttonNode,
+            isSemantics(
+              label: 'Clear search',
+              isTextField: false,
+              isButton: true,
+              hasTapAction: true,
+              hasFocusAction: true,
+            ),
+          );
+          expect(
+            buttonNode.rect.size,
+            tester.getSize(find.byType(RemixIconButton)),
+          );
+
+          tester.semantics.tap(button);
+          expect(taps, 1);
+          tester.semantics.performAction(button, SemanticsAction.focus);
+          await tester.pump();
+          expect(focusNode.hasPrimaryFocus, isTrue);
+          expect(button.evaluate().single.id, buttonNode.id);
+          expect(
+            buttonNode.getSemanticsData().flagsCollection.isFocused,
+            Tristate.isTrue,
+          );
+        } finally {
+          handle.dispose();
+        }
+      });
+
       testWidgets('exposes one semantic owner for the button contract', (
         tester,
       ) async {

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'utilities/merge_naked_button_semantics.dart';
 import 'utilities/positioning.dart';
 import 'utilities/reduced_motion.dart';
 
@@ -497,15 +498,17 @@ class _NakedTooltipState extends State<NakedTooltip>
   Widget build(BuildContext context) {
     final textDirection = Directionality.of(context);
     final animationStyle = _animationStyle;
+    // RawTooltip treats an empty semantics label as "no tooltip". Preserve
+    // NakedTooltip's ability to show visual content without a label.
+    final semanticsTooltip =
+        widget.excludeSemantics || widget.semanticLabel?.trim().isEmpty == true
+        ? null
+        : widget.semanticLabel;
+    final parentOwnsTrigger = MergeNakedButtonSemantics.isRequested(context);
+    final ownsTrigger = semanticsTooltip != null && !parentOwnsTrigger;
     Widget result = RawTooltip(
       key: _tooltipKey,
-      // RawTooltip treats an empty semantics label as "no tooltip". Preserve
-      // NakedTooltip's ability to show visual content without a label.
-      semanticsTooltip:
-          widget.excludeSemantics ||
-              widget.semanticLabel?.trim().isEmpty == true
-          ? null
-          : widget.semanticLabel,
+      semanticsTooltip: semanticsTooltip,
       tooltipBuilder: (context, animation) {
         _captureRawAnimation(animation);
         return OverlayPlacementScope(
@@ -551,7 +554,10 @@ class _NakedTooltipState extends State<NakedTooltip>
 
         return placement.offset;
       },
-      child: widget.child,
+      child: MergeNakedButtonSemantics(
+        enabled: ownsTrigger || parentOwnsTrigger,
+        child: widget.child,
+      ),
     );
     result = MouseRegion(
       opaque: false,
@@ -576,7 +582,9 @@ class _NakedTooltipState extends State<NakedTooltip>
       child: result,
     );
 
-    return widget.excludeSemantics ? ExcludeSemantics(child: result) : result;
+    return widget.excludeSemantics
+        ? ExcludeSemantics(child: result)
+        : Semantics(container: ownsTrigger, child: result);
   }
 }
 

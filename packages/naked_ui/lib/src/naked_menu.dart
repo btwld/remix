@@ -10,6 +10,7 @@ import 'naked_button.dart';
 import 'naked_menubar.dart';
 import 'utilities/anchored_overlay.dart';
 import 'utilities/intents.dart';
+import 'utilities/merge_naked_button_semantics.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/positioning.dart';
 import 'utilities/state.dart';
@@ -1074,7 +1075,7 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
         : menubar != null
         ? trigger
         : widget.openOnTap
-        ? Semantics(expanded: _isOpen, child: trigger)
+        ? Semantics(container: true, expanded: _isOpen, child: trigger)
         : _MenuControlSemantics(expanded: _isOpen, child: trigger);
 
     return RawMenuAnchor(
@@ -1117,7 +1118,7 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
           child: KeyedSubtree(key: overlayContentKey, child: panel),
         );
       },
-      child: menuChild,
+      child: MergeNakedButtonSemantics(child: menuChild),
     );
   }
 }

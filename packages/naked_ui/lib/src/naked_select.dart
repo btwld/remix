@@ -6,6 +6,7 @@ import 'base/overlay_base.dart';
 import 'naked_button.dart';
 import 'utilities/anchored_overlay.dart';
 import 'utilities/intents.dart';
+import 'utilities/merge_naked_button_semantics.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/positioning.dart';
 import 'utilities/state.dart';
@@ -568,26 +569,28 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
           ),
         );
       },
-      child: NakedButton(
-        onPressed: _isEnabled ? _toggle : null,
-        enabled: _isEnabled,
-        mouseCursor: widget.mouseCursor,
-        focusNode: _triggerFocusNode,
-        semanticLabel: widget.semanticLabel,
-        child: widget.child,
-        builder: (context, buttonState, child) {
-          final selectState = NakedSelectState(
-            states: buttonState.states,
-            isOpen: _isOpen,
-            value: _effectiveValue,
-          );
+      child: MergeNakedButtonSemantics(
+        child: NakedButton(
+          onPressed: _isEnabled ? _toggle : null,
+          enabled: _isEnabled,
+          mouseCursor: widget.mouseCursor,
+          focusNode: _triggerFocusNode,
+          semanticLabel: widget.semanticLabel,
+          child: widget.child,
+          builder: (context, buttonState, child) {
+            final selectState = NakedSelectState(
+              states: buttonState.states,
+              isOpen: _isOpen,
+              value: _effectiveValue,
+            );
 
-          return NakedStateScopeBuilder(
-            value: selectState,
-            child: child,
-            builder: widget.builder,
-          );
-        },
+            return NakedStateScopeBuilder(
+              value: selectState,
+              child: child,
+              builder: widget.builder,
+            );
+          },
+        ),
       ),
     );
 
