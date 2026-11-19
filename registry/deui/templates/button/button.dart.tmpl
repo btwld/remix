@@ -81,10 +81,12 @@ ButtonStyler {{valuePrefix}}ButtonStyle({
       .onPressed(ButtonStyler().scale(_pressedScale))
       .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
       .onDisabled(ButtonStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))
-      .merge(
-        palette.bordered
-            ? ButtonStyler().border(.color({{typePrefix}}Tokens.border()).width(1))
-            : null,
+      // Every variant keeps the 1px edge, transparent unless bordered, so the
+      // variants share one size.
+      .border(
+        .color(
+          palette.bordered ? {{typePrefix}}Tokens.border() : {{typePrefix}}Tokens.transparent,
+        ).width(1),
       )
       .merge(fullWidth ? ButtonStyler().width(double.infinity) : null)
       .merge(style);
@@ -120,10 +122,10 @@ IconButtonStyler {{valuePrefix}}IconButtonStyle({
       .onPressed(IconButtonStyler().scale(_pressedScale))
       .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
       .onDisabled(IconButtonStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))
-      .merge(
-        palette.bordered
-            ? IconButtonStyler().border(.color({{typePrefix}}Tokens.border()).width(1))
-            : null,
+      .border(
+        .color(
+          palette.bordered ? {{typePrefix}}Tokens.border() : {{typePrefix}}Tokens.transparent,
+        ).width(1),
       )
       .merge(style);
 }
@@ -138,9 +140,9 @@ typedef _Metrics = ({
 /// {{typePrefix}}'s `small`, `medium` and `large` rows: `(32, 12, 6)`, `(36, 20, 8)`,
 /// `(48, 24, 8)` for height, horizontal padding and icon gap.
 _Metrics _metrics({{typePrefix}}ButtonSize size) => switch (size) {
-  .small => (height: 32, paddingX: 13, gap: 6, text: {{typePrefix}}Tokens.textXs),
-  .medium => (height: 36, paddingX: 21, gap: 8, text: {{typePrefix}}Tokens.textSm),
-  .large => (height: 48, paddingX: 25, gap: 8, text: {{typePrefix}}Tokens.textBase),
+  .small => (height: 32, paddingX: 12, gap: 6, text: {{typePrefix}}Tokens.textXs),
+  .medium => (height: 36, paddingX: 20, gap: 8, text: {{typePrefix}}Tokens.textSm),
+  .large => (height: 48, paddingX: 24, gap: 8, text: {{typePrefix}}Tokens.textBase),
 };
 
 typedef _Palette = ({

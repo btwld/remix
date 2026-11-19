@@ -33,7 +33,7 @@ TextFieldStyler deuiTextFieldStyle({
 
   return TextFieldStyler()
       .layout(FlexBoxStyler().spacing(_fieldGap))
-      .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
+      .padding(.fromLTRB(_paddingX, _paddingTop, _paddingX, _paddingBottom))
       .minHeight(single ? _minHeight : 0)
       .borderRadius(.circular(single ? _pill : _panel))
       .color(DeuiTokens.fieldBackground())
@@ -71,7 +71,8 @@ TextFieldStyler deuiTextFieldStyle({
 }
 
 const _paddingX = 14.0;
-const _paddingY = 10.0;
+const _paddingTop = 10.0;
+const _paddingBottom = 8.0;
 const _minHeight = 44.0;
 const _pill = 999.0;
 const _panel = 16.0;
