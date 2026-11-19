@@ -1,0 +1,67 @@
+---
+title: NakedListbox
+description: Controlled selection in an always-visible list
+keywords: [flutter, headless, listbox, keyboard, accessibility]
+---
+
+Use `NakedListbox<T>` when users choose from a visible, vertical collection,
+such as a short list of project reviewers. Unlike [NakedSelect](/widget/select),
+it has no trigger or popup. Unlike [NakedToggleGroup](/widget/toggle-group),
+it supports multiple selections. In both widgets, arrow keys move focus
+without changing selection.
+Give the listbox a bounded width and wrap it in a scrollable if needed. The
+caller owns filtering, row visuals, and any surrounding controls or positioning.
+
+## Basic implementation
+
+<NakedSource file="naked_listbox.0.dart" />
+
+## Selection and identity
+
+- Use `NakedListbox<T>(selectedValue: ..., onChanged: ...)` for single selection.
+  Pass `null` for no selection. Activating the selected option is a no-op;
+  clearing the selection is up to the caller.
+- Use `NakedListbox<T>.multiple(selectedValues: ..., onChanged: ...)` for
+  multiple selections. Activation proposes a new, unmodifiable set that toggles
+  only the activated value. Values not currently rendered are preserved.
+- Use unique, non-null option values with stable equality and hash codes. The
+  value identifies the row across rebuilds and reordering; labels can change.
+  Rebuild with a new options list or selection set rather than mutating one.
+- A disabled listbox or one without `onChanged` displays the supplied selection
+  without accepting input. A disabled option remains visible and can still be
+  selected by the owner. Option builders receive value, selection, keyboard
+  focus, and disabled state. The listbox owns its nodes; there is no controller
+  or external focus node to manage.
+
+## Interaction
+
+| Input | Focus and selection |
+| --- | --- |
+| Tab or Shift+Tab into the list | Focuses the first enabled selected option in list order, or the first enabled option. Selection is unchanged. |
+| Up/Down or Home/End | Focuses the previous/next or first/last enabled option without wrapping or selecting. |
+| Space, Enter, primary click, touch tap, or assistive activation | Requests focus on the option, then calls `onChanged` once if the selection would change. Held Space and Enter do not repeat activation. |
+| Tab or Shift+Tab while in the list | Leaves the list through ordinary Flutter traversal. |
+
+Focus remains on the activated row if the owner rejects the proposal. There is
+no optimistic update and a rebuild never calls `onChanged`. Reordering retains
+focus by value; removal or disabling of the focused option uses the same
+selected-first fallback as entry. The focused option is scrolled into view on
+entry and after these updates. Empty and all-disabled lists have no focus stop.
+Other keys are not claimed. The behavior follows the independent-focus
+model from the [WAI-ARIA listbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/),
+without type-ahead, modifier selection, or range shortcuts.
+
+## Accessible naming and roles
+
+Supply a localized `semanticLabel` for the list and each option. Each row is
+one control: its label replaces the visuals' semantics, so do not nest
+interactive controls inside a row. The named list has separate list items with
+actionable radio-style (single) or checkbox-style (multiple) semantics. Checked
+state represents the owner's selection, independently of keyboard focus.
+Disabled rows have no activation action. `excludeSemantics` hides the whole
+subtree; use it only if an equivalent accessible control is provided elsewhere.
+
+[Flutter 3.44.0's roles](https://github.com/flutter/flutter/blob/3.44.0/engine/src/flutter/lib/ui/semantics.dart)
+do not include `listbox` or `option`. This is a Flutter list with checkable
+controls, not native ARIA listbox markup or a promise of identical screen
+reader announcements.
