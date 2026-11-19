@@ -107,11 +107,17 @@ TabStyler {{valuePrefix}}TabStyle({
           {{typePrefix}}Tokens.textSm.mix(),
         ).fontWeight(.w500).color({{typePrefix}}Tokens.muted()),
       )
-      // Unselected tabs fade on hover, on the 150 ms smooth motion in both
-      // directions; selected tabs restore it below. A tab that becomes
-      // selected takes its colors on the indicator's glide, as in {{typePrefix}}.
-      .onHovered(TabStyler().wrap(.opacity(_hoverOpacity)))
-      .animate({{typePrefix}}Tokens.smoothMotion)
+      // Unselected tabs fade on hover, in on the 150 ms smooth motion; selected
+      // tabs restore it below. Colors follow the indicator's glide, as in
+      // {{typePrefix}}. Mix picks the animation from the style a tab moves to, and a tab
+      // that stops being hovered moves to the same style as one that stops
+      // being selected, so hover-out shares the glide.
+      .onHovered(
+        TabStyler()
+            .wrap(.opacity(_hoverOpacity))
+            .animate({{typePrefix}}Tokens.smoothMotion),
+      )
+      .animate(_foregroundGlide)
       .merge(switch (variant) {
         .primary =>
           TabStyler()
@@ -178,8 +184,7 @@ class _TabGlide extends Curve {
 TabStyler _selected(ColorToken foreground) => TabStyler()
     .label(.color(foreground()))
     .icon(.color(foreground()))
-    .wrap(.opacity(1))
-    .animate(_foregroundGlide);
+    .wrap(.opacity(1));
 
 /// `.tabs__tab`: `h-8 px-4`, and `opacity-70` while hovered.
 const _height = 32.0;

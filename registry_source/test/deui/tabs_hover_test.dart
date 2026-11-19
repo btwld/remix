@@ -19,7 +19,7 @@ double _opacity(WidgetTester tester) {
 }
 
 void main() {
-  testWidgets('tab hover fades on its own 150 ms, not the 470 ms glide', (
+  testWidgets('tab hover fades in on its own 150 ms and out on the glide', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -70,14 +70,14 @@ void main() {
     // Hover-in finished within 150 ms (the glide would still be running).
     expect(_opacity(tester), closeTo(.7, .01));
 
+    // Hover-out runs on the base style's animation, the indicator's glide:
+    // Mix cannot tell a tab that stops being hovered from one that stops
+    // being selected, and the second must follow the glide.
     await mouse.moveTo(const Offset(700, 500));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 75));
-    final mid = _opacity(tester);
-    expect(mid, greaterThan(.7));
-    expect(mid, lessThan(1));
-    await tester.pump(const Duration(milliseconds: 90));
-    // Hover-out is done at 165 ms; a 470 ms glide would not be.
-    expect(_opacity(tester), closeTo(1, .01));
+    expect(_opacity(tester), allOf(greaterThan(.7), lessThan(1)));
+    await tester.pumpAndSettle();
+    expect(_opacity(tester), 1);
   });
 }
