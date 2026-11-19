@@ -38,6 +38,7 @@ or see the [documentation source](../../naked_ui_docs/README.md) to contribute.
 - NakedDisclosure — standalone show/hide button and panel
 - NakedMenu — anchored menu with checkbox/radio items + recursive submenus
 - NakedMenubar — menu bar that closes sibling menus and moves with the arrow keys
+- NakedToolbar — one Tab stop and horizontal arrow-key focus for existing actions
 - NakedDialog — normal and alert dialog (`showNakedAlertDialog`) semantics + modal focus trap
 - NakedTooltip — hover, focus, and touch tooltip on `RawTooltip` with hoverable content and collision-aware positioning
 - NakedPopover — anchored, dismissible overlay with optional separate anchor
