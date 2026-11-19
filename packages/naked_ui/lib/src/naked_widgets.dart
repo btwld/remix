@@ -18,4 +18,5 @@ export 'naked_text_magnifier.dart';
 export 'naked_textfield.dart';
 export 'naked_toast.dart';
 export 'naked_toggle.dart';
+export 'naked_toolbar.dart';
 export 'naked_tooltip.dart';

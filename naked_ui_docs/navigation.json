@@ -147,6 +147,10 @@
           "href": "/widget/toggle-group"
         },
         {
+          "title": "NakedToolbar",
+          "href": "/widget/toolbar"
+        },
+        {
           "title": "NakedTextMagnifier",
           "href": "/widget/text-magnifier"
         }

@@ -1,0 +1,60 @@
+---
+title: NakedToolbar
+description: Single Tab stop and horizontal arrow-key navigation for existing controls
+keywords: [flutter, headless, toolbar, keyboard]
+---
+
+Wrap a horizontal row of related actions in `NakedToolbar` when it should take
+one Tab stop. The WAI-ARIA pattern recommends grouping three or more controls;
+this widget also tolerates fewer during dynamic updates. For visual grouping
+alone, keep using a `Row` or your own layout.
+The toolbar does not create buttons, handle presses, or own a selection value.
+Children retain their existing focus nodes, activation callbacks and states.
+
+## Basic implementation
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget composerActions({
+  required VoidCallback onAttach,
+  required VoidCallback onChooseModel,
+  required VoidCallback? onSend,
+}) {
+  return NakedToolbar(
+    semanticLabel: 'Message actions',
+    child: Row(
+      children: [
+        NakedButton(onPressed: onAttach, child: const Text('Attach')),
+        NakedButton(onPressed: onChooseModel, child: const Text('Choose model')),
+        NakedButton(onPressed: onSend, child: const Text('Send')),
+      ],
+    ),
+  );
+}
+```
+
+## Keyboard and accessibility
+
+- Tab and Shift+Tab enter at the first traversable control, or the last one
+  focused if it is still available. Both keys leave the toolbar from any
+  control. A row with no traversable controls has no Tab stop. Disabled
+  controls are skipped when they opt out of traversal, as buttons normally do.
+- Left and Right wrap between traversable controls, reversing the reading-order
+  step in RTL. Moving focus does not invoke a button or change selection.
+  Other keys, including activation and modified arrows, are left to the child
+  or host. Use one row without nested focus groups or scopes. Keep editors and
+  other arrow-operated controls outside the toolbar.
+- When a focused control is removed or stops being traversable, the toolbar
+  preserves Flutter's fallback to another control, including one outside the
+  toolbar. If Flutter leaves focus on the enclosing scope instead, the toolbar
+  focuses its first remaining traversable control, if any. Use stable keys when
+  reordering controls.
+- The group can have a localized `semanticLabel` but is not focusable or
+  actionable itself. Flutter 3.44 has no toolbar semantics role, so the group
+  has no role rather than being announced as a menu bar. Keep each control
+  independently labeled and actionable, with its own disabled or selected state.
+
+See the [WAI-ARIA toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)
+and the [Flutter 3.44 semantics roles](https://github.com/flutter/flutter/blob/3.44.0/engine/src/flutter/lib/ui/semantics.dart).
