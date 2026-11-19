@@ -558,13 +558,11 @@ class _NakedTooltipState extends State<NakedTooltip>
       },
       child: MergeNakedButtonSemantics(
         enabled: ownsTrigger || parentOwnsTrigger,
-        child: ownsTrigger
-            ? Semantics(
-                container: true,
-                tooltip: semanticsTooltip,
-                child: widget.child,
-              )
-            : widget.child,
+        child: Semantics(
+          container: ownsTrigger,
+          tooltip: ownsTrigger ? semanticsTooltip : null,
+          child: widget.child,
+        ),
       ),
     );
     result = MouseRegion(

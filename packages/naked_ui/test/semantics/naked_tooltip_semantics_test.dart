@@ -170,6 +170,90 @@ void main() {
       }
     });
 
+    const description = 'Manage workspace actions';
+    for (final initialLabel in <String?>[null, description]) {
+      final change = initialLabel == null ? 'adding' : 'removing';
+      final updatedLabel = initialLabel == null ? description : null;
+
+      testWidgets('$change a tooltip label preserves trigger focus', (
+        tester,
+      ) async {
+        final handle = tester.ensureSemantics();
+        try {
+          Future<void> pumpTooltip(String? label) => tester.pumpWidget(
+            _buildTestApp(
+              NakedTooltip(
+                semanticLabel: label,
+                isFocusVisible: () => false,
+                overlayBuilder: (context, animation) => const Text('Help'),
+                child: NakedButton(
+                  onPressed: () {},
+                  child: const Text('Actions'),
+                ),
+              ),
+            ),
+          );
+
+          await pumpTooltip(initialLabel);
+          final trigger = find.semantics.byLabel('Actions');
+          tester.semantics.performAction(trigger, SemanticsAction.focus);
+          await tester.pumpAndSettle();
+          final focus = FocusManager.instance.primaryFocus!;
+          expect(
+            trigger
+                .evaluate()
+                .single
+                .getSemanticsData()
+                .flagsCollection
+                .isFocused,
+            Tristate.isTrue,
+          );
+
+          await pumpTooltip(updatedLabel);
+          await tester.pumpAndSettle();
+          expect(focus.hasPrimaryFocus, isTrue);
+          final data = trigger.evaluate().single.getSemanticsData();
+          expect(data.flagsCollection.isFocused, Tristate.isTrue);
+          expect(data.tooltip, updatedLabel ?? '');
+        } finally {
+          handle.dispose();
+        }
+      });
+
+      testWidgets('$change a tooltip label leaves an open menu open', (
+        tester,
+      ) async {
+        final controller = MenuController();
+        Future<void> pumpTooltip(String? label) => tester.pumpWidget(
+          _buildTestApp(
+            NakedTooltip(
+              semanticLabel: label,
+              isFocusVisible: () => false,
+              overlayBuilder: (context, animation) => const Text('Help'),
+              child: NakedMenu<String>(
+                controller: controller,
+                overlayBuilder: (context, info) => const NakedMenuItem<String>(
+                  value: 'item',
+                  child: Text('Overlay item'),
+                ),
+                child: const Text('Actions'),
+              ),
+            ),
+          ),
+        );
+
+        await pumpTooltip(initialLabel);
+        await tester.tap(find.text('Actions'));
+        await tester.pumpAndSettle();
+        expect(find.text('Overlay item'), findsOneWidget);
+
+        await pumpTooltip(updatedLabel);
+        await tester.pumpAndSettle();
+        expect(controller.isOpen, isTrue);
+        expect(find.text('Overlay item'), findsOneWidget);
+      });
+    }
+
     testWidgets('can include meaningful custom overlay semantics', (
       tester,
     ) async {
