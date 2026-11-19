@@ -125,131 +125,148 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
     final effective = (inherited is ComboboxStyler
         ? inherited.merge(base)
         : base);
-    return NakedCombobox<T>(
-      optionsBuilder: optionsBuilder,
-      onSelected: onSelected,
-      displayStringForOption: displayStringForOption,
-      controller: controller,
-      focusNode: focusNode,
-      initialValue: initialValue,
-      enabled: enabled,
-      optionsViewOpenDirection: optionsViewOpenDirection,
-      isOptionDisabled: isOptionDisabled,
-      onOpen: onOpen,
-      onClose: onClose,
-      excludeSemantics: excludeSemantics,
-      // The default editor names its editable node directly, avoiding a second
-      // named container. Custom editors receive Naked's container name too.
-      semanticLabel: fieldBuilder == null ? null : semanticLabel,
-      fieldBuilder: (context, state, controller, focusNode, submit) {
-        Widget defaultField(TextFieldSpec? rawSpec) => RemixTextField(
-          controller: controller,
-          focusNode: focusNode,
-          label: label,
-          hintText: hintText,
-          enabled: enabled,
-          autofocus: autofocus,
-          semanticLabel: semanticLabel,
-          // Finalize IME text while retaining editor focus. Naked suppresses
-          // acceptance for this composing submit.
-          onEditingComplete: controller.clearComposing,
-          onSubmitted: (_) => submit(),
-          styleSpec: rawSpec,
-        );
+    return _ComboboxExitScope(
+      builder: (context, exit) => NakedCombobox<T>(
+        optionsBuilder: optionsBuilder,
+        onSelected: onSelected,
+        displayStringForOption: displayStringForOption,
+        controller: controller,
+        focusNode: focusNode,
+        initialValue: initialValue,
+        enabled: enabled,
+        optionsViewOpenDirection: optionsViewOpenDirection,
+        isOptionDisabled: isOptionDisabled,
+        onOpen: onOpen,
+        onClose: onClose,
+        excludeSemantics: excludeSemantics,
+        // The default editor names its editable node directly, avoiding a second
+        // named container. Custom editors receive Naked's container name too.
+        semanticLabel: fieldBuilder == null ? null : semanticLabel,
+        fieldBuilder: (context, state, controller, focusNode, submit) {
+          Widget defaultField(TextFieldSpec? rawSpec) => RemixTextField(
+            controller: controller,
+            focusNode: focusNode,
+            label: label,
+            hintText: hintText,
+            enabled: enabled,
+            autofocus: autofocus,
+            semanticLabel: semanticLabel,
+            // Finalize IME text while retaining editor focus. Naked suppresses
+            // acceptance for this composing submit.
+            onEditingComplete: controller.clearComposing,
+            onSubmitted: (_) => submit(),
+            styleSpec: rawSpec,
+          );
 
-        return RemixStyleSpecBuilder<ComboboxSpec>(
-          style: base,
-          styleSpec: styleSpec,
-          controller: NakedComboboxState.controllerOf<T>(context),
-          builder: (context, spec) => RemixBoxAdapter(
-            styleSpec: spec.container,
-            child: fieldBuilder != null
-                ? fieldBuilder(context, state, controller, focusNode, submit)
-                : styleSpec != null
-                ? StyleSpecBuilder<TextFieldSpec>(
-                    styleSpec: spec.field,
-                    builder: (context, fieldSpec) => defaultField(fieldSpec),
-                  )
-                : StyleProvider<TextFieldSpec>(
-                    style: _ComboboxFieldStyle(
-                      effective,
-                      Style.maybeOf<TextFieldSpec>(context),
+          return RemixStyleSpecBuilder<ComboboxSpec>(
+            style: base,
+            styleSpec: styleSpec,
+            controller: NakedComboboxState.controllerOf<T>(context),
+            builder: (context, spec) => RemixBoxAdapter(
+              key: exit.fieldKey,
+              styleSpec: spec.container,
+              child: fieldBuilder != null
+                  ? fieldBuilder(context, state, controller, focusNode, submit)
+                  : styleSpec != null
+                  ? StyleSpecBuilder<TextFieldSpec>(
+                      styleSpec: spec.field,
+                      builder: (context, fieldSpec) => defaultField(fieldSpec),
+                    )
+                  : StyleProvider<TextFieldSpec>(
+                      style: _ComboboxFieldStyle(
+                        effective,
+                        Style.maybeOf<TextFieldSpec>(context),
+                      ),
+                      child: defaultField(null),
                     ),
-                    child: defaultField(null),
-                  ),
-          ),
-        );
-      },
-      overlayBuilder: (context, options) {
-        final panel =
-            styleSpec?.panel ??
-            _ComboboxProjection(effective, .panel).build(context).spec.panel;
-        return StyleSpecBuilder<ComboboxPanelSpec>(
-          styleSpec: panel,
-          builder: (context, spec) => StyleSpecBuilder<BoxSpec>(
-            styleSpec: spec.container,
-            builder: (context, box) => _ComboboxOptionsViewport(
-              panel: spec,
-              box: box,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final (index, option) in options.indexed)
-                    NakedComboboxOption<T>(
-                      // Replacing or moving a pressed option cancels its
-                      // press rather than accepting a different result.
-                      key: ValueKey((index, option)),
-                      value: option,
-                      semanticLabel: displayStringForOption(option),
-                      builder: (context, state, _) => FocusVisibilityScope(
-                        child: WidgetStateProvider(
-                          states: state.states,
-                          child: Builder(
-                            builder: (context) {
-                              final spec =
-                                  styleSpec ??
-                                  _ComboboxProjection(
-                                    effective,
-                                    .option,
-                                  ).build(context).spec;
-                              return StyleSpecBuilder<ComboboxOptionSpec>(
-                                styleSpec: spec.option,
-                                builder: (context, optionSpec) =>
-                                    RemixBoxAdapter(
-                                      styleSpec: optionSpec.container,
-                                      child: Align(
-                                        alignment:
-                                            AlignmentDirectional.centerStart,
-                                        heightFactor: 1,
-                                        child: optionBuilder == null
-                                            ? StyledText(
-                                                displayStringForOption(option),
-                                                styleSpec: optionSpec.label,
-                                              )
-                                            : RemixDefaultContentStyle(
-                                                text: optionSpec.label,
-                                                child: optionBuilder(
-                                                  context,
-                                                  option,
-                                                ),
-                                              ),
-                                      ),
-                                    ),
-                              );
-                            },
+            ),
+          );
+        },
+        overlayBuilder: (context, options) {
+          final panel =
+              styleSpec?.panel ??
+              _ComboboxProjection(effective, .panel).build(context).spec.panel;
+          return StyleSpecBuilder<ComboboxPanelSpec>(
+            styleSpec: panel,
+            builder: (context, spec) => _transitioned(
+              exit,
+              spec.panelTransition,
+              StyleSpecBuilder<BoxSpec>(
+                styleSpec: spec.container,
+                builder: (context, box) => _ComboboxOptionsViewport(
+                  panel: spec,
+                  box: box,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (final (index, option) in options.indexed)
+                        NakedComboboxOption<T>(
+                          // Replacing or moving a pressed option cancels its
+                          // press rather than accepting a different result.
+                          key: ValueKey((index, option)),
+                          value: option,
+                          semanticLabel: displayStringForOption(option),
+                          builder: (context, state, _) => FocusVisibilityScope(
+                            child: WidgetStateProvider(
+                              states: state.states,
+                              child: Builder(
+                                builder: (context) {
+                                  final spec =
+                                      styleSpec ??
+                                      _ComboboxProjection(
+                                        effective,
+                                        .option,
+                                      ).build(context).spec;
+                                  return StyleSpecBuilder<ComboboxOptionSpec>(
+                                    styleSpec: spec.option,
+                                    builder: (context, optionSpec) =>
+                                        RemixBoxAdapter(
+                                          styleSpec: optionSpec.container,
+                                          child: Align(
+                                            alignment: AlignmentDirectional
+                                                .centerStart,
+                                            heightFactor: 1,
+                                            child: optionBuilder == null
+                                                ? StyledText(
+                                                    displayStringForOption(
+                                                      option,
+                                                    ),
+                                                    styleSpec: optionSpec.label,
+                                                  )
+                                                : RemixDefaultContentStyle(
+                                                    text: optionSpec.label,
+                                                    child: optionBuilder(
+                                                      context,
+                                                      option,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                ],
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
+
+  Widget _transitioned(
+    _ComboboxExit exit,
+    RemixPanelTransition? transition,
+    Widget panel,
+  ) => transition == null
+      ? panel
+      : _ComboboxPanelHost(exit: exit, transition: transition, child: panel);
 }
 
 /// Own the controller for the entire mounted panel, including keyboard reveal.
