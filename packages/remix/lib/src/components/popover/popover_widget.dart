@@ -134,8 +134,9 @@ class _RemixPopoverState extends State<RemixPopover>
     super.dispose();
   }
 
-  /// The transition the style gives the panel about to open, resolved where
-  /// the popover is, because the panel itself has not been built yet.
+  /// The transition the style gives the panel about to open, read where the
+  /// popover is: the panel itself has not been built yet. The panel reads its
+  /// own style again and hands that to the handle.
   RemixPanelTransition? _resolvePanelTransition() {
     final styleSpec = widget.styleSpec;
     if (styleSpec != null) return styleSpec.panelTransition;

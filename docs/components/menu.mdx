@@ -377,39 +377,55 @@ The animation is linear, so apply a curve in the builder.
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+// A top-level function, not an inline closure: `RemixPanelTransition` compares
+// its builder by identity, so a new closure on every build makes every styler
+// unequal and restarts style resolution.
+Widget fadeScalePanel(
+  BuildContext context,
+  RemixPanelTransitionInfo info,
+  Widget panel,
+) {
+  // The side the panel was placed on, after collision handling.
+  final placement = OverlayPlacement.maybeOf(context);
+  final origin = placement?.side == OverlaySide.top
+      ? Alignment.bottomLeft
+      : Alignment.topLeft;
+  final curved = info.animation.drive(CurveTween(curve: Curves.easeOutCubic));
+  return FadeTransition(
+    opacity: curved,
+    child: ScaleTransition(
+      alignment: origin,
+      scale: curved.drive(Tween<double>(begin: .96, end: 1)),
+      child: panel,
+    ),
+  );
+}
+
+const panelTransition = RemixPanelTransition(
+  duration: Duration(milliseconds: 360),
+  reverseDuration: Duration(milliseconds: 260),
+  builder: fadeScalePanel,
+);
+
 final menuWithTransition = RemixMenu<String>(
   trigger: const RemixMenuTrigger(label: 'Options'),
   items: const [
     RemixMenuItem(value: 'copy', label: 'Copy'),
     RemixMenuItem(value: 'paste', label: 'Paste'),
   ],
-  style: MenuStyler().panelTransition(
-    RemixPanelTransition(
-      duration: const Duration(milliseconds: 360),
-      reverseDuration: const Duration(milliseconds: 260),
-      builder: (context, info, panel) {
-        // The side the panel was placed on, after collision handling.
-        final placement = OverlayPlacement.maybeOf(context);
-        final origin = placement?.side == OverlaySide.top
-            ? Alignment.bottomLeft
-            : Alignment.topLeft;
-        final curved = CurvedAnimation(
-          parent: info.animation,
-          curve: Curves.easeOutCubic,
-        );
-        return FadeTransition(
-          opacity: curved,
-          child: ScaleTransition(
-            alignment: origin,
-            scale: Tween<double>(begin: .96, end: 1).animate(curved),
-            child: panel,
-          ),
-        );
-      },
-    ),
-  ),
+  style: MenuStyler().panelTransition(panelTransition),
 );
 ```
+
+Pass a top-level function or a static tear-off as `builder`, and keep the
+transition in a `const` or `final`. Equality is by builder identity, so an
+inline closure gives a new, unequal transition on every build.
+
+The open animation starts when the open is requested, before the panel exists,
+so its length comes from the style as the menu resolves it. The panel then
+resolves the style again in its own scope: that transition's builder runs, and
+its `reverseDuration` paces the exit. Variants that differ between the two
+scopes therefore open with the menu's durations and close with the panel's.
 
 The panel stays mounted until the exit has played, then hides and `onClose`
 runs. A panel that is leaving takes no pointer input. When `onCloseRequested`
