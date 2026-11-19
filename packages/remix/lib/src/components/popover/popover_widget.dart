@@ -4,7 +4,7 @@ part of 'popover.dart';
 ///
 /// The popover opens when [child] is tapped or activated from the keyboard.
 /// [popoverChild] is rendered in the overlay using [style].
-class RemixPopover extends StatelessWidget {
+class RemixPopover extends StatefulWidget {
   const RemixPopover({
     super.key,
     required this.popoverChild,
@@ -92,6 +92,9 @@ class RemixPopover extends StatelessWidget {
   final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
 
   /// Intercepts a request to close the popover.
+  ///
+  /// With a [PopoverStyler.panelTransition], the `hideOverlay` passed here
+  /// plays the exit transition before the panel hides.
   final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
 
   /// Optional controller for programmatic open and close operations.
@@ -114,17 +117,51 @@ class RemixPopover extends StatelessWidget {
   static final styleFrom = PopoverStyler.new;
 
   @override
+  State<RemixPopover> createState() => _RemixPopoverState();
+}
+
+class _RemixPopoverState extends State<RemixPopover> {
+  final _panelTransition = RemixPanelTransitionHandle();
+
+  @override
   Widget build(BuildContext context) {
+    final RemixPopover(
+      :popoverChild,
+      :child,
+      :positioning,
+      :consumeOutsideTaps,
+      :useRootOverlay,
+      :openOnTap,
+      :triggerFocusNode,
+      :initialFocusNode,
+      :constrainToAvailableSpace,
+      :avoidViewInsets,
+      :onOpen,
+      :onClose,
+      :onOpenRequested,
+      :onCloseRequested,
+      :controller,
+      :semanticLabel,
+      :excludeSemantics,
+      :style,
+      :styleSpec,
+    ) = widget;
+
     return RemixStyleSpecBuilder<PopoverSpec>(
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
         return NakedPopover(
           popoverBuilder: (context, info) {
-            return RemixBoxAdapter(
-              styleSpec: spec.container,
-              containerEffects: spec.containerEffects,
-              child: popoverChild,
+            return RemixPanelTransitionHost(
+              handle: _panelTransition,
+              transition: spec.panelTransition,
+              anchorRect: info.anchorRect,
+              child: RemixBoxAdapter(
+                styleSpec: spec.container,
+                containerEffects: spec.containerEffects,
+                child: popoverChild,
+              ),
             );
           },
           positioning: positioning,
@@ -138,7 +175,8 @@ class RemixPopover extends StatelessWidget {
           onOpen: onOpen,
           onClose: onClose,
           onOpenRequested: onOpenRequested,
-          onCloseRequested: onCloseRequested,
+          onCloseRequested: (hideOverlay) =>
+              _panelTransition.closeRequested(hideOverlay, onCloseRequested),
           controller: controller,
           excludeSemantics: excludeSemantics,
           child: child,

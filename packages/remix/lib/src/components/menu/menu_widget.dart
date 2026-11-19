@@ -482,6 +482,11 @@ class RemixMenu<T> extends StatefulWidget {
   final VoidCallback? onCanceled;
 
   /// Open/close interceptors (for example, to drive animations).
+  ///
+  /// A [MenuStyler.panelTransition] plays after these: the open transition
+  /// starts when the panel mounts, so after `showOverlay` is called, and
+  /// `hideOverlay` passed to [onCloseRequested] plays the exit transition
+  /// before the panel hides. Without a transition they behave as before.
   final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
 
   final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
@@ -534,6 +539,7 @@ class RemixMenu<T> extends StatefulWidget {
 
 class _RemixMenuState<T> extends State<RemixMenu<T>> {
   late final MenuController _internalController;
+  final _panelTransition = RemixPanelTransitionHandle();
   FocusNode? _ownedControlFocusNode;
 
   @override
@@ -612,15 +618,20 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
               final effectiveStyle = inherited is MenuStyler
                   ? inherited.merge(style)
                   : style;
-              return _RemixMenuItemsPanel<T>(
-                items: widget.items,
-                overlayStyleSpec: spec.overlay,
-                containerEffects: spec.containerEffects,
-                dividerStyleSpec: spec.divider,
-                hasRootSelectionCallback: widget.onSelected != null,
-                itemStyles: widget.styleSpec == null
-                    ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
-                    : _RemixMenuItemStyles.fromSpec(spec),
+              return RemixPanelTransitionHost(
+                handle: _panelTransition,
+                transition: spec.panelTransition,
+                anchorRect: info.anchorRect,
+                child: _RemixMenuItemsPanel<T>(
+                  items: widget.items,
+                  overlayStyleSpec: spec.overlay,
+                  containerEffects: spec.containerEffects,
+                  dividerStyleSpec: spec.divider,
+                  hasRootSelectionCallback: widget.onSelected != null,
+                  itemStyles: widget.styleSpec == null
+                      ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
+                      : _RemixMenuItemStyles.fromSpec(spec),
+                ),
               );
             },
           ),
@@ -632,7 +643,8 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       onClose: widget.onClose,
       onCanceled: widget.onCanceled,
       onOpenRequested: widget.onOpenRequested,
-      onCloseRequested: widget.onCloseRequested,
+      onCloseRequested: (hideOverlay) =>
+          _panelTransition.closeRequested(hideOverlay, widget.onCloseRequested),
       consumeOutsideTaps: widget.consumeOutsideTaps,
       useRootOverlay: widget.useRootOverlay,
       closeOnClickOutside: widget.closeOnClickOutside,
