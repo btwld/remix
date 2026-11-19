@@ -120,8 +120,32 @@ class RemixPopover extends StatefulWidget {
   State<RemixPopover> createState() => _RemixPopoverState();
 }
 
-class _RemixPopoverState extends State<RemixPopover> {
-  final _panelTransition = RemixPanelTransitionHandle();
+class _RemixPopoverState extends State<RemixPopover>
+    with SingleTickerProviderStateMixin {
+  late final _panelTransition = RemixPanelTransitionHandle(
+    vsync: this,
+    resolve: _resolvePanelTransition,
+    reduceMotion: () => remixReducedMotionOf(context),
+  );
+
+  @override
+  void dispose() {
+    _panelTransition.dispose();
+    super.dispose();
+  }
+
+  /// The transition the style gives the panel about to open, resolved where
+  /// the popover is, because the panel itself has not been built yet.
+  RemixPanelTransition? _resolvePanelTransition() {
+    final styleSpec = widget.styleSpec;
+    if (styleSpec != null) return styleSpec.panelTransition;
+    final inherited = Style.maybeOf<PopoverSpec>(context);
+    final style = widget.style;
+    final effective = inherited is PopoverStyler
+        ? inherited.merge(style)
+        : style;
+    return effective.build(context).spec.panelTransition;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +198,8 @@ class _RemixPopoverState extends State<RemixPopover> {
           avoidViewInsets: avoidViewInsets,
           onOpen: onOpen,
           onClose: onClose,
-          onOpenRequested: onOpenRequested,
+          onOpenRequested: (position, showOverlay) => _panelTransition
+              .openRequested(position, showOverlay, onOpenRequested),
           onCloseRequested: (hideOverlay) =>
               _panelTransition.closeRequested(hideOverlay, onCloseRequested),
           controller: controller,
