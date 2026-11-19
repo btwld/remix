@@ -25,6 +25,7 @@ or see the [documentation source](../../naked_ui_docs/README.md) to contribute.
 - NakedRangeCalendar / CivilDateRange — complete inclusive ranges with a local draft and unavailable-interior checks over the shared calendar engine
 - NakedLink — link semantics and Enter-only activation
 - NakedCheckbox — toggle behavior and semantics
+- NakedCheckboxGroup / NakedCheckboxGroupItem — controlled multi-selection with independent checkbox options
 - NakedCombobox — autocomplete field on Flutter's RawAutocomplete
 - NakedRadio / NakedRadioGroup — single‑select radio on RawRadio with group management
 - NakedSelect — caller-controlled selection and controlled/uncontrolled opening with keyboard navigation

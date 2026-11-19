@@ -1,0 +1,79 @@
+---
+title: NakedCheckboxGroup
+description: An independently toggleable set of headless checkboxes with a shared selection and accessible group name.
+keywords: [flutter, headless, checkbox-group, accessibility]
+---
+
+`NakedCheckboxGroup<T>` coordinates `NakedCheckboxGroupItem<T>` options. Use
+the same type argument for both. The group does not render labels, choose a
+layout, size tap targets, or enforce a minimum selection.
+
+## Example
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+class Interests extends StatefulWidget {
+  const Interests({super.key});
+
+  @override
+  State<Interests> createState() => _InterestsState();
+}
+
+class _InterestsState extends State<Interests> {
+  Set<String> _values = {'Design'};
+
+  @override
+  Widget build(BuildContext context) {
+    return NakedCheckboxGroup<String>(
+      values: _values,
+      onChanged: (next) => setState(() => _values = next),
+      semanticLabel: 'Interests',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final interest in ['Design', 'Code'])
+            NakedCheckboxGroupItem<String>(
+              value: interest,
+              semanticLabel: interest,
+              builder: (context, state, _) => SizedBox(
+                height: 48,
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text('${state.isChecked == true ? "☑" : "☐"} $interest'),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+The owner passes the current `values`. Activation calls `onChanged` once with
+a new, unmodifiable set; it never changes the input set or drops values for
+unmounted options. If the owner declines the change, the option stays as it
+was. A null `onChanged` or `enabled: false` on the group disables all items.
+Setting `enabled: false` on an item disables just that option. Mounted values
+must be unique within the group.
+
+Items accept a static `child` or a `builder` that receives `NakedCheckboxState`
+for custom checked, focus, and hover visuals. Don't nest another interactive
+checkbox inside an item. An item can take a caller-owned `focusNode`; otherwise
+the underlying checkbox manages one. At most one item may opt into `autofocus`.
+
+## Keyboard and accessibility
+
+- Tab and Shift+Tab traverse each enabled item in the app's ordinary focus order.
+  Space and Enter toggle the focused item. The group adds no arrow-key shortcuts.
+  In directional navigation, Flutter can still focus disabled options, but
+  activation remains disabled.
+- The group exposes a labeled semantics container with separately actionable
+  checkbox descendants. Flutter does not expose a dedicated checkbox-group
+  role. Give each item a visible text label or a `semanticLabel`; an explicit
+  `semanticLabel` replaces the semantics of the visual content.
+- `isRequired` marks only the group container and requires a nonblank group
+  `semanticLabel` unless `excludeSemantics` hides the entire subtree. The way
+  the required state is announced depends on the platform and screen reader.
