@@ -17,6 +17,7 @@ repository does not commit installed skills; the index points at the sources.
 [Mix skill]|root: https://raw.githubusercontent.com/btwld/mix/main/skills/mix
 |mix:{SKILL.md,references/{animations.md,architecture.md,code-generation.md,design-tokens.md,development-workflow.md,examples.md,fluent-api.md,layout.md,styler-api-policy.md,testing.md,variants.md,widget-modifiers-directives.md}}
 [Maintainer workflows]|root: .
+|component creation:{COMPONENT_CHECKLIST.md}
 |open_code:{README.md,REGISTRIES.md,PRESETS.md,ADDING_PRESETS.md,RELEASING.md}
 ```
 
@@ -26,6 +27,7 @@ repository does not commit installed skills; the index points at the sources.
 - `open_code/RELEASING.md`: version bumps, contract checkers, release PRs, tags, and registry promotion.
 
 Architecture rationale lives in [ARCHITECTURE.md](ARCHITECTURE.md).
+Use the [new component checklist](COMPONENT_CHECKLIST.md) before implementing or reviewing a Naked UI primitive or Remix component.
 Read [Adding a preset](open_code/ADDING_PRESETS.md) before adding a first-party
 design language beside Vanilla, Fortal, and HeroUI.
 

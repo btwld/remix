@@ -11,6 +11,7 @@ export 'naked_menubar.dart' hide NakedMenubarScope, MenubarTriggers;
 export 'naked_popover.dart';
 export 'naked_radio.dart' hide NakedRadioGroupScope;
 export 'naked_scrollbar.dart';
+export 'naked_search_field.dart';
 export 'naked_select.dart';
 export 'naked_slider.dart';
 export 'naked_tabs.dart';

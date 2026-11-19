@@ -1,0 +1,47 @@
+---
+title: NakedSearchField
+description: Add clear and Escape behavior to a search input without choosing its editor or styling.
+keywords: [flutter, headless, search, input]
+---
+
+`NakedSearchField` coordinates a query editor and its clear action. It doesn't filter results, open a popup, or require a Material host. Use `NakedCombobox` instead if users should navigate and select suggestions.
+
+```dart
+import 'package:flutter/services.dart' show TextInputAction;
+import 'package:flutter/widgets.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget peopleSearch(ValueChanged<String> onQueryChanged) => NakedSearchField(
+  onChanged: onQueryChanged,
+  builder: (context, field) => Row(
+    children: [
+      Expanded(
+        child: NakedTextField(
+          controller: field.controller,
+          focusNode: field.focusNode,
+          enabled: field.enabled,
+          readOnly: field.readOnly,
+          onChanged: field.onChanged,
+          semanticLabel: 'Search people',
+          textInputAction: TextInputAction.search,
+          builder: (context, state, editable) => editable,
+        ),
+      ),
+      if (field.clear != null)
+        TextFieldTapRegion(
+          child: NakedButton(
+            semanticLabel: 'Clear search',
+            onPressed: field.clear,
+            child: const Text('Clear'),
+          ),
+        ),
+    ],
+  ),
+);
+```
+
+Give the editor and clear button separate accessible names. Wire `field.onChanged` to the editor's user-edit callback, not to a controller listener: typing reports the new query, clearing calls `onChanged('')` and then `onCleared`, and external edits do neither. Set `onSubmitted` on the editor if search runs only on submission.
+
+The clear action is absent when the query is empty, disabled, or read-only. Clearing returns focus to the editor. Holding Escape clears once; a new press on an empty field can dismiss the enclosing dialog. During text composition, Escape is left to the input method without reaching ancestor shortcuts.
+
+Supply a `controller` or `focusNode` to share it with your application; you keep ownership. Removing an external controller gives the field its own controller with the same text, selection, and composing range.
