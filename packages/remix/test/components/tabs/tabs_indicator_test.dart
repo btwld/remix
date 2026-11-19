@@ -489,6 +489,46 @@ void main() {
       handle.dispose();
     });
 
+    testWidgets('announces the new selection while the indicator glides', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      final motion = AnimationConfig.curve(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.linear,
+      );
+      Widget bar(String selected) =>
+          _tabs(selected: selected, onChanged: (_) {}, motion: motion);
+      await tester.pumpRemixApp(bar('a'));
+      await tester.pump();
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Alpha')),
+        isSemantics(isSelected: true, hasTapAction: true, isFocusable: true),
+      );
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Beta')),
+        isSemantics(isSelected: false, hasTapAction: true, isFocusable: true),
+      );
+
+      await tester.pumpRemixApp(bar('b'));
+      await tester.pump(const Duration(milliseconds: 100));
+      // Mid-glide: the selection is already the new tab, and the indicator
+      // adds no node of its own.
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Alpha')),
+        isSemantics(isSelected: false, hasTapAction: true, isFocusable: true),
+      );
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Beta')),
+        isSemantics(isSelected: true, hasTapAction: true, isFocusable: true),
+      );
+      expect(
+        find.bySemanticsLabel(RegExp('Alpha|Beta|Gamma')),
+        findsNWidgets(3),
+      );
+      handle.dispose();
+    });
+
     testWidgets('does not take taps from the tabs', (tester) async {
       String? tapped;
       await tester.pumpRemixApp(
