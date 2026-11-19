@@ -127,7 +127,6 @@ the tab's own selected background clear so only the indicator shows.
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:remix/remix.dart';
 
 final pillTabs = RemixTabs(
@@ -145,8 +144,10 @@ final pillTabs = RemixTabs(
                   .margin(.all(0)),
             )
             .indicatorMotion(
-              const RemixTabIndicatorMotion.spring(
-                SpringDescription(mass: 1, stiffness: 400, damping: 36),
+              AnimationConfig.springDescription(
+                mass: 1,
+                stiffness: 400,
+                damping: 36,
               ),
             ),
         child: const Row(
@@ -163,14 +164,22 @@ final pillTabs = RemixTabs(
 );
 ```
 
-`RemixTabIndicatorMotion` moves the indicator along a curve over a duration
-(250 ms on `Curves.easeOutCubic` by default) or, with
-`RemixTabIndicatorMotion.spring`, under a spring that may overshoot. The
-indicator jumps when the user asks to reduce motion, follows its tab when the
-bar resizes, and is excluded from semantics and hit testing. Without an
-`indicator` nothing is added. Lay the tabs out in the bar itself: a scrollable
-inside the bar moves the tabs without moving the indicator, so scroll around
-the bar instead.
+`indicatorMotion` takes a Mix `AnimationConfig`, the same type as the styler's
+`animate`: a curve config such as `AnimationConfig.curve(duration: ..., curve:
+...)` or `AnimationConfig.easeOut(duration)`, or a spring config such as
+`AnimationConfig.springDescription(...)`, which may overshoot. With none, the
+indicator glides along `Curves.easeOutCubic` over 250 ms. Phase and keyframe
+configs are not supported. The indicator jumps when the user asks to reduce
+motion, follows its tab when the bar or the tab moves or resizes, and is
+excluded from semantics and hit testing. Without an `indicator` nothing is
+added.
+
+The indicator is placed from where the selected tab is each time the bar paints.
+A tab that a `Transform` or a relayout boundary inside the bar moves is
+followed, and so is the whole bar inside a scroll view. Keep the tabs directly
+in the bar: a scrollable inside the bar is not supported, so scroll around the
+bar instead. If the selected tab disappears the indicator is hidden, and when
+the selected tab changes while the tab it leaves is gone the indicator jumps.
 
 ## Fortal widgets
 
@@ -356,9 +365,10 @@ Draws a shared surface behind the selected tab that glides between tabs.
 
 Adds paint layers behind the indicator, such as a shadow.
 
-#### `indicatorMotion(RemixTabIndicatorMotion value)`
+#### `indicatorMotion(AnimationConfig value)`
 
-Sets how the indicator moves: a curve and duration, or a spring.
+Sets how the indicator moves: a curve or a spring `AnimationConfig`. `null`
+glides along `Curves.easeOutCubic` over 250 ms.
 
 #### `alignment(Alignment value)`
 

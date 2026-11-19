@@ -13,9 +13,10 @@ class TabBarSpec with _$TabBarSpec {
   ///
   /// It takes the selected tab's bounds, so `margin` insets it and the
   /// decoration draws it. `null`, the default, draws none and leaves each
-  /// tab's own selected style in charge. The tab content must be laid out in
-  /// the bar's own layout: a scrollable inside the bar moves the tabs without
-  /// moving the indicator, so scroll around the bar instead.
+  /// tab's own selected style in charge. The indicator is placed from the
+  /// selected tab's position each time the bar paints, so keep the tabs
+  /// directly in the bar: a scrollable inside the bar is not supported, so
+  /// scroll around the bar instead.
   @override
   final StyleSpec<BoxSpec>? indicator;
 
@@ -24,10 +25,15 @@ class TabBarSpec with _$TabBarSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? indicatorEffects;
 
-  /// How [indicator] moves between tabs. `null` glides along
-  /// `Curves.easeOutCubic` over 250 ms.
+  /// How [indicator] moves between tabs: a curve [AnimationConfig], such as
+  /// `AnimationConfig.curve(...)` or `AnimationConfig.easeOut(...)`, or a
+  /// spring one, such as `AnimationConfig.springDescription(...)`, which may
+  /// overshoot. `null` glides along `Curves.easeOutCubic` over 250 ms.
+  ///
+  /// Phase and keyframe configs are not supported. This is separate from the
+  /// styler's own `animate`, which animates style changes of the bar.
   @override
-  final RemixTabIndicatorMotion? indicatorMotion;
+  final AnimationConfig? indicatorMotion;
 
   const TabBarSpec({
     StyleSpec<FlexBoxSpec>? container,
