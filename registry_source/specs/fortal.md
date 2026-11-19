@@ -312,15 +312,15 @@ truncation, RTL and 200% text.
 ## Search field
 
 Search field promotes the dashboard's three hand-built search inputs into the
-registry. `FortalSearchField` is a hand-written stateful composition over
-`FortalTextField`: its `FortalSearchFieldSize` size1–size3 and
-`FortalSearchFieldVariant` surface/soft select the text field's own size and
-variant, so height, padding, frame, fill, focus ring, hint and disabled
-colors are the text field's at every size and text scale. There is no label
+registry. `FortalSearchField` composes `NakedSearchField` for behavior and
+`FortalTextField` for the editor and its styling. Its `FortalSearchFieldSize`
+size1–size3 and `FortalSearchFieldVariant` surface/soft select the text field's
+own size and variant, so height, padding, frame, fill, focus ring, hint and
+disabled colors are the text field's at every size and text scale. There is no label
 or helper text; the required `semanticLabel` names the field. The leading
 `search` glyph takes the field's icon theme (16px, gray11 on surface, accent
-content on soft), and `textInputAction` defaults to search. The field owns a
-controller and focus node only when the caller gives none.
+content on soft), and `textInputAction` defaults to search. The headless
+field supplies a controller and focus node only when the caller gives none.
 
 The clear button is a ghost icon button: size1 (12px `close` glyph) on size1
 and size2 fields and size2 (16px) on size3, gray11 with grayA3/grayA4 hover
@@ -331,8 +331,9 @@ its whole target inside the field. A trailing spacer is always present, so
 the input stops where that target starts, at least one field spacing short of
 its glyph, and keeps one width and structure whether or not there is text; a
 tap on the text never lands on the button. It shows only
-while the field is enabled, editable and not empty. Pressing it clears the
-text, calls `onChanged('')` and `onCleared`, and returns focus to the field;
+while the field is enabled, editable and not empty. Pressing it or invoking
+its semantic tap action clears the text, calls `onChanged('')` before
+`onCleared`, and returns focus to the field;
 it sits inside the field's tap region and excludes focus, so it is no Tab
 stop. It is its own semantics container: merged into the node around the
 field, it would turn that node into a button once there is text, and Flutter
@@ -341,8 +342,12 @@ after the first. A caller controller that is withdrawn leaves its last value
 in the field's own controller. Escape is the keyboard path: it clears when
 there is text to clear, and the repeats and release of that press are
 consumed with it, so holding Escape never also closes a dialog. With nothing
-to clear it passes on, so a dialog still closes. During input-method
-composition it skips the remaining handlers, leaving the key to the IME. A caller `style` merges last into the field.
+to clear it passes on, so a dialog still closes. An Escape press that starts
+during active composition in an enabled, editable field skips ancestor
+handlers through repeats and release, even if the field becomes read-only
+during the press. A fresh Escape in a read-only field passes on even if the
+editor retained a composing range. Neither press clears the text or calls
+either callback. A caller `style` merges last into the field.
 Tests cover both modes and variants, every size at 100% and 200% text in both
 directions, the clear target, keyboard focus and Escape, composition,
 controller swaps, semantics, and the editor and its semantics node surviving
