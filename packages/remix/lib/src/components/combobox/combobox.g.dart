@@ -179,7 +179,6 @@ mixin _$ComboboxPanelSpec implements Spec<ComboboxPanelSpec>, Diagnosticable {
   RemixBoxEffectsSpec? get containerEffects;
   Color? get scrollbarColor;
   double? get scrollbarThickness;
-  RemixPanelTransition? get panelTransition;
 
   @override
   Type get type => ComboboxPanelSpec;
@@ -190,14 +189,12 @@ mixin _$ComboboxPanelSpec implements Spec<ComboboxPanelSpec>, Diagnosticable {
     RemixBoxEffectsSpec? containerEffects,
     Color? scrollbarColor,
     double? scrollbarThickness,
-    RemixPanelTransition? panelTransition,
   }) {
     return ComboboxPanelSpec(
       container: container ?? this.container,
       containerEffects: containerEffects ?? this.containerEffects,
       scrollbarColor: scrollbarColor ?? this.scrollbarColor,
       scrollbarThickness: scrollbarThickness ?? this.scrollbarThickness,
-      panelTransition: panelTransition ?? this.panelTransition,
     );
   }
 
@@ -216,11 +213,6 @@ mixin _$ComboboxPanelSpec implements Spec<ComboboxPanelSpec>, Diagnosticable {
         other?.scrollbarThickness,
         t,
       ),
-      panelTransition: MixOps.lerpSnap(
-        panelTransition,
-        other?.panelTransition,
-        t,
-      ),
     );
   }
 
@@ -230,7 +222,6 @@ mixin _$ComboboxPanelSpec implements Spec<ComboboxPanelSpec>, Diagnosticable {
     containerEffects,
     scrollbarColor,
     scrollbarThickness,
-    panelTransition,
   ];
 
   @override
@@ -276,8 +267,7 @@ mixin _$ComboboxPanelSpec implements Spec<ComboboxPanelSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(ColorProperty('scrollbarColor', scrollbarColor))
-      ..add(DoubleProperty('scrollbarThickness', scrollbarThickness))
-      ..add(DiagnosticsProperty('panelTransition', panelTransition));
+      ..add(DoubleProperty('scrollbarThickness', scrollbarThickness));
   }
 }
 
@@ -1616,29 +1606,25 @@ class ComboboxPanelStyler
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<Color>? $scrollbarColor;
   final Prop<double>? $scrollbarThickness;
-  final Prop<RemixPanelTransition>? $panelTransition;
 
   const ComboboxPanelStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<Color>? scrollbarColor,
     Prop<double>? scrollbarThickness,
-    Prop<RemixPanelTransition>? panelTransition,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $containerEffects = containerEffects,
        $scrollbarColor = scrollbarColor,
-       $scrollbarThickness = scrollbarThickness,
-       $panelTransition = panelTransition;
+       $scrollbarThickness = scrollbarThickness;
 
   ComboboxPanelStyler({
     BoxStyler? container,
     RemixBoxEffectsMix? containerEffects,
     Color? scrollbarColor,
     double? scrollbarThickness,
-    RemixPanelTransition? panelTransition,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<ComboboxPanelSpec>>? variants,
@@ -1647,7 +1633,6 @@ class ComboboxPanelStyler
          containerEffects: Prop.maybeMix(containerEffects),
          scrollbarColor: Prop.maybe(scrollbarColor),
          scrollbarThickness: Prop.maybe(scrollbarThickness),
-         panelTransition: Prop.maybe(panelTransition),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -1661,8 +1646,6 @@ class ComboboxPanelStyler
       ComboboxPanelStyler().scrollbarColor(value);
   factory ComboboxPanelStyler.scrollbarThickness(double value) =>
       ComboboxPanelStyler().scrollbarThickness(value);
-  factory ComboboxPanelStyler.panelTransition(RemixPanelTransition value) =>
-      ComboboxPanelStyler().panelTransition(value);
   factory ComboboxPanelStyler.alignment(AlignmentGeometry value) =>
       ComboboxPanelStyler().alignment(value);
   factory ComboboxPanelStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -2168,7 +2151,6 @@ class ComboboxPanelStyler
     'containerEffects',
     'scrollbarColor',
     'scrollbarThickness',
-    'panelTransition',
     'animation',
     'modifier',
     'variants',
@@ -2192,11 +2174,6 @@ class ComboboxPanelStyler
   /// Sets the scrollbarThickness.
   ComboboxPanelStyler scrollbarThickness(double value) {
     return merge(ComboboxPanelStyler(scrollbarThickness: value));
-  }
-
-  /// Sets the panelTransition.
-  ComboboxPanelStyler panelTransition(RemixPanelTransition value) {
-    return merge(ComboboxPanelStyler(panelTransition: value));
   }
 
   /// Sets the animation configuration.
@@ -2236,7 +2213,6 @@ class ComboboxPanelStyler
         $scrollbarThickness,
         other?.$scrollbarThickness,
       ),
-      panelTransition: MixOps.merge($panelTransition, other?.$panelTransition),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -2251,7 +2227,6 @@ class ComboboxPanelStyler
       containerEffects: MixOps.resolve(context, $containerEffects),
       scrollbarColor: MixOps.resolve(context, $scrollbarColor),
       scrollbarThickness: MixOps.resolve(context, $scrollbarThickness),
-      panelTransition: MixOps.resolve(context, $panelTransition),
     );
 
     return StyleSpec(
@@ -2268,8 +2243,7 @@ class ComboboxPanelStyler
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('scrollbarColor', $scrollbarColor))
-      ..add(DiagnosticsProperty('scrollbarThickness', $scrollbarThickness))
-      ..add(DiagnosticsProperty('panelTransition', $panelTransition));
+      ..add(DiagnosticsProperty('scrollbarThickness', $scrollbarThickness));
   }
 
   @override
@@ -2278,7 +2252,6 @@ class ComboboxPanelStyler
     $containerEffects,
     $scrollbarColor,
     $scrollbarThickness,
-    $panelTransition,
     $animation,
     $modifier,
     $variants,

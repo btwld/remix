@@ -168,32 +168,6 @@ The root exposes focus and disabled state. Put hover and press styles on the `fi
 
 Unstyled rows default to a 48px minimum and grow with wrapped labels; option styles own this minimum. The eager scroll panel defaults to a 288px maximum within the available overlay space; panel styles can replace it. A short fade marks each overflowing end, and a directional gutter keeps the persistent scrollbar clear of row fills. Keep result sets small; eager construction allows keyboard navigation to reveal every option. Width and opening direction follow RawAutocomplete; `optionsViewOpenDirection` supports down, up and mostSpace.
 
-## Panel transition
-
-The panel shows and hides at once by default. Set `panelTransition` on
-`ComboboxStyler` (or `ComboboxPanelStyler`) to open and close it with a
-transition, as on [Menu](/components/menu#panel-transition) and
-[Popover](/components/popover#panel-transition). The builder receives the open
-and close animation, which is linear, and the editor's bounds.
-
-```dart
-final fadingCombobox = ComboboxStyler().panelTransition(
-  RemixPanelTransition(
-    duration: const Duration(milliseconds: 300),
-    reverseDuration: const Duration(milliseconds: 150),
-    builder: (context, info, panel) =>
-        FadeTransition(opacity: info.animation, child: panel),
-  ),
-);
-```
-
-RawAutocomplete unmounts the panel the moment the suggestions hide, so the
-panel cannot stay mounted through its exit. The combobox keeps a snapshot of
-the open panel and plays the exit on that image in the nearest `Overlay`, as
-the `panel` the builder receives. A panel that opens again drops an exit still
-playing. Reduced motion skips the transition. The builder cannot stagger rows:
-it sees the whole panel.
-
 ## Interaction and filtering
 
 Arrow keys move the highlighted suggestion while focus stays in the editor. Enter accepts; Escape dismisses while preserving text. Tab and Shift-Tab leave without committing. Pointer, touch and stylus release activate an option; scrolling and canceled presses do not select it.

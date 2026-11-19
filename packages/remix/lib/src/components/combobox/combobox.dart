@@ -4,11 +4,7 @@ library remix_combobox;
 // ignore: unused_import
 import 'dart:async';
 
-import 'dart:ui' as ui;
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
@@ -16,13 +12,10 @@ import 'package:naked_ui/naked_ui.dart';
 
 import '../textfield/textfield.dart';
 import '../../rendering/remix_box_effects.dart';
-import '../../utilities/remix_panel_transition.dart';
-import '../../utilities/remix_reduced_motion.dart';
 import '../../utilities/remix_style.dart';
 import '../../style/style.dart';
 
 part 'combobox_spec.dart';
 part 'combobox_style.dart';
-part 'combobox_transition.dart';
 part 'combobox_widget.dart';
 part 'combobox.g.dart';
