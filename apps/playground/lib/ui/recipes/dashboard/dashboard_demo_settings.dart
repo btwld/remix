@@ -14,6 +14,7 @@ import '../../components/segmented_control.dart';
 import '../../components/select.dart';
 import '../../components/slider.dart';
 import '../../components/switch.dart';
+import '../../components/text.dart';
 import '../../components/textfield.dart';
 import '../../theme/theme_data.dart';
 import '../../theme/theme_scope.dart';
@@ -106,9 +107,8 @@ class _PlaygroundDashboardSettingsPageState
                 token: PlaygroundTokens.text3xl,
                 emphasized: true,
               ),
-              PlaygroundDashboardText(
+              PlaygroundText.muted(
                 'Manage your profile, preferences, and workspace.',
-                muted: true,
               ),
             ],
           ),
@@ -340,12 +340,8 @@ Widget _section(String title, String description, Widget child) =>
                 .crossAxisAlignment(.start)
                 .spacing(PlaygroundTokens.s1),
             children: [
-              PlaygroundDashboardText(
-                title,
-                token: PlaygroundTokens.textLg,
-                emphasized: true,
-              ),
-              PlaygroundDashboardText(description, muted: true),
+              PlaygroundText.large(title),
+              PlaygroundText.muted(description),
             ],
           ),
           child,
@@ -365,7 +361,7 @@ Widget _preference(String title, String description, Widget trailing) => RowBox(
             .spacing(PlaygroundTokens.s0_5),
         children: [
           PlaygroundDashboardText(title, emphasized: true),
-          PlaygroundDashboardText(description, muted: true),
+          PlaygroundText.muted(description),
         ],
       ),
     ),

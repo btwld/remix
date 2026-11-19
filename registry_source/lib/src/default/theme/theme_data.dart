@@ -312,6 +312,7 @@ class VanillaThemeData {
         VanillaTokens.textXl: _text(20, 28),
         VanillaTokens.text2xl: _text(24, 32),
         VanillaTokens.text3xl: _text(30, 36),
+        VanillaTokens.text4xl: _text(36, 40),
         VanillaTokens.textMono: _text(14, 20, family: monoFontFamily),
       });
 

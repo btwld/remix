@@ -615,6 +615,191 @@ final _badgeTargets = <SpecTarget>[
   ),
 ];
 
+final _headingTargets = <SpecTarget>[
+  _target<TextSpec>(
+    'heading',
+    'h2 rule',
+    source: 'examples/typography-h2.tsx: border-b pb-2',
+    style: () => vanillaHeadingStyle(variant: .h2),
+    read: (spec) {
+      final box = spec.widgetModifiers!.whereType<BoxModifier>().single.spec;
+      return (box.padding, (box.decoration as BoxDecoration).border);
+    },
+    expected: (theme) => (
+      const EdgeInsets.only(bottom: 8),
+      Border(bottom: BorderSide(color: theme.border)),
+    ),
+  ),
+];
+
+final _textTargets = <SpecTarget>[
+  _target<TextSpec>(
+    'text',
+    'paragraph line',
+    source: 'examples/typography-p.tsx: leading-7',
+    style: vanillaTextStyle,
+    read: (spec) {
+      final style = spec.spec.style!;
+      return (style.fontSize, style.fontSize! * style.height!);
+    },
+    expected: (_) => (16.0, closeTo(28, 1e-9)),
+  ),
+];
+
+// -- code ---------------------------------------------------------------------
+
+/// The chip: the box the recipe wraps around its text.
+BoxSpec _codeChip(StyleSpec<TextSpec> spec) =>
+    spec.widgetModifiers!.whereType<BoxModifier>().single.spec;
+
+final _codeTargets = <SpecTarget>[
+  _target<TextSpec>(
+    'code',
+    'chip',
+    source:
+        'examples/typography-inline-code.tsx: rounded bg-muted '
+        'px-[0.3rem] py-[0.2rem]',
+    style: vanillaCodeStyle,
+    read: (spec) => (
+      _codeChip(spec).padding,
+      (_codeChip(spec).decoration as BoxDecoration?)?.borderRadius,
+      (_codeChip(spec).decoration as BoxDecoration?)?.color,
+    ),
+    expected: (theme) => (
+      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      const BorderRadius.all(Radius.circular(4)),
+      theme.muted,
+    ),
+  ),
+  _target<TextSpec>(
+    'code',
+    'text',
+    source:
+        'examples/typography-inline-code.tsx: font-mono text-sm font-semibold',
+    style: vanillaCodeStyle,
+    read: (spec) {
+      final style = spec.spec.style;
+      return (
+        style?.fontFamily,
+        style?.fontSize,
+        style == null ? null : style.fontSize! * style.height!,
+        style?.fontWeight,
+        style?.color,
+      );
+    },
+    expected: (theme) => (
+      theme.monoFontFamily,
+      14.0,
+      closeTo(20, 1e-9),
+      FontWeight.w600,
+      theme.foreground,
+    ),
+  ),
+];
+
+// -- kbd ----------------------------------------------------------------------
+
+SpecTarget _kbd(
+  String property, {
+  VanillaKbdVariant variant = .muted,
+  required String source,
+  required Object? Function(StyleSpec<TextSpec> spec) read,
+  required Object? Function(VanillaThemeData theme) expected,
+}) => _target<TextSpec>(
+  'kbd',
+  property,
+  source: source,
+  style: () => vanillaKbdStyle(variant: variant),
+  read: read,
+  expected: expected,
+);
+
+/// The key cap: the box the recipe wraps around its label.
+BoxSpec _kbdCap(StyleSpec<TextSpec> spec) =>
+    spec.widgetModifiers!.whereType<BoxModifier>().single.spec;
+
+final _kbdTargets = <SpecTarget>[
+  _kbd(
+    'cap',
+    source: 'kbd.tsx: Kbd h-5 min-w-5 rounded-sm px-1',
+    read: (spec) => (
+      _kbdCap(spec).constraints?.minWidth,
+      _kbdCap(spec).padding,
+      (_kbdCap(spec).decoration as BoxDecoration?)?.borderRadius,
+    ),
+    expected: (theme) => (
+      20.0,
+      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      _rounded(theme, VanillaTokens.radiusSm),
+    ),
+  ),
+  _kbd(
+    'label',
+    source: 'kbd.tsx: Kbd font-sans text-xs font-medium',
+    read: (spec) {
+      final style = spec.spec.style;
+      return (
+        style?.fontSize,
+        style == null ? null : style.fontSize! * style.height!,
+        style?.fontWeight,
+        style?.fontFamily,
+      );
+    },
+    expected: (theme) =>
+        (12.0, closeTo(16, 1e-9), FontWeight.w500, theme.fontFamily),
+  ),
+  _kbd(
+    'colors',
+    source: 'kbd.tsx: Kbd bg-muted text-muted-foreground',
+    read: (spec) => (
+      (_kbdCap(spec).decoration as BoxDecoration?)?.color,
+      spec.spec.style?.color,
+    ),
+    expected: (theme) => (theme.muted, theme.mutedForeground),
+  ),
+  _kbd(
+    'tooltip colors',
+    variant: .tooltip,
+    source:
+        'kbd.tsx: [[data-slot=tooltip-content]_&]:bg-background/20 '
+        'text-background dark:bg-background/10',
+    read: (spec) => (
+      (_kbdCap(spec).decoration as BoxDecoration?)?.color,
+      spec.spec.style?.color,
+    ),
+    expected: (theme) =>
+        (tint(theme.background, _isDark(theme) ? 0.1 : 0.2), theme.background),
+  ),
+  SpecTarget._(
+    component: 'kbd',
+    property: 'group gap',
+    source: 'kbd.tsx: KbdGroup inline-flex items-center gap-1',
+    actual: (tester, theme) async {
+      await tester.pumpWidget(
+        VanillaTheme(
+          theme: theme,
+          child: hostOf(
+            const Center(
+              child: VanillaKbdGroup(
+                children: [VanillaKbd('Ctrl'), VanillaKbd('B')],
+              ),
+            ),
+          ),
+        ),
+      );
+      Rect cap(String key) => tester.getRect(
+        find.ancestor(of: find.text(key), matching: find.byType(Box)).first,
+      );
+
+      return (
+        cap('B').left - cap('Ctrl').right,
+        cap('B').center.dy - cap('Ctrl').center.dy,
+      );
+    },
+    expected: (_) => (4.0, 0.0),
+  ),
+];
+
 // -- toggle -------------------------------------------------------------------
 
 SpecTarget _toggle(
@@ -2446,6 +2631,10 @@ final vanillaSpecTargets = <SpecTarget>[
   ..._linkTargets,
   ..._breadcrumbsTargets,
   ..._badgeTargets,
+  ..._headingTargets,
+  ..._textTargets,
+  ..._codeTargets,
+  ..._kbdTargets,
   ..._toggleTargets,
   ..._toggleGroupTargets,
   ..._textFieldTargets,

@@ -35,6 +35,8 @@ import 'package:widgetbook_vanilla/components/checkbox.dart'
     as _widgetbook_vanilla_components_checkbox;
 import 'package:widgetbook_vanilla/components/checkbox_group.dart'
     as _widgetbook_vanilla_components_checkbox_group;
+import 'package:widgetbook_vanilla/components/code.dart'
+    as _widgetbook_vanilla_components_code;
 import 'package:widgetbook_vanilla/components/combobox.dart'
     as _widgetbook_vanilla_components_combobox;
 import 'package:widgetbook_vanilla/components/data_list.dart'
@@ -51,8 +53,12 @@ import 'package:widgetbook_vanilla/components/disclosure.dart'
     as _widgetbook_vanilla_components_disclosure;
 import 'package:widgetbook_vanilla/components/divider.dart'
     as _widgetbook_vanilla_components_divider;
+import 'package:widgetbook_vanilla/components/heading.dart'
+    as _widgetbook_vanilla_components_heading;
 import 'package:widgetbook_vanilla/components/icon_button.dart'
     as _widgetbook_vanilla_components_icon_button;
+import 'package:widgetbook_vanilla/components/kbd.dart'
+    as _widgetbook_vanilla_components_kbd;
 import 'package:widgetbook_vanilla/components/link.dart'
     as _widgetbook_vanilla_components_link;
 import 'package:widgetbook_vanilla/components/menu.dart'
@@ -87,6 +93,8 @@ import 'package:widgetbook_vanilla/components/switch.dart'
     as _widgetbook_vanilla_components_switch;
 import 'package:widgetbook_vanilla/components/tabs.dart'
     as _widgetbook_vanilla_components_tabs;
+import 'package:widgetbook_vanilla/components/text.dart'
+    as _widgetbook_vanilla_components_text;
 import 'package:widgetbook_vanilla/components/textarea.dart'
     as _widgetbook_vanilla_components_textarea;
 import 'package:widgetbook_vanilla/components/textfield.dart'
@@ -215,6 +223,16 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'VanillaCode',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Code',
+            builder:
+                _widgetbook_vanilla_components_code.buildVanillaCodeUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'VanillaCombobox<Object>',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -315,12 +333,31 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'VanillaHeading',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Heading',
+            builder: _widgetbook_vanilla_components_heading
+                .buildVanillaHeadingUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'VanillaIconButton',
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Icon Button',
             builder: _widgetbook_vanilla_components_icon_button
                 .buildVanillaIconButtonUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaKbd',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Kbd',
+            builder: _widgetbook_vanilla_components_kbd.buildVanillaKbdUseCase,
           ),
         ],
       ),
@@ -511,6 +548,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Tabs',
             builder:
                 _widgetbook_vanilla_components_tabs.buildVanillaTabsUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'VanillaText',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Text',
+            builder:
+                _widgetbook_vanilla_components_text.buildVanillaTextUseCase,
           ),
         ],
       ),

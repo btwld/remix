@@ -75,7 +75,7 @@ void main() {
     expect(runner.calls, isEmpty);
   });
 
-  test('a two-letter typo gets the list hint but no suggestion', () async {
+  test('a short misspelling can suggest a short registry item', () async {
     final root = createFlutterPackage();
     addTearDown(() => root.deleteSync(recursive: true));
     final installer = Installer(
@@ -89,7 +89,7 @@ void main() {
     final errors = <String>[];
 
     await runInstallerCli(
-      ['add', 'bu'],
+      ['add', 'kb'],
       installer,
       writeOut: (_) {},
       writeError: errors.add,
@@ -97,7 +97,8 @@ void main() {
 
     expect(
       errors.single,
-      'Unknown registry item @remix/bu in the vanilla preset.\n'
+      'Unknown registry item @remix/kb in the vanilla preset.\n'
+      'Did you mean kbd?\n'
       'Run remix list to see every item in the vanilla preset.',
     );
   });

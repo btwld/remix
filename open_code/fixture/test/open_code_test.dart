@@ -211,6 +211,74 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('installed typography preserves style and heading level', (
+    tester,
+  ) async {
+    await _pumpInScope(
+      tester,
+      const Column(
+        children: [
+          AcmeHeading.h3('Summary', headingLevel: 2),
+          AcmeText.lead('A short introduction.'),
+        ],
+      ),
+    );
+
+    final heading = tester.getSemantics(find.bySemanticsLabel('Summary'));
+    expect(heading, matchesSemantics(label: 'Summary', isHeader: true));
+    expect(heading.getSemanticsData().headingLevel, 2);
+    const theme = AcmeThemeData.light();
+    final lead = tester.widget<Text>(find.text('A short introduction.'));
+    expect(lead.style?.fontSize, 20);
+    expect(lead.style?.color, theme.mutedForeground);
+  });
+
+  testWidgets('installed code draws a monospace chip', (tester) async {
+    await _pumpInScope(tester, const AcmeCode('main.dart'));
+    const theme = AcmeThemeData.light();
+    final chip = tester.widget<Box>(
+      find
+          .ancestor(of: find.text('main.dart'), matching: find.byType(Box))
+          .first,
+    );
+
+    expect(
+      (chip.styleSpec!.spec.decoration! as BoxDecoration).color,
+      theme.muted,
+    );
+    expect(
+      tester.widget<Text>(find.text('main.dart')).style?.fontFamily,
+      theme.monoFontFamily,
+    );
+    expect(tester.getSize(find.byWidget(chip)).height, 24);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('installed kbd draws key caps and groups a shortcut', (
+    tester,
+  ) async {
+    await _pumpInScope(
+      tester,
+      const AcmeKbdGroup(children: [AcmeKbd('Ctrl'), AcmeKbd.tooltip('B')]),
+    );
+    const theme = AcmeThemeData.light();
+    Box cap(String key) => tester.widget<Box>(
+      find.ancestor(of: find.text(key), matching: find.byType(Box)).first,
+    );
+
+    expect(
+      (cap('Ctrl').styleSpec!.spec.decoration! as BoxDecoration).color,
+      theme.muted,
+    );
+    expect(
+      tester.widget<Text>(find.text('Ctrl')).style?.color,
+      theme.mutedForeground,
+    );
+    expect(tester.widget<Text>(find.text('B')).style?.color, theme.background);
+    expect(tester.getSize(find.byType(AcmeKbdGroup)).height, 20);
+    expect(tester.takeException(), isNull);
+  });
+
   group('installed Agent recipes', () {
     Widget scope(Widget child) =>
         AgentGlyphs(builder: acmeAgentGlyph, child: child);
@@ -468,7 +536,7 @@ void main() {
 
         expect(AcmeTokens.colors, hasLength(32));
         expect(AcmeTokens.radii, hasLength(4));
-        expect(AcmeTokens.textStyles, hasLength(8));
+        expect(AcmeTokens.textStyles, hasLength(9));
         expect(
           tokens,
           hasLength(
@@ -522,6 +590,7 @@ void main() {
         'xl': (20, 28),
         '2xl': (24, 32),
         '3xl': (30, 36),
+        '4xl': (36, 40),
         'mono': (14, 20),
       };
       final theme = const AcmeThemeData.light().copyWith(

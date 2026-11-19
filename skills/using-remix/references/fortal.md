@@ -48,8 +48,9 @@ palettes pass 4.5:1 over the page and solid panel in both modes.
 
 ## Typography
 
-`FortalText`, `FortalHeading`, `FortalCode`, and `FortalKbd` exist only in
-Fortal — base Remix ships no equivalent. `FortalLink` is Fortal's themed
+`FortalText`, `FortalHeading`, `FortalCode`, and `FortalKbd` are Fortal
+recipes — base Remix ships no equivalent, and Vanilla supplies the same
+item names with its own variants. `FortalLink` is Fortal's themed
 wrapper over `RemixLink`, which is base Remix (the Vanilla preset also ships
 a `link` item generating `<Prefix>Link`). All five typography widgets share
 one `FortalTextSize` (`size1`–`size9`). `FortalTextWeight` (`light`,

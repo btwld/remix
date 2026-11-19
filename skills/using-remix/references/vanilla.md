@@ -107,6 +107,33 @@ families carry over.
   from the end with the small radius. `style` merges last into the field; edit
   the installed `_clearButtonStyle()` to restyle the button. The dashboard's
   customer and header searches use it.
+- **Heading** — install with `remix add heading`. `<Prefix>Heading.h1` through
+  `.h4` follow shadcn/ui's heading styles and default to semantics levels 1–4.
+  Use `headingLevel` when the outline level should differ from the visual style.
+  If you keep an older installed Vanilla theme, declare `text4xl` in
+  `theme/tokens.dart`, include it in `textStyles`, and map it to `_text(36, 40)`
+  in `theme/theme_data.dart` before installing Heading (36px type on a 40px line).
+- **Text** — install with `remix add text`. `<Prefix>Text` defaults to a paragraph;
+  `.lead`, `.large`, `.small`, `.muted`, and `.blockquote` select the other
+  variants. Blockquote puts an italic run beside a rule on the leading edge.
+- **Code** — install with `remix add code`. `<Prefix>Code('main.dart')` is
+  the inline code of shadcn/ui's Typography page: `textMono` at semibold
+  weight (Geist Mono has no 600, so it draws at 500) in `foreground` on a
+  `muted` chip, 4px across and 2px down, so the chip is 24px tall, with
+  `radiusSm` corners clamped to 4px. In running text put it in a
+  `WidgetSpan` with `PlaceholderAlignment.middle` and pass
+  `style: TextStyler().textScaler(TextScaler.noScaling)` to the inline chip.
+  The span scales the whole chip; leave text scaling enabled for standalone code.
+- **Kbd** — install with `remix add kbd`. `<Prefix>Kbd('K')` follows
+  shadcn/ui's Kbd: `textXs` at medium weight in `mutedForeground` on a `muted`
+  cap with the small radius, at least 20px square and 4px beside the label.
+  The cap is the line plus 2px above and below, so it grows with the text
+  scale. `<Prefix>Kbd.tooltip` is the inverted cap for a tooltip's content,
+  which shadcn/ui applies through the ancestor and a recipe cannot.
+  `<Prefix>KbdGroup(children: [...])` sets a shortcut's keys 4px apart and
+  reads them as one phrase. A key is plain text to assistive technology; name
+  a symbol through `style: TextStyler().semanticsLabel('Command')`. Keys are
+  text, and Geist has no ⌘, ⌥, ⌃, or ⏎, so the platform font draws those.
 - **Combobox** — install with `remix add combobox`. `<Prefix>Combobox<T>`
   uses the TextField recipe for the editor and a Select-like rounded, elevated
   popover panel, offset 8px, bounded at 320px high with a 128px width floor.

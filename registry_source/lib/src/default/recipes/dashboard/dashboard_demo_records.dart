@@ -11,6 +11,7 @@ import '../../components/icon_button.dart';
 import '../../components/menu.dart';
 import '../../components/search_field.dart';
 import '../../components/segmented_control.dart';
+import '../../components/text.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_demo_text.dart';
 
@@ -458,7 +459,7 @@ class _Page extends StatelessWidget {
                     token: VanillaTokens.text3xl,
                     emphasized: true,
                   ),
-                  VanillaDashboardText(description, muted: true),
+                  VanillaText.muted(description),
                 ],
               ),
             ),
@@ -503,7 +504,7 @@ class _Empty extends StatelessWidget {
               .spacing(VanillaTokens.s1),
           children: [
             VanillaDashboardText(title, emphasized: true),
-            VanillaDashboardText(body, muted: true),
+            VanillaText.muted(body),
           ],
         ),
         ?action,

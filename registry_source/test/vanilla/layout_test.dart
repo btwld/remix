@@ -248,6 +248,44 @@ void main() {
     }
   });
 
+  testWidgets('inline code is a 24px chip around its 20px line', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      host(const Center(child: VanillaCode('main.dart'))),
+    );
+    final chip = tester.getRect(
+      find
+          .ancestor(of: find.text('main.dart'), matching: find.byType(Box))
+          .first,
+    );
+    final text = tester.getRect(find.text('main.dart'));
+
+    expect(chip.height, 24);
+    expect(text.left - chip.left, 4);
+    expect(chip.center, text.center);
+  });
+
+  testWidgets('a shortcut is one 20px line of caps 4px apart', (tester) async {
+    await tester.pumpWidget(
+      host(
+        const Center(
+          child: VanillaKbdGroup(
+            children: [VanillaKbd('K'), VanillaKbd('Ctrl')],
+          ),
+        ),
+      ),
+    );
+    Rect cap(String key) => tester.getRect(
+      find.ancestor(of: find.text(key), matching: find.byType(Box)).first,
+    );
+
+    expect(tester.getSize(find.byType(VanillaKbdGroup)).height, 20);
+    expect(cap('K').size, const Size.square(20));
+    expect(cap('Ctrl').height, 20);
+    expect(cap('Ctrl').left - cap('K').right, 4);
+  });
+
   group('a breadcrumb trail that does not fit', () {
     Future<Rect> pumpTrail(
       WidgetTester tester,

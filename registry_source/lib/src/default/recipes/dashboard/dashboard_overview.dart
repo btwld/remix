@@ -13,6 +13,7 @@ import '../../components/data_table.dart';
 import '../../components/button.dart';
 import '../../components/divider.dart';
 import '../../components/progress.dart';
+import '../../components/text.dart';
 import '../../theme/tokens.dart';
 
 /// Revenue, orders, and recent activity.
@@ -52,12 +53,7 @@ class VanillaDashboardOverview extends StatelessWidget {
               .fontWeight(FontWeight.w700)
               .color(VanillaTokens.foreground()),
         ),
-        StyledText(
-          description,
-          style: TextStyler()
-              .style(VanillaTokens.textSm.mix())
-              .color(VanillaTokens.mutedForeground()),
-        ),
+        VanillaText.muted(description),
       ],
     ),
     metricBuilder: (context, metric) => VanillaCard(
@@ -157,8 +153,8 @@ Widget _revenueCard(RegistryDashboardSampleData data) => VanillaCard(
             .crossAxisAlignment(.start)
             .spacing(VanillaTokens.s1),
         children: [
-          _sectionTitle('Revenue trend'),
-          _sectionDescription('Seven-day net revenue'),
+          const VanillaText.large('Revenue trend'),
+          const VanillaText.muted('Seven-day net revenue'),
         ],
       ),
       Box(
@@ -204,8 +200,8 @@ Widget _customerChartCard() => VanillaCard(
             .crossAxisAlignment(.start)
             .spacing(VanillaTokens.s1),
         children: [
-          _sectionTitle('Customer acquisition'),
-          _sectionDescription('New accounts by month'),
+          const VanillaText.large('Customer acquisition'),
+          const VanillaText.muted('New accounts by month'),
         ],
       ),
       Box(
@@ -241,8 +237,8 @@ Widget _fulfillmentCard() => VanillaCard(
             .crossAxisAlignment(.start)
             .spacing(VanillaTokens.s1),
         children: [
-          _sectionTitle('Fulfillment mix'),
-          _sectionDescription('Current order status'),
+          const VanillaText.large('Fulfillment mix'),
+          const VanillaText.muted('Current order status'),
         ],
       ),
       RegistryChartLegend(
@@ -296,7 +292,7 @@ Widget _activityCard(RegistryDashboardSampleData data) => VanillaCard(
         .crossAxisAlignment(.stretch)
         .spacing(VanillaTokens.s2),
     children: [
-      _sectionTitle('Recent activity'),
+      const VanillaText.large('Recent activity'),
       ColumnBox(
         style: FlexBoxStyler().crossAxisAlignment(.stretch),
         children: [
@@ -328,11 +324,11 @@ Widget _activityCard(RegistryDashboardSampleData data) => VanillaCard(
                           .spacing(VanillaTokens.s0_5),
                       children: [
                         _cell(event.title, emphasized: true),
-                        _sectionDescription(event.detail),
+                        VanillaText.muted(event.detail),
                       ],
                     ),
                   ),
-                  _sectionDescription(event.relativeTime),
+                  VanillaText.muted(event.relativeTime),
                 ],
               ),
             ),
@@ -364,7 +360,7 @@ Widget _ordersCard(
       RowBox(
         style: FlexBoxStyler().crossAxisAlignment(.center),
         children: [
-          Expanded(child: _sectionTitle('Recent orders')),
+          const Expanded(child: VanillaText.large('Recent orders')),
           VanillaButton.ghost(
             key: const ValueKey('overview-view-orders'),
             size: .small,
@@ -387,21 +383,6 @@ Widget _ordersCard(
       ),
     ],
   ),
-);
-
-Widget _sectionTitle(String text) => StyledText(
-  text,
-  style: TextStyler()
-      .style(VanillaTokens.textLg.mix())
-      .fontWeight(FontWeight.w600)
-      .color(VanillaTokens.foreground()),
-);
-
-Widget _sectionDescription(String text) => StyledText(
-  text,
-  style: TextStyler()
-      .style(VanillaTokens.textSm.mix())
-      .color(VanillaTokens.mutedForeground()),
 );
 
 Widget _cell(String text, {bool emphasized = false}) => StyledText(

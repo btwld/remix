@@ -10,6 +10,7 @@ import '../../components/chart.dart';
 import '../../components/data_table.dart';
 import '../../components/divider.dart';
 import '../../components/progress.dart';
+import '../../components/text.dart';
 import '../../theme/tokens.dart';
 import 'dashboard_demo_charts.dart';
 import 'dashboard_overview_base.dart';
@@ -52,12 +53,7 @@ class PlaygroundDashboardOverview extends StatelessWidget {
               .fontWeight(FontWeight.w700)
               .color(PlaygroundTokens.foreground()),
         ),
-        StyledText(
-          description,
-          style: TextStyler()
-              .style(PlaygroundTokens.textSm.mix())
-              .color(PlaygroundTokens.mutedForeground()),
-        ),
+        PlaygroundText.muted(description),
       ],
     ),
     metricBuilder: (context, metric) => PlaygroundCard(
@@ -157,8 +153,8 @@ Widget _revenueCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
             .crossAxisAlignment(.start)
             .spacing(PlaygroundTokens.s1),
         children: [
-          _sectionTitle('Revenue trend'),
-          _sectionDescription('Seven-day net revenue'),
+          const PlaygroundText.large('Revenue trend'),
+          const PlaygroundText.muted('Seven-day net revenue'),
         ],
       ),
       Box(
@@ -204,8 +200,8 @@ Widget _customerChartCard() => PlaygroundCard(
             .crossAxisAlignment(.start)
             .spacing(PlaygroundTokens.s1),
         children: [
-          _sectionTitle('Customer acquisition'),
-          _sectionDescription('New accounts by month'),
+          const PlaygroundText.large('Customer acquisition'),
+          const PlaygroundText.muted('New accounts by month'),
         ],
       ),
       Box(
@@ -241,8 +237,8 @@ Widget _fulfillmentCard() => PlaygroundCard(
             .crossAxisAlignment(.start)
             .spacing(PlaygroundTokens.s1),
         children: [
-          _sectionTitle('Fulfillment mix'),
-          _sectionDescription('Current order status'),
+          const PlaygroundText.large('Fulfillment mix'),
+          const PlaygroundText.muted('Current order status'),
         ],
       ),
       PlaygroundChartLegend(
@@ -296,7 +292,7 @@ Widget _activityCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
         .crossAxisAlignment(.stretch)
         .spacing(PlaygroundTokens.s2),
     children: [
-      _sectionTitle('Recent activity'),
+      const PlaygroundText.large('Recent activity'),
       ColumnBox(
         style: FlexBoxStyler().crossAxisAlignment(.stretch),
         children: [
@@ -328,11 +324,11 @@ Widget _activityCard(PlaygroundDashboardSampleData data) => PlaygroundCard(
                           .spacing(PlaygroundTokens.s0_5),
                       children: [
                         _cell(event.title, emphasized: true),
-                        _sectionDescription(event.detail),
+                        PlaygroundText.muted(event.detail),
                       ],
                     ),
                   ),
-                  _sectionDescription(event.relativeTime),
+                  PlaygroundText.muted(event.relativeTime),
                 ],
               ),
             ),
@@ -364,7 +360,7 @@ Widget _ordersCard(
       RowBox(
         style: FlexBoxStyler().crossAxisAlignment(.center),
         children: [
-          Expanded(child: _sectionTitle('Recent orders')),
+          const Expanded(child: PlaygroundText.large('Recent orders')),
           PlaygroundButton.ghost(
             key: const ValueKey('overview-view-orders'),
             size: .small,
@@ -387,21 +383,6 @@ Widget _ordersCard(
       ),
     ],
   ),
-);
-
-Widget _sectionTitle(String text) => StyledText(
-  text,
-  style: TextStyler()
-      .style(PlaygroundTokens.textLg.mix())
-      .fontWeight(FontWeight.w600)
-      .color(PlaygroundTokens.foreground()),
-);
-
-Widget _sectionDescription(String text) => StyledText(
-  text,
-  style: TextStyler()
-      .style(PlaygroundTokens.textSm.mix())
-      .color(PlaygroundTokens.mutedForeground()),
 );
 
 Widget _cell(String text, {bool emphasized = false}) => StyledText(
