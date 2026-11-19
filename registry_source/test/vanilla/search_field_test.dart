@@ -402,13 +402,14 @@ void main() {
         'a fresh Escape then closes it', (tester) async {
       final controller = TextEditingController();
       addTearDown(controller.dispose);
-      var cleared = 0;
+      final calls = <String>[];
       await openDialog(
         tester,
         VanillaSearchField(
           semanticLabel: 'Search',
           controller: controller,
-          onCleared: () => cleared++,
+          onChanged: (query) => calls.add('change:$query'),
+          onCleared: () => calls.add('clear'),
         ),
       );
       await tester.enterText(editable(), 'ada');
@@ -427,12 +428,16 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
       expect(controller.text, isEmpty);
-      expect(cleared, 1);
+      expect(calls, ['change:ada', 'change:', 'clear']);
+      expect(
+        tester.widget<EditableText>(editable()).focusNode.hasFocus,
+        isTrue,
+      );
       expect(dialogField(), findsOneWidget, reason: 'the dialog stays open');
 
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
-      expect(cleared, 1);
+      expect(calls, ['change:ada', 'change:', 'clear']);
       expect(dialogField(), findsNothing, reason: 'an empty field passes up');
     });
 
@@ -634,6 +639,49 @@ void main() {
     expect(changes, ['own', 'next']);
   });
 
+  testWidgets('replacing an external controller preserves editor focus', (
+    tester,
+  ) async {
+    final first = TextEditingController(text: 'first');
+    final second = TextEditingController(text: 'second');
+    final controller = ValueNotifier(first);
+    addTearDown(first.dispose);
+    addTearDown(second.dispose);
+    addTearDown(controller.dispose);
+    final calls = <String>[];
+
+    await pump(
+      tester,
+      ValueListenableBuilder<TextEditingController>(
+        valueListenable: controller,
+        builder: (_, value, _) => VanillaSearchField(
+          semanticLabel: 'Search',
+          controller: value,
+          onChanged: (query) => calls.add('change:$query'),
+          onCleared: () => calls.add('clear'),
+        ),
+      ),
+    );
+    await tester.showKeyboard(editable());
+    final editor = tester.state<EditableTextState>(editable());
+    controller.value = second;
+    await tester.pump();
+    first.clear();
+    await tester.pump();
+    expect(tester.state<EditableTextState>(editable()), same(editor));
+    expect(editor.widget.controller, same(second));
+    expect(editor.widget.focusNode.hasFocus, isTrue);
+    expect(clearButton(), findsOneWidget);
+    expect(calls, isEmpty);
+
+    first.text = 'untouched';
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+    expect(second.text, isEmpty);
+    expect(first.text, 'untouched');
+    expect(calls, ['change:', 'clear']);
+  });
+
   testWidgets('a disabled field fades as the text field does', (tester) async {
     await pump(
       tester,
@@ -657,6 +705,7 @@ void main() {
     try {
       final controller = TextEditingController(text: 'ada');
       addTearDown(controller.dispose);
+      final calls = <String>[];
       await pump(
         tester,
         VanillaSearchField(
@@ -664,6 +713,8 @@ void main() {
           hintText: 'Search customers…',
           clearSemanticLabel: 'Clear customer search',
           controller: controller,
+          onChanged: (query) => calls.add('change:$query'),
+          onCleared: () => calls.add('clear'),
         ),
       );
       final field = find.semantics.byLabel('Search customers');
@@ -681,6 +732,16 @@ void main() {
       // node that encloses the field.
       expect(node.rect.size, const Size.square(24));
       expect(node.getSemanticsData().label, 'Clear customer search');
+
+      node.owner!.performAction(node.id, SemanticsAction.tap);
+      await tester.pump();
+      expect(clear, findsNothing);
+      expect(field.evaluate().single.getSemanticsData().value, isEmpty);
+      expect(calls, ['change:', 'clear']);
+      expect(
+        tester.widget<EditableText>(editable()).focusNode.hasFocus,
+        isTrue,
+      );
     } finally {
       semantics.dispose();
     }

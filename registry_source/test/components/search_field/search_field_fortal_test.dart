@@ -1,3 +1,4 @@
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -397,7 +398,12 @@ void main() {
 
       await pump(first);
       expect(find.byType(FortalIconButton), findsOneWidget);
+      await tester.showKeyboard(find.byType(EditableText));
+      final focusNode = _editable(tester).focusNode;
       await pump(second);
+      expect(_editable(tester).focusNode, same(focusNode));
+      expect(focusNode.hasFocus, isTrue);
+      expect(_editable(tester).controller, same(second));
       expect(find.byType(FortalIconButton), findsNothing);
       second.text = 'two';
       await tester.pump();
@@ -443,11 +449,12 @@ void main() {
         );
 
         expect(find.byType(FortalIconButton), findsNothing);
+        await tester.tap(find.byType(EditableText), warnIfMissed: enabled);
+        await tester.pump();
+        expect(_editable(tester).focusNode.hasFocus, enabled);
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        expect(controller.text, 'mar');
         if (enabled) {
-          await tester.tap(find.byType(EditableText));
-          await tester.pump();
-          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-          expect(controller.text, 'mar');
           expect(
             escapes.whereType<KeyDownEvent>().map((event) => event.logicalKey),
             [LogicalKeyboardKey.escape],
@@ -706,28 +713,56 @@ void main() {
   });
 
   group('semantics', () {
-    testWidgets('the field and its clear button are named', (tester) async {
+    testWidgets('semantic Clear empties the named editor and returns focus', (
+      tester,
+    ) async {
       final semantics = tester.ensureSemantics();
-      await tester.pumpRemixApp(
-        SizedBox(
-          width: 320,
-          child: FortalSearchField(
-            semanticLabel: 'Search editions',
-            clearSemanticLabel: 'Clear the search',
-            controller: TextEditingController(text: 'mar'),
+      final controller = TextEditingController(text: 'mar');
+      addTearDown(controller.dispose);
+      final calls = <String>[];
+      try {
+        await tester.pumpRemixApp(
+          SizedBox(
+            width: 320,
+            child: FortalSearchField(
+              semanticLabel: 'Search editions',
+              clearSemanticLabel: 'Clear the search',
+              controller: controller,
+              onChanged: (value) => calls.add('change:$value'),
+              onCleared: () => calls.add('clear'),
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(
-        tester.getSemantics(find.byType(EditableText)),
-        isSemantics(label: 'Search editions', isTextField: true, value: 'mar'),
-      );
-      expect(
-        tester.getSemantics(find.bySemanticsLabel('Clear the search')),
-        isSemantics(isButton: true, hasTapAction: true),
-      );
-      semantics.dispose();
+        final field = find.byType(EditableText);
+        final editor = tester.state<EditableTextState>(field);
+        final clear = find.semantics.byLabel('Clear the search');
+        expect(clear, findsOne);
+        final clearNode = clear.evaluate().single;
+        expect(
+          tester.getSemantics(field),
+          isSemantics(
+            label: 'Search editions',
+            isTextField: true,
+            value: 'mar',
+          ),
+        );
+        expect(clearNode, isSemantics(isButton: true, hasTapAction: true));
+
+        clearNode.owner!.performAction(clearNode.id, SemanticsAction.tap);
+        await tester.pump();
+        expect(controller.text, isEmpty);
+        expect(calls, ['change:', 'clear']);
+        expect(tester.state<EditableTextState>(field), same(editor));
+        expect(editor.widget.focusNode.hasFocus, isTrue);
+        expect(clear, findsNothing);
+        expect(
+          tester.getSemantics(field),
+          isSemantics(label: 'Search editions', isTextField: true, value: ''),
+        );
+      } finally {
+        semantics.dispose();
+      }
     });
   });
 }
