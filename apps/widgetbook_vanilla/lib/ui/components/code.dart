@@ -13,7 +13,8 @@ part 'code.g.dart';
 /// `textMono`, 14px on a 20px line, at semibold weight in `foreground`, on a
 /// `muted` chip with 4px beside the text, 2px above and below, and corners of
 /// at most 4px. In running text it sits in a `WidgetSpan`, which does not pass
-/// its paragraph's style down, so the recipe sets every value itself:
+/// its paragraph's style down, so the recipe sets every value itself. The span
+/// scales the whole chip, so disable text scaling on the inline chip only:
 ///
 /// ```dart
 /// Text.rich(
@@ -22,7 +23,10 @@ part 'code.g.dart';
 ///     children: [
 ///       WidgetSpan(
 ///         alignment: PlaceholderAlignment.middle,
-///         child: VanillaCode('remix_ui_fonts'),
+///         child: VanillaCode(
+///           'remix_ui_fonts',
+///           style: TextStyler().textScaler(TextScaler.noScaling),
+///         ),
 ///       ),
 ///       TextSpan(text: ' first.'),
 ///     ],

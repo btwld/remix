@@ -121,8 +121,9 @@ families carry over.
   weight (Geist Mono has no 600, so it draws at 500) in `foreground` on a
   `muted` chip, 4px across and 2px down, so the chip is 24px tall, with
   `radiusSm` corners clamped to 4px. In running text put it in a
-  `WidgetSpan` with `PlaceholderAlignment.middle`; a widget span does not
-  pass its paragraph's style down, so the chip keeps its own color.
+  `WidgetSpan` with `PlaceholderAlignment.middle` and pass
+  `style: TextStyler().textScaler(TextScaler.noScaling)` to the inline chip.
+  The span scales the whole chip; leave text scaling enabled for standalone code.
 - **Kbd** — install with `remix add kbd`. `<Prefix>Kbd('K')` follows
   shadcn/ui's Kbd: `textXs` at medium weight in `mutedForeground` on a `muted`
   cap with the small radius, at least 20px square and 4px beside the label.

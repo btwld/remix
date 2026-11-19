@@ -111,7 +111,9 @@ with a search icon and a clear button that shows for text, clears on Escape,
 and owns its controller when you pass none. The Vanilla `dashboard_shell`
 header search and the demo's customer search use it.
 `code` is a generated text recipe too: inline code in the monospace step on a
-`muted` chip, which sits in a `WidgetSpan` in running text.
+`muted` chip. In running text, put it in a `WidgetSpan` and use
+`style: TextStyler().textScaler(TextScaler.noScaling)` on the chip so only the
+span scales it. Standalone chips keep their text scaling.
 `heading` provides four levels of headings with heading semantics. `text`
 provides paragraph, lead, large, small, muted, and blockquote styles. Both
 follow the typography examples in shadcn/ui; the Vanilla dashboard uses

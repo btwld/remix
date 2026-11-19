@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 import 'package:widgetbook_vanilla/ui/ui.dart';
 
@@ -16,17 +17,23 @@ Widget buildVanillaCodeUseCase(BuildContext context) => Scaffold(
           child: Text.rich(
             TextSpan(
               text: 'Add ',
-              children: const [
+              children: [
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
-                  child: VanillaCode('remix_ui_fonts'),
+                  child: VanillaCode(
+                    'remix_ui_fonts',
+                    style: TextStyler().textScaler(TextScaler.noScaling),
+                  ),
                 ),
-                TextSpan(text: ' to pubspec.yaml, then run '),
+                const TextSpan(text: ' to pubspec.yaml, then run '),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
-                  child: VanillaCode('flutter pub get'),
+                  child: VanillaCode(
+                    'flutter pub get',
+                    style: TextStyler().textScaler(TextScaler.noScaling),
+                  ),
                 ),
-                TextSpan(text: '.'),
+                const TextSpan(text: '.'),
               ],
             ),
           ),

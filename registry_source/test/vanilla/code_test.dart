@@ -108,28 +108,36 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('it sits inside a paragraph as a widget span', (tester) async {
-    await pump(
-      tester,
-      const SizedBox(
-        width: 400,
-        child: Text.rich(
-          TextSpan(
-            text: 'Install ',
-            children: [
-              WidgetSpan(
-                alignment: PlaceholderAlignment.middle,
-                child: VanillaCode('remix'),
-              ),
-              TextSpan(text: ' first.'),
-            ],
+  testWidgets('the documented inline chip scales once in a widget span', (
+    tester,
+  ) async {
+    for (final scale in [1.0, 2.0]) {
+      await pump(
+        tester,
+        SizedBox(
+          width: 400,
+          child: Text.rich(
+            TextSpan(
+              text: 'Install ',
+              children: [
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: VanillaCode(
+                    'remix',
+                    style: TextStyler().textScaler(TextScaler.noScaling),
+                  ),
+                ),
+                const TextSpan(text: ' first.'),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+        textScale: scale,
+      );
 
-    expect(tester.getSize(chip('remix')).height, 24);
-    expect(tester.takeException(), isNull);
+      expect(tester.getRect(chip('remix')).height, 24 * scale);
+      expect(tester.takeException(), isNull);
+    }
   });
 
   testWidgets('code is plain text to assistive technology', (tester) async {

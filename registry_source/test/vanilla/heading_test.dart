@@ -99,4 +99,32 @@ void main() {
     expect(text.maxLines, 1);
     expect(text.overflow, TextOverflow.ellipsis);
   });
+
+  testWidgets('the heading announces its custom label exactly once', (
+    tester,
+  ) async {
+    const visibleLabel = 'Q4 KPI';
+    const spokenLabel = 'Fourth-quarter indicators';
+
+    await tester.pumpWidget(
+      VanillaTheme(
+        child: hostOf(
+          Center(
+            child: VanillaHeading.h2(
+              visibleLabel,
+              style: TextStyler().semanticsLabel(spokenLabel),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final heading = find.bySemanticsLabel(spokenLabel);
+    expect(heading, findsOneWidget);
+    final node = tester.getSemantics(heading);
+    expect(node, matchesSemantics(label: spokenLabel, isHeader: true));
+    expect(node.getSemanticsData().headingLevel, 2);
+    expect(find.bySemanticsLabel(visibleLabel), findsNothing);
+    expect(find.text(visibleLabel), findsOneWidget);
+  });
 }

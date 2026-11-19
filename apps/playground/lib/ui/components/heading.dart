@@ -86,7 +86,7 @@ final _tracking = <TextStyleToken, ContextToken<double>>{};
 /// PlaygroundHeading.h2('Customers', headingLevel: 1)
 /// ```
 ///
-/// Align, wrap, or truncate it through [style].
+/// Align, wrap, truncate, or set a spoken label through [style].
 class PlaygroundHeading extends StatelessWidget {
   const PlaygroundHeading(
     this.text, {
@@ -150,8 +150,6 @@ class PlaygroundHeading extends StatelessWidget {
     container: true,
     header: true,
     headingLevel: headingLevel ?? variant.index + 1,
-    label: text,
-    excludeSemantics: true,
     child: playgroundHeadingStyle(variant: variant, style: style)(text),
   );
 }
