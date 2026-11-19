@@ -397,7 +397,12 @@ void main() {
 
       await pump(first);
       expect(find.byType(FortalIconButton), findsOneWidget);
+      await tester.showKeyboard(find.byType(EditableText));
+      final focusNode = _editable(tester).focusNode;
       await pump(second);
+      expect(_editable(tester).focusNode, same(focusNode));
+      expect(focusNode.hasFocus, isTrue);
+      expect(_editable(tester).controller, same(second));
       expect(find.byType(FortalIconButton), findsNothing);
       second.text = 'two';
       await tester.pump();
@@ -443,11 +448,12 @@ void main() {
         );
 
         expect(find.byType(FortalIconButton), findsNothing);
+        await tester.tap(find.byType(EditableText), warnIfMissed: enabled);
+        await tester.pump();
+        expect(_editable(tester).focusNode.hasFocus, enabled);
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        expect(controller.text, 'mar');
         if (enabled) {
-          await tester.tap(find.byType(EditableText));
-          await tester.pump();
-          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-          expect(controller.text, 'mar');
           expect(
             escapes.whereType<KeyDownEvent>().map((event) => event.logicalKey),
             [LogicalKeyboardKey.escape],
