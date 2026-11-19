@@ -213,6 +213,103 @@ void main() {
     expect(controller.text, isEmpty);
   });
 
+  for (final holdEscape in [false, true]) {
+    testWidgets(
+      holdEscape
+          ? 'A composing Escape press stays owned until release in a dialog'
+          : 'Fresh Escape dismisses a dialog with read-only composition',
+      (tester) async {
+        final controller = TextEditingController();
+        final navigatorKey = GlobalKey<NavigatorState>();
+        final readOnly = ValueNotifier(false);
+        addTearDown(controller.dispose);
+        addTearDown(readOnly.dispose);
+        final calls = <String>[];
+        final ancestorEvents = <KeyEvent>[];
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xff000000),
+            navigatorKey: navigatorKey,
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  builder(context),
+            ),
+            home: const SizedBox(),
+          ),
+        );
+        showGeneralDialog<void>(
+          context: navigatorKey.currentContext!,
+          barrierDismissible: true,
+          barrierLabel: 'Dismiss search dialog',
+          pageBuilder: (context, animation, secondaryAnimation) => Focus(
+            onKeyEvent: (node, event) {
+              if (event.logicalKey == LogicalKeyboardKey.escape) {
+                ancestorEvents.add(event);
+              }
+              return .ignored;
+            },
+            child: ValueListenableBuilder<bool>(
+              valueListenable: readOnly,
+              builder: (context, value, child) => NakedSearchField(
+                controller: controller,
+                readOnly: value,
+                onChanged: (value) => calls.add('edit:$value'),
+                onCleared: () => calls.add('clear'),
+                builder: (context, field) => NakedTextField(
+                  controller: field.controller,
+                  focusNode: field.focusNode,
+                  enabled: field.enabled,
+                  readOnly: field.readOnly,
+                  onChanged: field.onChanged,
+                  builder: (context, state, editable) => editable,
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final editor = find.byType(EditableText);
+        await tester.showKeyboard(editor);
+        const composingValue = TextEditingValue(
+          text: 'に',
+          selection: TextSelection.collapsed(offset: 1),
+          composing: TextRange(start: 0, end: 1),
+        );
+        tester.testTextInput.updateEditingValue(composingValue);
+        await tester.pump();
+        expect(controller.value, composingValue);
+        expect(calls, ['edit:に']);
+
+        const escape = LogicalKeyboardKey.escape;
+        if (holdEscape) {
+          expect(await tester.sendKeyDownEvent(escape), isFalse);
+        }
+        readOnly.value = true;
+        await tester.pump();
+        expect(tester.widget<EditableText>(editor).focusNode.hasFocus, isTrue);
+        expect(controller.value, composingValue);
+
+        if (holdEscape) {
+          expect(await tester.sendKeyRepeatEvent(escape), isFalse);
+          expect(await tester.sendKeyUpEvent(escape), isFalse);
+          await tester.pumpAndSettle();
+          expect(editor, findsOneWidget);
+          expect(ancestorEvents, isEmpty);
+          expect(controller.value, composingValue);
+          expect(calls, ['edit:に']);
+        }
+
+        await tester.sendKeyEvent(escape);
+        await tester.pumpAndSettle();
+        expect(editor, findsNothing);
+        expect(ancestorEvents.whereType<KeyDownEvent>(), hasLength(1));
+        expect(controller.text, 'に');
+        expect(calls, ['edit:に']);
+      },
+    );
+  }
+
   for (final readOnly in [true, false]) {
     testWidgets(
       '${readOnly ? 'read-only' : 'disabled'} prevents even a retained clear action',
