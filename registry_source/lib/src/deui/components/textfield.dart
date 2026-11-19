@@ -71,7 +71,7 @@ TextFieldStyler deuiTextFieldStyle({
 }
 
 const _paddingX = 14.0;
-const _paddingY = 9.0;
+const _paddingY = 10.0;
 const _minHeight = 44.0;
 const _pill = 999.0;
 const _panel = 16.0;

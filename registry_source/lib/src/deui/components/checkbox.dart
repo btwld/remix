@@ -27,7 +27,7 @@ CheckboxStyler deuiCheckboxStyle({
       .color(DeuiTokens.background())
       .border(.color(edge).width(_edgeWidth))
       .indicator(.size(_checkmark).color(DeuiTokens.accentForeground()))
-      .label(deuiLabelText.color(label()))
+      .label(deuiLabelText.fontWeight(.w400).color(label()))
       .labelSpacing(_labelGap)
       .onHovered(
         CheckboxStyler().border(.color(DeuiTokens.muted()).width(_edgeWidth)),
@@ -60,7 +60,7 @@ const _control = 20.0;
 const _radius = 6.0;
 const _edgeWidth = 2.0;
 const _labelGap = 8.0;
-const _checkmark = 12.0;
+const _checkmark = 9.0;
 
 /// `muted` at 50%: the box's resting edge.
 final _edge = deuiAlpha(DeuiTokens.muted, .5);

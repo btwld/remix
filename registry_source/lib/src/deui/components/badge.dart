@@ -18,7 +18,6 @@ BadgeStyler deuiBadgeStyle({
 }) {
   final tone = _tone(color);
   return BadgeStyler()
-      .alignment(.center)
       .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
       .borderRadius(.circular(_pill))
       .color(tone.fill)

@@ -138,9 +138,9 @@ typedef _Metrics = ({
 /// {{typePrefix}}'s `small`, `medium` and `large` rows: `(32, 12, 6)`, `(36, 20, 8)`,
 /// `(48, 24, 8)` for height, horizontal padding and icon gap.
 _Metrics _metrics({{typePrefix}}ButtonSize size) => switch (size) {
-  .small => (height: 32, paddingX: 12, gap: 6, text: {{typePrefix}}Tokens.textXs),
-  .medium => (height: 36, paddingX: 20, gap: 8, text: {{typePrefix}}Tokens.textSm),
-  .large => (height: 48, paddingX: 24, gap: 8, text: {{typePrefix}}Tokens.textBase),
+  .small => (height: 32, paddingX: 13, gap: 6, text: {{typePrefix}}Tokens.textXs),
+  .medium => (height: 36, paddingX: 21, gap: 8, text: {{typePrefix}}Tokens.textSm),
+  .large => (height: 48, paddingX: 25, gap: 8, text: {{typePrefix}}Tokens.textBase),
 };
 
 typedef _Palette = ({

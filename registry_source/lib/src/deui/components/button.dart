@@ -138,9 +138,9 @@ typedef _Metrics = ({
 /// Deui's `small`, `medium` and `large` rows: `(32, 12, 6)`, `(36, 20, 8)`,
 /// `(48, 24, 8)` for height, horizontal padding and icon gap.
 _Metrics _metrics(DeuiButtonSize size) => switch (size) {
-  .small => (height: 32, paddingX: 12, gap: 6, text: DeuiTokens.textXs),
-  .medium => (height: 36, paddingX: 20, gap: 8, text: DeuiTokens.textSm),
-  .large => (height: 48, paddingX: 24, gap: 8, text: DeuiTokens.textBase),
+  .small => (height: 32, paddingX: 13, gap: 6, text: DeuiTokens.textXs),
+  .medium => (height: 36, paddingX: 21, gap: 8, text: DeuiTokens.textSm),
+  .large => (height: 48, paddingX: 25, gap: 8, text: DeuiTokens.textBase),
 };
 
 typedef _Palette = ({
