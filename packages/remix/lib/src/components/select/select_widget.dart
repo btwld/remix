@@ -153,37 +153,36 @@ class RemixSelect<T> extends StatefulWidget {
 
 class _RemixSelectState<T> extends State<RemixSelect<T>>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  late final AnimationController animationController;
+  late final _panelTransition = RemixPanelTransitionHandle(
+    vsync: this,
+    resolve: _resolvePanelTransition,
+    reduceMotion: () => remixReducedMotionOf(context),
+  );
 
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(
-      duration: const Duration(milliseconds: 150),
-      reverseDuration: const Duration(milliseconds: 150),
-      vsync: this,
-    );
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _settleWhenReduced();
+    _panelTransition.settleWhenReduced();
   }
 
   @override
-  void didChangeAccessibilityFeatures() => _settleWhenReduced();
+  void didChangeAccessibilityFeatures() => _panelTransition.settleWhenReduced();
 
-  void _settleWhenReduced() {
-    if (!remixReducedMotionOf(context) || !animationController.isAnimating) {
-      return;
-    }
-    final closing = animationController.status == AnimationStatus.reverse;
-    // Complete the exit future before setting the endpoint. A canceled ticker
-    // would strand the close callback that unmounts the overlay.
-    animationController.stop(canceled: false);
-    animationController.value = closing ? 0 : 1;
+  /// The transition the style gives the panel about to open, read where the
+  /// select is: the panel itself has not been built yet. The panel reads its
+  /// own style again and hands that to the handle.
+  RemixPanelTransition _resolvePanelTransition() {
+    final styleSpec = widget.styleSpec;
+    final transition =
+        styleSpec?.panelTransition ??
+        _buildStyle().build(context).spec.panelTransition;
+    return transition ?? _defaultPanelTransition;
   }
 
   SelectStyler _buildStyle() {
@@ -215,22 +214,36 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   /// Menu chrome resolves once from [spec], without option states; each row
   /// re-resolves its own branch from [style]. The two inputs are two different
   /// resolution scopes, not a duplicated one.
-  Widget _buildOverlayMenu(SelectSpec spec, SelectStyler style) {
-    return _AnimatedOverlayMenu(
-      controller: animationController,
-      duration: const Duration(milliseconds: 150),
-      curve: Curves.easeInOut,
-      content: spec.content,
-      menuContainer: spec.menuContainer,
-      children: widget.items
-          .map(
-            (item) => _RemixSelectItemWidget(
-              data: item,
-              itemStyle: _itemStyle(style, item),
-              selectStyleSpec: widget.styleSpec,
-            ),
-          )
-          .toList(),
+  Widget _buildOverlayMenu(
+    SelectSpec spec,
+    SelectStyler style,
+    Rect anchorRect,
+  ) {
+    return RemixPanelTransitionHost(
+      handle: _panelTransition,
+      transition: spec.panelTransition ?? _defaultPanelTransition,
+      anchorRect: anchorRect,
+      child: StyleSpecBuilder<SelectContentSpec>(
+        styleSpec: spec.content,
+        builder: (context, content) => RemixBoxAdapter(
+          styleSpec: content.container,
+          containerEffects: content.containerEffects,
+          child: RemixFlexBoxAdapter(
+            styleSpec: spec.menuContainer,
+            direction: Axis.vertical,
+            scrollable: true,
+            children: widget.items
+                .map(
+                  (item) => _RemixSelectItemWidget(
+                    data: item,
+                    itemStyle: _itemStyle(style, item),
+                    selectStyleSpec: widget.styleSpec,
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+      ),
     );
   }
 
@@ -281,7 +294,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    animationController.dispose();
+    _panelTransition.dispose();
     super.dispose();
   }
 
@@ -299,7 +312,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
           child: RemixStyleSpecBuilder<SelectSpec>(
             style: style,
             styleSpec: widget.styleSpec,
-            builder: (context, spec) => _buildOverlayMenu(spec, style),
+            builder: (context, spec) =>
+                _buildOverlayMenu(spec, style, info.anchorRect),
           ),
         );
       },
@@ -313,28 +327,12 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       semanticValue: selectedItem?.semanticLabel ?? selectedItem?.label,
       positioning: widget.positioning,
       constrainToAvailableSpace: true,
-      onOpen: () {
-        if (remixReducedMotionOf(context)) {
-          animationController.value = 1;
-        } else {
-          animationController.forward();
-        }
-        widget.onOpen?.call();
-      },
-      onCloseRequested: (hide) {
-        // Naked owns open state. Play the reverse visual, then complete close.
-        if (animationController.value == 0 || remixReducedMotionOf(context)) {
-          hide();
-          return;
-        }
-        animationController.reverse().whenComplete(hide);
-      },
-      onClose: () {
-        if (animationController.status != .dismissed) {
-          animationController.value = 0;
-        }
-        widget.onClose?.call();
-      },
+      onOpen: widget.onOpen,
+      onOpenRequested: (position, showOverlay) =>
+          _panelTransition.openRequested(position, showOverlay, null),
+      onCloseRequested: (hideOverlay) =>
+          _panelTransition.closeRequested(hideOverlay, null),
+      onClose: widget.onClose,
       builder: (context, state, _) {
         return RemixStyleSpecBuilder<SelectSpec>(
           style: style,
@@ -359,84 +357,26 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   }
 }
 
-class _AnimatedOverlayMenu extends StatefulWidget {
-  const _AnimatedOverlayMenu({
-    required this.controller,
-    required this.duration,
-    required this.curve,
-    required this.content,
-    required this.menuContainer,
-    required this.children,
-  });
+/// The select's panel motion when its style sets none: a 150 ms ease-in-out
+/// fade and scale from 95 percent.
+const _defaultPanelTransition = RemixPanelTransition(
+  duration: Duration(milliseconds: 150),
+  builder: _defaultPanelBuilder,
+);
 
-  final AnimationController controller;
-  final Duration duration;
-  final Curve curve;
-  final StyleSpec<SelectContentSpec> content;
-  final StyleSpec<FlexBoxSpec> menuContainer;
-  final List<Widget> children;
-
-  @override
-  State<_AnimatedOverlayMenu> createState() => _AnimatedOverlayMenuState();
-}
-
-class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
-  late final Animation<double> scaleAnimation;
-  late final CurvedAnimation _fadeCurve;
-  late final CurvedAnimation _scaleCurve;
-
-  Animation<double> get fadeAnimation => _fadeCurve;
-
-  @override
-  void initState() {
-    super.initState();
-
-    widget.controller.duration = widget.duration;
-    _fadeCurve = CurvedAnimation(
-      parent: widget.controller,
-      curve: widget.curve,
-    );
-    _scaleCurve = CurvedAnimation(
-      parent: widget.controller,
-      curve: widget.curve,
-    );
-    scaleAnimation = _scaleCurve.drive(Tween<double>(begin: 0.95, end: 1.0));
-  }
-
-  @override
-  void dispose() {
-    _fadeCurve.dispose();
-    _scaleCurve.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: fadeAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: scaleAnimation.value,
-          child: Opacity(
-            opacity: fadeAnimation.value,
-            child: StyleSpecBuilder<SelectContentSpec>(
-              styleSpec: widget.content,
-              builder: (context, spec) => RemixBoxAdapter(
-                styleSpec: spec.container,
-                containerEffects: spec.containerEffects,
-                child: RemixFlexBoxAdapter(
-                  styleSpec: widget.menuContainer,
-                  direction: Axis.vertical,
-                  scrollable: true,
-                  children: widget.children,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+Widget _defaultPanelBuilder(
+  BuildContext context,
+  RemixPanelTransitionInfo info,
+  Widget panel,
+) {
+  final curved = info.animation.drive(CurveTween(curve: Curves.easeInOut));
+  return FadeTransition(
+    opacity: curved,
+    child: ScaleTransition(
+      scale: Tween<double>(begin: 0.95, end: 1).animate(curved),
+      child: panel,
+    ),
+  );
 }
 
 /// Internal widget for rendering the select trigger.

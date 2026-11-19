@@ -286,6 +286,51 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
   See the [fortalSelectStyle source code](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/select.dart) for all available options.
 </Info>
 
+## Panel transition
+
+The panel fades and scales in over 150 ms by default. Set `panelTransition` on
+`SelectStyler` to replace that motion. It is the same `RemixPanelTransition` as
+[Menu](/components/menu#panel-transition) and [Popover](/components/popover#panel-transition),
+so one recipe can give all three the same motion. The panel stays mounted until
+the exit has played.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Widget riseInPanel(
+  BuildContext context,
+  RemixPanelTransitionInfo info,
+  Widget panel,
+) {
+  final curved = info.animation.drive(CurveTween(curve: Curves.easeOutCubic));
+  return FadeTransition(
+    opacity: curved,
+    child: SlideTransition(
+      position: curved.drive(
+        Tween<Offset>(begin: const Offset(0, .04), end: Offset.zero),
+      ),
+      child: panel,
+    ),
+  );
+}
+
+final riseInSelect = RemixSelect<String>(
+  onChanged: (_) {},
+  trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+  items: const [RemixSelectItem(value: 'a', label: 'Alpha')],
+  style: SelectStyler().panelTransition(
+    const RemixPanelTransition(
+      duration: Duration(milliseconds: 220),
+      builder: riseInPanel,
+    ),
+  ),
+);
+```
+
+A builder is compared by identity, so pass a top-level function and keep the
+transition in a `const` or `final`.
+
 ## Reduced motion
 
 When the user asks for reduced motion, the menu opens and closes without its
@@ -407,6 +452,11 @@ Configures the select trigger style.
 
 Configures the default style for every option. A `RemixSelectItem.style`
 merges on top as an optional row-level override.
+
+#### `panelTransition(RemixPanelTransition value)`
+
+Opens and closes the panel with a transition. Without one the panel uses its
+default 150 ms fade and scale.
 
 #### `animate(AnimationConfig value)`
 

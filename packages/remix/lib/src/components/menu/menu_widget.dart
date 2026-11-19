@@ -483,10 +483,10 @@ class RemixMenu<T> extends StatefulWidget {
 
   /// Open/close interceptors (for example, to drive animations).
   ///
-  /// A [MenuStyler.panelTransition] plays after these: the open transition
-  /// starts when the panel mounts, so after `showOverlay` is called, and
-  /// `hideOverlay` passed to [onCloseRequested] plays the exit transition
-  /// before the panel hides. Without a transition they behave as before.
+  /// A [MenuStyler.panelTransition] runs inside these: the open transition
+  /// starts when `showOverlay` is called, and the `hideOverlay` passed to
+  /// [onCloseRequested] plays the exit transition before the panel hides.
+  /// Without a transition they behave as before.
   final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
 
   final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
@@ -569,8 +569,9 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
         .merge(widget.style);
   }
 
-  /// The transition the style gives the panel about to open, resolved where
-  /// the menu is, because the panel itself has not been built yet.
+  /// The transition the style gives the panel about to open, read where the
+  /// menu is: the panel itself has not been built yet. The panel reads its own
+  /// style again and hands that to the handle.
   RemixPanelTransition? _resolvePanelTransition() {
     final styleSpec = widget.styleSpec;
     if (styleSpec != null) return styleSpec.panelTransition;

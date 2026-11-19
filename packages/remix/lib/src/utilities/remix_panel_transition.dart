@@ -95,9 +95,16 @@ final class RemixPanelTransition {
 ///
 /// The component owns one (it is the [TickerProvider]), passes [openRequested]
 /// and [closeRequested] as the anchor's request callbacks, and builds its
-/// panel with [RemixPanelTransitionHost]. The animation starts when the open
-/// is requested, not when the panel first builds, so it is a frame ahead of
-/// the panel.
+/// panel with [RemixPanelTransitionHost].
+///
+/// The animation starts when the open is requested, so it is in step with the
+/// panel rather than a frame behind it. That moment is before the panel
+/// exists, so [resolve] reads the style where the component is. The panel then
+/// resolves its own style, in its own scope, and [RemixPanelTransitionHost]
+/// reports it through [adopt]: the panel's builder is the one that runs, and
+/// its durations pace the rest of the animation and the exit. A style whose
+/// transition differs between the two scopes therefore opens with the
+/// component's durations and closes with the panel's.
 @internal
 final class RemixPanelTransitionHandle extends ChangeNotifier {
   RemixPanelTransitionHandle({
@@ -108,7 +115,8 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
 
   final TickerProvider vsync;
 
-  /// The transition the style gives the panel about to open, or `null`.
+  /// The transition the style gives the panel about to open, read where the
+  /// component is, or `null`.
   final RemixPanelTransition? Function() resolve;
 
   /// Whether the user asks to reduce motion.
@@ -135,7 +143,7 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
     void Function(Offset? position, VoidCallback showOverlay)? userRequested,
   ) {
     void show() {
-      _begin();
+      _start(resolve());
       showOverlay();
     }
 
@@ -146,20 +154,61 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
     }
   }
 
-  void _begin() {
-    final transition = resolve();
+  void _start(RemixPanelTransition? transition) {
     _closing = false;
     _transition = transition;
     if (transition == null) return;
     final controller = _controller ??= AnimationController(vsync: vsync);
-    controller
-      ..duration = transition.duration
-      ..reverseDuration = transition.reverseDuration ?? transition.duration;
+    _pace(controller, transition);
     if (reduceMotion()) {
       controller.value = 1;
     } else {
       controller.forward(from: 0);
     }
+  }
+
+  static void _pace(
+    AnimationController controller,
+    RemixPanelTransition transition,
+  ) {
+    controller
+      ..duration = transition.duration
+      ..reverseDuration = transition.reverseDuration ?? transition.duration;
+  }
+
+  /// Takes the transition the panel resolved in its own scope.
+  ///
+  /// Called by [RemixPanelTransitionHost] when the panel mounts or its
+  /// transition changes. It starts the animation when the request did not, and
+  /// stops it when the panel has none.
+  void adopt(RemixPanelTransition? transition) {
+    if (_closing) return;
+    if (transition == null) {
+      _transition = null;
+      _controller?.stop();
+      return;
+    }
+    final controller = _controller;
+    if (_transition == null || controller == null) {
+      _start(transition);
+      return;
+    }
+    _transition = transition;
+    _pace(controller, transition);
+  }
+
+  /// Completes an animation in flight at its end when the user starts asking
+  /// to reduce motion.
+  void settleWhenReduced() {
+    final controller = _controller;
+    if (controller == null || !controller.isAnimating || !reduceMotion()) {
+      return;
+    }
+    final closing = controller.status == AnimationStatus.reverse;
+    // Complete the exit future before setting the endpoint. A canceled ticker
+    // would strand the close callback that unmounts the overlay.
+    controller.stop(canceled: false);
+    controller.value = closing ? 0 : 1;
   }
 
   /// An `onCloseRequested` that plays the exit before the panel hides.
@@ -180,7 +229,10 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
 
   void _close(VoidCallback hideOverlay) {
     final controller = _controller;
-    if (_transition == null || controller == null || reduceMotion()) {
+    if (_transition == null ||
+        controller == null ||
+        controller.value == 0 ||
+        reduceMotion()) {
       _transition = null;
       hideOverlay();
       return;
@@ -205,8 +257,11 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
 
 /// Builds [child] through the transition the [handle] is running, and returns
 /// it unchanged when there is none.
+///
+/// [transition] is what the panel resolved in its own scope. The host hands it
+/// to the [handle], so the builder and the exit follow the panel's style.
 @internal
-final class RemixPanelTransitionHost extends StatelessWidget {
+final class RemixPanelTransitionHost extends StatefulWidget {
   const RemixPanelTransitionHost({
     super.key,
     required this.handle,
@@ -221,10 +276,31 @@ final class RemixPanelTransitionHost extends StatelessWidget {
   final Widget child;
 
   @override
+  State<RemixPanelTransitionHost> createState() =>
+      _RemixPanelTransitionHostState();
+}
+
+class _RemixPanelTransitionHostState extends State<RemixPanelTransitionHost> {
+  @override
+  void initState() {
+    super.initState();
+    widget.handle.adopt(widget.transition);
+  }
+
+  @override
+  void didUpdateWidget(RemixPanelTransitionHost oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.transition != oldWidget.transition) {
+      widget.handle.adopt(widget.transition);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final handle = widget.handle;
     final animation = handle.animation;
-    final transition = this.transition;
-    if (animation == null || transition == null) return child;
+    final transition = widget.transition;
+    if (animation == null || transition == null) return widget.child;
 
     // A closing panel takes no input, so a click cannot select an item that
     // is already leaving.
@@ -237,9 +313,9 @@ final class RemixPanelTransitionHost extends StatelessWidget {
             context,
             RemixPanelTransitionInfo(
               animation: animation,
-              anchorRect: anchorRect,
+              anchorRect: widget.anchorRect,
             ),
-            child,
+            widget.child,
           ),
         ),
       ),

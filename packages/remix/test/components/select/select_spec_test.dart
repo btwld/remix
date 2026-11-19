@@ -137,7 +137,8 @@ void main() {
       test('props list contains all properties', () {
         const spec = SelectSpec();
 
-        expect(spec.props, hasLength(4));
+        expect(spec.props, hasLength(5));
+        expect(spec.props, contains(spec.panelTransition));
         expect(spec.props, contains(spec.trigger));
         expect(spec.props, contains(spec.menuContainer));
         expect(spec.props, contains(spec.item));
@@ -151,7 +152,13 @@ void main() {
         spec.debugFillProperties(builder);
         expect(
           builder.properties.map((property) => property.name),
-          unorderedEquals(['trigger', 'content', 'menuContainer', 'item']),
+          unorderedEquals([
+            'trigger',
+            'content',
+            'menuContainer',
+            'item',
+            'panelTransition',
+          ]),
         );
       });
     });

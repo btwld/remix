@@ -174,21 +174,27 @@ fully composable.
 
 The panel shows and hides at once by default. Set `panelTransition` on
 `PopoverStyler` to open and close it with a transition; the panel stays mounted
-until the exit has played. The builder receives the open and close animation
+until the exit has played. Use a top-level function as the builder: it is
+compared by identity. The builder receives the open and close animation
 and the trigger's bounds.
 
 ```dart
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
+Widget fadePanel(
+  BuildContext context,
+  RemixPanelTransitionInfo info,
+  Widget panel,
+) => FadeTransition(opacity: info.animation, child: panel);
+
+const fadeTransition = RemixPanelTransition(
+  duration: Duration(milliseconds: 240),
+  builder: fadePanel,
+);
+
 final fadingPopover = RemixPopover(
-  style: PopoverStyler().panelTransition(
-    RemixPanelTransition(
-      duration: const Duration(milliseconds: 240),
-      builder: (context, info, panel) =>
-          FadeTransition(opacity: info.animation, child: panel),
-    ),
-  ),
+  style: PopoverStyler().panelTransition(fadeTransition),
   popoverChild: const Text('Popover content'),
   child: const Text('Open'),
 );
