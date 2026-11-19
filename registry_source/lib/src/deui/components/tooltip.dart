@@ -9,11 +9,27 @@ part 'tooltip.g.dart';
 /// Deui recipe for [RemixTooltip]: a small `overlay` chip with a hairline
 /// border and a 12px medium label.
 ///
-/// Hover, focus, and long-press behavior stay with Remix.
+/// Hover, focus, and long-press behavior stay with Remix. [animationStyle] is
+/// Deui's 180 ms in and 120 ms out on an ease-out, and [transitionBuilder]
+/// fades and scales the chip from .94 about the edge that faces its trigger;
+/// both are Remix's own hooks, so a call can replace either.
 @MixWidget(target: RemixTooltip.new)
 TooltipStyler deuiTooltipStyle({
+  AnimationStyle animationStyle = const AnimationStyle(
+    curve: _easeOut,
+    duration: _showDuration,
+    reverseDuration: _hideDuration,
+  ),
+  Widget Function(
+        BuildContext context,
+        Animation<double> animation,
+        Widget child,
+      )?
+      transitionBuilder =
+      deuiTooltipTransition,
   TooltipStyler style = const TooltipStyler.create(),
 }) => TooltipStyler()
+    .waitDuration(_waitDuration)
     .maxWidth(_maxWidth)
     .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
     .color(DeuiTokens.overlay())
@@ -22,6 +38,41 @@ TooltipStyler deuiTooltipStyle({
     .label(.style(DeuiTokens.textXs.mix()).fontWeight(.w500))
     .merge(style);
 
+/// Fades and scales a tooltip chip from .94 about the edge facing its trigger.
+/// With reduced motion the scale is skipped.
+Widget deuiTooltipTransition(
+  BuildContext context,
+  Animation<double> animation,
+  Widget child,
+) {
+  final reduced = MediaQuery.disableAnimationsOf(context);
+  final side = OverlayPlacement.maybeOf(context)?.side ?? OverlaySide.top;
+  final origin = switch (side) {
+    OverlaySide.top => Alignment.bottomCenter,
+    OverlaySide.right => Alignment.centerLeft,
+    OverlaySide.bottom => Alignment.topCenter,
+    OverlaySide.left => Alignment.centerRight,
+  };
+
+  return FadeTransition(
+    opacity: animation,
+    child: AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) => Transform.scale(
+        scale: reduced ? 1 : _scaleFrom + (1 - _scaleFrom) * animation.value,
+        alignment: origin,
+        child: child,
+      ),
+      child: child,
+    ),
+  );
+}
+
+const _easeOut = Cubic(.16, 1, .3, 1);
+const _showDuration = Duration(milliseconds: 180);
+const _hideDuration = Duration(milliseconds: 120);
+const _waitDuration = Duration(milliseconds: 120);
+const _scaleFrom = .94;
 const _maxWidth = 320.0;
 const _paddingX = 10.0;
 const _paddingY = 4.0;
