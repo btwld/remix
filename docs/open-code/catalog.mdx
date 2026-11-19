@@ -116,6 +116,9 @@ header search and the demo's customer search use it.
 provides paragraph, lead, large, small, muted, and blockquote styles. Both
 follow the typography examples in shadcn/ui; the Vanilla dashboard uses
 `text` for matching section labels and descriptions.
+Before adding `heading` to an app with an older installed Vanilla theme,
+declare `text4xl` in `theme/tokens.dart`, include it in `textStyles`, and map it
+to `_text(36, 40)` in `theme/theme_data.dart` (36px type on a 40px line).
 `kbd` is a generated text recipe, one key drawn as a key cap, beside a
 hand-written `UiKbdGroup` that sets the keys of a shortcut 4px apart and reads
 them as one phrase. Its `tooltip` variant inverts the cap for a tooltip's

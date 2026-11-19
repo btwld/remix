@@ -536,7 +536,7 @@ void main() {
 
         expect(AcmeTokens.colors, hasLength(32));
         expect(AcmeTokens.radii, hasLength(4));
-        expect(AcmeTokens.textStyles, hasLength(8));
+        expect(AcmeTokens.textStyles, hasLength(9));
         expect(
           tokens,
           hasLength(

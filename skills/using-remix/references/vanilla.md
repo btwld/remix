@@ -110,6 +110,9 @@ families carry over.
 - **Heading** — install with `remix add heading`. `<Prefix>Heading.h1` through
   `.h4` follow shadcn/ui's heading styles and default to semantics levels 1–4.
   Use `headingLevel` when the outline level should differ from the visual style.
+  If you keep an older installed Vanilla theme, declare `text4xl` in
+  `theme/tokens.dart`, include it in `textStyles`, and map it to `_text(36, 40)`
+  in `theme/theme_data.dart` before installing Heading (36px type on a 40px line).
 - **Text** — install with `remix add text`. `<Prefix>Text` defaults to a paragraph;
   `.lead`, `.large`, `.small`, `.muted`, and `.blockquote` select the other
   variants. Blockquote puts an italic run beside a rule on the leading edge.
