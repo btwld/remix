@@ -1,0 +1,91 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'alert.g.dart';
+
+/// {{typePrefix}} alert statuses: the title and the icon take the status color.
+enum {{typePrefix}}AlertStatus {
+  /// Neutral: the title keeps the `foreground` color.
+  defaultStatus,
+
+  /// Informational, in the `accent` tint.
+  accent,
+
+  /// A positive outcome, in the `success` tint.
+  success,
+
+  /// Something that needs attention, in the `warning` tint.
+  warning,
+
+  /// An error or destructive outcome, in the `danger` tint.
+  danger,
+}
+
+/// {{typePrefix}} recipe for [RemixCallout]: an icon and a title on a surface.
+///
+/// [RemixCallout] holds one text or one custom child; a title with a
+/// description is the app's composition inside `child`.
+@MixWidget(target: RemixCallout.new)
+CalloutStyler {{valuePrefix}}AlertStyle({
+  {{typePrefix}}AlertStatus status = .defaultStatus,
+  CalloutStyler style = const CalloutStyler.create(),
+}) {
+  final tone = switch (status) {
+    .defaultStatus => null,
+    .accent => {{typePrefix}}Tokens.accent,
+    .success => {{typePrefix}}Tokens.success,
+    .warning => {{typePrefix}}Tokens.warning,
+    .danger => {{typePrefix}}Tokens.danger,
+  };
+  final fill = switch (status) {
+    .defaultStatus => {{typePrefix}}Tokens.surfaceSecondary(),
+    .accent => _accentFill(),
+    .success => _successFill(),
+    .warning => _warningFill(),
+    .danger => _dangerFill(),
+  };
+  final edge = switch (status) {
+    .defaultStatus => {{typePrefix}}Tokens.border(),
+    .accent => _accentEdge(),
+    .success => _successEdge(),
+    .warning => _warningEdge(),
+    .danger => _dangerEdge(),
+  };
+  final ink = tone == null ? {{typePrefix}}Tokens.foreground() : tone();
+
+  return CalloutStyler()
+      .direction(.horizontal)
+      .mainAxisSize(.max)
+      .crossAxisAlignment(.start)
+      .spacing(_gap)
+      .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
+      .color(fill)
+      .border(.color(edge).width(1))
+      .borderRadius(.circular(_radius))
+      .icon(IconStyler().size(_icon).color(ink))
+      .text(
+        TextStyler(
+          style: {{typePrefix}}Tokens.textSm.mix(),
+        ).height(_titleHeight).fontWeight(.w500).color({{typePrefix}}Tokens.foreground()),
+      )
+      .merge(style);
+}
+
+final _accentFill = {{valuePrefix}}Alpha({{typePrefix}}Tokens.accent, .10);
+final _accentEdge = {{valuePrefix}}Alpha({{typePrefix}}Tokens.accent, .25);
+final _successFill = {{valuePrefix}}Alpha({{typePrefix}}Tokens.success, .10);
+final _successEdge = {{valuePrefix}}Alpha({{typePrefix}}Tokens.success, .25);
+final _warningFill = {{valuePrefix}}Alpha({{typePrefix}}Tokens.warning, .10);
+final _warningEdge = {{valuePrefix}}Alpha({{typePrefix}}Tokens.warning, .25);
+final _dangerFill = {{valuePrefix}}Alpha({{typePrefix}}Tokens.danger, .10);
+final _dangerEdge = {{valuePrefix}}Alpha({{typePrefix}}Tokens.danger, .25);
+
+const _gap = 12.0;
+const _paddingX = 14.0;
+const _paddingY = 10.0;
+const _radius = 12.0;
+const _icon = 16.0;
+const _titleHeight = 20 / 14;

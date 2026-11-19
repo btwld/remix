@@ -915,6 +915,47 @@ const herouiPreset = PresetSpec(
   recipeItems: agentRecipes,
 );
 
+/// Deui's look over Remix: Geist, hairline borders, pill controls and a blue
+/// primary. A small catalog of a theme and the recipes for the Remix widgets
+/// Deui styles; Agent, dashboard, chart and calendar items are not part of it.
+const deuiPreset = PresetSpec(
+  name: 'deui',
+  sourceRoot: 'registry_source/lib/src/deui',
+  sourcePackage: 'registry_source',
+  typeWord: 'Deui',
+  valueWord: 'deui',
+  componentDirectory: 'components',
+  sharedItems: [
+    SharedItemSpec(
+      name: 'theme',
+      directory: 'theme',
+      requiredFile: 'theme/theme.dart',
+      packages: {'remix'},
+      exports: ['theme/theme.dart'],
+    ),
+  ],
+  copiedItems: [],
+  fileItems: [
+    FileItemSpec(
+      name: 'icons',
+      file: 'icons.dart',
+      packages: const {},
+      registryDependencies: ['theme'],
+      exports: ['icons.dart'],
+    ),
+  ],
+  ignoredSourceFiles: {},
+  floorPackages: {
+    'remix',
+    'mix_annotations',
+    'build_runner',
+    'mix_generator',
+    'remix_ui_fonts',
+  },
+  detectedPackages: ['remix_ui_fonts'],
+  composedRegistryDependencies: {},
+);
+
 /// Every remote preset and the specs that derive it, writer first.
 ///
 /// The first spec owns the preset. Any spec after it is an extension whose
@@ -923,6 +964,7 @@ const presetSpecs = <String, List<PresetSpec>>{
   'vanilla': [defaultPreset],
   'fortal': [fortalPreset],
   'heroui': [herouiPreset],
+  'deui': [deuiPreset],
 };
 
 PresetOutput mergePresetOutputs(PresetOutput base, PresetOutput extension) {

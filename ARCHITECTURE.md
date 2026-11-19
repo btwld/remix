@@ -127,6 +127,18 @@ the HeroUI extension and reference-parity boundaries remain as recorded.
 See the [Fortal showcase](apps/dashboard/README.md) for its composition and
 the [catalog](docs/open-code/catalog.mdx) for each preset's installed items.
 
+## Deui is a first-party preset of recipes over Remix
+
+Accepted · [Presets](open_code/PRESETS.md) · [Fixture](open_code/deui_fixture)
+
+Author Deui's look (Geist, hairline borders, no shadows, pill controls, blue primary) as a
+`deui` preset in `registry_source`, so Stargate installs it with `remix_cli` as the HeroUI
+preset was and customises it as owned source. The theme reuses the shared semantic token
+vocabulary with Deui's values; recipes restyle Remix widgets and add no behavior. The first
+catalog is small, and motion needing new Remix capability (overlay enter/exit, anchor-origin
+grow, staggered rows, disclosure timing) is left to separate changes rather than built into
+the preset. Cost: one more preset to keep in the builder, checker and CI.
+
 ## Retain the private Fortal package (Fortal ADR-0001, superseded)
 
 2026-09-14 · Superseded by [Fortal ADR-0002](#one-analyzed-authoring-tree-fortal-adr-0002)

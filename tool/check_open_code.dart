@@ -2,7 +2,7 @@
 /// Flutter application.
 ///
 /// ```shell
-/// dart run tool/check_open_code.dart [--preset vanilla|fortal|heroui]
+/// dart run tool/check_open_code.dart [--preset vanilla|fortal|heroui|deui]
 ///     [--source both|hosted|checkout]
 ///     [--independent canary|all|none] [--install batch|incremental]
 ///     [--item dashboard_demo|dashboard_shell|icons|ownership|search_field]
@@ -330,6 +330,51 @@ const _herouiPreset = _PresetContract(
     'remix',
     'mix_annotations',
     'mix_chart',
+    'remix_ui_fonts',
+    'remix_ui_icons',
+  ],
+);
+
+/// Deui's items: a theme and the recipes for the Remix widgets it styles.
+const _deuiRegistryItems = [
+  'icons',
+  'alert',
+  'avatar',
+  'badge',
+  'button',
+  'checkbox',
+  'disclosure',
+  'dropdown',
+  'link',
+  'modal',
+  'popover',
+  'progress',
+  'select',
+  'separator',
+  'skeleton',
+  'spinner',
+  'switch',
+  'tabs',
+  'textfield',
+  'tooltip',
+];
+
+const _deuiPreset = _PresetContract(
+  name: 'deui',
+  fixtureDirectory: 'deui_fixture',
+  registryItems: _deuiRegistryItems,
+  independentItems: null,
+  specStylerItems: [],
+  requiredRuntimeDependencies: [
+    'remix',
+    'mix_annotations',
+    'remix_ui_fonts',
+    'remix_ui_icons',
+  ],
+  allowedImportPackages: [
+    'flutter',
+    'remix',
+    'mix_annotations',
     'remix_ui_fonts',
     'remix_ui_icons',
   ],
@@ -820,6 +865,8 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
           preset = _fortalPreset;
         case 'heroui':
           preset = _herouiPreset;
+        case 'deui':
+          preset = _deuiPreset;
         default:
           return null;
       }
@@ -895,7 +942,7 @@ Future<void> main(List<String> arguments) async {
   if (parsed == null) {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
-      '[--preset vanilla|fortal|heroui] [--source both|hosted|checkout] '
+      '[--preset vanilla|fortal|heroui|deui] [--source both|hosted|checkout] '
       '[--item dashboard_demo|dashboard_shell|icons|ownership|search_field (requires '
       '--source checkout; icons/ownership are vanilla, search_field is '
       'heroui only)] '
@@ -2667,10 +2714,11 @@ _PresetContract _presetByName(String name) => switch (name) {
   'vanilla' => _defaultPreset,
   'fortal' => _fortalPreset,
   'heroui' => _herouiPreset,
+  'deui' => _deuiPreset,
   _ => throw ArgumentError.value(
     name,
     'preset',
-    'must be vanilla, fortal, or heroui',
+    'must be vanilla, fortal, heroui, or deui',
   ),
 };
 

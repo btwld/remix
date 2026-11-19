@@ -1,0 +1,206 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+import 'spinner.dart';
+
+part 'button.g.dart';
+
+/// The emphasis levels of a {{typePrefix}} button.
+enum {{typePrefix}}ButtonVariant {
+  /// The blue `primary` fill: the main action.
+  primary,
+
+  /// The quiet `surfaceSecondary` fill inside a hairline border.
+  secondary,
+
+  /// No fill and muted text until the pointer arrives.
+  ghost,
+
+  /// No fill, inside a hairline border.
+  outline,
+
+  /// A 12% `danger` tint under danger text, for a destructive action.
+  danger,
+}
+
+/// {{typePrefix}} button sizes: 32, 36 and 48 px tall.
+enum {{typePrefix}}ButtonSize {
+  /// 32px tall, 12px label.
+  small,
+
+  /// 36px tall, 14px label. The default.
+  medium,
+
+  /// 48px tall, 16px label.
+  large,
+}
+
+/// {{typePrefix}} recipe for [RemixButton]: a pill with a spring that grows a little on
+/// hover and presses in on tap.
+///
+/// The values come from two tables below: [_metrics] has a row per size and
+/// [_palette] a row per variant. {{typePrefix}}'s focus ring is a 2px primary ring, 2px
+/// off the pill. A loading button keeps its label's colour on the spinner.
+/// [fullWidth] stretches it. [style] merges last.
+@MixWidget(target: RemixButton.new)
+ButtonStyler {{valuePrefix}}ButtonStyle({
+  {{typePrefix}}ButtonVariant variant = .primary,
+  {{typePrefix}}ButtonSize size = .medium,
+  bool fullWidth = false,
+  ButtonStyler style = const ButtonStyler.create(),
+}) {
+  final metrics = _metrics(size);
+  final palette = _palette(variant);
+
+  return ButtonStyler()
+      .animate(_spring)
+      .minHeight(metrics.height)
+      .padding(.horizontal(metrics.paddingX))
+      .mainAxisAlignment(.center)
+      .spacing(metrics.gap)
+      .borderRadius(.circular(_pill))
+      .color(palette.fill)
+      .label(
+        .style(metrics.text.mix())
+            .fontWeight(.w500)
+            .color(palette.foreground)
+            .softWrap(false)
+            .maxLines(1)
+            .overflow(TextOverflow.ellipsis),
+      )
+      .icon(.size(_icon).color(palette.foreground))
+      .spinner({{valuePrefix}}InlineSpinnerStyle(palette.foreground))
+      .onHovered(
+        ButtonStyler()
+            .color(palette.hover)
+            .label(.color(palette.hoverForeground))
+            .scale(_hoverScale),
+      )
+      .onPressed(ButtonStyler().scale(_pressedScale))
+      .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
+      .onDisabled(ButtonStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))
+      .merge(
+        palette.bordered
+            ? ButtonStyler().border(.color({{typePrefix}}Tokens.border()).width(1))
+            : null,
+      )
+      .merge(fullWidth ? ButtonStyler().width(double.infinity) : null)
+      .merge(style);
+}
+
+/// {{typePrefix}}'s icon-only button, as a recipe for [RemixIconButton].
+///
+/// The same variants and states as [{{valuePrefix}}ButtonStyle], square at the button's
+/// height.
+@MixWidget(target: RemixIconButton.new)
+IconButtonStyler {{valuePrefix}}IconButtonStyle({
+  {{typePrefix}}ButtonVariant variant = .ghost,
+  {{typePrefix}}ButtonSize size = .medium,
+  IconButtonStyler style = const IconButtonStyler.create(),
+}) {
+  final metrics = _metrics(size);
+  final palette = _palette(variant);
+
+  return IconButtonStyler()
+      .animate(_spring)
+      .size(metrics.height, metrics.height)
+      .alignment(.center)
+      .borderRadius(.circular(_pill))
+      .color(palette.fill)
+      .icon(.size(_icon).color(palette.foreground))
+      .spinner({{valuePrefix}}InlineSpinnerStyle(palette.foreground))
+      .onHovered(
+        IconButtonStyler()
+            .color(palette.hover)
+            .icon(.color(palette.hoverForeground))
+            .scale(_hoverScale),
+      )
+      .onPressed(IconButtonStyler().scale(_pressedScale))
+      .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
+      .onDisabled(IconButtonStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)))
+      .merge(
+        palette.bordered
+            ? IconButtonStyler().border(.color({{typePrefix}}Tokens.border()).width(1))
+            : null,
+      )
+      .merge(style);
+}
+
+typedef _Metrics = ({
+  double height,
+  double paddingX,
+  double gap,
+  TextStyleToken text,
+});
+
+/// {{typePrefix}}'s `small`, `medium` and `large` rows: `(32, 12, 6)`, `(36, 20, 8)`,
+/// `(48, 24, 8)` for height, horizontal padding and icon gap.
+_Metrics _metrics({{typePrefix}}ButtonSize size) => switch (size) {
+  .small => (height: 32, paddingX: 12, gap: 6, text: {{typePrefix}}Tokens.textXs),
+  .medium => (height: 36, paddingX: 20, gap: 8, text: {{typePrefix}}Tokens.textSm),
+  .large => (height: 48, paddingX: 24, gap: 8, text: {{typePrefix}}Tokens.textBase),
+};
+
+typedef _Palette = ({
+  Color fill,
+  Color hover,
+  Color foreground,
+  Color hoverForeground,
+  bool bordered,
+});
+
+_Palette _palette({{typePrefix}}ButtonVariant variant) => switch (variant) {
+  .primary => (
+    fill: {{typePrefix}}Tokens.accent(),
+    hover: {{typePrefix}}Tokens.accentHover(),
+    foreground: {{typePrefix}}Tokens.accentForeground(),
+    hoverForeground: {{typePrefix}}Tokens.accentForeground(),
+    bordered: false,
+  ),
+  .secondary => (
+    fill: {{typePrefix}}Tokens.surfaceSecondary(),
+    hover: {{typePrefix}}Tokens.surfaceSecondary(),
+    foreground: {{typePrefix}}Tokens.foreground(),
+    hoverForeground: {{typePrefix}}Tokens.foreground(),
+    bordered: true,
+  ),
+  .ghost => (
+    fill: {{typePrefix}}Tokens.transparent,
+    hover: _quietHover(),
+    foreground: {{typePrefix}}Tokens.muted(),
+    hoverForeground: {{typePrefix}}Tokens.foreground(),
+    bordered: false,
+  ),
+  .outline => (
+    fill: {{typePrefix}}Tokens.transparent,
+    hover: _quietHover(),
+    foreground: {{typePrefix}}Tokens.foreground(),
+    hoverForeground: {{typePrefix}}Tokens.foreground(),
+    bordered: true,
+  ),
+  .danger => (
+    fill: {{typePrefix}}Tokens.dangerSoft(),
+    hover: {{typePrefix}}Tokens.dangerSoft(),
+    foreground: {{typePrefix}}Tokens.danger(),
+    hoverForeground: {{typePrefix}}Tokens.danger(),
+    bordered: false,
+  ),
+};
+
+/// `surfaceSecondary` at 60%: what ghost and outline buttons show on hover.
+final _quietHover = {{valuePrefix}}Alpha({{typePrefix}}Tokens.surfaceSecondary, .6);
+
+/// A pill: any radius past half the height.
+const _pill = 999.0;
+const _icon = 16.0;
+const _hoverScale = 1.02;
+const _pressedScale = .93;
+
+/// {{typePrefix}}'s spring: mass .6, stiffness 500, damping 30.
+final _spring = AnimationConfig.springDescription(
+  mass: .6,
+  stiffness: 500,
+  damping: 30,
+);

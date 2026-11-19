@@ -1,0 +1,86 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'dropdown.g.dart';
+
+/// {{typePrefix}} menu-item tones.
+enum {{typePrefix}}DropdownItemVariant {
+  /// The ordinary item.
+  defaultItem,
+
+  /// `menu-item--danger`: a destructive action, in the `danger` color.
+  danger,
+}
+
+/// {{typePrefix}} recipe for [RemixMenu]: the dropdown trigger and its popover menu.
+///
+/// Style a single row with [{{valuePrefix}}DropdownItemStyle], for example a danger item
+/// in `RemixMenuItem.style`.
+@MixWidget(target: RemixMenu.new)
+MenuStyler {{valuePrefix}}DropdownStyle({MenuStyler style = const MenuStyler.create()}) =>
+    MenuStyler()
+        .trigger(
+          MenuTriggerStyler().onFocusVisible(
+            .containerEffects({{valuePrefix}}FocusRing()),
+          ),
+        )
+        .overlay(_popover)
+        .item({{valuePrefix}}DropdownItemStyle())
+        .divider(
+          DividerStyler()
+              .height(1)
+              .color({{typePrefix}}Tokens.border())
+              .margin(.symmetric(vertical: _dividerGap)),
+        )
+        .merge(style);
+
+/// One row of the menu: 40px, 8px corners, muted 16px icons.
+MenuItemStyler {{valuePrefix}}DropdownItemStyle({
+  {{typePrefix}}DropdownItemVariant variant = .defaultItem,
+}) {
+  final danger = variant == .danger;
+  final label = danger ? {{typePrefix}}Tokens.danger : {{typePrefix}}Tokens.foreground;
+
+  return MenuItemStyler()
+      .direction(.horizontal)
+      .crossAxisAlignment(.center)
+      .minHeight(_minHeight)
+      .padding(.symmetric(horizontal: _paddingX, vertical: _paddingY))
+      .borderRadius(.circular(_itemRadius))
+      .label(.style({{typePrefix}}Tokens.textSm.mix()).color(label()))
+      .indicator(
+        .size(
+          _indicator,
+        ).color(danger ? {{typePrefix}}Tokens.danger() : {{typePrefix}}Tokens.muted()),
+      )
+      .leadingIcon(
+        .size(_icon)
+            .color(danger ? {{typePrefix}}Tokens.danger() : {{typePrefix}}Tokens.muted())
+            .wrap(.padding(.only(right: _iconGap))),
+      )
+      .trailingIcon(.size(_icon).color({{typePrefix}}Tokens.muted()))
+      .trailingText(.style({{typePrefix}}Tokens.textXs.mix()).color({{typePrefix}}Tokens.muted()))
+      .onHovered(.color({{valuePrefix}}RowHover()))
+      .onFocusVisible(.color({{valuePrefix}}RowHover()))
+      .onDisabled(MenuItemStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)));
+}
+
+final _popover = FlexBoxStyler()
+    .padding(.symmetric(vertical: _menuPadding, horizontal: _menuPadding))
+    .color({{typePrefix}}Tokens.overlay())
+    .borderRadius(.all({{typePrefix}}Tokens.radiusLg()))
+    .border({{valuePrefix}}Hairline())
+    .clipBehavior(.antiAlias);
+
+const _minHeight = 40.0;
+const _paddingX = 10.0;
+const _paddingY = 8.0;
+const _itemRadius = 8.0;
+const _indicator = 14.0;
+const _icon = 16.0;
+const _iconGap = 10.0;
+const _menuPadding = 6.0;
+const _dividerGap = 4.0;

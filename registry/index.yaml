@@ -3,3 +3,4 @@ presets:
   vanilla: vanilla/registry.yaml
   fortal: fortal/registry.yaml
   heroui: heroui/registry.yaml
+  deui: deui/registry.yaml

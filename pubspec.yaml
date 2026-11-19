@@ -275,6 +275,7 @@ melos:
         - ci:open-code:vanilla
         - ci:open-code:fortal
         - ci:open-code:heroui
+        - ci:open-code:deui
         - ci:open-code:icons
       description: >-
         Verify generated sources, docs, the Fortal specification, HeroUI parity,
@@ -344,6 +345,11 @@ melos:
         - dart run tool/check_open_code.dart --preset heroui --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --preset heroui --source checkout
       description: Install every HeroUI item against the Remix checkout
+
+    ci:open-code:deui:
+      steps:
+        - dart run tool/check_open_code.dart --preset deui --source checkout
+      description: Install every Deui item against the Remix checkout
 
     ci:open-code:icons:
       steps:

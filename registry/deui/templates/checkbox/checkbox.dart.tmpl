@@ -1,0 +1,66 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'checkbox.g.dart';
+
+/// {{typePrefix}} recipe for [RemixCheckbox]: a 20px box with 6px corners and a 2px
+/// edge that fills `accent` when checked or mixed.
+///
+/// [invalid] draws the edge and label in `danger`. The check mark is Remix's
+/// indicator at 12px. [style] merges last.
+@MixWidget(target: RemixCheckbox.new)
+CheckboxStyler {{valuePrefix}}CheckboxStyle({
+  bool invalid = false,
+  Size minimumTapTargetSize = {{valuePrefix}}CheckboxTapTarget,
+  CheckboxStyler style = const CheckboxStyler.create(),
+}) {
+  final label = invalid ? {{typePrefix}}Tokens.danger : {{typePrefix}}Tokens.foreground;
+  final edge = invalid ? {{typePrefix}}Tokens.danger() : _edge();
+
+  return CheckboxStyler()
+      .size(_control, _control)
+      .alignment(.center)
+      .borderRadius(.circular(_radius))
+      .color({{typePrefix}}Tokens.background())
+      .border(.color(edge).width(_edgeWidth))
+      .indicator(.size(_checkmark).color({{typePrefix}}Tokens.accentForeground()))
+      .label({{valuePrefix}}LabelText.color(label()))
+      .labelSpacing(_labelGap)
+      .onHovered(
+        CheckboxStyler().border(.color({{typePrefix}}Tokens.muted()).width(_edgeWidth)),
+      )
+      .onSelected(
+        CheckboxStyler()
+            .color({{typePrefix}}Tokens.accent())
+            .border(.color({{typePrefix}}Tokens.accent()).width(_edgeWidth)),
+      )
+      .onIndeterminate(
+        CheckboxStyler()
+            .color({{typePrefix}}Tokens.accent())
+            .border(.color({{typePrefix}}Tokens.accent()).width(_edgeWidth)),
+      )
+      .onPressed(CheckboxStyler().scale(.92))
+      .onFocusVisible(.containerEffects({{valuePrefix}}FocusRing()))
+      .animate({{typePrefix}}Tokens.selectionMotion)
+      .onDisabled(
+        CheckboxStyler()
+            .label(.color({{valuePrefix}}DisabledLabelColor(danger: invalid)()))
+            .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+      )
+      .merge(style);
+}
+
+/// The 20px box needs no more than itself as a tap target.
+const {{valuePrefix}}CheckboxTapTarget = Size.square(20);
+
+const _control = 20.0;
+const _radius = 6.0;
+const _edgeWidth = 2.0;
+const _labelGap = 8.0;
+const _checkmark = 12.0;
+
+/// `muted` at 50%: the box's resting edge.
+final _edge = {{valuePrefix}}Alpha({{typePrefix}}Tokens.muted, .5);

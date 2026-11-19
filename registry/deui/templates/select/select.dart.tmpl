@@ -1,0 +1,83 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'select.g.dart';
+
+/// {{typePrefix}} recipe for [RemixSelect]: a field trigger over an overlay list.
+///
+/// [invalid] paints the error treatment; validation stays with the app.
+@MixWidget(target: RemixSelect.new)
+SelectStyler {{valuePrefix}}SelectStyle({
+  bool invalid = false,
+  SelectStyler style = const SelectStyler.create(),
+}) => SelectStyler()
+    .trigger(_trigger(invalid: invalid))
+    .content(_content)
+    .menuContainer(
+      FlexBoxStyler().padding(.all(_listPadding)).spacing(_listGap),
+    )
+    .item(_item)
+    .merge(style);
+
+/// {{typePrefix}}'s trigger is the text field's 44px pill: hairline border, no fill.
+SelectTriggerStyler _trigger({required bool invalid}) => SelectTriggerStyler()
+    .direction(.horizontal)
+    .minHeight(_triggerHeight)
+    .padding(.symmetric(horizontal: _paddingX))
+    .spacing(_valueGap)
+    .borderRadius(.circular(_pill))
+    .color({{typePrefix}}Tokens.fieldBackground())
+    .border(
+      .color(invalid ? {{typePrefix}}Tokens.danger() : {{typePrefix}}Tokens.border()).width(1),
+    )
+    .label({{valuePrefix}}FieldText({{typePrefix}}Tokens.fieldForeground))
+    .placeholder({{valuePrefix}}FieldText({{typePrefix}}Tokens.fieldPlaceholder))
+    .indicator(.size(_indicator).color({{typePrefix}}Tokens.muted()))
+    .onHovered(.color({{typePrefix}}Tokens.fieldHover()))
+    .onFocusVisible(
+      SelectTriggerStyler().border(
+        .color({{typePrefix}}Tokens.fieldBorderFocus()).width(1),
+      ),
+    )
+    .onDisabled(
+      SelectTriggerStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+    )
+    .animate({{typePrefix}}Tokens.smoothMotion);
+
+final _content = SelectContentStyler()
+    .minWidth(remixAnchorWidth())
+    .color({{typePrefix}}Tokens.overlay())
+    .borderRadius(.all({{typePrefix}}Tokens.radiusLg()))
+    .border({{valuePrefix}}Hairline());
+
+final _item = SelectMenuItemStyler()
+    .minHeight(_itemHeight)
+    .padding(.symmetric(horizontal: _itemPaddingX, vertical: _itemPaddingY))
+    .spacing(_itemGap)
+    .borderRadius(.circular(_itemRadius))
+    .text(.style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.foreground()))
+    .icon(.size(_itemMark).color({{typePrefix}}Tokens.foreground()))
+    .onHovered(.color({{valuePrefix}}RowHover()))
+    .onFocusVisible(.color({{valuePrefix}}RowHover()))
+    .onDisabled(
+      SelectMenuItemStyler().wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+    );
+
+const _triggerHeight = 44.0;
+const _paddingX = 14.0;
+const _pill = 999.0;
+const _indicator = 14.0;
+const _valueGap = 8.0;
+
+const _listPadding = 6.0;
+const _listGap = 2.0;
+
+const _itemHeight = 36.0;
+const _itemGap = 10.0;
+const _itemPaddingX = 10.0;
+const _itemPaddingY = 8.0;
+const _itemRadius = 8.0;
+const _itemMark = 16.0;

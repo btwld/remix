@@ -155,7 +155,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        preset: [vanilla, fortal, heroui]
+        preset: [vanilla, fortal, heroui, deui]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-workspace

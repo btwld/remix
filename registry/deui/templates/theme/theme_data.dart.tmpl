@@ -1,0 +1,293 @@
+import 'dart:ui' show ColorSpace;
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
+
+import 'color.dart';
+import 'effects.dart';
+import 'tokens.dart';
+
+enum {{typePrefix}}ThemeMode { system, light, dark }
+
+/// The {{typePrefix}} web theme for one brightness.
+///
+/// As with {{typePrefix}}'s CSS variables, any color can be overridden in [colors],
+/// and the colors derived from it follow: overriding
+/// [{{typePrefix}}Tokens.accent] also changes its hover and soft shades.
+@immutable
+class {{typePrefix}}ThemeData {
+  const {{typePrefix}}ThemeData({
+    required this.brightness,
+    this.colors = const {},
+    this.radius = 12,
+    this.fontFamily = RemixFonts.geist,
+  });
+
+  const {{typePrefix}}ThemeData.light({
+    this.colors = const {},
+    this.radius = 12,
+    this.fontFamily = RemixFonts.geist,
+  }) : brightness = Brightness.light;
+
+  const {{typePrefix}}ThemeData.dark({
+    this.colors = const {},
+    this.radius = 12,
+    this.fontFamily = RemixFonts.geist,
+  }) : brightness = Brightness.dark;
+
+  final Brightness brightness;
+
+  /// Color overrides, keyed by the token they replace.
+  final Map<ColorToken, Color> colors;
+
+  /// The base radius; the radius scale is derived from it. {{typePrefix}} uses 12.
+  final double radius;
+
+  /// The font family: Geist, which `remix_ui_fonts` bundles.
+  final String? fontFamily;
+
+  /// The resolved color for [token], in extended sRGB.
+  Color color(ColorToken token) => _resolve(token, {});
+
+  Color _resolve(ColorToken token, Map<ColorToken, Color> resolved) =>
+      resolved[token] ??=
+          colors[token] ??
+          switch (_definition(token)) {
+            final _Value value => value.color,
+            _Alias(:final source) => _resolve(source, resolved),
+            final _Mix mix => {{valuePrefix}}MixOklab(
+              _resolve(mix.first, resolved),
+              _resolve(mix.second, resolved),
+              mix.firstAmount,
+              mix.secondAmount,
+            ),
+            _Fade(:final source, :final amount) => _faded(
+              _resolve(source, resolved),
+              amount,
+            ),
+          };
+
+  /// The formula of [{{valuePrefix}}Alpha], on a resolved color.
+  static Color _faded(Color color, double amount) =>
+      color.withValues(alpha: color.a * amount);
+
+  Map<ColorToken, _Color> get _modeColors =>
+      brightness == Brightness.dark ? _dark : _light;
+
+  _Color _definition(ColorToken token) =>
+      _modeColors[token] ??
+      _shared[token] ??
+      (throw ArgumentError.value(token, 'token', 'Not a {{typePrefix}} color token'));
+
+  TextStyle _text(double size, double lineHeight) => TextStyle(
+    fontFamily: fontFamily,
+    fontSize: size,
+    height: lineHeight / size,
+    leadingDistribution: TextLeadingDistribution.even,
+  );
+
+  Map<MixToken<Object?>, Object> get tokens {
+    final resolved = <ColorToken, Color>{};
+    return Map<MixToken<Object?>, Object>.unmodifiable({
+      for (final token in [..._shared.keys, ..._modeColors.keys])
+        token: {{valuePrefix}}PaintColor(_resolve(token, resolved)),
+      {{valuePrefix}}SurfaceShadow: {{valuePrefix}}Shadows(brightness),
+      {{valuePrefix}}OverlayShadow: {{valuePrefix}}Shadows(brightness, overlay: true),
+      {{typePrefix}}Tokens.radiusXs: Radius.circular(radius * 0.25),
+      {{typePrefix}}Tokens.radiusSm: Radius.circular(radius * 0.5),
+      {{typePrefix}}Tokens.radiusMd: Radius.circular(radius * 0.75),
+      {{typePrefix}}Tokens.radiusLg: Radius.circular(radius),
+      {{typePrefix}}Tokens.radiusXl: Radius.circular(radius * 1.5),
+      {{typePrefix}}Tokens.radius2xl: Radius.circular(radius * 2),
+      {{typePrefix}}Tokens.radius3xl: Radius.circular(radius * 3),
+      {{typePrefix}}Tokens.radius4xl: Radius.circular(radius * 4),
+      {{typePrefix}}Tokens.radiusField: Radius.circular(radius * 1.5),
+      {{typePrefix}}Tokens.radiusPanel: Radius.circular(radius * 4 / 3),
+      {{typePrefix}}Tokens.textXs: _text(12, 16),
+      {{typePrefix}}Tokens.textSm: _text(14, 20),
+      {{typePrefix}}Tokens.textBase: _text(16, 24),
+    });
+  }
+
+  /// A copy with the given fields; [colors] are merged into the existing
+  /// overrides.
+  {{typePrefix}}ThemeData copyWith({
+    Brightness? brightness,
+    Map<ColorToken, Color>? colors,
+    double? radius,
+    String? fontFamily,
+  }) => {{typePrefix}}ThemeData(
+    brightness: brightness ?? this.brightness,
+    colors: colors == null ? this.colors : {...this.colors, ...colors},
+    radius: radius ?? this.radius,
+    fontFamily: fontFamily ?? this.fontFamily,
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is {{typePrefix}}ThemeData &&
+          brightness == other.brightness &&
+          radius == other.radius &&
+          fontFamily == other.fontFamily &&
+          mapEquals(colors, other.colors);
+
+  @override
+  int get hashCode => Object.hash(
+    brightness,
+    radius,
+    fontFamily,
+    Object.hashAllUnordered(
+      colors.entries.map((entry) => Object.hash(entry.key, entry.value)),
+    ),
+  );
+}
+
+/// How the pinned theme defines one color variable.
+sealed class _Color {
+  const _Color();
+}
+
+/// A literal value, in extended sRGB.
+final class _Value extends _Color {
+  const _Value(this.red, this.green, this.blue, [this.alpha = 1]);
+  final double red, green, blue, alpha;
+
+  /// A literal from a `0xAARRGGBB` value, read as sRGB.
+  const _Value.argb(int value)
+    : red = ((value >> 16) & 0xFF) / 255,
+      green = ((value >> 8) & 0xFF) / 255,
+      blue = (value & 0xFF) / 255,
+      alpha = ((value >> 24) & 0xFF) / 255;
+
+  Color get color => Color.from(
+    alpha: alpha,
+    red: red,
+    green: green,
+    blue: blue,
+    colorSpace: ColorSpace.extendedSRGB,
+  );
+}
+
+/// `var(--source)`.
+final class _Alias extends _Color {
+  const _Alias(this.source);
+  final ColorToken source;
+}
+
+/// `color-mix(in oklab, first firstAmount, second secondAmount)`.
+final class _Mix extends _Color {
+  const _Mix(this.first, this.firstAmount, this.second, this.secondAmount);
+  final ColorToken first, second;
+  final double firstAmount, secondAmount;
+}
+
+/// `color-mix(in oklab, source amount, transparent)`.
+final class _Fade extends _Color {
+  const _Fade(this.source, this.amount);
+  final ColorToken source;
+  final double amount;
+}
+
+// {{typePrefix}}'s light and dark values. Entries both modes share are in [_shared].
+
+final _shared = <ColorToken, _Color>{
+  {{typePrefix}}Tokens.white: const _Value(1, 1, 1),
+  {{typePrefix}}Tokens.black: const _Value(0, 0, 0),
+  {{typePrefix}}Tokens.snow: const _Value.argb(0xFFF2F2F2),
+  {{typePrefix}}Tokens.eclipse: const _Value.argb(0xFF0B0B0B),
+  // {{typePrefix}}'s `primary`: the blue that fills the main action and the selection.
+  {{typePrefix}}Tokens.accent: const _Value.argb(0xFF0276DB),
+  {{typePrefix}}Tokens.accentForeground: const _Value(1, 1, 1),
+  {{typePrefix}}Tokens.success: const _Value.argb(0xFF00BD6C),
+  {{typePrefix}}Tokens.successForeground: const _Alias({{typePrefix}}Tokens.eclipse),
+  {{typePrefix}}Tokens.warning: const _Value.argb(0xFFF5A500),
+  {{typePrefix}}Tokens.warningForeground: const _Alias({{typePrefix}}Tokens.eclipse),
+  {{typePrefix}}Tokens.danger: const _Value.argb(0xFFEE343B),
+  {{typePrefix}}Tokens.dangerForeground: const _Value(1, 1, 1),
+  {{typePrefix}}Tokens.surfaceForeground: const _Alias({{typePrefix}}Tokens.foreground),
+  {{typePrefix}}Tokens.surfaceSecondaryForeground: const _Alias({{typePrefix}}Tokens.foreground),
+  {{typePrefix}}Tokens.surfaceTertiaryForeground: const _Alias({{typePrefix}}Tokens.foreground),
+  {{typePrefix}}Tokens.overlayForeground: const _Alias({{typePrefix}}Tokens.foreground),
+  {{typePrefix}}Tokens.fieldBackground: const _Value(0, 0, 0, 0),
+  {{typePrefix}}Tokens.fieldForeground: const _Alias({{typePrefix}}Tokens.foreground),
+  {{typePrefix}}Tokens.fieldPlaceholder: const _Fade({{typePrefix}}Tokens.muted, 0.6),
+  {{typePrefix}}Tokens.focus: const _Alias({{typePrefix}}Tokens.accent),
+  {{typePrefix}}Tokens.link: const _Alias({{typePrefix}}Tokens.foreground),
+  {{typePrefix}}Tokens.defaultForeground: const _Alias({{typePrefix}}Tokens.foreground),
+  {{typePrefix}}Tokens.separator: const _Alias({{typePrefix}}Tokens.border),
+  {{typePrefix}}Tokens.backgroundInverse: const _Alias({{typePrefix}}Tokens.foreground),
+  {{typePrefix}}Tokens.surfaceHover: const _Fade({{typePrefix}}Tokens.surfaceSecondary, 0.6),
+  {{typePrefix}}Tokens.backgroundSecondary: const _Alias({{typePrefix}}Tokens.surfaceSecondary),
+  {{typePrefix}}Tokens.backgroundTertiary: const _Alias({{typePrefix}}Tokens.surfaceSecondary),
+  // Hovered fills: {{valuePrefix}}'s primary at 90%, a quiet surface at 60%.
+  {{typePrefix}}Tokens.defaultHover: const _Fade({{typePrefix}}Tokens.defaultColor, 0.6),
+  {{typePrefix}}Tokens.accentHover: const _Fade({{typePrefix}}Tokens.accent, 0.9),
+  {{typePrefix}}Tokens.successHover: const _Fade({{typePrefix}}Tokens.success, 0.9),
+  {{typePrefix}}Tokens.warningHover: const _Fade({{typePrefix}}Tokens.warning, 0.9),
+  {{typePrefix}}Tokens.dangerHover: const _Fade({{typePrefix}}Tokens.danger, 0.9),
+  {{typePrefix}}Tokens.fieldHover: const _Fade({{typePrefix}}Tokens.surfaceSecondary, 0.6),
+  {{typePrefix}}Tokens.fieldFocus: const _Value(0, 0, 0, 0),
+  // {{typePrefix}}'s field edge: the 1px `border`, then `text` at 40% while focused.
+  {{typePrefix}}Tokens.fieldBorderHover: const _Alias({{typePrefix}}Tokens.fieldBorder),
+  {{typePrefix}}Tokens.fieldBorderFocus: const _Fade({{typePrefix}}Tokens.foreground, 0.4),
+  // Soft fills are {{valuePrefix}}'s 10 to 12% tints of the status color.
+  {{typePrefix}}Tokens.defaultSoft: const _Alias({{typePrefix}}Tokens.defaultColor),
+  {{typePrefix}}Tokens.defaultSoftForeground: const _Alias({{typePrefix}}Tokens.foreground),
+  {{typePrefix}}Tokens.defaultSoftHover: const _Fade({{typePrefix}}Tokens.defaultColor, 0.6),
+  {{typePrefix}}Tokens.accentSoft: const _Fade({{typePrefix}}Tokens.accent, 0.12),
+  {{typePrefix}}Tokens.accentSoftForeground: const _Alias({{typePrefix}}Tokens.accent),
+  {{typePrefix}}Tokens.accentSoftHover: const _Fade({{typePrefix}}Tokens.accent, 0.16),
+  {{typePrefix}}Tokens.dangerSoft: const _Fade({{typePrefix}}Tokens.danger, 0.12),
+  {{typePrefix}}Tokens.dangerSoftForeground: const _Alias({{typePrefix}}Tokens.danger),
+  {{typePrefix}}Tokens.dangerSoftHover: const _Fade({{typePrefix}}Tokens.danger, 0.16),
+  {{typePrefix}}Tokens.warningSoft: const _Fade({{typePrefix}}Tokens.warning, 0.12),
+  {{typePrefix}}Tokens.warningSoftHover: const _Fade({{typePrefix}}Tokens.warning, 0.16),
+  {{typePrefix}}Tokens.successSoft: const _Fade({{typePrefix}}Tokens.success, 0.12),
+  {{typePrefix}}Tokens.successSoftHover: const _Fade({{typePrefix}}Tokens.success, 0.16),
+  {{typePrefix}}Tokens.separatorSecondary: const _Alias({{typePrefix}}Tokens.fieldBorder),
+  {{typePrefix}}Tokens.separatorTertiary: const _Alias({{typePrefix}}Tokens.fieldBorder),
+  {{typePrefix}}Tokens.borderSecondary: const _Alias({{typePrefix}}Tokens.fieldBorder),
+  {{typePrefix}}Tokens.borderTertiary: const _Alias({{typePrefix}}Tokens.fieldBorder),
+  // The segmented selection is the primary pill.
+  {{typePrefix}}Tokens.segment: const _Alias({{typePrefix}}Tokens.accent),
+  {{typePrefix}}Tokens.segmentForeground: const _Alias({{typePrefix}}Tokens.accentForeground),
+  // {{typePrefix}}'s teal `accent`.
+  {{typePrefix}}Tokens.highlightForeground: const _Alias({{typePrefix}}Tokens.eclipse),
+};
+
+final _light = <ColorToken, _Color>{
+  {{typePrefix}}Tokens.background: const _Value.argb(0xFFFCFCFC),
+  {{typePrefix}}Tokens.foreground: const _Alias({{typePrefix}}Tokens.eclipse),
+  {{typePrefix}}Tokens.surface: const _Value.argb(0xFFFCFCFC),
+  {{typePrefix}}Tokens.surfaceSecondary: const _Value.argb(0xFFF5F5F5),
+  {{typePrefix}}Tokens.surfaceTertiary: const _Value.argb(0xFFF5F5F5),
+  {{typePrefix}}Tokens.overlay: const _Value.argb(0xFFF5F5F5),
+  {{typePrefix}}Tokens.muted: const _Value.argb(0xFF636363),
+  {{typePrefix}}Tokens.defaultColor: const _Value.argb(0xFFF5F5F5),
+  {{typePrefix}}Tokens.border: const _Value.argb(0x0F0B0B0B),
+  {{typePrefix}}Tokens.fieldBorder: const _Value.argb(0x1F0B0B0B),
+  {{typePrefix}}Tokens.backdrop: const _Value.argb(0x1A0B0B0B),
+  {{typePrefix}}Tokens.highlight: const _Value.argb(0xFF00BEBF),
+  {{typePrefix}}Tokens.warningSoftForeground: const _Value.argb(0xFFAF4C00),
+  {{typePrefix}}Tokens.successSoftForeground: const _Value.argb(0xFF007452),
+};
+
+final _dark = <ColorToken, _Color>{
+  {{typePrefix}}Tokens.background: const _Value.argb(0xFF151515),
+  {{typePrefix}}Tokens.foreground: const _Alias({{typePrefix}}Tokens.snow),
+  {{typePrefix}}Tokens.surface: const _Value.argb(0xFF151515),
+  {{typePrefix}}Tokens.surfaceSecondary: const _Value.argb(0xFF1C1C1C),
+  {{typePrefix}}Tokens.surfaceTertiary: const _Value.argb(0xFF1C1C1C),
+  {{typePrefix}}Tokens.overlay: const _Value.argb(0xFF1C1C1C),
+  {{typePrefix}}Tokens.muted: const _Value.argb(0xFF868686),
+  {{typePrefix}}Tokens.defaultColor: const _Value.argb(0xFF1C1C1C),
+  {{typePrefix}}Tokens.border: const _Value.argb(0x0DFFFFFF),
+  {{typePrefix}}Tokens.fieldBorder: const _Value.argb(0x1AFFFFFF),
+  {{typePrefix}}Tokens.backdrop: const _Value.argb(0x1AF2F2F2),
+  {{typePrefix}}Tokens.highlight: const _Value.argb(0xFF00DADB),
+  {{typePrefix}}Tokens.warningSoftForeground: const _Value.argb(0xFFFFD236),
+  {{typePrefix}}Tokens.successSoftForeground: const _Value.argb(0xFF5EE9B5),
+};
