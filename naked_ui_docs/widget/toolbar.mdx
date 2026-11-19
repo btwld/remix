@@ -46,10 +46,11 @@ Widget composerActions({
   Other keys, including activation and modified arrows, are left to the child
   or host. Use one row without nested focus groups or scopes. Keep editors and
   other arrow-operated controls outside the toolbar.
-- When a focused control is removed, the toolbar preserves Flutter's fallback
-  to another control, including one outside the toolbar. If Flutter leaves
-  focus on the enclosing scope instead, the toolbar focuses its first remaining
-  traversable control, if any. Use stable keys when reordering controls.
+- When a focused control is removed or stops being traversable, the toolbar
+  preserves Flutter's fallback to another control, including one outside the
+  toolbar. If Flutter leaves focus on the enclosing scope instead, the toolbar
+  focuses its first remaining traversable control, if any. Use stable keys when
+  reordering controls.
 - The group can have a localized `semanticLabel` but is not focusable or
   actionable itself. Flutter 3.44 has no toolbar semantics role, so the group
   has no role rather than being announced as a menu bar. Keep each control

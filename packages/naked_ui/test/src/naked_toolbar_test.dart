@@ -159,6 +159,98 @@ void main() {
     expect(send.hasPrimaryFocus, isTrue);
   });
 
+  testWidgets('disabling the focused action repairs focus without removal', (
+    tester,
+  ) async {
+    final attach = _node();
+    final send = _node();
+    final after = _node();
+    Widget host({required bool attachEnabled}) => _host([
+      _toolbar([
+        _button('Attach', attach, enabled: attachEnabled),
+        _button('Send', send),
+      ]),
+      _button('After', after),
+    ]);
+
+    await tester.pumpWidget(host(attachEnabled: true));
+    await _press(tester, LogicalKeyboardKey.tab);
+    expect(attach.hasPrimaryFocus, isTrue);
+    final originalAction = tester.element(find.byKey(const ValueKey('Attach')));
+
+    await tester.pumpWidget(host(attachEnabled: false));
+    await tester.pumpAndSettle();
+    expect(
+      tester.element(find.byKey(const ValueKey('Attach'))),
+      same(originalAction),
+    );
+    expect(attach.canRequestFocus, isFalse);
+    expect(FocusManager.instance.primaryFocus, same(send));
+    await _press(tester, LogicalKeyboardKey.tab);
+    expect(after.hasPrimaryFocus, isTrue);
+    await _shiftTab(tester);
+    expect(send.hasPrimaryFocus, isTrue);
+  });
+
+  testWidgets('disabling the last eligible action leaves no toolbar Tab stop', (
+    tester,
+  ) async {
+    final before = _node();
+    final attach = _node();
+    final send = _node();
+    final after = _node();
+    Widget host({required bool attachEnabled}) => _host([
+      _button('Before', before),
+      _toolbar([
+        _button('Attach', attach, enabled: attachEnabled),
+        _button('Send', send, enabled: false),
+      ]),
+      _button('After', after),
+    ]);
+
+    await tester.pumpWidget(host(attachEnabled: true));
+    attach.requestFocus();
+    await tester.pump();
+    expect(attach.hasPrimaryFocus, isTrue);
+    await tester.pumpWidget(host(attachEnabled: false));
+    await tester.pumpAndSettle();
+    expect(FocusManager.instance.primaryFocus, same(attach.enclosingScope));
+    expect(attach.hasFocus, isFalse);
+    expect(send.hasFocus, isFalse);
+    before.requestFocus();
+    await tester.pump();
+    await _press(tester, LogicalKeyboardKey.tab);
+    expect(after.hasPrimaryFocus, isTrue);
+    await _shiftTab(tester);
+    expect(before.hasPrimaryFocus, isTrue);
+  });
+
+  testWidgets('disabling the focused action respects an outside fallback', (
+    tester,
+  ) async {
+    final before = _node();
+    final attach = _node();
+    final send = _node();
+    Widget host({required bool attachEnabled}) => _host([
+      _button('Before', before),
+      _toolbar([
+        _button('Attach', attach, enabled: attachEnabled),
+        _button('Send', send),
+      ]),
+    ]);
+
+    await tester.pumpWidget(host(attachEnabled: true));
+    before.requestFocus();
+    await tester.pump();
+    await _press(tester, LogicalKeyboardKey.tab);
+    expect(attach.hasPrimaryFocus, isTrue);
+    await tester.pumpWidget(host(attachEnabled: false));
+    await tester.pumpAndSettle();
+    expect(before.hasPrimaryFocus, isTrue);
+    await _press(tester, LogicalKeyboardKey.tab);
+    expect(send.hasPrimaryFocus, isTrue);
+  });
+
   testWidgets('composer editor keeps editing keys and removal fallback', (
     tester,
   ) async {

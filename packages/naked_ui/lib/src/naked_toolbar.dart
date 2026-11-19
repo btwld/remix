@@ -37,25 +37,25 @@ class _NakedToolbarState extends State<NakedToolbar> {
     FocusManager.instance.addListener(_handleFocusChange);
   }
 
-  bool _containsControl(FocusNode node) =>
+  bool _isTraversableControl(FocusNode node) =>
+      node.canRequestFocus &&
+      !node.skipTraversal &&
       node.ancestors.contains(_boundary) &&
       node.nearestScope == _boundary.nearestScope &&
       FocusTraversalGroup.maybeOfNode(node) == _policy;
 
   Iterable<FocusNode> get _controls =>
-      _boundary.traversalDescendants.where(_containsControl);
+      _boundary.descendants.where(_isTraversableControl);
 
   void _handleFocusChange() {
     final focused = FocusManager.instance.primaryFocus;
     final previous = _lastFocused;
     final hadFocusedControl = _hadFocusedControl;
     _hadFocusedControl = false;
-    if (focused != null &&
-        _containsControl(focused) &&
-        !focused.skipTraversal) {
+    if (focused != null && _isTraversableControl(focused)) {
       _lastFocused = focused;
       _hadFocusedControl = true;
-    } else if (previous != null && !_containsControl(previous)) {
+    } else if (previous != null && !_isTraversableControl(previous)) {
       _lastFocused = null;
       if (hadFocusedControl && focused == _boundary.enclosingScope) {
         final first = ReadingOrderTraversalPolicy.sort(_controls).firstOrNull;
@@ -80,7 +80,7 @@ class _NakedToolbarState extends State<NakedToolbar> {
       return KeyEventResult.ignored;
     }
     final focused = FocusManager.instance.primaryFocus;
-    if (focused == null || !_containsControl(focused)) {
+    if (focused == null || !_isTraversableControl(focused)) {
       return KeyEventResult.ignored;
     }
     final controls = ReadingOrderTraversalPolicy.sort(_controls).toList();
