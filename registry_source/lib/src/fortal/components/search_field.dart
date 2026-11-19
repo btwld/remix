@@ -50,7 +50,11 @@ enum FortalSearchFieldVariant {
 /// The field creates its own controller and focus node when none are given.
 /// When a caller's controller is withdrawn, the owned one starts from its
 /// last value.
-class FortalSearchField extends StatefulWidget {
+///
+/// ```dart
+/// FortalSearchField(semanticLabel: 'Search editions', controller: query)
+/// ```
+class FortalSearchField extends StatelessWidget {
   const FortalSearchField({
     super.key,
     this.variant = .surface,
@@ -140,118 +144,10 @@ class FortalSearchField extends StatefulWidget {
   final TextFieldStyler style;
 
   @override
-  State<FortalSearchField> createState() => _FortalSearchFieldState();
-}
-
-class _FortalSearchFieldState extends State<FortalSearchField> {
-  TextEditingController? _ownController;
-  FocusNode? _ownFocusNode;
-
-  TextEditingController get _controller =>
-      widget.controller ?? (_ownController ??= TextEditingController());
-
-  FocusNode get _focusNode =>
-      widget.focusNode ?? (_ownFocusNode ??= FocusNode(debugLabel: 'search'));
-
-  late bool _hasText = _controller.text.isNotEmpty;
-
-  bool get _canClear => widget.enabled && !widget.readOnly && _hasText;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.addListener(_onTextChanged);
-  }
-
-  @override
-  void didUpdateWidget(FortalSearchField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.controller != oldWidget.controller) {
-      final previous = oldWidget.controller ?? _ownController!;
-      previous.removeListener(_onTextChanged);
-      if (oldWidget.controller == null) {
-        _disposeAfterFrame(_ownController);
-        _ownController = null;
-      } else if (widget.controller == null) {
-        // Keep what the caller's controller held instead of emptying the
-        // field.
-        _ownController = TextEditingController.fromValue(previous.value);
-      }
-      _controller.addListener(_onTextChanged);
-      _hasText = _controller.text.isNotEmpty;
-    }
-    if (oldWidget.focusNode == null && widget.focusNode != null) {
-      _disposeAfterFrame(_ownFocusNode);
-      _ownFocusNode = null;
-    }
-  }
-
-  /// Disposes [notifier] once the field below has let go of it.
-  void _disposeAfterFrame(ChangeNotifier? notifier) {
-    if (notifier == null) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) => notifier.dispose());
-  }
-
-  @override
-  void dispose() {
-    _controller.removeListener(_onTextChanged);
-    _ownController?.dispose();
-    _ownFocusNode?.dispose();
-    super.dispose();
-  }
-
-  void _onTextChanged() {
-    final hasText = _controller.text.isNotEmpty;
-    if (hasText != _hasText) setState(() => _hasText = hasText);
-  }
-
-  void _clear() {
-    _controller.clear();
-    widget.onChanged?.call('');
-    widget.onCleared?.call();
-    _focusNode.requestFocus();
-  }
-
-  /// Whether the Escape press now held down cleared the field.
-  bool _escapeCleared = false;
-
-  /// Escape clears when there is something to clear, and otherwise passes
-  /// on, to close a dialog for example.
-  ///
-  /// The repeats and release of a press that cleared are consumed with it:
-  /// the field is empty after the first, so holding Escape would otherwise
-  /// close the dialog too. While an input method is composing, the key is
-  /// left to it alone.
-  KeyEventResult _onKeyEvent(FocusNode _, KeyEvent event) {
-    if (event.logicalKey != LogicalKeyboardKey.escape) return .ignored;
-    if (event is KeyDownEvent) {
-      _escapeCleared = false;
-    } else if (_escapeCleared) {
-      if (event is KeyUpEvent) _escapeCleared = false;
-      return .handled;
-    }
-    final composing = _controller.value.composing;
-    if (composing.isValid && !composing.isCollapsed) {
-      return .skipRemainingHandlers;
-    }
-    if (event is! KeyDownEvent || !_canClear) return .ignored;
-    _clear();
-    _escapeCleared = true;
-
-    return .handled;
-  }
-
-  @override
   Widget build(BuildContext context) {
     // The field's own end padding and the spacing before a trailing widget,
     // as the text field sets them for each size.
-    final (
-      fieldSize,
-      buttonSize,
-      paddingX,
-      spacing,
-      glyph,
-    ) = switch (widget.size) {
+    final (fieldSize, buttonSize, paddingX, spacing, glyph) = switch (size) {
       .size1 => (
         FortalTextFieldSize.size1,
         FortalIconButtonSize.size1,
@@ -284,37 +180,40 @@ class _FortalSearchFieldState extends State<FortalSearchField> {
       target / 2 + glyph.resolve(context) / 2 - paddingX.resolve(context),
     );
 
-    return Focus(
-      canRequestFocus: false,
-      skipTraversal: true,
-      onKeyEvent: _onKeyEvent,
-      child: Stack(
+    return NakedSearchField(
+      controller: controller,
+      focusNode: focusNode,
+      enabled: enabled,
+      readOnly: readOnly,
+      onChanged: onChanged,
+      onCleared: onCleared,
+      builder: (context, field) => Stack(
         fit: .passthrough,
         children: [
           FortalTextField(
-            variant: switch (widget.variant) {
+            variant: switch (variant) {
               .surface => .surface,
               .soft => .soft,
             },
             size: fieldSize,
-            controller: _controller,
-            focusNode: _focusNode,
-            hintText: widget.hintText,
-            semanticLabel: widget.semanticLabel,
-            enabled: widget.enabled,
-            readOnly: widget.readOnly,
-            autofocus: widget.autofocus,
-            textInputAction: widget.textInputAction,
-            onChanged: widget.onChanged,
-            onSubmitted: widget.onSubmitted,
+            controller: field.controller,
+            focusNode: field.focusNode,
+            hintText: hintText,
+            semanticLabel: semanticLabel,
+            enabled: field.enabled,
+            readOnly: field.readOnly,
+            autofocus: autofocus,
+            textInputAction: textInputAction,
+            onChanged: field.onChanged,
+            onSubmitted: onSubmitted,
             leading: const StyledIcon(icon: RemixIcons.search),
             // Always present at the clear button's width, so the text area
             // keeps one width and the field one structure as text comes and
             // goes.
             trailing: SizedBox(width: reserved),
-            style: widget.style,
+            style: style,
           ),
-          if (_canClear)
+          if (field.clear != null)
             PositionedDirectional(
               top: 0,
               bottom: 0,
@@ -333,10 +232,10 @@ class _FortalSearchFieldState extends State<FortalSearchField> {
                     child: ExcludeFocus(
                       child: FortalIconButton.ghost(
                         icon: RemixIcons.close,
-                        semanticLabel: widget.clearSemanticLabel,
+                        semanticLabel: clearSemanticLabel,
                         size: buttonSize,
-                        onPressed: _clear,
-                        style: _clearStyle(widget.variant),
+                        onPressed: field.clear,
+                        style: _clearStyle(variant),
                       ),
                     ),
                   ),
