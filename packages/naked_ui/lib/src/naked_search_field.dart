@@ -42,7 +42,8 @@ class NakedSearchFieldBindings {
 ///
 /// Escape clears an editable, nonempty field. Repeats and key-up from that
 /// press do not dismiss a surrounding dialog. During active text composition,
-/// Escape stays with the input method; a fresh Escape on an empty field bubbles.
+/// Escape stays with the input method even if the field becomes read-only.
+/// A fresh Escape with nothing to clear bubbles.
 class NakedSearchField extends StatefulWidget {
   /// Creates a behavior-only search field.
   const NakedSearchField({
@@ -144,15 +145,13 @@ class _NakedSearchFieldState extends State<NakedSearchField>
   KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
     if (event.logicalKey != LogicalKeyboardKey.escape) return .ignored;
     if (event is KeyDownEvent) {
+      final value = _controller.value;
       _escapeResult = .ignored;
-      if (widget.enabled && !widget.readOnly) {
-        final value = _controller.value;
-        if (value.isComposingRangeValid && !value.composing.isCollapsed) {
-          _escapeResult = .skipRemainingHandlers;
-        } else if (_canClear) {
-          _escapeResult = .handled;
-          _clear();
-        }
+      if (value.isComposingRangeValid && !value.composing.isCollapsed) {
+        _escapeResult = .skipRemainingHandlers;
+      } else if (_canClear) {
+        _escapeResult = .handled;
+        _clear();
       }
     }
     final result = _escapeResult;

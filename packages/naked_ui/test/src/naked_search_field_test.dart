@@ -213,6 +213,52 @@ void main() {
     expect(controller.text, isEmpty);
   });
 
+  testWidgets('IME keeps Escape when a composing field becomes read-only', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    final focusNode = FocusNode();
+    addTearDown(controller.dispose);
+    addTearDown(focusNode.dispose);
+    final calls = <String>[];
+    await _pump(tester, controller: controller, focusNode: focusNode);
+    await tester.showKeyboard(find.byType(EditableText));
+    const composingValue = TextEditingValue(
+      text: 'に',
+      selection: TextSelection.collapsed(offset: 1),
+      composing: TextRange(start: 0, end: 1),
+    );
+    controller.value = composingValue;
+    await tester.pump();
+
+    await _pump(
+      tester,
+      controller: controller,
+      focusNode: focusNode,
+      readOnly: true,
+      onChanged: (value) => calls.add('edit:$value'),
+      onCleared: () => calls.add('clear'),
+      onEscape: () => calls.add('ancestor Escape'),
+    );
+    expect(focusNode.hasFocus, isTrue);
+    expect(controller.value, composingValue);
+    expect(find.byType(NakedButton), findsNothing);
+
+    expect(await tester.sendKeyDownEvent(LogicalKeyboardKey.escape), isFalse);
+    expect(controller.value, composingValue);
+    controller.clearComposing();
+    await tester.pump();
+    expect(await tester.sendKeyRepeatEvent(LogicalKeyboardKey.escape), isFalse);
+    expect(await tester.sendKeyUpEvent(LogicalKeyboardKey.escape), isFalse);
+    expect(controller.text, 'に');
+    expect(calls, isEmpty);
+
+    expect(await tester.sendKeyDownEvent(LogicalKeyboardKey.escape), isTrue);
+    expect(await tester.sendKeyUpEvent(LogicalKeyboardKey.escape), isTrue);
+    expect(controller.text, 'に');
+    expect(calls, ['ancestor Escape', 'ancestor Escape']);
+  });
+
   for (final readOnly in [true, false]) {
     testWidgets(
       '${readOnly ? 'read-only' : 'disabled'} prevents even a retained clear action',
