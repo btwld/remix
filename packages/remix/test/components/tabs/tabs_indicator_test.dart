@@ -425,7 +425,7 @@ void main() {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
-                    width: 80,
+                    width: 240,
                     child: RemixTab(tabId: 'a', label: 'Alpha'),
                   ),
                   SizedBox(
@@ -461,8 +461,9 @@ void main() {
         );
       }
 
-      // Near the pill's corner, clear of the label.
-      final inside = at(pill.topLeft + const Offset(3, 3));
+      // Near the pill's far corner: the label is at the start of a wide tab,
+      // whichever font the platform falls back to.
+      final inside = at(pill.topRight + const Offset(-4, 3));
       expect(inside.b, greaterThan(.4));
       expect(inside.r, lessThan(.2));
       // The bar's padding, outside the pill, keeps the fill.
