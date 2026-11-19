@@ -112,7 +112,16 @@ class RemixTabBar extends StatelessWidget {
         style: style,
         styleSpec: styleSpec,
         builder: (context, spec) {
-          return FlexBox(styleSpec: spec.container, children: [child]);
+          final bar = FlexBox(styleSpec: spec.container, children: [child]);
+          final indicator = spec.indicator;
+          if (indicator == null) return bar;
+
+          return _TabIndicatorHost(
+            indicator: indicator,
+            indicatorEffects: spec.indicatorEffects,
+            motion: spec.indicatorMotion,
+            child: bar,
+          );
         },
       ),
     );
@@ -226,25 +235,28 @@ class RemixTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NakedTab(
+    return _TabIndicatorAnchor(
       tabId: tabId,
-      enabled: enabled,
-      mouseCursor: mouseCursor,
-      enableFeedback: enableFeedback,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      onFocusChange: onFocusChange,
-      onHoverChange: onHoverChange,
-      onPressChange: onPressChange,
-      semanticLabel: semanticLabel ?? label,
-      builder: (context, state, _) {
-        return RemixStyleSpecBuilder<TabSpec>(
-          style: style,
-          styleSpec: styleSpec,
-          controller: NakedTabState.controllerOf(context),
-          builder: (context, spec) => _buildTabContent(context, spec, state),
-        );
-      },
+      child: NakedTab(
+        tabId: tabId,
+        enabled: enabled,
+        mouseCursor: mouseCursor,
+        enableFeedback: enableFeedback,
+        focusNode: focusNode,
+        autofocus: autofocus,
+        onFocusChange: onFocusChange,
+        onHoverChange: onHoverChange,
+        onPressChange: onPressChange,
+        semanticLabel: semanticLabel ?? label,
+        builder: (context, state, _) {
+          return RemixStyleSpecBuilder<TabSpec>(
+            style: style,
+            styleSpec: styleSpec,
+            controller: NakedTabState.controllerOf(context),
+            builder: (context, spec) => _buildTabContent(context, spec, state),
+          );
+        },
+      ),
     );
   }
 }

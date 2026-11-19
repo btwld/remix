@@ -8,22 +8,53 @@ part of 'tabs.dart';
 
 mixin _$TabBarSpec implements Spec<TabBarSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<BoxSpec>? get indicator;
+  RemixBoxEffectsSpec? get indicatorEffects;
+  RemixTabIndicatorMotion? get indicatorMotion;
 
   @override
   Type get type => TabBarSpec;
 
   @override
-  TabBarSpec copyWith({StyleSpec<FlexBoxSpec>? container}) {
-    return TabBarSpec(container: container ?? this.container);
+  TabBarSpec copyWith({
+    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<BoxSpec>? indicator,
+    RemixBoxEffectsSpec? indicatorEffects,
+    RemixTabIndicatorMotion? indicatorMotion,
+  }) {
+    return TabBarSpec(
+      container: container ?? this.container,
+      indicator: indicator ?? this.indicator,
+      indicatorEffects: indicatorEffects ?? this.indicatorEffects,
+      indicatorMotion: indicatorMotion ?? this.indicatorMotion,
+    );
   }
 
   @override
   TabBarSpec lerp(TabBarSpec? other, double t) {
-    return TabBarSpec(container: container.lerp(other?.container, t));
+    return TabBarSpec(
+      container: container.lerp(other?.container, t),
+      indicator: indicator?.lerp(other?.indicator, t),
+      indicatorEffects: MixOps.lerpSnap(
+        indicatorEffects,
+        other?.indicatorEffects,
+        t,
+      ),
+      indicatorMotion: MixOps.lerpSnap(
+        indicatorMotion,
+        other?.indicatorMotion,
+        t,
+      ),
+    );
   }
 
   @override
-  List<Object?> get props => [container];
+  List<Object?> get props => [
+    container,
+    indicator,
+    indicatorEffects,
+    indicatorMotion,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -64,7 +95,11 @@ mixin _$TabBarSpec implements Spec<TabBarSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties.add(DiagnosticsProperty('container', container));
+    properties
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('indicator', indicator))
+      ..add(DiagnosticsProperty('indicatorEffects', indicatorEffects))
+      ..add(DiagnosticsProperty('indicatorMotion', indicatorMotion));
   }
 }
 
@@ -241,21 +276,36 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     with RemixBoxStylerMixin<TabBarStyler>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<StyleSpec<BoxSpec>>? $indicator;
+  final Prop<RemixBoxEffectsSpec>? $indicatorEffects;
+  final Prop<RemixTabIndicatorMotion>? $indicatorMotion;
 
   const TabBarStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<StyleSpec<BoxSpec>>? indicator,
+    Prop<RemixBoxEffectsSpec>? indicatorEffects,
+    Prop<RemixTabIndicatorMotion>? indicatorMotion,
     super.variants,
     super.modifier,
     super.animation,
-  }) : $container = container;
+  }) : $container = container,
+       $indicator = indicator,
+       $indicatorEffects = indicatorEffects,
+       $indicatorMotion = indicatorMotion;
 
   TabBarStyler({
     FlexBoxStyler? container,
+    BoxStyler? indicator,
+    RemixBoxEffectsMix? indicatorEffects,
+    RemixTabIndicatorMotion? indicatorMotion,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<TabBarSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
+         indicator: Prop.maybeMix(indicator),
+         indicatorEffects: Prop.maybeMix(indicatorEffects),
+         indicatorMotion: Prop.maybe(indicatorMotion),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -263,6 +313,12 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
 
   factory TabBarStyler.container(FlexBoxStyler value) =>
       TabBarStyler().container(value);
+  factory TabBarStyler.indicator(BoxStyler value) =>
+      TabBarStyler().indicator(value);
+  factory TabBarStyler.indicatorEffects(RemixBoxEffectsMix value) =>
+      TabBarStyler().indicatorEffects(value);
+  factory TabBarStyler.indicatorMotion(RemixTabIndicatorMotion value) =>
+      TabBarStyler().indicatorMotion(value);
   factory TabBarStyler.color(Color value) => TabBarStyler().color(value);
   factory TabBarStyler.gradient(GradientMix value) =>
       TabBarStyler().gradient(value);
@@ -811,6 +867,9 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
   @override
   Set<String> get $stylerFieldNames => const {
     'container',
+    'indicator',
+    'indicatorEffects',
+    'indicatorMotion',
     'animation',
     'modifier',
     'variants',
@@ -819,6 +878,21 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
   /// Sets the container.
   TabBarStyler container(FlexBoxStyler value) {
     return merge(TabBarStyler(container: value));
+  }
+
+  /// Sets the indicator.
+  TabBarStyler indicator(BoxStyler value) {
+    return merge(TabBarStyler(indicator: value));
+  }
+
+  /// Sets the indicatorEffects.
+  TabBarStyler indicatorEffects(RemixBoxEffectsMix value) {
+    return merge(TabBarStyler(indicatorEffects: value));
+  }
+
+  /// Sets the indicatorMotion.
+  TabBarStyler indicatorMotion(RemixTabIndicatorMotion value) {
+    return merge(TabBarStyler(indicatorMotion: value));
   }
 
   /// Sets the animation configuration.
@@ -853,6 +927,12 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
   TabBarStyler merge(TabBarStyler? other) {
     return TabBarStyler.create(
       container: MixOps.merge($container, other?.$container),
+      indicator: MixOps.merge($indicator, other?.$indicator),
+      indicatorEffects: MixOps.merge(
+        $indicatorEffects,
+        other?.$indicatorEffects,
+      ),
+      indicatorMotion: MixOps.merge($indicatorMotion, other?.$indicatorMotion),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -862,7 +942,12 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
   /// Resolves to [StyleSpec<TabBarSpec>] using [context].
   @override
   StyleSpec<TabBarSpec> resolve(BuildContext context) {
-    final spec = TabBarSpec(container: MixOps.resolve(context, $container));
+    final spec = TabBarSpec(
+      container: MixOps.resolve(context, $container),
+      indicator: MixOps.resolve(context, $indicator),
+      indicatorEffects: MixOps.resolve(context, $indicatorEffects),
+      indicatorMotion: MixOps.resolve(context, $indicatorMotion),
+    );
 
     return StyleSpec(
       spec: spec,
@@ -874,11 +959,23 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('container', $container));
+    properties
+      ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('indicator', $indicator))
+      ..add(DiagnosticsProperty('indicatorEffects', $indicatorEffects))
+      ..add(DiagnosticsProperty('indicatorMotion', $indicatorMotion));
   }
 
   @override
-  List<Object?> get props => [$container, $animation, $modifier, $variants];
+  List<Object?> get props => [
+    $container,
+    $indicator,
+    $indicatorEffects,
+    $indicatorMotion,
+    $animation,
+    $modifier,
+    $variants,
+  ];
 }
 
 class TabStyler extends MixStyler<TabStyler, TabSpec>
