@@ -107,9 +107,10 @@ TabStyler deuiTabStyle({
           DeuiTokens.textSm.mix(),
         ).fontWeight(.w500).color(DeuiTokens.muted()),
       )
-      // Unselected tabs fade on hover; selected tabs restore it below.
+      // Unselected tabs fade on hover; selected tabs restore it below. The
+      // colors follow the indicator's glide, as in Deui.
       .onHovered(TabStyler().wrap(.opacity(_hoverOpacity)))
-      .animate(DeuiTokens.smoothMotion)
+      .animate(_foregroundGlide)
       .merge(switch (variant) {
         .primary =>
           TabStyler()
@@ -136,9 +137,17 @@ TabViewStyler deuiTabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
 }) => TabViewStyler().padding(.all(_panelPadding)).merge(style);
 
+const _glideCurve = _TabGlide(slow: -10.4356, fast: -19.5644, seconds: .47);
 const _glide = RemixTabIndicatorMotion(
   duration: Duration(milliseconds: 470),
-  curve: _TabGlide(slow: -10.4356, fast: -19.5644, seconds: .47),
+  curve: _glideCurve,
+);
+
+/// Deui reveals the selected foreground through a clip that follows the glide,
+/// so the colors change on the indicator's timing, not on a 150 ms fade.
+const _foregroundGlide = CurveAnimationConfig(
+  duration: Duration(milliseconds: 470),
+  curve: _glideCurve,
 );
 
 /// The unit-step response of an overdamped spring, normalized at its stop
