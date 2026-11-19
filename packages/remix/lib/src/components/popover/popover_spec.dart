@@ -10,8 +10,19 @@ class PopoverSpec with _$PopoverSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  const PopoverSpec({StyleSpec<BoxSpec>? container, this.containerEffects})
-    : container = container ?? const StyleSpec(spec: BoxSpec());
+  /// Opens and closes the panel with a transition.
+  ///
+  /// The builder receives the open and close animation and the trigger's
+  /// bounds, and the panel stays mounted until the exit has played. `null`
+  /// shows and hides the panel at once.
+  @override
+  final RemixPanelTransition? panelTransition;
+
+  const PopoverSpec({
+    StyleSpec<BoxSpec>? container,
+    this.containerEffects,
+    this.panelTransition,
+  }) : container = container ?? const StyleSpec(spec: BoxSpec());
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.
@@ -25,6 +36,7 @@ class PopoverSpec with _$PopoverSpec {
         other.containerEffects,
         t,
       ),
+      panelTransition: generated.panelTransition,
     );
   }
 }

@@ -364,6 +364,61 @@ checkbox item, radio group, radio item, submenu, section, and divider. Build
 keys from application-owned item identity and keep them stable across
 rebuilds. Item keys are not derived automatically from labels or values.
 
+## Panel transition
+
+A menu panel shows and hides at once by default. Set `panelTransition` on the
+style to open and close the root panel with a transition, so a recipe owns the
+motion. `RemixPanelTransition` takes the durations and a builder. The builder
+receives the open and close animation, which runs from `0.0` to `1.0` while the
+panel opens and back while it closes, and the trigger's bounds as `anchorRect`.
+The animation is linear, so apply a curve in the builder.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final menuWithTransition = RemixMenu<String>(
+  trigger: const RemixMenuTrigger(label: 'Options'),
+  items: const [
+    RemixMenuItem(value: 'copy', label: 'Copy'),
+    RemixMenuItem(value: 'paste', label: 'Paste'),
+  ],
+  style: MenuStyler().panelTransition(
+    RemixPanelTransition(
+      duration: const Duration(milliseconds: 360),
+      reverseDuration: const Duration(milliseconds: 260),
+      builder: (context, info, panel) {
+        // The side the panel was placed on, after collision handling.
+        final placement = OverlayPlacement.maybeOf(context);
+        final origin = placement?.side == OverlaySide.top
+            ? Alignment.bottomLeft
+            : Alignment.topLeft;
+        final curved = CurvedAnimation(
+          parent: info.animation,
+          curve: Curves.easeOutCubic,
+        );
+        return FadeTransition(
+          opacity: curved,
+          child: ScaleTransition(
+            alignment: origin,
+            scale: Tween<double>(begin: .96, end: 1).animate(curved),
+            child: panel,
+          ),
+        );
+      },
+    ),
+  ),
+);
+```
+
+The panel stays mounted until the exit has played, then hides and `onClose`
+runs. A panel that is leaving takes no pointer input. When `onCloseRequested`
+is set it runs first and keeps its contract: the menu stays open until it calls
+`hideOverlay`, and that call plays the exit. While the user asks to reduce
+motion the panel opens and closes at once, whatever the durations. Submenu
+panels are not wrapped. `RemixPopover` takes the same `panelTransition` on
+`PopoverStyler`.
+
 ## Sections
 
 `RemixMenuSection` groups entries under a heading, such as "Recent" or
@@ -844,6 +899,11 @@ Configures the menu-wide section-heading override after `item`.
 #### `divider(DividerStyler value)`
 
 Configures divider style.
+
+#### `panelTransition(RemixPanelTransition value)`
+
+Opens and closes the root panel with a transition. `null` shows and hides it at
+once.
 
 #### `animate(AnimationConfig value)`
 
