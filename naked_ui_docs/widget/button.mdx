@@ -227,4 +227,8 @@ Optional tooltip semantics for assistive technologies.
 #### semanticLabel → `String?`
 Optional semantic label for screen readers.
 
+A standalone button exposes its label, actions, and keyboard focus on its own
+semantics node, separate from nearby controls. Set `excludeSemantics: true` to
+hide it when the enclosing control supplies the accessibility semantics instead.
+
 `semanticHint` describes the action to accessibility services. `tooltip` sets semantic tooltip text; use [NakedTooltip](/widget/tooltip) for a visible overlay.
