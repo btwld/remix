@@ -20,8 +20,10 @@ class SemanticsUpdateSpyBinding extends AutomatedTestWidgetsFlutterBinding {
   static SemanticsUpdateSpyBinding get instance =>
       TestWidgetsFlutterBinding.instance as SemanticsUpdateSpyBinding;
 
-  final Map<int, List<int>> _tree = {};
+  final Map<int, SerializedSemanticsNode> _tree = {};
   final List<String> _detachedNodes = [];
+
+  Iterable<SerializedSemanticsNode> get nodes => _tree.values;
 
   /// Nodes sent in an update that were not reachable from the root node once
   /// that update was applied, described as `#id "label" in update N`.
@@ -36,18 +38,16 @@ class SemanticsUpdateSpyBinding extends AutomatedTestWidgetsFlutterBinding {
     _updateCount = 0;
   }
 
-  void _applyUpdate(Map<int, _NodeUpdate> update) {
+  void _applyUpdate(Map<int, SerializedSemanticsNode> update) {
     _updateCount += 1;
-    for (final MapEntry(:key, :value) in update.entries) {
-      _tree[key] = value.childrenInTraversalOrder;
-    }
+    _tree.addAll(update);
 
     final reachable = <int>{};
     final pending = <int>[0];
     while (pending.isNotEmpty) {
       final id = pending.removeLast();
       if (!reachable.add(id)) continue;
-      pending.addAll(_tree[id] ?? const <int>[]);
+      pending.addAll(_tree[id]?.childrenInTraversalOrder ?? const <int>[]);
     }
 
     for (final MapEntry(:key, :value) in update.entries) {
@@ -64,11 +64,20 @@ class SemanticsUpdateSpyBinding extends AutomatedTestWidgetsFlutterBinding {
   }
 }
 
-class _NodeUpdate {
-  const _NodeUpdate(this.label, this.childrenInTraversalOrder);
+class SerializedSemanticsNode {
+  const SerializedSemanticsNode({
+    required this.label,
+    required this.flags,
+    required this.actions,
+    required this.childrenInTraversalOrder,
+  });
 
   final String label;
+  final ui.SemanticsFlags flags;
+  final int actions;
   final List<int> childrenInTraversalOrder;
+
+  bool hasAction(ui.SemanticsAction action) => (actions & action.index) != 0;
 }
 
 /// Records `updateNode` calls without depending on their full parameter list,
@@ -77,8 +86,8 @@ class _SemanticsUpdateBuilderSpy extends Fake
     implements ui.SemanticsUpdateBuilder {
   _SemanticsUpdateBuilderSpy(this._onBuild);
 
-  final void Function(Map<int, _NodeUpdate> update) _onBuild;
-  final Map<int, _NodeUpdate> _update = {};
+  final void Function(Map<int, SerializedSemanticsNode> update) _onBuild;
+  final Map<int, SerializedSemanticsNode> _update = {};
 
   @override
   ui.SemanticsUpdate build() {
@@ -91,9 +100,13 @@ class _SemanticsUpdateBuilderSpy extends Fake
   Object? noSuchMethod(Invocation invocation) {
     if (invocation.memberName == #updateNode) {
       final arguments = invocation.namedArguments;
-      _update[arguments[#id]! as int] = _NodeUpdate(
-        arguments[#label]! as String,
-        List.of(arguments[#childrenInTraversalOrder]! as List<int>),
+      _update[arguments[#id]! as int] = SerializedSemanticsNode(
+        label: arguments[#label]! as String,
+        flags: arguments[#flags]! as ui.SemanticsFlags,
+        actions: arguments[#actions]! as int,
+        childrenInTraversalOrder: List.of(
+          arguments[#childrenInTraversalOrder]! as List<int>,
+        ),
       );
 
       return null;
