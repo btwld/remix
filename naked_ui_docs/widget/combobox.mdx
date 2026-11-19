@@ -10,6 +10,8 @@ Keep option values stable across filtering. Dispose your text and focus controll
 
 To show a result that people cannot choose, return it and mark it with `isOptionDisabled`. Keyboard navigation skips it, Enter and pointer activation do not accept it, and its `NakedComboboxOption` is disabled. A result with no enabled option closes the panel. The option's own `enabled` flag is deprecated: it blocks only pointer and semantic activation.
 
+To play an exit animation, pass `exitBuilder`. RawAutocomplete hides the options view directly on focus loss, selection, Escape or an empty result, so a combobox cannot defer the close the way a menu's `onCloseRequested` does. Instead the combobox keeps the last options view, rebuilt and inert, in the nearest overlay at the same bounds, in the frame that drops the view, and hands it to `exitBuilder` with a `dismiss` callback. Animate it, then call `dismiss`. `onOpen` and `onClose` still report the view mounting and unmounting.
+
 ## Basic implementation
 
 <NakedSource file="naked_combobox.0.dart" />
