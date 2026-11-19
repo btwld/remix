@@ -331,8 +331,9 @@ its whole target inside the field. A trailing spacer is always present, so
 the input stops where that target starts, at least one field spacing short of
 its glyph, and keeps one width and structure whether or not there is text; a
 tap on the text never lands on the button. It shows only
-while the field is enabled, editable and not empty. Pressing it clears the
-text, calls `onChanged('')` and `onCleared`, and returns focus to the field;
+while the field is enabled, editable and not empty. Pressing it or invoking
+its semantic tap action clears the text, calls `onChanged('')` before
+`onCleared`, and returns focus to the field;
 it sits inside the field's tap region and excludes focus, so it is no Tab
 stop. It is its own semantics container: merged into the node around the
 field, it would turn that node into a button once there is text, and Flutter
