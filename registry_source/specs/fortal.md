@@ -342,9 +342,11 @@ after the first. A caller controller that is withdrawn leaves its last value
 in the field's own controller. Escape is the keyboard path: it clears when
 there is text to clear, and the repeats and release of that press are
 consumed with it, so holding Escape never also closes a dialog. With nothing
-to clear it passes on, so a dialog still closes. Active input-method
-composition takes precedence even if the field becomes read-only: that
-whole Escape press skips ancestor handlers without clearing or calling
+to clear it passes on, so a dialog still closes. An Escape press that starts
+during active composition in an enabled, editable field skips ancestor
+handlers through repeats and release, even if the field becomes read-only
+during the press. A fresh Escape in a read-only field passes on even if the
+editor retained a composing range. Neither press clears the text or calls
 either callback. A caller `style` merges last into the field.
 Tests cover both modes and variants, every size at 100% and 200% text in both
 directions, the clear target, keyboard focus and Escape, composition,

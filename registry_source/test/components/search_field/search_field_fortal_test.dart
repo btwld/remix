@@ -505,11 +505,14 @@ void main() {
       expect(cleared, 1);
     });
 
-    testWidgets('Escape leaves an input method composition alone', (
+    testWidgets('only a held composing Escape stays owned after read-only', (
       tester,
     ) async {
       final controller = TextEditingController();
+      final readOnly = ValueNotifier(false);
       addTearDown(controller.dispose);
+      addTearDown(readOnly.dispose);
+      final calls = <String>[];
       var dismissed = 0;
       await tester.pumpRemixApp(
         Actions(
@@ -520,26 +523,47 @@ void main() {
           },
           child: SizedBox(
             width: 320,
-            child: FortalSearchField(
-              semanticLabel: 'Search',
-              controller: controller,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: readOnly,
+              builder: (context, value, child) => FortalSearchField(
+                semanticLabel: 'Search',
+                controller: controller,
+                readOnly: value,
+                onChanged: (query) => calls.add('change:$query'),
+                onCleared: () => calls.add('clear'),
+              ),
             ),
           ),
         ),
       );
 
-      await tester.tap(find.byType(EditableText));
-      controller.value = const TextEditingValue(
+      final editor = find.byType(EditableText);
+      await tester.showKeyboard(editor);
+      const composingValue = TextEditingValue(
         text: 'かな',
         selection: TextSelection.collapsed(offset: 2),
         composing: TextRange(start: 0, end: 2),
       );
+      tester.testTextInput.updateEditingValue(composingValue);
       await tester.pump();
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      expect(controller.value, composingValue);
+
+      const escape = LogicalKeyboardKey.escape;
+      expect(await tester.sendKeyDownEvent(escape), isFalse);
+      readOnly.value = true;
       await tester.pump();
-      // The input method keeps the key: nothing clears and nothing closes.
-      expect(controller.text, 'かな');
+      expect(tester.widget<EditableText>(editor).focusNode.hasFocus, isTrue);
+      expect(await tester.sendKeyRepeatEvent(escape), isFalse);
+      expect(await tester.sendKeyUpEvent(escape), isFalse);
+      expect(controller.value, composingValue);
+      expect(calls, ['change:かな']);
       expect(dismissed, 0);
+
+      await tester.sendKeyEvent(escape);
+      await tester.pump();
+      expect(controller.value, composingValue);
+      expect(calls, ['change:かな']);
+      expect(dismissed, 1);
     });
 
     testWidgets('holding Escape clears once and closes nothing', (

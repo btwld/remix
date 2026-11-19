@@ -44,8 +44,9 @@ enum FortalSearchFieldVariant {
 /// where that target starts. Pressing it clears the text, reports `onChanged('')` and
 /// [onCleared], and returns focus to the field. It is its own semantics node
 /// and takes no Tab stop: Escape clears from the keyboard, its repeats
-/// included. Escape passes on, to close a dialog for example, when there is
-/// nothing to clear, and is left to an input method that is composing.
+/// included. A press that starts during editable composition stays with the
+/// input method through release. A fresh Escape in a read-only or empty field
+/// passes on, to close a dialog for example.
 ///
 /// The field creates its own controller and focus node when none are given.
 /// When a caller's controller is withdrawn, the owned one starts from its

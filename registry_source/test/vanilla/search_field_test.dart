@@ -441,45 +441,58 @@ void main() {
       expect(dialogField(), findsNothing, reason: 'an empty field passes up');
     });
 
-    testWidgets('Escape during composition stays with the input method', (
+    testWidgets('only a held composing Escape stays owned after read-only', (
       tester,
     ) async {
       final controller = TextEditingController();
+      final readOnly = ValueNotifier(false);
       addTearDown(controller.dispose);
-      var cleared = 0;
+      addTearDown(readOnly.dispose);
+      final calls = <String>[];
       await openDialog(
         tester,
-        VanillaSearchField(
-          semanticLabel: 'Search',
-          controller: controller,
-          onCleared: () => cleared++,
+        ValueListenableBuilder<bool>(
+          valueListenable: readOnly,
+          builder: (context, value, child) => VanillaSearchField(
+            semanticLabel: 'Search',
+            controller: controller,
+            readOnly: value,
+            onChanged: (query) => calls.add('change:$query'),
+            onCleared: () => calls.add('clear'),
+          ),
         ),
       );
       await tester.showKeyboard(editable());
-      controller.value = const TextEditingValue(
+      const composingValue = TextEditingValue(
         text: 'に',
         selection: TextSelection.collapsed(offset: 1),
         composing: TextRange(start: 0, end: 1),
       );
+      tester.testTextInput.updateEditingValue(composingValue);
       await tester.pump();
+      expect(controller.value, composingValue);
 
-      // Unhandled by the framework, so the platform's input method gets it,
-      // and no handler above the field sees it.
-      expect(await tester.sendKeyDownEvent(LogicalKeyboardKey.escape), isFalse);
-      controller.clearComposing();
+      const escape = LogicalKeyboardKey.escape;
+      expect(await tester.sendKeyDownEvent(escape), isFalse);
+      readOnly.value = true;
       await tester.pump();
-      await tester.sendKeyRepeatEvent(LogicalKeyboardKey.escape);
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.escape);
+      expect(controller.value, composingValue);
+      expect(
+        tester.widget<EditableText>(editable()).focusNode.hasFocus,
+        isTrue,
+      );
+      expect(await tester.sendKeyRepeatEvent(escape), isFalse);
+      expect(await tester.sendKeyUpEvent(escape), isFalse);
       await tester.pumpAndSettle();
-      expect(controller.text, 'に');
-      expect(cleared, 0);
+      expect(controller.value, composingValue);
+      expect(calls, ['change:に']);
       expect(dialogField(), findsOneWidget, reason: 'the dialog stays open');
 
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.sendKeyEvent(escape);
       await tester.pumpAndSettle();
-      expect(controller.text, isEmpty);
-      expect(cleared, 1);
-      expect(dialogField(), findsOneWidget);
+      expect(controller.text, 'に');
+      expect(calls, ['change:に']);
+      expect(dialogField(), findsNothing);
     });
   });
 
@@ -709,6 +722,7 @@ void main() {
     try {
       final controller = TextEditingController(text: 'ada');
       addTearDown(controller.dispose);
+      final calls = <String>[];
       await pump(
         tester,
         VanillaSearchField(
@@ -716,6 +730,8 @@ void main() {
           hintText: 'Search customers…',
           clearSemanticLabel: 'Clear customer search',
           controller: controller,
+          onChanged: (query) => calls.add('change:$query'),
+          onCleared: () => calls.add('clear'),
         ),
       );
       final field = find.semantics.byLabel('Search customers');
@@ -738,6 +754,7 @@ void main() {
       await tester.pump();
       expect(clear, findsNothing);
       expect(field.evaluate().single.getSemanticsData().value, isEmpty);
+      expect(calls, ['change:', 'clear']);
       expect(
         tester.widget<EditableText>(editable()).focusNode.hasFocus,
         isTrue,

@@ -21,10 +21,10 @@ import 'textfield.dart';
 /// Clearing, by the button or by Escape, empties the text, reports `''` to
 /// [onChanged], calls [onCleared], and keeps focus in the field. Escape clears
 /// when there is text, and the key repeats of that press are spent on it, so
-/// holding Escape does not go on to close an enclosing dialog. During an
-/// input-method composition Escape belongs to the input method and reaches
-/// nothing above the field. With nothing to clear it passes up, so an
-/// enclosing dialog closes.
+/// holding Escape does not go on to close an enclosing dialog. A press that
+/// starts during editable composition stays with the input method through
+/// release. A fresh Escape in a read-only or empty field passes up, so an
+/// enclosing dialog can close.
 ///
 /// ```dart
 /// VanillaSearchField(
