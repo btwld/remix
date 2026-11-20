@@ -27,6 +27,18 @@ import 'dashboard_overview.dart';
 import 'dashboard_sample_data.dart';
 import 'dashboard_shell.dart';
 
+// Everything the demo's constructor takes, so this one import builds it.
+export 'dashboard_demo_base.dart'
+    show UiDashboardDemoPage, UiDashboardDemoSection;
+export 'dashboard_sample_data.dart'
+    show
+        UiDashboardActivity,
+        UiDashboardActivityKind,
+        UiDashboardMetric,
+        UiDashboardPoint,
+        UiDashboardRecord,
+        UiDashboardSampleData;
+
 /// Dashboard with Overview, Chat, Customers, Orders, and Settings.
 ///
 /// An extension: HeroUI web 3.2.6 has no dashboard. The pages, sample data,
@@ -389,8 +401,6 @@ class _UiHeaderPopoverState extends State<_UiHeaderPopover> {
   @override
   void didUpdateWidget(covariant _UiHeaderPopover oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Appearance changes used to dismiss the popover by remounting the demo.
-    // Keep that behavior while retaining the dashboard's page state.
     if (widget.dark != oldWidget.dark) _controller.close();
   }
 

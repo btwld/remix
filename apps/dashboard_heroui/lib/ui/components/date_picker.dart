@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 import 'calendar.dart';
 import 'popover.dart';
 
-/// HeroUI's reviewed DatePicker composition.
+/// HeroUI's DatePicker composition.
 ///
 /// Remix owns civil-date selection, focus, keyboard navigation and semantics.
 /// Multiple independent child styles require a hand-written facade; caller

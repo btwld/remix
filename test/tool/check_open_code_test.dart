@@ -1293,7 +1293,7 @@ Future<void> main(List<String> arguments) async {
         'components/sidebar_layout.dart',
         // The header search, and the field and button it composes.
         'components/search_field.dart',
-        'components/textfield.dart',
+        'components/text_field.dart',
         'components/icon_button.dart',
       ]),
     );
@@ -1405,7 +1405,7 @@ Future<void> main(List<String> arguments) async {
           'sidebar_layout',
           'switch_group',
           'table',
-          'textarea',
+          'text_area',
           'toast',
           'toggle_button_group',
           'agent_glyphs_recipe',
@@ -1866,7 +1866,7 @@ import 'package:flutter/widgets.dart'
         'components/search_field.g.dart',
         'components/close_button.dart',
         'components/spinner.dart',
-        'components/textfield.dart',
+        'components/text_field.dart',
       ]),
     );
     expect(inventory, isNot(contains('components/toast.dart')));

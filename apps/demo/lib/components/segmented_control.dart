@@ -9,7 +9,7 @@ Widget buildSegmentedControlCatalogUseCase(BuildContext context) {
   return CatalogMatrix(
     cellWidth: 260,
     columns: labelsOf(FortalSegmentedControlSize.values),
-    rows: labelsOf(FortalSegmentedControlVariant.values),
+    rows: noRowAxis,
     cell: (row, column) => FortalSegmentedControl<String>(
       items: const [
         RemixSegmentedControlItem(value: 'day', label: 'Day'),
@@ -17,7 +17,6 @@ Widget buildSegmentedControlCatalogUseCase(BuildContext context) {
       ],
       selectedValue: 'day',
       size: FortalSegmentedControlSize.values[column],
-      variant: FortalSegmentedControlVariant.values[row],
     ),
   );
 }

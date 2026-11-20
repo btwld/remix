@@ -4,12 +4,6 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// The looks a keyboard key comes in.
-enum UiKbdVariant {
-  /// A gray-tinted key cap.
-  soft,
-}
-
 /// The style of a keyboard key, sized from the surrounding text.
 ///
 /// Without [size] it follows the 16px body text at 75%; with one it takes 80%
@@ -18,7 +12,6 @@ enum UiKbdVariant {
 BadgeStyler uiKbdStyle(
   BuildContext context, {
   UiTextSize? size,
-  UiKbdVariant variant = .soft,
   BadgeStyler style = const BadgeStyler.create(),
 }) {
   final base = uiResolveTextToken(context, size ?? UiTextSize.size3);
@@ -54,9 +47,7 @@ BadgeStyler uiKbdStyle(
           0.35 * fontSize * uiRadiusFactor(context),
         ),
       )
-      .color(switch (variant) {
-        .soft => uiResolveColor(context, UiTokens.grayA3),
-      });
+      .color(uiResolveColor(context, UiTokens.grayA3));
 
   return recipe.merge(style);
 }
@@ -67,39 +58,21 @@ class UiKbd extends StatelessWidget {
     this.text, {
     super.key,
     this.size,
-    this.variant = UiKbdVariant.soft,
     this.semanticLabel,
     this.excludeSemantics = false,
     this.style = const BadgeStyler.create(),
   }) : assert(text != ''),
        assert(semanticLabel == null || semanticLabel != '');
 
-  const UiKbd.soft(
-    this.text, {
-    super.key,
-    this.size,
-    this.semanticLabel,
-    this.excludeSemantics = false,
-    this.style = const BadgeStyler.create(),
-  }) : variant = UiKbdVariant.soft,
-       assert(text != ''),
-       assert(semanticLabel == null || semanticLabel != '');
-
   final String text;
   final UiTextSize? size;
-  final UiKbdVariant variant;
   final String? semanticLabel;
   final bool excludeSemantics;
   final BadgeStyler style;
 
   @override
   Widget build(BuildContext context) {
-    final content = uiKbdStyle(
-      context,
-      size: size,
-      variant: variant,
-      style: style,
-    )(label: text);
+    final content = uiKbdStyle(context, size: size, style: style)(label: text);
 
     if (excludeSemantics) return ExcludeSemantics(child: content);
 

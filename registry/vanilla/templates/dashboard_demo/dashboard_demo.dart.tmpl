@@ -32,6 +32,18 @@ import 'dashboard_overview.dart';
 import 'dashboard_sample_data.dart';
 import 'dashboard_shell.dart';
 
+// Everything the demo's constructor takes, so this one import builds it.
+export 'dashboard_demo_base.dart'
+    show {{typePrefix}}DashboardDemoPage, {{typePrefix}}DashboardDemoSection;
+export 'dashboard_sample_data.dart'
+    show
+        {{typePrefix}}DashboardActivity,
+        {{typePrefix}}DashboardActivityKind,
+        {{typePrefix}}DashboardMetric,
+        {{typePrefix}}DashboardPoint,
+        {{typePrefix}}DashboardRecord,
+        {{typePrefix}}DashboardSampleData;
+
 /// Dashboard with Overview, Chat, Customers, Orders, and Settings.
 class {{typePrefix}}DashboardDemo extends StatefulWidget {
   const {{typePrefix}}DashboardDemo({
@@ -376,8 +388,6 @@ class _{{typePrefix}}HeaderPopoverState extends State<_{{typePrefix}}HeaderPopov
   @override
   void didUpdateWidget(covariant _{{typePrefix}}HeaderPopover oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Appearance changes used to dismiss the popover by remounting the demo.
-    // Keep that behavior while retaining the dashboard's page state.
     if (widget.dark != oldWidget.dark) _controller.close();
   }
 

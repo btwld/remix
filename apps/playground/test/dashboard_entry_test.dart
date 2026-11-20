@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playground/main.dart';
-import 'package:playground/ui/ui.dart';
+import 'package:playground/ui/recipes/dashboard/dashboard_demo.dart';
 
 void main() {
   testWidgets(

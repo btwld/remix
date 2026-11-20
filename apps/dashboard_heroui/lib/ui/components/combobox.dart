@@ -1,3 +1,5 @@
+// Codegen validates the expanded optionsBuilder signature, including FutureOr,
+// before emitting its typedef. Keep that type visible to the generator.
 // ignore: unused_import
 import 'dart:async';
 
@@ -6,18 +8,9 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
-import 'textfield.dart';
+import 'text_field.dart';
 
 part 'combobox.g.dart';
-
-/// HeroUI's editable field variants, the same as the text field's.
-enum UiComboboxVariant {
-  /// The field surface fill, with its shadow.
-  primary,
-
-  /// The `default` fill.
-  secondary,
-}
 
 /// HeroUI v3 ComboBox appearance over Remix's editable suggestions API.
 ///
@@ -31,15 +24,12 @@ enum UiComboboxVariant {
 /// trailing-indicator slot; the editor keeps symmetric horizontal padding.
 @MixWidget(target: RemixCombobox.new)
 ComboboxStyler uiComboboxStyle({
-  UiComboboxVariant variant = .primary,
+  UiTextFieldVariant variant = .primary,
   ComboboxStyler style = const ComboboxStyler.create(),
 }) => ComboboxStyler()
     .field(
       uiTextFieldStyle(
-        variant: switch (variant) {
-          .primary => .primary,
-          .secondary => .secondary,
-        },
+        variant: variant,
         // Clear the unstyled Combobox's 48px floor; TextField's intrinsic
         // 24/20px line plus 16px padding supplies HeroUI's 40/36px field.
         // combo-box.css: either variant takes `--field-focus` while focused.
@@ -98,7 +88,7 @@ ComboboxStyler uiComboboxStyle({
 
 final _scrollbar = uiAlpha(UiTokens.muted, .35);
 
-// combo-box.css and list-box-item.css, resolved by capture_combobox.mjs.
+// combo-box.css and list-box-item.css, in logical pixels.
 const _rowMinHeight = 36.0;
 const _rowPaddingX = 10.0;
 const _rowPaddingY = 6.0;

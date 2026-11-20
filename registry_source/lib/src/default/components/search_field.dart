@@ -5,7 +5,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../theme/tokens.dart';
 import 'icon_button.dart';
-import 'textfield.dart';
+import 'text_field.dart';
 
 /// The application's SearchField: a text field for a query, with a search
 /// icon at the start and a clear button at the end.

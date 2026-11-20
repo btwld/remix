@@ -415,13 +415,7 @@ items:
         final fortal = preset == 'fortal';
         expect(item.files, hasLength(fortal ? 19 : 11), reason: preset);
         expect(item.generated, isEmpty, reason: preset);
-        expect(item.exports, [
-          fortal
-              ? 'recipes/dashboard/dashboard_demo_data.dart'
-              : 'recipes/dashboard/dashboard_sample_data.dart',
-          'recipes/dashboard/dashboard_overview.dart',
-          'recipes/dashboard/dashboard_demo.dart',
-        ]);
+        expect(item.exports, isEmpty, reason: preset);
         expect(closure.last, 'dashboard_demo');
         expect(
           closure,
@@ -651,7 +645,7 @@ items:
         // Every component reaches the single Remix floor through theme, in dependency order.
         expect(catalog.resolve(name).map((item) => item.name), switch (name) {
           'breadcrumbs' => ['theme', 'link', name],
-          'combobox' => ['theme', 'textfield', name],
+          'combobox' => ['theme', 'text_field', name],
           'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
           'calendar' => ['theme', 'icon_button', 'select', name],
           'date_picker' => [
@@ -681,7 +675,7 @@ items:
             name,
           ],
           'range_slider' => ['theme', 'slider', name],
-          'search_field' => ['theme', 'icon_button', 'textfield', name],
+          'search_field' => ['theme', 'icon_button', 'text_field', name],
           'sidebar' => ['theme', 'toggle', 'tooltip', name],
           'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
           'toast' => ['theme', 'button', 'icon_button', name],
@@ -914,7 +908,7 @@ const _componentSurfaces =
       'switch': (widgets: ['Switch'], types: []),
       'tabs': (widgets: ['TabBar', 'Tab', 'TabView'], types: []),
       'text': (widgets: ['Text'], types: ['TextVariant']),
-      'textfield': (widgets: ['TextField', 'TextArea'], types: []),
+      'text_field': (widgets: ['TextField', 'TextArea'], types: []),
       'toast': (widgets: ['Toast'], types: ['ToastVariant']),
       'toggle': (widgets: ['Toggle'], types: ['ToggleVariant', 'ToggleSize']),
       'tooltip': (widgets: ['Tooltip'], types: []),

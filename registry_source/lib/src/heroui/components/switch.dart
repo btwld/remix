@@ -124,8 +124,7 @@ final _trackHover = heroUiAlpha(HeroUiTokens.defaultColor, 0.8);
 /// `bg-default-foreground/20`.
 final _disabledThumb = heroUiAlpha(HeroUiTokens.defaultForeground, 0.2);
 
-/// `.switch__thumb` selected `box-shadow` (switch.css:186-189), measured by
-/// `switch-md-selected-thumb`.
+/// The selected `.switch__thumb` `box-shadow`.
 final _selectedThumbShadow = RemixBoxEffectsMix.behindContent(
   RemixBoxEffectLayerMix(
     shadows: [

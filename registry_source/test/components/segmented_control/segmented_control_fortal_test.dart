@@ -287,7 +287,6 @@ Future<
 _resolve(
   WidgetTester tester, {
   FortalSegmentedControlSize size = FortalSegmentedControlSize.size2,
-  FortalSegmentedControlVariant variant = FortalSegmentedControlVariant.surface,
   FortalScaling scaling = FortalScaling.percent100,
   Set<WidgetState> states = const {},
 }) async {
@@ -311,10 +310,7 @@ _resolve(
         child: Builder(
           builder: (context) {
             result = (
-              spec: fortalSegmentedControlStyle(
-                size: size,
-                variant: variant,
-              ).build(context).spec,
+              spec: fortalSegmentedControlStyle(size: size).build(context).spec,
               colorSurface: MixScope.tokenOf(
                 FortalTokens.colorSurface,
                 context,

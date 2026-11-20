@@ -3,6 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'ui/recipes/dashboard/dashboard_demo.dart';
+import 'ui/recipes/dashboard/dashboard_demo_theme.dart';
 import 'ui/ui.dart';
 
 void main() {

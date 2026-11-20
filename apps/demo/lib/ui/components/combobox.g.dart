@@ -40,7 +40,7 @@ class FortalCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// The `gray2` fill inside a 1px neutral frame.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   const FortalCombobox.surface({
     super.key,
     this.size = .size2,
@@ -63,9 +63,9 @@ class FortalCombobox<T extends Object> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
-  }) : variant = FortalComboboxVariant.surface;
+  }) : variant = FortalTextFieldVariant.surface;
 
-  /// An accent tint inside a 1px accent ring.
+  /// An accent tint inside a 1px accent ring, with accent-colored text.
   const FortalCombobox.soft({
     super.key,
     this.size = .size2,
@@ -88,11 +88,11 @@ class FortalCombobox<T extends Object> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
-  }) : variant = FortalComboboxVariant.soft;
+  }) : variant = FortalTextFieldVariant.soft;
 
-  final FortalComboboxVariant variant;
+  final FortalTextFieldVariant variant;
 
-  final FortalComboboxSize size;
+  final FortalTextFieldSize size;
 
   final ComboboxStyler style;
 

@@ -10,7 +10,7 @@ variants: [primary, secondary]
 sizes: {supported: [], default: null}
 states: [rest, hover, focus, error, disabled]
 tokens:
-  - the text field's tokens (see textfield.yaml)
+  - the text field's tokens (see text_field.yaml)
   - field-placeholder (search icon), default, default-hover, muted (clear button), radius-xl
 measurements:
   - {what: group, value: "36 high, radius 12", cite: search-primary-full-rest-group}

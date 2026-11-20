@@ -43,7 +43,7 @@ For base widgets: `flutter pub add remix:^1.0.0-rc.5`, then import
 ```bash
 dart pub global activate remix_cli '^1.0.0-rc.1'
 remix init                  # vanilla, prefix Ui
-remix add button textfield
+remix add button text_field
 ```
 
 Install once globally. Keep the prerelease pin: an unversioned activation

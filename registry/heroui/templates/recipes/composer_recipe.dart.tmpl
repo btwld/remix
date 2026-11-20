@@ -3,7 +3,7 @@ import 'package:remix/agent.dart';
 import 'package:remix/remix.dart';
 
 import '../components/button.dart';
-import '../components/textarea.dart';
+import '../components/text_area.dart';
 import '../theme/theme.dart';
 
 /// Styles for the composer: a rounded surface holding a text area over a

@@ -14,10 +14,7 @@ part 'chart.g.dart';
 /// The accent's `accentIndicator` comes first, then the other named color
 /// families, each at a step that keeps 3:1 on the page and panels (see
 /// [computeChartSeries]). Set [highContrast] to use step 12 throughout.
-List<Color> resolveUiChartPalette(
-  BuildContext context, {
-  bool highContrast = false,
-}) {
+List<Color> uiChartPalette(BuildContext context, {bool highContrast = false}) {
   final theme = UiTheme.of(context);
   final colors = resolveUiTokens(theme);
   final namedAccent = theme.accentPalette == null ? theme.accent : null;
@@ -37,7 +34,7 @@ List<Color> resolveUiChartPalette(
 /// `#111111` ink, whichever contrasts more.
 ///
 /// ```dart
-/// final palette = resolveUiChartPalette(context);
+/// final palette = uiChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
@@ -254,12 +251,12 @@ ChartTooltipStyler _uiTooltipStyle() =>
 
 /// The series colors of the active theme.
 final _standardPaletteToken = ContextToken<List<Color>>(
-  (context) => resolveUiChartPalette(context),
+  (context) => uiChartPalette(context),
 );
 
 /// The series colors of the active theme, all at step 12.
 final _highContrastPaletteToken = ContextToken<List<Color>>(
-  (context) => resolveUiChartPalette(context, highContrast: true),
+  (context) => uiChartPalette(context, highContrast: true),
 );
 
 /// The tooltip's 1px frame.

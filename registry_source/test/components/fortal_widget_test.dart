@@ -31,10 +31,6 @@ void main() {
         trigger: RemixSelectTrigger(placeholder: 'Pick'),
         items: [RemixSelectItem(value: 'a', label: 'A')],
       );
-      const segmented = FortalSegmentedControl.surface(
-        items: [RemixSegmentedControlItem(value: 'a', label: 'A')],
-        selectedValue: 'a',
-      );
       const textArea = FortalTextArea.soft();
 
       expect(button.variant, FortalButtonVariant.soft);
@@ -47,9 +43,7 @@ void main() {
       expect(menu.variant, FortalMenuVariant.soft);
       expect(select, isA<FortalSelect<String>>());
       expect(select.variant, FortalSelectVariant.ghost);
-      expect(segmented, isA<FortalSegmentedControl<String>>());
-      expect(segmented.variant, FortalSegmentedControlVariant.surface);
-      expect(textArea.variant, FortalTextAreaVariant.soft);
+      expect(textArea.variant, FortalTextFieldVariant.soft);
     });
 
     testWidgets('renders FortalDisclosure', (tester) async {

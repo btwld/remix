@@ -18,9 +18,9 @@ Widget buildSurfaceUseCase(BuildContext context) {
         ),
         size: context.knobs.object.dropdown(
           label: 'size',
-          options: FortalSurfaceSize.values,
+          options: FortalCardSize.values,
           labelBuilder: (size) => size.name,
-          initialOption: FortalSurfaceSize.size2,
+          initialOption: FortalCardSize.size2,
         ),
         padded: context.knobs.boolean(label: 'padded', initialValue: true),
         onPressed: pressable ? () {} : null,
@@ -41,13 +41,13 @@ CatalogMatrix surfaceCatalog({
   Widget Function(Widget content) content = _unchanged,
 }) => CatalogMatrix(
   cellWidth: 232,
-  columns: labelsOf(FortalSurfaceSize.values),
+  columns: labelsOf(FortalCardSize.values),
   rows: labelsOf(FortalSurfaceVariant.values),
   cell: (row, column) => SizedBox(
     width: 224,
     child: FortalSurface(
       variant: FortalSurfaceVariant.values[row],
-      size: FortalSurfaceSize.values[column],
+      size: FortalCardSize.values[column],
       child: content(const _Content()),
     ),
   ),

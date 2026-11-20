@@ -281,11 +281,14 @@ class _BrandPaletteCard extends StatelessWidget {
         const FortalAvatar.soft(icon: RemixIcons.plus, size: .size3),
         const FortalText('Your brand', size: .size3, weight: .medium),
         StyledText(
-          'A brand palette is a FortalColorTheme from theme/palette.dart: '
-          'one FortalColor for light mode and one for dark.',
+          'A brand palette holds one color set for light mode and one for '
+          'dark.',
           style: dashboardText(.size2, tone: .muted),
         ),
-        const FortalCode('accentPalette: brand', size: .size1),
+        const FortalCode(
+          'accentPalette: FortalColorTheme(light, dark)',
+          size: .size1,
+        ),
       ],
     ),
   );

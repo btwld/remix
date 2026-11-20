@@ -1151,12 +1151,12 @@
         "trailing"
       ],
       "tests": [
-        "test/components/textfield/fortal_textfield_regression_test.dart",
-        "test/components/textfield/textfield_widget_test.dart",
-        "test/components/textfield/fortal_textfield_disabled_test.dart",
+        "test/components/text_field/fortal_text_field_regression_test.dart",
+        "test/components/text_field/text_field_widget_test.dart",
+        "test/components/text_field/fortal_text_field_disabled_test.dart",
         "test/fortal/fortal_control_matrix_test.dart",
         "test/fortal/spec_conformance_test.dart",
-        "test/components/textfield/fortal_input_content_contrast_test.dart"
+        "test/components/text_field/fortal_input_content_contrast_test.dart"
       ]
     },
     {
@@ -1233,12 +1233,6 @@
             "size3"
           ],
           "default": "size2"
-        },
-        "variant": {
-          "values": [
-            "surface"
-          ],
-          "default": "surface"
         }
       },
       "defaults": {
@@ -1302,10 +1296,10 @@
         "invalid"
       ],
       "tests": [
-        "test/components/textfield/text_area_fortal_test.dart",
-        "test/components/textfield/textfield_widget_test.dart",
+        "test/components/text_field/text_area_fortal_test.dart",
+        "test/components/text_field/text_field_widget_test.dart",
         "test/fortal/spec_conformance_test.dart",
-        "test/components/textfield/fortal_input_content_contrast_test.dart"
+        "test/components/text_field/fortal_input_content_contrast_test.dart"
       ]
     },
     {
@@ -1749,17 +1743,10 @@
             "size9"
           ],
           "default": null
-        },
-        "variant": {
-          "values": [
-            "soft"
-          ],
-          "default": "soft"
         }
       },
       "defaults": {
         "size": null,
-        "variant": "soft",
         "excludeSemantics": false
       },
       "supportedStyleProps": [

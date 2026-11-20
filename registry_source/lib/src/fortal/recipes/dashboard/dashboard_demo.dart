@@ -35,6 +35,31 @@ import 'dashboard_demo_widgets.dart';
 import 'dashboard_overview.dart';
 import 'dashboard_shell.dart';
 
+// Everything the demo's constructor takes, so this one import builds it.
+export 'dashboard_demo_artwork.dart' show FortalArtworkMotif;
+export 'dashboard_demo_data.dart'
+    show
+        FortalDashboardActivity,
+        FortalDashboardActivityKind,
+        FortalDashboardChannel,
+        FortalDashboardCustomer,
+        FortalDashboardCustomerStatus,
+        FortalDashboardCustomerTier,
+        FortalDashboardData,
+        FortalDashboardEdition,
+        FortalDashboardEditionStatus,
+        FortalDashboardEvent,
+        FortalDashboardEventKind,
+        FortalDashboardGoal,
+        FortalDashboardMember,
+        FortalDashboardMetric,
+        FortalDashboardOrder,
+        FortalDashboardOrderStatus,
+        FortalDashboardPoint,
+        FortalDashboardRange,
+        FortalDashboardWeek;
+export 'dashboard_demo_theme.dart' show FortalThemeSettings;
+
 /// The navigation groups of the dashboard demo.
 enum FortalDashboardDemoSection {
   workspace('Workspace'),

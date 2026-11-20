@@ -14,7 +14,7 @@ part 'chart.g.dart';
 /// The accent's `accentIndicator` comes first, then the other named color
 /// families, each at a step that keeps 3:1 on the page and panels (see
 /// [computeChartSeries]). Set [highContrast] to use step 12 throughout.
-List<Color> resolve{{typePrefix}}ChartPalette(
+List<Color> {{valuePrefix}}ChartPalette(
   BuildContext context, {
   bool highContrast = false,
 }) {
@@ -37,7 +37,7 @@ List<Color> resolve{{typePrefix}}ChartPalette(
 /// `#111111` ink, whichever contrasts more.
 ///
 /// ```dart
-/// final palette = resolve{{typePrefix}}ChartPalette(context);
+/// final palette = {{valuePrefix}}ChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
@@ -256,12 +256,12 @@ ChartTooltipStyler _{{valuePrefix}}TooltipStyle() =>
 
 /// The series colors of the active theme.
 final _standardPaletteToken = ContextToken<List<Color>>(
-  (context) => resolve{{typePrefix}}ChartPalette(context),
+  (context) => {{valuePrefix}}ChartPalette(context),
 );
 
 /// The series colors of the active theme, all at step 12.
 final _highContrastPaletteToken = ContextToken<List<Color>>(
-  (context) => resolve{{typePrefix}}ChartPalette(context, highContrast: true),
+  (context) => {{valuePrefix}}ChartPalette(context, highContrast: true),
 );
 
 /// The tooltip's 1px frame.

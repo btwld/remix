@@ -76,7 +76,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   scroll panel with a persistent overflow thumb. Panel styles expose effects,
   scrollbar color and thickness. Vanilla ships `<Prefix>Combobox<T>` via `remix add combobox`,
   with the TextField recipe and a Select-like panel; its dependencies are
-  `theme` and `textfield`. Fortal also ships the recipe with surface/soft variants and three TextField sizes; HeroUI ships primary/secondary variants with its responsive TextField and ComboBox/ListBox panel.
+  `theme` and `text_field`. Fortal also ships the recipe with surface/soft variants and three TextField sizes; HeroUI ships primary/secondary variants with its responsive TextField and ComboBox/ListBox panel.
   See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 - **TextField/TextArea** — forwards the standard Flutter text-input surface
   (`controller`, `keyboardType`, `inputFormatters`, `maxLines`, etc.)
@@ -236,7 +236,11 @@ HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, `dashboard_shell`, and
 - **dashboard_demo** — showcase recipe assembling the product dashboard
   screens into a runnable demo: Overview, Chat, Customers, Orders, and
   Settings in Vanilla and HeroUI; those plus Analytics, Schedule, an
-  image-card Collection and Themes in Fortal. See [Reference showcases](reference-showcases.md) for
+  image-card Collection and Themes in Fortal. It stays out of `ui.dart`:
+  import `ui/recipes/dashboard/dashboard_demo.dart`, which also exports the
+  types its constructor takes. The default records, `<prefix>DashboardSampleData`,
+  live in `dashboard_sample_data.dart` (`dashboard_demo_data.dart` in
+  Fortal). See [Reference showcases](reference-showcases.md) for
   product-example and coverage-gallery conventions. The HeroUI demo also
   installs `chart`, `table`, `tabs`, `chip`, and the Agent items.
 - **Surface** — a preset composition, not a Remix widget. HeroUI's `surface` is

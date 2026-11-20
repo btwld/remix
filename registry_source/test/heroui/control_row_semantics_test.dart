@@ -123,7 +123,7 @@ void main() {
               explicitChildNodes: true,
               label: 'Page',
               child: HeroUiFieldLayout(
-                axis: axis,
+                orientation: axis,
                 label: label,
                 controlProvidesName: controlProvidesName,
                 helperText: 'Help',
@@ -197,7 +197,7 @@ void main() {
                       ],
                     )
                   : HeroUiSwitchGroup(
-                      items: [
+                      options: [
                         HeroUiSwitchOption(
                           selected: selected,
                           onChanged: (value) =>

@@ -57,7 +57,7 @@ void main() {
                       : HeroUiSwitchGroup(
                           key: groupKey,
                           orientation: orientation,
-                          items: [
+                          options: [
                             HeroUiSwitchOption(
                               selected: false,
                               label: _longLabel,

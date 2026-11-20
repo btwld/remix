@@ -70,7 +70,7 @@
     {
       "id": 7,
       "prompt": "This Flutter app already depends on remix. I want to switch one screen to FortalButton and FortalTextField. Which dependency and imports do I need?",
-      "expected_output": "Initializes the Fortal preset with remix_cli (init --prefix Fortal --preset fortal) when remix.yaml is absent, adds button and textfield, imports the installed ui/ui.dart barrel, and retains an explicit package:remix/remix.dart import only when the file also uses base Remix widgets, stylers, or data classes.",
+      "expected_output": "Initializes the Fortal preset with remix_cli (init --prefix Fortal --preset fortal) when remix.yaml is absent, adds button and text_field, imports the installed ui/ui.dart barrel, and retains an explicit package:remix/remix.dart import only when the file also uses base Remix widgets, stylers, or data classes.",
       "files": [],
       "expectations": [
         "Initializes the Fortal preset with --prefix Fortal --preset fortal, adds the needed items, and imports the owned UI barrel.",

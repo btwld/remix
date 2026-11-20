@@ -8,7 +8,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../theme/theme.dart';
 import 'close_button.dart';
-import 'textfield.dart';
+import 'text_field.dart';
 
 part 'search_field.g.dart';
 

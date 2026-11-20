@@ -37,7 +37,7 @@ const {{valuePrefix}}ChartSeries = <ColorToken>[
 /// Returns [{{valuePrefix}}ChartSeries] resolved in [context].
 ///
 /// Pass `palette` to one recipe or generated widget for a local override.
-List<Color> resolve{{typePrefix}}ChartPalette(BuildContext context) =>
+List<Color> {{valuePrefix}}ChartPalette(BuildContext context) =>
     List<Color>.unmodifiable([
       for (final token in {{valuePrefix}}ChartSeries) token.resolve(context),
     ]);
@@ -52,7 +52,7 @@ List<Color> resolve{{typePrefix}}ChartPalette(BuildContext context) =>
 /// slice's label color from this, next to the fill the slice is drawn in:
 ///
 /// ```dart
-/// final palette = resolve{{typePrefix}}ChartPalette(context);
+/// final palette = {{valuePrefix}}ChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
@@ -229,9 +229,7 @@ const _tooltipMargin = 8.0;
 /// tooltip cannot draw.
 const _tooltipBorderWidth = 1.0;
 
-const _defaultPaletteToken = ContextToken<List<Color>>(
-  resolve{{typePrefix}}ChartPalette,
-);
+const _defaultPaletteToken = ContextToken<List<Color>>({{valuePrefix}}ChartPalette);
 const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
 const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
 const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);

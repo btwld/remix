@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
+import 'ui/recipes/dashboard/dashboard_demo.dart';
 import 'ui/ui.dart';
 
 void main() {

@@ -278,7 +278,7 @@
   {
    "upstream": "input",
    "status": "mapped",
-   "item": "textfield",
+   "item": "text_field",
    "remix": "RemixTextField"
   },
   {
@@ -290,13 +290,13 @@
   {
    "upstream": "textarea",
    "status": "mapped",
-   "item": "textarea",
+   "item": "text_area",
    "remix": "RemixTextArea"
   },
   {
    "upstream": "textfield",
    "status": "mapped",
-   "item": "textfield",
+   "item": "text_field",
    "remix": "RemixTextField"
   },
   {

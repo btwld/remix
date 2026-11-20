@@ -496,7 +496,7 @@ class _SemanticsPanel extends StatelessWidget {
                   Row(
                     spacing: 8,
                     children: [
-                      for (final color in resolveFortalChartPalette(context))
+                      for (final color in fortalChartPalette(context))
                         Expanded(
                           child: Column(
                             spacing: 4,

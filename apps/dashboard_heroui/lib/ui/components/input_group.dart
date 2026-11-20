@@ -8,7 +8,7 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
-import 'textfield.dart';
+import 'text_field.dart';
 
 part 'input_group.g.dart';
 

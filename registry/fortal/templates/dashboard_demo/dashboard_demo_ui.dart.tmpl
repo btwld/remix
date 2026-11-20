@@ -26,7 +26,7 @@ export '../../components/surface.dart';
 export '../../components/switch.dart';
 export '../../components/tabs.dart';
 export '../../components/text.dart';
-export '../../components/textfield.dart';
+export '../../components/text_field.dart';
 export '../../components/toast.dart';
 export '../../components/tooltip.dart';
 export '../../components/typography.dart';

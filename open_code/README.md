@@ -155,12 +155,12 @@ Vanilla and Fortal: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
 `dashboard_shell`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`, `segmented_control`,
 `select`, `sidebar`, `sidebar_layout`, `skeleton`, `slider`, `spinner`, `switch`,
-`tabs`, `textfield`, `toast`, `toggle`, `toggle_group`, `tooltip`.
+`tabs`, `text_field`, `toast`, `toggle`, `toggle_group`, `tooltip`.
 
 All three presets also ship `range_slider`, which installs `slider` and supplies
 the two-bound `<Prefix>RangeSlider` recipe.
 
-All three presets also ship `combobox` (depends on `theme` and `textfield`).
+All three presets also ship `combobox` (depends on `theme` and `text_field`).
 
 Vanilla also: `calendar`, `range_calendar`, `date_picker`, `date_range_picker`.
 These hand-written composites wire the Vanilla child recipes and have no
@@ -169,7 +169,7 @@ generated part; selection and overlay behavior stay in Remix.
 Vanilla also: `breadcrumbs`, a hand-written trail of `link` recipes after
 shadcn/ui's Breadcrumb (depends on `theme` and `link`; no generated part), and
 `search_field`, a stateful text field with a search icon and a clear button
-after shadcn/ui's Input Group (depends on `theme`, `textfield`, and
+after shadcn/ui's Input Group (depends on `theme`, `text_field`, and
 `icon_button`; no generated part).
 
 Vanilla also: `heading`, `text`, and `code`, recipes drawn from shadcn/ui's
@@ -179,13 +179,13 @@ Typography examples, and `kbd`, a key cap after shadcn/ui's Kbd, with
 Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`,
 and the hand-written compositions `avatar_group` (depends on `theme` and
 `avatar`), `breadcrumbs` (depends on `theme`, `link`, `text` and
-`typography`), `search_field` (depends on `theme`, `textfield` and
+`typography`), `search_field` (depends on `theme`, `text_field` and
 `icon_button`) and `surface` (depends on `theme` and `card`).
 
 HeroUI follows HeroUI's names, adding `alert`, `avatar_group`,
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
 `field_layout`, `input_group`, `modal`, `radio_group`,
-`separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
+`separator`, `surface`, `switch_group`, `table`, `text_area`, `toggle_button`,
 and `toggle_button_group` to shared names such as `button`, `select`,
 `breadcrumbs`, and `search_field`.
 It also ships `icons`, `sidebar`, `sidebar_layout`, `app_bar`,

@@ -332,7 +332,7 @@ class _RevenueLegend extends StatelessWidget {
       {{typePrefix}}DashboardChartLegendItem(
         id: 'current',
         label: 'This period',
-        color: resolve{{typePrefix}}ChartPalette(context).first,
+        color: {{valuePrefix}}ChartPalette(context).first,
         pattern: .solid,
       ),
       {{typePrefix}}DashboardChartLegendItem(
@@ -368,7 +368,7 @@ class {{typePrefix}}RevenueChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = resolve{{typePrefix}}ChartPalette(context).first;
+    final accent = {{valuePrefix}}ChartPalette(context).first;
     final previous = MixScope.tokenOf({{typePrefix}}Tokens.gray9, context);
     // Thirteen weekly labels do not fit under a narrow card; show every other.
     final labelEvery = points.length > 8 ? 2 : 1;
@@ -592,7 +592,7 @@ class {{typePrefix}}ChannelsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = resolve{{typePrefix}}ChartPalette(context);
+    final palette = {{valuePrefix}}ChartPalette(context);
     return {{typePrefix}}Surface(
       child: ColumnBox(
         style: FlexBoxStyler()

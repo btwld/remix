@@ -193,6 +193,8 @@ Optional chart/icon items declare their hosted dependencies. Vanilla's theme
 also declares `remix_ui_fonts` for Geist/Geist Mono; Fortal pins no font family.
 Grouped `dashboard_shell` and `dashboard_demo` items leave the app entry point,
 theme scope, routes, authentication and persistence with the host.
+`dashboard_demo` is a sample application and declares no barrel exports; apps
+import its entry file, `recipes/dashboard/dashboard_demo.dart`, directly.
 
 ## Author and publish
 

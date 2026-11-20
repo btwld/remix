@@ -16,18 +16,18 @@ core Remix component surface: `accordion`, `app_bar`, `avatar`, `badge`, `button
 `checkbox`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
 `icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
 `segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
-`slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`, `toggle`,
+`slider`, `spinner`, `switch`, `tabs`, `text_field`, `toast`, `toggle`,
 `toggle_group`, and `tooltip`, each with a `theme` dependency. Vanilla also
-ships `combobox`, with `theme` and `textfield` dependencies;
+ships `combobox`, with `theme` and `text_field` dependencies;
 `breadcrumbs`, a hand-written trail of `link` recipes with no generated
-adapter; `search_field`, a hand-written stateful field over `textfield`
+adapter; `search_field`, a hand-written stateful field over `text_field`
 and `icon_button` with a built-in clear button; `heading`, `text`, and
 `code` from shadcn/ui's Typography examples; and `kbd`, a key cap with a
 `<Prefix>KbdGroup` for shortcuts.
 The Fortal
 preset also includes `base_button`, `code`, `heading`, `kbd`, `text`,
 `typography`, `avatar_group`, a spaced row of `avatar`s, `breadcrumbs`,
-a one-line trail of `link`s, `search_field`, a `textfield` with a search
+a one-line trail of `link`s, `search_field`, a `text_field` with a search
 glyph and clear button, and `surface`, a `card` at four levels of emphasis.
 Vanilla also provides `range_slider`, which installs
 `slider` and generates a two-bound `<Prefix>RangeSlider`. The `data_table` item
@@ -52,7 +52,7 @@ records require verified, explicit `add theme button --adopt` migration; see
 The `heroui` preset follows HeroUI's names, adding `alert`, `avatar_group`,
 `breadcrumbs`, `button_group`, `checkbox_group`, `chip`, `close_button`,
 `dropdown`, `field_layout`, `input_group`, `modal`, `radio_group`,
-`search_field`, `separator`, `surface`, `switch_group`, `table`, `textarea`,
+`search_field`, `separator`, `surface`, `switch_group`, `table`, `text_area`,
 `toggle_button`, and `toggle_button_group` to shared names such as `button` and
 `select`.
 
@@ -301,7 +301,7 @@ remix add dashboard_shell
 ```
 
 This installs the preset's sidebar, responsive sidebar layout, app bar, icon button,
-textfield, icons, and theme dependency closure plus two editable files under
+text field, icons, and theme dependency closure plus two editable files under
 `lib/ui/recipes/dashboard/`. The public `UiDashboardShell<T>` API is the same
 for `vanilla` and `fortal`. The host supplies `RemixSidebarSection<T>` values,
 the selected value and callback, the current page body, `title` (with an
@@ -317,22 +317,27 @@ use `--diff` and explicit `--overwrite` for template updates.
 
 ### Add the full dashboard demo
 
-Initialize the Vanilla or Fortal preset (HeroUI ships no dashboard), then use
-the same item and public dashboard API:
+Initialize any preset, then use the same item and public dashboard API:
 
 ```shell
 remix init --prefix Ui --preset vanilla
-# Or initialize a separate app with: --preset fortal
+# Or initialize a separate app with: --preset fortal or --preset heroui
 remix add dashboard_demo
 ```
 
 `dashboard_demo` installs `UiDashboardDemo`, `UiDashboardOverview`, the
-usable shell, and the five product destinations from the reference dashboard
-(Overview, Chat, Customers, Orders, and Settings). Product pages and navigation
+usable shell, and the product destinations from the reference dashboard
+(Overview, Chat, Customers, Orders, and Settings; Fortal adds Analytics,
+Schedule, Collection, and Themes). Product pages and navigation
 match across presets while rendering each preset's native components and
-variants. The overview's four metrics, revenue series, and recent records live
-in editable `lib/ui/recipes/dashboard/dashboard_sample_data.dart`; replace them
-there or pass a `RegistryDashboardSampleData` to `UiDashboardDemo(data: ...)`.
+variants. It is a sample application, not part of the kit, so `ui.dart` does
+not export it: import `lib/ui/recipes/dashboard/dashboard_demo.dart`, which
+also exports the types `UiDashboardDemo` takes. The sample records live in
+editable source: `lib/ui/recipes/dashboard/dashboard_sample_data.dart`
+(`uiDashboardSampleData`) in Vanilla and HeroUI, and
+`lib/ui/recipes/dashboard/dashboard_demo_data.dart` (`uiDashboardSampleData`)
+in Fortal. Replace them there, or pass your own `UiDashboardSampleData`
+(Vanilla, HeroUI) or `UiDashboardData` (Fortal) to `UiDashboardDemo(data: ...)`.
 
 The host supplies its Flutter application, directionality, brand, and theme
 scope. Default uses `UiTheme(theme: UiThemeData.light(), child: ...)`;
@@ -369,7 +374,7 @@ styler override merges last. Calendar selectors grow with text scaling.
 
 Most Vanilla component items generate one widget. Four generate several:
 `checkbox` also generates
-`UiCheckboxGroupItem`, `textfield` generates `UiTextField` and `UiTextArea`,
+`UiCheckboxGroupItem`, `text_field` generates `UiTextField` and `UiTextArea`,
 `tabs` generates `UiTabBar`, `UiTab`, and `UiTabView`, and `chart` generates
 `UiLineChart`, `UiBarChart`, and `UiPieChart`.
 
