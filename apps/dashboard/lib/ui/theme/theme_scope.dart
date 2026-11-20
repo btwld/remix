@@ -5,7 +5,7 @@ import 'palette.dart';
 import 'theme_data.dart';
 import 'tokens.dart';
 
-/// Establishes Ui's body text and neutral foreground at the root.
+/// Establishes Fortal's body text and neutral foreground at the root.
 /// Nested scopes preserve text metrics; neutral foreground changes recolor it.
 Widget _uiRootTextStyle({
   required Map<MixToken<Object?>, Object> tokens,
@@ -34,7 +34,7 @@ Widget _uiRecolored(Color foreground, Widget child) => DefaultTextStyle.merge(
   ),
 );
 
-/// Widget that provides Ui design tokens to its subtree via [MixScope].
+/// Widget that provides Fortal design tokens to its subtree via [MixScope].
 ///
 /// Place [UiTheme] below the application host so its text defaults apply.
 /// For a routed app, wrap the navigator in the host's builder. This also keeps
@@ -84,20 +84,20 @@ class UiTheme extends StatelessWidget {
   final List<Type>? orderOfModifiers;
   final Widget child;
 
-  /// Returns the closest resolved Ui theme.
+  /// Returns the closest resolved Fortal theme.
   static UiThemeData of(BuildContext context) {
     final data = maybeOf(context);
     if (data != null) return data;
     throw FlutterError.fromParts([
       ErrorSummary('No UiTheme found.'),
       ErrorDescription(
-        '${context.widget.runtimeType} tried to read the Ui theme, but no UiTheme was found above it.',
+        '${context.widget.runtimeType} tried to read the Fortal theme, but no UiTheme was found above it.',
       ),
       context.describeElement('The context used was'),
     ]);
   }
 
-  /// Returns the closest resolved Ui theme, if one is available.
+  /// Returns the closest resolved Fortal theme, if one is available.
   static UiThemeData? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_UiInheritedTheme>()?.data;
 

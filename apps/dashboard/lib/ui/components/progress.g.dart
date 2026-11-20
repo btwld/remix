@@ -6,7 +6,7 @@ part of 'progress.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Progress recipe.
+/// The Fortal Progress recipe.
 ///
 /// It reads top to bottom: the size, then the variant's track and fill.
 ///

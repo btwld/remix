@@ -11,7 +11,7 @@ import 'palette.dart';
 import 'theme_scope.dart' show UiTheme;
 import 'tokens.dart';
 
-/// Paired Ui themes, named for Uieza landscapes and coastal materials.
+/// Paired Fortal themes, named for Fortaleza landscapes and coastal materials.
 /// Each choice owns its accent and subtly tinted neutral scales. Error
 /// roles use a dedicated red palette that is not a selectable accent.
 enum UiAccentColor {
@@ -33,7 +33,7 @@ enum UiRadius { none, small, medium, large, full }
 /// Background treatment used by floating panels.
 enum UiPanelBackground { solid, translucent }
 
-/// Discrete theme scaling values supported by Ui.
+/// Discrete theme scaling values supported by Fortal.
 enum UiScaling {
   percent90(0.9),
   percent95(0.95),
@@ -47,7 +47,7 @@ enum UiScaling {
   final double factor;
 }
 
-/// Appearance selection for a Ui scope. A root defaults to system;
+/// Appearance selection for a Fortal scope. A root defaults to system;
 /// a nested scope inherits its parent's selection when mode is omitted.
 enum UiThemeMode { system, light, dark }
 
@@ -119,7 +119,7 @@ class UiThemeConfig {
   );
 }
 
-/// Fully resolved theme values inherited by a Ui subtree.
+/// Fully resolved theme values inherited by a Fortal subtree.
 @immutable
 class UiThemeData extends UiThemeConfig {
   const UiThemeData({
@@ -241,7 +241,7 @@ final _scopeTokens = <UiThemeData, Map<MixToken<Object?>, Object>>{};
 /// custom palettes must not grow the cache without bound.
 const _scopeTokensLimit = 64;
 
-/// Returns the token map for a Ui scope. Used by [UiTheme].
+/// Returns the token map for a Fortal scope. Used by [UiTheme].
 ///
 /// The map is shared between scopes with an equal [theme] and cannot be
 /// modified.
@@ -591,7 +591,7 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(UiThemeData theme) {
     UiTokens.fontWeightRegular: FontWeight.w400,
     UiTokens.fontWeightSemibold: FontWeight.w600,
     UiTokens.fontWeightMedium: FontWeight.w500,
-    // Match Ui font weights (bold = 700)
+    // Match Fortal font weights (bold = 700)
     UiTokens.fontWeightBold: FontWeight.w700,
 
     // Durations (token values)
@@ -615,7 +615,7 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(UiThemeData theme) {
 /// [MixScope] decides whether to notify token readers by comparing the old and
 /// new token maps value by value, and a plain [List] equals only itself. The
 /// shadow tokens are lists, so without this every rebuild of an unchanged
-/// theme would restyle every widget that reads a Ui token.
+/// theme would restyle every widget that reads a Fortal token.
 class _ValueList<E> extends UnmodifiableListView<E> {
   _ValueList(super.source);
 

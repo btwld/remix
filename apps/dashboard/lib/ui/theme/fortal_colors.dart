@@ -1,8 +1,8 @@
 // GENERATED CODE - DO NOT EDIT.
 // Raw scales: @radix-ui/colors 3.0.0 (sRGB).
 // Source: https://github.com/radix-ui/colors
-// Regenerate with tool/ui_palettes/generate.dart.
-// Ui derives labelled fills separately; raw and alpha scales are unchanged.
+// Regenerate with tool/fortal_palettes/generate.dart.
+// Fortal derives labelled fills separately; raw and alpha scales are unchanged.
 // MIT License
 //
 // Copyright (c) 2021 Radix
@@ -29,7 +29,7 @@ import 'package:flutter/painting.dart';
 
 import 'palette.dart';
 
-/// Radix gray + gray; paired Ui theme.
+/// Radix gray + gray; paired Fortal theme.
 const orla = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -113,7 +113,7 @@ const orla = UiColorTheme(
   ),
 );
 
-/// Radix teal + sage; paired Ui theme.
+/// Radix teal + sage; paired Fortal theme.
 const mar = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -195,7 +195,7 @@ const mar = UiColorTheme(
   ),
 );
 
-/// Radix blue + slate; paired Ui theme.
+/// Radix blue + slate; paired Fortal theme.
 const ceu = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -277,7 +277,7 @@ const ceu = UiColorTheme(
   ),
 );
 
-/// Radix gold + olive; paired Ui theme.
+/// Radix gold + olive; paired Fortal theme.
 const serra = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -359,7 +359,7 @@ const serra = UiColorTheme(
   ),
 );
 
-/// Radix amber + sand; paired Ui theme.
+/// Radix amber + sand; paired Fortal theme.
 const sol = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -441,7 +441,7 @@ const sol = UiColorTheme(
   ),
 );
 
-/// Radix brown + sand; paired Ui theme.
+/// Radix brown + sand; paired Fortal theme.
 const duna = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -523,7 +523,7 @@ const duna = UiColorTheme(
   ),
 );
 
-/// Radix orange + sand; paired Ui theme.
+/// Radix orange + sand; paired Fortal theme.
 const caju = UiColorTheme(
   UiColor(
     UiColorScale(

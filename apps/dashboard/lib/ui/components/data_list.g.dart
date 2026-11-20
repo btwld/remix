@@ -6,7 +6,7 @@ part of 'data_list.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui DataList recipe: gray labels beside values in gray 12.
+/// The Fortal DataList recipe: gray labels beside values in gray 12.
 ///
 /// [highContrast] moves the labels to gray 12.
 class UiDataList extends StatelessWidget {

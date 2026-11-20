@@ -22,7 +22,7 @@ enum UiPopoverSize {
   size4,
 }
 
-/// The Ui Popover recipe: a raised, blurred panel in a 1px frame.
+/// The Fortal Popover recipe: a raised, blurred panel in a 1px frame.
 ///
 /// The generated [UiPopover] defaults to [UiPopoverSize.size2], a
 /// 480-pixel maximum width, and no arrow.

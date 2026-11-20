@@ -6,7 +6,7 @@ part of 'divider.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Divider recipe: a 1px gray line, horizontal or vertical.
+/// The Fortal Divider recipe: a 1px gray line, horizontal or vertical.
 class UiDivider extends StatelessWidget {
   const UiDivider({
     super.key,

@@ -523,6 +523,8 @@ void main() {
   });
 
   test('every authored template round-trips and removes Fortal names', () {
+    final identifier = RegExp('Fortal[A-Z0-9]|fortal[A-Z0-9]');
+    final quotedId = RegExp('[\'"]fortal[-._]');
     final builder = PresetBuilder.forRepository(Directory.current);
     final output = builder.derive();
 
@@ -537,13 +539,92 @@ void main() {
       );
 
       expect(rendered, entry.value, reason: entry.key);
-      expect(template, isNot(contains('Fortal')), reason: entry.key);
+      expect(template, isNot(contains(identifier)), reason: entry.key);
       expect(
         template.replaceAll('fortal_colors.dart', ''),
-        isNot(contains('fortal')),
+        isNot(contains(quotedId)),
         reason: entry.key,
       );
     }
+  });
+
+  test('only identifiers and quoted ids take the consumer prefix', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(
+      builder.sourceRoot,
+      'components/badge.dart',
+      """/// The Fortal Badge recipe, Fortal's smallest surface.
+///
+/// Its palette is named for Fortaleza; see tool/fortal_palettes/generate.dart.
+final class FortalBadge {}
+
+void fortalBadgeStyle() => _resolveFortalTheme('fortal.color.accent');
+
+void _resolveFortalTheme(String id) {}
+
+const row = 'fortal-row';
+const key = 'fortal_badge_ambient';
+""",
+    );
+
+    final template = builder.derive().files['templates/badge/badge.dart.tmpl'];
+
+    expect(template, """/// The Fortal Badge recipe, Fortal's smallest surface.
+///
+/// Its palette is named for Fortaleza; see tool/fortal_palettes/generate.dart.
+final class {{typePrefix}}Badge {}
+
+void {{valuePrefix}}BadgeStyle() => _resolve{{typePrefix}}Theme('{{valuePrefix}}.color.accent');
+
+void _resolve{{typePrefix}}Theme(String id) {}
+
+const row = '{{valuePrefix}}-row';
+const key = '{{valuePrefix}}_badge_ambient';
+""");
+  });
+
+  test('refuses the authoring word glued to identifier characters', () {
+    final builder = _fixtureBuilder(sandbox);
+    for (final source in [
+      'final isFortal = true;\n',
+      'final _fortal = 0;\n',
+      'final fortal_badge = 0;\n',
+    ]) {
+      _write(builder.sourceRoot, 'components/badge.dart', '// Badge.\n$source');
+
+      expect(
+        builder.derive,
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            contains('components/badge.dart:2:'),
+          ),
+        ),
+        reason: source,
+      );
+    }
+  });
+
+  test('shared dashboard prose keeps its registry word', () {
+    final builder = _emptyBuilder(sandbox, spec: _acmeWithGroupedRecipes);
+    _writeGroupedAcmeSources(builder);
+    _write(
+      builder.sourceRoot.parent,
+      'dashboard/dashboard_navigation.dart',
+      '/// Lists the registry destinations.\n'
+          'final class RegistryDashboardDestination {}\n',
+    );
+
+    final template = builder
+        .derive()
+        .files['templates/dashboard_shell/dashboard_navigation.dart.tmpl'];
+
+    expect(
+      template,
+      '/// Lists the registry destinations.\n'
+      'final class {{typePrefix}}DashboardDestination {}\n',
+    );
   });
 
   test(

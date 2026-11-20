@@ -400,8 +400,9 @@ const agentRecipes = [
 
 /// The default preset as application-owned registry source.
 ///
-/// `Vanilla` is the authoring word: it stands in for the consumer prefix and
-/// appears nowhere else in the source, so plain substitution is exact.
+/// `Vanilla` is the authoring word: it stands in for the consumer prefix where
+/// it begins an identifier segment or a quoted id, and stays as written where
+/// prose names the design system.
 const defaultPreset = PresetSpec(
   name: 'vanilla',
   sourceRoot: 'registry_source/lib/src/default',
@@ -1884,31 +1885,33 @@ final class PresetBuilder {
           );
     }
     if (sourceTypeWord != null && sourceValueWord != null) {
-      rewritten = rewritten
-          .replaceAll(sourceTypeWord, spec.typeWord)
-          .replaceAll(sourceValueWord, spec.valueWord);
+      rewritten = _replacePrefixWords(
+        sourcePath,
+        rewritten,
+        typeWord: sourceTypeWord,
+        valueWord: sourceValueWord,
+        typeReplacement: spec.typeWord,
+        valueReplacement: spec.valueWord,
+      );
     }
     return sortDirectives(sourcePath, rewritten);
   }
 
   /// Swaps the preset's own naming for the consumer prefix placeholders.
   ///
-  /// The round trip is asserted rather than assumed: a substitution that does
-  /// not reverse exactly means the source says the preset's name somewhere the
-  /// consumer's prefix does not belong.
+  /// The round trip is asserted rather than assumed: a template that does not
+  /// render back to its source under the preset's own words would install
+  /// something other than the analyzed source.
   String _templateFor(String path, String source) {
-    final substitutions = RegExp(
-      [
-        ...spec.fixedFileNames.map(RegExp.escape),
-        RegExp.escape(spec.typeWord),
-        RegExp.escape(spec.valueWord),
-      ].join('|'),
+    var template = _replacePrefixWords(
+      path,
+      source,
+      typeWord: spec.typeWord,
+      valueWord: spec.valueWord,
+      typeReplacement: '{{typePrefix}}',
+      valueReplacement: '{{valuePrefix}}',
+      fixedFileNames: spec.fixedFileNames,
     );
-    var template = source.replaceAllMapped(substitutions, (match) {
-      final word = match[0]!;
-      if (spec.fixedFileNames.contains(word)) return word;
-      return word == spec.typeWord ? '{{typePrefix}}' : '{{valuePrefix}}';
-    });
     template = _iconTemplate(path, template);
     final roundTrip = const TemplateRenderer().render(
       template,
@@ -2189,6 +2192,62 @@ Map<String, String> _sortedMap(Map<String, String> source) {
 
 String _relative(File file, Directory root) =>
     p.posix.joinAll(p.split(p.relative(file.path, from: root.path)));
+
+/// Replaces an authoring prefix only where it names something: an identifier
+/// segment (`FortalButton`, `fortalButtonStyle`, `_resolveFortalTheme`) or
+/// the start of a quoted id (`'fortal.color.accent'`, `'fortal-row'`,
+/// `'fortal_code_ambient_foreground'`).
+///
+/// Every other occurrence is the design system's own name in prose, as in
+/// "The Fortal Button recipe." or "Fortaleza", and stays as written, as do
+/// [fixedFileNames]. A word left glued to identifier characters, such as
+/// `isFortal` or `_fortal`, fits neither reading, so it throws rather than
+/// ship the authoring word inside a consumer's identifier.
+String _replacePrefixWords(
+  String path,
+  String source, {
+  required String typeWord,
+  required String valueWord,
+  required String typeReplacement,
+  required String valueReplacement,
+  Set<String> fixedFileNames = const {},
+}) {
+  final type = RegExp.escape(typeWord);
+  final value = RegExp.escape(valueWord);
+  final fixed = fixedFileNames.map(RegExp.escape);
+  final names = RegExp(
+    [
+      ...fixed,
+      '$type(?=[A-Z0-9])',
+      '$value(?=[A-Z0-9])',
+      '(?<=[\'"])$value(?=[-._])',
+    ].join('|'),
+  );
+  final replaced = source.replaceAllMapped(names, (match) {
+    final word = match[0]!;
+    if (word == typeWord) return typeReplacement;
+    if (word == valueWord) return valueReplacement;
+    return word;
+  });
+  // A path segment such as `tool/fortal_palettes/` is prose, so an
+  // underscore after the word counts as glued only away from a slash.
+  final glued = RegExp(
+    [
+      ...fixed,
+      '(?<=[A-Za-z0-9_\$])(?:$type|$value)',
+      '(?<!/)(?:$type|$value)(?=[_\$])',
+    ].join('|'),
+  );
+  for (final match in glued.allMatches(replaced)) {
+    if (fixedFileNames.contains(match[0])) continue;
+    final line = '\n'.allMatches(replaced.substring(0, match.start)).length;
+    throw StateError(
+      '$path:${line + 1}: "${match[0]}" is glued to identifier characters; '
+      'write it as an identifier prefix, a quoted id, or a prose word.',
+    );
+  }
+  return replaced;
+}
 
 final _importPattern = RegExp(
   r'''^\s*(?:import|export)\s+['"]([^'"]+)['"]''',

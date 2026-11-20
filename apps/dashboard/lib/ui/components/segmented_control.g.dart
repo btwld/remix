@@ -6,7 +6,7 @@ part of 'segmented_control.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui SegmentedControl recipe.
+/// The Fortal SegmentedControl recipe.
 ///
 /// The track is a gray tint blended over the surface. The selected item sits
 /// on a raised fill with a 1px edge, and turns medium weight.

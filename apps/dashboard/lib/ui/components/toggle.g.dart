@@ -6,7 +6,7 @@ part of 'toggle.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Toggle recipe.
+/// The Fortal Toggle recipe.
 ///
 /// It reads top to bottom: what every toggle shares, then the size, then the
 /// variant's colors for rest, hover, press, on, focus and disabled.

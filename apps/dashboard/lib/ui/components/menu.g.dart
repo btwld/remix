@@ -6,7 +6,7 @@ part of 'menu.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Menu recipe: the trigger, the floating panel, its items,
+/// The Fortal Menu recipe: the trigger, the floating panel, its items,
 /// submenu items and dividers.
 ///
 /// [highContrast] moves the highlighted item of the solid variant to accent
