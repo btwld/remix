@@ -91,7 +91,7 @@ class UiTheme extends StatelessWidget {
     throw FlutterError.fromParts([
       ErrorSummary('No UiTheme found.'),
       ErrorDescription(
-        '${context.widget.runtimeType} tried to read the Fortal theme, but no UiTheme was found above it.',
+        '${context.widget.runtimeType} tried to read the UI theme, but no UiTheme was found above it.',
       ),
       context.describeElement('The context used was'),
     ]);

@@ -522,9 +522,7 @@ void main() {
     if (sandbox.existsSync()) sandbox.deleteSync(recursive: true);
   });
 
-  test('every authored template round-trips and removes Fortal names', () {
-    final identifier = RegExp('Fortal[A-Z0-9]|fortal[A-Z0-9]');
-    final quotedId = RegExp('[\'"]fortal[-._]');
+  test('every authored template round-trips under the Fortal words', () {
     final builder = PresetBuilder.forRepository(Directory.current);
     final output = builder.derive();
 
@@ -539,12 +537,40 @@ void main() {
       );
 
       expect(rendered, entry.value, reason: entry.key);
-      expect(template, isNot(contains(identifier)), reason: entry.key);
-      expect(
-        template.replaceAll('fortal_colors.dart', ''),
-        isNot(contains(quotedId)),
-        reason: entry.key,
+    }
+  });
+
+  test('installed source names its design system only in prose', () {
+    // The two dashboard strings name the city Fortal is named for.
+    const prose = [
+      "'The breeze blocks of Fortaleza façades, one tile at a time.'",
+      "'Fortaleza'",
+    ];
+    for (final spec in [defaultPreset, fortalPreset, herouiPreset]) {
+      final builder = PresetBuilder.forRepository(
+        Directory.current,
+        spec: spec,
       );
+      final output = builder.derive();
+      for (final path in output.sourceByTemplate.keys) {
+        final rendered = const TemplateRenderer().render(
+          output.files[path]!,
+          typePrefix: 'Zq',
+          valuePrefix: 'zq',
+          icons: builder.icons,
+        );
+        for (final line in rendered.split('\n')) {
+          final named = spec.fixedFileNames
+              .fold(line, (line, name) => line.replaceAll(name, ''))
+              .contains(RegExp('${spec.typeWord}|${spec.valueWord}'));
+          if (!named) continue;
+          expect(
+            line.trimLeft().startsWith('//') || prose.any(line.contains),
+            isTrue,
+            reason: '$path: $line',
+          );
+        }
+      }
     }
   });
 
@@ -556,6 +582,7 @@ void main() {
       """/// The Fortal Badge recipe, Fortal's smallest surface.
 ///
 /// Its palette is named for Fortaleza; see tool/fortal_palettes/generate.dart.
+/// See `fortal_palette.dart`.
 final class FortalBadge {}
 
 void fortalBadgeStyle() => _resolveFortalTheme('fortal.color.accent');
@@ -564,6 +591,7 @@ void _resolveFortalTheme(String id) {}
 
 const row = 'fortal-row';
 const key = 'fortal_badge_ambient';
+const caption = 'Cards in the Fortal style';
 """,
     );
 
@@ -572,6 +600,7 @@ const key = 'fortal_badge_ambient';
     expect(template, """/// The Fortal Badge recipe, Fortal's smallest surface.
 ///
 /// Its palette is named for Fortaleza; see tool/fortal_palettes/generate.dart.
+/// See `fortal_palette.dart`.
 final class {{typePrefix}}Badge {}
 
 void {{valuePrefix}}BadgeStyle() => _resolve{{typePrefix}}Theme('{{valuePrefix}}.color.accent');
@@ -580,15 +609,28 @@ void _resolve{{typePrefix}}Theme(String id) {}
 
 const row = '{{valuePrefix}}-row';
 const key = '{{valuePrefix}}_badge_ambient';
+const caption = 'Cards in the Fortal style';
 """);
   });
 
-  test('refuses the authoring word glued to identifier characters', () {
+  test('refuses the authoring word where neither a prefix nor prose fits', () {
     final builder = _fixtureBuilder(sandbox);
     for (final source in [
+      'final fortal = 0;\n',
+      'class Fortal {}\n',
+      'final theme = Fortal.of(context);\n',
+      'List<Fortal> themes = [];\n',
+      "final key = ValueKey('fortal');\n",
+      "const id = 'theme.fortal.color';\n",
+      "final id = '\${base}fortal.color';\n",
+      "const id = '--fortal-row';\n",
+      "const id = 'fortal:x';\n",
       'final isFortal = true;\n',
       'final _fortal = 0;\n',
       'final fortal_badge = 0;\n',
+      // Visible text, not an id, so it is refused rather than prefixed.
+      "final label = Text('fortal-themed card');\n",
+      "final label = Text('fortal.');\n",
     ]) {
       _write(builder.sourceRoot, 'components/badge.dart', '// Badge.\n$source');
 
