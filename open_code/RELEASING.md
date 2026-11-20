@@ -315,15 +315,15 @@ commit, then repeat the smoke tests and log the rollback. The restored content
 has a new SHA; do not reset, force-push, or delete `registry-stable`. Existing
 projects stay on their pinned revisions.
 
-**Protection still to set up:** An admin applies two active branch rulesets
-targeting only `refs/heads/registry-stable`:
+**Protection:** The active `registry-stable protection` ruleset targets only
+`refs/heads/registry-stable` and blocks force pushes and deletion with no
+bypass actors.
 
-- Block force pushes and deletion with no bypass actors. This can be applied
-  independently of the promotion credential.
-- Restrict creation and updates, with **Always allow** for only a dedicated
-  GitHub App installed on this repository with `Contents: write`. Enable this
-  only after the `Promote registry` job on `main` uses that app's installation
-  token for its push instead of `GITHUB_TOKEN`.
+The remaining follow-up is a separate ruleset restricting creation and updates
+on the same ref, with **Always allow** for only a dedicated GitHub App installed
+on this repository with `Contents: write`. An admin enables that ruleset only
+after the **Promote registry** job on `main` uses the app's installation token
+for its push instead of `GITHUB_TOKEN`.
 
 ## Release the CLI only for installer changes
 
