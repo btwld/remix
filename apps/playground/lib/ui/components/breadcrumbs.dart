@@ -46,11 +46,11 @@ class PlaygroundBreadcrumbItem {
 /// longer ones ellipsize.
 ///
 /// ```dart
-/// VanillaBreadcrumbs(
+/// PlaygroundBreadcrumbs(
 ///   items: [
-///     VanillaBreadcrumbItem('Home', onPressed: openHome),
-///     VanillaBreadcrumbItem('Components', onPressed: openComponents),
-///     const VanillaBreadcrumbItem('Breadcrumb'),
+///     PlaygroundBreadcrumbItem('Home', onPressed: openHome),
+///     PlaygroundBreadcrumbItem('Components', onPressed: openComponents),
+///     const PlaygroundBreadcrumbItem('Breadcrumb'),
 ///   ],
 /// )
 /// ```

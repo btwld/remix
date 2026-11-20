@@ -14,7 +14,7 @@ part of 'slider.dart';
 /// distinct. Both slider recipes reserve a 48px interaction height.
 ///
 /// Set [surfaceColor] to the enclosing surface on cards or tinted panels (for
-/// example `VanillaTokens.card.resolve(context)`); the hover and press halos
+/// example `PlaygroundTokens.card.resolve(context)`); the hover and press halos
 /// are opaque and blend against it, defaulting to the page background.
 class PlaygroundSlider extends StatelessWidget {
   const PlaygroundSlider({

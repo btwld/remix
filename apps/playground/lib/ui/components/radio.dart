@@ -22,8 +22,8 @@ part 'radio.g.dart';
 ///   groupValue: plan,
 ///   onChanged: (value) => setState(() => plan = value),
 ///   child: Column(children: const [
-///     VanillaRadio(value: 'free', label: 'Free'),
-///     VanillaRadio(value: 'pro', label: 'Pro'),
+///     PlaygroundRadio(value: 'free', label: 'Free'),
+///     PlaygroundRadio(value: 'pro', label: 'Pro'),
 ///   ]),
 /// )
 /// ```

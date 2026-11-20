@@ -21,7 +21,7 @@ part of 'code.dart';
 ///     children: [
 ///       WidgetSpan(
 ///         alignment: PlaceholderAlignment.middle,
-///         child: VanillaCode(
+///         child: PlaygroundCode(
 ///           'remix_ui_fonts',
 ///           style: TextStyler().textScaler(TextScaler.noScaling),
 ///         ),

@@ -577,8 +577,21 @@ void main() {
           token = token.next!
         ) {
           if (!token.isIdentifier) continue;
-          expect(token.lexeme, isNot(contains(spec.typeWord)), reason: path);
-          expect(token.lexeme, isNot(contains(spec.valueWord)), reason: path);
+          expect(
+            token.lexeme,
+            isNot(matches('${spec.typeWord}(?=[A-Z0-9])')),
+            reason: path,
+          );
+          expect(
+            token.lexeme,
+            isNot(
+              matches(
+                r'(?:^|[_$])'
+                '${spec.valueWord}(?=[A-Z0-9])',
+              ),
+            ),
+            reason: path,
+          );
         }
       }
     }
@@ -626,19 +639,23 @@ final sum = '{{valuePrefix}}.\${a + b}';
   });
 
   test(
-    'consumer prefixes do not alter embedded words, captions or comments',
+    'consumer prefixes adapt code references but not prose or embedded words',
     () {
       final builder = _fixtureBuilder(sandbox);
       const source =
           r'''// A FortalInspired view uses comfortalButton, not FortalBadge.
 /* FortalInspired is just text here, too. */
 /// A FortalInspired view (see [FortalBadge.new]).
+/// In Dart: `FortalBadge`, `FortalToken`, and `fortalBadgeStyle`.
 class FortalBadge {}
 
 final comfortalButton = FortalBadge();
 final _resolveFortalBadge = FortalBadge.new;
 const caption = 'A FortalInspired view';
+const brand = 'Fortal-inspired';
+const embedded = 'comfortalButton()';
 const id = 'fortal.color.accent';
+const variantId = 'fortalBadgeDark';
 final display = 'FortalInspired ${FortalBadge()}';
 ''';
       _write(builder.sourceRoot, 'components/badge.dart', source);
@@ -653,16 +670,86 @@ final display = 'FortalInspired ${FortalBadge()}';
           typePrefix: 'Acme',
           valuePrefix: 'acme',
         ),
-        r'''// A FortalInspired view uses comfortalButton, not FortalBadge.
+        r'''// A FortalInspired view uses comfortalButton, not AcmeBadge.
 /* FortalInspired is just text here, too. */
 /// A FortalInspired view (see [AcmeBadge.new]).
+/// In Dart: `AcmeBadge`, `AcmeToken`, and `acmeBadgeStyle`.
 class AcmeBadge {}
 
 final comfortalButton = AcmeBadge();
 final _resolveAcmeBadge = AcmeBadge.new;
 const caption = 'A FortalInspired view';
+const brand = 'Fortal-inspired';
+const embedded = 'comfortalButton()';
 const id = 'acme.color.accent';
+const variantId = 'acmeBadgeDark';
 final display = 'FortalInspired ${AcmeBadge()}';
+''',
+      );
+    },
+  );
+
+  group('installed source uses the Acme API', () {
+    for (final (spec, expectations) in [
+      (
+        defaultPreset,
+        {
+          'button/button': '/// AcmeButton.primary(',
+          'theme/theme_scope': "ErrorSummary('No AcmeTheme found.')",
+        },
+      ),
+      (
+        fortalPreset,
+        {
+          'dashboard_demo/dashboard_demo_themes':
+              "AcmeCode('acmeButtonStyle()')",
+        },
+      ),
+    ]) {
+      final builder = PresetBuilder.forRepository(
+        Directory.current,
+        spec: spec,
+      );
+      late PresetOutput output;
+      group(spec.name, () {
+        setUpAll(() => output = builder.derive());
+        for (final entry in expectations.entries) {
+          test(entry.key, () {
+            final rendered = const TemplateRenderer().render(
+              output.files['templates/${entry.key}.dart.tmpl']!,
+              typePrefix: 'Acme',
+              valuePrefix: 'acme',
+              icons: builder.icons,
+            );
+            expect(rendered, contains(entry.value));
+          });
+        }
+      });
+    }
+  });
+
+  test(
+    'interpolated ID segments can precede literal and interpolated segments',
+    () {
+      final builder = _fixtureBuilder(sandbox);
+      _write(builder.sourceRoot, 'components/badge.dart', r'''
+final color = 'fortal.$group.accent';
+final variant = 'fortal.${group}.${variantName}';
+const raw = r'fortal.color.accent';
+const typed = 'Fortal.color.accent';
+''');
+
+      expect(
+        const TemplateRenderer().render(
+          builder.derive().files['templates/badge/badge.dart.tmpl']!,
+          typePrefix: 'Acme',
+          valuePrefix: 'acme',
+        ),
+        r'''
+final color = 'acme.$group.accent';
+final variant = 'acme.${group}.${variantName}';
+const raw = r'acme.color.accent';
+const typed = 'Acme.color.accent';
 ''',
       );
     },
@@ -886,34 +973,31 @@ final display = 'FortalInspired ${AcmeBadge()}';
     'validation requires conditional targets in the transitive install closure',
     () {
       final builder = _fixtureBuilder(sandbox);
-      _write(
-        builder.sourceRoot,
-        'components/native.dart',
-        "export 'web.dart';\n",
-      );
       _write(builder.sourceRoot, 'components/web.dart', '');
       _write(
         builder.sourceRoot,
         'components/platform.dart',
         "export 'native.dart';\n",
       );
-      final output = builder.derive();
-      final files = {
-        ...output.files,
-        'templates/platform/platform.dart.tmpl':
-            "export 'native.dart' if (dart.library.js_interop) 'web.dart';\n",
-      };
-      final patched = PresetOutput(files: files, sourceByTemplate: {});
-
-      expect(() => builder.validate(patched), returnsNormally);
-      files['registry.yaml'] = files['registry.yaml']!.replaceFirst(
-        '  native:\n    registryDependencies:\n      - web\n',
-        '  native:\n',
-      );
-      files['templates/native/native.dart.tmpl'] = '';
+      PresetOutput withConditionalBranch(String nativeSource) {
+        _write(builder.sourceRoot, 'components/native.dart', nativeSource);
+        return PresetOutput(
+          files: {
+            ...builder.derive().files,
+            'templates/platform/platform.dart.tmpl':
+                "export 'native.dart' if (dart.library.js_interop) 'web.dart';\n",
+          },
+          sourceByTemplate: const {},
+        );
+      }
 
       expect(
-        () => builder.validate(patched),
+        () => builder.validate(withConditionalBranch("export 'web.dart';\n")),
+        returnsNormally,
+      );
+      final outsideClosure = withConditionalBranch('');
+      expect(
+        () => builder.validate(outsideClosure),
         _throwsFormatExceptionWith('platform imports web.dart'),
       );
     },
@@ -1489,16 +1573,16 @@ final class {{typePrefix}}BotDialRecipe {
     _write(
       builder.sourceRoot,
       'recipes/dashboard/dashboard_shell.dart',
-      "export '../../../dashboard/dashboard_shell_base.dart'\n"
-          "    if (dart.library.js_interop) '../../../dashboard/dashboard_navigation.dart';\n",
+      "export '../../../dashboard/' 'dashboard_shell_base.dart'\n"
+          "    if (dart.library.js_interop) r'../../../dashboard/dashboard_navigation.dart';\n",
     );
 
     final output = builder.derive();
 
     expect(
       output.files['templates/dashboard_shell/dashboard_shell.dart.tmpl'],
-      "export 'dashboard_shell_base.dart'\n"
-      "    if (dart.library.js_interop) 'dashboard_navigation.dart';\n",
+      'export "dashboard_shell_base.dart"\n'
+      "    if (dart.library.js_interop) r'dashboard_navigation.dart';\n",
     );
     expect(() => builder.validate(output), returnsNormally);
   });

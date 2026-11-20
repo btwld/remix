@@ -48,7 +48,7 @@ Widget _{{valuePrefix}}Recolored(Color foreground, Widget child) =>
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
 ///   ),
-///   builder: (_, child) => FortalTheme(child: child!),
+///   builder: (_, child) => {{typePrefix}}Theme(child: child!),
 ///   home: const HomePage(),
 /// )
 /// ```
@@ -90,9 +90,9 @@ class {{typePrefix}}Theme extends StatelessWidget {
     final data = maybeOf(context);
     if (data != null) return data;
     throw FlutterError.fromParts([
-      ErrorSummary('No FortalTheme found.'),
+      ErrorSummary('No {{typePrefix}}Theme found.'),
       ErrorDescription(
-        '${context.widget.runtimeType} tried to read the UI theme, but no FortalTheme was found above it.',
+        '${context.widget.runtimeType} tried to read the UI theme, but no {{typePrefix}}Theme was found above it.',
       ),
       context.describeElement('The context used was'),
     ]);

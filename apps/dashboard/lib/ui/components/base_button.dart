@@ -112,7 +112,7 @@ Color _filtered(Color color, List<RemixCssColorFilterOperation> operations) {
 ///
 /// ```dart
 /// ButtonStyler().wrap(
-///   fortalModeAwareFilter(
+///   uiModeAwareFilter(
 ///     light: const [.brightness(0.9)],
 ///     dark: const [.brightness(1.1)],
 ///   ),

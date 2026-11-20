@@ -7,7 +7,7 @@ import '../components/spinner.dart';
 
 /// Draws the glyphs of the Agent widgets from this preset's icon set.
 ///
-/// Wrap the conversation in `AgentGlyphs(builder: heroUiAgentGlyph, ...)`.
+/// Wrap the conversation in `AgentGlyphs(builder: uiAgentGlyph, ...)`.
 /// Each Agent widget sizes and colors its glyph through its own style, so this
 /// only picks the shape. Returning null draws nothing there.
 Widget? uiAgentGlyph(BuildContext context, AgentGlyph glyph, IconSpec spec) =>
@@ -23,7 +23,7 @@ Widget? uiAgentGlyph(BuildContext context, AgentGlyph glyph, IconSpec spec) =>
     };
 
 /// Picks named tool icons; null keeps the generic tool glyph as the fallback.
-/// Pass this to `AgentGlyphs.toolIconBuilder` beside `heroUiAgentGlyph`.
+/// Pass this to `AgentGlyphs.toolIconBuilder` beside `uiAgentGlyph`.
 Widget? uiAgentToolIcon(BuildContext context, String name, IconSpec spec) =>
     switch (name) {
       'terminal.run' => const Icon(RemixIcons.terminal),

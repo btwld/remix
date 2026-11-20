@@ -13,7 +13,7 @@ part of 'data_list.dart';
 /// override the spacings through [style] for a denser block.
 ///
 /// ```dart
-/// VanillaDataList(
+/// PlaygroundDataList(
 ///   items: const [
 ///     RemixDataListItem(label: 'Status', value: 'Active'),
 ///     RemixDataListItem(label: 'Plan', value: 'Pro'),

@@ -1110,7 +1110,7 @@ final class PresetBuilder {
           for (final entry in sharedSources)
             ..._registryDependencies(
               sourcePath: entry.key,
-              imports: _dependencyUris(directives[entry.key]!),
+              imports: directives[entry.key]!.dependencies,
               componentNames: componentNames,
               sourceOwners: sourceOwners,
               itemName: shared.name,
@@ -1120,9 +1120,9 @@ final class PresetBuilder {
           for (final package in shared.packages) package: floors[package]!,
           for (final package in spec.detectedPackages)
             if (sharedSources.any(
-              (entry) => _dependencyUris(
-                directives[entry.key]!,
-              ).any((uri) => uri.startsWith('package:$package/')),
+              (entry) => directives[entry.key]!.dependencies.any(
+                (uri) => uri.startsWith('package:$package/'),
+              ),
             ))
               package: floors[package]!,
         },
@@ -1167,7 +1167,7 @@ final class PresetBuilder {
       }
       final name = p.posix.basename(item.file);
       final templatePath = '${spec.templateDirectory}/${item.name}/$name.tmpl';
-      final imports = _dependencyUris(directives[item.file]!);
+      final imports = directives[item.file]!.dependencies;
       output[templatePath] = _templateFor(item.file, source);
       sourceByTemplate[templatePath] = source;
       items[item.name] = _RegistryItemDraft(
@@ -1200,8 +1200,9 @@ final class PresetBuilder {
     )) {
       final name = p.posix.basenameWithoutExtension(entry.key);
       final templatePath = '${spec.templateDirectory}/$name/$name.dart.tmpl';
-      final generated = _generatedPart(directives[entry.key]!);
-      final imports = _dependencyUris(directives[entry.key]!);
+      final sourceDirectives = directives[entry.key]!;
+      final generated = sourceDirectives.generatedPart;
+      final imports = sourceDirectives.dependencies;
       final registryDependencies = _registryDependencies(
         sourcePath: entry.key,
         imports: imports,
@@ -1260,7 +1261,7 @@ final class PresetBuilder {
         throw FormatException('${spec.name} source must contain $path.');
       }
       final source = _recipeSource(path, authored);
-      final imports = _dependencyUris(_readDirectiveUris(path, source));
+      final imports = _readDirectiveUris(path, source).dependencies;
       final templatePath = '${spec.templateDirectory}/$path.tmpl';
       output[templatePath] = _templateFor(path, source);
       sourceByTemplate[templatePath] = source;
@@ -1294,12 +1295,12 @@ final class PresetBuilder {
         final sourcePath = p.posix.normalize(file.source);
         final authored = groupedSources[sourcePath]!;
         final sourceDirectives = directives[sourcePath]!;
-        final imports = _dependencyUris(sourceDirectives);
+        final imports = sourceDirectives.dependencies;
         final rewritten = _groupedRecipeSource(
           sourcePath: sourcePath,
           targetPath: file.target,
           authored: authored,
-          directives: sourceDirectives,
+          directives: sourceDirectives.all,
           installedTargets: installedTargets,
           sourceTypeWord: file.sourceTypeWord,
           sourceValueWord: file.sourceValueWord,
@@ -1455,9 +1456,9 @@ final class PresetBuilder {
           valuePrefix: spec.valueWord,
           icons: icons,
         );
-        for (final directive in _readDirectiveUris(file.source, source)) {
+        for (final directive in _readDirectiveUris(file.source, source).all) {
           final uri = directive.uri;
-          if (uri.startsWith('package:') || uri.startsWith('dart:')) continue;
+          if (!_isRelativeUri(uri)) continue;
           final resolved = p.posix.normalize(
             p.posix.join(p.posix.dirname(file.target), uri),
           );
@@ -1666,7 +1667,7 @@ final class PresetBuilder {
     Map<String, String> sources, {
     required Map<String, String> groupedSources,
     required Map<String, String> sourceOwners,
-    required Map<String, List<_DirectiveUri>> directives,
+    required Map<String, _SourceDirectives> directives,
   }) {
     final failures = <String>[];
     final allSources = {...sources, ...groupedSources};
@@ -1693,7 +1694,7 @@ final class PresetBuilder {
         (item) =>
             item.files.any((file) => p.posix.normalize(file.source) == path),
       );
-      for (final directive in directives[path]!) {
+      for (final directive in directives[path]!.all) {
         final uri = directive.uri;
         final variableUri = uri
             .split('/')
@@ -1703,12 +1704,11 @@ final class PresetBuilder {
             variableUri.contains(spec.valueWord)) {
           failures.add('$path: directive URI would be rewritten: $uri');
         }
-        if (!uri.startsWith('package:') && !uri.startsWith('dart:')) {
+        if (_isRelativeUri(uri)) {
           final resolved = p.posix.normalize(
             p.posix.join(p.posix.dirname(path), uri),
           );
-          if (_isGeneratedPart(directive) ||
-              sourceOwners.containsKey(resolved)) {
+          if (directive.isGeneratedPart || sourceOwners.containsKey(resolved)) {
             // Generated parts are produced beside their source. Every other
             // accepted relative directive resolves to an explicitly owned
             // source, including grouped sources in a sibling directory.
@@ -1823,8 +1823,16 @@ final class PresetBuilder {
     // A recipe that styles a published library has no sibling behavior to
     // rebase; only its directives need sorting.
     if (behavior == null) return sortDirectives(path, authored);
-    final rewritten = authored
-        .replaceAll(behavior.importPrefix, '../')
+    return sortDirectives(
+      path,
+      _rebaseBehaviorWords(authored.replaceAll(behavior.importPrefix, '../')),
+    );
+  }
+
+  String _rebaseBehaviorWords(String source) {
+    final behavior = spec.behavior;
+    if (behavior == null) return source;
+    return source
         .replaceAllMapped(
           RegExp('(?<![A-Za-z0-9_])${behavior.typeWord}(?=[A-Z])'),
           (_) => spec.typeWord,
@@ -1833,7 +1841,6 @@ final class PresetBuilder {
           RegExp('(?<![A-Za-z0-9_])${behavior.valueWord}(?=[A-Z])'),
           (_) => spec.valueWord,
         );
-    return sortDirectives(path, rewritten);
   }
 
   /// Rebase each mapped relative directive from authored to installed paths.
@@ -1853,11 +1860,7 @@ final class PresetBuilder {
     var rewritten = authored;
     for (final directive in directives.reversed) {
       final uri = directive.uri;
-      if (uri.startsWith('package:') ||
-          uri.startsWith('dart:') ||
-          _isGeneratedPart(directive)) {
-        continue;
-      }
+      if (!_isRelativeUri(uri) || directive.isGeneratedPart) continue;
       final resolved = p.posix.normalize(
         p.posix.join(p.posix.dirname(sourcePath), uri),
       );
@@ -1876,33 +1879,10 @@ final class PresetBuilder {
         from: p.posix.dirname(targetPath),
       );
       if (rebased != uri) {
-        final literal = directive.literal;
-        rewritten =
-            literal is SimpleStringLiteral &&
-                !_uriLiteralSpecialCharacter.hasMatch(rebased)
-            ? rewritten.replaceRange(
-                literal.contentsOffset,
-                literal.contentsEnd,
-                rebased,
-              )
-            : rewritten.replaceRange(
-                literal.offset,
-                literal.end,
-                jsonEncode(rebased).replaceAll(r'$', r'\$'),
-              );
+        rewritten = _replaceDirectiveUri(rewritten, directive.literal, rebased);
       }
     }
-    if (behavior != null) {
-      rewritten = rewritten
-          .replaceAllMapped(
-            RegExp('(?<![A-Za-z0-9_])${behavior.typeWord}(?=[A-Z])'),
-            (_) => spec.typeWord,
-          )
-          .replaceAllMapped(
-            RegExp('(?<![A-Za-z0-9_])${behavior.valueWord}(?=[A-Z])'),
-            (_) => spec.valueWord,
-          );
-    }
+    rewritten = _rebaseBehaviorWords(rewritten);
     if (sourceTypeWord != null && sourceValueWord != null) {
       rewritten = _replacePrefixWords(
         sourcePath,
@@ -2038,7 +2018,7 @@ final class PresetBuilder {
   }) {
     final dependencies = <String>{};
     for (final uri in imports) {
-      if (uri.startsWith('package:') || uri.startsWith('dart:')) continue;
+      if (!_isRelativeUri(uri)) continue;
       final resolved = p.posix.normalize(
         p.posix.join(p.posix.dirname(sourcePath), uri),
       );
@@ -2162,20 +2142,47 @@ final class _RegistryFileDraft {
   final String target;
 }
 
-typedef _DirectiveUri = ({String uri, StringLiteral literal, bool isPart});
+typedef _DirectiveUri = ({
+  String uri,
+  StringLiteral literal,
+  bool isGeneratedPart,
+});
 
 final _uriLiteralSpecialCharacter = RegExp(r'''['"\\$\x00-\x1f]''');
 
-List<_DirectiveUri> _readDirectiveUris(String path, String source) {
+String _replaceDirectiveUri(String source, StringLiteral literal, String uri) {
+  if (literal is SimpleStringLiteral &&
+      !_uriLiteralSpecialCharacter.hasMatch(uri)) {
+    return source.replaceRange(
+      literal.contentsOffset,
+      literal.contentsEnd,
+      uri,
+    );
+  }
+  return source.replaceRange(
+    literal.offset,
+    literal.end,
+    jsonEncode(uri).replaceAll(r'$', r'\$'),
+  );
+}
+
+bool _isRelativeUri(String uri) =>
+    !uri.startsWith('package:') && !uri.startsWith('dart:');
+
+_SourceDirectives _readDirectiveUris(String path, String source) {
   _DirectiveUri read(StringLiteral literal, {required bool isPart}) {
     final uri = literal.stringValue;
     if (uri == null) {
       throw FormatException('$path: directive URIs cannot interpolate.');
     }
-    return (uri: uri, literal: literal, isPart: isPart);
+    return (
+      uri: uri,
+      literal: literal,
+      isGeneratedPart: isPart && uri.endsWith('.g.dart'),
+    );
   }
 
-  return [
+  return _SourceDirectives([
     for (final directive in _parseSource(path, source).directives)
       if (directive is UriBasedDirective) ...[
         read(directive.uri, isPart: directive is PartDirective),
@@ -2183,24 +2190,29 @@ List<_DirectiveUri> _readDirectiveUris(String path, String source) {
           for (final configuration in directive.configurations)
             read(configuration.uri, isPart: false),
       ],
-  ];
+  ]);
 }
 
-bool _isGeneratedPart(_DirectiveUri directive) =>
-    directive.isPart && directive.uri.endsWith('.g.dart');
+class _SourceDirectives {
+  _SourceDirectives(this.all);
 
-Iterable<String> _dependencyUris(List<_DirectiveUri> directives) => directives
-    .where((directive) => !_isGeneratedPart(directive))
-    .map((directive) => directive.uri);
+  final List<_DirectiveUri> all;
+  late final dependencies = [
+    for (final directive in all)
+      if (!directive.isGeneratedPart) directive.uri,
+  ];
 
-String? _generatedPart(List<_DirectiveUri> directives) {
-  final matches = directives.where(_isGeneratedPart).toList();
-  if (matches.length > 1) {
-    throw const FormatException(
-      'A component declares multiple generated parts.',
-    );
+  late final String? generatedPart = _findGeneratedPart();
+
+  String? _findGeneratedPart() {
+    final parts = all.where((directive) => directive.isGeneratedPart);
+    if (parts.length > 1) {
+      throw const FormatException(
+        'A component declares multiple generated parts.',
+      );
+    }
+    return parts.singleOrNull?.uri;
   }
-  return matches.singleOrNull?.uri;
 }
 
 void _writeStringList(
@@ -2236,12 +2248,10 @@ Map<String, String> _sortedMap(Map<String, String> source) {
 String _relative(File file, Directory root) =>
     p.posix.joinAll(p.split(p.relative(file.path, from: root.path)));
 
-/// Replaces an authoring prefix only in identifiers (`FortalButton`,
-/// `_resolveFortalTheme`), explicit Dartdoc references and quoted IDs
-/// (`'fortal.color.accent'`). Prose keeps the design system's name.
-///
-/// An identifier segment or ambiguous string that uses a bare authoring word
-/// is refused rather than silently shipped with the wrong prefix.
+/// Substitutes prefixes at identifier segments followed by an uppercase letter
+/// or digit. In text, it rewrites quoted IDs and references marked as code by
+/// syntax, markup, or a matching same-file identifier; other prose is kept.
+/// Bare code prefixes and ambiguous ID-like strings fail with `path:line`.
 String _replacePrefixWords(
   String path,
   String source, {
@@ -2251,63 +2261,140 @@ String _replacePrefixWords(
   required String valueReplacement,
   Set<String> fixedFileNames = const {},
 }) {
+  final prefixes = RegExp(
+    '${RegExp.escape(typeWord)}|${RegExp.escape(valueWord)}',
+  );
   final words = RegExp(
-    [
-      ...fixedFileNames.map(RegExp.escape),
-      RegExp.escape(typeWord),
-      RegExp.escape(valueWord),
-    ].join('|'),
+    [...fixedFileNames.map(RegExp.escape), r'[\w$]+'].join('|'),
   );
   final edits = <({int start, int end, String replacement})>[];
-  void rewrite(Token token, {bool docReference = false}) {
-    final string = token.type == TokenType.STRING;
-    if (!string && !token.isIdentifier) return;
-    final lexeme = token.lexeme;
-    for (final match in words.allMatches(lexeme)) {
-      final word = match[0]!;
-      if (fixedFileNames.contains(word)) continue;
-      final before = _charAt(lexeme, match.start - 1);
-      final after = _charAt(lexeme, match.end);
-      final start = token.offset + match.start;
-      final end = token.offset + match.end;
-      if (!string &&
-          match.start > 0 &&
-          before != '_' &&
-          before != r'$' &&
-          word != typeWord) {
-        continue;
+  final unit = _parseSource(path, source);
+  final identifiers = <String>{};
+  final comments = <Token>[];
+
+  void replace(String word, int start) {
+    edits.add((
+      start: start,
+      end: start + word.length,
+      replacement: word == typeWord ? typeReplacement : valueReplacement,
+    ));
+  }
+
+  Never refuse(String word, int start, String problem) {
+    final line = unit.lineInfo.getLocation(start).lineNumber;
+    throw StateError('$path:$line: "$word" $problem.');
+  }
+
+  Iterable<RegExpMatch> segments(String identifier) => prefixes
+      .allMatches(identifier)
+      .where(
+        (match) =>
+            match.start == 0 ||
+            match[0] == typeWord ||
+            '_\$'.contains(identifier[match.start - 1]),
+      );
+
+  void rewriteText(
+    String text,
+    int offset, {
+    String? idShape,
+    bool literal = false,
+    bool interpolatesBefore = false,
+    bool interpolatesAfter = false,
+  }) {
+    if (!prefixes.hasMatch(text)) return;
+    final leading = prefixes.matchAsPrefix(text);
+    if (leading != null &&
+        idShape != null &&
+        !fixedFileNames.contains(words.matchAsPrefix(text)?[0])) {
+      final suffix = idShape.substring(leading.end);
+      final valueId = leading[0] == valueWord;
+      if ((_idSuffix.hasMatch(suffix) &&
+              (valueId || !suffix.startsWith('-'))) ||
+          (valueId && !interpolatesAfter && _camelIdSuffix.hasMatch(suffix))) {
+        replace(leading[0]!, offset);
+        return;
       }
-      final replace = string
-          ? word == valueWord && _startsQuotedId(token, match)
-          : _identifierSuffixStart.hasMatch(after);
-      if (!replace) {
-        if (docReference || (string && _isProse(lexeme, match))) continue;
-        final line = '\n'.allMatches(source.substring(0, start)).length;
-        final problem = string
-            ? 'is a whole string or touches `.`, `-`, `_`, `:` or an '
-                  'interpolation inside a string; reword it, or start the '
-                  'string with it to make an id'
-            : 'is code but does not start an identifier segment; make it an '
-                  'identifier prefix';
-        throw StateError('$path:${line + 1}: "$word" $problem.');
+    }
+    final markup = _codeMarkup.allMatches(text).toList();
+    for (final candidate in words.allMatches(text)) {
+      final identifier = candidate[0]!;
+      if (fixedFileNames.contains(identifier)) continue;
+      final code =
+          identifiers.contains(identifier) ||
+          _codePunctuation.matchAsPrefix(text, candidate.end) != null ||
+          markup.any(
+            (span) => span.start < candidate.start && candidate.end < span.end,
+          );
+      for (final match in segments(identifier)) {
+        final word = match[0]!;
+        final start = candidate.start + match.start;
+        final end = candidate.start + match.end;
+        if (_identifierSuffixStart.hasMatch(_charAt(identifier, match.end))) {
+          if (code) replace(word, offset + start);
+        } else if (literal &&
+            !(word == typeWord && _charAt(text, end) == '-') &&
+            ((start == 0 && interpolatesBefore) ||
+                (end == text.length && interpolatesAfter) ||
+                (start == 0 && end == text.length) ||
+                (start > 0 && '.-_:'.contains(text[start - 1])) ||
+                (end < text.length && '.-_:'.contains(text[end])))) {
+          refuse(
+            word,
+            offset + start,
+            'is a whole string or touches `.`, `-`, `_`, `:` or an '
+            'interpolation inside a string; reword it, or start the '
+            'string with it to make an id',
+          );
+        }
       }
-      edits.add((
-        start: start,
-        end: end,
-        replacement: word == typeWord ? typeReplacement : valueReplacement,
-      ));
     }
   }
 
-  final unit = _parseSource(path, source);
-  for (var token = unit.beginToken; !token.isEof; token = token.next!) {
-    rewrite(token);
+  for (var token = unit.beginToken; ; token = token.next!) {
+    if (token.isIdentifier && prefixes.hasMatch(token.lexeme)) {
+      identifiers.add(token.lexeme);
+      for (final match in segments(token.lexeme)) {
+        final word = match[0]!;
+        final start = token.offset + match.start;
+        if (!_identifierSuffixStart.hasMatch(
+          _charAt(token.lexeme, match.end),
+        )) {
+          refuse(
+            word,
+            start,
+            'is code but does not start an identifier segment; make it an '
+            'identifier prefix',
+          );
+        }
+        replace(word, start);
+      }
+    }
+    for (
+      Token? comment = token.precedingComments;
+      comment != null;
+      comment = comment.next
+    ) {
+      comments.add(comment);
+    }
+    if (token.isEof) break;
   }
-  final references = _DocReferenceTokens();
-  unit.accept(references);
-  for (final token in references.tokens) {
-    rewrite(token, docReference: true);
+  // A comment can refer to identifiers declared later in the file.
+  for (final comment in comments) {
+    rewriteText(comment.lexeme, comment.offset);
   }
+  unit.accept(
+    _StringPieces((start, end, {idShape, before = false, after = false}) {
+      rewriteText(
+        source.substring(start, end),
+        start,
+        literal: true,
+        idShape: idShape,
+        interpolatesBefore: before,
+        interpolatesAfter: after,
+      );
+    }),
+  );
 
   final buffer = StringBuffer();
   var copied = 0;
@@ -2321,64 +2408,53 @@ String _replacePrefixWords(
   return (buffer..write(source.substring(copied))).toString();
 }
 
-class _DocReferenceTokens extends RecursiveAstVisitor<void> {
-  final tokens = <Token>[];
+class _StringPieces extends RecursiveAstVisitor<void> {
+  _StringPieces(this.visitPiece);
+
+  final void Function(
+    int start,
+    int end, {
+    String? idShape,
+    bool before,
+    bool after,
+  })
+  visitPiece;
 
   @override
-  void visitCommentReference(CommentReference node) {
-    final expression = node.expression;
-    for (
-      Token? token = expression.beginToken;
-      token != null;
-      token = token.next
-    ) {
-      if (token.isIdentifier && !token.isSynthetic) tokens.add(token);
-      if (token == expression.endToken) break;
+  void visitSimpleStringLiteral(SimpleStringLiteral node) {
+    visitPiece(node.contentsOffset, node.contentsEnd, idShape: node.value);
+  }
+
+  @override
+  void visitStringInterpolation(StringInterpolation node) {
+    final elements = node.elements;
+    final shape = elements
+        .map((element) => element is InterpolationString ? element.value : '0')
+        .join();
+    for (final (index, element) in elements.indexed) {
+      if (element is InterpolationString) {
+        visitPiece(
+          element.contentsOffset,
+          element.contentsEnd,
+          idShape: index == 0 ? shape : null,
+          before: index > 0,
+          after: index < elements.length - 1,
+        );
+      } else {
+        element.accept(this);
+      }
     }
   }
 }
 
 final _identifierSuffixStart = RegExp('[A-Z0-9]');
-final _openingQuote = RegExp("^r?(\"{3}|'{3}|\"|')");
 final _idSuffix = RegExp(r'^(?:[-._][A-Za-z0-9]+)+$');
-final _interpolatedIdSuffix = RegExp(r'^(?:[-._][A-Za-z0-9]+)*[-._]$');
+final _camelIdSuffix = RegExp(r'^[A-Z0-9][A-Za-z0-9]*$');
+final _codePunctuation = RegExp(r'(?:\(|[.<][A-Za-z_$])');
+final _codeMarkup = RegExp(r'`[^`\n]+`|\[[\w.$]+\]');
 
 String _charAt(String source, int index) =>
     index >= 0 && index < source.length ? source[index] : '';
-
-/// An entire literal starts with the value word and uses `.`, `-`, or `_`
-/// to separate alphanumeric segments. The last segment can be interpolated.
-bool _startsQuotedId(Token token, Match match) {
-  final opening = _openingQuote.firstMatch(token.lexeme);
-  if (opening == null || opening.end != match.start) return false;
-  final quote = opening[1]!;
-  final suffix = token.lexeme.substring(match.end);
-  if (suffix.endsWith(quote)) {
-    return _idSuffix.hasMatch(
-      suffix.substring(0, suffix.length - quote.length),
-    );
-  }
-  final interpolation = token.next!;
-  final closing = switch (interpolation.type) {
-    TokenType.STRING_INTERPOLATION_EXPRESSION => interpolation.endGroup?.next,
-    TokenType.STRING_INTERPOLATION_IDENTIFIER => interpolation.next?.next,
-    _ => null,
-  };
-  return closing?.lexeme == quote && _interpolatedIdSuffix.hasMatch(suffix);
-}
-
-/// Whether a word inside a string literal piece reads as prose: it is not the
-/// whole string and touches no id separator or interpolation.
-bool _isProse(String lexeme, Match match) {
-  final before = _charAt(lexeme, match.start - 1);
-  final after = _charAt(lexeme, match.end);
-  final interpolated = match.start == 0 || match.end == lexeme.length;
-  final whole = (before == "'" || before == '"') && after == before;
-  return !interpolated &&
-      !whole &&
-      !'.-_:'.contains(before) &&
-      !'.-_:'.contains(after);
-}
 
 CompilationUnit _parseSource(String path, String source) {
   try {

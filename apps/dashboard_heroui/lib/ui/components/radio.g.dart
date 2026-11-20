@@ -9,7 +9,7 @@ part of 'radio.dart';
 /// HeroUI recipe for [RemixRadio].
 ///
 /// The label sits inside the control's tap target. A description beneath it is
-/// `HeroUiRadioGroup`'s. [invalid] paints the error treatment and turns the
+/// `UiRadioGroup`'s. [invalid] paints the error treatment and turns the
 /// label danger; validation stays with the app.
 class UiRadio<T> extends StatelessWidget {
   const UiRadio({

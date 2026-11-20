@@ -1,4 +1,4 @@
-// `TextInputAction` appears in the generated HeroUiSearchField constructor,
+// `TextInputAction` appears in the generated `UiSearchField` constructor,
 // so it must be visible from this library.
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';

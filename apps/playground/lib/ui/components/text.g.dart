@@ -14,7 +14,7 @@ part of 'text.dart';
 /// wrap, or truncate it through [style]:
 ///
 /// ```dart
-/// VanillaText.muted(
+/// PlaygroundText.muted(
 ///   'Enter your email address.',
 ///   style: TextStyler().maxLines(1).overflow(.ellipsis),
 /// )

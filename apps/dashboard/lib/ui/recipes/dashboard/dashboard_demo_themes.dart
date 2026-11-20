@@ -273,10 +273,7 @@ class _BrandPaletteCard extends StatelessWidget {
           'dark.',
           style: dashboardText(.size2, tone: .muted),
         ),
-        const UiCode(
-          'accentPalette: FortalColorTheme(light, dark)',
-          size: .size1,
-        ),
+        const UiCode('accentPalette: UiColorTheme(light, dark)', size: .size1),
       ],
     ),
   );
@@ -432,7 +429,7 @@ class _UiSpecimenCardState extends State<UiSpecimenCard> {
           label: 'Inline',
           children: [
             UiKbd(uiQuickFindShortcut),
-            const UiCode('fortalButtonStyle()'),
+            const UiCode('uiButtonStyle()'),
             UiLink(
               'A link',
               size: .size2,

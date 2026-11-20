@@ -34,14 +34,14 @@ List<Color> uiChartPalette(BuildContext context, {bool highContrast = false}) {
 /// `#111111` ink, whichever contrasts more.
 ///
 /// ```dart
-/// final palette = fortalChartPalette(context);
+/// final palette = uiChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
 ///   label: 'Mobile',
 ///   value: 64,
 ///   style: PieSliceStyler().label(
-///     TextStyler().color(fortalPieSliceLabelColor(palette[0])),
+///     TextStyler().color(uiPieSliceLabelColor(palette[0])),
 ///   ),
 /// )
 /// ```

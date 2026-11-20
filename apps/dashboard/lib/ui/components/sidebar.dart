@@ -26,7 +26,7 @@ const _sectionLabelLetterSpacing = 0.7;
 /// The recipe sets no panel width and no header padding. The host can supply
 /// expanded/collapsed widths to the widget for coordinated animation, or size
 /// the panel itself. Header metrics usually match the app bar beside it: a
-/// `FortalTokens.space9` height lines the header up with `app_bar`.
+/// `UiTokens.space9` height lines the header up with `app_bar`.
 @MixWidget(target: RemixSidebar.new)
 SidebarStyler uiSidebarStyle({
   bool highContrast = false,

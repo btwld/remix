@@ -15,7 +15,7 @@ part 'link.g.dart';
 /// at rest through [style]:
 ///
 /// ```dart
-/// VanillaLink(
+/// PlaygroundLink(
 ///   label: 'terms of service',
 ///   style: LinkStyler().label(.decoration(TextDecoration.underline)),
 ///   onPressed: openTerms,

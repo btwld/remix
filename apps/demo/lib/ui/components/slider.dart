@@ -27,8 +27,6 @@ enum FortalSliderVariant {
   soft,
 }
 
-enum _SliderVariantKey { fortalSliderDark }
-
 /// The Fortal Slider recipe.
 ///
 /// It reads top to bottom: the track and thumb sizes, then the variant's
@@ -48,7 +46,7 @@ SliderStyler fortalSliderStyle({
     })
     .variant(
       ContextVariant(
-        _SliderVariantKey.fortalSliderDark.name,
+        'fortalSliderDark',
         (context) => FortalTheme.of(context).isDark,
       ),
       SliderStyler().thumb(

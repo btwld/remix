@@ -248,16 +248,10 @@ resolve within the item's transitive install closure; generated parts resolve
 to declared adapter targets. Whole-tree checks reject missing, unexpected or
 changed files.
 
-The prefix replaces the authoring word only where it begins an identifier
-segment followed by an uppercase letter or digit (`FortalButton`,
-`_resolveFortalTheme`), or in a quoted ID. A quoted ID starts with the value
-word and separates alphanumeric segments with `.`, `-` or `_`
-(`'fortal.color.accent'`); its last segment may be interpolated. Comments and
-prose keep their original text, except that Dartdoc references (`[FortalButton]`)
-follow the installed identifier. Bare prefix segments or ambiguous ID-like
-strings fail derivation with a file and line. Explicit fixed data filenames
-are exempt: `theme/fortal_colors.dart` stays stable while its Dart types take
-the consumer prefix; the theme barrel excludes unprefixed palette globals.
+Follow the [registry authoring guide](../skills/building-remix-design-system/references/registry.md)
+for prefix conventions. The fixed `theme/fortal_colors.dart` data filename
+stays stable while its Dart types take the consumer prefix; the theme barrel
+excludes unprefixed palette globals.
 Palettes are generated from owned seeds; [Fortal's specification](../registry_source/specs/fortal.md)
 owns the visual contract.
 

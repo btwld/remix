@@ -12,13 +12,13 @@ part of 'button.dart';
 /// variant's colors at rest, under the pointer and on focus, then disabled.
 /// Remix owns rendering, input, semantics, and the loading and disabled rules.
 ///
-/// `@MixWidget` generates `VanillaButton` into `button.g.dart`, with one named
+/// `@MixWidget` generates `AcmeButton` into `button.g.dart`, with one named
 /// constructor per variant. Renaming this function renames the widget.
 ///
 /// [style] merges last, so one call site can override any part:
 ///
 /// ```dart
-/// VanillaButton.primary(
+/// AcmeButton.primary(
 ///   label: 'Publish',
 ///   style: ButtonStyler().color(const Color(0xFF7C3AED)),
 ///   onPressed: publish,

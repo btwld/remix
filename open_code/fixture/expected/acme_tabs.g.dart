@@ -19,7 +19,7 @@ part of 'tabs.dart';
 /// ```dart
 /// SingleChildScrollView(
 ///   scrollDirection: Axis.horizontal,
-///   child: VanillaTabBar(child: Row(children: tabs)),
+///   child: AcmeTabBar(child: Row(children: tabs)),
 /// )
 /// ```
 ///
@@ -33,14 +33,14 @@ part of 'tabs.dart';
 ///   child: Column(
 ///     crossAxisAlignment: CrossAxisAlignment.start,
 ///     children: [
-///       VanillaTabBar(
+///       AcmeTabBar(
 ///         child: Row(mainAxisSize: MainAxisSize.min, children: [
-///           VanillaTab(tabId: 'account', label: 'Account'),
-///           VanillaTab(tabId: 'billing', label: 'Billing'),
+///           AcmeTab(tabId: 'account', label: 'Account'),
+///           AcmeTab(tabId: 'billing', label: 'Billing'),
 ///         ]),
 ///       ),
-///       VanillaTabView(tabId: 'account', child: accountPanel),
-///       VanillaTabView(tabId: 'billing', child: billingPanel),
+///       AcmeTabView(tabId: 'account', child: accountPanel),
+///       AcmeTabView(tabId: 'billing', child: billingPanel),
 ///     ],
 ///   ),
 /// )

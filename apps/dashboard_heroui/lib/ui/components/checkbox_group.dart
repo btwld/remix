@@ -11,7 +11,7 @@ part 'checkbox_group.g.dart';
 /// that carries its own label.
 ///
 /// [minimumTapTargetSize] sets the widget's default tap target, as on
-/// `HeroUiCheckbox`.
+/// `UiCheckbox`.
 @MixWidget(target: RemixCheckboxGroupItem.new)
 CheckboxStyler uiCheckboxGroupItemStyle({
   UiCheckboxVariant variant = .primary,

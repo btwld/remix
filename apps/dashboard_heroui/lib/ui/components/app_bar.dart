@@ -26,7 +26,7 @@ const uiAppBarSeparatorWidth = 1.0;
 /// Merges [style] last, so a caller can override anything:
 ///
 /// ```dart
-/// HeroUiAppBar(
+/// UiAppBar(
 ///   style: AppBarStyler().toolbarHeight(56),
 ///   title: 'Orders',
 /// )

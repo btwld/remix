@@ -39,16 +39,16 @@ const _separatorWidth = 1.0;
 /// dismissal.
 ///
 /// ```dart
-/// HeroUiSidebarLayout(
-///   sidebar: HeroUiSidebar<AppPage>(
+/// UiSidebarLayout(
+///   sidebar: UiSidebar<AppPage>(
 ///     sections: sections,
 ///     selectedValue: page,
 ///     onSelected: (value) {
 ///       setState(() => page = value);
-///       HeroUiSidebarLayoutScope.of(context).closeCompact();
+///       UiSidebarLayoutScope.of(context).closeCompact();
 ///     },
 ///   ),
-///   header: const HeroUiAppBar(title: 'Overview'),
+///   header: const UiAppBar(title: 'Overview'),
 ///   body: PageBody(page: page),
 /// )
 /// ```
@@ -369,7 +369,7 @@ class UiSidebarLayoutScope extends InheritedWidget {
     final scope = maybeOf(context);
     if (scope == null) {
       throw FlutterError(
-        'HeroUiSidebarLayoutScope.of requires a HeroUiSidebarLayout ancestor.',
+        'UiSidebarLayoutScope.of requires a UiSidebarLayout ancestor.',
       );
     }
     return scope;

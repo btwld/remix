@@ -47,7 +47,7 @@ Widget _uiRecolored(Color foreground, Widget child) => DefaultTextStyle.merge(
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
 ///   ),
-///   builder: (_, child) => FortalTheme(child: child!),
+///   builder: (_, child) => UiTheme(child: child!),
 ///   home: const HomePage(),
 /// )
 /// ```
@@ -89,9 +89,9 @@ class UiTheme extends StatelessWidget {
     final data = maybeOf(context);
     if (data != null) return data;
     throw FlutterError.fromParts([
-      ErrorSummary('No FortalTheme found.'),
+      ErrorSummary('No UiTheme found.'),
       ErrorDescription(
-        '${context.widget.runtimeType} tried to read the UI theme, but no FortalTheme was found above it.',
+        '${context.widget.runtimeType} tried to read the UI theme, but no UiTheme was found above it.',
       ),
       context.describeElement('The context used was'),
     ]);

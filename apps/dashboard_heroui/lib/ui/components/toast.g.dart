@@ -13,9 +13,9 @@ part of 'toast.dart';
 /// from 768px down. Below 640px it adds `mt-2` through a second `action`.
 ///
 /// An `action` replaces rather than merges, so a caller who styles it restates
-/// `heroUiButtonStyle()` in their `action`, and again, with `.margin(.top(2))`,
+/// `uiButtonStyle()` in their `action`, and again, with `.margin(.top(2))`,
 /// in an `onNot(ContextVariant.breakpoint(Breakpoint.minWidth(
-/// HeroUiTokens.breakpointSm)), ...)` fragment; without that fragment the
+/// UiTokens.breakpointSm)), ...)` fragment; without that fragment the
 /// recipe's own action wins below 640px.
 class UiToast extends StatelessWidget {
   const UiToast({

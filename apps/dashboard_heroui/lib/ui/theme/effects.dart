@@ -135,7 +135,7 @@ ContextToken<Color> uiAlpha(ColorToken source, double alpha) =>
     });
 
 /// `min(max, calc(var(--radius-N) * scale))`: HeroUI caps its large surfaces
-/// at 32px. `HeroUiTokens.radiusPanel` is the `radius-3xl` case.
+/// at 32px. `UiTokens.radiusPanel` is the `radius-3xl` case.
 ///
 /// Keep the result in a top-level final.
 ContextToken<Radius> uiRadius(

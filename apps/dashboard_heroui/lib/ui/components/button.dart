@@ -36,7 +36,7 @@ enum UiButtonVariant {
 /// They are `onBreakpoint` fragments, which beat the base style whatever the
 /// merge order: a caller's `style: ButtonStyler().height(50)` is ignored from
 /// 768px up. Override with
-/// `onBreakpoint(Breakpoint.minWidth(HeroUiTokens.breakpointMd), ...)`.
+/// `onBreakpoint(Breakpoint.minWidth(UiTokens.breakpointMd), ...)`.
 enum UiButtonSize {
   /// 36px tall, 32px from 768px up.
   sm,

@@ -29,7 +29,7 @@ enum PlaygroundKbdVariant {
 /// key through [style]:
 ///
 /// ```dart
-/// VanillaKbd('⌘', style: TextStyler().semanticsLabel('Command'))
+/// PlaygroundKbd('⌘', style: TextStyler().semanticsLabel('Command'))
 /// ```
 @MixWidget()
 TextStyler playgroundKbdStyle({
@@ -76,7 +76,7 @@ TextStyler playgroundKbdStyle({
 /// a time. Text between the keys, such as a `+`, is a child like the keys.
 ///
 /// ```dart
-/// VanillaKbdGroup(children: [VanillaKbd('Ctrl'), VanillaKbd('B')])
+/// PlaygroundKbdGroup(children: [PlaygroundKbd('Ctrl'), PlaygroundKbd('B')])
 /// ```
 class PlaygroundKbdGroup extends StatelessWidget {
   const PlaygroundKbdGroup({super.key, required this.children});

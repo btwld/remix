@@ -18,7 +18,7 @@ part of 'accordion.dart';
 /// RemixAccordionGroup<String>(
 ///   controller: RemixAccordionController<String>(),
 ///   child: Column(children: const [
-///     VanillaAccordion(
+///     PlaygroundAccordion(
 ///       value: 'shipping',
 ///       title: 'Shipping',
 ///       child: Text('Two to four business days.'),

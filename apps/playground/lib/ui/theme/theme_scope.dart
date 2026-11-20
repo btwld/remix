@@ -10,7 +10,7 @@ import 'tokens.dart';
 ///
 /// * an inherited theme so application code can read the raw values through
 ///   [PlaygroundTheme.of];
-/// * a `MixScope` carrying the same values keyed by `VanillaTokens`, so every Mix
+/// * a `MixScope` carrying the same values keyed by `PlaygroundTokens`, so every Mix
 ///   styler resolved below this point sees them.
 ///
 /// The outermost scope also sets the page up: it paints the theme's
@@ -26,7 +26,7 @@ import 'tokens.dart';
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
 ///   ),
-///   builder: (context, child) => VanillaTheme(child: child!),
+///   builder: (context, child) => PlaygroundTheme(child: child!),
 ///   home: const HomePage(),
 /// )
 /// ```
@@ -92,10 +92,10 @@ class PlaygroundTheme extends StatelessWidget {
     if (data != null) return data;
 
     throw FlutterError.fromParts([
-      ErrorSummary('No VanillaTheme found.'),
+      ErrorSummary('No PlaygroundTheme found.'),
       ErrorDescription(
         '${context.widget.runtimeType} tried to read the UI theme, but no '
-        'VanillaTheme was found above it.',
+        'PlaygroundTheme was found above it.',
       ),
       context.describeElement('The context used was'),
     ]);

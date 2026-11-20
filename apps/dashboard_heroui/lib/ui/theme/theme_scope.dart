@@ -10,7 +10,7 @@ import 'tokens.dart';
 ///
 /// * an inherited theme so application code can read the raw values through
 ///   [UiTheme.of];
-/// * a `MixScope` carrying the same values keyed by `HeroUiTokens`, so every Mix
+/// * a `MixScope` carrying the same values keyed by `UiTokens`, so every Mix
 ///   styler resolved below this point sees them.
 ///
 /// The outermost scope also sets the page up: it paints the theme's
@@ -26,7 +26,7 @@ import 'tokens.dart';
 ///     settings: settings,
 ///     pageBuilder: (context, animation, secondaryAnimation) => builder(context),
 ///   ),
-///   builder: (context, child) => HeroUiTheme(child: child!),
+///   builder: (context, child) => UiTheme(child: child!),
 ///   home: const HomePage(),
 /// )
 /// ```
@@ -73,10 +73,10 @@ class UiTheme extends StatelessWidget {
     if (data != null) return data;
 
     throw FlutterError.fromParts([
-      ErrorSummary('No HeroUiTheme found.'),
+      ErrorSummary('No UiTheme found.'),
       ErrorDescription(
         '${context.widget.runtimeType} tried to read the UI theme, but no '
-        'HeroUiTheme was found above it.',
+        'UiTheme was found above it.',
       ),
       context.describeElement('The context used was'),
     ]);

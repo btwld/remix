@@ -16,7 +16,7 @@ part 'slider.g.dart';
 /// distinct. Both slider recipes reserve a 48px interaction height.
 ///
 /// Set [surfaceColor] to the enclosing surface on cards or tinted panels (for
-/// example `VanillaTokens.card.resolve(context)`); the hover and press halos
+/// example `PlaygroundTokens.card.resolve(context)`); the hover and press halos
 /// are opaque and blend against it, defaulting to the page background.
 @MixWidget(target: RemixSlider.new)
 SliderStyler playgroundSliderStyle({
@@ -102,7 +102,7 @@ ContextToken<Color> _ringColor(double alpha, Color? surfaceColor) =>
       ),
     );
 
-// ContextToken equality is resolver identity, as in vanillaTint: cache per
+// ContextToken equality is resolver identity, as in `playgroundTint`: cache per
 // argument set so rebuilding the recipe keeps style equality.
 final _ringColors = <(double, Color?), ContextToken<Color>>{};
 

@@ -4,18 +4,18 @@ import 'package:remix/remix.dart';
 ///
 /// Remix ships no theme, so the names below are the application's vocabulary,
 /// not a Remix contract. A [MixToken] is only an identity: the concrete value
-/// comes from whichever `MixScope` is active, which `VanillaTheme` installs
-/// from a `VanillaThemeData`. Spacing, size, stroke, opacity, and motion steps
+/// comes from whichever `MixScope` is active, which `PlaygroundTheme` installs
+/// from a `PlaygroundThemeData`. Spacing, size, stroke, opacity, and motion steps
 /// are plain constants on the same class so every recipe reads from one place.
 /// Editing, renaming, or adding a member here is a local change — nothing in
 /// Remix reads these names.
 ///
 /// The color, radius, and text names follow the CSS variables of shadcn/ui's
 /// theme, which inspired these defaults, so a value read off one of those
-/// themes drops straight into `VanillaThemeData`.
+/// themes drops straight into `PlaygroundThemeData`.
 ///
 /// ```dart
-/// ButtonStyler().color(VanillaTokens.primary());
+/// ButtonStyler().color(PlaygroundTokens.primary());
 /// ```
 abstract final class PlaygroundTokens {
   /// Page background the application paints behind its content.
@@ -79,7 +79,7 @@ abstract final class PlaygroundTokens {
   ///
   /// In the dark theme this is a light red that reads as text on the page but
   /// is too light to carry white text as a solid fill, which is why the dark
-  /// recipes paint destructive fills at a reduced alpha (see `vanillaTint`).
+  /// recipes paint destructive fills at a reduced alpha (see `playgroundTint`).
   static const destructive = ColorToken('playground.color.destructive');
 
   /// Content color used on top of a [destructive] fill.
@@ -158,7 +158,7 @@ abstract final class PlaygroundTokens {
   /// The small corner radius: menu rows and select options.
   ///
   /// Every radius step is derived from the one `radius` value on
-  /// `VanillaThemeData`, so changing that value rounds the whole application
+  /// `PlaygroundThemeData`, so changing that value rounds the whole application
   /// consistently.
   static const radiusSm = RadiusToken('playground.radius.sm');
 
@@ -207,7 +207,7 @@ abstract final class PlaygroundTokens {
 
   /// Every color token this layer defines, in declaration order.
   ///
-  /// The installed-app fixture checks that `VanillaThemeData`'s scope map
+  /// The installed-app fixture checks that `PlaygroundThemeData`'s scope map
   /// resolves every entry, so a token added here and forgotten there fails.
   static const colors = <ColorToken>[
     background,

@@ -79,7 +79,7 @@ class UiDashboardThemeScope extends InheritedWidget {
     final scope = maybeOf(context);
     assert(
       scope != null,
-      'FortalDashboardThemeScope is missing above this context.',
+      'UiDashboardThemeScope is missing above this context.',
     );
     return scope!;
   }

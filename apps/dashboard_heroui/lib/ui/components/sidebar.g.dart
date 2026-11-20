@@ -29,7 +29,7 @@ part of 'sidebar.dart';
 /// It takes no variant and no size, and sets no panel width and no header
 /// padding: the host sizes the panel, because the same panel is presented
 /// as a sheet at narrow widths. Give the header the app bar's
-/// `heroUiAppBarToolbarHeight` and separator so the two rows line up.
+/// `uiAppBarToolbarHeight` and separator so the two rows line up.
 class UiSidebar<T extends Object> extends StatelessWidget {
   const UiSidebar({
     super.key,

@@ -7,7 +7,7 @@ import '../components/spinner.dart';
 
 /// Draws the glyphs of the Agent widgets from this preset's icon set.
 ///
-/// Wrap the conversation in `AgentGlyphs(builder: vanillaAgentGlyph, ...)`.
+/// Wrap the conversation in `AgentGlyphs(builder: playgroundAgentGlyph, ...)`.
 /// Each Agent widget sizes and colors its glyph through its own style, so this
 /// only picks the shape. Returning null draws nothing there.
 Widget? playgroundAgentGlyph(
@@ -25,7 +25,7 @@ Widget? playgroundAgentGlyph(
 };
 
 /// Picks named tool icons; null keeps the generic tool glyph as the fallback.
-/// Pass this to `AgentGlyphs.toolIconBuilder` beside `vanillaAgentGlyph`.
+/// Pass this to `AgentGlyphs.toolIconBuilder` beside `playgroundAgentGlyph`.
 Widget? playgroundAgentToolIcon(
   BuildContext context,
   String name,

@@ -387,7 +387,7 @@ class _UiDashboardOrdersPageState extends State<UiDashboardOrdersPage> {
   int _page = 0;
   int _rowsPerPage = 10;
 
-  /// See `_FortalDashboardCustomersPageState._rows`.
+  /// See `_UiDashboardCustomersPageState._rows`.
   List<UiDashboardOrder>? _rows;
 
   /// The table columns. Built once per data set: the edition column looks a

@@ -148,5 +148,5 @@ ToggleStyler uiToggleButtonStyle({
 }
 
 /// `gap-2` less the icon's `-mx-0.5` on both sides, as on the button. Shared
-/// with `heroUiToggleButtonGroupStyle`.
+/// with `uiToggleButtonGroupStyle`.
 const uiToggleButtonGap = 8.0 - 2 * 2;

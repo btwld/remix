@@ -18,7 +18,7 @@ enum {{typePrefix}}RadioVariant {
 /// HeroUI recipe for [RemixRadio].
 ///
 /// The label sits inside the control's tap target. A description beneath it is
-/// `HeroUiRadioGroup`'s. [invalid] paints the error treatment and turns the
+/// `{{typePrefix}}RadioGroup`'s. [invalid] paints the error treatment and turns the
 /// label danger; validation stays with the app.
 @MixWidget(target: RemixRadio.new)
 RadioStyler {{valuePrefix}}RadioStyle({
@@ -76,7 +76,7 @@ RadioStyler {{valuePrefix}}RadioStyle({
 }
 
 /// `.radio__control`: `size-4`. Also the description indent in
-/// `HeroUiRadioGroup`, with the label gap.
+/// `{{typePrefix}}RadioGroup`, with the label gap.
 const {{valuePrefix}}RadioSize = 16.0;
 
 /// The selected dot, `scale: 0.4286` of the control, and `0.5714` while pressed.

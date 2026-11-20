@@ -16,8 +16,8 @@ const playgroundAppBarToolbarHeight = PlaygroundTokens.s16;
 /// [style] merges last:
 ///
 /// ```dart
-/// VanillaAppBar(
-///   style: AppBarStyler().toolbarHeight(VanillaTokens.s12),
+/// PlaygroundAppBar(
+///   style: AppBarStyler().toolbarHeight(PlaygroundTokens.s12),
 ///   title: 'Orders',
 /// )
 /// ```

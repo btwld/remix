@@ -286,7 +286,7 @@ class _BrandPaletteCard extends StatelessWidget {
           style: dashboardText(.size2, tone: .muted),
         ),
         const {{typePrefix}}Code(
-          'accentPalette: FortalColorTheme(light, dark)',
+          'accentPalette: {{typePrefix}}ColorTheme(light, dark)',
           size: .size1,
         ),
       ],
@@ -448,7 +448,7 @@ class _{{typePrefix}}SpecimenCardState extends State<{{typePrefix}}SpecimenCard>
           label: 'Inline',
           children: [
             {{typePrefix}}Kbd({{valuePrefix}}QuickFindShortcut),
-            const {{typePrefix}}Code('fortalButtonStyle()'),
+            const {{typePrefix}}Code('{{valuePrefix}}ButtonStyle()'),
             {{typePrefix}}Link(
               'A link',
               size: .size2,

@@ -7,7 +7,7 @@ import '../../theme/theme.dart';
 /// The text sizes the demo uses, named as HeroUI's typography names them.
 ///
 /// The theme carries only `text-xs`, `text-sm` and `text-base`; the headings
-/// set Tailwind's larger sizes over `text-base`, as `HeroUiTypography` does,
+/// set Tailwind's larger sizes over `text-base`, as `UiTypography` does,
 /// so the demo does not need the `typography` item and its fonts package.
 enum UiDashboardTextType { h3, h4, h6, bodySm, bodyXs }
 
