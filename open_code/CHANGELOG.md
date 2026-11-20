@@ -60,3 +60,6 @@ declarations.
 - Allow the released-CLI compatibility check to bootstrap a missing
   `registry-stable` from the candidate SHA, and document promotion, rollback,
   and release logging. (#507, #512)
+- Audit every checkout catalog item's install closure before creating a
+  consumer, checking conditional imports and exports, generated targets, and
+  direct runtime dependencies. Hosted validation is unchanged. (#515)
