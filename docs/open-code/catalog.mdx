@@ -108,9 +108,10 @@ The installer rejects older resolved versions before it writes source.
 The four calendar items are Vanilla hand-written composites with no generated
 part. `calendar` wires IconButton and Select recipes; `range_calendar` adds
 range day states. The pickers compose outline Button, elevated Popover and the
-matching calendar, retaining all five child-styler overrides. `breadcrumbs` is
-one too: a one-line trail of Link recipes with chevron separators, the current
-page as plain text, and a navigation landmark around it. The Vanilla
+matching calendar, retaining all five child-styler overrides. Both pickers
+install `date_picker_styles` automatically as an internal dependency.
+`breadcrumbs` is a one-line trail of Link recipes with chevron separators, the
+current page as plain text, and a navigation landmark around it. The Vanilla
 `dashboard_demo` header uses it. So is `search_field`: a stateful text field
 with a search icon and a clear button that shows for text, clears on Escape,
 and owns its controller when you pass none. The Vanilla `dashboard_shell`
@@ -166,6 +167,10 @@ components. HeroUI's `dashboard_demo` renders the same five destinations with
 HeroUI's components, and pulls in `chart`, `table`, `tabs`, `chip`, and the
 Agent items. Families that need
 behavior Remix does not provide, such as Form and the separate popover-search Autocomplete, are not included.
+
+HeroUI's `UiCheckboxGroup` stacks options by default (`Axis.vertical`). Pass
+`orientation: Axis.horizontal` to flow the label, options, and help or error
+text in a row that wraps when space runs out.
 
 One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the
