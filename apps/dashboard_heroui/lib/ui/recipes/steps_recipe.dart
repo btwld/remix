@@ -26,8 +26,8 @@ final class UiAgentStepsRecipe {
 
 /// Builds the recipe; each argument is merged last, so callers can override.
 ///
-/// The line is quiet gray text with a 16px glyph. The rail's 1px line hangs
-/// 7px in, so it ends at the center of that glyph, with 4px between steps.
+/// The line is quiet gray text with a 16px glyph. The rail's 1px line sits
+/// 7px in, its right edge under the glyph's center, with 4px between steps.
 UiAgentStepsRecipe uiAgentStepsRecipe({
   AgentStepsStyler style = const AgentStepsStyler.create(),
   AgentStepStyler stepStyle = const AgentStepStyler.create(),
@@ -70,7 +70,7 @@ UiAgentStepsRecipe uiAgentStepsRecipe({
   disclosureStyle: _quietDisclosure().merge(disclosureStyle),
 );
 
-/// Ends the rail's 1px line at the center of the line's 16px glyph.
+/// Puts the rail line's right edge under the center of the 16px glyph.
 const _railInset = 7.0;
 
 /// A 16px glyph in quiet gray.
@@ -94,8 +94,7 @@ DisclosureStyler _quietDisclosure() => uiDisclosureStyle(
       )
       .content(
         BoxStyler()
-            .padding(.all(0))
-            .padding(.top(12))
+            .padding(.all(0).top(12))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
       .onHovered(.trigger(.color(const Color(0x00000000))))

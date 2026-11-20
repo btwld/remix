@@ -47,7 +47,7 @@ PlaygroundAgentConversationRecipe playgroundAgentConversationRecipe({
     variant: .outline,
     size: .large,
     style: IconButtonStyler()
-        // The button floats over the transcript, so every fill is opaque.
+        // The button floats over the transcript: rest, hover and press are opaque.
         .color(PlaygroundTokens.background())
         .borderRadius(.circular(PlaygroundTokens.pill))
         .onHovered(.color(PlaygroundTokens.accent()))

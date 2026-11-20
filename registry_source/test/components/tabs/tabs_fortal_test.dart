@@ -21,26 +21,48 @@ void main() {
   for (final states in [
     {WidgetState.disabled},
     {WidgetState.disabled, WidgetState.hovered},
+    {WidgetState.disabled, WidgetState.focused},
     {WidgetState.disabled, WidgetState.selected},
   ]) {
     testWidgets(
-      'a disabled tab is grayA8 with no fill (${states.join(', ')})',
+      'a disabled tab is grayA8 with no fill or ring (${states.join(', ')})',
       (tester) async {
         final disabled = await _resolve(tester, states);
 
         expect(disabled.spec.label.spec.style?.color, disabled.grayA8);
         expect(disabled.spec.icon.spec.color, disabled.grayA8);
         expect(_containerColor(disabled.spec), const Color(0x00000000));
+        expect(disabled.spec.containerEffects?.outline.style, BorderStyle.none);
       },
     );
   }
+
+  testWidgets('a disabled selected tab grays its underline and stays medium', (
+    tester,
+  ) async {
+    final disabled = await _resolve(tester, const {
+      WidgetState.disabled,
+      WidgetState.selected,
+    });
+
+    expect(disabled.underline, disabled.grayA8);
+    // fontWeightMedium, which keeps it apart from a disabled unselected tab.
+    expect(disabled.spec.label.spec.style?.fontWeight, FontWeight.w500);
+  });
 }
 
-Future<({TabSpec spec, Color grayA3, Color grayA8, Color accentA3})> _resolve(
-  WidgetTester tester,
-  Set<WidgetState> states,
-) async {
-  late ({TabSpec spec, Color grayA3, Color grayA8, Color accentA3}) result;
+Future<
+  ({TabSpec spec, Color? underline, Color grayA3, Color grayA8, Color accentA3})
+>
+_resolve(WidgetTester tester, Set<WidgetState> states) async {
+  late ({
+    TabSpec spec,
+    Color? underline,
+    Color grayA3,
+    Color grayA8,
+    Color accentA3,
+  })
+  result;
 
   await tester.pumpWidget(
     FortalTheme(
@@ -51,8 +73,10 @@ Future<({TabSpec spec, Color grayA3, Color grayA8, Color accentA3})> _resolve(
           states: states,
           child: Builder(
             builder: (context) {
+              final style = fortalTabStyle().build(context);
               result = (
-                spec: fortalTabStyle().build(context).spec,
+                spec: style.spec,
+                underline: _tabUnderlineColor(style),
                 grayA3: MixScope.tokenOf(FortalTokens.grayA3, context),
                 grayA8: MixScope.tokenOf(FortalTokens.grayA8, context),
                 accentA3: MixScope.tokenOf(FortalTokens.accentA3, context),
@@ -75,3 +99,11 @@ Color? _containerColor(TabSpec spec) {
 
 BoxDecoration? _containerDecoration(TabSpec spec) =>
     spec.container.spec.box?.spec.decoration as BoxDecoration?;
+
+Color? _tabUnderlineColor(StyleSpec<TabSpec> style) {
+  final modifiers = style.widgetModifiers?.whereType<BoxModifier>().toList();
+  final decoration = modifiers?.single.spec.decoration as BoxDecoration?;
+  final border = decoration?.border;
+
+  return border is Border ? border.bottom.color : null;
+}

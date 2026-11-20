@@ -163,9 +163,8 @@ families carry over.
   `primary` ring around the thumb, raised locally rather than through the
   shared focus helper. Disabled fades the whole control. The range widget
   takes two ordered, parent-owned `values`, `minSpacing`, `snapDivisions`, and
-  lower/upper `semanticLabels` and `focusNodes`. The generated adapters omit
-  Naked UI's semantic formatter typedefs; for custom announcements, use
-  `RemixRangeSlider` with `<prefix>RangeSliderStyle()`. See the
+  lower/upper `semanticLabels`, `semanticFormatterCallbacks` and
+  `focusNodes`. See the
   [Slider examples](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
 - **Tabs** — compose `RemixTabs` (the behavioral root) with `<Prefix>TabBar`,
   `<Prefix>Tab`, and `<Prefix>TabView`. `<Prefix>TabsVariant { filled, line }`:
