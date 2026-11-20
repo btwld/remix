@@ -9,6 +9,7 @@ part of 'popover.dart';
 mixin _$PopoverSpec implements Spec<PopoverSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   RemixBoxEffectsSpec? get containerEffects;
+  RemixPanelTransition? get panelTransition;
 
   @override
   Type get type => PopoverSpec;
@@ -17,10 +18,12 @@ mixin _$PopoverSpec implements Spec<PopoverSpec>, Diagnosticable {
   PopoverSpec copyWith({
     StyleSpec<BoxSpec>? container,
     RemixBoxEffectsSpec? containerEffects,
+    RemixPanelTransition? panelTransition,
   }) {
     return PopoverSpec(
       container: container ?? this.container,
       containerEffects: containerEffects ?? this.containerEffects,
+      panelTransition: panelTransition ?? this.panelTransition,
     );
   }
 
@@ -33,11 +36,16 @@ mixin _$PopoverSpec implements Spec<PopoverSpec>, Diagnosticable {
         other?.containerEffects,
         t,
       ),
+      panelTransition: MixOps.lerpSnap(
+        panelTransition,
+        other?.panelTransition,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, containerEffects];
+  List<Object?> get props => [container, containerEffects, panelTransition];
 
   @override
   bool operator ==(Object other) {
@@ -80,7 +88,8 @@ mixin _$PopoverSpec implements Spec<PopoverSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('containerEffects', containerEffects));
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
+      ..add(DiagnosticsProperty('panelTransition', panelTransition));
   }
 }
 
@@ -98,25 +107,30 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
+  final Prop<RemixPanelTransition>? $panelTransition;
 
   const PopoverStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<RemixBoxEffectsSpec>? containerEffects,
+    Prop<RemixPanelTransition>? panelTransition,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
-       $containerEffects = containerEffects;
+       $containerEffects = containerEffects,
+       $panelTransition = panelTransition;
 
   PopoverStyler({
     BoxStyler? container,
     RemixBoxEffectsMix? containerEffects,
+    RemixPanelTransition? panelTransition,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<PopoverSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          containerEffects: Prop.maybeMix(containerEffects),
+         panelTransition: Prop.maybe(panelTransition),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -126,6 +140,8 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
       PopoverStyler().container(value);
   factory PopoverStyler.containerEffects(RemixBoxEffectsMix value) =>
       PopoverStyler().containerEffects(value);
+  factory PopoverStyler.panelTransition(RemixPanelTransition value) =>
+      PopoverStyler().panelTransition(value);
   factory PopoverStyler.alignment(AlignmentGeometry value) =>
       PopoverStyler().alignment(value);
   factory PopoverStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -621,6 +637,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
   Set<String> get $stylerFieldNames => const {
     'container',
     'containerEffects',
+    'panelTransition',
     'animation',
     'modifier',
     'variants',
@@ -634,6 +651,11 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
   /// Sets the containerEffects.
   PopoverStyler containerEffects(RemixBoxEffectsMix value) {
     return merge(PopoverStyler(containerEffects: value));
+  }
+
+  /// Sets the panelTransition.
+  PopoverStyler panelTransition(RemixPanelTransition value) {
+    return merge(PopoverStyler(panelTransition: value));
   }
 
   /// Sets the animation configuration.
@@ -711,6 +733,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
         $containerEffects,
         other?.$containerEffects,
       ),
+      panelTransition: MixOps.merge($panelTransition, other?.$panelTransition),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -723,6 +746,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     final spec = PopoverSpec(
       container: MixOps.resolve(context, $container),
       containerEffects: MixOps.resolve(context, $containerEffects),
+      panelTransition: MixOps.resolve(context, $panelTransition),
     );
 
     return StyleSpec(
@@ -737,13 +761,15 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
+      ..add(DiagnosticsProperty('panelTransition', $panelTransition));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $containerEffects,
+    $panelTransition,
     $animation,
     $modifier,
     $variants,

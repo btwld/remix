@@ -364,6 +364,76 @@ checkbox item, radio group, radio item, submenu, section, and divider. Build
 keys from application-owned item identity and keep them stable across
 rebuilds. Item keys are not derived automatically from labels or values.
 
+## Panel transition
+
+A menu panel shows and hides at once by default. Set `panelTransition` on the
+style to open and close the root panel with a transition, so a recipe owns the
+motion. `RemixPanelTransition` takes the durations and a builder. The builder
+receives the open and close animation, which runs from `0.0` to `1.0` while the
+panel opens and back while it closes, and the trigger's bounds as `anchorRect`.
+The animation is linear, so apply a curve in the builder.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+// A top-level function, not an inline closure: `RemixPanelTransition` compares
+// its builder by identity, so a new closure on every build makes every styler
+// unequal and restarts style resolution.
+Widget fadeScalePanel(
+  BuildContext context,
+  RemixPanelTransitionInfo info,
+  Widget panel,
+) {
+  // The side the panel was placed on, after collision handling.
+  final placement = OverlayPlacement.maybeOf(context);
+  final origin = placement?.side == OverlaySide.top
+      ? Alignment.bottomLeft
+      : Alignment.topLeft;
+  final curved = info.animation.drive(CurveTween(curve: Curves.easeOutCubic));
+  return FadeTransition(
+    opacity: curved,
+    child: ScaleTransition(
+      alignment: origin,
+      scale: curved.drive(Tween<double>(begin: .96, end: 1)),
+      child: panel,
+    ),
+  );
+}
+
+const panelTransition = RemixPanelTransition(
+  duration: Duration(milliseconds: 360),
+  reverseDuration: Duration(milliseconds: 260),
+  builder: fadeScalePanel,
+);
+
+final menuWithTransition = RemixMenu<String>(
+  trigger: const RemixMenuTrigger(label: 'Options'),
+  items: const [
+    RemixMenuItem(value: 'copy', label: 'Copy'),
+    RemixMenuItem(value: 'paste', label: 'Paste'),
+  ],
+  style: MenuStyler().panelTransition(panelTransition),
+);
+```
+
+Pass a top-level function or a static tear-off as `builder`, and keep the
+transition in a `const` or `final`. Equality is by builder identity, so an
+inline closure gives a new, unequal transition on every build.
+
+The panel resolves the builder and both durations in its own scope, not at
+the trigger. Menu, Popover, and Select builders can read the resolved side and
+alignment from `OverlayPlacement.maybeOf(context)`. A shared builder should
+handle a missing placement: overlays such as Flutter's autocomplete do not
+provide that scope. `anchorRect` is independent of placement.
+
+The panel stays mounted until the exit has played, then hides and `onClose`
+runs. The leaving content cannot be focused, activated, or reached by assistive
+technology. Toggling the trigger again resumes opening from the current
+progress. When `onCloseRequested` is set, the menu stays open until it calls
+`hideOverlay`, and that call plays the exit. Reduced motion also finishes
+transitions already in progress. Submenu panels are not wrapped.
+
 ## Sections
 
 `RemixMenuSection` groups entries under a heading, such as "Recent" or
@@ -844,6 +914,11 @@ Configures the menu-wide section-heading override after `item`.
 #### `divider(DividerStyler value)`
 
 Configures divider style.
+
+#### `panelTransition(RemixPanelTransition value)`
+
+Opens and closes the root panel with a transition. `null` shows and hides it at
+once.
 
 #### `animate(AnimationConfig value)`
 

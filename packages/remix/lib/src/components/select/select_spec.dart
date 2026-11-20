@@ -13,11 +13,21 @@ class SelectSpec with _$SelectSpec {
   @override
   final StyleSpec<SelectMenuItemSpec> item;
 
+  /// Opens and closes the panel with a transition.
+  ///
+  /// The builder receives the open and close animation and the trigger's
+  /// bounds, and the panel stays mounted until the exit has played. `null`
+  /// keeps the default: a 150 ms ease-in-out fade and scale from 95 percent.
+  /// While the user asks to reduce motion the panel opens and closes at once.
+  @override
+  final RemixPanelTransition? panelTransition;
+
   const SelectSpec({
     StyleSpec<SelectTriggerSpec>? trigger,
     StyleSpec<SelectContentSpec>? content,
     StyleSpec<FlexBoxSpec>? menuContainer,
     StyleSpec<SelectMenuItemSpec>? item,
+    this.panelTransition,
   }) : trigger = trigger ?? const StyleSpec(spec: SelectTriggerSpec()),
        content = content ?? const StyleSpec(spec: SelectContentSpec()),
        item = item ?? const StyleSpec(spec: SelectMenuItemSpec()),

@@ -109,6 +109,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
   StyleSpec<MenuItemSpec>? get submenuItem;
   StyleSpec<MenuItemSpec>? get sectionLabel;
   StyleSpec<DividerSpec> get divider;
+  RemixPanelTransition? get panelTransition;
 
   @override
   Type get type => MenuSpec;
@@ -124,6 +125,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     StyleSpec<MenuItemSpec>? submenuItem,
     StyleSpec<MenuItemSpec>? sectionLabel,
     StyleSpec<DividerSpec>? divider,
+    RemixPanelTransition? panelTransition,
   }) {
     return MenuSpec(
       trigger: trigger ?? this.trigger,
@@ -135,6 +137,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       submenuItem: submenuItem ?? this.submenuItem,
       sectionLabel: sectionLabel ?? this.sectionLabel,
       divider: divider ?? this.divider,
+      panelTransition: panelTransition ?? this.panelTransition,
     );
   }
 
@@ -154,6 +157,11 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       submenuItem: submenuItem?.lerp(other?.submenuItem, t),
       sectionLabel: sectionLabel?.lerp(other?.sectionLabel, t),
       divider: divider.lerp(other?.divider, t),
+      panelTransition: MixOps.lerpSnap(
+        panelTransition,
+        other?.panelTransition,
+        t,
+      ),
     );
   }
 
@@ -168,6 +176,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     submenuItem,
     sectionLabel,
     divider,
+    panelTransition,
   ];
 
   @override
@@ -218,7 +227,8 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('radioItem', radioItem))
       ..add(DiagnosticsProperty('submenuItem', submenuItem))
       ..add(DiagnosticsProperty('sectionLabel', sectionLabel))
-      ..add(DiagnosticsProperty('divider', divider));
+      ..add(DiagnosticsProperty('divider', divider))
+      ..add(DiagnosticsProperty('panelTransition', panelTransition));
   }
 }
 
@@ -1074,6 +1084,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
   final Prop<StyleSpec<MenuItemSpec>>? $submenuItem;
   final Prop<StyleSpec<MenuItemSpec>>? $sectionLabel;
   final Prop<StyleSpec<DividerSpec>>? $divider;
+  final Prop<RemixPanelTransition>? $panelTransition;
 
   const MenuStyler.create({
     Prop<StyleSpec<MenuTriggerSpec>>? trigger,
@@ -1085,6 +1096,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     Prop<StyleSpec<MenuItemSpec>>? submenuItem,
     Prop<StyleSpec<MenuItemSpec>>? sectionLabel,
     Prop<StyleSpec<DividerSpec>>? divider,
+    Prop<RemixPanelTransition>? panelTransition,
     super.variants,
     super.modifier,
     super.animation,
@@ -1096,7 +1108,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
        $radioItem = radioItem,
        $submenuItem = submenuItem,
        $sectionLabel = sectionLabel,
-       $divider = divider;
+       $divider = divider,
+       $panelTransition = panelTransition;
 
   MenuStyler({
     MenuTriggerStyler? trigger,
@@ -1108,6 +1121,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     MenuItemStyler? submenuItem,
     MenuItemStyler? sectionLabel,
     DividerStyler? divider,
+    RemixPanelTransition? panelTransition,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<MenuSpec>>? variants,
@@ -1121,6 +1135,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
          submenuItem: Prop.maybeMix(submenuItem),
          sectionLabel: Prop.maybeMix(sectionLabel),
          divider: Prop.maybeMix(divider),
+         panelTransition: Prop.maybe(panelTransition),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -1143,6 +1158,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       MenuStyler().sectionLabel(value);
   factory MenuStyler.divider(DividerStyler value) =>
       MenuStyler().divider(value);
+  factory MenuStyler.panelTransition(RemixPanelTransition value) =>
+      MenuStyler().panelTransition(value);
 
   @override
   Set<String> get $stylerFieldNames => const {
@@ -1155,6 +1172,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     'submenuItem',
     'sectionLabel',
     'divider',
+    'panelTransition',
     'animation',
     'modifier',
     'variants',
@@ -1203,6 +1221,11 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
   /// Sets the divider.
   MenuStyler divider(DividerStyler value) {
     return merge(MenuStyler(divider: value));
+  }
+
+  /// Sets the panelTransition.
+  MenuStyler panelTransition(RemixPanelTransition value) {
+    return merge(MenuStyler(panelTransition: value));
   }
 
   /// Sets the animation configuration.
@@ -1285,6 +1308,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       submenuItem: MixOps.merge($submenuItem, other?.$submenuItem),
       sectionLabel: MixOps.merge($sectionLabel, other?.$sectionLabel),
       divider: MixOps.merge($divider, other?.$divider),
+      panelTransition: MixOps.merge($panelTransition, other?.$panelTransition),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1304,6 +1328,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       submenuItem: MixOps.resolve(context, $submenuItem),
       sectionLabel: MixOps.resolve(context, $sectionLabel),
       divider: MixOps.resolve(context, $divider),
+      panelTransition: MixOps.resolve(context, $panelTransition),
     );
 
     return StyleSpec(
@@ -1325,7 +1350,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       ..add(DiagnosticsProperty('radioItem', $radioItem))
       ..add(DiagnosticsProperty('submenuItem', $submenuItem))
       ..add(DiagnosticsProperty('sectionLabel', $sectionLabel))
-      ..add(DiagnosticsProperty('divider', $divider));
+      ..add(DiagnosticsProperty('divider', $divider))
+      ..add(DiagnosticsProperty('panelTransition', $panelTransition));
   }
 
   @override
@@ -1339,6 +1365,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     $submenuItem,
     $sectionLabel,
     $divider,
+    $panelTransition,
     $animation,
     $modifier,
     $variants,

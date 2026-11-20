@@ -482,6 +482,11 @@ class RemixMenu<T> extends StatefulWidget {
   final VoidCallback? onCanceled;
 
   /// Open/close interceptors (for example, to drive animations).
+  ///
+  /// A [MenuStyler.panelTransition] runs inside these: the open transition
+  /// starts when `showOverlay` mounts the panel, and the `hideOverlay` passed to
+  /// [onCloseRequested] plays the exit transition before the panel hides.
+  /// Without a transition they behave as before.
   final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
 
   final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
@@ -532,8 +537,10 @@ class RemixMenu<T> extends StatefulWidget {
   State<RemixMenu<T>> createState() => _RemixMenuState<T>();
 }
 
-class _RemixMenuState<T> extends State<RemixMenu<T>> {
+class _RemixMenuState<T> extends State<RemixMenu<T>>
+    with SingleTickerProviderStateMixin {
   late final MenuController _internalController;
+  late final _panelTransition = RemixPanelTransitionHandle(vsync: this);
   FocusNode? _ownedControlFocusNode;
 
   @override
@@ -544,6 +551,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 
   @override
   void dispose() {
+    _panelTransition.dispose();
     _ownedControlFocusNode?.dispose();
     super.dispose();
   }
@@ -599,7 +607,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       'give the control its own label.',
     );
 
-    return NakedMenu<T>(
+    final anchor = NakedMenu<T>(
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
         return RemixAnchorScope(
@@ -612,15 +620,20 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
               final effectiveStyle = inherited is MenuStyler
                   ? inherited.merge(style)
                   : style;
-              return _RemixMenuItemsPanel<T>(
-                items: widget.items,
-                overlayStyleSpec: spec.overlay,
-                containerEffects: spec.containerEffects,
-                dividerStyleSpec: spec.divider,
-                hasRootSelectionCallback: widget.onSelected != null,
-                itemStyles: widget.styleSpec == null
-                    ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
-                    : _RemixMenuItemStyles.fromSpec(spec),
+              return RemixPanelTransitionHost(
+                handle: _panelTransition,
+                transition: spec.panelTransition,
+                anchorRect: info.anchorRect,
+                child: _RemixMenuItemsPanel<T>(
+                  items: widget.items,
+                  overlayStyleSpec: spec.overlay,
+                  containerEffects: spec.containerEffects,
+                  dividerStyleSpec: spec.divider,
+                  hasRootSelectionCallback: widget.onSelected != null,
+                  itemStyles: widget.styleSpec == null
+                      ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
+                      : _RemixMenuItemStyles.fromSpec(spec),
+                ),
               );
             },
           ),
@@ -631,8 +644,15 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       onOpen: widget.onOpen,
       onClose: widget.onClose,
       onCanceled: widget.onCanceled,
-      onOpenRequested: widget.onOpenRequested,
-      onCloseRequested: widget.onCloseRequested,
+      onOpenRequested: (position, showOverlay) =>
+          _panelTransition.openRequested(
+            position,
+            showOverlay,
+            widget.onOpenRequested,
+            isOpen: () => _effectiveController.isOpen,
+          ),
+      onCloseRequested: (hideOverlay) =>
+          _panelTransition.closeRequested(hideOverlay, widget.onCloseRequested),
       consumeOutsideTaps: widget.consumeOutsideTaps,
       useRootOverlay: widget.useRootOverlay,
       closeOnClickOutside: widget.closeOnClickOutside,
@@ -653,6 +673,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
               isOpen: state.isOpen,
               controller: _effectiveController,
               focusNode: _controlFocusNode,
+              isExiting: () => _panelTransition.isExiting,
             ),
           );
         }
@@ -677,6 +698,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
         );
       },
     );
+    return _panelTransition.wrapAnchor(anchor);
   }
 }
 

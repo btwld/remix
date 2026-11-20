@@ -959,9 +959,13 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
     super.dispose();
   }
 
-  void _toggle() => widget.controller.isOpen
-      ? widget.controller.close()
-      : widget.controller.open();
+  void _toggle() {
+    if (_isOpen && !OverlayTriggerScope.shouldReopen(context, widget)) {
+      widget.controller.close();
+    } else {
+      widget.controller.open();
+    }
+  }
 
   void _handleOpen() {
     handleOpen(widget.onOpen);

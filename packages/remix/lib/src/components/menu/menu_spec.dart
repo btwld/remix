@@ -117,6 +117,14 @@ class MenuSpec with _$MenuSpec {
   @override
   final StyleSpec<DividerSpec> divider;
 
+  /// Opens and closes the root panel with a transition.
+  ///
+  /// The builder receives the open and close animation and the trigger's
+  /// bounds, and the panel stays mounted until the exit has played. `null`
+  /// shows and hides the panel at once. Submenu panels are not wrapped.
+  @override
+  final RemixPanelTransition? panelTransition;
+
   /// Creates a menu spec with default empty child specs.
   const MenuSpec({
     StyleSpec<MenuTriggerSpec>? trigger,
@@ -128,6 +136,7 @@ class MenuSpec with _$MenuSpec {
     this.submenuItem,
     this.sectionLabel,
     StyleSpec<DividerSpec>? divider,
+    this.panelTransition,
   }) : trigger = trigger ?? const StyleSpec(spec: MenuTriggerSpec()),
        overlay = overlay ?? const StyleSpec(spec: FlexBoxSpec()),
        item = item ?? const StyleSpec(spec: MenuItemSpec()),
@@ -181,6 +190,7 @@ class MenuSpec with _$MenuSpec {
         other.item,
       ),
       divider: generated.divider,
+      panelTransition: generated.panelTransition,
     );
   }
 }
