@@ -217,7 +217,7 @@ void main() {
       initialPage: RegistryDashboardDemoPage.settings,
       host: (child) => HeroUiTheme(
         mode: HeroUiThemeMode.light,
-        darkTheme: const HeroUiThemeData.dark().copyWith(
+        darkTheme: HeroUiThemeData.dark(
           colors: {HeroUiTokens.background: custom},
         ),
         child: child,

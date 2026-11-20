@@ -157,86 +157,62 @@ void main() {
     );
   });
 
-  test('theme data snapshots its input colors and keeps a stable hash', () {
-    const accent = Color(0xFF8000FF);
-    final colors = {HeroUiTokens.accent: accent};
-    final theme = HeroUiThemeData(brightness: Brightness.light, colors: colors);
-    final hash = theme.hashCode;
-
-    colors[HeroUiTokens.accent] = const Color(0xFF00FF00);
-
-    expect(theme.color(HeroUiTokens.accent), accent);
-    expect(theme.hashCode, hash);
+  test('legacy constructors retain their const colors argument', () {
+    const themes = [
+      HeroUiThemeData(brightness: Brightness.light, colors: {}),
+      HeroUiThemeData.light(colors: {}),
+      HeroUiThemeData.dark(colors: {}),
+    ];
+    for (final theme in themes) {
+      expect(theme.colors, isEmpty);
+    }
   });
 
-  test('constructor color overrides cannot be mutated through the getter', () {
-    final theme = HeroUiThemeData(
-      brightness: Brightness.dark,
-      colors: {HeroUiTokens.accent: const Color(0xFF8000FF)},
-    );
+  for (final updatesInactiveDark in [false, true]) {
+    testWidgets(
+      updatesInactiveDark
+          ? 'an inactive dark theme update reaches a nested dark scope'
+          : 'an active theme update reaches its dependents',
+      (tester) async {
+        const originalAccent = Color(0xFF8000FF);
+        const updatedAccent = Color(0xFF00FF00);
+        final colors = {HeroUiTokens.accent: originalAccent};
+        final theme = updatesInactiveDark
+            ? HeroUiThemeData.dark(colors: colors)
+            : HeroUiThemeData.light(colors: colors);
+        final seenAccents = <Color>[];
+        final dependent = Builder(
+          builder: (context) {
+            seenAccents.add(HeroUiTheme.of(context).color(HeroUiTokens.accent));
+            return const SizedBox();
+          },
+        );
+        final child = updatesInactiveDark
+            ? HeroUiTheme(mode: HeroUiThemeMode.dark, child: dependent)
+            : dependent;
 
-    expect(() => theme.colors.clear(), throwsUnsupportedError);
-  });
+        Future<void> pumpTheme() => tester.pumpWidget(
+          HeroUiTheme(
+            mode: HeroUiThemeMode.light,
+            theme: updatesInactiveDark ? null : theme,
+            darkTheme: updatesInactiveDark ? theme : null,
+            child: child,
+          ),
+        );
 
-  test('copyWith merges color overrides into an immutable snapshot', () {
-    const originalAccent = Color(0xFF8000FF);
-    const updatedAccent = Color(0xFF00FF00);
-    const surface = Color(0xFF202020);
-    final original = HeroUiThemeData(
-      brightness: Brightness.dark,
-      colors: {
-        HeroUiTokens.accent: originalAccent,
-        HeroUiTokens.surface: surface,
+        await pumpTheme();
+        expect(seenAccents, [originalAccent]);
+
+        await pumpTheme();
+        expect(seenAccents, [originalAccent]);
+
+        theme.colors[HeroUiTokens.accent] = updatedAccent;
+        expect(colors[HeroUiTokens.accent], updatedAccent);
+        await pumpTheme();
+        expect(seenAccents, [originalAccent, updatedAccent]);
       },
     );
-    final colors = {HeroUiTokens.accent: updatedAccent};
-    final copy = original.copyWith(colors: colors);
-    colors.clear();
-
-    expect(original.color(HeroUiTokens.accent), originalAccent);
-    expect(copy.colors, {
-      HeroUiTokens.accent: updatedAccent,
-      HeroUiTokens.surface: surface,
-    });
-    expect(() => copy.colors.clear(), throwsUnsupportedError);
-    expect(
-      () => copy.copyWith(radius: 12).colors.clear(),
-      throwsUnsupportedError,
-    );
-  });
-
-  testWidgets('reusing an override map still notifies theme dependents', (
-    tester,
-  ) async {
-    const originalAccent = Color(0xFF8000FF);
-    const updatedAccent = Color(0xFF00FF00);
-    final colors = {HeroUiTokens.accent: originalAccent};
-    final seenAccents = <Color>[];
-    final child = Builder(
-      builder: (context) {
-        seenAccents.add(HeroUiTheme.of(context).color(HeroUiTokens.accent));
-        return const SizedBox();
-      },
-    );
-
-    Future<void> pumpTheme() => tester.pumpWidget(
-      HeroUiTheme(
-        mode: HeroUiThemeMode.light,
-        theme: HeroUiThemeData(brightness: Brightness.light, colors: colors),
-        child: child,
-      ),
-    );
-
-    await pumpTheme();
-    expect(seenAccents, [originalAccent]);
-
-    await pumpTheme();
-    expect(seenAccents, [originalAccent]);
-
-    colors[HeroUiTokens.accent] = updatedAccent;
-    await pumpTheme();
-    expect(seenAccents, [originalAccent, updatedAccent]);
-  });
+  }
 
   testWidgets('of throws without a scope; maybeOf returns null', (
     tester,

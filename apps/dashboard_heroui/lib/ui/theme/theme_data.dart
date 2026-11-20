@@ -17,24 +17,28 @@ enum UiThemeMode { system, light, dark }
 /// [UiTokens.accent] also changes its hover and soft shades.
 @immutable
 class UiThemeData {
-  UiThemeData({
+  const UiThemeData({
     required this.brightness,
-    Map<ColorToken, Color> colors = const {},
+    this.colors = const {},
     this.radius = 8,
     this.fontFamily,
-  }) : colors = Map<ColorToken, Color>.unmodifiable(colors);
+  });
 
-  const UiThemeData.light({this.radius = 8, this.fontFamily})
-    : brightness = Brightness.light,
-      colors = const {};
+  const UiThemeData.light({
+    this.colors = const {},
+    this.radius = 8,
+    this.fontFamily,
+  }) : brightness = Brightness.light;
 
-  const UiThemeData.dark({this.radius = 8, this.fontFamily})
-    : brightness = Brightness.dark,
-      colors = const {};
+  const UiThemeData.dark({
+    this.colors = const {},
+    this.radius = 8,
+    this.fontFamily,
+  }) : brightness = Brightness.dark;
 
   final Brightness brightness;
 
-  /// An immutable snapshot of color overrides, keyed by the token they replace.
+  /// Color overrides, keyed by the token they replace.
   final Map<ColorToken, Color> colors;
 
   /// The base radius (`--radius`); the radius scale is derived from it.
@@ -106,8 +110,8 @@ class UiThemeData {
     });
   }
 
-  /// A copy with the given fields and [colors] merged into the existing
-  /// overrides as an immutable snapshot.
+  /// A copy with the given fields; [colors] are merged into the existing
+  /// overrides.
   UiThemeData copyWith({
     Brightness? brightness,
     Map<ColorToken, Color>? colors,
