@@ -264,10 +264,14 @@ remix ^X is not on pub.dev yet; push tag vX, wait for the Publish workflow, then
 ```
 
 If a floor is missing, the run fails within seconds and does not advance
-`registry-stable`. Use **Publish to pub.dev** and wait until pub.dev serves the
-runtime before retrying. **Promote registry** validates and pushes the run's
-event SHA. **Re-run jobs** retries the original SHA; use it only if that SHA
-is still the intended candidate and can fast-forward `registry-stable`.
+`registry-stable`. For a Remix-owned package, push the matching release tag
+and wait for **Publish to pub.dev** to make that version available. For an
+upstream dependency, wait for its publisher or revise the candidate.
+
+Once the required floors are available, retry promotion. **Promote registry**
+validates and pushes the run's event SHA. **Re-run jobs** retries the original
+SHA; use it only if that SHA is still the intended candidate and can
+fast-forward `registry-stable`.
 **Run workflow** on `main` starts a new run at the head of `main` at dispatch.
 A new push to `main` likewise starts a run for that push's SHA.
 
@@ -404,7 +408,9 @@ Restore the previously committed `remix.yaml` revision to select an older
 registry snapshot. Changing the pin alone does not revert installed,
 application-owned source. To undo an install, restore `remix.yaml`, the
 `remix.ownership.json` record, and installed source together through the
-app's version control. See [the registry contract](REGISTRIES.md#update-and-review).
+app's version control. If the install changed `pubspec.yaml` or
+`pubspec.lock`, revert only the install-related changes in those files and
+keep unrelated dependency edits. See [the registry contract](REGISTRIES.md#update-and-review).
 
 Schemas 1 and 2 are not readable. A project still on one names no registry, so
 it is reinitialized rather than migrated. See [the registry contract](REGISTRIES.md)
