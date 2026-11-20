@@ -89,7 +89,6 @@ void main() {
       'acmeError',
       'orla',
       'ceu',
-      'calcadao',
       'serra',
       'blackAlpha',
       'acmeSlateNeutral',
