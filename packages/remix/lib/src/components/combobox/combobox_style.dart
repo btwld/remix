@@ -4,6 +4,54 @@ part of 'combobox.dart';
 // animation and modifiers belong to the editor root, never to every option.
 enum _ComboboxSlot { field, panel, option }
 
+/// Only opts out when no declared style can supply overlay motion. Unknown
+/// sources still resolve in the live panel, not in the editor's scope.
+bool _mayUsePanelTransition(ComboboxStyler style) {
+  final visitedRoots = Set<Style<ComboboxSpec>>.identity();
+  final visitedPanels = Set<Style<ComboboxPanelSpec>>.identity();
+
+  bool panelMayTransition(Style<ComboboxPanelSpec> panel) {
+    if (!visitedPanels.add(panel)) return false;
+    if (panel is! ComboboxPanelStyler ||
+        panel.runtimeType != ComboboxPanelStyler) {
+      return true;
+    }
+    return panel.$panelTransition != null ||
+        (panel.$variants?.any(
+              (variant) =>
+                  variant.variant is ContextVariantBuilder ||
+                  panelMayTransition(variant.value),
+            ) ??
+            false);
+  }
+
+  bool rootMayTransition(Style<ComboboxSpec> root) {
+    if (!visitedRoots.add(root)) return false;
+    if (root is! ComboboxStyler || root.runtimeType != ComboboxStyler) {
+      return true;
+    }
+    final panel = root.$panel;
+    return (panel?.$directives?.isNotEmpty ?? false) ||
+        (panel?.sources.any(
+              (source) => switch (source) {
+                MixSource(mix: final Style<ComboboxPanelSpec> style) =>
+                  panelMayTransition(style),
+                ValueSource(:final value) => value.spec.panelTransition != null,
+                _ => true,
+              },
+            ) ??
+            false) ||
+        (root.$variants?.any(
+              (variant) =>
+                  variant.variant is ContextVariantBuilder ||
+                  rootMayTransition(variant.value),
+            ) ??
+            false);
+  }
+
+  return rootMayTransition(style);
+}
+
 final class _ComboboxProjection extends ComboboxStyler {
   _ComboboxProjection(this.source, this.slot, {this.fieldFallback})
     : super.create(variants: source.$variants);

@@ -72,11 +72,23 @@ class ComboboxPanelSpec with _$ComboboxPanelSpec {
   @override
   final double? scrollbarThickness;
 
+  /// Opens and closes the panel with a transition.
+  ///
+  /// The builder receives the open and close animation and the editor's
+  /// bounds. RawAutocomplete does not provide `OverlayPlacement` for this
+  /// panel. In the frame the live panel hides, the combobox paints an inert
+  /// copy at the previous bounds through `NakedCombobox.exitBuilder` to play
+  /// the exit. The exit cannot stagger rows or follow a scroll offset.
+  /// `null` shows and hides the panel at once.
+  @override
+  final RemixPanelTransition? panelTransition;
+
   const ComboboxPanelSpec({
     StyleSpec<BoxSpec>? container,
     this.containerEffects,
     this.scrollbarColor,
     this.scrollbarThickness,
+    this.panelTransition,
   }) : container = container ?? const StyleSpec(spec: BoxSpec());
 
   @override

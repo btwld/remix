@@ -6,7 +6,7 @@ part of 'combobox.dart';
 /// acceptance. Applications own filtering, asynchronous errors and debounce.
 /// Supply small result sets: all rows are built eagerly so keyboard navigation
 /// can reveal any suggestion. No results closes the panel.
-class RemixCombobox<T extends Object> extends StatelessWidget {
+class RemixCombobox<T extends Object> extends StatefulWidget {
   /// Creates an editable field with eligible suggestions.
   const RemixCombobox({
     super.key,
@@ -113,9 +113,63 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
   static final styleFrom = ComboboxStyler.new;
 
   @override
+  State<RemixCombobox<T>> createState() => _RemixComboboxState<T>();
+}
+
+class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
+    with SingleTickerProviderStateMixin {
+  RemixPanelTransitionHandle? _panelTransition;
+  final _fieldKey = GlobalKey();
+
+  /// The transition the live panel resolved last, kept for the exit layer,
+  /// which is built outside the panel's scope.
+  RemixPanelTransition? _lastTransition;
+  Rect _lastAnchor = Rect.zero;
+
+  @override
+  void dispose() {
+    _panelTransition?.dispose();
+    super.dispose();
+  }
+
+  /// The editor's bounds in the overlay the panel is shown in.
+  Rect _anchorRect(BuildContext context) {
+    final field = _fieldKey.currentContext?.findRenderObject();
+    final overlay = Overlay.maybeOf(context)?.context.findRenderObject();
+    if (field is! RenderBox ||
+        overlay is! RenderBox ||
+        !field.attached ||
+        !field.hasSize) {
+      return _lastAnchor;
+    }
+    return _lastAnchor =
+        overlay.globalToLocal(field.localToGlobal(Offset.zero)) & field.size;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final fieldBuilder = this.fieldBuilder;
-    final optionBuilder = this.optionBuilder;
+    final RemixCombobox<T>(
+      :optionsBuilder,
+      :onSelected,
+      :displayStringForOption,
+      :controller,
+      :focusNode,
+      :initialValue,
+      :label,
+      :hintText,
+      :enabled,
+      :autofocus,
+      :semanticLabel,
+      :fieldBuilder,
+      :optionBuilder,
+      :optionsViewOpenDirection,
+      :isOptionDisabled,
+      :onOpen,
+      :onClose,
+      :excludeSemantics,
+      :style,
+      :styleSpec,
+    ) = widget;
     final base = ComboboxStyler()
         .field(TextFieldStyler().constraints(.minHeight(48)))
         .option(ComboboxOptionStyler().minHeight(48))
@@ -125,7 +179,11 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
     final effective = (inherited is ComboboxStyler
         ? inherited.merge(base)
         : base);
+    final retainPanel = styleSpec == null
+        ? _mayUsePanelTransition(effective)
+        : styleSpec.panel.spec.panelTransition != null;
     return NakedCombobox<T>(
+      exitBuilder: retainPanel ? _buildExit : null,
       optionsBuilder: optionsBuilder,
       onSelected: onSelected,
       displayStringForOption: displayStringForOption,
@@ -161,22 +219,25 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
           style: base,
           styleSpec: styleSpec,
           controller: NakedComboboxState.controllerOf<T>(context),
-          builder: (context, spec) => RemixBoxAdapter(
-            styleSpec: spec.container,
-            child: fieldBuilder != null
-                ? fieldBuilder(context, state, controller, focusNode, submit)
-                : styleSpec != null
-                ? StyleSpecBuilder<TextFieldSpec>(
-                    styleSpec: spec.field,
-                    builder: (context, fieldSpec) => defaultField(fieldSpec),
-                  )
-                : StyleProvider<TextFieldSpec>(
-                    style: _ComboboxFieldStyle(
-                      effective,
-                      Style.maybeOf<TextFieldSpec>(context),
+          builder: (context, spec) => KeyedSubtree(
+            key: _fieldKey,
+            child: RemixBoxAdapter(
+              styleSpec: spec.container,
+              child: fieldBuilder != null
+                  ? fieldBuilder(context, state, controller, focusNode, submit)
+                  : styleSpec != null
+                  ? StyleSpecBuilder<TextFieldSpec>(
+                      styleSpec: spec.field,
+                      builder: (context, fieldSpec) => defaultField(fieldSpec),
+                    )
+                  : StyleProvider<TextFieldSpec>(
+                      style: _ComboboxFieldStyle(
+                        effective,
+                        Style.maybeOf<TextFieldSpec>(context),
+                      ),
+                      child: defaultField(null),
                     ),
-                    child: defaultField(null),
-                  ),
+            ),
           ),
         );
       },
@@ -186,63 +247,69 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
             _ComboboxProjection(effective, .panel).build(context).spec.panel;
         return StyleSpecBuilder<ComboboxPanelSpec>(
           styleSpec: panel,
-          builder: (context, spec) => StyleSpecBuilder<BoxSpec>(
-            styleSpec: spec.container,
-            builder: (context, box) => _ComboboxOptionsViewport(
-              panel: spec,
-              box: box,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final (index, option) in options.indexed)
-                    NakedComboboxOption<T>(
-                      // Replacing or moving a pressed option cancels its
-                      // press rather than accepting a different result.
-                      key: ValueKey((index, option)),
-                      value: option,
-                      semanticLabel: displayStringForOption(option),
-                      builder: (context, state, _) => FocusVisibilityScope(
-                        child: WidgetStateProvider(
-                          states: state.states,
-                          child: Builder(
-                            builder: (context) {
-                              final spec =
-                                  styleSpec ??
-                                  _ComboboxProjection(
-                                    effective,
-                                    .option,
-                                  ).build(context).spec;
-                              return StyleSpecBuilder<ComboboxOptionSpec>(
-                                styleSpec: spec.option,
-                                builder: (context, optionSpec) =>
-                                    RemixBoxAdapter(
-                                      styleSpec: optionSpec.container,
-                                      child: Align(
-                                        alignment:
-                                            AlignmentDirectional.centerStart,
-                                        heightFactor: 1,
-                                        child: optionBuilder == null
-                                            ? StyledText(
-                                                displayStringForOption(option),
-                                                styleSpec: optionSpec.label,
-                                              )
-                                            : RemixDefaultContentStyle(
-                                                text: optionSpec.label,
-                                                child: optionBuilder(
-                                                  context,
-                                                  option,
+          builder: (context, spec) => _panelHost(
+            context,
+            spec,
+            StyleSpecBuilder<BoxSpec>(
+              styleSpec: spec.container,
+              builder: (context, box) => _ComboboxOptionsViewport(
+                panel: spec,
+                box: box,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final (index, option) in options.indexed)
+                      NakedComboboxOption<T>(
+                        // Replacing or moving a pressed option cancels its
+                        // press rather than accepting a different result.
+                        key: ValueKey((index, option)),
+                        value: option,
+                        semanticLabel: displayStringForOption(option),
+                        builder: (context, state, _) => FocusVisibilityScope(
+                          child: WidgetStateProvider(
+                            states: state.states,
+                            child: Builder(
+                              builder: (context) {
+                                final spec =
+                                    styleSpec ??
+                                    _ComboboxProjection(
+                                      effective,
+                                      .option,
+                                    ).build(context).spec;
+                                return StyleSpecBuilder<ComboboxOptionSpec>(
+                                  styleSpec: spec.option,
+                                  builder: (context, optionSpec) =>
+                                      RemixBoxAdapter(
+                                        styleSpec: optionSpec.container,
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional.centerStart,
+                                          heightFactor: 1,
+                                          child: optionBuilder == null
+                                              ? StyledText(
+                                                  displayStringForOption(
+                                                    option,
+                                                  ),
+                                                  styleSpec: optionSpec.label,
+                                                )
+                                              : RemixDefaultContentStyle(
+                                                  text: optionSpec.label,
+                                                  child: optionBuilder(
+                                                    context,
+                                                    option,
+                                                  ),
                                                 ),
-                                              ),
+                                        ),
                                       ),
-                                    ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -250,6 +317,142 @@ class RemixCombobox<T extends Object> extends StatelessWidget {
       },
     );
   }
+
+  Widget _buildExit(BuildContext context, Widget view, VoidCallback dismiss) {
+    final handle = _panelTransition;
+    final transition = _lastTransition;
+    if (handle == null || transition == null) {
+      dismiss();
+      return const SizedBox.shrink();
+    }
+    return _ComboboxExit(
+      handle: handle,
+      transition: transition,
+      anchorRect: _lastAnchor,
+      dismiss: dismiss,
+      child: view,
+    );
+  }
+
+  /// Runs the panel through its transition, and keeps what the exit layer
+  /// needs once the panel has gone.
+  Widget _panelHost(
+    BuildContext context,
+    ComboboxPanelSpec spec,
+    Widget panel,
+  ) {
+    final handle = _panelTransition;
+    if (handle != null &&
+        _ComboboxExitScope.maybeOf(context)?.handle == handle) {
+      return panel;
+    }
+    final transition = _lastTransition = spec.panelTransition;
+    if (transition == null && handle == null) return panel;
+    final liveHandle = _panelTransition ??= RemixPanelTransitionHandle(
+      vsync: this,
+    );
+    return _ComboboxLivePanel(
+      handle: liveHandle,
+      child: RemixPanelTransitionHost(
+        handle: liveHandle,
+        transition: transition,
+        anchorRect: transition == null ? Rect.zero : _anchorRect(context),
+        child: panel,
+      ),
+    );
+  }
+}
+
+/// Tells the handle when RawAutocomplete has mounted a new live panel.
+class _ComboboxLivePanel extends StatefulWidget {
+  const _ComboboxLivePanel({required this.handle, required this.child});
+
+  final RemixPanelTransitionHandle handle;
+  final Widget child;
+
+  @override
+  State<_ComboboxLivePanel> createState() => _ComboboxLivePanelState();
+}
+
+class _ComboboxLivePanelState extends State<_ComboboxLivePanel> {
+  bool _opened = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_opened) return;
+    _opened = true;
+    widget.handle.updateReducedMotion(remixReducedMotionOf(context));
+    widget.handle.openRequested(null, () {}, null);
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
+/// The panel's exit: the last panel, held by the combobox, plays the
+/// transition backwards and then lets go.
+class _ComboboxExit extends StatefulWidget {
+  const _ComboboxExit({
+    required this.handle,
+    required this.transition,
+    required this.anchorRect,
+    required this.dismiss,
+    required this.child,
+  });
+
+  final RemixPanelTransitionHandle handle;
+  final RemixPanelTransition transition;
+  final Rect anchorRect;
+  final VoidCallback dismiss;
+  final Widget child;
+
+  @override
+  State<_ComboboxExit> createState() => _ComboboxExitState();
+}
+
+class _ComboboxExitState extends State<_ComboboxExit> {
+  bool _started = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final handle = widget.handle;
+    if (remixReducedMotionOf(context)) handle.updateReducedMotion(true);
+    if (_started) return;
+    _started = true;
+    handle.closeRequested(widget.dismiss, null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final handle = widget.handle;
+    if (!handle.isExiting) return const SizedBox.shrink();
+    return RemixReducedMotionBuilder(
+      builder: (context, reduceMotion) => reduceMotion
+          ? const SizedBox.shrink()
+          : RemixPanelTransitionHost(
+              handle: handle,
+              transition: widget.transition,
+              anchorRect: widget.anchorRect,
+              child: _ComboboxExitScope(handle: handle, child: widget.child),
+            ),
+    );
+  }
+}
+
+/// Marks the panel rebuilt inside the exit layer, which the exit host
+/// animates, so it does not start a transition of its own.
+class _ComboboxExitScope extends InheritedWidget {
+  const _ComboboxExitScope({required this.handle, required super.child});
+
+  final RemixPanelTransitionHandle handle;
+
+  static _ComboboxExitScope? maybeOf(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<_ComboboxExitScope>();
+
+  @override
+  bool updateShouldNotify(_ComboboxExitScope oldWidget) => false;
 }
 
 /// Own the controller for the entire mounted panel, including keyboard reveal.
