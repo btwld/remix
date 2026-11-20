@@ -255,13 +255,14 @@ libraries:
           ),
           isNull,
         );
-        expect(commands.first, [
-          'fake-dart',
-          'pub',
-          'global',
-          'activate',
-          'remix_cli',
-          cliVersion,
+        expect(commands.take(2), [
+          [
+            'git',
+            'ls-remote',
+            'https://github.com/btwld/remix.git',
+            'refs/heads/registry-stable',
+          ],
+          ['fake-dart', 'pub', 'global', 'activate', 'remix_cli', cliVersion],
         ]);
       },
     );
@@ -297,6 +298,7 @@ libraries:
             isNull,
           );
           expect(commands.map((command) => command.first), [
+            'git',
             'fake-dart',
             'fake-dart',
             'fake-flutter',
@@ -307,7 +309,7 @@ libraries:
             'fake-dart',
           ]);
           expect(
-            commands[4],
+            commands[5],
             containsAllInOrder([
               'pub',
               'global',
@@ -317,11 +319,11 @@ libraries:
             ]),
           );
           expect(
-            commands[5],
+            commands[6],
             containsAllInOrder(['registry', 'update', '@remix', '--ref', sha]),
           );
           expect(
-            commands[6],
+            commands[7],
             containsAllInOrder([
               'pub',
               'global',
@@ -374,7 +376,7 @@ libraries:
         ),
         'unsupported by published CLI',
       );
-      expect(calls, 6);
+      expect(calls, 7);
     });
     test(
       'branch names cannot silently spend the candidate API budget',

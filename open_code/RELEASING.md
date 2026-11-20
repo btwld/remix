@@ -225,17 +225,22 @@ Publishing a newer version during the consumer run cannot change its resolution.
 
 Each lane also selects the newest unretracted `remix_cli` published on pub.dev
 in the documented install pin’s major line, including prereleases. It activates
-that exact version, prints it, verifies `remix --version`, initializes from stable,
-and runs `registry update @remix --ref <candidate-SHA>`. It installs two
-representative items and analyzes their installed source. This uses the
-published executable without the checkout harness or a fallback. Selection
-ignores the candidate pubspec's lower bound: a synchronized install pin can
-already name the next, unpublished CLI. A separate readiness guard warns if no
-published version satisfies that pin; the candidate version will satisfy it
-once published. This warning does not block promotion, because compatibility
-must be proved with the CLI users can install today. Publish the candidate CLI
-before advertising its new install pin. Missing same-major releases and pub.dev
-lookup failures still block the compatibility check.
+that exact version, prints it, verifies `remix --version`, initializes from
+stable, and runs `registry update @remix --ref <candidate-SHA>`. When
+`registry-stable` does not exist, it writes a `remix.yaml` that pins `@remix`
+to the candidate before `init`, so promotion can create the branch. That run
+does not prove a default `remix init`: verify one after the promotion that
+recreates the branch (the next promotion proves it again). A failed branch
+lookup blocks the check. It installs two representative items and analyzes
+their installed source. This uses the published executable without the
+checkout harness or a fallback. Selection ignores the candidate pubspec's lower
+bound: a synchronized install pin can already name the next, unpublished CLI.
+A separate readiness guard warns if no published version satisfies that pin;
+the candidate version will satisfy it once published. This warning does not
+block promotion, because compatibility must be proved with the CLI users can
+install today. Publish the candidate CLI before advertising its new install
+pin. Missing same-major releases and pub.dev lookup failures still block the
+compatibility check.
 
 Expect approximately 6–9 minutes wall time, including canaries and the
 published-CLI smoke, versus approximately 45 minutes previously. This is an
@@ -265,6 +270,8 @@ registry change is promoted until that publish and re-run.
 
 After the first promotion creates `registry-stable`, protect that branch:
 only GitHub Actions may push, and force pushes and deletion are disabled.
+If the branch is ever deleted, push to `main` or re-run **Promote registry**
+on `main`; promotion recreates it at the head of `main`.
 
 Roll a bad promotion back by reverting that commit on `main` and letting
 the workflow fast-forward `registry-stable` to the revert. Moving the
