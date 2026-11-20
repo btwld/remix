@@ -71,13 +71,23 @@ List<String> checkFortalContract(Directory workspace) {
         'size' when {'text', 'heading', 'code', 'kbd', 'link'}.contains(id) =>
           'FortalTextSize',
         'size' when id == 'tabs' => 'FortalTabsSize',
+        'size' ||
+        'variant' when id == 'combobox' => 'FortalTextField${_pascal(kind)}',
+        'size' when id == 'surface' => 'FortalCardSize',
         _ => 'Fortal${_pascal(id)}${_pascal(kind)}',
       };
-      var enumSource = id == 'range_slider'
-          ? File(
-              '$root/lib/src/fortal/components/slider.dart',
-            ).readAsStringSync()
-          : source;
+      // A family that shares another family's enum reads it from that file.
+      final enumFile = switch (id) {
+        'range_slider' => 'slider',
+        'combobox' => 'text_field',
+        'surface' when kind == 'size' => 'card',
+        _ => null,
+      };
+      var enumSource = enumFile == null
+          ? source
+          : File(
+              '$root/lib/src/fortal/components/$enumFile.dart',
+            ).readAsStringSync();
       if (enumType == 'FortalTextSize' || enumType == 'FortalTextWeight') {
         enumSource = File(
           '$root/lib/src/fortal/components/typography.dart',

@@ -355,7 +355,7 @@ the clear button's arrival and departure.
 Surface promotes the dashboard's emphasis surfaces into the registry. The card
 has one resting look, so a page built from cards alone asks the same
 attention of every block; `FortalSurfaceVariant` settles that hierarchy once.
-`fortalSurfaceStyle()` is the card recipe at the matching `FortalSurfaceSize`
+`fortalSurfaceStyle()` is the card recipe at a `FortalCardSize`
 (size1–size5: 12/16/24/32/48px padding, radius4/4/5/5/6; default size2) with
 the variant's fill and hairline. Emphasis comes from fill and contrast alone:
 no variant casts a shadow.
