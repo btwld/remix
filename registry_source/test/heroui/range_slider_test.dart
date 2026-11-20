@@ -18,6 +18,37 @@ RemixBoxAdapter part(WidgetTester tester, int index) =>
     tester.widget(thumb(index));
 
 void main() {
+  testWidgets('HeroUiRangeSlider announces each formatted bound', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpHeroUi(
+      SizedBox(
+        width: 240,
+        child: HeroUiRangeSlider(
+          values: const [.25, .75],
+          onChanged: (_) {},
+          semanticLabels: const ['Minimum', 'Maximum'],
+          semanticFormatterCallbacks: [
+            (value) => 'From ${(value * 100).round()}%',
+            (value) => 'To ${(value * 100).round()}%',
+          ],
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Minimum')).value,
+      'From 25%',
+    );
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Maximum')).value,
+      'To 75%',
+    );
+    semantics.dispose();
+  });
+
   for (final mode in ['light', 'dark']) {
     testWidgets(
       '$mode: range preserves the upstream track and both thumb pills',

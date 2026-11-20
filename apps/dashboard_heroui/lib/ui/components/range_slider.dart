@@ -9,26 +9,7 @@ part 'range_slider.g.dart';
 /// Two-bound interval sharing [uiSliderStyle]'s pill track and thumbs.
 /// Remix owns independent thumb interaction, RTL, spacing and announcements.
 /// Give each bound a distinct localized name with `semanticLabels`.
-/// Custom formatters use [RemixRangeSlider] with this recipe.
-@MixWidget(
-  target: RemixRangeSlider.new,
-  widgetParameters: .only({
-    'values',
-    'onChanged',
-    'onChangeStart',
-    'onChangeEnd',
-    'min',
-    'max',
-    'minSpacing',
-    'snapDivisions',
-    'enabled',
-    'enableFeedback',
-    'focusNodes',
-    'autofocusThumbIndex',
-    'semanticLabels',
-    'excludeSemantics',
-  }),
-)
+@MixWidget(target: RemixRangeSlider.new)
 SliderStyler uiRangeSliderStyle({
   SliderStyler style = const SliderStyler.create(),
 }) => uiSliderStyle(style: style);

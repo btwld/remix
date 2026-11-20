@@ -29,29 +29,7 @@ part 'accordion.g.dart';
 ///   ]),
 /// )
 /// ```
-///
-/// The generated widget omits `builder`: its type comes from `package:naked_ui`,
-/// which this layer does not import. Use `RemixAccordion` for a custom trigger.
-@MixWidget(
-  target: RemixAccordion.new,
-  widgetParameters: .only({
-    'value',
-    'child',
-    'title',
-    'leadingIcon',
-    'trailingIcon',
-    'enabled',
-    'mouseCursor',
-    'enableFeedback',
-    'autofocus',
-    'focusNode',
-    'onFocusChange',
-    'onHoverChange',
-    'onPressChange',
-    'semanticLabel',
-    'transitionBuilder',
-  }),
-)
+@MixWidget(target: RemixAccordion.new)
 AccordionStyler {{valuePrefix}}AccordionStyle({
   AccordionStyler style = const AccordionStyler.create(),
 }) => AccordionStyler()

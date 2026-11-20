@@ -26,8 +26,8 @@ final class VanillaAgentStepsRecipe {
 
 /// Builds the recipe; each argument is merged last, so callers can override.
 ///
-/// The line is quiet gray text with a 16px glyph. The rail hangs 7px in, under
-/// the center of that glyph, with 4px between steps.
+/// The line is quiet gray text with a 16px glyph. The rail's 1px line sits
+/// 7px in, its right edge under the glyph's center, with 4px between steps.
 VanillaAgentStepsRecipe vanillaAgentStepsRecipe({
   AgentStepsStyler style = const AgentStepsStyler.create(),
   AgentStepStyler stepStyle = const AgentStepStyler.create(),
@@ -78,7 +78,7 @@ VanillaAgentStepsRecipe vanillaAgentStepsRecipe({
   disclosureStyle: _quietDisclosure().merge(disclosureStyle),
 );
 
-/// Puts the rail's left edge under the center of the line's 16px glyph.
+/// Puts the rail line's right edge under the center of the 16px glyph.
 const _railInset = 7.0;
 
 /// A 16px glyph in quiet gray.
@@ -97,7 +97,7 @@ DisclosureStyler _quietDisclosure() => vanillaDisclosureStyle(
       .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
       .content(
         BoxStyler()
-            .padding(.only(top: VanillaTokens.s3))
+            .padding(.all(0).top(VanillaTokens.s3))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
       .onHovered(.trigger(.color(const Color(0x00000000))))

@@ -12,28 +12,8 @@ part 'range_slider.g.dart';
 /// serve both thumbs. Pass [surfaceColor] on a card or tinted panel so the
 /// thumb halos blend with it rather than the page.
 ///
-/// Give each bound a distinct name in `semanticLabels`. The generated
-/// `PlaygroundRangeSlider` omits `semanticFormatterCallbacks`, whose type comes
-/// from `package:naked_ui`; use `RemixRangeSlider` for custom announcements.
-@MixWidget(
-  target: RemixRangeSlider.new,
-  widgetParameters: .only({
-    'values',
-    'onChanged',
-    'onChangeStart',
-    'onChangeEnd',
-    'min',
-    'max',
-    'minSpacing',
-    'snapDivisions',
-    'enabled',
-    'enableFeedback',
-    'focusNodes',
-    'autofocusThumbIndex',
-    'semanticLabels',
-    'excludeSemantics',
-  }),
-)
+/// Give each bound a distinct name in `semanticLabels`.
+@MixWidget(target: RemixRangeSlider.new)
 SliderStyler playgroundRangeSliderStyle({
   Color? surfaceColor,
   SliderStyler style = const SliderStyler.create(),

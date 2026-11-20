@@ -434,7 +434,7 @@ neutral gray3 edge. Disabled sliders show gray5 rail, gray8 interval and a
 gray4 light / gray9 dark face with gray9 hairline, using srcOver in both modes;
 interaction halos are suppressed. Per-thumb state belongs to Remix.
 Two ordered values, minimum spacing, snapping, RTL and semantics retain Remix's
-API. Custom value formatters use the base widget with the recipe.
+API.
 
 ## Calendar and picker families
 

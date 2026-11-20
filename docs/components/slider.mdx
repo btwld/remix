@@ -190,18 +190,16 @@ class _VanillaPriceRangeState extends State<VanillaPriceRange> {
 }
 ```
 
-The generated adapter forwards the range API except `styleSpec` and
-`semanticFormatterCallbacks`. For localized value formatting, keep
-`RemixRangeSlider` and set `style: uiRangeSliderStyle()` instead. Caller
-`style` overrides merge last, including state fragments.
+In every preset, the generated adapter forwards every range parameter except
+`styleSpec`, including `semanticFormatterCallbacks` for localized value
+formatting. Caller `style` overrides merge last, including state fragments.
 
 ## Fortal widgets
 
 Fortal also installs `range_slider`, sharing the single slider's surface/soft
 variants, three sizes, high contrast, and 48px interaction height. Each thumb
 has its own hover halo, pressed edge and contiguous visible-focus ring.
-Disabled intervals remain visible in both modes. Use the base
-`RemixRangeSlider` with `uiRangeSliderStyle()` for custom announcements.
+Disabled intervals remain visible in both modes.
 
 The application-owned Fortal preset provides a themed widget for this component:
 

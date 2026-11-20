@@ -65,10 +65,16 @@ DisclosureStyler _quietDisclosure() => uiDisclosureStyle(
             .color(const Color(0x00000000))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
-      .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
+      .trigger(
+        BoxStyler()
+            .color(const Color(0x00000000))
+            .padding(.all(0))
+            // The disclosure centers a trigger narrower than its open panel.
+            .alignment(.centerLeft),
+      )
       .content(
         BoxStyler()
-            .padding(.only(top: 8))
+            .padding(.all(0).top(8))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
       .onHovered(.trigger(.color(const Color(0x00000000))))

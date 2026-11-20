@@ -16,32 +16,7 @@ part 'disclosure.g.dart';
 /// The spec carries plain boxes, not text, so the trigger's type is a default
 /// text style: a bare `Text` trigger takes it and one with its own style keeps
 /// it.
-///
-/// The generated widget omits `triggerBuilder` and `transitionBuilder`: their
-/// types come from `package:naked_ui`, which this layer does not import. Use
-/// `RemixDisclosure` for a state-aware trigger or a custom transition.
-@MixWidget(
-  target: RemixDisclosure.new,
-  widgetParameters: .only({
-    'trigger',
-    'content',
-    'expanded',
-    'defaultExpanded',
-    'onExpandedChanged',
-    'enabled',
-    'mouseCursor',
-    'enableFeedback',
-    'focusNode',
-    'autofocus',
-    'onFocusChange',
-    'onHoverChange',
-    'onPressChange',
-    'semanticLabel',
-    'semanticHint',
-    'excludeSemantics',
-    'animationStyle',
-  }),
-)
+@MixWidget(target: RemixDisclosure.new)
 DisclosureStyler playgroundDisclosureStyle({
   DisclosureStyler style = const DisclosureStyler.create(),
 }) => DisclosureStyler()

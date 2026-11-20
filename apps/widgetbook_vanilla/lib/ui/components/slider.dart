@@ -18,28 +18,7 @@ part 'slider.g.dart';
 /// Set [surfaceColor] to the enclosing surface on cards or tinted panels (for
 /// example `VanillaTokens.card.resolve(context)`); the hover and press halos
 /// are opaque and blend against it, defaulting to the page background.
-///
-/// The generated widget omits `semanticFormatterCallback`: its type comes from
-/// `package:naked_ui`, which this layer does not import. Use `RemixSlider` to
-/// reword the announced value.
-@MixWidget(
-  target: RemixSlider.new,
-  widgetParameters: .only({
-    'value',
-    'onChanged',
-    'onChangeStart',
-    'onChangeEnd',
-    'min',
-    'max',
-    'enabled',
-    'enableFeedback',
-    'focusNode',
-    'autofocus',
-    'snapDivisions',
-    'semanticLabel',
-    'excludeSemantics',
-  }),
-)
+@MixWidget(target: RemixSlider.new)
 SliderStyler vanillaSliderStyle({
   Color? surfaceColor,
   SliderStyler style = const SliderStyler.create(),

@@ -935,7 +935,7 @@
       ],
       "flutterExceptions": [
         "Shares FortalSliderSize and FortalSliderVariant with the slider recipe.",
-        "Exactly two ordered values; no vertical orientation. Custom announcements use RemixRangeSlider with fortalRangeSliderStyle()."
+        "Exactly two ordered values; no vertical orientation."
       ]
     },
     {

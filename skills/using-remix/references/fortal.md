@@ -186,8 +186,8 @@ Install `range_slider` for `<Prefix>RangeSlider` and its shared `slider`
 dependency. Both recipes expose `size` (size1–size3), `variant` (surface/soft),
 and `highContrast`; caller style merges last. Independent thumbs have hover,
 press and contiguous keyboard-focus rings. Normal scaling reserves 48px.
-Give `semanticLabels` distinct localized names. Custom value formatters use
-`RemixRangeSlider` with `<prefix>RangeSliderStyle()`.
+Give `semanticLabels` distinct localized names; the widget takes
+`semanticFormatterCallbacks` for custom value announcements.
 See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
 
 ## Combobox

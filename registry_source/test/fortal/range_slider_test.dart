@@ -20,6 +20,37 @@ RemixBoxAdapter part(WidgetTester tester, int index) =>
     tester.widget(thumb(index));
 
 void main() {
+  testWidgets('FortalRangeSlider announces each formatted bound', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpRemixApp(
+      SizedBox(
+        width: 240,
+        child: FortalRangeSlider(
+          values: const [.25, .75],
+          onChanged: (_) {},
+          semanticLabels: const ['Minimum', 'Maximum'],
+          semanticFormatterCallbacks: [
+            (value) => 'From ${(value * 100).round()}%',
+            (value) => 'To ${(value * 100).round()}%',
+          ],
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Minimum')).value,
+      'From 25%',
+    );
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Maximum')).value,
+      'To 75%',
+    );
+    semantics.dispose();
+  });
+
   for (final dark in [false, true]) {
     testWidgets(
       '${dark ? "dark" : "light"}: each thumb owns hover, press and keyboard focus',

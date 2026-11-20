@@ -15,16 +15,13 @@ part of 'disclosure.dart';
 /// The spec carries plain boxes, not text, so the trigger's type is a default
 /// text style: a bare `Text` trigger takes it and one with its own style keeps
 /// it.
-///
-/// The generated widget omits `triggerBuilder` and `transitionBuilder`: their
-/// types come from `package:naked_ui`, which this layer does not import. Use
-/// `RemixDisclosure` for a state-aware trigger or a custom transition.
 class PlaygroundDisclosure extends StatelessWidget {
   const PlaygroundDisclosure({
     super.key,
     this.style = const DisclosureStyler.create(),
     required this.trigger,
     required this.content,
+    this.triggerBuilder,
     this.expanded,
     this.defaultExpanded = false,
     this.onExpandedChanged,
@@ -39,6 +36,7 @@ class PlaygroundDisclosure extends StatelessWidget {
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
+    this.transitionBuilder,
     this.animationStyle = const AnimationStyle(
       curve: Curves.ease,
       duration: Duration(milliseconds: 200),
@@ -51,6 +49,8 @@ class PlaygroundDisclosure extends StatelessWidget {
   final Widget trigger;
 
   final Widget content;
+
+  final ValueWidgetBuilder<NakedDisclosureState>? triggerBuilder;
 
   final bool? expanded;
 
@@ -80,6 +80,8 @@ class PlaygroundDisclosure extends StatelessWidget {
 
   final bool excludeSemantics;
 
+  final NakedDisclosureTransitionBuilder? transitionBuilder;
+
   final AnimationStyle animationStyle;
 
   @override
@@ -89,6 +91,7 @@ class PlaygroundDisclosure extends StatelessWidget {
       style: playgroundDisclosureStyle(style: this.style),
       trigger: this.trigger,
       content: this.content,
+      triggerBuilder: this.triggerBuilder,
       expanded: this.expanded,
       defaultExpanded: this.defaultExpanded,
       onExpandedChanged: this.onExpandedChanged,
@@ -103,6 +106,7 @@ class PlaygroundDisclosure extends StatelessWidget {
       semanticLabel: this.semanticLabel,
       semanticHint: this.semanticHint,
       excludeSemantics: this.excludeSemantics,
+      transitionBuilder: this.transitionBuilder,
       animationStyle: this.animationStyle,
     );
   }
