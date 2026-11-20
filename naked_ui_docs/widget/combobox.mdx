@@ -12,7 +12,7 @@ To show a result that people cannot choose, return it and mark it with `isOption
 
 To play an exit animation, pass `exitBuilder`. RawAutocomplete hides the live options view directly on focus loss, selection, Escape or an empty result, so a combobox cannot defer the close the way a menu's `onCloseRequested` does.
 
-There is no panel in the hiding frame, including when the combobox is disabled. On the next frame, the combobox shows the last options view, rebuilt at its previous bounds in the nearest overlay. The entire builder result is inert: it takes no pointer input, focus or accessibility actions. Call `dismiss` after animating, or call it in the builder to skip the exit. The callback only dismisses that exit.
+In the first frame without live options, the combobox paints the last options view, rebuilt at its previous bounds in the nearest overlay. This also applies when the combobox is disabled. The entire builder result is inert: it takes no pointer input, focus or accessibility actions. Call `dismiss` after animating, or call it in the builder to skip painting the exit. The callback only dismisses that exit.
 
 If the combobox reopens during an exit, the held view is removed before the live options mount in the following frame. `onOpen` and `onClose` still report the live view mounting and unmounting.
 

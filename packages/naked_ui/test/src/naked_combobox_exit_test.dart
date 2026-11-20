@@ -1,4 +1,7 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
@@ -16,7 +19,9 @@ Future<void> _pump(
   _Exit exit, {
   bool withExit = true,
   bool enabled = true,
+  bool reduceMotion = false,
   Key? panelKey,
+  GlobalKey? sceneKey,
   NakedComboboxExitBuilder? exitBuilder,
   Widget Function(Widget child)? transform,
   VoidCallback? onOpen,
@@ -52,45 +57,173 @@ Future<void> _pump(
     ),
     overlayBuilder: (context, options) => Material(
       key: panelKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final option in options)
-            NakedComboboxOption<String>(
-              value: option,
-              builder: (context, state, _) => Text(
-                state.isHighlighted ? 'hi:$option' : option,
-                key: ValueKey('option-$option'),
+      color: sceneKey == null ? null : const Color(0xFFFF0000),
+      child: SizedBox(
+        width: sceneKey == null ? null : 180,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final option in options)
+              NakedComboboxOption<String>(
+                value: option,
+                semanticLabel: option,
+                builder: (context, state, _) => Text(
+                  state.isHighlighted ? 'hi:$option' : option,
+                  key: ValueKey('option-$option'),
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     ),
   );
-  return tester.pumpMaterialWidget(
-    Align(
-      alignment: Alignment.topLeft,
-      child: transform?.call(combobox) ?? combobox,
+  final body = Align(
+    alignment: Alignment.topLeft,
+    child: transform?.call(combobox) ?? combobox,
+  );
+  if (sceneKey == null) return tester.pumpMaterialWidget(body);
+  return tester.pumpWidget(
+    RepaintBoundary(
+      key: sceneKey,
+      child: MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(disableAnimations: reduceMotion),
+          child: child!,
+        ),
+        home: Scaffold(backgroundColor: Colors.white, body: body),
+      ),
     ),
   );
 }
 
-Future<void> _open(WidgetTester tester) async {
+Widget _markExit(BuildContext context, Widget view, VoidCallback dismiss) =>
+    ColorFiltered(
+      colorFilter: const ColorFilter.mode(Color(0xFF00FF00), BlendMode.srcIn),
+      child: view,
+    );
+
+Offset _samplePoint(WidgetTester tester, Finder panel) =>
+    tester.getBottomRight(panel) - const Offset(8, 4);
+
+Future<int> _paintedPixel(
+  WidgetTester tester,
+  GlobalKey key,
+  Offset point,
+) async {
+  final boundary =
+      key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+  return (await tester.runAsync(() async {
+    final image = await boundary.toImage();
+    try {
+      final bytes = (await image.toByteData(
+        format: ui.ImageByteFormat.rawRgba,
+      ))!;
+      return bytes.getUint32(
+        (point.dy.floor() * image.width + point.dx.floor()) * 4,
+      );
+    } finally {
+      image.dispose();
+    }
+  }))!;
+}
+
+Future<void> _open(WidgetTester tester, {bool settle = true}) async {
   await tester.tap(find.byType(TextField));
   await tester.enterText(find.byType(TextField), 'ap');
-  await tester.pump();
+  if (settle) await tester.pump();
   await tester.pump();
 }
 
 Future<void> _close(WidgetTester tester) async {
   await tester.sendKeyEvent(LogicalKeyboardKey.escape);
   await tester.pump();
-  await tester.pump();
 }
 
 void main() {
   group('NakedCombobox exitBuilder', () {
-    testWidgets('rebuilds the last options view after the hiding frame, '
+    for (final reason in [
+      'Escape',
+      'selection',
+      'empty results',
+      'blur',
+      'disable',
+    ]) {
+      testWidgets(
+        '$reason paints the inert exit in the first dismissal frame',
+        (tester) async {
+          final exit = _Exit();
+          final sceneKey = GlobalKey();
+          final panelKey = GlobalKey();
+          final option = find.byKey(const ValueKey('option-apple'));
+          final editorFinder = find.byType(EditableText);
+          Future<void> rebuild({required bool enabled}) => _pump(
+            tester,
+            exit,
+            enabled: enabled,
+            panelKey: panelKey,
+            sceneKey: sceneKey,
+            exitBuilder: _markExit,
+          );
+          await rebuild(enabled: true);
+          await _open(tester, settle: false);
+          final editor = tester.state<EditableTextState>(editorFinder);
+          final before = editor.widget.controller.value;
+          final focus = editor.widget.focusNode;
+          final point = _samplePoint(tester, find.byKey(panelKey));
+          expect(await _paintedPixel(tester, sceneKey, point), 0xFF0000FF);
+          expect(exit.built, 0);
+          expect(
+            tester.semantics.simulatedAccessibilityTraversal().where(
+              (node) => node.getSemanticsData().label == 'apple',
+            ),
+            hasLength(1),
+          );
+
+          switch (reason) {
+            case 'Escape':
+              await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+            case 'selection':
+              await tester.tap(option);
+            case 'empty results':
+              await tester.enterText(find.byType(TextField), '');
+            case 'blur':
+              FocusManager.instance.primaryFocus!.unfocus();
+            case 'disable':
+              await rebuild(enabled: false);
+          }
+          if (reason != 'disable') await tester.pump();
+
+          expect(await _paintedPixel(tester, sceneKey, point), 0x00FF00FF);
+          expect(find.byKey(panelKey), findsOneWidget);
+          expect(
+            tester.semantics.simulatedAccessibilityTraversal().where(
+              (node) => node.getSemanticsData().label == 'apple',
+            ),
+            isEmpty,
+          );
+          expect(tester.state<EditableTextState>(editorFinder), same(editor));
+          expect(editor.widget.focusNode, same(focus));
+          expect(focus.hasFocus, reason != 'blur');
+          expect(editor.widget.controller.value, switch (reason) {
+            'selection' => const TextEditingValue(
+              text: 'apple',
+              selection: TextSelection.collapsed(offset: 5),
+            ),
+            'empty results' => const TextEditingValue(
+              selection: TextSelection.collapsed(offset: 0),
+            ),
+            _ => before,
+          });
+          expect(tester.takeException(), isNull);
+        },
+        semanticsEnabled: true,
+      );
+    }
+
+    testWidgets('rebuilds the last options view in the hiding frame, '
         'in the same place, until dismissed', (tester) async {
       final exit = _Exit();
       var closes = 0;
@@ -101,13 +234,9 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
 
-      expect(find.byKey(const ValueKey('option-apple')), findsNothing);
-      expect(exit.built, 0);
-      expect(closes, 1);
-      await tester.pump();
-
       expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
       expect(exit.built, greaterThan(0));
+      expect(closes, 1);
       expect(
         tester.getRect(find.byKey(const ValueKey('option-apple'))),
         before,
@@ -121,50 +250,6 @@ void main() {
       expect(find.byKey(const ValueKey('option-apple')), findsNothing);
       exit.dismiss!();
       await tester.pump();
-    });
-
-    testWidgets('builds the exit on the next frame for each close path', (
-      tester,
-    ) async {
-      for (final hide in <Future<void> Function(WidgetTester)>[
-        (t) => t.sendKeyEvent(LogicalKeyboardKey.escape),
-        (t) => t.enterText(find.byType(TextField), ''),
-        (t) async => FocusManager.instance.primaryFocus?.unfocus(),
-        (t) => t.tap(find.byKey(const ValueKey('option-apple'))),
-      ]) {
-        final exit = _Exit();
-        await _pump(tester, exit);
-        await _open(tester);
-        expect(exit.built, 0);
-
-        await hide(tester);
-        await tester.pump(Duration.zero);
-
-        expect(find.byKey(const ValueKey('option-apple')), findsNothing);
-        expect(exit.built, 0);
-        await tester.pump(Duration.zero);
-
-        expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
-        expect(exit.built, greaterThan(0));
-        await tester.pumpWidget(const SizedBox());
-      }
-    });
-
-    testWidgets('disabling uses the same next-frame exit timing', (
-      tester,
-    ) async {
-      final exit = _Exit();
-      await _pump(tester, exit);
-      await _open(tester);
-
-      await _pump(tester, exit, enabled: false);
-      expect(find.byKey(const ValueKey('option-apple')), findsNothing);
-      expect(exit.built, 0);
-
-      await tester.pump();
-      expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
-      expect(exit.built, greaterThan(0));
-      expect(tester.takeException(), isNull);
     });
 
     testWidgets('the entire exit result takes no pointer, focus or semantics', (
@@ -261,26 +346,41 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('dismiss can be called synchronously by the exit builder', (
+    testWidgets('synchronous reduced-motion dismiss never paints an exit', (
       tester,
     ) async {
       for (final disable in [false, true]) {
         final exit = _Exit();
+        final sceneKey = GlobalKey();
+        final panelKey = GlobalKey();
         Widget skip(BuildContext context, Widget view, VoidCallback dismiss) {
-          dismiss();
-          dismiss();
-          return view;
+          if (MediaQuery.disableAnimationsOf(context)) {
+            dismiss();
+            dismiss();
+          }
+          return _markExit(context, view, dismiss);
         }
 
-        await _pump(tester, exit, exitBuilder: skip);
+        Future<void> rebuild({required bool enabled}) => _pump(
+          tester,
+          exit,
+          enabled: enabled,
+          reduceMotion: true,
+          sceneKey: sceneKey,
+          panelKey: panelKey,
+          exitBuilder: skip,
+        );
+        await rebuild(enabled: true);
         await _open(tester);
+        final point = _samplePoint(tester, find.byKey(panelKey));
+        expect(await _paintedPixel(tester, sceneKey, point), 0xFF0000FF);
         if (disable) {
-          await _pump(tester, exit, enabled: false, exitBuilder: skip);
-          await tester.pump();
+          await rebuild(enabled: false);
         } else {
           await _close(tester);
         }
         expect(exit.built, 1);
+        expect(await _paintedPixel(tester, sceneKey, point), 0xFFFFFFFF);
         expect(find.byKey(const ValueKey('option-apple')), findsNothing);
         expect(tester.takeException(), isNull);
         await tester.pump();
@@ -298,11 +398,16 @@ void main() {
     ) async {
       for (final scale in [1.0, .75]) {
         final exit = _Exit();
+        final sceneKey = GlobalKey();
+        final panelKey = GlobalKey();
         await _pump(
           tester,
           exit,
+          sceneKey: sceneKey,
+          panelKey: panelKey,
+          exitBuilder: _markExit,
           transform: (child) => Transform.translate(
-            offset: const Offset(-25, -60),
+            offset: Offset(-25, -60 * scale),
             child: Transform.scale(
               scale: scale,
               alignment: Alignment.topLeft,
@@ -314,12 +419,15 @@ void main() {
         await tester.enterText(field, 'ap');
         await tester.pump();
         await tester.pump();
-        final option = find.byKey(const ValueKey('option-apple'));
-        final bounds = tester.getRect(option);
+        final panel = find.byKey(panelKey);
+        final bounds = tester.getRect(panel);
         expect(bounds.left, lessThan(0));
         expect(bounds.top, lessThan(0));
+        final point = _samplePoint(tester, panel);
+        expect(await _paintedPixel(tester, sceneKey, point), 0xFF0000FF);
         await _close(tester);
-        expect(tester.getRect(option), bounds);
+        expect(tester.getRect(panel), bounds);
+        expect(await _paintedPixel(tester, sceneKey, point), 0x00FF00FF);
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());
       }
@@ -329,11 +437,22 @@ void main() {
       tester,
     ) async {
       final exit = _Exit();
-      await _pump(tester, exit, withExit: false);
+      final sceneKey = GlobalKey();
+      final panelKey = GlobalKey();
+      await _pump(
+        tester,
+        exit,
+        withExit: false,
+        sceneKey: sceneKey,
+        panelKey: panelKey,
+      );
       await _open(tester);
+      final point = _samplePoint(tester, find.byKey(panelKey));
+      expect(await _paintedPixel(tester, sceneKey, point), 0xFF0000FF);
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
 
+      expect(await _paintedPixel(tester, sceneKey, point), 0xFFFFFFFF);
       expect(find.byKey(const ValueKey('option-apple')), findsNothing);
       expect(exit.built, 0);
     });
@@ -404,6 +523,18 @@ void main() {
       dismiss();
       await tester.pump();
       expect(find.byKey(const ValueKey('option-apple')), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('disposing the open combobox does not start an exit', (
+      tester,
+    ) async {
+      final exit = _Exit();
+      await _pump(tester, exit);
+      await _open(tester, settle: false);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+      expect(exit.built, 0);
       expect(tester.takeException(), isNull);
     });
   });
