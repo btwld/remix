@@ -47,6 +47,8 @@ void main() {
     PubFloorClient? client,
     String? failingCommand,
     bool complete = false,
+    bool stableBranch = true,
+    void Function()? onInit,
   }) => checkPublishedCliCandidate(
     app: Directory('${root.path}/app'),
     repositoryRoot: root,
@@ -59,6 +61,9 @@ void main() {
     run: (executable, args, {capturedOutput}) async {
       commands.add([executable, ...args]);
       if (args.contains(failingCommand)) return 'fixture command failed';
+      if (args.first == 'ls-remote' && stableBranch) {
+        capturedOutput!.writeln('${'b' * 40}\trefs/heads/registry-stable');
+      }
       if (args.contains('--version')) {
         capturedOutput!.writeln(activatedVersion ?? version);
       }
@@ -67,6 +72,7 @@ void main() {
         if (!complete) return 'fixture reached consumer setup';
         Directory('${root.path}/app').createSync();
       }
+      if (args.contains('init')) onInit?.call();
       if (args.contains('update')) {
         File('${root.path}/app/remix.yaml').writeAsStringSync(
           'registries: {"@remix": {revision: "${'a' * 40}"}}',
@@ -79,7 +85,13 @@ void main() {
   test('tests published X even when candidate X+1 is unpublished', () async {
     final client = published();
     expect(await check(client: client), 'fixture reached consumer setup');
-    expect(commands.take(2), [
+    expect(commands.take(3), [
+      [
+        'git',
+        'ls-remote',
+        'https://github.com/btwld/remix.git',
+        'refs/heads/registry-stable',
+      ],
       ['fake-dart', 'pub', 'global', 'activate', 'remix_cli', version],
       ['fake-dart', 'pub', 'global', 'run', 'remix_cli:remix', '--version'],
     ]);
@@ -91,13 +103,117 @@ void main() {
     expect(out.toString(), contains('documented constraint $pin'));
   });
 
+  void writeVanillaRegistry() =>
+      File('${root.path}/registry/vanilla/registry.yaml')
+        ..parent.createSync(recursive: true)
+        ..writeAsStringSync('items: {theme: {dependencies: {remix: ^1.0.0}}}');
+
+  List<List<String>> consumerSequence() => [
+    [
+      'git',
+      'ls-remote',
+      'https://github.com/btwld/remix.git',
+      'refs/heads/registry-stable',
+    ],
+    ['fake-dart', 'pub', 'global', 'activate', 'remix_cli', version],
+    ['fake-dart', 'pub', 'global', 'run', 'remix_cli:remix', '--version'],
+    [
+      'fake-flutter',
+      'create',
+      '--empty',
+      '--no-pub',
+      '--platforms=web',
+      '--project-name',
+      'published_cli_fixture',
+      '${root.path}/app',
+    ],
+    ['fake-dart', 'pub', 'get'],
+    [
+      'fake-dart',
+      ...['pub', 'global', 'run', 'remix_cli:remix', 'init'],
+      ...['--prefix', 'Released', '--preset', 'vanilla'],
+    ],
+    [
+      'fake-dart',
+      ...['pub', 'global', 'run', 'remix_cli:remix', 'registry', 'update'],
+      ...['@remix', '--ref', 'a' * 40],
+    ],
+    [
+      'fake-dart',
+      ...['pub', 'global', 'run', 'remix_cli:remix', 'add'],
+      ...['dashboard_shell', 'button'],
+    ],
+    ['fake-dart', 'analyze', 'lib/ui'],
+  ];
+
   test('unpublished X+1 passes the complete gate using published X', () async {
-    File('${root.path}/registry/vanilla/registry.yaml')
-      ..parent.createSync(recursive: true)
-      ..writeAsStringSync('items: {theme: {dependencies: {remix: ^1.0.0}}}');
+    writeVanillaRegistry();
     expect(await check(complete: true), isNull);
-    expect(commands.first.last, version);
+    expect(commands[1].last, version);
     expect(commands.last, ['fake-dart', 'analyze', 'lib/ui']);
+  });
+
+  test('an existing stable branch keeps the default init sequence', () async {
+    writeVanillaRegistry();
+    bool? configAtInit;
+    expect(
+      await check(
+        complete: true,
+        onInit: () =>
+            configAtInit = File('${root.path}/app/remix.yaml').existsSync(),
+      ),
+      isNull,
+    );
+    expect(commands, consumerSequence());
+    expect(configAtInit, isFalse);
+    expect(out.toString(), isNot(contains('bootstraps')));
+  });
+
+  test('a missing stable branch pins the candidate before init', () async {
+    writeVanillaRegistry();
+    String? configAtInit;
+    expect(
+      await check(
+        complete: true,
+        stableBranch: false,
+        onInit: () => configAtInit = File(
+          '${root.path}/app/remix.yaml',
+        ).readAsStringSync(),
+      ),
+      isNull,
+    );
+    expect(commands, consumerSequence());
+    expect(
+      configAtInit,
+      'schema: 3\n'
+      'prefix: Released\n'
+      'preset: vanilla\n'
+      'paths:\n'
+      '  ui: lib/ui\n'
+      'defaultRegistry: "@remix"\n'
+      'registries:\n'
+      '  "@remix":\n'
+      '    repository: "btwld/remix"\n'
+      '    path: "registry"\n'
+      '    ref: "${'a' * 40}"\n'
+      '    revision: "${'a' * 40}"\n',
+    );
+    expect(
+      out.toString(),
+      contains(
+        'registry-stable is missing on btwld/remix; '
+        'this run bootstraps @remix from candidate ${'a' * 40}.',
+      ),
+    );
+  });
+
+  test('a failed stable branch lookup stops before activation', () async {
+    expect(
+      await check(failingCommand: 'ls-remote'),
+      'Could not look up registry-stable on btwld/remix: '
+      'fixture command failed; re-run Promote registry.',
+    );
+    expect(commands, hasLength(1));
   });
 
   test('selects newest same-major release, including prereleases', () async {
@@ -122,7 +238,7 @@ void main() {
       ),
       'fixture reached consumer setup',
     );
-    expect(commands.first.last, '7.5.0-beta.2');
+    expect(commands[1].last, '7.5.0-beta.2');
     expect(out.toString(), isNot(contains('WARNING')));
   });
 
@@ -156,7 +272,7 @@ void main() {
         await check(activatedVersion: wrong),
         'Activated remix_cli $wrong does not match selected published version $version.',
       );
-      expect(commands, hasLength(2));
+      expect(commands, hasLength(3));
     }
   });
 
@@ -226,7 +342,7 @@ void main() {
         contains('Could not determine activated remix_cli version'),
       );
       expect(problem, contains('expected published version $version'));
-      expect(commands, hasLength(2));
+      expect(commands, hasLength(3));
     }
   });
 
@@ -283,7 +399,7 @@ void main() {
       for (final command in ['activate', '--version']) {
         commands.clear();
         expect(await check(failingCommand: command), 'fixture command failed');
-        expect(commands, hasLength(command == 'activate' ? 1 : 2));
+        expect(commands, hasLength(command == 'activate' ? 2 : 3));
       }
     },
   );
