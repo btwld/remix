@@ -592,6 +592,7 @@ void _resolveFortalTheme(String id) {}
 const row = 'fortal-row';
 const key = 'fortal_badge_ambient';
 const caption = 'Cards in the Fortal style';
+final sum = 'fortal.\${a + b}';
 """,
     );
 
@@ -610,6 +611,7 @@ void _resolve{{typePrefix}}Theme(String id) {}
 const row = '{{valuePrefix}}-row';
 const key = '{{valuePrefix}}_badge_ambient';
 const caption = 'Cards in the Fortal style';
+final sum = '{{valuePrefix}}.\${a + b}';
 """);
   });
 
@@ -646,6 +648,59 @@ const caption = 'Cards in the Fortal style';
         reason: source,
       );
     }
+  });
+
+  test('a refusal says where the word stands and what to write', () {
+    final builder = _fixtureBuilder(sandbox);
+    for (final (source, problem) in [
+      ('class Fortal {}\n', 'is code but does not start an identifier segment'),
+      (
+        "const credit = 'Built with Fortal.';\n",
+        'touches `.`, `-`, `_`, `:` or an interpolation inside a string; '
+            'reword it, or start the string with it to make an id',
+      ),
+      (
+        "const credit = 'Fortal: a theme';\n",
+        'touches `.`, `-`, `_`, `:` or an interpolation inside a string',
+      ),
+    ]) {
+      _write(builder.sourceRoot, 'components/badge.dart', source);
+
+      expect(
+        builder.derive,
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            allOf(
+              contains('components/badge.dart:1: "Fortal"'),
+              contains(problem),
+            ),
+          ),
+        ),
+        reason: source,
+      );
+    }
+  });
+
+  test('refuses source the analyzer cannot parse', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(
+      builder.sourceRoot,
+      'components/badge.dart',
+      'class FortalBadge {\n',
+    );
+
+    expect(
+      builder.derive,
+      throwsA(
+        isA<StateError>().having(
+          (error) => error.message,
+          'message',
+          contains('components/badge.dart does not parse.'),
+        ),
+      ),
+    );
   });
 
   test('shared dashboard prose keeps its registry word', () {

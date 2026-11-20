@@ -2201,7 +2201,9 @@ String _relative(File file, Directory root) =>
 ///
 /// Any other occurrence in code, or in a string where it is the whole string
 /// or touches `.`, `-`, `_`, `:` or an interpolation, throws instead of
-/// installing the authoring word where the prefix may belong.
+/// installing the authoring word where the prefix may belong. A string that
+/// starts with the value word, a separator and an id character, with no
+/// whitespace, is always an id, so `Text('fortal-themed')` takes the prefix.
 String _replacePrefixWords(
   String path,
   String source, {
@@ -2218,25 +2220,30 @@ String _replacePrefixWords(
       RegExp.escape(valueWord),
     ].join('|'),
   );
-  final spans = _commentAndStringSpans(source);
+  final spans = _commentAndStringSpans(path, source);
   final buffer = StringBuffer();
   var copied = 0;
   for (final match in words.allMatches(source)) {
     final word = match[0]!;
     if (fixedFileNames.contains(word)) continue;
+    final span = spans
+        .where((span) => span.start <= match.start && match.end <= span.end)
+        .firstOrNull;
     if (!_identifierStart.hasMatch(_charAt(source, match.end)) &&
-        !_startsQuotedId(source, match)) {
-      final span = spans
-          .where((span) => span.start <= match.start && match.end <= span.end)
-          .firstOrNull;
+        !(span != null &&
+            span.string &&
+            _startsQuotedId(source, match, span))) {
       if (span != null && (!span.string || _isProse(source, match, span))) {
         continue;
       }
       final line = '\n'.allMatches(source.substring(0, match.start)).length;
-      throw StateError(
-        '$path:${line + 1}: "$word" is neither an identifier prefix, a quoted '
-        'id start, nor prose in a comment or string.',
-      );
+      final problem = span == null
+          ? 'is code but does not start an identifier segment; make it an '
+                'identifier prefix'
+          : 'is a whole string or touches `.`, `-`, `_`, `:` or an '
+                'interpolation inside a string; reword it, or start the '
+                'string with it to make an id';
+      throw StateError('$path:${line + 1}: "$word" $problem.');
     }
     buffer
       ..write(source.substring(copied, match.start))
@@ -2247,23 +2254,20 @@ String _replacePrefixWords(
 }
 
 final _identifierStart = RegExp('[A-Z0-9]');
-final _quotedIdContinuation = RegExp('[-._][A-Za-z0-9]');
+final _quotedIdContinuation = RegExp(r'[-._][A-Za-z0-9$]');
 
 String _charAt(String source, int index) =>
     index >= 0 && index < source.length ? source[index] : '';
 
 /// Whether [match] opens a quoted id such as `'fortal.color.accent'`: right
-/// after the quote, a separator and an id character follow, and the quoted
-/// text holds no whitespace, so `'fortal-themed card'` is not one.
-bool _startsQuotedId(String source, Match match) {
+/// after the quote, a separator and an id character or interpolation follow,
+/// and the literal [span] holds no whitespace, so `'fortal-themed card'` is
+/// not one.
+bool _startsQuotedId(String source, Match match, _Span span) {
   final quote = _charAt(source, match.start - 1);
-  if (quote != "'" && quote != '"') return false;
-  if (_quotedIdContinuation.matchAsPrefix(source, match.end) == null) {
-    return false;
-  }
-  final close = source.indexOf(quote, match.end);
-  return close != -1 &&
-      !source.substring(match.start, close).contains(RegExp(r'\s'));
+  return (quote == "'" || quote == '"') &&
+      _quotedIdContinuation.matchAsPrefix(source, match.end) != null &&
+      !source.substring(match.start, span.end).contains(RegExp(r'\s'));
 }
 
 /// Whether a word inside a string literal piece reads as prose: it is not the
@@ -2283,13 +2287,15 @@ typedef _Span = ({int start, int end, bool string});
 
 /// Comment and string literal spans of [source], from the analyzer's tokens.
 /// An interpolated string yields one span per literal piece.
-List<_Span> _commentAndStringSpans(String source) {
+List<_Span> _commentAndStringSpans(String path, String source) {
   final spans = <_Span>[];
-  Token? token = parseString(
-    content: source,
-    throwIfDiagnostics: false,
-  ).unit.beginToken;
-  while (token != null) {
+  final Token begin;
+  try {
+    begin = parseString(content: source).unit.beginToken;
+  } on ArgumentError catch (error) {
+    throw StateError('$path does not parse. ${error.message}');
+  }
+  for (var token = begin; ; token = token.next!) {
     for (
       Token? comment = token.precedingComments;
       comment != null;
@@ -2300,10 +2306,8 @@ List<_Span> _commentAndStringSpans(String source) {
     if (token.type == TokenType.STRING) {
       spans.add((start: token.offset, end: token.end, string: true));
     }
-    if (token.isEof) break;
-    token = token.next;
+    if (token.isEof) return spans;
   }
-  return spans;
 }
 
 final _importPattern = RegExp(
