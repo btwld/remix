@@ -7,6 +7,8 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
 import '../../packages/remix_cli/lib/src/registry_source.dart';
+import '../../packages/remix_cli/test/checkout_registry.dart';
+import '../../tool/audit_registry_closures.dart';
 import '../../tool/check_open_code.dart' as checker;
 import '../../tool/check_pub_floors.dart';
 import '../../tool/check_published_cli.dart';
@@ -820,7 +822,6 @@ void main() {
         expect(canary, [
           preset == 'heroui' ? 'search_field' : 'dashboard_shell',
         ]);
-        expect(checker.independentInstallsForTest(preset), containsAll(canary));
         expect(
           checker.independentInstallItems(
             preset,
@@ -833,7 +834,7 @@ void main() {
             preset,
             mode: checker.IndependentMode.all,
           ),
-          checker.independentInstallsForTest(preset),
+          containsAll(canary),
         );
       }
     });
@@ -1355,7 +1356,10 @@ Future<void> main(List<String> arguments) async {
   group('independent installs', () {
     test('Vanilla and Fortal install the Agent and dashboard items alone', () {
       for (final preset in ['vanilla', 'fortal']) {
-        final items = checker.independentInstallsForTest(preset);
+        final items = checker.independentInstallItems(
+          preset,
+          mode: checker.IndependentMode.all,
+        );
 
         expect(items, hasLength(preset == 'fortal' ? 16 : 12), reason: preset);
         if (preset == 'fortal') {
@@ -1378,82 +1382,127 @@ Future<void> main(List<String> arguments) async {
       }
     });
 
-    test('HeroUI installs alone only the items with a multi-item closure', () {
-      // Every fresh `remix init` is one unauthenticated GitHub API request, so
-      // the list stays short: these are the items that depend on another item
-      // besides the theme, and they include every item that uses an icon.
-      expect(
-        checker.independentInstallsForTest('heroui'),
-        unorderedEquals([
-          'avatar_group',
-          'breadcrumbs',
-          'button',
-          'button_group',
-          'calendar',
-          'range_calendar',
-          'date_picker',
-          'date_range_picker',
-          'checkbox_group',
-          'close_button',
-          'combobox',
-          'dashboard_shell',
-          'input_group',
-          'radio_group',
-          'range_slider',
-          'search_field',
-          'sidebar',
-          'sidebar_layout',
-          'switch_group',
-          'table',
-          'text_area',
-          'toast',
-          'toggle_button_group',
-          'agent_glyphs_recipe',
-          'answer_recipe',
-          'composer_recipe',
-          'conversation_recipe',
-          'message_recipe',
-          'sources_recipe',
-          'steps_recipe',
-          'suggestions_recipe',
-          'tool_call_recipe',
-          'dashboard_demo',
-        ]),
+    test('HeroUI keeps the same solo install canaries', () {
+      final canaries = checker.independentInstallItems(
+        'heroui',
+        mode: checker.IndependentMode.all,
       );
+      expect(canaries, hasLength(33));
+      expect(
+        canaries,
+        containsAll(['avatar_group', 'search_field', 'dashboard_demo']),
+      );
+      expect(canaries, isNot(contains('chart')));
     });
 
-    test('a derived list follows the registry dependencies', () {
-      final root = Directory('${sandbox.path}/repo');
-      final registry = File('${root.path}/registry/heroui/registry.yaml');
-      registry.parent.createSync(recursive: true);
-      registry.writeAsStringSync('''
-schema: 2
+    test('pinned all keeps the catalog-derived solo plan', () {
+      const catalog = '''
 items:
-  theme:
-    files: []
-  solo:
-    registryDependencies:
-      - theme
-    files: []
-  base:
-    files: []
-  composite:
-    registryDependencies:
-      - theme
-      - base
-    files: []
-  uses_composite:
-    registryDependencies:
-      - composite
-    files: []
-''');
-
+  theme: {files: []}
+  button: {files: [], registryDependencies: [theme]}
+  stable_combo: {files: [], registryDependencies: [theme, button]}
+  dashboard_shell: {files: [], registryDependencies: [theme]}
+''';
       expect(
-        checker.independentInstallsForTest('heroui', repositoryRoot: root),
-        ['composite', 'uses_composite'],
+        checker.independentInstallItems(
+          'vanilla',
+          mode: checker.IndependentMode.all,
+          catalogYaml: catalog,
+        ),
+        ['stable_combo'],
       );
     });
+
+    test(
+      'default checkout audit rejects an omitted non-canary edge before setup',
+      () async {
+        expect(
+          checker.independentInstallItems(
+            'heroui',
+            mode: checker.IndependentMode.all,
+          ),
+          isNot(contains('feature')),
+        );
+        final registry = _writeClosureFixture(sandbox);
+        final catalog = File('${registry.path}/heroui/registry.yaml');
+        catalog.writeAsStringSync(
+          catalog.readAsStringSync().replaceFirst(
+            '    registryDependencies: [bridge]\n',
+            '',
+          ),
+        );
+        File('registry/icons.yaml').copySync('${registry.path}/icons.yaml');
+        File(
+          '${sandbox.path}/pubspec.yaml',
+        ).writeAsStringSync('name: remix_workspace\n');
+        File('${sandbox.path}/packages/remix_ui_icons/pubspec.yaml')
+          ..createSync(recursive: true)
+          ..writeAsStringSync('version: 1.0.0\n');
+        Directory('${sandbox.path}/open_code').createSync();
+        final result = await Process.run(
+          Platform.resolvedExecutable,
+          [
+            File('tool/check_open_code.dart').absolute.path,
+            '--source',
+            'checkout',
+            '--preset',
+            'heroui',
+          ],
+          workingDirectory: sandbox.path,
+          includeParentEnvironment: false,
+        );
+        expect(
+          result.exitCode,
+          1,
+          reason: '${result.stdout}\n${result.stderr}',
+        );
+        expect(result.stderr, contains('Registry closure audit failed:'));
+        expect(
+          result.stderr,
+          contains(
+            '`../peer.dart` resolves to @ui/peer.dart from `peer`, which is '
+            'missing from its `registryDependencies` closure',
+          ),
+        );
+        expect(
+          result.stderr,
+          contains(
+            '`package:direct/io.dart` requires a direct package declaration',
+          ),
+        );
+        expect(result.stdout, isNot(contains('Consumer setup')));
+      },
+      timeout: const Timeout(Duration(minutes: 2)),
+    );
   });
+
+  test(
+    'closure audit follows transitive files, conditional URIs, and parts',
+    () async {
+      final registry = _writeClosureFixture(sandbox);
+
+      Future<List<String>> audit() => auditRegistryClosures(
+        CheckoutRegistry(registry, 'heroui'),
+        iconLibrary: 'remix',
+      );
+      expect(await audit(), isEmpty);
+
+      File(
+        '${registry.path}/heroui/templates/feature.dart.tmpl',
+      ).writeAsStringSync('''
+import 'dart:async' if (dart.library.io) 'package:indirect/io.dart';
+export '../bridge.dart' if (dart.library.js_interop) '../missing.dart';
+part 'missing.g.dart';
+''');
+      expect(await audit(), [
+        contains(
+          '`package:indirect/io.dart` requires a direct package declaration',
+        ),
+        contains('`../missing.dart` resolves to @ui/missing.dart'),
+        contains('`missing.g.dart` resolves to @ui/components/missing.g.dart'),
+      ]);
+    },
+  );
 
   group('registry coverage', () {
     test('the checkout catalog and the checker agree', () {
@@ -1755,7 +1804,7 @@ import 'package:remix_ui_fonts/remix_ui_fonts.dart';
       _writeInstalledUi(app);
       File('${app.path}/lib/ui/ui.dart').writeAsStringSync('''
 import 'package:flutter/widgets.dart'
-    if (dart.library.io) 'package:unexpected_package/io.dart'
+    if (dart.library.io == 'true') 'package:unexpected_package/io.dart'
     if (dart.library.html) '../../outside.dart';
 ''');
 
@@ -1763,6 +1812,7 @@ import 'package:flutter/widgets.dart'
 
       expect(problem, contains('imports package:unexpected_package'));
       expect(problem, contains('`../../outside.dart` escapes lib/ui'));
+      expect(problem, isNot(contains('`true`')));
     });
   });
 
@@ -2182,6 +2232,42 @@ items:
       );
     });
   });
+}
+
+Directory _writeClosureFixture(Directory root) {
+  final registry = Directory('${root.path}/registry');
+  final preset = Directory('${registry.path}/heroui');
+  final templates = Directory('${preset.path}/templates')
+    ..createSync(recursive: true);
+  File(
+    '${registry.path}/index.yaml',
+  ).writeAsStringSync('schema: 1\npresets: {heroui: heroui/registry.yaml}\n');
+  File('${preset.path}/registry.yaml').writeAsStringSync('''
+schema: 2
+items:
+  feature:
+    registryDependencies: [bridge]
+    devDependencies: {direct: ^1.0.0}
+    files:
+      - {source: templates/feature.dart.tmpl, target: '@ui/components/feature.dart'}
+    generated: ['@ui/components/feature.g.dart']
+  bridge:
+    registryDependencies: [peer]
+    files:
+      - {source: templates/bridge.dart.tmpl, target: '@ui/bridge.dart'}
+  peer:
+    dependencies: {direct: ^1.0.0}
+    files:
+      - {source: templates/peer.dart.tmpl, target: '@ui/peer.dart'}
+''');
+  File('${templates.path}/feature.dart.tmpl').writeAsStringSync('''
+import '../peer.dart' if (dart.library.io) 'package:direct/io.dart';
+export '../bridge.dart' if (dart.library.js_interop) '../peer.dart';
+part 'feature.g.dart';
+''');
+  File('${templates.path}/bridge.dart.tmpl').writeAsStringSync('library;');
+  File('${templates.path}/peer.dart.tmpl').writeAsStringSync('library;');
+  return registry;
 }
 
 void _writeValidFixture(Directory fixture) {
