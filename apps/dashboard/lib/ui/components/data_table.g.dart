@@ -6,7 +6,7 @@ part of 'data_table.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui DataTable recipe.
+/// The Fortal DataTable recipe.
 ///
 /// It reads top to bottom: the cells, rows, footer and the controls inside
 /// them at the size, then the variant's panel.

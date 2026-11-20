@@ -6,7 +6,7 @@ part of 'textfield.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui TextField recipe.
+/// The Fortal TextField recipe.
 ///
 /// It reads top to bottom: what every text input shares, then the size, then
 /// the variant's colors for rest and disabled, then the error state.
@@ -393,7 +393,7 @@ class UiTextField extends StatelessWidget {
   }
 }
 
-/// The Ui TextArea recipe: the text field's looks on a taller box whose
+/// The Fortal TextArea recipe: the text field's looks on a taller box whose
 /// content starts at the top.
 class UiTextArea extends StatelessWidget {
   const UiTextArea({

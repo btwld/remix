@@ -7,7 +7,7 @@ import 'typography.dart';
 
 part 'text.g.dart';
 
-/// The Ui Text recipe: body text on the nine-step text scale.
+/// The Fortal Text recipe: body text on the nine-step text scale.
 ///
 /// Neutral text is gray 12; [accent] takes the accent's text color, and
 /// [highContrast] moves that to accent step 12. [truncate] wins over

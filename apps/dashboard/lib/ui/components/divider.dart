@@ -21,7 +21,7 @@ enum UiDividerSize {
   size4,
 }
 
-/// The Ui Divider recipe: a 1px gray line, horizontal or vertical.
+/// The Fortal Divider recipe: a 1px gray line, horizontal or vertical.
 @MixWidget(target: RemixDivider.new)
 DividerStyler uiDividerStyle({
   UiDividerSize size = .size1,

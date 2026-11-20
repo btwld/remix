@@ -6,7 +6,7 @@ part of 'slider.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Slider recipe.
+/// The Fortal Slider recipe.
 ///
 /// It reads top to bottom: the track and thumb sizes, then the variant's
 /// colors, then the dark-mode thumb edge, hover, press and disabled.

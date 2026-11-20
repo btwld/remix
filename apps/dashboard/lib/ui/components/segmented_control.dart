@@ -25,7 +25,7 @@ enum UiSegmentedControlVariant {
   surface,
 }
 
-/// The Ui SegmentedControl recipe.
+/// The Fortal SegmentedControl recipe.
 ///
 /// The track is a gray tint blended over the surface. The selected item sits
 /// on a raised fill with a 1px edge, and turns medium weight.

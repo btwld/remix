@@ -30,7 +30,7 @@ enum UiCalloutVariant {
   outline,
 }
 
-/// The Ui Callout recipe.
+/// The Fortal Callout recipe.
 ///
 /// It reads top to bottom: the size, the color the icon and text share, then
 /// the variant's fill and frame.

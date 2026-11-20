@@ -18,7 +18,7 @@ enum UiDataListSize {
   size3,
 }
 
-/// The Ui DataList recipe: gray labels beside values in gray 12.
+/// The Fortal DataList recipe: gray labels beside values in gray 12.
 ///
 /// [highContrast] moves the labels to gray 12.
 @MixWidget(target: RemixDataList.new)

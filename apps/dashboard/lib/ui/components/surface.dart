@@ -5,7 +5,7 @@ import '../theme/theme.dart';
 import 'card.dart';
 
 /// How loudly a surface speaks, from the ordinary panel to the one block a
-/// page leads with. Ui casts no shadow under a surface, so emphasis comes
+/// page leads with. Fortal casts no shadow under a surface, so emphasis comes
 /// from fill and contrast alone.
 enum UiSurfaceVariant {
   /// The surface card: a panel inside a hairline frame. For content of
@@ -45,7 +45,7 @@ enum UiSurfaceSize {
   size5,
 }
 
-/// The Ui Surface recipe: the surface card, with [variant]'s fill and
+/// The Fortal Surface recipe: the surface card, with [variant]'s fill and
 /// frame.
 ///
 /// Pressing, hovering and focus resolve from the widget states above it, as

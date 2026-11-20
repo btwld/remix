@@ -15,7 +15,7 @@ enum {{typePrefix}}TabsSize {
   size2,
 }
 
-/// The {{typePrefix}} TabBar recipe: the row of tabs over a 1px gray line.
+/// The Fortal TabBar recipe: the row of tabs over a 1px gray line.
 @MixWidget(target: RemixTabBar.new)
 TabBarStyler {{valuePrefix}}TabBarStyle({
   TabBarStyler style = const TabBarStyler.create(),
@@ -25,14 +25,14 @@ TabBarStyler {{valuePrefix}}TabBarStyle({
     )
     .merge(style);
 
-/// The {{typePrefix}} TabView recipe: the panel under the tabs, which it leaves
+/// The Fortal TabView recipe: the panel under the tabs, which it leaves
 /// unstyled.
 @MixWidget(target: RemixTabView.new)
 TabViewStyler {{valuePrefix}}TabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
 }) => TabViewStyler().merge(style);
 
-/// The {{typePrefix}} Tab recipe.
+/// The Fortal Tab recipe.
 ///
 /// A tab is gray text, darker under the pointer, with a 2px underline in the
 /// accent when selected. The underline is a transparent border at rest, so

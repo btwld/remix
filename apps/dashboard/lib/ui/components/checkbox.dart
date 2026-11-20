@@ -28,7 +28,7 @@ enum UiCheckboxVariant {
   soft,
 }
 
-/// The Ui Checkbox recipe.
+/// The Fortal Checkbox recipe.
 ///
 /// It reads top to bottom: the box and its focus ring, then the variant's
 /// colors for rest, selected and disabled, then the touch target.
@@ -50,7 +50,7 @@ CheckboxStyler uiCheckboxStyle({
     .onDisabled(.containerEffects(.outline(.style(.none))))
     .merge(style);
 
-/// The Ui CheckboxGroupItem recipe: the checkbox recipe plus a label.
+/// The Fortal CheckboxGroupItem recipe: the checkbox recipe plus a label.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
 /// so, unlike the menu, select, segmented control and toggle group items, there
