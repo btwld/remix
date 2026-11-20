@@ -459,8 +459,7 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
   /// when the live view unmounts, not after the exit. A scroll offset inside
   /// the options view is not carried over.
   ///
-  /// Set it for the whole life of the widget: adding or removing it changes
-  /// the widget tree of the field.
+  /// Adding or removing this builder preserves the editor's state.
   final NakedComboboxExitBuilder? exitBuilder;
 
   /// Accessible name for the field container.
@@ -557,8 +556,6 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   bool _waitingForOptions = false;
   bool _suppressCachedOptions = false;
 
-  /// The portal wraps RawAutocomplete so its held subtree is removed in the
-  /// rebuild before Raw's options layout can mount the live panel again.
   final _exitController = OverlayPortalController();
   _ComboboxPanel<T>? _lastPanel;
   _ComboboxExit<T>? _exit;
@@ -978,11 +975,23 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
         optionsViewBuilder: _buildOptionsView,
       ),
     );
-    if (widget.exitBuilder == null) return autocomplete;
-    return OverlayPortal(
-      controller: _exitController,
-      overlayChildBuilder: _buildExitView,
-      child: autocomplete,
+    return Stack(
+      alignment: Alignment.topLeft,
+      fit: StackFit.passthrough,
+      clipBehavior: Clip.none,
+      children: [
+        autocomplete,
+        if (widget.exitBuilder != null)
+          Positioned(
+            left: 0,
+            top: 0,
+            child: OverlayPortal(
+              controller: _exitController,
+              overlayChildBuilder: _buildExitView,
+              child: const SizedBox.shrink(),
+            ),
+          ),
+      ],
     );
   }
 }

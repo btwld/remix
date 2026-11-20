@@ -16,6 +16,8 @@ There is no panel in the hiding frame, including when the combobox is disabled. 
 
 If the combobox reopens during an exit, the held view is removed before the live options mount in the following frame. `onOpen` and `onClose` still report the live view mounting and unmounting.
 
+The exit layer does not change accessibility traversal of live suggestions. You can add or remove `exitBuilder` without resetting the editor, its selection or focus. Removing it also removes any held view.
+
 ## Basic implementation
 
 <NakedSource file="naked_combobox.0.dart" />

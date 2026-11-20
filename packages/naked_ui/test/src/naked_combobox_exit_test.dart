@@ -338,6 +338,58 @@ void main() {
       expect(exit.built, 0);
     });
 
+    testWidgets('toggling exitBuilder preserves the editor and live options', (
+      tester,
+    ) async {
+      final exit = _Exit();
+      var opens = 0;
+      var closes = 0;
+      Future<void> rebuild({required bool withExit}) => _pump(
+        tester,
+        exit,
+        withExit: withExit,
+        onOpen: () => opens++,
+        onClose: () => closes++,
+      );
+
+      await rebuild(withExit: false);
+      await _open(tester);
+      final field = find.byType(EditableText);
+      final editor = tester.state<EditableTextState>(field);
+      final controller = editor.widget.controller;
+      final focus = editor.widget.focusNode;
+      controller.selection = const TextSelection(
+        baseOffset: 0,
+        extentOffset: 1,
+      );
+      await tester.pump();
+      final value = controller.value;
+
+      for (final withExit in [true, false, true]) {
+        await rebuild(withExit: withExit);
+        expect(tester.state<EditableTextState>(field), same(editor));
+        expect(editor.widget.controller, same(controller));
+        expect(editor.widget.focusNode, same(focus));
+        expect(controller.value, value);
+        expect(focus.hasFocus, isTrue);
+        expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
+        expect(opens, 1);
+        expect(closes, 0);
+      }
+
+      await _close(tester);
+      final dismiss = exit.dismiss!;
+      await rebuild(withExit: false);
+      dismiss();
+      await tester.pump();
+      expect(tester.state<EditableTextState>(field), same(editor));
+      expect(controller.value, value);
+      expect(focus.hasFocus, isTrue);
+      expect(find.byKey(const ValueKey('option-apple')), findsNothing);
+      expect(closes, 1);
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('dismiss after disposal is harmless and leaves no layer', (
       tester,
     ) async {

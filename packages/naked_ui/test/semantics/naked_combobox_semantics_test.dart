@@ -8,6 +8,72 @@ import 'package:naked_ui/naked_ui.dart';
 import 'semantics_test_utils.dart';
 
 void main() {
+  testWidgets('semantic text entry exposes live options but not the exit', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final selected = <String>[];
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: NakedCombobox<String>(
+            semanticLabel: 'Fruit',
+            optionsBuilder: (_) => ['apple'],
+            onSelected: selected.add,
+            exitBuilder: (context, optionsView, dismiss) => Semantics(
+              label: 'Exiting suggestions',
+              container: true,
+              child: optionsView,
+            ),
+            fieldBuilder: (context, state, controller, focusNode, submit) =>
+                TextField(controller: controller, focusNode: focusNode),
+            overlayBuilder: (context, options) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final option in options)
+                  NakedComboboxOption(
+                    value: option,
+                    semanticLabel: option,
+                    child: Text(option),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final editor = tester.semantics
+        .simulatedAccessibilityTraversal()
+        .singleWhere(
+          (node) => node.getSemanticsData().flagsCollection.isTextField,
+        );
+    editor.owner!.performAction(editor.id, SemanticsAction.tap);
+    await tester.pumpAndSettle();
+    editor.owner!.performAction(editor.id, SemanticsAction.setText, 'ap');
+    await tester.pumpAndSettle();
+
+    expect(find.text('apple'), findsOneWidget);
+    final options = tester.semantics.simulatedAccessibilityTraversal().where(
+      (node) => node.getSemanticsData().label == 'apple',
+    );
+    expect(options, hasLength(1));
+    final option = options.single;
+    expect(option.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+    option.owner!.performAction(option.id, SemanticsAction.tap);
+    await tester.pumpAndSettle();
+    expect(selected, ['apple']);
+    expect(find.byType(NakedComboboxOption<String>), findsOneWidget);
+    expect(
+      tester.semantics.simulatedAccessibilityTraversal().where((node) {
+        final label = node.getSemanticsData().label;
+        return label == 'apple' || label == 'Exiting suggestions';
+      }),
+      isEmpty,
+    );
+    handle.dispose();
+  });
+
   testWidgets(
     'option semantic tap selects once and disabled popup has no actions',
     (tester) async {
