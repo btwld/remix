@@ -421,19 +421,18 @@ Pass a top-level function or a static tear-off as `builder`, and keep the
 transition in a `const` or `final`. Equality is by builder identity, so an
 inline closure gives a new, unequal transition on every build.
 
-The open animation starts when the open is requested, before the panel exists,
-so its length comes from the style as the menu resolves it. The panel then
-resolves the style again in its own scope: that transition's builder runs, and
-its `reverseDuration` paces the exit. Variants that differ between the two
-scopes therefore open with the menu's durations and close with the panel's.
+The panel resolves the builder and both durations in its own scope, not at
+the trigger. Menu, Popover, and Select builders can read the resolved side and
+alignment from `OverlayPlacement.maybeOf(context)`. A shared builder should
+handle a missing placement: overlays such as Flutter's autocomplete do not
+provide that scope. `anchorRect` is independent of placement.
 
 The panel stays mounted until the exit has played, then hides and `onClose`
-runs. A panel that is leaving takes no pointer input. When `onCloseRequested`
-is set it runs first and keeps its contract: the menu stays open until it calls
-`hideOverlay`, and that call plays the exit. While the user asks to reduce
-motion the panel opens and closes at once, whatever the durations. Submenu
-panels are not wrapped. `RemixPopover` takes the same `panelTransition` on
-`PopoverStyler`.
+runs. The leaving content cannot be focused, activated, or reached by assistive
+technology. Toggling the trigger again resumes opening from the current
+progress. When `onCloseRequested` is set, the menu stays open until it calls
+`hideOverlay`, and that call plays the exit. Reduced motion also finishes
+transitions already in progress. Submenu panels are not wrapped.
 
 ## Sections
 

@@ -60,11 +60,18 @@ void main() {
     final open = pixel(await capture(tester, key), sample);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pump();
+    await tester.pump(Duration.zero);
+    final hidden = pixel(await capture(tester, key), sample);
+    expect(find.text('Avocado'), findsNothing);
+    await tester.pump(Duration.zero);
+    final restored = pixel(await capture(tester, key), sample);
     await tester.pump(duration ~/ 2);
     final exit = pixel(await capture(tester, key), sample);
 
     expect(entry, isNot(open));
+    expect(hidden, isNot(open));
+    expect(hidden, isNot(entry));
+    expect(restored, open);
     expect(exit, entry);
   });
 

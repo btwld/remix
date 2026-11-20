@@ -176,7 +176,8 @@ The panel shows and hides at once by default. Set `panelTransition` on
 `PopoverStyler` to open and close it with a transition; the panel stays mounted
 until the exit has played. Use a top-level function as the builder: it is
 compared by identity. The builder receives the open and close animation
-and the trigger's bounds.
+and the trigger's bounds. Its context provides the resolved placement through
+`OverlayPlacement.maybeOf(context)`.
 
 ```dart
 import 'package:flutter/widgets.dart';

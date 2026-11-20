@@ -8,7 +8,6 @@ import 'package:naked_ui/naked_ui.dart';
 
 import '../../rendering/remix_box_effects.dart';
 import '../../utilities/remix_panel_transition.dart';
-import '../../utilities/remix_reduced_motion.dart';
 import '../../utilities/remix_style.dart';
 
 part 'popover_spec.dart';

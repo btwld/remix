@@ -12,7 +12,6 @@ import '../../style/style.dart';
 import '../../utilities/remix_anchor.dart';
 import '../../utilities/remix_panel_transition.dart';
 import '../../utilities/remix_path_icon.dart';
-import '../../utilities/remix_reduced_motion.dart';
 import '../../utilities/remix_style.dart';
 import '../../rendering/remix_box_effects.dart';
 

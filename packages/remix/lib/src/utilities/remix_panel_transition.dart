@@ -1,5 +1,10 @@
+import 'dart:async' show scheduleMicrotask;
+
 import 'package:flutter/foundation.dart' show ChangeNotifier, internal;
 import 'package:flutter/widgets.dart';
+import 'package:naked_ui/src/base/overlay_base.dart' show OverlayTriggerScope;
+
+import 'remix_reduced_motion.dart';
 
 /// What a [RemixPanelTransitionBuilder] receives for one overlay panel.
 @immutable
@@ -19,17 +24,16 @@ final class RemixPanelTransitionInfo {
   final Animation<double> animation;
 
   /// The bounds of the trigger, in the overlay's coordinate space.
-  ///
-  /// Read `OverlayPlacement.maybeOf(context)` in the builder for the side the
-  /// panel was placed on after collision handling.
   final Rect anchorRect;
 }
 
 /// Wraps an overlay panel in an open and close transition.
 ///
-/// `context` is inside the overlay, below the panel's placement, so
-/// `OverlayPlacement.maybeOf(context)` gives the side and alignment the panel
-/// resolved to. `panel` is the whole styled panel.
+/// `context` is inside the overlay and `panel` is the whole styled panel.
+/// Menu, popover and select provide their resolved side and alignment through
+/// `OverlayPlacement.maybeOf(context)`. A combobox using Flutter's autocomplete
+/// overlay does not establish its own placement scope. Shared builders should
+/// use a fallback instead of requiring placement.
 typedef RemixPanelTransitionBuilder =
     Widget Function(
       BuildContext context,
@@ -55,8 +59,8 @@ typedef RemixPanelTransitionBuilder =
 /// ```
 ///
 /// While the user asks to reduce motion the panel opens and closes at once,
-/// whatever the durations. Without a transition a panel shows and hides at
-/// once, as before.
+/// whatever the durations. Without a transition the component keeps its
+/// default motion.
 @immutable
 final class RemixPanelTransition {
   const RemixPanelTransition({
@@ -97,53 +101,63 @@ final class RemixPanelTransition {
 /// and [closeRequested] as the anchor's request callbacks, and builds its
 /// panel with [RemixPanelTransitionHost].
 ///
-/// The animation starts when the open is requested, so it is in step with the
-/// panel rather than a frame behind it. That moment is before the panel
-/// exists, so [resolve] reads the style where the component is. The panel then
-/// resolves its own style, in its own scope, and [RemixPanelTransitionHost]
-/// reports it through [adopt]: the panel's builder is the one that runs, and
-/// its durations pace the rest of the animation and the exit. A style whose
-/// transition differs between the two scopes therefore opens with the
-/// component's durations and closes with the panel's.
+/// The transition comes from the mounted panel, never from the anchor.
 @internal
 final class RemixPanelTransitionHandle extends ChangeNotifier {
-  RemixPanelTransitionHandle({
-    required this.vsync,
-    required this.resolve,
-    required this.reduceMotion,
-  });
+  RemixPanelTransitionHandle({required this.vsync});
 
   final TickerProvider vsync;
 
-  /// The transition the style gives the panel about to open, read where the
-  /// component is, or `null`.
-  final RemixPanelTransition? Function() resolve;
-
-  /// Whether the user asks to reduce motion.
-  final bool Function() reduceMotion;
-
   AnimationController? _controller;
-  RemixPanelTransition? _transition;
-  bool _closing = false;
+  RemixPanelTransition? _panelTransition;
+  RemixPanelTransition? _exitTransition;
+  Object? _openRequest;
+  Object? _closeRequest;
+  Offset? _openPosition;
+  bool _reduceMotion = false;
+  bool _disposed = false;
 
-  /// The animation of the open or closing panel, or `null` without a
-  /// transition.
-  Animation<double>? get animation => _transition == null ? null : _controller;
+  RemixPanelTransition? get _transition => _exitTransition ?? _panelTransition;
 
-  /// Whether the exit is playing.
-  bool get closing => _closing;
+  bool get isExiting => _exitTransition != null;
 
-  /// An `onOpenRequested` that starts the transition when the panel shows.
+  Widget wrapAnchor(Widget child) =>
+      OverlayTriggerScope(isExiting: () => isExiting, child: child);
+
+  /// Shows the overlay, or reverses an exit without reopening the portal.
   ///
-  /// A caller-supplied [userRequested] runs first and keeps its contract: the
-  /// panel shows when it calls `showOverlay`, and that call starts the open.
+  /// A newer request supersedes a deferred show. When [isOpen] is supplied,
+  /// only requests with a different position are forwarded to an open anchor.
   void openRequested(
     Offset? position,
     VoidCallback showOverlay,
-    void Function(Offset? position, VoidCallback showOverlay)? userRequested,
-  ) {
+    void Function(Offset? position, VoidCallback showOverlay)? userRequested, {
+    bool Function()? isOpen,
+  }) {
+    if (_disposed) return;
+    final request = _openRequest = Object();
     void show() {
-      _start(resolve());
+      if (!identical(_openRequest, request)) return;
+      _openRequest = null;
+      _closeRequest = null;
+      if (isExiting) {
+        _exitTransition = null;
+        final transition = _panelTransition;
+        if (transition == null) {
+          _controller?.stop();
+        } else {
+          _open(transition);
+        }
+        notifyListeners();
+        return;
+      }
+      if (isOpen?.call() ?? false) {
+        if (_openPosition == position) return;
+      } else {
+        _panelTransition = null;
+        _controller?.stop();
+      }
+      _openPosition = position;
       showOverlay();
     }
 
@@ -154,16 +168,16 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
     }
   }
 
-  void _start(RemixPanelTransition? transition) {
-    _closing = false;
-    _transition = transition;
-    if (transition == null) return;
-    final controller = _controller ??= AnimationController(vsync: vsync);
+  void _open(RemixPanelTransition transition, {double? from}) {
+    final controller = _controller ??= AnimationController(
+      vsync: vsync,
+      animationBehavior: AnimationBehavior.preserve,
+    );
     _pace(controller, transition);
-    if (reduceMotion()) {
+    if (_reduceMotion) {
       controller.value = 1;
     } else {
-      controller.forward(from: 0);
+      controller.forward(from: from);
     }
   }
 
@@ -176,91 +190,83 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
       ..reverseDuration = transition.reverseDuration ?? transition.duration;
   }
 
-  /// Takes the transition the panel resolved in its own scope.
-  ///
-  /// Called by [RemixPanelTransitionHost] when the panel mounts or its
-  /// transition changes. It starts the animation when the request did not, and
-  /// stops it when the panel has none. A panel that mounts while an exit plays
-  /// (a combobox that opens again) turns the exit around from where it is.
-  void adopt(RemixPanelTransition? transition, {bool mounting = false}) {
-    if (_closing) {
-      final controller = _controller;
-      if (mounting && transition != null && controller != null) {
-        _closing = false;
-        _transition = transition;
-        _pace(controller, transition);
-        // The canceled exit never completes, so its hide never runs.
-        controller.forward();
-      }
-      return;
-    }
+  /// Starts or updates the transition the mounted panel resolved.
+  void adopt(RemixPanelTransition? transition) {
+    final previous = _panelTransition;
+    _panelTransition = transition;
+    if (isExiting) return;
     if (transition == null) {
-      _transition = null;
       _controller?.stop();
       return;
     }
     final controller = _controller;
-    if (_transition == null || controller == null) {
-      _start(transition);
+    if (previous == null || controller == null) {
+      _open(transition, from: 0);
       return;
     }
-    _transition = transition;
     _pace(controller, transition);
   }
 
-  /// Completes an animation in flight at its end when the user starts asking
-  /// to reduce motion.
-  void settleWhenReduced() {
+  void updateReducedMotion(bool reduceMotion) {
+    _reduceMotion = reduceMotion;
     final controller = _controller;
-    if (controller == null || !controller.isAnimating || !reduceMotion()) {
+    if (!reduceMotion || controller == null || !controller.isAnimating) {
       return;
     }
-    final closing = controller.status == AnimationStatus.reverse;
-    // Complete the exit future before setting the endpoint. A canceled ticker
-    // would strand the close callback that unmounts the overlay.
     controller.stop(canceled: false);
-    controller.value = closing ? 0 : 1;
+    controller.value = isExiting ? 0 : 1;
   }
 
   /// An `onCloseRequested` that plays the exit before the panel hides.
   ///
   /// A caller-supplied [userRequested] runs first and keeps its contract: the
   /// panel stays open until it calls `hideOverlay`, and that call plays the
-  /// exit.
+  /// exit. New requests supersede a deferred hide until the exit starts.
   void closeRequested(
     VoidCallback hideOverlay,
     void Function(VoidCallback hideOverlay)? userRequested,
   ) {
-    if (userRequested == null) {
-      _close(hideOverlay);
-    } else {
-      userRequested(() => _close(hideOverlay));
-    }
-  }
+    if (_disposed || isExiting) return;
+    final request = _closeRequest = Object();
+    _openRequest = null;
 
-  void _close(VoidCallback hideOverlay) {
-    final controller = _controller;
-    if (_transition == null ||
-        controller == null ||
-        controller.value == 0 ||
-        reduceMotion()) {
-      _transition = null;
+    void hide() {
+      if (!identical(_closeRequest, request)) return;
+      _closeRequest = null;
+      _panelTransition = null;
+      _exitTransition = null;
+      _controller?.stop();
       hideOverlay();
-      return;
     }
-    // A second request while the exit plays keeps the first one's hide.
-    if (_closing) return;
-    _closing = true;
-    notifyListeners();
-    controller.reverse().then((_) {
-      _transition = null;
-      _closing = false;
-      hideOverlay();
-    });
+
+    void startExit() {
+      if (!identical(_closeRequest, request) || isExiting) return;
+      final controller = _controller;
+      final transition = _panelTransition;
+      if (transition == null ||
+          controller == null ||
+          controller.value == 0 ||
+          _reduceMotion) {
+        hide();
+        return;
+      }
+      _exitTransition = transition;
+      controller.reverse().then((_) => hide());
+      notifyListeners();
+    }
+
+    if (userRequested == null) {
+      startExit();
+    } else {
+      userRequested(startExit);
+    }
   }
 
   @override
   void dispose() {
+    _disposed = true;
+    _openRequest = null;
+    _closeRequest = null;
     _controller?.dispose();
     super.dispose();
   }
@@ -279,7 +285,6 @@ final class RemixPanelTransitionHost extends StatefulWidget {
     required this.transition,
     required this.anchorRect,
     required this.child,
-    this.exiting = false,
   });
 
   final RemixPanelTransitionHandle handle;
@@ -287,51 +292,92 @@ final class RemixPanelTransitionHost extends StatefulWidget {
   final Rect anchorRect;
   final Widget child;
 
-  /// Whether this host shows a panel that already left: it follows the exit
-  /// the [handle] plays, and mounting it is not a panel opening again.
-  final bool exiting;
-
   @override
   State<RemixPanelTransitionHost> createState() =>
       _RemixPanelTransitionHostState();
 }
 
-class _RemixPanelTransitionHostState extends State<RemixPanelTransitionHost> {
+class _RemixPanelTransitionHostState extends State<RemixPanelTransitionHost>
+    with WidgetsBindingObserver {
+  FocusNode? _focusGate;
+
   @override
   void initState() {
     super.initState();
-    widget.handle.adopt(widget.transition, mounting: !widget.exiting);
+    WidgetsBinding.instance.addObserver(this);
+    widget.handle.addListener(_onExitChanged);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncReducedMotion();
+    widget.handle.adopt(widget.transition);
   }
 
   @override
   void didUpdateWidget(RemixPanelTransitionHost oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.transition != oldWidget.transition) {
-      widget.handle.adopt(widget.transition);
+    if (widget.handle != oldWidget.handle) {
+      oldWidget.handle.removeListener(_onExitChanged);
+      widget.handle.addListener(_onExitChanged);
+      _focusGate?.descendantsAreFocusable = !widget.handle.isExiting;
+      _syncReducedMotion();
     }
+    widget.handle.adopt(widget.transition);
+  }
+
+  @override
+  void didChangeAccessibilityFeatures() => _syncReducedMotion();
+
+  void _syncReducedMotion() =>
+      widget.handle.updateReducedMotion(remixReducedMotionOf(context));
+
+  void _onExitChanged() {
+    final handle = widget.handle;
+    scheduleMicrotask(() {
+      if (!mounted || widget.handle != handle) return;
+      FocusManager.instance.applyFocusChangesIfNeeded();
+      _focusGate?.descendantsAreFocusable = !handle.isExiting;
+    });
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    widget.handle.removeListener(_onExitChanged);
+    _focusGate?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final handle = widget.handle;
-    final animation = handle.animation;
-    final transition = widget.transition;
+    final transition = handle._transition;
+    final animation = handle._controller;
     if (animation == null || transition == null) return widget.child;
-
-    // A closing panel takes no input, so a click cannot select an item that
-    // is already leaving.
-    return ListenableBuilder(
-      listenable: handle,
-      builder: (context, _) => IgnorePointer(
-        ignoring: handle.closing,
-        child: Builder(
-          builder: (context) => transition.builder(
-            context,
-            RemixPanelTransitionInfo(
-              animation: animation,
-              anchorRect: widget.anchorRect,
+    final exiting = handle.isExiting;
+    return Focus.withExternalFocusNode(
+      focusNode: _focusGate ??= FocusNode(
+        canRequestFocus: false,
+        skipTraversal: true,
+        descendantsAreFocusable: !exiting,
+      ),
+      includeSemantics: false,
+      child: ExcludeSemantics(
+        excluding: exiting,
+        child: IgnorePointer(
+          ignoring: exiting,
+          child: Builder(
+            builder: (context) => transition.builder(
+              context,
+              RemixPanelTransitionInfo(
+                animation: animation.view,
+                anchorRect: widget.anchorRect,
+              ),
+              widget.child,
             ),
-            widget.child,
           ),
         ),
       ),

@@ -18,6 +18,28 @@ import '../utilities/anchored_overlay.dart';
 import '../utilities/naked_state_scope.dart';
 import '../utilities/state.dart';
 
+/// Lets an adapter distinguish a trigger toggle from another close request.
+class OverlayTriggerScope extends InheritedWidget {
+  /// Wraps a single anchor whose adapter can retain the panel during exit.
+  const OverlayTriggerScope({
+    required bool Function() isExiting,
+    required super.child,
+  }) : _isExiting = isExiting;
+
+  final bool Function() _isExiting;
+
+  /// Whether this anchor's trigger should reverse its adapter's exit.
+  static bool shouldReopen(BuildContext context, Widget anchor) {
+    final scope = context.getInheritedWidgetOfExactType<OverlayTriggerScope>();
+    return scope != null &&
+        identical(scope.child, anchor) &&
+        scope._isExiting();
+  }
+
+  @override
+  bool updateShouldNotify(OverlayTriggerScope oldWidget) => false;
+}
+
 // Overlay scope pattern implementation
 
 /// Base class for overlay scope widgets that provide context to their children.

@@ -152,38 +152,8 @@ class RemixSelect<T> extends StatefulWidget {
 }
 
 class _RemixSelectState<T> extends State<RemixSelect<T>>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  late final _panelTransition = RemixPanelTransitionHandle(
-    vsync: this,
-    resolve: _resolvePanelTransition,
-    reduceMotion: () => remixReducedMotionOf(context),
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _panelTransition.settleWhenReduced();
-  }
-
-  @override
-  void didChangeAccessibilityFeatures() => _panelTransition.settleWhenReduced();
-
-  /// The transition the style gives the panel about to open, read where the
-  /// select is: the panel itself has not been built yet. The panel reads its
-  /// own style again and hands that to the handle.
-  RemixPanelTransition _resolvePanelTransition() {
-    final styleSpec = widget.styleSpec;
-    final transition =
-        styleSpec?.panelTransition ??
-        _buildStyle().build(context).spec.panelTransition;
-    return transition ?? _defaultPanelTransition;
-  }
+    with SingleTickerProviderStateMixin {
+  late final _panelTransition = RemixPanelTransitionHandle(vsync: this);
 
   SelectStyler _buildStyle() {
     return SelectStyler()
@@ -293,7 +263,6 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _panelTransition.dispose();
     super.dispose();
   }
@@ -305,7 +274,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     assert(_debugValidate(selectedItem));
     final hasSelection = widget.selectedValue != null;
 
-    return NakedSelect<T>(
+    final anchor = NakedSelect<T>(
       overlayBuilder: (context, info) {
         return RemixAnchorScope(
           width: info.anchorRect.width,
@@ -354,6 +323,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         );
       },
     );
+    return _panelTransition.wrapAnchor(anchor);
   }
 }
 

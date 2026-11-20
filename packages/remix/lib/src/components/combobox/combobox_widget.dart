@@ -117,7 +117,7 @@ class RemixCombobox<T extends Object> extends StatefulWidget {
 }
 
 class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+    with SingleTickerProviderStateMixin {
   RemixPanelTransitionHandle? _panelTransition;
   final _fieldKey = GlobalKey();
 
@@ -127,29 +127,9 @@ class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
   Rect _lastAnchor = Rect.zero;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _panelTransition?.settleWhenReduced();
-  }
-
-  @override
-  void didChangeAccessibilityFeatures() =>
-      _panelTransition?.settleWhenReduced();
-
-  @override
   void dispose() {
-    if (_panelTransition != null) WidgetsBinding.instance.removeObserver(this);
     _panelTransition?.dispose();
     super.dispose();
-  }
-
-  RemixPanelTransitionHandle _createPanelTransition() {
-    WidgetsBinding.instance.addObserver(this);
-    return RemixPanelTransitionHandle(
-      vsync: this,
-      resolve: () => null,
-      reduceMotion: () => remixReducedMotionOf(context),
-    );
   }
 
   /// The editor's bounds in the overlay the panel is shown in.
@@ -199,14 +179,11 @@ class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
     final effective = (inherited is ComboboxStyler
         ? inherited.merge(base)
         : base);
+    final retainPanel = styleSpec == null
+        ? _mayUsePanelTransition(effective)
+        : styleSpec.panel.spec.panelTransition != null;
     return NakedCombobox<T>(
-      exitBuilder: (context, view, dismiss) => _ComboboxExit(
-        handle: _panelTransition,
-        transition: _lastTransition,
-        anchorRect: _lastAnchor,
-        dismiss: dismiss,
-        child: view,
-      ),
+      exitBuilder: retainPanel ? _buildExit : null,
       optionsBuilder: optionsBuilder,
       onSelected: onSelected,
       displayStringForOption: displayStringForOption,
@@ -341,6 +318,22 @@ class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
     );
   }
 
+  Widget _buildExit(BuildContext context, Widget view, VoidCallback dismiss) {
+    final handle = _panelTransition;
+    final transition = _lastTransition;
+    if (handle == null || transition == null) {
+      dismiss();
+      return const SizedBox.shrink();
+    }
+    return _ComboboxExit(
+      handle: handle,
+      transition: transition,
+      anchorRect: _lastAnchor,
+      dismiss: dismiss,
+      child: view,
+    );
+  }
+
   /// Runs the panel through its transition, and keeps what the exit layer
   /// needs once the panel has gone.
   Widget _panelHost(
@@ -355,13 +348,46 @@ class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
     }
     final transition = _lastTransition = spec.panelTransition;
     if (transition == null && handle == null) return panel;
-    return RemixPanelTransitionHost(
-      handle: _panelTransition ??= _createPanelTransition(),
-      transition: transition,
-      anchorRect: transition == null ? Rect.zero : _anchorRect(context),
-      child: panel,
+    final liveHandle = _panelTransition ??= RemixPanelTransitionHandle(
+      vsync: this,
+    );
+    return _ComboboxLivePanel(
+      handle: liveHandle,
+      child: RemixPanelTransitionHost(
+        handle: liveHandle,
+        transition: transition,
+        anchorRect: transition == null ? Rect.zero : _anchorRect(context),
+        child: panel,
+      ),
     );
   }
+}
+
+/// Tells the handle when RawAutocomplete has mounted a new live panel.
+class _ComboboxLivePanel extends StatefulWidget {
+  const _ComboboxLivePanel({required this.handle, required this.child});
+
+  final RemixPanelTransitionHandle handle;
+  final Widget child;
+
+  @override
+  State<_ComboboxLivePanel> createState() => _ComboboxLivePanelState();
+}
+
+class _ComboboxLivePanelState extends State<_ComboboxLivePanel> {
+  bool _opened = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_opened) return;
+    _opened = true;
+    widget.handle.updateReducedMotion(remixReducedMotionOf(context));
+    widget.handle.openRequested(null, () {}, null);
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 /// The panel's exit: the last panel, held by the combobox, plays the
@@ -375,8 +401,8 @@ class _ComboboxExit extends StatefulWidget {
     required this.child,
   });
 
-  final RemixPanelTransitionHandle? handle;
-  final RemixPanelTransition? transition;
+  final RemixPanelTransitionHandle handle;
+  final RemixPanelTransition transition;
   final Rect anchorRect;
   final VoidCallback dismiss;
   final Widget child;
@@ -386,40 +412,22 @@ class _ComboboxExit extends StatefulWidget {
 }
 
 class _ComboboxExitState extends State<_ComboboxExit> {
-  bool _playing = false;
+  bool _started = false;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final handle = widget.handle;
-    final dismiss = widget.dismiss;
-    if (handle == null || widget.transition == null) {
-      _dismissAfterFrame(dismiss);
-      return;
-    }
-    var building = true;
-    handle.closeRequested(() {
-      if (!mounted) return;
-      if (building) {
-        _dismissAfterFrame(dismiss);
-      } else {
-        dismiss();
-      }
-    }, null);
-    building = false;
-    _playing = handle.closing;
-  }
-
-  void _dismissAfterFrame(VoidCallback dismiss) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) dismiss();
-    });
+    if (remixReducedMotionOf(context)) handle.updateReducedMotion(true);
+    if (_started) return;
+    _started = true;
+    handle.closeRequested(widget.dismiss, null);
   }
 
   @override
   Widget build(BuildContext context) {
     final handle = widget.handle;
-    if (!_playing || handle == null) return const SizedBox.shrink();
+    if (!handle.isExiting) return const SizedBox.shrink();
     return RemixReducedMotionBuilder(
       builder: (context, reduceMotion) => reduceMotion
           ? const SizedBox.shrink()
@@ -427,7 +435,6 @@ class _ComboboxExitState extends State<_ComboboxExit> {
               handle: handle,
               transition: widget.transition,
               anchorRect: widget.anchorRect,
-              exiting: true,
               child: _ComboboxExitScope(handle: handle, child: widget.child),
             ),
     );

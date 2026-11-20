@@ -76,10 +76,10 @@ class ComboboxPanelSpec with _$ComboboxPanelSpec {
   ///
   /// The builder receives the open and close animation and the editor's
   /// bounds. RawAutocomplete does not provide `OverlayPlacement` for this
-  /// panel. The panel stays on screen until the exit has played: the combobox
-  /// holds its last panel through `NakedCombobox.exitBuilder`, rebuilt and
-  /// inert, so the exit cannot stagger rows or follow a scroll offset. `null`
-  /// shows and hides the panel at once.
+  /// panel. The hide frame has no panel. On the next frame, the combobox
+  /// rebuilds an inert copy at the previous bounds through
+  /// `NakedCombobox.exitBuilder` to play the exit. The exit cannot stagger
+  /// rows or follow a scroll offset. `null` shows and hides the panel at once.
   @override
   final RemixPanelTransition? panelTransition;
 

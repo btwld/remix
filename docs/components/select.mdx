@@ -291,8 +291,9 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
 The panel fades and scales in over 150 ms by default. Set `panelTransition` on
 `SelectStyler` to replace that motion. It is the same `RemixPanelTransition` as
 [Menu](/components/menu#panel-transition) and [Popover](/components/popover#panel-transition),
-so one recipe can give all three the same motion. The panel stays mounted until
-the exit has played.
+so one recipe can give all three the same motion. The builder can read the
+resolved placement through `OverlayPlacement.maybeOf(context)`. The panel
+stays mounted until the exit has played, but leaving content is not interactive.
 
 ```dart
 import 'package:flutter/widgets.dart';

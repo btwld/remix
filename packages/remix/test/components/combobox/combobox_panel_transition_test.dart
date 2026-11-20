@@ -1,6 +1,9 @@
+import 'dart:ui' show SemanticsAction;
+
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart' show NakedCombobox;
 import 'package:remix/remix.dart';
 
 import '../../helpers/motion_harness.dart';
@@ -19,6 +22,12 @@ Widget _combobox(_Probe probe) => RemixCombobox<String>(
   optionsBuilder: (_) => suggestions,
   style: _transitionStyle(probe),
 );
+
+bool _retainsPanel(WidgetTester tester) =>
+    tester
+        .widget<NakedCombobox<String>>(find.byType(NakedCombobox<String>))
+        .exitBuilder !=
+    null;
 
 ComboboxStyler _transitionStyle(_Probe probe) => testComboboxStyle().panel(
   ComboboxPanelStyler().panelTransition(
@@ -91,9 +100,9 @@ void main() {
 
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
-      // The very frame the panel is hidden still shows it.
-      expect(find.text('Apple'), findsOneWidget);
-      await tester.pump(_tick);
+      expect(find.text('Apple'), findsNothing);
+      expect(closes, 1);
+      await tester.pump();
       await tester.pump(_exit ~/ 2);
       expect(find.text('Apple'), findsOneWidget);
       expect(probe.animations.last.value, closeTo(.5, .15));
@@ -120,20 +129,23 @@ void main() {
       expect(probe.animations.last.value, closeTo(.5, .01));
     });
 
-    testWidgets('the exit runs in the frame the panel is dropped', (
-      tester,
-    ) async {
+    testWidgets('the held exit starts after one empty frame', (tester) async {
       final probe = _Probe();
       await tester.pumpWidget(comboboxHost(_combobox(probe)));
       await _open(tester);
       await tester.pump(_enter + _tick);
       expect(probe.animations.last.value, 1);
+      final bounds = tester.getRect(find.text('Apple'));
 
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump(Duration.zero);
+      expect(find.text('Apple'), findsNothing);
+      expect(probe.animations.last.status, AnimationStatus.completed);
+      await tester.pump(Duration.zero);
 
-      // The panel is held and its exit is already running, not a frame away.
       expect(find.text('Apple'), findsOneWidget);
+      expect(tester.getRect(find.text('Apple')), bounds);
+      expect(probe.animations.last.value, 1);
       expect(probe.animations.last.status, AnimationStatus.reverse);
 
       // The transition is applied once: a second host would square the fade.
@@ -164,19 +176,40 @@ void main() {
                 RemixPanelTransition(
                   duration: _enter,
                   reverseDuration: _exit,
-                  builder: (context, info, panel) =>
-                      FadeTransition(opacity: info.animation, child: panel),
+                  builder: (context, info, panel) => Semantics(
+                    label: 'Transition wrapper',
+                    container: true,
+                    explicitChildNodes: true,
+                    child: FadeTransition(
+                      opacity: info.animation,
+                      child: panel,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
         ),
       );
-      await _open(tester);
+      final editor = tester.semantics
+          .simulatedAccessibilityTraversal()
+          .singleWhere(
+            (node) => node.getSemanticsData().flagsCollection.isTextField,
+          );
+      editor.owner!.performAction(editor.id, SemanticsAction.tap);
+      await tester.pump();
+      editor.owner!.performAction(editor.id, SemanticsAction.setText, 'A');
+      await tester.pump();
       await tester.pump(_enter ~/ 2);
 
       // Mid-open: the field keeps its name and the options are named buttons.
       expect(find.bySemanticsLabel('Fruit'), findsOneWidget);
+      expect(find.bySemanticsLabel('Transition wrapper'), findsOneWidget);
+      final traversal = tester.semantics.simulatedAccessibilityTraversal();
+      expect(
+        traversal.map((node) => node.getSemanticsData().label),
+        containsAll(suggestions),
+      );
       for (final option in suggestions) {
         expect(
           tester.getSemantics(find.bySemanticsLabel(option)),
@@ -194,10 +227,12 @@ void main() {
       await tester.pump(_enter);
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump(Duration.zero);
+      await tester.pump(Duration.zero);
       await tester.pump(_exit ~/ 2);
       // Mid-exit the panel is drawn, but the copy takes no part in semantics.
       expect(find.text('Apple'), findsOneWidget);
       expect(find.bySemanticsLabel('Apple'), findsNothing);
+      expect(find.bySemanticsLabel('Transition wrapper'), findsNothing);
       expect(find.bySemanticsLabel('Fruit'), findsOneWidget);
       handle.dispose();
     });
@@ -211,11 +246,15 @@ void main() {
           ),
         ),
       );
+      expect(_retainsPanel(tester), isFalse);
       await _open(tester);
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
 
       expect(find.text('Apple'), findsNothing);
+      await tester.enterText(find.byType(EditableText), 'Ap');
+      await tester.pump();
+      expect(find.text('Apple'), findsOneWidget);
     });
 
     testWidgets('changing transition styles preserves the editor', (
@@ -241,9 +280,14 @@ void main() {
       final controller = state.widget.controller;
       controller.selection = const TextSelection.collapsed(offset: 0);
 
-      for (final newStyle in [_transitionStyle(probe), testComboboxStyle()]) {
+      expect(_retainsPanel(tester), isFalse);
+      for (final (newStyle, retainsPanel) in [
+        (_transitionStyle(probe), true),
+        (testComboboxStyle(), false),
+      ]) {
         style.value = newStyle;
         await tester.pump();
+        expect(_retainsPanel(tester), retainsPanel);
         expect(tester.state<EditableTextState>(editor), same(state));
         expect(state.widget.focusNode.hasFocus, isTrue);
         expect(controller.text, 'A');
@@ -255,6 +299,58 @@ void main() {
       expect(find.text('Apple'), findsNothing);
     });
 
+    testWidgets('a transition from an inherited overlay variant retains exit', (
+      tester,
+    ) async {
+      final probe = _Probe();
+      await tester.pumpWidget(
+        comboboxHost(
+          StyleProvider<ComboboxSpec>(
+            style: ComboboxStyler().onBuilder((context) {
+              return context
+                          .getInheritedWidgetOfExactType<
+                            AutocompleteHighlightedOption
+                          >() ==
+                      null
+                  ? ComboboxStyler()
+                  : _transitionStyle(probe);
+            }),
+            child: RemixCombobox<String>(optionsBuilder: (_) => suggestions),
+          ),
+        ),
+      );
+      expect(_retainsPanel(tester), isTrue);
+      await _open(tester);
+      await tester.pump(_enter + _tick);
+      expect(probe.animations.last.value, 1);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+      expect(find.text('Apple'), findsNothing);
+      await tester.pump();
+      expect(find.text('Apple'), findsOneWidget);
+      expect(probe.animations.last.status, AnimationStatus.reverse);
+    });
+
+    testWidgets('raw spec without motion bypasses the fluent exit', (
+      tester,
+    ) async {
+      final probe = _Probe();
+      await tester.pumpWidget(
+        comboboxHost(
+          RemixCombobox<String>(
+            optionsBuilder: (_) => suggestions,
+            style: _transitionStyle(probe),
+            styleSpec: const ComboboxSpec(),
+          ),
+        ),
+      );
+      expect(_retainsPanel(tester), isFalse);
+      await _open(tester);
+      expect(find.text('Apple'), findsOneWidget);
+      expect(probe.animations, isEmpty);
+    });
+
     testWidgets('opening again during the exit brings the panel back', (
       tester,
     ) async {
@@ -263,6 +359,7 @@ void main() {
       await _open(tester);
       await tester.pump(_enter + _tick);
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
       await tester.pump();
       await tester.pump(_exit ~/ 2);
 
@@ -277,6 +374,28 @@ void main() {
     });
 
     for (final request in MotionRequest.values) {
+      testWidgets('$request turned off in the hide frame skips that exit', (
+        tester,
+      ) async {
+        final probe = _Probe();
+        final harness = await MotionHarness.pump(tester, _combobox(probe));
+        await harness.set(request, enabled: true);
+        await _open(tester);
+        expect(probe.animations.last.value, 1);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump();
+        expect(find.text('Apple'), findsNothing);
+        await harness.set(request, enabled: false);
+        expect(find.text('Apple'), findsNothing);
+
+        await tester.enterText(find.byType(EditableText), 'Ap');
+        await tester.pump();
+        expect(probe.animations.last.value, 0);
+        await tester.pump(_enter ~/ 2);
+        expect(probe.animations.last.value, closeTo(.5, .01));
+      });
+
       testWidgets('$request skips the exit and permits the next entry', (
         tester,
       ) async {
@@ -287,6 +406,8 @@ void main() {
         expect(probe.animations.last.value, 1);
 
         await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump();
+        expect(find.text('Apple'), findsNothing);
         await tester.pump();
         expect(find.text('Apple'), findsNothing);
 
@@ -311,6 +432,7 @@ void main() {
 
         await harness.set(request, enabled: false);
         await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump();
         await tester.pump();
         await tester.pump(_exit ~/ 2);
         expect(probe.animations.last.value, closeTo(.5, .01));
