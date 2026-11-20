@@ -268,21 +268,12 @@ workflow). Another push to `main` retries the same way. Promotion always
 takes the head of `main`, so while an unpublished floor is on `main`, no
 registry change is promoted until that publish and re-run.
 
-After the first promotion creates `registry-stable`, protect that branch:
-only GitHub Actions may push, and force pushes and deletion are disabled.
-If the branch is ever deleted, push to `main` or re-run **Promote registry**
-on `main`; promotion recreates it at the head of `main`.
+If `registry-stable` is missing, a push to `main` or a **Promote registry**
+run on `main` recreates it at the head of `main`.
 
-Roll a bad promotion back by reverting that commit on `main` and letting
-the workflow fast-forward `registry-stable` to the revert. Moving the
-branch back by hand takes a force push, which that protection rejects, and
-the next push to `main` would advance the branch over the reset. Projects
-that already pinned a revision stay on it either way.
-
-Optionally repeat the fast smoke after promotion. The workflow already checked
-the candidate against hosted packages and the published CLI. This aggregate
-installs every item in all presets, with two incremental adds and one batch per
-gallery, and skips independent apps:
+For broader coverage after the default-init checks below, optionally run this
+aggregate smoke. It installs every item in all presets, with two incremental
+adds and one batch per gallery, and skips independent apps:
 
 ```shell
 REMIX_REGISTRY_RELEASE_SMOKE=1 fvm dart run melos run open-code:release:check
@@ -294,9 +285,45 @@ CLI, while CLI publication tests the already-promoted registry. A candidate that
 requires new CLI behavior must remain compatible with the released major line
 or wait for that CLI's publication.
 
-Normal component changes require only that promotion. The same CLI installs
-the new commit after an explicit `registry update`; existing pins do not
-move. Keep schema compatibility with released CLI versions.
+Normal component changes do not require a CLI release. The same CLI installs
+the new commit after an explicit `registry update`; existing pins do not move.
+Keep schema compatibility with released CLI versions.
+
+## Release checklist and log
+
+1. **Merge** the reviewed release PR to `main`. Record the maintainer, merge
+   SHA, and UTC time.
+2. **Promote.** Wait for **Promote registry** on that SHA, including the
+   `Promote registry-stable` step. Verify that `registry-stable` points to the
+   merge SHA. Record the run link, previous and new SHAs, and outcome. If it
+   fails, record the failing step and log instead of treating it as released.
+3. **Smoke-test default init.** Use the published CLI in fresh Vanilla,
+   Fortal, and HeroUI Flutter apps. Select the preset as needed, but pass no
+   ref override and do not seed a `remix.yaml`. Verify the resolved SHA,
+   install representative items, and run `flutter pub get` and
+   `flutter analyze`. Record the CLI version, items, and result for each preset.
+4. **Post one `Release log` comment** on the release PR. Use one row per step
+   with the operator, linked commit SHA or run ID, UTC time, result, and
+   rollback action (or not applicable). Include any protection changes with
+   their ruleset IDs, or record why they were not applied.
+
+**Rollback:** Restore the registry content from an earlier known-good
+promoted SHA in a reviewed revert or restore PR on `main`. Keep the registry
+source, generated output, and dependency floors consistent. After merge, let
+**Promote registry** validate and fast-forward `registry-stable` to the new
+commit, then repeat the smoke tests and log the rollback. The restored content
+has a new SHA; do not reset, force-push, or delete `registry-stable`. Existing
+projects stay on their pinned revisions.
+
+**Protection still to set up:** An admin applies two active branch rulesets
+targeting only `refs/heads/registry-stable`:
+
+- Block force pushes and deletion with no bypass actors. This can be applied
+  independently of the promotion credential.
+- Restrict creation and updates, with **Always allow** for only a dedicated
+  GitHub App installed on this repository with `Contents: write`. Enable this
+  only after the `Promote registry` job on `main` uses that app's installation
+  token for its push instead of `GITHUB_TOKEN`.
 
 ## Release the CLI only for installer changes
 
