@@ -64,7 +64,7 @@ void main() {
         expect(catalog.items, contains(name));
         final item = catalog.items[name]!;
         expect(item.generated, isEmpty);
-        expect(item.files.single.target, '@ui/components/$name.dart');
+        expect(item.files.map((file) => file.target), _componentTargets(name));
         expect(item.exports, ['components/$name.dart']);
         expect(catalog.resolve(name).map((item) => item.name), switch (name) {
           'calendar' => ['theme', 'select', name],
@@ -97,7 +97,7 @@ void main() {
     ]) {
       final item = catalog.items[name]!;
       expect(item.generated, isEmpty);
-      expect(item.files.single.target, '@ui/components/$name.dart');
+      expect(item.files.map((file) => file.target), _componentTargets(name));
       expect(item.exports, ['components/$name.dart']);
       expect(catalog.resolve(name).map((item) => item.name), switch (name) {
         'calendar' => ['theme', 'base_button', 'icon_button', 'select', name],
@@ -696,7 +696,10 @@ items:
           'date_range_picker',
         }.contains(name)) {
           // Handwritten layouts and composites have no generated adapter.
-          expect(item!.files.single.target, '@ui/components/$name.dart');
+          expect(
+            item!.files.map((file) => file.target),
+            _componentTargets(name),
+          );
           expect(item.generated, isEmpty);
           expect(item.exports, ['components/$name.dart']);
         } else {
@@ -721,7 +724,11 @@ items:
 
     for (final entry in _componentSurfaces.entries) {
       final item = catalog.items[entry.key]!;
-      final source = await registry.template(item.files.single);
+      final source = await registry.template(
+        item.files.singleWhere(
+          (file) => file.target == '@ui/${item.exports.single}',
+        ),
+      );
 
       for (final prefix in const [
         (type: 'Acme', value: 'acme'),
@@ -842,6 +849,11 @@ items:
     }
   });
 }
+
+List<String> _componentTargets(String name) => [
+  '@ui/components/$name.dart',
+  if (name == 'calendar') '@ui/components/calendar/date_picker_styles.dart',
+];
 
 /// The public surface each component template must publish.
 ///
