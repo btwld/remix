@@ -73,10 +73,8 @@ void main() {
         Directory('${root.path}/app').createSync();
       }
       if (args.contains('init')) onInit?.call();
-      // Updating to the ref already pinned leaves the file as it is.
-      final config = File('${root.path}/app/remix.yaml');
-      if (args.contains('update') && !config.existsSync()) {
-        config.writeAsStringSync(
+      if (args.contains('update')) {
+        File('${root.path}/app/remix.yaml').writeAsStringSync(
           'registries: {"@remix": {revision: "${'a' * 40}"}}',
         );
       }

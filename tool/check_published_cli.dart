@@ -80,8 +80,9 @@ Future<String?> checkPublishedCliCandidate({
         'cannot check the candidate with a released CLI.';
   }
   final selected = compatible.last;
-  // An exact ref pattern prints one line when the branch exists and nothing
-  // when it does not; only a failed lookup exits non-zero.
+  // The pattern matches refs whose name ends in it at a `/` boundary, so this
+  // prints the branch when it exists and nothing when it does not; only a
+  // failed lookup exits non-zero.
   final stableRefs = StringBuffer();
   final lookup = await run('git', [
     'ls-remote',
@@ -188,8 +189,8 @@ Future<String?> checkPublishedCliCandidate({
       '--preset',
       preset,
     ],
-    // Init skips the registry for a preserved remix.yaml, so this is also
-    // where a bootstrapped pin is resolved and its catalog read.
+    // Init skips the registry for a preserved remix.yaml, so a bootstrapped
+    // pin is proved by this command re-resolving it and reading its catalog.
     [
       'pub',
       'global',
