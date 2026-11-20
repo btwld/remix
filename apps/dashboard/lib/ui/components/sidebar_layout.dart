@@ -323,9 +323,8 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
 /// Descendants of [UiSidebarLayout] and its compact navigation sheet can
 /// read this scope to observe compact mode or toggle the sheet.
 class UiSidebarLayoutScope extends InheritedWidget {
-  // Fortal source floors at Dart 3.11, one release before private named
-  // parameters, so this assigns the private fields explicitly instead of
-  // naming the parameters after them.
+  // Private named parameters would raise the application's language floor,
+  // so the private fields are assigned explicitly.
   const UiSidebarLayoutScope._({
     required this.isCompact,
     required this.isCompactOpen,

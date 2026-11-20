@@ -1,3 +1,5 @@
+// Codegen validates the expanded optionsBuilder signature, including FutureOr,
+// before emitting its typedef. Keep that type visible to the generator.
 // ignore: unused_import
 import 'dart:async';
 

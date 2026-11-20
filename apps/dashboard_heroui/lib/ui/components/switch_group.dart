@@ -53,7 +53,7 @@ class UiSwitchGroup extends StatelessWidget {
       for (final option in options)
         _row(
           option,
-          itemEnabled: enabled && option.enabled && option.onChanged != null,
+          optionEnabled: enabled && option.enabled && option.onChanged != null,
         ),
     ];
     return UiFieldLayout(
@@ -64,16 +64,16 @@ class UiSwitchGroup extends StatelessWidget {
     );
   }
 
-  Widget _row(UiSwitchOption option, {required bool itemEnabled}) =>
+  Widget _row(UiSwitchOption option, {required bool optionEnabled}) =>
       UiDescribedControl(
         descriptionInset: size.trackWidth + uiControlGap,
-        enabled: itemEnabled,
+        enabled: optionEnabled,
         description: option.description,
         control: UiSwitch(
           size: size,
           selected: option.selected,
           onChanged: option.onChanged,
-          enabled: itemEnabled,
+          enabled: optionEnabled,
           label: option.label,
           invalid: option.invalid,
         ),

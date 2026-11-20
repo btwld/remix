@@ -27,8 +27,7 @@ import 'dashboard_overview.dart';
 import 'dashboard_sample_data.dart';
 import 'dashboard_shell.dart';
 
-// The types the demo's constructor takes and the types inside them, so this
-// one import builds it.
+// Everything the demo's constructor takes, so this one import builds it.
 export 'dashboard_demo_base.dart'
     show {{typePrefix}}DashboardDemoPage, {{typePrefix}}DashboardDemoSection;
 export 'dashboard_sample_data.dart'
@@ -403,8 +402,6 @@ class _{{typePrefix}}HeaderPopoverState extends State<_{{typePrefix}}HeaderPopov
   @override
   void didUpdateWidget(covariant _{{typePrefix}}HeaderPopover oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Appearance changes used to dismiss the popover by remounting the demo.
-    // Keep that behavior while retaining the dashboard's page state.
     if (widget.dark != oldWidget.dark) _controller.close();
   }
 

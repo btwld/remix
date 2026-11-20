@@ -281,11 +281,14 @@ class _BrandPaletteCard extends StatelessWidget {
         const {{typePrefix}}Avatar.soft(icon: {{icon:plus}}, size: .size3),
         const {{typePrefix}}Text('Your brand', size: .size3, weight: .medium),
         StyledText(
-          'A brand palette is a {{typePrefix}}ColorTheme from theme/palette.dart: '
-          'one {{typePrefix}}Color for light mode and one for dark.',
+          'A brand palette holds one color set for light mode and one for '
+          'dark.',
           style: dashboardText(.size2, tone: .muted),
         ),
-        const {{typePrefix}}Code('accentPalette: brand', size: .size1),
+        const {{typePrefix}}Code(
+          'accentPalette: {{typePrefix}}ColorTheme(light, dark)',
+          size: .size1,
+        ),
       ],
     ),
   );
