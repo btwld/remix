@@ -1,7 +1,8 @@
 /// Ui computed tokens and functional color utilities.
 ///
-/// Implements computed role tokens (accent-contrast, accent-track, etc.) and
-/// background/overlay colors derived from the selected paired theme.
+/// Derives the roles a palette does not store, such as content and focus
+/// colors, control borders, backgrounds and shadows, from the selected paired
+/// theme.
 ///
 /// Components should use these functional roles rather than raw color steps.
 library;
@@ -353,8 +354,8 @@ Map<MixToken<Object?>, Object> buildUiShadows({
 
 /// Container for all computed Ui theme colors and scales.
 ///
-/// Holds resolved color system for a specific theme configuration.
-/// Created by [resolveUiTokens] for internal use by the token system.
+/// Holds the resolved color system for one theme configuration, as returned
+/// by [resolveUiTokens].
 class UiThemeColors {
   final UiColor accent;
   final UiColor gray;
