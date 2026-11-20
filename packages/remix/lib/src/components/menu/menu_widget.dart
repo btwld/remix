@@ -484,7 +484,7 @@ class RemixMenu<T> extends StatefulWidget {
   /// Open/close interceptors (for example, to drive animations).
   ///
   /// A [MenuStyler.panelTransition] runs inside these: the open transition
-  /// starts when `showOverlay` is called, and the `hideOverlay` passed to
+  /// starts when `showOverlay` mounts the panel, and the `hideOverlay` passed to
   /// [onCloseRequested] plays the exit transition before the panel hides.
   /// Without a transition they behave as before.
   final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
@@ -540,11 +540,7 @@ class RemixMenu<T> extends StatefulWidget {
 class _RemixMenuState<T> extends State<RemixMenu<T>>
     with SingleTickerProviderStateMixin {
   late final MenuController _internalController;
-  late final _panelTransition = RemixPanelTransitionHandle(
-    vsync: this,
-    resolve: _resolvePanelTransition,
-    reduceMotion: () => remixReducedMotionOf(context),
-  );
+  late final _panelTransition = RemixPanelTransitionHandle(vsync: this);
   FocusNode? _ownedControlFocusNode;
 
   @override
@@ -567,18 +563,6 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
         .trigger(MenuTriggerStyler().mainAxisSize(.min))
         .overlay(FlexBoxStyler().mainAxisSize(.min).wrap(.intrinsicWidth()))
         .merge(widget.style);
-  }
-
-  /// The transition the style gives the panel about to open, read where the
-  /// menu is: the panel itself has not been built yet. The panel reads its own
-  /// style again and hands that to the handle.
-  RemixPanelTransition? _resolvePanelTransition() {
-    final styleSpec = widget.styleSpec;
-    if (styleSpec != null) return styleSpec.panelTransition;
-    final inherited = Style.maybeOf<MenuSpec>(context);
-    final style = _buildStyle();
-    final effective = inherited is MenuStyler ? inherited.merge(style) : style;
-    return effective.build(context).spec.panelTransition;
   }
 
   MenuController get _effectiveController =>
@@ -623,7 +607,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
       'give the control its own label.',
     );
 
-    return NakedMenu<T>(
+    final anchor = NakedMenu<T>(
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
         return RemixAnchorScope(
@@ -684,6 +668,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
               isOpen: state.isOpen,
               controller: _effectiveController,
               focusNode: _controlFocusNode,
+              isExiting: () => _panelTransition.isExiting,
             ),
           );
         }
@@ -708,6 +693,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
         );
       },
     );
+    return _panelTransition.wrapAnchor(anchor);
   }
 }
 

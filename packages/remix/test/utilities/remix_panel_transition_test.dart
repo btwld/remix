@@ -16,12 +16,9 @@ Widget _other(
   Widget panel,
 ) => panel;
 
-/// Owns a handle that guesses one transition at the request, while the host
-/// reports another from the panel's own scope.
 class _Harness extends StatefulWidget {
-  const _Harness({super.key, required this.guess, required this.panel});
+  const _Harness({super.key, required this.panel});
 
-  final RemixPanelTransition? guess;
   final RemixPanelTransition? panel;
 
   @override
@@ -30,11 +27,7 @@ class _Harness extends StatefulWidget {
 
 class _HarnessState extends State<_Harness>
     with SingleTickerProviderStateMixin {
-  late final handle = RemixPanelTransitionHandle(
-    vsync: this,
-    resolve: () => widget.guess,
-    reduceMotion: () => false,
-  );
+  late final handle = RemixPanelTransitionHandle(vsync: this);
   bool shown = false;
   bool hidden = false;
 
@@ -94,7 +87,7 @@ void main() {
   });
 
   group('RemixPanelTransitionHandle', () {
-    testWidgets('the panel scope decides the builder and the exit length', (
+    testWidgets('the mounted panel decides the builder and both durations', (
       tester,
     ) async {
       var built = 0;
@@ -106,18 +99,16 @@ void main() {
           return FadeTransition(opacity: info.animation, child: child);
         },
       );
-      const guess = RemixPanelTransition(
-        duration: Duration(milliseconds: 50),
-        reverseDuration: Duration(milliseconds: 900),
-        builder: _other,
-      );
       final key = GlobalKey<_HarnessState>();
-      await tester.pumpWidget(_Harness(key: key, guess: guess, panel: panel));
+      await tester.pumpWidget(_Harness(key: key, panel: panel));
 
       key.currentState!.open();
       await tester.pump();
-      expect(built, greaterThan(0), reason: 'the panel builder, not the guess');
-      expect(key.currentState!.handle.animation, isNotNull);
+      expect(built, greaterThan(0));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      final fade = tester.widget<FadeTransition>(find.byType(FadeTransition));
+      expect(fade.opacity.value, closeTo(.25, .01));
 
       await tester.pump(const Duration(milliseconds: 500));
       key.currentState!.close();
@@ -128,34 +119,49 @@ void main() {
       expect(key.currentState!.hidden, isTrue, reason: 'panel exit is 100 ms');
     });
 
-    testWidgets('a panel with no transition stops what the request started', (
-      tester,
-    ) async {
-      const guess = RemixPanelTransition(builder: _fade);
+    testWidgets('a panel with no transition hides immediately', (tester) async {
       final key = GlobalKey<_HarnessState>();
-      await tester.pumpWidget(_Harness(key: key, guess: guess, panel: null));
+      await tester.pumpWidget(_Harness(key: key, panel: null));
 
       key.currentState!.open();
       await tester.pump();
 
-      expect(key.currentState!.handle.animation, isNull);
+      expect(find.byType(FadeTransition), findsNothing);
       key.currentState!.close();
       await tester.pump();
       expect(key.currentState!.hidden, isTrue);
     });
 
-    testWidgets('a panel transition starts one the request did not', (
+    testWidgets('removing the style does not interrupt an exit', (
       tester,
     ) async {
       const panel = RemixPanelTransition(builder: _fade);
       final key = GlobalKey<_HarnessState>();
-      await tester.pumpWidget(_Harness(key: key, guess: null, panel: panel));
+      await tester.pumpWidget(_Harness(key: key, panel: panel));
 
       key.currentState!.open();
       await tester.pump();
-
-      expect(key.currentState!.handle.animation, isNotNull);
+      await tester.pump();
       await tester.pump(const Duration(milliseconds: 250));
+      key.currentState!.close();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 40));
+      final fade = tester.widget<FadeTransition>(find.byType(FadeTransition));
+      expect(fade.opacity.value, closeTo(.8, .01));
+
+      await tester.pumpWidget(_Harness(key: key, panel: null));
+      expect(find.byType(FadeTransition), findsOneWidget);
+      expect(fade.opacity.value, closeTo(.8, .01));
+      final blockers = find.ancestor(
+        of: find.text('panel'),
+        matching: find.byWidgetPredicate(
+          (widget) => widget is IgnorePointer && widget.ignoring,
+        ),
+      );
+      expect(blockers, findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump();
+      expect(key.currentState!.hidden, isTrue);
     });
   });
 }

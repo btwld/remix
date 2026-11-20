@@ -414,7 +414,13 @@ class _NakedSelectState<T> extends State<NakedSelect<T>>
     open ? _menuController.open() : _menuController.close();
   }
 
-  void _toggle() => _requestOpen(!_menuController.isOpen);
+  void _toggle() {
+    if (_isEnabled && OverlayTriggerScope.shouldReopen(context, widget)) {
+      _menuController.open();
+    } else {
+      _requestOpen(!_menuController.isOpen);
+    }
+  }
 
   // Every open and close, including the ones RawMenuAnchor starts itself
   // (Escape on the trigger, ancestor scroll, view resize), arrives here. A

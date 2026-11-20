@@ -4,7 +4,7 @@ part of 'popover.dart';
 ///
 /// The popover opens when [child] is tapped or activated from the keyboard.
 /// [popoverChild] is rendered in the overlay using [style].
-class RemixPopover extends StatefulWidget {
+class RemixPopover extends StatelessWidget {
   const RemixPopover({
     super.key,
     required this.popoverChild,
@@ -117,35 +117,26 @@ class RemixPopover extends StatefulWidget {
   static final styleFrom = PopoverStyler.new;
 
   @override
-  State<RemixPopover> createState() => _RemixPopoverState();
+  Widget build(BuildContext context) => _RemixPopoverAnchor(popover: this);
 }
 
-class _RemixPopoverState extends State<RemixPopover>
+class _RemixPopoverAnchor extends StatefulWidget {
+  const _RemixPopoverAnchor({required this.popover});
+
+  final RemixPopover popover;
+
+  @override
+  State<_RemixPopoverAnchor> createState() => _RemixPopoverAnchorState();
+}
+
+class _RemixPopoverAnchorState extends State<_RemixPopoverAnchor>
     with SingleTickerProviderStateMixin {
-  late final _panelTransition = RemixPanelTransitionHandle(
-    vsync: this,
-    resolve: _resolvePanelTransition,
-    reduceMotion: () => remixReducedMotionOf(context),
-  );
+  late final _panelTransition = RemixPanelTransitionHandle(vsync: this);
 
   @override
   void dispose() {
     _panelTransition.dispose();
     super.dispose();
-  }
-
-  /// The transition the style gives the panel about to open, read where the
-  /// popover is: the panel itself has not been built yet. The panel reads its
-  /// own style again and hands that to the handle.
-  RemixPanelTransition? _resolvePanelTransition() {
-    final styleSpec = widget.styleSpec;
-    if (styleSpec != null) return styleSpec.panelTransition;
-    final inherited = Style.maybeOf<PopoverSpec>(context);
-    final style = widget.style;
-    final effective = inherited is PopoverStyler
-        ? inherited.merge(style)
-        : style;
-    return effective.build(context).spec.panelTransition;
   }
 
   @override
@@ -170,55 +161,52 @@ class _RemixPopoverState extends State<RemixPopover>
       :excludeSemantics,
       :style,
       :styleSpec,
-    ) = widget;
+    ) = widget.popover;
 
-    return RemixStyleSpecBuilder<PopoverSpec>(
-      style: style,
-      styleSpec: styleSpec,
-      builder: (context, spec) {
-        return NakedPopover(
-          popoverBuilder: (context, info) {
-            return RemixPanelTransitionHost(
-              handle: _panelTransition,
-              transition: spec.panelTransition,
-              anchorRect: info.anchorRect,
-              child: RemixBoxAdapter(
-                styleSpec: spec.container,
-                containerEffects: spec.containerEffects,
-                child: popoverChild,
-              ),
-            );
-          },
-          positioning: positioning,
-          consumeOutsideTaps: consumeOutsideTaps,
-          useRootOverlay: useRootOverlay,
-          openOnTap: openOnTap,
-          triggerFocusNode: triggerFocusNode,
-          initialFocusNode: initialFocusNode,
-          constrainToAvailableSpace: constrainToAvailableSpace,
-          avoidViewInsets: avoidViewInsets,
-          onOpen: onOpen,
-          onClose: onClose,
-          onOpenRequested: (position, showOverlay) => _panelTransition
-              .openRequested(position, showOverlay, onOpenRequested),
-          onCloseRequested: (hideOverlay) =>
-              _panelTransition.closeRequested(hideOverlay, onCloseRequested),
-          controller: controller,
-          excludeSemantics: excludeSemantics,
-          child: child,
-          builder: (context, state, trigger) {
-            final label = openOnTap ? semanticLabel : null;
-            final semantics = Semantics(
-              excludeSemantics: label != null,
-              expanded: state.isOpen,
-              label: label,
-              child: trigger!,
-            );
-
-            return openOnTap ? semantics : MergeSemantics(child: semantics);
-          },
+    final anchor = NakedPopover(
+      popoverBuilder: (context, info) => RemixStyleSpecBuilder<PopoverSpec>(
+        style: style,
+        styleSpec: styleSpec,
+        builder: (context, spec) => RemixPanelTransitionHost(
+          handle: _panelTransition,
+          transition: spec.panelTransition,
+          anchorRect: info.anchorRect,
+          child: RemixBoxAdapter(
+            styleSpec: spec.container,
+            containerEffects: spec.containerEffects,
+            child: popoverChild,
+          ),
+        ),
+      ),
+      positioning: positioning,
+      consumeOutsideTaps: consumeOutsideTaps,
+      useRootOverlay: useRootOverlay,
+      openOnTap: openOnTap,
+      triggerFocusNode: triggerFocusNode,
+      initialFocusNode: initialFocusNode,
+      constrainToAvailableSpace: constrainToAvailableSpace,
+      avoidViewInsets: avoidViewInsets,
+      onOpen: onOpen,
+      onClose: onClose,
+      onOpenRequested: (position, showOverlay) => _panelTransition
+          .openRequested(position, showOverlay, onOpenRequested),
+      onCloseRequested: (hideOverlay) =>
+          _panelTransition.closeRequested(hideOverlay, onCloseRequested),
+      controller: controller,
+      excludeSemantics: excludeSemantics,
+      child: child,
+      builder: (context, state, trigger) {
+        final label = openOnTap ? semanticLabel : null;
+        final semantics = Semantics(
+          excludeSemantics: label != null,
+          expanded: state.isOpen,
+          label: label,
+          child: trigger!,
         );
+
+        return openOnTap ? semantics : MergeSemantics(child: semantics);
       },
     );
+    return _panelTransition.wrapAnchor(anchor);
   }
 }

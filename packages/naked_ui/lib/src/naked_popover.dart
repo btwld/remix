@@ -272,7 +272,8 @@ class _NakedPopoverState extends State<NakedPopover>
   }
 
   void _toggle() {
-    if (_menuController.isOpen) {
+    if (_menuController.isOpen &&
+        !OverlayTriggerScope.shouldReopen(context, widget)) {
       _menuController.close();
     } else {
       _menuController.open();

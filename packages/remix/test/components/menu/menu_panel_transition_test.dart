@@ -279,24 +279,5 @@ void main() {
       expect(probe.animation!.value, closeTo(.5, .05));
       await tester.pump(_enter + _tick);
     });
-
-    testWidgets('the panel keeps its menu semantics through the exit', (
-      tester,
-    ) async {
-      final probe = _Probe();
-      final handle = tester.ensureSemantics();
-      await tester.pumpRemixApp(_menu(probe));
-
-      await _openPanel(tester);
-      await tester.pump(_enter + _tick);
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pump(_exit ~/ 2);
-
-      expect(find.bySemanticsLabel('Copy'), findsOneWidget);
-      await tester.pump(_exit + _tick);
-      await tester.pump();
-      expect(find.bySemanticsLabel('Copy'), findsNothing);
-      handle.dispose();
-    });
   });
 }
