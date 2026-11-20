@@ -33,13 +33,63 @@ void main() {
 
   for (final preset in presets) {
     testWidgets(
-      '${preset.name}: reopening leaves the exiting sheet unchanged',
+      '${preset.name}: a queued keyed sheet update followed by resize',
+      (tester) async {
+        final rebuilt = ValueNotifier(false);
+        final width = ValueNotifier(500.0);
+        addTearDown(rebuilt.dispose);
+        addTearDown(width.dispose);
+        final sidebarKey = GlobalKey();
+        const body = Text('Body');
+        await tester.pumpWidget(
+          _app(
+            theme: preset.theme,
+            home: Align(
+              alignment: Alignment.topLeft,
+              child: ValueListenableBuilder(
+                valueListenable: width,
+                child: ValueListenableBuilder(
+                  valueListenable: rebuilt,
+                  builder: (context, value, _) => preset.layout(
+                    compactBreakpoint: 650,
+                    sidebar: value
+                        ? Text('Updated sidebar', key: sidebarKey)
+                        : const Text('Original sidebar'),
+                    body: body,
+                  ),
+                ),
+                builder: (context, value, child) =>
+                    SizedBox(width: value, height: 500, child: child),
+              ),
+            ),
+          ),
+        );
+        preset.open(tester.element(find.byWidget(body)));
+        await tester.pumpAndSettle();
+
+        rebuilt.value = true;
+        await tester.pump();
+        expect(find.text('Original sidebar'), findsOneWidget);
+        width.value = 750;
+        await tester.pump();
+        expect(tester.takeException(), isNull);
+        await tester.pumpAndSettle();
+        final updated = find.byKey(sidebarKey);
+        expect(updated, findsOneWidget);
+        expect(
+          ModalRoute.of(tester.element(updated)),
+          same(ModalRoute.of(tester.element(find.byWidget(body)))),
+        );
+      },
+    );
+
+    testWidgets(
+      '${preset.name}: rapid reopen with a shared key waits for the exit',
       (tester) async {
         final rebuilt = ValueNotifier(false);
         addTearDown(rebuilt.dispose);
         final sidebarKey = GlobalKey();
         const body = Text('Body');
-
         await tester.pumpWidget(
           _app(
             theme: preset.theme,
@@ -47,9 +97,9 @@ void main() {
               valueListenable: rebuilt,
               builder: (context, value, _) => preset.layout(
                 compactBreakpoint: 1000,
-                sidebar: value
-                    ? Text('Updated sidebar', key: sidebarKey)
-                    : const Text('Original sidebar'),
+                sidebar: Center(
+                  child: Text(value ? 'Updated' : 'Original', key: sidebarKey),
+                ),
                 body: body,
               ),
             ),
@@ -58,32 +108,93 @@ void main() {
         final bodyContext = tester.element(find.byWidget(body));
         preset.open(bodyContext);
         await tester.pumpAndSettle();
-
-        final original = find.text('Original sidebar', skipOffstage: false);
-        final exitingRoute = ModalRoute.of(tester.element(original))!;
+        final sidebar = find.byKey(sidebarKey, skipOffstage: false);
+        final exitingRoute = ModalRoute.of(tester.element(sidebar))!;
         exitingRoute.navigator!.pop();
         await tester.pump();
         preset.open(bodyContext);
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 50));
-        expect(original, findsNWidgets(2));
+        expect(tester.takeException(), isNull);
+        expect(ModalRoute.of(tester.element(sidebar)), same(exitingRoute));
 
         rebuilt.value = true;
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 50));
-
         expect(tester.takeException(), isNull);
-        expect(ModalRoute.of(tester.element(original)), same(exitingRoute));
-        final updated = find.byKey(sidebarKey);
-        expect(find.text('Updated sidebar'), findsOneWidget);
+        expect(tester.widget<Text>(sidebar).data, 'Original');
+
+        await tester.pumpAndSettle();
         expect(
-          ModalRoute.of(tester.element(updated)),
+          ModalRoute.of(tester.element(sidebar)),
           isNot(same(exitingRoute)),
         );
-        await tester.pumpAndSettle();
-        expect(original, findsNothing);
+        expect(tester.widget<Text>(sidebar).data, 'Updated');
       },
     );
+
+    for (final popBeforePublish in [true, false]) {
+      testWidgets(
+        '${preset.name}: a same-frame pop freezes the exiting sheet (before publish: $popBeforePublish)',
+        (tester) async {
+          final rebuilt = ValueNotifier(false);
+          addTearDown(rebuilt.dispose);
+          final sidebarKey = GlobalKey();
+          const body = Text('Body');
+          ModalRoute<dynamic>? exitingRoute;
+          void popAfterFrame() {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              exitingRoute!.navigator!.pop();
+            });
+          }
+
+          await tester.pumpWidget(
+            _app(
+              theme: preset.theme,
+              home: ValueListenableBuilder(
+                valueListenable: rebuilt,
+                builder: (context, value, _) => preset.layout(
+                  compactBreakpoint: 1000,
+                  sidebar: value
+                      ? Text('Updated sidebar', key: sidebarKey)
+                      : const Text('Original sidebar'),
+                  body: Builder(
+                    builder: (context) {
+                      if (value && !popBeforePublish) popAfterFrame();
+                      return body;
+                    },
+                  ),
+                ),
+              ),
+            ),
+          );
+          final bodyContext = tester.element(find.byWidget(body));
+          preset.open(bodyContext);
+          await tester.pumpAndSettle();
+
+          final original = find.text('Original sidebar', skipOffstage: false);
+          exitingRoute = ModalRoute.of(tester.element(original))!;
+          if (popBeforePublish) popAfterFrame();
+          rebuilt.value = true;
+          await tester.pump();
+          expect(exitingRoute.isActive, isFalse);
+
+          preset.open(bodyContext);
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 50));
+          expect(tester.takeException(), isNull);
+          expect(ModalRoute.of(tester.element(original)), same(exitingRoute));
+          final updated = find.byKey(sidebarKey, skipOffstage: false);
+          expect(updated, findsNothing);
+          await tester.pumpAndSettle();
+          expect(original, findsNothing);
+          expect(
+            ModalRoute.of(tester.element(updated)),
+            isNot(same(exitingRoute)),
+          );
+        },
+      );
+    }
 
     testWidgets('${preset.name}: open sheet updates without losing focus', (
       tester,

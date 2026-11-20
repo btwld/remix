@@ -107,7 +107,7 @@ class PlaygroundSidebarLayout extends StatefulWidget {
 
 class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
   bool _selfOpen = false;
-  ValueNotifier<_CompactSheetInputs>? _activeSheetInputs;
+  ValueNotifier<_CompactSheetInputs>? _sheetInputs;
 
   _CompactSheetInputs get _currentSheetInputs => (
     sidebar: widget.sidebar,
@@ -146,13 +146,20 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
   void _reconcileSheet(bool isCompact) {
     _isCompact = isCompact;
     final desiredOpen = isCompact && _effectiveOpen;
-    if (desiredOpen == (_activeSheetInputs != null)) return;
+    if (desiredOpen
+        ? _sheetInputs?.value == _currentSheetInputs
+        : _sheetInputs == null) {
+      return;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      if (_isCompact && _effectiveOpen) {
-        if (_activeSheetInputs == null) _pushSheet();
-      } else {
+      final inputs = _sheetInputs;
+      if (!_isCompact || !_effectiveOpen) {
         _removeSheetRoute();
+      } else if (inputs == null) {
+        _pushSheet();
+      } else if (_sheetRoute?.isActive != false) {
+        inputs.value = _currentSheetInputs;
       }
     });
   }
@@ -165,7 +172,8 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
 
   Future<void> _pushSheet() async {
     final inputs = ValueNotifier(_currentSheetInputs);
-    _activeSheetInputs = inputs;
+    _sheetInputs = inputs;
+    var renderedInputs = inputs.value;
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     await showRemixDialog<void>(
@@ -176,28 +184,29 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
           ? Duration.zero
           : const Duration(milliseconds: 250),
       builder: (dialogContext) {
-        if (_activeSheetInputs == inputs) {
-          _sheetRoute = ModalRoute.of(dialogContext);
-        }
+        final route = _sheetRoute ??= ModalRoute.of<void>(dialogContext)!;
         return ValueListenableBuilder(
           valueListenable: inputs,
-          builder: _buildSheet,
+          builder: (context, nextInputs, _) {
+            if (route.isActive && mounted && _isCompact && _effectiveOpen) {
+              renderedInputs = nextInputs;
+            }
+            return _buildSheet(context, renderedInputs);
+          },
         );
       },
     );
-    final route = _sheetRoute;
-    _sheetRoute = null;
-    _activeSheetInputs = null;
     if (mounted) _setOpen(false);
-    await route?.completed;
+    await _sheetRoute?.completed;
     inputs.dispose();
+    if (!mounted) return;
+    setState(() {
+      _sheetRoute = null;
+      _sheetInputs = null;
+    });
   }
 
-  Widget _buildSheet(
-    BuildContext dialogContext,
-    _CompactSheetInputs inputs,
-    Widget? _,
-  ) {
+  Widget _buildSheet(BuildContext dialogContext, _CompactSheetInputs inputs) {
     final available = MediaQuery.sizeOf(dialogContext).width;
     final width = math.min(
       inputs.sidebarWidth,
@@ -241,18 +250,6 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
   }
 
   @override
-  void didUpdateWidget(PlaygroundSidebarLayout oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final inputs = _activeSheetInputs;
-    if (inputs == null || inputs.value == _currentSheetInputs) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && _activeSheetInputs == inputs) {
-        inputs.value = _currentSheetInputs;
-      }
-    });
-  }
-
-  @override
   void dispose() {
     final route = _sheetRoute;
     if (route != null) {
@@ -280,7 +277,7 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
           isCompactOpen: isCompact && _effectiveOpen,
           openCompact: _openCompact,
           closeCompact: _closeCompact,
-          child: isCompact ? _body() : _wideRow(),
+          child: isCompact || _sheetInputs != null ? _body() : _wideRow(),
         );
       },
     );
