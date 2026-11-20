@@ -82,7 +82,7 @@ class TypographyExample extends StatelessWidget {
           spacing: 10,
           children: [
             FortalCode.soft('FortalTheme', size: FortalTextSize.size2),
-            FortalKbd.soft(
+            FortalKbd(
               '⌘K',
               size: FortalTextSize.size2,
               semanticLabel: 'Command K',
@@ -142,8 +142,8 @@ class TypographyVariantsExample extends StatelessWidget {
         FortalCode.soft('soft'),
         FortalCode.outline('outline'),
         FortalCode.ghost('ghost'),
-        FortalKbd.soft('⌘K', semanticLabel: 'Command K'),
-        FortalKbd.soft('Esc', semanticLabel: 'Escape'),
+        FortalKbd('⌘K', semanticLabel: 'Command K'),
+        FortalKbd('Esc', semanticLabel: 'Escape'),
       ],
     );
   }
@@ -302,6 +302,7 @@ and layers only what your project actually adds. Reaching for a bare
   `style`: `BadgeStyler().label(TextStyler().fontFamily(RemixFonts.geistMono))`.
 - Link underline thickness follows the font's underline metrics. Keyboard
   focus uses the shared outside ring and suppresses the underline.
-- Kbd has only the flat `soft` variant and is inert, with keyboard-key semantics.
+- Kbd has one flat gray look, takes no variant, and is inert, with
+  keyboard-key semantics.
 - Scope a named accent or generated brand palette around a subtree to change
   color without restating its typography.

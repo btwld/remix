@@ -179,10 +179,11 @@ fill must identify the control. Check the actual component on its host surface.
 
 `classic` is absent from button, icon button, card, checkbox, radio, switch,
 slider, progress, text field, text area, segmented control, and kbd. There are
-no aliases or deprecations. Kbd defaults to its sole `soft` variant; segmented
-control retains its sole `surface` variant. Other variants and behavioral APIs
-are listed in the catalog. Toast's independent `classic` floating treatment is
-not a raised-card/control variant and uses the ordinary elevation scale.
+no aliases or deprecations. Kbd keeps only the `soft` look and segmented
+control only the `surface` look, so neither takes a `variant`. Other variants
+and behavioral APIs are listed in the catalog. Toast's independent `classic`
+floating treatment is not a raised-card/control variant and uses the ordinary
+elevation scale.
 
 Cards and controls have no blurred/offset shadows or gradients. Crisp inset
 frames are borders, not elevation. Menus, popovers, dialogs, tooltips, and
@@ -488,7 +489,7 @@ frameless and clips its marks.
 - Labels are `text1` in `gray11`; the horizontal grid is `grayA5` at
   `borderWidth1`.
 - Series colors meet WCAG 1.4.11's 3:1 on the page and the solid and
-  translucent panels. `resolveFortalChartPalette` starts with the accent's
+  translucent panels. `fortalChartPalette` starts with the accent's
   `accentIndicator`, then the other named families without the accent's own;
   `computeChartSeries` takes each family's first step from 9 that keeps
   Fortal's 3.05:1 mark margin there, and does the same for an accent

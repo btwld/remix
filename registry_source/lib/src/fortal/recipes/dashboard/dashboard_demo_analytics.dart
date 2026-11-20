@@ -142,7 +142,7 @@ class FortalChannelOrdersCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = resolveFortalChartPalette(context);
+    final palette = fortalChartPalette(context);
     Color colorOf(int channel) => palette[channel % palette.length];
 
     return FortalSurface(

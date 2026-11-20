@@ -39,7 +39,7 @@ A `—` value means the widget does not expose that axis. When values are listed
 | `FortalDivider` | `size1`, `size2`, `size3`, `size4` | `size1` | — | — |
 | `FortalHeading` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | `size6` | — | — |
 | `FortalIconButton` | `size1`, `size2`, `size3`, `size4` | `size2` | `solid`, `soft`, `surface`, `outline`, `ghost` | `solid` |
-| `FortalKbd` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — | `soft` | `soft` |
+| `FortalKbd` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — | — | — |
 | `FortalLineChart` | — | — | — | — |
 | `FortalLink` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — | — | — |
 | `FortalMenu` | `size1`, `size2` | `size2` | `solid`, `soft` | `solid` |
@@ -49,7 +49,7 @@ A `—` value means the widget does not expose that axis. When values are listed
 | `FortalRangeCalendar` | — | — | — | — |
 | `FortalRangeSlider` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalSearchField` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
-| `FortalSegmentedControl` | `size1`, `size2`, `size3` | `size2` | `surface` | `surface` |
+| `FortalSegmentedControl` | `size1`, `size2`, `size3` | `size2` | — | — |
 | `FortalSelect` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft`, `ghost` | `surface` |
 | `FortalSidebar` | — | — | — | — |
 | `FortalSidebarLayout` | — | — | — | — |
@@ -408,9 +408,6 @@ Recipe `registry_source/lib/src/fortal/components/segmented_control.dart`
 | Parameter | Values | Default |
 | --- | --- | --- |
 | `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `surface` | `surface` |
-
-**Named constructors:** `FortalSegmentedControl.surface`
 
 **Other defaults:** `enabled: true`, `loop: true`, `orientation: horizontal`
 
@@ -784,9 +781,6 @@ Recipe `registry_source/lib/src/fortal/components/kbd.dart`
 | Parameter | Values | Default |
 | --- | --- | --- |
 | `size` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — |
-| `variant` | `soft` | `soft` |
-
-**Named constructors:** `FortalKbd.soft`
 
 **Other defaults:** `excludeSemantics: false`
 
