@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart' show SpringSimulation;
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:naked_ui/naked_ui.dart' show NakedTab;
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
     show RemixBoxAdapter;
@@ -184,6 +184,53 @@ void main() {
         );
       },
     );
+
+    for (final (name, config) in <(String, AnimationConfig)>[
+      (
+        'phase',
+        PhaseAnimationConfig<BoxSpec, BoxStyler>(
+          styles: [BoxStyler(), BoxStyler().color(_green)],
+          curveConfigs: [
+            CurveAnimationConfig(
+              duration: Duration(milliseconds: 200),
+              curve: Curves.linear,
+            ),
+          ],
+          trigger: null,
+        ),
+      ),
+      (
+        'keyframe',
+        KeyframeAnimationConfig<BoxSpec>(
+          trigger: null,
+          timeline: [],
+          styleBuilder: (_, style) => style,
+          initialStyle: BoxStyler(),
+        ),
+      ),
+    ]) {
+      testWidgets('rejects $name motion before selection changes', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MixScope.empty(
+            child: MaterialApp(
+              home: _tabs(selected: 'a', motion: config, onChanged: (_) {}),
+            ),
+          ),
+          phase: EnginePhase.build,
+        );
+
+        expect(
+          tester.takeException(),
+          isA<ArgumentError>().having(
+            (error) => error.name,
+            'argument',
+            'indicatorMotion',
+          ),
+        );
+      });
+    }
   });
 
   group('RemixTabBar indicator', () {
@@ -236,6 +283,7 @@ void main() {
 
     testWidgets('waits out the delay of a curve config', (tester) async {
       var selected = 'a';
+      var completions = 0;
       late StateSetter set;
       await tester.pumpRemixApp(
         StatefulBuilder(
@@ -247,6 +295,7 @@ void main() {
                 duration: const Duration(milliseconds: 200),
                 curve: Curves.linear,
                 delay: const Duration(milliseconds: 200),
+                onEnd: () => completions++,
               ),
               onChanged: (_) {},
             );
@@ -259,45 +308,53 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 150));
       expect((await _indicatorRect(tester))!.left, closeTo(start.left, 2));
+      expect(completions, 0);
 
-      await tester.pumpAndSettle();
-      await _expectOn(tester, _tabRect(tester, 'Gamma'));
+      final target = _tabRect(tester, 'Gamma');
+      await tester.pump(const Duration(milliseconds: 150));
+      await _expectOn(tester, Rect.lerp(start, target, .5)!);
+      expect(completions, 0);
+      await tester.pump(const Duration(milliseconds: 101));
+      await _expectOn(tester, target);
+      expect(completions, 1);
     });
 
-    testWidgets('a spring config moves it too', (tester) async {
+    testWidgets('a spring follows the Mix simulation from rest', (
+      tester,
+    ) async {
       var selected = 'a';
+      final motion = SpringAnimationConfig.standard(
+        mass: 1,
+        stiffness: 400,
+        damping: 40,
+      );
       late StateSetter set;
       await tester.pumpRemixApp(
         StatefulBuilder(
           builder: (context, setState) {
             set = setState;
-            return _tabs(
-              selected: selected,
-              motion: AnimationConfig.springDescription(
-                mass: 1,
-                stiffness: 400,
-                damping: 40,
-              ),
-              onChanged: (_) {},
-            );
+            return _tabs(selected: selected, motion: motion, onChanged: (_) {});
           },
         ),
       );
 
+      final start = _tabRect(tester, 'Alpha');
+      final end = _tabRect(tester, 'Beta');
       set(() => selected = 'b');
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 60));
-      final mid = (await _indicatorRect(tester))!;
-      expect(mid.left, greaterThan(_tabRect(tester, 'Alpha').left + 1));
+      final progress = SpringSimulation(motion.spring, 0, 1, 0).x(.06);
+      await _expectOn(tester, Rect.lerp(start, end, progress)!);
 
       await tester.pumpAndSettle();
-      await _expectOn(tester, _tabRect(tester, 'Beta'));
+      await _expectOn(tester, end);
     });
 
     testWidgets('a bouncy spring overshoots and settles on the tab', (
       tester,
     ) async {
       var selected = 'a';
+      var completions = 0;
       late StateSetter set;
       await tester.pumpRemixApp(
         StatefulBuilder(
@@ -308,6 +365,7 @@ void main() {
               motion: AnimationConfig.springUnderdamped(
                 stiffness: 600,
                 ratio: .3,
+                onEnd: () => completions++,
               ),
               onChanged: (_) {},
             );
@@ -325,10 +383,53 @@ void main() {
         if (rect.right > farthest) farthest = rect.right;
       }
       expect(farthest, greaterThan(target.right + 1));
+      expect(completions, 0);
 
       await tester.pumpAndSettle();
       await _expectOn(tester, target);
+      expect(tester.getSize(_indicator), target.size);
+      expect(completions, 1);
     });
+
+    for (final request in MotionRequest.values) {
+      testWidgets('settles an active glide on ${request.name} reduced motion', (
+        tester,
+      ) async {
+        var selected = 'a';
+        var completions = 0;
+        late StateSetter set;
+        final harness = await MotionHarness.pump(
+          tester,
+          StatefulBuilder(
+            builder: (context, setState) {
+              set = setState;
+              return _tabs(
+                selected: selected,
+                motion: AnimationConfig.curve(
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.linear,
+                  onEnd: () => completions++,
+                ),
+                onChanged: (_) {},
+              );
+            },
+          ),
+        );
+        set(() => selected = 'c');
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        final target = _tabRect(tester, 'Gamma');
+        expect((await _indicatorRect(tester))!.left, lessThan(target.left));
+
+        await harness.set(request, enabled: true);
+        await _expectOn(tester, target);
+        expect(tester.hasRunningAnimations, isFalse);
+        await harness.set(request, enabled: false);
+        await tester.pump(const Duration(seconds: 2));
+        await _expectOn(tester, target);
+        expect(completions, 0);
+      });
+    }
 
     testWidgets('jumps when the user asks to reduce motion', (tester) async {
       var selected = 'a';
@@ -633,6 +734,75 @@ void main() {
       await _expectOn(tester, _tabRect(tester, 'Beta'));
     });
 
+    testWidgets('updates the selected width inside a fixed strip', (
+      tester,
+    ) async {
+      final width = ValueNotifier<double>(80);
+      addTearDown(width.dispose);
+      await tester.pumpRemixApp(
+        _tabs(
+          selected: 'a',
+          onChanged: (_) {},
+          wrapStrip: (_) => SizedBox(
+            width: 360,
+            height: 40,
+            child: ValueListenableBuilder<double>(
+              valueListenable: width,
+              builder: (context, width, _) => Row(
+                children: [
+                  SizedBox(
+                    width: width,
+                    child: const RemixTab(tabId: 'a', label: 'Alpha'),
+                  ),
+                  const RemixTab(tabId: 'b', label: 'Beta'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await _expectOn(tester, _tabRect(tester, 'Alpha'));
+
+      width.value = 140;
+      await tester.pump();
+      final target = _tabRect(tester, 'Alpha');
+      expect(target.width, 140);
+      await _expectOn(tester, target);
+      await tester.pumpAndSettle();
+      expect(tester.getSize(_indicator), target.size);
+    });
+
+    testWidgets('follows a paint-time scale of the selected tab', (
+      tester,
+    ) async {
+      final scale = ValueNotifier<double>(1);
+      addTearDown(scale.dispose);
+      await tester.pumpRemixApp(
+        _tabs(
+          selected: 'a',
+          onChanged: (_) {},
+          wrapStrip: (_) => ValueListenableBuilder<double>(
+            valueListenable: scale,
+            builder: (context, scale, _) => Transform.scale(
+              scale: scale,
+              alignment: Alignment.topLeft,
+              child: const SizedBox(
+                width: 80,
+                child: RemixTab(tabId: 'a', label: 'Alpha'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await _expectOn(tester, _tabRect(tester, 'Alpha'));
+
+      scale.value = 1.5;
+      await tester.pump();
+      final target = _tabRect(tester, 'Alpha');
+      expect(target.width, 120);
+      await _expectOn(tester, target);
+    });
+
     testWidgets('keeps the indicator on a tab when the whole bar is moved', (
       tester,
     ) async {
@@ -679,50 +849,24 @@ void main() {
     });
   });
 
-  group('without an indicator', () {
-    bool isAnchor(Widget w) =>
-        w.runtimeType.toString() == '_TabIndicatorAnchor';
+  testWidgets('builds no indicator or compositing target by default', (
+    tester,
+  ) async {
+    await tester.pumpRemixApp(
+      _tabs(selected: 'a', onChanged: (_) {}, withIndicator: false),
+    );
 
-    testWidgets('builds no indicator', (tester) async {
-      await tester.pumpRemixApp(
-        _tabs(selected: 'a', onChanged: (_) {}, withIndicator: false),
-      );
+    expect(_indicator, findsNothing);
+    expect(find.byType(CompositedTransformTarget), findsNothing);
+  });
 
-      expect(_indicator, findsNothing);
-    });
-
-    testWidgets('builds each tab as the NakedTab and nothing around it', (
-      tester,
-    ) async {
-      await tester.pumpRemixApp(
-        _tabs(selected: 'a', onChanged: (_) {}, withIndicator: false),
-      );
-
-      expect(find.byWidgetPredicate(isAnchor), findsNothing);
-      expect(find.byType(CompositedTransformTarget), findsNothing);
-      for (final id in ['a', 'b', 'c']) {
-        final element = tester.element(find.byKey(ValueKey(id)));
-        final children = <Widget>[];
-        element.visitChildren((child) => children.add(child.widget));
-        expect(children, hasLength(1));
-        expect(children.single, isA<NakedTab>(), reason: 'tab $id');
-      }
-      // No leader layer, which is what an anchor adds, anywhere in the tree.
-      var leaders = 0;
-      void visit(RenderObject object) {
-        if (object.runtimeType.toString().contains('Leader') ||
-            object.runtimeType.toString().contains('Anchor')) {
-          leaders++;
-        }
-        object.visitChildren(visit);
-      }
-
-      visit(tester.binding.renderViews.first);
-      expect(leaders, 0);
-    });
-
-    testWidgets('wraps the tabs only once an indicator is set', (tester) async {
-      var withIndicator = false;
+  for (final initiallyEnabled in [false, true]) {
+    testWidgets('retains focus and child state when toggling from '
+        '${initiallyEnabled ? 'enabled' : 'disabled'}', (tester) async {
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      const content = ValueKey('stateful tab content');
+      var withIndicator = initiallyEnabled;
       late StateSetter set;
       await tester.pumpRemixApp(
         StatefulBuilder(
@@ -730,26 +874,93 @@ void main() {
             set = setState;
             return _tabs(
               selected: 'a',
-              onChanged: (_) {},
               withIndicator: withIndicator,
+              onChanged: (_) {},
+              wrapStrip: (_) => RemixTab(
+                tabId: 'a',
+                focusNode: focusNode,
+                child: StatefulBuilder(
+                  key: content,
+                  builder: (context, _) => const Text('Alpha'),
+                ),
+              ),
             );
           },
         ),
       );
-      expect(find.byWidgetPredicate(isAnchor), findsNothing);
-
-      set(() => withIndicator = true);
+      focusNode.requestFocus();
       await tester.pump();
-      expect(find.byWidgetPredicate(isAnchor), findsNWidgets(3));
-      await _expectOn(tester, _tabRect(tester, 'Alpha'));
+      expect(focusNode.hasPrimaryFocus, isTrue);
+      final state = tester.state(find.byKey(content));
 
-      set(() => withIndicator = false);
-      await tester.pump();
-      expect(find.byWidgetPredicate(isAnchor), findsNothing);
+      for (final enabled in [!initiallyEnabled, initiallyEnabled]) {
+        set(() => withIndicator = enabled);
+        await tester.pump();
+        expect(_indicator, enabled ? findsOneWidget : findsNothing);
+        expect(tester.state(find.byKey(content)), same(state));
+        expect(focusNode.hasPrimaryFocus, isTrue);
+      }
     });
-  });
+  }
 
   group('right to left', () {
+    testWidgets('retargets from the last painted rectangle during reflow', (
+      tester,
+    ) async {
+      var selected = 'a';
+      var gap = 0.0;
+      final completed = <String>[];
+      late StateSetter set;
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            set = setState;
+            final target = selected;
+            return _tabs(
+              selected: selected,
+              motion: AnimationConfig.curve(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.linear,
+                onEnd: () => completed.add(target),
+              ),
+              onChanged: (_) {},
+              wrapStrip: (strip) {
+                final children = (strip as Flex).children;
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ...children.take(2),
+                    SizedBox(width: gap),
+                    children.last,
+                  ],
+                );
+              },
+            );
+          },
+        ),
+        textDirection: TextDirection.rtl,
+      );
+      set(() => selected = 'b');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      final before = (await _indicatorRect(tester))!;
+
+      set(() {
+        selected = 'c';
+        gap = 50;
+      });
+      await tester.pump();
+      await _expectOn(tester, before);
+      await tester.pump(const Duration(milliseconds: 200));
+      final target = _tabRect(tester, 'Gamma');
+      await _expectOn(tester, Rect.lerp(before, target, .5)!);
+      expect(completed, isEmpty);
+
+      await tester.pump(const Duration(milliseconds: 201));
+      await _expectOn(tester, target);
+      expect(completed, ['c']);
+    });
+
     testWidgets('sits on the selected tab', (tester) async {
       await tester.pumpRemixApp(
         _tabs(selected: 'b', onChanged: (_) {}),
@@ -916,13 +1127,23 @@ void main() {
       tester,
     ) async {
       var selected = 'b';
+      var completions = 0;
       var ids = ['a', 'b', 'c'];
       late StateSetter set;
       await tester.pumpRemixApp(
         StatefulBuilder(
           builder: (context, setState) {
             set = setState;
-            return _tabs(selected: selected, ids: ids, onChanged: (_) {});
+            return _tabs(
+              selected: selected,
+              ids: ids,
+              motion: AnimationConfig.curve(
+                duration: const Duration(seconds: 1),
+                curve: Curves.linear,
+                onEnd: () => completions++,
+              ),
+              onChanged: (_) {},
+            );
           },
         ),
       );
@@ -935,8 +1156,10 @@ void main() {
       await tester.pump();
 
       await _expectOn(tester, _tabRect(tester, 'Alpha'));
-      await tester.pumpAndSettle();
+      expect(tester.hasRunningAnimations, isFalse);
+      await tester.pump(const Duration(seconds: 2));
       await _expectOn(tester, _tabRect(tester, 'Alpha'));
+      expect(completions, 0);
     });
   });
 

@@ -10,6 +10,9 @@ const _defaultIndicatorMotion = CurveAnimationConfig(
 /// Lets tabs hand their render boxes to the indicator of the bar above them.
 final class _TabIndicatorRegistry {
   final Map<String, _RenderTabAnchor> _tabs = {};
+  _RenderTabIndicatorBar? _bar;
+
+  void anchorChanged(String tabId) => _bar?.anchorChanged(tabId);
 
   /// The mounted tab [tabId] that has been laid out, or `null`.
   _RenderTabAnchor? laidOut(String? tabId) {
@@ -18,8 +21,7 @@ final class _TabIndicatorRegistry {
   }
 }
 
-/// Present below a [RemixTabBar] only when its style sets an indicator, so a
-/// bar without one builds its tabs exactly as before.
+/// Keeps the anchors mounted even if the bar's style toggles the indicator.
 final class _TabIndicatorScope extends InheritedWidget {
   const _TabIndicatorScope({required this.registry, required super.child});
 
@@ -34,7 +36,7 @@ final class _TabIndicatorScope extends InheritedWidget {
       registry != oldWidget.registry;
 }
 
-/// Wraps one tab of a bar that has an indicator, so the bar can find it.
+/// Wraps one tab so the bar can find it without remounting its content.
 class _TabIndicatorAnchor extends SingleChildRenderObjectWidget {
   const _TabIndicatorAnchor({
     required this.registry,
@@ -74,10 +76,15 @@ class _RenderTabAnchor extends RenderProxyBox {
     if (attached) _register();
   }
 
-  void _register() => _registry._tabs[_tabId] = this;
+  void _register() {
+    _registry._tabs[_tabId] = this;
+    _registry.anchorChanged(_tabId);
+  }
 
   void _unregister() {
-    if (_registry._tabs[_tabId] == this) _registry._tabs.remove(_tabId);
+    if (_registry._tabs[_tabId] != this) return;
+    _registry._tabs.remove(_tabId);
+    _registry.anchorChanged(_tabId);
   }
 
   @override
@@ -95,110 +102,89 @@ class _RenderTabAnchor extends RenderProxyBox {
   @override
   void performLayout() {
     super.performLayout();
+    if (laidOutSize == size) return;
     laidOutSize = size;
+    _registry.anchorChanged(_tabId);
   }
 }
 
 /// Runs the indicator's move from where it was to the selected tab.
 ///
-/// Where the indicator rests is not stored: the bar reads the selected tab's
-/// position every time it paints, so the indicator stays on a tab that moves
-/// or resizes. A glide only adds an offset to that, from where the indicator
-/// was drawn to the tab, which shrinks to nothing as the animation ends.
+/// Each glide starts from the last painted bounds, not from a tab that may
+/// already have moved. Once started, it tracks the current target.
 final class _TabIndicatorMotion {
   _TabIndicatorMotion(TickerProvider vsync)
     : controller = AnimationController.unbounded(vsync: vsync, value: 1);
 
   final AnimationController controller;
 
-  /// Whether a glide is in flight or has finished with [delta] and
-  /// [fromSize] set.
-  bool gliding = false;
-
-  /// Set by [begin] until the next paint measures the origin of the glide.
-  bool pending = false;
+  Rect? lastPaintedRect;
+  Rect? _fromRect;
+  Offset? _delta;
   String? fromTabId;
+  int _runId = 0;
 
-  /// Where the indicator was drawn, relative to the tab it left, when the
-  /// selection changed.
-  Offset carried = Offset.zero;
+  bool get gliding => _fromRect != null;
 
-  /// The indicator's offset from the selected tab at the start of the glide,
-  /// in the bar's coordinates.
-  Offset delta = Offset.zero;
-  Size? fromSize;
+  void cancel() {
+    if (!gliding) return;
+    _runId++;
+    controller.stop();
+    _fromRect = null;
+    _delta = null;
+    fromTabId = null;
+  }
 
-  /// The size the indicator was laid out to, or `null` when none was drawn.
-  Size? lastSize;
+  void settle() {
+    if (!gliding) return;
+    cancel();
+    controller.value = 1;
+  }
 
-  /// The offset from the selected tab the indicator is drawn at now.
-  Offset get linkedOffset =>
-      gliding && !pending ? delta * (1 - controller.value) : Offset.zero;
-
-  /// Starts a glide from the tab [from], where the indicator is, to
-  /// whichever tab is selected by the next layout.
-  void begin({
-    required String from,
-    required AnimationConfig? config,
-    required bool reduce,
-  }) {
-    final size = lastSize;
-    if (size == null || reduce) {
-      gliding = false;
-      pending = false;
-      controller.stop();
-      controller.value = 1;
-      return;
-    }
-    carried = linkedOffset;
-    fromSize = size;
+  void begin(String from, AnimationConfig config) {
+    cancel();
+    final rect = lastPaintedRect;
+    if (rect == null) return;
+    _fromRect = rect;
     fromTabId = from;
-    pending = true;
-    gliding = true;
     controller.value = 0;
-    _run(config ?? _defaultIndicatorMotion);
-  }
+    final runId = ++_runId;
 
-  void _run(AnimationConfig config) {
-    switch (config) {
-      case SpringAnimationConfig(:final spring, :final onEnd):
-        controller
-            .animateWith(SpringSimulation(spring, 0, 1, 0))
-            .then((_) => onEnd?.call());
-      case CurveAnimationConfig(
-        :final duration,
-        :final curve,
-        :final delay,
-        :final onEnd,
-      ):
-        final total = delay + duration;
-        controller
-            .animateTo(
-              1,
-              duration: total,
-              curve: delay > Duration.zero
-                  ? Interval(
-                      delay.inMicroseconds / total.inMicroseconds,
-                      1,
-                      curve: curve,
-                    )
-                  : curve,
-            )
-            .then((_) => onEnd?.call());
-      default:
-        assert(
-          false,
-          'TabBarStyler.indicatorMotion takes a curve or a spring '
-          'AnimationConfig, not $config.',
-        );
-        _run(_defaultIndicatorMotion);
+    void complete(VoidCallback? onEnd) {
+      if (runId != _runId) return;
+      cancel();
+      onEnd?.call();
+    }
+
+    if (config is SpringAnimationConfig) {
+      controller
+          .animateWith(
+            SpringSimulation(config.spring, 0, 1, 0, snapToEnd: true),
+          )
+          .then((_) => complete(config.onEnd));
+    } else {
+      final curveConfig = config as CurveAnimationConfig;
+      final delay = curveConfig.delay;
+      final total = curveConfig.totalDuration;
+      controller
+          .animateTo(
+            1,
+            duration: total,
+            curve: delay > Duration.zero
+                ? Interval(
+                    delay.inMicroseconds / total.inMicroseconds,
+                    1,
+                    curve: curveConfig.curve,
+                  )
+                : curveConfig.curve,
+          )
+          .then((_) => complete(curveConfig.onEnd));
     }
   }
 
-  /// The size to lay the indicator out to for a selected tab of [target].
-  Size? sizeFor(Size? target) {
-    final from = fromSize;
-    if (target == null || !gliding || from == null) return target;
+  Size sizeFor(Size target) {
+    final from = _fromRect?.size;
+    if (from == null) return target;
     final t = controller.value;
     return Size(
       math.max(0, from.width + (target.width - from.width) * t),
@@ -206,9 +192,18 @@ final class _TabIndicatorMotion {
     );
   }
 
-  bool get lastSizeIsEmpty => lastSize?.isEmpty ?? true;
+  Rect rectFor(Rect target) {
+    final from = _fromRect;
+    if (from == null) return target;
+    final delta = _delta ??= from.topLeft - target.topLeft;
+    return (target.topLeft + delta * (1 - controller.value)) &
+        sizeFor(target.size);
+  }
 
-  void dispose() => controller.dispose();
+  void dispose() {
+    cancel();
+    controller.dispose();
+  }
 }
 
 /// Draws the shared indicator behind [child] and glides it to the selected
@@ -221,7 +216,7 @@ class _TabIndicatorHost extends StatefulWidget {
     required this.child,
   });
 
-  final StyleSpec<BoxSpec> indicator;
+  final StyleSpec<BoxSpec>? indicator;
   final RemixBoxEffectsSpec? indicatorEffects;
   final AnimationConfig? motion;
   final Widget child;
@@ -231,24 +226,40 @@ class _TabIndicatorHost extends StatefulWidget {
 }
 
 class _TabIndicatorHostState extends State<_TabIndicatorHost>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final _registry = _TabIndicatorRegistry();
   late final _motion = _TabIndicatorMotion(this);
   String? _selectedTabId;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAccessibilityFeatures() {
+    if (_motion.gliding && remixReducedMotionOf(context)) _motion.settle();
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _motion.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final selectedTabId = NakedTabsScope.of(context).selectedTabId;
-    final reduce = remixReducedMotionOf(context);
+    final indicator = widget.indicator;
+    final selectedTabId = indicator == null
+        ? null
+        : NakedTabsScope.of(context).selectedTabId;
     final previous = _selectedTabId;
-    if (previous != null && previous != selectedTabId) {
-      _motion.begin(from: previous, config: widget.motion, reduce: reduce);
+    if (selectedTabId == null || remixReducedMotionOf(context)) {
+      _motion.settle();
+    } else if (previous != null && previous != selectedTabId) {
+      _motion.begin(previous, widget.motion ?? _defaultIndicatorMotion);
     }
     _selectedTabId = selectedTabId;
 
@@ -258,15 +269,17 @@ class _TabIndicatorHostState extends State<_TabIndicatorHost>
         registry: _registry,
         motion: _motion,
         selectedTabId: selectedTabId,
-        indicator: ExcludeSemantics(
-          child: IgnorePointer(
-            child: RemixBoxAdapter(
-              key: const ValueKey('remix-tab-indicator'),
-              styleSpec: widget.indicator,
-              containerEffects: widget.indicatorEffects,
-            ),
-          ),
-        ),
+        indicator: indicator == null
+            ? null
+            : ExcludeSemantics(
+                child: IgnorePointer(
+                  child: RemixBoxAdapter(
+                    key: const ValueKey('remix-tab-indicator'),
+                    styleSpec: indicator,
+                    containerEffects: widget.indicatorEffects,
+                  ),
+                ),
+              ),
         content: widget.child,
       ),
     );
@@ -287,8 +300,8 @@ class _TabIndicatorBar
 
   final _TabIndicatorRegistry registry;
   final _TabIndicatorMotion motion;
-  final String selectedTabId;
-  final Widget indicator;
+  final String? selectedTabId;
+  final Widget? indicator;
   final Widget content;
 
   @override
@@ -331,7 +344,7 @@ class _RenderTabIndicatorBar extends RenderBox
   _RenderTabIndicatorBar({
     required _TabIndicatorRegistry registry,
     required _TabIndicatorMotion motion,
-    required String selectedTabId,
+    required String? selectedTabId,
   }) : _registry = registry,
        _motion = motion,
        _selectedTabId = selectedTabId;
@@ -339,7 +352,9 @@ class _RenderTabIndicatorBar extends RenderBox
   _TabIndicatorRegistry _registry;
   set registry(_TabIndicatorRegistry value) {
     if (_registry == value) return;
+    if (attached) _registry._bar = null;
     _registry = value;
+    if (attached) _registry._bar = this;
     markNeedsLayout();
   }
 
@@ -352,8 +367,8 @@ class _RenderTabIndicatorBar extends RenderBox
     markNeedsLayout();
   }
 
-  String _selectedTabId;
-  set selectedTabId(String value) {
+  String? _selectedTabId;
+  set selectedTabId(String? value) {
     if (_selectedTabId == value) return;
     _selectedTabId = value;
     markNeedsLayout();
@@ -361,22 +376,53 @@ class _RenderTabIndicatorBar extends RenderBox
 
   RenderBox? get _indicator => childForSlot(_TabIndicatorSlot.indicator);
   RenderBox? get _content => childForSlot(_TabIndicatorSlot.content);
+  Size? _laidOutTargetSize;
+  Size _laidOutIndicatorSize = Size.zero;
+  bool _anchorRelayoutPending = false;
+
+  /// A selected anchor can relayout below a tight constraint without laying
+  /// out this bar. Catch up after layout; the current paint still uses its
+  /// new bounds. Most changes are already handled by [performLayout].
+  void anchorChanged(String tabId) {
+    if (tabId != _selectedTabId ||
+        _indicator == null ||
+        _anchorRelayoutPending) {
+      return;
+    }
+    _anchorRelayoutPending = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _anchorRelayoutPending = false;
+      if (attached &&
+          _indicator != null &&
+          _registry.laidOut(_selectedTabId)?.laidOutSize !=
+              _laidOutTargetSize) {
+        markNeedsLayout();
+      }
+    });
+  }
 
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
+    _registry._bar = this;
     _motion.controller.addListener(markNeedsLayout);
   }
 
   @override
   void detach() {
+    _registry._bar = null;
     _motion.controller.removeListener(markNeedsLayout);
     super.detach();
   }
 
-  /// The top left of [tab] in this box's coordinates, as laid out now.
-  Offset _originOf(_RenderTabAnchor tab) =>
-      MatrixUtils.transformPoint(tab.getTransformTo(this), Offset.zero);
+  Rect _boundsOf(_RenderTabAnchor tab) {
+    final size = tab.laidOutSize!;
+    final transform = tab.getTransformTo(this);
+    final translation = MatrixUtils.getAsTranslation(transform);
+    return translation != null
+        ? translation & size
+        : MatrixUtils.transformRect(transform, Offset.zero & size);
+  }
 
   @override
   void performLayout() {
@@ -384,45 +430,63 @@ class _RenderTabIndicatorBar extends RenderBox
     content.layout(constraints, parentUsesSize: true);
     size = constraints.constrain(content.size);
 
+    final indicator = _indicator;
+    if (indicator == null) return;
     final motion = _motion;
     final selected = _registry.laidOut(_selectedTabId);
-    if (motion.pending &&
+    if (motion.gliding &&
         (selected == null || _registry.laidOut(motion.fromTabId) == null)) {
-      // The tab it leaves or the one it reaches is not there: jump.
-      motion.pending = false;
-      motion.gliding = false;
+      motion.cancel();
     }
 
-    final indicatorSize = motion.sizeFor(selected?.laidOutSize);
-    motion.lastSize = indicatorSize;
-    _indicator!.layout(BoxConstraints.tight(indicatorSize ?? Size.zero));
+    final targetSize = selected?.laidOutSize;
+    _laidOutTargetSize = targetSize;
+    _laidOutIndicatorSize = targetSize == null
+        ? Size.zero
+        : motion.sizeFor(targetSize);
+    indicator.layout(BoxConstraints.tight(_laidOutIndicatorSize));
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    // Where the tab is comes from the tree as laid out now, read here and not
-    // in layout: a tab can move without this box being laid out again, such
-    // as when a relayout boundary below it resizes a sibling or the content
-    // is transformed. Nothing is marked dirty from here.
-    final selected = _registry.laidOut(_selectedTabId);
-    final indicatorSize = _motion.lastSize;
-    if (selected != null && indicatorSize != null && !indicatorSize.isEmpty) {
-      final origin = _originOf(selected);
-      final motion = _motion;
-      if (motion.pending) {
-        // The one place the start of a glide is measured: where the indicator
-        // was drawn, relative to the tab it now ends on.
-        motion.pending = false;
-        final from = _registry.laidOut(motion.fromTabId);
-        if (from != null) {
-          motion.delta = _originOf(from) + motion.carried - origin;
-        } else {
-          motion.gliding = false;
-        }
-      }
-      context.paintChild(_indicator!, offset + origin + motion.linkedOffset);
-    }
+    final indicator = _indicator;
+    final selected = indicator == null
+        ? null
+        : _registry.laidOut(_selectedTabId);
+    _motion.lastPaintedRect = indicator != null && selected != null
+        ? _paintIndicator(context, offset, indicator, selected)
+        : null;
     context.paintChild(_content!, offset);
+  }
+
+  Rect? _paintIndicator(
+    PaintingContext context,
+    Offset offset,
+    RenderBox indicator,
+    _RenderTabAnchor selected,
+  ) {
+    final laidOut = _laidOutIndicatorSize;
+    if (laidOut.isEmpty) return null;
+    final bounds = _boundsOf(selected);
+    if (!bounds.isFinite || bounds.isEmpty) return null;
+    final rect = _motion.rectFor(bounds);
+    if (!rect.isFinite || rect.isEmpty) return null;
+    final origin = offset + rect.topLeft;
+    if (rect.size == laidOut) {
+      context.paintChild(indicator, origin);
+    } else {
+      context.pushTransform(
+        needsCompositing,
+        origin,
+        Matrix4.diagonal3Values(
+          rect.width / laidOut.width,
+          rect.height / laidOut.height,
+          1,
+        ),
+        (context, offset) => context.paintChild(indicator, offset),
+      );
+    }
+    return rect;
   }
 
   @override
@@ -448,6 +512,12 @@ class _RenderTabIndicatorBar extends RenderBox
   @override
   double? computeDistanceToActualBaseline(TextBaseline baseline) =>
       _content!.getDistanceToActualBaseline(baseline);
+
+  @override
+  double? computeDryBaseline(
+    BoxConstraints constraints,
+    TextBaseline baseline,
+  ) => _content!.getDryBaseline(constraints, baseline);
 
   @override
   Size computeDryLayout(BoxConstraints constraints) =>

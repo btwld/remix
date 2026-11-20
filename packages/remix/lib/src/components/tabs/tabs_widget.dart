@@ -112,20 +112,23 @@ class RemixTabBar extends StatelessWidget {
         style: style,
         styleSpec: styleSpec,
         builder: (context, spec) {
-          final indicator = spec.indicator;
-          if (indicator == null) {
-            return FlexBox(styleSpec: spec.container, children: [child]);
+          final motion = spec.indicatorMotion;
+          if (motion != null &&
+              motion is! CurveAnimationConfig &&
+              motion is! SpringAnimationConfig) {
+            throw ArgumentError.value(
+              motion,
+              'indicatorMotion',
+              'Expected CurveAnimationConfig or SpringAnimationConfig',
+            );
           }
-
-          // The indicator lives inside the bar's box, so it paints over the
-          // bar's own fill and border and under the tabs.
           return FlexBox(
             styleSpec: spec.container,
             children: [
               _TabIndicatorHost(
-                indicator: indicator,
+                indicator: spec.indicator,
                 indicatorEffects: spec.indicatorEffects,
-                motion: spec.indicatorMotion,
+                motion: motion,
                 child: child,
               ),
             ],
@@ -264,8 +267,6 @@ class RemixTab extends StatelessWidget {
       },
     );
 
-    // Only a bar with an indicator needs to know where its tabs are; without
-    // one the tab is built exactly as before.
     final registry = _TabIndicatorScope.maybeOf(context);
     if (registry == null) return tab;
     return _TabIndicatorAnchor(registry: registry, tabId: tabId, child: tab);

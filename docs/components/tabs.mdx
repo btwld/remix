@@ -129,57 +129,79 @@ the tab's own selected background clear so only the indicator shows.
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
-final pillTabs = RemixTabs(
-  selectedTabId: 'overview',
-  onChanged: (id) {},
-  child: Column(
-    children: [
-      RemixTabBar(
-        style: TabBarStyler()
-            .container(FlexBoxStyler().direction(.horizontal).padding(.all(4)))
-            .indicator(
-              BoxStyler()
-                  .color(Colors.white)
-                  .borderRadius(.circular(8))
-                  .margin(.all(0)),
-            )
-            .indicatorMotion(
-              AnimationConfig.springDescription(
-                mass: 1,
-                stiffness: 400,
-                damping: 36,
+class PillTabs extends StatefulWidget {
+  const PillTabs({super.key});
+
+  @override
+  State<PillTabs> createState() => _PillTabsState();
+}
+
+class _PillTabsState extends State<PillTabs> {
+  String _selected = 'overview';
+
+  @override
+  Widget build(BuildContext context) => RemixTabs(
+    selectedTabId: _selected,
+    onChanged: (id) => setState(() => _selected = id),
+    child: Column(
+      children: [
+        RemixTabBar(
+          style: TabBarStyler()
+              .direction(.horizontal)
+              .padding(.all(4))
+              .color(Colors.blueGrey.shade100)
+              .indicator(
+                BoxStyler().color(Colors.white).borderRadius(.circular(8)),
+              )
+              .indicatorMotion(
+                AnimationConfig.springDescription(
+                  mass: 1,
+                  stiffness: 400,
+                  damping: 36,
+                ),
               ),
-            ),
-        child: const Row(
-          children: [
-            RemixTab(tabId: 'overview', label: 'Overview'),
-            RemixTab(tabId: 'activity', label: 'Activity'),
-          ],
+          child: Row(
+            children: [
+              RemixTab(
+                tabId: 'overview',
+                label: 'Overview',
+                style: TabStyler().padding(.all(8)),
+              ),
+              RemixTab(
+                tabId: 'activity',
+                label: 'Activity',
+                style: TabStyler().padding(.all(8)),
+              ),
+            ],
+          ),
         ),
-      ),
-      const RemixTabView(tabId: 'overview', child: Text('Overview')),
-      const RemixTabView(tabId: 'activity', child: Text('Activity')),
-    ],
-  ),
-);
+        const RemixTabView(tabId: 'overview', child: Text('Overview')),
+        const RemixTabView(tabId: 'activity', child: Text('Activity')),
+      ],
+    ),
+  );
+}
 ```
 
-`indicatorMotion` takes a Mix `AnimationConfig`, the same type as the styler's
-`animate`: a curve config such as `AnimationConfig.curve(duration: ..., curve:
-...)` or `AnimationConfig.easeOut(duration)`, or a spring config such as
-`AnimationConfig.springDescription(...)`, which may overshoot. With none, the
-indicator glides along `Curves.easeOutCubic` over 250 ms. Phase and keyframe
-configs are not supported. The indicator jumps when the user asks to reduce
-motion, follows its tab when the bar or the tab moves or resizes, and is
-excluded from semantics and hit testing. Without an `indicator` nothing is
-added.
+`indicatorMotion` accepts two Mix `AnimationConfig` types: `CurveAnimationConfig`
+(for example, `AnimationConfig.curve(...)` or `AnimationConfig.easeOut(duration)`)
+and `SpringAnimationConfig` (for example, `AnimationConfig.springDescription(...)`).
+Curves honor their delay, and springs may overshoot before settling on the tab.
+`onEnd` runs once for a completed glide, not an interrupted or skipped one.
+With no motion config, the indicator glides along `Curves.easeOutCubic` over
+250 ms. Phase and keyframe configs throw `ArgumentError` when the bar builds.
+The bar's own `animate` still controls style changes independently.
 
-The indicator is placed from where the selected tab is each time the bar paints.
-A tab that a `Transform` or a relayout boundary inside the bar moves is
-followed, and so is the whole bar inside a scroll view. Keep the tabs directly
-in the bar: a scrollable inside the bar is not supported, so scroll around the
-bar instead. If the selected tab disappears the indicator is hidden, and when
-the selected tab changes while the tab it leaves is gone the indicator jumps.
+The indicator follows the painted bounds of the selected tab when it moves or
+resizes, including translation and axis-aligned scaling. It jumps to the selection
+when reduced motion is enabled, even during a glide. It's excluded from semantics
+and hit testing. Omitting the indicator leaves the tabs' own selected styles in
+charge; adding or removing it does not reset the tabs' focus or state.
+
+Scroll around the bar, not inside it. Changes that only repaint inside a separate
+repaint boundary are picked up the next time the bar paints. If the selected tab
+disappears, the indicator is hidden; if the departing tab disappears, the indicator
+jumps to the selection.
 
 ## Fortal widgets
 
@@ -367,8 +389,9 @@ Adds paint layers behind the indicator, such as a shadow.
 
 #### `indicatorMotion(AnimationConfig value)`
 
-Sets how the indicator moves: a curve or a spring `AnimationConfig`. `null`
-glides along `Curves.easeOutCubic` over 250 ms.
+Sets how the indicator moves: a `CurveAnimationConfig` or `SpringAnimationConfig`.
+Phase and keyframe configs throw `ArgumentError` when the bar builds. Omitting
+the config uses `Curves.easeOutCubic` over 250 ms.
 
 #### `alignment(Alignment value)`
 

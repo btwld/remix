@@ -25,13 +25,15 @@ class TabBarSpec with _$TabBarSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? indicatorEffects;
 
-  /// How [indicator] moves between tabs: a curve [AnimationConfig], such as
-  /// `AnimationConfig.curve(...)` or `AnimationConfig.easeOut(...)`, or a
-  /// spring one, such as `AnimationConfig.springDescription(...)`, which may
-  /// overshoot. `null` glides along `Curves.easeOutCubic` over 250 ms.
+  /// How [indicator] moves between tabs. Accepts [CurveAnimationConfig] (such
+  /// as `AnimationConfig.curve(...)`) or [SpringAnimationConfig] (such as
+  /// `AnimationConfig.springDescription(...)`), which may overshoot.
+  /// `null` glides along `Curves.easeOutCubic` over 250 ms.
   ///
-  /// Phase and keyframe configs are not supported. This is separate from the
-  /// styler's own `animate`, which animates style changes of the bar.
+  /// [RemixTabBar] throws [ArgumentError] for phase and keyframe configs when
+  /// it builds. This is separate from the styler's own `animate`, which
+  /// animates style changes of the bar. `onEnd` runs only when a glide
+  /// completes, not when it is interrupted or skipped.
   @override
   final AnimationConfig? indicatorMotion;
 
