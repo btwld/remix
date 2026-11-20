@@ -117,8 +117,7 @@ class HeroUiSidebarLayout extends StatefulWidget {
 
 class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
   bool _selfOpen = false;
-  bool _sheetShowing = false;
-  late final _sheetInputs = ValueNotifier(_currentSheetInputs);
+  ValueNotifier<_CompactSheetInputs>? _activeSheetInputs;
 
   _CompactSheetInputs get _currentSheetInputs => (
     sidebar: widget.sidebar,
@@ -134,7 +133,7 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
   /// inside its own builder via `ModalRoute.of` so [_removeSheetRoute] can
   /// close exactly that route on the Navigator that actually owns it,
   /// rather than popping whatever a bare `Navigator.of(context)` finds.
-  Route<void>? _sheetRoute;
+  ModalRoute<void>? _sheetRoute;
 
   bool get _effectiveOpen => widget.compactOpen ?? _selfOpen;
 
@@ -158,12 +157,12 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
   void _reconcileSheet(bool isCompact) {
     _isCompact = isCompact;
     final desiredOpen = isCompact && _effectiveOpen;
-    if (desiredOpen == _sheetShowing) return;
+    if (desiredOpen == (_activeSheetInputs != null)) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (_isCompact && _effectiveOpen) {
-        if (!_sheetShowing) _pushSheet();
-      } else if (_sheetShowing) {
+        if (_activeSheetInputs == null) _pushSheet();
+      } else {
         _removeSheetRoute();
       }
     });
@@ -176,8 +175,8 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
   }
 
   Future<void> _pushSheet() async {
-    _sheetShowing = true;
-    _sheetInputs.value = _currentSheetInputs;
+    final inputs = ValueNotifier(_currentSheetInputs);
+    _activeSheetInputs = inputs;
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     await showRemixDialog<void>(
@@ -189,24 +188,27 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
           ? Duration.zero
           : const Duration(milliseconds: 250),
       builder: (dialogContext) {
-        _sheetRoute = ModalRoute.of(dialogContext);
+        if (_activeSheetInputs == inputs) {
+          _sheetRoute = ModalRoute.of(dialogContext);
+        }
         return ValueListenableBuilder(
-          valueListenable: _sheetInputs,
+          valueListenable: inputs,
           builder: _buildSheet,
         );
       },
     );
-    // Reached once, however the route completed: a user dismissal or
-    // _removeSheetRoute above.
+    final route = _sheetRoute;
     _sheetRoute = null;
-    _sheetShowing = false;
+    _activeSheetInputs = null;
     if (mounted) _setOpen(false);
+    await route?.completed;
+    inputs.dispose();
   }
 
   Widget _buildSheet(
     BuildContext dialogContext,
     _CompactSheetInputs inputs,
-    Widget? child,
+    Widget? _,
   ) {
     final available = MediaQuery.sizeOf(dialogContext).width;
     final width = math.min(
@@ -255,15 +257,17 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
   @override
   void didUpdateWidget(HeroUiSidebarLayout oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!_sheetShowing || _currentSheetInputs == _sheetInputs.value) return;
+    final inputs = _activeSheetInputs;
+    if (inputs == null || inputs.value == _currentSheetInputs) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _sheetInputs.value = _currentSheetInputs;
+      if (mounted && _activeSheetInputs == inputs) {
+        inputs.value = _currentSheetInputs;
+      }
     });
   }
 
   @override
   void dispose() {
-    _sheetInputs.dispose();
     final route = _sheetRoute;
     if (route != null) {
       // Navigator mutations must wait until the current tree update finishes.

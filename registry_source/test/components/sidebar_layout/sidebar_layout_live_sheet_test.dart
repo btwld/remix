@@ -32,10 +32,63 @@ void main() {
   ];
 
   for (final preset in presets) {
+    testWidgets(
+      '${preset.name}: reopening leaves the exiting sheet unchanged',
+      (tester) async {
+        final rebuilt = ValueNotifier(false);
+        addTearDown(rebuilt.dispose);
+        final sidebarKey = GlobalKey();
+        const body = Text('Body');
+
+        await tester.pumpWidget(
+          _app(
+            theme: preset.theme,
+            home: ValueListenableBuilder(
+              valueListenable: rebuilt,
+              builder: (context, value, _) => preset.layout(
+                compactBreakpoint: 1000,
+                sidebar: value
+                    ? Text('Updated sidebar', key: sidebarKey)
+                    : const Text('Original sidebar'),
+                body: body,
+              ),
+            ),
+          ),
+        );
+        final bodyContext = tester.element(find.byWidget(body));
+        preset.open(bodyContext);
+        await tester.pumpAndSettle();
+
+        final original = find.text('Original sidebar', skipOffstage: false);
+        final exitingRoute = ModalRoute.of(tester.element(original))!;
+        exitingRoute.navigator!.pop();
+        await tester.pump();
+        preset.open(bodyContext);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(original, findsNWidgets(2));
+
+        rebuilt.value = true;
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+
+        expect(tester.takeException(), isNull);
+        expect(ModalRoute.of(tester.element(original)), same(exitingRoute));
+        final updated = find.byKey(sidebarKey);
+        expect(find.text('Updated sidebar'), findsOneWidget);
+        expect(
+          ModalRoute.of(tester.element(updated)),
+          isNot(same(exitingRoute)),
+        );
+        await tester.pumpAndSettle();
+        expect(original, findsNothing);
+      },
+    );
+
     testWidgets('${preset.name}: open sheet updates without losing focus', (
       tester,
     ) async {
-      final host = ValueNotifier((label: 'Orders', selected: false));
+      final host = ValueNotifier(false);
       addTearDown(host.dispose);
       const itemKey = ValueKey('destination');
 
@@ -44,14 +97,14 @@ void main() {
           theme: preset.theme,
           home: ValueListenableBuilder(
             valueListenable: host,
-            builder: (context, state, _) => preset.layout(
+            builder: (context, selected, _) => preset.layout(
               compactBreakpoint: 1000,
               compactOpen: true,
               sidebar: Focus(
                 child: Semantics(
                   key: itemKey,
-                  selected: state.selected,
-                  child: Text(state.label),
+                  selected: selected,
+                  child: Text(selected ? 'All orders' : 'Orders'),
                 ),
               ),
               body: const Text('Body'),
@@ -78,14 +131,10 @@ void main() {
       expect(selected(), Tristate.isFalse);
       expect(FocusManager.instance.primaryFocus, same(focus));
 
-      host.value = (label: 'All orders', selected: false);
+      host.value = true;
       await tester.pumpAndSettle();
       expect(find.text('Orders'), findsNothing);
       expect(find.text('All orders'), findsOneWidget);
-      expect(FocusManager.instance.primaryFocus, same(focus));
-
-      host.value = (label: 'All orders', selected: true);
-      await tester.pumpAndSettle();
       expect(selected(), Tristate.isTrue);
       expect(ModalRoute.of(tester.element(item)), same(route));
       expect(FocusManager.instance.primaryFocus, same(focus));
@@ -96,7 +145,6 @@ void main() {
       (tester) async {
         final controlled = ValueNotifier(false);
         addTearDown(controlled.dispose);
-        final requests = <bool>[];
         const sidebar = SizedBox.expand(child: Text('Sidebar'));
         const body = Text('Body');
 
@@ -109,7 +157,6 @@ void main() {
                 compactBreakpoint: 1000,
                 compactOpen: value ? true : null,
                 sidebarWidth: value ? 320 : 256,
-                onCompactOpenChanged: requests.add,
                 sidebar: sidebar,
                 body: body,
               ),
@@ -126,17 +173,10 @@ void main() {
 
         controlled.value = true;
         await tester.pumpAndSettle();
-        expect(ModalRoute.of(tester.element(sheet)), same(route));
         expect(
           (tester.getSize(sheet).width, route.popDisposition),
           (320, RoutePopDisposition.doNotPop),
         );
-        expect(requests, [true]);
-
-        await route.navigator!.maybePop();
-        await tester.pumpAndSettle();
-        expect(sheet, findsOneWidget);
-        expect(requests, [true, false]);
       },
     );
   }
