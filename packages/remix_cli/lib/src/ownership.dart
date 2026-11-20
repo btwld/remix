@@ -4,9 +4,12 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 
 import 'project_config.dart';
-import 'registry.dart';
+import 'registry_graph.dart';
+import 'registry_source.dart';
 
 const ownershipFileName = 'remix.ownership.json';
+const _registry511MigrationGuide =
+    'https://github.com/btwld/remix/blob/main/open_code/REGISTRY_511_MIGRATION.md';
 
 /// Durable target reservations, including generated outputs and missing files.
 /// Revision and namespace are deliberately absent from identity: moving a pin
@@ -20,9 +23,8 @@ final class OwnershipPlan {
 
   static OwnershipPlan resolve(
     ProjectConfig config,
-    List<RegistryItem> items, {
-    required Set<String> requestedNames,
-    required bool adopt,
+    RegistryGraph graph, {
+    Set<String> adoptNames = const {},
   }) {
     final root = config.packageRoot;
     validateProjectFilePath(root, ownershipFileName);
@@ -111,11 +113,45 @@ final class OwnershipPlan {
     }
     final barrel = canonical('${config.uiPath}/ui.dart');
     final planned = <String>{};
-    for (final item in items) {
+    for (final item in graph.items) {
       final parts = item.name.split('/');
       final source = config.registries[parts.first]!;
-      final owner =
-          '${source.repository.toLowerCase()}/${source.path}#${config.preset}/${parts.last}';
+      final repository = source.repository.toLowerCase();
+      final ownerScope = '$repository/${source.path}#${config.preset}';
+      final owner = '$ownerScope/${parts.last}';
+      final oldName = switch ((
+        repository,
+        source.path,
+        config.preset,
+        parts.last,
+      )) {
+        (
+          officialRepository,
+          'registry',
+          'vanilla' || 'fortal' || 'heroui',
+          'text_field',
+        ) =>
+          'textfield',
+        (officialRepository, 'registry', 'heroui', 'text_area') => 'textarea',
+        _ => null,
+      };
+      if (oldName != null &&
+          !graph.catalogs[parts.first]!.items.containsKey(oldName)) {
+        final oldOwner = '$ownerScope/$oldName';
+        final obsoleteTargets = [
+          for (final MapEntry(:key, :value) in targets.entries)
+            if (value == oldOwner) key,
+        ];
+        if (obsoleteTargets.isNotEmpty) {
+          throw FormatException(
+            '${parts.first}/$oldName was renamed to ${item.name}, but still '
+            'owns ${obsoleteTargets.join(', ')} in $ownershipFileName.\n'
+            'No files were changed. Back up your edits and remove the '
+            'obsolete files, exports, and ownership entries before retrying. '
+            'Migration guide: $_registry511MigrationGuide',
+          );
+        }
+      }
       for (final declared in [
         ...item.files.map((file) => file.target),
         ...item.generated,
@@ -152,7 +188,7 @@ final class OwnershipPlan {
                   followLinks: false,
                 ) !=
                 FileSystemEntityType.notFound) {
-          if (!adopt || !requestedNames.contains(item.name)) {
+          if (!adoptNames.contains(item.name)) {
             throw FormatException(
               '$target has unknown registry ownership. Verify its provenance, then explicitly request ${item.name} with --adopt (and its existing dependencies by name). --overwrite cannot establish ownership.',
             );

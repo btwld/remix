@@ -492,9 +492,8 @@ final class Installer {
     }
     final ownership = OwnershipPlan.resolve(
       config,
-      items,
-      requestedNames: graph.requestedNames,
-      adopt: options.adopt,
+      graph,
+      adoptNames: options.adopt ? graph.requestedNames : const {},
     );
     // Requested names are qualified for a pinned project, so they compare
     // against the qualified names `items` carries. The graph does the

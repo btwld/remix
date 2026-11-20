@@ -175,9 +175,8 @@ Future<List<String>> _compare(
       );
       final ownership = OwnershipPlan.resolve(
         config,
-        graph.items,
-        requestedNames: graph.items.map((item) => item.name).toSet(),
-        adopt: true,
+        graph,
+        adoptNames: graph.items.map((item) => item.name).toSet(),
       );
       File(
         '${directory.path}/$ownershipFileName',

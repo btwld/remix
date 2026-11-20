@@ -1,3 +1,11 @@
+## Unreleased
+
+- Reject installs that would bring in the official `text_field` or HeroUI
+  `text_area` while the obsolete item still owns targets. This also applies
+  to dependency installs and previews. Follow the
+  [#511 registry migration guide](https://github.com/btwld/remix/blob/main/open_code/REGISTRY_511_MIGRATION.md)
+  to keep local edits and remove obsolete exports and reservations.
+
 ## 1.0.0-rc.1
 
 First 1.0 release candidate of the GitHub-pinned registry installer. Retains

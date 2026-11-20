@@ -548,6 +548,11 @@ the source you install; the registry pin in `remix.yaml` does:
 
 There is no automatic merge or migration layer.
 
+If your app was installed before the registry moved to `text_field` and
+HeroUI's `text_area`, follow the [#511 registry migration guide](https://github.com/btwld/remix/blob/main/open_code/REGISTRY_511_MIGRATION.md)
+before reinstalling those items or their dependents. The guide also covers the
+dashboard demo exports removed in the same cutover.
+
 Because `--overwrite` replaces only files present in the incoming registry item
 and `updateManagedBarrel` preserves existing exports without pruning, removing
 an obsolete template file during an upgrade requires manual cleanup. Before
