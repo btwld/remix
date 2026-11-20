@@ -317,18 +317,18 @@ use `--diff` and explicit `--overwrite` for template updates.
 
 ### Add the full dashboard demo
 
-Initialize the Vanilla or Fortal preset (HeroUI ships no dashboard), then use
-the same item and public dashboard API:
+Initialize any preset, then use the same item and public dashboard API:
 
 ```shell
 remix init --prefix Ui --preset vanilla
-# Or initialize a separate app with: --preset fortal
+# Or initialize a separate app with: --preset fortal or --preset heroui
 remix add dashboard_demo
 ```
 
 `dashboard_demo` installs `UiDashboardDemo`, `UiDashboardOverview`, the
-usable shell, and the five product destinations from the reference dashboard
-(Overview, Chat, Customers, Orders, and Settings). Product pages and navigation
+usable shell, and the product destinations from the reference dashboard
+(Overview, Chat, Customers, Orders, and Settings; Fortal adds Analytics,
+Schedule, Collection, and Themes). Product pages and navigation
 match across presets while rendering each preset's native components and
 variants. It is a sample application, not part of the kit, so `ui.dart` does
 not export it: import `lib/ui/recipes/dashboard/dashboard_demo.dart`, which

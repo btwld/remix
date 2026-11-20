@@ -75,8 +75,7 @@ TextFieldStyler heroUiTextFieldStyle({
             .containerEffects(heroUiInvalidRing())
             .label(.color(HeroUiTokens.danger()))
             .helperText(heroUiErrorText)
-            // `.input:hover:not(:focus)` (0,4,0) beats `.input[data-invalid]`
-            // (0,2,0): a hovered invalid field keeps the hover fill.
+            // A hovered invalid field keeps the hover fill.
             .onHovered(.color(field.hover()))
             .onFocused(
               TextFieldStyler()
