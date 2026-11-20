@@ -620,7 +620,7 @@ void main() {
             (file.path.endsWith('.yml') || file.path.endsWith('.yaml')))
           file.path,
     ];
-    final invocation = RegExp(r'check_open_code\.dart([^\n]*)');
+    final invocation = RegExp(r'check_open_code\.dart([^\n`]*)');
     var checked = 0;
     for (final path in sources) {
       final file = File(path);
