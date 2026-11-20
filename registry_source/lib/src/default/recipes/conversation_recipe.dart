@@ -47,7 +47,7 @@ VanillaAgentConversationRecipe vanillaAgentConversationRecipe({
     variant: .outline,
     size: .large,
     style: IconButtonStyler()
-        // The button floats over the transcript: rest, hover and press are opaque.
+        // Floats over the transcript, so rest, hover and press are opaque.
         .color(VanillaTokens.background())
         .borderRadius(.circular(VanillaTokens.pill))
         .onHovered(.color(VanillaTokens.accent()))
