@@ -516,7 +516,7 @@ class UiTextArea extends StatelessWidget {
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
-  }) : variant = UiTextAreaVariant.surface;
+  }) : variant = UiTextFieldVariant.surface;
 
   /// An accent tint inside a 1px accent ring, with accent-colored text.
   const UiTextArea.soft({
@@ -577,9 +577,9 @@ class UiTextArea extends StatelessWidget {
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
-  }) : variant = UiTextAreaVariant.soft;
+  }) : variant = UiTextFieldVariant.soft;
 
-  final UiTextAreaVariant variant;
+  final UiTextFieldVariant variant;
 
   final UiTextAreaSize size;
 
