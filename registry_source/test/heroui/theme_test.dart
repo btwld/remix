@@ -214,6 +214,77 @@ void main() {
     );
   }
 
+  for (final changesAccent in [true, false]) {
+    testWidgets(
+      changesAccent
+          ? 'changing an accent in an identity map notifies dependents'
+          : 'reordering identity-map entries does not notify dependents',
+      (tester) async {
+        const originalAccent = Color(0xFF8000FF);
+        const updatedAccent = Color(0xFF00FF00);
+        const otherAccent = Color(0xFF00FFFF);
+        const accent = HeroUiTokens.accent;
+        final equalAccent = ColorToken(accent.name);
+        final colors = Map<ColorToken, Color>.identity()
+          ..[accent] = originalAccent
+          ..[equalAccent] = otherAccent;
+        final theme = HeroUiThemeData.light(colors: colors);
+        final seenAccents = <Color>[];
+        final child = Builder(
+          builder: (context) {
+            seenAccents.add(HeroUiTheme.of(context).color(accent));
+            return const SizedBox();
+          },
+        );
+
+        Future<void> pumpTheme(HeroUiThemeData theme) =>
+            tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
+
+        await pumpTheme(theme);
+        expect(seenAccents, [originalAccent]);
+
+        if (changesAccent) {
+          await pumpTheme(
+            HeroUiThemeData.light(
+              colors: Map<ColorToken, Color>.identity()
+                ..addAll(colors)
+                ..[accent] = updatedAccent,
+            ),
+          );
+          expect(seenAccents, [originalAccent, updatedAccent]);
+        } else {
+          colors[accent] = colors.remove(accent)!;
+          await pumpTheme(theme);
+          expect(seenAccents, [originalAccent]);
+        }
+      },
+    );
+  }
+
+  testWidgets('replacing a value-equal map key does not notify dependents', (
+    tester,
+  ) async {
+    const accent = HeroUiTokens.accent;
+    const color = Color(0xFF8000FF);
+    var builds = 0;
+    final child = Builder(
+      builder: (context) {
+        expect(HeroUiTheme.of(context).color(accent), color);
+        builds++;
+        return const SizedBox();
+      },
+    );
+    final colors = {accent: color};
+    final theme = HeroUiThemeData.light(colors: colors);
+
+    await tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
+    expect(builds, 1);
+
+    colors[ColorToken(accent.name)] = colors.remove(accent)!;
+    await tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
+    expect(builds, 1);
+  });
+
   testWidgets('of throws without a scope; maybeOf returns null', (
     tester,
   ) async {

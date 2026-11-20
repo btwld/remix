@@ -104,18 +104,12 @@ class {{typePrefix}}Theme extends StatelessWidget {
   Widget _build(BuildContext context) {
     final inherited = context
         .dependOnInheritedWidgetOfExactType<_{{typePrefix}}InheritedTheme>();
-    final base =
-        theme ??
-        inherited?.baseTheme ??
-        inherited?.data ??
-        const {{typePrefix}}ThemeData.light();
+    final base = theme ?? inherited?.baseTheme ?? const {{typePrefix}}ThemeData.light();
     final dark =
         darkTheme ??
-        (theme != null
-            ? theme!
-            : inherited?.darkTheme ??
-                  inherited?.data ??
-                  const {{typePrefix}}ThemeData.dark());
+        theme ??
+        inherited?.darkTheme ??
+        const {{typePrefix}}ThemeData.dark();
     final useDark = mode == null && inherited != null
         ? inherited.usesDarkTheme
         : switch (mode ?? {{typePrefix}}ThemeMode.system) {
@@ -147,10 +141,9 @@ class {{typePrefix}}Theme extends StatelessWidget {
     }
 
     return _{{typePrefix}}InheritedTheme(
-      data: selected,
       baseTheme: base,
       darkTheme: dark,
-      useDarkTheme: useDark,
+      usesDarkTheme: useDark,
       child: scoped,
     );
   }
@@ -205,35 +198,37 @@ Widget _recolored(Color foreground, Widget child) => DefaultTextStyle.merge(
 /// `InheritedTheme.wrap` can still rebuild both across a route boundary.
 class _{{typePrefix}}InheritedTheme extends InheritedTheme {
   _{{typePrefix}}InheritedTheme({
-    required this.data,
-    this.baseTheme,
-    this.darkTheme,
-    this.useDarkTheme,
+    required this.baseTheme,
+    required this.darkTheme,
+    required this.usesDarkTheme,
     required super.child,
-  }) : _comparisonSnapshot = (
-         data.copyWith(colors: const {}),
-         baseTheme?.copyWith(colors: const {}),
-         darkTheme?.copyWith(colors: const {}),
-         useDarkTheme,
-       );
+  }) : _baseSnapshot = _snapshot(baseTheme) {
+    _darkSnapshot = identical(baseTheme, darkTheme)
+        ? _baseSnapshot
+        : _snapshot(darkTheme);
+  }
 
-  final ({{typePrefix}}ThemeData, {{typePrefix}}ThemeData?, {{typePrefix}}ThemeData?, bool?)
-  _comparisonSnapshot;
+  final {{typePrefix}}ThemeData _baseSnapshot;
+  late final {{typePrefix}}ThemeData _darkSnapshot;
+
+  static {{typePrefix}}ThemeData _snapshot({{typePrefix}}ThemeData theme) => {{typePrefix}}ThemeData(
+    brightness: theme.brightness,
+    colors: Map<ColorToken, Color>.identity()..addAll(theme.colors),
+    radius: theme.radius,
+    fontFamily: theme.fontFamily,
+  );
 
   /// The theme values available to [child].
-  final {{typePrefix}}ThemeData data;
+  {{typePrefix}}ThemeData get data => usesDarkTheme ? darkTheme : baseTheme;
 
   /// The configured light values, carried so a nested scope can inherit them.
-  final {{typePrefix}}ThemeData? baseTheme;
+  final {{typePrefix}}ThemeData baseTheme;
 
   /// The configured dark values, carried so a nested scope can inherit them.
-  final {{typePrefix}}ThemeData? darkTheme;
-
-  /// The active selection, carried so a nested scope can inherit it.
-  final bool? useDarkTheme;
+  final {{typePrefix}}ThemeData darkTheme;
 
   /// Whether the dark half of the configured pair is currently selected.
-  bool get usesDarkTheme => useDarkTheme ?? data.brightness == Brightness.dark;
+  final bool usesDarkTheme;
 
   /// Rebuilds the theme *and* its Mix scope for a captured subtree.
   ///
@@ -244,15 +239,16 @@ class _{{typePrefix}}InheritedTheme extends InheritedTheme {
   @override
   Widget wrap(BuildContext context, Widget child) {
     return _{{typePrefix}}InheritedTheme(
-      data: data,
       baseTheme: baseTheme,
       darkTheme: darkTheme,
-      useDarkTheme: useDarkTheme,
+      usesDarkTheme: usesDarkTheme,
       child: MixScope(tokens: data.tokens, child: child),
     );
   }
 
   @override
   bool updateShouldNotify(_{{typePrefix}}InheritedTheme oldWidget) =>
-      _comparisonSnapshot != oldWidget._comparisonSnapshot;
+      oldWidget.usesDarkTheme != usesDarkTheme ||
+      oldWidget._baseSnapshot != baseTheme ||
+      oldWidget._darkSnapshot != darkTheme;
 }
