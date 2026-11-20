@@ -12,8 +12,8 @@ part of 'app_bar.dart';
 /// [style] merges last:
 ///
 /// ```dart
-/// PlaygroundAppBar(
-///   style: AppBarStyler().toolbarHeight(PlaygroundTokens.s12),
+/// VanillaAppBar(
+///   style: AppBarStyler().toolbarHeight(VanillaTokens.s12),
 ///   title: 'Orders',
 /// )
 /// ```

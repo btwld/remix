@@ -12,7 +12,7 @@ part of 'toast.dart';
 /// close button. It caps at 360px and shrinks with the available width.
 ///
 /// ```dart
-/// RemixToastScope(style: uiToastStyle(), child: const Shell())
+/// RemixToastScope(style: fortalToastStyle(), child: const Shell())
 /// ```
 class UiToast extends StatelessWidget {
   const UiToast({

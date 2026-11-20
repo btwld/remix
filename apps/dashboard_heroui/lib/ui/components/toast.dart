@@ -35,9 +35,9 @@ enum UiToastVariant {
 /// from 768px down. Below 640px it adds `mt-2` through a second `action`.
 ///
 /// An `action` replaces rather than merges, so a caller who styles it restates
-/// `uiButtonStyle()` in their `action`, and again, with `.margin(.top(2))`,
+/// `heroUiButtonStyle()` in their `action`, and again, with `.margin(.top(2))`,
 /// in an `onNot(ContextVariant.breakpoint(Breakpoint.minWidth(
-/// UiTokens.breakpointSm)), ...)` fragment; without that fragment the
+/// HeroUiTokens.breakpointSm)), ...)` fragment; without that fragment the
 /// recipe's own action wins below 640px.
 @MixWidget(target: RemixToast.new)
 ToastStyler uiToastStyle({

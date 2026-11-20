@@ -52,14 +52,14 @@ List<Color> {{valuePrefix}}ChartPalette(BuildContext context) =>
 /// slice's label color from this, next to the fill the slice is drawn in:
 ///
 /// ```dart
-/// final palette = {{valuePrefix}}ChartPalette(context);
+/// final palette = heroUiChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
 ///   label: 'Mobile',
 ///   value: 64,
 ///   style: PieSliceStyler().label(
-///     TextStyler().color({{valuePrefix}}PieSliceLabelColor(context, palette[0])),
+///     TextStyler().color(heroUiPieSliceLabelColor(context, palette[0])),
 ///   ),
 /// )
 /// ```

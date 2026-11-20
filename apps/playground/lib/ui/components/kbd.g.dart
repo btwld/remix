@@ -17,7 +17,7 @@ part of 'kbd.dart';
 /// key through [style]:
 ///
 /// ```dart
-/// PlaygroundKbd('⌘', style: TextStyler().semanticsLabel('Command'))
+/// VanillaKbd('⌘', style: TextStyler().semanticsLabel('Command'))
 /// ```
 class PlaygroundKbd extends StatelessWidget {
   const PlaygroundKbd(

@@ -21,7 +21,7 @@ part of 'sidebar.dart';
 /// The recipe sets no panel width and no header padding. The host can supply
 /// expanded/collapsed widths to the widget for coordinated animation, or size
 /// the panel itself. Header metrics usually match the app bar beside it: a
-/// `UiTokens.space9` height lines the header up with `app_bar`.
+/// `FortalTokens.space9` height lines the header up with `app_bar`.
 class UiSidebar<T extends Object> extends StatelessWidget {
   const UiSidebar({
     super.key,

@@ -34,7 +34,7 @@ enum PlaygroundToastVariant {
 ///   ),
 ///   home: const SizedBox.shrink(),
 ///   builder: (context, child) => Overlay.wrap(
-///     child: RemixToastScope(style: playgroundToastStyle(), child: child!),
+///     child: RemixToastScope(style: vanillaToastStyle(), child: child!),
 ///   ),
 /// )
 /// ```
@@ -48,7 +48,7 @@ enum PlaygroundToastVariant {
 ///   RemixToastData(
 ///     title: 'Upload failed',
 ///     priority: RemixToastPriority.assertive,
-///     style: playgroundToastStyle(variant: .destructive),
+///     style: vanillaToastStyle(variant: .destructive),
 ///   ),
 /// );
 /// ```

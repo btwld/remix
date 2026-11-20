@@ -34,7 +34,7 @@ enum {{typePrefix}}ToastVariant {
 ///   ),
 ///   home: const SizedBox.shrink(),
 ///   builder: (context, child) => Overlay.wrap(
-///     child: RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: child!),
+///     child: RemixToastScope(style: vanillaToastStyle(), child: child!),
 ///   ),
 /// )
 /// ```
@@ -48,7 +48,7 @@ enum {{typePrefix}}ToastVariant {
 ///   RemixToastData(
 ///     title: 'Upload failed',
 ///     priority: RemixToastPriority.assertive,
-///     style: {{valuePrefix}}ToastStyle(variant: .destructive),
+///     style: vanillaToastStyle(variant: .destructive),
 ///   ),
 /// );
 /// ```

@@ -32,16 +32,16 @@ const _compactSheetBarrierGutter = 56.0;
 /// dismissal.
 ///
 /// ```dart
-/// UiSidebarLayout(
-///   sidebar: UiSidebar<AppPage>(
+/// FortalSidebarLayout(
+///   sidebar: FortalSidebar<AppPage>(
 ///     sections: sections,
 ///     selectedValue: page,
 ///     onSelected: (value) {
 ///       setState(() => page = value);
-///       UiSidebarLayoutScope.of(context).closeCompact();
+///       FortalSidebarLayoutScope.of(context).closeCompact();
 ///     },
 ///   ),
-///   header: const UiAppBar(title: 'Overview'),
+///   header: const FortalAppBar(title: 'Overview'),
 ///   body: PageBody(page: page),
 /// )
 /// ```
@@ -362,7 +362,7 @@ class UiSidebarLayoutScope extends InheritedWidget {
     final scope = maybeOf(context);
     if (scope == null) {
       throw FlutterError(
-        'UiSidebarLayoutScope.of requires a UiSidebarLayout ancestor.',
+        'FortalSidebarLayoutScope.of requires a FortalSidebarLayout ancestor.',
       );
     }
     return scope;

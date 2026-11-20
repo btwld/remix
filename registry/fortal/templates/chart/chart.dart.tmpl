@@ -37,14 +37,14 @@ List<Color> {{valuePrefix}}ChartPalette(
 /// `#111111` ink, whichever contrasts more.
 ///
 /// ```dart
-/// final palette = {{valuePrefix}}ChartPalette(context);
+/// final palette = fortalChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
 ///   label: 'Mobile',
 ///   value: 64,
 ///   style: PieSliceStyler().label(
-///     TextStyler().color({{valuePrefix}}PieSliceLabelColor(palette[0])),
+///     TextStyler().color(fortalPieSliceLabelColor(palette[0])),
 ///   ),
 /// )
 /// ```

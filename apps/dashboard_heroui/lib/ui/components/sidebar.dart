@@ -31,7 +31,7 @@ part 'sidebar.g.dart';
 /// It takes no variant and no size, and sets no panel width and no header
 /// padding: the host sizes the panel, because the same panel is presented
 /// as a sheet at narrow widths. Give the header the app bar's
-/// `uiAppBarToolbarHeight` and separator so the two rows line up.
+/// `heroUiAppBarToolbarHeight` and separator so the two rows line up.
 @MixWidget(target: RemixSidebar.new)
 SidebarStyler uiSidebarStyle({
   SidebarStyler style = const SidebarStyler.create(),

@@ -6,7 +6,7 @@ import 'tokens.dart';
 
 /// [token] at [alpha] of its own opacity, resolved from the active scope.
 ///
-/// `primary` at 90% is `playgroundTint(PlaygroundTokens.primary, 0.9)`. The alpha
+/// `primary` at 90% is `vanillaTint(VanillaTokens.primary, 0.9)`. The alpha
 /// multiplies rather than replaces, because some tokens are already translucent
 /// — the dark theme's `border` is white at 10%, and half of it is white at 5%,
 /// not at 50%.
@@ -15,7 +15,7 @@ import 'tokens.dart';
 /// exists for the handful of fills that sit at a different strength in the dark
 /// theme, such as the destructive fill at 60%.
 ///
-/// The obvious spelling would be `PlaygroundTokens.primary().withValues(...)`,
+/// The obvious spelling would be `VanillaTokens.primary().withValues(...)`,
 /// but that records a Mix *directive*, and directives accumulate through
 /// every later merge: a caller who replaced the fill would still get this
 /// alpha applied on top of their own color. A `ContextToken` does the
@@ -77,8 +77,8 @@ final _byBrightness =
 /// have an outside band cut off at the container's edge; pass [inset] to draw
 /// it inside the control instead.
 ///
-/// A destructive control rings in its own color: `playgroundFocusRing(color:
-/// PlaygroundTokens.destructive, alpha: 0.2, dark: 0.4)`.
+/// A destructive control rings in its own color: `vanillaFocusRing(color:
+/// VanillaTokens.destructive, alpha: 0.2, dark: 0.4)`.
 RemixBoxEffectsMix playgroundFocusRing({
   ColorToken color = PlaygroundTokens.ring,
   double alpha = _ringAlpha,

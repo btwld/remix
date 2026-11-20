@@ -20,7 +20,7 @@ enum UiSwitchSize {
 /// HeroUI recipe for [RemixSwitch].
 ///
 /// The label sits inside the control's tap target. A description beneath it is
-/// `UiSwitchGroup`'s. [invalid] turns the label danger, as
+/// `HeroUiSwitchGroup`'s. [invalid] turns the label danger, as
 /// `[data-invalid] .label`; `switch.css` has no invalid treatment for the
 /// control itself.
 @MixWidget(target: RemixSwitch.new)

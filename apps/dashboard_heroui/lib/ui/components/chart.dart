@@ -51,14 +51,14 @@ List<Color> uiChartPalette(BuildContext context) => List<Color>.unmodifiable([
 /// slice's label color from this, next to the fill the slice is drawn in:
 ///
 /// ```dart
-/// final palette = uiChartPalette(context);
+/// final palette = heroUiChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
 ///   label: 'Mobile',
 ///   value: 64,
 ///   style: PieSliceStyler().label(
-///     TextStyler().color(uiPieSliceLabelColor(context, palette[0])),
+///     TextStyler().color(heroUiPieSliceLabelColor(context, palette[0])),
 ///   ),
 /// )
 /// ```

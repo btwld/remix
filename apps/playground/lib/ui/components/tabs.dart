@@ -32,7 +32,7 @@ enum PlaygroundTabsVariant {
 /// ```dart
 /// SingleChildScrollView(
 ///   scrollDirection: Axis.horizontal,
-///   child: PlaygroundTabBar(child: Row(children: tabs)),
+///   child: VanillaTabBar(child: Row(children: tabs)),
 /// )
 /// ```
 ///
@@ -46,14 +46,14 @@ enum PlaygroundTabsVariant {
 ///   child: Column(
 ///     crossAxisAlignment: CrossAxisAlignment.start,
 ///     children: [
-///       PlaygroundTabBar(
+///       VanillaTabBar(
 ///         child: Row(mainAxisSize: MainAxisSize.min, children: [
-///           PlaygroundTab(tabId: 'account', label: 'Account'),
-///           PlaygroundTab(tabId: 'billing', label: 'Billing'),
+///           VanillaTab(tabId: 'account', label: 'Account'),
+///           VanillaTab(tabId: 'billing', label: 'Billing'),
 ///         ]),
 ///       ),
-///       PlaygroundTabView(tabId: 'account', child: accountPanel),
-///       PlaygroundTabView(tabId: 'billing', child: billingPanel),
+///       VanillaTabView(tabId: 'account', child: accountPanel),
+///       VanillaTabView(tabId: 'billing', child: billingPanel),
 ///     ],
 ///   ),
 /// )

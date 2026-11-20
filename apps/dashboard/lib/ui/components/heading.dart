@@ -36,7 +36,7 @@ TextStyler uiHeadingStyle({
     style: uiTextSizeToken(size).mix(),
   ).height(lineHeight).fontWeight(uiTextWeightToken(weight)());
   // Neutral headings pin `gray12` from the tokens rather than inheriting the
-  // ambient foreground, matching uiTextStyle's token-default contract.
+  // ambient foreground, matching fortalTextStyle's token-default contract.
   recipe = accent
       ? uiAccentForeground(recipe, highContrast: highContrast)
       : recipe.color(UiTokens.gray12());

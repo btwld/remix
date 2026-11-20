@@ -30,14 +30,14 @@ List<Color> playgroundChartPalette(BuildContext context) =>
 /// slice's label color from this:
 ///
 /// ```dart
-/// final palette = playgroundChartPalette(context);
+/// final palette = vanillaChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
 ///   label: 'Mobile',
 ///   value: 64,
 ///   style: PieSliceStyler().label(
-///     TextStyler().color(playgroundPieSliceLabelColor(context, palette[0])),
+///     TextStyler().color(vanillaPieSliceLabelColor(context, palette[0])),
 ///   ),
 /// )
 /// ```

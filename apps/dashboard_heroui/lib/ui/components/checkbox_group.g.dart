@@ -10,7 +10,7 @@ part of 'checkbox_group.dart';
 /// that carries its own label.
 ///
 /// [minimumTapTargetSize] sets the widget's default tap target, as on
-/// `UiCheckbox`.
+/// `HeroUiCheckbox`.
 class UiCheckboxGroupItem<T extends Object> extends StatelessWidget {
   const UiCheckboxGroupItem({
     super.key,

@@ -9,7 +9,7 @@ import 'theme_scope.dart' show UiTheme;
 ///
 /// Example:
 /// ```dart
-/// ButtonStyler().color(UiTokens.accentSolid())
+/// ButtonStyler().color(FortalTokens.accentSolid())
 /// ```
 ///
 /// Must be used within [UiTheme] to resolve actual values.

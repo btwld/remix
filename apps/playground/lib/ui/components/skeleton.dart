@@ -14,7 +14,7 @@ part 'skeleton.g.dart';
 /// child it wraps, or explicit constraints on [style], measure it:
 ///
 /// ```dart
-/// PlaygroundSkeleton(
+/// VanillaSkeleton(
 ///   style: SkeletonStyler().container(.size(160, 20)),
 /// )
 /// ```

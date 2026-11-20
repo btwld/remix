@@ -29,12 +29,12 @@ part of 'popover.dart';
 ///   }
 ///
 ///   @override
-///   Widget build(BuildContext context) => PlaygroundPopover(
+///   Widget build(BuildContext context) => VanillaPopover(
 ///     controller: _controller,
 ///     openOnTap: false,
 ///     triggerFocusNode: _triggerFocus,
 ///     popoverChild: const Text('Filters go here.'),
-///     child: PlaygroundButton.outline(
+///     child: VanillaButton.outline(
 ///       label: 'Filter',
 ///       focusNode: _triggerFocus,
 ///       onPressed: () =>

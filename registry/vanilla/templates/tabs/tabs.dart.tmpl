@@ -32,7 +32,7 @@ enum {{typePrefix}}TabsVariant {
 /// ```dart
 /// SingleChildScrollView(
 ///   scrollDirection: Axis.horizontal,
-///   child: {{typePrefix}}TabBar(child: Row(children: tabs)),
+///   child: VanillaTabBar(child: Row(children: tabs)),
 /// )
 /// ```
 ///
@@ -46,14 +46,14 @@ enum {{typePrefix}}TabsVariant {
 ///   child: Column(
 ///     crossAxisAlignment: CrossAxisAlignment.start,
 ///     children: [
-///       {{typePrefix}}TabBar(
+///       VanillaTabBar(
 ///         child: Row(mainAxisSize: MainAxisSize.min, children: [
-///           {{typePrefix}}Tab(tabId: 'account', label: 'Account'),
-///           {{typePrefix}}Tab(tabId: 'billing', label: 'Billing'),
+///           VanillaTab(tabId: 'account', label: 'Account'),
+///           VanillaTab(tabId: 'billing', label: 'Billing'),
 ///         ]),
 ///       ),
-///       {{typePrefix}}TabView(tabId: 'account', child: accountPanel),
-///       {{typePrefix}}TabView(tabId: 'billing', child: billingPanel),
+///       VanillaTabView(tabId: 'account', child: accountPanel),
+///       VanillaTabView(tabId: 'billing', child: billingPanel),
 ///     ],
 ///   ),
 /// )

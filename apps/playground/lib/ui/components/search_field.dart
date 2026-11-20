@@ -27,7 +27,7 @@ import 'text_field.dart';
 /// enclosing dialog closes.
 ///
 /// ```dart
-/// PlaygroundSearchField(
+/// VanillaSearchField(
 ///   semanticLabel: 'Search customers',
 ///   hintText: 'Search customers…',
 ///   onChanged: (query) => setState(() => this.query = query),
@@ -110,7 +110,7 @@ class _PlaygroundSearchFieldState extends State<PlaygroundSearchField> {
 
   FocusNode get _focusNode =>
       widget.focusNode ??
-      (_ownFocusNode ??= FocusNode(debugLabel: 'PlaygroundSearchField'));
+      (_ownFocusNode ??= FocusNode(debugLabel: 'VanillaSearchField'));
 
   /// Whether there is anything the user may clear.
   bool get _canClear => widget.enabled && !widget.readOnly && _hasText;

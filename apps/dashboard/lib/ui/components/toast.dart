@@ -51,7 +51,7 @@ enum UiToastIntent {
 /// close button. It caps at 360px and shrinks with the available width.
 ///
 /// ```dart
-/// RemixToastScope(style: uiToastStyle(), child: const Shell())
+/// RemixToastScope(style: fortalToastStyle(), child: const Shell())
 /// ```
 @MixWidget(target: RemixToast.new)
 ToastStyler uiToastStyle({

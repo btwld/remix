@@ -9,7 +9,7 @@ part of 'modal.dart';
 /// HeroUI recipe for [RemixDialog], the modal surface.
 ///
 /// Open it with `showRemixDialog`, or `showRemixAlertDialog` for an alert; pass
-/// `UiTokens.backdrop` (resolved in the caller's context) as `barrierColor`
+/// `HeroUiTokens.backdrop` (resolved in the caller's context) as `barrierColor`
 /// for HeroUI's backdrop.
 class UiModal extends StatelessWidget {
   const UiModal({
