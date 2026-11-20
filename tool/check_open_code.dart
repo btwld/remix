@@ -39,6 +39,7 @@ import 'package:yaml/yaml.dart';
 
 import '../packages/remix_cli/lib/src/icon_registry.dart';
 import '../packages/remix_cli/lib/src/project_config.dart';
+import '../packages/remix_cli/lib/src/registry.dart';
 import '../packages/remix_cli/lib/src/registry_source.dart';
 import 'compile_registry_consumer.dart';
 import 'check_pub_floors.dart';
@@ -681,8 +682,8 @@ enum IndependentMode { canary, all, none }
 
 enum InstallMode { batch, incremental }
 
-/// Every catalog item is installed once; a batch still exercises two incremental
-/// adds before installing the rest together. Small catalogs need no empty add.
+/// Requests each planned item in order. Batch mode still exercises two
+/// incremental adds before requesting the rest together.
 List<List<String>> galleryInstallBatches(
   List<String> items,
   InstallMode mode,
@@ -2066,8 +2067,8 @@ Future<Object> _resolveToolchain(Directory root, String pinned) async {
 /// Fails when the checked item list and remote registry have drifted apart.
 ///
 /// This check exists because the failure it prevents is silent: an item added
-/// to `registry.yaml` but not to the preset contract is never installed, never
-/// rendered into the fixture, never behavior-tested, and never boundary
+/// to `registry.yaml` but unreachable from any planned add is never installed,
+/// never rendered into the fixture, never behavior-tested, and never boundary
 /// checked — and every suite still passes.
 _Failure? _verifyRegistryCoverage(
   Directory repositoryRoot,
@@ -2081,22 +2082,27 @@ _Failure? _verifyRegistryCoverage(
     return _Failure('registry/${preset.name}/registry.yaml is missing.');
   }
 
-  final document = loadYaml(file.readAsStringSync());
-  if (document is! YamlMap || document['items'] is! YamlMap) {
-    return _Failure('registry.yaml is not in the expected shape.');
+  final requested = preset.registryItems.toSet();
+  final Set<String> catalogItems;
+  final Set<String> installed;
+  try {
+    final catalog = RegistryCatalog.parse(
+      file.readAsStringSync(),
+      preset: preset.name,
+    );
+    catalogItems = catalog.items.keys.toSet();
+    final knownRequests = requested.intersection(catalogItems);
+    installed = knownRequests.isEmpty
+        ? const {}
+        : catalog.resolveAll(knownRequests).map((item) => item.name).toSet();
+  } on FormatException catch (error) {
+    return _Failure(error.message);
   }
 
-  // Foundations arrive through dependency closure. Their exact files are
-  // still asserted by the installed inventory, not exempted from coverage.
-  final catalogItems = {
-    for (final key in (document['items'] as YamlMap).keys)
-      if (key is String) key,
-  };
-  final installed = {...preset.foundationItems, ...preset.registryItems};
   final problems = <String>[
     for (final item in catalogItems.difference(installed))
       'registry.yaml has $item, which this check never installs',
-    for (final item in installed.difference(catalogItems))
+    for (final item in requested.difference(catalogItems))
       'this check installs $item, which registry.yaml does not define',
   ]..sort();
 

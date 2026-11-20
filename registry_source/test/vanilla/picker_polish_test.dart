@@ -8,7 +8,7 @@ import 'package:registry_source/vanilla.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-import 'calendar_recipes_test.dart' show calendarHost;
+import 'calendar_recipes_test.dart' show calendarHost, dayBox;
 import 'support.dart';
 
 void main() {
@@ -23,6 +23,70 @@ void main() {
     }
     await loader.load();
   });
+
+  for (final range in [false, true]) {
+    testWidgets('${range ? 'range' : 'single'} picker overrides win', (
+      tester,
+    ) async {
+      final firstDate = DateTime(2026);
+      final lastDate = DateTime(2028);
+      final currentDate = DateTime(2026, 11, 6);
+      final trigger = ButtonStyler().maxWidth(440);
+      final panel = PopoverStyler().minWidth(360).maxWidth(380);
+      final selector = SelectStyler().trigger(
+        SelectTriggerStyler().minHeight(56),
+      );
+      final calendar = CalendarStyler().day(CalendarDayStyler().minHeight(52));
+      await tester.pumpWidget(
+        calendarHost(
+          range
+              ? VanillaDateRangePicker(
+                  value: null,
+                  firstDate: firstDate,
+                  lastDate: lastDate,
+                  currentDate: currentDate,
+                  onChanged: (_) {},
+                  buttonStyle: trigger,
+                  popoverStyle: panel,
+                  selectorStyle: selector,
+                  calendarStyle: calendar,
+                )
+              : VanillaDatePicker(
+                  value: null,
+                  firstDate: firstDate,
+                  lastDate: lastDate,
+                  currentDate: currentDate,
+                  onChanged: (_) {},
+                  buttonStyle: trigger,
+                  popoverStyle: panel,
+                  selectorStyle: selector,
+                  calendarStyle: calendar,
+                ),
+          const VanillaThemeData.light(),
+        ),
+      );
+      await tester.tap(find.byType(RemixButton));
+      await tester.pumpAndSettle();
+
+      final panelSpec = tester.widget<StyleSpecProvider<PopoverSpec>>(
+        find.byType(StyleSpecProvider<PopoverSpec>),
+      );
+      expect(panelSpec.spec.spec.container.spec.constraints?.minWidth, 360);
+      expect(panelSpec.spec.spec.container.spec.constraints?.maxWidth, 380);
+      final selectorSpec = tester.widget<StyleSpecProvider<SelectTriggerSpec>>(
+        find.byType(StyleSpecProvider<SelectTriggerSpec>).first,
+      );
+      expect(
+        selectorSpec.spec.spec.container.spec.box?.spec.constraints?.minHeight,
+        56,
+      );
+      final daySpec = tester.widget<StyleSpecProvider<CalendarDaySpec>>(
+        dayBox(6),
+      );
+      expect(daySpec.spec.spec.container.spec.constraints?.minHeight, 52);
+      expect(tester.takeException(), isNull);
+    });
+  }
   for (final theme in vanillaThemes) {
     for (final range in [false, true]) {
       testWidgets(
@@ -185,6 +249,64 @@ void main() {
             ),
           );
           expect(t.takeException(), isNull);
+        },
+      );
+    }
+    for (final range in [false, true]) {
+      testWidgets(
+        '${theme.name} ${range ? "range" : "single"} picker honors panel width floors',
+        (tester) async {
+          const calendarWidth =
+              VanillaTokens.s12 * DateTime.daysPerWeek +
+              (VanillaTokens.s3 + VanillaTokens.strokeHairline) * 2;
+          final cases = [
+            (0.0, ButtonStyler(), calendarWidth),
+            (400.0, ButtonStyler(), 400.0),
+            (0.0, ButtonStyler().minWidth(420), 420.0),
+            (0.0, ButtonStyler().maxWidth(440), 440.0),
+          ];
+          final firstDate = DateTime(2026);
+          final lastDate = DateTime(2028);
+          final currentDate = DateTime(2026, 11, 6);
+          for (final (parentWidth, buttonStyle, panelWidth) in cases) {
+            await tester.pumpWidget(
+              calendarHost(
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: parentWidth),
+                  child: range
+                      ? VanillaDateRangePicker(
+                          value: null,
+                          firstDate: firstDate,
+                          lastDate: lastDate,
+                          currentDate: currentDate,
+                          onChanged: (_) {},
+                          buttonStyle: buttonStyle,
+                        )
+                      : VanillaDatePicker(
+                          value: null,
+                          firstDate: firstDate,
+                          lastDate: lastDate,
+                          currentDate: currentDate,
+                          onChanged: (_) {},
+                          buttonStyle: buttonStyle,
+                        ),
+                ),
+                theme.data,
+              ),
+            );
+            await tester.tap(find.byType(RemixButton));
+            await tester.pumpAndSettle();
+            final panel = tester.widget<StyleSpecProvider<PopoverSpec>>(
+              find.byType(StyleSpecProvider<PopoverSpec>),
+            );
+            expect(
+              panel.spec.spec.container.spec.constraints?.minWidth,
+              panelWidth,
+            );
+            expect(tester.takeException(), isNull);
+            await tester.pumpWidget(const SizedBox.shrink());
+            await tester.pumpAndSettle();
+          }
         },
       );
     }
