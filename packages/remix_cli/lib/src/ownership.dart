@@ -112,6 +112,7 @@ final class OwnershipPlan {
       }
       reservations[path] = (entry.key, entry.value);
     }
+    final recordedPaths = reservations.keys.toSet();
     final barrel = canonical('${config.uiPath}/ui.dart');
     final planned = <String>{};
     for (final item in graph.items) {
@@ -136,7 +137,8 @@ final class OwnershipPlan {
             if (value == oldOwner) key,
         ];
         final evidence = [
-          if (managedExports.contains(oldExport))
+          if (managedExports.contains(oldExport) &&
+              !recordedPaths.contains(canonical('${config.uiPath}/$oldExport')))
             '${config.uiPath}/ui.dart still exports $oldExport.',
           if (obsoleteTargets.isNotEmpty)
             '$ownershipFileName still reserves ${obsoleteTargets.join(', ')}.',

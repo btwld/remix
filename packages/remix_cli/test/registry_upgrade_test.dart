@@ -21,7 +21,6 @@ const _themeExports = [
 ];
 const _oldOwner = 'btwld/remix/registry#vanilla/textfield';
 const _themeOwner = 'btwld/remix/registry#vanilla/theme';
-final _oldRevision = 'b' * 40;
 
 void main() {
   late Directory root;
@@ -34,10 +33,6 @@ void main() {
   test(
     'a partially adopted install cannot add a second managed export',
     () async {
-      _seedOldVanilla(root, recordTextField: false);
-      for (final path in _themeExports) {
-        _file(root, 'lib/ui/$path').createSync(recursive: true);
-      }
       final processes = RecordingProcessRunner(
         (_) async => successProcessOutput,
       );
@@ -47,7 +42,10 @@ void main() {
         processRunner: processes,
         writeOut: (_) {},
       );
-      await _advancePin(root, installer);
+      await _seedOldVanilla(root, installer, recordTextField: false);
+      for (final path in _themeExports) {
+        _file(root, 'lib/ui/$path').createSync(recursive: true);
+      }
       final before = snapshotFiles(root);
 
       for (final flags in [
@@ -76,6 +74,46 @@ void main() {
       expect(snapshotFiles(root), before);
     },
   );
+
+  for (final (preset, oldItem, newItem) in [
+    ('vanilla', 'textfield', 'text_field'),
+    ('fortal', 'textfield', 'text_field'),
+    ('heroui', 'textfield', 'text_field'),
+    ('heroui', 'textarea', 'text_area'),
+  ]) {
+    test('$preset permits a third-party export of $oldItem.dart', () async {
+      final installer = Installer(
+        projectRoot: root,
+        sources: const FixtureOfficialResolver(),
+        writeOut: (_) {},
+      );
+      expect(await _run(installer, ['init', '--preset', preset]), (0, ''));
+      final legacyExport = 'components/$oldItem.dart';
+      final legacyTarget = 'lib/ui/$legacyExport';
+      _file(root, legacyTarget)
+        ..createSync(recursive: true)
+        ..writeAsStringSync('const companyLegacyWidget = 42;\n');
+      final barrel = _file(root, _barrel);
+      barrel.writeAsStringSync(
+        updateManagedBarrel(barrel.readAsStringSync(), [legacyExport]),
+      );
+      _writeOwnership(
+        root,
+        preset: preset,
+        uiPath: 'lib/ui',
+        targets: {
+          legacyTarget: 'example/company/registry#$preset/legacy_widget',
+        },
+      );
+      final before = snapshotFiles(root);
+
+      expect(await _run(installer, ['add', '@remix/$newItem', '--dry-run']), (
+        0,
+        '',
+      ));
+      expect(snapshotFiles(root), before);
+    });
+  }
 
   for (final (preset, oldItem, newItem) in [
     ('fortal', 'textfield', 'text_field'),
@@ -120,14 +158,14 @@ void main() {
   }
 
   test(
-    'migrating a simulated old-pin install compiles with one text field export',
+    'migrating simulated pre-rename source compiles with one text field export',
     () async {
-      _seedOldVanilla(root, recordTextField: true);
       final installer = Installer(
         projectRoot: root,
         sources: const FixtureOfficialResolver(),
         writeOut: (_) {},
       );
+      await _seedOldVanilla(root, installer, recordTextField: true);
       _file(root, 'pubspec.yaml').writeAsStringSync('''
 dev_dependencies:
   flutter_test:
@@ -143,7 +181,6 @@ dev_dependencies:
         ].join('\n'),
       );
 
-      await _advancePin(root, installer);
       final customization = _file(root, _oldField).readAsLinesSync().last;
       _file(root, _oldField).deleteSync();
       _file(root, _oldAdapter).deleteSync();
@@ -239,30 +276,14 @@ Future<(int, String)> _run(Installer installer, List<String> arguments) async {
   return (exitCode, errors.join('\n'));
 }
 
-Future<void> _advancePin(Directory root, Installer installer) async {
-  final config = _file(root, 'remix.yaml');
-  expect(config.readAsStringSync(), contains(_oldRevision));
-  expect(await _run(installer, ['registry', 'update', '@remix']), (0, ''));
-  expect(config.readAsStringSync(), isNot(contains(_oldRevision)));
-}
-
 File _file(Directory root, String path) => File(p.join(root.path, path));
 
-void _seedOldVanilla(Directory root, {required bool recordTextField}) {
-  _file(root, 'remix.yaml').writeAsStringSync('''
-schema: 3
-prefix: Acme
-preset: vanilla
-paths:
-  ui: lib/ui
-defaultRegistry: "@remix"
-registries:
-  "@remix":
-    repository: btwld/remix
-    path: registry
-    ref: registry-stable
-    revision: "$_oldRevision"
-''');
+Future<void> _seedOldVanilla(
+  Directory root,
+  Installer installer, {
+  required bool recordTextField,
+}) async {
+  expect(await _run(installer, ['init', '--prefix', 'Acme']), (0, ''));
   _file(root, _oldField)
     ..createSync(recursive: true)
     ..writeAsStringSync(

@@ -41,6 +41,9 @@ item still provides both widgets.
 
 ## Remove only the obsolete files, exports, and reservations
 
+These steps apply only to the retired Remix items. If a file at one of these
+paths is recorded as belonging to another item, keep it and its export.
+
 1. Once your edits are backed up, remove the old `.dart` file and its
    `.g.dart` adapter. The installer regenerates the adapter at the new path.
 2. In `ui.dart`, remove `export 'components/textfield.dart';` and, for HeroUI
