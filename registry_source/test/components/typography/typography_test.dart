@@ -12,39 +12,35 @@ import '../../helpers/test_helpers.dart';
 
 void main() {
   group('metrics', () {
-    for (final variant in FortalKbdVariant.values) {
-      testWidgets('kbd ${variant.name} preserves token font families', (
-        tester,
-      ) async {
-        for (final size in [null, FortalTextSize.size2]) {
-          final token = size == null ? FortalTokens.text3 : FortalTokens.text2;
-          await _pump(
-            tester,
-            Builder(
-              builder: (context) => MixScope.inherit(
-                textStyles: {
-                  token: token
-                      .resolve(context)
-                      .copyWith(
-                        fontFamily: 'Custom family',
-                        fontFamilyFallback: ['Fallback family'],
-                      ),
-                },
-                child: FortalKbd('Key', variant: variant, size: size),
-              ),
+    testWidgets('kbd preserves token font families', (tester) async {
+      for (final size in [null, FortalTextSize.size2]) {
+        final token = size == null ? FortalTokens.text3 : FortalTokens.text2;
+        await _pump(
+          tester,
+          Builder(
+            builder: (context) => MixScope.inherit(
+              textStyles: {
+                token: token
+                    .resolve(context)
+                    .copyWith(
+                      fontFamily: 'Custom family',
+                      fontFamilyFallback: ['Fallback family'],
+                    ),
+              },
+              child: FortalKbd('Key', size: size),
             ),
-            ambient: const TextStyle(fontFamily: 'Unrelated ambient family'),
-          );
-          final style = _renderedTextStyle(tester, 'Key');
-          expect(style.fontFamily, 'Custom family');
-          expect(style.fontFamilyFallback, ['Fallback family']);
-          expect(style.inherit, isFalse);
-          expect(style.fontWeight, FontWeight.w400);
-          expect(style.fontSize, closeTo(size == null ? 12 : 11.2, 1e-9));
-          expect(style.height, 1.7);
-        }
-      });
-    }
+          ),
+          ambient: const TextStyle(fontFamily: 'Unrelated ambient family'),
+        );
+        final style = _renderedTextStyle(tester, 'Key');
+        expect(style.fontFamily, 'Custom family');
+        expect(style.fontFamilyFallback, ['Fallback family']);
+        expect(style.inherit, isFalse);
+        expect(style.fontWeight, FontWeight.w400);
+        expect(style.fontSize, closeTo(size == null ? 12 : 11.2, 1e-9));
+        expect(style.height, 1.7);
+      }
+    });
 
     testWidgets('all nine sizes resolve the pinned scale across scaling', (
       tester,
@@ -127,8 +123,8 @@ void main() {
         tester,
         const Column(
           children: [
-            FortalKbd.soft('unsized'),
-            FortalKbd.soft('explicit', size: FortalTextSize.size2),
+            FortalKbd('unsized'),
+            FortalKbd('explicit', size: FortalTextSize.size2),
           ],
         ),
       );
@@ -152,7 +148,7 @@ void main() {
       for (var i = 0; i < FortalTextSize.values.length; i++) {
         final size = FortalTextSize.values[i];
         final label = 'kbd$i';
-        await _pump(tester, FortalKbd.soft(label, size: size));
+        await _pump(tester, FortalKbd(label, size: size));
         final style = _text(tester, label).style!;
         expect(style.fontSize, closeTo(_fontSizes[i] * 0.8, 1e-9));
         expect(style.letterSpacing, closeTo(_letterSpacings[i] * 0.8, 1e-9));
@@ -165,7 +161,7 @@ void main() {
 
       // The unsized path remains anchored to text3, whose letter spacing is
       // zero, instead of inheriting the hostile run's 2px spacing.
-      await _pump(tester, const FortalKbd.soft('unsized'));
+      await _pump(tester, const FortalKbd('unsized'));
       expect(_text(tester, 'unsized').style?.letterSpacing, 0);
     });
 
@@ -260,7 +256,7 @@ void main() {
             const FortalHeading('section heading'),
             const FortalCode.soft('soft code'),
             const FortalCode.ghost('ghost code'),
-            const FortalKbd.soft('command key'),
+            const FortalKbd('command key'),
             const FortalLink('inert link'),
             FortalLink('actionable link', onPressed: _noop),
           ],
@@ -687,10 +683,7 @@ void main() {
       expect(code.maxLines, 1);
       expect(code.overflow, TextOverflow.ellipsis);
 
-      await _pump(
-        tester,
-        const FortalKbd.soft('x', size: FortalTextSize.size2),
-      );
+      await _pump(tester, const FortalKbd('x', size: FortalTextSize.size2));
       expect(
         _surface(tester).container.spec.constraints?.minWidth,
         closeTo(1.75 * 14 * 0.8, 1e-9),
@@ -698,8 +691,10 @@ void main() {
     });
   });
 
-  group('kbd variants', () {
-    testWidgets('soft resolves its fills in both modes', (tester) async {
+  group('kbd fill', () {
+    testWidgets('grayA3 key cap with gray12 text in both modes', (
+      tester,
+    ) async {
       for (final brightness in Brightness.values) {
         final grayA3 = await _resolveToken(
           tester,
@@ -712,21 +707,15 @@ void main() {
           brightness: brightness,
         );
 
-        for (final (variant, fill) in [(FortalKbdVariant.soft, grayA3)]) {
-          final label = '${variant.name}-${brightness.name}';
-          await _pump(
-            tester,
-            FortalKbd(label, variant: variant),
-            brightness: brightness,
-          );
-          expect(_boxColor(_surface(tester)), fill, reason: label);
-          expect(_text(tester, label).style?.color, gray12, reason: label);
-        }
+        final label = brightness.name;
+        await _pump(tester, FortalKbd(label), brightness: brightness);
+        expect(_boxColor(_surface(tester)), grayA3, reason: label);
+        expect(_text(tester, label).style?.color, gray12, reason: label);
       }
     });
 
-    testWidgets('soft draws no key-cap stack', (tester) async {
-      await _pump(tester, const FortalKbd.soft('soft'));
+    testWidgets('draws no key-cap stack', (tester) async {
+      await _pump(tester, const FortalKbd('kbd'));
       expect(_surface(tester).containerEffects?.behindContent, isNull);
     });
   });
@@ -1016,10 +1005,7 @@ void main() {
         await _pump(
           tester,
           const Column(
-            children: [
-              FortalKbd.soft('kbd'),
-              FortalText('accent', accent: true),
-            ],
+            children: [FortalKbd('kbd'), FortalText('accent', accent: true)],
           ),
           brightness: brightness,
         );
@@ -1264,7 +1250,6 @@ void main() {
       expect(code.weight, isNull);
 
       expect(kbd.size, isNull);
-      expect(kbd.variant, FortalKbdVariant.soft);
       expect(kbd.excludeSemantics, isFalse);
 
       expect(link.size, isNull);
@@ -1283,7 +1268,6 @@ void main() {
       expect(const FortalCode.soft('c').variant, FortalCodeVariant.soft);
       expect(const FortalCode.outline('c').variant, FortalCodeVariant.outline);
       expect(const FortalCode.ghost('c').variant, FortalCodeVariant.ghost);
-      expect(const FortalKbd.soft('k').variant, FortalKbdVariant.soft);
     });
 
     testWidgets('excludeSemantics drops the published node', (tester) async {

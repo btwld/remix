@@ -1233,12 +1233,6 @@
             "size3"
           ],
           "default": "size2"
-        },
-        "variant": {
-          "values": [
-            "surface"
-          ],
-          "default": "surface"
         }
       },
       "defaults": {
@@ -1749,17 +1743,10 @@
             "size9"
           ],
           "default": null
-        },
-        "variant": {
-          "values": [
-            "soft"
-          ],
-          "default": "soft"
         }
       },
       "defaults": {
         "size": null,
-        "variant": "soft",
         "excludeSemantics": false
       },
       "supportedStyleProps": [

@@ -174,52 +174,47 @@ void main() {
     }
   }
   for (final size in FortalSegmentedControlSize.values) {
-    for (final variant in FortalSegmentedControlVariant.values) {
-      for (final enabled in [true, false]) {
-        for (final direction in TextDirection.values) {
-          for (final override in [false, true]) {
-            testWidgets(
-              'Segmented ${size.name} $variant enabled=$enabled $direction override=$override',
-              (tester) async {
-                await tester.pumpRemixApp(
-                  IconTheme(
-                    data: const IconThemeData(size: 48),
-                    child: FortalSegmentedControl<String>(
-                      size: size,
-                      variant: variant,
-                      enabled: enabled,
-                      style: override
-                          ? SegmentedControlStyler().item(
-                              SegmentedControlItemStyler().icon(.size(14)),
-                            )
-                          : const SegmentedControlStyler.create(),
-                      items: const [
-                        RemixSegmentedControlItem(
-                          value: 'a',
-                          label: 'Alpha',
-                          icon: Icons.star,
-                        ),
-                      ],
-                      selectedValue: 'a',
-                      onChanged: (_) {},
-                    ),
+    for (final enabled in [true, false]) {
+      for (final direction in TextDirection.values) {
+        for (final override in [false, true]) {
+          testWidgets(
+            'Segmented ${size.name} enabled=$enabled $direction override=$override',
+            (tester) async {
+              await tester.pumpRemixApp(
+                IconTheme(
+                  data: const IconThemeData(size: 48),
+                  child: FortalSegmentedControl<String>(
+                    size: size,
+                    enabled: enabled,
+                    style: override
+                        ? SegmentedControlStyler().item(
+                            SegmentedControlItemStyler().icon(.size(14)),
+                          )
+                        : const SegmentedControlStyler.create(),
+                    items: const [
+                      RemixSegmentedControlItem(
+                        value: 'a',
+                        label: 'Alpha',
+                        icon: Icons.star,
+                      ),
+                    ],
+                    selectedValue: 'a',
+                    onChanged: (_) {},
                   ),
-                  textDirection: direction,
-                );
-                final icon = find.byIcon(Icons.star);
-                expect(icon, findsOneWidget);
-                final spec = tester.resolvedSpecOf<SegmentedControlItemSpec>(
-                  icon,
-                );
-                final expected = override
-                    ? 14.0
-                    : [12.0, 16.0, 20.0][size.index];
-                expect(spec.icon.spec.size, expected);
-                expect(tester.getSize(icon), Size.square(expected));
-                expect(tester.takeException(), isNull);
-              },
-            );
-          }
+                ),
+                textDirection: direction,
+              );
+              final icon = find.byIcon(Icons.star);
+              expect(icon, findsOneWidget);
+              final spec = tester.resolvedSpecOf<SegmentedControlItemSpec>(
+                icon,
+              );
+              final expected = override ? 14.0 : [12.0, 16.0, 20.0][size.index];
+              expect(spec.icon.spec.size, expected);
+              expect(tester.getSize(icon), Size.square(expected));
+              expect(tester.takeException(), isNull);
+            },
+          );
         }
       }
     }

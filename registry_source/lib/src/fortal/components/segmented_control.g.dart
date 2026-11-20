@@ -16,7 +16,6 @@ part of 'segmented_control.dart';
 class FortalSegmentedControl<T extends Object> extends StatelessWidget {
   const FortalSegmentedControl({
     super.key,
-    this.variant = .surface,
     this.size = .size2,
     this.style = const SegmentedControlStyler.create(),
     required this.items,
@@ -28,23 +27,6 @@ class FortalSegmentedControl<T extends Object> extends StatelessWidget {
     this.semanticLabel,
     this.excludeSemantics = false,
   });
-
-  /// A gray track with a raised surface under the selected item.
-  const FortalSegmentedControl.surface({
-    super.key,
-    this.size = .size2,
-    this.style = const SegmentedControlStyler.create(),
-    required this.items,
-    required this.selectedValue,
-    this.onChanged,
-    this.enabled = true,
-    this.orientation = .horizontal,
-    this.loop = true,
-    this.semanticLabel,
-    this.excludeSemantics = false,
-  }) : variant = FortalSegmentedControlVariant.surface;
-
-  final FortalSegmentedControlVariant variant;
 
   final FortalSegmentedControlSize size;
 
@@ -70,11 +52,7 @@ class FortalSegmentedControl<T extends Object> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixSegmentedControl<T>(
       key: this.key,
-      style: fortalSegmentedControlStyle(
-        variant: this.variant,
-        size: this.size,
-        style: this.style,
-      ),
+      style: fortalSegmentedControlStyle(size: this.size, style: this.style),
       items: this.items,
       selectedValue: this.selectedValue,
       onChanged: this.onChanged,
