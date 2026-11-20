@@ -17,28 +17,24 @@ enum {{typePrefix}}ThemeMode { system, light, dark }
 /// [{{typePrefix}}Tokens.accent] also changes its hover and soft shades.
 @immutable
 class {{typePrefix}}ThemeData {
-  const {{typePrefix}}ThemeData({
+  {{typePrefix}}ThemeData({
     required this.brightness,
-    this.colors = const {},
+    Map<ColorToken, Color> colors = const {},
     this.radius = 8,
     this.fontFamily,
-  });
+  }) : colors = Map<ColorToken, Color>.unmodifiable(colors);
 
-  const {{typePrefix}}ThemeData.light({
-    this.colors = const {},
-    this.radius = 8,
-    this.fontFamily,
-  }) : brightness = Brightness.light;
+  const {{typePrefix}}ThemeData.light({this.radius = 8, this.fontFamily})
+    : brightness = Brightness.light,
+      colors = const {};
 
-  const {{typePrefix}}ThemeData.dark({
-    this.colors = const {},
-    this.radius = 8,
-    this.fontFamily,
-  }) : brightness = Brightness.dark;
+  const {{typePrefix}}ThemeData.dark({this.radius = 8, this.fontFamily})
+    : brightness = Brightness.dark,
+      colors = const {};
 
   final Brightness brightness;
 
-  /// Color overrides, keyed by the token they replace.
+  /// An immutable snapshot of color overrides, keyed by the token they replace.
   final Map<ColorToken, Color> colors;
 
   /// The base radius (`--radius`); the radius scale is derived from it.
@@ -110,8 +106,8 @@ class {{typePrefix}}ThemeData {
     });
   }
 
-  /// A copy with the given fields; [colors] are merged into the existing
-  /// overrides.
+  /// A copy with the given fields and [colors] merged into the existing
+  /// overrides as an immutable snapshot.
   {{typePrefix}}ThemeData copyWith({
     Brightness? brightness,
     Map<ColorToken, Color>? colors,

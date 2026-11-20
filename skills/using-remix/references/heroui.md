@@ -254,6 +254,13 @@ hover, soft, and focus colours follow); `radius` drives the whole radius
 scale. `fontFamily` is null by default, the platform font, as HeroUI uses the
 system stack; code text uses Geist Mono from `remix_ui_fonts`.
 
+Overrides are immutable snapshots. Use `copyWith(colors: ...)` to update an
+existing theme rather than editing its `colors` map. Move `colors` arguments
+on `.light()` or `.dark()` to `copyWith`, as shown above. The unnamed
+`HeroUiThemeData(brightness: ..., colors: ...)` constructor still accepts
+overrides but is no longer `const`; use the named constructors for const
+themes without overrides.
+
 ## Tokens
 
 `HeroUiTokens` keeps HeroUI's role names: `accent`, `defaultColor`,
