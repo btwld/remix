@@ -190,10 +190,9 @@ class _VanillaPriceRangeState extends State<VanillaPriceRange> {
 }
 ```
 
-The generated adapter forwards the range API except `styleSpec` and
-`semanticFormatterCallbacks`. For localized value formatting, keep
-`RemixRangeSlider` and set `style: uiRangeSliderStyle()` instead. Caller
-`style` overrides merge last, including state fragments.
+The generated adapter forwards the range API except `styleSpec`, including
+`semanticFormatterCallbacks` for localized value formatting. Caller `style`
+overrides merge last, including state fragments.
 
 ## Fortal widgets
 

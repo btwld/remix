@@ -47,8 +47,11 @@ VanillaAgentConversationRecipe vanillaAgentConversationRecipe({
     variant: .outline,
     size: .large,
     style: IconButtonStyler()
+        // The button floats over the transcript, so every fill is opaque.
         .color(VanillaTokens.background())
         .borderRadius(.circular(VanillaTokens.pill))
+        .onHovered(.color(VanillaTokens.accent()))
+        .onPressed(.color(VanillaTokens.accent()))
         .merge(latestStyle),
   ),
 );

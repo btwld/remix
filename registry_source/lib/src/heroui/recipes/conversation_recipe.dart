@@ -42,8 +42,10 @@ HeroUiAgentConversationRecipe heroUiAgentConversationRecipe({
     variant: .outline,
     size: .md,
     style: IconButtonStyler()
+        // The button floats over the transcript, so every fill is opaque.
         .color(HeroUiTokens.surface())
         .borderRadius(.all(HeroUiTokens.radius4xl()))
+        .onHovered(.color(HeroUiTokens.defaultColor()))
         .merge(latestStyle),
   ),
 );

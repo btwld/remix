@@ -64,7 +64,8 @@ class FortalTabView extends StatelessWidget {
 /// A tab is gray text, darker under the pointer, with a 2px underline in the
 /// accent when selected. The underline is a transparent border at rest, so
 /// selecting a tab does not move it. The selected label is medium weight, and
-/// its letter spacing is adjusted so the bolder label keeps its width.
+/// its letter spacing is adjusted so the bolder label keeps its width. A
+/// disabled tab is gray-alpha 8 with no fill under the pointer.
 ///
 /// [highContrast] moves the underline to accent step 12.
 class FortalTab extends StatelessWidget {

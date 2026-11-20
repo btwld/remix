@@ -86,28 +86,7 @@ TabBarStyler playgroundTabBarStyle({
 /// lifted onto the page color with a small shadow; in the dark theme onto a
 /// faint `input` well with an `input` outline, since the dark page is darker
 /// than the list. In the line list it is underlined in `foreground` instead.
-///
-/// The generated widget omits `builder`: `NakedTabState` comes from
-/// `package:naked_ui`, which this layer does not import. Pass a `child` for
-/// custom content, or use `RemixTab` for the raw state.
-@MixWidget(
-  target: RemixTab.new,
-  widgetParameters: .only({
-    'tabId',
-    'child',
-    'label',
-    'icon',
-    'enabled',
-    'mouseCursor',
-    'enableFeedback',
-    'focusNode',
-    'autofocus',
-    'onFocusChange',
-    'onHoverChange',
-    'onPressChange',
-    'semanticLabel',
-  }),
-)
+@MixWidget(target: RemixTab.new)
 TabStyler playgroundTabStyle({
   PlaygroundTabsVariant variant = .filled,
   TabStyler style = const TabStyler.create(),

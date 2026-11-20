@@ -81,7 +81,8 @@ DisclosureStyler _quietDisclosure() => playgroundDisclosureStyle(
       .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
       .content(
         BoxStyler()
-            .padding(.only(top: PlaygroundTokens.s2))
+            .padding(.all(0))
+            .padding(.top(PlaygroundTokens.s2))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
       .onHovered(.trigger(.color(const Color(0x00000000))))
