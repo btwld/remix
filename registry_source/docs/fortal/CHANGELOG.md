@@ -29,22 +29,25 @@
   `fortalBaseButtonRestMotion`. Read sizes from `FortalTokens`, as the recipes
   now do.
 - **Breaking:** remove `FortalKbdVariant`, `FortalKbd.soft`, `FortalKbd.variant`
-  and the `variant` argument of `fortalKbdStyle`. Kbd has one look.
+  and the `variant` arguments to `FortalKbd` and `fortalKbdStyle`.
+  Use `FortalKbd(...)` for the same look.
 - **Breaking:** remove `FortalSegmentedControlVariant`,
   `FortalSegmentedControl.surface`, `FortalSegmentedControl.variant` and the
-  `variant` argument of `fortalSegmentedControlStyle`. The segmented control
-  has one look.
-- **Breaking:** remove the enums that repeated another family's values:
-  `FortalComboboxSize` and `FortalComboboxVariant` (use `FortalTextFieldSize`
-  and `FortalTextFieldVariant`), `FortalTextAreaVariant` (use
-  `FortalTextFieldVariant`) and `FortalSurfaceSize` (use `FortalCardSize`).
+  `variant` arguments to `FortalSegmentedControl` and
+  `fortalSegmentedControlStyle`. Use `FortalSegmentedControl(...)` for the
+  same look.
+- **Breaking:** replace `FortalComboboxSize` with `FortalTextFieldSize`.
+- **Breaking:** replace `FortalComboboxVariant` with `FortalTextFieldVariant`.
+- **Breaking:** replace `FortalTextAreaVariant` with `FortalTextFieldVariant`.
+  `FortalTextAreaSize` stays separate.
+- **Breaking:** replace `FortalSurfaceSize` with `FortalCardSize`.
 - **Breaking:** `FortalTokens` is an `abstract final class`; it cannot be
   instantiated, extended or implemented.
 - **Breaking:** rename `resolveFortalChartPalette` to `fortalChartPalette`.
-- **Breaking:** remove `styleFrom` from `FortalCalendar` and
-  `FortalRangeCalendar`; call `CalendarStyler()` instead.
+- **Breaking:** remove `FortalCalendar.styleFrom`; call `CalendarStyler()` instead.
+- **Breaking:** remove `FortalRangeCalendar.styleFrom`; call `CalendarStyler()` instead.
 - **Breaking:** the `textfield` item is `text_field`, installed as
-  `components/text_field.dart`.
+  `components/text_field.dart` and `components/text_field.g.dart`.
 - **Breaking:** `dashboard_demo` no longer adds exports to `ui.dart`; import
   `ui/recipes/dashboard/dashboard_demo.dart`.
 
