@@ -39,7 +39,7 @@ typedef _Scale = ({
   TextStyleToken text,
 });
 
-/// The Ui DataTable recipe.
+/// The Fortal DataTable recipe.
 ///
 /// It reads top to bottom: the cells, rows, footer and the controls inside
 /// them at the size, then the variant's panel.

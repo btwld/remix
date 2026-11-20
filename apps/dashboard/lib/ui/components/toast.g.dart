@@ -6,7 +6,7 @@ part of 'toast.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Toast recipe, for [RemixToast] and [RemixToastScope].
+/// The Fortal Toast recipe, for [RemixToast] and [RemixToastScope].
 ///
 /// A toast is a raised, blurred panel in a 1px frame, with a ghost action and
 /// close button. It caps at 360px and shrinks with the available width.

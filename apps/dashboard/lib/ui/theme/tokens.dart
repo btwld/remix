@@ -2,7 +2,7 @@ import 'package:remix/remix.dart';
 
 import 'theme_scope.dart' show UiTheme;
 
-/// Design tokens for the Ui UI system and its paired color themes.
+/// Design tokens for the Fortal UI system and its paired color themes.
 ///
 /// Provides color scales (12-step accent/gray), spacing (9-step), radius (6-step),
 /// shadows (6-level), typography (9-size), and functional colors.
@@ -330,7 +330,7 @@ class UiTokens {
 
   static const badgePaddingY1 = DoubleToken('ui.badge.padding-y.1');
 
-  /// Checkbox dimensions expressed as scaled pixels by Ui.
+  /// Checkbox dimensions expressed as scaled pixels by Fortal.
   static const checkboxSize1 = DoubleToken('ui.checkbox.size.1');
   static const checkboxSize3 = DoubleToken('ui.checkbox.size.3');
   static const checkboxIndicatorSize1 = DoubleToken(
@@ -340,7 +340,7 @@ class UiTokens {
     'ui.checkbox.indicator-size.2',
   );
 
-  /// Radio indicators are 40% of their control size in Ui.
+  /// Radio indicators are 40% of their control size in Fortal.
   ///
   /// These values need dedicated tokens because arithmetic on an unresolved
   /// token reference would destroy its identity before Mix can resolve it.

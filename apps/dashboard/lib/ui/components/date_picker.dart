@@ -7,7 +7,7 @@ import 'button.dart';
 import 'calendar.dart';
 import 'popover.dart';
 
-/// Ui's reviewed DatePicker composition.
+/// Fortal's reviewed DatePicker composition.
 ///
 /// Remix owns civil-date selection, focus, keyboard navigation and semantics.
 /// Multiple independent child styles require a hand-written facade; caller

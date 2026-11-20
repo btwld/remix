@@ -6,7 +6,7 @@ part of 'combobox.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Combobox recipe: an editable field with a panel of suggestions.
+/// The Fortal Combobox recipe: an editable field with a panel of suggestions.
 ///
 /// The field shares TextField's recipe. Suggestions use the Select panel's
 /// token roles with growing rows and separate hover, keyboard and press fills.

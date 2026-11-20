@@ -11,7 +11,7 @@ import 'package:remix/remix.dart';
 /// Remix reads these names.
 ///
 /// The color, radius, and text names follow the CSS variables of shadcn/ui's
-/// theme, which inspired Playground's look, so a value read off one of those
+/// theme, which inspired these defaults, so a value read off one of those
 /// themes drops straight into `PlaygroundThemeData`.
 ///
 /// ```dart

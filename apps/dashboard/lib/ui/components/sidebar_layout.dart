@@ -15,7 +15,7 @@ const _navigationSemanticLabel = 'Navigation';
 /// scrim stays reachable on narrow screens.
 const _compactSheetBarrierGutter = 56.0;
 
-/// A Ui-themed layout widget that pairs a [sidebar] with a [body].
+/// A Fortal-themed layout widget that pairs a [sidebar] with a [body].
 ///
 /// At or above [compactBreakpoint] width, the layout displays [sidebar] in a
 /// row beside an expanded column containing [header] and [body]. The sidebar
@@ -323,7 +323,7 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
 /// Descendants of [UiSidebarLayout] and its compact navigation sheet can
 /// read this scope to observe compact mode or toggle the sheet.
 class UiSidebarLayoutScope extends InheritedWidget {
-  // Ui source floors at Dart 3.11, one release before private named
+  // Fortal source floors at Dart 3.11, one release before private named
   // parameters, so this assigns the private fields explicitly instead of
   // naming the parameters after them.
   const UiSidebarLayoutScope._({

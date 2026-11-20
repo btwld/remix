@@ -41,7 +41,7 @@ final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
   );
 });
 
-/// The Ui Dialog recipe: a raised, blurred panel with a bold title.
+/// The Fortal Dialog recipe: a raised, blurred panel with a bold title.
 ///
 /// The generated [UiDialog] defaults to [UiDialogSize.size3],
 /// [Alignment.center], fills up to 600 logical pixels, preserves safe

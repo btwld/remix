@@ -6,7 +6,7 @@ part of 'accordion.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Accordion recipe.
+/// The Fortal Accordion recipe.
 ///
 /// It reads top to bottom: what every accordion shares, then the size, then
 /// the variant's panel colors for rest, hover, press, focus and disabled.

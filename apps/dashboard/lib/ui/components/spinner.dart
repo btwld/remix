@@ -18,7 +18,7 @@ enum UiSpinnerSize {
   size3,
 }
 
-/// The Ui Spinner recipe, drawn in the inherited foreground color.
+/// The Fortal Spinner recipe, drawn in the inherited foreground color.
 @MixWidget(target: RemixSpinner.new)
 SpinnerStyler uiSpinnerStyle({
   UiSpinnerSize size = .size2,
