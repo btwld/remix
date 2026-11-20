@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'dart:ui' show SemanticsRole;
 
+import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
 import 'base/overlay_base.dart';
@@ -105,6 +106,137 @@ typedef NakedComboboxFieldBuilder<T extends Object> =
       FocusNode focusNode,
       VoidCallback onFieldSubmitted,
     );
+
+/// Builds what [NakedCombobox] keeps on screen after its options view hides.
+///
+/// [optionsView] is the last options view, rebuilt in the same place and at the
+/// same size. The entire builder result takes no pointer input, focus or
+/// semantics. Call [dismiss] when the exit is over, or synchronously to skip
+/// it. The callback only affects this exit; repeated calls and calls after
+/// reopening or disposal are harmless.
+typedef NakedComboboxExitBuilder =
+    Widget Function(
+      BuildContext context,
+      Widget optionsView,
+      VoidCallback dismiss,
+    );
+
+typedef _PanelGeometry = ({Size size, Matrix4 transform});
+
+/// Records the panel after layout without requesting any additional frames.
+class _TrackPanel extends StatefulWidget {
+  const _TrackPanel({required this.onGeometry, required this.child});
+
+  final ValueChanged<_PanelGeometry> onGeometry;
+  final Widget child;
+
+  @override
+  State<_TrackPanel> createState() => _TrackPanelState();
+}
+
+class _TrackPanelState extends State<_TrackPanel> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(_recordGeometry);
+  }
+
+  void _recordGeometry(Duration _) {
+    if (!mounted) return;
+    final panel = context.findRenderObject();
+    final overlay = Overlay.maybeOf(context)?.context.findRenderObject();
+    if (panel is RenderBox &&
+        panel.attached &&
+        panel.hasSize &&
+        overlay != null &&
+        overlay.attached) {
+      widget.onGeometry((
+        size: panel.size,
+        transform: panel.getTransformTo(overlay),
+      ));
+    }
+    WidgetsBinding.instance.addPostFrameCallback(_recordGeometry);
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
+typedef _ComboboxPanel<T extends Object> = ({
+  _PanelGeometry geometry,
+  _RawComboboxResults<T> results,
+  int highlight,
+  T? value,
+  Widget Function(BuildContext, Iterable<T>) builder,
+});
+
+class _ComboboxExit<T extends Object> {
+  _ComboboxExit(this.panel) : highlight = ValueNotifier(panel.highlight);
+
+  final _ComboboxPanel<T> panel;
+  final ValueNotifier<int> highlight;
+  bool dismissRequested = false;
+}
+
+/// Checks for a detached live panel during layout, without requesting frames.
+/// The exit portal is anchored inside RawAutocomplete's field so Flutter lays
+/// out its deferred overlay after RawAutocomplete's own, even if the latter
+/// removes the options during layout rather than during build.
+class _ComboboxExitLayout<T extends Object>
+    extends AbstractLayoutBuilder<_ComboboxExit<T>?> {
+  const _ComboboxExitLayout(this.exit, {required this.builder});
+
+  final _ComboboxExit<T>? Function() exit;
+
+  @override
+  final Widget Function(BuildContext, _ComboboxExit<T>?) builder;
+
+  @override
+  _RenderComboboxExitLayout<T> createRenderObject(BuildContext context) =>
+      _RenderComboboxExitLayout(exit);
+}
+
+class _RenderComboboxExitLayout<T extends Object> extends RenderProxyBox
+    with
+        RenderObjectWithLayoutCallbackMixin,
+        RenderAbstractLayoutBuilderMixin<_ComboboxExit<T>?, RenderBox> {
+  _RenderComboboxExitLayout(this.exit);
+
+  final _ComboboxExit<T>? Function() exit;
+  int? _frameCallback;
+
+  @override
+  _ComboboxExit<T>? get layoutInfo => exit();
+
+  void _scheduleCheck() {
+    _frameCallback ??= SchedulerBinding.instance.scheduleFrameCallback((_) {
+      _frameCallback = null;
+      scheduleLayoutCallback();
+    }, scheduleNewFrame: false);
+  }
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    _scheduleCheck();
+  }
+
+  @override
+  void detach() {
+    if (_frameCallback case final callback?) {
+      SchedulerBinding.instance.cancelFrameCallbackWithId(callback);
+      _frameCallback = null;
+    }
+    super.detach();
+  }
+
+  @override
+  void performLayout() {
+    runLayoutCallback();
+    super.performLayout();
+    if (layoutInfo == null) _scheduleCheck();
+  }
+}
 
 /// Internal scope provided by [NakedCombobox] to its options view.
 class _NakedComboboxScope<T extends Object> extends OverlayScope<T> {
@@ -213,12 +345,15 @@ class NakedComboboxOption<T extends Object>
 class _OverlayLifecycle extends StatefulWidget {
   const _OverlayLifecycle({
     required this.onMount,
+    required this.onDeactivate,
     required this.onUnmount,
     required this.child,
   });
 
   final VoidCallback onMount;
+  final VoidCallback onDeactivate;
   final VoidCallback onUnmount;
+
   final Widget child;
 
   @override
@@ -232,6 +367,12 @@ class _OverlayLifecycleState extends State<_OverlayLifecycle> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) widget.onMount();
     });
+  }
+
+  @override
+  void deactivate() {
+    widget.onDeactivate();
+    super.deactivate();
   }
 
   @override
@@ -293,6 +434,7 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
     this.enabled = true,
     this.onOpen,
     this.onClose,
+    this.exitBuilder,
     this.semanticLabel,
     this.excludeSemantics = false,
   }) : assert(
@@ -369,6 +511,25 @@ class NakedCombobox<T extends Object> extends StatefulWidget {
 
   /// Called when the options view is unmounted.
   final VoidCallback? onClose;
+
+  /// Keeps the options view on screen after [RawAutocomplete] hides it, so an
+  /// exit can play.
+  ///
+  /// [RawAutocomplete] unmounts the options view in the frame its visibility
+  /// ends, and a combobox has no request that could be deferred the way a
+  /// menu's `onCloseRequested` is: focus loss, selection, Escape and an empty
+  /// result all hide it directly. This builder is the hold instead. When the
+  /// view hides, the combobox shows the builder's result in the nearest
+  /// [Overlay], where the view was, until it calls the `dismiss` it is given.
+  ///
+  /// The inert layer replaces the live view in its first hiding frame.
+  /// If the combobox reopens during an exit, the live options mount on the
+  /// frame that removes the exit layer, not alongside it. [onClose] still runs
+  /// when the live view unmounts, not after the exit. A scroll offset inside
+  /// the options view is not carried over.
+  ///
+  /// Adding or removing this builder preserves the editor's state.
+  final NakedComboboxExitBuilder? exitBuilder;
 
   /// Accessible name for the field container.
   final String? semanticLabel;
@@ -464,9 +625,21 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   bool _waitingForOptions = false;
   bool _suppressCachedOptions = false;
 
+  final _exitController = OverlayPortalController();
+  _ComboboxPanel<T>? _lastPanel;
+  _ComboboxExit<T>? _exit;
+  bool _active = true;
+
   @override
   void didUpdateWidget(covariant NakedCombobox<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.exitBuilder == null) {
+      _lastPanel = null;
+      final exit = _exit;
+      if (exit != null) _dismissExit(exit);
+    } else if (oldWidget.exitBuilder == null && _isOpen) {
+      _exitController.show();
+    }
     if (oldWidget.enabled != widget.enabled ||
         oldWidget.controller != widget.controller ||
         oldWidget.focusNode != widget.focusNode) {
@@ -495,9 +668,23 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
   }
 
   @override
+  void deactivate() {
+    _active = false;
+    super.deactivate();
+  }
+
+  @override
+  void activate() {
+    super.activate();
+    _active = true;
+  }
+
+  @override
   void dispose() {
     _listenedController?.removeListener(_syncValueToText);
     _listenedFocusNode?.removeListener(_syncFocus);
+    _exit?.highlight.dispose();
+    _exit = null;
     super.dispose();
   }
 
@@ -615,8 +802,31 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     if (!mounted || !widget.enabled || _suppressCachedOptions || _isOpen) {
       return;
     }
+    if (widget.exitBuilder != null) _exitController.show();
     setState(() => _isOpen = true);
     widget.onOpen?.call();
+  }
+
+  /// Retires this specific exit outside the synchronous widget pipeline, even
+  /// if the request comes from inside the exit builder or the live view build.
+  void _dismissExit(_ComboboxExit<T> exit) {
+    if (!mounted || !identical(_exit, exit) || exit.dismissRequested) return;
+    exit.dismissRequested = true;
+    scheduleMicrotask(() {
+      if (!mounted || !identical(_exit, exit)) return;
+      if (_exitController.isShowing) _exitController.hide();
+      exit.highlight.dispose();
+      setState(() => _exit = null);
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
+  }
+
+  void _handleDeactivate() {
+    if (!_active) return;
+    final panel = _lastPanel;
+    _lastPanel = null;
+    if (widget.exitBuilder == null || panel == null || _exit != null) return;
+    _exit = _ComboboxExit(panel);
   }
 
   bool _claimReveal(int index) {
@@ -714,11 +924,27 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
       ),
     );
 
-    if (widget.semanticLabel == null) return field;
-    return Semantics(
-      container: true,
-      label: widget.semanticLabel,
-      child: field,
+    final editor = widget.semanticLabel == null
+        ? field
+        : Semantics(container: true, label: widget.semanticLabel, child: field);
+    return Stack(
+      alignment: Alignment.topLeft,
+      fit: StackFit.passthrough,
+      clipBehavior: Clip.none,
+      children: [
+        editor,
+        if (widget.exitBuilder != null)
+          Positioned(
+            left: 0,
+            top: 0,
+            child: OverlayPortal.overlayChildLayoutBuilder(
+              controller: _exitController,
+              overlayChildBuilder: (context, _) =>
+                  _ComboboxExitLayout(() => _exit, builder: _buildExitView),
+              child: const SizedBox.shrink(),
+            ),
+          ),
+      ],
     );
   }
 
@@ -732,6 +958,11 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     if (!widget.enabled || _suppressCachedOptions) {
       return const SizedBox.shrink();
     }
+    final exit = _exit;
+    if (exit != null && widget.exitBuilder != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _dismissExit(exit));
+      return const SizedBox.shrink();
+    }
     // Raw retains the iterable _optionsBuilder resolved and hands it back here,
     // which the lazy selection identity above already relies on. It shows the
     // view only for a non-empty result, so it is always one of ours.
@@ -739,6 +970,7 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
     final generation = _optionsGeneration;
     return _OverlayLifecycle(
       onMount: _handleMount,
+      onDeactivate: _handleDeactivate,
       onUnmount: _handleUnmount,
       child: _NakedComboboxScope<T>(
         options: results.enabledOptions,
@@ -760,9 +992,65 @@ class _NakedComboboxState<T extends Object> extends State<NakedCombobox<T>> {
             role: SemanticsRole.list,
             container: true,
             explicitChildNodes: true,
-            child: ExcludeFocus(
-              child: widget.overlayBuilder(context, results.options),
-            ),
+            child: ExcludeFocus(child: _buildLivePanel(context, results)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLivePanel(BuildContext context, _RawComboboxResults<T> results) {
+    final builder = widget.overlayBuilder;
+    final view = builder(context, results.options);
+    if (widget.exitBuilder == null) return view;
+    final highlight = AutocompleteHighlightedOption.of(context);
+    final value = _value;
+    return _TrackPanel(
+      onGeometry: (geometry) => _lastPanel = (
+        geometry: geometry,
+        results: results,
+        highlight: highlight,
+        value: value,
+        builder: builder,
+      ),
+      child: view,
+    );
+  }
+
+  Widget _buildExitView(BuildContext context, _ComboboxExit<T>? exit) {
+    final exitBuilder = widget.exitBuilder;
+    if (exit == null || exit.dismissRequested || exitBuilder == null) {
+      return const SizedBox.shrink();
+    }
+    final panel = exit.panel;
+    final view = _NakedComboboxScope<T>(
+      options: panel.results.enabledOptions,
+      disabledOptions: panel.results.disabledOptions,
+      onSelected: (_) {},
+      claimReveal: (_) => false,
+      enabled: true,
+      value: panel.value,
+      child: AutocompleteHighlightedOption(
+        highlightIndexNotifier: exit.highlight,
+        child: Builder(
+          builder: (context) => panel.builder(context, panel.results.options),
+        ),
+      ),
+    );
+    final content = exitBuilder(context, view, () => _dismissExit(exit));
+    if (exit.dismissRequested) return const SizedBox.shrink();
+    final (:size, :transform) = panel.geometry;
+    return ClipRect(
+      child: OverflowBox(
+        alignment: Alignment.topLeft,
+        minWidth: size.width,
+        maxWidth: size.width,
+        minHeight: size.height,
+        maxHeight: size.height,
+        child: Transform(
+          transform: transform,
+          child: IgnorePointer(
+            child: ExcludeSemantics(child: ExcludeFocus(child: content)),
           ),
         ),
       ),
