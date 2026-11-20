@@ -157,14 +157,4 @@ catalogs are [Vanilla](../registry/vanilla/registry.yaml),
 [HeroUI](../registry/heroui/registry.yaml), as declared in the
 [registry index](../registry/index.yaml).
 
-All three presets include calendar and date-picker composites. The recipes
-wire their own preset's children while selection and overlay behavior stay in
-Remix. All three also style the Agent widgets from `package:remix/agent.dart`.
-
-Vanilla's typography and input compositions take cues from shadcn/ui. Fortal
-uses its own palette and typography roles, with `base_button` shared by its
-button recipes. HeroUI follows web component names (for example, `modal`
-instead of `dialog`); the dashboard and Agent recipes are
-[labelled extensions](../ARCHITECTURE.md#heroui-dashboard-items-are-labelled-extensions)
-where HeroUI web has no counterpart. See [Presets](PRESETS.md) for visual and
-recipe differences.
+See [Presets](PRESETS.md) for visual and recipe differences.

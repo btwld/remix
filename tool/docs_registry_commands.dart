@@ -36,20 +36,21 @@ Map<String, Set<String>> readRegistryItems(
 
 final _fence = RegExp(r'^\s*```([\w-]*)');
 final _scope = RegExp(
-  r'^\s*(?:<!--|\{/\*)\s*remix-preset:\s*([\w, ]+)\s*(?:-->|\*/\})\s*$',
+  r'^\s*(?:<!--|\{/\*)\s*remix-preset:\s*([a-z][a-z0-9_]*)\s*(?:-->|\*/\})\s*$',
 );
 final _command = RegExp(
-  r'^\s*(?:\$\s+)?(?:dart\s+run\s+remix_cli:)?remix\s+(init|add)\b(.*)$',
+  r'^\s*(?:\$\s+)?(?:dart\s+run\s+remix_cli:)?remix\s+(init|add)(?:\s+(.*))?$',
 );
 final _inlineCode = RegExp(r'`([^`]+)`');
 final _presetOption = RegExp(r'''(?:^|\s)--preset[=\s]+["']?([a-z0-9_]+)''');
 final _thirdPartyItem = RegExp(r'^@(?!remix/)[\w-]+/[a-z][a-z0-9_]*$');
-final _shellSeparator = RegExp(r'[;&|]+');
-final _helpDescription = RegExp(r'[ \t]{2,}(?=[A-Z])');
+final _helpDescription = RegExp(r'[ \t]{2,}');
+final _arguments = RegExp(
+  r'''<[\w.-]+>|(?:\d*[<>]|&>)>?\s*(?:"[^"]*"|'[^']*'|[^\s<>]+)|(?<word>[^\s<>]+)''',
+);
 
-/// Common examples must work in every preset. Shell walks select their preset
-/// with `init`; an isolated example can declare it with a `remix-preset:`
-/// Markdown/MDX comment, scoped to the rest of the page or the next selection.
+/// Common examples must work in every preset. An `init` selects the preset
+/// within its shell block; a `remix-preset:` comment sets the page default.
 List<String> checkRegistryCommands(
   String source,
   String path,
@@ -57,40 +58,27 @@ List<String> checkRegistryCommands(
 ) {
   final failures = <String>[];
   final lines = source.split('\n');
-  var presets = catalogs.keys.toList();
+  String? pagePreset;
+  String? blockPreset;
   String? fence;
   for (var index = 0; index < lines.length; index++) {
     final location = '$path:${index + 1}';
-    var line = lines[index];
+    final line = lines[index];
     final delimiter = _fence.firstMatch(line);
     if (delimiter != null) {
       fence = fence == null ? delimiter[1] : null;
+      blockPreset = null;
       continue;
     }
     final scope = fence == null ? _scope.firstMatch(line) : null;
     if (scope != null) {
-      presets = scope[1]!.split(',').map((preset) => preset.trim()).toList();
-      for (final preset in presets.where(
-        (preset) => !catalogs.containsKey(preset),
-      )) {
-        failures.add('$location: unknown registry preset `$preset`.');
+      pagePreset = scope[1]!;
+      if (!catalogs.containsKey(pagePreset)) {
+        failures.add('$location: unknown registry preset `$pagePreset`.');
       }
       continue;
     }
-    final shell = const {
-      '',
-      'bash',
-      'shell',
-      'sh',
-      'zsh',
-      'console',
-    }.contains(fence);
-    if (shell) {
-      while (line.trimRight().endsWith('\\') && index + 1 < lines.length) {
-        final prefix = line.trimRight();
-        line = '${prefix.substring(0, prefix.length - 1)} ${lines[++index]}';
-      }
-    }
+    final shell = const {'', 'bash', 'shell'}.contains(fence);
     final examples = switch (fence) {
       null => _inlineCode.allMatches(line).map((match) => match[1]!),
       'text' => [line.trim().split(_helpDescription).first],
@@ -98,22 +86,26 @@ List<String> checkRegistryCommands(
       _ => <String>[],
     };
     for (final example in examples) {
-      final commands = example.split('#').first.split(_shellSeparator);
-      for (final fragment in commands) {
-        final command = _command.firstMatch(fragment);
-        if (command == null) continue;
-        final args = command[2]!.trim();
-        if (command[1] == 'init') {
-          if (!shell || args.startsWith('[')) continue;
-          final preset = _presetOption.firstMatch(args)?[1] ?? 'vanilla';
-          if (!catalogs.containsKey(preset)) {
-            failures.add('$location: unknown registry preset `$preset`.');
-          }
-          presets = [preset];
-          continue;
+      final command = _command.firstMatch(example.split('#').first.trimRight());
+      if (command == null) continue;
+      final args = command[2] ?? '';
+      if (command[1] == 'init') {
+        if (!shell || args.startsWith('[')) continue;
+        blockPreset = _presetOption.firstMatch(args)?[1] ?? 'vanilla';
+        if (!catalogs.containsKey(blockPreset)) {
+          failures.add('$location: unknown registry preset `$blockPreset`.');
         }
-        failures.addAll(_checkAdd(args, location, presets, catalogs));
+        continue;
       }
+      final preset = blockPreset ?? pagePreset;
+      failures.addAll(
+        _checkAdd(
+          args,
+          location,
+          preset == null ? catalogs.keys : [preset],
+          catalogs,
+        ),
+      );
     }
   }
   return failures;
@@ -122,13 +114,15 @@ List<String> checkRegistryCommands(
 Iterable<String> _checkAdd(
   String arguments,
   String location,
-  List<String> presets,
+  Iterable<String> presets,
   Map<String, Set<String>> catalogs,
 ) sync* {
-  for (final word in arguments.split(RegExp(r'\s+'))) {
+  for (final match in _arguments.allMatches(arguments)) {
+    final word = match.namedGroup('word');
+    if (word == null) continue;
     final item = word.replaceAll(RegExp(r'''^["']|["']$'''), '');
     if (item.isEmpty ||
-        RegExp(r'^[-\[<$]').hasMatch(item) ||
+        RegExp(r'^[-\[$]').hasMatch(item) ||
         _thirdPartyItem.hasMatch(item)) {
       continue;
     }

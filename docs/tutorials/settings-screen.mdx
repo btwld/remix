@@ -61,10 +61,9 @@ Initialization resolves the official registry's stable branch to a commit,
 records it in `remix.yaml`, and writes a managed barrel at `lib/ui/ui.dart`.
 It does not install a component yet.
 
-New projects use the promoted catalog. To reproduce the download after a
-registry promotion, copy the `revision` from the matching sample's `remix.yaml`
-and run `remix registry update @remix --ref <revision>` after `init` and before
-installing anything. The archived projects already have that revision pinned.
+To reproduce the archived sample after a registry promotion, run
+`remix registry update @remix --ref <revision>` before installing anything.
+Use the `revision` in the sample's `remix.yaml`.
 
 Preview the first install:
 
@@ -158,6 +157,8 @@ sample directory for the remaining CLI commands.
 ## Build the settings screen
 
 Install the remaining recipes, one item per command:
+
+{/* remix-preset: vanilla */}
 
 {/* tutorial-source: install-screen */}
 

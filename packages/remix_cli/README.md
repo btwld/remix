@@ -174,25 +174,19 @@ Set `iconLibrary` in `remix.yaml` to `remix` (the default, Outline), `rounded`
 (Rounded), or `lucide`. The first two use `remix_ui_icons`; `lucide` uses
 `lucide_flutter`. The setting affects installs, not existing source.
 
-To switch, use the **pinned** catalog to identify installed items to refresh:
-
-1. Run `remix list --json` to see the project's preset, registry revisions,
-   item IDs, and target files. In `remix.ownership.json`, find items owned by
-   the registry and preset you're inspecting. Each target's owner ends in
-   `#<preset>/<item-id>`. Check that the target files are still present. Include
-   installed dependencies, not just items you explicitly added.
-2. Use the `repository`, `path`, and `revision` in `remix.yaml` to open the
-   registry at that exact GitHub commit (not `main` or `registry-stable`). Follow
-   the preset entry in its `index.yaml` to the catalog. For each installed item,
-   open its `files[].source` templates relative to that catalog. Select the
-   item if one of its own templates contains `{{icon:`. An item that merely
-   depends on an icon-owning item does not need to be replaced on that account.
-3. Change `iconLibrary`, then pass all the selected IDs to `add --diff`.
-   For example, if `icons` is the only installed owner, run
-   `remix add @remix/icons --diff`. Review the changes and save any local edits you
-   need to reapply. Then repeat with `--overwrite` instead of `--diff`
-   (`remix add @remix/icons --overwrite` in this example). Only named items are
-   overwritten; icon references in your application are not rewritten.
+1. Run `remix list --json` for the preset, registry revisions, item IDs, and
+   target paths. Find installed items in `remix.ownership.json`, where each
+   existing target's owner ends in `#<preset>/<item-id>`. Include installed
+   dependencies, not just items you added explicitly.
+2. Open the registry's `repository` and `path` at the exact `revision` in
+   `remix.yaml`. Follow the preset's entry in `index.yaml` to its catalog.
+   Select installed items whose own `files[].source` templates contain
+   `{{icon:`; depending on an icon-owning item is not enough.
+3. Change `iconLibrary` and preview all selected items in one `add --diff`
+   command (for example, `remix add @remix/icons --diff` if `icons` is the only
+   owner). Review the diffs and save any local edits you need to reapply. Then
+   rerun the command with `--overwrite`. Only named items are overwritten;
+   icon references in your application are not rewritten.
 
 A registry's `icons.yaml` maps each icon to a constant in every library. From
 schema 2, an icon a library does not draw names a `fallback` library instead:
@@ -260,7 +254,7 @@ remix add button
 Several items can be named in one command:
 
 ```shell
-remix add button card dialog
+remix add button card checkbox
 ```
 
 A batch installs as one unit. The items and everything they depend on are

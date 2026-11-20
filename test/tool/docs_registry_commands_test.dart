@@ -21,59 +21,60 @@ void main() {
     ]);
   });
 
-  test('checks chained commands', () {
-    expect(check('`remix add button && remix add textfield`'), [
-      contains('`textfield`'),
-    ]);
-  });
-
   test('unscoped commands must work in every preset', () {
     expect(check('`remix add dialog`'), [contains('heroui registry catalog')]);
   });
 
-  test(
-    'follows init across tutorial blocks and checks continued arguments',
-    () {
-      expect(
-        check(r'''
+  test('init sets the preset only within its shell block', () {
+    expect(
+      check(r'''
 ```bash
 remix init --preset vanilla
 remix add dialog
 ```
 ```shell
-dart run remix_cli:remix init --preset=heroui
+$ remix add dialog # this is a general example
 ```
-```bash
-$ remix add modal \
-    dialog # unavailable in HeroUI
-```
+`remix add dialog`
 '''),
-        [
-          allOf(
-            contains('example.mdx:9'),
-            contains('`dialog`'),
-            contains('heroui'),
-          ),
-        ],
-      );
-    },
-  );
+      [
+        allOf(contains('example.mdx:6'), contains('heroui registry catalog')),
+        allOf(contains('example.mdx:8'), contains('heroui registry catalog')),
+      ],
+    );
+  });
 
   test('validates explicit preset scopes and official qualified names', () {
     expect(
       check('''
-{/* remix-preset: vanilla, fortal */}
+{/* remix-preset: vanilla */}
 `remix add @remix/dialog`
+```shell
+dart run remix_cli:remix init --preset=heroui
+remix add "modal" @remix/dialog
+```
+`remix add dialog`
 <!-- remix-preset: fortal -->
 `remix add base_button`
-<!-- remix-preset: heroui -->
-`remix add @remix/base_button`
 '''),
-      [contains('`@remix/base_button` is absent from the heroui registry')],
+      [contains('`@remix/dialog` is absent from the heroui registry')],
     );
     expect(check('<!-- remix-preset: unknown -->'), [
       contains('unknown registry preset'),
     ]);
+  });
+
+  test('ignores shell redirections without skipping later item IDs', () {
+    expect(
+      check('''
+```bash
+remix add button > install.log 2>&1
+remix add button 2> errors.log < input
+remix add button>>"install log" --diff textfield
+```
+'''),
+      [contains('example.mdx:4: `remix add` item `textfield`')],
+    );
   });
 
   test('skips placeholders and external IDs; handles annotated CLI help', () {

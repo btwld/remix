@@ -50,12 +50,12 @@ fvm dart run melos run docs:check
 
 The gate checks navigation, retired APIs, compilable snippets, catalog drift,
 recorded tutorial evidence and selected local links. It validates literal
-`remix add` item IDs in docs and skill Markdown against the catalogs declared
-in `registry/index.yaml`. General examples must work in all official presets.
-An example following a shell `remix init` uses that app's preset; otherwise,
-use a `remix-preset: <preset>` comment to scope preset-specific examples (an
-MDX comment on MDX pages, an HTML comment in Markdown). The scope lasts until
-the next `init` or scope comment in the page.
+`remix add` item IDs in the docs, published skills, and CLI README against the
+checkout catalogs in `registry/index.yaml`. Unscoped examples must work in all
+official presets. A shell `remix init` sets the preset only for that block. To
+set a preset across blocks, use a `remix-preset: <preset>` comment (MDX comment
+in MDX, HTML comment in Markdown). It applies until the next preset comment
+or the end of the page.
 
 Before promoting a catalog that changes the tutorial's installation steps or
 recipe API, update and replay both paths. The tutorial check is not a fresh

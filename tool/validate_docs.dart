@@ -351,20 +351,19 @@ Future<void> main() async {
     failures,
   );
   _checkOpenCodeCatalog(workspaceRoot, catalogs, failures);
-  for (final directory in ['docs', 'skills']) {
-    final markdown = Directory('${workspaceRoot.path}/$directory')
-        .listSync(recursive: true)
-        .whereType<File>()
-        .where((file) => RegExp(r'\.mdx?$').hasMatch(file.path));
-    for (final file in markdown) {
-      failures.addAll(
-        checkRegistryCommands(
-          file.readAsStringSync(),
-          _relativePath(workspaceRoot, file),
-          catalogs,
-        ),
-      );
-    }
+  for (final file in [
+    ...docs,
+    ...skills,
+    File('${workspaceRoot.path}/docs/README.md'),
+    File('${workspaceRoot.path}/packages/remix_cli/README.md'),
+  ]) {
+    failures.addAll(
+      checkRegistryCommands(
+        file.readAsStringSync(),
+        _relativePath(workspaceRoot, file),
+        catalogs,
+      ),
+    );
   }
   _checkSkillEvalMetadata(workspaceRoot, failures);
   checkSkillEvalInstallPins(workspaceRoot, expectedPins, failures);
