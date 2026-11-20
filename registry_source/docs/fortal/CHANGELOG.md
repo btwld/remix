@@ -18,10 +18,10 @@
   solid fills, exposed as `fortalSolidPressedFill`,
   `fortalHighContrastHoverFill` and `fortalHighContrastPressedFill`, and the
   mode-aware filter.
-- **Breaking:** the theme barrel exports only `FortalThemeColors`,
-  `resolveFortalTokens`, `computeAccentThumbRing`, `computeChartSeries` and
-  `computeContrastRatio` from `computed.dart`. Import `theme/computed.dart`
-  for the other helpers.
+- **Breaking:** the theme barrel exports only `FortalThemeColors`
+  (`<prefix>ThemeColors`), `resolveFortalTokens` (`resolve<prefix>Tokens`),
+  `computeAccentThumbRing`, `computeChartSeries` and `computeContrastRatio`
+  from `computed.dart`. Import `theme/computed.dart` for the other helpers.
 - **Breaking:** remove the shared BaseButton layer: `FortalBaseButtonSize`,
   `FortalBaseButtonVariant`, `fortalBaseButtonMetrics`,
   `fortalBaseButtonIconSize`, `fortalBaseButtonGhostMetrics`,
