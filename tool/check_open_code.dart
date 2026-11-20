@@ -17,8 +17,8 @@
 /// checkout explicitly so a registry can be validated before its Remix version
 /// is on pub.dev.
 /// Hosted defaults to one independent canary and two incremental gallery adds,
-/// then one batch for the remainder. Checkout and both keep every independent
-/// install and the full incremental loop. Override either plan with the flags.
+/// then one batch for the remainder. Checkout and both audit every item's
+/// closure, run the solo install canaries, and keep the full incremental loop.
 ///
 /// The independent-item installs run in parallel: `--jobs N` or
 /// `REMIX_OPEN_CODE_JOBS=N` sets how many at once, and the default is one per
@@ -40,8 +40,10 @@ import 'package:yaml/yaml.dart';
 import '../packages/remix_cli/lib/src/icon_registry.dart';
 import '../packages/remix_cli/lib/src/project_config.dart';
 import '../packages/remix_cli/lib/src/registry_source.dart';
-import 'compile_registry_consumer.dart';
+import '../packages/remix_cli/test/checkout_registry.dart';
+import 'audit_registry_closures.dart';
 import 'check_pub_floors.dart';
+import 'compile_registry_consumer.dart';
 import 'consumer_check_reporting.dart';
 import 'open_code_lifecycle.dart';
 
@@ -317,7 +319,31 @@ const _herouiPreset = _PresetContract(
   name: 'heroui',
   fixtureDirectory: 'heroui_fixture',
   registryItems: _herouiRegistryItems,
-  independentItems: null,
+  independentItems: [
+    ..._independentRegistryItems,
+    'avatar_group',
+    'breadcrumbs',
+    'button',
+    'button_group',
+    'calendar',
+    'range_calendar',
+    'date_picker',
+    'date_range_picker',
+    'checkbox_group',
+    'close_button',
+    'combobox',
+    'input_group',
+    'radio_group',
+    'range_slider',
+    'search_field',
+    'sidebar',
+    'sidebar_layout',
+    'switch_group',
+    'table',
+    'text_area',
+    'toast',
+    'toggle_button_group',
+  ],
   requiredRuntimeDependencies: [
     'remix',
     'mix_annotations',
@@ -514,12 +540,8 @@ final class _PresetContract {
 
   final Set<String> foundationItems;
 
-  /// Items installed alone in a fresh app, so an omitted dependency cannot
-  /// hide behind the full gallery. Each one costs a `remix init`, and a fresh
-  /// init makes one unauthenticated GitHub API request (60 an hour). `null`
-  /// derives the list from `registry.yaml`: the items whose dependencies name
-  /// anything besides a foundation item.
-  final List<String>? independentItems;
+  /// Solo install canaries, independent of whether the catalog declares edges.
+  final List<String> independentItems;
   final List<String> specStylerItems;
 
   /// Packages the installed `lib/ui` source may import.
@@ -578,7 +600,7 @@ final class _PresetContract {
       foundationItems: foundationItems.intersection(
         items.keys.cast<String>().toSet(),
       ),
-      independentItems: null,
+      independentItems: independentItems,
       specStylerItems: [],
       requiredRuntimeDependencies: runtime.toList(),
       allowedImportPackages: ['flutter', ...runtime],
@@ -644,18 +666,15 @@ final class _PresetContract {
     }.toList();
   }
 
-  List<String> independentInstalls([Directory? repositoryRoot]) {
-    final listed = independentItems;
-    if (listed != null) return listed;
-    final items = _loadItems(repositoryRoot);
-    return [
-      for (final key in items.keys.cast<String>())
-        if (!foundationItems.contains(key) &&
-            ((items[key] as YamlMap)['registryDependencies'] as YamlList? ??
-                    const [])
-                .any((dependency) => !foundationItems.contains(dependency)))
-          key,
-    ];
+  List<String> independentInstalls(IndependentMode mode) {
+    final candidates = switch (mode) {
+      IndependentMode.none => const <String>[],
+      IndependentMode.canary => [
+        name == 'heroui' ? 'search_field' : 'dashboard_shell',
+      ],
+      IndependentMode.all => independentItems,
+    };
+    return candidates.where(registryItems.contains).toList();
   }
 
   List<String> get installedUiFiles {
@@ -958,6 +977,28 @@ Future<void> main(List<String> arguments) async {
     stdout.writeln(
       'Registry under test: ${ref == null ? 'this checkout' : '$_officialRepository@$ref'}.',
     );
+    if (ref == null &&
+        parsed.item == null &&
+        parsed.independent == IndependentMode.all) {
+      _reporter.startPhase('Registry closure audit');
+      final problems = await auditRegistryClosures(
+        CheckoutRegistry(
+          Directory('${repositoryRoot.path}/registry'),
+          parsed.preset,
+        ),
+        iconLibrary: parsed.iconLibrary,
+      );
+      if (problems.isNotEmpty) {
+        _reporter.failure(
+          'Registry closure audit failed:\n${problems.join('\n')}',
+        );
+        exitCode = 1;
+        return;
+      }
+      _step(
+        'Verified file and package references for every solo item closure.',
+      );
+    }
     final failure = await _run(
       repositoryRoot,
       keep: parsed.keep,
@@ -1023,9 +1064,9 @@ Future<_Failure?> _run(
     );
     if (problem != null) return _Failure(problem);
     _step('Every hosted floor exists; Remix floor is current.');
-    _reporter.startPhase('Consumer setup');
   }
 
+  _reporter.startPhase('Consumer setup');
   final pinnedVersion = _pinnedFlutterVersion(repositoryRoot);
   if (pinnedVersion == null) {
     return _Failure('.fvmrc does not pin a Flutter version.', exitCode: 64);
@@ -1725,18 +1766,10 @@ Future<_Failure?> _checkIndependentItems({
   required int jobs,
   IndependentMode mode = IndependentMode.all,
 }) async {
+  final items = preset.independentInstalls(mode);
+  if (items.isEmpty) return null;
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  final items = preset.catalogYaml == null
-      ? independentInstallItems(preset.name, mode: mode)
-      : switch (mode) {
-          IndependentMode.none => <String>[],
-          IndependentMode.canary => independentInstallItems(
-            preset.name,
-            mode: mode,
-          ).where(preset.registryItems.contains).toList(),
-          IndependentMode.all => preset.independentInstalls(),
-        };
 
   Future<_Failure?> checkItem(String item, StringSink log) async {
     final elapsed = Stopwatch()..start();
@@ -1824,33 +1857,18 @@ Future<_Failure?> _checkIndependentItems({
 List<String> independentInstallItems(
   String preset, {
   required IndependentMode mode,
-  Directory? repositoryRoot,
-}) => switch (mode) {
-  IndependentMode.none => [],
-  // A large closure on Vanilla/Fortal and a generated multi-item closure on
-  // HeroUI retain a fresh hosted install tripwire without repeating Lane B.
-  IndependentMode.canary => [
-    preset == 'heroui' ? 'search_field' : 'dashboard_shell',
-  ],
-  IndependentMode.all => _presetByName(
-    preset,
-  ).independentInstalls(repositoryRoot),
-};
+}) => _presetByName(preset).independentInstalls(mode);
 
 /// Planned fresh init calls, hence branch-resolution API calls in release smoke.
 /// Candidate SHAs skip the API altogether. This uses the production independent
 /// plan so adding another canary changes the budget test as well.
-int plannedInitCalls(
-  ConsumerCheckOptions options, {
-  Directory? repositoryRoot,
-}) =>
+int plannedInitCalls(ConsumerCheckOptions options) =>
     1 +
     (options.item != null
         ? 0
         : independentInstallItems(
             options.preset,
             mode: options.independent,
-            repositoryRoot: repositoryRoot,
           ).length);
 
 /// Runs [work] for every input with at most [limit] in flight, and returns the
@@ -2727,10 +2745,11 @@ Future<String?> independentItemsProblemForTest(
 ))?.message;
 
 /// Returns the items a preset installs alone, for focused regression tests.
-List<String> independentInstallsForTest(
-  String preset, {
-  Directory? repositoryRoot,
-}) => _presetByName(preset).independentInstalls(repositoryRoot);
+List<String> independentInstallsForTest(String preset, {String? catalogYaml}) {
+  final contract = _presetByName(preset);
+  return (catalogYaml == null ? contract : contract.forCatalog(catalogYaml))
+      .independentInstalls(IndependentMode.all);
+}
 
 /// The install contract for [preset] against one registry's [iconsYaml]:
 /// the runtime dependencies an installed app must declare, and the packages a

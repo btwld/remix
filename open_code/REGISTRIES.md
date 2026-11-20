@@ -273,3 +273,11 @@ floors through the [package release workflow](RELEASING.md).
 `tool/check_consumer_apps.dart` checks these installed trees. Fresh checkout
 consumers test installation and generation; hosted checks separately establish
 published-floor compatibility. See [release ordering](RELEASING.md).
+
+For the checkout registry, `tool/check_open_code.dart --source checkout
+--independent all` (the checkout default) audits each catalog item's solo
+install closure before creating a consumer. Relative imports, exports and
+parts must have authored or generated targets in that closure, and package
+imports must have direct runtime declarations there (apart from the fixture's
+Flutter SDK dependency). Explicit solo install canaries still exercise the
+installer and generator; the default hosted canary does not run the audit.
