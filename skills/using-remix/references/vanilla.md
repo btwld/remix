@@ -1,5 +1,7 @@
 # Vanilla Reference
 
+<!-- remix-preset: vanilla -->
+
 Rules for the Vanilla preset that are easy to get wrong from a widget's name
 alone. Vanilla is the `remix_cli` default: a neutral, minimal theme inspired
 by shadcn/ui, editable the same way as Fortal. For

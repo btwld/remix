@@ -168,18 +168,37 @@ configuration is refused instead of silently rewriting an existing project.
 The preset defaults to `vanilla` when omitted and cannot be changed after
 initialization.
 
-Schema 3 projects may also set `iconLibrary: remix|lucide`; omitting it keeps
-Remix icons. It applies when items are installed; after changing it, reinstall
-every installed item that uses icons (`icons`, `dashboard_shell`,
-`dashboard_demo`, `support`) in one `add --diff`, then `add --overwrite`.
+### Switch icon libraries
+
+Set `iconLibrary` in `remix.yaml` to `remix` (the default, Outline), `rounded`
+(Rounded), or `lucide`. The first two use `remix_ui_icons`; `lucide` uses
+`lucide_flutter`. The setting affects installs, not existing source.
+
+To switch, use the **pinned** catalog to identify installed items to refresh:
+
+1. Run `remix list --json` to see the project's preset, registry revisions,
+   item IDs, and target files. In `remix.ownership.json`, find items owned by
+   the registry and preset you're inspecting. Each target's owner ends in
+   `#<preset>/<item-id>`. Check that the target files are still present. Include
+   installed dependencies, not just items you explicitly added.
+2. Use the `repository`, `path`, and `revision` in `remix.yaml` to open the
+   registry at that exact GitHub commit (not `main` or `registry-stable`). Follow
+   the preset entry in its `index.yaml` to the catalog. For each installed item,
+   open its `files[].source` templates relative to that catalog. Select the
+   item if one of its own templates contains `{{icon:`. An item that merely
+   depends on an icon-owning item does not need to be replaced on that account.
+3. Change `iconLibrary`, then pass all the selected IDs to `add --diff`.
+   For example, if `icons` is the only installed owner, run
+   `remix add @remix/icons --diff`. Review the changes and save any local edits you
+   need to reapply. Then repeat with `--overwrite` instead of `--diff`
+   (`remix add @remix/icons --overwrite` in this example). Only named items are
+   overwritten; icon references in your application are not rewritten.
 
 A registry's `icons.yaml` maps each icon to a constant in every library. From
 schema 2, an icon a library does not draw names a `fallback` library instead:
 installing it on that library renders the fallback's constant and adds the
-fallback's package too. The schema 2 official icon table uses Lucide for icons
-Remix does not draw, so those installs add `lucide_flutter` alongside
-`remix_ui_icons`. Earlier schema 1 pins keep their original icon package
-requirements.
+fallback's package too. All three libraries in the current official table
+cover every icon; older pins retain their own mappings and dependencies.
 
 ### Fortal as owned source
 
@@ -360,17 +379,16 @@ dart run tool/check_open_code.dart --preset fortal --source checkout --item dash
 `remix add icons` is the deliberate exception. It adds
 `lib/ui/icons.dart`, declares the selected icon package and any per-icon
 fallback packages, and exposes a small, application-owned `UiIcons` alias set
-with no generated adapter. The
-default Remix selection uses `remix_ui_icons`, plus `lucide_flutter` for the
-schema 2 official table's fallbacks. Add or rename
-aliases there as your interface evolves. Every Remix icon remains one direct
+with no generated adapter. The current default Remix selection uses
+`remix_ui_icons` without a fallback package. Add or rename aliases there as
+your interface evolves. Every Remix icon remains one direct
 `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
-Vanilla additionally ships `calendar`, `range_calendar`, `date_picker` and
-`date_range_picker`. They are hand-written composites with no generated part:
-the calendars wire IconButton and Select recipes; the pickers add outline
-Button and elevated Popover recipes around the matching calendar. Each child
-styler override merges last. Calendar selectors grow with text scaling.
+All presets ship `calendar`, `range_calendar`, `date_picker` and
+`date_range_picker`. They are hand-written composites with no generated part.
+In Vanilla, the calendars wire IconButton and Select recipes; the pickers add
+outline Button and elevated Popover recipes around the matching calendar.
+Each child styler override merges last. Calendar selectors grow with text scaling.
 
 Most Vanilla component items generate one widget. Four generate several:
 `checkbox` also generates

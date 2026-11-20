@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'docs_registry_commands.dart';
 import 'install_pins.dart';
 
 final _removedComponentBackgroundColorInvocation = RegExp(
@@ -267,55 +268,22 @@ final _staleConsumerDocumentationClaims = <(RegExp, String)>[
 const _openCodeCatalogDocuments = <String>[
   'docs/open-code/catalog.mdx',
   'packages/remix_cli/README.md',
-  'open_code/README.md',
 ];
 
-/// Fails when an item in either remote preset is missing from a catalog
+/// Fails when an item in any remote preset is missing from a catalog
 /// document.
 ///
 /// Deliberately one-directional: a document may mention `theme` or discuss an
 /// item in prose without listing it, and matching that exactly would make the
 /// check fight the writing. What it will not allow is shipping an item nobody
 /// wrote down.
-void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
-  final items = <String>{};
-  // The published index is the source of truth for which presets ship, so a
-  // preset added or held back there needs no matching edit here.
-  final index = File('${workspaceRoot.path}/registry/index.yaml');
-  if (!index.existsSync()) {
-    failures.add('registry/index.yaml is missing.');
-    return;
-  }
-  final presets = RegExp(r'^  ([a-z][a-z0-9_]*):', multiLine: true)
-      .allMatches(index.readAsStringSync())
-      .map((match) => match.group(1)!)
-      .toList();
-  if (presets.isEmpty) {
-    failures.add('registry/index.yaml declares no presets.');
-    return;
-  }
-  for (final preset in presets) {
-    final registry = File(
-      '${workspaceRoot.path}/registry/'
-      '$preset/registry.yaml',
-    );
-    if (!registry.existsSync()) {
-      failures.add('registry/$preset/registry.yaml is missing.');
-      continue;
-    }
-
-    // Item keys are the only two-space-indented `name:` lines in the file.
-    items.addAll(
-      RegExp(r'^  ([a-z][a-z0-9_]*):$', multiLine: true)
-          .allMatches(registry.readAsStringSync())
-          .map((match) => match.group(1)!)
-          .where((name) => name != 'theme'),
-    );
-  }
-  if (items.isEmpty) {
-    failures.add('remote registries declared no component items.');
-    return;
-  }
+void _checkOpenCodeCatalog(
+  Directory workspaceRoot,
+  Map<String, Set<String>> catalogs,
+  List<String> failures,
+) {
+  final items = {for (final catalog in catalogs.values) ...catalog}
+    ..remove('theme');
 
   for (final relativePath in _openCodeCatalogDocuments) {
     final file = File('${workspaceRoot.path}/$relativePath');
@@ -355,6 +323,8 @@ Future<void> main() async {
   };
 
   final docs = documentationPages(workspaceRoot);
+  final skills = skillMarkdownFiles(workspaceRoot);
+  final catalogs = readRegistryItems(workspaceRoot, failures);
 
   if (docs.isEmpty) failures.add('No MDX documentation files were found.');
 
@@ -380,7 +350,22 @@ Future<void> main() async {
     expectedPins,
     failures,
   );
-  _checkOpenCodeCatalog(workspaceRoot, failures);
+  _checkOpenCodeCatalog(workspaceRoot, catalogs, failures);
+  for (final directory in ['docs', 'skills']) {
+    final markdown = Directory('${workspaceRoot.path}/$directory')
+        .listSync(recursive: true)
+        .whereType<File>()
+        .where((file) => RegExp(r'\.mdx?$').hasMatch(file.path));
+    for (final file in markdown) {
+      failures.addAll(
+        checkRegistryCommands(
+          file.readAsStringSync(),
+          _relativePath(workspaceRoot, file),
+          catalogs,
+        ),
+      );
+    }
+  }
   _checkSkillEvalMetadata(workspaceRoot, failures);
   checkSkillEvalInstallPins(workspaceRoot, expectedPins, failures);
   final exampleSourceCount = _checkDartSources(
@@ -412,7 +397,7 @@ Future<void> main() async {
   }
 
   final extraction = _extractAnalyzableSnippets(
-    [...docs, ...skillMarkdownFiles(workspaceRoot)],
+    [...docs, ...skills],
     workspaceRoot,
     failures,
   );

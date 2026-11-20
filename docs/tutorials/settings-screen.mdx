@@ -61,6 +61,11 @@ Initialization resolves the official registry's stable branch to a commit,
 records it in `remix.yaml`, and writes a managed barrel at `lib/ui/ui.dart`.
 It does not install a component yet.
 
+New projects use the promoted catalog. To reproduce the download after a
+registry promotion, copy the `revision` from the matching sample's `remix.yaml`
+and run `remix registry update @remix --ref <revision>` after `init` and before
+installing anything. The archived projects already have that revision pinned.
+
 Preview the first install:
 
 {/* tutorial-source: preview-button */}
@@ -158,7 +163,7 @@ Install the remaining recipes, one item per command:
 
 ```bash
 remix add checkbox
-remix add textfield
+remix add text_field
 remix add dialog
 remix add card
 remix add sidebar
@@ -259,7 +264,8 @@ cd remix_fortal_demo
 
 Initialize Fortal and install its recipes using the same global CLI. The Fortal theme
 does not depend on `remix_ui_fonts`, so the last command adds Geist for the
-application:
+application. If you're reproducing the download, pin its Fortal revision after
+`init` as described for Vanilla:
 
 {/* tutorial-source: install-fortal */}
 
@@ -267,7 +273,7 @@ application:
 remix init --prefix Acme --preset fortal
 remix add button
 remix add checkbox
-remix add textfield
+remix add text_field
 remix add dialog
 remix add card
 remix add sidebar
