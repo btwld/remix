@@ -9,7 +9,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-part 'textfield.g.dart';
+part 'text_field.g.dart';
 
 /// HeroUI field variants.
 enum HeroUiTextFieldVariant {

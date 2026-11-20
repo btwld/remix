@@ -10,7 +10,7 @@ variants: [primary, secondary]
 sizes: {supported: [], default: null}
 states: [rest, hover, focus, error, disabled]
 tokens:
-  - the text field's tokens (see textfield.yaml)
+  - the text field's tokens (see text_field.yaml)
 measurements:
   - {what: area, value: "two lines: 56 high at 1024 px, 64 at 375 px", cite: textarea-primary-full-rest}
   - {what: minimum height, value: 38, cite: textarea-primary-full-rest}

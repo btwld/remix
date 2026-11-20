@@ -288,7 +288,7 @@ See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx
 
 ## Combobox
 
-`remix add combobox` installs `<Prefix>Combobox<T>` and its `theme`/`textfield`
+`remix add combobox` installs `<Prefix>Combobox<T>` and its `theme`/`text_field`
 dependencies. Use `variant: .primary|.secondary` (primary by default); there is
 no size axis upstream. The field matches TextField, except that a focused
 secondary field takes the `fieldFocus` fill, as upstream does. Suggestions

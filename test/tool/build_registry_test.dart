@@ -16,7 +16,7 @@ void main() {
     ).derive();
     final catalog = loadYaml(output.files['registry.yaml']!) as YamlMap;
     final item = (catalog['items'] as YamlMap)['combobox'] as YamlMap;
-    expect(_strings(item['registryDependencies']), ['theme', 'textfield']);
+    expect(_strings(item['registryDependencies']), ['theme', 'text_field']);
     expect(_strings(item['generated']), ['@ui/components/combobox.g.dart']);
     expect(
       output.files['templates/combobox/combobox.dart.tmpl'],
@@ -101,7 +101,7 @@ void main() {
     expect(_strings(item['registryDependencies']), [
       'theme',
       'icon_button',
-      'textfield',
+      'text_field',
     ]);
     expect(item.containsKey('generated'), isFalse);
     final template =
@@ -112,7 +112,7 @@ void main() {
     // The dashboard shell's header search is the installed component.
     expect(
       _strings((items['dashboard_shell'] as YamlMap)['registryDependencies']),
-      allOf(contains('search_field'), isNot(contains('textfield'))),
+      allOf(contains('search_field'), isNot(contains('text_field'))),
     );
   });
   test(

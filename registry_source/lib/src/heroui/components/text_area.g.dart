@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'textarea.dart';
+part of 'text_area.dart';
 
 // **************************************************************************
 // MixWidgetGenerator

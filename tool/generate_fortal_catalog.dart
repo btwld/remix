@@ -302,14 +302,11 @@ List<String> _namedConstructors(
   return names;
 }
 
-/// TextField and TextArea share one recipe file because TextArea reuses
+/// TextArea shares the text field's recipe file because it reuses
 /// TextField's private helpers; this mirrors the same mapping the Fortal
 /// checker uses so both name the identical source.
 String _recipePath(String id) {
-  final recipeName = switch (id) {
-    'text_field' || 'text_area' => 'textfield',
-    _ => id,
-  };
+  final recipeName = id == 'text_area' ? 'text_field' : id;
   return 'lib/src/fortal/components/$recipeName.dart';
 }
 

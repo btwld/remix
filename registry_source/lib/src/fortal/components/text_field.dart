@@ -9,7 +9,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-part 'textfield.g.dart';
+part 'text_field.g.dart';
 
 /// The sizes a text field comes in. Pixel values are at 100% theme scaling.
 enum FortalTextFieldSize {

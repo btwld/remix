@@ -101,7 +101,7 @@ families carry over.
   `style` parameter or ellipsis item: edit the installed `_linkStyle()` to
   restyle the links, and compose a `<Prefix>Menu` for a collapsed trail.
 - **Search field** — install with `remix add search_field` (installs
-  `textfield` and `icon_button`). `<Prefix>SearchField` follows shadcn/ui's
+  `text_field` and `icon_button`). `<Prefix>SearchField` follows shadcn/ui's
   Input Group: the TextField recipe's 36px box and focus ring, a 16px
   `mutedForeground` search icon 12px in, and a 24px ghost clear button 4px
   from the end with the small radius. `style` merges last into the field; edit

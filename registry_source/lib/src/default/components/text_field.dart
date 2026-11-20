@@ -10,7 +10,7 @@ import 'package:remix/remix.dart';
 import '../theme/effects.dart';
 import '../theme/tokens.dart';
 
-part 'textfield.g.dart';
+part 'text_field.g.dart';
 
 /// The application's TextField recipe.
 ///

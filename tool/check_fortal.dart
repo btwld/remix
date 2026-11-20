@@ -45,7 +45,7 @@ List<String> checkFortalContract(Directory workspace) {
   for (final family in families) {
     final id = family['id'] as String;
     if (!ids.add(id)) failures.add('Duplicate Fortal family $id.');
-    final fileName = id == 'text_field' || id == 'text_area' ? 'textfield' : id;
+    final fileName = id == 'text_area' ? 'text_field' : id;
     coveredSources.add(fileName);
     final file = File('$root/lib/src/fortal/components/$fileName.dart');
     if (!file.existsSync()) {

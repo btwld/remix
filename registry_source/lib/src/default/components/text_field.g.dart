@@ -1,20 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'textfield.dart';
+part of 'text_field.dart';
 
 // **************************************************************************
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Fortal TextField recipe.
+/// The application's TextField recipe.
 ///
-/// It reads top to bottom: what every text input shares, then the size, then
-/// the variant's colors for rest and disabled, then the error state.
-class FortalTextField extends StatelessWidget {
-  const FortalTextField({
+/// There is no hover fragment: the I-beam cursor is the affordance, and tinting
+/// the box would compete with the focus ring that follows.
+///
+/// `EditableText` asserts on an `Overlay` ancestor when the field takes focus.
+/// Any app with a `Navigator` has one; a bare `WidgetsApp(builder: ...)` has to
+/// supply its own.
+class VanillaTextField extends StatelessWidget {
+  const VanillaTextField({
     super.key,
-    this.variant = .surface,
-    this.size = .size2,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -74,138 +76,6 @@ class FortalTextField extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
   });
-
-  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
-  const FortalTextField.surface({
-    super.key,
-    this.size = .size2,
-    this.style = const TextFieldStyler.create(),
-    this.controller,
-    this.focusNode,
-    this.label,
-    this.hintText,
-    this.helperText,
-    this.error = false,
-    this.keyboardType,
-    this.textInputAction,
-    this.textCapitalization = .none,
-    this.textDirection,
-    this.obscureText = false,
-    this.enabled = true,
-    this.readOnly = false,
-    this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
-    this.expands = false,
-    this.maxLength,
-    this.maxLengthEnforcement,
-    this.onChanged,
-    this.onEditingComplete,
-    this.onSubmitted,
-    this.onAppPrivateCommand,
-    this.inputFormatters,
-    this.showCursor,
-    this.obscuringCharacter = '•',
-    this.autocorrect = true,
-    this.enableSuggestions = true,
-    this.smartDashesType,
-    this.smartQuotesType,
-    this.dragStartBehavior = .start,
-    this.enableInteractiveSelection = true,
-    this.selectionControls,
-    this.onTap,
-    this.onTapOutside,
-    this.onPressUpOutside,
-    this.onTapAlwaysCalled = false,
-    this.scrollController,
-    this.scrollPhysics,
-    this.autofillHints,
-    this.contentInsertionConfiguration,
-    this.clipBehavior = .hardEdge,
-    this.restorationId,
-    this.stylusHandwritingEnabled = true,
-    this.enableIMEPersonalizedLearning = true,
-    this.contextMenuBuilder,
-    this.spellCheckConfiguration,
-    this.magnifierConfiguration,
-    this.canRequestFocus = true,
-    this.ignorePointers,
-    this.undoController,
-    this.groupId = EditableText,
-    this.leading,
-    this.trailing,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-  }) : variant = FortalTextFieldVariant.surface;
-
-  /// An accent tint inside a 1px accent ring, with accent-colored text.
-  const FortalTextField.soft({
-    super.key,
-    this.size = .size2,
-    this.style = const TextFieldStyler.create(),
-    this.controller,
-    this.focusNode,
-    this.label,
-    this.hintText,
-    this.helperText,
-    this.error = false,
-    this.keyboardType,
-    this.textInputAction,
-    this.textCapitalization = .none,
-    this.textDirection,
-    this.obscureText = false,
-    this.enabled = true,
-    this.readOnly = false,
-    this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
-    this.expands = false,
-    this.maxLength,
-    this.maxLengthEnforcement,
-    this.onChanged,
-    this.onEditingComplete,
-    this.onSubmitted,
-    this.onAppPrivateCommand,
-    this.inputFormatters,
-    this.showCursor,
-    this.obscuringCharacter = '•',
-    this.autocorrect = true,
-    this.enableSuggestions = true,
-    this.smartDashesType,
-    this.smartQuotesType,
-    this.dragStartBehavior = .start,
-    this.enableInteractiveSelection = true,
-    this.selectionControls,
-    this.onTap,
-    this.onTapOutside,
-    this.onPressUpOutside,
-    this.onTapAlwaysCalled = false,
-    this.scrollController,
-    this.scrollPhysics,
-    this.autofillHints,
-    this.contentInsertionConfiguration,
-    this.clipBehavior = .hardEdge,
-    this.restorationId,
-    this.stylusHandwritingEnabled = true,
-    this.enableIMEPersonalizedLearning = true,
-    this.contextMenuBuilder,
-    this.spellCheckConfiguration,
-    this.magnifierConfiguration,
-    this.canRequestFocus = true,
-    this.ignorePointers,
-    this.undoController,
-    this.groupId = EditableText,
-    this.leading,
-    this.trailing,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-  }) : variant = FortalTextFieldVariant.soft;
-
-  final FortalTextFieldVariant variant;
-
-  final FortalTextFieldSize size;
 
   final TextFieldStyler style;
 
@@ -327,11 +197,7 @@ class FortalTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextField(
       key: this.key,
-      style: fortalTextFieldStyle(
-        variant: this.variant,
-        size: this.size,
-        style: this.style,
-      ),
+      style: vanillaTextFieldStyle(style: this.style),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,
@@ -393,13 +259,13 @@ class FortalTextField extends StatelessWidget {
   }
 }
 
-/// The Fortal TextArea recipe: the text field's looks on a taller box whose
-/// content starts at the top.
-class FortalTextArea extends StatelessWidget {
-  const FortalTextArea({
+/// The application's TextArea recipe.
+///
+/// The field's recipe with a taller resting box (at least 64px, 8px above and
+/// below the text) and accessories pinned to the first line.
+class VanillaTextArea extends StatelessWidget {
+  const VanillaTextArea({
     super.key,
-    this.variant = .surface,
-    this.size = .size2,
     this.style = const TextFieldStyler.create(),
     this.controller,
     this.focusNode,
@@ -456,132 +322,6 @@ class FortalTextArea extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
   });
-
-  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
-  const FortalTextArea.surface({
-    super.key,
-    this.size = .size2,
-    this.style = const TextFieldStyler.create(),
-    this.controller,
-    this.focusNode,
-    this.label,
-    this.hintText,
-    this.helperText,
-    this.error = false,
-    this.keyboardType = TextInputType.multiline,
-    this.textInputAction = TextInputAction.newline,
-    this.textCapitalization = .none,
-    this.textDirection,
-    this.enabled = true,
-    this.readOnly = false,
-    this.autofocus = false,
-    this.maxLines,
-    this.minLines = 2,
-    this.maxLength,
-    this.maxLengthEnforcement,
-    this.onChanged,
-    this.onEditingComplete,
-    this.onSubmitted,
-    this.onAppPrivateCommand,
-    this.inputFormatters,
-    this.showCursor,
-    this.autocorrect = true,
-    this.enableSuggestions = true,
-    this.smartDashesType,
-    this.smartQuotesType,
-    this.dragStartBehavior = .start,
-    this.enableInteractiveSelection = true,
-    this.selectionControls,
-    this.onTap,
-    this.onTapOutside,
-    this.onPressUpOutside,
-    this.onTapAlwaysCalled = false,
-    this.scrollController,
-    this.scrollPhysics,
-    this.autofillHints,
-    this.contentInsertionConfiguration,
-    this.clipBehavior = .hardEdge,
-    this.restorationId,
-    this.stylusHandwritingEnabled = true,
-    this.enableIMEPersonalizedLearning = true,
-    this.contextMenuBuilder,
-    this.spellCheckConfiguration,
-    this.magnifierConfiguration,
-    this.canRequestFocus = true,
-    this.ignorePointers,
-    this.undoController,
-    this.groupId = EditableText,
-    this.leading,
-    this.trailing,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-  }) : variant = FortalTextAreaVariant.surface;
-
-  /// An accent tint inside a 1px accent ring, with accent-colored text.
-  const FortalTextArea.soft({
-    super.key,
-    this.size = .size2,
-    this.style = const TextFieldStyler.create(),
-    this.controller,
-    this.focusNode,
-    this.label,
-    this.hintText,
-    this.helperText,
-    this.error = false,
-    this.keyboardType = TextInputType.multiline,
-    this.textInputAction = TextInputAction.newline,
-    this.textCapitalization = .none,
-    this.textDirection,
-    this.enabled = true,
-    this.readOnly = false,
-    this.autofocus = false,
-    this.maxLines,
-    this.minLines = 2,
-    this.maxLength,
-    this.maxLengthEnforcement,
-    this.onChanged,
-    this.onEditingComplete,
-    this.onSubmitted,
-    this.onAppPrivateCommand,
-    this.inputFormatters,
-    this.showCursor,
-    this.autocorrect = true,
-    this.enableSuggestions = true,
-    this.smartDashesType,
-    this.smartQuotesType,
-    this.dragStartBehavior = .start,
-    this.enableInteractiveSelection = true,
-    this.selectionControls,
-    this.onTap,
-    this.onTapOutside,
-    this.onPressUpOutside,
-    this.onTapAlwaysCalled = false,
-    this.scrollController,
-    this.scrollPhysics,
-    this.autofillHints,
-    this.contentInsertionConfiguration,
-    this.clipBehavior = .hardEdge,
-    this.restorationId,
-    this.stylusHandwritingEnabled = true,
-    this.enableIMEPersonalizedLearning = true,
-    this.contextMenuBuilder,
-    this.spellCheckConfiguration,
-    this.magnifierConfiguration,
-    this.canRequestFocus = true,
-    this.ignorePointers,
-    this.undoController,
-    this.groupId = EditableText,
-    this.leading,
-    this.trailing,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-  }) : variant = FortalTextAreaVariant.soft;
-
-  final FortalTextAreaVariant variant;
-
-  final FortalTextAreaSize size;
 
   final TextFieldStyler style;
 
@@ -697,11 +437,7 @@ class FortalTextArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextArea(
       key: this.key,
-      style: fortalTextAreaStyle(
-        variant: this.variant,
-        size: this.size,
-        style: this.style,
-      ),
+      style: vanillaTextAreaStyle(style: this.style),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,

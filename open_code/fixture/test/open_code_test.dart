@@ -5746,7 +5746,7 @@ void main() {
         theme: theme,
         states: states,
       )).spec.item.widgetModifiers,
-      'textfield': (tester) async => (await _resolve(
+      'text_field': (tester) async => (await _resolve(
         tester,
         acmeTextFieldStyle(),
         theme: theme,
@@ -5991,14 +5991,14 @@ void main() {
           theme: theme,
         )).spec.container,
       ),
-      'textfield': (tester) async => _boxBackground(
+      'text_field': (tester) async => _boxBackground(
         (await _resolve(
           tester,
           acmeTextFieldStyle(style: TextFieldStyler().color(override)),
           theme: theme,
         )).spec.container,
       ),
-      'textfield/area': (tester) async => _boxBackground(
+      'text_field/area': (tester) async => _boxBackground(
         (await _resolve(
           tester,
           acmeTextAreaStyle(style: TextFieldStyler().color(override)),
@@ -6035,7 +6035,7 @@ void main() {
     test('every directly resolvable registry recipe is probed', () {
       // These probes cover 29 items. Disclosure needs a live widget to resolve
       // its state fragments and has focused tests above. Chart, tabs, and
-      // textfield publish more than one recipe, so this count is higher.
+      // text_field publish more than one recipe, so this count is higher.
       expect(probes, hasLength(34));
     });
 

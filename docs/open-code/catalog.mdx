@@ -69,7 +69,7 @@ The installer rejects older resolved versions before it writes source.
 | `chart` | `UiLineChart`, `UiBarChart`, `UiPieChart` | — |
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | — |
 | `code` | `UiCode` (Vanilla) | — |
-| `combobox` | `UiCombobox` (every preset; installs `theme` and `textfield`) | — |
+| `combobox` | `UiCombobox` (every preset; installs `theme` and `text_field`) | — |
 | `dashboard_demo` | `UiDashboardDemo` (from `recipes/dashboard/dashboard_demo.dart`, not `ui.dart`) | — |
 | `dashboard_shell` | `UiDashboardShell` | — |
 | `data_list` | `UiDataList` | — |
@@ -86,7 +86,7 @@ The installer rejects older resolved versions before it writes source.
 | `progress` | `UiProgress` | — |
 | `radio` | `UiRadio` | — |
 | `range_slider` | `UiRangeSlider` (depends on `slider`) | — |
-| `search_field` | `UiSearchField` (Vanilla; installs `theme`, `textfield`, and `icon_button`) | — |
+| `search_field` | `UiSearchField` (Vanilla; installs `theme`, `text_field`, and `icon_button`) | — |
 | `segmented_control` | `UiSegmentedControl` | — |
 | `select` | `UiSelect` | — |
 | `sidebar` | `UiSidebar` | — |
@@ -97,7 +97,7 @@ The installer rejects older resolved versions before it writes source.
 | `switch` | `UiSwitch` | — |
 | `tabs` | `UiTabBar`, `UiTab`, `UiTabView` | variant |
 | `text` | `UiText` (Vanilla) | variant |
-| `textfield` | `UiTextField`, `UiTextArea` | — |
+| `text_field` | `UiTextField`, `UiTextArea` | — |
 | `toast` | `UiToast` | variant |
 | `toggle` | `UiToggle` | variant, size |
 | `toggle_group` | `UiToggleGroup` | variant, size |
@@ -137,7 +137,7 @@ axis and no group. `base_button` and `typography` are shared authored recipes
 that arrive transitively with the components that use them. Fortal's own
 `avatar_group` (`UiAvatarGroup`, size axis; installs `avatar`),
 `breadcrumbs` (`UiBreadcrumbs`, size axis; installs `link` and `text`),
-`search_field` (`UiSearchField`, variant and size axes; installs `textfield`
+`search_field` (`UiSearchField`, variant and size axes; installs `text_field`
 and `icon_button`) and `surface` (`UiSurface`, variant and size axes;
 installs `card`) are hand-written compositions with no generated part. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
@@ -148,7 +148,7 @@ The `heroui` catalog follows HeroUI's names. Beside shared names such as
 `date_picker`, `date_range_picker`, `breadcrumbs`, `search_field`, and `tabs`, it adds `alert`, `avatar_group`,
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
 `field_layout`, `input_group`, `modal`, `radio_group`,
-`separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
+`separator`, `surface`, `switch_group`, `table`, `text_area`, `toggle_button`,
 and `toggle_button_group`. It also ships `app_bar`, `sidebar`,
 `sidebar_layout`, `icons`, and `dashboard_shell` as extensions: HeroUI web has
 no navbar, sidebar, or application shell, so these are styled from HeroUI's
@@ -159,7 +159,7 @@ the `tooltip`) without an upstream reference. HeroUI's `sidebar` pulls in
 `dashboard_demo` are extensions too. HeroUI's `chart` draws its series in an
 ordered ramp of existing tokens (`accent`, `muted`, `foreground`, then
 `border-tertiary`) and never in a status color. The Agent recipes pass HeroUI's
-`card`, `button`, `disclosure`, and `textarea` styles into the shared Agent
+`card`, `button`, `disclosure`, and `text_area` styles into the shared Agent
 components. HeroUI's `dashboard_demo` renders the same five destinations with
 HeroUI's components, and pulls in `chart`, `table`, `tabs`, `chip`, and the
 Agent items. Families that need

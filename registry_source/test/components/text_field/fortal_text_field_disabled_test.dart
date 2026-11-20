@@ -22,7 +22,7 @@ List<Color> _renderedDecorationColors(WidgetTester tester, Finder finder) {
 }
 
 void main() {
-  testWidgets('fortal textfield factories build real stylers per variant', (
+  testWidgets('fortal text field factories build real stylers per variant', (
     tester,
   ) async {
     // Drive the real factories rather than asserting on their source text.
@@ -34,7 +34,7 @@ void main() {
   });
 
   testWidgets(
-    'disabled soft textfield resolves a background and never the debug red',
+    'disabled soft text field resolves a background and never the debug red',
     (tester) async {
       await tester.pumpRemixApp(
         FortalTextField.soft(
@@ -59,7 +59,7 @@ void main() {
     },
   );
 
-  testWidgets('fortal textfield disabled soft renders under FortalTheme', (
+  testWidgets('fortal text field disabled soft renders under FortalTheme', (
     tester,
   ) async {
     await tester.pumpRemixApp(
