@@ -1467,7 +1467,7 @@ items:
       );
     });
 
-    test('an item the checker never installs is reported', () {
+    test('reports unreachable items and missing requests', () {
       final root = Directory('${sandbox.path}/repo');
       final registry = File('${root.path}/registry/vanilla/registry.yaml');
       registry.parent.createSync(recursive: true);
@@ -1478,6 +1478,15 @@ items:
     files:
       - source: templates/theme/tokens.dart.tmpl
         target: "@ui/theme/tokens.dart"
+  calendar:
+    registryDependencies: [theme, calendar_styles]
+    files:
+      - source: templates/calendar/calendar.dart.tmpl
+        target: "@ui/components/calendar.dart"
+  calendar_styles:
+    files:
+      - source: templates/calendar_styles/calendar_styles.dart.tmpl
+        target: "@ui/components/calendar_styles.dart"
   brand_new:
     files:
       - source: templates/brand_new/brand_new.dart.tmpl
@@ -1487,6 +1496,7 @@ items:
       final problem = checker.registryCoverageProblem(root);
 
       expect(problem, contains('registry.yaml has brand_new'));
+      expect(problem, isNot(contains('registry.yaml has calendar_styles')));
       // The reverse direction is reported too, so a removed item cannot leave
       // the checker installing something that no longer exists.
       expect(problem, contains('this check installs button'));
