@@ -9,6 +9,8 @@ import 'dart:io';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
+import '../packages/remix_cli/lib/src/project_config.dart';
+import '../packages/remix_cli/lib/src/registry_source.dart';
 import 'check_open_code.dart'
     show
         registryRemixFloor,
@@ -78,6 +80,19 @@ Future<String?> checkPublishedCliCandidate({
         'cannot check the candidate with a released CLI.';
   }
   final selected = compatible.last;
+  // An exact ref pattern prints one line when the branch exists and nothing
+  // when it does not; only a failed lookup exits non-zero.
+  final stableRefs = StringBuffer();
+  final lookup = await run('git', [
+    'ls-remote',
+    'https://github.com/$officialRepository.git',
+    'refs/heads/$officialStableRef',
+  ], capturedOutput: stableRefs);
+  if (lookup != null) {
+    return 'Could not look up $officialStableRef on $officialRepository: '
+        '$lookup; re-run Promote registry.';
+  }
+  final bootstrap = stableRefs.toString().trim().isEmpty;
   final warning = documentedCliPinWarning(pin, published);
   if (warning != null) (out ?? stdout).writeln(warning);
   final activation = await run(dart, [
@@ -130,6 +145,33 @@ Future<String?> checkPublishedCliCandidate({
   if (create != null) return create;
   final floor = registryRemixFloor(repositoryRoot, preset);
   writeHostedFloorOverride(app, floor: floor);
+  const prefix = 'Released';
+  if (bootstrap) {
+    // A default init resolves the stable branch, so pin the candidate first;
+    // init preserves a matching remix.yaml and only creates the barrel.
+    (out ?? stdout).writeln(
+      '$officialStableRef is missing on $officialRepository; '
+      'this run bootstraps @remix from candidate $sha.',
+    );
+    final config = ProjectConfig(
+      packageRoot: app,
+      prefix: prefix,
+      preset: preset,
+      uiPath: 'lib/ui',
+      defaultRegistry: '@remix',
+      registries: {
+        '@remix': RegistrySource(
+          repository: officialRepository,
+          path: 'registry',
+          ref: sha,
+          revision: sha,
+        ),
+      },
+    );
+    File(
+      '${app.path}/$projectConfigFileName',
+    ).writeAsStringSync(config.encode());
+  }
   final items = preset == 'heroui'
       ? ['search_field', 'button']
       : ['dashboard_shell', 'button'];
@@ -142,10 +184,12 @@ Future<String?> checkPublishedCliCandidate({
       'remix_cli:remix',
       'init',
       '--prefix',
-      'Released',
+      prefix,
       '--preset',
       preset,
     ],
+    // Init skips the registry for a preserved remix.yaml, so this is also
+    // where a bootstrapped pin is resolved and its catalog read.
     [
       'pub',
       'global',
