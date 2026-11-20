@@ -140,6 +140,16 @@ void main() {
       );
     });
 
+    test('a missing shared enum recipe is reported as contract drift', () {
+      File(
+        '${candidate.path}/registry_source/lib/src/fortal/components/typography.dart',
+      ).deleteSync();
+      expect(
+        checkFortalContract(candidate),
+        anyElement(contains('typography.dart for FortalTextSize')),
+      );
+    });
+
     File candidateButton() => File(
       '${candidate.path}/registry_source/lib/src/fortal/components/button.dart',
     );

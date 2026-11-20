@@ -6,6 +6,10 @@ The [machine-readable catalog](fortal_catalog.json) lists every shipped family,
 its axes, constructor defaults, and behavior. The public component APIs remain
 size-linked recipes over Remix; no behavioral component is reimplemented.
 
+In the catalog, `recipe` overrides the family ID when locating its Dart file.
+An axis with `enumOwner` uses that family's enum. The owner can set `enumRecipe`
+when its enum declarations live outside its widget recipe.
+
 ## Sources and decisions
 
 The [design provenance](../docs/fortal/refresh-brief.md) records the original

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'fortal_recipe_path.dart';
+
 /// Checks Fortal's own specification, independently of any external library.
 void main() {
   final failures = checkFortalContract(Directory.current);
@@ -40,20 +42,31 @@ List<String> checkFortalContract(Directory workspace) {
     _checkDefault('theme', entry.key, entry.value['default'], theme, failures);
   }
   final families = (catalog['families'] as List).cast<Map<String, dynamic>>();
-  final ids = <String>{};
-  final coveredSources = <String>{};
+  final familiesById = <String, Map<String, dynamic>>{};
   for (final family in families) {
     final id = family['id'] as String;
-    if (!ids.add(id)) failures.add('Duplicate Fortal family $id.');
-    final fileName = id == 'text_area' ? 'text_field' : id;
-    coveredSources.add(fileName);
-    final file = File('$root/lib/src/fortal/components/$fileName.dart');
-    if (!file.existsSync()) {
+    if (familiesById.containsKey(id)) {
+      failures.add('Duplicate Fortal family $id.');
+    }
+    familiesById[id] = family;
+  }
+  final coveredSources = <String>{};
+  final sources = <String, String?>{};
+  String? readRecipe(String path) => sources.putIfAbsent(path, () {
+    final file = File('$root/$path');
+    return file.existsSync() ? file.readAsStringSync() : null;
+  });
+  for (final family in families) {
+    final id = family['id'] as String;
+    final recipePath = fortalRecipePath(family);
+    final source = readRecipe(recipePath);
+    final file = File('$root/$recipePath');
+    if (source == null) {
       failures.add('$id has no authored recipe.');
       continue;
     }
-    final source = file.readAsStringSync();
-    final generated = File(file.path.replaceFirst('.dart', '.g.dart'));
+    coveredSources.add(file.uri.pathSegments.last);
+    final generated = File(fortalGeneratedPath(file.path));
     final all =
         '$source\n${generated.existsSync() ? generated.readAsStringSync() : ''}';
     final type = family['fortalType'] as String;
@@ -64,31 +77,23 @@ List<String> checkFortalContract(Directory workspace) {
     for (final entry in axes.entries) {
       final kind = entry.key;
       final definition = entry.value as Map;
-      // A family that shares another family's enum names it and its file.
-      final (enumType, enumFile) = switch (kind) {
-        'size' || 'variant' when id == 'range_slider' => (
-          'FortalSlider${_pascal(kind)}',
-          'slider',
-        ),
-        'weight' => ('FortalTextWeight', 'typography'),
-        'size' when {'text', 'heading', 'code', 'kbd', 'link'}.contains(id) => (
-          'FortalTextSize',
-          'typography',
-        ),
-        'size' when id == 'tabs' => ('FortalTabsSize', null),
-        'size' || 'variant' when id == 'combobox' => (
-          'FortalTextField${_pascal(kind)}',
-          'text_field',
-        ),
-        'variant' when id == 'text_area' => ('FortalTextFieldVariant', null),
-        'size' when id == 'surface' => ('FortalCardSize', 'card'),
-        _ => ('Fortal${_pascal(id)}${_pascal(kind)}', null),
-      };
-      final enumSource = enumFile == null
-          ? source
-          : File(
-              '$root/lib/src/fortal/components/$enumFile.dart',
-            ).readAsStringSync();
+      final enumOwner = definition['enumOwner'] as String?;
+      final ownerId = enumOwner ?? id;
+      final owner = familiesById[ownerId];
+      if (owner == null || !(owner['enums'] as Map).containsKey(kind)) {
+        failures.add('$id: unknown enum owner $ownerId for $kind.');
+        continue;
+      }
+      final enumType = 'Fortal${_pascal(ownerId)}${_pascal(kind)}';
+      final enumPath = fortalRecipePath(
+        owner,
+        recipe: owner['enumRecipe'] as String?,
+      );
+      final enumSource = readRecipe(enumPath);
+      if (enumSource == null) {
+        failures.add('$id: missing enum source $enumPath for $enumType.');
+        continue;
+      }
       // Framework/Remix behavioral enums stay owned by those packages.
       if (RegExp('enum\\s+$enumType\\b').hasMatch(enumSource)) {
         _checkEnum(
@@ -97,7 +102,8 @@ List<String> checkFortalContract(Directory workspace) {
           definition['values'] as List,
           failures,
         );
-      } else if (kind == 'size' ||
+      } else if (enumOwner != null ||
+          kind == 'size' ||
           kind == 'variant' ||
           kind == 'weight' ||
           kind == 'underline') {
@@ -127,13 +133,13 @@ List<String> checkFortalContract(Directory workspace) {
         failures.add('$id: missing test $test.');
     }
   }
-  final components = Directory('$root/lib/src/fortal/components')
+  final components = Directory('$root/$fortalComponentsPath')
       .listSync()
       .whereType<File>()
       .where((f) => f.path.endsWith('.dart') && !f.path.endsWith('.g.dart'));
   for (final file in components) {
     final name = file.uri.pathSegments.last.replaceFirst('.dart', '');
-    if (!coveredSources.contains(name) &&
+    if (!coveredSources.contains(file.uri.pathSegments.last) &&
         !{'base_button', 'typography'}.contains(name)) {
       failures.add('Unspecified Fortal recipe: $name.');
     }

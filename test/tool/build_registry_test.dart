@@ -487,48 +487,6 @@ void main() {
     }
   });
 
-  test('preset output merge rejects file collisions', () {
-    const left = PresetOutput(
-      files: {'registry.yaml': 'schema: 1\nitems:\n', 'templates/a': 'a'},
-      sourceByTemplate: {},
-    );
-    const right = PresetOutput(
-      files: {'registry.yaml': 'schema: 1\nitems:\n', 'templates/a': 'b'},
-      sourceByTemplate: {},
-    );
-    expect(() => mergePresetOutputs(left, right), throwsStateError);
-  });
-
-  test('preset merge rejects item and target collisions before writing', () {
-    PresetOutput fixture(
-      String name,
-      String target,
-      String source,
-    ) => PresetOutput(
-      files: {
-        'registry.yaml':
-            'schema: 1\nitems:\n  $name:\n    files:\n      - source: $source\n        target: "$target"\n',
-        source: 'fixture',
-      },
-      sourceByTemplate: const {},
-    );
-    final base = fixture('one', '@ui/one.dart', 'templates/one');
-    expect(
-      () => mergePresetOutputs(
-        base,
-        fixture('one', '@ui/two.dart', 'templates/two'),
-      ),
-      throwsStateError,
-    );
-    expect(
-      () => mergePresetOutputs(
-        base,
-        fixture('two', '@ui/one.dart', 'templates/two'),
-      ),
-      throwsStateError,
-    );
-  });
-
   late Directory sandbox;
 
   setUp(() {
@@ -1359,88 +1317,6 @@ void acmeDialStyle() {}
     );
   });
 
-  test('a recipe rewrites the behavior import and word, then sorts', () {
-    final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
-    _writeAcmeSources(builder);
-    _write(
-      builder.sourceRoot,
-      'recipes/dial_recipe.dart',
-      """import 'package:remix/remix.dart';
-import '../../bot/components/dial.dart';
-
-import '../core/core.dart';
-import '../widgets/dial.dart';
-
-final class AcmeBotDialRecipe {
-  const AcmeBotDialRecipe(this.style);
-  final BotDialStyler style;
-}
-
-AcmeBotDialRecipe acmeBotDialRecipe() =>
-    AcmeBotDialRecipe(BotDialStyler().merge(acmeDialStyle()));
-""",
-    );
-    final output = builder.derive();
-    final template = output.files['templates/recipes/dial_recipe.dart.tmpl']!;
-    expect(template, """import 'package:remix/remix.dart';
-
-import '../components/dial.dart';
-import '../core/core.dart';
-import '../widgets/dial.dart';
-
-final class {{typePrefix}}BotDialRecipe {
-  const {{typePrefix}}BotDialRecipe(this.style);
-  final {{typePrefix}}DialStyler style;
-}
-
-{{typePrefix}}BotDialRecipe {{valuePrefix}}BotDialRecipe() =>
-    {{typePrefix}}BotDialRecipe({{typePrefix}}DialStyler().merge({{valuePrefix}}DialStyle()));
-""");
-    final items = loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
-    expect(
-      _strings((items['dial_recipe'] as YamlMap)['registryDependencies']),
-      ['core', 'dial'],
-    );
-    expect(
-      (items['dial_recipe'] as YamlMap)['files'].first['target'],
-      '@ui/recipes/dial_recipe.dart',
-    );
-  });
-
-  test(
-    'behavior imports are refused outside recipes and beyond components',
-    () {
-      final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
-      _writeAcmeSources(builder);
-      _write(
-        builder.sourceRoot,
-        'widgets/gauge.dart',
-        "import '../../bot/components/dial.dart';\n",
-      );
-      _write(
-        builder.sourceRoot,
-        'recipes/dial_recipe.dart',
-        "import '../../bot/support/glyph.dart';\n",
-      );
-      expect(
-        builder.derive,
-        throwsA(
-          isA<FormatException>().having(
-            (error) => error.message,
-            'message',
-            allOf(
-              contains('widgets/gauge.dart: only recipes may import'),
-              contains(
-                'recipes/dial_recipe.dart: recipes import behavior '
-                'components only',
-              ),
-            ),
-          ),
-        ),
-      );
-    },
-  );
-
   test('recipes and declared recipe items must agree', () {
     final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
     _writeAcmeSources(builder);
@@ -1468,25 +1344,19 @@ final class {{typePrefix}}BotDialRecipe {
     );
   });
 
-  test('a recipe importing something the preset never installs is refused', () {
+  test('single-file recipes reject unmapped sibling imports', () {
     final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
     _writeAcmeSources(builder);
+    _write(sandbox, 'external/dial.dart', 'class Dial {}\n');
     _write(
       builder.sourceRoot,
       'recipes/dial_recipe.dart',
-      "import '../../bot/components/dial.dart';\n",
+      "import '../../external/dial.dart';\n",
     );
-    // Derivation defers the behavior component to the merge; validation of
-    // the un-merged preset is where it surfaces.
-    final output = builder.derive();
     expect(
-      () => builder.validate(output),
-      throwsA(
-        isA<FormatException>().having(
-          (error) => error.message,
-          'message',
-          contains('dial_recipe imports ../components/dial.dart'),
-        ),
+      builder.derive,
+      _throwsFormatExceptionWith(
+        'recipes/dial_recipe.dart: missing relative source ../../external/dial.dart',
       ),
     );
   });
@@ -1629,6 +1499,44 @@ final class {{typePrefix}}BotDialRecipe {
     );
   });
 
+  test('the complete catalog rejects collisions with generated targets', () {
+    final builder = _fixtureBuilder(sandbox);
+    final output = builder.derive();
+    final colliding = PresetOutput(
+      files: {
+        ...output.files,
+        'registry.yaml':
+            '${output.files['registry.yaml']}\n'
+            '  extra:\n'
+            '    files:\n'
+            '      - source: templates/extra/extra.dart.tmpl\n'
+            '        target: "@ui/components/button.g.dart"\n',
+        'templates/extra/extra.dart.tmpl': '',
+      },
+      sourceByTemplate: output.sourceByTemplate,
+    );
+    expect(
+      () => builder.write(colliding),
+      _throwsFormatExceptionWith('both target @ui/components/button.g.dart'),
+    );
+    expect(builder.outputRoot.existsSync(), isFalse);
+  });
+
+  test('the complete catalog cannot reference a missing template', () {
+    final builder = _fixtureBuilder(sandbox);
+    final output = builder.derive();
+    const missing = 'templates/button/button.dart.tmpl';
+    final incomplete = PresetOutput(
+      files: {...output.files}..remove(missing),
+      sourceByTemplate: output.sourceByTemplate,
+    );
+    expect(
+      () => builder.write(incomplete),
+      _throwsFormatExceptionWith('button is missing template $missing'),
+    );
+    expect(builder.outputRoot.existsSync(), isFalse);
+  });
+
   test('grouped dependency cycles are rejected before output changes', () {
     final builder = _emptyBuilder(sandbox, spec: _acmeWithGroupedCycle);
     _writeDefaultRegistry(builder.defaultRegistryRoot);
@@ -1691,14 +1599,13 @@ const _acmePreset = PresetSpec(
       exports: ['core/core.dart'],
     ),
   ],
-  copiedItems: [],
   ignoredSourceFiles: {},
   floorPackages: {'remix'},
   detectedPackages: [],
   composedRegistryDependencies: {},
 );
 
-/// [_acmePreset] styling a `remix_bot` behavior through one recipe.
+/// [_acmePreset] with one recipe.
 const _acmeWithRecipes = PresetSpec(
   name: 'acme',
   sourceRoot: 'registry_source/acme',
@@ -1715,18 +1622,11 @@ const _acmeWithRecipes = PresetSpec(
       exports: ['core/core.dart'],
     ),
   ],
-  copiedItems: [],
   ignoredSourceFiles: {},
   floorPackages: {'remix'},
   detectedPackages: [],
   composedRegistryDependencies: {},
   recipeItems: ['dial_recipe'],
-  behavior: BehaviorSpec(
-    directory: 'bot',
-    typeWord: 'Bot',
-    valueWord: 'bot',
-    componentDirectory: 'components',
-  ),
 );
 
 const _acmeWithGroupedRecipes = PresetSpec(
@@ -1737,7 +1637,6 @@ const _acmeWithGroupedRecipes = PresetSpec(
   valueWord: 'acme',
   componentDirectory: 'widgets',
   sharedItems: [],
-  copiedItems: [],
   ignoredSourceFiles: {},
   floorPackages: {'remix'},
   detectedPackages: [],
@@ -1796,7 +1695,6 @@ const _acmeWithGroupedCollision = PresetSpec(
   valueWord: 'acme',
   componentDirectory: 'widgets',
   sharedItems: [],
-  copiedItems: [],
   ignoredSourceFiles: {},
   floorPackages: {'remix'},
   detectedPackages: [],
@@ -1827,7 +1725,6 @@ const _acmeWithGroupedCycle = PresetSpec(
   valueWord: 'acme',
   componentDirectory: 'widgets',
   sharedItems: [],
-  copiedItems: [],
   ignoredSourceFiles: {},
   floorPackages: {'remix'},
   detectedPackages: [],
@@ -1857,17 +1754,6 @@ const _acmeWithGroupedCycle = PresetSpec(
 );
 
 void _writeAcmeSources(PresetBuilder builder) {
-  // The behavior the recipe styles, a sibling of the preset source.
-  _write(
-    Directory(p.join(builder.sourceRoot.parent.path, 'bot')),
-    'components/dial.dart',
-    'class BotDialStyler {}\n',
-  );
-  _write(
-    Directory(p.join(builder.sourceRoot.parent.path, 'bot')),
-    'support/glyph.dart',
-    '',
-  );
   _write(builder.sourceRoot, 'core/core.dart', "export 'tokens.dart';\n");
   _write(
     builder.sourceRoot,
@@ -1949,17 +1835,7 @@ const _fortalFixture = PresetSpec(
       exports: ['theme/theme.dart'],
     ),
   ],
-  copiedItems: [
-    CopiedItemSpec(
-      name: 'icons',
-      templatePath: 'templates/icons/icons.dart.tmpl',
-      target: '@ui/icons.dart',
-      registryDependencies: ['theme'],
-      packages: {'remix_ui_icons'},
-      exports: ['icons.dart'],
-    ),
-  ],
-  ignoredSourceFiles: {'icons.dart'},
+  ignoredSourceFiles: {},
   floorPackages: {
     'remix',
     'mix_annotations',
@@ -2041,11 +1917,6 @@ items:
       - source: templates/icons/icons.dart.tmpl
         target: "@ui/icons.dart"
 ''');
-  _write(
-    root,
-    'templates/icons/icons.dart.tmpl',
-    'abstract final class {{typePrefix}}Icons {}\n',
-  );
 }
 
 Matcher _throwsFormatExceptionWith(String text) => throwsA(
