@@ -31,9 +31,7 @@ ComboboxStyler fortalComboboxStyle({
   };
 
   return ComboboxStyler()
-      .field(
-        fortalTextFieldStyle(variant: variant, size: size),
-      )
+      .field(fortalTextFieldStyle(variant: variant, size: size))
       .panel(
         ComboboxPanelStyler()
             .margin(.top(FortalTokens.space2()))

@@ -27,9 +27,10 @@ import 'dashboard_demo_text.dart';
 import 'dashboard_overview.dart';
 import 'dashboard_shell.dart';
 
-// The types the demo's constructor takes, so this one import builds it.
+// The types the demo's constructor takes and the types inside them, so this
+// one import builds it.
 export '../../../dashboard/dashboard_demo_base.dart'
-    show RegistryDashboardDemoPage;
+    show RegistryDashboardDemoPage, RegistryDashboardDemoSection;
 export '../../../dashboard/dashboard_sample_data.dart'
     show
         RegistryDashboardActivity,

@@ -7,11 +7,8 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 Widget buildKbdCatalogUseCase(BuildContext context) {
   return CatalogMatrix(
     columns: labelsOf(FortalTextSize.values),
-    rows: labelsOf(FortalKbdVariant.values),
-    cell: (row, column) => FortalKbd(
-      'Shift',
-      size: FortalTextSize.values[column],
-      variant: FortalKbdVariant.values[row],
-    ),
+    rows: noRowAxis,
+    cell: (row, column) =>
+        FortalKbd('Shift', size: FortalTextSize.values[column]),
   );
 }

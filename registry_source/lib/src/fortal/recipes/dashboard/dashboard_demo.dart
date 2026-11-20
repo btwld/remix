@@ -35,7 +35,8 @@ import 'dashboard_demo_widgets.dart';
 import 'dashboard_overview.dart';
 import 'dashboard_shell.dart';
 
-// The types the demo's constructor takes, so this one import builds it.
+// The types the demo's constructor takes and the types inside them, so this
+// one import builds it.
 export 'dashboard_demo_artwork.dart' show FortalArtworkMotif;
 export 'dashboard_demo_data.dart'
     show

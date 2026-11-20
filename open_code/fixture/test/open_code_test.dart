@@ -2979,7 +2979,7 @@ void main() {
           AcmeTheme(
             theme: theme.data,
             child: _host(
-              _Probe((context) => palette = resolveAcmeChartPalette(context)),
+              _Probe((context) => palette = acmeChartPalette(context)),
             ),
           ),
         );
@@ -3012,7 +3012,7 @@ void main() {
             theme: theme.data,
             child: _host(
               _Probe((context) {
-                palette = resolveAcmeChartPalette(context);
+                palette = acmeChartPalette(context);
                 labels = [
                   for (final slice in palette)
                     acmePieSliceLabelColor(context, slice),
@@ -3046,7 +3046,7 @@ void main() {
         AcmeTheme(
           theme: theme,
           child: _host(
-            _Probe((context) => palette = resolveAcmeChartPalette(context)),
+            _Probe((context) => palette = acmeChartPalette(context)),
           ),
         ),
       );

@@ -358,7 +358,8 @@ void main() {
       contains(
         RegExp(
           r"export 'dashboard_demo_base\.dart'\s+"
-          r'show \{\{typePrefix\}\}DashboardDemoPage;',
+          r'show \{\{typePrefix\}\}DashboardDemoPage, '
+          r'\{\{typePrefix\}\}DashboardDemoSection;',
         ),
       ),
     );
