@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:path/path.dart' as p;
+
 import 'fortal_recipe_path.dart';
 
 /// Checks Fortal's own specification, independently of any external library.
@@ -51,11 +55,21 @@ List<String> checkFortalContract(Directory workspace) {
     familiesById[id] = family;
   }
   final coveredSources = <String>{};
+  final enumSources = <String>{};
   final sources = <String, String?>{};
+  final units = <String, CompilationUnit>{};
   String? readRecipe(String path) => sources.putIfAbsent(path, () {
     final file = File('$root/$path');
     return file.existsSync() ? file.readAsStringSync() : null;
   });
+  CompilationUnit parseRecipe(String path, String source) => units.putIfAbsent(
+    path,
+    () => parseString(
+      content: source,
+      path: path,
+      throwIfDiagnostics: false,
+    ).unit,
+  );
   for (final family in families) {
     final id = family['id'] as String;
     final recipePath = fortalRecipePath(family);
@@ -65,7 +79,7 @@ List<String> checkFortalContract(Directory workspace) {
       failures.add('$id has no authored recipe.');
       continue;
     }
-    coveredSources.add(file.uri.pathSegments.last);
+    coveredSources.add(recipePath);
     final generated = File(fortalGeneratedPath(file.path));
     final all =
         '$source\n${generated.existsSync() ? generated.readAsStringSync() : ''}';
@@ -85,17 +99,34 @@ List<String> checkFortalContract(Directory workspace) {
         continue;
       }
       final enumType = 'Fortal${_pascal(ownerId)}${_pascal(kind)}';
-      final enumPath = fortalRecipePath(
-        owner,
-        recipe: owner['enumRecipe'] as String?,
-      );
+      final enumRecipe = owner['enumRecipe'] as String?;
+      final enumPath = fortalRecipePath(owner, recipe: enumRecipe);
       final enumSource = readRecipe(enumPath);
       if (enumSource == null) {
         failures.add('$id: missing enum source $enumPath for $enumType.');
         continue;
       }
       // Framework/Remix behavioral enums stay owned by those packages.
-      if (RegExp('enum\\s+$enumType\\b').hasMatch(enumSource)) {
+      final declaresEnum = parseRecipe(enumPath, enumSource).declarations
+          .whereType<EnumDeclaration>()
+          .any(
+            (declaration) => declaration.namePart.typeName.lexeme == enumType,
+          );
+      if (declaresEnum) {
+        if (enumRecipe != null) enumSources.add(enumPath);
+        if (enumOwner != null || enumRecipe != null) {
+          final actual = _stylerParameterType(
+            parseRecipe(recipePath, source),
+            type,
+            kind,
+          );
+          if (actual != enumType) {
+            final found = actual ?? 'no typed styler parameter';
+            failures.add(
+              '$id: $kind uses $found, but the catalog names $enumType.',
+            );
+          }
+        }
         _checkEnum(
           enumType,
           enumSource,
@@ -138,10 +169,26 @@ List<String> checkFortalContract(Directory workspace) {
       .whereType<File>()
       .where((f) => f.path.endsWith('.dart') && !f.path.endsWith('.g.dart'));
   for (final file in components) {
-    final name = file.uri.pathSegments.last.replaceFirst('.dart', '');
-    if (!coveredSources.contains(file.uri.pathSegments.last) &&
-        !{'base_button', 'typography'}.contains(name)) {
-      failures.add('Unspecified Fortal recipe: $name.');
+    final fileName = file.uri.pathSegments.last;
+    final path = '$fortalComponentsPath/$fileName';
+    if (coveredSources.contains(path) ||
+        enumSources.contains(path) ||
+        fileName == 'base_button.dart') {
+      continue;
+    }
+    final exportsEnums = parseRecipe(path, file.readAsStringSync()).directives
+        .whereType<ExportDirective>()
+        .map((export) => export.uri.stringValue)
+        .nonNulls
+        .any(
+          (uri) => enumSources.contains(
+            p.posix.normalize(p.posix.join(fortalComponentsPath, uri)),
+          ),
+        );
+    if (!exportsEnums) {
+      failures.add(
+        'Unspecified Fortal recipe: ${p.basenameWithoutExtension(fileName)}.',
+      );
     }
   }
   for (final path in [
@@ -232,6 +279,28 @@ void _checkRecipeSources(
       }
     }
   }
+}
+
+String? _stylerParameterType(
+  CompilationUnit source,
+  String widgetType,
+  String parameter,
+) {
+  final stylerName = 'fortal${widgetType.substring('Fortal'.length)}Style';
+  final styler = source.declarations
+      .whereType<FunctionDeclaration>()
+      .where((declaration) => declaration.name.lexeme == stylerName)
+      .firstOrNull;
+  final formal = styler?.functionExpression.parameters?.parameters
+      .where((declaration) => declaration.name?.lexeme == parameter)
+      .firstOrNull;
+  final declaration = formal is DefaultFormalParameter
+      ? formal.parameter
+      : formal;
+  return switch (declaration) {
+    SimpleFormalParameter(type: NamedType(:final name)) => name.lexeme,
+    _ => null,
+  };
 }
 
 void _checkEnum(

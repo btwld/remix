@@ -842,8 +842,6 @@ const herouiPreset = PresetSpec(
   recipeItems: agentRecipes,
 );
 
-/// Every remote preset and the specs that derive it, writer first.
-///
 const presetSpecs = {
   'vanilla': defaultPreset,
   'fortal': fortalPreset,
