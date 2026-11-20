@@ -132,6 +132,10 @@ class _RemixPopoverAnchor extends StatefulWidget {
 class _RemixPopoverAnchorState extends State<_RemixPopoverAnchor>
     with SingleTickerProviderStateMixin {
   late final _panelTransition = RemixPanelTransitionHandle(vsync: this);
+  final _internalController = MenuController();
+
+  MenuController get _effectiveController =>
+      widget.popover.controller ?? _internalController;
 
   @override
   void dispose() {
@@ -156,7 +160,6 @@ class _RemixPopoverAnchorState extends State<_RemixPopoverAnchor>
       :onClose,
       :onOpenRequested,
       :onCloseRequested,
-      :controller,
       :semanticLabel,
       :excludeSemantics,
       :style,
@@ -188,11 +191,16 @@ class _RemixPopoverAnchorState extends State<_RemixPopoverAnchor>
       avoidViewInsets: avoidViewInsets,
       onOpen: onOpen,
       onClose: onClose,
-      onOpenRequested: (position, showOverlay) => _panelTransition
-          .openRequested(position, showOverlay, onOpenRequested),
+      onOpenRequested: (position, showOverlay) =>
+          _panelTransition.openRequested(
+            position,
+            showOverlay,
+            onOpenRequested,
+            isOpen: () => _effectiveController.isOpen,
+          ),
       onCloseRequested: (hideOverlay) =>
           _panelTransition.closeRequested(hideOverlay, onCloseRequested),
-      controller: controller,
+      controller: _effectiveController,
       excludeSemantics: excludeSemantics,
       child: child,
       builder: (context, state, trigger) {

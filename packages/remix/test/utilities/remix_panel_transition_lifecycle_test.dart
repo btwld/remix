@@ -216,6 +216,104 @@ void main() {
   });
 
   for (final overlay in [_Overlay.menu, _Overlay.popover]) {
+    testWidgets('${overlay.name} retries vetoed open requests', (tester) async {
+      final controller = MenuController();
+      final requests = <VoidCallback>[];
+      var opens = 0;
+      await tester.pumpRemixApp(
+        overlay.build(
+          transition: _transition,
+          controller: controller,
+          onOpenRequested: (_, show) => requests.add(show),
+          onOpen: () => opens++,
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+      expect(controller.isOpen, isFalse);
+
+      controller.open();
+      expect(requests, hasLength(2));
+      requests.first();
+      expect(controller.isOpen, isFalse);
+      requests.last();
+      requests.last();
+      await tester.pumpAndSettle();
+      expect(_progress(tester), 1);
+      expect(opens, 1);
+    });
+
+    testWidgets('${overlay.name} retries vetoed close requests', (
+      tester,
+    ) async {
+      final controller = MenuController();
+      final requests = <VoidCallback>[];
+      var closes = 0;
+      await tester.pumpRemixApp(
+        overlay.build(
+          transition: _transition,
+          controller: controller,
+          onCloseRequested: requests.add,
+          onClose: () => closes++,
+        ),
+      );
+
+      controller.open();
+      await tester.pumpAndSettle();
+      controller.close();
+      await tester.pumpAndSettle();
+      expect(_progress(tester), 1);
+
+      controller.close();
+      expect(requests, hasLength(2));
+      requests.first();
+      await tester.pumpAndSettle();
+      expect(_progress(tester), 1);
+      requests.last();
+      requests.last();
+      await tester.pumpAndSettle();
+      expect(controller.isOpen, isFalse);
+      expect(closes, 1);
+    });
+
+    testWidgets('${overlay.name} repeated open preserves panel progress', (
+      tester,
+    ) async {
+      final controller = MenuController();
+      final events = <String>[];
+      var requests = 0;
+      await tester.pumpRemixApp(
+        overlay.build(
+          transition: _transition,
+          controller: controller,
+          onOpenRequested: (_, show) {
+            requests++;
+            show();
+          },
+          onOpen: () => events.add('open'),
+          onClose: () => events.add('close'),
+        ),
+      );
+
+      controller.open();
+      await tester.pump();
+      await tester.pump(_duration ~/ 2);
+      expect(_progress(tester), closeTo(.5, .01));
+
+      controller.open();
+      await tester.pump(_duration ~/ 4);
+      expect(_progress(tester), closeTo(.75, .01));
+      await tester.pump(_duration ~/ 4);
+      expect(_progress(tester), 1);
+
+      controller.open();
+      await tester.pump();
+      expect(_progress(tester), 1);
+      expect(requests, 3);
+      expect(events, ['open']);
+    });
+
     testWidgets('${overlay.name} ignores a deferred show after disposal', (
       tester,
     ) async {
@@ -233,6 +331,35 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
+
+  testWidgets('popover forwards a new position without resetting progress', (
+    tester,
+  ) async {
+    final controller = MenuController();
+    var opens = 0;
+    await tester.pumpRemixApp(
+      _Overlay.popover.build(
+        transition: _transition,
+        controller: controller,
+        onOpen: () => opens++,
+      ),
+    );
+
+    controller.open(position: const Offset(20, 20));
+    await tester.pump();
+    await tester.pump(_duration ~/ 2);
+    expect(_progress(tester), closeTo(.5, .01));
+
+    controller.open(position: const Offset(50, 20));
+    await tester.pump(_duration ~/ 4);
+    expect(_progress(tester), closeTo(.75, .01));
+    expect(opens, 2);
+
+    controller.open(position: const Offset(50, 20));
+    await tester.pumpAndSettle();
+    expect(_progress(tester), 1);
+    expect(opens, 2);
+  });
 
   testWidgets('controller reopen drops stale and duplicate close requests', (
     tester,
@@ -252,9 +379,9 @@ void main() {
     controller.open();
     await tester.pumpAndSettle();
     controller.close();
+    requests.single();
     controller.close();
     expect(requests, hasLength(1));
-    requests.single();
     await tester.pump();
     await tester.pump(_duration ~/ 2);
     controller.open();

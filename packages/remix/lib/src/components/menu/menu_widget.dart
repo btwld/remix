@@ -644,8 +644,13 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
       onOpen: widget.onOpen,
       onClose: widget.onClose,
       onCanceled: widget.onCanceled,
-      onOpenRequested: (position, showOverlay) => _panelTransition
-          .openRequested(position, showOverlay, widget.onOpenRequested),
+      onOpenRequested: (position, showOverlay) =>
+          _panelTransition.openRequested(
+            position,
+            showOverlay,
+            widget.onOpenRequested,
+            isOpen: () => _effectiveController.isOpen,
+          ),
       onCloseRequested: (hideOverlay) =>
           _panelTransition.closeRequested(hideOverlay, widget.onCloseRequested),
       consumeOutsideTaps: widget.consumeOutsideTaps,

@@ -66,21 +66,21 @@
     "codeSha256": "d98ed24a778f7bd5431eedd7876f6c80a45f3d33f9ad0240327e791fe25f1f17",
     "reason": "API signature for NakedMenu; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_menu.dart",
-    "sourceSha256": "44891fdf958c4cf182dcf8c729aaff0190b29d15b22cb55cd5a311bac5cea9c3",
+    "sourceSha256": "768c0ccc8e3942fe2692602c6785e16be3c7b81125fa1d79205e6eac5e72e3e0",
     "symbol": "NakedMenu"
   },
   "widget/menu.mdx#2": {
     "codeSha256": "d0b0fae5dad3f300c4594ae22aa5ef53f96b0cccc666df1ca46c480d7be76fb6",
     "reason": "API signature for NakedMenuItem; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_menu.dart",
-    "sourceSha256": "44891fdf958c4cf182dcf8c729aaff0190b29d15b22cb55cd5a311bac5cea9c3",
+    "sourceSha256": "768c0ccc8e3942fe2692602c6785e16be3c7b81125fa1d79205e6eac5e72e3e0",
     "symbol": "NakedMenuItem"
   },
   "widget/popover.mdx#2": {
     "codeSha256": "ef0cad23defe53871061adff5ebb13a141f57a6bad35ed8f1acce3dc34679523",
     "reason": "API signature for NakedPopover; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_popover.dart",
-    "sourceSha256": "be1030375b5b32bc92f06417181d2f061cc2d06cce998e94e58f6015cb3841de",
+    "sourceSha256": "c816ad9e17f73bcf3e5cea44d93f37ea1b3a398291b771229ce5c13c650e5268",
     "symbol": "NakedPopover"
   },
   "widget/radio.mdx#1": {
@@ -101,14 +101,14 @@
     "codeSha256": "90767f2aa36299d86701c9939eb8974ebeed42ec5f27668fff9b2e87739f6640",
     "reason": "API signature for NakedSelect; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_select.dart",
-    "sourceSha256": "e71bde30347b0ad9562d38c8a71d6dbbcf2a2d07035156635902a72f05940d6a",
+    "sourceSha256": "7ca940aa8b75ea32f8ed30ffd438200487c92b2a5ed44bf8a64d9b2d045148ae",
     "symbol": "NakedSelect"
   },
   "widget/select.mdx#2": {
     "codeSha256": "28461deb55d7b51007ba59716c39ba999055ad8ac4cd56578afe2245bd9cc5c7",
     "reason": "API signature for NakedSelectOption; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_select.dart",
-    "sourceSha256": "e71bde30347b0ad9562d38c8a71d6dbbcf2a2d07035156635902a72f05940d6a",
+    "sourceSha256": "7ca940aa8b75ea32f8ed30ffd438200487c92b2a5ed44bf8a64d9b2d045148ae",
     "symbol": "NakedSelectOption"
   },
   "widget/tabs.mdx#1": {

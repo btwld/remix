@@ -113,6 +113,7 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
   RemixPanelTransition? _exitTransition;
   Object? _openRequest;
   Object? _closeRequest;
+  Offset? _openPosition;
   bool _reduceMotion = false;
   bool _disposed = false;
 
@@ -124,32 +125,39 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
       OverlayTriggerScope(isExiting: () => isExiting, child: child);
 
   /// Shows the overlay, or reverses an exit without reopening the portal.
+  ///
+  /// A newer request supersedes a deferred show. When [isOpen] is supplied,
+  /// only requests with a different position are forwarded to an open anchor.
   void openRequested(
     Offset? position,
     VoidCallback showOverlay,
-    void Function(Offset? position, VoidCallback showOverlay)? userRequested,
-  ) {
-    if (_disposed || _openRequest != null) return;
+    void Function(Offset? position, VoidCallback showOverlay)? userRequested, {
+    bool Function()? isOpen,
+  }) {
+    if (_disposed) return;
     final request = _openRequest = Object();
     void show() {
       if (!identical(_openRequest, request)) return;
       _openRequest = null;
-      if (_closeRequest != null) {
-        _closeRequest = null;
-        if (isExiting) {
-          _exitTransition = null;
-          final transition = _panelTransition;
-          if (transition == null) {
-            _controller?.stop();
-          } else {
-            _open(transition);
-          }
-          notifyListeners();
+      _closeRequest = null;
+      if (isExiting) {
+        _exitTransition = null;
+        final transition = _panelTransition;
+        if (transition == null) {
+          _controller?.stop();
+        } else {
+          _open(transition);
         }
+        notifyListeners();
         return;
       }
-      _panelTransition = null;
-      _controller?.stop();
+      if (isOpen?.call() ?? false) {
+        if (_openPosition == position) return;
+      } else {
+        _panelTransition = null;
+        _controller?.stop();
+      }
+      _openPosition = position;
       showOverlay();
     }
 
@@ -213,12 +221,12 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
   ///
   /// A caller-supplied [userRequested] runs first and keeps its contract: the
   /// panel stays open until it calls `hideOverlay`, and that call plays the
-  /// exit.
+  /// exit. New requests supersede a deferred hide until the exit starts.
   void closeRequested(
     VoidCallback hideOverlay,
     void Function(VoidCallback hideOverlay)? userRequested,
   ) {
-    if (_disposed || _closeRequest != null) return;
+    if (_disposed || isExiting) return;
     final request = _closeRequest = Object();
     _openRequest = null;
 
