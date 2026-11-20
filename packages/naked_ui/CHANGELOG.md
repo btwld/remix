@@ -1,3 +1,27 @@
+## 2.0.0-rc.3
+
+### Features
+
+- Search field: add `NakedSearchField` for a caller-built editor and clear
+  control, with composition-aware Escape handling.
+- Toolbar: add `NakedToolbar` for arrow-key navigation between caller-built
+  controls.
+- Listbox: add `NakedListbox` for a standalone list with controlled selection
+  and roving keyboard focus.
+- Checkbox group: add `NakedCheckboxGroup` and `NakedCheckboxGroupItem` for
+  controlled selection with caller-owned layout.
+- Combobox: add optional `exitBuilder` to paint a held options view in the
+  same frame the live options hide. The held view accepts no pointer, focus,
+  or accessibility actions; reopening retires it before live options mount.
+
+### Fixes
+
+- Keep button actions and focus together in one accessibility node, and keep
+  menu, popover, select, and tooltip trigger semantics separate from their
+  overlay contents.
+- Let menu, popover, and select triggers reopen a panel during an
+  adapter-managed exit.
+
 ## 2.0.0-rc.2
 
 ### Features
