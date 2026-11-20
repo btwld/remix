@@ -21,10 +21,10 @@ import 'textfield.dart';
 /// Clearing, by the button or by Escape, empties the text, reports `''` to
 /// [onChanged], calls [onCleared], and keeps focus in the field. Escape clears
 /// when there is text, and the key repeats of that press are spent on it, so
-/// holding Escape does not go on to close an enclosing dialog. During an
-/// input-method composition Escape belongs to the input method and reaches
-/// nothing above the field. With nothing to clear it passes up, so an
-/// enclosing dialog closes.
+/// holding Escape does not go on to close an enclosing dialog. A press that
+/// starts during editable composition stays with the input method through
+/// release. A fresh Escape in a read-only or empty field passes up, so an
+/// enclosing dialog can close.
 ///
 /// ```dart
 /// VanillaSearchField(
@@ -33,7 +33,7 @@ import 'textfield.dart';
 ///   onChanged: (query) => setState(() => this.query = query),
 /// )
 /// ```
-class VanillaSearchField extends StatefulWidget {
+class VanillaSearchField extends StatelessWidget {
   const VanillaSearchField({
     super.key,
     required this.semanticLabel,
@@ -94,113 +94,32 @@ class VanillaSearchField extends StatefulWidget {
   final TextFieldStyler style;
 
   @override
-  State<VanillaSearchField> createState() => _VanillaSearchFieldState();
-}
-
-class _VanillaSearchFieldState extends State<VanillaSearchField> {
-  TextEditingController? _ownController;
-  FocusNode? _ownFocusNode;
-  late bool _hasText;
-
-  /// Whether the Escape press now held down cleared the field.
-  bool _escapeCleared = false;
-
-  TextEditingController get _controller =>
-      widget.controller ?? (_ownController ??= TextEditingController());
-
-  FocusNode get _focusNode =>
-      widget.focusNode ??
-      (_ownFocusNode ??= FocusNode(debugLabel: 'VanillaSearchField'));
-
-  /// Whether there is anything the user may clear.
-  bool get _canClear => widget.enabled && !widget.readOnly && _hasText;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.addListener(_syncHasText);
-    _hasText = _controller.text.isNotEmpty;
-  }
-
-  @override
-  void didUpdateWidget(VanillaSearchField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.controller == oldWidget.controller) return;
-    final previous = oldWidget.controller ?? _ownController!;
-    previous.removeListener(_syncHasText);
-    // Taking the text over from the caller keeps what the user typed.
-    if (widget.controller == null) {
-      _ownController?.dispose();
-      _ownController = TextEditingController.fromValue(previous.value);
-    }
-    _controller.addListener(_syncHasText);
-    _hasText = _controller.text.isNotEmpty;
-  }
-
-  @override
-  void dispose() {
-    (widget.controller ?? _ownController)?.removeListener(_syncHasText);
-    _ownController?.dispose();
-    _ownFocusNode?.dispose();
-    super.dispose();
-  }
-
-  void _syncHasText() {
-    final hasText = _controller.text.isNotEmpty;
-    if (hasText != _hasText) setState(() => _hasText = hasText);
-  }
-
-  void _clear() {
-    _controller.clear();
-    widget.onChanged?.call('');
-    widget.onCleared?.call();
-    _focusNode.requestFocus();
-  }
-
-  KeyEventResult _onKeyEvent(FocusNode node, KeyEvent event) {
-    if (event.logicalKey != LogicalKeyboardKey.escape) return .ignored;
-    // Composition owns the key: skip the dialog's shortcut, and leave the
-    // event unhandled so the platform's input method still receives it.
-    if (_controller.value.isComposingRangeValid) return .skipRemainingHandlers;
-    switch (event) {
-      case KeyDownEvent():
-        _escapeCleared = _canClear;
-        if (!_escapeCleared) return .ignored;
-        _clear();
-        return .handled;
-      case KeyRepeatEvent():
-        return _escapeCleared ? .handled : .ignored;
-      case KeyUpEvent():
-        final cleared = _escapeCleared;
-        _escapeCleared = false;
-        return cleared ? .handled : .ignored;
-    }
-    return .ignored;
-  }
-
-  @override
-  Widget build(BuildContext context) => Focus(
-    canRequestFocus: false,
-    onKeyEvent: _onKeyEvent,
-    child: VanillaTextField(
-      controller: _controller,
-      focusNode: _focusNode,
-      hintText: widget.hintText,
-      enabled: widget.enabled,
-      readOnly: widget.readOnly,
-      autofocus: widget.autofocus,
-      textInputAction: widget.textInputAction,
-      onChanged: widget.onChanged,
-      onSubmitted: widget.onSubmitted,
-      semanticLabel: widget.semanticLabel,
-      style: _fieldStyle(Directionality.of(context)).merge(widget.style),
+  Widget build(BuildContext context) => NakedSearchField(
+    controller: controller,
+    focusNode: focusNode,
+    enabled: enabled,
+    readOnly: readOnly,
+    onChanged: onChanged,
+    onCleared: onCleared,
+    builder: (context, field) => VanillaTextField(
+      controller: field.controller,
+      focusNode: field.focusNode,
+      hintText: hintText,
+      enabled: field.enabled,
+      readOnly: field.readOnly,
+      autofocus: autofocus,
+      textInputAction: textInputAction,
+      onChanged: field.onChanged,
+      onSubmitted: onSubmitted,
+      semanticLabel: semanticLabel,
+      style: _fieldStyle(Directionality.of(context)).merge(style),
       // In the recipe's accessory icon theme: `mutedForeground`, 16px.
       leading: const ExcludeSemantics(
         child: StyledIcon(icon: RemixIcons.search),
       ),
       // Always present, so the 8px gap before it plus the 4px end inset
       // make the 12px text inset the field has without the button.
-      trailing: _canClear
+      trailing: field.clear != null
           // Its own semantics node: a button's semantics are not a
           // container, so it would otherwise merge into whatever node
           // encloses the field.
@@ -209,8 +128,8 @@ class _VanillaSearchFieldState extends State<VanillaSearchField> {
               child: VanillaIconButton.ghost(
                 size: .small,
                 icon: RemixIcons.close,
-                semanticLabel: widget.clearSemanticLabel,
-                onPressed: _clear,
+                semanticLabel: clearSemanticLabel,
+                onPressed: field.clear,
                 style: _clearButtonStyle(),
               ),
             )
