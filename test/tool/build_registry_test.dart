@@ -116,7 +116,7 @@ void main() {
     );
   });
   test(
-    'Vanilla calendar composites infer complete install closures without generated parts',
+    'Vanilla calendar composites infer their dependencies without generated parts',
     () {
       final output = PresetBuilder.forRepository(
         Directory.current,
@@ -127,20 +127,19 @@ void main() {
       for (final (item, dependencies) in [
         ('calendar', ['theme', 'icon_button', 'select']),
         ('range_calendar', ['theme', 'calendar', 'icon_button', 'select']),
+        ('date_picker_styles', ['theme', 'calendar', 'icon_button', 'select']),
         (
           'date_picker',
-          ['theme', 'button', 'calendar', 'icon_button', 'popover', 'select'],
+          ['theme', 'button', 'calendar', 'date_picker_styles', 'popover'],
         ),
         (
           'date_range_picker',
           [
             'theme',
             'button',
-            'calendar',
-            'icon_button',
+            'date_picker_styles',
             'popover',
             'range_calendar',
-            'select',
           ],
         ),
       ]) {
