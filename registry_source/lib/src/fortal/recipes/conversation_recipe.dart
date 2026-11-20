@@ -47,8 +47,11 @@ FortalAgentConversationRecipe fortalAgentConversationRecipe({
     variant: .outline,
     size: .size3,
     style: IconButtonStyler()
+        // The button floats over the transcript, so every fill is opaque.
         .color(FortalTokens.colorSurface())
         .borderRadius(.circular(_pill))
+        .onHovered(.color(FortalTokens.accent2()))
+        .onPressed(.color(FortalTokens.accent3()))
         .merge(latestStyle),
   ),
 );

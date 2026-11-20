@@ -80,7 +80,8 @@ DisclosureStyler _quietDisclosure() => {{valuePrefix}}DisclosureStyle(
       .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
       .content(
         BoxStyler()
-            .padding(.only(top: {{typePrefix}}Tokens.space2()))
+            .padding(.all(0))
+            .padding(.top({{typePrefix}}Tokens.space2()))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
       .onHovered(.trigger(.color(const Color(0x00000000))))

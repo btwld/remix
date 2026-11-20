@@ -17,13 +17,30 @@ void main() {
     expect(_containerColor(focusedHovered.spec), focusedHovered.accentA3);
     expect(focusedHovered.spec.containerEffects?.outline.width, 2);
   });
+
+  for (final states in [
+    {WidgetState.disabled},
+    {WidgetState.disabled, WidgetState.hovered},
+    {WidgetState.disabled, WidgetState.selected},
+  ]) {
+    testWidgets(
+      'a disabled tab is grayA8 with no fill (${states.join(', ')})',
+      (tester) async {
+        final disabled = await _resolve(tester, states);
+
+        expect(disabled.spec.label.spec.style?.color, disabled.grayA8);
+        expect(disabled.spec.icon.spec.color, disabled.grayA8);
+        expect(_containerColor(disabled.spec), const Color(0x00000000));
+      },
+    );
+  }
 }
 
-Future<({TabSpec spec, Color grayA3, Color accentA3})> _resolve(
+Future<({TabSpec spec, Color grayA3, Color grayA8, Color accentA3})> _resolve(
   WidgetTester tester,
   Set<WidgetState> states,
 ) async {
-  late ({TabSpec spec, Color grayA3, Color accentA3}) result;
+  late ({TabSpec spec, Color grayA3, Color grayA8, Color accentA3}) result;
 
   await tester.pumpWidget(
     FortalTheme(
@@ -37,6 +54,7 @@ Future<({TabSpec spec, Color grayA3, Color accentA3})> _resolve(
               result = (
                 spec: fortalTabStyle().build(context).spec,
                 grayA3: MixScope.tokenOf(FortalTokens.grayA3, context),
+                grayA8: MixScope.tokenOf(FortalTokens.grayA8, context),
                 accentA3: MixScope.tokenOf(FortalTokens.accentA3, context),
               );
 

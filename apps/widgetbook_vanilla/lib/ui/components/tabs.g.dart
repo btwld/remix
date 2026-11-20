@@ -91,10 +91,6 @@ class VanillaTabBar extends StatelessWidget {
 /// lifted onto the page color with a small shadow; in the dark theme onto a
 /// faint `input` well with an `input` outline, since the dark page is darker
 /// than the list. In the line list it is underlined in `foreground` instead.
-///
-/// The generated widget omits `builder`: `NakedTabState` comes from
-/// `package:naked_ui`, which this layer does not import. Pass a `child` for
-/// custom content, or use `RemixTab` for the raw state.
 class VanillaTab extends StatelessWidget {
   const VanillaTab({
     super.key,
@@ -112,6 +108,7 @@ class VanillaTab extends StatelessWidget {
     this.onFocusChange,
     this.onHoverChange,
     this.onPressChange,
+    this.builder,
     this.semanticLabel,
   });
 
@@ -132,6 +129,7 @@ class VanillaTab extends StatelessWidget {
     this.onFocusChange,
     this.onHoverChange,
     this.onPressChange,
+    this.builder,
     this.semanticLabel,
   }) : variant = VanillaTabsVariant.filled;
 
@@ -151,6 +149,7 @@ class VanillaTab extends StatelessWidget {
     this.onFocusChange,
     this.onHoverChange,
     this.onPressChange,
+    this.builder,
     this.semanticLabel,
   }) : variant = VanillaTabsVariant.line;
 
@@ -182,6 +181,8 @@ class VanillaTab extends StatelessWidget {
 
   final ValueChanged<bool>? onPressChange;
 
+  final ValueWidgetBuilder<NakedTabState>? builder;
+
   final String? semanticLabel;
 
   @override
@@ -201,6 +202,7 @@ class VanillaTab extends StatelessWidget {
       onFocusChange: this.onFocusChange,
       onHoverChange: this.onHoverChange,
       onPressChange: this.onPressChange,
+      builder: this.builder,
       semanticLabel: this.semanticLabel,
     );
   }

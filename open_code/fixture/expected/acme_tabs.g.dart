@@ -91,10 +91,6 @@ class AcmeTabBar extends StatelessWidget {
 /// lifted onto the page color with a small shadow; in the dark theme onto a
 /// faint `input` well with an `input` outline, since the dark page is darker
 /// than the list. In the line list it is underlined in `foreground` instead.
-///
-/// The generated widget omits `builder`: `NakedTabState` comes from
-/// `package:naked_ui`, which this layer does not import. Pass a `child` for
-/// custom content, or use `RemixTab` for the raw state.
 class AcmeTab extends StatelessWidget {
   const AcmeTab({
     super.key,
@@ -112,6 +108,7 @@ class AcmeTab extends StatelessWidget {
     this.onFocusChange,
     this.onHoverChange,
     this.onPressChange,
+    this.builder,
     this.semanticLabel,
   });
 
@@ -132,6 +129,7 @@ class AcmeTab extends StatelessWidget {
     this.onFocusChange,
     this.onHoverChange,
     this.onPressChange,
+    this.builder,
     this.semanticLabel,
   }) : variant = AcmeTabsVariant.filled;
 
@@ -151,6 +149,7 @@ class AcmeTab extends StatelessWidget {
     this.onFocusChange,
     this.onHoverChange,
     this.onPressChange,
+    this.builder,
     this.semanticLabel,
   }) : variant = AcmeTabsVariant.line;
 
@@ -182,6 +181,8 @@ class AcmeTab extends StatelessWidget {
 
   final ValueChanged<bool>? onPressChange;
 
+  final ValueWidgetBuilder<NakedTabState>? builder;
+
   final String? semanticLabel;
 
   @override
@@ -201,6 +202,7 @@ class AcmeTab extends StatelessWidget {
       onFocusChange: onFocusChange,
       onHoverChange: onHoverChange,
       onPressChange: onPressChange,
+      builder: builder,
       semanticLabel: semanticLabel,
     );
   }
