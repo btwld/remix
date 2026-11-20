@@ -27,8 +27,7 @@ import 'dashboard_demo_text.dart';
 import 'dashboard_overview.dart';
 import 'dashboard_shell.dart';
 
-// The types the demo's constructor takes and the types inside them, so this
-// one import builds it.
+// Everything the demo's constructor takes, so this one import builds it.
 export '../../../dashboard/dashboard_demo_base.dart'
     show RegistryDashboardDemoPage, RegistryDashboardDemoSection;
 export '../../../dashboard/dashboard_sample_data.dart'
@@ -403,8 +402,6 @@ class _HeroUiHeaderPopoverState extends State<_HeroUiHeaderPopover> {
   @override
   void didUpdateWidget(covariant _HeroUiHeaderPopover oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Appearance changes used to dismiss the popover by remounting the demo.
-    // Keep that behavior while retaining the dashboard's page state.
     if (widget.dark != oldWidget.dark) _controller.close();
   }
 

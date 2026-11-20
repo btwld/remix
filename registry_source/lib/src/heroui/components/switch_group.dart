@@ -53,7 +53,7 @@ class HeroUiSwitchGroup extends StatelessWidget {
       for (final option in options)
         _row(
           option,
-          itemEnabled: enabled && option.enabled && option.onChanged != null,
+          optionEnabled: enabled && option.enabled && option.onChanged != null,
         ),
     ];
     return HeroUiFieldLayout(
@@ -64,16 +64,16 @@ class HeroUiSwitchGroup extends StatelessWidget {
     );
   }
 
-  Widget _row(HeroUiSwitchOption option, {required bool itemEnabled}) =>
+  Widget _row(HeroUiSwitchOption option, {required bool optionEnabled}) =>
       HeroUiDescribedControl(
         descriptionInset: size.trackWidth + heroUiControlGap,
-        enabled: itemEnabled,
+        enabled: optionEnabled,
         description: option.description,
         control: HeroUiSwitch(
           size: size,
           selected: option.selected,
           onChanged: option.onChanged,
-          enabled: itemEnabled,
+          enabled: optionEnabled,
           label: option.label,
           invalid: option.invalid,
         ),
