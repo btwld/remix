@@ -74,8 +74,7 @@ DisclosureStyler _quietDisclosure() => uiDisclosureStyle(
       )
       .content(
         BoxStyler()
-            .padding(.all(0))
-            .padding(.top(8))
+            .padding(.all(0).top(8))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
       .onHovered(.trigger(.color(const Color(0x00000000))))

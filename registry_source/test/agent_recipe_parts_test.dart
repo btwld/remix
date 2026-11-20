@@ -23,6 +23,7 @@ void main() {
       theme: (Widget child, bool dark) =>
           FortalTheme(mode: dark ? .dark : .light, child: child),
       call: fortalCall.style,
+      callDisclosure: fortalCall.disclosureStyle,
       action: fortalAnswer.actionStyle,
       selected: fortalAnswer.selectedActionStyle,
       steps: fortalSteps.style,
@@ -41,6 +42,7 @@ void main() {
       theme: (Widget child, bool dark) =>
           VanillaTheme(mode: dark ? .dark : .light, child: child),
       call: vanillaCall.style,
+      callDisclosure: vanillaCall.disclosureStyle,
       action: vanillaAnswer.actionStyle,
       selected: vanillaAnswer.selectedActionStyle,
       steps: vanillaSteps.style,
@@ -59,6 +61,7 @@ void main() {
       theme: (Widget child, bool dark) =>
           HeroUiTheme(mode: dark ? .dark : .light, child: child),
       call: heroUiCall.style,
+      callDisclosure: heroUiCall.disclosureStyle,
       action: heroUiAnswer.actionStyle,
       selected: heroUiAnswer.selectedActionStyle,
       steps: heroUiSteps.style,
@@ -150,6 +153,14 @@ void main() {
         ) async {
           final steps = await resolve(tester, preset.stepsDisclosure);
           final sources = await resolve(tester, preset.sourcesDisclosure);
+          final call = await resolve(tester, preset.callDisclosure);
+
+          for (final quiet in [steps, sources, call]) {
+            expect(
+              quiet.container.spec.padding ?? EdgeInsets.zero,
+              EdgeInsets.zero,
+            );
+          }
 
           expect(steps.trigger.spec.padding, EdgeInsets.zero);
           expect(steps.content.spec.padding, const EdgeInsets.only(top: 12));

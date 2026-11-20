@@ -9,7 +9,6 @@ part of 'range_slider.dart';
 /// Two-bound interval sharing [uiSliderStyle]'s pill track and thumbs.
 /// Remix owns independent thumb interaction, RTL, spacing and announcements.
 /// Give each bound a distinct localized name with `semanticLabels`.
-/// Custom formatters use [RemixRangeSlider] with this recipe.
 class UiRangeSlider extends StatelessWidget {
   const UiRangeSlider({
     super.key,
@@ -27,6 +26,7 @@ class UiRangeSlider extends StatelessWidget {
     this.focusNodes,
     this.autofocusThumbIndex,
     this.semanticLabels,
+    this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
   });
 
@@ -58,6 +58,8 @@ class UiRangeSlider extends StatelessWidget {
 
   final List<String?>? semanticLabels;
 
+  final List<NakedSliderSemanticFormatterCallback?>? semanticFormatterCallbacks;
+
   final bool excludeSemantics;
 
   @override
@@ -78,6 +80,7 @@ class UiRangeSlider extends StatelessWidget {
       focusNodes: this.focusNodes,
       autofocusThumbIndex: this.autofocusThumbIndex,
       semanticLabels: this.semanticLabels,
+      semanticFormatterCallbacks: this.semanticFormatterCallbacks,
       excludeSemantics: this.excludeSemantics,
     );
   }
