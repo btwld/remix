@@ -2,9 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
-import '../theme/theme.dart';
 import 'button.dart';
 import 'calendar.dart';
+import 'calendar/date_picker_styles.dart';
 import 'popover.dart';
 
 /// Fortal's DatePicker composition.
@@ -121,53 +121,45 @@ class {{typePrefix}}DatePicker extends StatelessWidget {
   final SelectStyler selectorStyle;
 
   @override
-  Widget build(BuildContext context) => RemixDatePicker(
-    value: value,
-    firstDate: firstDate,
-    lastDate: lastDate,
-    onChanged: onChanged,
-    onOpen: onOpen,
-    onClose: onClose,
-    currentDate: currentDate,
-    isDateUnavailable: isDateUnavailable,
-    firstDayOfWeek: firstDayOfWeek,
-    enabled: enabled,
-    semanticLabel: semanticLabel,
-    placeholder: placeholder,
-    calendarLabels: calendarLabels,
-    formatDate: formatDate,
-    focusNode: focusNode,
-    autofocus: autofocus,
-    positioning: positioning,
-    icon: {{icon:calendar}},
-    placeholderStyle: ButtonStyler()
-        .labelColor({{typePrefix}}Tokens.gray10())
-        .labelFontWeight({{typePrefix}}Tokens.fontWeightRegular()),
-    expandedStyle: ButtonStyler().border(
-      .color({{typePrefix}}Tokens.focus8()).width({{typePrefix}}Tokens.borderWidth1()),
-    ),
-    buttonStyle: {{valuePrefix}}ButtonStyle(variant: .outline)
-        .minHeight({{valuePrefix}}CalendarTarget)
-        .minWidth(MediaQuery.textScalerOf(context).scale(200))
-        .spacing({{typePrefix}}Tokens.space2())
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale({{typePrefix}}Tokens.space4.resolve(context)),
-          ),
-        )
-        .merge(buttonStyle),
-    popoverStyle: {{valuePrefix}}PopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
-        .merge(popoverStyle),
-    navigationStyle: {{valuePrefix}}CalendarNavigationStyle(
+  Widget build(BuildContext context) {
+    final styles = {{valuePrefix}}DatePickerStyles(
       context,
-    ).merge(navigationStyle),
-    selectorStyle: {{valuePrefix}}CalendarSelectorStyle(context).merge(selectorStyle),
-    calendarStyle: {{valuePrefix}}CalendarStyle(
-      style: {{valuePrefix}}CalendarGeometry(context).merge(calendarStyle),
-    ),
-  );
+      minTriggerWidth: 200,
+      outlineButton: {{valuePrefix}}ButtonStyle(variant: .outline),
+      popover: {{valuePrefix}}PopoverStyle(),
+      calendarRecipe: {{valuePrefix}}CalendarStyle,
+      buttonStyle: buttonStyle,
+      popoverStyle: popoverStyle,
+      navigationStyle: navigationStyle,
+      selectorStyle: selectorStyle,
+      calendarStyle: calendarStyle,
+    );
+    return RemixDatePicker(
+      value: value,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      currentDate: currentDate,
+      isDateUnavailable: isDateUnavailable,
+      firstDayOfWeek: firstDayOfWeek,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      placeholder: placeholder,
+      calendarLabels: calendarLabels,
+      formatDate: formatDate,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      positioning: positioning,
+      icon: {{icon:calendar}},
+      placeholderStyle: styles.placeholder,
+      expandedStyle: styles.expanded,
+      buttonStyle: styles.button,
+      popoverStyle: styles.popover,
+      navigationStyle: styles.navigation,
+      selectorStyle: styles.selector,
+      calendarStyle: styles.calendar,
+    );
+  }
 }

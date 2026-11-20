@@ -4,6 +4,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../theme/theme.dart';
 import 'calendar.dart';
+import 'calendar/date_picker_styles.dart';
 import 'popover.dart';
 
 /// HeroUI's DatePicker composition.
@@ -120,45 +121,45 @@ class HeroUiDatePicker extends StatelessWidget {
   final SelectStyler selectorStyle;
 
   @override
-  Widget build(BuildContext context) => RemixDatePicker(
-    value: value,
-    firstDate: firstDate,
-    lastDate: lastDate,
-    onChanged: onChanged,
-    onOpen: onOpen,
-    onClose: onClose,
-    currentDate: currentDate,
-    isDateUnavailable: isDateUnavailable,
-    firstDayOfWeek: firstDayOfWeek,
-    enabled: enabled,
-    semanticLabel: semanticLabel,
-    placeholder: placeholder,
-    calendarLabels: calendarLabels,
-    formatDate: formatDate,
-    focusNode: focusNode,
-    autofocus: autofocus,
-    positioning: positioning,
-    icon: RemixIcons.calendar,
-    placeholderStyle: ButtonStyler()
-        .labelColor(HeroUiTokens.fieldPlaceholder())
-        .labelFontWeight(FontWeight.w400),
-    expandedStyle: ButtonStyler()
-        .color(HeroUiTokens.fieldFocus())
-        .containerEffects(heroUiFocusRing()),
-    buttonStyle: heroUiDatePickerButtonStyle(context).merge(buttonStyle),
-    popoverStyle: heroUiPopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
-        .borderRadius(.all(heroUiCalendarPopoverRadius()))
-        .merge(popoverStyle),
-    navigationStyle: heroUiCalendarNavigationStyle(
+  Widget build(BuildContext context) {
+    final styles = heroUiDatePickerStyles(
       context,
-    ).merge(navigationStyle),
-    selectorStyle: heroUiCalendarSelectorStyle(context).merge(selectorStyle),
-    calendarStyle: heroUiCalendarStyle(
-      style: heroUiCalendarGeometry(context).merge(calendarStyle),
-    ),
-  );
+      popover: heroUiPopoverStyle(),
+      popoverRadius: heroUiCalendarPopoverRadius,
+      calendarRecipe: heroUiCalendarStyle,
+      popoverStyle: popoverStyle,
+      navigationStyle: navigationStyle,
+      selectorStyle: selectorStyle,
+      calendarStyle: calendarStyle,
+    );
+    return RemixDatePicker(
+      value: value,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      currentDate: currentDate,
+      isDateUnavailable: isDateUnavailable,
+      firstDayOfWeek: firstDayOfWeek,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      placeholder: placeholder,
+      calendarLabels: calendarLabels,
+      formatDate: formatDate,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      positioning: positioning,
+      icon: RemixIcons.calendar,
+      placeholderStyle: styles.placeholder,
+      expandedStyle: styles.expanded,
+      buttonStyle: heroUiDatePickerButtonStyle(context).merge(buttonStyle),
+      popoverStyle: styles.popover,
+      navigationStyle: styles.navigation,
+      selectorStyle: styles.selector,
+      calendarStyle: styles.calendar,
+    );
+  }
 }
 
 /// Field-shaped button approximation of upstream's segmented DateField.

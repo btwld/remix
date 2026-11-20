@@ -246,6 +246,11 @@ trips and rewrites shared dashboard imports to installed relative paths. Imports
 determine item dependencies; parts determine adapter targets. Whole-tree checks
 reject missing, unexpected or changed files.
 
+Plain Dart helper files under `components/<item>/` ship with
+`components/<item>.dart` and are not added to the installed UI barrel. Use this
+for internal helpers that belong to an existing item rather than adding a
+catalog entry.
+
 The prefix replaces the authoring word only where it begins an identifier
 segment or a quoted id (`FortalButton`, `'fortal.color.accent'`); prose keeps
 the design system's name, and the word anywhere else in code or in an id-like

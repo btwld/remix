@@ -2,9 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-import '../theme/theme.dart';
 import 'button.dart';
-import 'calendar.dart';
+import 'calendar/date_picker_styles.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
 
@@ -133,53 +132,47 @@ class UiDateRangePicker extends StatelessWidget {
   final Widget Function(BuildContext context, String summary)? summaryBuilder;
 
   @override
-  Widget build(BuildContext context) => RemixDateRangePicker(
-    value: value,
-    firstDate: firstDate,
-    lastDate: lastDate,
-    onChanged: onChanged,
-    onOpen: onOpen,
-    onClose: onClose,
-    currentDate: currentDate,
-    isDateUnavailable: isDateUnavailable,
-    firstDayOfWeek: firstDayOfWeek,
-    enabled: enabled,
-    semanticLabel: semanticLabel,
-    placeholder: placeholder,
-    calendarLabels: calendarLabels,
-    rangeLabels: rangeLabels,
-    summaryBuilder: summaryBuilder,
-    formatRange: formatRange,
-    focusNode: focusNode,
-    autofocus: autofocus,
-    positioning: positioning,
-    icon: RemixIcons.calendar,
-    placeholderStyle: ButtonStyler()
-        .labelColor(UiTokens.gray10())
-        .labelFontWeight(UiTokens.fontWeightRegular()),
-    expandedStyle: ButtonStyler().border(
-      .color(UiTokens.focus8()).width(UiTokens.borderWidth1()),
-    ),
-    buttonStyle: uiButtonStyle(variant: .outline)
-        .minHeight(uiCalendarTarget)
-        .minWidth(MediaQuery.textScalerOf(context).scale(260))
-        .spacing(UiTokens.space2())
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale(UiTokens.space4.resolve(context)),
-          ),
-        )
-        .merge(buttonStyle),
-    popoverStyle: uiPopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
-        .merge(popoverStyle),
-    navigationStyle: uiCalendarNavigationStyle(context).merge(navigationStyle),
-    selectorStyle: uiCalendarSelectorStyle(context).merge(selectorStyle),
-    calendarStyle: uiRangeCalendarStyle(
-      style: uiCalendarGeometry(context).merge(calendarStyle),
-    ),
-  );
+  Widget build(BuildContext context) {
+    final styles = uiDatePickerStyles(
+      context,
+      minTriggerWidth: 260,
+      outlineButton: uiButtonStyle(variant: .outline),
+      popover: uiPopoverStyle(),
+      calendarRecipe: uiRangeCalendarStyle,
+      buttonStyle: buttonStyle,
+      popoverStyle: popoverStyle,
+      navigationStyle: navigationStyle,
+      selectorStyle: selectorStyle,
+      calendarStyle: calendarStyle,
+    );
+    return RemixDateRangePicker(
+      value: value,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      currentDate: currentDate,
+      isDateUnavailable: isDateUnavailable,
+      firstDayOfWeek: firstDayOfWeek,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      placeholder: placeholder,
+      calendarLabels: calendarLabels,
+      rangeLabels: rangeLabels,
+      summaryBuilder: summaryBuilder,
+      formatRange: formatRange,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      positioning: positioning,
+      icon: RemixIcons.calendar,
+      placeholderStyle: styles.placeholder,
+      expandedStyle: styles.expanded,
+      buttonStyle: styles.button,
+      popoverStyle: styles.popover,
+      navigationStyle: styles.navigation,
+      selectorStyle: styles.selector,
+      calendarStyle: styles.calendar,
+    );
+  }
 }

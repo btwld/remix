@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-import '../theme/theme.dart';
 import 'calendar.dart';
+import 'calendar/date_picker_styles.dart';
 import 'date_picker.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
@@ -133,45 +133,45 @@ class HeroUiDateRangePicker extends StatelessWidget {
   final Widget Function(BuildContext context, String summary)? summaryBuilder;
 
   @override
-  Widget build(BuildContext context) => RemixDateRangePicker(
-    value: value,
-    firstDate: firstDate,
-    lastDate: lastDate,
-    onChanged: onChanged,
-    onOpen: onOpen,
-    onClose: onClose,
-    currentDate: currentDate,
-    isDateUnavailable: isDateUnavailable,
-    firstDayOfWeek: firstDayOfWeek,
-    enabled: enabled,
-    semanticLabel: semanticLabel,
-    placeholder: placeholder,
-    calendarLabels: calendarLabels,
-    rangeLabels: rangeLabels,
-    summaryBuilder: summaryBuilder,
-    formatRange: formatRange,
-    focusNode: focusNode,
-    autofocus: autofocus,
-    positioning: positioning,
-    icon: RemixIcons.calendar,
-    placeholderStyle: ButtonStyler()
-        .labelColor(HeroUiTokens.fieldPlaceholder())
-        .labelFontWeight(FontWeight.w400),
-    expandedStyle: ButtonStyler()
-        .color(HeroUiTokens.fieldFocus())
-        .containerEffects(heroUiFocusRing()),
-    buttonStyle: heroUiDatePickerButtonStyle(context).merge(buttonStyle),
-    popoverStyle: heroUiPopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
-        .borderRadius(.all(heroUiCalendarPopoverRadius()))
-        .merge(popoverStyle),
-    navigationStyle: heroUiCalendarNavigationStyle(
+  Widget build(BuildContext context) {
+    final styles = heroUiDatePickerStyles(
       context,
-    ).merge(navigationStyle),
-    selectorStyle: heroUiCalendarSelectorStyle(context).merge(selectorStyle),
-    calendarStyle: heroUiRangeCalendarStyle(
-      style: heroUiCalendarGeometry(context).merge(calendarStyle),
-    ),
-  );
+      popover: heroUiPopoverStyle(),
+      popoverRadius: heroUiCalendarPopoverRadius,
+      calendarRecipe: heroUiRangeCalendarStyle,
+      popoverStyle: popoverStyle,
+      navigationStyle: navigationStyle,
+      selectorStyle: selectorStyle,
+      calendarStyle: calendarStyle,
+    );
+    return RemixDateRangePicker(
+      value: value,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      currentDate: currentDate,
+      isDateUnavailable: isDateUnavailable,
+      firstDayOfWeek: firstDayOfWeek,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      placeholder: placeholder,
+      calendarLabels: calendarLabels,
+      rangeLabels: rangeLabels,
+      summaryBuilder: summaryBuilder,
+      formatRange: formatRange,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      positioning: positioning,
+      icon: RemixIcons.calendar,
+      placeholderStyle: styles.placeholder,
+      expandedStyle: styles.expanded,
+      buttonStyle: heroUiDatePickerButtonStyle(context).merge(buttonStyle),
+      popoverStyle: styles.popover,
+      navigationStyle: styles.navigation,
+      selectorStyle: styles.selector,
+      calendarStyle: styles.calendar,
+    );
+  }
 }

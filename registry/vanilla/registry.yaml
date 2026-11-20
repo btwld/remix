@@ -146,6 +146,8 @@ items:
     files:
       - source: templates/calendar/calendar.dart.tmpl
         target: "@ui/components/calendar.dart"
+      - source: templates/calendar/support/date_picker_styles.dart.tmpl
+        target: "@ui/components/calendar/date_picker_styles.dart"
     exports:
       - components/calendar.dart
 
@@ -387,9 +389,7 @@ items:
       - theme
       - button
       - calendar
-      - icon_button
       - popover
-      - select
     files:
       - source: templates/date_picker/date_picker.dart.tmpl
         target: "@ui/components/date_picker.dart"
@@ -401,10 +401,8 @@ items:
       - theme
       - button
       - calendar
-      - icon_button
       - popover
       - range_calendar
-      - select
     files:
       - source: templates/date_range_picker/date_range_picker.dart.tmpl
         target: "@ui/components/date_range_picker.dart"

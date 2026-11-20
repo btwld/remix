@@ -10,6 +10,7 @@
     "lib/ui/components/button.dart": "btwld/remix/registry#vanilla/button",
     "lib/ui/components/button.g.dart": "btwld/remix/registry#vanilla/button",
     "lib/ui/components/calendar.dart": "btwld/remix/registry#vanilla/calendar",
+    "lib/ui/components/calendar/date_picker_styles.dart": "btwld/remix/registry#vanilla/calendar",
     "lib/ui/components/code.dart": "btwld/remix/registry#vanilla/code",
     "lib/ui/components/code.g.dart": "btwld/remix/registry#vanilla/code",
     "lib/ui/components/combobox.dart": "btwld/remix/registry#vanilla/combobox",

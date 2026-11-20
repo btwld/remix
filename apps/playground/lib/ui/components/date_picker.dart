@@ -1,16 +1,12 @@
-import 'dart:math' as math;
-
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-import '../theme/effects.dart';
 import '../theme/tokens.dart';
 import 'button.dart';
 import 'calendar.dart';
-import 'icon_button.dart';
+import 'calendar/date_picker_styles.dart';
 import 'popover.dart';
-import 'select.dart';
 
 /// The application's DatePicker composite.
 ///
@@ -132,25 +128,15 @@ class PlaygroundDatePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
-      final requested = buttonStyle
-          .build(context)
-          .spec
-          .container
-          .spec
-          .box
-          ?.spec
-          .constraints;
-      final panelWidth = math.max(
-        playgroundCalendarDayWidth(context) * DateTime.daysPerWeek +
-            PlaygroundTokens.s3 * 2 +
-            PlaygroundTokens.strokeHairline * 2,
-        math.max(
-          constraints.minWidth,
-          math.max(
-            requested?.minWidth ?? 0.0,
-            requested?.hasBoundedWidth == true ? requested!.maxWidth : 0.0,
-          ),
-        ),
+      final styles = playgroundDatePickerStyles(
+        context,
+        constraints,
+        calendarRecipe: playgroundCalendarStyle,
+        buttonStyle: buttonStyle,
+        popoverStyle: popoverStyle,
+        navigationStyle: navigationStyle,
+        selectorStyle: selectorStyle,
+        calendarStyle: calendarStyle,
       );
       return RemixDatePicker(
         value: value,
@@ -171,89 +157,16 @@ class PlaygroundDatePicker extends StatelessWidget {
         autofocus: autofocus,
         positioning: positioning,
         icon: RemixIcons.calendar,
-        placeholderStyle: ButtonStyler().label(
-          .color(PlaygroundTokens.mutedForeground()),
-        ),
-        expandedStyle: ButtonStyler()
-            .border(playgroundFocusBorder())
-            .containerEffects(playgroundFocusRing()),
+        placeholderStyle: styles.placeholder,
+        expandedStyle: styles.expanded,
         buttonStyle: playgroundButtonStyle(
           variant: .outline,
-          style: ButtonStyler()
-              .mainAxisAlignment(.start)
-              .onHovered(
-                ButtonStyler().icon(.color(PlaygroundTokens.mutedForeground())),
-              )
-              .onPressed(
-                ButtonStyler().icon(.color(PlaygroundTokens.mutedForeground())),
-              )
-              .icon(
-                .color(PlaygroundTokens.mutedForeground()).size(
-                  MediaQuery.textScalerOf(context).scale(PlaygroundTokens.icon),
-                ),
-              )
-              .minWidth(PlaygroundTokens.s16 * 3 + PlaygroundTokens.s12)
-              .maxWidth(panelWidth)
-              .padding(.horizontal(PlaygroundTokens.s3))
-              .label(
-                .fontWeight(
-                  FontWeight.w400,
-                ).textAlign(.start).maxLines(1).overflow(.ellipsis),
-              )
-              .merge(buttonStyle),
+          style: styles.button,
         ),
-        calendarStyle: playgroundCalendarStyle(
-          style: CalendarStyler()
-              .day(
-                CalendarDayStyler()
-                    .minWidth(playgroundCalendarDayWidth(context))
-                    .minHeight(playgroundCalendarDayWidth(context)),
-              )
-              .merge(calendarStyle),
-        ),
-        popoverStyle: playgroundPopoverStyle(
-          style: PopoverStyler()
-              .minWidth(panelWidth)
-              .maxWidth(double.infinity)
-              .padding(.all(0))
-              .merge(popoverStyle),
-        ),
-        navigationStyle: playgroundIconButtonStyle(
-          variant: .ghost,
-          style: IconButtonStyler()
-              .size(
-                playgroundCalendarDayWidth(context),
-                playgroundCalendarDayWidth(context),
-              )
-              .icon(
-                .size(
-                  MediaQuery.textScalerOf(context).scale(PlaygroundTokens.icon),
-                ),
-              )
-              .merge(navigationStyle),
-        ),
-        selectorStyle: playgroundSelectStyle(
-          style: SelectStyler()
-              .content(playgroundCalendarSelectorContentStyle())
-              .trigger(
-                SelectTriggerStyler()
-                    .indicator(
-                      .size(
-                        MediaQuery.textScalerOf(
-                          context,
-                        ).scale(PlaygroundTokens.s2_5),
-                      ),
-                    )
-                    .maxWidth(double.infinity)
-                    .minHeight(playgroundCalendarDayWidth(context))
-                    .minWidth(
-                      MediaQuery.textScalerOf(
-                        context,
-                      ).scale(PlaygroundTokens.s16 + PlaygroundTokens.s12),
-                    ),
-              )
-              .merge(selectorStyle),
-        ),
+        popoverStyle: playgroundPopoverStyle(style: styles.popover),
+        navigationStyle: styles.navigation,
+        selectorStyle: styles.selector,
+        calendarStyle: styles.calendar,
       );
     },
   );

@@ -2,9 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-import '../theme/theme.dart';
 import 'button.dart';
-import 'calendar.dart';
+import 'calendar/date_picker_styles.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
 
@@ -133,55 +132,47 @@ class FortalDateRangePicker extends StatelessWidget {
   final Widget Function(BuildContext context, String summary)? summaryBuilder;
 
   @override
-  Widget build(BuildContext context) => RemixDateRangePicker(
-    value: value,
-    firstDate: firstDate,
-    lastDate: lastDate,
-    onChanged: onChanged,
-    onOpen: onOpen,
-    onClose: onClose,
-    currentDate: currentDate,
-    isDateUnavailable: isDateUnavailable,
-    firstDayOfWeek: firstDayOfWeek,
-    enabled: enabled,
-    semanticLabel: semanticLabel,
-    placeholder: placeholder,
-    calendarLabels: calendarLabels,
-    rangeLabels: rangeLabels,
-    summaryBuilder: summaryBuilder,
-    formatRange: formatRange,
-    focusNode: focusNode,
-    autofocus: autofocus,
-    positioning: positioning,
-    icon: RemixIcons.calendar,
-    placeholderStyle: ButtonStyler()
-        .labelColor(FortalTokens.gray10())
-        .labelFontWeight(FortalTokens.fontWeightRegular()),
-    expandedStyle: ButtonStyler().border(
-      .color(FortalTokens.focus8()).width(FortalTokens.borderWidth1()),
-    ),
-    buttonStyle: fortalButtonStyle(variant: .outline)
-        .minHeight(fortalCalendarTarget)
-        .minWidth(MediaQuery.textScalerOf(context).scale(260))
-        .spacing(FortalTokens.space2())
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale(FortalTokens.space4.resolve(context)),
-          ),
-        )
-        .merge(buttonStyle),
-    popoverStyle: fortalPopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
-        .merge(popoverStyle),
-    navigationStyle: fortalCalendarNavigationStyle(
+  Widget build(BuildContext context) {
+    final styles = fortalDatePickerStyles(
       context,
-    ).merge(navigationStyle),
-    selectorStyle: fortalCalendarSelectorStyle(context).merge(selectorStyle),
-    calendarStyle: fortalRangeCalendarStyle(
-      style: fortalCalendarGeometry(context).merge(calendarStyle),
-    ),
-  );
+      minTriggerWidth: 260,
+      outlineButton: fortalButtonStyle(variant: .outline),
+      popover: fortalPopoverStyle(),
+      calendarRecipe: fortalRangeCalendarStyle,
+      buttonStyle: buttonStyle,
+      popoverStyle: popoverStyle,
+      navigationStyle: navigationStyle,
+      selectorStyle: selectorStyle,
+      calendarStyle: calendarStyle,
+    );
+    return RemixDateRangePicker(
+      value: value,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      currentDate: currentDate,
+      isDateUnavailable: isDateUnavailable,
+      firstDayOfWeek: firstDayOfWeek,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      placeholder: placeholder,
+      calendarLabels: calendarLabels,
+      rangeLabels: rangeLabels,
+      summaryBuilder: summaryBuilder,
+      formatRange: formatRange,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      positioning: positioning,
+      icon: RemixIcons.calendar,
+      placeholderStyle: styles.placeholder,
+      expandedStyle: styles.expanded,
+      buttonStyle: styles.button,
+      popoverStyle: styles.popover,
+      navigationStyle: styles.navigation,
+      selectorStyle: styles.selector,
+      calendarStyle: styles.calendar,
+    );
+  }
 }
