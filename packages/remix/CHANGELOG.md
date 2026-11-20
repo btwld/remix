@@ -1,3 +1,17 @@
+## 1.0.0-rc.5
+
+### Features
+
+- Menu, popover, select, and combobox: configure how panels enter and exit
+  with `RemixPanelTransition` (#499, #502).
+- Tabs: add a shared indicator that animates between selected tabs (#500).
+- Re-export `NakedSearchField` and `NakedSearchFieldBindings` from
+  `package:remix/remix.dart` for typed search-field compositions.
+
+### Dependencies
+
+- Require Naked UI ^2.0.0-rc.3 for combobox exits and the search field API.
+
 ## 1.0.0-rc.4
 
 ### Breaking changes

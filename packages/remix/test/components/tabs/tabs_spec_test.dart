@@ -134,8 +134,11 @@ void main() {
       test('props includes all relevant properties', () {
         const spec = TabBarSpec();
 
-        expect(spec.props.length, equals(1));
+        expect(spec.props.length, equals(4));
         expect(spec.props, contains(spec.container));
+        expect(spec.props, contains(spec.indicator));
+        expect(spec.props, contains(spec.indicatorEffects));
+        expect(spec.props, contains(spec.indicatorMotion));
       });
     });
 

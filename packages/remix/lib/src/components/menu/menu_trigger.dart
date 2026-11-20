@@ -10,7 +10,10 @@ final class RemixMenuTriggerHandle {
     required this.isOpen,
     required this.controller,
     required this.focusNode,
-  });
+    required bool Function() isExiting,
+  }) : _isExiting = isExiting;
+
+  final bool Function() _isExiting;
 
   /// Whether the menu is open.
   final bool isOpen;
@@ -23,8 +26,11 @@ final class RemixMenuTriggerHandle {
   /// owns the node.
   final FocusNode focusNode;
 
-  /// Toggles the menu. Pass this to the control as its `onPressed`.
-  void toggle() => controller.isOpen ? controller.close() : controller.open();
+  /// Toggles the menu, or reopens it if it is animating out.
+  /// Pass this to the control as its `onPressed`.
+  void toggle() => controller.isOpen && !_isExiting()
+      ? controller.close()
+      : controller.open();
 }
 
 /// Configuration for a [RemixMenu] trigger.

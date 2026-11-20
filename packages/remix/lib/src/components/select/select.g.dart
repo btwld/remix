@@ -11,6 +11,7 @@ mixin _$SelectSpec implements Spec<SelectSpec>, Diagnosticable {
   StyleSpec<SelectContentSpec> get content;
   StyleSpec<FlexBoxSpec> get menuContainer;
   StyleSpec<SelectMenuItemSpec> get item;
+  RemixPanelTransition? get panelTransition;
 
   @override
   Type get type => SelectSpec;
@@ -21,12 +22,14 @@ mixin _$SelectSpec implements Spec<SelectSpec>, Diagnosticable {
     StyleSpec<SelectContentSpec>? content,
     StyleSpec<FlexBoxSpec>? menuContainer,
     StyleSpec<SelectMenuItemSpec>? item,
+    RemixPanelTransition? panelTransition,
   }) {
     return SelectSpec(
       trigger: trigger ?? this.trigger,
       content: content ?? this.content,
       menuContainer: menuContainer ?? this.menuContainer,
       item: item ?? this.item,
+      panelTransition: panelTransition ?? this.panelTransition,
     );
   }
 
@@ -37,11 +40,22 @@ mixin _$SelectSpec implements Spec<SelectSpec>, Diagnosticable {
       content: content.lerp(other?.content, t),
       menuContainer: menuContainer.lerp(other?.menuContainer, t),
       item: item.lerp(other?.item, t),
+      panelTransition: MixOps.lerpSnap(
+        panelTransition,
+        other?.panelTransition,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [trigger, content, menuContainer, item];
+  List<Object?> get props => [
+    trigger,
+    content,
+    menuContainer,
+    item,
+    panelTransition,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -86,7 +100,8 @@ mixin _$SelectSpec implements Spec<SelectSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('trigger', trigger))
       ..add(DiagnosticsProperty('content', content))
       ..add(DiagnosticsProperty('menuContainer', menuContainer))
-      ..add(DiagnosticsProperty('item', item));
+      ..add(DiagnosticsProperty('item', item))
+      ..add(DiagnosticsProperty('panelTransition', panelTransition));
   }
 }
 
@@ -423,25 +438,29 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
   final Prop<StyleSpec<SelectContentSpec>>? $content;
   final Prop<StyleSpec<FlexBoxSpec>>? $menuContainer;
   final Prop<StyleSpec<SelectMenuItemSpec>>? $item;
+  final Prop<RemixPanelTransition>? $panelTransition;
 
   const SelectStyler.create({
     Prop<StyleSpec<SelectTriggerSpec>>? trigger,
     Prop<StyleSpec<SelectContentSpec>>? content,
     Prop<StyleSpec<FlexBoxSpec>>? menuContainer,
     Prop<StyleSpec<SelectMenuItemSpec>>? item,
+    Prop<RemixPanelTransition>? panelTransition,
     super.variants,
     super.modifier,
     super.animation,
   }) : $trigger = trigger,
        $content = content,
        $menuContainer = menuContainer,
-       $item = item;
+       $item = item,
+       $panelTransition = panelTransition;
 
   SelectStyler({
     SelectTriggerStyler? trigger,
     SelectContentStyler? content,
     FlexBoxStyler? menuContainer,
     SelectMenuItemStyler? item,
+    RemixPanelTransition? panelTransition,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<SelectSpec>>? variants,
@@ -450,6 +469,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
          content: Prop.maybeMix(content),
          menuContainer: Prop.maybeMix(menuContainer),
          item: Prop.maybeMix(item),
+         panelTransition: Prop.maybe(panelTransition),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -463,6 +483,8 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
       SelectStyler().menuContainer(value);
   factory SelectStyler.item(SelectMenuItemStyler value) =>
       SelectStyler().item(value);
+  factory SelectStyler.panelTransition(RemixPanelTransition value) =>
+      SelectStyler().panelTransition(value);
   factory SelectStyler.alignment(AlignmentGeometry value) =>
       SelectStyler().alignment(value);
   factory SelectStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -960,6 +982,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     'content',
     'menuContainer',
     'item',
+    'panelTransition',
     'animation',
     'modifier',
     'variants',
@@ -983,6 +1006,11 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
   /// Sets the item.
   SelectStyler item(SelectMenuItemStyler value) {
     return merge(SelectStyler(item: value));
+  }
+
+  /// Sets the panelTransition.
+  SelectStyler panelTransition(RemixPanelTransition value) {
+    return merge(SelectStyler(panelTransition: value));
   }
 
   /// Sets the animation configuration.
@@ -1052,6 +1080,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
       content: MixOps.merge($content, other?.$content),
       menuContainer: MixOps.merge($menuContainer, other?.$menuContainer),
       item: MixOps.merge($item, other?.$item),
+      panelTransition: MixOps.merge($panelTransition, other?.$panelTransition),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1066,6 +1095,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
       content: MixOps.resolve(context, $content),
       menuContainer: MixOps.resolve(context, $menuContainer),
       item: MixOps.resolve(context, $item),
+      panelTransition: MixOps.resolve(context, $panelTransition),
     );
 
     return StyleSpec(
@@ -1082,7 +1112,8 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
       ..add(DiagnosticsProperty('trigger', $trigger))
       ..add(DiagnosticsProperty('content', $content))
       ..add(DiagnosticsProperty('menuContainer', $menuContainer))
-      ..add(DiagnosticsProperty('item', $item));
+      ..add(DiagnosticsProperty('item', $item))
+      ..add(DiagnosticsProperty('panelTransition', $panelTransition));
   }
 
   @override
@@ -1091,6 +1122,7 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     $content,
     $menuContainer,
     $item,
+    $panelTransition,
     $animation,
     $modifier,
     $variants,

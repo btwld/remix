@@ -160,7 +160,7 @@ final cityStyle = ComboboxStyler()
         .label(TextStyler().fontSize(16)));
 ```
 
-`ComboboxPanelStyler` supplies panel constraints, `containerEffects`, `scrollbarColor`, and `scrollbarThickness`. The component owns a persistent overflow thumb (painted only when scrolling is possible); its default is 4px wide with the inherited text color at 35% opacity. Panel scrolling clamps and stays isolated from the page, as in Select/Menu. Set option `.minHeight(...)` to size rows including padding; the unstyled default is 48px.
+`ComboboxPanelStyler` supplies panel constraints, `containerEffects`, `scrollbarColor`, `scrollbarThickness`, and `panelTransition`. The component owns a persistent overflow thumb (painted only when scrolling is possible); its default is 4px wide with the inherited text color at 35% opacity. Panel scrolling clamps and stays isolated from the page, as in Select/Menu. Set option `.minHeight(...)` to size rows including padding; the unstyled default is 48px.
 
 `container` controls editor-root layout; `field` and `panel` style the editor and suggestions surface. The nested `option: ComboboxOptionSpec` groups `container` and `label`; use `ComboboxOptionStyler` for row styling and `.label(TextStyler(...))` for its text. An option's focused state denotes RawAutocomplete's keyboard highlight, and its disabled state marks a suggestion that `isOptionDisabled` returned true for. Hover styles a row independently and does not move that highlight. Root modifiers and animation apply once around the editor. Direct `styleSpec: ComboboxSpec(...)` bypasses fluent styling and defaults. `RemixCombobox.styleFrom(...)` and generated `ComboboxStyler.call<T>()` are supported.
 
@@ -202,6 +202,46 @@ Option equality identifies an entity. Equal values are shown once, retaining the
 
 The fallback semantics expose one editable field and named actionable suggestions. Widget semantics tests do not establish screen-reader parity. Expanded relationships, highlighted-result discovery and announcements still require real platform/assistive-technology testing.
 
+
+## Panel transition
+
+The suggestions panel shows and hides at once by default. Set `panelTransition`
+on the panel styler to open and close it with the same
+[`RemixPanelTransition`](/components/menu#panel-transition) that menu, popover
+and select take.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Widget fadePanel(
+  BuildContext context,
+  RemixPanelTransitionInfo info,
+  Widget panel,
+) => FadeTransition(opacity: info.animation, child: panel);
+
+final fadingCombobox = RemixCombobox<String>(
+  optionsBuilder: (value) => const ['Apple', 'Apricot'],
+  style: ComboboxStyler().panel(
+    ComboboxPanelStyler().panelTransition(
+      const RemixPanelTransition(
+        duration: Duration(milliseconds: 200),
+        builder: fadePanel,
+      ),
+    ),
+  ),
+);
+```
+
+`info.anchorRect` is the editor's bounds in the overlay. RawAutocomplete places
+the suggestions itself and does not provide `OverlayPlacement` for the panel;
+shared transition recipes must work without that placement information.
+When RawAutocomplete removes the live panel, the combobox uses
+`NakedCombobox.exitBuilder` to paint an inert copy at the previous bounds in
+the same frame and play the exit. The copy does not keep a scroll offset, and
+the exit cannot stagger rows. `onClose` runs when the live panel unmounts,
+not after the exit. Reduced motion opens and closes at once. Use a top-level
+function as the builder: a transition is compared by its builder's identity.
 
 ## Constructor
 

@@ -9,7 +9,11 @@ void main() {
       const spec = PopoverSpec();
 
       expect(spec.container, isA<StyleSpec<BoxSpec>>());
-      expect(spec.props, [spec.container, spec.containerEffects]);
+      expect(spec.props, [
+        spec.container,
+        spec.containerEffects,
+        spec.panelTransition,
+      ]);
     });
 
     test('accepts and copies a custom container spec', () {
