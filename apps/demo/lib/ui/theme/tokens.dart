@@ -15,7 +15,15 @@ import 'theme_scope.dart' show FortalTheme;
 /// Must be used within [FortalTheme] to resolve actual values.
 abstract final class FortalTokens {
   static const activityMaxHeight = DoubleToken('fortal.activity.max-height');
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in the next major release.',
+  )
   static const planMaxHeight = DoubleToken('fortal.plan.max-height');
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in the next major release.',
+  )
   static const messageAvatarSize = DoubleToken('fortal.message.avatar-size');
   static const messageContentMaxWidth = DoubleToken(
     'fortal.message.content-max-width',
@@ -23,9 +31,14 @@ abstract final class FortalTokens {
   static const messageCollapsedHeight = DoubleToken(
     'fortal.message.collapsed-height',
   );
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in the next major release.',
+  )
   static const composerFieldMinHeight = DoubleToken(
     'fortal.composer-field-min-height',
   );
+
   static const touchTargetMin = DoubleToken('fortal.touch-target-min');
   static const popoverMaxWidth = DoubleToken('fortal.popover-max-width');
   static const dialogMaxWidth = DoubleToken('fortal.dialog-max-width');
@@ -643,9 +656,11 @@ abstract final class FortalTokens {
   static const fontWeightBold = FontWeightToken('fortal.font.weight.bold');
 
   /// Fast animation duration (100ms).
+  @Deprecated('Use Duration(milliseconds: 100) or an app-owned DurationToken.')
   static const transitionFast = DurationToken('fortal.transition.fast');
 
   /// Slow animation duration (300ms).
+  @Deprecated('Use Duration(milliseconds: 300) or an app-owned DurationToken.')
   static const transitionSlow = DurationToken('fortal.transition.slow');
 
   static const skeletonPulseDuration = DurationToken(
