@@ -38,14 +38,6 @@ final _customizationTokens = {
   'shadow1Layers',
 };
 
-const _deprecatedTokens = {
-  'transitionFast',
-  'transitionSlow',
-  'planMaxHeight',
-  'messageAvatarSize',
-  'composerFieldMinHeight',
-};
-
 void main() {
   final declaration = _parse(File('$_fortal/theme/tokens.dart')).declarations
       .whereType<ClassDeclaration>()
@@ -72,18 +64,16 @@ void main() {
       hasLength(declared.length),
       reason: 'Duplicate token IDs',
     );
-    for (final appearance in [
-      const FortalThemeData.light(),
-      const FortalThemeData.dark(),
-    ]) {
-      for (final panel in FortalPanelBackground.values) {
-        final scope = buildFortalScopeTokens(
-          appearance.copyWith(panelBackground: panel),
-        );
+    for (final panel in FortalPanelBackground.values) {
+      for (final theme in [
+        FortalThemeData.light(panelBackground: panel),
+        FortalThemeData.dark(panelBackground: panel),
+      ]) {
+        final scope = buildFortalScopeTokens(theme);
         expect(
           scope.keys.map((token) => token.name),
           unorderedEquals(ids),
-          reason: '${appearance.brightness}, $panel',
+          reason: '${theme.brightness}, $panel',
         );
       }
     }
@@ -101,7 +91,11 @@ void main() {
       }
     }
     final unused = declared.keys.toSet().difference(references.names);
-    final classified = {..._customizationTokens, ..._deprecatedTokens};
+    final deprecated = {
+      for (final MapEntry(:key, :value) in declared.entries)
+        if (value.deprecated) key,
+    };
+    final classified = {..._customizationTokens, ...deprecated};
     expect(
       unused.difference(classified),
       isEmpty,
@@ -112,11 +106,11 @@ void main() {
       isEmpty,
       reason: 'Stale classifications',
     );
-    expect(_customizationTokens.intersection(_deprecatedTokens), isEmpty);
-    expect([
-      for (final MapEntry(:key, :value) in declared.entries)
-        if (value.deprecated) key,
-    ], unorderedEquals(_deprecatedTokens));
+    expect(
+      _customizationTokens.intersection(deprecated),
+      isEmpty,
+      reason: 'Deprecated customization tokens',
+    );
   });
 }
 
@@ -124,14 +118,19 @@ CompilationUnit _parse(File file) =>
     parseString(path: file.path, content: file.readAsStringSync()).unit;
 
 String _tokenId(VariableDeclaration declaration) {
-  final arguments = switch (declaration.initializer) {
+  final argumentList = switch (declaration.initializer) {
     MethodInvocation(:final argumentList) ||
-    InstanceCreationExpression(:final argumentList) => argumentList.arguments,
-    _ => throw StateError(
-      '${declaration.name} must declare a token with a literal ID',
-    ),
+    InstanceCreationExpression(:final argumentList) => argumentList,
+    _ => null,
   };
-  return (arguments.single as StringLiteral).stringValue!;
+  if (argumentList?.arguments case [
+    StringLiteral(stringValue: final String id),
+  ]) {
+    return id;
+  }
+  throw StateError(
+    '${declaration.name} must declare a token with a literal ID',
+  );
 }
 
 class _TokenReferences extends RecursiveAstVisitor<void> {

@@ -17,12 +17,12 @@ abstract final class UiTokens {
   static const activityMaxHeight = DoubleToken('ui.activity.max-height');
 
   @Deprecated(
-    'Use app-owned sizing. Will be removed in the next major release.',
+    'Use app-owned sizing. Will be removed in a future registry revision.',
   )
   static const planMaxHeight = DoubleToken('ui.plan.max-height');
 
   @Deprecated(
-    'Use app-owned sizing. Will be removed in the next major release.',
+    'Use app-owned sizing. Will be removed in a future registry revision.',
   )
   static const messageAvatarSize = DoubleToken('ui.message.avatar-size');
   static const messageContentMaxWidth = DoubleToken(
@@ -33,7 +33,7 @@ abstract final class UiTokens {
   );
 
   @Deprecated(
-    'Use app-owned sizing. Will be removed in the next major release.',
+    'Use app-owned sizing. Will be removed in a future registry revision.',
   )
   static const composerFieldMinHeight = DoubleToken(
     'ui.composer-field-min-height',
@@ -620,11 +620,17 @@ abstract final class UiTokens {
   static const fontWeightBold = FontWeightToken('ui.font.weight.bold');
 
   /// Fast animation duration (100ms).
-  @Deprecated('Use Duration(milliseconds: 100) or an app-owned DurationToken.')
+  @Deprecated(
+    'Use Duration(milliseconds: 100) or an app-owned DurationToken. '
+    'Will be removed in a future registry revision.',
+  )
   static const transitionFast = DurationToken('ui.transition.fast');
 
   /// Slow animation duration (300ms).
-  @Deprecated('Use Duration(milliseconds: 300) or an app-owned DurationToken.')
+  @Deprecated(
+    'Use Duration(milliseconds: 300) or an app-owned DurationToken. '
+    'Will be removed in a future registry revision.',
+  )
   static const transitionSlow = DurationToken('ui.transition.slow');
 
   static const skeletonPulseDuration = DurationToken(

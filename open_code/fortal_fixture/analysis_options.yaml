@@ -5,6 +5,7 @@ analyzer:
     strict-casts: true
     strict-raw-types: true
   errors:
+    deprecated_member_use_from_same_package: error
     unused_import: error
     unused_element: error
   exclude:
@@ -16,6 +17,7 @@ linter:
     - always_declare_return_types
     - avoid_print
     - dangling_library_doc_comments
+    - deprecated_member_use_from_same_package
     - overridden_fields
     - prefer_const_constructors
     - prefer_const_declarations

@@ -17,12 +17,12 @@ abstract final class {{typePrefix}}Tokens {
   static const activityMaxHeight = DoubleToken('{{valuePrefix}}.activity.max-height');
 
   @Deprecated(
-    'Use app-owned sizing. Will be removed in the next major release.',
+    'Use app-owned sizing. Will be removed in a future registry revision.',
   )
   static const planMaxHeight = DoubleToken('{{valuePrefix}}.plan.max-height');
 
   @Deprecated(
-    'Use app-owned sizing. Will be removed in the next major release.',
+    'Use app-owned sizing. Will be removed in a future registry revision.',
   )
   static const messageAvatarSize = DoubleToken('{{valuePrefix}}.message.avatar-size');
   static const messageContentMaxWidth = DoubleToken(
@@ -33,7 +33,7 @@ abstract final class {{typePrefix}}Tokens {
   );
 
   @Deprecated(
-    'Use app-owned sizing. Will be removed in the next major release.',
+    'Use app-owned sizing. Will be removed in a future registry revision.',
   )
   static const composerFieldMinHeight = DoubleToken(
     '{{valuePrefix}}.composer-field-min-height',
@@ -656,11 +656,17 @@ abstract final class {{typePrefix}}Tokens {
   static const fontWeightBold = FontWeightToken('{{valuePrefix}}.font.weight.bold');
 
   /// Fast animation duration (100ms).
-  @Deprecated('Use Duration(milliseconds: 100) or an app-owned DurationToken.')
+  @Deprecated(
+    'Use Duration(milliseconds: 100) or an app-owned DurationToken. '
+    'Will be removed in a future registry revision.',
+  )
   static const transitionFast = DurationToken('{{valuePrefix}}.transition.fast');
 
   /// Slow animation duration (300ms).
-  @Deprecated('Use Duration(milliseconds: 300) or an app-owned DurationToken.')
+  @Deprecated(
+    'Use Duration(milliseconds: 300) or an app-owned DurationToken. '
+    'Will be removed in a future registry revision.',
+  )
   static const transitionSlow = DurationToken('{{valuePrefix}}.transition.slow');
 
   static const skeletonPulseDuration = DurationToken(

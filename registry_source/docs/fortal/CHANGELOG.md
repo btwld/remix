@@ -3,10 +3,11 @@
 - **Deprecated:** `FortalTokens.transitionFast`, `transitionSlow`,
   `planMaxHeight`, `messageAvatarSize`, and `composerFieldMinHeight` (including
   their installed, prefixed equivalents). Their IDs and scope values are
-  unchanged until the next major release. For custom motion, use explicit
-  durations (100ms or 300ms) or an app-owned duration token. For custom sizing,
-  use app-owned values (220, 28, and 56 logical pixels, respectively, before
-  theme scaling). Move any scope overrides to app-owned tokens when migrating.
+  unchanged in this revision. These tokens will be removed in a future registry
+  revision. For custom motion, use explicit durations (100ms or 300ms) or an
+  app-owned duration token. For custom sizing, use app-owned values (220, 28,
+  and 56 logical pixels, respectively, before theme scaling). Move any scope
+  overrides to app-owned tokens when migrating.
   The [custom recipe tokens](README.md#tokens-for-custom-recipes) and the
   recipe-used `skeletonPulseDuration` are not deprecated.
 - Polish the dashboard. Sidebar rows now sit one 40px row apart with no
