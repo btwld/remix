@@ -47,8 +47,11 @@ UiAgentConversationRecipe uiAgentConversationRecipe({
     variant: .outline,
     size: .size3,
     style: IconButtonStyler()
+        // The button floats over the transcript, so every fill is opaque.
         .color(UiTokens.colorSurface())
         .borderRadius(.circular(_pill))
+        .onHovered(.color(UiTokens.accent2()))
+        .onPressed(.color(UiTokens.accent3()))
         .merge(latestStyle),
   ),
 );
