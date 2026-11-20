@@ -1,4 +1,5 @@
 import 'package:dashboard_heroui/main.dart';
+import 'package:dashboard_heroui/ui/recipes/dashboard/dashboard_demo.dart';
 import 'package:dashboard_heroui/ui/ui.dart';
 import 'package:flutter/material.dart' show MaterialApp;
 import 'package:flutter/widgets.dart';

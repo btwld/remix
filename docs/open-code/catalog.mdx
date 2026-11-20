@@ -41,6 +41,9 @@ a calendar, a page for its seven palettes, and a quick-find field in the
 header. Every starter includes deterministic Agent flows, complete
 customer and order tables, charts, appearance and notification chrome, and
 local toast feedback.
+The demo is an application, not part of the kit, so `ui.dart` does not export
+it: import `ui/recipes/dashboard/dashboard_demo.dart`, which also exports the
+types `UiDashboardDemo` takes.
 Built-in chrome can be disabled; caller actions append to it and caller account
 content replaces the default. It leaves the application, routes,
 authentication, persistence, and backend search behavior with the host.
@@ -67,7 +70,7 @@ The installer rejects older resolved versions before it writes source.
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | — |
 | `code` | `UiCode` (Vanilla) | — |
 | `combobox` | `UiCombobox` (every preset; installs `theme` and `textfield`) | — |
-| `dashboard_demo` | `UiDashboardDemo`, `UiDashboardOverview` | — |
+| `dashboard_demo` | `UiDashboardDemo` (from `recipes/dashboard/dashboard_demo.dart`, not `ui.dart`) | — |
 | `dashboard_shell` | `UiDashboardShell` | — |
 | `data_list` | `UiDataList` | — |
 | `data_table` | `UiDataTable` | — |

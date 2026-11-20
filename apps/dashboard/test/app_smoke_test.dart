@@ -1,6 +1,10 @@
 import 'dart:ui' as ui;
 
 import 'package:dashboard/main.dart';
+import 'package:dashboard/ui/recipes/dashboard/dashboard_demo.dart';
+import 'package:dashboard/ui/recipes/dashboard/dashboard_demo_chat.dart';
+import 'package:dashboard/ui/recipes/dashboard/dashboard_demo_page_header.dart';
+import 'package:dashboard/ui/recipes/dashboard/dashboard_demo_theme.dart';
 import 'package:dashboard/ui/ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';

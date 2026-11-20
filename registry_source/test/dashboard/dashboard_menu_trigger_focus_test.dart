@@ -5,7 +5,6 @@ import 'package:registry_source/fortal.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_theme.dart';
 import 'package:registry_source/src/fortal/recipes/dashboard/dashboard_demo_widgets.dart';
-import 'package:registry_source/src/dashboard/dashboard_demo_base.dart';
 import 'package:registry_source/src/heroui/components/avatar.dart';
 import 'package:registry_source/src/heroui/components/button.dart';
 import 'package:registry_source/src/heroui/recipes/dashboard/dashboard_demo.dart';

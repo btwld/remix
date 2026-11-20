@@ -550,11 +550,9 @@ const defaultPreset = PresetSpec(
           sourceValueWord: 'registry',
         ),
       ],
-      exports: [
-        'recipes/dashboard/dashboard_sample_data.dart',
-        'recipes/dashboard/dashboard_overview.dart',
-        'recipes/dashboard/dashboard_demo.dart',
-      ],
+      // A sample application, not part of the kit: it stays out of the barrel
+      // and apps import recipes/dashboard/dashboard_demo.dart directly.
+      exports: [],
     ),
   ],
 );
@@ -748,11 +746,7 @@ const fortalPreset = PresetSpec(
           sourceValueWord: 'registry',
         ),
       ],
-      exports: [
-        'recipes/dashboard/dashboard_demo_data.dart',
-        'recipes/dashboard/dashboard_overview.dart',
-        'recipes/dashboard/dashboard_demo.dart',
-      ],
+      exports: [],
     ),
   ],
 );
@@ -903,11 +897,7 @@ const herouiPreset = PresetSpec(
           sourceValueWord: 'registry',
         ),
       ],
-      exports: [
-        'recipes/dashboard/dashboard_sample_data.dart',
-        'recipes/dashboard/dashboard_overview.dart',
-        'recipes/dashboard/dashboard_demo.dart',
-      ],
+      exports: [],
     ),
   ],
   // The Agent recipes style `package:remix/agent.dart` with HeroUI's own

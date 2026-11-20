@@ -415,13 +415,7 @@ items:
         final fortal = preset == 'fortal';
         expect(item.files, hasLength(fortal ? 19 : 11), reason: preset);
         expect(item.generated, isEmpty, reason: preset);
-        expect(item.exports, [
-          fortal
-              ? 'recipes/dashboard/dashboard_demo_data.dart'
-              : 'recipes/dashboard/dashboard_sample_data.dart',
-          'recipes/dashboard/dashboard_overview.dart',
-          'recipes/dashboard/dashboard_demo.dart',
-        ]);
+        expect(item.exports, isEmpty, reason: preset);
         expect(closure.last, 'dashboard_demo');
         expect(
           closure,

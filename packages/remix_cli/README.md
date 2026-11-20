@@ -330,9 +330,12 @@ remix add dashboard_demo
 usable shell, and the five product destinations from the reference dashboard
 (Overview, Chat, Customers, Orders, and Settings). Product pages and navigation
 match across presets while rendering each preset's native components and
-variants. The overview's four metrics, revenue series, and recent records live
-in editable `lib/ui/recipes/dashboard/dashboard_sample_data.dart`; replace them
-there or pass a `RegistryDashboardSampleData` to `UiDashboardDemo(data: ...)`.
+variants. It is a sample application, not part of the kit, so `ui.dart` does
+not export it: import `lib/ui/recipes/dashboard/dashboard_demo.dart`, which
+also exports the types `UiDashboardDemo` takes. The overview's four metrics,
+revenue series, and recent records live in editable
+`lib/ui/recipes/dashboard/dashboard_sample_data.dart`; replace them there or
+pass a `UiDashboardSampleData` to `UiDashboardDemo(data: ...)`.
 
 The host supplies its Flutter application, directionality, brand, and theme
 scope. Default uses `UiTheme(theme: UiThemeData.light(), child: ...)`;

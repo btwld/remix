@@ -330,11 +330,9 @@ void main() {
     expect(demo, isNot(contains('typography')));
     // Its segmented choices are RemixSegmentedControl, not a tab list.
     expect(demo, isNot(contains('tabs')));
-    expect((items['dashboard_demo'] as YamlMap)['exports'], [
-      'recipes/dashboard/dashboard_sample_data.dart',
-      'recipes/dashboard/dashboard_overview.dart',
-      'recipes/dashboard/dashboard_demo.dart',
-    ]);
+    // A sample application stays out of the barrel; its entry file
+    // re-exports the types its constructor takes instead.
+    expect((items['dashboard_demo'] as YamlMap)['exports'], isNull);
     // Compared with Vanilla by name: Fortal's demo no longer installs the
     // shared bases, and the builder's default spec is Fortal.
     final vanilla = PresetBuilder.forRepository(
@@ -355,6 +353,24 @@ void main() {
     final page =
         output.files['templates/dashboard_demo/dashboard_demo.dart.tmpl']!;
     expect(page, contains('class {{typePrefix}}DashboardDemo '));
+    expect(
+      page,
+      contains(
+        RegExp(
+          r"export 'dashboard_demo_base\.dart'\s+"
+          r'show \{\{typePrefix\}\}DashboardDemoPage;',
+        ),
+      ),
+    );
+    expect(
+      page,
+      contains(
+        RegExp(
+          r"export 'dashboard_sample_data\.dart'\s+show\s+"
+          r'\{\{typePrefix\}\}DashboardActivity,',
+        ),
+      ),
+    );
     expect(page, contains('{{icon:bell}}'));
     expect(page, isNot(contains('HeroUi')));
     expect(page, isNot(contains('RemixIcons')));

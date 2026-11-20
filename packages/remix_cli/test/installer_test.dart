@@ -889,9 +889,10 @@ packages:
         expect(
           File(p.join(caseRoot.path, uiPath, 'ui.dart')).readAsStringSync(),
           allOf(
-            contains("export 'recipes/dashboard/dashboard_demo.dart';"),
-            contains("export 'recipes/dashboard/dashboard_overview.dart';"),
-            contains("export 'recipes/dashboard/$sampleDataName';"),
+            contains("export 'recipes/dashboard/dashboard_shell.dart';"),
+            isNot(contains("export 'recipes/dashboard/dashboard_demo")),
+            isNot(contains("export 'recipes/dashboard/dashboard_overview")),
+            isNot(contains("export 'recipes/dashboard/$sampleDataName';")),
           ),
         );
         for (final entry in hostBefore.entries) {
