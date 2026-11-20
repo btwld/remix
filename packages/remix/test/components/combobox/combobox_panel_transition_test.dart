@@ -100,9 +100,8 @@ void main() {
 
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
-      expect(find.text('Apple'), findsNothing);
+      expect(find.text('Apple'), findsOneWidget);
       expect(closes, 1);
-      await tester.pump();
       await tester.pump(_exit ~/ 2);
       expect(find.text('Apple'), findsOneWidget);
       expect(probe.animations.last.value, closeTo(.5, .15));
@@ -129,7 +128,9 @@ void main() {
       expect(probe.animations.last.value, closeTo(.5, .01));
     });
 
-    testWidgets('the held exit starts after one empty frame', (tester) async {
+    testWidgets('the held exit starts on the first close frame', (
+      tester,
+    ) async {
       final probe = _Probe();
       await tester.pumpWidget(comboboxHost(_combobox(probe)));
       await _open(tester);
@@ -138,9 +139,6 @@ void main() {
       final bounds = tester.getRect(find.text('Apple'));
 
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pump(Duration.zero);
-      expect(find.text('Apple'), findsNothing);
-      expect(probe.animations.last.status, AnimationStatus.completed);
       await tester.pump(Duration.zero);
 
       expect(find.text('Apple'), findsOneWidget);
@@ -226,14 +224,19 @@ void main() {
 
       await tester.pump(_enter);
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pump(Duration.zero);
-      await tester.pump(Duration.zero);
-      await tester.pump(_exit ~/ 2);
-      // Mid-exit the panel is drawn, but the copy takes no part in semantics.
-      expect(find.text('Apple'), findsOneWidget);
-      expect(find.bySemanticsLabel('Apple'), findsNothing);
-      expect(find.bySemanticsLabel('Transition wrapper'), findsNothing);
-      expect(find.bySemanticsLabel('Fruit'), findsOneWidget);
+      for (final step in [Duration.zero, _exit ~/ 2]) {
+        await tester.pump(step);
+        expect(find.text('Apple'), findsOneWidget);
+        expect(find.bySemanticsLabel('Apple'), findsNothing);
+        expect(find.bySemanticsLabel('Transition wrapper'), findsNothing);
+        expect(find.bySemanticsLabel('Fruit'), findsOneWidget);
+        expect(
+          tester.semantics.simulatedAccessibilityTraversal().where(
+            (node) => node.getSemanticsData().flagsCollection.isTextField,
+          ),
+          hasLength(1),
+        );
+      }
       handle.dispose();
     });
 
@@ -326,8 +329,6 @@ void main() {
 
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
-      expect(find.text('Apple'), findsNothing);
-      await tester.pump();
       expect(find.text('Apple'), findsOneWidget);
       expect(probe.animations.last.status, AnimationStatus.reverse);
     });
@@ -360,7 +361,6 @@ void main() {
       await tester.pump(_enter + _tick);
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
-      await tester.pump();
       await tester.pump(_exit ~/ 2);
 
       await tester.enterText(find.byType(EditableText), 'Ap');
@@ -373,8 +373,49 @@ void main() {
       expect(probe.animations.last.value, 1);
     });
 
+    testWidgets('reopen on the first closing frame keeps the same editor', (
+      tester,
+    ) async {
+      final probe = _Probe();
+      await tester.pumpWidget(
+        comboboxHost(
+          RemixCombobox<String>(
+            optionsBuilder: (value) =>
+                value.text == 'Ap' ? const ['Apricot'] : suggestions,
+            style: _transitionStyle(probe),
+          ),
+        ),
+      );
+      await _open(tester);
+      await tester.pump(_enter + _tick);
+      final field = find.byType(EditableText);
+      final editor = tester.state<EditableTextState>(field);
+      final focus = editor.widget.focusNode;
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump(Duration.zero);
+      expect(find.text('Avocado'), findsOneWidget);
+      expect(tester.state<EditableTextState>(field), same(editor));
+      expect(focus.hasFocus, isTrue);
+      await tester.enterText(field, 'Ap');
+      await tester.pump(Duration.zero);
+      expect(find.text('Apricot'), findsOneWidget);
+      expect(find.text('Avocado'), findsOneWidget);
+      await tester.pump(Duration.zero);
+      expect(find.text('Apricot'), findsOneWidget);
+      expect(find.text('Avocado'), findsNothing);
+
+      await tester.pump(_exit + _enter + _tick);
+      expect(find.text('Apricot'), findsOneWidget);
+      expect(tester.state<EditableTextState>(field), same(editor));
+      expect(editor.widget.focusNode, same(focus));
+      expect(focus.hasFocus, isTrue);
+      expect(editor.widget.controller.text, 'Ap');
+      expect(probe.animations.last.value, 1);
+    });
+
     for (final request in MotionRequest.values) {
-      testWidgets('$request turned off in the hide frame skips that exit', (
+      testWidgets('$request turned off after close does not replay the exit', (
         tester,
       ) async {
         final probe = _Probe();
@@ -432,7 +473,6 @@ void main() {
 
         await harness.set(request, enabled: false);
         await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-        await tester.pump();
         await tester.pump();
         await tester.pump(_exit ~/ 2);
         expect(probe.animations.last.value, closeTo(.5, .01));

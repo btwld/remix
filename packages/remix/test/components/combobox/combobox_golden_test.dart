@@ -29,8 +29,11 @@ int pixel(({ByteData bytes, int width}) pixels, Offset point) {
 }
 
 void main() {
-  testWidgets('panel paints the same fade on entry and exit', (tester) async {
+  testWidgets('panel paints every closing frame with a single fade', (
+    tester,
+  ) async {
     const duration = Duration(milliseconds: 200);
+    const frame = Duration(milliseconds: 16);
     final key = GlobalKey();
     await tester.pumpWidget(
       comboboxHost(
@@ -50,6 +53,7 @@ void main() {
       ),
     );
 
+    final closed = await capture(tester, key);
     await tester.tap(find.byType(EditableText));
     await tester.pump();
     await tester.pump(duration ~/ 2);
@@ -60,19 +64,62 @@ void main() {
     final open = pixel(await capture(tester, key), sample);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pump(Duration.zero);
-    final hidden = pixel(await capture(tester, key), sample);
-    expect(find.text('Avocado'), findsNothing);
-    await tester.pump(Duration.zero);
-    final restored = pixel(await capture(tester, key), sample);
-    await tester.pump(duration ~/ 2);
+    final closing = <int>[];
+    for (final step in [Duration.zero, frame, frame]) {
+      await tester.pump(step);
+      closing.add(pixel(await capture(tester, key), sample));
+    }
+    await tester.pump(duration ~/ 2 - frame * 2);
     final exit = pixel(await capture(tester, key), sample);
 
+    final background = pixel(closed, sample);
+    expect(open, isNot(background));
     expect(entry, isNot(open));
-    expect(hidden, isNot(open));
-    expect(hidden, isNot(entry));
-    expect(restored, open);
+    expect(closing.first, open, reason: 'First three close pixels: $closing');
+    expect(closing, everyElement(isNot(background)));
+    expect(closing[1] & 0xFF, lessThan(closing[0] & 0xFF));
+    expect(closing[2] & 0xFF, lessThan(closing[1] & 0xFF));
     expect(exit, entry);
+  });
+
+  testWidgets('reduced motion paints no retained closing frame', (
+    tester,
+  ) async {
+    final key = GlobalKey();
+    await tester.pumpWidget(
+      comboboxHost(
+        Builder(
+          builder: (context) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(disableAnimations: true),
+            child: RemixCombobox<String>(
+              optionsBuilder: (_) => suggestions,
+              style: testComboboxStyle().panel(
+                ComboboxPanelStyler().panelTransition(
+                  RemixPanelTransition(
+                    builder: (context, info, panel) =>
+                        FadeTransition(opacity: info.animation, child: panel),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        repaintKey: key,
+      ),
+    );
+    final closed = await capture(tester, key);
+    await tester.tap(find.byType(EditableText));
+    await tester.pump();
+    final sample =
+        tester.getTopRight(find.text('Avocado')) - const Offset(4, -2);
+    final background = pixel(closed, sample);
+    expect(pixel(await capture(tester, key), sample), isNot(background));
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump(Duration.zero);
+    expect(pixel(await capture(tester, key), sample), background);
+    await tester.pump(const Duration(milliseconds: 16));
+    expect(pixel(await capture(tester, key), sample), background);
   });
 
   for (final raw in [false, true]) {
