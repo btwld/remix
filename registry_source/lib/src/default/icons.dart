@@ -1,9 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-/// Application-owned aliases for the icons used by this UI layer.
+/// A starter set of icon aliases for the application's own screens.
 ///
-/// Add, rename, or remove aliases here as the application vocabulary evolves.
+/// Installed components reference the icon library directly, so editing these
+/// aliases changes no component. Add, rename, or remove them as the
+/// application's vocabulary evolves.
 abstract final class VanillaIcons {
   /// Confirms a successful or selected action.
   static const IconData check = RemixIcons.check;
@@ -17,7 +19,7 @@ abstract final class VanillaIcons {
   /// Opens primary navigation on compact layouts.
   static const IconData hamburgerMenu = RemixIcons.menu;
 
-  /// Finds content within the current dashboard.
+  /// Starts a search, or marks a search field.
   static const IconData magnifyingGlass = RemixIcons.search;
 
   /// Moves a start-edge panel toward the left.
@@ -26,6 +28,6 @@ abstract final class VanillaIcons {
   /// Moves a start-edge panel toward the right.
   static const IconData doubleArrowRight = RemixIcons.chevronsRight;
 
-  /// Represents the dashboard overview destination.
+  /// Represents an overview or home destination.
   static const IconData dashboard = RemixIcons.dashboard;
 }
