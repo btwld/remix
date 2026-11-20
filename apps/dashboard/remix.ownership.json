@@ -12,7 +12,6 @@
     "lib/ui/components/button.dart": "btwld/remix/registry#fortal/button",
     "lib/ui/components/button.g.dart": "btwld/remix/registry#fortal/button",
     "lib/ui/components/calendar.dart": "btwld/remix/registry#fortal/calendar",
-    "lib/ui/components/calendar/date_picker_styles.dart": "btwld/remix/registry#fortal/calendar",
     "lib/ui/components/combobox.dart": "btwld/remix/registry#fortal/combobox",
     "lib/ui/components/combobox.g.dart": "btwld/remix/registry#fortal/combobox",
     "lib/ui/components/date_picker.dart": "btwld/remix/registry#fortal/date_picker",

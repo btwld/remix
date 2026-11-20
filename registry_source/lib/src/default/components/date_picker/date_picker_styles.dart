@@ -21,7 +21,6 @@ import '../select.dart';
 vanillaDatePickerStyles(
   BuildContext context,
   BoxConstraints constraints, {
-  required CalendarStyler Function({CalendarStyler style}) calendarRecipe,
   required ButtonStyler buttonStyle,
   required PopoverStyler popoverStyle,
   required IconButtonStyler navigationStyle,
@@ -39,16 +38,18 @@ vanillaDatePickerStyles(
   final dayWidth = vanillaCalendarDayWidth(context);
   final scaler = MediaQuery.textScalerOf(context);
   final iconSize = scaler.scale(VanillaTokens.icon);
+  final calendarWidth =
+      dayWidth * DateTime.daysPerWeek +
+      VanillaTokens.s3 * 2 +
+      VanillaTokens.strokeHairline * 2;
+  final triggerMaxWidth = requested != null && requested.hasBoundedWidth
+      ? requested.maxWidth
+      : 0.0;
   final panelWidth = math.max(
-    dayWidth * DateTime.daysPerWeek +
-        VanillaTokens.s3 * 2 +
-        VanillaTokens.strokeHairline * 2,
+    calendarWidth,
     math.max(
       constraints.minWidth,
-      math.max(
-        requested?.minWidth ?? 0.0,
-        requested?.hasBoundedWidth == true ? requested!.maxWidth : 0.0,
-      ),
+      math.max(requested?.minWidth ?? 0.0, triggerMaxWidth),
     ),
   );
   return (
@@ -94,10 +95,8 @@ vanillaDatePickerStyles(
           )
           .merge(selectorStyle),
     ),
-    calendar: calendarRecipe(
-      style: CalendarStyler()
-          .day(CalendarDayStyler().minWidth(dayWidth).minHeight(dayWidth))
-          .merge(calendarStyle),
-    ),
+    calendar: CalendarStyler()
+        .day(CalendarDayStyler().minWidth(dayWidth).minHeight(dayWidth))
+        .merge(calendarStyle),
   );
 }

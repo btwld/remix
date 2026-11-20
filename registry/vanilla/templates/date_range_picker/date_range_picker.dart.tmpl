@@ -4,7 +4,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/tokens.dart';
 import 'button.dart';
-import 'calendar/date_picker_styles.dart';
+import 'date_picker/date_picker_styles.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
 
@@ -142,7 +142,6 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
       final styles = {{valuePrefix}}DatePickerStyles(
         context,
         constraints,
-        calendarRecipe: {{valuePrefix}}RangeCalendarStyle,
         buttonStyle: buttonStyle,
         popoverStyle: popoverStyle,
         navigationStyle: navigationStyle,
@@ -178,7 +177,7 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
         popoverStyle: {{valuePrefix}}PopoverStyle(style: styles.popover),
         navigationStyle: styles.navigation,
         selectorStyle: styles.selector,
-        calendarStyle: styles.calendar,
+        calendarStyle: {{valuePrefix}}RangeCalendarStyle(style: styles.calendar),
         summaryBuilder: summaryBuilder,
       );
     },

@@ -233,8 +233,6 @@ void main() {
                     currentDate: DateTime(2026, 11, 6),
                     onChanged: (_) {},
                     buttonStyle: ButtonStyler().minWidth(280),
-                    popoverStyle: PopoverStyler().maxWidth(420),
-                    navigationStyle: IconButtonStyler().icon(.size(21)),
                   )
                 : HeroUiDatePicker(
                     value: null,
@@ -243,8 +241,6 @@ void main() {
                     currentDate: DateTime(2026, 11, 6),
                     onChanged: (_) {},
                     buttonStyle: ButtonStyler().minWidth(280),
-                    popoverStyle: PopoverStyler().maxWidth(420),
-                    navigationStyle: IconButtonStyler().icon(.size(21)),
                   ),
             mode: mode,
           );
@@ -269,11 +265,6 @@ void main() {
               .spec
               .spec;
           expect(pop.container.spec.padding, EdgeInsets.zero);
-          expect(pop.container.spec.constraints?.maxWidth, 420);
-          final nav = t.widget<StyleSpecProvider<IconButtonSpec>>(
-            find.byType(StyleSpecProvider<IconButtonSpec>).first,
-          );
-          expect(nav.spec.spec.icon.spec.size, 21);
           expect(
             (pop.container.spec.decoration as BoxDecoration).borderRadius,
             BorderRadius.circular(

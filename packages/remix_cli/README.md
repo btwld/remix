@@ -371,6 +371,7 @@ Vanilla additionally ships `calendar`, `range_calendar`, `date_picker` and
 the calendars wire IconButton and Select recipes; the pickers add outline
 Button and elevated Popover recipes around the matching calendar. Each child
 styler override merges last. Calendar selectors grow with text scaling.
+Both pickers install `date_picker_styles` automatically as an internal dependency.
 
 Most Vanilla component items generate one widget. Four generate several:
 `checkbox` also generates

@@ -5,7 +5,7 @@ import 'package:remix_ui_icons/remix_ui_icons.dart';
 import '../theme/tokens.dart';
 import 'button.dart';
 import 'calendar.dart';
-import 'calendar/date_picker_styles.dart';
+import 'date_picker/date_picker_styles.dart';
 import 'popover.dart';
 
 /// The application's DatePicker composite.
@@ -131,7 +131,6 @@ class PlaygroundDatePicker extends StatelessWidget {
       final styles = playgroundDatePickerStyles(
         context,
         constraints,
-        calendarRecipe: playgroundCalendarStyle,
         buttonStyle: buttonStyle,
         popoverStyle: popoverStyle,
         navigationStyle: navigationStyle,
@@ -166,7 +165,7 @@ class PlaygroundDatePicker extends StatelessWidget {
         popoverStyle: playgroundPopoverStyle(style: styles.popover),
         navigationStyle: styles.navigation,
         selectorStyle: styles.selector,
-        calendarStyle: styles.calendar,
+        calendarStyle: playgroundCalendarStyle(style: styles.calendar),
       );
     },
   );

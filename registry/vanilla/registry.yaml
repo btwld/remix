@@ -29,6 +29,16 @@ items:
     exports:
       - icons.dart
 
+  date_picker_styles:
+    registryDependencies:
+      - theme
+      - calendar
+      - icon_button
+      - select
+    files:
+      - source: templates/date_picker_styles/date_picker_styles.dart.tmpl
+        target: "@ui/components/date_picker/date_picker_styles.dart"
+
   accordion:
     registryDependencies:
       - theme
@@ -146,8 +156,6 @@ items:
     files:
       - source: templates/calendar/calendar.dart.tmpl
         target: "@ui/components/calendar.dart"
-      - source: templates/calendar/support/date_picker_styles.dart.tmpl
-        target: "@ui/components/calendar/date_picker_styles.dart"
     exports:
       - components/calendar.dart
 
@@ -389,6 +397,7 @@ items:
       - theme
       - button
       - calendar
+      - date_picker_styles
       - popover
     files:
       - source: templates/date_picker/date_picker.dart.tmpl
@@ -400,7 +409,7 @@ items:
     registryDependencies:
       - theme
       - button
-      - calendar
+      - date_picker_styles
       - popover
       - range_calendar
     files:

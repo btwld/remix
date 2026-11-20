@@ -9,33 +9,6 @@ import '../../packages/remix_cli/lib/src/template_renderer.dart';
 import '../../tool/build_registry.dart';
 
 void main() {
-  for (final spec in [defaultPreset, fortalPreset, herouiPreset]) {
-    test(
-      '${spec.name} pickers install their shared styles through calendar',
-      () {
-        final output = PresetBuilder.forRepository(
-          Directory.current,
-          spec: spec,
-        ).derive();
-        final items =
-            loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
-        final calendar = items['calendar'] as YamlMap;
-        const supportFile = 'components/calendar/date_picker_styles.dart';
-        expect(items, isNot(contains('date_picker_styles')));
-        expect(
-          (calendar['files'] as YamlList).map((file) => file['target']),
-          contains('@ui/$supportFile'),
-        );
-        expect(_strings(calendar['exports']), ['components/calendar.dart']);
-        for (final picker in ['date_picker', 'date_range_picker']) {
-          final item = items[picker] as YamlMap;
-          expect(_strings(item['registryDependencies']), contains('calendar'));
-          expect(_strings(item['exports']), ['components/$picker.dart']);
-        }
-      },
-    );
-  }
-
   test('Vanilla combobox installs its field recipe and generated adapter', () {
     final output = PresetBuilder.forRepository(
       Directory.current,
@@ -143,7 +116,7 @@ void main() {
     );
   });
   test(
-    'Vanilla calendar composites infer complete install closures without generated parts',
+    'Vanilla calendar composites infer their dependencies without generated parts',
     () {
       final output = PresetBuilder.forRepository(
         Directory.current,
@@ -154,10 +127,20 @@ void main() {
       for (final (item, dependencies) in [
         ('calendar', ['theme', 'icon_button', 'select']),
         ('range_calendar', ['theme', 'calendar', 'icon_button', 'select']),
-        ('date_picker', ['theme', 'button', 'calendar', 'popover']),
+        ('date_picker_styles', ['theme', 'calendar', 'icon_button', 'select']),
+        (
+          'date_picker',
+          ['theme', 'button', 'calendar', 'date_picker_styles', 'popover'],
+        ),
         (
           'date_range_picker',
-          ['theme', 'button', 'calendar', 'popover', 'range_calendar'],
+          [
+            'theme',
+            'button',
+            'date_picker_styles',
+            'popover',
+            'range_calendar',
+          ],
         ),
       ]) {
         final entry = items[item] as YamlMap;
@@ -183,10 +166,10 @@ void main() {
       for (final (item, dependencies) in [
         ('calendar', ['theme', 'icon_button', 'select']),
         ('range_calendar', ['theme', 'calendar']),
-        ('date_picker', ['button', 'calendar', 'popover']),
+        ('date_picker', ['theme', 'button', 'calendar', 'popover']),
         (
           'date_range_picker',
-          ['button', 'calendar', 'popover', 'range_calendar'],
+          ['theme', 'button', 'calendar', 'popover', 'range_calendar'],
         ),
       ]) {
         final entry = items[item] as YamlMap;

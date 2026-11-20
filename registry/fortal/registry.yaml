@@ -175,8 +175,6 @@ items:
     files:
       - source: templates/calendar/calendar.dart.tmpl
         target: "@ui/components/calendar.dart"
-      - source: templates/calendar/support/date_picker_styles.dart.tmpl
-        target: "@ui/components/calendar/date_picker_styles.dart"
     exports:
       - components/calendar.dart
 
@@ -446,6 +444,7 @@ items:
 
   date_picker:
     registryDependencies:
+      - theme
       - button
       - calendar
       - popover
@@ -457,6 +456,7 @@ items:
 
   date_range_picker:
     registryDependencies:
+      - theme
       - button
       - calendar
       - popover

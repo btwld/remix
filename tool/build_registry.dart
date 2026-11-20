@@ -192,7 +192,7 @@ final class PresetSpec {
   /// Stable data filenames are not identifiers and never take a UI prefix.
   final Set<String> fixedFileNames;
 
-  /// Source directory holding component entry points and their support files.
+  /// Source directory holding one file per component item.
   final String componentDirectory;
 
   /// Items assembled from a source directory that components may import.
@@ -345,7 +345,7 @@ final class CopiedItemSpec {
   final List<String> exports;
 }
 
-/// An item derived from a single file at the source root, e.g. `icons.dart`.
+/// An item derived from a single explicitly declared source file.
 final class FileItemSpec {
   const FileItemSpec({
     required this.name,
@@ -434,6 +434,13 @@ const defaultPreset = PresetSpec(
       packages: const {},
       registryDependencies: ['theme'],
       exports: ['icons.dart'],
+    ),
+    FileItemSpec(
+      name: 'date_picker_styles',
+      file: 'components/date_picker/date_picker_styles.dart',
+      packages: const {},
+      registryDependencies: [],
+      exports: [],
     ),
   ],
   ignoredSourceFiles: {},
@@ -1051,8 +1058,18 @@ final class PresetBuilder {
     }
 
     final sources = _readSources();
+    final componentPrefix = '${spec.componentDirectory}/';
+    final fileItemPaths = spec.fileItems.map((item) => item.file).toSet();
+    final components = sources.entries.where(
+      (entry) =>
+          entry.key.startsWith(componentPrefix) &&
+          !fileItemPaths.contains(entry.key),
+    );
     final groupedSources = _readGroupedSources(sources);
-    final sourceOwners = _sourceOwners(sources);
+    final sourceOwners = _sourceOwners(
+      sources,
+      components.map((entry) => entry.key),
+    );
     final installedTargets = _installedTargets(sourceOwners);
     _validateSources(
       sources,
@@ -1064,11 +1081,9 @@ final class PresetBuilder {
     final output = <String, String>{};
     final sourceByTemplate = <String, String>{};
     final items = <String, _RegistryItemDraft>{};
-    final componentPrefix = '${spec.componentDirectory}/';
     final componentNames = {
-      for (final path in sources.keys)
-        if (p.posix.dirname(path) == spec.componentDirectory)
-          p.posix.basenameWithoutExtension(path),
+      for (final entry in components)
+        p.posix.basenameWithoutExtension(entry.key),
     };
 
     for (final shared in spec.sharedItems) {
@@ -1188,13 +1203,18 @@ final class PresetBuilder {
       );
     }
 
-    for (final entry in sources.entries.where(
-      (entry) => p.posix.dirname(entry.key) == spec.componentDirectory,
-    )) {
+    for (final entry in components) {
       final name = p.posix.basenameWithoutExtension(entry.key);
+      final templatePath = '${spec.templateDirectory}/$name/$name.dart.tmpl';
       final generated = _generatedPart(entry.value);
-      final files = <_RegistryFileDraft>[];
-      final registryDependencies = <String>{};
+      final imports = _imports(entry.value);
+      final registryDependencies = _registryDependencies(
+        sourcePath: entry.key,
+        imports: imports,
+        componentNames: componentNames,
+        sourceOwners: sourceOwners,
+        itemName: name,
+      );
       final dependencies = <String, String>{};
       final devDependencies = <String, String>{};
       if (generated != null) {
@@ -1203,45 +1223,25 @@ final class PresetBuilder {
           ..['build_runner'] = floors['build_runner']!
           ..['mix_generator'] = floors['mix_generator']!;
       }
-      final supportPrefix = '$componentPrefix$name/';
-      for (final source in [
-        entry,
-        ...sources.entries.where(
-          (source) => source.key.startsWith(supportPrefix),
-        ),
-      ]) {
-        final templatePath = source.key == entry.key
-            ? '${spec.templateDirectory}/$name/$name.dart.tmpl'
-            : '${spec.templateDirectory}/$name/support/'
-                  '${source.key.substring(supportPrefix.length)}.tmpl';
-        output[templatePath] = _templateFor(source.key, source.value);
-        sourceByTemplate[templatePath] = source.value;
-        files.add(
-          _RegistryFileDraft(source: templatePath, target: '@ui/${source.key}'),
-        );
-        final imports = _imports(source.value);
-        registryDependencies.addAll(
-          _registryDependencies(
-            sourcePath: source.key,
-            imports: imports,
-            componentNames: componentNames,
-            sourceOwners: sourceOwners,
-            itemName: name,
-          ),
-        );
-        for (final package in spec.detectedPackages) {
-          if (imports.any((uri) => uri.startsWith('package:$package/'))) {
-            dependencies[package] = floors[package]!;
-          }
+      for (final package in spec.detectedPackages) {
+        if (imports.any((uri) => uri.startsWith('package:$package/'))) {
+          dependencies[package] = floors[package]!;
         }
       }
 
+      output[templatePath] = _templateFor(entry.key, entry.value);
+      sourceByTemplate[templatePath] = entry.value;
       items[name] = _RegistryItemDraft(
         name: name,
-        registryDependencies: _orderRegistryDependencies(registryDependencies),
+        registryDependencies: registryDependencies,
         dependencies: dependencies,
         devDependencies: devDependencies,
-        files: files,
+        files: [
+          _RegistryFileDraft(
+            source: templatePath,
+            target: '@ui/$componentPrefix$name.dart',
+          ),
+        ],
         generated: generated == null
             ? const []
             : ['@ui/$componentPrefix$generated'],
@@ -1606,7 +1606,10 @@ final class PresetBuilder {
     return grouped;
   }
 
-  Map<String, String> _sourceOwners(Map<String, String> sources) {
+  Map<String, String> _sourceOwners(
+    Map<String, String> sources,
+    Iterable<String> componentPaths,
+  ) {
     final owners = <String, String>{};
     void own(String source, String item) {
       final previous = owners[source];
@@ -1634,24 +1637,8 @@ final class PresetBuilder {
       final source = item.target.substring(uiPrefix.length);
       if (sources.containsKey(source)) own(source, item.name);
     }
-    final componentPrefix = '${spec.componentDirectory}/';
-    for (final source in sources.keys.where(
-      (path) => path.startsWith(componentPrefix),
-    )) {
-      final relative = source.substring(componentPrefix.length);
-      final segments = p.posix.split(relative);
-      if (segments.length == 1) {
-        own(source, p.posix.basenameWithoutExtension(relative));
-      } else {
-        final component = segments.first;
-        if (!sources.containsKey('$componentPrefix$component.dart')) {
-          throw FormatException(
-            '${spec.name} support source $source has no '
-            'owning component $component.',
-          );
-        }
-        own(source, component);
-      }
+    for (final source in componentPaths) {
+      own(source, p.posix.basenameWithoutExtension(source));
     }
     for (final name in spec.recipeItems) {
       final source = '${PresetSpec.recipeDirectory}/$name.dart';

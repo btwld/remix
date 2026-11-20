@@ -21,7 +21,6 @@
     "lib/ui/components/button.g.dart": "btwld/remix/registry#heroui/button",
     "lib/ui/components/button_group.dart": "btwld/remix/registry#heroui/button_group",
     "lib/ui/components/calendar.dart": "btwld/remix/registry#heroui/calendar",
-    "lib/ui/components/calendar/date_picker_styles.dart": "btwld/remix/registry#heroui/calendar",
     "lib/ui/components/card.dart": "btwld/remix/registry#heroui/card",
     "lib/ui/components/card.g.dart": "btwld/remix/registry#heroui/card",
     "lib/ui/components/chart.dart": "btwld/remix/registry#heroui/chart",
