@@ -1,3 +1,10 @@
+## 1.0.0-rc.6
+
+### Features
+
+- Add `RemixSidebarLayout` and `RemixSidebarLayoutScope` for responsive
+  navigation with a caller-styled compact sheet and live sidebar content.
+
 ## 1.0.0-rc.5
 
 ### Features

@@ -30,6 +30,8 @@ export 'src/components/radio/radio.dart';
 export 'src/components/segmented_control/segmented_control.dart';
 export 'src/components/select/select.dart';
 export 'src/components/sidebar/sidebar.dart';
+export 'src/components/sidebar/sidebar_layout.dart'
+    show RemixSidebarLayout, RemixSidebarLayoutScope;
 export 'src/components/skeleton/skeleton.dart';
 export 'src/components/slider/slider.dart';
 export 'src/components/spinner/spinner.dart';
