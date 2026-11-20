@@ -167,6 +167,10 @@ HeroUI's components, and pulls in `chart`, `table`, `tabs`, `chip`, and the
 Agent items. Families that need
 behavior Remix does not provide, such as Form and the separate popover-search Autocomplete, are not included.
 
+HeroUI's `UiCheckboxGroup` stacks options by default (`Axis.vertical`). Pass
+`orientation: Axis.horizontal` to flow the label, options, and help or error
+text in a row that wraps when space runs out.
+
 One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the
 recipe declares, and a recipe whose axis is named `variant` also gets one
