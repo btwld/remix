@@ -233,10 +233,12 @@ final fadingCombobox = RemixCombobox<String>(
 );
 ```
 
-`info.anchorRect` is the editor's bounds in the overlay. RawAutocomplete removes
-the panel in the frame its visibility ends, so the combobox holds the last panel
-through `NakedCombobox.exitBuilder` while the exit plays. That copy is rebuilt
-and inert, takes no input, and does not keep a scroll offset, so the exit
+`info.anchorRect` is the editor's bounds in the overlay. RawAutocomplete places
+the suggestions itself and does not provide `OverlayPlacement` for the panel;
+shared transition recipes must work without that placement information.
+RawAutocomplete removes the panel in the frame its visibility ends, so the
+combobox holds the last panel through `NakedCombobox.exitBuilder` while the exit
+plays. That copy is rebuilt and inert, and does not keep a scroll offset. The exit
 cannot stagger rows. `onClose` runs when the panel unmounts, not after the
 exit. Reduced motion opens and closes at once. Use a top-level function as the
 builder: a transition is compared by its builder's identity.

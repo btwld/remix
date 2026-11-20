@@ -29,6 +29,45 @@ int pixel(({ByteData bytes, int width}) pixels, Offset point) {
 }
 
 void main() {
+  testWidgets('panel paints the same fade on entry and exit', (tester) async {
+    const duration = Duration(milliseconds: 200);
+    final key = GlobalKey();
+    await tester.pumpWidget(
+      comboboxHost(
+        RemixCombobox<String>(
+          optionsBuilder: (_) => suggestions,
+          style: testComboboxStyle().panel(
+            ComboboxPanelStyler().panelTransition(
+              RemixPanelTransition(
+                duration: duration,
+                builder: (context, info, panel) =>
+                    FadeTransition(opacity: info.animation, child: panel),
+              ),
+            ),
+          ),
+        ),
+        repaintKey: key,
+      ),
+    );
+
+    await tester.tap(find.byType(EditableText));
+    await tester.pump();
+    await tester.pump(duration ~/ 2);
+    final point = tester.getTopRight(find.text('Avocado')) - const Offset(4, 0);
+    final sample = point + const Offset(0, 2);
+    final entry = pixel(await capture(tester, key), sample);
+    await tester.pump(duration ~/ 2);
+    final open = pixel(await capture(tester, key), sample);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+    await tester.pump(duration ~/ 2);
+    final exit = pixel(await capture(tester, key), sample);
+
+    expect(entry, isNot(open));
+    expect(exit, entry);
+  });
+
   for (final raw in [false, true]) {
     testWidgets(
       'field hover, press, focus and disabled paint respect raw=$raw',

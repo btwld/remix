@@ -75,7 +75,8 @@ class ComboboxPanelSpec with _$ComboboxPanelSpec {
   /// Opens and closes the panel with a transition.
   ///
   /// The builder receives the open and close animation and the editor's
-  /// bounds. The panel stays on screen until the exit has played: the combobox
+  /// bounds. RawAutocomplete does not provide `OverlayPlacement` for this
+  /// panel. The panel stays on screen until the exit has played: the combobox
   /// holds its last panel through `NakedCombobox.exitBuilder`, rebuilt and
   /// inert, so the exit cannot stagger rows or follow a scroll offset. `null`
   /// shows and hides the panel at once.

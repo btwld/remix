@@ -17,17 +17,19 @@ final class _Probe {
 
 Widget _combobox(_Probe probe) => RemixCombobox<String>(
   optionsBuilder: (_) => suggestions,
-  style: testComboboxStyle().panel(
-    ComboboxPanelStyler().panelTransition(
-      RemixPanelTransition(
-        duration: _enter,
-        reverseDuration: _exit,
-        builder: (context, info, panel) {
-          probe.animations.add(info.animation);
-          probe.anchors.add(info.anchorRect);
-          return FadeTransition(opacity: info.animation, child: panel);
-        },
-      ),
+  style: _transitionStyle(probe),
+);
+
+ComboboxStyler _transitionStyle(_Probe probe) => testComboboxStyle().panel(
+  ComboboxPanelStyler().panelTransition(
+    RemixPanelTransition(
+      duration: _enter,
+      reverseDuration: _exit,
+      builder: (context, info, panel) {
+        probe.animations.add(info.animation);
+        probe.anchors.add(info.anchorRect);
+        return FadeTransition(opacity: info.animation, child: panel);
+      },
     ),
   ),
 );
@@ -212,8 +214,44 @@ void main() {
       await _open(tester);
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
-      await tester.pump();
 
+      expect(find.text('Apple'), findsNothing);
+    });
+
+    testWidgets('changing transition styles preserves the editor', (
+      tester,
+    ) async {
+      final probe = _Probe();
+      final style = ValueNotifier(testComboboxStyle());
+      addTearDown(style.dispose);
+      await tester.pumpWidget(
+        comboboxHost(
+          ValueListenableBuilder<ComboboxStyler>(
+            valueListenable: style,
+            builder: (context, value, _) => RemixCombobox<String>(
+              optionsBuilder: (_) => suggestions,
+              style: value,
+            ),
+          ),
+        ),
+      );
+      await _open(tester);
+      final editor = find.byType(EditableText);
+      final state = tester.state<EditableTextState>(editor);
+      final controller = state.widget.controller;
+      controller.selection = const TextSelection.collapsed(offset: 0);
+
+      for (final newStyle in [_transitionStyle(probe), testComboboxStyle()]) {
+        style.value = newStyle;
+        await tester.pump();
+        expect(tester.state<EditableTextState>(editor), same(state));
+        expect(state.widget.focusNode.hasFocus, isTrue);
+        expect(controller.text, 'A');
+        expect(controller.selection, const TextSelection.collapsed(offset: 0));
+      }
+      expect(probe.animations, isNotEmpty);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
       expect(find.text('Apple'), findsNothing);
     });
 
@@ -238,21 +276,53 @@ void main() {
       expect(probe.animations.last.value, 1);
     });
 
-    testWidgets('reduced motion hides at once', (tester) async {
-      final probe = _Probe();
-      final harness = await MotionHarness.pump(tester, _combobox(probe));
-      await harness.set(MotionRequest.mediaQuery, enabled: true);
-      await tester.tap(find.byType(EditableText));
-      await tester.enterText(find.byType(EditableText), 'A');
-      await tester.pump();
-      await tester.pump();
+    for (final request in MotionRequest.values) {
+      testWidgets('$request skips the exit and permits the next entry', (
+        tester,
+      ) async {
+        final probe = _Probe();
+        final harness = await MotionHarness.pump(tester, _combobox(probe));
+        await harness.set(request, enabled: true);
+        await _open(tester);
+        expect(probe.animations.last.value, 1);
 
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pump();
-      await tester.pump();
-      await tester.pump();
-      expect(find.text('Apple'), findsNothing);
-    });
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump();
+        expect(find.text('Apple'), findsNothing);
+
+        await harness.set(request, enabled: false);
+        await tester.enterText(find.byType(EditableText), 'Ap');
+        await tester.pump();
+        expect(probe.animations.last.value, 0);
+        await tester.pump(_enter ~/ 2);
+        expect(probe.animations.last.value, closeTo(.5, .01));
+      });
+
+      testWidgets('$request settles entries and exits already in flight', (
+        tester,
+      ) async {
+        final probe = _Probe();
+        final harness = await MotionHarness.pump(tester, _combobox(probe));
+        await _open(tester);
+        await tester.pump(_enter ~/ 2);
+        expect(probe.animations.last.value, closeTo(.5, .01));
+        await harness.set(request, enabled: true);
+        expect(probe.animations.last.value, 1);
+
+        await harness.set(request, enabled: false);
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pump();
+        await tester.pump(_exit ~/ 2);
+        expect(probe.animations.last.value, closeTo(.5, .01));
+        expect(find.text('Apple'), findsOneWidget);
+
+        await harness.set(request, enabled: true);
+        expect(probe.animations.last.value, 0);
+        expect(find.text('Apple'), findsNothing);
+        await tester.pump();
+        expect(find.text('Apple'), findsNothing);
+      });
+    }
 
     test('the panel spec carries the transition', () {
       const transition = RemixPanelTransition(builder: _passThrough);

@@ -117,14 +117,8 @@ class RemixCombobox<T extends Object> extends StatefulWidget {
 }
 
 class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
-    with SingleTickerProviderStateMixin {
-  late final _panelTransition = RemixPanelTransitionHandle(
-    vsync: this,
-    // The panel is where the transition is resolved: nothing requests the
-    // open, so the panel's host starts the animation.
-    resolve: () => null,
-    reduceMotion: () => remixReducedMotionOf(context),
-  );
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  RemixPanelTransitionHandle? _panelTransition;
   final _fieldKey = GlobalKey();
 
   /// The transition the live panel resolved last, kept for the exit layer,
@@ -133,9 +127,29 @@ class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
   Rect _lastAnchor = Rect.zero;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _panelTransition?.settleWhenReduced();
+  }
+
+  @override
+  void didChangeAccessibilityFeatures() =>
+      _panelTransition?.settleWhenReduced();
+
+  @override
   void dispose() {
-    _panelTransition.dispose();
+    if (_panelTransition != null) WidgetsBinding.instance.removeObserver(this);
+    _panelTransition?.dispose();
     super.dispose();
+  }
+
+  RemixPanelTransitionHandle _createPanelTransition() {
+    WidgetsBinding.instance.addObserver(this);
+    return RemixPanelTransitionHandle(
+      vsync: this,
+      resolve: () => null,
+      reduceMotion: () => remixReducedMotionOf(context),
+    );
   }
 
   /// The editor's bounds in the overlay the panel is shown in.
@@ -334,14 +348,17 @@ class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
     ComboboxPanelSpec spec,
     Widget panel,
   ) {
-    _lastTransition = spec.panelTransition;
-    // In the exit layer the exit host already runs the transition around this
-    // panel; a second host would run it twice.
-    if (_ComboboxExitScope.maybeOf(context) != null) return panel;
+    final handle = _panelTransition;
+    if (handle != null &&
+        _ComboboxExitScope.maybeOf(context)?.handle == handle) {
+      return panel;
+    }
+    final transition = _lastTransition = spec.panelTransition;
+    if (transition == null && handle == null) return panel;
     return RemixPanelTransitionHost(
-      handle: _panelTransition,
-      transition: spec.panelTransition,
-      anchorRect: _anchorRect(context),
+      handle: _panelTransition ??= _createPanelTransition(),
+      transition: transition,
+      anchorRect: transition == null ? Rect.zero : _anchorRect(context),
       child: panel,
     );
   }
@@ -358,7 +375,7 @@ class _ComboboxExit extends StatefulWidget {
     required this.child,
   });
 
-  final RemixPanelTransitionHandle handle;
+  final RemixPanelTransitionHandle? handle;
   final RemixPanelTransition? transition;
   final Rect anchorRect;
   final VoidCallback dismiss;
@@ -369,43 +386,50 @@ class _ComboboxExit extends StatefulWidget {
 }
 
 class _ComboboxExitState extends State<_ComboboxExit> {
+  bool _playing = false;
+
   @override
   void initState() {
     super.initState();
-    // The exit starts in the build that shows this layer, the frame the panel
-    // is dropped, so its clock runs from that frame like the other panels'.
-    // An exit that has nothing to play hides the layer, which cannot happen
-    // during build, so that waits for the frame to end.
+    final handle = widget.handle;
+    final dismiss = widget.dismiss;
+    if (handle == null || widget.transition == null) {
+      _dismissAfterFrame(dismiss);
+      return;
+    }
     var building = true;
-    widget.handle.closeRequested(() {
+    handle.closeRequested(() {
+      if (!mounted) return;
       if (building) {
-        _dismissAfterFrame();
+        _dismissAfterFrame(dismiss);
       } else {
-        widget.dismiss();
+        dismiss();
       }
     }, null);
     building = false;
+    _playing = handle.closing;
   }
 
-  void _dismissAfterFrame() {
+  void _dismissAfterFrame(VoidCallback dismiss) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) widget.dismiss();
+      if (mounted) dismiss();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.transition == null) {
-      // No transition: nothing to play, so the layer goes at once.
-      _dismissAfterFrame();
-      return const SizedBox.shrink();
-    }
-    return RemixPanelTransitionHost(
-      handle: widget.handle,
-      transition: widget.transition,
-      anchorRect: widget.anchorRect,
-      exiting: true,
-      child: _ComboboxExitScope(child: widget.child),
+    final handle = widget.handle;
+    if (!_playing || handle == null) return const SizedBox.shrink();
+    return RemixReducedMotionBuilder(
+      builder: (context, reduceMotion) => reduceMotion
+          ? const SizedBox.shrink()
+          : RemixPanelTransitionHost(
+              handle: handle,
+              transition: widget.transition,
+              anchorRect: widget.anchorRect,
+              exiting: true,
+              child: _ComboboxExitScope(handle: handle, child: widget.child),
+            ),
     );
   }
 }
@@ -413,7 +437,9 @@ class _ComboboxExitState extends State<_ComboboxExit> {
 /// Marks the panel rebuilt inside the exit layer, which the exit host
 /// animates, so it does not start a transition of its own.
 class _ComboboxExitScope extends InheritedWidget {
-  const _ComboboxExitScope({required super.child});
+  const _ComboboxExitScope({required this.handle, required super.child});
+
+  final RemixPanelTransitionHandle handle;
 
   static _ComboboxExitScope? maybeOf(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_ComboboxExitScope>();
