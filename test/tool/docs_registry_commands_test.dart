@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart';
 
 import '../../tool/docs_registry_commands.dart';
 
@@ -110,4 +111,19 @@ remix add "$items" --diff
       expect(failures, isEmpty);
     },
   );
+
+  test('the switching guide names each official icon library', () {
+    final catalog =
+        loadYaml(File('registry/icons.yaml').readAsStringSync()) as YamlMap;
+    final libraries = (catalog['libraries'] as YamlMap).keys;
+    final readme = File('packages/remix_cli/README.md').readAsStringSync();
+    final guide = readme
+        .split('\n### ')
+        .singleWhere(
+          (section) => section.startsWith('Switch icon libraries\n'),
+        );
+    for (final library in libraries) {
+      expect(guide, contains('`$library`'));
+    }
+  });
 }
