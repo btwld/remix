@@ -18,6 +18,12 @@ const _compactSheetBarrierGutter = 56.0;
 /// The sheet's `separator` edge, as wide as the sidebar's.
 const _separatorWidth = 1.0;
 
+typedef _CompactSheetInputs = ({
+  Widget sidebar,
+  double sidebarWidth,
+  bool canPop,
+});
+
 /// A layout widget that pairs a [sidebar] with a [body].
 ///
 /// An extension: HeroUI web 3.2.6 has no layout family to port. The
@@ -112,6 +118,13 @@ class HeroUiSidebarLayout extends StatefulWidget {
 class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
   bool _selfOpen = false;
   bool _sheetShowing = false;
+  late final _sheetInputs = ValueNotifier(_currentSheetInputs);
+
+  _CompactSheetInputs get _currentSheetInputs => (
+    sidebar: widget.sidebar,
+    sidebarWidth: widget.sidebarWidth,
+    canPop: widget.compactOpen == null,
+  );
 
   /// The layout's presentation as of its most recent build, so [_openCompact]
   /// can no-op while wide even when called outside that build.
@@ -164,6 +177,7 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
 
   Future<void> _pushSheet() async {
     _sheetShowing = true;
+    _sheetInputs.value = _currentSheetInputs;
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     await showRemixDialog<void>(
@@ -176,47 +190,9 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
           : const Duration(milliseconds: 250),
       builder: (dialogContext) {
         _sheetRoute = ModalRoute.of(dialogContext);
-        final available = MediaQuery.sizeOf(dialogContext).width;
-        final width = math.min(
-          widget.sidebarWidth,
-          math.max(0.0, available - _compactSheetBarrierGutter),
-        );
-        return PopScope<void>(
-          canPop: widget.compactOpen == null,
-          onPopInvokedWithResult: (didPop, _) {
-            if (!didPop) _closeCompact();
-          },
-          child: HeroUiSidebarLayoutScope._(
-            isCompact: true,
-            isCompactOpen: true,
-            openCompact: _openCompact,
-            closeCompact: _closeCompact,
-            child: Box(
-              style: BoxStyler().alignment(.centerStart),
-              // A foreground border paints the panel edge without shrinking
-              // `width` by the border's own stroke width.
-              child: Box(
-                style: BoxStyler()
-                    .width(width)
-                    .height(.infinity)
-                    .color(HeroUiTokens.background())
-                    .foregroundDecoration(
-                      BoxDecorationMix(
-                        border: BorderDirectionalMix(
-                          end: BorderSideMix(
-                            color: HeroUiTokens.separator(),
-                            width: _separatorWidth,
-                          ),
-                        ),
-                      ),
-                    ),
-                child: RemixDialog(
-                  semanticLabel: _navigationSemanticLabel,
-                  child: widget.sidebar,
-                ),
-              ),
-            ),
-          ),
+        return ValueListenableBuilder(
+          valueListenable: _sheetInputs,
+          builder: _buildSheet,
         );
       },
     );
@@ -227,8 +203,67 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
     if (mounted) _setOpen(false);
   }
 
+  Widget _buildSheet(
+    BuildContext dialogContext,
+    _CompactSheetInputs inputs,
+    Widget? child,
+  ) {
+    final available = MediaQuery.sizeOf(dialogContext).width;
+    final width = math.min(
+      inputs.sidebarWidth,
+      math.max(0.0, available - _compactSheetBarrierGutter),
+    );
+    return PopScope<void>(
+      canPop: inputs.canPop,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _closeCompact();
+      },
+      child: HeroUiSidebarLayoutScope._(
+        isCompact: true,
+        isCompactOpen: true,
+        openCompact: _openCompact,
+        closeCompact: _closeCompact,
+        child: Box(
+          style: BoxStyler().alignment(.centerStart),
+          // A foreground border paints the panel edge without shrinking
+          // `width` by the border's own stroke width.
+          child: Box(
+            style: BoxStyler()
+                .width(width)
+                .height(.infinity)
+                .color(HeroUiTokens.background())
+                .foregroundDecoration(
+                  BoxDecorationMix(
+                    border: BorderDirectionalMix(
+                      end: BorderSideMix(
+                        color: HeroUiTokens.separator(),
+                        width: _separatorWidth,
+                      ),
+                    ),
+                  ),
+                ),
+            child: RemixDialog(
+              semanticLabel: _navigationSemanticLabel,
+              child: inputs.sidebar,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void didUpdateWidget(HeroUiSidebarLayout oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_sheetShowing || _currentSheetInputs == _sheetInputs.value) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _sheetInputs.value = _currentSheetInputs;
+    });
+  }
+
   @override
   void dispose() {
+    _sheetInputs.dispose();
     final route = _sheetRoute;
     if (route != null) {
       // Navigator mutations must wait until the current tree update finishes.
