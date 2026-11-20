@@ -1,8 +1,5 @@
-// GENERATED CODE - DO NOT EDIT.
-// Raw scales: @radix-ui/colors 3.0.0 (sRGB).
+// Raw and alpha scales: @radix-ui/colors 3.0.0 (sRGB).
 // Source: https://github.com/radix-ui/colors
-// Regenerate with tool/ui_palettes/generate.dart.
-// Ui derives labelled fills separately; raw and alpha scales are unchanged.
 // MIT License
 //
 // Copyright (c) 2021 Radix
@@ -29,7 +26,7 @@ import 'package:flutter/painting.dart';
 
 import 'palette.dart';
 
-/// Radix gray + gray; paired Ui theme.
+/// The orla accent palette: Radix gray, paired with the gray neutral.
 const orla = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -113,7 +110,7 @@ const orla = UiColorTheme(
   ),
 );
 
-/// Radix teal + sage; paired Ui theme.
+/// The mar accent palette: Radix teal, paired with the sage neutral.
 const mar = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -195,7 +192,7 @@ const mar = UiColorTheme(
   ),
 );
 
-/// Radix blue + slate; paired Ui theme.
+/// The ceu accent palette: Radix blue, paired with the slate neutral.
 const ceu = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -277,7 +274,7 @@ const ceu = UiColorTheme(
   ),
 );
 
-/// Radix gold + olive; paired Ui theme.
+/// The serra accent palette: Radix gold, paired with the olive neutral.
 const serra = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -359,7 +356,7 @@ const serra = UiColorTheme(
   ),
 );
 
-/// Radix amber + sand; paired Ui theme.
+/// The sol accent palette: Radix amber, paired with the sand neutral.
 const sol = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -441,7 +438,7 @@ const sol = UiColorTheme(
   ),
 );
 
-/// Radix brown + sand; paired Ui theme.
+/// The duna accent palette: Radix brown, paired with the sand neutral.
 const duna = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -523,7 +520,7 @@ const duna = UiColorTheme(
   ),
 );
 
-/// Radix orange + sand; paired Ui theme.
+/// The caju accent palette: Radix orange, paired with the sand neutral.
 const caju = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -604,10 +601,8 @@ const caju = UiColorTheme(
     markContrast: Color(0xff582d1d),
   ),
 );
-@Deprecated('Use orla instead.')
-const calcadao = orla;
 
-/// Internal Radix gray neutral family.
+/// The Radix gray neutral palette.
 const uiGrayNeutral = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -689,7 +684,7 @@ const uiGrayNeutral = UiColorTheme(
   ),
 );
 
-/// Internal Radix sage neutral family.
+/// The Radix sage neutral palette.
 const uiSageNeutral = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -771,7 +766,7 @@ const uiSageNeutral = UiColorTheme(
   ),
 );
 
-/// Internal Radix slate neutral family.
+/// The Radix slate neutral palette.
 const uiSlateNeutral = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -853,7 +848,7 @@ const uiSlateNeutral = UiColorTheme(
   ),
 );
 
-/// Internal Radix olive neutral family.
+/// The Radix olive neutral palette.
 const uiOliveNeutral = UiColorTheme(
   UiColor(
     UiColorScale(
@@ -935,7 +930,7 @@ const uiOliveNeutral = UiColorTheme(
   ),
 );
 
-/// Internal Radix sand neutral family.
+/// The Radix sand neutral palette.
 const uiSandNeutral = UiColorTheme(
   UiColor(
     UiColorScale(

@@ -214,7 +214,7 @@ class FortalTokens {
   /// Gray step 12 - High contrast text and primary content.
   static const gray12 = ColorToken('fortal.gray.12');
 
-  /// Neutral surface baseline for the selected gray scale (matches JSON surface)
+  /// Neutral surface baseline for the selected gray scale
   static const graySurface = ColorToken('fortal.gray.surface');
 
   /// Neutral indicator color (typically gray step 9)
@@ -254,7 +254,7 @@ class FortalTokens {
   static const grayA11 = ColorToken('fortal.gray.a11');
   static const grayA12 = ColorToken('fortal.gray.a12');
 
-  /// Black alpha steps used in layered shadows.
+  /// Black alpha steps.
   static const blackA1 = ColorToken('fortal.black.a1');
   static const blackA2 = ColorToken('fortal.black.a2');
   static const blackA3 = ColorToken('fortal.black.a3');
@@ -528,7 +528,7 @@ class FortalTokens {
   /// Shadow level 1 - Subtle elevation.
   static const shadow1 = BoxShadowToken('fortal.shadow.1');
 
-  /// Exact layered shadow level 1, including inset layers.
+  /// Shadow level 1 as a [RemixBoxShadow] list.
   static const shadow1Layers = RemixBoxShadowListToken(
     'fortal.shadow.1.layers',
   );

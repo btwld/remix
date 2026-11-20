@@ -544,7 +544,12 @@ void main() {
     expect(custom, isNot(contains('0xfffaf9f6')));
     expect(custom, isNot(contains('fortalError')));
     expect(custom, isNot(contains('blackAlpha')));
-    expect(builtIn, contains('Radix gray + gray'));
+    expect(
+      builtIn,
+      contains(
+        'The orla accent palette: Radix gray, paired with the gray neutral.',
+      ),
+    );
     expect(builtIn, contains('const fortalGrayNeutral'));
     expect(builtIn, contains('const fortalError'));
   });

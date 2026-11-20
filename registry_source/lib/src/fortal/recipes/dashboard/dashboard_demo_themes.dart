@@ -264,8 +264,7 @@ class FortalPaletteCard extends StatelessWidget {
   }
 }
 
-/// The eighth card: a palette is generated, not hand-picked, so a brand can
-/// add its own.
+/// The eighth card: how a brand supplies its own palette.
 class _BrandPaletteCard extends StatelessWidget {
   const _BrandPaletteCard();
 
@@ -282,11 +281,11 @@ class _BrandPaletteCard extends StatelessWidget {
         const FortalAvatar.soft(icon: RemixIcons.plus, size: .size3),
         const FortalText('Your brand', size: .size3, weight: .medium),
         StyledText(
-          'An eighth palette comes from one seed color. Generate it, then '
-          'pass it to the theme as accentPalette.',
+          'A brand palette is a FortalColorTheme with a light and a dark '
+          'scale. Pass it to the theme as accentPalette.',
           style: dashboardText(.size2, tone: .muted),
         ),
-        const FortalCode("generate.dart --seed '#8038CC'", size: .size1),
+        const FortalCode('FortalTheme(accentPalette: brand)', size: .size1),
       ],
     ),
   );

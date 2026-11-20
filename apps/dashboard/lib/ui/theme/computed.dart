@@ -1,7 +1,8 @@
 /// Ui computed tokens and functional color utilities.
 ///
-/// Implements computed role tokens (accent-contrast, accent-track, etc.) and
-/// background/overlay colors derived from the selected paired theme.
+/// Derives the roles a palette does not store, such as content and focus
+/// colors, control borders, backgrounds and shadows, from the selected paired
+/// theme.
 ///
 /// Components should use these functional roles rather than raw color steps.
 library;

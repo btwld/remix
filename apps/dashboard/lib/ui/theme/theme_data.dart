@@ -14,18 +14,7 @@ import 'tokens.dart';
 /// Paired Ui themes, named for Uieza landscapes and coastal materials.
 /// Each choice owns its accent and subtly tinted neutral scales. Error
 /// roles use a dedicated red palette that is not a selectable accent.
-enum UiAccentColor {
-  orla,
-  mar,
-  ceu,
-  serra,
-  sol,
-  duna,
-  caju;
-
-  @Deprecated('Use orla instead.')
-  static const calcadao = orla;
-}
+enum UiAccentColor { orla, mar, ceu, serra, sol, duna, caju }
 
 /// Theme-level radius multipliers.
 enum UiRadius { none, small, medium, large, full }

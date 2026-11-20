@@ -118,7 +118,6 @@ String errorPaletteName(String typePrefix) =>
 /// palette with one of these names would be ambiguous beside it.
 Set<String> reservedPaletteNames(String typePrefix) => {
   ...builtInPaletteNames,
-  'calcadao',
   errorPaletteName(typePrefix),
   'blackAlpha',
   'whiteAlpha',
@@ -220,17 +219,16 @@ String _renderRadixPalettes(String paletteImport, String errorName) {
       .split('\n')
       .map((line) => '// $line')
       .join('\n');
-  final out = StringBuffer('''// GENERATED CODE - DO NOT EDIT.
-// Raw scales: ${provenance['package']} ${provenance['version']} (sRGB).
+  final out = StringBuffer(
+    '''// Raw and alpha scales: ${provenance['package']} ${provenance['version']} (sRGB).
 // Source: https://github.com/radix-ui/colors
-// Regenerate with tool/fortal_palettes/generate.dart.
-// Fortal derives labelled fills separately; raw and alpha scales are unchanged.
 $license
 import 'package:flutter/painting.dart';
 
 import '$paletteImport';
 
-''');
+''',
+  );
   for (final entry in pairs.entries) {
     final pair = entry.value as Map<String, dynamic>;
     final family = pair['accent'] as String;
@@ -246,12 +244,13 @@ import '$paletteImport';
       data,
       labelInk: labelInk,
       markInk: markInk,
-      note: 'Radix $family + ${pair['neutral']}; paired Fortal theme.',
+      note:
+          'The ${entry.key} accent palette: Radix $family, paired with the '
+          '${pair['neutral']} neutral.',
       neutral: scales[pair['neutral']] as Map<String, dynamic>,
       strongNeutral: entry.key == 'orla',
     );
   }
-  out.writeln("@Deprecated('Use orla instead.')\nconst calcadao = orla;\n");
   for (final family in {'gray', 'sage', 'slate', 'olive', 'sand'}) {
     _writeRadixPalette(
       out,
@@ -262,7 +261,7 @@ import '$paletteImport';
         (((scales[family] as Map)['light'] as Map)['solid'] as List)[11]
             as String,
       ),
-      note: 'Internal Radix $family neutral family.',
+      note: 'The Radix $family neutral palette.',
     );
   }
   out.writeln('const fortalNeutralPalettes = <String, FortalColorTheme>{');

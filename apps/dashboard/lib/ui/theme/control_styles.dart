@@ -24,7 +24,8 @@ RemixBoxEffectsMix uiSliderFocusOutline() => RemixBoxEffectsMix(
   outlineOffset: 0,
 );
 
-/// Keeps compact visual sizes while giving controls a 40px interaction area.
+/// Keeps compact visual sizes while giving controls a
+/// [UiTokens.touchTargetMin] interaction area.
 /// This wraps the painted child inside Naked UI's existing gesture target.
 WidgetModifierConfig uiTouchTarget() =>
     WidgetModifierConfig.modifier(const _UiTouchTargetMix());

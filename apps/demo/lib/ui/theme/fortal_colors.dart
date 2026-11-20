@@ -1,8 +1,5 @@
-// GENERATED CODE - DO NOT EDIT.
-// Raw scales: @radix-ui/colors 3.0.0 (sRGB).
+// Raw and alpha scales: @radix-ui/colors 3.0.0 (sRGB).
 // Source: https://github.com/radix-ui/colors
-// Regenerate with tool/fortal_palettes/generate.dart.
-// Fortal derives labelled fills separately; raw and alpha scales are unchanged.
 // MIT License
 //
 // Copyright (c) 2021 Radix
@@ -29,7 +26,7 @@ import 'package:flutter/painting.dart';
 
 import 'palette.dart';
 
-/// Radix gray + gray; paired Fortal theme.
+/// The orla accent palette: Radix gray, paired with the gray neutral.
 const orla = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -113,7 +110,7 @@ const orla = FortalColorTheme(
   ),
 );
 
-/// Radix teal + sage; paired Fortal theme.
+/// The mar accent palette: Radix teal, paired with the sage neutral.
 const mar = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -195,7 +192,7 @@ const mar = FortalColorTheme(
   ),
 );
 
-/// Radix blue + slate; paired Fortal theme.
+/// The ceu accent palette: Radix blue, paired with the slate neutral.
 const ceu = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -277,7 +274,7 @@ const ceu = FortalColorTheme(
   ),
 );
 
-/// Radix gold + olive; paired Fortal theme.
+/// The serra accent palette: Radix gold, paired with the olive neutral.
 const serra = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -359,7 +356,7 @@ const serra = FortalColorTheme(
   ),
 );
 
-/// Radix amber + sand; paired Fortal theme.
+/// The sol accent palette: Radix amber, paired with the sand neutral.
 const sol = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -441,7 +438,7 @@ const sol = FortalColorTheme(
   ),
 );
 
-/// Radix brown + sand; paired Fortal theme.
+/// The duna accent palette: Radix brown, paired with the sand neutral.
 const duna = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -523,7 +520,7 @@ const duna = FortalColorTheme(
   ),
 );
 
-/// Radix orange + sand; paired Fortal theme.
+/// The caju accent palette: Radix orange, paired with the sand neutral.
 const caju = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -604,10 +601,8 @@ const caju = FortalColorTheme(
     markContrast: Color(0xff582d1d),
   ),
 );
-@Deprecated('Use orla instead.')
-const calcadao = orla;
 
-/// Internal Radix gray neutral family.
+/// The Radix gray neutral palette.
 const fortalGrayNeutral = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -689,7 +684,7 @@ const fortalGrayNeutral = FortalColorTheme(
   ),
 );
 
-/// Internal Radix sage neutral family.
+/// The Radix sage neutral palette.
 const fortalSageNeutral = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -771,7 +766,7 @@ const fortalSageNeutral = FortalColorTheme(
   ),
 );
 
-/// Internal Radix slate neutral family.
+/// The Radix slate neutral palette.
 const fortalSlateNeutral = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -853,7 +848,7 @@ const fortalSlateNeutral = FortalColorTheme(
   ),
 );
 
-/// Internal Radix olive neutral family.
+/// The Radix olive neutral palette.
 const fortalOliveNeutral = FortalColorTheme(
   FortalColor(
     FortalColorScale(
@@ -935,7 +930,7 @@ const fortalOliveNeutral = FortalColorTheme(
   ),
 );
 
-/// Internal Radix sand neutral family.
+/// The Radix sand neutral palette.
 const fortalSandNeutral = FortalColorTheme(
   FortalColor(
     FortalColorScale(
