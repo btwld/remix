@@ -755,6 +755,31 @@ const typed = 'Acme.color.accent';
     },
   );
 
+  for (final (authored, installed) in [
+    (r'fortal.${group}/accent', r'acme.${group}/accent'),
+    (r'fortalSlider${group}', r'acmeSlider${group}'),
+    (r'fortal.$group.accent:active', r'acme.$group.accent:active'),
+    ('fortalSlider-track', 'acmeSlider-track'),
+  ]) {
+    test('Acme prefixes the quoted ID $authored', () {
+      final builder = _fixtureBuilder(sandbox);
+      _write(
+        builder.sourceRoot,
+        'components/badge.dart',
+        "final id = '$authored';\n",
+      );
+
+      expect(
+        const TemplateRenderer().render(
+          builder.derive().files['templates/badge/badge.dart.tmpl']!,
+          typePrefix: 'Acme',
+          valuePrefix: 'acme',
+        ),
+        "final id = '$installed';\n",
+      );
+    });
+  }
+
   test('refuses the authoring word where neither a prefix nor prose fits', () {
     final builder = _fixtureBuilder(sandbox);
     for (final source in [
@@ -767,6 +792,8 @@ const typed = 'Acme.color.accent';
       "final id = '\${base}fortal.color';\n",
       "const id = '--fortal-row';\n",
       "const id = 'fortal:x';\n",
+      r"final id = 'fortal${group}';"
+          '\n',
       'final isFortal = true;\n',
       'final _fortal = 0;\n',
       'final fortal_badge = 0;\n',

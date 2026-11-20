@@ -2311,7 +2311,9 @@ String _replacePrefixWords(
       final valueId = leading[0] == valueWord;
       if ((_idSuffix.hasMatch(suffix) &&
               (valueId || !suffix.startsWith('-'))) ||
-          (valueId && !interpolatesAfter && _camelIdSuffix.hasMatch(suffix))) {
+          (valueId &&
+              leading.end < text.length &&
+              _camelIdSuffix.hasMatch(suffix))) {
         replace(leading[0]!, offset);
         return;
       }
@@ -2448,8 +2450,8 @@ class _StringPieces extends RecursiveAstVisitor<void> {
 }
 
 final _identifierSuffixStart = RegExp('[A-Z0-9]');
-final _idSuffix = RegExp(r'^(?:[-._][A-Za-z0-9]+)+$');
-final _camelIdSuffix = RegExp(r'^[A-Z0-9][A-Za-z0-9]*$');
+final _idSuffix = RegExp(r'^[-._][A-Za-z0-9]\S*$');
+final _camelIdSuffix = RegExp(r'^[A-Z0-9][\w./:-]*$');
 final _codePunctuation = RegExp(r'(?:\(|[.<][A-Za-z_$])');
 final _codeMarkup = RegExp(r'`[^`\n]+`|\[[\w.$]+\]');
 
