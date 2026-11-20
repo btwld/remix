@@ -24,7 +24,8 @@ final class OwnershipPlan {
   static OwnershipPlan resolve(
     ProjectConfig config,
     RegistryGraph graph, {
-    Set<String> adoptNames = const {},
+    required Set<String> adoptNames,
+    required Set<String> managedExports,
   }) {
     final root = config.packageRoot;
     validateProjectFilePath(root, ownershipFileName);
@@ -114,41 +115,38 @@ final class OwnershipPlan {
     final barrel = canonical('${config.uiPath}/ui.dart');
     final planned = <String>{};
     for (final item in graph.items) {
-      final parts = item.name.split('/');
-      final source = config.registries[parts.first]!;
+      final [namespace, itemName] = item.name.split('/');
+      final source = config.registries[namespace]!;
       final repository = source.repository.toLowerCase();
       final ownerScope = '$repository/${source.path}#${config.preset}';
-      final owner = '$ownerScope/${parts.last}';
-      final oldName = switch ((
-        repository,
-        source.path,
-        config.preset,
-        parts.last,
-      )) {
-        (
-          officialRepository,
-          'registry',
-          'vanilla' || 'fortal' || 'heroui',
-          'text_field',
-        ) =>
-          'textfield',
-        (officialRepository, 'registry', 'heroui', 'text_area') => 'textarea',
+      final owner = '$ownerScope/$itemName';
+      final oldName = switch ((config.preset, itemName)) {
+        ('vanilla' || 'fortal' || 'heroui', 'text_field') => 'textfield',
+        ('heroui', 'text_area') => 'textarea',
         _ => null,
       };
       if (oldName != null &&
-          !graph.catalogs[parts.first]!.items.containsKey(oldName)) {
+          repository == officialRepository &&
+          source.path == 'registry' &&
+          !graph.catalogs[namespace]!.items.containsKey(oldName)) {
+        final oldExport = 'components/$oldName.dart';
         final oldOwner = '$ownerScope/$oldName';
         final obsoleteTargets = [
           for (final MapEntry(:key, :value) in targets.entries)
             if (value == oldOwner) key,
         ];
-        if (obsoleteTargets.isNotEmpty) {
+        final evidence = [
+          if (managedExports.contains(oldExport))
+            '${config.uiPath}/ui.dart still exports $oldExport.',
+          if (obsoleteTargets.isNotEmpty)
+            '$ownershipFileName still reserves ${obsoleteTargets.join(', ')}.',
+        ];
+        if (evidence.isNotEmpty) {
           throw FormatException(
-            '${parts.first}/$oldName was renamed to ${item.name}, but still '
-            'owns ${obsoleteTargets.join(', ')} in $ownershipFileName.\n'
-            'No files were changed. Back up your edits and remove the '
-            'obsolete files, exports, and ownership entries before retrying. '
-            'Migration guide: $_registry511MigrationGuide',
+            '$namespace/$oldName was renamed to ${item.name}.\n'
+            '${evidence.join('\n')}\n'
+            'No files were changed. Follow the migration guide before retrying: '
+            '$_registry511MigrationGuide',
           );
         }
       }

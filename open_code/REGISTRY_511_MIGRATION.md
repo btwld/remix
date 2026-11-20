@@ -20,8 +20,8 @@ item still provides both widgets.
 
 1. On a migration branch, save a checkpoint of `remix.yaml`,
    `remix.ownership.json`, `ui.dart`, installed source and adapters, the app's
-   code, and dependency and build files. Back up any untracked local edits
-   too. If you have no ownership record, use
+   code, and dependency and build files. Back up untracked edits too. If
+   installed source you want to keep is unrecorded, use
    [legacy adoption](REGISTRIES.md#existing-source-without-an-ownership-record)
    at the old pin before moving it. If you already moved the pin, restore the
    old pin for adoption.
@@ -35,16 +35,14 @@ item still provides both widgets.
    ```
 
    `registry update` does not modify installed source. With the migration
-   check, `remix add @remix/text_field --diff` reports the obsolete owner before
-   writing anything. `--dry-run` reports the same error; `--overwrite` and
-   `--adopt` do not bypass it.
+   check, `remix add @remix/text_field --diff` reports obsolete managed exports
+   or ownership entries before writing anything. `--dry-run` reports the same
+   error; `--overwrite` and `--adopt` do not bypass it.
 
 ## Remove only the obsolete files, exports, and reservations
 
-1. For each old item you installed, save its customized `.dart` file outside
-   the UI tree or in your checkpoint. Remove the old `.dart` file and its
-   `.g.dart` adapter from the app. Do not rename the generated adapter; the
-   installer regenerates it from the new source.
+1. Once your edits are backed up, remove the old `.dart` file and its
+   `.g.dart` adapter. The installer regenerates the adapter at the new path.
 2. In `ui.dart`, remove `export 'components/textfield.dart';` and, for HeroUI
    if installed, `export 'components/textarea.dart';`. Keep both
    `remix_cli:exports` markers and every unrelated export. Update any
@@ -52,17 +50,19 @@ item still provides both widgets.
 3. In `remix.ownership.json`, remove only those old `.dart` and `.g.dart` keys
    from `targets`. For example, the old Vanilla authored file is recorded as
    `"lib/ui/components/textfield.dart": "btwld/remix/registry#vanilla/textfield"`.
-   Confirm the listed owner matches the old item before removing a key. Leave
-   the schema, context, and all other reservations intact. Do not rename
-   entries or delete the entire record.
+   Confirm the listed owner matches the old item before removing a key. If
+   the old item has no entries, skip this step. Do not rename ownership keys
+   or remove unrelated reservations.
 4. If you installed `dashboard_demo`, also remove the managed exports under
    `recipes/dashboard/` for `dashboard_demo.dart`, `dashboard_overview.dart`,
    and `dashboard_sample_data.dart` (Vanilla and HeroUI) or
    `dashboard_demo_data.dart` (Fortal). These files and their ownership stay
    in place; only their barrel exports changed. Keep the `dashboard_shell`
-   export. Import `recipes/dashboard/dashboard_demo.dart` directly for the
-   demo and its constructor types, and import the relevant page or data file
-   directly for other symbols.
+   export. Import `recipes/dashboard/dashboard_demo.dart` for the widget.
+   If you keep the pre-#511 demo source, import constructor types defined in
+   the data file directly from `dashboard_demo_data.dart` (Fortal) or
+   `dashboard_sample_data.dart` (Vanilla and HeroUI); the old demo does not
+   re-export them. Import `dashboard_overview.dart` directly if you use it.
 
 ## Reinstall and verify
 

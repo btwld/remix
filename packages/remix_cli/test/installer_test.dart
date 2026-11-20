@@ -19,16 +19,17 @@ void main() {
         '$managedExportsStart\n'
         "export 'components/button.dart';\n"
         '\n'
-        '$managedExportsEnd\n';
+        '$managedExportsEnd\n'
+        "export 'app_only.dart';\n";
     final crlf = lf.replaceAll('\n', '\r\n');
 
     test('accepts an LF barrel', () {
-      expect(() => validateManagedBarrel(lf), returnsNormally);
+      expect(readManagedBarrelExports(lf), {'components/button.dart'});
     });
 
     test('accepts a CRLF barrel', () {
       // Git with core.autocrlf=true hands a Windows consumer this exact file.
-      expect(() => validateManagedBarrel(crlf), returnsNormally);
+      expect(readManagedBarrelExports(crlf), {'components/button.dart'});
     });
 
     test('rewriting an LF barrel keeps LF', () {

@@ -153,7 +153,7 @@ final class Installer {
 
     var writeBarrel = true;
     if (barrelFile.existsSync()) {
-      validateManagedBarrel(barrelFile.readAsStringSync());
+      readManagedBarrelExports(barrelFile.readAsStringSync());
       writeBarrel = false;
     }
 
@@ -477,7 +477,7 @@ final class Installer {
       throw FormatException('Managed UI barrel $barrelRelative is missing.');
     }
     final currentBarrel = barrel.readAsStringSync();
-    validateManagedBarrel(currentBarrel);
+    final managedExports = readManagedBarrelExports(currentBarrel);
 
     _writeProgress('Fetching registry items...');
     final graph = await RegistryGraph.resolve(config, options.items, _sources);
@@ -494,6 +494,7 @@ final class Installer {
       config,
       graph,
       adoptNames: options.adopt ? graph.requestedNames : const {},
+      managedExports: managedExports,
     );
     // Requested names are qualified for a pinned project, so they compare
     // against the qualified names `items` carries. The graph does the
@@ -1055,43 +1056,44 @@ List<String> _barrelLines(String source) => [
     line.endsWith('\r') ? line.substring(0, line.length - 1) : line,
 ];
 
-void validateManagedBarrel(String source) {
-  final lines = _barrelLines(source);
-  final starts = <int>[];
-  final ends = <int>[];
-  for (var index = 0; index < lines.length; index++) {
-    if (lines[index] == managedExportsStart) starts.add(index);
-    if (lines[index] == managedExportsEnd) ends.add(index);
-  }
-  if (starts.length != 1 || ends.length != 1 || starts.single >= ends.single) {
+Set<String> readManagedBarrelExports(String source) =>
+    _readManagedBarrelExports(_barrelLines(source));
+
+Set<String> _readManagedBarrelExports(List<String> lines) {
+  final start = lines.indexOf(managedExportsStart);
+  final end = lines.indexOf(managedExportsEnd);
+  if (start < 0 ||
+      end <= start ||
+      lines.lastIndexOf(managedExportsStart) != start ||
+      lines.lastIndexOf(managedExportsEnd) != end) {
     throw const FormatException(
       'The managed UI barrel must contain one ordered exports marker pair.',
     );
   }
-  for (var index = starts.single + 1; index < ends.single; index++) {
+  final exports = <String>{};
+  for (var index = start + 1; index < end; index++) {
     if (lines[index].contains('remix_cli:exports:')) {
       throw const FormatException('Managed export markers cannot be nested.');
     }
     final line = lines[index].trim();
-    if (line.isNotEmpty && !_managedExport.hasMatch(line)) {
+    if (line.isEmpty) continue;
+    final match = _managedExport.firstMatch(line);
+    if (match == null) {
       throw FormatException('Unexpected content inside managed exports: $line');
     }
+    exports.add(match.group(1)!);
   }
+  return exports;
 }
 
 String updateManagedBarrel(String source, Iterable<String> additions) {
-  validateManagedBarrel(source);
   // Rewrite the file with the terminator it already uses, so an installed
   // barrel never shows up as a whole-file change on Windows.
   final terminator = source.contains('\r\n') ? '\r\n' : '\n';
   final lines = _barrelLines(source);
+  final exports = {..._readManagedBarrelExports(lines), ...additions};
   final start = lines.indexOf(managedExportsStart);
   final end = lines.indexOf(managedExportsEnd);
-  final exports = <String>{...additions};
-  for (final line in lines.sublist(start + 1, end)) {
-    final match = _managedExport.firstMatch(line.trim());
-    if (match != null) exports.add(match.group(1)!);
-  }
   final replacement = [
     managedExportsStart,
     for (final export in exports.toList()..sort()) "export '$export';",

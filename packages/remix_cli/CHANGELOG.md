@@ -1,8 +1,8 @@
 ## Unreleased
 
-- Reject installs that would bring in the official `text_field` or HeroUI
-  `text_area` while the obsolete item still owns targets. This also applies
-  to dependency installs and previews. Follow the
+- Block installs and previews that would bring in the official `text_field`
+  or HeroUI `text_area` while an obsolete managed export or ownership entry
+  remains, including when the replacement is a dependency. Follow the
   [#511 registry migration guide](https://github.com/btwld/remix/blob/main/open_code/REGISTRY_511_MIGRATION.md)
   to keep local edits and remove obsolete exports and reservations.
 
