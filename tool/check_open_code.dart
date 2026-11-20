@@ -17,8 +17,9 @@
 /// checkout explicitly so a registry can be validated before its Remix version
 /// is on pub.dev.
 /// Hosted defaults to one independent canary and two incremental gallery adds,
-/// then one batch for the remainder. Checkout and both audit every item's
-/// closure, run the solo install canaries, and keep the full incremental loop.
+/// then one batch for the remainder. With `--independent all`, checks against
+/// a pinned catalog take their solo plan from that catalog. Checks against
+/// the checkout audit every closure and run solo canaries instead.
 ///
 /// The independent-item installs run in parallel: `--jobs N` or
 /// `REMIX_OPEN_CODE_JOBS=N` sets how many at once, and the default is one per
@@ -45,6 +46,7 @@ import 'audit_registry_closures.dart';
 import 'check_pub_floors.dart';
 import 'compile_registry_consumer.dart';
 import 'consumer_check_reporting.dart';
+import 'dart_directive_uris.dart';
 import 'open_code_lifecycle.dart';
 
 var _lifecycle = OpenCodeLifecycle(
@@ -600,7 +602,6 @@ final class _PresetContract {
       foundationItems: foundationItems.intersection(
         items.keys.cast<String>().toSet(),
       ),
-      independentItems: independentItems,
       specStylerItems: [],
       requiredRuntimeDependencies: runtime.toList(),
       allowedImportPackages: ['flutter', ...runtime],
@@ -667,14 +668,22 @@ final class _PresetContract {
   }
 
   List<String> independentInstalls(IndependentMode mode) {
-    final candidates = switch (mode) {
-      IndependentMode.none => const <String>[],
-      IndependentMode.canary => [
-        name == 'heroui' ? 'search_field' : 'dashboard_shell',
-      ],
-      IndependentMode.all => independentItems,
-    };
-    return candidates.where(registryItems.contains).toList();
+    if (mode == IndependentMode.none) return [];
+    if (mode == IndependentMode.canary) {
+      final canary = name == 'heroui' ? 'search_field' : 'dashboard_shell';
+      return [if (registryItems.contains(canary)) canary];
+    }
+    if (catalogYaml == null) return independentItems;
+
+    final items = _loadItems();
+    return [
+      for (final key in registryItems)
+        if (!foundationItems.contains(key) &&
+            ((items[key] as YamlMap)['registryDependencies'] as YamlList? ??
+                    const [])
+                .any((dependency) => !foundationItems.contains(dependency)))
+          key,
+    ];
   }
 
   List<String> get installedUiFiles {
@@ -1857,7 +1866,12 @@ Future<_Failure?> _checkIndependentItems({
 List<String> independentInstallItems(
   String preset, {
   required IndependentMode mode,
-}) => _presetByName(preset).independentInstalls(mode);
+  String? catalogYaml,
+}) {
+  final contract = _presetByName(preset);
+  return (catalogYaml == null ? contract : contract.forCatalog(catalogYaml))
+      .independentInstalls(mode);
+}
 
 /// Planned fresh init calls, hence branch-resolution API calls in release smoke.
 /// Candidate SHAs skip the API altogether. This uses the production independent
@@ -2408,11 +2422,6 @@ List<String> _installedReferenceProblems(
   Set<String> installedUiFiles,
   _PresetContract preset,
 ) {
-  final directive = RegExp(
-    r'''^\s*(?:import|export|part(?:\s+of)?)\s+([^;]+);''',
-    multiLine: true,
-  );
-  final quotedUri = RegExp(r'''(?:'([^']*)'|"([^"]*)")''');
   final problems = <String>[];
 
   for (final file
@@ -2421,17 +2430,17 @@ List<String> _installedReferenceProblems(
           .whereType<File>()
           .where((candidate) => candidate.path.endsWith('.dart'))) {
     final relative = _relativePath(uiRoot, file);
-    for (final match in directive.allMatches(file.readAsStringSync())) {
-      for (final uriMatch in quotedUri.allMatches(match.group(1)!)) {
-        final uri = uriMatch.group(1) ?? uriMatch.group(2)!;
-        final problem = _referenceProblem(
-          uri,
-          from: relative,
-          installedUiFiles: installedUiFiles,
-          allowedPackages: preset.allowedImportPackages,
-        );
-        if (problem != null) problems.add('$relative: $problem');
-      }
+    for (final (:uri, line: _) in dartDirectiveUris(
+      file.readAsStringSync(),
+      path: file.path,
+    )) {
+      final problem = _referenceProblem(
+        uri,
+        from: relative,
+        installedUiFiles: installedUiFiles,
+        allowedPackages: preset.allowedImportPackages,
+      );
+      if (problem != null) problems.add('$relative: $problem');
     }
   }
   return problems;
@@ -2743,13 +2752,6 @@ Future<String?> independentItemsProblemForTest(
   environment: environment,
   jobs: jobs,
 ))?.message;
-
-/// Returns the items a preset installs alone, for focused regression tests.
-List<String> independentInstallsForTest(String preset, {String? catalogYaml}) {
-  final contract = _presetByName(preset);
-  return (catalogYaml == null ? contract : contract.forCatalog(catalogYaml))
-      .independentInstalls(IndependentMode.all);
-}
 
 /// The install contract for [preset] against one registry's [iconsYaml]:
 /// the runtime dependencies an installed app must declare, and the packages a

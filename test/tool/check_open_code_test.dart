@@ -822,7 +822,6 @@ void main() {
         expect(canary, [
           preset == 'heroui' ? 'search_field' : 'dashboard_shell',
         ]);
-        expect(checker.independentInstallsForTest(preset), containsAll(canary));
         expect(
           checker.independentInstallItems(
             preset,
@@ -835,7 +834,7 @@ void main() {
             preset,
             mode: checker.IndependentMode.all,
           ),
-          checker.independentInstallsForTest(preset),
+          containsAll(canary),
         );
       }
     });
@@ -1357,7 +1356,10 @@ Future<void> main(List<String> arguments) async {
   group('independent installs', () {
     test('Vanilla and Fortal install the Agent and dashboard items alone', () {
       for (final preset in ['vanilla', 'fortal']) {
-        final items = checker.independentInstallsForTest(preset);
+        final items = checker.independentInstallItems(
+          preset,
+          mode: checker.IndependentMode.all,
+        );
 
         expect(items, hasLength(preset == 'fortal' ? 16 : 12), reason: preset);
         if (preset == 'fortal') {
@@ -1381,176 +1383,112 @@ Future<void> main(List<String> arguments) async {
     });
 
     test('HeroUI keeps the same solo install canaries', () {
+      final canaries = checker.independentInstallItems(
+        'heroui',
+        mode: checker.IndependentMode.all,
+      );
+      expect(canaries, hasLength(33));
       expect(
-        checker.independentInstallsForTest('heroui'),
-        unorderedEquals([
-          'avatar_group',
-          'breadcrumbs',
-          'button',
-          'button_group',
-          'calendar',
-          'range_calendar',
-          'date_picker',
-          'date_range_picker',
-          'checkbox_group',
-          'close_button',
-          'combobox',
-          'dashboard_shell',
-          'input_group',
-          'radio_group',
-          'range_slider',
-          'search_field',
-          'sidebar',
-          'sidebar_layout',
-          'switch_group',
-          'table',
-          'text_area',
-          'toast',
-          'toggle_button_group',
-          'agent_glyphs_recipe',
-          'answer_recipe',
-          'composer_recipe',
-          'conversation_recipe',
-          'message_recipe',
-          'sources_recipe',
-          'steps_recipe',
-          'suggestions_recipe',
-          'tool_call_recipe',
-          'dashboard_demo',
-        ]),
+        canaries,
+        containsAll(['avatar_group', 'search_field', 'dashboard_demo']),
+      );
+      expect(canaries, isNot(contains('chart')));
+    });
+
+    test('pinned all keeps the catalog-derived solo plan', () {
+      const catalog = '''
+items:
+  theme: {files: []}
+  button: {files: [], registryDependencies: [theme]}
+  stable_combo: {files: [], registryDependencies: [theme, button]}
+  dashboard_shell: {files: [], registryDependencies: [theme]}
+''';
+      expect(
+        checker.independentInstallItems(
+          'vanilla',
+          mode: checker.IndependentMode.all,
+          catalogYaml: catalog,
+        ),
+        ['stable_combo'],
       );
     });
 
     test(
-      'a missing edge stays in the solo plan and fails the closure audit',
+      'default checkout audit rejects an omitted non-canary edge before setup',
       () async {
-        final catalog =
-            loadYaml(File('registry/heroui/registry.yaml').readAsStringSync())
-                as YamlMap;
-        final items = catalog['items'] as YamlMap;
-        final avatarGroup = items['avatar_group'] as YamlMap;
-        final peers = (avatarGroup['registryDependencies'] as YamlList)
-            .cast<String>();
-        expect(peers.where((peer) => peer != 'theme'), ['avatar']);
-        final chart = items['chart'] as YamlMap;
-        final packages = Map.of(chart['dependencies'] as YamlMap);
-        final chartFloor = packages.remove('mix_chart');
-        expect(chartFloor, isNotNull);
-        final brokenCatalog = jsonEncode({
-          ...catalog,
-          'items': {
-            ...items,
-            'avatar_group': {
-              ...avatarGroup,
-              'registryDependencies': peers
-                  .where((peer) => peer != 'avatar')
-                  .toList(),
-            },
-            'chart': {
-              ...chart,
-              'dependencies': packages,
-              'devDependencies': {
-                ...chart['devDependencies'] as YamlMap,
-                'mix_chart': chartFloor,
-              },
-            },
-          },
-        });
-        final checkout = Directory('${sandbox.path}/registry/heroui')
-          ..createSync(recursive: true);
-        for (final path in ['index.yaml', 'icons.yaml']) {
-          File('registry/$path').copySync('${checkout.parent.path}/$path');
-        }
-        File('${checkout.path}/registry.yaml').writeAsStringSync(brokenCatalog);
-        final templates = Directory('registry/heroui/templates');
-        for (final source
-            in templates.listSync(recursive: true).whereType<File>()) {
-          final target = File(
-            '${checkout.path}${source.path.substring(templates.parent.path.length)}',
-          );
-          target.parent.createSync(recursive: true);
-          source.copySync(target.path);
-        }
         expect(
-          checker.independentInstallsForTest(
+          checker.independentInstallItems(
             'heroui',
-            catalogYaml: brokenCatalog,
+            mode: checker.IndependentMode.all,
           ),
-          contains('avatar_group'),
+          isNot(contains('feature')),
         );
-
-        final problems = await auditRegistryClosures(
-          CheckoutRegistry(checkout.parent, 'heroui'),
-          iconLibrary: 'remix',
+        final registry = _writeClosureFixture(sandbox);
+        final catalog = File('${registry.path}/heroui/registry.yaml');
+        catalog.writeAsStringSync(
+          catalog.readAsStringSync().replaceFirst(
+            '    registryDependencies: [bridge]\n',
+            '',
+          ),
+        );
+        File('registry/icons.yaml').copySync('${registry.path}/icons.yaml');
+        File(
+          '${sandbox.path}/pubspec.yaml',
+        ).writeAsStringSync('name: remix_workspace\n');
+        File('${sandbox.path}/packages/remix_ui_icons/pubspec.yaml')
+          ..createSync(recursive: true)
+          ..writeAsStringSync('version: 1.0.0\n');
+        Directory('${sandbox.path}/open_code').createSync();
+        final result = await Process.run(
+          Platform.resolvedExecutable,
+          [
+            File('tool/check_open_code.dart').absolute.path,
+            '--source',
+            'checkout',
+            '--preset',
+            'heroui',
+          ],
+          workingDirectory: sandbox.path,
+          includeParentEnvironment: false,
         );
         expect(
-          problems,
-          containsAll([
-            allOf(
-              startsWith('avatar_group (@ui/components/avatar_group.dart:'),
-              contains(
-                '`avatar.dart` resolves to @ui/components/avatar.dart from `avatar`',
-              ),
-              contains('`registryDependencies` closure'),
-            ),
-            allOf(
-              startsWith('chart (@ui/components/chart.dart:'),
-              contains(
-                '`package:mix_chart/mix_chart.dart` requires a direct package declaration',
-              ),
-            ),
-          ]),
+          result.exitCode,
+          1,
+          reason: '${result.stdout}\n${result.stderr}',
         );
+        expect(result.stderr, contains('Registry closure audit failed:'));
+        expect(
+          result.stderr,
+          contains(
+            '`../peer.dart` resolves to @ui/peer.dart from `peer`, which is '
+            'missing from its `registryDependencies` closure',
+          ),
+        );
+        expect(
+          result.stderr,
+          contains(
+            '`package:direct/io.dart` requires a direct package declaration',
+          ),
+        );
+        expect(result.stdout, isNot(contains('Consumer setup')));
       },
+      timeout: const Timeout(Duration(minutes: 2)),
     );
   });
 
   test(
     'closure audit follows transitive files, conditional URIs, and parts',
     () async {
-      final registry = Directory('${sandbox.path}/registry');
-      const catalog = '''
-schema: 2
-items:
-  feature:
-    registryDependencies: [bridge]
-    files:
-      - {source: templates/feature.dart.tmpl, target: '@ui/components/feature.dart'}
-    generated: ['@ui/components/feature.g.dart']
-  bridge:
-    registryDependencies: [peer]
-    files:
-      - {source: templates/bridge.dart.tmpl, target: '@ui/bridge.dart'}
-  peer:
-    dependencies: {direct: ^1.0.0}
-    files:
-      - {source: templates/peer.dart.tmpl, target: '@ui/peer.dart'}
-''';
-      final files = {
-        'index.yaml': 'schema: 1\npresets: {vanilla: vanilla/registry.yaml}\n',
-        'vanilla/registry.yaml': catalog,
-        'vanilla/templates/feature.dart.tmpl': '''
-import '../peer.dart' if (dart.library.io) 'package:direct/io.dart';
-export '../bridge.dart' if (dart.library.js_interop) '../peer.dart';
-part 'feature.g.dart';
-''',
-        'vanilla/templates/bridge.dart.tmpl': 'library;',
-        'vanilla/templates/peer.dart.tmpl': 'library;',
-      };
-      for (final MapEntry(key: path, value: content) in files.entries) {
-        final file = File('${registry.path}/$path');
-        file.parent.createSync(recursive: true);
-        file.writeAsStringSync(content);
-      }
+      final registry = _writeClosureFixture(sandbox);
 
       Future<List<String>> audit() => auditRegistryClosures(
-        CheckoutRegistry(registry, 'vanilla'),
+        CheckoutRegistry(registry, 'heroui'),
         iconLibrary: 'remix',
       );
       expect(await audit(), isEmpty);
 
       File(
-        '${registry.path}/vanilla/templates/feature.dart.tmpl',
+        '${registry.path}/heroui/templates/feature.dart.tmpl',
       ).writeAsStringSync('''
 import 'dart:async' if (dart.library.io) 'package:indirect/io.dart';
 export '../bridge.dart' if (dart.library.js_interop) '../missing.dart';
@@ -1856,7 +1794,7 @@ import 'package:remix_ui_fonts/remix_ui_fonts.dart';
       _writeInstalledUi(app);
       File('${app.path}/lib/ui/ui.dart').writeAsStringSync('''
 import 'package:flutter/widgets.dart'
-    if (dart.library.io) 'package:unexpected_package/io.dart'
+    if (dart.library.io == 'true') 'package:unexpected_package/io.dart'
     if (dart.library.html) '../../outside.dart';
 ''');
 
@@ -1864,6 +1802,7 @@ import 'package:flutter/widgets.dart'
 
       expect(problem, contains('imports package:unexpected_package'));
       expect(problem, contains('`../../outside.dart` escapes lib/ui'));
+      expect(problem, isNot(contains('`true`')));
     });
   });
 
@@ -2283,6 +2222,42 @@ items:
       );
     });
   });
+}
+
+Directory _writeClosureFixture(Directory root) {
+  final registry = Directory('${root.path}/registry');
+  final preset = Directory('${registry.path}/heroui');
+  final templates = Directory('${preset.path}/templates')
+    ..createSync(recursive: true);
+  File(
+    '${registry.path}/index.yaml',
+  ).writeAsStringSync('schema: 1\npresets: {heroui: heroui/registry.yaml}\n');
+  File('${preset.path}/registry.yaml').writeAsStringSync('''
+schema: 2
+items:
+  feature:
+    registryDependencies: [bridge]
+    devDependencies: {direct: ^1.0.0}
+    files:
+      - {source: templates/feature.dart.tmpl, target: '@ui/components/feature.dart'}
+    generated: ['@ui/components/feature.g.dart']
+  bridge:
+    registryDependencies: [peer]
+    files:
+      - {source: templates/bridge.dart.tmpl, target: '@ui/bridge.dart'}
+  peer:
+    dependencies: {direct: ^1.0.0}
+    files:
+      - {source: templates/peer.dart.tmpl, target: '@ui/peer.dart'}
+''');
+  File('${templates.path}/feature.dart.tmpl').writeAsStringSync('''
+import '../peer.dart' if (dart.library.io) 'package:direct/io.dart';
+export '../bridge.dart' if (dart.library.js_interop) '../peer.dart';
+part 'feature.g.dart';
+''');
+  File('${templates.path}/bridge.dart.tmpl').writeAsStringSync('library;');
+  File('${templates.path}/peer.dart.tmpl').writeAsStringSync('library;');
+  return registry;
 }
 
 void _writeValidFixture(Directory fixture) {

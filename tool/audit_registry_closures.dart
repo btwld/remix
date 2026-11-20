@@ -1,10 +1,12 @@
-import 'package:analyzer/dart/analysis/utilities.dart';
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/icon_registry.dart';
 import 'package:remix_cli/src/registry.dart';
 import 'package:remix_cli/src/registry_reader.dart';
 import 'package:remix_cli/src/template_renderer.dart';
+
+import 'dart_directive_uris.dart';
+
+typedef _TemplateReference = ({String target, String uri, int line});
 
 /// Checks each item against the files and direct runtime dependencies its solo
 /// install would supply, without running pub, code generation, or analysis.
@@ -16,50 +18,45 @@ Future<List<String>> auditRegistryClosures(
   const renderer = TemplateRenderer();
   IconRegistry? icons;
   final owners = <String, String>{};
-  final references = <String, List<({String target, String uri, int line})>>{};
-  final iconPackages = <String, Set<String>>{};
+  final sources =
+      <
+        String,
+        ({List<_TemplateReference> references, Set<String> iconPackages})
+      >{};
 
   for (final item in catalog.items.values) {
-    final itemReferences = references[item.name] = [];
-    final itemIconPackages = iconPackages[item.name] = {};
+    final sourceInfo = sources[item.name] = (references: [], iconPackages: {});
     for (final target in item.generated) {
       owners[target] = item.name;
     }
     for (final file in item.files) {
       owners[file.target] = item.name;
       final source = await registry.template(file);
-      final usesIcons = source.contains('{{icon:');
-      if (usesIcons) {
-        icons ??= IconRegistry.parse(await registry.icons());
+      if (source.contains('{{icon:')) {
+        final iconTable = icons ??= IconRegistry.parse(await registry.icons());
         for (final library in renderer.iconLibraries(
           source,
-          icons: icons,
+          icons: iconTable,
           iconLibrary: iconLibrary,
         )) {
-          itemIconPackages.addAll(icons.library(library).dependencies.keys);
+          sourceInfo.iconPackages.addAll(
+            iconTable.library(library).dependencies.keys,
+          );
         }
       }
       if (!file.target.endsWith('.dart')) continue;
-      final parsed = parseString(
-        content: renderer.render(
-          source,
-          typePrefix: 'Solo',
-          valuePrefix: 'solo',
-          icons: usesIcons ? icons : null,
-          iconLibrary: iconLibrary,
-        ),
-        path: file.target,
+      final rendered = renderer.render(
+        source,
+        typePrefix: 'Solo',
+        valuePrefix: 'solo',
+        icons: icons,
+        iconLibrary: iconLibrary,
       );
-      for (final directive in parsed.unit.directives) {
-        for (final literal in _directiveUris(directive)) {
-          if (literal.stringValue case final uri?) {
-            itemReferences.add((
-              target: file.target,
-              uri: uri,
-              line: parsed.lineInfo.getLocation(literal.offset).lineNumber,
-            ));
-          }
-        }
+      for (final (:uri, :line) in dartDirectiveUris(
+        rendered,
+        path: file.target,
+      )) {
+        sourceInfo.references.add((target: file.target, uri: uri, line: line));
       }
     }
   }
@@ -71,9 +68,10 @@ Future<List<String>> auditRegistryClosures(
     final packages = {
       'flutter',
       for (final dependency in closure) ...dependency.dependencies.keys,
-      for (final dependency in closure) ...iconPackages[dependency.name]!,
+      for (final dependency in closure)
+        ...sources[dependency.name]!.iconPackages,
     };
-    for (final reference in references[item.name]!) {
+    for (final reference in sources[item.name]!.references) {
       final location = '${item.name} (${reference.target}:${reference.line})';
       final uri = Uri.parse(reference.uri);
       if (uri.scheme == 'dart') continue;
@@ -112,14 +110,4 @@ Future<List<String>> auditRegistryClosures(
     }
   }
   return problems;
-}
-
-Iterable<StringLiteral> _directiveUris(Directive directive) sync* {
-  if (directive is UriBasedDirective) yield directive.uri;
-  if (directive is NamespaceDirective) {
-    for (final configuration in directive.configurations) {
-      yield configuration.uri;
-    }
-  }
-  if (directive case PartOfDirective(uri: final uri?)) yield uri;
 }

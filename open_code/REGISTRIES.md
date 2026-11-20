@@ -280,4 +280,7 @@ install closure before creating a consumer. Relative imports, exports and
 parts must have authored or generated targets in that closure, and package
 imports must have direct runtime declarations there (apart from the fixture's
 Flutter SDK dependency). Explicit solo install canaries still exercise the
-installer and generator; the default hosted canary does not run the audit.
+installer and generator. Checks against the pinned `registry-stable` catalog
+skip the audit. Hosted mode defaults to one solo canary; explicit
+`--independent all` against the pin exercises the non-foundation items with
+non-foundation dependencies in that catalog.
