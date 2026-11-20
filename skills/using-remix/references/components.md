@@ -108,8 +108,7 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   Each preset's `range_slider` item installs `<Prefix>RangeSlider` and its shared
   `slider` recipe dependency. Both thumbs use their preset's shared slider treatments;
   focus, hover and press rings apply independently to the active thumb.
-  Use `<prefix>RangeSliderStyle()` on the base widget for custom semantic
-  formatters, which the generated adapter omits.
+  The generated adapter forwards `semanticFormatterCallbacks`.
   See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
 - **Select** — is interactively enabled only when `enabled == true` and
   `onChanged != null`; either condition alone leaves it visually present but

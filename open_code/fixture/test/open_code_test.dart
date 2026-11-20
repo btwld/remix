@@ -2405,6 +2405,11 @@ void main() {
     testWidgets('forwards the curated RemixTab surface', (tester) async {
       final focusNode = FocusNode(debugLabel: 'ui-tab');
       addTearDown(focusNode.dispose);
+      Widget content(
+        BuildContext context,
+        NakedTabState state,
+        Widget? child,
+      ) => child!;
 
       await _pumpTabs(
         tester,
@@ -2423,6 +2428,7 @@ void main() {
             onFocusChange: (_) {},
             onHoverChange: (_) {},
             onPressChange: (_) {},
+            builder: content,
             semanticLabel: 'First tab',
           ),
         ],
@@ -2444,9 +2450,7 @@ void main() {
       expect(remix.semanticLabel, 'First tab');
       expect(remix.style, acmeTabStyle(style: TabStyler().minHeight(48)));
       expect(remix.styleSpec, isNull);
-      // `builder` would drag `package:naked_ui` into the adapter, so it is
-      // deliberately outside the generated surface.
-      expect(remix.builder, isNull);
+      expect(remix.builder, content);
     });
 
     testWidgets('selecting a tab reports it and swaps the panel', (
@@ -4097,6 +4101,8 @@ void main() {
     });
 
     testWidgets('forwards the curated RemixSlider surface', (tester) async {
+      String announce(double value) => '$value of 10';
+
       await _pumpInScope(
         tester,
         SizedBox(
@@ -4108,6 +4114,7 @@ void main() {
             max: 10,
             snapDivisions: 5,
             semanticLabel: 'Volume',
+            semanticFormatterCallback: announce,
             onChanged: (_) {},
           ),
         ),
@@ -4123,9 +4130,7 @@ void main() {
         remix.style,
         acmeSliderStyle(surfaceColor: const Color(0xFFE1E7F6)),
       );
-      // `semanticFormatterCallback` would drag `package:naked_ui` into the
-      // adapter, so it is deliberately outside the generated surface.
-      expect(remix.semanticFormatterCallback, isNull);
+      expect(remix.semanticFormatterCallback, announce);
     });
   });
 
@@ -5589,6 +5594,10 @@ void main() {
       final controller = RemixAccordionController<String>();
       addTearDown(controller.dispose);
       var presses = 0;
+      Widget trigger(
+        BuildContext context,
+        NakedAccordionItemState<String> state,
+      ) => const Text('Shipping');
 
       await _pumpInScope(
         tester,
@@ -5607,6 +5616,7 @@ void main() {
                 enableFeedback: false,
                 focusNode: focusNode,
                 onPressChange: (_) => presses += 1,
+                builder: trigger,
                 semanticLabel: 'Shipping section',
                 child: const Text('Two to four business days.'),
               ),
@@ -5630,9 +5640,7 @@ void main() {
       expect(remix.semanticLabel, 'Shipping section');
       expect(remix.style, acmeAccordionStyle());
       expect(remix.styleSpec, isNull);
-      // `builder` would drag `package:naked_ui` into the adapter, so it is
-      // deliberately outside the generated surface.
-      expect(remix.builder, isNull);
+      expect(remix.builder, trigger);
 
       focusNode.requestFocus();
       await tester.pumpAndSettle();

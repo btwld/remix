@@ -26,8 +26,7 @@ measurements:
   - {what: disabled, value: "root opacity 0.5", cite: slider-range-disabled-root}
 apiMapping:
   - "Controlled values: exactly two ordered Remix values, with onChanged and onChangeStart/onChangeEnd."
-  - "Remix min/max, minSpacing, snapDivisions, enabled, focusNodes and semanticLabels retain their names and shapes."
-  - "Custom value announcements use RemixRangeSlider with heroUiRangeSliderStyle(); the adapter omits the Naked UI formatter type."
+  - "Remix min/max, minSpacing, snapDivisions, enabled, focusNodes, semanticLabels and semanticFormatterCallbacks retain their names and shapes."
   - "The range_slider registry item depends on slider and delegates to heroUiSliderStyle(), merging caller style last."
 approximations:
   - "Inherits slider.yaml's rim, shadow-kernel and whole-thumb drag-scale approximations."

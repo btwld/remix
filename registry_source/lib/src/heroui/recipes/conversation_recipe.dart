@@ -42,7 +42,7 @@ HeroUiAgentConversationRecipe heroUiAgentConversationRecipe({
     variant: .outline,
     size: .md,
     style: IconButtonStyler()
-        // The button floats over the transcript: rest, hover and press are opaque.
+        // Floats over the transcript, so rest, hover and press are opaque.
         .color(HeroUiTokens.surface())
         .borderRadius(.all(HeroUiTokens.radius4xl()))
         .onHovered(.color(HeroUiTokens.defaultColor()))
