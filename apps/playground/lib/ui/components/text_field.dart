@@ -10,7 +10,7 @@ import 'package:remix/remix.dart';
 import '../theme/effects.dart';
 import '../theme/tokens.dart';
 
-part 'textfield.g.dart';
+part 'text_field.g.dart';
 
 /// The application's TextField recipe.
 ///
@@ -21,13 +21,16 @@ part 'textfield.g.dart';
 /// Any app with a `Navigator` has one; a bare `WidgetsApp(builder: ...)` has to
 /// supply its own.
 @MixWidget(target: RemixTextField.new)
-TextFieldStyler {{valuePrefix}}TextFieldStyle({
+TextFieldStyler playgroundTextFieldStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   return _base()
-      .minHeight({{typePrefix}}Tokens.controlMd)
+      .minHeight(PlaygroundTokens.controlMd)
       .padding(
-        .symmetric(horizontal: {{typePrefix}}Tokens.s3, vertical: {{typePrefix}}Tokens.s1),
+        .symmetric(
+          horizontal: PlaygroundTokens.s3,
+          vertical: PlaygroundTokens.s1,
+        ),
       )
       .crossAxisAlignment(.center)
       .merge(style);
@@ -38,13 +41,16 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
 /// The field's recipe with a taller resting box (at least 64px, 8px above and
 /// below the text) and accessories pinned to the first line.
 @MixWidget(target: RemixTextArea.new)
-TextFieldStyler {{valuePrefix}}TextAreaStyle({
+TextFieldStyler playgroundTextAreaStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) {
   return _base()
-      .minHeight({{typePrefix}}Tokens.s16)
+      .minHeight(PlaygroundTokens.s16)
       .padding(
-        .symmetric(horizontal: {{typePrefix}}Tokens.s3, vertical: {{typePrefix}}Tokens.s2),
+        .symmetric(
+          horizontal: PlaygroundTokens.s3,
+          vertical: PlaygroundTokens.s2,
+        ),
       )
       .crossAxisAlignment(.start)
       .merge(style);
@@ -53,42 +59,52 @@ TextFieldStyler {{valuePrefix}}TextAreaStyle({
 /// The surface, the text roles and every state fragment, shared by the field
 /// and the area.
 TextFieldStyler _base() => TextFieldStyler()
-    .animate({{typePrefix}}Tokens.motion)
+    .animate(PlaygroundTokens.motion)
     // Transparent, or `input` at 30% in the dark theme: a well, not a hole.
-    .color({{valuePrefix}}Tint({{typePrefix}}Tokens.input, 0, dark: 0.3)())
-    .border(.color({{typePrefix}}Tokens.input()).width({{typePrefix}}Tokens.strokeHairline))
-    .borderRadius(.all({{typePrefix}}Tokens.radiusMd()))
+    .color(playgroundTint(PlaygroundTokens.input, 0, dark: 0.3)())
+    .border(
+      .color(PlaygroundTokens.input()).width(PlaygroundTokens.strokeHairline),
+    )
+    .borderRadius(.all(PlaygroundTokens.radiusMd()))
     // In the effects layer: the fill is transparent, and a decoration shadow
     // would show through it.
-    .containerEffects(.behindContent({{typePrefix}}Shadow.xs.effects))
-    .spacing({{typePrefix}}Tokens.s2)
-    .text(.style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.foreground()))
+    .containerEffects(.behindContent(PlaygroundShadow.xs.effects))
+    .spacing(PlaygroundTokens.s2)
+    .text(
+      .style(
+        PlaygroundTokens.textSm.mix(),
+      ).color(PlaygroundTokens.foreground()),
+    )
     // Quieter than the value, or an empty field looks filled in.
     .hintText(
-      .style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.mutedForeground()),
+      .style(
+        PlaygroundTokens.textSm.mix(),
+      ).color(PlaygroundTokens.mutedForeground()),
     )
-    .cursorColor({{typePrefix}}Tokens.foreground())
+    .cursorColor(PlaygroundTokens.foreground())
     .label(
       .style(
-        {{typePrefix}}Tokens.textSm.mix(),
-      ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
+        PlaygroundTokens.textSm.mix(),
+      ).fontWeight(FontWeight.w500).color(PlaygroundTokens.foreground()),
     )
     .helperText(
-      .style({{typePrefix}}Tokens.textSm.mix()).color({{typePrefix}}Tokens.mutedForeground()),
+      .style(
+        PlaygroundTokens.textSm.mix(),
+      ).color(PlaygroundTokens.mutedForeground()),
     )
-    .layout(.direction(.vertical).spacing({{typePrefix}}Tokens.s2))
+    .layout(.direction(.vertical).spacing(PlaygroundTokens.s2))
     .wrap(
       .iconTheme(
-        color: {{typePrefix}}Tokens.mutedForeground(),
-        size: {{typePrefix}}Tokens.icon,
+        color: PlaygroundTokens.mutedForeground(),
+        size: PlaygroundTokens.icon,
       ),
     )
     // Any focus, not only keyboard focus: a browser treats a focused text input
     // as `:focus-visible` even after a click, so shadcn's input rings on click.
     .onFocused(
       TextFieldStyler()
-          .containerEffects({{valuePrefix}}FocusRing())
-          .border({{valuePrefix}}FocusBorder()),
+          .containerEffects(playgroundFocusRing())
+          .border(playgroundFocusBorder()),
     )
     // Mix ships no `onError`; `RemixTextField` drives this standard
     // `WidgetState` from its own `error` flag. `destructive` clears 4.5:1 on the
@@ -96,19 +112,19 @@ TextFieldStyler _base() => TextFieldStyler()
     .variant(
       ContextVariant.widgetState(.error),
       TextFieldStyler()
-          .border(.color({{typePrefix}}Tokens.destructive()))
-          .helperText(.color({{typePrefix}}Tokens.destructive()))
+          .border(.color(PlaygroundTokens.destructive()))
+          .helperText(.color(PlaygroundTokens.destructive()))
           // Focus rings in the same red: `destructive` at 20%, 40% in the dark.
           .onFocused(
             TextFieldStyler()
                 .containerEffects(
-                  {{valuePrefix}}FocusRing(
-                    color: {{typePrefix}}Tokens.destructive,
+                  playgroundFocusRing(
+                    color: PlaygroundTokens.destructive,
                     alpha: 0.2,
                     dark: 0.4,
                   ),
                 )
-                .border(.color({{typePrefix}}Tokens.destructive())),
+                .border(.color(PlaygroundTokens.destructive())),
           ),
     )
     // Declared last so it wins; the ring is cleared because a disabled control
@@ -116,5 +132,5 @@ TextFieldStyler _base() => TextFieldStyler()
     .onDisabled(
       TextFieldStyler()
           .containerEffects(.outline(.style(.none)))
-          .wrap(.opacity({{typePrefix}}Tokens.disabledOpacity)),
+          .wrap(.opacity(PlaygroundTokens.disabledOpacity)),
     );

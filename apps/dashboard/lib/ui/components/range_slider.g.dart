@@ -8,8 +8,7 @@ part of 'range_slider.dart';
 
 /// Two-bound slider sharing [uiSliderStyle]'s variants, sizes and states.
 /// Each thumb keeps independent hover, press and visible keyboard focus.
-/// Supply distinct localized `semanticLabels`. For custom value announcements,
-/// use [RemixRangeSlider] with this recipe and `semanticFormatterCallbacks`.
+/// Supply distinct localized `semanticLabels`.
 class UiRangeSlider extends StatelessWidget {
   const UiRangeSlider({
     super.key,
@@ -30,6 +29,7 @@ class UiRangeSlider extends StatelessWidget {
     this.focusNodes,
     this.autofocusThumbIndex,
     this.semanticLabels,
+    this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
   });
 
@@ -52,6 +52,7 @@ class UiRangeSlider extends StatelessWidget {
     this.focusNodes,
     this.autofocusThumbIndex,
     this.semanticLabels,
+    this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
   }) : variant = UiSliderVariant.surface;
 
@@ -74,6 +75,7 @@ class UiRangeSlider extends StatelessWidget {
     this.focusNodes,
     this.autofocusThumbIndex,
     this.semanticLabels,
+    this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
   }) : variant = UiSliderVariant.soft;
 
@@ -111,6 +113,8 @@ class UiRangeSlider extends StatelessWidget {
 
   final List<String?>? semanticLabels;
 
+  final List<NakedSliderSemanticFormatterCallback?>? semanticFormatterCallbacks;
+
   final bool excludeSemantics;
 
   @override
@@ -136,6 +140,7 @@ class UiRangeSlider extends StatelessWidget {
       focusNodes: this.focusNodes,
       autofocusThumbIndex: this.autofocusThumbIndex,
       semanticLabels: this.semanticLabels,
+      semanticFormatterCallbacks: this.semanticFormatterCallbacks,
       excludeSemantics: this.excludeSemantics,
     );
   }

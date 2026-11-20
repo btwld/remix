@@ -40,7 +40,7 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// The `gray2` fill inside a 1px neutral frame.
+  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
   const UiCombobox.surface({
     super.key,
     this.size = .size2,
@@ -63,9 +63,9 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
-  }) : variant = UiComboboxVariant.surface;
+  }) : variant = UiTextFieldVariant.surface;
 
-  /// An accent tint inside a 1px accent ring.
+  /// An accent tint inside a 1px accent ring, with accent-colored text.
   const UiCombobox.soft({
     super.key,
     this.size = .size2,
@@ -88,11 +88,11 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
-  }) : variant = UiComboboxVariant.soft;
+  }) : variant = UiTextFieldVariant.soft;
 
-  final UiComboboxVariant variant;
+  final UiTextFieldVariant variant;
 
-  final UiComboboxSize size;
+  final UiTextFieldSize size;
 
   final ComboboxStyler style;
 

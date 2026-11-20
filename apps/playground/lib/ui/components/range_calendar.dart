@@ -258,9 +258,6 @@ class PlaygroundRangeCalendar extends StatelessWidget {
   /// technology only. A builder makes it visible and keeps it live.
   final Widget Function(BuildContext context, String summary)? summaryBuilder;
 
-  /// Creates a [CalendarStyler], for `RemixRangeCalendar.styleFrom(...)`.
-  static const styleFrom = CalendarStyler.new;
-
   @override
   Widget build(BuildContext context) => RemixRangeCalendar(
     value: value,

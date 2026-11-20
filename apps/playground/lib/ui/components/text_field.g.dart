@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'textfield.dart';
+part of 'text_field.dart';
 
 // **************************************************************************
 // MixWidgetGenerator
@@ -14,8 +14,8 @@ part of 'textfield.dart';
 /// `EditableText` asserts on an `Overlay` ancestor when the field takes focus.
 /// Any app with a `Navigator` has one; a bare `WidgetsApp(builder: ...)` has to
 /// supply its own.
-class VanillaTextField extends StatelessWidget {
-  const VanillaTextField({
+class PlaygroundTextField extends StatelessWidget {
+  const PlaygroundTextField({
     super.key,
     this.style = const TextFieldStyler.create(),
     this.controller,
@@ -197,7 +197,7 @@ class VanillaTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextField(
       key: this.key,
-      style: vanillaTextFieldStyle(style: this.style),
+      style: playgroundTextFieldStyle(style: this.style),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,
@@ -263,8 +263,8 @@ class VanillaTextField extends StatelessWidget {
 ///
 /// The field's recipe with a taller resting box (at least 64px, 8px above and
 /// below the text) and accessories pinned to the first line.
-class VanillaTextArea extends StatelessWidget {
-  const VanillaTextArea({
+class PlaygroundTextArea extends StatelessWidget {
+  const PlaygroundTextArea({
     super.key,
     this.style = const TextFieldStyler.create(),
     this.controller,
@@ -437,7 +437,7 @@ class VanillaTextArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTextArea(
       key: this.key,
-      style: vanillaTextAreaStyle(style: this.style),
+      style: playgroundTextAreaStyle(style: this.style),
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,

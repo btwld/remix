@@ -1,4 +1,4 @@
-// The theme layer's barrel: every Ui component imports it, and the
+// The theme layer's barrel: every Fortal component imports it, and the
 // library entrypoint re-exports it.
 
 export 'computed.dart'

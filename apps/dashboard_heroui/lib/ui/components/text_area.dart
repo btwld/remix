@@ -7,9 +7,9 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import 'textfield.dart';
+import 'text_field.dart';
 
-part 'textarea.g.dart';
+part 'text_area.g.dart';
 
 /// HeroUI recipe for [RemixTextArea]: the text field chrome over several lines.
 ///

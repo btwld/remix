@@ -4,12 +4,6 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// The looks a keyboard key comes in.
-enum {{typePrefix}}KbdVariant {
-  /// A gray-tinted key cap.
-  soft,
-}
-
 /// The style of a keyboard key, sized from the surrounding text.
 ///
 /// Without [size] it follows the 16px body text at 75%; with one it takes 80%
@@ -18,7 +12,6 @@ enum {{typePrefix}}KbdVariant {
 BadgeStyler {{valuePrefix}}KbdStyle(
   BuildContext context, {
   {{typePrefix}}TextSize? size,
-  {{typePrefix}}KbdVariant variant = .soft,
   BadgeStyler style = const BadgeStyler.create(),
 }) {
   final base = {{valuePrefix}}ResolveTextToken(context, size ?? {{typePrefix}}TextSize.size3);
@@ -54,9 +47,7 @@ BadgeStyler {{valuePrefix}}KbdStyle(
           0.35 * fontSize * {{valuePrefix}}RadiusFactor(context),
         ),
       )
-      .color(switch (variant) {
-        .soft => {{valuePrefix}}ResolveColor(context, {{typePrefix}}Tokens.grayA3),
-      });
+      .color({{valuePrefix}}ResolveColor(context, {{typePrefix}}Tokens.grayA3));
 
   return recipe.merge(style);
 }
@@ -67,39 +58,23 @@ class {{typePrefix}}Kbd extends StatelessWidget {
     this.text, {
     super.key,
     this.size,
-    this.variant = {{typePrefix}}KbdVariant.soft,
     this.semanticLabel,
     this.excludeSemantics = false,
     this.style = const BadgeStyler.create(),
   }) : assert(text != ''),
        assert(semanticLabel == null || semanticLabel != '');
 
-  const {{typePrefix}}Kbd.soft(
-    this.text, {
-    super.key,
-    this.size,
-    this.semanticLabel,
-    this.excludeSemantics = false,
-    this.style = const BadgeStyler.create(),
-  }) : variant = {{typePrefix}}KbdVariant.soft,
-       assert(text != ''),
-       assert(semanticLabel == null || semanticLabel != '');
-
   final String text;
   final {{typePrefix}}TextSize? size;
-  final {{typePrefix}}KbdVariant variant;
   final String? semanticLabel;
   final bool excludeSemantics;
   final BadgeStyler style;
 
   @override
   Widget build(BuildContext context) {
-    final content = {{valuePrefix}}KbdStyle(
-      context,
-      size: size,
-      variant: variant,
-      style: style,
-    )(label: text);
+    final content = {{valuePrefix}}KbdStyle(context, size: size, style: style)(
+      label: text,
+    );
 
     if (excludeSemantics) return ExcludeSemantics(child: content);
 

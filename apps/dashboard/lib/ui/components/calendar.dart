@@ -268,9 +268,6 @@ class UiCalendar extends StatelessWidget {
   /// Raw resolved spec; bypasses [style] and inherited styles.
   final CalendarSpec? styleSpec;
 
-  /// Creates a [CalendarStyler], for `RemixCalendar.styleFrom(...)`.
-  static const styleFrom = CalendarStyler.new;
-
   @override
   Widget build(BuildContext context) => RemixCalendar(
     value: value,

@@ -64,9 +64,9 @@ SidebarStyler uiSidebarStyle({
 /// (`ring-inset`), as the items of a joined toggle button group do. Neither
 /// ring changes layout.
 ///
-/// The toggle's 100ms fill motion is left out, as Vanilla's sidebar leaves
-/// out its toggle's: a collapsing rail moves destination padding every frame,
-/// and an implicit animation would ease each of those steps again.
+/// The toggle's 100ms fill motion is left out: a collapsing rail moves
+/// destination padding every frame, and an implicit animation would ease each
+/// of those steps again.
 ToggleStyler _destinationStyle() {
   final resolved = uiToggleButtonStyle(variant: .ghost, size: .sm)
       .container(.mainAxisSize(.max).mainAxisAlignment(.start))

@@ -65,7 +65,8 @@ class UiTabView extends StatelessWidget {
 /// accent when selected. The underline is a transparent border at rest, so
 /// selecting a tab does not move it. The selected label is medium weight, and
 /// its letter spacing is adjusted so the bolder label keeps its width. A
-/// disabled tab is gray-alpha 8 with no fill under the pointer.
+/// disabled tab is gray-alpha-8, underline included, with no fill under the
+/// pointer.
 ///
 /// [highContrast] moves the underline to accent step 12.
 class UiTab extends StatelessWidget {

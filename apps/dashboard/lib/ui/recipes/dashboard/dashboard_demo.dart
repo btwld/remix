@@ -35,6 +35,32 @@ import 'dashboard_demo_widgets.dart';
 import 'dashboard_overview.dart';
 import 'dashboard_shell.dart';
 
+// The types the demo's constructor takes and the types inside them, so this
+// one import builds it.
+export 'dashboard_demo_artwork.dart' show UiArtworkMotif;
+export 'dashboard_demo_data.dart'
+    show
+        UiDashboardActivity,
+        UiDashboardActivityKind,
+        UiDashboardChannel,
+        UiDashboardCustomer,
+        UiDashboardCustomerStatus,
+        UiDashboardCustomerTier,
+        UiDashboardData,
+        UiDashboardEdition,
+        UiDashboardEditionStatus,
+        UiDashboardEvent,
+        UiDashboardEventKind,
+        UiDashboardGoal,
+        UiDashboardMember,
+        UiDashboardMetric,
+        UiDashboardOrder,
+        UiDashboardOrderStatus,
+        UiDashboardPoint,
+        UiDashboardRange,
+        UiDashboardWeek;
+export 'dashboard_demo_theme.dart' show UiThemeSettings;
+
 /// The navigation groups of the dashboard demo.
 enum UiDashboardDemoSection {
   workspace('Workspace'),

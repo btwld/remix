@@ -42,7 +42,7 @@ export 'components/spinner.dart';
 export 'components/switch.dart';
 export 'components/tabs.dart';
 export 'components/text.dart';
-export 'components/textfield.dart';
+export 'components/text_field.dart';
 export 'components/toast.dart';
 export 'components/toggle.dart';
 export 'components/toggle_group.dart';

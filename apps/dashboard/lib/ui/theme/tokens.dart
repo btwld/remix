@@ -13,7 +13,7 @@ import 'theme_scope.dart' show UiTheme;
 /// ```
 ///
 /// Must be used within [UiTheme] to resolve actual values.
-class UiTokens {
+abstract final class UiTokens {
   static const activityMaxHeight = DoubleToken('ui.activity.max-height');
   static const planMaxHeight = DoubleToken('ui.plan.max-height');
   static const messageAvatarSize = DoubleToken('ui.message.avatar-size');

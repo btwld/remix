@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-/// Application-owned aliases for the icons used by this UI layer.
+/// An optional starter set of icon aliases for the application's own screens.
 ///
-/// HeroUI draws its own icon set; this layer draws the project's icon library
-/// instead. Add, rename, or remove aliases here as the application vocabulary
-/// evolves.
+/// The HeroUI components name their icons directly and do not use these. HeroUI
+/// draws its own icon set; these resolve to the project's icon library instead.
+/// Add, rename, or remove aliases as the application vocabulary evolves.
 abstract final class UiIcons {
   /// Confirms a successful or selected action.
   static const IconData check = RemixIcons.check;
@@ -19,7 +19,7 @@ abstract final class UiIcons {
   /// Opens primary navigation on compact layouts.
   static const IconData hamburgerMenu = RemixIcons.menu;
 
-  /// Finds content within the current dashboard.
+  /// Starts a search.
   static const IconData magnifyingGlass = RemixIcons.search;
 
   /// Moves a start-edge panel toward the left.
@@ -28,6 +28,6 @@ abstract final class UiIcons {
   /// Moves a start-edge panel toward the right.
   static const IconData doubleArrowRight = RemixIcons.chevronsRight;
 
-  /// Represents the dashboard overview destination.
+  /// Marks an overview destination.
   static const IconData dashboard = RemixIcons.dashboard;
 }

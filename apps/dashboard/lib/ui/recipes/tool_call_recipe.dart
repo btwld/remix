@@ -256,6 +256,7 @@ DisclosureStyler _quietDisclosure() => uiDisclosureStyle(
       .container(
         BoxStyler()
             .color(const Color(0x00000000))
+            .padding(.all(0))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
       .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))

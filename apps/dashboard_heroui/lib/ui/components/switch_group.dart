@@ -34,14 +34,14 @@ class UiSwitchOption {
 class UiSwitchGroup extends StatelessWidget {
   const UiSwitchGroup({
     super.key,
-    required this.items,
+    required this.options,
     this.size = .md,
     this.orientation = Axis.vertical,
     this.enabled = true,
     this.label,
   });
 
-  final List<UiSwitchOption> items;
+  final List<UiSwitchOption> options;
   final UiSwitchSize size;
   final Axis orientation;
   final bool enabled;
@@ -50,32 +50,32 @@ class UiSwitchGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rows = [
-      for (final item in items)
+      for (final option in options)
         _row(
-          item,
-          itemEnabled: enabled && item.enabled && item.onChanged != null,
+          option,
+          itemEnabled: enabled && option.enabled && option.onChanged != null,
         ),
     ];
     return UiFieldLayout(
-      axis: orientation,
+      orientation: orientation,
       label: label,
       enabled: enabled,
       items: rows,
     );
   }
 
-  Widget _row(UiSwitchOption item, {required bool itemEnabled}) =>
+  Widget _row(UiSwitchOption option, {required bool itemEnabled}) =>
       UiDescribedControl(
         descriptionInset: size.trackWidth + uiControlGap,
         enabled: itemEnabled,
-        description: item.description,
+        description: option.description,
         control: UiSwitch(
           size: size,
-          selected: item.selected,
-          onChanged: item.onChanged,
+          selected: option.selected,
+          onChanged: option.onChanged,
           enabled: itemEnabled,
-          label: item.label,
-          invalid: item.invalid,
+          label: option.label,
+          invalid: option.invalid,
         ),
       );
 }

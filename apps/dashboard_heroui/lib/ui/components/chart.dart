@@ -37,10 +37,9 @@ const uiChartSeries = <ColorToken>[
 /// Returns [uiChartSeries] resolved in [context].
 ///
 /// Pass `palette` to one recipe or generated widget for a local override.
-List<Color> resolveUiChartPalette(BuildContext context) =>
-    List<Color>.unmodifiable([
-      for (final token in uiChartSeries) token.resolve(context),
-    ]);
+List<Color> uiChartPalette(BuildContext context) => List<Color>.unmodifiable([
+  for (final token in uiChartSeries) token.resolve(context),
+]);
 
 /// The label color that reads on a pie slice filled with [slice].
 ///
@@ -52,7 +51,7 @@ List<Color> resolveUiChartPalette(BuildContext context) =>
 /// slice's label color from this, next to the fill the slice is drawn in:
 ///
 /// ```dart
-/// final palette = resolveUiChartPalette(context);
+/// final palette = uiChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
@@ -229,7 +228,7 @@ const _tooltipMargin = 8.0;
 /// tooltip cannot draw.
 const _tooltipBorderWidth = 1.0;
 
-const _defaultPaletteToken = ContextToken<List<Color>>(resolveUiChartPalette);
+const _defaultPaletteToken = ContextToken<List<Color>>(uiChartPalette);
 const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
 const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
 const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);

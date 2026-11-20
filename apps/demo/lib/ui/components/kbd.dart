@@ -4,12 +4,6 @@ import 'package:remix/remix.dart';
 import '../theme/theme.dart';
 import 'typography.dart';
 
-/// The looks a keyboard key comes in.
-enum FortalKbdVariant {
-  /// A gray-tinted key cap.
-  soft,
-}
-
 /// The style of a keyboard key, sized from the surrounding text.
 ///
 /// Without [size] it follows the 16px body text at 75%; with one it takes 80%
@@ -18,7 +12,6 @@ enum FortalKbdVariant {
 BadgeStyler fortalKbdStyle(
   BuildContext context, {
   FortalTextSize? size,
-  FortalKbdVariant variant = .soft,
   BadgeStyler style = const BadgeStyler.create(),
 }) {
   final base = fortalResolveTextToken(context, size ?? FortalTextSize.size3);
@@ -54,9 +47,7 @@ BadgeStyler fortalKbdStyle(
           0.35 * fontSize * fortalRadiusFactor(context),
         ),
       )
-      .color(switch (variant) {
-        .soft => fortalResolveColor(context, FortalTokens.grayA3),
-      });
+      .color(fortalResolveColor(context, FortalTokens.grayA3));
 
   return recipe.merge(style);
 }
@@ -67,39 +58,23 @@ class FortalKbd extends StatelessWidget {
     this.text, {
     super.key,
     this.size,
-    this.variant = FortalKbdVariant.soft,
     this.semanticLabel,
     this.excludeSemantics = false,
     this.style = const BadgeStyler.create(),
   }) : assert(text != ''),
        assert(semanticLabel == null || semanticLabel != '');
 
-  const FortalKbd.soft(
-    this.text, {
-    super.key,
-    this.size,
-    this.semanticLabel,
-    this.excludeSemantics = false,
-    this.style = const BadgeStyler.create(),
-  }) : variant = FortalKbdVariant.soft,
-       assert(text != ''),
-       assert(semanticLabel == null || semanticLabel != '');
-
   final String text;
   final FortalTextSize? size;
-  final FortalKbdVariant variant;
   final String? semanticLabel;
   final bool excludeSemantics;
   final BadgeStyler style;
 
   @override
   Widget build(BuildContext context) {
-    final content = fortalKbdStyle(
-      context,
-      size: size,
-      variant: variant,
-      style: style,
-    )(label: text);
+    final content = fortalKbdStyle(context, size: size, style: style)(
+      label: text,
+    );
 
     if (excludeSemantics) return ExcludeSemantics(child: content);
 

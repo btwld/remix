@@ -27,6 +27,19 @@ import 'dashboard_overview.dart';
 import 'dashboard_sample_data.dart';
 import 'dashboard_shell.dart';
 
+// The types the demo's constructor takes and the types inside them, so this
+// one import builds it.
+export 'dashboard_demo_base.dart'
+    show UiDashboardDemoPage, UiDashboardDemoSection;
+export 'dashboard_sample_data.dart'
+    show
+        UiDashboardActivity,
+        UiDashboardActivityKind,
+        UiDashboardMetric,
+        UiDashboardPoint,
+        UiDashboardRecord,
+        UiDashboardSampleData;
+
 /// Dashboard with Overview, Chat, Customers, Orders, and Settings.
 ///
 /// An extension: HeroUI web 3.2.6 has no dashboard. The pages, sample data,

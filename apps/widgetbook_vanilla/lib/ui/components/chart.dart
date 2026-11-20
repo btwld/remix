@@ -10,9 +10,7 @@ import '../theme/tokens.dart';
 
 part 'chart.g.dart';
 
-const _defaultPaletteToken = ContextToken<List<Color>>(
-  resolveVanillaChartPalette,
-);
+const _defaultPaletteToken = ContextToken<List<Color>>(vanillaChartPalette);
 const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
 const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
 const _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
@@ -20,7 +18,7 @@ const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
 
 /// The categorical palette shared by the charts: the theme's `chart1` through
 /// `chart5` in series order. Pass `palette` to one chart to override it.
-List<Color> resolveVanillaChartPalette(BuildContext context) =>
+List<Color> vanillaChartPalette(BuildContext context) =>
     List<Color>.unmodifiable([
       for (final token in VanillaTokens.chart) token.resolve(context),
     ]);
@@ -32,7 +30,7 @@ List<Color> resolveVanillaChartPalette(BuildContext context) =>
 /// slice's label color from this:
 ///
 /// ```dart
-/// final palette = resolveVanillaChartPalette(context);
+/// final palette = vanillaChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',

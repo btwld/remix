@@ -126,8 +126,8 @@ const _inset = 16.0;
 const _insetSm = 40.0;
 
 /// `.modal__dialog` `p-6`; `.modal__header + .modal__body` `mt-2`, and the
-/// body's own `p-[3px]` (`modal-md-auto-body`); `.modal__body + .modal__footer`
-/// `mt-5`; `.modal__footer` `gap-2`.
+/// body's own `p-[3px]`; `.modal__body + .modal__footer` `mt-5`;
+/// `.modal__footer` `gap-2`.
 const _padding = 24.0;
 const _bodyGap = 8.0;
 const _bodyInset = 3.0;

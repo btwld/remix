@@ -9,7 +9,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-part 'textfield.g.dart';
+part 'text_field.g.dart';
 
 /// HeroUI field variants.
 enum UiTextFieldVariant {
@@ -75,8 +75,7 @@ TextFieldStyler uiTextFieldStyle({
             .containerEffects(uiInvalidRing())
             .label(.color(UiTokens.danger()))
             .helperText(uiErrorText)
-            // `.input:hover:not(:focus)` (0,4,0) beats `.input[data-invalid]`
-            // (0,2,0): a hovered invalid field keeps the hover fill.
+            // A hovered invalid field keeps the hover fill.
             .onHovered(.color(field.hover()))
             .onFocused(
               TextFieldStyler()

@@ -142,7 +142,7 @@ class UiChannelOrdersCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = resolveUiChartPalette(context);
+    final palette = uiChartPalette(context);
     Color colorOf(int channel) => palette[channel % palette.length];
 
     return UiSurface(

@@ -26,25 +26,6 @@ enum UiSurfaceVariant {
   inverse,
 }
 
-/// The sizes a surface comes in: the card's padding and corner steps. Pixel
-/// values are at 100% theme scaling.
-enum UiSurfaceSize {
-  /// 12px padding.
-  size1,
-
-  /// 16px padding. The default.
-  size2,
-
-  /// 24px padding.
-  size3,
-
-  /// 32px padding.
-  size4,
-
-  /// 48px padding.
-  size5,
-}
-
 /// The Fortal Surface recipe: the surface card, with [variant]'s fill and
 /// frame.
 ///
@@ -56,10 +37,10 @@ enum UiSurfaceSize {
 /// it in the opposite appearance.
 CardStyler uiSurfaceStyle({
   UiSurfaceVariant variant = .surface,
-  UiSurfaceSize size = .size2,
+  UiCardSize size = .size2,
   bool padded = true,
   CardStyler style = const CardStyler.create(),
-}) => uiCardStyle(size: _cardSize(size))
+}) => uiCardStyle(size: size)
     .merge(switch (variant) {
       .surface || .inverse => null,
       .soft => _soft(),
@@ -67,14 +48,6 @@ CardStyler uiSurfaceStyle({
     })
     .merge(padded ? null : CardStyler().padding(.all(0)))
     .merge(style);
-
-UiCardSize _cardSize(UiSurfaceSize size) => switch (size) {
-  .size1 => .size1,
-  .size2 => .size2,
-  .size3 => .size3,
-  .size4 => .size4,
-  .size5 => .size5,
-};
 
 /// An accent wash and hairline, each a step deeper under the pointer.
 CardStyler _soft() => CardStyler()
@@ -169,7 +142,7 @@ class UiSurface extends StatelessWidget {
   final UiSurfaceVariant variant;
 
   /// The padding and corner size.
-  final UiSurfaceSize size;
+  final UiCardSize size;
 
   /// Whether the surface pads its [child].
   final bool padded;

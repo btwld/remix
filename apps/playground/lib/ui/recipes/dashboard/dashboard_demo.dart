@@ -32,6 +32,19 @@ import 'dashboard_overview.dart';
 import 'dashboard_sample_data.dart';
 import 'dashboard_shell.dart';
 
+// The types the demo's constructor takes and the types inside them, so this
+// one import builds it.
+export 'dashboard_demo_base.dart'
+    show PlaygroundDashboardDemoPage, PlaygroundDashboardDemoSection;
+export 'dashboard_sample_data.dart'
+    show
+        PlaygroundDashboardActivity,
+        PlaygroundDashboardActivityKind,
+        PlaygroundDashboardMetric,
+        PlaygroundDashboardPoint,
+        PlaygroundDashboardRecord,
+        PlaygroundDashboardSampleData;
+
 /// Dashboard with Overview, Chat, Customers, Orders, and Settings.
 class PlaygroundDashboardDemo extends StatefulWidget {
   const PlaygroundDashboardDemo({
