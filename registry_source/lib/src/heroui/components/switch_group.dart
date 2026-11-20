@@ -34,14 +34,14 @@ class HeroUiSwitchOption {
 class HeroUiSwitchGroup extends StatelessWidget {
   const HeroUiSwitchGroup({
     super.key,
-    required this.items,
+    required this.options,
     this.size = .md,
     this.orientation = Axis.vertical,
     this.enabled = true,
     this.label,
   });
 
-  final List<HeroUiSwitchOption> items;
+  final List<HeroUiSwitchOption> options;
   final HeroUiSwitchSize size;
   final Axis orientation;
   final bool enabled;
@@ -50,32 +50,32 @@ class HeroUiSwitchGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rows = [
-      for (final item in items)
+      for (final option in options)
         _row(
-          item,
-          itemEnabled: enabled && item.enabled && item.onChanged != null,
+          option,
+          itemEnabled: enabled && option.enabled && option.onChanged != null,
         ),
     ];
     return HeroUiFieldLayout(
-      axis: orientation,
+      orientation: orientation,
       label: label,
       enabled: enabled,
       items: rows,
     );
   }
 
-  Widget _row(HeroUiSwitchOption item, {required bool itemEnabled}) =>
+  Widget _row(HeroUiSwitchOption option, {required bool itemEnabled}) =>
       HeroUiDescribedControl(
         descriptionInset: size.trackWidth + heroUiControlGap,
         enabled: itemEnabled,
-        description: item.description,
+        description: option.description,
         control: HeroUiSwitch(
           size: size,
-          selected: item.selected,
-          onChanged: item.onChanged,
+          selected: option.selected,
+          onChanged: option.onChanged,
           enabled: itemEnabled,
-          label: item.label,
-          invalid: item.invalid,
+          label: option.label,
+          invalid: option.invalid,
         ),
       );
 }

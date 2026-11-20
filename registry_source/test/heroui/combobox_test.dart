@@ -10,7 +10,7 @@ import '../helpers/contrast.dart';
 Future<ComboboxSpec> resolve(
   WidgetTester tester, {
   required String mode,
-  HeroUiComboboxVariant variant = .primary,
+  HeroUiTextFieldVariant variant = .primary,
   Set<WidgetState> states = const {},
   ComboboxStyler style = const ComboboxStyler.create(),
   double width = 1024,
@@ -26,7 +26,7 @@ Future<ComboboxSpec> resolve(
             style: style,
           ).build(context).spec;
           final field = heroUiTextFieldStyle(
-            variant: HeroUiTextFieldVariant.values[variant.index],
+            variant: variant,
             style: TextFieldStyler().constraints(.minHeight(0)),
           ).build(context);
           expect(
@@ -123,7 +123,7 @@ void main() {
 
   for (final mode in ['light', 'dark']) {
     for (final width in [375, 1024]) {
-      for (final variant in HeroUiComboboxVariant.values) {
+      for (final variant in HeroUiTextFieldVariant.values) {
         testWidgets(
           '$mode/$width/$variant field matrix and measured suggestion geometry',
           (tester) async {
@@ -210,7 +210,7 @@ void main() {
         );
       }
     }
-    for (final variant in HeroUiComboboxVariant.values) {
+    for (final variant in HeroUiTextFieldVariant.values) {
       testWidgets(
         '$mode ${variant.name} field fills follow combo-box.css at rest and focused',
         (tester) async {

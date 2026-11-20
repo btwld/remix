@@ -28,7 +28,7 @@ void main() {
       );
       expect(legend.items.map((item) => item.color), heroUiChartSeries.take(3));
       final pie = find.byType(PieChart);
-      final palette = resolveHeroUiChartPalette(tester.element(pie));
+      final palette = heroUiChartPalette(tester.element(pie));
       expect(palette.take(3), [
         heroUiToken(HeroUiTokens.accent, mode),
         heroUiToken(HeroUiTokens.muted, mode),

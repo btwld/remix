@@ -61,7 +61,7 @@ void main() {
       await tester.pumpHeroUi(
         Builder(
           builder: (context) {
-            palette = resolveHeroUiChartPalette(context);
+            palette = heroUiChartPalette(context);
             line = heroUiLineChartStyle(showMarkers: true).build(context).spec;
             bar = heroUiBarChartStyle().build(context).spec;
             pie = heroUiPieChartStyle(centerRadius: 40).build(context).spec;
@@ -120,7 +120,7 @@ void main() {
         Builder(
           builder: (context) {
             labels = [
-              for (final color in resolveHeroUiChartPalette(context))
+              for (final color in heroUiChartPalette(context))
                 heroUiPieSliceLabelColor(context, color),
             ];
             return const SizedBox.shrink();

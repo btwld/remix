@@ -25,7 +25,7 @@ Widget _group({
     size: size,
     enabled: enabled,
     label: 'Switches',
-    items: [
+    options: [
       for (var i = 0; i < selected.length; i++)
         HeroUiSwitchOption(
           selected: selected[i],
@@ -172,7 +172,7 @@ void main() {
       await _pump(
         tester,
         HeroUiSwitchGroup(
-          items: [
+          options: [
             HeroUiSwitchOption(
               selected: false,
               label: 'Fine',
@@ -271,7 +271,7 @@ void main() {
       IntrinsicHeight(
         child: HeroUiSwitchGroup(
           label: 'Switches',
-          items: [
+          options: [
             HeroUiSwitchOption(
               selected: false,
               label: 'Switch 1',

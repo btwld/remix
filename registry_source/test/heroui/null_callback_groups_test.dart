@@ -54,7 +54,7 @@ void main() {
       tester,
     ) async {
       HeroUiSwitchGroup group({bool interactive = false}) => HeroUiSwitchGroup(
-        items: [
+        options: [
           HeroUiSwitchOption(
             selected: false,
             label: 'Switch',
