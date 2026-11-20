@@ -112,7 +112,27 @@ class RemixTabBar extends StatelessWidget {
         style: style,
         styleSpec: styleSpec,
         builder: (context, spec) {
-          return FlexBox(styleSpec: spec.container, children: [child]);
+          final motion = spec.indicatorMotion;
+          if (motion != null &&
+              motion is! CurveAnimationConfig &&
+              motion is! SpringAnimationConfig) {
+            throw ArgumentError.value(
+              motion,
+              'indicatorMotion',
+              'Expected CurveAnimationConfig or SpringAnimationConfig',
+            );
+          }
+          return FlexBox(
+            styleSpec: spec.container,
+            children: [
+              _TabIndicatorHost(
+                indicator: spec.indicator,
+                indicatorEffects: spec.indicatorEffects,
+                motion: motion,
+                child: child,
+              ),
+            ],
+          );
         },
       ),
     );
@@ -226,7 +246,7 @@ class RemixTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NakedTab(
+    final tab = NakedTab(
       tabId: tabId,
       enabled: enabled,
       mouseCursor: mouseCursor,
@@ -246,6 +266,10 @@ class RemixTab extends StatelessWidget {
         );
       },
     );
+
+    final registry = _TabIndicatorScope.maybeOf(context);
+    if (registry == null) return tab;
+    return _TabIndicatorAnchor(registry: registry, tabId: tabId, child: tab);
   }
 }
 
