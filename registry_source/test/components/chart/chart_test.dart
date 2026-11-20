@@ -27,7 +27,7 @@ void main() {
           mode: .dark,
           child: Builder(
             builder: (context) {
-              publicPalette = resolveFortalChartPalette(context);
+              publicPalette = fortalChartPalette(context);
               resolved = fortalLineChartStyle().build(context);
               return const SizedBox();
             },
@@ -65,7 +65,7 @@ void main() {
             mode: mode,
             child: Builder(
               builder: (context) {
-                palette = resolveFortalChartPalette(context);
+                palette = fortalChartPalette(context);
                 colors = resolveFortalTokens(FortalTheme.of(context));
                 return const SizedBox();
               },
@@ -140,8 +140,8 @@ void main() {
                 child: Builder(
                   builder: (context) {
                     colors = [
-                      ...resolveFortalChartPalette(context),
-                      ...resolveFortalChartPalette(context, highContrast: true),
+                      ...fortalChartPalette(context),
+                      ...fortalChartPalette(context, highContrast: true),
                     ];
                     return const SizedBox();
                   },

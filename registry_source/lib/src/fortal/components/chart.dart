@@ -14,7 +14,7 @@ part 'chart.g.dart';
 /// The accent's `accentIndicator` comes first, then the other named color
 /// families, each at a step that keeps 3:1 on the page and panels (see
 /// [computeChartSeries]). Set [highContrast] to use step 12 throughout.
-List<Color> resolveFortalChartPalette(
+List<Color> fortalChartPalette(
   BuildContext context, {
   bool highContrast = false,
 }) {
@@ -37,7 +37,7 @@ List<Color> resolveFortalChartPalette(
 /// `#111111` ink, whichever contrasts more.
 ///
 /// ```dart
-/// final palette = resolveFortalChartPalette(context);
+/// final palette = fortalChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
@@ -256,12 +256,12 @@ ChartTooltipStyler _fortalTooltipStyle() =>
 
 /// The series colors of the active theme.
 final _standardPaletteToken = ContextToken<List<Color>>(
-  (context) => resolveFortalChartPalette(context),
+  (context) => fortalChartPalette(context),
 );
 
 /// The series colors of the active theme, all at step 12.
 final _highContrastPaletteToken = ContextToken<List<Color>>(
-  (context) => resolveFortalChartPalette(context, highContrast: true),
+  (context) => fortalChartPalette(context, highContrast: true),
 );
 
 /// The tooltip's 1px frame.
