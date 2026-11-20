@@ -4,12 +4,9 @@
 export 'computed.dart'
     show
         FortalThemeColors,
-        computeAccentIndicatorContrast,
         computeAccentThumbRing,
         computeChartSeries,
         computeContrastRatio,
-        computeFocus8,
-        mixOklabPremultiplied,
         resolveFortalTokens;
 export 'control_styles.dart';
 export 'surface_frame.dart';
@@ -17,8 +14,8 @@ export 'theme_data.dart' hide buildFortalScopeTokens;
 export 'theme_scope.dart';
 export 'tokens.dart';
 
-// Accent palette constants have bare names, so they stay out of this barrel;
-// import fortal_colors.dart and palette.dart directly. The prefixed error
+// Import fortal_colors.dart for the accent palettes, whose bare names stay
+// out of this barrel, and palette.dart for their types. The prefixed error
 // palette is exported so applications can scope destructive content without
 // a deep import.
 export 'fortal_colors.dart' show fortalError;

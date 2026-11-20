@@ -354,8 +354,8 @@ Map<MixToken<Object?>, Object> buildUiShadows({
 
 /// Container for all computed Ui theme colors and scales.
 ///
-/// Holds resolved color system for a specific theme configuration.
-/// Created by [resolveUiTokens] for internal use by the token system.
+/// Holds the resolved color system for one theme configuration, as returned
+/// by [resolveUiTokens].
 class UiThemeColors {
   final UiColor accent;
   final UiColor gray;

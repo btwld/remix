@@ -13,9 +13,8 @@ roles are fitted separately to Fortal's existing contrast requirements. See
 
 ## Regenerate the built-in Dart source
 
-`lib/src/fortal/theme/fortal_colors.dart` is generated; do not hand-edit it.
-Its header carries only provenance and the license, because consumers own the
-installed copy. From the repository root with the pinned SDK:
+`registry_source/lib/src/fortal/theme/fortal_colors.dart` is generated; do not
+hand-edit it. From the repository root with the pinned SDK:
 
 ```sh
 fvm dart run registry_source/tool/fortal_palettes/generate.dart

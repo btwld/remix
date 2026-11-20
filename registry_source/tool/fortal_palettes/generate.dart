@@ -149,13 +149,14 @@ String renderPalettes(
     throw const FormatException('Invalid palette import.');
   }
   if (builtIns) return _renderRadixPalettes(paletteImport, errorName);
-  final out = StringBuffer('''// GENERATED CODE - DO NOT EDIT.
-// Fortal-owned OKLCH scales. Regenerate with tool/fortal_palettes/generate.dart.
+  final out = StringBuffer(
+    '''// Fortal OKLCH scales, generated from the seed noted on each palette.
 import 'package:flutter/painting.dart';
 
 import '$paletteImport';
 
-''');
+''',
+  );
   for (final entry in seeds.entries) {
     _writePalette(
       out,
@@ -220,8 +221,9 @@ String _renderRadixPalettes(String paletteImport, String errorName) {
       .map((line) => '// $line')
       .join('\n');
   final out = StringBuffer(
-    '''// Raw and alpha scales: ${provenance['package']} ${provenance['version']} (sRGB).
+    '''// Raw and alpha scales: ${provenance['package']} ${provenance['version']} (sRGB), unchanged.
 // Source: https://github.com/radix-ui/colors
+// Fortal derives the labelled fills, marks and contrast colors separately.
 $license
 import 'package:flutter/painting.dart';
 

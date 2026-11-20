@@ -526,7 +526,7 @@ class _AppearanceSection extends StatelessWidget {
 }
 
 /// The sample workspace's API key. The page shows only its two ends.
-const _apiKey = 'demo_key_0000_0000_0000_0000';
+const _apiKey = 'demo-key-abcd-efgh-ijkl-wxyz';
 
 class _PlanSection extends StatelessWidget {
   const _PlanSection({required this.data});

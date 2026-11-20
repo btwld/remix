@@ -1257,13 +1257,13 @@ void main() {
       await tester.pumpAndSettle();
 
       // The page shows only the key's ends; the copy is the full key.
-      expect(find.text('demo_key_0000…0000'), findsOneWidget);
+      expect(find.text('demo-key-abcd…wxyz'), findsOneWidget);
       final copy = find.byKey(const ValueKey('settings-copy-api-key')).first;
       await tester.ensureVisible(copy);
       await tester.tap(copy);
       await tester.pump();
 
-      expect(copied, ['demo_key_0000_0000_0000_0000']);
+      expect(copied, ['demo-key-abcd-efgh-ijkl-wxyz']);
       expect(find.text('API key copied'), findsOneWidget);
       await _dismissToast(tester);
     });

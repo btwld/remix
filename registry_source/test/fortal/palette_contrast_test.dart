@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:registry_source/src/fortal/theme/computed.dart'
+    show computeAccentIndicatorContrast, computeFocus8;
 
 import '../../tool/fortal_palettes/generate.dart' as cli;
 import '../../tool/fortal_palettes/palette_generator.dart' as generator;
@@ -552,6 +554,23 @@ void main() {
     );
     expect(builtIn, contains('const fortalGrayNeutral'));
     expect(builtIn, contains('const fortalError'));
+  });
+
+  test('palette headers hold only what is true in a consumer app', () {
+    final custom = cli.renderPalettes({
+      'brand': 0xff8038cc,
+    }, paletteImport: 'palette.dart');
+    final builtIn = cli.renderPalettes(
+      const {},
+      paletteImport: 'palette.dart',
+      builtIns: true,
+    );
+    // Consumers own both files and do not have the generator.
+    for (final source in [custom, builtIn]) {
+      expect(source, isNot(contains('DO NOT EDIT')));
+      expect(source, isNot(contains('tool/')));
+    }
+    expect(builtIn, contains('// Copyright (c) 2021 Radix'));
   });
 
   test('out-of-range steps fail in release builds as well as debug', () {

@@ -357,8 +357,8 @@ Map<MixToken<Object?>, Object> buildFortalShadows({
 
 /// Container for all computed Fortal theme colors and scales.
 ///
-/// Holds resolved color system for a specific theme configuration.
-/// Created by [resolveFortalTokens] for internal use by the token system.
+/// Holds the resolved color system for one theme configuration, as returned
+/// by [resolveFortalTokens].
 class FortalThemeColors {
   final FortalColor accent;
   final FortalColor gray;
