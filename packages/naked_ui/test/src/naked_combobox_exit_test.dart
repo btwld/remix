@@ -15,50 +15,62 @@ Future<void> _pump(
   WidgetTester tester,
   _Exit exit, {
   bool withExit = true,
+  bool enabled = true,
+  Key? panelKey,
+  NakedComboboxExitBuilder? exitBuilder,
+  Widget Function(Widget child)? transform,
+  VoidCallback? onOpen,
   VoidCallback? onClose,
   ValueChanged<String>? onSelected,
 }) {
+  final combobox = NakedCombobox<String>(
+    enabled: enabled,
+    onOpen: onOpen,
+    onClose: onClose,
+    onSelected: onSelected,
+    optionsBuilder: (value) => switch (value.text) {
+      '' => const <String>[],
+      'apr' => ['apricot'],
+      _ => ['apple', 'apricot'],
+    },
+    exitBuilder: !withExit
+        ? null
+        : (context, view, dismiss) {
+            exit.built++;
+            exit.dismiss = dismiss;
+            exit.view = view;
+            return exitBuilder?.call(context, view, dismiss) ??
+                Opacity(opacity: .5, child: view);
+          },
+    fieldBuilder: (context, state, controller, focusNode, submit) => SizedBox(
+      width: 200,
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        onSubmitted: (_) => submit(),
+      ),
+    ),
+    overlayBuilder: (context, options) => Material(
+      key: panelKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final option in options)
+            NakedComboboxOption<String>(
+              value: option,
+              builder: (context, state, _) => Text(
+                state.isHighlighted ? 'hi:$option' : option,
+                key: ValueKey('option-$option'),
+              ),
+            ),
+        ],
+      ),
+    ),
+  );
   return tester.pumpMaterialWidget(
     Align(
       alignment: Alignment.topLeft,
-      child: NakedCombobox<String>(
-        onClose: onClose,
-        onSelected: onSelected,
-        optionsBuilder: (value) =>
-            value.text.isEmpty ? const <String>[] : ['apple', 'apricot'],
-        exitBuilder: withExit
-            ? (context, view, dismiss) {
-                exit.built++;
-                exit.dismiss = dismiss;
-                exit.view = view;
-                return Opacity(opacity: .5, child: view);
-              }
-            : null,
-        fieldBuilder: (context, state, controller, focusNode, submit) =>
-            SizedBox(
-              width: 200,
-              child: TextField(
-                controller: controller,
-                focusNode: focusNode,
-                onSubmitted: (_) => submit(),
-              ),
-            ),
-        overlayBuilder: (context, options) => Material(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final option in options)
-                NakedComboboxOption<String>(
-                  value: option,
-                  builder: (context, state, _) => Text(
-                    state.isHighlighted ? 'hi:$option' : option,
-                    key: ValueKey('option-$option'),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
+      child: transform?.call(combobox) ?? combobox,
     ),
   );
 }
@@ -70,9 +82,15 @@ Future<void> _open(WidgetTester tester) async {
   await tester.pump();
 }
 
+Future<void> _close(WidgetTester tester) async {
+  await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+  await tester.pump();
+  await tester.pump();
+}
+
 void main() {
   group('NakedCombobox exitBuilder', () {
-    testWidgets('keeps the last options view in the frame that hides it, '
+    testWidgets('rebuilds the last options view after the hiding frame, '
         'in the same place, until dismissed', (tester) async {
       final exit = _Exit();
       var closes = 0;
@@ -83,7 +101,11 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
 
-      // The view is still there, in the very frame it was hidden.
+      expect(find.byKey(const ValueKey('option-apple')), findsNothing);
+      expect(exit.built, 0);
+      expect(closes, 1);
+      await tester.pump();
+
       expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
       expect(exit.built, greaterThan(0));
       expect(
@@ -101,7 +123,7 @@ void main() {
       await tester.pump();
     });
 
-    testWidgets('builds the exit in the hiding frame whatever hides the view', (
+    testWidgets('builds the exit on the next frame for each close path', (
       tester,
     ) async {
       for (final hide in <Future<void> Function(WidgetTester)>[
@@ -118,23 +140,59 @@ void main() {
         await hide(tester);
         await tester.pump(Duration.zero);
 
-        // Zero time passed, so nothing but the hiding frame itself ran.
+        expect(find.byKey(const ValueKey('option-apple')), findsNothing);
+        expect(exit.built, 0);
+        await tester.pump(Duration.zero);
+
         expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
         expect(exit.built, greaterThan(0));
         await tester.pumpWidget(const SizedBox());
       }
     });
 
-    testWidgets('the exit view takes no pointer input and no semantics', (
+    testWidgets('disabling uses the same next-frame exit timing', (
+      tester,
+    ) async {
+      final exit = _Exit();
+      await _pump(tester, exit);
+      await _open(tester);
+
+      await _pump(tester, exit, enabled: false);
+      expect(find.byKey(const ValueKey('option-apple')), findsNothing);
+      expect(exit.built, 0);
+
+      await tester.pump();
+      expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
+      expect(exit.built, greaterThan(0));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('the entire exit result takes no pointer, focus or semantics', (
       tester,
     ) async {
       final exit = _Exit();
       final selected = <String>[];
-      await _pump(tester, exit, onSelected: selected.add);
+      final focus = FocusNode();
+      addTearDown(focus.dispose);
+      final semantics = tester.ensureSemantics();
+      var taps = 0;
+      await _pump(
+        tester,
+        exit,
+        onSelected: selected.add,
+        exitBuilder: (context, view, dismiss) => Focus(
+          focusNode: focus,
+          child: Semantics(
+            label: 'exit wrapper',
+            onTap: () => taps++,
+            child: GestureDetector(onTap: () => taps++, child: view),
+          ),
+        ),
+      );
       await _open(tester);
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pump();
+      await _close(tester);
 
+      focus.requestFocus();
       await tester.tap(
         find.byKey(const ValueKey('option-apple')),
         warnIfMissed: false,
@@ -142,23 +200,129 @@ void main() {
       await tester.pump();
 
       expect(selected, isEmpty);
-      final handle = tester.ensureSemantics();
+      expect(taps, 0);
+      expect(focus.hasFocus, isFalse);
       expect(find.bySemanticsLabel('apple'), findsNothing);
-      handle.dispose();
+      expect(find.bySemanticsLabel('exit wrapper'), findsNothing);
+      semantics.dispose();
     });
 
-    testWidgets('opening again removes the exit layer at once', (tester) async {
+    testWidgets('reopen replaces the keyed exit without overlapping panels', (
+      tester,
+    ) async {
+      final exit = _Exit();
+      final panelKey = GlobalKey();
+      var opened = 0;
+      await _pump(tester, exit, panelKey: panelKey, onOpen: () => opened++);
+      await _open(tester);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pump();
+      expect(find.text('hi:apricot'), findsOneWidget);
+      await _close(tester);
+      expect(find.text('hi:apricot'), findsOneWidget);
+      expect(opened, 1);
+
+      await tester.enterText(find.byType(TextField), 'apr');
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(opened, 1);
+      expect(find.byKey(panelKey), findsOneWidget);
+      expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
+      expect(find.text('hi:apricot'), findsOneWidget);
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(opened, 2);
+      expect(find.byKey(panelKey), findsOneWidget);
+      expect(find.byKey(const ValueKey('option-apple')), findsNothing);
+      expect(find.text('hi:apricot'), findsOneWidget);
+    });
+
+    testWidgets('dismiss cannot affect a later exit', (tester) async {
       final exit = _Exit();
       await _pump(tester, exit);
       await _open(tester);
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pump();
+      await _close(tester);
+      final oldDismiss = exit.dismiss!;
 
       await tester.enterText(find.byType(TextField), 'apr');
       await tester.pump();
       await tester.pump();
+      await _close(tester);
+      final currentDismiss = exit.dismiss!;
 
-      expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
+      oldDismiss();
+      oldDismiss();
+      await tester.pump();
+      expect(find.byKey(const ValueKey('option-apricot')), findsOneWidget);
+      currentDismiss();
+      currentDismiss();
+      await tester.pump();
+      expect(find.byKey(const ValueKey('option-apricot')), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('dismiss can be called synchronously by the exit builder', (
+      tester,
+    ) async {
+      for (final disable in [false, true]) {
+        final exit = _Exit();
+        Widget skip(BuildContext context, Widget view, VoidCallback dismiss) {
+          dismiss();
+          dismiss();
+          return view;
+        }
+
+        await _pump(tester, exit, exitBuilder: skip);
+        await _open(tester);
+        if (disable) {
+          await _pump(tester, exit, enabled: false, exitBuilder: skip);
+          await tester.pump();
+        } else {
+          await _close(tester);
+        }
+        expect(exit.built, 1);
+        expect(find.byKey(const ValueKey('option-apple')), findsNothing);
+        expect(tester.takeException(), isNull);
+        await tester.pump();
+        if (!disable) {
+          await tester.enterText(find.byType(TextField), 'apr');
+          await tester.pump();
+          expect(find.byKey(const ValueKey('option-apricot')), findsOneWidget);
+        }
+        await tester.pumpWidget(const SizedBox());
+      }
+    });
+
+    testWidgets('exit keeps signed and transformed panel geometry', (
+      tester,
+    ) async {
+      for (final scale in [1.0, .75]) {
+        final exit = _Exit();
+        await _pump(
+          tester,
+          exit,
+          transform: (child) => Transform.translate(
+            offset: const Offset(-25, -60),
+            child: Transform.scale(
+              scale: scale,
+              alignment: Alignment.topLeft,
+              child: child,
+            ),
+          ),
+        );
+        final field = find.byType(TextField);
+        await tester.enterText(field, 'ap');
+        await tester.pump();
+        await tester.pump();
+        final option = find.byKey(const ValueKey('option-apple'));
+        final bounds = tester.getRect(option);
+        expect(bounds.left, lessThan(0));
+        expect(bounds.top, lessThan(0));
+        await _close(tester);
+        expect(tester.getRect(option), bounds);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+      }
     });
 
     testWidgets('without an exitBuilder the view leaves at once', (
@@ -174,16 +338,72 @@ void main() {
       expect(exit.built, 0);
     });
 
-    testWidgets('disposing during an exit leaves no layer behind', (
+    testWidgets('toggling exitBuilder preserves the editor and live options', (
+      tester,
+    ) async {
+      final exit = _Exit();
+      var opens = 0;
+      var closes = 0;
+      Future<void> rebuild({required bool withExit}) => _pump(
+        tester,
+        exit,
+        withExit: withExit,
+        onOpen: () => opens++,
+        onClose: () => closes++,
+      );
+
+      await rebuild(withExit: false);
+      await _open(tester);
+      final field = find.byType(EditableText);
+      final editor = tester.state<EditableTextState>(field);
+      final controller = editor.widget.controller;
+      final focus = editor.widget.focusNode;
+      controller.selection = const TextSelection(
+        baseOffset: 0,
+        extentOffset: 1,
+      );
+      await tester.pump();
+      final value = controller.value;
+
+      for (final withExit in [true, false, true]) {
+        await rebuild(withExit: withExit);
+        expect(tester.state<EditableTextState>(field), same(editor));
+        expect(editor.widget.controller, same(controller));
+        expect(editor.widget.focusNode, same(focus));
+        expect(controller.value, value);
+        expect(focus.hasFocus, isTrue);
+        expect(find.byKey(const ValueKey('option-apple')), findsOneWidget);
+        expect(opens, 1);
+        expect(closes, 0);
+      }
+
+      await _close(tester);
+      final dismiss = exit.dismiss!;
+      await rebuild(withExit: false);
+      dismiss();
+      await tester.pump();
+      expect(tester.state<EditableTextState>(field), same(editor));
+      expect(controller.value, value);
+      expect(focus.hasFocus, isTrue);
+      expect(find.byKey(const ValueKey('option-apple')), findsNothing);
+      expect(closes, 1);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('dismiss after disposal is harmless and leaves no layer', (
       tester,
     ) async {
       final exit = _Exit();
       await _pump(tester, exit);
       await _open(tester);
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pump();
+      await _close(tester);
+      final dismiss = exit.dismiss!;
 
       await tester.pumpWidget(const SizedBox());
+      dismiss();
+      dismiss();
+      await tester.pump();
+      expect(find.byKey(const ValueKey('option-apple')), findsNothing);
       expect(tester.takeException(), isNull);
     });
   });
