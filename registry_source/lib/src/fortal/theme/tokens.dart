@@ -13,7 +13,7 @@ import 'theme_scope.dart' show FortalTheme;
 /// ```
 ///
 /// Must be used within [FortalTheme] to resolve actual values.
-class FortalTokens {
+abstract final class FortalTokens {
   static const activityMaxHeight = DoubleToken('fortal.activity.max-height');
   static const planMaxHeight = DoubleToken('fortal.plan.max-height');
   static const messageAvatarSize = DoubleToken('fortal.message.avatar-size');
