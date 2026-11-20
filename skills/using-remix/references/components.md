@@ -238,7 +238,9 @@ HeroUI ships `app_bar`, `sidebar`, `sidebar_layout`, `dashboard_shell`, and
   Settings in Vanilla and HeroUI; those plus Analytics, Schedule, an
   image-card Collection and Themes in Fortal. It stays out of `ui.dart`:
   import `ui/recipes/dashboard/dashboard_demo.dart`, which also exports the
-  types its constructor takes. See [Reference showcases](reference-showcases.md) for
+  types its constructor takes. The default records, `<prefix>DashboardSampleData`,
+  live in `dashboard_sample_data.dart` (`dashboard_demo_data.dart` in
+  Fortal). See [Reference showcases](reference-showcases.md) for
   product-example and coverage-gallery conventions. The HeroUI demo also
   installs `chart`, `table`, `tabs`, `chip`, and the Agent items.
 - **Surface** — a preset composition, not a Remix widget. HeroUI's `surface` is

@@ -28,6 +28,25 @@
   `fortalIconButtonGhostMetrics`, `fortalBaseButtonActiveMotion` and
   `fortalBaseButtonRestMotion`. Read sizes from `FortalTokens`, as the recipes
   now do.
+- **Breaking:** remove `FortalKbdVariant`, `FortalKbd.soft`, `FortalKbd.variant`
+  and the `variant` argument of `fortalKbdStyle`. Kbd has one look.
+- **Breaking:** remove `FortalSegmentedControlVariant`,
+  `FortalSegmentedControl.surface`, `FortalSegmentedControl.variant` and the
+  `variant` argument of `fortalSegmentedControlStyle`. The segmented control
+  has one look.
+- **Breaking:** remove the enums that repeated another family's values:
+  `FortalComboboxSize` and `FortalComboboxVariant` (use `FortalTextFieldSize`
+  and `FortalTextFieldVariant`), `FortalTextAreaVariant` (use
+  `FortalTextFieldVariant`) and `FortalSurfaceSize` (use `FortalCardSize`).
+- **Breaking:** `FortalTokens` is an `abstract final class`; it cannot be
+  instantiated, extended or implemented.
+- **Breaking:** rename `resolveFortalChartPalette` to `fortalChartPalette`.
+- **Breaking:** remove `styleFrom` from `FortalCalendar` and
+  `FortalRangeCalendar`; call `CalendarStyler()` instead.
+- **Breaking:** the `textfield` item is `text_field`, installed as
+  `components/text_field.dart`.
+- **Breaking:** `dashboard_demo` no longer adds exports to `ui.dart`; import
+  `ui/recipes/dashboard/dashboard_demo.dart`.
 
 - Strengthen Orla primary roles to dark/white fills while retaining exact Radix
   scales and subtle neutral surfaces. Add `accentMarkHover` for coherent selected

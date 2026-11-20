@@ -43,7 +43,9 @@ customer and order tables, charts, appearance and notification chrome, and
 local toast feedback.
 The demo is an application, not part of the kit, so `ui.dart` does not export
 it: import `ui/recipes/dashboard/dashboard_demo.dart`, which also exports the
-types `UiDashboardDemo` takes.
+types `UiDashboardDemo` takes. The default records, `uiDashboardSampleData`,
+live in their own file: `dashboard_sample_data.dart`, or `dashboard_demo_data.dart`
+in Fortal.
 Built-in chrome can be disabled; caller actions append to it and caller account
 content replaces the default. It leaves the application, routes,
 authentication, persistence, and backend search behavior with the host.

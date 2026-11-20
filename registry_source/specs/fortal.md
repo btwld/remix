@@ -179,8 +179,8 @@ fill must identify the control. Check the actual component on its host surface.
 
 `classic` is absent from button, icon button, card, checkbox, radio, switch,
 slider, progress, text field, text area, segmented control, and kbd. There are
-no aliases or deprecations. Kbd keeps only the `soft` look and segmented
-control only the `surface` look, so neither takes a `variant`. Other variants
+no aliases or deprecations. Kbd has one look (`soft`) and segmented control
+one (`surface`); neither takes a `variant`. Other variants
 and behavioral APIs are listed in the catalog. Toast's independent `classic`
 floating treatment is not a raised-card/control variant and uses the ordinary
 elevation scale.

@@ -332,10 +332,12 @@ Schedule, Collection, and Themes). Product pages and navigation
 match across presets while rendering each preset's native components and
 variants. It is a sample application, not part of the kit, so `ui.dart` does
 not export it: import `lib/ui/recipes/dashboard/dashboard_demo.dart`, which
-also exports the types `UiDashboardDemo` takes. The overview's four metrics,
-revenue series, and recent records live in editable
-`lib/ui/recipes/dashboard/dashboard_sample_data.dart`; replace them there or
-pass a `UiDashboardSampleData` to `UiDashboardDemo(data: ...)`.
+also exports the types `UiDashboardDemo` takes. The sample records live in
+editable source: `lib/ui/recipes/dashboard/dashboard_sample_data.dart`
+(`uiDashboardSampleData`) in Vanilla and HeroUI, and
+`lib/ui/recipes/dashboard/dashboard_demo_data.dart` (`uiDashboardSampleData`)
+in Fortal. Replace them there, or pass your own `UiDashboardSampleData`
+(Vanilla, HeroUI) or `UiDashboardData` (Fortal) to `UiDashboardDemo(data: ...)`.
 
 The host supplies its Flutter application, directionality, brand, and theme
 scope. Default uses `UiTheme(theme: UiThemeData.light(), child: ...)`;
