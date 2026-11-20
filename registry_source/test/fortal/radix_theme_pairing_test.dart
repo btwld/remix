@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:registry_source/src/fortal/theme/computed.dart'
+    show computeAccentIndicatorContrast;
 
 import '../helpers/contrast.dart';
 import '../helpers/test_helpers.dart';

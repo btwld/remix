@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:registry_source/src/fortal/theme/computed.dart'
+    show mixOklabPremultiplied;
 import 'package:registry_source/src/fortal/theme/theme_data.dart'
     show buildFortalScopeTokens;
 

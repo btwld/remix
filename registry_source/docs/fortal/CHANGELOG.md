@@ -18,6 +18,10 @@
   solid fills, exposed as `fortalSolidPressedFill`,
   `fortalHighContrastHoverFill` and `fortalHighContrastPressedFill`, and the
   mode-aware filter.
+- **Breaking:** the theme barrel exports only `FortalThemeColors`
+  (`<prefix>ThemeColors`), `resolveFortalTokens` (`resolve<prefix>Tokens`),
+  `computeAccentThumbRing`, `computeChartSeries` and `computeContrastRatio`
+  from `computed.dart`. Import `theme/computed.dart` for the other helpers.
 - **Breaking:** remove the shared BaseButton layer: `FortalBaseButtonSize`,
   `FortalBaseButtonVariant`, `fortalBaseButtonMetrics`,
   `fortalBaseButtonIconSize`, `fortalBaseButtonGhostMetrics`,
@@ -40,9 +44,7 @@
   error red remain supported.
 
 - Rename Calçadão to Orla in theme choices, generated palettes and examples,
-  preserving all color values. Keep `calcadao` as a deprecated enum and palette
-  alias. Serialized neutral names now use `orla`; migrate saved preferences
-  that contain `calcadao`.
+  preserving all color values.
 
 - Adopt Remix effects slots for control focus, anchor-width select sizing,
   styled radio/switch labels and caller-owned menu controls. Preserve the

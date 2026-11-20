@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
-import 'package:registry_source/src/fortal/theme/fortal_colors.dart' as colors;
 
 void main() {
   test('palette names are canonical without duplicating legacy choices', () {
@@ -15,13 +14,6 @@ void main() {
       'duna',
       'caju',
     ]);
-  });
-
-  test('legacy palette identifiers still resolve to the renamed palettes', () {
-    // ignore: deprecated_member_use_from_same_package
-    expect(FortalAccentColor.calcadao, FortalAccentColor.orla);
-    // ignore: deprecated_member_use_from_same_package
-    expect(identical(colors.calcadao, colors.orla), isTrue);
   });
 
   group('Fortal scaled tokens', () {

@@ -24,7 +24,8 @@ RemixBoxEffectsMix fortalSliderFocusOutline() => RemixBoxEffectsMix(
   outlineOffset: 0,
 );
 
-/// Keeps compact visual sizes while giving controls a 40px interaction area.
+/// Keeps compact visual sizes while giving controls a
+/// [FortalTokens.touchTargetMin] interaction area.
 /// This wraps the painted child inside Naked UI's existing gesture target.
 WidgetModifierConfig fortalTouchTarget() =>
     WidgetModifierConfig.modifier(const _FortalTouchTargetMix());
