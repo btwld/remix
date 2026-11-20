@@ -188,6 +188,64 @@ void main() {
         },
       );
     }
+    for (final range in [false, true]) {
+      testWidgets(
+        '${theme.name} $range picker panel honors calendar, parent and trigger width floors',
+        (tester) async {
+          const calendarWidth =
+              VanillaTokens.s12 * DateTime.daysPerWeek +
+              (VanillaTokens.s3 + VanillaTokens.strokeHairline) * 2;
+          final cases = [
+            (0.0, ButtonStyler(), calendarWidth),
+            (400.0, ButtonStyler(), 400.0),
+            (0.0, ButtonStyler().minWidth(420), 420.0),
+            (0.0, ButtonStyler().maxWidth(440), 440.0),
+          ];
+          for (final (parentWidth, buttonStyle, panelWidth) in cases) {
+            final firstDate = DateTime(2026);
+            final lastDate = DateTime(2028);
+            final currentDate = DateTime(2026, 11, 6);
+            await tester.pumpWidget(
+              calendarHost(
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: parentWidth),
+                  child: range
+                      ? VanillaDateRangePicker(
+                          value: null,
+                          firstDate: firstDate,
+                          lastDate: lastDate,
+                          currentDate: currentDate,
+                          onChanged: (_) {},
+                          buttonStyle: buttonStyle,
+                        )
+                      : VanillaDatePicker(
+                          value: null,
+                          firstDate: firstDate,
+                          lastDate: lastDate,
+                          currentDate: currentDate,
+                          onChanged: (_) {},
+                          buttonStyle: buttonStyle,
+                        ),
+                ),
+                theme.data,
+              ),
+            );
+            await tester.tap(find.byType(RemixButton));
+            await tester.pumpAndSettle();
+            final panel = tester.widget<StyleSpecProvider<PopoverSpec>>(
+              find.byType(StyleSpecProvider<PopoverSpec>),
+            );
+            expect(
+              panel.spec.spec.container.spec.constraints?.minWidth,
+              panelWidth,
+            );
+            expect(tester.takeException(), isNull);
+            await tester.pumpWidget(const SizedBox.shrink());
+            await tester.pumpAndSettle();
+          }
+        },
+      );
+    }
     testWidgets(
       '${theme.name} natural long range stays within its panel width',
       (t) async {

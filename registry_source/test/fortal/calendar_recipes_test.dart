@@ -179,6 +179,52 @@ void main() {
       },
     );
     for (final range in [false, true]) {
+      testWidgets('$dark $range picker scales its own trigger minimum', (
+        tester,
+      ) async {
+        final picker = range
+            ? FortalDateRangePicker(
+                value: null,
+                firstDate: DateTime(2025),
+                lastDate: DateTime(2028),
+                onChanged: (_) {},
+              )
+            : FortalDatePicker(
+                value: null,
+                firstDate: DateTime(2025),
+                lastDate: DateTime(2028),
+                onChanged: (_) {},
+              );
+        for (final scale in [1.0, 2.0]) {
+          await tester.pumpRemixApp(
+            Builder(
+              builder: (context) => MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: TextScaler.linear(scale)),
+                child: picker,
+              ),
+            ),
+            mode: dark ? .dark : .light,
+          );
+          await tester.pumpAndSettle();
+          final button = tester.widget<StyleSpecProvider<ButtonSpec>>(
+            find.byType(StyleSpecProvider<ButtonSpec>),
+          );
+          final spec = button.spec.spec;
+          expect(
+            spec.container.spec.box?.spec.constraints?.minWidth,
+            (range ? 260 : 200) * scale,
+          );
+          expect(
+            spec.icon.spec.size,
+            FortalTokens.space4.resolve(
+                  tester.element(find.byType(RemixButton)),
+                ) *
+                scale,
+          );
+        }
+      });
       testWidgets(
         '$dark $range picker forwards overrides and caps nested month panel',
         (t) async {
@@ -191,6 +237,10 @@ void main() {
                     currentDate: DateTime(2026, 11, 6),
                     onChanged: (_) {},
                     buttonStyle: ButtonStyler().minWidth(280),
+                    popoverStyle: PopoverStyler()
+                        .padding(.all(4))
+                        .maxWidth(390),
+                    navigationStyle: IconButtonStyler().icon(.size(21)),
                   )
                 : FortalDatePicker(
                     value: null,
@@ -199,6 +249,10 @@ void main() {
                     currentDate: DateTime(2026, 11, 6),
                     onChanged: (_) {},
                     buttonStyle: ButtonStyler().minWidth(280),
+                    popoverStyle: PopoverStyler()
+                        .padding(.all(4))
+                        .maxWidth(390),
+                    navigationStyle: IconButtonStyler().icon(.size(21)),
                   ),
             mode: dark ? .dark : .light,
           );
@@ -208,6 +262,18 @@ void main() {
           );
           await t.tap(find.byType(RemixButton));
           await t.pumpAndSettle();
+          final panel = t.widget<StyleSpecProvider<PopoverSpec>>(
+            find.byType(StyleSpecProvider<PopoverSpec>),
+          );
+          expect(
+            panel.spec.spec.container.spec.padding,
+            const EdgeInsets.all(4),
+          );
+          expect(panel.spec.spec.container.spec.constraints?.maxWidth, 390);
+          final nav = t.widget<StyleSpecProvider<IconButtonSpec>>(
+            find.byType(StyleSpecProvider<IconButtonSpec>).first,
+          );
+          expect(nav.spec.spec.icon.spec.size, 21);
           await t.tap(find.bySemanticsLabel('Choose month'));
           await t.pumpAndSettle();
           final spec = t
