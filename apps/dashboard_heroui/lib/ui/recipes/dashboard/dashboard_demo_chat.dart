@@ -72,7 +72,7 @@ final class UiDashboardAgentStyles {
   /// Draws every glyph of the Agent widgets.
   final AgentGlyphBuilder glyphBuilder;
 
-  /// Draws tool icons by their ui name.
+  /// Draws tool icons by the tool call's name, such as `terminal.run`.
   final AgentToolIconBuilder toolIconBuilder;
 
   /// Style of the empty state's question.

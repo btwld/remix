@@ -6,7 +6,7 @@ part of 'sidebar.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Sidebar recipe.
+/// The Fortal Sidebar recipe.
 ///
 /// It paints the solid panel surface with a trailing edge border,
 /// pads the scrolling destination region, keeps section labels compact and

@@ -15,7 +15,7 @@ enum UiTabsSize {
   size2,
 }
 
-/// The Ui TabBar recipe: the row of tabs over a 1px gray line.
+/// The Fortal TabBar recipe: the row of tabs over a 1px gray line.
 @MixWidget(target: RemixTabBar.new)
 TabBarStyler uiTabBarStyle({
   TabBarStyler style = const TabBarStyler.create(),
@@ -23,14 +23,14 @@ TabBarStyler uiTabBarStyle({
     .border(.bottom(.color(UiTokens.grayA5()).width(UiTokens.borderWidth1())))
     .merge(style);
 
-/// The Ui TabView recipe: the panel under the tabs, which it leaves
+/// The Fortal TabView recipe: the panel under the tabs, which it leaves
 /// unstyled.
 @MixWidget(target: RemixTabView.new)
 TabViewStyler uiTabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
 }) => TabViewStyler().merge(style);
 
-/// The Ui Tab recipe.
+/// The Fortal Tab recipe.
 ///
 /// A tab is gray text, darker under the pointer, with a 2px underline in the
 /// accent when selected. The underline is a transparent border at rest, so

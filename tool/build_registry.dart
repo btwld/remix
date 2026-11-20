@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
@@ -400,8 +402,9 @@ const agentRecipes = [
 
 /// The default preset as application-owned registry source.
 ///
-/// `Vanilla` is the authoring word: it stands in for the consumer prefix and
-/// appears nowhere else in the source, so plain substitution is exact.
+/// `Vanilla` is the authoring word: it stands in for the consumer prefix where
+/// it begins an identifier segment or a quoted id, and stays as written where
+/// prose names the design system.
 const defaultPreset = PresetSpec(
   name: 'vanilla',
   sourceRoot: 'registry_source/lib/src/default',
@@ -1884,31 +1887,33 @@ final class PresetBuilder {
           );
     }
     if (sourceTypeWord != null && sourceValueWord != null) {
-      rewritten = rewritten
-          .replaceAll(sourceTypeWord, spec.typeWord)
-          .replaceAll(sourceValueWord, spec.valueWord);
+      rewritten = _replacePrefixWords(
+        sourcePath,
+        rewritten,
+        typeWord: sourceTypeWord,
+        valueWord: sourceValueWord,
+        typeReplacement: spec.typeWord,
+        valueReplacement: spec.valueWord,
+      );
     }
     return sortDirectives(sourcePath, rewritten);
   }
 
   /// Swaps the preset's own naming for the consumer prefix placeholders.
   ///
-  /// The round trip is asserted rather than assumed: a substitution that does
-  /// not reverse exactly means the source says the preset's name somewhere the
-  /// consumer's prefix does not belong.
+  /// The round trip is asserted rather than assumed: a template that does not
+  /// render back to its source under the preset's own words would install
+  /// something other than the analyzed source.
   String _templateFor(String path, String source) {
-    final substitutions = RegExp(
-      [
-        ...spec.fixedFileNames.map(RegExp.escape),
-        RegExp.escape(spec.typeWord),
-        RegExp.escape(spec.valueWord),
-      ].join('|'),
+    var template = _replacePrefixWords(
+      path,
+      source,
+      typeWord: spec.typeWord,
+      valueWord: spec.valueWord,
+      typeReplacement: '{{typePrefix}}',
+      valueReplacement: '{{valuePrefix}}',
+      fixedFileNames: spec.fixedFileNames,
     );
-    var template = source.replaceAllMapped(substitutions, (match) {
-      final word = match[0]!;
-      if (spec.fixedFileNames.contains(word)) return word;
-      return word == spec.typeWord ? '{{typePrefix}}' : '{{valuePrefix}}';
-    });
     template = _iconTemplate(path, template);
     final roundTrip = const TemplateRenderer().render(
       template,
@@ -2189,6 +2194,121 @@ Map<String, String> _sortedMap(Map<String, String> source) {
 
 String _relative(File file, Directory root) =>
     p.posix.joinAll(p.split(p.relative(file.path, from: root.path)));
+
+/// Replaces an authoring prefix where it names something: an identifier
+/// segment (`FortalButton`, `_resolveFortalTheme`) or the start of a quoted id
+/// (`'fortal.color.accent'`). Prose keeps the design system's name.
+///
+/// Any other occurrence in code, or in a string where it is the whole string
+/// or touches `.`, `-`, `_`, `:` or an interpolation, throws instead of
+/// installing the authoring word where the prefix may belong. A string that
+/// starts with the value word, a separator and an id character, with no
+/// whitespace, is always an id, so `Text('fortal-themed')` takes the prefix.
+String _replacePrefixWords(
+  String path,
+  String source, {
+  required String typeWord,
+  required String valueWord,
+  required String typeReplacement,
+  required String valueReplacement,
+  Set<String> fixedFileNames = const {},
+}) {
+  final words = RegExp(
+    [
+      ...fixedFileNames.map(RegExp.escape),
+      RegExp.escape(typeWord),
+      RegExp.escape(valueWord),
+    ].join('|'),
+  );
+  final spans = _commentAndStringSpans(path, source);
+  final buffer = StringBuffer();
+  var copied = 0;
+  for (final match in words.allMatches(source)) {
+    final word = match[0]!;
+    if (fixedFileNames.contains(word)) continue;
+    final span = spans
+        .where((span) => span.start <= match.start && match.end <= span.end)
+        .firstOrNull;
+    if (!_identifierStart.hasMatch(_charAt(source, match.end)) &&
+        !(span != null &&
+            span.string &&
+            _startsQuotedId(source, match, span))) {
+      if (span != null && (!span.string || _isProse(source, match, span))) {
+        continue;
+      }
+      final line = '\n'.allMatches(source.substring(0, match.start)).length;
+      final problem = span == null
+          ? 'is code but does not start an identifier segment; make it an '
+                'identifier prefix'
+          : 'is a whole string or touches `.`, `-`, `_`, `:` or an '
+                'interpolation inside a string; reword it, or start the '
+                'string with it to make an id';
+      throw StateError('$path:${line + 1}: "$word" $problem.');
+    }
+    buffer
+      ..write(source.substring(copied, match.start))
+      ..write(word == typeWord ? typeReplacement : valueReplacement);
+    copied = match.end;
+  }
+  return (buffer..write(source.substring(copied))).toString();
+}
+
+final _identifierStart = RegExp('[A-Z0-9]');
+final _quotedIdContinuation = RegExp(r'[-._][A-Za-z0-9$]');
+
+String _charAt(String source, int index) =>
+    index >= 0 && index < source.length ? source[index] : '';
+
+/// Whether [match] opens a quoted id such as `'fortal.color.accent'`: right
+/// after the quote, a separator and an id character or interpolation follow,
+/// and the literal [span] holds no whitespace, so `'fortal-themed card'` is
+/// not one.
+bool _startsQuotedId(String source, Match match, _Span span) {
+  final quote = _charAt(source, match.start - 1);
+  return (quote == "'" || quote == '"') &&
+      _quotedIdContinuation.matchAsPrefix(source, match.end) != null &&
+      !source.substring(match.start, span.end).contains(RegExp(r'\s'));
+}
+
+/// Whether a word inside a string literal piece reads as prose: it is not the
+/// whole string and touches no id separator or interpolation.
+bool _isProse(String source, Match match, _Span span) {
+  final before = _charAt(source, match.start - 1);
+  final after = _charAt(source, match.end);
+  final interpolated = match.start == span.start || match.end == span.end;
+  final whole = (before == "'" || before == '"') && after == before;
+  return !interpolated &&
+      !whole &&
+      !'.-_:'.contains(before) &&
+      !'.-_:'.contains(after);
+}
+
+typedef _Span = ({int start, int end, bool string});
+
+/// Comment and string literal spans of [source], from the analyzer's tokens.
+/// An interpolated string yields one span per literal piece.
+List<_Span> _commentAndStringSpans(String path, String source) {
+  final spans = <_Span>[];
+  final Token begin;
+  try {
+    begin = parseString(content: source).unit.beginToken;
+  } on ArgumentError catch (error) {
+    throw StateError('$path does not parse. ${error.message}');
+  }
+  for (var token = begin; ; token = token.next!) {
+    for (
+      Token? comment = token.precedingComments;
+      comment != null;
+      comment = comment.next
+    ) {
+      spans.add((start: comment.offset, end: comment.end, string: false));
+    }
+    if (token.type == TokenType.STRING) {
+      spans.add((start: token.offset, end: token.end, string: true));
+    }
+    if (token.isEof) return spans;
+  }
+}
 
 final _importPattern = RegExp(
   r'''^\s*(?:import|export)\s+['"]([^'"]+)['"]''',

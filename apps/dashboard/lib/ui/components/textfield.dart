@@ -32,7 +32,7 @@ enum UiTextFieldVariant {
   soft,
 }
 
-/// The Ui TextField recipe.
+/// The Fortal TextField recipe.
 ///
 /// It reads top to bottom: what every text input shares, then the size, then
 /// the variant's colors for rest and disabled, then the error state.
@@ -70,7 +70,7 @@ enum UiTextAreaVariant {
   soft,
 }
 
-/// The Ui TextArea recipe: the text field's looks on a taller box whose
+/// The Fortal TextArea recipe: the text field's looks on a taller box whose
 /// content starts at the top.
 @MixWidget(target: RemixTextArea.new)
 TextFieldStyler uiTextAreaStyle({

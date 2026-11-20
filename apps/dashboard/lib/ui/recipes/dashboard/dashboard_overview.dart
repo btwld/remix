@@ -987,7 +987,7 @@ class UiUpcomingCard extends StatelessWidget {
   );
 }
 
-/// The seven Ui palettes, one button each, on a quiet surface. Picking
+/// The seven Fortal palettes, one button each, on a quiet surface. Picking
 /// one restyles the whole dashboard.
 ///
 /// The buttons need a [UiDashboardThemeScope] above them to apply a

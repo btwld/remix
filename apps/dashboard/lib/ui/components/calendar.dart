@@ -188,7 +188,7 @@ class _CalendarScrollBehavior extends ScrollBehavior {
   );
 }
 
-/// Ui's Calendar composition.
+/// Fortal's Calendar composition.
 ///
 /// Remix owns civil-date selection, focus, keyboard navigation and semantics.
 /// Multiple independent child styles require a hand-written facade; caller

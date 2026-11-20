@@ -31,7 +31,7 @@ enum UiSelectVariant {
   ghost,
 }
 
-/// The Ui Select recipe: the trigger, the floating panel and its items.
+/// The Fortal Select recipe: the trigger, the floating panel and its items.
 ///
 /// Content icons use size-matched 12/16/20 token defaults rather than the
 /// ambient icon size. Override the trigger icon through [style] when needed.
@@ -54,7 +54,7 @@ SelectStyler uiSelectStyle({
     .item(_item(variant, size, highContrast: highContrast))
     .merge(style);
 
-/// The Ui select item recipe, for styling one item on its own.
+/// The Fortal select item recipe, for styling one item on its own.
 ///
 /// It is the item style [uiSelectStyle] gives every item, so a call site
 /// can match a select's items outside the select.

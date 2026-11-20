@@ -27,7 +27,7 @@ enum UiToggleGroupVariant {
   surface,
 }
 
-/// The Ui ToggleGroup recipe: a segmented control, a 1px gray frame around
+/// The Fortal ToggleGroup recipe: a segmented control, a 1px gray frame around
 /// items that share it.
 ///
 /// It reads top to bottom: the frame, the item's colors for rest, hover,

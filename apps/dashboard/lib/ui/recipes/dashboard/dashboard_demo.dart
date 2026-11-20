@@ -1087,7 +1087,7 @@ class _PageSlotState extends State<_PageSlot> {
     }
     final heldText = _textRun!;
 
-    // Innermost first. The captured themes re-install the Ui theme with
+    // Innermost first. The captured themes re-install the Fortal theme with
     // its own tokens, so the tokens read here, which include any override a
     // host placed above the dashboard, go back on below them.
     Widget page = KeyedSubtree(key: _page, child: widget.child);

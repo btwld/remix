@@ -6,7 +6,7 @@ part of 'card.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Card recipe: a flat panel. Elevation is reserved for floating
+/// The Fortal Card recipe: a flat panel. Elevation is reserved for floating
 /// layers, never cards.
 ///
 /// It reads top to bottom: the size and focus ring, then the variant's colors

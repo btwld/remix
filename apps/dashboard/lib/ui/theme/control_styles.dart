@@ -3,7 +3,7 @@ import 'package:remix/remix.dart';
 
 import 'tokens.dart';
 
-/// Ui's focus ring: contrast-fitted focus8, 2px wide, with a 2px gap.
+/// Fortal's focus ring: contrast-fitted focus8, 2px wide, with a 2px gap.
 /// Tokens resolve at the control, so nested themes and overrides work.
 /// The outline takes no layout space and never replaces the control's border.
 RemixBoxEffectsMix uiFocusOutline() => RemixBoxEffectsMix(
@@ -24,7 +24,8 @@ RemixBoxEffectsMix uiSliderFocusOutline() => RemixBoxEffectsMix(
   outlineOffset: 0,
 );
 
-/// Keeps compact visual sizes while giving controls a 40px interaction area.
+/// Keeps compact visual sizes while giving controls a
+/// [UiTokens.touchTargetMin] interaction area.
 /// This wraps the painted child inside Naked UI's existing gesture target.
 WidgetModifierConfig uiTouchTarget() =>
     WidgetModifierConfig.modifier(const _UiTouchTargetMix());

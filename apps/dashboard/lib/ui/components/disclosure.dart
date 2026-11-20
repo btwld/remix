@@ -27,7 +27,7 @@ enum UiDisclosureVariant {
   soft,
 }
 
-/// The Ui Disclosure recipe.
+/// The Fortal Disclosure recipe.
 ///
 /// It reads top to bottom: what every disclosure shares, then the variant's
 /// panel colors for rest, hover, press, focus and disabled.

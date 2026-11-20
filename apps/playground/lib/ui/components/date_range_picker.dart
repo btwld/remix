@@ -16,8 +16,9 @@ import 'select.dart';
 /// The application's DateRangePicker composite.
 ///
 /// Remix owns the trigger, overlay positioning, focus restoration, dismissal
-/// and controlled selection. This facade wires the Playground outline Button,
-/// Popover and RangeCalendar recipes; callers override each child styler last.
+/// and controlled selection. This facade wires the outline
+/// [playgroundButtonStyle], [playgroundPopoverStyle] and [playgroundRangeCalendarStyle]
+/// recipes; callers override each child styler last.
 ///
 /// Several independent child stylers require a hand-written composite rather
 /// than a generated single-style adapter. There is no generated part.

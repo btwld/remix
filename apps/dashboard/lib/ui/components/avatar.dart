@@ -45,7 +45,7 @@ enum UiAvatarVariant {
   solid,
 }
 
-/// The Ui Avatar recipe.
+/// The Fortal Avatar recipe.
 ///
 /// It reads top to bottom: the size and fallback text, then the variant's
 /// colors. The corners turn into a circle when the theme radius is `full`.

@@ -775,7 +775,8 @@ final uiDashboardSampleData = UiDashboardData(
       motif: .cobogo,
       accent: .caju,
       format: '30 × 40 cm · Risograph',
-      description: 'The breeze blocks of Uieza façades, one tile at a time.',
+      description:
+          'The breeze blocks of Fortaleza façades, one tile at a time.',
       seed: 3,
     ),
     UiDashboardEdition(
@@ -1090,7 +1091,7 @@ final uiDashboardSampleData = UiDashboardData(
       'cus_019',
       'Luna Hall',
       'luna@afterglow.co',
-      'Uieza',
+      'Fortaleza',
       .member,
       .active,
       2,

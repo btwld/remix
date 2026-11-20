@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 
 part 'tooltip.g.dart';
 
-/// The Ui Tooltip recipe: `gray1` text on a `gray12` fill with `radius2`
+/// The Fortal Tooltip recipe: `gray1` text on a `gray12` fill with `radius2`
 /// corners, inverted from the page, that appears after a 200ms wait.
 @MixWidget(target: RemixTooltip.new)
 TooltipStyler uiTooltipStyle({

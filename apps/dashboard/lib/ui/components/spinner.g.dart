@@ -6,7 +6,7 @@ part of 'spinner.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Spinner recipe, drawn in the inherited foreground color.
+/// The Fortal Spinner recipe, drawn in the inherited foreground color.
 class UiSpinner extends StatelessWidget {
   const UiSpinner({
     super.key,

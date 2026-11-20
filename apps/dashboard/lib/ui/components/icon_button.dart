@@ -46,7 +46,7 @@ enum UiIconButtonVariant {
   ghost,
 }
 
-/// The Ui IconButton recipe.
+/// The Fortal IconButton recipe.
 ///
 /// It reads top to bottom: what every icon button shares, then the size, then
 /// the variant's colors for each state, then focus and disabled. [style]

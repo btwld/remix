@@ -6,7 +6,7 @@ part of 'radio.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Radio recipe.
+/// The Fortal Radio recipe.
 ///
 /// It reads top to bottom: the circle and its focus ring, then the variant's
 /// colors for rest, selected and disabled, then the touch target.

@@ -1,7 +1,8 @@
-/// Ui computed tokens and functional color utilities.
+/// Fortal computed tokens and functional color utilities.
 ///
-/// Implements computed role tokens (accent-contrast, accent-track, etc.) and
-/// background/overlay colors derived from the selected paired theme.
+/// Derives the roles a palette does not store, such as content and focus
+/// colors, control borders, backgrounds and shadows, from the selected paired
+/// theme.
 ///
 /// Components should use these functional roles rather than raw color steps.
 library;
@@ -17,7 +18,7 @@ import 'palette.dart';
 import 'theme_data.dart';
 import 'tokens.dart';
 
-/// Ui's margin over WCAG's 3:1 for marks and focus rings on a surface.
+/// Fortal's margin over WCAG's 3:1 for marks and focus rings on a surface.
 const _markMargin = 3.05;
 
 /// WCAG 2 contrast ratio between two opaque colors.
@@ -313,7 +314,7 @@ double _encodeSrgb(double channel) => channel <= 0.0031308
     ? 12.92 * channel
     : 1.055 * math.pow(channel, 1 / 2.4).toDouble() - 0.055;
 
-/// Ui's floating-layer elevation scale (no inset or control shadows).
+/// Fortal's floating-layer elevation scale (no inset or control shadows).
 Map<MixToken<Object?>, Object> buildUiShadows({
   required bool isDark,
   required UiThemeColors colors,
@@ -351,10 +352,10 @@ Map<MixToken<Object?>, Object> buildUiShadows({
   };
 }
 
-/// Container for all computed Ui theme colors and scales.
+/// Container for all computed Fortal theme colors and scales.
 ///
-/// Holds resolved color system for a specific theme configuration.
-/// Created by [resolveUiTokens] for internal use by the token system.
+/// Holds the resolved color system for one theme configuration, as returned
+/// by [resolveUiTokens].
 class UiThemeColors {
   final UiColor accent;
   final UiColor gray;
