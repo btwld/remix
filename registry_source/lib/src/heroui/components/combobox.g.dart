@@ -63,7 +63,7 @@ class HeroUiCombobox<T extends Object> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
-  }) : variant = HeroUiComboboxVariant.primary;
+  }) : variant = HeroUiTextFieldVariant.primary;
 
   /// The `default` fill.
   const HeroUiCombobox.secondary({
@@ -87,9 +87,9 @@ class HeroUiCombobox<T extends Object> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.excludeSemantics = false,
-  }) : variant = HeroUiComboboxVariant.secondary;
+  }) : variant = HeroUiTextFieldVariant.secondary;
 
-  final HeroUiComboboxVariant variant;
+  final HeroUiTextFieldVariant variant;
 
   final ComboboxStyler style;
 

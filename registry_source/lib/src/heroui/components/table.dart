@@ -62,16 +62,15 @@ DataTableStyler heroUiTableStyle({
       .headerMinHeight(_headerHeight)
       .rowMinHeight(_rowHeight)
       // `.table__header` and `.table__row` borders do not paint under
-      // `border-separate`; only the cells' own rule does (`table-primary-header`).
+      // `border-separate`; only the cells' own rule does.
       .headerRow(BoxStyler().color(HeroUiTokens.surfaceSecondary()))
       .bodyRow(
-        // A real border, so every row is 45px tall, the last included
-        // (`table-primary-row-last`).
+        // A real border, so every row is 45px tall, the last included.
         BoxStyler()
             .border(.bottom(.color(_cellDivider()).width(_dividerWidth)))
             .color(primary ? HeroUiTokens.surface() : HeroUiTokens.transparent)
             .onHovered(BoxStyler().color(hover()))
-            // Hover beats selected, selected or not (`table-primary-select-hover-cell`).
+            // A hovered row takes the hover fill, selected or not.
             .onSelected(
               BoxStyler()
                   .color(_selectedFill())
