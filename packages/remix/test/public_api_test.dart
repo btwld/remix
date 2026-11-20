@@ -5,6 +5,24 @@ import 'package:remix/remix.dart';
 enum Interest { design, code }
 
 void main() {
+  testWidgets('search bindings can be typed through the Remix barrel', (
+    tester,
+  ) async {
+    final controller = TextEditingController(text: 'Ada');
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: NakedSearchField(
+          controller: controller,
+          builder: (BuildContext context, NakedSearchFieldBindings field) =>
+              Text(field.controller.text),
+        ),
+      ),
+    );
+    expect(find.text('Ada'), findsOneWidget);
+  });
+
   test(
     'range slider is additive and reuses the existing single-value styler',
     () {
