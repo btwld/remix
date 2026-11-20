@@ -76,6 +76,70 @@ void main() {
       );
     });
 
+    // Adds [value] to [enumName] in [file] and to the catalog axis of every
+    // family in [owners], so only a family that shares the enum disagrees.
+    void driftSharedEnum({
+      required String file,
+      required String enumName,
+      required String value,
+      required String kind,
+      required Set<String> owners,
+    }) {
+      final source = File(
+        '${candidate.path}/registry_source/lib/src/fortal/components/$file',
+      );
+      source.writeAsStringSync(
+        source.readAsStringSync().replaceFirst(
+          'enum $enumName {',
+          'enum $enumName { $value,',
+        ),
+      );
+      for (final family in catalog['families'] as List) {
+        if (!owners.contains(family['id'])) continue;
+        (family['enums'][kind]['values'] as List).insert(0, value);
+      }
+      catalogFile.writeAsStringSync(jsonEncode(catalog));
+    }
+
+    test('surface reads its size from the card', () {
+      driftSharedEnum(
+        file: 'card.dart',
+        enumName: 'FortalCardSize',
+        value: 'size0',
+        kind: 'size',
+        owners: {'card'},
+      );
+      expect(
+        checkFortalContract(candidate),
+        anyElement(
+          contains(
+            'FortalCardSize: [size0, size1, size2, size3, size4, size5] '
+            'differs from the Fortal specification '
+            '[size1, size2, size3, size4, size5]',
+          ),
+        ),
+      );
+    });
+
+    test('combobox reads its variant from the text field', () {
+      driftSharedEnum(
+        file: 'text_field.dart',
+        enumName: 'FortalTextFieldVariant',
+        value: 'outline',
+        kind: 'variant',
+        owners: {'text_field', 'text_area'},
+      );
+      expect(
+        checkFortalContract(candidate),
+        anyElement(
+          contains(
+            'FortalTextFieldVariant: [outline, surface, soft] '
+            'differs from the Fortal specification [surface, soft]',
+          ),
+        ),
+      );
+    });
+
     File candidateButton() => File(
       '${candidate.path}/registry_source/lib/src/fortal/components/button.dart',
     );

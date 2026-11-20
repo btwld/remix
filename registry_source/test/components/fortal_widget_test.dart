@@ -43,7 +43,7 @@ void main() {
       expect(menu.variant, FortalMenuVariant.soft);
       expect(select, isA<FortalSelect<String>>());
       expect(select.variant, FortalSelectVariant.ghost);
-      expect(textArea.variant, FortalTextAreaVariant.soft);
+      expect(textArea.variant, FortalTextFieldVariant.soft);
     });
 
     testWidgets('renders FortalDisclosure', (tester) async {

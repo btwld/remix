@@ -61,20 +61,11 @@ enum FortalTextAreaSize {
   size3,
 }
 
-/// The looks a text area comes in.
-enum FortalTextAreaVariant {
-  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
-  surface,
-
-  /// An accent tint inside a 1px accent ring, with accent-colored text.
-  soft,
-}
-
 /// The Fortal TextArea recipe: the text field's looks on a taller box whose
 /// content starts at the top.
 @MixWidget(target: RemixTextArea.new)
 TextFieldStyler fortalTextAreaStyle({
-  FortalTextAreaVariant variant = .surface,
+  FortalTextFieldVariant variant = .surface,
   FortalTextAreaSize size = .size2,
   TextFieldStyler style = const TextFieldStyler.create(),
 }) => _input(

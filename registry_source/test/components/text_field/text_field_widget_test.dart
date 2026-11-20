@@ -85,12 +85,12 @@ void main() {
               textArea: false,
               soft: variant == FortalTextFieldVariant.soft,
             ),
-          for (final variant in FortalTextAreaVariant.values)
+          for (final variant in FortalTextFieldVariant.values)
             (
               name: 'TextArea ${variant.name}',
               style: fortalTextAreaStyle(variant: variant),
               textArea: true,
-              soft: variant == FortalTextAreaVariant.soft,
+              soft: variant == FortalTextFieldVariant.soft,
             ),
         ];
 

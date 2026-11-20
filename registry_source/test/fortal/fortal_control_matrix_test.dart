@@ -118,10 +118,6 @@ void main() {
         FortalTextAreaSize.size2,
         FortalTextAreaSize.size3,
       ]);
-      expect(FortalTextAreaVariant.values, [
-        FortalTextAreaVariant.surface,
-        FortalTextAreaVariant.soft,
-      ]);
       expect(FortalDataListSize.values, [
         FortalDataListSize.size1,
         FortalDataListSize.size2,
@@ -197,7 +193,7 @@ void main() {
       expect(skeleton, isA<FortalSkeleton>());
       expect(segmented.size, FortalSegmentedControlSize.size2);
       expect(textArea.size, FortalTextAreaSize.size2);
-      expect(textArea.variant, FortalTextAreaVariant.surface);
+      expect(textArea.variant, FortalTextFieldVariant.surface);
       expect(dataList.size, FortalDataListSize.size2);
       expect(dataList.highContrast, isFalse);
 

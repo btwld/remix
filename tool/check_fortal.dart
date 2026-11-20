@@ -64,35 +64,31 @@ List<String> checkFortalContract(Directory workspace) {
     for (final entry in axes.entries) {
       final kind = entry.key;
       final definition = entry.value as Map;
-      final enumType = switch (kind) {
-        'size' ||
-        'variant' when id == 'range_slider' => 'FortalSlider${_pascal(kind)}',
-        'weight' => 'FortalTextWeight',
-        'size' when {'text', 'heading', 'code', 'kbd', 'link'}.contains(id) =>
+      // A family that shares another family's enum names it and its file.
+      final (enumType, enumFile) = switch (kind) {
+        'size' || 'variant' when id == 'range_slider' => (
+          'FortalSlider${_pascal(kind)}',
+          'slider',
+        ),
+        'weight' => ('FortalTextWeight', 'typography'),
+        'size' when {'text', 'heading', 'code', 'kbd', 'link'}.contains(id) => (
           'FortalTextSize',
-        'size' when id == 'tabs' => 'FortalTabsSize',
-        'size' ||
-        'variant' when id == 'combobox' => 'FortalTextField${_pascal(kind)}',
-        'size' when id == 'surface' => 'FortalCardSize',
-        _ => 'Fortal${_pascal(id)}${_pascal(kind)}',
+          'typography',
+        ),
+        'size' when id == 'tabs' => ('FortalTabsSize', null),
+        'size' || 'variant' when id == 'combobox' => (
+          'FortalTextField${_pascal(kind)}',
+          'text_field',
+        ),
+        'variant' when id == 'text_area' => ('FortalTextFieldVariant', null),
+        'size' when id == 'surface' => ('FortalCardSize', 'card'),
+        _ => ('Fortal${_pascal(id)}${_pascal(kind)}', null),
       };
-      // A family that shares another family's enum reads it from that file.
-      final enumFile = switch (id) {
-        'range_slider' => 'slider',
-        'combobox' => 'text_field',
-        'surface' when kind == 'size' => 'card',
-        _ => null,
-      };
-      var enumSource = enumFile == null
+      final enumSource = enumFile == null
           ? source
           : File(
               '$root/lib/src/fortal/components/$enumFile.dart',
             ).readAsStringSync();
-      if (enumType == 'FortalTextSize' || enumType == 'FortalTextWeight') {
-        enumSource = File(
-          '$root/lib/src/fortal/components/typography.dart',
-        ).readAsStringSync();
-      }
       // Framework/Remix behavioral enums stay owned by those packages.
       if (RegExp('enum\\s+$enumType\\b').hasMatch(enumSource)) {
         _checkEnum(

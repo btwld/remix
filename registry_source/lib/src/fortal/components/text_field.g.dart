@@ -516,7 +516,7 @@ class FortalTextArea extends StatelessWidget {
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
-  }) : variant = FortalTextAreaVariant.surface;
+  }) : variant = FortalTextFieldVariant.surface;
 
   /// An accent tint inside a 1px accent ring, with accent-colored text.
   const FortalTextArea.soft({
@@ -577,9 +577,9 @@ class FortalTextArea extends StatelessWidget {
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
-  }) : variant = FortalTextAreaVariant.soft;
+  }) : variant = FortalTextFieldVariant.soft;
 
-  final FortalTextAreaVariant variant;
+  final FortalTextFieldVariant variant;
 
   final FortalTextAreaSize size;
 

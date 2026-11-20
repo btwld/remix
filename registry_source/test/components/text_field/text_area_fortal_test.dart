@@ -32,7 +32,7 @@ void main() {
       EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     ];
 
-    for (final variant in FortalTextAreaVariant.values) {
+    for (final variant in FortalTextFieldVariant.values) {
       for (var index = 0; index < FortalTextAreaSize.values.length; index++) {
         final result = await _resolve(
           tester,
@@ -81,7 +81,7 @@ void main() {
     tester,
   ) async {
     for (final brightness in [Brightness.light, Brightness.dark]) {
-      for (final variant in FortalTextAreaVariant.values) {
+      for (final variant in FortalTextFieldVariant.values) {
         final disabled = await _resolve(
           tester,
           variant: variant,
@@ -127,7 +127,7 @@ void main() {
       EdgeInsets.symmetric(horizontal: 13.2, vertical: 8.8),
     ];
 
-    for (final variant in FortalTextAreaVariant.values) {
+    for (final variant in FortalTextFieldVariant.values) {
       for (var index = 0; index < FortalTextAreaSize.values.length; index++) {
         final result = await _resolve(
           tester,
@@ -150,7 +150,7 @@ void main() {
     tester,
   ) async {
     for (final brightness in [Brightness.light, Brightness.dark]) {
-      for (final variant in [FortalTextAreaVariant.surface]) {
+      for (final variant in [FortalTextFieldVariant.surface]) {
         final result = await _resolve(
           tester,
           variant: variant,
@@ -165,7 +165,7 @@ void main() {
     tester,
   ) async {
     for (final brightness in [Brightness.light, Brightness.dark]) {
-      for (final variant in FortalTextAreaVariant.values) {
+      for (final variant in FortalTextFieldVariant.values) {
         final result = await _resolve(
           tester,
           variant: variant,
@@ -206,7 +206,7 @@ Future<
 >
 _resolve(
   WidgetTester tester, {
-  FortalTextAreaVariant variant = FortalTextAreaVariant.surface,
+  FortalTextFieldVariant variant = FortalTextFieldVariant.surface,
   FortalTextAreaSize size = FortalTextAreaSize.size2,
   FortalScaling scaling = FortalScaling.percent100,
   Brightness brightness = Brightness.light,
