@@ -9,7 +9,7 @@ import 'package:remix/remix.dart';
 
 import '../theme/effects.dart';
 import '../theme/tokens.dart';
-import 'textfield.dart';
+import 'text_field.dart';
 
 part 'combobox.g.dart';
 

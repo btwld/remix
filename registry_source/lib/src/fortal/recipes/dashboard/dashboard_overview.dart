@@ -332,7 +332,7 @@ class _RevenueLegend extends StatelessWidget {
       FortalDashboardChartLegendItem(
         id: 'current',
         label: 'This period',
-        color: resolveFortalChartPalette(context).first,
+        color: fortalChartPalette(context).first,
         pattern: .solid,
       ),
       FortalDashboardChartLegendItem(
@@ -368,7 +368,7 @@ class FortalRevenueChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = resolveFortalChartPalette(context).first;
+    final accent = fortalChartPalette(context).first;
     final previous = MixScope.tokenOf(FortalTokens.gray9, context);
     // Thirteen weekly labels do not fit under a narrow card; show every other.
     final labelEvery = points.length > 8 ? 2 : 1;
@@ -592,7 +592,7 @@ class FortalChannelsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = resolveFortalChartPalette(context);
+    final palette = fortalChartPalette(context);
     return FortalSurface(
       child: ColumnBox(
         style: FlexBoxStyler()

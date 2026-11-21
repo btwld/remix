@@ -5,7 +5,7 @@ import 'palette.dart';
 import 'theme_data.dart';
 import 'tokens.dart';
 
-/// Establishes {{typePrefix}}'s body text and neutral foreground at the root.
+/// Establishes Fortal's body text and neutral foreground at the root.
 /// Nested scopes preserve text metrics; neutral foreground changes recolor it.
 Widget _{{valuePrefix}}RootTextStyle({
   required Map<MixToken<Object?>, Object> tokens,
@@ -35,7 +35,7 @@ Widget _{{valuePrefix}}Recolored(Color foreground, Widget child) =>
       ),
     );
 
-/// Widget that provides {{typePrefix}} design tokens to its subtree via [MixScope].
+/// Widget that provides Fortal design tokens to its subtree via [MixScope].
 ///
 /// Place [{{typePrefix}}Theme] below the application host so its text defaults apply.
 /// For a routed app, wrap the navigator in the host's builder. This also keeps
@@ -85,20 +85,20 @@ class {{typePrefix}}Theme extends StatelessWidget {
   final List<Type>? orderOfModifiers;
   final Widget child;
 
-  /// Returns the closest resolved {{typePrefix}} theme.
+  /// Returns the closest resolved Fortal theme.
   static {{typePrefix}}ThemeData of(BuildContext context) {
     final data = maybeOf(context);
     if (data != null) return data;
     throw FlutterError.fromParts([
       ErrorSummary('No {{typePrefix}}Theme found.'),
       ErrorDescription(
-        '${context.widget.runtimeType} tried to read the {{typePrefix}} theme, but no {{typePrefix}}Theme was found above it.',
+        '${context.widget.runtimeType} tried to read the UI theme, but no {{typePrefix}}Theme was found above it.',
       ),
       context.describeElement('The context used was'),
     ]);
   }
 
-  /// Returns the closest resolved {{typePrefix}} theme, if one is available.
+  /// Returns the closest resolved Fortal theme, if one is available.
   static {{typePrefix}}ThemeData? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_{{typePrefix}}InheritedTheme>()?.data;
 

@@ -13,7 +13,7 @@ import '../../components/modal.dart';
 import '../../components/select.dart';
 import '../../components/slider.dart';
 import '../../components/switch.dart';
-import '../../components/textfield.dart';
+import '../../components/text_field.dart';
 import '../../theme/theme.dart';
 import 'dashboard_demo_text.dart';
 

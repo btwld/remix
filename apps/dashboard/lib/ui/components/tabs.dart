@@ -15,7 +15,7 @@ enum UiTabsSize {
   size2,
 }
 
-/// The Ui TabBar recipe: the row of tabs over a 1px gray line.
+/// The Fortal TabBar recipe: the row of tabs over a 1px gray line.
 @MixWidget(target: RemixTabBar.new)
 TabBarStyler uiTabBarStyle({
   TabBarStyler style = const TabBarStyler.create(),
@@ -23,19 +23,21 @@ TabBarStyler uiTabBarStyle({
     .border(.bottom(.color(UiTokens.grayA5()).width(UiTokens.borderWidth1())))
     .merge(style);
 
-/// The Ui TabView recipe: the panel under the tabs, which it leaves
+/// The Fortal TabView recipe: the panel under the tabs, which it leaves
 /// unstyled.
 @MixWidget(target: RemixTabView.new)
 TabViewStyler uiTabViewStyle({
   TabViewStyler style = const TabViewStyler.create(),
 }) => TabViewStyler().merge(style);
 
-/// The Ui Tab recipe.
+/// The Fortal Tab recipe.
 ///
 /// A tab is gray text, darker under the pointer, with a 2px underline in the
 /// accent when selected. The underline is a transparent border at rest, so
 /// selecting a tab does not move it. The selected label is medium weight, and
-/// its letter spacing is adjusted so the bolder label keeps its width.
+/// its letter spacing is adjusted so the bolder label keeps its width. A
+/// disabled tab is gray-alpha-8, underline included, with no fill under the
+/// pointer.
 ///
 /// [highContrast] moves the underline to accent step 12.
 @MixWidget(target: RemixTab.new)
@@ -120,6 +122,23 @@ TabStyler uiTabStyle({
             ),
       )
       .wrap(uiTouchTarget())
-      .onDisabled(.containerEffects(.outline(.style(.none))))
+      .onDisabled(
+        TabStyler()
+            .label(.color(UiTokens.grayA8()))
+            .icon(.color(UiTokens.grayA8()))
+            .color(const Color(0x00000000))
+            .containerEffects(.outline(.style(.none)))
+            .onSelected(
+              TabStyler().wrap(
+                .box(
+                  BoxStyler().border(
+                    .bottom(
+                      .color(UiTokens.grayA8()).width(UiTokens.borderWidth2()),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+      )
       .merge(style);
 }

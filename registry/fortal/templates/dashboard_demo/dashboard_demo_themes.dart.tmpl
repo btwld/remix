@@ -18,7 +18,7 @@ import 'dashboard_demo_ui.dart';
 import 'dashboard_demo_widgets.dart';
 import 'dashboard_overview.dart';
 
-/// What the dashboard says about one {{typePrefix}} palette.
+/// What the dashboard says about one Fortal palette.
 typedef {{typePrefix}}PaletteNote = ({
   String place,
   String pairing,
@@ -37,7 +37,7 @@ const {{valuePrefix}}PaletteNotes = <{{typePrefix}}AccentColor, {{typePrefix}}Pa
   .caju: (place: 'The cashew', pairing: 'Orange on sand', motif: .cobogo),
 };
 
-/// The Themes page: the seven {{typePrefix}} palettes as cards, the rest of the theme
+/// The Themes page: the seven Fortal palettes as cards, the rest of the theme
 /// as controls, and a specimen of components that follows both.
 ///
 /// It edits the nearest [{{typePrefix}}DashboardThemeScope], so every page restyles as
@@ -264,8 +264,7 @@ class {{typePrefix}}PaletteCard extends StatelessWidget {
   }
 }
 
-/// The eighth card: a palette is generated, not hand-picked, so a brand can
-/// add its own.
+/// The eighth card: how a brand supplies its own palette.
 class _BrandPaletteCard extends StatelessWidget {
   const _BrandPaletteCard();
 
@@ -282,17 +281,20 @@ class _BrandPaletteCard extends StatelessWidget {
         const {{typePrefix}}Avatar.soft(icon: {{icon:plus}}, size: .size3),
         const {{typePrefix}}Text('Your brand', size: .size3, weight: .medium),
         StyledText(
-          'An eighth palette comes from one seed color. Generate it, then '
-          'pass it to the theme as accentPalette.',
+          'A brand palette holds one color set for light mode and one for '
+          'dark.',
           style: dashboardText(.size2, tone: .muted),
         ),
-        const {{typePrefix}}Code("generate.dart --seed '#8038CC'", size: .size1),
+        const {{typePrefix}}Code(
+          'accentPalette: {{typePrefix}}ColorTheme(light, dark)',
+          size: .size1,
+        ),
       ],
     ),
   );
 }
 
-/// A specimen of {{typePrefix}} components in the active theme: every variant of the
+/// A specimen of Fortal components in the active theme: every variant of the
 /// button and the badge, the selection and range controls, and inline type.
 ///
 /// The variant rows come from the recipes' own enums, so a variant added to a

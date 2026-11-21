@@ -77,7 +77,7 @@ DisclosureStyler _quietDisclosure() => vanillaDisclosureStyle(
       .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
       .content(
         BoxStyler()
-            .padding(.only(top: VanillaTokens.s2))
+            .padding(.all(0).top(VanillaTokens.s2))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
       .onHovered(.trigger(.color(const Color(0x00000000))))

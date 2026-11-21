@@ -8,7 +8,7 @@ import 'calendar.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
 
-/// Ui's reviewed DateRangePicker composition.
+/// Fortal's DateRangePicker composition.
 ///
 /// Remix owns civil-date selection, focus, keyboard navigation and semantics.
 /// Multiple independent child styles require a hand-written facade; caller

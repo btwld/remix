@@ -19,13 +19,7 @@ enum UiSegmentedControlSize {
   size3,
 }
 
-/// The looks a segmented control comes in.
-enum UiSegmentedControlVariant {
-  /// A gray track with a raised surface under the selected item.
-  surface,
-}
-
-/// The Ui SegmentedControl recipe.
+/// The Fortal SegmentedControl recipe.
 ///
 /// The track is a gray tint blended over the surface. The selected item sits
 /// on a raised fill with a 1px edge, and turns medium weight.
@@ -34,12 +28,11 @@ enum UiSegmentedControlVariant {
 /// icon size. Control and item styles may override these defaults.
 @MixWidget(target: RemixSegmentedControl.new)
 SegmentedControlStyler uiSegmentedControlStyle({
-  UiSegmentedControlVariant variant = .surface,
   UiSegmentedControlSize size = .size2,
   SegmentedControlStyler style = const SegmentedControlStyler.create(),
 }) {
   final metrics = _metrics(size);
-  final item = _item(variant, metrics);
+  final item = _item(metrics);
 
   return SegmentedControlStyler()
       .mainAxisSize(.min)
@@ -51,10 +44,7 @@ SegmentedControlStyler uiSegmentedControlStyle({
       .merge(style);
 }
 
-SegmentedControlItemStyler _item(
-  UiSegmentedControlVariant variant,
-  _Metrics metrics,
-) {
+SegmentedControlItemStyler _item(_Metrics metrics) {
   final base = SegmentedControlItemStyler()
       .wrap(uiTouchTarget())
       .minHeight(metrics.height)
@@ -77,7 +67,7 @@ SegmentedControlItemStyler _item(
           overContent: RemixBoxEffectLayerMix(),
         ),
       );
-  final selected = _selectedItem(variant, metrics);
+  final selected = _selectedItem(metrics);
   final disabled = SegmentedControlItemStyler()
       .containerEffects(
         RemixBoxEffectsMix(outline: BorderSideMix(style: .none)),
@@ -109,41 +99,33 @@ SegmentedControlItemStyler _item(
       .onDisabled(disabled.onSelected(disabledSelected));
 }
 
-SegmentedControlItemStyler _selectedItem(
-  UiSegmentedControlVariant variant,
-  _Metrics metrics,
-) {
-  final overContent = switch (variant) {
-    .surface => RemixBoxEffectLayerMix(
-      shadows: [
-        RemixBoxShadowMix(
-          color: UiTokens.grayA4(),
-          spreadRadius: UiTokens.borderWidth1(),
-          shapeInset: 1,
-        ),
-      ],
-    ),
-  };
-
-  return SegmentedControlItemStyler()
-      .color(const Color(0x00000000))
-      .borderRadius(.all(metrics.radius))
-      .label(
-        TextStyler()
-            .fontWeight(UiTokens.fontWeightMedium())
-            .letterSpacing(metrics.activeLetterSpacing)
-            .wordSpacing(0),
-      )
-      .containerEffects(
-        RemixBoxEffectsMix(
-          behindContent: _fill(
-            UiTokens.segmentedControlIndicatorBackground(),
-            inset: 1,
+SegmentedControlItemStyler _selectedItem(_Metrics metrics) =>
+    SegmentedControlItemStyler()
+        .color(const Color(0x00000000))
+        .borderRadius(.all(metrics.radius))
+        .label(
+          TextStyler()
+              .fontWeight(UiTokens.fontWeightMedium())
+              .letterSpacing(metrics.activeLetterSpacing)
+              .wordSpacing(0),
+        )
+        .containerEffects(
+          RemixBoxEffectsMix(
+            behindContent: _fill(
+              UiTokens.segmentedControlIndicatorBackground(),
+              inset: 1,
+            ),
+            overContent: RemixBoxEffectLayerMix(
+              shadows: [
+                RemixBoxShadowMix(
+                  color: UiTokens.grayA4(),
+                  spreadRadius: UiTokens.borderWidth1(),
+                  shapeInset: 1,
+                ),
+              ],
+            ),
           ),
-          overContent: overContent,
-        ),
-      );
-}
+        );
 
 RemixBoxEffectLayerMix _fill(Color color, {double? inset}) =>
     RemixBoxEffectLayerMix(

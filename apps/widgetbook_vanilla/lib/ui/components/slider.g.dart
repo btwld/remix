@@ -16,10 +16,6 @@ part of 'slider.dart';
 /// Set [surfaceColor] to the enclosing surface on cards or tinted panels (for
 /// example `VanillaTokens.card.resolve(context)`); the hover and press halos
 /// are opaque and blend against it, defaulting to the page background.
-///
-/// The generated widget omits `semanticFormatterCallback`: its type comes from
-/// `package:naked_ui`, which this layer does not import. Use `RemixSlider` to
-/// reword the announced value.
 class VanillaSlider extends StatelessWidget {
   const VanillaSlider({
     super.key,
@@ -37,6 +33,7 @@ class VanillaSlider extends StatelessWidget {
     this.autofocus = false,
     this.snapDivisions,
     this.semanticLabel,
+    this.semanticFormatterCallback,
     this.excludeSemantics = false,
   });
 
@@ -68,6 +65,8 @@ class VanillaSlider extends StatelessWidget {
 
   final String? semanticLabel;
 
+  final NakedSliderSemanticFormatterCallback? semanticFormatterCallback;
+
   final bool excludeSemantics;
 
   @override
@@ -90,6 +89,7 @@ class VanillaSlider extends StatelessWidget {
       autofocus: this.autofocus,
       snapDivisions: this.snapDivisions,
       semanticLabel: this.semanticLabel,
+      semanticFormatterCallback: this.semanticFormatterCallback,
       excludeSemantics: this.excludeSemantics,
     );
   }

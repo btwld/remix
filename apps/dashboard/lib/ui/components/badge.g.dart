@@ -6,7 +6,7 @@ part of 'badge.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Badge recipe.
+/// The Fortal Badge recipe.
 ///
 /// It reads top to bottom: the size, then the variant's colors.
 ///

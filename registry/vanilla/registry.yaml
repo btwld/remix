@@ -29,6 +29,16 @@ items:
     exports:
       - icons.dart
 
+  date_picker_styles:
+    registryDependencies:
+      - theme
+      - calendar
+      - icon_button
+      - select
+    files:
+      - source: templates/date_picker_styles/date_picker_styles.dart.tmpl
+        target: "@ui/components/date_picker/date_picker_styles.dart"
+
   accordion:
     registryDependencies:
       - theme
@@ -233,7 +243,7 @@ items:
   combobox:
     registryDependencies:
       - theme
-      - textfield
+      - text_field
     dependencies:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
@@ -251,7 +261,7 @@ items:
     registryDependencies:
       - theme
       - icon_button
-      - textfield
+      - text_field
     files:
       - source: templates/recipes/composer_recipe.dart.tmpl
         target: "@ui/recipes/composer_recipe.dart"
@@ -302,7 +312,7 @@ items:
       - suggestions_recipe
       - switch
       - text
-      - textfield
+      - text_field
       - toast
       - tool_call_recipe
     dependencies:
@@ -330,10 +340,6 @@ items:
         target: "@ui/recipes/dashboard/dashboard_demo_settings.dart"
       - source: templates/dashboard_demo/dashboard_demo.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo.dart"
-    exports:
-      - recipes/dashboard/dashboard_sample_data.dart
-      - recipes/dashboard/dashboard_overview.dart
-      - recipes/dashboard/dashboard_demo.dart
 
   dashboard_shell:
     registryDependencies:
@@ -391,9 +397,8 @@ items:
       - theme
       - button
       - calendar
-      - icon_button
+      - date_picker_styles
       - popover
-      - select
     files:
       - source: templates/date_picker/date_picker.dart.tmpl
         target: "@ui/components/date_picker.dart"
@@ -404,11 +409,9 @@ items:
     registryDependencies:
       - theme
       - button
-      - calendar
-      - icon_button
+      - date_picker_styles
       - popover
       - range_calendar
-      - select
     files:
       - source: templates/date_range_picker/date_range_picker.dart.tmpl
         target: "@ui/components/date_range_picker.dart"
@@ -626,7 +629,7 @@ items:
     registryDependencies:
       - theme
       - icon_button
-      - textfield
+      - text_field
     files:
       - source: templates/search_field/search_field.dart.tmpl
         target: "@ui/components/search_field.dart"
@@ -820,7 +823,7 @@ items:
     exports:
       - components/text.dart
 
-  textfield:
+  text_field:
     registryDependencies:
       - theme
     dependencies:
@@ -829,12 +832,12 @@ items:
       build_runner: ^2.10.1
       mix_generator: ^2.2.0-beta.3
     files:
-      - source: templates/textfield/textfield.dart.tmpl
-        target: "@ui/components/textfield.dart"
+      - source: templates/text_field/text_field.dart.tmpl
+        target: "@ui/components/text_field.dart"
     generated:
-      - "@ui/components/textfield.g.dart"
+      - "@ui/components/text_field.g.dart"
     exports:
-      - components/textfield.dart
+      - components/text_field.dart
 
   toast:
     registryDependencies:

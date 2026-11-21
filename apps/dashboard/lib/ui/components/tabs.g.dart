@@ -6,7 +6,7 @@ part of 'tabs.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui TabBar recipe: the row of tabs over a 1px gray line.
+/// The Fortal TabBar recipe: the row of tabs over a 1px gray line.
 class UiTabBar extends StatelessWidget {
   const UiTabBar({
     super.key,
@@ -28,7 +28,7 @@ class UiTabBar extends StatelessWidget {
   }
 }
 
-/// The Ui TabView recipe: the panel under the tabs, which it leaves
+/// The Fortal TabView recipe: the panel under the tabs, which it leaves
 /// unstyled.
 class UiTabView extends StatelessWidget {
   const UiTabView({
@@ -59,12 +59,14 @@ class UiTabView extends StatelessWidget {
   }
 }
 
-/// The Ui Tab recipe.
+/// The Fortal Tab recipe.
 ///
 /// A tab is gray text, darker under the pointer, with a 2px underline in the
 /// accent when selected. The underline is a transparent border at rest, so
 /// selecting a tab does not move it. The selected label is medium weight, and
-/// its letter spacing is adjusted so the bolder label keeps its width.
+/// its letter spacing is adjusted so the bolder label keeps its width. A
+/// disabled tab is gray-alpha-8, underline included, with no fill under the
+/// pointer.
 ///
 /// [highContrast] moves the underline to accent step 12.
 class UiTab extends StatelessWidget {

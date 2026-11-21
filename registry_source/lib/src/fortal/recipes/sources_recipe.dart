@@ -75,12 +75,13 @@ DisclosureStyler _quietDisclosure() => fortalDisclosureStyle(
       .container(
         BoxStyler()
             .color(const Color(0x00000000))
+            .padding(.all(0))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
       .trigger(BoxStyler().color(const Color(0x00000000)).padding(.all(0)))
       .content(
         BoxStyler()
-            .padding(.only(top: FortalTokens.space2()))
+            .padding(.all(0).top(FortalTokens.space2()))
             .foregroundDecoration(BoxDecorationMix.border(.style(.none))),
       )
       .onHovered(.trigger(.color(const Color(0x00000000))))

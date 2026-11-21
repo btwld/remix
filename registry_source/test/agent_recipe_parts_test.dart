@@ -14,14 +14,23 @@ void main() {
   final fortalAnswer = fortalAgentAnswerRecipe();
   final vanillaAnswer = vanillaAgentAnswerRecipe();
   final heroUiAnswer = heroUiAgentAnswerRecipe();
+  final fortalSteps = fortalAgentStepsRecipe();
+  final vanillaSteps = vanillaAgentStepsRecipe();
+  final heroUiSteps = heroUiAgentStepsRecipe();
   final presets = [
     (
       name: 'fortal',
       theme: (Widget child, bool dark) =>
           FortalTheme(mode: dark ? .dark : .light, child: child),
       call: fortalCall.style,
+      callDisclosure: fortalCall.disclosureStyle,
       action: fortalAnswer.actionStyle,
       selected: fortalAnswer.selectedActionStyle,
+      steps: fortalSteps.style,
+      step: fortalSteps.stepStyle,
+      stepsDisclosure: fortalSteps.disclosureStyle,
+      sourcesDisclosure: fortalAgentSourcesRecipe().disclosureStyle,
+      latest: fortalAgentConversationRecipe().latestStyle,
       toolIcon: fortalAgentToolIcon,
       hover: FortalTokens.grayA3,
       pressed: FortalTokens.grayA4,
@@ -33,8 +42,14 @@ void main() {
       theme: (Widget child, bool dark) =>
           VanillaTheme(mode: dark ? .dark : .light, child: child),
       call: vanillaCall.style,
+      callDisclosure: vanillaCall.disclosureStyle,
       action: vanillaAnswer.actionStyle,
       selected: vanillaAnswer.selectedActionStyle,
+      steps: vanillaSteps.style,
+      step: vanillaSteps.stepStyle,
+      stepsDisclosure: vanillaSteps.disclosureStyle,
+      sourcesDisclosure: vanillaAgentSourcesRecipe().disclosureStyle,
+      latest: vanillaAgentConversationRecipe().latestStyle,
       toolIcon: vanillaAgentToolIcon,
       hover: VanillaTokens.accent,
       pressed: VanillaTokens.accent,
@@ -46,8 +61,14 @@ void main() {
       theme: (Widget child, bool dark) =>
           HeroUiTheme(mode: dark ? .dark : .light, child: child),
       call: heroUiCall.style,
+      callDisclosure: heroUiCall.disclosureStyle,
       action: heroUiAnswer.actionStyle,
       selected: heroUiAnswer.selectedActionStyle,
+      steps: heroUiSteps.style,
+      step: heroUiSteps.stepStyle,
+      stepsDisclosure: heroUiSteps.disclosureStyle,
+      sourcesDisclosure: heroUiAgentSourcesRecipe().disclosureStyle,
+      latest: heroUiAgentConversationRecipe().latestStyle,
       toolIcon: heroUiAgentToolIcon,
       hover: HeroUiTokens.defaultColor,
       pressed: HeroUiTokens.defaultHover,
@@ -124,6 +145,70 @@ void main() {
                 TextDecoration.underline,
               );
             }
+          }
+        });
+
+        testWidgets('the quiet disclosures pad only above their content', (
+          tester,
+        ) async {
+          final steps = await resolve(tester, preset.stepsDisclosure);
+          final sources = await resolve(tester, preset.sourcesDisclosure);
+          final call = await resolve(tester, preset.callDisclosure);
+
+          for (final quiet in [steps, sources, call]) {
+            expect(
+              quiet.container.spec.padding ?? EdgeInsets.zero,
+              EdgeInsets.zero,
+            );
+          }
+
+          expect(steps.trigger.spec.padding, EdgeInsets.zero);
+          expect(steps.content.spec.padding, const EdgeInsets.only(top: 12));
+          expect(sources.trigger.spec.padding, EdgeInsets.zero);
+          expect(sources.content.spec.padding, const EdgeInsets.only(top: 8));
+        });
+
+        testWidgets('the open rail ends its line at the glyph center', (
+          tester,
+        ) async {
+          await pump(
+            tester,
+            SizedBox(
+              width: 500,
+              child: AgentSteps(
+                steps: const [AgentStep(id: 'read', title: 'Read the file')],
+                expanded: true,
+                style: preset.steps,
+                stepStyle: preset.step,
+                disclosureStyle: preset.stepsDisclosure,
+                glyphBuilder: (_, glyph, spec) =>
+                    SizedBox.square(key: ValueKey(glyph), dimension: spec.size),
+              ),
+            ),
+          );
+          final glyph = find.byKey(const ValueKey(AgentGlyph.thinking));
+          final rail = find.ancestor(
+            of: find.byKey(const ValueKey(AgentGlyph.stepPending)),
+            matching: find.byType(ColumnBox),
+          );
+
+          // `_railInset` (7) plus the 1px line, inside the rail's margin box.
+          expect(
+            tester.getCenter(glyph).dx - tester.getTopLeft(rail.first).dx,
+            8,
+          );
+        });
+
+        testWidgets('the latest button stays opaque under the pointer', (
+          tester,
+        ) async {
+          for (final states in [
+            {WidgetState.hovered},
+            {WidgetState.pressed},
+            {WidgetState.hovered, WidgetState.pressed},
+          ]) {
+            final spec = await resolve(tester, preset.latest, states: states);
+            expect(_fill(spec.container)?.a, 1.0, reason: '$states');
           }
         });
 

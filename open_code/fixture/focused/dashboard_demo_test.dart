@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 
 import '../lib/main.dart';
+import '../lib/ui/recipes/dashboard/dashboard_demo.dart';
 import '../lib/ui/ui.dart';
 
 void main() {

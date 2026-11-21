@@ -8,8 +8,9 @@ import 'select.dart';
 ///
 /// Remix owns rendering, selection, navigation, focus and date semantics.
 /// This supplies theme typography, transparent resting days and the visual
-/// states. The inset focus band uses the shared ring tint and stroke without
-/// changing layout; a calendar's scrolling grid clips an outside ring.
+/// states. Keyboard focus is a `foreground` outline drawn inside the day,
+/// because the scrolling grid clips an outside ring and the `focus` tint is the
+/// accent fill of a selected day.
 CalendarStyler uiCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => CalendarStyler()
@@ -105,9 +106,9 @@ CalendarStyler uiCalendarStyle({
                   RemixBoxEffectsMix(
                     outline: BorderSideMix(
                       color: UiTokens.foreground(),
-                      width: 2.0,
+                      width: UiTokens.focusWidth,
                     ),
-                    outlineOffset: -2.0,
+                    outlineOffset: -UiTokens.focusWidth,
                   ),
                 ),
           )
@@ -389,9 +390,6 @@ class UiCalendar extends StatelessWidget {
 
   /// Raw resolved spec; bypasses [style] and inherited styles.
   final CalendarSpec? styleSpec;
-
-  /// Creates a [CalendarStyler], for `RemixCalendar.styleFrom(...)`.
-  static const styleFrom = CalendarStyler.new;
 
   @override
   Widget build(BuildContext context) => RemixCalendar(

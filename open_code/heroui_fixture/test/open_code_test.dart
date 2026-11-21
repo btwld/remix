@@ -638,6 +638,7 @@ final _cases = <_WidgetCase>[
   const _WidgetCase(
     'checkbox group',
     AcmeCheckboxGroup<String>(
+      orientation: Axis.horizontal,
       values: {},
       options: [AcmeCheckboxOption(value: 'a', label: 'Choice A')],
     ),
@@ -774,7 +775,7 @@ final _cases = <_WidgetCase>[
   const _WidgetCase(
     'switch group',
     AcmeSwitchGroup(
-      items: [AcmeSwitchOption(selected: false, label: 'Alerts')],
+      options: [AcmeSwitchOption(selected: false, label: 'Alerts')],
     ),
     {AcmeSwitchGroup, AcmeSwitch},
   ),

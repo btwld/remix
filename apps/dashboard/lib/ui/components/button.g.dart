@@ -6,7 +6,7 @@ part of 'button.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Button recipe.
+/// The Fortal Button recipe.
 ///
 /// It reads top to bottom: what every button shares, then the size, then the
 /// variant's colors for each state, then focus and disabled. [style] merges

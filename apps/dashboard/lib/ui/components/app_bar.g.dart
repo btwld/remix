@@ -6,7 +6,7 @@ part of 'app_bar.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates the default [AppBarStyler] for the Ui app bar.
+/// Creates the default [AppBarStyler] for the Fortal app bar.
 ///
 /// Configures a solid panel surface, a `space9` toolbar height with an inset
 /// bottom border, `space4` horizontal padding, and bold `size4` title

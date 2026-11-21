@@ -9,15 +9,12 @@ import '../theme/theme.dart';
 
 part 'chart.g.dart';
 
-/// Returns the series colors for Ui charts in the current scope.
+/// Returns the series colors for Fortal charts in the current scope.
 ///
 /// The accent's `accentIndicator` comes first, then the other named color
 /// families, each at a step that keeps 3:1 on the page and panels (see
 /// [computeChartSeries]). Set [highContrast] to use step 12 throughout.
-List<Color> resolveUiChartPalette(
-  BuildContext context, {
-  bool highContrast = false,
-}) {
+List<Color> uiChartPalette(BuildContext context, {bool highContrast = false}) {
   final theme = UiTheme.of(context);
   final colors = resolveUiTokens(theme);
   final namedAccent = theme.accentPalette == null ? theme.accent : null;
@@ -37,7 +34,7 @@ List<Color> resolveUiChartPalette(
 /// `#111111` ink, whichever contrasts more.
 ///
 /// ```dart
-/// final palette = resolveUiChartPalette(context);
+/// final palette = uiChartPalette(context);
 ///
 /// PieSlice(
 ///   id: 'mobile',
@@ -69,7 +66,7 @@ const _seriesFamilies = <(UiAccentColor, UiColorTheme)>[
   (.orla, orla),
 ];
 
-/// The Ui LineChart recipe, for a Mix line or area chart.
+/// The Fortal LineChart recipe, for a Mix line or area chart.
 ///
 /// Generates [UiLineChart] through `mix_generator`. The plot remains
 /// transparent so callers can compose it inside any surface.
@@ -120,7 +117,7 @@ LineChartStyler uiLineChartStyle({
       .merge(style);
 }
 
-/// The Ui BarChart recipe: grouped, stacked or floating bars.
+/// The Fortal BarChart recipe: grouped, stacked or floating bars.
 ///
 /// Generates [UiBarChart] through `mix_generator`.
 @MixWidget(target: BarChart.new)
@@ -150,7 +147,7 @@ BarChartStyler uiBarChartStyle({
       .merge(style);
 }
 
-/// The Ui PieChart recipe, for a Mix pie or donut chart.
+/// The Fortal PieChart recipe, for a Mix pie or donut chart.
 ///
 /// A positive [centerRadius] renders a donut. Labels are hidden by default so
 /// category names can be presented in a caller-owned legend without forcing
@@ -254,12 +251,12 @@ ChartTooltipStyler _uiTooltipStyle() =>
 
 /// The series colors of the active theme.
 final _standardPaletteToken = ContextToken<List<Color>>(
-  (context) => resolveUiChartPalette(context),
+  (context) => uiChartPalette(context),
 );
 
 /// The series colors of the active theme, all at step 12.
 final _highContrastPaletteToken = ContextToken<List<Color>>(
-  (context) => resolveUiChartPalette(context, highContrast: true),
+  (context) => uiChartPalette(context, highContrast: true),
 );
 
 /// The tooltip's 1px frame.

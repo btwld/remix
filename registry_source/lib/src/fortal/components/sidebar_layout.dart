@@ -323,9 +323,8 @@ class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
 /// Descendants of [FortalSidebarLayout] and its compact navigation sheet can
 /// read this scope to observe compact mode or toggle the sheet.
 class FortalSidebarLayoutScope extends InheritedWidget {
-  // Fortal source floors at Dart 3.11, one release before private named
-  // parameters, so this assigns the private fields explicitly instead of
-  // naming the parameters after them.
+  // Private named parameters would raise the application's language floor,
+  // so the private fields are assigned explicitly.
   const FortalSidebarLayoutScope._({
     required this.isCompact,
     required this.isCompactOpen,

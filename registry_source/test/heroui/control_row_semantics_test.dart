@@ -9,7 +9,7 @@ import '../helpers/heroui.dart';
 void main() {
   for (final (radio, axis, enabled) in [
     for (final radio in [true, false])
-      for (final axis in radio ? Axis.values : [Axis.vertical])
+      for (final axis in Axis.values)
         for (final enabled in [true, false]) (radio, axis, enabled),
   ]) {
     testWidgets(
@@ -38,6 +38,7 @@ void main() {
                     values: const {},
                     onChanged: (_) => callbacks++,
                     label: 'Notifications',
+                    orientation: axis,
                     enabled: enabled,
                     helperText: 'Choose your channels.',
                     errorText: 'Choose at least one channel.',
@@ -123,7 +124,7 @@ void main() {
               explicitChildNodes: true,
               label: 'Page',
               child: HeroUiFieldLayout(
-                axis: axis,
+                orientation: axis,
                 label: label,
                 controlProvidesName: controlProvidesName,
                 helperText: 'Help',
@@ -197,7 +198,7 @@ void main() {
                       ],
                     )
                   : HeroUiSwitchGroup(
-                      items: [
+                      options: [
                         HeroUiSwitchOption(
                           selected: selected,
                           onChanged: (value) =>

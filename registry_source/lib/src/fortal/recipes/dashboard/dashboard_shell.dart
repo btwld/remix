@@ -7,7 +7,7 @@ import '../../components/app_bar.dart';
 import '../../components/icon_button.dart';
 import '../../components/sidebar.dart';
 import '../../components/sidebar_layout.dart';
-import '../../components/textfield.dart';
+import '../../components/text_field.dart';
 import '../../theme/theme.dart';
 
 /// A dashboard shell styled with this preset.

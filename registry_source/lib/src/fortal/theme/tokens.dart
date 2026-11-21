@@ -13,9 +13,17 @@ import 'theme_scope.dart' show FortalTheme;
 /// ```
 ///
 /// Must be used within [FortalTheme] to resolve actual values.
-class FortalTokens {
+abstract final class FortalTokens {
   static const activityMaxHeight = DoubleToken('fortal.activity.max-height');
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in a future registry revision.',
+  )
   static const planMaxHeight = DoubleToken('fortal.plan.max-height');
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in a future registry revision.',
+  )
   static const messageAvatarSize = DoubleToken('fortal.message.avatar-size');
   static const messageContentMaxWidth = DoubleToken(
     'fortal.message.content-max-width',
@@ -23,9 +31,14 @@ class FortalTokens {
   static const messageCollapsedHeight = DoubleToken(
     'fortal.message.collapsed-height',
   );
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in a future registry revision.',
+  )
   static const composerFieldMinHeight = DoubleToken(
     'fortal.composer-field-min-height',
   );
+
   static const touchTargetMin = DoubleToken('fortal.touch-target-min');
   static const popoverMaxWidth = DoubleToken('fortal.popover-max-width');
   static const dialogMaxWidth = DoubleToken('fortal.dialog-max-width');
@@ -214,7 +227,7 @@ class FortalTokens {
   /// Gray step 12 - High contrast text and primary content.
   static const gray12 = ColorToken('fortal.gray.12');
 
-  /// Neutral surface baseline for the selected gray scale (matches JSON surface)
+  /// Neutral surface baseline for the selected gray scale.
   static const graySurface = ColorToken('fortal.gray.surface');
 
   /// Neutral indicator color (typically gray step 9)
@@ -254,7 +267,7 @@ class FortalTokens {
   static const grayA11 = ColorToken('fortal.gray.a11');
   static const grayA12 = ColorToken('fortal.gray.a12');
 
-  /// Black alpha steps used in layered shadows.
+  /// Translucent black steps, independent of the selected theme.
   static const blackA1 = ColorToken('fortal.black.a1');
   static const blackA2 = ColorToken('fortal.black.a2');
   static const blackA3 = ColorToken('fortal.black.a3');
@@ -528,7 +541,7 @@ class FortalTokens {
   /// Shadow level 1 - Subtle elevation.
   static const shadow1 = BoxShadowToken('fortal.shadow.1');
 
-  /// Exact layered shadow level 1, including inset layers.
+  /// Shadow level 1 as a [RemixBoxShadow] list.
   static const shadow1Layers = RemixBoxShadowListToken(
     'fortal.shadow.1.layers',
   );
@@ -643,9 +656,17 @@ class FortalTokens {
   static const fontWeightBold = FontWeightToken('fortal.font.weight.bold');
 
   /// Fast animation duration (100ms).
+  @Deprecated(
+    'Use Duration(milliseconds: 100) or an app-owned DurationToken. '
+    'Will be removed in a future registry revision.',
+  )
   static const transitionFast = DurationToken('fortal.transition.fast');
 
   /// Slow animation duration (300ms).
+  @Deprecated(
+    'Use Duration(milliseconds: 300) or an app-owned DurationToken. '
+    'Will be removed in a future registry revision.',
+  )
   static const transitionSlow = DurationToken('fortal.transition.slow');
 
   static const skeletonPulseDuration = DurationToken(

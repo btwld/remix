@@ -286,7 +286,7 @@ items:
   combobox:
     registryDependencies:
       - theme
-      - textfield
+      - text_field
     dependencies:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
@@ -304,7 +304,7 @@ items:
     registryDependencies:
       - theme
       - button
-      - textarea
+      - text_area
     files:
       - source: templates/recipes/composer_recipe.dart.tmpl
         target: "@ui/recipes/composer_recipe.dart"
@@ -351,7 +351,7 @@ items:
       - suggestions_recipe
       - switch
       - table
-      - textfield
+      - text_field
       - toast
       - tool_call_recipe
     dependencies:
@@ -379,10 +379,6 @@ items:
         target: "@ui/recipes/dashboard/dashboard_demo_settings.dart"
       - source: templates/dashboard_demo/dashboard_demo.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo.dart"
-    exports:
-      - recipes/dashboard/dashboard_sample_data.dart
-      - recipes/dashboard/dashboard_overview.dart
-      - recipes/dashboard/dashboard_demo.dart
 
   dashboard_shell:
     registryDependencies:
@@ -468,7 +464,7 @@ items:
   input_group:
     registryDependencies:
       - theme
-      - textfield
+      - text_field
     dependencies:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
@@ -622,7 +618,7 @@ items:
     registryDependencies:
       - theme
       - close_button
-      - textfield
+      - text_field
     dependencies:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
@@ -844,23 +840,23 @@ items:
     exports:
       - components/tabs.dart
 
-  textarea:
+  text_area:
     registryDependencies:
-      - textfield
+      - text_field
     dependencies:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
       mix_generator: ^2.2.0-beta.3
     files:
-      - source: templates/textarea/textarea.dart.tmpl
-        target: "@ui/components/textarea.dart"
+      - source: templates/text_area/text_area.dart.tmpl
+        target: "@ui/components/text_area.dart"
     generated:
-      - "@ui/components/textarea.g.dart"
+      - "@ui/components/text_area.g.dart"
     exports:
-      - components/textarea.dart
+      - components/text_area.dart
 
-  textfield:
+  text_field:
     registryDependencies:
       - theme
     dependencies:
@@ -869,12 +865,12 @@ items:
       build_runner: ^2.10.1
       mix_generator: ^2.2.0-beta.3
     files:
-      - source: templates/textfield/textfield.dart.tmpl
-        target: "@ui/components/textfield.dart"
+      - source: templates/text_field/text_field.dart.tmpl
+        target: "@ui/components/text_field.dart"
     generated:
-      - "@ui/components/textfield.g.dart"
+      - "@ui/components/text_field.g.dart"
     exports:
-      - components/textfield.dart
+      - components/text_field.dart
 
   toast:
     registryDependencies:

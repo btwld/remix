@@ -12,9 +12,7 @@ part of 'range_slider.dart';
 /// serve both thumbs. Pass [surfaceColor] on a card or tinted panel so the
 /// thumb halos blend with it rather than the page.
 ///
-/// Give each bound a distinct name in `semanticLabels`. The generated
-/// `VanillaRangeSlider` omits `semanticFormatterCallbacks`, whose type comes
-/// from `package:naked_ui`; use `RemixRangeSlider` for custom announcements.
+/// Give each bound a distinct name in `semanticLabels`.
 class VanillaRangeSlider extends StatelessWidget {
   const VanillaRangeSlider({
     super.key,
@@ -33,6 +31,7 @@ class VanillaRangeSlider extends StatelessWidget {
     this.focusNodes,
     this.autofocusThumbIndex,
     this.semanticLabels,
+    this.semanticFormatterCallbacks,
     this.excludeSemantics = false,
   });
 
@@ -66,6 +65,8 @@ class VanillaRangeSlider extends StatelessWidget {
 
   final List<String?>? semanticLabels;
 
+  final List<NakedSliderSemanticFormatterCallback?>? semanticFormatterCallbacks;
+
   final bool excludeSemantics;
 
   @override
@@ -89,6 +90,7 @@ class VanillaRangeSlider extends StatelessWidget {
       focusNodes: this.focusNodes,
       autofocusThumbIndex: this.autofocusThumbIndex,
       semanticLabels: this.semanticLabels,
+      semanticFormatterCallbacks: this.semanticFormatterCallbacks,
       excludeSemantics: this.excludeSemantics,
     );
   }

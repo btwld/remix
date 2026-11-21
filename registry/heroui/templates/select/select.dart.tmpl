@@ -112,9 +112,8 @@ const _paddingY = 8.0;
 const _reservedEnd = 28.0;
 
 /// `.select__indicator` is a `size-4` slot at `end-2`, centered on its chevron,
-/// which inks 10.5px wide (`IconChevronDown` in react `icons.js`). Remix's
-/// chevron fills the width of its box, so an 11px glyph centered in the same
-/// slot matches it.
+/// which is 10.5px wide. Remix's chevron fills the width of its box, so an
+/// 11px glyph centered in the same slot matches it.
 const _indicator = 11.0;
 const _indicatorEnd = 8 + (16 - _indicator) / 2;
 

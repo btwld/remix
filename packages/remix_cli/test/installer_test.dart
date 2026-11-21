@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
@@ -5,6 +6,7 @@ import 'package:remix_cli/src/cli.dart';
 import 'package:remix_cli/src/installer.dart';
 import 'package:remix_cli/src/process_runner.dart';
 import 'package:remix_cli/src/registry.dart';
+import 'package:remix_cli/src/template_renderer.dart';
 import 'package:test/test.dart';
 
 import 'checkout_registry.dart';
@@ -657,6 +659,66 @@ packages:
     expect(writer.paths, ['lib/ui/components/button.dart']);
   });
 
+  test('Vanilla pickers preserve a customized standalone calendar', () async {
+    writeRequiredPubspec(root, remixUiIcons: registryRemixIconsConstraint);
+    writeRequiredLock(root, remixUiIcons: '$registryRemixIconsFloor');
+    final writer = RecordingFileWriter(root);
+    final installer = Installer(
+      projectRoot: root,
+      writeOut: (_) {},
+      processRunner: happyRunner(root, writeLockOnPubGet: false),
+      fileWriter: writer,
+      sources: const FixtureOfficialResolver(),
+    );
+    await installer.add(
+      const AddOptions(items: ['icon_button', 'select'], mode: AddMode.write),
+    );
+    final registry = CheckoutRegistry(findCheckoutRegistry(), 'vanilla');
+    final catalog = await registry.catalog();
+    const calendarTarget = 'components/calendar.dart';
+    const calendarPath = 'lib/ui/$calendarTarget';
+    final calendarSource = await registry.template(
+      catalog.items['calendar']!.files.firstWhere(
+        (file) => file.target == '@ui/$calendarTarget',
+      ),
+    );
+    final renderedCalendar = const TemplateRenderer().render(
+      calendarSource,
+      typePrefix: 'Ui',
+      valuePrefix: 'ui',
+    );
+    final calendar = File(p.join(root.path, calendarPath))
+      ..writeAsStringSync(
+        '$renderedCalendar\nconst localCalendarCustomization = true;\n',
+      );
+    final manifest = File(p.join(root.path, 'remix.ownership.json'));
+    final ownership =
+        jsonDecode(manifest.readAsStringSync()) as Map<String, dynamic>;
+    (ownership['targets'] as Map<String, dynamic>)[calendarPath] =
+        'btwld/remix/registry#vanilla/calendar';
+    manifest.writeAsStringSync(jsonEncode(ownership));
+    final calendarBytes = calendar.readAsBytesSync();
+    final before = snapshotFiles(root);
+    writer.paths.clear();
+
+    for (final item in ['range_calendar', 'date_picker', 'date_range_picker']) {
+      await installer.add(AddOptions(items: [item], mode: AddMode.dryRun));
+    }
+    expect(snapshotFiles(root), before);
+    expect(writer.paths, isEmpty);
+
+    await installer.add(
+      const AddOptions(items: ['date_picker'], mode: AddMode.write),
+    );
+    const helper = 'components/date_picker/date_picker_styles.dart';
+    expect(File(p.join(root.path, 'lib/ui/$helper')).existsSync(), isTrue);
+    expect(writer.paths, isNot(contains(p.normalize(calendarPath))));
+    expect(calendar.readAsBytesSync(), calendarBytes);
+    final barrel = File(p.join(root.path, 'lib/ui/ui.dart')).readAsStringSync();
+    expect(barrel, contains("export 'components/date_picker.dart';"));
+    expect(barrel, isNot(contains(helper)));
+  });
+
   test('partial dependency fails before processes or writes', () async {
     await installButton(root);
     File(p.join(root.path, 'lib/ui/theme/theme_data.dart')).deleteSync();
@@ -889,9 +951,10 @@ packages:
         expect(
           File(p.join(caseRoot.path, uiPath, 'ui.dart')).readAsStringSync(),
           allOf(
-            contains("export 'recipes/dashboard/dashboard_demo.dart';"),
-            contains("export 'recipes/dashboard/dashboard_overview.dart';"),
-            contains("export 'recipes/dashboard/$sampleDataName';"),
+            contains("export 'recipes/dashboard/dashboard_shell.dart';"),
+            isNot(contains("export 'recipes/dashboard/dashboard_demo")),
+            isNot(contains("export 'recipes/dashboard/dashboard_overview")),
+            isNot(contains("export 'recipes/dashboard/$sampleDataName';")),
           ),
         );
         for (final entry in hostBefore.entries) {

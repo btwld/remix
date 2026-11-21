@@ -83,17 +83,19 @@ behavior tests and its own specification; there is no external parity pin.
   `tool/check_version_alignment.dart` fails until they do. When the new version
   leaves the old caret range, also move the melos shared constraint and every
   workspace pubspec that declares it.
-- The package is generated. Change `tool/icons/manifest.yaml` or the
-  `design/icons` masters, run `dart run melos run icons:generate`, and fill in
-  the CHANGELOG entry around its generated block. The `since:` of a new
+- The package is generated. Change `packages/remix_ui_icons/tool/icons/manifest.yaml`
+  or the `design/icons` masters, run `dart run melos run icons:generate`, and
+  fill in the CHANGELOG entry around its generated block. The `since:` of a new
   concept is the new version.
-- Choose the bump from `tool/icons/README.md`: a new icon, family, master, or
-  redraw is minor; a removal is major; a codepoint never changes.
-  `tool/icons/check.py` fails a removal from `released_api.txt` that is not a
-  major version.
-- After the release is published, replace `tool/icons/released_api.txt` with
-  `tool/icons/public_api.txt` and set its `version:` line, so the next
-  release is compared with it.
+- Follow the maintainer policy in `packages/remix_ui_icons/tool/icons/README.md`:
+  a new icon, family, master, or redraw is minor; a removal is major; a codepoint
+  never changes. For removals, `packages/remix_ui_icons/tool/icons/check.py`
+  accepts a major bump or a minor bump within `0.x`; the maintainer policy
+  still requires a major bump.
+- After the release is published, replace
+  `packages/remix_ui_icons/tool/icons/released_api.txt` with
+  `packages/remix_ui_icons/tool/icons/public_api.txt` and set its `version:`
+  line, so the next release is compared with it.
 - The registry needs the CLI that reads its `icons.yaml` schema; publish
   `remix_cli` first when the schema changes, then `remix_ui_icons`, and only
   then let **Promote registry** run.
@@ -225,23 +227,29 @@ Publishing a newer version during the consumer run cannot change its resolution.
 
 Each lane also selects the newest unretracted `remix_cli` published on pub.dev
 in the documented install pin’s major line, including prereleases. It activates
-that exact version, prints it, verifies `remix --version`, initializes from stable,
-and runs `registry update @remix --ref <candidate-SHA>`. It installs two
-representative items and analyzes their installed source. This uses the
-published executable without the checkout harness or a fallback. Selection
-ignores the candidate pubspec's lower bound: a synchronized install pin can
-already name the next, unpublished CLI. A separate readiness guard warns if no
-published version satisfies that pin; the candidate version will satisfy it
-once published. This warning does not block promotion, because compatibility
-must be proved with the CLI users can install today. Publish the candidate CLI
-before advertising its new install pin. Missing same-major releases and pub.dev
-lookup failures still block the compatibility check.
+that exact version, prints it, verifies `remix --version`, initializes from
+stable, and runs `registry update @remix --ref <candidate-SHA>`. When
+`registry-stable` does not exist, it writes a `remix.yaml` that pins `@remix`
+to the candidate before `init`, so promotion can create the branch. That run
+does not prove that a fresh default `remix init` resolves `registry-stable`;
+use the checklist below after promotion creates it. A failed branch lookup
+blocks the check. It installs two representative items and analyzes
+their installed source. This uses the published executable without the
+checkout harness or a fallback. Selection ignores the candidate pubspec's lower
+bound: a synchronized install pin can already name the next, unpublished CLI.
+A separate readiness guard warns if no published version satisfies that pin;
+the candidate version will satisfy it once published. This warning does not
+block promotion, because compatibility must be proved with the CLI users can
+install today. Publish the candidate CLI before advertising its new install
+pin. Missing same-major releases and pub.dev lookup failures still block the
+compatibility check.
 
 Expect approximately 6–9 minutes wall time, including canaries and the
 published-CLI smoke, versus approximately 45 minutes previously. This is an
 estimate from the audit; measure the first GitHub runs. Logs show one timing
 line per child step. GitHub groups phases and appends a timing table to the
-step summary, including on failure. Use `--verbose` for streaming child output.
+step summary, including on failure. Pass `--verbose` to
+`dart run tool/check_open_code.dart` to stream its child output.
 
 `promote` needs both jobs and fast-forwards `registry-stable` only on `main`.
 A dispatch on a feature branch validates its candidate and skips promotion.
@@ -255,31 +263,22 @@ library floor on pub.dev. A missing Remix floor prints:
 remix ^X is not on pub.dev yet; push tag vX, wait for the Publish workflow, then re-run Promote registry
 ```
 
-If a floor is missing, the run fails within seconds and
-`registry-stable` does not move. `main` shows that failure until the floor
-is published. Publish the runtime, wait until pub.dev serves it, then
-re-run **Promote registry** on `main` (Actions → Promote registry → Run
-workflow). Another push to `main` retries the same way. Promotion always
-takes the head of `main`, so while an unpublished floor is on `main`, no
-registry change is promoted until that publish and re-run.
+If a floor is missing, the run fails within seconds and does not advance
+`registry-stable`. For a Remix-owned package, push the matching release tag
+and wait for **Publish to pub.dev** to make that version available. For an
+upstream dependency, wait for its publisher or revise the candidate.
 
-After the first promotion creates `registry-stable`, protect that branch:
-only GitHub Actions may push, and force pushes and deletion are disabled.
+Once the required floors are available, retry promotion. **Promote registry**
+validates and pushes the run's event SHA. **Re-run jobs** retries the original
+SHA; use it only if that SHA is still the intended candidate and can
+fast-forward `registry-stable`.
+**Run workflow** on `main` starts a new run at the head of `main` at dispatch.
+A new push to `main` likewise starts a run for that push's SHA.
 
-Roll a bad promotion back by reverting that commit on `main` and letting
-the workflow fast-forward `registry-stable` to the revert. Moving the
-branch back by hand takes a force push, which that protection rejects, and
-the next push to `main` would advance the branch over the reset. Projects
-that already pinned a revision stay on it either way.
-
-Optionally repeat the fast smoke after promotion. The workflow already checked
-the candidate against hosted packages and the published CLI. This aggregate
-installs every item in all presets, with two incremental adds and one batch per
-gallery, and skips independent apps:
-
-```shell
-REMIX_REGISTRY_RELEASE_SMOKE=1 fvm dart run melos run open-code:release:check
-```
+If `registry-stable` is missing, a push to `main` or a dispatch on `main`
+starts validation. The workflow creates the branch at the validated run SHA
+only after both the static and hosted jobs pass, including the published-CLI
+check.
 
 After the initial registry and CLI bootstrap, CLI publication and registry
 promotion can run in either order: promotion tests the newest already-published
@@ -287,9 +286,76 @@ CLI, while CLI publication tests the already-promoted registry. A candidate that
 requires new CLI behavior must remain compatible with the released major line
 or wait for that CLI's publication.
 
-Normal component changes require only that promotion. The same CLI installs
-the new commit after an explicit `registry update`; existing pins do not
-move. Keep schema compatibility with released CLI versions.
+Normal component changes do not require a CLI release. Existing pins do not
+move automatically. `remix registry update @remix` re-resolves the saved ref
+when called without `--ref`; it follows `registry-stable` only if that is the
+saved ref, and it does not change installed source. Keep schema compatibility
+with released CLI versions.
+
+## Release checklist and log
+
+1. **Merge** the reviewed release PR to `main`. Record the maintainer, merge
+   SHA, and UTC time.
+2. **Promote.** Match the **Promote registry** run to the intended merge SHA
+   and verify that `Promote registry-stable` succeeded and the branch points to
+   that SHA. Record the run link, previous and new SHAs, and outcome; for a
+   failed run, include the failing step and log. A newer `main` run can replace
+   a pending run or advance the branch before smoke testing. If that happens,
+   log the intended SHA as superseded rather than keep waiting or credit a
+   different SHA with its results.
+3. **Smoke-test default init.** Use the published CLI in fresh Vanilla,
+   Fortal, and HeroUI Flutter apps, without a preseeded `remix.yaml`. Run
+   `remix init` for Vanilla, `remix init --preset fortal` for Fortal, and
+   `remix init --preset heroui` for HeroUI. Each init must succeed and record
+   the intended promoted SHA in `registries["@remix"].revision`. If a newer
+   promotion changes the resolved SHA, record the superseded check instead
+   of counting it as a pass. In each app, use `remix add` to install
+   representative items, then run `flutter pub get` and `flutter analyze`;
+   all three commands must succeed. Record the CLI version, items, and result
+   for each preset. If verification fails after the push, record **promoted;
+   verification failed** and decide whether to restore the registry or fix
+   forward: the branch is already live.
+
+   For broader coverage, this optional aggregate uses the checkout CLI with
+   `registry-stable` and hosted runtimes. It installs every item in all presets,
+   with two incremental adds and one batch per gallery, and skips independent
+   apps. It does not replace the published-CLI smoke.
+
+   ```shell
+   REMIX_REGISTRY_RELEASE_SMOKE=1 fvm dart run melos run open-code:release:check
+   ```
+
+4. **Post one `Release log` comment** on the release PR. Use one row for the
+   merge, one for promotion, and one per preset smoke. Include a protection
+   row only if protection was checked or changed; record the ruleset ID if
+   available. Each row records the step, operator, a link to the commit, run,
+   or ruleset, UTC time, result, and rollback action (or not applicable).
+
+### Restore the published registry
+
+Use a known-good promoted SHA as a reference to restore its behavior in a
+reviewed PR on current `main`, not to copy its old dependency floors. Keep
+floors aligned with the workspace where required, and match the Remix floor
+to the newest unretracted Remix version on pub.dev, including prereleases.
+Regenerate `registry/` with
+`dart run melos run open-code:registry:build`. If the old behavior is not
+compatible with the current runtime, ship a forward fix instead of lowering
+the floor.
+
+After merge, let **Promote registry** validate and fast-forward
+`registry-stable` to the new commit, then repeat the smoke tests and log the
+rollback. The restored behavior has a new SHA; do not reset, force-push, or
+delete `registry-stable`. Existing projects stay on their pinned revisions.
+
+**Protection:** The active `registry-stable protection` ruleset targets only
+`refs/heads/registry-stable` and blocks force pushes and deletion with no
+bypass actors.
+
+The remaining follow-up is a separate ruleset restricting creation and updates
+on the same ref, with **Always allow** for only a dedicated GitHub App installed
+on this repository with `Contents: write`. An admin enables that ruleset only
+after the **Promote registry** job on `main` uses the app's installation token
+for its push instead of `GITHUB_TOKEN`.
 
 ## Release the CLI only for installer changes
 
@@ -336,11 +402,15 @@ inits total. Candidate SHAs need no API call to resolve their revision.
 Use `--independent all` for a full isolation investigation; checkout and `both`
 already default to that. Avoid repeated full branch-based smokes on a shared IP.
 
-## Rollback and migration
+## Roll back an app
 
 Restore the previously committed `remix.yaml` revision to select an older
-registry snapshot. This does not revert installed, application-owned source;
-review or restore that source separately through application version control.
+registry snapshot. Changing the pin alone does not revert installed,
+application-owned source. To undo an install, restore `remix.yaml`, the
+`remix.ownership.json` record, and installed source together through the
+app's version control. If the install changed `pubspec.yaml` or
+`pubspec.lock`, revert only the install-related changes in those files and
+keep unrelated dependency edits. See [the registry contract](REGISTRIES.md#update-and-review).
 
 Schemas 1 and 2 are not readable. A project still on one names no registry, so
 it is reinitialized rather than migrated. See [the registry contract](REGISTRIES.md)

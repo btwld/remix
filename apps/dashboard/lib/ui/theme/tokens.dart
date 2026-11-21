@@ -2,7 +2,7 @@ import 'package:remix/remix.dart';
 
 import 'theme_scope.dart' show UiTheme;
 
-/// Design tokens for the Ui UI system and its paired color themes.
+/// Design tokens for the Fortal UI system and its paired color themes.
 ///
 /// Provides color scales (12-step accent/gray), spacing (9-step), radius (6-step),
 /// shadows (6-level), typography (9-size), and functional colors.
@@ -13,9 +13,17 @@ import 'theme_scope.dart' show UiTheme;
 /// ```
 ///
 /// Must be used within [UiTheme] to resolve actual values.
-class UiTokens {
+abstract final class UiTokens {
   static const activityMaxHeight = DoubleToken('ui.activity.max-height');
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in a future registry revision.',
+  )
   static const planMaxHeight = DoubleToken('ui.plan.max-height');
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in a future registry revision.',
+  )
   static const messageAvatarSize = DoubleToken('ui.message.avatar-size');
   static const messageContentMaxWidth = DoubleToken(
     'ui.message.content-max-width',
@@ -23,9 +31,14 @@ class UiTokens {
   static const messageCollapsedHeight = DoubleToken(
     'ui.message.collapsed-height',
   );
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in a future registry revision.',
+  )
   static const composerFieldMinHeight = DoubleToken(
     'ui.composer-field-min-height',
   );
+
   static const touchTargetMin = DoubleToken('ui.touch-target-min');
   static const popoverMaxWidth = DoubleToken('ui.popover-max-width');
   static const dialogMaxWidth = DoubleToken('ui.dialog-max-width');
@@ -212,7 +225,7 @@ class UiTokens {
   /// Gray step 12 - High contrast text and primary content.
   static const gray12 = ColorToken('ui.gray.12');
 
-  /// Neutral surface baseline for the selected gray scale (matches JSON surface)
+  /// Neutral surface baseline for the selected gray scale.
   static const graySurface = ColorToken('ui.gray.surface');
 
   /// Neutral indicator color (typically gray step 9)
@@ -252,7 +265,7 @@ class UiTokens {
   static const grayA11 = ColorToken('ui.gray.a11');
   static const grayA12 = ColorToken('ui.gray.a12');
 
-  /// Black alpha steps used in layered shadows.
+  /// Translucent black steps, independent of the selected theme.
   static const blackA1 = ColorToken('ui.black.a1');
   static const blackA2 = ColorToken('ui.black.a2');
   static const blackA3 = ColorToken('ui.black.a3');
@@ -330,7 +343,7 @@ class UiTokens {
 
   static const badgePaddingY1 = DoubleToken('ui.badge.padding-y.1');
 
-  /// Checkbox dimensions expressed as scaled pixels by Ui.
+  /// Checkbox dimensions expressed as scaled pixels by Fortal.
   static const checkboxSize1 = DoubleToken('ui.checkbox.size.1');
   static const checkboxSize3 = DoubleToken('ui.checkbox.size.3');
   static const checkboxIndicatorSize1 = DoubleToken(
@@ -340,7 +353,7 @@ class UiTokens {
     'ui.checkbox.indicator-size.2',
   );
 
-  /// Radio indicators are 40% of their control size in Ui.
+  /// Radio indicators are 40% of their control size in Fortal.
   ///
   /// These values need dedicated tokens because arithmetic on an unresolved
   /// token reference would destroy its identity before Mix can resolve it.
@@ -498,7 +511,7 @@ class UiTokens {
   /// Shadow level 1 - Subtle elevation.
   static const shadow1 = BoxShadowToken('ui.shadow.1');
 
-  /// Exact layered shadow level 1, including inset layers.
+  /// Shadow level 1 as a [RemixBoxShadow] list.
   static const shadow1Layers = RemixBoxShadowListToken('ui.shadow.1.layers');
 
   /// Shadow level 2 - Low elevation.
@@ -607,9 +620,17 @@ class UiTokens {
   static const fontWeightBold = FontWeightToken('ui.font.weight.bold');
 
   /// Fast animation duration (100ms).
+  @Deprecated(
+    'Use Duration(milliseconds: 100) or an app-owned DurationToken. '
+    'Will be removed in a future registry revision.',
+  )
   static const transitionFast = DurationToken('ui.transition.fast');
 
   /// Slow animation duration (300ms).
+  @Deprecated(
+    'Use Duration(milliseconds: 300) or an app-owned DurationToken. '
+    'Will be removed in a future registry revision.',
+  )
   static const transitionSlow = DurationToken('ui.transition.slow');
 
   static const skeletonPulseDuration = DurationToken(

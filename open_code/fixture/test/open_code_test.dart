@@ -2405,6 +2405,11 @@ void main() {
     testWidgets('forwards the curated RemixTab surface', (tester) async {
       final focusNode = FocusNode(debugLabel: 'ui-tab');
       addTearDown(focusNode.dispose);
+      Widget content(
+        BuildContext context,
+        NakedTabState state,
+        Widget? child,
+      ) => child!;
 
       await _pumpTabs(
         tester,
@@ -2423,6 +2428,7 @@ void main() {
             onFocusChange: (_) {},
             onHoverChange: (_) {},
             onPressChange: (_) {},
+            builder: content,
             semanticLabel: 'First tab',
           ),
         ],
@@ -2444,9 +2450,7 @@ void main() {
       expect(remix.semanticLabel, 'First tab');
       expect(remix.style, acmeTabStyle(style: TabStyler().minHeight(48)));
       expect(remix.styleSpec, isNull);
-      // `builder` would drag `package:naked_ui` into the adapter, so it is
-      // deliberately outside the generated surface.
-      expect(remix.builder, isNull);
+      expect(remix.builder, content);
     });
 
     testWidgets('selecting a tab reports it and swaps the panel', (
@@ -2979,7 +2983,7 @@ void main() {
           AcmeTheme(
             theme: theme.data,
             child: _host(
-              _Probe((context) => palette = resolveAcmeChartPalette(context)),
+              _Probe((context) => palette = acmeChartPalette(context)),
             ),
           ),
         );
@@ -3012,7 +3016,7 @@ void main() {
             theme: theme.data,
             child: _host(
               _Probe((context) {
-                palette = resolveAcmeChartPalette(context);
+                palette = acmeChartPalette(context);
                 labels = [
                   for (final slice in palette)
                     acmePieSliceLabelColor(context, slice),
@@ -3046,7 +3050,7 @@ void main() {
         AcmeTheme(
           theme: theme,
           child: _host(
-            _Probe((context) => palette = resolveAcmeChartPalette(context)),
+            _Probe((context) => palette = acmeChartPalette(context)),
           ),
         ),
       );
@@ -4097,6 +4101,8 @@ void main() {
     });
 
     testWidgets('forwards the curated RemixSlider surface', (tester) async {
+      String announce(double value) => '$value of 10';
+
       await _pumpInScope(
         tester,
         SizedBox(
@@ -4108,6 +4114,7 @@ void main() {
             max: 10,
             snapDivisions: 5,
             semanticLabel: 'Volume',
+            semanticFormatterCallback: announce,
             onChanged: (_) {},
           ),
         ),
@@ -4123,9 +4130,7 @@ void main() {
         remix.style,
         acmeSliderStyle(surfaceColor: const Color(0xFFE1E7F6)),
       );
-      // `semanticFormatterCallback` would drag `package:naked_ui` into the
-      // adapter, so it is deliberately outside the generated surface.
-      expect(remix.semanticFormatterCallback, isNull);
+      expect(remix.semanticFormatterCallback, announce);
     });
   });
 
@@ -5589,6 +5594,10 @@ void main() {
       final controller = RemixAccordionController<String>();
       addTearDown(controller.dispose);
       var presses = 0;
+      Widget trigger(
+        BuildContext context,
+        NakedAccordionItemState<String> state,
+      ) => const Text('Shipping');
 
       await _pumpInScope(
         tester,
@@ -5607,6 +5616,7 @@ void main() {
                 enableFeedback: false,
                 focusNode: focusNode,
                 onPressChange: (_) => presses += 1,
+                builder: trigger,
                 semanticLabel: 'Shipping section',
                 child: const Text('Two to four business days.'),
               ),
@@ -5630,9 +5640,7 @@ void main() {
       expect(remix.semanticLabel, 'Shipping section');
       expect(remix.style, acmeAccordionStyle());
       expect(remix.styleSpec, isNull);
-      // `builder` would drag `package:naked_ui` into the adapter, so it is
-      // deliberately outside the generated surface.
-      expect(remix.builder, isNull);
+      expect(remix.builder, trigger);
 
       focusNode.requestFocus();
       await tester.pumpAndSettle();
@@ -5746,7 +5754,7 @@ void main() {
         theme: theme,
         states: states,
       )).spec.item.widgetModifiers,
-      'textfield': (tester) async => (await _resolve(
+      'text_field': (tester) async => (await _resolve(
         tester,
         acmeTextFieldStyle(),
         theme: theme,
@@ -5991,14 +5999,14 @@ void main() {
           theme: theme,
         )).spec.container,
       ),
-      'textfield': (tester) async => _boxBackground(
+      'text_field': (tester) async => _boxBackground(
         (await _resolve(
           tester,
           acmeTextFieldStyle(style: TextFieldStyler().color(override)),
           theme: theme,
         )).spec.container,
       ),
-      'textfield/area': (tester) async => _boxBackground(
+      'text_field/area': (tester) async => _boxBackground(
         (await _resolve(
           tester,
           acmeTextAreaStyle(style: TextFieldStyler().color(override)),
@@ -6035,7 +6043,7 @@ void main() {
     test('every directly resolvable registry recipe is probed', () {
       // These probes cover 29 items. Disclosure needs a live widget to resolve
       // its state fragments and has focused tests above. Chart, tabs, and
-      // textfield publish more than one recipe, so this count is higher.
+      // text_field publish more than one recipe, so this count is higher.
       expect(probes, hasLength(34));
     });
 

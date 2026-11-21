@@ -8,13 +8,13 @@ Widget buildTextAreaCatalogUseCase(BuildContext context) {
   return CatalogMatrix(
     cellWidth: 240,
     columns: labelsOf(FortalTextAreaSize.values),
-    rows: labelsOf(FortalTextAreaVariant.values),
+    rows: labelsOf(FortalTextFieldVariant.values),
     cell: (row, column) => SizedBox(
       width: 200,
       child: FortalTextArea(
         hintText: 'Text area',
         size: FortalTextAreaSize.values[column],
-        variant: FortalTextAreaVariant.values[row],
+        variant: FortalTextFieldVariant.values[row],
       ),
     ),
   );

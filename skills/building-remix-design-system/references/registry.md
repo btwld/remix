@@ -62,27 +62,34 @@ application.
 
 **One authoring word.** Pick a PascalCase word that is not part of any
 ordinary word or other identifier, for example `Acme`; its lower-camel form
-(`acme`) is the value word. Derivation replaces every `Acme` with
-`{{typePrefix}}` and every `acme` with `{{valuePrefix}}`, comments and strings
-included. A consumer initialized with `--prefix Shop` receives `ShopButton`,
-`shopButtonStyle`, and token ids such as `'shop.color.primary'`. So the word
-belongs only inside identifiers and at the start of quoted ids, never as a
-word of its own:
+(`acme`) is the value word. A plain-replacement derive script replaces every
+`Acme` with `{{typePrefix}}` and every `acme` with `{{valuePrefix}}`, comments
+and strings included. A consumer initialized with `--prefix Shop` receives
+`ShopButton`, `shopButtonStyle`, and token ids such as `'shop.color.primary'`.
+The first-party builder is identifier-aware instead: it substitutes only
+identifier segments and quoted-id starts, leaves prose that names the design
+system as written, and fails derivation on the word anywhere else in code or
+in an id-like string. It treats a string that starts with the value word, a
+separator and an id character, with no whitespace, as an id, so
+`Text('acme-themed')` takes the prefix. A plain-replacement script must keep
+the stricter rule:
+the word belongs only inside identifiers and at the start of quoted ids, never
+as a word of its own:
 
-| Source | Installed for `--prefix Shop` | OK? |
-| --- | --- | --- |
-| `class AcmeButton` | `class ShopButton` | yes |
-| `ButtonStyler acmeButtonStyle(...)` | `ButtonStyler shopButtonStyle(...)` | yes |
-| `Color resolveAcmePalette()` | `Color resolveShopPalette()` | yes |
-| `/// Wraps [AcmeButton].` | `/// Wraps [ShopButton].` | yes |
-| `ColorToken('acme.color.primary')`, `ValueKey('acme-row')` | `'shop.color.primary'`, `'shop-row'` | yes |
-| `/// Follows the Acme brand guide.` | `/// Follows the Shop brand guide.` | **no** |
-| `// Generated from @acme/tokens 3.1.0` | `// Generated from @shop/tokens 3.1.0` | **no** |
-| `const title = 'ACME';` | not replaced; ships as written | **no** |
-| file `acme_button.dart` or `AcmeButton.dart` | file names are not rendered | **no** |
+| Source | Plain replacement, `--prefix Shop` | First-party builder | OK in a plain-replacement script? |
+| --- | --- | --- | --- |
+| `class AcmeButton` | `class ShopButton` | same | yes |
+| `ButtonStyler acmeButtonStyle(...)` | `ButtonStyler shopButtonStyle(...)` | same | yes |
+| `Color resolveAcmePalette()` | `Color resolveShopPalette()` | same | yes |
+| `/// Wraps [AcmeButton].` | `/// Wraps [ShopButton].` | same | yes |
+| `ColorToken('acme.color.primary')`, `ValueKey('acme-row')` | `'shop.color.primary'`, `'shop-row'` | same | yes |
+| `/// Follows the Acme brand guide.` | `/// Follows the Shop brand guide.` | kept as written | **no** |
+| `// Generated from @acme/tokens 3.1.0` | `// Generated from @shop/tokens 3.1.0` | kept as written | **no** |
+| `const title = 'ACME';` | not replaced; ships as written | same | **no** |
+| file `acme_button.dart` or `AcmeButton.dart` | file names are not rendered | derivation fails | **no** |
 
-Write ordinary prose as "this design system"; keep research provenance in the
-brief/spec or decision log. Required license, copyright, attribution and change
+With a plain-replacement script, write ordinary prose as "this design system";
+keep research provenance in the brief/spec or decision log. Required license, copyright, attribution and change
 notices are an exception: preserve them verbatim in installed source. Choose an
 authoring word that does not collide with those notices, or protect the notice
 text during derivation and test byte preservation. Never replace an upstream
@@ -143,9 +150,10 @@ A short script owned by the repository. Its contract:
 
 Use the maintained [official builder](https://github.com/btwld/remix/blob/main/tool/build_registry.dart)
 and its [tests](https://github.com/btwld/remix/blob/main/test/tool/build_registry_test.dart)
-as the implementation reference. Keep the derivation script local and small;
-assert rendering with a different consumer prefix and deriving it back yields
-byte-identical source. Compare the entire output tree, including catalog
+as the reference for walking, writing and drift checks; its identifier-aware
+substitution keeps prose that a plain-replacement script must reject. Keep the
+derivation script local and small; assert rendering with a different consumer
+prefix and deriving it back yields byte-identical source. Compare the entire output tree, including catalog
 structure, so orphaned files cannot escape drift checks.
 
 The official registry has explicit stable data filename exceptions such as

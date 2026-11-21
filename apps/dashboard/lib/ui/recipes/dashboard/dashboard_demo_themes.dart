@@ -18,7 +18,7 @@ import 'dashboard_demo_ui.dart';
 import 'dashboard_demo_widgets.dart';
 import 'dashboard_overview.dart';
 
-/// What the dashboard says about one Ui palette.
+/// What the dashboard says about one Fortal palette.
 typedef UiPaletteNote = ({String place, String pairing, UiArtworkMotif motif});
 
 /// The seven palettes, each named for a landscape of Ceará and paired with
@@ -33,7 +33,7 @@ const uiPaletteNotes = <UiAccentColor, UiPaletteNote>{
   .caju: (place: 'The cashew', pairing: 'Orange on sand', motif: .cobogo),
 };
 
-/// The Themes page: the seven Ui palettes as cards, the rest of the theme
+/// The Themes page: the seven Fortal palettes as cards, the rest of the theme
 /// as controls, and a specimen of components that follows both.
 ///
 /// It edits the nearest [UiDashboardThemeScope], so every page restyles as
@@ -252,8 +252,7 @@ class UiPaletteCard extends StatelessWidget {
   }
 }
 
-/// The eighth card: a palette is generated, not hand-picked, so a brand can
-/// add its own.
+/// The eighth card: how a brand supplies its own palette.
 class _BrandPaletteCard extends StatelessWidget {
   const _BrandPaletteCard();
 
@@ -270,17 +269,17 @@ class _BrandPaletteCard extends StatelessWidget {
         const UiAvatar.soft(icon: RemixIcons.plus, size: .size3),
         const UiText('Your brand', size: .size3, weight: .medium),
         StyledText(
-          'An eighth palette comes from one seed color. Generate it, then '
-          'pass it to the theme as accentPalette.',
+          'A brand palette holds one color set for light mode and one for '
+          'dark.',
           style: dashboardText(.size2, tone: .muted),
         ),
-        const UiCode("generate.dart --seed '#8038CC'", size: .size1),
+        const UiCode('accentPalette: UiColorTheme(light, dark)', size: .size1),
       ],
     ),
   );
 }
 
-/// A specimen of Ui components in the active theme: every variant of the
+/// A specimen of Fortal components in the active theme: every variant of the
 /// button and the badge, the selection and range controls, and inline type.
 ///
 /// The variant rows come from the recipes' own enums, so a variant added to a

@@ -26,9 +26,6 @@ part of 'accordion.dart';
 ///   ]),
 /// )
 /// ```
-///
-/// The generated widget omits `builder`: its type comes from `package:naked_ui`,
-/// which this layer does not import. Use `RemixAccordion` for a custom trigger.
 class PlaygroundAccordion<T> extends StatelessWidget {
   const PlaygroundAccordion({
     super.key,
@@ -38,6 +35,7 @@ class PlaygroundAccordion<T> extends StatelessWidget {
     this.title,
     this.leadingIcon,
     this.trailingIcon,
+    this.builder,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
     this.enableFeedback = true,
@@ -61,6 +59,8 @@ class PlaygroundAccordion<T> extends StatelessWidget {
   final IconData? leadingIcon;
 
   final IconData? trailingIcon;
+
+  final NakedAccordionTriggerBuilder<T>? builder;
 
   final bool enabled;
 
@@ -92,6 +92,7 @@ class PlaygroundAccordion<T> extends StatelessWidget {
       title: this.title,
       leadingIcon: this.leadingIcon,
       trailingIcon: this.trailingIcon,
+      builder: this.builder,
       enabled: this.enabled,
       mouseCursor: this.mouseCursor,
       enableFeedback: this.enableFeedback,

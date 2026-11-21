@@ -142,7 +142,7 @@ class {{typePrefix}}ChannelOrdersCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = resolve{{typePrefix}}ChartPalette(context);
+    final palette = {{valuePrefix}}ChartPalette(context);
     Color colorOf(int channel) => palette[channel % palette.length];
 
     return {{typePrefix}}Surface(

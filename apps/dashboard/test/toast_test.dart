@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dashboard/main.dart';
+import 'package:dashboard/ui/recipes/dashboard/dashboard_demo.dart';
+import 'package:dashboard/ui/recipes/dashboard/dashboard_demo_theme.dart';
 import 'package:dashboard/ui/ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';

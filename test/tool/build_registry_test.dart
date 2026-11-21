@@ -16,7 +16,7 @@ void main() {
     ).derive();
     final catalog = loadYaml(output.files['registry.yaml']!) as YamlMap;
     final item = (catalog['items'] as YamlMap)['combobox'] as YamlMap;
-    expect(_strings(item['registryDependencies']), ['theme', 'textfield']);
+    expect(_strings(item['registryDependencies']), ['theme', 'text_field']);
     expect(_strings(item['generated']), ['@ui/components/combobox.g.dart']);
     expect(
       output.files['templates/combobox/combobox.dart.tmpl'],
@@ -101,7 +101,7 @@ void main() {
     expect(_strings(item['registryDependencies']), [
       'theme',
       'icon_button',
-      'textfield',
+      'text_field',
     ]);
     expect(item.containsKey('generated'), isFalse);
     final template =
@@ -112,11 +112,11 @@ void main() {
     // The dashboard shell's header search is the installed component.
     expect(
       _strings((items['dashboard_shell'] as YamlMap)['registryDependencies']),
-      allOf(contains('search_field'), isNot(contains('textfield'))),
+      allOf(contains('search_field'), isNot(contains('text_field'))),
     );
   });
   test(
-    'Vanilla calendar composites infer complete install closures without generated parts',
+    'Vanilla calendar composites infer their dependencies without generated parts',
     () {
       final output = PresetBuilder.forRepository(
         Directory.current,
@@ -127,20 +127,19 @@ void main() {
       for (final (item, dependencies) in [
         ('calendar', ['theme', 'icon_button', 'select']),
         ('range_calendar', ['theme', 'calendar', 'icon_button', 'select']),
+        ('date_picker_styles', ['theme', 'calendar', 'icon_button', 'select']),
         (
           'date_picker',
-          ['theme', 'button', 'calendar', 'icon_button', 'popover', 'select'],
+          ['theme', 'button', 'calendar', 'date_picker_styles', 'popover'],
         ),
         (
           'date_range_picker',
           [
             'theme',
             'button',
-            'calendar',
-            'icon_button',
+            'date_picker_styles',
             'popover',
             'range_calendar',
-            'select',
           ],
         ),
       ]) {
@@ -330,11 +329,9 @@ void main() {
     expect(demo, isNot(contains('typography')));
     // Its segmented choices are RemixSegmentedControl, not a tab list.
     expect(demo, isNot(contains('tabs')));
-    expect((items['dashboard_demo'] as YamlMap)['exports'], [
-      'recipes/dashboard/dashboard_sample_data.dart',
-      'recipes/dashboard/dashboard_overview.dart',
-      'recipes/dashboard/dashboard_demo.dart',
-    ]);
+    // A sample application stays out of the barrel; its entry file
+    // re-exports the types its constructor takes instead.
+    expect((items['dashboard_demo'] as YamlMap)['exports'], isNull);
     // Compared with Vanilla by name: Fortal's demo no longer installs the
     // shared bases, and the builder's default spec is Fortal.
     final vanilla = PresetBuilder.forRepository(
@@ -355,6 +352,25 @@ void main() {
     final page =
         output.files['templates/dashboard_demo/dashboard_demo.dart.tmpl']!;
     expect(page, contains('class {{typePrefix}}DashboardDemo '));
+    expect(
+      page,
+      contains(
+        RegExp(
+          r"export 'dashboard_demo_base\.dart'\s+"
+          r'show \{\{typePrefix\}\}DashboardDemoPage, '
+          r'\{\{typePrefix\}\}DashboardDemoSection;',
+        ),
+      ),
+    );
+    expect(
+      page,
+      contains(
+        RegExp(
+          r"export 'dashboard_sample_data\.dart'\s+show\s+"
+          r'\{\{typePrefix\}\}DashboardActivity,',
+        ),
+      ),
+    );
     expect(page, contains('{{icon:bell}}'));
     expect(page, isNot(contains('HeroUi')));
     expect(page, isNot(contains('RemixIcons')));
@@ -522,7 +538,7 @@ void main() {
     if (sandbox.existsSync()) sandbox.deleteSync(recursive: true);
   });
 
-  test('every authored template round-trips and removes Fortal names', () {
+  test('every authored template round-trips under the Fortal words', () {
     final builder = PresetBuilder.forRepository(Directory.current);
     final output = builder.derive();
 
@@ -537,13 +553,191 @@ void main() {
       );
 
       expect(rendered, entry.value, reason: entry.key);
-      expect(template, isNot(contains('Fortal')), reason: entry.key);
+    }
+  });
+
+  test('installed source names its design system only in prose', () {
+    // The two dashboard strings name the city Fortal is named for.
+    const prose = [
+      "'The breeze blocks of Fortaleza façades, one tile at a time.'",
+      "'Fortaleza'",
+    ];
+    for (final spec in [defaultPreset, fortalPreset, herouiPreset]) {
+      final builder = PresetBuilder.forRepository(
+        Directory.current,
+        spec: spec,
+      );
+      final output = builder.derive();
+      for (final path in output.sourceByTemplate.keys) {
+        final rendered = const TemplateRenderer().render(
+          output.files[path]!,
+          typePrefix: 'Zq',
+          valuePrefix: 'zq',
+          icons: builder.icons,
+        );
+        for (final line in rendered.split('\n')) {
+          final named = spec.fixedFileNames
+              .fold(line, (line, name) => line.replaceAll(name, ''))
+              .contains(RegExp('${spec.typeWord}|${spec.valueWord}'));
+          if (!named) continue;
+          expect(
+            line.trimLeft().startsWith('//') || prose.any(line.contains),
+            isTrue,
+            reason: '$path: $line',
+          );
+        }
+      }
+    }
+  });
+
+  test('only identifiers and quoted ids take the consumer prefix', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(
+      builder.sourceRoot,
+      'components/badge.dart',
+      """/// The Fortal Badge recipe, Fortal's smallest surface.
+///
+/// Its palette is named for Fortaleza; see tool/fortal_palettes/generate.dart.
+/// See `fortal_palette.dart`.
+final class FortalBadge {}
+
+void fortalBadgeStyle() => _resolveFortalTheme('fortal.color.accent');
+
+void _resolveFortalTheme(String id) {}
+
+const row = 'fortal-row';
+const key = 'fortal_badge_ambient';
+const caption = 'Cards in the Fortal style';
+final sum = 'fortal.\${a + b}';
+""",
+    );
+
+    final template = builder.derive().files['templates/badge/badge.dart.tmpl'];
+
+    expect(template, """/// The Fortal Badge recipe, Fortal's smallest surface.
+///
+/// Its palette is named for Fortaleza; see tool/fortal_palettes/generate.dart.
+/// See `fortal_palette.dart`.
+final class {{typePrefix}}Badge {}
+
+void {{valuePrefix}}BadgeStyle() => _resolve{{typePrefix}}Theme('{{valuePrefix}}.color.accent');
+
+void _resolve{{typePrefix}}Theme(String id) {}
+
+const row = '{{valuePrefix}}-row';
+const key = '{{valuePrefix}}_badge_ambient';
+const caption = 'Cards in the Fortal style';
+final sum = '{{valuePrefix}}.\${a + b}';
+""");
+  });
+
+  test('refuses the authoring word where neither a prefix nor prose fits', () {
+    final builder = _fixtureBuilder(sandbox);
+    for (final source in [
+      'final fortal = 0;\n',
+      'class Fortal {}\n',
+      'final theme = Fortal.of(context);\n',
+      'List<Fortal> themes = [];\n',
+      "final key = ValueKey('fortal');\n",
+      "const id = 'theme.fortal.color';\n",
+      "final id = '\${base}fortal.color';\n",
+      "const id = '--fortal-row';\n",
+      "const id = 'fortal:x';\n",
+      'final isFortal = true;\n',
+      'final _fortal = 0;\n',
+      'final fortal_badge = 0;\n',
+      // Visible text, not an id, so it is refused rather than prefixed.
+      "final label = Text('fortal-themed card');\n",
+      "final label = Text('fortal.');\n",
+    ]) {
+      _write(builder.sourceRoot, 'components/badge.dart', '// Badge.\n$source');
+
       expect(
-        template.replaceAll('fortal_colors.dart', ''),
-        isNot(contains('fortal')),
-        reason: entry.key,
+        builder.derive,
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            contains('components/badge.dart:2:'),
+          ),
+        ),
+        reason: source,
       );
     }
+  });
+
+  test('a refusal says where the word stands and what to write', () {
+    final builder = _fixtureBuilder(sandbox);
+    for (final (source, problem) in [
+      ('class Fortal {}\n', 'is code but does not start an identifier segment'),
+      (
+        "const credit = 'Built with Fortal.';\n",
+        'touches `.`, `-`, `_`, `:` or an interpolation inside a string; '
+            'reword it, or start the string with it to make an id',
+      ),
+      (
+        "const credit = 'Fortal: a theme';\n",
+        'touches `.`, `-`, `_`, `:` or an interpolation inside a string',
+      ),
+    ]) {
+      _write(builder.sourceRoot, 'components/badge.dart', source);
+
+      expect(
+        builder.derive,
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            allOf(
+              contains('components/badge.dart:1: "Fortal"'),
+              contains(problem),
+            ),
+          ),
+        ),
+        reason: source,
+      );
+    }
+  });
+
+  test('refuses source the analyzer cannot parse', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(
+      builder.sourceRoot,
+      'components/badge.dart',
+      'class FortalBadge {\n',
+    );
+
+    expect(
+      builder.derive,
+      throwsA(
+        isA<StateError>().having(
+          (error) => error.message,
+          'message',
+          contains('components/badge.dart does not parse.'),
+        ),
+      ),
+    );
+  });
+
+  test('shared dashboard prose keeps its registry word', () {
+    final builder = _emptyBuilder(sandbox, spec: _acmeWithGroupedRecipes);
+    _writeGroupedAcmeSources(builder);
+    _write(
+      builder.sourceRoot.parent,
+      'dashboard/dashboard_navigation.dart',
+      '/// Lists the registry destinations.\n'
+          'final class RegistryDashboardDestination {}\n',
+    );
+
+    final template = builder
+        .derive()
+        .files['templates/dashboard_shell/dashboard_navigation.dart.tmpl'];
+
+    expect(
+      template,
+      '/// Lists the registry destinations.\n'
+      'final class {{typePrefix}}DashboardDestination {}\n',
+    );
   });
 
   test(

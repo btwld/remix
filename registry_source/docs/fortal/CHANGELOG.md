@@ -1,5 +1,15 @@
 ## Unreleased
 
+- **Deprecated:** `FortalTokens.transitionFast`, `transitionSlow`,
+  `planMaxHeight`, `messageAvatarSize`, and `composerFieldMinHeight` (including
+  their installed, prefixed equivalents). Their IDs and scope values are
+  unchanged in this revision. These tokens will be removed in a future registry
+  revision. For custom motion, use explicit durations (100ms or 300ms) or an
+  app-owned duration token. For custom sizing, use app-owned values (220, 28,
+  and 56 logical pixels, respectively, before theme scaling). Move any scope
+  overrides to app-owned tokens when migrating.
+  The [custom recipe tokens](README.md#tokens-for-custom-recipes) and the
+  recipe-used `skeletonPulseDuration` are not deprecated.
 - Polish the dashboard. Sidebar rows now sit one 40px row apart with no
   margin or spacing (`sidebarDestinationMinHeight` is 40, the touch-target
   floor, and sections are separated by `space2`); selected rows use
@@ -18,12 +28,38 @@
   solid fills, exposed as `fortalSolidPressedFill`,
   `fortalHighContrastHoverFill` and `fortalHighContrastPressedFill`, and the
   mode-aware filter.
+- **Breaking:** the theme barrel exports only `FortalThemeColors`
+  (`<prefix>ThemeColors`), `resolveFortalTokens` (`resolve<prefix>Tokens`),
+  `computeAccentThumbRing`, `computeChartSeries` and `computeContrastRatio`
+  from `computed.dart`. Import `theme/computed.dart` for the other helpers.
 - **Breaking:** remove the shared BaseButton layer: `FortalBaseButtonSize`,
   `FortalBaseButtonVariant`, `fortalBaseButtonMetrics`,
   `fortalBaseButtonIconSize`, `fortalBaseButtonGhostMetrics`,
   `fortalIconButtonGhostMetrics`, `fortalBaseButtonActiveMotion` and
   `fortalBaseButtonRestMotion`. Read sizes from `FortalTokens`, as the recipes
   now do.
+- **Breaking:** remove `FortalKbdVariant`, `FortalKbd.soft`, `FortalKbd.variant`
+  and the `variant` arguments to `FortalKbd` and `fortalKbdStyle`.
+  Use `FortalKbd(...)` for the same look.
+- **Breaking:** remove `FortalSegmentedControlVariant`,
+  `FortalSegmentedControl.surface`, `FortalSegmentedControl.variant` and the
+  `variant` arguments to `FortalSegmentedControl` and
+  `fortalSegmentedControlStyle`. Use `FortalSegmentedControl(...)` for the
+  same look.
+- **Breaking:** replace `FortalComboboxSize` with `FortalTextFieldSize`.
+- **Breaking:** replace `FortalComboboxVariant` with `FortalTextFieldVariant`.
+- **Breaking:** replace `FortalTextAreaVariant` with `FortalTextFieldVariant`.
+  `FortalTextAreaSize` stays separate.
+- **Breaking:** replace `FortalSurfaceSize` with `FortalCardSize`.
+- **Breaking:** `FortalTokens` is an `abstract final class`; it cannot be
+  instantiated, extended or implemented.
+- **Breaking:** rename `resolveFortalChartPalette` to `fortalChartPalette`.
+- **Breaking:** remove `FortalCalendar.styleFrom`; call `CalendarStyler()` instead.
+- **Breaking:** remove `FortalRangeCalendar.styleFrom`; call `CalendarStyler()` instead.
+- **Breaking:** the `textfield` item is `text_field`, installed as
+  `components/text_field.dart` and `components/text_field.g.dart`.
+- **Breaking:** `dashboard_demo` no longer adds exports to `ui.dart`; import
+  `ui/recipes/dashboard/dashboard_demo.dart`.
 
 - Strengthen Orla primary roles to dark/white fills while retaining exact Radix
   scales and subtle neutral surfaces. Add `accentMarkHover` for coherent selected
@@ -40,9 +76,7 @@
   error red remain supported.
 
 - Rename Calçadão to Orla in theme choices, generated palettes and examples,
-  preserving all color values. Keep `calcadao` as a deprecated enum and palette
-  alias. Serialized neutral names now use `orla`; migrate saved preferences
-  that contain `calcadao`.
+  preserving all color values.
 
 - Adopt Remix effects slots for control focus, anchor-width select sizing,
   styled radio/switch labels and caller-owned menu controls. Preserve the

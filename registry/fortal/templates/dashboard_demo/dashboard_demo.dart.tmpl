@@ -35,6 +35,31 @@ import 'dashboard_demo_widgets.dart';
 import 'dashboard_overview.dart';
 import 'dashboard_shell.dart';
 
+// Everything the demo's constructor takes, so this one import builds it.
+export 'dashboard_demo_artwork.dart' show {{typePrefix}}ArtworkMotif;
+export 'dashboard_demo_data.dart'
+    show
+        {{typePrefix}}DashboardActivity,
+        {{typePrefix}}DashboardActivityKind,
+        {{typePrefix}}DashboardChannel,
+        {{typePrefix}}DashboardCustomer,
+        {{typePrefix}}DashboardCustomerStatus,
+        {{typePrefix}}DashboardCustomerTier,
+        {{typePrefix}}DashboardData,
+        {{typePrefix}}DashboardEdition,
+        {{typePrefix}}DashboardEditionStatus,
+        {{typePrefix}}DashboardEvent,
+        {{typePrefix}}DashboardEventKind,
+        {{typePrefix}}DashboardGoal,
+        {{typePrefix}}DashboardMember,
+        {{typePrefix}}DashboardMetric,
+        {{typePrefix}}DashboardOrder,
+        {{typePrefix}}DashboardOrderStatus,
+        {{typePrefix}}DashboardPoint,
+        {{typePrefix}}DashboardRange,
+        {{typePrefix}}DashboardWeek;
+export 'dashboard_demo_theme.dart' show {{typePrefix}}ThemeSettings;
+
 /// The navigation groups of the dashboard demo.
 enum {{typePrefix}}DashboardDemoSection {
   workspace('Workspace'),
@@ -1101,7 +1126,7 @@ class _PageSlotState extends State<_PageSlot> {
     }
     final heldText = _textRun!;
 
-    // Innermost first. The captured themes re-install the {{typePrefix}} theme with
+    // Innermost first. The captured themes re-install the Fortal theme with
     // its own tokens, so the tokens read here, which include any override a
     // host placed above the dashboard, go back on below them.
     Widget page = KeyedSubtree(key: _page, child: widget.child);

@@ -1,4 +1,8 @@
 import 'package:dashboard/main.dart';
+import 'package:dashboard/ui/recipes/dashboard/dashboard_demo.dart';
+import 'package:dashboard/ui/recipes/dashboard/dashboard_demo_settings.dart';
+import 'package:dashboard/ui/recipes/dashboard/dashboard_demo_widgets.dart';
+import 'package:dashboard/ui/recipes/dashboard/dashboard_overview.dart';
 import 'package:dashboard/ui/ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';

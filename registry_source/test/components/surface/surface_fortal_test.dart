@@ -12,7 +12,7 @@ void main() {
     const surface = FortalSurface(child: SizedBox());
 
     expect(surface.variant, FortalSurfaceVariant.surface);
-    expect(surface.size, FortalSurfaceSize.size2);
+    expect(surface.size, FortalCardSize.size2);
     expect(surface.padded, isTrue);
     for (final (built, variant) in const [
       (FortalSurface.surface(child: SizedBox()), FortalSurfaceVariant.surface),
@@ -74,11 +74,11 @@ void main() {
 
     testWidgets('sizes take the card padding and corners', (tester) async {
       for (final (size, padding, radius) in const [
-        (FortalSurfaceSize.size1, 12.0, 8.0),
-        (FortalSurfaceSize.size2, 16.0, 8.0),
-        (FortalSurfaceSize.size3, 24.0, 12.0),
-        (FortalSurfaceSize.size4, 32.0, 12.0),
-        (FortalSurfaceSize.size5, 48.0, 16.0),
+        (FortalCardSize.size1, 12.0, 8.0),
+        (FortalCardSize.size2, 16.0, 8.0),
+        (FortalCardSize.size3, 24.0, 12.0),
+        (FortalCardSize.size4, 32.0, 12.0),
+        (FortalCardSize.size5, 48.0, 16.0),
       ]) {
         final box = await resolveInFortalTheme(
           tester,

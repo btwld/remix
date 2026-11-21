@@ -113,17 +113,10 @@ void main() {
         FortalSegmentedControlSize.size2,
         FortalSegmentedControlSize.size3,
       ]);
-      expect(FortalSegmentedControlVariant.values, [
-        FortalSegmentedControlVariant.surface,
-      ]);
       expect(FortalTextAreaSize.values, [
         FortalTextAreaSize.size1,
         FortalTextAreaSize.size2,
         FortalTextAreaSize.size3,
-      ]);
-      expect(FortalTextAreaVariant.values, [
-        FortalTextAreaVariant.surface,
-        FortalTextAreaVariant.soft,
       ]);
       expect(FortalDataListSize.values, [
         FortalDataListSize.size1,
@@ -155,7 +148,6 @@ void main() {
         FortalCodeVariant.outline,
         FortalCodeVariant.ghost,
       ]);
-      expect(FortalKbdVariant.values, [FortalKbdVariant.soft]);
       expect(FortalLinkUnderline.values, [
         FortalLinkUnderline.auto,
         FortalLinkUnderline.always,
@@ -200,9 +192,8 @@ void main() {
       expect(textField.variant, FortalTextFieldVariant.surface);
       expect(skeleton, isA<FortalSkeleton>());
       expect(segmented.size, FortalSegmentedControlSize.size2);
-      expect(segmented.variant, FortalSegmentedControlVariant.surface);
       expect(textArea.size, FortalTextAreaSize.size2);
-      expect(textArea.variant, FortalTextAreaVariant.surface);
+      expect(textArea.variant, FortalTextFieldVariant.surface);
       expect(dataList.size, FortalDataListSize.size2);
       expect(dataList.highContrast, isFalse);
 
@@ -222,7 +213,6 @@ void main() {
       expect(code.size, isNull);
       expect(code.variant, FortalCodeVariant.soft);
       expect(kbd.size, isNull);
-      expect(kbd.variant, FortalKbdVariant.soft);
       expect(link.size, isNull);
       expect(link.underline, FortalLinkUnderline.auto);
     });

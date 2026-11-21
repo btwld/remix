@@ -316,7 +316,7 @@ class _RevenueLegend extends StatelessWidget {
       UiDashboardChartLegendItem(
         id: 'current',
         label: 'This period',
-        color: resolveUiChartPalette(context).first,
+        color: uiChartPalette(context).first,
         pattern: .solid,
       ),
       UiDashboardChartLegendItem(
@@ -352,7 +352,7 @@ class UiRevenueChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = resolveUiChartPalette(context).first;
+    final accent = uiChartPalette(context).first;
     final previous = MixScope.tokenOf(UiTokens.gray9, context);
     // Thirteen weekly labels do not fit under a narrow card; show every other.
     final labelEvery = points.length > 8 ? 2 : 1;
@@ -576,7 +576,7 @@ class UiChannelsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = resolveUiChartPalette(context);
+    final palette = uiChartPalette(context);
     return UiSurface(
       child: ColumnBox(
         style: FlexBoxStyler()
@@ -987,7 +987,7 @@ class UiUpcomingCard extends StatelessWidget {
   );
 }
 
-/// The seven Ui palettes, one button each, on a quiet surface. Picking
+/// The seven Fortal palettes, one button each, on a quiet surface. Picking
 /// one restyles the whole dashboard.
 ///
 /// The buttons need a [UiDashboardThemeScope] above them to apply a

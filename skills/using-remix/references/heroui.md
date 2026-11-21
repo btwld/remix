@@ -282,13 +282,13 @@ Install `range_slider` for `<Prefix>RangeSlider` and its `slider` dependency.
 Both use the upstream pill track, accent interval and ringed thumbs. Each
 thumb owns drag scaling and visible keyboard focus; hover retains the
 upstream resting paint. The range reserves a 48px target and keeps Remix's
-ordered `values`, `minSpacing`, snapping, RTL and accessible bound names.
-Custom announcements use `RemixRangeSlider` with `<prefix>RangeSliderStyle()`.
+ordered `values`, `minSpacing`, snapping, RTL, accessible bound names and
+`semanticFormatterCallbacks`.
 See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx).
 
 ## Combobox
 
-`remix add combobox` installs `<Prefix>Combobox<T>` and its `theme`/`textfield`
+`remix add combobox` installs `<Prefix>Combobox<T>` and its `theme`/`text_field`
 dependencies. Use `variant: .primary|.secondary` (primary by default); there is
 no size axis upstream. The field matches TextField, except that a focused
 secondary field takes the `fieldFocus` fill, as upstream does. Suggestions

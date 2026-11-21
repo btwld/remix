@@ -1,3 +1,5 @@
+// Codegen validates the expanded optionsBuilder signature, including FutureOr,
+// before emitting its typedef. Keep that type visible to the generator.
 // ignore: unused_import
 import 'dart:async';
 
@@ -6,30 +8,9 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
-import 'textfield.dart';
+import 'text_field.dart';
 
 part 'combobox.g.dart';
-
-/// The sizes a combobox's field comes in, matching the text field.
-enum FortalComboboxSize {
-  /// A 24px field with 12px text.
-  size1,
-
-  /// A 32px field with 14px text. The default.
-  size2,
-
-  /// A 40px field with 16px text.
-  size3,
-}
-
-/// The looks a combobox's field comes in, matching the text field.
-enum FortalComboboxVariant {
-  /// The `gray2` fill inside a 1px neutral frame.
-  surface,
-
-  /// An accent tint inside a 1px accent ring.
-  soft,
-}
 
 /// The Fortal Combobox recipe: an editable field with a panel of suggestions.
 ///
@@ -41,8 +22,8 @@ enum FortalComboboxVariant {
 /// owns its editor styling. Caller overrides merge last.
 @MixWidget(target: RemixCombobox.new)
 ComboboxStyler fortalComboboxStyle({
-  FortalComboboxVariant variant = .surface,
-  FortalComboboxSize size = .size2,
+  FortalTextFieldVariant variant = .surface,
+  FortalTextFieldSize size = .size2,
   ComboboxStyler style = const ComboboxStyler.create(),
 }) {
   final text = switch (size) {
@@ -52,19 +33,7 @@ ComboboxStyler fortalComboboxStyle({
   };
 
   return ComboboxStyler()
-      .field(
-        fortalTextFieldStyle(
-          variant: switch (variant) {
-            .surface => .surface,
-            .soft => .soft,
-          },
-          size: switch (size) {
-            .size1 => .size1,
-            .size2 => .size2,
-            .size3 => .size3,
-          },
-        ),
-      )
+      .field(fortalTextFieldStyle(variant: variant, size: size))
       .panel(
         ComboboxPanelStyler()
             .margin(.top(FortalTokens.space2()))

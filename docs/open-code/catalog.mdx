@@ -41,6 +41,11 @@ a calendar, a page for its seven palettes, and a quick-find field in the
 header. Every starter includes deterministic Agent flows, complete
 customer and order tables, charts, appearance and notification chrome, and
 local toast feedback.
+The demo is an application, not part of the kit, so `ui.dart` does not export
+it: import `ui/recipes/dashboard/dashboard_demo.dart`, which also exports the
+types `UiDashboardDemo` takes. The default records, `uiDashboardSampleData`,
+live in their own file: `dashboard_sample_data.dart`, or `dashboard_demo_data.dart`
+in Fortal.
 Built-in chrome can be disabled; caller actions append to it and caller account
 content replaces the default. It leaves the application, routes,
 authentication, persistence, and backend search behavior with the host.
@@ -66,8 +71,8 @@ The installer rejects older resolved versions before it writes source.
 | `chart` | `UiLineChart`, `UiBarChart`, `UiPieChart` | — |
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | — |
 | `code` | `UiCode` (Vanilla) | — |
-| `combobox` | `UiCombobox` (every preset; installs `theme` and `textfield`) | — |
-| `dashboard_demo` | `UiDashboardDemo`, `UiDashboardOverview` | — |
+| `combobox` | `UiCombobox` (every preset; installs `theme` and `text_field`) | — |
+| `dashboard_demo` | `UiDashboardDemo` (from `recipes/dashboard/dashboard_demo.dart`, not `ui.dart`) | — |
 | `dashboard_shell` | `UiDashboardShell` | — |
 | `data_list` | `UiDataList` | — |
 | `data_table` | `UiDataTable` | — |
@@ -83,7 +88,7 @@ The installer rejects older resolved versions before it writes source.
 | `progress` | `UiProgress` | — |
 | `radio` | `UiRadio` | — |
 | `range_slider` | `UiRangeSlider` (depends on `slider`) | — |
-| `search_field` | `UiSearchField` (Vanilla; installs `theme`, `textfield`, and `icon_button`) | — |
+| `search_field` | `UiSearchField` (Vanilla; installs `theme`, `text_field`, and `icon_button`) | — |
 | `segmented_control` | `UiSegmentedControl` | — |
 | `select` | `UiSelect` | — |
 | `sidebar` | `UiSidebar` | — |
@@ -94,7 +99,7 @@ The installer rejects older resolved versions before it writes source.
 | `switch` | `UiSwitch` | — |
 | `tabs` | `UiTabBar`, `UiTab`, `UiTabView` | variant |
 | `text` | `UiText` (Vanilla) | variant |
-| `textfield` | `UiTextField`, `UiTextArea` | — |
+| `text_field` | `UiTextField`, `UiTextArea` | — |
 | `toast` | `UiToast` | variant |
 | `toggle` | `UiToggle` | variant, size |
 | `toggle_group` | `UiToggleGroup` | variant, size |
@@ -103,9 +108,10 @@ The installer rejects older resolved versions before it writes source.
 The four calendar items are Vanilla hand-written composites with no generated
 part. `calendar` wires IconButton and Select recipes; `range_calendar` adds
 range day states. The pickers compose outline Button, elevated Popover and the
-matching calendar, retaining all five child-styler overrides. `breadcrumbs` is
-one too: a one-line trail of Link recipes with chevron separators, the current
-page as plain text, and a navigation landmark around it. The Vanilla
+matching calendar, retaining all five child-styler overrides. Both pickers
+install `date_picker_styles` automatically as an internal dependency.
+`breadcrumbs` is a one-line trail of Link recipes with chevron separators, the
+current page as plain text, and a navigation landmark around it. The Vanilla
 `dashboard_demo` header uses it. So is `search_field`: a stateful text field
 with a search icon and a clear button that shows for text, clears on Escape,
 and owns its controller when you pass none. The Vanilla `dashboard_shell`
@@ -134,7 +140,7 @@ axis and no group. `base_button` and `typography` are shared authored recipes
 that arrive transitively with the components that use them. Fortal's own
 `avatar_group` (`UiAvatarGroup`, size axis; installs `avatar`),
 `breadcrumbs` (`UiBreadcrumbs`, size axis; installs `link` and `text`),
-`search_field` (`UiSearchField`, variant and size axes; installs `textfield`
+`search_field` (`UiSearchField`, variant and size axes; installs `text_field`
 and `icon_button`) and `surface` (`UiSurface`, variant and size axes;
 installs `card`) are hand-written compositions with no generated part. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
@@ -145,7 +151,7 @@ The `heroui` catalog follows HeroUI's names. Beside shared names such as
 `date_picker`, `date_range_picker`, `breadcrumbs`, `search_field`, and `tabs`, it adds `alert`, `avatar_group`,
 `button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
 `field_layout`, `input_group`, `modal`, `radio_group`,
-`separator`, `surface`, `switch_group`, `table`, `textarea`, `toggle_button`,
+`separator`, `surface`, `switch_group`, `table`, `text_area`, `toggle_button`,
 and `toggle_button_group`. It also ships `app_bar`, `sidebar`,
 `sidebar_layout`, `icons`, and `dashboard_shell` as extensions: HeroUI web has
 no navbar, sidebar, or application shell, so these are styled from HeroUI's
@@ -156,11 +162,15 @@ the `tooltip`) without an upstream reference. HeroUI's `sidebar` pulls in
 `dashboard_demo` are extensions too. HeroUI's `chart` draws its series in an
 ordered ramp of existing tokens (`accent`, `muted`, `foreground`, then
 `border-tertiary`) and never in a status color. The Agent recipes pass HeroUI's
-`card`, `button`, `disclosure`, and `textarea` styles into the shared Agent
+`card`, `button`, `disclosure`, and `text_area` styles into the shared Agent
 components. HeroUI's `dashboard_demo` renders the same five destinations with
 HeroUI's components, and pulls in `chart`, `table`, `tabs`, `chip`, and the
 Agent items. Families that need
 behavior Remix does not provide, such as Form and the separate popover-search Autocomplete, are not included.
+
+HeroUI's `UiCheckboxGroup` stacks options by default (`Axis.vertical`). Pass
+`orientation: Axis.horizontal` to flow the label, options, and help or error
+text in a row that wraps when space runs out.
 
 One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the

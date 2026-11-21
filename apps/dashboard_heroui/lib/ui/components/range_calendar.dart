@@ -7,11 +7,11 @@ import 'calendar.dart';
 /// The application's RangeCalendar style recipe.
 ///
 /// Remix owns the complete range, local draft and range roles. This recipe
-/// paints committed endpoints in primary, interiors in a distinct tint, and
+/// paints committed endpoints in `accent`, interiors in a distinct tint, and
 /// the draft with a tinted fill and an `accentSoftForeground` outline. While
 /// drafting, the old committed value keeps only its quiet selected treatment.
-/// Unavailable draft days use the full-strength destructive text role and
-/// remain struck through.
+/// Unavailable draft days use full-strength `danger` text and remain struck
+/// through.
 CalendarStyler uiRangeCalendarStyle({
   CalendarStyler style = const CalendarStyler.create(),
 }) => uiCalendarStyle()
@@ -288,9 +288,6 @@ class UiRangeCalendar extends StatelessWidget {
   /// By default the summary is not painted; it is a live region for assistive
   /// technology only. A builder makes it visible and keeps it live.
   final Widget Function(BuildContext context, String summary)? summaryBuilder;
-
-  /// Creates a [CalendarStyler], for `RemixRangeCalendar.styleFrom(...)`.
-  static const styleFrom = CalendarStyler.new;
 
   @override
   Widget build(BuildContext context) => RemixRangeCalendar(

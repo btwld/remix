@@ -193,6 +193,8 @@ Optional chart/icon items declare their hosted dependencies. Vanilla's theme
 also declares `remix_ui_fonts` for Geist/Geist Mono; Fortal pins no font family.
 Grouped `dashboard_shell` and `dashboard_demo` items leave the app entry point,
 theme scope, routes, authentication and persistence with the host.
+`dashboard_demo` is a sample application and declares no barrel exports; apps
+import its entry file, `recipes/dashboard/dashboard_demo.dart`, directly.
 
 ## Author and publish
 
@@ -244,10 +246,13 @@ trips and rewrites shared dashboard imports to installed relative paths. Imports
 determine item dependencies; parts determine adapter targets. Whole-tree checks
 reject missing, unexpected or changed files.
 
-Explicit fixed data filenames are exceptions to prefix substitution:
-`theme/fortal_colors.dart` stays stable while its Dart types take the consumer
-prefix; the theme barrel excludes unprefixed palette globals. Palettes are
-generated from owned seeds; [Fortal's specification](../registry_source/specs/fortal.md)
+The prefix replaces the authoring word only where it begins an identifier
+segment or a quoted id (`FortalButton`, `'fortal.color.accent'`); prose keeps
+the design system's name, and the word anywhere else in code or in an id-like
+string fails derivation with its file and line. Explicit fixed data filenames
+are also exempt: `theme/fortal_colors.dart` stays stable while its Dart types
+take the consumer prefix; the theme barrel excludes unprefixed palette globals.
+Palettes are generated from owned seeds; [Fortal's specification](../registry_source/specs/fortal.md)
 owns the visual contract.
 
 Catalog structure and templates are derived. Maintained inputs are
@@ -268,3 +273,14 @@ floors through the [package release workflow](RELEASING.md).
 `tool/check_consumer_apps.dart` checks these installed trees. Fresh checkout
 consumers test installation and generation; hosted checks separately establish
 published-floor compatibility. See [release ordering](RELEASING.md).
+
+For the checkout registry, `tool/check_open_code.dart --source checkout
+--independent all` (the checkout default) audits each catalog item's solo
+install closure before creating a consumer. Relative imports, exports and
+parts must have authored or generated targets in that closure, and package
+imports must have direct runtime declarations there (apart from the fixture's
+Flutter SDK dependency). Explicit solo install canaries still exercise the
+installer and generator. Checks against the pinned `registry-stable` catalog
+skip the audit. Hosted mode defaults to one solo canary; explicit
+`--independent all` against the pin exercises the non-foundation items with
+non-foundation dependencies in that catalog.

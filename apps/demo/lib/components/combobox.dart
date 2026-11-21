@@ -124,11 +124,11 @@ class _ComboboxExampleState extends State<_ComboboxExample> {
 @widgetbook.UseCase(name: 'Catalog', type: RemixCombobox)
 Widget buildComboboxCatalogUseCase(BuildContext context) => CatalogMatrix(
   cellWidth: 220,
-  columns: labelsOf(FortalComboboxSize.values),
-  rows: labelsOf(FortalComboboxVariant.values),
+  columns: labelsOf(FortalTextFieldSize.values),
+  rows: labelsOf(FortalTextFieldVariant.values),
   cell: (row, column) => FortalCombobox<String>(
-    variant: FortalComboboxVariant.values[row],
-    size: FortalComboboxSize.values[column],
+    variant: FortalTextFieldVariant.values[row],
+    size: FortalTextFieldSize.values[column],
     label: 'Destination',
     hintText: 'Search cities',
     optionsBuilder: (_) => const ['Recife', 'Porto', 'Chiang Mai'],

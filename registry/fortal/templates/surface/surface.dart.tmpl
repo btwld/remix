@@ -5,7 +5,7 @@ import '../theme/theme.dart';
 import 'card.dart';
 
 /// How loudly a surface speaks, from the ordinary panel to the one block a
-/// page leads with. {{typePrefix}} casts no shadow under a surface, so emphasis comes
+/// page leads with. Fortal casts no shadow under a surface, so emphasis comes
 /// from fill and contrast alone.
 enum {{typePrefix}}SurfaceVariant {
   /// The surface card: a panel inside a hairline frame. For content of
@@ -26,26 +26,7 @@ enum {{typePrefix}}SurfaceVariant {
   inverse,
 }
 
-/// The sizes a surface comes in: the card's padding and corner steps. Pixel
-/// values are at 100% theme scaling.
-enum {{typePrefix}}SurfaceSize {
-  /// 12px padding.
-  size1,
-
-  /// 16px padding. The default.
-  size2,
-
-  /// 24px padding.
-  size3,
-
-  /// 32px padding.
-  size4,
-
-  /// 48px padding.
-  size5,
-}
-
-/// The {{typePrefix}} Surface recipe: the surface card, with [variant]'s fill and
+/// The Fortal Surface recipe: the surface card, with [variant]'s fill and
 /// frame.
 ///
 /// Pressing, hovering and focus resolve from the widget states above it, as
@@ -56,10 +37,10 @@ enum {{typePrefix}}SurfaceSize {
 /// it in the opposite appearance.
 CardStyler {{valuePrefix}}SurfaceStyle({
   {{typePrefix}}SurfaceVariant variant = .surface,
-  {{typePrefix}}SurfaceSize size = .size2,
+  {{typePrefix}}CardSize size = .size2,
   bool padded = true,
   CardStyler style = const CardStyler.create(),
-}) => {{valuePrefix}}CardStyle(size: _cardSize(size))
+}) => {{valuePrefix}}CardStyle(size: size)
     .merge(switch (variant) {
       .surface || .inverse => null,
       .soft => _soft(),
@@ -67,14 +48,6 @@ CardStyler {{valuePrefix}}SurfaceStyle({
     })
     .merge(padded ? null : CardStyler().padding(.all(0)))
     .merge(style);
-
-{{typePrefix}}CardSize _cardSize({{typePrefix}}SurfaceSize size) => switch (size) {
-  .size1 => .size1,
-  .size2 => .size2,
-  .size3 => .size3,
-  .size4 => .size4,
-  .size5 => .size5,
-};
 
 /// An accent wash and hairline, each a step deeper under the pointer.
 CardStyler _soft() => CardStyler()
@@ -169,7 +142,7 @@ class {{typePrefix}}Surface extends StatelessWidget {
   final {{typePrefix}}SurfaceVariant variant;
 
   /// The padding and corner size.
-  final {{typePrefix}}SurfaceSize size;
+  final {{typePrefix}}CardSize size;
 
   /// Whether the surface pads its [child].
   final bool padded;

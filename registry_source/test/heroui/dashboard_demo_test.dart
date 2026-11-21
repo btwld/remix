@@ -4,7 +4,6 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
-import 'package:registry_source/src/dashboard/dashboard_demo_base.dart';
 import 'package:registry_source/src/dashboard/dashboard_demo_charts.dart';
 import 'package:registry_source/src/heroui/components/button.dart';
 import 'package:registry_source/src/heroui/components/chart.dart';
@@ -29,7 +28,7 @@ void main() {
       );
       expect(legend.items.map((item) => item.color), heroUiChartSeries.take(3));
       final pie = find.byType(PieChart);
-      final palette = resolveHeroUiChartPalette(tester.element(pie));
+      final palette = heroUiChartPalette(tester.element(pie));
       expect(palette.take(3), [
         heroUiToken(HeroUiTokens.accent, mode),
         heroUiToken(HeroUiTokens.muted, mode),

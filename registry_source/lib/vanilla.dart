@@ -54,7 +54,7 @@ export 'src/default/components/spinner.dart';
 export 'src/default/components/switch.dart';
 export 'src/default/components/tabs.dart';
 export 'src/default/components/text.dart';
-export 'src/default/components/textfield.dart';
+export 'src/default/components/text_field.dart';
 export 'src/default/components/toast.dart';
 export 'src/default/components/toggle.dart';
 export 'src/default/components/toggle_group.dart';

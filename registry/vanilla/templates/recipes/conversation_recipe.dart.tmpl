@@ -47,8 +47,11 @@ final class {{typePrefix}}AgentConversationRecipe {
     variant: .outline,
     size: .large,
     style: IconButtonStyler()
+        // Floats over the transcript, so rest, hover and press are opaque.
         .color({{typePrefix}}Tokens.background())
         .borderRadius(.circular({{typePrefix}}Tokens.pill))
+        .onHovered(.color({{typePrefix}}Tokens.accent()))
+        .onPressed(.color({{typePrefix}}Tokens.accent()))
         .merge(latestStyle),
   ),
 );

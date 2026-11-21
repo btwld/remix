@@ -62,7 +62,7 @@ export 'src/fortal/components/surface.dart';
 export 'src/fortal/components/switch.dart';
 export 'src/fortal/components/tabs.dart';
 export 'src/fortal/components/text.dart';
-export 'src/fortal/components/textfield.dart';
+export 'src/fortal/components/text_field.dart';
 export 'src/fortal/components/toast.dart';
 export 'src/fortal/components/toggle.dart';
 export 'src/fortal/components/toggle_group.dart';

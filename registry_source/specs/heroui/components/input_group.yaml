@@ -10,7 +10,7 @@ variants: [primary, secondary]
 sizes: {supported: [], default: null}
 states: [rest, hover, focus, error, disabled]
 tokens:
-  - the text field's tokens (see textfield.yaml)
+  - the text field's tokens (see text_field.yaml)
   - field-placeholder (prefix and suffix text and icons)
 measurements:
   - {what: group, value: "36 high at 1024 px, 40 at 375 px; radius 12", cite: input-group-primary-full-input}

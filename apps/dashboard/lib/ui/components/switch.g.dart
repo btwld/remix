@@ -6,7 +6,7 @@ part of 'switch.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Ui Switch recipe.
+/// The Fortal Switch recipe.
 ///
 /// It reads top to bottom: the track, thumb and focus ring, then the variant's
 /// colors for on, pressed and disabled, then the touch target.

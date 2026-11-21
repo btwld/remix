@@ -21,7 +21,7 @@ class UiFieldLayout extends StatelessWidget {
   const UiFieldLayout({
     super.key,
     required this.items,
-    this.axis = Axis.vertical,
+    this.orientation = Axis.vertical,
     this.label,
     this.controlProvidesName = false,
     this.helperText,
@@ -31,7 +31,7 @@ class UiFieldLayout extends StatelessWidget {
   });
 
   final List<Widget> items;
-  final Axis axis;
+  final Axis orientation;
   final String? label;
 
   /// Whether the control supplies [label] as its accessible name.
@@ -77,7 +77,7 @@ class UiFieldLayout extends StatelessWidget {
         ? StyledText(errorText!, style: uiErrorText)
         : null;
 
-    if (axis == Axis.horizontal) {
+    if (orientation == Axis.horizontal) {
       return Wrap(
         spacing: _groupGap,
         runSpacing: _groupGap,

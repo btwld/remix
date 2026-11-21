@@ -74,7 +74,7 @@ class _FortalExampleScreenState extends State<FortalExampleScreen> {
                           'FortalTheme',
                           size: FortalTextSize.size2,
                         ),
-                        const FortalKbd.soft(
+                        const FortalKbd(
                           '⌘K',
                           size: FortalTextSize.size2,
                           semanticLabel: 'Command K',

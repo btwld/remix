@@ -50,7 +50,7 @@ class UiAvatarGroupMember {
 ///
 /// The avatars stand a spacing step apart instead of overlapping. Overlapping
 /// avatars need a seam to stay distinct, a ring in the page color or a cut
-/// that follows each avatar's corner. Ui casts no shadow outside floating
+/// that follows each avatar's corner. Fortal casts no shadow outside floating
 /// layers, and each avatar's corner belongs to its own recipe, so the group
 /// separates them with space.
 ///

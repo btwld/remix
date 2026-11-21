@@ -12,11 +12,11 @@ BoxDecoration decoration(BoxSpec spec) => spec.decoration! as BoxDecoration;
 
 void main() {
   for (final (size, height, paddingY) in const [
-    (FortalComboboxSize.size1, 24.0, 4.0),
-    (FortalComboboxSize.size2, 32.0, 6.0),
-    (FortalComboboxSize.size3, 40.0, 8.0),
+    (FortalTextFieldSize.size1, 24.0, 4.0),
+    (FortalTextFieldSize.size2, 32.0, 6.0),
+    (FortalTextFieldSize.size3, 40.0, 8.0),
   ]) {
-    for (final variant in FortalComboboxVariant.values) {
+    for (final variant in FortalTextFieldVariant.values) {
       for (final scale in [1.0, 2.0]) {
         testWidgets(
           '$size/$variant at $scale keeps the accepted text line inside its field',
@@ -64,8 +64,8 @@ void main() {
     testWidgets(
       '$mode field matrix matches TextField including disabled and focus',
       (tester) async {
-        for (final size in FortalComboboxSize.values) {
-          for (final variant in FortalComboboxVariant.values) {
+        for (final size in FortalTextFieldSize.values) {
+          for (final variant in FortalTextFieldVariant.values) {
             for (final states in <Set<WidgetState>>[
               {},
               {.hovered},

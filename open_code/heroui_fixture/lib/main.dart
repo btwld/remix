@@ -625,7 +625,7 @@ class _GalleryState extends State<Gallery> {
       ),
       AcmeSwitchGroup(
         label: 'Notifications',
-        items: [
+        options: [
           AcmeSwitchOption(
             selected: _notify,
             label: 'Email me',
@@ -733,7 +733,7 @@ class _GalleryState extends State<Gallery> {
 
   Widget _overlays() {
     return _card('Combobox, Select, dropdown, popover, tooltip, modal', [
-      for (final variant in AcmeComboboxVariant.values)
+      for (final variant in AcmeTextFieldVariant.values)
         SizedBox(
           width: 320,
           child: AcmeCombobox<String>(
