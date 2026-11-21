@@ -207,9 +207,14 @@ class _ThemeComparison {
   ) {
     if (colors.isEmpty) return const {};
 
-    return Map<ColorToken, Color?>.identity()
+    final lookups = Map<ColorToken, Color?>.identity()
       ..addAll(colors)
       ..addEntries(_paletteKeys.map((token) => MapEntry(token, colors[token])));
+    for (final token in colors.keys) {
+      final alias = ColorToken(token.name);
+      if (alias == token) lookups[alias] = colors[alias];
+    }
+    return lookups;
   }
 
   bool differsFrom(_ThemeComparison old) {

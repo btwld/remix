@@ -343,6 +343,36 @@ void main() {
     );
   }
 
+  testWidgets('changing lookup policy notifies accent alias dependents', (
+    tester,
+  ) async {
+    const accent = HeroUiTokens.accent;
+    final alias = ColorToken(accent.name);
+    const override = Color(0xFF8000FF);
+    final fallback = const HeroUiThemeData.light().color(alias);
+    final valueTheme = HeroUiThemeData.light(colors: {accent: override});
+    final identityTheme = HeroUiThemeData.light(
+      colors: Map<ColorToken, Color>.identity()..[accent] = override,
+    );
+    final seenAccents = <Color>[];
+    final child = Builder(
+      builder: (context) {
+        seenAccents.add(HeroUiTheme.of(context).color(alias));
+        return const SizedBox();
+      },
+    );
+
+    Future<void> pumpTheme(HeroUiThemeData theme) =>
+        tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
+
+    await pumpTheme(valueTheme);
+    expect(seenAccents, [override]);
+    await pumpTheme(identityTheme);
+    expect(seenAccents, [override, fallback]);
+    await pumpTheme(valueTheme);
+    expect(seenAccents, [override, fallback, override]);
+  });
+
   testWidgets('subclass equality determines whether a theme change notifies', (
     tester,
   ) async {
