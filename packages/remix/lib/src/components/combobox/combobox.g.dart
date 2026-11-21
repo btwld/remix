@@ -531,6 +531,8 @@ class ComboboxStyler extends MixStyler<ComboboxStyler, ComboboxSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => ComboboxStyler().transform(value, alignment: alignment);
+  factory ComboboxStyler.wrap(WidgetModifierConfig value) =>
+      ComboboxStyler().wrap(value);
 
   ComboboxStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -1220,6 +1222,8 @@ class ComboboxOptionStyler
     Matrix4 value, {
     Alignment alignment = .center,
   }) => ComboboxOptionStyler().transform(value, alignment: alignment);
+  factory ComboboxOptionStyler.wrap(WidgetModifierConfig value) =>
+      ComboboxOptionStyler().wrap(value);
 
   ComboboxOptionStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -1862,6 +1866,8 @@ class ComboboxPanelStyler
     Matrix4 value, {
     Alignment alignment = .center,
   }) => ComboboxPanelStyler().transform(value, alignment: alignment);
+  factory ComboboxPanelStyler.wrap(WidgetModifierConfig value) =>
+      ComboboxPanelStyler().wrap(value);
 
   ComboboxPanelStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

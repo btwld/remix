@@ -67,13 +67,12 @@ class VanillaBadge extends StatelessWidget {
   final RemixBadgeLabelBuilder? labelBuilder;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixBadge(
-      key: this.key,
-      style: vanillaBadgeStyle(variant: this.variant, style: this.style),
-      label: this.label,
-      child: this.child,
-      labelBuilder: this.labelBuilder,
+      style: vanillaBadgeStyle(variant: variant, style: style),
+      label: label,
+      labelBuilder: labelBuilder,
+      child: child,
     );
   }
 }

@@ -26,13 +26,9 @@ class PlaygroundDivider extends StatelessWidget {
   final DividerStyler style;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixDivider(
-      key: this.key,
-      style: playgroundDividerStyle(
-        orientation: this.orientation,
-        style: this.style,
-      ),
+      style: playgroundDividerStyle(orientation: orientation, style: style),
     );
   }
 }

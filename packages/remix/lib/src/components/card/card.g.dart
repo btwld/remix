@@ -311,6 +311,8 @@ class CardStyler extends MixStyler<CardStyler, CardSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => CardStyler().transform(value, alignment: alignment);
+  factory CardStyler.wrap(WidgetModifierConfig value) =>
+      CardStyler().wrap(value);
 
   CardStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

@@ -47,21 +47,16 @@ class HeroUiModal extends StatelessWidget {
   final String? semanticLabel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixDialog(
-      key: this.key,
-      style: heroUiModalStyle(
-        size: this.size,
-        placement: this.placement,
-        style: this.style,
-      ),
-      child: this.child,
-      title: this.title,
-      description: this.description,
-      actions: this.actions,
-      scrollable: this.scrollable,
-      modal: this.modal,
-      semanticLabel: this.semanticLabel,
+      style: heroUiModalStyle(size: size, placement: placement, style: style),
+      title: title,
+      description: description,
+      actions: actions,
+      scrollable: scrollable,
+      modal: modal,
+      semanticLabel: semanticLabel,
+      child: child,
     );
   }
 }

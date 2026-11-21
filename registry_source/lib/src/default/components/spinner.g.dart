@@ -27,12 +27,11 @@ class VanillaSpinner extends StatelessWidget {
   final String? semanticsValue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSpinner(
-      key: this.key,
-      style: vanillaSpinnerStyle(style: this.style),
-      semanticsLabel: this.semanticsLabel,
-      semanticsValue: this.semanticsValue,
+      style: vanillaSpinnerStyle(style: style),
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
     );
   }
 }

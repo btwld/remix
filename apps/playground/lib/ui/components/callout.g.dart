@@ -53,13 +53,12 @@ class PlaygroundCallout extends StatelessWidget {
   final Widget? child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCallout(
-      key: this.key,
-      style: playgroundCalloutStyle(variant: this.variant, style: this.style),
-      text: this.text,
-      icon: this.icon,
-      child: this.child,
+      style: playgroundCalloutStyle(variant: variant, style: style),
+      text: text,
+      icon: icon,
+      child: child,
     );
   }
 }

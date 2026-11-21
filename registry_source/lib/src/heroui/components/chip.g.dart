@@ -78,18 +78,17 @@ class HeroUiChip extends StatelessWidget {
   final RemixBadgeLabelBuilder? labelBuilder;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixBadge(
-      key: this.key,
       style: heroUiChipStyle(
-        variant: this.variant,
-        color: this.color,
-        size: this.size,
-        style: this.style,
+        variant: variant,
+        color: color,
+        size: size,
+        style: style,
       ),
-      label: this.label,
-      child: this.child,
-      labelBuilder: this.labelBuilder,
+      label: label,
+      labelBuilder: labelBuilder,
+      child: child,
     );
   }
 }

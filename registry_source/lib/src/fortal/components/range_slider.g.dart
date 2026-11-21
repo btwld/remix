@@ -118,30 +118,29 @@ class FortalRangeSlider extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixRangeSlider(
-      key: this.key,
       style: fortalRangeSliderStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      values: this.values,
-      onChanged: this.onChanged,
-      onChangeStart: this.onChangeStart,
-      onChangeEnd: this.onChangeEnd,
-      min: this.min,
-      max: this.max,
-      minSpacing: this.minSpacing,
-      snapDivisions: this.snapDivisions,
-      enabled: this.enabled,
-      enableFeedback: this.enableFeedback,
-      focusNodes: this.focusNodes,
-      autofocusThumbIndex: this.autofocusThumbIndex,
-      semanticLabels: this.semanticLabels,
-      semanticFormatterCallbacks: this.semanticFormatterCallbacks,
-      excludeSemantics: this.excludeSemantics,
+      values: values,
+      onChanged: onChanged,
+      onChangeStart: onChangeStart,
+      onChangeEnd: onChangeEnd,
+      min: min,
+      max: max,
+      minSpacing: minSpacing,
+      snapDivisions: snapDivisions,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      focusNodes: focusNodes,
+      autofocusThumbIndex: autofocusThumbIndex,
+      semanticLabels: semanticLabels,
+      semanticFormatterCallbacks: semanticFormatterCallbacks,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

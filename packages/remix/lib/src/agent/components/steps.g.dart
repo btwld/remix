@@ -258,6 +258,8 @@ class AgentStepsStyler extends MixStyler<AgentStepsStyler, AgentStepsSpec>
       AgentStepsStyler().indicator(value);
   factory AgentStepsStyler.rail(FlexBoxStyler value) =>
       AgentStepsStyler().rail(value);
+  factory AgentStepsStyler.wrap(WidgetModifierConfig value) =>
+      AgentStepsStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {
@@ -432,6 +434,8 @@ class AgentStepStyler extends MixStyler<AgentStepStyler, AgentStepSpec>
       AgentStepStyler().title(value);
   factory AgentStepStyler.detail(TextStyler value) =>
       AgentStepStyler().detail(value);
+  factory AgentStepStyler.wrap(WidgetModifierConfig value) =>
+      AgentStepStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {

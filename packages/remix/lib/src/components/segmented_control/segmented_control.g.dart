@@ -455,6 +455,8 @@ class SegmentedControlStyler
     Matrix4 value, {
     Alignment alignment = .center,
   }) => SegmentedControlStyler().transform(value, alignment: alignment);
+  factory SegmentedControlStyler.wrap(WidgetModifierConfig value) =>
+      SegmentedControlStyler().wrap(value);
 
   SegmentedControlStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -1155,6 +1157,8 @@ class SegmentedControlItemStyler
     Matrix4 value, {
     Alignment alignment = .center,
   }) => SegmentedControlItemStyler().transform(value, alignment: alignment);
+  factory SegmentedControlItemStyler.wrap(WidgetModifierConfig value) =>
+      SegmentedControlItemStyler().wrap(value);
 
   SegmentedControlItemStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

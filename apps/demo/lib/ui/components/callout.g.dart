@@ -72,18 +72,17 @@ class FortalCallout extends StatelessWidget {
   final Widget? child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCallout(
-      key: this.key,
       style: fortalCalloutStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      text: this.text,
-      icon: this.icon,
-      child: this.child,
+      text: text,
+      icon: icon,
+      child: child,
     );
   }
 }

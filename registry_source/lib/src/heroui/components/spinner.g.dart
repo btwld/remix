@@ -32,16 +32,11 @@ class HeroUiSpinner extends StatelessWidget {
   final String? semanticsValue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSpinner(
-      key: this.key,
-      style: heroUiSpinnerStyle(
-        size: this.size,
-        color: this.color,
-        style: this.style,
-      ),
-      semanticsLabel: this.semanticsLabel,
-      semanticsValue: this.semanticsValue,
+      style: heroUiSpinnerStyle(size: size, color: color, style: style),
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
     );
   }
 }

@@ -34,17 +34,12 @@ class UiProgress extends StatelessWidget {
   final String? semanticsValue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixProgress(
-      key: this.key,
-      style: uiProgressStyle(
-        size: this.size,
-        color: this.color,
-        style: this.style,
-      ),
-      value: this.value,
-      semanticsLabel: this.semanticsLabel,
-      semanticsValue: this.semanticsValue,
+      style: uiProgressStyle(size: size, color: color, style: style),
+      value: value,
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
     );
   }
 }

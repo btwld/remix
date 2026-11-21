@@ -101,26 +101,25 @@ class UiToggle extends StatelessWidget {
   final MouseCursor mouseCursor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixToggle(
-      key: this.key,
       style: uiToggleStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      selected: this.selected,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      label: this.label,
-      icon: this.icon,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
-      mouseCursor: this.mouseCursor,
+      selected: selected,
+      onChanged: onChanged,
+      enabled: enabled,
+      label: label,
+      icon: icon,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
     );
   }
 }

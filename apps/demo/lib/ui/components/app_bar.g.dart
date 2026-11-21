@@ -49,19 +49,18 @@ class FortalAppBar extends StatelessWidget {
   final int? headingLevel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixAppBar(
-      key: this.key,
-      style: fortalAppBarStyle(style: this.style),
-      leading: this.leading,
-      title: this.title,
-      titleChild: this.titleChild,
-      actions: this.actions,
-      bottom: this.bottom,
-      centerTitle: this.centerTitle,
-      safeArea: this.safeArea,
-      namesRoute: this.namesRoute,
-      headingLevel: this.headingLevel,
+      style: fortalAppBarStyle(style: style),
+      leading: leading,
+      title: title,
+      titleChild: titleChild,
+      actions: actions,
+      bottom: bottom,
+      centerTitle: centerTitle,
+      safeArea: safeArea,
+      namesRoute: namesRoute,
+      headingLevel: headingLevel,
     );
   }
 }

@@ -62,24 +62,23 @@ class PlaygroundCheckbox extends StatelessWidget {
   final MouseCursor mouseCursor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCheckbox(
-      key: this.key,
-      style: playgroundCheckboxStyle(style: this.style),
-      selected: this.selected,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      tristate: this.tristate,
-      checkedIcon: this.checkedIcon,
-      uncheckedIcon: this.uncheckedIcon,
-      indeterminateIcon: this.indeterminateIcon,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      enableFeedback: this.enableFeedback,
-      label: this.label,
-      semanticLabel: this.semanticLabel,
-      minimumTapTargetSize: this.minimumTapTargetSize,
-      mouseCursor: this.mouseCursor,
+      style: playgroundCheckboxStyle(style: style),
+      selected: selected,
+      onChanged: onChanged,
+      enabled: enabled,
+      tristate: tristate,
+      checkedIcon: checkedIcon,
+      uncheckedIcon: uncheckedIcon,
+      indeterminateIcon: indeterminateIcon,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      enableFeedback: enableFeedback,
+      label: label,
+      semanticLabel: semanticLabel,
+      minimumTapTargetSize: minimumTapTargetSize,
+      mouseCursor: mouseCursor,
     );
   }
 }
@@ -130,21 +129,20 @@ class PlaygroundCheckboxGroupItem<T extends Object> extends StatelessWidget {
   final MouseCursor mouseCursor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCheckboxGroupItem<T>(
-      key: this.key,
-      style: playgroundCheckboxGroupItemStyle(style: this.style),
-      value: this.value,
-      label: this.label,
-      semanticLabel: this.semanticLabel,
-      enabled: this.enabled,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      checkedIcon: this.checkedIcon,
-      uncheckedIcon: this.uncheckedIcon,
-      enableFeedback: this.enableFeedback,
-      minimumTapTargetSize: this.minimumTapTargetSize,
-      mouseCursor: this.mouseCursor,
+      style: playgroundCheckboxGroupItemStyle(style: style),
+      value: value,
+      label: label,
+      semanticLabel: semanticLabel,
+      enabled: enabled,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      checkedIcon: checkedIcon,
+      uncheckedIcon: uncheckedIcon,
+      enableFeedback: enableFeedback,
+      minimumTapTargetSize: minimumTapTargetSize,
+      mouseCursor: mouseCursor,
     );
   }
 }

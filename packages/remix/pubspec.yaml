@@ -13,7 +13,7 @@ topics:
   - styling
   - mix
 
-version: 1.0.0-rc.5
+version: 1.0.0-rc.6
 
 # Consumer floor, matching `mix` 2.3.1, the oldest Mix this package accepts.
 # Enforced by tool/check_toolchain.dart.
@@ -33,4 +33,4 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.10.1
   meta: ^1.18.0
-  mix_generator: ^2.2.0-beta.3
+  mix_generator: ^2.3.0

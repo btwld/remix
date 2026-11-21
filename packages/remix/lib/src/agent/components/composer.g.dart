@@ -146,6 +146,8 @@ class AgentComposerStyler
       AgentComposerStyler().fieldMaxHeight(value);
   factory AgentComposerStyler.toolbar(FlexBoxStyler value) =>
       AgentComposerStyler().toolbar(value);
+  factory AgentComposerStyler.wrap(WidgetModifierConfig value) =>
+      AgentComposerStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {

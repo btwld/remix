@@ -50,10 +50,7 @@ class PlaygroundKbd extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) {
-    return playgroundKbdStyle(
-      variant: this.variant,
-      style: this.style,
-    ).call(this.text, key: this.key);
+  Widget build(BuildContext _) {
+    return playgroundKbdStyle(variant: variant, style: style).call(text);
   }
 }

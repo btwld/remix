@@ -47,18 +47,17 @@ class PlaygroundSegmentedControl<T extends Object> extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSegmentedControl<T>(
-      key: this.key,
-      style: playgroundSegmentedControlStyle(style: this.style),
-      items: this.items,
-      selectedValue: this.selectedValue,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      orientation: this.orientation,
-      loop: this.loop,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+      style: playgroundSegmentedControlStyle(style: style),
+      items: items,
+      selectedValue: selectedValue,
+      onChanged: onChanged,
+      enabled: enabled,
+      orientation: orientation,
+      loop: loop,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

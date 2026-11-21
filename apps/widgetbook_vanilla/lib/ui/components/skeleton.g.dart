@@ -32,12 +32,11 @@ class VanillaSkeleton extends StatelessWidget {
   final bool loading;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSkeleton(
-      key: this.key,
-      style: vanillaSkeletonStyle(style: this.style),
-      child: this.child,
-      loading: this.loading,
+      style: vanillaSkeletonStyle(style: style),
+      loading: loading,
+      child: child,
     );
   }
 }

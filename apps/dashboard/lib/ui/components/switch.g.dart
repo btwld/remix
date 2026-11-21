@@ -102,26 +102,25 @@ class UiSwitch extends StatelessWidget {
   final MouseCursor mouseCursor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSwitch(
-      key: this.key,
       style: uiSwitchStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      selected: this.selected,
-      label: this.label,
-      semanticLabel: this.semanticLabel,
-      minimumTapTargetSize: this.minimumTapTargetSize,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      excludeSemantics: this.excludeSemantics,
-      mouseCursor: this.mouseCursor,
+      selected: selected,
+      label: label,
+      semanticLabel: semanticLabel,
+      minimumTapTargetSize: minimumTapTargetSize,
+      onChanged: onChanged,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
     );
   }
 }

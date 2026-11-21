@@ -359,6 +359,8 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => DialogStyler().transform(value, alignment: alignment);
+  factory DialogStyler.wrap(WidgetModifierConfig value) =>
+      DialogStyler().wrap(value);
 
   DialogStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -729,13 +731,13 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     return RemixDialog(
       key: key,
       style: this,
-      child: child,
       title: title,
       description: description,
       actions: actions,
       scrollable: scrollable,
       modal: modal,
       semanticLabel: semanticLabel,
+      child: child,
     );
   }
 

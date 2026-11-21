@@ -85,22 +85,21 @@ class PlaygroundToggleGroup<T> extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixToggleGroup<T>(
-      key: this.key,
       style: playgroundToggleGroupStyle(
-        variant: this.variant,
-        size: this.size,
-        style: this.style,
+        variant: variant,
+        size: size,
+        style: style,
       ),
-      items: this.items,
-      selectedValue: this.selectedValue,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      orientation: this.orientation,
-      loop: this.loop,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+      items: items,
+      selectedValue: selectedValue,
+      onChanged: onChanged,
+      enabled: enabled,
+      orientation: orientation,
+      loop: loop,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

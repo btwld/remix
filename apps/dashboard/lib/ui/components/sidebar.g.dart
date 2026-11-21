@@ -79,29 +79,28 @@ class UiSidebar<T extends Object> extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSidebar<T>(
-      key: this.key,
       style: uiSidebarStyle(
-        highContrast: this.highContrast,
-        collapsed: this.collapsed,
-        panelPadding: this.panelPadding,
-        style: this.style,
+        highContrast: highContrast,
+        collapsed: collapsed,
+        panelPadding: panelPadding,
+        style: style,
       ),
-      header: this.header,
-      collapsed: this.collapsed,
-      showTooltips: this.showTooltips,
-      tooltipPositioning: this.tooltipPositioning,
-      expandedWidth: this.expandedWidth,
-      collapsedWidth: this.collapsedWidth,
-      animationStyle: this.animationStyle,
-      sections: this.sections,
-      selectedValue: this.selectedValue,
-      onSelected: this.onSelected,
-      footer: this.footer,
-      enabled: this.enabled,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+      header: header,
+      collapsed: collapsed,
+      showTooltips: showTooltips,
+      tooltipPositioning: tooltipPositioning,
+      expandedWidth: expandedWidth,
+      collapsedWidth: collapsedWidth,
+      animationStyle: animationStyle,
+      sections: sections,
+      selectedValue: selectedValue,
+      onSelected: onSelected,
+      footer: footer,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

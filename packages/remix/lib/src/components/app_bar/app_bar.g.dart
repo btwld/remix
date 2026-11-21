@@ -379,6 +379,8 @@ class AppBarStyler extends MixStyler<AppBarStyler, AppBarSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => AppBarStyler().transform(value, alignment: alignment);
+  factory AppBarStyler.wrap(WidgetModifierConfig value) =>
+      AppBarStyler().wrap(value);
 
   AppBarStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
