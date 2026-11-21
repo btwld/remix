@@ -677,6 +677,8 @@ class SelectStyler extends MixStyler<SelectStyler, SelectSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => SelectStyler().transform(value, alignment: alignment);
+  factory SelectStyler.wrap(WidgetModifierConfig value) =>
+      SelectStyler().wrap(value);
 
   SelectStyler alignment(AlignmentGeometry value) {
     return menuContainer(FlexBoxStyler().alignment(value));
@@ -1425,6 +1427,8 @@ class SelectTriggerStyler
     Matrix4 value, {
     Alignment alignment = .center,
   }) => SelectTriggerStyler().transform(value, alignment: alignment);
+  factory SelectTriggerStyler.wrap(WidgetModifierConfig value) =>
+      SelectTriggerStyler().wrap(value);
 
   SelectTriggerStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
@@ -2156,6 +2160,8 @@ class SelectContentStyler
     Matrix4 value, {
     Alignment alignment = .center,
   }) => SelectContentStyler().transform(value, alignment: alignment);
+  factory SelectContentStyler.wrap(WidgetModifierConfig value) =>
+      SelectContentStyler().wrap(value);
 
   SelectContentStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -2823,6 +2829,8 @@ class SelectMenuItemStyler
     Matrix4 value, {
     Alignment alignment = .center,
   }) => SelectMenuItemStyler().transform(value, alignment: alignment);
+  factory SelectMenuItemStyler.wrap(WidgetModifierConfig value) =>
+      SelectMenuItemStyler().wrap(value);
 
   SelectMenuItemStyler color(Color value) {
     return container(FlexBoxStyler().color(value));

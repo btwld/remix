@@ -322,6 +322,8 @@ class LinkStyler extends MixStyler<LinkStyler, LinkSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => LinkStyler().transform(value, alignment: alignment);
+  factory LinkStyler.wrap(WidgetModifierConfig value) =>
+      LinkStyler().wrap(value);
 
   LinkStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -687,7 +689,6 @@ class LinkStyler extends MixStyler<LinkStyler, LinkSpec>
       key: key,
       style: this,
       label: label,
-      child: child,
       onPressed: onPressed,
       enabled: enabled,
       linkUrl: linkUrl,
@@ -698,6 +699,7 @@ class LinkStyler extends MixStyler<LinkStyler, LinkSpec>
       semanticLabel: semanticLabel,
       semanticHint: semanticHint,
       excludeSemantics: excludeSemantics,
+      child: child,
     );
   }
 

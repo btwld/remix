@@ -362,6 +362,8 @@ class CheckboxStyler extends MixStyler<CheckboxStyler, CheckboxSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => CheckboxStyler().transform(value, alignment: alignment);
+  factory CheckboxStyler.wrap(WidgetModifierConfig value) =>
+      CheckboxStyler().wrap(value);
 
   CheckboxStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

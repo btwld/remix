@@ -104,6 +104,8 @@ class AgentSuggestionsStyler
 
   factory AgentSuggestionsStyler.container(WrapBoxStyler value) =>
       AgentSuggestionsStyler().container(value);
+  factory AgentSuggestionsStyler.wrap(WidgetModifierConfig value) =>
+      AgentSuggestionsStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {

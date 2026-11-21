@@ -568,6 +568,8 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => DataTableStyler().transform(value, alignment: alignment);
+  factory DataTableStyler.wrap(WidgetModifierConfig value) =>
+      DataTableStyler().wrap(value);
 
   DataTableStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

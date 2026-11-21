@@ -359,6 +359,8 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => CalloutStyler().transform(value, alignment: alignment);
+  factory CalloutStyler.wrap(WidgetModifierConfig value) =>
+      CalloutStyler().wrap(value);
 
   CalloutStyler color(Color value) {
     return container(FlexBoxStyler().color(value));

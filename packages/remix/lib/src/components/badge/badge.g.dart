@@ -322,6 +322,8 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => BadgeStyler().transform(value, alignment: alignment);
+  factory BadgeStyler.wrap(WidgetModifierConfig value) =>
+      BadgeStyler().wrap(value);
 
   BadgeStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -678,8 +680,8 @@ class BadgeStyler extends MixStyler<BadgeStyler, BadgeSpec>
       key: key,
       style: this,
       label: label,
-      child: child,
       labelBuilder: labelBuilder,
+      child: child,
     );
   }
 

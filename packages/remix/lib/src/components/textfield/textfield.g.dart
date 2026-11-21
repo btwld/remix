@@ -573,6 +573,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => TextFieldStyler().transform(value, alignment: alignment);
+  factory TextFieldStyler.wrap(WidgetModifierConfig value) =>
+      TextFieldStyler().wrap(value);
 
   TextFieldStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

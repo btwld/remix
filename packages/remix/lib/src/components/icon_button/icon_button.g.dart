@@ -349,6 +349,8 @@ class IconButtonStyler extends MixStyler<IconButtonStyler, IconButtonSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => IconButtonStyler().transform(value, alignment: alignment);
+  factory IconButtonStyler.wrap(WidgetModifierConfig value) =>
+      IconButtonStyler().wrap(value);
 
   IconButtonStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
