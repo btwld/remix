@@ -83,6 +83,75 @@ void main() {
       },
     );
 
+    testWidgets(
+      '${preset.name}: widening cancels a pending synchronous reopen',
+      (tester) async {
+        final width = ValueNotifier(500.0);
+        addTearDown(width.dispose);
+        const sidebar = Text('Sidebar');
+        const body = Text('Body');
+        await tester.pumpWidget(
+          _app(
+            theme: preset.theme,
+            home: Align(
+              alignment: Alignment.topLeft,
+              child: ValueListenableBuilder(
+                valueListenable: width,
+                child: preset.layout(
+                  compactBreakpoint: 650,
+                  sidebar: sidebar,
+                  body: body,
+                ),
+                builder: (context, value, child) =>
+                    SizedBox(width: value, height: 500, child: child),
+              ),
+            ),
+          ),
+        );
+        final bodyContext = tester.element(find.byWidget(body));
+        preset.open(bodyContext);
+        await tester.pumpAndSettle();
+        Navigator.of(bodyContext).pop();
+        preset.open(bodyContext);
+        await tester.pump();
+
+        width.value = 750;
+        await tester.pump(const Duration(milliseconds: 50));
+        width.value = 500;
+        await tester.pumpAndSettle();
+        expect(find.byWidget(sidebar), findsNothing);
+      },
+    );
+
+    testWidgets(
+      '${preset.name}: reopens a sheet popped before its first build',
+      (tester) async {
+        const sidebar = Text('Sidebar');
+        const body = Text('Body');
+        await tester.pumpWidget(
+          _app(
+            theme: preset.theme,
+            home: preset.layout(
+              compactBreakpoint: 1000,
+              sidebar: sidebar,
+              body: body,
+            ),
+          ),
+        );
+        final bodyContext = tester.element(find.byWidget(body));
+        final navigator = Navigator.of(bodyContext);
+        preset.open(bodyContext);
+        await tester.pump();
+        expect(navigator.canPop(), isTrue);
+        expect(find.byWidget(sidebar), findsNothing);
+
+        navigator.pop();
+        preset.open(bodyContext);
+        await tester.pumpAndSettle();
+        expect(find.byWidget(sidebar), findsOneWidget);
+      },
+    );
+
     for (final synchronous in [false, true]) {
       testWidgets(
         '${preset.name}: rapid reopen with a shared key (synchronous: $synchronous)',

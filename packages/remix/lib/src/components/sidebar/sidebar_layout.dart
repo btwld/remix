@@ -98,6 +98,7 @@ class RemixSidebarLayout extends StatefulWidget {
 class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
   bool _isCompact = false;
   bool _selfOpen = false;
+  bool _reopenRequested = false;
   bool _reconcileScheduled = false;
 
   /// Holds the sheet until its sidebar unmounts, so a reopened or inline
@@ -124,8 +125,8 @@ class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
   void _openCompact() {
     if (!_isCompact) return;
     final sheet = _sheet;
-    if (sheet != null && sheet.route?.isActive == false) {
-      sheet.reopenRequested = true;
+    if (sheet != null && sheet.route?.isActive != true) {
+      _reopenRequested = true;
     }
     _setOpen(true);
   }
@@ -134,13 +135,21 @@ class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
 
   /// Applies navigation and overlay updates after the layout frame.
   void _reconcileSheet() {
-    if (_reconcileScheduled || _sheet?.route?.isActive == false) return;
-    if ((_shouldOpen ? _sheetInputs : null) == _sheet?.value) return;
+    if (_reconcileScheduled) return;
+    if ((_isCompact || !_reopenRequested) &&
+        (_sheet?.route?.isActive == false ||
+            (_shouldOpen ? _sheetInputs : null) == _sheet?.value)) {
+      return;
+    }
     _reconcileScheduled = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _reconcileScheduled = false;
       if (!mounted) return;
       final sheet = _sheet;
+      if (!_isCompact && _reopenRequested) {
+        _reopenRequested = false;
+        _closeCompact();
+      }
       if (!_shouldOpen) {
         sheet?.removeRoute();
       } else if (sheet == null) {
@@ -152,6 +161,7 @@ class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
   }
 
   void _pushSheet() {
+    _reopenRequested = false;
     final sheet = _CompactSheet(_sheetInputs);
     _sheet = sheet;
     var renderedInputs = sheet.value;
@@ -171,6 +181,7 @@ class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
           unawaited(route.completed.then((_) => _finishSheet(sheet)));
         }
         final route = sheet.route!;
+        if (route.isActive) _reopenRequested = false;
         return ValueListenableBuilder(
           valueListenable: sheet,
           builder: (context, inputs, _) {
@@ -184,7 +195,7 @@ class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
     );
     unawaited(
       popped.then((_) {
-        if (identical(_sheet, sheet) && !sheet.reopenRequested) _closeCompact();
+        if (identical(_sheet, sheet) && !_reopenRequested) _closeCompact();
         if (sheet.route == null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (sheet.route == null) _finishSheet(sheet);
@@ -302,7 +313,6 @@ class _CompactSheet extends ValueNotifier<_SheetInputs> {
   _CompactSheet(super.value);
 
   ModalRoute<void>? route;
-  bool reopenRequested = false;
 
   void removeRoute() {
     final route = this.route;
