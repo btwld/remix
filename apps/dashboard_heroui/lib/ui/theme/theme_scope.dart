@@ -188,6 +188,39 @@ Widget _recolored(Color foreground, Widget child) => DefaultTextStyle.merge(
   ),
 );
 
+class _ThemeComparison {
+  _ThemeComparison(this.theme)
+    : _overrideCount = theme.colors.length,
+      _lookups = _snapshotLookups(theme.colors);
+
+  final UiThemeData theme;
+  final int _overrideCount;
+  final Map<ColorToken, Color?> _lookups;
+
+  static final _paletteKeys = {
+    ...const UiThemeData.light().tokens.keys.whereType<ColorToken>(),
+    ...const UiThemeData.dark().tokens.keys.whereType<ColorToken>(),
+  };
+
+  static Map<ColorToken, Color?> _snapshotLookups(
+    Map<ColorToken, Color> colors,
+  ) {
+    if (colors.isEmpty) return const {};
+
+    return Map<ColorToken, Color?>.identity()
+      ..addAll(colors)
+      ..addEntries(_paletteKeys.map((token) => MapEntry(token, colors[token])));
+  }
+
+  bool differsFrom(_ThemeComparison old) {
+    if (theme != old.theme) return true;
+
+    final colors = theme.colors;
+    return colors.length != old._overrideCount ||
+        old._lookups.entries.any((entry) => colors[entry.key] != entry.value);
+  }
+}
+
 /// The inherited half of [UiTheme].
 ///
 /// Kept private so callers always mount [UiTheme], which installs the
@@ -195,34 +228,27 @@ Widget _recolored(Color foreground, Widget child) => DefaultTextStyle.merge(
 /// `InheritedTheme.wrap` can still rebuild both across a route boundary.
 class _UiInheritedTheme extends InheritedTheme {
   _UiInheritedTheme({
-    required this.baseTheme,
-    required this.darkTheme,
+    required UiThemeData baseTheme,
+    required UiThemeData darkTheme,
     required this.usesDarkTheme,
     required super.child,
-  }) : _baseSnapshot = _snapshot(baseTheme) {
-    _darkSnapshot = identical(baseTheme, darkTheme)
-        ? _baseSnapshot
-        : _snapshot(darkTheme);
+  }) : _base = _ThemeComparison(baseTheme) {
+    _dark = identical(baseTheme, darkTheme)
+        ? _base
+        : _ThemeComparison(darkTheme);
   }
 
-  final UiThemeData _baseSnapshot;
-  late final UiThemeData _darkSnapshot;
-
-  static UiThemeData _snapshot(UiThemeData theme) => UiThemeData(
-    brightness: theme.brightness,
-    colors: Map<ColorToken, Color>.identity()..addAll(theme.colors),
-    radius: theme.radius,
-    fontFamily: theme.fontFamily,
-  );
+  final _ThemeComparison _base;
+  late final _ThemeComparison _dark;
 
   /// The theme values available to [child].
   UiThemeData get data => usesDarkTheme ? darkTheme : baseTheme;
 
   /// The configured light values, carried so a nested scope can inherit them.
-  final UiThemeData baseTheme;
+  UiThemeData get baseTheme => _base.theme;
 
   /// The configured dark values, carried so a nested scope can inherit them.
-  final UiThemeData darkTheme;
+  UiThemeData get darkTheme => _dark.theme;
 
   /// Whether the dark half of the configured pair is currently selected.
   final bool usesDarkTheme;
@@ -245,7 +271,7 @@ class _UiInheritedTheme extends InheritedTheme {
 
   @override
   bool updateShouldNotify(_UiInheritedTheme oldWidget) =>
-      oldWidget.usesDarkTheme != usesDarkTheme ||
-      oldWidget._baseSnapshot != baseTheme ||
-      oldWidget._darkSnapshot != darkTheme;
+      usesDarkTheme != oldWidget.usesDarkTheme ||
+      _base.differsFrom(oldWidget._base) ||
+      _dark.differsFrom(oldWidget._dark);
 }

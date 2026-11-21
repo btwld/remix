@@ -9,6 +9,27 @@ import 'package:remix/remix.dart';
 
 import '../helpers/heroui.dart';
 
+const _brand = ColorToken('app.brand');
+
+class _BrandedTheme extends HeroUiThemeData {
+  const _BrandedTheme(this.brandColor) : super.light();
+
+  final Color brandColor;
+
+  @override
+  Color color(ColorToken token) =>
+      token == _brand ? brandColor : super.color(token);
+
+  @override
+  bool operator ==(Object other) =>
+      other is _BrandedTheme &&
+      super == other &&
+      brandColor == other.brandColor;
+
+  @override
+  int get hashCode => Object.hash(super.hashCode, brandColor);
+}
+
 /// Browser-resolved colors from the pinned HeroUI CSS, by variable name.
 Map<String, dynamic> _upstreamColors(String mode) {
   final tokens =
@@ -283,6 +304,67 @@ void main() {
     colors[ColorToken(accent.name)] = colors.remove(accent)!;
     await tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
     expect(builds, 1);
+  });
+
+  for (final keepsStoredKey in [false, true]) {
+    testWidgets(
+      keepsStoredKey
+          ? 'a map policy change notifies even when its stored key stays the same'
+          : 'switching from identity to value lookups notifies dependents',
+      (tester) async {
+        const accent = HeroUiTokens.accent;
+        final alias = ColorToken(accent.name);
+        const override = Color(0xFF8000FF);
+        final fallback = const HeroUiThemeData.light().color(accent);
+        final identityTheme = HeroUiThemeData.light(
+          colors: Map<ColorToken, Color>.identity()..[alias] = override,
+        );
+        final valueTheme = HeroUiThemeData.light(
+          colors: {if (keepsStoredKey) alias: override else accent: override},
+        );
+        final seenAccents = <Color>[];
+        final child = Builder(
+          builder: (context) {
+            seenAccents.add(HeroUiTheme.of(context).color(accent));
+            return const SizedBox();
+          },
+        );
+
+        Future<void> pumpTheme(HeroUiThemeData theme) =>
+            tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
+
+        await pumpTheme(identityTheme);
+        expect(seenAccents, [fallback]);
+        await pumpTheme(valueTheme);
+        expect(seenAccents, [fallback, override]);
+        await pumpTheme(identityTheme);
+        expect(seenAccents, [fallback, override, fallback]);
+      },
+    );
+  }
+
+  testWidgets('subclass equality determines whether a theme change notifies', (
+    tester,
+  ) async {
+    const original = Color(0xFF8000FF);
+    const updated = Color(0xFF00FF00);
+    final seenColors = <Color>[];
+    final child = Builder(
+      builder: (context) {
+        seenColors.add(HeroUiTheme.of(context).color(_brand));
+        return const SizedBox();
+      },
+    );
+
+    Future<void> pumpTheme(HeroUiThemeData theme) =>
+        tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
+
+    await pumpTheme(const _BrandedTheme(original));
+    expect(seenColors, [original]);
+    await pumpTheme(_BrandedTheme(original));
+    expect(seenColors, [original]);
+    await pumpTheme(const _BrandedTheme(updated));
+    expect(seenColors, [original, updated]);
   });
 
   testWidgets('of throws without a scope; maybeOf returns null', (
