@@ -1460,13 +1460,19 @@ final class PresetBuilder {
           ...dependency.generated,
         ],
       };
+      var probePrefix = 'Consumer';
+      while (targets.any(
+        (target) => target.toLowerCase().contains(probePrefix.toLowerCase()),
+      )) {
+        probePrefix += 'X';
+      }
       for (final file in item.files) {
         final template = output.files[file.source];
         if (template == null) continue;
         final source = const TemplateRenderer().render(
           template,
-          typePrefix: spec.typeWord,
-          valuePrefix: spec.valueWord,
+          typePrefix: probePrefix,
+          valuePrefix: probePrefix.toLowerCase(),
           icons: icons,
         );
         for (final directive in _readDirectiveUris(file.source, source).all) {
@@ -2324,9 +2330,7 @@ String _replacePrefixWords(
       final valueId = leading[0] == valueWord;
       if ((_idSuffix.hasMatch(suffix) &&
               (valueId || !suffix.startsWith('-'))) ||
-          ((valueId || interpolatesAfter) &&
-              leading.end < text.length &&
-              _camelIdSuffix.hasMatch(suffix))) {
+          (valueId && !interpolatesAfter && _camelIdSuffix.hasMatch(suffix))) {
         replace(leading[0]!, offset);
         return;
       }
@@ -2399,22 +2403,9 @@ String _replacePrefixWords(
     rewriteText(comment.lexeme, comment.offset);
   }
   unit.accept(
-    _StringPieces((
-      start,
-      end, {
-      idShape,
-      before = false,
-      after = false,
-      raw = false,
-    }) {
-      final text = source.substring(start, end);
+    _StringPieces((start, end, {idShape, before = false, after = false}) {
       rewriteText(
-        raw
-            ? text
-            : text.replaceAllMapped(
-                _escapedBackslashOrNewline,
-                (escape) => escape[0] == r'\n' ? ' \n' : escape[0]!,
-              ),
+        source.substring(start, end),
         start,
         literal: true,
         idShape: idShape,
@@ -2445,34 +2436,12 @@ class _StringPieces extends RecursiveAstVisitor<void> {
     String? idShape,
     bool before,
     bool after,
-    bool raw,
   })
   visitPiece;
 
   @override
   void visitSimpleStringLiteral(SimpleStringLiteral node) {
-    var shape = node.value;
-    var after = false;
-    if (node.parent case AdjacentStrings(:final strings)
-        when strings.first == node &&
-            strings.any((part) => part is StringInterpolation)) {
-      shape = [
-        for (final part in strings)
-          if (part is StringInterpolation)
-            for (final element in part.elements)
-              element is InterpolationString ? element.value : '0'
-          else
-            part.stringValue!,
-      ].join();
-      after = true;
-    }
-    visitPiece(
-      node.contentsOffset,
-      node.contentsEnd,
-      idShape: shape,
-      after: after,
-      raw: node.isRaw,
-    );
+    visitPiece(node.contentsOffset, node.contentsEnd, idShape: node.value);
   }
 
   @override
@@ -2498,11 +2467,10 @@ class _StringPieces extends RecursiveAstVisitor<void> {
 }
 
 final _identifierSuffixStart = RegExp('[A-Z0-9]');
-final _idSuffix = RegExp(r'^[-._][A-Za-z0-9]\S*$');
-final _camelIdSuffix = RegExp(r'^[A-Z0-9](?:[\w./:#-]|\[\w+\])*$');
+final _idSuffix = RegExp(r'^(?:[-._][A-Za-z0-9]+)+$');
+final _camelIdSuffix = RegExp(r'^[A-Z0-9][A-Za-z0-9]*$');
 final _codePunctuation = RegExp(r'(?:\(|[.<][A-Za-z_$])');
 final _codeMarkup = RegExp(r'`[^`\n]+`|\[[\w.$]+\]');
-final _escapedBackslashOrNewline = RegExp(r'\\\\|\\n');
 
 String _charAt(String source, int index) =>
     index >= 0 && index < source.length ? source[index] : '';

@@ -205,6 +205,28 @@ void main() {
     expect(renderedTheme, isNot(contains('acme_colors.dart')));
   });
 
+  test('closure validation rejects a prefix-dependent palette import', () {
+    final builder = PresetBuilder.forRepository(Directory.current.absolute);
+    final output = builder.derive();
+    const path = 'templates/theme/theme_data.dart.tmpl';
+    final planted = PresetOutput(
+      files: {
+        ...output.files,
+        path: output.files[path]!.replaceFirst(
+          "'fortal_colors.dart'",
+          "'{{valuePrefix}}_colors.dart'",
+        ),
+      },
+      sourceByTemplate: output.sourceByTemplate,
+    );
+    expect(
+      () => builder.validate(planted),
+      _throwsFormatExceptionWith(
+        '_colors.dart, which is not in its fortal install closure',
+      ),
+    );
+  });
+
   test(
     'HeroUI derives every component as a generated recipe and keeps notices',
     () {
@@ -652,7 +674,6 @@ final comfortalButton = FortalBadge();
 final _resolveFortalBadge = FortalBadge.new;
 const caption = 'A FortalInspired view';
 const brand = 'Fortal-inspired';
-const brandLabel = 'FortalInspired';
 const embedded = 'comfortalButton()';
 const id = 'fortal.color.accent';
 const variantId = 'fortalBadgeDark';
@@ -680,7 +701,6 @@ final comfortalButton = AcmeBadge();
 final _resolveAcmeBadge = AcmeBadge.new;
 const caption = 'A FortalInspired view';
 const brand = 'Fortal-inspired';
-const brandLabel = 'FortalInspired';
 const embedded = 'comfortalButton()';
 const id = 'acme.color.accent';
 const variantId = 'acmeBadgeDark';
@@ -756,78 +776,6 @@ const typed = 'Acme.color.accent';
     },
   );
 
-  for (final (authored, installed) in [
-    (r'fortal.${group}/accent', r'acme.${group}/accent'),
-    (r'fortalSlider${group}', r'acmeSlider${group}'),
-    (r'FortalSlider${group}', r'AcmeSlider${group}'),
-    (r'fortalSlider${group}#accent', r'acmeSlider${group}#accent'),
-    (r'fortalSlider[$group]', r'acmeSlider[$group]'),
-    (r'fortal.$group.accent:active', r'acme.$group.accent:active'),
-    ('fortalSlider-track', 'acmeSlider-track'),
-  ]) {
-    test('Acme prefixes the quoted ID $authored', () {
-      final builder = _fixtureBuilder(sandbox);
-      _write(
-        builder.sourceRoot,
-        'components/badge.dart',
-        "final id = '$authored';\n",
-      );
-
-      expect(
-        const TemplateRenderer().render(
-          builder.derive().files['templates/badge/badge.dart.tmpl']!,
-          typePrefix: 'Acme',
-          valuePrefix: 'acme',
-        ),
-        "final id = '$installed';\n",
-      );
-    });
-  }
-
-  test('Acme prefixes the quoted ID in adjacent string literals', () {
-    final builder = _fixtureBuilder(sandbox);
-    _write(builder.sourceRoot, 'components/badge.dart', r'''
-final id = 'FortalSlider' '$group';
-final caption = 'FortalInspired' ' view $group';
-''');
-
-    expect(
-      const TemplateRenderer().render(
-        builder.derive().files['templates/badge/badge.dart.tmpl']!,
-        typePrefix: 'Acme',
-        valuePrefix: 'acme',
-      ),
-      r'''
-final id = 'AcmeSlider' '$group';
-final caption = 'FortalInspired' ' view $group';
-''',
-    );
-  });
-
-  test('Acme prefixes the function name after an escaped newline', () {
-    final builder = _fixtureBuilder(sandbox);
-    _write(builder.sourceRoot, 'components/badge.dart', r'''
-void fortalSliderStyle() {}
-const caption = 'Use:\nfortalSliderStyle()';
-const escaped = 'Use:\\nfortalSliderStyle()';
-const raw = r'Use:\nfortalSliderStyle()';
-''');
-
-    expect(
-      const TemplateRenderer().render(
-        builder.derive().files['templates/badge/badge.dart.tmpl']!,
-        typePrefix: 'Acme',
-        valuePrefix: 'acme',
-      ),
-      r'''
-void acmeSliderStyle() {}
-const caption = 'Use:\nacmeSliderStyle()';
-const escaped = 'Use:\\nfortalSliderStyle()';
-const raw = r'Use:\nfortalSliderStyle()';
-''',
-    );
-  });
-
   test('refuses the authoring word where neither a prefix nor prose fits', () {
     final builder = _fixtureBuilder(sandbox);
     for (final source in [
@@ -840,8 +788,6 @@ const raw = r'Use:\nfortalSliderStyle()';
       "final id = '\${base}fortal.color';\n",
       "const id = '--fortal-row';\n",
       "const id = 'fortal:x';\n",
-      r"final id = 'fortal${group}';"
-          '\n',
       'final isFortal = true;\n',
       'final _fortal = 0;\n',
       'final fortal_badge = 0;\n',
