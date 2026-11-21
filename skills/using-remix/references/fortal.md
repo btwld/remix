@@ -1,5 +1,7 @@
 # Fortal Reference
 
+<!-- remix-preset: fortal -->
+
 Rules for the Fortal preset that are easy to get wrong from a widget's name
 or dartdoc alone. For component variants, sizes, and defaults, the installed
 recipe's enum in `lib/ui/components/<name>.dart` is authoritative — this

@@ -474,7 +474,7 @@ final class _AddCommand extends Command<int> {
 
 Examples:
   remix add button                       Install button and what it needs.
-  remix add button card dialog           Install several items at once.
+  remix add button card checkbox         Install several items at once.
   remix add button --dry-run             Print the plan and change nothing.
   remix add button --diff --exit-code    Exit $driftExitCode on drift, for CI.
   remix add @acme/card                   Install from a registry you added.''';

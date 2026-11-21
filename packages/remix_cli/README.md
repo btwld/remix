@@ -168,18 +168,31 @@ configuration is refused instead of silently rewriting an existing project.
 The preset defaults to `vanilla` when omitted and cannot be changed after
 initialization.
 
-Schema 3 projects may also set `iconLibrary: remix|lucide`; omitting it keeps
-Remix icons. It applies when items are installed; after changing it, reinstall
-every installed item that uses icons (`icons`, `dashboard_shell`,
-`dashboard_demo`, `support`) in one `add --diff`, then `add --overwrite`.
+### Switch icon libraries
+
+Set `iconLibrary` in `remix.yaml` to `remix` (the default, Outline), `rounded`
+(Rounded), or `lucide`. The first two use `remix_ui_icons`; `lucide` uses
+`lucide_flutter`. The setting affects installs, not existing source.
+
+1. Run `remix list --json` for the preset, registry revisions, item IDs, and
+   target paths. Find installed items in `remix.ownership.json`, where each
+   existing target's owner ends in `#<preset>/<item-id>`. Include installed
+   dependencies, not just items you added explicitly.
+2. Open the registry's `repository` and `path` at the exact `revision` in
+   `remix.yaml`. Follow the preset's entry in `index.yaml` to its catalog.
+   Select installed items whose own `files[].source` templates contain
+   `{{icon:`; depending on an icon-owning item is not enough.
+3. Change `iconLibrary` and preview all selected items in one `add --diff`
+   command (for example, `remix add @remix/icons --diff` if `icons` is the only
+   owner). Review the diffs and save any local edits you need to reapply. Then
+   rerun the command with `--overwrite`. Only named items are overwritten;
+   icon references in your application are not rewritten.
 
 A registry's `icons.yaml` maps each icon to a constant in every library. From
 schema 2, an icon a library does not draw names a `fallback` library instead:
 installing it on that library renders the fallback's constant and adds the
-fallback's package too. The schema 2 official icon table uses Lucide for icons
-Remix does not draw, so those installs add `lucide_flutter` alongside
-`remix_ui_icons`. Earlier schema 1 pins keep their original icon package
-requirements.
+fallback's package too. All three libraries in the current official table
+cover every icon; older pins retain their own mappings and dependencies.
 
 ### Fortal as owned source
 
@@ -241,7 +254,7 @@ remix add button
 Several items can be named in one command:
 
 ```shell
-remix add button card dialog
+remix add button card checkbox
 ```
 
 A batch installs as one unit. The items and everything they depend on are
@@ -360,17 +373,16 @@ dart run tool/check_open_code.dart --preset fortal --source checkout --item dash
 `remix add icons` is the deliberate exception. It adds
 `lib/ui/icons.dart`, declares the selected icon package and any per-icon
 fallback packages, and exposes a small, application-owned `UiIcons` alias set
-with no generated adapter. The
-default Remix selection uses `remix_ui_icons`, plus `lucide_flutter` for the
-schema 2 official table's fallbacks. Add or rename
-aliases there as your interface evolves. Every Remix icon remains one direct
+with no generated adapter. The current default Remix selection uses
+`remix_ui_icons` without a fallback package. Add or rename aliases there as
+your interface evolves. Every Remix icon remains one direct
 `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
-Vanilla additionally ships `calendar`, `range_calendar`, `date_picker` and
-`date_range_picker`. They are hand-written composites with no generated part:
-the calendars wire IconButton and Select recipes; the pickers add outline
-Button and elevated Popover recipes around the matching calendar. Each child
-styler override merges last. Calendar selectors grow with text scaling.
+All presets ship `calendar`, `range_calendar`, `date_picker` and
+`date_range_picker`. They are hand-written composites with no generated part.
+In Vanilla, the calendars wire IconButton and Select recipes; the pickers add
+outline Button and elevated Popover recipes around the matching calendar.
+Each child styler override merges last. Calendar selectors grow with text scaling.
 Both pickers install `date_picker_styles` automatically as an internal dependency.
 
 Most Vanilla component items generate one widget. Four generate several:

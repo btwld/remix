@@ -49,6 +49,17 @@ fvm dart run melos run docs:check
 ```
 
 The gate checks navigation, retired APIs, compilable snippets, catalog drift,
-recorded tutorial evidence and selected local links. The tutorial check is not a
-fresh replay; rerun the replay when application code or CLI behavior changes.
+recorded tutorial evidence and selected local links. It validates literal
+`remix add` item IDs in the docs, published skills, and CLI README against the
+checkout catalogs in `registry/index.yaml`. Unscoped examples must work in all
+official presets. A shell `remix init` sets the preset only for that block. To
+set a preset across blocks, use a `remix-preset: <preset>` comment (MDX comment
+in MDX, HTML comment in Markdown). It applies until the next preset comment
+or the end of the page.
+
+Before promoting a catalog that changes the tutorial's installation steps or
+recipe API, update and replay both paths. The tutorial check is not a fresh
+replay. The archived apps retain their tested revision when
+`registry-stable` advances.
+
 For site validation run `pnpm typecheck` and `pnpm build` in `apps/docs`.

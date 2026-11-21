@@ -395,6 +395,7 @@ melos:
       # directories, so a stale page is drift, not a doc edit.
       steps:
         - dart test test/tool/install_pins_test.dart
+        - dart test test/tool/docs_registry_commands_test.dart
         - dart run tool/validate_docs.dart
         - dart run tool/generate_fortal_catalog.dart --check
         - dart test test/tool/generate_cli_reference_test.dart
@@ -405,4 +406,4 @@ melos:
         - python3 -m unittest discover -s tool -p 'test_example_hosts.py'
         - python3 tool/check_tutorial_assets.py
         - python3 -m unittest discover -s tool -p 'test_tutorial_assets.py'
-      description: Validate docs, reject retired APIs, and fail on catalog, CLI reference, or skills manifest drift
+      description: Validate docs and install commands; reject retired APIs and catalog, CLI reference, or skills manifest drift

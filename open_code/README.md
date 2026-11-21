@@ -150,56 +150,11 @@ published-CLI gates; these prove different boundaries.
 
 ## Item catalog
 
-Vanilla and Fortal: `theme`, `icons`, `chart`, `accordion`, `app_bar`, `avatar`,
-`badge`, `button`, `callout`, `card`, `checkbox`, `dashboard_demo`,
-`dashboard_shell`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
-`icon_button`, `link`, `menu`, `popover`, `progress`, `radio`, `segmented_control`,
-`select`, `sidebar`, `sidebar_layout`, `skeleton`, `slider`, `spinner`, `switch`,
-`tabs`, `text_field`, `toast`, `toggle`, `toggle_group`, `tooltip`.
+Run `remix list` from your app for the items and dependencies at its pinned
+preset and revision. Use `remix list --json` for scripts. The checkout's
+catalogs are [Vanilla](../registry/vanilla/registry.yaml),
+[Fortal](../registry/fortal/registry.yaml), and
+[HeroUI](../registry/heroui/registry.yaml), as declared in the
+[registry index](../registry/index.yaml).
 
-All three presets also ship `range_slider`, which installs `slider` and supplies
-the two-bound `<Prefix>RangeSlider` recipe.
-
-All three presets also ship `combobox` (depends on `theme` and `text_field`).
-
-Vanilla also: `calendar`, `range_calendar`, `date_picker`, `date_range_picker`.
-These hand-written composites wire the Vanilla child recipes and have no
-generated part; selection and overlay behavior stay in Remix.
-Both pickers install `date_picker_styles` automatically as an internal dependency.
-
-Vanilla also: `breadcrumbs`, a hand-written trail of `link` recipes after
-shadcn/ui's Breadcrumb (depends on `theme` and `link`; no generated part), and
-`search_field`, a stateful text field with a search icon and a clear button
-after shadcn/ui's Input Group (depends on `theme`, `text_field`, and
-`icon_button`; no generated part).
-
-Vanilla also: `heading`, `text`, and `code`, recipes drawn from shadcn/ui's
-Typography examples, and `kbd`, a key cap after shadcn/ui's Kbd, with
-`<Prefix>KbdGroup` for the keys of one shortcut (each depends on `theme`).
-
-Fortal also: `base_button`, `code`, `heading`, `kbd`, `text`, `typography`,
-and the hand-written compositions `avatar_group` (depends on `theme` and
-`avatar`), `breadcrumbs` (depends on `theme`, `link`, `text` and
-`typography`), `search_field` (depends on `theme`, `text_field` and
-`icon_button`) and `surface` (depends on `theme` and `card`).
-
-HeroUI follows HeroUI's names, adding `alert`, `avatar_group`,
-`button_group`, `checkbox_group`, `chip`, `close_button`, `dropdown`,
-`field_layout`, `input_group`, `modal`, `radio_group`,
-`separator`, `surface`, `switch_group`, `table`, `text_area`, `toggle_button`,
-and `toggle_button_group` to shared names such as `button`, `select`,
-`breadcrumbs`, and `search_field`.
-It also ships `icons`, `sidebar`, `sidebar_layout`, `app_bar`,
-`dashboard_shell`, `chart`, `dashboard_demo`, and the Agent items below as
-labelled extensions: HeroUI web has no counterpart to port, so they are
-styled only from HeroUI's tokens and mapped recipes (see
-[ARCHITECTURE.md](../ARCHITECTURE.md#heroui-dashboard-items-are-labelled-extensions)).
-Its installed-source
-gallery is `open_code/heroui_fixture`; see [Presets](PRESETS.md) and
-[Adding a preset](ADDING_PRESETS.md).
-
-Agent recipes in all three presets, styling `package:remix/agent.dart`:
-`agent_glyphs_recipe`, `answer_recipe`, `composer_recipe`, `conversation_recipe`,
-`message_recipe`, `sources_recipe`, `steps_recipe`, `suggestions_recipe`, and
-`tool_call_recipe`. Each styles one widget of `package:remix/agent.dart` with the
-preset's own components.
+See [Presets](PRESETS.md) for visual and recipe differences.
