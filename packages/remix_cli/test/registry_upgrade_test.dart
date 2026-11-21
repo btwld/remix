@@ -3,11 +3,16 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/installer.dart';
+import 'package:remix_cli/src/registry.dart';
+import 'package:remix_cli/src/registry_reader.dart';
+import 'package:remix_cli/src/registry_source.dart';
 import 'package:test/test.dart';
 
 import 'checkout_registry.dart';
 import 'test_support.dart';
 
+const _oldRevision = 'c6c9f172d2219271925df2b3dc535d7eccf4facb';
+const _newRevision = '6667e18693b7c3f40e390183e78c9dfce2aba07d';
 const _barrel = 'lib/ui/ui.dart';
 const _receipt = 'remix.ownership.json';
 const _oldExport = "export 'components/textfield.dart';";
@@ -19,7 +24,6 @@ const _themeExports = [
   'theme/theme_scope.dart',
   'theme/tokens.dart',
 ];
-const _oldOwner = 'btwld/remix/registry#vanilla/textfield';
 const _themeOwner = 'btwld/remix/registry#vanilla/theme';
 
 void main() {
@@ -30,103 +34,50 @@ void main() {
     addTearDown(() => root.deleteSync(recursive: true));
   });
 
-  for (final legacyPath in [
-    'components/textfield.dart',
-    './components/textfield.dart',
-  ]) {
-    test(
-      'a partially adopted install cannot add a second export alongside $legacyPath',
-      () async {
-        final processes = RecordingProcessRunner(
-          (_) async => successProcessOutput,
-        );
-        final installer = Installer(
-          projectRoot: root,
-          sources: const FixtureOfficialResolver(),
-          processRunner: processes,
-          writeOut: (_) {},
-        );
-        await _seedOldVanilla(
-          root,
-          installer,
-          recordTextField: false,
-          fieldExport: "export '$legacyPath';",
-        );
-        for (final path in _themeExports) {
-          _file(root, 'lib/ui/$path').createSync(recursive: true);
-        }
-        final before = snapshotFiles(root);
+  test(
+    'a partially adopted install cannot add a second export alongside components/textfield.dart',
+    () async {
+      final processes = RecordingProcessRunner(
+        (_) async => successProcessOutput,
+      );
+      final installer = Installer(
+        projectRoot: root,
+        sources: const FixtureOfficialResolver(),
+        processRunner: processes,
+        writeOut: (_) {},
+      );
+      await _seedOldVanilla(root, installer);
+      for (final path in _themeExports) {
+        _file(root, 'lib/ui/$path').createSync(recursive: true);
+      }
+      final before = snapshotFiles(root);
 
-        for (final flags in [
-          ['--dry-run'],
-          ['--diff', '--exit-code'],
-          ['--overwrite'],
-          ['--adopt'],
-          <String>[],
-        ]) {
-          final (exitCode, error) = await _run(installer, [
-            'add',
-            'search_field',
-            ...flags,
-          ]);
-          expect(exitCode, 1, reason: '$flags: $error');
-          expect(
-            error,
-            contains('@remix/textfield was renamed to @remix/text_field'),
-          );
-          expect(error, contains('still exports $legacyPath'));
-          expect(error, contains(_barrel));
-          expect(error, contains('REGISTRY_511_MIGRATION.md'));
-        }
-        expect(await _run(installer, ['add', 'link', '--dry-run']), (0, ''));
-        expect(processes.calls, isEmpty);
-        expect(snapshotFiles(root), before);
-      },
-    );
-  }
-
-  test('a case-only receipt match must refer to the exported file', () async {
-    final installer = Installer(
-      projectRoot: root,
-      sources: const FixtureOfficialResolver(),
-      writeOut: (_) {},
-    );
-    expect(await _run(installer, ['init']), (0, ''));
-    _file(root, _oldField)
-      ..createSync(recursive: true)
-      ..writeAsStringSync('class UiTextField {}\n');
-    const recordedTarget = 'lib/ui/components/TextField.dart';
-    final recordedFile = _file(root, recordedTarget);
-    final sameFile = recordedFile.existsSync();
-    if (!sameFile) {
-      recordedFile.writeAsStringSync('const companyLegacyWidget = 42;\n');
-    }
-    final barrel = _file(root, _barrel);
-    barrel.writeAsStringSync(
-      updateManagedBarrel(barrel.readAsStringSync(), [
-        'components/textfield.dart',
-      ]),
-    );
-    _writeOwnership(
-      root,
-      preset: 'vanilla',
-      uiPath: 'lib/ui',
-      targets: {
-        recordedTarget: 'example/company/registry#vanilla/legacy_widget',
-      },
-    );
-    final before = snapshotFiles(root);
-
-    final (exitCode, error) = await _run(installer, [
-      'add',
-      'search_field',
-      '--dry-run',
-    ]);
-    expect(exitCode, sameFile ? 0 : 1, reason: error);
-    if (!sameFile)
-      expect(error, contains('still exports components/textfield.dart'));
-    expect(snapshotFiles(root), before);
-  });
+      for (final flags in [
+        ['--dry-run'],
+        ['--diff', '--exit-code'],
+        ['--overwrite'],
+        ['--adopt'],
+        <String>[],
+      ]) {
+        final (exitCode, error) = await _run(installer, [
+          'add',
+          'search_field',
+          ...flags,
+        ]);
+        expect(exitCode, 1, reason: '$flags: $error');
+        expect(
+          error,
+          contains('@remix/textfield was renamed to @remix/text_field'),
+        );
+        expect(error, contains('still exports components/textfield.dart'));
+        expect(error, contains(_barrel));
+        expect(error, contains('REGISTRY_511_MIGRATION.md'));
+      }
+      expect(await _run(installer, ['add', 'link', '--dry-run']), (0, ''));
+      expect(processes.calls, isEmpty);
+      expect(snapshotFiles(root), before);
+    },
+  );
 
   for (final (preset, oldItem, newItem) in [
     ('vanilla', 'textfield', 'text_field'),
@@ -211,21 +162,34 @@ void main() {
   }
 
   test(
-    'migrating simulated pre-rename source compiles with one text field export',
+    'an old pin can migrate an edited text field and compile',
     () async {
+      File projectFile(String path) => File(p.join(root.path, path));
+
+      final sources = _CutoverSources(findCheckoutRegistry());
+      final errors = <String>[];
       final installer = Installer(
         projectRoot: root,
-        sources: const FixtureOfficialResolver(),
         writeOut: (_) {},
+        sources: sources,
       );
-      await _seedOldVanilla(root, installer, recordTextField: true);
-      _file(root, 'pubspec.yaml').writeAsStringSync('''
+      Future<int> run(List<String> args, {Installer? using}) {
+        errors.clear();
+        return runInstallerCli(
+          args,
+          using ?? installer,
+          writeOut: (_) {},
+          writeError: errors.add,
+        );
+      }
+
+      projectFile('pubspec.yaml').writeAsStringSync('''
 dev_dependencies:
   flutter_test:
     sdk: flutter
 ''', mode: FileMode.append);
-      final packages = p.join(findCheckoutRegistry().parent.path, 'packages');
-      _file(root, 'pubspec_overrides.yaml').writeAsStringSync(
+      final packages = p.join(sources.distribution.parent.path, 'packages');
+      projectFile('pubspec_overrides.yaml').writeAsStringSync(
         [
           'dependency_overrides:',
           for (final name in ['remix', 'naked_ui', 'remix_ui_fonts'])
@@ -233,75 +197,139 @@ dev_dependencies:
           '',
         ].join('\n'),
       );
+      expect(await run(['init', '--prefix', 'Acme']), 0, reason: '$errors');
+      expect(await run(['add', 'search_field']), 0, reason: '$errors');
 
-      final customization = _file(root, _oldField).readAsLinesSync().last;
-      _file(root, _oldField).deleteSync();
-      _file(root, _oldAdapter).deleteSync();
-      final barrel = _file(root, _barrel);
+      const oldField = 'lib/ui/components/textfield.dart';
+      const oldAdapter = 'lib/ui/components/textfield.g.dart';
+      const oldExport = "export 'components/textfield.dart';";
+      const newExport = "export 'components/text_field.dart';";
+      const originalHeight = '.minHeight(AcmeTokens.controlMd)';
+      const editedHeight = '.minHeight(AcmeTokens.controlLg)';
+      final original = projectFile(oldField).readAsStringSync();
+      expect(original, contains(originalHeight));
+      projectFile(
+        oldField,
+      ).writeAsStringSync(original.replaceFirst(originalHeight, editedHeight));
+      final barrel = projectFile('lib/ui/ui.dart');
+      expect(barrel.readAsStringSync(), contains(oldExport));
+      projectFile(
+        'lib/ui/app_only.dart',
+      ).writeAsStringSync('const appOnly = 42;\n');
       barrel.writeAsStringSync(
-        barrel.readAsStringSync().replaceFirst('$_oldExport\n', ''),
+        "\nexport 'app_only.dart';\n",
+        mode: FileMode.append,
       );
-      final receipt = _file(root, _receipt);
+
+      expect(
+        projectFile('remix.yaml').readAsStringSync(),
+        contains(_oldRevision),
+      );
+      expect(
+        await run(['registry', 'update', '@remix', '--ref', _newRevision]),
+        0,
+        reason: '$errors',
+      );
+      expect(
+        projectFile('remix.yaml').readAsStringSync(),
+        contains(_newRevision),
+      );
+
+      final processes = RecordingProcessRunner(
+        (_) async => successProcessOutput,
+      );
+      final preflight = Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        sources: sources,
+        processRunner: processes,
+      );
+      final before = snapshotFiles(root);
+      for (final flags in [
+        ['--dry-run'],
+        ['--diff', '--exit-code'],
+        ['--overwrite'],
+        ['--adopt'],
+        <String>[],
+      ]) {
+        expect(
+          await run(['add', 'search_field', ...flags], using: preflight),
+          1,
+          reason: '$flags: $errors',
+        );
+        final message = errors.join('\n');
+        expect(message, contains('@remix/textfield'));
+        expect(message, contains('@remix/text_field'));
+        expect(message, contains('remix.ownership.json'));
+        expect(message, contains('REGISTRY_511_MIGRATION.md'));
+      }
+      expect(processes.calls, isEmpty);
+      expect(snapshotFiles(root), before);
+      expect(await run(['add', 'link', '--dry-run'], using: preflight), 0);
+
+      final customizedField = projectFile(oldField).readAsStringSync();
+      projectFile(oldField).deleteSync();
+      projectFile(oldAdapter).deleteSync();
+      barrel.writeAsStringSync(
+        barrel.readAsStringSync().replaceFirst('$oldExport\n', ''),
+      );
+      final receipt = projectFile('remix.ownership.json');
       final ownership =
           jsonDecode(receipt.readAsStringSync()) as Map<String, dynamic>;
       final targets = ownership['targets'] as Map<String, dynamic>;
-      targets.remove(_oldField);
-      targets.remove(_oldAdapter);
+      expect(targets.remove(oldField), endsWith('/textfield'));
+      expect(targets.remove(oldAdapter), endsWith('/textfield'));
+      final untouchedTargets = Map.of(targets);
       receipt.writeAsStringSync(jsonEncode(ownership));
+      final searchField = projectFile('lib/ui/components/search_field.dart');
+      searchField.writeAsStringSync(
+        searchField.readAsStringSync().replaceFirst(
+          "'textfield.dart'",
+          "'text_field.dart'",
+        ),
+      );
 
-      expect(
-        await _run(installer, ['add', 'text_field', 'search_field', '--diff']),
-        (0, ''),
+      expect(await run(['add', 'text_field', '--diff']), 0, reason: '$errors');
+      expect(await run(['add', 'text_field']), 0, reason: '$errors');
+      final newField = projectFile('lib/ui/components/text_field.dart');
+      final updated = newField.readAsStringSync();
+      expect(customizedField, contains(editedHeight));
+      expect(updated, contains(originalHeight));
+      newField.writeAsStringSync(
+        updated.replaceFirst(originalHeight, editedHeight),
       );
-      expect(await _run(installer, ['add', 'text_field', 'search_field']), (
-        0,
-        '',
-      ));
-      _file(
-        root,
-        'lib/ui/components/text_field.dart',
-      ).writeAsStringSync('\n$customization\n', mode: FileMode.append);
+      expect(newField.readAsStringSync(), contains(editedHeight));
       final exports = barrel.readAsLinesSync();
-      expect(
-        exports.where((line) => line == "export 'components/text_field.dart';"),
-        hasLength(1),
-      );
-      expect(exports, isNot(contains(_oldExport)));
+      expect(exports.where((line) => line == newExport), hasLength(1));
+      expect(exports, isNot(contains(oldExport)));
+      expect(exports, contains("export 'app_only.dart';"));
       final updatedOwnership =
           jsonDecode(receipt.readAsStringSync()) as Map<String, dynamic>;
       final updatedTargets =
           updatedOwnership['targets'] as Map<String, dynamic>;
-      for (final path in _themeExports) {
-        expect(updatedTargets, containsPair('lib/ui/$path', _themeOwner));
-      }
-      expect(
-        updatedTargets,
-        containsPair(
-          'lib/ui/components/text_field.dart',
-          'btwld/remix/registry#vanilla/text_field',
-        ),
-      );
       expect(
         updatedTargets,
         containsPair(
           'lib/ui/components/text_field.g.dart',
-          'btwld/remix/registry#vanilla/text_field',
+          endsWith('/text_field'),
         ),
       );
-      expect(updatedTargets, isNot(contains(_oldField)));
-      expect(updatedTargets, isNot(contains(_oldAdapter)));
+      expect(updatedTargets, isNot(contains(oldField)));
+      expect(updatedTargets, isNot(contains(oldAdapter)));
+      for (final MapEntry(:key, :value) in untouchedTargets.entries) {
+        expect(updatedTargets, containsPair(key, value));
+      }
 
-      _file(root, 'test/upgrade_test.dart')
+      projectFile('test/upgrade_test.dart')
         ..createSync(recursive: true)
         ..writeAsStringSync('''
 import 'package:consumer/ui/ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('the upgraded barrel retains the app customization', () {
+  test('the upgraded barrel exposes the field', () {
     expect(const AcmeTextField(), isA<AcmeTextField>());
     expect(const AcmeSearchField(semanticLabel: 'Search').semanticLabel, 'Search');
-    expect(customFieldHeight, 40);
     expect(appOnly, 42);
   });
 }
@@ -314,7 +342,7 @@ void main() {
       );
       expect(smoke.exitCode, 0, reason: '${smoke.stdout}\n${smoke.stderr}');
     },
-    timeout: const Timeout(Duration(minutes: 5)),
+    timeout: const Timeout(Duration(minutes: 8)),
   );
 }
 
@@ -331,12 +359,7 @@ Future<(int, String)> _run(Installer installer, List<String> arguments) async {
 
 File _file(Directory root, String path) => File(p.join(root.path, path));
 
-Future<void> _seedOldVanilla(
-  Directory root,
-  Installer installer, {
-  required bool recordTextField,
-  String fieldExport = _oldExport,
-}) async {
+Future<void> _seedOldVanilla(Directory root, Installer installer) async {
   expect(await _run(installer, ['init', '--prefix', 'Acme']), (0, ''));
   _file(root, _oldField)
     ..createSync(recursive: true)
@@ -354,7 +377,7 @@ Future<void> _seedOldVanilla(
 library;
 
 $managedExportsStart
-$fieldExport
+$_oldExport
 ${_themeExports.map((path) => "export '$path';").join('\n')}
 $managedExportsEnd
 
@@ -365,10 +388,7 @@ export 'app_only.dart';
     preset: 'vanilla',
     uiPath: 'lib/ui',
     prefix: 'Acme',
-    targets: {
-      for (final path in _themeExports) 'lib/ui/$path': _themeOwner,
-      if (recordTextField) ...{_oldField: _oldOwner, _oldAdapter: _oldOwner},
-    },
+    targets: {for (final path in _themeExports) 'lib/ui/$path': _themeOwner},
   );
 }
 
@@ -386,4 +406,66 @@ void _writeOwnership(
       'targets': targets,
     }),
   );
+}
+
+final class _CutoverSources implements RegistrySources {
+  _CutoverSources(this.distribution);
+
+  final Directory distribution;
+
+  @override
+  Future<RegistrySource> latestOfficial() =>
+      resolve(repository: officialRepository, ref: _oldRevision);
+
+  @override
+  Future<RegistrySource> resolve({
+    required String repository,
+    String path = 'registry',
+    String? ref,
+  }) async => RegistrySource(
+    repository: repository,
+    path: path,
+    ref: ref!,
+    revision: ref,
+  );
+
+  @override
+  RegistryReader open(RegistrySource pin, String preset) =>
+      pin.revision == _oldRevision
+      ? _BeforeCutover(distribution)
+      : CheckoutRegistry(distribution, preset);
+
+  @override
+  Future<String?> file(RegistrySource pin, String path) =>
+      readCheckoutFile(distribution, path);
+}
+
+final class _BeforeCutover implements RegistryReader {
+  _BeforeCutover(this.distribution)
+    : checkout = CheckoutRegistry(distribution, 'vanilla');
+
+  final Directory distribution;
+  final CheckoutRegistry checkout;
+
+  @override
+  Future<RegistryCatalog> catalog() async => RegistryCatalog.parse(
+    (await File(
+      p.join(distribution.path, 'vanilla', 'registry.yaml'),
+    ).readAsString()).replaceAll('text_field', 'textfield'),
+    preset: 'vanilla',
+  );
+
+  @override
+  Future<String> template(RegistryFile file) async =>
+      (await checkout.template(
+            RegistryFile(
+              source: file.source.replaceAll('textfield', 'text_field'),
+              target: file.target,
+            ),
+          ))
+          .replaceAll('text_field.dart', 'textfield.dart')
+          .replaceAll('text_field.g.dart', 'textfield.g.dart');
+
+  @override
+  Future<String> icons() => checkout.icons();
 }

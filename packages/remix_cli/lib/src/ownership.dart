@@ -32,7 +32,6 @@ final class OwnershipPlan {
     final file = File(p.join(root.path, ownershipFileName));
     final before = file.existsSync() ? file.readAsStringSync() : null;
     final targets = <String, String>{};
-    final recordedPaths = <String>{};
     final context = <String, String>{
       'prefix': config.prefix,
       'preset': config.preset,
@@ -77,20 +76,9 @@ final class OwnershipPlan {
             'Invalid ownership target in remix.ownership.json.',
           );
         }
-        recordedPaths.add(validateProjectFilePath(root, target));
+        validateProjectFilePath(root, target);
         targets[target] = entry.value as String;
       }
-    }
-
-    bool hasRecordedFile(String target) {
-      final path = validateProjectFilePath(root, target);
-      return recordedPaths.contains(path) ||
-          (File(path).existsSync() &&
-              recordedPaths.any(
-                (recordedPath) =>
-                    File(recordedPath).existsSync() &&
-                    FileSystemEntity.identicalSync(path, recordedPath),
-              ));
     }
 
     // Resolve internal symlinks too, so different spellings of one output
@@ -125,9 +113,7 @@ final class OwnershipPlan {
       reservations[path] = (entry.key, entry.value);
     }
     final barrel = canonical('${config.uiPath}/ui.dart');
-    final barrelUri = root.uri.resolveUri(
-      Uri(path: '${config.uiPath}/ui.dart'),
-    );
+    final recordedTargets = targets.keys.toSet();
     final planned = <String>{};
     for (final item in graph.items) {
       final [namespace, itemName] = item.name.split('/');
@@ -145,20 +131,15 @@ final class OwnershipPlan {
           source.path == 'registry' &&
           !graph.catalogs[namespace]!.items.containsKey(oldName)) {
         final oldExport = 'components/$oldName.dart';
-        final oldExportUri = barrelUri.resolve(oldExport);
-        final obsoleteExport = managedExports.where((export) {
-          final uri = Uri.tryParse(export);
-          return uri != null && barrelUri.resolveUri(uri) == oldExportUri;
-        }).firstOrNull;
         final oldOwner = '$ownerScope/$oldName';
         final obsoleteTargets = [
           for (final MapEntry(:key, :value) in targets.entries)
             if (value == oldOwner) key,
         ];
         final evidence = [
-          if (obsoleteExport != null &&
-              !hasRecordedFile('${config.uiPath}/$oldExport'))
-            '${config.uiPath}/ui.dart still exports $obsoleteExport.',
+          if (managedExports.contains(oldExport) &&
+              !recordedTargets.contains('${config.uiPath}/$oldExport'))
+            '${config.uiPath}/ui.dart still exports $oldExport.',
           if (obsoleteTargets.isNotEmpty)
             '$ownershipFileName still reserves ${obsoleteTargets.join(', ')}.',
         ];
