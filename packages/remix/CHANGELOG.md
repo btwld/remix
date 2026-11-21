@@ -1,3 +1,17 @@
+## 1.0.0-rc.6
+
+### Features
+
+- Add `RemixSidebarLayout` to show a sidebar inline or in a modal sheet below
+  a configurable breakpoint. Use `RemixSidebarLayoutScope` to read the layout
+  mode and open or close the sheet (#531).
+- Add a `.wrap(WidgetModifierConfig)` named factory to 55 generated stylers
+  (#532).
+
+### Dependencies
+
+- Raise the `mix_generator` dev dependency to ^2.3.0 (#532).
+
 ## 1.0.0-rc.5
 
 ### Features
