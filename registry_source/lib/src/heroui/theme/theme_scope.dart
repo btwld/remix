@@ -204,13 +204,21 @@ Widget _recolored(Color foreground, Widget child) => DefaultTextStyle.merge(
 /// matching `MixScope` alongside the inherited data, while
 /// `InheritedTheme.wrap` can still rebuild both across a route boundary.
 class _HeroUiInheritedTheme extends InheritedTheme {
-  const _HeroUiInheritedTheme({
+  _HeroUiInheritedTheme({
     required this.data,
     this.baseTheme,
     this.darkTheme,
     this.useDarkTheme,
     required super.child,
-  });
+  }) : _comparisonSnapshot = (
+         data.copyWith(colors: const {}),
+         baseTheme?.copyWith(colors: const {}),
+         darkTheme?.copyWith(colors: const {}),
+         useDarkTheme,
+       );
+
+  final (HeroUiThemeData, HeroUiThemeData?, HeroUiThemeData?, bool?)
+  _comparisonSnapshot;
 
   /// The theme values available to [child].
   final HeroUiThemeData data;
@@ -249,5 +257,6 @@ class _HeroUiInheritedTheme extends InheritedTheme {
       data != oldWidget.data ||
       baseTheme != oldWidget.baseTheme ||
       darkTheme != oldWidget.darkTheme ||
-      useDarkTheme != oldWidget.useDarkTheme;
+      useDarkTheme != oldWidget.useDarkTheme ||
+      _comparisonSnapshot != oldWidget._comparisonSnapshot;
 }
