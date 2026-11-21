@@ -15,7 +15,15 @@ import 'theme_scope.dart' show UiTheme;
 /// Must be used within [UiTheme] to resolve actual values.
 abstract final class UiTokens {
   static const activityMaxHeight = DoubleToken('ui.activity.max-height');
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in a future registry revision.',
+  )
   static const planMaxHeight = DoubleToken('ui.plan.max-height');
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in a future registry revision.',
+  )
   static const messageAvatarSize = DoubleToken('ui.message.avatar-size');
   static const messageContentMaxWidth = DoubleToken(
     'ui.message.content-max-width',
@@ -23,9 +31,14 @@ abstract final class UiTokens {
   static const messageCollapsedHeight = DoubleToken(
     'ui.message.collapsed-height',
   );
+
+  @Deprecated(
+    'Use app-owned sizing. Will be removed in a future registry revision.',
+  )
   static const composerFieldMinHeight = DoubleToken(
     'ui.composer-field-min-height',
   );
+
   static const touchTargetMin = DoubleToken('ui.touch-target-min');
   static const popoverMaxWidth = DoubleToken('ui.popover-max-width');
   static const dialogMaxWidth = DoubleToken('ui.dialog-max-width');
@@ -607,9 +620,17 @@ abstract final class UiTokens {
   static const fontWeightBold = FontWeightToken('ui.font.weight.bold');
 
   /// Fast animation duration (100ms).
+  @Deprecated(
+    'Use Duration(milliseconds: 100) or an app-owned DurationToken. '
+    'Will be removed in a future registry revision.',
+  )
   static const transitionFast = DurationToken('ui.transition.fast');
 
   /// Slow animation duration (300ms).
+  @Deprecated(
+    'Use Duration(milliseconds: 300) or an app-owned DurationToken. '
+    'Will be removed in a future registry revision.',
+  )
   static const transitionSlow = DurationToken('ui.transition.slow');
 
   static const skeletonPulseDuration = DurationToken(

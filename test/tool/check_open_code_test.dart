@@ -1565,52 +1565,6 @@ items:
     });
   });
 
-  group('icon reinstall documentation', () {
-    for (final preset in ['vanilla', 'fortal', 'heroui']) {
-      test('$preset commands cover every item with icon placeholders', () {
-        final registry = File('registry/$preset/registry.yaml');
-        final catalog = loadYaml(registry.readAsStringSync()) as YamlMap;
-        final items = catalog['items'] as YamlMap;
-        final expected = <String>{};
-        for (final entry in items.entries) {
-          final item = entry.value as YamlMap;
-          final files = item['files'] as YamlList? ?? [];
-          if (files.any(
-            (file) => File(
-              'registry/$preset/${file['source']}',
-            ).readAsStringSync().contains('{{icon:'),
-          )) {
-            expected.add(entry.key as String);
-          }
-        }
-        expect(expected, containsAll(['date_picker', 'date_range_picker']));
-        for (final path in [
-          'docs/open-code/catalog.mdx',
-          'skills/using-remix/references/cli.md',
-        ]) {
-          final commands = RegExp(
-            r'^remix add (icons .+) --(diff|overwrite)',
-            multiLine: true,
-          ).allMatches(File(path).readAsStringSync()).toList();
-          // Vanilla's pair comes first, then Fortal's, then HeroUI's.
-          final selected = switch (preset) {
-            'vanilla' => commands.take(2),
-            'fortal' => commands.skip(2).take(2),
-            _ => commands.skip(4),
-          };
-          expect(selected, hasLength(2), reason: '$path/$preset');
-          for (final command in selected) {
-            expect(
-              command.group(1)!.split(' ').toSet(),
-              expected,
-              reason: '$path/$preset/${command.group(2)}',
-            );
-          }
-        }
-      });
-    }
-  });
-
   group('fixture contract', () {
     test('full Vanilla staging includes every committed fixture test', () {
       final fixture = Directory('open_code/fixture');

@@ -74,12 +74,10 @@ access, or a name marked with backticks or Dartdoc brackets. Use backticks for
 references that would otherwise look like prose, such as a generated constructor
 name in a comment. Brand prose such as “Acme-inspired” stays as written.
 
-A standalone quoted ID has no whitespace and starts with the authoring word,
-then `.`, `-`, or `_` followed by an alphanumeric character or interpolation
-(`'acme.${group}/accent'`). Use the lower-camel prefix for hyphenated IDs and
-camel-case keys such as `'acmeSlider${group}#accent'`. A PascalCase key such as
-`'AcmeSlider${group}'` needs an interpolation to distinguish it from prose.
-`Text('acme-themed')` therefore takes the prefix.
+A standalone quoted ID starts with the authoring word and uses `.`, `-`, or `_`
+between alphanumeric or interpolated segments (`'acme.$group.accent'`); use
+the lower-camel prefix for hyphenated IDs and for standalone camel-case keys
+such as `'acmeSliderDark'`. `Text('acme-themed')` therefore takes the prefix.
 Ambiguous ID-like strings and bare prefix segments fail with a `path:line`
 diagnostic. A plain-replacement script must keep the stricter rule:
 the word belongs only inside identifiers and at the start of quoted ids, never

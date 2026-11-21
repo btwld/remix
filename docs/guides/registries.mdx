@@ -42,10 +42,9 @@ writes `remix.yaml`. If the branch is not published, initialization fails and
 creates no files.
 
 An optional `iconLibrary` (`remix`, `rounded`, or `lucide`) lives in that same schema 3
-file. Templates carry icon placeholders, resolved at install; to switch an
-installed project, change the setting and reinstall every installed item that
-uses icons with `add --diff`, then `--overwrite`, naming them all in one
-command.
+file. Templates carry icon placeholders, resolved at install. To switch an
+installed project, [find icon owners at your pin and preview the diff](https://github.com/btwld/remix/blob/main/packages/remix_cli/README.md#switch-icon-libraries)
+before overwriting.
 A CLI that understands the placeholders has to ship before a registry that
 uses them.
 

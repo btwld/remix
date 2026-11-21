@@ -1276,6 +1276,12 @@ final class PresetBuilder {
           ...dependency.generated,
         ],
       };
+      var probePrefix = 'Consumer';
+      while (targets.any(
+        (target) => target.toLowerCase().contains(probePrefix.toLowerCase()),
+      )) {
+        probePrefix += 'X';
+      }
       for (final file in item.files) {
         final template = output.files[file.source];
         if (template == null) {
@@ -1285,8 +1291,8 @@ final class PresetBuilder {
         }
         final source = const TemplateRenderer().render(
           template,
-          typePrefix: spec.typeWord,
-          valuePrefix: spec.valueWord,
+          typePrefix: probePrefix,
+          valuePrefix: probePrefix.toLowerCase(),
           icons: icons,
         );
         for (final directive in _readDirectiveUris(file.source, source).all) {
@@ -2036,9 +2042,7 @@ String _replacePrefixWords(
       final valueId = leading[0] == valueWord;
       if ((_idSuffix.hasMatch(suffix) &&
               (valueId || !suffix.startsWith('-'))) ||
-          ((valueId || interpolatesAfter) &&
-              leading.end < text.length &&
-              _camelIdSuffix.hasMatch(suffix))) {
+          (valueId && !interpolatesAfter && _camelIdSuffix.hasMatch(suffix))) {
         replace(leading[0]!, offset);
         return;
       }
@@ -2175,8 +2179,8 @@ class _StringPieces extends RecursiveAstVisitor<void> {
 }
 
 final _identifierSuffixStart = RegExp('[A-Z0-9]');
-final _idSuffix = RegExp(r'^[-._][A-Za-z0-9]\S*$');
-final _camelIdSuffix = RegExp(r'^[A-Z0-9][\w./:#-]*$');
+final _idSuffix = RegExp(r'^(?:[-._][A-Za-z0-9]+)+$');
+final _camelIdSuffix = RegExp(r'^[A-Z0-9][A-Za-z0-9]*$');
 final _codePunctuation = RegExp(r'(?:\(|[.<][A-Za-z_$])');
 final _codeMarkup = RegExp(r'`[^`\n]+`|\[[\w.$]+\]');
 
