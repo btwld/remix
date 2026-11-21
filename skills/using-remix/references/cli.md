@@ -57,7 +57,7 @@ to read with an explicit error. Recover a schema 1 or 2 project by deleting
 
 CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. Upgrade
 these versions first with
-`dart pub global activate remix_cli '^1.0.0-rc.1'`. The current
+`dart pub global activate remix_cli '^1.0.0-rc.2'`. The current
 CLI rejects unknown existing targets before mutation, including `--diff` and
 `--dry-run`. After verifying their source, name every existing dependency
 explicitly when adopting. For Vanilla Button, that is Theme and Button. Fortal
@@ -111,22 +111,11 @@ icon. `lucide` adds `lucide_flutter` instead. Projects still on `remix_ui_icons`
 `flutter pub add remix_ui_icons:^1.0.0-beta.1` and migrate their own icon
 references using the package’s `MIGRATION.md`.
 
-The choice applies at install. Six items use icon placeholders in every
-preset: `icons`, `dashboard_shell`, `dashboard_demo`, `agent_glyphs_recipe`,
-`date_picker`, and `date_range_picker`. Vanilla and Fortal add `breadcrumbs`
-and `search_field`; HeroUI adds `breadcrumbs`, `close_button`, and
-`search_field`.
-To switch an installed project, change the setting and reinstall every one of
-them you have, in one command; `--overwrite` rewrites only the items named:
+The choice applies at install. Follow the CLI's [switching instructions] to
+find installed items with icon placeholders in your pinned catalog and preview
+their diffs before overwriting.
 
-```bash
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --diff   # Vanilla
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --overwrite
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --diff   # Fortal
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --overwrite
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs close_button search_field --diff   # HeroUI
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs close_button search_field --overwrite
-```
+[switching instructions]: https://github.com/btwld/remix/blob/main/packages/remix_cli/README.md#switch-icon-libraries
 
 Icons referenced in application code are not rewritten. The CLI that
 resolves these placeholders ships before a registry that uses them.

@@ -9,6 +9,27 @@ import 'package:remix/remix.dart';
 
 import '../helpers/heroui.dart';
 
+const _brand = ColorToken('app.brand');
+
+class _BrandedTheme extends HeroUiThemeData {
+  const _BrandedTheme(this.brandColor) : super.light();
+
+  final Color brandColor;
+
+  @override
+  Color color(ColorToken token) =>
+      token == _brand ? brandColor : super.color(token);
+
+  @override
+  bool operator ==(Object other) =>
+      other is _BrandedTheme &&
+      super == other &&
+      brandColor == other.brandColor;
+
+  @override
+  int get hashCode => Object.hash(super.hashCode, brandColor);
+}
+
 /// Browser-resolved colors from the pinned HeroUI CSS, by variable name.
 Map<String, dynamic> _upstreamColors(String mode) {
   final tokens =
@@ -155,6 +176,111 @@ void main() {
       () => theme.color(const ColorToken('heroUi.color.unknown')),
       throwsArgumentError,
     );
+  });
+
+  test('legacy constructors retain their const colors argument', () {
+    const themes = [
+      HeroUiThemeData(brightness: Brightness.light, colors: {}),
+      HeroUiThemeData.light(colors: {}),
+      HeroUiThemeData.dark(colors: {}),
+    ];
+    for (final theme in themes) {
+      expect(theme.colors, isEmpty);
+    }
+  });
+
+  for (final updatesInactiveDark in [false, true]) {
+    testWidgets(
+      updatesInactiveDark
+          ? 'an inactive dark theme update reaches a nested dark scope'
+          : 'an active theme update reaches its dependents',
+      (tester) async {
+        const originalAccent = Color(0xFF8000FF);
+        const updatedAccent = Color(0xFF00FF00);
+        final colors = {HeroUiTokens.accent: originalAccent};
+        final theme = updatesInactiveDark
+            ? HeroUiThemeData.dark(colors: colors)
+            : HeroUiThemeData.light(colors: colors);
+        final seenAccents = <Color>[];
+        final dependent = Builder(
+          builder: (context) {
+            seenAccents.add(HeroUiTheme.of(context).color(HeroUiTokens.accent));
+            return const SizedBox();
+          },
+        );
+        final child = updatesInactiveDark
+            ? HeroUiTheme(mode: HeroUiThemeMode.dark, child: dependent)
+            : dependent;
+
+        Future<void> pumpTheme() => tester.pumpWidget(
+          HeroUiTheme(
+            mode: HeroUiThemeMode.light,
+            theme: updatesInactiveDark ? null : theme,
+            darkTheme: updatesInactiveDark ? theme : null,
+            child: child,
+          ),
+        );
+
+        await pumpTheme();
+        expect(seenAccents, [originalAccent]);
+
+        await pumpTheme();
+        expect(seenAccents, [originalAccent]);
+
+        theme.colors[HeroUiTokens.accent] = updatedAccent;
+        expect(colors[HeroUiTokens.accent], updatedAccent);
+        await pumpTheme();
+        expect(seenAccents, [originalAccent, updatedAccent]);
+      },
+    );
+  }
+
+  testWidgets('replacing a value-equal map key does not notify dependents', (
+    tester,
+  ) async {
+    const accent = HeroUiTokens.accent;
+    const color = Color(0xFF8000FF);
+    var builds = 0;
+    final child = Builder(
+      builder: (context) {
+        expect(HeroUiTheme.of(context).color(accent), color);
+        builds++;
+        return const SizedBox();
+      },
+    );
+    final colors = {accent: color};
+    final theme = HeroUiThemeData.light(colors: colors);
+
+    await tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
+    expect(builds, 1);
+
+    colors[ColorToken(accent.name)] = colors.remove(accent)!;
+    await tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
+    expect(builds, 1);
+  });
+
+  testWidgets('subclass equality determines whether a theme change notifies', (
+    tester,
+  ) async {
+    const original = Color(0xFF8000FF);
+    const updated = Color(0xFF00FF00);
+    final seenColors = <Color>[];
+    final child = Builder(
+      builder: (context) {
+        seenColors.add(HeroUiTheme.of(context).color(_brand));
+        return const SizedBox();
+      },
+    );
+
+    Future<void> pumpTheme(HeroUiThemeData theme) =>
+        tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
+
+    await pumpTheme(const _BrandedTheme(original));
+    expect(seenColors, [original]);
+    await pumpTheme(_BrandedTheme(original));
+    expect(seenColors, [original]);
+    await pumpTheme(const _BrandedTheme(updated));
+    expect(seenColors, [original, updated]);
   });
 
   testWidgets('of throws without a scope; maybeOf returns null', (

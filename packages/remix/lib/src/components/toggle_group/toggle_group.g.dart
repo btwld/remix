@@ -433,6 +433,8 @@ class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => ToggleGroupStyler().transform(value, alignment: alignment);
+  factory ToggleGroupStyler.wrap(WidgetModifierConfig value) =>
+      ToggleGroupStyler().wrap(value);
 
   ToggleGroupStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
@@ -1153,6 +1155,8 @@ class ToggleGroupItemStyler
     Matrix4 value, {
     Alignment alignment = .center,
   }) => ToggleGroupItemStyler().transform(value, alignment: alignment);
+  factory ToggleGroupItemStyler.wrap(WidgetModifierConfig value) =>
+      ToggleGroupItemStyler().wrap(value);
 
   ToggleGroupItemStyler color(Color value) {
     return container(FlexBoxStyler().color(value));

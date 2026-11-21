@@ -21,16 +21,17 @@ void main() {
         '$managedExportsStart\n'
         "export 'components/button.dart';\n"
         '\n'
-        '$managedExportsEnd\n';
+        '$managedExportsEnd\n'
+        "export 'app_only.dart';\n";
     final crlf = lf.replaceAll('\n', '\r\n');
 
     test('accepts an LF barrel', () {
-      expect(() => validateManagedBarrel(lf), returnsNormally);
+      expect(readManagedBarrelExports(lf), {'components/button.dart'});
     });
 
     test('accepts a CRLF barrel', () {
       // Git with core.autocrlf=true hands a Windows consumer this exact file.
-      expect(() => validateManagedBarrel(crlf), returnsNormally);
+      expect(readManagedBarrelExports(crlf), {'components/button.dart'});
     });
 
     test('rewriting an LF barrel keeps LF', () {
@@ -286,7 +287,7 @@ registries:
         'remix_ui_fonts@^0.1.0',
         'mix_annotations@^2.2.0-beta.1',
         'dev:build_runner@^2.10.1',
-        'dev:mix_generator@^2.2.0-beta.3',
+        'dev:mix_generator@$registryMixGeneratorConstraint',
       ]);
       expect(
         runner.calls[4].arguments,
@@ -569,7 +570,7 @@ packages:
   build_runner:
     version: "2.10.1"
   mix_generator:
-    version: "2.2.0-beta.3"
+    version: "$registryMixGeneratorFloor"
 ''');
         final packageConfig = File(
           p.join(workspace.path, '.dart_tool/package_config.json'),
@@ -1369,7 +1370,7 @@ $declaration  mix_annotations: ^2.2.0-beta.1
   remix_ui_fonts: ^0.1.0
 dev_dependencies:
   build_runner: ^2.10.1
-  mix_generator: ^2.2.0-beta.3
+  mix_generator: $registryMixGeneratorConstraint
 dependency_overrides:
   remix:
     path: ../local-remix
@@ -1411,7 +1412,7 @@ dependencies:
   mix_annotations: ^2.2.0-beta.1
 dev_dependencies:
   build_runner: ^2.10.1
-  mix_generator: ^2.2.0-beta.3
+  mix_generator: $registryMixGeneratorConstraint
 ''');
       final before = pubspec.readAsBytesSync();
       writeRequiredLock(root, remix: '0.9.0');
@@ -1541,7 +1542,7 @@ dependencies:
 dev_dependencies:
   remix: $registryRemixConstraint
   build_runner: ^2.10.1
-  mix_generator: ^2.2.0-beta.3
+  mix_generator: $registryMixGeneratorConstraint
 '''
               : '''name: consumer
 environment:
@@ -1553,7 +1554,7 @@ dependencies:
 dev_dependencies:
   mix_annotations: ^2.2.0-beta.1
   build_runner: ^2.10.1
-  mix_generator: ^2.2.0-beta.3
+  mix_generator: $registryMixGeneratorConstraint
 ''',
         );
         writeRequiredLock(caseRoot);
@@ -1615,7 +1616,7 @@ dependencies:
 dev_dependencies:
   mix_chart: ^0.0.1-beta.1
   build_runner: ^2.10.1
-  mix_generator: ^2.2.0-beta.3
+  mix_generator: $registryMixGeneratorConstraint
 ''');
       writeRequiredLock(caseRoot, mixChart: '$registryMixChartFloor');
       final before = snapshotFiles(caseRoot);
@@ -1664,7 +1665,7 @@ dependencies:
   mix_annotations: ^2.2.0-beta.1
   remix_ui_fonts: ^0.1.0
   build_runner: ^2.10.1
-  mix_generator: ^2.2.0-beta.3
+  mix_generator: $registryMixGeneratorConstraint
 ''');
       final before = pubspec.readAsBytesSync();
       writeRequiredLock(root);
@@ -1699,7 +1700,7 @@ dependencies:
 dev_dependencies:
   remix: $registryRemixConstraint
   build_runner: ^2.10.1
-  mix_generator: ^2.2.0-beta.3
+  mix_generator: $registryMixGeneratorConstraint
 ''');
     writeRequiredLock(root);
     final before = snapshotFiles(root);

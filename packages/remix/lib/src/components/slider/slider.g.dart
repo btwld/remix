@@ -448,6 +448,8 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => SliderStyler().transform(value, alignment: alignment);
+  factory SliderStyler.wrap(WidgetModifierConfig value) =>
+      SliderStyler().wrap(value);
 
   SliderStyler alignment(AlignmentGeometry value) {
     return thumb(BoxStyler().alignment(value));

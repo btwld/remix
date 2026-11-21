@@ -1,6 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:path/path.dart' as p;
+
+import 'fortal_recipe_path.dart';
+
 /// Checks Fortal's own specification, independently of any external library.
 void main() {
   final failures = checkFortalContract(Directory.current);
@@ -40,20 +46,41 @@ List<String> checkFortalContract(Directory workspace) {
     _checkDefault('theme', entry.key, entry.value['default'], theme, failures);
   }
   final families = (catalog['families'] as List).cast<Map<String, dynamic>>();
-  final ids = <String>{};
-  final coveredSources = <String>{};
+  final familiesById = <String, Map<String, dynamic>>{};
   for (final family in families) {
     final id = family['id'] as String;
-    if (!ids.add(id)) failures.add('Duplicate Fortal family $id.');
-    final fileName = id == 'text_area' ? 'text_field' : id;
-    coveredSources.add(fileName);
-    final file = File('$root/lib/src/fortal/components/$fileName.dart');
-    if (!file.existsSync()) {
+    if (familiesById.containsKey(id)) {
+      failures.add('Duplicate Fortal family $id.');
+    }
+    familiesById[id] = family;
+  }
+  final coveredSources = <String>{};
+  final enumSources = <String>{};
+  final sources = <String, String?>{};
+  final units = <String, CompilationUnit>{};
+  String? readRecipe(String path) => sources.putIfAbsent(path, () {
+    final file = File('$root/$path');
+    return file.existsSync() ? file.readAsStringSync() : null;
+  });
+  CompilationUnit parseRecipe(String path, String source) => units.putIfAbsent(
+    path,
+    () => parseString(
+      content: source,
+      path: path,
+      throwIfDiagnostics: false,
+    ).unit,
+  );
+  for (final family in families) {
+    final id = family['id'] as String;
+    final recipePath = fortalRecipePath(family);
+    final source = readRecipe(recipePath);
+    final file = File('$root/$recipePath');
+    if (source == null) {
       failures.add('$id has no authored recipe.');
       continue;
     }
-    final source = file.readAsStringSync();
-    final generated = File(file.path.replaceFirst('.dart', '.g.dart'));
+    coveredSources.add(recipePath);
+    final generated = File(fortalGeneratedPath(file.path));
     final all =
         '$source\n${generated.existsSync() ? generated.readAsStringSync() : ''}';
     final type = family['fortalType'] as String;
@@ -64,40 +91,50 @@ List<String> checkFortalContract(Directory workspace) {
     for (final entry in axes.entries) {
       final kind = entry.key;
       final definition = entry.value as Map;
-      // A family that shares another family's enum names it and its file.
-      final (enumType, enumFile) = switch (kind) {
-        'size' || 'variant' when id == 'range_slider' => (
-          'FortalSlider${_pascal(kind)}',
-          'slider',
-        ),
-        'weight' => ('FortalTextWeight', 'typography'),
-        'size' when {'text', 'heading', 'code', 'kbd', 'link'}.contains(id) => (
-          'FortalTextSize',
-          'typography',
-        ),
-        'size' when id == 'tabs' => ('FortalTabsSize', null),
-        'size' || 'variant' when id == 'combobox' => (
-          'FortalTextField${_pascal(kind)}',
-          'text_field',
-        ),
-        'variant' when id == 'text_area' => ('FortalTextFieldVariant', null),
-        'size' when id == 'surface' => ('FortalCardSize', 'card'),
-        _ => ('Fortal${_pascal(id)}${_pascal(kind)}', null),
-      };
-      final enumSource = enumFile == null
-          ? source
-          : File(
-              '$root/lib/src/fortal/components/$enumFile.dart',
-            ).readAsStringSync();
+      final enumOwner = definition['enumOwner'] as String?;
+      final ownerId = enumOwner ?? id;
+      final owner = familiesById[ownerId];
+      if (owner == null || !(owner['enums'] as Map).containsKey(kind)) {
+        failures.add('$id: unknown enum owner $ownerId for $kind.');
+        continue;
+      }
+      final enumType = 'Fortal${_pascal(ownerId)}${_pascal(kind)}';
+      final enumRecipe = owner['enumRecipe'] as String?;
+      final enumPath = fortalRecipePath(owner, recipe: enumRecipe);
+      final enumSource = readRecipe(enumPath);
+      if (enumSource == null) {
+        failures.add('$id: missing enum source $enumPath for $enumType.');
+        continue;
+      }
       // Framework/Remix behavioral enums stay owned by those packages.
-      if (RegExp('enum\\s+$enumType\\b').hasMatch(enumSource)) {
+      final declaresEnum = parseRecipe(enumPath, enumSource).declarations
+          .whereType<EnumDeclaration>()
+          .any(
+            (declaration) => declaration.namePart.typeName.lexeme == enumType,
+          );
+      if (declaresEnum) {
+        if (enumRecipe != null) enumSources.add(enumPath);
+        if (enumOwner != null || enumRecipe != null) {
+          final actual = _stylerParameterType(
+            parseRecipe(recipePath, source),
+            type,
+            kind,
+          );
+          if (actual != enumType) {
+            final found = actual ?? 'no typed styler parameter';
+            failures.add(
+              '$id: $kind uses $found, but the catalog names $enumType.',
+            );
+          }
+        }
         _checkEnum(
           enumType,
           enumSource,
           definition['values'] as List,
           failures,
         );
-      } else if (kind == 'size' ||
+      } else if (enumOwner != null ||
+          kind == 'size' ||
           kind == 'variant' ||
           kind == 'weight' ||
           kind == 'underline') {
@@ -127,16 +164,21 @@ List<String> checkFortalContract(Directory workspace) {
         failures.add('$id: missing test $test.');
     }
   }
-  final components = Directory('$root/lib/src/fortal/components')
+  final components = Directory('$root/$fortalComponentsPath')
       .listSync()
       .whereType<File>()
       .where((f) => f.path.endsWith('.dart') && !f.path.endsWith('.g.dart'));
   for (final file in components) {
-    final name = file.uri.pathSegments.last.replaceFirst('.dart', '');
-    if (!coveredSources.contains(name) &&
-        !{'base_button', 'typography'}.contains(name)) {
-      failures.add('Unspecified Fortal recipe: $name.');
+    final fileName = file.uri.pathSegments.last;
+    final path = '$fortalComponentsPath/$fileName';
+    if (coveredSources.contains(path) ||
+        enumSources.contains(path) ||
+        fileName == 'base_button.dart') {
+      continue;
     }
+    failures.add(
+      'Unspecified Fortal recipe: ${p.basenameWithoutExtension(fileName)}.',
+    );
   }
   for (final path in [
     'test/fortal/palette_contrast_test.dart',
@@ -226,6 +268,28 @@ void _checkRecipeSources(
       }
     }
   }
+}
+
+String? _stylerParameterType(
+  CompilationUnit source,
+  String widgetType,
+  String parameter,
+) {
+  final stylerName = 'fortal${widgetType.substring('Fortal'.length)}Style';
+  final styler = source.declarations
+      .whereType<FunctionDeclaration>()
+      .where((declaration) => declaration.name.lexeme == stylerName)
+      .firstOrNull;
+  final formal = styler?.functionExpression.parameters?.parameters
+      .where((declaration) => declaration.name?.lexeme == parameter)
+      .firstOrNull;
+  final declaration = formal is DefaultFormalParameter
+      ? formal.parameter
+      : formal;
+  return switch (declaration) {
+    SimpleFormalParameter(type: NamedType(:final name)) => name.lexeme,
+    _ => null,
+  };
 }
 
 void _checkEnum(

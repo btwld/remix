@@ -422,6 +422,8 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => AccordionStyler().transform(value, alignment: alignment);
+  factory AccordionStyler.wrap(WidgetModifierConfig value) =>
+      AccordionStyler().wrap(value);
 
   AccordionStyler color(Color value) {
     return trigger(FlexBoxStyler().color(value));
@@ -860,7 +862,6 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
       key: key,
       style: this,
       value: value,
-      child: child,
       title: title,
       leadingIcon: leadingIcon,
       trailingIcon: trailingIcon,
@@ -875,6 +876,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
       onPressChange: onPressChange,
       semanticLabel: semanticLabel,
       transitionBuilder: transitionBuilder,
+      child: child,
     );
   }
 

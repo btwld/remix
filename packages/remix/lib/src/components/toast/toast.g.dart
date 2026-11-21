@@ -423,6 +423,8 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => ToastStyler().transform(value, alignment: alignment);
+  factory ToastStyler.wrap(WidgetModifierConfig value) =>
+      ToastStyler().wrap(value);
 
   ToastStyler color(Color value) {
     return container(FlexBoxStyler().color(value));

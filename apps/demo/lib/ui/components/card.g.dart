@@ -46,15 +46,10 @@ class FortalCard extends StatelessWidget {
   final Widget? child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCard(
-      key: this.key,
-      style: fortalCardStyle(
-        variant: this.variant,
-        size: this.size,
-        style: this.style,
-      ),
-      child: this.child,
+      style: fortalCardStyle(variant: variant, size: size, style: style),
+      child: child,
     );
   }
 }

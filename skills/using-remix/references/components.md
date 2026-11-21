@@ -85,21 +85,24 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `expands`/`obscureText` fixed to `false`. Vanilla, Fortal, and HeroUI recipes
   ring the field with `onFocused`, so a click shows the ring. Other controls use
   `onFocusVisible`.
-- **SearchField** — Remix has no search widget; presets compose one over their
-  text field. Vanilla's `remix add search_field` installs the stateful
-  `<Prefix>SearchField(semanticLabel: ...)` with `controller`, `focusNode`,
-  `hintText`, `enabled`, `readOnly`, `autofocus`, `onChanged`, `onSubmitted`,
-  `onCleared`, `clearSemanticLabel` (default `'Clear search'`),
-  `textInputAction` (default `search`) and `style`. It owns its controller
-  and focus node when none is given and draws its own search icon. The clear
-  button shows only while the field is enabled, editable and not empty;
-  clearing reports `''` to `onChanged`, calls `onCleared` and keeps focus.
-  Escape clears too, and holding it does not then close an enclosing dialog;
-  during IME composition Escape stays with the input method. With nothing to
-  clear, Escape passes up, so the dialog closes. Fortal's field has the same
-  contract and also keeps the TextField height at every size; see
-  [Fortal](fortal.md#search-field). HeroUI's `search_field` is a recipe
-  instead: the app passes its icon and clear button and wires them.
+- **SearchField** — In Vanilla and Fortal, `remix add search_field` installs
+  `<Prefix>SearchField(semanticLabel: ...)`. Both use
+  `NakedSearchField` for behavior and their own TextField for the editor.
+  They supply a controller and focus node when you don't pass them.
+  `textInputAction` defaults to `.search` and `clearSemanticLabel` to
+  `'Clear search'`. Clear appears only in an enabled, editable, nonempty
+  field. It empties the query, calls `onChanged('')` before `onCleared`, and
+  returns focus to the editor.
+
+  An Escape press that starts during active composition in an enabled,
+  editable field stays with the input method through release, even if the
+  field becomes read-only. A fresh Escape in a read-only or empty field
+  passes up, even with a retained composing range. Otherwise, Escape clears
+  an enabled, editable, nonempty query and consumes the press through
+  release. A collapsed composing range is not active composition.
+
+  See [Fortal](fortal.md#search-field) for its layout. HeroUI's `search_field`
+  is a recipe instead: the app supplies and wires its icon and Clear button.
 - **RangeSlider** — `RemixRangeSlider` takes exactly two ordered, parent-owned
   values. Give the lower and upper thumbs distinct `semanticLabels` in that
   order. `onChanged` requests values; the parent decides whether to accept them.

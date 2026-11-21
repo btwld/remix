@@ -36,7 +36,7 @@ TextStyler {{valuePrefix}}HeadingStyle({
     style: {{valuePrefix}}TextSizeToken(size).mix(),
   ).height(lineHeight).fontWeight({{valuePrefix}}TextWeightToken(weight)());
   // Neutral headings pin `gray12` from the tokens rather than inheriting the
-  // ambient foreground, matching {{valuePrefix}}TextStyle's token-default contract.
+  // ambient foreground, matching `{{valuePrefix}}TextStyle`'s token-default contract.
   recipe = accent
       ? {{valuePrefix}}AccentForeground(recipe, highContrast: highContrast)
       : recipe.color({{typePrefix}}Tokens.gray12());

@@ -174,8 +174,7 @@ void main() {
   }
 }
 
-/// The dashboard recipes forward their key, so several elements carry it.
-Finder _control(ValueKey<String> key) => find.byKey(key).first;
+Finder _control(ValueKey<String> key) => find.byKey(key);
 
 /// The colours of every glyph and text span painted inside [key].
 List<Color?> _paintedColors(WidgetTester tester, ValueKey<String> key) {

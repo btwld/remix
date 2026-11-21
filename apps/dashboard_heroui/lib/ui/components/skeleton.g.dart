@@ -26,12 +26,11 @@ class UiSkeleton extends StatelessWidget {
   final bool loading;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSkeleton(
-      key: this.key,
-      style: uiSkeletonStyle(style: this.style),
-      child: this.child,
-      loading: this.loading,
+      style: uiSkeletonStyle(style: style),
+      loading: loading,
+      child: child,
     );
   }
 }

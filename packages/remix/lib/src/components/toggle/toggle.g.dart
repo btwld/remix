@@ -359,6 +359,8 @@ class ToggleStyler extends MixStyler<ToggleStyler, ToggleSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => ToggleStyler().transform(value, alignment: alignment);
+  factory ToggleStyler.wrap(WidgetModifierConfig value) =>
+      ToggleStyler().wrap(value);
 
   ToggleStyler color(Color value) {
     return container(FlexBoxStyler().color(value));

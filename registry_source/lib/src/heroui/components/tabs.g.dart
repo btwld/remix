@@ -104,24 +104,23 @@ class HeroUiTab extends StatelessWidget {
   final String? semanticLabel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixTab(
-      key: this.key,
-      style: heroUiTabStyle(variant: this.variant, style: this.style),
-      tabId: this.tabId,
-      child: this.child,
-      label: this.label,
-      icon: this.icon,
-      enabled: this.enabled,
-      mouseCursor: this.mouseCursor,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      onFocusChange: this.onFocusChange,
-      onHoverChange: this.onHoverChange,
-      onPressChange: this.onPressChange,
-      builder: this.builder,
-      semanticLabel: this.semanticLabel,
+      style: heroUiTabStyle(variant: variant, style: style),
+      tabId: tabId,
+      label: label,
+      icon: icon,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      builder: builder,
+      semanticLabel: semanticLabel,
+      child: child,
     );
   }
 }
@@ -145,13 +144,12 @@ class HeroUiTabView extends StatelessWidget {
   final bool maintainState;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixTabView(
-      key: this.key,
-      style: heroUiTabViewStyle(style: this.style),
-      tabId: this.tabId,
-      child: this.child,
-      maintainState: this.maintainState,
+      style: heroUiTabViewStyle(style: style),
+      tabId: tabId,
+      maintainState: maintainState,
+      child: child,
     );
   }
 }

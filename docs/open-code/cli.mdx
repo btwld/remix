@@ -81,7 +81,7 @@ remix add <item...> [options]
 ```text
 Examples:
   remix add button                       Install button and what it needs.
-  remix add button card dialog           Install several items at once.
+  remix add button card checkbox         Install several items at once.
   remix add button --dry-run             Print the plan and change nothing.
   remix add button --diff --exit-code    Exit 2 on drift, for CI.
   remix add @acme/card                   Install from a registry you added.
@@ -249,9 +249,10 @@ look, then `--overwrite` deliberately.
 Generated adapters are not your problem. `button.g.dart` is regenerated
 whenever its authored source is rewritten or the adapter is missing, and the
 CLI verifies the file exists afterwards rather than assuming the build worked.
-The current `mix_generator` writes `this.` qualifiers that `flutter_lints`
-reports as infos, so exclude `lib/ui/**/*.g.dart` under `analyzer: exclude:`
-in `analysis_options.yaml`.
+With `mix_generator` 2.3.0, the generated adapters pass the default
+`flutter_lints` without an analyzer exclusion. Only if you're using an older
+generator and see `unnecessary_this` infos in its output do you need to exclude
+`lib/ui/**/*.g.dart` to silence them.
 </Note>
 
 ## Dependency rules

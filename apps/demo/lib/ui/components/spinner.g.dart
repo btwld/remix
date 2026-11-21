@@ -25,12 +25,11 @@ class FortalSpinner extends StatelessWidget {
   final String? semanticsValue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSpinner(
-      key: this.key,
-      style: fortalSpinnerStyle(size: this.size, style: this.style),
-      semanticsLabel: this.semanticsLabel,
-      semanticsValue: this.semanticsValue,
+      style: fortalSpinnerStyle(size: size, style: style),
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
     );
   }
 }

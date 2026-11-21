@@ -189,6 +189,8 @@ class AgentSourcesStyler extends MixStyler<AgentSourcesStyler, AgentSourcesSpec>
       AgentSourcesStyler().source(value);
   factory AgentSourcesStyler.sourceLabel(TextStyler value) =>
       AgentSourcesStyler().sourceLabel(value);
+  factory AgentSourcesStyler.wrap(WidgetModifierConfig value) =>
+      AgentSourcesStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {

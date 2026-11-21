@@ -189,6 +189,8 @@ class AgentMessageStyler extends MixStyler<AgentMessageStyler, AgentMessageSpec>
       AgentMessageStyler().maxWidthFactor(value);
   factory AgentMessageStyler.collapsedHeight(double value) =>
       AgentMessageStyler().collapsedHeight(value);
+  factory AgentMessageStyler.wrap(WidgetModifierConfig value) =>
+      AgentMessageStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {

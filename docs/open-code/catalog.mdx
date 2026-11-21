@@ -250,33 +250,10 @@ surface. Registry templates resolve the `iconLibrary` in `remix.yaml` to either
 selected package. Outline and Rounded each draw every icon the presets use, so
 neither adds Lucide. See [Icons in registry presets](/guides/icons#icons-in-registry-presets)
 for how presets size those icons.
-Six items use icon placeholders in every preset: `icons`, `dashboard_shell`,
-`dashboard_demo`, `agent_glyphs_recipe`, `date_picker`, and `date_range_picker`.
-Vanilla and Fortal add `breadcrumbs` and `search_field`; HeroUI adds
-`breadcrumbs`, `close_button`, and `search_field`.
-To switch an existing install, change `iconLibrary`, then reinstall every one
-of those you have installed in one command, reviewing first (`--overwrite`
-replaces only the items you name, so one left out keeps the old library).
-For Vanilla:
 
-```shell
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --diff
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --overwrite
-```
-
-For Fortal:
-
-```shell
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --diff
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs search_field --overwrite
-```
-
-For HeroUI:
-
-```shell
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs close_button search_field --diff
-remix add icons dashboard_shell dashboard_demo agent_glyphs_recipe date_picker date_range_picker breadcrumbs close_button search_field --overwrite
-```
+To switch an existing install, follow the CLI's [icon-library switching instructions](https://github.com/btwld/remix/blob/main/packages/remix_cli/README.md#switch-icon-libraries)
+to find the installed items that own icon templates at your pin and preview
+their diffs before you overwrite them.
 
 Icons you reference in your own code stay as you wrote them. Import
 `package:remix_ui_icons/remix_ui_icons.dart` directly when you need the rest of

@@ -1,5 +1,7 @@
 # Fortal Reference
 
+<!-- remix-preset: fortal -->
+
 Rules for the Fortal preset that are easy to get wrong from a widget's name
 or dartdoc alone. For component variants, sizes, and defaults, the installed
 recipe's enum in `lib/ui/components/<name>.dart` is authoritative — this
@@ -244,19 +246,14 @@ navigation landmark named "Breadcrumb"; pass a localized `semanticLabel`.
 
 ## Search field
 
-`remix add search_field` installs `<Prefix>SearchField`, a stateful
-composition over `<Prefix>TextField` with the same `variant` (`.surface`,
-`.soft`) and `size` (`.size1`–`.size3`, default size2), so it matches a text
-field's height and look. `semanticLabel` is required; there is no label or
-helper text. It owns a controller and focus node only when you pass none, and
-defaults `textInputAction` to search. The clear button appears while the field
-is enabled, editable and not empty; it clears, calls `onChanged('')` and
-`onCleared`, and refocuses the field. It is an overlay centred in the field's
-last 40px, so a 24/32px field keeps its height, and the text stops where its
-target starts. It is no Tab stop: Escape clears instead, and holding it clears
-once without closing a dialog. On an empty field Escape passes on (a dialog
-still closes); during input-method composition it is left to the IME.
-Localize `clearSemanticLabel`.
+`remix add search_field` installs `<Prefix>SearchField`. It uses
+`NakedSearchField` for [shared search behavior](components.md#forms) and
+`<Prefix>TextField` for the editor, matching its `variant` (`.surface`, `.soft`)
+and `size` (`.size1`–`.size3`, default size2). `semanticLabel` is required;
+there is no visible label or helper text. Clear overlays the trailing
+`touchTargetMin` (at least 40px) without increasing the field height or
+overlapping the editor's tap area. It is not a Tab stop. Localize
+`clearSemanticLabel`.
 
 ## Surface
 

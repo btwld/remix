@@ -116,29 +116,28 @@ class UiSlider extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSlider(
-      key: this.key,
       style: uiSliderStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      value: this.value,
-      onChanged: this.onChanged,
-      onChangeStart: this.onChangeStart,
-      onChangeEnd: this.onChangeEnd,
-      min: this.min,
-      max: this.max,
-      enabled: this.enabled,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      snapDivisions: this.snapDivisions,
-      semanticLabel: this.semanticLabel,
-      semanticFormatterCallback: this.semanticFormatterCallback,
-      excludeSemantics: this.excludeSemantics,
+      value: value,
+      onChanged: onChanged,
+      onChangeStart: onChangeStart,
+      onChangeEnd: onChangeEnd,
+      min: min,
+      max: max,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      snapDivisions: snapDivisions,
+      semanticLabel: semanticLabel,
+      semanticFormatterCallback: semanticFormatterCallback,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

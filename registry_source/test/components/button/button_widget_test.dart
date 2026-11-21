@@ -8,6 +8,20 @@ import '../../helpers/test_helpers.dart';
 
 void main() {
   group('FortalButton wrapper widget', () {
+    testWidgets('keeps the GlobalKey on the adapter', (tester) async {
+      final key = GlobalKey();
+      await tester.pumpRemixApp(FortalButton.soft(key: key, label: 'Save'));
+
+      final adapter = find.byKey(key);
+      expect(adapter, findsOneWidget);
+      expect(tester.widget(adapter), isA<FortalButton>());
+      final button = find.descendant(
+        of: adapter,
+        matching: find.byType(RemixButton),
+      );
+      expect(tester.widget<RemixButton>(button).key, isNull);
+    });
+
     testWidgets('renders generated button and forwards core params', (
       tester,
     ) async {

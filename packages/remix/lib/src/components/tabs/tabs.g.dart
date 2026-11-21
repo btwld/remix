@@ -527,6 +527,8 @@ class TabBarStyler extends MixStyler<TabBarStyler, TabBarSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => TabBarStyler().transform(value, alignment: alignment);
+  factory TabBarStyler.wrap(WidgetModifierConfig value) =>
+      TabBarStyler().wrap(value);
 
   TabBarStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
@@ -1221,6 +1223,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
       TabStyler().textBaseline(value);
   factory TabStyler.transform(Matrix4 value, {Alignment alignment = .center}) =>
       TabStyler().transform(value, alignment: alignment);
+  factory TabStyler.wrap(WidgetModifierConfig value) => TabStyler().wrap(value);
 
   TabStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
@@ -1635,7 +1638,6 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
       key: key,
       style: this,
       tabId: tabId,
-      child: child,
       label: label,
       icon: icon,
       enabled: enabled,
@@ -1648,6 +1650,7 @@ class TabStyler extends MixStyler<TabStyler, TabSpec>
       onPressChange: onPressChange,
       builder: builder,
       semanticLabel: semanticLabel,
+      child: child,
     );
   }
 
@@ -1927,6 +1930,8 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => TabViewStyler().transform(value, alignment: alignment);
+  factory TabViewStyler.wrap(WidgetModifierConfig value) =>
+      TabViewStyler().wrap(value);
 
   TabViewStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -2270,8 +2275,8 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
       key: key,
       style: this,
       tabId: tabId,
-      child: child,
       maintainState: maintainState,
+      child: child,
     );
   }
 

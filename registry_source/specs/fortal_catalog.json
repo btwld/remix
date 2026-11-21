@@ -803,6 +803,7 @@
       "fortalType": "FortalCombobox",
       "enums": {
         "size": {
+          "enumOwner": "text_field",
           "values": [
             "size1",
             "size2",
@@ -811,6 +812,7 @@
           "default": "size2"
         },
         "variant": {
+          "enumOwner": "text_field",
           "values": [
             "surface",
             "soft"
@@ -892,6 +894,7 @@
       "fortalType": "FortalRangeSlider",
       "enums": {
         "size": {
+          "enumOwner": "slider",
           "values": [
             "size1",
             "size2",
@@ -900,6 +903,7 @@
           "default": "size2"
         },
         "variant": {
+          "enumOwner": "slider",
           "values": [
             "surface",
             "soft"
@@ -972,6 +976,7 @@
       "fortalType": "FortalSurface",
       "enums": {
         "size": {
+          "enumOwner": "card",
           "values": [
             "size1",
             "size2",
@@ -1259,6 +1264,7 @@
     },
     {
       "id": "text_area",
+      "recipe": "text_field",
       "fortalType": "FortalTextArea",
       "enums": {
         "size": {
@@ -1270,6 +1276,7 @@
           "default": "size2"
         },
         "variant": {
+          "enumOwner": "text_field",
           "values": [
             "surface",
             "soft"
@@ -1559,6 +1566,7 @@
     },
     {
       "id": "text",
+      "enumRecipe": "typography",
       "fortalType": "FortalText",
       "enums": {
         "size": {
@@ -1614,6 +1622,7 @@
       "fortalType": "FortalHeading",
       "enums": {
         "size": {
+          "enumOwner": "text",
           "values": [
             "size1",
             "size2",
@@ -1628,6 +1637,7 @@
           "default": "size6"
         },
         "weight": {
+          "enumOwner": "text",
           "values": [
             "light",
             "regular",
@@ -1669,6 +1679,7 @@
       "fortalType": "FortalCode",
       "enums": {
         "size": {
+          "enumOwner": "text",
           "values": [
             "size1",
             "size2",
@@ -1692,6 +1703,7 @@
           "default": "soft"
         },
         "weight": {
+          "enumOwner": "text",
           "values": [
             "light",
             "regular",
@@ -1731,6 +1743,7 @@
       "fortalType": "FortalKbd",
       "enums": {
         "size": {
+          "enumOwner": "text",
           "values": [
             "size1",
             "size2",
@@ -1767,6 +1780,7 @@
       "fortalType": "FortalLink",
       "enums": {
         "size": {
+          "enumOwner": "text",
           "values": [
             "size1",
             "size2",
@@ -1781,6 +1795,7 @@
           "default": null
         },
         "weight": {
+          "enumOwner": "text",
           "values": [
             "light",
             "regular",

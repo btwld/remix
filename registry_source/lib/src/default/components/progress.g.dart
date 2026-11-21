@@ -30,13 +30,12 @@ class VanillaProgress extends StatelessWidget {
   final String? semanticsValue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixProgress(
-      key: this.key,
-      style: vanillaProgressStyle(style: this.style),
-      value: this.value,
-      semanticsLabel: this.semanticsLabel,
-      semanticsValue: this.semanticsValue,
+      style: vanillaProgressStyle(style: style),
+      value: value,
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
     );
   }
 }

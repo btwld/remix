@@ -40,7 +40,7 @@ Install the CLI release candidate globally and confirm its version:
 {/* tutorial-source: install-cli */}
 
 ```bash
-dart pub global activate remix_cli '^1.0.0-rc.1'
+dart pub global activate remix_cli '^1.0.0-rc.2'
 remix --version
 ```
 
@@ -60,6 +60,10 @@ remix init --prefix Acme --preset vanilla
 Initialization resolves the official registry's stable branch to a commit,
 records it in `remix.yaml`, and writes a managed barrel at `lib/ui/ui.dart`.
 It does not install a component yet.
+
+To reproduce the archived sample after a registry promotion, run
+`remix registry update @remix --ref <revision>` before installing anything.
+Use the `revision` in the sample's `remix.yaml`.
 
 Preview the first install:
 
@@ -154,11 +158,13 @@ sample directory for the remaining CLI commands.
 
 Install the remaining recipes, one item per command:
 
+{/* remix-preset: vanilla */}
+
 {/* tutorial-source: install-screen */}
 
 ```bash
 remix add checkbox
-remix add textfield
+remix add text_field
 remix add dialog
 remix add card
 remix add sidebar
@@ -259,7 +265,8 @@ cd remix_fortal_demo
 
 Initialize Fortal and install its recipes using the same global CLI. The Fortal theme
 does not depend on `remix_ui_fonts`, so the last command adds Geist for the
-application:
+application. If you're reproducing the download, pin its Fortal revision after
+`init` as described for Vanilla:
 
 {/* tutorial-source: install-fortal */}
 
@@ -267,7 +274,7 @@ application:
 remix init --prefix Acme --preset fortal
 remix add button
 remix add checkbox
-remix add textfield
+remix add text_field
 remix add dialog
 remix add card
 remix add sidebar

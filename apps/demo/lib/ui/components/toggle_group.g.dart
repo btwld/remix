@@ -87,23 +87,22 @@ class FortalToggleGroup<T> extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixToggleGroup<T>(
-      key: this.key,
       style: fortalToggleGroupStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      items: this.items,
-      selectedValue: this.selectedValue,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      orientation: this.orientation,
-      loop: this.loop,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+      items: items,
+      selectedValue: selectedValue,
+      onChanged: onChanged,
+      enabled: enabled,
+      orientation: orientation,
+      loop: loop,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

@@ -116,17 +116,16 @@ class UiToast extends StatelessWidget {
   final bool excludeMessageSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixToast(
-      key: this.key,
-      style: uiToastStyle(variant: this.variant, style: this.style),
-      title: this.title,
-      description: this.description,
-      icon: this.icon,
-      action: this.action,
-      onDismiss: this.onDismiss,
-      dismissLabel: this.dismissLabel,
-      excludeMessageSemantics: this.excludeMessageSemantics,
+      style: uiToastStyle(variant: variant, style: style),
+      title: title,
+      description: description,
+      icon: icon,
+      action: action,
+      onDismiss: onDismiss,
+      dismissLabel: dismissLabel,
+      excludeMessageSemantics: excludeMessageSemantics,
     );
   }
 }

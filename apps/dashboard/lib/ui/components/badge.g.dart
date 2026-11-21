@@ -83,18 +83,17 @@ class UiBadge extends StatelessWidget {
   final RemixBadgeLabelBuilder? labelBuilder;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixBadge(
-      key: this.key,
       style: uiBadgeStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      label: this.label,
-      child: this.child,
-      labelBuilder: this.labelBuilder,
+      label: label,
+      labelBuilder: labelBuilder,
+      child: child,
     );
   }
 }

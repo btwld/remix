@@ -6,6 +6,10 @@ The [machine-readable catalog](fortal_catalog.json) lists every shipped family,
 its axes, constructor defaults, and behavior. The public component APIs remain
 size-linked recipes over Remix; no behavioral component is reimplemented.
 
+In the catalog, `recipe` overrides the family ID when locating its Dart file.
+An axis with `enumOwner` uses that family's enum. The owner can set `enumRecipe`
+when its enum declarations live outside its widget recipe.
+
 ## Sources and decisions
 
 The [design provenance](../docs/fortal/refresh-brief.md) records the original
@@ -312,43 +316,30 @@ truncation, RTL and 200% text.
 
 ## Search field
 
-Search field promotes the dashboard's three hand-built search inputs into the
-registry. `FortalSearchField` is a hand-written stateful composition over
-`FortalTextField`: its `FortalSearchFieldSize` size1–size3 and
-`FortalSearchFieldVariant` surface/soft select the text field's own size and
-variant, so height, padding, frame, fill, focus ring, hint and disabled
-colors are the text field's at every size and text scale. There is no label
-or helper text; the required `semanticLabel` names the field. The leading
-`search` glyph takes the field's icon theme (16px, gray11 on surface, accent
-content on soft), and `textInputAction` defaults to search. The field owns a
-controller and focus node only when the caller gives none.
+`FortalSearchField` uses `NakedSearchField` for behavior and `FortalTextField`
+for the editor. The size (`size1`–`size3`) and variant (`surface` or `soft`)
+match the text field at each text scale. There is no visible label or helper
+text; `semanticLabel` names the field. The leading `search` glyph takes the
+field's icon theme (16px, gray11 on surface, accent content on soft).
+`textInputAction` defaults to search. Caller-supplied controllers and focus
+nodes remain caller-owned. Removing the caller's controller preserves its
+last editing value.
 
 The clear button is a ghost icon button: size1 (12px `close` glyph) on size1
 and size2 fields and size2 (16px) on size3, gray11 with grayA3/grayA4 hover
-and press on surface, accent content on soft. A 40px target would make a
-24/32px field 40px tall if it sat in the field's row, so it is an overlay:
-the button is centred in the field's last `touchTargetMin` (40px, never less),
-its whole target inside the field. A trailing spacer is always present, so
-the input stops where that target starts, at least one field spacing short of
-its glyph, and keeps one width and structure whether or not there is text; a
-tap on the text never lands on the button. It shows only
-while the field is enabled, editable and not empty. Pressing it or invoking
-its semantic tap action clears the text, calls `onChanged('')` before
-`onCleared`, and returns focus to the field;
-it sits inside the field's tap region and excludes focus, so it is no Tab
-stop. It is its own semantics container: merged into the node around the
-field, it would turn that node into a button once there is text, and Flutter
-web, whose input element hangs from the semantics tree, then drops every key
-after the first. A caller controller that is withdrawn leaves its last value
-in the field's own controller. Escape is the keyboard path: it clears when
-there is text to clear, and the repeats and release of that press are
-consumed with it, so holding Escape never also closes a dialog. With nothing
-to clear it passes on, so a dialog still closes. During input-method
-composition it skips the remaining handlers, leaving the key to the IME. A caller `style` merges last into the field.
-Tests cover both modes and variants, every size at 100% and 200% text in both
-directions, the clear target, keyboard focus and Escape, composition,
-controller swaps, semantics, and the editor and its semantics node surviving
-the clear button's arrival and departure.
+and press on surface, accent content on soft. Its trailing `touchTargetMin`
+(40px minimum) overlay avoids increasing the field height. The editor always
+reserves that space, so its width and tap area do not change when Clear
+appears. Clear is visible only when the field is enabled, editable, and
+nonempty. It shares the editor's tap region, takes no Tab stop, and has its
+own semantics node so Flutter web does not lose editor focus when it appears.
+
+Clear empties the text, calls `onChanged('')` before `onCleared`, and returns
+focus to the editor whether activated by tap, semantics, or Escape. An Escape
+that clears also consumes repeats and release. During active composition in
+an enabled, editable field, the input method keeps the press through release.
+A fresh Escape in a read-only or empty field bubbles, even if a read-only
+editor retains a composing range. A caller `style` merges last.
 
 ## Surface
 

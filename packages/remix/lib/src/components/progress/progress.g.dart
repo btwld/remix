@@ -375,6 +375,8 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => ProgressStyler().transform(value, alignment: alignment);
+  factory ProgressStyler.wrap(WidgetModifierConfig value) =>
+      ProgressStyler().wrap(value);
 
   ProgressStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

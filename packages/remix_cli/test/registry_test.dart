@@ -344,6 +344,7 @@ items:
           rendered,
           contains('class ${prefix.type}SidebarLayout extends StatefulWidget'),
         );
+        expect(rendered, contains('=> RemixSidebarLayout('));
         expect(
           rendered,
           contains(

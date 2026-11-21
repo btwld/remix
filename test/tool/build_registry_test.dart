@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
@@ -204,6 +205,28 @@ void main() {
     expect(renderedTheme, isNot(contains('acme_colors.dart')));
   });
 
+  test('closure validation rejects a prefix-dependent palette import', () {
+    final builder = PresetBuilder.forRepository(Directory.current.absolute);
+    final output = builder.derive();
+    const path = 'templates/theme/theme_data.dart.tmpl';
+    final planted = PresetOutput(
+      files: {
+        ...output.files,
+        path: output.files[path]!.replaceFirst(
+          "'fortal_colors.dart'",
+          "'{{valuePrefix}}_colors.dart'",
+        ),
+      },
+      sourceByTemplate: output.sourceByTemplate,
+    );
+    expect(
+      () => builder.validate(planted),
+      _throwsFormatExceptionWith(
+        '_colors.dart, which is not in its fortal install closure',
+      ),
+    );
+  });
+
   test(
     'HeroUI derives every component as a generated recipe and keeps notices',
     () {
@@ -244,7 +267,6 @@ void main() {
       expect(search, isNot(contains('RemixIcons')));
       final button = output.files['templates/button/button.dart.tmpl']!;
       expect(button, contains('{{typePrefix}}Button'));
-      expect(button, isNot(contains('HeroUi')));
       expect(button, isNot(contains('package:registry_source')));
       final notice = output.files['templates/theme/license.dart.tmpl']!;
       expect(notice, contains('Apache License'));
@@ -486,48 +508,6 @@ void main() {
     }
   });
 
-  test('preset output merge rejects file collisions', () {
-    const left = PresetOutput(
-      files: {'registry.yaml': 'schema: 1\nitems:\n', 'templates/a': 'a'},
-      sourceByTemplate: {},
-    );
-    const right = PresetOutput(
-      files: {'registry.yaml': 'schema: 1\nitems:\n', 'templates/a': 'b'},
-      sourceByTemplate: {},
-    );
-    expect(() => mergePresetOutputs(left, right), throwsStateError);
-  });
-
-  test('preset merge rejects item and target collisions before writing', () {
-    PresetOutput fixture(
-      String name,
-      String target,
-      String source,
-    ) => PresetOutput(
-      files: {
-        'registry.yaml':
-            'schema: 1\nitems:\n  $name:\n    files:\n      - source: $source\n        target: "$target"\n',
-        source: 'fixture',
-      },
-      sourceByTemplate: const {},
-    );
-    final base = fixture('one', '@ui/one.dart', 'templates/one');
-    expect(
-      () => mergePresetOutputs(
-        base,
-        fixture('one', '@ui/two.dart', 'templates/two'),
-      ),
-      throwsStateError,
-    );
-    expect(
-      () => mergePresetOutputs(
-        base,
-        fixture('two', '@ui/one.dart', 'templates/two'),
-      ),
-      throwsStateError,
-    );
-  });
-
   late Directory sandbox;
 
   setUp(() {
@@ -556,12 +536,7 @@ void main() {
     }
   });
 
-  test('installed source names its design system only in prose', () {
-    // The two dashboard strings name the city Fortal is named for.
-    const prose = [
-      "'The breeze blocks of Fortaleza façades, one tile at a time.'",
-      "'Fortaleza'",
-    ];
+  test('installed identifiers do not keep their authoring prefixes', () {
     for (final spec in [defaultPreset, fortalPreset, herouiPreset]) {
       final builder = PresetBuilder.forRepository(
         Directory.current,
@@ -575,15 +550,26 @@ void main() {
           valuePrefix: 'zq',
           icons: builder.icons,
         );
-        for (final line in rendered.split('\n')) {
-          final named = spec.fixedFileNames
-              .fold(line, (line, name) => line.replaceAll(name, ''))
-              .contains(RegExp('${spec.typeWord}|${spec.valueWord}'));
-          if (!named) continue;
+        for (
+          var token = parseString(content: rendered).unit.beginToken;
+          !token.isEof;
+          token = token.next!
+        ) {
+          if (!token.isIdentifier) continue;
           expect(
-            line.trimLeft().startsWith('//') || prose.any(line.contains),
-            isTrue,
-            reason: '$path: $line',
+            token.lexeme,
+            isNot(matches('${spec.typeWord}(?=[A-Z0-9])')),
+            reason: path,
+          );
+          expect(
+            token.lexeme,
+            isNot(
+              matches(
+                r'(?:^|[_$])'
+                '${spec.valueWord}(?=[A-Z0-9])',
+              ),
+            ),
+            reason: path,
           );
         }
       }
@@ -630,6 +616,123 @@ const caption = 'Cards in the Fortal style';
 final sum = '{{valuePrefix}}.\${a + b}';
 """);
   });
+
+  test(
+    'consumer prefixes adapt code references but not prose or embedded words',
+    () {
+      final builder = _fixtureBuilder(sandbox);
+      const source =
+          r'''// A FortalInspired view uses comfortalButton, not FortalBadge.
+/* FortalInspired is just text here, too. */
+/// A FortalInspired view (see [FortalBadge.new]).
+/// In Dart: `FortalBadge`, `FortalToken`, and `fortalBadgeStyle`.
+class FortalBadge {}
+
+final comfortalButton = FortalBadge();
+final _resolveFortalBadge = FortalBadge.new;
+const caption = 'A FortalInspired view';
+const brand = 'Fortal-inspired';
+const embedded = 'comfortalButton()';
+const id = 'fortal.color.accent';
+const variantId = 'fortalBadgeDark';
+final display = 'FortalInspired ${FortalBadge()}';
+''';
+      _write(builder.sourceRoot, 'components/badge.dart', source);
+
+      final template = builder
+          .derive()
+          .files['templates/badge/badge.dart.tmpl']!;
+
+      expect(
+        const TemplateRenderer().render(
+          template,
+          typePrefix: 'Acme',
+          valuePrefix: 'acme',
+        ),
+        r'''// A FortalInspired view uses comfortalButton, not AcmeBadge.
+/* FortalInspired is just text here, too. */
+/// A FortalInspired view (see [AcmeBadge.new]).
+/// In Dart: `AcmeBadge`, `AcmeToken`, and `acmeBadgeStyle`.
+class AcmeBadge {}
+
+final comfortalButton = AcmeBadge();
+final _resolveAcmeBadge = AcmeBadge.new;
+const caption = 'A FortalInspired view';
+const brand = 'Fortal-inspired';
+const embedded = 'comfortalButton()';
+const id = 'acme.color.accent';
+const variantId = 'acmeBadgeDark';
+final display = 'FortalInspired ${AcmeBadge()}';
+''',
+      );
+    },
+  );
+
+  group('installed source uses the Acme API', () {
+    for (final (spec, expectations) in [
+      (
+        defaultPreset,
+        {
+          'button/button': '/// AcmeButton.primary(',
+          'theme/theme_scope': "ErrorSummary('No AcmeTheme found.')",
+        },
+      ),
+      (
+        fortalPreset,
+        {
+          'dashboard_demo/dashboard_demo_themes':
+              "AcmeCode('acmeButtonStyle()')",
+        },
+      ),
+    ]) {
+      final builder = PresetBuilder.forRepository(
+        Directory.current,
+        spec: spec,
+      );
+      late PresetOutput output;
+      group(spec.name, () {
+        setUpAll(() => output = builder.derive());
+        for (final entry in expectations.entries) {
+          test(entry.key, () {
+            final rendered = const TemplateRenderer().render(
+              output.files['templates/${entry.key}.dart.tmpl']!,
+              typePrefix: 'Acme',
+              valuePrefix: 'acme',
+              icons: builder.icons,
+            );
+            expect(rendered, contains(entry.value));
+          });
+        }
+      });
+    }
+  });
+
+  test(
+    'interpolated ID segments can precede literal and interpolated segments',
+    () {
+      final builder = _fixtureBuilder(sandbox);
+      _write(builder.sourceRoot, 'components/badge.dart', r'''
+final color = 'fortal.$group.accent';
+final variant = 'fortal.${group}.${variantName}';
+const raw = r'fortal.color.accent';
+const typed = 'Fortal.color.accent';
+''');
+
+      expect(
+        const TemplateRenderer().render(
+          builder.derive().files['templates/badge/badge.dart.tmpl']!,
+          typePrefix: 'Acme',
+          valuePrefix: 'acme',
+        ),
+        r'''
+final color = 'acme.$group.accent';
+final variant = 'acme.${group}.${variantName}';
+const raw = r'acme.color.accent';
+const typed = 'Acme.color.accent';
+''',
+      );
+    },
+  );
 
   test('refuses the authoring word where neither a prefix nor prose fits', () {
     final builder = _fixtureBuilder(sandbox);
@@ -804,6 +907,80 @@ final sum = '{{valuePrefix}}.\${a + b}';
       '@ui/components/button.g.dart',
     ]);
   });
+
+  test('both branches of conditional imports and exports install', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(builder.sourceRoot, 'components/native.dart', '');
+    _write(builder.sourceRoot, 'components/web.dart', '');
+    for (final directive in ['import', 'export']) {
+      _write(
+        builder.sourceRoot,
+        'components/platform.dart',
+        "$directive 'native.dart' if (dart.library.js_interop) 'web.dart';\n",
+      );
+
+      final output = builder.derive();
+      final items =
+          loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+
+      expect(_strings(items['platform']['registryDependencies']), [
+        'native',
+        'web',
+      ]);
+      expect(() => builder.validate(output), returnsNormally);
+    }
+  });
+
+  test('a missing conditional branch is rejected during source validation', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(builder.sourceRoot, 'components/native.dart', '');
+    _write(
+      builder.sourceRoot,
+      'components/platform.dart',
+      "export 'native.dart' if (dart.library.js_interop) 'web.dart';\n",
+    );
+
+    expect(
+      builder.derive,
+      _throwsFormatExceptionWith(
+        'platform.dart: missing relative source web.dart',
+      ),
+    );
+  });
+
+  test(
+    'validation requires conditional targets in the transitive install closure',
+    () {
+      final builder = _fixtureBuilder(sandbox);
+      _write(builder.sourceRoot, 'components/web.dart', '');
+      _write(
+        builder.sourceRoot,
+        'components/platform.dart',
+        "export 'native.dart';\n",
+      );
+      PresetOutput withConditionalBranch(String nativeSource) {
+        _write(builder.sourceRoot, 'components/native.dart', nativeSource);
+        return PresetOutput(
+          files: {
+            ...builder.derive().files,
+            'templates/platform/platform.dart.tmpl':
+                "export 'native.dart' if (dart.library.js_interop) 'web.dart';\n",
+          },
+          sourceByTemplate: const {},
+        );
+      }
+
+      expect(
+        () => builder.validate(withConditionalBranch("export 'web.dart';\n")),
+        returnsNormally,
+      );
+      final outsideClosure = withConditionalBranch('');
+      expect(
+        () => builder.validate(outsideClosure),
+        _throwsFormatExceptionWith('platform imports web.dart'),
+      );
+    },
+  );
 
   test('refuses Fortal path segments before reading registry metadata', () {
     final builder = _emptyBuilder(sandbox);
@@ -1134,88 +1311,6 @@ void acmeDialStyle() {}
     );
   });
 
-  test('a recipe rewrites the behavior import and word, then sorts', () {
-    final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
-    _writeAcmeSources(builder);
-    _write(
-      builder.sourceRoot,
-      'recipes/dial_recipe.dart',
-      """import 'package:remix/remix.dart';
-import '../../bot/components/dial.dart';
-
-import '../core/core.dart';
-import '../widgets/dial.dart';
-
-final class AcmeBotDialRecipe {
-  const AcmeBotDialRecipe(this.style);
-  final BotDialStyler style;
-}
-
-AcmeBotDialRecipe acmeBotDialRecipe() =>
-    AcmeBotDialRecipe(BotDialStyler().merge(acmeDialStyle()));
-""",
-    );
-    final output = builder.derive();
-    final template = output.files['templates/recipes/dial_recipe.dart.tmpl']!;
-    expect(template, """import 'package:remix/remix.dart';
-
-import '../components/dial.dart';
-import '../core/core.dart';
-import '../widgets/dial.dart';
-
-final class {{typePrefix}}BotDialRecipe {
-  const {{typePrefix}}BotDialRecipe(this.style);
-  final {{typePrefix}}DialStyler style;
-}
-
-{{typePrefix}}BotDialRecipe {{valuePrefix}}BotDialRecipe() =>
-    {{typePrefix}}BotDialRecipe({{typePrefix}}DialStyler().merge({{valuePrefix}}DialStyle()));
-""");
-    final items = loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
-    expect(
-      _strings((items['dial_recipe'] as YamlMap)['registryDependencies']),
-      ['core', 'dial'],
-    );
-    expect(
-      (items['dial_recipe'] as YamlMap)['files'].first['target'],
-      '@ui/recipes/dial_recipe.dart',
-    );
-  });
-
-  test(
-    'behavior imports are refused outside recipes and beyond components',
-    () {
-      final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
-      _writeAcmeSources(builder);
-      _write(
-        builder.sourceRoot,
-        'widgets/gauge.dart',
-        "import '../../bot/components/dial.dart';\n",
-      );
-      _write(
-        builder.sourceRoot,
-        'recipes/dial_recipe.dart',
-        "import '../../bot/support/glyph.dart';\n",
-      );
-      expect(
-        builder.derive,
-        throwsA(
-          isA<FormatException>().having(
-            (error) => error.message,
-            'message',
-            allOf(
-              contains('widgets/gauge.dart: only recipes may import'),
-              contains(
-                'recipes/dial_recipe.dart: recipes import behavior '
-                'components only',
-              ),
-            ),
-          ),
-        ),
-      );
-    },
-  );
-
   test('recipes and declared recipe items must agree', () {
     final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
     _writeAcmeSources(builder);
@@ -1243,25 +1338,19 @@ final class {{typePrefix}}BotDialRecipe {
     );
   });
 
-  test('a recipe importing something the preset never installs is refused', () {
+  test('single-file recipes reject unmapped sibling imports', () {
     final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
     _writeAcmeSources(builder);
+    _write(sandbox, 'external/dial.dart', 'class Dial {}\n');
     _write(
       builder.sourceRoot,
       'recipes/dial_recipe.dart',
-      "import '../../bot/components/dial.dart';\n",
+      "import '../../external/dial.dart';\n",
     );
-    // Derivation defers the behavior component to the merge; validation of
-    // the un-merged preset is where it surfaces.
-    final output = builder.derive();
     expect(
-      () => builder.validate(output),
-      throwsA(
-        isA<FormatException>().having(
-          (error) => error.message,
-          'message',
-          contains('dial_recipe imports ../components/dial.dart'),
-        ),
+      builder.derive,
+      _throwsFormatExceptionWith(
+        'recipes/dial_recipe.dart: missing relative source ../../external/dial.dart',
       ),
     );
   });
@@ -1369,6 +1458,26 @@ final class {{typePrefix}}BotDialRecipe {
     );
   });
 
+  test('grouped recipes rebase each conditional branch', () {
+    final builder = _emptyBuilder(sandbox, spec: _acmeWithGroupedRecipes);
+    _writeGroupedAcmeSources(builder);
+    _write(
+      builder.sourceRoot,
+      'recipes/dashboard/dashboard_shell.dart',
+      "export '../../../dashboard/' 'dashboard_shell_base.dart'\n"
+          "    if (dart.library.js_interop) r'../../../dashboard/dashboard_navigation.dart';\n",
+    );
+
+    final output = builder.derive();
+
+    expect(
+      output.files['templates/dashboard_shell/dashboard_shell.dart.tmpl'],
+      'export "dashboard_shell_base.dart"\n'
+      "    if (dart.library.js_interop) r'dashboard_navigation.dart';\n",
+    );
+    expect(() => builder.validate(output), returnsNormally);
+  });
+
   test('grouped recipes reject target collisions', () {
     final builder = _emptyBuilder(sandbox, spec: _acmeWithGroupedCollision);
     _writeGroupedAcmeSources(builder);
@@ -1382,6 +1491,44 @@ final class {{typePrefix}}BotDialRecipe {
         ),
       ),
     );
+  });
+
+  test('the complete catalog rejects collisions with generated targets', () {
+    final builder = _fixtureBuilder(sandbox);
+    final output = builder.derive();
+    final colliding = PresetOutput(
+      files: {
+        ...output.files,
+        'registry.yaml':
+            '${output.files['registry.yaml']}\n'
+            '  extra:\n'
+            '    files:\n'
+            '      - source: templates/extra/extra.dart.tmpl\n'
+            '        target: "@ui/components/button.g.dart"\n',
+        'templates/extra/extra.dart.tmpl': '',
+      },
+      sourceByTemplate: output.sourceByTemplate,
+    );
+    expect(
+      () => builder.write(colliding),
+      _throwsFormatExceptionWith('both target @ui/components/button.g.dart'),
+    );
+    expect(builder.outputRoot.existsSync(), isFalse);
+  });
+
+  test('the complete catalog cannot reference a missing template', () {
+    final builder = _fixtureBuilder(sandbox);
+    final output = builder.derive();
+    const missing = 'templates/button/button.dart.tmpl';
+    final incomplete = PresetOutput(
+      files: {...output.files}..remove(missing),
+      sourceByTemplate: output.sourceByTemplate,
+    );
+    expect(
+      () => builder.write(incomplete),
+      _throwsFormatExceptionWith('button is missing template $missing'),
+    );
+    expect(builder.outputRoot.existsSync(), isFalse);
   });
 
   test('grouped dependency cycles are rejected before output changes', () {
@@ -1446,14 +1593,13 @@ const _acmePreset = PresetSpec(
       exports: ['core/core.dart'],
     ),
   ],
-  copiedItems: [],
   ignoredSourceFiles: {},
   floorPackages: {'remix'},
   detectedPackages: [],
   composedRegistryDependencies: {},
 );
 
-/// [_acmePreset] styling a `remix_bot` behavior through one recipe.
+/// [_acmePreset] with one recipe.
 const _acmeWithRecipes = PresetSpec(
   name: 'acme',
   sourceRoot: 'registry_source/acme',
@@ -1470,18 +1616,11 @@ const _acmeWithRecipes = PresetSpec(
       exports: ['core/core.dart'],
     ),
   ],
-  copiedItems: [],
   ignoredSourceFiles: {},
   floorPackages: {'remix'},
   detectedPackages: [],
   composedRegistryDependencies: {},
   recipeItems: ['dial_recipe'],
-  behavior: BehaviorSpec(
-    directory: 'bot',
-    typeWord: 'Bot',
-    valueWord: 'bot',
-    componentDirectory: 'components',
-  ),
 );
 
 const _acmeWithGroupedRecipes = PresetSpec(
@@ -1492,7 +1631,6 @@ const _acmeWithGroupedRecipes = PresetSpec(
   valueWord: 'acme',
   componentDirectory: 'widgets',
   sharedItems: [],
-  copiedItems: [],
   ignoredSourceFiles: {},
   floorPackages: {'remix'},
   detectedPackages: [],
@@ -1551,7 +1689,6 @@ const _acmeWithGroupedCollision = PresetSpec(
   valueWord: 'acme',
   componentDirectory: 'widgets',
   sharedItems: [],
-  copiedItems: [],
   ignoredSourceFiles: {},
   floorPackages: {'remix'},
   detectedPackages: [],
@@ -1582,7 +1719,6 @@ const _acmeWithGroupedCycle = PresetSpec(
   valueWord: 'acme',
   componentDirectory: 'widgets',
   sharedItems: [],
-  copiedItems: [],
   ignoredSourceFiles: {},
   floorPackages: {'remix'},
   detectedPackages: [],
@@ -1612,17 +1748,6 @@ const _acmeWithGroupedCycle = PresetSpec(
 );
 
 void _writeAcmeSources(PresetBuilder builder) {
-  // The behavior the recipe styles, a sibling of the preset source.
-  _write(
-    Directory(p.join(builder.sourceRoot.parent.path, 'bot')),
-    'components/dial.dart',
-    'class BotDialStyler {}\n',
-  );
-  _write(
-    Directory(p.join(builder.sourceRoot.parent.path, 'bot')),
-    'support/glyph.dart',
-    '',
-  );
   _write(builder.sourceRoot, 'core/core.dart', "export 'tokens.dart';\n");
   _write(
     builder.sourceRoot,
@@ -1704,17 +1829,7 @@ const _fortalFixture = PresetSpec(
       exports: ['theme/theme.dart'],
     ),
   ],
-  copiedItems: [
-    CopiedItemSpec(
-      name: 'icons',
-      templatePath: 'templates/icons/icons.dart.tmpl',
-      target: '@ui/icons.dart',
-      registryDependencies: ['theme'],
-      packages: {'remix_ui_icons'},
-      exports: ['icons.dart'],
-    ),
-  ],
-  ignoredSourceFiles: {'icons.dart'},
+  ignoredSourceFiles: {},
   floorPackages: {
     'remix',
     'mix_annotations',
@@ -1796,12 +1911,15 @@ items:
       - source: templates/icons/icons.dart.tmpl
         target: "@ui/icons.dart"
 ''');
-  _write(
-    root,
-    'templates/icons/icons.dart.tmpl',
-    'abstract final class {{typePrefix}}Icons {}\n',
-  );
 }
+
+Matcher _throwsFormatExceptionWith(String text) => throwsA(
+  isA<FormatException>().having(
+    (error) => error.message,
+    'message',
+    contains(text),
+  ),
+);
 
 void _write(Directory root, String relativePath, String source) {
   final file = File(p.joinAll([root.path, ...p.posix.split(relativePath)]));

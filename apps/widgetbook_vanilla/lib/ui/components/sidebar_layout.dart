@@ -5,9 +5,6 @@ import 'package:remix/remix.dart';
 
 import '../theme/tokens.dart';
 
-const _closeNavigationLabel = 'Close navigation';
-const _navigationSemanticLabel = 'Navigation';
-
 /// Width left outside the compact sheet so its scrim stays reachable.
 const _compactSheetBarrierGutter = 56.0;
 
@@ -96,266 +93,105 @@ class VanillaSidebarLayout extends StatefulWidget {
 
   @override
   State<VanillaSidebarLayout> createState() => _VanillaSidebarLayoutState();
-}
 
-class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
-  bool _selfOpen = false;
-  bool _sheetShowing = false;
-
-  /// The presentation as of the last build, so [_openCompact] can no-op while
-  /// wide even when called outside a build.
-  bool _isCompact = false;
-
-  /// The route [showRemixDialog] pushed for the sheet, captured in its builder
-  /// so [_removeSheetRoute] closes exactly that route on the Navigator that
-  /// owns it.
-  Route<void>? _sheetRoute;
-
-  bool get _effectiveOpen => widget.compactOpen ?? _selfOpen;
-
-  void _setOpen(bool value) {
-    if (_effectiveOpen == value) return;
-    if (widget.compactOpen == null) {
-      setState(() => _selfOpen = value);
-    }
-    widget.onCompactOpenChanged?.call(value);
-  }
-
-  // No-op while wide, so open state never carries over to the next compact
-  // presentation.
-  void _openCompact() {
-    if (!_isCompact) return;
-    _setOpen(true);
-  }
-
-  void _closeCompact() => _setOpen(false);
-
-  void _reconcileSheet(bool isCompact) {
-    _isCompact = isCompact;
-    final desiredOpen = isCompact && _effectiveOpen;
-    if (desiredOpen == _sheetShowing) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      if (_isCompact && _effectiveOpen) {
-        if (!_sheetShowing) _pushSheet();
-      } else if (_sheetShowing) {
-        _removeSheetRoute();
-      }
-    });
-  }
-
-  void _removeSheetRoute() {
-    final route = _sheetRoute;
-    if (route == null || !route.isActive) return;
-    route.navigator?.removeRoute(route);
-  }
-
-  Future<void> _pushSheet() async {
-    _sheetShowing = true;
-    final reduceMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    await showRemixDialog<void>(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: _closeNavigationLabel,
-      transitionDuration: reduceMotion
-          ? Duration.zero
-          : const Duration(milliseconds: 250),
-      builder: (dialogContext) {
-        _sheetRoute = ModalRoute.of(dialogContext);
-        final available = MediaQuery.sizeOf(dialogContext).width;
-        final width = math.min(
-          widget.sidebarWidth,
-          math.max(0.0, available - _compactSheetBarrierGutter),
-        );
-        return PopScope<void>(
-          canPop: widget.compactOpen == null,
-          onPopInvokedWithResult: (didPop, _) {
-            if (!didPop) _closeCompact();
-          },
-          child: VanillaSidebarLayoutScope._(
-            isCompact: true,
-            isCompactOpen: true,
-            openCompact: _openCompact,
-            closeCompact: _closeCompact,
-            child: Box(
-              style: BoxStyler().alignment(.centerStart),
-              // A foreground border, so the edge does not shrink `width`.
-              child: Box(
-                style: BoxStyler()
-                    .width(width)
-                    .height(.infinity)
-                    .color(VanillaTokens.sidebar())
-                    .foregroundDecoration(
-                      BoxDecorationMix(
-                        border: BorderDirectionalMix(
-                          end: BorderSideMix(
-                            color: VanillaTokens.sidebarBorder(),
-                          ),
-                        ),
-                      ),
-                    ),
-                child: RemixDialog(
-                  semanticLabel: _navigationSemanticLabel,
-                  child: widget.sidebar,
+  Widget _buildCompactPanel(BuildContext context, Widget child) {
+    final available = MediaQuery.sizeOf(context).width;
+    final width = math.min(
+      sidebarWidth,
+      math.max(0.0, available - _compactSheetBarrierGutter),
+    );
+    return Box(
+      style: BoxStyler().alignment(.centerStart),
+      child: Box(
+        style: BoxStyler()
+            .width(width)
+            .height(.infinity)
+            .color(VanillaTokens.sidebar())
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BorderDirectionalMix(
+                  end: BorderSideMix(color: VanillaTokens.sidebarBorder()),
                 ),
               ),
             ),
-          ),
-        );
-      },
-    );
-    // Reached once, however the route completed.
-    _sheetRoute = null;
-    _sheetShowing = false;
-    if (mounted) _setOpen(false);
-  }
-
-  @override
-  void dispose() {
-    final route = _sheetRoute;
-    if (route != null) {
-      // Navigator mutations must wait until the current tree update finishes.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final navigator = route.navigator;
-        if (navigator != null && navigator.mounted && route.isActive) {
-          navigator.removeRoute(route);
-        }
-      });
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isCompact = constraints.maxWidth < widget.compactBreakpoint;
-        _reconcileSheet(isCompact);
-
-        return VanillaSidebarLayoutScope._(
-          isCompact: isCompact,
-          // Anded with isCompact so it can't read true while wide.
-          isCompactOpen: isCompact && _effectiveOpen,
-          openCompact: _openCompact,
-          closeCompact: _closeCompact,
-          child: isCompact ? _body() : _wideRow(),
-        );
-      },
-    );
-  }
-
-  Widget _wideRow() {
-    final policy = FocusTraversalGroup.maybeOf(context);
-    return RemixReducedMotionBuilder(
-      builder: (context, reduceMotion) => RowBox(
-        style: FlexBoxStyler().crossAxisAlignment(.stretch),
-        children: [
-          AnimatedContainer(
-            width: widget.collapsed
-                ? widget.collapsedWidth
-                : widget.sidebarWidth,
-            duration: reduceMotion
-                ? Duration.zero
-                : const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-            // Grouped so Tab finishes one pane before the other, rather than
-            // zigzagging between controls that sit at similar heights.
-            child: FocusTraversalGroup(policy: policy, child: widget.sidebar),
-          ),
-          Expanded(
-            child: FocusTraversalGroup(
-              policy: policy,
-              child: _body(besideSidebar: true),
-            ),
-          ),
-        ],
+        child: child,
       ),
-    );
-  }
-
-  Widget _body({bool besideSidebar = false}) {
-    final header = widget.header;
-    final ltr = Directionality.of(context) == TextDirection.ltr;
-
-    // Beside the sidebar the column never touches the start edge, so it drops
-    // that inset (a landscape notch). A header keeps clear of the top inset
-    // itself, so the body below drops it, or a scroll view would pad twice.
-    // Both wrappers read this widget's MediaQuery, so neither undoes the other.
-    Widget inset(Widget child, {bool removeTop = false}) =>
-        MediaQuery.removePadding(
-          context: context,
-          removeTop: removeTop,
-          removeLeft: besideSidebar && ltr,
-          removeRight: besideSidebar && !ltr,
-          child: child,
-        );
-
-    return ColumnBox(
-      style: FlexBoxStyler().crossAxisAlignment(.stretch),
-      children: [
-        if (header != null) inset(header),
-        // Stays mounted either way, so its state survives a header coming or
-        // going.
-        Expanded(
-          child: RepaintBoundary(
-            child: inset(widget.body, removeTop: header != null),
-          ),
-        ),
-      ],
     );
   }
 }
 
-/// An inherited scope that provides compact layout state and controls.
-///
-/// Descendants of [VanillaSidebarLayout] and its compact navigation sheet can
-/// read this scope to observe compact mode or toggle the sheet.
+class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
+  final _bodyKey = GlobalKey();
+
+  Widget _scoped(Widget child, {Key? key}) => Builder(
+    key: key,
+    builder: (context) => VanillaSidebarLayoutScope._(
+      RemixSidebarLayoutScope.of(context),
+      () => (_bodyKey.currentContext ?? context)
+          .getInheritedWidgetOfExactType<RemixSidebarLayoutScope>()!,
+      _closeWhileWide,
+      child: child,
+    ),
+  );
+
+  void _closeWhileWide() {
+    if (widget.compactOpen == true) widget.onCompactOpenChanged?.call(false);
+  }
+
+  @override
+  Widget build(BuildContext context) => RemixSidebarLayout(
+    sidebar: _scoped(widget.sidebar),
+    body: _scoped(widget.body, key: _bodyKey),
+    header: widget.header == null ? null : _scoped(widget.header!),
+    compactBreakpoint: widget.compactBreakpoint,
+    inlineWidth: widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
+    compactOpen: widget.compactOpen,
+    onCompactOpenChanged: widget.onCompactOpenChanged,
+    compactPanelBuilder: widget._buildCompactPanel,
+  );
+}
+
+/// Scope available from [VanillaSidebarLayout] and its compact navigation sheet.
 class VanillaSidebarLayoutScope extends InheritedWidget {
-  const VanillaSidebarLayoutScope._({
-    required this.isCompact,
-    required this.isCompactOpen,
-    required this._openCompact,
-    required this._closeCompact,
+  const VanillaSidebarLayoutScope._(
+    this._layout,
+    this._currentLayout,
+    this._closeWhileWide, {
     required super.child,
   });
 
+  final RemixSidebarLayoutScope _layout;
+  final ValueGetter<RemixSidebarLayoutScope> _currentLayout;
+  final VoidCallback _closeWhileWide;
+
   /// Whether the layout is currently in its compact presentation.
-  final bool isCompact;
+  bool get isCompact => _layout.isCompact;
 
-  /// Whether the compact sheet is currently open.
-  ///
-  /// Always `false` outside a compact presentation.
-  final bool isCompactOpen;
+  /// Whether the compact sheet is open. Always false while wide.
+  bool get isCompactOpen => _layout.isCompactOpen;
 
-  final VoidCallback _openCompact;
-  final VoidCallback _closeCompact;
+  /// Opens the compact sheet. Has no effect while wide.
+  void openCompact() => _currentLayout().openCompact();
 
-  /// Opens the compact sheet.
-  ///
-  /// Has no effect when the layout is not compact.
-  void openCompact() => _openCompact();
-
-  /// Closes the compact sheet.
-  ///
-  /// Has no effect when the sheet is already closed.
-  void closeCompact() => _closeCompact();
-
-  /// Returns the nearest [VanillaSidebarLayoutScope] from [context].
-  ///
-  /// Throws a [FlutterError] if no [VanillaSidebarLayout] ancestor is found.
-  static VanillaSidebarLayoutScope of(BuildContext context) {
-    final scope = maybeOf(context);
-    if (scope == null) {
-      throw FlutterError(
-        'VanillaSidebarLayoutScope.of requires a '
-        'VanillaSidebarLayout ancestor.',
-      );
+  /// Requests closure, even while wide if the host still sets compactOpen to true.
+  void closeCompact() {
+    final layout = _currentLayout();
+    if (layout.isCompact) {
+      layout.closeCompact();
+    } else {
+      _closeWhileWide();
     }
-    return scope;
   }
 
-  /// Returns the nearest [VanillaSidebarLayoutScope] from [context], or `null` if none exists.
+  /// Returns the nearest preset scope, or throws if there is no [VanillaSidebarLayout].
+  static VanillaSidebarLayoutScope of(BuildContext context) =>
+      maybeOf(context) ??
+      (throw FlutterError(
+        'VanillaSidebarLayoutScope.of requires a '
+        'VanillaSidebarLayout ancestor.',
+      ));
+
+  /// Returns the nearest preset scope, or null if there is no [VanillaSidebarLayout].
   static VanillaSidebarLayoutScope? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<VanillaSidebarLayoutScope>();
 

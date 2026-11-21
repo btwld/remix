@@ -81,7 +81,6 @@ class AcmeLineChart extends StatelessWidget {
   @override
   Widget build(BuildContext _) {
     return LineChart(
-      key: key,
       style: acmeLineChartStyle(
         showMarkers: showMarkers,
         palette: palette,
@@ -180,7 +179,6 @@ class AcmeBarChart extends StatelessWidget {
   @override
   Widget build(BuildContext _) {
     return BarChart(
-      key: key,
       style: acmeBarChartStyle(palette: palette, style: style),
       groups: groups,
       xAxis: xAxis,
@@ -269,7 +267,6 @@ class AcmePieChart extends StatelessWidget {
   @override
   Widget build(BuildContext _) {
     return PieChart(
-      key: key,
       style: acmePieChartStyle(
         centerRadius: centerRadius,
         showLabels: showLabels,

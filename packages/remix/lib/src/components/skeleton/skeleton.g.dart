@@ -133,6 +133,8 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
       SkeletonStyler().pulseColor(value);
   factory SkeletonStyler.duration(Duration value) =>
       SkeletonStyler().duration(value);
+  factory SkeletonStyler.wrap(WidgetModifierConfig value) =>
+      SkeletonStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {
@@ -183,7 +185,7 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
   }
 
   RemixSkeleton call({Key? key, Widget? child, bool loading = true}) {
-    return RemixSkeleton(key: key, style: this, child: child, loading: loading);
+    return RemixSkeleton(key: key, style: this, loading: loading, child: child);
   }
 
   /// Merges with another [SkeletonStyler].

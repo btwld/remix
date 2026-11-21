@@ -414,6 +414,8 @@ class DataListStyler extends MixStyler<DataListStyler, DataListSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => DataListStyler().transform(value, alignment: alignment);
+  factory DataListStyler.wrap(WidgetModifierConfig value) =>
+      DataListStyler().wrap(value);
 
   DataListStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

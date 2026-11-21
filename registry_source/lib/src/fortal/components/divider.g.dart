@@ -22,13 +22,12 @@ class FortalDivider extends StatelessWidget {
   final DividerStyler style;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixDivider(
-      key: this.key,
       style: fortalDividerStyle(
-        size: this.size,
-        orientation: this.orientation,
-        style: this.style,
+        size: size,
+        orientation: orientation,
+        style: style,
       ),
     );
   }

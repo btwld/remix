@@ -100,25 +100,24 @@ class FortalAvatar extends StatelessWidget {
   final RemixAvatarIconBuilder? iconBuilder;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixAvatar(
-      key: this.key,
       style: fortalAvatarStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        fallbackLength: this.fallbackLength,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        fallbackLength: fallbackLength,
+        style: style,
       ),
-      backgroundImage: this.backgroundImage,
-      foregroundImage: this.foregroundImage,
-      onBackgroundImageError: this.onBackgroundImageError,
-      onForegroundImageError: this.onForegroundImageError,
-      child: this.child,
-      label: this.label,
-      labelBuilder: this.labelBuilder,
-      icon: this.icon,
-      iconBuilder: this.iconBuilder,
+      backgroundImage: backgroundImage,
+      foregroundImage: foregroundImage,
+      onBackgroundImageError: onBackgroundImageError,
+      onForegroundImageError: onForegroundImageError,
+      label: label,
+      labelBuilder: labelBuilder,
+      icon: icon,
+      iconBuilder: iconBuilder,
+      child: child,
     );
   }
 }

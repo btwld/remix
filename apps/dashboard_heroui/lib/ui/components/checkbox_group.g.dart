@@ -95,26 +95,25 @@ class UiCheckboxGroupItem<T extends Object> extends StatelessWidget {
   final MouseCursor mouseCursor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCheckboxGroupItem<T>(
-      key: this.key,
       style: uiCheckboxGroupItemStyle(
-        variant: this.variant,
-        invalid: this.invalid,
-        minimumTapTargetSize: this.minimumTapTargetSize,
-        style: this.style,
+        variant: variant,
+        invalid: invalid,
+        minimumTapTargetSize: minimumTapTargetSize,
+        style: style,
       ),
-      value: this.value,
-      label: this.label,
-      semanticLabel: this.semanticLabel,
-      enabled: this.enabled,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      checkedIcon: this.checkedIcon,
-      uncheckedIcon: this.uncheckedIcon,
-      enableFeedback: this.enableFeedback,
-      minimumTapTargetSize: this.minimumTapTargetSize,
-      mouseCursor: this.mouseCursor,
+      value: value,
+      label: label,
+      semanticLabel: semanticLabel,
+      enabled: enabled,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      checkedIcon: checkedIcon,
+      uncheckedIcon: uncheckedIcon,
+      enableFeedback: enableFeedback,
+      minimumTapTargetSize: minimumTapTargetSize,
+      mouseCursor: mouseCursor,
     );
   }
 }

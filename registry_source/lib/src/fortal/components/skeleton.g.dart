@@ -22,12 +22,11 @@ class FortalSkeleton extends StatelessWidget {
   final bool loading;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSkeleton(
-      key: this.key,
-      style: fortalSkeletonStyle(style: this.style),
-      child: this.child,
-      loading: this.loading,
+      style: fortalSkeletonStyle(style: style),
+      loading: loading,
+      child: child,
     );
   }
 }

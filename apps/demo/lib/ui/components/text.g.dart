@@ -44,16 +44,16 @@ class FortalText extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return fortalTextStyle(
-      size: this.size,
-      weight: this.weight,
-      align: this.align,
-      softWrap: this.softWrap,
-      truncate: this.truncate,
-      accent: this.accent,
-      highContrast: this.highContrast,
-      style: this.style,
-    ).call(this.text, key: this.key);
+      size: size,
+      weight: weight,
+      align: align,
+      softWrap: softWrap,
+      truncate: truncate,
+      accent: accent,
+      highContrast: highContrast,
+      style: style,
+    ).call(text);
   }
 }

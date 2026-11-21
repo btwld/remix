@@ -46,9 +46,7 @@ class PlaygroundCode extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) {
-    return playgroundCodeStyle(
-      style: this.style,
-    ).call(this.text, key: this.key);
+  Widget build(BuildContext _) {
+    return playgroundCodeStyle(style: style).call(text);
   }
 }

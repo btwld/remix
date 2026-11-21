@@ -624,6 +624,8 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => MenuTriggerStyler().transform(value, alignment: alignment);
+  factory MenuTriggerStyler.wrap(WidgetModifierConfig value) =>
+      MenuTriggerStyler().wrap(value);
 
   MenuTriggerStyler color(Color value) {
     return container(FlexBoxStyler().color(value));
@@ -1160,6 +1162,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       MenuStyler().divider(value);
   factory MenuStyler.panelTransition(RemixPanelTransition value) =>
       MenuStyler().panelTransition(value);
+  factory MenuStyler.wrap(WidgetModifierConfig value) =>
+      MenuStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {
@@ -1652,6 +1656,8 @@ class MenuItemStyler extends MixStyler<MenuItemStyler, MenuItemSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => MenuItemStyler().transform(value, alignment: alignment);
+  factory MenuItemStyler.wrap(WidgetModifierConfig value) =>
+      MenuItemStyler().wrap(value);
 
   MenuItemStyler color(Color value) {
     return container(FlexBoxStyler().color(value));

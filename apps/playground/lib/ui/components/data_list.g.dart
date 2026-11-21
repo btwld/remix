@@ -41,14 +41,13 @@ class PlaygroundDataList extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixDataList(
-      key: this.key,
-      style: playgroundDataListStyle(style: this.style),
-      items: this.items,
-      orientation: this.orientation,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+      style: playgroundDataListStyle(style: style),
+      items: items,
+      orientation: orientation,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

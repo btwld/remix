@@ -119,30 +119,25 @@ class UiAccordion<T> extends StatelessWidget {
   final Widget Function(Widget, Animation<double>)? transitionBuilder;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixAccordion<T>(
-      key: this.key,
-      style: uiAccordionStyle(
-        variant: this.variant,
-        size: this.size,
-        style: this.style,
-      ),
-      value: this.value,
-      child: this.child,
-      title: this.title,
-      leadingIcon: this.leadingIcon,
-      trailingIcon: this.trailingIcon,
-      builder: this.builder,
-      enabled: this.enabled,
-      mouseCursor: this.mouseCursor,
-      enableFeedback: this.enableFeedback,
-      autofocus: this.autofocus,
-      focusNode: this.focusNode,
-      onFocusChange: this.onFocusChange,
-      onHoverChange: this.onHoverChange,
-      onPressChange: this.onPressChange,
-      semanticLabel: this.semanticLabel,
-      transitionBuilder: this.transitionBuilder,
+      style: uiAccordionStyle(variant: variant, size: size, style: style),
+      value: value,
+      title: title,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
+      builder: builder,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      autofocus: autofocus,
+      focusNode: focusNode,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      semanticLabel: semanticLabel,
+      transitionBuilder: transitionBuilder,
+      child: child,
     );
   }
 }

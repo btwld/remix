@@ -472,6 +472,8 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => CalendarStyler().transform(value, alignment: alignment);
+  factory CalendarStyler.wrap(WidgetModifierConfig value) =>
+      CalendarStyler().wrap(value);
 
   CalendarStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -1145,6 +1147,8 @@ class CalendarDayStyler extends MixStyler<CalendarDayStyler, CalendarDaySpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => CalendarDayStyler().transform(value, alignment: alignment);
+  factory CalendarDayStyler.wrap(WidgetModifierConfig value) =>
+      CalendarDayStyler().wrap(value);
 
   CalendarDayStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

@@ -73,27 +73,26 @@ class UiPopover extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixPopover(
-      key: this.key,
-      style: uiPopoverStyle(style: this.style),
-      popoverChild: this.popoverChild,
-      child: this.child,
-      positioning: this.positioning,
-      consumeOutsideTaps: this.consumeOutsideTaps,
-      useRootOverlay: this.useRootOverlay,
-      openOnTap: this.openOnTap,
-      triggerFocusNode: this.triggerFocusNode,
-      initialFocusNode: this.initialFocusNode,
-      constrainToAvailableSpace: this.constrainToAvailableSpace,
-      avoidViewInsets: this.avoidViewInsets,
-      onOpen: this.onOpen,
-      onClose: this.onClose,
-      onOpenRequested: this.onOpenRequested,
-      onCloseRequested: this.onCloseRequested,
-      controller: this.controller,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+      style: uiPopoverStyle(style: style),
+      popoverChild: popoverChild,
+      positioning: positioning,
+      consumeOutsideTaps: consumeOutsideTaps,
+      useRootOverlay: useRootOverlay,
+      openOnTap: openOnTap,
+      triggerFocusNode: triggerFocusNode,
+      initialFocusNode: initialFocusNode,
+      constrainToAvailableSpace: constrainToAvailableSpace,
+      avoidViewInsets: avoidViewInsets,
+      onOpen: onOpen,
+      onClose: onClose,
+      onOpenRequested: onOpenRequested,
+      onCloseRequested: onCloseRequested,
+      controller: controller,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
+      child: child,
     );
   }
 }

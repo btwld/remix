@@ -83,6 +83,9 @@ the complete dependency graph and templates before dependency installation or
 writes, rejects cycles and conflicting target owners, and intersects package
 constraints. Output identifies namespaces and the resolved revisions.
 
+For installs that predate the `text_field` and HeroUI `text_area` renames, see
+the [#511 migration guide](REGISTRY_511_MIGRATION.md) before refreshing items.
+
 Ownership checks also cover earlier installs, including files subsequently
 removed or targets no longer present in the latest catalog. The durable owner
 is the GitHub repository (case insensitive), registry path, preset, and item.
@@ -242,16 +245,16 @@ internal authoring directory remains `registry_source/lib/src/default/`.
 
 `registry_source/lib/src/default`, `fortal`, `heroui` and `dashboard` own the
 analyzed Dart. Edit it, never `.tmpl` output. The builder asserts prefix round
-trips and rewrites shared dashboard imports to installed relative paths. Imports
-determine item dependencies; parts determine adapter targets. Whole-tree checks
-reject missing, unexpected or changed files.
+trips and rewrites shared dashboard imports to installed relative paths. Every
+branch of an import or export contributes dependencies. Relative paths must
+resolve within the item's transitive install closure; generated parts resolve
+to declared adapter targets. Whole-tree checks reject missing, unexpected or
+changed files.
 
-The prefix replaces the authoring word only where it begins an identifier
-segment or a quoted id (`FortalButton`, `'fortal.color.accent'`); prose keeps
-the design system's name, and the word anywhere else in code or in an id-like
-string fails derivation with its file and line. Explicit fixed data filenames
-are also exempt: `theme/fortal_colors.dart` stays stable while its Dart types
-take the consumer prefix; the theme barrel excludes unprefixed palette globals.
+Follow the [registry authoring guide](../skills/building-remix-design-system/references/registry.md)
+for prefix conventions. The fixed `theme/fortal_colors.dart` data filename
+stays stable while its Dart types take the consumer prefix; the theme barrel
+excludes unprefixed palette globals.
 Palettes are generated from owned seeds; [Fortal's specification](../registry_source/specs/fortal.md)
 owns the visual contract.
 
@@ -273,3 +276,14 @@ floors through the [package release workflow](RELEASING.md).
 `tool/check_consumer_apps.dart` checks these installed trees. Fresh checkout
 consumers test installation and generation; hosted checks separately establish
 published-floor compatibility. See [release ordering](RELEASING.md).
+
+For the checkout registry, `tool/check_open_code.dart --source checkout
+--independent all` (the checkout default) audits each catalog item's solo
+install closure before creating a consumer. Relative imports, exports and
+parts must have authored or generated targets in that closure, and package
+imports must have direct runtime declarations there (apart from the fixture's
+Flutter SDK dependency). Explicit solo install canaries still exercise the
+installer and generator. Checks against the pinned `registry-stable` catalog
+skip the audit. Hosted mode defaults to one solo canary; explicit
+`--independent all` against the pin exercises the non-foundation items with
+non-foundation dependencies in that catalog.

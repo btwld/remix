@@ -71,26 +71,25 @@ class PlaygroundMenu<T> extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixMenu<T>(
-      key: this.key,
-      style: playgroundMenuStyle(style: this.style),
-      trigger: this.trigger,
-      items: this.items,
-      controller: this.controller,
-      onSelected: this.onSelected,
-      onOpen: this.onOpen,
-      onClose: this.onClose,
-      onCanceled: this.onCanceled,
-      onOpenRequested: this.onOpenRequested,
-      onCloseRequested: this.onCloseRequested,
-      consumeOutsideTaps: this.consumeOutsideTaps,
-      useRootOverlay: this.useRootOverlay,
-      closeOnClickOutside: this.closeOnClickOutside,
-      triggerFocusNode: this.triggerFocusNode,
-      positioning: this.positioning,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+      style: playgroundMenuStyle(style: style),
+      trigger: trigger,
+      items: items,
+      controller: controller,
+      onSelected: onSelected,
+      onOpen: onOpen,
+      onClose: onClose,
+      onCanceled: onCanceled,
+      onOpenRequested: onOpenRequested,
+      onCloseRequested: onCloseRequested,
+      consumeOutsideTaps: consumeOutsideTaps,
+      useRootOverlay: useRootOverlay,
+      closeOnClickOutside: closeOnClickOutside,
+      triggerFocusNode: triggerFocusNode,
+      positioning: positioning,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

@@ -48,19 +48,18 @@ class VanillaAvatar extends StatelessWidget {
   final RemixAvatarIconBuilder? iconBuilder;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixAvatar(
-      key: this.key,
-      style: vanillaAvatarStyle(style: this.style),
-      backgroundImage: this.backgroundImage,
-      foregroundImage: this.foregroundImage,
-      onBackgroundImageError: this.onBackgroundImageError,
-      onForegroundImageError: this.onForegroundImageError,
-      child: this.child,
-      label: this.label,
-      labelBuilder: this.labelBuilder,
-      icon: this.icon,
-      iconBuilder: this.iconBuilder,
+      style: vanillaAvatarStyle(style: style),
+      backgroundImage: backgroundImage,
+      foregroundImage: foregroundImage,
+      onBackgroundImageError: onBackgroundImageError,
+      onForegroundImageError: onForegroundImageError,
+      label: label,
+      labelBuilder: labelBuilder,
+      icon: icon,
+      iconBuilder: iconBuilder,
+      child: child,
     );
   }
 }
