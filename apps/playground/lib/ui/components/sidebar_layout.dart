@@ -139,7 +139,9 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
   // presentation.
   void _openCompact() {
     if (!_isCompact) return;
-    if (_sheetRoute?.isActive == false) _reopenRequested = true;
+    if (_sheetInputs != null && _sheetRoute?.isActive != true) {
+      _reopenRequested = true;
+    }
     _setOpen(true);
   }
 
@@ -150,13 +152,17 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
     final desiredOpen = isCompact && _effectiveOpen;
     if (desiredOpen
         ? _sheetInputs?.value == _currentSheetInputs
-        : _sheetInputs == null) {
+        : _sheetInputs == null && (isCompact || !_reopenRequested)) {
       return;
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final inputs = _sheetInputs;
       if (!_isCompact || !_effectiveOpen) {
+        if (!_isCompact && _reopenRequested) {
+          _reopenRequested = false;
+          _closeCompact();
+        }
         _removeSheetRoute();
       } else if (inputs == null) {
         _pushSheet();
@@ -188,6 +194,7 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
           : const Duration(milliseconds: 250),
       builder: (dialogContext) {
         final route = _sheetRoute ??= ModalRoute.of<void>(dialogContext)!;
+        if (route.isActive) _reopenRequested = false;
         return ValueListenableBuilder(
           valueListenable: inputs,
           builder: (context, nextInputs, _) {
