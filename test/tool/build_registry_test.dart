@@ -652,6 +652,7 @@ final comfortalButton = FortalBadge();
 final _resolveFortalBadge = FortalBadge.new;
 const caption = 'A FortalInspired view';
 const brand = 'Fortal-inspired';
+const brandLabel = 'FortalInspired';
 const embedded = 'comfortalButton()';
 const id = 'fortal.color.accent';
 const variantId = 'fortalBadgeDark';
@@ -679,6 +680,7 @@ final comfortalButton = AcmeBadge();
 final _resolveAcmeBadge = AcmeBadge.new;
 const caption = 'A FortalInspired view';
 const brand = 'Fortal-inspired';
+const brandLabel = 'FortalInspired';
 const embedded = 'comfortalButton()';
 const id = 'acme.color.accent';
 const variantId = 'acmeBadgeDark';
@@ -757,6 +759,8 @@ const typed = 'Acme.color.accent';
   for (final (authored, installed) in [
     (r'fortal.${group}/accent', r'acme.${group}/accent'),
     (r'fortalSlider${group}', r'acmeSlider${group}'),
+    (r'FortalSlider${group}', r'AcmeSlider${group}'),
+    (r'fortalSlider${group}#accent', r'acmeSlider${group}#accent'),
     (r'fortal.$group.accent:active', r'acme.$group.accent:active'),
     ('fortalSlider-track', 'acmeSlider-track'),
   ]) {
