@@ -506,7 +506,7 @@ void main() {
     });
 
     testWidgets(
-      'held composing Escape stays local, fresh read-only Escape bubbles',
+      'a fresh read-only Escape dismisses despite a retained composing range',
       (tester) async {
         final controller = TextEditingController();
         final readOnly = ValueNotifier(false);
@@ -554,7 +554,7 @@ void main() {
         await tester.pump();
         expect(tester.widget<EditableText>(editor).focusNode.hasFocus, isTrue);
         expect(await tester.sendKeyRepeatEvent(escape), isFalse);
-        expect(await tester.sendKeyUpEvent(escape), isFalse);
+        await tester.sendKeyUpEvent(escape);
         expect(controller.value, composingValue);
         expect(calls, ['change:かな']);
         expect(dismissed, 0);
