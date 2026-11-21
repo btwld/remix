@@ -1,3 +1,7 @@
+## 1.0.0-rc.6
+
+ - **FEAT**(remix): add RemixSidebarLayout (#531).
+
 ## 1.0.0-rc.5
 
 ### Features
