@@ -638,6 +638,7 @@ final _cases = <_WidgetCase>[
   const _WidgetCase(
     'checkbox group',
     AcmeCheckboxGroup<String>(
+      orientation: Axis.horizontal,
       values: {},
       options: [AcmeCheckboxOption(value: 'a', label: 'Choice A')],
     ),

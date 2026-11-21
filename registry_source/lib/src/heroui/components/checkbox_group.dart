@@ -35,6 +35,9 @@ class HeroUiCheckboxOption<T extends Object> {
 
 /// A [RemixCheckboxGroup] with HeroUI's label, option spacing, and description.
 ///
+/// [orientation] defaults to [Axis.vertical]. With [Axis.horizontal], the
+/// label, options, and help or error text flow in a wrapping row.
+///
 /// [variant], [invalid], and [enabled] apply to every option. While [invalid],
 /// [errorText] shows after [helperText].
 class HeroUiCheckboxGroup<T extends Object> extends StatelessWidget {
@@ -43,6 +46,7 @@ class HeroUiCheckboxGroup<T extends Object> extends StatelessWidget {
     required this.values,
     required this.options,
     this.onChanged,
+    this.orientation = Axis.vertical,
     this.variant = .primary,
     this.invalid = false,
     this.enabled = true,
@@ -54,6 +58,7 @@ class HeroUiCheckboxGroup<T extends Object> extends StatelessWidget {
   final Set<T> values;
   final List<HeroUiCheckboxOption<T>> options;
   final ValueChanged<Set<T>>? onChanged;
+  final Axis orientation;
   final HeroUiCheckboxVariant variant;
   final bool invalid;
   final bool enabled;
@@ -68,6 +73,7 @@ class HeroUiCheckboxGroup<T extends Object> extends StatelessWidget {
     enabled: enabled,
     semanticLabel: label,
     child: HeroUiFieldLayout(
+      orientation: orientation,
       label: label,
       // Flutter has no checkbox-group role; RemixCheckboxGroup owns the
       // semantic container that names its explicit checkbox children.
