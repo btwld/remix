@@ -1516,39 +1516,52 @@ part 'missing.g.dart';
       );
     });
 
-    test('reports unreachable items and missing requests', () {
+    test('a new catalog item enters the checkout gallery automatically', () {
+      expect(
+        checker.checkoutGalleryItemsForTest('heroui', '''
+items:
+  theme: {files: []}
+  icons: {files: []}
+  accordion: {files: []}
+  new_item: {files: []}
+'''),
+        ['icons', 'accordion', 'new_item'],
+      );
+    });
+
+    test('removing a focused install item still fails the contract', () {
       final root = Directory('${sandbox.path}/repo');
       final registry = File('${root.path}/registry/vanilla/registry.yaml');
       registry.parent.createSync(recursive: true);
-      registry.writeAsStringSync('''
-schema: 1
-items:
-  theme:
-    files:
-      - source: templates/theme/tokens.dart.tmpl
-        target: "@ui/theme/tokens.dart"
-  calendar:
-    registryDependencies: [theme, calendar_styles]
-    files:
-      - source: templates/calendar/calendar.dart.tmpl
-        target: "@ui/components/calendar.dart"
-  calendar_styles:
-    files:
-      - source: templates/calendar_styles/calendar_styles.dart.tmpl
-        target: "@ui/components/calendar_styles.dart"
-  brand_new:
-    files:
-      - source: templates/brand_new/brand_new.dart.tmpl
-        target: "@ui/components/brand_new.dart"
-''');
+      final original = File(
+        'registry/vanilla/registry.yaml',
+      ).readAsStringSync();
+      registry.writeAsStringSync(
+        original.replaceFirst('\n  dashboard_demo:', '\n  dashboard_example:'),
+      );
 
-      final problem = checker.registryCoverageProblem(root);
+      expect(
+        checker.registryCoverageProblem(root),
+        contains('Missing required registry items: dashboard_demo'),
+      );
+    });
 
-      expect(problem, contains('registry.yaml has brand_new'));
-      expect(problem, isNot(contains('registry.yaml has calendar_styles')));
-      // The reverse direction is reported too, so a removed item cannot leave
-      // the checker installing something that no longer exists.
-      expect(problem, contains('this check installs button'));
+    test('the first gallery install must bring in the theme', () {
+      final root = Directory('${sandbox.path}/repo');
+      final registry = File('${root.path}/registry/heroui/registry.yaml');
+      registry.parent.createSync(recursive: true);
+      final original = File('registry/heroui/registry.yaml').readAsStringSync();
+      registry.writeAsStringSync(
+        original.replaceFirst(
+          '  icons:\n    registryDependencies:\n      - theme\n',
+          '  icons:\n',
+        ),
+      );
+
+      expect(
+        checker.registryCoverageProblem(root, preset: 'heroui'),
+        contains('The first gallery install (icons) must install the theme'),
+      );
     });
   });
 

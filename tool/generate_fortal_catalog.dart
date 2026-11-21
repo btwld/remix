@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'fortal_recipe_path.dart';
+
 /// Renders docs/fortal/catalog.mdx from Fortal's own specification catalog.
 /// Pass --check to fail on drift; the contract checker validates the API data.
 void main(List<String> arguments) {
@@ -123,7 +125,7 @@ String _render(Map<String, Object?> manifest, Directory packageRoot) {
     buffer
       ..writeln('## ${category.key}')
       ..writeln();
-    _writeFamilySections(buffer, category.value, manifest, packageRoot);
+    _writeFamilySections(buffer, category.value, packageRoot);
   }
 
   return buffer.toString();
@@ -214,14 +216,12 @@ void _writeGlanceTable(
 void _writeFamilySections(
   StringBuffer buffer,
   List<Map<String, Object?>> families,
-  Map<String, Object?> manifest,
   Directory packageRoot,
 ) {
   for (final family in families) {
-    final id = family['id']! as String;
     final fortalType = family['fortalType']! as String;
     final enums = (family['enums'] as Map<String, Object?>?) ?? const {};
-    final recipePath = _recipePath(id);
+    final recipePath = fortalRecipePath(family);
 
     buffer
       ..writeln('### $fortalType')
@@ -247,7 +247,11 @@ void _writeFamilySections(
       buffer.writeln();
     }
 
-    final constructors = _namedConstructors(packageRoot, id, fortalType);
+    final constructors = _namedConstructors(
+      packageRoot,
+      recipePath,
+      fortalType,
+    );
     if (constructors.isNotEmpty) {
       final rendered = constructors
           .map((name) => '`$fortalType.$name`')
@@ -284,14 +288,12 @@ void _writeFamilySections(
 /// `FortalKbd`) that no generator emits.
 List<String> _namedConstructors(
   Directory packageRoot,
-  String id,
+  String recipePath,
   String fortalType,
 ) {
-  final recipe = File('${packageRoot.path}/${_recipePath(id)}');
+  final recipe = File('${packageRoot.path}/$recipePath');
   if (!recipe.existsSync()) return const [];
-  final generated = File(
-    recipe.path.replaceFirst(RegExp(r'\.dart$'), '.g.dart'),
-  );
+  final generated = File(fortalGeneratedPath(recipe.path));
   final source =
       '${recipe.readAsStringSync()}\n'
       '${generated.existsSync() ? generated.readAsStringSync() : ''}';
@@ -300,13 +302,6 @@ List<String> _namedConstructors(
     'const\\s+${RegExp.escape(fortalType)}\\.([A-Za-z0-9_]+)\\s*\\(',
   ).allMatches(source).map((match) => match.group(1)!).toSet().toList()..sort();
   return names;
-}
-
-/// TextArea shares the text field's recipe file because it reuses
-/// TextField's private helpers; this matches the Fortal checker's mapping.
-String _recipePath(String id) {
-  final recipeName = id == 'text_area' ? 'text_field' : id;
-  return 'lib/src/fortal/components/$recipeName.dart';
 }
 
 String _otherDefaults(Map<String, Object?> family, Map<String, Object?> enums) {
@@ -364,13 +359,9 @@ Map<String, String> _parameterCarriers(
   Map<String, Object?> enums,
 ) {
   final fortalType = family['fortalType']! as String;
-  final recipe = File(
-    '${packageRoot.path}/${_recipePath(family['id']! as String)}',
-  );
+  final recipe = File('${packageRoot.path}/${fortalRecipePath(family)}');
   if (!recipe.existsSync()) return const {};
-  final generated = File(
-    recipe.path.replaceFirst(RegExp(r'\.dart$'), '.g.dart'),
-  );
+  final generated = File(fortalGeneratedPath(recipe.path));
   final source =
       '${recipe.readAsStringSync()}\n'
       '${generated.existsSync() ? generated.readAsStringSync() : ''}';

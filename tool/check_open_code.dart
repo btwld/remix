@@ -44,6 +44,7 @@ import '../packages/remix_cli/lib/src/registry.dart';
 import '../packages/remix_cli/lib/src/registry_source.dart';
 import '../packages/remix_cli/test/checkout_registry.dart';
 import 'audit_registry_closures.dart';
+import 'build_registry.dart' show agentRecipes;
 import 'check_pub_floors.dart';
 import 'compile_registry_consumer.dart';
 import 'consumer_check_reporting.dart';
@@ -64,93 +65,15 @@ const _fixtureAppFiles = <String>[
   'test/theme_modes_test.dart',
 ];
 
-/// The registry items the CLI installs, in invocation order.
-///
-/// Checkout (and both) adds each by its own `remix add` on purpose: this
-/// exercises the incremental path a consumer actually takes, where each item
-/// meets an application that already has the previous ones. Theme arrives as
-/// the first item's registry dependency. Hosted installs the first two items
-/// incrementally, then batches the remainder: checkout CI owns the full
-/// incremental and asset-graph invalidation proof on the same SHA.
-const _defaultRegistryItems = <String>[
+const _dateItems = [
   'calendar',
   'range_calendar',
   'date_picker',
   'date_range_picker',
-  'icons',
-  'accordion',
-  'app_bar',
-  'avatar',
-  'badge',
-  'breadcrumbs',
-  'button',
-  'callout',
-  'card',
-  'chart',
-  'dashboard_demo',
-  'dashboard_shell',
-  'checkbox',
-  'code',
-  'combobox',
-  'data_list',
-  'data_table',
-  'dialog',
-  'disclosure',
-  'divider',
-  'heading',
-  'icon_button',
-  'kbd',
-  'link',
-  'menu',
-  'popover',
-  'progress',
-  'radio',
-  'range_slider',
-  'search_field',
-  'segmented_control',
-  'select',
-  'sidebar',
-  'sidebar_layout',
-  'skeleton',
-  'slider',
-  'spinner',
-  'switch',
-  'tabs',
-  'text',
-  'text_field',
-  'toast',
-  'toggle',
-  'toggle_group',
-  'tooltip',
-  ..._agentRegistryItems,
 ];
 
-/// The Agent widgets live in `package:remix/agent.dart`, so no behavior
-/// installs; only the preset's recipes for them do.
-const _agentComponentItems = <String>[];
-
-const _agentRecipeItems = <String>[
-  'agent_glyphs_recipe',
-  'answer_recipe',
-  'composer_recipe',
-  'conversation_recipe',
-  'message_recipe',
-  'sources_recipe',
-  'steps_recipe',
-  'suggestions_recipe',
-  'tool_call_recipe',
-];
-
-const _agentRegistryItems = <String>[
-  ..._agentComponentItems,
-  ..._agentRecipeItems,
-];
-
-const _independentRegistryItems = <String>[
-  ..._agentRegistryItems,
-  'dashboard_demo',
-  'dashboard_shell',
-];
+const _dashboardItems = ['dashboard_demo', 'dashboard_shell'];
+const _independentRegistryItems = [...agentRecipes, ..._dashboardItems];
 
 const _foundationItems = <String>{'theme'};
 
@@ -172,68 +95,9 @@ const _generatedSnapshots = <String, String>{
   'lib/ui/components/tabs.g.dart': 'expected/acme_tabs.g.dart',
 };
 
-const _fortalRegistryItems = <String>[
-  'calendar',
-  'range_calendar',
-  'date_picker',
-  'date_range_picker',
-
-  'icons',
-  'accordion',
-  'app_bar',
-  'avatar',
-  'avatar_group',
-  'badge',
-  'base_button',
-  'breadcrumbs',
-  'button',
-  'callout',
-  'card',
-  'chart',
-  'dashboard_demo',
-  'dashboard_shell',
-  'checkbox',
-  'code',
-  'data_list',
-  'data_table',
-  'dialog',
-  'disclosure',
-  'divider',
-  'heading',
-  'icon_button',
-  'kbd',
-  'link',
-  'menu',
-  'popover',
-  'progress',
-  'radio',
-  'range_slider',
-  'search_field',
-  'segmented_control',
-  'select',
-  'combobox',
-  'sidebar',
-  'sidebar_layout',
-  'skeleton',
-  'slider',
-  'spinner',
-  'surface',
-  'switch',
-  'tabs',
-  'text',
-  'text_field',
-  'toast',
-  'toggle',
-  'toggle_group',
-  'tooltip',
-  'typography',
-  ..._agentRegistryItems,
-];
-
 const _defaultPreset = _PresetContract(
   name: 'vanilla',
   fixtureDirectory: 'fixture',
-  registryItems: _defaultRegistryItems,
   independentItems: [..._independentRegistryItems, 'range_slider'],
   // Vanilla's theme sets its type in Geist, so every install carries the fonts.
   requiredRuntimeDependencies: [..._baseRuntimeDependencies, 'remix_ui_fonts'],
@@ -244,109 +108,17 @@ const _defaultPreset = _PresetContract(
 const _fortalPreset = _PresetContract(
   name: 'fortal',
   fixtureDirectory: 'fortal_fixture',
-  registryItems: _fortalRegistryItems,
   independentItems: [
     ..._independentRegistryItems,
     'range_slider',
-    'calendar',
-    'range_calendar',
-    'date_picker',
-    'date_range_picker',
+    ..._dateItems,
   ],
 );
-
-/// HeroUI's items. `app_bar`, `chart`, `dashboard_demo`, `dashboard_shell`,
-/// `icons`, `sidebar`, `sidebar_layout` and the Agent items are extensions
-/// with no upstream family; see `extensions` in
-/// registry_source/reference/heroui_3_2_6/families.json.
-const _herouiRegistryItems = [
-  'icons',
-  'accordion',
-  'alert',
-  'app_bar',
-  'avatar',
-  'avatar_group',
-  'badge',
-  'breadcrumbs',
-  'button',
-  'button_group',
-  'card',
-  'calendar',
-  'range_calendar',
-  'date_picker',
-  'date_range_picker',
-  'chart',
-  'dashboard_demo',
-  'dashboard_shell',
-  'checkbox',
-  'checkbox_group',
-  'chip',
-  'close_button',
-  'disclosure',
-  'dropdown',
-  'field_layout',
-  'input_group',
-  'kbd',
-  'link',
-  'modal',
-  'popover',
-  'progress',
-  'radio',
-  'radio_group',
-  'range_slider',
-  'search_field',
-  'select',
-  'combobox',
-  'separator',
-  'sidebar',
-  'sidebar_layout',
-  'skeleton',
-  'slider',
-  'spinner',
-  'surface',
-  'switch',
-  'switch_group',
-  'table',
-  'tabs',
-  'text_area',
-  'text_field',
-  'toast',
-  'toggle_button',
-  'toggle_button_group',
-  'tooltip',
-  'typography',
-  ..._agentRegistryItems,
-];
 
 const _herouiPreset = _PresetContract(
   name: 'heroui',
   fixtureDirectory: 'heroui_fixture',
-  registryItems: _herouiRegistryItems,
-  independentItems: [
-    ..._independentRegistryItems,
-    'avatar_group',
-    'breadcrumbs',
-    'button',
-    'button_group',
-    'calendar',
-    'range_calendar',
-    'date_picker',
-    'date_range_picker',
-    'checkbox_group',
-    'close_button',
-    'combobox',
-    'input_group',
-    'radio_group',
-    'range_slider',
-    'search_field',
-    'sidebar',
-    'sidebar_layout',
-    'switch_group',
-    'table',
-    'text_area',
-    'toast',
-    'toggle_button_group',
-  ],
+  independentItems: null,
   requiredRuntimeDependencies: [
     'remix',
     'mix_annotations',
@@ -512,13 +284,11 @@ final class _PresetContract {
   const _PresetContract({
     required this.name,
     required this.fixtureDirectory,
-    required this.registryItems,
     this.generatedSnapshots = const {},
     this.requiredRuntimeDependencies = _baseRuntimeDependencies,
     this.allowedImportPackages = _baseImportPackages,
     this.foundationItems = _foundationItems,
     this.independentItems = _independentRegistryItems,
-    this.specStylerItems = _agentComponentItems,
     this.iconsFromCheckout = false,
     this.catalogYaml,
   });
@@ -526,8 +296,26 @@ final class _PresetContract {
   final String? catalogYaml;
   final String name;
   final String fixtureDirectory;
-  final List<String> registryItems;
   final Map<String, String> generatedSnapshots;
+
+  List<String> get registryItems => galleryItems(_loadItems());
+
+  /// Keep checkout canaries first; add the remaining catalog items in order.
+  /// An archived catalog instead installs every item, including foundations.
+  List<String> galleryItems(YamlMap catalogItems) {
+    final items = catalogItems.keys.cast<String>();
+    if (catalogYaml != null) return items.toList();
+
+    return {
+      ...galleryCanaries,
+      for (final item in items)
+        if (!foundationItems.contains(item)) item,
+    }.toList();
+  }
+
+  List<String> get galleryCanaries => name == 'heroui'
+      ? const ['icons', 'accordion']
+      : const [..._dateItems, 'icons'];
 
   /// Validation uses the full gallery inventory. Focused installs supply their
   /// own main/test pair and must not stage tests requiring other registry items.
@@ -543,9 +331,12 @@ final class _PresetContract {
 
   final Set<String> foundationItems;
 
-  /// Solo install canaries, independent of whether the catalog declares edges.
-  final List<String> independentItems;
-  final List<String> specStylerItems;
+  /// Solo install canaries. `null` derives the plan from the catalog items
+  /// whose dependencies name anything besides a foundation item.
+  final List<String>? independentItems;
+
+  String get independentCanary =>
+      name == 'heroui' ? 'search_field' : 'dashboard_shell';
 
   /// Packages the installed `lib/ui` source may import.
   final List<String> allowedImportPackages;
@@ -569,14 +360,12 @@ final class _PresetContract {
     return _PresetContract(
       name: name,
       fixtureDirectory: fixtureDirectory,
-      registryItems: registryItems,
       catalogYaml: catalogYaml,
       generatedSnapshots: generatedSnapshots,
       requiredRuntimeDependencies: swap(requiredRuntimeDependencies),
       allowedImportPackages: swap(allowedImportPackages),
       foundationItems: foundationItems,
       independentItems: independentItems,
-      specStylerItems: specStylerItems,
       iconsFromCheckout:
           icons.contains('remix_ui_icons') &&
           iconsResolveFromCheckout(iconsYaml, checkoutIconsVersion),
@@ -599,11 +388,10 @@ final class _PresetContract {
       name: name,
       fixtureDirectory: fixtureDirectory,
       catalogYaml: catalogYaml,
-      registryItems: items.keys.cast<String>().toList(),
       foundationItems: foundationItems.intersection(
         items.keys.cast<String>().toSet(),
       ),
-      specStylerItems: [],
+      independentItems: null,
       requiredRuntimeDependencies: runtime.toList(),
       allowedImportPackages: ['flutter', ...runtime],
     );
@@ -671,14 +459,16 @@ final class _PresetContract {
   List<String> independentInstalls(IndependentMode mode) {
     if (mode == IndependentMode.none) return [];
     if (mode == IndependentMode.canary) {
-      final canary = name == 'heroui' ? 'search_field' : 'dashboard_shell';
-      return [if (registryItems.contains(canary)) canary];
+      return [
+        if (_loadItems().containsKey(independentCanary)) independentCanary,
+      ];
     }
-    if (catalogYaml == null) return independentItems;
+    final listed = independentItems;
+    if (listed != null) return listed;
 
     final items = _loadItems();
     return [
-      for (final key in registryItems)
+      for (final key in items.keys.cast<String>())
         if (!foundationItems.contains(key) &&
             ((items[key] as YamlMap)['registryDependencies'] as YamlList? ??
                     const [])
@@ -820,8 +610,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
     if (argument == '--item') {
       if (item != null || index + 1 >= arguments.length) return null;
       final selected = arguments[++index];
-      if (selected != 'dashboard_demo' &&
-          selected != 'dashboard_shell' &&
+      if (!_dashboardItems.contains(selected) &&
           selected != 'ownership' &&
           selected != 'icons' &&
           selected != 'search_field') {
@@ -873,11 +662,6 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   // Vanilla and Fortal ship `search_field` too, but only HeroUI has its
   // focused web build fixture.
   if (item == 'search_field' && preset.name != 'heroui') return null;
-  if (item != null &&
-      item != 'ownership' &&
-      !preset.registryItems.contains(item)) {
-    return null;
-  }
   return ConsumerCheckOptions(
     keep: keep,
     verbose: verbose,
@@ -1622,11 +1406,8 @@ Future<_Failure?> _checkFocusedItem({
     );
   }
 
-  final forbiddenRecipeFiles = <String>{
-    for (final agent in _agentRegistryItems)
-      agent.endsWith('_recipe')
-          ? 'recipes/$agent.dart'
-          : 'components/$agent.dart',
+  final forbiddenRecipeFiles = {
+    for (final recipe in agentRecipes) 'recipes/$recipe.dart',
   };
   if (item == 'dashboard_shell' &&
       found.intersection(forbiddenRecipeFiles).isNotEmpty) {
@@ -2096,12 +1877,7 @@ Future<Object> _resolveToolchain(Directory root, String pinned) async {
   );
 }
 
-/// Fails when the checked item list and remote registry have drifted apart.
-///
-/// This check exists because the failure it prevents is silent: an item added
-/// to `registry.yaml` but unreachable from any planned add is never installed,
-/// never rendered into the fixture, never behavior-tested, and never boundary
-/// checked — and every suite still passes.
+/// Checks the candidate catalog against the fixture's explicit install probes.
 _Failure? _verifyRegistryCoverage(
   Directory repositoryRoot,
   _PresetContract preset,
@@ -2114,35 +1890,36 @@ _Failure? _verifyRegistryCoverage(
     return _Failure('registry/${preset.name}/registry.yaml is missing.');
   }
 
-  final requested = preset.registryItems.toSet();
-  final Set<String> catalogItems;
-  final Set<String> installed;
+  final RegistryCatalog catalog;
   try {
-    final catalog = RegistryCatalog.parse(
+    catalog = RegistryCatalog.parse(
       file.readAsStringSync(),
       preset: preset.name,
     );
-    catalogItems = catalog.items.keys.toSet();
-    final knownRequests = requested.intersection(catalogItems);
-    installed = knownRequests.isEmpty
-        ? const {}
-        : catalog.resolveAll(knownRequests).map((item) => item.name).toSet();
   } on FormatException catch (error) {
-    return _Failure(error.message);
+    return _Failure('Invalid registry/${preset.name}/registry.yaml: $error');
   }
 
-  final problems = <String>[
-    for (final item in catalogItems.difference(installed))
-      'registry.yaml has $item, which this check never installs',
-    for (final item in requested.difference(catalogItems))
-      'this check installs $item, which registry.yaml does not define',
-  ]..sort();
+  final requiredItems = {
+    ...preset.foundationItems,
+    ...preset.galleryCanaries,
+    ..._dashboardItems,
+    ...?preset.independentItems,
+    preset.independentCanary,
+  };
+  final missing = requiredItems.difference(catalog.items.keys.toSet());
+  if (missing.isNotEmpty) {
+    return _Failure('Missing required registry items: ${missing.join(', ')}.');
+  }
 
-  if (problems.isEmpty) return null;
-  return _Failure(
-    'the checker and the remote registry disagree on the catalog:\n'
-    '${problems.map((problem) => '  - $problem').join('\n')}',
-  );
+  final first = preset.galleryCanaries.first;
+  final closure = catalog.resolve(first).map((item) => item.name).toSet();
+  if (!closure.containsAll(preset.foundationItems)) {
+    return _Failure(
+      'The first gallery install ($first) must install the theme.',
+    );
+  }
+  return null;
 }
 
 /// The single Remix floor shared by all items in the selected catalog.
@@ -2349,10 +2126,7 @@ bool _isFlutterSdkDeclaration(Object? declaration) =>
 _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
   final buildConfig = File('${app.path}/build.yaml');
   final specStylerFiles = preset.catalogYaml == null
-      ? [
-          for (final item in preset.specStylerItems)
-            'lib/ui/components/$item.dart',
-        ]
+      ? <String>[]
       : [
           for (final file in preset.installedUiFiles)
             if (!file.endsWith('.g.dart') &&
@@ -2783,6 +2557,12 @@ iconContractForTest(
     ).keys.toSet(),
   );
 }
+
+/// The production checkout gallery order for a candidate registry catalog.
+List<String> checkoutGalleryItemsForTest(String preset, String catalogYaml) =>
+    _presetByName(
+      preset,
+    ).galleryItems((loadYaml(catalogYaml) as YamlMap)['items'] as YamlMap);
 
 /// The production gallery plan and inventory for a selected registry catalog.
 ({List<String> items, List<String> files, String floor, List<String> runtime})

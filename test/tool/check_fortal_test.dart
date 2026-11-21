@@ -140,6 +140,32 @@ void main() {
       );
     });
 
+    test('matching values do not make the slider enum the combobox size', () {
+      final combobox = (catalog['families'] as List).singleWhere(
+        (family) => family['id'] == 'combobox',
+      );
+      combobox['enums']['size']['enumOwner'] = 'slider';
+      catalogFile.writeAsStringSync(jsonEncode(catalog));
+
+      expect(
+        checkFortalContract(candidate),
+        contains(
+          'combobox: size uses FortalTextFieldSize, but the catalog names '
+          'FortalSliderSize.',
+        ),
+      );
+    });
+
+    test('a missing shared enum recipe is reported as contract drift', () {
+      File(
+        '${candidate.path}/registry_source/lib/src/fortal/components/typography.dart',
+      ).deleteSync();
+      expect(
+        checkFortalContract(candidate),
+        anyElement(contains('typography.dart for FortalTextSize')),
+      );
+    });
+
     File candidateButton() => File(
       '${candidate.path}/registry_source/lib/src/fortal/components/button.dart',
     );
