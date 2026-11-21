@@ -122,11 +122,23 @@ class PlaygroundSidebarLayout extends StatefulWidget {
 }
 
 class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
+  Widget _scoped(Widget child) => Builder(
+    builder: (context) => PlaygroundSidebarLayoutScope._(
+      RemixSidebarLayoutScope.of(context),
+      _closeWhileWide,
+      child: child,
+    ),
+  );
+
+  void _closeWhileWide() {
+    if (widget.compactOpen == true) widget.onCompactOpenChanged?.call(false);
+  }
+
   @override
   Widget build(BuildContext context) => RemixSidebarLayout(
-    sidebar: widget.sidebar,
-    body: widget.body,
-    header: widget.header,
+    sidebar: _scoped(widget.sidebar),
+    body: _scoped(widget.body),
+    header: widget.header == null ? null : _scoped(widget.header!),
     compactBreakpoint: widget.compactBreakpoint,
     inlineWidth: widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
     compactOpen: widget.compactOpen,
@@ -136,4 +148,42 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
 }
 
 /// Scope available from [PlaygroundSidebarLayout] and its compact navigation sheet.
-typedef PlaygroundSidebarLayoutScope = RemixSidebarLayoutScope;
+class PlaygroundSidebarLayoutScope extends InheritedWidget {
+  const PlaygroundSidebarLayoutScope._(
+    this._layout,
+    this._closeWhileWide, {
+    required super.child,
+  });
+
+  final RemixSidebarLayoutScope _layout;
+  final VoidCallback _closeWhileWide;
+
+  /// Whether the layout is currently in its compact presentation.
+  bool get isCompact => _layout.isCompact;
+
+  /// Whether the compact sheet is open. Always false while wide.
+  bool get isCompactOpen => _layout.isCompactOpen;
+
+  /// Opens the compact sheet. Has no effect while wide.
+  void openCompact() => _layout.openCompact();
+
+  /// Requests closure, even while wide if the host still sets compactOpen to true.
+  void closeCompact() => isCompact ? _layout.closeCompact() : _closeWhileWide();
+
+  /// Returns the nearest preset scope, or throws if there is no [PlaygroundSidebarLayout].
+  static PlaygroundSidebarLayoutScope of(BuildContext context) =>
+      maybeOf(context) ??
+      (throw FlutterError(
+        'PlaygroundSidebarLayoutScope.of requires a '
+        'PlaygroundSidebarLayout ancestor.',
+      ));
+
+  /// Returns the nearest preset scope, or null if there is no [PlaygroundSidebarLayout].
+  static PlaygroundSidebarLayoutScope? maybeOf(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<PlaygroundSidebarLayoutScope>();
+
+  @override
+  bool updateShouldNotify(PlaygroundSidebarLayoutScope oldWidget) =>
+      isCompact != oldWidget.isCompact ||
+      isCompactOpen != oldWidget.isCompactOpen;
+}

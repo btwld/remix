@@ -348,7 +348,7 @@ items:
         expect(
           rendered,
           contains(
-            'typedef ${prefix.type}SidebarLayoutScope = RemixSidebarLayoutScope;',
+            'class ${prefix.type}SidebarLayoutScope extends InheritedWidget',
           ),
         );
         expect(rendered, isNot(contains('{{')));

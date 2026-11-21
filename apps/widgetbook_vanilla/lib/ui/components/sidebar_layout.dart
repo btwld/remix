@@ -121,11 +121,23 @@ class VanillaSidebarLayout extends StatefulWidget {
 }
 
 class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
+  Widget _scoped(Widget child) => Builder(
+    builder: (context) => VanillaSidebarLayoutScope._(
+      RemixSidebarLayoutScope.of(context),
+      _closeWhileWide,
+      child: child,
+    ),
+  );
+
+  void _closeWhileWide() {
+    if (widget.compactOpen == true) widget.onCompactOpenChanged?.call(false);
+  }
+
   @override
   Widget build(BuildContext context) => RemixSidebarLayout(
-    sidebar: widget.sidebar,
-    body: widget.body,
-    header: widget.header,
+    sidebar: _scoped(widget.sidebar),
+    body: _scoped(widget.body),
+    header: widget.header == null ? null : _scoped(widget.header!),
     compactBreakpoint: widget.compactBreakpoint,
     inlineWidth: widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
     compactOpen: widget.compactOpen,
@@ -135,4 +147,42 @@ class _VanillaSidebarLayoutState extends State<VanillaSidebarLayout> {
 }
 
 /// Scope available from [VanillaSidebarLayout] and its compact navigation sheet.
-typedef VanillaSidebarLayoutScope = RemixSidebarLayoutScope;
+class VanillaSidebarLayoutScope extends InheritedWidget {
+  const VanillaSidebarLayoutScope._(
+    this._layout,
+    this._closeWhileWide, {
+    required super.child,
+  });
+
+  final RemixSidebarLayoutScope _layout;
+  final VoidCallback _closeWhileWide;
+
+  /// Whether the layout is currently in its compact presentation.
+  bool get isCompact => _layout.isCompact;
+
+  /// Whether the compact sheet is open. Always false while wide.
+  bool get isCompactOpen => _layout.isCompactOpen;
+
+  /// Opens the compact sheet. Has no effect while wide.
+  void openCompact() => _layout.openCompact();
+
+  /// Requests closure, even while wide if the host still sets compactOpen to true.
+  void closeCompact() => isCompact ? _layout.closeCompact() : _closeWhileWide();
+
+  /// Returns the nearest preset scope, or throws if there is no [VanillaSidebarLayout].
+  static VanillaSidebarLayoutScope of(BuildContext context) =>
+      maybeOf(context) ??
+      (throw FlutterError(
+        'VanillaSidebarLayoutScope.of requires a '
+        'VanillaSidebarLayout ancestor.',
+      ));
+
+  /// Returns the nearest preset scope, or null if there is no [VanillaSidebarLayout].
+  static VanillaSidebarLayoutScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<VanillaSidebarLayoutScope>();
+
+  @override
+  bool updateShouldNotify(VanillaSidebarLayoutScope oldWidget) =>
+      isCompact != oldWidget.isCompact ||
+      isCompactOpen != oldWidget.isCompactOpen;
+}
