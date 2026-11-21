@@ -104,9 +104,18 @@ class UiTheme extends StatelessWidget {
   Widget _build(BuildContext context) {
     final inherited = context
         .dependOnInheritedWidgetOfExactType<_UiInheritedTheme>();
-    final base = theme ?? inherited?.baseTheme ?? const UiThemeData.light();
+    final base =
+        theme ??
+        inherited?.baseTheme ??
+        inherited?.data ??
+        const UiThemeData.light();
     final dark =
-        darkTheme ?? theme ?? inherited?.darkTheme ?? const UiThemeData.dark();
+        darkTheme ??
+        (theme != null
+            ? theme!
+            : inherited?.darkTheme ??
+                  inherited?.data ??
+                  const UiThemeData.dark());
     final useDark = mode == null && inherited != null
         ? inherited.usesDarkTheme
         : switch (mode ?? UiThemeMode.system) {
@@ -138,9 +147,10 @@ class UiTheme extends StatelessWidget {
     }
 
     return _UiInheritedTheme(
+      data: selected,
       baseTheme: base,
       darkTheme: dark,
-      usesDarkTheme: useDark,
+      useDarkTheme: useDark,
       child: scoped,
     );
   }
@@ -188,44 +198,6 @@ Widget _recolored(Color foreground, Widget child) => DefaultTextStyle.merge(
   ),
 );
 
-class _ThemeComparison {
-  _ThemeComparison(this.theme)
-    : _overrideCount = theme.colors.length,
-      _lookups = _snapshotLookups(theme.colors);
-
-  final UiThemeData theme;
-  final int _overrideCount;
-  final Map<ColorToken, Color?> _lookups;
-
-  static final _paletteKeys = {
-    ...const UiThemeData.light().tokens.keys.whereType<ColorToken>(),
-    ...const UiThemeData.dark().tokens.keys.whereType<ColorToken>(),
-  };
-
-  static Map<ColorToken, Color?> _snapshotLookups(
-    Map<ColorToken, Color> colors,
-  ) {
-    if (colors.isEmpty) return const {};
-
-    final lookups = Map<ColorToken, Color?>.identity()
-      ..addAll(colors)
-      ..addEntries(_paletteKeys.map((token) => MapEntry(token, colors[token])));
-    for (final token in colors.keys) {
-      final alias = ColorToken(token.name);
-      if (alias == token) lookups[alias] = colors[alias];
-    }
-    return lookups;
-  }
-
-  bool differsFrom(_ThemeComparison old) {
-    if (theme != old.theme) return true;
-
-    final colors = theme.colors;
-    return colors.length != old._overrideCount ||
-        old._lookups.entries.any((entry) => colors[entry.key] != entry.value);
-  }
-}
-
 /// The inherited half of [UiTheme].
 ///
 /// Kept private so callers always mount [UiTheme], which installs the
@@ -233,30 +205,34 @@ class _ThemeComparison {
 /// `InheritedTheme.wrap` can still rebuild both across a route boundary.
 class _UiInheritedTheme extends InheritedTheme {
   _UiInheritedTheme({
-    required UiThemeData baseTheme,
-    required UiThemeData darkTheme,
-    required this.usesDarkTheme,
+    required this.data,
+    this.baseTheme,
+    this.darkTheme,
+    this.useDarkTheme,
     required super.child,
-  }) : _base = _ThemeComparison(baseTheme) {
-    _dark = identical(baseTheme, darkTheme)
-        ? _base
-        : _ThemeComparison(darkTheme);
-  }
+  }) : _comparisonSnapshot = (
+         data.copyWith(colors: const {}),
+         baseTheme?.copyWith(colors: const {}),
+         darkTheme?.copyWith(colors: const {}),
+         useDarkTheme,
+       );
 
-  final _ThemeComparison _base;
-  late final _ThemeComparison _dark;
+  final (UiThemeData, UiThemeData?, UiThemeData?, bool?) _comparisonSnapshot;
 
   /// The theme values available to [child].
-  UiThemeData get data => usesDarkTheme ? darkTheme : baseTheme;
+  final UiThemeData data;
 
   /// The configured light values, carried so a nested scope can inherit them.
-  UiThemeData get baseTheme => _base.theme;
+  final UiThemeData? baseTheme;
 
   /// The configured dark values, carried so a nested scope can inherit them.
-  UiThemeData get darkTheme => _dark.theme;
+  final UiThemeData? darkTheme;
+
+  /// The active selection, carried so a nested scope can inherit it.
+  final bool? useDarkTheme;
 
   /// Whether the dark half of the configured pair is currently selected.
-  final bool usesDarkTheme;
+  bool get usesDarkTheme => useDarkTheme ?? data.brightness == Brightness.dark;
 
   /// Rebuilds the theme *and* its Mix scope for a captured subtree.
   ///
@@ -267,16 +243,19 @@ class _UiInheritedTheme extends InheritedTheme {
   @override
   Widget wrap(BuildContext context, Widget child) {
     return _UiInheritedTheme(
+      data: data,
       baseTheme: baseTheme,
       darkTheme: darkTheme,
-      usesDarkTheme: usesDarkTheme,
+      useDarkTheme: useDarkTheme,
       child: MixScope(tokens: data.tokens, child: child),
     );
   }
 
   @override
   bool updateShouldNotify(_UiInheritedTheme oldWidget) =>
-      usesDarkTheme != oldWidget.usesDarkTheme ||
-      _base.differsFrom(oldWidget._base) ||
-      _dark.differsFrom(oldWidget._dark);
+      data != oldWidget.data ||
+      baseTheme != oldWidget.baseTheme ||
+      darkTheme != oldWidget.darkTheme ||
+      useDarkTheme != oldWidget.useDarkTheme ||
+      _comparisonSnapshot != oldWidget._comparisonSnapshot;
 }

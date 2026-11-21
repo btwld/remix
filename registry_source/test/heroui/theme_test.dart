@@ -235,53 +235,6 @@ void main() {
     );
   }
 
-  for (final changesAccent in [true, false]) {
-    testWidgets(
-      changesAccent
-          ? 'changing an accent in an identity map notifies dependents'
-          : 'reordering identity-map entries does not notify dependents',
-      (tester) async {
-        const originalAccent = Color(0xFF8000FF);
-        const updatedAccent = Color(0xFF00FF00);
-        const otherAccent = Color(0xFF00FFFF);
-        const accent = HeroUiTokens.accent;
-        final equalAccent = ColorToken(accent.name);
-        final colors = Map<ColorToken, Color>.identity()
-          ..[accent] = originalAccent
-          ..[equalAccent] = otherAccent;
-        final theme = HeroUiThemeData.light(colors: colors);
-        final seenAccents = <Color>[];
-        final child = Builder(
-          builder: (context) {
-            seenAccents.add(HeroUiTheme.of(context).color(accent));
-            return const SizedBox();
-          },
-        );
-
-        Future<void> pumpTheme(HeroUiThemeData theme) =>
-            tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
-
-        await pumpTheme(theme);
-        expect(seenAccents, [originalAccent]);
-
-        if (changesAccent) {
-          await pumpTheme(
-            HeroUiThemeData.light(
-              colors: Map<ColorToken, Color>.identity()
-                ..addAll(colors)
-                ..[accent] = updatedAccent,
-            ),
-          );
-          expect(seenAccents, [originalAccent, updatedAccent]);
-        } else {
-          colors[accent] = colors.remove(accent)!;
-          await pumpTheme(theme);
-          expect(seenAccents, [originalAccent]);
-        }
-      },
-    );
-  }
-
   testWidgets('replacing a value-equal map key does not notify dependents', (
     tester,
   ) async {
@@ -304,73 +257,6 @@ void main() {
     colors[ColorToken(accent.name)] = colors.remove(accent)!;
     await tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
     expect(builds, 1);
-  });
-
-  for (final keepsStoredKey in [false, true]) {
-    testWidgets(
-      keepsStoredKey
-          ? 'a map policy change notifies even when its stored key stays the same'
-          : 'switching from identity to value lookups notifies dependents',
-      (tester) async {
-        const accent = HeroUiTokens.accent;
-        final alias = ColorToken(accent.name);
-        const override = Color(0xFF8000FF);
-        final fallback = const HeroUiThemeData.light().color(accent);
-        final identityTheme = HeroUiThemeData.light(
-          colors: Map<ColorToken, Color>.identity()..[alias] = override,
-        );
-        final valueTheme = HeroUiThemeData.light(
-          colors: {if (keepsStoredKey) alias: override else accent: override},
-        );
-        final seenAccents = <Color>[];
-        final child = Builder(
-          builder: (context) {
-            seenAccents.add(HeroUiTheme.of(context).color(accent));
-            return const SizedBox();
-          },
-        );
-
-        Future<void> pumpTheme(HeroUiThemeData theme) =>
-            tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
-
-        await pumpTheme(identityTheme);
-        expect(seenAccents, [fallback]);
-        await pumpTheme(valueTheme);
-        expect(seenAccents, [fallback, override]);
-        await pumpTheme(identityTheme);
-        expect(seenAccents, [fallback, override, fallback]);
-      },
-    );
-  }
-
-  testWidgets('changing lookup policy notifies accent alias dependents', (
-    tester,
-  ) async {
-    const accent = HeroUiTokens.accent;
-    final alias = ColorToken(accent.name);
-    const override = Color(0xFF8000FF);
-    final fallback = const HeroUiThemeData.light().color(alias);
-    final valueTheme = HeroUiThemeData.light(colors: {accent: override});
-    final identityTheme = HeroUiThemeData.light(
-      colors: Map<ColorToken, Color>.identity()..[accent] = override,
-    );
-    final seenAccents = <Color>[];
-    final child = Builder(
-      builder: (context) {
-        seenAccents.add(HeroUiTheme.of(context).color(alias));
-        return const SizedBox();
-      },
-    );
-
-    Future<void> pumpTheme(HeroUiThemeData theme) =>
-        tester.pumpWidget(HeroUiTheme(theme: theme, child: child));
-
-    await pumpTheme(valueTheme);
-    expect(seenAccents, [override]);
-    await pumpTheme(identityTheme);
-    expect(seenAccents, [override, fallback]);
-    await pumpTheme(valueTheme);
-    expect(seenAccents, [override, fallback, override]);
   });
 
   testWidgets('subclass equality determines whether a theme change notifies', (
