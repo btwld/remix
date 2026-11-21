@@ -165,6 +165,7 @@ All three presets also ship `combobox` (depends on `theme` and `text_field`).
 Vanilla also: `calendar`, `range_calendar`, `date_picker`, `date_range_picker`.
 These hand-written composites wire the Vanilla child recipes and have no
 generated part; selection and overlay behavior stay in Remix.
+Both pickers install `date_picker_styles` automatically as an internal dependency.
 
 Vanilla also: `breadcrumbs`, a hand-written trail of `link` recipes after
 shadcn/ui's Breadcrumb (depends on `theme` and `link`; no generated part), and

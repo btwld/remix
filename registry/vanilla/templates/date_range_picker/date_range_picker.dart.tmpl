@@ -1,17 +1,12 @@
-import 'dart:math' as math;
-
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 {{icon:import}}
 
-import '../theme/effects.dart';
 import '../theme/tokens.dart';
 import 'button.dart';
-import 'calendar.dart';
-import 'icon_button.dart';
+import 'date_picker/date_picker_styles.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
-import 'select.dart';
 
 /// The application's DateRangePicker composite.
 ///
@@ -144,25 +139,14 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
-      final requested = buttonStyle
-          .build(context)
-          .spec
-          .container
-          .spec
-          .box
-          ?.spec
-          .constraints;
-      final panelWidth = math.max(
-        {{valuePrefix}}CalendarDayWidth(context) * DateTime.daysPerWeek +
-            {{typePrefix}}Tokens.s3 * 2 +
-            {{typePrefix}}Tokens.strokeHairline * 2,
-        math.max(
-          constraints.minWidth,
-          math.max(
-            requested?.minWidth ?? 0.0,
-            requested?.hasBoundedWidth == true ? requested!.maxWidth : 0.0,
-          ),
-        ),
+      final styles = {{valuePrefix}}DatePickerStyles(
+        context,
+        constraints,
+        buttonStyle: buttonStyle,
+        popoverStyle: popoverStyle,
+        navigationStyle: navigationStyle,
+        selectorStyle: selectorStyle,
+        calendarStyle: calendarStyle,
       );
       return RemixDateRangePicker(
         value: value,
@@ -184,89 +168,16 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
         autofocus: autofocus,
         positioning: positioning,
         icon: {{icon:calendar}},
-        placeholderStyle: ButtonStyler().label(
-          .color({{typePrefix}}Tokens.mutedForeground()),
-        ),
-        expandedStyle: ButtonStyler()
-            .border({{valuePrefix}}FocusBorder())
-            .containerEffects({{valuePrefix}}FocusRing()),
+        placeholderStyle: styles.placeholder,
+        expandedStyle: styles.expanded,
         buttonStyle: {{valuePrefix}}ButtonStyle(
           variant: .outline,
-          style: ButtonStyler()
-              .mainAxisAlignment(.start)
-              .onHovered(
-                ButtonStyler().icon(.color({{typePrefix}}Tokens.mutedForeground())),
-              )
-              .onPressed(
-                ButtonStyler().icon(.color({{typePrefix}}Tokens.mutedForeground())),
-              )
-              .icon(
-                .color({{typePrefix}}Tokens.mutedForeground()).size(
-                  MediaQuery.textScalerOf(context).scale({{typePrefix}}Tokens.icon),
-                ),
-              )
-              .minWidth({{typePrefix}}Tokens.s16 * 3 + {{typePrefix}}Tokens.s12)
-              .maxWidth(panelWidth)
-              .padding(.horizontal({{typePrefix}}Tokens.s3))
-              .label(
-                .fontWeight(
-                  FontWeight.w400,
-                ).textAlign(.start).maxLines(1).overflow(.ellipsis),
-              )
-              .merge(buttonStyle),
+          style: styles.button,
         ),
-        calendarStyle: {{valuePrefix}}RangeCalendarStyle(
-          style: CalendarStyler()
-              .day(
-                CalendarDayStyler()
-                    .minWidth({{valuePrefix}}CalendarDayWidth(context))
-                    .minHeight({{valuePrefix}}CalendarDayWidth(context)),
-              )
-              .merge(calendarStyle),
-        ),
-        popoverStyle: {{valuePrefix}}PopoverStyle(
-          style: PopoverStyler()
-              .minWidth(panelWidth)
-              .maxWidth(double.infinity)
-              .padding(.all(0))
-              .merge(popoverStyle),
-        ),
-        navigationStyle: {{valuePrefix}}IconButtonStyle(
-          variant: .ghost,
-          style: IconButtonStyler()
-              .size(
-                {{valuePrefix}}CalendarDayWidth(context),
-                {{valuePrefix}}CalendarDayWidth(context),
-              )
-              .icon(
-                .size(
-                  MediaQuery.textScalerOf(context).scale({{typePrefix}}Tokens.icon),
-                ),
-              )
-              .merge(navigationStyle),
-        ),
-        selectorStyle: {{valuePrefix}}SelectStyle(
-          style: SelectStyler()
-              .content({{valuePrefix}}CalendarSelectorContentStyle())
-              .trigger(
-                SelectTriggerStyler()
-                    .indicator(
-                      .size(
-                        MediaQuery.textScalerOf(
-                          context,
-                        ).scale({{typePrefix}}Tokens.s2_5),
-                      ),
-                    )
-                    .maxWidth(double.infinity)
-                    .minHeight({{valuePrefix}}CalendarDayWidth(context))
-                    .minWidth(
-                      MediaQuery.textScalerOf(
-                        context,
-                      ).scale({{typePrefix}}Tokens.s16 + {{typePrefix}}Tokens.s12),
-                    ),
-              )
-              .merge(selectorStyle),
-        ),
+        popoverStyle: {{valuePrefix}}PopoverStyle(style: styles.popover),
+        navigationStyle: styles.navigation,
+        selectorStyle: styles.selector,
+        calendarStyle: {{valuePrefix}}RangeCalendarStyle(style: styles.calendar),
         summaryBuilder: summaryBuilder,
       );
     },
