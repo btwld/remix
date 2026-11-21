@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:mix/mix.dart' show MixScope;
 import 'package:naked_ui/naked_ui.dart';
 
 import '../../utilities/remix_reduced_motion.dart';
 import '../dialog/dialog.dart';
 
 typedef _SheetInputs = ({
+  MixScope? mixScope,
   Widget sidebar,
   Widget Function(BuildContext, Widget) panelBuilder,
   String semanticLabel,
@@ -112,6 +114,7 @@ class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
   bool get _shouldOpen => _isCompact && _effectiveOpen;
 
   _SheetInputs get _sheetInputs => (
+    mixScope: MixScope.maybeOf(context),
     sidebar: widget.sidebar,
     panelBuilder: widget.compactPanelBuilder,
     semanticLabel: widget.semanticLabel,
@@ -175,7 +178,15 @@ class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
             if (route.isActive && mounted && _shouldOpen) {
               renderedInputs = inputs;
             }
-            return _buildSheet(renderedInputs, requestClose);
+            final scope = renderedInputs.mixScope;
+            final panel = _buildSheet(renderedInputs, requestClose);
+            return scope == null
+                ? panel
+                : MixScope(
+                    tokens: scope.tokens,
+                    orderOfModifiers: scope.orderOfModifiers,
+                    child: panel,
+                  );
           },
         );
       },
@@ -242,7 +253,9 @@ class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
         isCompact: _isCompact,
         isCompactOpen: _shouldOpen,
         openCompact: _openCompact,
-        closeCompact: _closeCompact,
+        closeCompact: () {
+          if (_isCompact) _closeCompact();
+        },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

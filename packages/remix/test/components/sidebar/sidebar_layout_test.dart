@@ -60,6 +60,86 @@ void main() {
     expect(changes, [true, false]);
   });
 
+  testWidgets('selecting an inline destination does not request a close', (
+    tester,
+  ) async {
+    final changes = <bool>[];
+    await tester.pumpWidget(
+      _app(
+        _layout(
+          compactOpen: true,
+          onChanged: changes.add,
+          sidebar: Builder(
+            builder: (context) => GestureDetector(
+              onTap: RemixSidebarLayoutScope.of(context).closeCompact,
+              child: const Text('Orders'),
+            ),
+          ),
+        ),
+        width: 600,
+      ),
+    );
+    expect(_scope(tester).isCompactOpen, isFalse);
+    await tester.tap(find.text('Orders'));
+    expect(changes, isEmpty);
+  });
+
+  testWidgets('open panel follows host brightness without losing focus', (
+    tester,
+  ) async {
+    const background = ColorToken('navigation.background');
+    const light = Color(0xFFFFFFFF);
+    const dark = Color(0xFF171717);
+    final focus = FocusNode();
+    addTearDown(focus.dispose);
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
+    addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+
+    final layout = RemixSidebarLayout(
+      compactBreakpoint: 400,
+      inlineWidth: 120,
+      compactOpen: true,
+      sidebar: Focus(
+        focusNode: focus,
+        autofocus: true,
+        child: const Text('Nav'),
+      ),
+      body: _body,
+      compactPanelBuilder: (context, child) => ColoredBox(
+        color: MixScope.tokenOf(background, context),
+        child: child,
+      ),
+    );
+    await tester.pumpWidget(
+      _app(
+        Builder(
+          builder: (context) => MixScope(
+            colors: {
+              background:
+                  MediaQuery.platformBrightnessOf(context) == Brightness.dark
+                  ? dark
+                  : light,
+            },
+            child: layout,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final panel = find
+        .ancestor(of: find.text('Nav'), matching: find.byType(ColoredBox))
+        .first;
+    final route = ModalRoute.of(tester.element(panel));
+    expect(tester.widget<ColoredBox>(panel).color, light);
+    expect(FocusManager.instance.primaryFocus, same(focus));
+
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    await tester.pumpAndSettle();
+    expect(tester.widget<ColoredBox>(panel).color, dark);
+    expect(ModalRoute.of(tester.element(panel)), same(route));
+    expect(FocusManager.instance.primaryFocus, same(focus));
+  });
+
   testWidgets('a controlled owner can decline Escape or accept dismissal', (
     tester,
   ) async {
