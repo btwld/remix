@@ -23,6 +23,14 @@ final Version registryRemixFloor = _floorOf(registryRemixConstraint);
 final String registryMixChartConstraint = _readRegistryConstraint('mix_chart');
 final Version registryMixChartFloor = _floorOf(registryMixChartConstraint);
 
+final String registryMixGeneratorConstraint = _readRegistryConstraint(
+  'mix_generator',
+  section: 'devDependencies',
+);
+final Version registryMixGeneratorFloor = _floorOf(
+  registryMixGeneratorConstraint,
+);
+
 /// Icon floors and fallbacks follow the catalog under test, before and after
 /// the schema-2 migration. A CLI release can read both distributions.
 final _registryIcons = IconRegistry.parse(
@@ -44,7 +52,10 @@ Version _floorOf(String constraint) =>
 /// The constraint the catalog declares for [package], from the first item that
 /// depends on it. Reading it back is what keeps these fixtures honest: a floor
 /// raised in `registry/` moves here without an edit.
-String _readRegistryConstraint(String package) {
+String _readRegistryConstraint(
+  String package, {
+  String section = 'dependencies',
+}) {
   final document = loadYaml(
     File(
       p.join(findCheckoutRegistry().path, 'vanilla', 'registry.yaml'),
@@ -52,7 +63,7 @@ String _readRegistryConstraint(String package) {
   );
   final items = (document as YamlMap)['items'] as YamlMap;
   for (final item in items.values) {
-    final dependencies = (item as YamlMap)['dependencies'];
+    final dependencies = (item as YamlMap)[section];
     if (dependencies is YamlMap && dependencies[package] is String) {
       return dependencies[package] as String;
     }
@@ -93,7 +104,6 @@ void writeRequiredPubspec(
   String? lucideFlutter,
   String? remixUiFonts = '^0.1.0',
   String buildRunner = '^2.10.1',
-  String mixGenerator = '^2.2.0-beta.3',
 }) {
   final lucide =
       lucideFlutter ??
@@ -116,7 +126,7 @@ dependencies:
   mix_annotations: $mixAnnotations
 $mixChartDependency$remixUiIconsDependency$lucideDependency${remixUiFontsDependency}dev_dependencies:
   build_runner: $buildRunner
-  mix_generator: $mixGenerator
+  mix_generator: $registryMixGeneratorConstraint
 ''');
 }
 
@@ -129,7 +139,6 @@ void writeRequiredLock(
   String? lucideFlutter,
   String? remixUiFonts = '0.1.0',
   String buildRunner = '2.10.1',
-  String mixGenerator = '2.2.0-beta.3',
 }) {
   final lucide =
       lucideFlutter ??
@@ -155,7 +164,7 @@ void writeRequiredLock(
 $mixChartPackage$remixUiIconsPackage$lucidePackage${remixUiFontsPackage}  build_runner:
     version: "$buildRunner"
   mix_generator:
-    version: "$mixGenerator"
+    version: "$registryMixGeneratorFloor"
 ''');
 }
 
