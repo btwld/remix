@@ -32,6 +32,7 @@ final class OwnershipPlan {
     final file = File(p.join(root.path, ownershipFileName));
     final before = file.existsSync() ? file.readAsStringSync() : null;
     final targets = <String, String>{};
+    final recordedPaths = <String>{};
     final context = <String, String>{
       'prefix': config.prefix,
       'preset': config.preset,
@@ -76,9 +77,20 @@ final class OwnershipPlan {
             'Invalid ownership target in remix.ownership.json.',
           );
         }
-        validateProjectFilePath(root, target);
+        recordedPaths.add(validateProjectFilePath(root, target));
         targets[target] = entry.value as String;
       }
+    }
+
+    bool hasRecordedFile(String target) {
+      final path = validateProjectFilePath(root, target);
+      return recordedPaths.contains(path) ||
+          (File(path).existsSync() &&
+              recordedPaths.any(
+                (recordedPath) =>
+                    File(recordedPath).existsSync() &&
+                    FileSystemEntity.identicalSync(path, recordedPath),
+              ));
     }
 
     // Resolve internal symlinks too, so different spellings of one output
@@ -112,7 +124,6 @@ final class OwnershipPlan {
       }
       reservations[path] = (entry.key, entry.value);
     }
-    final recordedPaths = reservations.keys.toSet();
     final barrel = canonical('${config.uiPath}/ui.dart');
     final planned = <String>{};
     for (final item in graph.items) {
@@ -138,7 +149,7 @@ final class OwnershipPlan {
         ];
         final evidence = [
           if (managedExports.contains(oldExport) &&
-              !recordedPaths.contains(canonical('${config.uiPath}/$oldExport')))
+              !hasRecordedFile('${config.uiPath}/$oldExport'))
             '${config.uiPath}/ui.dart still exports $oldExport.',
           if (obsoleteTargets.isNotEmpty)
             '$ownershipFileName still reserves ${obsoleteTargets.join(', ')}.',

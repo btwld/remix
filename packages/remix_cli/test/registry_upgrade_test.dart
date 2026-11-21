@@ -75,6 +75,49 @@ void main() {
     },
   );
 
+  test('a case-only receipt match must refer to the exported file', () async {
+    final installer = Installer(
+      projectRoot: root,
+      sources: const FixtureOfficialResolver(),
+      writeOut: (_) {},
+    );
+    expect(await _run(installer, ['init']), (0, ''));
+    _file(root, _oldField)
+      ..createSync(recursive: true)
+      ..writeAsStringSync('class UiTextField {}\n');
+    const recordedTarget = 'lib/ui/components/TextField.dart';
+    final recordedFile = _file(root, recordedTarget);
+    final sameFile = recordedFile.existsSync();
+    if (!sameFile) {
+      recordedFile.writeAsStringSync('const companyLegacyWidget = 42;\n');
+    }
+    final barrel = _file(root, _barrel);
+    barrel.writeAsStringSync(
+      updateManagedBarrel(barrel.readAsStringSync(), [
+        'components/textfield.dart',
+      ]),
+    );
+    _writeOwnership(
+      root,
+      preset: 'vanilla',
+      uiPath: 'lib/ui',
+      targets: {
+        recordedTarget: 'example/company/registry#vanilla/legacy_widget',
+      },
+    );
+    final before = snapshotFiles(root);
+
+    final (exitCode, error) = await _run(installer, [
+      'add',
+      'search_field',
+      '--dry-run',
+    ]);
+    expect(exitCode, sameFile ? 0 : 1, reason: error);
+    if (!sameFile)
+      expect(error, contains('still exports components/textfield.dart'));
+    expect(snapshotFiles(root), before);
+  });
+
   for (final (preset, oldItem, newItem) in [
     ('vanilla', 'textfield', 'text_field'),
     ('fortal', 'textfield', 'text_field'),
