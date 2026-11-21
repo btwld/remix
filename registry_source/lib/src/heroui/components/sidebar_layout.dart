@@ -117,6 +117,7 @@ class HeroUiSidebarLayout extends StatefulWidget {
 
 class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
   bool _selfOpen = false;
+  bool _reopenRequested = false;
   ValueNotifier<_CompactSheetInputs>? _sheetInputs;
 
   _CompactSheetInputs get _currentSheetInputs => (
@@ -149,6 +150,7 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
   // presentation.
   void _openCompact() {
     if (!_isCompact) return;
+    if (_sheetRoute?.isActive == false) _reopenRequested = true;
     _setOpen(true);
   }
 
@@ -182,6 +184,7 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
   }
 
   Future<void> _pushSheet() async {
+    _reopenRequested = false;
     final inputs = ValueNotifier(_currentSheetInputs);
     _sheetInputs = inputs;
     var renderedInputs = inputs.value;
@@ -208,7 +211,7 @@ class _HeroUiSidebarLayoutState extends State<HeroUiSidebarLayout> {
         );
       },
     );
-    if (mounted) _setOpen(false);
+    if (mounted && !_reopenRequested) _setOpen(false);
     await _sheetRoute?.completed;
     inputs.dispose();
     if (!mounted) return;
