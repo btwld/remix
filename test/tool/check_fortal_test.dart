@@ -156,33 +156,6 @@ void main() {
       );
     });
 
-    test(
-      'the inventory follows a declared enum source through a re-export',
-      () {
-        final components =
-            '${candidate.path}/registry_source/lib/src/fortal/components';
-        final typography = File('$components/typography.dart');
-        final source = typography.readAsStringSync();
-        final enumStart = source.indexOf('/// The nine steps');
-        final enumEnd = source.indexOf('/// The text style token');
-        File(
-          '$components/text_axes.dart',
-        ).writeAsStringSync(source.substring(enumStart, enumEnd));
-        typography.writeAsStringSync(
-          '${source.substring(0, enumStart)}'
-          "import 'text_axes.dart';\n\nexport 'text_axes.dart';\n\n"
-          '${source.substring(enumEnd)}',
-        );
-        final text = (catalog['families'] as List).singleWhere(
-          (family) => family['id'] == 'text',
-        );
-        text['enumRecipe'] = 'text_axes';
-        catalogFile.writeAsStringSync(jsonEncode(catalog));
-
-        expect(checkFortalContract(candidate), isEmpty);
-      },
-    );
-
     test('a missing shared enum recipe is reported as contract drift', () {
       File(
         '${candidate.path}/registry_source/lib/src/fortal/components/typography.dart',

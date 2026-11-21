@@ -176,20 +176,9 @@ List<String> checkFortalContract(Directory workspace) {
         fileName == 'base_button.dart') {
       continue;
     }
-    final exportsEnums = parseRecipe(path, file.readAsStringSync()).directives
-        .whereType<ExportDirective>()
-        .map((export) => export.uri.stringValue)
-        .nonNulls
-        .any(
-          (uri) => enumSources.contains(
-            p.posix.normalize(p.posix.join(fortalComponentsPath, uri)),
-          ),
-        );
-    if (!exportsEnums) {
-      failures.add(
-        'Unspecified Fortal recipe: ${p.basenameWithoutExtension(fileName)}.',
-      );
-    }
+    failures.add(
+      'Unspecified Fortal recipe: ${p.basenameWithoutExtension(fileName)}.',
+    );
   }
   for (final path in [
     'test/fortal/palette_contrast_test.dart',
