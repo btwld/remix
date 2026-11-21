@@ -125,6 +125,9 @@ final class OwnershipPlan {
       reservations[path] = (entry.key, entry.value);
     }
     final barrel = canonical('${config.uiPath}/ui.dart');
+    final barrelUri = root.uri.resolveUri(
+      Uri(path: '${config.uiPath}/ui.dart'),
+    );
     final planned = <String>{};
     for (final item in graph.items) {
       final [namespace, itemName] = item.name.split('/');
@@ -142,15 +145,20 @@ final class OwnershipPlan {
           source.path == 'registry' &&
           !graph.catalogs[namespace]!.items.containsKey(oldName)) {
         final oldExport = 'components/$oldName.dart';
+        final oldExportUri = barrelUri.resolve(oldExport);
+        final obsoleteExport = managedExports.where((export) {
+          final uri = Uri.tryParse(export);
+          return uri != null && barrelUri.resolveUri(uri) == oldExportUri;
+        }).firstOrNull;
         final oldOwner = '$ownerScope/$oldName';
         final obsoleteTargets = [
           for (final MapEntry(:key, :value) in targets.entries)
             if (value == oldOwner) key,
         ];
         final evidence = [
-          if (managedExports.contains(oldExport) &&
+          if (obsoleteExport != null &&
               !hasRecordedFile('${config.uiPath}/$oldExport'))
-            '${config.uiPath}/ui.dart still exports $oldExport.',
+            '${config.uiPath}/ui.dart still exports $obsoleteExport.',
           if (obsoleteTargets.isNotEmpty)
             '$ownershipFileName still reserves ${obsoleteTargets.join(', ')}.',
         ];

@@ -30,50 +30,60 @@ void main() {
     addTearDown(() => root.deleteSync(recursive: true));
   });
 
-  test(
-    'a partially adopted install cannot add a second managed export',
-    () async {
-      final processes = RecordingProcessRunner(
-        (_) async => successProcessOutput,
-      );
-      final installer = Installer(
-        projectRoot: root,
-        sources: const FixtureOfficialResolver(),
-        processRunner: processes,
-        writeOut: (_) {},
-      );
-      await _seedOldVanilla(root, installer, recordTextField: false);
-      for (final path in _themeExports) {
-        _file(root, 'lib/ui/$path').createSync(recursive: true);
-      }
-      final before = snapshotFiles(root);
-
-      for (final flags in [
-        ['--dry-run'],
-        ['--diff', '--exit-code'],
-        ['--overwrite'],
-        ['--adopt'],
-        <String>[],
-      ]) {
-        final (exitCode, error) = await _run(installer, [
-          'add',
-          'search_field',
-          ...flags,
-        ]);
-        expect(exitCode, 1, reason: '$flags: $error');
-        expect(
-          error,
-          contains('@remix/textfield was renamed to @remix/text_field'),
+  for (final legacyPath in [
+    'components/textfield.dart',
+    './components/textfield.dart',
+  ]) {
+    test(
+      'a partially adopted install cannot add a second export alongside $legacyPath',
+      () async {
+        final processes = RecordingProcessRunner(
+          (_) async => successProcessOutput,
         );
-        expect(error, contains('components/textfield.dart'));
-        expect(error, contains(_barrel));
-        expect(error, contains('REGISTRY_511_MIGRATION.md'));
-      }
-      expect(await _run(installer, ['add', 'link', '--dry-run']), (0, ''));
-      expect(processes.calls, isEmpty);
-      expect(snapshotFiles(root), before);
-    },
-  );
+        final installer = Installer(
+          projectRoot: root,
+          sources: const FixtureOfficialResolver(),
+          processRunner: processes,
+          writeOut: (_) {},
+        );
+        await _seedOldVanilla(
+          root,
+          installer,
+          recordTextField: false,
+          fieldExport: "export '$legacyPath';",
+        );
+        for (final path in _themeExports) {
+          _file(root, 'lib/ui/$path').createSync(recursive: true);
+        }
+        final before = snapshotFiles(root);
+
+        for (final flags in [
+          ['--dry-run'],
+          ['--diff', '--exit-code'],
+          ['--overwrite'],
+          ['--adopt'],
+          <String>[],
+        ]) {
+          final (exitCode, error) = await _run(installer, [
+            'add',
+            'search_field',
+            ...flags,
+          ]);
+          expect(exitCode, 1, reason: '$flags: $error');
+          expect(
+            error,
+            contains('@remix/textfield was renamed to @remix/text_field'),
+          );
+          expect(error, contains('still exports $legacyPath'));
+          expect(error, contains(_barrel));
+          expect(error, contains('REGISTRY_511_MIGRATION.md'));
+        }
+        expect(await _run(installer, ['add', 'link', '--dry-run']), (0, ''));
+        expect(processes.calls, isEmpty);
+        expect(snapshotFiles(root), before);
+      },
+    );
+  }
 
   test('a case-only receipt match must refer to the exported file', () async {
     final installer = Installer(
@@ -325,6 +335,7 @@ Future<void> _seedOldVanilla(
   Directory root,
   Installer installer, {
   required bool recordTextField,
+  String fieldExport = _oldExport,
 }) async {
   expect(await _run(installer, ['init', '--prefix', 'Acme']), (0, ''));
   _file(root, _oldField)
@@ -343,7 +354,7 @@ Future<void> _seedOldVanilla(
 library;
 
 $managedExportsStart
-$_oldExport
+$fieldExport
 ${_themeExports.map((path) => "export '$path';").join('\n')}
 $managedExportsEnd
 
