@@ -20,6 +20,8 @@ library;
 
 import 'dart:io';
 
+import 'package:path/path.dart' as p;
+
 /// The components this checks.
 const componentsPath = 'registry_source/lib/src/default/components';
 
@@ -246,9 +248,10 @@ void main() {
     scaleSource: File(scalePath).readAsStringSync(),
     themeDataSource: File(themeDataPath).readAsStringSync(),
   );
+  final components = Directory(componentsPath);
   final files =
-      Directory(componentsPath)
-          .listSync()
+      components
+          .listSync(recursive: true)
           .whereType<File>()
           .where(
             (file) =>
@@ -259,7 +262,7 @@ void main() {
   final findings = [
     for (final file in files)
       ...offScaleLiterals(
-        file.uri.pathSegments.last,
+        p.posix.relative(file.uri.path, from: components.uri.path),
         file.readAsStringSync(),
         scale,
       ),

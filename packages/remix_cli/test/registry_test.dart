@@ -628,11 +628,13 @@ items:
     () async {
       final registry = CheckoutRegistry(distribution, 'vanilla');
       final catalog = await registry.catalog();
+      const pickerStyles = 'date_picker_styles';
 
       // Both directions. Checking only that each listed name exists would let a
       // new registry item ship with no surface pinned and no rendering asserted.
       expect(catalog.items.keys.toSet(), {
         'theme',
+        pickerStyles,
         ..._componentSurfaces.keys,
         ..._agentRecipeNames,
         'dashboard_demo',
@@ -654,6 +656,7 @@ items:
             'icon_button',
             'select',
             'calendar',
+            pickerStyles,
             'popover',
             name,
           ],
@@ -670,6 +673,7 @@ items:
             'icon_button',
             'select',
             'calendar',
+            pickerStyles,
             'popover',
             'range_calendar',
             name,
