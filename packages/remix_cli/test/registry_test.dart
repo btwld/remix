@@ -344,10 +344,11 @@ items:
           rendered,
           contains('class ${prefix.type}SidebarLayout extends StatefulWidget'),
         );
+        expect(rendered, contains('=> RemixSidebarLayout('));
         expect(
           rendered,
           contains(
-            'class ${prefix.type}SidebarLayoutScope extends InheritedWidget',
+            'typedef ${prefix.type}SidebarLayoutScope = RemixSidebarLayoutScope;',
           ),
         );
         expect(rendered, isNot(contains('{{')));
