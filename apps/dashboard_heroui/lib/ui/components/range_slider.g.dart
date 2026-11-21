@@ -63,25 +63,24 @@ class UiRangeSlider extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixRangeSlider(
-      key: this.key,
-      style: uiRangeSliderStyle(style: this.style),
-      values: this.values,
-      onChanged: this.onChanged,
-      onChangeStart: this.onChangeStart,
-      onChangeEnd: this.onChangeEnd,
-      min: this.min,
-      max: this.max,
-      minSpacing: this.minSpacing,
-      snapDivisions: this.snapDivisions,
-      enabled: this.enabled,
-      enableFeedback: this.enableFeedback,
-      focusNodes: this.focusNodes,
-      autofocusThumbIndex: this.autofocusThumbIndex,
-      semanticLabels: this.semanticLabels,
-      semanticFormatterCallbacks: this.semanticFormatterCallbacks,
-      excludeSemantics: this.excludeSemantics,
+      style: uiRangeSliderStyle(style: style),
+      values: values,
+      onChanged: onChanged,
+      onChangeStart: onChangeStart,
+      onChangeEnd: onChangeEnd,
+      min: min,
+      max: max,
+      minSpacing: minSpacing,
+      snapDivisions: snapDivisions,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      focusNodes: focusNodes,
+      autofocusThumbIndex: autofocusThumbIndex,
+      semanticLabels: semanticLabels,
+      semanticFormatterCallbacks: semanticFormatterCallbacks,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

@@ -75,11 +75,10 @@ class PlaygroundTabBar extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixTabBar(
-      key: this.key,
-      style: playgroundTabBarStyle(variant: this.variant, style: this.style),
-      child: this.child,
+      style: playgroundTabBarStyle(variant: variant, style: style),
+      child: child,
     );
   }
 }
@@ -186,24 +185,23 @@ class PlaygroundTab extends StatelessWidget {
   final String? semanticLabel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixTab(
-      key: this.key,
-      style: playgroundTabStyle(variant: this.variant, style: this.style),
-      tabId: this.tabId,
-      child: this.child,
-      label: this.label,
-      icon: this.icon,
-      enabled: this.enabled,
-      mouseCursor: this.mouseCursor,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      onFocusChange: this.onFocusChange,
-      onHoverChange: this.onHoverChange,
-      onPressChange: this.onPressChange,
-      builder: this.builder,
-      semanticLabel: this.semanticLabel,
+      style: playgroundTabStyle(variant: variant, style: style),
+      tabId: tabId,
+      label: label,
+      icon: icon,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      builder: builder,
+      semanticLabel: semanticLabel,
+      child: child,
     );
   }
 }
@@ -228,13 +226,12 @@ class PlaygroundTabView extends StatelessWidget {
   final bool maintainState;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixTabView(
-      key: this.key,
-      style: playgroundTabViewStyle(style: this.style),
-      tabId: this.tabId,
-      child: this.child,
-      maintainState: this.maintainState,
+      style: playgroundTabViewStyle(style: style),
+      tabId: tabId,
+      maintainState: maintainState,
+      child: child,
     );
   }
 }

@@ -67,18 +67,17 @@ class FortalProgress extends StatelessWidget {
   final String? semanticsValue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixProgress(
-      key: this.key,
       style: fortalProgressStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      value: this.value,
-      semanticsLabel: this.semanticsLabel,
-      semanticsValue: this.semanticsValue,
+      value: value,
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
     );
   }
 }

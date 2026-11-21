@@ -70,27 +70,23 @@ class PlaygroundSlider extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSlider(
-      key: this.key,
-      style: playgroundSliderStyle(
-        surfaceColor: this.surfaceColor,
-        style: this.style,
-      ),
-      value: this.value,
-      onChanged: this.onChanged,
-      onChangeStart: this.onChangeStart,
-      onChangeEnd: this.onChangeEnd,
-      min: this.min,
-      max: this.max,
-      enabled: this.enabled,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      snapDivisions: this.snapDivisions,
-      semanticLabel: this.semanticLabel,
-      semanticFormatterCallback: this.semanticFormatterCallback,
-      excludeSemantics: this.excludeSemantics,
+      style: playgroundSliderStyle(surfaceColor: surfaceColor, style: style),
+      value: value,
+      onChanged: onChanged,
+      onChangeStart: onChangeStart,
+      onChangeEnd: onChangeEnd,
+      min: min,
+      max: max,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      snapDivisions: snapDivisions,
+      semanticLabel: semanticLabel,
+      semanticFormatterCallback: semanticFormatterCallback,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

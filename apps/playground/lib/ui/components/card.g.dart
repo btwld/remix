@@ -23,11 +23,10 @@ class PlaygroundCard extends StatelessWidget {
   final Widget? child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCard(
-      key: this.key,
-      style: playgroundCardStyle(style: this.style),
-      child: this.child,
+      style: playgroundCardStyle(style: style),
+      child: child,
     );
   }
 }

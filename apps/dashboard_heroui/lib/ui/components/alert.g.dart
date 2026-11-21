@@ -31,13 +31,12 @@ class UiAlert extends StatelessWidget {
   final Widget? child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCallout(
-      key: this.key,
-      style: uiAlertStyle(status: this.status, style: this.style),
-      text: this.text,
-      icon: this.icon,
-      child: this.child,
+      style: uiAlertStyle(status: status, style: style),
+      text: text,
+      icon: icon,
+      child: child,
     );
   }
 }

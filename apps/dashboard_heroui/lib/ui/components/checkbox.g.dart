@@ -110,29 +110,28 @@ class UiCheckbox extends StatelessWidget {
   final MouseCursor mouseCursor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCheckbox(
-      key: this.key,
       style: uiCheckboxStyle(
-        variant: this.variant,
-        invalid: this.invalid,
-        minimumTapTargetSize: this.minimumTapTargetSize,
-        style: this.style,
+        variant: variant,
+        invalid: invalid,
+        minimumTapTargetSize: minimumTapTargetSize,
+        style: style,
       ),
-      selected: this.selected,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      tristate: this.tristate,
-      checkedIcon: this.checkedIcon,
-      uncheckedIcon: this.uncheckedIcon,
-      indeterminateIcon: this.indeterminateIcon,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      enableFeedback: this.enableFeedback,
-      label: this.label,
-      semanticLabel: this.semanticLabel,
-      minimumTapTargetSize: this.minimumTapTargetSize,
-      mouseCursor: this.mouseCursor,
+      selected: selected,
+      onChanged: onChanged,
+      enabled: enabled,
+      tristate: tristate,
+      checkedIcon: checkedIcon,
+      uncheckedIcon: uncheckedIcon,
+      indeterminateIcon: indeterminateIcon,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      enableFeedback: enableFeedback,
+      label: label,
+      semanticLabel: semanticLabel,
+      minimumTapTargetSize: minimumTapTargetSize,
+      mouseCursor: mouseCursor,
     );
   }
 }

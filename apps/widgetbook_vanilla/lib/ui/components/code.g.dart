@@ -46,7 +46,7 @@ class VanillaCode extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) {
-    return vanillaCodeStyle(style: this.style).call(this.text, key: this.key);
+  Widget build(BuildContext _) {
+    return vanillaCodeStyle(style: style).call(text);
   }
 }

@@ -89,24 +89,23 @@ class UiAvatar extends StatelessWidget {
   final RemixAvatarIconBuilder? iconBuilder;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixAvatar(
-      key: this.key,
       style: uiAvatarStyle(
-        variant: this.variant,
-        color: this.color,
-        size: this.size,
-        style: this.style,
+        variant: variant,
+        color: color,
+        size: size,
+        style: style,
       ),
-      backgroundImage: this.backgroundImage,
-      foregroundImage: this.foregroundImage,
-      onBackgroundImageError: this.onBackgroundImageError,
-      onForegroundImageError: this.onForegroundImageError,
-      child: this.child,
-      label: this.label,
-      labelBuilder: this.labelBuilder,
-      icon: this.icon,
-      iconBuilder: this.iconBuilder,
+      backgroundImage: backgroundImage,
+      foregroundImage: foregroundImage,
+      onBackgroundImageError: onBackgroundImageError,
+      onForegroundImageError: onForegroundImageError,
+      label: label,
+      labelBuilder: labelBuilder,
+      icon: icon,
+      iconBuilder: iconBuilder,
+      child: child,
     );
   }
 }

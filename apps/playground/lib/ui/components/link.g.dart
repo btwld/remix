@@ -68,22 +68,21 @@ class PlaygroundLink extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixLink(
-      key: this.key,
-      style: playgroundLinkStyle(style: this.style),
-      label: this.label,
-      child: this.child,
-      onPressed: this.onPressed,
-      enabled: this.enabled,
-      linkUrl: this.linkUrl,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      enableFeedback: this.enableFeedback,
-      mouseCursor: this.mouseCursor,
-      semanticLabel: this.semanticLabel,
-      semanticHint: this.semanticHint,
-      excludeSemantics: this.excludeSemantics,
+      style: playgroundLinkStyle(style: style),
+      label: label,
+      onPressed: onPressed,
+      enabled: enabled,
+      linkUrl: linkUrl,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      enableFeedback: enableFeedback,
+      mouseCursor: mouseCursor,
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+      child: child,
     );
   }
 }

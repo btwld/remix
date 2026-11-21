@@ -79,10 +79,7 @@ class PlaygroundText extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) {
-    return playgroundTextStyle(
-      variant: this.variant,
-      style: this.style,
-    ).call(this.text, key: this.key);
+  Widget build(BuildContext _) {
+    return playgroundTextStyle(variant: variant, style: style).call(text);
   }
 }

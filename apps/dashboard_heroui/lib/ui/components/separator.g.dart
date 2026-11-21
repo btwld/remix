@@ -43,13 +43,12 @@ class UiSeparator extends StatelessWidget {
   final DividerStyler style;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixDivider(
-      key: this.key,
       style: uiSeparatorStyle(
-        variant: this.variant,
-        orientation: this.orientation,
-        style: this.style,
+        variant: variant,
+        orientation: orientation,
+        style: style,
       ),
     );
   }

@@ -27,12 +27,11 @@ class PlaygroundSpinner extends StatelessWidget {
   final String? semanticsValue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSpinner(
-      key: this.key,
-      style: playgroundSpinnerStyle(style: this.style),
-      semanticsLabel: this.semanticsLabel,
-      semanticsValue: this.semanticsValue,
+      style: playgroundSpinnerStyle(style: style),
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
     );
   }
 }

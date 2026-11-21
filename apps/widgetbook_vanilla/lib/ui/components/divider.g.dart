@@ -26,13 +26,9 @@ class VanillaDivider extends StatelessWidget {
   final DividerStyler style;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixDivider(
-      key: this.key,
-      style: vanillaDividerStyle(
-        orientation: this.orientation,
-        style: this.style,
-      ),
+      style: vanillaDividerStyle(orientation: orientation, style: style),
     );
   }
 }

@@ -85,29 +85,28 @@ class VanillaDisclosure extends StatelessWidget {
   final AnimationStyle animationStyle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixDisclosure(
-      key: this.key,
-      style: vanillaDisclosureStyle(style: this.style),
-      trigger: this.trigger,
-      content: this.content,
-      triggerBuilder: this.triggerBuilder,
-      expanded: this.expanded,
-      defaultExpanded: this.defaultExpanded,
-      onExpandedChanged: this.onExpandedChanged,
-      enabled: this.enabled,
-      mouseCursor: this.mouseCursor,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      onFocusChange: this.onFocusChange,
-      onHoverChange: this.onHoverChange,
-      onPressChange: this.onPressChange,
-      semanticLabel: this.semanticLabel,
-      semanticHint: this.semanticHint,
-      excludeSemantics: this.excludeSemantics,
-      transitionBuilder: this.transitionBuilder,
-      animationStyle: this.animationStyle,
+      style: vanillaDisclosureStyle(style: style),
+      trigger: trigger,
+      content: content,
+      triggerBuilder: triggerBuilder,
+      expanded: expanded,
+      defaultExpanded: defaultExpanded,
+      onExpandedChanged: onExpandedChanged,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+      transitionBuilder: transitionBuilder,
+      animationStyle: animationStyle,
     );
   }
 }
