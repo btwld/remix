@@ -43,10 +43,11 @@ enum {{typePrefix}}SearchFieldVariant {
 /// whole 40px target is inside the field, and the text area always stops
 /// where that target starts. Pressing it clears the text, reports `onChanged('')` and
 /// [onCleared], and returns focus to the field. It is its own semantics node
-/// and takes no Tab stop: Escape clears from the keyboard, its repeats
-/// included. A press that starts during editable composition stays with the
-/// input method through release. A fresh Escape in a read-only or empty field
-/// passes on, to close a dialog for example.
+/// and takes no Tab stop. Escape clears an editable, nonempty field and
+/// consumes that press through release. A press that starts during active
+/// composition in an editable field stays with the input method through
+/// release. A fresh Escape in a read-only or empty field can dismiss an
+/// enclosing dialog.
 ///
 /// The field creates its own controller and focus node when none are given.
 /// When a caller's controller is withdrawn, the owned one starts from its
@@ -208,9 +209,6 @@ class {{typePrefix}}SearchField extends StatelessWidget {
             onChanged: field.onChanged,
             onSubmitted: onSubmitted,
             leading: const StyledIcon(icon: {{icon:magnifyingGlass}}),
-            // Always present at the clear button's width, so the text area
-            // keeps one width and the field one structure as text comes and
-            // goes.
             trailing: SizedBox(width: reserved),
             style: style,
           ),

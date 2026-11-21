@@ -18,13 +18,12 @@ import 'text_field.dart';
 /// square 4px from the end, shows only while the field is enabled, editable,
 /// and not empty.
 ///
-/// Clearing, by the button or by Escape, empties the text, reports `''` to
-/// [onChanged], calls [onCleared], and keeps focus in the field. Escape clears
-/// when there is text, and the key repeats of that press are spent on it, so
-/// holding Escape does not go on to close an enclosing dialog. A press that
-/// starts during editable composition stays with the input method through
-/// release. A fresh Escape in a read-only or empty field passes up, so an
-/// enclosing dialog can close.
+/// Clear empties the text, calls [onChanged] with `''` before [onCleared],
+/// and returns focus to the field. Escape clears an editable, nonempty field
+/// and consumes that press through release. A press that starts during active
+/// composition in an editable field stays with the input method through
+/// release. A fresh Escape in a read-only or empty field can dismiss an
+/// enclosing dialog.
 ///
 /// ```dart
 /// VanillaSearchField(
@@ -68,8 +67,7 @@ class VanillaSearchField extends StatelessWidget {
   /// clear button.
   final bool enabled;
 
-  /// Whether the text can be selected but not changed. A read-only field
-  /// shows no clear button and ignores Escape.
+  /// Whether the text can be selected but not changed or cleared.
   final bool readOnly;
 
   /// Whether the field takes focus when first built.
@@ -113,7 +111,6 @@ class VanillaSearchField extends StatelessWidget {
       onSubmitted: onSubmitted,
       semanticLabel: semanticLabel,
       style: _fieldStyle(Directionality.of(context)).merge(style),
-      // In the recipe's accessory icon theme: `mutedForeground`, 16px.
       leading: const ExcludeSemantics(
         child: StyledIcon(icon: RemixIcons.search),
       ),

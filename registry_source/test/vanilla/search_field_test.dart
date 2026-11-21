@@ -441,59 +441,59 @@ void main() {
       expect(dialogField(), findsNothing, reason: 'an empty field passes up');
     });
 
-    testWidgets('only a held composing Escape stays owned after read-only', (
-      tester,
-    ) async {
-      final controller = TextEditingController();
-      final readOnly = ValueNotifier(false);
-      addTearDown(controller.dispose);
-      addTearDown(readOnly.dispose);
-      final calls = <String>[];
-      await openDialog(
-        tester,
-        ValueListenableBuilder<bool>(
-          valueListenable: readOnly,
-          builder: (context, value, child) => VanillaSearchField(
-            semanticLabel: 'Search',
-            controller: controller,
-            readOnly: value,
-            onChanged: (query) => calls.add('change:$query'),
-            onCleared: () => calls.add('clear'),
+    testWidgets(
+      'held composing Escape stays local, fresh read-only Escape bubbles',
+      (tester) async {
+        final controller = TextEditingController();
+        final readOnly = ValueNotifier(false);
+        addTearDown(controller.dispose);
+        addTearDown(readOnly.dispose);
+        final calls = <String>[];
+        await openDialog(
+          tester,
+          ValueListenableBuilder<bool>(
+            valueListenable: readOnly,
+            builder: (context, value, child) => VanillaSearchField(
+              semanticLabel: 'Search',
+              controller: controller,
+              readOnly: value,
+              onChanged: (query) => calls.add('change:$query'),
+              onCleared: () => calls.add('clear'),
+            ),
           ),
-        ),
-      );
-      await tester.showKeyboard(editable());
-      const composingValue = TextEditingValue(
-        text: 'に',
-        selection: TextSelection.collapsed(offset: 1),
-        composing: TextRange(start: 0, end: 1),
-      );
-      tester.testTextInput.updateEditingValue(composingValue);
-      await tester.pump();
-      expect(controller.value, composingValue);
+        );
+        await tester.showKeyboard(editable());
+        const composingValue = TextEditingValue(
+          text: 'に',
+          selection: TextSelection.collapsed(offset: 1),
+          composing: TextRange(start: 0, end: 1),
+        );
+        tester.testTextInput.updateEditingValue(composingValue);
+        await tester.pump();
+        expect(controller.value, composingValue);
 
-      const escape = LogicalKeyboardKey.escape;
-      expect(await tester.sendKeyDownEvent(escape), isFalse);
-      readOnly.value = true;
-      await tester.pump();
-      expect(controller.value, composingValue);
-      expect(
-        tester.widget<EditableText>(editable()).focusNode.hasFocus,
-        isTrue,
-      );
-      expect(await tester.sendKeyRepeatEvent(escape), isFalse);
-      expect(await tester.sendKeyUpEvent(escape), isFalse);
-      await tester.pumpAndSettle();
-      expect(controller.value, composingValue);
-      expect(calls, ['change:に']);
-      expect(dialogField(), findsOneWidget, reason: 'the dialog stays open');
+        const escape = LogicalKeyboardKey.escape;
+        expect(await tester.sendKeyDownEvent(escape), isFalse);
+        readOnly.value = true;
+        await tester.pump();
+        expect(
+          tester.widget<EditableText>(editable()).focusNode.hasFocus,
+          isTrue,
+        );
+        expect(await tester.sendKeyRepeatEvent(escape), isFalse);
+        expect(await tester.sendKeyUpEvent(escape), isFalse);
+        await tester.pumpAndSettle();
+        expect(controller.value, composingValue);
+        expect(calls, ['change:に']);
+        expect(dialogField(), findsOneWidget, reason: 'the dialog stays open');
 
-      await tester.sendKeyEvent(escape);
-      await tester.pumpAndSettle();
-      expect(controller.text, 'に');
-      expect(calls, ['change:に']);
-      expect(dialogField(), findsNothing);
-    });
+        await tester.sendKeyEvent(escape);
+        await tester.pumpAndSettle();
+        expect(controller.text, 'に');
+        expect(calls, ['change:に']);
+        expect(dialogField(), findsNothing);
+      },
+    );
   });
 
   testWidgets('a read-only field passes Escape up', (tester) async {

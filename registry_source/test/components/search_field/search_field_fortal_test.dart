@@ -505,66 +505,67 @@ void main() {
       expect(cleared, 1);
     });
 
-    testWidgets('only a held composing Escape stays owned after read-only', (
-      tester,
-    ) async {
-      final controller = TextEditingController();
-      final readOnly = ValueNotifier(false);
-      addTearDown(controller.dispose);
-      addTearDown(readOnly.dispose);
-      final calls = <String>[];
-      var dismissed = 0;
-      await tester.pumpRemixApp(
-        Actions(
-          actions: {
-            DismissIntent: CallbackAction<DismissIntent>(
-              onInvoke: (_) => dismissed++,
-            ),
-          },
-          child: SizedBox(
-            width: 320,
-            child: ValueListenableBuilder<bool>(
-              valueListenable: readOnly,
-              builder: (context, value, child) => FortalSearchField(
-                semanticLabel: 'Search',
-                controller: controller,
-                readOnly: value,
-                onChanged: (query) => calls.add('change:$query'),
-                onCleared: () => calls.add('clear'),
+    testWidgets(
+      'held composing Escape stays local, fresh read-only Escape bubbles',
+      (tester) async {
+        final controller = TextEditingController();
+        final readOnly = ValueNotifier(false);
+        addTearDown(controller.dispose);
+        addTearDown(readOnly.dispose);
+        final calls = <String>[];
+        var dismissed = 0;
+        await tester.pumpRemixApp(
+          Actions(
+            actions: {
+              DismissIntent: CallbackAction<DismissIntent>(
+                onInvoke: (_) => dismissed++,
+              ),
+            },
+            child: SizedBox(
+              width: 320,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: readOnly,
+                builder: (context, value, child) => FortalSearchField(
+                  semanticLabel: 'Search',
+                  controller: controller,
+                  readOnly: value,
+                  onChanged: (query) => calls.add('change:$query'),
+                  onCleared: () => calls.add('clear'),
+                ),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      final editor = find.byType(EditableText);
-      await tester.showKeyboard(editor);
-      const composingValue = TextEditingValue(
-        text: 'かな',
-        selection: TextSelection.collapsed(offset: 2),
-        composing: TextRange(start: 0, end: 2),
-      );
-      tester.testTextInput.updateEditingValue(composingValue);
-      await tester.pump();
-      expect(controller.value, composingValue);
+        final editor = find.byType(EditableText);
+        await tester.showKeyboard(editor);
+        const composingValue = TextEditingValue(
+          text: 'かな',
+          selection: TextSelection.collapsed(offset: 2),
+          composing: TextRange(start: 0, end: 2),
+        );
+        tester.testTextInput.updateEditingValue(composingValue);
+        await tester.pump();
+        expect(controller.value, composingValue);
 
-      const escape = LogicalKeyboardKey.escape;
-      expect(await tester.sendKeyDownEvent(escape), isFalse);
-      readOnly.value = true;
-      await tester.pump();
-      expect(tester.widget<EditableText>(editor).focusNode.hasFocus, isTrue);
-      expect(await tester.sendKeyRepeatEvent(escape), isFalse);
-      expect(await tester.sendKeyUpEvent(escape), isFalse);
-      expect(controller.value, composingValue);
-      expect(calls, ['change:かな']);
-      expect(dismissed, 0);
+        const escape = LogicalKeyboardKey.escape;
+        expect(await tester.sendKeyDownEvent(escape), isFalse);
+        readOnly.value = true;
+        await tester.pump();
+        expect(tester.widget<EditableText>(editor).focusNode.hasFocus, isTrue);
+        expect(await tester.sendKeyRepeatEvent(escape), isFalse);
+        expect(await tester.sendKeyUpEvent(escape), isFalse);
+        expect(controller.value, composingValue);
+        expect(calls, ['change:かな']);
+        expect(dismissed, 0);
 
-      await tester.sendKeyEvent(escape);
-      await tester.pump();
-      expect(controller.value, composingValue);
-      expect(calls, ['change:かな']);
-      expect(dismissed, 1);
-    });
+        await tester.sendKeyEvent(escape);
+        await tester.pump();
+        expect(controller.value, composingValue);
+        expect(calls, ['change:かな']);
+        expect(dismissed, 1);
+      },
+    );
 
     testWidgets('holding Escape clears once and closes nothing', (
       tester,
