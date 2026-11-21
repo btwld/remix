@@ -17,8 +17,9 @@
 /// checkout explicitly so a registry can be validated before its Remix version
 /// is on pub.dev.
 /// Hosted defaults to one independent canary and two incremental gallery adds,
-/// then one batch for the remainder. Checkout and both keep every independent
-/// install and the full incremental loop. Override either plan with the flags.
+/// then one batch for the remainder. With `--independent all`, checks against
+/// a pinned catalog take their solo plan from that catalog. Checks against
+/// the checkout audit every closure and run solo canaries instead.
 ///
 /// The independent-item installs run in parallel: `--jobs N` or
 /// `REMIX_OPEN_CODE_JOBS=N` sets how many at once, and the default is one per
@@ -41,10 +42,13 @@ import '../packages/remix_cli/lib/src/icon_registry.dart';
 import '../packages/remix_cli/lib/src/project_config.dart';
 import '../packages/remix_cli/lib/src/registry.dart';
 import '../packages/remix_cli/lib/src/registry_source.dart';
+import '../packages/remix_cli/test/checkout_registry.dart';
+import 'audit_registry_closures.dart';
 import 'build_registry.dart' show agentRecipes;
-import 'compile_registry_consumer.dart';
 import 'check_pub_floors.dart';
+import 'compile_registry_consumer.dart';
 import 'consumer_check_reporting.dart';
+import 'dart_directive_uris.dart';
 import 'open_code_lifecycle.dart';
 
 var _lifecycle = OpenCodeLifecycle(
@@ -327,12 +331,12 @@ final class _PresetContract {
 
   final Set<String> foundationItems;
 
-  /// Items installed alone in a fresh app, so an omitted dependency cannot
-  /// hide behind the full gallery. Each one costs a `remix init`, and a fresh
-  /// init makes one unauthenticated GitHub API request (60 an hour). `null`
-  /// derives the list from `registry.yaml`: the items whose dependencies name
-  /// anything besides a foundation item.
+  /// Solo install canaries. `null` derives the plan from the catalog items
+  /// whose dependencies name anything besides a foundation item.
   final List<String>? independentItems;
+
+  String get independentCanary =>
+      name == 'heroui' ? 'search_field' : 'dashboard_shell';
 
   /// Packages the installed `lib/ui` source may import.
   final List<String> allowedImportPackages;
@@ -452,10 +456,17 @@ final class _PresetContract {
     }.toList();
   }
 
-  List<String> independentInstalls([Directory? repositoryRoot]) {
+  List<String> independentInstalls(IndependentMode mode) {
+    if (mode == IndependentMode.none) return [];
+    if (mode == IndependentMode.canary) {
+      return [
+        if (_loadItems().containsKey(independentCanary)) independentCanary,
+      ];
+    }
     final listed = independentItems;
     if (listed != null) return listed;
-    final items = _loadItems(repositoryRoot);
+
+    final items = _loadItems();
     return [
       for (final key in items.keys.cast<String>())
         if (!foundationItems.contains(key) &&
@@ -489,8 +500,8 @@ enum IndependentMode { canary, all, none }
 
 enum InstallMode { batch, incremental }
 
-/// Every catalog item is installed once; a batch still exercises two incremental
-/// adds before installing the rest together. Small catalogs need no empty add.
+/// Requests each planned item in order. Batch mode still exercises two
+/// incremental adds before requesting the rest together.
 List<List<String>> galleryInstallBatches(
   List<String> items,
   InstallMode mode,
@@ -760,6 +771,28 @@ Future<void> main(List<String> arguments) async {
     stdout.writeln(
       'Registry under test: ${ref == null ? 'this checkout' : '$_officialRepository@$ref'}.',
     );
+    if (ref == null &&
+        parsed.item == null &&
+        parsed.independent == IndependentMode.all) {
+      _reporter.startPhase('Registry closure audit');
+      final problems = await auditRegistryClosures(
+        CheckoutRegistry(
+          Directory('${repositoryRoot.path}/registry'),
+          parsed.preset,
+        ),
+        iconLibrary: parsed.iconLibrary,
+      );
+      if (problems.isNotEmpty) {
+        _reporter.failure(
+          'Registry closure audit failed:\n${problems.join('\n')}',
+        );
+        exitCode = 1;
+        return;
+      }
+      _step(
+        'Verified file and package references for every solo item closure.',
+      );
+    }
     final failure = await _run(
       repositoryRoot,
       keep: parsed.keep,
@@ -825,9 +858,9 @@ Future<_Failure?> _run(
     );
     if (problem != null) return _Failure(problem);
     _step('Every hosted floor exists; Remix floor is current.');
-    _reporter.startPhase('Consumer setup');
   }
 
+  _reporter.startPhase('Consumer setup');
   final pinnedVersion = _pinnedFlutterVersion(repositoryRoot);
   if (pinnedVersion == null) {
     return _Failure('.fvmrc does not pin a Flutter version.', exitCode: 64);
@@ -1524,18 +1557,10 @@ Future<_Failure?> _checkIndependentItems({
   required int jobs,
   IndependentMode mode = IndependentMode.all,
 }) async {
+  final items = preset.independentInstalls(mode);
+  if (items.isEmpty) return null;
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  final items = preset.catalogYaml == null
-      ? independentInstallItems(preset.name, mode: mode)
-      : switch (mode) {
-          IndependentMode.none => <String>[],
-          IndependentMode.canary => independentInstallItems(
-            preset.name,
-            mode: mode,
-          ).where(preset.registryItems.contains).toList(),
-          IndependentMode.all => preset.independentInstalls(),
-        };
 
   Future<_Failure?> checkItem(String item, StringSink log) async {
     final elapsed = Stopwatch()..start();
@@ -1623,33 +1648,23 @@ Future<_Failure?> _checkIndependentItems({
 List<String> independentInstallItems(
   String preset, {
   required IndependentMode mode,
-  Directory? repositoryRoot,
-}) => switch (mode) {
-  IndependentMode.none => [],
-  // A large closure on Vanilla/Fortal and a generated multi-item closure on
-  // HeroUI retain a fresh hosted install tripwire without repeating Lane B.
-  IndependentMode.canary => [
-    preset == 'heroui' ? 'search_field' : 'dashboard_shell',
-  ],
-  IndependentMode.all => _presetByName(
-    preset,
-  ).independentInstalls(repositoryRoot),
-};
+  String? catalogYaml,
+}) {
+  final contract = _presetByName(preset);
+  return (catalogYaml == null ? contract : contract.forCatalog(catalogYaml))
+      .independentInstalls(mode);
+}
 
 /// Planned fresh init calls, hence branch-resolution API calls in release smoke.
 /// Candidate SHAs skip the API altogether. This uses the production independent
 /// plan so adding another canary changes the budget test as well.
-int plannedInitCalls(
-  ConsumerCheckOptions options, {
-  Directory? repositoryRoot,
-}) =>
+int plannedInitCalls(ConsumerCheckOptions options) =>
     1 +
     (options.item != null
         ? 0
         : independentInstallItems(
             options.preset,
             mode: options.independent,
-            repositoryRoot: repositoryRoot,
           ).length);
 
 /// Runs [work] for every input with at most [limit] in flight, and returns the
@@ -1890,7 +1905,7 @@ _Failure? _verifyRegistryCoverage(
     ...preset.galleryCanaries,
     ..._dashboardItems,
     ...?preset.independentItems,
-    ...independentInstallItems(preset.name, mode: IndependentMode.canary),
+    preset.independentCanary,
   };
   final missing = requiredItems.difference(catalog.items.keys.toSet());
   if (missing.isNotEmpty) {
@@ -2187,11 +2202,6 @@ List<String> _installedReferenceProblems(
   Set<String> installedUiFiles,
   _PresetContract preset,
 ) {
-  final directive = RegExp(
-    r'''^\s*(?:import|export|part(?:\s+of)?)\s+([^;]+);''',
-    multiLine: true,
-  );
-  final quotedUri = RegExp(r'''(?:'([^']*)'|"([^"]*)")''');
   final problems = <String>[];
 
   for (final file
@@ -2200,17 +2210,17 @@ List<String> _installedReferenceProblems(
           .whereType<File>()
           .where((candidate) => candidate.path.endsWith('.dart'))) {
     final relative = _relativePath(uiRoot, file);
-    for (final match in directive.allMatches(file.readAsStringSync())) {
-      for (final uriMatch in quotedUri.allMatches(match.group(1)!)) {
-        final uri = uriMatch.group(1) ?? uriMatch.group(2)!;
-        final problem = _referenceProblem(
-          uri,
-          from: relative,
-          installedUiFiles: installedUiFiles,
-          allowedPackages: preset.allowedImportPackages,
-        );
-        if (problem != null) problems.add('$relative: $problem');
-      }
+    for (final (:uri, line: _) in dartDirectiveUris(
+      file.readAsStringSync(),
+      path: file.path,
+    )) {
+      final problem = _referenceProblem(
+        uri,
+        from: relative,
+        installedUiFiles: installedUiFiles,
+        allowedPackages: preset.allowedImportPackages,
+      );
+      if (problem != null) problems.add('$relative: $problem');
     }
   }
   return problems;
@@ -2522,12 +2532,6 @@ Future<String?> independentItemsProblemForTest(
   environment: environment,
   jobs: jobs,
 ))?.message;
-
-/// Returns the items a preset installs alone, for focused regression tests.
-List<String> independentInstallsForTest(
-  String preset, {
-  Directory? repositoryRoot,
-}) => _presetByName(preset).independentInstalls(repositoryRoot);
 
 /// The install contract for [preset] against one registry's [iconsYaml]:
 /// the runtime dependencies an installed app must declare, and the packages a

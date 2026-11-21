@@ -117,7 +117,7 @@ void main() {
     );
   });
   test(
-    'Vanilla calendar composites infer complete install closures without generated parts',
+    'Vanilla calendar composites infer their dependencies without generated parts',
     () {
       final output = PresetBuilder.forRepository(
         Directory.current,
@@ -128,20 +128,19 @@ void main() {
       for (final (item, dependencies) in [
         ('calendar', ['theme', 'icon_button', 'select']),
         ('range_calendar', ['theme', 'calendar', 'icon_button', 'select']),
+        ('date_picker_styles', ['theme', 'calendar', 'icon_button', 'select']),
         (
           'date_picker',
-          ['theme', 'button', 'calendar', 'icon_button', 'popover', 'select'],
+          ['theme', 'button', 'calendar', 'date_picker_styles', 'popover'],
         ),
         (
           'date_range_picker',
           [
             'theme',
             'button',
-            'calendar',
-            'icon_button',
+            'date_picker_styles',
             'popover',
             'range_calendar',
-            'select',
           ],
         ),
       ]) {
@@ -611,6 +610,7 @@ final comfortalButton = FortalBadge();
 final _resolveFortalBadge = FortalBadge.new;
 const caption = 'A FortalInspired view';
 const brand = 'Fortal-inspired';
+const brandLabel = 'FortalInspired';
 const embedded = 'comfortalButton()';
 const id = 'fortal.color.accent';
 const variantId = 'fortalBadgeDark';
@@ -638,6 +638,7 @@ final comfortalButton = AcmeBadge();
 final _resolveAcmeBadge = AcmeBadge.new;
 const caption = 'A FortalInspired view';
 const brand = 'Fortal-inspired';
+const brandLabel = 'FortalInspired';
 const embedded = 'comfortalButton()';
 const id = 'acme.color.accent';
 const variantId = 'acmeBadgeDark';
@@ -716,6 +717,8 @@ const typed = 'Acme.color.accent';
   for (final (authored, installed) in [
     (r'fortal.${group}/accent', r'acme.${group}/accent'),
     (r'fortalSlider${group}', r'acmeSlider${group}'),
+    (r'FortalSlider${group}', r'AcmeSlider${group}'),
+    (r'fortalSlider${group}#accent', r'acmeSlider${group}#accent'),
     (r'fortal.$group.accent:active', r'acme.$group.accent:active'),
     ('fortalSlider-track', 'acmeSlider-track'),
   ]) {

@@ -302,7 +302,7 @@ final class SharedItemSpec {
   final List<String> registryDependencies;
 }
 
-/// An item derived from a single file at the source root, e.g. `icons.dart`.
+/// An item derived from a single explicitly declared source file.
 final class FileItemSpec {
   const FileItemSpec({
     required this.name,
@@ -370,6 +370,13 @@ const defaultPreset = PresetSpec(
       packages: const {},
       registryDependencies: ['theme'],
       exports: ['icons.dart'],
+    ),
+    FileItemSpec(
+      name: 'date_picker_styles',
+      file: 'components/date_picker/date_picker_styles.dart',
+      packages: const {},
+      registryDependencies: [],
+      exports: [],
     ),
   ],
   ignoredSourceFiles: {},
@@ -912,8 +919,18 @@ final class PresetBuilder {
     }
 
     final sources = _readSources();
+    final componentPrefix = '${spec.componentDirectory}/';
+    final fileItemPaths = spec.fileItems.map((item) => item.file).toSet();
+    final components = sources.entries.where(
+      (entry) =>
+          entry.key.startsWith(componentPrefix) &&
+          !fileItemPaths.contains(entry.key),
+    );
     final groupedSources = _readGroupedSources(sources);
-    final sourceOwners = _sourceOwners(sources);
+    final sourceOwners = _sourceOwners(
+      sources,
+      components.map((entry) => entry.key),
+    );
     final installedTargets = _installedTargets(sourceOwners);
     final directives = {
       for (final entry in {...sources, ...groupedSources}.entries)
@@ -930,11 +947,9 @@ final class PresetBuilder {
     final output = <String, String>{};
     final sourceByTemplate = <String, String>{};
     final items = <String, _RegistryItemDraft>{};
-    final componentPrefix = '${spec.componentDirectory}/';
     final componentNames = {
-      for (final path in sources.keys)
-        if (path.startsWith(componentPrefix))
-          p.posix.basenameWithoutExtension(path),
+      for (final entry in components)
+        p.posix.basenameWithoutExtension(entry.key),
     };
 
     for (final shared in spec.sharedItems) {
@@ -1024,9 +1039,7 @@ final class PresetBuilder {
       );
     }
 
-    for (final entry in sources.entries.where(
-      (entry) => entry.key.startsWith(componentPrefix),
-    )) {
+    for (final entry in components) {
       final name = p.posix.basenameWithoutExtension(entry.key);
       final templatePath = 'templates/$name/$name.dart.tmpl';
       final sourceDirectives = directives[entry.key]!;
@@ -1427,7 +1440,10 @@ final class PresetBuilder {
     return grouped;
   }
 
-  Map<String, String> _sourceOwners(Map<String, String> sources) {
+  Map<String, String> _sourceOwners(
+    Map<String, String> sources,
+    Iterable<String> componentPaths,
+  ) {
     final owners = <String, String>{};
     void own(String source, String item) {
       final previous = owners[source];
@@ -1449,10 +1465,7 @@ final class PresetBuilder {
     for (final item in spec.fileItems) {
       if (sources.containsKey(item.file)) own(item.file, item.name);
     }
-    final componentPrefix = '${spec.componentDirectory}/';
-    for (final source in sources.keys.where(
-      (path) => path.startsWith(componentPrefix),
-    )) {
+    for (final source in componentPaths) {
       own(source, p.posix.basenameWithoutExtension(source));
     }
     for (final name in spec.recipeItems) {
@@ -2023,7 +2036,7 @@ String _replacePrefixWords(
       final valueId = leading[0] == valueWord;
       if ((_idSuffix.hasMatch(suffix) &&
               (valueId || !suffix.startsWith('-'))) ||
-          (valueId &&
+          ((valueId || interpolatesAfter) &&
               leading.end < text.length &&
               _camelIdSuffix.hasMatch(suffix))) {
         replace(leading[0]!, offset);
@@ -2163,7 +2176,7 @@ class _StringPieces extends RecursiveAstVisitor<void> {
 
 final _identifierSuffixStart = RegExp('[A-Z0-9]');
 final _idSuffix = RegExp(r'^[-._][A-Za-z0-9]\S*$');
-final _camelIdSuffix = RegExp(r'^[A-Z0-9][\w./:-]*$');
+final _camelIdSuffix = RegExp(r'^[A-Z0-9][\w./:#-]*$');
 final _codePunctuation = RegExp(r'(?:\(|[.<][A-Za-z_$])');
 final _codeMarkup = RegExp(r'`[^`\n]+`|\[[\w.$]+\]');
 
