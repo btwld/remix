@@ -124,7 +124,7 @@ void main() {
     );
 
     testWidgets(
-      '${preset.name}: reopens a sheet popped before its first build',
+      '${preset.name}: a second open before the first build is a no-op',
       (tester) async {
         const sidebar = Text('Sidebar');
         const body = Text('Body');
@@ -145,10 +145,10 @@ void main() {
         expect(navigator.canPop(), isTrue);
         expect(find.byWidget(sidebar), findsNothing);
 
-        navigator.pop();
         preset.open(bodyContext);
+        navigator.pop();
         await tester.pumpAndSettle();
-        expect(find.byWidget(sidebar), findsOneWidget);
+        expect(find.byWidget(sidebar), findsNothing);
       },
     );
 

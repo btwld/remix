@@ -143,9 +143,7 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
   // presentation.
   void _openCompact() {
     if (!_isCompact) return;
-    if (_sheetInputs != null && _sheetRoute?.isActive != true) {
-      _reopenRequested = true;
-    }
+    if (_sheetRoute?.isActive == false) _reopenRequested = true;
     _setOpen(true);
   }
 
@@ -199,7 +197,6 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
           : const Duration(milliseconds: 250),
       builder: (dialogContext) {
         final route = _sheetRoute ??= ModalRoute.of<void>(dialogContext)!;
-        if (route.isActive) _reopenRequested = false;
         return ValueListenableBuilder(
           valueListenable: inputs,
           builder: (context, nextInputs, _) {
