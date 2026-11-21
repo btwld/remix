@@ -2399,9 +2399,22 @@ String _replacePrefixWords(
     rewriteText(comment.lexeme, comment.offset);
   }
   unit.accept(
-    _StringPieces((start, end, {idShape, before = false, after = false}) {
+    _StringPieces((
+      start,
+      end, {
+      idShape,
+      before = false,
+      after = false,
+      raw = false,
+    }) {
+      final text = source.substring(start, end);
       rewriteText(
-        source.substring(start, end),
+        raw
+            ? text
+            : text.replaceAllMapped(
+                _escapedBackslashOrNewline,
+                (escape) => escape[0] == r'\n' ? ' \n' : escape[0]!,
+              ),
         start,
         literal: true,
         idShape: idShape,
@@ -2432,12 +2445,34 @@ class _StringPieces extends RecursiveAstVisitor<void> {
     String? idShape,
     bool before,
     bool after,
+    bool raw,
   })
   visitPiece;
 
   @override
   void visitSimpleStringLiteral(SimpleStringLiteral node) {
-    visitPiece(node.contentsOffset, node.contentsEnd, idShape: node.value);
+    var shape = node.value;
+    var after = false;
+    if (node.parent case AdjacentStrings(:final strings)
+        when strings.first == node &&
+            strings.any((part) => part is StringInterpolation)) {
+      shape = [
+        for (final part in strings)
+          if (part is StringInterpolation)
+            for (final element in part.elements)
+              element is InterpolationString ? element.value : '0'
+          else
+            part.stringValue!,
+      ].join();
+      after = true;
+    }
+    visitPiece(
+      node.contentsOffset,
+      node.contentsEnd,
+      idShape: shape,
+      after: after,
+      raw: node.isRaw,
+    );
   }
 
   @override
@@ -2464,9 +2499,10 @@ class _StringPieces extends RecursiveAstVisitor<void> {
 
 final _identifierSuffixStart = RegExp('[A-Z0-9]');
 final _idSuffix = RegExp(r'^[-._][A-Za-z0-9]\S*$');
-final _camelIdSuffix = RegExp(r'^[A-Z0-9][\w./:#-]*$');
+final _camelIdSuffix = RegExp(r'^[A-Z0-9](?:[\w./:#-]|\[\w+\])*$');
 final _codePunctuation = RegExp(r'(?:\(|[.<][A-Za-z_$])');
 final _codeMarkup = RegExp(r'`[^`\n]+`|\[[\w.$]+\]');
+final _escapedBackslashOrNewline = RegExp(r'\\\\|\\n');
 
 String _charAt(String source, int index) =>
     index >= 0 && index < source.length ? source[index] : '';

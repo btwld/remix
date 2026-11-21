@@ -761,6 +761,7 @@ const typed = 'Acme.color.accent';
     (r'fortalSlider${group}', r'acmeSlider${group}'),
     (r'FortalSlider${group}', r'AcmeSlider${group}'),
     (r'fortalSlider${group}#accent', r'acmeSlider${group}#accent'),
+    (r'fortalSlider[$group]', r'acmeSlider[$group]'),
     (r'fortal.$group.accent:active', r'acme.$group.accent:active'),
     ('fortalSlider-track', 'acmeSlider-track'),
   ]) {
@@ -782,6 +783,50 @@ const typed = 'Acme.color.accent';
       );
     });
   }
+
+  test('Acme prefixes the quoted ID in adjacent string literals', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(builder.sourceRoot, 'components/badge.dart', r'''
+final id = 'FortalSlider' '$group';
+final caption = 'FortalInspired' ' view $group';
+''');
+
+    expect(
+      const TemplateRenderer().render(
+        builder.derive().files['templates/badge/badge.dart.tmpl']!,
+        typePrefix: 'Acme',
+        valuePrefix: 'acme',
+      ),
+      r'''
+final id = 'AcmeSlider' '$group';
+final caption = 'FortalInspired' ' view $group';
+''',
+    );
+  });
+
+  test('Acme prefixes the function name after an escaped newline', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(builder.sourceRoot, 'components/badge.dart', r'''
+void fortalSliderStyle() {}
+const caption = 'Use:\nfortalSliderStyle()';
+const escaped = 'Use:\\nfortalSliderStyle()';
+const raw = r'Use:\nfortalSliderStyle()';
+''');
+
+    expect(
+      const TemplateRenderer().render(
+        builder.derive().files['templates/badge/badge.dart.tmpl']!,
+        typePrefix: 'Acme',
+        valuePrefix: 'acme',
+      ),
+      r'''
+void acmeSliderStyle() {}
+const caption = 'Use:\nacmeSliderStyle()';
+const escaped = 'Use:\\nfortalSliderStyle()';
+const raw = r'Use:\nfortalSliderStyle()';
+''',
+    );
+  });
 
   test('refuses the authoring word where neither a prefix nor prose fits', () {
     final builder = _fixtureBuilder(sandbox);
