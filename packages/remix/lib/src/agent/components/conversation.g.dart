@@ -204,6 +204,8 @@ class AgentConversationStyler
       AgentConversationStyler().latest(value);
   factory AgentConversationStyler.empty(BoxStyler value) =>
       AgentConversationStyler().empty(value);
+  factory AgentConversationStyler.wrap(WidgetModifierConfig value) =>
+      AgentConversationStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {

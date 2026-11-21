@@ -242,6 +242,8 @@ class SpinnerStyler extends MixStyler<SpinnerStyler, SpinnerSpec>
       SpinnerStyler().sweepAngle(value);
   factory SpinnerStyler.strokeCap(StrokeCap value) =>
       SpinnerStyler().strokeCap(value);
+  factory SpinnerStyler.wrap(WidgetModifierConfig value) =>
+      SpinnerStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {

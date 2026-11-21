@@ -182,28 +182,23 @@ class VanillaIconButton extends StatelessWidget {
   final MouseCursor mouseCursor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixIconButton(
-      key: this.key,
-      style: vanillaIconButtonStyle(
-        variant: this.variant,
-        size: this.size,
-        style: this.style,
-      ),
-      icon: this.icon,
-      semanticLabel: this.semanticLabel,
-      iconBuilder: this.iconBuilder,
-      loadingBuilder: this.loadingBuilder,
-      loading: this.loading,
-      enabled: this.enabled,
-      enableFeedback: this.enableFeedback,
-      onPressed: this.onPressed,
-      onLongPress: this.onLongPress,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      semanticHint: this.semanticHint,
-      excludeSemantics: this.excludeSemantics,
-      mouseCursor: this.mouseCursor,
+      style: vanillaIconButtonStyle(variant: variant, size: size, style: style),
+      icon: icon,
+      semanticLabel: semanticLabel,
+      iconBuilder: iconBuilder,
+      loadingBuilder: loadingBuilder,
+      loading: loading,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
     );
   }
 }

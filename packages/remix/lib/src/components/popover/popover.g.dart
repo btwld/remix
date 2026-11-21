@@ -336,6 +336,8 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => PopoverStyler().transform(value, alignment: alignment);
+  factory PopoverStyler.wrap(WidgetModifierConfig value) =>
+      PopoverStyler().wrap(value);
 
   PopoverStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -705,7 +707,6 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
       key: key,
       style: this,
       popoverChild: popoverChild,
-      child: child,
       positioning: positioning,
       consumeOutsideTaps: consumeOutsideTaps,
       useRootOverlay: useRootOverlay,
@@ -721,6 +722,7 @@ class PopoverStyler extends MixStyler<PopoverStyler, PopoverSpec>
       controller: controller,
       semanticLabel: semanticLabel,
       excludeSemantics: excludeSemantics,
+      child: child,
     );
   }
 

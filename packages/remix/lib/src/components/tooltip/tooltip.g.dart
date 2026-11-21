@@ -378,6 +378,8 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => TooltipStyler().transform(value, alignment: alignment);
+  factory TooltipStyler.wrap(WidgetModifierConfig value) =>
+      TooltipStyler().wrap(value);
 
   TooltipStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -761,13 +763,13 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
       key: key,
       style: this,
       tooltipChild: tooltipChild,
-      child: child,
       tooltipKey: tooltipKey,
       onOpenChanged: onOpenChanged,
       tooltipSemantics: tooltipSemantics,
       positioning: positioning,
       transitionBuilder: transitionBuilder,
       animationStyle: animationStyle,
+      child: child,
     );
   }
 

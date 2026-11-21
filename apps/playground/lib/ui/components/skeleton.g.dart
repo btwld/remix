@@ -32,12 +32,11 @@ class PlaygroundSkeleton extends StatelessWidget {
   final bool loading;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSkeleton(
-      key: this.key,
-      style: playgroundSkeletonStyle(style: this.style),
-      child: this.child,
-      loading: this.loading,
+      style: playgroundSkeletonStyle(style: style),
+      loading: loading,
+      child: child,
     );
   }
 }

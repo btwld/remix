@@ -53,11 +53,10 @@ class HeroUiCard extends StatelessWidget {
   final Widget? child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCard(
-      key: this.key,
-      style: heroUiCardStyle(variant: this.variant, style: this.style),
-      child: this.child,
+      style: heroUiCardStyle(variant: variant, style: style),
+      child: child,
     );
   }
 }

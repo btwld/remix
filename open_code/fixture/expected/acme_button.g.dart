@@ -224,7 +224,6 @@ class AcmeButton extends StatelessWidget {
   @override
   Widget build(BuildContext _) {
     return RemixButton(
-      key: key,
       style: acmeButtonStyle(variant: variant, size: size, style: style),
       label: label,
       leadingIcon: leadingIcon,

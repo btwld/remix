@@ -125,31 +125,30 @@ class FortalMenu<T> extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixMenu<T>(
-      key: this.key,
       style: fortalMenuStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      trigger: this.trigger,
-      items: this.items,
-      controller: this.controller,
-      onSelected: this.onSelected,
-      onOpen: this.onOpen,
-      onClose: this.onClose,
-      onCanceled: this.onCanceled,
-      onOpenRequested: this.onOpenRequested,
-      onCloseRequested: this.onCloseRequested,
-      consumeOutsideTaps: this.consumeOutsideTaps,
-      useRootOverlay: this.useRootOverlay,
-      closeOnClickOutside: this.closeOnClickOutside,
-      triggerFocusNode: this.triggerFocusNode,
-      positioning: this.positioning,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+      trigger: trigger,
+      items: items,
+      controller: controller,
+      onSelected: onSelected,
+      onOpen: onOpen,
+      onClose: onClose,
+      onCanceled: onCanceled,
+      onOpenRequested: onOpenRequested,
+      onCloseRequested: onCloseRequested,
+      consumeOutsideTaps: consumeOutsideTaps,
+      useRootOverlay: useRootOverlay,
+      closeOnClickOutside: closeOnClickOutside,
+      triggerFocusNode: triggerFocusNode,
+      positioning: positioning,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

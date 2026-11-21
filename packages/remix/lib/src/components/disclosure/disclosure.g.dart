@@ -367,6 +367,8 @@ class DisclosureStyler extends MixStyler<DisclosureStyler, DisclosureSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => DisclosureStyler().transform(value, alignment: alignment);
+  factory DisclosureStyler.wrap(WidgetModifierConfig value) =>
+      DisclosureStyler().wrap(value);
 
   DisclosureStyler alignment(AlignmentGeometry value) {
     return trigger(BoxStyler().alignment(value));

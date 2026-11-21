@@ -297,6 +297,8 @@ class DividerStyler extends MixStyler<DividerStyler, DividerSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => DividerStyler().transform(value, alignment: alignment);
+  factory DividerStyler.wrap(WidgetModifierConfig value) =>
+      DividerStyler().wrap(value);
 
   DividerStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

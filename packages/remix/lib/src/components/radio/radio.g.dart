@@ -352,6 +352,8 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => RadioStyler().transform(value, alignment: alignment);
+  factory RadioStyler.wrap(WidgetModifierConfig value) =>
+      RadioStyler().wrap(value);
 
   RadioStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));

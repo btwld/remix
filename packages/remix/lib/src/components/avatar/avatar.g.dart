@@ -327,6 +327,8 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => AvatarStyler().transform(value, alignment: alignment);
+  factory AvatarStyler.wrap(WidgetModifierConfig value) =>
+      AvatarStyler().wrap(value);
 
   AvatarStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
@@ -693,11 +695,11 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
       foregroundImage: foregroundImage,
       onBackgroundImageError: onBackgroundImageError,
       onForegroundImageError: onForegroundImageError,
-      child: child,
       label: label,
       labelBuilder: labelBuilder,
       icon: icon,
       iconBuilder: iconBuilder,
+      child: child,
     );
   }
 

@@ -391,6 +391,8 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => ButtonStyler().transform(value, alignment: alignment);
+  factory ButtonStyler.wrap(WidgetModifierConfig value) =>
+      ButtonStyler().wrap(value);
 
   ButtonStyler color(Color value) {
     return container(FlexBoxStyler().color(value));

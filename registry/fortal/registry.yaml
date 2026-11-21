@@ -42,7 +42,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/accordion/accordion.dart.tmpl
         target: "@ui/components/accordion.dart"
@@ -78,7 +78,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/app_bar/app_bar.dart.tmpl
         target: "@ui/components/app_bar.dart"
@@ -94,7 +94,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/avatar/avatar.dart.tmpl
         target: "@ui/components/avatar.dart"
@@ -120,7 +120,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/badge/badge.dart.tmpl
         target: "@ui/components/badge.dart"
@@ -158,7 +158,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/button/button.dart.tmpl
         target: "@ui/components/button.dart"
@@ -185,7 +185,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/callout/callout.dart.tmpl
         target: "@ui/components/callout.dart"
@@ -201,7 +201,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/card/card.dart.tmpl
         target: "@ui/components/card.dart"
@@ -218,7 +218,7 @@ items:
       mix_chart: ^0.0.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/chart/chart.dart.tmpl
         target: "@ui/components/chart.dart"
@@ -234,7 +234,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/checkbox/checkbox.dart.tmpl
         target: "@ui/components/checkbox.dart"
@@ -261,7 +261,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/combobox/combobox.dart.tmpl
         target: "@ui/components/combobox.dart"
@@ -414,7 +414,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/data_list/data_list.dart.tmpl
         target: "@ui/components/data_list.dart"
@@ -433,7 +433,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/data_table/data_table.dart.tmpl
         target: "@ui/components/data_table.dart"
@@ -474,7 +474,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/dialog/dialog.dart.tmpl
         target: "@ui/components/dialog.dart"
@@ -490,7 +490,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/disclosure/disclosure.dart.tmpl
         target: "@ui/components/disclosure.dart"
@@ -506,7 +506,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/divider/divider.dart.tmpl
         target: "@ui/components/divider.dart"
@@ -533,7 +533,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/icon_button/icon_button.dart.tmpl
         target: "@ui/components/icon_button.dart"
@@ -569,7 +569,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/menu/menu.dart.tmpl
         target: "@ui/components/menu.dart"
@@ -595,7 +595,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/popover/popover.dart.tmpl
         target: "@ui/components/popover.dart"
@@ -611,7 +611,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/progress/progress.dart.tmpl
         target: "@ui/components/progress.dart"
@@ -627,7 +627,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/radio/radio.dart.tmpl
         target: "@ui/components/radio.dart"
@@ -653,7 +653,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/range_slider/range_slider.dart.tmpl
         target: "@ui/components/range_slider.dart"
@@ -680,7 +680,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/segmented_control/segmented_control.dart.tmpl
         target: "@ui/components/segmented_control.dart"
@@ -696,7 +696,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/select/select.dart.tmpl
         target: "@ui/components/select.dart"
@@ -715,7 +715,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/sidebar/sidebar.dart.tmpl
         target: "@ui/components/sidebar.dart"
@@ -741,7 +741,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/skeleton/skeleton.dart.tmpl
         target: "@ui/components/skeleton.dart"
@@ -757,7 +757,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/slider/slider.dart.tmpl
         target: "@ui/components/slider.dart"
@@ -784,7 +784,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/spinner/spinner.dart.tmpl
         target: "@ui/components/spinner.dart"
@@ -830,7 +830,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/switch/switch.dart.tmpl
         target: "@ui/components/switch.dart"
@@ -846,7 +846,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/tabs/tabs.dart.tmpl
         target: "@ui/components/tabs.dart"
@@ -863,7 +863,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/text/text.dart.tmpl
         target: "@ui/components/text.dart"
@@ -879,7 +879,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/text_field/text_field.dart.tmpl
         target: "@ui/components/text_field.dart"
@@ -897,7 +897,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/toast/toast.dart.tmpl
         target: "@ui/components/toast.dart"
@@ -913,7 +913,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/toggle/toggle.dart.tmpl
         target: "@ui/components/toggle.dart"
@@ -929,7 +929,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/toggle_group/toggle_group.dart.tmpl
         target: "@ui/components/toggle_group.dart"
@@ -957,7 +957,7 @@ items:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
       build_runner: ^2.10.1
-      mix_generator: ^2.2.0-beta.3
+      mix_generator: ^2.3.0
     files:
       - source: templates/tooltip/tooltip.dart.tmpl
         target: "@ui/components/tooltip.dart"

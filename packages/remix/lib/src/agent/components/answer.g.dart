@@ -176,6 +176,8 @@ class AgentAnswerStyler extends MixStyler<AgentAnswerStyler, AgentAnswerSpec>
       AgentAnswerStyler().actions(value);
   factory AgentAnswerStyler.feedback(TextStyler value) =>
       AgentAnswerStyler().feedback(value);
+  factory AgentAnswerStyler.wrap(WidgetModifierConfig value) =>
+      AgentAnswerStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {

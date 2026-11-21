@@ -450,6 +450,8 @@ class AgentToolCallStyler
       AgentToolCallStyler().description(value);
   factory AgentToolCallStyler.footer(FlexBoxStyler value) =>
       AgentToolCallStyler().footer(value);
+  factory AgentToolCallStyler.wrap(WidgetModifierConfig value) =>
+      AgentToolCallStyler().wrap(value);
 
   @override
   Set<String> get $stylerFieldNames => const {

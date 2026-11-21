@@ -50,18 +50,17 @@ class VanillaTooltip extends StatelessWidget {
   final AnimationStyle animationStyle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixTooltip(
-      key: this.key,
-      style: vanillaTooltipStyle(style: this.style),
-      tooltipChild: this.tooltipChild,
-      child: this.child,
-      tooltipKey: this.tooltipKey,
-      onOpenChanged: this.onOpenChanged,
-      tooltipSemantics: this.tooltipSemantics,
-      positioning: this.positioning,
-      transitionBuilder: this.transitionBuilder,
-      animationStyle: this.animationStyle,
+      style: vanillaTooltipStyle(style: style),
+      tooltipChild: tooltipChild,
+      tooltipKey: tooltipKey,
+      onOpenChanged: onOpenChanged,
+      tooltipSemantics: tooltipSemantics,
+      positioning: positioning,
+      transitionBuilder: transitionBuilder,
+      animationStyle: animationStyle,
+      child: child,
     );
   }
 }

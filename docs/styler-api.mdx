@@ -41,7 +41,7 @@ final fluent = CardStyler().color(Colors.blue);
 | Primary nested container | Forward one compatible canonical surface from the nested styler. |
 | Alias of a canonical operation | Do not add one. A canonical operation has exactly one spelling. |
 | Slot-forwarding convenience (`titleColor`, `labelFontSize`) | Keep it fluent-only. It names a child slot rather than duplicating a canonical operation. |
-| Styler lifecycle or composition (`animate`, `variants`, `wrap`, `modifier`, `merge`) | Keep it fluent-only because it configures or combines an existing parent styler. |
+| Styler lifecycle or composition (`animate`, `variants`, `modifier`, `merge`) | Keep it fluent-only because it configures or combines an existing parent styler. |
 | Generic variant helper | Keep it as an extension method; it operates on an existing styler. |
 | Callable widget helper | Generate it with `@MixableSpec(target: RemixWidget.new)` so it stays aligned with the widget constructor. Calendar uses a hand-written extension because the pinned generator cannot resolve its cross-generated constructor styler types. |
 | Name conflict | Give the component-specific behavior a descriptive name and reserve the canonical name for the generated surface. |
@@ -195,6 +195,15 @@ already occupies the shorter name:
 
 `ButtonStyler.rotate` transforms the container, while
 `ButtonStyler.wrap(.rotate(...))` rotates the complete widget.
+Every generated Remix styler can start with a widget modifier using its `wrap`
+factory. When the styler type is known, `.wrap(...)` works in dot shorthand:
+
+```dart
+import 'package:remix/remix.dart';
+
+final explicit = ButtonStyler.wrap(.opacity(0.5));
+final ButtonStyler shorthand = .wrap(.opacity(0.5));
+```
 
 This keeps contextual shorthand predictable while preserving each specialized
 operation without ambiguous overloads.

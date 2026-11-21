@@ -345,9 +345,7 @@ void main() {
 
     await _openPage(tester, UiDashboardDemoPage.customers);
 
-    // UiDataTable forwards the key to the Remix widget it builds, so the
-    // key matches both.
-    expect(find.byKey(const ValueKey('data-grid-customers')), findsWidgets);
+    expect(find.byKey(const ValueKey('data-grid-customers')), findsOneWidget);
     expect(find.text('1–10 of 24'), findsOneWidget);
   });
 
@@ -357,10 +355,9 @@ void main() {
       await tester.pumpWidget(const DashboardApp());
 
       // The lead card totals the week's revenue (in thousands of dollars).
-      // UiText forwards its key to the widget it builds, so it matches twice.
       expect(
         find.byKey(const ValueKey('overview-revenue-total')),
-        findsWidgets,
+        findsOneWidget,
       );
       expect(
         find.descendant(
@@ -989,8 +986,7 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       await tester.pumpWidget(const DashboardApp());
 
-      // UiCombobox forwards its key to the Remix widget it builds.
-      final search = find.byKey(const ValueKey('dashboard-search')).first;
+      final search = find.byKey(const ValueKey('dashboard-search'));
       expect(search, findsOneWidget);
       await tester.enterText(
         find.descendant(of: search, matching: find.byType(EditableText)),

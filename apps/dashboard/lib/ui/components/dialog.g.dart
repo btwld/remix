@@ -47,21 +47,16 @@ class UiDialog extends StatelessWidget {
   final String? semanticLabel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixDialog(
-      key: this.key,
-      style: uiDialogStyle(
-        size: this.size,
-        align: this.align,
-        style: this.style,
-      ),
-      child: this.child,
-      title: this.title,
-      description: this.description,
-      actions: this.actions,
-      scrollable: this.scrollable,
-      modal: this.modal,
-      semanticLabel: this.semanticLabel,
+      style: uiDialogStyle(size: size, align: align, style: style),
+      title: title,
+      description: description,
+      actions: actions,
+      scrollable: scrollable,
+      modal: modal,
+      semanticLabel: semanticLabel,
+      child: child,
     );
   }
 }

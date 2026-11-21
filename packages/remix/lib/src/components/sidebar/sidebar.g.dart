@@ -427,6 +427,8 @@ class SidebarStyler extends MixStyler<SidebarStyler, SidebarSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => SidebarStyler().transform(value, alignment: alignment);
+  factory SidebarStyler.wrap(WidgetModifierConfig value) =>
+      SidebarStyler().wrap(value);
 
   SidebarStyler color(Color value) {
     return container(FlexBoxStyler().color(value));

@@ -53,13 +53,12 @@ class VanillaCallout extends StatelessWidget {
   final Widget? child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCallout(
-      key: this.key,
-      style: vanillaCalloutStyle(variant: this.variant, style: this.style),
-      text: this.text,
-      icon: this.icon,
-      child: this.child,
+      style: vanillaCalloutStyle(variant: variant, style: style),
+      text: text,
+      icon: icon,
+      child: child,
     );
   }
 }

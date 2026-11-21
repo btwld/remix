@@ -133,32 +133,27 @@ class UiCombobox<T extends Object> extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixCombobox<T>(
-      key: this.key,
-      style: uiComboboxStyle(
-        variant: this.variant,
-        size: this.size,
-        style: this.style,
-      ),
-      optionsBuilder: this.optionsBuilder,
-      onSelected: this.onSelected,
-      displayStringForOption: this.displayStringForOption,
-      controller: this.controller,
-      focusNode: this.focusNode,
-      initialValue: this.initialValue,
-      label: this.label,
-      hintText: this.hintText,
-      enabled: this.enabled,
-      autofocus: this.autofocus,
-      semanticLabel: this.semanticLabel,
-      fieldBuilder: this.fieldBuilder,
-      optionBuilder: this.optionBuilder,
-      optionsViewOpenDirection: this.optionsViewOpenDirection,
-      isOptionDisabled: this.isOptionDisabled,
-      onOpen: this.onOpen,
-      onClose: this.onClose,
-      excludeSemantics: this.excludeSemantics,
+      style: uiComboboxStyle(variant: variant, size: size, style: style),
+      optionsBuilder: optionsBuilder,
+      onSelected: onSelected,
+      displayStringForOption: displayStringForOption,
+      controller: controller,
+      focusNode: focusNode,
+      initialValue: initialValue,
+      label: label,
+      hintText: hintText,
+      enabled: enabled,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      fieldBuilder: fieldBuilder,
+      optionBuilder: optionBuilder,
+      optionsViewOpenDirection: optionsViewOpenDirection,
+      isOptionDisabled: isOptionDisabled,
+      onOpen: onOpen,
+      onClose: onClose,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

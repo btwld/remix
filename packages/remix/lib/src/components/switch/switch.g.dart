@@ -367,6 +367,8 @@ class SwitchStyler extends MixStyler<SwitchStyler, SwitchSpec>
     Matrix4 value, {
     Alignment alignment = .center,
   }) => SwitchStyler().transform(value, alignment: alignment);
+  factory SwitchStyler.wrap(WidgetModifierConfig value) =>
+      SwitchStyler().wrap(value);
 
   SwitchStyler alignment(AlignmentGeometry value) {
     return container(BoxStyler().alignment(value));
