@@ -528,7 +528,7 @@ String _name(Type type) => type.toString().split('<').first;
 /// case.
 Set<String> _installedWidgetNames() {
   final declaration = RegExp(
-    r'^class (Acme\w+)(?:<[^{]*?>)? extends StatelessWidget',
+    r'^class (Acme\w+)(?:<[^{]*?>)? extends (?:Stateless|Stateful)Widget',
     multiLine: true,
   );
   return {
@@ -851,8 +851,7 @@ final _cases = <_WidgetCase>[
       ),
       body: const Text('Body'),
     ),
-    // The layout is a StatefulWidget, outside the stateless inventory.
-    {AcmeSidebar<String>, AcmeAppBar},
+    {AcmeSidebarLayout, AcmeSidebar<String>, AcmeAppBar},
   ),
   const _WidgetCase(
     'tooltip',
