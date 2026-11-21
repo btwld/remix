@@ -1418,12 +1418,13 @@ void main() {
       tester,
     ) async {
       final focusNode = FocusNode(debugLabel: 'ui-button');
+      final key = GlobalKey();
       addTearDown(focusNode.dispose);
 
       await _pumpInScope(
         tester,
         AcmeButton(
-          key: const ValueKey<String>('forwarded'),
+          key: key,
           variant: AcmeButtonVariant.outline,
           size: AcmeButtonSize.large,
           style: ButtonStyler().minHeight(44),
@@ -1456,8 +1457,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final remix = tester.widget<RemixButton>(find.byType(RemixButton));
-      expect(remix.key, const ValueKey<String>('forwarded'));
+      final adapter = find.byKey(key);
+      expect(tester.widget(adapter), isA<AcmeButton>());
+      final remix = tester.widget<RemixButton>(
+        find.descendant(of: adapter, matching: find.byType(RemixButton)),
+      );
+      expect(remix.key, isNull);
       expect(remix.label, 'Save');
       expect(remix.leadingIcon, _leading);
       expect(remix.trailingIcon, _trailing);
@@ -2059,12 +2064,13 @@ void main() {
       tester,
     ) async {
       final focusNode = FocusNode(debugLabel: 'ui-checkbox');
+      const key = ValueKey('checkbox');
       addTearDown(focusNode.dispose);
 
       await _pumpInScope(
         tester,
         AcmeCheckbox(
-          key: const ValueKey<String>('forwarded'),
+          key: key,
           style: CheckboxStyler().labelSpacing(20),
           selected: null,
           onChanged: (_) {},
@@ -2084,8 +2090,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final remix = tester.widget<RemixCheckbox>(find.byType(RemixCheckbox));
-      expect(remix.key, const ValueKey<String>('forwarded'));
+      final adapter = find.byKey(key);
+      expect(tester.widget(adapter), isA<AcmeCheckbox>());
+      final remix = tester.widget<RemixCheckbox>(
+        find.descendant(of: adapter, matching: find.byType(RemixCheckbox)),
+      );
+      expect(remix.key, isNull);
       expect(remix.selected, isNull);
       expect(remix.tristate, isTrue);
       expect(remix.enabled, isTrue);
@@ -2404,6 +2414,7 @@ void main() {
   group('Acme tabs delegate behavior to Remix', () {
     testWidgets('forwards the curated RemixTab surface', (tester) async {
       final focusNode = FocusNode(debugLabel: 'ui-tab');
+      const key = ValueKey('tab');
       addTearDown(focusNode.dispose);
       Widget content(
         BuildContext context,
@@ -2416,7 +2427,7 @@ void main() {
         selected: 'one',
         tabs: [
           AcmeTab(
-            key: const ValueKey<String>('forwarded'),
+            key: key,
             style: TabStyler().minHeight(48),
             tabId: 'one',
             label: 'One',
@@ -2435,8 +2446,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final remix = tester.widget<RemixTab>(find.byType(RemixTab));
-      expect(remix.key, const ValueKey<String>('forwarded'));
+      final adapter = find.byKey(key);
+      expect(tester.widget(adapter), isA<AcmeTab>());
+      final remix = tester.widget<RemixTab>(
+        find.descendant(of: adapter, matching: find.byType(RemixTab)),
+      );
+      expect(remix.key, isNull);
       expect(remix.tabId, 'one');
       expect(remix.label, 'One');
       expect(remix.icon, _leading);

@@ -77,7 +77,6 @@ class AcmeTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext _) {
     return RemixTabBar(
-      key: key,
       style: acmeTabBarStyle(variant: variant, style: style),
       child: child,
     );
@@ -188,10 +187,8 @@ class AcmeTab extends StatelessWidget {
   @override
   Widget build(BuildContext _) {
     return RemixTab(
-      key: key,
       style: acmeTabStyle(variant: variant, style: style),
       tabId: tabId,
-      child: child,
       label: label,
       icon: icon,
       enabled: enabled,
@@ -204,6 +201,7 @@ class AcmeTab extends StatelessWidget {
       onPressChange: onPressChange,
       builder: builder,
       semanticLabel: semanticLabel,
+      child: child,
     );
   }
 }
@@ -230,11 +228,10 @@ class AcmeTabView extends StatelessWidget {
   @override
   Widget build(BuildContext _) {
     return RemixTabView(
-      key: key,
       style: acmeTabViewStyle(style: style),
       tabId: tabId,
-      child: child,
       maintainState: maintainState,
+      child: child,
     );
   }
 }
