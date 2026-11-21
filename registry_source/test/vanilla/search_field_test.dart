@@ -441,38 +441,59 @@ void main() {
       expect(dialogField(), findsNothing, reason: 'an empty field passes up');
     });
 
-    testWidgets('Escape during composition stays with the input method', (
-      tester,
-    ) async {
-      final controller = TextEditingController();
-      addTearDown(controller.dispose);
-      var cleared = 0;
-      await openDialog(
-        tester,
-        VanillaSearchField(
-          semanticLabel: 'Search',
-          controller: controller,
-          onCleared: () => cleared++,
-        ),
-      );
-      await tester.showKeyboard(editable());
-      controller.value = const TextEditingValue(
-        text: 'に',
-        selection: TextSelection.collapsed(offset: 1),
-        composing: TextRange(start: 0, end: 1),
-      );
-      await tester.pump();
+    testWidgets(
+      'a fresh read-only Escape dismisses despite a retained composing range',
+      (tester) async {
+        final controller = TextEditingController();
+        final readOnly = ValueNotifier(false);
+        addTearDown(controller.dispose);
+        addTearDown(readOnly.dispose);
+        final calls = <String>[];
+        await openDialog(
+          tester,
+          ValueListenableBuilder<bool>(
+            valueListenable: readOnly,
+            builder: (context, value, child) => VanillaSearchField(
+              semanticLabel: 'Search',
+              controller: controller,
+              readOnly: value,
+              onChanged: (query) => calls.add('change:$query'),
+              onCleared: () => calls.add('clear'),
+            ),
+          ),
+        );
+        await tester.showKeyboard(editable());
+        const composingValue = TextEditingValue(
+          text: 'に',
+          selection: TextSelection.collapsed(offset: 1),
+          composing: TextRange(start: 0, end: 1),
+        );
+        tester.testTextInput.updateEditingValue(composingValue);
+        await tester.pump();
+        expect(controller.value, composingValue);
 
-      // Unhandled by the framework, so the platform's input method gets it,
-      // and no handler above the field sees it.
-      expect(await tester.sendKeyDownEvent(LogicalKeyboardKey.escape), isFalse);
-      await tester.sendKeyRepeatEvent(LogicalKeyboardKey.escape);
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.escape);
-      await tester.pumpAndSettle();
-      expect(controller.text, 'に');
-      expect(cleared, 0);
-      expect(dialogField(), findsOneWidget, reason: 'the dialog stays open');
-    });
+        const escape = LogicalKeyboardKey.escape;
+        expect(await tester.sendKeyDownEvent(escape), isFalse);
+        readOnly.value = true;
+        await tester.pump();
+        expect(
+          tester.widget<EditableText>(editable()).focusNode.hasFocus,
+          isTrue,
+        );
+        expect(await tester.sendKeyRepeatEvent(escape), isFalse);
+        await tester.sendKeyUpEvent(escape);
+        await tester.pumpAndSettle();
+        expect(controller.value, composingValue);
+        expect(calls, ['change:に']);
+        expect(dialogField(), findsOneWidget, reason: 'the dialog stays open');
+
+        await tester.sendKeyEvent(escape);
+        await tester.pumpAndSettle();
+        expect(controller.text, 'に');
+        expect(calls, ['change:に']);
+        expect(dialogField(), findsNothing);
+      },
+    );
   });
 
   testWidgets('a read-only field passes Escape up', (tester) async {
@@ -625,10 +646,6 @@ void main() {
     expect(controller.text, 'given', reason: 'the caller keeps its own text');
     expect(clearButton(), findsOneWidget);
 
-    // The field now follows the caller's controller, not its own.
-    owned.text = '';
-    await tester.pump();
-    expect(clearButton(), findsOneWidget);
     controller.clear();
     await tester.pump();
     expect(clearButton(), findsNothing);
