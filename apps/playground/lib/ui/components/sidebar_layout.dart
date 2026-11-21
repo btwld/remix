@@ -122,9 +122,14 @@ class PlaygroundSidebarLayout extends StatefulWidget {
 }
 
 class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
-  Widget _scoped(Widget child) => Builder(
+  final _bodyKey = GlobalKey();
+
+  Widget _scoped(Widget child, {Key? key}) => Builder(
+    key: key,
     builder: (context) => PlaygroundSidebarLayoutScope._(
       RemixSidebarLayoutScope.of(context),
+      () => (_bodyKey.currentContext ?? context)
+          .getInheritedWidgetOfExactType<RemixSidebarLayoutScope>()!,
       _closeWhileWide,
       child: child,
     ),
@@ -137,7 +142,7 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
   @override
   Widget build(BuildContext context) => RemixSidebarLayout(
     sidebar: _scoped(widget.sidebar),
-    body: _scoped(widget.body),
+    body: _scoped(widget.body, key: _bodyKey),
     header: widget.header == null ? null : _scoped(widget.header!),
     compactBreakpoint: widget.compactBreakpoint,
     inlineWidth: widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
@@ -151,11 +156,13 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
 class PlaygroundSidebarLayoutScope extends InheritedWidget {
   const PlaygroundSidebarLayoutScope._(
     this._layout,
+    this._currentLayout,
     this._closeWhileWide, {
     required super.child,
   });
 
   final RemixSidebarLayoutScope _layout;
+  final ValueGetter<RemixSidebarLayoutScope> _currentLayout;
   final VoidCallback _closeWhileWide;
 
   /// Whether the layout is currently in its compact presentation.
@@ -165,10 +172,17 @@ class PlaygroundSidebarLayoutScope extends InheritedWidget {
   bool get isCompactOpen => _layout.isCompactOpen;
 
   /// Opens the compact sheet. Has no effect while wide.
-  void openCompact() => _layout.openCompact();
+  void openCompact() => _currentLayout().openCompact();
 
   /// Requests closure, even while wide if the host still sets compactOpen to true.
-  void closeCompact() => isCompact ? _layout.closeCompact() : _closeWhileWide();
+  void closeCompact() {
+    final layout = _currentLayout();
+    if (layout.isCompact) {
+      layout.closeCompact();
+    } else {
+      _closeWhileWide();
+    }
+  }
 
   /// Returns the nearest preset scope, or throws if there is no [PlaygroundSidebarLayout].
   static PlaygroundSidebarLayoutScope of(BuildContext context) =>
