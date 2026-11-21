@@ -33,7 +33,7 @@ Use `Remix*` widgets with your own stylers, or install a neutral Vanilla or
 Fortal preset as editable application source:
 
 ```bash
-dart pub global activate remix_cli '^1.0.0-rc.1'
+dart pub global activate remix_cli '^1.0.0-rc.2'
 remix init --preset vanilla
 remix add button
 ```
@@ -42,7 +42,7 @@ Install the CLI once globally. The constraint includes the 1.0 release
 candidate; `remix.yaml` pins the registry revision used by each project.
 Add Pub's `bin` directory to `PATH` if needed; Pub prints the instructions.
 For a CLI pinned in the app's lockfile, use
-`flutter pub add dev:remix_cli:^1.0.0-rc.1` instead and prefix each command
+`flutter pub add dev:remix_cli:^1.0.0-rc.2` instead and prefix each command
 with `dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 
 The CLI installs a theme and recipes, then generates adapters against your
