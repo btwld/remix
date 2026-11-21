@@ -22,6 +22,7 @@ library;
 
 import 'dart:io';
 
+import 'package:remix_cli/src/installer.dart' show readManagedBarrelExports;
 import 'package:remix_cli/src/ownership.dart';
 import 'package:remix_cli/src/project_config.dart';
 import 'package:remix_cli/src/registry_graph.dart';
@@ -175,9 +176,11 @@ Future<List<String>> _compare(
       );
       final ownership = OwnershipPlan.resolve(
         config,
-        graph.items,
-        requestedNames: graph.items.map((item) => item.name).toSet(),
-        adopt: true,
+        graph,
+        adoptNames: graph.items.map((item) => item.name).toSet(),
+        managedExports: readManagedBarrelExports(
+          File('${directory.path}/${config.uiPath}/ui.dart').readAsStringSync(),
+        ),
       );
       File(
         '${directory.path}/$ownershipFileName',

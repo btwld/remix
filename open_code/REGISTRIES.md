@@ -83,6 +83,9 @@ the complete dependency graph and templates before dependency installation or
 writes, rejects cycles and conflicting target owners, and intersects package
 constraints. Output identifies namespaces and the resolved revisions.
 
+For installs that predate the `text_field` and HeroUI `text_area` renames, see
+the [#511 migration guide](REGISTRY_511_MIGRATION.md) before refreshing items.
+
 Ownership checks also cover earlier installs, including files subsequently
 removed or targets no longer present in the latest catalog. The durable owner
 is the GitHub repository (case insensitive), registry path, preset, and item.
