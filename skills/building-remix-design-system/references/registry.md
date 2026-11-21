@@ -66,13 +66,20 @@ ordinary word or other identifier, for example `Acme`; its lower-camel form
 `Acme` with `{{typePrefix}}` and every `acme` with `{{valuePrefix}}`, comments
 and strings included. A consumer initialized with `--prefix Shop` receives
 `ShopButton`, `shopButtonStyle`, and token ids such as `'shop.color.primary'`.
-The first-party builder is identifier-aware instead: it substitutes only
-identifier segments and quoted-id starts, leaves prose that names the design
-system as written, and fails derivation on the word anywhere else in code or
-in an id-like string. It treats a string that starts with the value word, a
-separator and an id character, with no whitespace, as an id, so
-`Text('acme-themed')` takes the prefix. A plain-replacement script must keep
-the stricter rule:
+The first-party builder replaces a prefix only at an identifier segment
+followed by an uppercase letter or digit. Embedded text such as `comfortalButton`
+stays unchanged. Comments, examples, captions, and errors follow the installed
+API when they refer to code: a name used in the same Dart file, a call or member
+access, or a name marked with backticks or Dartdoc brackets. Use backticks for
+references that would otherwise look like prose, such as a generated constructor
+name in a comment. Brand prose such as “Acme-inspired” stays as written.
+
+A standalone quoted ID starts with the authoring word and uses `.`, `-`, or `_`
+between alphanumeric or interpolated segments (`'acme.$group.accent'`); use
+the lower-camel prefix for hyphenated IDs and for standalone camel-case keys
+such as `'acmeSliderDark'`. `Text('acme-themed')` therefore takes the prefix.
+Ambiguous ID-like strings and bare prefix segments fail with a `path:line`
+diagnostic. A plain-replacement script must keep the stricter rule:
 the word belongs only inside identifiers and at the start of quoted ids, never
 as a word of its own:
 
@@ -82,6 +89,7 @@ as a word of its own:
 | `ButtonStyler acmeButtonStyle(...)` | `ButtonStyler shopButtonStyle(...)` | same | yes |
 | `Color resolveAcmePalette()` | `Color resolveShopPalette()` | same | yes |
 | `/// Wraps [AcmeButton].` | `/// Wraps [ShopButton].` | same | yes |
+| `Text('acmeButtonStyle()')` | `Text('shopButtonStyle()')` | same | yes |
 | `ColorToken('acme.color.primary')`, `ValueKey('acme-row')` | `'shop.color.primary'`, `'shop-row'` | same | yes |
 | `/// Follows the Acme brand guide.` | `/// Follows the Shop brand guide.` | kept as written | **no** |
 | `// Generated from @acme/tokens 3.1.0` | `// Generated from @shop/tokens 3.1.0` | kept as written | **no** |

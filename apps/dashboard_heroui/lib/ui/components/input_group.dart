@@ -1,5 +1,5 @@
 // `DragStartBehavior` and `MaxLengthEnforcement` appear in the generated
-// UiInputGroup constructor, so they must be visible from this library even
+// `UiInputGroup` constructor, so they must be visible from this library even
 // though nothing here references them directly.
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';

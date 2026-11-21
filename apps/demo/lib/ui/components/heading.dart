@@ -36,7 +36,7 @@ TextStyler fortalHeadingStyle({
     style: fortalTextSizeToken(size).mix(),
   ).height(lineHeight).fontWeight(fortalTextWeightToken(weight)());
   // Neutral headings pin `gray12` from the tokens rather than inheriting the
-  // ambient foreground, matching fortalTextStyle's token-default contract.
+  // ambient foreground, matching `fortalTextStyle`'s token-default contract.
   recipe = accent
       ? fortalAccentForeground(recipe, highContrast: highContrast)
       : recipe.color(FortalTokens.gray12());

@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
@@ -1071,10 +1073,15 @@ final class PresetBuilder {
       components.map((entry) => entry.key),
     );
     final installedTargets = _installedTargets(sourceOwners);
+    final directives = {
+      for (final entry in {...sources, ...groupedSources}.entries)
+        entry.key: _readDirectiveUris(entry.key, entry.value),
+    };
     _validateSources(
       sources,
       groupedSources: groupedSources,
       sourceOwners: sourceOwners,
+      directives: directives,
     );
 
     final floors = _readDefaultFloors();
@@ -1118,7 +1125,7 @@ final class PresetBuilder {
           for (final entry in sharedSources)
             ..._registryDependencies(
               sourcePath: entry.key,
-              imports: _imports(entry.value),
+              imports: directives[entry.key]!.dependencies,
               componentNames: componentNames,
               sourceOwners: sourceOwners,
               itemName: shared.name,
@@ -1128,9 +1135,9 @@ final class PresetBuilder {
           for (final package in shared.packages) package: floors[package]!,
           for (final package in spec.detectedPackages)
             if (sharedSources.any(
-              (entry) => _imports(
-                entry.value,
-              ).any((uri) => uri.startsWith('package:$package/')),
+              (entry) => directives[entry.key]!.dependencies.any(
+                (uri) => uri.startsWith('package:$package/'),
+              ),
             ))
               package: floors[package]!,
         },
@@ -1175,7 +1182,7 @@ final class PresetBuilder {
       }
       final name = p.posix.basename(item.file);
       final templatePath = '${spec.templateDirectory}/${item.name}/$name.tmpl';
-      final imports = _imports(source);
+      final imports = directives[item.file]!.dependencies;
       output[templatePath] = _templateFor(item.file, source);
       sourceByTemplate[templatePath] = source;
       items[item.name] = _RegistryItemDraft(
@@ -1206,8 +1213,9 @@ final class PresetBuilder {
     for (final entry in components) {
       final name = p.posix.basenameWithoutExtension(entry.key);
       final templatePath = '${spec.templateDirectory}/$name/$name.dart.tmpl';
-      final generated = _generatedPart(entry.value);
-      final imports = _imports(entry.value);
+      final sourceDirectives = directives[entry.key]!;
+      final generated = sourceDirectives.generatedPart;
+      final imports = sourceDirectives.dependencies;
       final registryDependencies = _registryDependencies(
         sourcePath: entry.key,
         imports: imports,
@@ -1266,6 +1274,7 @@ final class PresetBuilder {
         throw FormatException('${spec.name} source must contain $path.');
       }
       final source = _recipeSource(path, authored);
+      final imports = _readDirectiveUris(path, source).dependencies;
       final templatePath = '${spec.templateDirectory}/$path.tmpl';
       output[templatePath] = _templateFor(path, source);
       sourceByTemplate[templatePath] = source;
@@ -1273,7 +1282,7 @@ final class PresetBuilder {
         name: name,
         registryDependencies: _registryDependencies(
           sourcePath: path,
-          imports: _imports(source),
+          imports: imports,
           componentNames: componentNames,
           sourceOwners: sourceOwners,
           itemName: name,
@@ -1283,9 +1292,7 @@ final class PresetBuilder {
         ),
         dependencies: {
           for (final package in spec.detectedPackages)
-            if (_imports(
-              source,
-            ).any((uri) => uri.startsWith('package:$package/')))
+            if (imports.any((uri) => uri.startsWith('package:$package/')))
               package: floors[package]!,
         },
         files: [_RegistryFileDraft(source: templatePath, target: '@ui/$path')],
@@ -1300,10 +1307,13 @@ final class PresetBuilder {
       for (final file in item.files) {
         final sourcePath = p.posix.normalize(file.source);
         final authored = groupedSources[sourcePath]!;
+        final sourceDirectives = directives[sourcePath]!;
+        final imports = sourceDirectives.dependencies;
         final rewritten = _groupedRecipeSource(
           sourcePath: sourcePath,
           targetPath: file.target,
           authored: authored,
+          directives: sourceDirectives.all,
           installedTargets: installedTargets,
           sourceTypeWord: file.sourceTypeWord,
           sourceValueWord: file.sourceValueWord,
@@ -1327,16 +1337,14 @@ final class PresetBuilder {
         registryDependencies.addAll(
           _registryDependencies(
             sourcePath: sourcePath,
-            imports: _imports(authored),
+            imports: imports,
             componentNames: componentNames,
             sourceOwners: sourceOwners,
             itemName: item.name,
           ),
         );
         for (final package in spec.detectedPackages) {
-          if (_imports(
-            authored,
-          ).any((uri) => uri.startsWith('package:$package/'))) {
+          if (imports.any((uri) => uri.startsWith('package:$package/'))) {
             importedPackages.add(package);
           }
         }
@@ -1437,34 +1445,46 @@ final class PresetBuilder {
     validate(output);
   }
 
-  /// Holds a merged preset to the contract the installer enforces: no
-  /// dependency cycles or target collisions, and every relative import in an
-  /// installed recipe resolving to something the preset also installs.
+  /// Holds a merged preset to the installer's contract: no dependency cycles
+  /// or target collisions, and every relative directive resolves to a target
+  /// installed by its own item or a transitive dependency.
   void validate(PresetOutput output) {
-    final document = loadYaml(output.files['registry.yaml']!);
-    if (document is! YamlMap || document['items'] is! YamlMap) {
-      throw const FormatException('Registry must contain an items map.');
-    }
-    RegistryCatalog.parse(jsonEncode(document), preset: spec.name);
-    final items = document['items'] as YamlMap;
-    final targets = <String>{
-      for (final item in items.values)
-        for (final file in item['files'] as YamlList? ?? const [])
-          file['target'] as String,
-    };
-    for (final entry in items.entries) {
-      for (final file in entry.value['files'] as YamlList? ?? const []) {
-        final source = file['source'] as String;
-        final target = file['target'] as String;
-        for (final uri in _imports(output.files[source] ?? '')) {
-          if (uri.startsWith('package:') || uri.startsWith('dart:')) continue;
+    final catalog = RegistryCatalog.parse(
+      output.files['registry.yaml']!,
+      preset: spec.name,
+    );
+    for (final item in catalog.items.values) {
+      final targets = <String>{
+        for (final dependency in catalog.resolve(item.name)) ...[
+          for (final file in dependency.files) file.target,
+          ...dependency.generated,
+        ],
+      };
+      var probePrefix = 'Consumer';
+      while (targets.any(
+        (target) => target.toLowerCase().contains(probePrefix.toLowerCase()),
+      )) {
+        probePrefix += 'X';
+      }
+      for (final file in item.files) {
+        final template = output.files[file.source];
+        if (template == null) continue;
+        final source = const TemplateRenderer().render(
+          template,
+          typePrefix: probePrefix,
+          valuePrefix: probePrefix.toLowerCase(),
+          icons: icons,
+        );
+        for (final directive in _readDirectiveUris(file.source, source).all) {
+          final uri = directive.uri;
+          if (!_isRelativeUri(uri)) continue;
           final resolved = p.posix.normalize(
-            p.posix.join(p.posix.dirname(target), uri),
+            p.posix.join(p.posix.dirname(file.target), uri),
           );
           if (!targets.contains(resolved)) {
             throw FormatException(
-              '${entry.key} imports $uri, which nothing in the ${spec.name} '
-              'preset installs.',
+              '${item.name} imports $uri, which is not in its '
+              '${spec.name} install closure.',
             );
           }
         }
@@ -1666,6 +1686,7 @@ final class PresetBuilder {
     Map<String, String> sources, {
     required Map<String, String> groupedSources,
     required Map<String, String> sourceOwners,
+    required Map<String, _SourceDirectives> directives,
   }) {
     final failures = <String>[];
     final allSources = {...sources, ...groupedSources};
@@ -1692,8 +1713,8 @@ final class PresetBuilder {
         (item) =>
             item.files.any((file) => p.posix.normalize(file.source) == path),
       );
-      for (final match in _directivePattern.allMatches(content)) {
-        final uri = match.group(2)!;
+      for (final directive in directives[path]!.all) {
+        final uri = directive.uri;
         final variableUri = uri
             .split('/')
             .where((segment) => !spec.fixedFileNames.contains(segment))
@@ -1702,12 +1723,11 @@ final class PresetBuilder {
             variableUri.contains(spec.valueWord)) {
           failures.add('$path: directive URI would be rewritten: $uri');
         }
-        if (!uri.startsWith('package:') && !uri.startsWith('dart:')) {
+        if (_isRelativeUri(uri)) {
           final resolved = p.posix.normalize(
             p.posix.join(p.posix.dirname(path), uri),
           );
-          final generated = match.group(1) == 'part' && uri.endsWith('.g.dart');
-          if (generated || sourceOwners.containsKey(resolved)) {
+          if (directive.isGeneratedPart || sourceOwners.containsKey(resolved)) {
             // Generated parts are produced beside their source. Every other
             // accepted relative directive resolves to an explicitly owned
             // source, including grouped sources in a sibling directory.
@@ -1822,8 +1842,16 @@ final class PresetBuilder {
     // A recipe that styles a published library has no sibling behavior to
     // rebase; only its directives need sorting.
     if (behavior == null) return sortDirectives(path, authored);
-    final rewritten = authored
-        .replaceAll(behavior.importPrefix, '../')
+    return sortDirectives(
+      path,
+      _rebaseBehaviorWords(authored.replaceAll(behavior.importPrefix, '../')),
+    );
+  }
+
+  String _rebaseBehaviorWords(String source) {
+    final behavior = spec.behavior;
+    if (behavior == null) return source;
+    return source
         .replaceAllMapped(
           RegExp('(?<![A-Za-z0-9_])${behavior.typeWord}(?=[A-Z])'),
           (_) => spec.typeWord,
@@ -1832,7 +1860,6 @@ final class PresetBuilder {
           RegExp('(?<![A-Za-z0-9_])${behavior.valueWord}(?=[A-Z])'),
           (_) => spec.valueWord,
         );
-    return sortDirectives(path, rewritten);
   }
 
   /// Rebase each mapped relative directive from authored to installed paths.
@@ -1843,18 +1870,16 @@ final class PresetBuilder {
     required String sourcePath,
     required String targetPath,
     required String authored,
+    required List<_DirectiveUri> directives,
     required Map<String, String> installedTargets,
     required String? sourceTypeWord,
     required String? sourceValueWord,
   }) {
     final behavior = spec.behavior;
-    var rewritten = authored.replaceAllMapped(_directivePattern, (match) {
-      final uri = match.group(2)!;
-      if (uri.startsWith('package:') || uri.startsWith('dart:')) {
-        return match.group(0)!;
-      }
-      final generated = match.group(1) == 'part' && uri.endsWith('.g.dart');
-      if (generated) return match.group(0)!;
+    var rewritten = authored;
+    for (final directive in directives.reversed) {
+      final uri = directive.uri;
+      if (!_isRelativeUri(uri) || directive.isGeneratedPart) continue;
       final resolved = p.posix.normalize(
         p.posix.join(p.posix.dirname(sourcePath), uri),
       );
@@ -1867,28 +1892,16 @@ final class PresetBuilder {
           resolved.startsWith(behaviorPrefix)) {
         installed = resolved.substring(behaviorPrefix.length);
       }
-      if (installed == null) return match.group(0)!;
+      if (installed == null) continue;
       final rebased = p.posix.relative(
         installed,
         from: p.posix.dirname(targetPath),
       );
-      final whole = match.group(0)!;
-      final uriStart = whole.indexOf(uri);
-      final uriEnd = uriStart + uri.length;
-      return '${whole.substring(0, uriStart)}$rebased'
-          '${whole.substring(uriEnd)}';
-    });
-    if (behavior != null) {
-      rewritten = rewritten
-          .replaceAllMapped(
-            RegExp('(?<![A-Za-z0-9_])${behavior.typeWord}(?=[A-Z])'),
-            (_) => spec.typeWord,
-          )
-          .replaceAllMapped(
-            RegExp('(?<![A-Za-z0-9_])${behavior.valueWord}(?=[A-Z])'),
-            (_) => spec.valueWord,
-          );
+      if (rebased != uri) {
+        rewritten = _replaceDirectiveUri(rewritten, directive.literal, rebased);
+      }
     }
+    rewritten = _rebaseBehaviorWords(rewritten);
     if (sourceTypeWord != null && sourceValueWord != null) {
       rewritten = _replacePrefixWords(
         sourcePath,
@@ -2016,7 +2029,7 @@ final class PresetBuilder {
   /// Infers one item's registry dependencies from its relative imports.
   List<String> _registryDependencies({
     required String sourcePath,
-    required List<String> imports,
+    required Iterable<String> imports,
     required Set<String> componentNames,
     required Map<String, String> sourceOwners,
     required String itemName,
@@ -2024,7 +2037,7 @@ final class PresetBuilder {
   }) {
     final dependencies = <String>{};
     for (final uri in imports) {
-      if (uri.startsWith('package:') || uri.startsWith('dart:')) continue;
+      if (!_isRelativeUri(uri)) continue;
       final resolved = p.posix.normalize(
         p.posix.join(p.posix.dirname(sourcePath), uri),
       );
@@ -2148,21 +2161,77 @@ final class _RegistryFileDraft {
   final String target;
 }
 
-List<String> _imports(String source) => [
-  for (final match in _importPattern.allMatches(source)) match.group(1)!,
-];
+typedef _DirectiveUri = ({
+  String uri,
+  StringLiteral literal,
+  bool isGeneratedPart,
+});
 
-String? _generatedPart(String source) {
-  final matches = RegExp(
-    r'''^\s*part\s+['"]([^'"]+\.g\.dart)['"]\s*;''',
-    multiLine: true,
-  ).allMatches(source).toList();
-  if (matches.length > 1) {
-    throw const FormatException(
-      'A component declares multiple generated parts.',
+final _uriLiteralSpecialCharacter = RegExp(r'''['"\\$\x00-\x1f]''');
+
+String _replaceDirectiveUri(String source, StringLiteral literal, String uri) {
+  if (literal is SimpleStringLiteral &&
+      !_uriLiteralSpecialCharacter.hasMatch(uri)) {
+    return source.replaceRange(
+      literal.contentsOffset,
+      literal.contentsEnd,
+      uri,
     );
   }
-  return matches.singleOrNull?.group(1);
+  return source.replaceRange(
+    literal.offset,
+    literal.end,
+    jsonEncode(uri).replaceAll(r'$', r'\$'),
+  );
+}
+
+bool _isRelativeUri(String uri) =>
+    !uri.startsWith('package:') && !uri.startsWith('dart:');
+
+_SourceDirectives _readDirectiveUris(String path, String source) {
+  _DirectiveUri read(StringLiteral literal, {required bool isPart}) {
+    final uri = literal.stringValue;
+    if (uri == null) {
+      throw FormatException('$path: directive URIs cannot interpolate.');
+    }
+    return (
+      uri: uri,
+      literal: literal,
+      isGeneratedPart: isPart && uri.endsWith('.g.dart'),
+    );
+  }
+
+  return _SourceDirectives([
+    for (final directive in _parseSource(path, source).directives)
+      if (directive is UriBasedDirective) ...[
+        read(directive.uri, isPart: directive is PartDirective),
+        if (directive is NamespaceDirective)
+          for (final configuration in directive.configurations)
+            read(configuration.uri, isPart: false),
+      ],
+  ]);
+}
+
+class _SourceDirectives {
+  _SourceDirectives(this.all);
+
+  final List<_DirectiveUri> all;
+  late final dependencies = [
+    for (final directive in all)
+      if (!directive.isGeneratedPart) directive.uri,
+  ];
+
+  late final String? generatedPart = _findGeneratedPart();
+
+  String? _findGeneratedPart() {
+    final parts = all.where((directive) => directive.isGeneratedPart);
+    if (parts.length > 1) {
+      throw const FormatException(
+        'A component declares multiple generated parts.',
+      );
+    }
+    return parts.singleOrNull?.uri;
+  }
 }
 
 void _writeStringList(
@@ -2198,15 +2267,10 @@ Map<String, String> _sortedMap(Map<String, String> source) {
 String _relative(File file, Directory root) =>
     p.posix.joinAll(p.split(p.relative(file.path, from: root.path)));
 
-/// Replaces an authoring prefix where it names something: an identifier
-/// segment (`FortalButton`, `_resolveFortalTheme`) or the start of a quoted id
-/// (`'fortal.color.accent'`). Prose keeps the design system's name.
-///
-/// Any other occurrence in code, or in a string where it is the whole string
-/// or touches `.`, `-`, `_`, `:` or an interpolation, throws instead of
-/// installing the authoring word where the prefix may belong. A string that
-/// starts with the value word, a separator and an id character, with no
-/// whitespace, is always an id, so `Text('fortal-themed')` takes the prefix.
+/// Substitutes prefixes at identifier segments followed by an uppercase letter
+/// or digit. In text, it rewrites quoted IDs and references marked as code by
+/// syntax, markup, or a matching same-file identifier; other prose is kept.
+/// Bare code prefixes and ambiguous ID-like strings fail with `path:line`.
 String _replacePrefixWords(
   String path,
   String source, {
@@ -2216,109 +2280,205 @@ String _replacePrefixWords(
   required String valueReplacement,
   Set<String> fixedFileNames = const {},
 }) {
-  final words = RegExp(
-    [
-      ...fixedFileNames.map(RegExp.escape),
-      RegExp.escape(typeWord),
-      RegExp.escape(valueWord),
-    ].join('|'),
+  final prefixes = RegExp(
+    '${RegExp.escape(typeWord)}|${RegExp.escape(valueWord)}',
   );
-  final spans = _commentAndStringSpans(path, source);
-  final buffer = StringBuffer();
-  var copied = 0;
-  for (final match in words.allMatches(source)) {
-    final word = match[0]!;
-    if (fixedFileNames.contains(word)) continue;
-    final span = spans
-        .where((span) => span.start <= match.start && match.end <= span.end)
-        .firstOrNull;
-    if (!_identifierStart.hasMatch(_charAt(source, match.end)) &&
-        !(span != null &&
-            span.string &&
-            _startsQuotedId(source, match, span))) {
-      if (span != null && (!span.string || _isProse(source, match, span))) {
-        continue;
+  final words = RegExp(
+    [...fixedFileNames.map(RegExp.escape), r'[\w$]+'].join('|'),
+  );
+  final edits = <({int start, int end, String replacement})>[];
+  final unit = _parseSource(path, source);
+  final identifiers = <String>{};
+  final comments = <Token>[];
+
+  void replace(String word, int start) {
+    edits.add((
+      start: start,
+      end: start + word.length,
+      replacement: word == typeWord ? typeReplacement : valueReplacement,
+    ));
+  }
+
+  Never refuse(String word, int start, String problem) {
+    final line = unit.lineInfo.getLocation(start).lineNumber;
+    throw StateError('$path:$line: "$word" $problem.');
+  }
+
+  Iterable<RegExpMatch> segments(String identifier) => prefixes
+      .allMatches(identifier)
+      .where(
+        (match) =>
+            match.start == 0 ||
+            match[0] == typeWord ||
+            '_\$'.contains(identifier[match.start - 1]),
+      );
+
+  void rewriteText(
+    String text,
+    int offset, {
+    String? idShape,
+    bool literal = false,
+    bool interpolatesBefore = false,
+    bool interpolatesAfter = false,
+  }) {
+    if (!prefixes.hasMatch(text)) return;
+    final leading = prefixes.matchAsPrefix(text);
+    if (leading != null &&
+        idShape != null &&
+        !fixedFileNames.contains(words.matchAsPrefix(text)?[0])) {
+      final suffix = idShape.substring(leading.end);
+      final valueId = leading[0] == valueWord;
+      if ((_idSuffix.hasMatch(suffix) &&
+              (valueId || !suffix.startsWith('-'))) ||
+          (valueId && !interpolatesAfter && _camelIdSuffix.hasMatch(suffix))) {
+        replace(leading[0]!, offset);
+        return;
       }
-      final line = '\n'.allMatches(source.substring(0, match.start)).length;
-      final problem = span == null
-          ? 'is code but does not start an identifier segment; make it an '
-                'identifier prefix'
-          : 'is a whole string or touches `.`, `-`, `_`, `:` or an '
-                'interpolation inside a string; reword it, or start the '
-                'string with it to make an id';
-      throw StateError('$path:${line + 1}: "$word" $problem.');
     }
-    buffer
-      ..write(source.substring(copied, match.start))
-      ..write(word == typeWord ? typeReplacement : valueReplacement);
-    copied = match.end;
+    final markup = _codeMarkup.allMatches(text).toList();
+    for (final candidate in words.allMatches(text)) {
+      final identifier = candidate[0]!;
+      if (fixedFileNames.contains(identifier)) continue;
+      final code =
+          identifiers.contains(identifier) ||
+          _codePunctuation.matchAsPrefix(text, candidate.end) != null ||
+          markup.any(
+            (span) => span.start < candidate.start && candidate.end < span.end,
+          );
+      for (final match in segments(identifier)) {
+        final word = match[0]!;
+        final start = candidate.start + match.start;
+        final end = candidate.start + match.end;
+        if (_identifierSuffixStart.hasMatch(_charAt(identifier, match.end))) {
+          if (code) replace(word, offset + start);
+        } else if (literal &&
+            !(word == typeWord && _charAt(text, end) == '-') &&
+            ((start == 0 && interpolatesBefore) ||
+                (end == text.length && interpolatesAfter) ||
+                (start == 0 && end == text.length) ||
+                (start > 0 && '.-_:'.contains(text[start - 1])) ||
+                (end < text.length && '.-_:'.contains(text[end])))) {
+          refuse(
+            word,
+            offset + start,
+            'is a whole string or touches `.`, `-`, `_`, `:` or an '
+            'interpolation inside a string; reword it, or start the '
+            'string with it to make an id',
+          );
+        }
+      }
+    }
   }
-  return (buffer..write(source.substring(copied))).toString();
-}
 
-final _identifierStart = RegExp('[A-Z0-9]');
-final _quotedIdContinuation = RegExp(r'[-._][A-Za-z0-9$]');
-
-String _charAt(String source, int index) =>
-    index >= 0 && index < source.length ? source[index] : '';
-
-/// Whether [match] opens a quoted id such as `'fortal.color.accent'`: right
-/// after the quote, a separator and an id character or interpolation follow,
-/// and the literal [span] holds no whitespace, so `'fortal-themed card'` is
-/// not one.
-bool _startsQuotedId(String source, Match match, _Span span) {
-  final quote = _charAt(source, match.start - 1);
-  return (quote == "'" || quote == '"') &&
-      _quotedIdContinuation.matchAsPrefix(source, match.end) != null &&
-      !source.substring(match.start, span.end).contains(RegExp(r'\s'));
-}
-
-/// Whether a word inside a string literal piece reads as prose: it is not the
-/// whole string and touches no id separator or interpolation.
-bool _isProse(String source, Match match, _Span span) {
-  final before = _charAt(source, match.start - 1);
-  final after = _charAt(source, match.end);
-  final interpolated = match.start == span.start || match.end == span.end;
-  final whole = (before == "'" || before == '"') && after == before;
-  return !interpolated &&
-      !whole &&
-      !'.-_:'.contains(before) &&
-      !'.-_:'.contains(after);
-}
-
-typedef _Span = ({int start, int end, bool string});
-
-/// Comment and string literal spans of [source], from the analyzer's tokens.
-/// An interpolated string yields one span per literal piece.
-List<_Span> _commentAndStringSpans(String path, String source) {
-  final spans = <_Span>[];
-  final Token begin;
-  try {
-    begin = parseString(content: source).unit.beginToken;
-  } on ArgumentError catch (error) {
-    throw StateError('$path does not parse. ${error.message}');
-  }
-  for (var token = begin; ; token = token.next!) {
+  for (var token = unit.beginToken; ; token = token.next!) {
+    if (token.isIdentifier && prefixes.hasMatch(token.lexeme)) {
+      identifiers.add(token.lexeme);
+      for (final match in segments(token.lexeme)) {
+        final word = match[0]!;
+        final start = token.offset + match.start;
+        if (!_identifierSuffixStart.hasMatch(
+          _charAt(token.lexeme, match.end),
+        )) {
+          refuse(
+            word,
+            start,
+            'is code but does not start an identifier segment; make it an '
+            'identifier prefix',
+          );
+        }
+        replace(word, start);
+      }
+    }
     for (
       Token? comment = token.precedingComments;
       comment != null;
       comment = comment.next
     ) {
-      spans.add((start: comment.offset, end: comment.end, string: false));
+      comments.add(comment);
     }
-    if (token.type == TokenType.STRING) {
-      spans.add((start: token.offset, end: token.end, string: true));
+    if (token.isEof) break;
+  }
+  // A comment can refer to identifiers declared later in the file.
+  for (final comment in comments) {
+    rewriteText(comment.lexeme, comment.offset);
+  }
+  unit.accept(
+    _StringPieces((start, end, {idShape, before = false, after = false}) {
+      rewriteText(
+        source.substring(start, end),
+        start,
+        literal: true,
+        idShape: idShape,
+        interpolatesBefore: before,
+        interpolatesAfter: after,
+      );
+    }),
+  );
+
+  final buffer = StringBuffer();
+  var copied = 0;
+  for (final edit
+      in edits..sort((left, right) => left.start.compareTo(right.start))) {
+    buffer
+      ..write(source.substring(copied, edit.start))
+      ..write(edit.replacement);
+    copied = edit.end;
+  }
+  return (buffer..write(source.substring(copied))).toString();
+}
+
+class _StringPieces extends RecursiveAstVisitor<void> {
+  _StringPieces(this.visitPiece);
+
+  final void Function(
+    int start,
+    int end, {
+    String? idShape,
+    bool before,
+    bool after,
+  })
+  visitPiece;
+
+  @override
+  void visitSimpleStringLiteral(SimpleStringLiteral node) {
+    visitPiece(node.contentsOffset, node.contentsEnd, idShape: node.value);
+  }
+
+  @override
+  void visitStringInterpolation(StringInterpolation node) {
+    final elements = node.elements;
+    final shape = elements
+        .map((element) => element is InterpolationString ? element.value : '0')
+        .join();
+    for (final (index, element) in elements.indexed) {
+      if (element is InterpolationString) {
+        visitPiece(
+          element.contentsOffset,
+          element.contentsEnd,
+          idShape: index == 0 ? shape : null,
+          before: index > 0,
+          after: index < elements.length - 1,
+        );
+      } else {
+        element.accept(this);
+      }
     }
-    if (token.isEof) return spans;
   }
 }
 
-final _importPattern = RegExp(
-  r'''^\s*(?:import|export)\s+['"]([^'"]+)['"]''',
-  multiLine: true,
-);
+final _identifierSuffixStart = RegExp('[A-Z0-9]');
+final _idSuffix = RegExp(r'^(?:[-._][A-Za-z0-9]+)+$');
+final _camelIdSuffix = RegExp(r'^[A-Z0-9][A-Za-z0-9]*$');
+final _codePunctuation = RegExp(r'(?:\(|[.<][A-Za-z_$])');
+final _codeMarkup = RegExp(r'`[^`\n]+`|\[[\w.$]+\]');
 
-final _directivePattern = RegExp(
-  r'''^\s*(import|export|part)\s+['"]([^'"]+)['"]''',
-  multiLine: true,
-);
+String _charAt(String source, int index) =>
+    index >= 0 && index < source.length ? source[index] : '';
+
+CompilationUnit _parseSource(String path, String source) {
+  try {
+    return parseString(content: source).unit;
+  } on ArgumentError catch (error) {
+    throw StateError('$path does not parse. ${error.message}');
+  }
+}

@@ -100,7 +100,7 @@ ContextToken<Color> _ringColor(double alpha, Color? surfaceColor) =>
       ),
     );
 
-// ContextToken equality is resolver identity, as in vanillaTint: cache per
+// ContextToken equality is resolver identity, as in `vanillaTint`: cache per
 // argument set so rebuilding the recipe keeps style equality.
 final _ringColors = <(double, Color?), ContextToken<Color>>{};
 

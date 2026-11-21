@@ -242,16 +242,16 @@ internal authoring directory remains `registry_source/lib/src/default/`.
 
 `registry_source/lib/src/default`, `fortal`, `heroui` and `dashboard` own the
 analyzed Dart. Edit it, never `.tmpl` output. The builder asserts prefix round
-trips and rewrites shared dashboard imports to installed relative paths. Imports
-determine item dependencies; parts determine adapter targets. Whole-tree checks
-reject missing, unexpected or changed files.
+trips and rewrites shared dashboard imports to installed relative paths. Every
+branch of an import or export contributes dependencies. Relative paths must
+resolve within the item's transitive install closure; generated parts resolve
+to declared adapter targets. Whole-tree checks reject missing, unexpected or
+changed files.
 
-The prefix replaces the authoring word only where it begins an identifier
-segment or a quoted id (`FortalButton`, `'fortal.color.accent'`); prose keeps
-the design system's name, and the word anywhere else in code or in an id-like
-string fails derivation with its file and line. Explicit fixed data filenames
-are also exempt: `theme/fortal_colors.dart` stays stable while its Dart types
-take the consumer prefix; the theme barrel excludes unprefixed palette globals.
+Follow the [registry authoring guide](../skills/building-remix-design-system/references/registry.md)
+for prefix conventions. The fixed `theme/fortal_colors.dart` data filename
+stays stable while its Dart types take the consumer prefix; the theme barrel
+excludes unprefixed palette globals.
 Palettes are generated from owned seeds; [Fortal's specification](../registry_source/specs/fortal.md)
 owns the visual contract.
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
@@ -204,6 +205,28 @@ void main() {
     expect(renderedTheme, isNot(contains('acme_colors.dart')));
   });
 
+  test('closure validation rejects a prefix-dependent palette import', () {
+    final builder = PresetBuilder.forRepository(Directory.current.absolute);
+    final output = builder.derive();
+    const path = 'templates/theme/theme_data.dart.tmpl';
+    final planted = PresetOutput(
+      files: {
+        ...output.files,
+        path: output.files[path]!.replaceFirst(
+          "'fortal_colors.dart'",
+          "'{{valuePrefix}}_colors.dart'",
+        ),
+      },
+      sourceByTemplate: output.sourceByTemplate,
+    );
+    expect(
+      () => builder.validate(planted),
+      _throwsFormatExceptionWith(
+        '_colors.dart, which is not in its fortal install closure',
+      ),
+    );
+  });
+
   test(
     'HeroUI derives every component as a generated recipe and keeps notices',
     () {
@@ -244,7 +267,6 @@ void main() {
       expect(search, isNot(contains('RemixIcons')));
       final button = output.files['templates/button/button.dart.tmpl']!;
       expect(button, contains('{{typePrefix}}Button'));
-      expect(button, isNot(contains('HeroUi')));
       expect(button, isNot(contains('package:registry_source')));
       final notice = output.files['templates/theme/license.dart.tmpl']!;
       expect(notice, contains('Apache License'));
@@ -556,12 +578,7 @@ void main() {
     }
   });
 
-  test('installed source names its design system only in prose', () {
-    // The two dashboard strings name the city Fortal is named for.
-    const prose = [
-      "'The breeze blocks of Fortaleza façades, one tile at a time.'",
-      "'Fortaleza'",
-    ];
+  test('installed identifiers do not keep their authoring prefixes', () {
     for (final spec in [defaultPreset, fortalPreset, herouiPreset]) {
       final builder = PresetBuilder.forRepository(
         Directory.current,
@@ -575,15 +592,26 @@ void main() {
           valuePrefix: 'zq',
           icons: builder.icons,
         );
-        for (final line in rendered.split('\n')) {
-          final named = spec.fixedFileNames
-              .fold(line, (line, name) => line.replaceAll(name, ''))
-              .contains(RegExp('${spec.typeWord}|${spec.valueWord}'));
-          if (!named) continue;
+        for (
+          var token = parseString(content: rendered).unit.beginToken;
+          !token.isEof;
+          token = token.next!
+        ) {
+          if (!token.isIdentifier) continue;
           expect(
-            line.trimLeft().startsWith('//') || prose.any(line.contains),
-            isTrue,
-            reason: '$path: $line',
+            token.lexeme,
+            isNot(matches('${spec.typeWord}(?=[A-Z0-9])')),
+            reason: path,
+          );
+          expect(
+            token.lexeme,
+            isNot(
+              matches(
+                r'(?:^|[_$])'
+                '${spec.valueWord}(?=[A-Z0-9])',
+              ),
+            ),
+            reason: path,
           );
         }
       }
@@ -630,6 +658,123 @@ const caption = 'Cards in the Fortal style';
 final sum = '{{valuePrefix}}.\${a + b}';
 """);
   });
+
+  test(
+    'consumer prefixes adapt code references but not prose or embedded words',
+    () {
+      final builder = _fixtureBuilder(sandbox);
+      const source =
+          r'''// A FortalInspired view uses comfortalButton, not FortalBadge.
+/* FortalInspired is just text here, too. */
+/// A FortalInspired view (see [FortalBadge.new]).
+/// In Dart: `FortalBadge`, `FortalToken`, and `fortalBadgeStyle`.
+class FortalBadge {}
+
+final comfortalButton = FortalBadge();
+final _resolveFortalBadge = FortalBadge.new;
+const caption = 'A FortalInspired view';
+const brand = 'Fortal-inspired';
+const embedded = 'comfortalButton()';
+const id = 'fortal.color.accent';
+const variantId = 'fortalBadgeDark';
+final display = 'FortalInspired ${FortalBadge()}';
+''';
+      _write(builder.sourceRoot, 'components/badge.dart', source);
+
+      final template = builder
+          .derive()
+          .files['templates/badge/badge.dart.tmpl']!;
+
+      expect(
+        const TemplateRenderer().render(
+          template,
+          typePrefix: 'Acme',
+          valuePrefix: 'acme',
+        ),
+        r'''// A FortalInspired view uses comfortalButton, not AcmeBadge.
+/* FortalInspired is just text here, too. */
+/// A FortalInspired view (see [AcmeBadge.new]).
+/// In Dart: `AcmeBadge`, `AcmeToken`, and `acmeBadgeStyle`.
+class AcmeBadge {}
+
+final comfortalButton = AcmeBadge();
+final _resolveAcmeBadge = AcmeBadge.new;
+const caption = 'A FortalInspired view';
+const brand = 'Fortal-inspired';
+const embedded = 'comfortalButton()';
+const id = 'acme.color.accent';
+const variantId = 'acmeBadgeDark';
+final display = 'FortalInspired ${AcmeBadge()}';
+''',
+      );
+    },
+  );
+
+  group('installed source uses the Acme API', () {
+    for (final (spec, expectations) in [
+      (
+        defaultPreset,
+        {
+          'button/button': '/// AcmeButton.primary(',
+          'theme/theme_scope': "ErrorSummary('No AcmeTheme found.')",
+        },
+      ),
+      (
+        fortalPreset,
+        {
+          'dashboard_demo/dashboard_demo_themes':
+              "AcmeCode('acmeButtonStyle()')",
+        },
+      ),
+    ]) {
+      final builder = PresetBuilder.forRepository(
+        Directory.current,
+        spec: spec,
+      );
+      late PresetOutput output;
+      group(spec.name, () {
+        setUpAll(() => output = builder.derive());
+        for (final entry in expectations.entries) {
+          test(entry.key, () {
+            final rendered = const TemplateRenderer().render(
+              output.files['templates/${entry.key}.dart.tmpl']!,
+              typePrefix: 'Acme',
+              valuePrefix: 'acme',
+              icons: builder.icons,
+            );
+            expect(rendered, contains(entry.value));
+          });
+        }
+      });
+    }
+  });
+
+  test(
+    'interpolated ID segments can precede literal and interpolated segments',
+    () {
+      final builder = _fixtureBuilder(sandbox);
+      _write(builder.sourceRoot, 'components/badge.dart', r'''
+final color = 'fortal.$group.accent';
+final variant = 'fortal.${group}.${variantName}';
+const raw = r'fortal.color.accent';
+const typed = 'Fortal.color.accent';
+''');
+
+      expect(
+        const TemplateRenderer().render(
+          builder.derive().files['templates/badge/badge.dart.tmpl']!,
+          typePrefix: 'Acme',
+          valuePrefix: 'acme',
+        ),
+        r'''
+final color = 'acme.$group.accent';
+final variant = 'acme.${group}.${variantName}';
+const raw = r'acme.color.accent';
+const typed = 'Acme.color.accent';
+''',
+      );
+    },
+  );
 
   test('refuses the authoring word where neither a prefix nor prose fits', () {
     final builder = _fixtureBuilder(sandbox);
@@ -804,6 +949,80 @@ final sum = '{{valuePrefix}}.\${a + b}';
       '@ui/components/button.g.dart',
     ]);
   });
+
+  test('both branches of conditional imports and exports install', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(builder.sourceRoot, 'components/native.dart', '');
+    _write(builder.sourceRoot, 'components/web.dart', '');
+    for (final directive in ['import', 'export']) {
+      _write(
+        builder.sourceRoot,
+        'components/platform.dart',
+        "$directive 'native.dart' if (dart.library.js_interop) 'web.dart';\n",
+      );
+
+      final output = builder.derive();
+      final items =
+          loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+
+      expect(_strings(items['platform']['registryDependencies']), [
+        'native',
+        'web',
+      ]);
+      expect(() => builder.validate(output), returnsNormally);
+    }
+  });
+
+  test('a missing conditional branch is rejected during source validation', () {
+    final builder = _fixtureBuilder(sandbox);
+    _write(builder.sourceRoot, 'components/native.dart', '');
+    _write(
+      builder.sourceRoot,
+      'components/platform.dart',
+      "export 'native.dart' if (dart.library.js_interop) 'web.dart';\n",
+    );
+
+    expect(
+      builder.derive,
+      _throwsFormatExceptionWith(
+        'platform.dart: missing relative source web.dart',
+      ),
+    );
+  });
+
+  test(
+    'validation requires conditional targets in the transitive install closure',
+    () {
+      final builder = _fixtureBuilder(sandbox);
+      _write(builder.sourceRoot, 'components/web.dart', '');
+      _write(
+        builder.sourceRoot,
+        'components/platform.dart',
+        "export 'native.dart';\n",
+      );
+      PresetOutput withConditionalBranch(String nativeSource) {
+        _write(builder.sourceRoot, 'components/native.dart', nativeSource);
+        return PresetOutput(
+          files: {
+            ...builder.derive().files,
+            'templates/platform/platform.dart.tmpl':
+                "export 'native.dart' if (dart.library.js_interop) 'web.dart';\n",
+          },
+          sourceByTemplate: const {},
+        );
+      }
+
+      expect(
+        () => builder.validate(withConditionalBranch("export 'web.dart';\n")),
+        returnsNormally,
+      );
+      final outsideClosure = withConditionalBranch('');
+      expect(
+        () => builder.validate(outsideClosure),
+        _throwsFormatExceptionWith('platform imports web.dart'),
+      );
+    },
+  );
 
   test('refuses Fortal path segments before reading registry metadata', () {
     final builder = _emptyBuilder(sandbox);
@@ -1369,6 +1588,26 @@ final class {{typePrefix}}BotDialRecipe {
     );
   });
 
+  test('grouped recipes rebase each conditional branch', () {
+    final builder = _emptyBuilder(sandbox, spec: _acmeWithGroupedRecipes);
+    _writeGroupedAcmeSources(builder);
+    _write(
+      builder.sourceRoot,
+      'recipes/dashboard/dashboard_shell.dart',
+      "export '../../../dashboard/' 'dashboard_shell_base.dart'\n"
+          "    if (dart.library.js_interop) r'../../../dashboard/dashboard_navigation.dart';\n",
+    );
+
+    final output = builder.derive();
+
+    expect(
+      output.files['templates/dashboard_shell/dashboard_shell.dart.tmpl'],
+      'export "dashboard_shell_base.dart"\n'
+      "    if (dart.library.js_interop) r'dashboard_navigation.dart';\n",
+    );
+    expect(() => builder.validate(output), returnsNormally);
+  });
+
   test('grouped recipes reject target collisions', () {
     final builder = _emptyBuilder(sandbox, spec: _acmeWithGroupedCollision);
     _writeGroupedAcmeSources(builder);
@@ -1802,6 +2041,14 @@ items:
     'abstract final class {{typePrefix}}Icons {}\n',
   );
 }
+
+Matcher _throwsFormatExceptionWith(String text) => throwsA(
+  isA<FormatException>().having(
+    (error) => error.message,
+    'message',
+    contains(text),
+  ),
+);
 
 void _write(Directory root, String relativePath, String source) {
   final file = File(p.joinAll([root.path, ...p.posix.split(relativePath)]));
