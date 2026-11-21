@@ -5,12 +5,6 @@ import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
 
-/// Accessible name for the compact navigation sheet's dialog barrier.
-const _closeNavigationLabel = 'Close navigation';
-
-/// Accessible name for the compact navigation sheet itself.
-const _navigationSemanticLabel = 'Navigation';
-
 /// A width, in logical pixels, reserved outside the compact sheet so its
 /// scrim stays reachable on narrow screens.
 const _compactSheetBarrierGutter = 56.0;
@@ -100,275 +94,110 @@ class FortalSidebarLayout extends StatefulWidget {
 
   @override
   State<FortalSidebarLayout> createState() => _FortalSidebarLayoutState();
-}
 
-class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
-  bool _selfOpen = false;
-  bool _sheetShowing = false;
-
-  /// The layout's presentation as of its most recent build, so [_openCompact]
-  /// can no-op while wide even when called outside that build.
-  bool _isCompact = false;
-
-  /// The route [showRemixDialog] pushed for the open sheet, captured from
-  /// inside its own builder via `ModalRoute.of` so [_removeSheetRoute] can
-  /// close exactly that route on the Navigator that actually owns it,
-  /// rather than popping whatever a bare `Navigator.of(context)` finds.
-  Route<void>? _sheetRoute;
-
-  bool get _effectiveOpen => widget.compactOpen ?? _selfOpen;
-
-  void _setOpen(bool value) {
-    if (_effectiveOpen == value) return;
-    if (widget.compactOpen == null) {
-      setState(() => _selfOpen = value);
-    }
-    widget.onCompactOpenChanged?.call(value);
-  }
-
-  // No-op while wide, so open state never carries over to the next compact
-  // presentation.
-  void _openCompact() {
-    if (!_isCompact) return;
-    _setOpen(true);
-  }
-
-  void _closeCompact() => _setOpen(false);
-
-  void _reconcileSheet(bool isCompact) {
-    _isCompact = isCompact;
-    final desiredOpen = isCompact && _effectiveOpen;
-    if (desiredOpen == _sheetShowing) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      if (_isCompact && _effectiveOpen) {
-        if (!_sheetShowing) _pushSheet();
-      } else if (_sheetShowing) {
-        _removeSheetRoute();
-      }
-    });
-  }
-
-  void _removeSheetRoute() {
-    final route = _sheetRoute;
-    if (route == null || !route.isActive) return;
-    route.navigator?.removeRoute(route);
-  }
-
-  Future<void> _pushSheet() async {
-    _sheetShowing = true;
-    final reduceMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    await showRemixDialog<void>(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: _closeNavigationLabel,
-      barrierColor: MixScope.tokenOf(FortalTokens.colorOverlay, context),
-      transitionDuration: reduceMotion
-          ? Duration.zero
-          : const Duration(milliseconds: 250),
-      builder: (dialogContext) {
-        _sheetRoute = ModalRoute.of(dialogContext);
-        final available = MediaQuery.sizeOf(dialogContext).width;
-        final width = math.min(
-          widget.sidebarWidth,
-          math.max(0.0, available - _compactSheetBarrierGutter),
-        );
-        return PopScope<void>(
-          canPop: widget.compactOpen == null,
-          onPopInvokedWithResult: (didPop, _) {
-            if (!didPop) _closeCompact();
-          },
-          child: FortalSidebarLayoutScope._(
-            isCompact: true,
-            isCompactOpen: true,
-            openCompact: _openCompact,
-            closeCompact: _closeCompact,
-            child: Box(
-              style: BoxStyler().alignment(.centerStart),
-              // A foreground border paints the panel edge without shrinking
-              // `width` by the border's own stroke width.
-              child: Box(
-                style: BoxStyler()
-                    .width(width)
-                    .height(.infinity)
-                    .color(FortalTokens.colorPanelSolid())
-                    .foregroundDecoration(
-                      BoxDecorationMix(
-                        border: BorderDirectionalMix(
-                          end: BorderSideMix(
-                            color: FortalTokens.grayA5(),
-                            width: FortalTokens.borderWidth1(),
-                          ),
-                        ),
-                      ),
-                    ),
-                child: RemixDialog(
-                  semanticLabel: _navigationSemanticLabel,
-                  child: widget.sidebar,
+  Widget _buildCompactPanel(BuildContext context, Widget child) {
+    final available = MediaQuery.sizeOf(context).width;
+    final width = math.min(
+      sidebarWidth,
+      math.max(0.0, available - _compactSheetBarrierGutter),
+    );
+    return Box(
+      style: BoxStyler().alignment(.centerStart),
+      child: Box(
+        style: BoxStyler()
+            .width(width)
+            .height(.infinity)
+            .color(FortalTokens.colorPanelSolid())
+            .foregroundDecoration(
+              BoxDecorationMix(
+                border: BorderDirectionalMix(
+                  end: BorderSideMix(
+                    color: FortalTokens.grayA5(),
+                    width: FortalTokens.borderWidth1(),
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
-    );
-    // Reached once, however the route completed: a user dismissal or
-    // _removeSheetRoute above.
-    _sheetRoute = null;
-    _sheetShowing = false;
-    if (mounted) _setOpen(false);
-  }
-
-  @override
-  void dispose() {
-    final route = _sheetRoute;
-    if (route != null) {
-      // Navigator mutations must wait until the current tree update finishes.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final navigator = route.navigator;
-        if (navigator != null && navigator.mounted && route.isActive) {
-          navigator.removeRoute(route);
-        }
-      });
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isCompact = constraints.maxWidth < widget.compactBreakpoint;
-        _reconcileSheet(isCompact);
-
-        return FortalSidebarLayoutScope._(
-          isCompact: isCompact,
-          // Anded with isCompact so it can't read true while wide.
-          isCompactOpen: isCompact && _effectiveOpen,
-          openCompact: _openCompact,
-          closeCompact: _closeCompact,
-          child: isCompact ? _body() : _wideRow(),
-        );
-      },
-    );
-  }
-
-  Widget _wideRow() {
-    final policy = FocusTraversalGroup.maybeOf(context);
-    return RemixReducedMotionBuilder(
-      builder: (context, reduceMotion) => RowBox(
-        style: FlexBoxStyler().crossAxisAlignment(.stretch),
-        children: [
-          AnimatedContainer(
-            width: widget.collapsed
-                ? widget.collapsedWidth
-                : widget.sidebarWidth,
-            duration: reduceMotion
-                ? Duration.zero
-                : const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-            // Grouped so Tab finishes one pane before the other, rather than
-            // zigzagging between controls that sit at similar heights.
-            child: FocusTraversalGroup(policy: policy, child: widget.sidebar),
-          ),
-          Expanded(
-            child: FocusTraversalGroup(
-              policy: policy,
-              child: _body(besideSidebar: true),
-            ),
-          ),
-        ],
+        child: child,
       ),
-    );
-  }
-
-  Widget _body({bool besideSidebar = false}) {
-    final header = widget.header;
-    final ltr = Directionality.of(context) == TextDirection.ltr;
-
-    // Beside the sidebar, the column never touches the start edge, so it
-    // must not keep clear of a start inset such as a landscape notch. A header
-    // sits against the top edge and keeps clear of the top inset itself, so
-    // the body below must not reserve it a second time: a scroll view
-    // otherwise pads its content by MediaQuery's top inset. Both wrappers
-    // read this widget's MediaQuery, so neither undoes the other.
-    Widget inset(Widget child, {bool removeTop = false}) =>
-        MediaQuery.removePadding(
-          context: context,
-          removeTop: removeTop,
-          removeLeft: besideSidebar && ltr,
-          removeRight: besideSidebar && !ltr,
-          child: child,
-        );
-
-    return ColumnBox(
-      style: FlexBoxStyler().crossAxisAlignment(.stretch),
-      children: [
-        if (header != null) inset(header),
-        // The body's wrapper stays mounted either way so its state survives
-        // a header coming or going.
-        Expanded(
-          child: RepaintBoundary(
-            child: inset(widget.body, removeTop: header != null),
-          ),
-        ),
-      ],
     );
   }
 }
 
-/// An inherited scope that provides compact layout state and controls.
-///
-/// Descendants of [FortalSidebarLayout] and its compact navigation sheet can
-/// read this scope to observe compact mode or toggle the sheet.
-class FortalSidebarLayoutScope extends InheritedWidget {
-  // Private named parameters would raise the application's language floor,
-  // so the private fields are assigned explicitly.
-  const FortalSidebarLayoutScope._({
-    required this.isCompact,
-    required this.isCompactOpen,
-    required VoidCallback openCompact,
-    required VoidCallback closeCompact,
-    required super.child,
-  }) : _openCompact = openCompact, // ignore: prefer_initializing_formals
-       _closeCompact = closeCompact; // ignore: prefer_initializing_formals
+class _FortalSidebarLayoutState extends State<FortalSidebarLayout> {
+  final _bodyKey = GlobalKey();
 
-  /// Whether the layout is currently in its compact presentation.
-  final bool isCompact;
+  Widget _scoped(Widget child, {Key? key}) => Builder(
+    key: key,
+    builder: (context) => FortalSidebarLayoutScope._(
+      RemixSidebarLayoutScope.of(context),
+      () => (_bodyKey.currentContext ?? context)
+          .getInheritedWidgetOfExactType<RemixSidebarLayoutScope>()!,
+      _closeWhileWide,
+      child: child,
+    ),
+  );
 
-  /// Whether the compact sheet is currently open.
-  ///
-  /// Always `false` outside a compact presentation.
-  final bool isCompactOpen;
-
-  final VoidCallback _openCompact;
-  final VoidCallback _closeCompact;
-
-  /// Opens the compact sheet.
-  ///
-  /// Has no effect when the layout is not compact.
-  void openCompact() => _openCompact();
-
-  /// Closes the compact sheet.
-  ///
-  /// Has no effect when the sheet is already closed.
-  void closeCompact() => _closeCompact();
-
-  /// Returns the nearest [FortalSidebarLayoutScope] from [context].
-  ///
-  /// Throws a [FlutterError] if no [FortalSidebarLayout] ancestor is found.
-  static FortalSidebarLayoutScope of(BuildContext context) {
-    final scope = maybeOf(context);
-    if (scope == null) {
-      throw FlutterError(
-        'FortalSidebarLayoutScope.of requires a FortalSidebarLayout ancestor.',
-      );
-    }
-    return scope;
+  void _closeWhileWide() {
+    if (widget.compactOpen == true) widget.onCompactOpenChanged?.call(false);
   }
 
-  /// Returns the nearest [FortalSidebarLayoutScope] from [context], or `null` if none exists.
+  @override
+  Widget build(BuildContext context) => RemixSidebarLayout(
+    sidebar: _scoped(widget.sidebar),
+    body: _scoped(widget.body, key: _bodyKey),
+    header: widget.header == null ? null : _scoped(widget.header!),
+    compactBreakpoint: widget.compactBreakpoint,
+    inlineWidth: widget.collapsed ? widget.collapsedWidth : widget.sidebarWidth,
+    compactOpen: widget.compactOpen,
+    onCompactOpenChanged: widget.onCompactOpenChanged,
+    compactBarrierColorBuilder: (context) =>
+        MixScope.tokenOf(FortalTokens.colorOverlay, context),
+    compactPanelBuilder: widget._buildCompactPanel,
+  );
+}
+
+/// Scope available from [FortalSidebarLayout] and its compact navigation sheet.
+class FortalSidebarLayoutScope extends InheritedWidget {
+  const FortalSidebarLayoutScope._(
+    this._layout,
+    this._currentLayout,
+    this._closeWhileWide, {
+    required super.child,
+  });
+
+  final RemixSidebarLayoutScope _layout;
+  final ValueGetter<RemixSidebarLayoutScope> _currentLayout;
+  final VoidCallback _closeWhileWide;
+
+  /// Whether the layout is currently in its compact presentation.
+  bool get isCompact => _layout.isCompact;
+
+  /// Whether the compact sheet is open. Always false while wide.
+  bool get isCompactOpen => _layout.isCompactOpen;
+
+  /// Opens the compact sheet. Has no effect while wide.
+  void openCompact() => _currentLayout().openCompact();
+
+  /// Requests closure, even while wide if the host still sets compactOpen to true.
+  void closeCompact() {
+    final layout = _currentLayout();
+    if (layout.isCompact) {
+      layout.closeCompact();
+    } else {
+      _closeWhileWide();
+    }
+  }
+
+  /// Returns the nearest preset scope, or throws if there is no [FortalSidebarLayout].
+  static FortalSidebarLayoutScope of(BuildContext context) =>
+      maybeOf(context) ??
+      (throw FlutterError(
+        'FortalSidebarLayoutScope.of requires a '
+        'FortalSidebarLayout ancestor.',
+      ));
+
+  /// Returns the nearest preset scope, or null if there is no [FortalSidebarLayout].
   static FortalSidebarLayoutScope? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<FortalSidebarLayoutScope>();
 
