@@ -26,12 +26,11 @@ class HeroUiSkeleton extends StatelessWidget {
   final bool loading;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSkeleton(
-      key: this.key,
-      style: heroUiSkeletonStyle(style: this.style),
-      child: this.child,
-      loading: this.loading,
+      style: heroUiSkeletonStyle(style: style),
+      loading: loading,
+      child: child,
     );
   }
 }

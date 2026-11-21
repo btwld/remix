@@ -50,10 +50,7 @@ class VanillaKbd extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) {
-    return vanillaKbdStyle(
-      variant: this.variant,
-      style: this.style,
-    ).call(this.text, key: this.key);
+  Widget build(BuildContext _) {
+    return vanillaKbdStyle(variant: variant, style: style).call(text);
   }
 }

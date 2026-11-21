@@ -144,27 +144,26 @@ class FortalSelect<T> extends StatelessWidget {
   final FocusNode? focusNode;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixSelect<T>(
-      key: this.key,
       style: fortalSelectStyle(
-        variant: this.variant,
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        variant: variant,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      trigger: this.trigger,
-      items: this.items,
-      selectedValue: this.selectedValue,
-      positioning: this.positioning,
-      onChanged: this.onChanged,
-      onOpen: this.onOpen,
-      onClose: this.onClose,
-      enabled: this.enabled,
-      mouseCursor: this.mouseCursor,
-      semanticLabel: this.semanticLabel,
-      closeOnSelect: this.closeOnSelect,
-      focusNode: this.focusNode,
+      trigger: trigger,
+      items: items,
+      selectedValue: selectedValue,
+      positioning: positioning,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      semanticLabel: semanticLabel,
+      closeOnSelect: closeOnSelect,
+      focusNode: focusNode,
     );
   }
 }

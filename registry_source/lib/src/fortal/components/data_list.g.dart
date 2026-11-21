@@ -36,18 +36,17 @@ class FortalDataList extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixDataList(
-      key: this.key,
       style: fortalDataListStyle(
-        size: this.size,
-        highContrast: this.highContrast,
-        style: this.style,
+        size: size,
+        highContrast: highContrast,
+        style: style,
       ),
-      items: this.items,
-      orientation: this.orientation,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+      items: items,
+      orientation: orientation,
+      semanticLabel: semanticLabel,
+      excludeSemantics: excludeSemantics,
     );
   }
 }

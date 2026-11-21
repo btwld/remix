@@ -90,24 +90,19 @@ class HeroUiRadio<T> extends StatelessWidget {
   final bool excludeSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixRadio<T>(
-      key: this.key,
-      style: heroUiRadioStyle(
-        variant: this.variant,
-        invalid: this.invalid,
-        style: this.style,
-      ),
-      value: this.value,
-      label: this.label,
-      semanticLabel: this.semanticLabel,
-      minimumTapTargetSize: this.minimumTapTargetSize,
-      enabled: this.enabled,
-      toggleable: this.toggleable,
-      mouseCursor: this.mouseCursor,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      excludeSemantics: this.excludeSemantics,
+      style: heroUiRadioStyle(variant: variant, invalid: invalid, style: style),
+      value: value,
+      label: label,
+      semanticLabel: semanticLabel,
+      minimumTapTargetSize: minimumTapTargetSize,
+      enabled: enabled,
+      toggleable: toggleable,
+      mouseCursor: mouseCursor,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      excludeSemantics: excludeSemantics,
     );
   }
 }
