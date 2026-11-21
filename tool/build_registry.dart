@@ -347,7 +347,7 @@ final class CopiedItemSpec {
   final List<String> exports;
 }
 
-/// An item derived from a single file at the source root, e.g. `icons.dart`.
+/// An item derived from a single explicitly declared source file.
 final class FileItemSpec {
   const FileItemSpec({
     required this.name,
@@ -436,6 +436,13 @@ const defaultPreset = PresetSpec(
       packages: const {},
       registryDependencies: ['theme'],
       exports: ['icons.dart'],
+    ),
+    FileItemSpec(
+      name: 'date_picker_styles',
+      file: 'components/date_picker/date_picker_styles.dart',
+      packages: const {},
+      registryDependencies: [],
+      exports: [],
     ),
   ],
   ignoredSourceFiles: {},
@@ -1053,8 +1060,18 @@ final class PresetBuilder {
     }
 
     final sources = _readSources();
+    final componentPrefix = '${spec.componentDirectory}/';
+    final fileItemPaths = spec.fileItems.map((item) => item.file).toSet();
+    final components = sources.entries.where(
+      (entry) =>
+          entry.key.startsWith(componentPrefix) &&
+          !fileItemPaths.contains(entry.key),
+    );
     final groupedSources = _readGroupedSources(sources);
-    final sourceOwners = _sourceOwners(sources);
+    final sourceOwners = _sourceOwners(
+      sources,
+      components.map((entry) => entry.key),
+    );
     final installedTargets = _installedTargets(sourceOwners);
     final directives = {
       for (final entry in {...sources, ...groupedSources}.entries)
@@ -1071,11 +1088,9 @@ final class PresetBuilder {
     final output = <String, String>{};
     final sourceByTemplate = <String, String>{};
     final items = <String, _RegistryItemDraft>{};
-    final componentPrefix = '${spec.componentDirectory}/';
     final componentNames = {
-      for (final path in sources.keys)
-        if (path.startsWith(componentPrefix))
-          p.posix.basenameWithoutExtension(path),
+      for (final entry in components)
+        p.posix.basenameWithoutExtension(entry.key),
     };
 
     for (final shared in spec.sharedItems) {
@@ -1195,9 +1210,7 @@ final class PresetBuilder {
       );
     }
 
-    for (final entry in sources.entries.where(
-      (entry) => entry.key.startsWith(componentPrefix),
-    )) {
+    for (final entry in components) {
       final name = p.posix.basenameWithoutExtension(entry.key);
       final templatePath = '${spec.templateDirectory}/$name/$name.dart.tmpl';
       final sourceDirectives = directives[entry.key]!;
@@ -1607,7 +1620,10 @@ final class PresetBuilder {
     return grouped;
   }
 
-  Map<String, String> _sourceOwners(Map<String, String> sources) {
+  Map<String, String> _sourceOwners(
+    Map<String, String> sources,
+    Iterable<String> componentPaths,
+  ) {
     final owners = <String, String>{};
     void own(String source, String item) {
       final previous = owners[source];
@@ -1635,10 +1651,7 @@ final class PresetBuilder {
       final source = item.target.substring(uiPrefix.length);
       if (sources.containsKey(source)) own(source, item.name);
     }
-    final componentPrefix = '${spec.componentDirectory}/';
-    for (final source in sources.keys.where(
-      (path) => path.startsWith(componentPrefix),
-    )) {
+    for (final source in componentPaths) {
       own(source, p.posix.basenameWithoutExtension(source));
     }
     for (final name in spec.recipeItems) {
