@@ -372,10 +372,13 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(FortalThemeData theme) {
     FortalTokens.activityMaxHeight: 200.0 * scaling,
     FortalTokens.dataTableSortIconSize1: 14.0 * scaling,
     FortalTokens.dataTableSortIconSize3: 18.0 * scaling,
+    // ignore: deprecated_member_use_from_same_package
     FortalTokens.planMaxHeight: 220.0 * scaling,
+    // ignore: deprecated_member_use_from_same_package
     FortalTokens.messageAvatarSize: 28.0 * scaling,
     FortalTokens.messageContentMaxWidth: 768.0 * scaling,
     FortalTokens.messageCollapsedHeight: 72.0 * scaling,
+    // ignore: deprecated_member_use_from_same_package
     FortalTokens.composerFieldMinHeight: 56.0 * scaling,
     FortalTokens.touchTargetMin: 40.0 * math.max(1.0, scaling),
     FortalTokens.sidebarDestinationMinHeight: 40.0 * math.max(1.0, scaling),
@@ -583,7 +586,9 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(FortalThemeData theme) {
     FortalTokens.fontWeightBold: FontWeight.w700,
 
     // Durations (token values)
+    // ignore: deprecated_member_use_from_same_package
     FortalTokens.transitionFast: const Duration(milliseconds: 100),
+    // ignore: deprecated_member_use_from_same_package
     FortalTokens.transitionSlow: const Duration(milliseconds: 300),
     FortalTokens.skeletonPulseDuration: const Duration(milliseconds: 1000),
   };

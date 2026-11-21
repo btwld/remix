@@ -37,6 +37,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  analyzer: ^10.2.0
   build_runner: ^2.10.1
   # Pins the HeroUI reference snapshot by sha256 (tool/heroui_parity/check.dart).
   crypto: ^3.0.7

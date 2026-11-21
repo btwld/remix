@@ -267,6 +267,23 @@ final style = ButtonStyler()
   .label(TextStyler().color(FortalTokens.accentContrast()));
 ```
 
+### Tokens for custom recipes
+
+The theme installs the following tokens for application-owned recipes even
+though Fortal's bundled recipes do not read them directly. They resolve from
+the same active `FortalTheme` as the bundled recipe tokens.
+
+| `FortalTokens` members | Use in custom recipes |
+| --- | --- |
+| `accent9`, `accentA1`, `accentA9`–`accentA12`, `grayA1`, `grayA12` | Use the raw Radix swatches to complete the accent and gray scales. Prefer Fortal's fitted roles, such as `accentSolid` with `accentContrast`, for labelled controls. |
+| `blackA1`–`blackA12`, `whiteA2`–`whiteA12` | Use the neutral alpha ramps for scrims, overlays, or tints independent of the selected accent. `whiteA1` is already used by bundled recipes. |
+| `colorPanelTranslucent` | Opt into a translucent custom panel even when the theme's default `colorPanel` is solid. |
+| `graySurface`, `grayIndicator`, `grayTrack` | Style neutral surfaces, selection marks, and tracks with the active theme's gray roles. |
+| `focusA8`, `error7`, `error12` | Use the translucent accent focus color or the semantic error palette's border and high-emphasis ink swatches. Built-in controls use `focus8` for their default focus outline. |
+| `shadowStroke`, `grayStroke3`–`grayStroke5`, `grayStroke7` | Style subtle outlines with the mode-aware shadow stroke or match custom borders to Fortal's blended gray stroke steps. |
+| `radiusFull`, `radiusThumb` | Make custom shapes respond to the theme radius. `radiusFull` is zero except at the `full` setting; `radiusThumb` switches from near-square to pill at `medium`. |
+| `shadow1`, `shadow2`, `shadow1Layers` | Use the first two elevation levels for custom floating surfaces, or use `shadow1Layers` for level-one elevation in a `RemixBoxShadow` slot. |
+
 ## Covered components
 
 Every Remix component has a matching Fortal recipe and preset widget:
