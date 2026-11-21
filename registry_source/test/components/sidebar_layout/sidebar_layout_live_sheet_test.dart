@@ -83,55 +83,63 @@ void main() {
       },
     );
 
-    testWidgets(
-      '${preset.name}: rapid reopen with a shared key waits for the exit',
-      (tester) async {
-        final rebuilt = ValueNotifier(false);
-        addTearDown(rebuilt.dispose);
-        final sidebarKey = GlobalKey();
-        const body = Text('Body');
-        await tester.pumpWidget(
-          _app(
-            theme: preset.theme,
-            home: ValueListenableBuilder(
-              valueListenable: rebuilt,
-              builder: (context, value, _) => preset.layout(
-                compactBreakpoint: 1000,
-                sidebar: Center(
-                  child: Text(value ? 'Updated' : 'Original', key: sidebarKey),
+    for (final synchronous in [false, true]) {
+      testWidgets(
+        '${preset.name}: rapid reopen with a shared key (synchronous: $synchronous)',
+        (tester) async {
+          final rebuilt = ValueNotifier(false);
+          addTearDown(rebuilt.dispose);
+          final sidebarKey = GlobalKey();
+          const body = Text('Body');
+          await tester.pumpWidget(
+            _app(
+              theme: preset.theme,
+              home: ValueListenableBuilder(
+                valueListenable: rebuilt,
+                builder: (context, value, _) => preset.layout(
+                  compactBreakpoint: 1000,
+                  sidebar: Center(
+                    child: Text(
+                      value ? 'Updated' : 'Original',
+                      key: sidebarKey,
+                    ),
+                  ),
+                  body: body,
                 ),
-                body: body,
               ),
             ),
-          ),
-        );
-        final bodyContext = tester.element(find.byWidget(body));
-        preset.open(bodyContext);
-        await tester.pumpAndSettle();
-        final sidebar = find.byKey(sidebarKey, skipOffstage: false);
-        final exitingRoute = ModalRoute.of(tester.element(sidebar))!;
-        exitingRoute.navigator!.pop();
-        await tester.pump();
-        preset.open(bodyContext);
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 50));
-        expect(tester.takeException(), isNull);
-        expect(ModalRoute.of(tester.element(sidebar)), same(exitingRoute));
+          );
+          final bodyContext = tester.element(find.byWidget(body));
+          preset.open(bodyContext);
+          await tester.pumpAndSettle();
+          final sidebar = find.byKey(sidebarKey, skipOffstage: false);
+          final exitingRoute = ModalRoute.of(tester.element(sidebar))!;
+          exitingRoute.navigator!.pop();
+          if (!synchronous) await tester.pump();
+          preset.open(bodyContext);
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 50));
+          expect(tester.takeException(), isNull);
+          expect(ModalRoute.of(tester.element(sidebar)), same(exitingRoute));
 
-        rebuilt.value = true;
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 50));
-        expect(tester.takeException(), isNull);
-        expect(tester.widget<Text>(sidebar).data, 'Original');
+          rebuilt.value = true;
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 50));
+          expect(tester.takeException(), isNull);
+          expect(tester.widget<Text>(sidebar).data, 'Original');
 
-        await tester.pumpAndSettle();
-        expect(
-          ModalRoute.of(tester.element(sidebar)),
-          isNot(same(exitingRoute)),
-        );
-        expect(tester.widget<Text>(sidebar).data, 'Updated');
-      },
-    );
+          await tester.pumpAndSettle();
+          expect(sidebar, findsOneWidget);
+          final reopenedRoute = ModalRoute.of(tester.element(sidebar))!;
+          expect(reopenedRoute, isNot(same(exitingRoute)));
+          expect(tester.widget<Text>(sidebar).data, 'Updated');
+
+          reopenedRoute.navigator!.pop();
+          await tester.pumpAndSettle();
+          expect(sidebar, findsNothing);
+        },
+      );
+    }
 
     for (final popBeforePublish in [true, false]) {
       testWidgets(

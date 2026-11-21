@@ -203,7 +203,7 @@ void main() {
   });
 
   testWidgets(
-    'rapid reopen waits for the outgoing sheet with a shared nested key',
+    'same-turn reopen waits for the outgoing sheet with a shared nested key',
     (tester) async {
       final sidebar = ValueNotifier('Links');
       final sidebarKey = GlobalKey();
@@ -225,8 +225,6 @@ void main() {
       final exitingScope = RemixSidebarLayoutScope.of(exitingContext);
       final exitingRoute = ModalRoute.of(exitingContext)!;
       exitingRoute.navigator!.pop();
-      await tester.pump();
-
       _scope(tester).openCompact();
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 20));

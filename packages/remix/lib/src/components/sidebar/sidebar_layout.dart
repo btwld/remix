@@ -122,7 +122,12 @@ class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
   }
 
   void _openCompact() {
-    if (_isCompact) _setOpen(true);
+    if (!_isCompact) return;
+    final sheet = _sheet;
+    if (sheet != null && sheet.route?.isActive == false) {
+      sheet.reopenRequested = true;
+    }
+    _setOpen(true);
   }
 
   void _closeCompact() => _setOpen(false);
@@ -179,7 +184,7 @@ class _RemixSidebarLayoutState extends State<RemixSidebarLayout> {
     );
     unawaited(
       popped.then((_) {
-        if (identical(_sheet, sheet)) _closeCompact();
+        if (identical(_sheet, sheet) && !sheet.reopenRequested) _closeCompact();
         if (sheet.route == null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (sheet.route == null) _finishSheet(sheet);
@@ -297,6 +302,7 @@ class _CompactSheet extends ValueNotifier<_SheetInputs> {
   _CompactSheet(super.value);
 
   ModalRoute<void>? route;
+  bool reopenRequested = false;
 
   void removeRoute() {
     final route = this.route;
