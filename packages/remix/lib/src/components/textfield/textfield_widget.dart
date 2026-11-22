@@ -280,6 +280,9 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   // is Mix resolution for chrome outside that subtree, not a second
   // interaction owner.
   late final WidgetStatesController _styleController;
+  // Deliberate: changing ancestor wrappers would otherwise remount the field
+  // and discard its uncontrolled draft.
+  final _nakedTextFieldKey = GlobalKey();
   _RemixTextSelectionControls? _defaultSelectionControls;
   final _activePressSources = <_RemixTextFieldPressSource>{};
   // Naked owns an internal FocusNode when none is provided, but Remix still
@@ -397,6 +400,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
         : joinedSemanticHint;
 
     final nakedTextField = NakedTextField(
+      key: _nakedTextFieldKey,
       groupId: config.groupId,
       controller: config.controller,
       focusNode: _effectiveFocusNode,
