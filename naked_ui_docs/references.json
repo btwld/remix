@@ -3,21 +3,21 @@
     "codeSha256": "fd8ec2112c6a69b02a5497e571b4d4f1433b226b77503ad1d603fdc64e9b6bd4",
     "reason": "API signature for NakedAccordionGroup; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_accordion.dart",
-    "sourceSha256": "ad7c0b78b033e1a821d3d622326571ad25b48e85cc678aab67ba68349f103b93",
+    "sourceSha256": "d75a45a7be1fb12507432df7e5d967bd46a13be9bd4e4811647c23ed4c5c8bb1",
     "symbol": "NakedAccordionGroup"
   },
   "widget/accordion.mdx#3": {
     "codeSha256": "1d056d25213e9193c154dc95f9ec6a7bfe6aedd96a028ac68a47188958957327",
     "reason": "API signature for NakedAccordion; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_accordion.dart",
-    "sourceSha256": "ad7c0b78b033e1a821d3d622326571ad25b48e85cc678aab67ba68349f103b93",
+    "sourceSha256": "d75a45a7be1fb12507432df7e5d967bd46a13be9bd4e4811647c23ed4c5c8bb1",
     "symbol": "NakedAccordion"
   },
   "widget/button.mdx#3": {
     "codeSha256": "708093241ff21190e4f5257ce0f7bc02201cfe6f9b6a1e837d7d89e307d993a1",
     "reason": "API signature for NakedButton; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_button.dart",
-    "sourceSha256": "594834b9390091c272c8b21f8586594aacae994ead1e2a553beef4131076a330",
+    "sourceSha256": "1e77b9dffab0396cb527d35f859970ac28b1e39a0938b3d3ce408dcdb90a64f4",
     "symbol": "NakedButton"
   },
   "widget/checkbox.mdx#1": {
@@ -52,7 +52,7 @@
     "codeSha256": "88357e6813856a8116754e47b019e89704af457f74aebc080e54b48b3ffa31fb",
     "reason": "API signature for NakedDisclosure; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_disclosure.dart",
-    "sourceSha256": "979b59493d1c51b2e8c5551eb52be9a92ad1d3863a2b10ac0b90a98ced6b59e0",
+    "sourceSha256": "6320bf53ea52568d4615a8c26dd3268322c7bbb9bcfff4505bcb70840d8cb63c",
     "symbol": "NakedDisclosure"
   },
   "widget/link.mdx#1": {
