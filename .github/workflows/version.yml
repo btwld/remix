@@ -26,6 +26,8 @@ jobs:
     timeout-minutes: 15
     name: Bump Remix version and changelog
     runs-on: ubuntu-latest
+    env:
+      REMIX_VERSION: ${{ inputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,7 +54,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          version='${{ inputs.version }}'
+          version="$REMIX_VERSION"
 
           # No `dart pub global activate melos`. melos runs whichever version
           # the workspace pins as a dev dependency, so a global install cannot
@@ -84,9 +86,9 @@ jobs:
           # is not what makes this work: melos re-executes itself and the
           # child does not inherit the redirect, so a redirected stdin alone
           # still reached the prompt and threw StdinException.
-          # `-V` makes the workflow input authoritative rather than asking
-          # melos to infer a version from commits. Scope is explicit so
-          # independently versioned remix_cli cannot enter the release branch.
+          # `-V` requests the exact version, but melos can still skip Remix
+          # if an excluded dependency has pending changes. Scope is explicit
+          # so independently versioned remix_cli cannot enter the release branch.
           # Disable dependent constraint and version propagation too: melos
           # otherwise rewrites and can version workspace dependents even when
           # the initial package filter selects only Remix, which would pull the
@@ -98,6 +100,8 @@ jobs:
             --no-git-commit-version \
             --yes \
             -V "remix:$version" < /dev/null
+
+          dart run tool/check_version_alignment.dart --expect-remix "$version"
 
           # The remote registry.yaml is data, not a pubspec, so melos never
           # reaches it and its `remix: ^<floor>` would keep pointing at the
@@ -119,7 +123,7 @@ jobs:
           dart run tool/check_version_alignment.dart
 
           if git diff --quiet && git diff --cached --quiet; then
-            echo "Remix did not require versioning."
+            echo "Remix is already at $version; no release branch was created."
             echo "versioned=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -136,22 +140,19 @@ jobs:
         if: steps.bump.outputs.versioned == 'true'
         run: |
           url="${{ github.server_url }}/${{ github.repository }}/compare/main...release/version-packages?expand=1"
-          # GitHub expands these workflow expressions before the shell sees
-          # the intentionally single-quoted Markdown commands below.
-          # shellcheck disable=SC2016
           {
             echo "### Remix version bumped"
             echo
             echo "[Open the pull request]($url)"
             echo
-            echo "Remix is on \`${{ inputs.version }}\`."
+            echo "Remix is on \`$REMIX_VERSION\`."
             echo
             echo "After merging, push these Remix tags one at a time."
             echo "Do not \`git push --tags\`: stale \`v*\` tags in this repo"
             echo "would start publish runs from the wrong commits."
             echo
-            echo '1. `v${{ inputs.version }}` — publishes **remix**.'
-            echo '2. `remix-v${{ inputs.version }}` — publishes nothing. melos'
+            printf '1. `v%s` — publishes **remix**.\n' "$REMIX_VERSION"
+            printf '2. `remix-v%s` — publishes nothing. melos\n' "$REMIX_VERSION"
             echo '   reads it to derive the next release changelog.'
             echo
             echo "### CI on this branch"

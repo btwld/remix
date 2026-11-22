@@ -102,11 +102,20 @@ behavior tests and its own specification; there is no external parity pin.
 
 **`remix` only:** prefer the **Prepare Version Bump** workflow
 (`.github/workflows/version.yml`, `workflow_dispatch`, takes an exact version).
-It runs `melos version` plus `tool/sync_registry_remix.dart` and
+It runs `melos version` and verifies that `packages/remix/pubspec.yaml`
+matches the request before syncing floors. It then runs
+`tool/sync_registry_remix.dart` and
 `tool/build_registry.dart`, because the remote `registry.yaml` floor
 (`remix: ^<version>`) is data melos never reaches. It pushes
 `release/version-packages` and prints a compare link; it does not open the PR
 or tag.
+
+If the requested version was not prepared, look for the Melos warning that
+Remix “depends on an ignored package that has pending changes.” Melos names
+Remix in that warning, not the excluded dependency. Check its workspace
+dependencies for unreleased versionable commits. If `naked_ui` is the blocker,
+version and release it separately first, following the `naked_ui` steps above,
+then re-dispatch **Prepare Version Bump** for Remix.
 
 Keep compatible caret constraints unless the consumer needs a newer release.
 If raising a floor, publish the dependency first. Runtime or registry-only
