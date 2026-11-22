@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:glob/glob.dart';
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
@@ -581,20 +580,7 @@ final class Installer {
       for (final item in items)
         for (final target in item.generated) config.targetPath(target),
     ];
-    // A newly added dependency can invalidate build_runner's asset graph. On
-    // that first rebuild, outputs excluded by --build-filter may be removed as
-    // stale even when their authored inputs did not change. Keep every
-    // already-installed registry adapter in the focused build so adding one
-    // optional item cannot delete another item's generated part.
     final installedDart = _installedDartFiles(root, config.uiPath);
-    final generationTargets = <String>{
-      ...generated,
-      ..._installedAdapters(root, config.uiPath, installedDart),
-      for (final item in availableItems)
-        for (final target in item.generated)
-          if (_projectFile(root, config.targetPath(target)).existsSync())
-            config.targetPath(target),
-    }.toList(growable: false);
 
     // Spec stylers are opt-in in the supported Mix generator. Detect the
     // authored annotation, not Agent item names or consumer prefixes.
@@ -654,8 +640,6 @@ final class Installer {
       requirements: requirements,
       missingDependencies: missingDependencies,
       generated: generated,
-      generationTargets: generationTargets,
-      pubspec: pubspec,
       builderConfiguration: builderConfiguration,
     );
   }
@@ -684,8 +668,6 @@ final class Installer {
       :requirements,
       :missingDependencies,
       :generated,
-      :generationTargets,
-      :pubspec,
     ) = plan;
 
     final toolchain = await _resolveFlutter(root);
@@ -795,24 +777,16 @@ final class Installer {
               pathsToWrite.any((path) => path.endsWith('.dart')) ||
               generated.any((path) => !_projectFile(root, path).existsSync()));
       if (needsGeneration) {
-        final packageName =
-            (loadYaml(pubspec.readAsStringSync()) as YamlMap)['name'] as String;
         await _run(
           ProcessInvocation(
             executable: toolchain.dart,
-            arguments: [
-              'run',
-              'build_runner',
-              'build',
-              for (final target in generationTargets)
-                '--build-filter=${_generationFilter(packageName, target)}',
-            ],
+            arguments: const ['run', 'build_runner', 'build'],
             workingDirectory: root.path,
           ),
           failure: 'Mix code generation failed',
           progress: 'Generating adapters...',
         );
-        for (final target in generationTargets) {
+        for (final target in generated) {
           if (!_projectFile(root, target).existsSync()) {
             throw FormatException('Code generation did not create $target.');
           }
@@ -1381,42 +1355,6 @@ bool _workspaceContains(Directory workspaceRoot, String resolvedPackage) {
   return configured?.resolveSymbolicLinksSync() == resolvedPackage;
 }
 
-// Package URIs are relative to lib/ and preserve spaces and URI characters.
-// Quote glob syntax so each filter selects one generated file, even when the
-// UI path contains brackets.
-String _generationFilter(String packageName, String target) => Uri(
-  scheme: 'package',
-  pathSegments: [
-    packageName,
-    ...p.posix.split(Glob.quote(target.substring('lib/'.length))),
-  ],
-).toString();
-
-Set<String> _installedAdapters(
-  Directory root,
-  String uiPath,
-  List<String> files,
-) {
-  final adapters = <String>{...files.where((path) => path.endsWith('.g.dart'))};
-  final partDirective = RegExp(
-    r'''^\s*part\s+['"]([^'"]+)['"]\s*;''',
-    multiLine: true,
-  );
-  for (final relative in files) {
-    for (final match in partDirective.allMatches(
-      _projectFile(root, relative).readAsStringSync(),
-    )) {
-      final target = p.posix.normalize(
-        p.posix.join(p.posix.dirname(relative), match.group(1)!),
-      );
-      if (!target.startsWith('$uiPath/')) continue;
-      validateProjectFilePath(root, target);
-      if (_projectFile(root, target).existsSync()) adapters.add(target);
-    }
-  }
-  return adapters;
-}
-
 List<String> _installedDartFiles(Directory root, String uiPath) {
   final result = <String>[];
   final seen = <String>{};
@@ -1491,8 +1429,6 @@ final class _InstallPlan {
     required this.requirements,
     required this.missingDependencies,
     required this.generated,
-    required this.generationTargets,
-    required this.pubspec,
     required this.builderConfiguration,
   });
 
@@ -1518,8 +1454,6 @@ final class _InstallPlan {
   final List<_DependencyRequirement> requirements;
   final List<_DependencyRequirement> missingDependencies;
   final List<String> generated;
-  final List<String> generationTargets;
-  final File pubspec;
   final String? builderConfiguration;
 }
 

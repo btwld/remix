@@ -289,10 +289,7 @@ registries:
         'dev:build_runner@^2.10.1',
         'dev:mix_generator@$registryMixGeneratorConstraint',
       ]);
-      expect(
-        runner.calls[4].arguments,
-        contains('--build-filter=package:consumer/ui/components/button.g.dart'),
-      );
+      expect(runner.calls[4].arguments, ['run', 'build_runner', 'build']);
       expect(runner.calls[5].arguments, ['analyze', 'lib/ui']);
     },
   );
@@ -372,9 +369,10 @@ registries:
     );
   });
 
-  test('generated build filter strips the lib/ directory', () async {
+  test('build stays unfiltered with existing dependencies', () async {
     final caseRoot = createFlutterPackage();
     addTearDown(() => caseRoot.deleteSync(recursive: true));
+    writeRequiredPubspec(caseRoot);
     const uiPath = 'lib/design_system';
     await Installer(
       projectRoot: caseRoot,
@@ -383,7 +381,7 @@ registries:
     ).initialize(
       const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: uiPath),
     );
-    final runner = happyRunner(caseRoot, addMissingDependencies: true);
+    final runner = happyRunner(caseRoot);
     await Installer(
       projectRoot: caseRoot,
       writeOut: (_) {},
@@ -394,13 +392,14 @@ registries:
     final build = runner.calls.singleWhere(
       (call) => call.arguments.take(3).join(' ') == 'run build_runner build',
     );
+    expect(build.arguments, ['run', 'build_runner', 'build']);
+    expect(runner.calls.any((call) => call.arguments.contains('add')), isFalse);
+    expect(File(p.join(caseRoot.path, 'build.yaml')).existsSync(), isFalse);
     expect(
-      build.arguments.where(
-        (argument) => argument.startsWith('--build-filter='),
-      ),
-      {
-        '--build-filter=package:consumer/design_system/components/button.g.dart',
-      },
+      File(
+        p.join(caseRoot.path, uiPath, 'components/button.g.dart'),
+      ).existsSync(),
+      isTrue,
     );
   });
 
@@ -441,7 +440,7 @@ registries:
   );
 
   test(
-    'adding Chart keeps installed adapters in the focused generation build',
+    'adding Chart after Button runs a full build and retains both adapters',
     () async {
       await installButton(root);
       final runner = happyRunner(
@@ -468,15 +467,7 @@ registries:
       final build = runner.calls.singleWhere(
         (call) => call.arguments.take(3).join(' ') == 'run build_runner build',
       );
-      expect(
-        build.arguments.where(
-          (argument) => argument.startsWith('--build-filter='),
-        ),
-        {
-          '--build-filter=package:consumer/ui/components/chart.g.dart',
-          '--build-filter=package:consumer/ui/components/button.g.dart',
-        },
-      );
+      expect(build.arguments, ['run', 'build_runner', 'build']);
       expect(
         File(p.join(root.path, 'lib/ui/components/button.g.dart')).existsSync(),
         isTrue,
@@ -2238,21 +2229,16 @@ RecordingProcessRunner happyRunner(
         stderr: 'build failed',
       );
     }
-    for (final filter in invocation.arguments.where(
-      (argument) => argument.startsWith('--build-filter='),
-    )) {
-      File(
-          p.joinAll([
-            root.path,
-            'lib',
-            ...Uri.parse(filter.substring('--build-filter='.length))
-                .pathSegments
-                .skip(1)
-                .map((segment) => segment.replaceAll(r'\', '')),
-          ]),
-        )
-        ..createSync(recursive: true)
-        ..writeAsStringSync('// generated\n');
+    final partDirective = RegExp(r"^part '([^']+\.g\.dart)';", multiLine: true);
+    for (final source
+        in Directory(p.join(root.path, 'lib'))
+            .listSync(recursive: true)
+            .whereType<File>()
+            .where((file) => file.path.endsWith('.dart'))) {
+      for (final part in partDirective.allMatches(source.readAsStringSync())) {
+        final output = File(p.join(source.parent.path, part.group(1)!));
+        if (!output.existsSync()) output.writeAsStringSync('// generated\n');
+      }
     }
     return successProcessOutput;
   }
