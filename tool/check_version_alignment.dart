@@ -25,17 +25,28 @@ const _pinned = <_Pinned>[
   ),
 ];
 
-void main() {
+void main(List<String> args) {
   final workspaceRoot = Directory.current.absolute;
   final failures = <String>[];
-  for (final pinned in _pinned) {
-    final version = _packageVersion(workspaceRoot, pinned.package, failures);
-    if (version != null) {
-      _checkRegistryFloor(workspaceRoot, pinned, version, failures);
-    }
+  switch (args) {
+    case []:
+      _checkAlignment(workspaceRoot, failures);
+    case ['--expect-remix', final expected]:
+      final version = _packageVersion(workspaceRoot, 'remix', failures);
+      if (version != null && version.toString() != expected) {
+        failures.add(
+          'Expected packages/remix/pubspec.yaml to declare $expected after '
+          'melos version, but found $version.',
+        );
+      }
+    default:
+      stderr.writeln(
+        'Usage: dart run tool/check_version_alignment.dart '
+        '[--expect-remix <version>]',
+      );
+      exitCode = 64;
+      return;
   }
-  final icons = _packageVersion(workspaceRoot, 'remix_ui_icons', failures);
-  if (icons != null) _checkIconTableFloor(workspaceRoot, icons, failures);
 
   if (failures.isEmpty) return;
 
@@ -44,6 +55,17 @@ void main() {
     stderr.writeln('- $failure');
   }
   exitCode = 1;
+}
+
+void _checkAlignment(Directory workspaceRoot, List<String> failures) {
+  for (final pinned in _pinned) {
+    final version = _packageVersion(workspaceRoot, pinned.package, failures);
+    if (version != null) {
+      _checkRegistryFloor(workspaceRoot, pinned, version, failures);
+    }
+  }
+  final icons = _packageVersion(workspaceRoot, 'remix_ui_icons', failures);
+  if (icons != null) _checkIconTableFloor(workspaceRoot, icons, failures);
 }
 
 Version? _packageVersion(

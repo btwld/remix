@@ -102,7 +102,10 @@ behavior tests and its own specification; there is no external parity pin.
 
 **`remix` only:** prefer the **Prepare Version Bump** workflow
 (`.github/workflows/version.yml`, `workflow_dispatch`, takes an exact version).
-It runs `melos version` plus `tool/sync_registry_remix.dart` and
+It runs `melos version` and verifies that `packages/remix/pubspec.yaml`
+matches the request before syncing floors. Melos can exit successfully without
+bumping Remix when an excluded dependency has pending versionable commits.
+The workflow then runs `tool/sync_registry_remix.dart` and
 `tool/build_registry.dart`, because the remote `registry.yaml` floor
 (`remix: ^<version>`) is data melos never reaches. It pushes
 `release/version-packages` and prints a compare link; it does not open the PR

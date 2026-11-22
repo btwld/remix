@@ -38,9 +38,11 @@ icons:
 ''');
   }
 
-  ProcessResult check() => Process.runSync(Platform.resolvedExecutable, [
-    checker,
-  ], workingDirectory: sandbox.path);
+  ProcessResult check([List<String> args = const []]) => Process.runSync(
+    Platform.resolvedExecutable,
+    [checker, ...args],
+    workingDirectory: sandbox.path,
+  );
 
   setUp(() {
     sandbox = Directory.systemTemp.createTempSync('remix_version_alignment_');
@@ -57,6 +59,30 @@ items:
   });
 
   tearDown(() => sandbox.deleteSync(recursive: true));
+
+  test('fails when the Remix manifest still has the previous version', () {
+    iconTable(remix: '^2.0.0', rounded: '^2.0.0');
+
+    final result = check(['--expect-remix', '1.0.0-beta.15']);
+
+    expect(result.exitCode, 1);
+    expect(
+      '${result.stderr}',
+      contains(
+        'Expected packages/remix/pubspec.yaml to declare 1.0.0-beta.15 '
+        'after melos version, but found 1.0.0-beta.14.',
+      ),
+    );
+  });
+
+  test('passes on the requested Remix version before floors are synced', () {
+    iconTable(remix: '^2.0.0', rounded: '^2.0.0');
+    write('packages/remix/pubspec.yaml', 'version: 1.0.0-beta.15\n');
+
+    final result = check(['--expect-remix', '1.0.0-beta.15']);
+
+    expect(result.exitCode, 0, reason: '${result.stderr}');
+  });
 
   test('passes when every remix_ui_icons library floors at the package', () {
     iconTable(remix: '^2.0.0', rounded: '^2.0.0');

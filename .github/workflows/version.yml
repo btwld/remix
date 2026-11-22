@@ -84,9 +84,9 @@ jobs:
           # is not what makes this work: melos re-executes itself and the
           # child does not inherit the redirect, so a redirected stdin alone
           # still reached the prompt and threw StdinException.
-          # `-V` makes the workflow input authoritative rather than asking
-          # melos to infer a version from commits. Scope is explicit so
-          # independently versioned remix_cli cannot enter the release branch.
+          # `-V` requests the exact version, but melos can still skip Remix
+          # if an excluded dependency has pending changes. Scope is explicit
+          # so independently versioned remix_cli cannot enter the release branch.
           # Disable dependent constraint and version propagation too: melos
           # otherwise rewrites and can version workspace dependents even when
           # the initial package filter selects only Remix, which would pull the
@@ -98,6 +98,8 @@ jobs:
             --no-git-commit-version \
             --yes \
             -V "remix:$version" < /dev/null
+
+          dart run tool/check_version_alignment.dart --expect-remix "$version"
 
           # The remote registry.yaml is data, not a pubspec, so melos never
           # reaches it and its `remix: ^<floor>` would keep pointing at the
