@@ -1,11 +1,15 @@
 # Remix registry changelog
 
-Registry revisions ship independently of pub.dev packages. `remix` 1.0.0-rc.6
-and `remix_cli` 1.0.0-rc.2 are published. The `registry-stable` promotion at
-`81b9c0ae` includes the dependency floors below; the preset sidebar update
-merged in the following revision, `987c7aa9`.
+These notes cover changes to installable preset source. For versioned package
+changes, see the [Remix changelog](../packages/remix/CHANGELOG.md) and the
+[Remix CLI changelog](../packages/remix_cli/CHANGELOG.md).
 
-## Since Remix 1.0.0-rc.5
+## 2026-11-21 — `987c7aa9`
+
+Promoted to `registry-stable` on November 21, 2026. This entry covers registry
+changes since Remix `1.0.0-rc.5`, through the shared sidebar rollout in all three
+presets. The corresponding published packages are `remix` `1.0.0-rc.6` and
+`remix_cli` `1.0.0-rc.2`.
 
 ### Breaking Changes
 
@@ -48,15 +52,13 @@ if replacing both HeroUI items. Then reapply your edits. (#517, #535)
   `triggerBuilder` and `transitionBuilder` on Vanilla disclosure,
   `semanticFormatterCallback` on Vanilla slider, and
   `semanticFormatterCallbacks` on all three presets' range sliders. (#510)
-- All three presets now require `remix: ^1.0.0-rc.6`. That release exports
-  `RemixSidebarLayout` and `RemixSidebarLayoutScope` for inline navigation
-  that switches to a modal sheet below a configurable breakpoint. It also adds
-  a `.wrap(WidgetModifierConfig)` constructor to 55 generated Remix stylers.
-  (#531, #532, #533)
-- Items with generated adapters now require `mix_generator: ^2.3.0` as a dev
-  dependency. Regenerated adapters keep the widget key on the adapter instead
-  of also passing it to the inner widget. In tests, `find.byKey` finds the
-  adapter; use a descendant finder for the child. (#532)
+
+### Dependency Floors
+
+- All three presets require `remix: ^1.0.0-rc.6`, which provides the shared
+  `RemixSidebarLayout` used by the updated sidebar recipes. (#531, #533, #534)
+- Items with generated adapters require `mix_generator: ^2.3.0` as a dev
+  dependency. (#532)
 
 ### Fixes
 
@@ -66,6 +68,9 @@ if replacing both HeroUI items. Then reapply your edits. (#517, #535)
   `VanillaSidebarLayoutScope`, `FortalSidebarLayoutScope`, and
   `HeroUiSidebarLayoutScope` still expose `openCompact()` and `closeCompact()`.
   (#534)
+- Regenerated adapters keep the widget key on the adapter instead of also
+  passing it to the inner widget. In tests, `find.byKey` finds the adapter;
+  use a descendant finder for the child. (#532)
 - HeroUI theme dependents, including nested dark scopes, pick up color changes
   when the host edits the same `HeroUiThemeData.colors` map and rebuilds. (#514)
 - In Vanilla and Fortal search fields, an Escape press that starts during active
