@@ -397,6 +397,70 @@ void main() {
       });
     });
 
+    group('Uncontrolled draft', () {
+      EditableText editor(WidgetTester tester) =>
+          tester.widget<EditableText>(find.byType(EditableText));
+
+      Future<void> typeDraft(WidgetTester tester) async {
+        await tester.pumpRemixApp(const RemixTextField());
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byType(RemixTextField), 'draft');
+        await tester.pumpAndSettle();
+        expect(editor(tester).controller.text, 'draft');
+        expect(editor(tester).focusNode.hasFocus, isTrue);
+      }
+
+      testWidgets('survives adding helper text and keeps focus', (
+        tester,
+      ) async {
+        await typeDraft(tester);
+        await tester.pumpRemixApp(const RemixTextField(helperText: 'Help'));
+        await tester.pumpAndSettle();
+
+        expect(editor(tester).controller.text, 'draft');
+        expect(editor(tester).focusNode.hasFocus, isTrue);
+      });
+
+      testWidgets('survives adding a label', (tester) async {
+        await typeDraft(tester);
+
+        await tester.pumpRemixApp(const RemixTextField(label: 'Name'));
+        await tester.pumpAndSettle();
+
+        expect(editor(tester).controller.text, 'draft');
+        expect(editor(tester).focusNode.hasFocus, isTrue);
+      });
+
+      testWidgets('survives being disabled and re-enabled', (tester) async {
+        await typeDraft(tester);
+
+        await tester.pumpRemixApp(const RemixTextField(enabled: false));
+        await tester.pumpAndSettle();
+        expect(editor(tester).controller.text, 'draft');
+        expect(editor(tester).focusNode.hasFocus, isFalse);
+
+        await tester.pumpRemixApp(const RemixTextField());
+        await tester.pumpAndSettle();
+        expect(editor(tester).controller.text, 'draft');
+        expect(editor(tester).focusNode.hasFocus, isFalse);
+
+        await tester.tap(find.byType(EditableText));
+        await tester.pumpAndSettle();
+        expect(editor(tester).focusNode.hasFocus, isTrue);
+      });
+
+      testWidgets('survives enabling excludeSemantics and keeps focus', (
+        tester,
+      ) async {
+        await typeDraft(tester);
+        await tester.pumpRemixApp(const RemixTextField(excludeSemantics: true));
+        await tester.pumpAndSettle();
+
+        expect(editor(tester).controller.text, 'draft');
+        expect(editor(tester).focusNode.hasFocus, isTrue);
+      });
+    });
+
     group('Focus Behavior', () {
       testWidgets('handles focus changes', (tester) async {
         final focusNode = FocusNode();
