@@ -280,6 +280,8 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   // is Mix resolution for chrome outside that subtree, not a second
   // interaction owner.
   late final WidgetStatesController _styleController;
+  // Deliberate: changing ancestor wrappers would otherwise remount the field
+  // and discard its uncontrolled draft.
   final _nakedTextFieldKey = GlobalKey();
   _RemixTextSelectionControls? _defaultSelectionControls;
   final _activePressSources = <_RemixTextFieldPressSource>{};
