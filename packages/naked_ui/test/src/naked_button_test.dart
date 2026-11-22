@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' as m;
-import 'package:flutter/gestures.dart' show kLongPressTimeout;
+import 'package:flutter/gestures.dart' show kLongPressTimeout, kPressTimeout;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -420,5 +420,51 @@ void main() {
 
       tester.expectCursor(SystemMouseCursors.basic, on: keyDisabled);
     });
+  });
+
+  testWidgets('disabling a pressed NakedButton clears pressed state', (
+    tester,
+  ) async {
+    var enabled = true;
+    late StateSetter rebuild;
+    late NakedButtonState state;
+    final pressChanges = <bool>[];
+
+    await tester.pumpMaterialWidget(
+      StatefulBuilder(
+        builder: (context, setState) {
+          rebuild = setState;
+          return NakedButton(
+            enabled: enabled,
+            onPressed: () {},
+            onPressChange: (pressed) {
+              setState(() => pressChanges.add(pressed));
+            },
+            builder: (_, value, _) {
+              state = value;
+              return const Text('Button');
+            },
+          );
+        },
+      ),
+    );
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('Button')),
+    );
+    await tester.pump(kPressTimeout);
+    expect(state.isPressed, isTrue);
+    expect(pressChanges, [true]);
+
+    rebuild(() => enabled = false);
+    await tester.pump();
+
+    expect(tester.takeException(), isNull);
+    expect(state.isPressed, isFalse);
+    expect(pressChanges, [true, false]);
+
+    await gesture.up();
+    await tester.pump();
+    expect(pressChanges, [true, false]);
   });
 }

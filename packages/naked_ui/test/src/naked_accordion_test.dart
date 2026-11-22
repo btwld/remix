@@ -753,4 +753,56 @@ void main() {
       timeout: Timeout(Duration(seconds: 20)),
     );
   });
+
+  testWidgets('disabling a pressed NakedAccordion clears pressed state', (
+    tester,
+  ) async {
+    final controller = NakedAccordionController<String>();
+    addTearDown(controller.dispose);
+    var enabled = true;
+    late StateSetter rebuild;
+    late NakedAccordionItemState<String> state;
+    final pressChanges = <bool>[];
+
+    await tester.pumpMaterialWidget(
+      NakedAccordionGroup<String>(
+        controller: controller,
+        child: StatefulBuilder(
+          builder: (context, setState) {
+            rebuild = setState;
+            return NakedAccordion<String>(
+              value: 'item',
+              enabled: enabled,
+              onPressChange: (pressed) {
+                setState(() => pressChanges.add(pressed));
+              },
+              builder: (_, value) {
+                state = value;
+                return const Text('Trigger');
+              },
+              child: const Text('Content'),
+            );
+          },
+        ),
+      ),
+    );
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('Trigger')),
+    );
+    await tester.pump();
+    expect(state.isPressed, isTrue);
+    expect(pressChanges, [true]);
+
+    rebuild(() => enabled = false);
+    await tester.pump();
+
+    expect(tester.takeException(), isNull);
+    expect(state.isPressed, isFalse);
+    expect(pressChanges, [true, false]);
+
+    await gesture.up();
+    await tester.pump();
+    expect(pressChanges, [true, false]);
+  });
 }

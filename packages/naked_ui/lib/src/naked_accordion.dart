@@ -488,9 +488,10 @@ class _NakedAccordionState<T> extends State<NakedAccordion<T>>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.enabled != widget.enabled) {
       updateDisabledState(!widget.enabled);
-      if (!widget.enabled) {
-        updatePressState(false, widget.onPressChange);
-      }
+      releasePressWhenDisabled(
+        disabled: () => !widget.enabled,
+        onPressChange: widget.onPressChange,
+      );
     }
   }
 

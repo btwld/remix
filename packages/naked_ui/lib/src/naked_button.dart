@@ -211,7 +211,10 @@ class _NakedButtonState extends State<NakedButton>
 
       if (!_isInteractive) {
         _cleanupKeyboardTimer();
-        updatePressState(false, widget.onPressChange);
+        releasePressWhenDisabled(
+          disabled: () => !_isInteractive,
+          onPressChange: widget.onPressChange,
+        );
       }
     }
   }
