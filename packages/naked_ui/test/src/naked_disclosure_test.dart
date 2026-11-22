@@ -934,6 +934,52 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   });
+
+  testWidgets('disabling a pressed NakedDisclosure clears pressed state', (
+    tester,
+  ) async {
+    var enabled = true;
+    late StateSetter rebuild;
+    late NakedDisclosureState state;
+    final pressChanges = <bool>[];
+
+    await tester.pumpMaterialWidget(
+      StatefulBuilder(
+        builder: (context, setState) {
+          rebuild = setState;
+          return NakedDisclosure(
+            enabled: enabled,
+            onPressChange: (pressed) {
+              setState(() => pressChanges.add(pressed));
+            },
+            builder: (_, value, _) {
+              state = value;
+              return const Text('Trigger');
+            },
+            panel: const Text('Panel'),
+          );
+        },
+      ),
+    );
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('Trigger')),
+    );
+    await tester.pump();
+    expect(state.isPressed, isTrue);
+    expect(pressChanges, [true]);
+
+    rebuild(() => enabled = false);
+    await tester.pump();
+
+    expect(tester.takeException(), isNull);
+    expect(state.isPressed, isFalse);
+    expect(pressChanges, [true, false]);
+
+    await gesture.up();
+    await tester.pump();
+    expect(pressChanges, [true, false]);
+  });
 }
 
 class _PanelLifecycleProbe extends StatefulWidget {

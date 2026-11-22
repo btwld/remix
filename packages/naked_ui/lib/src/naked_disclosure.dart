@@ -298,7 +298,10 @@ class _NakedDisclosureState extends State<NakedDisclosure>
       updateDisabledState(!_isInteractive);
       if (!_isInteractive) {
         _cleanupKeyboardPress();
-        updatePressState(false, widget.onPressChange);
+        releasePressWhenDisabled(
+          disabled: () => !_isInteractive,
+          onPressChange: widget.onPressChange,
+        );
       }
     }
 
