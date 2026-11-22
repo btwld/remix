@@ -646,6 +646,26 @@ void main() {
     expect(checked, greaterThan(4), reason: 'found no invocations to check');
   });
 
+  test('version workflow checks the requested Remix version before syncing', () {
+    final workflow =
+        loadYaml(File('.github/workflows/version.yml').readAsStringSync())
+            as YamlMap;
+    final steps = workflow['jobs']['version']['steps'] as YamlList;
+    final bump = steps.cast<YamlMap>().singleWhere(
+      (step) => step['id'] == 'bump',
+    );
+    final script = bump['run'] as String;
+
+    expect(
+      script.split('\n').map((line) => line.trim()),
+      containsAllInOrder([
+        startsWith('dart run melos version '),
+        r'dart run tool/check_version_alignment.dart --expect-remix "$version"',
+        'dart run tool/sync_registry_remix.dart',
+      ]),
+    );
+  });
+
   test('promotion validates static contracts and every hosted preset', () {
     final jobs =
         (loadYaml(File('.github/workflows/registry.yml').readAsStringSync())

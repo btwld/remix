@@ -36,7 +36,11 @@ void main(List<String> args) {
       if (version != null && version.toString() != expected) {
         failures.add(
           'Expected packages/remix/pubspec.yaml to declare $expected after '
-          'melos version, but found $version.',
+          'melos version, but found $version. If Melos warned above that Remix '
+          'depends on an ignored package with pending changes, check which '
+          'dependency has unreleased commits. Version and release it first '
+          '(see open_code/RELEASING.md for naked_ui), then re-dispatch '
+          'Prepare Version Bump.',
         );
       }
     default:

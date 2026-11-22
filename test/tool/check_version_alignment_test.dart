@@ -61,8 +61,6 @@ items:
   tearDown(() => sandbox.deleteSync(recursive: true));
 
   test('fails when the Remix manifest still has the previous version', () {
-    iconTable(remix: '^2.0.0', rounded: '^2.0.0');
-
     final result = check(['--expect-remix', '1.0.0-beta.15']);
 
     expect(result.exitCode, 1);
@@ -73,15 +71,35 @@ items:
         'after melos version, but found 1.0.0-beta.14.',
       ),
     );
+    expect(
+      '${result.stderr}',
+      allOf(
+        contains('depends on an ignored package with pending changes'),
+        contains('see open_code/RELEASING.md for naked_ui'),
+        contains('re-dispatch Prepare Version Bump'),
+      ),
+    );
   });
 
   test('passes on the requested Remix version before floors are synced', () {
-    iconTable(remix: '^2.0.0', rounded: '^2.0.0');
     write('packages/remix/pubspec.yaml', 'version: 1.0.0-beta.15\n');
 
     final result = check(['--expect-remix', '1.0.0-beta.15']);
 
     expect(result.exitCode, 0, reason: '${result.stderr}');
+  });
+
+  test('prints usage when --expect-remix has no version', () {
+    final result = check(['--expect-remix']);
+
+    expect(result.exitCode, 64);
+    expect(
+      '${result.stderr}',
+      contains(
+        'Usage: dart run tool/check_version_alignment.dart '
+        '[--expect-remix <version>]',
+      ),
+    );
   });
 
   test('passes when every remix_ui_icons library floors at the package', () {
