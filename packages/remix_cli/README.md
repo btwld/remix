@@ -266,8 +266,10 @@ fails before anything is written.
 The command installs Theme before Button, adds missing compatible hosted
 dependencies, formats the authored files, and analyzes the installed UI path.
 When the declared adapters need generation, the CLI runs an unfiltered
-`build_runner build` so unrelated generated outputs are not dropped when
-the build cache is invalidated. Recipe-only installs do not need `build.yaml`.
+`dart run build_runner build` so unrelated generated outputs are not dropped
+when the build cache is invalidated. The build can update outputs outside
+the UI path; `--dry-run`, `--diff`, and the install summary call out that scope.
+Recipe-only installs do not need `build.yaml`.
 Installing an item with `@MixableSpec` source enables Mix's opt-in spec-styler
 builder there, scoped to the installed files. The CLI preserves comments and
 unrelated settings; it refuses explicit builder disablement, excluded source,
@@ -305,9 +307,8 @@ One `add` installs every named item plus shared dependencies once.
 Default component items add an authored file and a
 generated part to `components/`. Fortal also has shared source items without
 generated parts, such as `base_button` and `typography`.
-Existing authored source stays untouched. When generation runs, the build
-includes every installed adapter. This protects earlier generated parts when
-dependencies change.
+Existing authored source stays untouched. When generation runs, the CLI checks
+that the requested and already-installed adapters exist after the build.
 
 ### Add a dashboard shell
 
@@ -499,7 +500,8 @@ CLI names the package and the section to move it to rather than editing your
 `pubspec.yaml`.
 
 If generation or analysis fails after installation, the authored source stays
-in place for inspection. Fix the reported issue and rerun the same command.
+in place for inspection. Generation failures can come from any configured
+builder, not just Mix. Fix the reported issue and rerun the same command.
 
 ## Install agent skills
 

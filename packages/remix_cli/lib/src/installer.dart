@@ -422,7 +422,7 @@ final class Installer {
       items: plan.items,
       requirements: plan.requirements,
       filesByItem: plan.filesByItem,
-      generated: plan.generated,
+      generated: plan.generationTargets.isEmpty ? const [] : plan.generated,
       exports: plan.exports,
       states: plan.states,
     );
@@ -434,6 +434,10 @@ final class Installer {
       _writeOut(
         'build.yaml: enable spec-styler generation for installed source.',
       );
+    }
+    if (plan.generationTargets.isNotEmpty &&
+        (options.mode == AddMode.dryRun || options.mode == AddMode.diff)) {
+      _writeOut(plan.generationScope);
     }
     if (options.mode == AddMode.dryRun) return AddResult.done;
     if (options.mode == AddMode.diff) {
@@ -623,6 +627,30 @@ final class Installer {
       if (before != after) builderConfiguration = after;
     }
 
+    final writes = <String, String>{
+      for (final item in items)
+        if (states[item.name] == _ItemState.missing ||
+            (requestedNames.contains(item.name) &&
+                options.mode == AddMode.overwrite))
+          for (final path in filesByItem[item.name]!) path: rendered[path]!,
+      if (proposedBarrel != currentBarrel) barrelRelative: proposedBarrel,
+    };
+    final needsGeneration =
+        generated.isNotEmpty &&
+        (builderConfiguration != null ||
+            writes.keys.any((path) => path.endsWith('.dart')) ||
+            generated.any((path) => !_projectFile(root, path).existsSync()));
+    final generationTargets = needsGeneration
+        ? {
+            ...generated,
+            ..._installedAdapters(root, config.uiPath, installedDart),
+            for (final item in availableItems)
+              for (final target in item.generated)
+                if (_projectFile(root, config.targetPath(target)).existsSync())
+                  config.targetPath(target),
+          }
+        : const <String>{};
+
     return _InstallPlan(
       root: root,
       config: config,
@@ -633,13 +661,14 @@ final class Installer {
       filesByItem: filesByItem,
       states: states,
       exports: exports,
-      barrel: barrel,
+      writes: writes,
       barrelRelative: barrelRelative,
       currentBarrel: currentBarrel,
       proposedBarrel: proposedBarrel,
       requirements: requirements,
       missingDependencies: missingDependencies,
       generated: generated,
+      generationTargets: generationTargets,
       builderConfiguration: builderConfiguration,
     );
   }
@@ -658,21 +687,16 @@ final class Installer {
       :config,
       :items,
       :requestedNames,
-      :rendered,
-      :filesByItem,
       :states,
-      :barrel,
-      :barrelRelative,
-      :currentBarrel,
-      :proposedBarrel,
+      :writes,
       :requirements,
       :missingDependencies,
       :generated,
+      :generationTargets,
     ) = plan;
 
     final toolchain = await _resolveFlutter(root);
     final completed = <String>[];
-    var regenerated = false;
     try {
       if (missingDependencies.isNotEmpty) {
         final arguments = <String>['pub', 'add'];
@@ -734,29 +758,15 @@ final class Installer {
         );
         completed.add('registry ownership');
       }
-      final pathsToWrite = <String>[];
-      for (final item in items) {
-        final state = states[item.name]!;
-        final shouldWrite =
-            state == _ItemState.missing ||
-            (requestedNames.contains(item.name) &&
-                options.mode == AddMode.overwrite);
-        if (!shouldWrite) continue;
-        for (final relative in filesByItem[item.name]!) {
-          _fileWriter.write(_projectFile(root, relative), rendered[relative]!);
-          pathsToWrite.add(relative);
-        }
+      for (final MapEntry(key: path, value: contents) in writes.entries) {
+        _fileWriter.write(_projectFile(root, path), contents);
       }
-      if (proposedBarrel != currentBarrel) {
-        _fileWriter.write(barrel, proposedBarrel);
-        pathsToWrite.add(barrelRelative);
-      }
-      if (pathsToWrite.isNotEmpty) {
+      if (writes.isNotEmpty) {
         completed.add('authored source');
         await _run(
           ProcessInvocation(
             executable: toolchain.dart,
-            arguments: ['format', ...pathsToWrite],
+            arguments: ['format', ...writes.keys],
             workingDirectory: root.path,
           ),
           failure: 'Could not format installed source',
@@ -771,28 +781,22 @@ final class Installer {
         );
         completed.add('builder configuration');
       }
-      final needsGeneration =
-          generated.isNotEmpty &&
-          (plan.builderConfiguration != null ||
-              pathsToWrite.any((path) => path.endsWith('.dart')) ||
-              generated.any((path) => !_projectFile(root, path).existsSync()));
-      if (needsGeneration) {
+      if (generationTargets.isNotEmpty) {
         await _run(
           ProcessInvocation(
             executable: toolchain.dart,
             arguments: const ['run', 'build_runner', 'build'],
             workingDirectory: root.path,
           ),
-          failure: 'Mix code generation failed',
-          progress: 'Generating adapters...',
+          failure: 'Project code generation failed',
+          progress: 'Running project code generation...',
         );
-        for (final target in generated) {
+        for (final target in generationTargets) {
           if (!_projectFile(root, target).existsSync()) {
             throw FormatException('Code generation did not create $target.');
           }
         }
         completed.add('generated Dart');
-        regenerated = true;
       }
 
       await _run(
@@ -833,8 +837,11 @@ final class Installer {
       _writeOut('$action ${item.name}.');
     }
     for (final target in generated) {
-      _writeOut('${regenerated ? 'Generated' : 'Preserved'} $target.');
+      _writeOut(
+        '${generationTargets.isNotEmpty ? 'Generated' : 'Preserved'} $target.',
+      );
     }
+    if (generationTargets.isNotEmpty) _writeOut(plan.generationScope);
   }
 
   Future<_FlutterToolchain> _resolveFlutter(Directory root) async {
@@ -1355,6 +1362,31 @@ bool _workspaceContains(Directory workspaceRoot, String resolvedPackage) {
   return configured?.resolveSymbolicLinksSync() == resolvedPackage;
 }
 
+Set<String> _installedAdapters(
+  Directory root,
+  String uiPath,
+  List<String> files,
+) {
+  final adapters = <String>{...files.where((path) => path.endsWith('.g.dart'))};
+  final partDirective = RegExp(
+    r'''^\s*part\s+['"]([^'"]+)['"]\s*;''',
+    multiLine: true,
+  );
+  for (final relative in files) {
+    for (final match in partDirective.allMatches(
+      _projectFile(root, relative).readAsStringSync(),
+    )) {
+      final target = p.posix.normalize(
+        p.posix.join(p.posix.dirname(relative), match.group(1)!),
+      );
+      if (!target.startsWith('$uiPath/')) continue;
+      validateProjectFilePath(root, target);
+      if (_projectFile(root, target).existsSync()) adapters.add(target);
+    }
+  }
+  return adapters;
+}
+
 List<String> _installedDartFiles(Directory root, String uiPath) {
   final result = <String>[];
   final seen = <String>{};
@@ -1422,13 +1454,14 @@ final class _InstallPlan {
     required this.filesByItem,
     required this.states,
     required this.exports,
-    required this.barrel,
+    required this.writes,
     required this.barrelRelative,
     required this.currentBarrel,
     required this.proposedBarrel,
     required this.requirements,
     required this.missingDependencies,
     required this.generated,
+    required this.generationTargets,
     required this.builderConfiguration,
   });
 
@@ -1447,14 +1480,18 @@ final class _InstallPlan {
   final Map<String, List<String>> filesByItem;
   final Map<String, _ItemState> states;
   final List<String> exports;
-  final File barrel;
+  final Map<String, String> writes;
   final String barrelRelative;
   final String currentBarrel;
   final String proposedBarrel;
   final List<_DependencyRequirement> requirements;
   final List<_DependencyRequirement> missingDependencies;
   final List<String> generated;
+  final Set<String> generationTargets;
   final String? builderConfiguration;
+
+  String get generationScope =>
+      'Project-wide generation may update outputs outside ${config.uiPath}.';
 }
 
 enum _ItemState { missing, partial, complete }

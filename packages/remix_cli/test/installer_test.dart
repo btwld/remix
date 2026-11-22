@@ -311,11 +311,15 @@ registries:
       'Checking the Flutter SDK...',
       'Adding dependencies...',
       'Resolving dependencies...',
-      'Generating adapters...',
+      'Running project code generation...',
       'Analyzing...',
     ]);
     expect(output, isNot(contains(endsWith('...'))));
-    expect(output.last, 'Generated lib/ui/components/button.g.dart.');
+    expect(output, contains('Generated lib/ui/components/button.g.dart.'));
+    expect(
+      output.last,
+      'Project-wide generation may update outputs outside lib/ui.',
+    );
   });
 
   test('diff reports fetching and comparing on the progress writer', () async {
@@ -336,6 +340,8 @@ registries:
       'Checking the Flutter SDK...',
       'Comparing with installed source...',
     ]);
+    expect(output, contains('Will generate: none'));
+    expect(output, isNot(contains(startsWith('Project-wide generation'))));
     expect(output.last, 'No authored-source differences.');
   });
 
@@ -369,10 +375,16 @@ registries:
     );
   });
 
-  test('build stays unfiltered with existing dependencies', () async {
+  test('keeps consumer output after build graph invalidation', () async {
     final caseRoot = createFlutterPackage();
     addTearDown(() => caseRoot.deleteSync(recursive: true));
     writeRequiredPubspec(caseRoot);
+    final model = File(p.join(caseRoot.path, 'lib/models/user.dart'))
+      ..createSync(recursive: true)
+      ..writeAsStringSync("part 'user.g.dart';\n");
+    const modelPartSource = "part of 'user.dart';\nconst userName = 'Ada';\n";
+    final modelPart = File(p.join(model.parent.path, 'user.g.dart'))
+      ..writeAsStringSync(modelPartSource);
     const uiPath = 'lib/design_system';
     await Installer(
       projectRoot: caseRoot,
@@ -381,7 +393,7 @@ registries:
     ).initialize(
       const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: uiPath),
     );
-    final runner = happyRunner(caseRoot);
+    final runner = happyRunner(caseRoot, invalidateBuildGraph: true);
     await Installer(
       projectRoot: caseRoot,
       writeOut: (_) {},
@@ -389,10 +401,12 @@ registries:
       sources: const FixtureOfficialResolver(),
     ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
-    final build = runner.calls.singleWhere(
-      (call) => call.arguments.take(3).join(' ') == 'run build_runner build',
+    expect(
+      modelPart.existsSync(),
+      isTrue,
+      reason: 'Keep lib/models/user.g.dart.',
     );
-    expect(build.arguments, ['run', 'build_runner', 'build']);
+    expect(modelPart.readAsStringSync(), modelPartSource);
     expect(runner.calls.any((call) => call.arguments.contains('add')), isFalse);
     expect(File(p.join(caseRoot.path, 'build.yaml')).existsSync(), isFalse);
     expect(
@@ -475,6 +489,60 @@ registries:
       expect(
         File(p.join(root.path, 'lib/ui/components/chart.g.dart')).existsSync(),
         isTrue,
+      );
+    },
+  );
+
+  test('a successful build must still leave installed adapters', () async {
+    await installButton(root);
+    final adapter = File(p.join(root.path, 'lib/ui/components/button.g.dart'));
+    final fakeBuild = happyRunner(root);
+    final runner = RecordingProcessRunner((invocation) async {
+      final result = await fakeBuild.run(invocation);
+      if (invocation.arguments.contains('build_runner')) adapter.deleteSync();
+      return result;
+    });
+
+    await expectLater(
+      Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: runner,
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['accordion'], mode: AddMode.write)),
+      throwsA(
+        isA<InstallFailure>().having(
+          (error) => error.message,
+          'message',
+          contains(
+            'Code generation did not create lib/ui/components/button.g.dart.',
+          ),
+        ),
+      ),
+    );
+  });
+
+  test(
+    'an unrelated builder failure is reported as project code generation',
+    () async {
+      writeRequiredPubspec(root);
+      await expectLater(
+        Installer(
+          projectRoot: root,
+          writeOut: (_) {},
+          processRunner: happyRunner(root, failStage: 'build'),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
+        throwsA(
+          isA<InstallFailure>().having(
+            (error) => error.message,
+            'message',
+            allOf(
+              startsWith('Project code generation failed:'),
+              contains('model_builder:user on lib/models/user.dart failed'),
+            ),
+          ),
+        ),
       );
     },
   );
@@ -1053,6 +1121,36 @@ packages:
       expect(
         output.join('\n'),
         contains('Will generate: lib/ui/components/button.g.dart'),
+      );
+      expect(
+        output,
+        contains('Project-wide generation may update outputs outside lib/ui.'),
+      );
+    },
+  );
+
+  test(
+    'diff reports the scope of generation without running builders',
+    () async {
+      final before = snapshotFiles(root);
+      final output = <String>[];
+      final runner = happyRunner(root);
+
+      await Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        processRunner: runner,
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.diff));
+
+      expect(snapshotFiles(root), before);
+      expect(
+        runner.calls.any((call) => call.arguments.contains('build_runner')),
+        isFalse,
+      );
+      expect(
+        output,
+        contains('Project-wide generation may update outputs outside lib/ui.'),
       );
     },
   );
@@ -2165,6 +2263,7 @@ RecordingProcessRunner happyRunner(
   bool writeLockOnPubGet = true,
   bool runRealFormatter = false,
   bool runRealGit = false,
+  bool invalidateBuildGraph = false,
   String? lockedRemix,
   String? failStage,
   String flutterPreamble = '',
@@ -2226,18 +2325,38 @@ RecordingProcessRunner happyRunner(
       return const ProcessOutput(
         exitCode: 1,
         stdout: '',
-        stderr: 'build failed',
+        stderr: 'model_builder:user on lib/models/user.dart failed',
       );
     }
+    const prefix = '--build-filter=';
+    final filters = {
+      for (final argument in invocation.arguments)
+        if (argument.startsWith(prefix))
+          p.joinAll([
+            'lib',
+            ...Uri.parse(
+              argument.substring(prefix.length),
+            ).pathSegments.skip(1),
+          ]),
+    };
+    bool selected(File output) =>
+        filters.isEmpty ||
+        filters.contains(p.relative(output.path, from: root.path));
+    final sources = Directory(p.join(root.path, 'lib'))
+        .listSync(recursive: true)
+        .whereType<File>()
+        .where((file) => file.path.endsWith('.dart'));
     final partDirective = RegExp(r"^part '([^']+\.g\.dart)';", multiLine: true);
-    for (final source
-        in Directory(p.join(root.path, 'lib'))
-            .listSync(recursive: true)
-            .whereType<File>()
-            .where((file) => file.path.endsWith('.dart'))) {
+    for (final source in sources) {
+      if (source.path.endsWith('.g.dart')) {
+        if (invalidateBuildGraph && !selected(source)) source.deleteSync();
+        continue;
+      }
       for (final part in partDirective.allMatches(source.readAsStringSync())) {
         final output = File(p.join(source.parent.path, part.group(1)!));
-        if (!output.existsSync()) output.writeAsStringSync('// generated\n');
+        if (selected(output) && !output.existsSync()) {
+          output.writeAsStringSync('// generated\n');
+        }
       }
     }
     return successProcessOutput;
