@@ -199,6 +199,7 @@ void main() {
         ...item('button'),
         'generated': ['@ui/button.g.dart'],
       };
+      fixture.templates['button'] = "part 'button.g.dart';\n";
       final other = File('${root.path}/lib/ui/company.g.dart')
         ..writeAsStringSync('// existing adapter');
       final runner = happyRunner(root);
@@ -211,10 +212,7 @@ void main() {
       final build = runner.calls.singleWhere(
         (call) => call.arguments.contains('build_runner'),
       );
-      expect(
-        build.arguments,
-        contains('--build-filter=package:consumer/ui/company.g.dart'),
-      );
+      expect(build.arguments, ['run', 'build_runner', 'build']);
       expect(other.existsSync(), isTrue);
     },
   );
@@ -583,6 +581,7 @@ final class FixtureRegistries {
     'button': item('button', ['theme']),
   };
   final company = <String, Object>{'button': item('company')};
+  final templates = <String, String>{};
   final requests = <Uri>[];
   late final resolver = GitHubSources(
     transport: (uri) async {
@@ -619,7 +618,8 @@ final class FixtureRegistries {
       final name = uri.pathSegments.last.split('.').first;
       return RegistryResponse(
         200,
-        '// ${uri.path.contains('c' * 40) ? 'revision two' : 'revision one'}\nclass {{typePrefix}}${name[0].toUpperCase()}${name.substring(1)} {}\n',
+        templates[name] ??
+            '// ${uri.path.contains('c' * 40) ? 'revision two' : 'revision one'}\nclass {{typePrefix}}${name[0].toUpperCase()}${name.substring(1)} {}\n',
       );
     },
   );

@@ -1227,13 +1227,7 @@ Future<_Failure?> _checkInTemporaryApp({
   }
   final regenerate = await _runProcess(
     sdk.dart,
-    [
-      'run',
-      'build_runner',
-      'build',
-      for (final relative in preset.generatedAppFiles)
-        '--build-filter=$relative',
-    ],
+    const ['run', 'build_runner', 'build'],
     workingDirectory: app.path,
     environment: environment,
   );

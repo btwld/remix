@@ -88,11 +88,14 @@ After changing recipe parameters, enums, annotations, Remix or the generator,
 regenerate and review the adapter:
 
 ```shell
-dart run build_runner build --build-filter=lib/ui/components/button.g.dart
+dart run build_runner build
 ```
 
 Commit authored and generated source. A normal `add` preserves existing authored
-files and includes already-installed adapters in generation.
+files. When adapters need generation, `add` runs the same unfiltered build
+and checks that requested and already-installed adapters exist afterwards.
+Both previews and the install summary note that the build can also update
+generated files outside the UI folder.
 
 ## Source ownership
 

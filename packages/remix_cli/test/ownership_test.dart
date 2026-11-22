@@ -96,6 +96,7 @@ void main() {
         ...item('button', ['theme']),
         'generated': ['@ui/button.g.dart'],
       };
+      fixture.templates['button'] = "part 'button.g.dart';\n";
       await add(['button']);
       File('${root.path}/lib/ui/button.g.dart').deleteSync();
       fixture.company['button'] = {

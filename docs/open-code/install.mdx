@@ -111,9 +111,9 @@ Created remix.yaml; preserved lib/ui/ui.dart.
 
 ## 2. Preview before you write
 
-Never let a generator surprise you. Both preview modes run the full preflight
-(path safety, dependency sections, registry resolution) and then stop before any
-file is written or any process runs.
+Both preview modes run the full preflight (path safety, dependency sections,
+registry resolution) without changing the project or running its builders.
+The plan notes when generation can update outputs outside your UI folder.
 
 ```bash
 remix add button --dry-run
@@ -122,12 +122,13 @@ remix add button --dry-run
 ```
 @remix (vanilla) revision <pinned commit>
 Items: @remix/theme -> @remix/button
-Dependencies: remix@^1.0.0-beta.17, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.2.0-beta.3
+Dependencies: remix@^1.0.0-rc.6, remix_ui_fonts@^0.1.0, mix_annotations@^2.2.0-beta.1, dev:build_runner@^2.10.1, dev:mix_generator@^2.3.0
 @remix/theme: missing; lib/ui/theme/effects.dart, lib/ui/theme/theme_data.dart, lib/ui/theme/theme_scope.dart, lib/ui/theme/tokens.dart
 @remix/button: missing; lib/ui/components/button.dart
 Exports: theme/tokens.dart, theme/theme_data.dart, theme/theme_scope.dart, theme/effects.dart, components/button.dart
 Will generate: lib/ui/components/button.g.dart
 remix.ownership.json: record registry target ownership.
+Project-wide generation may update outputs outside lib/ui.
 ```
 
 `Fetching registry items...` appears on stderr before the plan. A real install
@@ -138,7 +139,8 @@ To browse the catalog first, run `remix list`. It prints every item in your
 preset with the items each one needs.
 
 For the actual source, use `--diff`, which renders the proposed files, formats
-them, and shows a real `git diff` against what you have:
+them, and shows a real `git diff` against what you have. It does not show
+the generated changes:
 
 ```bash
 remix add button --diff
@@ -158,14 +160,19 @@ first. The command then runs a fixed sequence and stops at the first failure:
 3. `flutter pub get`, then verify the **resolved** versions in `pubspec.lock`
 4. Write the authored files and update the managed barrel
 5. `dart format` the files it wrote
-6. `dart run build_runner build --build-filter=...` — scoped to the generated targets only
+6. `dart run build_runner build` — only when generation is needed; runs all configured builders for the project
 7. `dart analyze lib/ui`
 
 ```
-Added theme.
-Added button.
+Added @remix/theme.
+Added @remix/button.
 Generated lib/ui/components/button.g.dart.
+Project-wide generation may update outputs outside lib/ui.
 ```
+
+The CLI checks that requested and previously installed adapters exist after the
+build. The summary lists this install's adapters, not every file the build may
+have updated. Review generated changes outside the UI folder too.
 
 Commit `remix.ownership.json` with `remix.yaml` and the installed source. It
 records the registry owner of authored and generated targets, including missing
