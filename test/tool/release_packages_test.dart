@@ -33,7 +33,7 @@ dependencies:
         'naked_ui',
       ]),
     );
-    expect(remix.tags, ['remix-v1.2.3', 'v1.2.3']);
+    expect(remix.tags, ['v1.2.3', 'remix-v1.2.3']);
     expect(remix.publishingTag, 'v1.2.3');
     for (final package in releasePackages.where(
       (package) => package != 'remix',
@@ -167,8 +167,8 @@ Too old.
 
     test('a changed version with an empty changelog entry still qualifies', () {
       expect(plan(previous: Version.parse('1.2.2'), section: ''), [
-        (tag: 'remix-v1.2.3', publish: false, skip: null),
         (tag: 'v1.2.3', publish: true, skip: null),
+        (tag: 'remix-v1.2.3', publish: false, skip: null),
       ]);
     });
 
@@ -199,9 +199,23 @@ annotated-tag-object\trefs/tags/v1.2.3
 reviewed-merge\trefs/tags/remix-v1.2.3
 ''');
       expect(plan(remote: tags).map((entry) => entry.skip), [
-        'remote tag already points to reviewed-merge',
         'remote tag points to old-commit, not reviewed-merge',
+        'remote tag already points to reviewed-merge',
       ]);
+    });
+
+    test('does not create a missing Remix tag beside a conflicting one', () {
+      for (final tag in remix.tags) {
+        final entries = plan(dispatch: true, remote: {tag: 'old-commit'});
+        expect(
+          entries.singleWhere((entry) => entry.tag == tag).skip,
+          'remote tag points to old-commit, not reviewed-merge',
+        );
+        expect(
+          entries.singleWhere((entry) => entry.tag != tag).skip,
+          'paired tag `$tag` points to old-commit, not reviewed-merge',
+        );
+      }
     });
 
     test(

@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -35,8 +36,8 @@ class PackageRelease {
   String get publishingTag =>
       package == 'remix' ? 'v$version' : '$package-v$version';
   List<String> get tags => [
-    if (package == 'remix') 'remix-v$version',
     publishingTag,
+    if (package == 'remix') 'remix-v$version',
   ];
   bool get prerelease => version.isPreRelease;
   bool get latest => package == 'remix' && !prerelease;
@@ -105,23 +106,31 @@ List<({String tag, bool publish, String? skip})> planTags({
   required String? section,
   required Map<String, String> remoteTags,
   required String sha,
-}) => [
-  for (final tag in release.tags)
-    (
-      tag: tag,
-      publish: tag == release.publishingTag,
-      skip: switch (remoteTags[tag]) {
-        final existing? when existing != sha =>
-          'remote tag points to $existing, not $sha',
-        _ when !dispatch && previousVersion == release.version =>
-          'package version did not change',
-        _ when section == null =>
-          'missing CHANGELOG heading for ${release.version}',
-        final existing? => 'remote tag already points to $existing',
-        null => null,
-      },
-    ),
-];
+}) {
+  final conflict = release.tags.where((tag) {
+    final existing = remoteTags[tag];
+    return existing != null && existing != sha;
+  }).firstOrNull;
+  return [
+    for (final tag in release.tags)
+      (
+        tag: tag,
+        publish: tag == release.publishingTag,
+        skip: switch (remoteTags[tag]) {
+          final existing? when existing != sha =>
+            'remote tag points to $existing, not $sha',
+          _ when !dispatch && previousVersion == release.version =>
+            'package version did not change',
+          _ when section == null =>
+            'missing CHANGELOG heading for ${release.version}',
+          final existing? => 'remote tag already points to $existing',
+          null when conflict != null =>
+            'paired tag `$conflict` points to ${remoteTags[conflict]}, not $sha',
+          null => null,
+        },
+      ),
+  ];
+}
 
 Map<String, String> remoteTagCommits(String refs) {
   final tags = <String, String>{};
@@ -223,10 +232,16 @@ void _tagReleases() {
         remoteTags: remoteTags,
         sha: sha,
       );
+      String? publishingTag;
+      String? blockedBy;
       for (final entry in plan) {
         final tag = entry.tag;
         if (entry.skip case final reason?) {
           summary.add('Skipped `$tag`: $reason.');
+          continue;
+        }
+        if (blockedBy != null) {
+          summary.add('Skipped `$tag`: tagging was blocked by `$blockedBy`.');
           continue;
         }
         try {
@@ -249,7 +264,15 @@ void _tagReleases() {
               ]),
             )[tag];
             if (existing != null) {
-              summary.add('Skipped `$tag`: remote tag appeared at $existing.');
+              if (existing == sha) {
+                summary.add('Skipped `$tag`: remote tag appeared at $sha.');
+              } else {
+                summary.add(
+                  'Skipped `$tag`: remote tag appeared at $existing, not $sha.',
+                );
+                blockedBy = tag;
+                exitCode = 1;
+              }
               continue;
             }
             throw ProcessException(
@@ -260,15 +283,28 @@ void _tagReleases() {
             );
           }
           summary.add('Tagged `$tag` at $sha.');
-          if (entry.publish) {
-            _run('gh', ['workflow', 'run', 'publish.yml', '--ref', tag]);
-            summary.add('Dispatched publishing for `$tag`.');
-          }
+          if (entry.publish) publishingTag = tag;
         } on Exception catch (error) {
           stderr.writeln(error);
-          summary.add('Failed to tag or dispatch `$tag`; see the job log.');
+          summary.add('Failed to tag `$tag`; see the job log.');
+          blockedBy = tag;
           exitCode = 1;
         }
+      }
+      if (publishingTag == null) continue;
+      if (blockedBy != null) {
+        summary.add(
+          'Did not dispatch `$publishingTag`: tagging was blocked by `$blockedBy`.',
+        );
+        continue;
+      }
+      try {
+        _run('gh', ['workflow', 'run', 'publish.yml', '--ref', publishingTag]);
+        summary.add('Dispatched publishing for `$publishingTag`.');
+      } on Exception catch (error) {
+        stderr.writeln(error);
+        summary.add('Failed to dispatch `$publishingTag`; see the job log.');
+        exitCode = 1;
       }
     }
   } finally {

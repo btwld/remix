@@ -130,6 +130,8 @@ reviewed PR to start the release.
 **Tag releases** creates missing tags at the merge SHA when the package's
 version changed in the push and its changelog has a `## <version>` heading. It
 reports and skips existing remote tags, including tags at a different commit.
+If either Remix tag points to a different commit, the workflow leaves its
+partner alone rather than splitting the pair across commits.
 Tags created with `GITHUB_TOKEN` do not trigger a push workflow, so automation
 dispatches **Publish to pub.dev** on each newly created publishing tag.
 Existing CLI consumer checks and the `Production` environment gate still apply.
@@ -177,10 +179,11 @@ missing tag, even if the version did not change in the last push. Only use it
 if the current `main` SHA is the intended release commit for the missing tags
 and none of the missing publishing tags name versions already on pub.dev.
 
-If a publishing tag exists at the intended commit but dispatch failed, run
-`gh workflow run publish.yml --ref '<publishing-tag>'` once the issue is fixed
-and you have confirmed the version is not already published. If only GitHub
-Release creation failed, rerun the failed job instead of republishing.
+If a publishing tag exists at the intended commit but publishing was not
+dispatched, fix the reported issue first and, for Remix, confirm both tags
+point to that commit. Then run `gh workflow run publish.yml --ref '<publishing-tag>'`
+if the version is not already published. If only GitHub Release creation failed,
+rerun the failed job instead of republishing.
 
 A hand-pushed publishing tag still runs **Publish to pub.dev** and creates a
 GitHub Release after publishing. Use this fallback only for a missing tag and
