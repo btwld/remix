@@ -13,6 +13,12 @@ remix list --json   # the same listing as one JSON document
 An unknown item or preset fails with a "Did you mean" hint when a name is
 close.
 
+## Recover from a builder failure
+
+If a builder fails during `remix add`, fix the reported issue and run
+`dart run build_runner build` from the application root before retrying
+`remix add`. The retry can skip generation if the adapters already exist.
+
 ## Move a registry pin
 
 ```bash
