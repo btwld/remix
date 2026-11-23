@@ -114,7 +114,7 @@ libraries:
       () async {
         expect(
           await checkPubFloors(registry, client: client(missing: 'remix')),
-          'remix ^1.0.0-beta.18 is not on pub.dev yet; check Tag releases for v1.0.0-beta.18 (see Manual recovery in open_code/RELEASING.md), wait for the Publish workflow, then re-run Promote registry',
+          'remix ^1.0.0-beta.18 is not on pub.dev yet; publish a GitHub Release with tag v1.0.0-beta.18, wait for the Publish workflow, then re-run Promote registry',
         );
         expect(
           await checkPubFloors(

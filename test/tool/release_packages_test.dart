@@ -1,17 +1,14 @@
 import 'dart:io';
 
-import 'package:pub_semver/pub_semver.dart';
 import 'package:test/test.dart';
 
 import '../../tool/release_packages.dart';
 
 void main() {
-  final version = Version.parse('1.2.3');
-  final remix = PackageRelease('remix', version);
-  final pubLink =
-      '[View on pub.dev](https://pub.dev/packages/remix/versions/1.2.3)';
+  final remix = PackageRelease.fromTag('v1.2.3');
+  final cli = PackageRelease.fromTag('remix_cli-v1.2.3-rc.2');
 
-  test('reads and validates the top-level pubspec version', () {
+  test('reads the top-level pubspec version', () {
     final version = pubspecVersion('''
 name: remix
 version: "1.2.3-rc.1+build.2" # release version
@@ -24,245 +21,114 @@ dependencies:
     }
   });
 
-  test('maps only independently published packages to release tags', () {
-    expect(
-      releasePackages,
-      unorderedEquals([
-        'remix',
-        'remix_cli',
-        'remix_ui_icons',
-        'remix_ui_fonts',
-        'naked_ui',
-      ]),
-    );
-    expect(remix.tags, ['remix-v1.2.3', 'v1.2.3']);
-    expect(remix.publishingTag, 'v1.2.3');
-    for (final package in releasePackages.where(
-      (package) => package != 'remix',
-    )) {
-      final release = PackageRelease(package, version);
-      expect(release.publishingTag, '$package-v1.2.3');
-      expect(release.tags, [release.publishingTag]);
+  test('maps only publishing tags with versions to packages', () {
+    final tags = {
+      'v1.2.3': 'remix',
+      'remix_cli-v1.2.3': 'remix_cli',
+      'remix_ui_icons-v1.2.3': 'remix_ui_icons',
+      'remix_ui_fonts-v1.2.3': 'remix_ui_fonts',
+      'naked_ui-v1.2.3': 'naked_ui',
+    };
+    for (final MapEntry(key: tag, value: package) in tags.entries) {
+      final release = PackageRelease.fromTag(tag);
+      expect(release.package, package);
+      expect(release.publishingTag, tag);
+      expect(release.melosTag, package == 'remix' ? 'remix-v1.2.3' : isNull);
+    }
+    for (final invalid in [
+      'remix-v1.2.3',
+      'registry_source-v1.2.3',
+      'v1.2.3wrong',
+      'v1.2',
+      'v01.2.3',
+      'v1.2.3-rc.01',
+    ]) {
+      expect(() => PackageRelease.fromTag(invalid), throwsFormatException);
     }
   });
 
+  test('only stable Remix releases are latest', () {
+    expect(remix.latest, isTrue);
+    expect(PackageRelease.fromTag('v1.2.3-rc.1').latest, isFalse);
+    expect(PackageRelease.fromTag('v1.2.3+build.1').latest, isTrue);
+    expect(PackageRelease.fromTag('remix_cli-v1.2.3').latest, isFalse);
+    expect(cli.prerelease, isTrue);
+    expect(cli.latest, isFalse);
+  });
+
   test(
-    'only stable Remix releases are latest; build metadata is not a prerelease',
+    'picks the highest earlier semver publishing tag of the same package',
     () {
-      for (final package in releasePackages) {
-        final stable = PackageRelease(package, Version.parse('1.2.3+build.1'));
-        final candidate = PackageRelease(
-          package,
-          Version.parse('1.2.3-rc.1+build.1'),
-        );
-        expect(stable.prerelease, isFalse);
-        expect(stable.latest, package == 'remix');
-        expect(candidate.prerelease, isTrue);
-        expect(candidate.latest, isFalse);
-        expect(candidate.title, '$package 1.2.3-rc.1+build.1');
-      }
+      expect(
+        previousPublishingTag(cli, [
+          'remix_cli-v1.2.3',
+          'remix_cli-v1.2.3-rc.2',
+          'remix_cli-v1.2.3-rc.1',
+          'remix_cli-v1.2.3-rc.0',
+          'remix_cli-v1.2.3-rc.10',
+          'remix_cli-v1.2.2',
+          'v1.2.3-rc.1',
+          'remix_cli-vbad',
+        ]),
+        'remix_cli-v1.2.3-rc.1',
+      );
+      expect(
+        previousPublishingTag(remix, ['remix-v1.2.2', 'v1.1.9', 'v1.1.10']),
+        'v1.1.10',
+      );
+      expect(previousPublishingTag(remix, ['remix-v1.2.2']), isNull);
+      expect(
+        previousPublishingTag(PackageRelease.fromTag('v1.2.3+build.2'), [
+          'v1.2.2',
+          'v1.2.3+build.1',
+        ]),
+        'v1.2.2',
+      );
     },
   );
 
-  group('changelog', () {
-    test(
-      'extracts the exact section through its nested headings and fences',
-      () {
-        final changelog =
-            '''
-## 1.2.30
-Too new.
-## 1.2.3 ###
+  group('link-changelog', () {
+    test('returns the full draft and changes only the selected body', () {
+      const earlier = '# Changelog\r\n\r\n## 1.2.30\r\nOther heading.\r\n\r\n';
+      const body =
+          '### Fixes\r\n\r\n```md\r\n## Not a heading\r\n```\r\n\r\n- Fixed a bug.';
+      const older = '## 1.2.2\r\n\r\nLegacy notes.  \r\n';
+      final result = linkChangelog(
+        '$earlier## 1.2.3\r\n\r\n$body\r\n\r\n$older',
+        remix,
+      );
+      expect(result.draft, body);
+      expect(
+        result.changelog,
+        '$earlier## 1.2.3\r\n\r\n'
+        'See the [release notes](https://github.com/btwld/remix/releases/tag/v1.2.3).\r\n\r\n'
+        '$older',
+      );
+    });
 
-### Fixes
+    test('supports an empty last section and a retry is a no-op', () {
+      final result = linkChangelog('## 1.2.3-rc.2', cli);
+      expect(result.draft, isEmpty);
+      expect(result.changelog, '## 1.2.3-rc.2\n\n${cli.changelogLink}\n');
+      expect(linkChangelog(result.changelog, cli), result);
+    });
 
-- Fixed layout.
-```md
-## Example heading
-```
-
-## 1.2.2
-Too old.
-'''
-                .replaceAll('\n', '\r\n');
-        expect(changelogSection(changelog, version), '''
-### Fixes
-
-- Fixed layout.
-```md
-## Example heading
-```''');
-      },
-    );
-
-    test(
-      'distinguishes an empty matching section from no matching heading',
-      () {
-        expect(changelogSection('## 1.2.3\n\n## 1.2.2\nOld.', version), '');
-        expect(changelogSection('## 1.2.3-rc.1\n### 1.2.3\n', version), isNull);
-        expect(changelogSection('~~~md\n## 1.2.3\n~~~\n', version), isNull);
-      },
-    );
-
-    test('distinguishes a link-only section from written notes', () {
-      for (final section in [
-        '',
-        '  \n',
-        '[Release notes](https://example.com/release)',
-        'https://example.com/release',
-        '- <https://example.com/release>\n- [Changes](https://example.com/compare)',
+    test('requires a matching second-level heading outside code fences', () {
+      for (final changelog in [
+        '## 1.2.30\n',
+        '### 1.2.3\n',
+        '~~~md\n## 1.2.3\n~~~\n',
       ]) {
-        expect(hasChangelogNotes(section), isFalse, reason: section);
-      }
-      expect(
-        hasChangelogNotes('Fixed a bug. [Details](https://example.com)'),
-        isTrue,
-      );
-      expect(
-        hasChangelogNotes('[PR](https://example.com) fixes layout.'),
-        isTrue,
-      );
-    });
-  });
-
-  group('release notes', () {
-    String notes({String? custom, String? section}) => releaseNotes(
-      custom: custom,
-      section: section,
-      generate: () => 'GitHub generated notes\n',
-      release: remix,
-    );
-
-    test('prefers a tag-specific file and appends the exact pub.dev link', () {
-      expect(
-        notes(custom: 'Curated notes\n', section: 'Changelog'),
-        'Curated notes\n\n$pubLink',
-      );
-      expect(notes(custom: '', section: 'Changelog'), pubLink);
-    });
-
-    test('uses a substantive changelog section before generating notes', () {
-      expect(notes(section: 'Fixed layout.'), 'Fixed layout.\n\n$pubLink');
-      expect(
-        notes(section: '[Release notes](https://example.com)'),
-        'GitHub generated notes\n\n$pubLink',
-      );
-      expect(notes(section: ''), 'GitHub generated notes\n\n$pubLink');
-      expect(notes(), 'GitHub generated notes\n\n$pubLink');
-    });
-  });
-
-  group('tag planning', () {
-    List<TagPlanEntry> plan({
-      bool dispatch = false,
-      Version? previous,
-      String? section = 'Changes',
-      Map<String, String> remote = const {},
-    }) => planTags(
-      release: remix,
-      dispatch: dispatch,
-      previousVersion: previous,
-      section: section,
-      remoteTags: remote,
-      sha: 'reviewed-merge',
-    );
-
-    test('a changed version with an empty changelog entry still qualifies', () {
-      expect(plan(previous: Version.parse('1.2.2'), section: ''), [
-        (tag: 'remix-v1.2.3', publish: false, skip: null, failed: false),
-        (tag: 'v1.2.3', publish: true, skip: null, failed: false),
-      ]);
-    });
-
-    test('push skips unchanged versions; dispatch can backfill them', () {
-      expect(
-        plan(previous: version).map((entry) => entry.skip),
-        everyElement('package version did not change'),
-      );
-      expect(
-        plan(dispatch: true, previous: version).map((entry) => entry.skip),
-        everyElement(isNull),
-      );
-    });
-
-    test('never tags without the exact changelog heading', () {
-      for (final dispatch in [false, true]) {
-        expect(
-          plan(dispatch: dispatch, section: null).map((entry) => entry.skip),
-          everyElement('missing CHANGELOG heading for 1.2.3'),
-        );
+        expect(() => linkChangelog(changelog, remix), throwsFormatException);
       }
     });
-
-    test('skips existing refs and reports where each one points', () {
-      final tags = remoteTagCommits('''
-old-commit\trefs/tags/v1.2.3^{}
-annotated-tag-object\trefs/tags/v1.2.3
-reviewed-merge\trefs/tags/remix-v1.2.3
-''');
-      expect(plan(remote: tags).map((entry) => entry.skip), [
-        'remote tag already points to reviewed-merge',
-        'remote tag points to old-commit, not reviewed-merge',
-      ]);
-    });
-
-    test('does not create a missing Remix tag beside a conflicting one', () {
-      for (final tag in remix.tags) {
-        final entries = plan(dispatch: true, remote: {tag: 'old-commit'});
-        expect(
-          entries.singleWhere((entry) => entry.tag == tag).skip,
-          'remote tag points to old-commit, not reviewed-merge',
-        );
-        expect(
-          entries.singleWhere((entry) => entry.tag != tag).skip,
-          'paired tag `$tag` points to old-commit, not reviewed-merge',
-        );
-      }
-    });
-
-    test(
-      'backfills only the missing Remix alias without dispatching publishing',
-      () {
-        final due = plan(
-          dispatch: true,
-          remote: {'v1.2.3': 'reviewed-merge'},
-        ).where((entry) => entry.skip == null);
-        expect(due.single.tag, 'remix-v1.2.3');
-        expect(due.single.publish, isFalse);
-      },
-    );
   });
-
-  test(
-    'previous release is the highest earlier publishing tag for the package',
-    () {
-      const tags = [
-        'v1.2.3-rc.10',
-        'v1.2.3-rc.2',
-        'v1.2.4',
-        'v1.2.3',
-        'vtest',
-        'remix-v1.2.3-rc.11',
-        'remix_cli-v1.2.2',
-        'naked_ui-v1.2.3-rc.11',
-      ];
-      expect(previousPublishingTag(remix, tags), 'v1.2.3-rc.10');
-      expect(
-        previousPublishingTag(PackageRelease('remix_cli', version), tags),
-        'remix_cli-v1.2.2',
-      );
-      expect(
-        previousPublishingTag(PackageRelease('remix_ui_fonts', version), tags),
-        isNull,
-      );
-    },
-  );
 
   group(
-    'tag command',
+    'release commands',
     () {
       final script = File('tool/release_packages.dart').absolute.path;
-      late Directory sandbox;
+      late Directory repo;
       late File ghLog;
       late String baseline;
 
@@ -270,189 +136,211 @@ reviewed-merge\trefs/tags/remix-v1.2.3
         final result = Process.runSync(
           'git',
           args,
-          workingDirectory: sandbox.path,
+          workingDirectory: repo.path,
         );
         expect(result.exitCode, 0, reason: 'git $args: ${result.stderr}');
         return '${result.stdout}'.trim();
       }
 
-      File write(String path, String content) => File('${sandbox.path}/$path')
+      File write(String path, String content) => File('${repo.path}/$path')
         ..parent.createSync(recursive: true)
         ..writeAsStringSync(content);
 
-      String commit(String subject) {
-        git(['add', 'packages']);
-        git(['-c', 'commit.gpgsign=false', 'commit', '-m', subject]);
-        return git(['rev-parse', 'HEAD']);
-      }
-
-      void package(String name, String version, {bool heading = true}) {
-        write(
-          'packages/$name/pubspec.yaml',
-          'name: $name\nversion: $version\n',
-        );
-        write(
-          'packages/$name/CHANGELOG.md',
-          heading ? '## $version\n\nChanges.\n' : '## 1.2.2\n',
-        );
-      }
-
-      void remoteTag(String name, String sha) {
-        git(['tag', name, sha]);
-        git(['push', 'origin', 'refs/tags/$name']);
-      }
-
-      ProcessResult runTags({
-        String? before,
-        String? packages,
-        bool failAlias = false,
-      }) => Process.runSync(
-        Platform.resolvedExecutable,
-        [script, 'tag'],
-        workingDirectory: sandbox.path,
-        environment: {
-          'PATH': '${sandbox.path}/bin:${Platform.environment['PATH']}',
-          'GITHUB_SHA': git(['rev-parse', 'HEAD']),
-          'GITHUB_EVENT_NAME': packages == null ? 'push' : 'workflow_dispatch',
-          'RELEASE_BEFORE': before ?? baseline,
-          'RELEASE_PACKAGES': packages ?? '',
-          'GITHUB_STEP_SUMMARY': '${sandbox.path}/summary',
-          'TEST_GH_LOG': ghLog.path,
-          'TEST_FAIL_ALIAS': failAlias ? 'yes' : 'no',
-        },
+      void manifest(String package, String version) => write(
+        'packages/$package/pubspec.yaml',
+        'name: $package\nversion: $version\n',
       );
 
+      String commit(String message, {bool onMain = true}) {
+        git(['add', 'packages']);
+        git(['-c', 'commit.gpgsign=false', 'commit', '-m', message]);
+        final sha = git(['rev-parse', 'HEAD']);
+        if (onMain) git(['update-ref', 'refs/remotes/origin/main', sha]);
+        return sha;
+      }
+
+      void remoteTag(String tag, String sha, {bool annotated = false}) {
+        git([
+          'tag',
+          if (annotated) ...['-a', '-m', 'Release'],
+          tag,
+          sha,
+        ]);
+        git(['push', 'origin', 'refs/tags/$tag']);
+      }
+
+      ProcessResult run(List<String> args, {bool existingRelease = false}) =>
+          Process.runSync(
+            Platform.resolvedExecutable,
+            [script, ...args],
+            workingDirectory: repo.path,
+            environment: {
+              'PATH': '${repo.path}/bin:${Platform.environment['PATH']}',
+              'TEST_GH_LOG': ghLog.path,
+              'TEST_RELEASE_EXISTS': existingRelease ? 'yes' : 'no',
+            },
+          );
+
       setUp(() {
-        sandbox = Directory.systemTemp.createTempSync('remix_tag_test_');
+        repo = Directory.systemTemp.createTempSync('remix_release_test_');
         git(['init', '-b', 'main']);
         git(['init', '--bare', 'origin.git']);
-        git(['remote', 'add', 'origin', '${sandbox.path}/origin.git']);
-        git(['config', 'user.name', 'Release test']);
-        git(['config', 'user.email', 'release-test@example.com']);
-        for (final name in releasePackages) {
-          package(name, '1.2.2');
-        }
-        baseline = commit('Initial packages');
+        git(['remote', 'add', 'origin', '${repo.path}/origin.git']);
+        git(['config', 'user.name', 'Release Test']);
+        git(['config', 'user.email', 'test@example.com']);
+        git(['config', 'tag.gpgSign', 'false']);
+        manifest('remix', '1.2.3');
+        write(
+          'packages/remix/CHANGELOG.md',
+          '## 1.2.3\n\n${remix.changelogLink}\n',
+        );
+        baseline = commit('Version bump');
         ghLog = write('gh.log', '');
         write('bin/gh', r'''#!/bin/sh
 printf '%s\n' "$*" >> "$TEST_GH_LOG"
-if [ "$TEST_FAIL_ALIAS" = yes ] && [ "$4" = ref=refs/tags/remix-v1.2.3 ]; then
-  printf '%s\n' 'Could not create alias' >&2
-  exit 1
-fi
+case "$1 $2" in
+  'release view')
+    if [ "$TEST_RELEASE_EXISTS" = yes ]; then exit 0; fi
+    printf '%s\n' 'release not found' >&2
+    exit 1 ;;
+  'api repos/{owner}/{repo}/releases/generate-notes')
+    printf '%s\n' 'Generated notes.' ;;
+esac
 ''');
-        final chmod = Process.runSync('chmod', [
-          '+x',
-          '${sandbox.path}/bin/gh',
-        ]);
-        expect(chmod.exitCode, 0);
-      });
-
-      tearDown(() => sandbox.deleteSync(recursive: true));
-
-      test('changed versions fail on conflicting tags and missing headings', () {
-        remoteTag('v1.2.3', baseline);
-        remoteTag('remix_cli-v1.2.3', baseline);
-        package('remix', '1.2.3');
-        package('remix_cli', '1.2.3');
-        package('naked_ui', '1.2.3', heading: false);
-        final target = commit('Bump three versions');
-
-        final result = runTags();
-        expect(result.exitCode, 1);
         expect(
-          result.stderr,
-          allOf(
-            contains(
-              'Skipped `remix-v1.2.3`: paired tag `v1.2.3` points to $baseline, not $target',
-            ),
-            contains(
-              'Skipped `remix_cli-v1.2.3`: remote tag points to $baseline, not $target',
-            ),
-            contains(
-              'Skipped `naked_ui-v1.2.3`: missing CHANGELOG heading for 1.2.3',
-            ),
-          ),
+          Process.runSync('chmod', ['+x', '${repo.path}/bin/gh']).exitCode,
+          0,
         );
-        expect(ghLog.readAsLinesSync(), isEmpty);
       });
 
-      test('dispatch selects packages and tags each version-change commit', () {
-        package('remix_cli', '1.2.3');
-        final cliBump = commit('Bump CLI');
-        package('naked_ui', '1.2.4');
-        final nakedBump = commit('Bump Naked UI');
-        write(
-          'packages/remix_cli/pubspec.yaml',
-          'name: remix_cli\nversion: "1.2.3"\ndescription: A later edit\n',
-        );
-        write('packages/naked_ui/CHANGELOG.md', '## 1.2.2\n');
-        commit('Edit the manifest and changelog without bumping versions');
+      tearDown(() => repo.deleteSync(recursive: true));
 
-        final result = runTags(packages: 'remix_cli, naked_ui');
-        expect(result.exitCode, 0, reason: '${result.stderr}');
-        expect(ghLog.readAsLinesSync(), [
-          'api repos/{owner}/{repo}/git/refs -f ref=refs/tags/remix_cli-v1.2.3 -f sha=$cliBump',
-          'workflow run publish.yml --ref remix_cli-v1.2.3',
-          'api repos/{owner}/{repo}/git/refs -f ref=refs/tags/naked_ui-v1.2.4 -f sha=$nakedBump',
-          'workflow run publish.yml --ref naked_ui-v1.2.4',
-        ]);
-      });
+      test(
+        'validates a link-only changelog at the tagged ancestor of main',
+        () {
+          remoteTag(remix.publishingTag, baseline, annotated: true);
+          manifest('remix', '1.2.4');
+          commit('Newer change to main');
 
-      test('dispatch rejects an empty or unknown package selection', () {
-        for (final input in ['', 'remix, registry_source']) {
-          final result = runTags(packages: input);
-          expect(result.exitCode, 1);
-          expect(
-            result.stderr,
-            contains('RELEASE_PACKAGES must name one or more'),
-          );
-        }
-        expect(ghLog.readAsLinesSync(), isEmpty);
-      });
+          final result = run(['validate', remix.publishingTag]);
+          expect(result.exitCode, 0, reason: '${result.stderr}');
+          expect(result.stdout, contains('at $baseline on origin/main'));
+        },
+      );
 
-      test('alias failure never creates the Remix publishing tag', () {
-        package('remix', '1.2.3');
-        final target = commit('Bump Remix');
+      test('rejects a tag that is not on origin/main', () {
+        write('packages/remix/CHANGELOG.md', '## 1.2.3\n\nDifferent.\n');
+        remoteTag(remix.publishingTag, commit('Off main', onMain: false));
 
-        final result = runTags(failAlias: true);
+        final result = run(['validate', remix.publishingTag]);
         expect(result.exitCode, 1);
-        expect(
-          result.stdout,
-          contains('Skipped `v1.2.3`: tagging was blocked by `remix-v1.2.3`'),
-        );
-        expect(ghLog.readAsLinesSync(), [
-          'api repos/{owner}/{repo}/git/refs -f ref=refs/tags/remix-v1.2.3 -f sha=$target',
-        ]);
+        expect(result.stderr, contains('not on origin/main'));
+      });
+
+      test('rejects the wrong version and a missing heading', () {
+        remoteTag('v1.2.4', baseline);
+        final mismatch = run(['validate', 'v1.2.4']);
+        expect(mismatch.exitCode, 1);
+        expect(mismatch.stderr, contains('at the tag has 1.2.3'));
+
+        write('packages/remix/CHANGELOG.md', '## 1.2.30\n');
+        remoteTag(remix.publishingTag, commit('No release heading'));
+        final missing = run(['validate', remix.publishingTag]);
+        expect(missing.exitCode, 1);
+        expect(missing.stderr, contains('Missing CHANGELOG heading: ## 1.2.3'));
       });
 
       test(
-        'unresolvable before SHA checks and tags missing versions at the push SHA',
+        'the command takes the version from pubspec and prints its draft',
         () {
-          for (final tag in [
-            'v1.2.2',
-            'remix-v1.2.2',
-            'naked_ui-v1.2.2',
-            'remix_ui_icons-v1.2.2',
-            'remix_ui_fonts-v1.2.2',
-          ]) {
-            remoteTag(tag, baseline);
-          }
-          package('remix_cli', '1.2.3');
-          final target = commit('Bump CLI');
-
-          final result = runTags(before: 'a' * 40);
-          expect(result.exitCode, 0, reason: '${result.stderr}');
-          expect(
-            result.stdout,
-            contains('checking every current package version'),
+          manifest('remix_cli', '${cli.version}');
+          const older = '## 1.2.2\n\nKeep this.\n';
+          final changelog = write(
+            'packages/remix_cli/CHANGELOG.md',
+            '## ${cli.version}\n\nDraft notes.\n\n$older',
           );
-          expect(ghLog.readAsLinesSync(), [
-            'api repos/{owner}/{repo}/git/refs -f ref=refs/tags/remix_cli-v1.2.3 -f sha=$target',
-            'workflow run publish.yml --ref remix_cli-v1.2.3',
-          ]);
+
+          final result = run(['link-changelog', 'remix_cli']);
+          expect(result.exitCode, 0, reason: '${result.stderr}');
+          expect(result.stdout, 'Draft notes.\n');
+          expect(
+            changelog.readAsStringSync(),
+            '## ${cli.version}\n\n${cli.changelogLink}\n\n$older',
+          );
         },
       );
+
+      test('adds a missing Melos alias without changing an existing Release', () {
+        remoteTag(remix.publishingTag, baseline, annotated: true);
+        manifest('remix', '1.2.4');
+        commit('Main has advanced');
+
+        final result = run([
+          'release',
+          remix.publishingTag,
+        ], existingRelease: true);
+        expect(result.exitCode, 0, reason: '${result.stderr}');
+        expect(ghLog.readAsLinesSync(), [
+          'api repos/{owner}/{repo}/git/refs -f ref=refs/tags/remix-v1.2.3 -f sha=$baseline',
+          'release view v1.2.3 --json tagName',
+        ]);
+      });
+
+      test('fails without moving a Melos alias at a different commit', () {
+        write('packages/remix/CHANGELOG.md', '## 1.2.3\n\nDifferent.\n');
+        final other = commit('Different commit');
+        remoteTag(remix.publishingTag, other);
+        remoteTag(remix.melosTag!, baseline, annotated: true);
+
+        final result = run([
+          'release',
+          remix.publishingTag,
+        ], existingRelease: true);
+        expect(result.exitCode, 1);
+        expect(
+          result.stderr,
+          contains('Melos alias remix-v1.2.3 points to $baseline, not $other'),
+        );
+        expect(ghLog.readAsStringSync(), isEmpty);
+      });
+
+      test('generates a missing Release with the previous package tag', () {
+        remoteTag(remix.publishingTag, baseline);
+        remoteTag(remix.melosTag!, baseline, annotated: true);
+        remoteTag('v1.2.2', baseline);
+        remoteTag('remix_cli-v1.2.3-rc.1', baseline);
+        remoteTag('remix_cli-v1.2.3', baseline);
+
+        final stable = run(['release', remix.publishingTag]);
+        expect(stable.exitCode, 0, reason: '${stable.stderr}');
+        expect(
+          ghLog.readAsStringSync(),
+          allOf(
+            contains('tag_name=v1.2.3 -f previous_tag_name=v1.2.2'),
+            contains(
+              'release create v1.2.3 --verify-tag --title remix 1.2.3 --notes Generated notes.',
+            ),
+            contains('[View on pub.dev](${remix.pubLink}) --latest\n'),
+            isNot(contains('git/refs')),
+          ),
+        );
+
+        ghLog.writeAsStringSync('');
+        final prerelease = run(['release', cli.publishingTag]);
+        expect(prerelease.exitCode, 0, reason: '${prerelease.stderr}');
+        expect(
+          ghLog.readAsStringSync(),
+          allOf(
+            contains(
+              'tag_name=remix_cli-v1.2.3-rc.2 -f previous_tag_name=remix_cli-v1.2.3-rc.1',
+            ),
+            contains(
+              '[View on pub.dev](${cli.pubLink}) --latest=false --prerelease',
+            ),
+            isNot(contains('git/refs')),
+          ),
+        );
+      });
     },
     skip: Platform.isWindows ? 'Requires the POSIX gh fixture' : false,
   );

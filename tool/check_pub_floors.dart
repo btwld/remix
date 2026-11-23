@@ -150,7 +150,7 @@ Future<String?> checkPubPackageFloors(
               };
               final action = tag == null
                   ? 'publish the required dependency upstream, wait for pub.dev'
-                  : 'check Tag releases for $tag (see Manual recovery in open_code/RELEASING.md), wait for the Publish workflow';
+                  : 'publish a GitHub Release with tag $tag, wait for the Publish workflow';
               return '$name ^$floor is not on pub.dev yet; $action, then re-run Promote registry';
             }
           }

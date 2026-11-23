@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:pub_semver/pub_semver.dart';
@@ -24,141 +23,132 @@ Version pubspecVersion(String pubspec) {
 class PackageRelease {
   PackageRelease(this.package, this.version) {
     if (!releasePackages.contains(package)) {
-      throw ArgumentError.value(package, 'package', 'Not a release package');
+      throw FormatException('Not a release package: $package');
     }
+  }
+
+  factory PackageRelease.fromTag(String tag) {
+    for (final package in releasePackages) {
+      final prefix = _tagPrefix(package);
+      if (!tag.startsWith(prefix)) continue;
+      final text = tag.substring(prefix.length);
+      final Version version;
+      try {
+        version = Version.parse(text);
+      } on FormatException {
+        throw FormatException('Invalid version in publishing tag: $tag');
+      }
+      final core = '${version.major}.${version.minor}.${version.patch}';
+      final precedence = text.split('+').first;
+      final prerelease = precedence.startsWith('$core-')
+          ? precedence.substring(core.length + 1)
+          : null;
+      if ((precedence != core && prerelease == null) ||
+          (prerelease != null &&
+              prerelease.split('.').any(RegExp(r'^0[0-9]+$').hasMatch))) {
+        throw FormatException('Invalid version in publishing tag: $tag');
+      }
+      return PackageRelease(package, version);
+    }
+    throw FormatException('Not a publishing tag for a known package: $tag');
   }
 
   final String package;
   final Version version;
 
+  static String _tagPrefix(String package) =>
+      package == 'remix' ? 'v' : '$package-v';
+
   String get directory => 'packages/$package';
-  String get publishingTagPrefix => package == 'remix' ? 'v' : '$package-v';
+  String get publishingTagPrefix => _tagPrefix(package);
   String get publishingTag => '$publishingTagPrefix$version';
-  List<String> get tags => [
-    if (package == 'remix') 'remix-v$version',
-    publishingTag,
-  ];
+  String? get melosTag => package == 'remix' ? 'remix-v$version' : null;
   bool get prerelease => version.isPreRelease;
   bool get latest => package == 'remix' && !prerelease;
   String get title => '$package $version';
   String get pubLink => 'https://pub.dev/packages/$package/versions/$version';
+  String get changelogLink =>
+      'See the [release notes](https://github.com/btwld/remix/releases/tag/$publishingTag).';
 }
 
-String? changelogSection(String changelog, Version version) {
+typedef _ChangelogBody = ({int start, int end, String newline});
+
+_ChangelogBody? _changelogBody(String changelog, Version version) {
   final heading = RegExp(r'^ {0,3}(#{1,2})[ \t]+(.*)$');
   final fenceStart = RegExp(r'^ {0,3}(`{3,}|~{3,})');
   String? fence;
-  List<String>? section;
-  for (final line in const LineSplitter().convert(changelog)) {
+  int? start;
+  var newline = '\n';
+  for (final match in RegExp(
+    r'([^\r\n]*)(\r\n|\n|\r|$)',
+  ).allMatches(changelog)) {
+    final line = match[1]!;
     if (fence case final openFence?) {
       final closing = line.trimRight();
-      final match = fenceStart.firstMatch(closing);
-      if (match != null &&
-          match.end == closing.length &&
-          match[1]!.startsWith(openFence)) {
+      final closeMatch = fenceStart.firstMatch(closing);
+      if (closeMatch != null &&
+          closeMatch.end == closing.length &&
+          closeMatch[1]!.startsWith(openFence)) {
         fence = null;
       }
     } else if (fenceStart.firstMatch(line) case final opening?) {
       fence = opening[1];
-    } else if (heading.firstMatch(line) case final match?) {
-      if (section != null) break;
-      final text = match[2]!
+    } else if (heading.firstMatch(line) case final header?) {
+      if (start != null) {
+        return (start: start, end: match.start, newline: newline);
+      }
+      final text = header[2]!
           .replaceFirst(RegExp(r'[ \t]+#+[ \t]*$'), '')
           .trim();
-      if (match[1] == '##' && text == '$version') section = [];
-      continue;
+      if (header[1] == '##' && text == '$version') {
+        start = match.start + line.length;
+        if (match[2]!.isNotEmpty) newline = match[2]!;
+      }
     }
-    section?.add(line);
   }
-  return section?.join('\n').trim();
+  return start == null
+      ? null
+      : (start: start, end: changelog.length, newline: newline);
 }
 
-bool hasChangelogNotes(String section) {
-  final linkOnly = RegExp(
-    r'^(?:(?:[-+*]|\d+\.)\s+)?(?:\[[^\]]+\]\([^)]+\)|<https?://[^<>\s]+>|https?://\S+)$',
-  );
-  return const LineSplitter()
-      .convert(section)
-      .map((line) => line.trim())
-      .any((line) => line.isNotEmpty && !linkOnly.hasMatch(line));
-}
-
-String releaseNotes({
-  required String? custom,
-  required String? section,
-  required String Function() generate,
-  required PackageRelease release,
-}) {
-  final notes =
-      custom ??
-      (section != null && hasChangelogNotes(section) ? section : generate());
-  return [
-    if (notes.trimRight().isNotEmpty) notes.trimRight(),
-    '[View on pub.dev](${release.pubLink})',
-  ].join('\n\n');
-}
-
-typedef TagPlanEntry = ({String tag, bool publish, String? skip, bool failed});
-
-List<TagPlanEntry> planTags({
-  required PackageRelease release,
-  required bool dispatch,
-  required Version? previousVersion,
-  required String? section,
-  required Map<String, String> remoteTags,
-  required String sha,
-  bool comparisonUnavailable = false,
-}) {
-  final targets = release.tags.map((tag) => remoteTags[tag]).toSet();
-  final settled =
-      comparisonUnavailable && targets.length == 1 && targets.single != null;
-  final unchanged = !dispatch && previousVersion == release.version;
-  final conflict = release.tags
-      .where((tag) => remoteTags[tag] != null && remoteTags[tag] != sha)
-      .firstOrNull;
-  return release.tags.map((tag) {
-    final (String? skip, bool failed) = switch (remoteTags[tag]) {
-      final existing? when settled => (
-        'release tags already exist at $existing',
-        false,
-      ),
-      final existing? when existing != sha => (
-        'remote tag points to $existing, not $sha',
-        !unchanged,
-      ),
-      _ when unchanged => ('package version did not change', false),
-      final existing? => ('remote tag already points to $existing', false),
-      null when conflict != null => (
-        'paired tag `$conflict` points to ${remoteTags[conflict]}, not $sha',
-        true,
-      ),
-      null when section == null => (
-        'missing CHANGELOG heading for ${release.version}',
-        true,
-      ),
-      null => (null, false),
-    };
-    return (
-      tag: tag,
-      publish: tag == release.publishingTag,
-      skip: skip,
-      failed: failed,
+({String changelog, String draft}) linkChangelog(
+  String changelog,
+  PackageRelease release,
+) {
+  final body = _changelogBody(changelog, release.version);
+  if (body == null) {
+    throw FormatException(
+      'Missing CHANGELOG heading: ## ${release.version} (${release.package})',
     );
-  }).toList();
+  }
+  final original = changelog.substring(body.start, body.end);
+  final draft = original
+      .replaceFirst(RegExp(r'^(?:[ \t]*(?:\r\n|\n|\r))+'), '')
+      .trimRight();
+  if (draft == release.changelogLink) return (changelog: changelog, draft: '');
+  final newline = body.newline;
+  final updated = changelog.replaceRange(
+    body.start,
+    body.end,
+    '$newline$newline${release.changelogLink}$newline'
+    '${body.end < changelog.length ? newline : ''}',
+  );
+  return (changelog: updated, draft: draft);
 }
 
 String? previousPublishingTag(PackageRelease release, Iterable<String> tags) {
   final prefix = release.publishingTagPrefix;
+  final current = _semverPrecedence(release.version);
   Version? previousVersion;
   String? previousTag;
   for (final tag in tags.where((tag) => tag.startsWith(prefix))) {
     final Version version;
     try {
-      version = Version.parse(tag.substring(prefix.length));
+      version = _semverPrecedence(PackageRelease.fromTag(tag).version);
     } on FormatException {
       continue;
     }
-    if (version < release.version &&
+    if (version < current &&
         (previousVersion == null || version > previousVersion)) {
       previousVersion = version;
       previousTag = tag;
@@ -167,10 +157,14 @@ String? previousPublishingTag(PackageRelease release, Iterable<String> tags) {
   return previousTag;
 }
 
+Version _semverPrecedence(Version version) => version.build.isEmpty
+    ? version
+    : Version.parse('$version'.split('+').first);
+
 Map<String, String> remoteTagCommits(String refs) {
   final tags = <String, String>{};
   final peeled = <String, String>{};
-  for (final line in const LineSplitter().convert(refs)) {
+  for (final line in refs.split('\n')) {
     final parts = line.split('\trefs/tags/');
     if (parts.length != 2) continue;
     final tag = parts.last;
@@ -186,13 +180,16 @@ Map<String, String> remoteTagCommits(String refs) {
 void main(List<String> args) {
   try {
     switch (args) {
-      case ['tag']:
-        _tagReleases();
+      case ['validate', final tag]:
+        _validateRelease(PackageRelease.fromTag(tag));
       case ['release', final tag]:
-        _createRelease(tag);
+        _finalizeRelease(PackageRelease.fromTag(tag));
+      case ['link-changelog', final package]:
+        _linkPackageChangelog(package);
       default:
         stderr.writeln(
-          'Usage: dart run tool/release_packages.dart tag | release <tag>',
+          'Usage: dart run tool/release_packages.dart '
+          'validate <tag> | release <tag> | link-changelog <package>',
         );
         exitCode = 64;
     }
@@ -202,270 +199,146 @@ void main(List<String> args) {
   }
 }
 
-Iterable<PackageRelease> _workspaceReleases([
-  Iterable<String> packages = releasePackages,
-]) sync* {
-  for (final package in packages) {
-    final manifest = File('packages/$package/pubspec.yaml');
-    yield PackageRelease(package, pubspecVersion(manifest.readAsStringSync()));
+String _taggedCommit(String tag) =>
+    _run('git', ['rev-parse', '--verify', 'refs/tags/$tag^{commit}']).trim();
+
+void _validateRelease(PackageRelease release) {
+  final tag = release.publishingTag;
+  final commit = _taggedCommit(tag);
+  final ancestry = [
+    'merge-base',
+    '--is-ancestor',
+    commit,
+    'refs/remotes/origin/main',
+  ];
+  final result = Process.runSync('git', ancestry);
+  if (result.exitCode == 1) {
+    throw FormatException(
+      'Tag $tag points to $commit, which is not on origin/main',
+    );
   }
+  if (result.exitCode != 0) {
+    throw ProcessException(
+      'git',
+      ancestry,
+      'Could not verify that $tag is on origin/main: ${result.stderr}',
+      result.exitCode,
+    );
+  }
+  final manifest = '${release.directory}/pubspec.yaml';
+  final version = pubspecVersion(_run('git', ['show', '$commit:$manifest']));
+  if ('$version' != '${release.version}') {
+    throw FormatException(
+      'Tag $tag requires version ${release.version}, but $manifest at the tag has $version',
+    );
+  }
+  final changelog = '${release.directory}/CHANGELOG.md';
+  if (_changelogBody(_run('git', ['show', '$commit:$changelog']), version) ==
+      null) {
+    throw FormatException(
+      'Missing CHANGELOG heading: ## $version in $changelog at tag $tag',
+    );
+  }
+  stdout.writeln(
+    'Validated $tag for ${release.title} at $commit on origin/main.',
+  );
 }
 
-String? _readFile(String path) {
-  final file = File(path);
-  return file.existsSync() ? file.readAsStringSync() : null;
+void _linkPackageChangelog(String package) {
+  if (!releasePackages.contains(package)) {
+    throw FormatException('Not a release package: $package');
+  }
+  final path = 'packages/$package';
+  final version = pubspecVersion(File('$path/pubspec.yaml').readAsStringSync());
+  final release = PackageRelease(package, version);
+  final file = File('$path/CHANGELOG.md');
+  final original = file.readAsStringSync();
+  final updated = linkChangelog(original, release);
+  if (updated.changelog != original) file.writeAsStringSync(updated.changelog);
+  if (updated.draft.isNotEmpty) stdout.writeln(updated.draft);
 }
 
-String? _packageSection(PackageRelease release) => changelogSection(
-  _readFile('${release.directory}/CHANGELOG.md') ?? '',
-  release.version,
+Map<String, String> _remoteTags([String? tag]) => remoteTagCommits(
+  _run('git', [
+    'ls-remote',
+    '--tags',
+    'origin',
+    if (tag != null) ...['refs/tags/$tag', 'refs/tags/$tag^{}'],
+  ]),
 );
 
-Set<String> _dispatchPackages(String input) {
-  final packages = input.split(',').map((package) => package.trim()).toSet();
-  if (packages.any((package) => !releasePackages.contains(package))) {
-    throw FormatException(
-      'RELEASE_PACKAGES must name one or more of ${releasePackages.join(', ')}; got "$input".',
-    );
-  }
-  return packages;
-}
-
-String? _readAt(String commit, String path) =>
-    _run('git', ['ls-tree', commit, '--', path]).isEmpty
-    ? null
-    : _run('git', ['show', '$commit:$path']);
-
-String _versionCommit(PackageRelease release, String sha, String path) {
-  final history = _run('git', [
-    'log',
-    '--first-parent',
-    '--format=%H',
-    sha,
-    '--',
-    path,
-  ]);
-  String? target;
-  for (final commit in const LineSplitter().convert(history)) {
-    final manifest = _readAt(commit, path);
-    if (manifest == null || pubspecVersion(manifest) != release.version) break;
-    target = commit;
-  }
-  if (target == null) {
-    throw FormatException(
-      'Could not find the main commit that set ${release.title}.',
-    );
-  }
-  return target;
-}
-
-bool _hasCommit(String sha) =>
-    Process.runSync('git', ['cat-file', '-e', '$sha^{commit}']).exitCode == 0;
-
-String? _pushBaseline(String before, List<String> summary) {
-  if (!_shaPattern.hasMatch(before)) {
-    throw const FormatException(
-      'Expected RELEASE_BEFORE to be the previous commit SHA',
-    );
-  }
-  if (before != '0000000000000000000000000000000000000000') {
-    if (_hasCommit(before)) return before;
-    final fetch = Process.runSync('git', [
-      'fetch',
-      '--no-tags',
-      'origin',
-      before,
-    ]);
-    if (fetch.exitCode == 0 && _hasCommit(before)) return before;
-  }
-  summary.add(
-    'Could not resolve previous commit `$before`; checking every current package version.',
-  );
-  return null;
-}
-
-Map<String, String> _remoteTags() =>
-    remoteTagCommits(_run('git', ['ls-remote', '--tags', 'origin']));
-
-void _tagReleases() {
-  final sha = Platform.environment['GITHUB_SHA'];
-  if (sha == null || !_shaPattern.hasMatch(sha)) {
-    throw const FormatException('Expected GITHUB_SHA to be a commit SHA');
-  }
-  final before = Platform.environment['RELEASE_BEFORE'] ?? '';
-  final dispatch =
-      Platform.environment['GITHUB_EVENT_NAME'] == 'workflow_dispatch';
-  final summary = <String>[];
-  try {
-    final packages = dispatch
-        ? _dispatchPackages(Platform.environment['RELEASE_PACKAGES'] ?? '')
-        : releasePackages;
-    final baseline = dispatch ? null : _pushBaseline(before, summary);
-    final remoteTags = _remoteTags();
-    for (final release in _workspaceReleases(packages)) {
-      final path = '${release.directory}/pubspec.yaml';
-      final previous = baseline == null ? null : _readAt(baseline, path);
-      final target = dispatch ? _versionCommit(release, sha, path) : sha;
-      final plan = planTags(
-        release: release,
-        dispatch: dispatch,
-        previousVersion: previous == null ? null : pubspecVersion(previous),
-        section: changelogSection(
-          _readAt(target, '${release.directory}/CHANGELOG.md') ?? '',
-          release.version,
-        ),
-        remoteTags: remoteTags,
-        sha: target,
-        comparisonUnavailable: !dispatch && baseline == null,
+void _ensureMelosTag(String tag, String commit) {
+  void checkTarget(String existing) {
+    if (existing != commit) {
+      throw FormatException(
+        'Melos alias $tag points to $existing, not $commit; refusing to move it',
       );
-      String? publishingTag;
-      String? blockedBy;
-      for (final entry in plan) {
-        final tag = entry.tag;
-        if (entry.skip case final reason?) {
-          final message = 'Skipped `$tag`: $reason.';
-          if (entry.failed) {
-            stderr.writeln(message);
-            exitCode = 1;
-          }
-          summary.add(message);
-          continue;
-        }
-        if (blockedBy != null) {
-          summary.add('Skipped `$tag`: tagging was blocked by `$blockedBy`.');
-          continue;
-        }
-        try {
-          final create = Process.runSync('gh', [
-            'api',
-            'repos/{owner}/{repo}/git/refs',
-            '-f',
-            'ref=refs/tags/$tag',
-            '-f',
-            'sha=$target',
-          ]);
-          if (create.exitCode != 0) {
-            final existing = remoteTagCommits(
-              _run('git', [
-                'ls-remote',
-                '--tags',
-                'origin',
-                'refs/tags/$tag',
-                'refs/tags/$tag^{}',
-              ]),
-            )[tag];
-            if (existing != null) {
-              if (existing == target) {
-                summary.add('Skipped `$tag`: remote tag appeared at $target.');
-              } else {
-                summary.add(
-                  'Skipped `$tag`: remote tag appeared at $existing, not $target.',
-                );
-                blockedBy = tag;
-                exitCode = 1;
-              }
-              continue;
-            }
-            throw ProcessException(
-              'gh',
-              ['api', 'git/refs'],
-              '${create.stderr}',
-              create.exitCode,
-            );
-          }
-          summary.add('Tagged `$tag` at $target.');
-          if (entry.publish) publishingTag = tag;
-        } on Exception catch (error) {
-          stderr.writeln(error);
-          summary.add('Failed to tag `$tag`; see the job log.');
-          blockedBy = tag;
-          exitCode = 1;
-        }
-      }
-      if (publishingTag == null) continue;
-      if (blockedBy != null) {
-        summary.add(
-          'Did not dispatch `$publishingTag`: tagging was blocked by `$blockedBy`.',
-        );
-        continue;
-      }
-      try {
-        _run('gh', ['workflow', 'run', 'publish.yml', '--ref', publishingTag]);
-        summary.add('Dispatched publishing for `$publishingTag`.');
-      } on Exception catch (error) {
-        stderr.writeln(error);
-        summary.add('Failed to dispatch `$publishingTag`; see the job log.');
-        exitCode = 1;
-      }
     }
-  } finally {
-    final report = [
-      '### Release tags',
-      '',
-      ...summary.map((line) => '- $line'),
-    ].join('\n');
-    stdout.writeln(report);
-    if (Platform.environment['GITHUB_STEP_SUMMARY'] case final path?) {
-      File(path).writeAsStringSync('$report\n', mode: FileMode.append);
-    }
+    stdout.writeln('Melos alias $tag already points to $commit.');
   }
-}
 
-final _shaPattern = RegExp(r'^[a-f0-9]{40}$');
-
-void _createRelease(String tag) {
-  final matches = _workspaceReleases().where(
-    (release) => release.publishingTag == tag,
-  );
-  if (matches.isEmpty) {
-    throw FormatException('Not a publishing tag for this checkout: $tag');
-  }
-  final release = matches.single;
-  if (_releaseExists(tag)) {
-    stdout.writeln('Release $tag already exists; skipping.');
+  if (_remoteTags(tag)[tag] case final existing?) {
+    checkTarget(existing);
     return;
   }
-  final notes = releaseNotes(
-    custom: _readFile('.github/release-notes/$tag.md'),
-    section: _packageSection(release),
-    generate: () {
-      final previous = previousPublishingTag(release, _remoteTags().keys);
-      return _run('gh', [
-        'api',
-        'repos/{owner}/{repo}/releases/generate-notes',
-        '-f',
-        'tag_name=$tag',
-        if (previous != null) ...['-f', 'previous_tag_name=$previous'],
-        '--jq',
-        '.body',
-      ]);
-    },
-    release: release,
-  );
-  final temp = Directory.systemTemp.createTempSync('remix_release_');
   try {
-    final notesFile = File('${temp.path}/notes.md')..writeAsStringSync(notes);
-    try {
-      stdout.write(
-        _run('gh', [
-          'release',
-          'create',
-          tag,
-          '--verify-tag',
-          '--title',
-          release.title,
-          '--notes-file',
-          notesFile.path,
-          '--latest=${release.latest}',
-          if (release.prerelease) '--prerelease',
-        ]),
-      );
-    } on ProcessException {
-      if (!_releaseExists(tag)) rethrow;
-      stdout.writeln('Release $tag already exists; skipping.');
-    }
-  } finally {
-    temp.deleteSync(recursive: true);
+    _run('gh', [
+      'api',
+      'repos/{owner}/{repo}/git/refs',
+      '-f',
+      'ref=refs/tags/$tag',
+      '-f',
+      'sha=$commit',
+    ]);
+    stdout.writeln('Created Melos alias $tag at $commit.');
+  } on ProcessException {
+    final existing = _remoteTags(tag)[tag];
+    if (existing == null) rethrow;
+    checkTarget(existing);
+  }
+}
+
+void _finalizeRelease(PackageRelease release) {
+  final tag = release.publishingTag;
+  if (release.melosTag case final alias?) {
+    _ensureMelosTag(alias, _taggedCommit(tag));
+  }
+  if (_releaseExists(tag)) {
+    stdout.writeln('Release $tag already exists; leaving it unchanged.');
+    return;
+  }
+  final previous = previousPublishingTag(release, _remoteTags().keys);
+  final generated = _run('gh', [
+    'api',
+    'repos/{owner}/{repo}/releases/generate-notes',
+    '-f',
+    'tag_name=$tag',
+    if (previous != null) ...['-f', 'previous_tag_name=$previous'],
+    '--jq',
+    '.body',
+  ]).trimRight();
+  final notes = [
+    if (generated.isNotEmpty) generated,
+    '[View on pub.dev](${release.pubLink})',
+  ].join('\n\n');
+  try {
+    stdout.write(
+      _run('gh', [
+        'release',
+        'create',
+        tag,
+        '--verify-tag',
+        '--title',
+        release.title,
+        '--notes',
+        notes,
+        release.latest ? '--latest' : '--latest=false',
+        if (release.prerelease) '--prerelease',
+      ]),
+    );
+  } on ProcessException {
+    if (!_releaseExists(tag)) rethrow;
+    stdout.writeln('Release $tag already exists; leaving it unchanged.');
   }
 }
 

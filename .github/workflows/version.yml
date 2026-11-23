@@ -1,9 +1,8 @@
 name: Prepare Version Bump
 
-# Pushes a branch that sets Remix to one explicit version and writes its
-# changelog from conventional commits. After the reviewed PR merges, Tag
-# releases creates the tags and dispatches publishing. registry_source is the
-# unpublished authoring source and is deliberately outside this workflow.
+# Pushes a branch that sets Remix to one explicit version and links its changelog
+# to the upcoming GitHub Release. The summary drafts notes from conventional
+# commits. registry_source is private and deliberately outside this workflow.
 #
 # It pushes a branch and prints its compare link rather than opening the pull
 # request itself. Opening one from a workflow needs "Allow GitHub Actions to
@@ -102,6 +101,10 @@ jobs:
 
           dart run tool/check_version_alignment.dart --expect-remix "$version"
 
+          if ! git diff --quiet HEAD -- packages/remix/pubspec.yaml; then
+            dart run tool/release_packages.dart link-changelog remix > "$RUNNER_TEMP/remix-release-notes.md"
+          fi
+
           # The remote registry.yaml is data, not a pubspec, so melos never
           # reaches it and its `remix: ^<floor>` would keep pointing at the
           # previous release.
@@ -146,16 +149,20 @@ jobs:
             echo
             echo "Remix is on \`$REMIX_VERSION\`."
             echo
-            echo 'After merging, **Tag releases** creates both tags automatically:'
+            echo '1. Review and merge the version-bump PR to `main`.'
+            printf '2. Draft a GitHub Release with a new `v%s` tag targeting the reviewed commit on `main`.\n' "$REMIX_VERSION"
+            echo '3. Write the notes in the Release, tick **Set as a pre-release** if needed, and publish it.'
+            echo '4. The tag push starts **Publish to pub.dev**. Approve the environment gate if prompted.'
+            printf '5. After pub.dev publishing succeeds, CI adds the `remix-v%s` Melos alias.\n' "$REMIX_VERSION"
             echo
-            printf '1. `v%s` — publishes **remix**.\n' "$REMIX_VERSION"
-            printf '2. `remix-v%s` — publishes nothing. melos\n' "$REMIX_VERSION"
-            echo '   reads it to derive the next release changelog.'
-            echo
-            echo 'Publishing requires **Enable publishing from workflow_dispatch events**'
-            echo 'in pub.dev → Admin → Automated publishing. After publication, CI'
-            printf 'creates a GitHub Release (optional notes: `.github/release-notes/v%s.md`).\n' "$REMIX_VERSION"
-            echo 'For manual recovery, see `open_code/RELEASING.md`. Never `git push --tags`.'
+            echo 'If publishing fails, fix the cause and re-run the failed jobs. Never move the tag.'
+            echo 'See `open_code/RELEASING.md` for recovery. Never `git push --tags`.'
+            if [[ -s "$RUNNER_TEMP/remix-release-notes.md" ]]; then
+              echo
+              echo '### Draft GitHub Release notes'
+              echo
+              cat "$RUNNER_TEMP/remix-release-notes.md"
+            fi
             echo
             echo "### CI on this branch"
             echo
@@ -175,7 +182,8 @@ jobs:
             echo 'release. To release it, in its own pull request: bump'
             echo '`packages/remix_cli/pubspec.yaml`,'
             echo '`packages/remix_cli/lib/src/version.dart`, and its CHANGELOG'
-            echo 'to the same version, run `dart run tool/sync_install_pins.dart`,'
-            echo 'then merge to let CI create `remix_cli-v<version>`.'
+            echo 'to the same version. Run `dart run tool/release_packages.dart link-changelog remix_cli`'
+            echo 'and `dart run tool/sync_install_pins.dart`. After merging, publish a GitHub Release'
+            echo 'from the new `remix_cli-v<version>` tag on `main`.'
           } >> "$GITHUB_STEP_SUMMARY"
           echo "Open the pull request: $url"

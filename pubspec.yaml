@@ -302,7 +302,7 @@ melos:
 
     release:test:
       run: dart test test/tool/release_packages_test.dart
-      description: Verify release tag planning and notes
+      description: Verify publishing tag validation, changelogs, and GitHub Releases
 
     ci:codegen:
       steps:

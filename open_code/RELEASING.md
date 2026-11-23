@@ -2,8 +2,8 @@
 
 Use the reviewed merge commit as the candidate. Do not infer publication from
 checkout version numbers. Runtime package publication, registry publication,
-and CLI publication have separate gates. GitHub Actions creates package tags
-and Releases; the registry builder does not.
+and CLI publication have separate gates. Publish a GitHub Release to start
+package publication; the registry builder does not publish packages.
 
 When adding a preset, follow [Adding a first-party preset](ADDING_PRESETS.md).
 Extend `open-code:release:check` in the root pubspec, the promotion workflow's
@@ -36,9 +36,8 @@ Five packages publish from this monorepo and are **versioned independently**:
 `registry_source/` is private authoring source and is never published as a
 package.
 
-Merging the release PR to `main` starts **Tag releases**, which creates the
-tags and dispatches **Publish to pub.dev**. Read package diffs since the last
-release, not just commit subjects. Apply semantic versioning:
+Merge the release PR to `main` before publishing its GitHub Release. Read
+package diffs since the last release, not just commit subjects. Apply semantic versioning:
 incompatible public API/config changes are major, added API minor, and
 fixes/internal/docs changes patch.
 
@@ -47,8 +46,9 @@ fixes/internal/docs changes patch.
 **Always, for any package:**
 
 - `packages/<pkg>/pubspec.yaml` — `version:`
-- `packages/<pkg>/CHANGELOG.md` — a new top entry, matching the surrounding
-  style (`## <version>` then `### Fixes` / `### Features` bullets)
+- `packages/<pkg>/CHANGELOG.md` — a new top entry with `## <version>` followed
+  only by `See the [release notes](https://github.com/btwld/remix/releases/tag/<tag>).`
+  Keep older entries as they are. Write the release notes in the GitHub Release.
 - install pins in user-facing docs and skill evals — run
   `dart run tool/sync_install_pins.dart`, which rewrites the files
   `tool/install_pins.dart` lists. The READMEs ship inside the package
@@ -84,9 +84,9 @@ behavior tests and its own specification; there is no external parity pin.
   leaves the old caret range, also move the melos shared constraint and every
   workspace pubspec that declares it.
 - The package is generated. Change `packages/remix_ui_icons/tool/icons/manifest.yaml`
-  or the `design/icons` masters, run `dart run melos run icons:generate`, and
-  fill in the CHANGELOG entry around its generated block. The `since:` of a new
-  concept is the new version.
+  or the `design/icons` masters and run `dart run melos run icons:generate`.
+  Leave the generated blocks in the existing `1.0.0-beta.1` changelog entry;
+  draft new release notes separately. The `since:` of a new concept is the new version.
 - Follow the maintainer policy in `packages/remix_ui_icons/tool/icons/README.md`:
   a new icon, family, master, or redraw is minor; a removal is major; a codepoint
   never changes. For removals, `packages/remix_ui_icons/tool/icons/check.py`
@@ -102,8 +102,9 @@ behavior tests and its own specification; there is no external parity pin.
 
 **`remix` only:** prefer the **Prepare Version Bump** workflow
 (`.github/workflows/version.yml`, `workflow_dispatch`, takes an exact version).
-It runs `melos version` and verifies that `packages/remix/pubspec.yaml`
-matches the request before syncing floors. It then runs
+It runs `melos version`, verifies that `packages/remix/pubspec.yaml`
+matches the request, and replaces the new changelog body with the Release link.
+The workflow summary contains the original body as a draft for the Release. It then runs
 `tool/sync_registry_remix.dart` and
 `tool/build_registry.dart`, because the remote `registry.yaml` floor
 (`remix: ^<version>`) is data melos never reaches. It pushes
@@ -121,27 +122,21 @@ Keep compatible caret constraints unless the consumer needs a newer release.
 If raising a floor, publish the dependency first. Runtime or registry-only
 changes do not require a `remix_cli` version bump.
 
+For hand-made bumps (`remix_cli`, `naked_ui`, `remix_ui_icons`, and
+`remix_ui_fonts`), write the notes under the new `## <version>` heading, then
+run `dart run tool/release_packages.dart link-changelog <package>` after the
+pubspec bump. Save its output as the draft GitHub Release notes; the command
+replaces only the selected version's body with the link. You can also write
+the link-only entry directly and draft the notes in GitHub.
+
 Run `dart run melos run ci:checks` before pushing, use a focused release branch
-with Conventional Commit title `chore(release): <pkg> <version>`, and merge the
-reviewed PR to start the release.
+with Conventional Commit title `chore(release): <pkg> <version>`, and merge it
+after review.
 
 ### Tag patterns after merge
 
-**Tag releases** creates missing tags at the merge SHA when a package's version
-changed in the push. For a version bump, a conflicting remote tag or a missing
-`## <version>` changelog heading for a new tag fails the workflow with an
-explanation. Existing tags are never moved. The Remix pair is checked together,
-and the Melos alias is created first so an alias failure cannot strand a new
-publishing tag. If the previous push SHA cannot be recovered, the workflow
-checks every current version and leaves complete sets of existing tags alone.
-Tags created with `GITHUB_TOKEN` do not trigger a push workflow, so automation
-dispatches **Publish to pub.dev** on each newly created publishing tag.
-Existing CLI consumer checks and the `Production` environment gate still apply.
-
-**Before the next release**, for each package, open pub.dev → **Admin** →
-**Automated publishing** and tick **Enable publishing from workflow_dispatch events**.
-Without it, a dispatched publish fails OIDC authentication. Each package's tag
-pattern must also match its pub.dev configuration:
+Choose a publishing tag that matches the package's pub.dev automated
+publishing configuration:
 
 | Package | Tag |
 | --- | --- |
@@ -151,9 +146,9 @@ pattern must also match its pub.dev configuration:
 | `remix_ui_icons` | `remix_ui_icons-v<version>` |
 | `remix_ui_fonts` | `remix_ui_fonts-v<version>` |
 
-- `remix-v<version>` publishes **nothing** — `melos version` reads it to derive
-  the next changelog. A remix release wants both `v<version>` (publishes) and
-  `remix-v<version>` (melos reads).
+- `remix-v<version>` publishes **nothing**. After Remix publishes to pub.dev,
+  CI creates this alias at the same commit so `melos version` can find the last
+  release. If the alias exists at another commit, CI fails without moving it.
 - On the first monorepo release, check that `naked_ui` moved from its former
   repo/bare `v<version>` pattern to `naked_ui-v{{version}}` in pub.dev
   automated publishing.
@@ -164,32 +159,31 @@ pattern must also match its pub.dev configuration:
 
 ### GitHub Releases and notes
 
-After publication succeeds, **Publish to pub.dev** creates a GitHub Release
-on the publishing tag (never `remix-v<version>`). To override the notes, include
-`.github/release-notes/<tag>.md` in the release PR, for example
-`.github/release-notes/v1.0.0.md` for Remix. Otherwise, the workflow uses the
-version's changelog section, or GitHub's generated notes if the section is
-empty or only links elsewhere. Generated notes use the highest earlier version
-tag for the same package, if one exists. The workflow appends the version's pub.dev
-link. A version with a prerelease suffix is marked as a prerelease, and only
-stable Remix releases are marked latest. An existing GitHub Release is left alone.
+1. Merge the version-bump PR to `main` and confirm the intended release commit.
+2. On GitHub, open **Releases → Draft a new release**. Choose a **new** publishing
+   tag from the table above, targeting the reviewed commit on `main`. For Remix,
+   use `v<version>`, not `remix-v<version>`.
+3. Write and review the notes in the Release. Tick **Set as a pre-release** for a
+   version with a prerelease suffix. Mark only a stable Remix Release as latest.
+   Publish the Release when ready; saving a draft does not start publishing.
+4. Publishing the Release creates the tag. Its tag push starts **Publish to pub.dev**.
+   The workflow checks the tag format, pubspec version, changelog heading, and
+   ancestry on `main` before the publishing gate. For the CLI, consumer checks
+   also run before publishing. Approve the `Production` gate when prompted.
+
+CI leaves an existing Release and its notes unchanged. If a publishing tag was
+pushed by hand and has no Release, CI creates one after pub.dev publication. It
+generates notes from the highest earlier publishing tag of the same package
+when available, adds the version's pub.dev link, and applies the prerelease and
+latest rules above.
 
 ### Manual recovery
 
-Check the **Tag releases** summary first. To backfill a missing tag, dispatch
-**Tag releases** on `main` with the `packages` input set to the package name or
-a comma-separated list, for example `remix,remix_cli`. For each selected
-package, the workflow finds the commit on `main` that last changed its current
-pubspec version, checks the changelog at that commit, and tags that commit
-instead of the current head. Select only versions that still need publishing;
-dispatching **Publish to pub.dev** requires the workflow to support dispatch
-at the tagged commit.
-
-If a publishing tag exists at the intended commit but publishing was not
-dispatched, fix the reported issue first and, for Remix, confirm both tags
-point to that commit. Then run `gh workflow run publish.yml --ref '<publishing-tag>'`
-if the version is not already published. If only GitHub Release creation failed,
-rerun the failed job instead of republishing.
+The GitHub Release can be public before the package is on pub.dev. If publishing
+fails, find **Publish to pub.dev** for the tag, fix the cause, and select **Re-run
+failed jobs**. If only finalization failed, retry it without republishing. Never
+move or delete a public tag. If the fix requires changing the tagged source,
+prepare a new version and Release instead of retrying with a moved tag.
 
 A hand-pushed publishing tag still runs **Publish to pub.dev** and creates a
 GitHub Release after publishing. Use this fallback only for a missing tag and
@@ -219,8 +213,8 @@ git ls-remote https://github.com/btwld/remix.git \
 
 - **Present on GitHub at the reviewed commit:** it is already pushed. Don't
   push it again.
-- **Present on GitHub at any other commit:** stop. Moving a public tag needs an
-  explicit decision from Leo; never force or delete it.
+- **Present on GitHub at any other commit:** stop and ask Leo. Never move or
+  delete a public tag.
 
 Then push that one ref:
 
@@ -309,12 +303,12 @@ Before creating an app, the preflight checks every runtime, generator, and icon
 library floor on pub.dev. A missing Remix floor prints:
 
 ```text
-remix ^X is not on pub.dev yet; check Tag releases for vX (see Manual recovery in open_code/RELEASING.md), wait for the Publish workflow, then re-run Promote registry
+remix ^X is not on pub.dev yet; publish a GitHub Release with tag vX, wait for the Publish workflow, then re-run Promote registry
 ```
 
 If a floor is missing, the run fails within seconds and does not advance
-`registry-stable`. For a Remix-owned package, check **Tag releases** and wait
-for **Publish to pub.dev** to make that version available. Use the manual
+`registry-stable`. For a Remix-owned package, publish its GitHub Release and
+wait for **Publish to pub.dev** to make that version available. Use the manual
 recovery steps if needed. For an upstream dependency, wait for its publisher
 or revise the candidate.
 
@@ -345,9 +339,9 @@ with released CLI versions.
 ## Release checklist and log
 
 1. **Merge** the reviewed release PR to `main`. Record the maintainer, merge
-   SHA, and UTC time. For a package bump, confirm **Tag releases** created the
-   expected tags and **Publish to pub.dev** produced the pub.dev version and
-   its GitHub Release.
+   SHA, and UTC time. For a package bump, publish the GitHub Release from the
+   reviewed commit. Confirm **Publish to pub.dev** produced the pub.dev version
+   and, for Remix, created the matching Melos alias.
 2. **Promote.** Match the **Promote registry** run to the intended merge SHA
    and verify that `Promote registry-stable` succeeded and the branch points to
    that SHA. Record the run link, previous and new SHAs, and outcome; for a

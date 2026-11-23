@@ -21,8 +21,8 @@ name: Publish to pub.dev
 #
 # Separately, `melos version` derives each package's last release from its
 # `<package>-v*` tag. So a remix release wants both tags: `v<version>` is what
-# publishes, `remix-v<version>` is what melos reads. Only the bare tag can
-# publish, either by a tag push or by a dispatch from Tag releases.
+# publishes, `remix-v<version>` is what melos reads. The bare tag starts
+# publishing; the post-publish job adds the Melos alias.
 #
 # remix_cli, remix_ui_icons, remix_ui_fonts, and naked_ui are versioned
 # independently from Remix.
@@ -42,13 +42,27 @@ on:
       - 'remix_ui_fonts-v[0-9]+.[0-9]+.[0-9]+*'
       - 'naked_ui-v[0-9]+.[0-9]+.[0-9]+*'
       - 'v[0-9]+.[0-9]+.[0-9]+*'
-  workflow_dispatch:
 
 # Match the SDK used by version preparation and local validation. Floating to
 # latest stable can fail before package resolution even when the release passed CI.
 jobs:
+  validate:
+    if: github.ref_type == 'tag' && !github.event.deleted
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+      - name: Validate publishing tag
+        run: dart run tool/release_packages.dart validate "$GITHUB_REF_NAME"
+
   verify-cli-consumers:
-    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/remix_cli-v')
+    if: startsWith(github.ref, 'refs/tags/remix_cli-v')
+    needs: validate
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -67,7 +81,8 @@ jobs:
 
   publish-remix:
     # Bare `v*` only; package-prefixed tags do not start with `refs/tags/v`.
-    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: validate
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -78,7 +93,8 @@ jobs:
       contents: read
 
   publish-remix-ui-icons:
-    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/remix_ui_icons-v')
+    if: startsWith(github.ref, 'refs/tags/remix_ui_icons-v')
+    needs: validate
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -89,7 +105,8 @@ jobs:
       contents: read
 
   publish-remix-ui-fonts:
-    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/remix_ui_fonts-v')
+    if: startsWith(github.ref, 'refs/tags/remix_ui_fonts-v')
+    needs: validate
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -100,8 +117,8 @@ jobs:
       contents: read
 
   publish-remix-cli:
-    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/remix_cli-v')
-    needs: verify-cli-consumers
+    if: startsWith(github.ref, 'refs/tags/remix_cli-v')
+    needs: [validate, verify-cli-consumers]
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -112,7 +129,8 @@ jobs:
       contents: read
 
   publish-naked-ui:
-    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/naked_ui-v')
+    if: startsWith(github.ref, 'refs/tags/naked_ui-v')
+    needs: validate
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -130,7 +148,7 @@ jobs:
       - publish-remix-cli
       - publish-naked-ui
     if: >-
-      !cancelled() && github.ref_type == 'tag' &&
+      !cancelled() &&
       contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
     permissions:
@@ -139,13 +157,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          flutter-version-file: .fvmrc
-          cache: true
-      - run: flutter pub get
-      - name: Create GitHub Release
+      - uses: ./.github/actions/setup-workspace
+      - name: Finalize GitHub Release and Melos alias
         env:
           GH_TOKEN: ${{ github.token }}
         run: dart run tool/release_packages.dart release "$GITHUB_REF_NAME"
