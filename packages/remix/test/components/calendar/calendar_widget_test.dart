@@ -313,6 +313,57 @@ void main() {
     );
   }
 
+  testWidgets('calendar day exits a root hover variant on reverse timing', (
+    tester,
+  ) async {
+    const idle = Color(0xffff0000);
+    const hovered = Color(0xff0000ff);
+    const enter = Duration(milliseconds: 100);
+    const halfExit = Duration(milliseconds: 150);
+    await tester.pumpWidget(
+      _host(
+        _calendar(
+          style: CalendarStyler()
+              .day(CalendarDayStyler().color(idle))
+              .animate(.linear(const Duration(milliseconds: 600)))
+              .onHovered(
+                CalendarStyler()
+                    .day(CalendarDayStyler().color(hovered))
+                    .animate(
+                      .reversible(
+                        .linear(enter),
+                        reverse: .linear(halfExit * 2),
+                      ),
+                    ),
+              ),
+        ),
+      ),
+    );
+    final day = find.byWidgetPredicate(
+      (widget) =>
+          widget is NakedCalendarDay && widget.date == DateTime(2024, 2, 13),
+    );
+    final box = find.descendant(of: day, matching: find.byType(Box)).first;
+    Color? dayColor() =>
+        (tester.widget<Box>(box).styleSpec?.spec.decoration as BoxDecoration?)
+            ?.color;
+
+    expect(dayColor(), idle);
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: tester.getCenter(box));
+    await tester.pump();
+    await tester.pump(enter);
+    expect(dayColor(), hovered);
+
+    await mouse.moveTo(Offset.zero);
+    await tester.pump();
+    await tester.pump(halfExit);
+    expect(dayColor(), Color.lerp(hovered, idle, .5));
+    await tester.pump(halfExit);
+    expect(dayColor(), idle);
+    await mouse.removePointer();
+  });
+
   group('layout defaults are style values', () {
     Finder day(int value) => find.byWidgetPredicate(
       (w) => w is NakedCalendarDay && w.date.day == value,

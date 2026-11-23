@@ -8,27 +8,36 @@ import 'package:mix/mix.dart' as mix show AnimationConfig;
 @internal
 mix.AnimationConfig? remixChildAnimation<S extends Spec<S>>(
   mix.AnimationConfig? config,
-) => switch (config) {
-  CurveAnimationConfig() => CurveAnimationConfig(
-    duration: config.duration,
-    curve: config.curve,
-    delay: config.delay,
-  ),
-  SpringAnimationConfig() => SpringAnimationConfig(spring: config.spring),
-  PhaseAnimationConfig<S, Style<S>>() => PhaseAnimationConfig<S, Style<S>>(
-    styles: config.styles,
-    curveConfigs: [
-      for (final curve in config.curveConfigs)
-        CurveAnimationConfig(
-          duration: curve.duration,
-          curve: curve.curve,
-          delay: curve.delay,
-        ),
-    ],
-    trigger: config.trigger,
-  ),
-  _ => config,
-};
+) {
+  if (config == null) return null;
+
+  final mix.AnimationConfig stripped = switch (config) {
+    CurveAnimationConfig() => CurveAnimationConfig(
+      duration: config.duration,
+      curve: config.curve,
+      delay: config.delay,
+    ),
+    SpringAnimationConfig() => SpringAnimationConfig(spring: config.spring),
+    PhaseAnimationConfig<S, Style<S>>() => PhaseAnimationConfig<S, Style<S>>(
+      styles: config.styles,
+      curveConfigs: [
+        for (final curve in config.curveConfigs)
+          CurveAnimationConfig(
+            duration: curve.duration,
+            curve: curve.curve,
+            delay: curve.delay,
+          ),
+      ],
+      trigger: config.trigger,
+    ),
+    _ => config,
+  };
+  final reverse = remixChildAnimation<S>(mix.AnimationConfig.reverseOf(config));
+
+  return reverse == null
+      ? stripped
+      : mix.AnimationConfig.reversible(stripped, reverse: reverse);
+}
 
 /// Applies resolved Remix text and icon specs as inherited defaults for
 /// arbitrary component content.

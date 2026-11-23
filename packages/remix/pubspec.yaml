@@ -15,7 +15,7 @@ topics:
 
 version: 1.0.0-rc.6
 
-# Consumer floor, matching `mix` 2.3.1, the oldest Mix this package accepts.
+# Consumer floor, matching `mix` 2.5.0, the oldest Mix this package accepts.
 # Enforced by tool/check_toolchain.dart.
 environment:
   sdk: ">=3.12.0 <4.0.0"
@@ -24,7 +24,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mix: ^2.3.1
+  mix: ^2.5.0
   mix_annotations: ^2.2.0-beta.1
   naked_ui: ^2.0.0-rc.3
 

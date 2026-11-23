@@ -92,6 +92,50 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('range thumb exits a root hover variant on reverse timing', (
+    tester,
+  ) async {
+    const enter = Duration(milliseconds: 100);
+    const halfExit = Duration(milliseconds: 150);
+    final style = SliderStyler()
+        .thumbSize(const Size(20, 20))
+        .thumbColor(red)
+        .animate(.linear(const Duration(milliseconds: 600)))
+        .onHovered(
+          SliderStyler()
+              .thumbColor(blue)
+              .animate(
+                .reversible(.linear(enter), reverse: .linear(halfExit * 2)),
+              ),
+        );
+    await tester.pumpWidget(
+      host(
+        RemixRangeSlider(
+          values: const [.25, .75],
+          onChanged: (_) {},
+          style: style,
+        ),
+      ),
+    );
+
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: Offset.zero);
+    await mouse.moveTo(tester.getCenter(thumb(0)));
+    await tester.pump();
+    await tester.pump(enter);
+    expect(color(tester, 0), blue);
+    expect(color(tester, 1), red);
+
+    await mouse.moveTo(Offset.zero);
+    await tester.pump();
+    await tester.pump(halfExit);
+    expect(color(tester, 0), Color.lerp(blue, red, .5));
+    expect(color(tester, 1), red);
+    await tester.pump(halfExit);
+    expect(color(tester, 0), red);
+    await mouse.removePointer();
+  });
+
   testWidgets('public example runs in a widgets-only host', (t) async {
     await t.pumpWidget(host(const example.RangeSliderExample()));
     expect(find.byType(RemixRangeSlider), findsOneWidget);
