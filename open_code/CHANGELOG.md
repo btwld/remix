@@ -9,7 +9,8 @@ changes, see the [Remix changelog](../packages/remix/CHANGELOG.md) and the
 Promoted to `registry-stable` on November 21, 2026. This entry covers registry
 changes since Remix `1.0.0-rc.5`, through the shared sidebar rollout in all three
 presets. The corresponding published packages are `remix` `1.0.0-rc.6` and
-`remix_cli` `1.0.0-rc.2`.
+`remix_cli` `1.0.0-rc.2`. Later promotions that do not change installable
+source, such as `16c3bdf3`, have no separate entry.
 
 ### Breaking Changes
 
@@ -32,6 +33,7 @@ prefix. Installed source belongs to the app and is not rewritten by repinning.
 | HeroUI | `HeroUiComboboxVariant` | Use `HeroUiTextFieldVariant`. (#511) |
 | HeroUI | `HeroUiSwitchGroup.items` and `items:` | Use `options` and `options:`. (#511) |
 | HeroUI | `HeroUiFieldLayout.axis` and `axis:` | Use `orientation` and `orientation:`. (#511) |
+| All | Finding the inner widget of a generated adapter with `find.byKey` | The widget key now stays on the adapter only. Use a descendant finder, such as `find.descendant(of: find.byKey(key), matching: find.byType(RemixButton))`. (#532) |
 | Vanilla, Fortal | Treating `VanillaSearchField` or `FortalSearchField` as a `StatefulWidget` | Accept a `Widget` instead: the search field is now a `StatelessWidget`. Its constructors are unchanged; pass a `TextEditingController` or `FocusNode` to control the editor. (#497) |
 
 With `remix_cli` 1.0.0-rc.2, `remix add` stops before writing if a replacement
@@ -74,9 +76,10 @@ if replacing both HeroUI items. Then reapply your edits. (#517, #535)
 - HeroUI theme dependents, including nested dark scopes, pick up color changes
   when the host edits the same `HeroUiThemeData.colors` map and rebuilds. (#514)
 - In Vanilla and Fortal search fields, an Escape press that starts during active
-  composition stays with the input method through release. A fresh Escape in a
-  read-only field can dismiss its dialog; in Vanilla a collapsed composing range
-  no longer prevents Escape from clearing an editable, nonempty query. (#497)
+  composition in an editable field stays with the input method through release.
+  A fresh Escape in a read-only or empty field can dismiss an enclosing dialog;
+  in Vanilla a collapsed composing range no longer prevents Escape from
+  clearing an editable, nonempty query. (#497)
 - A custom prefix changes recipe identifiers, IDs, and marked code references
   without changing paths or brand prose such as “Fortal-inspired”. Dependencies
   from every branch of a conditional import or export are included, not just
