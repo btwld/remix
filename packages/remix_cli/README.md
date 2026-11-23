@@ -501,7 +501,10 @@ CLI names the package and the section to move it to rather than editing your
 
 If generation or analysis fails after installation, the authored source stays
 in place for inspection. Generation failures can come from any configured
-builder, not just Mix. Fix the reported issue and rerun the same command.
+builder, not just Mix. After fixing a builder issue, run
+`dart run build_runner build` from the application root before retrying
+`remix add`: the retry can skip generation if the adapters already exist.
+For an analysis failure, fix the reported issue and rerun the same command.
 
 ## Install agent skills
 
