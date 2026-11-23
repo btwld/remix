@@ -1,3 +1,15 @@
+## 2.0.0-rc.4
+
+### Fixes
+
+- Clear pressed state immediately when `NakedButton`, `NakedAccordion`, or
+  `NakedDisclosure` becomes non-interactive: when disabled, when neither
+  `onPressed` nor `onLongPress` remains on a button, or when a controlled
+  disclosure loses `onExpandedChanged`. Defer `onPressChange(false)` until
+  after the frame so callbacks can safely update parent state. Skip the
+  notification if the control is removed, becomes interactive again, or is
+  pressed again.
+
 ## 2.0.0-rc.3
 
 ### Features
