@@ -288,6 +288,7 @@ melos:
         - toolchain:check
         - constraints:check
         - analyze
+        - release:test
         - version:align:check
         - mix:consumer:check
         - material:check
@@ -298,6 +299,10 @@ melos:
         - vanilla:scale:check
       description: >-
         Every cheap contract checker; seconds in total, so they share one job
+
+    release:test:
+      run: dart test test/tool/release_packages_test.dart
+      description: Verify release tag planning and notes
 
     ci:codegen:
       steps:

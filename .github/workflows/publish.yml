@@ -5,7 +5,7 @@ name: Publish to pub.dev
 #
 # THE FIVE PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
 # choice — it is each package's "Automated publishing" tag pattern on pub.dev,
-# and the OIDC token is rejected if the pushed tag does not match:
+# and the OIDC token is rejected if the publishing tag does not match:
 #
 #   remix          ->  v<version>               (bare, e.g. v1.0.0-beta.5)
 #   remix_ui_icons ->  remix_ui_icons-v<version>
@@ -19,16 +19,10 @@ name: Publish to pub.dev
 # `naked_ui-v{{version}}` before the first release from this monorepo; until
 # that is done the job below authenticates against the old pattern and fails.
 #
-# Pushing `remix-v<version>` therefore does NOT publish remix. It fails
-# authentication with "this token has 'refs/tags/remix-v...' ref for which
-# publishing is not allowed. Expected tag 'v...'". That prefix is deliberately
-# absent from the triggers below so the mistake cannot start a doomed run.
-# Aligning the two would mean changing remix's tag pattern on pub.dev first.
-#
 # Separately, `melos version` derives each package's last release from its
 # `<package>-v*` tag. So a remix release wants both tags: `v<version>` is what
-# publishes, `remix-v<version>` is what melos reads. Only the first triggers
-# this workflow.
+# publishes, `remix-v<version>` is what melos reads. Only the bare tag can
+# publish, either by a tag push or by a dispatch from Tag releases.
 #
 # remix_cli, remix_ui_icons, remix_ui_fonts, and naked_ui are versioned
 # independently from Remix.
@@ -48,12 +42,13 @@ on:
       - 'remix_ui_fonts-v[0-9]+.[0-9]+.[0-9]+*'
       - 'naked_ui-v[0-9]+.[0-9]+.[0-9]+*'
       - 'v[0-9]+.[0-9]+.[0-9]+*'
+  workflow_dispatch:
 
 # Match the SDK used by version preparation and local validation. Floating to
 # latest stable can fail before package resolution even when the release passed CI.
 jobs:
   verify-cli-consumers:
-    if: startsWith(github.ref, 'refs/tags/remix_cli-v')
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/remix_cli-v')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -72,7 +67,7 @@ jobs:
 
   publish-remix:
     # Bare `v*` only; package-prefixed tags do not start with `refs/tags/v`.
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v')
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -83,7 +78,7 @@ jobs:
       contents: read
 
   publish-remix-ui-icons:
-    if: startsWith(github.ref, 'refs/tags/remix_ui_icons-v')
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/remix_ui_icons-v')
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -94,7 +89,7 @@ jobs:
       contents: read
 
   publish-remix-ui-fonts:
-    if: startsWith(github.ref, 'refs/tags/remix_ui_fonts-v')
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/remix_ui_fonts-v')
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -105,7 +100,7 @@ jobs:
       contents: read
 
   publish-remix-cli:
-    if: startsWith(github.ref, 'refs/tags/remix_cli-v')
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/remix_cli-v')
     needs: verify-cli-consumers
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
@@ -117,7 +112,7 @@ jobs:
       contents: read
 
   publish-naked-ui:
-    if: startsWith(github.ref, 'refs/tags/naked_ui-v')
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/naked_ui-v')
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -126,3 +121,31 @@ jobs:
     permissions:
       id-token: write
       contents: read
+
+  github-release:
+    needs:
+      - publish-remix
+      - publish-remix-ui-icons
+      - publish-remix-ui-fonts
+      - publish-remix-cli
+      - publish-naked-ui
+    if: >-
+      !cancelled() && github.ref_type == 'tag' &&
+      contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: .fvmrc
+          cache: true
+      - run: flutter pub get
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: dart run tool/release_packages.dart release "$GITHUB_REF_NAME"

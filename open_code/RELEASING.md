@@ -2,8 +2,8 @@
 
 Use the reviewed merge commit as the candidate. Do not infer publication from
 checkout version numbers. Runtime package publication, registry publication,
-and CLI publication have separate gates. Publishing tags/releases is a release
-operator action, not something the builder performs.
+and CLI publication have separate gates. GitHub Actions creates package tags
+and Releases; the registry builder does not.
 
 When adding a preset, follow [Adding a first-party preset](ADDING_PRESETS.md).
 Extend `open-code:release:check` in the root pubspec, the promotion workflow's
@@ -36,9 +36,9 @@ Five packages publish from this monorepo and are **versioned independently**:
 `registry_source/` is private authoring source and is never published as a
 package.
 
-Publishing is tag-triggered. A version bump never publishes anything on its
-own — merging the release PR and then pushing the tag does. Read package diffs
-since the last release, not just commit subjects. Apply semantic versioning:
+Merging the release PR to `main` starts **Tag releases**, which creates the
+tags and dispatches **Publish to pub.dev**. Read package diffs since the last
+release, not just commit subjects. Apply semantic versioning:
 incompatible public API/config changes are major, added API minor, and
 fixes/internal/docs changes patch.
 
@@ -123,13 +123,21 @@ changes do not require a `remix_cli` version bump.
 
 Run `dart run melos run ci:checks` before pushing, use a focused release branch
 with Conventional Commit title `chore(release): <pkg> <version>`, and merge the
-reviewed PR before tagging its release commit.
+reviewed PR to start the release.
 
 ### Tag patterns after merge
 
-Publishing (`.github/workflows/publish.yml`) fires on a tag push, and **each
-package has its own tag pattern**, matched against its pub.dev "Automated
-publishing" configuration. A mismatched tag fails OIDC auth.
+**Tag releases** creates missing tags at the merge SHA when the package's
+version changed in the push and its changelog has a `## <version>` heading. It
+reports and skips existing remote tags, including tags at a different commit.
+Tags created with `GITHUB_TOKEN` do not trigger a push workflow, so automation
+dispatches **Publish to pub.dev** on each newly created publishing tag.
+Existing CLI consumer checks and the `Production` environment gate still apply.
+
+**Before the next release**, for each package, open pub.dev → **Admin** →
+**Automated publishing** and tick **Enable publishing from workflow_dispatch events**.
+Without it, a dispatched publish fails OIDC authentication. Each package's tag
+pattern must also match its pub.dev configuration:
 
 | Package | Tag |
 | --- | --- |
@@ -139,9 +147,6 @@ publishing" configuration. A mismatched tag fails OIDC auth.
 | `remix_ui_icons` | `remix_ui_icons-v<version>` |
 | `remix_ui_fonts` | `remix_ui_fonts-v<version>` |
 
-- **Never `git push --tags`.** Stale `v*` tags in this repo would start publish
-  runs from the wrong commits. Check the exact remote ref and push one tag,
-  explicitly, as described below.
 - `remix-v<version>` publishes **nothing** — `melos version` reads it to derive
   the next changelog. A remix release wants both `v<version>` (publishes) and
   `remix-v<version>` (melos reads).
@@ -153,7 +158,33 @@ publishing" configuration. A mismatched tag fails OIDC auth.
   `packages/remix_ui_fonts`), then automated publishing is enabled with
   `remix_ui_fonts-v{{version}}`.
 
-### Check a tag before creating it
+### GitHub Releases and notes
+
+After publication succeeds, **Publish to pub.dev** creates a GitHub Release
+on the publishing tag (never `remix-v<version>`). To override the notes, include
+`.github/release-notes/<tag>.md` in the release PR, for example
+`.github/release-notes/v1.0.0.md` for Remix. Otherwise, the workflow uses the
+version's changelog section, or GitHub's generated notes if the section is
+empty or only links elsewhere. The workflow appends the version's pub.dev
+link. A version with a prerelease suffix is marked as a prerelease, and only
+stable Remix releases are marked latest. An existing GitHub Release is left alone.
+
+### Manual recovery
+
+Check the **Tag releases** summary first. A manual dispatch of **Tag releases**
+on `main` considers every current package version with a changelog heading and
+missing tag, even if the version did not change in the last push. Only use it
+if the current `main` SHA is the intended release commit for the missing tags
+and none of the missing publishing tags name versions already on pub.dev.
+
+If a publishing tag exists at the intended commit but dispatch failed, run
+`gh workflow run publish.yml --ref '<publishing-tag>'` once the issue is fixed
+and you have confirmed the version is not already published. If only GitHub
+Release creation failed, rerun the failed job instead of republishing.
+
+A hand-pushed publishing tag still runs **Publish to pub.dev** and creates a
+GitHub Release after publishing. Use this fallback only for a missing tag and
+**never `git push --tags`**.
 
 A local tag can hold an old commit under the name you are about to use. For
 example, a local `v1.0.0-beta.14` is a 2024 Mix release (tag object
@@ -273,9 +304,10 @@ remix ^X is not on pub.dev yet; push tag vX, wait for the Publish workflow, then
 ```
 
 If a floor is missing, the run fails within seconds and does not advance
-`registry-stable`. For a Remix-owned package, push the matching release tag
-and wait for **Publish to pub.dev** to make that version available. For an
-upstream dependency, wait for its publisher or revise the candidate.
+`registry-stable`. For a Remix-owned package, check **Tag releases** and wait
+for **Publish to pub.dev** to make that version available. Use the manual
+recovery steps if needed. For an upstream dependency, wait for its publisher
+or revise the candidate.
 
 Once the required floors are available, retry promotion. **Promote registry**
 validates and pushes the run's event SHA. **Re-run jobs** retries the original
@@ -304,7 +336,9 @@ with released CLI versions.
 ## Release checklist and log
 
 1. **Merge** the reviewed release PR to `main`. Record the maintainer, merge
-   SHA, and UTC time.
+   SHA, and UTC time. For a package bump, confirm **Tag releases** created the
+   expected tags and **Publish to pub.dev** produced the pub.dev version and
+   its GitHub Release.
 2. **Promote.** Match the **Promote registry** run to the intended merge SHA
    and verify that `Promote registry-stable` succeeded and the branch points to
    that SHA. Record the run link, previous and new SHAs, and outcome; for a
