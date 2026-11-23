@@ -34,7 +34,7 @@ Use this when adding a Naked UI primitive or a Remix component, or moving behavi
 ## 6. Independent review and rollout
 
 - [ ] Someone other than the implementer checks the diff against steps 1–3, exercises a failure case, and records findings with file locations and expected behavior. Fix and recheck blockers. Report commands run, skipped checks, and remaining risks; don’t mark an unperformed review complete.
-- [ ] Identify the first adopting consumer and the migration path. If it needs an unpublished dependency, separate the primitive from consumer adoption; follow the [release and dependency-floor workflow](open_code/RELEASING.md). Versions and changelogs belong to the release PR.
+- [ ] Identify the first adopting consumer and the migration path. If it needs an unpublished dependency, separate the primitive from consumer adoption; follow the [release and dependency-floor workflow](RELEASING.md). Versions and changelogs belong to the release PR.
 
 ### Example acceptance case: proposed multi-select listbox
 

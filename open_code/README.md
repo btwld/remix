@@ -57,7 +57,7 @@ flutter pub add "remix:{path: /path/to/remix/packages/remix}"
 ```
 
 A registry candidate whose Remix floor pub.dev does not serve yet needs a
-checkout override for development. Only [hosted release checks](RELEASING.md)
+checkout override for development. Only [hosted release checks](../RELEASING.md)
 establish that published packages satisfy the floor; a local override does not.
 
 ## Host requirements
@@ -148,7 +148,7 @@ optional charts use `mix_chart`/`fl_chart` ([Mix #1021](https://github.com/btwld
 ## Repository proof
 
 [REGISTRIES.md](REGISTRIES.md#repository-consumers) lists workspace consumers
-and derivation checks. [RELEASING.md](RELEASING.md) defines checkout, hosted and
+and derivation checks. [RELEASING.md](../RELEASING.md) defines checkout, hosted and
 published-CLI gates; these prove different boundaries.
 
 ## Item catalog

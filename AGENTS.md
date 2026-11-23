@@ -18,13 +18,14 @@ repository does not commit installed skills; the index points at the sources.
 |mix:{SKILL.md,references/{animations.md,architecture.md,code-generation.md,design-tokens.md,development-workflow.md,examples.md,fluent-api.md,layout.md,styler-api-policy.md,testing.md,variants.md,widget-modifiers-directives.md}}
 [Maintainer workflows]|root: .
 |component creation:{COMPONENT_CHECKLIST.md}
-|open_code:{README.md,REGISTRIES.md,PRESETS.md,ADDING_PRESETS.md,RELEASING.md}
+|release process:{RELEASING.md}
+|open_code:{README.md,REGISTRIES.md,PRESETS.md,ADDING_PRESETS.md}
 ```
 
 - `using-remix`: app UI with `Remix*` widgets or an installed Vanilla/Fortal/HeroUI preset.
 - `building-remix-design-system`: authoring a first-party preset or a third-party registry.
 - `mix`: stylers, specs, tokens, variants, animations, and modifiers.
-- `open_code/RELEASING.md`: version bumps, contract checkers, release PRs, tags, and registry promotion.
+- `RELEASING.md`: version bumps, contract checkers, release PRs, tags, and registry promotion.
 
 Architecture rationale lives in [ARCHITECTURE.md](ARCHITECTURE.md).
 Use the [new component checklist](COMPONENT_CHECKLIST.md) before implementing or reviewing a Naked UI primitive or Remix component.
@@ -48,11 +49,11 @@ or `borderRounded`.
   `registry/icons.yaml` (icon mappings and library floors) and the Vanilla
   dependency and dev-dependency floors in `registry/vanilla/registry.yaml`, which the
   builder reads back as input. Edit those floors through the release workflow
-  documented in [open_code/RELEASING.md](open_code/RELEASING.md).
+  documented in [RELEASING.md](RELEASING.md).
 - `apps/`: `playground`, `demo`, `dashboard`, `dashboard_heroui`, and
   `widgetbook_vanilla` are workspace consumers pinned in their `remix.yaml`; `docs` is the docs site;
   `naked_ui_example`.
-- `docs/`: MDX documentation. `open_code/`: registry, preset, and release docs.
+- `docs/`: MDX documentation. `open_code/`: registry and preset docs.
 - `skills/`: published agent skills, installed with `remix skills install`.
   `skills/index.yaml` is generated; run `dart run melos run skills:index` after
   adding or removing a skill file.

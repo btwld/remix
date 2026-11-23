@@ -55,7 +55,7 @@ substitute another catalog.
 
 ## Promote registry content independently
 
-2026-09-23 · Accepted · [Release ordering and rollback](open_code/RELEASING.md)
+2026-09-23 · Accepted · [Release ordering and rollback](RELEASING.md)
 
 Advance `registry-stable` only after CI validates hosted runtime floors,
 rather than tying each catalog update to a tagged CLI release. An unpublished

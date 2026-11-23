@@ -37,7 +37,7 @@ class PackageRelease {
       try {
         version = Version.parse(text);
       } on FormatException {
-        throw FormatException('Invalid version in publishing tag: $tag');
+        throw FormatException('Invalid version in release tag: $tag');
       }
       final core = '${version.major}.${version.minor}.${version.patch}';
       final precedence = text.split('+').first;
@@ -47,11 +47,11 @@ class PackageRelease {
       if ((precedence != core && prerelease == null) ||
           (prerelease != null &&
               prerelease.split('.').any(RegExp(r'^0[0-9]+$').hasMatch))) {
-        throw FormatException('Invalid version in publishing tag: $tag');
+        throw FormatException('Invalid version in release tag: $tag');
       }
       return PackageRelease(package, version);
     }
-    throw FormatException('Not a publishing tag for a known package: $tag');
+    throw FormatException('Not a release tag for a known package: $tag');
   }
 
   final String package;
@@ -412,7 +412,7 @@ void _restoreLatestRemix(List<PackageRelease> newest) {
     return;
   }
   stdout.writeln(
-    'No published Release for the newest stable Remix version; could not reassign Latest.',
+    'No public GitHub Release for the newest stable Remix version; could not reassign Latest.',
   );
 }
 

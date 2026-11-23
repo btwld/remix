@@ -21,7 +21,7 @@ dependencies:
     }
   });
 
-  test('maps only publishing tags with versions to packages', () {
+  test('maps only release tags with versions to packages', () {
     final tags = {
       'v1.2.3': 'remix',
       'remix_cli-v1.2.3': 'remix_cli',
@@ -66,41 +66,38 @@ dependencies:
     },
   );
 
-  test(
-    'picks the highest earlier semver publishing tag of the same package',
-    () {
-      expect(
-        previousPublishingTag(cli, [
-          'remix_cli-v1.2.3',
-          'remix_cli-v1.2.3-rc.2',
-          'remix_cli-v1.2.3-rc.1',
-          'remix_cli-v1.2.3-rc.0',
-          'remix_cli-v1.2.3-rc.10',
-          'remix_cli-v1.2.2',
-          'v1.2.3-rc.1',
-          'remix_cli-vbad',
-        ]),
+  test('picks the highest earlier semver release tag of the same package', () {
+    expect(
+      previousPublishingTag(cli, [
+        'remix_cli-v1.2.3',
+        'remix_cli-v1.2.3-rc.2',
         'remix_cli-v1.2.3-rc.1',
-      );
-      expect(
-        previousPublishingTag(remix, ['remix-v1.2.2', 'v1.1.9', 'v1.1.10']),
-        'v1.1.10',
-      );
-      expect(
-        previousPublishingTag(remix, ['v1.2.2', 'v1.2.3-rc.1', 'v1.2.2-rc.2']),
+        'remix_cli-v1.2.3-rc.0',
+        'remix_cli-v1.2.3-rc.10',
+        'remix_cli-v1.2.2',
+        'v1.2.3-rc.1',
+        'remix_cli-vbad',
+      ]),
+      'remix_cli-v1.2.3-rc.1',
+    );
+    expect(
+      previousPublishingTag(remix, ['remix-v1.2.2', 'v1.1.9', 'v1.1.10']),
+      'v1.1.10',
+    );
+    expect(
+      previousPublishingTag(remix, ['v1.2.2', 'v1.2.3-rc.1', 'v1.2.2-rc.2']),
+      'v1.2.2',
+    );
+    expect(previousPublishingTag(remix, ['v1.2.3-rc.1']), isNull);
+    expect(previousPublishingTag(remix, ['remix-v1.2.2']), isNull);
+    expect(
+      previousPublishingTag(PackageRelease.fromTag('v1.2.3+build.2'), [
         'v1.2.2',
-      );
-      expect(previousPublishingTag(remix, ['v1.2.3-rc.1']), isNull);
-      expect(previousPublishingTag(remix, ['remix-v1.2.2']), isNull);
-      expect(
-        previousPublishingTag(PackageRelease.fromTag('v1.2.3+build.2'), [
-          'v1.2.2',
-          'v1.2.3+build.1',
-        ]),
-        'v1.2.2',
-      );
-    },
-  );
+        'v1.2.3+build.1',
+      ]),
+      'v1.2.2',
+    );
+  });
 
   group('link-changelog', () {
     test('returns the full draft and changes only the selected body', () {
@@ -350,7 +347,7 @@ esac
       );
 
       test(
-        'publishes an existing draft with corrected flags and preserved notes',
+        'makes an existing draft public with corrected flags and preserved notes',
         () {
           remoteTag(cli.publishingTag, baseline);
           remoteTag(remix.publishingTag, baseline);
@@ -368,22 +365,25 @@ esac
         },
       );
 
-      test('does not promote an older tag or publish an unrelated draft', () {
-        remoteTag(remix.publishingTag, baseline);
-        remoteTag('v1.2.4', baseline);
-        existingRelease(remix.publishingTag);
-        existingRelease('v1.2.4', draft: true);
-        existingRelease(cli.publishingTag);
+      test(
+        'does not make an older release Latest or an unrelated draft public',
+        () {
+          remoteTag(remix.publishingTag, baseline);
+          remoteTag('v1.2.4', baseline);
+          existingRelease(remix.publishingTag);
+          existingRelease('v1.2.4', draft: true);
+          existingRelease(cli.publishingTag);
 
-        final result = run(['release', cli.publishingTag]);
-        expect(result.exitCode, 0, reason: '${result.stderr}');
-        expect(result.stdout, contains('could not reassign Latest'));
-        expect(ghLog.readAsLinesSync(), [
-          'release view remix_cli-v1.2.3-rc.2 --json isDraft',
-          'release edit remix_cli-v1.2.3-rc.2 --prerelease=true --latest=false',
-          'release view v1.2.4 --json isDraft',
-        ]);
-      });
+          final result = run(['release', cli.publishingTag]);
+          expect(result.exitCode, 0, reason: '${result.stderr}');
+          expect(result.stdout, contains('could not reassign Latest'));
+          expect(ghLog.readAsLinesSync(), [
+            'release view remix_cli-v1.2.3-rc.2 --json isDraft',
+            'release edit remix_cli-v1.2.3-rc.2 --prerelease=true --latest=false',
+            'release view v1.2.4 --json isDraft',
+          ]);
+        },
+      );
 
       test('a lookup error other than release not found aborts', () {
         write(

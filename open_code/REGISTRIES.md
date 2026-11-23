@@ -1,6 +1,6 @@
 # Pinned GitHub registries
 
-Registry publication is independent of CLI releases. New projects use schema 3;
+Registry promotion is independent of CLI releases. New projects use schema 3;
 `init` resolves the `registry-stable` branch of `btwld/remix` and stores
 its full commit SHA. It validates the selected preset. No published
 `registry-stable` branch means initialization fails without creating files.
@@ -27,7 +27,7 @@ The optional `iconLibrary` is resolved when templates are installed.
 `remix_ui_icons`. Each covers every registry icon; `lucide` remains available
 as an alternative. Changing this setting affects the next installation or
 refresh of an item, so reinstall every item whose icons should change.
-Registries publish `icons.yaml` beside their preset catalogs; the CLI must
+Registries serve `icons.yaml` beside their preset catalogs; the CLI must
 ship support for that table, and for its schema, before a registry begins
 using them. Schema 2 (`remix_cli` 1.0.0-beta.1) lets an icon name a `fallback`
 library for the libraries that do not draw it.
@@ -199,7 +199,7 @@ theme scope, routes, authentication and persistence with the host.
 `dashboard_demo` is a sample application and declares no barrel exports; apps
 import its entry file, `recipes/dashboard/dashboard_demo.dart`, directly.
 
-## Author and publish
+## Author and promote
 
 Edit analyzer-checked Dart under `registry_source/`, then run:
 
@@ -229,7 +229,7 @@ items should instead be declared as dependencies. Templates declare sources
 under `templates/`, destinations under `@ui/`, package constraints, generated
 adapters and exports using the existing catalog format.
 
-See [release instructions](RELEASING.md) for the independent registry gate,
+See [release instructions](../RELEASING.md) for the independent registry gate,
 bootstrap order and promoted-branch smoke check. Component-only changes
 require promoting `registry-stable`, not a new CLI release.
 
@@ -261,7 +261,7 @@ owns the visual contract.
 Catalog structure and templates are derived. Maintained inputs are
 `registry/icons.yaml` (mapping/library floors) and Vanilla's dependency and
 dev-dependency floors, read back by the builder and shared with Fortal and HeroUI. Change
-floors through the [package release workflow](RELEASING.md).
+floors through the [package release workflow](../RELEASING.md).
 
 ## Repository consumers
 
@@ -275,7 +275,7 @@ floors through the [package release workflow](RELEASING.md).
 
 `tool/check_consumer_apps.dart` checks these installed trees. Fresh checkout
 consumers test installation and generation; hosted checks separately establish
-published-floor compatibility. See [release ordering](RELEASING.md).
+published-floor compatibility. See [release ordering](../RELEASING.md).
 
 For the checkout registry, `tool/check_open_code.dart --source checkout
 --independent all` (the checkout default) audits each catalog item's solo

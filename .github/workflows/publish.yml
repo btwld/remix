@@ -5,7 +5,7 @@ name: Publish to pub.dev
 #
 # THE FIVE PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
 # choice — it is each package's "Automated publishing" tag pattern on pub.dev,
-# and the OIDC token is rejected if the publishing tag does not match:
+# and the OIDC token is rejected if the release tag does not match:
 #
 #   remix          ->  v<version>               (bare, e.g. v1.0.0-beta.5)
 #   remix_ui_icons ->  remix_ui_icons-v<version>
@@ -33,7 +33,7 @@ name: Publish to pub.dev
 #
 # The CLI release requires `registry-stable` to resolve and its hosted
 # runtime dependencies. registry_source/ is private authoring source; registry/
-# is published independently through the CI-promoted `registry-stable` branch.
+# is promoted independently through the `registry-stable` branch.
 on:
   push:
     tags:
@@ -57,7 +57,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: ./.github/actions/setup-workspace
-      - name: Validate publishing tag
+      - name: Validate release tag
         run: dart run tool/release_packages.dart validate "$GITHUB_REF_NAME"
 
   verify-cli-consumers:
@@ -74,7 +74,7 @@ jobs:
           cache: true
       - name: Resolve the workspace
         run: flutter pub get
-      - name: Verify every preset from the published registry with hosted Remix
+      - name: Verify every preset from the promoted registry with hosted Remix
         env:
           REMIX_REGISTRY_RELEASE_SMOKE: '1'
         run: dart run melos run open-code:release:check

@@ -1,7 +1,7 @@
 # Registry reference
 
 How a design system becomes a Remix registry: repository layout, authoring
-rules, derivation, the catalog format, and the publish-and-test loop. Examples
+rules, derivation, the catalog format, and the release-and-test loop. Examples
 use a third-party system named "Acme" registered as `@acme`. For a first-party
 preset in `btwld/remix`, follow `open_code/ADDING_PRESETS.md` in that checkout:
 reuse its authoring package, builder, and checkout consumer harness.
@@ -246,7 +246,7 @@ Item design rules:
 - No `@remix/...` dependencies (see the self-contained constraint in
   `SKILL.md`).
 
-## 6. Publish and test
+## 6. Release and test
 
 The production CLI reads registries from GitHub only. The Remix repository's
 internal checkout harness tests first-party changes without a push; it does
