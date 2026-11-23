@@ -1,3 +1,10 @@
+## Unreleased
+
+### Fixes
+
+- Calendar days and range slider thumbs honor variant exit timing. Requires
+  Mix ^2.5.0.
+
 ## 1.0.0-rc.6
 
 ### Features
