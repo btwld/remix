@@ -1,3 +1,8 @@
+## 1.0.0-rc.7
+
+ - **FIX**(remix): keep variant exit timing in calendar and slider children (#548).
+ - **FIX**(remix): preserve text field drafts across rebuilds (#536).
+
 ## Unreleased
 
 ### Fixes
