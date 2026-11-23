@@ -1,14 +1,21 @@
 ## 1.0.0-rc.7
 
- - **FIX**(remix): keep variant exit timing in calendar and slider children (#548).
- - **FIX**(remix): preserve text field drafts across rebuilds (#536).
-
-## Unreleased
-
 ### Fixes
 
-- Calendar days and range slider thumbs honor variant exit timing. Requires
-  Mix ^2.5.0.
+- Text fields preserve uncontrolled drafts when labels, helper or error text,
+  or semantics change, and when disabled and re-enabled (#536).
+- Calendar days and range slider thumbs honor variant exit timing (#548).
+
+### Dependencies
+
+- Require Mix ^2.5.0 for reversible child animations (#548).
+- Require Naked UI ^2.0.0-rc.4, which safely clears pressed state when a
+  control becomes non-interactive (#537, #544).
+
+### Documentation
+
+- Update the README's CLI installation examples to `remix_cli` ^1.0.0-rc.3
+  (#535, #545).
 
 ## 1.0.0-rc.6
 
