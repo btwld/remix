@@ -1,3 +1,12 @@
+## 2.0.0-rc.4
+
+### Fixes
+
+- Clear pressed state immediately when disabling `NakedButton`,
+  `NakedAccordion`, or `NakedDisclosure`, but defer `onPressChange(false)`
+  until after the frame so callbacks can safely update parent state. Skip the
+  notification if the control is removed, re-enabled, or pressed again.
+
 ## 2.0.0-rc.3
 
 ### Features
