@@ -60,7 +60,7 @@ Widget saveButton(VoidCallback save) => RemixButton(
 Or install editable theme and component source:
 
 ```bash
-dart pub global activate remix_cli '^1.0.0-rc.2'
+dart pub global activate remix_cli '^1.0.0-rc.3'
 remix init --preset vanilla
 remix add button
 ```
@@ -69,7 +69,7 @@ Install the CLI once globally. The constraint includes the 1.0 release
 candidate; `remix.yaml` pins the registry revision used by each project.
 Add Pub's `bin` directory to `PATH` if needed; Pub prints the instructions.
 For a CLI pinned in the app's lockfile, use
-`flutter pub add dev:remix_cli:^1.0.0-rc.2` instead and prefix each command
+`flutter pub add dev:remix_cli:^1.0.0-rc.3` instead and prefix each command
 with `dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 
 Place the installed theme above your Navigator in the host's builder before
