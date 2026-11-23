@@ -72,7 +72,7 @@ activation fails during version solving.
 Install the CLI once globally; `remix.yaml` separately pins registry content:
 
 ```shell
-dart pub global activate remix_cli '^1.0.0-rc.2'
+dart pub global activate remix_cli '^1.0.0-rc.3'
 remix init --prefix Acme --preset fortal
 remix add button
 ```
@@ -86,7 +86,7 @@ Projects upgrading from `0.1.0` also lack an ownership record, so their first
 [legacy ownership migration](../../open_code/REGISTRIES.md#existing-source-without-an-ownership-record).
 
 For teams that want the CLI pinned in the app's lockfile, use
-`flutter pub add dev:remix_cli:^1.0.0-rc.2` instead. Prefix each command with
+`flutter pub add dev:remix_cli:^1.0.0-rc.3` instead. Prefix each command with
 `dart run remix_cli:`, for example `dart run remix_cli:remix init`.
 
 To run an unreleased build, point at a checkout or staged package path:
@@ -501,7 +501,10 @@ CLI names the package and the section to move it to rather than editing your
 
 If generation or analysis fails after installation, the authored source stays
 in place for inspection. Generation failures can come from any configured
-builder, not just Mix. Fix the reported issue and rerun the same command.
+builder, not just Mix. After fixing a builder issue, run
+`dart run build_runner build` from the application root before retrying
+`remix add`: the retry can skip generation if the adapters already exist.
+For an analysis failure, fix the reported issue and rerun the same command.
 
 ## Install agent skills
 

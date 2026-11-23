@@ -12,7 +12,7 @@ version.
 Install the CLI once globally, then run `remix` from any Flutter app:
 
 ```bash
-dart pub global activate remix_cli '^1.0.0-rc.2'
+dart pub global activate remix_cli '^1.0.0-rc.3'
 ```
 
 <Note>
@@ -35,7 +35,7 @@ For teams that want the CLI pinned in the app's lockfile, use a project-local
 dev dependency instead:
 
 ```bash
-flutter pub add dev:remix_cli:^1.0.0-rc.2
+flutter pub add dev:remix_cli:^1.0.0-rc.3
 ```
 
 Prefix each command with `dart run remix_cli:`, for example
@@ -173,6 +173,10 @@ Project-wide generation may update outputs outside lib/ui.
 The CLI checks that requested and previously installed adapters exist after the
 build. The summary lists this install's adapters, not every file the build may
 have updated. Review generated changes outside the UI folder too.
+
+If a builder fails, fix the reported issue and run `dart run build_runner build`
+from the application root before retrying `remix add`. The retry can skip
+generation if the adapters already exist.
 
 Commit `remix.ownership.json` with `remix.yaml` and the installed source. It
 records the registry owner of authored and generated targets, including missing

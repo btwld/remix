@@ -13,6 +13,12 @@ remix list --json   # the same listing as one JSON document
 An unknown item or preset fails with a "Did you mean" hint when a name is
 close.
 
+## Recover from a builder failure
+
+If a builder fails during `remix add`, fix the reported issue and run
+`dart run build_runner build` from the application root before retrying
+`remix add`. The retry can skip generation if the adapters already exist.
+
 ## Move a registry pin
 
 ```bash
@@ -57,7 +63,7 @@ to read with an explicit error. Recover a schema 1 or 2 project by deleting
 
 CLI 0.1.0 and beta.0 also wrote schema 3 without target ownership. Upgrade
 these versions first with
-`dart pub global activate remix_cli '^1.0.0-rc.2'`. The current
+`dart pub global activate remix_cli '^1.0.0-rc.3'`. The current
 CLI rejects unknown existing targets before mutation, including `--diff` and
 `--dry-run`. After verifying their source, name every existing dependency
 explicitly when adopting. For Vanilla Button, that is Theme and Button. Fortal

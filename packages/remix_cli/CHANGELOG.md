@@ -1,3 +1,19 @@
+## 1.0.0-rc.3
+
+### Fixes
+
+- Preserve consumer-generated files during `remix add` by running an
+  unfiltered `build_runner` build when adapters need generation. Verify that
+  requested and previously installed adapters still exist after the build.
+- Report project-wide generation in `--dry-run`, `--diff`, and the install
+  summary only when it will run. Outputs outside the UI path can change, and
+  failures can come from any configured builder.
+
+### Documentation
+
+- Explain project-wide generation and how to recover from a builder failure
+  in the package README.
+
 ## 1.0.0-rc.2
 
 ### Fixes
