@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -33,11 +32,11 @@ class PackageRelease {
   final Version version;
 
   String get directory => 'packages/$package';
-  String get publishingTag =>
-      package == 'remix' ? 'v$version' : '$package-v$version';
+  String get publishingTagPrefix => package == 'remix' ? 'v' : '$package-v';
+  String get publishingTag => '$publishingTagPrefix$version';
   List<String> get tags => [
-    publishingTag,
     if (package == 'remix') 'remix-v$version',
+    publishingTag,
   ];
   bool get prerelease => version.isPreRelease;
   bool get latest => package == 'remix' && !prerelease;
@@ -99,37 +98,73 @@ String releaseNotes({
   ].join('\n\n');
 }
 
-List<({String tag, bool publish, String? skip})> planTags({
+typedef TagPlanEntry = ({String tag, bool publish, String? skip, bool failed});
+
+List<TagPlanEntry> planTags({
   required PackageRelease release,
   required bool dispatch,
   required Version? previousVersion,
   required String? section,
   required Map<String, String> remoteTags,
   required String sha,
+  bool comparisonUnavailable = false,
 }) {
-  final conflict = release.tags.where((tag) {
-    final existing = remoteTags[tag];
-    return existing != null && existing != sha;
-  }).firstOrNull;
-  return [
-    for (final tag in release.tags)
-      (
-        tag: tag,
-        publish: tag == release.publishingTag,
-        skip: switch (remoteTags[tag]) {
-          final existing? when existing != sha =>
-            'remote tag points to $existing, not $sha',
-          _ when !dispatch && previousVersion == release.version =>
-            'package version did not change',
-          _ when section == null =>
-            'missing CHANGELOG heading for ${release.version}',
-          final existing? => 'remote tag already points to $existing',
-          null when conflict != null =>
-            'paired tag `$conflict` points to ${remoteTags[conflict]}, not $sha',
-          null => null,
-        },
+  final targets = release.tags.map((tag) => remoteTags[tag]).toSet();
+  final settled =
+      comparisonUnavailable && targets.length == 1 && targets.single != null;
+  final unchanged = !dispatch && previousVersion == release.version;
+  final conflict = release.tags
+      .where((tag) => remoteTags[tag] != null && remoteTags[tag] != sha)
+      .firstOrNull;
+  return release.tags.map((tag) {
+    final (String? skip, bool failed) = switch (remoteTags[tag]) {
+      final existing? when settled => (
+        'release tags already exist at $existing',
+        false,
       ),
-  ];
+      final existing? when existing != sha => (
+        'remote tag points to $existing, not $sha',
+        !unchanged,
+      ),
+      _ when unchanged => ('package version did not change', false),
+      final existing? => ('remote tag already points to $existing', false),
+      null when conflict != null => (
+        'paired tag `$conflict` points to ${remoteTags[conflict]}, not $sha',
+        true,
+      ),
+      null when section == null => (
+        'missing CHANGELOG heading for ${release.version}',
+        true,
+      ),
+      null => (null, false),
+    };
+    return (
+      tag: tag,
+      publish: tag == release.publishingTag,
+      skip: skip,
+      failed: failed,
+    );
+  }).toList();
+}
+
+String? previousPublishingTag(PackageRelease release, Iterable<String> tags) {
+  final prefix = release.publishingTagPrefix;
+  Version? previousVersion;
+  String? previousTag;
+  for (final tag in tags.where((tag) => tag.startsWith(prefix))) {
+    final Version version;
+    try {
+      version = Version.parse(tag.substring(prefix.length));
+    } on FormatException {
+      continue;
+    }
+    if (version < release.version &&
+        (previousVersion == null || version > previousVersion)) {
+      previousVersion = version;
+      previousTag = tag;
+    }
+  }
+  return previousTag;
 }
 
 Map<String, String> remoteTagCommits(String refs) {
@@ -167,8 +202,10 @@ void main(List<String> args) {
   }
 }
 
-Iterable<PackageRelease> _workspaceReleases() sync* {
-  for (final package in releasePackages) {
+Iterable<PackageRelease> _workspaceReleases([
+  Iterable<String> packages = releasePackages,
+]) sync* {
+  for (final package in packages) {
     final manifest = File('packages/$package/pubspec.yaml');
     yield PackageRelease(package, pubspecVersion(manifest.readAsStringSync()));
   }
@@ -184,6 +221,72 @@ String? _packageSection(PackageRelease release) => changelogSection(
   release.version,
 );
 
+Set<String> _dispatchPackages(String input) {
+  final packages = input.split(',').map((package) => package.trim()).toSet();
+  if (packages.any((package) => !releasePackages.contains(package))) {
+    throw FormatException(
+      'RELEASE_PACKAGES must name one or more of ${releasePackages.join(', ')}; got "$input".',
+    );
+  }
+  return packages;
+}
+
+String? _readAt(String commit, String path) =>
+    _run('git', ['ls-tree', commit, '--', path]).isEmpty
+    ? null
+    : _run('git', ['show', '$commit:$path']);
+
+String _versionCommit(PackageRelease release, String sha, String path) {
+  final history = _run('git', [
+    'log',
+    '--first-parent',
+    '--format=%H',
+    sha,
+    '--',
+    path,
+  ]);
+  String? target;
+  for (final commit in const LineSplitter().convert(history)) {
+    final manifest = _readAt(commit, path);
+    if (manifest == null || pubspecVersion(manifest) != release.version) break;
+    target = commit;
+  }
+  if (target == null) {
+    throw FormatException(
+      'Could not find the main commit that set ${release.title}.',
+    );
+  }
+  return target;
+}
+
+bool _hasCommit(String sha) =>
+    Process.runSync('git', ['cat-file', '-e', '$sha^{commit}']).exitCode == 0;
+
+String? _pushBaseline(String before, List<String> summary) {
+  if (!_shaPattern.hasMatch(before)) {
+    throw const FormatException(
+      'Expected RELEASE_BEFORE to be the previous commit SHA',
+    );
+  }
+  if (before != '0000000000000000000000000000000000000000') {
+    if (_hasCommit(before)) return before;
+    final fetch = Process.runSync('git', [
+      'fetch',
+      '--no-tags',
+      'origin',
+      before,
+    ]);
+    if (fetch.exitCode == 0 && _hasCommit(before)) return before;
+  }
+  summary.add(
+    'Could not resolve previous commit `$before`; checking every current package version.',
+  );
+  return null;
+}
+
+Map<String, String> _remoteTags() =>
+    remoteTagCommits(_run('git', ['ls-remote', '--tags', 'origin']));
+
 void _tagReleases() {
   final sha = Platform.environment['GITHUB_SHA'];
   if (sha == null || !_shaPattern.hasMatch(sha)) {
@@ -194,50 +297,38 @@ void _tagReleases() {
       Platform.environment['GITHUB_EVENT_NAME'] == 'workflow_dispatch';
   final summary = <String>[];
   try {
-    if (!dispatch) {
-      if (!_shaPattern.hasMatch(before)) {
-        throw const FormatException(
-          'Expected RELEASE_BEFORE to be the previous commit SHA',
-        );
-      }
-      if (before == '0000000000000000000000000000000000000000') {
-        summary.add(
-          'Skipped: no previous `main` commit to compare; dispatch manually if needed.',
-        );
-        return;
-      }
-      if (Process.runSync('git', [
-            'cat-file',
-            '-e',
-            '$before^{commit}',
-          ]).exitCode !=
-          0) {
-        _run('git', ['fetch', '--no-tags', 'origin', before]);
-      }
-    }
-    final remoteTags = remoteTagCommits(
-      _run('git', ['ls-remote', '--tags', 'origin']),
-    );
-    for (final release in _workspaceReleases()) {
+    final packages = dispatch
+        ? _dispatchPackages(Platform.environment['RELEASE_PACKAGES'] ?? '')
+        : releasePackages;
+    final baseline = dispatch ? null : _pushBaseline(before, summary);
+    final remoteTags = _remoteTags();
+    for (final release in _workspaceReleases(packages)) {
       final path = '${release.directory}/pubspec.yaml';
-      final previous =
-          dispatch || _run('git', ['ls-tree', before, '--', path]).isEmpty
-          ? null
-          : pubspecVersion(_run('git', ['show', '$before:$path']));
+      final previous = baseline == null ? null : _readAt(baseline, path);
+      final target = dispatch ? _versionCommit(release, sha, path) : sha;
       final plan = planTags(
         release: release,
         dispatch: dispatch,
-        previousVersion: previous,
-        section: _packageSection(release),
+        previousVersion: previous == null ? null : pubspecVersion(previous),
+        section: changelogSection(
+          _readAt(target, '${release.directory}/CHANGELOG.md') ?? '',
+          release.version,
+        ),
         remoteTags: remoteTags,
-        sha: sha,
+        sha: target,
+        comparisonUnavailable: !dispatch && baseline == null,
       );
       String? publishingTag;
       String? blockedBy;
       for (final entry in plan) {
         final tag = entry.tag;
         if (entry.skip case final reason?) {
-          summary.add('Skipped `$tag`: $reason.');
+          final message = 'Skipped `$tag`: $reason.';
+          if (entry.failed) {
+            stderr.writeln(message);
+            exitCode = 1;
+          }
+          summary.add(message);
           continue;
         }
         if (blockedBy != null) {
@@ -251,7 +342,7 @@ void _tagReleases() {
             '-f',
             'ref=refs/tags/$tag',
             '-f',
-            'sha=$sha',
+            'sha=$target',
           ]);
           if (create.exitCode != 0) {
             final existing = remoteTagCommits(
@@ -264,11 +355,11 @@ void _tagReleases() {
               ]),
             )[tag];
             if (existing != null) {
-              if (existing == sha) {
-                summary.add('Skipped `$tag`: remote tag appeared at $sha.');
+              if (existing == target) {
+                summary.add('Skipped `$tag`: remote tag appeared at $target.');
               } else {
                 summary.add(
-                  'Skipped `$tag`: remote tag appeared at $existing, not $sha.',
+                  'Skipped `$tag`: remote tag appeared at $existing, not $target.',
                 );
                 blockedBy = tag;
                 exitCode = 1;
@@ -282,7 +373,7 @@ void _tagReleases() {
               create.exitCode,
             );
           }
-          summary.add('Tagged `$tag` at $sha.');
+          summary.add('Tagged `$tag` at $target.');
           if (entry.publish) publishingTag = tag;
         } on Exception catch (error) {
           stderr.writeln(error);
@@ -326,8 +417,9 @@ void _createRelease(String tag) {
   final matches = _workspaceReleases().where(
     (release) => release.publishingTag == tag,
   );
-  if (matches.isEmpty)
+  if (matches.isEmpty) {
     throw FormatException('Not a publishing tag for this checkout: $tag');
+  }
   final release = matches.single;
   if (_releaseExists(tag)) {
     stdout.writeln('Release $tag already exists; skipping.');
@@ -336,14 +428,18 @@ void _createRelease(String tag) {
   final notes = releaseNotes(
     custom: _readFile('.github/release-notes/$tag.md'),
     section: _packageSection(release),
-    generate: () => _run('gh', [
-      'api',
-      'repos/{owner}/{repo}/releases/generate-notes',
-      '-f',
-      'tag_name=$tag',
-      '--jq',
-      '.body',
-    ]),
+    generate: () {
+      final previous = previousPublishingTag(release, _remoteTags().keys);
+      return _run('gh', [
+        'api',
+        'repos/{owner}/{repo}/releases/generate-notes',
+        '-f',
+        'tag_name=$tag',
+        if (previous != null) ...['-f', 'previous_tag_name=$previous'],
+        '--jq',
+        '.body',
+      ]);
+    },
     release: release,
   );
   final temp = Directory.systemTemp.createTempSync('remix_release_');

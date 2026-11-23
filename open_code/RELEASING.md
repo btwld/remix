@@ -127,11 +127,13 @@ reviewed PR to start the release.
 
 ### Tag patterns after merge
 
-**Tag releases** creates missing tags at the merge SHA when the package's
-version changed in the push and its changelog has a `## <version>` heading. It
-reports and skips existing remote tags, including tags at a different commit.
-If either Remix tag points to a different commit, the workflow leaves its
-partner alone rather than splitting the pair across commits.
+**Tag releases** creates missing tags at the merge SHA when a package's version
+changed in the push. For a version bump, a conflicting remote tag or a missing
+`## <version>` changelog heading for a new tag fails the workflow with an
+explanation. Existing tags are never moved. The Remix pair is checked together,
+and the Melos alias is created first so an alias failure cannot strand a new
+publishing tag. If the previous push SHA cannot be recovered, the workflow
+checks every current version and leaves complete sets of existing tags alone.
 Tags created with `GITHUB_TOKEN` do not trigger a push workflow, so automation
 dispatches **Publish to pub.dev** on each newly created publishing tag.
 Existing CLI consumer checks and the `Production` environment gate still apply.
@@ -167,17 +169,21 @@ on the publishing tag (never `remix-v<version>`). To override the notes, include
 `.github/release-notes/<tag>.md` in the release PR, for example
 `.github/release-notes/v1.0.0.md` for Remix. Otherwise, the workflow uses the
 version's changelog section, or GitHub's generated notes if the section is
-empty or only links elsewhere. The workflow appends the version's pub.dev
+empty or only links elsewhere. Generated notes use the highest earlier version
+tag for the same package, if one exists. The workflow appends the version's pub.dev
 link. A version with a prerelease suffix is marked as a prerelease, and only
 stable Remix releases are marked latest. An existing GitHub Release is left alone.
 
 ### Manual recovery
 
-Check the **Tag releases** summary first. A manual dispatch of **Tag releases**
-on `main` considers every current package version with a changelog heading and
-missing tag, even if the version did not change in the last push. Only use it
-if the current `main` SHA is the intended release commit for the missing tags
-and none of the missing publishing tags name versions already on pub.dev.
+Check the **Tag releases** summary first. To backfill a missing tag, dispatch
+**Tag releases** on `main` with the `packages` input set to the package name or
+a comma-separated list, for example `remix,remix_cli`. For each selected
+package, the workflow finds the commit on `main` that last changed its current
+pubspec version, checks the changelog at that commit, and tags that commit
+instead of the current head. Select only versions that still need publishing;
+dispatching **Publish to pub.dev** requires the workflow to support dispatch
+at the tagged commit.
 
 If a publishing tag exists at the intended commit but publishing was not
 dispatched, fix the reported issue first and, for Remix, confirm both tags
@@ -303,7 +309,7 @@ Before creating an app, the preflight checks every runtime, generator, and icon
 library floor on pub.dev. A missing Remix floor prints:
 
 ```text
-remix ^X is not on pub.dev yet; push tag vX, wait for the Publish workflow, then re-run Promote registry
+remix ^X is not on pub.dev yet; check Tag releases for vX (see Manual recovery in open_code/RELEASING.md), wait for the Publish workflow, then re-run Promote registry
 ```
 
 If a floor is missing, the run fails within seconds and does not advance
