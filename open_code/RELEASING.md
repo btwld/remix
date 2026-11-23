@@ -164,18 +164,23 @@ publishing configuration:
    tag from the table above, targeting the reviewed commit on `main`. For Remix,
    use `v<version>`, not `remix-v<version>`.
 3. Write and review the notes in the Release. Tick **Set as a pre-release** for a
-   version with a prerelease suffix. Mark only a stable Remix Release as latest.
+   version with a prerelease suffix. Mark only the newest stable Remix Release
+   as latest; leave it unchecked for other packages, prereleases, and backfills.
    Publish the Release when ready; saving a draft does not start publishing.
 4. Publishing the Release creates the tag. Its tag push starts **Publish to pub.dev**.
    The workflow checks the tag format, pubspec version, changelog heading, and
    ancestry on `main` before the publishing gate. For the CLI, consumer checks
    also run before publishing. Approve the `Production` gate when prompted.
 
-CI leaves an existing Release and its notes unchanged. If a publishing tag was
-pushed by hand and has no Release, CI creates one after pub.dev publication. It
-generates notes from the highest earlier publishing tag of the same package
-when available, adds the version's pub.dev link, and applies the prerelease and
-latest rules above.
+After pub.dev publication, CI syncs the Release's prerelease and Latest flags
+and publishes a matching draft if one exists, without editing its notes. If
+the current Release does not qualify as Latest, CI restores Latest to a
+published Release at the highest stable Remix version, if one exists.
+
+If the tag was pushed by hand and has no Release, CI creates one. It generates
+notes from the highest earlier publishing tag of the same package when
+available, skipping prereleases for stable releases, and adds the version's
+pub.dev link.
 
 ### Manual recovery
 
@@ -185,9 +190,9 @@ failed jobs**. If only finalization failed, retry it without republishing. Never
 move or delete a public tag. If the fix requires changing the tagged source,
 prepare a new version and Release instead of retrying with a moved tag.
 
-A hand-pushed publishing tag still runs **Publish to pub.dev** and creates a
-GitHub Release after publishing. Use this fallback only for a missing tag and
-**never `git push --tags`**.
+A hand-pushed publishing tag still runs **Publish to pub.dev** and publishes a
+matching draft or creates a GitHub Release after publishing. Use this fallback
+only for a missing tag and **never `git push --tags`**.
 
 A local tag can hold an old commit under the name you are about to use. For
 example, a local `v1.0.0-beta.14` is a 2024 Mix release (tag object

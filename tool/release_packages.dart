@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:pub_semver/pub_semver.dart';
@@ -64,7 +65,7 @@ class PackageRelease {
   String get publishingTag => '$publishingTagPrefix$version';
   String? get melosTag => package == 'remix' ? 'remix-v$version' : null;
   bool get prerelease => version.isPreRelease;
-  bool get latest => package == 'remix' && !prerelease;
+  bool get stableRemix => package == 'remix' && !prerelease;
   String get title => '$package $version';
   String get pubLink => 'https://pub.dev/packages/$package/versions/$version';
   String get changelogLink =>
@@ -148,13 +149,36 @@ String? previousPublishingTag(PackageRelease release, Iterable<String> tags) {
     } on FormatException {
       continue;
     }
-    if (version < current &&
+    if ((release.prerelease || !version.isPreRelease) &&
+        version < current &&
         (previousVersion == null || version > previousVersion)) {
       previousVersion = version;
       previousTag = tag;
     }
   }
   return previousTag;
+}
+
+List<PackageRelease> newestStableRemixTags(Iterable<String> tags) {
+  final newest = <PackageRelease>[];
+  Version? highest;
+  for (final tag in tags.where((tag) => tag.startsWith('v'))) {
+    final PackageRelease candidate;
+    try {
+      candidate = PackageRelease.fromTag(tag);
+    } on FormatException {
+      continue;
+    }
+    if (!candidate.stableRemix) continue;
+    final version = _semverPrecedence(candidate.version);
+    if (highest != null && version < highest) continue;
+    if (highest == null || version > highest) {
+      highest = version;
+      newest.clear();
+    }
+    newest.add(candidate);
+  }
+  return newest;
 }
 
 Version _semverPrecedence(Version version) => version.build.isEmpty
@@ -303,11 +327,29 @@ void _finalizeRelease(PackageRelease release) {
   if (release.melosTag case final alias?) {
     _ensureMelosTag(alias, _taggedCommit(tag));
   }
-  if (_releaseExists(tag)) {
-    stdout.writeln('Release $tag already exists; leaving it unchanged.');
-    return;
+  final tags = _remoteTags().keys;
+  final newest = newestStableRemixTags(tags);
+  final latest =
+      release.stableRemix &&
+      (newest.isEmpty ||
+          _semverPrecedence(release.version) >=
+              _semverPrecedence(newest.first.version));
+  final draft = _releaseIsDraft(tag);
+  if (draft == null) {
+    _createRelease(release, tags: tags, latest: latest);
+  } else {
+    _editRelease(release, latest: latest, draft: draft);
   }
-  final previous = previousPublishingTag(release, _remoteTags().keys);
+  if (!latest) _restoreLatestRemix(newest);
+}
+
+void _createRelease(
+  PackageRelease release, {
+  required Iterable<String> tags,
+  required bool latest,
+}) {
+  final tag = release.publishingTag;
+  final previous = previousPublishingTag(release, tags);
   final generated = _run('gh', [
     'api',
     'repos/{owner}/{repo}/releases/generate-notes',
@@ -332,21 +374,60 @@ void _finalizeRelease(PackageRelease release) {
         release.title,
         '--notes',
         notes,
-        release.latest ? '--latest' : '--latest=false',
+        _latestFlag(latest),
         if (release.prerelease) '--prerelease',
       ]),
     );
   } on ProcessException {
-    if (!_releaseExists(tag)) rethrow;
-    stdout.writeln('Release $tag already exists; leaving it unchanged.');
+    final draft = _releaseIsDraft(tag);
+    if (draft == null) rethrow;
+    _editRelease(release, latest: latest, draft: draft);
   }
 }
 
-bool _releaseExists(String tag) {
-  final args = ['release', 'view', tag, '--json', 'tagName'];
+String _latestFlag(bool latest) => latest ? '--latest' : '--latest=false';
+
+void _editRelease(
+  PackageRelease release, {
+  required bool latest,
+  required bool draft,
+}) {
+  final tag = release.publishingTag;
+  stdout.write(
+    _run('gh', [
+      'release',
+      'edit',
+      tag,
+      if (draft) ...['--draft=false', '--verify-tag', '--tag', tag],
+      '--prerelease=${release.prerelease}',
+      _latestFlag(latest),
+    ]),
+  );
+}
+
+void _restoreLatestRemix(List<PackageRelease> newest) {
+  for (final candidate in newest) {
+    if (_releaseIsDraft(candidate.publishingTag) != false) continue;
+    _editRelease(candidate, latest: true, draft: false);
+    return;
+  }
+  stdout.writeln(
+    'No published Release for the newest stable Remix version; could not reassign Latest.',
+  );
+}
+
+bool? _releaseIsDraft(String tag) {
+  final args = ['release', 'view', tag, '--json', 'isDraft'];
   final result = Process.runSync('gh', args);
-  if (result.exitCode == 0) return true;
-  if ('${result.stderr}'.trim() == 'release not found') return false;
+  if (result.exitCode == 0) {
+    if (jsonDecode(result.stdout as String) case {
+      'isDraft': final bool draft,
+    }) {
+      return draft;
+    }
+    throw FormatException('Expected isDraft in the GitHub Release for $tag');
+  }
+  if ('${result.stderr}'.trim() == 'release not found') return null;
   throw ProcessException('gh', args, '${result.stderr}', result.exitCode);
 }
 

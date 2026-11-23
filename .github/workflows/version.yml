@@ -161,7 +161,10 @@ jobs:
               echo
               echo '### Draft GitHub Release notes'
               echo
-              cat "$RUNNER_TEMP/remix-release-notes.md"
+              draft=$(< "$RUNNER_TEMP/remix-release-notes.md")
+              fence='```'
+              while [[ "$draft" == *"$fence"* ]]; do fence+='`'; done
+              printf '%smarkdown\n%s\n%s\n' "$fence" "$draft" "$fence"
             fi
             echo
             echo "### CI on this branch"

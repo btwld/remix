@@ -47,14 +47,24 @@ dependencies:
     }
   });
 
-  test('only stable Remix releases are latest', () {
-    expect(remix.latest, isTrue);
-    expect(PackageRelease.fromTag('v1.2.3-rc.1').latest, isFalse);
-    expect(PackageRelease.fromTag('v1.2.3+build.1').latest, isTrue);
-    expect(PackageRelease.fromTag('remix_cli-v1.2.3').latest, isFalse);
-    expect(cli.prerelease, isTrue);
-    expect(cli.latest, isFalse);
-  });
+  test(
+    'finds the newest stable Remix tags by semver, ignoring build metadata',
+    () {
+      expect(
+        newestStableRemixTags([
+          'v1.2.9',
+          'v1.2.10+build.1',
+          'v1.2.10',
+          'v1.2.11-rc.1',
+          'remix-v2.0.0',
+          'vinvalid',
+          'remix_cli-v2.0.0',
+        ]).map((release) => release.publishingTag),
+        ['v1.2.10+build.1', 'v1.2.10'],
+      );
+      expect(cli.prerelease, isTrue);
+    },
+  );
 
   test(
     'picks the highest earlier semver publishing tag of the same package',
@@ -76,6 +86,11 @@ dependencies:
         previousPublishingTag(remix, ['remix-v1.2.2', 'v1.1.9', 'v1.1.10']),
         'v1.1.10',
       );
+      expect(
+        previousPublishingTag(remix, ['v1.2.2', 'v1.2.3-rc.1', 'v1.2.2-rc.2']),
+        'v1.2.2',
+      );
+      expect(previousPublishingTag(remix, ['v1.2.3-rc.1']), isNull);
       expect(previousPublishingTag(remix, ['remix-v1.2.2']), isNull);
       expect(
         previousPublishingTag(PackageRelease.fromTag('v1.2.3+build.2'), [
@@ -169,17 +184,19 @@ dependencies:
         git(['push', 'origin', 'refs/tags/$tag']);
       }
 
-      ProcessResult run(List<String> args, {bool existingRelease = false}) =>
-          Process.runSync(
-            Platform.resolvedExecutable,
-            [script, ...args],
-            workingDirectory: repo.path,
-            environment: {
-              'PATH': '${repo.path}/bin:${Platform.environment['PATH']}',
-              'TEST_GH_LOG': ghLog.path,
-              'TEST_RELEASE_EXISTS': existingRelease ? 'yes' : 'no',
-            },
-          );
+      void existingRelease(String tag, {bool draft = false}) =>
+          write('releases/$tag', '{"isDraft":$draft}\n');
+
+      ProcessResult run(List<String> args) => Process.runSync(
+        Platform.resolvedExecutable,
+        [script, ...args],
+        workingDirectory: repo.path,
+        environment: {
+          'PATH': '${repo.path}/bin:${Platform.environment['PATH']}',
+          'TEST_GH_LOG': ghLog.path,
+          'TEST_RELEASE_FIXTURES': '${repo.path}/releases',
+        },
+      );
 
       setUp(() {
         repo = Directory.systemTemp.createTempSync('remix_release_test_');
@@ -200,7 +217,14 @@ dependencies:
 printf '%s\n' "$*" >> "$TEST_GH_LOG"
 case "$1 $2" in
   'release view')
-    if [ "$TEST_RELEASE_EXISTS" = yes ]; then exit 0; fi
+    if [ -f "$TEST_RELEASE_FIXTURES/$3.error" ]; then
+      cat "$TEST_RELEASE_FIXTURES/$3.error" >&2
+      exit 1
+    fi
+    if [ -f "$TEST_RELEASE_FIXTURES/$3" ]; then
+      cat "$TEST_RELEASE_FIXTURES/$3"
+      exit 0
+    fi
     printf '%s\n' 'release not found' >&2
     exit 1 ;;
   'api repos/{owner}/{repo}/releases/generate-notes')
@@ -270,21 +294,23 @@ esac
         },
       );
 
-      test('adds a missing Melos alias without changing an existing Release', () {
-        remoteTag(remix.publishingTag, baseline, annotated: true);
-        manifest('remix', '1.2.4');
-        commit('Main has advanced');
+      test(
+        'adds a missing Melos alias and syncs flags without changing notes',
+        () {
+          remoteTag(remix.publishingTag, baseline, annotated: true);
+          manifest('remix', '1.2.4');
+          commit('Main has advanced');
+          existingRelease(remix.publishingTag);
 
-        final result = run([
-          'release',
-          remix.publishingTag,
-        ], existingRelease: true);
-        expect(result.exitCode, 0, reason: '${result.stderr}');
-        expect(ghLog.readAsLinesSync(), [
-          'api repos/{owner}/{repo}/git/refs -f ref=refs/tags/remix-v1.2.3 -f sha=$baseline',
-          'release view v1.2.3 --json tagName',
-        ]);
-      });
+          final result = run(['release', remix.publishingTag]);
+          expect(result.exitCode, 0, reason: '${result.stderr}');
+          expect(ghLog.readAsLinesSync(), [
+            'api repos/{owner}/{repo}/git/refs -f ref=refs/tags/remix-v1.2.3 -f sha=$baseline',
+            'release view v1.2.3 --json isDraft',
+            'release edit v1.2.3 --prerelease=false --latest',
+          ]);
+        },
+      );
 
       test('fails without moving a Melos alias at a different commit', () {
         write('packages/remix/CHANGELOG.md', '## 1.2.3\n\nDifferent.\n');
@@ -292,10 +318,7 @@ esac
         remoteTag(remix.publishingTag, other);
         remoteTag(remix.melosTag!, baseline, annotated: true);
 
-        final result = run([
-          'release',
-          remix.publishingTag,
-        ], existingRelease: true);
+        final result = run(['release', remix.publishingTag]);
         expect(result.exitCode, 1);
         expect(
           result.stderr,
@@ -304,10 +327,83 @@ esac
         expect(ghLog.readAsStringSync(), isEmpty);
       });
 
+      test(
+        'restores Latest to the newest stable release after a stable backfill',
+        () {
+          remoteTag(remix.publishingTag, baseline);
+          remoteTag(remix.melosTag!, baseline);
+          remoteTag('v1.2.10', baseline);
+          remoteTag('v1.2.11-rc.1', baseline);
+          existingRelease(remix.publishingTag);
+          existingRelease('v1.2.10');
+          existingRelease('v1.2.11-rc.1');
+
+          final result = run(['release', remix.publishingTag]);
+          expect(result.exitCode, 0, reason: '${result.stderr}');
+          expect(ghLog.readAsLinesSync(), [
+            'release view v1.2.3 --json isDraft',
+            'release edit v1.2.3 --prerelease=false --latest=false',
+            'release view v1.2.10 --json isDraft',
+            'release edit v1.2.10 --prerelease=false --latest',
+          ]);
+        },
+      );
+
+      test(
+        'publishes an existing draft with corrected flags and preserved notes',
+        () {
+          remoteTag(cli.publishingTag, baseline);
+          remoteTag(remix.publishingTag, baseline);
+          existingRelease(cli.publishingTag, draft: true);
+          existingRelease(remix.publishingTag);
+
+          final result = run(['release', cli.publishingTag]);
+          expect(result.exitCode, 0, reason: '${result.stderr}');
+          expect(ghLog.readAsLinesSync(), [
+            'release view remix_cli-v1.2.3-rc.2 --json isDraft',
+            'release edit remix_cli-v1.2.3-rc.2 --draft=false --verify-tag --tag remix_cli-v1.2.3-rc.2 --prerelease=true --latest=false',
+            'release view v1.2.3 --json isDraft',
+            'release edit v1.2.3 --prerelease=false --latest',
+          ]);
+        },
+      );
+
+      test('does not promote an older tag or publish an unrelated draft', () {
+        remoteTag(remix.publishingTag, baseline);
+        remoteTag('v1.2.4', baseline);
+        existingRelease(remix.publishingTag);
+        existingRelease('v1.2.4', draft: true);
+        existingRelease(cli.publishingTag);
+
+        final result = run(['release', cli.publishingTag]);
+        expect(result.exitCode, 0, reason: '${result.stderr}');
+        expect(result.stdout, contains('could not reassign Latest'));
+        expect(ghLog.readAsLinesSync(), [
+          'release view remix_cli-v1.2.3-rc.2 --json isDraft',
+          'release edit remix_cli-v1.2.3-rc.2 --prerelease=true --latest=false',
+          'release view v1.2.4 --json isDraft',
+        ]);
+      });
+
+      test('a lookup error other than release not found aborts', () {
+        write(
+          'releases/${cli.publishingTag}.error',
+          'HTTP 403: release not found\n',
+        );
+
+        final result = run(['release', cli.publishingTag]);
+        expect(result.exitCode, 1);
+        expect(result.stderr, contains('HTTP 403: release not found'));
+        expect(ghLog.readAsLinesSync(), [
+          'release view remix_cli-v1.2.3-rc.2 --json isDraft',
+        ]);
+      });
+
       test('generates a missing Release with the previous package tag', () {
         remoteTag(remix.publishingTag, baseline);
         remoteTag(remix.melosTag!, baseline, annotated: true);
         remoteTag('v1.2.2', baseline);
+        remoteTag('v1.2.3-rc.1', baseline);
         remoteTag('remix_cli-v1.2.3-rc.1', baseline);
         remoteTag('remix_cli-v1.2.3', baseline);
 
