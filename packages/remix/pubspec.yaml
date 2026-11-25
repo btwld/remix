@@ -13,7 +13,7 @@ topics:
   - styling
   - mix
 
-version: 1.0.0-rc.6
+version: 1.0.0-rc.7
 
 # Consumer floor, matching `mix` 2.5.0, the oldest Mix this package accepts.
 # Enforced by tool/check_toolchain.dart.
@@ -26,7 +26,7 @@ dependencies:
     sdk: flutter
   mix: ^2.5.0
   mix_annotations: ^2.2.0-beta.1
-  naked_ui: ^2.0.0-rc.3
+  naked_ui: ^2.0.0-rc.4
 
 dev_dependencies:
   flutter_test:
