@@ -75,8 +75,8 @@ items:
       '${result.stderr}',
       allOf(
         contains('depends on an ignored package with pending changes'),
-        contains('see open_code/RELEASING.md for naked_ui'),
-        contains('re-dispatch Prepare Version Bump'),
+        contains('see RELEASING.md for naked_ui'),
+        contains('re-dispatch Prepare release'),
       ),
     );
   });

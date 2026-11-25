@@ -1991,8 +1991,8 @@ _Failure? _verifyResolvedRemixFloor({
   if (actual == floor) return null;
   return _Failure(
     'the fresh app resolved $actual, but the registry floors at $floor. '
-    'If packages/remix was just bumped, push its `v$floor` tag and wait for '
-    'pub.dev to serve it.',
+    'If packages/remix was just bumped, create a public GitHub Release with '
+    'tag `v$floor` and wait for pub.dev to serve it.',
   );
 }
 

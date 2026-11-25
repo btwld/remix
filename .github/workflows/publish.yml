@@ -5,7 +5,7 @@ name: Publish to pub.dev
 #
 # THE FIVE PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
 # choice — it is each package's "Automated publishing" tag pattern on pub.dev,
-# and the OIDC token is rejected if the pushed tag does not match:
+# and the OIDC token is rejected if the release tag does not match:
 #
 #   remix          ->  v<version>               (bare, e.g. v1.0.0-beta.5)
 #   remix_ui_icons ->  remix_ui_icons-v<version>
@@ -19,16 +19,10 @@ name: Publish to pub.dev
 # `naked_ui-v{{version}}` before the first release from this monorepo; until
 # that is done the job below authenticates against the old pattern and fails.
 #
-# Pushing `remix-v<version>` therefore does NOT publish remix. It fails
-# authentication with "this token has 'refs/tags/remix-v...' ref for which
-# publishing is not allowed. Expected tag 'v...'". That prefix is deliberately
-# absent from the triggers below so the mistake cannot start a doomed run.
-# Aligning the two would mean changing remix's tag pattern on pub.dev first.
-#
 # Separately, `melos version` derives each package's last release from its
 # `<package>-v*` tag. So a remix release wants both tags: `v<version>` is what
-# publishes, `remix-v<version>` is what melos reads. Only the first triggers
-# this workflow.
+# publishes, `remix-v<version>` is what melos reads. The bare tag starts
+# publishing; the post-publish job adds the Melos alias.
 #
 # remix_cli, remix_ui_icons, remix_ui_fonts, and naked_ui are versioned
 # independently from Remix.
@@ -39,7 +33,7 @@ name: Publish to pub.dev
 #
 # The CLI release requires `registry-stable` to resolve and its hosted
 # runtime dependencies. registry_source/ is private authoring source; registry/
-# is published independently through the CI-promoted `registry-stable` branch.
+# is promoted independently through the `registry-stable` branch.
 on:
   push:
     tags:
@@ -52,8 +46,23 @@ on:
 # Match the SDK used by version preparation and local validation. Floating to
 # latest stable can fail before package resolution even when the release passed CI.
 jobs:
+  validate:
+    if: github.ref_type == 'tag' && !github.event.deleted
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+      - name: Validate release tag
+        run: dart run tool/release_packages.dart validate "$GITHUB_REF_NAME"
+
   verify-cli-consumers:
     if: startsWith(github.ref, 'refs/tags/remix_cli-v')
+    needs: validate
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -65,7 +74,7 @@ jobs:
           cache: true
       - name: Resolve the workspace
         run: flutter pub get
-      - name: Verify every preset from the published registry with hosted Remix
+      - name: Verify every preset from the promoted registry with hosted Remix
         env:
           REMIX_REGISTRY_RELEASE_SMOKE: '1'
         run: dart run melos run open-code:release:check
@@ -73,6 +82,7 @@ jobs:
   publish-remix:
     # Bare `v*` only; package-prefixed tags do not start with `refs/tags/v`.
     if: startsWith(github.ref, 'refs/tags/v')
+    needs: validate
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -84,6 +94,7 @@ jobs:
 
   publish-remix-ui-icons:
     if: startsWith(github.ref, 'refs/tags/remix_ui_icons-v')
+    needs: validate
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -95,6 +106,7 @@ jobs:
 
   publish-remix-ui-fonts:
     if: startsWith(github.ref, 'refs/tags/remix_ui_fonts-v')
+    needs: validate
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -106,7 +118,7 @@ jobs:
 
   publish-remix-cli:
     if: startsWith(github.ref, 'refs/tags/remix_cli-v')
-    needs: verify-cli-consumers
+    needs: [validate, verify-cli-consumers]
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -118,6 +130,7 @@ jobs:
 
   publish-naked-ui:
     if: startsWith(github.ref, 'refs/tags/naked_ui-v')
+    needs: validate
     uses: btwld/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
     with:
       packages_folder_path: "packages"
@@ -126,3 +139,26 @@ jobs:
     permissions:
       id-token: write
       contents: read
+
+  github-release:
+    needs:
+      - publish-remix
+      - publish-remix-ui-icons
+      - publish-remix-ui-fonts
+      - publish-remix-cli
+      - publish-naked-ui
+    if: >-
+      !cancelled() &&
+      contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+      - name: Finalize GitHub Release and Melos alias
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: dart run tool/release_packages.dart release "$GITHUB_REF_NAME"

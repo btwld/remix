@@ -1,10 +1,8 @@
-name: Prepare Version Bump
+name: Prepare release
 
-# Pushes a branch that sets Remix to one explicit version and writes its
-# changelog from conventional commits. It never tags and never publishes:
-# `publish.yml` fires on a tag push, so the tag is pushed by hand after this PR
-# is reviewed and merged. registry_source is the unpublished authoring source
-# and is deliberately outside this workflow.
+# Pushes a branch that sets Remix to one explicit version and links its changelog
+# to the upcoming GitHub Release. The summary drafts notes from conventional
+# commits. registry_source is private and deliberately outside this workflow.
 #
 # It pushes a branch and prints its compare link rather than opening the pull
 # request itself. Opening one from a workflow needs "Allow GitHub Actions to
@@ -24,7 +22,7 @@ permissions:
 jobs:
   version:
     timeout-minutes: 15
-    name: Bump Remix version and changelog
+    name: Prepare Remix release
     runs-on: ubuntu-latest
     env:
       REMIX_VERSION: ${{ inputs.version }}
@@ -49,7 +47,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Bump versions
+      - name: Prepare release branch
         id: bump
         run: |
           set -euo pipefail
@@ -103,6 +101,10 @@ jobs:
 
           dart run tool/check_version_alignment.dart --expect-remix "$version"
 
+          if ! git diff --quiet HEAD -- packages/remix/pubspec.yaml; then
+            dart run tool/release_packages.dart link-changelog remix > "$RUNNER_TEMP/remix-release-notes.md"
+          fi
+
           # The remote registry.yaml is data, not a pubspec, so melos never
           # reaches it and its `remix: ^<floor>` would keep pointing at the
           # previous release.
@@ -136,36 +138,46 @@ jobs:
           git commit -m "chore(release): version Remix"
           git push --set-upstream origin release/version-packages --force
 
-      - name: Summarise
+      - name: Summarize release preparation
         if: steps.bump.outputs.versioned == 'true'
         run: |
           url="${{ github.server_url }}/${{ github.repository }}/compare/main...release/version-packages?expand=1"
           {
-            echo "### Remix version bumped"
+            echo "### Remix release preparation"
             echo
             echo "[Open the pull request]($url)"
             echo
             echo "Remix is on \`$REMIX_VERSION\`."
             echo
-            echo "After merging, push these Remix tags one at a time."
-            echo "Do not \`git push --tags\`: stale \`v*\` tags in this repo"
-            echo "would start publish runs from the wrong commits."
+            echo '1. Review and merge the version-bump PR to `main`.'
+            printf '2. Draft a GitHub Release with a new `v%s` tag targeting the reviewed commit on `main`.\n' "$REMIX_VERSION"
+            echo '3. Write the notes, tick **Set as a pre-release** if needed, and make the GitHub Release public.'
+            echo '4. The tag push starts **Publish to pub.dev**. Approve the environment gate if prompted.'
+            printf '5. After publishing to pub.dev succeeds, CI adds the `remix-v%s` Melos alias.\n' "$REMIX_VERSION"
             echo
-            printf '1. `v%s` — publishes **remix**.\n' "$REMIX_VERSION"
-            printf '2. `remix-v%s` — publishes nothing. melos\n' "$REMIX_VERSION"
-            echo '   reads it to derive the next release changelog.'
+            echo 'If publishing to pub.dev fails, fix the cause and re-run the failed jobs. Never move the tag.'
+            echo 'See `RELEASING.md` for recovery. Never `git push --tags`.'
+            if [[ -s "$RUNNER_TEMP/remix-release-notes.md" ]]; then
+              echo
+              echo '### Draft GitHub Release notes'
+              echo
+              draft=$(< "$RUNNER_TEMP/remix-release-notes.md")
+              fence='```'
+              while [[ "$draft" == *"$fence"* ]]; do fence+='`'; done
+              printf '%smarkdown\n%s\n%s\n' "$fence" "$draft" "$fence"
+            fi
             echo
             echo "### CI on this branch"
             echo
             echo 'CI installs every preset against checkout Remix.'
             echo 'Merging starts **Promote registry**. If this Remix version'
             echo 'is not on pub.dev yet, that run fails and `registry-stable`'
-            echo 'does not move. After pub.dev serves step 1, run'
+            echo 'does not move. After pub.dev serves the new version, run'
             echo '`dart run melos run open-code:release:check`, then re-run'
             echo '**Promote registry** on `main` (Actions → Promote registry'
             echo '→ Run workflow). Do not force-push `registry-stable`.'
-            echo 'The CLI publish workflow requires that branch to resolve.'
-            echo 'Do not lower the registry floor to bypass a missing release.'
+            echo '**Publish to pub.dev** requires that branch to resolve for CLI releases.'
+            echo 'Do not lower the registry floor to bypass a version missing from pub.dev.'
             echo
             echo "### remix_cli"
             echo
@@ -173,7 +185,8 @@ jobs:
             echo 'release. To release it, in its own pull request: bump'
             echo '`packages/remix_cli/pubspec.yaml`,'
             echo '`packages/remix_cli/lib/src/version.dart`, and its CHANGELOG'
-            echo 'to the same version, run `dart run tool/sync_install_pins.dart`,'
-            echo 'then push `remix_cli-v<version>`.'
+            echo 'to the same version. Run `dart run tool/release_packages.dart link-changelog remix_cli`'
+            echo 'and `dart run tool/sync_install_pins.dart`. After merging, create a public GitHub Release'
+            echo 'from the new `remix_cli-v<version>` tag on `main`.'
           } >> "$GITHUB_STEP_SUMMARY"
           echo "Open the pull request: $url"

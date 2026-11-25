@@ -99,10 +99,9 @@ melos:
         test: ^1.31.0
 
   scripts:
-    # No `release:*` versioning scripts here on purpose. The version workflow
-    # is the supported path for the published Remix package; registry_source is
-    # the internal authoring and specification package whose source derives the remote
-    # presets, so release automation must not version it.
+    # Prepare release is the supported way to bump Remix. registry_source is
+    # the internal authoring and specification package whose source derives the
+    # remote presets, so release automation must not version it.
     generate:
       description: Regenerate Remix sources
       # registry_source's generator resolves package:remix, so it must not build
@@ -286,6 +285,7 @@ melos:
         - toolchain:check
         - constraints:check
         - analyze
+        - release:test
         - version:align:check
         - mix:consumer:check
         - material:check
@@ -296,6 +296,10 @@ melos:
         - vanilla:scale:check
       description: >-
         Every cheap contract checker; seconds in total, so they share one job
+
+    release:test:
+      run: dart test test/tool/release_packages_test.dart
+      description: Verify release tag validation, changelogs, and GitHub Releases
 
     ci:codegen:
       steps:

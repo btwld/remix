@@ -72,8 +72,8 @@ List<File> installPinDocuments(Directory workspaceRoot) {
   return documents..sort((a, b) => a.path.compareTo(b.path));
 }
 
-/// User-facing docs describe the published release; `open_code/RELEASING.md`
-/// owns the candidate (#383).
+/// User-facing docs describe the version on pub.dev; `RELEASING.md`
+/// covers the release candidate (#383).
 final _releaseStagingPhrases = <RegExp>[
   RegExp(r'\bunpublished\b', caseSensitive: false),
   RegExp(r'\bnot published yet\b', caseSensitive: false),
@@ -117,7 +117,7 @@ void checkReleaseState(
     if (match != null) {
       failures.add(
         '$relativePath says "${match[0]}" at offset ${match.start}; '
-        'user-facing docs describe the published release, not a staged one.',
+        'user-facing docs describe the version on pub.dev, not a release candidate.',
       );
     }
   }

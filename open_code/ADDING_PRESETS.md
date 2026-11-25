@@ -8,7 +8,7 @@ Read the [design-system skill](../skills/building-remix-design-system/SKILL.md)
 and, when porting a web library, its
 [porting guide](../skills/building-remix-design-system/references/reference-parity.md).
 Use [PRESETS.md](PRESETS.md) for the current distribution contract and
-[RELEASING.md](RELEASING.md) for publication.
+[RELEASING.md](../RELEASING.md) for the release process.
 
 ## Architecture to retain
 
@@ -103,7 +103,7 @@ Complete these together before calling the new preset supported:
 | `open_code/<preset>_fixture/` | Add a minimal pre-install app with a different consumer prefix; install every shipped item and exercise theme, generation, imports, and rendering. |
 | `pubspec.yaml` | Add the parity check to `ci:checks`, a `ci:open-code:<preset>` step to `ci`, and checkout/hosted coverage to the corresponding aggregate scripts. |
 | `.github/workflows/ci.yaml` | Add the consumer job/matrix entry; `tool/check_ci_coverage.dart` must confirm CI and local gates agree. |
-| `.github/workflows/registry.yml`, `open_code/RELEASING.md` | Extend the hosted preset matrix and published/hosted CLI verification examples. Each matrix lane checks the candidate and the published CLI before promotion. Keep the all-preset release aggregate aligned; the CI-coverage checker does not inspect the promotion matrix. |
+| `.github/workflows/registry.yml`, `RELEASING.md` | Extend the hosted preset matrix and hosted CLI verification examples. Each matrix lane checks the candidate and the published CLI before promotion. Keep the all-preset release aggregate aligned; the CI-coverage checker does not inspect the promotion matrix. |
 | `tool/check_registry_icons.dart`, `tool/check_version_alignment.dart` | Inspect preset iteration and shared floors. Extend any hardcoded coverage; retain icon-placeholder and hosted-constraint guarantees. |
 | Installed-source review app | Add a dedicated consumer or deliberately extend a review surface without replacing existing preset demos. If adding a workspace app, wire its pubspec/workspace entry, installed-source checks in `tool/check_consumer_apps.dart`, and applicable codegen/docs coverage. |
 | `AGENTS.md`, `open_code/PRESETS.md`, `skills/using-remix/`, `docs/` | Document only implemented APIs, installation, source version, supported families, and deviations. Extend discovery/catalog generation where applicable; do not present the Fortal-only catalog as multi-preset coverage. |
@@ -132,14 +132,14 @@ the pattern. Then run `fvm dart run melos run ci` for completion.
 The checkout harness exercises unpushed authored output through the real CLI
 flow with internal registry-source injection. Production `init` still resolves
 `registry-stable`; updating to a development ref *after* `init` cannot bootstrap
-a preset absent from the stable index. Use the harness before publication and
-the remote/hosted checks in [RELEASING.md](RELEASING.md) at the release boundary.
-Passing checkout checks alone does not establish published installability.
+a preset absent from the stable index. Use the harness before promotion and
+the remote/hosted checks in [RELEASING.md](../RELEASING.md) at the release boundary.
+Passing checkout checks alone does not prove a hosted install works.
 
 ## Completion
 
 A preset is ready when every advertised item has a worksheet with source
 citations, passing recipe and token tests, generated distribution,
 fresh-consumer coverage, a reviewed installed-source gallery, and CI coverage.
-Report partial coverage as partial. Publishing and advancing registry refs are
-separate from implementation; passing gates do not authorize publishing.
+Report partial coverage as partial. Releasing packages and advancing registry
+refs are separate from implementation; passing gates does not authorize either.

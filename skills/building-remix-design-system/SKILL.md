@@ -10,7 +10,7 @@ description: >-
   porting HeroUI web, Material, Polaris, Fluent, Carbon, or a brand to Remix as
   installable source (even if one app consumes it first), from token
   packages, Figma, docs, PDFs, screenshots, or a brief; or when authoring,
-  reviewing, or publishing a Remix registry. Not for consuming a registry or
+  reviewing, or releasing a Remix registry. Not for consuming a registry or
   restyling installed Remix source inside one application; use `using-remix`.
 ---
 
@@ -37,14 +37,14 @@ syntax.
 | Task | Route |
 | --- | --- |
 | Add a preset beside Vanilla/Fortal in `btwld/remix` | Read `open_code/ADDING_PRESETS.md` in that checkout. Extend `registry_source` and the existing builder, consumer harness, and CI; do not scaffold another repository or force the new preset under `vanilla`. |
-| Publish a separate design-system registry | Use the repository and distribution workflow below and `references/registry.md`. |
+| Release a separate design-system registry | Use the repository and distribution workflow below and `references/registry.md`. |
 | Port an existing web design system | Also read `references/reference-parity.md` before extracting tokens or writing recipes. |
 | Restyle source owned by one app | Use `using-remix`. |
 
 The first-party checklist is also available in the
 [Remix repository](https://github.com/btwld/remix/blob/main/open_code/ADDING_PRESETS.md).
 The phases below apply to both authoring routes; repository creation and
-publication instructions default to the third-party route.
+release instructions default to the third-party route.
 
 ## What you are building
 
@@ -140,11 +140,11 @@ route. Four names are easy to confuse:
    recipe to the [readable source](references/components.md#readable-source)
    rules. See [components](references/components.md) for loading/focus,
    unresolved child styles, merge order and overlay scope hazards.
-5. **Publish and verify.** Analyze/test authored code, derive and check for
+5. **Release and verify.** Analyze/test authored code, derive and check for
    drift. First-party presets use the checkout consumer harness and their
-   parity gates; verify hosted publication separately per `open_code/RELEASING.md`.
+   parity gates; verify the hosted release separately per `RELEASING.md`.
    Third-party registries use a pushed branch in a fresh `vanilla` scratch app
-   with a different prefix when publication is authorized. Install every item,
+   with a different prefix when the release is authorized. Install every item,
    generate, analyze, build and render each component/mode. Advance the consumer
    ref only after those checks. Reference ports also need measured geometry,
    a reviewed side-by-side capture, and stated approximations.
@@ -154,7 +154,7 @@ required preset, exclusive `@<namespace>/*` use and host/theme setup. First-part
 setup uses `init --preset <preset>` once the served index includes it.
 Refresh every changed item,
 including theme dependencies, during iteration; `--overwrite` only replaces
-named items. [Registry](references/registry.md#6-publish-and-test) owns that loop.
+named items. [Registry](references/registry.md#6-release-and-test) owns that loop.
 
 ## References
 

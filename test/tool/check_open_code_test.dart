@@ -114,7 +114,7 @@ libraries:
       () async {
         expect(
           await checkPubFloors(registry, client: client(missing: 'remix')),
-          'remix ^1.0.0-beta.18 is not on pub.dev yet; push tag v1.0.0-beta.18, wait for the Publish workflow, then re-run Promote registry',
+          'remix ^1.0.0-beta.18 is not on pub.dev yet; create a public GitHub Release with tag v1.0.0-beta.18, wait for Publish to pub.dev, then re-run Promote registry',
         );
         expect(
           await checkPubFloors(
@@ -613,7 +613,7 @@ void main() {
     // commands here instead.
     final sources = [
       'pubspec.yaml',
-      'open_code/RELEASING.md',
+      'RELEASING.md',
       // Both extensions: the repository uses `.yml` and `.yaml`, and a
       // workflow this skipped would be exactly the blind spot the test exists
       // to remove.
@@ -646,10 +646,13 @@ void main() {
     expect(checked, greaterThan(4), reason: 'found no invocations to check');
   });
 
-  test('version workflow checks the requested Remix version before syncing', () {
+  test('Prepare release checks the requested Remix version before syncing', () {
     final workflow =
-        loadYaml(File('.github/workflows/version.yml').readAsStringSync())
+        loadYaml(
+              File('.github/workflows/prepare-release.yml').readAsStringSync(),
+            )
             as YamlMap;
+    expect(workflow['name'], 'Prepare release');
     final steps = workflow['jobs']['version']['steps'] as YamlList;
     final bump = steps.cast<YamlMap>().singleWhere(
       (step) => step['id'] == 'bump',

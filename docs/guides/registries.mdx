@@ -1,11 +1,11 @@
 ---
 title: Registries
-description: Install component source from the official registry, pin it to a commit, and publish a registry of your own
+description: Install component source from the official registry, pin it to a commit, and release a registry of your own
 ---
 
 The `remix` CLI copies component source into your application and leaves you
 owning it. A **registry** is where that source comes from. This guide covers
-using the official one, and publishing your own.
+using the official one and releasing your own.
 
 ## The model
 
@@ -38,7 +38,7 @@ remix add button
 
 `init` resolves the `registry-stable` branch of `btwld/remix` and stores
 its full commit SHA. It checks that your preset exists in that branch and
-writes `remix.yaml`. If the branch is not published, initialization fails and
+writes `remix.yaml`. If the branch does not exist, initialization fails and
 creates no files.
 
 An optional `iconLibrary` (`remix`, `rounded`, or `lucide`) lives in that same schema 3
@@ -179,10 +179,10 @@ control, or initialize a clean installation and reapply your edits. Changing
 the prefix, preset, or UI path conflicts with an existing ownership record;
 renaming or deleting source files does not release its reservations.
 
-## Publish your own registry
+## Release your own registry
 
 A registry is a directory in a public GitHub repository. Nothing else — no
-service to run, no account, no publishing step beyond `git push`.
+service to run, no separate account, no distribution step beyond `git push`.
 
 ### Layout
 
@@ -216,11 +216,11 @@ This trips people up, so it is worth being precise:
 
 `remix registry add` validates your registry against the preset the project
 **already** selected. So **every registry a project uses must offer that
-project's preset.** Publishing only a `acme` preset means no project that
+project's preset.** Offering only an `acme` preset means no project that
 initialized against the official registry can add you — `remix init` always
 resolves the official registry, which has no `acme`.
 
-Until a preset can be introduced by a third-party registry, publish under a
+Until a preset can be introduced by a third-party registry, use a
 preset name the consuming projects already use — `vanilla` here. Your
 namespace is what keeps your items distinct, not your preset name.
 
@@ -285,7 +285,7 @@ A template is ordinary Dart with these placeholders:
 | `{{icon:import}}` | the chosen icon library's import | `import 'package:lucide_flutter/lucide_flutter.dart';` |
 | `{{icon:<name>}}` | that library's constant for `<name>` | `LucideIcons.bell` |
 
-Icon placeholders resolve through the registry's `icons.yaml`, published beside
+Icon placeholders resolve through the registry's `icons.yaml`, stored beside
 `index.yaml`: `libraries` names each library's package, import, and class,
 and `icons` maps every canonical name (the `remix` library's constant) to its
 constant in every library. A template that uses `{{icon:<name>}}` also carries
@@ -317,7 +317,7 @@ registry the *consuming project* has configured. An item cannot register a
 registry or redirect one — the consumer stays in control of every source their
 code is installed from.
 
-### Publish and consume
+### Release and consume
 
 Commit the `registry/` directory and push it to the ref your consumers follow.
 A consumer with a `vanilla` project then registers you and installs:
@@ -387,7 +387,7 @@ There is no persistent offline cache.
 
 | message | cause |
 | --- | --- |
-| `No registry-stable branch is published for btwld/remix.` | The official registry has not been promoted yet, so `init` has no commit to pin. Nothing was written; retry once it is published. |
+| `No registry-stable branch is published for btwld/remix.` | The official registry has not been promoted yet, so `init` has no commit to pin. Nothing was written; retry after promotion. |
 | `GitHub ref <ref> not found` | The branch, tag or commit does not exist in that repository. Check the `--ref` value. |
 | `GitHub repository not found` | The `--repository` is misspelled, or the repository is private. |
 | `Registry <repo> has no <preset> preset.` | The registry's `index.yaml` does not list your project's preset. |

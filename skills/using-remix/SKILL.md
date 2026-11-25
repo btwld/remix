@@ -10,7 +10,7 @@ description: >-
   variants, and tokens, restyling this app's installed recipes and theme, or
   building a Remix component gallery. Also use for UI requests in projects
   whose pubspec or `remix.yaml` references Remix. Not for authoring or
-  publishing a reusable design-system registry (use
+  releasing a reusable design-system registry (use
   `building-remix-design-system`) or for Flutter UI in projects without
   Remix.
 ---
@@ -174,7 +174,7 @@ controller rules. See [Components](references/components.md#navigation).
 | HeroUI recipes, compositions, theme overrides, and what is not included | [HeroUI](references/heroui.md) |
 | Fluent styling, effects/gradient shorthand, state/context variants, animation, callable styles | [Styling](references/styling.md) |
 | Reference apps, product examples, variant matrices, and showcase audits | [Reference showcases](references/reference-showcases.md) |
-| A reusable design system published as a Remix registry | `building-remix-design-system` |
+| A reusable design system released as a Remix registry | `building-remix-design-system` |
 
 ## Verify the result
 
