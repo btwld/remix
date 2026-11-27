@@ -1,0 +1,99 @@
+---
+title: Rating
+description: A star rating built on radio group semantics, with hover preview and optional clearing
+keywords: [flutter, remix, rating, stars, radio group, selection, form, input]
+---
+
+A rating lets a person score something from 1 to `max` stars. Each star is a
+radio in one group, so arrow keys move the value, the checked star carries the
+accessible value, and a screen reader hears "3 of 5 stars". Hovering a star
+previews its value; leaving the stars restores the committed one. With
+`allowClear` (the default), choosing the committed star again clears the
+rating.
+
+`value` is `null` when the item is not rated. `onChanged` reports the chosen
+value, or `null` on a clear. A `null` `onChanged` disables the rating.
+
+## Basic implementation
+
+<CodeGroup title="Controlled rating" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class RatingExample extends StatefulWidget {
+  const RatingExample({super.key});
+
+  @override
+  State<RatingExample> createState() => _RatingExampleState();
+}
+
+class _RatingExampleState extends State<RatingExample> {
+  int? _rating = 4;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return RemixRating(
+      label: 'Rate this recipe',
+      description: 'Your rating is shared with the author.',
+      value: _rating,
+      onChanged: (value) => setState(() => _rating = value),
+      style: RatingStyler()
+          .spacing(6)
+          .stars(FlexBoxStyler().spacing(2))
+          .controlRow(FlexBoxStyler().spacing(8))
+          .fillStagger(const Duration(milliseconds: 35))
+          .star(
+            RatingStarStyler()
+                .size(36, 36)
+                .borderRadius(.circular(8))
+                .glyphSize(24)
+                .outlineColor(colors.outline)
+                .fillColor(Colors.amber.shade700)
+                .keptColor(Colors.amber.shade700.withValues(alpha: 0.3))
+                .onRated(RatingStarStyler().emptyColor(colors.surfaceContainerHighest))
+                .onFocusVisible(
+                  RatingStarStyler().containerEffects(
+                    .outline(.color(colors.primary).width(2)).outlineOffset(2),
+                  ),
+                ),
+          ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Anatomy
+
+| Part | Spec field | Notes |
+|---|---|---|
+| Field | `container` | Column holding the label, the row and the description. |
+| Label | `label` | Visible label, also the group's accessible name unless `semanticLabel` is set. |
+| Row | `controlRow` | The stars, then the value text. |
+| Stars | `stars` | Layout of the star cells. |
+| Star | `star` | One `RatingStarSpec` per star: the cell (`container`, `containerEffects`) and the glyph (`glyphSize`, `strokeWidth`, `glyphScale`, `emptyColor`, `outlineColor`, `keptColor`, `fillColor`). |
+| Value text | `valueText` | `valueLabelBuilder` text for the shown value. Every label stays laid out, so the row never changes width. |
+| Description | `description` | Visible text under the row, announced as the group's hint. |
+
+## Star states
+
+Each star resolves its style under its own widget states (hovered, pressed,
+focused, disabled; selected is the checked star) and three rating states:
+
+- `onFilled`: the star is inside the shown value, the hovered preview or else the committed value.
+- `onKept`: the star is inside the committed value.
+- `onRated`: the rating shows any value.
+
+`RemixRatingStarState.maybeOf(context)` exposes the same values, plus the
+star's `sweepOrder`, inside `onBuilder`.
+
+## Motion
+
+The fill of each star is painted clipped from the reading-order start, and
+moves with `fillMotion` (a curve or spring config; 150 ms ease-out by
+default). `fillStagger` delays each star along the sweep, so the fill travels
+away from the previous value. `keptMotion` moves the committed mark. Reduced
+motion jumps.
