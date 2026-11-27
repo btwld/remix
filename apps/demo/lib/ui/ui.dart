@@ -44,6 +44,7 @@ export 'components/spinner.dart';
 export 'components/surface.dart';
 export 'components/switch.dart';
 export 'components/tabs.dart';
+export 'components/tag_input.dart';
 export 'components/text.dart';
 export 'components/text_field.dart';
 export 'components/toast.dart';

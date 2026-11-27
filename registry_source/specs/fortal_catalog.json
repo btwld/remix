@@ -1191,6 +1191,39 @@
       ]
     },
     {
+      "id": "tag_input",
+      "fortalType": "FortalTagInput",
+      "enums": {},
+      "defaults": {
+        "highContrast": false,
+        "enabled": true,
+        "readOnly": false,
+        "autofocus": false,
+        "separators": [
+          ","
+        ],
+        "duplicates": "rejectIgnoringCase"
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "focused",
+        "picked",
+        "error",
+        "disabled",
+        "readOnly",
+        "wrapped",
+        "rtl"
+      ],
+      "tests": [
+        "test/fortal/tag_input_test.dart"
+      ]
+    },
+    {
       "id": "skeleton",
       "fortalType": "FortalSkeleton",
       "enums": {},

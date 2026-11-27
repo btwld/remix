@@ -858,6 +858,22 @@ items:
     exports:
       - components/tabs.dart
 
+  tag_input:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.3.0
+    files:
+      - source: templates/tag_input/tag_input.dart.tmpl
+        target: "@ui/components/tag_input.dart"
+    generated:
+      - "@ui/components/tag_input.g.dart"
+    exports:
+      - components/tag_input.dart
+
   text:
     registryDependencies:
       - theme
