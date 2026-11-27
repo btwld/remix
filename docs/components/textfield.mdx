@@ -716,3 +716,117 @@ Sets label/text word spacing
 #### `labelDecorationColor(Color value)`
 
 Sets label/text decoration color
+
+## Tag input
+
+`RemixTagInput` is a text field that collects a list of tags, such as topics, labels, or recipients. You own the list; the field commits typed text into it. Use `RemixSelect` or `RemixCombobox` when people pick from a fixed set.
+
+### Basic implementation
+
+<CodeGroup title="Tag input" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class TagInputExample extends StatefulWidget {
+  const TagInputExample({super.key});
+
+  @override
+  State<TagInputExample> createState() => _TagInputExampleState();
+}
+
+class _TagInputExampleState extends State<TagInputExample> {
+  var topics = <String>['design', 'flutter'];
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 320,
+      child: RemixTagInput(
+        label: 'Topics',
+        hintText: 'Add a tag',
+        helperText: 'Press Enter or type a comma to add a tag',
+        value: topics,
+        maxTags: 8,
+        onChanged: (next) => setState(() => topics = next),
+        style: style,
+      ),
+    );
+  }
+
+  TagInputStyler get style {
+    return TagInputStyler()
+        .padding(.all(7))
+        .spacing(6)
+        .runSpacing(6)
+        .borderRadius(.circular(14))
+        .border(.all(.color(Colors.grey.shade400)))
+        .onFocused(TagInputStyler().border(.all(.color(Colors.black))))
+        .tag(
+          TagInputTagStyler()
+              .height(28)
+              .padding(.only(left: 9, right: 4))
+              .spacing(3)
+              .borderRadius(.circular(999))
+              .color(Colors.grey.shade100)
+              .onSelected(TagInputTagStyler().color(Colors.grey.shade300))
+              .removeButton(
+                IconButtonStyler()
+                    .size(22, 22)
+                    .borderRadius(.circular(11))
+                    .iconSize(14),
+              ),
+        );
+  }
+}
+```
+</CodeGroup>
+
+### Behavior
+
+Enter, a separator (`separators`, a comma by default), and focus loss commit the trimmed draft. Pasted text splits at every separator, and `onChanged` receives the whole list once per user action. A duplicate, which ignores case by default (`duplicates`), is refused and announced, and `onDuplicate` receives the existing tag's index. At `maxTags` the draft stays in the field.
+
+The editor is the only Tab stop. With the caret at the start, Backspace or the back arrow picks the last tag, and the next Backspace removes it. The arrows move the pick and Escape clears it. A tap on a tag picks it; its remove button removes it. Focus stays in the editor throughout.
+
+Each tag is one semantics node with its text as the label, selected while picked, and a remove action. The editor's accessible name is `semanticLabel` or `label`. `helperText` is announced as the hint, or as the error when `error` is true. Pass `messages` to translate the announcements and the remove action.
+
+### Styling
+
+`TagInputStyler` styles the shell (`container` box values, `containerEffects`), the gaps (`spacing`, `runSpacing`), the editor (`text`, `hintText`, cursor values, `editorMinWidth`), and the `layout`, `label`, and `helperText` around it. Its `onFocused`, `onHovered`, `onDisabled`, and `onError` variants follow the field.
+
+`tag` takes a `TagInputTagStyler`, which each tag resolves in its own state: `onSelected` while picked and `onDisabled` with the field. The tag's `removeButton` takes an `IconButtonStyler` that resolves in the button's own hover and press states.
+
+### Constructor
+<CodeGroup title="Tag input constructor" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+RemixTagInput remixTagInputConstructor({
+  Key? key,
+  required List<String> value,
+  ValueChanged<List<String>>? onChanged,
+  ValueChanged<int>? onDuplicate,
+  TextEditingController? controller,
+  FocusNode? focusNode,
+  String? label,
+  String? hintText,
+  String? helperText,
+  bool error = false,
+  List<String> separators = const [','],
+  NakedTagInputDuplicates duplicates = NakedTagInputDuplicates.rejectIgnoringCase,
+  int? maxTags,
+  bool enabled = true,
+  bool readOnly = false,
+  bool autofocus = false,
+  TextInputAction? textInputAction,
+  String? semanticLabel,
+  NakedTagInputMessages messages = const NakedTagInputMessages(),
+  String Function(String tag) removeLabelBuilder = _removeLabel,
+  TagInputStyler style = const TagInputStyler.create(),
+  TagInputSpec? styleSpec,
+}) => throw UnimplementedError();
+
+String _removeLabel(String tag) => 'Remove $tag';
+```
+</CodeGroup>

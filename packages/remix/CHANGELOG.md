@@ -1,3 +1,12 @@
+## Unreleased
+
+### Features
+
+- Tag input: add `RemixTagInput`, `TagInputSpec`, and `TagInputTagSpec` on
+  Naked UI's `NakedTagInput`. Tags resolve their own style (`onSelected` while
+  picked), and each remove button resolves an `IconButtonStyler` in its own
+  state.
+
 ## 1.0.0-rc.7
 
 ### Fixes
