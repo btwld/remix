@@ -222,6 +222,14 @@ class _AccentSwatch extends StatelessWidget {
             .onSelected(
               ToggleStyler()
                   .iconColor({{typePrefix}}Tokens.accentSwatchContrast())
+                  // The strong tone takes the page colour as its ink, as the
+                  // ink solid's label does.
+                  .onHovered(
+                    ToggleStyler().iconColor({{typePrefix}}Tokens.accentContrast()),
+                  )
+                  .onPressed(
+                    ToggleStyler().iconColor({{typePrefix}}Tokens.accentContrast()),
+                  )
                   .merge(ring({{typePrefix}}Tokens.gray12)),
             )
             .onFocusVisible(ring({{typePrefix}}Tokens.focus8)),
