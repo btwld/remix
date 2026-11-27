@@ -256,6 +256,7 @@ final class FortalMotionClock {
   void remove(FortalChannel channel) => _channels.remove(channel);
 
   /// Moves [channel] to [to] with [timing], or straight there when [jump].
+  /// A target the channel already heads for leaves it as it is.
   void animate(
     FortalChannel channel,
     double to,
@@ -263,7 +264,7 @@ final class FortalMotionClock {
     bool jump = false,
   }) {
     if (jump) {
-      channel._jump(to);
+      if (to != channel._target) channel._jump(to);
 
       return;
     }
@@ -274,8 +275,6 @@ final class FortalMotionClock {
       _ticker.start();
     }
   }
-
-  void jump(FortalChannel channel, double to) => channel._jump(to);
 
   void _handleTick(Duration elapsed) {
     _elapsed = elapsed.inMicroseconds / Duration.microsecondsPerSecond;

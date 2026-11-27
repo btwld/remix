@@ -58,11 +58,13 @@ class FortalIndicatorAnchor extends StatefulWidget {
 final class _AnchorRegistry {
   final Map<Object, BuildContext> _contexts = {};
 
-  RenderBox? boxFor(Object? value) {
+  _RenderAnchor? boxFor(Object? value) {
     if (value == null) return null;
     final box = _contexts[value]?.findRenderObject();
 
-    return box is RenderBox && box.attached && box.hasSize ? box : null;
+    return box is _RenderAnchor && box.attached && box.laidOutSize != null
+        ? box
+        : null;
   }
 }
 
@@ -116,7 +118,26 @@ class _FortalIndicatorAnchorState extends State<FortalIndicatorAnchor> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.child;
+  Widget build(BuildContext context) => _Anchor(child: widget.child);
+}
+
+class _Anchor extends SingleChildRenderObjectWidget {
+  const _Anchor({super.child});
+
+  @override
+  RenderObject createRenderObject(BuildContext context) => _RenderAnchor();
+}
+
+/// Keeps its own size for the track, which may only read the size of its
+/// direct children during layout.
+class _RenderAnchor extends RenderProxyBox {
+  Size? laidOutSize;
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    laidOutSize = size;
+  }
 }
 
 class _FortalIndicatorTrackState extends State<FortalIndicatorTrack>
@@ -242,7 +263,7 @@ class _RenderIndicatorTrack extends RenderBox
     if (anchor != null) {
       final rect = MatrixUtils.transformRect(
         anchor.getTransformTo(this),
-        Offset.zero & anchor.size,
+        Offset.zero & anchor.laidOutSize!,
       );
       final jump = reduceMotion || !_placed || _placedFor == _selected;
       _clock
