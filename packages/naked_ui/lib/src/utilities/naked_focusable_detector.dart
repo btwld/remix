@@ -155,22 +155,16 @@ class _NakedFocusableDetectorState extends State<NakedFocusableDetector>
       );
     }
 
-    // Disabling empties these wrappers instead of removing them, so the
-    // subtree keeps its state and its style can animate to disabled.
-    final actions = widget.actions;
-    if (actions != null && actions.isNotEmpty) {
-      result = Actions(
-        actions: widget.enabled ? actions : const {},
-        child: result,
-      );
+    if (widget.enabled &&
+        widget.actions != null &&
+        widget.actions!.isNotEmpty) {
+      result = Actions(actions: widget.actions!, child: result);
     }
 
-    final shortcuts = widget.shortcuts;
-    if (shortcuts != null && shortcuts.isNotEmpty) {
-      result = Shortcuts(
-        shortcuts: widget.enabled ? shortcuts : const {},
-        child: result,
-      );
+    if (widget.enabled &&
+        widget.shortcuts != null &&
+        widget.shortcuts!.isNotEmpty) {
+      result = Shortcuts(shortcuts: widget.shortcuts!, child: result);
     }
 
     return result;

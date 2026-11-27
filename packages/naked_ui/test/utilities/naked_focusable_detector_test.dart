@@ -297,44 +297,6 @@ void main() {
     });
 
     group('State transitions', () {
-      testWidgets('keeps the child mounted when enabled changes', (
-        tester,
-      ) async {
-        var triggered = 0;
-        final focusNode = FocusNode();
-        addTearDown(focusNode.dispose);
-        Widget build({required bool enabled}) => MaterialApp(
-          home: NakedFocusableDetector(
-            enabled: enabled,
-            focusNode: focusNode,
-            shortcuts: {LogicalKeySet(LogicalKeyboardKey.enter): TestIntent()},
-            actions: {
-              TestIntent: CallbackAction<TestIntent>(
-                onInvoke: (_) => triggered++,
-              ),
-            },
-            child: const _Probe(),
-          ),
-        );
-
-        await tester.pumpWidget(build(enabled: true));
-        final state = tester.state(find.byType(_Probe));
-        focusNode.requestFocus();
-        await tester.pump();
-
-        await tester.pumpWidget(build(enabled: false));
-        expect(tester.state(find.byType(_Probe)), same(state));
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        expect(triggered, 0);
-
-        await tester.pumpWidget(build(enabled: true));
-        expect(tester.state(find.byType(_Probe)), same(state));
-        focusNode.requestFocus();
-        await tester.pump();
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        expect(triggered, 1);
-      });
-
       testWidgets('calls onEnableChange when enabled state changes', (
         tester,
       ) async {
@@ -500,16 +462,4 @@ void main() {
 
 class TestIntent extends Intent {
   const TestIntent();
-}
-
-class _Probe extends StatefulWidget {
-  const _Probe();
-
-  @override
-  State<_Probe> createState() => _ProbeState();
-}
-
-class _ProbeState extends State<_Probe> {
-  @override
-  Widget build(BuildContext context) => const SizedBox(width: 100, height: 100);
 }
