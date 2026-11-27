@@ -106,8 +106,11 @@ import 'package:remix/remix.dart';
 RemixCallout remixCalloutConstructor({
   Key? key,
   String? text,
+  String? title,
   IconData? icon,
   Widget? child,
+  VoidCallback? onDismiss,
+  String? dismissLabel,
   CalloutStyler style = const CalloutStyler.create(),
   CalloutSpec? styleSpec,
 }) => throw UnimplementedError();
@@ -132,7 +135,11 @@ Optional. Controls how one widget replaces another widget in the tree.
 
 #### `text` → `String?`
 
-Optional. The text to display in the callout.
+Optional. The text to display in the callout. Under a `title`, it is the description.
+
+#### `title` → `String?`
+
+Optional. A heading above `text`. The two stack in the `content` column, aligned to the start.
 
 #### `icon` → `IconData?`
 
@@ -141,6 +148,14 @@ Optional. The icon to display in the callout.
 #### `child` → `Widget?`
 
 Optional. Optional custom child content for the callout body.
+
+#### `onDismiss` → `VoidCallback?`
+
+Optional. Shows a close button at the end of the row and calls this when it is pressed. The callout does not hide itself; remove it from the tree in the callback.
+
+#### `dismissLabel` → `String?`
+
+The close button's localized accessible name. Required with `onDismiss`.
 
 ### Style Methods
 
@@ -208,6 +223,18 @@ Configures the icon style using an IconStyler.
 
 Configures the text style using a TextStyler.
 
+#### `title(TextStyler value)`
+
+Configures the title text style.
+
+#### `content(FlexBoxStyler value)`
+
+Configures the column that holds the title and text, such as the gap between them.
+
+#### `closeButton(Style<IconButtonSpec> value)`
+
+Styles the close button. The button resolves this style against its own hover, focus, and press states.
+
 #### `iconSize(double value)`
 
 Sets icon size
@@ -248,6 +275,6 @@ Sets icon shadows
 
 Sets single icon shadow
 
-#### `call({Key? key, String? text, IconData? icon, Widget? child})`
+#### `call({Key? key, String? text, String? title, IconData? icon, Widget? child, VoidCallback? onDismiss, String? dismissLabel})`
 
 Creates a `RemixCallout` widget with this style applied.

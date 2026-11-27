@@ -11,6 +11,9 @@ mixin _$CalloutSpec implements Spec<CalloutSpec>, Diagnosticable {
   StyleSpec<TextSpec> get text;
   StyleSpec<IconSpec> get icon;
   RemixBoxEffectsSpec? get containerEffects;
+  StyleSpec<TextSpec> get title;
+  StyleSpec<FlexBoxSpec> get content;
+  Style<IconButtonSpec>? get closeButton;
 
   @override
   Type get type => CalloutSpec;
@@ -21,12 +24,18 @@ mixin _$CalloutSpec implements Spec<CalloutSpec>, Diagnosticable {
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
     RemixBoxEffectsSpec? containerEffects,
+    StyleSpec<TextSpec>? title,
+    StyleSpec<FlexBoxSpec>? content,
+    Style<IconButtonSpec>? closeButton,
   }) {
     return CalloutSpec(
       container: container ?? this.container,
       text: text ?? this.text,
       icon: icon ?? this.icon,
       containerEffects: containerEffects ?? this.containerEffects,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      closeButton: closeButton ?? this.closeButton,
     );
   }
 
@@ -41,11 +50,22 @@ mixin _$CalloutSpec implements Spec<CalloutSpec>, Diagnosticable {
         other?.containerEffects,
         t,
       ),
+      title: title.lerp(other?.title, t),
+      content: content.lerp(other?.content, t),
+      closeButton: MixOps.lerpSnap(closeButton, other?.closeButton, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, text, icon, containerEffects];
+  List<Object?> get props => [
+    container,
+    text,
+    icon,
+    containerEffects,
+    title,
+    content,
+    closeButton,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -90,7 +110,10 @@ mixin _$CalloutSpec implements Spec<CalloutSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('text', text))
       ..add(DiagnosticsProperty('icon', icon))
-      ..add(DiagnosticsProperty('containerEffects', containerEffects));
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
+      ..add(DiagnosticsProperty('title', title))
+      ..add(DiagnosticsProperty('content', content))
+      ..add(DiagnosticsProperty('closeButton', closeButton));
   }
 }
 
@@ -110,25 +133,37 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
+  final Prop<StyleSpec<TextSpec>>? $title;
+  final Prop<StyleSpec<FlexBoxSpec>>? $content;
+  final Prop<Style<IconButtonSpec>>? $closeButton;
 
   const CalloutStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<IconSpec>>? icon,
     Prop<RemixBoxEffectsSpec>? containerEffects,
+    Prop<StyleSpec<TextSpec>>? title,
+    Prop<StyleSpec<FlexBoxSpec>>? content,
+    Prop<Style<IconButtonSpec>>? closeButton,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $text = text,
        $icon = icon,
-       $containerEffects = containerEffects;
+       $containerEffects = containerEffects,
+       $title = title,
+       $content = content,
+       $closeButton = closeButton;
 
   CalloutStyler({
     FlexBoxStyler? container,
     TextStyler? text,
     IconStyler? icon,
     RemixBoxEffectsMix? containerEffects,
+    TextStyler? title,
+    FlexBoxStyler? content,
+    Style<IconButtonSpec>? closeButton,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<CalloutSpec>>? variants,
@@ -137,6 +172,9 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
          text: Prop.maybeMix(text),
          icon: Prop.maybeMix(icon),
          containerEffects: Prop.maybeMix(containerEffects),
+         title: Prop.maybeMix(title),
+         content: Prop.maybeMix(content),
+         closeButton: Prop.maybe(closeButton),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -148,6 +186,11 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
   factory CalloutStyler.icon(IconStyler value) => CalloutStyler().icon(value);
   factory CalloutStyler.containerEffects(RemixBoxEffectsMix value) =>
       CalloutStyler().containerEffects(value);
+  factory CalloutStyler.title(TextStyler value) => CalloutStyler().title(value);
+  factory CalloutStyler.content(FlexBoxStyler value) =>
+      CalloutStyler().content(value);
+  factory CalloutStyler.closeButton(Style<IconButtonSpec> value) =>
+      CalloutStyler().closeButton(value);
   factory CalloutStyler.color(Color value) => CalloutStyler().color(value);
   factory CalloutStyler.gradient(GradientMix value) =>
       CalloutStyler().gradient(value);
@@ -704,6 +747,9 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     'text',
     'icon',
     'containerEffects',
+    'title',
+    'content',
+    'closeButton',
     'animation',
     'modifier',
     'variants',
@@ -730,6 +776,21 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     return merge(CalloutStyler(containerEffects: value));
   }
 
+  /// Sets the title.
+  CalloutStyler title(TextStyler value) {
+    return merge(CalloutStyler(title: value));
+  }
+
+  /// Sets the content.
+  CalloutStyler content(FlexBoxStyler value) {
+    return merge(CalloutStyler(content: value));
+  }
+
+  /// Sets the closeButton.
+  CalloutStyler closeButton(Style<IconButtonSpec> value) {
+    return merge(CalloutStyler(closeButton: value));
+  }
+
   /// Sets the animation configuration.
   @override
   CalloutStyler animate(AnimationConfig value) {
@@ -753,12 +814,23 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     return merge(CalloutStyler(modifier: value));
   }
 
-  RemixCallout call({Key? key, String? text, IconData? icon, Widget? child}) {
+  RemixCallout call({
+    Key? key,
+    String? text,
+    String? title,
+    IconData? icon,
+    Widget? child,
+    VoidCallback? onDismiss,
+    String? dismissLabel,
+  }) {
     return RemixCallout(
       key: key,
       style: this,
       text: text,
+      title: title,
       icon: icon,
+      onDismiss: onDismiss,
+      dismissLabel: dismissLabel,
       child: child,
     );
   }
@@ -774,6 +846,9 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
         $containerEffects,
         other?.$containerEffects,
       ),
+      title: MixOps.merge($title, other?.$title),
+      content: MixOps.merge($content, other?.$content),
+      closeButton: MixOps.merge($closeButton, other?.$closeButton),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -788,6 +863,9 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
       text: MixOps.resolve(context, $text),
       icon: MixOps.resolve(context, $icon),
       containerEffects: MixOps.resolve(context, $containerEffects),
+      title: MixOps.resolve(context, $title),
+      content: MixOps.resolve(context, $content),
+      closeButton: MixOps.resolve(context, $closeButton),
     );
 
     return StyleSpec(
@@ -804,7 +882,10 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('text', $text))
       ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
+      ..add(DiagnosticsProperty('title', $title))
+      ..add(DiagnosticsProperty('content', $content))
+      ..add(DiagnosticsProperty('closeButton', $closeButton));
   }
 
   @override
@@ -813,6 +894,9 @@ class CalloutStyler extends MixStyler<CalloutStyler, CalloutSpec>
     $text,
     $icon,
     $containerEffects,
+    $title,
+    $content,
+    $closeButton,
     $animation,
     $modifier,
     $variants,

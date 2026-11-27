@@ -59,6 +59,9 @@
   `RemixToastScope` reads from its style to time and draw each toast's
   entrance and exit, and `iconContainer`, a box around the leading icon.
   `RemixToastScope.defaultTransitionBuilder` is the existing fade and slide.
+- `RemixCallout` takes a `title` above its `text`, and `onDismiss` with
+  `dismissLabel` for a close button at the end of the row.
+  `CalloutStyler.title`, `.content`, and `.closeButton` style them.
 
 ## 1.0.0-rc.7
 
