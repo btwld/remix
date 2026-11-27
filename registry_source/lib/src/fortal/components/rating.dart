@@ -63,10 +63,9 @@ RatingStyler fortalRatingStyle({
       .controlRow(FlexBoxStyler().spacing(8 - inset))
       .stars(FlexBoxStyler().spacing(2))
       .valueText(
-        TextStyler()
-            .style(FortalTokens.text2.mix())
-            .color(muted)
-            .fontFeatures([const FontFeature.tabularFigures()]),
+        TextStyler().style(FortalTokens.text2.mix()).color(muted).fontFeatures([
+          const FontFeature.tabularFigures(),
+        ]),
       )
       .description(
         TextStyler()
@@ -75,10 +74,16 @@ RatingStyler fortalRatingStyle({
             .fontFeatures([const FontFeature.tabularFigures()])
             .wrap(.padding(.only(left: inset))),
       )
-      .onRated(RatingStyler().valueText(TextStyler().color(FortalTokens.gray11())))
-      .fillMotion(const SpringAnimationConfig(spring: FortalMotion.springSnappy))
+      .onRated(
+        RatingStyler().valueText(TextStyler().color(FortalTokens.gray11())),
+      )
+      .fillMotion(
+        const SpringAnimationConfig(spring: FortalMotion.springSnappy),
+      )
       .fillStagger(FortalMotion.staggerItem)
-      .keptMotion(const SpringAnimationConfig(spring: FortalMotion.springSmooth))
+      .keptMotion(
+        const SpringAnimationConfig(spring: FortalMotion.springSmooth),
+      )
       .star(
         RatingStarStyler()
             .alignment(.center)

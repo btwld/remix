@@ -63,10 +63,9 @@ RatingStyler {{valuePrefix}}RatingStyle({
       .controlRow(FlexBoxStyler().spacing(8 - inset))
       .stars(FlexBoxStyler().spacing(2))
       .valueText(
-        TextStyler()
-            .style({{typePrefix}}Tokens.text2.mix())
-            .color(muted)
-            .fontFeatures([const FontFeature.tabularFigures()]),
+        TextStyler().style({{typePrefix}}Tokens.text2.mix()).color(muted).fontFeatures([
+          const FontFeature.tabularFigures(),
+        ]),
       )
       .description(
         TextStyler()
@@ -75,10 +74,16 @@ RatingStyler {{valuePrefix}}RatingStyle({
             .fontFeatures([const FontFeature.tabularFigures()])
             .wrap(.padding(.only(left: inset))),
       )
-      .onRated(RatingStyler().valueText(TextStyler().color({{typePrefix}}Tokens.gray11())))
-      .fillMotion(const SpringAnimationConfig(spring: {{typePrefix}}Motion.springSnappy))
+      .onRated(
+        RatingStyler().valueText(TextStyler().color({{typePrefix}}Tokens.gray11())),
+      )
+      .fillMotion(
+        const SpringAnimationConfig(spring: {{typePrefix}}Motion.springSnappy),
+      )
       .fillStagger({{typePrefix}}Motion.staggerItem)
-      .keptMotion(const SpringAnimationConfig(spring: {{typePrefix}}Motion.springSmooth))
+      .keptMotion(
+        const SpringAnimationConfig(spring: {{typePrefix}}Motion.springSmooth),
+      )
       .star(
         RatingStarStyler()
             .alignment(.center)

@@ -1,0 +1,139 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'rating.g.dart';
+
+/// The sizes a rating comes in. Pixel values are at 100% theme scaling.
+enum FortalRatingSize {
+  /// 18px stars in 28px cells.
+  size1,
+
+  /// 24px stars in 36px cells. The default.
+  size2,
+
+  /// 30px stars in 44px cells.
+  size3,
+}
+
+/// The committed value under a hovered preview: the warning tone at 30%.
+final _kept = ContextToken<Color>(
+  (context) => FortalTokens.warning.resolve(context).withValues(alpha: .3),
+);
+
+/// The Fortal Rating recipe: outlined stars that fill in the warning tone,
+/// with a label above, the value in words beside them and an optional
+/// description below.
+///
+/// It reads top to bottom: the field, the label, value and description text,
+/// the fill motion, the star's layers for rest, rated, filled, pressed, focus
+/// and disabled, then the size.
+///
+/// Once a value shows, empty stars soften from an outline into a quiet solid
+/// and shrink a little, so a partly filled row reads as one shape. While a
+/// preview shows, the committed value stays as a faint mark.
+///
+/// [highContrast] moves the empty outline, the empty value text and the
+/// description to gray step 11.
+@MixWidget(target: RemixRating.new)
+RatingStyler fortalRatingStyle({
+  FortalRatingSize size = .size2,
+  bool highContrast = false,
+  RatingStyler style = const RatingStyler.create(),
+}) {
+  final muted = highContrast ? FortalTokens.gray11() : FortalTokens.gray10();
+  final outline = highContrast
+      ? FortalTokens.gray11()
+      : FortalTokens.controlBorder();
+  // Cells are wider than their stars. Insetting the label and description by
+  // the cell's margin lines the first star up with the text above it.
+  final inset = (_cell(size) - _glyph(size)) / 2;
+
+  return RatingStyler()
+      .spacing(6)
+      .label(
+        TextStyler()
+            .style(FortalTokens.text2.mix())
+            .color(FortalTokens.gray12())
+            .fontWeight(FortalTokens.fontWeightMedium())
+            .wrap(.padding(.only(left: inset))),
+      )
+      .controlRow(FlexBoxStyler().spacing(8 - inset))
+      .stars(FlexBoxStyler().spacing(2))
+      .valueText(
+        TextStyler().style(FortalTokens.text2.mix()).color(muted).fontFeatures([
+          const FontFeature.tabularFigures(),
+        ]),
+      )
+      .description(
+        TextStyler()
+            .style(FortalTokens.text1.mix())
+            .color(muted)
+            .fontFeatures([const FontFeature.tabularFigures()])
+            .wrap(.padding(.only(left: inset))),
+      )
+      .onRated(
+        RatingStyler().valueText(TextStyler().color(FortalTokens.gray11())),
+      )
+      .fillMotion(
+        const SpringAnimationConfig(spring: FortalMotion.springSnappy),
+      )
+      .fillStagger(FortalMotion.staggerItem)
+      .keptMotion(
+        const SpringAnimationConfig(spring: FortalMotion.springSmooth),
+      )
+      .star(
+        RatingStarStyler()
+            .alignment(.center)
+            .outlineColor(outline)
+            .fillColor(FortalTokens.warning())
+            .keptColor(_kept())
+            .glyphScale(1)
+            .onRated(
+              RatingStarStyler()
+                  .emptyColor(FortalTokens.gray7())
+                  .outlineColor(FortalTokens.gray7())
+                  .glyphScale(.9),
+            )
+            .onFilled(RatingStarStyler().glyphScale(1))
+            .onPressed(RatingStarStyler().glyphScale(.86))
+            .onFocusVisible(.containerEffects(fortalFocusOutline()))
+            .animate(
+              const SpringAnimationConfig(spring: FortalMotion.springSnappy),
+            ),
+      )
+      .onDisabled(
+        RatingStyler()
+            .stars(FlexBoxStyler().wrap(.opacity(.5)))
+            .valueText(TextStyler().wrap(.opacity(.5))),
+      )
+      .merge(_scale(size))
+      .merge(style);
+}
+
+double _cell(FortalRatingSize size) => switch (size) {
+  .size1 => 28,
+  .size2 => 36,
+  .size3 => 44,
+};
+
+double _glyph(FortalRatingSize size) => switch (size) {
+  .size1 => 18,
+  .size2 => 24,
+  .size3 => 30,
+};
+
+/// The cell, glyph and stroke of each step. The stroke keeps 1.75 at a 24px
+/// star and scales with the glyph.
+RatingStyler _scale(FortalRatingSize size) {
+  final glyph = _glyph(size);
+  return RatingStyler().star(
+    RatingStarStyler()
+        .size(_cell(size), _cell(size))
+        .borderRadius(.circular(8))
+        .glyphSize(glyph)
+        .strokeWidth(1.75 * glyph / 24),
+  );
+}
