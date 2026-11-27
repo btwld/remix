@@ -400,6 +400,9 @@ for Overlay, Navigator and toast scope placement.
   `hideOverlay` when the transition ends; the panel stays open until then.
   Hover and keys do not reopen a panel whose close is pending, and when the
   whole menu closes a submenu hides with the root panel.
+- **RemixContextMenu\<T\>**: the `RemixMenu` panel opened at a point on
+  `child` by secondary click, touch long press, or the ContextMenu key and
+  Shift+F10. Same `items` and `MenuStyler`; no trigger.
 - **Toast** — base Remix exposes `RemixToastScope` and
   `showRemixToast(context, RemixToastData(title: ...))`, which returns a
   `RemixToastHandle` (`closed`, `dismiss()`). A toast with the same non-null

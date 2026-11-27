@@ -12,6 +12,7 @@ final class RemixPanelTransitionInfo {
   const RemixPanelTransitionInfo({
     required this.animation,
     required this.anchorRect,
+    this.openPosition,
   });
 
   /// Runs from `0.0` to `1.0` while the panel opens and back to `0.0` while it
@@ -25,6 +26,11 @@ final class RemixPanelTransitionInfo {
 
   /// The bounds of the trigger, in the overlay's coordinate space.
   final Rect anchorRect;
+
+  /// The point the panel opened at, in the overlay's coordinate space, or
+  /// `null` when it opened against the whole anchor. A context menu sets it to
+  /// the pointer, so a transition can grow the panel from there.
+  final Offset? openPosition;
 }
 
 /// Wraps an overlay panel in an open and close transition.
@@ -145,11 +151,15 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
   ///
   /// A newer request supersedes a deferred show. When [isOpen] is supplied,
   /// only requests with a different position are forwarded to an open anchor.
+  /// With [replayOnMove], such a request also replays the open transition at
+  /// the new position, including one that interrupts an exit; otherwise the
+  /// panel moves with its progress kept, and an exit reverses in place.
   void openRequested(
     Offset? position,
     VoidCallback showOverlay,
     void Function(Offset? position, VoidCallback showOverlay)? userRequested, {
     bool Function()? isOpen,
+    bool replayOnMove = false,
   }) {
     if (_disposed) return;
     final request = _openRequest = Object();
@@ -157,7 +167,8 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
       if (!identical(_openRequest, request)) return;
       _openRequest = null;
       _closeRequest = null;
-      if (isExiting) {
+      final moved = _openPosition != position;
+      if (isExiting && !(replayOnMove && moved)) {
         _exitTransition = null;
         final transition = _panelTransition;
         if (transition == null) {
@@ -168,14 +179,23 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
         notifyListeners();
         return;
       }
-      if (isOpen?.call() ?? false) {
-        if (_openPosition == position) return;
+      final wasOpen = isOpen?.call() ?? false;
+      if (wasOpen) {
+        if (!moved) return;
       } else {
         _panelTransition = null;
         _controller?.stop();
       }
       _openPosition = position;
       showOverlay();
+      if (!wasOpen || !replayOnMove) return;
+      // The anchor keeps the mounted panel when it moves, so nothing adopts
+      // the transition again: replay it here.
+      final exited = isExiting;
+      _exitTransition = null;
+      final transition = _panelTransition;
+      if (transition != null) _open(transition, from: 0);
+      if (exited) notifyListeners();
     }
 
     if (userRequested == null) {
@@ -306,12 +326,14 @@ final class RemixPanelTransitionHost extends StatefulWidget {
     required this.handle,
     required this.transition,
     required this.anchorRect,
+    this.openPosition,
     required this.child,
   });
 
   final RemixPanelTransitionHandle handle;
   final RemixPanelTransition? transition;
   final Rect anchorRect;
+  final Offset? openPosition;
   final Widget child;
 
   @override
@@ -397,6 +419,7 @@ class _RemixPanelTransitionHostState extends State<RemixPanelTransitionHost>
               RemixPanelTransitionInfo(
                 animation: animation.view,
                 anchorRect: widget.anchorRect,
+                openPosition: widget.openPosition,
               ),
               widget.child,
             ),

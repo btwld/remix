@@ -541,6 +541,38 @@ The animation is the one `panelTransition` runs, and it is complete when the
 menu has no panel transition. A section and a divider each count as one entry.
 Submenu panels are not wrapped.
 
+## Context menu
+
+`RemixContextMenu` opens the same panel at a point on a region instead of
+under a trigger. A secondary click opens it at the pointer, a touch long press
+at the press, and the ContextMenu key or Shift+F10 at the region's bottom-left
+corner. It takes the same `items` and `MenuStyler`; the trigger styles do not
+apply.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Widget photoWithActions() {
+  return RemixContextMenu<String>(
+    items: const [
+      RemixMenuItem(value: 'copy', label: 'Copy'),
+      RemixMenuItem(value: 'delete', label: 'Delete'),
+    ],
+    onSelected: (value) => debugPrint('Selected $value'),
+    child: const SizedBox(width: 240, height: 160, child: Text('Photo')),
+  );
+}
+```
+
+The panel's top-left corner sits at the point unless a `positioning` argument
+or the style's `positioning` says otherwise. A `panelTransition` receives the
+point as `RemixPanelTransitionInfo.openPosition`, in the overlay's coordinate
+space, so the panel can grow from the pointer. When the user opens the menu at
+a new point while it is open or closing, the panel moves there and its open
+transition plays again. On the web, call
+`BrowserContextMenu.disableContextMenu()` so the browser's own menu stays shut.
+
 ## Sections
 
 `RemixMenuSection` groups entries under a heading, such as "Recent" or
