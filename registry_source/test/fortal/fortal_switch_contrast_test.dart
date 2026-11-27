@@ -105,7 +105,7 @@ void main() {
   }
 
   testWidgets(
-    'default neutral dark selected thumb is outlined on the white track',
+    'high contrast neutral dark selected thumb is outlined on the light track',
     (tester) async {
       for (final pressed in [false, true]) {
         final spec = await resolveInFortalTheme(
@@ -116,10 +116,11 @@ void main() {
           },
           accent: .orla,
           mode: .dark,
+          highContrast: true,
           states: {WidgetState.selected, if (pressed) WidgetState.pressed},
         );
         expect(_color(spec.thumb), const Color(0xffffffff));
-        expect(_border(spec.thumb).color, const Color(0xff111111));
+        expect(_border(spec.thumb).color, const Color(0xff141414));
         expect(_border(spec.thumb).width, 2);
         expect(
           _color(spec.container),

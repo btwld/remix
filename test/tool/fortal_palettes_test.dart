@@ -31,7 +31,7 @@ void main() {
     expect(result.exitCode, 0, reason: '${result.stderr}');
     expect(
       result.stdout,
-      contains('Generated 7 accent palettes and the semantic error palette'),
+      contains('Generated 8 accent palettes and the semantic error palette'),
     );
     expect(
       output.readAsStringSync(),

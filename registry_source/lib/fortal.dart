@@ -12,13 +12,7 @@ export 'src/fortal/icons.dart';
 
 /// THEME
 export 'src/fortal/theme/fortal_colors.dart'
-    hide
-        fortalNeutralPalettes,
-        fortalGrayNeutral,
-        fortalSageNeutral,
-        fortalSlateNeutral,
-        fortalOliveNeutral,
-        fortalSandNeutral;
+    hide fortalNeutral, fortalFunctionalLight, fortalFunctionalDark;
 export 'src/fortal/theme/palette.dart';
 export 'src/fortal/theme/theme.dart';
 export 'src/fortal/components/base_button.dart';

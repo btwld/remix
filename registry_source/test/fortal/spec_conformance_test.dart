@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:registry_source/src/fortal/theme/fortal_colors.dart'
+    show fortalNeutral;
 import 'package:registry_source/src/fortal/theme/theme_data.dart'
     show buildFortalScopeTokens;
 
@@ -85,9 +87,15 @@ void main() {
         final tokens = buildFortalScopeTokens(
           theme.copyWith(brightness: brightness),
         );
+        // The raised surface is the panel: white in light and, in dark, a
+        // step above the gray-2 surface.
+        final panel = brightness == Brightness.dark
+            ? const Color(0xff1f1f1f)
+            : const Color(0xffffffff);
         expect(tokens[FortalTokens.colorBackground], neutral.scale.step(1));
-        expect(tokens[FortalTokens.colorPanelSolid], neutral.scale.step(2));
-        expect(tokens[FortalTokens.colorPanel], neutral.scale.step(2));
+        expect(tokens[FortalTokens.colorSurface], neutral.scale.step(2));
+        expect(tokens[FortalTokens.colorPanelSolid], panel);
+        expect(tokens[FortalTokens.colorPanel], panel);
         for (final (token, step) in [
           (FortalTokens.error3, 3),
           (FortalTokens.error7, 7),
@@ -108,8 +116,8 @@ void main() {
           isFalse,
         );
         final text = tokens[FortalTokens.text8]! as TextStyle;
-        expect(text.fontSize, 36);
-        expect(text.fontSize! * text.height!, 40);
+        expect(text.fontSize, 34);
+        expect(text.fontSize! * text.height!, closeTo(37.4, 1e-9));
       }
     });
 
@@ -123,11 +131,16 @@ void main() {
               textDirection: TextDirection.ltr,
               child: Builder(
                 builder: (context) {
-                  final neutral = dark ? orla.dark : orla.light;
+                  final neutral = dark
+                      ? fortalNeutral.dark
+                      : fortalNeutral.light;
+                  final panel = dark
+                      ? const Color(0xff1f1f1f)
+                      : const Color(0xffffffff);
                   final card = fortalCardStyle().build(context).spec;
                   final decoration =
                       card.container.spec.decoration! as BoxDecoration;
-                  expect(decoration.color, neutral.scale.step(2));
+                  expect(decoration.color, panel);
                   expect(decoration.boxShadow, isNull);
                   expect(
                     card.containerEffects?.behindContent?.shadows ?? [],
@@ -232,7 +245,7 @@ void main() {
       }
       expect(
         (tokens[FortalTokens.text8] as TextStyle).fontSize,
-        36 * scaling.factor,
+        closeTo(34 * scaling.factor, 1e-9),
       );
       expect(tokens[FortalTokens.focusRingWidth], 2);
       expect(tokens[FortalTokens.focusRingOffset], 2);
