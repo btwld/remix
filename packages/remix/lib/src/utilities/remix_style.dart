@@ -220,16 +220,16 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
         controller: controller,
         builder: inherited == null
             ? builder
-            : (context, spec) => StyleProvider<S>(
+            : (_, spec) => StyleProvider<S>(
                 style: inherited,
-                child: builder(context, spec),
+                child: Builder(builder: (context) => builder(context, spec)),
               ),
       );
       if (inherited == null) return fluent;
 
       // StyleBuilder merges the inherited style into ours, and a generated
       // styler cannot merge the wrapper. Offer it a wrapped copy, then
-      // restore the original for descendants that read it.
+      // restore the original for the builder and its descendants.
       return StyleProvider<S>(
         style: _ReducedMotionStyle(inherited, reduceMotion: reduceMotion),
         child: fluent,
