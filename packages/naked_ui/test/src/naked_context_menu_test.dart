@@ -55,10 +55,11 @@ Widget _contextMenu({
           ],
         ),
       ),
+      // The label covers only the corner, so presses land on empty space.
       child: SizedBox.fromSize(
         key: _targetKey,
         size: _targetSize,
-        child: const Text('Target'),
+        child: const Align(alignment: Alignment.topLeft, child: Text('Target')),
       ),
     ),
   );

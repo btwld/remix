@@ -177,14 +177,18 @@ class _NakedContextMenuState<T> extends State<NakedContextMenu<T>>
   @override
   Widget build(BuildContext context) {
     final enabled = widget.enabled;
+    // Opaque: the whole target opens the menu, including its empty areas.
     final target = Listener(
+      behavior: HitTestBehavior.opaque,
       onPointerDown: _handlePointerDown,
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         excludeFromSemantics: true,
         onSecondaryTapUp: enabled
             ? (details) => _openAt(details.localPosition)
             : null,
         child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
           supportedDevices: _touchDevices,
           excludeFromSemantics: true,
           onLongPressStart: enabled
