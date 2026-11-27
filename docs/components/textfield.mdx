@@ -822,11 +822,10 @@ RemixTagInput remixTagInputConstructor({
   TextInputAction? textInputAction,
   String? semanticLabel,
   NakedTagInputMessages messages = const NakedTagInputMessages(),
-  String Function(String tag) removeLabelBuilder = _removeLabel,
+  String Function(String tag)? removeLabelBuilder,
   TagInputStyler style = const TagInputStyler.create(),
   TagInputSpec? styleSpec,
 }) => throw UnimplementedError();
 
-String _removeLabel(String tag) => 'Remove $tag';
 ```
 </CodeGroup>
