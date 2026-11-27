@@ -109,6 +109,7 @@ With `MaterialApp`, put the scope in `home` (or a persistent router shell) so it
 | `inset` | `EdgeInsetsDirectional.all(24)` | Space from the safe area. The bottom edge also clears the keyboard. |
 | `gap` | `12` | Space between stacked toasts. |
 | `animationStyle` | 180 ms in, 120 ms out | Drives `animation`. Skipped when `MediaQuery.disableAnimationsOf` is true. |
+| `reducedMotionDuration` | `null` | Paces `animation` in both directions while reduced motion is requested. `null` jumps. |
 
 `NakedToastScope.of<T>(context)` and `maybeOf<T>(context)` return the controller without registering a dependency, so they are safe in event callbacks.
 

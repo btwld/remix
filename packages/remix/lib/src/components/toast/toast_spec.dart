@@ -103,6 +103,16 @@ class ToastSpec with _$ToastSpec {
   @override
   final AnimationStyle? animationStyle;
 
+  /// How long [RemixToastScope] takes to move each toast in and out while the
+  /// user asks to reduce motion.
+  ///
+  /// `null`, the default, shows and hides toasts at once. Set it to keep a
+  /// short fade; the default transition then drops its travel, and a custom
+  /// [transitionBuilder] should check `remixReducedMotionOf(context)` and do
+  /// the same.
+  @override
+  final Duration? reducedMotionDuration;
+
   const ToastSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<FlexBoxSpec>? content,
@@ -116,6 +126,7 @@ class ToastSpec with _$ToastSpec {
     this.actionPlacement,
     this.transitionBuilder,
     this.animationStyle,
+    this.reducedMotionDuration,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        content = content ?? const StyleSpec(spec: FlexBoxSpec()),
        title = title ?? const StyleSpec(spec: TextSpec()),

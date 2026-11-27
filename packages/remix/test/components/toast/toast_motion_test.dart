@@ -19,15 +19,19 @@ Future<void> _show(
   WidgetTester tester, {
   ToastStyler style = const ToastStyler.create(),
   RemixToastData data = const RemixToastData(title: 'Saved'),
+  bool reduceMotion = false,
 }) async {
   final controller = RemixToastController();
   addTearDown(controller.dispose);
   await tester.pumpWidget(
-    _host(
-      RemixToastScope(
-        controller: controller,
-        style: style,
-        child: const SizedBox.expand(),
+    MediaQuery(
+      data: MediaQueryData(disableAnimations: reduceMotion),
+      child: _host(
+        RemixToastScope(
+          controller: controller,
+          style: style,
+          child: const SizedBox.expand(),
+        ),
       ),
     ),
   );
@@ -148,6 +152,51 @@ void main() {
 
       await tester.pump(const Duration(milliseconds: 180));
       expect(_opacity(tester), 1);
+    });
+  });
+
+  group('ToastSpec.reducedMotionDuration', () {
+    double offset(WidgetTester tester) => tester
+        .widget<Transform>(
+          find
+              .ancestor(
+                of: find.byType(RemixToast),
+                matching: find.byType(Transform),
+              )
+              .first,
+        )
+        .transform
+        .getTranslation()
+        .y;
+
+    testWidgets('without it, reduced motion shows the toast at once', (
+      tester,
+    ) async {
+      await _show(tester, reduceMotion: true);
+
+      expect(_opacity(tester), 1);
+    });
+
+    testWidgets('with it, reduced motion fades without travel', (tester) async {
+      await _show(
+        tester,
+        reduceMotion: true,
+        style: ToastStyler().reducedMotionDuration(
+          const Duration(milliseconds: 100),
+        ),
+      );
+
+      expect(
+        tester
+            .widget<NakedToastScope<RemixToastData>>(
+              find.byType(NakedToastScope<RemixToastData>),
+            )
+            .reducedMotionDuration,
+        const Duration(milliseconds: 100),
+      );
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(_opacity(tester), inExclusiveRange(0, 1));
+      expect(offset(tester), 0);
     });
   });
 

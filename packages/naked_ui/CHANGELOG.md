@@ -8,6 +8,9 @@
 - `showNakedDialog` and `showNakedAlertDialog` take `reducedMotionDuration`,
   which keeps a short entrance and exit while the user asks to reduce motion.
   Without it, dialogs still open and close at once.
+- `NakedToastScope` takes `reducedMotionDuration`, which paces each toast's
+  entrance and exit while the user asks to reduce motion. Without it, toasts
+  still show and hide at once.
 
 ## 2.0.0-rc.4
 

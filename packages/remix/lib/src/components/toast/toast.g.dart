@@ -19,6 +19,7 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
   RemixToastActionPlacement? get actionPlacement;
   RemixToastTransitionBuilder? get transitionBuilder;
   AnimationStyle? get animationStyle;
+  Duration? get reducedMotionDuration;
 
   @override
   Type get type => ToastSpec;
@@ -37,6 +38,7 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
     RemixToastActionPlacement? actionPlacement,
     RemixToastTransitionBuilder? transitionBuilder,
     AnimationStyle? animationStyle,
+    Duration? reducedMotionDuration,
   }) {
     return ToastSpec(
       container: container ?? this.container,
@@ -51,6 +53,8 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
       actionPlacement: actionPlacement ?? this.actionPlacement,
       transitionBuilder: transitionBuilder ?? this.transitionBuilder,
       animationStyle: animationStyle ?? this.animationStyle,
+      reducedMotionDuration:
+          reducedMotionDuration ?? this.reducedMotionDuration,
     );
   }
 
@@ -81,6 +85,11 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
         t,
       ),
       animationStyle: MixOps.lerpSnap(animationStyle, other?.animationStyle, t),
+      reducedMotionDuration: MixOps.lerpSnap(
+        reducedMotionDuration,
+        other?.reducedMotionDuration,
+        t,
+      ),
     );
   }
 
@@ -98,6 +107,7 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
     actionPlacement,
     transitionBuilder,
     animationStyle,
+    reducedMotionDuration,
   ];
 
   @override
@@ -151,7 +161,10 @@ mixin _$ToastSpec implements Spec<ToastSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('actionPlacement', actionPlacement))
       ..add(DiagnosticsProperty('transitionBuilder', transitionBuilder))
-      ..add(DiagnosticsProperty('animationStyle', animationStyle));
+      ..add(DiagnosticsProperty('animationStyle', animationStyle))
+      ..add(
+        DiagnosticsProperty('reducedMotionDuration', reducedMotionDuration),
+      );
   }
 }
 
@@ -179,6 +192,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
   final Prop<RemixToastActionPlacement>? $actionPlacement;
   final Prop<RemixToastTransitionBuilder>? $transitionBuilder;
   final Prop<AnimationStyle>? $animationStyle;
+  final Prop<Duration>? $reducedMotionDuration;
 
   const ToastStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
@@ -193,6 +207,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     Prop<RemixToastActionPlacement>? actionPlacement,
     Prop<RemixToastTransitionBuilder>? transitionBuilder,
     Prop<AnimationStyle>? animationStyle,
+    Prop<Duration>? reducedMotionDuration,
     super.variants,
     super.modifier,
     super.animation,
@@ -207,7 +222,8 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
        $containerEffects = containerEffects,
        $actionPlacement = actionPlacement,
        $transitionBuilder = transitionBuilder,
-       $animationStyle = animationStyle;
+       $animationStyle = animationStyle,
+       $reducedMotionDuration = reducedMotionDuration;
 
   ToastStyler({
     FlexBoxStyler? container,
@@ -222,6 +238,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     RemixToastActionPlacement? actionPlacement,
     RemixToastTransitionBuilder? transitionBuilder,
     AnimationStyle? animationStyle,
+    Duration? reducedMotionDuration,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<ToastSpec>>? variants,
@@ -238,6 +255,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
          actionPlacement: Prop.maybe(actionPlacement),
          transitionBuilder: Prop.maybe(transitionBuilder),
          animationStyle: Prop.maybe(animationStyle),
+         reducedMotionDuration: Prop.maybe(reducedMotionDuration),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -265,6 +283,8 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
       ToastStyler().transitionBuilder(value);
   factory ToastStyler.animationStyle(AnimationStyle value) =>
       ToastStyler().animationStyle(value);
+  factory ToastStyler.reducedMotionDuration(Duration value) =>
+      ToastStyler().reducedMotionDuration(value);
   factory ToastStyler.color(Color value) => ToastStyler().color(value);
   factory ToastStyler.gradient(GradientMix value) =>
       ToastStyler().gradient(value);
@@ -819,6 +839,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     'actionPlacement',
     'transitionBuilder',
     'animationStyle',
+    'reducedMotionDuration',
     'animation',
     'modifier',
     'variants',
@@ -883,6 +904,11 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
   /// Sets the animationStyle.
   ToastStyler animationStyle(AnimationStyle value) {
     return merge(ToastStyler(animationStyle: value));
+  }
+
+  /// Sets the reducedMotionDuration.
+  ToastStyler reducedMotionDuration(Duration value) {
+    return merge(ToastStyler(reducedMotionDuration: value));
   }
 
   /// Sets the animation configuration.
@@ -953,6 +979,10 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
         other?.$transitionBuilder,
       ),
       animationStyle: MixOps.merge($animationStyle, other?.$animationStyle),
+      reducedMotionDuration: MixOps.merge(
+        $reducedMotionDuration,
+        other?.$reducedMotionDuration,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -975,6 +1005,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
       actionPlacement: MixOps.resolve(context, $actionPlacement),
       transitionBuilder: MixOps.resolve(context, $transitionBuilder),
       animationStyle: MixOps.resolve(context, $animationStyle),
+      reducedMotionDuration: MixOps.resolve(context, $reducedMotionDuration),
     );
 
     return StyleSpec(
@@ -999,7 +1030,10 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('actionPlacement', $actionPlacement))
       ..add(DiagnosticsProperty('transitionBuilder', $transitionBuilder))
-      ..add(DiagnosticsProperty('animationStyle', $animationStyle));
+      ..add(DiagnosticsProperty('animationStyle', $animationStyle))
+      ..add(
+        DiagnosticsProperty('reducedMotionDuration', $reducedMotionDuration),
+      );
   }
 
   @override
@@ -1016,6 +1050,7 @@ class ToastStyler extends MixStyler<ToastStyler, ToastSpec>
     $actionPlacement,
     $transitionBuilder,
     $animationStyle,
+    $reducedMotionDuration,
     $animation,
     $modifier,
     $variants,

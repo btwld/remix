@@ -758,7 +758,7 @@ void main() {
         NakedToastController<String> controller,
       })
     >
-    pumpScope(WidgetTester tester) async {
+    pumpScope(WidgetTester tester, {Duration? reducedMotionDuration}) async {
       final reducedMotion = ReducedMotionSwitch(tester);
       final controller = _controller();
       await tester.pumpWidget(
@@ -767,6 +767,7 @@ void main() {
             NakedToastScope<String>(
               controller: controller,
               animationStyle: slow,
+              reducedMotionDuration: reducedMotionDuration,
               toastBuilder: (context, toast, animation) => KeyedSubtree(
                 key: ValueKey('toast-${toast.data}'),
                 child: FadeTransition(
@@ -833,6 +834,31 @@ void main() {
           handle.dismiss();
           await tester.pump();
           await tester.pump();
+          expect(_toast('a'), findsNothing);
+        });
+
+        testWidgets('keeps a reducedMotionDuration fade in and out', (
+          tester,
+        ) async {
+          final (:controller, :reducedMotion) = await pumpScope(
+            tester,
+            reducedMotionDuration: const Duration(milliseconds: 100),
+          );
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+
+          final handle = controller.show(_request('a'));
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 50));
+          expect(fade(tester), closeTo(0.5, 0.01));
+          await tester.pump(const Duration(milliseconds: 50));
+          expect(fade(tester), 1);
+
+          handle.dismiss();
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 50));
+          expect(fade(tester), closeTo(0.5, 0.01));
+          await tester.pumpAndSettle();
           expect(_toast('a'), findsNothing);
         });
 

@@ -219,17 +219,20 @@ class RemixToastScope extends StatelessWidget {
   );
 
   /// The default [ToastSpec.transitionBuilder]: a fade while the toast
-  /// travels 16 pixels from the stack's edge.
+  /// travels 16 pixels from the stack's edge. Under reduced motion it only
+  /// fades.
   static Widget defaultTransitionBuilder(
     BuildContext context,
     Animation<double> animation,
     RemixToastPlacement placement,
     Widget child,
   ) {
-    final entranceOffset = switch (placement) {
-      .topStart || .topCenter || .topEnd => -16.0,
-      .bottomStart || .bottomCenter || .bottomEnd => 16.0,
-    };
+    final entranceOffset = remixReducedMotionOf(context)
+        ? 0.0
+        : switch (placement) {
+            .topStart || .topCenter || .topEnd => -16.0,
+            .bottomStart || .bottomCenter || .bottomEnd => 16.0,
+          };
 
     return AnimatedBuilder(
       animation: animation,
@@ -312,6 +315,7 @@ class RemixToastScope extends StatelessWidget {
               reverseDuration: motion.reverseDuration,
               reverseCurve: motion.reverseCurve,
             ),
+      reducedMotionDuration: spec.reducedMotionDuration,
       toastBuilder: (context, toast, animation) =>
           _buildToast(context, toast, animation, transitionBuilder),
       child: child,
