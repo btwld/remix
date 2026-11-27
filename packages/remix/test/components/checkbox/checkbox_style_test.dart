@@ -323,7 +323,7 @@ void main() {
 
       test('props list contains all properties', () {
         const style = CheckboxStyler.create();
-        expect(style.props, hasLength(8));
+        expect(style.props, hasLength(9));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$indicator));
         expect(style.props, contains(style.$label));

@@ -19,6 +19,8 @@
 
 - Accordion: toggling a panel mid-transition turns the same panel around
   instead of growing a second one while the first fades.
+- Add `CheckboxSpec.indicatorBuilder`, set from a style, which builds the
+  checkbox indicator in every state so it can animate its mark in and out.
 
 ## 1.0.0-rc.7
 

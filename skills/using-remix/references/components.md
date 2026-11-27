@@ -44,7 +44,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 - **Checkbox** — `checkedIcon` and `indeterminateIcon` are `IconData?`,
   default `null`. Leaving them unset does not mean "no icon": Remix falls
   back to its own built-in glyphs, `RemixPathGlyph.thickCheck` and
-  `RemixPathGlyph.thickDividerHorizontal`, not a blank state.
+  `RemixPathGlyph.thickDividerHorizontal`, not a blank state. A style's
+  `indicatorBuilder` replaces all three icons and is built in every state,
+  unchecked included, so its widget can animate the mark in and out.
 - **Radio and Switch** — `label` is drawn inside the same pointer, hover,
   press, focus, and semantics target as the control and is its accessible
   name; `semanticLabel` overrides it. Pass at least one of the two. The gap is
