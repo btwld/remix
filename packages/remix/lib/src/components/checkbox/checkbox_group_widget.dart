@@ -183,6 +183,7 @@ class RemixCheckboxGroupItem<T extends Object> extends StatefulWidget {
     super.key,
     required this.value,
     required this.label,
+    this.description,
     this.semanticLabel,
     this.enabled = true,
     this.focusNode,
@@ -216,6 +217,10 @@ class RemixCheckboxGroupItem<T extends Object> extends StatefulWidget {
   /// It is rendered inside the same pointer, focus, and semantics target as
   /// the checkbox indicator and is the accessible name by default.
   final String label;
+
+  /// Optional visible description shown under [label], inside the same
+  /// interaction target. Assistive technologies read it as the hint.
+  final String? description;
 
   /// Optional accessible-name override. Must not be blank when provided.
   ///
@@ -362,6 +367,7 @@ class _RemixCheckboxGroupItemState<T extends Object>
       autofocus: widget.autofocus,
       enableFeedback: widget.enableFeedback,
       label: widget.label,
+      description: widget.description,
       semanticLabel: widget.semanticLabel,
       minimumTapTargetSize: widget.minimumTapTargetSize,
       mouseCursor: widget.mouseCursor,

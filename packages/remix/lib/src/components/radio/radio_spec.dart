@@ -38,16 +38,46 @@ class RadioSpec with _$RadioSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
+  /// Styling for the optional visible description under the label.
+  @override
+  final StyleSpec<TextSpec> description;
+
+  /// Gap between the label and the description.
+  @override
+  final double descriptionSpacing;
+
+  /// How the control aligns with its label and description. `null` centers
+  /// it; `CrossAxisAlignment.start` lines it up with the top of the label.
+  @override
+  final CrossAxisAlignment? controlAlignment;
+
+  /// A box drawn around the control and its copy, inside the interaction
+  /// target, resolved in the control's state. `null`, the default, draws none.
+  @override
+  final StyleSpec<BoxSpec>? row;
+
+  /// Outline and paint layers drawn around [row] without affecting layout.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? rowEffects;
+
   const RadioSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicator,
     StyleSpec<TextSpec>? label,
     double? labelSpacing,
     this.containerEffects,
+    StyleSpec<TextSpec>? description,
+    double? descriptionSpacing,
+    this.controlAlignment,
+    this.row,
+    this.rowEffects,
     bool? keepIndicatorMounted,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: BoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
+       description = description ?? const StyleSpec(spec: TextSpec()),
+       descriptionSpacing = descriptionSpacing ?? 2,
        labelSpacing = labelSpacing ?? 8,
        keepIndicatorMounted = keepIndicatorMounted ?? false;
 
@@ -61,6 +91,11 @@ class RadioSpec with _$RadioSpec {
       containerEffects: RemixBoxEffectsSpec.lerpNullable(
         containerEffects,
         other.containerEffects,
+        t,
+      ),
+      rowEffects: RemixBoxEffectsSpec.lerpNullable(
+        rowEffects,
+        other.rowEffects,
         t,
       ),
     );

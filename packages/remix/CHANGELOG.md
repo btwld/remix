@@ -23,6 +23,11 @@
   checkbox indicator in every state so it can animate its mark in and out.
 - Add `RadioSpec.keepIndicatorMounted`, which keeps the radio indicator built
   while unselected so a style can animate it out.
+- Add `description` to `RemixCheckbox`, `RemixCheckboxGroupItem` and
+  `RemixRadio`, shown under the label and read as the hint, with
+  `description`, `descriptionSpacing`, `controlAlignment`, `row` and
+  `rowEffects` style slots on `CheckboxSpec` and `RadioSpec`. `row` draws a
+  box around the control and its copy, such as a bordered card row.
 
 ## 1.0.0-rc.7
 
