@@ -39,6 +39,7 @@ class RemixAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
     this.style = const AvatarStyler.create(),
     this.styleSpec,
   });
@@ -74,6 +75,14 @@ class RemixAvatar extends StatelessWidget {
   /// Optional builder that exposes the resolved [IconSpec] for custom icon
   /// rendering while preserving configured icon styling.
   final RemixAvatarIconBuilder? iconBuilder;
+
+  /// Optional overlay, such as a status dot, pinned to the bottom end corner.
+  ///
+  /// It paints above the container and outside its clip, so a circular
+  /// avatar does not cut a dot that sits on its corner. It is placed against
+  /// the avatar's outer bounds, including any container margin; pad or
+  /// translate the badge to move it. Its semantics stay caller-owned.
+  final Widget? badge;
 
   /// The style configuration for the avatar.
   final AvatarStyler style;
@@ -136,9 +145,18 @@ class RemixAvatar extends StatelessWidget {
           );
         }
 
-        return Box(
+        final avatar = Box(
           styleSpec: spec.container,
           child: Container(alignment: .center, child: current),
+        );
+        if (badge == null) return avatar;
+
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            avatar,
+            PositionedDirectional(end: 0, bottom: 0, child: badge!),
+          ],
         );
       },
     );
