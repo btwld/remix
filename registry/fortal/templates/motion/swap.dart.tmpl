@@ -1,0 +1,343 @@
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+import 'timing.dart';
+import 'visual.dart';
+
+/// Which way swapped content travels: [up] brings the new child up from
+/// below and lifts the old one away; [down] mirrors it.
+enum {{typePrefix}}SwapDirection { up, down }
+
+/// One side of a swap: the [visual] an entering child starts from, or an
+/// exiting child ends at, and how each channel gets there.
+@immutable
+final class {{typePrefix}}SwapPhase {
+  const {{typePrefix}}SwapPhase({required this.visual, required this.timing});
+
+  final {{typePrefix}}Visual visual;
+  final {{typePrefix}}VisualTiming timing;
+
+  {{typePrefix}}SwapPhase _mirrored() => {{typePrefix}}SwapPhase(
+    visual: {{typePrefix}}Visual(
+      opacity: visual.opacity,
+      offset: -visual.offset,
+      scale: visual.scale,
+      blur: visual.blur,
+    ),
+    timing: timing,
+  );
+}
+
+/// The enter and exit phases of a [{{typePrefix}}Swap].
+@immutable
+final class {{typePrefix}}SwapMotion {
+  const {{typePrefix}}SwapMotion({required this.enter, required this.exit});
+
+  /// Text changing in place (badge labels, status lines): the new text rises
+  /// 0.3 em out of a 4 px blur over 200 ms, the old one lifts 0.3 em into a
+  /// 2 px blur over 150 ms.
+  factory {{typePrefix}}SwapMotion.text({required double fontSize}) => {{typePrefix}}SwapMotion(
+    enter: {{typePrefix}}SwapPhase(
+      visual: {{typePrefix}}Visual(
+        opacity: 0,
+        offset: Offset(0, 0.3 * fontSize),
+        blur: {{typePrefix}}Motion.blurSoft,
+      ),
+      timing: const {{typePrefix}}VisualTiming.all({{typePrefix}}Timing.enter),
+    ),
+    exit: {{typePrefix}}SwapPhase(
+      visual: {{typePrefix}}Visual(
+        opacity: 0,
+        offset: Offset(0, -0.3 * fontSize),
+        blur: {{typePrefix}}Motion.blurSubtle,
+      ),
+      timing: const {{typePrefix}}VisualTiming.all({{typePrefix}}Timing.fade),
+    ),
+  );
+
+  /// One icon replacing another: the new icon grows from 0.6 out of a 2 px
+  /// blur on the snappy spring, the old one shrinks back into it over 150 ms.
+  static const icon = {{typePrefix}}SwapMotion(
+    enter: {{typePrefix}}SwapPhase(
+      visual: {{typePrefix}}Visual(
+        opacity: 0,
+        scale: 0.6,
+        blur: {{typePrefix}}Motion.blurSubtle,
+      ),
+      timing: {{typePrefix}}VisualTiming.all({{typePrefix}}Timing.snappy),
+    ),
+    exit: {{typePrefix}}SwapPhase(
+      visual: {{typePrefix}}Visual(
+        opacity: 0,
+        scale: 0.6,
+        blur: {{typePrefix}}Motion.blurSubtle,
+      ),
+      timing: {{typePrefix}}VisualTiming.all({{typePrefix}}Timing.fade),
+    ),
+  );
+
+  /// Opacity only, over [{{typePrefix}}Timing.instant]: what every swap does under
+  /// reduced motion.
+  static const reduced = {{typePrefix}}SwapMotion(
+    enter: {{typePrefix}}SwapPhase(
+      visual: {{typePrefix}}Visual(opacity: 0),
+      timing: {{typePrefix}}VisualTiming.all({{typePrefix}}Timing.instant),
+    ),
+    exit: {{typePrefix}}SwapPhase(
+      visual: {{typePrefix}}Visual(opacity: 0),
+      timing: {{typePrefix}}VisualTiming.all({{typePrefix}}Timing.instant),
+    ),
+  );
+
+  final {{typePrefix}}SwapPhase enter;
+  final {{typePrefix}}SwapPhase exit;
+
+  {{typePrefix}}SwapMotion _toward({{typePrefix}}SwapDirection direction) =>
+      direction == {{typePrefix}}SwapDirection.up
+      ? this
+      : {{typePrefix}}SwapMotion(enter: enter._mirrored(), exit: exit._mirrored());
+}
+
+/// Cross-swaps its child when the child's key or type changes: the old child
+/// plays [motion]'s exit while the new one plays its enter, in the same spot.
+///
+/// The outgoing child leaves layout at once and keeps painting at its last
+/// size, so the swap sizes to the new child only. Wrap it in a
+/// `{{typePrefix}}SizeMorph` to spring between the two sizes.
+///
+/// With [{{typePrefix}}SwapMotion.icon] this is the icon switcher. `{{typePrefix}}TextSwap`
+/// builds it for strings.
+class {{typePrefix}}Swap extends StatefulWidget {
+  const {{typePrefix}}Swap({
+    super.key,
+    this.motion = {{typePrefix}}SwapMotion.icon,
+    this.direction = {{typePrefix}}SwapDirection.up,
+    this.alignment = AlignmentDirectional.centerStart,
+    required this.child,
+  });
+
+  final {{typePrefix}}SwapMotion motion;
+  final {{typePrefix}}SwapDirection direction;
+
+  /// Where the children sit when their sizes differ.
+  final AlignmentGeometry alignment;
+
+  final Widget child;
+
+  @override
+  State<{{typePrefix}}Swap> createState() => _{{typePrefix}}SwapState();
+}
+
+final class _SwapEntry {
+  _SwapEntry(this.child, {required this.entering});
+
+  Widget child;
+  final bool entering;
+  final Key key = UniqueKey();
+  bool exiting = false;
+  Size? size;
+}
+
+class _{{typePrefix}}SwapState extends State<{{typePrefix}}Swap> {
+  late final List<_SwapEntry> _entries = [
+    _SwapEntry(widget.child, entering: false),
+  ];
+
+  @override
+  void didUpdateWidget({{typePrefix}}Swap oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final current = _entries.last;
+    if (Widget.canUpdate(current.child, widget.child)) {
+      current.child = widget.child;
+
+      return;
+    }
+    current.exiting = true;
+    _entries.add(_SwapEntry(widget.child, entering: true));
+  }
+
+  void _remove(_SwapEntry entry) {
+    if (!mounted || !_entries.contains(entry)) return;
+    setState(() => _entries.remove(entry));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixReducedMotionBuilder(
+      builder: (context, reduceMotion) {
+        final motion = reduceMotion
+            ? {{typePrefix}}SwapMotion.reduced
+            : widget.motion._toward(widget.direction);
+
+        return Stack(
+          alignment: widget.alignment,
+          clipBehavior: Clip.none,
+          children: [
+            for (final entry in _entries)
+              Positioned(
+                key: entry.key,
+                width: entry.exiting ? entry.size?.width : null,
+                height: entry.exiting ? entry.size?.height : null,
+                child: _SizeProbe(
+                  onSize: (size) => entry.size = size,
+                  child: {{typePrefix}}AnimatedVisual(
+                    visual: entry.exiting
+                        ? motion.exit.visual
+                        : {{typePrefix}}Visual.rest,
+                    timing: entry.exiting
+                        ? motion.exit.timing
+                        : motion.enter.timing,
+                    initial: entry.entering ? motion.enter.visual : null,
+                    onEnd: entry.exiting ? () => _remove(entry) : null,
+                    child: entry.child,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Swaps [text] with a blur and rise when it changes, sized to the new
+/// string.
+///
+/// With [staggerWords], each word of the new text enters on its own,
+/// [{{typePrefix}}Motion.staggerWord] after the one before; the old text leaves as
+/// one line. Under reduced motion the text crossfades.
+class {{typePrefix}}TextSwap extends StatefulWidget {
+  const {{typePrefix}}TextSwap(
+    this.text, {
+    super.key,
+    this.style,
+    this.direction = {{typePrefix}}SwapDirection.up,
+    this.staggerWords = false,
+    this.alignment = AlignmentDirectional.centerStart,
+  });
+
+  final String text;
+  final TextStyle? style;
+  final {{typePrefix}}SwapDirection direction;
+  final bool staggerWords;
+  final AlignmentGeometry alignment;
+
+  @override
+  State<{{typePrefix}}TextSwap> createState() => _{{typePrefix}}TextSwapState();
+}
+
+class _{{typePrefix}}TextSwapState extends State<{{typePrefix}}TextSwap> {
+  bool _changed = false;
+
+  @override
+  void didUpdateWidget({{typePrefix}}TextSwap oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.text != oldWidget.text) _changed = true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final style = DefaultTextStyle.of(context).style.merge(widget.style);
+    final motion = {{typePrefix}}SwapMotion.text(
+      fontSize: style.fontSize ?? 14,
+    )._toward(widget.direction);
+
+    return RemixReducedMotionBuilder(
+      builder: (context, reduceMotion) {
+        final staggered = widget.staggerWords && !reduceMotion;
+
+        return {{typePrefix}}Swap(
+          motion: staggered
+              ? {{typePrefix}}SwapMotion(
+                  enter: {{typePrefix}}SwapPhase(
+                    visual: {{typePrefix}}Visual.rest,
+                    timing: motion.enter.timing,
+                  ),
+                  exit: motion.exit,
+                )
+              : motion,
+          alignment: widget.alignment,
+          child: staggered
+              ? _StaggeredWords(
+                  key: ValueKey(widget.text),
+                  text: widget.text,
+                  style: style,
+                  enter: _changed ? motion.enter : null,
+                )
+              : Text(widget.text, key: ValueKey(widget.text), style: style),
+        );
+      },
+    );
+  }
+}
+
+class _StaggeredWords extends StatelessWidget {
+  const _StaggeredWords({
+    super.key,
+    required this.text,
+    required this.style,
+    required this.enter,
+  });
+
+  final String text;
+  final TextStyle style;
+  final {{typePrefix}}SwapPhase? enter;
+
+  @override
+  Widget build(BuildContext context) {
+    final words = text.split(' ');
+    final enter = this.enter;
+
+    return Text.rich(
+      TextSpan(
+        children: [
+          for (var index = 0; index < words.length; index++) ...[
+            if (index > 0) const TextSpan(text: ' '),
+            WidgetSpan(
+              alignment: PlaceholderAlignment.baseline,
+              baseline: TextBaseline.alphabetic,
+              child: {{typePrefix}}AnimatedVisual(
+                visual: {{typePrefix}}Visual.rest,
+                timing: enter == null
+                    ? const {{typePrefix}}VisualTiming.all({{typePrefix}}Timing.enter)
+                    : enter.timing.delayed({{typePrefix}}Motion.staggerWord * index),
+                initial: enter?.visual,
+                child: Text(words[index], style: style),
+              ),
+            ),
+          ],
+        ],
+      ),
+      style: style,
+    );
+  }
+}
+
+class _SizeProbe extends SingleChildRenderObjectWidget {
+  const _SizeProbe({required this.onSize, super.child});
+
+  final ValueChanged<Size> onSize;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderSizeProbe(onSize);
+
+  @override
+  void updateRenderObject(BuildContext context, _RenderSizeProbe renderObject) {
+    renderObject.onSize = onSize;
+  }
+}
+
+class _RenderSizeProbe extends RenderProxyBox {
+  _RenderSizeProbe(this.onSize);
+
+  ValueChanged<Size> onSize;
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    onSize(size);
+  }
+}

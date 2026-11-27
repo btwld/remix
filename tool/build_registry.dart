@@ -520,6 +520,13 @@ const fortalPreset = PresetSpec(
       packages: {'remix'},
       exports: ['theme/theme.dart'],
     ),
+    SharedItemSpec(
+      name: 'motion',
+      directory: 'motion',
+      requiredFile: 'motion/motion.dart',
+      packages: {'remix'},
+      exports: ['motion/motion.dart'],
+    ),
   ],
   fileItems: [
     FileItemSpec(

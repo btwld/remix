@@ -29,6 +29,31 @@ items:
     exports:
       - theme/theme.dart
 
+  motion:
+    registryDependencies:
+      - theme
+    dependencies:
+      remix: ^1.0.0-rc.7
+    files:
+      - source: templates/motion/indicator.dart.tmpl
+        target: "@ui/motion/indicator.dart"
+      - source: templates/motion/motion.dart.tmpl
+        target: "@ui/motion/motion.dart"
+      - source: templates/motion/rolling_text.dart.tmpl
+        target: "@ui/motion/rolling_text.dart"
+      - source: templates/motion/size_morph.dart.tmpl
+        target: "@ui/motion/size_morph.dart"
+      - source: templates/motion/swap.dart.tmpl
+        target: "@ui/motion/swap.dart"
+      - source: templates/motion/timing.dart.tmpl
+        target: "@ui/motion/timing.dart"
+      - source: templates/motion/underline.dart.tmpl
+        target: "@ui/motion/underline.dart"
+      - source: templates/motion/visual.dart.tmpl
+        target: "@ui/motion/visual.dart"
+    exports:
+      - motion/motion.dart
+
   icons:
     registryDependencies:
       - theme
