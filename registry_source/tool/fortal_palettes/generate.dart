@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math' as math;
-
 import 'palette_generator.dart';
 
 /// Run from anywhere. With no options, regenerates the seven built-in accents
@@ -64,7 +62,7 @@ void main(List<String> arguments) {
       paletteImport: options['--palette-import'] ?? 'palette.dart',
       builtIns: !custom,
       errorName: errorPaletteName(typePrefix),
-    ).replaceAll('FortalColor', '${typePrefix}Color');
+    ).replaceAll(RegExp(r'\bFortal(?=[A-Z])'), typePrefix);
     if (!custom) {
       final valuePrefix =
           '${typePrefix[0].toLowerCase()}${typePrefix.substring(1)}';
@@ -122,19 +120,22 @@ Set<String> reservedPaletteNames(String typePrefix) => {
   'blackAlpha',
   'whiteAlpha',
   for (final suffix in [
+    'Neutral',
     'GrayNeutral',
     'SageNeutral',
     'SlateNeutral',
     'OliveNeutral',
     'SandNeutral',
     'NeutralPalettes',
+    'FunctionalLight',
+    'FunctionalDark',
   ])
     '${typePrefix[0].toLowerCase()}${typePrefix.substring(1)}$suffix',
 };
 
 /// Renders [seeds] as palette constants. [builtIns] marks the shipped file:
-/// Pinned Radix accent/neutral pairs, the dedicated error palette and
-/// neutral alpha swatches are emitted. Custom output never infers either
+/// The neutral, the accents, the dedicated error palette, the functional
+/// roles and the neutral alpha swatches are emitted. Custom output never infers either
 /// from its name. [errorName] is the built-in error identifier for the
 /// requested prefix; explicit custom names are never rewritten.
 String renderPalettes(
@@ -148,7 +149,7 @@ String renderPalettes(
       paletteImport.contains('\r')) {
     throw const FormatException('Invalid palette import.');
   }
-  if (builtIns) return _renderRadixPalettes(paletteImport, errorName);
+  if (builtIns) return _renderFoundationPalettes(paletteImport, errorName);
   final out = StringBuffer(
     '''// Fortal OKLCH scales, generated from the seed noted on each palette.
 import 'package:flutter/painting.dart';
@@ -202,10 +203,10 @@ void _writePalette(
 
 String _hex(int value) => '0x${value.toRadixString(16).padLeft(8, '0')}';
 
-/// Built-in raw scales are pinned upstream data; functional roles are derived
-/// separately for Fortal's contrast contract and Orla's primary emphasis.
-String _renderRadixPalettes(String paletteImport, String errorName) {
-  final relative = 'specs/fortal_radix_colors.json';
+/// Built-in scales and roles are Fortal's foundation literals, read from
+/// `specs/fortal_colors.json`; the generated file only arranges them.
+String _renderFoundationPalettes(String paletteImport, String errorName) {
+  const relative = 'specs/fortal_colors.json';
   final candidates = [
     File('registry_source/$relative'),
     File(relative),
@@ -213,74 +214,70 @@ String _renderRadixPalettes(String paletteImport, String errorName) {
   ];
   final file = candidates.firstWhere((file) => file.existsSync());
   final source = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
-  final provenance = source['source'] as Map<String, dynamic>;
-  final pairs = source['pairs'] as Map<String, dynamic>;
-  final scales = source['scales'] as Map<String, dynamic>;
-  final license = (provenance['licenseText'] as String)
-      .split('\n')
-      .map((line) => '// $line')
-      .join('\n');
   final out = StringBuffer(
-    '''// Raw and alpha scales: ${provenance['package']} ${provenance['version']} (sRGB), unchanged.
-// Source: https://github.com/radix-ui/colors
-// Fortal derives the labelled fills, marks and contrast colors separately.
-$license
+    """// Fortal's foundation colours, generated from specs/fortal_colors.json.
+// One untinted neutral serves every accent; each accent pins its own roles.
 import 'package:flutter/painting.dart';
 
 import '$paletteImport';
 
-''',
+""",
   );
-  for (final entry in pairs.entries) {
-    final pair = entry.value as Map<String, dynamic>;
-    final family = pair['accent'] as String;
-    final data = scales[family] as Map<String, dynamic>;
-    final labelInk = family == 'amber'
-        ? _rgb(((data['light'] as Map)['solid'] as List)[11] as String)
-        : 0xffffffff;
-    final lightData = data['light'] as Map<String, dynamic>;
-    final markInk = _rgb((lightData['solid'] as List)[11] as String);
-    _writeRadixPalette(
-      out,
-      entry.key,
-      data,
-      labelInk: labelInk,
-      markInk: markInk,
-      note:
-          'The ${entry.key} accent palette: Radix $family, paired with the '
-          '${pair['neutral']} neutral.',
-      neutral: scales[pair['neutral']] as Map<String, dynamic>,
-      strongNeutral: entry.key == 'orla',
-    );
-  }
-  for (final family in {'gray', 'sage', 'slate', 'olive', 'sand'}) {
-    _writeRadixPalette(
-      out,
-      'fortal${family[0].toUpperCase()}${family.substring(1)}Neutral',
-      scales[family] as Map<String, dynamic>,
-      labelInk: 0xffffffff,
-      markInk: _rgb(
-        (((scales[family] as Map)['light'] as Map)['solid'] as List)[11]
-            as String,
-      ),
-      note: 'The Radix $family neutral palette.',
-    );
+  _writeTheme(
+    out,
+    'fortalNeutral',
+    source['neutral'] as Map<String, dynamic>,
+    note:
+        'The neutral scale every accent shares, with the neutral control roles.',
+  );
+  final accents = (source['accents'] as Map).cast<String, dynamic>();
+  out.writeln(
+    '/// Every accent shares [fortalNeutral]; these names remain for callers '
+    'that imported the former tinted neutrals.',
+  );
+  for (final family in ['Gray', 'Sage', 'Slate', 'Olive', 'Sand']) {
+    out.writeln('const fortal${family}Neutral = fortalNeutral;');
   }
   out.writeln('const fortalNeutralPalettes = <String, FortalColorTheme>{');
-  for (final entry in pairs.entries) {
-    final family = (entry.value as Map)['neutral'] as String;
-    out.writeln(
-      "'${entry.key}': fortal${family[0].toUpperCase()}${family.substring(1)}Neutral,",
-    );
+  for (final name in accents.keys) {
+    out.writeln("'$name': fortalNeutral,");
   }
   out.writeln('};');
-  _writePalette(
+  for (final entry in accents.entries) {
+    _writeTheme(
+      out,
+      entry.key,
+      entry.value as Map<String, dynamic>,
+      note: 'The ${entry.key} accent palette.',
+    );
+  }
+  _writeTheme(
     out,
     errorName,
-    fortalErrorSeed,
-    generateErrorPalette(),
+    source['error'] as Map<String, dynamic>,
     note: 'Error roles only; not a selectable accent.',
   );
+  final functional = (source['functional'] as Map).cast<String, dynamic>();
+  for (final mode in ['light', 'dark']) {
+    final values = (functional[mode] as Map).cast<String, dynamic>();
+    out.writeln(
+      '/// $mode roles that follow neither the accent nor a custom palette.',
+    );
+    out.writeln(
+      'const fortalFunctional${mode[0].toUpperCase()}${mode.substring(1)} = FortalFunctionalColors(',
+    );
+    for (final entry in values.entries) {
+      out.writeln('${entry.key}: Color(${entry.value}),');
+    }
+    out.writeln(');');
+  }
+  final provenance = source['source'] as Map<String, dynamic>;
+  out.writeln('// ${provenance['alphaLadders']}');
+  for (final line in (provenance['alphaLaddersLicense'] as String).split(
+    '\n',
+  )) {
+    out.writeln('// $line'.trimRight());
+  }
   const opacity = [.02, .04, .07, .11, .16, .24, .35, .48, .62, .74, .86, .94];
   for (final name in ['black', 'white']) {
     final rgb = name == 'black' ? 0 : 0xffffff;
@@ -298,113 +295,47 @@ import '$paletteImport';
   return out.toString();
 }
 
-int _rgb(String value) => 0xff000000 | int.parse(value.substring(1), radix: 16);
-int _alpha(String value) {
-  if (value.length == 7) return _rgb(value);
-  final rgba = int.parse(value.substring(1), radix: 16);
-  return (rgba & 0xff) << 24 | rgba >> 8;
-}
-
-double _contrast(int first, int second) {
-  double luminance(int argb) {
-    double channel(int shift) {
-      final value = ((argb >> shift) & 0xff) / 255;
-      return value <= .04045
-          ? value / 12.92
-          : math.pow((value + .055) / 1.055, 2.4).toDouble();
-    }
-
-    return .2126 * channel(16) + .7152 * channel(8) + .0722 * channel(0);
-  }
-
-  final a = luminance(first), b = luminance(second);
-  return (math.max(a, b) + .05) / (math.min(a, b) + .05);
-}
-
-int _whiteLabelFill(int fill) {
-  if (_contrast(0xffffffff, fill) >= contrastMargin.text) return fill;
-  final tone = toOklch(fill);
-  var lightness = tone.l;
-  do {
-    lightness -= .002;
-    fill = fromOklch((l: lightness, c: tone.c, h: tone.h));
-  } while (_contrast(0xffffffff, fill) < contrastMargin.text);
-  return fill;
-}
-
-void _writeRadixPalette(
+void _writeTheme(
   StringBuffer out,
   String name,
-  Map<String, dynamic> data, {
-  required int labelInk,
-  required int markInk,
+  Map<String, dynamic> theme, {
   required String note,
-  Map<String, dynamic>? neutral,
-  bool strongNeutral = false,
 }) {
   out.writeln('/// $note');
   out.writeln('const $name = FortalColorTheme(');
   for (final mode in ['light', 'dark']) {
-    final values = data[mode] as Map<String, dynamic>;
-    final solid = [
-      for (final value in values['solid'] as List) _rgb(value as String),
-    ];
-    final alpha = [
-      for (final value in values['alpha'] as List) _alpha(value as String),
-    ];
-    var fill = solid[8], hover = solid[9];
-    if (labelInk == 0xffffffff &&
-        (_contrast(labelInk, fill) < contrastMargin.text ||
-            _contrast(labelInk, hover) < contrastMargin.text)) {
-      fill = _whiteLabelFill(fill);
-      final tone = toOklch(fill);
-      hover = _whiteLabelFill(
-        fromOklch((l: tone.l - .035, c: tone.c, h: tone.h)),
-      );
-    }
-    var mark = solid[8];
-    if (mode == 'light' && labelInk == 0xffffffff && neutral != null) {
-      final surfaces = ((neutral[mode] as Map)['solid'] as List)
-          .take(2)
-          .map((value) => _rgb(value as String))
-          .toList();
-      final tone = toOklch(mark);
-      var lightness = tone.l;
-      while (surfaces.any((surface) => _contrast(mark, surface) < 3.05)) {
-        lightness -= .002;
-        mark = fromOklch((l: lightness, c: tone.c, h: tone.h));
-      }
-    }
-    var contrast = labelInk;
-    var markHover = solid[9];
-    if (strongNeutral) {
-      // Orla's primary roles are deliberately stronger than Radix's default
-      // mid-gray accent. Raw source steps and internal neutrals stay exact.
-      fill = mode == 'dark' ? 0xffffffff : solid[11];
-      hover = mode == 'dark' ? solid[11] : 0xff303030;
-      contrast = mode == 'dark' ? solid[0] : 0xffffffff;
-      mark = fill;
-      markHover = hover;
-    }
-    final ink = strongNeutral
-        ? contrast
-        : [mark, markHover].every((fill) => _contrast(0xffffffff, fill) >= 3)
-        ? 0xffffffff
-        : markInk;
+    final values = (theme[mode] as Map).cast<String, dynamic>();
     out.writeln('FortalColor(FortalColorScale(');
-    for (final scale in [solid, alpha]) {
-      out.writeln('ColorSwatch(${_hex(scale[8])}, {');
-      for (var i = 0; i < 12; i++)
-        out.writeln('${i + 1}: Color(${_hex(scale[i])}),');
+    for (final key in ['solid', 'alpha']) {
+      final scale = (values[key] as List).cast<String>();
+      out.writeln('ColorSwatch(${scale[8]}, {');
+      for (var i = 0; i < 12; i++) {
+        out.writeln('${i + 1}: Color(${scale[i]}),');
+      }
       out.writeln('}),');
     }
-    out.writeln(
-      '), Color(${_hex(alpha[2])}), Color(${_hex(mark)}), Color(${_hex(mark)}), Color(${_hex(contrast)}),',
+    out.write(
+      '), Color(${values['surface']}), Color(${values['indicator']}), '
+      'Color(${values['track']}), Color(${values['contrast']})',
     );
-    out.writeln(
-      'solid: Color(${_hex(fill)}), solidHover: Color(${_hex(hover)}), markContrast: Color(${_hex(ink)})'
-      '${strongNeutral ? ', markHover: Color(${_hex(markHover)})' : ''}),',
-    );
+    for (final (key, field) in [
+      ('fill', 'solid'),
+      ('fillHover', 'solidHover'),
+      ('markContrast', 'markContrast'),
+      ('markHover', 'markHover'),
+    ]) {
+      if (values[key] case final String value) {
+        out.write(', $field: Color($value)');
+      }
+    }
+    if (values['roles'] case final Map roles) {
+      out.write(', roles: FortalColorRoles(');
+      for (final entry in roles.entries) {
+        out.write('${entry.key}: Color(${entry.value}), ');
+      }
+      out.write(')');
+    }
+    out.writeln('),');
   }
   out.writeln(');');
 }

@@ -192,8 +192,9 @@ and filters extend only for missing paths. Explicit exclusions, disabled
 builders and competing target ownership fail preflight. Both `$default` and
 package-named default targets are supported; diff/dry-run show proposed changes.
 
-Optional chart/icon items declare their hosted dependencies. Vanilla's theme
-also declares `remix_ui_fonts` for Geist/Geist Mono; Fortal pins no font family.
+Optional chart/icon items declare their hosted dependencies. The Vanilla and
+Fortal theme items also declare `remix_ui_fonts`: Vanilla for Geist/Geist
+Mono, Fortal for Inter body text and Geist display text.
 Grouped `dashboard_shell` and `dashboard_demo` items leave the app entry point,
 theme scope, routes, authentication and persistence with the host.
 `dashboard_demo` is a sample application and declares no barrel exports; apps

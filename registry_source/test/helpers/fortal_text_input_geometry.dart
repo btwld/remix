@@ -16,19 +16,22 @@ void expectFortalTextInputGeometry(
   final rect = tester.getRect(chrome);
   final editorRect = tester.getRect(editor);
   if (scale == 1) {
-    expect(rect.height, height);
+    expect(rect.height, closeTo(height, 1e-9));
     expect(editorRect.center.dy, closeTo(rect.center.dy, 0.001));
   } else {
     expect(
       rect.height,
-      greaterThanOrEqualTo(render.preferredLineHeight + 2 * paddingY),
+      greaterThanOrEqualTo(render.preferredLineHeight + 2 * paddingY - 1e-6),
     );
     expect(
       render.size.height,
       greaterThanOrEqualTo(render.preferredLineHeight),
     );
-    expect(editorRect.top - rect.top, greaterThanOrEqualTo(paddingY));
-    expect(rect.bottom - editorRect.bottom, greaterThanOrEqualTo(paddingY));
+    expect(editorRect.top - rect.top, greaterThanOrEqualTo(paddingY - 1e-6));
+    expect(
+      rect.bottom - editorRect.bottom,
+      greaterThanOrEqualTo(paddingY - 1e-6),
+    );
   }
   expect(tester.takeException(), isNull);
 }

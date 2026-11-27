@@ -13,6 +13,7 @@ void main() {
       'sol',
       'duna',
       'caju',
+      'jambo',
     ]);
   });
 
@@ -83,7 +84,7 @@ void main() {
             .medium => 1.0,
             .large || .full => 1.5,
           };
-          final expectedRadius3 = 6 * scaling.factor * radiusFactor;
+          final expectedRadius3 = 12 * scaling.factor * radiusFactor;
           final expectedFull = radius == .full ? 9999.0 : 0.0;
           final expectedThumb = switch (radius) {
             .none || .small => 0.5,
@@ -107,21 +108,26 @@ void main() {
           expect(text1.fontSize, closeTo(12 * scaling.factor, 1e-9));
           expect(
             text1.letterSpacing,
-            closeTo(0.0025 * 12 * scaling.factor, 1e-9),
+            closeTo(-0.01 * 12 * scaling.factor, 1e-9),
           );
-          expect(text1.height, closeTo(16 / 12, 1e-9));
-          expect(text3.fontSize, closeTo(16 * scaling.factor, 1e-9));
-          expect(text3.height, closeTo(24 / 16, 1e-9));
-          expect(accordionText2.fontSize, closeTo(14 * scaling.factor, 1e-9));
-          expect(accordionText2.height, closeTo(20 / 14, 1e-9));
+          expect(text1.height, closeTo(1.4, 1e-9));
+          expect(text3.fontSize, closeTo(15 * scaling.factor, 1e-9));
+          expect(text3.height, closeTo(1.4, 1e-9));
+          expect(accordionText2.fontSize, closeTo(13 * scaling.factor, 1e-9));
+          expect(accordionText2.height, closeTo(1.4, 1e-9));
         });
       }
     }
   });
 
-  testWidgets('gray accent aliases the resolved gray family', (tester) async {
+  testWidgets('the neutral accent draws its solid and marks in ink', (
+    tester,
+  ) async {
     late Color accent9;
-    late Color gray9;
+    late Color accentSolid;
+    late Color accentIndicator;
+    late Color gray12;
+    late Color grayIndicator;
 
     await tester.pumpWidget(
       FortalTheme(
@@ -131,14 +137,24 @@ void main() {
           color: const Color(0xFF000000),
           builder: (context, child) {
             accent9 = MixScope.tokenOf(FortalTokens.accent9, context);
-            gray9 = MixScope.tokenOf(FortalTokens.gray9, context);
+            accentSolid = MixScope.tokenOf(FortalTokens.accentSolid, context);
+            accentIndicator = MixScope.tokenOf(
+              FortalTokens.accentIndicator,
+              context,
+            );
+            gray12 = MixScope.tokenOf(FortalTokens.gray12, context);
+            grayIndicator = MixScope.tokenOf(
+              FortalTokens.grayIndicator,
+              context,
+            );
             return const SizedBox.shrink();
           },
         ),
       ),
     );
 
-    expect(accent9, gray9);
     expect(accent9, orla.light.scale.step(9));
+    expect(accentSolid, gray12);
+    expect(accentIndicator, grayIndicator);
   });
 }

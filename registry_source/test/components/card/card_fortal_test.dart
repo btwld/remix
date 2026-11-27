@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:registry_source/src/fortal/theme/fortal_colors.dart'
+    show fortalNeutral;
 
 import '../../helpers/test_helpers.dart';
 
@@ -14,11 +16,11 @@ void main() {
   });
 
   for (final (size, padding, radius) in const [
-    (FortalCardSize.size1, 12.0, 8.0),
-    (FortalCardSize.size2, 16.0, 8.0),
-    (FortalCardSize.size3, 24.0, 12.0),
-    (FortalCardSize.size4, 32.0, 12.0),
-    (FortalCardSize.size5, 48.0, 16.0),
+    (FortalCardSize.size1, 12.0, 14.0),
+    (FortalCardSize.size2, 16.0, 14.0),
+    (FortalCardSize.size3, 24.0, 16.0),
+    (FortalCardSize.size4, 32.0, 16.0),
+    (FortalCardSize.size5, 48.0, 20.0),
   ]) {
     testWidgets(
       '${size.name} padding, radius, scaling and ghost compensation',
@@ -54,7 +56,7 @@ void main() {
     testWidgets(
       '${dark ? 'dark' : 'light'} surface is flat in every interaction state',
       (tester) async {
-        final scale = (dark ? orla.dark : orla.light).scale;
+        final scale = (dark ? fortalNeutral.dark : fortalNeutral.light).scale;
         for (final states in <Set<WidgetState>>[
           {},
           {WidgetState.hovered},
@@ -65,14 +67,14 @@ void main() {
         ]) {
           final card = await _resolve(tester, dark: dark, states: states);
           final decoration = card.container.spec.decoration! as BoxDecoration;
+          // The resting fill is the panel: the raised surface, a step above
+          // gray 2 in dark.
           expect(
             decoration.color,
-            scale.step(
-              states.contains(WidgetState.pressed) ||
-                      states.contains(WidgetState.selected)
-                  ? 3
-                  : 2,
-            ),
+            states.contains(WidgetState.pressed) ||
+                    states.contains(WidgetState.selected)
+                ? scale.step(3)
+                : (dark ? const Color(0xff1f1f1f) : const Color(0xffffffff)),
           );
           expect(
             decoration.border!.top.color,
@@ -126,9 +128,9 @@ void main() {
   ) async {
     for (final (states, color) in [
       (<WidgetState>{}, const Color(0x00000000)),
-      ({WidgetState.hovered}, orla.light.scale.alphaStep(3)),
-      ({WidgetState.pressed}, orla.light.scale.alphaStep(4)),
-      ({WidgetState.selected}, orla.light.scale.alphaStep(3)),
+      ({WidgetState.hovered}, fortalNeutral.light.scale.alphaStep(3)),
+      ({WidgetState.pressed}, fortalNeutral.light.scale.alphaStep(4)),
+      ({WidgetState.selected}, fortalNeutral.light.scale.alphaStep(3)),
     ]) {
       final card = await _resolve(tester, variant: .ghost, states: states);
       expect((card.container.spec.decoration! as BoxDecoration).color, color);

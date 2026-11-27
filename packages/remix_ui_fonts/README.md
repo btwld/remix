@@ -9,6 +9,7 @@ than synthesized.
 | --- | --- | --- | --- |
 | Geist | `RemixFonts.geist` | 400, 500, 600, 700 | [vercel/geist-font](https://github.com/vercel/geist-font) v1.7.2 |
 | Geist Mono | `RemixFonts.geistMono` | 400, 500 | [vercel/geist-font](https://github.com/vercel/geist-font) v1.7.2 |
+| Inter | `RemixFonts.inter` | 400, 500, 600, 700 | [rsms/inter](https://github.com/rsms/inter) v4.1 |
 
 Add the package, then pass a `RemixFonts` constant as the font family:
 

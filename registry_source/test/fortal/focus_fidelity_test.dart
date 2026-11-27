@@ -108,6 +108,8 @@ void main() {
               FortalTheme(
                 mode: mode,
                 radius: radius,
+                // The thumb edge is drawn only under high contrast.
+                highContrast: true,
                 child: RepaintBoundary(
                   key: slider,
                   child: Padding(
@@ -212,6 +214,19 @@ void main() {
     Color panelToken(WidgetTester tester, ColorToken token) =>
         MixScope.tokenOf(token, tester.element(find.byType(FortalThemePanel)));
 
+    // Nothing is painted behind the ring in the capture and raw RGBA bytes
+    // are premultiplied, so the translucent ring reads as its channels scaled
+    // by its alpha.
+    Color ringOnPanel(WidgetTester tester) {
+      final ring = panelToken(tester, FortalTokens.focus8);
+      return Color.from(
+        alpha: ring.a,
+        red: ring.r * ring.a,
+        green: ring.g * ring.a,
+        blue: ring.b * ring.a,
+      );
+    }
+
     void focusSwatch(WidgetTester tester, String accent) {
       final check = find.descendant(
         of: find.byKey(ValueKey('accent-$accent')),
@@ -272,7 +287,7 @@ void main() {
       final at = await probe(tester, 'serra');
 
       expect(at(1), at(5));
-      _expectNear(at(3), panelToken(tester, FortalTokens.focus8));
+      _expectNear(at(3), ringOnPanel(tester));
     });
 
     for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
@@ -310,7 +325,7 @@ void main() {
 
       final at = await probe(tester, 'orla');
 
-      _expectNear(at(3), panelToken(tester, FortalTokens.focus8));
+      _expectNear(at(3), ringOnPanel(tester));
     });
 
     testWidgets('the ring shows on the first column of the panel', (
@@ -322,7 +337,7 @@ void main() {
 
       final at = await probe(tester, 'orla', left: true);
 
-      _expectNear(at(3), panelToken(tester, FortalTokens.focus8));
+      _expectNear(at(3), ringOnPanel(tester));
     });
 
     testWidgets('the ring does not change the swatch layout', (tester) async {
@@ -354,8 +369,8 @@ void main() {
 
       expect(at(1.5), at(7));
       expect(at(2.5), at(7));
-      _expectNear(at(3.5), panelToken(tester, FortalTokens.focus8));
-      _expectNear(at(5.5), panelToken(tester, FortalTokens.focus8));
+      _expectNear(at(3.5), ringOnPanel(tester));
+      _expectNear(at(5.5), ringOnPanel(tester));
       expect(at(6.5), at(7));
     });
 

@@ -13,9 +13,9 @@ void main() {
 
   group('Fortal Callout geometry', () {
     for (final (size, padding, gap, radius, fontSize) in const [
-      (FortalCalloutSize.size1, 12.0, 8.0, 6.0, 14.0),
-      (FortalCalloutSize.size2, 16.0, 12.0, 8.0, 14.0),
-      (FortalCalloutSize.size3, 24.0, 16.0, 12.0, 16.0),
+      (FortalCalloutSize.size1, 12.0, 8.0, 12.0, 13.0),
+      (FortalCalloutSize.size2, 16.0, 12.0, 14.0, 13.0),
+      (FortalCalloutSize.size3, 24.0, 16.0, 16.0, 15.0),
     ]) {
       testWidgets('${size.name} matches specified metrics', (tester) async {
         final spec = await _resolve(tester, fortalCalloutStyle(size: size));
@@ -41,7 +41,7 @@ void main() {
         closeTo(26.4, 1e-9),
       );
       expect(spec.container.spec.flex!.spec.spacing, closeTo(17.6, 1e-9));
-      expect(spec.text.spec.style!.fontSize, closeTo(17.6, 1e-9));
+      expect(spec.text.spec.style!.fontSize, closeTo(16.5, 1e-9));
     });
   });
 

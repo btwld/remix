@@ -72,18 +72,15 @@ void main() {
     }
   });
 
-  test(
-    'the default Orla theme retains its paired Radix specification values',
-    () {
-      final colors = resolveAcmeTokens(const AcmeThemeConfig());
+  test('the default Orla theme resolves the foundation values', () {
+    final colors = resolveAcmeTokens(const AcmeThemeConfig());
 
-      expect(colors.colorBackground, const Color(0xFFFCFCFC));
-      expect(colors.accent.scale.step(9), const Color(0xFF8D8D8D));
-      expect(colors.gray.scale.step(12), const Color(0xFF202020));
-      expect(colors.accent.solid, const Color(0xFF202020));
-      expect(colors.accent.contrast, const Color(0xFFFFFFFF));
-    },
-  );
+    expect(colors.colorBackground, const Color(0xFFFFFFFF));
+    expect(colors.accent.scale.step(9), const Color(0xFF353535));
+    expect(colors.gray.scale.step(12), const Color(0xFF0B0B0B));
+    expect(colors.accent.solid, const Color(0xFF0B0B0B));
+    expect(colors.accent.contrast, const Color(0xFFFFFFFF));
+  });
 
   testWidgets('the example application renders installed source', (
     tester,

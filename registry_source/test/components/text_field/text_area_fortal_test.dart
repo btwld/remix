@@ -5,9 +5,9 @@ import 'package:registry_source/fortal.dart';
 
 void main() {
   for (final (size, minHeight, fontSize, radius) in const [
-    (FortalTextAreaSize.size1, 48.0, 12.0, 4.0),
-    (FortalTextAreaSize.size2, 64.0, 14.0, 4.0),
-    (FortalTextAreaSize.size3, 80.0, 16.0, 6.0),
+    (FortalTextAreaSize.size1, 48.0, 12.0, 10.0),
+    (FortalTextAreaSize.size2, 64.0, 13.0, 10.0),
+    (FortalTextAreaSize.size3, 80.0, 15.0, 12.0),
   ]) {
     testWidgets('${size.name} matches specified multiline metrics', (
       tester,

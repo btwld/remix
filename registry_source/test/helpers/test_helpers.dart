@@ -24,14 +24,16 @@ extension WidgetTesterHelpers on WidgetTester {
     FortalAccentColor? accent,
     FortalColorTheme? accentPalette,
     FortalThemeMode? mode,
+    bool? highContrast,
   }) async {
     await pumpWidget(
       FortalTheme(
-        // Orla's raw accent scale is the gray's, so a recipe that reads one
-        // where it should read the other would still pass under it.
+        // Under the neutral default an accent token and a gray token can
+        // resolve alike, so a recipe reading the wrong one would still pass.
         accent: accent ?? (accentPalette == null ? .mar : null),
         accentPalette: accentPalette,
         mode: mode,
+        highContrast: highContrast,
         child: WidgetsApp(
           color: const Color(0xFFFFFFFF),
           pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
@@ -67,6 +69,7 @@ Future<T> resolveInFortalTheme<T>(
   FortalAccentColor? accent,
   FortalColorTheme? accentPalette,
   FortalThemeMode? mode,
+  bool? highContrast,
   Set<WidgetState> states = const {},
 }) async {
   late T result;
@@ -83,6 +86,7 @@ Future<T> resolveInFortalTheme<T>(
     accent: accent,
     accentPalette: accentPalette,
     mode: mode,
+    highContrast: highContrast,
   );
 
   return result;

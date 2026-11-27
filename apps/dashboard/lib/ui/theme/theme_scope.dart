@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 import 'palette.dart';
 import 'theme_data.dart';
@@ -63,6 +64,7 @@ class UiTheme extends StatelessWidget {
     this.radius,
     this.scaling,
     this.hasBackground,
+    this.highContrast,
     this.orderOfModifiers,
     required this.child,
   });
@@ -81,6 +83,10 @@ class UiTheme extends StatelessWidget {
   final UiRadius? radius;
   final UiScaling? scaling;
   final bool? hasBackground;
+
+  /// Moves the low-contrast boundaries to accessible values; see
+  /// [UiThemeConfig.highContrast].
+  final bool? highContrast;
   final List<Type>? orderOfModifiers;
   final Widget child;
 
@@ -141,6 +147,10 @@ class UiTheme extends StatelessWidget {
           radius: radius ?? config.radius,
           scaling: scaling ?? config.scaling,
           hasBackground: hasBackground ?? config.hasBackground,
+          highContrast: highContrast ?? config.highContrast,
+          fontFamily: config.fontFamily,
+          displayFontFamily: config.displayFontFamily,
+          monoFontFamily: config.monoFontFamily,
         ),
         parent: ancestor,
       );
@@ -213,6 +223,14 @@ UiThemeData _resolveUiTheme(UiThemeConfig config, {UiThemeData? parent}) {
     radius: config.radius ?? parent?.radius ?? UiRadius.medium,
     scaling: config.scaling ?? parent?.scaling ?? UiScaling.percent100,
     hasBackground: config.hasBackground ?? parent == null,
+    highContrast: config.highContrast ?? parent?.highContrast ?? false,
+    fontFamily: config.fontFamily ?? parent?.fontFamily ?? RemixFonts.inter,
+    displayFontFamily:
+        config.displayFontFamily ??
+        parent?.displayFontFamily ??
+        RemixFonts.geist,
+    monoFontFamily:
+        config.monoFontFamily ?? parent?.monoFontFamily ?? RemixFonts.geistMono,
   );
 }
 

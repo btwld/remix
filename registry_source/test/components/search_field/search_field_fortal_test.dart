@@ -25,9 +25,10 @@ void main() {
 
   group('geometry', () {
     for (final (size, fieldSize, height, paddingY, glyph) in const [
-      (FortalSearchFieldSize.size1, FortalTextFieldSize.size1, 24.0, 4.0, 12.0),
-      (FortalSearchFieldSize.size2, FortalTextFieldSize.size2, 32.0, 6.0, 12.0),
-      (FortalSearchFieldSize.size3, FortalTextFieldSize.size3, 40.0, 8.0, 16.0),
+      // Vertical padding is (height - line box) / 2 at 1x: 3.6, 6.9, 9.5.
+      (FortalSearchFieldSize.size1, FortalTextFieldSize.size1, 24.2, 3.6, 12.0),
+      (FortalSearchFieldSize.size2, FortalTextFieldSize.size2, 32.0, 6.9, 12.0),
+      (FortalSearchFieldSize.size3, FortalTextFieldSize.size3, 40.0, 9.5, 16.0),
     ]) {
       for (final variant in FortalSearchFieldVariant.values) {
         for (final scale in [1.0, 2.0]) {
@@ -80,7 +81,7 @@ void main() {
                     child: FortalTextField(size: fieldSize, semanticLabel: 'X'),
                   ),
                 );
-                expect(_chrome(tester).height, height);
+                expect(_chrome(tester).height, closeTo(height, 1e-9));
               }
             },
           );

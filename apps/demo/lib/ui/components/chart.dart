@@ -57,7 +57,7 @@ Color fortalPieSliceLabelColor(Color slice) {
       : ink;
 }
 
-/// The color families after the accent. Teal, orange and blue lead because
+/// The color families after the accent. Green, orange and blue lead because
 /// they are the most distinct from one another; gray, the least, is last.
 const _seriesFamilies = <(FortalAccentColor, FortalColorTheme)>[
   (.mar, mar),
@@ -66,6 +66,7 @@ const _seriesFamilies = <(FortalAccentColor, FortalColorTheme)>[
   (.serra, serra),
   (.sol, sol),
   (.duna, duna),
+  (.jambo, jambo),
   (.orla, orla),
 ];
 
