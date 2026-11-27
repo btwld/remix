@@ -129,11 +129,11 @@ void main() {
       final radius = _day(tester, 6).borderRadius!.resolve(TextDirection.ltr);
       expect(
         radius.topLeft,
-        start == 5 ? Radius.zero : const Radius.circular(6),
+        start == 5 ? Radius.zero : const Radius.circular(12),
       );
       expect(
         radius.topRight,
-        end == 6 ? const Radius.circular(6) : Radius.zero,
+        end == 6 ? const Radius.circular(12) : Radius.zero,
       );
     }
   });

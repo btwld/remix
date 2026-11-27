@@ -63,6 +63,30 @@ Color computeFocusA5(UiColorScale accent) => accent.alphaStep(5);
 /// Computes translucent focus ring color (accent alpha step 8).
 Color computeFocusA8(UiColorScale accent) => accent.alphaStep(8);
 
+UiFunctionalColors _functional({required bool isDark}) =>
+    isDark ? uiFunctionalDark : uiFunctionalLight;
+
+/// The page colour. The neutral's step 1 carries it; [gray] stays in the
+/// signature for callers written against the fitted model.
+Color computeColorBackground(UiColorScale gray, {required bool isDark}) =>
+    _functional(isDark: isDark).background;
+
+/// The solid panel colour: the raised surface, a step above the input
+/// surface in dark.
+Color computeColorPanelSolid(UiColorScale gray, {required bool isDark}) =>
+    _functional(isDark: isDark).panelSolid;
+
+/// The translucent panel colour: the raised surface at 88 percent.
+Color computeColorPanelTranslucent(UiColorScale gray, {required bool isDark}) =>
+    _functional(isDark: isDark).panelTranslucent;
+
+/// The surface colour of input fields and controls: neutral step 2.
+Color computeColorSurface(UiColorScale gray) => gray.step(2);
+
+/// The modal backdrop, the same in both appearances.
+Color computeColorOverlay({required bool isDark}) =>
+    _functional(isDark: isDark).overlay;
+
 /// Computes the neutral boundary of active empty controls under high
 /// contrast.
 ///
@@ -508,15 +532,18 @@ UiThemeColors resolveUiTokens(UiThemeConfig theme) {
       theme.accentPalette ?? _accentThemesByName[accentColor.name]!;
   final isDark = theme.isDark;
   final highContrast = theme.highContrast ?? false;
-  final functional = isDark ? uiFunctionalDark : uiFunctionalLight;
+  final functional = _functional(isDark: isDark);
   final UiColor grayRC = isDark ? uiNeutral.dark : uiNeutral.light;
   var accentRC = isDark ? accentTheme.dark : accentTheme.light;
   final gray = grayRC.scale;
   var accent = accentRC.scale;
 
-  final colorBackground = functional.background;
-  final colorPanelSolid = functional.panelSolid;
-  final colorPanelTranslucent = functional.panelTranslucent;
+  final colorBackground = computeColorBackground(gray, isDark: isDark);
+  final colorPanelSolid = computeColorPanelSolid(gray, isDark: isDark);
+  final colorPanelTranslucent = computeColorPanelTranslucent(
+    gray,
+    isDark: isDark,
+  );
   final markSurfaces = _markSurfaces(
     colorBackground,
     colorPanelSolid,
@@ -582,10 +609,10 @@ UiThemeColors resolveUiTokens(UiThemeConfig theme) {
     whiteAlpha: whiteAlpha,
     highContrast: highContrast,
     colorBackground: colorBackground,
-    colorSurface: functional.surface,
+    colorSurface: computeColorSurface(gray),
     colorPanelSolid: colorPanelSolid,
     colorPanelTranslucent: colorPanelTranslucent,
-    colorOverlay: functional.overlay,
+    colorOverlay: computeColorOverlay(isDark: isDark),
     shadowStroke: computeShadowStroke(gray, isDark: isDark),
     controlBorder: controlBorder,
     controlTrack: controlTrack,
