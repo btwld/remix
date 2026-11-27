@@ -48,6 +48,13 @@ class CalendarSpec with _$CalendarSpec {
   @override
   final bool? fixedWeeks;
 
+  /// Paints beneath the days of each month grid, given the grid's geometry
+  /// and the cells of the visible selection, so one shape can mark it.
+  ///
+  /// `null` paints nothing and leaves the layout unchanged.
+  @override
+  final RemixCalendarSelectionLayerBuilder? selectionLayer;
+
   const CalendarSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? weekday,
@@ -58,6 +65,7 @@ class CalendarSpec with _$CalendarSpec {
     this.selectorSpacing,
     this.monthTransition,
     this.fixedWeeks,
+    this.selectionLayer,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        weekday = weekday ?? const StyleSpec(spec: TextSpec()),
        day = day ?? const StyleSpec(spec: CalendarDaySpec());

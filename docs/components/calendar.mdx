@@ -170,6 +170,21 @@ height, separated by `rowSpacing`. Unset or `false`, the grid has one row per
 week of the displayed month. Pair it with `monthTransition` so the two grids of
 a slide line up.
 
+`selectionLayer(RemixCalendarSelectionLayerBuilder)` paints beneath the days of
+each month grid, sized to the grid, so a recipe can draw one selection shape
+instead of a fill per day. The builder receives a `RemixCalendarSelection`:
+`cellSize` (a seventh of the grid width by the day's minimum height),
+`rowSpacing`, `textDirection`, the `start` and `end` cells
+(`RemixCalendarCell` row and column), and one `RemixCalendarSelectionSegment`
+per week row the selection covers. `cellRect` and `segmentRect` turn them into
+bounds within the layer, mirrored for right-to-left. A single date is one cell
+with `start` equal to `end`. A range describes its painted interval, and an end
+in another month is null. The layer stays mounted while the selection changes,
+so an implicitly animated child glides between days. It takes no pointer
+events and adds no semantics. Rows that grow past the day's minimum height,
+such as at large text scales, no longer match `cellSize`. Unset, nothing is
+painted and the layout is unchanged.
+
 ## Localization and direction
 
 Defaults are explicitly English; the widget does not detect date formatting or
@@ -354,7 +369,7 @@ Optional. A raw resolved spec that bypasses `style` and inherited styles.
 `weekday(TextStyler)` and `day(CalendarDayStyler)`. Use `headerSpacing` for the
 gap below the header and `weekdaySpacing` for the gap before the first week.
 Both default to zero; navigation centres follow the outer day columns.
-`monthTransition` and `fixedWeeks` are described in
+`monthTransition`, `fixedWeeks` and `selectionLayer` are described in
 [Recipe hooks](#recipe-hooks).
 
 `CalendarDayStyler` styles a day like a box, its number through

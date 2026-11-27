@@ -185,6 +185,9 @@ painted. Use `style` for state and range styling.
 The [Calendar recipe hooks](/components/calendar#recipe-hooks) apply here too.
 A `monthTransition` keeps the outgoing grid's interval painted while it leaves.
 `fixedWeeks` keeps the panel height steady inside a date range picker.
+A `selectionLayer` receives one segment per week of the painted interval and
+the two end cells, so a recipe can draw week bars with end discs behind the
+days.
 
 ## Interaction and scope
 
