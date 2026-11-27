@@ -26,7 +26,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 - **Button** — effective enabled state is `enabled && !loading &&
   (onPressed != null || onLongPress != null)`. While `loading`, content stays
   laid out via `Visibility(visible: false, maintainSize: true)` and a spinner is layered
-  over it in a `Stack`, so the button never changes size. Icon placement is
+  over it in a `Stack`, so the button never changes size.
+  `ButtonStyler().loadingTransition(RemixLoadingTransition(...))` animates the
+  swap instead: `contentBuilder` wraps the label and icons, `spinnerBuilder`
+  the spinner, and the spinner stays mounted until its exit has played. Icon placement is
   style-driven when exactly one icon is present —
   `ButtonStyler().iconAlignment(RemixPlacement.end)` moves it after the
   label regardless of whether it came from `leadingIcon` or `trailingIcon`.
