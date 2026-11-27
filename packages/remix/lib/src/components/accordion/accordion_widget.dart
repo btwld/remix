@@ -153,6 +153,10 @@ class RemixAccordion<T> extends StatelessWidget {
   final IconData? leadingIcon;
 
   /// Optional trailing icon for the trigger.
+  ///
+  /// Without one, the default trigger shows the icon the style sets through
+  /// `trailingIcon(IconStyler().icon(...))`, or, when the style sets none, a
+  /// plus that turns into a minus while expanded.
   final IconData? trailingIcon;
 
   /// Custom builder for the trigger.
@@ -215,8 +219,6 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
   // trigger's interaction states here is what lets one resolved spec drive
   // the container, the trigger, and the content alike.
   late final WidgetStatesController _statesController;
-  GlobalKey? _panelKey;
-  bool _wasExpanded = false;
 
   RemixAccordion<T> get _config => widget.config;
 
@@ -279,8 +281,8 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
           StyledIcon(icon: leadingIcon, styleSpec: spec.leadingIcon),
         if (title != null)
           Expanded(child: StyledText(title, styleSpec: spec.title)),
-        if (_config.trailingIcon case final icon?)
-          StyledIcon(icon: icon, styleSpec: spec.trailingIcon)
+        if (_config.trailingIcon != null || spec.trailingIcon.spec.icon != null)
+          StyledIcon(icon: _config.trailingIcon, styleSpec: spec.trailingIcon)
         else
           RemixPathIcon(
             glyph: state.isExpanded
@@ -303,27 +305,30 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
     Widget panel,
   ) {
     return RemixReducedMotionBuilder(
-      builder: (context, reduceMotion) {
-        final content = isExpanded
-            ? Box(
-                styleSpec: spec.content,
-                // Preserve the logical content when the preference moves it
-                // into or out of the switcher, not the transition itself.
-                child: KeyedSubtree(key: _panelKey, child: panel),
-              )
-            : const SizedBox.shrink();
-        if (reduceMotion) return content;
-
-        return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          transitionBuilder: _config.transitionBuilder,
-          child: content,
-        );
-      },
+      builder: (context, reduceMotion) => _AccordionContentMotion(
+        expanded: isExpanded,
+        motion: spec.contentMotion,
+        reduceMotion: reduceMotion,
+        transitionBuilder: _config.transitionBuilder,
+        child: Box(styleSpec: spec.content, child: panel),
+      ),
     );
   }
 
   Widget _buildItem(AccordionSpec spec, bool isExpanded) {
+    final motion = spec.contentMotion;
+    if (motion != null &&
+        motion is! CurveAnimationConfig &&
+        motion is! SpringAnimationConfig) {
+      throw ArgumentError.value(
+        motion,
+        'contentMotion',
+        'Expected CurveAnimationConfig or SpringAnimationConfig',
+      );
+    }
+    // NakedAccordion hands over an empty box once collapsed, but a closing
+    // panel must keep painting its content until its exit ends.
+    final panel = WidgetStateProvider(states: const {}, child: _config.child);
     // One panel wraps the trigger and the (conditionally mounted) content so
     // a single clip + radius crops both, matching the Radix Table idiom:
     // the container owns the outer shape, its children stay flat, and the
@@ -335,7 +340,7 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
       containerEffects: spec.containerEffects,
       child: NakedAccordion<T>(
         value: _config.value,
-        transitionBuilder: (panel) =>
+        transitionBuilder: (_) =>
             _buildTransitionWrapper(spec, isExpanded, panel),
         enabled: _config.enabled,
         mouseCursor: _config.mouseCursor,
@@ -351,7 +356,7 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
         semanticLabel: _config.semanticLabel ?? _config.title,
         // The panel is mounted inside the trigger's state scope, which belongs
         // to the trigger alone.
-        child: WidgetStateProvider(states: const {}, child: _config.child),
+        child: panel,
         builder: (context, state) => switch (_config.builder) {
           final builder? => RemixBoxAdapter(
             styleSpec: const StyleSpec(spec: BoxSpec()),
@@ -368,12 +373,6 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
   Widget build(BuildContext context) {
     final controller = NakedAccordionScope.of<T>(context).controller;
     final isExpanded = controller.contains(_config.value);
-    if (isExpanded && !_wasExpanded) {
-      // A new expansion must not share its identity with a panel still fading
-      // out after a rapid close and reopen.
-      _panelKey = GlobalKey(debugLabel: 'RemixAccordion panel');
-    }
-    _wasExpanded = isExpanded;
     final canCollapse = isExpanded && controller.values.length > controller.min;
     final canExpand =
         !isExpanded &&
@@ -390,5 +389,103 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
         builder: (context, spec) => _buildItem(spec, isExpanded),
       ),
     );
+  }
+}
+
+/// The motion of a [RemixAccordion] panel that sets no `contentMotion`.
+const _defaultContentMotion = CurveAnimationConfig(
+  duration: Duration(milliseconds: 200),
+  curve: Curves.linear,
+);
+
+/// Opens and closes one accordion panel on a single controller, so a toggle
+/// mid-flight turns the same panel around instead of mounting another.
+class _AccordionContentMotion extends StatefulWidget {
+  const _AccordionContentMotion({
+    required this.expanded,
+    required this.motion,
+    required this.reduceMotion,
+    required this.transitionBuilder,
+    required this.child,
+  });
+
+  final bool expanded;
+  final AnimationConfig? motion;
+  final bool reduceMotion;
+  final Widget Function(Widget, Animation<double>) transitionBuilder;
+  final Widget child;
+
+  @override
+  State<_AccordionContentMotion> createState() =>
+      _AccordionContentMotionState();
+}
+
+class _AccordionContentMotionState extends State<_AccordionContentMotion>
+    with SingleTickerProviderStateMixin<_AccordionContentMotion> {
+  late final AnimationController _controller = AnimationController(
+    value: widget.expanded ? 1 : 0,
+    vsync: this,
+  )..addStatusListener(_handleStatus);
+
+  void _handleStatus(AnimationStatus status) {
+    if (status.isDismissed && mounted) setState(() {});
+  }
+
+  void _run() {
+    final expanded = widget.expanded;
+    final target = expanded ? 1.0 : 0.0;
+    if (widget.reduceMotion) {
+      _controller
+        ..stop()
+        ..value = target;
+
+      return;
+    }
+    final enter = widget.motion ?? _defaultContentMotion;
+    final config = expanded ? enter : AnimationConfig.reverseOf(enter) ?? enter;
+    switch (config) {
+      case SpringAnimationConfig(:final spring):
+        final simulation = SpringSimulation(
+          spring,
+          _controller.value,
+          target,
+          _controller.velocity,
+          snapToEnd: true,
+        );
+        expanded
+            ? _controller.animateWith(simulation)
+            : _controller.animateBackWith(simulation);
+      case CurveAnimationConfig(:final duration, :final curve):
+        final remaining = duration * (target - _controller.value).abs();
+        expanded
+            ? _controller.animateTo(1, duration: remaining, curve: curve)
+            : _controller.animateBack(0, duration: remaining, curve: curve);
+      default:
+        throw StateError('RemixAccordion validates contentMotion on build.');
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _AccordionContentMotion oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.expanded != oldWidget.expanded ||
+        (widget.reduceMotion && !oldWidget.reduceMotion)) {
+      _run();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.expanded && _controller.isDismissed) {
+      return const SizedBox.shrink();
+    }
+
+    return widget.transitionBuilder(widget.child, _controller);
   }
 }
