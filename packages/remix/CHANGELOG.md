@@ -100,6 +100,8 @@
 - Add `MenuSpec.itemTransition` and `RemixMenuItemTransition`. The builder
   wraps each root-panel entry with the panel animation and the entry's index,
   so rows can stagger.
+- Add `ButtonStyler.onLoading`. It applies while a `RemixButton` is loading
+  and, declared after `onDisabled`, overrides the disabled look.
 
 ### Fixes
 

@@ -148,6 +148,21 @@ The content keeps its size while it is hidden, and the spinner stays mounted
 until its exit has played. Loading still disables the button. While the user
 asks to reduce motion, both parts switch at once.
 
+Loading disables the button, so `onDisabled` styles apply while it loads. Use
+`onLoading` to style the loading state on its own. Declare it after
+`onDisabled` so it overrides the disabled look, for example to keep the
+enabled colors while the spinner shows:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final loadingAwareButton = ButtonStyler()
+    .color(Colors.black)
+    .onDisabled(ButtonStyler().color(Colors.grey))
+    .onLoading(ButtonStyler().color(Colors.black));
+```
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
