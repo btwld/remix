@@ -13,6 +13,9 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
   Duration? get showDuration;
   Duration? get dismissDuration;
   Duration? get skipDelayDuration;
+  RemixTooltipTransitionBuilder? get transitionBuilder;
+  AnimationStyle? get animationStyle;
+  OverlayPositionConfig? get positioning;
 
   @override
   Type get type => TooltipSpec;
@@ -25,6 +28,9 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
     Duration? showDuration,
     Duration? dismissDuration,
     Duration? skipDelayDuration,
+    RemixTooltipTransitionBuilder? transitionBuilder,
+    AnimationStyle? animationStyle,
+    OverlayPositionConfig? positioning,
   }) {
     return TooltipSpec(
       container: container ?? this.container,
@@ -33,6 +39,9 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
       showDuration: showDuration ?? this.showDuration,
       dismissDuration: dismissDuration ?? this.dismissDuration,
       skipDelayDuration: skipDelayDuration ?? this.skipDelayDuration,
+      transitionBuilder: transitionBuilder ?? this.transitionBuilder,
+      animationStyle: animationStyle ?? this.animationStyle,
+      positioning: positioning ?? this.positioning,
     );
   }
 
@@ -53,6 +62,13 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
         other?.skipDelayDuration,
         t,
       ),
+      transitionBuilder: MixOps.lerpSnap(
+        transitionBuilder,
+        other?.transitionBuilder,
+        t,
+      ),
+      animationStyle: MixOps.lerpSnap(animationStyle, other?.animationStyle, t),
+      positioning: MixOps.lerpSnap(positioning, other?.positioning, t),
     );
   }
 
@@ -64,6 +80,9 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
     showDuration,
     dismissDuration,
     skipDelayDuration,
+    transitionBuilder,
+    animationStyle,
+    positioning,
   ];
 
   @override
@@ -111,7 +130,10 @@ mixin _$TooltipSpec implements Spec<TooltipSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('waitDuration', waitDuration))
       ..add(DiagnosticsProperty('showDuration', showDuration))
       ..add(DiagnosticsProperty('dismissDuration', dismissDuration))
-      ..add(DiagnosticsProperty('skipDelayDuration', skipDelayDuration));
+      ..add(DiagnosticsProperty('skipDelayDuration', skipDelayDuration))
+      ..add(DiagnosticsProperty('transitionBuilder', transitionBuilder))
+      ..add(DiagnosticsProperty('animationStyle', animationStyle))
+      ..add(DiagnosticsProperty('positioning', positioning));
   }
 }
 
@@ -133,6 +155,9 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
   final Prop<Duration>? $showDuration;
   final Prop<Duration>? $dismissDuration;
   final Prop<Duration>? $skipDelayDuration;
+  final Prop<RemixTooltipTransitionBuilder>? $transitionBuilder;
+  final Prop<AnimationStyle>? $animationStyle;
+  final Prop<OverlayPositionConfig>? $positioning;
 
   const TooltipStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
@@ -141,6 +166,9 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     Prop<Duration>? showDuration,
     Prop<Duration>? dismissDuration,
     Prop<Duration>? skipDelayDuration,
+    Prop<RemixTooltipTransitionBuilder>? transitionBuilder,
+    Prop<AnimationStyle>? animationStyle,
+    Prop<OverlayPositionConfig>? positioning,
     super.variants,
     super.modifier,
     super.animation,
@@ -149,7 +177,10 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
        $waitDuration = waitDuration,
        $showDuration = showDuration,
        $dismissDuration = dismissDuration,
-       $skipDelayDuration = skipDelayDuration;
+       $skipDelayDuration = skipDelayDuration,
+       $transitionBuilder = transitionBuilder,
+       $animationStyle = animationStyle,
+       $positioning = positioning;
 
   TooltipStyler({
     BoxStyler? container,
@@ -158,6 +189,9 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     Duration? showDuration,
     Duration? dismissDuration,
     Duration? skipDelayDuration,
+    RemixTooltipTransitionBuilder? transitionBuilder,
+    AnimationStyle? animationStyle,
+    OverlayPositionConfig? positioning,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<TooltipSpec>>? variants,
@@ -168,6 +202,9 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
          showDuration: Prop.maybe(showDuration),
          dismissDuration: Prop.maybe(dismissDuration),
          skipDelayDuration: Prop.maybe(skipDelayDuration),
+         transitionBuilder: Prop.maybe(transitionBuilder),
+         animationStyle: Prop.maybe(animationStyle),
+         positioning: Prop.maybe(positioning),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -184,6 +221,13 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
       TooltipStyler().dismissDuration(value);
   factory TooltipStyler.skipDelayDuration(Duration value) =>
       TooltipStyler().skipDelayDuration(value);
+  factory TooltipStyler.transitionBuilder(
+    RemixTooltipTransitionBuilder value,
+  ) => TooltipStyler().transitionBuilder(value);
+  factory TooltipStyler.animationStyle(AnimationStyle value) =>
+      TooltipStyler().animationStyle(value);
+  factory TooltipStyler.positioning(OverlayPositionConfig value) =>
+      TooltipStyler().positioning(value);
   factory TooltipStyler.alignment(AlignmentGeometry value) =>
       TooltipStyler().alignment(value);
   factory TooltipStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -685,6 +729,9 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     'showDuration',
     'dismissDuration',
     'skipDelayDuration',
+    'transitionBuilder',
+    'animationStyle',
+    'positioning',
     'animation',
     'modifier',
     'variants',
@@ -718,6 +765,21 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
   /// Sets the skipDelayDuration.
   TooltipStyler skipDelayDuration(Duration value) {
     return merge(TooltipStyler(skipDelayDuration: value));
+  }
+
+  /// Sets the transitionBuilder.
+  TooltipStyler transitionBuilder(RemixTooltipTransitionBuilder value) {
+    return merge(TooltipStyler(transitionBuilder: value));
+  }
+
+  /// Sets the animationStyle.
+  TooltipStyler animationStyle(AnimationStyle value) {
+    return merge(TooltipStyler(animationStyle: value));
+  }
+
+  /// Sets the positioning.
+  TooltipStyler positioning(OverlayPositionConfig value) {
+    return merge(TooltipStyler(positioning: value));
   }
 
   /// Sets the animation configuration.
@@ -786,6 +848,12 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
         $skipDelayDuration,
         other?.$skipDelayDuration,
       ),
+      transitionBuilder: MixOps.merge(
+        $transitionBuilder,
+        other?.$transitionBuilder,
+      ),
+      animationStyle: MixOps.merge($animationStyle, other?.$animationStyle),
+      positioning: MixOps.merge($positioning, other?.$positioning),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -802,6 +870,9 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
       showDuration: MixOps.resolve(context, $showDuration),
       dismissDuration: MixOps.resolve(context, $dismissDuration),
       skipDelayDuration: MixOps.resolve(context, $skipDelayDuration),
+      transitionBuilder: MixOps.resolve(context, $transitionBuilder),
+      animationStyle: MixOps.resolve(context, $animationStyle),
+      positioning: MixOps.resolve(context, $positioning),
     );
 
     return StyleSpec(
@@ -820,7 +891,10 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
       ..add(DiagnosticsProperty('waitDuration', $waitDuration))
       ..add(DiagnosticsProperty('showDuration', $showDuration))
       ..add(DiagnosticsProperty('dismissDuration', $dismissDuration))
-      ..add(DiagnosticsProperty('skipDelayDuration', $skipDelayDuration));
+      ..add(DiagnosticsProperty('skipDelayDuration', $skipDelayDuration))
+      ..add(DiagnosticsProperty('transitionBuilder', $transitionBuilder))
+      ..add(DiagnosticsProperty('animationStyle', $animationStyle))
+      ..add(DiagnosticsProperty('positioning', $positioning));
   }
 
   @override
@@ -831,6 +905,9 @@ class TooltipStyler extends MixStyler<TooltipStyler, TooltipSpec>
     $showDuration,
     $dismissDuration,
     $skipDelayDuration,
+    $transitionBuilder,
+    $animationStyle,
+    $positioning,
     $animation,
     $modifier,
     $variants,

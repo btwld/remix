@@ -52,6 +52,9 @@
 - `RemixDialog` takes `onClose` and `closeLabel` for a close button at the end
   of a header row. `DialogStyler.header`, `.body`, and `.closeButton` style
   that layout; without a header style or `onClose`, dialogs keep one column.
+- `TooltipStyler` sets `transitionBuilder`, `animationStyle`, and
+  `positioning`, so a style can carry tooltip motion and placement. Widget
+  arguments still win; ones left at their defaults let the style decide.
 
 ## 1.0.0-rc.7
 
