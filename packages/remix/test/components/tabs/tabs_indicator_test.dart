@@ -9,7 +9,7 @@ import 'package:remix/src/rendering/remix_box_effects.dart'
 import '../../helpers/motion_harness.dart';
 import '../../helpers/test_helpers.dart';
 
-final _indicator = find.byKey(const ValueKey('remix-tab-indicator'));
+final _indicator = find.byKey(const ValueKey('remix-selection-indicator'));
 final _boundary = GlobalKey();
 
 /// An opaque green no tab or label paints, so its bounding box in the

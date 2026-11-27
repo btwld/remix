@@ -1,90 +1,142 @@
-part of 'tabs.dart';
+import 'dart:math' as math;
 
-/// The motion of a [RemixTabBar] indicator that sets no `indicatorMotion`:
-/// 250 ms along `Curves.easeOutCubic`.
+import 'package:flutter/foundation.dart' show internal;
+import 'package:flutter/physics.dart' show SpringSimulation;
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mix/mix.dart';
+
+import '../rendering/remix_box_effects.dart';
+import 'remix_reduced_motion.dart';
+
+/// The motion of an indicator that sets no `indicatorMotion`: 250 ms along
+/// `Curves.easeOutCubic`.
 const _defaultIndicatorMotion = CurveAnimationConfig(
   duration: Duration(milliseconds: 250),
   curve: Curves.easeOutCubic,
 );
 
-/// Lets tabs hand their render boxes to the indicator of the bar above them.
-final class _TabIndicatorRegistry {
-  final Map<String, _RenderTabAnchor> _tabs = {};
-  _RenderTabIndicatorBar? _bar;
+/// Lets anchors hand their render boxes to the indicator of the host above
+/// them.
+final class _IndicatorRegistry {
+  final Map<Object, _RenderIndicatorAnchor> _anchors = {};
+  _RenderIndicatorLayer? _bar;
 
-  void anchorChanged(String tabId) => _bar?.anchorChanged(tabId);
+  void anchorChanged(Object id) => _bar?.anchorChanged(id);
 
-  /// The mounted tab [tabId] that has been laid out, or `null`.
-  _RenderTabAnchor? laidOut(String? tabId) {
-    final tab = _tabs[tabId];
-    return tab != null && tab.attached && tab.laidOutSize != null ? tab : null;
+  /// The mounted anchor [id] that has been laid out, or `null`.
+  _RenderIndicatorAnchor? laidOut(Object? id) {
+    final anchor = _anchors[id];
+    return anchor != null && anchor.attached && anchor.laidOutSize != null
+        ? anchor
+        : null;
   }
 }
 
-/// Keeps the anchors mounted even if the bar's style toggles the indicator.
-final class _TabIndicatorScope extends InheritedWidget {
-  const _TabIndicatorScope({required this.registry, required super.child});
+/// Keeps the anchors mounted even if the host's style toggles the indicator.
+final class _IndicatorScope extends InheritedWidget {
+  const _IndicatorScope({required this.registry, required super.child});
 
-  final _TabIndicatorRegistry registry;
+  final _IndicatorRegistry registry;
 
-  static _TabIndicatorRegistry? maybeOf(BuildContext context) => context
-      .dependOnInheritedWidgetOfExactType<_TabIndicatorScope>()
-      ?.registry;
+  static _IndicatorRegistry? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_IndicatorScope>()?.registry;
 
   @override
-  bool updateShouldNotify(_TabIndicatorScope oldWidget) =>
+  bool updateShouldNotify(_IndicatorScope oldWidget) =>
       registry != oldWidget.registry;
 }
 
-/// Wraps one tab so the bar can find it without remounting its content.
-class _TabIndicatorAnchor extends SingleChildRenderObjectWidget {
-  const _TabIndicatorAnchor({
-    required this.registry,
-    required this.tabId,
-    required super.child,
+/// Throws [ArgumentError] unless [motion] is `null`, a
+/// [CurveAnimationConfig], or a [SpringAnimationConfig].
+@internal
+void remixCheckIndicatorMotion(AnimationConfig? motion) {
+  if (motion == null ||
+      motion is CurveAnimationConfig ||
+      motion is SpringAnimationConfig) {
+    return;
+  }
+  throw ArgumentError.value(
+    motion,
+    'indicatorMotion',
+    'Expected CurveAnimationConfig or SpringAnimationConfig',
+  );
+}
+
+/// Marks [child] as the item [id] of the nearest
+/// [RemixSelectionIndicatorHost], so the indicator can sit on it when it is
+/// selected. Without a host it returns [child] unchanged.
+@internal
+class RemixSelectionIndicatorAnchor extends StatelessWidget {
+  const RemixSelectionIndicatorAnchor({
+    super.key,
+    required this.id,
+    required this.child,
   });
 
-  final _TabIndicatorRegistry registry;
-  final String tabId;
+  final Object id;
+  final Widget child;
 
   @override
-  _RenderTabAnchor createRenderObject(BuildContext context) =>
-      _RenderTabAnchor(registry, tabId);
-
-  @override
-  void updateRenderObject(BuildContext context, _RenderTabAnchor renderObject) {
-    renderObject.update(registry, tabId);
+  Widget build(BuildContext context) {
+    final registry = _IndicatorScope.maybeOf(context);
+    if (registry == null) return child;
+    return _IndicatorAnchor(registry: registry, id: id, child: child);
   }
 }
 
-/// A box that is exactly its tab, and keeps the size it laid out to. Only a
-/// parent may read its child's size during layout, so the bar reads it here.
-class _RenderTabAnchor extends RenderProxyBox {
-  _RenderTabAnchor(this._registry, this._tabId);
+/// Wraps one item so the host can find it without remounting its content.
+class _IndicatorAnchor extends SingleChildRenderObjectWidget {
+  const _IndicatorAnchor({
+    required this.registry,
+    required this.id,
+    required super.child,
+  });
 
-  _TabIndicatorRegistry _registry;
-  String _tabId;
+  final _IndicatorRegistry registry;
+  final Object id;
+
+  @override
+  _RenderIndicatorAnchor createRenderObject(BuildContext context) =>
+      _RenderIndicatorAnchor(registry, id);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderIndicatorAnchor renderObject,
+  ) {
+    renderObject.update(registry, id);
+  }
+}
+
+/// A box that is exactly its item, and keeps the size it laid out to. Only a
+/// parent may read its child's size during layout, so the host reads it here.
+class _RenderIndicatorAnchor extends RenderProxyBox {
+  _RenderIndicatorAnchor(this._registry, this._id);
+
+  _IndicatorRegistry _registry;
+  Object _id;
 
   /// The size of the last layout, or `null` before the first one.
   Size? laidOutSize;
 
-  void update(_TabIndicatorRegistry registry, String tabId) {
-    if (_registry == registry && _tabId == tabId) return;
+  void update(_IndicatorRegistry registry, Object id) {
+    if (_registry == registry && _id == id) return;
     if (attached) _unregister();
     _registry = registry;
-    _tabId = tabId;
+    _id = id;
     if (attached) _register();
   }
 
   void _register() {
-    _registry._tabs[_tabId] = this;
-    _registry.anchorChanged(_tabId);
+    _registry._anchors[_id] = this;
+    _registry.anchorChanged(_id);
   }
 
   void _unregister() {
-    if (_registry._tabs[_tabId] != this) return;
-    _registry._tabs.remove(_tabId);
-    _registry.anchorChanged(_tabId);
+    if (_registry._anchors[_id] != this) return;
+    _registry._anchors.remove(_id);
+    _registry.anchorChanged(_id);
   }
 
   @override
@@ -104,16 +156,16 @@ class _RenderTabAnchor extends RenderProxyBox {
     super.performLayout();
     if (laidOutSize == size) return;
     laidOutSize = size;
-    _registry.anchorChanged(_tabId);
+    _registry.anchorChanged(_id);
   }
 }
 
-/// Runs the indicator's move from where it was to the selected tab.
+/// Runs the indicator's move from where it was to the selected anchor.
 ///
-/// Each glide starts from the last painted bounds, not from a tab that may
+/// Each glide starts from the last painted bounds, not from an anchor that may
 /// already have moved. Once started, it tracks the current target.
-final class _TabIndicatorMotion {
-  _TabIndicatorMotion(TickerProvider vsync)
+final class _IndicatorMotion {
+  _IndicatorMotion(TickerProvider vsync)
     : controller = AnimationController.unbounded(vsync: vsync, value: 1);
 
   final AnimationController controller;
@@ -121,7 +173,7 @@ final class _TabIndicatorMotion {
   Rect? lastPaintedRect;
   Rect? _fromRect;
   Offset? _delta;
-  String? fromTabId;
+  Object? fromId;
   int _runId = 0;
 
   bool get gliding => _fromRect != null;
@@ -132,7 +184,7 @@ final class _TabIndicatorMotion {
     controller.stop();
     _fromRect = null;
     _delta = null;
-    fromTabId = null;
+    fromId = null;
   }
 
   void settle() {
@@ -141,12 +193,12 @@ final class _TabIndicatorMotion {
     controller.value = 1;
   }
 
-  void begin(String from, AnimationConfig config) {
+  void begin(Object from, AnimationConfig config) {
     cancel();
     final rect = lastPaintedRect;
     if (rect == null) return;
     _fromRect = rect;
-    fromTabId = from;
+    fromId = from;
     controller.value = 0;
     final runId = ++_runId;
 
@@ -206,30 +258,41 @@ final class _TabIndicatorMotion {
   }
 }
 
-/// Draws the shared indicator behind [child] and glides it to the selected
-/// tab.
-class _TabIndicatorHost extends StatefulWidget {
-  const _TabIndicatorHost({
+/// Draws one indicator behind [child], on the [RemixSelectionIndicatorAnchor]
+/// whose id is [selectedId], and glides it there when the selection changes.
+///
+/// The indicator is placed from the anchor's position each time the host
+/// paints, so keep the anchors directly in the host: a scrollable between them
+/// is not supported.
+@internal
+class RemixSelectionIndicatorHost extends StatefulWidget {
+  const RemixSelectionIndicatorHost({
+    super.key,
+    required this.selectedId,
     required this.indicator,
     required this.indicatorEffects,
     required this.motion,
     required this.child,
   });
 
+  /// The id of the selected anchor, or `null` for no indicator.
+  final Object? selectedId;
   final StyleSpec<BoxSpec>? indicator;
   final RemixBoxEffectsSpec? indicatorEffects;
   final AnimationConfig? motion;
   final Widget child;
 
   @override
-  State<_TabIndicatorHost> createState() => _TabIndicatorHostState();
+  State<RemixSelectionIndicatorHost> createState() =>
+      _RemixSelectionIndicatorHostState();
 }
 
-class _TabIndicatorHostState extends State<_TabIndicatorHost>
+class _RemixSelectionIndicatorHostState
+    extends State<RemixSelectionIndicatorHost>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  final _registry = _TabIndicatorRegistry();
-  late final _motion = _TabIndicatorMotion(this);
-  String? _selectedTabId;
+  final _registry = _IndicatorRegistry();
+  late final _motion = _IndicatorMotion(this);
+  Object? _selectedId;
 
   @override
   void initState() {
@@ -252,29 +315,27 @@ class _TabIndicatorHostState extends State<_TabIndicatorHost>
   @override
   Widget build(BuildContext context) {
     final indicator = widget.indicator;
-    final selectedTabId = indicator == null
-        ? null
-        : NakedTabsScope.of(context).selectedTabId;
-    final previous = _selectedTabId;
-    if (selectedTabId == null || remixReducedMotionOf(context)) {
+    final selectedId = indicator == null ? null : widget.selectedId;
+    final previous = _selectedId;
+    if (selectedId == null || remixReducedMotionOf(context)) {
       _motion.settle();
-    } else if (previous != null && previous != selectedTabId) {
+    } else if (previous != null && previous != selectedId) {
       _motion.begin(previous, widget.motion ?? _defaultIndicatorMotion);
     }
-    _selectedTabId = selectedTabId;
+    _selectedId = selectedId;
 
-    return _TabIndicatorScope(
+    return _IndicatorScope(
       registry: _registry,
-      child: _TabIndicatorBar(
+      child: _IndicatorLayer(
         registry: _registry,
         motion: _motion,
-        selectedTabId: selectedTabId,
+        selectedId: selectedId,
         indicator: indicator == null
             ? null
             : ExcludeSemantics(
                 child: IgnorePointer(
                   child: RemixBoxAdapter(
-                    key: const ValueKey('remix-tab-indicator'),
+                    key: const ValueKey('remix-selection-indicator'),
                     styleSpec: indicator,
                     containerEffects: widget.indicatorEffects,
                   ),
@@ -286,71 +347,71 @@ class _TabIndicatorHostState extends State<_TabIndicatorHost>
   }
 }
 
-enum _TabIndicatorSlot { indicator, content }
+enum _IndicatorSlot { indicator, content }
 
-class _TabIndicatorBar
-    extends SlottedMultiChildRenderObjectWidget<_TabIndicatorSlot, RenderBox> {
-  const _TabIndicatorBar({
+class _IndicatorLayer
+    extends SlottedMultiChildRenderObjectWidget<_IndicatorSlot, RenderBox> {
+  const _IndicatorLayer({
     required this.registry,
     required this.motion,
-    required this.selectedTabId,
+    required this.selectedId,
     required this.indicator,
     required this.content,
   });
 
-  final _TabIndicatorRegistry registry;
-  final _TabIndicatorMotion motion;
-  final String? selectedTabId;
+  final _IndicatorRegistry registry;
+  final _IndicatorMotion motion;
+  final Object? selectedId;
   final Widget? indicator;
   final Widget content;
 
   @override
-  Iterable<_TabIndicatorSlot> get slots => _TabIndicatorSlot.values;
+  Iterable<_IndicatorSlot> get slots => _IndicatorSlot.values;
 
   @override
-  Widget? childForSlot(_TabIndicatorSlot slot) => switch (slot) {
-    _TabIndicatorSlot.indicator => indicator,
-    _TabIndicatorSlot.content => content,
+  Widget? childForSlot(_IndicatorSlot slot) => switch (slot) {
+    _IndicatorSlot.indicator => indicator,
+    _IndicatorSlot.content => content,
   };
 
   @override
-  _RenderTabIndicatorBar createRenderObject(BuildContext context) =>
-      _RenderTabIndicatorBar(
+  _RenderIndicatorLayer createRenderObject(BuildContext context) =>
+      _RenderIndicatorLayer(
         registry: registry,
         motion: motion,
-        selectedTabId: selectedTabId,
+        selectedId: selectedId,
       );
 
   @override
   void updateRenderObject(
     BuildContext context,
-    _RenderTabIndicatorBar renderObject,
+    _RenderIndicatorLayer renderObject,
   ) {
     renderObject
       ..registry = registry
       ..motion = motion
-      ..selectedTabId = selectedTabId;
+      ..selectedId = selectedId;
   }
 }
 
-/// Sizes itself to its content, then sizes the indicator to the selected tab
-/// and paints it on that tab, behind the content.
+/// Sizes itself to its content, then sizes the indicator to the selected
+/// anchor and paints it on that anchor, behind the content.
 ///
 /// The indicator is laid out again on every animation tick, which costs one
-/// layout of the indicator and not of the tabs. Paint never marks anything
-/// dirty: it reads where the selected tab is and draws the indicator there.
-class _RenderTabIndicatorBar extends RenderBox
-    with SlottedContainerRenderObjectMixin<_TabIndicatorSlot, RenderBox> {
-  _RenderTabIndicatorBar({
-    required _TabIndicatorRegistry registry,
-    required _TabIndicatorMotion motion,
-    required String? selectedTabId,
+/// layout of the indicator and not of the items. Paint never marks anything
+/// dirty: it reads where the selected anchor is and draws the indicator there.
+class _RenderIndicatorLayer extends RenderBox
+    with SlottedContainerRenderObjectMixin<_IndicatorSlot, RenderBox> {
+  _RenderIndicatorLayer({
+    required _IndicatorRegistry registry,
+    required _IndicatorMotion motion,
+    required Object? selectedId,
   }) : _registry = registry,
        _motion = motion,
-       _selectedTabId = selectedTabId;
+       _selectedId = selectedId;
 
-  _TabIndicatorRegistry _registry;
-  set registry(_TabIndicatorRegistry value) {
+  _IndicatorRegistry _registry;
+  set registry(_IndicatorRegistry value) {
     if (_registry == value) return;
     if (attached) _registry._bar = null;
     _registry = value;
@@ -358,8 +419,8 @@ class _RenderTabIndicatorBar extends RenderBox
     markNeedsLayout();
   }
 
-  _TabIndicatorMotion _motion;
-  set motion(_TabIndicatorMotion value) {
+  _IndicatorMotion _motion;
+  set motion(_IndicatorMotion value) {
     if (_motion == value) return;
     if (attached) _motion.controller.removeListener(markNeedsLayout);
     _motion = value;
@@ -367,26 +428,24 @@ class _RenderTabIndicatorBar extends RenderBox
     markNeedsLayout();
   }
 
-  String? _selectedTabId;
-  set selectedTabId(String? value) {
-    if (_selectedTabId == value) return;
-    _selectedTabId = value;
+  Object? _selectedId;
+  set selectedId(Object? value) {
+    if (_selectedId == value) return;
+    _selectedId = value;
     markNeedsLayout();
   }
 
-  RenderBox? get _indicator => childForSlot(_TabIndicatorSlot.indicator);
-  RenderBox? get _content => childForSlot(_TabIndicatorSlot.content);
+  RenderBox? get _indicator => childForSlot(_IndicatorSlot.indicator);
+  RenderBox? get _content => childForSlot(_IndicatorSlot.content);
   Size? _laidOutTargetSize;
   Size _laidOutIndicatorSize = Size.zero;
   bool _anchorRelayoutPending = false;
 
   /// A selected anchor can relayout below a tight constraint without laying
-  /// out this bar. Catch up after layout; the current paint still uses its
+  /// out this host. Catch up after layout; the current paint still uses its
   /// new bounds. Most changes are already handled by [performLayout].
-  void anchorChanged(String tabId) {
-    if (tabId != _selectedTabId ||
-        _indicator == null ||
-        _anchorRelayoutPending) {
+  void anchorChanged(Object id) {
+    if (id != _selectedId || _indicator == null || _anchorRelayoutPending) {
       return;
     }
     _anchorRelayoutPending = true;
@@ -394,8 +453,7 @@ class _RenderTabIndicatorBar extends RenderBox
       _anchorRelayoutPending = false;
       if (attached &&
           _indicator != null &&
-          _registry.laidOut(_selectedTabId)?.laidOutSize !=
-              _laidOutTargetSize) {
+          _registry.laidOut(_selectedId)?.laidOutSize != _laidOutTargetSize) {
         markNeedsLayout();
       }
     });
@@ -415,9 +473,9 @@ class _RenderTabIndicatorBar extends RenderBox
     super.detach();
   }
 
-  Rect _boundsOf(_RenderTabAnchor tab) {
-    final size = tab.laidOutSize!;
-    final transform = tab.getTransformTo(this);
+  Rect _boundsOf(_RenderIndicatorAnchor anchor) {
+    final size = anchor.laidOutSize!;
+    final transform = anchor.getTransformTo(this);
     final translation = MatrixUtils.getAsTranslation(transform);
     return translation != null
         ? translation & size
@@ -433,9 +491,9 @@ class _RenderTabIndicatorBar extends RenderBox
     final indicator = _indicator;
     if (indicator == null) return;
     final motion = _motion;
-    final selected = _registry.laidOut(_selectedTabId);
+    final selected = _registry.laidOut(_selectedId);
     if (motion.gliding &&
-        (selected == null || _registry.laidOut(motion.fromTabId) == null)) {
+        (selected == null || _registry.laidOut(motion.fromId) == null)) {
       motion.cancel();
     }
 
@@ -450,9 +508,7 @@ class _RenderTabIndicatorBar extends RenderBox
   @override
   void paint(PaintingContext context, Offset offset) {
     final indicator = _indicator;
-    final selected = indicator == null
-        ? null
-        : _registry.laidOut(_selectedTabId);
+    final selected = indicator == null ? null : _registry.laidOut(_selectedId);
     _motion.lastPaintedRect = indicator != null && selected != null
         ? _paintIndicator(context, offset, indicator, selected)
         : null;
@@ -463,7 +519,7 @@ class _RenderTabIndicatorBar extends RenderBox
     PaintingContext context,
     Offset offset,
     RenderBox indicator,
-    _RenderTabAnchor selected,
+    _RenderIndicatorAnchor selected,
   ) {
     final laidOut = _laidOutIndicatorSize;
     if (laidOut.isEmpty) return null;
