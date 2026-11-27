@@ -17,6 +17,12 @@
   Controls built on it, such as `NakedButton`, no longer rebuild their
   subtree from scratch when they become disabled, so child state survives
   and style animations to the disabled state can play.
+- Context menu: add `NakedContextMenu`, a menu that opens at a point on its
+  target from a secondary click, a touch long press, the ContextMenu key or
+  Shift+F10, and the semantics long-press action.
+- `AnchoredOverlay` now places the panel at the `position` passed to
+  `MenuController.open`, relative to the anchor's top-left corner. It used to
+  ignore the position and open against the whole anchor.
 
 ## 2.0.0-rc.4
 

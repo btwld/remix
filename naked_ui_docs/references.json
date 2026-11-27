@@ -66,14 +66,14 @@
     "codeSha256": "d98ed24a778f7bd5431eedd7876f6c80a45f3d33f9ad0240327e791fe25f1f17",
     "reason": "API signature for NakedMenu; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_menu.dart",
-    "sourceSha256": "768c0ccc8e3942fe2692602c6785e16be3c7b81125fa1d79205e6eac5e72e3e0",
+    "sourceSha256": "48ed372d628a3320f98ae1e0b2d970ee47a372aee25c3c7f0198079f087f1ba3",
     "symbol": "NakedMenu"
   },
   "widget/menu.mdx#2": {
     "codeSha256": "d0b0fae5dad3f300c4594ae22aa5ef53f96b0cccc666df1ca46c480d7be76fb6",
     "reason": "API signature for NakedMenuItem; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_menu.dart",
-    "sourceSha256": "768c0ccc8e3942fe2692602c6785e16be3c7b81125fa1d79205e6eac5e72e3e0",
+    "sourceSha256": "48ed372d628a3320f98ae1e0b2d970ee47a372aee25c3c7f0198079f087f1ba3",
     "symbol": "NakedMenuItem"
   },
   "widget/popover.mdx#2": {

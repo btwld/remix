@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -14,6 +15,8 @@ import 'utilities/merge_naked_button_semantics.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/positioning.dart';
 import 'utilities/state.dart';
+
+part 'naked_context_menu.dart';
 
 /// Immutable view passed to [NakedMenu.builder].
 class NakedMenuState extends NakedState {
@@ -1096,39 +1099,54 @@ class _NakedMenuState<T> extends State<NakedMenu<T>>
           widget.onOpenRequested ?? (_, showOverlay) => showOverlay(),
       onCloseRequested: _handleCloseRequested,
       useRootOverlay: widget.useRootOverlay,
-      overlayBuilder: (context, info) {
-        Widget panel = Semantics(
-          role: SemanticsRole.menu,
-          container: true,
-          explicitChildNodes: true,
-          // Preserve a child boundary while transitions hide item semantics.
-          child: Semantics(
-            container: true,
-            explicitChildNodes: true,
-            child: _NakedMenuScope<T>(
-              onSelected: widget.onSelected == null && parentMenu != null
-                  ? parentMenu.onSelected
-                  : _handleSelection,
-              controller: widget.controller,
-              rootController: parentMenu?.rootController ?? widget.controller,
-              child: Builder(
-                builder: (context) => widget.overlayBuilder(context, info),
-              ),
+      overlayBuilder: (context, info) => AnchoredOverlay(
+        info: info,
+        useRootOverlay: widget.useRootOverlay,
+        positioning: widget.positioning,
+        constrainToAvailableSpace: widget.constrainToAvailableSpace,
+        closeOnTapOutside: widget.closeOnClickOutside,
+        child: KeyedSubtree(
+          key: overlayContentKey,
+          child: _menuPanel<T>(
+            onSelected: widget.onSelected == null && parentMenu != null
+                ? parentMenu.onSelected
+                : _handleSelection,
+            controller: widget.controller,
+            rootController: parentMenu?.rootController ?? widget.controller,
+            child: Builder(
+              builder: (context) => widget.overlayBuilder(context, info),
             ),
           ),
-        );
-        return AnchoredOverlay(
-          info: info,
-          useRootOverlay: widget.useRootOverlay,
-          positioning: widget.positioning,
-          constrainToAvailableSpace: widget.constrainToAvailableSpace,
-          closeOnTapOutside: widget.closeOnClickOutside,
-          child: KeyedSubtree(key: overlayContentKey, child: panel),
-        );
-      },
+        ),
+      ),
       child: MergeNakedButtonSemantics(child: menuChild),
     );
   }
+}
+
+/// The menu role and item scope around a menu's overlay content.
+Widget _menuPanel<T>({
+  required ValueChanged<T>? onSelected,
+  required MenuController controller,
+  required MenuController rootController,
+  required Widget child,
+}) {
+  return Semantics(
+    role: SemanticsRole.menu,
+    container: true,
+    explicitChildNodes: true,
+    // Preserve a child boundary while transitions hide item semantics.
+    child: Semantics(
+      container: true,
+      explicitChildNodes: true,
+      child: _NakedMenuScope<T>(
+        onSelected: onSelected,
+        controller: controller,
+        rootController: rootController,
+        child: child,
+      ),
+    ),
+  );
 }
 
 class _MenuControlSemantics extends SingleChildRenderObjectWidget {

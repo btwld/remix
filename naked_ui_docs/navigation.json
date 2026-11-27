@@ -139,6 +139,10 @@
           "href": "/widget/combobox"
         },
         {
+          "title": "NakedContextMenu",
+          "href": "/widget/context-menu"
+        },
+        {
           "title": "NakedListbox",
           "href": "/widget/listbox"
         },
