@@ -6,23 +6,20 @@ import '../../helpers/test_helpers.dart';
 
 const _badge = Key('badge');
 
-Widget _control({TextDirection direction = TextDirection.ltr}) =>
-    RemixSegmentedControl<String>(
-      selectedValue: 'inbox',
-      onChanged: (_) {},
-      style: SegmentedControlStyler().item(
-        SegmentedControlItemStyler().spacing(6),
-      ),
-      items: const [
-        RemixSegmentedControlItem(
-          value: 'inbox',
-          label: 'Inbox',
-          semanticLabel: 'Inbox, 3 unread',
-          trailing: SizedBox(key: _badge, width: 10, height: 10),
-        ),
-        RemixSegmentedControlItem(value: 'sent', label: 'Sent'),
-      ],
-    );
+Widget _control() => RemixSegmentedControl<String>(
+  selectedValue: 'inbox',
+  onChanged: (_) {},
+  style: SegmentedControlStyler().item(SegmentedControlItemStyler().spacing(6)),
+  items: const [
+    RemixSegmentedControlItem(
+      value: 'inbox',
+      label: 'Inbox',
+      semanticLabel: 'Inbox, 3 unread',
+      trailing: SizedBox(key: _badge, width: 10, height: 10),
+    ),
+    RemixSegmentedControlItem(value: 'sent', label: 'Sent'),
+  ],
+);
 
 void main() {
   testWidgets('trailing content follows the label with the item spacing', (
