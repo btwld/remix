@@ -255,6 +255,27 @@ A split button needs separate menu controls.
 trigger, because the button owns its look and name. Setting `semanticLabel` on a
 menu with a control trigger fails an assertion.
 
+## Open trigger state
+
+While the menu is open, the default trigger and a `RemixMenuTrigger.builder`
+trigger resolve their style with `WidgetState.selected`. Put the open look on
+`onSelected`:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final openAwareMenu = MenuStyler().trigger(
+  MenuTriggerStyler()
+      .color(Colors.white)
+      .onSelected(MenuTriggerStyler().color(Colors.blueGrey.shade50)),
+);
+```
+
+The state ends as soon as the panel starts its exit transition, so the trigger
+returns to its closed look while the panel fades out. A
+`RemixMenuTrigger.control` reads `menu.isOpen` instead.
+
 ## Checkboxes, radio groups, and submenus
 
 Checkboxes and radio groups are controlled. Keep their current value in your

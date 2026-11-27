@@ -372,6 +372,9 @@ for Overlay, Navigator and toast scope placement.
   `RemixMenuTrigger` is the trigger for `FortalMenu`; there is no separate
   Fortal trigger type. Size the panel from the trigger with
   `MenuStyler().overlay(FlexBoxStyler().minWidth(remixAnchorWidth()))`.
+  The default and builder triggers resolve with `WidgetState.selected` while
+  the menu is open (until its exit starts): style the open trigger with
+  `MenuTriggerStyler().onSelected(...)`.
   Show a keyboard shortcut or count on a row with `trailingText:` (ordinary,
   checkbox, radio, and submenu items) rather than a hand-built row; style it
   with `MenuItemStyler().trailingText(...)`, which inherits the label style.

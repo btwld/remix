@@ -89,6 +89,9 @@
 - Add `SegmentedControlSpec.segmentSizing` and `RemixSegmentSizing`.
   `RemixSegmentSizing.content` sizes each segment to its content instead of
   the largest segment. The default stays equal.
+- The default and builder `RemixMenu` triggers resolve their style with
+  `WidgetState.selected` while the menu is open, until its exit transition
+  starts, so `MenuTriggerStyler().onSelected(...)` styles the open trigger.
 
 ### Fixes
 
