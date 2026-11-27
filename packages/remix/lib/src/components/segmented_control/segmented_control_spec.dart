@@ -1,5 +1,15 @@
 part of 'segmented_control.dart';
 
+/// How a [RemixSegmentedControl] shares the track between its segments.
+enum RemixSegmentSizing {
+  /// Every segment gets the extent of the largest one.
+  equal,
+
+  /// Every segment gets its own natural extent. When the track is larger or
+  /// smaller than the segments need, each one grows or shrinks in proportion.
+  content,
+}
+
 /// Resolved visual properties for a [RemixSegmentedControl].
 @MixableSpec(
   target: RemixSegmentedControl.new,
@@ -11,13 +21,18 @@ class SegmentedControlSpec with _$SegmentedControlSpec {
   @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
 
-  /// Main-axis sizing for the equal-segment track layout.
+  /// Main-axis sizing for the segment track layout.
   @override
   final MainAxisSize? mainAxisSize;
 
   /// Space between adjacent segments.
   @override
   final double? spacing;
+
+  /// How segments share the track's main axis. `null` means
+  /// [RemixSegmentSizing.equal].
+  @override
+  final RemixSegmentSizing? segmentSizing;
 
   /// Default visual style for every segment.
   @override
@@ -53,6 +68,7 @@ class SegmentedControlSpec with _$SegmentedControlSpec {
     StyleSpec<BoxSpec>? container,
     this.mainAxisSize,
     this.spacing,
+    this.segmentSizing,
     StyleSpec<SegmentedControlItemSpec>? item,
     this.indicator,
     this.indicatorEffects,

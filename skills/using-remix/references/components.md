@@ -46,6 +46,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   draws one surface behind the selected segment that glides on selection
   change (`indicatorMotion`: curve or spring; 250 ms `easeOutCubic` by
   default), like the tabs indicator. Clear the item's own selected fill.
+  Segments are equal width by default;
+  `.segmentSizing(RemixSegmentSizing.content)` sizes each to its content.
 
 ## Forms
 

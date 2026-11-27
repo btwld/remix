@@ -59,11 +59,12 @@ class RemixSegmentedControlItem<T extends Object> {
        );
 }
 
-/// An equal-segment, single-select control with roving keyboard focus.
+/// A single-select control with roving keyboard focus. Segments share the
+/// track equally unless the style sets [SegmentedControlSpec.segmentSizing].
 ///
 /// This deliberately parallels [RemixToggleGroup] instead of wrapping it.
 /// Both controls compose Naked's headless toggle primitives, but a segmented
-/// control owns a persistent track, equal segment layout, and effects-aware
+/// control owns a persistent track, segment layout, and effects-aware
 /// item surfaces as a distinct public visual anatomy.
 ///
 /// [orientation] and per-item disabled state are Flutter extensions to the
@@ -217,8 +218,9 @@ class RemixSegmentedControl<T extends Object> extends StatelessWidget {
                     indicator: spec.indicator,
                     indicatorEffects: spec.indicatorEffects,
                     motion: spec.indicatorMotion,
-                    child: _EqualSegmentLayout(
+                    child: _SegmentLayout(
                       orientation: orientation,
+                      sizing: spec.segmentSizing ?? .equal,
                       spacing: spec.spacing ?? 0,
                       textDirection: textDirection,
                       fillMainAxis: fillMainAxis,
@@ -347,9 +349,10 @@ class _RemixSegmentedControlItemWidget<T extends Object>
   }
 }
 
-class _EqualSegmentLayout extends MultiChildRenderObjectWidget {
-  const _EqualSegmentLayout({
+class _SegmentLayout extends MultiChildRenderObjectWidget {
+  const _SegmentLayout({
     required this.orientation,
+    required this.sizing,
     required this.spacing,
     required this.textDirection,
     required this.fillMainAxis,
@@ -357,14 +360,16 @@ class _EqualSegmentLayout extends MultiChildRenderObjectWidget {
   });
 
   final Axis orientation;
+  final RemixSegmentSizing sizing;
   final double spacing;
   final TextDirection textDirection;
   final bool fillMainAxis;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return _RenderEqualSegmentLayout(
+    return _RenderSegmentLayout(
       orientation: orientation,
+      sizing: sizing,
       spacing: spacing,
       textDirection: textDirection,
       fillMainAxis: fillMainAxis,
@@ -374,34 +379,38 @@ class _EqualSegmentLayout extends MultiChildRenderObjectWidget {
   @override
   void updateRenderObject(
     BuildContext context,
-    _RenderEqualSegmentLayout renderObject,
+    _RenderSegmentLayout renderObject,
   ) {
     renderObject
       ..orientation = orientation
+      ..sizing = sizing
       ..spacing = spacing
       ..textDirection = textDirection
       ..fillMainAxis = fillMainAxis;
   }
 }
 
-class _EqualSegmentParentData extends ContainerBoxParentData<RenderBox> {}
+class _SegmentParentData extends ContainerBoxParentData<RenderBox> {}
 
-class _RenderEqualSegmentLayout extends RenderBox
+class _RenderSegmentLayout extends RenderBox
     with
-        ContainerRenderObjectMixin<RenderBox, _EqualSegmentParentData>,
-        RenderBoxContainerDefaultsMixin<RenderBox, _EqualSegmentParentData> {
-  _RenderEqualSegmentLayout({
+        ContainerRenderObjectMixin<RenderBox, _SegmentParentData>,
+        RenderBoxContainerDefaultsMixin<RenderBox, _SegmentParentData> {
+  _RenderSegmentLayout({
     required Axis orientation,
+    required RemixSegmentSizing sizing,
     required double spacing,
     required TextDirection textDirection,
     required bool fillMainAxis,
   }) : assert(spacing.isFinite && spacing >= 0.0),
        _orientation = orientation,
+       _sizing = sizing,
        _spacing = spacing,
        _textDirection = textDirection,
        _fillMainAxis = fillMainAxis;
 
   Axis _orientation;
+  RemixSegmentSizing _sizing;
   double _spacing;
   TextDirection _textDirection;
   bool _fillMainAxis;
@@ -410,6 +419,13 @@ class _RenderEqualSegmentLayout extends RenderBox
   set orientation(Axis value) {
     if (_orientation == value) return;
     _orientation = value;
+    markNeedsLayout();
+  }
+
+  RemixSegmentSizing get sizing => _sizing;
+  set sizing(RemixSegmentSizing value) {
+    if (_sizing == value) return;
+    _sizing = value;
     markNeedsLayout();
   }
 
@@ -437,8 +453,8 @@ class _RenderEqualSegmentLayout extends RenderBox
 
   @override
   void setupParentData(RenderBox child) {
-    if (child.parentData is! _EqualSegmentParentData) {
-      child.parentData = _EqualSegmentParentData();
+    if (child.parentData is! _SegmentParentData) {
+      child.parentData = _SegmentParentData();
     }
   }
 
@@ -479,38 +495,43 @@ class _RenderEqualSegmentLayout extends RenderBox
 
   /// Each segment's share of [mainExtent], used by the cross-axis intrinsic
   /// overrides to ask children what they need at their real segment size.
-  double _intrinsicChildMainExtent(double mainExtent) {
-    if (childCount == 0) return mainExtent;
-    final totalSpacing = _saturatingProduct(
-      _effectiveSpacingFor(mainExtent),
-      _gapCount,
-    );
+  List<double> _intrinsicChildMainExtents(double mainExtent) =>
+      _childMainExtents(
+        mainExtent,
+        _effectiveSpacingFor(mainExtent),
+        double.infinity,
+      );
 
-    return math.max(0.0, (mainExtent - totalSpacing) / childCount);
-  }
-
-  /// Main-axis extent of [childCount] equal segments plus the gaps between
-  /// them, each segment sized from the largest child.
+  /// Main-axis extent of the segments plus the gaps between them. Equal
+  /// segments are each sized from the largest child; content segments sum
+  /// their own extents.
   ///
   /// [minimum] selects each child's minimum intrinsic extent, which is what the
   /// `computeMin*` overrides must report; layout and the `computeMax*`
   /// overrides ask for the maximum. Deliberate: conflating the two makes an
   /// intrinsic-sizing parent believe the track cannot shrink, so labels
   /// overflow instead of wrapping.
-  double _desiredMainExtent(double crossExtent, {required bool minimum}) =>
-      _saturatingSum(
-        _saturatingProduct(
-          _largestIntrinsicMainExtent(crossExtent, minimum: minimum),
-          childCount,
-        ),
-        _totalSpacing,
-      );
+  double _desiredMainExtent(double crossExtent, {required bool minimum}) {
+    final double segments;
+    switch (sizing) {
+      case RemixSegmentSizing.equal:
+        var largest = 0.0;
+        for (final extent in _naturalMainExtents(crossExtent, minimum)) {
+          largest = math.max(largest, extent);
+        }
+        segments = _saturatingProduct(largest, childCount);
+      case RemixSegmentSizing.content:
+        var sum = 0.0;
+        for (final extent in _naturalMainExtents(crossExtent, minimum)) {
+          sum = _saturatingSum(sum, extent);
+        }
+        segments = sum;
+    }
+    return _saturatingSum(segments, _totalSpacing);
+  }
 
-  double _largestIntrinsicMainExtent(
-    double crossExtent, {
-    required bool minimum,
-  }) {
-    var largest = 0.0;
+  /// Each child's own main-axis extent, in child order.
+  Iterable<double> _naturalMainExtents(double crossExtent, bool minimum) sync* {
     var child = firstChild;
     while (child != null) {
       var extent = _childMainExtent(child, crossExtent, minimum: minimum);
@@ -520,10 +541,31 @@ class _RenderEqualSegmentLayout extends RenderBox
       if (!minimum && !extent.isFinite) {
         extent = _childMainExtent(child, crossExtent, minimum: true);
       }
-      largest = math.max(largest, extent);
+      yield extent;
       child = childAfter(child);
     }
-    return largest;
+  }
+
+  /// Each child's main-axis extent, in child order, once the track is
+  /// [mainExtent] long with [effectiveSpacing] between segments.
+  List<double> _childMainExtents(
+    double mainExtent,
+    double effectiveSpacing,
+    double crossExtent,
+  ) {
+    final count = childCount;
+    if (count == 0) return const [];
+    final available = math.max(
+      0.0,
+      mainExtent - _saturatingProduct(effectiveSpacing, count - 1),
+    );
+    final equal = List.filled(count, available / count);
+    if (sizing == RemixSegmentSizing.equal) return equal;
+
+    final natural = _naturalMainExtents(crossExtent, false).toList();
+    final total = natural.fold(0.0, _saturatingSum);
+    if (!(total > 0) || total >= double.maxFinite) return equal;
+    return [for (final extent in natural) extent * available / total];
   }
 
   double _childMainExtent(
@@ -602,16 +644,18 @@ class _RenderEqualSegmentLayout extends RenderBox
 
     final layout = _mainAxisLayout(constraints);
     final mainExtent = layout.mainExtent;
-    final totalSpacing = _saturatingProduct(
+    final extents = _childMainExtents(
+      mainExtent,
       layout.effectiveSpacing,
-      math.max(0, count - 1),
+      _crossExtentOf(constraints),
     );
-    final childMainExtent = math.max(0.0, (mainExtent - totalSpacing) / count);
-    final childConstraints = _childConstraints(constraints, childMainExtent);
     var largestCrossExtent = 0.0;
+    var index = 0;
     var child = firstChild;
     while (child != null) {
-      final childSize = child.getDryLayout(childConstraints);
+      final childSize = child.getDryLayout(
+        _childConstraints(constraints, extents[index++]),
+      );
       largestCrossExtent = math.max(
         largestCrossExtent,
         orientation == Axis.horizontal ? childSize.height : childSize.width,
@@ -626,6 +670,11 @@ class _RenderEqualSegmentLayout extends RenderBox
     );
   }
 
+  double _crossExtentOf(BoxConstraints constraints) =>
+      orientation == Axis.horizontal
+      ? constraints.maxHeight
+      : constraints.maxWidth;
+
   @override
   void performLayout() {
     final count = childCount;
@@ -637,16 +686,19 @@ class _RenderEqualSegmentLayout extends RenderBox
     final layout = _mainAxisLayout(constraints);
     final mainExtent = layout.mainExtent;
     final effectiveSpacing = layout.effectiveSpacing;
-    final totalSpacing = _saturatingProduct(
+    final extents = _childMainExtents(
+      mainExtent,
       effectiveSpacing,
-      math.max(0, count - 1),
+      _crossExtentOf(constraints),
     );
-    final childMainExtent = math.max(0.0, (mainExtent - totalSpacing) / count);
-    final childConstraints = _childConstraints(constraints, childMainExtent);
     var largestCrossExtent = 0.0;
+    var index = 0;
     var child = firstChild;
     while (child != null) {
-      child.layout(childConstraints, parentUsesSize: true);
+      child.layout(
+        _childConstraints(constraints, extents[index++]),
+        parentUsesSize: true,
+      );
       largestCrossExtent = math.max(
         largestCrossExtent,
         orientation == Axis.horizontal ? child.size.height : child.size.width,
@@ -663,18 +715,21 @@ class _RenderEqualSegmentLayout extends RenderBox
     final childCrossExtent = orientation == Axis.horizontal
         ? size.height
         : size.width;
-    final fillConstraints = _childConstraints(
-      constraints,
-      childMainExtent,
-      childCrossExtent: childCrossExtent,
-    );
     var offset = orientation == Axis.horizontal && textDirection == .rtl
         ? size.width
         : 0.0;
+    index = 0;
     child = firstChild;
     while (child != null) {
-      child.layout(fillConstraints, parentUsesSize: true);
-      final parentData = child.parentData! as _EqualSegmentParentData;
+      child.layout(
+        _childConstraints(
+          constraints,
+          extents[index++],
+          childCrossExtent: childCrossExtent,
+        ),
+        parentUsesSize: true,
+      );
+      final parentData = child.parentData! as _SegmentParentData;
       if (orientation == Axis.horizontal) {
         if (textDirection == .rtl) offset -= child.size.width;
         parentData.offset = Offset(offset, 0);
@@ -689,65 +744,56 @@ class _RenderEqualSegmentLayout extends RenderBox
     }
   }
 
-  @override
-  double computeMinIntrinsicWidth(double height) {
-    if (orientation == Axis.horizontal) {
-      return _desiredMainExtent(height, minimum: true);
-    }
+  /// The largest cross-axis intrinsic extent [measure] reports for a child
+  /// laid out at its share of [mainExtent].
+  double _largestCrossIntrinsic(
+    double mainExtent,
+    double Function(RenderBox child, double childMainExtent) measure,
+  ) {
+    final extents = _intrinsicChildMainExtents(mainExtent);
     var largest = 0.0;
+    var index = 0;
     var child = firstChild;
-    final childHeight = _intrinsicChildMainExtent(height);
     while (child != null) {
-      largest = math.max(largest, child.getMinIntrinsicWidth(childHeight));
+      largest = math.max(largest, measure(child, extents[index++]));
       child = childAfter(child);
     }
     return largest;
   }
 
   @override
-  double computeMaxIntrinsicWidth(double height) {
-    if (orientation == Axis.horizontal) {
-      return _desiredMainExtent(height, minimum: false);
-    }
-    var largest = 0.0;
-    var child = firstChild;
-    final childHeight = _intrinsicChildMainExtent(height);
-    while (child != null) {
-      largest = math.max(largest, child.getMaxIntrinsicWidth(childHeight));
-      child = childAfter(child);
-    }
-    return largest;
-  }
+  double computeMinIntrinsicWidth(double height) =>
+      orientation == Axis.horizontal
+      ? _desiredMainExtent(height, minimum: true)
+      : _largestCrossIntrinsic(
+          height,
+          (child, extent) => child.getMinIntrinsicWidth(extent),
+        );
 
   @override
-  double computeMinIntrinsicHeight(double width) {
-    if (orientation == Axis.vertical) {
-      return _desiredMainExtent(width, minimum: true);
-    }
-    var largest = 0.0;
-    var child = firstChild;
-    final childWidth = _intrinsicChildMainExtent(width);
-    while (child != null) {
-      largest = math.max(largest, child.getMinIntrinsicHeight(childWidth));
-      child = childAfter(child);
-    }
-    return largest;
-  }
+  double computeMaxIntrinsicWidth(double height) =>
+      orientation == Axis.horizontal
+      ? _desiredMainExtent(height, minimum: false)
+      : _largestCrossIntrinsic(
+          height,
+          (child, extent) => child.getMaxIntrinsicWidth(extent),
+        );
 
   @override
-  double computeMaxIntrinsicHeight(double width) {
-    if (orientation == Axis.vertical) {
-      return _desiredMainExtent(width, minimum: false);
-    }
-    var largest = 0.0;
-    var child = firstChild;
-    final childWidth = _intrinsicChildMainExtent(width);
-    while (child != null) {
-      largest = math.max(largest, child.getMaxIntrinsicHeight(childWidth));
-      child = childAfter(child);
-    }
-    return largest;
-  }
+  double computeMinIntrinsicHeight(double width) => orientation == Axis.vertical
+      ? _desiredMainExtent(width, minimum: true)
+      : _largestCrossIntrinsic(
+          width,
+          (child, extent) => child.getMinIntrinsicHeight(extent),
+        );
+
+  @override
+  double computeMaxIntrinsicHeight(double width) => orientation == Axis.vertical
+      ? _desiredMainExtent(width, minimum: false)
+      : _largestCrossIntrinsic(
+          width,
+          (child, extent) => child.getMaxIntrinsicHeight(extent),
+        );
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
