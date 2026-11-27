@@ -53,6 +53,7 @@ export 'src/fortal/components/kbd.dart';
 export 'src/fortal/components/link.dart';
 export 'src/fortal/components/context_menu.dart';
 export 'src/fortal/components/menu.dart';
+export 'src/fortal/components/number_field.dart';
 export 'src/fortal/components/popover.dart';
 export 'src/fortal/components/progress.dart';
 export 'src/fortal/components/radio.dart';
