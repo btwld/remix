@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Add `FortalRating`: outlined stars that fill in the warning tone, with the
+  value in words beside them, a faint mark of the committed value under a hover
+  preview, and a star-by-star fill sweep. Sizes `size1` to `size3`; needs the
+  Remix release that ships `RemixRating`.
 - **Deprecated:** `FortalTokens.transitionFast`, `transitionSlow`,
   `planMaxHeight`, `messageAvatarSize`, and `composerFieldMinHeight` (including
   their installed, prefixed equivalents). Their IDs and scope values are

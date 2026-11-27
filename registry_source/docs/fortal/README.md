@@ -298,7 +298,7 @@ for controls, semantics, and composition guidance.
 
 ### Interactive Elements
 - **FortalButton**, **FortalIconButton**, **FortalSwitch**, **FortalToggle**
-- **FortalCheckbox**, **FortalCheckboxGroupItem**, **FortalRadio**, **FortalSlider**
+- **FortalCheckbox**, **FortalCheckboxGroupItem**, **FortalRadio**, **FortalRating**, **FortalSlider**
 
 ### Input Components
 - **FortalTextField**, **FortalTextArea**, **FortalSelect**

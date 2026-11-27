@@ -706,6 +706,22 @@ items:
     exports:
       - components/range_slider.dart
 
+  rating:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.3.0
+    files:
+      - source: templates/rating/rating.dart.tmpl
+        target: "@ui/components/rating.dart"
+    generated:
+      - "@ui/components/rating.g.dart"
+    exports:
+      - components/rating.dart
+
   search_field:
     registryDependencies:
       - theme
