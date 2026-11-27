@@ -62,6 +62,9 @@
 - `RemixCallout` takes a `title` above its `text`, and `onDismiss` with
   `dismissLabel` for a close button at the end of the row.
   `CalloutStyler.title`, `.content`, and `.closeButton` style them.
+- `ProgressStyler.indicatorFill(RemixProgressFill.slide)` keeps the indicator
+  at full width and slides it in from the start edge instead of shrinking
+  it. `shrink` stays the default.
 
 ## 1.0.0-rc.7
 
