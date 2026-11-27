@@ -1,8 +1,11 @@
 /// Fortal computed tokens and functional color utilities.
 ///
-/// Derives the roles a palette does not store, such as content and focus
-/// colors, control borders, backgrounds and shadows, from the selected paired
-/// theme.
+/// Resolves the roles a palette does not store, such as content and focus
+/// colors, control borders, backgrounds and shadows, for the selected accent
+/// and appearance. Built-in accents pin most roles ([{{typePrefix}}ColorRoles]); the
+/// fitting functions here serve custom palettes and the theme's high contrast
+/// switch, which moves the foundation's low-contrast boundaries to the
+/// accessible values.
 ///
 /// Components should use these functional roles rather than raw color steps.
 library;
@@ -60,67 +63,72 @@ Color computeFocusA5({{typePrefix}}ColorScale accent) => accent.alphaStep(5);
 /// Computes translucent focus ring color (accent alpha step 8).
 Color computeFocusA8({{typePrefix}}ColorScale accent) => accent.alphaStep(8);
 
-/// Computes primary page background color.
-///
-/// Uses step 1 of the neutral paired with the selected theme.
-Color computeColorBackground({{typePrefix}}ColorScale gray, {required bool isDark}) =>
-    gray.step(1);
-
-/// Computes solid background for panels and input surfaces.
-///
-/// Solid panels use the neutral step 2 in both modes.
-Color computeColorPanelSolid({{typePrefix}}ColorScale gray, {required bool isDark}) =>
-    gray.step(2);
-
-/// Computes translucent background for floating panels.
-///
-/// Opt-in translucent panels composite neutral step 2 over the page.
-Color computeColorPanelTranslucent(
-  {{typePrefix}}ColorScale gray, {
-  required bool isDark,
-}) {
-  final page = gray.step(1), panel = gray.step(2);
-  final backgrounds = [page.r, page.g, page.b];
-  final channels = [panel.r, panel.g, panel.b];
-  var opacity = 0.0;
-  for (var i = 0; i < 3; i++) {
-    final background = backgrounds[i], channel = channels[i];
-    final needed = channel < background
-        ? (background - channel) / background
-        : channel > background
-        ? (channel - background) / (1 - background)
-        : 0.0;
-    opacity = math.max(opacity, needed);
-  }
-  if (opacity == 0) return const Color(0x00000000);
-  final alpha = (opacity * 255).ceil();
-  final a = alpha / 255;
-  int foreground(int i) => ((channels[i] - backgrounds[i] * (1 - a)) / a * 255)
-      .round()
-      .clamp(0, 255);
-  return Color.fromARGB(alpha, foreground(0), foreground(1), foreground(2));
-}
-
-/// Computes the neutral control surface color.
-///
-/// Controls use step 2 of the selected theme's paired neutral.
-Color computeColorSurface({{typePrefix}}ColorScale gray) => gray.step(2);
-
-/// Computes the neutral boundary of active empty controls.
+/// Computes the neutral boundary of active empty controls under high
+/// contrast.
 ///
 /// Unchecked checkboxes and radios, the off switch's track and thumb, and
 /// surface text inputs draw this line where it is the visual cue that a
-/// control is there. It fits source step 8 toward the strong neutral text tone
-/// until page, panel and off-track cues retain their 3:1 contrast requirement.
-/// The [isDark] argument remains for source compatibility; the scale carries
-/// its own appearance values.
-Color computeControlBorder({{typePrefix}}ColorScale gray, {required bool isDark}) =>
-    _fitForeground(gray.step(8), gray.step(12), [
-      for (final surface in [gray.step(1), gray.step(2)]) ...[
-        surface,
-        Color.alphaBlend(gray.alphaStep(3), surface),
-      ],
-    ], _markMargin);
+/// control is there. It fits neutral step 8 toward the strong neutral text
+/// tone until every one of [surfaces] keeps the 3:1 requirement.
+Color computeControlBorder(
+  {{typePrefix}}ColorScale gray, {
+  required List<Color> surfaces,
+}) => _fitForeground(gray.step(8), gray.step(12), [
+  for (final surface in surfaces) ...[
+    surface,
+    Color.alphaBlend(gray.alphaStep(3), surface),
+  ],
+], _markMargin);
+
+/// Moves a mark fill toward the accent's strong tone until it keeps 3:1 on
+/// every one of [surfaces].
+Color computeMarkFill(
+  Color fill,
+  {{typePrefix}}ColorScale accent, {
+  required List<Color> surfaces,
+}) => _fitForeground(fill, accent.step(10), surfaces, _markMargin);
+
+/// The soft fills and neutral surfaces accent text has to read on.
+List<Color> _contentSurfaces(
+  {{typePrefix}}ColorScale accent,
+  Color page,
+  Color panel,
+) => [
+  for (var step = 1; step <= 5; step++) accent.step(step),
+  for (final surface in [page, panel]) ...[
+    surface,
+    for (var step = 3; step <= 5; step++)
+      Color.alphaBlend(accent.alphaStep(step), surface),
+  ],
+];
+
+/// Accessible normal text across soft, surface and outline treatments: step
+/// 11 fitted toward step 12 for 4.5:1 on steps 1 to 5 and on the alpha fills
+/// 3 to 5 over the page and panel.
+Color computeAccentContent(
+  {{typePrefix}}ColorScale accent, {
+  required Color page,
+  required Color panel,
+}) => _fitForeground(
+  accent.step(11),
+  accent.step(12),
+  _contentSurfaces(accent, page, panel),
+  4.6,
+);
+
+/// Retains alpha step 11 where it meets the same content contract, otherwise
+/// moves toward [content].
+Color computeAccentContentAlpha(
+  {{typePrefix}}ColorScale accent, {
+  required Color content,
+  required Color page,
+  required Color panel,
+}) => _fitForeground(
+  accent.alphaStep(11),
+  content,
+  _contentSurfaces(accent, page, panel),
+  4.6,
+);
 
 /// Least movement toward the strong source text tone that meets the role.
 /// Raw upstream scale and alpha steps remain untouched.
@@ -206,12 +214,6 @@ Color _markInk(Color fill, Color supplied) {
 /// WCAG 2 contrast of at least 3:1, the non-text threshold.
 bool _keepsMarkContrast(Color first, Color second) =>
     computeContrastRatio(first, second) >= 3;
-
-/// Computes modal backdrop overlay color.
-///
-/// Uses black alpha step 6 (light mode) or step 8 (dark mode).
-Color computeColorOverlay({required bool isDark}) =>
-    isDark ? blackAlpha[8]! : blackAlpha[6]!;
 
 /// Computes the mode-aware stroke used by elevation shadows.
 Color computeShadowStroke({{typePrefix}}ColorScale gray, {required bool isDark}) =>
@@ -317,20 +319,75 @@ double _encodeSrgb(double channel) => channel <= 0.0031308
     ? 12.92 * channel
     : 1.055 * math.pow(channel, 1 / 2.4).toDouble() - 0.055;
 
-/// Fortal's floating-layer elevation scale (no inset or control shadows).
-Map<MixToken<Object?>, Object> build{{typePrefix}}Shadows({
-  required bool isDark,
-  required {{typePrefix}}ThemeColors colors,
-}) {
-  final color = Color.fromRGBO(0, 0, 0, isDark ? .36 : .14);
-  const geometry = [
-    (1.0, 2.0, 0.0),
-    (2.0, 6.0, -1.0),
-    (4.0, 12.0, -2.0),
-    (8.0, 20.0, -4.0),
-    (12.0, 32.0, -6.0),
-    (16.0, 48.0, -8.0),
-  ];
+/// The Flutter blur radius whose Gaussian matches a CSS shadow blur.
+///
+/// CSS blurs a shadow with sigma `blur / 2`; Flutter's
+/// `Shadow.convertRadiusToSigma` is `0.57735 × radius + 0.5` for a positive
+/// radius and 0 otherwise. Writing the CSS number into `blurRadius` would
+/// paint a shadow about a fifth wider and softer than designed.
+double {{valuePrefix}}BlurRadius(double cssBlur) =>
+    cssBlur <= 1 ? 0 : (cssBlur / 2 - 0.5) / 0.57735;
+
+/// One shadow layer in the foundation's CSS terms.
+typedef _Layer = ({double y, double blur, double spread, double alpha});
+
+BoxShadow _boxShadow(_Layer layer) => BoxShadow(
+  color: Color.fromRGBO(0, 0, 0, layer.alpha),
+  offset: Offset(0, layer.y),
+  blurRadius: {{valuePrefix}}BlurRadius(layer.blur),
+  spreadRadius: layer.spread,
+);
+
+/// Fortal's elevation scale and the thumb shadow.
+///
+/// Levels 1, 3 and 5 are the foundation's resting, raised and floating
+/// shadows; 2 and 4 sit midway between their neighbours and 6 extends level 5
+/// by a quarter. Light shadows carry two layers, dark ones a single denser
+/// layer.
+Map<MixToken<Object?>, Object> build{{typePrefix}}Shadows({required bool isDark}) {
+  final levels = isDark
+      ? const <List<_Layer>>[
+          [(y: 1, blur: 2, spread: 0, alpha: .18)],
+          [(y: 4.5, blur: 12, spread: 0, alpha: .20)],
+          [(y: 8, blur: 22, spread: 0, alpha: .22)],
+          [(y: 15, blur: 38.5, spread: 0, alpha: .28)],
+          [(y: 22, blur: 55, spread: 0, alpha: .34)],
+          [(y: 27.5, blur: 68.75, spread: 0, alpha: .34)],
+        ]
+      : const <List<_Layer>>[
+          [(y: 1, blur: 2, spread: 0, alpha: .035)],
+          [
+            (y: 3.5, blur: 10, spread: 0, alpha: .05),
+            (y: 1, blur: 3, spread: 0, alpha: .035),
+          ],
+          [
+            (y: 6, blur: 18, spread: 0, alpha: .065),
+            (y: 1, blur: 3, spread: 0, alpha: .035),
+          ],
+          [
+            (y: 13, blur: 33, spread: 0, alpha: .085),
+            (y: 2, blur: 6.5, spread: 0, alpha: .04),
+          ],
+          [
+            (y: 20, blur: 48, spread: 0, alpha: .105),
+            (y: 3, blur: 10, spread: 0, alpha: .045),
+          ],
+          [
+            (y: 25, blur: 60, spread: 0, alpha: .105),
+            (y: 3.75, blur: 12.5, spread: 0, alpha: .045),
+          ],
+        ];
+  final thumb = isDark
+      ? const <_Layer>[
+          (y: 0, blur: 0, spread: .5, alpha: .30),
+          (y: 1, blur: 2, spread: 0, alpha: .35),
+          (y: 2, blur: 6, spread: 0, alpha: .20),
+        ]
+      : const <_Layer>[
+          (y: 0, blur: 0, spread: .5, alpha: .07),
+          (y: 1, blur: 2, spread: 0, alpha: .14),
+          (y: 2, blur: 6, spread: 0, alpha: .06),
+        ];
   const tokens = [
     {{typePrefix}}Tokens.shadow1,
     {{typePrefix}}Tokens.shadow2,
@@ -339,18 +396,17 @@ Map<MixToken<Object?>, Object> build{{typePrefix}}Shadows({
     {{typePrefix}}Tokens.shadow5,
     {{typePrefix}}Tokens.shadow6,
   ];
+  final resting = levels[0].single;
   return {
-    for (var i = 0; i < geometry.length; i++)
-      tokens[i]: [
-        BoxShadow(
-          color: color,
-          offset: Offset(0, geometry[i].$1),
-          blurRadius: geometry[i].$2,
-          spreadRadius: geometry[i].$3,
-        ),
-      ],
+    for (var i = 0; i < levels.length; i++)
+      tokens[i]: [for (final layer in levels[i]) _boxShadow(layer)],
+    {{typePrefix}}Tokens.shadowThumb: [for (final layer in thumb) _boxShadow(layer)],
     {{typePrefix}}Tokens.shadow1Layers: [
-      RemixBoxShadow(color: color, offset: const Offset(0, 1), blurRadius: 2),
+      RemixBoxShadow(
+        color: Color.fromRGBO(0, 0, 0, resting.alpha),
+        offset: Offset(0, resting.y),
+        blurRadius: {{valuePrefix}}BlurRadius(resting.blur),
+      ),
     ],
   };
 }
@@ -360,10 +416,13 @@ Map<MixToken<Object?>, Object> build{{typePrefix}}Shadows({
 /// Holds the resolved color system for one theme configuration, as returned
 /// by [resolve{{typePrefix}}Tokens].
 class {{typePrefix}}ThemeColors {
+  /// The accent, with its mark fills already fitted under high contrast.
   final {{typePrefix}}Color accent;
   final {{typePrefix}}Color gray;
+  final {{typePrefix}}FunctionalColors functional;
   final ColorSwatch<int> blackAlpha;
   final ColorSwatch<int> whiteAlpha;
+  final bool highContrast;
 
   // Functional colors
   final Color colorBackground;
@@ -375,50 +434,33 @@ class {{typePrefix}}ThemeColors {
 
   // Control boundaries
   final Color controlBorder;
+  final Color controlTrack;
   final Color accentThumbRing;
+
+  // Accent roles
+  final Color accentIndicatorContrast;
+  final Color accentContent;
+  final Color accentContentAlpha;
+  final Color accentRange;
+  final Color accentThumb;
+  final Color accentSwatchContrast;
 
   // Focus
   final Color focus8;
   final Color focusA5;
   final Color focusA8;
 
-  /// Ink of checks and radio dots on the accent's indicator.
-  Color get accentIndicatorContrast => computeAccentIndicatorContrast(accent);
-
   /// The page and the solid and translucent panels marks must show on.
   List<Color> get markSurfaces =>
       _markSurfaces(colorBackground, colorPanelSolid, colorPanelTranslucent);
 
-  List<Color> get _contentSurfaces => [
-    for (var step = 1; step <= 5; step++) accent.scale.step(step),
-    for (final surface in [colorBackground, colorPanelSolid]) ...[
-      surface,
-      for (var step = 3; step <= 5; step++)
-        Color.alphaBlend(accent.scale.alphaStep(step), surface),
-    ],
-  ];
-
-  /// Accessible normal text across soft, surface and outline treatments.
-  Color get accentContent => _fitForeground(
-    accent.scale.step(11),
-    accent.scale.step(12),
-    _contentSurfaces,
-    4.6,
-  );
-
-  /// Retains upstream alpha text where it meets the same content contract.
-  Color get accentContentAlpha => _fitForeground(
-    accent.scale.alphaStep(11),
-    accentContent,
-    _contentSurfaces,
-    4.6,
-  );
-
   const {{typePrefix}}ThemeColors({
     required this.accent,
     required this.gray,
+    required this.functional,
     required this.blackAlpha,
     required this.whiteAlpha,
+    required this.highContrast,
     required this.colorBackground,
     required this.colorSurface,
     required this.colorPanelSolid,
@@ -426,7 +468,14 @@ class {{typePrefix}}ThemeColors {
     required this.colorOverlay,
     required this.shadowStroke,
     required this.controlBorder,
+    required this.controlTrack,
     required this.accentThumbRing,
+    required this.accentIndicatorContrast,
+    required this.accentContent,
+    required this.accentContentAlpha,
+    required this.accentRange,
+    required this.accentThumb,
+    required this.accentSwatchContrast,
     required this.focus8,
     required this.focusA5,
     required this.focusA8,
@@ -448,76 +497,124 @@ const Map<String, {{typePrefix}}ColorTheme> _accentThemesByName = {
   'sol': sol,
   'duna': duna,
   'caju': caju,
+  'jambo': jambo,
 };
 
 /// Resolves all computed tokens for a theme configuration.
+///
+/// In the default mode a built-in accent's pinned [{{typePrefix}}ColorRoles] are used
+/// as they are. A custom palette without roles has them fitted. Under
+/// `highContrast` every palette takes the fitted path, and the neutral
+/// control boundaries and the accent's mark fills are fitted as well.
 {{typePrefix}}ThemeColors resolve{{typePrefix}}Tokens({{typePrefix}}ThemeConfig theme) {
   final accentColor = theme.accent ?? {{typePrefix}}AccentColor.orla;
-  final grayTheme = {{valuePrefix}}NeutralPalettes[accentColor.name]!;
   final accentTheme =
       theme.accentPalette ?? _accentThemesByName[accentColor.name]!;
-  final {{typePrefix}}Color accentRC = theme.isDark
-      ? accentTheme.dark
-      : accentTheme.light;
-  final {{typePrefix}}Color grayRC = theme.isDark ? grayTheme.dark : grayTheme.light;
+  final isDark = theme.isDark;
+  final highContrast = theme.highContrast ?? false;
+  final functional = isDark ? {{valuePrefix}}FunctionalDark : {{valuePrefix}}FunctionalLight;
+  final {{typePrefix}}Color grayRC = isDark ? {{valuePrefix}}Neutral.dark : {{valuePrefix}}Neutral.light;
+  var accentRC = isDark ? accentTheme.dark : accentTheme.light;
+  final gray = grayRC.scale;
+  var accent = accentRC.scale;
 
-  // Extract scales
-  final {{typePrefix}}ColorScale accent = accentRC.scale;
-  final {{typePrefix}}ColorScale gray = grayRC.scale;
+  final colorBackground = functional.background;
+  final colorPanelSolid = functional.panelSolid;
+  final colorPanelTranslucent = functional.panelTranslucent;
+  final markSurfaces = _markSurfaces(
+    colorBackground,
+    colorPanelSolid,
+    colorPanelTranslucent,
+  );
 
-  // Neutral alpha swatches
-  const ColorSwatch<int> blackA = blackAlpha;
-  const ColorSwatch<int> whiteA = whiteAlpha;
+  final controlTrack = highContrast
+      ? _fitForeground(
+          functional.controlTrack,
+          gray.step(12),
+          markSurfaces,
+          _markMargin,
+        )
+      : functional.controlTrack;
+  final controlBorder = highContrast
+      ? computeControlBorder(gray, surfaces: [...markSurfaces, controlTrack])
+      : gray.step(8);
 
-  // Backgrounds/panels/overlay
-  final Color colorBackground = computeColorBackground(
-    gray,
-    isDark: theme.isDark,
-  );
-  final Color colorPanelSolid = computeColorPanelSolid(
-    gray,
-    isDark: theme.isDark,
-  );
-  final Color colorPanelTranslucent = computeColorPanelTranslucent(
-    gray,
-    isDark: theme.isDark,
-  );
-  final Color colorSurface = computeColorSurface(gray);
-  final Color colorOverlay = computeColorOverlay(isDark: theme.isDark);
-  final Color shadowStroke = computeShadowStroke(gray, isDark: theme.isDark);
-  final Color controlBorder = computeControlBorder(gray, isDark: theme.isDark);
+  if (highContrast) {
+    // Strong text keeps 7:1 on steps 1 to 5; only dark amber falls short.
+    final strong = _fitForeground(accent.step(12), gray.step(12), [
+      for (var step = 1; step <= 5; step++) accent.step(step),
+    ], 7);
+    accent = {{typePrefix}}ColorScale(
+      ColorSwatch(accent.step(9).toARGB32(), {
+        for (var step = 1; step <= 12; step++)
+          step: step == 12 ? strong : accent.step(step),
+      }),
+      ColorSwatch(accent.alphaStep(9).toARGB32(), {
+        for (var step = 1; step <= 12; step++)
+          step: step == 12 ? strong : accent.alphaStep(step),
+      }),
+    );
+    Color fit(Color fill) =>
+        computeMarkFill(fill, accent, surfaces: markSurfaces);
+    accentRC = {{typePrefix}}Color(
+      accent,
+      accentRC.surface,
+      fit(accentRC.indicator),
+      fit(accentRC.track),
+      accentRC.contrast,
+      solid: accentRC.solid,
+      solidHover: accentRC.solidHover,
+      markContrast: accentRC.markContrast,
+      markHover: fit(accentRC.markHover),
+    );
+  }
+  final roles = accentRC.roles;
 
-  // Focus
-  final Color focus8 = computeFocus8(
-    accent,
-    surfaces: [colorBackground, colorPanelSolid],
-  );
-  final Color focusA5 = computeFocusA5(accent);
-  final Color focusA8 = computeFocusA8(accent);
+  final accentContent =
+      roles?.content ??
+      computeAccentContent(
+        accent,
+        page: colorBackground,
+        panel: colorPanelSolid,
+      );
 
   return {{typePrefix}}ThemeColors(
     accent: accentRC,
     gray: grayRC,
-    blackAlpha: blackA,
-    whiteAlpha: whiteA,
+    functional: functional,
+    blackAlpha: blackAlpha,
+    whiteAlpha: whiteAlpha,
+    highContrast: highContrast,
     colorBackground: colorBackground,
-    colorSurface: colorSurface,
+    colorSurface: functional.surface,
     colorPanelSolid: colorPanelSolid,
     colorPanelTranslucent: colorPanelTranslucent,
-    colorOverlay: colorOverlay,
-    shadowStroke: shadowStroke,
+    colorOverlay: functional.overlay,
+    shadowStroke: computeShadowStroke(gray, isDark: isDark),
     controlBorder: controlBorder,
-    accentThumbRing: computeAccentThumbRing(
-      accentRC,
-      controlBorder,
-      surfaces: _markSurfaces(
-        colorBackground,
-        colorPanelSolid,
-        colorPanelTranslucent,
-      ),
-    ),
-    focus8: focus8,
-    focusA5: focusA5,
-    focusA8: focusA8,
+    controlTrack: controlTrack,
+    accentThumbRing:
+        roles?.thumbRing ??
+        computeAccentThumbRing(accentRC, controlBorder, surfaces: markSurfaces),
+    accentIndicatorContrast: roles != null
+        ? accentRC.markContrast ?? computeAccentIndicatorContrast(accentRC)
+        : computeAccentIndicatorContrast(accentRC),
+    accentContent: accentContent,
+    accentContentAlpha:
+        roles?.contentAlpha ??
+        computeAccentContentAlpha(
+          accent,
+          content: accentContent,
+          page: colorBackground,
+          panel: colorPanelSolid,
+        ),
+    accentRange: roles?.range ?? accentRC.track,
+    accentThumb: roles?.thumb ?? _white,
+    accentSwatchContrast: roles?.swatchContrast ?? accentRC.contrast,
+    focus8:
+        roles?.focus ??
+        computeFocus8(accent, surfaces: [colorBackground, colorPanelSolid]),
+    focusA5: computeFocusA5(accent),
+    focusA8: roles?.focus ?? computeFocusA8(accent),
   );
 }
