@@ -1,14 +1,17 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/physics.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
 
-double _spring(SpringDescription spring, double from, double to, double ms,
-        {double velocity = 0}) =>
-    SpringSimulation(spring, from, to, velocity).x(ms / 1000);
+double _spring(
+  SpringDescription spring,
+  double from,
+  double to,
+  double ms, {
+  double velocity = 0,
+}) => SpringSimulation(spring, from, to, velocity).x(ms / 1000);
 
 double _springVelocity(
   SpringDescription spring,
@@ -36,7 +39,9 @@ Widget _host(Widget child, {bool reduceMotion = false}) => MediaQuery(
 }) {
   final visual = of == null
       ? find.byType(FortalAnimatedVisual)
-      : find.ancestor(of: of, matching: find.byType(FortalAnimatedVisual)).first;
+      : find
+            .ancestor(of: of, matching: find.byType(FortalAnimatedVisual))
+            .first;
   T only<T extends Widget>() => tester.widget<T>(
     find.descendant(of: visual, matching: find.byType(T)).first,
   );
@@ -66,8 +71,10 @@ void main() {
       final curve = FortalSpringCurve.css;
 
       expect(curve.duration.inMilliseconds, inInclusiveRange(439, 441));
-      expect(curve.transform(220 / curve.duration.inMilliseconds),
-          closeTo(0.908, 0.003));
+      expect(
+        curve.transform(220 / curve.duration.inMilliseconds),
+        closeTo(0.908, 0.003),
+      );
       expect(curve.transform(1), 1);
     });
 
@@ -99,8 +106,9 @@ void main() {
       reduceMotion: reduceMotion,
     );
 
-    testWidgets('runs opacity on its curve and the transform on its spring',
-        (tester) async {
+    testWidgets('runs opacity on its curve and the transform on its spring', (
+      tester,
+    ) async {
       await tester.pumpWidget(visual(FortalVisual.rest));
       await tester.pumpWidget(
         visual(const FortalVisual(opacity: 0, offset: Offset(0, 100))),
@@ -115,15 +123,18 @@ void main() {
         );
         expect(
           now.offset.dy,
-          closeTo(_spring(FortalMotion.springSnappy, 0, 100, ms.toDouble()),
-              1e-6),
+          closeTo(
+            _spring(FortalMotion.springSnappy, 0, 100, ms.toDouble()),
+            1e-6,
+          ),
           reason: 'offset at $ms ms',
         );
       }
     });
 
-    testWidgets('a spring retargeted mid-flight keeps its velocity',
-        (tester) async {
+    testWidgets('a spring retargeted mid-flight keeps its velocity', (
+      tester,
+    ) async {
       await tester.pumpWidget(visual(FortalVisual.rest));
       await tester.pumpWidget(
         visual(const FortalVisual(offset: Offset(0, 100))),
@@ -131,7 +142,10 @@ void main() {
       await tester.pump(const Duration(milliseconds: 60));
       final position = _visual(tester).offset.dy;
       final velocity = _springVelocity(FortalMotion.springSnappy, 0, 100, 60);
-      expect(position, closeTo(_spring(FortalMotion.springSnappy, 0, 100, 60), 1e-6));
+      expect(
+        position,
+        closeTo(_spring(FortalMotion.springSnappy, 0, 100, 60), 1e-6),
+      );
       expect(velocity, greaterThan(500));
 
       await tester.pumpWidget(visual(FortalVisual.rest));
@@ -140,15 +154,21 @@ void main() {
       expect(
         _visual(tester).offset.dy,
         closeTo(
-          _spring(FortalMotion.springSnappy, position, 0, 50,
-              velocity: velocity),
+          _spring(
+            FortalMotion.springSnappy,
+            position,
+            0,
+            50,
+            velocity: velocity,
+          ),
           1e-3,
         ),
       );
     });
 
-    testWidgets('reduced motion jumps the transform and fades in 100 ms',
-        (tester) async {
+    testWidgets('reduced motion jumps the transform and fades in 100 ms', (
+      tester,
+    ) async {
       await tester.pumpWidget(visual(FortalVisual.rest, reduceMotion: true));
       await tester.pumpWidget(
         visual(
@@ -187,15 +207,22 @@ void main() {
         final p = FortalMotion.easeEnter.transform(ms / 200);
         final incoming = _visual(tester, of: find.text('Sent'));
         expect(incoming.opacity, closeTo(p, 1e-6), reason: 'opacity at $ms');
-        expect(incoming.offset.dy, closeTo(3 * (1 - p), 1e-6),
-            reason: '0.3 em rise at $ms');
-        expect(incoming.blur, closeTo(FortalMotion.blurSoft * (1 - p), 1e-6),
-            reason: 'blur at $ms');
+        expect(
+          incoming.offset.dy,
+          closeTo(3 * (1 - p), 1e-6),
+          reason: '0.3 em rise at $ms',
+        );
+        expect(
+          incoming.blur,
+          closeTo(FortalMotion.blurSoft * (1 - p), 1e-6),
+          reason: 'blur at $ms',
+        );
       }
     });
 
-    testWidgets('the old text lifts away in 150 ms and leaves layout at once',
-        (tester) async {
+    testWidgets('the old text lifts away in 150 ms and leaves layout at once', (
+      tester,
+    ) async {
       await tester.pumpWidget(swap('Longer'));
       expect(tester.getSize(find.byType(FortalTextSwap)).width, 60);
 
@@ -207,8 +234,11 @@ void main() {
       expect(outgoing.opacity, closeTo(1 - p, 1e-6));
       expect(outgoing.offset.dy, closeTo(-3 * p, 1e-6));
       expect(outgoing.blur, closeTo(FortalMotion.blurSubtle * p, 1e-6));
-      expect(tester.getSize(find.text('Longer')).width, 60,
-          reason: 'keeps painting at its own size');
+      expect(
+        tester.getSize(find.text('Longer')).width,
+        60,
+        reason: 'keeps painting at its own size',
+      );
 
       await tester.pump(const Duration(milliseconds: 75));
       await tester.pump();
@@ -292,10 +322,14 @@ void main() {
       await tester.pumpWidget(morph(const Size(200, 60)));
       await tester.pump(const Duration(milliseconds: 100));
       final size = morphSize(tester);
-      expect(size.width,
-          closeTo(_spring(FortalMotion.springMorph, 100, 200, 100), 1e-3));
-      expect(size.height,
-          closeTo(_spring(FortalMotion.springSnappy, 20, 60, 100), 1e-3));
+      expect(
+        size.width,
+        closeTo(_spring(FortalMotion.springMorph, 100, 200, 100), 1e-3),
+      );
+      expect(
+        size.height,
+        closeTo(_spring(FortalMotion.springSnappy, 20, 60, 100), 1e-3),
+      );
 
       await tester.pumpAndSettle();
       expect(morphSize(tester), const Size(200, 60));
@@ -339,8 +373,9 @@ void main() {
     );
     Rect pillRect(WidgetTester tester) => tester.getRect(find.byKey(pill));
 
-    testWidgets('sits on the selected anchor from the first frame',
-        (tester) async {
+    testWidgets('sits on the selected anchor from the first frame', (
+      tester,
+    ) async {
       await tester.pumpWidget(track(1));
 
       expect(pillRect(tester), const Rect.fromLTWH(50, 0, 60, 20));
@@ -354,8 +389,10 @@ void main() {
       final left = pillRect(tester).left;
       final velocity = _springVelocity(FortalMotion.springMorph, 0, 50, 80);
       expect(left, closeTo(_spring(FortalMotion.springMorph, 0, 50, 80), 1e-3));
-      expect(pillRect(tester).width,
-          closeTo(_spring(FortalMotion.springMorph, 50, 60, 80), 1e-3));
+      expect(
+        pillRect(tester).width,
+        closeTo(_spring(FortalMotion.springMorph, 50, 60, 80), 1e-3),
+      );
 
       await tester.pumpWidget(track(2));
       await tester.pump(const Duration(milliseconds: 60));
@@ -408,7 +445,8 @@ void main() {
     /// The vertical offset of the wheel slot showing [digit], in em.
     double slot(WidgetTester tester, String digit) {
       final transform = tester.widget<Transform>(
-        find.ancestor(of: find.text(digit), matching: find.byType(Transform))
+        find
+            .ancestor(of: find.text(digit), matching: find.byType(Transform))
             .first,
       );
 
@@ -429,8 +467,7 @@ void main() {
       expect(find.text('2'), findsNothing);
     });
 
-    testWidgets('wraps 9 to 0 going up and 0 to 9 going down',
-        (tester) async {
+    testWidgets('wraps 9 to 0 going up and 0 to 9 going down', (tester) async {
       await tester.pumpWidget(rolling('19'));
       await tester.pumpWidget(rolling('20'));
       await tester.pump(const Duration(milliseconds: 40));
@@ -442,8 +479,9 @@ void main() {
       expect(slot(tester, '9'), lessThan(0), reason: 'arrives from above');
     });
 
-    testWidgets('a new place value grows in on the morph spring',
-        (tester) async {
+    testWidgets('a new place value grows in on the morph spring', (
+      tester,
+    ) async {
       await tester.pumpWidget(rolling('950'));
       await tester.pumpWidget(rolling('1,000'));
       await tester.pump(const Duration(milliseconds: 100));
@@ -451,8 +489,10 @@ void main() {
         find.ancestor(of: find.text(','), matching: find.byType(Align)).first,
       );
 
-      expect(separator.widthFactor,
-          closeTo(_spring(FortalMotion.springMorph, 0, 1, 100), 1e-6));
+      expect(
+        separator.widthFactor,
+        closeTo(_spring(FortalMotion.springMorph, 0, 1, 100), 1e-6),
+      );
       await tester.pumpAndSettle();
       expect(tester.getSize(find.byType(FortalRollingText)).width, 50);
     });
@@ -467,8 +507,9 @@ void main() {
     });
   });
 
-  testWidgets('FortalUnderline draws below the baseline by its offset',
-      (tester) async {
+  testWidgets('FortalUnderline draws below the baseline by its offset', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       _host(
         const FortalUnderline(
@@ -483,8 +524,9 @@ void main() {
       text: const TextSpan(text: 'Link', style: TextStyle(fontSize: 10)),
       textDirection: TextDirection.ltr,
     )..layout();
-    final baseline =
-        painter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+    final baseline = painter.computeDistanceToActualBaseline(
+      TextBaseline.alphabetic,
+    );
     painter.dispose();
 
     expect(

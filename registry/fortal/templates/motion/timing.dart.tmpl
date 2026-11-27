@@ -175,8 +175,7 @@ final class {{typePrefix}}SpringCurve extends Curve {
   }
 
   @override
-  double transformInternal(double t) =>
-      _motion.x(t * _seconds(duration));
+  double transformInternal(double t) => _motion.x(t * _seconds(duration));
 }
 
 /// One animated number on a [{{typePrefix}}MotionClock].
@@ -256,6 +255,7 @@ final class {{typePrefix}}MotionClock {
   void remove({{typePrefix}}Channel channel) => _channels.remove(channel);
 
   /// Moves [channel] to [to] with [timing], or straight there when [jump].
+  /// A target the channel already heads for leaves it as it is.
   void animate(
     {{typePrefix}}Channel channel,
     double to,
@@ -263,7 +263,7 @@ final class {{typePrefix}}MotionClock {
     bool jump = false,
   }) {
     if (jump) {
-      channel._jump(to);
+      if (to != channel._target) channel._jump(to);
 
       return;
     }
@@ -274,8 +274,6 @@ final class {{typePrefix}}MotionClock {
       _ticker.start();
     }
   }
-
-  void jump({{typePrefix}}Channel channel, double to) => channel._jump(to);
 
   void _handleTick(Duration elapsed) {
     _elapsed = elapsed.inMicroseconds / Duration.microsecondsPerSecond;
@@ -308,7 +306,8 @@ final class _CurveSimulation extends Simulation {
   double x(double time) {
     if (time >= _duration) return _to;
 
-    return _from + (_to - _from) * _curve.transform(math.max(0, time) / _duration);
+    return _from +
+        (_to - _from) * _curve.transform(math.max(0, time) / _duration);
   }
 
   @override

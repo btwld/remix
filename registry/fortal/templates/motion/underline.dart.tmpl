@@ -74,7 +74,10 @@ class _RenderUnderline extends RenderProxyBox {
   @override
   void performLayout() {
     super.performLayout();
-    _baseline = child?.getDistanceToActualBaseline(TextBaseline.alphabetic);
+    _baseline = child?.getDistanceToBaseline(
+      TextBaseline.alphabetic,
+      onlyReal: true,
+    );
   }
 
   @override

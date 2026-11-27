@@ -227,6 +227,7 @@ class _FortalRollingTextState extends State<FortalRollingText>
         final feather = _feather * em / digit.height;
 
         return ShaderMask(
+          blendMode: BlendMode.dstIn,
           shaderCallback: (bounds) => LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

@@ -175,8 +175,7 @@ final class FortalSpringCurve extends Curve {
   }
 
   @override
-  double transformInternal(double t) =>
-      _motion.x(t * _seconds(duration));
+  double transformInternal(double t) => _motion.x(t * _seconds(duration));
 }
 
 /// One animated number on a [FortalMotionClock].
@@ -307,7 +306,8 @@ final class _CurveSimulation extends Simulation {
   double x(double time) {
     if (time >= _duration) return _to;
 
-    return _from + (_to - _from) * _curve.transform(math.max(0, time) / _duration);
+    return _from +
+        (_to - _from) * _curve.transform(math.max(0, time) / _duration);
   }
 
   @override
