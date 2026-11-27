@@ -3,6 +3,70 @@ import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart' hide AnimationConfig;
 import 'package:mix/mix.dart' as mix show AnimationConfig;
 
+import 'remix_reduced_motion.dart';
+
+/// Drops [spec]'s animation while motion is reduced under [context], so Mix's
+/// driver jumps to the target instead of interpolating toward it.
+///
+/// For child drivers that resolve a style outside [RemixStyleSpecBuilder].
+@internal
+StyleSpec<S> remixReducedMotionSpec<S extends Spec<S>>(
+  BuildContext context,
+  StyleSpec<S> spec,
+) => remixReducedMotionOf(context) ? _withoutAnimation(spec) : spec;
+
+StyleSpec<S> _withoutAnimation<S extends Spec<S>>(StyleSpec<S> spec) =>
+    spec.animation == null
+    ? spec
+    : StyleSpec(spec: spec.spec, widgetModifiers: spec.widgetModifiers);
+
+/// Resolves [inner] as Mix does, minus its animation when [reduceMotion].
+///
+/// Stripping the resolved spec, rather than merging an instant `.animate`
+/// over the style, also drops timing that an active variant contributes,
+/// because variants merge after the base style.
+final class _ReducedMotionStyle<S extends Spec<S>> extends Style<S> {
+  _ReducedMotionStyle(this.inner, {required this.reduceMotion})
+    : super(
+        variants: inner.$variants,
+        modifier: inner.$modifier,
+        animation: inner.$animation,
+      );
+
+  final Style<S> inner;
+  final bool reduceMotion;
+
+  StyleSpec<S> _apply(StyleSpec<S> spec) =>
+      reduceMotion ? _withoutAnimation(spec) : spec;
+
+  @override
+  StyleSpec<S> build(
+    BuildContext context, {
+    Set<NamedVariant> namedVariants = const {},
+  }) => _apply(inner.build(context, namedVariants: namedVariants));
+
+  @override
+  StyleSpec<S> resolve(BuildContext context) => _apply(inner.resolve(context));
+
+  /// Mirrors how [StyleBuilder] merges an inherited style into its own.
+  @override
+  Style<S> merge(covariant Style<S>? other) {
+    final next = other is _ReducedMotionStyle<S> ? other.inner : other;
+    if (next == null || next is IdentityStyle<S>) return this;
+    if (inner is IdentityStyle<S>) {
+      return _ReducedMotionStyle(next, reduceMotion: reduceMotion);
+    }
+
+    return _ReducedMotionStyle(inner.merge(next), reduceMotion: reduceMotion);
+  }
+
+  @override
+  Object get mergeKey => inner.mergeKey;
+
+  @override
+  List<Object?> get props => [inner, reduceMotion];
+}
+
 /// Keeps root completion callbacks on the aggregate renderer while child
 /// frame drivers animate the same values. Nested slot configs are unchanged.
 @internal
@@ -96,6 +160,11 @@ final class RemixDefaultContentStyle extends StatelessWidget {
 }
 
 /// Builds from a raw spec when supplied, otherwise resolves the fluent style.
+///
+/// While motion is reduced (see [RemixReducedMotionBuilder]), the style's
+/// `.animate(...)` timing is dropped and state changes land on their end
+/// value in the same frame. When the preference changes, a transition already
+/// running finishes on its own timing.
 class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
   const RemixStyleSpecBuilder({
     super.key,
@@ -133,16 +202,40 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
             styleSpec: StyleSpec(spec: spec),
             builder: builder,
           )
-        : StyleBuilder<S>(
-            style: style,
-            controller: controller,
-            builder: builder,
-          );
+        : _buildFluent(context);
 
     if (!trackFocusVisibility) return result;
 
     return FocusVisibilityScope(child: result);
   }
+
+  // The preference builder rebuilds on platform `reduceMotion` changes, which
+  // notify no inherited widget. Mix animates the first change after a toggle
+  // with the outgoing spec's timing, so a stale spec would animate once more.
+  Widget _buildFluent(BuildContext context) => RemixReducedMotionBuilder(
+    builder: (context, reduceMotion) {
+      final inherited = Style.maybeOf<S>(context);
+      final fluent = StyleBuilder<S>(
+        style: _ReducedMotionStyle(style, reduceMotion: reduceMotion),
+        controller: controller,
+        builder: inherited == null
+            ? builder
+            : (context, spec) => StyleProvider<S>(
+                style: inherited,
+                child: builder(context, spec),
+              ),
+      );
+      if (inherited == null) return fluent;
+
+      // StyleBuilder merges the inherited style into ours, and a generated
+      // styler cannot merge the wrapper. Offer it a wrapped copy, then
+      // restore the original for descendants that read it.
+      return StyleProvider<S>(
+        style: _ReducedMotionStyle(inherited, reduceMotion: reduceMotion),
+        child: fluent,
+      );
+    },
+  );
 }
 
 /// Canonical Box-style anchors supplied by a forwarded nested styler.

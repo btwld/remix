@@ -88,10 +88,13 @@ class _SliderRendererState extends State<_SliderRenderer> {
         builder: (context) {
           final inherited = Style.maybeOf<SliderSpec>(context);
           final resolved = widget.styleSpec == null
-              ? (inherited == null
-                        ? widget.style
-                        : inherited.merge(widget.style))
-                    .build(context)
+              ? remixReducedMotionSpec(
+                  context,
+                  (inherited == null
+                          ? widget.style
+                          : inherited.merge(widget.style))
+                      .build(context),
+                )
               : StyleSpec(spec: widget.styleSpec!);
           // Resolve the complete composite under this thumb's state, including
           // nested variants. Consume only frame data: phase/keyframe outputs can
