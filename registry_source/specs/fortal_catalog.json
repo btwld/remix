@@ -567,6 +567,36 @@
       ]
     },
     {
+      "id": "context_menu",
+      "fortalType": "FortalContextMenu",
+      "enums": {},
+      "defaults": {
+        "highContrast": false,
+        "enabled": true,
+        "useRootOverlay": false
+      },
+      "supportedStyleProps": [
+        "highContrast"
+      ],
+      "states": [
+        "closed",
+        "open",
+        "highlighted",
+        "pressed",
+        "disabled",
+        "destructive",
+        "moved",
+        "escape",
+        "outsideTap",
+        "focusRestored",
+        "highContrast"
+      ],
+      "tests": [
+        "test/fortal/context_menu_test.dart",
+        "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
       "id": "icon_button",
       "fortalType": "FortalIconButton",
       "enums": {

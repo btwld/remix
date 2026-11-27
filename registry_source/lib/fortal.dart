@@ -51,6 +51,7 @@ export 'src/fortal/components/heading.dart';
 export 'src/fortal/components/icon_button.dart';
 export 'src/fortal/components/kbd.dart';
 export 'src/fortal/components/link.dart';
+export 'src/fortal/components/context_menu.dart';
 export 'src/fortal/components/menu.dart';
 export 'src/fortal/components/popover.dart';
 export 'src/fortal/components/progress.dart';
