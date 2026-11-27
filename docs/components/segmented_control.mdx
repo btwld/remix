@@ -176,6 +176,24 @@ Widget layoutSelector({
 ```
 </CodeGroup>
 
+## Trailing content
+
+`RemixSegmentedControlItem.trailing` adds content after the label, such as a
+count badge. It follows the label with the item `spacing` and mirrors in
+right-to-left text. It is decorative, so put its meaning in `semanticLabel`:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+const inboxItem = RemixSegmentedControlItem<String>(
+  value: 'inbox',
+  label: 'Inbox',
+  semanticLabel: 'Inbox, 3 unread',
+  trailing: Text('3'),
+);
+```
+
 ## Vertical orientation
 
 Set `orientation: Axis.vertical` to equalize item heights and use Up/Down arrow

@@ -102,6 +102,8 @@
   so rows can stagger.
 - Add `ButtonStyler.onLoading`. It applies while a `RemixButton` is loading
   and, declared after `onDisabled`, overrides the disabled look.
+- Add `RemixSegmentedControlItem.trailing` for content after the label, such
+  as a count badge.
 
 ### Fixes
 
