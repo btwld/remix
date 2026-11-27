@@ -16,6 +16,7 @@ import '../../utilities/remix_reduced_motion.dart';
 import '../../utilities/remix_style.dart';
 
 part 'tabs_indicator.dart';
+part 'tabs_order.dart';
 part 'tabs_spec.dart';
 part 'tabs_widget.dart';
 part 'tabs.g.dart';
