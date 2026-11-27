@@ -1,3 +1,12 @@
+## Unreleased
+
+### Features
+
+- Tag input: add `NakedTagInput` and `NakedTagInputTag`. Enter, a separator,
+  and focus loss commit the draft into a caller-owned list, with a duplicate
+  policy and an optional limit. Backspace and the arrow keys pick a tag and
+  remove it; each tag is one semantics node with a remove action.
+
 ## 2.0.0-rc.4
 
 ### Fixes

@@ -155,6 +155,10 @@
           "href": "/widget/search-field"
         },
         {
+          "title": "NakedTagInput",
+          "href": "/widget/tag-input"
+        },
+        {
           "title": "NakedToggleGroup",
           "href": "/widget/toggle-group"
         },

@@ -1,0 +1,62 @@
+---
+title: NakedTagInput
+description: Turn typed text into a caller-owned list of tags, with keyboard picking and a remove action per tag.
+keywords: [flutter, headless, tags, chips, input]
+---
+
+`NakedTagInput` commits text from an editor into a list of tags that you own. It doesn't lay out the tags, draw them, or suggest values. Use `NakedCombobox` instead if users should pick from suggestions.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget topicsField(List<String> topics, ValueChanged<List<String>> onChanged) =>
+    NakedTagInput(
+      value: topics,
+      onChanged: onChanged,
+      maxTags: 8,
+      builder: (context, field) => Wrap(
+        spacing: 6,
+        runSpacing: 6,
+        children: [
+          for (final tag in field.tags)
+            NakedTagInputTag(
+              item: tag,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(tag.value),
+                  GestureDetector(
+                    onTap: tag.remove,
+                    child: const Text(' x'),
+                  ),
+                ],
+              ),
+            ),
+          SizedBox(
+            width: 120,
+            child: NakedTextField(
+              controller: field.controller,
+              focusNode: field.focusNode,
+              enabled: field.enabled,
+              readOnly: field.readOnly,
+              onChanged: field.onChanged,
+              onEditingComplete: field.onEditingComplete,
+              semanticLabel: 'Topics',
+              builder: (context, state, editable) => editable,
+            ),
+          ),
+        ],
+      ),
+    );
+```
+
+Wire `field.onChanged` to the editor's user-edit callback and `field.onEditingComplete` to its editing-complete callback. Enter, a separator (a comma by default), and focus loss commit the trimmed draft. Pasted text splits at every separator, and `onChanged` receives the whole proposal once. When the owner declines a proposal, the committed draft is still cleared.
+
+A commit that matches an existing tag is refused under `duplicates`, which ignores case by default. The draft stays, `onDuplicate` receives the existing tag's index, and the field announces it. At `maxTags` a commit is refused and the draft stays; text that did not fit in a paste stays in the editor.
+
+The editor is the only Tab stop. With the caret at the start, Backspace or the reading-direction back arrow picks the last tag. With a tag picked, Backspace or Delete removes it, the arrows move the pick, the forward arrow past the last tag returns to the editor, and Escape clears the pick. Typing and focus loss also clear it. A held Backspace does not move from deleting text to picking tags. Keys during input method composition stay with the editor. A tap on a tag toggles its pick and keeps focus in the editor.
+
+Each `NakedTagInputTag` is one semantics node. Its label is the tag text, it reports selected while picked, and it offers a custom remove action. The tag's own content is excluded from semantics, so draw the remove button without its own focus or semantics, as above. The editor owns the field's accessible name. Announcements for picks, additions, removals, and duplicates are English by default; pass `messages` to translate them.
+
+Disabled, read-only, or without `onChanged`, the field adds, picks, and removes nothing, and tags offer no remove action. Supply a `controller` or `focusNode` to share it with your application; you keep ownership.
