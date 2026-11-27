@@ -28,8 +28,8 @@ class {{typePrefix}}Underline extends SingleChildRenderObjectWidget {
       _RenderUnderline(color: color, offset: offset, thickness: thickness);
 
   @override
-  void updateRenderObject(BuildContext context, _RenderUnderline renderObject) {
-    renderObject
+  void updateRenderObject(BuildContext context, RenderObject renderObject) {
+    renderObject as _RenderUnderline
       ..color = color
       ..offset = offset
       ..thickness = thickness;
@@ -38,12 +38,10 @@ class {{typePrefix}}Underline extends SingleChildRenderObjectWidget {
 
 class _RenderUnderline extends RenderProxyBox {
   _RenderUnderline({
-    required Color color,
-    required double offset,
-    required double thickness,
-  }) : _color = color,
-       _offset = offset,
-       _thickness = thickness;
+    required this._color,
+    required this._offset,
+    required this._thickness,
+  });
 
   Color get color => _color;
   Color _color;

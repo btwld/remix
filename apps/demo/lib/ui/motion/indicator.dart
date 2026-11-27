@@ -212,10 +212,10 @@ class _RenderIndicatorTrack extends RenderBox
   _RenderIndicatorTrack({
     required TickerProvider vsync,
     required this.registry,
-    required Object? selected,
+    required this._selected,
     required this.timing,
     required this.reduceMotion,
-  }) : _selected = selected {
+  }) {
     _clock = FortalMotionClock(vsync, markNeedsLayout);
     _left = _clock.channel(0);
     _top = _clock.channel(0);

@@ -99,9 +99,9 @@ class _RenderSizeMorph extends RenderAligningShiftedBox {
     required this.heightTiming,
     required super.alignment,
     required super.textDirection,
-    required Clip clipBehavior,
+    required this._clipBehavior,
     required this.reduceMotion,
-  }) : _clipBehavior = clipBehavior {
+  }) {
     _clock = FortalMotionClock(vsync, markNeedsLayout);
   }
 
