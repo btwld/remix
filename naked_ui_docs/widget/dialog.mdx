@@ -104,6 +104,7 @@ RouteSettings? routeSettings,
 Offset? anchorPoint,
 Duration transitionDuration = const Duration(milliseconds: 400),
 Duration? reverseTransitionDuration,
+Duration? reducedMotionDuration,
 RouteTransitionsBuilder? transitionBuilder,
 bool requestFocus = true,
 TraversalEdgeBehavior? traversalEdgeBehavior,
@@ -115,6 +116,7 @@ TraversalEdgeBehavior? traversalEdgeBehavior,
 - barrierDismissible: Tap outside to dismiss (default true).
 - transitionDuration / transitionBuilder: Customize entry/exit animations.
 - reverseTransitionDuration: Exit duration; defaults to `transitionDuration`. `Duration.zero` closes the dialog at once.
+- reducedMotionDuration: Entrance and exit duration while the user asks to reduce motion. Defaults to `null`, which opens and closes at once. `transitionBuilder` still animates, so check the setting there and drop travel and scale.
 - anchorPoint: Supply a pointer offset to anchor desktop-style dialogs near the invocation point.
 - requestFocus: Whether the dialog route should grab focus when it enters.
 - traversalEdgeBehavior: Defaults to `TraversalEdgeBehavior.closedLoop` to keep focus inside the dialog; override for custom traversal.
@@ -137,6 +139,7 @@ RouteSettings? routeSettings,
 Offset? anchorPoint,
 Duration transitionDuration = const Duration(milliseconds: 400),
 Duration? reverseTransitionDuration,
+Duration? reducedMotionDuration,
 RouteTransitionsBuilder? transitionBuilder,
 FocusNode? initialFocusNode,
 })

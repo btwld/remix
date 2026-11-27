@@ -71,6 +71,8 @@
 - `RemixPanelTransition.reducedMotionDuration` keeps a short panel open and
   close while the user asks to reduce motion. Without it, panels still open
   and close at once.
+- `showRemixDialog` and `showRemixAlertDialog` forward `reducedMotionDuration`
+  to Naked UI, so a dialog can keep a short fade under reduced motion.
 
 ## 1.0.0-rc.7
 
