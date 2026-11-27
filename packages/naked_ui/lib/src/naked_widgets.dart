@@ -17,6 +17,7 @@ export 'naked_search_field.dart';
 export 'naked_select.dart';
 export 'naked_slider.dart';
 export 'naked_tabs.dart';
+export 'naked_tag_input.dart';
 export 'naked_text_magnifier.dart';
 export 'naked_textfield.dart';
 export 'naked_toast.dart';
