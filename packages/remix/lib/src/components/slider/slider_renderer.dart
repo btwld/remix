@@ -237,7 +237,13 @@ class _SliderRendererState extends State<_SliderRenderer> {
                       child: FractionalTranslation(
                         translation: const Offset(-.5, 0),
                         child: thumbStates == null
-                            ? _thumb(context, index, thumbs[index], override)
+                            ? _thumb(
+                                context,
+                                index,
+                                thumbs[index],
+                                override,
+                                null,
+                              )
                             : WidgetStateProvider(
                                 states: thumbStates[index],
                                 child: _thumb(
@@ -245,6 +251,7 @@ class _SliderRendererState extends State<_SliderRenderer> {
                                   index,
                                   thumbs[index],
                                   override,
+                                  thumbStates,
                                 ),
                               ),
                       ),
@@ -294,16 +301,47 @@ class _SliderRendererState extends State<_SliderRenderer> {
     int index,
     SliderSpec spec,
     WidgetStateStyleOverride? override,
+    List<Set<WidgetState>>? thumbStates,
   ) {
     final showFocus = override != null
         ? override.states.contains(WidgetState.focused)
         : widget.state.focusedThumbIndex == index &&
               FocusVisibility.of(context);
-    final thumb = RemixBoxAdapter(
+    final box = RemixBoxAdapter(
       styleSpec: _thumbStyle(spec),
       containerEffects: (spec.thumbEffects ?? const RemixBoxEffectsSpec())
           .merge(showFocus ? spec.thumbFocusEffects : null),
     );
+    final overlay = spec.thumbOverlay;
+    final thumb = overlay == null
+        ? box
+        : Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              box,
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: ExcludeSemantics(
+                    child: OverflowBox(
+                      minWidth: 0,
+                      minHeight: 0,
+                      maxWidth: double.infinity,
+                      maxHeight: double.infinity,
+                      child: overlay(
+                        context,
+                        RemixSliderThumbOverlayInfo(
+                          index: index,
+                          value: widget.state.values[index],
+                          states: thumbStates?[index] ?? widget.state.states,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
     return widget.range
         ? MouseRegion(
             opaque: true,
