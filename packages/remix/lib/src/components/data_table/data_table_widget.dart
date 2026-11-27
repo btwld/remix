@@ -362,21 +362,24 @@ class RemixDataTable<T> extends StatelessWidget {
         ? inherited.merge(style)
         : style;
 
-    return RemixStyleSpecBuilder<DataTableSpec>(
-      style: style,
-      styleSpec: styleSpec,
-      builder: (context, spec) => _RemixDataTableView<T>(
-        table: this,
-        rows: visibleRows,
-        columns: tableColumns,
-        rowIds: rowIds,
-        selectedRowIds: selection,
-        pageSizeOptions: sizeOptions,
-        // A supplied raw spec has no styler to re-resolve per row, so the
-        // table-level values are the final ones in that path.
-        styles: _DataTableStyles(
-          styler: styleSpec == null ? effectiveStyler : null,
-          spec: spec,
+    return _DataTableSortedColumnScope(
+      direction: null,
+      child: RemixStyleSpecBuilder<DataTableSpec>(
+        style: style,
+        styleSpec: styleSpec,
+        builder: (context, spec) => _RemixDataTableView<T>(
+          table: this,
+          rows: visibleRows,
+          columns: tableColumns,
+          rowIds: rowIds,
+          selectedRowIds: selection,
+          pageSizeOptions: sizeOptions,
+          // A supplied raw spec has no styler to re-resolve per row, so the
+          // table-level values are the final ones in that path.
+          styles: _DataTableStyles(
+            styler: styleSpec == null ? effectiveStyler : null,
+            spec: spec,
+          ),
         ),
       ),
     );
@@ -851,6 +854,7 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
             isLastRow: isLast,
             minHeight: _spec.rowMinHeight,
             alignment: column.alignment,
+            sortDirection: _sortStateOf(column),
             onHoverChanged: (hovered) => _setHoveredRow(index, hovered),
             child: column.cellBuilder(context, row),
           ),
@@ -1089,17 +1093,22 @@ class _DataTableHeaderCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget cell = Builder(
-      builder: (context) {
-        final resolved = styles.resolve(context);
-        return _DataTableCellSurface(
-          row: resolved.headerRow,
-          cell: useSelectionCell ? resolved.selectionCell : resolved.headerCell,
-          alignment: alignment,
-          minHeight: minHeight,
-          child: _buildContent(resolved),
-        );
-      },
+    Widget cell = _DataTableSortedColumnScope(
+      direction: sortState,
+      child: Builder(
+        builder: (context) {
+          final resolved = styles.resolve(context);
+          return _DataTableCellSurface(
+            row: resolved.headerRow,
+            cell: useSelectionCell
+                ? resolved.selectionCell
+                : resolved.headerCell,
+            alignment: alignment,
+            minHeight: minHeight,
+            child: _buildContent(resolved),
+          );
+        },
+      ),
     );
 
     if (onSort != null) {
@@ -1151,6 +1160,7 @@ class _DataTableBodyCell extends StatelessWidget {
     required this.onHoverChanged,
     required this.child,
     this.alignment = AlignmentDirectional.centerStart,
+    this.sortDirection,
     this.useSelectionCell = false,
   });
 
@@ -1163,6 +1173,7 @@ class _DataTableBodyCell extends StatelessWidget {
   final ValueChanged<bool> onHoverChanged;
   final Widget child;
   final AlignmentGeometry alignment;
+  final RemixDataTableSortDirection? sortDirection;
   final bool useSelectionCell;
 
   @override
@@ -1174,28 +1185,52 @@ class _DataTableBodyCell extends StatelessWidget {
         rowIndex: rowIndex,
         hoveredRow: hoveredRow,
         selected: selected,
-        child: Builder(
-          builder: (context) {
-            final resolved = styles.resolve(context);
-            return _DataTableCellSurface(
-              row: isLastRow
-                  ? (resolved.lastBodyRow ?? resolved.bodyRow)
-                  : resolved.bodyRow,
-              cell: useSelectionCell
-                  ? resolved.selectionCell
-                  : resolved.bodyCell,
-              alignment: alignment,
-              minHeight: minHeight,
-              child: RemixDefaultContentStyle(
-                text: resolved.cellText,
-                child: child,
-              ),
-            );
-          },
+        child: _DataTableSortedColumnScope(
+          direction: sortDirection,
+          child: Builder(
+            builder: (context) {
+              final resolved = styles.resolve(context);
+              return _DataTableCellSurface(
+                row: isLastRow
+                    ? (resolved.lastBodyRow ?? resolved.bodyRow)
+                    : resolved.bodyRow,
+                cell: useSelectionCell
+                    ? resolved.selectionCell
+                    : resolved.bodyCell,
+                alignment: alignment,
+                minHeight: minHeight,
+                child: RemixDefaultContentStyle(
+                  text: resolved.cellText,
+                  child: child,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
   }
+}
+
+/// Marks one cell as part of the sorted column, for the `onSorted` variants.
+///
+/// The table root and every cell install one, null outside the sorted column,
+/// so a table nested inside a sorted cell does not inherit its parent's sort.
+class _DataTableSortedColumnScope extends InheritedWidget {
+  const _DataTableSortedColumnScope({
+    required this.direction,
+    required super.child,
+  });
+
+  final RemixDataTableSortDirection? direction;
+
+  static RemixDataTableSortDirection? maybeOf(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_DataTableSortedColumnScope>()
+      ?.direction;
+
+  @override
+  bool updateShouldNotify(_DataTableSortedColumnScope oldWidget) =>
+      direction != oldWidget.direction;
 }
 
 /// Publishes a body row's hovered and selected states to one of its cells.

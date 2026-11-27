@@ -240,7 +240,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 - **DataTable** — fully controlled: the caller supplies the current page in
   final order, and sort/selection/pagination callbacks report intent only —
   they never mutate or fetch rows. Its styler has a generic `call<T>()`
-  builder (see [Styling](styling.md)).
+  builder (see [Styling](styling.md)). `onSorted`, `onSortedAscending`, and
+  `onSortedDescending` style the header and body cells of the sorted column.
 - **Skeleton** — a decorative loading placeholder that preserves its child's
   geometry and local state. While `loading`, the child cannot paint, receive
   input or focus, tick, or appear in semantics — announce loading state
