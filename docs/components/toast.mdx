@@ -97,6 +97,7 @@ class SaveButton extends StatelessWidget {
 - **Action placement.** `RemixToastActionPlacement.inline`, the default, keeps the action in the row with the icon, message, and close button while the message has room. `below` puts the action under the title and description, aligned with their start, and aligns the icon, message, and close button to the top of the row, so the close button stays on the first line, after the message. A toast without an action ignores the setting.
 - **Narrow fallback.** An inline toast that is too narrow for one row uses the `below` arrangement. The width counts the container's margin and its style max width, and the cutoff is about 280 logical pixels at the default text size; larger text raises it. A squeezed message is never wanted, so `inline` cannot keep the row below that width. `IntrinsicWidth` and `IntrinsicHeight` can size default-action toasts as well as explicit-below and action-less toasts.
 - **Theme.** Toasts render through one overlay portal, so they inherit the scope's `MixScope` tokens and update live when the theme changes.
+- **Motion.** A toast fades in over 180ms while it travels 16 pixels from the stack's edge, on `Curves.easeOutCubic`, and leaves over 120ms. The scope's `style` can change both: `animationStyle` sets the curves and durations (unset fields keep these defaults), and `transitionBuilder` receives the animation, the placement, and the toast. The scope reads them from its own style, not from each toast's `RemixToastData.style`. `RemixToastScope.defaultTransitionBuilder` is the default fade and slide.
 - **Reduced motion.** Toasts enter and leave at once while the user asks to reduce motion: `MediaQuery.disableAnimations` is set, or the platform's Reduce Motion setting is on (iOS reports it separately). A toast reads the setting when it enters and again when it leaves.
 
 ### Action placement by screen width
@@ -294,6 +295,10 @@ Configures the description text style.
 
 Configures the decorative leading icon.
 
+#### `iconContainer(BoxStyler value)`
+
+Draws a box around the icon, such as a tinted chip. Without it the icon is bare.
+
 #### `action(Style<ButtonSpec> value)`
 
 Styles the action button. The style resolves against the button's own hover, focus, and press states.
@@ -305,3 +310,11 @@ Styles the close button, resolved against its own states.
 #### `actionPlacement(RemixToastActionPlacement value)`
 
 Chooses where the action sits: `inline` (the default) keeps it in the row while the message has room, and otherwise uses the `below` arrangement; `below` always puts it under the message.
+
+#### `transitionBuilder(RemixToastTransitionBuilder value)`
+
+Replaces the scope's fade and slide. The builder receives the context, the entrance and exit animation, the scope's placement, and the toast.
+
+#### `animationStyle(AnimationStyle value)`
+
+Sets the scope's entrance and exit curves and durations. Unset fields keep 180ms in and 120ms out on `Curves.easeOutCubic`.

@@ -378,6 +378,9 @@ for Overlay, Navigator and toast scope placement.
   per-toast `RemixToastData.style` (for example
   `fortalToastStyle(intent: FortalToastIntent.error)`) merges over it. The
   generated `FortalToast` is for static previews, not for `showRemixToast`.
+  The scope's style also sets the motion: `ToastStyler().animationStyle(...)`
+  and `.transitionBuilder((context, animation, placement, child) => ...)`;
+  per-toast styles do not. `.iconContainer(BoxStyler())` boxes the icon.
   Place the scope per [host requirements](../SKILL.md#provide-only-the-host-capabilities-in-use).
 
 ## Navigation
