@@ -384,6 +384,10 @@ for Overlay, Navigator and toast scope placement.
   frame. Widget-state variants (`onHovered`, `onPressed`, `onFocused`,
   `onFocusVisible`, `onDisabled`) describe interaction with the trigger but
   resolve once for the whole item, so they may style `container` too.
+  `.contentMotion(...)` takes a curve or spring config (or
+  `AnimationConfig.reversible`) for open and close; the default is linear
+  200 ms. `.trailingIcon(IconStyler().icon(...))` replaces the default
+  plus/minus glyph with one icon in both states.
 - **Breadcrumbs** — a preset composition, not a Remix widget. HeroUI's
   `breadcrumbs` wraps onto more lines; Fortal's keeps one line, ellipsizes its
   steps and renders actionable ones as `<Prefix>Link`. The last step is the
