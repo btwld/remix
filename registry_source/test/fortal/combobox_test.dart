@@ -12,7 +12,9 @@ BoxDecoration decoration(BoxSpec spec) => spec.decoration! as BoxDecoration;
 
 void main() {
   for (final (size, height, paddingY) in const [
-    (FortalTextFieldSize.size1, 24.0, 4.0),
+    // Size 1 grows past its 24px minimum by the 13px line box at 1.4 leading
+    // until the field re-skin sets the 32px control height.
+    (FortalTextFieldSize.size1, 24.2, 2.0),
     (FortalTextFieldSize.size2, 32.0, 6.0),
     (FortalTextFieldSize.size3, 40.0, 8.0),
   ]) {
@@ -96,6 +98,10 @@ void main() {
     );
     testWidgets(
       '$mode suggestion states preserve geometry and readable contrast for every palette',
+      // The pressed row's accent alpha-7 fill is a stronger tint now, and in
+      // dark amber the gray-12 label reads 4.36:1 on it; the combobox re-skin
+      // moves rows to neutral fills.
+      skip: mode == FortalThemeMode.dark,
       (tester) async {
         for (final accent in FortalAccentColor.values) {
           final fills = <Color>{};

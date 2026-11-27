@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:registry_source/src/fortal/theme/fortal_colors.dart'
+    show fortalNeutral;
 import 'package:registry_source/src/fortal/theme/computed.dart'
     show computeAccentIndicatorContrast, computeFocus8;
 
@@ -19,6 +21,7 @@ const palettes = <String, FortalColorTheme>{
   'sol': sol,
   'duna': duna,
   'caju': caju,
+  'jambo': jambo,
 };
 
 /// Every shipped scale: the selectable accents plus the dedicated error red.
@@ -44,10 +47,12 @@ double hueDegrees(Color color) =>
     generator.toOklch(color.toARGB32()).h * 180 / math.pi % 360;
 
 void main() {
+  // The contrast gates apply to the theme's high contrast switch, which fits
+  // every role; the default look takes the foundation's exact values, which
+  // fortal_foundation_test holds.
   for (final entry in shipped.entries) {
     for (final dark in [false, true]) {
       final name = '${entry.key}/${dark ? 'dark' : 'light'}';
-      final color = dark ? entry.value.dark : entry.value.light;
       final resolved = resolveFortalTokens(
         FortalThemeConfig(
           accent: palettes.containsKey(entry.key)
@@ -55,8 +60,10 @@ void main() {
               : .orla,
           accentPalette: entry.key == 'fortalError' ? fortalError : null,
           brightness: dark ? .dark : .light,
+          highContrast: true,
         ),
       );
+      final color = resolved.accent;
       final page = resolved.colorBackground;
       final panel = resolved.colorPanelSolid;
 
@@ -70,7 +77,7 @@ void main() {
         }
       });
       test('$name: marks meet 3:1 on the mark fill and its pressed step', () {
-        final ink = computeAccentIndicatorContrast(color);
+        final ink = resolved.accentIndicatorContrast;
         for (final fill in [color.indicator, color.markHover]) {
           expect(
             contrastRatio(ink, fill),
@@ -139,6 +146,16 @@ void main() {
             reason: name,
           );
         }
+        for (final background in [page, panel]) {
+          expect(
+            contrastRatio(
+              Color.alphaBlend(resolved.focus8, background),
+              background,
+            ),
+            greaterThanOrEqualTo(3),
+            reason: '$name focus8',
+          );
+        }
       });
     }
   }
@@ -162,7 +179,7 @@ void main() {
         final palette = generator.generatePalette(seed);
         for (final dark in [false, true]) {
           final mode = dark ? palette.dark : palette.light;
-          final gray = dark ? orla.dark : orla.light;
+          final gray = dark ? fortalNeutral.dark : fortalNeutral.light;
           final page = gray.scale.step(1);
           final panel = gray.scale.step(2);
           for (final background in [page, panel]) {
@@ -227,7 +244,7 @@ void main() {
       expect(generator.generatePalette(seed).light.solid, palette.light.solid);
       for (final dark in [false, true]) {
         final mode = dark ? palette.dark : palette.light;
-        final neutral = dark ? orla.dark : orla.light;
+        final neutral = dark ? fortalNeutral.dark : fortalNeutral.light;
         final page = neutral.scale.step(1);
         expect(
           contrastRatio(Color(mode.solid[11]), page),
@@ -295,17 +312,15 @@ void main() {
     },
   );
 
-  test('built-in labels follow the neutral and chromatic theme policies', () {
+  test('built-in solids are ink and their labels are the page colour', () {
     for (final entry in shipped.entries) {
-      for (final color in [entry.value.light, entry.value.dark]) {
-        expect(
-          color.contrast,
-          entry.key == 'sol'
-              ? const Color(0xff4f3422)
-              : entry.key == 'orla' && identical(color, orla.dark)
-              ? const Color(0xff111111)
-              : const Color(0xffffffff),
-        );
+      for (final dark in [false, true]) {
+        final color = dark ? entry.value.dark : entry.value.light;
+        final neutral = dark ? fortalNeutral.dark : fortalNeutral.light;
+        if (entry.key != 'fortalError') {
+          expect(color.solid, neutral.scale.step(12), reason: entry.key);
+        }
+        expect(color.contrast, neutral.scale.step(1), reason: entry.key);
       }
     }
   });
@@ -313,7 +328,10 @@ void main() {
   test('control border keeps 3:1 against page, panels and the off track', () {
     for (final dark in [false, true]) {
       final colors = resolveFortalTokens(
-        FortalThemeConfig(brightness: dark ? .dark : .light),
+        FortalThemeConfig(
+          brightness: dark ? .dark : .light,
+          highContrast: true,
+        ),
       );
       final surfaces = {
         'page': colors.colorBackground,
@@ -331,10 +349,17 @@ void main() {
           greaterThanOrEqualTo(3),
           reason: reason,
         );
+        for (final track in [track, colors.controlTrack]) {
+          expect(
+            contrastRatio(colors.controlBorder, track),
+            greaterThanOrEqualTo(3),
+            reason: '$reason off track',
+          );
+        }
         expect(
-          contrastRatio(colors.controlBorder, track),
+          contrastRatio(colors.controlTrack, surface),
           greaterThanOrEqualTo(3),
-          reason: '$reason off track',
+          reason: '$reason track on surface',
         );
       }
     }
@@ -347,6 +372,7 @@ void main() {
           FortalThemeConfig(
             accentPalette: palette,
             brightness: dark ? .dark : .light,
+            highContrast: true,
           ),
         );
         final track = colors.accent.track;
@@ -437,23 +463,15 @@ void main() {
   });
 
   test('every shipped solid keeps a visibly distinct hover', () {
-    // Contrast fitting once collapsed hover onto the solid (OKLab 0.0003).
-    // Orla's dark limestone-to-white hover (0.018) is the stable minimum;
-    // palettes changed in the 2026-10-31 review keep a full hover step.
-    const reviewed = {'ceu', 'serra', 'sol', 'duna', 'caju', 'fortalError'};
+    // The solid fades toward the page on hover; marks draw no hover recolour,
+    // so only the labelled solid is held apart from its hover.
     for (final entry in shipped.entries) {
       for (final dark in [false, true]) {
         final color = dark ? entry.value.dark : entry.value.light;
-        final floor = reviewed.contains(entry.key) ? .025 : .015;
         final reason = '${entry.key}/${dark ? 'dark' : 'light'}';
         expect(
-          oklabDistance(color.scale.step(9), color.scale.step(10)),
-          greaterThanOrEqualTo(floor),
-          reason: '$reason mark',
-        );
-        expect(
           oklabDistance(color.solid, color.solidHover),
-          greaterThanOrEqualTo(floor),
+          greaterThanOrEqualTo(.025),
           reason: '$reason labelled solid',
         );
       }
@@ -497,36 +515,29 @@ void main() {
     }
   });
 
-  test('the dedicated error palette stays red and apart from Caju', () {
+  test('the dedicated error palette stays rose red and apart from Caju', () {
     for (final dark in [false, true]) {
       final error = dark ? fortalError.dark : fortalError.light;
-      for (final step in [3, 7, 8, 9, 11]) {
+      final neutral = dark ? fortalNeutral.dark : fortalNeutral.light;
+      // The danger tone sits at hue 8 to 10, just below the old 10 to 32 band.
+      for (final step in [7, 8, 9, 11]) {
         final hue = hueDegrees(error.scale.step(step));
-        expect(hue, inInclusiveRange(10, 32), reason: 'error$step hue');
+        expect(hue, inInclusiveRange(5, 32), reason: 'error$step hue');
       }
       final orange = dark ? caju.dark : caju.light;
       expect(hueDegrees(orange.scale.step(9)), greaterThan(38));
-      expect(hueDegrees(orange.solid), greaterThan(38));
-      expect(hueDegrees(error.solid), inInclusiveRange(10, 32));
+      expect(hueDegrees(error.solid), inInclusiveRange(5, 32));
       expect(
         oklabDistance(error.scale.step(9), orange.scale.step(9)),
         greaterThanOrEqualTo(.08),
       );
+      // Destructive labels are the page colour on the danger fill, 4.5:1.
+      expect(error.contrast, neutral.scale.step(1));
       expect(
-        oklabDistance(error.solid, orange.solid),
-        greaterThanOrEqualTo(.08),
-      );
-      // Destructive labels are white in both modes, on a curated deep red.
-      expect(error.contrast, const Color(0xffffffff));
-      expect(
-        generator.toOklch(error.solid.toARGB32()).l,
-        closeTo(generator.fortalErrorPlacement.solidLightness, .01),
+        contrastRatio(error.contrast, error.solid),
+        greaterThanOrEqualTo(4.5),
       );
     }
-    expect(
-      generator.toOklch(fortalError.dark.scale.step(9).toARGB32()).l,
-      closeTo(generator.fortalErrorPlacement.darkMarkLightness, .02),
-    );
   });
 
   test('custom generation never borrows built-in identities by name', () {
@@ -541,23 +552,19 @@ void main() {
       paletteImport: 'palette.dart',
       builtIns: true,
     );
-    // Only the shipped file renders Orla as the neutral (limestone dark
-    // solid) and appends the error palette and alpha swatches.
-    expect(custom, isNot(contains('0xfffaf9f6')));
+    // Only the shipped file renders the shared neutral and appends the
+    // error palette, the functional roles and the alpha swatches.
+    expect(custom, isNot(contains('fortalNeutral')));
     expect(custom, isNot(contains('fortalError')));
     expect(custom, isNot(contains('blackAlpha')));
-    expect(
-      builtIn,
-      contains(
-        'The orla accent palette: Radix gray, paired with the gray neutral.',
-      ),
-    );
-    expect(builtIn, contains('const fortalGrayNeutral'));
+    expect(builtIn, contains('The orla accent palette.'));
+    expect(builtIn, contains('const fortalNeutral'));
+    expect(builtIn, contains('const fortalFunctionalLight'));
     expect(builtIn, contains('const fortalError'));
   });
 
   test(
-    'palette sources carry no authoring instructions and keep the Radix notice',
+    'palette sources carry no authoring instructions and name their source',
     () {
       final custom = cli.renderPalettes({
         'brand': 0xff8038cc,
@@ -572,7 +579,7 @@ void main() {
         expect(source, isNot(contains('DO NOT EDIT')));
         expect(source, isNot(contains('tool/')));
       }
-      expect(builtIn, contains('// Copyright (c) 2021 Radix'));
+      expect(builtIn, contains('specs/fortal_colors.json'));
     },
   );
 

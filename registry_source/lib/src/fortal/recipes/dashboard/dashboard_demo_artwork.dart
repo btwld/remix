@@ -37,6 +37,7 @@ FortalColorTheme fortalAccentPalette(FortalAccentColor accent) =>
       .sol => sol,
       .duna => duna,
       .caju => caju,
+      .jambo => jambo,
     };
 
 /// A generated cover image, painted from one accent palette.

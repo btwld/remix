@@ -16,7 +16,7 @@ void expectFortalTextInputGeometry(
   final rect = tester.getRect(chrome);
   final editorRect = tester.getRect(editor);
   if (scale == 1) {
-    expect(rect.height, height);
+    expect(rect.height, closeTo(height, 1e-9));
     expect(editorRect.center.dy, closeTo(rect.center.dy, 0.001));
   } else {
     expect(

@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 import 'computed.dart';
 import 'fortal_colors.dart' as colors;
@@ -11,10 +12,11 @@ import 'palette.dart';
 import 'theme_scope.dart' show FortalTheme;
 import 'tokens.dart';
 
-/// Paired Fortal themes, named for Fortaleza landscapes and coastal materials.
-/// Each choice owns its accent and subtly tinted neutral scales. Error
-/// roles use a dedicated red palette that is not a selectable accent.
-enum FortalAccentColor { orla, mar, ceu, serra, sol, duna, caju }
+/// Fortal accents, named for Fortaleza landscapes and coastal materials.
+/// Every accent shares one untinted neutral; an accent recolours selection
+/// controls, accent text, soft tints, the focus outline and chart series.
+/// Error roles use a dedicated red palette that is not a selectable accent.
+enum FortalAccentColor { orla, mar, ceu, serra, sol, duna, caju, jambo }
 
 /// Theme-level radius multipliers.
 enum FortalRadius { none, small, medium, large, full }
@@ -51,6 +53,10 @@ class FortalThemeConfig {
     this.radius,
     this.scaling,
     this.hasBackground,
+    this.highContrast,
+    this.fontFamily,
+    this.displayFontFamily,
+    this.monoFontFamily,
   });
 
   final FortalAccentColor? accent;
@@ -63,6 +69,21 @@ class FortalThemeConfig {
   final FortalScaling? scaling;
   final bool? hasBackground;
 
+  /// Moves the foundation's low-contrast boundaries (control borders, the off
+  /// track, thumb outlines, mark fills and accent text) to values that meet
+  /// Fortal's contrast gates. Per-family `highContrast` parameters keep their
+  /// step-12 treatment on top of it.
+  final bool? highContrast;
+
+  /// Family of body text, `text1` to `text6` and typed field text.
+  final String? fontFamily;
+
+  /// Family of display text, `text7` to `text9`.
+  final String? displayFontFamily;
+
+  /// Family of code and keyboard text.
+  final String? monoFontFamily;
+
   bool get isDark => brightness == .dark;
 
   FortalThemeConfig copyWith({
@@ -73,6 +94,10 @@ class FortalThemeConfig {
     FortalRadius? radius,
     FortalScaling? scaling,
     bool? hasBackground,
+    bool? highContrast,
+    String? fontFamily,
+    String? displayFontFamily,
+    String? monoFontFamily,
   }) => FortalThemeConfig(
     accent: accent ?? this.accent,
     accentPalette:
@@ -82,6 +107,10 @@ class FortalThemeConfig {
     radius: radius ?? this.radius,
     scaling: scaling ?? this.scaling,
     hasBackground: hasBackground ?? this.hasBackground,
+    highContrast: highContrast ?? this.highContrast,
+    fontFamily: fontFamily ?? this.fontFamily,
+    displayFontFamily: displayFontFamily ?? this.displayFontFamily,
+    monoFontFamily: monoFontFamily ?? this.monoFontFamily,
   );
 
   @override
@@ -94,7 +123,11 @@ class FortalThemeConfig {
           panelBackground == other.panelBackground &&
           radius == other.radius &&
           scaling == other.scaling &&
-          hasBackground == other.hasBackground;
+          hasBackground == other.hasBackground &&
+          highContrast == other.highContrast &&
+          fontFamily == other.fontFamily &&
+          displayFontFamily == other.displayFontFamily &&
+          monoFontFamily == other.monoFontFamily;
 
   @override
   int get hashCode => Object.hash(
@@ -105,6 +138,10 @@ class FortalThemeConfig {
     radius,
     scaling,
     hasBackground,
+    highContrast,
+    fontFamily,
+    displayFontFamily,
+    monoFontFamily,
   );
 }
 
@@ -119,9 +156,16 @@ class FortalThemeData extends FortalThemeConfig {
     required FortalRadius super.radius,
     required FortalScaling super.scaling,
     required bool super.hasBackground,
+    bool super.highContrast = false,
+    super.fontFamily,
+    super.displayFontFamily,
+    super.monoFontFamily,
   });
 
   /// The preset's light appearance, with editable design options.
+  ///
+  /// Body text is set in Inter and display text in Geist. Pass a null family
+  /// through the unnamed constructor to leave one to the application.
   const FortalThemeData.light({
     FortalAccentColor accent = FortalAccentColor.orla,
     FortalColorTheme? accentPalette,
@@ -129,6 +173,10 @@ class FortalThemeData extends FortalThemeConfig {
     FortalRadius radius = FortalRadius.medium,
     FortalScaling scaling = FortalScaling.percent100,
     bool hasBackground = true,
+    bool highContrast = false,
+    String? fontFamily = RemixFonts.inter,
+    String? displayFontFamily = RemixFonts.geist,
+    String? monoFontFamily = RemixFonts.geistMono,
   }) : this(
          accent: accent,
          accentPalette: accentPalette,
@@ -137,6 +185,10 @@ class FortalThemeData extends FortalThemeConfig {
          radius: radius,
          scaling: scaling,
          hasBackground: hasBackground,
+         highContrast: highContrast,
+         fontFamily: fontFamily,
+         displayFontFamily: displayFontFamily,
+         monoFontFamily: monoFontFamily,
        );
 
   /// The preset's dark appearance, with editable design options.
@@ -147,6 +199,10 @@ class FortalThemeData extends FortalThemeConfig {
     FortalRadius radius = FortalRadius.medium,
     FortalScaling scaling = FortalScaling.percent100,
     bool hasBackground = true,
+    bool highContrast = false,
+    String? fontFamily = RemixFonts.inter,
+    String? displayFontFamily = RemixFonts.geist,
+    String? monoFontFamily = RemixFonts.geistMono,
   }) : this(
          accent: accent,
          accentPalette: accentPalette,
@@ -155,6 +211,10 @@ class FortalThemeData extends FortalThemeConfig {
          radius: radius,
          scaling: scaling,
          hasBackground: hasBackground,
+         highContrast: highContrast,
+         fontFamily: fontFamily,
+         displayFontFamily: displayFontFamily,
+         monoFontFamily: monoFontFamily,
        );
 
   @override
@@ -169,6 +229,8 @@ class FortalThemeData extends FortalThemeConfig {
   FortalScaling get scaling => super.scaling!;
   @override
   bool get hasBackground => super.hasBackground!;
+  @override
+  bool get highContrast => super.highContrast!;
 
   @override
   bool get isDark => brightness == .dark;
@@ -182,6 +244,10 @@ class FortalThemeData extends FortalThemeConfig {
     FortalRadius? radius,
     FortalScaling? scaling,
     bool? hasBackground,
+    bool? highContrast,
+    String? fontFamily,
+    String? displayFontFamily,
+    String? monoFontFamily,
   }) => FortalThemeData(
     accent: accent ?? this.accent,
     accentPalette:
@@ -191,6 +257,10 @@ class FortalThemeData extends FortalThemeConfig {
     radius: radius ?? this.radius,
     scaling: scaling ?? this.scaling,
     hasBackground: hasBackground ?? this.hasBackground,
+    highContrast: highContrast ?? this.highContrast,
+    fontFamily: fontFamily ?? this.fontFamily,
+    displayFontFamily: displayFontFamily ?? this.displayFontFamily,
+    monoFontFamily: monoFontFamily ?? this.monoFontFamily,
   );
 
   @override
@@ -203,7 +273,11 @@ class FortalThemeData extends FortalThemeConfig {
           panelBackground == other.panelBackground &&
           radius == other.radius &&
           scaling == other.scaling &&
-          hasBackground == other.hasBackground;
+          hasBackground == other.hasBackground &&
+          highContrast == other.highContrast &&
+          fontFamily == other.fontFamily &&
+          displayFontFamily == other.displayFontFamily &&
+          monoFontFamily == other.monoFontFamily;
 
   @override
   int get hashCode => Object.hash(
@@ -214,6 +288,10 @@ class FortalThemeData extends FortalThemeConfig {
     radius,
     scaling,
     hasBackground,
+    highContrast,
+    fontFamily,
+    displayFontFamily,
+    monoFontFamily,
   );
 }
 
@@ -245,11 +323,38 @@ Map<MixToken<Object?>, Object> buildFortalScopeTokens(FortalThemeData theme) {
 Map<MixToken<Object?>, Object> _buildScopeTokens(FortalThemeData theme) {
   final tokens = resolveFortalTokens(theme);
   final scaling = theme.scaling.factor;
-  final shadows = buildFortalShadows(isDark: theme.isDark, colors: tokens);
+  final shadows = buildFortalShadows(isDark: theme.isDark);
   // Error roles never follow the accent or a custom palette.
   final error = theme.isDark
       ? colors.fortalError.dark.scale
       : colors.fortalError.light.scale;
+  final functional = tokens.functional;
+  TextStyle text(
+    double size, {
+    required double leading,
+    required double tracking,
+    String? family,
+  }) => TextStyle(
+    fontFamily: family ?? theme.fontFamily,
+    fontSize: size * scaling,
+    letterSpacing: tracking * size * scaling,
+    height: leading,
+    // CSS splits leading evenly around the glyphs; Flutter's default places
+    // it by font metrics, which sits a label off-centre in a control sized to
+    // the line height.
+    leadingDistribution: TextLeadingDistribution.even,
+  );
+  TextStyle body(
+    double size, {
+    double leading = 1.4,
+    double tracking = -0.01,
+  }) => text(size, leading: leading, tracking: tracking);
+  TextStyle display(double size) => text(
+    size,
+    leading: 1.1,
+    tracking: -0.03,
+    family: theme.displayFontFamily ?? theme.fontFamily,
+  );
 
   final colorTokens = {
     // Role and functional tokens
@@ -265,7 +370,20 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(FortalThemeData theme) {
         : tokens.colorPanelTranslucent,
     FortalTokens.colorOverlay: tokens.colorOverlay,
     FortalTokens.controlBorder: tokens.controlBorder,
+    FortalTokens.controlTrack: tokens.controlTrack,
+    FortalTokens.controlTrackHover: functional.controlTrackHover,
+    FortalTokens.controlThumb: functional.controlThumb,
     FortalTokens.accentThumbRing: tokens.accentThumbRing,
+    FortalTokens.success: functional.success,
+    FortalTokens.warning: functional.warning,
+    FortalTokens.info: functional.info,
+    FortalTokens.toneTeal: functional.toneTeal,
+    FortalTokens.toneSky: functional.toneSky,
+    FortalTokens.toneOrchid: functional.toneOrchid,
+    FortalTokens.toneViolet: functional.toneViolet,
+    FortalTokens.toneRose: functional.toneRose,
+    FortalTokens.toneAmber: functional.toneAmber,
+    FortalTokens.toneGreen: functional.toneGreen,
     FortalTokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
@@ -394,6 +512,13 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(FortalThemeData theme) {
     FortalTokens.space7: 40.0 * scaling,
     FortalTokens.space8: 48.0 * scaling,
     FortalTokens.space9: 64.0 * scaling,
+    FortalTokens.space18: 18.0 * scaling,
+    FortalTokens.space20: 20.0 * scaling,
+    FortalTokens.space56: 56.0 * scaling,
+    FortalTokens.controlHeight1: 32.0 * scaling,
+    FortalTokens.controlHeight2: 40.0 * scaling,
+    FortalTokens.controlHeight3: 44.0 * scaling,
+    FortalTokens.controlHeight4: 48.0 * scaling,
     FortalTokens.spinnerSize3: 20.0 * scaling,
     FortalTokens.avatarSize6: 80.0 * scaling,
     FortalTokens.avatarSize7: 96.0 * scaling,
@@ -466,115 +591,93 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(FortalThemeData theme) {
     FortalTokens.borderWidth2: 2.0,
     FortalTokens.focusRingWidth: 2.0,
     FortalTokens.focusRingOffset: 2.0,
-    FortalTokens.text1: TextStyle(
-      fontSize: 12.0 * scaling,
-      letterSpacing: 0.0025 * 12.0 * scaling,
-      height: 16.0 / 12.0,
-    ),
-    FortalTokens.text2: TextStyle(
-      fontSize: 14.0 * scaling,
-      letterSpacing: 0.0,
-      height: 20.0 / 14.0,
-    ),
-    FortalTokens.text3: TextStyle(
-      fontSize: 16.0 * scaling,
-      letterSpacing: 0.0,
-      height: 24.0 / 16.0,
-    ),
-    FortalTokens.text4: TextStyle(
-      fontSize: 18.0 * scaling,
-      letterSpacing: -0.0025 * 18.0 * scaling,
-      height: 26.0 / 18.0,
-    ),
-    FortalTokens.text5: TextStyle(
-      fontSize: 20.0 * scaling,
-      letterSpacing: -0.005 * 20.0 * scaling,
-      height: 28.0 / 20.0,
-    ),
-    FortalTokens.text6: TextStyle(
-      fontSize: 24.0 * scaling,
-      letterSpacing: -0.00625 * 24.0 * scaling,
-      height: 30.0 / 24.0,
-    ),
-    FortalTokens.text7: TextStyle(
-      fontSize: 28.0 * scaling,
-      letterSpacing: -0.0075 * 28.0 * scaling,
-      height: 36.0 / 28.0,
-    ),
-    FortalTokens.text8: TextStyle(
-      fontSize: 36.0 * scaling,
-      letterSpacing: -0.01 * 36.0 * scaling,
-      height: 40.0 / 36.0,
-    ),
-    FortalTokens.text9: TextStyle(
-      fontSize: 60.0 * scaling,
-      letterSpacing: -0.025 * 60.0 * scaling,
-      height: 1.0,
-    ),
+    FortalTokens.text1: body(12),
+    FortalTokens.text2: body(13),
+    FortalTokens.text3: body(15),
+    FortalTokens.text4: body(17),
+    FortalTokens.text5: body(20, leading: 1.2),
+    FortalTokens.text6: body(22, leading: 1.15, tracking: -0.02),
+    FortalTokens.text7: display(28),
+    FortalTokens.text8: display(34),
+    FortalTokens.text9: display(40),
+    FortalTokens.textField: body(14),
     FortalTokens.avatarFallback1One: _avatarFallbackText(
       fontSize: 14,
       letterSpacing: 0.0025 * 12,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback1Two: _avatarFallbackText(
       fontSize: 12,
       letterSpacing: 0.0025 * 12,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback2One: _avatarFallbackText(
       fontSize: 16,
       letterSpacing: 0,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback2Two: _avatarFallbackText(
       fontSize: 14,
       letterSpacing: 0,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback3One: _avatarFallbackText(
       fontSize: 18,
       letterSpacing: 0,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback3Two: _avatarFallbackText(
       fontSize: 16,
       letterSpacing: 0,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback4One: _avatarFallbackText(
       fontSize: 20,
       letterSpacing: -0.0025 * 18,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback4Two: _avatarFallbackText(
       fontSize: 18,
       letterSpacing: -0.0025 * 18,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback5: _avatarFallbackText(
       fontSize: 24,
       letterSpacing: -0.00625 * 24,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback6: _avatarFallbackText(
       fontSize: 28,
       letterSpacing: -0.0075 * 28,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback7: _avatarFallbackText(
       fontSize: 28,
       letterSpacing: -0.0075 * 28,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback8: _avatarFallbackText(
       fontSize: 36,
       letterSpacing: -0.01 * 36,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     FortalTokens.avatarFallback9: _avatarFallbackText(
       fontSize: 60,
       letterSpacing: -0.025 * 60,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
 
     // Font weights (token values)
@@ -624,10 +727,13 @@ TextStyle _avatarFallbackText({
   required double fontSize,
   required double letterSpacing,
   required double scaling,
+  required String? family,
 }) => TextStyle(
+  fontFamily: family,
   fontSize: fontSize * scaling,
   letterSpacing: letterSpacing * scaling,
   height: 1,
+  leadingDistribution: TextLeadingDistribution.even,
 );
 
 Map<RadiusToken, Radius> _radiusTokensFor(FortalRadius radius, double scaling) {
@@ -641,12 +747,16 @@ Map<RadiusToken, Radius> _radiusTokensFor(FortalRadius radius, double scaling) {
     first.x > second.x ? first.x : second.x,
     first.y > second.y ? first.y : second.y,
   );
-  final radius1 = scaled(3.0);
-  final radius2 = scaled(4.0);
-  final radius3 = scaled(6.0);
-  final radius4 = scaled(8.0);
-  final radius5 = scaled(12.0);
-  final radius6 = scaled(16.0);
+  // At the medium factor the ladder is the foundation's control radius (14)
+  // with its inner and outer offsets, the panel radius (20) and the surface
+  // radius (24).
+  final radius1 = scaled(6.0);
+  final radius2 = scaled(10.0);
+  final radius3 = scaled(12.0);
+  final radius4 = scaled(14.0);
+  final radius5 = scaled(16.0);
+  final radius6 = scaled(20.0);
+  final radius7 = scaled(24.0);
   final full = radius == .full ? const Radius.circular(9999.0) : Radius.zero;
   Radius progressRadius(double height) {
     final thumbBase = switch (radius) {
@@ -663,6 +773,7 @@ Map<RadiusToken, Radius> _radiusTokensFor(FortalRadius radius, double scaling) {
     FortalTokens.radius4: radius4,
     FortalTokens.radius5: radius5,
     FortalTokens.radius6: radius6,
+    FortalTokens.radius7: radius7,
     FortalTokens.radiusFull: full,
     FortalTokens.radiusThumb: thumb,
     FortalTokens.radiusCircle: const Radius.circular(9999.0),
@@ -707,6 +818,9 @@ Map<ColorToken, Color> _accentColorTokens(FortalThemeColors tokens) {
     FortalTokens.accentContent: tokens.accentContent,
     FortalTokens.accentContentAlpha: tokens.accentContentAlpha,
     FortalTokens.accentIndicatorContrast: tokens.accentIndicatorContrast,
+    FortalTokens.accentRange: tokens.accentRange,
+    FortalTokens.accentThumb: tokens.accentThumb,
+    FortalTokens.accentSwatchContrast: tokens.accentSwatchContrast,
     FortalTokens.focus8: tokens.focus8,
     FortalTokens.focusA5: tokens.focusA5,
     FortalTokens.focusA8: tokens.focusA8,
