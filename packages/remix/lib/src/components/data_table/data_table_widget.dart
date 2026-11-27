@@ -3,6 +3,18 @@ part of 'data_table.dart';
 /// Direction of a [RemixDataTable]'s single active sort.
 enum RemixDataTableSortDirection { ascending, descending }
 
+/// Side of a sortable header's label that its sort indicator is drawn on.
+enum RemixDataTableSortIconPlacement {
+  /// After the label in reading order, whatever the column alignment.
+  end,
+
+  /// Toward the middle of the column: after a start-aligned label and before
+  /// an end-aligned one, so the label keeps the column's aligned edge.
+  ///
+  /// A horizontally centered column draws it after the label.
+  inward,
+}
+
 /// Formats the footer's visible page range.
 ///
 /// Receives the one-based [start] and [end] of the visible page (both zero
@@ -1052,7 +1064,7 @@ class _DataTableHeaderCell extends StatelessWidget {
   final _DataTableSortIcons? sortIcons;
   final bool useSelectionCell;
 
-  Widget _buildContent(DataTableSpec resolved) {
+  Widget _buildContent(BuildContext context, DataTableSpec resolved) {
     final headerStyle = resolved.headerLabel;
     // A custom header inherits the header typography the way Radix cascades
     // `th` styles onto arbitrary markup, without excluding its own semantics.
@@ -1079,16 +1091,28 @@ class _DataTableHeaderCell extends StatelessWidget {
           )
         : StyledIcon(icon: icon, styleSpec: resolved.sortIcon);
 
+    // The indicator keeps its natural size and the label yields, so a
+    // narrow fixed column shrinks the text instead of overflowing.
+    final text = Flexible(child: content);
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       spacing: styles.spec.sortIconSpacing ?? 0.0,
-      children: [
-        // The indicator keeps its natural size and the label yields, so a
-        // narrow fixed column shrinks the text instead of overflowing.
-        Flexible(child: content),
-        indicator,
-      ],
+      children: _indicatorLeads(context)
+          ? [indicator, text]
+          : [text, indicator],
     );
+  }
+
+  bool _indicatorLeads(BuildContext context) {
+    if (styles.spec.sortIconPlacement !=
+        RemixDataTableSortIconPlacement.inward) {
+      return false;
+    }
+    final direction = Directionality.of(context);
+    final x = alignment.resolve(direction).x;
+
+    return direction == TextDirection.ltr ? x > 0 : x < 0;
   }
 
   @override
@@ -1105,7 +1129,7 @@ class _DataTableHeaderCell extends StatelessWidget {
                 : resolved.headerCell,
             alignment: alignment,
             minHeight: minHeight,
-            child: _buildContent(resolved),
+            child: _buildContent(context, resolved),
           );
         },
       ),

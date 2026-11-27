@@ -468,6 +468,13 @@ Convenience setters for the header and footer text style or color.
 
 Styles the sort indicator and the gap between it and its label.
 
+#### `sortIconPlacement(RemixDataTableSortIconPlacement value)`
+
+Sets the side of the label that a sortable header draws its indicator on.
+`end`, the default, draws it after the label. `inward` draws it before the
+label of an end-aligned column, such as a numeric column, so the label keeps
+the column's aligned edge.
+
 #### `onSorted(DataTableStyler value)` / `onSortedAscending(DataTableStyler value)` / `onSortedDescending(DataTableStyler value)`
 
 Styles the header cell and every body cell of the column named by `sort`, for

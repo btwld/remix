@@ -144,6 +144,12 @@ class DataTableSpec with _$DataTableSpec {
   @override
   final double? sortIconSpacing;
 
+  /// Side of the label a sortable header draws its sort indicator on.
+  ///
+  /// Null keeps [RemixDataTableSortIconPlacement.end].
+  @override
+  final RemixDataTableSortIconPlacement? sortIconPlacement;
+
   const DataTableSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? headerRow,
@@ -164,6 +170,7 @@ class DataTableSpec with _$DataTableSpec {
     this.rowMinHeight,
     this.selectionColumnWidth,
     this.sortIconSpacing,
+    this.sortIconPlacement,
     this.containerEffects,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        headerRow = headerRow ?? const StyleSpec(spec: BoxSpec()),
