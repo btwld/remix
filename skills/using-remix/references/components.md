@@ -180,6 +180,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   Use `icon` for a decorative leading date-picker icon, `placeholderStyle`
   for the null-value fragment, and `expandedStyle` for the open-panel fragment
   (merged last over `buttonStyle`). Finite trigger labels ellipsize on one line.
+  Both pickers take `trailingIcon`, a trigger `textBuilder`, a `footerBuilder`
+  drawn under the calendar at its width, and `closeDelay` to keep the panel
+  open briefly after a pick (skipped under reduced motion).
   Style children independently with `buttonStyle`, `popoverStyle`,
   `calendarStyle`, `navigationStyle` and `selectorStyle`; there is no DatePicker
   `style`/`styleSpec` or public controller.
