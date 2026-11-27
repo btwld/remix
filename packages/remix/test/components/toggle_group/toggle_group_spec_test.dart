@@ -9,7 +9,10 @@ void main() {
 
       expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
       expect(spec.item, isA<StyleSpec<ToggleGroupItemSpec>>());
-      expect(spec.props, hasLength(2));
+      expect(spec.indicator, isNull);
+      expect(spec.indicatorEffects, isNull);
+      expect(spec.indicatorMotion, isNull);
+      expect(spec.props, hasLength(5));
     });
 
     test('copyWith replaces selected properties', () {
@@ -40,6 +43,9 @@ void main() {
       expect(builder.properties.map((property) => property.name), [
         'container',
         'item',
+        'indicator',
+        'indicatorEffects',
+        'indicatorMotion',
       ]);
     });
   });

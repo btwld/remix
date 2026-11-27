@@ -84,6 +84,8 @@
 - Add `indicator`, `indicatorEffects` and `indicatorMotion` to
   `SegmentedControlSpec`. The indicator draws one surface behind the selected
   segment and glides when the selection changes, like the tabs indicator.
+- Add `indicator`, `indicatorEffects` and `indicatorMotion` to
+  `ToggleGroupSpec`, with the same gliding indicator.
 
 ### Fixes
 

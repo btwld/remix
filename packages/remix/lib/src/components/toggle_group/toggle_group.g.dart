@@ -9,6 +9,9 @@ part of 'toggle_group.dart';
 mixin _$ToggleGroupSpec implements Spec<ToggleGroupSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<ToggleGroupItemSpec> get item;
+  StyleSpec<BoxSpec>? get indicator;
+  RemixBoxEffectsSpec? get indicatorEffects;
+  AnimationConfig? get indicatorMotion;
 
   @override
   Type get type => ToggleGroupSpec;
@@ -17,10 +20,16 @@ mixin _$ToggleGroupSpec implements Spec<ToggleGroupSpec>, Diagnosticable {
   ToggleGroupSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<ToggleGroupItemSpec>? item,
+    StyleSpec<BoxSpec>? indicator,
+    RemixBoxEffectsSpec? indicatorEffects,
+    AnimationConfig? indicatorMotion,
   }) {
     return ToggleGroupSpec(
       container: container ?? this.container,
       item: item ?? this.item,
+      indicator: indicator ?? this.indicator,
+      indicatorEffects: indicatorEffects ?? this.indicatorEffects,
+      indicatorMotion: indicatorMotion ?? this.indicatorMotion,
     );
   }
 
@@ -29,11 +38,28 @@ mixin _$ToggleGroupSpec implements Spec<ToggleGroupSpec>, Diagnosticable {
     return ToggleGroupSpec(
       container: container.lerp(other?.container, t),
       item: item.lerp(other?.item, t),
+      indicator: indicator?.lerp(other?.indicator, t),
+      indicatorEffects: MixOps.lerpSnap(
+        indicatorEffects,
+        other?.indicatorEffects,
+        t,
+      ),
+      indicatorMotion: MixOps.lerpSnap(
+        indicatorMotion,
+        other?.indicatorMotion,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, item];
+  List<Object?> get props => [
+    container,
+    item,
+    indicator,
+    indicatorEffects,
+    indicatorMotion,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -76,7 +102,10 @@ mixin _$ToggleGroupSpec implements Spec<ToggleGroupSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('item', item));
+      ..add(DiagnosticsProperty('item', item))
+      ..add(DiagnosticsProperty('indicator', indicator))
+      ..add(DiagnosticsProperty('indicatorEffects', indicatorEffects))
+      ..add(DiagnosticsProperty('indicatorMotion', indicatorMotion));
   }
 }
 
@@ -188,25 +217,40 @@ class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
     implements StylerFieldMetadata {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<ToggleGroupItemSpec>>? $item;
+  final Prop<StyleSpec<BoxSpec>>? $indicator;
+  final Prop<RemixBoxEffectsSpec>? $indicatorEffects;
+  final Prop<AnimationConfig>? $indicatorMotion;
 
   const ToggleGroupStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<ToggleGroupItemSpec>>? item,
+    Prop<StyleSpec<BoxSpec>>? indicator,
+    Prop<RemixBoxEffectsSpec>? indicatorEffects,
+    Prop<AnimationConfig>? indicatorMotion,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
-       $item = item;
+       $item = item,
+       $indicator = indicator,
+       $indicatorEffects = indicatorEffects,
+       $indicatorMotion = indicatorMotion;
 
   ToggleGroupStyler({
     FlexBoxStyler? container,
     ToggleGroupItemStyler? item,
+    BoxStyler? indicator,
+    RemixBoxEffectsMix? indicatorEffects,
+    AnimationConfig? indicatorMotion,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<ToggleGroupSpec>>? variants,
   }) : this.create(
          container: Prop.maybeMix(container),
          item: Prop.maybeMix(item),
+         indicator: Prop.maybeMix(indicator),
+         indicatorEffects: Prop.maybeMix(indicatorEffects),
+         indicatorMotion: Prop.maybe(indicatorMotion),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -216,6 +260,12 @@ class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
       ToggleGroupStyler().container(value);
   factory ToggleGroupStyler.item(ToggleGroupItemStyler value) =>
       ToggleGroupStyler().item(value);
+  factory ToggleGroupStyler.indicator(BoxStyler value) =>
+      ToggleGroupStyler().indicator(value);
+  factory ToggleGroupStyler.indicatorEffects(RemixBoxEffectsMix value) =>
+      ToggleGroupStyler().indicatorEffects(value);
+  factory ToggleGroupStyler.indicatorMotion(AnimationConfig value) =>
+      ToggleGroupStyler().indicatorMotion(value);
   factory ToggleGroupStyler.color(Color value) =>
       ToggleGroupStyler().color(value);
   factory ToggleGroupStyler.gradient(GradientMix value) =>
@@ -776,6 +826,9 @@ class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
   Set<String> get $stylerFieldNames => const {
     'container',
     'item',
+    'indicator',
+    'indicatorEffects',
+    'indicatorMotion',
     'animation',
     'modifier',
     'variants',
@@ -789,6 +842,21 @@ class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
   /// Sets the item.
   ToggleGroupStyler item(ToggleGroupItemStyler value) {
     return merge(ToggleGroupStyler(item: value));
+  }
+
+  /// Sets the indicator.
+  ToggleGroupStyler indicator(BoxStyler value) {
+    return merge(ToggleGroupStyler(indicator: value));
+  }
+
+  /// Sets the indicatorEffects.
+  ToggleGroupStyler indicatorEffects(RemixBoxEffectsMix value) {
+    return merge(ToggleGroupStyler(indicatorEffects: value));
+  }
+
+  /// Sets the indicatorMotion.
+  ToggleGroupStyler indicatorMotion(AnimationConfig value) {
+    return merge(ToggleGroupStyler(indicatorMotion: value));
   }
 
   /// Sets the animation configuration.
@@ -845,6 +913,12 @@ class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
     return ToggleGroupStyler.create(
       container: MixOps.merge($container, other?.$container),
       item: MixOps.merge($item, other?.$item),
+      indicator: MixOps.merge($indicator, other?.$indicator),
+      indicatorEffects: MixOps.merge(
+        $indicatorEffects,
+        other?.$indicatorEffects,
+      ),
+      indicatorMotion: MixOps.merge($indicatorMotion, other?.$indicatorMotion),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -857,6 +931,9 @@ class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
     final spec = ToggleGroupSpec(
       container: MixOps.resolve(context, $container),
       item: MixOps.resolve(context, $item),
+      indicator: MixOps.resolve(context, $indicator),
+      indicatorEffects: MixOps.resolve(context, $indicatorEffects),
+      indicatorMotion: MixOps.resolve(context, $indicatorMotion),
     );
 
     return StyleSpec(
@@ -871,13 +948,19 @@ class ToggleGroupStyler extends MixStyler<ToggleGroupStyler, ToggleGroupSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('item', $item));
+      ..add(DiagnosticsProperty('item', $item))
+      ..add(DiagnosticsProperty('indicator', $indicator))
+      ..add(DiagnosticsProperty('indicatorEffects', $indicatorEffects))
+      ..add(DiagnosticsProperty('indicatorMotion', $indicatorMotion));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $item,
+    $indicator,
+    $indicatorEffects,
+    $indicatorMotion,
     $animation,
     $modifier,
     $variants,

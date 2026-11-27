@@ -137,6 +137,41 @@ Widget buildStatusToggleGroup({
 ```
 </CodeGroup>
 
+## Shared indicator
+
+Each item paints its own selected style by default. Set `indicator` on the
+`ToggleGroupStyler` to draw one surface behind the items instead, such as a
+pill, that glides to the selected item. It paints inside the container's
+padding, over the container's fill and border and under the items. The
+indicator takes the selected item's bounds, so `margin` insets it and the
+decoration draws it. Leave the item's own selected background clear so only
+the indicator shows.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final pillGroup = ToggleGroupStyler()
+    .container(
+      FlexBoxStyler()
+          .padding(.all(3))
+          .spacing(2)
+          .color(Colors.blueGrey.shade100)
+          .borderRadius(.circular(14)),
+    )
+    .indicator(BoxStyler().color(Colors.white).borderRadius(.circular(11)))
+    .indicatorMotion(
+      AnimationConfig.springDescription(mass: 1, stiffness: 400, damping: 36),
+    );
+```
+
+`indicatorMotion` takes a `CurveAnimationConfig` or a `SpringAnimationConfig`,
+as on the tabs indicator. Without one the indicator glides along
+`Curves.easeOutCubic` over 250 ms. Phase and keyframe configs throw
+`ArgumentError` when the group builds. The indicator jumps while the user asks
+to reduce motion, draws nothing without a selection, and is excluded from
+semantics and hit testing.
+
 ## Focus rings
 
 `ToggleGroupItemStyler.containerEffects` paints an outline around the item

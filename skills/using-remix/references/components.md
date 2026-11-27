@@ -40,6 +40,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   just the visual variant/size.
 - **ToggleGroup** — controlled, single-select, with roving keyboard focus
   across items; `onChanged: null` disables the whole group.
+  `ToggleGroupStyler().indicator(...)` adds the same gliding selection
+  indicator as SegmentedControl, painted inside the container's padding.
 - **SegmentedControl** — `SegmentedControlStyler().indicator(BoxStyler())`
   draws one surface behind the selected segment that glides on selection
   change (`indicatorMotion`: curve or spring; 250 ms `easeOutCubic` by
