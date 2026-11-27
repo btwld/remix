@@ -38,6 +38,9 @@
   that animates the weeks when the displayed month changes, with the outgoing
   and incoming grids both mounted and the direction known. Unset, the month
   swaps at once.
+- Calendars accept `CalendarSpec.fixedWeeks`. When true, every month lays out
+  six week rows, padding with empty rows, so the height never changes. Unset,
+  the row count follows the month.
 
 ## 1.0.0-rc.7
 

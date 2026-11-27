@@ -485,6 +485,9 @@ class _CalendarHeader extends StatelessWidget {
   }
 }
 
+const _maxWeeks = 6;
+const _emptyWeek = <DateTime?>[null, null, null, null, null, null, null];
+
 class _CalendarView extends StatelessWidget {
   const _CalendarView({
     required this.style,
@@ -546,7 +549,11 @@ class _CalendarView extends StatelessWidget {
   ) => Column(
     mainAxisSize: MainAxisSize.min,
     children: [
-      for (final (index, week) in weeks.indexed) ...[
+      for (final (index, week) in [
+        ...weeks,
+        if (spec.fixedWeeks ?? false)
+          for (var i = weeks.length; i < _maxWeeks; i++) _emptyWeek,
+      ].indexed) ...[
         if (index > 0) SizedBox(height: spec.rowSpacing ?? 4),
         Row(
           children: [

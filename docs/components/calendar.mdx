@@ -164,6 +164,12 @@ day styles; it is removed when the animation completes. When the user asks to
 reduce motion, the new month replaces the old one at once. Unset, the month
 swaps at once.
 
+`fixedWeeks(true)` always lays out six week rows, so the calendar keeps one
+height between months. A shorter month is padded with empty rows of the day
+height, separated by `rowSpacing`. Unset or `false`, the grid has one row per
+week of the displayed month. Pair it with `monthTransition` so the two grids of
+a slide line up.
+
 ## Localization and direction
 
 Defaults are explicitly English; the widget does not detect date formatting or
@@ -348,7 +354,8 @@ Optional. A raw resolved spec that bypasses `style` and inherited styles.
 `weekday(TextStyler)` and `day(CalendarDayStyler)`. Use `headerSpacing` for the
 gap below the header and `weekdaySpacing` for the gap before the first week.
 Both default to zero; navigation centres follow the outer day columns.
-`monthTransition` is described in [Recipe hooks](#recipe-hooks).
+`monthTransition` and `fixedWeeks` are described in
+[Recipe hooks](#recipe-hooks).
 
 `CalendarDayStyler` styles a day like a box, its number through
 `label(TextStyler)`, and its states through `onSelected`, `onHovered`,
