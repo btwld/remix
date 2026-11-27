@@ -316,29 +316,31 @@ void main() {
       expect(valueColor(), const Color(0xFF000002));
     });
 
-    testWidgets('leadingOverhang pulls the field back and keeps the cell', (
-      tester,
-    ) async {
+    testWidgets('arrow keys follow radio group order in RTL', (tester) async {
       final log = <int?>[];
-      final cell = RatingStyler().star(RatingStarStyler().size(36, 36));
-      await tester.pumpRemixApp(_Host(log: log, style: cell));
-      final plain = tester.getSize(find.byType(RemixRating)).width;
-      final plainStar = tester.getTopLeft(_star(1)).dx;
-
       await tester.pumpRemixApp(
-        _Host(log: log, style: cell.leadingOverhang(6)),
+        Directionality(
+          textDirection: TextDirection.rtl,
+          child: _Host(initial: 2, log: log, style: _probe),
+        ),
       );
-      await tester.pumpAndSettle();
-      final field = tester.getRect(find.byType(RemixRating));
-      expect(field.width, plain - 6);
-      // Centred, the field moves 3 right; its content moves 6 left within it.
-      expect(tester.getTopLeft(_star(1)).dx, plainStar + 3 - 6);
-      expect(tester.getTopLeft(_star(1)).dx, field.left - 6);
+      // The first star sits on the right in RTL.
+      expect(
+        tester.getCenter(_star(1)).dx,
+        greaterThan(tester.getCenter(_star(5)).dx),
+      );
 
-      // The part of the first cell outside the field still takes the tap.
-      await tester.tapAt(Offset(field.left - 4, tester.getCenter(_star(1)).dy));
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
       await tester.pumpAndSettle();
-      expect(log, [1]);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pumpAndSettle();
+
+      // Flutter's radio group moves in child order whatever the direction.
+      expect(log, [3, 2, 1]);
+      expect(_filled(tester), [true, false, false, false, false]);
     });
 
     test('default value labels', () {
