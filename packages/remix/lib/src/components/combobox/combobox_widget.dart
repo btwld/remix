@@ -18,6 +18,8 @@ class RemixCombobox<T extends Object> extends StatefulWidget {
     this.initialValue,
     this.label,
     this.hintText,
+    this.helperText,
+    this.errorText,
     this.enabled = true,
     this.autofocus = false,
     this.semanticLabel,
@@ -62,6 +64,14 @@ class RemixCombobox<T extends Object> extends StatefulWidget {
 
   /// Placeholder shown while the default editor is empty.
   final String? hintText;
+
+  /// Description below the default editor, as [RemixTextField.helperText].
+  final String? helperText;
+
+  /// Error below the default editor's description, as
+  /// [RemixTextField.errorText]. It puts the default editor in its error
+  /// state.
+  final String? errorText;
 
   /// Whether editing and suggestion acceptance are enabled.
   final bool enabled;
@@ -157,6 +167,8 @@ class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
       :initialValue,
       :label,
       :hintText,
+      :helperText,
+      :errorText,
       :enabled,
       :autofocus,
       :semanticLabel,
@@ -200,19 +212,27 @@ class _RemixComboboxState<T extends Object> extends State<RemixCombobox<T>>
       // named container. Custom editors receive Naked's container name too.
       semanticLabel: fieldBuilder == null ? null : semanticLabel,
       fieldBuilder: (context, state, controller, focusNode, submit) {
-        Widget defaultField(TextFieldSpec? rawSpec) => RemixTextField(
-          controller: controller,
-          focusNode: focusNode,
-          label: label,
-          hintText: hintText,
-          enabled: enabled,
-          autofocus: autofocus,
-          semanticLabel: semanticLabel,
-          // Finalize IME text while retaining editor focus. Naked suppresses
-          // acceptance for this composing submit.
-          onEditingComplete: controller.clearComposing,
-          onSubmitted: (_) => submit(),
-          styleSpec: rawSpec,
+        // The default editor resolves under `selected` while the panel is
+        // open, as the select trigger does, so a field style can give it an
+        // open look.
+        Widget defaultField(TextFieldSpec? rawSpec) => RemixAddedWidgetStates(
+          states: {if (state.isOpen) .selected},
+          child: RemixTextField(
+            controller: controller,
+            focusNode: focusNode,
+            label: label,
+            hintText: hintText,
+            helperText: helperText,
+            errorText: errorText,
+            enabled: enabled,
+            autofocus: autofocus,
+            semanticLabel: semanticLabel,
+            // Finalize IME text while retaining editor focus. Naked suppresses
+            // acceptance for this composing submit.
+            onEditingComplete: controller.clearComposing,
+            onSubmitted: (_) => submit(),
+            styleSpec: rawSpec,
+          ),
         );
 
         return RemixStyleSpecBuilder<ComboboxSpec>(

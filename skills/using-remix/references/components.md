@@ -87,6 +87,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   scrollbar color and thickness. Vanilla ships `<Prefix>Combobox<T>` via `remix add combobox`,
   with the TextField recipe and a Select-like panel; its dependencies are
   `theme` and `text_field`. Fortal also ships the recipe with surface/soft variants and three TextField sizes; HeroUI ships primary/secondary variants with its responsive TextField and ComboBox/ListBox panel.
+  The default editor takes `helperText` and `errorText` and resolves its field
+  style under `selected` while the panel is open.
   See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 - **TextField/TextArea** — forwards the standard Flutter text-input surface
   (`controller`, `keyboardType`, `inputFormatters`, `maxLines`, etc.)

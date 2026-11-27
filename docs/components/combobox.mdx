@@ -168,6 +168,8 @@ The root exposes focus and disabled state. Put hover and press styles on the `fi
 
 Unstyled rows default to a 48px minimum and grow with wrapped labels; option styles own this minimum. The eager scroll panel defaults to a 288px maximum within the available overlay space; panel styles can replace it. A short fade marks each overflowing end, and a directional gutter keeps the persistent scrollbar clear of row fills. Keep result sets small; eager construction allows keyboard navigation to reveal every option. Width and opening direction follow RawAutocomplete; `optionsViewOpenDirection` supports down, up and mostSpace.
 
+While the panel is open, the default editor resolves its field style under the `selected` widget state, so `ComboboxStyler().field(TextFieldStyler().onSelected(...))` gives the control an open look. A custom `fieldBuilder` reads `state.isOpen` instead.
+
 ## Interaction and filtering
 
 Arrow keys move the highlighted suggestion while focus stays in the editor. Enter accepts; Escape dismisses while preserving text. Tab and Shift-Tab leave without committing. Pointer, touch and stylus release activate an option; scrolling and canceled presses do not select it.
@@ -261,6 +263,8 @@ RemixCombobox<T> remixComboboxConstructor<T extends Object>({
   TextEditingValue? initialValue,
   String? label,
   String? hintText,
+  String? helperText,
+  String? errorText,
   bool enabled = true,
   bool autofocus = false,
   String? semanticLabel,
@@ -293,6 +297,8 @@ RemixCombobox<T> remixComboboxConstructor<T extends Object>({
 | `initialValue` | `TextEditingValue?` | Initial text without an entity selection. Cannot be combined with `controller`. |
 | `label` | `String?` | Visible label and fallback accessible name of the default editor. |
 | `hintText` | `String?` | Placeholder for the empty default editor. |
+| `helperText` | `String?` | Description below the default editor, as on `RemixTextField`. |
+| `errorText` | `String?` | Error below the default editor's description. Puts the editor in its error state and is announced as its error. |
 | `enabled` | `bool` | Enables editing and acceptance. Defaults to `true`. |
 | `autofocus` | `bool` | Requests initial focus for the enabled default editor. Defaults to `false`. Custom editors own autofocus. |
 | `semanticLabel` | `String?` | Replaces the default editor's accessible name, including `label`. Does not change the visible label. Custom editors must apply it to their editable node. |
