@@ -68,6 +68,19 @@ class SelectTriggerSpec with _$SelectTriggerSpec {
   @override
   final double? placeholderOpacity;
 
+  /// Box around each chip, and around the overflow count, in a
+  /// [RemixMultiSelect] trigger. [RemixSelect] draws no chips.
+  @override
+  final StyleSpec<BoxSpec> chip;
+
+  /// Text of a chip in a [RemixMultiSelect] trigger.
+  @override
+  final StyleSpec<TextSpec> chipLabel;
+
+  /// Text of the overflow count ("+2") in a [RemixMultiSelect] trigger.
+  @override
+  final StyleSpec<TextSpec> overflowLabel;
+
   const SelectTriggerSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
@@ -77,7 +90,13 @@ class SelectTriggerSpec with _$SelectTriggerSpec {
     this.containerEffects,
     this.indicatorOpacity,
     this.placeholderOpacity,
+    StyleSpec<BoxSpec>? chip,
+    StyleSpec<TextSpec>? chipLabel,
+    StyleSpec<TextSpec>? overflowLabel,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
+       chip = chip ?? const StyleSpec(spec: BoxSpec()),
+       chipLabel = chipLabel ?? const StyleSpec(spec: TextSpec()),
+       overflowLabel = overflowLabel ?? const StyleSpec(spec: TextSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        placeholder = placeholder ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
