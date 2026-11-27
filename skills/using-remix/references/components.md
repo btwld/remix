@@ -40,6 +40,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   just the visual variant/size.
 - **ToggleGroup** — controlled, single-select, with roving keyboard focus
   across items; `onChanged: null` disables the whole group.
+- **SegmentedControl** — `SegmentedControlStyler().indicator(BoxStyler())`
+  draws one surface behind the selected segment that glides on selection
+  change (`indicatorMotion`: curve or spring; 250 ms `easeOutCubic` by
+  default), like the tabs indicator. Clear the item's own selected fill.
 
 ## Forms
 

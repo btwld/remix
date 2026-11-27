@@ -12,7 +12,10 @@ void main() {
       expect(spec.mainAxisSize, isNull);
       expect(spec.spacing, isNull);
       expect(spec.item, isA<StyleSpec<SegmentedControlItemSpec>>());
-      expect(spec.props, hasLength(4));
+      expect(spec.indicator, isNull);
+      expect(spec.indicatorEffects, isNull);
+      expect(spec.indicatorMotion, isNull);
+      expect(spec.props, hasLength(7));
     });
 
     test('copyWith replaces selected properties', () {
@@ -46,6 +49,9 @@ void main() {
         'mainAxisSize',
         'spacing',
         'item',
+        'indicator',
+        'indicatorEffects',
+        'indicatorMotion',
       ]);
     });
   });

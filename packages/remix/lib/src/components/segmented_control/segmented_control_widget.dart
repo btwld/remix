@@ -203,6 +203,7 @@ class RemixSegmentedControl<T extends Object> extends StatelessWidget {
           styleSpec: styleSpec,
           trackFocusVisibility: true,
           builder: (context, spec) {
+            remixCheckIndicatorMotion(spec.indicatorMotion);
             final textDirection = Directionality.of(context);
             return StyleSpecBuilder<BoxSpec>(
               key: const ValueKey('RemixSegmentedControl.track'),
@@ -211,24 +212,33 @@ class RemixSegmentedControl<T extends Object> extends StatelessWidget {
                 final fillMainAxis = spec.mainAxisSize == MainAxisSize.max;
                 final track = Box(
                   styleSpec: StyleSpec(spec: trackSpec),
-                  child: _EqualSegmentLayout(
-                    orientation: orientation,
-                    spacing: spec.spacing ?? 0,
-                    textDirection: textDirection,
-                    fillMainAxis: fillMainAxis,
-                    children: [
-                      for (final item in snapshot)
-                        KeyedSubtree(
-                          key: ValueKey(item.value),
-                          child: _RemixSegmentedControlItemWidget<T>(
-                            data: item,
-                            defaultStyle: styleSpec == null ? style : null,
-                            defaultStyleSpec: styleSpec == null
-                                ? null
-                                : spec.item,
+                  child: RemixSelectionIndicatorHost(
+                    selectedId: selectedValue,
+                    indicator: spec.indicator,
+                    indicatorEffects: spec.indicatorEffects,
+                    motion: spec.indicatorMotion,
+                    child: _EqualSegmentLayout(
+                      orientation: orientation,
+                      spacing: spec.spacing ?? 0,
+                      textDirection: textDirection,
+                      fillMainAxis: fillMainAxis,
+                      children: [
+                        for (final item in snapshot)
+                          KeyedSubtree(
+                            key: ValueKey(item.value),
+                            child: RemixSelectionIndicatorAnchor(
+                              id: item.value,
+                              child: _RemixSegmentedControlItemWidget<T>(
+                                data: item,
+                                defaultStyle: styleSpec == null ? style : null,
+                                defaultStyleSpec: styleSpec == null
+                                    ? null
+                                    : spec.item,
+                              ),
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
                 return Align(
