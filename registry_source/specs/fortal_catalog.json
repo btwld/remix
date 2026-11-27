@@ -618,6 +618,41 @@
       ]
     },
     {
+      "id": "multi_select",
+      "fortalType": "FortalMultiSelect",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        }
+      },
+      "defaults": {
+        "highContrast": false,
+        "enabled": true,
+        "maxVisibleChips": 2
+      },
+      "supportedStyleProps": [
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "focused",
+        "open",
+        "optionFocused",
+        "optionDisabled",
+        "disabled",
+        "highContrast"
+      ],
+      "tests": [
+        "test/fortal/multi_select_test.dart"
+      ]
+    },
+    {
       "id": "popover",
       "fortalType": "FortalPopover",
       "enums": {

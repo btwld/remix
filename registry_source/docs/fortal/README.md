@@ -301,7 +301,7 @@ for controls, semantics, and composition guidance.
 - **FortalCheckbox**, **FortalCheckboxGroupItem**, **FortalRadio**, **FortalSlider**
 
 ### Input Components
-- **FortalTextField**, **FortalTextArea**, **FortalSelect**
+- **FortalTextField**, **FortalTextArea**, **FortalSelect**, **FortalMultiSelect**
 
 ### Display Components
 - **FortalAvatar**, **FortalBadge**, **FortalCard**, **FortalDataList**

@@ -11,7 +11,7 @@ This is the API reference. Start with the [Fortal overview](/fortal) for install
 
 A `—` value means the widget does not expose that axis. When values are listed but their default is `—`, the parameter is nullable with no pinned value. That is the typography path: an omitted size or weight resolves from the active scope's tokens (`text3`, regular) rather than from an enum, so a host text run cannot resize Fortal text. See [Typography](/fortal/typography).
 
-<CatalogSearch items={["FortalAccordion","FortalAppBar","FortalAvatar","FortalAvatarGroup","FortalBadge","FortalBreadcrumbs","FortalButton","FortalCalendar","FortalCallout","FortalCard","FortalCheckbox","FortalCode","FortalCombobox","FortalDataList","FortalDataTable","FortalDatePicker","FortalDateRangePicker","FortalDialog","FortalDisclosure","FortalDivider","FortalHeading","FortalIconButton","FortalKbd","FortalLineChart","FortalLink","FortalMenu","FortalPopover","FortalProgress","FortalRadio","FortalRangeCalendar","FortalRangeSlider","FortalSearchField","FortalSegmentedControl","FortalSelect","FortalSidebar","FortalSidebarLayout","FortalSkeleton","FortalSlider","FortalSpinner","FortalSurface","FortalSwitch","FortalTabBar","FortalText","FortalTextArea","FortalTextField","FortalToast","FortalToggle","FortalToggleGroup","FortalTooltip"]} />
+<CatalogSearch items={["FortalAccordion","FortalAppBar","FortalAvatar","FortalAvatarGroup","FortalBadge","FortalBreadcrumbs","FortalButton","FortalCalendar","FortalCallout","FortalCard","FortalCheckbox","FortalCode","FortalCombobox","FortalDataList","FortalDataTable","FortalDatePicker","FortalDateRangePicker","FortalDialog","FortalDisclosure","FortalDivider","FortalHeading","FortalIconButton","FortalKbd","FortalLineChart","FortalLink","FortalMenu","FortalMultiSelect","FortalPopover","FortalProgress","FortalRadio","FortalRangeCalendar","FortalRangeSlider","FortalSearchField","FortalSegmentedControl","FortalSelect","FortalSidebar","FortalSidebarLayout","FortalSkeleton","FortalSlider","FortalSpinner","FortalSurface","FortalSwitch","FortalTabBar","FortalText","FortalTextArea","FortalTextField","FortalToast","FortalToggle","FortalToggleGroup","FortalTooltip"]} />
 
 ## At a glance
 
@@ -43,6 +43,7 @@ A `—` value means the widget does not expose that axis. When values are listed
 | `FortalLineChart` | — | — | — | — |
 | `FortalLink` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — | — | — |
 | `FortalMenu` | `size1`, `size2` | `size2` | `solid`, `soft` | `solid` |
+| `FortalMultiSelect` | `size1`, `size2`, `size3` | `size2` | — | — |
 | `FortalPopover` | `size1`, `size2`, `size3`, `size4` | `size2` | — | — |
 | `FortalProgress` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalRadio` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
@@ -344,6 +345,20 @@ Recipe `registry_source/lib/src/fortal/components/toggle_group.dart`
 **Style props:** `color`, `radius`, `highContrast`
 
 **States:** `unselected`, `selected`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`, `rtl`
+
+### FortalMultiSelect
+
+Recipe `registry_source/lib/src/fortal/components/multi_select.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+
+**Other defaults:** `enabled: true`, `highContrast: false`, `maxVisibleChips: 2`
+
+**Style props:** `highContrast`
+
+**States:** `idle`, `hovered`, `focused`, `open`, `optionFocused`, `optionDisabled`, `disabled`, `highContrast`
 
 ### FortalSearchField
 

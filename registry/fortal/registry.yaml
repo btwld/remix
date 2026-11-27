@@ -591,6 +591,22 @@ items:
     exports:
       - recipes/message_recipe.dart
 
+  multi_select:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.3.0
+    files:
+      - source: templates/multi_select/multi_select.dart.tmpl
+        target: "@ui/components/multi_select.dart"
+    generated:
+      - "@ui/components/multi_select.g.dart"
+    exports:
+      - components/multi_select.dart
+
   popover:
     registryDependencies:
       - theme
