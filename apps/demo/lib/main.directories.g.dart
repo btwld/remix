@@ -42,6 +42,8 @@ import 'package:demo/components/icon_button.dart'
 import 'package:demo/components/kbd.dart' as _demo_components_kbd;
 import 'package:demo/components/link.dart' as _demo_components_link;
 import 'package:demo/components/menu.dart' as _demo_components_menu;
+import 'package:demo/components/number_field.dart'
+    as _demo_components_number_field;
 import 'package:demo/components/popover.dart' as _demo_components_popover;
 import 'package:demo/components/progress.dart' as _demo_components_progress;
 import 'package:demo/components/radio.dart' as _demo_components_radio;
@@ -135,6 +137,20 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Catalog',
             builder: _demo_components_link.buildLinkCatalogUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'FortalNumberField',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder:
+                _demo_components_number_field.buildNumberFieldCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Number Field Component',
+            builder: _demo_components_number_field.buildNumberFieldUseCase,
           ),
         ],
       ),
