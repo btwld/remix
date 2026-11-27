@@ -861,7 +861,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
     final snapshot = List<RemixMenuItemData<T>>.unmodifiable(items);
     final hasChoiceItems = _hasChoiceItems(snapshot);
 
-    final entries = snapshot
+    final rows = snapshot
         .map((item) => _buildEntry(context, item, hasChoiceItems))
         .toList(growable: false);
     final transition = itemTransition;
@@ -872,9 +872,9 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
       containerEffects: containerEffects,
       scrollable: true,
       children: transition == null
-          ? entries
+          ? rows
           : [
-              for (final (index, entry) in entries.indexed)
+              for (final (index, entry) in rows.indexed)
                 KeyedSubtree(
                   key: entry.key,
                   child: transition.builder(
@@ -883,7 +883,7 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
                       animation:
                           panelAnimation?.animation ?? kAlwaysCompleteAnimation,
                       index: index,
-                      count: entries.length,
+                      count: rows.length,
                     ),
                     entry,
                   ),
