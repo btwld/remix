@@ -3,6 +3,10 @@
 ### Features
 
 - Re-export `NakedScrollbar` and `NakedTabsScope` from `package:remix/remix.dart`.
+- State animations from a style's `.animate(...)` land on their end value in
+  one frame while motion is reduced (`MediaQuery.disableAnimations` or the
+  platform's `reduceMotion`). This covers every widget built on
+  `RemixStyleSpecBuilder`, plus calendar days and slider thumbs.
 
 ## 1.0.0-rc.7
 

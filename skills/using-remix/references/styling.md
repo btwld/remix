@@ -194,9 +194,11 @@ Naked UI release reads.
 `RemixReducedMotionBuilder(builder: (context, reduceMotion) => ...)` exposes the
 same preference and rebuilds when either signal changes. A `MediaQuery`
 override can force it on but cannot turn the platform's `reduceMotion` off.
-Style `.animate(...)` is driven by Mix, which never reads the preference: choose
-the animation yourself while `reduceMotion` is true, and expect the change to
-take effect once the style stops moving.
+Under reduced motion, a Remix widget's style `.animate(...)` timing is
+dropped, including timing set inside a variant such as `.onHovered(...)`: state
+changes land on their end value in one frame. A transition already running when
+the preference changes finishes on its own timing. Mix widgets used directly
+(`Box`, `StyledText`) and `.animate` on a nested slot styler still animate.
 
 ## Reusable and dynamic app styles
 
