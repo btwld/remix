@@ -33,6 +33,13 @@ class CalendarSpec with _$CalendarSpec {
   @override
   final double? rowSpacing;
 
+  /// Animates the weeks when the displayed month changes, with the outgoing
+  /// and incoming month grids both mounted until it completes.
+  ///
+  /// `null` swaps months at once.
+  @override
+  final RemixMonthTransition? monthTransition;
+
   const CalendarSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? weekday,
@@ -41,6 +48,7 @@ class CalendarSpec with _$CalendarSpec {
     this.headerSpacing,
     this.weekdaySpacing,
     this.selectorSpacing,
+    this.monthTransition,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        weekday = weekday ?? const StyleSpec(spec: TextSpec()),
        day = day ?? const StyleSpec(spec: CalendarDaySpec());

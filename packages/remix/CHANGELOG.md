@@ -34,6 +34,10 @@
 - Add `SliderSpec.thumbOverlay`, a builder for a widget drawn over each
   slider and range slider thumb, such as a value bubble, given the thumb's
   index, value and states in `RemixSliderThumbOverlayInfo`.
+- Calendars accept a `CalendarSpec.monthTransition`, a `RemixMonthTransition`
+  that animates the weeks when the displayed month changes, with the outgoing
+  and incoming grids both mounted and the direction known. Unset, the month
+  swaps at once.
 
 ## 1.0.0-rc.7
 

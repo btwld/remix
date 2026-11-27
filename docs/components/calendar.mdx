@@ -147,6 +147,23 @@ Pass the styler to `RemixCalendar(style: calendarStyle, ...)`, or call it direct
 `CalendarStyler.call` returns a `RemixCalendar` and accepts its constructor
 parameters except `style` and `styleSpec`.
 
+## Recipe hooks
+
+These `CalendarStyler` fields let a recipe change how the weeks move and paint.
+Each one is unset by default, which keeps the behavior described above. They
+apply to `RemixRangeCalendar` too.
+
+`monthTransition(RemixMonthTransition)` animates the weeks when the displayed
+month changes. Its builder runs once for the incoming grid and, while a change
+runs, once for the outgoing grid. `RemixMonthTransitionInfo` carries a linear
+`animation` from 0 to 1, shared by both grids, the `direction`
+(`RemixMonthDirection.forward` or `backward`), and `isIncoming`. The grids
+share one stack cell with the incoming grid on top, so a slide clips each grid
+itself, for example with `ClipRect`. The outgoing grid is inert and keeps its
+day styles; it is removed when the animation completes. When the user asks to
+reduce motion, the new month replaces the old one at once. Unset, the month
+swaps at once.
+
 ## Localization and direction
 
 Defaults are explicitly English; the widget does not detect date formatting or
@@ -331,6 +348,7 @@ Optional. A raw resolved spec that bypasses `style` and inherited styles.
 `weekday(TextStyler)` and `day(CalendarDayStyler)`. Use `headerSpacing` for the
 gap below the header and `weekdaySpacing` for the gap before the first week.
 Both default to zero; navigation centres follow the outer day columns.
+`monthTransition` is described in [Recipe hooks](#recipe-hooks).
 
 `CalendarDayStyler` styles a day like a box, its number through
 `label(TextStyler)`, and its states through `onSelected`, `onHovered`,
