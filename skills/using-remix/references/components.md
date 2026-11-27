@@ -308,7 +308,11 @@ for Overlay, Navigator and toast scope placement.
 - **showRemixDialog** — works even when the calling context has no
   `MixScope`; when one exists, it clones that scope's tokens and modifier
   order into the dialog route. Default `barrierColor` is `Color(0x8A000000)`.
-  `RemixDialog` also takes `scrollable` (default `false`).
+  `RemixDialog` also takes `scrollable` (default `false`), and `onClose` with
+  a required `closeLabel` for a close button at the end of a header row. The
+  header layout (`DialogStyler().header(...)`, `.body(...)`,
+  `.closeButton(...)`) is opt-in; without it or `onClose` the dialog keeps one
+  column.
   `transitionDuration` (default 400ms) times the entrance;
   `reverseTransitionDuration` times the exit and defaults to
   `transitionDuration`. Reduced motion skips both.

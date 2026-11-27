@@ -49,6 +49,9 @@
   `RemixDatePicker` and `RemixDateRangePicker`. The footer sits under the
   calendar at its width; the delay keeps the panel open briefly after a pick
   and is skipped under reduced motion.
+- `RemixDialog` takes `onClose` and `closeLabel` for a close button at the end
+  of a header row. `DialogStyler.header`, `.body`, and `.closeButton` style
+  that layout; without a header style or `onClose`, dialogs keep one column.
 
 ## 1.0.0-rc.7
 

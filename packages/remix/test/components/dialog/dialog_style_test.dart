@@ -336,7 +336,7 @@ void main() {
 
       test('props list contains all properties', () {
         const style = DialogStyler.create();
-        expect(style.props, hasLength(8));
+        expect(style.props, hasLength(11));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$title));
         expect(style.props, contains(style.$description));

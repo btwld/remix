@@ -166,6 +166,8 @@ class RemixDialog extends StatelessWidget {
     this.title,
     this.description,
     this.actions,
+    this.onClose,
+    this.closeLabel,
     this.scrollable = false,
     this.modal = true,
     this.semanticLabel,
@@ -174,6 +176,10 @@ class RemixDialog extends StatelessWidget {
   }) : assert(
          child != null || title != null || description != null,
          'Either child, title, or description must be provided',
+       ),
+       assert(
+         onClose == null || closeLabel != null,
+         'A RemixDialog with onClose needs a localized closeLabel.',
        );
 
   /// Custom body content.
@@ -191,10 +197,22 @@ class RemixDialog extends StatelessWidget {
   /// Action buttons (typically placed at the bottom).
   final List<Widget>? actions;
 
+  /// Called by the close button at the end of the header row. The button is
+  /// shown only when non-null.
+  ///
+  /// The dialog does not pop its route; the callback decides, typically with
+  /// `Navigator.pop(context)`. Passing it lays the dialog out with
+  /// [DialogSpec.header] even when the style sets none.
+  final VoidCallback? onClose;
+
+  /// The close button's localized accessible name. Required with [onClose].
+  final String? closeLabel;
+
   /// Whether structured body content can scroll within a bounded dialog.
   ///
   /// When true, [description] and [child] share a vertical scroll region while
-  /// [title] and [actions] remain outside it. A lone [child] remains fully
+  /// [title] and [actions] remain outside it. With [DialogSpec.header], the
+  /// description stays in the header and only [child] scrolls. A lone [child] remains fully
   /// caller-owned and is never wrapped in the structured scroll region.
   final bool scrollable;
 
@@ -218,6 +236,52 @@ class RemixDialog extends StatelessWidget {
 
   static final styleFrom = DialogStyler.new;
 
+  Widget? _header(
+    StyleSpec<FlexBoxSpec> headerSpec,
+    DialogSpec spec,
+    Widget? titleText,
+    Widget? descriptionText,
+  ) {
+    final heading = titleText == null && descriptionText == null
+        ? null
+        : Column(
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
+            children: [?titleText, ?descriptionText],
+          );
+    final onClose = this.onClose;
+    if (onClose == null) {
+      return heading == null
+          ? null
+          : RowBox(styleSpec: headerSpec, children: [heading]);
+    }
+
+    Widget closeButton = RemixIconButton(
+      icon: null,
+      iconBuilder: (context, iconSpec, _) => RemixPathIcon(
+        glyph: RemixPathGlyph.cross,
+        styleSpec: StyleSpec(spec: iconSpec),
+      ),
+      semanticLabel: closeLabel!,
+      onPressed: onClose,
+    );
+    if (spec.closeButton case final style?) {
+      closeButton = StyleProvider<IconButtonSpec>(
+        style: style,
+        child: closeButton,
+      );
+    }
+
+    return RowBox(
+      styleSpec: headerSpec,
+      children: [
+        // The close button keeps the end of the row however short the title.
+        Expanded(child: heading ?? const SizedBox.shrink()),
+        closeButton,
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final resolvedSemanticLabel = _nonblank(semanticLabel) ?? _nonblank(title);
@@ -238,7 +302,8 @@ class RemixDialog extends StatelessWidget {
             child != null &&
             title == null &&
             description == null &&
-            !hasActions;
+            !hasActions &&
+            onClose == null;
 
         // Skip the default column so a fully custom body keeps its layout.
         if (isLoneChild) {
@@ -249,18 +314,32 @@ class RemixDialog extends StatelessWidget {
           );
         }
 
-        final hasBody = description != null || child != null;
-        final titleWidget = title == null
+        final titleText = title == null
             ? null
             : StyledText(title!, styleSpec: spec.title);
-        final bodyChildren = <Widget>[
-          if (description != null)
-            StyledText(description!, styleSpec: spec.description),
-          ?child,
-        ];
+        final descriptionText = description == null
+            ? null
+            : StyledText(description!, styleSpec: spec.description);
         final actionsWidget = hasActions
             ? FlexBox(styleSpec: spec.actions, children: actions!)
             : null;
+
+        final headerSpec =
+            spec.header ??
+            (onClose == null ? null : const StyleSpec(spec: FlexBoxSpec()));
+        final Widget? titleWidget;
+        final List<Widget> bodyChildren;
+        if (headerSpec == null) {
+          titleWidget = titleText;
+          bodyChildren = [?descriptionText, ?child];
+        } else {
+          titleWidget = _header(headerSpec, spec, titleText, descriptionText);
+          bodyChildren = [
+            if (child case final child?)
+              Box(styleSpec: spec.body, child: child),
+          ];
+        }
+        final hasBody = bodyChildren.isNotEmpty;
 
         // title → description → child → actions; never discard provided content.
         return RemixBoxAdapter(

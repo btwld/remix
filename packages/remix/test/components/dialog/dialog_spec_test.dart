@@ -52,7 +52,7 @@ void main() {
       final result = first.lerp(second, 0.5);
 
       expect(result, isA<DialogSpec>());
-      expect(result.props, hasLength(5));
+      expect(result.props, hasLength(8));
       expect(
         result.props,
         containsAll(<Object?>[
