@@ -75,6 +75,9 @@
   to Naked UI, so a dialog can keep a short fade under reduced motion.
 - `ToastStyler.reducedMotionDuration` keeps a short toast fade under reduced
   motion; `RemixToastScope.defaultTransitionBuilder` then drops its travel.
+- `SkeletonStyler.revealDuration`, `.revealCurve`, and `.revealOffset`
+  crossfade from the placeholder to the child when loading ends. Without
+  them the child still appears at once.
 
 ## 1.0.0-rc.7
 

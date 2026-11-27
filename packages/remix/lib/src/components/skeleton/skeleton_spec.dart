@@ -47,6 +47,26 @@ class SkeletonSpec with _$SkeletonSpec {
   @override
   final int? cycles;
 
+  /// How long the hand-over from placeholder to child takes when `loading`
+  /// turns false: the child fades in while the placeholder fades out.
+  ///
+  /// `null`, the default, shows the child at once. Reduced motion also shows
+  /// it at once. The child takes input, focus, and semantics from the first
+  /// frame of the reveal; only its paint animates.
+  @override
+  final Duration? revealDuration;
+
+  /// The easing of the child's fade and travel during the reveal. `null`
+  /// means [Curves.easeOut]. The placeholder fades out linearly.
+  @override
+  final Curve? revealCurve;
+
+  /// Where the child starts relative to its place, in logical pixels, and
+  /// travels from during the reveal, such as `Offset(0, 4)` for a short rise.
+  /// `null` keeps it in place.
+  @override
+  final Offset? revealOffset;
+
   const SkeletonSpec({
     StyleSpec<BoxSpec>? container,
     this.pulseColor,
@@ -54,6 +74,9 @@ class SkeletonSpec with _$SkeletonSpec {
     this.curve,
     this.delay,
     this.cycles,
+    this.revealDuration,
+    this.revealCurve,
+    this.revealOffset,
   }) : assert(cycles == null || cycles > 0),
        container = container ?? const StyleSpec(spec: BoxSpec());
 }

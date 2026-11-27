@@ -13,6 +13,9 @@ mixin _$SkeletonSpec implements Spec<SkeletonSpec>, Diagnosticable {
   Curve? get curve;
   Duration? get delay;
   int? get cycles;
+  Duration? get revealDuration;
+  Curve? get revealCurve;
+  Offset? get revealOffset;
 
   @override
   Type get type => SkeletonSpec;
@@ -25,6 +28,9 @@ mixin _$SkeletonSpec implements Spec<SkeletonSpec>, Diagnosticable {
     Curve? curve,
     Duration? delay,
     int? cycles,
+    Duration? revealDuration,
+    Curve? revealCurve,
+    Offset? revealOffset,
   }) {
     return SkeletonSpec(
       container: container ?? this.container,
@@ -33,6 +39,9 @@ mixin _$SkeletonSpec implements Spec<SkeletonSpec>, Diagnosticable {
       curve: curve ?? this.curve,
       delay: delay ?? this.delay,
       cycles: cycles ?? this.cycles,
+      revealDuration: revealDuration ?? this.revealDuration,
+      revealCurve: revealCurve ?? this.revealCurve,
+      revealOffset: revealOffset ?? this.revealOffset,
     );
   }
 
@@ -45,6 +54,9 @@ mixin _$SkeletonSpec implements Spec<SkeletonSpec>, Diagnosticable {
       curve: MixOps.lerpSnap(curve, other?.curve, t),
       delay: MixOps.lerpSnap(delay, other?.delay, t),
       cycles: MixOps.lerpSnap(cycles, other?.cycles, t),
+      revealDuration: MixOps.lerpSnap(revealDuration, other?.revealDuration, t),
+      revealCurve: MixOps.lerpSnap(revealCurve, other?.revealCurve, t),
+      revealOffset: MixOps.lerp(revealOffset, other?.revealOffset, t),
     );
   }
 
@@ -56,6 +68,9 @@ mixin _$SkeletonSpec implements Spec<SkeletonSpec>, Diagnosticable {
     curve,
     delay,
     cycles,
+    revealDuration,
+    revealCurve,
+    revealOffset,
   ];
 
   @override
@@ -103,7 +118,10 @@ mixin _$SkeletonSpec implements Spec<SkeletonSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('duration', duration))
       ..add(DiagnosticsProperty('curve', curve))
       ..add(DiagnosticsProperty('delay', delay))
-      ..add(IntProperty('cycles', cycles));
+      ..add(IntProperty('cycles', cycles))
+      ..add(DiagnosticsProperty('revealDuration', revealDuration))
+      ..add(DiagnosticsProperty('revealCurve', revealCurve))
+      ..add(DiagnosticsProperty('revealOffset', revealOffset));
   }
 }
 
@@ -124,6 +142,9 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
   final Prop<Curve>? $curve;
   final Prop<Duration>? $delay;
   final Prop<int>? $cycles;
+  final Prop<Duration>? $revealDuration;
+  final Prop<Curve>? $revealCurve;
+  final Prop<Offset>? $revealOffset;
 
   const SkeletonStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
@@ -132,6 +153,9 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
     Prop<Curve>? curve,
     Prop<Duration>? delay,
     Prop<int>? cycles,
+    Prop<Duration>? revealDuration,
+    Prop<Curve>? revealCurve,
+    Prop<Offset>? revealOffset,
     super.variants,
     super.modifier,
     super.animation,
@@ -140,7 +164,10 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
        $duration = duration,
        $curve = curve,
        $delay = delay,
-       $cycles = cycles;
+       $cycles = cycles,
+       $revealDuration = revealDuration,
+       $revealCurve = revealCurve,
+       $revealOffset = revealOffset;
 
   SkeletonStyler({
     BoxStyler? container,
@@ -149,6 +176,9 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
     Curve? curve,
     Duration? delay,
     int? cycles,
+    Duration? revealDuration,
+    Curve? revealCurve,
+    Offset? revealOffset,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<SkeletonSpec>>? variants,
@@ -159,6 +189,9 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
          curve: Prop.maybe(curve),
          delay: Prop.maybe(delay),
          cycles: Prop.maybe(cycles),
+         revealDuration: Prop.maybe(revealDuration),
+         revealCurve: Prop.maybe(revealCurve),
+         revealOffset: Prop.maybe(revealOffset),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -173,6 +206,12 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
   factory SkeletonStyler.curve(Curve value) => SkeletonStyler().curve(value);
   factory SkeletonStyler.delay(Duration value) => SkeletonStyler().delay(value);
   factory SkeletonStyler.cycles(int value) => SkeletonStyler().cycles(value);
+  factory SkeletonStyler.revealDuration(Duration value) =>
+      SkeletonStyler().revealDuration(value);
+  factory SkeletonStyler.revealCurve(Curve value) =>
+      SkeletonStyler().revealCurve(value);
+  factory SkeletonStyler.revealOffset(Offset value) =>
+      SkeletonStyler().revealOffset(value);
   factory SkeletonStyler.wrap(WidgetModifierConfig value) =>
       SkeletonStyler().wrap(value);
 
@@ -184,6 +223,9 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
     'curve',
     'delay',
     'cycles',
+    'revealDuration',
+    'revealCurve',
+    'revealOffset',
     'animation',
     'modifier',
     'variants',
@@ -217,6 +259,21 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
   /// Sets the cycles.
   SkeletonStyler cycles(int value) {
     return merge(SkeletonStyler(cycles: value));
+  }
+
+  /// Sets the revealDuration.
+  SkeletonStyler revealDuration(Duration value) {
+    return merge(SkeletonStyler(revealDuration: value));
+  }
+
+  /// Sets the revealCurve.
+  SkeletonStyler revealCurve(Curve value) {
+    return merge(SkeletonStyler(revealCurve: value));
+  }
+
+  /// Sets the revealOffset.
+  SkeletonStyler revealOffset(Offset value) {
+    return merge(SkeletonStyler(revealOffset: value));
   }
 
   /// Sets the animation configuration.
@@ -256,6 +313,9 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
       curve: MixOps.merge($curve, other?.$curve),
       delay: MixOps.merge($delay, other?.$delay),
       cycles: MixOps.merge($cycles, other?.$cycles),
+      revealDuration: MixOps.merge($revealDuration, other?.$revealDuration),
+      revealCurve: MixOps.merge($revealCurve, other?.$revealCurve),
+      revealOffset: MixOps.merge($revealOffset, other?.$revealOffset),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -272,6 +332,9 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
       curve: MixOps.resolve(context, $curve),
       delay: MixOps.resolve(context, $delay),
       cycles: MixOps.resolve(context, $cycles),
+      revealDuration: MixOps.resolve(context, $revealDuration),
+      revealCurve: MixOps.resolve(context, $revealCurve),
+      revealOffset: MixOps.resolve(context, $revealOffset),
     );
 
     return StyleSpec(
@@ -290,7 +353,10 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
       ..add(DiagnosticsProperty('duration', $duration))
       ..add(DiagnosticsProperty('curve', $curve))
       ..add(DiagnosticsProperty('delay', $delay))
-      ..add(DiagnosticsProperty('cycles', $cycles));
+      ..add(DiagnosticsProperty('cycles', $cycles))
+      ..add(DiagnosticsProperty('revealDuration', $revealDuration))
+      ..add(DiagnosticsProperty('revealCurve', $revealCurve))
+      ..add(DiagnosticsProperty('revealOffset', $revealOffset));
   }
 
   @override
@@ -301,6 +367,9 @@ class SkeletonStyler extends MixStyler<SkeletonStyler, SkeletonSpec>
     $curve,
     $delay,
     $cycles,
+    $revealDuration,
+    $revealCurve,
+    $revealOffset,
     $animation,
     $modifier,
     $variants,
