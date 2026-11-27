@@ -161,8 +161,8 @@ NumberFieldStyler fortalNumberFieldStyle({
 
 const _cursorWidth = 1.5;
 
-// The plus and minus glyphs fill more of their box than the reference's
-// 16px marks, so a smaller box draws marks of the same length.
+// The plus and minus glyphs fill most of their box, so a 12.5px box draws
+// the 10.5px marks Fortal's steps call for.
 const _glyph = 12.5;
 
 typedef _Metrics = ({
