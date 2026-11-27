@@ -118,6 +118,7 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
   StyleSpec<IconSpec> get indicator;
   RemixBoxEffectsSpec? get containerEffects;
   double? get indicatorOpacity;
+  double? get indicatorAngle;
   double? get placeholderOpacity;
 
   @override
@@ -132,6 +133,7 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
     StyleSpec<IconSpec>? indicator,
     RemixBoxEffectsSpec? containerEffects,
     double? indicatorOpacity,
+    double? indicatorAngle,
     double? placeholderOpacity,
   }) {
     return SelectTriggerSpec(
@@ -142,6 +144,7 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
       indicator: indicator ?? this.indicator,
       containerEffects: containerEffects ?? this.containerEffects,
       indicatorOpacity: indicatorOpacity ?? this.indicatorOpacity,
+      indicatorAngle: indicatorAngle ?? this.indicatorAngle,
       placeholderOpacity: placeholderOpacity ?? this.placeholderOpacity,
     );
   }
@@ -164,6 +167,7 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
         other?.indicatorOpacity,
         t,
       ),
+      indicatorAngle: MixOps.lerp(indicatorAngle, other?.indicatorAngle, t),
       placeholderOpacity: MixOps.lerp(
         placeholderOpacity,
         other?.placeholderOpacity,
@@ -181,6 +185,7 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
     indicator,
     containerEffects,
     indicatorOpacity,
+    indicatorAngle,
     placeholderOpacity,
   ];
 
@@ -231,6 +236,7 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DoubleProperty('indicatorOpacity', indicatorOpacity))
+      ..add(DoubleProperty('indicatorAngle', indicatorAngle))
       ..add(DoubleProperty('placeholderOpacity', placeholderOpacity));
   }
 }
@@ -1145,6 +1151,7 @@ class SelectTriggerStyler
   final Prop<StyleSpec<IconSpec>>? $indicator;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<double>? $indicatorOpacity;
+  final Prop<double>? $indicatorAngle;
   final Prop<double>? $placeholderOpacity;
 
   const SelectTriggerStyler.create({
@@ -1155,6 +1162,7 @@ class SelectTriggerStyler
     Prop<StyleSpec<IconSpec>>? indicator,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<double>? indicatorOpacity,
+    Prop<double>? indicatorAngle,
     Prop<double>? placeholderOpacity,
     super.variants,
     super.modifier,
@@ -1166,6 +1174,7 @@ class SelectTriggerStyler
        $indicator = indicator,
        $containerEffects = containerEffects,
        $indicatorOpacity = indicatorOpacity,
+       $indicatorAngle = indicatorAngle,
        $placeholderOpacity = placeholderOpacity;
 
   SelectTriggerStyler({
@@ -1176,6 +1185,7 @@ class SelectTriggerStyler
     IconStyler? indicator,
     RemixBoxEffectsMix? containerEffects,
     double? indicatorOpacity,
+    double? indicatorAngle,
     double? placeholderOpacity,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -1188,6 +1198,7 @@ class SelectTriggerStyler
          indicator: Prop.maybeMix(indicator),
          containerEffects: Prop.maybeMix(containerEffects),
          indicatorOpacity: Prop.maybe(indicatorOpacity),
+         indicatorAngle: Prop.maybe(indicatorAngle),
          placeholderOpacity: Prop.maybe(placeholderOpacity),
          variants: variants,
          modifier: modifier,
@@ -1208,6 +1219,8 @@ class SelectTriggerStyler
       SelectTriggerStyler().containerEffects(value);
   factory SelectTriggerStyler.indicatorOpacity(double value) =>
       SelectTriggerStyler().indicatorOpacity(value);
+  factory SelectTriggerStyler.indicatorAngle(double value) =>
+      SelectTriggerStyler().indicatorAngle(value);
   factory SelectTriggerStyler.placeholderOpacity(double value) =>
       SelectTriggerStyler().placeholderOpacity(value);
   factory SelectTriggerStyler.color(Color value) =>
@@ -1778,6 +1791,7 @@ class SelectTriggerStyler
     'indicator',
     'containerEffects',
     'indicatorOpacity',
+    'indicatorAngle',
     'placeholderOpacity',
     'animation',
     'modifier',
@@ -1819,6 +1833,11 @@ class SelectTriggerStyler
   /// Sets the indicatorOpacity.
   SelectTriggerStyler indicatorOpacity(double value) {
     return merge(SelectTriggerStyler(indicatorOpacity: value));
+  }
+
+  /// Sets the indicatorAngle.
+  SelectTriggerStyler indicatorAngle(double value) {
+    return merge(SelectTriggerStyler(indicatorAngle: value));
   }
 
   /// Sets the placeholderOpacity.
@@ -1866,6 +1885,7 @@ class SelectTriggerStyler
         $indicatorOpacity,
         other?.$indicatorOpacity,
       ),
+      indicatorAngle: MixOps.merge($indicatorAngle, other?.$indicatorAngle),
       placeholderOpacity: MixOps.merge(
         $placeholderOpacity,
         other?.$placeholderOpacity,
@@ -1887,6 +1907,7 @@ class SelectTriggerStyler
       indicator: MixOps.resolve(context, $indicator),
       containerEffects: MixOps.resolve(context, $containerEffects),
       indicatorOpacity: MixOps.resolve(context, $indicatorOpacity),
+      indicatorAngle: MixOps.resolve(context, $indicatorAngle),
       placeholderOpacity: MixOps.resolve(context, $placeholderOpacity),
     );
 
@@ -1908,6 +1929,7 @@ class SelectTriggerStyler
       ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('indicatorOpacity', $indicatorOpacity))
+      ..add(DiagnosticsProperty('indicatorAngle', $indicatorAngle))
       ..add(DiagnosticsProperty('placeholderOpacity', $placeholderOpacity));
   }
 
@@ -1920,6 +1942,7 @@ class SelectTriggerStyler
     $indicator,
     $containerEffects,
     $indicatorOpacity,
+    $indicatorAngle,
     $placeholderOpacity,
     $animation,
     $modifier,

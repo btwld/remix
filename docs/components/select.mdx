@@ -286,6 +286,12 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
   See the [fortalSelectStyle source code](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/select.dart) for all available options.
 </Info>
 
+## Open trigger
+
+While the panel is open and not closing, the trigger resolves under the
+`selected` widget state, so `SelectTriggerStyler().onSelected(...)` gives it an
+open look that leaves as the panel starts to close.
+
 ## Panel transition
 
 The panel fades and scales in over 150 ms by default. Set `panelTransition` on
@@ -508,6 +514,10 @@ Styles the collapsed/expanded indicator independently from the content icon.
 #### `indicatorOpacity(double value)`
 
 Sets the opacity of the collapsed/expanded indicator.
+
+#### `indicatorAngle(double value)`
+
+Sets the indicator's rotation in radians, clockwise. It turns the default chevron and the trigger's `collapsedIcon` and `expandedIcon`. Set it under `onSelected` with `animate` to turn the chevron as the panel opens and closes. Without it the default chevron flips at once while the panel is open.
 
 <Warning>
   `chevron` and `chevronOpacity` were renamed to `indicator` and

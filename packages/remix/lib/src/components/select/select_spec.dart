@@ -65,6 +65,16 @@ class SelectTriggerSpec with _$SelectTriggerSpec {
   /// Opacity applied to the collapsed/expanded trigger affordance.
   @override
   final double? indicatorOpacity;
+
+  /// Rotation of the trigger affordance, in radians, clockwise.
+  ///
+  /// It applies to the default chevron and to the trigger's own
+  /// `collapsedIcon` and `expandedIcon`. Set it under the open state
+  /// (`onSelected`) with an `animate` to turn the chevron with the panel.
+  /// `null` keeps the default: the default chevron flips at once while the
+  /// panel is open, and custom icons do not turn.
+  @override
+  final double? indicatorAngle;
   @override
   final double? placeholderOpacity;
 
@@ -76,6 +86,7 @@ class SelectTriggerSpec with _$SelectTriggerSpec {
     StyleSpec<IconSpec>? indicator,
     this.containerEffects,
     this.indicatorOpacity,
+    this.indicatorAngle,
     this.placeholderOpacity,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
