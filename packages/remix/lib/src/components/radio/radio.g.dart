@@ -12,6 +12,7 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
   StyleSpec<TextSpec> get label;
   double get labelSpacing;
   RemixBoxEffectsSpec? get containerEffects;
+  bool get keepIndicatorMounted;
 
   @override
   Type get type => RadioSpec;
@@ -23,6 +24,7 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
     StyleSpec<TextSpec>? label,
     double? labelSpacing,
     RemixBoxEffectsSpec? containerEffects,
+    bool? keepIndicatorMounted,
   }) {
     return RadioSpec(
       container: container ?? this.container,
@@ -30,6 +32,7 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
       label: label ?? this.label,
       labelSpacing: labelSpacing ?? this.labelSpacing,
       containerEffects: containerEffects ?? this.containerEffects,
+      keepIndicatorMounted: keepIndicatorMounted ?? this.keepIndicatorMounted,
     );
   }
 
@@ -45,6 +48,11 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
         other?.containerEffects,
         t,
       ),
+      keepIndicatorMounted: MixOps.lerpSnap(
+        keepIndicatorMounted,
+        other?.keepIndicatorMounted,
+        t,
+      ),
     );
   }
 
@@ -55,6 +63,7 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
     label,
     labelSpacing,
     containerEffects,
+    keepIndicatorMounted,
   ];
 
   @override
@@ -101,7 +110,8 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('label', label))
       ..add(DoubleProperty('labelSpacing', labelSpacing))
-      ..add(DiagnosticsProperty('containerEffects', containerEffects));
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
+      ..add(DiagnosticsProperty('keepIndicatorMounted', keepIndicatorMounted));
   }
 }
 
@@ -122,6 +132,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<double>? $labelSpacing;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
+  final Prop<bool>? $keepIndicatorMounted;
 
   const RadioStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
@@ -129,6 +140,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     Prop<StyleSpec<TextSpec>>? label,
     Prop<double>? labelSpacing,
     Prop<RemixBoxEffectsSpec>? containerEffects,
+    Prop<bool>? keepIndicatorMounted,
     super.variants,
     super.modifier,
     super.animation,
@@ -136,7 +148,8 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
        $indicator = indicator,
        $label = label,
        $labelSpacing = labelSpacing,
-       $containerEffects = containerEffects;
+       $containerEffects = containerEffects,
+       $keepIndicatorMounted = keepIndicatorMounted;
 
   RadioStyler({
     BoxStyler? container,
@@ -144,6 +157,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     TextStyler? label,
     double? labelSpacing,
     RemixBoxEffectsMix? containerEffects,
+    bool? keepIndicatorMounted,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RadioSpec>>? variants,
@@ -153,6 +167,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
          label: Prop.maybeMix(label),
          labelSpacing: Prop.maybe(labelSpacing),
          containerEffects: Prop.maybeMix(containerEffects),
+         keepIndicatorMounted: Prop.maybe(keepIndicatorMounted),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -167,6 +182,8 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
       RadioStyler().labelSpacing(value);
   factory RadioStyler.containerEffects(RemixBoxEffectsMix value) =>
       RadioStyler().containerEffects(value);
+  factory RadioStyler.keepIndicatorMounted(bool value) =>
+      RadioStyler().keepIndicatorMounted(value);
   factory RadioStyler.alignment(AlignmentGeometry value) =>
       RadioStyler().alignment(value);
   factory RadioStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -658,6 +675,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     'label',
     'labelSpacing',
     'containerEffects',
+    'keepIndicatorMounted',
     'animation',
     'modifier',
     'variants',
@@ -687,6 +705,11 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
   /// Sets the containerEffects.
   RadioStyler containerEffects(RemixBoxEffectsMix value) {
     return merge(RadioStyler(containerEffects: value));
+  }
+
+  /// Sets the keepIndicatorMounted.
+  RadioStyler keepIndicatorMounted(bool value) {
+    return merge(RadioStyler(keepIndicatorMounted: value));
   }
 
   /// Sets the animation configuration.
@@ -753,6 +776,10 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
         $containerEffects,
         other?.$containerEffects,
       ),
+      keepIndicatorMounted: MixOps.merge(
+        $keepIndicatorMounted,
+        other?.$keepIndicatorMounted,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -768,6 +795,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
       label: MixOps.resolve(context, $label),
       labelSpacing: MixOps.resolve(context, $labelSpacing),
       containerEffects: MixOps.resolve(context, $containerEffects),
+      keepIndicatorMounted: MixOps.resolve(context, $keepIndicatorMounted),
     );
 
     return StyleSpec(
@@ -785,7 +813,8 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
       ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('labelSpacing', $labelSpacing))
-      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
+      ..add(DiagnosticsProperty('keepIndicatorMounted', $keepIndicatorMounted));
   }
 
   @override
@@ -795,6 +824,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     $label,
     $labelSpacing,
     $containerEffects,
+    $keepIndicatorMounted,
     $animation,
     $modifier,
     $variants,
