@@ -40,6 +40,7 @@
     "lib/ui/theme/computed.dart": "btwld/remix/registry#fortal/theme",
     "lib/ui/theme/control_styles.dart": "btwld/remix/registry#fortal/theme",
     "lib/ui/theme/fortal_colors.dart": "btwld/remix/registry#fortal/theme",
+    "lib/ui/theme/motion.dart": "btwld/remix/registry#fortal/theme",
     "lib/ui/theme/palette.dart": "btwld/remix/registry#fortal/theme",
     "lib/ui/theme/surface_frame.dart": "btwld/remix/registry#fortal/theme",
     "lib/ui/theme/theme.dart": "btwld/remix/registry#fortal/theme",
