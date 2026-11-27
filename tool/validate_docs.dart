@@ -159,7 +159,8 @@ final _retiredApis = <(RegExp, String)>[
   ),
   (
     RegExp(
-      r'\b(?:Vanilla|Ui|Acme|Playground)(?:Space|Size|Stroke|Opacity|Motion)\b',
+      // Fortal ships a <Prefix>Motion constants class, so Motion is not listed.
+      r'\b(?:Vanilla|Ui|Acme|Playground)(?:Space|Size|Stroke|Opacity)\b',
     ),
     'retired scale helper class; use <Prefix>Tokens',
   ),

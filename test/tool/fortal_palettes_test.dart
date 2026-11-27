@@ -91,8 +91,8 @@ void main() {
       'ceu',
       'serra',
       'blackAlpha',
-      'acmeSlateNeutral',
-      'acmeNeutralPalettes',
+      'acmeNeutral',
+      'acmeFunctionalLight',
     ]) {
       final result = _generate([
         '--name',
