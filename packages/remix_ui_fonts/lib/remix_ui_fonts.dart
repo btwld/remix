@@ -13,4 +13,7 @@ abstract final class RemixFonts {
 
   /// Geist Mono, weights 400 and 500.
   static const String geistMono = 'packages/remix_ui_fonts/GeistMono';
+
+  /// Inter, weights 400, 500, 600, and 700.
+  static const String inter = 'packages/remix_ui_fonts/Inter';
 }
