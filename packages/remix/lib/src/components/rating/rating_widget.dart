@@ -73,6 +73,16 @@ class RemixRatingStarState {
   int get hashCode => Object.hash(star, max, value, preview, sweepOrder);
 }
 
+class _RatingScope extends InheritedWidget {
+  const _RatingScope({required this.shownValue, required super.child});
+
+  final int shownValue;
+
+  @override
+  bool updateShouldNotify(_RatingScope oldWidget) =>
+      shownValue != oldWidget.shownValue;
+}
+
 class _RatingStarScope extends InheritedWidget {
   const _RatingStarScope({required this.state, required super.child});
 
@@ -263,93 +273,96 @@ class _RemixRatingState extends State<RemixRating> {
     final style = _effectiveStyle;
     final groupLabel = widget.semanticLabel ?? widget.label;
 
-    return RemixStyleSpecBuilder<RatingSpec>(
-      style: style,
-      styleSpec: widget.styleSpec,
-      controller: _states,
-      trackFocusVisibility: true,
-      builder: (context, spec) {
-        final valueLabel = widget.valueLabelBuilder;
-        // Every label stays laid out, so the row keeps the widest one's width
-        // and the stars never move while the value changes.
-        final valueText = valueLabel == null
-            ? null
-            : IndexedStack(
-                index: shown,
-                children: [
-                  for (var value = 0; value <= widget.max; value++)
-                    StyledText(
-                      valueLabel(value == 0 ? null : value, widget.max),
-                      styleSpec: spec.valueText,
-                    ),
-                ],
-              );
+    return _RatingScope(
+      shownValue: shown,
+      child: RemixStyleSpecBuilder<RatingSpec>(
+        style: style,
+        styleSpec: widget.styleSpec,
+        controller: _states,
+        trackFocusVisibility: true,
+        builder: (context, spec) {
+          final valueLabel = widget.valueLabelBuilder;
+          // Every label stays laid out, so the row keeps the widest one's width
+          // and the stars never move while the value changes.
+          final valueText = valueLabel == null
+              ? null
+              : IndexedStack(
+                  index: shown,
+                  children: [
+                    for (var value = 0; value <= widget.max; value++)
+                      StyledText(
+                        valueLabel(value == 0 ? null : value, widget.max),
+                        styleSpec: spec.valueText,
+                      ),
+                  ],
+                );
 
-        final stars = MouseRegion(
-          onExit: (_) => _leaveStars(),
-          child: FlexBox(
-            styleSpec: spec.stars,
-            children: [
-              for (var star = 1; star <= widget.max; star++)
-                _RatingStar(
-                  key: ValueKey(star),
-                  star: RemixRatingStarState(
-                    star: star,
-                    max: widget.max,
-                    value: widget.value,
-                    preview: _preview,
-                    sweepOrder: _sweepOrder(star),
-                  ),
-                  allowClear: widget.allowClear,
-                  semanticLabel: widget.starSemanticLabelBuilder(
-                    star,
-                    widget.max,
-                  ),
-                  onHoverChange: (hovered) => _hoverStar(star, hovered),
-                  style: widget.styleSpec == null ? style : null,
-                  styleSpec: widget.styleSpec == null ? null : spec.star,
-                  ratingSpec: spec,
-                ),
-            ],
-          ),
-        );
-
-        final group = Semantics(
-          container: true,
-          explicitChildNodes: true,
-          label: groupLabel,
-          hint: widget.description,
-          child: NakedRadioGroup<int>(
-            groupValue: widget.value,
-            onChanged: _interactive ? _commit : null,
-            child: stars,
-          ),
-        );
-
-        return FlexBox(
-          styleSpec: spec.container,
-          children: [
-            if (widget.label != null)
-              ExcludeSemantics(
-                child: StyledText(widget.label!, styleSpec: spec.label),
-              ),
-            FlexBox(
-              styleSpec: spec.controlRow,
+          final stars = MouseRegion(
+            onExit: (_) => _leaveStars(),
+            child: FlexBox(
+              styleSpec: spec.stars,
               children: [
-                group,
-                if (valueText != null) ExcludeSemantics(child: valueText),
+                for (var star = 1; star <= widget.max; star++)
+                  _RatingStar(
+                    key: ValueKey(star),
+                    star: RemixRatingStarState(
+                      star: star,
+                      max: widget.max,
+                      value: widget.value,
+                      preview: _preview,
+                      sweepOrder: _sweepOrder(star),
+                    ),
+                    allowClear: widget.allowClear,
+                    semanticLabel: widget.starSemanticLabelBuilder(
+                      star,
+                      widget.max,
+                    ),
+                    onHoverChange: (hovered) => _hoverStar(star, hovered),
+                    style: widget.styleSpec == null ? style : null,
+                    styleSpec: widget.styleSpec == null ? null : spec.star,
+                    ratingSpec: spec,
+                  ),
               ],
             ),
-            if (widget.description != null)
-              ExcludeSemantics(
-                child: StyledText(
-                  widget.description!,
-                  styleSpec: spec.description,
+          );
+
+          final group = Semantics(
+            container: true,
+            explicitChildNodes: true,
+            label: groupLabel,
+            hint: widget.description,
+            child: NakedRadioGroup<int>(
+              groupValue: widget.value,
+              onChanged: _interactive ? _commit : null,
+              child: stars,
+            ),
+          );
+
+          return FlexBox(
+            styleSpec: spec.container,
+            children: [
+              if (widget.label != null)
+                ExcludeSemantics(
+                  child: StyledText(widget.label!, styleSpec: spec.label),
                 ),
+              FlexBox(
+                styleSpec: spec.controlRow,
+                children: [
+                  group,
+                  if (valueText != null) ExcludeSemantics(child: valueText),
+                ],
               ),
-          ],
-        );
-      },
+              if (widget.description != null)
+                ExcludeSemantics(
+                  child: StyledText(
+                    widget.description!,
+                    styleSpec: spec.description,
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

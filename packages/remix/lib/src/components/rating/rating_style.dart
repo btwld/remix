@@ -22,6 +22,22 @@ final _onRatedRatingStarVariant = ContextVariant(
   (context) => _starState(context)?.isRated ?? false,
 );
 
+final _onRatedRatingVariant = ContextVariant(
+  'remix.rating.rated',
+  (context) =>
+      (context.dependOnInheritedWidgetOfExactType<_RatingScope>()?.shownValue ??
+          0) >
+      0,
+);
+
+extension RemixRatingStylerRemixHelpers on RatingStyler {
+  /// Styles the rating while it shows a value, such as the value text's
+  /// color once it no longer reads "Not rated".
+  RatingStyler onRated(RatingStyler value) {
+    return variant(_onRatedRatingVariant, value);
+  }
+}
+
 extension RemixRatingStarStylerRemixHelpers on RatingStarStyler {
   /// Styles stars inside the shown value: the hovered preview, or the
   /// committed value when nothing is hovered.

@@ -292,6 +292,36 @@ void main() {
       expect(find.text('Poor'), findsOneWidget);
     });
 
+    testWidgets('onRated styles the rating while it shows a value', (
+      tester,
+    ) async {
+      final style = RatingStyler()
+          .valueText(TextStyler().color(const Color(0xFF000001)))
+          .onRated(
+            RatingStyler().valueText(
+              TextStyler().color(const Color(0xFF000002)),
+            ),
+          );
+      Color? valueColor() => tester
+          .widget<StyledText>(
+            find.byWidgetPredicate(
+              (widget) => widget is StyledText && widget.text == 'Not rated',
+              skipOffstage: false,
+            ),
+          )
+          .styleSpec
+          ?.spec
+          .style
+          ?.color;
+
+      await tester.pumpRemixApp(_Host(log: [], style: style));
+      expect(valueColor(), const Color(0xFF000001));
+
+      await tester.tap(_star(2));
+      await tester.pumpAndSettle();
+      expect(valueColor(), const Color(0xFF000002));
+    });
+
     test('default value labels', () {
       expect(RemixRating.defaultValueLabel(null, 5), 'Not rated');
       expect(RemixRating.defaultValueLabel(1, 5), 'Poor');
