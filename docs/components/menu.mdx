@@ -432,7 +432,8 @@ runs. The leaving content cannot be focused, activated, or reached by assistive
 technology. Toggling the trigger again resumes opening from the current
 progress. When `onCloseRequested` is set, the menu stays open until it calls
 `hideOverlay`, and that call plays the exit. Reduced motion also finishes
-transitions already in progress. Submenu panels are not wrapped.
+transitions already in progress, unless the transition sets
+`reducedMotionDuration`, which keeps a short open and close at that pace. Submenu panels are not wrapped.
 
 ## Sections
 

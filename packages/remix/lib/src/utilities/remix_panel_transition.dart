@@ -59,14 +59,15 @@ typedef RemixPanelTransitionBuilder =
 /// ```
 ///
 /// While the user asks to reduce motion the panel opens and closes at once,
-/// whatever the durations. Without a transition the component keeps its
-/// default motion.
+/// whatever the durations, unless [reducedMotionDuration] is set. Without a
+/// transition the component keeps its default motion.
 @immutable
 final class RemixPanelTransition {
   const RemixPanelTransition({
     required this.builder,
     this.duration = const Duration(milliseconds: 200),
     this.reverseDuration,
+    this.reducedMotionDuration,
   });
 
   /// Wraps the panel.
@@ -78,21 +79,32 @@ final class RemixPanelTransition {
   /// How long the panel takes to close. Defaults to [duration].
   final Duration? reverseDuration;
 
+  /// How long the panel takes to open and to close while the user asks to
+  /// reduce motion.
+  ///
+  /// `null`, the default, opens and closes at once. Set it to keep a short
+  /// fade; the [builder] still runs, so check `remixReducedMotionOf(context)`
+  /// there and drop any travel or scale.
+  final Duration? reducedMotionDuration;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is RemixPanelTransition &&
           builder == other.builder &&
           duration == other.duration &&
-          reverseDuration == other.reverseDuration;
+          reverseDuration == other.reverseDuration &&
+          reducedMotionDuration == other.reducedMotionDuration;
 
   @override
-  int get hashCode => Object.hash(builder, duration, reverseDuration);
+  int get hashCode =>
+      Object.hash(builder, duration, reverseDuration, reducedMotionDuration);
 
   @override
   String toString() =>
       'RemixPanelTransition(duration: $duration, '
-      'reverseDuration: $reverseDuration)';
+      'reverseDuration: $reverseDuration, '
+      'reducedMotionDuration: $reducedMotionDuration)';
 }
 
 /// Runs the open and close animation of one overlay component's panel.
@@ -174,20 +186,23 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
       animationBehavior: AnimationBehavior.preserve,
     );
     _pace(controller, transition);
-    if (_reduceMotion) {
+    if (_jumps(transition)) {
       controller.value = 1;
     } else {
       controller.forward(from: from);
     }
   }
 
-  static void _pace(
-    AnimationController controller,
-    RemixPanelTransition transition,
-  ) {
+  /// Whether [transition] skips its animation under the current setting.
+  bool _jumps(RemixPanelTransition transition) =>
+      _reduceMotion && transition.reducedMotionDuration == null;
+
+  void _pace(AnimationController controller, RemixPanelTransition transition) {
+    final reduced = _reduceMotion ? transition.reducedMotionDuration : null;
     controller
-      ..duration = transition.duration
-      ..reverseDuration = transition.reverseDuration ?? transition.duration;
+      ..duration = reduced ?? transition.duration
+      ..reverseDuration =
+          reduced ?? transition.reverseDuration ?? transition.duration;
   }
 
   /// Starts or updates the transition the mounted panel resolved.
@@ -210,9 +225,11 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
   void updateReducedMotion(bool reduceMotion) {
     _reduceMotion = reduceMotion;
     final controller = _controller;
-    if (!reduceMotion || controller == null || !controller.isAnimating) {
-      return;
-    }
+    final transition = _transition;
+    if (controller == null) return;
+    if (transition != null) _pace(controller, transition);
+    if (!reduceMotion || !controller.isAnimating) return;
+    if (transition != null && !_jumps(transition)) return;
     controller.stop(canceled: false);
     controller.value = isExiting ? 0 : 1;
   }
@@ -246,7 +263,7 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
       if (transition == null ||
           controller == null ||
           controller.value == 0 ||
-          _reduceMotion) {
+          _jumps(transition)) {
         hide();
         return;
       }

@@ -242,7 +242,8 @@ When RawAutocomplete removes the live panel, the combobox uses
 `NakedCombobox.exitBuilder` to paint an inert copy at the previous bounds in
 the same frame and play the exit. The copy does not keep a scroll offset, and
 the exit cannot stagger rows. `onClose` runs when the live panel unmounts,
-not after the exit. Reduced motion opens and closes at once. Use a top-level
+not after the exit. Reduced motion opens and closes at once unless the
+transition sets `reducedMotionDuration`. Use a top-level
 function as the builder: a transition is compared by its builder's identity.
 
 ## Constructor

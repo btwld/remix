@@ -380,7 +380,9 @@ transition in a `const` or `final`.
 ## Reduced motion
 
 When the user asks for reduced motion, the menu opens and closes without its
-fade and scale. See [Reduced motion](/guides/styling-components#reduced-motion) for the
+fade and scale. A style `RemixPanelTransition` with `reducedMotionDuration`
+keeps a short animation instead; check `remixReducedMotionOf(context)` in its
+builder to drop travel and scale. See [Reduced motion](/guides/styling-components#reduced-motion) for the
 signals Remix reads.
 
 ## Constructor
