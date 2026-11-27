@@ -18,4 +18,5 @@ import '../../rendering/remix_box_effects.dart';
 part 'select_spec.dart';
 part 'select_style.dart';
 part 'select_widget.dart';
+part 'multi_select_widget.dart';
 part 'select.g.dart';

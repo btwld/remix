@@ -119,6 +119,9 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
   RemixBoxEffectsSpec? get containerEffects;
   double? get indicatorOpacity;
   double? get placeholderOpacity;
+  StyleSpec<BoxSpec> get chip;
+  StyleSpec<TextSpec> get chipLabel;
+  StyleSpec<TextSpec> get overflowLabel;
 
   @override
   Type get type => SelectTriggerSpec;
@@ -133,6 +136,9 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
     RemixBoxEffectsSpec? containerEffects,
     double? indicatorOpacity,
     double? placeholderOpacity,
+    StyleSpec<BoxSpec>? chip,
+    StyleSpec<TextSpec>? chipLabel,
+    StyleSpec<TextSpec>? overflowLabel,
   }) {
     return SelectTriggerSpec(
       container: container ?? this.container,
@@ -143,6 +149,9 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
       containerEffects: containerEffects ?? this.containerEffects,
       indicatorOpacity: indicatorOpacity ?? this.indicatorOpacity,
       placeholderOpacity: placeholderOpacity ?? this.placeholderOpacity,
+      chip: chip ?? this.chip,
+      chipLabel: chipLabel ?? this.chipLabel,
+      overflowLabel: overflowLabel ?? this.overflowLabel,
     );
   }
 
@@ -169,6 +178,9 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
         other?.placeholderOpacity,
         t,
       ),
+      chip: chip.lerp(other?.chip, t),
+      chipLabel: chipLabel.lerp(other?.chipLabel, t),
+      overflowLabel: overflowLabel.lerp(other?.overflowLabel, t),
     );
   }
 
@@ -182,6 +194,9 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
     containerEffects,
     indicatorOpacity,
     placeholderOpacity,
+    chip,
+    chipLabel,
+    overflowLabel,
   ];
 
   @override
@@ -231,7 +246,10 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DoubleProperty('indicatorOpacity', indicatorOpacity))
-      ..add(DoubleProperty('placeholderOpacity', placeholderOpacity));
+      ..add(DoubleProperty('placeholderOpacity', placeholderOpacity))
+      ..add(DiagnosticsProperty('chip', chip))
+      ..add(DiagnosticsProperty('chipLabel', chipLabel))
+      ..add(DiagnosticsProperty('overflowLabel', overflowLabel));
   }
 }
 
@@ -1146,6 +1164,9 @@ class SelectTriggerStyler
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<double>? $indicatorOpacity;
   final Prop<double>? $placeholderOpacity;
+  final Prop<StyleSpec<BoxSpec>>? $chip;
+  final Prop<StyleSpec<TextSpec>>? $chipLabel;
+  final Prop<StyleSpec<TextSpec>>? $overflowLabel;
 
   const SelectTriggerStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
@@ -1156,6 +1177,9 @@ class SelectTriggerStyler
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<double>? indicatorOpacity,
     Prop<double>? placeholderOpacity,
+    Prop<StyleSpec<BoxSpec>>? chip,
+    Prop<StyleSpec<TextSpec>>? chipLabel,
+    Prop<StyleSpec<TextSpec>>? overflowLabel,
     super.variants,
     super.modifier,
     super.animation,
@@ -1166,7 +1190,10 @@ class SelectTriggerStyler
        $indicator = indicator,
        $containerEffects = containerEffects,
        $indicatorOpacity = indicatorOpacity,
-       $placeholderOpacity = placeholderOpacity;
+       $placeholderOpacity = placeholderOpacity,
+       $chip = chip,
+       $chipLabel = chipLabel,
+       $overflowLabel = overflowLabel;
 
   SelectTriggerStyler({
     FlexBoxStyler? container,
@@ -1177,6 +1204,9 @@ class SelectTriggerStyler
     RemixBoxEffectsMix? containerEffects,
     double? indicatorOpacity,
     double? placeholderOpacity,
+    BoxStyler? chip,
+    TextStyler? chipLabel,
+    TextStyler? overflowLabel,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<SelectTriggerSpec>>? variants,
@@ -1189,6 +1219,9 @@ class SelectTriggerStyler
          containerEffects: Prop.maybeMix(containerEffects),
          indicatorOpacity: Prop.maybe(indicatorOpacity),
          placeholderOpacity: Prop.maybe(placeholderOpacity),
+         chip: Prop.maybeMix(chip),
+         chipLabel: Prop.maybeMix(chipLabel),
+         overflowLabel: Prop.maybeMix(overflowLabel),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -1210,6 +1243,12 @@ class SelectTriggerStyler
       SelectTriggerStyler().indicatorOpacity(value);
   factory SelectTriggerStyler.placeholderOpacity(double value) =>
       SelectTriggerStyler().placeholderOpacity(value);
+  factory SelectTriggerStyler.chip(BoxStyler value) =>
+      SelectTriggerStyler().chip(value);
+  factory SelectTriggerStyler.chipLabel(TextStyler value) =>
+      SelectTriggerStyler().chipLabel(value);
+  factory SelectTriggerStyler.overflowLabel(TextStyler value) =>
+      SelectTriggerStyler().overflowLabel(value);
   factory SelectTriggerStyler.color(Color value) =>
       SelectTriggerStyler().color(value);
   factory SelectTriggerStyler.gradient(GradientMix value) =>
@@ -1779,6 +1818,9 @@ class SelectTriggerStyler
     'containerEffects',
     'indicatorOpacity',
     'placeholderOpacity',
+    'chip',
+    'chipLabel',
+    'overflowLabel',
     'animation',
     'modifier',
     'variants',
@@ -1826,6 +1868,21 @@ class SelectTriggerStyler
     return merge(SelectTriggerStyler(placeholderOpacity: value));
   }
 
+  /// Sets the chip.
+  SelectTriggerStyler chip(BoxStyler value) {
+    return merge(SelectTriggerStyler(chip: value));
+  }
+
+  /// Sets the chipLabel.
+  SelectTriggerStyler chipLabel(TextStyler value) {
+    return merge(SelectTriggerStyler(chipLabel: value));
+  }
+
+  /// Sets the overflowLabel.
+  SelectTriggerStyler overflowLabel(TextStyler value) {
+    return merge(SelectTriggerStyler(overflowLabel: value));
+  }
+
   /// Sets the animation configuration.
   @override
   SelectTriggerStyler animate(AnimationConfig value) {
@@ -1870,6 +1927,9 @@ class SelectTriggerStyler
         $placeholderOpacity,
         other?.$placeholderOpacity,
       ),
+      chip: MixOps.merge($chip, other?.$chip),
+      chipLabel: MixOps.merge($chipLabel, other?.$chipLabel),
+      overflowLabel: MixOps.merge($overflowLabel, other?.$overflowLabel),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1888,6 +1948,9 @@ class SelectTriggerStyler
       containerEffects: MixOps.resolve(context, $containerEffects),
       indicatorOpacity: MixOps.resolve(context, $indicatorOpacity),
       placeholderOpacity: MixOps.resolve(context, $placeholderOpacity),
+      chip: MixOps.resolve(context, $chip),
+      chipLabel: MixOps.resolve(context, $chipLabel),
+      overflowLabel: MixOps.resolve(context, $overflowLabel),
     );
 
     return StyleSpec(
@@ -1908,7 +1971,10 @@ class SelectTriggerStyler
       ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('indicatorOpacity', $indicatorOpacity))
-      ..add(DiagnosticsProperty('placeholderOpacity', $placeholderOpacity));
+      ..add(DiagnosticsProperty('placeholderOpacity', $placeholderOpacity))
+      ..add(DiagnosticsProperty('chip', $chip))
+      ..add(DiagnosticsProperty('chipLabel', $chipLabel))
+      ..add(DiagnosticsProperty('overflowLabel', $overflowLabel));
   }
 
   @override
@@ -1921,6 +1987,9 @@ class SelectTriggerStyler
     $containerEffects,
     $indicatorOpacity,
     $placeholderOpacity,
+    $chip,
+    $chipLabel,
+    $overflowLabel,
     $animation,
     $modifier,
     $variants,
