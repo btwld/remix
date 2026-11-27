@@ -1059,6 +1059,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     ValueChanged<int>? onPageSizeChanged,
     double minimumWidth = 0,
     WidgetBuilder? emptyBuilder,
+    WidgetBuilder? footerBuilder,
     RemixDataTableLabels labels = const RemixDataTableLabels(),
     RemixDataTablePageRangeFormatter pageRangeFormatter =
         remixDefaultDataTablePageRangeFormatter,
@@ -1087,6 +1088,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
       onPageSizeChanged: onPageSizeChanged,
       minimumWidth: minimumWidth,
       emptyBuilder: emptyBuilder,
+      footerBuilder: footerBuilder,
       labels: labels,
       pageRangeFormatter: pageRangeFormatter,
       sortableIcon: sortableIcon,
