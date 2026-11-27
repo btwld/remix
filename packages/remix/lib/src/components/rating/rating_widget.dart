@@ -226,8 +226,8 @@ class _RemixRatingState extends State<RemixRating> {
 
   void _syncStates() => _states.update(WidgetState.disabled, !_interactive);
 
-  void _hoverStar(int star, bool hovered) {
-    if (hovered && _preview != star) setState(() => _preview = star);
+  void _enterStar(int star) {
+    if (_interactive && _preview != star) setState(() => _preview = star);
   }
 
   void _leaveStars() {
@@ -317,7 +317,7 @@ class _RemixRatingState extends State<RemixRating> {
                       star,
                       widget.max,
                     ),
-                    onHoverChange: (hovered) => _hoverStar(star, hovered),
+                    onEnter: () => _enterStar(star),
                     style: widget.styleSpec == null ? style : null,
                     styleSpec: widget.styleSpec == null ? null : spec.star,
                     ratingSpec: spec,
@@ -373,7 +373,7 @@ class _RatingStar extends StatelessWidget {
     required this.star,
     required this.allowClear,
     required this.semanticLabel,
-    required this.onHoverChange,
+    required this.onEnter,
     required this.style,
     required this.styleSpec,
     required this.ratingSpec,
@@ -382,65 +382,70 @@ class _RatingStar extends StatelessWidget {
   final RemixRatingStarState star;
   final bool allowClear;
   final String semanticLabel;
-  final ValueChanged<bool> onHoverChange;
+  final VoidCallback onEnter;
   final RatingStyler? style;
   final StyleSpec<RatingStarSpec>? styleSpec;
   final RatingSpec ratingSpec;
 
   @override
   Widget build(BuildContext context) {
-    return NakedRadio<int>(
-      value: star.star,
-      toggleable: allowClear,
-      semanticLabel: semanticLabel,
-      onHoverChange: onHoverChange,
-      builder: (context, state, _) {
-        return _RatingStarScope(
-          state: star,
-          child: WidgetStateProvider(
-            states: state.states,
-            child: Builder(
-              builder: (context) {
-                // Resolve under this star's states and scope so widget-state
-                // and star variants apply together.
-                final resolved = styleSpec ?? style!.build(context).spec.star;
+    // The preview follows the pointer directly: the radio's hover state waits
+    // for the focus highlight mode, which stays touch on some platforms until
+    // the first press.
+    return MouseRegion(
+      onEnter: (_) => onEnter(),
+      child: NakedRadio<int>(
+        value: star.star,
+        toggleable: allowClear,
+        semanticLabel: semanticLabel,
+        builder: (context, state, _) {
+          return _RatingStarScope(
+            state: star,
+            child: WidgetStateProvider(
+              states: state.states,
+              child: Builder(
+                builder: (context) {
+                  // Resolve under this star's states and scope so widget-state
+                  // and star variants apply together.
+                  final resolved = styleSpec ?? style!.build(context).spec.star;
 
-                return StyleSpecBuilder<RatingStarSpec>(
-                  styleSpec: resolved,
-                  builder: (context, spec) {
-                    final size = spec.glyphSize ?? 24;
-                    return RemixBoxAdapter(
-                      styleSpec: spec.container,
-                      containerEffects: spec.containerEffects,
-                      child: Transform.scale(
-                        scale: spec.glyphScale ?? 1,
-                        child: SizedBox.square(
-                          dimension: size,
-                          child: RemixReducedMotionBuilder(
-                            builder: (context, reduceMotion) =>
-                                _RatingStarGlyph(
-                                  spec: spec,
-                                  fill: star.isFilled ? 1 : 0,
-                                  kept: star.isKept ? 1 : 0,
-                                  fillMotion: ratingSpec.fillMotion,
-                                  fillDelay:
-                                      (ratingSpec.fillStagger ??
-                                          Duration.zero) *
-                                      star.sweepOrder,
-                                  keptMotion: ratingSpec.keptMotion,
-                                  reduceMotion: reduceMotion,
-                                ),
+                  return StyleSpecBuilder<RatingStarSpec>(
+                    styleSpec: resolved,
+                    builder: (context, spec) {
+                      final size = spec.glyphSize ?? 24;
+                      return RemixBoxAdapter(
+                        styleSpec: spec.container,
+                        containerEffects: spec.containerEffects,
+                        child: Transform.scale(
+                          scale: spec.glyphScale ?? 1,
+                          child: SizedBox.square(
+                            dimension: size,
+                            child: RemixReducedMotionBuilder(
+                              builder: (context, reduceMotion) =>
+                                  _RatingStarGlyph(
+                                    spec: spec,
+                                    fill: star.isFilled ? 1 : 0,
+                                    kept: star.isKept ? 1 : 0,
+                                    fillMotion: ratingSpec.fillMotion,
+                                    fillDelay:
+                                        (ratingSpec.fillStagger ??
+                                            Duration.zero) *
+                                        star.sweepOrder,
+                                    keptMotion: ratingSpec.keptMotion,
+                                    reduceMotion: reduceMotion,
+                                  ),
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

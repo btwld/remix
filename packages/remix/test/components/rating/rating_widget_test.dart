@@ -97,15 +97,9 @@ List<SemanticsNode> _radios(WidgetTester tester) =>
         )
         .toList();
 
-/// Hover highlights follow the focus highlight mode, which is touch on the
-/// test platform until a key or mouse press switches it.
+/// The test platform keeps the touch highlight mode, as a phone with a mouse
+/// does, so the preview must not depend on hover highlights.
 Future<TestGesture> _mouse(WidgetTester tester) async {
-  FocusManager.instance.highlightStrategy =
-      FocusHighlightStrategy.alwaysTraditional;
-  addTearDown(
-    () => FocusManager.instance.highlightStrategy =
-        FocusHighlightStrategy.automatic,
-  );
   final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
   addTearDown(mouse.removePointer);
   return mouse;
