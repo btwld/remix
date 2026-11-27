@@ -111,20 +111,20 @@ void main() {
         >{
           FortalCheckboxSize.size1: (
             fontSize: 12,
-            lineHeight: 16 / 12,
-            letterSpacing: 0.0025 * 12,
+            lineHeight: 1.4,
+            letterSpacing: -0.01 * 12,
             gap: 4,
           ),
           FortalCheckboxSize.size2: (
-            fontSize: 14,
-            lineHeight: 20 / 14,
-            letterSpacing: 0,
+            fontSize: 13,
+            lineHeight: 1.4,
+            letterSpacing: -0.01 * 13,
             gap: 8,
           ),
           FortalCheckboxSize.size3: (
-            fontSize: 16,
-            lineHeight: 24 / 16,
-            letterSpacing: 0,
+            fontSize: 15,
+            lineHeight: 1.4,
+            letterSpacing: -0.01 * 15,
             gap: 8,
           ),
         };

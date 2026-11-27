@@ -51,9 +51,9 @@ void main() {
 
   for (final (size, height, fontSize, paddingX, gap, radius, activeSpacing)
       in const [
-        (FortalSegmentedControlSize.size1, 24.0, 12.0, 12.0, 4.0, 4.0, -0.12),
-        (FortalSegmentedControlSize.size2, 32.0, 14.0, 16.0, 8.0, 4.0, -0.14),
-        (FortalSegmentedControlSize.size3, 40.0, 16.0, 16.0, 12.0, 6.0, -0.16),
+        (FortalSegmentedControlSize.size1, 24.0, 12.0, 12.0, 4.0, 10.0, -0.12),
+        (FortalSegmentedControlSize.size2, 32.0, 13.0, 16.0, 8.0, 10.0, -0.14),
+        (FortalSegmentedControlSize.size3, 40.0, 15.0, 16.0, 12.0, 12.0, -0.15),
       ]) {
     testWidgets('${size.name} matches specified track and item metrics', (
       tester,
@@ -228,7 +228,7 @@ void main() {
     ]);
     expect(effects.overContent?.shadows, isEmpty);
     expect(item.label.spec.style?.color, result.grayA8);
-    expect(_radius(item.container.spec), 4);
+    expect(_radius(item.container.spec), 10);
   });
 
   testWidgets('inactive hover relies on track clipping and focus stays round', (
@@ -243,7 +243,7 @@ void main() {
     expect(_color(hovered.spec.item.spec.container.spec), idle.grayA2);
     expect(_radiusOrNull(hovered.spec.item.spec.container.spec), isNull);
     expect(_color(pressed.spec.item.spec.container.spec), isNull);
-    expect(_radius(focused.spec.item.spec.container.spec), 4);
+    expect(_radius(focused.spec.item.spec.container.spec), 10);
   });
 
   testWidgets('selected labels use medium tab typography', (tester) async {
@@ -267,7 +267,7 @@ void main() {
     expect(size1.spec.item.spec.label.spec.style?.letterSpacing, -0.12);
     expect(size1.spec.item.spec.label.spec.style?.wordSpacing, 0);
     expect(size2.spec.item.spec.label.spec.style?.letterSpacing, -0.14);
-    expect(size3.spec.item.spec.label.spec.style?.letterSpacing, -0.16);
+    expect(size3.spec.item.spec.label.spec.style?.letterSpacing, -0.15);
   });
 }
 

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "https://github.com/rsms/inter",
+    "tag": "v4.1",
+    "commit": "e3a3d4c57d5ecc01453a575621882a384c1995a3",
+    "releaseAsset": "https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip",
+    "releaseAssetSha256": "9883fdd4a49d4fb66bd8177ba6625ef9a64aa45899767dde3d36aa425756b11e",
+    "license": "OFL-1.1"
+  },
+  "license": {
+    "path": "lib/fonts/inter/OFL.txt",
+    "source": "LICENSE.txt",
+    "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a"
+  },
+  "fonts": [
+    {
+      "path": "lib/fonts/inter/Inter-Regular.ttf",
+      "family": "Inter",
+      "weight": 400,
+      "source": "extras/ttf/Inter-Regular.ttf",
+      "sha256": "40d692fce188e4471e2b3cba937be967878f631ad3ebbbdcd587687c7ebe0c82"
+    },
+    {
+      "path": "lib/fonts/inter/Inter-Medium.ttf",
+      "family": "Inter",
+      "weight": 500,
+      "source": "extras/ttf/Inter-Medium.ttf",
+      "sha256": "97ad806f526e41546d46365bb3a393145f75b7b1568913db74549ad8b8dba872"
+    },
+    {
+      "path": "lib/fonts/inter/Inter-SemiBold.ttf",
+      "family": "Inter",
+      "weight": 600,
+      "source": "extras/ttf/Inter-SemiBold.ttf",
+      "sha256": "78a843fade9d4612a5567302fb595b56976eb5fcebf4fea5a5912d638bafcde3"
+    },
+    {
+      "path": "lib/fonts/inter/Inter-Bold.ttf",
+      "family": "Inter",
+      "weight": 700,
+      "source": "extras/ttf/Inter-Bold.ttf",
+      "sha256": "288316099b1e0a47a4716d159098005eef7c0066921f34e3200393dbdb01947f"
+    }
+  ]
+}

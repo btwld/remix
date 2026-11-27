@@ -116,8 +116,8 @@ DisclosureStyler _surface(UiDisclosureSize size) => DisclosureStyler()
     )
     .trigger(.color(UiTokens.gray1()))
     .content(.foregroundDecoration(_dividerAbove(UiTokens.gray6())))
-    .onHovered(.trigger(.color(UiTokens.gray2())))
-    .onPressed(.trigger(.color(UiTokens.gray3())))
+    .onHovered(.trigger(.color(UiTokens.gray3())))
+    .onPressed(.trigger(.color(UiTokens.gray4())))
     .onFocusVisible(.triggerEffects(uiFocusOutline()))
     .onDisabled(_disabled());
 

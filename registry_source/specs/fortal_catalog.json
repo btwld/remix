@@ -12,7 +12,8 @@
           "serra",
           "sol",
           "duna",
-          "caju"
+          "caju",
+          "jambo"
         ],
         "default": "orla"
       },
@@ -49,52 +50,32 @@
     "focusRing": {
       "width": 2,
       "offset": 2,
-      "color": "accent8"
+      "color": "accentA8"
     },
     "typeSizes": [
       12,
-      14,
-      16,
-      18,
+      13,
+      15,
+      17,
       20,
-      24,
+      22,
       28,
-      36,
-      60
+      34,
+      40
     ],
-    "colorSource": "@radix-ui/colors 3.0.0",
-    "pairings": {
-      "orla": [
-        "gray",
-        "gray"
-      ],
-      "mar": [
-        "teal",
-        "sage"
-      ],
-      "ceu": [
-        "blue",
-        "slate"
-      ],
-      "serra": [
-        "gold",
-        "olive"
-      ],
-      "sol": [
-        "amber",
-        "sand"
-      ],
-      "duna": [
-        "brown",
-        "sand"
-      ],
-      "caju": [
-        "orange",
-        "sand"
-      ]
+    "colorSource": "specs/fortal_colors.json",
+    "fontFamilies": {
+      "body": "Inter",
+      "display": "Geist",
+      "mono": "Geist Mono"
+    },
+    "highContrast": {
+      "default": false,
+      "switch": "FortalThemeData.highContrast"
     }
   },
   "contrast": {
+    "appliesTo": "highContrast",
     "solidAndHover": 4.5,
     "secondaryOnBackground": 4.5,
     "primaryOnFills": 7,
@@ -634,6 +615,41 @@
         "test/fortal/fortal_control_matrix_test.dart",
         "test/fortal/fortal_high_contrast_test.dart",
         "test/fortal/spec_conformance_test.dart"
+      ]
+    },
+    {
+      "id": "multi_select",
+      "fortalType": "FortalMultiSelect",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        }
+      },
+      "defaults": {
+        "highContrast": false,
+        "enabled": true,
+        "maxVisibleChips": 2
+      },
+      "supportedStyleProps": [
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "focused",
+        "open",
+        "optionFocused",
+        "optionDisabled",
+        "disabled",
+        "highContrast"
+      ],
+      "tests": [
+        "test/fortal/multi_select_test.dart"
       ]
     },
     {

@@ -1,8 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
-import 'package:registry_source/src/fortal/theme/computed.dart'
-    show computeAccentIndicatorContrast;
 import 'package:remix/remix.dart';
 
 import '../helpers/contrast.dart';
@@ -22,6 +20,7 @@ void main() {
     'sol': sol,
     'duna': duna,
     'caju': caju,
+    'jambo': jambo,
     'fortalError': fortalError,
   };
   const white = Color(0xffffffff);
@@ -35,7 +34,14 @@ void main() {
       tester,
     ) async {
       for (final MapEntry(key: name, value: palette) in palettes.entries) {
-        final colors = dark ? palette.dark : palette.light;
+        // The gates run under high contrast, which fits the mark fills.
+        final colors = resolveFortalTokens(
+          FortalThemeConfig(
+            accentPalette: palette,
+            brightness: dark ? .dark : .light,
+            highContrast: true,
+          ),
+        ).accent;
         for (final state in [null, WidgetState.hovered, WidgetState.pressed]) {
           final resolved = await resolveInFortalTheme(
             tester,
@@ -56,6 +62,7 @@ void main() {
             },
             accentPalette: palette,
             mode: dark ? .dark : .light,
+            highContrast: true,
             states: {WidgetState.selected, ?state},
           );
           final reason = '$name/$mode/${state?.name ?? 'idle'}';
@@ -111,21 +118,26 @@ void main() {
     });
   }
 
-  test('neutral and chromatic labels retain their contrasting mark policy', () {
+  test('labels are the page colour and high contrast marks keep 3:1', () {
     for (final MapEntry(key: name, value: palette) in palettes.entries) {
-      if (name == 'sol') continue;
-      for (final colors in [palette.light, palette.dark]) {
+      for (final dark in [false, true]) {
+        final colors = dark ? palette.dark : palette.light;
         expect(
           colors.contrast,
-          name == 'orla' && identical(colors, orla.dark)
-              ? const Color(0xff111111)
-              : white,
+          dark ? const Color(0xff141414) : white,
           reason: name,
+        );
+        final fitted = resolveFortalTokens(
+          FortalThemeConfig(
+            accentPalette: palette,
+            brightness: dark ? .dark : .light,
+            highContrast: true,
+          ),
         );
         expect(
           contrastRatio(
-            computeAccentIndicatorContrast(colors),
-            colors.indicator,
+            fitted.accentIndicatorContrast,
+            fitted.accent.indicator,
           ),
           greaterThanOrEqualTo(3),
           reason: '$name mark',

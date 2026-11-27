@@ -158,6 +158,7 @@ void main() {
         '@ui/theme/computed.dart',
         '@ui/theme/control_styles.dart',
         '@ui/theme/fortal_colors.dart',
+        '@ui/theme/motion.dart',
         '@ui/theme/palette.dart',
         '@ui/theme/surface_frame.dart',
         '@ui/theme/theme.dart',

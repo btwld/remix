@@ -17,6 +17,7 @@ import 'components/radio.dart' as radio;
 import 'components/switch.dart' as switch_story;
 import 'components/slider.dart' as slider;
 import 'components/select.dart' as select;
+import 'components/multi_select.dart' as multi_select;
 import 'components/combobox.dart' as combobox;
 import 'components/segmented_control.dart' as segmented_control;
 import 'components/textfield.dart' as textfield;
@@ -214,6 +215,11 @@ final _families = <_Family>[
     build: slider.buildRangeSliderCatalogUseCase,
   ),
   (id: 'select', group: 'Inputs', build: select.buildSelectCatalogUseCase),
+  (
+    id: 'multi_select',
+    group: 'Inputs',
+    build: multi_select.buildMultiSelectCatalogUseCase,
+  ),
   (
     id: 'combobox',
     group: 'Inputs',

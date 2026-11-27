@@ -1,3 +1,9 @@
+## Unreleased
+
+### Features
+
+- Re-export `NakedScrollbar` and `NakedTabsScope` from `package:remix/remix.dart`.
+
 ## 1.0.0-rc.7
 
 ### Fixes

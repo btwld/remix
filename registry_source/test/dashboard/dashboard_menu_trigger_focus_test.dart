@@ -73,7 +73,10 @@ void main() {
       (inside) => Offset(rect.left + inside, rect.center.dy),
       (inside) => Offset(rect.right - inside, rect.center.dy),
     ]) {
-      expectNearColor(pixel(focused, at(-3)), focus8);
+      expectNearColor(
+        pixel(focused, at(-3)),
+        Color.alphaBlend(focus8, pixel(idle, at(-3))),
+      );
       expectNearColor(pixel(focused, at(3)), pixel(idle, at(3)));
     }
     expect(tester.getRect(painted), rect);
@@ -191,7 +194,10 @@ void main() {
             (out) => Offset(row.row.left - out, row.row.center.dy),
             (out) => Offset(row.row.right + out, row.row.center.dy),
           ]) {
-            expectNearColor(after(edge(3)), focus8);
+            expectNearColor(
+              after(edge(3)),
+              Color.alphaBlend(focus8, idle(edge(3))),
+            );
             expectNearColor(after(edge(1)), idle(edge(1)));
           }
           // The avatar's own pixels, including its left edge, are untouched.
@@ -385,7 +391,10 @@ void main() {
           (inside) => Offset(rect.left + inside, rect.center.dy),
           (inside) => Offset(rect.right - inside, rect.center.dy),
         ]) {
-          expectNearColor(pixelAt(tester, boundary, focused, at(-out)), ring);
+          expectNearColor(
+            pixelAt(tester, boundary, focused, at(-out)),
+            Color.alphaBlend(ring, pixelAt(tester, boundary, idle, at(-out))),
+          );
           expectNearColor(
             pixelAt(tester, boundary, focused, at(3)),
             pixelAt(tester, boundary, idle, at(3)),

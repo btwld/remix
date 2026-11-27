@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Add `FortalMultiSelect`: a rounded field that shows its picks as muted pill
+  chips and folds the rest into a +N count, over a floating list whose
+  options show a check when picked and stay open while toggling. Sizes
+  `size1` to `size3`; needs the Remix release that ships `RemixMultiSelect`.
 - **Deprecated:** `FortalTokens.transitionFast`, `transitionSlow`,
   `planMaxHeight`, `messageAvatarSize`, and `composerFieldMinHeight` (including
   their installed, prefixed equivalents). Their IDs and scope values are

@@ -4,6 +4,7 @@ items:
   theme:
     dependencies:
       remix: ^1.0.0-rc.7
+      remix_ui_fonts: ^0.1.0
     files:
       - source: templates/theme/computed.dart.tmpl
         target: "@ui/theme/computed.dart"
@@ -11,6 +12,8 @@ items:
         target: "@ui/theme/control_styles.dart"
       - source: templates/theme/fortal_colors.dart.tmpl
         target: "@ui/theme/fortal_colors.dart"
+      - source: templates/theme/motion.dart.tmpl
+        target: "@ui/theme/motion.dart"
       - source: templates/theme/palette.dart.tmpl
         target: "@ui/theme/palette.dart"
       - source: templates/theme/surface_frame.dart.tmpl
@@ -587,6 +590,22 @@ items:
         target: "@ui/recipes/message_recipe.dart"
     exports:
       - recipes/message_recipe.dart
+
+  multi_select:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.3.0
+    files:
+      - source: templates/multi_select/multi_select.dart.tmpl
+        target: "@ui/components/multi_select.dart"
+    generated:
+      - "@ui/components/multi_select.g.dart"
+    exports:
+      - components/multi_select.dart
 
   popover:
     registryDependencies:

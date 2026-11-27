@@ -28,6 +28,7 @@ export 'components/icon_button.dart';
 export 'components/kbd.dart';
 export 'components/link.dart';
 export 'components/menu.dart';
+export 'components/multi_select.dart';
 export 'components/popover.dart';
 export 'components/progress.dart';
 export 'components/radio.dart';

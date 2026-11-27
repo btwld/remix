@@ -136,6 +136,7 @@ String _render(Map<String, Object?> manifest, Directory packageRoot) {
 const _unpagedFamilies = {
   'avatar_group': 'Data display',
   'breadcrumbs': 'Navigation',
+  'multi_select': 'Actions and inputs',
   'search_field': 'Actions and inputs',
   'surface': 'Layout',
 };

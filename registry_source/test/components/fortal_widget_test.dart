@@ -269,7 +269,12 @@ void main() {
           final failedAccents = <FortalAccentColor>[];
           for (final accent in FortalAccentColor.values) {
             final colors = resolveFortalTokens(
-              FortalThemeConfig(accent: accent, brightness: brightness),
+              // The soft-label gate applies to the high contrast switch.
+              FortalThemeConfig(
+                accent: accent,
+                brightness: brightness,
+                highContrast: true,
+              ),
             );
             final ratio = compositedContrast(
               foreground: colors.accentContentAlpha,
