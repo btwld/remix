@@ -39,7 +39,7 @@ class RemixTagInput extends StatefulWidget {
     this.textInputAction,
     this.semanticLabel,
     this.messages = const NakedTagInputMessages(),
-    this.removeLabelBuilder = _defaultRemoveLabel,
+    this.removeLabelBuilder,
     this.style = const TagInputStyler.create(),
     this.styleSpec,
   });
@@ -98,9 +98,10 @@ class RemixTagInput extends StatefulWidget {
   /// Text given to assistive technology.
   final NakedTagInputMessages messages;
 
-  /// Names the remove button for a tag, for pointer tooltips and tests. The
-  /// screen reader action uses [NakedTagInputMessages.removeAction].
-  final String Function(String tag) removeLabelBuilder;
+  /// Names the remove button for a tag, for pointer tooltips and tests.
+  /// Defaults to `Remove <tag>`. The screen reader action uses
+  /// [NakedTagInputMessages.removeAction].
+  final String Function(String tag)? removeLabelBuilder;
 
   final TagInputStyler style;
 
@@ -202,7 +203,9 @@ class _RemixTagInputState extends State<RemixTagInput> {
           item: tag,
           enabled: widget.enabled,
           style: spec.tag,
-          removeLabel: widget.removeLabelBuilder(tag.value),
+          removeLabel: (widget.removeLabelBuilder ?? _defaultRemoveLabel)(
+            tag.value,
+          ),
         ),
     ];
 

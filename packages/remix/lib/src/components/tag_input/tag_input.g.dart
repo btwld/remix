@@ -1016,7 +1016,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
     TextInputAction? textInputAction,
     String? semanticLabel,
     NakedTagInputMessages messages = const NakedTagInputMessages(),
-    String Function(String tag) removeLabelBuilder = _defaultRemoveLabel,
+    String Function(String tag)? removeLabelBuilder,
   }) {
     return RemixTagInput(
       key: key,
