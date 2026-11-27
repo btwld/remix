@@ -21,6 +21,8 @@ class HeroUiModal extends StatelessWidget {
     this.title,
     this.description,
     this.actions,
+    this.onClose,
+    this.closeLabel,
     this.scrollable = false,
     this.modal = true,
     this.semanticLabel,
@@ -40,6 +42,10 @@ class HeroUiModal extends StatelessWidget {
 
   final List<Widget>? actions;
 
+  final VoidCallback? onClose;
+
+  final String? closeLabel;
+
   final bool scrollable;
 
   final bool modal;
@@ -53,6 +59,8 @@ class HeroUiModal extends StatelessWidget {
       title: title,
       description: description,
       actions: actions,
+      onClose: onClose,
+      closeLabel: closeLabel,
       scrollable: scrollable,
       modal: modal,
       semanticLabel: semanticLabel,
