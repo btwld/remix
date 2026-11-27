@@ -184,11 +184,12 @@ class _AccentSwatch extends StatelessWidget {
                 .borderRadius(.all(const Radius.circular(15))),
             icon: .size(15),
           )
-          // A swatch uses the palette's mark fill and selected-mark ink.
-          .color({{typePrefix}}Tokens.accentIndicator())
+          // A swatch is the accent fill with its swatch ink, the pair the
+          // foundation gives labelled accent fills.
+          .color({{typePrefix}}Tokens.accent9())
           .iconColor(const Color(0x00000000))
-          .onHovered(ToggleStyler().color({{typePrefix}}Tokens.accentMarkHover()))
-          .onPressed(ToggleStyler().color({{typePrefix}}Tokens.accentMarkHover()));
+          .onHovered(ToggleStyler().color({{typePrefix}}Tokens.accent10()))
+          .onPressed(ToggleStyler().color({{typePrefix}}Tokens.accent10()));
 
   final {{typePrefix}}AccentColor accent;
   final bool selected;
@@ -220,7 +221,7 @@ class _AccentSwatch extends StatelessWidget {
         style: _style
             .onSelected(
               ToggleStyler()
-                  .iconColor({{typePrefix}}Tokens.accentIndicatorContrast())
+                  .iconColor({{typePrefix}}Tokens.accentSwatchContrast())
                   .merge(ring({{typePrefix}}Tokens.gray12)),
             )
             .onFocusVisible(ring({{typePrefix}}Tokens.focus8)),

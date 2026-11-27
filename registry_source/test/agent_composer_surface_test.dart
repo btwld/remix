@@ -207,7 +207,7 @@ void main() {
         for (final distance in [2.5, 3.5]) {
           expectNearColor(
             await sample(before.center.dx, before.top - distance),
-            ink,
+            Color.alphaBlend(ink, background),
           );
         }
         for (final distance in [0.5, 1.5, 4.5]) {
@@ -224,7 +224,7 @@ void main() {
         final radius = FortalTokens.radius6.resolve(context).x;
         expectNearColor(
           await sample(before.left + radius, before.top - 3),
-          ink,
+          Color.alphaBlend(ink, background),
         );
       },
     );

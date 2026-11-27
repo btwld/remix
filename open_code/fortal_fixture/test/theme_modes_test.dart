@@ -282,7 +282,7 @@ void main() {
     ).gray.scale.step(12);
     await tester.pumpWidget(AcmeTheme(mode: .light, child: app()));
     expect(rendered().color, foreground);
-    expect(rendered().fontSize, 16);
+    expect(rendered().fontSize, 15);
     await tester.pumpWidget(
       AcmeTheme(
         mode: .light,
@@ -293,6 +293,6 @@ void main() {
     expect(rendered().fontSize, 31);
     await tester.pumpWidget(app(textStyle: override, scopeInBuilder: true));
     expect(rendered().color, foreground);
-    expect(rendered().fontSize, 16);
+    expect(rendered().fontSize, 15);
   });
 }

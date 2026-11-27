@@ -74,11 +74,11 @@ void main() {
 
     testWidgets('sizes take the card padding and corners', (tester) async {
       for (final (size, padding, radius) in const [
-        (FortalCardSize.size1, 12.0, 8.0),
-        (FortalCardSize.size2, 16.0, 8.0),
-        (FortalCardSize.size3, 24.0, 12.0),
-        (FortalCardSize.size4, 32.0, 12.0),
-        (FortalCardSize.size5, 48.0, 16.0),
+        (FortalCardSize.size1, 12.0, 14.0),
+        (FortalCardSize.size2, 16.0, 14.0),
+        (FortalCardSize.size3, 24.0, 16.0),
+        (FortalCardSize.size4, 32.0, 16.0),
+        (FortalCardSize.size5, 48.0, 20.0),
       ]) {
         final box = await resolveInFortalTheme(
           tester,

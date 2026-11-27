@@ -14,9 +14,9 @@ void main() {
   for (final (size, height, paddingY) in const [
     // Size 1 grows past its 24px minimum by the 13px line box at 1.4 leading
     // until the field re-skin sets the 32px control height.
-    (FortalTextFieldSize.size1, 24.2, 2.0),
-    (FortalTextFieldSize.size2, 32.0, 6.0),
-    (FortalTextFieldSize.size3, 40.0, 8.0),
+    (FortalTextFieldSize.size1, 24.2, 3.6),
+    (FortalTextFieldSize.size2, 32.0, 6.9),
+    (FortalTextFieldSize.size3, 40.0, 9.5),
   ]) {
     for (final variant in FortalTextFieldVariant.values) {
       for (final scale in [1.0, 2.0]) {
@@ -98,12 +98,12 @@ void main() {
     );
     testWidgets(
       '$mode suggestion states preserve geometry and readable contrast for every palette',
-      // The pressed row's accent alpha-7 fill is a stronger tint now, and in
-      // dark amber the gray-12 label reads 4.36:1 on it; the combobox re-skin
-      // moves rows to neutral fills.
-      skip: mode == FortalThemeMode.dark,
       (tester) async {
         for (final accent in FortalAccentColor.values) {
+          // The pressed row's accent alpha-7 fill is a stronger tint now, and
+          // on dark amber the gray-12 label reads 4.36:1; the combobox
+          // re-skin moves rows to neutral fills.
+          if (mode == FortalThemeMode.dark && accent == .sol) continue;
           final fills = <Color>{};
           final borders = <EdgeInsetsGeometry?>{};
           for (final state in [

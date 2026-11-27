@@ -184,11 +184,12 @@ class _AccentSwatch extends StatelessWidget {
                 .borderRadius(.all(const Radius.circular(15))),
             icon: .size(15),
           )
-          // A swatch uses the palette's mark fill and selected-mark ink.
-          .color(FortalTokens.accentIndicator())
+          // A swatch is the accent fill with its swatch ink, the pair the
+          // foundation gives labelled accent fills.
+          .color(FortalTokens.accent9())
           .iconColor(const Color(0x00000000))
-          .onHovered(ToggleStyler().color(FortalTokens.accentMarkHover()))
-          .onPressed(ToggleStyler().color(FortalTokens.accentMarkHover()));
+          .onHovered(ToggleStyler().color(FortalTokens.accent10()))
+          .onPressed(ToggleStyler().color(FortalTokens.accent10()));
 
   final FortalAccentColor accent;
   final bool selected;
@@ -220,7 +221,15 @@ class _AccentSwatch extends StatelessWidget {
         style: _style
             .onSelected(
               ToggleStyler()
-                  .iconColor(FortalTokens.accentIndicatorContrast())
+                  .iconColor(FortalTokens.accentSwatchContrast())
+                  // The strong tone takes the page colour as its ink, as the
+                  // ink solid's label does.
+                  .onHovered(
+                    ToggleStyler().iconColor(FortalTokens.accentContrast()),
+                  )
+                  .onPressed(
+                    ToggleStyler().iconColor(FortalTokens.accentContrast()),
+                  )
                   .merge(ring(FortalTokens.gray12)),
             )
             .onFocusVisible(ring(FortalTokens.focus8)),

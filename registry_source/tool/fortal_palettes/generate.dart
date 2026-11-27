@@ -119,7 +119,17 @@ Set<String> reservedPaletteNames(String typePrefix) => {
   errorPaletteName(typePrefix),
   'blackAlpha',
   'whiteAlpha',
-  for (final suffix in ['Neutral', 'FunctionalLight', 'FunctionalDark'])
+  for (final suffix in [
+    'Neutral',
+    'GrayNeutral',
+    'SageNeutral',
+    'SlateNeutral',
+    'OliveNeutral',
+    'SandNeutral',
+    'NeutralPalettes',
+    'FunctionalLight',
+    'FunctionalDark',
+  ])
     '${typePrefix[0].toLowerCase()}${typePrefix.substring(1)}$suffix',
 };
 
@@ -221,6 +231,18 @@ import '$paletteImport';
         'The neutral scale every accent shares, with the neutral control roles.',
   );
   final accents = (source['accents'] as Map).cast<String, dynamic>();
+  out.writeln(
+    '/// Every accent shares [fortalNeutral]; these names remain for callers '
+    'that imported the former tinted neutrals.',
+  );
+  for (final family in ['Gray', 'Sage', 'Slate', 'Olive', 'Sand']) {
+    out.writeln('const fortal${family}Neutral = fortalNeutral;');
+  }
+  out.writeln('const fortalNeutralPalettes = <String, FortalColorTheme>{');
+  for (final name in accents.keys) {
+    out.writeln("'$name': fortalNeutral,");
+  }
+  out.writeln('};');
   for (final entry in accents.entries) {
     _writeTheme(
       out,
@@ -248,6 +270,13 @@ import '$paletteImport';
       out.writeln('${entry.key}: Color(${entry.value}),');
     }
     out.writeln(');');
+  }
+  final provenance = source['source'] as Map<String, dynamic>;
+  out.writeln('// ${provenance['alphaLadders']}');
+  for (final line in (provenance['alphaLaddersLicense'] as String).split(
+    '\n',
+  )) {
+    out.writeln('// $line'.trimRight());
   }
   const opacity = [.02, .04, .07, .11, .16, .24, .35, .48, .62, .74, .86, .94];
   for (final name in ['black', 'white']) {

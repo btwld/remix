@@ -37,8 +37,8 @@ void main() {
 
   for (final (size, fontSize, rowSpacing) in const [
     (FortalDataListSize.size1, 12.0, 12.0),
-    (FortalDataListSize.size2, 14.0, 16.0),
-    (FortalDataListSize.size3, 16.0, 20.0),
+    (FortalDataListSize.size2, 13.0, 16.0),
+    (FortalDataListSize.size3, 15.0, 20.0),
   ]) {
     testWidgets('${size.name} matches specified typography and spacing', (
       tester,
@@ -75,7 +75,7 @@ void main() {
     expect(result.spec.columnSpacing, 22);
     expect(result.spec.labelValueSpacing, 4.4);
     expect(result.spec.minLabelWidth, 120);
-    expect(result.spec.label.spec.style?.fontSize, 17.6);
+    expect(result.spec.label.spec.style?.fontSize, 16.5);
   });
 }
 

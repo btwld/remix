@@ -84,14 +84,14 @@ void main() {
               triggerHeight: 24,
               triggerPadding: 8,
               gap: 4,
-              triggerRadius: 3,
+              triggerRadius: 6,
               triggerIndicatorSize: 9,
               contentPadding: 4,
-              contentRadius: 6,
+              contentRadius: 12,
               itemHeight: 24,
               indicatorWidth: 20,
               indicatorSize: 8,
-              itemRadius: 3,
+              itemRadius: 6,
               itemFontSize: 12,
             ),
           ),
@@ -101,15 +101,15 @@ void main() {
               triggerHeight: 32,
               triggerPadding: 12,
               gap: 8,
-              triggerRadius: 4,
+              triggerRadius: 10,
               triggerIndicatorSize: 9,
               contentPadding: 8,
-              contentRadius: 8,
+              contentRadius: 14,
               itemHeight: 32,
               indicatorWidth: 24,
               indicatorSize: 10,
-              itemRadius: 4,
-              itemFontSize: 14,
+              itemRadius: 10,
+              itemFontSize: 13,
             ),
           ),
           (
@@ -118,15 +118,15 @@ void main() {
               triggerHeight: 40,
               triggerPadding: 16,
               gap: 8,
-              triggerRadius: 6,
+              triggerRadius: 12,
               triggerIndicatorSize: 11,
               contentPadding: 8,
-              contentRadius: 8,
+              contentRadius: 14,
               itemHeight: 32,
               indicatorWidth: 24,
               indicatorSize: 10,
-              itemRadius: 4,
-              itemFontSize: 16,
+              itemRadius: 10,
+              itemFontSize: 15,
             ),
           ),
         ]) {
@@ -208,8 +208,8 @@ void main() {
       );
 
       expect(_radius(spec.trigger.spec.container.spec.box!.spec), 9999);
-      expect(_radius(spec.content.spec.container.spec), 12);
-      expect(_radius(spec.item.spec.container.spec.box!.spec), 6);
+      expect(_radius(spec.content.spec.container.spec), 21);
+      expect(_radius(spec.item.spec.container.spec.box!.spec), 15);
     });
   });
 

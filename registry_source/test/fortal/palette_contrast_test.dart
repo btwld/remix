@@ -559,6 +559,7 @@ void main() {
     expect(custom, isNot(contains('blackAlpha')));
     expect(builtIn, contains('The orla accent palette.'));
     expect(builtIn, contains('const fortalNeutral'));
+    expect(builtIn, contains('const fortalNeutralPalettes'));
     expect(builtIn, contains('const fortalFunctionalLight'));
     expect(builtIn, contains('const fortalError'));
   });
