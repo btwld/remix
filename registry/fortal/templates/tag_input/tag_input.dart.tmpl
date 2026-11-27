@@ -1,0 +1,151 @@
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'tag_input.g.dart';
+
+// One row is a 28px tag or editor inside 7px of padding and a 1px edge: 44px.
+const _shellPadding = 7.0;
+const _gap = 6.0;
+const _rowHeight = 28.0;
+const _editorPaddingX = 5.0;
+// The editor wraps to its own row when less than its 100px basis is left.
+const _editorMinWidth = 100.0;
+const _tagPaddingStart = 9.0;
+const _tagPaddingEnd = 4.0;
+const _tagGap = 3.0;
+const _pill = Radius.circular(9999);
+const _removeSize = 22.0;
+const _removeGlyph = 14.0;
+const _cursorWidth = 1.5;
+const _transparent = Color(0x00000000);
+
+/// The Fortal tag input recipe: a 44px shell of wrapping tags and an inline
+/// editor, with a label above and helper text below.
+///
+/// The shell edge is `gray7` at rest, `gray8` under the pointer and `gray12`
+/// while the editor has focus. Tags are 28px pills on `gray3` with a 1px
+/// `gray7` edge. A picked tag takes an `accent9` edge over an `accentA3`
+/// tint, and its remove glyph darkens to `gray12`. The remove button is a
+/// 22px circle that fills with `gray2` under the pointer.
+///
+/// [highContrast] moves the resting shell and tag edges to `gray8`, which
+/// holds 3:1 against the page.
+@MixWidget(target: RemixTagInput.new)
+TagInputStyler {{valuePrefix}}TagInputStyle({
+  bool highContrast = false,
+  TagInputStyler style = const TagInputStyler.create(),
+}) {
+  final edge = highContrast ? {{typePrefix}}Tokens.gray8() : {{typePrefix}}Tokens.gray7();
+  final text = {{typePrefix}}Tokens.text2.mix();
+
+  return TagInputStyler()
+      .layout(FlexBoxStyler().spacing({{typePrefix}}Tokens.space2()))
+      .label(
+        TextStyler()
+            .style(text)
+            .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
+            .color({{typePrefix}}Tokens.gray12()),
+      )
+      .helperText(
+        TextStyler()
+            .style({{typePrefix}}Tokens.text1.mix())
+            .color({{typePrefix}}Tokens.gray10()),
+      )
+      .padding(.all(_shellPadding))
+      .borderRadius(.all({{typePrefix}}Tokens.radius4()))
+      .border(.all(.color(edge).width({{typePrefix}}Tokens.borderWidth1())))
+      .color({{typePrefix}}Tokens.gray2())
+      .spacing(_gap)
+      .runSpacing(_gap)
+      .editorMinWidth(_editorMinWidth)
+      .editor(
+        BoxStyler()
+            .minHeight(_rowHeight)
+            .padding(.horizontal(_editorPaddingX))
+            .alignment(.centerLeft),
+      )
+      .text(TextStyler().style(text).color({{typePrefix}}Tokens.gray12()))
+      .hintText(TextStyler().style(text).color({{typePrefix}}Tokens.gray10()))
+      .cursorColor({{typePrefix}}Tokens.gray12())
+      .cursorWidth(_cursorWidth)
+      .tag({{valuePrefix}}TagInputTagStyle(highContrast: highContrast))
+      .onHovered(TagInputStyler().border(.all(.color({{typePrefix}}Tokens.gray8()))))
+      .onFocused(TagInputStyler().border(.all(.color({{typePrefix}}Tokens.gray12()))))
+      .variant(
+        ContextVariant.widgetState(.error),
+        TagInputStyler()
+            .border(.all(.color({{typePrefix}}Tokens.error8())))
+            .label(TextStyler().color({{typePrefix}}Tokens.error11()))
+            .helperText(TextStyler().color({{typePrefix}}Tokens.error11()))
+            .cursorColor({{typePrefix}}Tokens.error9()),
+      )
+      .onDisabled(
+        TagInputStyler()
+            .color({{typePrefix}}Tokens.gray3())
+            .text(TextStyler().color({{typePrefix}}Tokens.grayA11()))
+            .hintText(TextStyler().color({{typePrefix}}Tokens.gray9())),
+      )
+      .animate(
+        AnimationConfig.curve(
+          duration: {{typePrefix}}Motion.fast,
+          curve: {{typePrefix}}Motion.easeStandard,
+        ),
+      )
+      .merge(style);
+}
+
+/// The style every tag of [{{valuePrefix}}TagInputStyle] resolves in its own state.
+TagInputTagStyler {{valuePrefix}}TagInputTagStyle({bool highContrast = false}) {
+  final edge = highContrast ? {{typePrefix}}Tokens.gray8() : {{typePrefix}}Tokens.gray7();
+  final pill = BorderRadiusMix.all(_pill);
+
+  return TagInputTagStyler()
+      .minHeight(_rowHeight)
+      .padding(.only(left: _tagPaddingStart, right: _tagPaddingEnd))
+      .spacing(_tagGap)
+      .borderRadius(pill)
+      .border(.all(.color(edge).width({{typePrefix}}Tokens.borderWidth1())))
+      // The fill sits in a wrapper so a picked tag can lay its tint over it.
+      .color(_transparent)
+      .wrap(.box(BoxStyler().color({{typePrefix}}Tokens.gray3()).borderRadius(pill)))
+      .label(
+        TextStyler()
+            .style({{typePrefix}}Tokens.text2.mix())
+            .color({{typePrefix}}Tokens.gray12())
+            .maxLines(1)
+            .softWrap(false),
+      )
+      .removeButton(_removeButton({{typePrefix}}Tokens.gray11()))
+      .onSelected(
+        TagInputTagStyler()
+            .color({{typePrefix}}Tokens.accentA3())
+            .border(.all(.color({{typePrefix}}Tokens.accent9())))
+            .removeButton(_removeButton({{typePrefix}}Tokens.gray12())),
+      )
+      .onDisabled(
+        TagInputTagStyler().label(TextStyler().color({{typePrefix}}Tokens.grayA11())),
+      );
+}
+
+IconButtonStyler _removeButton(Color glyph) => IconButtonStyler()
+    .size(_removeSize, _removeSize)
+    .alignment(.center)
+    .borderRadius(.all(const Radius.circular(_removeSize / 2)))
+    .color(_transparent)
+    .iconColor(glyph)
+    .iconSize(_removeGlyph)
+    .onHovered(
+      IconButtonStyler()
+          .color({{typePrefix}}Tokens.gray2())
+          .iconColor({{typePrefix}}Tokens.gray12()),
+    )
+    .animate(
+      AnimationConfig.curve(
+        duration: {{typePrefix}}Motion.fast,
+        curve: {{typePrefix}}Motion.easeStandard,
+      ),
+    );

@@ -2,10 +2,10 @@ import 'package:remix/remix.dart';
 
 import 'theme_scope.dart' show UiTheme;
 
-/// Design tokens for the Fortal UI system and its paired color themes.
+/// Design tokens for the Fortal UI system.
 ///
-/// Provides color scales (12-step accent/gray), spacing (9-step), radius (6-step),
-/// shadows (6-level), typography (9-size), and functional colors.
+/// Provides color scales (12-step accent and gray), spacing, radius (7-step),
+/// shadows (6-level), typography (9-size), status tones and functional colors.
 ///
 /// Example:
 /// ```dart
@@ -117,16 +117,51 @@ abstract final class UiTokens {
     'ui.accent.indicator-contrast',
   );
 
-  /// Outline of a white switch or slider thumb: the track colour where white
-  /// stands out on the track, [controlBorder] where the track is too light
-  /// against the page, and a dark ink on bright tracks.
+  /// Outline of a switch or slider thumb. Transparent by default, because
+  /// thumbs carry [shadowThumb]; under the theme's high contrast switch the
+  /// track colour where white stands out on the track, [controlBorder] where
+  /// the track is too light against the page, and a dark ink on bright tracks.
   static const accentThumbRing = ColorToken('ui.accent.thumb-ring');
 
+  /// The slider's filled range; differs from [accentTrack] for dark orla.
+  static const accentRange = ColorToken('ui.accent.range');
+
+  /// Thumb of a selected switch; dark for dark orla, white elsewhere.
+  static const accentThumb = ColorToken('ui.accent.thumb');
+
+  /// Ink on a swatch filled with [accent9], such as a selected calendar day.
+  static const accentSwatchContrast = ColorToken('ui.accent.swatch-contrast');
+
   /// Neutral boundary of active empty controls (unchecked checkbox and radio,
-  /// off switch, surface text input), at least 3:1 against page and panel.
+  /// off switch, surface text input): the strong border, or under the theme's
+  /// high contrast switch a tone fitted to 3:1 against page and panel.
   static const controlBorder = ColorToken('ui.control.border');
 
-  /// Source accent step 8 fitted to the focus ring's 3:1 contrast contract.
+  /// Rail of an off switch and the empty slider track.
+  static const controlTrack = ColorToken('ui.control.track');
+
+  /// Hovered [controlTrack].
+  static const controlTrackHover = ColorToken('ui.control.track-hover');
+
+  /// Thumb of an off switch and of a slider.
+  static const controlThumb = ColorToken('ui.control.thumb');
+
+  /// Status colours, the same under every accent.
+  static const success = ColorToken('ui.success');
+  static const warning = ColorToken('ui.warning');
+  static const info = ColorToken('ui.info');
+
+  /// Categorical tones for tags, status and charts.
+  static const toneTeal = ColorToken('ui.tone.teal');
+  static const toneSky = ColorToken('ui.tone.sky');
+  static const toneOrchid = ColorToken('ui.tone.orchid');
+  static const toneViolet = ColorToken('ui.tone.violet');
+  static const toneRose = ColorToken('ui.tone.rose');
+  static const toneAmber = ColorToken('ui.tone.amber');
+  static const toneGreen = ColorToken('ui.tone.green');
+
+  /// The focus outline: the accent's strong tone at 72 percent, or under the
+  /// theme's high contrast switch step 8 fitted to 3:1 on page and panel.
   static const focus8 = ColorToken('ui.focus.8');
 
   /// Translucent text-selection color (accent alpha step 5).
@@ -329,6 +364,18 @@ abstract final class UiTokens {
   /// Space step 9 - 64px.
   static const space9 = SpaceToken('ui.space.9');
 
+  /// Off-ladder steps the foundation uses: 18px (the large button's inline
+  /// padding), 20px and 56px.
+  static const space18 = SpaceToken('ui.space.18px');
+  static const space20 = SpaceToken('ui.space.20px');
+  static const space56 = SpaceToken('ui.space.56px');
+
+  /// Control heights at sizes 1 to 4: 32, 40, 44 and 48px at 100% scaling.
+  static const controlHeight1 = DoubleToken('ui.control.height.1');
+  static const controlHeight2 = DoubleToken('ui.control.height.2');
+  static const controlHeight3 = DoubleToken('ui.control.height.3');
+  static const controlHeight4 = DoubleToken('ui.control.height.4');
+
   /// Spinner size 3 - 20px at 100% scaling.
   static const spinnerSize3 = DoubleToken('ui.spinner.size.3');
 
@@ -457,23 +504,26 @@ abstract final class UiTokens {
   static const selectGhostMarginX3 = DoubleToken('ui.select.ghost-margin-x.3');
   static const selectGhostMarginY3 = DoubleToken('ui.select.ghost-margin-y.3');
 
-  /// Radius step 1 - 3px.
+  /// Radius step 1 - 6px: small marks.
   static const radius1 = RadiusToken('ui.radius.1');
 
-  /// Radius step 2 - 4px.
+  /// Radius step 2 - 10px: items inside a control.
   static const radius2 = RadiusToken('ui.radius.2');
 
-  /// Radius step 3 - 6px.
+  /// Radius step 3 - 12px: small controls.
   static const radius3 = RadiusToken('ui.radius.3');
 
-  /// Radius step 4 - 8px.
+  /// Radius step 4 - 14px: controls.
   static const radius4 = RadiusToken('ui.radius.4');
 
-  /// Radius step 5 - 12px.
+  /// Radius step 5 - 16px: large controls.
   static const radius5 = RadiusToken('ui.radius.5');
 
-  /// Radius step 6 - 16px.
+  /// Radius step 6 - 20px: panels.
   static const radius6 = RadiusToken('ui.radius.6');
+
+  /// Radius step 7 - 24px: dialogs and large surfaces.
+  static const radius7 = RadiusToken('ui.radius.7');
 
   /// Theme-level full radius, enabled only by [UiRadius.full].
   static const radiusFull = RadiusToken('ui.radius.full');
@@ -508,7 +558,7 @@ abstract final class UiTokens {
   /// Radius step 2 promoted to the control-thumb radius when larger.
   static const radius2OrThumb = RadiusToken('ui.radius.2-or-thumb');
 
-  /// Shadow level 1 - Subtle elevation.
+  /// Shadow level 1 - Resting: hovered buttons.
   static const shadow1 = BoxShadowToken('ui.shadow.1');
 
   /// Shadow level 1 as a [RemixBoxShadow] list.
@@ -517,17 +567,20 @@ abstract final class UiTokens {
   /// Shadow level 2 - Low elevation.
   static const shadow2 = BoxShadowToken('ui.shadow.2');
 
-  /// Shadow level 3 - Medium elevation.
+  /// Shadow level 3 - Raised: tooltips and hovered cards.
   static const shadow3 = BoxShadowToken('ui.shadow.3');
 
   /// Shadow level 4 - High elevation.
   static const shadow4 = BoxShadowToken('ui.shadow.4');
 
-  /// Shadow level 5 - Very high elevation.
+  /// Shadow level 5 - Floating: menus, popovers, dialogs and toasts.
   static const shadow5 = BoxShadowToken('ui.shadow.5');
 
   /// Shadow level 6 - Maximum elevation.
   static const shadow6 = BoxShadowToken('ui.shadow.6');
+
+  /// Three-layer shadow of switch and slider thumbs.
+  static const shadowThumb = BoxShadowToken('ui.shadow.thumb');
 
   static const baseButtonGhostMarginX12 = DoubleToken(
     'ui.base-button.ghost.margin-x.1-2',
@@ -577,32 +630,35 @@ abstract final class UiTokens {
   /// Focus ring offset distance from element edge.
   static const focusRingOffset = SpaceToken('ui.focus.ring.offset');
 
-  /// Text size 1 - 12px (Small labels and metadata).
+  /// Text size 1 - 12px (hints, captions and badges).
   static const text1 = TextStyleToken('ui.text.1');
 
-  /// Text size 2 - 14px (Standard UI text).
+  /// Text size 2 - 13px (control labels: buttons, tabs, menu items).
   static const text2 = TextStyleToken('ui.text.2');
 
-  /// Text size 3 - 16px (Body text and primary content).
+  /// Text size 3 - 15px (body text, the page default).
   static const text3 = TextStyleToken('ui.text.3');
 
-  /// Text size 4 - 18px (Prominent body text).
+  /// Text size 4 - 17px (dialog and card titles).
   static const text4 = TextStyleToken('ui.text.4');
 
-  /// Text size 5 - 20px (Small headings).
+  /// Text size 5 - 20px (small headings).
   static const text5 = TextStyleToken('ui.text.5');
 
-  /// Text size 6 - 24px (Medium headings).
+  /// Text size 6 - 22px (medium headings).
   static const text6 = TextStyleToken('ui.text.6');
 
-  /// Text size 7 - 28px (Large headings).
+  /// Text size 7 - 28px (large headings, display family).
   static const text7 = TextStyleToken('ui.text.7');
 
-  /// Text size 8 - 36px (Extra large headings).
+  /// Text size 8 - 34px (extra large headings, display family).
   static const text8 = TextStyleToken('ui.text.8');
 
-  /// Text size 9 - 60px (Display text).
+  /// Text size 9 - 40px (display text, display family).
   static const text9 = TextStyleToken('ui.text.9');
+
+  /// Typed text in fields: 14px, between [text2] and [text3].
+  static const textField = TextStyleToken('ui.text.field');
 
   /// Light font weight (300).
   static const fontWeightLight = FontWeightToken('ui.font.weight.light');

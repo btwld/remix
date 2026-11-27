@@ -34,9 +34,9 @@ void main() {
   group('sizes', () {
     for (final (size, paddingX, paddingY, minHeight, fontSize, radius)
         in const [
-          (FortalDataTableSize.size1, 8.0, 8.0, 40.0, 14.0, 6.0),
-          (FortalDataTableSize.size2, 12.0, 12.0, 48.0, 14.0, 8.0),
-          (FortalDataTableSize.size3, 16.0, 12.0, 48.0, 16.0, 8.0),
+          (FortalDataTableSize.size1, 8.0, 8.0, 40.0, 13.0, 12.0),
+          (FortalDataTableSize.size2, 12.0, 12.0, 48.0, 13.0, 14.0),
+          (FortalDataTableSize.size3, 16.0, 12.0, 48.0, 15.0, 14.0),
         ]) {
       testWidgets('${size.name} matches the specified Fortal metrics', (
         tester,
@@ -71,7 +71,7 @@ void main() {
         spec.bodyCell.spec.padding!.resolve(TextDirection.ltr).left,
         closeTo(13.2, 1e-9),
       );
-      expect(_radius(spec.container.spec), closeTo(8.8, 1e-9));
+      expect(_radius(spec.container.spec), closeTo(15.4, 1e-9));
     });
   });
 

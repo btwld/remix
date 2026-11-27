@@ -13,15 +13,15 @@ void main() {
 
   group('Fortal Avatar geometry', () {
     const metrics = [
-      (FortalAvatarSize.size1, 24.0, 4.0),
-      (FortalAvatarSize.size2, 32.0, 4.0),
-      (FortalAvatarSize.size3, 40.0, 6.0),
-      (FortalAvatarSize.size4, 48.0, 6.0),
-      (FortalAvatarSize.size5, 64.0, 8.0),
-      (FortalAvatarSize.size6, 80.0, 12.0),
-      (FortalAvatarSize.size7, 96.0, 12.0),
-      (FortalAvatarSize.size8, 128.0, 16.0),
-      (FortalAvatarSize.size9, 160.0, 16.0),
+      (FortalAvatarSize.size1, 24.0, 10.0),
+      (FortalAvatarSize.size2, 32.0, 10.0),
+      (FortalAvatarSize.size3, 40.0, 12.0),
+      (FortalAvatarSize.size4, 48.0, 12.0),
+      (FortalAvatarSize.size5, 64.0, 14.0),
+      (FortalAvatarSize.size6, 80.0, 16.0),
+      (FortalAvatarSize.size7, 96.0, 16.0),
+      (FortalAvatarSize.size8, 128.0, 20.0),
+      (FortalAvatarSize.size9, 160.0, 20.0),
     ];
 
     for (final (size, dimension, radius) in metrics) {

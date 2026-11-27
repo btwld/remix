@@ -9,9 +9,11 @@ import '../../helpers/fortal_text_input_geometry.dart';
 /// Resolved-value coverage for the shared Fortal text-input recipe.
 void main() {
   for (final (size, height, paddingY) in const [
-    (FortalTextFieldSize.size1, 24.0, 4.0),
-    (FortalTextFieldSize.size2, 32.0, 6.0),
-    (FortalTextFieldSize.size3, 40.0, 8.0),
+    // Vertical padding is (height - line box) / 2 at 1x: 3.6, 6.9, 9.5. Size
+    // 1 grows past 24px by the rounding of its 12px line box.
+    (FortalTextFieldSize.size1, 24.2, 3.6),
+    (FortalTextFieldSize.size2, 32.0, 6.9),
+    (FortalTextFieldSize.size3, 40.0, 9.5),
   ]) {
     for (final variant in FortalTextFieldVariant.values) {
       for (final scale in [1.0, 2.0]) {
@@ -54,9 +56,9 @@ void main() {
 
   for (final (size, height, paddingX, softPaddingX, spacing, fontSize, radius)
       in const [
-        (FortalTextFieldSize.size1, 24.0, 8.0, 8.0, 8.0, 12.0, 4.0),
-        (FortalTextFieldSize.size2, 32.0, 8.0, 8.0, 8.0, 14.0, 4.0),
-        (FortalTextFieldSize.size3, 40.0, 12.0, 12.0, 12.0, 16.0, 6.0),
+        (FortalTextFieldSize.size1, 24.0, 8.0, 8.0, 8.0, 12.0, 10.0),
+        (FortalTextFieldSize.size2, 32.0, 8.0, 8.0, 8.0, 13.0, 10.0),
+        (FortalTextFieldSize.size3, 40.0, 12.0, 12.0, 12.0, 15.0, 12.0),
       ]) {
     testWidgets('${size.name} resolves the pinned metrics', (tester) async {
       for (final variant in FortalTextFieldVariant.values) {
@@ -66,13 +68,13 @@ void main() {
 
         expect(container.constraints?.minHeight, height);
         expect(container.constraints?.maxHeight, double.infinity);
-        expect(
-          container.padding?.resolve(TextDirection.ltr),
-          EdgeInsets.symmetric(
-            horizontal: variant == .soft ? softPaddingX : paddingX,
-            vertical: (height - [16.0, 20.0, 24.0][size.index]) / 2,
-          ),
-        );
+        final padding = container.padding!.resolve(TextDirection.ltr);
+        expect(padding.left, variant == .soft ? softPaddingX : paddingX);
+        expect(padding.right, variant == .soft ? softPaddingX : paddingX);
+        // (height - line box) / 2: 3.6, 6.9 and 9.5.
+        final vertical = (height - [16.8, 18.2, 21.0][size.index]) / 2;
+        expect(padding.top, closeTo(vertical, 1e-9));
+        expect(padding.bottom, closeTo(vertical, 1e-9));
         expect(spec.spacing, spacing);
         expect(spec.crossAxisAlignment, CrossAxisAlignment.center);
         expect(spec.text.spec.style?.fontSize, fontSize);
@@ -317,8 +319,10 @@ void main() {
         );
         expect(padding.left, closeTo(expected, 0.000001));
         expect(padding.right, closeTo(expected, 0.000001));
-        expect(padding.top, closeTo([4.4, 6.6, 8.8][size.index], 0.000001));
-        expect(padding.bottom, closeTo([4.4, 6.6, 8.8][size.index], 0.000001));
+        // (height - line box) / 2 at 110 percent: 3.6, 6.9 and 9.5 scaled.
+        final inset = [3.6, 6.9, 9.5][size.index] * 1.1;
+        expect(padding.top, closeTo(inset, 0.000001));
+        expect(padding.bottom, closeTo(inset, 0.000001));
       }
     }
   });

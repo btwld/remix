@@ -12,7 +12,8 @@
           "serra",
           "sol",
           "duna",
-          "caju"
+          "caju",
+          "jambo"
         ],
         "default": "orla"
       },
@@ -49,52 +50,32 @@
     "focusRing": {
       "width": 2,
       "offset": 2,
-      "color": "accent8"
+      "color": "accentA8"
     },
     "typeSizes": [
       12,
-      14,
-      16,
-      18,
+      13,
+      15,
+      17,
       20,
-      24,
+      22,
       28,
-      36,
-      60
+      34,
+      40
     ],
-    "colorSource": "@radix-ui/colors 3.0.0",
-    "pairings": {
-      "orla": [
-        "gray",
-        "gray"
-      ],
-      "mar": [
-        "teal",
-        "sage"
-      ],
-      "ceu": [
-        "blue",
-        "slate"
-      ],
-      "serra": [
-        "gold",
-        "olive"
-      ],
-      "sol": [
-        "amber",
-        "sand"
-      ],
-      "duna": [
-        "brown",
-        "sand"
-      ],
-      "caju": [
-        "orange",
-        "sand"
-      ]
+    "colorSource": "specs/fortal_colors.json",
+    "fontFamilies": {
+      "body": "Inter",
+      "display": "Geist",
+      "mono": "Geist Mono"
+    },
+    "highContrast": {
+      "default": false,
+      "switch": "FortalThemeData.highContrast"
     }
   },
   "contrast": {
+    "appliesTo": "highContrast",
     "solidAndHover": 4.5,
     "secondaryOnBackground": 4.5,
     "primaryOnFills": 7,
@@ -1207,6 +1188,39 @@
       ],
       "tests": [
         "test/components/search_field/search_field_fortal_test.dart"
+      ]
+    },
+    {
+      "id": "tag_input",
+      "fortalType": "FortalTagInput",
+      "enums": {},
+      "defaults": {
+        "highContrast": false,
+        "enabled": true,
+        "readOnly": false,
+        "autofocus": false,
+        "separators": [
+          ","
+        ],
+        "duplicates": "rejectIgnoringCase"
+      },
+      "supportedStyleProps": [
+        "color",
+        "radius"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "focused",
+        "picked",
+        "error",
+        "disabled",
+        "readOnly",
+        "wrapped",
+        "rtl"
+      ],
+      "tests": [
+        "test/fortal/tag_input_test.dart"
       ]
     },
     {

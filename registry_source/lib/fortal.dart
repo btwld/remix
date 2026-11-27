@@ -13,12 +13,15 @@ export 'src/fortal/icons.dart';
 /// THEME
 export 'src/fortal/theme/fortal_colors.dart'
     hide
+        fortalNeutral,
         fortalNeutralPalettes,
         fortalGrayNeutral,
         fortalSageNeutral,
         fortalSlateNeutral,
         fortalOliveNeutral,
-        fortalSandNeutral;
+        fortalSandNeutral,
+        fortalFunctionalLight,
+        fortalFunctionalDark;
 export 'src/fortal/theme/palette.dart';
 export 'src/fortal/theme/theme.dart';
 export 'src/fortal/components/base_button.dart';
@@ -50,6 +53,7 @@ export 'src/fortal/components/popover.dart';
 export 'src/fortal/components/progress.dart';
 export 'src/fortal/components/radio.dart';
 export 'src/fortal/components/search_field.dart';
+export 'src/fortal/components/tag_input.dart';
 export 'src/fortal/components/range_slider.dart';
 export 'src/fortal/components/segmented_control.dart';
 export 'src/fortal/components/select.dart';

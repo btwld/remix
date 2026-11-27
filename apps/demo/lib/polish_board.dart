@@ -234,6 +234,7 @@ final _families = <_Family>[
     group: 'Inputs',
     build: search_field.buildSearchFieldCatalogUseCase,
   ),
+  (id: 'tag_input', group: 'Inputs', build: _tagInputMatrix),
   (
     id: 'textarea',
     group: 'Inputs',
@@ -457,6 +458,18 @@ class _Grid extends CustomPainter {
   @override
   bool shouldRepaint(_Grid oldDelegate) => color != oldDelegate.color;
 }
+
+Widget _tagInputMatrix(BuildContext context) => CatalogMatrix(
+  columns: const ['default'],
+  rows: const ['tags', 'empty'],
+  cellWidth: 280,
+  cell: (row, column) => FortalTagInput(
+    label: 'Topics',
+    hintText: 'Add a tag',
+    value: row == 0 ? const ['design', 'flutter'] : const [],
+    onChanged: (_) {},
+  ),
+);
 
 Widget _menuMatrix(BuildContext context) => CatalogMatrix(
   columns: labelsOf(FortalMenuSize.values),

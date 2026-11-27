@@ -35,6 +35,7 @@ void main() {
     'sol': sol,
     'duna': duna,
     'caju': caju,
+    'jambo': jambo,
     'fortalError': fortalError,
   };
 
@@ -611,6 +612,9 @@ Future<void> _pump(
   await tester.pumpWidget(
     FortalTheme(
       mode: dark ? .dark : .light,
+      // Painted cues are gated under the theme's high contrast switch; the
+      // default look takes the foundation's exact values.
+      highContrast: true,
       child: FortalTheme(
         accentPalette: palette,
         child: WidgetsApp(
