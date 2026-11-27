@@ -137,7 +137,6 @@ const _unpagedFamilies = {
   'avatar_group': 'Data display',
   'breadcrumbs': 'Navigation',
   'context_menu': 'Navigation',
-  'rating': 'Actions and inputs',
   'search_field': 'Actions and inputs',
   'surface': 'Layout',
 };
