@@ -26,6 +26,7 @@ class UiAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
   });
 
   /// The neutral `default` fill.
@@ -43,6 +44,7 @@ class UiAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
   }) : variant = UiAvatarVariant.defaultAvatar;
 
   /// A tinted fill in the avatar's color.
@@ -60,6 +62,7 @@ class UiAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
   }) : variant = UiAvatarVariant.soft;
 
   final UiAvatarVariant variant;
@@ -88,6 +91,8 @@ class UiAvatar extends StatelessWidget {
 
   final RemixAvatarIconBuilder? iconBuilder;
 
+  final Widget? badge;
+
   @override
   Widget build(BuildContext _) {
     return RemixAvatar(
@@ -105,6 +110,7 @@ class UiAvatar extends StatelessWidget {
       labelBuilder: labelBuilder,
       icon: icon,
       iconBuilder: iconBuilder,
+      badge: badge,
       child: child,
     );
   }
