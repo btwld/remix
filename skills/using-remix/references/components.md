@@ -78,6 +78,14 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   with the TextField recipe and a Select-like panel; its dependencies are
   `theme` and `text_field`. Fortal also ships the recipe with surface/soft variants and three TextField sizes; HeroUI ships primary/secondary variants with its responsive TextField and ComboBox/ListBox panel.
   See [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
+- **TagInput** — `RemixTagInput(value:, onChanged:)` commits typed text into a
+  caller-owned `List<String>` on Enter, a separator (comma by default), or
+  focus loss. `duplicates` (case-insensitive by default) and `maxTags` refuse
+  commits and keep the draft. Backspace at the caret start picks the last tag;
+  the next Backspace removes it. Style tags through
+  `TagInputStyler().tag(TagInputTagStyler()...)`, which resolves per tag
+  (`onSelected` while picked); `removeButton` takes an `IconButtonStyler`.
+  Behavior is `NakedTagInput`. See [TagInput](https://github.com/btwld/remix/blob/main/docs/components/textfield.mdx#tag-input).
 - **TextField/TextArea** — forwards the standard Flutter text-input surface
   (`controller`, `keyboardType`, `inputFormatters`, `maxLines`, etc.)
   unchanged; check the doc page rather than assuming a param is missing.

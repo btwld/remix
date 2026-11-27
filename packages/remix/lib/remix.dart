@@ -37,6 +37,7 @@ export 'src/components/slider/slider.dart';
 export 'src/components/spinner/spinner.dart';
 export 'src/components/switch/switch.dart';
 export 'src/components/tabs/tabs.dart';
+export 'src/components/tag_input/tag_input.dart';
 export 'src/components/textfield/textfield.dart';
 export 'src/components/toast/toast.dart';
 export 'src/components/toggle/toggle.dart';
@@ -63,6 +64,8 @@ export 'package:naked_ui/naked_ui.dart'
         NakedSearchFieldBindings,
         NakedSliderSemanticFormatterCallback,
         NakedTabState,
+        NakedTagInputDuplicates,
+        NakedTagInputMessages,
         OverlayAlignment,
         OverlayPlacement,
         OverlayPositionConfig,
