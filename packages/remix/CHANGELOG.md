@@ -65,6 +65,9 @@
 - `ProgressStyler.indicatorFill(RemixProgressFill.slide)` keeps the indicator
   at full width and slides it in from the start edge instead of shrinking
   it. `shrink` stays the default.
+- `SkeletonStyler` sets the pulse `curve`, a `delay` before the first leg,
+  and a number of `cycles` after which the pulse rests on its base frame.
+  The defaults keep the endless linear pulse.
 
 ## 1.0.0-rc.7
 

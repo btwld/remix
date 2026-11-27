@@ -27,9 +27,33 @@ class SkeletonSpec with _$SkeletonSpec {
   @override
   final Duration? duration;
 
+  /// The easing of each pulse leg, applied the same way in both directions.
+  ///
+  /// `null` keeps the linear pulse.
+  @override
+  final Curve? curve;
+
+  /// How long the placeholder rests on its base frame before the first leg.
+  ///
+  /// Composers can stagger a list of placeholders by giving each a longer
+  /// delay. `null` starts at once.
+  @override
+  final Duration? delay;
+
+  /// How many pulses, each a forward and a reverse leg, to run before
+  /// resting on the base frame. Must be greater than zero.
+  ///
+  /// `null` pulses for as long as the placeholder is loading.
+  @override
+  final int? cycles;
+
   const SkeletonSpec({
     StyleSpec<BoxSpec>? container,
     this.pulseColor,
     this.duration,
-  }) : container = container ?? const StyleSpec(spec: BoxSpec());
+    this.curve,
+    this.delay,
+    this.cycles,
+  }) : assert(cycles == null || cycles > 0),
+       container = container ?? const StyleSpec(spec: BoxSpec());
 }

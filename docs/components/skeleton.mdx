@@ -298,6 +298,10 @@ RTL. Directionality comes from whatever the child itself needs.
   `foregroundDecoration` masks the fill, it fades the whole container between
   full and half opacity instead. This composes with any opacity the caller
   already applied and leaves the decoration intact.
+- The pulse is linear and endless by default. `curve` eases each leg,
+  `delay` rests on the base frame before the first leg, so a list can
+  stagger its placeholders, and `cycles` stops on the base frame after that
+  many pulses.
 - Loading content is excluded from focus, semantics, and ticking. There is
   no shimmer gradient or fabricated progress semantics.
 
@@ -359,6 +363,21 @@ instead so the animation stays visible.
 
 Sets the length of one forward pulse leg. Defaults to 1000 ms; the reverse leg
 takes the same time.
+
+#### `curve(Curve value)`
+
+Eases each pulse leg, the same way in both directions. Defaults to linear.
+
+#### `delay(Duration value)`
+
+Rests on the base frame for this long before the first leg. Defaults to no
+delay. Reduced motion skips the pulse and the delay.
+
+#### `cycles(int value)`
+
+Runs this many pulses, each a forward and a reverse leg, then rests on the base
+frame. Must be greater than zero. Defaults to pulsing for as long as the
+skeleton is loading.
 
 #### `container(BoxStyler value)`
 

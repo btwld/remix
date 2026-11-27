@@ -125,6 +125,7 @@ class _SkeletonPulse extends StatefulWidget {
 class _SkeletonPulseState extends State<_SkeletonPulse>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+  Timer? _delay;
 
   @override
   void initState() {
@@ -147,16 +148,19 @@ class _SkeletonPulseState extends State<_SkeletonPulse>
     // Retune in place. Replacing the controller would drop the current phase
     // and restart the pulse from its base frame.
     _controller.duration = leg;
-    if (_controller.isAnimating) _controller.repeat(reverse: true);
+    if (_controller.isAnimating) _pulse();
   }
 
   @override
   void dispose() {
+    _delay?.cancel();
     _controller.dispose();
     super.dispose();
   }
 
   void _syncMotion() {
+    _delay?.cancel();
+    _delay = null;
     if (widget.reduceMotion) {
       _controller.stop();
       // Deterministic base frame, so a static placeholder always paints the
@@ -166,13 +170,35 @@ class _SkeletonPulseState extends State<_SkeletonPulse>
       return;
     }
 
-    if (!_controller.isAnimating) _controller.repeat(reverse: true);
+    if (_controller.isAnimating) return;
+    final delay = widget.spec.delay ?? Duration.zero;
+    if (delay > Duration.zero) {
+      _delay = Timer(delay, _pulse);
+    } else {
+      _pulse();
+    }
+  }
+
+  void _pulse() {
+    _delay = null;
+    final cycles = widget.spec.cycles;
+    if (cycles == null) {
+      _controller.repeat(reverse: true);
+
+      return;
+    }
+
+    // Each cycle is a forward and a reverse leg.
+    _controller.repeat(reverse: true, count: cycles * 2).then((_) {
+      if (mounted) _controller.value = _controller.lowerBound;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final container = widget.spec.container;
     final fillPulse = _fillPulse(container.spec, widget.spec.pulseColor);
+    final curve = widget.spec.curve ?? Curves.linear;
 
     if (fillPulse == null) {
       // Nothing to interpolate, so fade the resolved container instead. The
@@ -182,7 +208,11 @@ class _SkeletonPulseState extends State<_SkeletonPulse>
         animation: _controller,
         child: Box(styleSpec: container),
         builder: (context, child) => Opacity(
-          opacity: lerpDouble(1, _fallbackPulseOpacity, _controller.value)!,
+          opacity: lerpDouble(
+            1,
+            _fallbackPulseOpacity,
+            curve.transform(_controller.value),
+          )!,
           child: child,
         ),
       );
@@ -201,7 +231,7 @@ class _SkeletonPulseState extends State<_SkeletonPulse>
         // pulseColor. Modifiers still belong to the caller, so they carry over.
         styleSpec: StyleSpec(
           spec: container.spec.copyWith(
-            decoration: fillPulse(_controller.value),
+            decoration: fillPulse(curve.transform(_controller.value)),
           ),
           widgetModifiers: container.widgetModifiers,
         ),
