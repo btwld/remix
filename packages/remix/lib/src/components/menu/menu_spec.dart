@@ -139,7 +139,8 @@ class MenuSpec with _$MenuSpec {
   /// offsets and collision padding.
   ///
   /// An explicit [RemixMenu.positioning] wins. `null` opens the panel below
-  /// the trigger, aligned to its start. Submenu panels are not affected.
+  /// the trigger, aligned to its start. The menu reads the style's base
+  /// value, so variants do not change it. Submenu panels are not affected.
   @override
   final OverlayPositionConfig? positioning;
 

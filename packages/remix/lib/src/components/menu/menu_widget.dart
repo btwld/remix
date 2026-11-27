@@ -609,21 +609,19 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
     );
   }
 
+  // Reads only the positioning property: resolving the whole menu style
+  // here would build item styles outside the overlay that scopes them.
   OverlayPositionConfig _resolvePositioning(
     BuildContext context,
     MenuStyler style,
   ) {
     if (!widget._usesDefaultPositioning) return widget.positioning;
-    final MenuSpec spec;
-    if (widget.styleSpec case final raw?) {
-      spec = raw;
-    } else {
-      final inherited = Style.maybeOf<MenuSpec>(context);
-      spec = (inherited is MenuStyler ? inherited.merge(style) : style)
-          .build(context)
-          .spec;
-    }
-    return spec.positioning ?? widget.positioning;
+    final raw = widget.styleSpec;
+    if (raw != null) return raw.positioning ?? widget.positioning;
+    final inherited = Style.maybeOf<MenuSpec>(context);
+    final effective = inherited is MenuStyler ? inherited.merge(style) : style;
+    return MixOps.resolve(context, effective.$positioning) ??
+        widget.positioning;
   }
 
   @override
