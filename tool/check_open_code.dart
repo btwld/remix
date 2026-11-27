@@ -113,6 +113,9 @@ const _fortalPreset = _PresetContract(
     'range_slider',
     ..._dateItems,
   ],
+  // Fortal's theme sets body text in Inter and display text in Geist.
+  requiredRuntimeDependencies: [..._baseRuntimeDependencies, 'remix_ui_fonts'],
+  allowedImportPackages: [..._baseImportPackages, 'remix_ui_fonts'],
 );
 
 const _herouiPreset = _PresetContract(
