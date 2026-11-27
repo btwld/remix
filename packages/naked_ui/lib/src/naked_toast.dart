@@ -998,10 +998,13 @@ class _NakedToastItemState<T> extends State<_NakedToastItem<T>>
     super.initState();
     _focusToRestore = FocusManager.instance.primaryFocus;
     // Preserve keeps the platform's disableAnimations flag from shrinking a
-    // reducedMotionDuration a second time; without one the duration is zero.
+    // reducedMotionDuration a second time. The behavior is fixed here, so a
+    // duration first set while the toast is visible applies to later toasts.
     _animationController = AnimationController(
       vsync: this,
-      animationBehavior: AnimationBehavior.preserve,
+      animationBehavior: widget.reducedMotionDuration == null
+          ? AnimationBehavior.normal
+          : AnimationBehavior.preserve,
     );
     _animation = _createAnimation();
   }
