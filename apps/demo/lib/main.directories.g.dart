@@ -47,6 +47,7 @@ import 'package:demo/components/progress.dart' as _demo_components_progress;
 import 'package:demo/components/radio.dart' as _demo_components_radio;
 import 'package:demo/components/range_calendar.dart'
     as _demo_components_range_calendar;
+import 'package:demo/components/rating.dart' as _demo_components_rating;
 import 'package:demo/components/search_field.dart'
     as _demo_components_search_field;
 import 'package:demo/components/segmented_control.dart'
@@ -469,6 +470,19 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Range catalog',
             builder: _demo_components_slider.buildRangeSliderCatalogUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixRating',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder: _demo_components_rating.buildRatingCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Rating Component',
+            builder: _demo_components_rating.buildRatingUseCase,
           ),
         ],
       ),

@@ -88,6 +88,10 @@
           "href": "/components/radio"
         },
         {
+          "title": "Rating",
+          "href": "/components/rating"
+        },
+        {
           "title": "Combobox",
           "href": "/components/combobox"
         },
