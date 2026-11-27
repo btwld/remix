@@ -305,6 +305,9 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   // The last text of a message the caller cleared, kept while its row plays
   // its exit.
   final _leavingMessages = <_RemixFieldMessageKind, String>{};
+  // The transition the last build resolved. A message cleared without one
+  // leaves at once and must not replay an exit if a transition arrives later.
+  RemixFieldMessageTransition? _messageTransition;
   bool _hasBuiltFirstFrame = false;
 
   FocusNode get _effectiveFocusNode =>
@@ -386,7 +389,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
     String? oldText,
     String? newText,
   ) {
-    if (newText != null) {
+    if (newText != null || _messageTransition == null) {
       _leavingMessages.remove(kind);
     } else if (oldText != null) {
       _leavingMessages[kind] = oldText;
@@ -443,6 +446,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   }
 
   Widget _buildResolved(TextFieldSpec spec) {
+    _messageTransition = spec.messageTransition;
     final config = widget.config;
     final isMultiline =
         config.expands || config.maxLines != 1 || (config.minLines ?? 1) > 1;

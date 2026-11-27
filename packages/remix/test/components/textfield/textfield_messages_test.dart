@@ -228,6 +228,17 @@ void main() {
       expect(find.text('Required'), findsOneWidget);
     });
 
+    testWidgets('a message cleared without a transition does not replay '
+        'its exit when a transition arrives', (tester) async {
+      final recorder = _Recorder();
+      await tester.pumpRemixApp(_field(helperText: 'Helper'));
+      await tester.pumpRemixApp(_field());
+      await tester.pumpRemixApp(_field(transition: recorder.transition));
+
+      expect(find.text('Helper'), findsNothing);
+      expect(recorder.animations, isEmpty);
+    });
+
     testWidgets('under reduced motion rows appear and leave at once', (
       tester,
     ) async {
