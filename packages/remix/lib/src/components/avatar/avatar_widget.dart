@@ -115,6 +115,7 @@ class RemixAvatar extends StatelessWidget {
           current = _RemixAvatarImageLayer(
             image: image,
             onError: onBackgroundImageError,
+            transition: spec.imageTransition,
             fallback: current,
           );
         }
@@ -127,6 +128,7 @@ class RemixAvatar extends StatelessWidget {
                 child: _RemixAvatarImageLayer(
                   image: image,
                   onError: onForegroundImageError,
+                  transition: spec.imageTransition,
                   fallback: const SizedBox.expand(),
                 ),
               ),
@@ -150,11 +152,13 @@ class _RemixAvatarImageLayer extends StatefulWidget {
     required this.image,
     required this.fallback,
     this.onError,
+    this.transition,
   });
 
   final ImageProvider image;
   final Widget fallback;
   final ImageErrorListener? onError;
+  final RemixAvatarImageTransition? transition;
 
   @override
   State<_RemixAvatarImageLayer> createState() => _RemixAvatarImageLayerState();
@@ -169,23 +173,38 @@ class _RemixAvatarImageLayerState extends State<_RemixAvatarImageLayer> {
     if (oldWidget.image != widget.image) _reportedError = false;
   }
 
+  bool get _hidesFallbackWhileLoading =>
+      widget.transition?.showFallbackWhileLoading == false;
+
+  /// Keeps the fallback's layout and semantics while it is not painted.
+  Widget get _hiddenFallback =>
+      Opacity(opacity: 0, alwaysIncludeSemantics: true, child: widget.fallback);
+
   @override
   Widget build(BuildContext context) {
+    final transition = widget.transition;
+
     return Image(
       image: widget.image,
       fit: BoxFit.cover,
       excludeFromSemantics: true,
       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-        if (!wasSynchronouslyLoaded && frame == null) return widget.fallback;
+        if (!wasSynchronouslyLoaded && frame == null) {
+          return _hidesFallbackWhileLoading ? _hiddenFallback : widget.fallback;
+        }
         return Stack(
           fit: StackFit.passthrough,
           children: [
-            Opacity(
-              opacity: 0,
-              alwaysIncludeSemantics: true,
-              child: widget.fallback,
+            _hiddenFallback,
+            Positioned.fill(
+              child: transition == null || wasSynchronouslyLoaded
+                  ? child
+                  : _RemixAvatarAppear(
+                      transition: transition,
+                      blurSigma: transition.blurSigma,
+                      child: child,
+                    ),
             ),
-            Positioned.fill(child: child),
           ],
         );
       },
@@ -197,7 +216,14 @@ class _RemixAvatarImageLayerState extends State<_RemixAvatarImageLayer> {
             if (mounted) onError?.call(error, stackTrace);
           });
         }
-        return widget.fallback;
+        if (transition == null || !_hidesFallbackWhileLoading) {
+          return widget.fallback;
+        }
+
+        return _RemixAvatarAppear(
+          transition: transition,
+          child: widget.fallback,
+        );
       },
     );
   }

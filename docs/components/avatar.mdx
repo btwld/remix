@@ -240,6 +240,14 @@ Configures the label text style using a TextStyler.
 
 Configures the icon style using an IconStyler.
 
+#### `imageTransition(RemixAvatarImageTransition value)`
+
+Fades a loaded image in over `duration` and `curve`, starting from a
+`blurSigma` blur. With `showFallbackWhileLoading: false`, only the container
+paints while the image loads, and the fallback fades in if the image fails.
+Cached images that load synchronously and reduced motion show at once. The
+default, null, swaps the image in on its first frame.
+
 #### `size(double width, double height)`
 
 Sets avatar size with width and height

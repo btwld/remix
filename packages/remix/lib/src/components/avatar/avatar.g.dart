@@ -10,6 +10,7 @@ mixin _$AvatarSpec implements Spec<AvatarSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
+  RemixAvatarImageTransition? get imageTransition;
 
   @override
   Type get type => AvatarSpec;
@@ -19,11 +20,13 @@ mixin _$AvatarSpec implements Spec<AvatarSpec>, Diagnosticable {
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
+    RemixAvatarImageTransition? imageTransition,
   }) {
     return AvatarSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       icon: icon ?? this.icon,
+      imageTransition: imageTransition ?? this.imageTransition,
     );
   }
 
@@ -33,11 +36,16 @@ mixin _$AvatarSpec implements Spec<AvatarSpec>, Diagnosticable {
       container: container.lerp(other?.container, t),
       label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
+      imageTransition: MixOps.lerpSnap(
+        imageTransition,
+        other?.imageTransition,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, icon];
+  List<Object?> get props => [container, label, icon, imageTransition];
 
   @override
   bool operator ==(Object other) {
@@ -81,7 +89,8 @@ mixin _$AvatarSpec implements Spec<AvatarSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
-      ..add(DiagnosticsProperty('icon', icon));
+      ..add(DiagnosticsProperty('icon', icon))
+      ..add(DiagnosticsProperty('imageTransition', imageTransition));
   }
 }
 
@@ -103,22 +112,26 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
+  final Prop<RemixAvatarImageTransition>? $imageTransition;
 
   const AvatarStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
+    Prop<RemixAvatarImageTransition>? imageTransition,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $label = label,
-       $icon = icon;
+       $icon = icon,
+       $imageTransition = imageTransition;
 
   AvatarStyler({
     BoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
+    RemixAvatarImageTransition? imageTransition,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<AvatarSpec>>? variants,
@@ -126,6 +139,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
          container: Prop.maybeMix(container),
          label: Prop.maybeMix(label),
          icon: Prop.maybeMix(icon),
+         imageTransition: Prop.maybe(imageTransition),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -135,6 +149,8 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
       AvatarStyler().container(value);
   factory AvatarStyler.label(TextStyler value) => AvatarStyler().label(value);
   factory AvatarStyler.icon(IconStyler value) => AvatarStyler().icon(value);
+  factory AvatarStyler.imageTransition(RemixAvatarImageTransition value) =>
+      AvatarStyler().imageTransition(value);
   factory AvatarStyler.alignment(AlignmentGeometry value) =>
       AvatarStyler().alignment(value);
   factory AvatarStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -631,6 +647,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     'container',
     'label',
     'icon',
+    'imageTransition',
     'animation',
     'modifier',
     'variants',
@@ -651,6 +668,11 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
   @override
   AvatarStyler icon(IconStyler value) {
     return merge(AvatarStyler(icon: value));
+  }
+
+  /// Sets the imageTransition.
+  AvatarStyler imageTransition(RemixAvatarImageTransition value) {
+    return merge(AvatarStyler(imageTransition: value));
   }
 
   /// Sets the animation configuration.
@@ -710,6 +732,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
+      imageTransition: MixOps.merge($imageTransition, other?.$imageTransition),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -723,6 +746,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),
+      imageTransition: MixOps.resolve(context, $imageTransition),
     );
 
     return StyleSpec(
@@ -738,7 +762,8 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('label', $label))
-      ..add(DiagnosticsProperty('icon', $icon));
+      ..add(DiagnosticsProperty('icon', $icon))
+      ..add(DiagnosticsProperty('imageTransition', $imageTransition));
   }
 
   @override
@@ -746,6 +771,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     $container,
     $label,
     $icon,
+    $imageTransition,
     $animation,
     $modifier,
     $variants,
