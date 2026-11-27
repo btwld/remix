@@ -261,6 +261,15 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     return true;
   }
 
+  /// Whether the style opts the trigger into `selected` while open. Read
+  /// without the open state, so the flag cannot depend on it.
+  bool _selectedWhileOpen(BuildContext context, SelectStyler style) =>
+      (widget.styleSpec ?? style.build(context).spec)
+          .trigger
+          .spec
+          .selectedWhileOpen ??
+      false;
+
   @override
   void dispose() {
     _panelTransition.dispose();
@@ -304,15 +313,15 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       onClose: widget.onClose,
       builder: (context, state, _) {
         final controller = NakedSelectState.controllerOf<T>(context);
-        // The trigger resolves under `selected` while the panel is open and
-        // not closing, as a menu's submenu trigger does, so a style can give
-        // it an open look that leaves together with the panel.
         return ListenableBuilder(
           listenable: Listenable.merge([controller, _panelTransition]),
           builder: (context, _) => WidgetStateProvider(
             states: {
               ...controller.value,
-              if (state.isOpen && !_panelTransition.isExiting) .selected,
+              if (state.isOpen &&
+                  !_panelTransition.isExiting &&
+                  _selectedWhileOpen(context, style))
+                .selected,
             },
             child: RemixStyleSpecBuilder<SelectSpec>(
               style: style,

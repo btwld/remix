@@ -75,6 +75,14 @@ class SelectTriggerSpec with _$SelectTriggerSpec {
   /// panel is open, and custom icons do not turn.
   @override
   final double? indicatorAngle;
+
+  /// Whether the trigger resolves under `WidgetState.selected` while the
+  /// panel is open and not closing, as a menu's submenu trigger does, so
+  /// `onSelected` can give it an open look that leaves with the panel.
+  ///
+  /// `null` keeps the default: the trigger never resolves under `selected`.
+  @override
+  final bool? selectedWhileOpen;
   @override
   final double? placeholderOpacity;
 
@@ -87,6 +95,7 @@ class SelectTriggerSpec with _$SelectTriggerSpec {
     this.containerEffects,
     this.indicatorOpacity,
     this.indicatorAngle,
+    this.selectedWhileOpen,
     this.placeholderOpacity,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),

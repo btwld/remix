@@ -44,7 +44,7 @@ Future<void> _openSelect(WidgetTester tester) async {
 
 void main() {
   group('RemixSelect trigger open state', () {
-    testWidgets('resolves the trigger under selected while open', (
+    testWidgets('by default the open trigger does not resolve under selected', (
       tester,
     ) async {
       await tester.pumpRemixApp(
@@ -54,17 +54,37 @@ void main() {
           ),
         ),
       );
-      Color? color() => tester.widget<Text>(find.text('Pick')).style?.color;
-
-      expect(color(), isNot(_open));
       await _openSelect(tester);
       await tester.pumpAndSettle();
-      expect(color(), _open);
 
-      await tester.tapAt(Offset.zero);
-      await tester.pumpAndSettle();
-      expect(color(), isNot(_open));
+      expect(find.text('One'), findsOneWidget);
+      expect(tester.widget<Text>(find.text('Pick')).style?.color, isNot(_open));
     });
+
+    testWidgets(
+      'with selectedWhileOpen it resolves under selected while open',
+      (tester) async {
+        await tester.pumpRemixApp(
+          _select(
+            trigger: SelectTriggerStyler()
+                .selectedWhileOpen(true)
+                .onSelected(
+                  SelectTriggerStyler().placeholder(TextStyler().color(_open)),
+                ),
+          ),
+        );
+        Color? color() => tester.widget<Text>(find.text('Pick')).style?.color;
+
+        expect(color(), isNot(_open));
+        await _openSelect(tester);
+        await tester.pumpAndSettle();
+        expect(color(), _open);
+
+        await tester.tapAt(Offset.zero);
+        await tester.pumpAndSettle();
+        expect(color(), isNot(_open));
+      },
+    );
 
     testWidgets('keeps the focus-visible style on the trigger', (tester) async {
       await tester.pumpRemixApp(
@@ -96,6 +116,7 @@ void main() {
       await tester.pumpRemixApp(
         _select(
           trigger: SelectTriggerStyler()
+              .selectedWhileOpen(true)
               .indicatorAngle(0)
               .onSelected(SelectTriggerStyler().indicatorAngle(math.pi))
               .animate(AnimationConfig.linear(_turn)),
@@ -130,9 +151,9 @@ void main() {
       await tester.pumpRemixApp(
         _select(
           triggerData: icons,
-          trigger: SelectTriggerStyler().onSelected(
-            SelectTriggerStyler().indicatorAngle(math.pi),
-          ),
+          trigger: SelectTriggerStyler()
+              .selectedWhileOpen(true)
+              .onSelected(SelectTriggerStyler().indicatorAngle(math.pi)),
         ),
       );
       await _openSelect(tester);
