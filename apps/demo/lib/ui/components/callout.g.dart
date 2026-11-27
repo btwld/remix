@@ -20,8 +20,11 @@ class FortalCallout extends StatelessWidget {
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   });
 
   /// A tinted accent fill.
@@ -31,8 +34,11 @@ class FortalCallout extends StatelessWidget {
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   }) : variant = FortalCalloutVariant.soft;
 
   /// A faint accent fill inside a 1px accent frame.
@@ -42,8 +48,11 @@ class FortalCallout extends StatelessWidget {
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   }) : variant = FortalCalloutVariant.surface;
 
   /// No fill inside a 1px accent frame.
@@ -53,8 +62,11 @@ class FortalCallout extends StatelessWidget {
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   }) : variant = FortalCalloutVariant.outline;
 
   final FortalCalloutVariant variant;
@@ -67,9 +79,15 @@ class FortalCallout extends StatelessWidget {
 
   final String? text;
 
+  final String? title;
+
   final IconData? icon;
 
   final Widget? child;
+
+  final VoidCallback? onDismiss;
+
+  final String? dismissLabel;
 
   @override
   Widget build(BuildContext _) {
@@ -81,7 +99,10 @@ class FortalCallout extends StatelessWidget {
         style: style,
       ),
       text: text,
+      title: title,
       icon: icon,
+      onDismiss: onDismiss,
+      dismissLabel: dismissLabel,
       child: child,
     );
   }

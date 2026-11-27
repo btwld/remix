@@ -20,8 +20,11 @@ class VanillaCallout extends StatelessWidget {
     this.variant = .neutral,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   });
 
   /// A neutral aside on the `card` surface.
@@ -29,8 +32,11 @@ class VanillaCallout extends StatelessWidget {
     super.key,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   }) : variant = VanillaCalloutVariant.neutral;
 
   /// A problem the reader has to act on.
@@ -38,8 +44,11 @@ class VanillaCallout extends StatelessWidget {
     super.key,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   }) : variant = VanillaCalloutVariant.destructive;
 
   final VanillaCalloutVariant variant;
@@ -48,16 +57,25 @@ class VanillaCallout extends StatelessWidget {
 
   final String? text;
 
+  final String? title;
+
   final IconData? icon;
 
   final Widget? child;
+
+  final VoidCallback? onDismiss;
+
+  final String? dismissLabel;
 
   @override
   Widget build(BuildContext _) {
     return RemixCallout(
       style: vanillaCalloutStyle(variant: variant, style: style),
       text: text,
+      title: title,
       icon: icon,
+      onDismiss: onDismiss,
+      dismissLabel: dismissLabel,
       child: child,
     );
   }
