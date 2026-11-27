@@ -4,6 +4,10 @@
   value in words beside them, a faint mark of the committed value under a hover
   preview, and a star-by-star fill sweep. Sizes `size1` to `size3`; needs the
   Remix release that ships `RemixRating`.
+- Add `FortalNumberField`: a rounded shell with minus and plus steps around a
+  centered value in medium tabular figures, a border that inks on focus
+  instead of a ring, and steps that fade at their bound. Sizes `size1` to
+  `size3`; needs the Remix release that ships `RemixNumberField`.
 - **Deprecated:** `FortalTokens.transitionFast`, `transitionSlow`,
   `planMaxHeight`, `messageAvatarSize`, and `composerFieldMinHeight` (including
   their installed, prefixed equivalents). Their IDs and scope values are

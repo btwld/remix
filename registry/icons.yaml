@@ -69,6 +69,7 @@ icons:
   lockClosed: {remix: lock, rounded: lock, lucide: lock}
   magicWand: {remix: wand, rounded: wand, lucide: wandSparkles}
   magnifyingGlass: {remix: search, rounded: search, lucide: search}
+  minus: {remix: minus, rounded: minus, lucide: minus}
   mixerHorizontal: {remix: sliders, rounded: sliders, lucide: slidersHorizontal}
   mobile: {remix: smartphone, rounded: smartphone, lucide: smartphone}
   moon: {remix: moon, rounded: moon, lucide: moon}

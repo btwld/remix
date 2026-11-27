@@ -632,6 +632,22 @@ items:
     exports:
       - recipes/message_recipe.dart
 
+  number_field:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.3.0
+    files:
+      - source: templates/number_field/number_field.dart.tmpl
+        target: "@ui/components/number_field.dart"
+    generated:
+      - "@ui/components/number_field.g.dart"
+    exports:
+      - components/number_field.dart
+
   popover:
     registryDependencies:
       - theme

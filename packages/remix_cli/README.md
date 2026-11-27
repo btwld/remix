@@ -29,6 +29,7 @@ preset also includes `base_button`, `code`, `heading`, `kbd`, `text`,
 `typography`, `avatar_group`, a spaced row of `avatar`s, `breadcrumbs`,
 a one-line trail of `link`s, `search_field`, a `text_field` with a search
 glyph and clear button, `rating`, a star rating over a radio group,
+`number_field`, a stepper with minus and plus controls around the value,
 `surface`, a `card` at four levels of emphasis, and `context_menu`, the
 `menu` panel opened at the pointer.
 Vanilla also provides `range_slider`, which installs
