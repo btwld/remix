@@ -866,4 +866,35 @@ void main() {
       });
     });
   });
+
+  group('loading toggles', () {
+    late ValueNotifier<bool> loading;
+
+    setUp(() => loading = ValueNotifier(false));
+    tearDown(() => loading.dispose());
+
+    Widget button() => ValueListenableBuilder<bool>(
+      valueListenable: loading,
+      builder: (context, isLoading, _) =>
+          RemixButton(label: 'Save', loading: isLoading, onPressed: () {}),
+    );
+
+    testWidgets('toggling loading keeps the button mounted', (tester) async {
+      await tester.pumpRemixApp(button());
+      final before = tester.state(find.byType(NakedButton));
+
+      loading.value = true;
+      await tester.pump();
+      expect(tester.state(find.byType(NakedButton)), same(before));
+    });
+
+    testWidgets('loading keeps the width a tight parent gives', (tester) async {
+      await tester.pumpRemixApp(SizedBox(width: 240, child: button()));
+      expect(tester.getSize(find.byType(NakedButton)).width, 240);
+
+      loading.value = true;
+      await tester.pump();
+      expect(tester.getSize(find.byType(NakedButton)).width, 240);
+    });
+  });
 }

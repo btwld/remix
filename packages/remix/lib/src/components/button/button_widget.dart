@@ -289,16 +289,11 @@ class RemixButton extends StatelessWidget {
       },
     );
 
-    if (!loading || excludeSemantics) return button;
-    return Stack(
-      children: [
-        button,
-        Semantics(
-          liveRegion: true,
-          label: '${semanticLabel ?? label}, loading',
-          child: const SizedBox.square(dimension: 1),
-        ),
-      ],
+    return remixLoadingAnnouncer(
+      control: button,
+      announcement: loading && !excludeSemantics
+          ? '${semanticLabel ?? label}, loading'
+          : null,
     );
   }
 }

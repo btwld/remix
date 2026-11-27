@@ -78,6 +78,11 @@
 - `SkeletonStyler.revealDuration`, `.revealCurve`, and `.revealOffset`
   crossfade from the placeholder to the child when loading ends. Without
   them the child still appears at once.
+### Fixes
+
+- `RemixButton` and `RemixIconButton` keep their subtree mounted and their
+  size under tight constraints when `loading` changes. A loading button in a
+  fixed-width parent no longer shrinks to its content.
 
 ## 1.0.0-rc.7
 
