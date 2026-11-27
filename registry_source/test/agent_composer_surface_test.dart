@@ -188,6 +188,15 @@ void main() {
         final ink = FortalTokens.focus8.resolve(context);
         // The theme paints outside this boundary; clear pixels stay transparent.
         const background = Color(0x00000000);
+        // Nothing is painted behind the ring and raw RGBA bytes are
+        // premultiplied, so the translucent ring reads as its channels scaled
+        // by its alpha.
+        final ringPixel = Color.from(
+          alpha: ink.a,
+          red: ink.r * ink.a,
+          green: ink.g * ink.a,
+          blue: ink.b * ink.a,
+        );
         Future<Color> sample(double x, double y) async {
           final pixels = await capturePixels(tester, boundary);
           return pixels.at(
@@ -207,7 +216,7 @@ void main() {
         for (final distance in [2.5, 3.5]) {
           expectNearColor(
             await sample(before.center.dx, before.top - distance),
-            Color.alphaBlend(ink, background),
+            ringPixel,
           );
         }
         for (final distance in [0.5, 1.5, 4.5]) {
@@ -224,7 +233,7 @@ void main() {
         final radius = FortalTokens.radius6.resolve(context).x;
         expectNearColor(
           await sample(before.left + radius, before.top - 3),
-          Color.alphaBlend(ink, background),
+          ringPixel,
         );
       },
     );

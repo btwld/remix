@@ -9,7 +9,6 @@ import 'package:registry_source/src/fortal/theme/theme_data.dart';
 const _fortal = 'lib/src/fortal';
 
 final _customizationTokens = {
-  'accent9',
   'accentA1',
   'accentA9',
   'accentA10',
@@ -52,7 +51,6 @@ final _customizationTokens = {
   'toneGreen',
   'accentRange',
   'accentThumb',
-  'accentSwatchContrast',
   'space18',
   'space20',
   'space56',
