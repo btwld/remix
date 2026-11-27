@@ -33,6 +33,10 @@ class TagInputSpec with _$TagInputSpec {
   @override
   final double? editorMinWidth;
 
+  /// Box around the editor: its padding, minimum height, and alignment.
+  @override
+  final StyleSpec<BoxSpec> editor;
+
   /// Typed text.
   @override
   final StyleSpec<TextSpec> text;
@@ -70,6 +74,7 @@ class TagInputSpec with _$TagInputSpec {
     this.spacing,
     this.runSpacing,
     this.editorMinWidth,
+    StyleSpec<BoxSpec>? editor,
     StyleSpec<TextSpec>? text,
     StyleSpec<TextSpec>? hintText,
     this.cursorColor,
@@ -80,6 +85,7 @@ class TagInputSpec with _$TagInputSpec {
     StyleSpec<TextSpec>? helperText,
     this.tag,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
+       editor = editor ?? const StyleSpec(spec: BoxSpec()),
        text = text ?? const StyleSpec(spec: TextSpec()),
        hintText = hintText ?? const StyleSpec(spec: TextSpec()),
        layout = layout ?? const StyleSpec(spec: FlexBoxSpec()),

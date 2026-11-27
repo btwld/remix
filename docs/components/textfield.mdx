@@ -792,7 +792,7 @@ Each tag is one semantics node with its text as the label, selected while picked
 
 ### Styling
 
-`TagInputStyler` styles the shell (`container` box values, `containerEffects`), the gaps (`spacing`, `runSpacing`), the editor (`text`, `hintText`, cursor values, `editorMinWidth`), and the `layout`, `label`, and `helperText` around it. Its `onFocused`, `onHovered`, `onDisabled`, and `onError` variants follow the field.
+`TagInputStyler` styles the shell (`container` box values, `containerEffects`), the gaps (`spacing`, `runSpacing`), the editor (`editor` box, `text`, `hintText`, cursor values, `editorMinWidth`), and the `layout`, `label`, and `helperText` around it. Its `onFocused`, `onHovered`, `onDisabled`, and `onError` variants follow the field.
 
 `tag` takes a `TagInputTagStyler`, which each tag resolves in its own state: `onSelected` while picked and `onDisabled` with the field. The tag's `removeButton` takes an `IconButtonStyler` that resolves in the button's own hover and press states.
 

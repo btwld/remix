@@ -215,9 +215,12 @@ class _RemixTagInputState extends State<RemixTagInput> {
         editorMinWidth: spec.editorMinWidth ?? 80,
         children: [
           ...tags,
-          DefaultSelectionStyle.merge(
-            selectionColor: spec.text.spec.selectionColor,
-            child: _editor(spec, field),
+          RemixBoxAdapter(
+            styleSpec: spec.editor,
+            child: DefaultSelectionStyle.merge(
+              selectionColor: spec.text.spec.selectionColor,
+              child: _editor(spec, field),
+            ),
           ),
         ],
       ),

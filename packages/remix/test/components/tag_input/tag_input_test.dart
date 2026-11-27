@@ -14,6 +14,7 @@ const _focusedBorder = Color(0xFFAA0000);
 const _removeHover = Color(0xFFAAAA00);
 
 TagInputStyler _style() => TagInputStyler()
+    .editor(BoxStyler().minHeight(28).padding(.horizontal(5)))
     .spacing(6)
     .runSpacing(4)
     .editorMinWidth(80)
@@ -108,6 +109,15 @@ void main() {
     expect(_tagColor(tester, 'alpha'), _rest);
     expect(tester.getSize(_tagBox('alpha')).height, 28);
     expect(tester.getSize(_remove('alpha')), const Size(22, 22));
+    final editorBox = find.ancestor(
+      of: _editor,
+      matching: find.byType(Padding),
+    );
+    expect(tester.getSize(editorBox.first).height, 28);
+    expect(
+      tester.getTopLeft(_editor).dx - tester.getTopLeft(editorBox.first).dx,
+      5,
+    );
   });
 
   testWidgets('the hint shows only while there are no tags and no draft', (
@@ -219,7 +229,7 @@ void main() {
   ) async {
     await tester.pumpRemixApp(const _Host(initial: ['a'], width: 300));
     final tagRight = tester.getTopRight(_tagBox('a')).dx;
-    expect(tester.getTopLeft(_editor).dx, closeTo(tagRight + 6, 0.01));
+    expect(tester.getTopLeft(_editor).dx, closeTo(tagRight + 6 + 5, 0.01));
     expect(
       tester.getTopLeft(_editor).dy,
       lessThan(tester.getBottomLeft(_tagBox('a')).dy),
@@ -246,8 +256,8 @@ void main() {
       final tag = tester.getRect(_tagBox('wide'));
       final editor = tester.getRect(_editor);
       expect(editor.top, greaterThanOrEqualTo(tag.bottom + 4 - 0.01));
-      expect(editor.left, closeTo(tag.left, 0.01));
-      expect(editor.width, closeTo(300 - 14 - 2, 0.01));
+      expect(editor.left, closeTo(tag.left + 5, 0.01));
+      expect(editor.width, closeTo(300 - 14 - 2 - 10, 0.01));
     },
   );
 

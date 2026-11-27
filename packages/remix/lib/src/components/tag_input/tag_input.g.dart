@@ -12,6 +12,7 @@ mixin _$TagInputSpec implements Spec<TagInputSpec>, Diagnosticable {
   double? get spacing;
   double? get runSpacing;
   double? get editorMinWidth;
+  StyleSpec<BoxSpec> get editor;
   StyleSpec<TextSpec> get text;
   StyleSpec<TextSpec> get hintText;
   Color? get cursorColor;
@@ -32,6 +33,7 @@ mixin _$TagInputSpec implements Spec<TagInputSpec>, Diagnosticable {
     double? spacing,
     double? runSpacing,
     double? editorMinWidth,
+    StyleSpec<BoxSpec>? editor,
     StyleSpec<TextSpec>? text,
     StyleSpec<TextSpec>? hintText,
     Color? cursorColor,
@@ -48,6 +50,7 @@ mixin _$TagInputSpec implements Spec<TagInputSpec>, Diagnosticable {
       spacing: spacing ?? this.spacing,
       runSpacing: runSpacing ?? this.runSpacing,
       editorMinWidth: editorMinWidth ?? this.editorMinWidth,
+      editor: editor ?? this.editor,
       text: text ?? this.text,
       hintText: hintText ?? this.hintText,
       cursorColor: cursorColor ?? this.cursorColor,
@@ -72,6 +75,7 @@ mixin _$TagInputSpec implements Spec<TagInputSpec>, Diagnosticable {
       spacing: MixOps.lerp(spacing, other?.spacing, t),
       runSpacing: MixOps.lerp(runSpacing, other?.runSpacing, t),
       editorMinWidth: MixOps.lerp(editorMinWidth, other?.editorMinWidth, t),
+      editor: editor.lerp(other?.editor, t),
       text: text.lerp(other?.text, t),
       hintText: hintText.lerp(other?.hintText, t),
       cursorColor: MixOps.lerp(cursorColor, other?.cursorColor, t),
@@ -91,6 +95,7 @@ mixin _$TagInputSpec implements Spec<TagInputSpec>, Diagnosticable {
     spacing,
     runSpacing,
     editorMinWidth,
+    editor,
     text,
     hintText,
     cursorColor,
@@ -147,6 +152,7 @@ mixin _$TagInputSpec implements Spec<TagInputSpec>, Diagnosticable {
       ..add(DoubleProperty('spacing', spacing))
       ..add(DoubleProperty('runSpacing', runSpacing))
       ..add(DoubleProperty('editorMinWidth', editorMinWidth))
+      ..add(DiagnosticsProperty('editor', editor))
       ..add(DiagnosticsProperty('text', text))
       ..add(DiagnosticsProperty('hintText', hintText))
       ..add(ColorProperty('cursorColor', cursorColor))
@@ -260,6 +266,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
   final Prop<double>? $spacing;
   final Prop<double>? $runSpacing;
   final Prop<double>? $editorMinWidth;
+  final Prop<StyleSpec<BoxSpec>>? $editor;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<TextSpec>>? $hintText;
   final Prop<Color>? $cursorColor;
@@ -276,6 +283,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
     Prop<double>? spacing,
     Prop<double>? runSpacing,
     Prop<double>? editorMinWidth,
+    Prop<StyleSpec<BoxSpec>>? editor,
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<TextSpec>>? hintText,
     Prop<Color>? cursorColor,
@@ -293,6 +301,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
        $spacing = spacing,
        $runSpacing = runSpacing,
        $editorMinWidth = editorMinWidth,
+       $editor = editor,
        $text = text,
        $hintText = hintText,
        $cursorColor = cursorColor,
@@ -309,6 +318,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
     double? spacing,
     double? runSpacing,
     double? editorMinWidth,
+    BoxStyler? editor,
     TextStyler? text,
     TextStyler? hintText,
     Color? cursorColor,
@@ -327,6 +337,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
          spacing: Prop.maybe(spacing),
          runSpacing: Prop.maybe(runSpacing),
          editorMinWidth: Prop.maybe(editorMinWidth),
+         editor: Prop.maybeMix(editor),
          text: Prop.maybeMix(text),
          hintText: Prop.maybeMix(hintText),
          cursorColor: Prop.maybe(cursorColor),
@@ -351,6 +362,8 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
       TagInputStyler().runSpacing(value);
   factory TagInputStyler.editorMinWidth(double value) =>
       TagInputStyler().editorMinWidth(value);
+  factory TagInputStyler.editor(BoxStyler value) =>
+      TagInputStyler().editor(value);
   factory TagInputStyler.text(TextStyler value) => TagInputStyler().text(value);
   factory TagInputStyler.hintText(TextStyler value) =>
       TagInputStyler().hintText(value);
@@ -868,6 +881,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
     'spacing',
     'runSpacing',
     'editorMinWidth',
+    'editor',
     'text',
     'hintText',
     'cursorColor',
@@ -905,6 +919,11 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
   /// Sets the editorMinWidth.
   TagInputStyler editorMinWidth(double value) {
     return merge(TagInputStyler(editorMinWidth: value));
+  }
+
+  /// Sets the editor.
+  TagInputStyler editor(BoxStyler value) {
+    return merge(TagInputStyler(editor: value));
   }
 
   /// Sets the text.
@@ -1036,6 +1055,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
       spacing: MixOps.merge($spacing, other?.$spacing),
       runSpacing: MixOps.merge($runSpacing, other?.$runSpacing),
       editorMinWidth: MixOps.merge($editorMinWidth, other?.$editorMinWidth),
+      editor: MixOps.merge($editor, other?.$editor),
       text: MixOps.merge($text, other?.$text),
       hintText: MixOps.merge($hintText, other?.$hintText),
       cursorColor: MixOps.merge($cursorColor, other?.$cursorColor),
@@ -1060,6 +1080,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
       spacing: MixOps.resolve(context, $spacing),
       runSpacing: MixOps.resolve(context, $runSpacing),
       editorMinWidth: MixOps.resolve(context, $editorMinWidth),
+      editor: MixOps.resolve(context, $editor),
       text: MixOps.resolve(context, $text),
       hintText: MixOps.resolve(context, $hintText),
       cursorColor: MixOps.resolve(context, $cursorColor),
@@ -1087,6 +1108,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
       ..add(DiagnosticsProperty('spacing', $spacing))
       ..add(DiagnosticsProperty('runSpacing', $runSpacing))
       ..add(DiagnosticsProperty('editorMinWidth', $editorMinWidth))
+      ..add(DiagnosticsProperty('editor', $editor))
       ..add(DiagnosticsProperty('text', $text))
       ..add(DiagnosticsProperty('hintText', $hintText))
       ..add(DiagnosticsProperty('cursorColor', $cursorColor))
@@ -1105,6 +1127,7 @@ class TagInputStyler extends MixStyler<TagInputStyler, TagInputSpec>
     $spacing,
     $runSpacing,
     $editorMinWidth,
+    $editor,
     $text,
     $hintText,
     $cursorColor,
