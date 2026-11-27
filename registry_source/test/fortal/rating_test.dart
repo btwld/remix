@@ -133,11 +133,58 @@ void main() {
     await tester.pumpRemixApp(const _Host(initial: 3));
     await tester.pumpAndSettle();
 
-    final field = tester.getRect(find.byType(RemixRating)).left;
+    final field = tester.getRect(find.byType(FortalRating)).left;
     final label = tester.getTopLeft(find.text('Rate this')).dx;
     final cell = tester.getTopLeft(_inStar(1, _adapter)).dx;
     expect(label, moreOrLessEquals(field, epsilon: .01));
     expect(cell + (36 - 24) / 2, moreOrLessEquals(field, epsilon: .01));
+  });
+
+  testWidgets('a tap on the overhang commits when an ancestor spans it', (
+    tester,
+  ) async {
+    await tester.pumpRemixApp(const _Host());
+    await tester.pumpAndSettle();
+
+    final field = tester.getRect(find.byType(FortalRating));
+    final row = tester.getCenter(_inStar(1, _adapter)).dy;
+    await tester.tapAt(Offset(field.left - 4, row));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Poor'), findsOneWidget);
+  });
+
+  testWidgets('intrinsic height matches layout at every width', (tester) async {
+    for (var width = 300.0; width <= 560; width += 8) {
+      await tester.pumpRemixApp(
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: width,
+            child: FortalRating(
+              label: 'Rate this',
+              description:
+                  'Your rating is public and helps other people choose well, '
+                  'so rate the recipe you cooked, not the photo',
+              value: 3,
+              onChanged: (_) {},
+            ),
+          ),
+        ),
+      );
+      final box = tester.renderObject<RenderBox>(find.byType(FortalRating));
+      expect(box.size.width, width);
+      expect(
+        box.getMinIntrinsicHeight(width),
+        moreOrLessEquals(box.size.height, epsilon: .01),
+        reason: 'min at $width',
+      );
+      expect(
+        box.getMaxIntrinsicHeight(width),
+        moreOrLessEquals(box.size.height, epsilon: .01),
+        reason: 'max at $width',
+      );
+    }
   });
 
   testWidgets('pressing a star lifts it to 86%', (tester) async {

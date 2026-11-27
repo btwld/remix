@@ -1,10 +1,8 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../theme/theme.dart';
-
-part 'rating.g.dart';
 
 /// The sizes a rating comes in. Pixel values are at 100% theme scaling.
 enum FortalRatingSize {
@@ -37,7 +35,10 @@ final _kept = ContextToken<Color>(
 ///
 /// [highContrast] moves the empty outline, the empty value text and the
 /// description to gray step 11.
-@MixWidget(target: RemixRating.new)
+///
+/// The label and description are inset by the cell's margin. [FortalRating]
+/// pulls the field back by the same amount, so the first glyph, not its cell,
+/// lines up with the label.
 RatingStyler fortalRatingStyle({
   FortalRatingSize size = .size2,
   bool highContrast = false,
@@ -47,20 +48,16 @@ RatingStyler fortalRatingStyle({
   final outline = highContrast
       ? FortalTokens.gray11()
       : FortalTokens.controlBorder();
-  // Cells are wider than their stars. The field overhangs its leading edge
-  // by the cell's margin and insets its text by the same amount, so the first
-  // glyph lines up with the label and the cell keeps its full target.
-  final inset = (_cell(size) - _glyph(size)) / 2;
+  final inset = _inset(size);
 
   return RatingStyler()
-      .leadingOverhang(inset)
       .spacing(6)
       .label(
         TextStyler()
             .style(FortalTokens.text2.mix())
             .color(FortalTokens.gray12())
             .fontWeight(FortalTokens.fontWeightMedium())
-            .wrap(.padding(.only(left: inset))),
+            .wrap(.padding(EdgeInsetsGeometryMix.directional(start: inset))),
       )
       .controlRow(FlexBoxStyler().spacing(8 - inset))
       .stars(FlexBoxStyler().spacing(2))
@@ -74,7 +71,7 @@ RatingStyler fortalRatingStyle({
             .style(FortalTokens.text1.mix())
             .color(muted)
             .fontFeatures([const FontFeature.tabularFigures()])
-            .wrap(.padding(.only(left: inset))),
+            .wrap(.padding(EdgeInsetsGeometryMix.directional(start: inset))),
       )
       .onRated(
         RatingStyler().valueText(TextStyler().color(FortalTokens.gray11())),
@@ -115,6 +112,8 @@ RatingStyler fortalRatingStyle({
       .merge(style);
 }
 
+double _inset(FortalRatingSize size) => (_cell(size) - _glyph(size)) / 2;
+
 double _cell(FortalRatingSize size) => switch (size) {
   .size1 => 28,
   .size2 => 36,
@@ -138,4 +137,202 @@ RatingStyler _scale(FortalRatingSize size) {
         .glyphSize(glyph)
         .strokeWidth(1.75 * glyph / 24),
   );
+}
+
+/// A Fortal star rating: [RemixRating] styled by [fortalRatingStyle].
+///
+/// The field overhangs its leading edge by the star cell's margin, as the
+/// reference look does, so the first glyph lines up with the label.
+class FortalRating extends StatelessWidget {
+  const FortalRating({
+    super.key,
+    this.size = .size2,
+    this.highContrast = false,
+    this.style = const RatingStyler.create(),
+    required this.value,
+    this.onChanged,
+    this.max = 5,
+    this.allowClear = true,
+    this.enabled = true,
+    this.label,
+    this.description,
+    this.semanticLabel,
+    this.valueLabelBuilder = RemixRating.defaultValueLabel,
+    this.starSemanticLabelBuilder = RemixRating.defaultStarSemanticLabel,
+  });
+
+  /// The cell and star size.
+  final FortalRatingSize size;
+
+  /// Moves muted text and the empty outline to gray step 11.
+  final bool highContrast;
+
+  /// Merged over the recipe.
+  final RatingStyler style;
+
+  /// See [RemixRating.value].
+  final int? value;
+
+  /// See [RemixRating.onChanged].
+  final ValueChanged<int?>? onChanged;
+
+  /// See [RemixRating.max].
+  final int max;
+
+  /// See [RemixRating.allowClear].
+  final bool allowClear;
+
+  /// See [RemixRating.enabled].
+  final bool enabled;
+
+  /// See [RemixRating.label].
+  final String? label;
+
+  /// See [RemixRating.description].
+  final String? description;
+
+  /// See [RemixRating.semanticLabel].
+  final String? semanticLabel;
+
+  /// See [RemixRating.valueLabelBuilder].
+  final RemixRatingValueLabelBuilder? valueLabelBuilder;
+
+  /// See [RemixRating.starSemanticLabelBuilder].
+  final RemixRatingStarLabelBuilder starSemanticLabelBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    return _RatingOverhang(
+      extent: _inset(size),
+      child: RemixRating(
+        value: value,
+        onChanged: onChanged,
+        max: max,
+        allowClear: allowClear,
+        enabled: enabled,
+        label: label,
+        description: description,
+        semanticLabel: semanticLabel,
+        valueLabelBuilder: valueLabelBuilder,
+        starSemanticLabelBuilder: starSemanticLabelBuilder,
+        style: fortalRatingStyle(
+          size: size,
+          highContrast: highContrast,
+          style: style,
+        ),
+      ),
+    );
+  }
+}
+
+/// Lays its child out [extent] wider than it reports, shifted toward the
+/// leading edge by that much. Visual only: it adds no semantics.
+///
+/// Hit testing reaches the shifted part only when every ancestor spans it,
+/// as a centred or padded rating does. A tight ancestor that ends at the
+/// field's edge, such as a start-aligned column with no padding, rejects
+/// taps there, so the first cell's outer [extent] is not tappable in it.
+class _RatingOverhang extends SingleChildRenderObjectWidget {
+  const _RatingOverhang({required this.extent, required super.child});
+
+  final double extent;
+
+  @override
+  _RenderRatingOverhang createRenderObject(BuildContext context) =>
+      _RenderRatingOverhang(extent, Directionality.of(context));
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderRatingOverhang renderObject,
+  ) {
+    renderObject
+      ..extent = extent
+      ..textDirection = Directionality.of(context);
+  }
+}
+
+class _RenderRatingOverhang extends RenderShiftedBox {
+  _RenderRatingOverhang(this._extent, this._textDirection) : super(null);
+
+  double _extent;
+  set extent(double value) {
+    if (value == _extent) return;
+    _extent = value;
+    markNeedsLayout();
+  }
+
+  TextDirection _textDirection;
+  set textDirection(TextDirection value) {
+    if (value == _textDirection) return;
+    _textDirection = value;
+    markNeedsLayout();
+  }
+
+  bool get _ltr => _textDirection == TextDirection.ltr;
+
+  double _narrower(double width) => width > _extent ? width - _extent : 0;
+
+  @override
+  double computeMinIntrinsicWidth(double height) =>
+      _narrower(child?.getMinIntrinsicWidth(height) ?? 0);
+
+  @override
+  double computeMaxIntrinsicWidth(double height) =>
+      _narrower(child?.getMaxIntrinsicWidth(height) ?? 0);
+
+  // The child lays out at the given width plus the overhang, so its height
+  // at that width is the height at ours.
+  @override
+  double computeMinIntrinsicHeight(double width) =>
+      child?.getMinIntrinsicHeight(width + _extent) ?? 0;
+
+  @override
+  double computeMaxIntrinsicHeight(double width) =>
+      child?.getMaxIntrinsicHeight(width + _extent) ?? 0;
+
+  BoxConstraints _childConstraints(BoxConstraints constraints) =>
+      constraints.copyWith(
+        minWidth: constraints.minWidth == 0
+            ? 0
+            : constraints.minWidth + _extent,
+        maxWidth: constraints.maxWidth + _extent,
+      );
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) {
+    final childSize =
+        child?.getDryLayout(_childConstraints(constraints)) ?? Size.zero;
+    return constraints.constrain(
+      Size(_narrower(childSize.width), childSize.height),
+    );
+  }
+
+  @override
+  void performLayout() {
+    final child = this.child;
+    if (child == null) {
+      size = constraints.smallest;
+      return;
+    }
+    child.layout(_childConstraints(constraints), parentUsesSize: true);
+    size = constraints.constrain(
+      Size(_narrower(child.size.width), child.size.height),
+    );
+    (child.parentData! as BoxParentData).offset = Offset(
+      _ltr ? -_extent : 0,
+      0,
+    );
+  }
+
+  @override
+  bool hitTest(BoxHitTestResult result, {required Offset position}) {
+    final reach = _ltr
+        ? Rect.fromLTRB(-_extent, 0, size.width, size.height)
+        : Rect.fromLTRB(0, 0, size.width + _extent, size.height);
+    if (!reach.contains(position)) return false;
+    if (!hitTestChildren(result, position: position)) return false;
+    result.add(BoxHitTestEntry(this, position));
+    return true;
+  }
 }

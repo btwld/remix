@@ -26,7 +26,6 @@
     "lib/ui/components/range_slider.dart": "btwld/remix/registry#fortal/range_slider",
     "lib/ui/components/range_slider.g.dart": "btwld/remix/registry#fortal/range_slider",
     "lib/ui/components/rating.dart": "btwld/remix/registry#fortal/rating",
-    "lib/ui/components/rating.g.dart": "btwld/remix/registry#fortal/rating",
     "lib/ui/components/search_field.dart": "btwld/remix/registry#fortal/search_field",
     "lib/ui/components/select.dart": "btwld/remix/registry#fortal/select",
     "lib/ui/components/select.g.dart": "btwld/remix/registry#fortal/select",
