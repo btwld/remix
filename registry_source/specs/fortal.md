@@ -473,7 +473,7 @@ pickers combine five independently overridable child stylers.
   Disabled days use gray9; unavailable days add a strike.
 - Ranges: directional radius3 caps in accentSolid, accent4 interiors; draft
   accent4 with accent5 caps and 2px accent8 perimeter. Blocked draft uses
-  error3/error11. Stale committed selection has gray4/gray3 caps/interior in
+  error3/error11. Stale committed selection has gray5/gray4 caps/interior in
   light, gray3 / the midpoint of gray2 and gray3 in dark, distinct from the live middle. Keyboard day focus
   uses the reviewed 2px border contour; dark uses gray11 so it separates from
   accent8, light uses focus8. This inset day treatment preserves connected bands.
