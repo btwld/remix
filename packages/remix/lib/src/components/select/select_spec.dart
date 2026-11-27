@@ -86,6 +86,14 @@ class SelectTriggerSpec with _$SelectTriggerSpec {
   @override
   final double? placeholderOpacity;
 
+  /// How the label changes when the selection changes.
+  ///
+  /// The builder receives each label's animation, whether it is arriving or
+  /// leaving, and which way the selection moved through the items. `null`
+  /// keeps the default: the label changes at once.
+  @override
+  final RemixSelectLabelTransition? labelTransition;
+
   const SelectTriggerSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
@@ -97,6 +105,7 @@ class SelectTriggerSpec with _$SelectTriggerSpec {
     this.indicatorAngle,
     this.selectedWhileOpen,
     this.placeholderOpacity,
+    this.labelTransition,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        placeholder = placeholder ?? const StyleSpec(spec: TextSpec()),

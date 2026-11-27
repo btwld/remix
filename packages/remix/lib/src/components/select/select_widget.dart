@@ -217,14 +217,12 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     );
   }
 
-  RemixSelectItem<T>? _findSelectedItem() {
+  /// The selected item's position in [RemixSelect.items], or `-1`.
+  int _findSelectedIndex() {
     final selectedValue = widget.selectedValue;
-    if (selectedValue == null) return null;
+    if (selectedValue == null) return -1;
 
-    for (final item in widget.items) {
-      if (item.value == selectedValue) return item;
-    }
-    return null;
+    return widget.items.indexWhere((item) => item.value == selectedValue);
   }
 
   /// Returns true so the whole check, loop included, is stripped in release.
@@ -279,7 +277,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   @override
   Widget build(BuildContext context) {
     final style = _buildStyle();
-    final selectedItem = _findSelectedItem();
+    final selectedIndex = _findSelectedIndex();
+    final selectedItem = selectedIndex < 0 ? null : widget.items[selectedIndex];
     assert(_debugValidate(selectedItem));
     final hasSelection = widget.selectedValue != null;
 
@@ -336,6 +335,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
                           ? '${widget.selectedValue}'
                           : widget.trigger.placeholder),
                   isPlaceholder: !hasSelection,
+                  selection: (hasSelection, widget.selectedValue),
+                  selectionIndex: selectedIndex,
                   isOpen: state.isOpen,
                   styleSpec: spec.trigger,
                 );
@@ -377,6 +378,8 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
     required this.trigger,
     required this.displayLabel,
     required this.isPlaceholder,
+    required this.selection,
+    required this.selectionIndex,
     required this.isOpen,
     required this.styleSpec,
   });
@@ -384,6 +387,8 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
   final RemixSelectTrigger trigger;
   final String displayLabel;
   final bool isPlaceholder;
+  final Object selection;
+  final int selectionIndex;
   final bool isOpen;
   final StyleSpec<SelectTriggerSpec> styleSpec;
 
@@ -418,11 +423,16 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
             if (trigger.icon != null)
               StyledIcon(icon: trigger.icon!, styleSpec: spec.icon),
             Expanded(
-              child: Opacity(
-                opacity: isPlaceholder ? spec.placeholderOpacity ?? 1 : 1,
-                child: StyledText(
-                  displayLabel,
-                  styleSpec: isPlaceholder ? spec.placeholder : spec.label,
+              child: _RemixSelectLabelSwitcher(
+                selection: selection,
+                index: selectionIndex,
+                transition: spec.labelTransition,
+                label: Opacity(
+                  opacity: isPlaceholder ? spec.placeholderOpacity ?? 1 : 1,
+                  child: StyledText(
+                    displayLabel,
+                    styleSpec: isPlaceholder ? spec.placeholder : spec.label,
+                  ),
                 ),
               ),
             ),

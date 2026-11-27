@@ -138,6 +138,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `selectedWhileOpen(true)` on the trigger style resolves it under `selected`
   while the panel is open, and `indicatorAngle` under `onSelected` with
   `animate` then turns the chevron.
+  `SelectTriggerStyler().labelTransition(...)` animates the label between
+  selections and reports the direction of the change.
 - **[Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx)** — controlled Gregorian date selection. `value` is nullable;
   `firstDate`/`lastDate` are required and inclusive. Compare civil year/month/day
   fields, not instants; callbacks return local date-only `DateTime` values,
