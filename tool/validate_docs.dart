@@ -25,7 +25,7 @@ final _retiredFortalAccents = <(RegExp, String)>[
       r'purple|violet|iris|indigo|blue|cyan|teal|jade|green|grass|brown|orange|'
       r'sky|mint|lime|yellow|amber|gold|bronze)\b',
     ),
-    'retired Radix accent name; use orla, mar, ceu, serra, sol, duna or caju',
+    'retired Radix accent name; use orla, mar, ceu, serra, sol, duna, caju or jambo',
   ),
 ];
 

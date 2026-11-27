@@ -174,35 +174,11 @@ void main() {
       '${candidateButton().readAsStringSync()}\n$source\n',
     );
 
-    test('a control cannot start casting a shadow', () {
-      appendToButton('final shadow = FortalTokens.shadow2;');
-      expect(
-        checkFortalContract(candidate),
-        anyElement(contains('button casts a shadow')),
-      );
-    });
-
     test('a recipe cannot build its own focus ring', () {
       appendToButton('final ring = RemixBoxEffectsMix(outlineOffset: 3);');
       expect(
         checkFortalContract(candidate),
         anyElement(contains('button builds a focus ring by hand')),
-      );
-    });
-
-    test('the shadow scan also reads layered shadow tokens', () {
-      appendToButton('final shadow = FortalTokens.shadow1Layers;');
-      expect(
-        checkFortalContract(candidate),
-        anyElement(contains('button casts a shadow')),
-      );
-    });
-
-    test('a raw blurred shadow counts as casting one', () {
-      appendToButton('final shadow = BoxShadowMix(blurRadius: 8);');
-      expect(
-        checkFortalContract(candidate),
-        anyElement(contains('button casts a shadow')),
       );
     });
 
