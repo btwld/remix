@@ -12,7 +12,8 @@ mixin _$NumberFieldSpec implements Spec<NumberFieldSpec>, Diagnosticable {
   double? get spacing;
   StyleSpec<FlexBoxSpec> get layout;
   StyleSpec<TextFieldSpec> get field;
-  StyleSpec<NumberFieldStepSpec> get step;
+  StyleSpec<NumberFieldStepSpec> get decrement;
+  StyleSpec<NumberFieldStepSpec> get increment;
   StyleSpec<TextSpec> get label;
   StyleSpec<TextSpec> get helperText;
 
@@ -26,7 +27,8 @@ mixin _$NumberFieldSpec implements Spec<NumberFieldSpec>, Diagnosticable {
     double? spacing,
     StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextFieldSpec>? field,
-    StyleSpec<NumberFieldStepSpec>? step,
+    StyleSpec<NumberFieldStepSpec>? decrement,
+    StyleSpec<NumberFieldStepSpec>? increment,
     StyleSpec<TextSpec>? label,
     StyleSpec<TextSpec>? helperText,
   }) {
@@ -36,7 +38,8 @@ mixin _$NumberFieldSpec implements Spec<NumberFieldSpec>, Diagnosticable {
       spacing: spacing ?? this.spacing,
       layout: layout ?? this.layout,
       field: field ?? this.field,
-      step: step ?? this.step,
+      decrement: decrement ?? this.decrement,
+      increment: increment ?? this.increment,
       label: label ?? this.label,
       helperText: helperText ?? this.helperText,
     );
@@ -54,7 +57,8 @@ mixin _$NumberFieldSpec implements Spec<NumberFieldSpec>, Diagnosticable {
       spacing: MixOps.lerp(spacing, other?.spacing, t),
       layout: layout.lerp(other?.layout, t),
       field: field.lerp(other?.field, t),
-      step: step.lerp(other?.step, t),
+      decrement: decrement.lerp(other?.decrement, t),
+      increment: increment.lerp(other?.increment, t),
       label: label.lerp(other?.label, t),
       helperText: helperText.lerp(other?.helperText, t),
     );
@@ -67,7 +71,8 @@ mixin _$NumberFieldSpec implements Spec<NumberFieldSpec>, Diagnosticable {
     spacing,
     layout,
     field,
-    step,
+    decrement,
+    increment,
     label,
     helperText,
   ];
@@ -117,7 +122,8 @@ mixin _$NumberFieldSpec implements Spec<NumberFieldSpec>, Diagnosticable {
       ..add(DoubleProperty('spacing', spacing))
       ..add(DiagnosticsProperty('layout', layout))
       ..add(DiagnosticsProperty('field', field))
-      ..add(DiagnosticsProperty('step', step))
+      ..add(DiagnosticsProperty('decrement', decrement))
+      ..add(DiagnosticsProperty('increment', increment))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('helperText', helperText));
   }
@@ -236,7 +242,8 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
   final Prop<double>? $spacing;
   final Prop<StyleSpec<FlexBoxSpec>>? $layout;
   final Prop<StyleSpec<TextFieldSpec>>? $field;
-  final Prop<StyleSpec<NumberFieldStepSpec>>? $step;
+  final Prop<StyleSpec<NumberFieldStepSpec>>? $decrement;
+  final Prop<StyleSpec<NumberFieldStepSpec>>? $increment;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<TextSpec>>? $helperText;
 
@@ -246,7 +253,8 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
     Prop<double>? spacing,
     Prop<StyleSpec<FlexBoxSpec>>? layout,
     Prop<StyleSpec<TextFieldSpec>>? field,
-    Prop<StyleSpec<NumberFieldStepSpec>>? step,
+    Prop<StyleSpec<NumberFieldStepSpec>>? decrement,
+    Prop<StyleSpec<NumberFieldStepSpec>>? increment,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<TextSpec>>? helperText,
     super.variants,
@@ -257,7 +265,8 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
        $spacing = spacing,
        $layout = layout,
        $field = field,
-       $step = step,
+       $decrement = decrement,
+       $increment = increment,
        $label = label,
        $helperText = helperText;
 
@@ -267,7 +276,8 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
     double? spacing,
     FlexBoxStyler? layout,
     TextFieldStyler? field,
-    NumberFieldStepStyler? step,
+    NumberFieldStepStyler? decrement,
+    NumberFieldStepStyler? increment,
     TextStyler? label,
     TextStyler? helperText,
     AnimationConfig? animation,
@@ -279,7 +289,8 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
          spacing: Prop.maybe(spacing),
          layout: Prop.maybeMix(layout),
          field: Prop.maybeMix(field),
-         step: Prop.maybeMix(step),
+         decrement: Prop.maybeMix(decrement),
+         increment: Prop.maybeMix(increment),
          label: Prop.maybeMix(label),
          helperText: Prop.maybeMix(helperText),
          variants: variants,
@@ -297,8 +308,10 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
       NumberFieldStyler().layout(value);
   factory NumberFieldStyler.field(TextFieldStyler value) =>
       NumberFieldStyler().field(value);
-  factory NumberFieldStyler.step(NumberFieldStepStyler value) =>
-      NumberFieldStyler().step(value);
+  factory NumberFieldStyler.decrement(NumberFieldStepStyler value) =>
+      NumberFieldStyler().decrement(value);
+  factory NumberFieldStyler.increment(NumberFieldStepStyler value) =>
+      NumberFieldStyler().increment(value);
   factory NumberFieldStyler.label(TextStyler value) =>
       NumberFieldStyler().label(value);
   factory NumberFieldStyler.helperText(TextStyler value) =>
@@ -808,7 +821,8 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
     'spacing',
     'layout',
     'field',
-    'step',
+    'decrement',
+    'increment',
     'label',
     'helperText',
     'animation',
@@ -841,9 +855,14 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
     return merge(NumberFieldStyler(field: value));
   }
 
-  /// Sets the step.
-  NumberFieldStyler step(NumberFieldStepStyler value) {
-    return merge(NumberFieldStyler(step: value));
+  /// Sets the decrement.
+  NumberFieldStyler decrement(NumberFieldStepStyler value) {
+    return merge(NumberFieldStyler(decrement: value));
+  }
+
+  /// Sets the increment.
+  NumberFieldStyler increment(NumberFieldStepStyler value) {
+    return merge(NumberFieldStyler(increment: value));
   }
 
   /// Sets the label.
@@ -949,7 +968,8 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
       spacing: MixOps.merge($spacing, other?.$spacing),
       layout: MixOps.merge($layout, other?.$layout),
       field: MixOps.merge($field, other?.$field),
-      step: MixOps.merge($step, other?.$step),
+      decrement: MixOps.merge($decrement, other?.$decrement),
+      increment: MixOps.merge($increment, other?.$increment),
       label: MixOps.merge($label, other?.$label),
       helperText: MixOps.merge($helperText, other?.$helperText),
       variants: MixOps.mergeVariants($variants, other?.$variants),
@@ -967,7 +987,8 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
       spacing: MixOps.resolve(context, $spacing),
       layout: MixOps.resolve(context, $layout),
       field: MixOps.resolve(context, $field),
-      step: MixOps.resolve(context, $step),
+      decrement: MixOps.resolve(context, $decrement),
+      increment: MixOps.resolve(context, $increment),
       label: MixOps.resolve(context, $label),
       helperText: MixOps.resolve(context, $helperText),
     );
@@ -988,7 +1009,8 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
       ..add(DiagnosticsProperty('spacing', $spacing))
       ..add(DiagnosticsProperty('layout', $layout))
       ..add(DiagnosticsProperty('field', $field))
-      ..add(DiagnosticsProperty('step', $step))
+      ..add(DiagnosticsProperty('decrement', $decrement))
+      ..add(DiagnosticsProperty('increment', $increment))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('helperText', $helperText));
   }
@@ -1000,7 +1022,8 @@ class NumberFieldStyler extends MixStyler<NumberFieldStyler, NumberFieldSpec>
     $spacing,
     $layout,
     $field,
-    $step,
+    $decrement,
+    $increment,
     $label,
     $helperText,
     $animation,

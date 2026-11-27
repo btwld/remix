@@ -15,26 +15,25 @@ const _shellRest = Color(0xff000011);
 const _shellFocus = Color(0xff000012);
 const _shellHover = Color(0xff000013);
 
+final _step =
+    NumberFieldStepStyler(
+          container: BoxStyler().size(30, 30),
+          icon: IconStyler(color: _rest, size: 16),
+        )
+        .onHovered(NumberFieldStepStyler(icon: IconStyler(color: _hover)))
+        .onPressed(
+          NumberFieldStepStyler(
+            icon: IconStyler(color: _press),
+            iconScale: 0.82,
+          ),
+        )
+        .onDisabled(NumberFieldStepStyler(icon: IconStyler(color: _off)));
+
 final _style =
     NumberFieldStyler(
           container: BoxStyler().color(_shellRest),
-          step:
-              NumberFieldStepStyler(
-                    container: BoxStyler().size(30, 30),
-                    icon: IconStyler(color: _rest, size: 16),
-                  )
-                  .onHovered(
-                    NumberFieldStepStyler(icon: IconStyler(color: _hover)),
-                  )
-                  .onPressed(
-                    NumberFieldStepStyler(
-                      icon: IconStyler(color: _press),
-                      iconScale: 0.82,
-                    ),
-                  )
-                  .onDisabled(
-                    NumberFieldStepStyler(icon: IconStyler(color: _off)),
-                  ),
+          decrement: _step,
+          increment: _step,
         )
         .onHovered(NumberFieldStyler(container: BoxStyler().color(_shellHover)))
         .onFocused(
@@ -266,5 +265,40 @@ void main() {
     expect(owner.proposals, [10]);
     expect(tester.widget<EditableText>(_editor).controller.text, '10');
     expect(tester.widget<EditableText>(_editor).textAlign, TextAlign.center);
+  });
+
+  testWidgets('each side takes its own style, and a style icon replaces the '
+      'text glyph', (tester) async {
+    const plus = IconData(0xe145, fontFamily: 'TestIcons');
+    await tester.pumpWidget(
+      WidgetsApp(
+        color: const Color(0xff000000),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, _, _) => builder(context),
+        ),
+        home: Center(
+          child: SizedBox(
+            width: 240,
+            child: RemixNumberField(
+              value: 1,
+              onChanged: (_) {},
+              style: NumberFieldStyler(
+                decrement: NumberFieldStepStyler(
+                  icon: IconStyler(color: _rest),
+                ),
+                increment: NumberFieldStepStyler(
+                  icon: IconStyler(icon: plus, color: _hover),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('+'), findsNothing);
+    expect(tester.widget<Icon>(find.byIcon(plus)).color, _hover);
+    expect(_glyphColor(tester, '\u2212'), _rest);
   });
 }

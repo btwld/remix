@@ -123,10 +123,12 @@ class RemixNumberField extends StatefulWidget {
   /// The decrement control's accessible name.
   final String decrementSemanticLabel;
 
-  /// The increment glyph. Defaults to a plus sign drawn as text.
+  /// The increment glyph. Defaults to the increment style's icon, then to a
+  /// plus sign drawn as text.
   final IconData? incrementIcon;
 
-  /// The decrement glyph. Defaults to a minus sign drawn as text.
+  /// The decrement glyph. Defaults to the decrement style's icon, then to a
+  /// minus sign drawn as text.
   final IconData? decrementIcon;
 
   /// The keyboard's action button. Pressing it commits the draft.
@@ -206,7 +208,8 @@ class _RemixNumberFieldState extends State<RemixNumberField> {
       spacing: 8,
     ),
     field: TextFieldStyler(textAlign: TextAlign.center),
-    step: NumberFieldStepStyler(container: BoxStyler(alignment: .center)),
+    decrement: NumberFieldStepStyler(container: BoxStyler(alignment: .center)),
+    increment: NumberFieldStepStyler(container: BoxStyler(alignment: .center)),
   ).merge(widget.style);
 
   Widget _buildStep({
@@ -215,14 +218,19 @@ class _RemixNumberFieldState extends State<RemixNumberField> {
     required IconData? icon,
     required String glyph,
     required NumberFieldStyler style,
-  }) => _NumberFieldStep(
-    onPressed: onPressed,
-    semanticLabel: semanticLabel,
-    icon: icon,
-    glyph: glyph,
-    style: widget.styleSpec == null ? style : null,
-    styleSpec: widget.styleSpec?.step,
-  );
+    required StyleSpec<NumberFieldStepSpec> Function(NumberFieldSpec) slot,
+  }) {
+    final styleSpec = widget.styleSpec;
+    return _NumberFieldStep(
+      onPressed: onPressed,
+      semanticLabel: semanticLabel,
+      icon: icon,
+      glyph: glyph,
+      resolve: styleSpec == null
+          ? (context) => slot(style.build(context).spec)
+          : (_) => slot(styleSpec),
+    );
+  }
 
   Widget _buildResolved(
     BuildContext context,
@@ -258,8 +266,9 @@ class _RemixNumberFieldState extends State<RemixNumberField> {
             onPressed: field.decrement,
             semanticLabel: widget.decrementSemanticLabel,
             icon: widget.decrementIcon,
-            glyph: '−',
+            glyph: '\u2212',
             style: style,
+            slot: (spec) => spec.decrement,
           ),
           Expanded(child: editor),
           _buildStep(
@@ -268,6 +277,7 @@ class _RemixNumberFieldState extends State<RemixNumberField> {
             icon: widget.incrementIcon,
             glyph: '+',
             style: style,
+            slot: (spec) => spec.increment,
           ),
         ],
       ),
@@ -329,21 +339,20 @@ class _NumberFieldStep extends StatelessWidget {
     required this.semanticLabel,
     required this.icon,
     required this.glyph,
-    required this.style,
-    required this.styleSpec,
+    required this.resolve,
   });
 
   final VoidCallback? onPressed;
   final String semanticLabel;
   final IconData? icon;
   final String glyph;
-  final NumberFieldStyler? style;
-  final StyleSpec<NumberFieldStepSpec>? styleSpec;
+  final StyleSpec<NumberFieldStepSpec> Function(BuildContext context) resolve;
 
   Widget _glyph(NumberFieldStepSpec spec) {
     final iconSpec = spec.icon.spec;
-    final Widget child = icon != null
-        ? StyledIcon(icon: icon!, styleSpec: spec.icon)
+    final glyphIcon = icon ?? iconSpec.icon;
+    final Widget child = glyphIcon != null
+        ? StyledIcon(icon: glyphIcon, styleSpec: spec.icon)
         : Text(
             glyph,
             textAlign: TextAlign.center,
@@ -372,7 +381,7 @@ class _NumberFieldStep extends StatelessWidget {
               builder: (context) => StyleSpecBuilder<NumberFieldStepSpec>(
                 // Resolve under this control's states so pressed and hovered
                 // variants apply to it alone.
-                styleSpec: styleSpec ?? style!.build(context).spec.step,
+                styleSpec: resolve(context),
                 builder: (context, spec) => RemixBoxAdapter(
                   styleSpec: spec.container,
                   containerEffects: spec.containerEffects,

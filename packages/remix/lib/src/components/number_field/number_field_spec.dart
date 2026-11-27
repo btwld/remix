@@ -3,8 +3,8 @@ part of 'number_field.dart';
 /// Resolved values for a [RemixNumberField].
 ///
 /// The field stacks [label], the [container] shell, and [helperText] in
-/// [layout]. The shell is a row: the decrement [step], the [field] editor,
-/// and the increment [step], [spacing] apart. [field] styles a
+/// [layout]. The shell is a row: the [decrement] control, the [field] editor,
+/// and the [increment] control, [spacing] apart. [field] styles a
 /// [RemixTextField] and is resolved under the shell's states, so it usually
 /// carries text, cursor and alignment values and no frame of its own.
 @MixableSpec(
@@ -34,10 +34,15 @@ class NumberFieldSpec with _$NumberFieldSpec {
   @override
   final StyleSpec<TextFieldSpec> field;
 
-  /// Both step controls. Each resolves under its own pressed, hovered and
-  /// disabled states.
+  /// The control before the editor. It resolves under its own pressed,
+  /// hovered and disabled states.
   @override
-  final StyleSpec<NumberFieldStepSpec> step;
+  final StyleSpec<NumberFieldStepSpec> decrement;
+
+  /// The control after the editor. It resolves under its own pressed,
+  /// hovered and disabled states.
+  @override
+  final StyleSpec<NumberFieldStepSpec> increment;
 
   /// The visible label above the shell.
   @override
@@ -53,13 +58,15 @@ class NumberFieldSpec with _$NumberFieldSpec {
     this.spacing,
     StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextFieldSpec>? field,
-    StyleSpec<NumberFieldStepSpec>? step,
+    StyleSpec<NumberFieldStepSpec>? decrement,
+    StyleSpec<NumberFieldStepSpec>? increment,
     StyleSpec<TextSpec>? label,
     StyleSpec<TextSpec>? helperText,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        layout = layout ?? const StyleSpec(spec: FlexBoxSpec()),
        field = field ?? const StyleSpec(spec: TextFieldSpec()),
-       step = step ?? const StyleSpec(spec: NumberFieldStepSpec()),
+       decrement = decrement ?? const StyleSpec(spec: NumberFieldStepSpec()),
+       increment = increment ?? const StyleSpec(spec: NumberFieldStepSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        helperText = helperText ?? const StyleSpec(spec: TextSpec());
 
@@ -94,7 +101,9 @@ class NumberFieldStepSpec with _$NumberFieldStepSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
 
-  /// The plus or minus glyph.
+  /// The glyph. Its icon is used when the field names none; without either,
+  /// the control draws a plus or minus sign as text in the icon's color and
+  /// size.
   @override
   final StyleSpec<IconSpec> icon;
 
