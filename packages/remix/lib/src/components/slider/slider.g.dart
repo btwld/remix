@@ -19,6 +19,7 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
   RemixBoxEffectsSpec? get thumbEffects;
   RemixBoxEffectsSpec? get thumbFocusEffects;
   BlendMode? get blendMode;
+  AnimationConfig? get thumbMotion;
 
   @override
   Type get type => SliderSpec;
@@ -37,6 +38,7 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
     RemixBoxEffectsSpec? thumbEffects,
     RemixBoxEffectsSpec? thumbFocusEffects,
     BlendMode? blendMode,
+    AnimationConfig? thumbMotion,
   }) {
     return SliderSpec(
       track: track ?? this.track,
@@ -51,6 +53,7 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
       thumbEffects: thumbEffects ?? this.thumbEffects,
       thumbFocusEffects: thumbFocusEffects ?? this.thumbFocusEffects,
       blendMode: blendMode ?? this.blendMode,
+      thumbMotion: thumbMotion ?? this.thumbMotion,
     );
   }
 
@@ -73,6 +76,7 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
         t,
       ),
       blendMode: MixOps.lerpSnap(blendMode, other?.blendMode, t),
+      thumbMotion: MixOps.lerpSnap(thumbMotion, other?.thumbMotion, t),
     );
   }
 
@@ -90,6 +94,7 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
     thumbEffects,
     thumbFocusEffects,
     blendMode,
+    thumbMotion,
   ];
 
   @override
@@ -143,7 +148,8 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('thumb', thumb))
       ..add(DiagnosticsProperty('thumbEffects', thumbEffects))
       ..add(DiagnosticsProperty('thumbFocusEffects', thumbFocusEffects))
-      ..add(EnumProperty<BlendMode>('blendMode', blendMode));
+      ..add(EnumProperty<BlendMode>('blendMode', blendMode))
+      ..add(DiagnosticsProperty('thumbMotion', thumbMotion));
   }
 }
 
@@ -171,6 +177,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
   final Prop<RemixBoxEffectsSpec>? $thumbEffects;
   final Prop<RemixBoxEffectsSpec>? $thumbFocusEffects;
   final Prop<BlendMode>? $blendMode;
+  final Prop<AnimationConfig>? $thumbMotion;
 
   const SliderStyler.create({
     Prop<StyleSpec<BoxSpec>>? track,
@@ -185,6 +192,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     Prop<RemixBoxEffectsSpec>? thumbEffects,
     Prop<RemixBoxEffectsSpec>? thumbFocusEffects,
     Prop<BlendMode>? blendMode,
+    Prop<AnimationConfig>? thumbMotion,
     super.variants,
     super.modifier,
     super.animation,
@@ -199,7 +207,8 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
        $thumb = thumb,
        $thumbEffects = thumbEffects,
        $thumbFocusEffects = thumbFocusEffects,
-       $blendMode = blendMode;
+       $blendMode = blendMode,
+       $thumbMotion = thumbMotion;
 
   SliderStyler({
     BoxStyler? track,
@@ -214,6 +223,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     RemixBoxEffectsMix? thumbEffects,
     RemixBoxEffectsMix? thumbFocusEffects,
     BlendMode? blendMode,
+    AnimationConfig? thumbMotion,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<SliderSpec>>? variants,
@@ -230,6 +240,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
          thumbEffects: Prop.maybeMix(thumbEffects),
          thumbFocusEffects: Prop.maybeMix(thumbFocusEffects),
          blendMode: Prop.maybe(blendMode),
+         thumbMotion: Prop.maybe(thumbMotion),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -256,6 +267,8 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
       SliderStyler().thumbFocusEffects(value);
   factory SliderStyler.blendMode(BlendMode value) =>
       SliderStyler().blendMode(value);
+  factory SliderStyler.thumbMotion(AnimationConfig value) =>
+      SliderStyler().thumbMotion(value);
   factory SliderStyler.alignment(AlignmentGeometry value) =>
       SliderStyler().alignment(value);
   factory SliderStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -761,6 +774,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     'thumbEffects',
     'thumbFocusEffects',
     'blendMode',
+    'thumbMotion',
     'animation',
     'modifier',
     'variants',
@@ -824,6 +838,11 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
   /// Sets the blendMode.
   SliderStyler blendMode(BlendMode value) {
     return merge(SliderStyler(blendMode: value));
+  }
+
+  /// Sets the thumbMotion.
+  SliderStyler thumbMotion(AnimationConfig value) {
+    return merge(SliderStyler(thumbMotion: value));
   }
 
   /// Sets the animation configuration.
@@ -905,6 +924,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
         other?.$thumbFocusEffects,
       ),
       blendMode: MixOps.merge($blendMode, other?.$blendMode),
+      thumbMotion: MixOps.merge($thumbMotion, other?.$thumbMotion),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -927,6 +947,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
       thumbEffects: MixOps.resolve(context, $thumbEffects),
       thumbFocusEffects: MixOps.resolve(context, $thumbFocusEffects),
       blendMode: MixOps.resolve(context, $blendMode),
+      thumbMotion: MixOps.resolve(context, $thumbMotion),
     );
 
     return StyleSpec(
@@ -951,7 +972,8 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
       ..add(DiagnosticsProperty('thumb', $thumb))
       ..add(DiagnosticsProperty('thumbEffects', $thumbEffects))
       ..add(DiagnosticsProperty('thumbFocusEffects', $thumbFocusEffects))
-      ..add(DiagnosticsProperty('blendMode', $blendMode));
+      ..add(DiagnosticsProperty('blendMode', $blendMode))
+      ..add(DiagnosticsProperty('thumbMotion', $thumbMotion));
   }
 
   @override
@@ -968,6 +990,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     $thumbEffects,
     $thumbFocusEffects,
     $blendMode,
+    $thumbMotion,
     $animation,
     $modifier,
     $variants,

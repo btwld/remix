@@ -398,6 +398,10 @@ Sets range color (filled progress portion)
 
 Sets thumb styling
 
+#### `thumbMotion(AnimationConfig value)`
+
+Sets how a thumb moves to a value that does not come from dragging it: a key press, a press on the track, or a value the app sets. Accepts `AnimationConfig.curve(...)` or a spring such as `AnimationConfig.springDescription(...)`; the selected range follows the moving thumbs. Unset, thumbs jump to every new value. A dragged thumb follows the pointer, and every change jumps under reduced motion. Applies to `RemixRangeSlider` too.
+
 #### `thumbSize(Size size)`
 
 Sets thumb to a fixed [size].

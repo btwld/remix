@@ -38,12 +38,24 @@ class _SliderRendererState extends State<_SliderRenderer> {
     styleSpec: widget.styleSpec,
     controller: NakedSliderState.controllerOf(context),
     trackFocusVisibility: true,
-    builder: (context, spec) => widget.range
-        ? _resolveThumbs(context, spec, const [], [
-            for (var i = 0; i < widget.state.values.length; i++)
-              _thumbStates(i),
-          ])
-        : _layout(context, spec, [spec]),
+    builder: (context, spec) {
+      final motion = spec.thumbMotion;
+      if (motion != null &&
+          motion is! CurveAnimationConfig &&
+          motion is! SpringAnimationConfig) {
+        throw ArgumentError.value(
+          motion,
+          'thumbMotion',
+          'Expected CurveAnimationConfig or SpringAnimationConfig',
+        );
+      }
+      return widget.range
+          ? _resolveThumbs(context, spec, const [], [
+              for (var i = 0; i < widget.state.values.length; i++)
+                _thumbStates(i),
+            ])
+          : _layout(context, spec, [spec]);
+    },
   );
 
   Set<WidgetState> _thumbStates(int index) {
@@ -151,88 +163,95 @@ class _SliderRendererState extends State<_SliderRenderer> {
             'Constrain the slider width with its parent',
           );
           final width = math.max(0.0, constraints.maxWidth - inset * 2);
-          final first = widget.range
-              ? state.visualPercentageAt(0)
-              : state.visualPercentageOf(0);
-          final end = state.visualPercentageAt(thumbs.length - 1);
-          final start = math.min(first, end);
-          final span = (end - first).abs();
-          return Stack(
-            alignment: Alignment.centerLeft,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: inset),
-                child: NakedSliderTrack(
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: constraints.maxHeight,
-                    child: LayoutBuilder(
-                      builder: (context, railConstraints) => Stack(
-                        alignment: Alignment.centerLeft,
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            height: spec.trackWidth,
-                            child: RemixBoxAdapter(
-                              styleSpec: _sliderRailStyle(
-                                spec.track,
-                                color: spec.trackColor,
-                                thickness: spec.trackWidth,
-                              ),
-                              containerEffects: spec.trackEffects,
-                            ),
-                          ),
-                          Positioned(
-                            left: start * railConstraints.maxWidth,
-                            width: span * railConstraints.maxWidth,
-                            top: 0,
-                            bottom: 0,
-                            child: Center(
-                              child: SizedBox(
+          return _SliderThumbMotion(
+            targets: [
+              for (var i = 0; i < thumbs.length; i++)
+                state.visualPercentageAt(i),
+            ],
+            draggedIndex: state.activeThumbIndex,
+            motion: spec.thumbMotion,
+            builder: (context, painted) {
+              final first = widget.range
+                  ? painted.first
+                  : state.visualPercentageOf(0);
+              final end = painted.last;
+              final start = math.min(first, end);
+              final span = (end - first).abs();
+              return Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: inset),
+                    child: NakedSliderTrack(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: constraints.maxHeight,
+                        child: LayoutBuilder(
+                          builder: (context, railConstraints) => Stack(
+                            alignment: Alignment.centerLeft,
+                            children: [
+                              SizedBox(
                                 width: double.infinity,
-                                height: spec.rangeWidth,
+                                height: spec.trackWidth,
                                 child: RemixBoxAdapter(
                                   styleSpec: _sliderRailStyle(
-                                    spec.range,
-                                    color: spec.rangeColor,
-                                    thickness: spec.rangeWidth,
+                                    spec.track,
+                                    color: spec.trackColor,
+                                    thickness: spec.trackWidth,
                                   ),
-                                  containerEffects: spec.rangeEffects,
+                                  containerEffects: spec.trackEffects,
                                 ),
                               ),
-                            ),
+                              Positioned(
+                                left: start * railConstraints.maxWidth,
+                                width: span * railConstraints.maxWidth,
+                                top: 0,
+                                bottom: 0,
+                                child: Center(
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    height: spec.rangeWidth,
+                                    child: RemixBoxAdapter(
+                                      styleSpec: _sliderRailStyle(
+                                        spec.range,
+                                        color: spec.rangeColor,
+                                        thickness: spec.rangeWidth,
+                                      ),
+                                      containerEffects: spec.rangeEffects,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              for (final index in order)
-                Transform.translate(
-                  key: ValueKey(index),
-                  offset: Offset(
-                    inset + width * state.visualPercentageAt(index),
-                    0,
-                  ),
-                  // Box constraints already include padding. Use the rendered size
-                  // for centering rather than subtracting a predicted footprint.
-                  child: FractionalTranslation(
-                    translation: const Offset(-.5, 0),
-                    child: thumbStates == null
-                        ? _thumb(context, index, thumbs[index], override)
-                        : WidgetStateProvider(
-                            states: thumbStates[index],
-                            child: _thumb(
-                              context,
-                              index,
-                              thumbs[index],
-                              override,
-                            ),
-                          ),
-                  ),
-                ),
-            ],
+                  for (final index in order)
+                    Transform.translate(
+                      key: ValueKey(index),
+                      offset: Offset(inset + width * painted[index], 0),
+                      // Box constraints already include padding. Use the rendered size
+                      // for centering rather than subtracting a predicted footprint.
+                      child: FractionalTranslation(
+                        translation: const Offset(-.5, 0),
+                        child: thumbStates == null
+                            ? _thumb(context, index, thumbs[index], override)
+                            : WidgetStateProvider(
+                                states: thumbStates[index],
+                                child: _thumb(
+                                  context,
+                                  index,
+                                  thumbs[index],
+                                  override,
+                                ),
+                              ),
+                      ),
+                    ),
+                ],
+              );
+            },
           );
         },
       ),

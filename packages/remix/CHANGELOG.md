@@ -28,6 +28,9 @@
   `description`, `descriptionSpacing`, `controlAlignment`, `row` and
   `rowEffects` style slots on `CheckboxSpec` and `RadioSpec`. `row` draws a
   box around the control and its copy, such as a bordered card row.
+- Add `SliderSpec.thumbMotion`, a curve or spring that moves slider and range
+  slider thumbs to values set by keys, track presses or the app. Dragged
+  thumbs still follow the pointer.
 
 ## 1.0.0-rc.7
 
