@@ -55,6 +55,7 @@ export 'src/fortal/components/radio.dart';
 export 'src/fortal/components/search_field.dart';
 export 'src/fortal/components/range_slider.dart';
 export 'src/fortal/components/segmented_control.dart';
+export 'src/fortal/components/multi_select.dart';
 export 'src/fortal/components/select.dart';
 export 'src/fortal/components/sidebar.dart';
 export 'src/fortal/components/sidebar_layout.dart';
