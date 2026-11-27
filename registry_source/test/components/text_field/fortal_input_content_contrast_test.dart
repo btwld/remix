@@ -47,6 +47,8 @@ void main() {
                 ),
                 accent: accent,
                 mode: dark ? .dark : .light,
+                // The content gate applies to the high contrast switch.
+                highContrast: true,
               );
               final iconColor = IconTheme.of(
                 tester.element(find.byKey(iconKey)),

@@ -129,7 +129,7 @@ void main() {
         ),
       ),
     );
-    expect(selected.label.spec.style?.fontSize, 14);
+    expect(selected.label.spec.style?.fontSize, 13);
     expect(selected.icon.spec.size, 16);
   });
 
@@ -336,7 +336,10 @@ void main() {
               (inside) => Offset(surface.left + inside, surface.center.dy),
               (inside) => Offset(surface.right - inside, surface.center.dy),
             ]) {
-              expectNearColor(pixel(focused, at(-offset - width / 2)), ring);
+              expectNearColor(
+                pixel(focused, at(-offset - width / 2)),
+                Color.alphaBlend(ring, pixel(idle, at(-offset - width / 2))),
+              );
               for (final distance in [1.0, -offset / 2, -offset - width - 1]) {
                 expectNearColor(
                   pixel(focused, at(distance)),

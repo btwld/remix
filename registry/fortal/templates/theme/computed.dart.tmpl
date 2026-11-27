@@ -63,6 +63,32 @@ Color computeFocusA5({{typePrefix}}ColorScale accent) => accent.alphaStep(5);
 /// Computes translucent focus ring color (accent alpha step 8).
 Color computeFocusA8({{typePrefix}}ColorScale accent) => accent.alphaStep(8);
 
+{{typePrefix}}FunctionalColors _functional({required bool isDark}) =>
+    isDark ? {{valuePrefix}}FunctionalDark : {{valuePrefix}}FunctionalLight;
+
+/// The page colour. The neutral's step 1 carries it; [gray] stays in the
+/// signature for callers written against the fitted model.
+Color computeColorBackground({{typePrefix}}ColorScale gray, {required bool isDark}) =>
+    _functional(isDark: isDark).background;
+
+/// The solid panel colour: the raised surface, a step above the input
+/// surface in dark.
+Color computeColorPanelSolid({{typePrefix}}ColorScale gray, {required bool isDark}) =>
+    _functional(isDark: isDark).panelSolid;
+
+/// The translucent panel colour: the raised surface at 88 percent.
+Color computeColorPanelTranslucent(
+  {{typePrefix}}ColorScale gray, {
+  required bool isDark,
+}) => _functional(isDark: isDark).panelTranslucent;
+
+/// The surface colour of input fields and controls: neutral step 2.
+Color computeColorSurface({{typePrefix}}ColorScale gray) => gray.step(2);
+
+/// The modal backdrop, the same in both appearances.
+Color computeColorOverlay({required bool isDark}) =>
+    _functional(isDark: isDark).overlay;
+
 /// Computes the neutral boundary of active empty controls under high
 /// contrast.
 ///
@@ -512,15 +538,18 @@ const Map<String, {{typePrefix}}ColorTheme> _accentThemesByName = {
       theme.accentPalette ?? _accentThemesByName[accentColor.name]!;
   final isDark = theme.isDark;
   final highContrast = theme.highContrast ?? false;
-  final functional = isDark ? {{valuePrefix}}FunctionalDark : {{valuePrefix}}FunctionalLight;
+  final functional = _functional(isDark: isDark);
   final {{typePrefix}}Color grayRC = isDark ? {{valuePrefix}}Neutral.dark : {{valuePrefix}}Neutral.light;
   var accentRC = isDark ? accentTheme.dark : accentTheme.light;
   final gray = grayRC.scale;
   var accent = accentRC.scale;
 
-  final colorBackground = functional.background;
-  final colorPanelSolid = functional.panelSolid;
-  final colorPanelTranslucent = functional.panelTranslucent;
+  final colorBackground = computeColorBackground(gray, isDark: isDark);
+  final colorPanelSolid = computeColorPanelSolid(gray, isDark: isDark);
+  final colorPanelTranslucent = computeColorPanelTranslucent(
+    gray,
+    isDark: isDark,
+  );
   final markSurfaces = _markSurfaces(
     colorBackground,
     colorPanelSolid,
@@ -586,10 +615,10 @@ const Map<String, {{typePrefix}}ColorTheme> _accentThemesByName = {
     whiteAlpha: whiteAlpha,
     highContrast: highContrast,
     colorBackground: colorBackground,
-    colorSurface: functional.surface,
+    colorSurface: computeColorSurface(gray),
     colorPanelSolid: colorPanelSolid,
     colorPanelTranslucent: colorPanelTranslucent,
-    colorOverlay: functional.overlay,
+    colorOverlay: computeColorOverlay(isDark: isDark),
     shadowStroke: computeShadowStroke(gray, isDark: isDark),
     controlBorder: controlBorder,
     controlTrack: controlTrack,

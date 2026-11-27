@@ -63,6 +63,32 @@ Color computeFocusA5(FortalColorScale accent) => accent.alphaStep(5);
 /// Computes translucent focus ring color (accent alpha step 8).
 Color computeFocusA8(FortalColorScale accent) => accent.alphaStep(8);
 
+FortalFunctionalColors _functional({required bool isDark}) =>
+    isDark ? fortalFunctionalDark : fortalFunctionalLight;
+
+/// The page colour. The neutral's step 1 carries it; [gray] stays in the
+/// signature for callers written against the fitted model.
+Color computeColorBackground(FortalColorScale gray, {required bool isDark}) =>
+    _functional(isDark: isDark).background;
+
+/// The solid panel colour: the raised surface, a step above the input
+/// surface in dark.
+Color computeColorPanelSolid(FortalColorScale gray, {required bool isDark}) =>
+    _functional(isDark: isDark).panelSolid;
+
+/// The translucent panel colour: the raised surface at 88 percent.
+Color computeColorPanelTranslucent(
+  FortalColorScale gray, {
+  required bool isDark,
+}) => _functional(isDark: isDark).panelTranslucent;
+
+/// The surface colour of input fields and controls: neutral step 2.
+Color computeColorSurface(FortalColorScale gray) => gray.step(2);
+
+/// The modal backdrop, the same in both appearances.
+Color computeColorOverlay({required bool isDark}) =>
+    _functional(isDark: isDark).overlay;
+
 /// Computes the neutral boundary of active empty controls under high
 /// contrast.
 ///
@@ -512,15 +538,18 @@ FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
       theme.accentPalette ?? _accentThemesByName[accentColor.name]!;
   final isDark = theme.isDark;
   final highContrast = theme.highContrast ?? false;
-  final functional = isDark ? fortalFunctionalDark : fortalFunctionalLight;
+  final functional = _functional(isDark: isDark);
   final FortalColor grayRC = isDark ? fortalNeutral.dark : fortalNeutral.light;
   var accentRC = isDark ? accentTheme.dark : accentTheme.light;
   final gray = grayRC.scale;
   var accent = accentRC.scale;
 
-  final colorBackground = functional.background;
-  final colorPanelSolid = functional.panelSolid;
-  final colorPanelTranslucent = functional.panelTranslucent;
+  final colorBackground = computeColorBackground(gray, isDark: isDark);
+  final colorPanelSolid = computeColorPanelSolid(gray, isDark: isDark);
+  final colorPanelTranslucent = computeColorPanelTranslucent(
+    gray,
+    isDark: isDark,
+  );
   final markSurfaces = _markSurfaces(
     colorBackground,
     colorPanelSolid,
@@ -586,10 +615,10 @@ FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
     whiteAlpha: whiteAlpha,
     highContrast: highContrast,
     colorBackground: colorBackground,
-    colorSurface: functional.surface,
+    colorSurface: computeColorSurface(gray),
     colorPanelSolid: colorPanelSolid,
     colorPanelTranslucent: colorPanelTranslucent,
-    colorOverlay: functional.overlay,
+    colorOverlay: computeColorOverlay(isDark: isDark),
     shadowStroke: computeShadowStroke(gray, isDark: isDark),
     controlBorder: controlBorder,
     controlTrack: controlTrack,

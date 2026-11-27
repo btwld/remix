@@ -114,8 +114,8 @@ void main() {
   group('geometry', () {
     for (final (size, fontSize, chevron, gap) in const [
       (FortalBreadcrumbsSize.size1, 12.0, 12.0, 4.0),
-      (FortalBreadcrumbsSize.size2, 14.0, 12.0, 8.0),
-      (FortalBreadcrumbsSize.size3, 16.0, 16.0, 8.0),
+      (FortalBreadcrumbsSize.size2, 13.0, 12.0, 8.0),
+      (FortalBreadcrumbsSize.size3, 15.0, 16.0, 8.0),
     ]) {
       testWidgets('${size.name} sets ${fontSize}px text, ${chevron}px '
           'chevrons ${gap}px from the steps', (tester) async {

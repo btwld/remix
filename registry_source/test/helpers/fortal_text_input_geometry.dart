@@ -21,14 +21,17 @@ void expectFortalTextInputGeometry(
   } else {
     expect(
       rect.height,
-      greaterThanOrEqualTo(render.preferredLineHeight + 2 * paddingY),
+      greaterThanOrEqualTo(render.preferredLineHeight + 2 * paddingY - 1e-6),
     );
     expect(
       render.size.height,
       greaterThanOrEqualTo(render.preferredLineHeight),
     );
-    expect(editorRect.top - rect.top, greaterThanOrEqualTo(paddingY));
-    expect(rect.bottom - editorRect.bottom, greaterThanOrEqualTo(paddingY));
+    expect(editorRect.top - rect.top, greaterThanOrEqualTo(paddingY - 1e-6));
+    expect(
+      rect.bottom - editorRect.bottom,
+      greaterThanOrEqualTo(paddingY - 1e-6),
+    );
   }
   expect(tester.takeException(), isNull);
 }

@@ -92,7 +92,10 @@ void main() {
           ];
 
           for (final at in edges(ringBounds)) {
-            expectNearColor(pixel(focused, at(outerInset + width / 2)), focus8);
+            expectNearColor(
+              pixel(focused, at(outerInset + width / 2)),
+              Color.alphaBlend(focus8, pixel(idle, at(outerInset + width / 2))),
+            );
             for (final distance in [outerInset - 0.5, inset - offset / 2]) {
               expectNearColor(
                 pixel(focused, at(distance)),

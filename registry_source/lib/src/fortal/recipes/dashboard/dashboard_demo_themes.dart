@@ -28,13 +28,14 @@ typedef FortalPaletteNote = ({
 /// The seven palettes, each named for a landscape of Ceará and paired with
 /// its own neutral.
 const fortalPaletteNotes = <FortalAccentColor, FortalPaletteNote>{
-  .orla: (place: 'The seafront', pairing: 'Gray on gray', motif: .waves),
-  .mar: (place: 'The sea', pairing: 'Teal on sage', motif: .waves),
-  .ceu: (place: 'The sky', pairing: 'Blue on slate', motif: .arches),
-  .serra: (place: 'The hills', pairing: 'Gold on olive', motif: .peaks),
-  .sol: (place: 'The sun', pairing: 'Amber on sand', motif: .sun),
-  .duna: (place: 'The dunes', pairing: 'Brown on sand', motif: .dunes),
-  .caju: (place: 'The cashew', pairing: 'Orange on sand', motif: .cobogo),
+  .orla: (place: 'The seafront', pairing: 'Neutral', motif: .waves),
+  .mar: (place: 'The sea', pairing: 'Green', motif: .waves),
+  .ceu: (place: 'The sky', pairing: 'Blue', motif: .arches),
+  .serra: (place: 'The hills', pairing: 'Violet', motif: .peaks),
+  .sol: (place: 'The sun', pairing: 'Amber', motif: .sun),
+  .duna: (place: 'The dunes', pairing: 'Coral', motif: .dunes),
+  .caju: (place: 'The cashew', pairing: 'Orange', motif: .cobogo),
+  .jambo: (place: 'The jambo tree', pairing: 'Rose', motif: .arches),
 };
 
 /// The Themes page: the seven Fortal palettes as cards, the rest of the theme

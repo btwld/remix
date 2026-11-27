@@ -1058,7 +1058,7 @@ void main() {
       expect(fortalPaletteNotes.keys, FortalAccentColor.values);
       expect(accentOf(tester), FortalAccentColor.orla);
       expect(
-        find.semantics.byLabel('Orla palette, gray on gray, in use'),
+        find.semantics.byLabel('Orla palette, neutral, in use'),
         findsOne,
       );
 
@@ -1068,10 +1068,10 @@ void main() {
 
       expect(accentOf(tester), FortalAccentColor.mar);
       expect(
-        find.semantics.byLabel('Mar palette, teal on sage, in use'),
+        find.semantics.byLabel('Mar palette, green, in use'),
         findsOne,
       );
-      expect(find.semantics.byLabel('Orla palette, gray on gray'), findsOne);
+      expect(find.semantics.byLabel('Orla palette, neutral'), findsOne);
       // The samples on a card are drawn, not operated: of the eight sample
       // switches on the page, only the specimen's is announced.
       expect(find.semantics.byLabel('Sample switch'), findsOne);
@@ -1357,7 +1357,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
-      await tester.tap(find.text('Palette · Brown on sand'));
+      await tester.tap(find.text('Palette · Coral'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
 

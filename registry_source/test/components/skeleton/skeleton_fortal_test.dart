@@ -18,7 +18,7 @@ void main() {
     expect(box.constraints?.minHeight, 12);
     expect(
       (decoration.borderRadius! as BorderRadius).topLeft,
-      const Radius.circular(3),
+      const Radius.circular(6),
     );
   });
 
@@ -30,7 +30,7 @@ void main() {
     expect(box.constraints?.minHeight, closeTo(13.2, 1e-9));
     expect(
       (decoration.borderRadius! as BorderRadius).topLeft.x,
-      closeTo(3.3, 1e-9),
+      closeTo(6.6, 1e-9),
     );
     expect(result.spec.duration, const Duration(milliseconds: 1000));
   });

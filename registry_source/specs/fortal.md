@@ -511,14 +511,14 @@ frameless and clips its marks.
   Fortal's 3.05:1 mark margin there, and does the same for an accent
   indicator that falls short. `highContrast` uses step 12 throughout. Color
   never carries meaning alone: label the series or slices.
-- Series order after the accent: Mar, Caju, Céu, Serra, Sol, Duna, then
-  Orla's gray. Teal, orange and blue are the most distinct families, so they
-  lead; the muted gold, amber and brown follow, and gray, the least distinct,
-  is last.
+- Series order after the accent: Mar, Caju, Céu, Serra, Sol, Duna, Jambo,
+  then Orla's gray. Green, orange and blue are the most distinct families, so
+  they lead; violet, amber, coral and rose follow, and gray, the least
+  distinct, is last.
 - Pie labels are off by default. A chart that shows them colors each slice's
   label with `fortalPieSliceLabelColor(sliceColor)` (installed as
-  `<prefix>PieSliceLabelColor`), which picks white or Orla's `#111111` ink to
-  meet WCAG 1.4.3's 4.5:1 on every series color.
+  `<prefix>PieSliceLabelColor`), which picks white or Orla's dark step-1 ink
+  to meet WCAG 1.4.3's 4.5:1 on every series color.
 - Legends are the caller's, as in Vanilla: the `chart` item ships none. The
   `dashboard_demo` item's `FortalDashboardChartLegend` is a worked example.
 - Bars round all four corners with `radius2`, as Vanilla's do. `mix_chart`
