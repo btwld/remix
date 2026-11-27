@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 void main() {
   test('theme configuration stores only canonical nullable overrides', () {
@@ -67,13 +68,17 @@ void main() {
         );
 
         final reason = '${scaling.name}/${brightness.name}';
-        expect(root.fontSize, closeTo(16 * factor, 1e-9), reason: reason);
-        expect(root.height, closeTo(1.5, 1e-9), reason: reason);
-        expect(root.letterSpacing, 0, reason: reason);
+        expect(root.fontSize, closeTo(15 * factor, 1e-9), reason: reason);
+        expect(root.height, closeTo(1.4, 1e-9), reason: reason);
+        expect(
+          root.letterSpacing,
+          closeTo(-0.01 * 15 * factor, 1e-9),
+          reason: reason,
+        );
         expect(root.fontWeight, FontWeight.w400, reason: reason);
         expect(root.color, gray12, reason: reason);
         expect(iconColor, gray12, reason: reason);
-        expect(root.fontFamily, isNull, reason: reason);
+        expect(root.fontFamily, RemixFonts.inter, reason: reason);
       }
     }
   });
@@ -100,9 +105,9 @@ void main() {
         .text
         .style!;
     expect(tester.widget<Text>(find.text('courtesy')).style, isNull);
-    expect(style.fontSize, 16);
-    expect(style.height, 1.5);
-    expect(style.letterSpacing, 0);
+    expect(style.fontSize, 15);
+    expect(style.height, 1.4);
+    expect(style.letterSpacing, closeTo(-0.15, 1e-9));
     expect(style.fontWeight, FontWeight.w400);
   });
 
@@ -133,11 +138,11 @@ void main() {
           .text
           .style
           ?.fontSize,
-      16,
+      15,
     );
     expect(
       tester.widget<Text>(find.text('code')).style?.fontSize,
-      closeTo(16 * 0.95 * 0.95, 1e-9),
+      closeTo(15 * 0.95 * 0.95, 1e-9),
     );
   });
 
@@ -173,9 +178,9 @@ void main() {
         .renderObject<RenderParagraph>(find.text('body'))
         .text
         .style!;
-    expect(body.fontSize, 17.6);
+    expect(body.fontSize, closeTo(16.5, 1e-9));
     expect(body.fontWeight, FontWeight.w400);
-    expect(body.letterSpacing, 0);
+    expect(body.letterSpacing, closeTo(-0.165, 1e-9));
     expect(
       body.color,
       MixScope.tokenOf(FortalTokens.gray12, tester.element(find.text('body'))),
@@ -183,7 +188,7 @@ void main() {
     // Code's geometry follows the nested scope's scaled text3 token.
     expect(
       tester.widget<Text>(find.text('code')).style?.fontSize,
-      closeTo(17.6 * 0.95 * 0.95, 1e-9),
+      closeTo(16.5 * 0.95 * 0.95, 1e-9),
     );
   });
 
@@ -298,7 +303,7 @@ void main() {
     // Mix tokens a route would otherwise lose.
     final root = await _captureThemes(tester, ambient: null);
     expect(root.accent, isNotNull);
-    expect(root.text.fontSize, 16);
+    expect(root.text.fontSize, 15);
     expect(root.text.color, root.gray12);
 
     final nested = await _captureThemes(

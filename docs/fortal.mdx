@@ -4,8 +4,9 @@ description: An independent, Fortaleza-inspired design system for Remix
 ---
 
 **Fortal** is an application-owned design system built on Remix and Naked UI.
-Seven city-inspired paired themes, subtle neutral tints, flat controls, and shared token
-scales give apps a complete starting point without locking away the source.
+Eight coastal accents over one neutral, Inter and Geist type, soft shadows,
+and shared token scales give apps a complete starting point without locking
+away the source.
 
 ![Fortal palettes, switch states, and input content in light and dark](/assets/fortal-catalog.png)
 
@@ -128,8 +129,8 @@ explicit `size:` selects another token size. Transparent, non-accent
 `FortalCode.ghost` is the deliberate exception for foreground only, so it can
 blend into surrounding text without inheriting that run's metrics.
 
-Nested themes retain the surrounding text metrics. When the paired neutral
-changes, bare text and icons use the new theme's neutral foreground.
+Nested themes retain the surrounding text metrics. When the appearance
+changes, bare text and icons use the new neutral foreground.
 
 <Warning>
   If an overlay's text does not inherit your theme, ensure the theme scope wraps
@@ -194,10 +195,10 @@ final style = fortalButtonStyle(variant: FortalButtonVariant.solid)
 
 Fortal styles are built on a robust token system that includes:
 
-- **Colors**: 12-step Radix accent and gray scales, paired under seven Fortal theme names
-- **Spacing**: 9-step spacing scale
-- **Border Radius**: 6-step radius scale
-- **Shadows**: 6-level shadow system
+- **Colors**: 12-step accent and gray scales for eight accents, plus status tones
+- **Spacing**: 9-step spacing scale with 18, 20 and 56px off-ladder steps
+- **Border Radius**: 7-step radius scale
+- **Shadows**: 6-level shadow system plus the thumb shadow
 - **Typography**: 9-size type scale
 - **Border Widths**: Consistent stroke weights
 
@@ -287,24 +288,26 @@ import 'package:remix_ui_icons/icons_index.dart';
 final search = remixIconEntries.firstWhere((entry) => entry.name == 'search');
 ```
 
-## Seven paired themes
+## Eight accents, one neutral
 
-Choose one Fortal theme. Its accent and subtly tinted gray are selected together;
-there is no separate neutral picker. The default is Orla. Both appearances use
-real scales from [Radix Colors](https://www.radix-ui.com/colors), pinned to version
-3.0.0. Fortal keeps its own component geometry and accessibility requirements.
+Choose an accent. Every accent shares one untinted neutral, so the page,
+panels, borders and body text never change with it; the accent recolours
+selection controls, accent text, soft tints, the focus outline and chart
+series. The default is Orla, whose accent is itself a near-ink gray. Fortal
+keeps its own component geometry and accessibility requirements.
 
-| Theme | Dart value | Radix accent | Paired neutral |
-| --- | --- | --- | --- |
-| Orla | `orla` | Gray | Gray |
-| Mar | `mar` | Teal | Sage |
-| Céu | `ceu` | Blue | Slate |
-| Serra | `serra` | Gold | Olive |
-| Sol | `sol` | Amber | Sand |
-| Duna | `duna` | Brown | Sand |
-| Caju | `caju` | Orange | Sand |
+| Accent | Dart value | Hue |
+| --- | --- | --- |
+| Orla | `orla` | neutral |
+| Mar | `mar` | green |
+| Céu | `ceu` | blue |
+| Serra | `serra` | violet |
+| Sol | `sol` | amber |
+| Duna | `duna` | coral |
+| Caju | `caju` | orange |
+| Jambo | `jambo` | rose |
 
-![The seven Fortal accent and neutral combinations in light and dark modes](/assets/fortal-theme-swatches.svg)
+![The eight Fortal accents over the shared neutral in light and dark modes](/assets/fortal-theme-swatches.svg)
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -317,52 +320,42 @@ Widget themedApp(Widget child) => FortalTheme(
 );
 ```
 
-The existing `accent` option selects the whole named combination. Page backgrounds,
-cards, text and borders use its paired gray. Buttons, badges, avatars, selections
-and progress use the accent. Neutral scale names such as Sage and Slate are
-internal source names; users choose only the seven Fortal themes.
-
-### Migrating an existing theme
-
-Remove `gray:` from `FortalTheme`, `FortalThemeConfig` and `FortalThemeData`, and
-remove `grayColor` from dashboard theme settings. `FortalGrayColor` is removed.
-The selected theme now owns the gray pairing. Existing `accent:` choices and
-ASCII identifiers, including `ceu`, remain supported.
-
-This update changes palette values. In particular, Serra now uses muted Gold
-with Olive neutrals, and Duna uses Brown with Sand neutrals. The swatches above
-show the actual source scales, not generated approximations of the former seeds.
+Solid buttons, badges and avatars are ink under every accent: the neutral's
+step 12 with the page colour as their label. Checkboxes, radios, switches,
+sliders, progress fills, selected calendar days and chart series take the
+accent.
 
 ### Contrast and functional colors
 
-Raw source steps remain unchanged. Use functional roles in component styles:
+Use functional roles in component styles:
 
 - `accentSolid` / `accentSolidHover` with `accentContrast` for labelled fills.
 - `accentContent` / `accentContentAlpha` for normal colored text on soft fills.
 - `accentIndicator` / `accentTrack` with `accentIndicatorContrast` for marks;
-  use `accentMarkHover` for their hover or pressed fill.
-- `focus8` and `controlBorder` for visible focus and empty-control boundaries.
+  `accentRange` for the slider range and `accentThumb` for a selected thumb.
+- `focus8` for visible focus, `controlBorder` for empty-control boundaries,
+  `controlTrack` and `controlThumb` for the off state of switches and sliders.
+- `success`, `warning`, `info` and the `tone*` colours for status; keep a text
+  label or icon alongside them.
 
-Fortal fits these roles where the source swatch alone cannot retain its existing
-WCAG requirements: **4.5:1** for normal labels and soft text, **3:1** for marks,
-focus and control cues. Sol keeps warm-brown labels. Orla uses dark primary
-fills with white labels in light mode, and white primary fills with dark labels
-in dark mode; its selected controls follow the same contrast. Its panels, soft
-treatments and secondary text retain their gray hierarchy. The other named
-themes use white labels on appropriately fitted solid fills. High-contrast variants remain
-available; in dark mode Orla’s explicit high-contrast fill uses source Gray-12
-(`#EEEEEE`), slightly dimmer than its default white. These are Fortal role choices,
-while the chart above shows unchanged raw Radix scales. Functional fills can
-therefore differ from the raw step-9 swatch.
+The default look takes Fortal's exact values, and a few boundaries sit below
+WCAG's 3:1: the control border and off track on the page, and the white thumb
+on the light off track. `FortalTheme(highContrast: true)` is one theme-level
+switch that moves those roles to values meeting **4.5:1** for labels and soft
+text and **3:1** for marks, focus and control cues. Per-family `highContrast`
+parameters keep their step-12 treatment on top of it.
 
-Error tokens use the dedicated red `fortalError`, independently of the selected
-theme. Keep a text label or icon alongside status colors. Raw opaque/alpha scales
-are imported together; alpha colors follow normal source-over compositing on
-the host surface.
+Error tokens use the dedicated rose `fortalError`, independently of the
+selected accent. Alpha colors follow normal source-over compositing on the
+host surface.
 
-Panels default to `solid`, with zero blur. `panelBackground: .translucent` is
-opt-in. Only floating layers carry elevation; cards and controls remain flat.
-Radius, scaling, appearance, font selection and icons remain independent options.
+Body text is set in Inter and display text (`text7` to `text9`) in Geist;
+code uses Geist Mono. Pass a null family through the unnamed
+`FortalThemeData` constructor to leave one to the application. Panels default
+to `solid`, with zero blur; `panelBackground: .translucent` is opt-in. Resting
+cards and controls are flat; hovered buttons and cards may cast the resting or
+raised shadow, and floating layers carry elevation. Radius, scaling,
+appearance and icons remain independent options.
 
 ## Your own brand seed
 

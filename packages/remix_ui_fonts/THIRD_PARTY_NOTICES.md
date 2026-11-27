@@ -24,3 +24,23 @@ The full license text is in [`lib/fonts/geist/OFL.txt`](lib/fonts/geist/OFL.txt)
 copied unmodified from the
 upstream release, and is also available with a FAQ at
 https://openfontlicense.org.
+
+## Inter 4.1
+
+`remix_ui_fonts` includes the Inter static TrueType fonts, unmodified, from the
+[Inter](https://github.com/rsms/inter) project.
+
+- Upstream: https://github.com/rsms/inter
+- Tag: `v4.1` (commit `e3a3d4c57d5ecc01453a575621882a384c1995a3`)
+- Source archive: the `Inter-4.1.zip` release asset, SHA-256
+  `9883fdd4a49d4fb66bd8177ba6625ef9a64aa45899767dde3d36aa425756b11e`
+- Files: `Inter-Regular`, `Inter-Medium`, `Inter-SemiBold`, and `Inter-Bold`,
+  all `.ttf`, from the archive's `extras/ttf/` directory
+- License: SIL Open Font License, Version 1.1
+
+Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+The full license text is in [`lib/fonts/inter/OFL.txt`](lib/fonts/inter/OFL.txt),
+copied unmodified from the upstream release's `LICENSE.txt`, and is also
+available with a FAQ at https://openfontlicense.org.

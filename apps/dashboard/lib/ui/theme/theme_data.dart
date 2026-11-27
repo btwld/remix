@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 import 'computed.dart';
 import 'fortal_colors.dart' as colors;
@@ -11,10 +12,11 @@ import 'palette.dart';
 import 'theme_scope.dart' show UiTheme;
 import 'tokens.dart';
 
-/// Paired Fortal themes, named for Fortaleza landscapes and coastal materials.
-/// Each choice owns its accent and subtly tinted neutral scales. Error
-/// roles use a dedicated red palette that is not a selectable accent.
-enum UiAccentColor { orla, mar, ceu, serra, sol, duna, caju }
+/// Fortal accents, named for Fortaleza landscapes and coastal materials.
+/// Every accent shares one untinted neutral; an accent recolours selection
+/// controls, accent text, soft tints, the focus outline and chart series.
+/// Error roles use a dedicated red palette that is not a selectable accent.
+enum UiAccentColor { orla, mar, ceu, serra, sol, duna, caju, jambo }
 
 /// Theme-level radius multipliers.
 enum UiRadius { none, small, medium, large, full }
@@ -51,6 +53,10 @@ class UiThemeConfig {
     this.radius,
     this.scaling,
     this.hasBackground,
+    this.highContrast,
+    this.fontFamily,
+    this.displayFontFamily,
+    this.monoFontFamily,
   });
 
   final UiAccentColor? accent;
@@ -63,6 +69,21 @@ class UiThemeConfig {
   final UiScaling? scaling;
   final bool? hasBackground;
 
+  /// Moves the foundation's low-contrast boundaries (control borders, the off
+  /// track, thumb outlines, mark fills and accent text) to values that meet
+  /// Fortal's contrast gates. Per-family `highContrast` parameters keep their
+  /// step-12 treatment on top of it.
+  final bool? highContrast;
+
+  /// Family of body text, `text1` to `text6` and typed field text.
+  final String? fontFamily;
+
+  /// Family of display text, `text7` to `text9`.
+  final String? displayFontFamily;
+
+  /// Family of code and keyboard text.
+  final String? monoFontFamily;
+
   bool get isDark => brightness == .dark;
 
   UiThemeConfig copyWith({
@@ -73,6 +94,10 @@ class UiThemeConfig {
     UiRadius? radius,
     UiScaling? scaling,
     bool? hasBackground,
+    bool? highContrast,
+    String? fontFamily,
+    String? displayFontFamily,
+    String? monoFontFamily,
   }) => UiThemeConfig(
     accent: accent ?? this.accent,
     accentPalette:
@@ -82,6 +107,10 @@ class UiThemeConfig {
     radius: radius ?? this.radius,
     scaling: scaling ?? this.scaling,
     hasBackground: hasBackground ?? this.hasBackground,
+    highContrast: highContrast ?? this.highContrast,
+    fontFamily: fontFamily ?? this.fontFamily,
+    displayFontFamily: displayFontFamily ?? this.displayFontFamily,
+    monoFontFamily: monoFontFamily ?? this.monoFontFamily,
   );
 
   @override
@@ -94,7 +123,11 @@ class UiThemeConfig {
           panelBackground == other.panelBackground &&
           radius == other.radius &&
           scaling == other.scaling &&
-          hasBackground == other.hasBackground;
+          hasBackground == other.hasBackground &&
+          highContrast == other.highContrast &&
+          fontFamily == other.fontFamily &&
+          displayFontFamily == other.displayFontFamily &&
+          monoFontFamily == other.monoFontFamily;
 
   @override
   int get hashCode => Object.hash(
@@ -105,6 +138,10 @@ class UiThemeConfig {
     radius,
     scaling,
     hasBackground,
+    highContrast,
+    fontFamily,
+    displayFontFamily,
+    monoFontFamily,
   );
 }
 
@@ -119,9 +156,16 @@ class UiThemeData extends UiThemeConfig {
     required UiRadius super.radius,
     required UiScaling super.scaling,
     required bool super.hasBackground,
+    bool super.highContrast = false,
+    super.fontFamily,
+    super.displayFontFamily,
+    super.monoFontFamily,
   });
 
   /// The preset's light appearance, with editable design options.
+  ///
+  /// Body text is set in Inter and display text in Geist. Pass a null family
+  /// through the unnamed constructor to leave one to the application.
   const UiThemeData.light({
     UiAccentColor accent = UiAccentColor.orla,
     UiColorTheme? accentPalette,
@@ -129,6 +173,10 @@ class UiThemeData extends UiThemeConfig {
     UiRadius radius = UiRadius.medium,
     UiScaling scaling = UiScaling.percent100,
     bool hasBackground = true,
+    bool highContrast = false,
+    String? fontFamily = RemixFonts.inter,
+    String? displayFontFamily = RemixFonts.geist,
+    String? monoFontFamily = RemixFonts.geistMono,
   }) : this(
          accent: accent,
          accentPalette: accentPalette,
@@ -137,6 +185,10 @@ class UiThemeData extends UiThemeConfig {
          radius: radius,
          scaling: scaling,
          hasBackground: hasBackground,
+         highContrast: highContrast,
+         fontFamily: fontFamily,
+         displayFontFamily: displayFontFamily,
+         monoFontFamily: monoFontFamily,
        );
 
   /// The preset's dark appearance, with editable design options.
@@ -147,6 +199,10 @@ class UiThemeData extends UiThemeConfig {
     UiRadius radius = UiRadius.medium,
     UiScaling scaling = UiScaling.percent100,
     bool hasBackground = true,
+    bool highContrast = false,
+    String? fontFamily = RemixFonts.inter,
+    String? displayFontFamily = RemixFonts.geist,
+    String? monoFontFamily = RemixFonts.geistMono,
   }) : this(
          accent: accent,
          accentPalette: accentPalette,
@@ -155,6 +211,10 @@ class UiThemeData extends UiThemeConfig {
          radius: radius,
          scaling: scaling,
          hasBackground: hasBackground,
+         highContrast: highContrast,
+         fontFamily: fontFamily,
+         displayFontFamily: displayFontFamily,
+         monoFontFamily: monoFontFamily,
        );
 
   @override
@@ -169,6 +229,8 @@ class UiThemeData extends UiThemeConfig {
   UiScaling get scaling => super.scaling!;
   @override
   bool get hasBackground => super.hasBackground!;
+  @override
+  bool get highContrast => super.highContrast!;
 
   @override
   bool get isDark => brightness == .dark;
@@ -182,6 +244,10 @@ class UiThemeData extends UiThemeConfig {
     UiRadius? radius,
     UiScaling? scaling,
     bool? hasBackground,
+    bool? highContrast,
+    String? fontFamily,
+    String? displayFontFamily,
+    String? monoFontFamily,
   }) => UiThemeData(
     accent: accent ?? this.accent,
     accentPalette:
@@ -191,6 +257,10 @@ class UiThemeData extends UiThemeConfig {
     radius: radius ?? this.radius,
     scaling: scaling ?? this.scaling,
     hasBackground: hasBackground ?? this.hasBackground,
+    highContrast: highContrast ?? this.highContrast,
+    fontFamily: fontFamily ?? this.fontFamily,
+    displayFontFamily: displayFontFamily ?? this.displayFontFamily,
+    monoFontFamily: monoFontFamily ?? this.monoFontFamily,
   );
 
   @override
@@ -203,7 +273,11 @@ class UiThemeData extends UiThemeConfig {
           panelBackground == other.panelBackground &&
           radius == other.radius &&
           scaling == other.scaling &&
-          hasBackground == other.hasBackground;
+          hasBackground == other.hasBackground &&
+          highContrast == other.highContrast &&
+          fontFamily == other.fontFamily &&
+          displayFontFamily == other.displayFontFamily &&
+          monoFontFamily == other.monoFontFamily;
 
   @override
   int get hashCode => Object.hash(
@@ -214,6 +288,10 @@ class UiThemeData extends UiThemeConfig {
     radius,
     scaling,
     hasBackground,
+    highContrast,
+    fontFamily,
+    displayFontFamily,
+    monoFontFamily,
   );
 }
 
@@ -245,11 +323,38 @@ Map<MixToken<Object?>, Object> buildUiScopeTokens(UiThemeData theme) {
 Map<MixToken<Object?>, Object> _buildScopeTokens(UiThemeData theme) {
   final tokens = resolveUiTokens(theme);
   final scaling = theme.scaling.factor;
-  final shadows = buildUiShadows(isDark: theme.isDark, colors: tokens);
+  final shadows = buildUiShadows(isDark: theme.isDark);
   // Error roles never follow the accent or a custom palette.
   final error = theme.isDark
       ? colors.uiError.dark.scale
       : colors.uiError.light.scale;
+  final functional = tokens.functional;
+  TextStyle text(
+    double size, {
+    required double leading,
+    required double tracking,
+    String? family,
+  }) => TextStyle(
+    fontFamily: family ?? theme.fontFamily,
+    fontSize: size * scaling,
+    letterSpacing: tracking * size * scaling,
+    height: leading,
+    // CSS splits leading evenly around the glyphs; Flutter's default places
+    // it by font metrics, which sits a label off-centre in a control sized to
+    // the line height.
+    leadingDistribution: TextLeadingDistribution.even,
+  );
+  TextStyle body(
+    double size, {
+    double leading = 1.4,
+    double tracking = -0.01,
+  }) => text(size, leading: leading, tracking: tracking);
+  TextStyle display(double size) => text(
+    size,
+    leading: 1.1,
+    tracking: -0.03,
+    family: theme.displayFontFamily ?? theme.fontFamily,
+  );
 
   final colorTokens = {
     // Role and functional tokens
@@ -265,7 +370,20 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(UiThemeData theme) {
         : tokens.colorPanelTranslucent,
     UiTokens.colorOverlay: tokens.colorOverlay,
     UiTokens.controlBorder: tokens.controlBorder,
+    UiTokens.controlTrack: tokens.controlTrack,
+    UiTokens.controlTrackHover: functional.controlTrackHover,
+    UiTokens.controlThumb: functional.controlThumb,
     UiTokens.accentThumbRing: tokens.accentThumbRing,
+    UiTokens.success: functional.success,
+    UiTokens.warning: functional.warning,
+    UiTokens.info: functional.info,
+    UiTokens.toneTeal: functional.toneTeal,
+    UiTokens.toneSky: functional.toneSky,
+    UiTokens.toneOrchid: functional.toneOrchid,
+    UiTokens.toneViolet: functional.toneViolet,
+    UiTokens.toneRose: functional.toneRose,
+    UiTokens.toneAmber: functional.toneAmber,
+    UiTokens.toneGreen: functional.toneGreen,
     UiTokens.sliderHighContrastOverlay: theme.isDark
         ? const Color(0x00000000)
         : tokens.blackAlpha[8]!,
@@ -395,6 +513,13 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(UiThemeData theme) {
     UiTokens.space7: 40.0 * scaling,
     UiTokens.space8: 48.0 * scaling,
     UiTokens.space9: 64.0 * scaling,
+    UiTokens.space18: 18.0 * scaling,
+    UiTokens.space20: 20.0 * scaling,
+    UiTokens.space56: 56.0 * scaling,
+    UiTokens.controlHeight1: 32.0 * scaling,
+    UiTokens.controlHeight2: 40.0 * scaling,
+    UiTokens.controlHeight3: 44.0 * scaling,
+    UiTokens.controlHeight4: 48.0 * scaling,
     UiTokens.spinnerSize3: 20.0 * scaling,
     UiTokens.avatarSize6: 80.0 * scaling,
     UiTokens.avatarSize7: 96.0 * scaling,
@@ -467,115 +592,93 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(UiThemeData theme) {
     UiTokens.borderWidth2: 2.0,
     UiTokens.focusRingWidth: 2.0,
     UiTokens.focusRingOffset: 2.0,
-    UiTokens.text1: TextStyle(
-      fontSize: 12.0 * scaling,
-      letterSpacing: 0.0025 * 12.0 * scaling,
-      height: 16.0 / 12.0,
-    ),
-    UiTokens.text2: TextStyle(
-      fontSize: 14.0 * scaling,
-      letterSpacing: 0.0,
-      height: 20.0 / 14.0,
-    ),
-    UiTokens.text3: TextStyle(
-      fontSize: 16.0 * scaling,
-      letterSpacing: 0.0,
-      height: 24.0 / 16.0,
-    ),
-    UiTokens.text4: TextStyle(
-      fontSize: 18.0 * scaling,
-      letterSpacing: -0.0025 * 18.0 * scaling,
-      height: 26.0 / 18.0,
-    ),
-    UiTokens.text5: TextStyle(
-      fontSize: 20.0 * scaling,
-      letterSpacing: -0.005 * 20.0 * scaling,
-      height: 28.0 / 20.0,
-    ),
-    UiTokens.text6: TextStyle(
-      fontSize: 24.0 * scaling,
-      letterSpacing: -0.00625 * 24.0 * scaling,
-      height: 30.0 / 24.0,
-    ),
-    UiTokens.text7: TextStyle(
-      fontSize: 28.0 * scaling,
-      letterSpacing: -0.0075 * 28.0 * scaling,
-      height: 36.0 / 28.0,
-    ),
-    UiTokens.text8: TextStyle(
-      fontSize: 36.0 * scaling,
-      letterSpacing: -0.01 * 36.0 * scaling,
-      height: 40.0 / 36.0,
-    ),
-    UiTokens.text9: TextStyle(
-      fontSize: 60.0 * scaling,
-      letterSpacing: -0.025 * 60.0 * scaling,
-      height: 1.0,
-    ),
+    UiTokens.text1: body(12),
+    UiTokens.text2: body(13),
+    UiTokens.text3: body(15),
+    UiTokens.text4: body(17),
+    UiTokens.text5: body(20, leading: 1.2),
+    UiTokens.text6: body(22, leading: 1.15, tracking: -0.02),
+    UiTokens.text7: display(28),
+    UiTokens.text8: display(34),
+    UiTokens.text9: display(40),
+    UiTokens.textField: body(14),
     UiTokens.avatarFallback1One: _avatarFallbackText(
       fontSize: 14,
       letterSpacing: 0.0025 * 12,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback1Two: _avatarFallbackText(
       fontSize: 12,
       letterSpacing: 0.0025 * 12,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback2One: _avatarFallbackText(
       fontSize: 16,
       letterSpacing: 0,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback2Two: _avatarFallbackText(
       fontSize: 14,
       letterSpacing: 0,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback3One: _avatarFallbackText(
       fontSize: 18,
       letterSpacing: 0,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback3Two: _avatarFallbackText(
       fontSize: 16,
       letterSpacing: 0,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback4One: _avatarFallbackText(
       fontSize: 20,
       letterSpacing: -0.0025 * 18,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback4Two: _avatarFallbackText(
       fontSize: 18,
       letterSpacing: -0.0025 * 18,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback5: _avatarFallbackText(
       fontSize: 24,
       letterSpacing: -0.00625 * 24,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback6: _avatarFallbackText(
       fontSize: 28,
       letterSpacing: -0.0075 * 28,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback7: _avatarFallbackText(
       fontSize: 28,
       letterSpacing: -0.0075 * 28,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback8: _avatarFallbackText(
       fontSize: 36,
       letterSpacing: -0.01 * 36,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
     UiTokens.avatarFallback9: _avatarFallbackText(
       fontSize: 60,
       letterSpacing: -0.025 * 60,
       scaling: scaling,
+      family: theme.fontFamily,
     ),
 
     // Font weights (token values)
@@ -625,10 +728,13 @@ TextStyle _avatarFallbackText({
   required double fontSize,
   required double letterSpacing,
   required double scaling,
+  required String? family,
 }) => TextStyle(
+  fontFamily: family,
   fontSize: fontSize * scaling,
   letterSpacing: letterSpacing * scaling,
   height: 1,
+  leadingDistribution: TextLeadingDistribution.even,
 );
 
 Map<RadiusToken, Radius> _radiusTokensFor(UiRadius radius, double scaling) {
@@ -642,12 +748,16 @@ Map<RadiusToken, Radius> _radiusTokensFor(UiRadius radius, double scaling) {
     first.x > second.x ? first.x : second.x,
     first.y > second.y ? first.y : second.y,
   );
-  final radius1 = scaled(3.0);
-  final radius2 = scaled(4.0);
-  final radius3 = scaled(6.0);
-  final radius4 = scaled(8.0);
-  final radius5 = scaled(12.0);
-  final radius6 = scaled(16.0);
+  // At the medium factor the ladder is the foundation's control radius (14)
+  // with its inner and outer offsets, the panel radius (20) and the surface
+  // radius (24).
+  final radius1 = scaled(6.0);
+  final radius2 = scaled(10.0);
+  final radius3 = scaled(12.0);
+  final radius4 = scaled(14.0);
+  final radius5 = scaled(16.0);
+  final radius6 = scaled(20.0);
+  final radius7 = scaled(24.0);
   final full = radius == .full ? const Radius.circular(9999.0) : Radius.zero;
   Radius progressRadius(double height) {
     final thumbBase = switch (radius) {
@@ -664,6 +774,7 @@ Map<RadiusToken, Radius> _radiusTokensFor(UiRadius radius, double scaling) {
     UiTokens.radius4: radius4,
     UiTokens.radius5: radius5,
     UiTokens.radius6: radius6,
+    UiTokens.radius7: radius7,
     UiTokens.radiusFull: full,
     UiTokens.radiusThumb: thumb,
     UiTokens.radiusCircle: const Radius.circular(9999.0),
@@ -708,6 +819,9 @@ Map<ColorToken, Color> _accentColorTokens(UiThemeColors tokens) {
     UiTokens.accentContent: tokens.accentContent,
     UiTokens.accentContentAlpha: tokens.accentContentAlpha,
     UiTokens.accentIndicatorContrast: tokens.accentIndicatorContrast,
+    UiTokens.accentRange: tokens.accentRange,
+    UiTokens.accentThumb: tokens.accentThumb,
+    UiTokens.accentSwatchContrast: tokens.accentSwatchContrast,
     UiTokens.focus8: tokens.focus8,
     UiTokens.focusA5: tokens.focusA5,
     UiTokens.focusA8: tokens.focusA8,

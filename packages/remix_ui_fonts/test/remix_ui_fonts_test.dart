@@ -151,10 +151,12 @@ void main() {
 
     expect(RemixFonts.geist, '${prefix}Geist');
     expect(RemixFonts.geistMono, '${prefix}GeistMono');
+    expect(RemixFonts.inter, '${prefix}Inter');
     // Add each new family's constant here.
     expect({
       RemixFonts.geist,
       RemixFonts.geistMono,
+      RemixFonts.inter,
     }, declared.values.map((font) => '$prefix${font.family}').toSet());
   });
 }

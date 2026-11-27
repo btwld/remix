@@ -7,8 +7,10 @@ export 'computed.dart'
         computeAccentThumbRing,
         computeChartSeries,
         computeContrastRatio,
+        fortalBlurRadius,
         resolveFortalTokens;
 export 'control_styles.dart';
+export 'motion.dart';
 export 'surface_frame.dart';
 export 'theme_data.dart' hide buildFortalScopeTokens;
 export 'theme_scope.dart';

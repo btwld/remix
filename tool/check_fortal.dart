@@ -197,17 +197,6 @@ List<String> checkFortalContract(Directory workspace) {
   return failures;
 }
 
-/// Layers that float, the only recipes that may cast a shadow.
-const _floatingRecipes = {
-  'combobox',
-  'dialog',
-  'menu',
-  'popover',
-  'select',
-  'toast',
-  'tooltip',
-};
-
 /// The accent picker draws its selected and focused rings itself, because a
 /// swatch's ring has to clear the panel edge.
 const _handBuiltRingAllowed = {'dashboard_demo_theme_panel'};
@@ -222,7 +211,7 @@ const _familyParts = {
 };
 
 /// Scans recipe sources for rules the spec states but no token can enforce.
-/// This only sees spellings, so it is a tripwire rather than a proof: a shadow
+/// This only sees spellings, so it is a tripwire rather than a proof: a ring
 /// built another way, or a widget outside `components/`, gets past it.
 void _checkRecipeSources(
   String root,
@@ -242,17 +231,10 @@ void _checkRecipeSources(
     for (final file in files) {
       final name = file.uri.pathSegments.last.replaceFirst('.dart', '');
       final text = file.readAsStringSync();
-      if (!name.endsWith('.g')) {
-        if (!_floatingRecipes.contains(name) &&
-            RegExp(
-              r'FortalTokens\.shadow[1-6]|\bBoxShadowMix\(|\bblurRadius\s*:',
-            ).hasMatch(text)) {
-          failures.add('$name casts a shadow but is not a floating layer.');
-        }
-        if (!_handBuiltRingAllowed.contains(name) &&
-            RegExp(r'\boutlineOffset\s*[:(]').hasMatch(text)) {
-          failures.add('$name builds a focus ring by hand.');
-        }
+      if (!name.endsWith('.g') &&
+          !_handBuiltRingAllowed.contains(name) &&
+          RegExp(r'\boutlineOffset\s*[:(]').hasMatch(text)) {
+        failures.add('$name builds a focus ring by hand.');
       }
       if (directory != 'components') continue;
       // Most public widgets are generated, so this one reads .g.dart as well.

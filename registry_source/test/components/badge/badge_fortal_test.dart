@@ -16,20 +16,20 @@ void main() {
       (
         FortalBadgeSize.size1,
         EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-        3.0,
+        6.0,
         12.0,
       ),
       (
         FortalBadgeSize.size2,
         EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        4.0,
+        10.0,
         12.0,
       ),
       (
         FortalBadgeSize.size3,
         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        4.0,
-        14.0,
+        10.0,
+        13.0,
       ),
     ]) {
       testWidgets('${size.name} matches specified metrics', (tester) async {
@@ -56,7 +56,7 @@ void main() {
       final padding = scaled.container.spec.padding!.resolve(TextDirection.ltr);
       expect(padding.left, closeTo(13.2, 1e-9));
       expect(padding.top, closeTo(4.4, 1e-9));
-      expect(scaled.label.spec.style!.fontSize, closeTo(15.4, 1e-9));
+      expect(scaled.label.spec.style!.fontSize, closeTo(14.3, 1e-9));
       expect(_radius(full.container.spec), 9999);
     });
 

@@ -193,8 +193,12 @@ void main() {
             return pixels.at(device.dx.round(), device.dy.round());
           }
 
+          // The ring is translucent, so it composites over whatever it covers.
           for (final at in edges) {
-            expectNearColor(pixel(focused, at(-3)), ring);
+            expectNearColor(
+              pixel(focused, at(-3)),
+              Color.alphaBlend(ring, pixel(idle, at(-3))),
+            );
             expectNearColor(pixel(focused, at(1)), pixel(idle, at(1)));
             expectNearColor(pixel(focused, at(-1)), pixel(idle, at(-1)));
           }

@@ -12,9 +12,9 @@ import '../../helpers/test_helpers.dart';
 void main() {
   group('panel anatomy', () {
     for (final (size, radius) in const [
-      (FortalAccordionSize.size1, 6.0),
-      (FortalAccordionSize.size2, 8.0),
-      (FortalAccordionSize.size3, 12.0),
+      (FortalAccordionSize.size1, 12.0),
+      (FortalAccordionSize.size2, 14.0),
+      (FortalAccordionSize.size3, 16.0),
     ]) {
       testWidgets('${size.name} container radius and clip are pinned', (
         tester,
@@ -77,7 +77,7 @@ void main() {
           spec.trigger.spec.box?.spec.decoration as BoxDecoration?;
 
       final radii = triggerBox!.borderRadius!.resolve(TextDirection.ltr);
-      expect(radii.topLeft.x, 8);
+      expect(radii.topLeft.x, 14);
       expect(radii.bottomLeft.x, 0);
     });
 
@@ -86,7 +86,7 @@ void main() {
       final triggerBox =
           spec.trigger.spec.box?.spec.decoration as BoxDecoration?;
 
-      expect(triggerBox?.borderRadius, BorderRadius.circular(8));
+      expect(triggerBox?.borderRadius, BorderRadius.circular(14));
     });
 
     testWidgets('an expanded item renders one continuous panel: the container '
@@ -141,7 +141,7 @@ void main() {
           spec.content,
         ).style.fontSize;
 
-        expect(contentFontSize, 14.0);
+        expect(contentFontSize, 13.0);
         expect(titleFontSize, isNotNull);
         expect(contentFontSize, lessThanOrEqualTo(titleFontSize!));
       });
@@ -156,7 +156,7 @@ void main() {
 
       expect(
         _defaultTextStyleModifier(spec.content).style.fontSize,
-        closeTo(15.4, 1e-9),
+        closeTo(14.3, 1e-9),
       );
     });
   });

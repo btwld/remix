@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:registry_source/src/fortal/theme/fortal_colors.dart'
+    show fortalNeutral;
 import 'package:registry_source/src/fortal/theme/computed.dart'
     show mixOklabPremultiplied;
 import 'package:registry_source/src/fortal/theme/theme_data.dart'
@@ -17,18 +19,19 @@ void main() {
             : const FortalThemeData.light();
         final colors = resolveFortalTokens(data);
         final tokens = buildFortalScopeTokens(data);
-        final neutral = dark ? orla.dark : orla.light;
+        final neutral = dark ? fortalNeutral.dark : fortalNeutral.light;
         expect(colors.colorBackground, neutral.scale.step(1));
-        expect(colors.colorPanelSolid, neutral.scale.step(2));
         expect(colors.colorSurface, neutral.scale.step(2));
-        expect(colors.colorPanelSolid.a, 1);
-        expect(colors.colorPanelTranslucent.a, lessThan(1));
         expect(
-          Color.alphaBlend(
-            colors.colorPanelTranslucent,
-            colors.colorBackground,
-          ).toARGB32(),
-          colors.colorPanelSolid.toARGB32(),
+          colors.colorPanelSolid,
+          dark ? const Color(0xff1f1f1f) : const Color(0xffffffff),
+        );
+        expect(colors.colorPanelSolid.a, 1);
+        // The translucent panel is the raised surface at 88 percent.
+        expect(colors.colorPanelTranslucent.a, closeTo(.88, .005));
+        expect(
+          colors.colorPanelTranslucent.toARGB32() & 0xffffff,
+          colors.colorPanelSolid.toARGB32() & 0xffffff,
         );
         expect(colors.colorOverlay.a, inExclusiveRange(0, 1));
         expect(tokens[FortalTokens.colorPanel], colors.colorPanelSolid);
@@ -52,12 +55,19 @@ void main() {
           FortalTokens.shadow6,
         ]) {
           final shadows = tokens[token]! as List<BoxShadow>;
-          expect(shadows, hasLength(1));
-          final shadow = shadows.single;
+          // Light shadows above the resting level carry a second, tighter
+          // layer; dark shadows are one denser layer.
+          expect(
+            shadows,
+            hasLength(dark || token == FortalTokens.shadow1 ? 1 : 2),
+          );
+          final shadow = shadows.first;
           expect(shadow.blurRadius, greaterThan(previousBlur));
           expect(shadow.offset.dy, greaterThan(previousY));
-          expect(shadow.offset.dx, 0);
-          expect(shadow.color.a, inExclusiveRange(0, 1));
+          for (final layer in shadows) {
+            expect(layer.offset.dx, 0);
+            expect(layer.color.a, inExclusiveRange(0, 1));
+          }
           previousBlur = shadow.blurRadius;
           previousY = shadow.offset.dy;
         }

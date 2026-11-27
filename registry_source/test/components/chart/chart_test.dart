@@ -91,8 +91,8 @@ void main() {
               ),
             };
 
-            expect(palette, hasLength(7));
-            expect(palette.toSet(), hasLength(7));
+            expect(palette, hasLength(FortalAccentColor.values.length));
+            expect(palette.toSet(), hasLength(FortalAccentColor.values.length));
             for (final (index, color) in palette.indexed) {
               for (final MapEntry(key: name, value: surface)
                   in surfaces.entries) {
@@ -118,11 +118,13 @@ void main() {
         for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
           for (final accent in FortalAccentColor.values) {
             final (palette, colors) = await resolve(tester, accent, mode);
-            // Sol's light mark fill is too pale for 3:1 on the page, so its
-            // series takes a deeper step of the same scale.
-            final expected = accent == .sol && mode == .light
-                ? colors.accent.scale.step(11)
-                : colors.accent.indicator;
+            // A mark fill too pale for 3:1 on the page (light amber and
+            // orange) gives way to a deeper step of the same scale.
+            final expected = computeChartSeries(
+              colors.accent.scale,
+              colors.markSurfaces,
+              preferred: colors.accent.indicator,
+            );
             expect(palette.first, expected, reason: '${accent.name} $mode');
           }
         }
@@ -169,6 +171,7 @@ void main() {
           FortalAccentColor.serra: serra,
           FortalAccentColor.sol: sol,
           FortalAccentColor.duna: duna,
+          FortalAccentColor.jambo: jambo,
           FortalAccentColor.orla: orla,
         };
         for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {

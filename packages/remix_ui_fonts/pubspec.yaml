@@ -36,6 +36,7 @@ flutter:
   # this package's code.
   licenses:
     - lib/fonts/geist/OFL.txt
+    - lib/fonts/inter/OFL.txt
   fonts:
     - family: Geist
       fonts:
@@ -53,3 +54,13 @@ flutter:
           weight: 400
         - asset: lib/fonts/geist/GeistMono-Medium.ttf
           weight: 500
+    - family: Inter
+      fonts:
+        - asset: lib/fonts/inter/Inter-Regular.ttf
+          weight: 400
+        - asset: lib/fonts/inter/Inter-Medium.ttf
+          weight: 500
+        - asset: lib/fonts/inter/Inter-SemiBold.ttf
+          weight: 600
+        - asset: lib/fonts/inter/Inter-Bold.ttf
+          weight: 700

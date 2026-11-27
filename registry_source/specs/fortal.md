@@ -12,132 +12,133 @@ when its enum declarations live outside its widget recipe.
 
 ## Sources and decisions
 
-The [design provenance](../docs/fortal/refresh-brief.md) records the original
-Fortaleza brief. On 2026-11-02, the color decision changed to paired themes
-using **@radix-ui/colors 3.0.0**. The [pinned source snapshot](fortal_radix_colors.json)
-contains the package integrity, complete MIT notice, exact sRGB opaque and alpha
-scales, and the approved pairings. `tool/fortal_palettes/radix/extract.mjs` imports
-the package's structured exports. Geometry, components, behavior and contrast
-requirements remain Fortal's; this is a color-data adoption, not a Radix widget port.
-The [architecture decision](../../../ARCHITECTURE.md#fortal-owns-its-visual-contract-fortal-adr-0003)
-records this update. Remix Icons remain the icon source.
+Fortal's visual values are its own foundation. The colour literals live in
+[`fortal_colors.json`](fortal_colors.json), a file of Dart colour literals
+that `tool/fortal_palettes/generate.dart` renders into the installed Dart
+source; the type ramp, radius ladder, shadows and motion constants are set in
+the theme layer. The [design provenance](../docs/fortal/refresh-brief.md)
+records the original Fortaleza brief, and the
+[architecture decision](../../../ARCHITECTURE.md#fortal-owns-its-visual-contract-fortal-adr-0003)
+records that Fortal owns its visual contract. Geometry, components, behavior
+and the contrast gates remain Fortal's. Remix Icons remain the icon source.
 
-## Paired themes
+## Accents and the neutral
 
-Select one named theme with `FortalTheme(accent: .mar, child: child)`. The existing
-`FortalAccentColor` name is retained, but each value now selects its accent and
-subtly tinted neutral together. There is no separate gray selector, `gray`
-configuration parameter, or `FortalGrayColor` enum. Upstream gray names are
-implementation details, not additional Fortal themes.
+Select an accent with `FortalTheme(accent: .mar, child: child)`. Every accent
+shares one untinted neutral scale. An accent recolours the selection controls
+(checkbox, radio, switch, slider, toggle group), accent text, soft tints, the
+focus outline and the chart series. It never recolours the page, panels,
+borders, body text or the solid button, which is ink under every accent.
+There is no separate gray selector.
 
-| Theme | Dart value | Radix accent | Paired neutral |
+| Accent | Dart value | Hue | Step 9, light / dark |
 | --- | --- | --- | --- |
-| Orla | `orla` | Gray | Gray |
-| Mar | `mar` | Teal | Sage |
-| Céu | `ceu` | Blue | Slate |
-| Serra | `serra` | Gold | Olive |
-| Sol | `sol` | Amber | Sand |
-| Duna | `duna` | Brown | Sand |
-| Caju | `caju` | Orange | Sand |
+| Orla | `orla` | neutral | `#353535` / `#bebebe` |
+| Mar | `mar` | green | `#0db879` / `#53dca6` |
+| Céu | `ceu` | blue | `#0562ef` / `#6ba3ff` |
+| Serra | `serra` | violet | `#7747ff` / `#a78bff` |
+| Sol | `sol` | amber | `#f3ad20` / `#ffcb62` |
+| Duna | `duna` | coral | `#f15f55` / `#ff9386` |
+| Caju | `caju` | orange | `#f48120` / `#ffad5e` |
+| Jambo | `jambo` | rose | `#ed4e9d` / `#ff8bc5` |
 
-Orla is the default. Page backgrounds use the paired neutral's step 1; solid
-panels and surface inputs use step 2. The optional translucent panel computes
-an overlay that reconstructs that step-2 color over its own page. The imported
-alpha scale stays unchanged. Serra now has a muted gold accent and Duna a brown
-accent; their names identify these approved combinations, not the former seeds.
+Orla is the default. The page is neutral step 1 (white, `#141414` in dark),
+input surfaces are step 2 (white, `#191919` in dark), and floating panels
+(`colorPanelSolid`) are the raised surface: white in light and `#1f1f1f` in
+dark, one step above the input surface. The translucent panel is the raised
+surface at 88 percent. Body text is step 12 (`#0b0b0b`, `#f2f2f2` in dark),
+secondary text step 11 and muted text step 10. The borders are steps 6 to 8
+(`border-subtle`, `border`, `border-strong`), which in light sit lighter than
+the hover fills at steps 4 and 5; the scale is role-anchored, not monotone.
 
-Error roles keep the separate generated red `fortalError` (seed `#C92E3B`,
-installed as `<prefix>Error`). Error is not a theme choice. Status examples
-must retain labels or icons because similar accent hues cannot carry meaning alone.
-A custom `accentPalette` inherits the selected named theme's neutral pairing;
-when no theme is specified it uses Orla's neutral. A named accent clears an
-inherited custom accent, as before.
+Error roles keep the dedicated `fortalError` palette (installed as
+`<prefix>Error`), built from the danger rose `#bb2c54` (`#f0738f` in dark).
+Error is not a theme choice. Status examples must retain labels or icons
+because similar hues cannot carry meaning alone. A custom `accentPalette`
+takes the shared neutral. A named accent clears an inherited custom accent,
+as before.
 
-## Raw scales and functional roles
+## Scales and functional roles
 
-Each imported appearance keeps all twelve opaque and twelve alpha steps exactly
-as published. sRGB values are used; `#RRGGBBAA` alpha values are converted to
-Dart ARGB, and six-digit entries in an alpha scale are fully opaque. The generator
-and source-fidelity tests check both modes against the pinned snapshot.
+Each accent has twelve opaque and twelve alpha steps. Steps 9, 10 and 11
+are the accent, its strong tone and that tone again; step 3 is the subtle
+tint; step 8 is the strong tone at 72 percent; steps 1, 2, 4, 5, 6 and 7 are
+the subtle tint at 0.25, 0.5, 1.4, 1.8, 2.4 and 3.2 times its alpha; opaque
+steps 1 to 8 composite the alpha step over the page; step 12 mixes the strong
+tone halfway to the foreground in OKLab.
 
-| Steps | Upstream role |
+| Steps | Role |
 | --- | --- |
-| 1–2 | Page and subtle backgrounds |
-| 3–5 | Rest, hover and selected fills |
-| 6–8 | Borders of increasing strength |
-| 9–10 | Accent swatch and hover |
-| 11–12 | Secondary and strong text |
+| 1–2 | Page tints |
+| 3 | The soft fill (`accentSurface`) |
+| 4–5 | Hovered and pressed soft fills |
+| 6–7 | Soft borders |
+| 8 | The focus outline tone |
+| 9 | The accent swatch: progress fill, selected calendar day |
+| 10–11 | The strong tone: a swatch's hover and accent text |
+| 12 | Strong text |
 
-Raw Radix steps do not by themselves guarantee Fortal's WCAG contrast thresholds
-in every Flutter component and state. Functional colors keep that contract without
-rewriting the source scales:
+Functional roles take the foundation's values as they are:
 
-- `accentSolid` and `accentSolidHover` pair with `accentContrast` at **4.5:1**
-  or more. White labels use the source fills when they meet the 4.6:1 generation
-  margin; otherwise the labelled fill is deepened in OKLCH, and its hover is
-  0.035 lightness deeper. Sol uses the source Amber-12 warm-brown ink with
-  the original Amber fills. Source swatches remain the unmodified steps 9–10.
-- `accentIndicator` and `accentTrack` identify selected marks and ranges.
-  `accentMarkHover` is their hover/pressed fill; it defaults to source step 10.
-  Non-luminous light marks are deepened only when their paired page/panel
-  needs the 3.05:1 margin. `markContrast` is white when it keeps 3:1 on both
-  the indicator and functional mark hover; otherwise it uses the source family's deep
-  light-mode step 12. Custom palettes retain the validated ink fallback.
-- `accentContent` and `accentContentAlpha` retain the source step-11 colors
-  where they pass. Otherwise they move toward the strong source text tone in
-  premultiplied OKLab, to keep **4.5:1** on soft fills 3–5 over the theme's page
-  and panel. Recipes use these content roles, not raw step 11, for normal text.
-- `focus8` fits source step 8 toward step 12 only as needed for **3:1** on
-  the page and panel. Empty soft controls use this solid ring rather than
-  relying on their low-contrast tint alone. Focus stays 2px wide with a 2px gap, except the contiguous slider ring
-  specified below.
-- `controlBorder` fits neutral step 8 toward neutral step 12 for **3:1** on
-  the page, panel and off-track fill. Disabled controls keep quieter strokes.
-- Selected surface switch and slider thumbs stay white. Their `accentThumbRing`
-  uses the mark ink on a bright fill or hover, the track when it is visible on
-  surrounding surfaces, and otherwise the neutral control border. Selected soft
-  thumbs use accessible accent content; high contrast keeps the source knockout.
+- `accentSolid` is the neutral ink (neutral step 12) under every accent,
+  `accentSolidHover` the ink at 91 percent over the page, and
+  `accentContrast` the page colour. Labels keep **4.5:1** or more.
+- `accentIndicator`, `accentTrack` and `accentMarkHover` are the accent's
+  control fill; `accentIndicatorContrast` is its glyph ink: white, a dark ink
+  on amber, and `#141414` for dark Orla. `accentRange` is the slider range and
+  `accentThumb` the selected switch thumb; both differ from the track only
+  for dark Orla. `accentSwatchContrast` is the ink on a step-9 swatch.
+- `accentContent` and `accentContentAlpha` are the strong tone.
+- `focus8` and `focusA8` are the strong tone at 72 percent; `focusA5` is
+  alpha step 5.
+- `controlBorder` is the strong neutral border (step 8). `controlTrack`,
+  `controlTrackHover` and `controlThumb` are the off state of switches and
+  sliders. `accentThumbRing` is transparent: thumbs carry `shadowThumb`.
+- `success`, `warning`, `info` and the seven `tone*` colours (teal, sky,
+  orchid, violet, rose, amber, green) do not follow the accent.
 
-### Orla primary-role override
+### High contrast
 
-Orla deliberately uses a stronger default than standard Radix Gray. In light
-mode, labelled solids and selected marks/tracks use Gray-12 `#202020`, hover
-`#303030`, and white ink. In dark mode they use true white, Gray-12 `#EEEEEE`
-on hover, and Gray-1 `#111111` ink. The white thumb retains a 2px dark ring.
-Raw opaque/alpha scales, Gray-2 panels, secondary text, soft variants, focus and
-disabled roles remain unchanged. This is a Fortal functional-role policy,
-not a claim that Radix's default gray accent is white or black.
+The default look takes those values exactly, and some boundaries fall below
+3:1: the control border and the off track on the page, the white thumb on the
+light off track, and for amber and orange the control fill and its glyph.
+`FortalThemeData.highContrast`, also `FortalTheme(highContrast: true)`, is
+one theme-level switch that moves those roles to fitted values:
+`controlBorder` and `controlTrack` toward neutral step 12 until **3:1** on
+the page, panels and the off track; the accent's indicator, track and mark
+hover toward its strong tone until **3:1** on the page and panels; and the
+mark ink, `accentThumbRing`, `focus8`, `accentContent`, `accentContentAlpha`
+and step 12 through the fitting functions in `computed.dart`. The same
+functions serve a hand-authored `accentPalette`, which carries no pinned
+roles. Per-family `highContrast` parameters keep their step-12 fill and
+step-1 knockout treatment on top of the switch.
 
-Ordinary solid press lightens under dark ink unless that returns to the idle
-fill within 2/255 per RGB channel; then it darkens the hover by 0.92 instead.
-Orla dark therefore retains distinct white/near-white/pressed states. Explicit
-`highContrast` variants retain their existing source step-12/step-1 treatment;
-in dark mode that fill is slightly dimmer than Orla's default white.
+### Contrast requirements (high contrast, both appearances)
 
-### Contrast requirements (both appearances)
-
-The component and rendered-pixel gates retain their thresholds:
+The component and rendered-pixel gates hold under the high contrast switch:
 
 - Label ink on normal, hovered and pressed labelled solids: **4.5:1**.
 - Normal functional content on soft fills and neutral surfaces: **4.5:1**.
-- Strong source text on source fills 1–5: **7:1**.
-- Mark ink, focus rings, empty control boundaries, and the white thumb or its
+- Strong text on fills 1–5: **7:1**.
+- Mark ink, focus rings, empty control boundaries, and the thumb or its
   outline on the track: **3:1**.
 - Bare progress tracks and filled extents: a fully covered **3:1** band on
   the page, solid and translucent panels.
 
-These guarantees cover Fortal's own surfaces; arbitrary image backgrounds and
-hand-authored custom palettes need contextual checks. The former comparative
-OKLab separation floor for Fortal-generated named seeds is retired: imported
-families retain upstream values, and chart/status examples keep labels or icons.
+The default look is held to the foundation's literals instead, in
+`test/fortal/fortal_foundation_test.dart`. Labels on the ink solid, strong
+text, focus rings and progress fills pass the same floors in the default look
+for every accent but dark amber's strong text. These guarantees cover
+Fortal's own surfaces; arbitrary image backgrounds and hand-authored custom
+palettes need contextual checks.
 
 ### Custom palette generation
 
-`generate.dart --name brand --seed '#8038CC'` still generates a separate OKLCH
-brand palette. The generated brand and dedicated error red use WCAG luminance,
-Björn Ottosson's OKLab equations, and the existing gamut and role fitting.
-Custom generation uses the pinned Orla gray page/panel reference values; the
-source-fidelity tests distinguish these designed values from imported scales.
+`generate.dart --name brand --seed '#8038CC'` generates a separate OKLCH
+brand palette. The generated brand uses WCAG luminance, Björn Ottosson's
+OKLab equations, and the existing gamut and role fitting against the shared
+neutral's page and panel. A generated palette carries no pinned roles, so the
+theme fits its content, focus, mark ink and thumb ring in both modes.
 
 Near-white custom seeds can blend into the page even with readable labels.
 Use an available `highContrast: true` treatment or a visible outline when the
@@ -145,39 +146,59 @@ fill must identify the control. Check the actual component on its host surface.
 
 ## Fixed scales and geometry
 
-- Spacing: **4, 8, 12, 16, 24, 32, 40, 48, 64px**, multiplied by scaling.
-  Component and agent recipes use these tokens whenever a dimension has an equivalent step.
-  Specialized measurements (20px icons, tiny indicators, em-relative inline
-  typography, and bounded agent viewports) remain named tokens or proportions.
-  The select trigger chevron is the reference's fixed 9px glyph (11px at size
-  3), named by `selectTriggerIndicatorSize12`/`3`, and deliberately does not
-  follow scaling (Radix Themes 3.3.0 `icons.tsx` L53–58, `select.css`
-  L209–212); its item check marks do scale.
-- Type: **12, 14, 16, 18, 20, 24, 28, 36, 60px**. Accordion and disclosure
-  size 2 use `text2`, not an intermediate 15px style. Text8 has a 40px line box.
-  Fortal sets no font family; the application supplies it, as the
-  [registry contract](../../open_code/REGISTRIES.md#preset-and-generation-contract)
-  states.
+- Spacing: **4, 8, 12, 16, 24, 32, 40, 48, 64px** (`space1`–`space9`) plus the
+  off-ladder **18, 20 and 56px** (`space18`, `space20`, `space56`), multiplied
+  by scaling. Control heights are **32, 40, 44 and 48px**
+  (`controlHeight1`–`controlHeight4`). Component and agent recipes use these
+  tokens whenever a dimension has an equivalent step. Specialized measurements
+  (20px icons, tiny indicators, em-relative inline typography, and bounded
+  agent viewports) remain named tokens or proportions. The select trigger
+  chevron is a fixed 9px glyph (11px at size 3), named by
+  `selectTriggerIndicatorSize12`/`3`, and deliberately does not follow
+  scaling; its item check marks do scale.
+- Type: **12, 13, 15, 17, 20, 22, 28, 34, 40px** (`text1`–`text9`), plus
+  `textField` at **14px** for typed text. Steps 1 to 6 are body text in Inter
+  at 1.4 leading (1.2 at step 5, 1.15 at step 6) and −0.01em tracking (−0.02em
+  at step 6); steps 7 to 9 are display text in Geist at 1.1 leading and
+  −0.03em. Leading is split evenly around the glyphs, as a CSS line box does.
+  Accordion and disclosure size 2 use `text2`. The theme sets body text to
+  `RemixFonts.inter`, display text to `RemixFonts.geist` and code to
+  `RemixFonts.geistMono`; the unnamed `FortalThemeData` constructor accepts a
+  null family to leave it to the application. The Fortal registry therefore
+  declares `remix_ui_fonts`.
 - Radius: `none`, `small`, `medium` (default), `large`, `full`; scaling:
-  90, 95, 100 (default), 105, 110 percent. `highContrast` remains available.
-- Control radii follow Radix Themes 3.3.0 per size. Buttons, icon buttons and
-  select triggers use radius 1/2/3 (`base-button.css` L45–55, `select.css`
-  L165–199); text fields, text areas and segmented controls use radius 2/2/3
-  (`text-field.css` L192–245, `text-area.css` L79–105,
-  `segmented-control.css` L251–275). At size 1 a field is therefore 1px
-  rounder than a button or select beside it; this is intended.
+  90, 95, 100 (default), 105, 110 percent. At medium the ladder is
+  **6, 10, 12, 14, 16, 20, 24px** (`radius1`–`radius7`): 14 is the control
+  radius, 12 and 16 its small and large offsets, 10 the radius of items inside
+  a control, 6 small marks, 20 the panel radius and 24 the surface radius.
+  Other factors scale the whole ladder. `highContrast` remains available per
+  family and on the theme.
 - Toggles at sizes 1–3 have the Button minimum heights, 24/32/40px, labelled or
   icon-only, with content centred and horizontal padding only. They grow
   beyond that only when their content is taller, as with enlarged text.
 - Compact painted controls retain their sizes, inside a **40px minimum hit
   target**, which does not shrink at 90/95% scaling. Hosts must leave room for
   that target instead of imposing a smaller tight constraint.
-- Focus: one **2px solid functional `focus8` outline, 2px outside** the painted control.
-  The helper reads `focusRingWidth` and `focusRingOffset`; it never changes
-  layout or replaces a variant's border. Text inputs show it on focus; other
-  controls show it on keyboard-visible focus. Disabled controls do not ring.
-  Sortable table headers measure the outline from inside their cell padding,
-  keeping the complete ring visible within the table's rounded clip.
+- Focus: one **2px `focus8` outline, 2px outside** the painted control, the
+  accent's strong tone at 72 percent. The helper reads `focusRingWidth` and
+  `focusRingOffset`; it never changes layout or replaces a variant's border.
+  Text inputs show it on focus; other controls show it on keyboard-visible
+  focus. Disabled controls do not ring. Sortable table headers measure the
+  outline from inside their cell padding, keeping the complete ring visible
+  within the table's rounded clip.
+- Shadows: six levels. Levels 1, 3 and 5 are the resting, raised and floating
+  shadows (offsets 1, 6 and 20px, blurs 2, 18 and 48px in light, each above
+  level 1 with a second tight layer; one denser layer in dark); levels 2 and 4
+  sit midway between their neighbours and level 6 extends level 5 by a
+  quarter. `shadowThumb` is the three-layer shadow of switch and slider
+  thumbs. CSS blur values are converted with `fortalBlurRadius` so Flutter's
+  Gaussian matches the designed one.
+- Motion: `FortalMotion` holds the durations (instant 100, fast 150, exit
+  140, standard 200, considered 360ms), the eases (enter, standard, exit and
+  in-out cubic béziers), the springs (responsive, gentle, snappy, smooth,
+  morph and the 440ms transform spring) and the stagger steps. Motion does not
+  vary with the accent, appearance, radius or scaling, so these are constants
+  rather than scope tokens.
 
 ## Components
 
@@ -189,14 +210,13 @@ and behavioral APIs are listed in the catalog. Toast's independent `classic`
 floating treatment is not a raised-card/control variant and uses the ordinary
 elevation scale.
 
-Cards and controls have no blurred/offset shadows or gradients. Crisp inset
-frames are borders, not elevation. Menus, popovers, dialogs, tooltips, and
-toasts retain outer elevation; a shadow means the surface floats.
+Resting cards and controls cast no shadow and carry no gradients. Crisp inset
+frames are borders, not elevation. A hovered button or card may cast the
+resting or raised shadow and thumbs carry `shadowThumb`; menus, popovers,
+dialogs, tooltips and toasts cast the floating levels.
 
 Fortal's elevation shadows carry no ring, so the anchored menu, select,
-popover and combobox panels share a 1px gray-7 edge. Radix Themes 3.3.0 gives
-its menu, select and popover panels one edge through the ring inside
-`--shadow-5` (`shadow.css` L26–29, `base-menu.css` L184). The menu paints its
+popover and combobox panels share a 1px gray-7 edge. The menu paints its
 edge as a foreground decoration, so items sized to a panel width keep it.
 
 Surface text fields and text areas use an opaque gray-2 fill and the
@@ -212,12 +232,11 @@ Select triggers keep their gray-7 frame (gray alpha 8 when open or hovered):
 their value and chevron identify them. A trigger always paints its value or
 placeholder and a gray-12 chevron (at least 11.5:1 on gray-2), so under WCAG
 1.4.11 its frame (about 1.5:1) is not the information that identifies it; a
-text field can be empty and unlabelled, so its frame is. Radix Themes 3.3.0
-frames both with gray-a7 (`select.css` L299, `text-field.css` L286); Fortal
-strengthens only the field.
+text field can be empty and unlabelled, so its frame is.
 
-Selected surface switch thumbs are white with a 2px `accentThumbRing`, or
-`accent1` against the high-contrast `accent12` track. Selected soft thumbs use
+Selected surface switch thumbs are white with a 2px `accentThumbRing`
+(transparent by default, the fitted ring under the theme's high contrast
+switch), or `accent1` against the high-contrast `accent12` track. Selected soft thumbs use
 `accentContent`, promoted to `accent12` at high contrast. Off thumbs stay white with
 a 1px `controlBorder` ring on a track edged in `controlBorder`; the selected
 surface track keeps its quiet gray-alpha-5 edge. Disabled switches keep a
@@ -377,19 +396,24 @@ interaction fills, inverse contrast for every accent, keyboard focus, RTL and
 
 - `tool/check_fortal.dart` (`melos run fortal:check`) holds the catalog against
   source enums, defaults, public constructors, recipe inventory, and tests.
-- `tool/fortal_palettes/generate.dart --check` rejects palette drift.
-- `test/fortal/palette_contrast_test.dart` checks labels on the labelled
-  pair, marks on the mark fill, alpha soft labels composited over their tints,
-  and the ramp targets for every accent and the error red. It also covers
-  non-curated/extreme brand seeds, dark mark placement, family inks, distinct
-  hovers for marks and labelled solids, and Fortal's own comparative
-  separation of mark fills and labelled solids between accents and the error
-  red, plus the `controlBorder` and `accentThumbRing` guarantees.
+- `tool/fortal_palettes/generate.dart --check` rejects drift between
+  `fortal_colors.json` and the generated Dart source.
+- `test/fortal/fortal_foundation_test.dart` holds every colour token to its
+  foundation literal under every accent in both appearances, the type ramp,
+  the radius ladder, the shadow conversion and the motion constants, and
+  checks that the high contrast switch meets the contrast gates.
+- `test/fortal/palette_contrast_test.dart` checks, under the high contrast
+  switch, labels on the labelled pair, marks on the mark fill, alpha soft
+  labels composited over their tints, and the ramp targets for every accent
+  and the error red. It also covers non-curated/extreme brand seeds, dark
+  mark placement, family inks, distinct hovers for labelled solids, the error
+  red's separation from Caju, and the `controlBorder`, `controlTrack` and
+  `accentThumbRing` guarantees.
 - `test/fortal/fortal_on_solid_ink_test.dart` resolves real button, badge,
   checkbox, radio and switch styles for every palette in both modes through
-  idle, hover and press. Labels must read `contrast` on the labelled fill;
-  checks and dots the derived mark ink on the indicator; switch thumbs white
-  with their outline.
+  idle, hover and press under the high contrast switch. Labels must read
+  `contrast` on the labelled fill; checks and dots the derived mark ink on the
+  indicator; switch thumbs white with their outline.
 - `test/fortal/fortal_custom_palette_roles_test.dart` covers hand-authored
   split palettes (bright indicator beside a deep labelled solid), reuse of a
   supplied ink only where it reaches 3:1, five-argument constructors, a solid
@@ -399,8 +423,9 @@ interaction fills, inverse contrast for every accent, keyboard focus, RTL and
   checks every selected accent swatch's tick on its fill, idle, hovered and
   pressed, in both modes.
 - `test/fortal/fortal_control_contrast_render_test.dart` renders mounted
-  controls on the page, solid panel and translucent panel for every palette
-  and both modes, and measures painted pixels: empty checkbox/radio outlines,
+  controls under the high contrast switch on the page, solid panel and
+  translucent panel for every palette and both modes, and measures painted
+  pixels: empty checkbox/radio outlines,
   off and selected switch thumbs, slider thumbs, progress track and fill
   extents at 0, part and full, text input borders, and solid
   and high-contrast button labels and focus rings through hover, press and
@@ -448,7 +473,7 @@ pickers combine five independently overridable child stylers.
   Disabled days use gray9; unavailable days add a strike.
 - Ranges: directional radius3 caps in accentSolid, accent4 interiors; draft
   accent4 with accent5 caps and 2px accent8 perimeter. Blocked draft uses
-  error3/error11. Stale committed selection has gray4/gray3 caps/interior in
+  error3/error11. Stale committed selection has gray5/gray4 caps/interior in
   light, gray3 / the midpoint of gray2 and gray3 in dark, distinct from the live middle. Keyboard day focus
   uses the reviewed 2px border contour; dark uses gray11 so it separates from
   accent8, light uses focus8. This inset day treatment preserves connected bands.
@@ -486,14 +511,14 @@ frameless and clips its marks.
   Fortal's 3.05:1 mark margin there, and does the same for an accent
   indicator that falls short. `highContrast` uses step 12 throughout. Color
   never carries meaning alone: label the series or slices.
-- Series order after the accent: Mar, Caju, Céu, Serra, Sol, Duna, then
-  Orla's gray. Teal, orange and blue are the most distinct families, so they
-  lead; the muted gold, amber and brown follow, and gray, the least distinct,
-  is last.
+- Series order after the accent: Mar, Caju, Céu, Serra, Sol, Duna, Jambo,
+  then Orla's gray. Green, orange and blue are the most distinct families, so
+  they lead; violet, amber, coral and rose follow, and gray, the least
+  distinct, is last.
 - Pie labels are off by default. A chart that shows them colors each slice's
   label with `fortalPieSliceLabelColor(sliceColor)` (installed as
-  `<prefix>PieSliceLabelColor`), which picks white or Orla's `#111111` ink to
-  meet WCAG 1.4.3's 4.5:1 on every series color.
+  `<prefix>PieSliceLabelColor`), which picks white or Orla's dark step-1 ink
+  to meet WCAG 1.4.3's 4.5:1 on every series color.
 - Legends are the caller's, as in Vanilla: the `chart` item ships none. The
   `dashboard_demo` item's `FortalDashboardChartLegend` is a worked example.
 - Bars round all four corners with `radius2`, as Vanilla's do. `mix_chart`

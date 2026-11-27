@@ -249,11 +249,9 @@ void main() {
                 color.scale.step(9),
                 isNot(resolved.tokens.gray.scale.step(9)),
               );
-            } else {
-              // Orla retains the neutral's raw scale, with stronger primary
-              // functional roles than the internal gray palette.
-              expect(color.scale, resolved.tokens.gray.scale);
             }
+            // Every accent's labelled solid is the neutral ink.
+            expect(color.solid, resolved.tokens.gray.scale.step(12));
             // Labelled fills read the solid role; marks read the indicator.
             expect(
               (resolved.button.container.spec.box!.spec.decoration
