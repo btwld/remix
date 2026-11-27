@@ -127,6 +127,19 @@ void main() {
     }
   });
 
+  testWidgets('the first star lines up with the label and the field edge', (
+    tester,
+  ) async {
+    await tester.pumpRemixApp(const _Host(initial: 3));
+    await tester.pumpAndSettle();
+
+    final field = tester.getRect(find.byType(RemixRating)).left;
+    final label = tester.getTopLeft(find.text('Rate this')).dx;
+    final cell = tester.getTopLeft(_inStar(1, _adapter)).dx;
+    expect(label, moreOrLessEquals(field, epsilon: .01));
+    expect(cell + (36 - 24) / 2, moreOrLessEquals(field, epsilon: .01));
+  });
+
   testWidgets('pressing a star lifts it to 86%', (tester) async {
     await tester.pumpRemixApp(const _Host());
     await tester.pumpAndSettle();

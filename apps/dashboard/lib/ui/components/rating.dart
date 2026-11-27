@@ -45,11 +45,13 @@ RatingStyler uiRatingStyle({
 }) {
   final muted = highContrast ? UiTokens.gray11() : UiTokens.gray10();
   final outline = highContrast ? UiTokens.gray11() : UiTokens.controlBorder();
-  // Cells are wider than their stars. Insetting the label and description by
-  // the cell's margin lines the first star up with the text above it.
+  // Cells are wider than their stars. The field overhangs its leading edge
+  // by the cell's margin and insets its text by the same amount, so the first
+  // glyph lines up with the label and the cell keeps its full target.
   final inset = (_cell(size) - _glyph(size)) / 2;
 
   return RatingStyler()
+      .leadingOverhang(inset)
       .spacing(6)
       .label(
         TextStyler()
