@@ -54,6 +54,15 @@ class RatingSpec with _$RatingSpec {
   @override
   final AnimationConfig? keptMotion;
 
+  /// Shifts the whole field this much toward its leading edge and reports
+  /// that much less width, while keeping the shifted part hit-testable.
+  ///
+  /// Use it to let the star cells reach past the field's edge so a glyph,
+  /// not its cell, lines up with the label: inset the label and description
+  /// by the same amount. `null` or 0 shifts nothing.
+  @override
+  final double? leadingOverhang;
+
   const RatingSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<FlexBoxSpec>? controlRow,
@@ -65,6 +74,7 @@ class RatingSpec with _$RatingSpec {
     this.fillMotion,
     this.fillStagger,
     this.keptMotion,
+    this.leadingOverhang,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        controlRow = controlRow ?? const StyleSpec(spec: FlexBoxSpec()),
        stars = stars ?? const StyleSpec(spec: FlexBoxSpec()),

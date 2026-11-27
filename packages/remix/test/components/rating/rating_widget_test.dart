@@ -316,6 +316,31 @@ void main() {
       expect(valueColor(), const Color(0xFF000002));
     });
 
+    testWidgets('leadingOverhang pulls the field back and keeps the cell', (
+      tester,
+    ) async {
+      final log = <int?>[];
+      final cell = RatingStyler().star(RatingStarStyler().size(36, 36));
+      await tester.pumpRemixApp(_Host(log: log, style: cell));
+      final plain = tester.getSize(find.byType(RemixRating)).width;
+      final plainStar = tester.getTopLeft(_star(1)).dx;
+
+      await tester.pumpRemixApp(
+        _Host(log: log, style: cell.leadingOverhang(6)),
+      );
+      await tester.pumpAndSettle();
+      final field = tester.getRect(find.byType(RemixRating));
+      expect(field.width, plain - 6);
+      // Centred, the field moves 3 right; its content moves 6 left within it.
+      expect(tester.getTopLeft(_star(1)).dx, plainStar + 3 - 6);
+      expect(tester.getTopLeft(_star(1)).dx, field.left - 6);
+
+      // The part of the first cell outside the field still takes the tap.
+      await tester.tapAt(Offset(field.left - 4, tester.getCenter(_star(1)).dy));
+      await tester.pumpAndSettle();
+      expect(log, [1]);
+    });
+
     test('default value labels', () {
       expect(RemixRating.defaultValueLabel(null, 5), 'Not rated');
       expect(RemixRating.defaultValueLabel(1, 5), 'Poor');

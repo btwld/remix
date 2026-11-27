@@ -338,7 +338,7 @@ class _RemixRatingState extends State<RemixRating> {
             ),
           );
 
-          return FlexBox(
+          final field = FlexBox(
             styleSpec: spec.container,
             children: [
               if (widget.label != null)
@@ -361,9 +361,109 @@ class _RemixRatingState extends State<RemixRating> {
                 ),
             ],
           );
+          final overhang = spec.leadingOverhang ?? 0;
+          return overhang > 0
+              ? _RatingOverhang(extent: overhang, child: field)
+              : field;
         },
       ),
     );
+  }
+}
+
+/// Lays out its child at full width, reports [extent] less, and shifts the
+/// child toward the leading edge by that much. Hit testing still covers the
+/// shifted part, so the leading cell keeps its whole target.
+class _RatingOverhang extends SingleChildRenderObjectWidget {
+  const _RatingOverhang({required this.extent, required super.child});
+
+  final double extent;
+
+  @override
+  _RenderRatingOverhang createRenderObject(BuildContext context) =>
+      _RenderRatingOverhang(extent, Directionality.of(context));
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderRatingOverhang renderObject,
+  ) {
+    renderObject
+      ..extent = extent
+      ..textDirection = Directionality.of(context);
+  }
+}
+
+class _RenderRatingOverhang extends RenderShiftedBox {
+  _RenderRatingOverhang(this._extent, this._textDirection) : super(null);
+
+  double _extent;
+  set extent(double value) {
+    if (value == _extent) return;
+    _extent = value;
+    markNeedsLayout();
+  }
+
+  TextDirection _textDirection;
+  set textDirection(TextDirection value) {
+    if (value == _textDirection) return;
+    _textDirection = value;
+    markNeedsLayout();
+  }
+
+  bool get _ltr => _textDirection == TextDirection.ltr;
+
+  @override
+  double computeMinIntrinsicWidth(double height) =>
+      max(0, (child?.getMinIntrinsicWidth(height) ?? 0) - _extent);
+
+  @override
+  double computeMaxIntrinsicWidth(double height) =>
+      max(0, (child?.getMaxIntrinsicWidth(height) ?? 0) - _extent);
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) {
+    final childSize =
+        child?.getDryLayout(_childConstraints(constraints)) ?? Size.zero;
+    return constraints.constrain(
+      Size(max(0, childSize.width - _extent), childSize.height),
+    );
+  }
+
+  BoxConstraints _childConstraints(BoxConstraints constraints) =>
+      constraints.copyWith(
+        minWidth: constraints.minWidth == 0
+            ? 0
+            : constraints.minWidth + _extent,
+        maxWidth: constraints.maxWidth + _extent,
+      );
+
+  @override
+  void performLayout() {
+    final child = this.child;
+    if (child == null) {
+      size = constraints.smallest;
+      return;
+    }
+    child.layout(_childConstraints(constraints), parentUsesSize: true);
+    size = constraints.constrain(
+      Size(max(0, child.size.width - _extent), child.size.height),
+    );
+    (child.parentData! as BoxParentData).offset = Offset(
+      _ltr ? -_extent : 0,
+      0,
+    );
+  }
+
+  @override
+  bool hitTest(BoxHitTestResult result, {required Offset position}) {
+    final reach = _ltr
+        ? Rect.fromLTRB(-_extent, 0, size.width, size.height)
+        : Rect.fromLTRB(0, 0, size.width + _extent, size.height);
+    if (!reach.contains(position)) return false;
+    if (!hitTestChildren(result, position: position)) return false;
+    result.add(BoxHitTestEntry(this, position));
+    return true;
   }
 }
 
@@ -596,22 +696,48 @@ class _RatingStarPainter extends CustomPainter {
   final Color? keptColor;
   final Color fillColor;
 
-  // A five-point star in a 24 x 24 box, tips 2 from the top and sides.
+  // A five-point star in a 24 x 24 box: tips 11.15 from the centre, inner
+  // corners at half that, tips rounded at 0.53 and inner corners at 2.12.
   static Path _star(Size size) {
-    final scale = size.shortestSide / 24;
-    final center = Offset(12 * scale, 12.6 * scale);
-    final outer = 10.5 * scale;
-    final inner = outer * 0.53;
+    const center = Offset(12, 12.484);
+    const outer = 11.151;
+    const inner = outer / 2;
+    final vertices = [
+      for (var point = 0; point < 10; point++)
+        center +
+            Offset(
+                  cos(-pi / 2 + point * pi / 5),
+                  sin(-pi / 2 + point * pi / 5),
+                ) *
+                (point.isEven ? outer : inner),
+    ];
     final path = Path();
     for (var point = 0; point < 10; point++) {
-      final radius = point.isEven ? outer : inner;
-      final angle = -pi / 2 + point * pi / 5;
-      final vertex = center + Offset(cos(angle), sin(angle)) * radius;
+      final tip = point.isEven;
+      final vertex = vertices[point];
+      final before = vertices[(point + 9) % 10];
+      final after = vertices[(point + 1) % 10];
+      final reach = tip ? 1.073 : 1.114;
+      Offset toward(Offset other) {
+        final delta = other - vertex;
+        return vertex + delta / delta.distance * reach;
+      }
+
+      final entry = toward(before);
+      final exit = toward(after);
       point == 0
-          ? path.moveTo(vertex.dx, vertex.dy)
-          : path.lineTo(vertex.dx, vertex.dy);
+          ? path.moveTo(entry.dx, entry.dy)
+          : path.lineTo(entry.dx, entry.dy);
+      path.arcToPoint(
+        exit,
+        radius: Radius.circular(tip ? 0.53 : 2.123),
+        clockwise: tip,
+      );
     }
-    return path..close();
+    final scale = size.shortestSide / 24;
+    return (path..close()).transform(
+      Matrix4.diagonal3Values(scale, scale, 1).storage,
+    );
   }
 
   void _layer(Canvas canvas, Size size, Path path, Color color, double t) {

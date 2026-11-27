@@ -17,6 +17,7 @@ mixin _$RatingSpec implements Spec<RatingSpec>, Diagnosticable {
   AnimationConfig? get fillMotion;
   Duration? get fillStagger;
   AnimationConfig? get keptMotion;
+  double? get leadingOverhang;
 
   @override
   Type get type => RatingSpec;
@@ -33,6 +34,7 @@ mixin _$RatingSpec implements Spec<RatingSpec>, Diagnosticable {
     AnimationConfig? fillMotion,
     Duration? fillStagger,
     AnimationConfig? keptMotion,
+    double? leadingOverhang,
   }) {
     return RatingSpec(
       container: container ?? this.container,
@@ -45,6 +47,7 @@ mixin _$RatingSpec implements Spec<RatingSpec>, Diagnosticable {
       fillMotion: fillMotion ?? this.fillMotion,
       fillStagger: fillStagger ?? this.fillStagger,
       keptMotion: keptMotion ?? this.keptMotion,
+      leadingOverhang: leadingOverhang ?? this.leadingOverhang,
     );
   }
 
@@ -61,6 +64,7 @@ mixin _$RatingSpec implements Spec<RatingSpec>, Diagnosticable {
       fillMotion: MixOps.lerpSnap(fillMotion, other?.fillMotion, t),
       fillStagger: MixOps.lerpSnap(fillStagger, other?.fillStagger, t),
       keptMotion: MixOps.lerpSnap(keptMotion, other?.keptMotion, t),
+      leadingOverhang: MixOps.lerp(leadingOverhang, other?.leadingOverhang, t),
     );
   }
 
@@ -76,6 +80,7 @@ mixin _$RatingSpec implements Spec<RatingSpec>, Diagnosticable {
     fillMotion,
     fillStagger,
     keptMotion,
+    leadingOverhang,
   ];
 
   @override
@@ -127,7 +132,8 @@ mixin _$RatingSpec implements Spec<RatingSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('description', description))
       ..add(DiagnosticsProperty('fillMotion', fillMotion))
       ..add(DiagnosticsProperty('fillStagger', fillStagger))
-      ..add(DiagnosticsProperty('keptMotion', keptMotion));
+      ..add(DiagnosticsProperty('keptMotion', keptMotion))
+      ..add(DoubleProperty('leadingOverhang', leadingOverhang));
   }
 }
 
@@ -281,6 +287,7 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
   final Prop<AnimationConfig>? $fillMotion;
   final Prop<Duration>? $fillStagger;
   final Prop<AnimationConfig>? $keptMotion;
+  final Prop<double>? $leadingOverhang;
 
   const RatingStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
@@ -293,6 +300,7 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
     Prop<AnimationConfig>? fillMotion,
     Prop<Duration>? fillStagger,
     Prop<AnimationConfig>? keptMotion,
+    Prop<double>? leadingOverhang,
     super.variants,
     super.modifier,
     super.animation,
@@ -305,7 +313,8 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
        $description = description,
        $fillMotion = fillMotion,
        $fillStagger = fillStagger,
-       $keptMotion = keptMotion;
+       $keptMotion = keptMotion,
+       $leadingOverhang = leadingOverhang;
 
   RatingStyler({
     FlexBoxStyler? container,
@@ -318,6 +327,7 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
     AnimationConfig? fillMotion,
     Duration? fillStagger,
     AnimationConfig? keptMotion,
+    double? leadingOverhang,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RatingSpec>>? variants,
@@ -332,6 +342,7 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
          fillMotion: Prop.maybe(fillMotion),
          fillStagger: Prop.maybe(fillStagger),
          keptMotion: Prop.maybe(keptMotion),
+         leadingOverhang: Prop.maybe(leadingOverhang),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -356,6 +367,8 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
       RatingStyler().fillStagger(value);
   factory RatingStyler.keptMotion(AnimationConfig value) =>
       RatingStyler().keptMotion(value);
+  factory RatingStyler.leadingOverhang(double value) =>
+      RatingStyler().leadingOverhang(value);
   factory RatingStyler.color(Color value) => RatingStyler().color(value);
   factory RatingStyler.gradient(GradientMix value) =>
       RatingStyler().gradient(value);
@@ -915,6 +928,7 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
     'fillMotion',
     'fillStagger',
     'keptMotion',
+    'leadingOverhang',
     'animation',
     'modifier',
     'variants',
@@ -969,6 +983,11 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
   /// Sets the keptMotion.
   RatingStyler keptMotion(AnimationConfig value) {
     return merge(RatingStyler(keptMotion: value));
+  }
+
+  /// Sets the leadingOverhang.
+  RatingStyler leadingOverhang(double value) {
+    return merge(RatingStyler(leadingOverhang: value));
   }
 
   /// Sets the animation configuration.
@@ -1039,6 +1058,7 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
       fillMotion: MixOps.merge($fillMotion, other?.$fillMotion),
       fillStagger: MixOps.merge($fillStagger, other?.$fillStagger),
       keptMotion: MixOps.merge($keptMotion, other?.$keptMotion),
+      leadingOverhang: MixOps.merge($leadingOverhang, other?.$leadingOverhang),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1059,6 +1079,7 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
       fillMotion: MixOps.resolve(context, $fillMotion),
       fillStagger: MixOps.resolve(context, $fillStagger),
       keptMotion: MixOps.resolve(context, $keptMotion),
+      leadingOverhang: MixOps.resolve(context, $leadingOverhang),
     );
 
     return StyleSpec(
@@ -1081,7 +1102,8 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
       ..add(DiagnosticsProperty('description', $description))
       ..add(DiagnosticsProperty('fillMotion', $fillMotion))
       ..add(DiagnosticsProperty('fillStagger', $fillStagger))
-      ..add(DiagnosticsProperty('keptMotion', $keptMotion));
+      ..add(DiagnosticsProperty('keptMotion', $keptMotion))
+      ..add(DiagnosticsProperty('leadingOverhang', $leadingOverhang));
   }
 
   @override
@@ -1096,6 +1118,7 @@ class RatingStyler extends MixStyler<RatingStyler, RatingSpec>
     $fillMotion,
     $fillStagger,
     $keptMotion,
+    $leadingOverhang,
     $animation,
     $modifier,
     $variants,
