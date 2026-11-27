@@ -23,6 +23,7 @@ class UiInputGroup extends StatelessWidget {
     this.label,
     this.hintText,
     this.helperText,
+    this.errorText,
     this.error = false,
     this.keyboardType,
     this.textInputAction,
@@ -86,6 +87,7 @@ class UiInputGroup extends StatelessWidget {
     this.label,
     this.hintText,
     this.helperText,
+    this.errorText,
     this.error = false,
     this.keyboardType,
     this.textInputAction,
@@ -149,6 +151,7 @@ class UiInputGroup extends StatelessWidget {
     this.label,
     this.hintText,
     this.helperText,
+    this.errorText,
     this.error = false,
     this.keyboardType,
     this.textInputAction,
@@ -218,6 +221,8 @@ class UiInputGroup extends StatelessWidget {
   final String? hintText;
 
   final String? helperText;
+
+  final String? errorText;
 
   final bool error;
 
@@ -333,6 +338,7 @@ class UiInputGroup extends StatelessWidget {
       label: label,
       hintText: hintText,
       helperText: helperText,
+      errorText: errorText,
       error: error,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
