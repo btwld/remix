@@ -1,8 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
-import 'package:naked_ui/naked_ui.dart' show CivilDateRange;
 import 'package:remix/remix.dart';
 
 import '../../helpers/date_picker_test_helpers.dart';
