@@ -288,7 +288,7 @@ void main() {
           crossAxisAlignment: CrossAxisAlignment.baseline,
         );
 
-        expect(spec.props.length, equals(19));
+        expect(spec.props.length, equals(21));
         expect(spec.props, contains(spec.text));
         expect(spec.props, contains(spec.hintText));
         expect(spec.props, contains(spec.textAlign));
@@ -306,6 +306,8 @@ void main() {
         expect(spec.props, contains(CrossAxisAlignment.baseline));
         expect(spec.props, contains(spec.layout));
         expect(spec.props, contains(spec.helperText));
+        expect(spec.props, contains(spec.errorText));
+        expect(spec.props, contains(spec.messageTransition));
         expect(spec.props, contains(spec.label));
       });
     });

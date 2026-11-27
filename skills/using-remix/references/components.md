@@ -94,7 +94,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `TextArea` is a multiline facade with `minLines: 2`, `maxLines: null`,
   `expands`/`obscureText` fixed to `false`. Vanilla, Fortal, and HeroUI recipes
   ring the field with `onFocused`, so a click shows the ring. Other controls use
-  `onFocusVisible`.
+  `onFocusVisible`. `errorText` shows an error row below `helperText` and sets
+  the error state; `error: true` alone turns `helperText` into the error. A
+  `messageTransition` on the style animates both rows in and out.
 - **SearchField** — In Vanilla and Fortal, `remix add search_field` installs
   `<Prefix>SearchField(semanticLabel: ...)`. Both use
   `NakedSearchField` for behavior and their own TextField for the editor.
