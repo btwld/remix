@@ -302,6 +302,7 @@ final _families = <_Family>[
   (id: 'dialog', group: 'Layers', build: dialog.buildDialogCatalogUseCase),
 
   (id: 'menu', group: 'Layers', build: _menuMatrix),
+  (id: 'context_menu', group: 'Layers', build: _contextMenuMatrix),
   (id: 'popover', group: 'Layers', build: _popoverMatrix),
   (id: 'tooltip', group: 'Layers', build: _tooltipMatrix),
   (id: 'toast', group: 'Feedback', build: _toastMatrix),
@@ -499,6 +500,43 @@ Widget _menuMatrix(BuildContext context) => CatalogMatrix(
     ],
   ),
 );
+Widget _contextMenuMatrix(BuildContext context) => CatalogMatrix(
+  columns: const ['default'],
+  rows: const ['rows'],
+  cellWidth: 280,
+  cell: (row, column) => FortalContextMenu<String>(
+    items: [
+      const RemixMenuItem(value: 'copy', label: 'Copy'),
+      RemixMenuItem(
+        value: 'delete',
+        label: 'Delete',
+        style: fortalContextMenuItemStyle(destructive: true),
+      ),
+    ],
+    child: Builder(
+      builder: (context) {
+        final spec = fortalContextMenuStyle().build(context).spec;
+        final destructive = fortalContextMenuItemStyle(
+          destructive: true,
+        ).build(context).spec;
+        return FlexBox(
+          styleSpec: spec.overlay,
+          children: [
+            for (final (label, item) in [
+              ('Copy', spec.item.spec),
+              ('Delete', destructive),
+            ])
+              FlexBox(
+                styleSpec: item.container,
+                children: [StyledText(label, styleSpec: item.label)],
+              ),
+          ],
+        );
+      },
+    ),
+  ),
+);
+
 Widget _popoverMatrix(BuildContext context) => CatalogMatrix(
   columns: labelsOf(FortalPopoverSize.values),
   rows: noRowAxis,
