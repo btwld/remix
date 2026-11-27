@@ -379,6 +379,8 @@ for Overlay, Navigator and toast scope placement.
   which can also set the glyph (`IconStyler().icon(...)`) for a preset chevron.
   Root panel placement comes from `RemixMenu.positioning` when passed,
   otherwise from `MenuStyler().positioning(OverlayPositionConfig(...))`.
+  `MenuStyler().itemTransition(RemixMenuItemTransition(builder:))` wraps each
+  root-panel entry with the panel animation, `index` and `count` for a stagger.
   Show a keyboard shortcut or count on a row with `trailingText:` (ordinary,
   checkbox, radio, and submenu items) rather than a hand-built row; style it
   with `MenuItemStyler().trailingText(...)`, which inherits the label style.

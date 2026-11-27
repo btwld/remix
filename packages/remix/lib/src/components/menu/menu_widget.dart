@@ -652,6 +652,8 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
                 transition: spec.panelTransition,
                 anchorRect: info.anchorRect,
                 child: _RemixMenuItemsPanel<T>(
+                  itemTransition: spec.itemTransition,
+                  panelAnimation: _panelTransition,
                   items: widget.items,
                   overlayStyleSpec: spec.overlay,
                   containerEffects: spec.containerEffects,
@@ -833,6 +835,8 @@ final class _MenuItemProjection extends MenuStyler {
 /// item, divider, decoration, and choice-row layout cannot drift.
 class _RemixMenuItemsPanel<T> extends StatelessWidget {
   const _RemixMenuItemsPanel({
+    this.itemTransition,
+    this.panelAnimation,
     required this.items,
     required this.overlayStyleSpec,
     required this.containerEffects,
@@ -840,6 +844,10 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
     required this.hasRootSelectionCallback,
     required this.itemStyles,
   });
+
+  /// Only the root panel passes these; submenu entries are never wrapped.
+  final RemixMenuItemTransition? itemTransition;
+  final RemixPanelTransitionHandle? panelAnimation;
 
   final List<RemixMenuItemData<T>> items;
   final StyleSpec<FlexBoxSpec> overlayStyleSpec;
@@ -853,14 +861,34 @@ class _RemixMenuItemsPanel<T> extends StatelessWidget {
     final snapshot = List<RemixMenuItemData<T>>.unmodifiable(items);
     final hasChoiceItems = _hasChoiceItems(snapshot);
 
+    final entries = snapshot
+        .map((item) => _buildEntry(context, item, hasChoiceItems))
+        .toList(growable: false);
+    final transition = itemTransition;
+
     return RemixFlexBoxAdapter(
       styleSpec: overlayStyleSpec,
       direction: Axis.vertical,
       containerEffects: containerEffects,
       scrollable: true,
-      children: snapshot
-          .map((item) => _buildEntry(context, item, hasChoiceItems))
-          .toList(growable: false),
+      children: transition == null
+          ? entries
+          : [
+              for (final (index, entry) in entries.indexed)
+                KeyedSubtree(
+                  key: entry.key,
+                  child: transition.builder(
+                    context,
+                    RemixMenuItemTransitionInfo(
+                      animation:
+                          panelAnimation?.animation ?? kAlwaysCompleteAnimation,
+                      index: index,
+                      count: entries.length,
+                    ),
+                    entry,
+                  ),
+                ),
+            ],
     );
   }
 

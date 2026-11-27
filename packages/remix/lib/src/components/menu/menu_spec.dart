@@ -1,5 +1,55 @@
 part of 'menu.dart';
 
+/// What a [RemixMenuItemTransition] builder receives for one panel entry.
+@immutable
+final class RemixMenuItemTransitionInfo {
+  const RemixMenuItemTransitionInfo({
+    required this.animation,
+    required this.index,
+    required this.count,
+  });
+
+  /// The root panel's open and close animation, linear from `0.0` to `1.0`.
+  /// It is complete when the menu sets no [MenuSpec.panelTransition].
+  final Animation<double> animation;
+
+  /// The entry's position in the root panel, from `0`. A section and a
+  /// divider each count as one entry.
+  final int index;
+
+  /// How many entries the root panel has.
+  final int count;
+}
+
+/// Wraps one entry of the root menu panel, such as to stagger the rows as the
+/// panel opens.
+typedef RemixMenuItemTransitionBuilder =
+    Widget Function(
+      BuildContext context,
+      RemixMenuItemTransitionInfo info,
+      Widget entry,
+    );
+
+/// A per-entry transition for the root menu panel.
+///
+/// The builder compares by identity, so pass a top-level function or a static
+/// tear-off. Submenu panels are not wrapped.
+@immutable
+final class RemixMenuItemTransition {
+  const RemixMenuItemTransition({required this.builder});
+
+  /// Wraps each entry.
+  final RemixMenuItemTransitionBuilder builder;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RemixMenuItemTransition && builder == other.builder;
+
+  @override
+  int get hashCode => builder.hashCode;
+}
+
 /// Resolved visual properties for [RemixMenuTrigger].
 ///
 /// This spec styles the trigger content only. The interactive trigger behavior
@@ -144,6 +194,14 @@ class MenuSpec with _$MenuSpec {
   @override
   final OverlayPositionConfig? positioning;
 
+  /// Wraps each entry of the root panel with the panel's open animation and
+  /// the entry's index, so rows can stagger in and out.
+  ///
+  /// `null` leaves the entries unwrapped. Without a [panelTransition] the
+  /// animation is complete. Submenu panels are not wrapped.
+  @override
+  final RemixMenuItemTransition? itemTransition;
+
   /// Creates a menu spec with default empty child specs.
   const MenuSpec({
     StyleSpec<MenuTriggerSpec>? trigger,
@@ -157,6 +215,7 @@ class MenuSpec with _$MenuSpec {
     StyleSpec<DividerSpec>? divider,
     this.panelTransition,
     this.positioning,
+    this.itemTransition,
   }) : trigger = trigger ?? const StyleSpec(spec: MenuTriggerSpec()),
        overlay = overlay ?? const StyleSpec(spec: FlexBoxSpec()),
        item = item ?? const StyleSpec(spec: MenuItemSpec()),
@@ -212,6 +271,7 @@ class MenuSpec with _$MenuSpec {
       divider: generated.divider,
       panelTransition: generated.panelTransition,
       positioning: generated.positioning,
+      itemTransition: generated.itemTransition,
     );
   }
 }
