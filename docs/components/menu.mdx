@@ -255,6 +255,25 @@ A split button needs separate menu controls.
 trigger, because the button owns its look and name. Setting `semanticLabel` on a
 menu with a control trigger fails an assertion.
 
+## Trailing icon
+
+The default trigger shows an optional icon after its label, such as a chevron.
+Pass `trailingIcon` to `RemixMenuTrigger` or `RemixMenuTrigger.builder`, and
+style it with `MenuTriggerStyler().trailingIcon(...)`, which does not inherit
+the leading `icon` style. A style can also supply the glyph, so a preset can
+add a chevron without a call-site argument:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final chevronTrigger = MenuStyler().trigger(
+  MenuTriggerStyler().trailingIcon(
+    IconStyler().icon(Icons.expand_more).size(16),
+  ),
+);
+```
+
 ## Open trigger state
 
 While the menu is open, the default trigger and a `RemixMenuTrigger.builder`

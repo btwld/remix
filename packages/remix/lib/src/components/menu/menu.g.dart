@@ -11,6 +11,7 @@ mixin _$MenuTriggerSpec implements Spec<MenuTriggerSpec>, Diagnosticable {
   RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
+  StyleSpec<IconSpec> get trailingIcon;
 
   @override
   Type get type => MenuTriggerSpec;
@@ -21,12 +22,14 @@ mixin _$MenuTriggerSpec implements Spec<MenuTriggerSpec>, Diagnosticable {
     RemixBoxEffectsSpec? containerEffects,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
+    StyleSpec<IconSpec>? trailingIcon,
   }) {
     return MenuTriggerSpec(
       container: container ?? this.container,
       containerEffects: containerEffects ?? this.containerEffects,
       label: label ?? this.label,
       icon: icon ?? this.icon,
+      trailingIcon: trailingIcon ?? this.trailingIcon,
     );
   }
 
@@ -41,11 +44,18 @@ mixin _$MenuTriggerSpec implements Spec<MenuTriggerSpec>, Diagnosticable {
       ),
       label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
+      trailingIcon: trailingIcon.lerp(other?.trailingIcon, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, containerEffects, label, icon];
+  List<Object?> get props => [
+    container,
+    containerEffects,
+    label,
+    icon,
+    trailingIcon,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -90,7 +100,8 @@ mixin _$MenuTriggerSpec implements Spec<MenuTriggerSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('label', label))
-      ..add(DiagnosticsProperty('icon', icon));
+      ..add(DiagnosticsProperty('icon', icon))
+      ..add(DiagnosticsProperty('trailingIcon', trailingIcon));
   }
 }
 
@@ -367,25 +378,29 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
+  final Prop<StyleSpec<IconSpec>>? $trailingIcon;
 
   const MenuTriggerStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
+    Prop<StyleSpec<IconSpec>>? trailingIcon,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $containerEffects = containerEffects,
        $label = label,
-       $icon = icon;
+       $icon = icon,
+       $trailingIcon = trailingIcon;
 
   MenuTriggerStyler({
     FlexBoxStyler? container,
     RemixBoxEffectsMix? containerEffects,
     TextStyler? label,
     IconStyler? icon,
+    IconStyler? trailingIcon,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<MenuTriggerSpec>>? variants,
@@ -394,6 +409,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
          containerEffects: Prop.maybeMix(containerEffects),
          label: Prop.maybeMix(label),
          icon: Prop.maybeMix(icon),
+         trailingIcon: Prop.maybeMix(trailingIcon),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -407,6 +423,8 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
       MenuTriggerStyler().label(value);
   factory MenuTriggerStyler.icon(IconStyler value) =>
       MenuTriggerStyler().icon(value);
+  factory MenuTriggerStyler.trailingIcon(IconStyler value) =>
+      MenuTriggerStyler().trailingIcon(value);
   factory MenuTriggerStyler.color(Color value) =>
       MenuTriggerStyler().color(value);
   factory MenuTriggerStyler.gradient(GradientMix value) =>
@@ -969,6 +987,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     'containerEffects',
     'label',
     'icon',
+    'trailingIcon',
     'animation',
     'modifier',
     'variants',
@@ -994,6 +1013,11 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
   @override
   MenuTriggerStyler icon(IconStyler value) {
     return merge(MenuTriggerStyler(icon: value));
+  }
+
+  /// Sets the trailingIcon.
+  MenuTriggerStyler trailingIcon(IconStyler value) {
+    return merge(MenuTriggerStyler(trailingIcon: value));
   }
 
   /// Sets the animation configuration.
@@ -1030,6 +1054,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
       ),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
+      trailingIcon: MixOps.merge($trailingIcon, other?.$trailingIcon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1044,6 +1069,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
       containerEffects: MixOps.resolve(context, $containerEffects),
       label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),
+      trailingIcon: MixOps.resolve(context, $trailingIcon),
     );
 
     return StyleSpec(
@@ -1060,7 +1086,8 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('label', $label))
-      ..add(DiagnosticsProperty('icon', $icon));
+      ..add(DiagnosticsProperty('icon', $icon))
+      ..add(DiagnosticsProperty('trailingIcon', $trailingIcon));
   }
 
   @override
@@ -1069,6 +1096,7 @@ class MenuTriggerStyler extends MixStyler<MenuTriggerStyler, MenuTriggerSpec>
     $containerEffects,
     $label,
     $icon,
+    $trailingIcon,
     $animation,
     $modifier,
     $variants,

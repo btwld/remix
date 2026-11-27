@@ -593,6 +593,12 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
             styleSpec: triggerSpec.label,
           ),
         ),
+        if (widget.trigger.trailingIcon != null ||
+            triggerSpec.trailingIcon.spec.icon != null)
+          StyledIcon(
+            icon: widget.trigger.trailingIcon,
+            styleSpec: triggerSpec.trailingIcon,
+          ),
       ],
     );
   }
