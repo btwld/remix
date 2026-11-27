@@ -10,6 +10,7 @@ export 'naked_link.dart';
 export 'naked_listbox.dart';
 export 'naked_menu.dart';
 export 'naked_menubar.dart' hide NakedMenubarScope, MenubarTriggers;
+export 'naked_number_field.dart';
 export 'naked_popover.dart';
 export 'naked_radio.dart' hide NakedRadioGroupScope;
 export 'naked_scrollbar.dart';

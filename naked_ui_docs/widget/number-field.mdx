@@ -1,0 +1,66 @@
+---
+title: NakedNumberField
+description: Add spin button stepping, bounds, and draft commits to a numeric input without choosing its editor or styling.
+keywords: [flutter, headless, number, spinbutton, stepper, input]
+---
+
+`NakedNumberField` turns a caller-built text editor into a spin button. It owns the value's bounds and steps, the arrow, Page, Home and End keys, typed drafts, and the increase and decrease actions that assistive technology uses. It doesn't draw anything or require a Material host. Use `NakedSlider` instead if users should pick a value by position.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+Widget quantityField(double quantity, ValueChanged<double?> onChanged) =>
+    NakedNumberField(
+      value: quantity,
+      min: 0,
+      max: 99,
+      onChanged: onChanged,
+      builder: (context, field) => Row(
+        children: [
+          ExcludeFocus(
+            child: TextFieldTapRegion(
+              child: NakedButton(
+                semanticLabel: 'Decrease quantity',
+                onPressed: field.decrement,
+                child: const Text('-'),
+              ),
+            ),
+          ),
+          Expanded(
+            child: field.spinButton(
+              NakedTextField(
+                controller: field.controller,
+                focusNode: field.focusNode,
+                enabled: field.enabled,
+                readOnly: field.readOnly,
+                keyboardType: field.keyboardType,
+                onSubmitted: field.onSubmitted,
+                semanticLabel: 'Quantity',
+                builder: (context, state, editable) => editable,
+              ),
+            ),
+          ),
+          ExcludeFocus(
+            child: TextFieldTapRegion(
+              child: NakedButton(
+                semanticLabel: 'Increase quantity',
+                onPressed: field.increment,
+                child: const Text('+'),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+```
+
+The value is controlled. `onChanged` proposes a value after a step, a key, a semantic action, or a commit that changes it, and the editor keeps showing `value` until you rebuild the field with the new one. Without `onChanged` the field is read-only.
+
+While the editor has focus, Up and Down move by `step`, Page Up and Page Down move by `largeStep` (ten steps by default), and Home and End jump to `min` and `max` when they are finite. On an unbounded side, Home and End move the caret instead. Keys pressed with a modifier, and keys during active text composition, stay with the editor.
+
+Typing edits a draft and reports nothing. Submitting or moving focus away commits it: an empty draft proposes null, text that doesn't parse reverts to `value`, and a number is clamped to the bounds. Stepping from a draft starts at the typed number. Supply `format` and `parse` for locale-aware text; the default shows at least as many fraction digits as `step` has.
+
+Wrap only the editor in `field.spinButton` so its semantics node carries the next and previous values and the increase and decrease actions. The pinned Flutter SDK cannot report a spin button role yet, so assistive technology reads the editor as a text field with those actions. Keep the step controls out of the Tab order with `ExcludeFocus`, and wrap them in `TextFieldTapRegion` so a press doesn't take focus from the editor. `field.increment` and `field.decrement` are null while the field is disabled, read-only, or at that bound.
+
+Supply a `controller` or `focusNode` to share it with your application; you keep ownership. The field writes the formatted value into the controller.

@@ -30,6 +30,7 @@ or see the [documentation source](../../naked_ui_docs/README.md) to contribute.
 - NakedCombobox — autocomplete field on Flutter's RawAutocomplete
 - NakedRadio / NakedRadioGroup — single‑select radio on RawRadio with group management
 - NakedSelect — caller-controlled selection and controlled/uncontrolled opening with keyboard navigation
+- NakedNumberField — spin button behavior for a caller-built numeric editor and step controls: bounds, steps, keys, and draft commits
 - NakedScrollbar — styleable scrollbar thumb and track
 - NakedSearchField — clearable search input behavior for a caller-built editor, with focus restoration and IME-safe Escape
 - NakedSlider — arbitrary multi-thumb slider with per-thumb focus + semantics

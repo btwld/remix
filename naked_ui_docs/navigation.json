@@ -151,6 +151,10 @@
           "href": "/widget/menubar"
         },
         {
+          "title": "NakedNumberField",
+          "href": "/widget/number-field"
+        },
+        {
           "title": "NakedScrollbar",
           "href": "/widget/scrollbar"
         },
