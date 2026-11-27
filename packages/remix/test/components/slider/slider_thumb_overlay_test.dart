@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
 import 'package:remix/src/rendering/remix_box_effects.dart'
     show RemixBoxAdapter;
