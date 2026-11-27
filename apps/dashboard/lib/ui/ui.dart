@@ -16,6 +16,7 @@ export 'components/chart.dart';
 export 'components/checkbox.dart';
 export 'components/code.dart';
 export 'components/combobox.dart';
+export 'components/context_menu.dart';
 export 'components/data_list.dart';
 export 'components/data_table.dart';
 export 'components/date_picker.dart';
