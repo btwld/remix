@@ -480,12 +480,19 @@ class _AccordionContentMotionState extends State<_AccordionContentMotion>
     super.dispose();
   }
 
+  // Keeps the panel's state when reduced motion adds or drops the transition.
+  final _panelKey = GlobalKey(debugLabel: 'RemixAccordion panel');
+
   @override
   Widget build(BuildContext context) {
     if (!widget.expanded && _controller.isDismissed) {
       return const SizedBox.shrink();
     }
+    final panel = KeyedSubtree(key: _panelKey, child: widget.child);
+    // Reduced motion shows the bare panel, as the transition's own layout
+    // (such as an alignment) would otherwise move it.
+    if (widget.reduceMotion) return panel;
 
-    return widget.transitionBuilder(widget.child, _controller);
+    return widget.transitionBuilder(panel, _controller);
   }
 }

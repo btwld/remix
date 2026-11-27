@@ -126,6 +126,22 @@ void main() {
     expect(_opacity(tester), 1);
   });
 
+  testWidgets('reduced motion leaves a narrow panel centered in its item', (
+    tester,
+  ) async {
+    final harness = await MotionHarness.pump(
+      tester,
+      SizedBox(width: 400, child: _accordion()),
+    );
+    await harness.set(MotionRequest.platform, enabled: true);
+    await _toggle(tester);
+
+    expect(
+      tester.getCenter(find.byType(_Counter)).dx,
+      tester.getCenter(find.byType(RemixAccordion<String>)).dx,
+    );
+  });
+
   testWidgets('the default trigger draws the style icon in place of plus', (
     tester,
   ) async {
