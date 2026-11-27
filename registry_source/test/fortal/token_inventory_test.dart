@@ -40,7 +40,6 @@ final _customizationTokens = {
   'controlTrackHover',
   'controlThumb',
   'success',
-  'warning',
   'info',
   'toneTeal',
   'toneSky',

@@ -28,8 +28,9 @@ The Fortal
 preset also includes `base_button`, `code`, `heading`, `kbd`, `text`,
 `typography`, `avatar_group`, a spaced row of `avatar`s, `breadcrumbs`,
 a one-line trail of `link`s, `search_field`, a `text_field` with a search
-glyph and clear button, `surface`, a `card` at four levels of emphasis,
-and `context_menu`, the `menu` panel opened at the pointer.
+glyph and clear button, `rating`, a star rating over a radio group,
+`surface`, a `card` at four levels of emphasis, and `context_menu`, the
+`menu` panel opened at the pointer.
 Vanilla also provides `range_slider`, which installs
 `slider` and generates a two-bound `<Prefix>RangeSlider`. The `data_table` item
 uses `checkbox`, `icon_button`, and `select` for its controls; `toast` uses `button` and `icon_button` for its

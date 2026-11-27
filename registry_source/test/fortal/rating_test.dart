@@ -17,6 +17,9 @@ Finder _inStar(int star, Finder matching) => find
     )
     .first;
 
+// ignore: invalid_use_of_internal_member
+final _adapter = find.byType(RemixBoxAdapter);
+
 RatingStarSpec _star(WidgetTester tester, int star) => tester
     .widget<StyleSpecBuilder<RatingStarSpec>>(
       _inStar(star, find.byType(StyleSpecBuilder<RatingStarSpec>)),
@@ -27,7 +30,7 @@ RatingStarSpec _star(WidgetTester tester, int star) => tester
 // ignore: invalid_use_of_internal_member
 RemixBoxAdapter _cell(WidgetTester tester, int star) =>
     // ignore: invalid_use_of_internal_member
-    tester.widget(_inStar(star, find.byType(RemixBoxAdapter)));
+    tester.widget(_inStar(star, _adapter));
 
 class _Host extends StatefulWidget {
   const _Host({this.initial, this.enabled = true, this.size = .size2});
@@ -106,7 +109,7 @@ void main() {
       await tester.pumpRemixApp(_Host(size: size));
       await tester.pumpAndSettle();
 
-      final cellSize = tester.getSize(_inStar(1, find.byType(RemixBoxAdapter)));
+      final cellSize = tester.getSize(_inStar(1, _adapter));
       // The star's spring settles within a hair of its target.
       expect(cellSize.width, moreOrLessEquals(cell, epsilon: .01));
       expect(cellSize.height, moreOrLessEquals(cell, epsilon: .01));
@@ -138,29 +141,23 @@ void main() {
     expect(_star(tester, 2).glyphScale, 1);
   });
 
-  testWidgets(
-    'keyboard focus rings the focused star',
-    (tester) async {
-      await tester.pumpRemixApp(const _Host(initial: 2));
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-      await tester.pumpAndSettle();
+  testWidgets('keyboard focus rings the focused star', (tester) async {
+    await tester.pumpRemixApp(const _Host(initial: 2));
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pumpAndSettle();
 
-      final focused = FocusManager.instance.primaryFocus;
-      final index = [
-        for (var star = 1; star <= 5; star++)
-          Focus.of(
-            tester.element(_inStar(star, find.byType(RemixBoxAdapter))),
-          ).hasPrimaryFocus,
-      ].indexOf(true);
-      expect(focused, isNotNull);
-      expect(index, isNonNegative);
-      final ring = _cell(tester, index + 1).containerEffects?.outline;
-      expect(ring?.style, BorderStyle.solid);
-      expect(ring?.width, moreOrLessEquals(2, epsilon: .01));
-    },
-    
-  );
+    final focused = FocusManager.instance.primaryFocus;
+    final index = [
+      for (var star = 1; star <= 5; star++)
+        Focus.of(tester.element(_inStar(star, _adapter))).hasPrimaryFocus,
+    ].indexOf(true);
+    expect(focused, isNotNull);
+    expect(index, isNonNegative);
+    final ring = _cell(tester, index + 1).containerEffects?.outline;
+    expect(ring?.style, BorderStyle.solid);
+    expect(ring?.width, moreOrLessEquals(2, epsilon: .01));
+  });
 
   testWidgets(
     'hover previews in the warning tone',
