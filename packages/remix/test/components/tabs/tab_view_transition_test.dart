@@ -143,9 +143,7 @@ void main() {
     expect(opacityOf(tester, 'View b'), 1);
   });
 
-  testWidgets('direction follows where the selected tab sits', (
-    tester,
-  ) async {
+  testWidgets('direction follows where the selected tab sits', (tester) async {
     final calls = <_Call>[];
     await tester.pumpRemixApp(_Harness(calls: calls));
     expect(directionsSince(calls, 0), {0});
@@ -161,9 +159,7 @@ void main() {
     expect(directionsSince(calls, start), {-1});
   });
 
-  testWidgets('direction is physical in right-to-left layouts', (
-    tester,
-  ) async {
+  testWidgets('direction is physical in right-to-left layouts', (tester) async {
     final calls = <_Call>[];
     await tester.pumpRemixApp(
       _Harness(calls: calls),
