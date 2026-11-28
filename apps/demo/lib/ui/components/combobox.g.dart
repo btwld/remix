@@ -8,9 +8,14 @@ part of 'combobox.dart';
 
 /// The Fortal Combobox recipe: an editable field with a panel of suggestions.
 ///
-/// The field shares TextField's recipe. Suggestions use the Select panel's
-/// token roles with growing rows and separate hover, keyboard and press fills.
-/// Remix owns filtering callbacks, traversal, acceptance, fades and scrollbar.
+/// The field takes TextField's recipe with its own frame: a quiet frame at
+/// rest, the strong frame over the muted fill while hovered or open, and the
+/// accent frame while focused with the panel closed. The panel is the raised
+/// surface 8px below the field; it grows in on the snappy spring and leaves
+/// faster than it came. Suggestions are 36px rows that take the muted fill
+/// under the pointer, the keyboard and a press.
+///
+/// Remix owns filtering callbacks, traversal, acceptance and scrolling.
 /// Eligible suggestions have no persistent selected or per-option disabled
 /// state; acceptance writes the value into the field. A custom field builder
 /// owns its editor styling. Caller overrides merge last.
