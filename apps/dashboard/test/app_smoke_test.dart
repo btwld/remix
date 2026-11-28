@@ -48,6 +48,12 @@ Future<void> _openSettingsTab(WidgetTester tester, String name) async {
   await tester.pump(_pageEntered);
 }
 
+// A keyed menu row, without the transition wrapper Remix keys with the same
+// key when the menu staggers its rows in.
+Finder _menuRow(Key key) => find.byWidgetPredicate(
+  (widget) => widget.key == key && widget is! KeyedSubtree,
+);
+
 /// The active page's root, for finders that must not match a page kept
 /// mounted behind it.
 Finder _inPage(UiDashboardDemoPage page, Finder matching) => find.descendant(
@@ -475,15 +481,15 @@ void main() {
       ui.SemanticsRole.menuItem,
     );
     expect(
-      find.byKey(const ValueKey('dashboard-action-profile')),
+      _menuRow(const ValueKey('dashboard-action-profile')),
       findsOneWidget,
     );
     expect(
-      find.byKey(const ValueKey('dashboard-action-preferences')),
+      _menuRow(const ValueKey('dashboard-action-preferences')),
       findsOneWidget,
     );
     expect(
-      find.byKey(const ValueKey('dashboard-action-signout')),
+      _menuRow(const ValueKey('dashboard-action-signout')),
       findsOneWidget,
     );
     expect(
@@ -526,15 +532,10 @@ void main() {
         .first;
     expect(tester.getSize(overlay).width, 180);
     expect(tester.getSize(overlay).height, lessThan(180));
-    final contentInset = UiTokens.space1.resolve(
-      tester.element(find.text('View profile')),
-    );
-    expect(
-      tester
-          .getSize(find.byKey(const ValueKey('dashboard-action-profile')))
-          .width,
-      180 - contentInset * 2,
-    );
+    final row = _menuRow(const ValueKey('dashboard-action-profile'));
+    final inset = tester.getTopLeft(row).dx - tester.getTopLeft(overlay).dx;
+    expect(inset, greaterThan(0));
+    expect(tester.getTopRight(row).dx, tester.getTopRight(overlay).dx - inset);
 
     await tester.tap(find.text('View profile'));
     await tester.pump();

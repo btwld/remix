@@ -635,12 +635,12 @@ class {{typePrefix}}ActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final contentInset = {{typePrefix}}Tokens.space1.resolve(context);
-    final itemWidth = width - contentInset * 2;
-
     return {{typePrefix}}Menu<String>(
       size: .size1,
       positioning: positioning,
+      style: MenuStyler().overlay(
+        FlexBoxStyler().width(width).crossAxisAlignment(.stretch),
+      ),
       trigger: trigger,
       items: [
         for (final action in actions) ...[
@@ -649,7 +649,6 @@ class {{typePrefix}}ActionMenu extends StatelessWidget {
             key: ValueKey('dashboard-action-${action.value}'),
             value: action.value,
             label: action.label,
-            style: MenuItemStyler().width(itemWidth),
           ),
         ],
       ],
