@@ -558,7 +558,7 @@ void main() {
 
     final content = find.byKey(const ValueKey('topbar-notifications-content'));
     expect(content, findsOneWidget);
-    expect(tester.getSize(content).width, 330);
+    expect(tester.getSize(content).width, 318);
     expect(tester.getSize(content).height, lessThan(300));
   });
 

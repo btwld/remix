@@ -645,7 +645,7 @@ class _Notifications extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Box(
     key: const ValueKey('topbar-notifications-content'),
-    style: BoxStyler().width(330),
+    style: BoxStyler().width(318),
     child: ColumnBox(
       style: FlexBoxStyler()
           .mainAxisSize(.min)
