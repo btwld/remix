@@ -302,6 +302,11 @@ RTL. Directionality comes from whatever the child itself needs.
   `delay` rests on the base frame before the first leg, so a list can
   stagger its placeholders, and `cycles` stops on the base frame after that
   many pulses.
+- When `loading` turns false the child appears at once by default.
+  `revealDuration` crossfades instead: the child fades in, eased by
+  `revealCurve` and travelling from `revealOffset`, while the placeholder
+  fades out. The child takes input, focus, and semantics from the first frame
+  of the reveal. Reduced motion shows it at once.
 - Loading content is excluded from focus, semantics, and ticking. There is
   no shimmer gradient or fabricated progress semantics.
 
@@ -378,6 +383,21 @@ delay. Reduced motion skips the pulse and the delay.
 Runs this many pulses, each a forward and a reverse leg, then rests on the base
 frame. Must be greater than zero. Defaults to pulsing for as long as the
 skeleton is loading.
+
+#### `revealDuration(Duration value)`
+
+Crossfades from the placeholder to the child over this long when `loading`
+turns false. Defaults to showing the child at once.
+
+#### `revealCurve(Curve value)`
+
+Eases the child's fade and travel during the reveal. Defaults to
+`Curves.easeOut`. The placeholder fades out linearly.
+
+#### `revealOffset(Offset value)`
+
+Sets where the child starts, in logical pixels from its place, such as
+`Offset(0, 4)` for a short rise. Defaults to no travel.
 
 #### `container(BoxStyler value)`
 

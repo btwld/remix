@@ -69,6 +69,95 @@ class RemixSkeleton extends StyleWidget<SkeletonSpec> {
     );
     if (child == null) return pulse();
 
+    return _SkeletonReveal(
+      loading: loading,
+      spec: spec,
+      pulse: pulse,
+      child: child,
+    );
+  }
+}
+
+/// Lays the pulse over the hidden child and plays the reveal.
+class _SkeletonReveal extends StatefulWidget {
+  const _SkeletonReveal({
+    required this.loading,
+    required this.spec,
+    required this.pulse,
+    required this.child,
+  });
+
+  final bool loading;
+  final SkeletonSpec spec;
+  final Widget Function() pulse;
+  final Widget child;
+
+  @override
+  State<_SkeletonReveal> createState() => _SkeletonRevealState();
+}
+
+class _SkeletonRevealState extends State<_SkeletonReveal>
+    with SingleTickerProviderStateMixin {
+  // At 1 the child is fully shown; a reveal runs it from 0.
+  late final AnimationController _reveal = AnimationController(
+    vsync: this,
+    value: 1,
+  );
+
+  @override
+  void didUpdateWidget(covariant _SkeletonReveal oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.loading) {
+      _reveal.value = 1;
+
+      return;
+    }
+    final duration = widget.spec.revealDuration;
+    if (!oldWidget.loading ||
+        duration == null ||
+        duration <= Duration.zero ||
+        remixReducedMotionOf(context)) {
+      return;
+    }
+    _reveal
+      ..duration = duration
+      ..forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _reveal.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final loading = widget.loading;
+    final curve = widget.spec.revealCurve ?? Curves.easeOut;
+    final offset = widget.spec.revealOffset ?? Offset.zero;
+
+    return AnimatedBuilder(
+      animation: _reveal,
+      builder: (context, child) => _layers(
+        loading: loading,
+        revealing: !loading && _reveal.value < 1,
+        shown: loading ? 0 : curve.transform(_reveal.value),
+        placeholder: loading ? 1 : 1 - _reveal.value,
+        offset: offset,
+        child: child!,
+      ),
+      child: widget.child,
+    );
+  }
+
+  Widget _layers({
+    required bool loading,
+    required bool revealing,
+    required double shown,
+    required double placeholder,
+    required Offset offset,
+    required Widget child,
+  }) {
     return ExcludeSemantics(
       // The single semantics control for both states. It sits outside the
       // Stack so it covers the pulse overlay as well as the hidden child.
@@ -96,13 +185,25 @@ class RemixSkeleton extends StyleWidget<SkeletonSpec> {
                 child: Opacity(
                   // Paint hiding only. The ExcludeSemantics wrapping the
                   // Stack is the accessibility control.
-                  opacity: loading ? 0 : 1,
-                  child: child,
+                  opacity: shown,
+                  child: Transform.translate(
+                    offset: revealing ? offset * (1 - shown) : Offset.zero,
+                    child: child,
+                  ),
                 ),
               ),
             ),
           ),
-          if (loading) Positioned.fill(child: pulse()),
+          if (loading || revealing)
+            Positioned.fill(
+              // The fading placeholder never takes input from the content.
+              child: IgnorePointer(
+                ignoring: !loading,
+                child: ExcludeSemantics(
+                  child: Opacity(opacity: placeholder, child: widget.pulse()),
+                ),
+              ),
+            ),
         ],
       ),
     );

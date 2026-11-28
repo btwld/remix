@@ -168,7 +168,7 @@ void main() {
           duration: _leg,
         );
 
-        expect(spec.props, hasLength(6));
+        expect(spec.props, hasLength(9));
         expect(
           spec.props,
           containsAll(<Object?>[_container, _pulseColor, _leg]),
@@ -190,6 +190,9 @@ void main() {
             'curve',
             'delay',
             'cycles',
+            'revealDuration',
+            'revealCurve',
+            'revealOffset',
           ]),
         );
       });
