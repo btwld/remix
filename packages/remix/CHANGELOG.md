@@ -41,6 +41,10 @@
 - Calendars accept `CalendarSpec.fixedWeeks`. When true, every month lays out
   six week rows, padding with empty rows, so the height never changes. Unset,
   the row count follows the month.
+- Calendars accept a `CalendarSpec.selectionLayer` builder that paints beneath
+  the days with the grid geometry and the visible selection
+  (`RemixCalendarSelection`: start and end cells and one segment per week).
+  Unset, nothing is painted and the layout is unchanged.
 
 ## 1.0.0-rc.7
 

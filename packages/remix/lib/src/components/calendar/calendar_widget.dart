@@ -207,6 +207,10 @@ class RemixCalendar extends StatelessWidget {
         firstDayOfWeek: firstDayOfWeek,
         displayedMonth: state.displayedMonth,
         weeks: state.weeks,
+        selection: switch (state.value) {
+          final value? => CivilDateRange(start: value, end: value),
+          null => null,
+        },
         headerBuilder: (context, spec) =>
             headerBuilder?.call(context, state) ??
             _CalendarHeader(
@@ -499,6 +503,7 @@ class _CalendarView extends StatelessWidget {
     required this.weeks,
     required this.headerBuilder,
     required this.dayBuilder,
+    this.selection,
     this.summary,
     this.summaryBuilder,
   });
@@ -511,6 +516,7 @@ class _CalendarView extends StatelessWidget {
   final List<List<DateTime?>> weeks;
   final Widget Function(BuildContext, CalendarSpec) headerBuilder;
   final Widget Function(DateTime) dayBuilder;
+  final CivilDateRange? selection;
   final String? summary;
   final Widget Function(BuildContext, String)? summaryBuilder;
 
@@ -542,32 +548,56 @@ class _CalendarView extends StatelessWidget {
     );
   }
 
-  Widget _grid(
-    CalendarSpec spec,
-    List<List<DateTime?>> weeks,
-    double dayHeight,
-  ) => Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      for (final (index, week) in [
-        ...weeks,
-        if (spec.fixedWeeks ?? false)
-          for (var i = weeks.length; i < _maxWeeks; i++) _emptyWeek,
-      ].indexed) ...[
-        if (index > 0) SizedBox(height: spec.rowSpacing ?? 4),
-        Row(
-          children: [
-            for (final date in week)
-              Expanded(
-                child: date == null
-                    ? SizedBox(height: dayHeight)
-                    : dayBuilder(date),
-              ),
-          ],
-        ),
+  Widget _grid(CalendarSpec spec, List<List<DateTime?>> weeks, Size cellSize) {
+    final rowSpacing = spec.rowSpacing ?? 4;
+    final rows = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final (index, week) in [
+          ...weeks,
+          if (spec.fixedWeeks ?? false)
+            for (var i = weeks.length; i < _maxWeeks; i++) _emptyWeek,
+        ].indexed) ...[
+          if (index > 0) SizedBox(height: rowSpacing),
+          Row(
+            children: [
+              for (final date in week)
+                Expanded(
+                  child: date == null
+                      ? SizedBox(height: cellSize.height)
+                      : dayBuilder(date),
+                ),
+            ],
+          ),
+        ],
       ],
-    ],
-  );
+    );
+    final layer = spec.selectionLayer;
+    if (layer == null) return rows;
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: IgnorePointer(
+            child: ExcludeSemantics(
+              child: Builder(
+                builder: (context) => layer(
+                  context,
+                  _calendarSelection(
+                    weeks: weeks,
+                    selected: selection,
+                    cellSize: cellSize,
+                    rowSpacing: rowSpacing,
+                    textDirection: Directionality.of(context),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        rows,
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) => RemixStyleSpecBuilder<CalendarSpec>(
@@ -628,6 +658,7 @@ class _CalendarView extends StatelessWidget {
               final width = available.isFinite && available > minimumWidth
                   ? available
                   : minimumWidth;
+              final cellSize = Size(width / 7, dayHeight);
               return SingleChildScrollView(
                 primary: false,
                 child: SingleChildScrollView(
@@ -655,10 +686,10 @@ class _CalendarView extends StatelessWidget {
                             weeks: weeks,
                             transition: transition,
                             gridBuilder: (weeks) =>
-                                _grid(spec, weeks, dayHeight),
+                                _grid(spec, weeks, cellSize),
                           )
                         else
-                          _grid(spec, weeks, dayHeight),
+                          _grid(spec, weeks, cellSize),
                       ],
                     ),
                   ),

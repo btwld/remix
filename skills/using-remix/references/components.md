@@ -153,7 +153,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   builds a `RemixCalendar` with the supplied style.
   Recipe hooks, unset by default: `monthTransition(RemixMonthTransition)`
   animates the outgoing and incoming month grids; `fixedWeeks(true)` always
-  lays out six week rows.
+  lays out six week rows; `selectionLayer` paints one selection shape beneath
+  the days from a `RemixCalendarSelection` (cells, week segments, cell size).
 - **[RangeCalendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx)** — controlled complete inclusive `CivilDateRange?`, sharing
   Calendar navigation and day anatomy. First activation anchors locally without
   a callback; second eligible activation requests one ordered range and clears

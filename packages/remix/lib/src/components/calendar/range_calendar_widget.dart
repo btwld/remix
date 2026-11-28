@@ -198,6 +198,7 @@ class RemixRangeCalendar extends StatelessWidget {
         firstDayOfWeek: firstDayOfWeek,
         displayedMonth: state.displayedMonth,
         weeks: state.weeks,
+        selection: state.preview ?? state.value,
         summary: _summary(state),
         summaryBuilder: summaryBuilder,
         headerBuilder: (context, spec) =>
