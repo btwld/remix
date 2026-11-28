@@ -15,6 +15,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
   StyleSpec<TextSpec> get title;
   StyleSpec<IconSpec> get trailingIcon;
   StyleSpec<BoxSpec> get content;
+  AnimationConfig? get contentMotion;
 
   @override
   Type get type => AccordionSpec;
@@ -29,6 +30,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
     StyleSpec<TextSpec>? title,
     StyleSpec<IconSpec>? trailingIcon,
     StyleSpec<BoxSpec>? content,
+    AnimationConfig? contentMotion,
   }) {
     return AccordionSpec(
       container: container ?? this.container,
@@ -39,6 +41,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
       title: title ?? this.title,
       trailingIcon: trailingIcon ?? this.trailingIcon,
       content: content ?? this.content,
+      contentMotion: contentMotion ?? this.contentMotion,
     );
   }
 
@@ -57,6 +60,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
       title: title.lerp(other?.title, t),
       trailingIcon: trailingIcon.lerp(other?.trailingIcon, t),
       content: content.lerp(other?.content, t),
+      contentMotion: MixOps.lerpSnap(contentMotion, other?.contentMotion, t),
     );
   }
 
@@ -70,6 +74,7 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
     title,
     trailingIcon,
     content,
+    contentMotion,
   ];
 
   @override
@@ -119,7 +124,8 @@ mixin _$AccordionSpec implements Spec<AccordionSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('trailingIcon', trailingIcon))
-      ..add(DiagnosticsProperty('content', content));
+      ..add(DiagnosticsProperty('content', content))
+      ..add(DiagnosticsProperty('contentMotion', contentMotion));
   }
 }
 
@@ -143,6 +149,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<IconSpec>>? $trailingIcon;
   final Prop<StyleSpec<BoxSpec>>? $content;
+  final Prop<AnimationConfig>? $contentMotion;
 
   const AccordionStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
@@ -153,6 +160,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     Prop<StyleSpec<TextSpec>>? title,
     Prop<StyleSpec<IconSpec>>? trailingIcon,
     Prop<StyleSpec<BoxSpec>>? content,
+    Prop<AnimationConfig>? contentMotion,
     super.variants,
     super.modifier,
     super.animation,
@@ -163,7 +171,8 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
        $leadingIcon = leadingIcon,
        $title = title,
        $trailingIcon = trailingIcon,
-       $content = content;
+       $content = content,
+       $contentMotion = contentMotion;
 
   AccordionStyler({
     BoxStyler? container,
@@ -174,6 +183,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     TextStyler? title,
     IconStyler? trailingIcon,
     BoxStyler? content,
+    AnimationConfig? contentMotion,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<AccordionSpec>>? variants,
@@ -186,6 +196,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
          title: Prop.maybeMix(title),
          trailingIcon: Prop.maybeMix(trailingIcon),
          content: Prop.maybeMix(content),
+         contentMotion: Prop.maybe(contentMotion),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -207,6 +218,8 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
       AccordionStyler().trailingIcon(value);
   factory AccordionStyler.content(BoxStyler value) =>
       AccordionStyler().content(value);
+  factory AccordionStyler.contentMotion(AnimationConfig value) =>
+      AccordionStyler().contentMotion(value);
   factory AccordionStyler.color(Color value) => AccordionStyler().color(value);
   factory AccordionStyler.gradient(GradientMix value) =>
       AccordionStyler().gradient(value);
@@ -771,6 +784,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     'title',
     'trailingIcon',
     'content',
+    'contentMotion',
     'animation',
     'modifier',
     'variants',
@@ -814,6 +828,11 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
   /// Sets the content.
   AccordionStyler content(BoxStyler value) {
     return merge(AccordionStyler(content: value));
+  }
+
+  /// Sets the contentMotion.
+  AccordionStyler contentMotion(AnimationConfig value) {
+    return merge(AccordionStyler(contentMotion: value));
   }
 
   /// Sets the animation configuration.
@@ -895,6 +914,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
       title: MixOps.merge($title, other?.$title),
       trailingIcon: MixOps.merge($trailingIcon, other?.$trailingIcon),
       content: MixOps.merge($content, other?.$content),
+      contentMotion: MixOps.merge($contentMotion, other?.$contentMotion),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -913,6 +933,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
       title: MixOps.resolve(context, $title),
       trailingIcon: MixOps.resolve(context, $trailingIcon),
       content: MixOps.resolve(context, $content),
+      contentMotion: MixOps.resolve(context, $contentMotion),
     );
 
     return StyleSpec(
@@ -933,7 +954,8 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
       ..add(DiagnosticsProperty('leadingIcon', $leadingIcon))
       ..add(DiagnosticsProperty('title', $title))
       ..add(DiagnosticsProperty('trailingIcon', $trailingIcon))
-      ..add(DiagnosticsProperty('content', $content));
+      ..add(DiagnosticsProperty('content', $content))
+      ..add(DiagnosticsProperty('contentMotion', $contentMotion));
   }
 
   @override
@@ -946,6 +968,7 @@ class AccordionStyler extends MixStyler<AccordionStyler, AccordionSpec>
     $title,
     $trailingIcon,
     $content,
+    $contentMotion,
     $animation,
     $modifier,
     $variants,

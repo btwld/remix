@@ -286,6 +286,51 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
   See the [fortalSelectStyle source code](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/select.dart) for all available options.
 </Info>
 
+## Open trigger
+
+Set `selectedWhileOpen(true)` on `SelectTriggerStyler` to have the trigger
+resolve under the `selected` widget state while the panel is open and not
+closing. `onSelected(...)` then gives the trigger an open look that leaves as
+the panel starts to close. By default the trigger never resolves under
+`selected`.
+
+## Label transition
+
+The trigger label changes at once by default. Set `labelTransition` on
+`SelectTriggerStyler` to animate the change. The builder runs once for the
+arriving label and once for the leaving one, which overlap in the label's
+place. `info.entering` tells them apart, and `info.direction` says whether the
+new selection comes later or earlier in `items`; the placeholder counts as
+coming first. The leaving label is hidden from semantics, and under reduced
+motion the label changes at once.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final rollingLabel = SelectTriggerStyler().labelTransition(
+  RemixSelectLabelTransition(
+    duration: const Duration(milliseconds: 200),
+    reverseDuration: const Duration(milliseconds: 150),
+    builder: (context, info, label) {
+      final later = info.direction == RemixSelectLabelDirection.later;
+      final rise = later ? 1.0 : -1.0;
+      final offset = info.entering ? rise : -rise;
+      return FadeTransition(
+        opacity: info.animation,
+        child: SlideTransition(
+          position: Tween(
+            begin: Offset(0, 0.35 * offset),
+            end: Offset.zero,
+          ).animate(info.animation),
+          child: label,
+        ),
+      );
+    },
+  ),
+);
+```
+
 ## Panel transition
 
 The panel fades and scales in over 150 ms by default. Set `panelTransition` on
@@ -508,6 +553,18 @@ Styles the collapsed/expanded indicator independently from the content icon.
 #### `indicatorOpacity(double value)`
 
 Sets the opacity of the collapsed/expanded indicator.
+
+#### `selectedWhileOpen(bool value)`
+
+Resolves the trigger under `selected` while the panel is open. See [Open trigger](#open-trigger).
+
+#### `labelTransition(RemixSelectLabelTransition value)`
+
+Animates the label when the selection changes. See [Label transition](#label-transition).
+
+#### `indicatorAngle(double value)`
+
+Sets the indicator's rotation in radians, clockwise. It turns the default chevron and the trigger's `collapsedIcon` and `expandedIcon`. With `selectedWhileOpen(true)`, set it under `onSelected` with `animate` to turn the chevron as the panel opens and closes. Without it the default chevron flips at once while the panel is open.
 
 <Warning>
   `chevron` and `chevronOpacity` were renamed to `indicator` and

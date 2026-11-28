@@ -59,6 +59,13 @@ essential spinner motion keeps running. Dialogs, tooltips, disclosure, and toast
 get their motion from Naked UI, so they follow whichever signals the installed
 Naked UI release reads.
 
+A Remix widget's style `.animate(...)` follows both signals too. While motion
+is reduced, its timing is dropped, including timing set inside a variant such as
+`.onHovered(...)`, so state changes land on their end value in one frame. A
+transition already running when the preference changes finishes on its own
+timing. Mix widgets used directly (`Box`, `StyledText`) and `.animate` on a
+nested slot styler still animate.
+
 Read the same preference for your own motion with `RemixReducedMotionBuilder`.
 Its builder runs again when either signal changes.
 

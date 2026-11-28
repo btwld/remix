@@ -196,7 +196,9 @@ class RemixRangeCalendar extends StatelessWidget {
         controller: NakedState.controllerOf<NakedRangeCalendarState>(context),
         labels: labels,
         firstDayOfWeek: firstDayOfWeek,
+        displayedMonth: state.displayedMonth,
         weeks: state.weeks,
+        selection: state.preview ?? state.value,
         summary: _summary(state),
         summaryBuilder: summaryBuilder,
         headerBuilder: (context, spec) =>
@@ -261,5 +263,8 @@ class RemixRangeCalendar extends StatelessWidget {
     style: effectiveStyle,
     styleSpec: styleSpec,
     labels: labels,
+    interactive: enabled && onChanged != null,
+    firstDate: firstDate,
+    lastDate: lastDate,
   );
 }

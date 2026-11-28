@@ -38,6 +38,21 @@ class AccordionSpec with _$AccordionSpec {
   @override
   final StyleSpec<BoxSpec> content;
 
+  /// How [content] opens and closes. Accepts [CurveAnimationConfig] (such as
+  /// `AnimationConfig.curve(...)`) or [SpringAnimationConfig] (such as
+  /// `AnimationConfig.springDescription(...)`). Wrap two configs in
+  /// `AnimationConfig.reversible(open, reverse: close)` to close on different
+  /// timing. `null` opens and closes linearly over 200 ms.
+  ///
+  /// A toggle during a transition turns the same panel around from where it
+  /// is; a curve then takes the share of its duration that is left to cover,
+  /// and a spring keeps its velocity. A curve's `delay` and a config's
+  /// `onEnd` are not used. [RemixAccordion] throws [ArgumentError] for phase
+  /// and keyframe configs when it builds. This is separate from the styler's
+  /// own `animate`, which animates style changes.
+  @override
+  final AnimationConfig? contentMotion;
+
   const AccordionSpec({
     StyleSpec<BoxSpec>? container,
     this.containerEffects,
@@ -47,6 +62,7 @@ class AccordionSpec with _$AccordionSpec {
     StyleSpec<TextSpec>? title,
     StyleSpec<IconSpec>? trailingIcon,
     StyleSpec<BoxSpec>? content,
+    this.contentMotion,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        trigger = trigger ?? const StyleSpec(spec: FlexBoxSpec()),
        leadingIcon = leadingIcon ?? const StyleSpec(spec: IconSpec()),

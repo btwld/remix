@@ -194,6 +194,10 @@ Optional. The style spec for the checkbox.
 
 Optional. The focus node for the checkbox.
 
+#### `description` → `String?`
+
+Optional visible description under the label, inside the same pointer, focus, and semantics target. Assistive technologies read it as the control's hint. Must not be empty.
+
 #### `semanticLabel` → `String?`
 
 Optional. Overrides the accessible name derived from `label`. Use it for icon-only checkboxes or when assistive technology needs more context than the visible label.
@@ -221,9 +225,33 @@ Sets the checkbox indicator style.
 
 Sets the visible label text style.
 
+#### `description(TextStyler value)`
+
+Sets the description text style.
+
+#### `descriptionSpacing(double value)`
+
+Sets the gap between the label and the description. Defaults to 2 logical pixels.
+
+#### `controlAlignment(CrossAxisAlignment value)`
+
+Aligns the control with its label and description. Defaults to centered; `CrossAxisAlignment.start` lines the control up with the top of the label.
+
+#### `row(BoxStyler value)`
+
+Draws a box around the control and its copy, inside the interaction target, such as a bordered card row with padding. It resolves in the control's own state, so hover, press, and selected styles apply to it. Unset, no box is drawn.
+
+#### `rowEffects(RemixBoxEffectsMix value)`
+
+Paints outline and effect layers around the row box without affecting layout.
+
 #### `labelSpacing(double value)`
 
 Sets the gap between the checkbox square and its visible label. Defaults to 8 logical pixels.
+
+#### `indicatorBuilder(RemixCheckboxIndicatorBuilder value)`
+
+Builds the indicator inside the box in every state, including unchecked. The builder receives the value (`true`, `false`, or `null` for an indeterminate tristate checkbox) and the resolved indicator style. Its widget stays mounted when the value changes, so it can animate its own mark in and out. When set, it replaces `checkedIcon`, `uncheckedIcon`, and `indeterminateIcon`. Pass a top-level or static function so resolved specs compare equal across rebuilds.
 
 #### `labelColor(Color value)`
 

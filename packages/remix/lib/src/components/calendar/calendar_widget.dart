@@ -205,7 +205,12 @@ class RemixCalendar extends StatelessWidget {
         controller: NakedState.controllerOf<NakedCalendarState>(context),
         labels: labels,
         firstDayOfWeek: firstDayOfWeek,
+        displayedMonth: state.displayedMonth,
         weeks: state.weeks,
+        selection: switch (state.value) {
+          final value? => CivilDateRange(start: value, end: value),
+          null => null,
+        },
         headerBuilder: (context, spec) =>
             headerBuilder?.call(context, state) ??
             _CalendarHeader(
@@ -231,6 +236,9 @@ class RemixCalendar extends StatelessWidget {
     style: effectiveStyle,
     styleSpec: styleSpec,
     labels: labels,
+    interactive: enabled && onChanged != null,
+    firstDate: firstDate,
+    lastDate: lastDate,
   );
 
   String _dayLabel(DateTime date) {
@@ -279,18 +287,35 @@ Widget _calendarDay({
   required CalendarStyler style,
   required CalendarSpec? styleSpec,
   required RemixCalendarLabels labels,
+  required bool interactive,
+  required DateTime firstDate,
+  required DateTime lastDate,
 }) => NakedCalendarDay(
   date: date,
   semanticLabel: semanticLabel,
   builder: (context, day, _) => WidgetStateProvider(
-    states: day.states,
+    // Naked disables a day outside the displayed month only to make the
+    // outgoing grid of a month transition inert; it keeps its displayed look.
+    states: day.isOutsideMonth
+        ? {
+            if (day.isSelected) WidgetState.selected,
+            if (!interactive ||
+                day.isUnavailable ||
+                compareCivilDates(date, firstDate) < 0 ||
+                compareCivilDates(date, lastDate) > 0)
+              WidgetState.disabled,
+          }
+        : day.states,
     child: Builder(
       builder: (context) {
         // Merge unresolved inherited styles before resolving this day's
         // context and state variants. Only the day renders, not root effects.
         final resolved = styleSpec == null
-            ? (Style.maybeOf<CalendarSpec>(context)?.merge(style) ?? style)
-                  .build(context)
+            ? remixReducedMotionSpec(
+                context,
+                (Style.maybeOf<CalendarSpec>(context)?.merge(style) ?? style)
+                    .build(context),
+              )
             : StyleSpec(spec: styleSpec);
         // Root animation can change day anatomy too. Consume its frame data
         // here without rendering the root modifiers again for every day.
@@ -464,6 +489,9 @@ class _CalendarHeader extends StatelessWidget {
   }
 }
 
+const _maxWeeks = 6;
+const _emptyWeek = <DateTime?>[null, null, null, null, null, null, null];
+
 class _CalendarView extends StatelessWidget {
   const _CalendarView({
     required this.style,
@@ -471,9 +499,11 @@ class _CalendarView extends StatelessWidget {
     required this.controller,
     required this.labels,
     required this.firstDayOfWeek,
+    required this.displayedMonth,
     required this.weeks,
     required this.headerBuilder,
     required this.dayBuilder,
+    this.selection,
     this.summary,
     this.summaryBuilder,
   });
@@ -482,9 +512,11 @@ class _CalendarView extends StatelessWidget {
   final WidgetStatesController controller;
   final RemixCalendarLabels labels;
   final int firstDayOfWeek;
+  final DateTime displayedMonth;
   final List<List<DateTime?>> weeks;
   final Widget Function(BuildContext, CalendarSpec) headerBuilder;
   final Widget Function(DateTime) dayBuilder;
+  final CivilDateRange? selection;
   final String? summary;
   final Widget Function(BuildContext, String)? summaryBuilder;
 
@@ -513,6 +545,57 @@ class _CalendarView extends StatelessWidget {
       liveRegion: true,
       label: summary,
       child: ExcludeSemantics(child: row),
+    );
+  }
+
+  Widget _grid(CalendarSpec spec, List<List<DateTime?>> weeks, Size cellSize) {
+    final rowSpacing = spec.rowSpacing ?? 4;
+    final rows = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final (index, week) in [
+          ...weeks,
+          if (spec.fixedWeeks ?? false)
+            for (var i = weeks.length; i < _maxWeeks; i++) _emptyWeek,
+        ].indexed) ...[
+          if (index > 0) SizedBox(height: rowSpacing),
+          Row(
+            children: [
+              for (final date in week)
+                Expanded(
+                  child: date == null
+                      ? SizedBox(height: cellSize.height)
+                      : dayBuilder(date),
+                ),
+            ],
+          ),
+        ],
+      ],
+    );
+    final layer = spec.selectionLayer;
+    if (layer == null) return rows;
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: IgnorePointer(
+            child: ExcludeSemantics(
+              child: Builder(
+                builder: (context) => layer(
+                  context,
+                  _calendarSelection(
+                    weeks: weeks,
+                    selected: selection,
+                    cellSize: cellSize,
+                    rowSpacing: rowSpacing,
+                    textDirection: Directionality.of(context),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        rows,
+      ],
     );
   }
 
@@ -575,6 +658,7 @@ class _CalendarView extends StatelessWidget {
               final width = available.isFinite && available > minimumWidth
                   ? available
                   : minimumWidth;
+              final cellSize = Size(width / 7, dayHeight);
               return SingleChildScrollView(
                 primary: false,
                 child: SingleChildScrollView(
@@ -596,19 +680,16 @@ class _CalendarView extends StatelessWidget {
                           ),
                         _weekdays(spec),
                         SizedBox(height: spec.weekdaySpacing ?? 0),
-                        for (final (index, week) in weeks.indexed) ...[
-                          if (index > 0) SizedBox(height: spec.rowSpacing ?? 4),
-                          Row(
-                            children: [
-                              for (final date in week)
-                                Expanded(
-                                  child: date == null
-                                      ? SizedBox(height: dayHeight)
-                                      : dayBuilder(date),
-                                ),
-                            ],
-                          ),
-                        ],
+                        if (spec.monthTransition case final transition?)
+                          _MonthTransitionHost(
+                            month: displayedMonth,
+                            weeks: weeks,
+                            transition: transition,
+                            gridBuilder: (weeks) =>
+                                _grid(spec, weeks, cellSize),
+                          )
+                        else
+                          _grid(spec, weeks, cellSize),
                       ],
                     ),
                   ),

@@ -16,6 +16,7 @@ class RemixTextArea extends RemixTextField {
     super.label,
     super.hintText,
     super.helperText,
+    super.errorText,
     super.error,
     TextInputType? keyboardType = TextInputType.multiline,
     TextInputAction? textInputAction = TextInputAction.newline,

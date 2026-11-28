@@ -398,6 +398,14 @@ Sets range color (filled progress portion)
 
 Sets thumb styling
 
+#### `thumbMotion(AnimationConfig value)`
+
+Sets how a thumb moves to a value that does not come from dragging it: a key press, a press on the track, or a value the app sets. Accepts `AnimationConfig.curve(...)` or a spring such as `AnimationConfig.springDescription(...)`; the selected range follows the moving thumbs. Unset, thumbs jump to every new value. A dragged thumb follows the pointer, and every change jumps under reduced motion. Applies to `RemixRangeSlider` too.
+
+#### `thumbOverlay(RemixSliderThumbOverlayBuilder value)`
+
+Builds a widget over each thumb, such as a bubble that shows its value. The builder receives a `RemixSliderThumbOverlayInfo` with the thumb's `index`, `value`, and own `states` (`WidgetState.pressed` while dragged, `WidgetState.focused` with keyboard focus). The widget takes its natural size, is centered on the thumb and moves with it, so offset it with a transform to place it above the thumb. It takes no pointer input and is excluded from semantics. Pass a top-level or static function so resolved specs compare equal across rebuilds.
+
 #### `thumbSize(Size size)`
 
 Sets thumb to a fixed [size].

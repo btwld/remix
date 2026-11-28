@@ -28,6 +28,8 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.initialValue,
     this.label,
     this.hintText,
+    this.helperText,
+    this.errorText,
     this.enabled = true,
     this.autofocus = false,
     this.semanticLabel,
@@ -53,6 +55,8 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.initialValue,
     this.label,
     this.hintText,
+    this.helperText,
+    this.errorText,
     this.enabled = true,
     this.autofocus = false,
     this.semanticLabel,
@@ -78,6 +82,8 @@ class UiCombobox<T extends Object> extends StatelessWidget {
     this.initialValue,
     this.label,
     this.hintText,
+    this.helperText,
+    this.errorText,
     this.enabled = true,
     this.autofocus = false,
     this.semanticLabel,
@@ -112,6 +118,10 @@ class UiCombobox<T extends Object> extends StatelessWidget {
 
   final String? hintText;
 
+  final String? helperText;
+
+  final String? errorText;
+
   final bool enabled;
 
   final bool autofocus;
@@ -144,6 +154,8 @@ class UiCombobox<T extends Object> extends StatelessWidget {
       initialValue: initialValue,
       label: label,
       hintText: hintText,
+      helperText: helperText,
+      errorText: errorText,
       enabled: enabled,
       autofocus: autofocus,
       semanticLabel: semanticLabel,

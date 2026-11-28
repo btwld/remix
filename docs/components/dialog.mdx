@@ -234,6 +234,8 @@ RemixDialog remixDialogConstructor({
   String? title,
   String? description,
   List<Widget>? actions,
+  VoidCallback? onClose,
+  String? closeLabel,
   bool modal = true,
   bool scrollable = false,
   String? semanticLabel,
@@ -261,6 +263,14 @@ Optional. Supporting body text rendered below the title.
 #### `actions` -> `List<Widget>?`
 
 Optional. Action widgets rendered in the dialog actions row.
+
+#### `onClose` -> `VoidCallback?`
+
+Optional. Shows a close button at the end of the header row and calls this when it is pressed. The dialog does not pop its route; call `Navigator.pop(context)` from the callback. Passing it lays the dialog out with the header row even when the style sets no `header`.
+
+#### `closeLabel` -> `String?`
+
+The close button's localized accessible name. Required with `onClose`.
 
 #### `modal` -> `bool`
 
@@ -300,6 +310,18 @@ Configures the description text style.
 
 Configures the actions row style.
 
+#### `header(FlexBoxStyler value)`
+
+Opts into the header layout: `title` and `description` sit in this row, with the close button at its end, and `child` moves into the `body` box. Without a header style or `onClose`, the dialog keeps one column and `scrollable` scrolls the description with `child`; with one, only `child` scrolls.
+
+#### `body(BoxStyler value)`
+
+Configures the box around `child` in the header layout.
+
+#### `closeButton(IconButtonStyler value)`
+
+Styles the close button. The button resolves this style against its own hover, focus, and press states.
+
 #### `padding(EdgeInsetsGeometryMix value)`
 
 Sets dialog container padding.
@@ -316,7 +338,7 @@ Sets dialog container shadow.
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `call({Key? key, Widget? child, String? title, String? description, List<Widget>? actions, bool modal = true, String? semanticLabel})`
+#### `call({Key? key, Widget? child, String? title, String? description, List<Widget>? actions, VoidCallback? onClose, String? closeLabel, bool scrollable = false, bool modal = true, String? semanticLabel})`
 
 Creates a `RemixDialog` widget with this style applied.
 

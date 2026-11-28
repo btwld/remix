@@ -12,6 +12,9 @@ mixin _$DialogSpec implements Spec<DialogSpec>, Diagnosticable {
   StyleSpec<TextSpec> get title;
   StyleSpec<TextSpec> get description;
   StyleSpec<FlexBoxSpec> get actions;
+  StyleSpec<FlexBoxSpec>? get header;
+  StyleSpec<BoxSpec> get body;
+  Style<IconButtonSpec>? get closeButton;
 
   @override
   Type get type => DialogSpec;
@@ -23,6 +26,9 @@ mixin _$DialogSpec implements Spec<DialogSpec>, Diagnosticable {
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<FlexBoxSpec>? actions,
+    StyleSpec<FlexBoxSpec>? header,
+    StyleSpec<BoxSpec>? body,
+    Style<IconButtonSpec>? closeButton,
   }) {
     return DialogSpec(
       container: container ?? this.container,
@@ -30,6 +36,9 @@ mixin _$DialogSpec implements Spec<DialogSpec>, Diagnosticable {
       title: title ?? this.title,
       description: description ?? this.description,
       actions: actions ?? this.actions,
+      header: header ?? this.header,
+      body: body ?? this.body,
+      closeButton: closeButton ?? this.closeButton,
     );
   }
 
@@ -45,6 +54,9 @@ mixin _$DialogSpec implements Spec<DialogSpec>, Diagnosticable {
       title: title.lerp(other?.title, t),
       description: description.lerp(other?.description, t),
       actions: actions.lerp(other?.actions, t),
+      header: header?.lerp(other?.header, t),
+      body: body.lerp(other?.body, t),
+      closeButton: MixOps.lerpSnap(closeButton, other?.closeButton, t),
     );
   }
 
@@ -55,6 +67,9 @@ mixin _$DialogSpec implements Spec<DialogSpec>, Diagnosticable {
     title,
     description,
     actions,
+    header,
+    body,
+    closeButton,
   ];
 
   @override
@@ -101,7 +116,10 @@ mixin _$DialogSpec implements Spec<DialogSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('description', description))
-      ..add(DiagnosticsProperty('actions', actions));
+      ..add(DiagnosticsProperty('actions', actions))
+      ..add(DiagnosticsProperty('header', header))
+      ..add(DiagnosticsProperty('body', body))
+      ..add(DiagnosticsProperty('closeButton', closeButton));
   }
 }
 
@@ -122,6 +140,9 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<TextSpec>>? $description;
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
+  final Prop<StyleSpec<FlexBoxSpec>>? $header;
+  final Prop<StyleSpec<BoxSpec>>? $body;
+  final Prop<Style<IconButtonSpec>>? $closeButton;
 
   const DialogStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
@@ -129,6 +150,9 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     Prop<StyleSpec<TextSpec>>? title,
     Prop<StyleSpec<TextSpec>>? description,
     Prop<StyleSpec<FlexBoxSpec>>? actions,
+    Prop<StyleSpec<FlexBoxSpec>>? header,
+    Prop<StyleSpec<BoxSpec>>? body,
+    Prop<Style<IconButtonSpec>>? closeButton,
     super.variants,
     super.modifier,
     super.animation,
@@ -136,7 +160,10 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
        $containerEffects = containerEffects,
        $title = title,
        $description = description,
-       $actions = actions;
+       $actions = actions,
+       $header = header,
+       $body = body,
+       $closeButton = closeButton;
 
   DialogStyler({
     BoxStyler? container,
@@ -144,6 +171,9 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     TextStyler? title,
     TextStyler? description,
     FlexBoxStyler? actions,
+    FlexBoxStyler? header,
+    BoxStyler? body,
+    Style<IconButtonSpec>? closeButton,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<DialogSpec>>? variants,
@@ -153,6 +183,9 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
          title: Prop.maybeMix(title),
          description: Prop.maybeMix(description),
          actions: Prop.maybeMix(actions),
+         header: Prop.maybeMix(header),
+         body: Prop.maybeMix(body),
+         closeButton: Prop.maybe(closeButton),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -167,6 +200,11 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
       DialogStyler().description(value);
   factory DialogStyler.actions(FlexBoxStyler value) =>
       DialogStyler().actions(value);
+  factory DialogStyler.header(FlexBoxStyler value) =>
+      DialogStyler().header(value);
+  factory DialogStyler.body(BoxStyler value) => DialogStyler().body(value);
+  factory DialogStyler.closeButton(Style<IconButtonSpec> value) =>
+      DialogStyler().closeButton(value);
   factory DialogStyler.alignment(AlignmentGeometry value) =>
       DialogStyler().alignment(value);
   factory DialogStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -665,6 +703,9 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     'title',
     'description',
     'actions',
+    'header',
+    'body',
+    'closeButton',
     'animation',
     'modifier',
     'variants',
@@ -693,6 +734,21 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
   /// Sets the actions.
   DialogStyler actions(FlexBoxStyler value) {
     return merge(DialogStyler(actions: value));
+  }
+
+  /// Sets the header.
+  DialogStyler header(FlexBoxStyler value) {
+    return merge(DialogStyler(header: value));
+  }
+
+  /// Sets the body.
+  DialogStyler body(BoxStyler value) {
+    return merge(DialogStyler(body: value));
+  }
+
+  /// Sets the closeButton.
+  DialogStyler closeButton(Style<IconButtonSpec> value) {
+    return merge(DialogStyler(closeButton: value));
   }
 
   /// Sets the animation configuration.
@@ -724,6 +780,8 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     String? title,
     String? description,
     List<Widget>? actions,
+    VoidCallback? onClose,
+    String? closeLabel,
     bool scrollable = false,
     bool modal = true,
     String? semanticLabel,
@@ -734,6 +792,8 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
       title: title,
       description: description,
       actions: actions,
+      onClose: onClose,
+      closeLabel: closeLabel,
       scrollable: scrollable,
       modal: modal,
       semanticLabel: semanticLabel,
@@ -753,6 +813,9 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
       title: MixOps.merge($title, other?.$title),
       description: MixOps.merge($description, other?.$description),
       actions: MixOps.merge($actions, other?.$actions),
+      header: MixOps.merge($header, other?.$header),
+      body: MixOps.merge($body, other?.$body),
+      closeButton: MixOps.merge($closeButton, other?.$closeButton),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -768,6 +831,9 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
       title: MixOps.resolve(context, $title),
       description: MixOps.resolve(context, $description),
       actions: MixOps.resolve(context, $actions),
+      header: MixOps.resolve(context, $header),
+      body: MixOps.resolve(context, $body),
+      closeButton: MixOps.resolve(context, $closeButton),
     );
 
     return StyleSpec(
@@ -785,7 +851,10 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('title', $title))
       ..add(DiagnosticsProperty('description', $description))
-      ..add(DiagnosticsProperty('actions', $actions));
+      ..add(DiagnosticsProperty('actions', $actions))
+      ..add(DiagnosticsProperty('header', $header))
+      ..add(DiagnosticsProperty('body', $body))
+      ..add(DiagnosticsProperty('closeButton', $closeButton));
   }
 
   @override
@@ -795,6 +864,9 @@ class DialogStyler extends MixStyler<DialogStyler, DialogSpec>
     $title,
     $description,
     $actions,
+    $header,
+    $body,
+    $closeButton,
     $animation,
     $modifier,
     $variants,

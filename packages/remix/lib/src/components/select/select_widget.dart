@@ -217,14 +217,12 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     );
   }
 
-  RemixSelectItem<T>? _findSelectedItem() {
+  /// The selected item's position in [RemixSelect.items], or `-1`.
+  int _findSelectedIndex() {
     final selectedValue = widget.selectedValue;
-    if (selectedValue == null) return null;
+    if (selectedValue == null) return -1;
 
-    for (final item in widget.items) {
-      if (item.value == selectedValue) return item;
-    }
-    return null;
+    return widget.items.indexWhere((item) => item.value == selectedValue);
   }
 
   /// Returns true so the whole check, loop included, is stripped in release.
@@ -261,6 +259,15 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     return true;
   }
 
+  /// Whether the style opts the trigger into `selected` while open. Read
+  /// without the open state, so the flag cannot depend on it.
+  bool _selectedWhileOpen(BuildContext context, SelectStyler style) =>
+      (widget.styleSpec ?? style.build(context).spec)
+          .trigger
+          .spec
+          .selectedWhileOpen ??
+      false;
+
   @override
   void dispose() {
     _panelTransition.dispose();
@@ -270,7 +277,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   @override
   Widget build(BuildContext context) {
     final style = _buildStyle();
-    final selectedItem = _findSelectedItem();
+    final selectedIndex = _findSelectedIndex();
+    final selectedItem = selectedIndex < 0 ? null : widget.items[selectedIndex];
     assert(_debugValidate(selectedItem));
     final hasSelection = widget.selectedValue != null;
 
@@ -303,23 +311,38 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
           _panelTransition.closeRequested(hideOverlay, null),
       onClose: widget.onClose,
       builder: (context, state, _) {
-        return RemixStyleSpecBuilder<SelectSpec>(
-          style: style,
-          styleSpec: widget.styleSpec,
-          controller: NakedSelectState.controllerOf<T>(context),
-          builder: (context, spec) {
-            return _RemixSelectTriggerWidget(
-              trigger: widget.trigger,
-              displayLabel:
-                  selectedItem?.label ??
-                  (hasSelection
-                      ? '${widget.selectedValue}'
-                      : widget.trigger.placeholder),
-              isPlaceholder: !hasSelection,
-              isOpen: state.isOpen,
-              styleSpec: spec.trigger,
-            );
-          },
+        final controller = NakedSelectState.controllerOf<T>(context);
+        return ListenableBuilder(
+          listenable: Listenable.merge([controller, _panelTransition]),
+          builder: (context, _) => WidgetStateProvider(
+            states: {
+              ...controller.value,
+              if (state.isOpen &&
+                  !_panelTransition.isExiting &&
+                  _selectedWhileOpen(context, style))
+                .selected,
+            },
+            child: RemixStyleSpecBuilder<SelectSpec>(
+              style: style,
+              styleSpec: widget.styleSpec,
+              trackFocusVisibility: true,
+              builder: (context, spec) {
+                return _RemixSelectTriggerWidget(
+                  trigger: widget.trigger,
+                  displayLabel:
+                      selectedItem?.label ??
+                      (hasSelection
+                          ? '${widget.selectedValue}'
+                          : widget.trigger.placeholder),
+                  isPlaceholder: !hasSelection,
+                  selection: (hasSelection, widget.selectedValue),
+                  selectionIndex: selectedIndex,
+                  isOpen: state.isOpen,
+                  styleSpec: spec.trigger,
+                );
+              },
+            ),
+          ),
         );
       },
     );
@@ -355,6 +378,8 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
     required this.trigger,
     required this.displayLabel,
     required this.isPlaceholder,
+    required this.selection,
+    required this.selectionIndex,
     required this.isOpen,
     required this.styleSpec,
   });
@@ -362,6 +387,8 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
   final RemixSelectTrigger trigger;
   final String displayLabel;
   final bool isPlaceholder;
+  final Object selection;
+  final int selectionIndex;
   final bool isOpen;
   final StyleSpec<SelectTriggerSpec> styleSpec;
 
@@ -373,6 +400,20 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
         final indicatorIcon = isOpen
             ? trigger.expandedIcon
             : trigger.collapsedIcon;
+        final indicatorAngle =
+            spec.indicatorAngle ??
+            (indicatorIcon == null ? (isOpen ? math.pi : 0.0) : null);
+        final indicator = indicatorIcon == null
+            ? RemixPathIcon(
+                key: const ValueKey('remix-select-indicator'),
+                glyph: RemixPathGlyph.chevronDown,
+                styleSpec: spec.indicator,
+              )
+            : StyledIcon(
+                key: const ValueKey('remix-select-indicator'),
+                icon: indicatorIcon,
+                styleSpec: spec.indicator,
+              );
 
         return RemixFlexBoxAdapter(
           styleSpec: spec.container,
@@ -382,30 +423,24 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
             if (trigger.icon != null)
               StyledIcon(icon: trigger.icon!, styleSpec: spec.icon),
             Expanded(
-              child: Opacity(
-                opacity: isPlaceholder ? spec.placeholderOpacity ?? 1 : 1,
-                child: StyledText(
-                  displayLabel,
-                  styleSpec: isPlaceholder ? spec.placeholder : spec.label,
+              child: _RemixSelectLabelSwitcher(
+                selection: selection,
+                index: selectionIndex,
+                transition: spec.labelTransition,
+                label: Opacity(
+                  opacity: isPlaceholder ? spec.placeholderOpacity ?? 1 : 1,
+                  child: StyledText(
+                    displayLabel,
+                    styleSpec: isPlaceholder ? spec.placeholder : spec.label,
+                  ),
                 ),
               ),
             ),
             Opacity(
               opacity: spec.indicatorOpacity ?? 1,
-              child: indicatorIcon == null
-                  ? Transform.rotate(
-                      angle: isOpen ? math.pi : 0,
-                      child: RemixPathIcon(
-                        key: const ValueKey('remix-select-indicator'),
-                        glyph: RemixPathGlyph.chevronDown,
-                        styleSpec: spec.indicator,
-                      ),
-                    )
-                  : StyledIcon(
-                      key: const ValueKey('remix-select-indicator'),
-                      icon: indicatorIcon,
-                      styleSpec: spec.indicator,
-                    ),
+              child: indicatorAngle == null
+                  ? indicator
+                  : Transform.rotate(angle: indicatorAngle, child: indicator),
             ),
           ],
         );

@@ -284,6 +284,22 @@ Placement, offsets and collision padding relative to the trigger. Defaults to a 
 
 Optional decorative leading icon; size and color follow `buttonStyle`.
 
+#### `trailingIcon` → `IconData?`
+
+Optional decorative trailing icon, such as a chevron; size and color follow `buttonStyle`, and `expandedStyle` can restyle it while the panel is open.
+
+#### `textBuilder` → `RemixButtonTextBuilder?`
+
+Optional builder for the trigger's visible text, given the resolved text style and the label, so a recipe can animate the text when the value changes. The accessible value is unchanged.
+
+#### `footerBuilder` → `Widget Function(BuildContext context, CivilDateRange? value)?`
+
+Optional footer under the calendar in the popover, laid out at the calendar's width from the current value. In a short panel the footer keeps its height and the calendar scrolls. It is outside the calendar's keyboard grid, so buttons in it are ordinary Tab stops.
+
+#### `closeDelay` → `Duration`
+
+How long the popover stays open after a selection so the selection can be seen; further selections are ignored meanwhile. Dismissal closes at once, and reduced motion skips the delay. Defaults to `Duration.zero`.
+
 #### `placeholderStyle` → `ButtonStyler`
 
 Fragment merged over `buttonStyle` only when `value` is null.

@@ -5,6 +5,43 @@ const double _remixSliderDefaultTrackThickness = 8;
 const Color _remixSliderDefaultTrackColor = MixColors.grey;
 const Color _remixSliderDefaultRangeColor = MixColors.black;
 
+/// What a [RemixSliderThumbOverlayBuilder] receives for one thumb.
+@immutable
+final class RemixSliderThumbOverlayInfo {
+  const RemixSliderThumbOverlayInfo({
+    required this.index,
+    required this.value,
+    required this.states,
+  });
+
+  /// The thumb's position in the slider's values: `0` for a single slider, `0`
+  /// or `1` for a range slider.
+  final int index;
+
+  /// The thumb's current value, between the slider's `min` and `max`.
+  final double value;
+
+  /// The thumb's own interaction states. `WidgetState.pressed` means it is
+  /// being dragged, and `WidgetState.focused` that it has keyboard focus.
+  final Set<WidgetState> states;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RemixSliderThumbOverlayInfo &&
+          index == other.index &&
+          value == other.value &&
+          setEquals(states, other.states);
+
+  @override
+  int get hashCode =>
+      Object.hash(index, value, Object.hashAllUnordered(states));
+}
+
+/// Builds a widget drawn over one slider thumb, such as a value bubble.
+typedef RemixSliderThumbOverlayBuilder =
+    Widget Function(BuildContext context, RemixSliderThumbOverlayInfo thumb);
+
 /// Shared visuals for [RemixSlider] and [RemixRangeSlider].
 @MixableSpec(target: RemixSlider.new, extraStylerMixins: [RemixBoxStylerMixin])
 class SliderSpec with _$SliderSpec {
@@ -66,6 +103,31 @@ class SliderSpec with _$SliderSpec {
   @override
   final BlendMode? blendMode;
 
+  /// How a thumb moves to a value that does not come from dragging it: a key
+  /// press, a press on the track, or a value the app sets. Accepts
+  /// [CurveAnimationConfig] (such as `AnimationConfig.curve(...)`) or
+  /// [SpringAnimationConfig] (such as `AnimationConfig.springDescription(...)`),
+  /// which may overshoot. The selected range follows the moving thumbs.
+  ///
+  /// `null`, the default, jumps to every new value. While a thumb is dragged
+  /// it follows the pointer, and under reduced motion every change jumps.
+  /// The slider throws [ArgumentError] for phase and keyframe configs when it
+  /// builds. `onEnd` runs only when a move completes, not when it is
+  /// interrupted.
+  @override
+  final AnimationConfig? thumbMotion;
+
+  /// Builds a widget over each thumb, such as a bubble that shows its value.
+  ///
+  /// The widget takes its natural size, is centered on the thumb, and moves
+  /// with it, so offset it with a transform to place it above. It may paint
+  /// outside the slider, takes no pointer input, and is excluded from
+  /// semantics because the slider already announces its value. `null`, the
+  /// default, draws nothing. Pass a top-level or static function so resolved
+  /// specs compare equal across rebuilds.
+  @override
+  final RemixSliderThumbOverlayBuilder? thumbOverlay;
+
   const SliderSpec({
     StyleSpec<BoxSpec>? track,
     Color? trackColor,
@@ -79,6 +141,8 @@ class SliderSpec with _$SliderSpec {
     this.thumbEffects,
     this.thumbFocusEffects,
     this.blendMode,
+    this.thumbMotion,
+    this.thumbOverlay,
   }) : trackColor = trackColor ?? _remixSliderDefaultTrackColor,
        trackWidth = trackWidth ?? _remixSliderDefaultTrackThickness,
        rangeColor = rangeColor ?? _remixSliderDefaultRangeColor,

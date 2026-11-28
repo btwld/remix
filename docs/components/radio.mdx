@@ -226,6 +226,10 @@ Optional. The mouse cursor to use when hovering over the radio button.
 
 Optional. A visible label included in the same pointer, hover, press, focus, and semantics target as the radio button. It becomes the accessible name unless `semanticLabel` overrides it. Provide `label` or `semanticLabel`; neither may be blank.
 
+#### `description` → `String?`
+
+Optional visible description under the label, inside the same pointer, focus, and semantics target. Assistive technologies read it as the control's hint. Must not be empty.
+
 #### `semanticLabel` → `String?`
 
 Optional. Overrides the accessible name derived from `label`, or names the radio button when there is no `label`. Must be nonblank — an adjacent `Text` is not the accessible name.
@@ -245,9 +249,33 @@ Optional. Whether to hide the radio button and its visual subtree from the seman
 
 Sets indicator styling (selected fill).
 
+#### `keepIndicatorMounted(bool value)`
+
+Keeps the indicator built while the radio is unselected. Defaults to `false`, which removes the indicator when unselected. With `true`, style the unselected indicator yourself (for example with zero opacity) so it can animate out on deselection or preview while pressed.
+
 #### `label(TextStyler value)`
 
 Sets the visible label text style.
+
+#### `description(TextStyler value)`
+
+Sets the description text style.
+
+#### `descriptionSpacing(double value)`
+
+Sets the gap between the label and the description. Defaults to 2 logical pixels.
+
+#### `controlAlignment(CrossAxisAlignment value)`
+
+Aligns the control with its label and description. Defaults to centered; `CrossAxisAlignment.start` lines the control up with the top of the label.
+
+#### `row(BoxStyler value)`
+
+Draws a box around the control and its copy, inside the interaction target, such as a bordered card row with padding. It resolves in the control's own state, so hover, press, and selected styles apply to it. Unset, no box is drawn.
+
+#### `rowEffects(RemixBoxEffectsMix value)`
+
+Paints outline and effect layers around the row box without affecting layout.
 
 #### `labelSpacing(double value)`
 
