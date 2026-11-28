@@ -11,6 +11,12 @@
 - `NakedToastScope` takes `reducedMotionDuration`, which paces each toast's
   entrance and exit while the user asks to reduce motion. Without it, toasts
   still show and hide at once.
+### Fixes
+
+- Keep the child of `NakedFocusableDetector` mounted when `enabled` changes.
+  Controls built on it, such as `NakedButton`, no longer rebuild their
+  subtree from scratch when they become disabled, so child state survives
+  and style animations to the disabled state can play.
 
 ## 2.0.0-rc.4
 
