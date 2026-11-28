@@ -53,7 +53,6 @@ final _customizationTokens = {
   'controlHeight2',
   'controlHeight3',
   'controlHeight4',
-  'radius7',
   'shadowThumb',
   'textField',
 };
