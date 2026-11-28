@@ -191,7 +191,7 @@ void main() {
       }
     });
 
-    testWidgets('callout variants resolve accent12 foregrounds', (
+    testWidgets('callout variants lift text and icon to the foreground', (
       tester,
     ) async {
       for (final variant in FortalCalloutVariant.values) {
@@ -207,10 +207,19 @@ void main() {
           ).build(context),
         );
 
-        expect(_textColor(normal.spec.text), normalColors.accentContentAlpha);
-        expect(_textColor(highContrast.spec.text), ceu.light.scale.step(12));
-        expect(normal.spec.icon.spec.color, normalColors.accentContentAlpha);
-        expect(highContrast.spec.icon.spec.color, ceu.light.scale.step(12));
+        expect(_textColor(normal.spec.text), normalColors.gray.scale.step(11));
+        expect(
+          _textColor(highContrast.spec.text),
+          normalColors.gray.scale.step(12),
+        );
+        expect(
+          normal.spec.icon.spec.color,
+          isNot(normalColors.gray.scale.step(12)),
+        );
+        expect(
+          highContrast.spec.icon.spec.color,
+          normalColors.gray.scale.step(12),
+        );
       }
     });
 
