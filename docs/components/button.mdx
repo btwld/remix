@@ -99,6 +99,55 @@ class ButtonExample extends StatelessWidget {
 ```
 </CodeGroup>
 
+## Loading transition
+
+By default, `loading` hides the content and shows the spinner at once. Set
+`loadingTransition` on the style to move between them with a transition, so a
+recipe owns the motion. `RemixLoadingTransition` takes the durations and two
+builders: `contentBuilder` wraps the label and each icon, and `spinnerBuilder`
+wraps the spinner. Both receive an animation that runs from `0.0` to `1.0` as
+loading starts and back as it ends. The animation is linear, so apply a curve
+in the builder. The defaults fade the content out and the spinner in.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+// A top-level function, not an inline closure: `RemixLoadingTransition`
+// compares its builders by identity.
+Widget scaleSpinner(
+  BuildContext context,
+  Animation<double> animation,
+  Widget spinner,
+) {
+  // Grow from 0.7 on the way in, shrink to 0.8 on the way out.
+  final entering = animation.status == AnimationStatus.forward ||
+      animation.status == AnimationStatus.completed;
+  final scale = Tween<double>(begin: entering ? 0.7 : 0.8, end: 1)
+      .animate(animation);
+  return FadeTransition(
+    opacity: animation,
+    child: ScaleTransition(scale: scale, child: spinner),
+  );
+}
+
+const loadingTransition = RemixLoadingTransition(
+  duration: Duration(milliseconds: 150),
+  spinnerBuilder: scaleSpinner,
+);
+
+final savingButton = RemixButton(
+  label: 'Save',
+  loading: true,
+  onPressed: () {},
+  style: ButtonStyler().loadingTransition(loadingTransition),
+);
+```
+
+The content keeps its size while it is hidden, and the spinner stays mounted
+until its exit has played. Loading still disables the button. While the user
+asks to reduce motion, both parts switch at once.
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
@@ -334,6 +383,11 @@ Configures the icon style using an IconStyler.
 #### `spinner(SpinnerStyler value)`
 
 Configures the loading spinner style.
+
+#### `loadingTransition(RemixLoadingTransition value)`
+
+Moves between the content and the spinner when `loading` changes. See
+[Loading transition](#loading-transition).
 
 #### `iconAlignment(RemixPlacement value)`
 

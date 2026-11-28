@@ -232,30 +232,48 @@ class RemixButton extends StatelessWidget {
               ?trailingIconWidget,
             ],
           };
-    final rowChildren = children.map((child) {
-      final visible = Visibility(
-        visible: !loading,
-        maintainState: true,
-        maintainAnimation: true,
-        maintainSize: true,
-        child: child,
+    Widget layer(Widget Function(Widget child) hide, Widget? spinner) {
+      final rowChildren = children.map((child) {
+        final hidden = hide(child);
+        // Keep Flexible outside the hiding wrapper to preserve loading geometry.
+        return identical(child, textWidget) ? Flexible(child: hidden) : hidden;
+      }).toList();
+
+      // Layer spinner above the content while keeping size stable.
+      return Stack(
+        alignment: .center,
+        children: [
+          _ButtonContentRow(
+            styleSpec: spec.container,
+            containerEffects: spec.containerEffects,
+            children: rowChildren,
+          ),
+          ?spinner,
+        ],
       );
-      // Keep Flexible outside Visibility to preserve loading geometry.
-      return identical(child, textWidget) ? Flexible(child: visible) : visible;
-    }).toList();
+    }
 
-    // Create content row with visibility control for loading state
-    final contentRow = _ButtonContentRow(
-      styleSpec: spec.container,
-      containerEffects: spec.containerEffects,
-      children: rowChildren,
-    );
-
-    // Layer spinner above the content while keeping size stable.
-    final layered = Stack(
-      alignment: .center,
-      children: [contentRow, if (loading) spinner],
-    );
+    final transition = spec.loadingTransition;
+    final animation = transition == null
+        ? null
+        : RemixLoadingTransitionHost.adopt(context, transition);
+    final layered = transition == null || animation == null
+        ? layer(
+            (child) => Visibility(
+              visible: !loading,
+              maintainState: true,
+              maintainAnimation: true,
+              maintainSize: true,
+              child: child,
+            ),
+            loading ? spinner : null,
+          )
+        : layer(
+            (child) => transition.contentBuilder(context, animation, child),
+            animation.isDismissed
+                ? null
+                : transition.spinnerBuilder(context, animation, spinner),
+          );
 
     // NakedButton owns the one accessible button node. Visual descendants are
     // decorative once that node supplies an accessible name.
@@ -290,7 +308,7 @@ class RemixButton extends StatelessWidget {
     );
 
     return remixLoadingAnnouncer(
-      control: button,
+      control: RemixLoadingTransitionHost(loading: loading, child: button),
       announcement: loading && !excludeSemantics
           ? '${semanticLabel ?? label}, loading'
           : null,

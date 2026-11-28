@@ -36,6 +36,14 @@ class ButtonSpec with _$ButtonSpec {
   @override
   final RemixPlacement? iconAlignment;
 
+  /// Moves between the content and the spinner when `loading` changes.
+  ///
+  /// The content keeps its size while hidden and the spinner stays mounted
+  /// until its exit has played. `null`, the default, hides the content and
+  /// shows the spinner at once. Loading disables the button either way.
+  @override
+  final RemixLoadingTransition? loadingTransition;
+
   const ButtonSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
@@ -43,6 +51,7 @@ class ButtonSpec with _$ButtonSpec {
     StyleSpec<SpinnerSpec>? spinner,
     this.containerEffects,
     this.iconAlignment,
+    this.loadingTransition,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),

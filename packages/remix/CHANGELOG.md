@@ -78,6 +78,10 @@
 - `SkeletonStyler.revealDuration`, `.revealCurve`, and `.revealOffset`
   crossfade from the placeholder to the child when loading ends. Without
   them the child still appears at once.
+- Add `ButtonSpec.loadingTransition` and `RemixLoadingTransition`, so a
+  style can animate the swap between a button's content and its spinner. The
+  default still swaps at once.
+
 ### Fixes
 
 - `RemixButton` and `RemixIconButton` keep their subtree mounted and their

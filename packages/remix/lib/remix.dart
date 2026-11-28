@@ -93,6 +93,8 @@ export 'src/rendering/remix_box_effects.dart'
         RemixBoxEffectsMix;
 
 export 'src/utilities/remix_anchor.dart' show remixAnchorWidth;
+export 'src/utilities/remix_loading.dart'
+    show RemixLoadingTransition, RemixLoadingTransitionBuilder;
 export 'src/utilities/remix_panel_transition.dart'
     show
         RemixPanelTransition,

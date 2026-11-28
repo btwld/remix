@@ -13,6 +13,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
   StyleSpec<SpinnerSpec> get spinner;
   RemixBoxEffectsSpec? get containerEffects;
   RemixPlacement? get iconAlignment;
+  RemixLoadingTransition? get loadingTransition;
 
   @override
   Type get type => ButtonSpec;
@@ -25,6 +26,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
     StyleSpec<SpinnerSpec>? spinner,
     RemixBoxEffectsSpec? containerEffects,
     RemixPlacement? iconAlignment,
+    RemixLoadingTransition? loadingTransition,
   }) {
     return ButtonSpec(
       container: container ?? this.container,
@@ -33,6 +35,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
       spinner: spinner ?? this.spinner,
       containerEffects: containerEffects ?? this.containerEffects,
       iconAlignment: iconAlignment ?? this.iconAlignment,
+      loadingTransition: loadingTransition ?? this.loadingTransition,
     );
   }
 
@@ -49,6 +52,11 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
         t,
       ),
       iconAlignment: MixOps.lerpSnap(iconAlignment, other?.iconAlignment, t),
+      loadingTransition: MixOps.lerpSnap(
+        loadingTransition,
+        other?.loadingTransition,
+        t,
+      ),
     );
   }
 
@@ -60,6 +68,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
     spinner,
     containerEffects,
     iconAlignment,
+    loadingTransition,
   ];
 
   @override
@@ -107,7 +116,8 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('icon', icon))
       ..add(DiagnosticsProperty('spinner', spinner))
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
-      ..add(DiagnosticsProperty('iconAlignment', iconAlignment));
+      ..add(DiagnosticsProperty('iconAlignment', iconAlignment))
+      ..add(DiagnosticsProperty('loadingTransition', loadingTransition));
   }
 }
 
@@ -133,6 +143,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
   final Prop<StyleSpec<SpinnerSpec>>? $spinner;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<RemixPlacement>? $iconAlignment;
+  final Prop<RemixLoadingTransition>? $loadingTransition;
 
   const ButtonStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
@@ -141,6 +152,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     Prop<StyleSpec<SpinnerSpec>>? spinner,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<RemixPlacement>? iconAlignment,
+    Prop<RemixLoadingTransition>? loadingTransition,
     super.variants,
     super.modifier,
     super.animation,
@@ -149,7 +161,8 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
        $icon = icon,
        $spinner = spinner,
        $containerEffects = containerEffects,
-       $iconAlignment = iconAlignment;
+       $iconAlignment = iconAlignment,
+       $loadingTransition = loadingTransition;
 
   ButtonStyler({
     FlexBoxStyler? container,
@@ -158,6 +171,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     SpinnerStyler? spinner,
     RemixBoxEffectsMix? containerEffects,
     RemixPlacement? iconAlignment,
+    RemixLoadingTransition? loadingTransition,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<ButtonSpec>>? variants,
@@ -168,6 +182,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
          spinner: Prop.maybeMix(spinner),
          containerEffects: Prop.maybeMix(containerEffects),
          iconAlignment: Prop.maybe(iconAlignment),
+         loadingTransition: Prop.maybe(loadingTransition),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -183,6 +198,8 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
       ButtonStyler().containerEffects(value);
   factory ButtonStyler.iconAlignment(RemixPlacement value) =>
       ButtonStyler().iconAlignment(value);
+  factory ButtonStyler.loadingTransition(RemixLoadingTransition value) =>
+      ButtonStyler().loadingTransition(value);
   factory ButtonStyler.color(Color value) => ButtonStyler().color(value);
   factory ButtonStyler.gradient(GradientMix value) =>
       ButtonStyler().gradient(value);
@@ -738,6 +755,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     'spinner',
     'containerEffects',
     'iconAlignment',
+    'loadingTransition',
     'animation',
     'modifier',
     'variants',
@@ -774,6 +792,11 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
   /// Sets the iconAlignment.
   ButtonStyler iconAlignment(RemixPlacement value) {
     return merge(ButtonStyler(iconAlignment: value));
+  }
+
+  /// Sets the loadingTransition.
+  ButtonStyler loadingTransition(RemixLoadingTransition value) {
+    return merge(ButtonStyler(loadingTransition: value));
   }
 
   /// Sets the animation configuration.
@@ -857,6 +880,10 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
         other?.$containerEffects,
       ),
       iconAlignment: MixOps.merge($iconAlignment, other?.$iconAlignment),
+      loadingTransition: MixOps.merge(
+        $loadingTransition,
+        other?.$loadingTransition,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -873,6 +900,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
       spinner: MixOps.resolve(context, $spinner),
       containerEffects: MixOps.resolve(context, $containerEffects),
       iconAlignment: MixOps.resolve(context, $iconAlignment),
+      loadingTransition: MixOps.resolve(context, $loadingTransition),
     );
 
     return StyleSpec(
@@ -891,7 +919,8 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
       ..add(DiagnosticsProperty('icon', $icon))
       ..add(DiagnosticsProperty('spinner', $spinner))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
-      ..add(DiagnosticsProperty('iconAlignment', $iconAlignment));
+      ..add(DiagnosticsProperty('iconAlignment', $iconAlignment))
+      ..add(DiagnosticsProperty('loadingTransition', $loadingTransition));
   }
 
   @override
@@ -902,6 +931,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     $spinner,
     $containerEffects,
     $iconAlignment,
+    $loadingTransition,
     $animation,
     $modifier,
     $variants,
