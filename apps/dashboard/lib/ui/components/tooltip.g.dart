@@ -6,8 +6,12 @@ part of 'tooltip.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Fortal Tooltip recipe: `gray1` text on a `gray12` fill with `radius2`
-/// corners, inverted from the page, that appears after a 200ms wait.
+/// The Fortal Tooltip recipe: 13px text in the page color on an ink bubble
+/// with 14px corners, inverted from the page, that appears 8px above its
+/// trigger after a 250ms wait.
+///
+/// It fades in over 150ms while it rises 3px from its trigger and grows from
+/// 97%, and fades out in 100ms to 98%. Under reduced motion it only fades.
 class UiTooltip extends StatelessWidget {
   const UiTooltip({
     super.key,

@@ -6,10 +6,16 @@ part of 'popover.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Fortal Popover recipe: a raised, blurred panel in a 1px frame.
+/// The Fortal Popover recipe: a floating panel in a 1px border, 192 to 352px
+/// wide.
 ///
-/// The generated [FortalPopover] defaults to [FortalPopoverSize.size2], a
-/// 480-pixel maximum width, and no arrow.
+/// It opens over 440ms: it fades in over the first 150ms while it slides 5px
+/// from its trigger and grows from 97% around the trigger-side corner on the
+/// transform spring. It closes in 150ms, halfway back and to 98%. Under
+/// reduced motion it only fades, over 100ms.
+///
+/// The generated [FortalPopover] defaults to [FortalPopoverSize.size2] and no
+/// arrow.
 class FortalPopover extends StatelessWidget {
   const FortalPopover({
     super.key,

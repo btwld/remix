@@ -708,7 +708,7 @@
         }
       },
       "defaults": {
-        "maxWidth": 480,
+        "maxWidth": 352,
         "arrow": false
       },
       "supportedStyleProps": [],
@@ -1455,12 +1455,12 @@
       "fortalType": "FortalTooltip",
       "enums": {},
       "defaults": {
-        "maxWidth": 360,
-        "delayMilliseconds": 200,
-        "sideOffset": 4,
-        "collisionPadding": 10,
+        "maxWidth": 240,
+        "delayMilliseconds": 250,
+        "sideOffset": 8,
+        "collisionPadding": 12,
         "disableHoverableContent": false,
-        "arrow": true
+        "arrow": false
       },
       "supportedStyleProps": [],
       "states": [
