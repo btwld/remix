@@ -31,7 +31,6 @@ final _customizationTokens = {
   'grayStroke5',
   'grayStroke7',
   'radiusThumb',
-  'shadow1',
   'shadow2',
   'shadow1Layers',
   // Foundation roles the per-component re-skins will read.

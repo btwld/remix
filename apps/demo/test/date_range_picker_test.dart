@@ -25,11 +25,10 @@ void main() {
     await _pump(tester);
     expect(find.text('Nov 10–13, 2026'), findsOneWidget);
   });
-  testWidgets('range demo prints a single day once and keeps its field width', (
+  testWidgets('range demo prints a single day once and keeps the 260px floor', (
     tester,
   ) async {
     await _pump(tester);
-    final width = tester.getSize(find.byType(RemixButton).first).width;
     await tester.tap(find.byType(RemixButton).first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('24'));
@@ -37,7 +36,11 @@ void main() {
     await tester.tap(find.text('24'));
     await tester.pumpAndSettle();
     expect(find.text('Nov 24, 2026'), findsOneWidget);
-    expect(tester.getSize(find.byType(RemixButton).first).width, width);
+    // The trigger takes its content width above a 260px floor.
+    expect(
+      tester.getSize(find.byType(RemixButton).first).width,
+      greaterThanOrEqualTo(260),
+    );
     expect(tester.takeException(), isNull);
   });
 }

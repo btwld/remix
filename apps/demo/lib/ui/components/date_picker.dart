@@ -3,7 +3,6 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../theme/theme.dart';
-import 'button.dart';
 import 'calendar.dart';
 import 'popover.dart';
 
@@ -32,7 +31,7 @@ class FortalDatePicker extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.positioning = const OverlayPositionConfig(
-      sideOffset: 4,
+      sideOffset: 8,
       collisionPadding: EdgeInsets.all(8),
     ),
     this.buttonStyle = const ButtonStyler.create(),
@@ -140,34 +139,94 @@ class FortalDatePicker extends StatelessWidget {
     autofocus: autofocus,
     positioning: positioning,
     icon: RemixIcons.calendar,
-    placeholderStyle: ButtonStyler()
-        .labelColor(FortalTokens.gray10())
-        .labelFontWeight(FortalTokens.fontWeightRegular()),
-    expandedStyle: ButtonStyler().border(
-      .color(FortalTokens.focus8()).width(FortalTokens.borderWidth1()),
+    trailingIcon: RemixIcons.chevronDown,
+    // The value fills the trigger so the chevron sits at its end.
+    textBuilder: (context, spec, text) => SizedBox(
+      width: double.infinity,
+      child: Text(
+        text,
+        style: spec.style,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     ),
-    buttonStyle: fortalButtonStyle(variant: .outline)
-        .minHeight(fortalCalendarTarget)
-        .minWidth(MediaQuery.textScalerOf(context).scale(200))
-        .spacing(FortalTokens.space2())
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale(FortalTokens.space4.resolve(context)),
-          ),
-        )
-        .merge(buttonStyle),
+    footerBuilder: (context, value) => fortalCalendarFooter(
+      value == null ? calendarLabels.noDate : calendarLabels.fullDate(value),
+    ),
+    closeDelay: const Duration(milliseconds: 300),
+    placeholderStyle: ButtonStyler().label(TextStyler().color(_placeholder())),
+    expandedStyle: _triggerHover,
+    buttonStyle: _trigger(context).merge(buttonStyle),
     popoverStyle: fortalPopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
+        .padding(.all(FortalTokens.space4()))
+        .borderRadius(.all(FortalTokens.radius6()))
+        .color(FortalTokens.colorPanelSolid())
+        .width(MediaQuery.textScalerOf(context).scale(320))
+        .panelTransition(fortalCalendarPanelTransition)
         .merge(popoverStyle),
     navigationStyle: fortalCalendarNavigationStyle(
       context,
     ).merge(navigationStyle),
     selectorStyle: fortalCalendarSelectorStyle(context).merge(selectorStyle),
     calendarStyle: fortalCalendarStyle(
-      style: fortalCalendarGeometry(context).merge(calendarStyle),
+      style: fortalCalendarGeometry(context, width: 288).merge(calendarStyle),
     ),
   );
 }
+
+/// The trigger: a 40px field with the control corner, a 1px gray 7 frame
+/// on gray 2, a 16px muted calendar icon and chevron 9px from 13px tabular
+/// text, 12px in from each side. It never scales; hover and the open state
+/// mute it.
+ButtonStyler _trigger(BuildContext context) {
+  final scaler = MediaQuery.textScalerOf(context);
+
+  return ButtonStyler()
+      .minHeight(FortalTokens.controlHeight2())
+      .minWidth(scaler.scale(200))
+      .padding(.horizontal(FortalTokens.space3()))
+      .spacing(9)
+      .borderRadius(.all(FortalTokens.radius4()))
+      .color(FortalTokens.gray2())
+      .border(.all(.color(_frame()).width(FortalTokens.borderWidth1())))
+      .mainAxisAlignment(.start)
+      .label(
+        TextStyler()
+            .style(FortalTokens.text2.mix())
+            .fontWeight(FortalTokens.fontWeightRegular())
+            .fontFeatures(const [FontFeature.tabularFigures()])
+            .color(FortalTokens.gray12()),
+      )
+      .icon(.size(scaler.scale(16)).color(FortalTokens.gray10()))
+      .onHovered(_triggerHover)
+      .onPressed(_triggerHover)
+      .onDisabled(ButtonStyler().wrap(.opacity(0.5)))
+      .animate(
+        AnimationConfig.curve(
+          duration: FortalMotion.fast,
+          curve: FortalMotion.easeStandard,
+        ),
+      );
+}
+
+final _triggerHover = ButtonStyler()
+    .color(FortalTokens.gray3())
+    .border(.all(.color(_hoverFrame()).width(FortalTokens.borderWidth1())));
+
+/// [rest] by default; [lifted] under the theme's high contrast.
+ContextToken<Color> _orHighContrast(ColorToken rest, ColorToken lifted) =>
+    ContextToken<Color>(
+      (context) =>
+          (FortalTheme.maybeOf(context)?.highContrast ?? false ? lifted : rest)
+              .resolve(context),
+    );
+
+/// Gray 10 reads at about 4.1:1 on a light field.
+final _placeholder = _orHighContrast(FortalTokens.gray10, FortalTokens.gray11);
+
+/// Gray 7 and 8 frames sit under 1.5:1 on the field.
+final _frame = _orHighContrast(FortalTokens.gray7, FortalTokens.controlBorder);
+final _hoverFrame = _orHighContrast(
+  FortalTokens.gray8,
+  FortalTokens.controlBorder,
+);

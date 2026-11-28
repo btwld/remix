@@ -167,10 +167,10 @@ void main() {
       for (final (item, dependencies) in [
         ('calendar', ['theme', 'motion', 'select']),
         ('range_calendar', ['theme', 'calendar']),
-        ('date_picker', ['theme', 'button', 'calendar', 'popover']),
+        ('date_picker', ['theme', 'calendar', 'popover']),
         (
           'date_range_picker',
-          ['theme', 'button', 'calendar', 'popover', 'range_calendar'],
+          ['theme', 'calendar', 'popover', 'range_calendar'],
         ),
       ]) {
         final entry = items[item] as YamlMap;

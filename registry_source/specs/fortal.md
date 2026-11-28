@@ -538,11 +538,22 @@ pickers combine five independently overridable child stylers.
   A range draft tints the days it would cover.
 - Months slide one slot and 16px on the smooth spring and fade toward 40% as
   they leave (`fortalCalendarMonthTransition`).
-- Pickers: outline Button, calendar icon scaled from space4, gray10 placeholder,
-  focus8 open border, Popover with zero extra padding and 480px scaled maximum.
-  Single/range trigger width floors are 200/260px scaled; labels and formatting
-  stay caller-owned. Nested selector panels cap at six touchTargetMin steps
-  (240px at normal scale), scaled with text, with a persistent gray9 scroll cue.
+- Pickers: the date picker trigger is a 40px field with the 14px control
+  corner, a 1px gray7 frame on gray2, a 16px gray10 calendar icon and
+  chevron 9px from 13px tabular text, 12px in from each side; hover and the
+  open state take gray3 and a gray8 frame, and the trigger never scales. The
+  value fills the trigger so the chevron sits at its end. The range trigger
+  is a raised field with an 18px corner, the resting shadow, 13px medium
+  text, 10px gaps and 14/12px inline padding. Popovers open 8px below the
+  trigger: 320px wide with 16px padding and the 20px panel corner for a date,
+  10px padding and a 26px corner for a range. They drop 8px and grow from 95%
+  on the snappy spring while fading in, and leave over 150ms
+  (`fortalCalendarPanelTransition`). Calendars inside are 288px (date) and
+  252px (range) wide. `fortalCalendarFooter` prints the selection, or the
+  empty-selection label, in muted 12px text under a gray6 rule. A pick closes
+  the popover after 300ms, so the disc lands first. Nested month and year
+  selector panels cap at six touchTargetMin steps, scaled with text, with a
+  persistent gray9 scroll cue.
 - Caller styles merge last. `summaryBuilder`, localized labels, RTL and range
   semantics pass through unchanged. No new date or interaction machinery.
 

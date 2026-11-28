@@ -104,8 +104,6 @@ void main() {
         'range_calendar' => ['theme', 'motion', 'select', 'calendar', name],
         'date_picker' => [
           'theme',
-          'base_button',
-          'button',
           'motion',
           'select',
           'calendar',
@@ -114,8 +112,6 @@ void main() {
         ],
         _ => [
           'theme',
-          'base_button',
-          'button',
           'motion',
           'select',
           'calendar',

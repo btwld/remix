@@ -303,6 +303,82 @@ class _Glide extends StatelessWidget {
   }
 }
 
+/// The pickers' popover: it drops 8px and grows from 95% on the snappy
+/// spring while fading in on the enter ease, and leaves over 150ms, rising
+/// 6px and shrinking to 97%.
+final uiCalendarPanelTransition = RemixPanelTransition(
+  duration: UiSpringCurve.snappy.duration,
+  reverseDuration: UiMotion.fast,
+  builder: (context, info, panel) => AnimatedBuilder(
+    animation: info.animation,
+    child: panel,
+    builder: (context, panel) {
+      final animation = info.animation;
+      final opening = animation.status != AnimationStatus.reverse;
+      final v = animation.value;
+      final t = opening
+          ? UiSpringCurve.snappy.transform(v)
+          : UiMotion.easeStandard.transform(v);
+      final fade = opening
+          ? UiMotion.easeEnter.transform((v * 1.33).clamp(0, 1).toDouble())
+          : t;
+
+      return Opacity(
+        opacity: fade,
+        child: Transform.translate(
+          offset: Offset(0, (opening ? -8 : -6) * (1 - t)),
+          child: Transform.scale(
+            scale: (opening ? 0.95 : 0.97) + (opening ? 0.05 : 0.03) * t,
+            alignment: AlignmentDirectional.topStart.resolve(
+              Directionality.of(context),
+            ),
+            child: panel,
+          ),
+        ),
+      );
+    },
+  ),
+);
+
+/// A picker footer: a 1px gray 6 rule 14px under the calendar and, 11px
+/// below it, [status] in muted 12px text at the end of the row.
+Widget uiCalendarFooter(String status) => _CalendarFooter(status: status);
+
+class _CalendarFooter extends StatelessWidget {
+  const _CalendarFooter({required this.status});
+
+  /// The selected date or range, or the empty-selection label.
+  final String status;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: 14),
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: UiTokens.gray6.resolve(context))),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 11),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Flexible(
+              child: StyledText(
+                status,
+                style: TextStyler()
+                    .style(UiTokens.text1.mix())
+                    .color(_mutedContent())
+                    .maxLines(1)
+                    .overflow(TextOverflow.ellipsis),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 /// The calendar header: the month and year on the left, previous and next
 /// month buttons on the right. Shared by the calendar and range calendar.
 Widget uiCalendarHeader({
