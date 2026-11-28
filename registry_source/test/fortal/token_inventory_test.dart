@@ -30,7 +30,6 @@ final _customizationTokens = {
   'grayStroke4',
   'grayStroke5',
   'grayStroke7',
-  'radiusFull',
   'radiusThumb',
   'shadow1',
   'shadow2',

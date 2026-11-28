@@ -40,6 +40,7 @@ icons:
   check: {remix: check, rounded: check, lucide: check}
   checkCircled: {remix: checkCircle, rounded: checkCircle, lucide: circleCheck}
   chevronDown: {remix: chevronDown, rounded: chevronDown, lucide: chevronDown}
+  chevronLeft: {remix: chevronLeft, rounded: chevronLeft, lucide: chevronLeft}
   chevronRight: {remix: chevronRight, rounded: chevronRight, lucide: chevronRight}
   chevronUp: {remix: chevronUp, rounded: chevronUp, lucide: chevronUp}
   circle: {remix: circle, rounded: circle, lucide: circle}

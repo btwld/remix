@@ -198,7 +198,7 @@ items:
   calendar:
     registryDependencies:
       - theme
-      - icon_button
+      - motion
       - select
     files:
       - source: templates/calendar/calendar.dart.tmpl
