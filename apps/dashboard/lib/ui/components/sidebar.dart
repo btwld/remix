@@ -82,6 +82,10 @@ SidebarStyler uiSidebarStyle({
     destination:
         uiToggleStyle(variant: .ghost, size: .size2, highContrast: highContrast)
             .minHeight(UiTokens.sidebarDestinationMinHeight())
+            // Rows keep their own gap and take no layout from the toggle's
+            // 1px border.
+            .spacing(UiTokens.space1())
+            .border(.width(0))
             // Selected rows sit a step above the hover fill with full-contrast
             // content. The shared ghost toggle's accent3 fill matches the
             // gray hover fill under the default accent.
