@@ -5,6 +5,9 @@
 - Tab view: add `transitionBuilder` and `animationStyle` to `NakedTabView`.
   A deselected view keeps painting where it sat, out of layout and inert,
   until its reverse animation ends. Views still swap at once by default.
+- `showNakedDialog` and `showNakedAlertDialog` take `reducedMotionDuration`,
+  which keeps a short entrance and exit while the user asks to reduce motion.
+  Without it, dialogs still open and close at once.
 
 ## 2.0.0-rc.4
 

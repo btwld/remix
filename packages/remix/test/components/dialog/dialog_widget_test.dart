@@ -341,6 +341,72 @@ void main() {
     });
   });
 
+  group('reducedMotionDuration', () {
+    Future<BuildContext> pumpReduced(WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MediaQuery(
+          data: MediaQueryData(disableAnimations: true),
+          child: MaterialApp(home: SizedBox(key: _homeKey)),
+        ),
+      );
+      return tester.element(find.byKey(_homeKey));
+    }
+
+    testWidgets('showRemixDialog keeps a short fade under reduced motion', (
+      tester,
+    ) async {
+      final hostContext = await pumpReduced(tester);
+
+      unawaited(
+        showRemixDialog<void>(
+          context: hostContext,
+          barrierLabel: 'Dismiss',
+          reducedMotionDuration: const Duration(milliseconds: 100),
+          transitionBuilder: _fade,
+          builder: (context) => const Text('Reduced dialog'),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(_fadeOpacity(tester), closeTo(0.5, 0.01));
+    });
+
+    testWidgets(
+      'showRemixAlertDialog keeps a short fade under reduced motion',
+      (tester) async {
+        final hostContext = await pumpReduced(tester);
+
+        unawaited(
+          showRemixAlertDialog<void>(
+            context: hostContext,
+            semanticLabel: 'Delete',
+            reducedMotionDuration: const Duration(milliseconds: 100),
+            transitionBuilder: _fade,
+            builder: (context) => const Text('Reduced alert'),
+          ),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(_fadeOpacity(tester), closeTo(0.5, 0.01));
+      },
+    );
+
+    testWidgets('without it, reduced motion opens at once', (tester) async {
+      final hostContext = await pumpReduced(tester);
+
+      unawaited(
+        showRemixDialog<void>(
+          context: hostContext,
+          barrierLabel: 'Dismiss',
+          transitionBuilder: _fade,
+          builder: (context) => const Text('Instant dialog'),
+        ),
+      );
+      await tester.pump();
+      expect(_fadeOpacity(tester), 1);
+    });
+  });
+
   group('showRemixDialog', () {
     testWidgets('closes over the reverse transition duration', (tester) async {
       final hostContext = await _pumpHost(tester);

@@ -35,7 +35,9 @@ WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
 ///
 /// [transitionDuration] times the entrance and [reverseTransitionDuration]
 /// the exit; the exit defaults to [transitionDuration]. Both are skipped while
-/// the user asks to reduce motion.
+/// the user asks to reduce motion, unless [reducedMotionDuration] is set: the
+/// entrance and exit then run at that pace, and [transitionBuilder] should
+/// check `remixReducedMotionOf(context)` to drop travel and scale.
 ///
 /// ## Example
 ///
@@ -70,6 +72,7 @@ Future<T?> showRemixDialog<T>({
   Offset? anchorPoint,
   Duration transitionDuration = const Duration(milliseconds: 400),
   Duration? reverseTransitionDuration,
+  Duration? reducedMotionDuration,
   RouteTransitionsBuilder? transitionBuilder,
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
@@ -88,6 +91,7 @@ Future<T?> showRemixDialog<T>({
     anchorPoint: anchorPoint,
     transitionDuration: transitionDuration,
     reverseTransitionDuration: reverseTransitionDuration,
+    reducedMotionDuration: reducedMotionDuration,
     transitionBuilder: transitionBuilder,
     requestFocus: requestFocus,
     traversalEdgeBehavior: traversalEdgeBehavior,
@@ -106,7 +110,8 @@ Future<T?> showRemixDialog<T>({
 /// dismiss the alert with a null result.
 ///
 /// As with [showRemixDialog], [reverseTransitionDuration] times the exit and
-/// defaults to [transitionDuration].
+/// defaults to [transitionDuration], and [reducedMotionDuration] keeps a short
+/// entrance and exit while the user asks to reduce motion.
 Future<T?> showRemixAlertDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
@@ -119,6 +124,7 @@ Future<T?> showRemixAlertDialog<T>({
   Offset? anchorPoint,
   Duration transitionDuration = const Duration(milliseconds: 400),
   Duration? reverseTransitionDuration,
+  Duration? reducedMotionDuration,
   RouteTransitionsBuilder? transitionBuilder,
   FocusNode? initialFocusNode,
 }) {
@@ -133,6 +139,7 @@ Future<T?> showRemixAlertDialog<T>({
     anchorPoint: anchorPoint,
     transitionDuration: transitionDuration,
     reverseTransitionDuration: reverseTransitionDuration,
+    reducedMotionDuration: reducedMotionDuration,
     transitionBuilder: transitionBuilder,
     initialFocusNode: initialFocusNode,
     builder: _captureMixScope(context, builder),

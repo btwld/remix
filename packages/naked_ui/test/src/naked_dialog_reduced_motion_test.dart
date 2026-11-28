@@ -18,6 +18,7 @@ class _Host {
   Future<void> open({
     Duration transitionDuration = const Duration(milliseconds: 400),
     Duration? reverseTransitionDuration,
+    Duration? reducedMotionDuration,
     String? barrierLabel,
   }) => showNakedDialog<void>(
     context: context,
@@ -25,6 +26,7 @@ class _Host {
     barrierLabel: barrierLabel,
     transitionDuration: transitionDuration,
     reverseTransitionDuration: reverseTransitionDuration,
+    reducedMotionDuration: reducedMotionDuration,
     transitionBuilder: _fade,
     builder: (_) => const NakedDialog(
       semanticLabel: 'Confirm',
@@ -294,6 +296,71 @@ void main() {
       } finally {
         handle.dispose();
       }
+    });
+  });
+
+  group('reducedMotionDuration', () {
+    for (final request in ReducedMotionRequest.values) {
+      testWidgets('keeps a short fade in and out with ${request.label}', (
+        tester,
+      ) async {
+        final host = await _pumpHost(tester);
+        host.reducedMotion.set(request, on: true);
+        await tester.pump();
+
+        unawaited(
+          host.open(
+            transitionDuration: const Duration(seconds: 2),
+            reverseTransitionDuration: const Duration(seconds: 3),
+            reducedMotionDuration: const Duration(milliseconds: 100),
+          ),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(_opacity(tester), closeTo(0.5, 0.01));
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(_opacity(tester), 1);
+
+        host.pop();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(_opacity(tester), closeTo(0.5, 0.01));
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(_opacity(tester), 0);
+        await tester.pumpAndSettle();
+        expect(find.byKey(_contentKey), findsNothing);
+      });
+    }
+
+    testWidgets('full motion ignores it', (tester) async {
+      final host = await _pumpHost(tester);
+
+      unawaited(
+        host.open(reducedMotionDuration: const Duration(milliseconds: 100)),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(_opacity(tester), closeTo(0.5, 0.01));
+    });
+
+    testWidgets('the alert dialog forwards it', (tester) async {
+      final host = await _pumpHost(tester);
+      host.reducedMotion.set(ReducedMotionRequest.values.first, on: true);
+      await tester.pump();
+
+      unawaited(
+        showNakedAlertDialog<void>(
+          context: host.context,
+          barrierColor: Colors.black54,
+          semanticLabel: 'Delete file',
+          reducedMotionDuration: const Duration(milliseconds: 100),
+          transitionBuilder: _fade,
+          builder: (_) => const SizedBox(key: _contentKey, width: 200),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(_opacity(tester), closeTo(0.5, 0.01));
     });
   });
 

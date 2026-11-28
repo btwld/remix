@@ -222,6 +222,10 @@ the dialog opens and again when it is dismissed. A dialog that opened without
 motion also closes without it, and a request made while it is open skips the
 exit.
 
+Pass `reducedMotionDuration` to keep a short entrance and exit at that pace
+instead, such as a 100ms fade. `transitionBuilder` then still animates, so
+check `remixReducedMotionOf(context)` there and drop travel and scale.
+
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart

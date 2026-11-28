@@ -23,8 +23,9 @@ import 'utilities/reduced_motion.dart';
 /// focus target near its beginning.
 ///
 /// Like [showNakedDialog], the route's transitions are skipped while reduced
-/// motion is requested, and [reverseTransitionDuration] sets the exit
-/// duration, defaulting to [transitionDuration].
+/// motion is requested unless [reducedMotionDuration] is set, and
+/// [reverseTransitionDuration] sets the exit duration, defaulting to
+/// [transitionDuration].
 Future<T?> showNakedAlertDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
@@ -37,6 +38,7 @@ Future<T?> showNakedAlertDialog<T>({
   Offset? anchorPoint,
   Duration transitionDuration = const Duration(milliseconds: 400),
   Duration? reverseTransitionDuration,
+  Duration? reducedMotionDuration,
   RouteTransitionsBuilder? transitionBuilder,
   FocusNode? initialFocusNode,
 }) {
@@ -66,6 +68,7 @@ Future<T?> showNakedAlertDialog<T>({
     anchorPoint: anchorPoint,
     transitionDuration: transitionDuration,
     reverseTransitionDuration: reverseTransitionDuration,
+    reducedMotionDuration: reducedMotionDuration,
     transitionBuilder: transitionBuilder,
     requestFocus: true,
     builder: (context) {
@@ -170,7 +173,9 @@ class _NakedAlertDialogFocusState extends State<_NakedAlertDialogFocus> {
 /// or the platform reports `AccessibilityFeatures.reduceMotion`, which iOS
 /// sets for Reduce Motion. [transitionDuration] and
 /// [reverseTransitionDuration] are then ignored and [transitionBuilder] sees a
-/// completed animation.
+/// completed animation. Set [reducedMotionDuration] to keep a short entrance
+/// and exit at that pace instead; [transitionBuilder] then still animates, so
+/// it should check the setting and drop travel and scale.
 ///
 /// The setting is read from [context] when the dialog opens and from the
 /// dialog's own subtree when it is dismissed. A dialog that opened without
@@ -204,6 +209,7 @@ Future<T?> showNakedDialog<T>({
   Offset? anchorPoint,
   Duration transitionDuration = const Duration(milliseconds: 400),
   Duration? reverseTransitionDuration,
+  Duration? reducedMotionDuration,
   RouteTransitionsBuilder? transitionBuilder,
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
@@ -218,6 +224,7 @@ Future<T?> showNakedDialog<T>({
     _NakedDialogRoute<T>(
       reducedMotion: reducedMotionOf(context),
       reverseTransitionDuration: reverseTransitionDuration,
+      reducedMotionDuration: reducedMotionDuration,
       pageBuilder:
           (
             BuildContext routeContext,
@@ -257,6 +264,7 @@ class _NakedDialogRoute<T> extends RawDialogRoute<T> {
   _NakedDialogRoute({
     required bool reducedMotion,
     required Duration? reverseTransitionDuration,
+    required Duration? reducedMotionDuration,
     required super.pageBuilder,
     required super.barrierDismissible,
     required super.barrierColor,
@@ -268,19 +276,39 @@ class _NakedDialogRoute<T> extends RawDialogRoute<T> {
     required super.anchorPoint,
     required super.traversalEdgeBehavior,
   }) : _reducedMotion = reducedMotion,
-       _reverseTransitionDuration = reverseTransitionDuration;
+       _reverseTransitionDuration = reverseTransitionDuration,
+       _reducedMotionDuration = reducedMotionDuration;
 
   bool _reducedMotion;
   final Duration? _reverseTransitionDuration;
+  final Duration? _reducedMotionDuration;
 
   @override
-  Duration get transitionDuration =>
-      _reducedMotion ? Duration.zero : super.transitionDuration;
+  Duration get transitionDuration => _reducedMotion
+      ? _reducedMotionDuration ?? Duration.zero
+      : super.transitionDuration;
 
   @override
   Duration get reverseTransitionDuration => _reducedMotion
-      ? Duration.zero
+      ? _reducedMotionDuration ?? Duration.zero
       : _reverseTransitionDuration ?? super.transitionDuration;
+
+  @override
+  AnimationController createAnimationController() {
+    if (_reducedMotionDuration == null) {
+      return super.createAnimationController();
+    }
+
+    // The platform's disableAnimations flag would otherwise shrink the
+    // requested reduced-motion duration a second time.
+    return AnimationController(
+      duration: transitionDuration,
+      reverseDuration: reverseTransitionDuration,
+      debugLabel: debugLabel,
+      vsync: navigator!,
+      animationBehavior: AnimationBehavior.preserve,
+    );
+  }
 
   @override
   bool didPop(T? result) {
