@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
 
+import '../../helpers/contrast.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
@@ -23,6 +24,38 @@ void main() {
     expect(resolved.spec.panelTransition!.duration, FortalMotion.spring);
     expect(resolved.spec.panelTransition!.reverseDuration, FortalMotion.fast);
   });
+
+  for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+    testWidgets('theme high contrast lifts the panel edge to 3:1 '
+        '(${mode.name})', (tester) async {
+      final ratios = <double>[];
+      for (final highContrast in [false, true]) {
+        await tester.pumpRemixApp(
+          Builder(
+            builder: (context) {
+              final box = fortalPopoverStyle()
+                  .build(context)
+                  .spec
+                  .container
+                  .spec;
+              final decoration = box.decoration! as BoxDecoration;
+              ratios.add(
+                contrastRatio(
+                  (decoration.border! as Border).top.color,
+                  decoration.color!,
+                ),
+              );
+              return const SizedBox.shrink();
+            },
+          ),
+          mode: mode,
+          highContrast: highContrast,
+        );
+      }
+      expect(ratios.first, lessThan(3));
+      expect(ratios.last, greaterThanOrEqualTo(3));
+    });
+  }
 
   testWidgets('FortalPopover supplies the themed overlay style', (
     tester,

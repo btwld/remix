@@ -50,7 +50,7 @@ PopoverStyler fortalPopoverStyle({
   };
 
   return PopoverStyler()
-      .border(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()))
+      .border(.color(_frame()).width(FortalTokens.borderWidth1()))
       .minWidth(_minWidth)
       .maxWidth(FortalTokens.popoverMaxWidth())
       .padding(.all(padding))
@@ -64,6 +64,14 @@ PopoverStyler fortalPopoverStyle({
 }
 
 const double _minWidth = 192;
+
+/// The quiet border, or gray 10 (3:1 on the panel) under the theme's high
+/// contrast.
+final _frame = ContextToken<Color>(
+  (context) => (FortalTheme.maybeOf(context)?.highContrast ?? false)
+      ? FortalTokens.gray10.resolve(context)
+      : FortalTokens.gray7.resolve(context),
+);
 
 const _panelTransition = RemixPanelTransition(
   duration: FortalMotion.spring,
