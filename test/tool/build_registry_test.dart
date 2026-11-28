@@ -437,7 +437,7 @@ void main() {
     }
   });
 
-  test('Fortal items leave bundled fonts to the application', () {
+  test('only the Fortal theme item declares the bundled fonts', () {
     final output = PresetBuilder.forRepository(
       Directory.current.absolute,
       spec: fortalPreset,
@@ -447,18 +447,22 @@ void main() {
       final dependencies = items[name]['dependencies'] as YamlMap?;
       expect(
         dependencies?.keys ?? const <String>[],
-        isNot(contains('remix_ui_fonts')),
+        name == 'theme'
+            ? contains('remix_ui_fonts')
+            : isNot(contains('remix_ui_fonts')),
         reason: name as String,
       );
     }
-    for (final entry in output.files.entries) {
-      if (!entry.key.endsWith('.dart.tmpl')) continue;
-      expect(
-        entry.value,
-        isNot(contains('package:remix_ui_fonts/')),
-        reason: entry.key,
-      );
-    }
+    final fontImports = [
+      for (final entry in output.files.entries)
+        if (entry.key.endsWith('.dart.tmpl') &&
+            entry.value.contains('package:remix_ui_fonts/'))
+          entry.key,
+    ];
+    expect(fontImports, [
+      'templates/theme/theme_data.dart.tmpl',
+      'templates/theme/theme_scope.dart.tmpl',
+    ]);
   });
 
   test('Agent recipes style the published library, not the authoring one', () {

@@ -9,7 +9,6 @@ import 'package:registry_source/src/fortal/theme/theme_data.dart';
 const _fortal = 'lib/src/fortal';
 
 final _customizationTokens = {
-  'accent9',
   'accentA1',
   'accentA9',
   'accentA10',
@@ -36,6 +35,32 @@ final _customizationTokens = {
   'shadow1',
   'shadow2',
   'shadow1Layers',
+  // Foundation roles the per-component re-skins will read.
+  'controlTrack',
+  'controlTrackHover',
+  'controlThumb',
+  'success',
+  'warning',
+  'info',
+  'toneTeal',
+  'toneSky',
+  'toneOrchid',
+  'toneViolet',
+  'toneRose',
+  'toneAmber',
+  'toneGreen',
+  'accentRange',
+  'accentThumb',
+  'space18',
+  'space20',
+  'space56',
+  'controlHeight1',
+  'controlHeight2',
+  'controlHeight3',
+  'controlHeight4',
+  'radius7',
+  'shadowThumb',
+  'textField',
 };
 
 void main() {

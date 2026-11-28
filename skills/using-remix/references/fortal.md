@@ -44,8 +44,8 @@ label with `<prefix>PieSliceLabelColor(sliceColor)`, which takes no
 
 Components that expose `highContrast` use it to strengthen their active or
 foreground treatment — do not assume the option exists on every family; check
-the catalog. Soft badges pair `accentA3`/`accentContentAlpha`; all seven built-in
-palettes pass 4.5:1 over the page and solid panel in both modes.
+the catalog. Soft badges pair `accentA3`/`accentContentAlpha`; all eight built-in
+accents pass 4.5:1 over the page and solid panel in both modes.
 `highContrast: true` strengthens the foreground to step 12.
 
 ## Typography
@@ -128,36 +128,39 @@ call-form mechanics (`.mix()`, `.resolve(context)`).
 
 ## Palettes and review
 
-The accents are `orla`, `mar`, `ceu`, `serra`, `sol`, `duna`, and `caju`.
+The accents are `orla` (neutral), `mar` (green), `ceu` (blue), `serra`
+(violet), `sol` (amber), `duna` (coral), `caju` (orange) and `jambo` (rose).
 For destructive or negative content, scope the error palette with
-`accentPalette:` instead of choosing Caju, and keep a text label or icon.
-The default is `orla`. Each theme pairs a pinned Radix accent and neutral:
-Orla Gray/Gray, Mar Teal/Sage, Céu Blue/Slate, Serra Gold/Olive, Sol Amber/Sand,
-Duna Brown/Sand, Caju Orange/Sand. There is no `gray:` configuration or gray
-selector. Custom `accentPalette:` source remains supported and inherits the
-named theme's neutral pairing. The imported raw scales remain exact; functional
-content, mark, label and focus roles enforce Fortal's contrast requirements.
+`accentPalette:` instead of choosing Jambo or Duna, and keep a text label or
+icon. The default is `orla`. Every accent shares one untinted neutral; there
+is no `gray:` configuration or gray selector. An accent recolours selection
+controls, accent text, soft tints, the focus outline and chart series, never
+the page, panels, borders, body text or the solid button. Custom
+`accentPalette:` source remains supported and has its content, focus, mark
+ink and thumb ring fitted. `FortalTheme(highContrast: true)` moves the quiet
+control border, off track and thumb outline to values that meet 3:1.
 
 The twelve flat-control families expose no `classic` constructor. Kbd defaults
 to `soft`; segmented control has only `surface`. Toast's independent `classic`
-variant remains a floating notification surface. Cards and controls have no
-elevation, surface fields use gray2 with the 3:1 `controlBorder` frame (select
-triggers keep gray7). Most focus rings use the fitted `focus8` role at 2px
-with a 2px gap; sliders use contiguous accent11 rings. Labelled fills
+variant remains a floating notification surface. Resting cards and controls have no
+elevation, surface fields use gray2 with the `controlBorder` frame (select
+triggers keep gray7). Most focus rings use the `focus8` role, the accent's
+strong tone at 72 percent, at 2px with a 2px gap; sliders use contiguous
+accent11 rings. Labelled fills
 (solid buttons, badges, avatars, menu highlights) read `accentSolid` and
 `accentSolidHover` with `accentContrast`. `accentIndicator`/`accentTrack` are the mark
 fill of selected controls and progress, and checks read
-`accentIndicatorContrast`; pair a custom fill with the matching role. Most
-palettes carry white labels in both modes; Sol keeps warm-brown labels. Orla uses
-Gray-12 primary fills in light mode and true white in dark mode, with opposite
-ink. Its soft variants and neutral surfaces stay subtle. `accentMarkHover` pairs
+`accentIndicatorContrast`; pair a custom fill with the matching role. Labelled
+solids are ink under every accent, with the page colour as their label. `accentMarkHover` pairs
 selected marks/tracks with their hover or pressed fill; mark ink follows both. Normal selected surface-switch thumbs and enabled slider thumbs are
-white with an `accentThumbRing` outline (slider edges use gray3 in dark); off switch
-thumbs are white with a `controlBorder` ring. Progress tracks are edged in
+white with an `accentThumbRing` outline, transparent unless the theme sets
+`highContrast` (slider edges use gray3 in dark); off switch thumbs are white
+with a `controlBorder` ring. Progress tracks are edged in
 `controlBorder`. Selected soft thumbs keep accentContent (accent12 at
 high contrast), selected high-contrast surface thumbs keep accent1, and
 disabled thumbs keep gray2 with a gray6 border.
-The type ramp is 12/14/16/18/20/24/28/36/60.
+The type ramp is 12/13/15/17/20/22/28/34/40, body text in Inter and
+`text7` to `text9` in Geist; `textField` is the 14px typed-text style.
 
 Generate custom brand source from a checkout with
 `registry_source/tool/fortal_palettes/generate.dart --name brand --seed '#8038CC'

@@ -1,15 +1,13 @@
 # Fortal color sources
 
-The seven built-in themes pair exact **@radix-ui/colors 3.0.0** accent and
-neutral scales. The source package is a development-only extraction dependency;
-installed Flutter applications have no Node or Radix runtime dependency.
-
-`specs/fortal_radix_colors.json` records the approved pairings, package integrity,
-sRGB opaque/alpha values, and MIT license. `generate.dart` reads that snapshot,
-retains every raw scale step, and emits the required license notice into the
-installed Dart source. Functional label fills, selected marks, content and focus
-roles are fitted separately to Fortal's existing contrast requirements. See
-[the specification](../../specs/fortal.md#raw-scales-and-functional-roles).
+The eight built-in accents, the shared neutral, the error red and the
+functional roles are Fortal's own foundation values. `specs/fortal_colors.json`
+records every literal as a Dart colour (`0xAARRGGBB`); `generate.dart` reads
+that file and emits the installed Dart source. Built-in accents pin their
+content, focus, range, thumb and swatch roles there, so the theme uses them as
+given; the fitting functions in `computed.dart` serve custom palettes and the
+theme's high contrast switch. See
+[the specification](../../specs/fortal.md#scales-and-functional-roles).
 
 ## Regenerate the built-in Dart source
 
@@ -21,19 +19,8 @@ fvm dart run registry_source/tool/fortal_palettes/generate.dart
 fvm dart run registry_source/tool/fortal_palettes/generate.dart --check
 ```
 
-Normal Dart generation and CI consume the committed snapshot offline. To verify
-or deliberately upgrade its upstream extraction:
-
-```sh
-cd registry_source/tool/fortal_palettes/radix
-npm ci --ignore-scripts
-npm run check
-```
-
-For an upgrade, change the exact package pin, refresh its lockfile, run
-`npm run extract`, regenerate the Dart source, and review both mode scales and
-component contrast before accepting the change. The extractor imports the
-package's structured exports; it does not scrape CSS or parse TypeScript.
+To change a value, edit `specs/fortal_colors.json`, regenerate, and review
+both appearances and the component contrast tests before accepting the change.
 
 ## Generate an application's custom brand palette
 

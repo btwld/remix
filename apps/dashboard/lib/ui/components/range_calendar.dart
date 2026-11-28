@@ -178,14 +178,15 @@ final _endpoint = CalendarDayStyler()
     .label(TextStyler().color(UiTokens.accentContrast()))
     .onDisabled(_mutedRange);
 
-/// A disabled day in the middle of a range.
+/// A disabled day in the middle of a range, one step above the page as the
+/// stale range is.
 final _mutedMiddle = CalendarDayStyler()
-    .color(UiTokens.gray3())
+    .color(UiTokens.gray4())
     .label(TextStyler().color(UiTokens.gray11()));
 
 /// A disabled first or last day of a range.
 final _mutedRange = CalendarDayStyler()
-    .color(UiTokens.gray4())
+    .color(UiTokens.gray5())
     .label(TextStyler().color(UiTokens.gray11()));
 
 // Physical borders support square middles in Flutter; mirror cap edges in RTL.
@@ -276,9 +277,11 @@ final _quietCommitted = ContextToken<Color>((context) {
       (compareCivilDates(day, value.start) == 0 ||
           compareCivilDates(day, value.end) == 0);
   final dark = UiTheme.of(context).isDark;
+  // Light steps 3 and 4 sit within 1.1:1 of the page, so the stale range
+  // takes steps 4 and 5 to stay visible above it.
   return (cap
-          ? (dark ? _quietDarkCap : UiTokens.gray4)
-          : (dark ? _quietDarkMiddle : UiTokens.gray3))
+          ? (dark ? _quietDarkCap : UiTokens.gray5)
+          : (dark ? _quietDarkMiddle : UiTokens.gray4))
       .resolve(context);
 });
 

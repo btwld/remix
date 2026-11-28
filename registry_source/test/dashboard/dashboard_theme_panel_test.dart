@@ -52,12 +52,21 @@ void main() {
             ),
           );
           final reason = '${accent.name}/${state?.name ?? 'idle'}';
+          // A swatch is the accent fill with its swatch ink.
           expect(
             fill,
-            state == null ? tokens.accent.indicator : tokens.accent.markHover,
+            tokens.accent.scale.step(state == null ? 9 : 10),
             reason: reason,
           );
-          expect(tick.color, tokens.accentIndicatorContrast, reason: reason);
+          // Hover and press take the strong tone with the page colour as
+          // ink, as the ink solid's label does.
+          expect(
+            tick.color,
+            state == null
+                ? tokens.accentSwatchContrast
+                : tokens.accent.contrast,
+            reason: reason,
+          );
           expect(
             contrastRatio(tick.color!, fill),
             greaterThanOrEqualTo(3),

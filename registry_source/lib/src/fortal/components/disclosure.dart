@@ -116,8 +116,8 @@ DisclosureStyler _surface(FortalDisclosureSize size) => DisclosureStyler()
     )
     .trigger(.color(FortalTokens.gray1()))
     .content(.foregroundDecoration(_dividerAbove(FortalTokens.gray6())))
-    .onHovered(.trigger(.color(FortalTokens.gray2())))
-    .onPressed(.trigger(.color(FortalTokens.gray3())))
+    .onHovered(.trigger(.color(FortalTokens.gray3())))
+    .onPressed(.trigger(.color(FortalTokens.gray4())))
     .onFocusVisible(.triggerEffects(fortalFocusOutline()))
     .onDisabled(_disabled());
 

@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:remix_ui_fonts/remix_ui_fonts.dart';
 
 import '../../helpers/test_helpers.dart';
 
@@ -37,7 +38,7 @@ void main() {
         expect(style.fontFamilyFallback, ['Fallback family']);
         expect(style.inherit, isFalse);
         expect(style.fontWeight, FontWeight.w400);
-        expect(style.fontSize, closeTo(size == null ? 12 : 11.2, 1e-9));
+        expect(style.fontSize, closeTo(size == null ? 11.25 : 10.4, 1e-9));
         expect(style.height, 1.7);
       }
     });
@@ -45,7 +46,7 @@ void main() {
     testWidgets('all nine sizes resolve the pinned scale across scaling', (
       tester,
     ) async {
-      const fontSizes = [12.0, 14, 16, 18, 20, 24, 28, 36, 60];
+      const fontSizes = [12.0, 13, 15, 17, 20, 22, 28, 34, 40];
       for (final (scaling, factor) in const [
         (FortalScaling.percent90, 0.9),
         (FortalScaling.percent100, 1.0),
@@ -69,8 +70,19 @@ void main() {
     testWidgets('heading keeps the pinned line boxes and bold size6 default', (
       tester,
     ) async {
-      const fontSizes = [12.0, 14, 16, 18, 20, 24, 28, 36, 60];
-      const lineHeights = [16.0, 18, 22, 24, 26, 30, 36, 40, 60];
+      const fontSizes = [12.0, 13, 15, 17, 20, 22, 28, 34, 40];
+      // The heading pins its line-height ratios; the boxes follow the new sizes.
+      const lineRatios = [
+        16 / 12,
+        18 / 14,
+        22 / 16,
+        24 / 18,
+        26 / 20,
+        30 / 24,
+        36 / 28,
+        40 / 36,
+        1.0,
+      ];
       for (var i = 0; i < FortalTextSize.values.length; i++) {
         final label = 'h$i';
         await _pump(
@@ -79,12 +91,15 @@ void main() {
         );
         final style = _text(tester, label).style!;
         expect(style.fontSize, closeTo(fontSizes[i], 1e-9));
-        expect(style.fontSize! * style.height!, closeTo(lineHeights[i], 1e-9));
+        expect(
+          style.fontSize! * style.height!,
+          closeTo(fontSizes[i] * lineRatios[i], 1e-9),
+        );
       }
 
       await _pump(tester, const FortalHeading('default'));
       final style = _text(tester, 'default').style!;
-      expect(style.fontSize, 24);
+      expect(style.fontSize, 22);
       expect(style.fontWeight, FontWeight.w700);
     });
 
@@ -103,17 +118,20 @@ void main() {
       );
 
       final unsized = _text(tester, 'unsized').style!;
-      expect(unsized.fontSize, closeTo(16 * 0.95 * 0.95, 1e-9));
+      expect(unsized.fontSize, closeTo(15 * 0.95 * 0.95, 1e-9));
       expect(unsized.height, 1.25);
-      expect(unsized.letterSpacing, closeTo(-0.007 * 14.44, 1e-9));
+      expect(
+        unsized.letterSpacing,
+        closeTo(-0.15 - 0.007 * 15 * 0.95 * 0.95, 1e-9),
+      );
       expect(unsized.fontFamily, 'Menlo');
 
       final explicit = _text(tester, 'explicit').style!;
-      expect(explicit.fontSize, closeTo(14 * 0.95 * 0.95, 1e-9));
-      expect(explicit.fontSize! * explicit.height!, closeTo(20, 1e-9));
+      expect(explicit.fontSize, closeTo(13 * 0.95 * 0.95, 1e-9));
+      expect(explicit.fontSize! * explicit.height!, closeTo(18.2, 1e-9));
 
       // Ghost keeps the outer adjustment only.
-      expect(_text(tester, 'ghost').style!.fontSize, closeTo(14 * 0.95, 1e-9));
+      expect(_text(tester, 'ghost').style!.fontSize, closeTo(13 * 0.95, 1e-9));
     });
 
     testWidgets('kbd applies distinct unsized and explicit token factors', (
@@ -131,12 +149,12 @@ void main() {
 
       expect(
         _text(tester, 'unsized').style?.fontSize,
-        closeTo(16 * 0.75, 1e-9),
+        closeTo(15 * 0.75, 1e-9),
       );
       final explicit = _text(tester, 'explicit').style!;
-      expect(explicit.fontSize, closeTo(11.2, 1e-9));
+      expect(explicit.fontSize, closeTo(10.4, 1e-9));
       expect(explicit.height, 1.7);
-      expect(explicit.wordSpacing, closeTo(-1.12, 1e-9));
+      expect(explicit.wordSpacing, closeTo(-1.04, 1e-9));
       expect(explicit.fontWeight, FontWeight.normal);
     });
 
@@ -162,7 +180,10 @@ void main() {
       // The unsized path remains anchored to text3, whose letter spacing is
       // zero, instead of inheriting the hostile run's 2px spacing.
       await _pump(tester, const FortalKbd('unsized'));
-      expect(_text(tester, 'unsized').style?.letterSpacing, 0);
+      expect(
+        _text(tester, 'unsized').style?.letterSpacing,
+        closeTo(-0.15, 1e-9),
+      );
     });
 
     testWidgets('code letter spacing adds the pinned -0.007em to the token', (
@@ -303,13 +324,13 @@ void main() {
         }
 
         final expected = <String, (double, Color)>{
-          'body copy': (16, gray12),
-          'section heading': (24, gray12),
-          'soft code': (16 * 0.95 * 0.95, accentContentAlpha),
-          'ghost code': (16 * 0.95, Colors.green),
-          'command key': (16 * 0.75, gray12),
-          'inert link': (16, accentContentAlpha),
-          'actionable link': (16, accentContentAlpha),
+          'body copy': (15, gray12),
+          'section heading': (22, gray12),
+          'soft code': (15 * 0.95 * 0.95, accentContentAlpha),
+          'ghost code': (15 * 0.95, Colors.green),
+          'command key': (15 * 0.75, gray12),
+          'inert link': (15, accentContentAlpha),
+          'actionable link': (15, accentContentAlpha),
         };
         for (final entry in expected.entries) {
           final style = _renderedTextStyle(tester, entry.key);
@@ -350,9 +371,10 @@ void main() {
           'inert link',
           'actionable link',
         ]) {
+          // The theme's Inter run wins over the hostile ambient family.
           expect(
             _renderedTextStyle(tester, label).fontFamily,
-            isNull,
+            RemixFonts.inter,
             reason: label,
           );
         }
@@ -638,7 +660,7 @@ void main() {
           highContrast ? tokens.accentA7 : tokens.accentA8,
         );
         for (final shadow in shadows) {
-          expect(shadow.spreadRadius, closeTo(0.033 * 60 * 0.95 * 0.95, 1e-9));
+          expect(shadow.spreadRadius, closeTo(0.033 * 40 * 0.95 * 0.95, 1e-9));
         }
       }
     });
@@ -686,7 +708,7 @@ void main() {
       await _pump(tester, const FortalKbd('x', size: FortalTextSize.size2));
       expect(
         _surface(tester).container.spec.constraints?.minWidth,
-        closeTo(1.75 * 14 * 0.8, 1e-9),
+        closeTo(1.75 * 13 * 0.8, 1e-9),
       );
     });
   });
@@ -726,7 +748,7 @@ void main() {
     ) async {
       // The ramp is `min(2px, max(1px, 0.05em))`, so it is flat at 1
       // through size5, rises through size8, and clamps at 2 for size9.
-      const expected = [1.0, 1, 1, 1, 1, 1.2, 1.4, 1.8, 2];
+      const expected = [1.0, 1, 1, 1, 1, 1.1, 1.4, 1.7, 2];
       for (var i = 0; i < FortalTextSize.values.length; i++) {
         final size = FortalTextSize.values[i];
         final label = 'link$i';
@@ -860,7 +882,7 @@ void main() {
         );
         final style = _text(tester, entry.key.name).style!;
         expect(style.fontWeight, entry.value);
-        expect(style.fontSize, 18);
+        expect(style.fontSize, 17);
       }
     });
 
@@ -1044,7 +1066,7 @@ void main() {
       expect(node, matchesSemantics(label: 'Chapter title', isHeader: true));
       expect(node.getSemanticsData().headingLevel, 4);
       // Visual size stays independent of the semantic level.
-      expect(_text(tester, 'Visual title').style?.fontSize, 14);
+      expect(_text(tester, 'Visual title').style?.fontSize, 13);
       handle.dispose();
     });
 
@@ -1291,17 +1313,17 @@ void main() {
   });
 }
 
-const _fontSizes = [12.0, 14, 16, 18, 20, 24, 28, 36, 60];
+const _fontSizes = [12.0, 13, 15, 17, 20, 22, 28, 34, 40];
 const _letterSpacings = [
-  0.0025 * 12,
-  0.0,
-  0.0,
-  -0.0025 * 18,
-  -0.005 * 20,
-  -0.00625 * 24,
-  -0.0075 * 28,
-  -0.01 * 36,
-  -0.025 * 60,
+  -0.01 * 12,
+  -0.01 * 13,
+  -0.01 * 15,
+  -0.01 * 17,
+  -0.01 * 20,
+  -0.02 * 22,
+  -0.03 * 28,
+  -0.03 * 34,
+  -0.03 * 40,
 ];
 
 void _noop() {}

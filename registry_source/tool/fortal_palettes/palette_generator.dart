@@ -10,7 +10,7 @@ import 'dart:math' as math;
 const basalt = 0xff13181d;
 const limestone = 0xfffaf9f6;
 
-/// Canonical theme identifiers; built-in values live in the pinned Radix snapshot.
+/// Canonical theme identifiers; built-in values live in `specs/fortal_colors.json`.
 const builtInPaletteNames = {
   'orla',
   'mar',
@@ -19,6 +19,7 @@ const builtInPaletteNames = {
   'sol',
   'duna',
   'caju',
+  'jambo',
 };
 
 /// Dedicated error red. It is generated with the accents but is not one of
@@ -209,8 +210,8 @@ bool _isLuminous(int seed) {
 
 /// The neutral page (step 1) or solid panel (step 2) of either appearance.
 int neutralSurface(int step, {required bool dark}) => (dark
-    ? const [0xff111111, 0xff191919]
-    : const [0xfffcfcfc, 0xfff9f9f9])[step - 1];
+    ? const [0xff141414, 0xff191919]
+    : const [0xffffffff, 0xffffffff])[step - 1];
 
 GeneratedMode _generateMode(
   int seed, {
