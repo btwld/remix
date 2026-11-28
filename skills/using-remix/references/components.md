@@ -135,6 +135,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `SelectStyler().content(SelectContentStyler().minWidth(remixAnchorWidth()))`),
   which resolves to the trigger width inside `RemixSelect` and `RemixMenu`
   overlays and to `0` anywhere else, `RemixPopover` included.
+  `selectedWhileOpen(true)` on the trigger style resolves it under `selected`
+  while the panel is open, and `indicatorAngle` under `onSelected` with
+  `animate` then turns the chevron.
 - **[Calendar](https://github.com/btwld/remix/blob/main/docs/components/calendar.mdx)** — controlled Gregorian date selection. `value` is nullable;
   `firstDate`/`lastDate` are required and inclusive. Compare civil year/month/day
   fields, not instants; callbacks return local date-only `DateTime` values,

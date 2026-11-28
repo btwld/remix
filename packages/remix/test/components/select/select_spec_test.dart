@@ -302,12 +302,14 @@ void main() {
       test('props list contains all properties', () {
         const spec = SelectTriggerSpec();
 
-        expect(spec.props, hasLength(8));
+        expect(spec.props, hasLength(10));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
         expect(spec.props, contains(spec.indicator));
         expect(spec.props, contains(spec.indicatorOpacity));
+        expect(spec.props, contains(spec.indicatorAngle));
+        expect(spec.props, contains(spec.selectedWhileOpen));
       });
     });
 
@@ -326,6 +328,8 @@ void main() {
             'indicator',
             'containerEffects',
             'indicatorOpacity',
+            'indicatorAngle',
+            'selectedWhileOpen',
             'placeholderOpacity',
           ]),
         );
