@@ -8,8 +8,11 @@ part of 'toast.dart';
 
 /// The Fortal Toast recipe, for [RemixToast] and [RemixToastScope].
 ///
-/// A toast is a raised, blurred panel in a 1px frame, with a ghost action and
-/// close button. It caps at 360px and shrinks with the available width.
+/// A toast is a floating card in a 1px border with a round tinted icon chip,
+/// a medium title over secondary text, and a round close button. It caps at
+/// 416px and shrinks with the available width. Inside a [RemixToastScope] it
+/// rises 16px and grows from 96% on the morph spring while it fades in over
+/// 200ms, and leaves in 140ms, sinking 8px to 97%.
 ///
 /// ```dart
 /// RemixToastScope(style: fortalToastStyle(), child: const Shell())
@@ -30,7 +33,7 @@ class FortalToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   });
 
-  /// A quiet shadow.
+  /// The raised shadow.
   const FortalToast.surface({
     super.key,
     this.size = .size2,
@@ -45,7 +48,7 @@ class FortalToast extends StatelessWidget {
     this.excludeMessageSemantics = false,
   }) : variant = FortalToastVariant.surface;
 
-  /// A deeper shadow. The default.
+  /// The floating shadow. The default.
   const FortalToast.classic({
     super.key,
     this.size = .size2,

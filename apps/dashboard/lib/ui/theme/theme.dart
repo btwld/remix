@@ -8,6 +8,7 @@ export 'computed.dart'
         computeChartSeries,
         computeContrastRatio,
         uiBlurRadius,
+        mixOklabPremultiplied,
         resolveUiTokens;
 export 'control_styles.dart';
 export 'motion.dart';

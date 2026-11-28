@@ -32,14 +32,19 @@ void main() {
       // The application's scope. Each kept page holds one below it.
       find.byType(UiDashboardThemeScope).first,
     );
+    // The default toast confirms in the success color, which follows the
+    // theme's mode rather than its accent.
+    final dark = themeScope.settings.appearance == UiThemeMode.dark;
     themeScope.onChanged(
-      themeScope.settings.copyWith(accentColor: UiAccentColor.serra),
+      themeScope.settings.copyWith(
+        appearance: dark ? UiThemeMode.light : UiThemeMode.dark,
+      ),
     );
     await tester.pump();
 
     final after = tester.widget<Icon>(toastIcon).color;
     final expected = MixScope.tokenOf(
-      UiTokens.accentContent,
+      UiTokens.success,
       tester.element(find.byType(UiDashboardDemo)),
     );
 

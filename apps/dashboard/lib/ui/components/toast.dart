@@ -1,54 +1,58 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../motion/motion.dart';
 import '../theme/theme.dart';
 import 'button.dart';
-import 'icon_button.dart';
 
 part 'toast.g.dart';
 
 /// The sizes a toast comes in. Pixel values are at 100% theme scaling.
 enum UiToastSize {
-  /// 12px text with 12px padding.
+  /// 12px text beside a 26px icon chip, 10px padding.
   size1,
 
-  /// 14px text with 16px padding. The default.
+  /// 13px text beside a 30px icon chip, 14px padding. The default.
   size2,
 
-  /// 16px text with 24px padding.
+  /// 15px text beside a 34px icon chip, 16px padding.
   size3,
 }
 
 /// How far a toast floats above the page.
 enum UiToastVariant {
-  /// A quiet shadow.
+  /// The raised shadow.
   surface,
 
-  /// A deeper shadow. The default.
+  /// The floating shadow. The default.
   classic,
 }
 
-/// The color role of the leading icon.
+/// The color role of the leading icon chip.
 ///
 /// Visual only: it never changes [RemixToastData.priority]. Choose
 /// [RemixToastPriority.assertive] explicitly when a message needs an
 /// immediate announcement.
 enum UiToastIntent {
-  /// The accent's text color.
+  /// A confirmation: the success color and a check. The default.
   accent,
 
-  /// Gray.
+  /// Gray and an info glyph.
   neutral,
 
-  /// The error color.
+  /// The error color and a warning glyph.
   error,
 }
 
 /// The Fortal Toast recipe, for [RemixToast] and [RemixToastScope].
 ///
-/// A toast is a raised, blurred panel in a 1px frame, with a ghost action and
-/// close button. It caps at 360px and shrinks with the available width.
+/// A toast is a floating card in a 1px border with a round tinted icon chip,
+/// a medium title over secondary text, and a round close button. It caps at
+/// 416px and shrinks with the available width. Inside a [RemixToastScope] it
+/// rises 16px and grows from 96% on the morph spring while it fades in over
+/// 200ms, and leaves in 140ms, sinking 8px to 97%.
 ///
 /// ```dart
 /// RemixToastScope(style: uiToastStyle(), child: const Shell())
@@ -61,32 +65,56 @@ ToastStyler uiToastStyle({
   ToastStyler style = const ToastStyler.create(),
 }) {
   final metrics = _metrics(size);
+  final (tone, glyph) = switch (intent) {
+    .accent => (UiTokens.success, RemixIcons.check),
+    .neutral => (UiTokens.gray11, RemixIcons.info),
+    .error => (UiTokens.error11, RemixIcons.warning),
+  };
 
   return ToastStyler(
-        container: FlexBoxStyler().spacing(metrics.gap),
-        content: FlexBoxStyler().spacing(UiTokens.space1()),
-        icon: IconStyler().size(metrics.iconSize).color(_intentColor(intent)),
-        title: TextStyler(
-          style: metrics.text.mix(),
-        ).fontWeight(UiTokens.fontWeightMedium()).color(UiTokens.gray12()),
+        container: FlexBoxStyler()
+            .spacing(metrics.gap)
+            .crossAxisAlignment(.start),
+        // The copy fills the row so the close button sits at the end and every
+        // toast spans the full width the scope allows.
+        content: FlexBoxStyler()
+            .width(double.infinity)
+            .spacing(2)
+            .padding(.only(top: metrics.copyTop)),
+        icon: IconStyler().icon(glyph).size(metrics.iconSize).color(tone()),
+        iconContainer: BoxStyler()
+            .size(metrics.chip, metrics.chip)
+            .alignment(.center)
+            .color(_chipFill(tone)())
+            .border(.all(.color(_chipBorder(tone)()).width(1)))
+            .borderRadius(.all(UiTokens.radiusCircle())),
+        title: TextStyler(style: metrics.text.mix())
+            .fontWeight(UiTokens.fontWeightMedium())
+            .color(UiTokens.gray12())
+            .maxLines(1)
+            .overflow(.ellipsis),
         description: TextStyler(
           style: metrics.text.mix(),
         ).color(UiTokens.gray11()),
         action: uiButtonStyle(variant: .ghost, size: .size1),
-        closeButton: uiIconButtonStyle(
-          variant: .ghost,
-          size: .size1,
-        ).merge(IconButtonStyler().icon(IconStyler().color(UiTokens.gray11()))),
+        closeButton: _closeButton(metrics.close),
+        transitionBuilder: _transition,
+        animationStyle: AnimationStyle(
+          duration: _enterSpring.duration,
+          curve: Curves.linear,
+          reverseDuration: UiMotion.exit,
+          reverseCurve: Curves.linear,
+        ),
+        reducedMotionDuration: UiMotion.instant,
       )
-      .padding(.all(metrics.padding))
+      .padding(metrics.padding)
       .borderRadius(.all(metrics.radius))
       .maxWidth(UiTokens.toastMaxWidth())
-      .containerEffects(RemixBoxEffectsMix.backdropBlur(UiTokens.panelBlur()))
-      .color(UiTokens.colorPanel())
-      .border(.all(.color(UiTokens.gray6()).width(UiTokens.borderWidth1())))
+      .color(_fill())
+      .border(.all(.color(_frame()).width(UiTokens.borderWidth1())))
       .decoration(
         BoxDecorationMix.create(
-          boxShadow: (variant == .surface ? UiTokens.shadow3 : UiTokens.shadow4)
+          boxShadow: (variant == .surface ? UiTokens.shadow3 : UiTokens.shadow5)
               .mix(),
         ),
       )
@@ -94,38 +122,174 @@ ToastStyler uiToastStyle({
 }
 
 ({
-  double padding,
+  EdgeInsetsGeometryMix padding,
   double gap,
+  double chip,
   double iconSize,
+  double copyTop,
+  double close,
   Radius radius,
   TextStyleToken text,
 })
 _metrics(UiToastSize size) => switch (size) {
   .size1 => (
-    padding: UiTokens.space3(),
+    padding: EdgeInsetsGeometryMix.directional(
+      top: 10,
+      bottom: 10,
+      start: UiTokens.space3(),
+      end: 10,
+    ),
     gap: UiTokens.space2(),
-    iconSize: UiTokens.space4(),
-    radius: UiTokens.radius3(),
+    chip: 26,
+    iconSize: 14,
+    copyTop: 4,
+    close: 28,
+    radius: UiTokens.radius5(),
     text: UiTokens.text1,
   ),
   .size2 => (
-    padding: UiTokens.space4(),
+    padding: EdgeInsetsGeometryMix.directional(
+      top: 14,
+      bottom: 14,
+      start: UiTokens.space4(),
+      end: 14,
+    ),
     gap: UiTokens.space3(),
+    chip: 30,
     iconSize: UiTokens.space4(),
-    radius: UiTokens.radius4(),
+    copyTop: 5,
+    close: 32,
+    radius: UiTokens.radius6(),
     text: UiTokens.text2,
   ),
   .size3 => (
-    padding: UiTokens.space5(),
+    padding: EdgeInsetsGeometryMix.directional(
+      top: 16,
+      bottom: 16,
+      start: UiTokens.space18(),
+      end: 16,
+    ),
     gap: UiTokens.space3(),
-    iconSize: UiTokens.space5(),
-    radius: UiTokens.radius5(),
+    chip: 34,
+    iconSize: UiTokens.space18(),
+    copyTop: 6,
+    close: 36,
+    radius: UiTokens.radius7(),
     text: UiTokens.text3,
   ),
 };
 
-Color _intentColor(UiToastIntent intent) => switch (intent) {
-  .accent => UiTokens.accentContent(),
-  .neutral => UiTokens.gray11(),
-  .error => UiTokens.error11(),
-};
+/// The quiet border, or gray 10 (3:1 on the card) under the theme's high
+/// contrast.
+final _frame = ContextToken<Color>(
+  (context) => (UiTheme.maybeOf(context)?.highContrast ?? false)
+      ? UiTokens.gray10.resolve(context)
+      : UiTokens.gray7.resolve(context),
+);
+
+/// The surface mixed 6% toward the page background.
+final _fill = ContextToken<Color>(
+  (context) => mixOklabPremultiplied(
+    UiTokens.colorSurface.resolve(context),
+    UiTokens.colorBackground.resolve(context),
+    .06,
+  ),
+);
+
+ContextToken<Color> _chipFill(ColorToken tone) => ContextToken<Color>(
+  (context) => mixOklabPremultiplied(
+    UiTokens.colorSurface.resolve(context),
+    tone.resolve(context),
+    .10,
+  ),
+);
+
+ContextToken<Color> _chipBorder(ColorToken tone) => ContextToken<Color>(
+  (context) => mixOklabPremultiplied(
+    UiTokens.gray7.resolve(context),
+    tone.resolve(context),
+    .24,
+  ),
+);
+
+/// A round ghost button nudged 2px out and 1px up, so it hugs the corner.
+IconButtonStyler _closeButton(double edge) => IconButtonStyler()
+    .size(edge, edge)
+    .alignment(.center)
+    .borderRadius(.all(UiTokens.radiusCircle()))
+    .icon(IconStyler().size(UiTokens.space4()).color(UiTokens.gray10()))
+    .wrap(.transform(transform: Matrix4.translationValues(2, -1, 0)))
+    .onHovered(
+      IconButtonStyler()
+          .color(UiTokens.gray3())
+          .icon(.color(UiTokens.gray12())),
+    )
+    .onPressed(IconButtonStyler().scale(.96))
+    .animate(.easeOut(UiMotion.fast));
+
+final _enterSpring = UiSpringCurve(UiMotion.springMorph);
+
+/// Rises 16px from the toast's edge and grows from 96% on the morph spring
+/// while fading in over 200ms; leaves in 140ms, sinking 8px to 97%. Under
+/// reduced motion it only fades.
+///
+/// The fade keeps semantics so a toast is announced from its first frame.
+Widget _transition(
+  BuildContext context,
+  Animation<double> animation,
+  RemixToastPlacement placement,
+  Widget child,
+) {
+  final fromTop = switch (placement) {
+    .topStart || .topCenter || .topEnd => true,
+    .bottomStart || .bottomCenter || .bottomEnd => false,
+  };
+  final edge = fromTop ? -1.0 : 1.0;
+  final enterMs = _enterSpring.duration.inMicroseconds / 1000;
+
+  return RemixReducedMotionBuilder(
+    builder: (context, reduceMotion) => AnimatedBuilder(
+      animation: animation,
+      child: child,
+      builder: (context, child) {
+        final t = animation.value;
+        final leaving = animation.status == .reverse;
+        if (reduceMotion) {
+          return Opacity(
+            opacity: t,
+            alwaysIncludeSemantics: true,
+            child: child,
+          );
+        }
+
+        final double opacity;
+        final double offset;
+        final double scale;
+        if (leaving) {
+          final p = UiMotion.easeStandard.transform(1 - t);
+          opacity = 1 - p;
+          offset = 8 * p;
+          scale = 1 - .03 * p;
+        } else {
+          final spring = _enterSpring.transform(t);
+          final fadeEnd = (UiMotion.standard.inMilliseconds / enterMs).clamp(
+            0.0,
+            1.0,
+          );
+          opacity = UiMotion.easeEnter.transform((t / fadeEnd).clamp(0.0, 1.0));
+          offset = 16 * (1 - spring);
+          scale = .96 + .04 * spring;
+        }
+
+        return Opacity(
+          opacity: opacity,
+          alwaysIncludeSemantics: true,
+          child: Transform.translate(
+            offset: Offset(0, edge * offset),
+            child: Transform.scale(scale: scale, child: child),
+          ),
+        );
+      },
+    ),
+  );
+}
