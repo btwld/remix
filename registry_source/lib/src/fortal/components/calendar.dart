@@ -369,7 +369,7 @@ class _CalendarFooter extends StatelessWidget {
                 status,
                 style: TextStyler()
                     .style(FortalTokens.text1.mix())
-                    .color(FortalTokens.gray10())
+                    .color(_mutedContent())
                     .maxLines(1)
                     .overflow(TextOverflow.ellipsis),
               ),

@@ -154,9 +154,7 @@ class FortalDatePicker extends StatelessWidget {
       value == null ? calendarLabels.noDate : calendarLabels.fullDate(value),
     ),
     closeDelay: const Duration(milliseconds: 300),
-    placeholderStyle: ButtonStyler().label(
-      TextStyler().color(FortalTokens.gray10()),
-    ),
+    placeholderStyle: ButtonStyler().label(TextStyler().color(_placeholder())),
     expandedStyle: _triggerHover,
     buttonStyle: _trigger(context).merge(buttonStyle),
     popoverStyle: fortalPopoverStyle()
@@ -190,9 +188,7 @@ ButtonStyler _trigger(BuildContext context) {
       .spacing(9)
       .borderRadius(.all(FortalTokens.radius4()))
       .color(FortalTokens.gray2())
-      .border(
-        .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
-      )
+      .border(.all(.color(_frame()).width(FortalTokens.borderWidth1())))
       .mainAxisAlignment(.start)
       .label(
         TextStyler()
@@ -215,6 +211,22 @@ ButtonStyler _trigger(BuildContext context) {
 
 final _triggerHover = ButtonStyler()
     .color(FortalTokens.gray3())
-    .border(
-      .all(.color(FortalTokens.gray8()).width(FortalTokens.borderWidth1())),
+    .border(.all(.color(_hoverFrame()).width(FortalTokens.borderWidth1())));
+
+/// [rest] by default; [lifted] under the theme's high contrast.
+ContextToken<Color> _orHighContrast(ColorToken rest, ColorToken lifted) =>
+    ContextToken<Color>(
+      (context) =>
+          (FortalTheme.maybeOf(context)?.highContrast ?? false ? lifted : rest)
+              .resolve(context),
     );
+
+/// Gray 10 reads at about 4.1:1 on a light field.
+final _placeholder = _orHighContrast(FortalTokens.gray10, FortalTokens.gray11);
+
+/// Gray 7 and 8 frames sit under 1.5:1 on the field.
+final _frame = _orHighContrast(FortalTokens.gray7, FortalTokens.controlBorder);
+final _hoverFrame = _orHighContrast(
+  FortalTokens.gray8,
+  FortalTokens.controlBorder,
+);

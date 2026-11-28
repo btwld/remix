@@ -201,9 +201,7 @@ ButtonStyler _trigger(BuildContext context) {
       .spacing(10)
       .borderRadius(.all(_triggerCorner()))
       .color({{typePrefix}}Tokens.colorPanelSolid())
-      .border(
-        .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
-      )
+      .border(.all(.color(_frame()).width({{typePrefix}}Tokens.borderWidth1())))
       .decoration(
         BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow1.mix()),
       )
@@ -228,9 +226,22 @@ ButtonStyler _trigger(BuildContext context) {
 
 final _triggerHover = ButtonStyler()
     .color(_hoverFill())
-    .border(
-      .all(.color({{typePrefix}}Tokens.gray8()).width({{typePrefix}}Tokens.borderWidth1())),
+    .border(.all(.color(_hoverFrame()).width({{typePrefix}}Tokens.borderWidth1())));
+
+/// [rest] by default; [lifted] under the theme's high contrast.
+ContextToken<Color> _orHighContrast(ColorToken rest, ColorToken lifted) =>
+    ContextToken<Color>(
+      (context) =>
+          ({{typePrefix}}Theme.maybeOf(context)?.highContrast ?? false ? lifted : rest)
+              .resolve(context),
     );
+
+/// Gray 7 and 8 frames sit under 1.5:1 on the field.
+final _frame = _orHighContrast({{typePrefix}}Tokens.gray7, {{typePrefix}}Tokens.controlBorder);
+final _hoverFrame = _orHighContrast(
+  {{typePrefix}}Tokens.gray8,
+  {{typePrefix}}Tokens.controlBorder,
+);
 
 /// The foreground mixed 3% into the raised surface.
 final _hoverFill = ContextToken<Color>(

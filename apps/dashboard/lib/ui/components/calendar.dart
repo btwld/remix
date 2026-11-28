@@ -367,7 +367,7 @@ class _CalendarFooter extends StatelessWidget {
                 status,
                 style: TextStyler()
                     .style(UiTokens.text1.mix())
-                    .color(UiTokens.gray10())
+                    .color(_mutedContent())
                     .maxLines(1)
                     .overflow(TextOverflow.ellipsis),
               ),

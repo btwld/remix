@@ -154,9 +154,7 @@ class UiDatePicker extends StatelessWidget {
       value == null ? calendarLabels.noDate : calendarLabels.fullDate(value),
     ),
     closeDelay: const Duration(milliseconds: 300),
-    placeholderStyle: ButtonStyler().label(
-      TextStyler().color(UiTokens.gray10()),
-    ),
+    placeholderStyle: ButtonStyler().label(TextStyler().color(_placeholder())),
     expandedStyle: _triggerHover,
     buttonStyle: _trigger(context).merge(buttonStyle),
     popoverStyle: uiPopoverStyle()
@@ -188,7 +186,7 @@ ButtonStyler _trigger(BuildContext context) {
       .spacing(9)
       .borderRadius(.all(UiTokens.radius4()))
       .color(UiTokens.gray2())
-      .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())))
+      .border(.all(.color(_frame()).width(UiTokens.borderWidth1())))
       .mainAxisAlignment(.start)
       .label(
         TextStyler()
@@ -211,4 +209,19 @@ ButtonStyler _trigger(BuildContext context) {
 
 final _triggerHover = ButtonStyler()
     .color(UiTokens.gray3())
-    .border(.all(.color(UiTokens.gray8()).width(UiTokens.borderWidth1())));
+    .border(.all(.color(_hoverFrame()).width(UiTokens.borderWidth1())));
+
+/// [rest] by default; [lifted] under the theme's high contrast.
+ContextToken<Color> _orHighContrast(ColorToken rest, ColorToken lifted) =>
+    ContextToken<Color>(
+      (context) =>
+          (UiTheme.maybeOf(context)?.highContrast ?? false ? lifted : rest)
+              .resolve(context),
+    );
+
+/// Gray 10 reads at about 4.1:1 on a light field.
+final _placeholder = _orHighContrast(UiTokens.gray10, UiTokens.gray11);
+
+/// Gray 7 and 8 frames sit under 1.5:1 on the field.
+final _frame = _orHighContrast(UiTokens.gray7, UiTokens.controlBorder);
+final _hoverFrame = _orHighContrast(UiTokens.gray8, UiTokens.controlBorder);

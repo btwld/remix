@@ -201,9 +201,7 @@ ButtonStyler _trigger(BuildContext context) {
       .spacing(10)
       .borderRadius(.all(_triggerCorner()))
       .color(FortalTokens.colorPanelSolid())
-      .border(
-        .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
-      )
+      .border(.all(.color(_frame()).width(FortalTokens.borderWidth1())))
       .decoration(
         BoxDecorationMix.create(boxShadow: FortalTokens.shadow1.mix()),
       )
@@ -228,9 +226,22 @@ ButtonStyler _trigger(BuildContext context) {
 
 final _triggerHover = ButtonStyler()
     .color(_hoverFill())
-    .border(
-      .all(.color(FortalTokens.gray8()).width(FortalTokens.borderWidth1())),
+    .border(.all(.color(_hoverFrame()).width(FortalTokens.borderWidth1())));
+
+/// [rest] by default; [lifted] under the theme's high contrast.
+ContextToken<Color> _orHighContrast(ColorToken rest, ColorToken lifted) =>
+    ContextToken<Color>(
+      (context) =>
+          (FortalTheme.maybeOf(context)?.highContrast ?? false ? lifted : rest)
+              .resolve(context),
     );
+
+/// Gray 7 and 8 frames sit under 1.5:1 on the field.
+final _frame = _orHighContrast(FortalTokens.gray7, FortalTokens.controlBorder);
+final _hoverFrame = _orHighContrast(
+  FortalTokens.gray8,
+  FortalTokens.controlBorder,
+);
 
 /// The foreground mixed 3% into the raised surface.
 final _hoverFill = ContextToken<Color>(

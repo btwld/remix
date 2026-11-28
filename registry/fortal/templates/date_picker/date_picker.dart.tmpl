@@ -154,9 +154,7 @@ class {{typePrefix}}DatePicker extends StatelessWidget {
       value == null ? calendarLabels.noDate : calendarLabels.fullDate(value),
     ),
     closeDelay: const Duration(milliseconds: 300),
-    placeholderStyle: ButtonStyler().label(
-      TextStyler().color({{typePrefix}}Tokens.gray10()),
-    ),
+    placeholderStyle: ButtonStyler().label(TextStyler().color(_placeholder())),
     expandedStyle: _triggerHover,
     buttonStyle: _trigger(context).merge(buttonStyle),
     popoverStyle: {{valuePrefix}}PopoverStyle()
@@ -190,9 +188,7 @@ ButtonStyler _trigger(BuildContext context) {
       .spacing(9)
       .borderRadius(.all({{typePrefix}}Tokens.radius4()))
       .color({{typePrefix}}Tokens.gray2())
-      .border(
-        .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
-      )
+      .border(.all(.color(_frame()).width({{typePrefix}}Tokens.borderWidth1())))
       .mainAxisAlignment(.start)
       .label(
         TextStyler()
@@ -215,6 +211,22 @@ ButtonStyler _trigger(BuildContext context) {
 
 final _triggerHover = ButtonStyler()
     .color({{typePrefix}}Tokens.gray3())
-    .border(
-      .all(.color({{typePrefix}}Tokens.gray8()).width({{typePrefix}}Tokens.borderWidth1())),
+    .border(.all(.color(_hoverFrame()).width({{typePrefix}}Tokens.borderWidth1())));
+
+/// [rest] by default; [lifted] under the theme's high contrast.
+ContextToken<Color> _orHighContrast(ColorToken rest, ColorToken lifted) =>
+    ContextToken<Color>(
+      (context) =>
+          ({{typePrefix}}Theme.maybeOf(context)?.highContrast ?? false ? lifted : rest)
+              .resolve(context),
     );
+
+/// Gray 10 reads at about 4.1:1 on a light field.
+final _placeholder = _orHighContrast({{typePrefix}}Tokens.gray10, {{typePrefix}}Tokens.gray11);
+
+/// Gray 7 and 8 frames sit under 1.5:1 on the field.
+final _frame = _orHighContrast({{typePrefix}}Tokens.gray7, {{typePrefix}}Tokens.controlBorder);
+final _hoverFrame = _orHighContrast(
+  {{typePrefix}}Tokens.gray8,
+  {{typePrefix}}Tokens.controlBorder,
+);
