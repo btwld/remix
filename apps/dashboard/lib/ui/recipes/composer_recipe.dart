@@ -85,10 +85,21 @@ UiAgentComposerRecipe uiAgentComposerRecipe({
         .container(BoxStyler().wrap(WidgetModifierConfig.reset()))
         // The surface draws the frame and the focus ring, not the field.
         .containerEffects(_noEffects)
-        .onFocused(.containerEffects(.outline(.style(.none))))
-        // The text area's disabled variant sets its own inset frame; clear it
-        // there too, or a disabled composer shows a second frame.
-        .onDisabled(.containerEffects(_noEffects))
+        // The text area's hover, focus and disabled variants set their own
+        // inset frame; clear it there too, or the composer shows a second
+        // frame. Disabled also fades the text area's box, which the composer
+        // does as a whole.
+        .onHovered(.containerEffects(_noEffects))
+        .onFocused(
+          TextFieldStyler()
+              .containerEffects(_noEffects)
+              .containerEffects(.outline(.style(.none))),
+        )
+        .onDisabled(
+          TextFieldStyler()
+              .containerEffects(_noEffects)
+              .container(BoxStyler().wrap(WidgetModifierConfig.reset())),
+        )
         .merge(fieldStyle),
   ),
   submitStyle: _round(submitStyle),
