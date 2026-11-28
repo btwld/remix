@@ -234,7 +234,12 @@ class UiSearchField extends StatelessWidget {
                         semanticLabel: clearSemanticLabel,
                         size: buttonSize,
                         onPressed: field.clear,
-                        style: _clearStyle(variant),
+                        style: _clearStyle(
+                          context,
+                          variant,
+                          buttonSize,
+                          glyph.resolve(context),
+                        ),
                       ),
                     ),
                   ),
@@ -249,11 +254,41 @@ class UiSearchField extends StatelessWidget {
 
 /// The clear button takes the field's icon color: gray on a surface field,
 /// with a gray tint under the pointer, and the accent on a soft one.
-IconButtonStyler _clearStyle(UiSearchFieldVariant variant) => switch (variant) {
-  .surface =>
-    IconButtonStyler()
-        .icon(.color(UiTokens.gray11()))
-        .onHovered(.color(UiTokens.grayA3()))
-        .onPressed(.color(UiTokens.grayA4())),
-  .soft => IconButtonStyler().icon(.color(UiTokens.accentContent())),
-};
+///
+/// It keeps the compact inline box the field was laid out around: the glyph
+/// with its padding, pulled back into the field's end by an equal negative
+/// margin, rather than the icon button's full square.
+IconButtonStyler _clearStyle(
+  BuildContext context,
+  UiSearchFieldVariant variant,
+  UiIconButtonSize size,
+  double glyph,
+) {
+  final (padding, margin, corner) = size == .size1
+      ? (
+          UiTokens.space1,
+          UiTokens.iconButtonGhostMargin1,
+          UiTokens.radius1OrFull,
+        )
+      : (
+          UiTokens.space2,
+          UiTokens.iconButtonGhostMargin2,
+          UiTokens.radius2OrFull,
+        );
+  final edge = glyph + 2 * padding.resolve(context);
+  final box = IconButtonStyler()
+      .size(edge, edge)
+      .padding(.all(padding()))
+      .margin(.all(margin()))
+      .borderRadius(.all(corner()))
+      .icon(.size(glyph));
+
+  return box.merge(switch (variant) {
+    .surface =>
+      IconButtonStyler()
+          .icon(.color(UiTokens.gray11()))
+          .onHovered(.color(UiTokens.grayA3()))
+          .onPressed(.color(UiTokens.grayA4())),
+    .soft => IconButtonStyler().icon(.color(UiTokens.accentContent())),
+  });
+}

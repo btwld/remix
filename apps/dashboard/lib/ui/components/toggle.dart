@@ -2,139 +2,133 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/computed.dart' show mixOklabPremultiplied;
 import '../theme/theme.dart';
 
 part 'toggle.g.dart';
 
-/// The sizes a toggle comes in. Pixel values are at 100% theme scaling.
+/// The sizes a toggle comes in, at the button heights so the two line up in
+/// a row. Pixel values are at 100% theme scaling.
 enum UiToggleSize {
-  /// 24px tall, with 12px text.
+  /// 32px tall, with a 12px corner.
   size1,
 
-  /// 32px tall, with 14px text. The default.
+  /// 40px tall, with a 14px corner. The default.
   size2,
 
-  /// 40px tall, with 16px text.
+  /// 44px tall, with a 16px corner.
   size3,
 }
 
 /// The looks a toggle comes in.
 enum UiToggleVariant {
-  /// No fill or frame until hovered; an accent tint when on.
+  /// No fill or frame until hovered; a tinted fill when on.
   ghost,
 
-  /// A 1px gray frame; an accent tint and frame when on.
+  /// A 1px border; a tinted fill inside it when on.
   outline,
 }
 
 /// The Fortal Toggle recipe.
 ///
 /// It reads top to bottom: what every toggle shares, then the size, then the
-/// variant's colors for rest, hover, press, on, focus and disabled.
+/// variant's look for rest, hover, on, focus and disabled. A toggle is drawn
+/// like one item of a toggle group: secondary text that turns to ink under the
+/// pointer and when on, over the group's tinted on fill.
 ///
-/// [highContrast] moves the label and icon of the on state to accent step 12.
+/// [highContrast] draws the resting text in ink and the border in the strong
+/// border.
 @MixWidget(target: RemixToggle.new)
 ToggleStyler uiToggleStyle({
   UiToggleVariant variant = .ghost,
   UiToggleSize size = .size2,
   bool highContrast = false,
   ToggleStyler style = const ToggleStyler.create(),
-}) => _base()
-    .merge(_scale(size))
-    .merge(switch (variant) {
-      .ghost => _ghost(highContrast),
-      .outline => _outline(highContrast),
-    })
-    .wrap(uiTouchTarget())
-    .onDisabled(.containerEffects(.outline(.style(.none))))
-    .merge(style);
+}) {
+  final border = switch (variant) {
+    .ghost => _transparent,
+    .outline => highContrast ? UiTokens.gray8() : UiTokens.gray7(),
+  };
 
-/// What every toggle shares: a medium-weight label and icon in gray 12.
-ToggleStyler _base() => ToggleStyler()
-    .container(.mainAxisSize(.min))
-    .labelColor(UiTokens.gray12())
-    .iconColor(UiTokens.gray12())
-    .labelFontWeight(UiTokens.fontWeightMedium());
-
-/// The height, padding, corner, text and icon size of each step.
-///
-/// The heights are the Button height scale, with content centered in it.
-ToggleStyler _scale(UiToggleSize size) => switch (size) {
-  .size1 => ToggleStyler(
-    container: FlexBoxStyler()
-        .padding(.horizontal(UiTokens.space2()))
-        .borderRadius(.all(UiTokens.radius2()))
-        .spacing(UiTokens.space1()),
-    label: .style(UiTokens.text1.mix()),
-    icon: .size(UiTokens.space3()),
-  ).minHeight(UiTokens.space5()),
-  .size2 => ToggleStyler(
-    container: FlexBoxStyler()
-        .padding(.horizontal(UiTokens.space3()))
-        .borderRadius(.all(UiTokens.radius2()))
-        .spacing(UiTokens.space1()),
-    label: .style(UiTokens.text2.mix()),
-    icon: .size(UiTokens.space4()),
-  ).minHeight(UiTokens.space6()),
-  .size3 => ToggleStyler(
-    container: FlexBoxStyler()
-        .padding(.horizontal(UiTokens.space4()))
-        .borderRadius(.all(UiTokens.radius3()))
-        .spacing(UiTokens.space2()),
-    label: .style(UiTokens.text3.mix()),
-    icon: .size(UiTokens.spinnerSize3()),
-  ).minHeight(UiTokens.space7()),
-};
-
-ToggleStyler _ghost(bool highContrast) => ToggleStyler()
-    .color(const Color(0x00000000))
-    .onHovered(.color(UiTokens.grayA3()))
-    .onPressed(.color(UiTokens.grayA4()))
-    .onSelected(
-      ToggleStyler()
-          .color(UiTokens.accent3())
-          .merge(_onContent(highContrast))
-          .onHovered(.color(UiTokens.accent4()))
-          .onPressed(.color(UiTokens.accent5())),
-    )
-    .onFocusVisible(.containerEffects(uiFocusOutline()))
-    .onDisabled(_disabled());
-
-ToggleStyler _outline(bool highContrast) => ToggleStyler()
-    .color(const Color(0x00000000))
-    .border(
-      .color(UiTokens.gray7())
-          .width(UiTokens.borderWidth1())
-          .strokeAlign(BorderSide.strokeAlignInside),
-    )
-    .onHovered(.color(UiTokens.grayA3()))
-    .onPressed(.color(UiTokens.grayA4()))
-    .onSelected(
-      ToggleStyler()
-          .color(UiTokens.accentA3())
-          .merge(_onContent(highContrast))
-          .border(.color(UiTokens.accentA5()))
-          .onHovered(.color(UiTokens.accentA4()))
-          .onPressed(.color(UiTokens.accentA5())),
-    )
-    .onFocusVisible(.containerEffects(uiFocusOutline()))
-    .onDisabled(
-      _disabled().border(
-        .color(UiTokens.grayA6())
+  return _base(highContrast)
+      .merge(_scale(size))
+      .border(
+        .color(border)
             .width(UiTokens.borderWidth1())
             .strokeAlign(BorderSide.strokeAlignInside),
-      ),
-    );
-
-/// The accent label and icon of the on state.
-ToggleStyler _onContent(bool highContrast) {
-  final color = highContrast ? UiTokens.accent12() : UiTokens.accentContent();
-
-  return ToggleStyler().labelColor(color).iconColor(color);
+      )
+      .onHovered(_content(UiTokens.gray12()).color(UiTokens.gray3()))
+      .onSelected(
+        _content(
+          UiTokens.gray12(),
+        ).color(_onFill()).onHovered(.color(_onFill())),
+      )
+      .onFocusVisible(.containerEffects(uiFocusOutline()))
+      .onDisabled(
+        ToggleStyler()
+            .wrap(.opacity(_disabledOpacity))
+            .containerEffects(.outline(.style(.none))),
+      )
+      .wrap(uiTouchTarget())
+      .merge(style);
 }
 
-/// A gray fill, label and icon.
-ToggleStyler _disabled() => ToggleStyler()
-    .color(UiTokens.grayA3())
-    .labelColor(UiTokens.gray8())
-    .iconColor(UiTokens.gray8());
+/// How much of a disabled toggle shows.
+const _disabledOpacity = 0.45;
+
+const _transparent = Color(0x00000000);
+
+/// The on fill: the accent's indicator mixed into the surface, 11% in light
+/// and 14% in dark. Neutral gray under orla, a faint tint under the others.
+const _onFillToken = ContextToken<Color>(_resolveOnFill);
+
+Color _onFill() => _onFillToken();
+
+Color _resolveOnFill(BuildContext context) => mixOklabPremultiplied(
+  UiTokens.gray2.resolve(context),
+  UiTokens.accentIndicator.resolve(context),
+  UiTheme.of(context).isDark ? 0.14 : 0.11,
+);
+
+/// What every toggle shares: a medium label and 16px icon in secondary text,
+/// no fill and an opaque box.
+ToggleStyler _base(bool highContrast) =>
+    _content(highContrast ? UiTokens.gray12() : UiTokens.gray11())
+        .container(.mainAxisSize(.min))
+        .color(_transparent)
+        .wrap(.opacity(1))
+        .labelFontWeight(UiTokens.fontWeightMedium());
+
+ToggleStyler _content(Color color) =>
+    ToggleStyler().labelColor(color).iconColor(color);
+
+/// The height, padding and corner of each step; the label is 13px and the
+/// icon 16px at every size.
+ToggleStyler _scale(UiToggleSize size) {
+  final (height, inline, corner) = switch (size) {
+    .size1 => (
+      UiTokens.controlHeight1(),
+      UiTokens.space3(),
+      UiTokens.radius3(),
+    ),
+    .size2 => (
+      UiTokens.controlHeight2(),
+      UiTokens.space4(),
+      UiTokens.radius4(),
+    ),
+    .size3 => (
+      UiTokens.controlHeight3(),
+      UiTokens.space18(),
+      UiTokens.radius5(),
+    ),
+  };
+
+  return ToggleStyler(
+    container: FlexBoxStyler()
+        .padding(.horizontal(inline))
+        .borderRadius(.all(corner))
+        .spacing(UiTokens.space2()),
+    label: .style(UiTokens.text2.mix()),
+    icon: .size(UiTokens.space4()),
+  ).minHeight(height);
+}

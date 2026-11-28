@@ -234,7 +234,12 @@ class {{typePrefix}}SearchField extends StatelessWidget {
                         semanticLabel: clearSemanticLabel,
                         size: buttonSize,
                         onPressed: field.clear,
-                        style: _clearStyle(variant),
+                        style: _clearStyle(
+                          context,
+                          variant,
+                          buttonSize,
+                          glyph.resolve(context),
+                        ),
                       ),
                     ),
                   ),
@@ -249,12 +254,41 @@ class {{typePrefix}}SearchField extends StatelessWidget {
 
 /// The clear button takes the field's icon color: gray on a surface field,
 /// with a gray tint under the pointer, and the accent on a soft one.
-IconButtonStyler _clearStyle({{typePrefix}}SearchFieldVariant variant) =>
-    switch (variant) {
-      .surface =>
-        IconButtonStyler()
-            .icon(.color({{typePrefix}}Tokens.gray11()))
-            .onHovered(.color({{typePrefix}}Tokens.grayA3()))
-            .onPressed(.color({{typePrefix}}Tokens.grayA4())),
-      .soft => IconButtonStyler().icon(.color({{typePrefix}}Tokens.accentContent())),
-    };
+///
+/// It keeps the compact inline box the field was laid out around: the glyph
+/// with its padding, pulled back into the field's end by an equal negative
+/// margin, rather than the icon button's full square.
+IconButtonStyler _clearStyle(
+  BuildContext context,
+  {{typePrefix}}SearchFieldVariant variant,
+  {{typePrefix}}IconButtonSize size,
+  double glyph,
+) {
+  final (padding, margin, corner) = size == .size1
+      ? (
+          {{typePrefix}}Tokens.space1,
+          {{typePrefix}}Tokens.iconButtonGhostMargin1,
+          {{typePrefix}}Tokens.radius1OrFull,
+        )
+      : (
+          {{typePrefix}}Tokens.space2,
+          {{typePrefix}}Tokens.iconButtonGhostMargin2,
+          {{typePrefix}}Tokens.radius2OrFull,
+        );
+  final edge = glyph + 2 * padding.resolve(context);
+  final box = IconButtonStyler()
+      .size(edge, edge)
+      .padding(.all(padding()))
+      .margin(.all(margin()))
+      .borderRadius(.all(corner()))
+      .icon(.size(glyph));
+
+  return box.merge(switch (variant) {
+    .surface =>
+      IconButtonStyler()
+          .icon(.color({{typePrefix}}Tokens.gray11()))
+          .onHovered(.color({{typePrefix}}Tokens.grayA3()))
+          .onPressed(.color({{typePrefix}}Tokens.grayA4())),
+    .soft => IconButtonStyler().icon(.color({{typePrefix}}Tokens.accentContent())),
+  });
+}

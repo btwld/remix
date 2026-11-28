@@ -173,9 +173,12 @@ fill must identify the control. Check the actual component on its host surface.
   a control, 6 small marks, 20 the panel radius and 24 the surface radius.
   Other factors scale the whole ladder. `highContrast` remains available per
   family and on the theme.
-- Toggles at sizes 1–3 have the Button minimum heights, 24/32/40px, labelled or
+- Toggles at sizes 1–3 have the Button minimum heights, 32/40/44px, labelled or
   icon-only, with content centred and horizontal padding only. They grow
-  beyond that only when their content is taller, as with enlarged text.
+  beyond that only when their content is taller, as with enlarged text. A
+  toggle is drawn like a toggle-group item: gray-11 text that turns to ink on
+  hover (over gray 3) and when on, over the accent's indicator mixed 11% (14%
+  in dark) into the surface; disabled shows 45% of the toggle.
 - Compact painted controls retain their sizes, inside a **40px minimum hit
   target**, which does not shrink at 90/95% scaling. Hosts must leave room for
   that target instead of imposing a smaller tight constraint.
@@ -296,14 +299,22 @@ already contrasts, warm brown on bright Sol fills. The soft fill is
 the fitted `focus8` role, which keeps 3:1 on the page and panels. High contrast fills with
 step 12 and no outline. Height, radius, value and semantics are unchanged.
 
-Solid button hover and press recolor only the fill. Hover uses `solidHover`. Press
-applies the brightness and saturation operations to the fill colour itself: darker
-(brightness 0.92, saturate 1.1) under a light label, lighter (brightness 1.08)
-under a deep ink, so the label keeps its contrast. High-contrast hover and
-press recolor the step-12 fill with their light/dark operation sets. No solid
-state filters the painted subtree, so labels, icons, spinners and the focus
-ring keep their colours, and `fortalClearFilter()` still clears a caller's
-own filter when disabled.
+Buttons and icon buttons are 32, 40, 44 and 48px tall at sizes 1 to 4 (the
+`controlHeight` steps), with 12, 14, 16 and 16px corners, 12, 16, 18 and 20px
+side padding plus the 1px frame, a 13px medium label and 16px icons at every
+size. Every variant is ink and neutral under every accent. Solid keeps its ink
+fill in every state: hover shows 91% of the button and casts the resting
+shadow, press 84%, disabled 52%. Surface fills with gray 2 inside a gray-7
+frame, outline is the same frame with no fill; both mute to gray 3 and cast
+the resting shadow on hover and take gray 4 on press. Soft is a gray-3 fill
+that deepens to gray 4. Ghost is the full control box with gray-11 text that
+turns ink over a gray-3 fill on hover. Disabled non-solid buttons draw gray-10
+text. A held button scales to 97% (an icon button to 96%). Every change runs
+150ms on the standard ease. Loading keeps the resting look; the label fades
+out and a 1.5px three-quarter ring fades and grows in, turning once per 700ms.
+High contrast fills solid with accent step 12 and moves frames to gray 8 and
+ghost text to ink. No solid state filters the painted subtree, and
+`fortalClearFilter()` still clears a caller's own filter when disabled.
 
 The polish board presents all families and sizes in light/dark pairs on a 4px
 grid. Check padding against height, text centering, matched icon size/gap,

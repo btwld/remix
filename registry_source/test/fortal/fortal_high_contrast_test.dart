@@ -69,16 +69,14 @@ void main() {
         (context) => fortalIconButtonStyle(variant: .surface).build(context),
       );
 
-      expect(
-        _flexBoxColor(softButton.spec.container),
-        ceu.light.scale.alphaStep(3),
-      );
-      expect(_flexBoxColor(surfaceButton.spec.container), ceu.light.surface);
-      expect(
-        _boxColor(softIconButton.spec.container),
-        ceu.light.scale.alphaStep(3),
-      );
-      expect(_boxColor(surfaceIconButton.spec.container), ceu.light.surface);
+      // Neutral under every accent: soft is the muted fill, surface the
+      // surface fill.
+      final gray = normalColors.gray.scale;
+      expect(_flexBoxColor(softButton.spec.container), gray.step(3));
+      expect(_flexBoxColor(surfaceButton.spec.container), gray.step(2));
+      expect(_boxColor(softIconButton.spec.container), gray.step(3));
+      expect(_boxColor(surfaceIconButton.spec.container), gray.step(2));
+      expect(gray.step(3), isNot(gray.step(2)));
     });
 
     testWidgets('solid interactions meet contrast for every accent and mode', (
@@ -123,9 +121,7 @@ void main() {
       }
     });
 
-    testWidgets('icon button variants resolve stronger accent roles', (
-      tester,
-    ) async {
+    testWidgets('icon button variants resolve stronger roles', (tester) async {
       for (final variant in FortalIconButtonVariant.values) {
         final normal = await _resolveFortalStyle(
           tester,
@@ -153,8 +149,12 @@ void main() {
             normalColors.gray.scale.step(1),
           );
         } else {
-          expect(normal.spec.icon.spec.color, normalColors.accentContentAlpha);
-          expect(highContrast.spec.icon.spec.color, ceu.light.scale.step(12));
+          final gray = normalColors.gray.scale;
+          expect(
+            normal.spec.icon.spec.color,
+            gray.step(variant == .ghost ? 11 : 12),
+          );
+          expect(highContrast.spec.icon.spec.color, gray.step(12));
         }
       }
     });
@@ -393,30 +393,30 @@ void main() {
       }
     });
 
-    testWidgets('selected toggle variants resolve accent12 foregrounds', (
-      tester,
-    ) async {
+    testWidgets('toggle text turns to ink when on, and at rest under high '
+        'contrast', (tester) async {
+      final gray = normalColors.gray.scale;
       for (final variant in FortalToggleVariant.values) {
-        final normal = await _resolveFortalStyle(
-          tester,
-          (context) => fortalToggleStyle(variant: variant).build(context),
-          states: {WidgetState.selected},
-        );
-        final highContrast = await _resolveFortalStyle(
-          tester,
-          (context) => fortalToggleStyle(
-            variant: variant,
-            highContrast: true,
-          ).build(context),
-          states: {WidgetState.selected},
+        Future<Color?> label({
+          required bool highContrast,
+          required bool selected,
+        }) async => _textColor(
+          (await _resolveFortalStyle(
+            tester,
+            (context) => fortalToggleStyle(
+              variant: variant,
+              highContrast: highContrast,
+            ).build(context),
+            states: {if (selected) WidgetState.selected},
+          )).spec.label,
         );
 
-        final expectedNormal = switch (variant) {
-          .ghost => normalColors.accentContent,
-          .outline => normalColors.accentContent,
-        };
-        expect(_textColor(normal.spec.label), expectedNormal);
-        expect(_textColor(highContrast.spec.label), ceu.light.scale.step(12));
+        expect(
+          await label(highContrast: false, selected: false),
+          gray.step(11),
+        );
+        expect(await label(highContrast: false, selected: true), gray.step(12));
+        expect(await label(highContrast: true, selected: false), gray.step(12));
       }
     });
 

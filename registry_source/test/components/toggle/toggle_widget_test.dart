@@ -25,47 +25,39 @@ void main() {
                   label: 'Bold',
                   style: fortalToggleStyle(variant: variant, size: size),
                 ),
+                accent: .orla,
               );
               await tester.pumpAndSettle();
               final box = _toggleRow(tester).styleSpec.spec.box!.spec;
               final paddingX = switch (size) {
-                FortalToggleSize.size1 => 8.0,
-                FortalToggleSize.size2 => 12.0,
-                FortalToggleSize.size3 => 16.0,
+                FortalToggleSize.size1 => 12.0,
+                FortalToggleSize.size2 => 16.0,
+                FortalToggleSize.size3 => 18.0,
               };
               expect(
                 box.padding!.resolve(TextDirection.ltr),
                 EdgeInsets.symmetric(horizontal: paddingX),
               );
-              final context = tester.element(_toggleRowFinder);
-              Color color(ColorToken token) => MixScope.tokenOf(token, context);
               final decoration = box.decoration! as BoxDecoration;
+              // The neutral indicator mixed 11% into the surface in OKLab.
               expect(
                 decoration.color,
-                selected
-                    ? color(
-                        variant == FortalToggleVariant.ghost
-                            ? FortalTokens.accent3
-                            : FortalTokens.accentA3,
-                      )
-                    : Colors.transparent,
+                isSameColorAs(
+                  selected ? const Color(0xFFE3E3E3) : Colors.transparent,
+                ),
               );
               expect(
                 tester.widget<Text>(find.text('Bold')).style!.color,
-                color(
-                  selected ? FortalTokens.accentContent : FortalTokens.gray12,
-                ),
+                selected ? const Color(0xFF0B0B0B) : const Color(0xFF585858),
               );
-              if (variant == FortalToggleVariant.outline) {
-                final border = decoration.border! as Border;
-                expect(border.top.width, 1);
-                expect(
-                  border.top.color,
-                  color(selected ? FortalTokens.accentA5 : FortalTokens.gray7),
-                );
-              } else {
-                expect(decoration.border, isNull);
-              }
+              final border = decoration.border! as Border;
+              expect(border.top.width, 1);
+              expect(
+                border.top.color,
+                variant == FortalToggleVariant.outline
+                    ? const Color(0xFFE9E9E9)
+                    : Colors.transparent,
+              );
             }
           }
         }
@@ -111,7 +103,8 @@ void main() {
 
       final rowSize = tester.getSize(_toggleRowFinder);
       final labelSize = tester.getSize(find.text('Bold'));
-      expect(rowSize.width, closeTo(labelSize.width + 24, 0.01));
+      // 16px padding and the 1px border on each side.
+      expect(rowSize.width, closeTo(labelSize.width + 34, 0.01));
 
       final iconOnlySizes = <Size>[];
       for (final scaler in const [TextScaler.noScaling, TextScaler.linear(2)]) {

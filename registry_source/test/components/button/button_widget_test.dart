@@ -118,9 +118,9 @@ void main() {
 
     testWidgets('preserves normal-scale Fortal heights', (tester) async {
       const expectedHeights = {
-        FortalButtonSize.size1: 24.0,
-        FortalButtonSize.size2: 32.0,
-        FortalButtonSize.size3: 40.0,
+        FortalButtonSize.size1: 32.0,
+        FortalButtonSize.size2: 40.0,
+        FortalButtonSize.size3: 44.0,
         FortalButtonSize.size4: 48.0,
       };
 

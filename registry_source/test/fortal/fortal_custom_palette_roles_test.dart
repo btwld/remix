@@ -33,6 +33,7 @@ void main() {
     FortalColor colors, {
     WidgetState? state,
     bool dark = false,
+    bool highContrast = false,
   }) => resolveInFortalTheme(
     tester,
     (context) {
@@ -55,6 +56,7 @@ void main() {
     },
     accentPalette: FortalColorTheme(colors, colors),
     mode: dark ? .dark : .light,
+    highContrast: highContrast,
     states: {WidgetState.selected, ?state},
   );
 
@@ -174,7 +176,14 @@ void main() {
     expect(legacy.solid, ceu.light.scale.step(9));
     expect(legacy.solidHover, ceu.light.scale.step(10));
     final idle = await resolve(tester, legacy);
-    final hovered = await resolve(tester, legacy, state: WidgetState.hovered);
+    // Hover thins the button and keeps its fill; under the theme's high
+    // contrast it recolors the fill to the hover step instead.
+    final hovered = await resolve(
+      tester,
+      legacy,
+      state: WidgetState.hovered,
+      highContrast: true,
+    );
     expect(idle.buttonFill, ceu.light.scale.step(9));
     expect(hovered.buttonFill, ceu.light.scale.step(10));
     expect(idle.check, white);

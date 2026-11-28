@@ -11,12 +11,8 @@ void main() {
       testWidgets('${variant.name}/${size.name} uses preset icon size', (
         tester,
       ) async {
-        final expectedSize = switch (size) {
-          FortalButtonSize.size1 => 12.0,
-          FortalButtonSize.size2 => 16.0,
-          FortalButtonSize.size3 => 20.0,
-          FortalButtonSize.size4 => 24.0,
-        };
+        // Icons are 16px at every size, whatever the ambient IconTheme.
+        const expectedSize = 16.0;
         await tester.pumpRemixApp(
           IconTheme(
             data: const IconThemeData(size: 48),
@@ -34,11 +30,11 @@ void main() {
 
         expect(
           tester.getSize(find.byIcon(Icons.save)),
-          Size.square(expectedSize),
+          const Size.square(expectedSize),
         );
         expect(
           tester.getSize(find.byIcon(Icons.check)),
-          Size.square(expectedSize),
+          const Size.square(expectedSize),
         );
         expect(tester.takeException(), isNull);
       });
