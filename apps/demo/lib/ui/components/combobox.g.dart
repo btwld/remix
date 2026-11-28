@@ -42,7 +42,7 @@ class FortalCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
+  /// The surface fill inside a 1px strong frame.
   const FortalCombobox.surface({
     super.key,
     this.size = .size2,
@@ -69,7 +69,7 @@ class FortalCombobox<T extends Object> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalTextFieldVariant.surface;
 
-  /// An accent tint inside a 1px accent ring, with accent-colored text.
+  /// The muted surface fill with no frame until hovered or focused.
   const FortalCombobox.soft({
     super.key,
     this.size = .size2,
