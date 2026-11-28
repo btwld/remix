@@ -20,6 +20,7 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
   RemixBoxEffectsSpec? get thumbFocusEffects;
   BlendMode? get blendMode;
   AnimationConfig? get thumbMotion;
+  RemixSliderThumbOverlayBuilder? get thumbOverlay;
 
   @override
   Type get type => SliderSpec;
@@ -39,6 +40,7 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
     RemixBoxEffectsSpec? thumbFocusEffects,
     BlendMode? blendMode,
     AnimationConfig? thumbMotion,
+    RemixSliderThumbOverlayBuilder? thumbOverlay,
   }) {
     return SliderSpec(
       track: track ?? this.track,
@@ -54,6 +56,7 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
       thumbFocusEffects: thumbFocusEffects ?? this.thumbFocusEffects,
       blendMode: blendMode ?? this.blendMode,
       thumbMotion: thumbMotion ?? this.thumbMotion,
+      thumbOverlay: thumbOverlay ?? this.thumbOverlay,
     );
   }
 
@@ -77,6 +80,7 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
       ),
       blendMode: MixOps.lerpSnap(blendMode, other?.blendMode, t),
       thumbMotion: MixOps.lerpSnap(thumbMotion, other?.thumbMotion, t),
+      thumbOverlay: MixOps.lerpSnap(thumbOverlay, other?.thumbOverlay, t),
     );
   }
 
@@ -95,6 +99,7 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
     thumbFocusEffects,
     blendMode,
     thumbMotion,
+    thumbOverlay,
   ];
 
   @override
@@ -149,7 +154,8 @@ mixin _$SliderSpec implements Spec<SliderSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('thumbEffects', thumbEffects))
       ..add(DiagnosticsProperty('thumbFocusEffects', thumbFocusEffects))
       ..add(EnumProperty<BlendMode>('blendMode', blendMode))
-      ..add(DiagnosticsProperty('thumbMotion', thumbMotion));
+      ..add(DiagnosticsProperty('thumbMotion', thumbMotion))
+      ..add(DiagnosticsProperty('thumbOverlay', thumbOverlay));
   }
 }
 
@@ -178,6 +184,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
   final Prop<RemixBoxEffectsSpec>? $thumbFocusEffects;
   final Prop<BlendMode>? $blendMode;
   final Prop<AnimationConfig>? $thumbMotion;
+  final Prop<RemixSliderThumbOverlayBuilder>? $thumbOverlay;
 
   const SliderStyler.create({
     Prop<StyleSpec<BoxSpec>>? track,
@@ -193,6 +200,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     Prop<RemixBoxEffectsSpec>? thumbFocusEffects,
     Prop<BlendMode>? blendMode,
     Prop<AnimationConfig>? thumbMotion,
+    Prop<RemixSliderThumbOverlayBuilder>? thumbOverlay,
     super.variants,
     super.modifier,
     super.animation,
@@ -208,7 +216,8 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
        $thumbEffects = thumbEffects,
        $thumbFocusEffects = thumbFocusEffects,
        $blendMode = blendMode,
-       $thumbMotion = thumbMotion;
+       $thumbMotion = thumbMotion,
+       $thumbOverlay = thumbOverlay;
 
   SliderStyler({
     BoxStyler? track,
@@ -224,6 +233,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     RemixBoxEffectsMix? thumbFocusEffects,
     BlendMode? blendMode,
     AnimationConfig? thumbMotion,
+    RemixSliderThumbOverlayBuilder? thumbOverlay,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<SliderSpec>>? variants,
@@ -241,6 +251,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
          thumbFocusEffects: Prop.maybeMix(thumbFocusEffects),
          blendMode: Prop.maybe(blendMode),
          thumbMotion: Prop.maybe(thumbMotion),
+         thumbOverlay: Prop.maybe(thumbOverlay),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -269,6 +280,8 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
       SliderStyler().blendMode(value);
   factory SliderStyler.thumbMotion(AnimationConfig value) =>
       SliderStyler().thumbMotion(value);
+  factory SliderStyler.thumbOverlay(RemixSliderThumbOverlayBuilder value) =>
+      SliderStyler().thumbOverlay(value);
   factory SliderStyler.alignment(AlignmentGeometry value) =>
       SliderStyler().alignment(value);
   factory SliderStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -775,6 +788,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     'thumbFocusEffects',
     'blendMode',
     'thumbMotion',
+    'thumbOverlay',
     'animation',
     'modifier',
     'variants',
@@ -843,6 +857,11 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
   /// Sets the thumbMotion.
   SliderStyler thumbMotion(AnimationConfig value) {
     return merge(SliderStyler(thumbMotion: value));
+  }
+
+  /// Sets the thumbOverlay.
+  SliderStyler thumbOverlay(RemixSliderThumbOverlayBuilder value) {
+    return merge(SliderStyler(thumbOverlay: value));
   }
 
   /// Sets the animation configuration.
@@ -925,6 +944,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
       ),
       blendMode: MixOps.merge($blendMode, other?.$blendMode),
       thumbMotion: MixOps.merge($thumbMotion, other?.$thumbMotion),
+      thumbOverlay: MixOps.merge($thumbOverlay, other?.$thumbOverlay),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -948,6 +968,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
       thumbFocusEffects: MixOps.resolve(context, $thumbFocusEffects),
       blendMode: MixOps.resolve(context, $blendMode),
       thumbMotion: MixOps.resolve(context, $thumbMotion),
+      thumbOverlay: MixOps.resolve(context, $thumbOverlay),
     );
 
     return StyleSpec(
@@ -973,7 +994,8 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
       ..add(DiagnosticsProperty('thumbEffects', $thumbEffects))
       ..add(DiagnosticsProperty('thumbFocusEffects', $thumbFocusEffects))
       ..add(DiagnosticsProperty('blendMode', $blendMode))
-      ..add(DiagnosticsProperty('thumbMotion', $thumbMotion));
+      ..add(DiagnosticsProperty('thumbMotion', $thumbMotion))
+      ..add(DiagnosticsProperty('thumbOverlay', $thumbOverlay));
   }
 
   @override
@@ -991,6 +1013,7 @@ class SliderStyler extends MixStyler<SliderStyler, SliderSpec>
     $thumbFocusEffects,
     $blendMode,
     $thumbMotion,
+    $thumbOverlay,
     $animation,
     $modifier,
     $variants,

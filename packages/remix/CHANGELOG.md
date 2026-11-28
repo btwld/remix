@@ -31,6 +31,9 @@
 - Add `SliderSpec.thumbMotion`, a curve or spring that moves slider and range
   slider thumbs to values set by keys, track presses or the app. Dragged
   thumbs still follow the pointer.
+- Add `SliderSpec.thumbOverlay`, a builder for a widget drawn over each
+  slider and range slider thumb, such as a value bubble, given the thumb's
+  index, value and states in `RemixSliderThumbOverlayInfo`.
 
 ## 1.0.0-rc.7
 
