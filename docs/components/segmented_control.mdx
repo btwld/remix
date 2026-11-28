@@ -210,6 +210,13 @@ extent equally. In narrow parents, labels wrap inside equal segments; keep
 labels short and use a visible output label when the selection needs more
 explanation.
 
+Set `segmentSizing(RemixSegmentSizing.content)` on the `SegmentedControlStyler`
+to give each segment its own natural extent instead. When the track is larger
+or smaller than the segments need, for example with `mainAxisSize(.max)` or
+explicit constraints, each segment grows or shrinks in proportion to its
+natural extent. Spacing, text direction, and vertical orientation work as
+they do for equal segments.
+
 ## Shared indicator
 
 Each segment paints its own selected style by default. Set `indicator` on the

@@ -86,6 +86,9 @@
   segment and glides when the selection changes, like the tabs indicator.
 - Add `indicator`, `indicatorEffects` and `indicatorMotion` to
   `ToggleGroupSpec`, with the same gliding indicator.
+- Add `SegmentedControlSpec.segmentSizing` and `RemixSegmentSizing`.
+  `RemixSegmentSizing.content` sizes each segment to its content instead of
+  the largest segment. The default stays equal.
 
 ### Fixes
 

@@ -11,6 +11,7 @@ mixin _$SegmentedControlSpec
   StyleSpec<BoxSpec> get container;
   MainAxisSize? get mainAxisSize;
   double? get spacing;
+  RemixSegmentSizing? get segmentSizing;
   StyleSpec<SegmentedControlItemSpec> get item;
   StyleSpec<BoxSpec>? get indicator;
   RemixBoxEffectsSpec? get indicatorEffects;
@@ -24,6 +25,7 @@ mixin _$SegmentedControlSpec
     StyleSpec<BoxSpec>? container,
     MainAxisSize? mainAxisSize,
     double? spacing,
+    RemixSegmentSizing? segmentSizing,
     StyleSpec<SegmentedControlItemSpec>? item,
     StyleSpec<BoxSpec>? indicator,
     RemixBoxEffectsSpec? indicatorEffects,
@@ -33,6 +35,7 @@ mixin _$SegmentedControlSpec
       container: container ?? this.container,
       mainAxisSize: mainAxisSize ?? this.mainAxisSize,
       spacing: spacing ?? this.spacing,
+      segmentSizing: segmentSizing ?? this.segmentSizing,
       item: item ?? this.item,
       indicator: indicator ?? this.indicator,
       indicatorEffects: indicatorEffects ?? this.indicatorEffects,
@@ -46,6 +49,7 @@ mixin _$SegmentedControlSpec
       container: container.lerp(other?.container, t),
       mainAxisSize: MixOps.lerpSnap(mainAxisSize, other?.mainAxisSize, t),
       spacing: MixOps.lerp(spacing, other?.spacing, t),
+      segmentSizing: MixOps.lerpSnap(segmentSizing, other?.segmentSizing, t),
       item: item.lerp(other?.item, t),
       indicator: indicator?.lerp(other?.indicator, t),
       indicatorEffects: MixOps.lerpSnap(
@@ -66,6 +70,7 @@ mixin _$SegmentedControlSpec
     container,
     mainAxisSize,
     spacing,
+    segmentSizing,
     item,
     indicator,
     indicatorEffects,
@@ -115,6 +120,7 @@ mixin _$SegmentedControlSpec
       ..add(DiagnosticsProperty('container', container))
       ..add(EnumProperty<MainAxisSize>('mainAxisSize', mainAxisSize))
       ..add(DoubleProperty('spacing', spacing))
+      ..add(DiagnosticsProperty('segmentSizing', segmentSizing))
       ..add(DiagnosticsProperty('item', item))
       ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('indicatorEffects', indicatorEffects))
@@ -243,6 +249,7 @@ class SegmentedControlStyler
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<MainAxisSize>? $mainAxisSize;
   final Prop<double>? $spacing;
+  final Prop<RemixSegmentSizing>? $segmentSizing;
   final Prop<StyleSpec<SegmentedControlItemSpec>>? $item;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
   final Prop<RemixBoxEffectsSpec>? $indicatorEffects;
@@ -252,6 +259,7 @@ class SegmentedControlStyler
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<MainAxisSize>? mainAxisSize,
     Prop<double>? spacing,
+    Prop<RemixSegmentSizing>? segmentSizing,
     Prop<StyleSpec<SegmentedControlItemSpec>>? item,
     Prop<StyleSpec<BoxSpec>>? indicator,
     Prop<RemixBoxEffectsSpec>? indicatorEffects,
@@ -262,6 +270,7 @@ class SegmentedControlStyler
   }) : $container = container,
        $mainAxisSize = mainAxisSize,
        $spacing = spacing,
+       $segmentSizing = segmentSizing,
        $item = item,
        $indicator = indicator,
        $indicatorEffects = indicatorEffects,
@@ -271,6 +280,7 @@ class SegmentedControlStyler
     BoxStyler? container,
     MainAxisSize? mainAxisSize,
     double? spacing,
+    RemixSegmentSizing? segmentSizing,
     SegmentedControlItemStyler? item,
     BoxStyler? indicator,
     RemixBoxEffectsMix? indicatorEffects,
@@ -282,6 +292,7 @@ class SegmentedControlStyler
          container: Prop.maybeMix(container),
          mainAxisSize: Prop.maybe(mainAxisSize),
          spacing: Prop.maybe(spacing),
+         segmentSizing: Prop.maybe(segmentSizing),
          item: Prop.maybeMix(item),
          indicator: Prop.maybeMix(indicator),
          indicatorEffects: Prop.maybeMix(indicatorEffects),
@@ -297,6 +308,8 @@ class SegmentedControlStyler
       SegmentedControlStyler().mainAxisSize(value);
   factory SegmentedControlStyler.spacing(double value) =>
       SegmentedControlStyler().spacing(value);
+  factory SegmentedControlStyler.segmentSizing(RemixSegmentSizing value) =>
+      SegmentedControlStyler().segmentSizing(value);
   factory SegmentedControlStyler.item(SegmentedControlItemStyler value) =>
       SegmentedControlStyler().item(value);
   factory SegmentedControlStyler.indicator(BoxStyler value) =>
@@ -817,6 +830,7 @@ class SegmentedControlStyler
     'container',
     'mainAxisSize',
     'spacing',
+    'segmentSizing',
     'item',
     'indicator',
     'indicatorEffects',
@@ -839,6 +853,11 @@ class SegmentedControlStyler
   /// Sets the spacing.
   SegmentedControlStyler spacing(double value) {
     return merge(SegmentedControlStyler(spacing: value));
+  }
+
+  /// Sets the segmentSizing.
+  SegmentedControlStyler segmentSizing(RemixSegmentSizing value) {
+    return merge(SegmentedControlStyler(segmentSizing: value));
   }
 
   /// Sets the item.
@@ -918,6 +937,7 @@ class SegmentedControlStyler
       container: MixOps.merge($container, other?.$container),
       mainAxisSize: MixOps.merge($mainAxisSize, other?.$mainAxisSize),
       spacing: MixOps.merge($spacing, other?.$spacing),
+      segmentSizing: MixOps.merge($segmentSizing, other?.$segmentSizing),
       item: MixOps.merge($item, other?.$item),
       indicator: MixOps.merge($indicator, other?.$indicator),
       indicatorEffects: MixOps.merge(
@@ -938,6 +958,7 @@ class SegmentedControlStyler
       container: MixOps.resolve(context, $container),
       mainAxisSize: MixOps.resolve(context, $mainAxisSize),
       spacing: MixOps.resolve(context, $spacing),
+      segmentSizing: MixOps.resolve(context, $segmentSizing),
       item: MixOps.resolve(context, $item),
       indicator: MixOps.resolve(context, $indicator),
       indicatorEffects: MixOps.resolve(context, $indicatorEffects),
@@ -958,6 +979,7 @@ class SegmentedControlStyler
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('mainAxisSize', $mainAxisSize))
       ..add(DiagnosticsProperty('spacing', $spacing))
+      ..add(DiagnosticsProperty('segmentSizing', $segmentSizing))
       ..add(DiagnosticsProperty('item', $item))
       ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('indicatorEffects', $indicatorEffects))
@@ -969,6 +991,7 @@ class SegmentedControlStyler
     $container,
     $mainAxisSize,
     $spacing,
+    $segmentSizing,
     $item,
     $indicator,
     $indicatorEffects,

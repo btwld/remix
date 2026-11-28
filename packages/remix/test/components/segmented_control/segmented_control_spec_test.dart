@@ -15,7 +15,8 @@ void main() {
       expect(spec.indicator, isNull);
       expect(spec.indicatorEffects, isNull);
       expect(spec.indicatorMotion, isNull);
-      expect(spec.props, hasLength(7));
+      expect(spec.segmentSizing, isNull);
+      expect(spec.props, hasLength(8));
     });
 
     test('copyWith replaces selected properties', () {
@@ -48,6 +49,7 @@ void main() {
         'container',
         'mainAxisSize',
         'spacing',
+        'segmentSizing',
         'item',
         'indicator',
         'indicatorEffects',
