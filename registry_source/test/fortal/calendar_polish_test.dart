@@ -94,61 +94,70 @@ void main() {
           expect(box.maxHeight, 32 * scale);
         }
       });
-      testWidgets(
-        '$family at $scale month panel avoids slicing calendar numerals',
-        // Day rows now sit 4px apart, too close for a panel edge to land
-        // between them; the pickers' month panel is retuned with their header.
-        skip: true,
-        (t) async {
-          t.view.devicePixelRatio = 1;
-          t.view.physicalSize = const Size(1000, 1500);
-          addTearDown(() {
-            t.view.resetPhysicalSize();
-            t.view.resetDevicePixelRatio();
-          });
-          await t.binding.setSurfaceSize(const Size(1000, 1500));
-          addTearDown(() => t.binding.setSurfaceSize(null));
-          await t.pumpWidget(host(fixture(family), scale: scale));
-          if (family.contains('picker')) {
-            await t.tap(find.byType(RemixButton));
+    }
+  }
+  // The calendars have no month select; only the pickers' header opens the
+  // month panel.
+  for (final scale in [1.0, 2.0]) {
+    for (final family in ['picker', 'range-picker']) {
+      group('', skip: _pickerGeometry, () {
+        testWidgets(
+          '$family at $scale month panel avoids slicing calendar numerals',
+          (t) async {
+            t.view.devicePixelRatio = 1;
+            t.view.physicalSize = const Size(1000, 1500);
+            addTearDown(() {
+              t.view.resetPhysicalSize();
+              t.view.resetDevicePixelRatio();
+            });
+            await t.binding.setSurfaceSize(const Size(1000, 1500));
+            addTearDown(() => t.binding.setSurfaceSize(null));
+            await t.pumpWidget(host(fixture(family), scale: scale));
+            if (family.contains('picker')) {
+              await t.tap(find.byType(RemixButton));
+              await t.pumpAndSettle();
+            }
+            await t.tap(find.bySemanticsLabel('Choose month'));
             await t.pumpAndSettle();
-          }
-          await t.tap(find.bySemanticsLabel('Choose month'));
-          await t.pumpAndSettle();
-          final panel = find.byType(StyleSpecProvider<SelectContentSpec>);
-          final rect = t.getRect(panel);
-          expect(
-            t
-                .widget<StyleSpecProvider<SelectContentSpec>>(panel)
-                .spec
-                .spec
-                .container
-                .spec
-                .constraints
-                ?.maxHeight,
-            262 * scale,
-          );
-          expect(rect.height, scale == 1 ? 262 : 498);
-          final rows = [
-            for (final day in [3, 10, 17, 24, 30])
-              t.getRect(scale == 1 ? dayBox(day) : find.text('$day')),
-          ];
-          expect(
-            rows.any(
-              (row) => rect.bottom > row.top && rect.bottom < row.bottom,
-            ),
-            isFalse,
-            reason: 'panel bottom ${rect.bottom}; rows $rows',
-          );
-          expect(
-            find.byWidgetPredicate(
-              (w) => w is RawScrollbar && w.thumbVisibility == true,
-            ),
-            findsWidgets,
-          );
-          expect(t.takeException(), isNull);
-        },
-      );
+            final panel = find.byType(StyleSpecProvider<SelectContentSpec>);
+            final rect = t.getRect(panel);
+            expect(
+              t
+                  .widget<StyleSpecProvider<SelectContentSpec>>(panel)
+                  .spec
+                  .spec
+                  .container
+                  .spec
+                  .constraints
+                  ?.maxHeight,
+              262 * scale,
+            );
+            expect(rect.height, scale == 1 ? 262 : 498);
+            final rows = [
+              for (final day in [3, 10, 17, 24, 30])
+                t.getRect(scale == 1 ? dayBox(day) : find.text('$day')),
+            ];
+            expect(
+              rows.any(
+                (row) => rect.bottom > row.top && rect.bottom < row.bottom,
+              ),
+              isFalse,
+              reason: 'panel bottom ${rect.bottom}; rows $rows',
+            );
+            expect(
+              find.byWidgetPredicate(
+                (w) => w is RawScrollbar && w.thumbVisibility == true,
+              ),
+              findsWidgets,
+            );
+            expect(t.takeException(), isNull);
+          },
+        );
+      });
     }
   }
 }
+
+const _pickerGeometry =
+    'The calendar rows now sit 4px apart and the pickers keep their old panel '
+    'geometry until the date picker re-skin, so the panel edge lands in a row.';

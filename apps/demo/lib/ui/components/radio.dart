@@ -54,7 +54,7 @@ RadioStyler fortalRadioStyle({
       .surface || .card => _surface(highContrast),
       .soft => _soft(highContrast),
     })
-    .merge(_copy(size))
+    .merge(_copy(size, highContrast))
     .merge(variant == .card ? _card(highContrast) : _target())
     .onPressed(RadioStyler().scale(0.88))
     .animate(_motion)
@@ -144,7 +144,7 @@ RadioStyler _soft(bool highContrast) {
 
 /// Secondary medium label 12px from the circle that turns foreground when
 /// selected, and a muted description 2px under it.
-RadioStyler _copy(FortalRadioSize size) {
+RadioStyler _copy(FortalRadioSize size, bool highContrast) {
   final (label, description) = switch (size) {
     .size1 => (FortalTokens.text1, FortalTokens.text1),
     .size2 => (FortalTokens.text2, FortalTokens.text1),
@@ -160,7 +160,9 @@ RadioStyler _copy(FortalRadioSize size) {
       )
       .labelSpacing(FortalTokens.space3())
       .description(
-        TextStyler().style(description.mix()).color(FortalTokens.gray10()),
+        TextStyler()
+            .style(description.mix())
+            .color(highContrast ? FortalTokens.gray11() : _mutedContent()),
       )
       .descriptionSpacing(2)
       .onSelected(
@@ -204,6 +206,13 @@ RadioStyler _card(bool highContrast) {
 /// equal styles.
 /// 12px inside the card's 1px frame, which is drawn inset and takes no
 /// layout space.
+/// Gray 10 reads at about 4.1:1 on a light page; high contrast takes gray 11.
+final _mutedContent = ContextToken<Color>(
+  (context) => FortalTheme.maybeOf(context)?.highContrast ?? false
+      ? FortalTokens.gray11.resolve(context)
+      : FortalTokens.gray10.resolve(context),
+);
+
 final _cardInset = ContextToken<double>(
   (c) => FortalTokens.space3.resolve(c) + FortalTokens.borderWidth1.resolve(c),
 );

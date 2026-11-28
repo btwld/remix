@@ -84,7 +84,7 @@ CheckboxStyler {{valuePrefix}}CheckboxGroupItemStyle({
   variant: variant,
   size: size,
   highContrast: highContrast,
-).merge(_copy(size)).merge(style);
+).merge(_copy(size, highContrast)).merge(style);
 
 /// Frame colour and press scale: 150 ms on the standard ease.
 final _motion = AnimationConfig.curve(
@@ -130,7 +130,7 @@ CheckboxStyler _square({{typePrefix}}CheckboxSize size) {
 
 /// Medium foreground label 12px from the square, and a muted description
 /// 2px under it.
-CheckboxStyler _copy({{typePrefix}}CheckboxSize size) {
+CheckboxStyler _copy({{typePrefix}}CheckboxSize size, bool highContrast) {
   final (label, description) = switch (size) {
     .size1 => ({{typePrefix}}Tokens.text1, {{typePrefix}}Tokens.text1),
     .size2 => ({{typePrefix}}Tokens.text2, {{typePrefix}}Tokens.text1),
@@ -146,10 +146,19 @@ CheckboxStyler _copy({{typePrefix}}CheckboxSize size) {
       )
       .labelSpacing({{typePrefix}}Tokens.space3())
       .description(
-        TextStyler().style(description.mix()).color({{typePrefix}}Tokens.gray10()),
+        TextStyler()
+            .style(description.mix())
+            .color(highContrast ? {{typePrefix}}Tokens.gray11() : _mutedContent()),
       )
       .descriptionSpacing(2);
 }
+
+/// Gray 10 reads at about 4.1:1 on a light page; high contrast takes gray 11.
+final _mutedContent = ContextToken<Color>(
+  (context) => {{typePrefix}}Theme.maybeOf(context)?.highContrast ?? false
+      ? {{typePrefix}}Tokens.gray11.resolve(context)
+      : {{typePrefix}}Tokens.gray10.resolve(context),
+);
 
 /// A surface square in a strong frame that darkens on hover; selected, the
 /// frame and fill take the control ink under a glyph-coloured mark.
