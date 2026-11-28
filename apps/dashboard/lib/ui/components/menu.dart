@@ -347,6 +347,7 @@ Widget _panelMotion(
       }
       return Opacity(
         opacity: opacity,
+        alwaysIncludeSemantics: true,
         child: Transform.translate(
           offset: toward * rise,
           child: Transform.scale(scale: scale, alignment: origin, child: child),
@@ -377,6 +378,7 @@ Widget _rowMotion(
       );
       return Opacity(
         opacity: t,
+        alwaysIncludeSemantics: true,
         child: Transform.translate(
           offset: Offset(0, -_rowRise * (1 - t)),
           child: child,

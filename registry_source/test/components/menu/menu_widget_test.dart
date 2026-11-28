@@ -341,6 +341,36 @@ void main() {
     },
   );
 
+  testWidgets('rows stay menu items while the panel fades in', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpRemixApp(
+      FortalMenu<String>(
+        trigger: const RemixMenuTrigger(label: 'Open'),
+        onSelected: (_) {},
+        items: const [
+          RemixMenuItem(value: 'a', label: 'Alpha'),
+          RemixMenuItem(value: 'b', label: 'Bravo'),
+        ],
+      ),
+    );
+
+    await tester.tap(find.text('Open'));
+    await tester.pump();
+
+    for (final label in ['Alpha', 'Bravo']) {
+      final fades = tester.widgetList<Opacity>(
+        find.ancestor(of: find.text(label), matching: find.byType(Opacity)),
+      );
+      expect(fades.map((fade) => fade.opacity), contains(0), reason: label);
+      expect(
+        tester.getSemantics(find.text(label)).getSemanticsData().role,
+        SemanticsRole.menuItem,
+        reason: label,
+      );
+    }
+    semantics.dispose();
+  });
+
   testWidgets(
     'FortalMenu.soft accepts RemixMenuTrigger.builder and opens items',
     (tester) async {
