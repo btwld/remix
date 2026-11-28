@@ -14,7 +14,9 @@ import 'positioning.dart';
 /// rect, and closing on ancestor scroll or view resize. It leaves three things
 /// to the overlay, and this widget adds exactly those around [child]:
 ///
-/// 1. Placement: [OverlayPositioner] puts [child] next to the anchor.
+/// 1. Placement: [OverlayPositioner] puts [child] next to the anchor, or
+///    next to [RawMenuOverlayInfo.position] when the menu was opened at a
+///    point (see [targetRectOf]).
 /// 2. Outside taps: a [TapRegion] in the menu's group closes the overlay.
 /// 3. Focus and keys: the overlay is a focus scope that takes focus on open,
 ///    on its container unless [initialFocusNode] asks for an item, and
@@ -52,7 +54,7 @@ class AnchoredOverlay extends StatefulWidget {
   /// The info passed to [RawMenuAnchor.overlayBuilder].
   final RawMenuOverlayInfo info;
 
-  /// Where [child] sits relative to [RawMenuOverlayInfo.anchorRect].
+  /// Where [child] sits relative to [targetRectOf].
   final OverlayPositionConfig positioning;
 
   /// Whether to fit [child] into the space its placement can use. Top and
@@ -90,6 +92,20 @@ class AnchoredOverlay extends StatefulWidget {
 
   /// The overlay panel.
   final Widget child;
+
+  /// The rect [child] is placed against: the anchor's bounds, or a zero-size
+  /// rect at [RawMenuOverlayInfo.position] when `MenuController.open` was
+  /// given one. The position is relative to the anchor's top-left corner.
+  static Rect targetRectOf(RawMenuOverlayInfo info) {
+    final position = info.position;
+    if (position == null) return info.anchorRect;
+    return Rect.fromLTWH(
+      info.anchorRect.left + position.dx,
+      info.anchorRect.top + position.dy,
+      0,
+      0,
+    );
+  }
 
   /// Moves focus back to the nearest [AnchoredOverlay] container if focus is
   /// currently on a descendant item within the same overlay [FocusScope].
@@ -269,7 +285,7 @@ class _AnchoredOverlayState extends State<AnchoredOverlay> {
           )
         : widget.child;
     return OverlayPositioner(
-      targetRect: widget.info.anchorRect,
+      targetRect: AnchoredOverlay.targetRectOf(widget.info),
       positioning: positioning,
       constrainToAvailableSpace: widget.constrainToAvailableSpace,
       child: TapRegion(

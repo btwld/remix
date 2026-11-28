@@ -40,6 +40,7 @@ or see the [documentation source](../../naked_ui_docs/README.md) to contribute.
 - NakedAccordion — expandable/collapsible sections
 - NakedDisclosure — standalone show/hide button and panel
 - NakedMenu — anchored menu with checkbox/radio items + recursive submenus
+- NakedContextMenu — menu opened at the pointer by right click, long press, or the menu key
 - NakedMenubar — menu bar that closes sibling menus and moves with the arrow keys
 - NakedToolbar — one Tab stop and horizontal arrow-key focus for existing actions
 - NakedDialog — normal and alert dialog (`showNakedAlertDialog`) semantics + modal focus trap

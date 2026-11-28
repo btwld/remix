@@ -1,0 +1,78 @@
+---
+title: NakedContextMenu
+description: A menu opened at a point on a region by right click, long press, or the menu key
+keywords: [flutter, headless, context menu, menu, keyboard]
+---
+
+Wrap a region in `NakedContextMenu` when it should offer actions at the point
+the user asks for them. The widget owns the gestures, keys, focus, and
+semantics. You build the panel and the items, with the same `NakedMenu.Item`,
+`NakedMenu.CheckboxItem`, and `NakedMenu.RadioItem` widgets as `NakedMenu`.
+
+## Basic implementation
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+class PhotoActions extends StatefulWidget {
+  const PhotoActions({super.key});
+
+  @override
+  State<PhotoActions> createState() => _PhotoActionsState();
+}
+
+class _PhotoActionsState extends State<PhotoActions> {
+  final _controller = MenuController();
+
+  @override
+  Widget build(BuildContext context) {
+    return NakedContextMenu<String>(
+      controller: _controller,
+      onSelected: (value) => debugPrint('Selected $value'),
+      overlayBuilder: (context, info) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          NakedMenu.Item(value: 'copy', child: const Text('Copy')),
+          NakedMenu.Item(value: 'delete', child: const Text('Delete')),
+        ],
+      ),
+      child: const SizedBox(width: 240, height: 160, child: Text('Photo')),
+    );
+  }
+}
+```
+
+## Opening and closing
+
+- A secondary click opens the menu at the pointer. A long press with touch or
+  a stylus opens it at the press. A mouse long press does not.
+- The ContextMenu key and Shift+F10 open it at the target's bottom-left corner
+  while the target or one of its descendants has focus.
+- A secondary click or long press while the menu is open moves it to the new
+  point. `onCanceled` and `onClose`, then `onOpen`, run for the move.
+- A primary press on the target, a tap outside, Escape, or an item that closes
+  on activation closes it. The tap that closes the menu is not consumed.
+- `MenuController.open(position: offset)` opens it at `offset` from the
+  target's top-left corner. `positioning` places the panel against that point;
+  by default its top-left corner sits at the point and it flips or shifts to
+  stay on screen.
+
+On the web, call `BrowserContextMenu.disableContextMenu()` so the browser's own
+menu does not open over this one.
+
+## Keyboard and accessibility
+
+- The target is one Tab stop. Its descendants keep their own focus, gestures,
+  and semantics.
+- When the menu opens, focus moves into the panel. Arrow Up and Arrow Down move
+  between items, Home and End jump to the ends, and Escape closes the menu.
+  Focus returns to the target unless the user moved it elsewhere.
+- The target is a semantics container with a long-press action that opens the
+  menu at its bottom-left corner. The panel has the menu role and each item the
+  menu item role.
+- With `enabled` false, nothing opens the menu, the target is not a Tab stop,
+  and an open menu closes. The target's content stays interactive.
+
+There is no WAI-ARIA context menu pattern. The panel follows the
+[menu pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/).
