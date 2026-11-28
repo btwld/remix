@@ -73,6 +73,8 @@
   and close at once.
 - `showRemixDialog` and `showRemixAlertDialog` forward `reducedMotionDuration`
   to Naked UI, so a dialog can keep a short fade under reduced motion.
+- `ToastStyler.reducedMotionDuration` keeps a short toast fade under reduced
+  motion; `RemixToastScope.defaultTransitionBuilder` then drops its travel.
 
 ## 1.0.0-rc.7
 

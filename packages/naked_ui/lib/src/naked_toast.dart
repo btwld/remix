@@ -563,7 +563,8 @@ class NakedToastState<T> extends NakedState {
 /// Builds the visuals for one toast.
 ///
 /// [animation] runs from zero to one on entrance and back to zero on exit. It
-/// jumps while the user asks to reduce motion: when
+/// jumps, or runs over [NakedToastScope.reducedMotionDuration] when that is
+/// set, while the user asks to reduce motion: when
 /// [MediaQueryData.disableAnimations] is set or the platform reports
 /// `AccessibilityFeatures.reduceMotion`, which iOS sets for Reduce Motion. The
 /// setting is read when the toast enters and again when it exits.
@@ -609,6 +610,7 @@ class NakedToastScope<T> extends StatefulWidget {
       duration: Duration(milliseconds: 180),
       reverseDuration: Duration(milliseconds: 120),
     ),
+    this.reducedMotionDuration,
     required this.toastBuilder,
     required this.child,
   });
@@ -635,6 +637,13 @@ class NakedToastScope<T> extends StatefulWidget {
 
   /// The entrance and exit curves and durations.
   final AnimationStyle animationStyle;
+
+  /// How long each toast takes to enter and to exit while the user asks to
+  /// reduce motion.
+  ///
+  /// `null`, the default, makes the animation jump. Set it to keep a short
+  /// fade; [toastBuilder] should then drop travel and scale.
+  final Duration? reducedMotionDuration;
 
   /// Builds each visible toast.
   final NakedToastBuilder<T> toastBuilder;
@@ -835,6 +844,7 @@ class _NakedToastScopeState<T> extends State<NakedToastScope<T>> {
           entry: rendered.entry,
           exiting: rendered.exiting,
           animationStyle: widget.animationStyle,
+          reducedMotionDuration: widget.reducedMotionDuration,
           onExited: _handleExited,
           builder: widget.toastBuilder,
         ),
@@ -903,6 +913,7 @@ class _NakedToastItem<T> extends StatefulWidget {
     required this.entry,
     required this.exiting,
     required this.animationStyle,
+    required this.reducedMotionDuration,
     required this.onExited,
     required this.builder,
   });
@@ -911,6 +922,7 @@ class _NakedToastItem<T> extends StatefulWidget {
   final _ToastEntry<T> entry;
   final bool exiting;
   final AnimationStyle animationStyle;
+  final Duration? reducedMotionDuration;
   final ValueChanged<_ToastEntry<T>> onExited;
   final NakedToastBuilder<T> builder;
 
@@ -942,10 +954,11 @@ class _NakedToastItemState<T> extends State<_NakedToastItem<T>>
   void _applyDurations() {
     final disabled = reducedMotionOf(context);
     final forward = _style.duration ?? const Duration(milliseconds: 180);
+    final reduced = widget.reducedMotionDuration ?? Duration.zero;
     _animationController
-      ..duration = disabled ? Duration.zero : forward
+      ..duration = disabled ? reduced : forward
       ..reverseDuration = disabled
-          ? Duration.zero
+          ? reduced
           : _style.reverseDuration ?? forward;
   }
 
@@ -984,7 +997,15 @@ class _NakedToastItemState<T> extends State<_NakedToastItem<T>>
   void initState() {
     super.initState();
     _focusToRestore = FocusManager.instance.primaryFocus;
-    _animationController = AnimationController(vsync: this);
+    // Preserve keeps the platform's disableAnimations flag from shrinking a
+    // reducedMotionDuration a second time. The behavior is fixed here, so a
+    // duration first set while the toast is visible applies to later toasts.
+    _animationController = AnimationController(
+      vsync: this,
+      animationBehavior: widget.reducedMotionDuration == null
+          ? AnimationBehavior.normal
+          : AnimationBehavior.preserve,
+    );
     _animation = _createAnimation();
   }
 
@@ -1008,6 +1029,9 @@ class _NakedToastItemState<T> extends State<_NakedToastItem<T>>
     if (widget.animationStyle != oldWidget.animationStyle) {
       _animation.dispose();
       _animation = _createAnimation();
+      _applyDurations();
+    } else if (widget.reducedMotionDuration !=
+        oldWidget.reducedMotionDuration) {
       _applyDurations();
     }
     if (widget.exiting && !oldWidget.exiting) _beginExit();

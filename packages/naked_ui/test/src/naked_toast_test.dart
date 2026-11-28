@@ -758,7 +758,7 @@ void main() {
         NakedToastController<String> controller,
       })
     >
-    pumpScope(WidgetTester tester) async {
+    pumpScope(WidgetTester tester, {Duration? reducedMotionDuration}) async {
       final reducedMotion = ReducedMotionSwitch(tester);
       final controller = _controller();
       await tester.pumpWidget(
@@ -767,6 +767,7 @@ void main() {
             NakedToastScope<String>(
               controller: controller,
               animationStyle: slow,
+              reducedMotionDuration: reducedMotionDuration,
               toastBuilder: (context, toast, animation) => KeyedSubtree(
                 key: ValueKey('toast-${toast.data}'),
                 child: FadeTransition(
@@ -804,6 +805,48 @@ void main() {
       expect(_toast('a'), findsNothing);
     });
 
+    testWidgets('without reducedMotionDuration, a MediaQuery that re-enables '
+        'animations keeps the platform flag scaling the entrance', (
+      tester,
+    ) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      final controller = _controller();
+      await tester.pumpWidget(
+        _host(
+          Builder(
+            builder: (context) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(disableAnimations: false),
+              child: NakedToastScope<String>(
+                controller: controller,
+                animationStyle: slow,
+                toastBuilder: (context, toast, animation) => KeyedSubtree(
+                  key: ValueKey('toast-${toast.data}'),
+                  child: FadeTransition(
+                    opacity: animation,
+                    child: SizedBox.fromSize(
+                      size: _toastSize,
+                      child: Text(toast.data),
+                    ),
+                  ),
+                ),
+                child: const SizedBox.expand(),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      controller.show(_request('a'));
+      await tester.pump();
+      // 400 ms scaled by the platform flag's 0.05 is 20 ms.
+      await tester.pump(const Duration(milliseconds: 25));
+      expect(fade(tester), 1);
+    });
+
     for (final request in ReducedMotionRequest.values) {
       group('with ${request.label}', () {
         testWidgets('enters and exits at once', (tester) async {
@@ -833,6 +876,31 @@ void main() {
           handle.dismiss();
           await tester.pump();
           await tester.pump();
+          expect(_toast('a'), findsNothing);
+        });
+
+        testWidgets('keeps a reducedMotionDuration fade in and out', (
+          tester,
+        ) async {
+          final (:controller, :reducedMotion) = await pumpScope(
+            tester,
+            reducedMotionDuration: const Duration(milliseconds: 100),
+          );
+          reducedMotion.set(request, on: true);
+          await tester.pump();
+
+          final handle = controller.show(_request('a'));
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 50));
+          expect(fade(tester), closeTo(0.5, 0.01));
+          await tester.pump(const Duration(milliseconds: 50));
+          expect(fade(tester), 1);
+
+          handle.dismiss();
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 50));
+          expect(fade(tester), closeTo(0.5, 0.01));
+          await tester.pumpAndSettle();
           expect(_toast('a'), findsNothing);
         });
 
