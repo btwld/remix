@@ -609,6 +609,8 @@ items:
   menu:
     registryDependencies:
       - theme
+      - motion
+      - icons
     dependencies:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:

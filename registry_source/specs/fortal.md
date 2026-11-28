@@ -274,6 +274,21 @@ Fortal's elevation shadows carry no ring, so the anchored menu, select,
 popover and combobox panels share a 1px gray-7 edge. The menu paints its
 edge as a foreground decoration, so items sized to a panel width keep it.
 
+The menu trigger is a 32px framed control: gray 2 in a gray-7 frame with a
+14px corner, 12px padding, a 13px medium label, a gray-11 leading icon and a
+15px gray-10 chevron. Under the pointer it mutes to gray 3 with a gray-8 frame
+and the resting shadow; pressed takes gray 4; while open it keeps the muted
+fill and strong frame and turns the chevron over. The panel opens 6px below
+the trigger, aligned to its end edge, at least 192px wide with 5px of padding
+inside its edge and a 20px corner. It fades in over 150ms while it rises 5px
+and grows from 97% toward the trigger on the 440ms CSS spring; its rows fade
+and drop 2px into place, 35ms apart for the first four. It leaves in 100ms,
+sinking half as far. Rows are 36px (32px at size 1) with an 11px inset, a 14px
+corner, 13px gray-12 labels and 16px gray-11 icons; `solid` marks the row
+under the pointer or keyboard with gray 3, `soft` with the accent's third
+alpha step, and a disabled row shows at 45%. Dividers are 1px gray 6 running
+to a pixel from the panel's edges.
+
 Surface text fields and text areas use an opaque gray-2 fill and the
 `controlBorder` frame, so a field without a visible label can still be found;
 soft fields and areas keep their accent-3 fill inside a fitted `focus8` ring,
