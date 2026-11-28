@@ -1,13 +1,17 @@
 library remix_avatar;
 
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 
 import '../../style/style.dart';
+import '../../utilities/remix_reduced_motion.dart';
 import '../../utilities/remix_style.dart';
 
+part 'avatar_image_transition.dart';
 part 'avatar_spec.dart';
 part 'avatar_widget.dart';
 part 'avatar.g.dart';

@@ -205,10 +205,11 @@ void main() {
       test('props list contains all properties', () {
         const spec = AvatarSpec();
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(4));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
+        expect(spec.props, contains(spec.imageTransition));
       });
     });
 
@@ -229,13 +230,14 @@ void main() {
         spec.debugFillProperties(builder);
 
         final properties = builder.properties;
-        expect(properties, hasLength(3));
+        expect(properties, hasLength(4));
 
         // Check that all expected properties are included
         final propertyNames = properties.map((p) => p.name).toSet();
         expect(propertyNames, contains('container'));
         expect(propertyNames, contains('label'));
         expect(propertyNames, contains('icon'));
+        expect(propertyNames, contains('imageTransition'));
       });
 
       test('toString includes class name', () {

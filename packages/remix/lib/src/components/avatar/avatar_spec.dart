@@ -14,10 +14,19 @@ class AvatarSpec with _$AvatarSpec {
   @override
   final StyleSpec<IconSpec> icon;
 
+  /// How a loaded image, or the fallback of a failed one, appears.
+  ///
+  /// Null swaps the image in on its first frame, the behavior before this
+  /// field existed. Images that load synchronously, such as cached ones,
+  /// never animate.
+  @override
+  final RemixAvatarImageTransition? imageTransition;
+
   const AvatarSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
+    this.imageTransition,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec());

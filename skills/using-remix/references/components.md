@@ -232,7 +232,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 
 
 - **Avatar** — purely presentational; content precedence is `child` >
-  `labelBuilder`/`label` > `iconBuilder`/`icon`.
+  `labelBuilder`/`label` > `iconBuilder`/`icon`. `AvatarStyler().imageTransition(...)`
+  fades a loaded image in, optionally from a blur.
 - **AvatarGroup** — a preset composition, not a Remix widget. HeroUI's
   `avatar_group` overlaps the avatars you pass. Fortal's spaces avatars built
   from `<Prefix>AvatarGroupMember` values, counts `+N` in the last of `max`
