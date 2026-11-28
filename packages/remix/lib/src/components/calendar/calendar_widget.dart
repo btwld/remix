@@ -205,6 +205,7 @@ class RemixCalendar extends StatelessWidget {
         controller: NakedState.controllerOf<NakedCalendarState>(context),
         labels: labels,
         firstDayOfWeek: firstDayOfWeek,
+        displayedMonth: state.displayedMonth,
         weeks: state.weeks,
         headerBuilder: (context, spec) =>
             headerBuilder?.call(context, state) ??
@@ -231,6 +232,9 @@ class RemixCalendar extends StatelessWidget {
     style: effectiveStyle,
     styleSpec: styleSpec,
     labels: labels,
+    interactive: enabled && onChanged != null,
+    firstDate: firstDate,
+    lastDate: lastDate,
   );
 
   String _dayLabel(DateTime date) {
@@ -279,11 +283,25 @@ Widget _calendarDay({
   required CalendarStyler style,
   required CalendarSpec? styleSpec,
   required RemixCalendarLabels labels,
+  required bool interactive,
+  required DateTime firstDate,
+  required DateTime lastDate,
 }) => NakedCalendarDay(
   date: date,
   semanticLabel: semanticLabel,
   builder: (context, day, _) => WidgetStateProvider(
-    states: day.states,
+    // Naked disables a day outside the displayed month only to make the
+    // outgoing grid of a month transition inert; it keeps its displayed look.
+    states: day.isOutsideMonth
+        ? {
+            if (day.isSelected) WidgetState.selected,
+            if (!interactive ||
+                day.isUnavailable ||
+                compareCivilDates(date, firstDate) < 0 ||
+                compareCivilDates(date, lastDate) > 0)
+              WidgetState.disabled,
+          }
+        : day.states,
     child: Builder(
       builder: (context) {
         // Merge unresolved inherited styles before resolving this day's
@@ -474,6 +492,7 @@ class _CalendarView extends StatelessWidget {
     required this.controller,
     required this.labels,
     required this.firstDayOfWeek,
+    required this.displayedMonth,
     required this.weeks,
     required this.headerBuilder,
     required this.dayBuilder,
@@ -485,6 +504,7 @@ class _CalendarView extends StatelessWidget {
   final WidgetStatesController controller;
   final RemixCalendarLabels labels;
   final int firstDayOfWeek;
+  final DateTime displayedMonth;
   final List<List<DateTime?>> weeks;
   final Widget Function(BuildContext, CalendarSpec) headerBuilder;
   final Widget Function(DateTime) dayBuilder;
@@ -518,6 +538,29 @@ class _CalendarView extends StatelessWidget {
       child: ExcludeSemantics(child: row),
     );
   }
+
+  Widget _grid(
+    CalendarSpec spec,
+    List<List<DateTime?>> weeks,
+    double dayHeight,
+  ) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      for (final (index, week) in weeks.indexed) ...[
+        if (index > 0) SizedBox(height: spec.rowSpacing ?? 4),
+        Row(
+          children: [
+            for (final date in week)
+              Expanded(
+                child: date == null
+                    ? SizedBox(height: dayHeight)
+                    : dayBuilder(date),
+              ),
+          ],
+        ),
+      ],
+    ],
+  );
 
   @override
   Widget build(BuildContext context) => RemixStyleSpecBuilder<CalendarSpec>(
@@ -599,19 +642,16 @@ class _CalendarView extends StatelessWidget {
                           ),
                         _weekdays(spec),
                         SizedBox(height: spec.weekdaySpacing ?? 0),
-                        for (final (index, week) in weeks.indexed) ...[
-                          if (index > 0) SizedBox(height: spec.rowSpacing ?? 4),
-                          Row(
-                            children: [
-                              for (final date in week)
-                                Expanded(
-                                  child: date == null
-                                      ? SizedBox(height: dayHeight)
-                                      : dayBuilder(date),
-                                ),
-                            ],
-                          ),
-                        ],
+                        if (spec.monthTransition case final transition?)
+                          _MonthTransitionHost(
+                            month: displayedMonth,
+                            weeks: weeks,
+                            transition: transition,
+                            gridBuilder: (weeks) =>
+                                _grid(spec, weeks, dayHeight),
+                          )
+                        else
+                          _grid(spec, weeks, dayHeight),
                       ],
                     ),
                   ),
