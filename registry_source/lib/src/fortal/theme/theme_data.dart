@@ -500,7 +500,7 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(FortalThemeData theme) {
     FortalTokens.composerFieldMinHeight: 56.0 * scaling,
     FortalTokens.touchTargetMin: 40.0 * math.max(1.0, scaling),
     FortalTokens.sidebarDestinationMinHeight: 40.0 * math.max(1.0, scaling),
-    FortalTokens.popoverMaxWidth: 480.0 * scaling,
+    FortalTokens.popoverMaxWidth: 352.0 * scaling,
     FortalTokens.dialogMaxWidth: 440.0 * scaling,
     FortalTokens.toastMaxWidth: 416.0 * scaling,
     FortalTokens.space1: 4.0 * scaling,
