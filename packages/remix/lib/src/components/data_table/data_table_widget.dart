@@ -243,6 +243,7 @@ class RemixDataTable<T> extends StatelessWidget {
     this.onPageSizeChanged,
     this.minimumWidth = 0,
     this.emptyBuilder,
+    this.footerBuilder,
     this.labels = const RemixDataTableLabels(),
     this.pageRangeFormatter = remixDefaultDataTablePageRangeFormatter,
     this.sortableIcon,
@@ -308,6 +309,15 @@ class RemixDataTable<T> extends StatelessWidget {
   ///
   /// The column header and the optional pagination footer are preserved.
   final WidgetBuilder? emptyBuilder;
+
+  /// Builds caller content pinned below the rows, inside the table frame.
+  ///
+  /// It stays at the visible width while the table scrolls horizontally, sits
+  /// above the pagination footer when both are present, and inherits
+  /// [DataTableSpec.footerLabel] as its default text style. Typical content is
+  /// a row count or a selection summary with a clear action. Its semantics
+  /// stay caller-owned and outside the table node.
+  final WidgetBuilder? footerBuilder;
 
   /// Every built-in string the table displays or announces.
   final RemixDataTableLabels labels;
@@ -731,6 +741,13 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
     );
 
     final footer = _table._paginated ? _buildFooter(context) : null;
+    final footerBuilder = _table.footerBuilder;
+    final customFooter = footerBuilder == null
+        ? null
+        : RemixDefaultContentStyle(
+            text: _spec.footerLabel,
+            child: Builder(builder: footerBuilder),
+          );
 
     return RemixBoxAdapter(
       styleSpec: _spec.container,
@@ -749,7 +766,7 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [tableContent, ?footer],
+                  children: [tableContent, ?customFooter, ?footer],
                 ),
               ),
             );
@@ -770,6 +787,7 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
               // PaginatedDataTable — pagination stays visible while the table
               // scrolls. Its top border spans the viewport, not the laid-out
               // table width.
+              ?customFooter,
               ?footer,
             ],
           );

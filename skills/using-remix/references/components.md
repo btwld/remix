@@ -243,6 +243,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   builder (see [Styling](styling.md)). `onSorted`, `onSortedAscending`, and
   `onSortedDescending` style the header and body cells of the sorted column.
   `sortIconPlacement(.inward)` puts the sort arrow before end-aligned labels.
+  `footerBuilder` pins caller content, such as a selection summary, below the
+  rows.
 - **Skeleton** — a decorative loading placeholder that preserves its child's
   geometry and local state. While `loading`, the child cannot paint, receive
   input or focus, tick, or appear in semantics — announce loading state

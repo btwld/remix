@@ -31,6 +31,7 @@ class UiTable<T> extends StatelessWidget {
     this.onPageSizeChanged,
     this.minimumWidth = 0,
     this.emptyBuilder,
+    this.footerBuilder,
     this.labels = const RemixDataTableLabels(),
     this.pageRangeFormatter = remixDefaultDataTablePageRangeFormatter,
     this.sortableIcon,
@@ -60,6 +61,7 @@ class UiTable<T> extends StatelessWidget {
     this.onPageSizeChanged,
     this.minimumWidth = 0,
     this.emptyBuilder,
+    this.footerBuilder,
     this.labels = const RemixDataTableLabels(),
     this.pageRangeFormatter = remixDefaultDataTablePageRangeFormatter,
     this.sortableIcon,
@@ -89,6 +91,7 @@ class UiTable<T> extends StatelessWidget {
     this.onPageSizeChanged,
     this.minimumWidth = 0,
     this.emptyBuilder,
+    this.footerBuilder,
     this.labels = const RemixDataTableLabels(),
     this.pageRangeFormatter = remixDefaultDataTablePageRangeFormatter,
     this.sortableIcon,
@@ -134,6 +137,8 @@ class UiTable<T> extends StatelessWidget {
 
   final WidgetBuilder? emptyBuilder;
 
+  final WidgetBuilder? footerBuilder;
+
   final RemixDataTableLabels labels;
 
   final RemixDataTablePageRangeFormatter pageRangeFormatter;
@@ -168,6 +173,7 @@ class UiTable<T> extends StatelessWidget {
       onPageSizeChanged: onPageSizeChanged,
       minimumWidth: minimumWidth,
       emptyBuilder: emptyBuilder,
+      footerBuilder: footerBuilder,
       labels: labels,
       pageRangeFormatter: pageRangeFormatter,
       sortableIcon: sortableIcon,

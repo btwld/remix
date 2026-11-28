@@ -383,6 +383,14 @@ scrolling. Defaults to `0`.
 
 Optional. Replaces the body rows when `rows` is empty.
 
+#### `footerBuilder` → `WidgetBuilder?`
+
+Optional. Builds content pinned below the rows inside the table frame, such as
+a row count or a selection summary with a clear action. It stays at the
+visible width while the table scrolls, sits above the pagination footer, and
+inherits the footer typography. Its semantics stay yours, outside the table
+node.
+
 #### `labels` → `RemixDataTableLabels` / `pageRangeFormatter` → `RemixDataTablePageRangeFormatter`
 
 Optional. Every built-in string and the visible page-range format.
