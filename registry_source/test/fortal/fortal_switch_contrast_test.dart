@@ -116,8 +116,10 @@ void main() {
       final base = SwitchStyler().thumbColor(custom);
       final idle = await resolveInFortalTheme(
         tester,
-        (context) =>
-            fortalSwitchStyle(variant: variant, style: base).build(context).spec,
+        (context) => fortalSwitchStyle(
+          variant: variant,
+          style: base,
+        ).build(context).spec,
       );
       expect(_color(idle.thumb), custom);
       for (final disabled in [false, true]) {

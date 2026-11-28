@@ -14,8 +14,7 @@ void main() {
         Future<StyleSpec<CheckboxSpec>> resolve(Set<WidgetState> states) =>
             resolveInFortalTheme(
               tester,
-              (context) =>
-                  fortalCheckboxStyle(variant: variant).build(context),
+              (context) => fortalCheckboxStyle(variant: variant).build(context),
               states: {if (selected) WidgetState.selected, ...states},
             );
         final enabled = await resolve({});
