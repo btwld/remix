@@ -45,6 +45,10 @@
   the days with the grid geometry and the visible selection
   (`RemixCalendarSelection`: start and end cells and one segment per week).
   Unset, nothing is painted and the layout is unchanged.
+- Add `trailingIcon`, `textBuilder`, `footerBuilder` and `closeDelay` to
+  `RemixDatePicker` and `RemixDateRangePicker`. The footer sits under the
+  calendar at its width; the delay keeps the panel open briefly after a pick
+  and is skipped under reduced motion.
 
 ## 1.0.0-rc.7
 

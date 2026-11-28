@@ -39,6 +39,10 @@ class RemixDateRangePicker extends StatelessWidget {
       collisionPadding: EdgeInsets.all(8),
     ),
     this.icon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.footerBuilder,
+    this.closeDelay = Duration.zero,
     this.placeholderStyle = const ButtonStyler.create(),
     this.expandedStyle = const ButtonStyler.create(),
     this.buttonStyle = const ButtonStyler.create(),
@@ -123,6 +127,27 @@ class RemixDateRangePicker extends StatelessWidget {
   /// Decorative leading trigger icon. Its size and color follow [buttonStyle].
   final IconData? icon;
 
+  /// Decorative trailing trigger icon, such as a chevron. Its size and color
+  /// follow [buttonStyle]; [expandedStyle] can restyle it while open.
+  final IconData? trailingIcon;
+
+  /// Builds the trigger's visible text from its resolved style and label, so
+  /// a recipe can animate the text when the value changes. The accessible
+  /// value is unchanged.
+  final RemixButtonTextBuilder? textBuilder;
+
+  /// Builds a footer under the calendar in the popover, as wide as the
+  /// calendar, from the current value. It is outside the calendar's keyboard
+  /// grid, so buttons in it are ordinary Tab stops.
+  final Widget Function(BuildContext context, CivilDateRange? value)?
+  footerBuilder;
+
+  /// How long the popover stays open after a selection, so the selection can
+  /// be seen before it closes. Further selections are ignored meanwhile.
+  /// Dismissal still closes at once, and under reduced motion the popover
+  /// closes at once. Defaults to [Duration.zero].
+  final Duration closeDelay;
+
   /// Fragment merged over [buttonStyle] only while [value] is null.
   /// Interaction variants, including disabled styling, still resolve normally.
   final ButtonStyler placeholderStyle;
@@ -194,21 +219,28 @@ class RemixDateRangePicker extends StatelessWidget {
       onOpen: onOpen,
       onClose: onClose,
       label: label,
-      textBuilder: value == null
-          ? null
-          : (context, spec, label) => _fittedRangeLabel(
-              context,
-              spec,
-              label,
-              compactLabel: compactLabel,
-              wrappedCompactLabel: wrappedCompactLabel,
-            ),
+      textBuilder:
+          textBuilder ??
+          (value == null
+              ? null
+              : (context, spec, label) => _fittedRangeLabel(
+                  context,
+                  spec,
+                  label,
+                  compactLabel: compactLabel,
+                  wrappedCompactLabel: wrappedCompactLabel,
+                )),
       semanticLabel: semanticLabel,
       semanticValue: spoken ?? rangeLabels.noRange,
       focusNode: focusNode,
       autofocus: autofocus,
       positioning: positioning,
       icon: icon,
+      trailingIcon: trailingIcon,
+      footerBuilder: footerBuilder == null
+          ? null
+          : (context) => footerBuilder!(context, value),
+      closeDelay: closeDelay,
       placeholderStyle: value == null
           ? placeholderStyle
           : const ButtonStyler.create(),
