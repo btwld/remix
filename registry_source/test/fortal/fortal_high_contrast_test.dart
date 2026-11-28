@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import '../helpers/test_helpers.dart';
 
 import '../helpers/contrast.dart';
 
@@ -471,9 +472,14 @@ void main() {
           ).build(context),
         );
 
+        final track = await resolveInFortalTheme(
+          tester,
+          (context) => FortalTokens.controlTrack.resolve(context),
+          accent: .ceu,
+        );
         final expectedNormal = switch (variant) {
           .surface => ceu.light.indicator,
-          .soft => ceu.light.scale.step(6),
+          .soft => Color.lerp(track, ceu.light.indicator, 0.55),
         };
         expect(_boxColor(normal.spec.range), expectedNormal);
         final contrastGradient =

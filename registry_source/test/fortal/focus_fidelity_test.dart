@@ -108,11 +108,8 @@ void main() {
             await tester.pump();
 
             final context = tester.element(find.byType(FortalSlider));
-            final edgeColor =
-                (mode == FortalThemeMode.dark
-                        ? FortalTokens.gray3
-                        : FortalTokens.accentThumbRing)
-                    .resolve(context);
+            final edgeColor = FortalTokens.accentThumbRing.resolve(context);
+            final face = FortalTokens.controlThumb.resolve(context);
             final focus8 = MixScope.tokenOf(FortalTokens.accent11, context);
             final pixels = await _capture(tester, slider);
             final thumb = tester.getCenter(find.byType(FortalSlider));
@@ -122,7 +119,7 @@ void main() {
             // along the thumb's center column at four device pixels per px.
             var y = ((thumb.dy - origin.dy) * _scale).round();
             final x = ((thumb.dx - origin.dx) * _scale).round();
-            while (pixels.at(x, y) == const Color(0xFFFFFFFF)) {
+            while (pixels.at(x, y) == face) {
               y--;
             }
             final edge = y - _scale;
