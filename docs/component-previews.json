@@ -251,6 +251,18 @@
       }
     ]
   },
+  "rating": {
+    "cases": [
+      {
+        "name": "Rating Component",
+        "path": "components/remixrating/rating-component"
+      },
+      {
+        "name": "Catalog",
+        "path": "components/remixrating/catalog"
+      }
+    ]
+  },
   "range_calendar": {
     "cases": [
       {

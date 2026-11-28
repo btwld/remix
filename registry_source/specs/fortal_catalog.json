@@ -765,6 +765,42 @@
       ]
     },
     {
+      "id": "rating",
+      "fortalType": "FortalRating",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        }
+      },
+      "defaults": {
+        "highContrast": false,
+        "enabled": true,
+        "max": 5,
+        "allowClear": true
+      },
+      "supportedStyleProps": [
+        "highContrast"
+      ],
+      "states": [
+        "unrated",
+        "rated",
+        "preview",
+        "hovered",
+        "pressed",
+        "focused",
+        "disabled",
+        "highContrast"
+      ],
+      "tests": [
+        "test/fortal/rating_test.dart"
+      ]
+    },
+    {
       "id": "select",
       "fortalType": "FortalSelect",
       "enums": {

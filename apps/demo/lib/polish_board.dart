@@ -14,6 +14,7 @@ import 'components/link.dart' as link;
 import 'components/breadcrumbs.dart' as breadcrumbs;
 import 'components/checkbox.dart' as checkbox;
 import 'components/radio.dart' as radio;
+import 'components/rating.dart' as rating;
 import 'components/switch.dart' as switch_story;
 import 'components/slider.dart' as slider;
 import 'components/select.dart' as select;
@@ -198,6 +199,7 @@ final _families = <_Family>[
     build: checkbox.buildCheckboxCatalogUseCase,
   ),
   (id: 'radio', group: 'Inputs', build: radio.buildRadioCatalogUseCase),
+  (id: 'rating', group: 'Inputs', build: rating.buildRatingCatalogUseCase),
   (
     id: 'switch',
     group: 'Inputs',

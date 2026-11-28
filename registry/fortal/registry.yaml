@@ -706,6 +706,15 @@ items:
     exports:
       - components/range_slider.dart
 
+  rating:
+    registryDependencies:
+      - theme
+    files:
+      - source: templates/rating/rating.dart.tmpl
+        target: "@ui/components/rating.dart"
+    exports:
+      - components/rating.dart
+
   search_field:
     registryDependencies:
       - theme
