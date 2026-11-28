@@ -21,6 +21,8 @@
   instead of growing a second one while the first fades.
 - Add `CheckboxSpec.indicatorBuilder`, set from a style, which builds the
   checkbox indicator in every state so it can animate its mark in and out.
+- Add `RadioSpec.keepIndicatorMounted`, which keeps the radio indicator built
+  while unselected so a style can animate it out.
 
 ## 1.0.0-rc.7
 

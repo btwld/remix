@@ -245,6 +245,10 @@ Optional. Whether to hide the radio button and its visual subtree from the seman
 
 Sets indicator styling (selected fill).
 
+#### `keepIndicatorMounted(bool value)`
+
+Keeps the indicator built while the radio is unselected. Defaults to `false`, which removes the indicator when unselected. With `true`, style the unselected indicator yourself (for example with zero opacity) so it can animate out on deselection or preview while pressed.
+
 #### `label(TextStyler value)`
 
 Sets the visible label text style.

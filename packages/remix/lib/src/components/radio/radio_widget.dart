@@ -125,7 +125,9 @@ class RemixRadio<T> extends StatelessWidget {
             final radio = RemixBoxAdapter(
               styleSpec: spec.container,
               containerEffects: spec.containerEffects,
-              child: state.isSelected ? Box(styleSpec: spec.indicator) : null,
+              child: state.isSelected || spec.keepIndicatorMounted
+                  ? Box(styleSpec: spec.indicator)
+                  : null,
             );
 
             if (label == null && minimumTapTargetSize == Size.zero) {

@@ -25,6 +25,15 @@ class RadioSpec with _$RadioSpec {
   @override
   final double labelSpacing;
 
+  /// Whether [indicator] is built while the radio is unselected too.
+  ///
+  /// `false`, the default, removes the indicator when the radio is unselected.
+  /// With `true` it stays mounted in every state, so a style can hide it while
+  /// unselected (for example with zero opacity and a smaller scale), animate it
+  /// out on deselection, or preview it while pressed.
+  @override
+  final bool keepIndicatorMounted;
+
   @override
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
@@ -35,10 +44,12 @@ class RadioSpec with _$RadioSpec {
     StyleSpec<TextSpec>? label,
     double? labelSpacing,
     this.containerEffects,
+    bool? keepIndicatorMounted,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: BoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
-       labelSpacing = labelSpacing ?? 8;
+       labelSpacing = labelSpacing ?? 8,
+       keepIndicatorMounted = keepIndicatorMounted ?? false;
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.

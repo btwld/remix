@@ -54,6 +54,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `.labelColor(...)`. The target is the control's own size unless
   `minimumTapTargetSize` is set (default `Size.zero`; checkbox defaults to
   48x48), so opt in with `Size.square(48)` for touch.
+- **Radio indicator** — the indicator exists only while selected unless the
+  style sets `.keepIndicatorMounted(true)`; then style the unselected
+  indicator as hidden so it can animate out.
 - **CheckboxGroup** — standard Flutter keyboard model:
   every enabled `RemixCheckboxGroupItem` is an ordinary Tab stop in widget
   order, and Space/Enter toggle the focused option, exactly like native HTML
