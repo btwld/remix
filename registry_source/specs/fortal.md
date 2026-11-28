@@ -522,7 +522,7 @@ pickers combine five independently overridable child stylers.
 - Calendar: 328px wide at normal scale, seven day slots that scale with text.
   Each day is a circle 2px in from each side of its slot, with 4px between
   rows, and every month shows six weeks so the height never changes. The
-  header is `FortalCalendarHeader`: the month and year in text3 medium on the
+  header is `fortalCalendarHeader`: the month and year in text3 medium on the
   left, and 32px pill buttons with 16px gray11 chevrons on the right that fill
   gray3 under the pointer and sink to 96% while held. Weekdays are text1
   medium gray10 on a 24px line, 6px above the days; the header sits 14px above

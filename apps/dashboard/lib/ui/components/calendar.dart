@@ -285,11 +285,24 @@ class _Glide extends StatelessWidget {
   }
 }
 
-/// The header: the month and year on the left, previous and next month
-/// buttons on the right.
-class UiCalendarHeader extends StatelessWidget {
-  const UiCalendarHeader({
-    super.key,
+/// The calendar header: the month and year on the left, previous and next
+/// month buttons on the right. Shared by the calendar and range calendar.
+Widget uiCalendarHeader({
+  required DateTime month,
+  VoidCallback? onPrevious,
+  VoidCallback? onNext,
+  RemixCalendarLabels labels = const RemixCalendarLabels(),
+  IconButtonStyler navigationStyle = const IconButtonStyler.create(),
+}) => _CalendarHeader(
+  month: month,
+  onPrevious: onPrevious,
+  onNext: onNext,
+  labels: labels,
+  navigationStyle: navigationStyle,
+);
+
+class _CalendarHeader extends StatelessWidget {
+  const _CalendarHeader({
     required this.month,
     this.onPrevious,
     this.onNext,
@@ -531,7 +544,7 @@ class UiCalendar extends StatelessWidget {
     labels: labels,
     headerBuilder:
         headerBuilder ??
-        (context, state) => UiCalendarHeader(
+        (context, state) => uiCalendarHeader(
           month: state.displayedMonth,
           onPrevious: state.showPreviousMonth,
           onNext: state.showNextMonth,
