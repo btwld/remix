@@ -12,6 +12,9 @@ mixin _$SegmentedControlSpec
   MainAxisSize? get mainAxisSize;
   double? get spacing;
   StyleSpec<SegmentedControlItemSpec> get item;
+  StyleSpec<BoxSpec>? get indicator;
+  RemixBoxEffectsSpec? get indicatorEffects;
+  AnimationConfig? get indicatorMotion;
 
   @override
   Type get type => SegmentedControlSpec;
@@ -22,12 +25,18 @@ mixin _$SegmentedControlSpec
     MainAxisSize? mainAxisSize,
     double? spacing,
     StyleSpec<SegmentedControlItemSpec>? item,
+    StyleSpec<BoxSpec>? indicator,
+    RemixBoxEffectsSpec? indicatorEffects,
+    AnimationConfig? indicatorMotion,
   }) {
     return SegmentedControlSpec(
       container: container ?? this.container,
       mainAxisSize: mainAxisSize ?? this.mainAxisSize,
       spacing: spacing ?? this.spacing,
       item: item ?? this.item,
+      indicator: indicator ?? this.indicator,
+      indicatorEffects: indicatorEffects ?? this.indicatorEffects,
+      indicatorMotion: indicatorMotion ?? this.indicatorMotion,
     );
   }
 
@@ -38,11 +47,30 @@ mixin _$SegmentedControlSpec
       mainAxisSize: MixOps.lerpSnap(mainAxisSize, other?.mainAxisSize, t),
       spacing: MixOps.lerp(spacing, other?.spacing, t),
       item: item.lerp(other?.item, t),
+      indicator: indicator?.lerp(other?.indicator, t),
+      indicatorEffects: MixOps.lerpSnap(
+        indicatorEffects,
+        other?.indicatorEffects,
+        t,
+      ),
+      indicatorMotion: MixOps.lerpSnap(
+        indicatorMotion,
+        other?.indicatorMotion,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, mainAxisSize, spacing, item];
+  List<Object?> get props => [
+    container,
+    mainAxisSize,
+    spacing,
+    item,
+    indicator,
+    indicatorEffects,
+    indicatorMotion,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -87,7 +115,10 @@ mixin _$SegmentedControlSpec
       ..add(DiagnosticsProperty('container', container))
       ..add(EnumProperty<MainAxisSize>('mainAxisSize', mainAxisSize))
       ..add(DoubleProperty('spacing', spacing))
-      ..add(DiagnosticsProperty('item', item));
+      ..add(DiagnosticsProperty('item', item))
+      ..add(DiagnosticsProperty('indicator', indicator))
+      ..add(DiagnosticsProperty('indicatorEffects', indicatorEffects))
+      ..add(DiagnosticsProperty('indicatorMotion', indicatorMotion));
   }
 }
 
@@ -213,25 +244,37 @@ class SegmentedControlStyler
   final Prop<MainAxisSize>? $mainAxisSize;
   final Prop<double>? $spacing;
   final Prop<StyleSpec<SegmentedControlItemSpec>>? $item;
+  final Prop<StyleSpec<BoxSpec>>? $indicator;
+  final Prop<RemixBoxEffectsSpec>? $indicatorEffects;
+  final Prop<AnimationConfig>? $indicatorMotion;
 
   const SegmentedControlStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<MainAxisSize>? mainAxisSize,
     Prop<double>? spacing,
     Prop<StyleSpec<SegmentedControlItemSpec>>? item,
+    Prop<StyleSpec<BoxSpec>>? indicator,
+    Prop<RemixBoxEffectsSpec>? indicatorEffects,
+    Prop<AnimationConfig>? indicatorMotion,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $mainAxisSize = mainAxisSize,
        $spacing = spacing,
-       $item = item;
+       $item = item,
+       $indicator = indicator,
+       $indicatorEffects = indicatorEffects,
+       $indicatorMotion = indicatorMotion;
 
   SegmentedControlStyler({
     BoxStyler? container,
     MainAxisSize? mainAxisSize,
     double? spacing,
     SegmentedControlItemStyler? item,
+    BoxStyler? indicator,
+    RemixBoxEffectsMix? indicatorEffects,
+    AnimationConfig? indicatorMotion,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<SegmentedControlSpec>>? variants,
@@ -240,6 +283,9 @@ class SegmentedControlStyler
          mainAxisSize: Prop.maybe(mainAxisSize),
          spacing: Prop.maybe(spacing),
          item: Prop.maybeMix(item),
+         indicator: Prop.maybeMix(indicator),
+         indicatorEffects: Prop.maybeMix(indicatorEffects),
+         indicatorMotion: Prop.maybe(indicatorMotion),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -253,6 +299,12 @@ class SegmentedControlStyler
       SegmentedControlStyler().spacing(value);
   factory SegmentedControlStyler.item(SegmentedControlItemStyler value) =>
       SegmentedControlStyler().item(value);
+  factory SegmentedControlStyler.indicator(BoxStyler value) =>
+      SegmentedControlStyler().indicator(value);
+  factory SegmentedControlStyler.indicatorEffects(RemixBoxEffectsMix value) =>
+      SegmentedControlStyler().indicatorEffects(value);
+  factory SegmentedControlStyler.indicatorMotion(AnimationConfig value) =>
+      SegmentedControlStyler().indicatorMotion(value);
   factory SegmentedControlStyler.alignment(AlignmentGeometry value) =>
       SegmentedControlStyler().alignment(value);
   factory SegmentedControlStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -766,6 +818,9 @@ class SegmentedControlStyler
     'mainAxisSize',
     'spacing',
     'item',
+    'indicator',
+    'indicatorEffects',
+    'indicatorMotion',
     'animation',
     'modifier',
     'variants',
@@ -789,6 +844,21 @@ class SegmentedControlStyler
   /// Sets the item.
   SegmentedControlStyler item(SegmentedControlItemStyler value) {
     return merge(SegmentedControlStyler(item: value));
+  }
+
+  /// Sets the indicator.
+  SegmentedControlStyler indicator(BoxStyler value) {
+    return merge(SegmentedControlStyler(indicator: value));
+  }
+
+  /// Sets the indicatorEffects.
+  SegmentedControlStyler indicatorEffects(RemixBoxEffectsMix value) {
+    return merge(SegmentedControlStyler(indicatorEffects: value));
+  }
+
+  /// Sets the indicatorMotion.
+  SegmentedControlStyler indicatorMotion(AnimationConfig value) {
+    return merge(SegmentedControlStyler(indicatorMotion: value));
   }
 
   /// Sets the animation configuration.
@@ -849,6 +919,12 @@ class SegmentedControlStyler
       mainAxisSize: MixOps.merge($mainAxisSize, other?.$mainAxisSize),
       spacing: MixOps.merge($spacing, other?.$spacing),
       item: MixOps.merge($item, other?.$item),
+      indicator: MixOps.merge($indicator, other?.$indicator),
+      indicatorEffects: MixOps.merge(
+        $indicatorEffects,
+        other?.$indicatorEffects,
+      ),
+      indicatorMotion: MixOps.merge($indicatorMotion, other?.$indicatorMotion),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -863,6 +939,9 @@ class SegmentedControlStyler
       mainAxisSize: MixOps.resolve(context, $mainAxisSize),
       spacing: MixOps.resolve(context, $spacing),
       item: MixOps.resolve(context, $item),
+      indicator: MixOps.resolve(context, $indicator),
+      indicatorEffects: MixOps.resolve(context, $indicatorEffects),
+      indicatorMotion: MixOps.resolve(context, $indicatorMotion),
     );
 
     return StyleSpec(
@@ -879,7 +958,10 @@ class SegmentedControlStyler
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('mainAxisSize', $mainAxisSize))
       ..add(DiagnosticsProperty('spacing', $spacing))
-      ..add(DiagnosticsProperty('item', $item));
+      ..add(DiagnosticsProperty('item', $item))
+      ..add(DiagnosticsProperty('indicator', $indicator))
+      ..add(DiagnosticsProperty('indicatorEffects', $indicatorEffects))
+      ..add(DiagnosticsProperty('indicatorMotion', $indicatorMotion));
   }
 
   @override
@@ -888,6 +970,9 @@ class SegmentedControlStyler
     $mainAxisSize,
     $spacing,
     $item,
+    $indicator,
+    $indicatorEffects,
+    $indicatorMotion,
     $animation,
     $modifier,
     $variants,

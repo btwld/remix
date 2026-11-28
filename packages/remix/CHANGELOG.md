@@ -81,6 +81,9 @@
 - Add `ButtonSpec.loadingTransition` and `RemixLoadingTransition`, so a
   style can animate the swap between a button's content and its spinner. The
   default still swaps at once.
+- Add `indicator`, `indicatorEffects` and `indicatorMotion` to
+  `SegmentedControlSpec`. The indicator draws one surface behind the selected
+  segment and glides when the selection changes, like the tabs indicator.
 
 ### Fixes
 

@@ -23,13 +23,57 @@ class SegmentedControlSpec with _$SegmentedControlSpec {
   @override
   final StyleSpec<SegmentedControlItemSpec> item;
 
+  /// A surface shared by the segments that sits behind the selected segment,
+  /// over the track's own fill and border, and glides to the next one when
+  /// the selection changes.
+  ///
+  /// It takes the selected segment's bounds, so `margin` insets it and the
+  /// decoration draws it. `null`, the default, draws none and leaves each
+  /// segment's own selected style in charge. With no selection it draws
+  /// nothing.
+  @override
+  final StyleSpec<BoxSpec>? indicator;
+
+  /// Paint layers behind [indicator], such as a shadow.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? indicatorEffects;
+
+  /// How [indicator] moves between segments. Accepts [CurveAnimationConfig]
+  /// or [SpringAnimationConfig], which may overshoot. `null` glides along
+  /// `Curves.easeOutCubic` over 250 ms.
+  ///
+  /// [RemixSegmentedControl] throws [ArgumentError] for phase and keyframe
+  /// configs when it builds. While the user asks to reduce motion, the
+  /// indicator moves at once.
+  @override
+  final AnimationConfig? indicatorMotion;
+
   const SegmentedControlSpec({
     StyleSpec<BoxSpec>? container,
     this.mainAxisSize,
     this.spacing,
     StyleSpec<SegmentedControlItemSpec>? item,
+    this.indicator,
+    this.indicatorEffects,
+    this.indicatorMotion,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        item = item ?? const StyleSpec(spec: SegmentedControlItemSpec());
+
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
+  @override
+  SegmentedControlSpec lerp(SegmentedControlSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      indicatorEffects: RemixBoxEffectsSpec.lerpNullable(
+        indicatorEffects,
+        other.indicatorEffects,
+        t,
+      ),
+    );
+  }
 }
 
 /// Resolved visual properties for one segment.

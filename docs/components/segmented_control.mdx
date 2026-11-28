@@ -210,6 +210,38 @@ extent equally. In narrow parents, labels wrap inside equal segments; keep
 labels short and use a visible output label when the selection needs more
 explanation.
 
+## Shared indicator
+
+Each segment paints its own selected style by default. Set `indicator` on the
+`SegmentedControlStyler` to draw one surface behind the segments instead, such
+as a raised pill, that glides to the selected segment. The indicator takes the
+selected segment's bounds, so `margin` insets it and the decoration draws it.
+`indicatorEffects` adds paint layers behind it, such as a shadow. Leave the
+segment's own selected background clear so only the indicator shows.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final pillTrack = SegmentedControlStyler()
+    .padding(.all(3))
+    .spacing(2)
+    .color(Colors.blueGrey.shade100)
+    .borderRadius(.circular(14))
+    .indicator(BoxStyler().color(Colors.white).borderRadius(.circular(10)))
+    .indicatorMotion(
+      AnimationConfig.springDescription(mass: 1, stiffness: 400, damping: 36),
+    )
+    .item(SegmentedControlItemStyler().padding(.symmetric(horizontal: 12)));
+```
+
+`indicatorMotion` takes the same configs as the tabs indicator: a
+`CurveAnimationConfig` or a `SpringAnimationConfig`. Without one the indicator
+glides along `Curves.easeOutCubic` over 250 ms. Phase and keyframe configs
+throw `ArgumentError` when the control builds. The indicator jumps while the
+user asks to reduce motion, draws nothing without a selection, and is excluded
+from semantics and hit testing.
+
 ## Styling anatomy
 
 `SegmentedControlStyler` owns the persistent track. Its nested `item` style is
