@@ -187,7 +187,8 @@ fill must identify the control. Check the actual component on its host surface.
   segments (28, 32 and 36px, 10px corner) on a gray-3 track in the same
   frame; a gray-2 pill with a gray-7 border and the resting shadow glides to
   the selected segment. Labels are gray 10 until hovered, pressed or selected
-  and stay medium weight. Both glides run 200ms on the standard ease, the
+  (gray 11 at rest under the theme's high contrast, 4.5:1 on the track) and
+  stay medium weight. Both glides run 200ms on the standard ease, the
   pace measured against the reference. The items of both sit inside the
   group's own height and take no 40px hit target of their own.
 - Compact painted controls retain their sizes, inside a **40px minimum hit
