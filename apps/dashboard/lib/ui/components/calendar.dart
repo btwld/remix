@@ -127,8 +127,11 @@ SelectStyler uiCalendarSelectorStyle(BuildContext context) => uiSelectStyle()
             MediaQuery.textScalerOf(context).scale(uiCalendarSelectorWidth),
           ),
     )
+    // The panel cap below counts rows at the touch target's pitch.
+    .item(SelectMenuItemStyler().wrap(uiTouchTarget()))
     .content(
       SelectContentStyler()
+          .margin(.vertical(0))
           // Half an extra item plus the panel borders puts the bottom
           // in a calendar row gap rather than through the day labels.
           .maxHeight(
