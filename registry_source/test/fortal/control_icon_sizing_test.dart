@@ -209,7 +209,7 @@ void main() {
               final spec = tester.resolvedSpecOf<SegmentedControlItemSpec>(
                 icon,
               );
-              final expected = override ? 14.0 : [12.0, 16.0, 20.0][size.index];
+              final expected = override ? 14.0 : [12.0, 16.0, 16.0][size.index];
               expect(spec.icon.spec.size, expected);
               expect(tester.getSize(icon), Size.square(expected));
               expect(tester.takeException(), isNull);

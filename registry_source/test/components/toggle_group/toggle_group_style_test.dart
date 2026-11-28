@@ -87,54 +87,105 @@ void main() {
       }
     }
   });
-  testWidgets('Fortal sizes resolve distinct item metrics', (tester) async {
-    final paddings = <EdgeInsetsGeometry?>{};
-    final spacings = <double?>{};
-    final fontSizes = <double?>{};
-    final iconSizes = <double?>{};
-    final radii = <BorderRadiusGeometry?>{};
+  testWidgets('Fortal sizes resolve the item box, padding and type', (
+    tester,
+  ) async {
+    const expected = {
+      FortalToggleGroupSize.size1: (
+        edge: 28.0,
+        inline: 8.0,
+        text: 12.0,
+        icon: 14.0,
+      ),
+      FortalToggleGroupSize.size2: (
+        edge: 36.0,
+        inline: 10.0,
+        text: 13.0,
+        icon: 16.0,
+      ),
+      FortalToggleGroupSize.size3: (
+        edge: 44.0,
+        inline: 12.0,
+        text: 13.0,
+        icon: 16.0,
+      ),
+    };
 
-    for (final size in FortalToggleGroupSize.values) {
+    for (final MapEntry(key: size, value: metrics) in expected.entries) {
       final resolved = await _resolveFortalToggleGroupStyle(
         tester,
         fortalToggleGroupStyle(size: size),
       );
-      final groupDecoration =
-          resolved.spec.container.spec.box?.spec.decoration as BoxDecoration?;
+      final group = resolved.spec.container.spec.box!.spec;
       final item = resolved.spec.item.spec;
+      final box = item.container.spec.box!.spec;
 
-      paddings.add(item.container.spec.box?.spec.padding);
-      spacings.add(item.container.spec.flex?.spec.spacing);
-      fontSizes.add(item.label.spec.style?.fontSize);
-      iconSizes.add(item.icon.spec.size);
-      radii.add(groupDecoration?.borderRadius);
+      expect(group.padding, const EdgeInsets.all(3), reason: '$size');
+      expect(resolved.spec.container.spec.flex!.spec.spacing, 2);
+      expect(
+        (group.decoration! as BoxDecoration).borderRadius,
+        const BorderRadius.all(Radius.circular(14)),
+      );
+      expect(box.constraints!.minHeight, metrics.edge, reason: '$size');
+      expect(box.constraints!.minWidth, metrics.edge, reason: '$size');
+      expect(
+        box.padding,
+        EdgeInsets.symmetric(horizontal: metrics.inline),
+        reason: '$size',
+      );
+      // The group corner less its 3px padding.
+      expect(
+        (box.decoration! as BoxDecoration).borderRadius,
+        const BorderRadius.all(Radius.circular(11)),
+      );
+      expect(item.container.spec.flex!.spec.spacing, 6);
+      expect(item.label.spec.style!.fontSize, metrics.text, reason: '$size');
+      expect(item.icon.spec.size, metrics.icon, reason: '$size');
     }
-
-    expect(paddings, hasLength(FortalToggleGroupSize.values.length));
-    expect(spacings, {4.0, 8.0});
-    expect(fontSizes, hasLength(FortalToggleGroupSize.values.length));
-    expect(iconSizes, hasLength(FortalToggleGroupSize.values.length));
-    expect(radii, hasLength(2));
   });
-  testWidgets('Fortal variants resolve distinct selected colors', (
+
+  testWidgets('one fill glides to the on item at the measured pace', (
     tester,
   ) async {
-    final colors = <Color?>{};
+    final soft = await _resolveFortalToggleGroupStyle(
+      tester,
+      fortalToggleGroupStyle(),
+      accent: FortalAccentColor.orla,
+    );
+    final surface = await _resolveFortalToggleGroupStyle(
+      tester,
+      fortalToggleGroupStyle(variant: .surface),
+      accent: FortalAccentColor.orla,
+    );
+    final softFill = soft.spec.indicator!.spec.decoration! as BoxDecoration;
+    final surfaceFill =
+        surface.spec.indicator!.spec.decoration! as BoxDecoration;
 
-    for (final variant in FortalToggleGroupVariant.values) {
-      final resolved = await _resolveFortalToggleGroupStyle(
-        tester,
-        fortalToggleGroupStyle(variant: variant),
-        states: {WidgetState.selected},
-      );
-      final decoration =
-          resolved.spec.item.spec.container.spec.box?.spec.decoration
-              as BoxDecoration?;
-      colors.add(decoration?.color);
-    }
+    // The neutral indicator mixed 11% into the surface, rounded 1px past the
+    // group corner.
+    expect(softFill.color, isSameColorAs(const Color(0xFFE3E3E3)));
+    expect(softFill.borderRadius, const BorderRadius.all(Radius.circular(15)));
+    expect(surfaceFill.color, const Color(0xFFF8F8F8));
+    expect((surfaceFill.border! as Border).top.color, const Color(0xFFE9E9E9));
+    expect(
+      soft.spec.indicatorMotion,
+      AnimationConfig.curve(
+        duration: const Duration(milliseconds: 200),
+        curve: FortalMotion.easeStandard,
+      ),
+    );
 
-    expect(colors, hasLength(FortalToggleGroupVariant.values.length));
-    expect(colors, isNot(contains(null)));
+    final on = await _resolveFortalToggleGroupStyle(
+      tester,
+      fortalToggleGroupStyle(),
+      accent: FortalAccentColor.orla,
+      states: {WidgetState.selected, WidgetState.hovered},
+    );
+    final onBox = on.spec.item.spec.container.spec.box!.spec;
+    // The on item paints nothing over the gliding fill, even under the
+    // pointer, and its text is ink.
+    expect((onBox.decoration! as BoxDecoration).color, const Color(0x00000000));
+    expect(on.spec.item.spec.label.spec.style!.color, const Color(0xFF0B0B0B));
   });
 }
 
@@ -142,11 +193,13 @@ Future<StyleSpec<ToggleGroupSpec>> _resolveFortalToggleGroupStyle(
   WidgetTester tester,
   ToggleGroupStyler style, {
   Set<WidgetState> states = const {},
+  FortalAccentColor? accent,
 }) async {
   late StyleSpec<ToggleGroupSpec> resolved;
 
   await tester.pumpWidget(
     FortalTheme(
+      accent: accent,
       child: WidgetsApp(
         color: const Color(0xFFFFFFFF),
         pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(

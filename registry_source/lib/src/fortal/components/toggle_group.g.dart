@@ -6,13 +6,14 @@ part of 'toggle_group.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Fortal ToggleGroup recipe: a segmented control, a 1px gray frame around
-/// items that share it.
+/// The Fortal ToggleGroup recipe: items inside a padded 1px frame, with one
+/// fill that glides to the item that is on.
 ///
-/// It reads top to bottom: the frame, the item's colors for rest, hover,
-/// press, selected, focus and disabled, then the size.
+/// It reads top to bottom: the frame, the gliding fill, the item's look for
+/// rest, hover, press, on, focus and disabled, then the size.
 ///
-/// [highContrast] moves the selected item's label and icon to accent step 12.
+/// [highContrast] draws resting item text in ink and the frame in the strong
+/// border.
 class FortalToggleGroup<T> extends StatelessWidget {
   const FortalToggleGroup({
     super.key,
@@ -30,7 +31,7 @@ class FortalToggleGroup<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// An accent tint behind the selected item.
+  /// The accent's indicator mixed into the surface behind the on item.
   const FortalToggleGroup.soft({
     super.key,
     this.size = .size2,
@@ -46,7 +47,7 @@ class FortalToggleGroup<T> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalToggleGroupVariant.soft;
 
-  /// A faint accent surface behind the selected item.
+  /// The muted fill inside a 1px border behind the on item.
   const FortalToggleGroup.surface({
     super.key,
     this.size = .size2,

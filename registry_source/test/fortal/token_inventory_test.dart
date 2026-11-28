@@ -54,6 +54,8 @@ final _customizationTokens = {
   'shadowThumb',
   'textField',
   'grayA7',
+  // The pill fill before the segmented control moved to the surface role.
+  'segmentedControlIndicatorBackground',
   // The inline ghost button boxes, kept for callers that rebuild that look;
   // the ghost recipes now draw the full control box.
   'baseButtonGhostMarginX12',

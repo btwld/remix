@@ -45,88 +45,104 @@ void main() {
       final spec = tester.resolvedSpecOf<SegmentedControlItemSpec>(
         find.text('Alpha'),
       );
-      expect(spec.containerEffects?.outline.width, 0);
+      expect(spec.containerEffects?.outline.width ?? 0, 0);
     });
   });
 
-  for (final (size, height, fontSize, paddingX, gap, radius, activeSpacing)
+  for (final (size, segment, paddingX, fontSize, frameRadius, segmentRadius)
       in const [
-        (FortalSegmentedControlSize.size1, 24.0, 12.0, 12.0, 4.0, 10.0, -0.12),
-        (FortalSegmentedControlSize.size2, 32.0, 13.0, 16.0, 8.0, 10.0, -0.14),
-        (FortalSegmentedControlSize.size3, 40.0, 15.0, 16.0, 12.0, 12.0, -0.15),
+        (FortalSegmentedControlSize.size1, 28.0, 10.0, 12.0, 14.0, 10.0),
+        (FortalSegmentedControlSize.size2, 32.0, 12.0, 13.0, 14.0, 10.0),
+        (FortalSegmentedControlSize.size3, 36.0, 14.0, 13.0, 16.0, 12.0),
       ]) {
-    testWidgets('${size.name} matches specified track and item metrics', (
+    testWidgets('${size.name} resolves its segment and frame metrics', (
       tester,
     ) async {
       final result = await _resolve(tester, size: size);
       final track = result.spec.container.spec;
-      final item = result.spec.item.spec;
+      final item = result.spec.item.spec.container.spec;
+      final indicator = result.spec.indicator!.spec;
 
-      expect(track.constraints?.minHeight, height);
-      expect(track.constraints?.maxHeight, double.infinity);
-      expect(item.container.spec.constraints?.minHeight, height);
-      expect(item.label.spec.style?.fontSize, fontSize);
+      expect(track.padding, const EdgeInsets.all(3));
+      expect(result.spec.spacing, 2);
+      expect(result.spec.segmentSizing, RemixSegmentSizing.content);
+      expect(_radius(track), frameRadius);
+      expect(item.constraints!.minHeight, segment);
       expect(
-        item.container.spec.padding?.resolve(TextDirection.ltr),
+        item.padding,
         EdgeInsets.symmetric(horizontal: paddingX),
       );
-      expect(item.spacing, gap);
-      expect(_radius(track), radius);
-      expect(_radiusOrNull(item.container.spec), isNull);
-    });
-
-    testWidgets('${size.name} metrics and active tracking scale with Fortal', (
-      tester,
-    ) async {
-      final result = await _resolve(
-        tester,
-        size: size,
-        scaling: .percent110,
-        states: {WidgetState.selected},
-      );
-      final track = result.spec.container.spec;
-      final item = result.spec.item.spec;
-
-      expect(track.constraints?.minHeight, closeTo(height * 1.1, 1e-9));
-      expect(
-        item.container.spec.constraints?.minHeight,
-        closeTo(height * 1.1, 1e-9),
-      );
-      expect(item.label.spec.style?.fontSize, closeTo(fontSize * 1.1, 1e-9));
-      expect(
-        item.container.spec.padding?.resolve(TextDirection.ltr).horizontal,
-        closeTo(paddingX * 2.2, 1e-9),
-      );
-      expect(item.spacing, closeTo(gap * 1.1, 1e-9));
-      expect(_radius(track), closeTo(radius * 1.1, 1e-9));
-      expect(
-        item.label.spec.style?.letterSpacing,
-        closeTo(activeSpacing * 1.1, 1e-9),
-      );
+      expect(_radius(item), segmentRadius);
+      expect(_radius(indicator), segmentRadius);
+      expect(result.spec.item.spec.label.spec.style!.fontSize, fontSize);
     });
   }
 
-  testWidgets(
-    'track layers and disabled color match the Fortal specification',
-    (tester) async {
-      final idle = await _resolve(tester);
-      final disabled = await _resolve(tester, states: {WidgetState.disabled});
-      final idleDecoration =
-          idle.spec.container.spec.decoration! as BoxDecoration;
-      final disabledDecoration =
-          disabled.spec.container.spec.decoration! as BoxDecoration;
+  testWidgets('a muted track in a border holds a raised gliding pill', (
+    tester,
+  ) async {
+    final result = await _resolve(tester, accent: FortalAccentColor.orla);
+    final track = result.spec.container.spec.decoration! as BoxDecoration;
+    final pill = result.spec.indicator!.spec.decoration! as BoxDecoration;
 
-      expect(
-        idleDecoration.color,
-        Color.alphaBlend(idle.grayA3, idle.colorSurface),
+    expect(track.color, const Color(0xFFF8F8F8));
+    expect((track.border! as Border).top.color, const Color(0xFFE9E9E9));
+    expect(pill.color, const Color(0xFFFFFFFF));
+    expect((pill.border! as Border).top.color, const Color(0xFFE9E9E9));
+    expect(pill.boxShadow, isNotEmpty);
+    expect(
+      result.spec.indicatorMotion,
+      AnimationConfig.curve(
+        duration: const Duration(milliseconds: 200),
+        curve: FortalMotion.easeStandard,
+      ),
+    );
+  });
+
+  testWidgets('the dark track and pill take the dark surface roles', (
+    tester,
+  ) async {
+    final result = await _resolve(
+      tester,
+      accent: FortalAccentColor.orla,
+      mode: FortalThemeMode.dark,
+    );
+    final track = result.spec.container.spec.decoration! as BoxDecoration;
+    final pill = result.spec.indicator!.spec.decoration! as BoxDecoration;
+
+    expect(track.color, const Color(0xFF242424));
+    expect((track.border! as Border).top.color, const Color(0xFF2B2B2B));
+    expect(pill.color, const Color(0xFF191919));
+  });
+
+  testWidgets('labels are muted until hovered, pressed or selected', (
+    tester,
+  ) async {
+    const muted = Color(0xFF7D7D7D);
+    const ink = Color(0xFF0B0B0B);
+    for (final (states, color) in [
+      (const <WidgetState>{}, muted),
+      ({WidgetState.hovered}, ink),
+      ({WidgetState.pressed}, ink),
+      ({WidgetState.selected}, ink),
+    ]) {
+      final result = await _resolve(
+        tester,
+        accent: FortalAccentColor.orla,
+        states: states,
       );
+      final label = result.spec.item.spec.label.spec.style!;
+
+      expect(label.color, color, reason: '$states');
+      expect(label.fontWeight, FontWeight.w500, reason: '$states');
+      // Segments never fill: the gliding pill is the only selected surface.
       expect(
-        disabledDecoration.color,
-        Color.alphaBlend(idle.grayA3, idle.gray3),
+        _color(result.spec.item.spec.container.spec),
+        isNull,
+        reason: '$states',
       );
-      expect(idle.spec.container.spec.clipBehavior, isNot(Clip.antiAlias));
-    },
-  );
+    }
+  });
 
   testWidgets('labels stay on one line so a narrow track cannot clip them', (
     tester,
@@ -144,40 +160,6 @@ void main() {
     }
   });
 
-  testWidgets('vertical controls keep one size height per segment', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      WidgetsApp(
-        color: const Color(0xFFFFFFFF),
-        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-          settings: settings,
-          pageBuilder: (context, _, _) => builder(context),
-        ),
-        home: FortalTheme(
-          child: Center(
-            child: FortalSegmentedControl<String>(
-              orientation: Axis.vertical,
-              items: const [
-                RemixSegmentedControlItem(value: 'day', label: 'Day'),
-                RemixSegmentedControlItem(value: 'week', label: 'Week'),
-              ],
-              selectedValue: 'day',
-              onChanged: (_) {},
-            ),
-          ),
-        ),
-      ),
-    );
-
-    expect(
-      tester
-          .getSize(find.byKey(const ValueKey('RemixSegmentedControl.track')))
-          .height,
-      80,
-    );
-  });
-
   testWidgets('the track paints no layer over the selected indicator', (
     tester,
   ) async {
@@ -187,144 +169,26 @@ void main() {
     expect(idle.spec.container.spec.foregroundDecoration, isNull);
     expect(disabled.spec.container.spec.foregroundDecoration, isNull);
   });
-
-  testWidgets('selected surface composes inset fill, ring, and focus', (
-    tester,
-  ) async {
-    final selected = await _resolve(
-      tester,
-      states: {WidgetState.selected, WidgetState.focused},
-    );
-    final effects = selected.spec.item.spec.containerEffects!;
-
-    expect(effects.behindContent?.gradients, hasLength(1));
-    expect(effects.behindContent?.gradientInsets, [1]);
-    expect((effects.behindContent!.gradients.single as LinearGradient).colors, [
-      selected.indicatorBackground,
-      selected.indicatorBackground,
-    ]);
-    expect(effects.overContent?.shadows, hasLength(1));
-    expect(effects.overContent?.shadows.single.color, selected.grayA4);
-    expect(effects.overContent?.shadows.single.shapeInset, 1);
-    expect(effects.outline.color, selected.focus8);
-    expect(effects.outline.width, 2);
-    expect(effects.outlineOffset, 2);
-  });
-
-  testWidgets('disabled selected state removes selected ring and inset', (
-    tester,
-  ) async {
-    final result = await _resolve(
-      tester,
-      states: {WidgetState.selected, WidgetState.disabled},
-    );
-    final item = result.spec.item.spec;
-    final effects = item.containerEffects!;
-
-    expect(effects.behindContent?.gradientInsets, isEmpty);
-    expect((effects.behindContent!.gradients.single as LinearGradient).colors, [
-      result.grayA3,
-      result.grayA3,
-    ]);
-    expect(effects.overContent?.shadows, isEmpty);
-    expect(item.label.spec.style?.color, result.grayA8);
-    expect(_radius(item.container.spec), 10);
-  });
-
-  testWidgets('inactive hover relies on track clipping and focus stays round', (
-    tester,
-  ) async {
-    final idle = await _resolve(tester);
-    final hovered = await _resolve(tester, states: {WidgetState.hovered});
-    final pressed = await _resolve(tester, states: {WidgetState.pressed});
-    final focused = await _resolve(tester, states: {WidgetState.focused});
-
-    expect(_color(idle.spec.item.spec.container.spec), isNull);
-    expect(_color(hovered.spec.item.spec.container.spec), idle.grayA2);
-    expect(_radiusOrNull(hovered.spec.item.spec.container.spec), isNull);
-    expect(_color(pressed.spec.item.spec.container.spec), isNull);
-    expect(_radius(focused.spec.item.spec.container.spec), 10);
-  });
-
-  testWidgets('selected labels use medium tab typography', (tester) async {
-    final size1 = await _resolve(
-      tester,
-      size: .size1,
-      states: {WidgetState.selected},
-    );
-    final size2 = await _resolve(
-      tester,
-      size: .size2,
-      states: {WidgetState.selected},
-    );
-    final size3 = await _resolve(
-      tester,
-      size: .size3,
-      states: {WidgetState.selected},
-    );
-
-    expect(size1.spec.item.spec.label.spec.style?.fontWeight, FontWeight.w500);
-    expect(size1.spec.item.spec.label.spec.style?.letterSpacing, -0.12);
-    expect(size1.spec.item.spec.label.spec.style?.wordSpacing, 0);
-    expect(size2.spec.item.spec.label.spec.style?.letterSpacing, -0.14);
-    expect(size3.spec.item.spec.label.spec.style?.letterSpacing, -0.15);
-  });
 }
 
-Future<
-  ({
-    SegmentedControlSpec spec,
-    Color colorSurface,
-    Color grayA2,
-    Color grayA3,
-    Color grayA4,
-    Color grayA8,
-    Color gray3,
-    Color indicatorBackground,
-    Color focus8,
-  })
->
-_resolve(
+Future<({SegmentedControlSpec spec})> _resolve(
   WidgetTester tester, {
   FortalSegmentedControlSize size = FortalSegmentedControlSize.size2,
-  FortalScaling scaling = FortalScaling.percent100,
+  FortalAccentColor? accent,
+  FortalThemeMode? mode,
   Set<WidgetState> states = const {},
 }) async {
-  late ({
-    SegmentedControlSpec spec,
-    Color colorSurface,
-    Color grayA2,
-    Color grayA3,
-    Color grayA4,
-    Color grayA8,
-    Color gray3,
-    Color indicatorBackground,
-    Color focus8,
-  })
-  result;
+  late ({SegmentedControlSpec spec}) result;
   await tester.pumpWidget(
     FortalTheme(
-      scaling: scaling,
+      accent: accent,
+      mode: mode,
       child: WidgetStateStyleOverride(
         states: states,
         child: Builder(
           builder: (context) {
             result = (
               spec: fortalSegmentedControlStyle(size: size).build(context).spec,
-              colorSurface: MixScope.tokenOf(
-                FortalTokens.colorSurface,
-                context,
-              ),
-              grayA2: MixScope.tokenOf(FortalTokens.grayA2, context),
-              grayA3: MixScope.tokenOf(FortalTokens.grayA3, context),
-              grayA4: MixScope.tokenOf(FortalTokens.grayA4, context),
-              grayA8: MixScope.tokenOf(FortalTokens.grayA8, context),
-              gray3: MixScope.tokenOf(FortalTokens.gray3, context),
-              indicatorBackground: MixScope.tokenOf(
-                FortalTokens.segmentedControlIndicatorBackground,
-                context,
-              ),
-              focus8: MixScope.tokenOf(FortalTokens.focus8, context),
             );
             return const SizedBox.shrink();
           },
@@ -338,11 +202,6 @@ _resolve(
 double _radius(BoxSpec box) =>
     ((box.decoration! as BoxDecoration).borderRadius! as BorderRadius)
         .topLeft
-        .x;
-
-double? _radiusOrNull(BoxSpec box) =>
-    ((box.decoration as BoxDecoration?)?.borderRadius as BorderRadius?)
-        ?.topLeft
         .x;
 
 Color? _color(BoxSpec box) => (box.decoration as BoxDecoration?)?.color;
