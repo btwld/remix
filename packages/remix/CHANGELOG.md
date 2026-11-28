@@ -97,6 +97,9 @@
 - Add `MenuSpec.positioning`. `RemixMenu.positioning` is now optional; when
   it is omitted, the style's positioning places the root panel, then the
   previous default.
+- Add `MenuSpec.itemTransition` and `RemixMenuItemTransition`. The builder
+  wraps each root-panel entry with the panel animation and the entry's index,
+  so rows can stagger.
 
 ### Fixes
 

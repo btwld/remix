@@ -133,6 +133,11 @@ final class RemixPanelTransitionHandle extends ChangeNotifier {
 
   bool get isExiting => _exitTransition != null;
 
+  /// The open and close animation while a transition runs the panel, or
+  /// `null` when the panel shows and hides at once.
+  Animation<double>? get animation =>
+      _transition == null ? null : _controller?.view;
+
   Widget wrapAnchor(Widget child) =>
       OverlayTriggerScope(isExiting: () => isExiting, child: child);
 

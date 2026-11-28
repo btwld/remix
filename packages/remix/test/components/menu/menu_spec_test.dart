@@ -498,7 +498,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = MenuSpec();
 
-        expect(spec.props, hasLength(11));
+        expect(spec.props, hasLength(12));
         expect(spec.props, contains(spec.panelTransition));
         expect(spec.props, contains(spec.trigger));
         expect(spec.props, contains(spec.overlay));
@@ -530,6 +530,7 @@ void main() {
             'divider',
             'panelTransition',
             'positioning',
+            'itemTransition',
           ]),
         );
       });

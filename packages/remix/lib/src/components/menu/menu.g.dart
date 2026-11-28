@@ -122,6 +122,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
   StyleSpec<DividerSpec> get divider;
   RemixPanelTransition? get panelTransition;
   OverlayPositionConfig? get positioning;
+  RemixMenuItemTransition? get itemTransition;
 
   @override
   Type get type => MenuSpec;
@@ -139,6 +140,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     StyleSpec<DividerSpec>? divider,
     RemixPanelTransition? panelTransition,
     OverlayPositionConfig? positioning,
+    RemixMenuItemTransition? itemTransition,
   }) {
     return MenuSpec(
       trigger: trigger ?? this.trigger,
@@ -152,6 +154,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       divider: divider ?? this.divider,
       panelTransition: panelTransition ?? this.panelTransition,
       positioning: positioning ?? this.positioning,
+      itemTransition: itemTransition ?? this.itemTransition,
     );
   }
 
@@ -177,6 +180,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
         t,
       ),
       positioning: MixOps.lerpSnap(positioning, other?.positioning, t),
+      itemTransition: MixOps.lerpSnap(itemTransition, other?.itemTransition, t),
     );
   }
 
@@ -193,6 +197,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     divider,
     panelTransition,
     positioning,
+    itemTransition,
   ];
 
   @override
@@ -245,7 +250,8 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('sectionLabel', sectionLabel))
       ..add(DiagnosticsProperty('divider', divider))
       ..add(DiagnosticsProperty('panelTransition', panelTransition))
-      ..add(DiagnosticsProperty('positioning', positioning));
+      ..add(DiagnosticsProperty('positioning', positioning))
+      ..add(DiagnosticsProperty('itemTransition', itemTransition));
   }
 }
 
@@ -1122,6 +1128,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
   final Prop<StyleSpec<DividerSpec>>? $divider;
   final Prop<RemixPanelTransition>? $panelTransition;
   final Prop<OverlayPositionConfig>? $positioning;
+  final Prop<RemixMenuItemTransition>? $itemTransition;
 
   const MenuStyler.create({
     Prop<StyleSpec<MenuTriggerSpec>>? trigger,
@@ -1135,6 +1142,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     Prop<StyleSpec<DividerSpec>>? divider,
     Prop<RemixPanelTransition>? panelTransition,
     Prop<OverlayPositionConfig>? positioning,
+    Prop<RemixMenuItemTransition>? itemTransition,
     super.variants,
     super.modifier,
     super.animation,
@@ -1148,7 +1156,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
        $sectionLabel = sectionLabel,
        $divider = divider,
        $panelTransition = panelTransition,
-       $positioning = positioning;
+       $positioning = positioning,
+       $itemTransition = itemTransition;
 
   MenuStyler({
     MenuTriggerStyler? trigger,
@@ -1162,6 +1171,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     DividerStyler? divider,
     RemixPanelTransition? panelTransition,
     OverlayPositionConfig? positioning,
+    RemixMenuItemTransition? itemTransition,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<MenuSpec>>? variants,
@@ -1177,6 +1187,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
          divider: Prop.maybeMix(divider),
          panelTransition: Prop.maybe(panelTransition),
          positioning: Prop.maybe(positioning),
+         itemTransition: Prop.maybe(itemTransition),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -1203,6 +1214,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       MenuStyler().panelTransition(value);
   factory MenuStyler.positioning(OverlayPositionConfig value) =>
       MenuStyler().positioning(value);
+  factory MenuStyler.itemTransition(RemixMenuItemTransition value) =>
+      MenuStyler().itemTransition(value);
   factory MenuStyler.wrap(WidgetModifierConfig value) =>
       MenuStyler().wrap(value);
 
@@ -1219,6 +1232,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     'divider',
     'panelTransition',
     'positioning',
+    'itemTransition',
     'animation',
     'modifier',
     'variants',
@@ -1277,6 +1291,11 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
   /// Sets the positioning.
   MenuStyler positioning(OverlayPositionConfig value) {
     return merge(MenuStyler(positioning: value));
+  }
+
+  /// Sets the itemTransition.
+  MenuStyler itemTransition(RemixMenuItemTransition value) {
+    return merge(MenuStyler(itemTransition: value));
   }
 
   /// Sets the animation configuration.
@@ -1361,6 +1380,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       divider: MixOps.merge($divider, other?.$divider),
       panelTransition: MixOps.merge($panelTransition, other?.$panelTransition),
       positioning: MixOps.merge($positioning, other?.$positioning),
+      itemTransition: MixOps.merge($itemTransition, other?.$itemTransition),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1382,6 +1402,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       divider: MixOps.resolve(context, $divider),
       panelTransition: MixOps.resolve(context, $panelTransition),
       positioning: MixOps.resolve(context, $positioning),
+      itemTransition: MixOps.resolve(context, $itemTransition),
     );
 
     return StyleSpec(
@@ -1405,7 +1426,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       ..add(DiagnosticsProperty('sectionLabel', $sectionLabel))
       ..add(DiagnosticsProperty('divider', $divider))
       ..add(DiagnosticsProperty('panelTransition', $panelTransition))
-      ..add(DiagnosticsProperty('positioning', $positioning));
+      ..add(DiagnosticsProperty('positioning', $positioning))
+      ..add(DiagnosticsProperty('itemTransition', $itemTransition));
   }
 
   @override
@@ -1421,6 +1443,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     $divider,
     $panelTransition,
     $positioning,
+    $itemTransition,
     $animation,
     $modifier,
     $variants,

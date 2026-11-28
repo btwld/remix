@@ -498,6 +498,49 @@ progress. When `onCloseRequested` is set, the menu stays open until it calls
 transitions already in progress, unless the transition sets
 `reducedMotionDuration`, which keeps a short open and close at that pace. Submenu panels are not wrapped.
 
+## Item stagger
+
+Set `itemTransition` on the style to wrap each entry of the root panel. The
+builder receives the panel's open and close animation, the entry's `index`,
+and the entry `count`, so rows can stagger in as the panel opens:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+Widget staggerRow(
+  BuildContext context,
+  RemixMenuItemTransitionInfo info,
+  Widget entry,
+) {
+  final start = (info.index * 0.06).clamp(0.0, 0.6);
+  final curved = CurvedAnimation(
+    parent: info.animation,
+    curve: Interval(start, 1, curve: Curves.easeOut),
+  );
+  return FadeTransition(opacity: curved, child: entry);
+}
+
+final staggeredMenu = MenuStyler()
+    .panelTransition(
+      const RemixPanelTransition(
+        duration: Duration(milliseconds: 300),
+        builder: fadePanel,
+      ),
+    )
+    .itemTransition(const RemixMenuItemTransition(builder: staggerRow));
+
+Widget fadePanel(
+  BuildContext context,
+  RemixPanelTransitionInfo info,
+  Widget panel,
+) => FadeTransition(opacity: info.animation, child: panel);
+```
+
+The animation is the one `panelTransition` runs, and it is complete when the
+menu has no panel transition. A section and a divider each count as one entry.
+Submenu panels are not wrapped.
+
 ## Sections
 
 `RemixMenuSection` groups entries under a heading, such as "Recent" or
