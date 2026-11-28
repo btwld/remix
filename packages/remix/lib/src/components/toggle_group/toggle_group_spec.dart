@@ -15,11 +15,54 @@ class ToggleGroupSpec with _$ToggleGroupSpec {
   @override
   final StyleSpec<ToggleGroupItemSpec> item;
 
+  /// A surface shared by the items that sits behind the selected item, inside
+  /// the container's padding and over its fill and border, and glides to the
+  /// next one when the selection changes.
+  ///
+  /// It takes the selected item's bounds, so `margin` insets it and the
+  /// decoration draws it. `null`, the default, draws none and leaves each
+  /// item's own selected style in charge. With no selection it draws nothing.
+  @override
+  final StyleSpec<BoxSpec>? indicator;
+
+  /// Paint layers behind [indicator], such as a shadow.
+  @override
+  @MixableField(setterType: RemixBoxEffectsMix)
+  final RemixBoxEffectsSpec? indicatorEffects;
+
+  /// How [indicator] moves between items. Accepts [CurveAnimationConfig] or
+  /// [SpringAnimationConfig], which may overshoot. `null` glides along
+  /// `Curves.easeOutCubic` over 250 ms.
+  ///
+  /// [RemixToggleGroup] throws [ArgumentError] for phase and keyframe configs
+  /// when it builds. While the user asks to reduce motion, the indicator moves
+  /// at once.
+  @override
+  final AnimationConfig? indicatorMotion;
+
   const ToggleGroupSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<ToggleGroupItemSpec>? item,
+    this.indicator,
+    this.indicatorEffects,
+    this.indicatorMotion,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        item = item ?? const StyleSpec(spec: ToggleGroupItemSpec());
+
+  // Deliberate: route effects through lerpNullable so shadows/blends animate;
+  // the generator's default snap-lerps unrecognized spec types.
+  @override
+  ToggleGroupSpec lerp(ToggleGroupSpec? other, double t) {
+    final generated = super.lerp(other, t);
+    if (other == null) return generated;
+    return generated.copyWith(
+      indicatorEffects: RemixBoxEffectsSpec.lerpNullable(
+        indicatorEffects,
+        other.indicatorEffects,
+        t,
+      ),
+    );
+  }
 }
 
 /// Backward-compatible name for [ToggleGroupSpec].

@@ -205,17 +205,39 @@ class RemixToggleGroup<T> extends StatelessWidget {
         styleSpec: styleSpec,
         trackFocusVisibility: true,
         builder: (context, spec) {
-          return FlexBox(
+          remixCheckIndicatorMotion(spec.indicatorMotion);
+          // The indicator paints inside the container's decoration and behind
+          // the items, so the host sits between the box and the flex.
+          return StyleSpecBuilder<FlexBoxSpec>(
             styleSpec: _withOrientation(spec.container),
-            children: [
-              for (final item in items)
-                _RemixToggleGroupItemWidget(
-                  key: ValueKey(item.value),
-                  data: item,
-                  defaultStyle: styleSpec == null ? effectiveStyle : null,
-                  defaultStyleSpec: styleSpec == null ? null : spec.item,
+            builder: (context, container) => Box(
+              styleSpec: container.box ?? const StyleSpec(spec: BoxSpec()),
+              child: RemixSelectionIndicatorHost(
+                selectedId: selectedValue,
+                indicator: spec.indicator,
+                indicatorEffects: spec.indicatorEffects,
+                motion: spec.indicatorMotion,
+                child: FlexBox(
+                  styleSpec: StyleSpec(spec: FlexBoxSpec(flex: container.flex)),
+                  children: [
+                    for (final item in items)
+                      RemixSelectionIndicatorAnchor(
+                        key: ValueKey(item.value),
+                        id: item.value as Object,
+                        child: _RemixToggleGroupItemWidget(
+                          data: item,
+                          defaultStyle: styleSpec == null
+                              ? effectiveStyle
+                              : null,
+                          defaultStyleSpec: styleSpec == null
+                              ? null
+                              : spec.item,
+                        ),
+                      ),
+                  ],
                 ),
-            ],
+              ),
+            ),
           );
         },
       ),
