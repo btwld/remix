@@ -648,6 +648,42 @@
       ]
     },
     {
+      "id": "number_field",
+      "fortalType": "FortalNumberField",
+      "enums": {
+        "size": {
+          "values": [
+            "size1",
+            "size2",
+            "size3"
+          ],
+          "default": "size2"
+        }
+      },
+      "defaults": {
+        "highContrast": false,
+        "enabled": true,
+        "readOnly": false,
+        "step": 1
+      },
+      "supportedStyleProps": [
+        "highContrast"
+      ],
+      "states": [
+        "idle",
+        "hovered",
+        "focused",
+        "stepHovered",
+        "stepPressed",
+        "atLimit",
+        "disabled",
+        "highContrast"
+      ],
+      "tests": [
+        "test/fortal/number_field_test.dart"
+      ]
+    },
+    {
       "id": "popover",
       "fortalType": "FortalPopover",
       "enums": {

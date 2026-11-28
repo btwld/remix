@@ -13,6 +13,7 @@ import 'components/tabs.dart' as tabs;
 import 'components/link.dart' as link;
 import 'components/breadcrumbs.dart' as breadcrumbs;
 import 'components/checkbox.dart' as checkbox;
+import 'components/number_field.dart' as number_field;
 import 'components/radio.dart' as radio;
 import 'components/rating.dart' as rating;
 import 'components/switch.dart' as switch_story;
@@ -235,6 +236,11 @@ final _families = <_Family>[
     id: 'search_field',
     group: 'Inputs',
     build: search_field.buildSearchFieldCatalogUseCase,
+  ),
+  (
+    id: 'number_field',
+    group: 'Inputs',
+    build: number_field.buildNumberFieldCatalogUseCase,
   ),
   (
     id: 'textarea',

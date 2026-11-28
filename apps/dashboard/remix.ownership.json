@@ -20,6 +20,8 @@
     "lib/ui/components/date_range_picker.dart": "btwld/remix/registry#fortal/date_range_picker",
     "lib/ui/components/icon_button.dart": "btwld/remix/registry#fortal/icon_button",
     "lib/ui/components/icon_button.g.dart": "btwld/remix/registry#fortal/icon_button",
+    "lib/ui/components/number_field.dart": "btwld/remix/registry#fortal/number_field",
+    "lib/ui/components/number_field.g.dart": "btwld/remix/registry#fortal/number_field",
     "lib/ui/components/popover.dart": "btwld/remix/registry#fortal/popover",
     "lib/ui/components/popover.g.dart": "btwld/remix/registry#fortal/popover",
     "lib/ui/components/range_calendar.dart": "btwld/remix/registry#fortal/range_calendar",
