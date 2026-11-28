@@ -25,7 +25,7 @@ A `—` value means the widget does not expose that axis. When values are listed
 | `FortalBreadcrumbs` | `size1`, `size2`, `size3` | `size2` | — | — |
 | `FortalButton` | `size1`, `size2`, `size3`, `size4` | `size2` | `solid`, `soft`, `surface`, `outline`, `ghost` | `solid` |
 | `FortalCalendar` | — | — | — | — |
-| `FortalCallout` | `size1`, `size2`, `size3` | `size2` | `soft`, `surface`, `outline` | `soft` |
+| `FortalCallout` | `size1`, `size2`, `size3` | `size2` | `soft`, `surface`, `outline` | `surface` |
 | `FortalCard` | `size1`, `size2`, `size3`, `size4`, `size5` | `size1` | `surface`, `ghost` | `surface` |
 | `FortalCheckbox` | `size1`, `size2`, `size3` | `size2` | `surface`, `soft` | `surface` |
 | `FortalCode` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — | `solid`, `soft`, `outline`, `ghost` | `soft` |
@@ -543,8 +543,9 @@ Recipe `registry_source/lib/src/fortal/components/callout.dart`
 
 | Parameter | Values | Default |
 | --- | --- | --- |
+| `intent` | `accent`, `info`, `success`, `warning`, `error` | `info` |
 | `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `soft`, `surface`, `outline` | `soft` |
+| `variant` | `soft`, `surface`, `outline` | `surface` |
 
 **Named constructors:** `FortalCallout.outline`, `FortalCallout.soft`, `FortalCallout.surface`
 

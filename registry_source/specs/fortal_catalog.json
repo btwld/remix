@@ -299,7 +299,17 @@
             "surface",
             "outline"
           ],
-          "default": "soft"
+          "default": "surface"
+        },
+        "intent": {
+          "values": [
+            "accent",
+            "info",
+            "success",
+            "warning",
+            "error"
+          ],
+          "default": "info"
         }
       },
       "defaults": {
