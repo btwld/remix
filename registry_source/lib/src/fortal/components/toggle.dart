@@ -78,12 +78,6 @@ const _disabledOpacity = 0.45;
 
 const _transparent = Color(0x00000000);
 
-/// Every change of fill, border and text color.
-final _motion = AnimationConfig.curve(
-  duration: FortalMotion.fast,
-  curve: FortalMotion.easeStandard,
-);
-
 /// The on fill: the accent's indicator mixed into the surface, 11% in light
 /// and 14% in dark. Neutral gray under orla, a faint tint under the others.
 const _onFillToken = ContextToken<Color>(_resolveOnFill);
@@ -100,7 +94,6 @@ Color _resolveOnFill(BuildContext context) => mixOklabPremultiplied(
 /// no fill and an opaque box.
 ToggleStyler _base(bool highContrast) =>
     _content(highContrast ? FortalTokens.gray12() : FortalTokens.gray11())
-        .animate(_motion)
         .container(.mainAxisSize(.min))
         .color(_transparent)
         .wrap(.opacity(1))
