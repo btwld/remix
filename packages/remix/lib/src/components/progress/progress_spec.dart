@@ -1,5 +1,16 @@
 part of 'progress.dart';
 
+/// How a [RemixProgress] indicator shows its value.
+enum RemixProgressFill {
+  /// The indicator's width is the value's share of the track.
+  shrink,
+
+  /// The indicator keeps the track's full width and slides in from the start
+  /// edge, clipped to the track, so its rounded end keeps its shape at small
+  /// values.
+  slide,
+}
+
 /// Resolved visual values for a [RemixProgress].
 @MixableSpec(
   target: RemixProgress.new,
@@ -24,6 +35,11 @@ class ProgressSpec with _$ProgressSpec {
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? indicatorEffects;
 
+  /// How the indicator shows the value. `null` means
+  /// [RemixProgressFill.shrink].
+  @override
+  final RemixProgressFill? indicatorFill;
+
   const ProgressSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? track,
@@ -31,6 +47,7 @@ class ProgressSpec with _$ProgressSpec {
     StyleSpec<BoxSpec>? trackContainer,
     this.trackEffects,
     this.indicatorEffects,
+    this.indicatorFill,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        track = track ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: BoxSpec()),

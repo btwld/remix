@@ -59,19 +59,39 @@ class RemixProgress extends StatelessWidget {
                 containerEffects: spec.trackEffects,
               ),
               // Indicator foreground based on value
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final biggestSize = constraints.biggest;
-
-                  return SizedBox(
-                    width: biggestSize.width * value.clamp(0.0, 1.0),
-                    child: RemixBoxAdapter(
-                      styleSpec: spec.indicator,
-                      containerEffects: spec.indicatorEffects,
+              if (spec.indicatorFill == .slide)
+                Positioned.fill(
+                  child: ClipRect(
+                    child: FractionalTranslation(
+                      translation: Offset(
+                        (value.clamp(0.0, 1.0) - 1) *
+                            switch (Directionality.of(context)) {
+                              .ltr => 1,
+                              .rtl => -1,
+                            },
+                        0,
+                      ),
+                      child: RemixBoxAdapter(
+                        styleSpec: spec.indicator,
+                        containerEffects: spec.indicatorEffects,
+                      ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                )
+              else
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final biggestSize = constraints.biggest;
+
+                    return SizedBox(
+                      width: biggestSize.width * value.clamp(0.0, 1.0),
+                      child: RemixBoxAdapter(
+                        styleSpec: spec.indicator,
+                        containerEffects: spec.indicatorEffects,
+                      ),
+                    );
+                  },
+                ),
               // Track container (for any additional styling)
               Box(styleSpec: spec.trackContainer),
             ],

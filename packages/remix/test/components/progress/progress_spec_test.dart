@@ -135,7 +135,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = ProgressSpec();
 
-        expect(spec.props, hasLength(6));
+        expect(spec.props, hasLength(7));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.track));
         expect(spec.props, contains(spec.indicator));
@@ -157,6 +157,7 @@ void main() {
             'trackContainer',
             'trackEffects',
             'indicatorEffects',
+            'indicatorFill',
           ]),
         );
       });

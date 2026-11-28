@@ -13,6 +13,7 @@ mixin _$ProgressSpec implements Spec<ProgressSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get trackContainer;
   RemixBoxEffectsSpec? get trackEffects;
   RemixBoxEffectsSpec? get indicatorEffects;
+  RemixProgressFill? get indicatorFill;
 
   @override
   Type get type => ProgressSpec;
@@ -25,6 +26,7 @@ mixin _$ProgressSpec implements Spec<ProgressSpec>, Diagnosticable {
     StyleSpec<BoxSpec>? trackContainer,
     RemixBoxEffectsSpec? trackEffects,
     RemixBoxEffectsSpec? indicatorEffects,
+    RemixProgressFill? indicatorFill,
   }) {
     return ProgressSpec(
       container: container ?? this.container,
@@ -33,6 +35,7 @@ mixin _$ProgressSpec implements Spec<ProgressSpec>, Diagnosticable {
       trackContainer: trackContainer ?? this.trackContainer,
       trackEffects: trackEffects ?? this.trackEffects,
       indicatorEffects: indicatorEffects ?? this.indicatorEffects,
+      indicatorFill: indicatorFill ?? this.indicatorFill,
     );
   }
 
@@ -49,6 +52,7 @@ mixin _$ProgressSpec implements Spec<ProgressSpec>, Diagnosticable {
         other?.indicatorEffects,
         t,
       ),
+      indicatorFill: MixOps.lerpSnap(indicatorFill, other?.indicatorFill, t),
     );
   }
 
@@ -60,6 +64,7 @@ mixin _$ProgressSpec implements Spec<ProgressSpec>, Diagnosticable {
     trackContainer,
     trackEffects,
     indicatorEffects,
+    indicatorFill,
   ];
 
   @override
@@ -107,7 +112,8 @@ mixin _$ProgressSpec implements Spec<ProgressSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('trackContainer', trackContainer))
       ..add(DiagnosticsProperty('trackEffects', trackEffects))
-      ..add(DiagnosticsProperty('indicatorEffects', indicatorEffects));
+      ..add(DiagnosticsProperty('indicatorEffects', indicatorEffects))
+      ..add(DiagnosticsProperty('indicatorFill', indicatorFill));
   }
 }
 
@@ -129,6 +135,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
   final Prop<StyleSpec<BoxSpec>>? $trackContainer;
   final Prop<RemixBoxEffectsSpec>? $trackEffects;
   final Prop<RemixBoxEffectsSpec>? $indicatorEffects;
+  final Prop<RemixProgressFill>? $indicatorFill;
 
   const ProgressStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
@@ -137,6 +144,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     Prop<StyleSpec<BoxSpec>>? trackContainer,
     Prop<RemixBoxEffectsSpec>? trackEffects,
     Prop<RemixBoxEffectsSpec>? indicatorEffects,
+    Prop<RemixProgressFill>? indicatorFill,
     super.variants,
     super.modifier,
     super.animation,
@@ -145,7 +153,8 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
        $indicator = indicator,
        $trackContainer = trackContainer,
        $trackEffects = trackEffects,
-       $indicatorEffects = indicatorEffects;
+       $indicatorEffects = indicatorEffects,
+       $indicatorFill = indicatorFill;
 
   ProgressStyler({
     BoxStyler? container,
@@ -154,6 +163,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     BoxStyler? trackContainer,
     RemixBoxEffectsMix? trackEffects,
     RemixBoxEffectsMix? indicatorEffects,
+    RemixProgressFill? indicatorFill,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<ProgressSpec>>? variants,
@@ -164,6 +174,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
          trackContainer: Prop.maybeMix(trackContainer),
          trackEffects: Prop.maybeMix(trackEffects),
          indicatorEffects: Prop.maybeMix(indicatorEffects),
+         indicatorFill: Prop.maybe(indicatorFill),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -181,6 +192,8 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
       ProgressStyler().trackEffects(value);
   factory ProgressStyler.indicatorEffects(RemixBoxEffectsMix value) =>
       ProgressStyler().indicatorEffects(value);
+  factory ProgressStyler.indicatorFill(RemixProgressFill value) =>
+      ProgressStyler().indicatorFill(value);
   factory ProgressStyler.alignment(AlignmentGeometry value) =>
       ProgressStyler().alignment(value);
   factory ProgressStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -682,6 +695,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     'trackContainer',
     'trackEffects',
     'indicatorEffects',
+    'indicatorFill',
     'animation',
     'modifier',
     'variants',
@@ -715,6 +729,11 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
   /// Sets the indicatorEffects.
   ProgressStyler indicatorEffects(RemixBoxEffectsMix value) {
     return merge(ProgressStyler(indicatorEffects: value));
+  }
+
+  /// Sets the indicatorFill.
+  ProgressStyler indicatorFill(RemixProgressFill value) {
+    return merge(ProgressStyler(indicatorFill: value));
   }
 
   /// Sets the animation configuration.
@@ -768,6 +787,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
         $indicatorEffects,
         other?.$indicatorEffects,
       ),
+      indicatorFill: MixOps.merge($indicatorFill, other?.$indicatorFill),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -784,6 +804,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
       trackContainer: MixOps.resolve(context, $trackContainer),
       trackEffects: MixOps.resolve(context, $trackEffects),
       indicatorEffects: MixOps.resolve(context, $indicatorEffects),
+      indicatorFill: MixOps.resolve(context, $indicatorFill),
     );
 
     return StyleSpec(
@@ -802,7 +823,8 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
       ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('trackContainer', $trackContainer))
       ..add(DiagnosticsProperty('trackEffects', $trackEffects))
-      ..add(DiagnosticsProperty('indicatorEffects', $indicatorEffects));
+      ..add(DiagnosticsProperty('indicatorEffects', $indicatorEffects))
+      ..add(DiagnosticsProperty('indicatorFill', $indicatorFill));
   }
 
   @override
@@ -813,6 +835,7 @@ class ProgressStyler extends MixStyler<ProgressStyler, ProgressSpec>
     $trackContainer,
     $trackEffects,
     $indicatorEffects,
+    $indicatorFill,
     $animation,
     $modifier,
     $variants,
