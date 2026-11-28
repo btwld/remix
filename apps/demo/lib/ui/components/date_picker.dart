@@ -150,10 +150,8 @@ class FortalDatePicker extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
     ),
-    footerBuilder: (context, value) => FortalCalendarFooter(
-      status: value == null
-          ? calendarLabels.noDate
-          : calendarLabels.fullDate(value),
+    footerBuilder: (context, value) => fortalCalendarFooter(
+      value == null ? calendarLabels.noDate : calendarLabels.fullDate(value),
     ),
     closeDelay: const Duration(milliseconds: 300),
     placeholderStyle: ButtonStyler().label(

@@ -154,8 +154,8 @@ class FortalDateRangePicker extends StatelessWidget {
     positioning: positioning,
     icon: RemixIcons.calendar,
     trailingIcon: RemixIcons.chevronDown,
-    footerBuilder: (context, value) => FortalCalendarFooter(
-      status: value == null
+    footerBuilder: (context, value) => fortalCalendarFooter(
+      value == null
           ? calendarLabels.noDate
           : (formatRange ?? _range(calendarLabels))(value),
     ),

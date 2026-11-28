@@ -150,10 +150,8 @@ class UiDatePicker extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
     ),
-    footerBuilder: (context, value) => UiCalendarFooter(
-      status: value == null
-          ? calendarLabels.noDate
-          : calendarLabels.fullDate(value),
+    footerBuilder: (context, value) => uiCalendarFooter(
+      value == null ? calendarLabels.noDate : calendarLabels.fullDate(value),
     ),
     closeDelay: const Duration(milliseconds: 300),
     placeholderStyle: ButtonStyler().label(

@@ -324,8 +324,10 @@ final fortalCalendarPanelTransition = RemixPanelTransition(
 
 /// A picker footer: a 1px gray 6 rule 14px under the calendar and, 11px
 /// below it, [status] in muted 12px text at the end of the row.
-class FortalCalendarFooter extends StatelessWidget {
-  const FortalCalendarFooter({super.key, required this.status});
+Widget fortalCalendarFooter(String status) => _CalendarFooter(status: status);
+
+class _CalendarFooter extends StatelessWidget {
+  const _CalendarFooter({required this.status});
 
   /// The selected date or range, or the empty-selection label.
   final String status;
@@ -361,11 +363,24 @@ class FortalCalendarFooter extends StatelessWidget {
   );
 }
 
-/// The header: the month and year on the left, previous and next month
-/// buttons on the right.
-class FortalCalendarHeader extends StatelessWidget {
-  const FortalCalendarHeader({
-    super.key,
+/// The calendar header: the month and year on the left, previous and next
+/// month buttons on the right. Shared by the calendar and range calendar.
+Widget fortalCalendarHeader({
+  required DateTime month,
+  VoidCallback? onPrevious,
+  VoidCallback? onNext,
+  RemixCalendarLabels labels = const RemixCalendarLabels(),
+  IconButtonStyler navigationStyle = const IconButtonStyler.create(),
+}) => _CalendarHeader(
+  month: month,
+  onPrevious: onPrevious,
+  onNext: onNext,
+  labels: labels,
+  navigationStyle: navigationStyle,
+);
+
+class _CalendarHeader extends StatelessWidget {
+  const _CalendarHeader({
     required this.month,
     this.onPrevious,
     this.onNext,
@@ -609,7 +624,7 @@ class FortalCalendar extends StatelessWidget {
     labels: labels,
     headerBuilder:
         headerBuilder ??
-        (context, state) => FortalCalendarHeader(
+        (context, state) => fortalCalendarHeader(
           month: state.displayedMonth,
           onPrevious: state.showPreviousMonth,
           onNext: state.showNextMonth,

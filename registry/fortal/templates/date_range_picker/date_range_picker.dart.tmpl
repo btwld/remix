@@ -154,8 +154,8 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
     positioning: positioning,
     icon: {{icon:calendar}},
     trailingIcon: {{icon:chevronDown}},
-    footerBuilder: (context, value) => {{typePrefix}}CalendarFooter(
-      status: value == null
+    footerBuilder: (context, value) => {{valuePrefix}}CalendarFooter(
+      value == null
           ? calendarLabels.noDate
           : (formatRange ?? _range(calendarLabels))(value),
     ),

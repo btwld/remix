@@ -169,7 +169,7 @@ class FortalRangeCalendar extends StatelessWidget {
     labels: labels,
     headerBuilder:
         headerBuilder ??
-        (context, state) => FortalCalendarHeader(
+        (context, state) => fortalCalendarHeader(
           month: state.displayedMonth,
           onPrevious: state.showPreviousMonth,
           onNext: state.showNextMonth,

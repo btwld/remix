@@ -522,7 +522,7 @@ pickers combine five independently overridable child stylers.
 - Calendar: 328px wide at normal scale, seven day slots that scale with text.
   Each day is a circle 2px in from each side of its slot, with 4px between
   rows, and every month shows six weeks so the height never changes. The
-  header is `FortalCalendarHeader`: the month and year in text3 medium on the
+  header is `fortalCalendarHeader`: the month and year in text3 medium on the
   left, and 32px pill buttons with 16px gray11 chevrons on the right that fill
   gray3 under the pointer and sink to 96% while held. Weekdays are text1
   medium gray10 on a 24px line, 6px above the days; the header sits 14px above
@@ -549,7 +549,7 @@ pickers combine five independently overridable child stylers.
   10px padding and a 26px corner for a range. They drop 8px and grow from 95%
   on the snappy spring while fading in, and leave over 150ms
   (`fortalCalendarPanelTransition`). Calendars inside are 288px (date) and
-  252px (range) wide. `FortalCalendarFooter` prints the selection, or the
+  252px (range) wide. `fortalCalendarFooter` prints the selection, or the
   empty-selection label, in muted 12px text under a gray6 rule. A pick closes
   the popover after 300ms, so the disc lands first. Nested month and year
   selector panels cap at six touchTargetMin steps, scaled with text, with a

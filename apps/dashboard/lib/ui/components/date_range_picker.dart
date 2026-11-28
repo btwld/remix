@@ -154,8 +154,8 @@ class UiDateRangePicker extends StatelessWidget {
     positioning: positioning,
     icon: RemixIcons.calendar,
     trailingIcon: RemixIcons.chevronDown,
-    footerBuilder: (context, value) => UiCalendarFooter(
-      status: value == null
+    footerBuilder: (context, value) => uiCalendarFooter(
+      value == null
           ? calendarLabels.noDate
           : (formatRange ?? _range(calendarLabels))(value),
     ),

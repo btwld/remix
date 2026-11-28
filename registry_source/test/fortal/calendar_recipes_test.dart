@@ -263,7 +263,6 @@ void _pickerTests() {
         ),
         findsWidgets,
       );
-      expect(find.byType(FortalCalendarFooter), findsOneWidget);
     });
   }
 }

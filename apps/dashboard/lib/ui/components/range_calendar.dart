@@ -169,7 +169,7 @@ class UiRangeCalendar extends StatelessWidget {
     labels: labels,
     headerBuilder:
         headerBuilder ??
-        (context, state) => UiCalendarHeader(
+        (context, state) => uiCalendarHeader(
           month: state.displayedMonth,
           onPrevious: state.showPreviousMonth,
           onNext: state.showNextMonth,
