@@ -1,14 +1,11 @@
-import 'package:flutter/gestures.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/utilities/remix_path_icon.dart';
 
 import '../helpers/test_helpers.dart';
 import '../vanilla/calendar_recipes_test.dart'
-    show dayBox, dayDecoration, dayText, dayBorder;
+    show dayBox, dayDecoration, dayText;
 import '../vanilla/support.dart' show contrastRatio;
 
 Widget calendar({bool range = false, bool enabled = true}) => range
@@ -38,40 +35,48 @@ void main() {
   for (final dark in [false, true]) {
     for (final range in [false, true]) {
       testWidgets(
-        '$dark $range today is gray12 bold; selection, bounds and disabled remain distinct',
+        '$dark $range today is medium, the selection sits on accent discs, unavailable days are muted',
         (t) async {
           await t.pumpRemixApp(
             calendar(range: range),
             mode: dark ? .dark : .light,
             accent: .orla,
           );
+          await t.pumpAndSettle();
           final context = t.element(find.text('6'));
           expect(dayText(t, 6)?.color, FortalTokens.gray12.resolve(context));
-          expect(dayText(t, 6)?.fontWeight, FontWeight.w700);
+          expect(dayText(t, 6)?.fontWeight, FontWeight.w500);
           expect(dayText(t, 18)?.decoration, TextDecoration.lineThrough);
           expect(
-            dayDecoration(t, range ? 10 : 12)?.color,
-            FortalTokens.accentSolid.resolve(context),
+            dayText(t, 18)?.color,
+            FortalTokens.gray10.resolve(context).withValues(alpha: 0.42),
           );
-          expect(
-            contrastRatio(
-              dayText(t, range ? 10 : 12)!.color!,
-              dayDecoration(t, range ? 10 : 12)!.color!,
-            ),
-            greaterThanOrEqualTo(4.5),
-          );
-          await t.pumpRemixApp(
-            calendar(range: range, enabled: false),
-            mode: dark ? .dark : .light,
-          );
-          expect(
-            dayText(t, 20)?.color,
-            FortalTokens.gray9.resolve(t.element(find.text('20'))),
-          );
+          final disc = FortalTokens.accent9.resolve(context);
+          final ends = range ? [10, 13] : [12];
+          expect(_fills(t), containsAll([disc]));
+          expect(_fills(t).where((c) => c == disc), hasLength(ends.length));
+          if (range) {
+            expect(
+              _fills(t),
+              contains(FortalTokens.accentSurface.resolve(context)),
+            );
+            expect(dayText(t, 11)?.color, FortalTokens.gray12.resolve(context));
+          }
+          for (final day in ends) {
+            expect(dayDecoration(t, day)?.color?.a ?? 0, 0);
+            expect(
+              dayText(t, day)?.color,
+              FortalTokens.accentSwatchContrast.resolve(context),
+            );
+            expect(
+              contrastRatio(dayText(t, day)!.color!, disc),
+              greaterThanOrEqualTo(4.5),
+            );
+          }
         },
       );
       testWidgets(
-        '$dark $range navigation and selector chevrons scale with 200 percent RTL text',
+        '$dark $range navigation buttons are 32px pills that scale with 200 percent RTL text',
         (t) async {
           await t.pumpRemixApp(
             MediaQuery(
@@ -87,97 +92,56 @@ void main() {
             mode: dark ? .dark : .light,
             textDirection: TextDirection.rtl,
           );
-          final context = t.element(find.byType(RemixIconButton).first);
+          expect(find.byType(RemixIconButton), findsNWidgets(2));
           final nav = t
               .widget<StyleSpecProvider<IconButtonSpec>>(
                 find.byType(StyleSpecProvider<IconButtonSpec>).first,
               )
               .spec
               .spec;
-          final selector = t
-              .widget<StyleSpecProvider<SelectTriggerSpec>>(
-                find.byType(StyleSpecProvider<SelectTriggerSpec>).first,
-              )
-              .spec
-              .spec;
-          expect(nav.icon.spec.size, FortalTokens.space5.resolve(context) * 2);
-          final glyph = find.descendant(
-            of: find.byType(RemixIconButton).first,
-            matching: find.byType(RemixPathIcon),
-          );
-          expect(
-            t.getSize(glyph).height,
-            FortalTokens.space5.resolve(context) * 2,
-          );
-          expect(selector.indicator.spec.size, 18);
-          final indicator = find.descendant(
-            of: find.byType(RemixSelect<int>).first,
-            matching: find.byType(RemixPathIcon),
-          );
-          expect(t.getSize(indicator).height, 18);
-
+          expect(nav.icon.spec.size, 32);
+          expect(nav.container.spec.constraints?.maxWidth, 64);
+          expect(find.byType(RemixSelect<int>), findsNothing);
           expect(t.takeException(), isNull);
         },
       );
     }
-    testWidgets('$dark stale cap separates from live middle', (t) async {
+    testWidgets('$dark the disc glides to a new day on the morph spring', (
+      t,
+    ) async {
       await t.pumpRemixApp(
-        calendar(range: true),
+        StatefulBuilder(builder: (context, setState) => _Holder()),
         mode: dark ? .dark : .light,
-        accent: .orla,
       );
-      await t.tap(find.text('20'));
       await t.pumpAndSettle();
-      final context = t.element(find.text('20'));
-      if (dark)
-        expect(
-          dayDecoration(t, 10)?.color,
-          isNot(FortalTokens.accent4.resolve(context)),
-        );
+      final from = _disc(t);
+      await t.tap(find.text('20'));
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 60));
+      final mid = _disc(t);
+      expect(mid.center.dx, isNot(from.center.dx));
+      expect(
+        mid.center.dy,
+        inExclusiveRange(from.center.dy, _dayCenter(t, 20).dy),
+      );
+      await t.pumpAndSettle();
+      expect(
+        _disc(t).center,
+        offsetMoreOrLessEquals(_dayCenter(t, 20), epsilon: 0.5),
+      );
     });
-    testWidgets(
-      '$dark draft retains a hierarchy and a contrasting focus contour',
-      (t) async {
-        FocusManager.instance.highlightStrategy =
-            FocusHighlightStrategy.alwaysTraditional;
-        addTearDown(
-          () => FocusManager.instance.highlightStrategy =
-              FocusHighlightStrategy.automatic,
-        );
-        await t.pumpRemixApp(
-          calendar(range: true),
-          mode: dark ? .dark : .light,
-          accent: .orla,
-        );
-        await t.tap(find.text('20'));
-        await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-        await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-        await t.pumpAndSettle();
-        final outline = dayBorder(t, 21).top.color;
-        final focus = dayBorder(t, 22).top.color;
-        expect(
-          contrastRatio(focus, outline),
-          greaterThanOrEqualTo(dark ? 2 : 1.1),
-        );
-        final context = t.element(find.text('20'));
-        if (dark)
-          expect(
-            dayDecoration(t, 10)?.color,
-            isNot(FortalTokens.accent4.resolve(context)),
-          );
-        expect(dayDecoration(t, 10)?.color, isNot(dayDecoration(t, 11)?.color));
-        final mouse = await t.createGesture(kind: PointerDeviceKind.mouse);
-        await mouse.addPointer();
-        await mouse.moveTo(t.getCenter(dayBox(21)));
-        await t.pumpAndSettle();
-        final hover = dayDecoration(t, 21)?.color;
-        await mouse.down(t.getCenter(dayBox(21)));
-        await t.pumpAndSettle();
-        expect(dayDecoration(t, 21)?.color, isNot(hover));
-        await mouse.cancel();
-        await mouse.removePointer();
-      },
-    );
+    testWidgets('$dark six weeks keep one height across months', (t) async {
+      await t.pumpRemixApp(calendar(), mode: dark ? .dark : .light);
+      await t.pumpAndSettle();
+      final before = t.getSize(find.byType(RemixCalendar)).height;
+      await t.tap(find.bySemanticsLabel('Next month'));
+      await t.pump(const Duration(milliseconds: 100));
+      // Both month grids are mounted while the strip slides.
+      expect(find.text('15'), findsNWidgets(2));
+      await t.pumpAndSettle();
+      expect(t.getSize(find.byType(RemixCalendar)).height, before);
+      expect(find.text('15'), findsOneWidget);
+    });
     for (final range in [false, true]) {
       testWidgets(
         '$dark $range picker forwards overrides and caps nested month panel',
@@ -229,3 +193,41 @@ void main() {
     }
   }
 }
+
+class _Holder extends StatefulWidget {
+  @override
+  State<_Holder> createState() => _HolderState();
+}
+
+class _HolderState extends State<_Holder> {
+  DateTime _value = DateTime(2026, 11, 12);
+
+  @override
+  Widget build(BuildContext context) => FortalCalendar(
+    value: _value,
+    firstDate: DateTime(2025),
+    lastDate: DateTime(2028, 12, 31),
+    currentDate: DateTime(2026, 11, 6),
+    onChanged: (next) => setState(() => _value = next),
+  );
+}
+
+Iterable<Color?> _fills(WidgetTester t) => t
+    .widgetList<DecoratedBox>(
+      find.descendant(
+        of: find.byType(AnimatedPositioned),
+        matching: find.byType(DecoratedBox),
+      ),
+    )
+    .map((box) => (box.decoration as ShapeDecoration).color);
+
+Rect _disc(WidgetTester t) => t.getRect(
+  find
+      .descendant(
+        of: find.byType(AnimatedPositioned),
+        matching: find.byType(DecoratedBox),
+      )
+      .first,
+);
+
+Offset _dayCenter(WidgetTester t, int day) => t.getCenter(dayBox(day));

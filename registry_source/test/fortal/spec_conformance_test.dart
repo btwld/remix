@@ -24,15 +24,13 @@ void main() {
                 fortalRangeCalendarStyle(),
               ]) {
                 final spec = style.build(context).spec;
-                expect(
-                  spec.container.spec.padding?.resolve(TextDirection.ltr),
-                  EdgeInsets.all(FortalTokens.space3.resolve(context)),
-                );
-                expect(
-                  spec.headerSpacing,
-                  FortalTokens.space2.resolve(context),
-                );
-                expect(spec.rowSpacing, FortalTokens.space1.resolve(context));
+                expect(spec.container.spec.padding, isNull);
+                expect(spec.headerSpacing, 14);
+                expect(spec.weekdaySpacing, 6);
+                expect(spec.rowSpacing, 4);
+                expect(spec.fixedWeeks, isTrue);
+                expect(spec.monthTransition, fortalCalendarMonthTransition);
+                expect(spec.selectionLayer, isNotNull);
               }
               return const SizedBox();
             },

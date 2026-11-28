@@ -515,28 +515,29 @@ API.
 
 ## Calendar and picker families
 
-The design source is the reviewed Appointment date and Reporting period stories
-in `apps/demo/lib/components/{calendar,range_calendar,date_picker,date_range_picker}.dart`
-at d8ad0b877 (calendar polish round 4). These are Fortal designs, not reference
-ports. Four independently installable hand-written composites retain Remix's
+Four independently installable hand-written composites retain Remix's
 controlled civil-date APIs; CalendarSpec has no widget generator target, and
 pickers combine five independently overridable child stylers.
 
-- Calendar: 44px minimum day targets scale with text; seven columns plus space3
-  padding. Navigation retains 44px targets; its space4 chevrons scale with text,
-  as do the 9px selector indicators. Select captions have 146px scaled widths,
-  touchTargetMin minimum height, and space2 horizontal padding. Text2 days,
-  text1 gray11 weekdays, space2 header gap, space1 weekday and row gaps, radius3.
-- Today: gray12 bold numeral and gray9 ring (range uses gray10), retaining
-  selected ink when today is also selected. Ordinary days hover gray4 and press
-  gray6. Selected days use accentSolid/accentContrast, 90% hover and 80% press.
-  Disabled days use gray9; unavailable days add a strike.
-- Ranges: directional radius3 caps in accentSolid, accent4 interiors; draft
-  accent4 with accent5 caps and 2px accent8 perimeter. Blocked draft uses
-  error3/error11. Stale committed selection has gray5/gray4 caps/interior in
-  light, gray3 / the midpoint of gray2 and gray3 in dark, distinct from the live middle. Keyboard day focus
-  uses the reviewed 2px border contour; dark uses gray11 so it separates from
-  accent8, light uses focus8. This inset day treatment preserves connected bands.
+- Calendar: 328px wide at normal scale, seven day slots that scale with text.
+  Each day is a circle 2px in from each side of its slot, with 4px between
+  rows, and every month shows six weeks so the height never changes. The
+  header is `fortalCalendarHeader`: the month and year in text3 medium on the
+  left, and 32px pill buttons with 16px gray11 chevrons on the right that fill
+  gray3 under the pointer and sink to 96% while held. Weekdays are text1
+  medium gray10 on a 24px line, 6px above the days; the header sits 14px above
+  them.
+- Days: text2 tabular gray12 numbers, gray3 under the pointer, 94% while held,
+  medium when today. Unavailable and disabled days are gray10 at 42%;
+  unavailable days add a strike. The keyboard ring is the shared outline.
+- Selection: painted under the days by `fortalCalendarSelectionLayer`, an
+  accent9 disc on each end and, for ranges, an accentSurface pill across each
+  week. Discs glide on the morph spring and grow from 70% when the selection
+  arrives. Selected and end numbers are medium `accentSwatchContrast`, or
+  black or white where a palette's swatch ink falls under 4.5:1 on the disc.
+  A range draft tints the days it would cover.
+- Months slide one slot and 16px on the smooth spring and fade toward 40% as
+  they leave (`fortalCalendarMonthTransition`).
 - Pickers: outline Button, calendar icon scaled from space4, gray10 placeholder,
   focus8 open border, Popover with zero extra padding and 480px scaled maximum.
   Single/range trigger width floors are 200/260px scaled; labels and formatting

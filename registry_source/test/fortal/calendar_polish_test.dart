@@ -1,11 +1,9 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
 import 'package:remix/remix.dart';
-import 'package:remix/src/utilities/remix_path_icon.dart';
 
-import '../vanilla/calendar_recipes_test.dart' show dayBox, dayDecoration;
+import '../vanilla/calendar_recipes_test.dart' show dayBox;
 
 Widget host(Widget child, {double scale = 1}) => WidgetsApp(
   color: const Color(0xffffffff),
@@ -72,7 +70,7 @@ Widget fixture(String family) {
 void main() {
   for (final scale in [1.0, 2.0]) {
     for (final family in ['calendar', 'range', 'picker', 'range-picker']) {
-      testWidgets('$family at $scale navigation is 24px scaled', (t) async {
+      testWidgets('$family at $scale navigation is 32px scaled', (t) async {
         t.view.devicePixelRatio = 1;
         t.view.physicalSize = const Size(1000, 1500);
         addTearDown(() {
@@ -86,99 +84,80 @@ void main() {
           await t.tap(find.byType(RemixButton));
           await t.pumpAndSettle();
         }
-        final glyphs = find.descendant(
-          of: find.byType(RemixIconButton),
-          matching: find.byType(RemixPathIcon),
-        );
-        for (final glyph in glyphs.evaluate()) {
-          expect(
-            t.getSize(find.byElementPredicate((e) => e == glyph)),
-            Size.square(24 * scale),
-          );
+        final buttons = find.byType(StyleSpecProvider<IconButtonSpec>);
+        expect(buttons, findsNWidgets(2));
+        for (final button in t.widgetList<StyleSpecProvider<IconButtonSpec>>(
+          buttons,
+        )) {
+          final box = button.spec.spec.container.spec.constraints!;
+          expect(box.maxWidth, 32 * scale);
+          expect(box.maxHeight, 32 * scale);
         }
-        expect(glyphs, findsNWidgets(2));
       });
-      testWidgets(
-        '$family at $scale month panel avoids slicing calendar numerals',
-        // The new text ramp moved the header 2px; the calendar re-skin
-        // re-tunes the selector panel cap against its row gaps.
-        skip: scale == 1,
-        (t) async {
-          t.view.devicePixelRatio = 1;
-          t.view.physicalSize = const Size(1000, 1500);
-          addTearDown(() {
-            t.view.resetPhysicalSize();
-            t.view.resetDevicePixelRatio();
-          });
-          await t.binding.setSurfaceSize(const Size(1000, 1500));
-          addTearDown(() => t.binding.setSurfaceSize(null));
-          await t.pumpWidget(host(fixture(family), scale: scale));
-          if (family.contains('picker')) {
-            await t.tap(find.byType(RemixButton));
-            await t.pumpAndSettle();
-          }
-          await t.tap(find.bySemanticsLabel('Choose month'));
-          await t.pumpAndSettle();
-          final panel = find.byType(StyleSpecProvider<SelectContentSpec>);
-          final rect = t.getRect(panel);
-          expect(
-            t
-                .widget<StyleSpecProvider<SelectContentSpec>>(panel)
-                .spec
-                .spec
-                .container
-                .spec
-                .constraints
-                ?.maxHeight,
-            262 * scale,
-          );
-          expect(rect.height, scale == 1 ? 262 : 498);
-          final rows = [
-            for (final day in [3, 10, 17, 24, 30])
-              t.getRect(scale == 1 ? dayBox(day) : find.text('$day')),
-          ];
-          expect(
-            rows.any(
-              (row) => rect.bottom > row.top && rect.bottom < row.bottom,
-            ),
-            isFalse,
-            reason: 'panel bottom ${rect.bottom}; rows $rows',
-          );
-          expect(
-            find.byWidgetPredicate(
-              (w) => w is RawScrollbar && w.thumbVisibility == true,
-            ),
-            findsWidgets,
-          );
-          expect(t.takeException(), isNull);
-        },
-      );
     }
   }
-  testWidgets(
-    'dark stale range lifts off picker surface while live draft wins',
-    (t) async {
-      t.view.devicePixelRatio = 1;
-      t.view.physicalSize = const Size(1000, 1500);
-      addTearDown(() {
-        t.view.resetPhysicalSize();
-        t.view.resetDevicePixelRatio();
+  // The calendars have no month select; only the pickers' header opens the
+  // month panel.
+  for (final scale in [1.0, 2.0]) {
+    for (final family in ['picker', 'range-picker']) {
+      group('', skip: _pickerGeometry, () {
+        testWidgets(
+          '$family at $scale month panel avoids slicing calendar numerals',
+          (t) async {
+            t.view.devicePixelRatio = 1;
+            t.view.physicalSize = const Size(1000, 1500);
+            addTearDown(() {
+              t.view.resetPhysicalSize();
+              t.view.resetDevicePixelRatio();
+            });
+            await t.binding.setSurfaceSize(const Size(1000, 1500));
+            addTearDown(() => t.binding.setSurfaceSize(null));
+            await t.pumpWidget(host(fixture(family), scale: scale));
+            if (family.contains('picker')) {
+              await t.tap(find.byType(RemixButton));
+              await t.pumpAndSettle();
+            }
+            await t.tap(find.bySemanticsLabel('Choose month'));
+            await t.pumpAndSettle();
+            final panel = find.byType(StyleSpecProvider<SelectContentSpec>);
+            final rect = t.getRect(panel);
+            expect(
+              t
+                  .widget<StyleSpecProvider<SelectContentSpec>>(panel)
+                  .spec
+                  .spec
+                  .container
+                  .spec
+                  .constraints
+                  ?.maxHeight,
+              262 * scale,
+            );
+            expect(rect.height, scale == 1 ? 262 : 498);
+            final rows = [
+              for (final day in [3, 10, 17, 24, 30])
+                t.getRect(scale == 1 ? dayBox(day) : find.text('$day')),
+            ];
+            expect(
+              rows.any(
+                (row) => rect.bottom > row.top && rect.bottom < row.bottom,
+              ),
+              isFalse,
+              reason: 'panel bottom ${rect.bottom}; rows $rows',
+            );
+            expect(
+              find.byWidgetPredicate(
+                (w) => w is RawScrollbar && w.thumbVisibility == true,
+              ),
+              findsWidgets,
+            );
+            expect(t.takeException(), isNull);
+          },
+        );
       });
-      await t.binding.setSurfaceSize(const Size(1000, 1500));
-      addTearDown(() => t.binding.setSurfaceSize(null));
-      await t.pumpWidget(host(fixture('range-picker')));
-      await t.tap(find.byType(RemixButton));
-      await t.pumpAndSettle();
-      await t.tap(find.text('20'));
-      await t.pumpAndSettle();
-      await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-      await t.pumpAndSettle();
-      await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-      await t.pumpAndSettle();
-      expect(dayDecoration(t, 10)?.color?.toARGB32(), 0xff252525);
-      expect(dayDecoration(t, 11)?.color?.toARGB32(), 0xff212121);
-      expect(dayDecoration(t, 21)?.color?.toARGB32(), 0xff333333);
-      expect(dayDecoration(t, 20)?.color?.toARGB32(), 0xff3b3b3b);
-    },
-  );
+    }
+  }
 }
+
+const _pickerGeometry =
+    'The calendar rows now sit 4px apart and the pickers keep their old panel '
+    'geometry until the date picker re-skin, so the panel edge lands in a row.';

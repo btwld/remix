@@ -70,8 +70,7 @@ void main() {
           await tester.pumpAndSettle();
         }
         for (final label in [
-          'November',
-          '2026',
+          if (picker == null) 'November 2026' else ...['November', '2026'],
           'Mo',
           'Tu',
           'We',

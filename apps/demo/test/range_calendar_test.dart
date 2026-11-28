@@ -3,7 +3,6 @@ import 'package:demo/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:naked_ui/naked_ui.dart' show NakedCalendarDay;
 import 'package:remix/remix.dart';
 
 Future<void> _pump(
@@ -33,108 +32,225 @@ Future<void> _pump(
   await tester.pumpAndSettle();
 }
 
-BoxDecoration _day(WidgetTester tester, int day) {
-  final f = find.byWidgetPredicate(
-    (w) => w is NakedCalendarDay && w.date.day == day,
-  );
-  return tester
-          .widget<Box>(find.descendant(of: f, matching: find.byType(Box)).first)
-          .styleSpec!
-          .spec
-          .decoration
-      as BoxDecoration;
+/// The discs and pills of the selection layer, in global coordinates.
+List<({Rect rect, Color color})> _layer(WidgetTester tester) => [
+  for (final element
+      in find
+          .descendant(
+            of: find.byType(AnimatedPositioned),
+            matching: find.byType(DecoratedBox),
+          )
+          .evaluate())
+    (
+      rect: tester.getRect(find.byElementPredicate((e) => e == element)),
+      color: ((element.widget as DecoratedBox).decoration as ShapeDecoration)
+          .color!,
+    ),
+];
+
+CalendarDaySpec _day(WidgetTester tester, int day) => tester
+    .widget<StyleSpecProvider<CalendarDaySpec>>(
+      find
+          .ancestor(
+            of: find.text('$day'),
+            matching: find.byType(StyleSpecProvider<CalendarDaySpec>),
+          )
+          .first,
+    )
+    .spec
+    .spec;
+
+/// A day slot narrowed to its drawn circle, 2px in from each side.
+Rect _dayRect(WidgetTester tester, int day) => tester
+    .getRect(
+      find
+          .ancestor(
+            of: find.text('$day'),
+            matching: find.byType(StyleSpecProvider<CalendarDaySpec>),
+          )
+          .first,
+    )
+    .deflateHorizontally(2);
+
+extension on Rect {
+  Rect deflateHorizontally(double inset) =>
+      Rect.fromLTRB(left + inset, top, right - inset, bottom);
 }
 
-(double, double) _sides(BoxBorder border, bool rtl) => switch (border) {
-  Border(:final left, :final right) => (left.width, right.width),
-  BorderDirectional(:final start, :final end) =>
-    rtl ? (end.width, start.width) : (start.width, end.width),
-  _ => throw StateError('Unexpected border'),
-};
+double _contrast(Color a, Color b) {
+  final x = a.computeLuminance(), y = b.computeLuminance();
+  return (x > y ? x + .05 : y + .05) / (x > y ? y + .05 : x + .05);
+}
+
 void main() {
   for (final dark in [false, true]) {
-    testWidgets('$dark today ring contrasts with the range middle by 3:1', (
-      t,
-    ) async {
-      await _pump(
-        t,
-        dark: dark,
-        child: RemixRangeCalendar(
-          value: CivilDateRange(
-            start: DateTime(2026, 11, 5),
-            end: DateTime(2026, 11, 9),
-          ),
-          firstDate: DateTime(2025),
-          lastDate: DateTime(2028),
-          currentDate: DateTime(2026, 11, 6),
-          onChanged: (_) {},
-          style: fortalRangeCalendarStyle(),
-        ),
+    for (final rtl in [false, true]) {
+      testWidgets(
+        '$dark $rtl the range is two accent discs over a tinted pill',
+        (tester) async {
+          await _pump(tester, dark: dark, rtl: rtl);
+          final context = tester.element(find.byType(RangeCalendarExample));
+          final fills = tester
+              .widgetList<DecoratedBox>(
+                find.descendant(
+                  of: find.byType(AnimatedPositioned),
+                  matching: find.byType(DecoratedBox),
+                ),
+              )
+              .map((box) => (box.decoration as ShapeDecoration).color)
+              .toList();
+          final disc = FortalTokens.accent9.resolve(context);
+          expect(fills.where((c) => c == disc), hasLength(2));
+          expect(fills, contains(FortalTokens.accentSurface.resolve(context)));
+          expect(tester.takeException(), isNull);
+        },
       );
-      final day = _day(t, 6);
-      final a = day.border!.top.color.computeLuminance(),
-          b = day.color!.computeLuminance();
+    }
+  }
+  for (final rtl in [false, true]) {
+    testWidgets('${rtl ? 'RTL' : 'LTR'} draft range moves the discs to the '
+        'draft ends and tints the days between', (tester) async {
+      await _pump(tester, rtl: rtl);
+      final context = tester.element(find.byType(RangeCalendarExample));
+      final disc = FortalTokens.accent9.resolve(context);
+      final tint = FortalTokens.accentSurface.resolve(context);
+      await tester.tap(find.text('20'));
+      await tester.pumpAndSettle();
+      final step = rtl
+          ? LogicalKeyboardKey.arrowLeft
+          : LogicalKeyboardKey.arrowRight;
+      await tester.sendKeyEvent(step);
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(step);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+
+      final layer = _layer(tester);
+      final discs = [
+        for (final part in layer)
+          if (part.color == disc) part.rect,
+      ];
+      expect(discs, hasLength(2));
+      for (final (i, day) in [20, 22].indexed) {
+        expect(discs[i].center.dx, closeTo(_dayRect(tester, day).center.dx, 1));
+        expect(discs[i].center.dy, closeTo(_dayRect(tester, day).center.dy, 1));
+      }
+      final band = layer.singleWhere((part) => part.color == tint).rect;
+      final (first, last) = rtl
+          ? (_dayRect(tester, 22), _dayRect(tester, 20))
+          : (_dayRect(tester, 20), _dayRect(tester, 22));
+      expect(band.left, closeTo(first.left, 1));
+      expect(band.right, closeTo(last.right, 1));
       expect(
-        (a > b ? a + .05 : b + .05) / (a > b ? b + .05 : a + .05),
-        greaterThanOrEqualTo(3),
+        (_day(tester, 21).container.spec.decoration as BoxDecoration?)?.color,
+        tint,
+      );
+      expect(
+        (_day(tester, 11).container.spec.decoration as BoxDecoration?)?.color,
+        isNot(tint),
       );
     });
   }
-  for (final rtl in [false, true]) {
-    testWidgets(
-      'draft edges connect without internal seams in ${rtl ? "RTL" : "LTR"}',
-      (tester) async {
-        await _pump(tester, rtl: rtl);
-        await tester.tap(find.text('20'));
-        await tester.sendKeyEvent(
-          rtl ? LogicalKeyboardKey.arrowLeft : LogicalKeyboardKey.arrowRight,
-        );
-        await tester.pumpAndSettle();
-        await tester.sendKeyEvent(
-          rtl ? LogicalKeyboardKey.arrowLeft : LogicalKeyboardKey.arrowRight,
-        );
-        await tester.pumpAndSettle();
-        expect(tester.takeException(), isNull);
-        final start = _day(tester, 20).border!,
-            middle = _day(tester, 21).border!;
-        expect(_sides(start, rtl), rtl ? (0.0, 2.0) : (2.0, 0.0));
-        expect(_sides(middle, rtl), (0.0, 0.0));
-        expect([middle.top.width, middle.bottom.width], [2, 2]);
-      },
-    );
-  }
-  testWidgets('today composes with middle start and single range corners', (
-    tester,
-  ) async {
-    await _pump(tester);
-    final style = tester
-        .widget<RemixRangeCalendar>(find.byType(RemixRangeCalendar))
-        .style;
-    for (final (start, end) in [(5, 9), (6, 9), (6, 6)]) {
+
+  for (final dark in [false, true]) {
+    testWidgets('${dark ? 'dark' : 'light'} disabled range stays visible at '
+        'half strength', (tester) async {
       await _pump(
         tester,
-        child: RemixRangeCalendar(
-          value: CivilDateRange(
-            start: DateTime(2026, 11, start),
-            end: DateTime(2026, 11, end),
+        dark: dark,
+        child: Center(
+          child: FortalRangeCalendar(
+            value: CivilDateRange(
+              start: DateTime(2026, 11, 10),
+              end: DateTime(2026, 11, 13),
+            ),
+            firstDate: DateTime(2026),
+            lastDate: DateTime(2027),
+            firstDayOfWeek: DateTime.monday,
+            enabled: false,
+            onChanged: (_) {},
           ),
-          firstDate: DateTime(2025),
-          lastDate: DateTime(2028),
-          currentDate: DateTime(2026, 11, 6),
-          onChanged: (_) {},
-          style: style,
         ),
       );
+      final context = tester.element(find.byType(FortalRangeCalendar));
+      final disc = FortalTokens.accent9.resolve(context);
+      final page = FortalTokens.colorBackground.resolve(context);
+      final discs = [
+        for (final part in _layer(tester))
+          if (part.color == disc) part.rect,
+      ];
+      expect(discs, hasLength(2));
+      expect(discs.first.center.dx, closeTo(_dayRect(tester, 10).center.dx, 1));
+      expect(discs.last.center.dx, closeTo(_dayRect(tester, 13).center.dx, 1));
+      final opacity = tester
+          .widgetList<Opacity>(
+            find.ancestor(
+              of: find.byType(AnimatedPositioned).first,
+              matching: find.byType(Opacity),
+            ),
+          )
+          .fold<double>(1, (value, widget) => value * widget.opacity);
+      expect(opacity, 0.5);
+      expect(
+        _contrast(
+          Color.alphaBlend(disc.withValues(alpha: disc.a * opacity), page),
+          page,
+        ),
+        greaterThan(1.15),
+      );
+    });
+  }
+
+  for (final rtl in [false, true]) {
+    testWidgets('${rtl ? 'RTL' : 'LTR'} keyboard focus on the range end rings '
+        'its disc', (tester) async {
+      final node = FocusNode();
+      addTearDown(node.dispose);
+      final previous = FocusManager.instance.highlightStrategy;
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+      addTearDown(() => FocusManager.instance.highlightStrategy = previous);
+      await _pump(
+        tester,
+        rtl: rtl,
+        child: Center(
+          child: FortalRangeCalendar(
+            value: CivilDateRange(
+              start: DateTime(2026, 11, 10),
+              end: DateTime(2026, 11, 13),
+            ),
+            firstDate: DateTime(2026),
+            lastDate: DateTime(2027),
+            firstDayOfWeek: DateTime.monday,
+            focusNode: node,
+            onChanged: (_) {},
+          ),
+        ),
+      );
+      node.requestFocus();
+      await tester.pumpAndSettle();
+      for (var i = 0; i < 3; i++) {
+        await tester.sendKeyEvent(
+          rtl ? LogicalKeyboardKey.arrowLeft : LogicalKeyboardKey.arrowRight,
+        );
+        await tester.pumpAndSettle();
+      }
+      final ring = fortalFocusOutline()
+          .resolve(tester.element(find.byType(FortalRangeCalendar)))
+          .outline
+          .color;
+      Color? outline(int day) =>
+          _day(tester, day).containerEffects?.outline.color;
+      expect(outline(13)?.toARGB32(), ring.toARGB32());
+      expect(outline(12)?.toARGB32(), isNot(ring.toARGB32()));
+      final disc = FortalTokens.accent9.resolve(
+        tester.element(find.byType(FortalRangeCalendar)),
+      );
+      final end = _layer(tester).lastWhere((part) => part.color == disc).rect;
+      final box = _dayRect(tester, 13);
+      expect(box.center.dx, closeTo(end.center.dx, 1));
+      expect(box.width, closeTo(end.width, 1));
       expect(tester.takeException(), isNull);
-      final radius = _day(tester, 6).borderRadius!.resolve(TextDirection.ltr);
-      expect(
-        radius.topLeft,
-        start == 5 ? Radius.zero : const Radius.circular(12),
-      );
-      expect(
-        radius.topRight,
-        end == 6 ? const Radius.circular(12) : Radius.zero,
-      );
-    }
-  });
+    });
+  }
 }
