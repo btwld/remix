@@ -33,6 +33,7 @@ final _customizationTokens = {
   'radiusFull',
   'radiusThumb',
   'shadow2',
+  'shadow4',
   'shadow1Layers',
   // Foundation roles the per-component re-skins will read.
   'controlTrack',
