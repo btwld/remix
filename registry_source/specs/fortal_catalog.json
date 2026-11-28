@@ -771,7 +771,8 @@
         "variant": {
           "values": [
             "surface",
-            "soft"
+            "soft",
+            "card"
           ],
           "default": "surface"
         }

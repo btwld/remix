@@ -258,6 +258,7 @@ items:
   checkbox:
     registryDependencies:
       - theme
+      - motion
     dependencies:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:
@@ -895,6 +896,7 @@ items:
   switch:
     registryDependencies:
       - theme
+      - motion
     dependencies:
       mix_annotations: ^2.2.0-beta.1
     devDependencies:

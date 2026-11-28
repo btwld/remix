@@ -390,9 +390,13 @@ abstract final class UiTokens {
 
   static const badgePaddingY1 = DoubleToken('ui.badge.padding-y.1');
 
-  /// Checkbox dimensions expressed as scaled pixels by Fortal.
+  /// Checkbox square sides expressed as scaled pixels by Fortal.
   static const checkboxSize1 = DoubleToken('ui.checkbox.size.1');
+  static const checkboxSize2 = DoubleToken('ui.checkbox.size.2');
   static const checkboxSize3 = DoubleToken('ui.checkbox.size.3');
+
+  /// The box the checkbox fill and stroked mark are drawn in; it covers the
+  /// square, frame included.
   static const checkboxIndicatorSize1 = DoubleToken(
     'ui.checkbox.indicator-size.1',
   );
@@ -400,19 +404,23 @@ abstract final class UiTokens {
     'ui.checkbox.indicator-size.2',
   );
 
-  /// Radio indicators are 40% of their control size in Fortal.
+  /// Radio circles; odd circles keep an odd dot on whole pixels.
   ///
   /// These values need dedicated tokens because arithmetic on an unresolved
   /// token reference would destroy its identity before Mix can resolve it.
+  static const radioSize2 = DoubleToken('ui.radio.size.2');
+  static const radioSize3 = DoubleToken('ui.radio.size.3');
   static const radioIndicatorSize1 = DoubleToken('ui.radio.indicator-size.1');
   static const radioIndicatorSize2 = DoubleToken('ui.radio.indicator-size.2');
 
-  /// Checkbox radii derived from fractional radius-step expressions.
+  /// Checkbox corners, following the theme's radius setting.
   static const checkboxRadius1 = RadiusToken('ui.checkbox.radius.1');
+  static const checkboxRadius2 = RadiusToken('ui.checkbox.radius.2');
   static const checkboxRadius3 = RadiusToken('ui.checkbox.radius.3');
 
   /// Switch geometry that cannot be derived from unresolved token references.
   static const switchHeight2 = DoubleToken('ui.switch.height.2');
+  static const switchHeight3 = DoubleToken('ui.switch.height.3');
   static const switchWidth1 = DoubleToken('ui.switch.width.1');
   static const switchWidth2 = DoubleToken('ui.switch.width.2');
   static const switchWidth3 = DoubleToken('ui.switch.width.3');

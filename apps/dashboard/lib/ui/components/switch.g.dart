@@ -8,10 +8,12 @@ part of 'switch.dart';
 
 /// The Fortal Switch recipe.
 ///
-/// It reads top to bottom: the track, thumb and focus ring, then the variant's
-/// colors for on, pressed and disabled, then the touch target.
+/// It reads top to bottom: the pill track and its shadowed thumb, then the
+/// variant's on colours, then the press stretch, disabled and the focus ring.
+/// The thumb glides on the smooth spring and stretches 5px while held, its
+/// near edge staying put.
 ///
-/// [highContrast] moves the on state to accent step 12.
+/// [highContrast] moves the on track to accent step 12.
 class UiSwitch extends StatelessWidget {
   const UiSwitch({
     super.key,
@@ -32,7 +34,8 @@ class UiSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  /// A neutral track with a 1px frame, filled with the accent when on.
+  /// A neutral track that darkens on hover and fills with the control ink
+  /// when on, under a shadowed light thumb.
   const UiSwitch.surface({
     super.key,
     this.size = .size2,
@@ -51,8 +54,8 @@ class UiSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = UiSwitchVariant.surface;
 
-  /// A neutral tint, accent-tinted when on. The 1px frame shows only while off
-  /// and enabled.
+  /// The surface track while off; on, a 10% control-ink tint with a
+  /// control-ink thumb.
   const UiSwitch.soft({
     super.key,
     this.size = .size2,

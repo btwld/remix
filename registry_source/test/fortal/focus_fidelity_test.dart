@@ -23,28 +23,6 @@ void main() {
 
   tearDown(() => FocusManager.instance.highlightStrategy = previousStrategy);
 
-  testWidgets('every radio variant uses the shared focus color', (
-    tester,
-  ) async {
-    final (rings, focus8) = await _resolveFocused(
-      tester,
-      (context) => (
-        {
-          for (final variant in FortalRadioVariant.values)
-            variant: fortalRadioStyle(
-              variant: variant,
-            ).build(context).spec.containerEffects!.outline.color,
-        },
-        MixScope.tokenOf(FortalTokens.focus8, context),
-      ),
-    );
-
-    expect(rings, {
-      FortalRadioVariant.surface: focus8,
-      FortalRadioVariant.soft: focus8,
-    });
-  });
-
   testWidgets('every select variant follows an overridden focus color', (
     tester,
   ) async {

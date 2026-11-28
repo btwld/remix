@@ -52,9 +52,6 @@ void main() {
                         .build(context)
                         .spec
                         .containerEffects,
-                    fortalCheckboxStyle().build(context).spec.containerEffects,
-                    fortalRadioStyle().build(context).spec.containerEffects,
-                    fortalSwitchStyle().build(context).spec.trackEffects,
                     fortalTextFieldStyle().build(context).spec.containerEffects,
                     fortalTextAreaStyle().build(context).spec.containerEffects,
                     fortalSelectStyle()

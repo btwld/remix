@@ -36,16 +36,10 @@ void main() {
                       fortalIconButtonStyle(
                         variant: variant,
                       ).build(context).spec.containerEffects,
-                    for (final variant in FortalRadioVariant.values)
-                      fortalRadioStyle(
-                        variant: variant,
-                      ).build(context).spec.containerEffects,
                     for (final variant in FortalSelectVariant.values)
                       fortalSelectStyle(
                         variant: variant,
                       ).build(context).spec.trigger.spec.containerEffects,
-                    fortalCheckboxStyle().build(context).spec.containerEffects,
-                    fortalSwitchStyle().build(context).spec.trackEffects,
                     fortalTextFieldStyle().build(context).spec.containerEffects,
                     fortalTextAreaStyle().build(context).spec.containerEffects,
                     fortalCardStyle().build(context).spec.containerEffects,

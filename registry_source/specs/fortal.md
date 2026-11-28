@@ -275,15 +275,28 @@ placeholder and a gray-12 chevron (at least 11.5:1 on gray-2), so under WCAG
 1.4.11 its frame (about 1.5:1) is not the information that identifies it; a
 text field can be empty and unlabelled, so its frame is.
 
-Selected surface switch thumbs are white with a 2px `accentThumbRing`
+Checkbox, radio and switch draw the control ink (`accentIndicator`,
+`accentTrack`) under every accent. The checkbox is an 18px square with a 5px
+corner in a 1px `controlBorder` frame that turns gray 10 on hover; selected,
+its fill springs in from 60% and its 1.75px check draws on along its length,
+then morphs point by point into the dash. The radio is a 17px circle whose 7px
+dot stays mounted: it grows from 40% when chosen and previews at 22% while an
+empty radio is pressed. The radio `card` variant wraps mark and copy in a
+framed card row with 12px padding that fills gray 3 on hover and takes a
+control-ink frame over a 5% tint when selected. Labels are 13px medium, 12px
+from the control, with a muted description 2px below; radio labels read
+gray 11 until selected. The switch is a 42 by 24 pill with a 3px inset and an
+18px thumb in `shadowThumb` that glides on the smooth spring and stretches 5px
+while held. Off tracks are `controlTrack` (`controlTrackHover` on hover) under
+`controlThumb`; on thumbs are `accentThumb` with a 2px `accentThumbRing`
 (transparent by default, the fitted ring under the theme's high contrast
-switch), or `accent1` against the high-contrast `accent12` track. Selected soft thumbs use
-`accentContent`, promoted to `accent12` at high contrast. Off thumbs stay white with
-a 1px `controlBorder` ring on a track edged in `controlBorder`; the selected
-surface track keeps its quiet gray-alpha-5 edge. Disabled switches keep a
-neutral gray-2 thumb with a gray-6 border and drop the active track edge
-(surface keeps the quiet edge, soft has none), whatever the selection, focus
-or press state. Slider thumbs are white with a 2px `accentThumbRing` in light
+switch), or `accent1` against the high-contrast `accent12` track. Selected
+soft switches put a control-ink thumb on a 10% tint, `accentContent` under the
+theme's high contrast. Disabled checkboxes, radios and switches fade to 50%
+and keep their state colours. Their focus ring circles the 40px touch target
+with the 14px control corner.
+
+Slider thumbs are white with a 2px `accentThumbRing` in light
 and gray3 in dark; the thumb
 is identified by its fill or its ring. The soft slider range is step 6 alone,
 with no accent alpha layered over it. Geometry and state precedence are shared.
