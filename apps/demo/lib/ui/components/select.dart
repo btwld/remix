@@ -52,7 +52,8 @@ enum FortalSelectVariant {
 ///
 /// [highContrast] gives the surface trigger the strong frame at rest and
 /// moves the highlighted item of the surface and ghost variants to accent
-/// step 12 under step 1 text.
+/// step 12 under step 1 text. It, or the theme's high contrast switch, lifts
+/// the placeholder and chevron from gray 10 to gray 11 so they read at 4.5:1.
 @MixWidget(target: RemixSelect.new)
 SelectStyler fortalSelectStyle({
   FortalSelectVariant variant = .surface,
@@ -89,7 +90,7 @@ SelectTriggerStyler _trigger(
   FortalSelectVariant variant,
   FortalSelectSize size, {
   required bool highContrast,
-}) => _triggerBase()
+}) => _triggerBase(highContrast: highContrast)
     .merge(_triggerScale(variant, size))
     .wrap(fortalTouchTarget())
     .merge(switch (variant) {
@@ -123,7 +124,8 @@ SelectTriggerStyler _trigger(
     );
 
 /// The trigger's label, placeholder, icons, value roll and focus ring.
-SelectTriggerStyler _triggerBase() {
+SelectTriggerStyler _triggerBase({required bool highContrast}) {
+  final muted = highContrast ? FortalTokens.gray11() : _mutedContent();
   TextStyler regular(Color color) => TextStyler(
     style: FortalTokens.text2.mix(),
   ).fontWeight(FortalTokens.fontWeightRegular()).color(color);
@@ -133,9 +135,9 @@ SelectTriggerStyler _triggerBase() {
       .mainAxisAlignment(.spaceBetween)
       .borderRadius(.all(FortalTokens.radius4OrFull()))
       .label(regular(FortalTokens.gray12()))
-      .placeholder(regular(FortalTokens.gray10()))
+      .placeholder(regular(muted))
       .icon(.color(FortalTokens.gray12()).size(FortalTokens.space4()))
-      .indicator(.color(FortalTokens.gray10()).size(FortalTokens.space4()))
+      .indicator(.color(muted).size(FortalTokens.space4()))
       .indicatorOpacity(1)
       .labelTransition(
         const RemixSelectLabelTransition(
@@ -146,6 +148,12 @@ SelectTriggerStyler _triggerBase() {
       )
       .onFocusVisible(.containerEffects(fortalFocusOutline()));
 }
+
+final _mutedContent = ContextToken<Color>(
+  (context) => FortalTheme.maybeOf(context)?.highContrast ?? false
+      ? FortalTokens.gray11.resolve(context)
+      : FortalTokens.gray10.resolve(context),
+);
 
 /// The gap, padding and height of the trigger. A ghost trigger has no height;
 /// it takes its padding and cancels it with a negative margin.

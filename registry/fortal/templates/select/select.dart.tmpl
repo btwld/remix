@@ -52,7 +52,8 @@ enum {{typePrefix}}SelectVariant {
 ///
 /// [highContrast] gives the surface trigger the strong frame at rest and
 /// moves the highlighted item of the surface and ghost variants to accent
-/// step 12 under step 1 text.
+/// step 12 under step 1 text. It, or the theme's high contrast switch, lifts
+/// the placeholder and chevron from gray 10 to gray 11 so they read at 4.5:1.
 @MixWidget(target: RemixSelect.new)
 SelectStyler {{valuePrefix}}SelectStyle({
   {{typePrefix}}SelectVariant variant = .surface,
@@ -89,7 +90,7 @@ SelectTriggerStyler _trigger(
   {{typePrefix}}SelectVariant variant,
   {{typePrefix}}SelectSize size, {
   required bool highContrast,
-}) => _triggerBase()
+}) => _triggerBase(highContrast: highContrast)
     .merge(_triggerScale(variant, size))
     .wrap({{valuePrefix}}TouchTarget())
     .merge(switch (variant) {
@@ -123,7 +124,8 @@ SelectTriggerStyler _trigger(
     );
 
 /// The trigger's label, placeholder, icons, value roll and focus ring.
-SelectTriggerStyler _triggerBase() {
+SelectTriggerStyler _triggerBase({required bool highContrast}) {
+  final muted = highContrast ? {{typePrefix}}Tokens.gray11() : _mutedContent();
   TextStyler regular(Color color) => TextStyler(
     style: {{typePrefix}}Tokens.text2.mix(),
   ).fontWeight({{typePrefix}}Tokens.fontWeightRegular()).color(color);
@@ -133,9 +135,9 @@ SelectTriggerStyler _triggerBase() {
       .mainAxisAlignment(.spaceBetween)
       .borderRadius(.all({{typePrefix}}Tokens.radius4OrFull()))
       .label(regular({{typePrefix}}Tokens.gray12()))
-      .placeholder(regular({{typePrefix}}Tokens.gray10()))
+      .placeholder(regular(muted))
       .icon(.color({{typePrefix}}Tokens.gray12()).size({{typePrefix}}Tokens.space4()))
-      .indicator(.color({{typePrefix}}Tokens.gray10()).size({{typePrefix}}Tokens.space4()))
+      .indicator(.color(muted).size({{typePrefix}}Tokens.space4()))
       .indicatorOpacity(1)
       .labelTransition(
         const RemixSelectLabelTransition(
@@ -146,6 +148,12 @@ SelectTriggerStyler _triggerBase() {
       )
       .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()));
 }
+
+final _mutedContent = ContextToken<Color>(
+  (context) => {{typePrefix}}Theme.maybeOf(context)?.highContrast ?? false
+      ? {{typePrefix}}Tokens.gray11.resolve(context)
+      : {{typePrefix}}Tokens.gray10.resolve(context),
+);
 
 /// The gap, padding and height of the trigger. A ghost trigger has no height;
 /// it takes its padding and cancels it with a negative margin.
