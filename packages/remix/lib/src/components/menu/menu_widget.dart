@@ -678,23 +678,37 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
           );
         }
 
-        return RemixStyleSpecBuilder<MenuSpec>(
-          style: style,
-          styleSpec: widget.styleSpec,
-          controller: NakedMenuState.controllerOf(context),
-          builder: (context, spec) {
-            return StyleSpecBuilder(
-              styleSpec: spec.trigger,
-              builder: (context, triggerSpec) {
-                final defaultTrigger = _buildDefaultTrigger(triggerSpec);
-                final triggerBuilder = widget.trigger.builder;
-                if (triggerBuilder == null) {
-                  return defaultTrigger;
-                }
-                return triggerBuilder(context, state, defaultTrigger);
+        final controller = NakedMenuState.controllerOf(context);
+        // The trigger reads as selected while the menu is open and not yet
+        // closing, so an open style reverses as soon as the exit starts.
+        return FocusVisibilityScope(
+          child: ListenableBuilder(
+            listenable: Listenable.merge([controller, _panelTransition]),
+            builder: (context, _) => WidgetStateProvider(
+              states: {
+                ...controller.value,
+                if (state.isOpen && !_panelTransition.isExiting)
+                  WidgetState.selected,
               },
-            );
-          },
+              child: RemixStyleSpecBuilder<MenuSpec>(
+                style: style,
+                styleSpec: widget.styleSpec,
+                builder: (context, spec) {
+                  return StyleSpecBuilder(
+                    styleSpec: spec.trigger,
+                    builder: (context, triggerSpec) {
+                      final defaultTrigger = _buildDefaultTrigger(triggerSpec);
+                      final triggerBuilder = widget.trigger.builder;
+                      if (triggerBuilder == null) {
+                        return defaultTrigger;
+                      }
+                      return triggerBuilder(context, state, defaultTrigger);
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
         );
       },
     );
