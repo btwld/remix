@@ -11,7 +11,9 @@ part of 'segmented_control.dart';
 /// A muted track inside a 1px border holds content-width segments. One raised
 /// pill, the surface fill with a border and the resting shadow, glides to the
 /// selected segment on the standard ease. Labels are muted until hovered,
-/// pressed or selected, and never change weight.
+/// pressed or selected, and never change weight. Under the theme's high
+/// contrast the resting labels move from gray step 10 to step 11, which keeps
+/// 4.5:1 on the track in light and dark.
 ///
 /// Content icons use 16px (12px at size 1) rather than the ambient icon size.
 /// Control and item styles may override these defaults.
