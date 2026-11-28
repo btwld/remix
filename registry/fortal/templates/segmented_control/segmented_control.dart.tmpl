@@ -25,7 +25,9 @@ enum {{typePrefix}}SegmentedControlSize {
 /// A muted track inside a 1px border holds content-width segments. One raised
 /// pill, the surface fill with a border and the resting shadow, glides to the
 /// selected segment on the standard ease. Labels are muted until hovered,
-/// pressed or selected, and never change weight.
+/// pressed or selected, and never change weight. Under the theme's high
+/// contrast the resting labels move from gray step 10 to step 11, which keeps
+/// 4.5:1 on the track in light and dark.
 ///
 /// Content icons use 16px (12px at size 1) rather than the ambient icon size.
 /// Control and item styles may override these defaults.
@@ -78,6 +80,12 @@ final _motion = AnimationConfig.curve(
   curve: {{typePrefix}}Motion.easeStandard,
 );
 
+final _restInk = ContextToken<Color>(
+  (context) => {{typePrefix}}Theme.of(context).highContrast
+      ? {{typePrefix}}Tokens.gray11.resolve(context)
+      : {{typePrefix}}Tokens.gray10.resolve(context),
+);
+
 BorderSideMix _border() => BorderSideMix(
   color: {{typePrefix}}Tokens.gray7(),
   width: {{typePrefix}}Tokens.borderWidth1(),
@@ -97,12 +105,12 @@ SegmentedControlItemStyler _item(_Metrics metrics) {
       .label(
         TextStyler()
             .style(metrics.text.mix())
-            .color({{typePrefix}}Tokens.gray10())
+            .color(_restInk())
             .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
             .maxLines(1)
             .overflow(TextOverflow.ellipsis),
       )
-      .icon(IconStyler().color({{typePrefix}}Tokens.gray10()).size(metrics.iconSize))
+      .icon(IconStyler().color(_restInk()).size(metrics.iconSize))
       .onHovered(active)
       .onPressed(active)
       .onSelected(active)
