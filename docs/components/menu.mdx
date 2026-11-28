@@ -884,6 +884,13 @@ constructors apply only the selected recipe. For reusable menu-wide
 customization, pass `fortalMenuStyle(...).merge(customStyle)` to
 `RemixMenu.style`; the custom fields merge after the recipe.
 
+`FortalContextMenu` is the Fortal recipe for `RemixContextMenu`: a panel at
+least 208 pixels wide and at most 300 pixels tall, with 34-pixel rows. The
+panel grows from the pointer as it fades in, and the rows rise in one after
+another. Mark a destructive row with
+`style: fortalContextMenuItemStyle(destructive: true)`. With `highContrast`,
+the keyboard-focused row also shows the focus ring.
+
 <Info>
   Fortal uses the pinned check and submenu-chevron paths, colors, sizes, and
   states. Their placement uses Remix's standard leading flex slot and item
