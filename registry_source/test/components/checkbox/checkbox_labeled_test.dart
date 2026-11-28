@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 // Suppressed per-use below, so a future accidental internal-member use still
 // gets flagged.
 import 'package:remix/src/rendering/remix_box_effects.dart';
-import 'package:remix/src/utilities/remix_path_icon.dart';
 import 'package:registry_source/fortal.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -17,13 +16,14 @@ void main() {
     ) async {
       const expectedVisualSizes = <FortalCheckboxSize, double>{
         FortalCheckboxSize.size1: 14,
-        FortalCheckboxSize.size2: 16,
+        FortalCheckboxSize.size2: 18,
         FortalCheckboxSize.size3: 20,
       };
 
       for (final entry in expectedVisualSizes.entries) {
         await tester.pumpRemixApp(
           FortalCheckbox(
+            key: ValueKey(entry.key),
             size: entry.key,
             selected: false,
             label: 'Receive updates',
@@ -45,51 +45,79 @@ void main() {
       }
     });
 
-    testWidgets('uses thick vector indicators at every checkbox size', (
+    testWidgets('draws the fill and mark over the whole square', (
       tester,
     ) async {
-      const expectedIndicatorSizes = <FortalCheckboxSize, double>{
-        FortalCheckboxSize.size1: 9,
-        FortalCheckboxSize.size2: 10,
-        FortalCheckboxSize.size3: 12,
+      const sides = <FortalCheckboxSize, double>{
+        FortalCheckboxSize.size1: 14,
+        FortalCheckboxSize.size2: 18,
+        FortalCheckboxSize.size3: 20,
       };
 
-      for (final entry in expectedIndicatorSizes.entries) {
-        await tester.pumpRemixApp(
-          FortalCheckbox(size: entry.key, selected: true, onChanged: (_) {}),
-        );
-
-        expect(
-          _pathGlyph(RemixPathGlyph.thickCheck),
-          findsOneWidget,
-          reason: '${entry.key.name}/checked',
-        );
-        expect(
-          tester.getSize(find.byType(RemixPathIcon)),
-          Size.square(entry.value),
-          reason: '${entry.key.name}/checked',
-        );
-
+      for (final entry in sides.entries) {
         await tester.pumpRemixApp(
           FortalCheckbox(
+            key: ValueKey(entry.key),
             size: entry.key,
-            selected: null,
-            tristate: true,
+            selected: true,
             onChanged: (_) {},
           ),
         );
+        await tester.pumpAndSettle();
 
         expect(
-          _pathGlyph(RemixPathGlyph.thickDividerHorizontal),
-          findsOneWidget,
-          reason: '${entry.key.name}/indeterminate',
-        );
-        expect(
-          tester.getSize(find.byType(RemixPathIcon)),
+          tester.getSize(_mark()),
           Size.square(entry.value),
-          reason: '${entry.key.name}/indeterminate',
+          reason: entry.key.name,
         );
+        expect(_painter(tester).on, 1, reason: entry.key.name);
+        expect(_painter(tester).opacity, 1, reason: entry.key.name);
       }
+    });
+
+    testWidgets('springs the fill in and draws the check on, then morphs', (
+      tester,
+    ) async {
+      Widget checkbox(bool? selected) => FortalCheckbox(
+        selected: selected,
+        tristate: true,
+        onChanged: (_) {},
+      );
+
+      await tester.pumpRemixApp(checkbox(false));
+      expect(_painter(tester).opacity, 0);
+
+      await tester.pumpRemixApp(checkbox(true));
+      await tester.pump(const Duration(milliseconds: 50));
+      final early = _painter(tester);
+      expect(early.on, inExclusiveRange(0, 1), reason: 'fill scale and draw');
+      expect(early.dash, 0);
+      await tester.pumpAndSettle();
+      expect(_painter(tester).on, 1);
+
+      await tester.pumpRemixApp(checkbox(null));
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(_painter(tester).dash, inExclusiveRange(0, 1), reason: 'morph');
+      await tester.pumpAndSettle();
+      expect(_painter(tester).dash, 1);
+
+      await tester.pumpRemixApp(checkbox(false));
+      await tester.pumpAndSettle();
+      expect(_painter(tester).opacity, 0);
+      expect(_painter(tester).dash, 1, reason: 'leaves as the shape it had');
+    });
+
+    testWidgets('jumps under reduced motion', (tester) async {
+      Widget checkbox(bool selected) => MediaQuery(
+        data: const MediaQueryData(disableAnimations: true),
+        child: FortalCheckbox(selected: selected, onChanged: (_) {}),
+      );
+
+      await tester.pumpRemixApp(checkbox(false));
+      await tester.pumpRemixApp(checkbox(true));
+      await tester.pump();
+      expect(_painter(tester).on, 1);
+      expect(_painter(tester).opacity, 1);
     });
 
     test('generated wrapper forwards label and minimum target size', () {
@@ -105,6 +133,21 @@ void main() {
   });
 }
 
-Finder _pathGlyph(RemixPathGlyph glyph) => find.byWidgetPredicate(
-  (widget) => widget is RemixPathIcon && widget.glyph == glyph,
+Finder _mark() => find.descendant(
+  of: find.byType(FortalCheckbox),
+  matching: find.byWidgetPredicate(
+    (widget) => widget is CustomPaint && widget.painter != null,
+  ),
 );
+
+/// The private mark painter's fields: fill scale and draw progress, opacity,
+/// and check-to-dash morph.
+({double on, double opacity, double dash}) _painter(WidgetTester tester) {
+  final dynamic painter = tester.widget<CustomPaint>(_mark()).painter;
+
+  return (
+    on: painter.on as double,
+    opacity: painter.opacity as double,
+    dash: painter.dash as double,
+  );
+}

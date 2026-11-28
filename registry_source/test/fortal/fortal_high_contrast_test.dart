@@ -244,10 +244,7 @@ void main() {
             ceu.light.scale.step(1),
           );
         } else {
-          expect(
-            normal.spec.indicator.spec.color,
-            normalColors.accentContentAlpha,
-          );
+          expect(normal.spec.indicator.spec.color, ceu.light.indicator);
           expect(
             highContrast.spec.indicator.spec.color,
             ceu.light.scale.step(12),
@@ -274,7 +271,7 @@ void main() {
           states: {WidgetState.selected},
         );
 
-        if (variant == .surface) {
+        if (variant != .soft) {
           expect(_boxColor(normal.spec.container), ceu.light.indicator);
           expect(
             _boxColor(highContrast.spec.container),
@@ -286,7 +283,7 @@ void main() {
             ceu.light.scale.step(1),
           );
         } else {
-          expect(_boxColor(normal.spec.indicator), normalColors.accentContent);
+          expect(_boxColor(normal.spec.indicator), ceu.light.indicator);
           expect(
             _boxColor(highContrast.spec.indicator),
             ceu.light.scale.step(12),
@@ -315,11 +312,11 @@ void main() {
 
         final expectedNormal = switch (variant) {
           .surface => ceu.light.track,
-          .soft => ceu.light.scale.alphaStep(4),
+          .soft => ceu.light.track.withValues(alpha: 0.1),
         };
         final expectedHighContrast = switch (variant) {
           .surface => ceu.light.scale.step(12),
-          .soft => ceu.light.scale.alphaStep(6),
+          .soft => ceu.light.scale.step(12).withValues(alpha: 0.1),
         };
         expect(_boxColor(normal.spec.container), expectedNormal);
         expect(_boxColor(highContrast.spec.container), expectedHighContrast);
@@ -347,7 +344,6 @@ void main() {
               WidgetState.selected,
               WidgetState.pressed,
             });
-            final disabled = await resolve({WidgetState.disabled});
             final disabledSelectedPressed = await resolve({
               WidgetState.disabled,
               WidgetState.selected,
@@ -359,10 +355,11 @@ void main() {
               reason:
                   '$brightness/$variant must keep an on-state while pressed.',
             );
+            // Disabled fades the whole switch and keeps its on-state.
             expect(
               _boxColor(disabledSelectedPressed.container),
-              _boxColor(disabled.container),
-              reason: 'Disabled must win over both press and selection.',
+              _boxColor(selectedPressed.container),
+              reason: '$brightness/$variant disabled keeps the on track.',
             );
           }
         }

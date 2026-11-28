@@ -11,18 +11,19 @@ import 'package:registry_source/fortal.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
-  testWidgets('keeps Fortal 14, 16, and 20 visuals inside 48 targets', (
+  testWidgets('keeps Fortal 14, 18, and 20 visuals inside 48 targets', (
     tester,
   ) async {
     const expectedVisualSizes = <FortalCheckboxSize, double>{
       FortalCheckboxSize.size1: 14,
-      FortalCheckboxSize.size2: 16,
+      FortalCheckboxSize.size2: 18,
       FortalCheckboxSize.size3: 20,
     };
 
     for (final entry in expectedVisualSizes.entries) {
       await tester.pumpRemixApp(
         RemixCheckboxGroup<String>(
+          key: ValueKey(entry.key),
           values: const {},
           onChanged: (_) {},
           child: RemixCheckboxGroupItem<String>(
@@ -85,6 +86,8 @@ void main() {
                   spec: direct.spec.copyWith(
                     label: wrapped.spec.label,
                     labelSpacing: wrapped.spec.labelSpacing,
+                    description: wrapped.spec.description,
+                    descriptionSpacing: wrapped.spec.descriptionSpacing,
                   ),
                 ),
               ),
@@ -113,19 +116,19 @@ void main() {
             fontSize: 12,
             lineHeight: 1.4,
             letterSpacing: -0.01 * 12,
-            gap: 4,
+            gap: 12,
           ),
           FortalCheckboxSize.size2: (
             fontSize: 13,
             lineHeight: 1.4,
             letterSpacing: -0.01 * 13,
-            gap: 8,
+            gap: 12,
           ),
           FortalCheckboxSize.size3: (
             fontSize: 15,
             lineHeight: 1.4,
             letterSpacing: -0.01 * 15,
-            gap: 8,
+            gap: 12,
           ),
         };
 

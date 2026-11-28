@@ -2,38 +2,42 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../motion/motion.dart';
 import '../theme/theme.dart';
 
 part 'switch.g.dart';
 
 /// The sizes a switch comes in. Pixel values are at 100% theme scaling.
 enum FortalSwitchSize {
-  /// A 28px by 16px track.
+  /// A 34px by 20px track with a 14px thumb.
   size1,
 
-  /// A 36px by 20px track. The default.
+  /// A 42px by 24px track with an 18px thumb. The default.
   size2,
 
-  /// A 44px by 24px track.
+  /// A 46px by 26px track with a 20px thumb.
   size3,
 }
 
 /// The looks a switch comes in.
 enum FortalSwitchVariant {
-  /// A neutral track with a 1px frame, filled with the accent when on.
+  /// A neutral track that darkens on hover and fills with the control ink
+  /// when on, under a shadowed light thumb.
   surface,
 
-  /// A neutral tint, accent-tinted when on. The 1px frame shows only while off
-  /// and enabled.
+  /// The surface track while off; on, a 10% control-ink tint with a
+  /// control-ink thumb.
   soft,
 }
 
 /// The Fortal Switch recipe.
 ///
-/// It reads top to bottom: the track, thumb and focus ring, then the variant's
-/// colors for on, pressed and disabled, then the touch target.
+/// It reads top to bottom: the pill track and its shadowed thumb, then the
+/// variant's on colours, then the press stretch, disabled and the focus ring.
+/// The thumb glides on the smooth spring and stretches 5px while held, its
+/// near edge staying put.
 ///
-/// [highContrast] moves the on state to accent step 12.
+/// [highContrast] moves the on track to accent step 12.
 @MixWidget(target: RemixSwitch.new)
 SwitchStyler fortalSwitchStyle({
   FortalSwitchVariant variant = .surface,
@@ -45,33 +49,42 @@ SwitchStyler fortalSwitchStyle({
       .surface => _surface(highContrast),
       .soft => _soft(highContrast),
     })
+    .animate(
+      AnimationConfig.curve(
+        duration: FortalSpringCurve.smooth.duration,
+        curve: FortalSpringCurve.smooth,
+      ),
+    )
     .wrap(fortalTouchTarget())
+    // The ring circles the 40px touch target with the control corner.
+    .onFocusVisible(
+      SwitchStyler().wrap(fortalFocusRingModifier(radius: const .circular(14))),
+    )
+    .onDisabled(SwitchStyler().wrap(.opacity(0.5)))
     .merge(style);
 
-/// The track and thumb sizes of each step, and the off look both variants
-/// start from: a gray track with a 1px frame, a white thumb, and a focus ring.
-///
-/// The empty effect layers give the variant's state fragments layers to
-/// replace.
+/// The pill track and thumb of each step, off: the control track under the
+/// control thumb, lifted by its three-layer shadow. A 3px inset rings the
+/// thumb at every step.
 SwitchStyler _track(FortalSwitchSize size) {
-  final (:width, :height, :thumb, :radius) = switch (size) {
+  final (width, height, thumb, radius) = switch (size) {
     .size1 => (
-      width: FortalTokens.switchWidth1(),
-      height: FortalTokens.space4(),
-      thumb: FortalTokens.switchThumbSize1(),
-      radius: FortalTokens.radius1OrThumb(),
+      FortalTokens.switchWidth1(),
+      FortalTokens.space20(),
+      FortalTokens.switchThumbSize1(),
+      FortalTokens.radius1OrThumb(),
     ),
     .size2 => (
-      width: FortalTokens.switchWidth2(),
-      height: FortalTokens.switchHeight2(),
-      thumb: FortalTokens.switchThumbSize2(),
-      radius: FortalTokens.radius2OrThumb(),
+      FortalTokens.switchWidth2(),
+      FortalTokens.switchHeight2(),
+      FortalTokens.switchThumbSize2(),
+      FortalTokens.radius2OrThumb(),
     ),
     .size3 => (
-      width: FortalTokens.switchWidth3(),
-      height: FortalTokens.space5(),
-      thumb: FortalTokens.switchThumbSize3(),
-      radius: FortalTokens.radius2OrThumb(),
+      FortalTokens.switchWidth3(),
+      FortalTokens.switchHeight3(),
+      FortalTokens.switchThumbSize3(),
+      FortalTokens.radius2OrThumb(),
     ),
   };
 
@@ -79,137 +92,94 @@ SwitchStyler _track(FortalSwitchSize size) {
         container: .size(
           width,
           height,
-        ).padding(.all(1)).borderRadius(.all(radius)),
-        thumb: .size(thumb, thumb).borderRadius(.all(radius)),
-        trackEffects: RemixBoxEffectsMix(
-          behindContent: RemixBoxEffectLayerMix(),
-          overContent: RemixBoxEffectLayerMix(),
-        ),
-      )
-      .thumbColor(const Color(0xFFFFFFFF))
-      .onFocusVisible(.trackEffects(fortalFocusOutline()))
-      .trackColor(FortalTokens.grayA3())
-      .merge(_trackRing(FortalTokens.controlBorder()))
-      // The off thumb is a light surface; its neutral ring separates it from
-      // the off track in light mode, where white alone is too close to it.
-      .thumb(
-        BoxStyler()
-            .color(const Color(0xFFFFFFFF))
-            .border(
-              .all(
-                .color(
-                  FortalTokens.controlBorder(),
-                ).width(FortalTokens.borderWidth1()),
+        ).padding(.all(_inset())).borderRadius(.all(radius)),
+        thumb: .size(thumb, thumb)
+            .borderRadius(.all(radius))
+            .decoration(
+              BoxDecorationMix.create(
+                boxShadow: FortalTokens.shadowThumb.mix(),
               ),
             ),
-      );
+      )
+      .trackColor(FortalTokens.controlTrack())
+      .thumbColor(FortalTokens.controlThumb())
+      .onHovered(SwitchStyler().trackColor(FortalTokens.controlTrackHover()))
+      .onPressed(SwitchStyler().thumb(.width(_held[size]!())));
 }
 
-/// The accent track when on, and the gray press fill when off.
+final _inset = ContextToken<double>(
+  (c) => 3 * FortalTheme.of(c).scaling.factor,
+);
+
+/// The thumb stretched 5px while held.
+final _held = {
+  for (final (size, thumb) in [
+    (FortalSwitchSize.size1, FortalTokens.switchThumbSize1),
+    (FortalSwitchSize.size2, FortalTokens.switchThumbSize2),
+    (FortalSwitchSize.size3, FortalTokens.switchThumbSize3),
+  ])
+    size: ContextToken<double>(
+      (c) => thumb.resolve(c) + 5 * FortalTheme.of(c).scaling.factor,
+    ),
+};
+
+/// The control-ink track under the on thumb.
 SwitchStyler _surface(bool highContrast) => SwitchStyler()
     .onSelected(
       SwitchStyler()
           .trackColor(
             highContrast ? FortalTokens.accent12() : FortalTokens.accentTrack(),
           )
-          .merge(_trackRing(FortalTokens.grayA5()))
-          .thumb(_surfaceOnThumb(highContrast)),
+          .thumbColor(
+            highContrast ? FortalTokens.accent1() : FortalTokens.accentThumb(),
+          )
+          .merge(_thumbRing()),
     )
-    .merge(
-      _pressed(
-        on: highContrast
-            ? FortalTokens.accent12()
-            : FortalTokens.accentMarkHover(),
+    // The on track draws no hover change; the hover role keeps it themable.
+    .onHovered(
+      SwitchStyler().onSelected(
+        SwitchStyler().trackColor(
+          highContrast
+              ? FortalTokens.accent12()
+              : FortalTokens.accentMarkHover(),
+        ),
       ),
-    )
-    .onDisabled(
-      _disabled(track: FortalTokens.grayA3(), ring: FortalTokens.grayA5()),
     );
 
-/// An accent-tinted track when on, with an accent-colored thumb.
-SwitchStyler _soft(bool highContrast) => SwitchStyler()
-    .onSelected(
-      SwitchStyler()
-          .trackColor(
-            highContrast ? FortalTokens.accentA6() : FortalTokens.accentA4(),
-          )
-          .merge(_trackRing(null))
-          .thumb(_softOnThumb(highContrast)),
-    )
-    .merge(
-      _pressed(
-        on: highContrast ? FortalTokens.accentA7() : FortalTokens.accentA5(),
-      ),
-    )
-    .onDisabled(_disabled(track: FortalTokens.grayA4()));
-
-/// The selected surface thumb stays a light surface rather than a disc of ink.
-/// Its 2px [FortalTokens.accentThumbRing] follows the track wherever white
-/// already stands out on it, and carries the contrast on bright tracks. High
-/// contrast keeps its deliberate step-1 knockout thumb.
-BoxStyler _surfaceOnThumb(bool highContrast) => highContrast
-    ? BoxStyler()
-          .color(FortalTokens.accent1())
-          .border(
-            .all(
-              .color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()),
-            ),
-          )
-    : BoxStyler()
-          .color(const Color(0xFFFFFFFF))
-          .border(
-            .all(
-              .color(
-                FortalTokens.accentThumbRing(),
-              ).width(FortalTokens.borderWidth2()),
-            ),
-          );
-
-/// Soft thumbs keep their accent content role on the tinted track.
-BoxStyler _softOnThumb(bool highContrast) => BoxStyler()
-    .color(
-      highContrast ? FortalTokens.accent12() : FortalTokens.accentContent(),
-    )
-    .border(
-      .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
-    );
-
-/// A gray press fill, or [on] while the switch is on.
-SwitchStyler _pressed({required Color on}) => SwitchStyler().onPressed(
-  SwitchStyler()
-      .trackColor(FortalTokens.grayA4())
-      .onSelected(SwitchStyler().trackColor(on))
-      .trackEffects(RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix())),
+/// A 2px ring on the on thumb: transparent by default, where the thumb's
+/// shadow carries it, and a contrasting tone under the theme's high contrast.
+SwitchStyler _thumbRing() => SwitchStyler().thumb(
+  BoxStyler().border(
+    .all(
+      .color(FortalTokens.accentThumbRing()).width(FortalTokens.borderWidth2()),
+    ),
+  ),
 );
 
-/// Disabled switches stay muted: the active off-track boundary is replaced by
-/// a quiet [ring] (surface) or removed (soft), whatever the selection, focus or
-/// press state.
-SwitchStyler _disabled({required Color track, Color? ring}) => SwitchStyler()
-    .trackColor(track)
-    .trackEffects(RemixBoxEffectsMix.overContent(_ringLayer(ring)))
-    .thumbColor(FortalTokens.gray2())
-    .thumb(
-      .border(
-        .all(.color(FortalTokens.gray6()).width(FortalTokens.borderWidth1())),
-      ),
-    )
-    .trackEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)));
+/// A 10% control-ink tint under a control-ink thumb.
+SwitchStyler _soft(bool highContrast) {
+  final ink = highContrast ? FortalTokens.accent12 : FortalTokens.accentTrack;
 
-/// Empties the layer behind the track and sets a 1px inset [ring] over it, or
-/// none when [ring] is null.
-SwitchStyler _trackRing(Color? ring) => SwitchStyler()
-    .trackEffects(RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()))
-    .trackEffects(RemixBoxEffectsMix.overContent(_ringLayer(ring)));
+  return SwitchStyler().onSelected(
+    SwitchStyler()
+        .trackColor(_softTrack[ink]!())
+        .thumbColor(highContrast ? ink() : _softThumb())
+        .merge(_thumbRing()),
+  );
+}
 
-/// A 1px inset ring, or no shadow when [color] is null.
-RemixBoxEffectLayerMix _ringLayer(Color? color) => RemixBoxEffectLayerMix(
-  shadows: [
-    if (color != null)
-      RemixBoxShadowMix(
-        kind: .inset,
-        color: color,
-        spreadRadius: FortalTokens.borderWidth1(),
-      ),
-  ],
+/// The control ink, or the accent's strong tone under the theme's high
+/// contrast, where the ink is too light on its own tint.
+final _softThumb = ContextToken<Color>(
+  (c) =>
+      (FortalTheme.of(c).highContrast
+              ? FortalTokens.accentContent
+              : FortalTokens.accentTrack)
+          .resolve(c),
 );
+
+/// The on track of the soft switch: the control ink at 10%.
+final _softTrack = {
+  for (final ink in [FortalTokens.accent12, FortalTokens.accentTrack])
+    ink: ContextToken<Color>((c) => ink.resolve(c).withValues(alpha: 0.1)),
+};

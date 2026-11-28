@@ -75,6 +75,7 @@ void main() {
       expect(FortalRadioVariant.values, [
         FortalRadioVariant.surface,
         FortalRadioVariant.soft,
+        FortalRadioVariant.card,
       ]);
       expect(FortalSwitchSize.values, [
         FortalSwitchSize.size1,
@@ -336,14 +337,14 @@ void main() {
       tester,
     ) async {
       const expectedCheckbox = <FortalCheckboxSize, (double, double)>{
-        FortalCheckboxSize.size1: (14, 9),
-        FortalCheckboxSize.size2: (16, 10),
-        FortalCheckboxSize.size3: (20, 12),
+        FortalCheckboxSize.size1: (14, 14),
+        FortalCheckboxSize.size2: (18, 18),
+        FortalCheckboxSize.size3: (20, 20),
       };
       const expectedRadio = <FortalRadioSize, (double, double)>{
-        FortalRadioSize.size1: (14, 5.6),
-        FortalRadioSize.size2: (16, 6.4),
-        FortalRadioSize.size3: (20, 8),
+        FortalRadioSize.size1: (14, 6),
+        FortalRadioSize.size2: (17, 7),
+        FortalRadioSize.size3: (19, 7),
       };
 
       for (final entry in expectedCheckbox.entries) {
@@ -387,9 +388,9 @@ void main() {
       tester,
     ) async {
       const expected = <FortalSwitchSize, (double, double, double)>{
-        FortalSwitchSize.size1: (28, 16, 14),
-        FortalSwitchSize.size2: (36, 20, 18),
-        FortalSwitchSize.size3: (44, 24, 22),
+        FortalSwitchSize.size1: (34, 20, 14),
+        FortalSwitchSize.size2: (42, 24, 18),
+        FortalSwitchSize.size3: (46, 26, 20),
       };
 
       for (final entry in expected.entries) {

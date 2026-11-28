@@ -36,9 +36,6 @@ final _customizationTokens = {
   'shadow2',
   'shadow1Layers',
   // Foundation roles the per-component re-skins will read.
-  'controlTrack',
-  'controlTrackHover',
-  'controlThumb',
   'success',
   'info',
   'toneTeal',
@@ -49,16 +46,13 @@ final _customizationTokens = {
   'toneAmber',
   'toneGreen',
   'accentRange',
-  'accentThumb',
   'space18',
-  'space20',
   'space56',
   'controlHeight1',
   'controlHeight2',
   'controlHeight3',
   'controlHeight4',
   'radius7',
-  'shadowThumb',
   'textField',
 };
 
