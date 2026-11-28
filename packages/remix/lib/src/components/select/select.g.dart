@@ -121,6 +121,7 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
   double? get indicatorAngle;
   bool? get selectedWhileOpen;
   double? get placeholderOpacity;
+  RemixSelectLabelTransition? get labelTransition;
 
   @override
   Type get type => SelectTriggerSpec;
@@ -137,6 +138,7 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
     double? indicatorAngle,
     bool? selectedWhileOpen,
     double? placeholderOpacity,
+    RemixSelectLabelTransition? labelTransition,
   }) {
     return SelectTriggerSpec(
       container: container ?? this.container,
@@ -149,6 +151,7 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
       indicatorAngle: indicatorAngle ?? this.indicatorAngle,
       selectedWhileOpen: selectedWhileOpen ?? this.selectedWhileOpen,
       placeholderOpacity: placeholderOpacity ?? this.placeholderOpacity,
+      labelTransition: labelTransition ?? this.labelTransition,
     );
   }
 
@@ -181,6 +184,11 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
         other?.placeholderOpacity,
         t,
       ),
+      labelTransition: MixOps.lerpSnap(
+        labelTransition,
+        other?.labelTransition,
+        t,
+      ),
     );
   }
 
@@ -196,6 +204,7 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
     indicatorAngle,
     selectedWhileOpen,
     placeholderOpacity,
+    labelTransition,
   ];
 
   @override
@@ -247,7 +256,8 @@ mixin _$SelectTriggerSpec implements Spec<SelectTriggerSpec>, Diagnosticable {
       ..add(DoubleProperty('indicatorOpacity', indicatorOpacity))
       ..add(DoubleProperty('indicatorAngle', indicatorAngle))
       ..add(DiagnosticsProperty('selectedWhileOpen', selectedWhileOpen))
-      ..add(DoubleProperty('placeholderOpacity', placeholderOpacity));
+      ..add(DoubleProperty('placeholderOpacity', placeholderOpacity))
+      ..add(DiagnosticsProperty('labelTransition', labelTransition));
   }
 }
 
@@ -1164,6 +1174,7 @@ class SelectTriggerStyler
   final Prop<double>? $indicatorAngle;
   final Prop<bool>? $selectedWhileOpen;
   final Prop<double>? $placeholderOpacity;
+  final Prop<RemixSelectLabelTransition>? $labelTransition;
 
   const SelectTriggerStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
@@ -1176,6 +1187,7 @@ class SelectTriggerStyler
     Prop<double>? indicatorAngle,
     Prop<bool>? selectedWhileOpen,
     Prop<double>? placeholderOpacity,
+    Prop<RemixSelectLabelTransition>? labelTransition,
     super.variants,
     super.modifier,
     super.animation,
@@ -1188,7 +1200,8 @@ class SelectTriggerStyler
        $indicatorOpacity = indicatorOpacity,
        $indicatorAngle = indicatorAngle,
        $selectedWhileOpen = selectedWhileOpen,
-       $placeholderOpacity = placeholderOpacity;
+       $placeholderOpacity = placeholderOpacity,
+       $labelTransition = labelTransition;
 
   SelectTriggerStyler({
     FlexBoxStyler? container,
@@ -1201,6 +1214,7 @@ class SelectTriggerStyler
     double? indicatorAngle,
     bool? selectedWhileOpen,
     double? placeholderOpacity,
+    RemixSelectLabelTransition? labelTransition,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<SelectTriggerSpec>>? variants,
@@ -1215,6 +1229,7 @@ class SelectTriggerStyler
          indicatorAngle: Prop.maybe(indicatorAngle),
          selectedWhileOpen: Prop.maybe(selectedWhileOpen),
          placeholderOpacity: Prop.maybe(placeholderOpacity),
+         labelTransition: Prop.maybe(labelTransition),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -1240,6 +1255,9 @@ class SelectTriggerStyler
       SelectTriggerStyler().selectedWhileOpen(value);
   factory SelectTriggerStyler.placeholderOpacity(double value) =>
       SelectTriggerStyler().placeholderOpacity(value);
+  factory SelectTriggerStyler.labelTransition(
+    RemixSelectLabelTransition value,
+  ) => SelectTriggerStyler().labelTransition(value);
   factory SelectTriggerStyler.color(Color value) =>
       SelectTriggerStyler().color(value);
   factory SelectTriggerStyler.gradient(GradientMix value) =>
@@ -1811,6 +1829,7 @@ class SelectTriggerStyler
     'indicatorAngle',
     'selectedWhileOpen',
     'placeholderOpacity',
+    'labelTransition',
     'animation',
     'modifier',
     'variants',
@@ -1868,6 +1887,11 @@ class SelectTriggerStyler
     return merge(SelectTriggerStyler(placeholderOpacity: value));
   }
 
+  /// Sets the labelTransition.
+  SelectTriggerStyler labelTransition(RemixSelectLabelTransition value) {
+    return merge(SelectTriggerStyler(labelTransition: value));
+  }
+
   /// Sets the animation configuration.
   @override
   SelectTriggerStyler animate(AnimationConfig value) {
@@ -1917,6 +1941,7 @@ class SelectTriggerStyler
         $placeholderOpacity,
         other?.$placeholderOpacity,
       ),
+      labelTransition: MixOps.merge($labelTransition, other?.$labelTransition),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1937,6 +1962,7 @@ class SelectTriggerStyler
       indicatorAngle: MixOps.resolve(context, $indicatorAngle),
       selectedWhileOpen: MixOps.resolve(context, $selectedWhileOpen),
       placeholderOpacity: MixOps.resolve(context, $placeholderOpacity),
+      labelTransition: MixOps.resolve(context, $labelTransition),
     );
 
     return StyleSpec(
@@ -1959,7 +1985,8 @@ class SelectTriggerStyler
       ..add(DiagnosticsProperty('indicatorOpacity', $indicatorOpacity))
       ..add(DiagnosticsProperty('indicatorAngle', $indicatorAngle))
       ..add(DiagnosticsProperty('selectedWhileOpen', $selectedWhileOpen))
-      ..add(DiagnosticsProperty('placeholderOpacity', $placeholderOpacity));
+      ..add(DiagnosticsProperty('placeholderOpacity', $placeholderOpacity))
+      ..add(DiagnosticsProperty('labelTransition', $labelTransition));
   }
 
   @override
@@ -1974,6 +2001,7 @@ class SelectTriggerStyler
     $indicatorAngle,
     $selectedWhileOpen,
     $placeholderOpacity,
+    $labelTransition,
     $animation,
     $modifier,
     $variants,
