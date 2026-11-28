@@ -78,11 +78,8 @@ void main() {
     testWidgets('springs the fill in and draws the check on, then morphs', (
       tester,
     ) async {
-      Widget checkbox(bool? selected) => FortalCheckbox(
-        selected: selected,
-        tristate: true,
-        onChanged: (_) {},
-      );
+      Widget checkbox(bool? selected) =>
+          FortalCheckbox(selected: selected, tristate: true, onChanged: (_) {});
 
       await tester.pumpRemixApp(checkbox(false));
       expect(_painter(tester).opacity, 0);

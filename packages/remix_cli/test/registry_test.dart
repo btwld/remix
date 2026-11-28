@@ -139,6 +139,7 @@ void main() {
     ]);
     expect(catalog.resolve('data_table').map((item) => item.name), [
       'theme',
+      'motion',
       'checkbox',
       'base_button',
       'icon_button',
