@@ -32,7 +32,10 @@ void main() {
                     onChanged: (_) {},
                   ),
           );
-          expect(find.byType(RemixSelect<int>), findsNWidgets(2));
+          // The installed header: a month title and two navigation pills.
+          expect(find.byType(RemixSelect<int>), findsNothing);
+          expect(find.byType(RemixIconButton), findsNWidgets(2));
+          expect(find.text('November 2026'), findsOneWidget);
           final day = tester.widget<StyledText>(
             find
                 .ancestor(of: find.text('6'), matching: find.byType(StyledText))
