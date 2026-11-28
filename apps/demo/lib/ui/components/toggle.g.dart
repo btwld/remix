@@ -9,9 +9,12 @@ part of 'toggle.dart';
 /// The Fortal Toggle recipe.
 ///
 /// It reads top to bottom: what every toggle shares, then the size, then the
-/// variant's colors for rest, hover, press, on, focus and disabled.
+/// variant's look for rest, hover, on, focus and disabled. A toggle is drawn
+/// like one item of a toggle group: secondary text that turns to ink under the
+/// pointer and when on, over the group's tinted on fill.
 ///
-/// [highContrast] moves the label and icon of the on state to accent step 12.
+/// [highContrast] draws the resting text in ink and the border in the strong
+/// border.
 class FortalToggle extends StatelessWidget {
   const FortalToggle({
     super.key,
@@ -32,7 +35,7 @@ class FortalToggle extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  /// No fill or frame until hovered; an accent tint when on.
+  /// No fill or frame until hovered; a tinted fill when on.
   const FortalToggle.ghost({
     super.key,
     this.size = .size2,
@@ -51,7 +54,7 @@ class FortalToggle extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalToggleVariant.ghost;
 
-  /// A 1px gray frame; an accent tint and frame when on.
+  /// A 1px border; a tinted fill inside it when on.
   const FortalToggle.outline({
     super.key,
     this.size = .size2,
