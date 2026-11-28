@@ -276,4 +276,51 @@ void main() {
       },
     );
   }
+
+  for (final dark in [false, true]) {
+    testWidgets(
+      '${dark ? 'dark' : 'light'} placeholder lifts to gray 11 under high contrast',
+      (tester) async {
+        for (final variant in FortalTextFieldVariant.values) {
+          for (final highContrast in [false, true]) {
+            late TextFieldSpec field;
+            late FortalThemeColors colors;
+            await tester.pumpRemixApp(
+              Builder(
+                builder: (context) {
+                  colors = resolveFortalTokens(FortalTheme.of(context));
+                  field = fortalComboboxStyle(
+                    variant: variant,
+                  ).build(context).spec.field.spec;
+                  return const SizedBox.shrink();
+                },
+              ),
+              mode: dark ? .dark : .light,
+              highContrast: highContrast,
+            );
+            final reason = '$dark/$variant/highContrast=$highContrast';
+            final hint = field.hintText.spec.style!.color!;
+            expect(
+              hint,
+              colors.gray.scale.step(highContrast ? 11 : 10),
+              reason: reason,
+            );
+            if (!highContrast) continue;
+            final fill =
+                (field.container.spec.decoration as BoxDecoration).color!;
+            for (final panel in [
+              colors.colorBackground,
+              colors.colorPanelSolid,
+            ]) {
+              expect(
+                compositedContrast(foreground: hint, fill: fill, panel: panel),
+                greaterThanOrEqualTo(4.5),
+                reason: reason,
+              );
+            }
+          }
+        }
+      },
+    );
+  }
 }
