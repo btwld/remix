@@ -23,6 +23,7 @@ class RemixRadio<T> extends StatelessWidget {
     super.key,
     required this.value,
     this.label,
+    this.description,
     this.semanticLabel,
     this.minimumTapTargetSize = Size.zero,
     this.enabled = true,
@@ -34,6 +35,7 @@ class RemixRadio<T> extends StatelessWidget {
     this.style = const RadioStyler.create(),
     this.styleSpec,
   }) : assert(label != '', 'RemixRadio.label must not be empty.'),
+       assert(description != '', 'RemixRadio.description must not be empty.'),
        assert(
          semanticLabel != '',
          'RemixRadio.semanticLabel must be a nonblank accessible name.',
@@ -42,6 +44,10 @@ class RemixRadio<T> extends StatelessWidget {
          label != null || semanticLabel != null,
          'RemixRadio requires a label or a semanticLabel.',
        );
+
+  /// Optional visible description shown under the label, inside the same
+  /// interaction target. Assistive technologies read it as the hint.
+  final String? description;
 
   final RadioStyler style;
 
@@ -107,7 +113,7 @@ class RemixRadio<T> extends StatelessWidget {
       'RemixRadio.minimumTapTargetSize must be finite and non-negative.',
     );
     // NakedRadio owns missing-group validation and group participation.
-    return NakedRadio<T>(
+    final behavior = NakedRadio<T>(
       value: value,
       enabled: enabled,
       mouseCursor: mouseCursor,
@@ -130,7 +136,10 @@ class RemixRadio<T> extends StatelessWidget {
                   : null,
             );
 
-            if (label == null && minimumTapTargetSize == Size.zero) {
+            if (label == null &&
+                description == null &&
+                spec.row == null &&
+                minimumTapTargetSize == Size.zero) {
               return radio;
             }
 
@@ -140,10 +149,22 @@ class RemixRadio<T> extends StatelessWidget {
               labelSpec: spec.label,
               labelSpacing: spec.labelSpacing,
               minimumTapTargetSize: minimumTapTargetSize,
+              description: description,
+              descriptionSpec: spec.description,
+              descriptionSpacing: spec.descriptionSpacing,
+              controlAlignment: spec.controlAlignment,
+              row: spec.row,
+              rowEffects: spec.rowEffects,
             );
           },
         );
       },
     );
+
+    return description == null || excludeSemantics
+        ? behavior
+        : MergeSemantics(
+            child: Semantics(hint: description, child: behavior),
+          );
   }
 }

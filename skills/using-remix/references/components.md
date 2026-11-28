@@ -54,6 +54,11 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `.labelColor(...)`. The target is the control's own size unless
   `minimumTapTargetSize` is set (default `Size.zero`; checkbox defaults to
   48x48), so opt in with `Size.square(48)` for touch.
+- **Checkbox and Radio copy** — `description` adds a second line under the
+  label inside the same target, read as the hint. A style's `.row(...)` draws
+  a box (border, padding, hover fill) around the control and its copy,
+  resolved in the control's state; `.controlAlignment(.start)` top-aligns the
+  control with the label.
 - **Radio indicator** — the indicator exists only while selected unless the
   style sets `.keepIndicatorMounted(true)`; then style the unselected
   indicator as hidden so it can animate out.

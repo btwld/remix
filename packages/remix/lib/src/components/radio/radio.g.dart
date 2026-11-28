@@ -12,6 +12,11 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
   StyleSpec<TextSpec> get label;
   double get labelSpacing;
   RemixBoxEffectsSpec? get containerEffects;
+  StyleSpec<TextSpec> get description;
+  double get descriptionSpacing;
+  CrossAxisAlignment? get controlAlignment;
+  StyleSpec<BoxSpec>? get row;
+  RemixBoxEffectsSpec? get rowEffects;
   bool get keepIndicatorMounted;
 
   @override
@@ -24,6 +29,11 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
     StyleSpec<TextSpec>? label,
     double? labelSpacing,
     RemixBoxEffectsSpec? containerEffects,
+    StyleSpec<TextSpec>? description,
+    double? descriptionSpacing,
+    CrossAxisAlignment? controlAlignment,
+    StyleSpec<BoxSpec>? row,
+    RemixBoxEffectsSpec? rowEffects,
     bool? keepIndicatorMounted,
   }) {
     return RadioSpec(
@@ -32,6 +42,11 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
       label: label ?? this.label,
       labelSpacing: labelSpacing ?? this.labelSpacing,
       containerEffects: containerEffects ?? this.containerEffects,
+      description: description ?? this.description,
+      descriptionSpacing: descriptionSpacing ?? this.descriptionSpacing,
+      controlAlignment: controlAlignment ?? this.controlAlignment,
+      row: row ?? this.row,
+      rowEffects: rowEffects ?? this.rowEffects,
       keepIndicatorMounted: keepIndicatorMounted ?? this.keepIndicatorMounted,
     );
   }
@@ -48,6 +63,19 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
         other?.containerEffects,
         t,
       ),
+      description: description.lerp(other?.description, t),
+      descriptionSpacing: MixOps.lerp(
+        descriptionSpacing,
+        other?.descriptionSpacing,
+        t,
+      ),
+      controlAlignment: MixOps.lerpSnap(
+        controlAlignment,
+        other?.controlAlignment,
+        t,
+      ),
+      row: row?.lerp(other?.row, t),
+      rowEffects: MixOps.lerpSnap(rowEffects, other?.rowEffects, t),
       keepIndicatorMounted: MixOps.lerpSnap(
         keepIndicatorMounted,
         other?.keepIndicatorMounted,
@@ -63,6 +91,11 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
     label,
     labelSpacing,
     containerEffects,
+    description,
+    descriptionSpacing,
+    controlAlignment,
+    row,
+    rowEffects,
     keepIndicatorMounted,
   ];
 
@@ -111,6 +144,13 @@ mixin _$RadioSpec implements Spec<RadioSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('label', label))
       ..add(DoubleProperty('labelSpacing', labelSpacing))
       ..add(DiagnosticsProperty('containerEffects', containerEffects))
+      ..add(DiagnosticsProperty('description', description))
+      ..add(DoubleProperty('descriptionSpacing', descriptionSpacing))
+      ..add(
+        EnumProperty<CrossAxisAlignment>('controlAlignment', controlAlignment),
+      )
+      ..add(DiagnosticsProperty('row', row))
+      ..add(DiagnosticsProperty('rowEffects', rowEffects))
       ..add(DiagnosticsProperty('keepIndicatorMounted', keepIndicatorMounted));
   }
 }
@@ -132,6 +172,11 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<double>? $labelSpacing;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
+  final Prop<StyleSpec<TextSpec>>? $description;
+  final Prop<double>? $descriptionSpacing;
+  final Prop<CrossAxisAlignment>? $controlAlignment;
+  final Prop<StyleSpec<BoxSpec>>? $row;
+  final Prop<RemixBoxEffectsSpec>? $rowEffects;
   final Prop<bool>? $keepIndicatorMounted;
 
   const RadioStyler.create({
@@ -140,6 +185,11 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     Prop<StyleSpec<TextSpec>>? label,
     Prop<double>? labelSpacing,
     Prop<RemixBoxEffectsSpec>? containerEffects,
+    Prop<StyleSpec<TextSpec>>? description,
+    Prop<double>? descriptionSpacing,
+    Prop<CrossAxisAlignment>? controlAlignment,
+    Prop<StyleSpec<BoxSpec>>? row,
+    Prop<RemixBoxEffectsSpec>? rowEffects,
     Prop<bool>? keepIndicatorMounted,
     super.variants,
     super.modifier,
@@ -149,6 +199,11 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
        $label = label,
        $labelSpacing = labelSpacing,
        $containerEffects = containerEffects,
+       $description = description,
+       $descriptionSpacing = descriptionSpacing,
+       $controlAlignment = controlAlignment,
+       $row = row,
+       $rowEffects = rowEffects,
        $keepIndicatorMounted = keepIndicatorMounted;
 
   RadioStyler({
@@ -157,6 +212,11 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     TextStyler? label,
     double? labelSpacing,
     RemixBoxEffectsMix? containerEffects,
+    TextStyler? description,
+    double? descriptionSpacing,
+    CrossAxisAlignment? controlAlignment,
+    BoxStyler? row,
+    RemixBoxEffectsMix? rowEffects,
     bool? keepIndicatorMounted,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -167,6 +227,11 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
          label: Prop.maybeMix(label),
          labelSpacing: Prop.maybe(labelSpacing),
          containerEffects: Prop.maybeMix(containerEffects),
+         description: Prop.maybeMix(description),
+         descriptionSpacing: Prop.maybe(descriptionSpacing),
+         controlAlignment: Prop.maybe(controlAlignment),
+         row: Prop.maybeMix(row),
+         rowEffects: Prop.maybeMix(rowEffects),
          keepIndicatorMounted: Prop.maybe(keepIndicatorMounted),
          variants: variants,
          modifier: modifier,
@@ -182,6 +247,15 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
       RadioStyler().labelSpacing(value);
   factory RadioStyler.containerEffects(RemixBoxEffectsMix value) =>
       RadioStyler().containerEffects(value);
+  factory RadioStyler.description(TextStyler value) =>
+      RadioStyler().description(value);
+  factory RadioStyler.descriptionSpacing(double value) =>
+      RadioStyler().descriptionSpacing(value);
+  factory RadioStyler.controlAlignment(CrossAxisAlignment value) =>
+      RadioStyler().controlAlignment(value);
+  factory RadioStyler.row(BoxStyler value) => RadioStyler().row(value);
+  factory RadioStyler.rowEffects(RemixBoxEffectsMix value) =>
+      RadioStyler().rowEffects(value);
   factory RadioStyler.keepIndicatorMounted(bool value) =>
       RadioStyler().keepIndicatorMounted(value);
   factory RadioStyler.alignment(AlignmentGeometry value) =>
@@ -675,6 +749,11 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     'label',
     'labelSpacing',
     'containerEffects',
+    'description',
+    'descriptionSpacing',
+    'controlAlignment',
+    'row',
+    'rowEffects',
     'keepIndicatorMounted',
     'animation',
     'modifier',
@@ -705,6 +784,31 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
   /// Sets the containerEffects.
   RadioStyler containerEffects(RemixBoxEffectsMix value) {
     return merge(RadioStyler(containerEffects: value));
+  }
+
+  /// Sets the description.
+  RadioStyler description(TextStyler value) {
+    return merge(RadioStyler(description: value));
+  }
+
+  /// Sets the descriptionSpacing.
+  RadioStyler descriptionSpacing(double value) {
+    return merge(RadioStyler(descriptionSpacing: value));
+  }
+
+  /// Sets the controlAlignment.
+  RadioStyler controlAlignment(CrossAxisAlignment value) {
+    return merge(RadioStyler(controlAlignment: value));
+  }
+
+  /// Sets the row.
+  RadioStyler row(BoxStyler value) {
+    return merge(RadioStyler(row: value));
+  }
+
+  /// Sets the rowEffects.
+  RadioStyler rowEffects(RemixBoxEffectsMix value) {
+    return merge(RadioStyler(rowEffects: value));
   }
 
   /// Sets the keepIndicatorMounted.
@@ -739,6 +843,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     Key? key,
     required T value,
     String? label,
+    String? description,
     String? semanticLabel,
     Size minimumTapTargetSize = Size.zero,
     bool enabled = true,
@@ -753,6 +858,7 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
       style: this,
       value: value,
       label: label,
+      description: description,
       semanticLabel: semanticLabel,
       minimumTapTargetSize: minimumTapTargetSize,
       enabled: enabled,
@@ -776,6 +882,17 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
         $containerEffects,
         other?.$containerEffects,
       ),
+      description: MixOps.merge($description, other?.$description),
+      descriptionSpacing: MixOps.merge(
+        $descriptionSpacing,
+        other?.$descriptionSpacing,
+      ),
+      controlAlignment: MixOps.merge(
+        $controlAlignment,
+        other?.$controlAlignment,
+      ),
+      row: MixOps.merge($row, other?.$row),
+      rowEffects: MixOps.merge($rowEffects, other?.$rowEffects),
       keepIndicatorMounted: MixOps.merge(
         $keepIndicatorMounted,
         other?.$keepIndicatorMounted,
@@ -795,6 +912,11 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
       label: MixOps.resolve(context, $label),
       labelSpacing: MixOps.resolve(context, $labelSpacing),
       containerEffects: MixOps.resolve(context, $containerEffects),
+      description: MixOps.resolve(context, $description),
+      descriptionSpacing: MixOps.resolve(context, $descriptionSpacing),
+      controlAlignment: MixOps.resolve(context, $controlAlignment),
+      row: MixOps.resolve(context, $row),
+      rowEffects: MixOps.resolve(context, $rowEffects),
       keepIndicatorMounted: MixOps.resolve(context, $keepIndicatorMounted),
     );
 
@@ -814,6 +936,11 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('labelSpacing', $labelSpacing))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects))
+      ..add(DiagnosticsProperty('description', $description))
+      ..add(DiagnosticsProperty('descriptionSpacing', $descriptionSpacing))
+      ..add(DiagnosticsProperty('controlAlignment', $controlAlignment))
+      ..add(DiagnosticsProperty('row', $row))
+      ..add(DiagnosticsProperty('rowEffects', $rowEffects))
       ..add(DiagnosticsProperty('keepIndicatorMounted', $keepIndicatorMounted));
   }
 
@@ -824,6 +951,11 @@ class RadioStyler extends MixStyler<RadioStyler, RadioSpec>
     $label,
     $labelSpacing,
     $containerEffects,
+    $description,
+    $descriptionSpacing,
+    $controlAlignment,
+    $row,
+    $rowEffects,
     $keepIndicatorMounted,
     $animation,
     $modifier,

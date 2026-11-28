@@ -26,6 +26,7 @@ class VanillaCheckbox extends StatelessWidget {
     this.autofocus = false,
     this.enableFeedback = true,
     this.label,
+    this.description,
     this.semanticLabel,
     this.minimumTapTargetSize = const Size.square(48),
     this.mouseCursor = SystemMouseCursors.click,
@@ -55,6 +56,8 @@ class VanillaCheckbox extends StatelessWidget {
 
   final String? label;
 
+  final String? description;
+
   final String? semanticLabel;
 
   final Size minimumTapTargetSize;
@@ -76,6 +79,7 @@ class VanillaCheckbox extends StatelessWidget {
       autofocus: autofocus,
       enableFeedback: enableFeedback,
       label: label,
+      description: description,
       semanticLabel: semanticLabel,
       minimumTapTargetSize: minimumTapTargetSize,
       mouseCursor: mouseCursor,
@@ -93,6 +97,7 @@ class VanillaCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.style = const CheckboxStyler.create(),
     required this.value,
     required this.label,
+    this.description,
     this.semanticLabel,
     this.enabled = true,
     this.focusNode,
@@ -109,6 +114,8 @@ class VanillaCheckboxGroupItem<T extends Object> extends StatelessWidget {
   final T value;
 
   final String label;
+
+  final String? description;
 
   final String? semanticLabel;
 
@@ -134,6 +141,7 @@ class VanillaCheckboxGroupItem<T extends Object> extends StatelessWidget {
       style: vanillaCheckboxGroupItemStyle(style: style),
       value: value,
       label: label,
+      description: description,
       semanticLabel: semanticLabel,
       enabled: enabled,
       focusNode: focusNode,
