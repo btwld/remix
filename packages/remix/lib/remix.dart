@@ -24,6 +24,7 @@ export 'src/components/divider/divider.dart';
 export 'src/components/icon_button/icon_button.dart';
 export 'src/components/link/link.dart';
 export 'src/components/menu/menu.dart';
+export 'src/components/number_field/number_field.dart';
 export 'src/components/popover/popover.dart';
 export 'src/components/progress/progress.dart';
 export 'src/components/radio/radio.dart';
