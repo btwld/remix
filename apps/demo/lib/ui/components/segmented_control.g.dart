@@ -8,11 +8,13 @@ part of 'segmented_control.dart';
 
 /// The Fortal SegmentedControl recipe.
 ///
-/// The track is a gray tint blended over the surface. The selected item sits
-/// on a raised fill with a 1px edge, and turns medium weight.
+/// A muted track inside a 1px border holds content-width segments. One raised
+/// pill, the surface fill with a border and the resting shadow, glides to the
+/// selected segment on the standard ease. Labels are muted until hovered,
+/// pressed or selected, and never change weight.
 ///
-/// Content icons use the size's 12, 16 or 20px default rather than the ambient
-/// icon size. Control and item styles may override these defaults.
+/// Content icons use 16px (12px at size 1) rather than the ambient icon size.
+/// Control and item styles may override these defaults.
 class FortalSegmentedControl<T extends Object> extends StatelessWidget {
   const FortalSegmentedControl({
     super.key,
