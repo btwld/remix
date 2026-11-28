@@ -179,6 +179,18 @@ fill must identify the control. Check the actual component on its host surface.
   toggle is drawn like a toggle-group item: gray-11 text that turns to ink on
   hover (over gray 3) and when on, over the accent's indicator mixed 11% (14%
   in dark) into the surface; disabled shows 45% of the toggle.
+- Toggle groups hold their items in a 3px-padded gray-2 frame with a gray-7
+  border, a 14px corner and 2px gaps: 28, 36 and 44px items at sizes 1 to 3,
+  with an 11px corner and the item height as minimum width. One fill, the
+  toggle's on fill rounded to 15px (or gray 3 in a gray-7 border for
+  `surface`), glides to the on item. Segmented controls put content-width
+  segments (28, 32 and 36px, 10px corner) on a gray-3 track in the same
+  frame; a gray-2 pill with a gray-7 border and the resting shadow glides to
+  the selected segment. Labels are gray 10 until hovered, pressed or selected
+  (gray 11 at rest under the theme's high contrast, 4.5:1 on the track) and
+  stay medium weight. Both glides run 200ms on the standard ease, the
+  pace measured against the reference. The items of both sit inside the
+  group's own height and take no 40px hit target of their own.
 - Compact painted controls retain their sizes, inside a **40px minimum hit
   target**, which does not shrink at 90/95% scaling. Hosts must leave room for
   that target instead of imposing a smaller tight constraint.

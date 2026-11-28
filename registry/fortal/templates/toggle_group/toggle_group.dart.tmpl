@@ -2,38 +2,41 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../theme/computed.dart' show mixOklabPremultiplied;
 import '../theme/theme.dart';
 
 part 'toggle_group.g.dart';
 
-/// The sizes a toggle group comes in. Pixel values are at 100% theme scaling.
+/// The sizes a toggle group comes in. Pixel values are at 100% theme scaling;
+/// the outer height adds the 3px group padding and the 1px frame on each side.
 enum {{typePrefix}}ToggleGroupSize {
-  /// 12px text with 8px by 4px item padding.
+  /// 28px items with 12px text and 14px icons.
   size1,
 
-  /// 14px text with 12px by 8px item padding. The default.
+  /// 36px items with 13px text and 16px icons. The default.
   size2,
 
-  /// 16px text with 16px by 8px item padding.
+  /// 44px items with 13px text and 16px icons.
   size3,
 }
 
-/// The looks a toggle group's selected item comes in.
+/// The looks a toggle group's on item comes in.
 enum {{typePrefix}}ToggleGroupVariant {
-  /// An accent tint behind the selected item.
+  /// The accent's indicator mixed into the surface behind the on item.
   soft,
 
-  /// A faint accent surface behind the selected item.
+  /// The muted fill inside a 1px border behind the on item.
   surface,
 }
 
-/// The Fortal ToggleGroup recipe: a segmented control, a 1px gray frame around
-/// items that share it.
+/// The Fortal ToggleGroup recipe: items inside a padded 1px frame, with one
+/// fill that glides to the item that is on.
 ///
-/// It reads top to bottom: the frame, the item's colors for rest, hover,
-/// press, selected, focus and disabled, then the size.
+/// It reads top to bottom: the frame, the gliding fill, the item's look for
+/// rest, hover, press, on, focus and disabled, then the size.
 ///
-/// [highContrast] moves the selected item's label and icon to accent step 12.
+/// [highContrast] draws resting item text in ink and the frame in the strong
+/// border.
 @MixWidget(target: RemixToggleGroup.new)
 ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
   {{typePrefix}}ToggleGroupVariant variant = .soft,
@@ -41,99 +44,187 @@ ToggleGroupStyler {{valuePrefix}}ToggleGroupStyle({
   bool highContrast = false,
   ToggleGroupStyler style = const ToggleGroupStyler.create(),
 }) {
-  final (selected, selectedHover, selectedPressed) = switch (variant) {
-    .soft => (
-      {{typePrefix}}Tokens.accent3(),
-      {{typePrefix}}Tokens.accent4(),
-      {{typePrefix}}Tokens.accent5(),
-    ),
-    .surface => (
-      {{typePrefix}}Tokens.accentSurface(),
-      {{typePrefix}}Tokens.accentA4(),
-      {{typePrefix}}Tokens.accentA5(),
-    ),
-  };
-  final selectedContent = highContrast
-      ? {{typePrefix}}Tokens.accent12()
-      : {{typePrefix}}Tokens.accentContent();
+  final frame = highContrast ? {{typePrefix}}Tokens.gray8() : {{typePrefix}}Tokens.gray7();
+  final rest = highContrast ? {{typePrefix}}Tokens.gray12() : {{typePrefix}}Tokens.gray11();
+  final ink = {{typePrefix}}Tokens.gray12();
 
   return ToggleGroupStyler(
-    container: FlexBoxStyler(
-      decoration: BoxDecorationMix(
-        border: BorderMix.all(
-          BorderSideMix(
-            color: {{typePrefix}}Tokens.gray7(),
-            width: {{typePrefix}}Tokens.borderWidth1(),
-          ),
+        container: FlexBoxStyler()
+            .mainAxisSize(.min)
+            .padding(.all(_groupPadding))
+            .spacing(_itemGap)
+            .color({{typePrefix}}Tokens.gray2())
+            .border(BoxBorderMix.all(_side(frame)))
+            .borderRadius(.all({{typePrefix}}Tokens.radius4OrFull())),
+        item: ToggleGroupItemStyler()
+            .animate(_motion)
+            .alignment(.center)
+            .color(_transparent)
+            .labelColor(rest)
+            .iconColor(rest)
+            .labelFontWeight({{typePrefix}}Tokens.fontWeightMedium())
+            .onHovered(
+              ToggleGroupItemStyler()
+                  .color({{typePrefix}}Tokens.gray3())
+                  .labelColor(ink)
+                  .iconColor(ink),
+            )
+            .onPressed(_pressedContent())
+            .onFocusVisible(
+              ToggleGroupItemStyler()
+                  .color({{typePrefix}}Tokens.gray3())
+                  .labelColor(ink)
+                  .iconColor(ink)
+                  .containerEffects({{valuePrefix}}FocusOutline()),
+            )
+            // After focus, so the gliding fill shows through a focused or
+            // hovered on item.
+            .onSelected(
+              ToggleGroupItemStyler()
+                  .color(_transparent)
+                  .labelColor(ink)
+                  .iconColor(ink),
+            )
+            .onDisabled(
+              ToggleGroupItemStyler()
+                  .wrap(.opacity(_disabledItemOpacity))
+                  .containerEffects(.outline(.style(.none))),
+            ),
+      )
+      .indicator(_indicator(variant))
+      // Measured against the reference glide: the standard ease over 200ms
+      // (0.33, 0.59, 0.76 of the travel at 16, 33 and 50ms), not a spring.
+      .indicatorMotion(
+        AnimationConfig.curve(
+          duration: {{typePrefix}}Motion.standard,
+          curve: {{typePrefix}}Motion.easeStandard,
         ),
-        color: {{typePrefix}}Tokens.colorSurface(),
-      ),
-      mainAxisSize: .min,
-      spacing: {{typePrefix}}Tokens.space1(),
-    ),
-    item: ToggleGroupItemStyler()
-        .wrap({{valuePrefix}}TouchTarget())
-        .alignment(.center)
-        .labelColor({{typePrefix}}Tokens.gray11())
-        .iconColor({{typePrefix}}Tokens.gray11())
-        .labelFontWeight({{typePrefix}}Tokens.fontWeightMedium())
-        .onHovered(.color({{typePrefix}}Tokens.grayA3()))
-        .onPressed(.color({{typePrefix}}Tokens.grayA4()))
-        .onSelected(
-          ToggleGroupItemStyler()
-              .color(selected)
-              .labelColor(selectedContent)
-              .iconColor(selectedContent)
-              .onHovered(.color(selectedHover))
-              .onPressed(.color(selectedPressed)),
-        )
-        .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()))
-        .onDisabled(
-          ToggleGroupItemStyler()
-              .containerEffects(.outline(.style(.none)))
-              .color({{typePrefix}}Tokens.grayA3())
-              .labelColor({{typePrefix}}Tokens.gray8())
-              .iconColor({{typePrefix}}Tokens.gray8()),
-        ),
-  ).merge(_scale(size)).merge(style);
+      )
+      .merge(_scale(size))
+      .merge(style);
 }
 
-/// The corner, item padding, text and icon size of each step.
-ToggleGroupStyler _scale({{typePrefix}}ToggleGroupSize size) => switch (size) {
-  .size1 => ToggleGroupStyler(
-    container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius2())),
-    item:
-        .container(
-              FlexBoxStyler()
-                  .padding(.horizontal({{typePrefix}}Tokens.space2()))
-                  .padding(.vertical({{typePrefix}}Tokens.space1()))
-                  .spacing({{typePrefix}}Tokens.space1()),
-            )
-            .label(.style({{typePrefix}}Tokens.text1.mix()))
-            .icon(.size({{typePrefix}}Tokens.space3())),
-  ),
-  .size2 => ToggleGroupStyler(
-    container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius2())),
-    item:
-        .container(
-              FlexBoxStyler()
-                  .padding(.horizontal({{typePrefix}}Tokens.space3()))
-                  .padding(.vertical({{typePrefix}}Tokens.space2()))
-                  .spacing({{typePrefix}}Tokens.space1()),
-            )
-            .label(.style({{typePrefix}}Tokens.text2.mix()))
-            .icon(.size({{typePrefix}}Tokens.space4())),
-  ),
-  .size3 => ToggleGroupStyler(
-    container: FlexBoxStyler().borderRadius(.all({{typePrefix}}Tokens.radius3())),
-    item:
-        .container(
-              FlexBoxStyler()
-                  .padding(.horizontal({{typePrefix}}Tokens.space4()))
-                  .padding(.vertical({{typePrefix}}Tokens.space2()))
-                  .spacing({{typePrefix}}Tokens.space2()),
-            )
-            .label(.style({{typePrefix}}Tokens.text3.mix()))
-            .icon(.size({{typePrefix}}Tokens.spinnerSize3())),
-  ),
+/// The group's inset around the items and the gap between them.
+const _groupPadding = 3.0;
+const _itemGap = 2.0;
+
+/// How much of a disabled item shows.
+const _disabledItemOpacity = 0.45;
+
+/// How far an item's label and icon sink while held.
+const _pressedScale = 0.96;
+
+const _transparent = Color(0x00000000);
+
+final _motion = AnimationConfig.curve(
+  duration: {{typePrefix}}Motion.fast,
+  curve: {{typePrefix}}Motion.easeStandard,
+);
+
+BorderSideMix _side(Color color) =>
+    BorderSideMix(color: color, width: {{typePrefix}}Tokens.borderWidth1());
+
+/// The content sinks while held; the item box and the fill do not.
+ToggleGroupItemStyler _pressedContent() => ToggleGroupItemStyler(
+  label: TextStyler().wrap(.scale(x: _pressedScale, y: _pressedScale)),
+  icon: IconStyler().wrap(.scale(x: _pressedScale, y: _pressedScale)),
+);
+
+/// The fill that glides to the on item.
+BoxStyler _indicator({{typePrefix}}ToggleGroupVariant variant) => switch (variant) {
+  .soft => BoxStyler().color(_onFill()).borderRadius(.all(_onFillRadius())),
+  .surface =>
+    BoxStyler()
+        .color({{typePrefix}}Tokens.gray3())
+        .border(BoxBorderMix.all(_side({{typePrefix}}Tokens.gray7())))
+        .borderRadius(.all(_itemRadius())),
 };
+
+/// The accent's indicator mixed into the surface, 11% in light and 14% in
+/// dark: neutral gray under orla, a faint tint under the other accents.
+const _onFillToken = ContextToken<Color>(_resolveOnFill);
+
+Color _onFill() => _onFillToken();
+
+Color _resolveOnFill(BuildContext context) => mixOklabPremultiplied(
+  {{typePrefix}}Tokens.gray2.resolve(context),
+  {{typePrefix}}Tokens.accentIndicator.resolve(context),
+  {{typePrefix}}Theme.of(context).isDark ? 0.14 : 0.11,
+);
+
+/// An item's corner: the group corner less the group padding. The gliding
+/// fill rounds one pixel past the group corner.
+final _itemRadius = ContextToken<Radius>(
+  (context) => Radius.circular(
+    {{typePrefix}}Tokens.radius4OrFull.resolve(context).x - _groupPadding,
+  ),
+);
+final _onFillRadius = ContextToken<Radius>(
+  (context) =>
+      Radius.circular({{typePrefix}}Tokens.radius4OrFull.resolve(context).x + 1),
+);
+
+/// The item height, which is also its minimum width, and its padding, text
+/// and icon size.
+ToggleGroupStyler _scale({{typePrefix}}ToggleGroupSize size) {
+  final (edge, paddingX, text, icon) = switch (size) {
+    .size1 => (
+      _itemEdge1(),
+      {{typePrefix}}Tokens.space2(),
+      {{typePrefix}}Tokens.text1,
+      _icon1(),
+    ),
+    .size2 => (
+      _itemEdge2(),
+      _itemPadding2(),
+      {{typePrefix}}Tokens.text2,
+      {{typePrefix}}Tokens.space4(),
+    ),
+    .size3 => (
+      {{typePrefix}}Tokens.controlHeight3(),
+      {{typePrefix}}Tokens.space3(),
+      {{typePrefix}}Tokens.text2,
+      {{typePrefix}}Tokens.space4(),
+    ),
+  };
+
+  return ToggleGroupStyler(
+    item: ToggleGroupItemStyler()
+        .minHeight(edge)
+        .minWidth(edge)
+        .borderRadius(.all(_itemRadius()))
+        .container(
+          FlexBoxStyler().padding(.horizontal(paddingX)).spacing(_contentGap()),
+        )
+        .label(.style(text.mix()))
+        .icon(.size(icon)),
+  );
+}
+
+// Off-scale item metrics: one 4px space under the 32 and 40px control
+// heights, a 10px pad, a 6px content gap and a 14px small icon.
+final _itemEdge1 = ContextToken<double>(
+  (context) =>
+      {{typePrefix}}Tokens.controlHeight1.resolve(context) -
+      {{typePrefix}}Tokens.space1.resolve(context),
+);
+final _itemEdge2 = ContextToken<double>(
+  (context) =>
+      {{typePrefix}}Tokens.controlHeight2.resolve(context) -
+      {{typePrefix}}Tokens.space1.resolve(context),
+);
+final _itemPadding2 = ContextToken<double>(
+  (context) =>
+      {{typePrefix}}Tokens.space2.resolve(context) +
+      {{typePrefix}}Tokens.space1.resolve(context) / 2,
+);
+final _contentGap = ContextToken<double>(
+  (context) =>
+      {{typePrefix}}Tokens.space2.resolve(context) -
+      {{typePrefix}}Tokens.space1.resolve(context) / 2,
+);
+final _icon1 = ContextToken<double>(
+  (context) =>
+      {{typePrefix}}Tokens.space4.resolve(context) -
+      {{typePrefix}}Tokens.space1.resolve(context) / 2,
+);
