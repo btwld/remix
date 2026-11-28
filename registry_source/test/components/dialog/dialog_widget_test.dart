@@ -23,7 +23,7 @@ Future<Rect> _pumpDialogSurface(
     of: find.byType(RemixDialog),
     matching: find.byType(Align),
   );
-  final surface = tester.widget<Align>(align).child!;
+  final surface = tester.widget<Align>(align.first).child!;
 
   return tester.getRect(find.byWidget(surface));
 }
@@ -45,12 +45,12 @@ void main() {
           ),
         );
         expect(rect.bottom, 560);
-        expect(rect.left, alignment.resolve(direction).x == -1 ? 24 : 172);
+        expect(rect.left, alignment.resolve(direction).x == -1 ? 24 : 332);
       });
     }
   }
 
-  testWidgets('default surface fills available width up to 600 pixels', (
+  testWidgets('default surface fills available width up to 440 pixels', (
     tester,
   ) async {
     final rect = await _pumpDialogSurface(
@@ -58,7 +58,208 @@ void main() {
       const FortalDialog(title: 'Short'),
     );
 
-    expect(rect.width, 600);
+    expect(rect.width, 440);
+  });
+
+  testWidgets('keeps 12px from the edges of a narrow viewport', (tester) async {
+    tester.view
+      ..physicalSize = const Size(360, 640)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final rect = await _pumpDialogSurface(
+      tester,
+      const FortalDialog(title: 'Narrow'),
+    );
+
+    expect(rect.left, 12);
+    expect(rect.width, 336);
+  });
+
+  testWidgets('the panel is a 24px floating card with a header row', (
+    tester,
+  ) async {
+    late DialogSpec spec, plain;
+    late Color panel, border, secondary;
+    await tester.pumpRemixApp(
+      SizedBox.expand(
+        child: RemixDialog(
+          title: 'Styled',
+          onClose: () {},
+          closeLabel: 'Close',
+          child: Builder(
+            builder: (context) {
+              spec = fortalDialogStyle().build(context).spec;
+              panel = FortalTokens.colorPanelSolid.resolve(context);
+              border = FortalTokens.gray7.resolve(context);
+              secondary = FortalTokens.gray11.resolve(context);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.pumpRemixApp(
+      Builder(
+        builder: (context) {
+          plain = fortalDialogStyle().build(context).spec;
+          return const SizedBox.shrink();
+        },
+      ),
+    );
+    expect(plain.header, isNull, reason: 'no close button, one column');
+    expect(plain.container.spec.padding, const EdgeInsets.all(20));
+
+    final box = spec.container.spec;
+    final decoration = box.decoration! as BoxDecoration;
+    expect(decoration.color, panel);
+    expect(decoration.borderRadius, BorderRadius.circular(24));
+    expect((decoration.border! as Border).top.color, border);
+    expect(decoration.boxShadow, isNotEmpty);
+
+    final header = spec.header!.spec;
+    final headerBox = header.box!.spec;
+    expect(headerBox.padding, const EdgeInsets.all(20));
+    expect(
+      ((headerBox.decoration! as BoxDecoration).border! as Border).bottom.color,
+      border,
+    );
+    expect(header.flex!.spec.spacing, 18);
+    expect(spec.title.spec.style!.fontSize, 17);
+    expect(spec.title.spec.style!.fontWeight, FontWeight.w500);
+    expect(spec.description.spec.style!.fontSize, 13);
+    expect(spec.description.spec.style!.color, secondary);
+    expect(spec.body.spec.padding, const EdgeInsets.fromLTRB(20, 20, 20, 0));
+  });
+
+  testWidgets('a dialog with onClose draws a 32px close button in its header', (
+    tester,
+  ) async {
+    var closed = 0;
+    final surface = await _pumpDialogSurface(
+      tester,
+      FortalDialog(
+        title: 'Rename workspace',
+        description: 'Pick a name.',
+        onClose: () => closed++,
+        closeLabel: 'Close',
+        child: const Text('Body'),
+      ),
+    );
+
+    expect(find.bySemanticsLabel('Close'), findsOneWidget);
+    final button = find.byType(RemixIconButton);
+    expect(tester.getSize(button), const Size(32, 32));
+    expect(
+      tester.getTopRight(button).dx,
+      surface.right - 21,
+      reason: 'inside the 1px frame and the 20px header padding',
+    );
+    await tester.tap(button);
+    expect(closed, 1);
+  });
+
+  group('showFortalDialog', () {
+    Future<void> open(WidgetTester tester, {bool reduceMotion = false}) async {
+      await tester.pumpWidget(
+        MediaQuery(
+          data: MediaQueryData(disableAnimations: reduceMotion),
+          child: FortalTheme(
+            child: WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              builder: (context, _) => Navigator(
+                onGenerateRoute: (_) => PageRouteBuilder<void>(
+                  pageBuilder: (context, _, _) => Center(
+                    child: GestureDetector(
+                      onTap: () => showFortalDialog<void>(
+                        context: context,
+                        barrierLabel: 'Dismiss',
+                        builder: (_) => const FortalDialog(
+                          title: 'Rename workspace',
+                          child: Text('Body'),
+                        ),
+                      ),
+                      child: const Text('Open'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Open'));
+      await tester.pump();
+    }
+
+    List<double> opacities(WidgetTester tester) => [
+      for (final o in tester.widgetList<Opacity>(
+        find.descendant(
+          of: find.byType(Stack).last,
+          matching: find.byType(Opacity),
+        ),
+      ))
+        o.opacity,
+    ];
+
+    double width(WidgetTester tester) =>
+        tester.getRect(find.byType(RemixDialog)).width;
+
+    testWidgets('the panel is announced from its first, transparent frame', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await open(tester);
+
+      expect(opacities(tester), everyElement(0));
+      expect(find.bySemanticsLabel('Rename workspace'), findsWidgets);
+      semantics.dispose();
+    });
+
+    testWidgets('fades the scrim over 200ms and grows the panel on the smooth '
+        'spring', (tester) async {
+      await open(tester);
+      final spring = FortalSpringCurve(FortalMotion.springSmooth);
+      await tester.pumpAndSettle();
+      final settled = width(tester);
+      Navigator.of(tester.element(find.byType(RemixDialog))).pop();
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Open'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      final t = 100 / spring.duration.inMilliseconds;
+      final [scrim, panel] = opacities(tester);
+      expect(scrim, closeTo(FortalMotion.easeEnter.transform(.5), .02));
+      expect(panel, closeTo(FortalMotion.easeEnter.transform(100 / 150), .02));
+      expect(
+        width(tester) / settled,
+        closeTo(.96 + .04 * spring.transform(t), .002),
+      );
+    });
+
+    testWidgets('closes in 150ms and a tap on the scrim dismisses', (
+      tester,
+    ) async {
+      await open(tester);
+      await tester.pumpAndSettle();
+
+      await tester.tapAt(const Offset(4, 4));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 75));
+      final p = FortalMotion.easeStandard.transform(.5);
+      expect(opacities(tester).first, closeTo(1 - p, .03));
+      await tester.pump(const Duration(milliseconds: 80));
+      expect(find.byType(RemixDialog), findsNothing);
+    });
+
+    testWidgets('only fades, over 100ms, under reduced motion', (tester) async {
+      await open(tester, reduceMotion: true);
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(opacities(tester).first, closeTo(.5, .02));
+      final halfway = width(tester);
+      await tester.pumpAndSettle();
+      expect(width(tester), halfway);
+    });
   });
 
   test('public contract defaults to center', () {
