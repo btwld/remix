@@ -567,7 +567,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
   MenuStyler _buildStyle() {
     return MenuStyler()
         .trigger(MenuTriggerStyler().mainAxisSize(.min))
-        .overlay(FlexBoxStyler().mainAxisSize(.min).wrap(.intrinsicWidth()))
+        .overlay(_menuPanelBaseStyle)
         .merge(widget.style);
   }
 
@@ -609,21 +609,6 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
     );
   }
 
-  // Reads only the positioning property: resolving the whole menu style
-  // here would build item styles outside the overlay that scopes them.
-  OverlayPositionConfig _resolvePositioning(
-    BuildContext context,
-    MenuStyler style,
-  ) {
-    if (!widget._usesDefaultPositioning) return widget.positioning;
-    final raw = widget.styleSpec;
-    if (raw != null) return raw.positioning ?? widget.positioning;
-    final inherited = Style.maybeOf<MenuSpec>(context);
-    final effective = inherited is MenuStyler ? inherited.merge(style) : style;
-    return MixOps.resolve(context, effective.$positioning) ??
-        widget.positioning;
-  }
-
   @override
   Widget build(BuildContext context) {
     final style = _buildStyle();
@@ -635,39 +620,17 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
     );
 
     final anchor = NakedMenu<T>(
-      // Render items list with direct spec passing
-      overlayBuilder: (context, info) {
-        return RemixAnchorScope(
-          width: info.anchorRect.width,
-          child: RemixStyleSpecBuilder<MenuSpec>(
-            style: style,
-            styleSpec: widget.styleSpec,
-            builder: (context, spec) {
-              final inherited = Style.maybeOf<MenuSpec>(context);
-              final effectiveStyle = inherited is MenuStyler
-                  ? inherited.merge(style)
-                  : style;
-              return RemixPanelTransitionHost(
-                handle: _panelTransition,
-                transition: spec.panelTransition,
-                anchorRect: info.anchorRect,
-                child: _RemixMenuItemsPanel<T>(
-                  itemTransition: spec.itemTransition,
-                  panelAnimation: _panelTransition,
-                  items: widget.items,
-                  overlayStyleSpec: spec.overlay,
-                  containerEffects: spec.containerEffects,
-                  dividerStyleSpec: spec.divider,
-                  hasRootSelectionCallback: widget.onSelected != null,
-                  itemStyles: widget.styleSpec == null
-                      ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
-                      : _RemixMenuItemStyles.fromSpec(spec),
-                ),
-              );
-            },
-          ),
-        );
-      },
+      overlayBuilder: (context, info) => RemixAnchorScope(
+        width: info.anchorRect.width,
+        child: _RemixMenuPanel<T>(
+          info: info,
+          style: style,
+          styleSpec: widget.styleSpec,
+          transition: _panelTransition,
+          items: widget.items,
+          hasRootSelectionCallback: widget.onSelected != null,
+        ),
+      ),
       controller: _effectiveController,
       onSelected: widget.onSelected,
       onOpen: widget.onOpen,
@@ -689,7 +652,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
       triggerFocusNode: control == null
           ? widget.triggerFocusNode
           : _controlFocusNode,
-      positioning: _resolvePositioning(context, style),
+      positioning: widget._usesDefaultPositioning
+          ? _styledMenuPositioning(context, style, widget.styleSpec) ??
+                widget.positioning
+          : widget.positioning,
       constrainToAvailableSpace: true,
       semanticLabel: _resolvedTriggerSemanticLabel,
       excludeSemantics: widget.excludeSemantics,
@@ -742,6 +708,79 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
       },
     );
     return _panelTransition.wrapAnchor(anchor);
+  }
+}
+
+final _menuPanelBaseStyle = FlexBoxStyler()
+    .mainAxisSize(.min)
+    .wrap(.intrinsicWidth());
+
+// Reads only the positioning property: resolving the whole menu style here
+// would build item styles outside the overlay that scopes them.
+OverlayPositionConfig? _styledMenuPositioning(
+  BuildContext context,
+  MenuStyler style,
+  MenuSpec? styleSpec,
+) {
+  if (styleSpec != null) return styleSpec.positioning;
+  final inherited = Style.maybeOf<MenuSpec>(context);
+  final effective = inherited is MenuStyler ? inherited.merge(style) : style;
+  return MixOps.resolve(context, effective.$positioning);
+}
+
+/// The styled panel of a [RemixMenu] or [RemixContextMenu]: the overlay box,
+/// its transition, and the item rows.
+class _RemixMenuPanel<T> extends StatelessWidget {
+  const _RemixMenuPanel({
+    super.key,
+    required this.info,
+    required this.style,
+    required this.styleSpec,
+    required this.transition,
+    required this.items,
+    required this.hasRootSelectionCallback,
+  });
+
+  final RawMenuOverlayInfo info;
+  final MenuStyler style;
+  final MenuSpec? styleSpec;
+  final RemixPanelTransitionHandle transition;
+  final List<RemixMenuItemData<T>> items;
+  final bool hasRootSelectionCallback;
+
+  @override
+  Widget build(BuildContext context) {
+    final position = info.position;
+    return RemixStyleSpecBuilder<MenuSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) {
+        final inherited = Style.maybeOf<MenuSpec>(context);
+        final effectiveStyle = inherited is MenuStyler
+            ? inherited.merge(style)
+            : style;
+        return RemixPanelTransitionHost(
+          handle: transition,
+          transition: spec.panelTransition,
+          anchorRect: info.anchorRect,
+          openPosition: position == null
+              ? null
+              : info.anchorRect.topLeft + position,
+          child: _RemixMenuItemsPanel<T>(
+            itemTransition: spec.itemTransition,
+            panelAnimation: transition,
+            items: items,
+            overlayStyleSpec: spec.overlay,
+            containerEffects: spec.containerEffects,
+            dividerStyleSpec: spec.divider,
+            hasRootSelectionCallback: hasRootSelectionCallback,
+            itemStyles: styleSpec == null
+                ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
+                : _RemixMenuItemStyles.fromSpec(spec),
+          ),
+        );
+      },
+    );
   }
 }
 

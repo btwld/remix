@@ -16,5 +16,6 @@ import '../divider/divider.dart';
 
 part 'menu_spec.dart';
 part 'menu_widget.dart';
+part 'context_menu_widget.dart';
 part 'menu_trigger.dart';
 part 'menu.g.dart';

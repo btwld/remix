@@ -78,6 +78,12 @@
 - `SkeletonStyler.revealDuration`, `.revealCurve`, and `.revealOffset`
   crossfade from the placeholder to the child when loading ends. Without
   them the child still appears at once.
+- Add `RemixContextMenu`, the menu panel opened at a point on a region by a
+  secondary click, a touch long press, or the ContextMenu key. It reuses
+  `RemixMenu`'s items and `MenuStyler`.
+- Add `RemixPanelTransitionInfo.openPosition`, the point a panel opened at,
+  so a transition can grow from the pointer. A context menu that moves to a
+  new point while open or closing replays its open transition.
 - Add `ButtonSpec.loadingTransition` and `RemixLoadingTransition`, so a
   style can animate the swap between a button's content and its spinner. The
   default still swaps at once.
