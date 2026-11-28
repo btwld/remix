@@ -85,7 +85,7 @@ CalendarStyler fortalCalendarStyle({
           .style(FortalTokens.text1.mix())
           .fontWeight(FortalTokens.fontWeightMedium())
           .height(2)
-          .color(FortalTokens.gray10()),
+          .color(_mutedContent()),
     )
     .onDisabled(CalendarStyler().wrap(.opacity(0.5)))
     .day(fortalCalendarDayStyle())
@@ -138,7 +138,7 @@ CalendarDayStyler fortalCalendarDayStyle() => CalendarDayStyler()
 /// white, whichever reads better, for palettes whose swatch ink falls under
 /// 4.5:1 on the disc.
 final fortalCalendarSwatchInk = ContextToken<Color>((context) {
-  final disc = FortalTokens.accent9.resolve(context);
+  final disc = _disc.resolve(context);
   final ink = FortalTokens.accentSwatchContrast.resolve(context);
   double ratio(Color a, Color b) {
     final (x, y) = (a.computeLuminance(), b.computeLuminance());
@@ -150,6 +150,24 @@ final fortalCalendarSwatchInk = ContextToken<Color>((context) {
   const white = Color(0xFFFFFFFF);
   return ratio(black, disc) > ratio(white, disc) ? black : white;
 });
+
+bool _highContrast(BuildContext context) =>
+    FortalTheme.maybeOf(context)?.highContrast ?? false;
+
+/// Gray 10 reads at about 4.1:1 on a light page; high contrast takes gray 11.
+final _mutedContent = ContextToken<Color>(
+  (context) => _highContrast(context)
+      ? FortalTokens.gray11.resolve(context)
+      : FortalTokens.gray10.resolve(context),
+);
+
+/// The selection disc. Accent 9 of amber, green and orange falls under 3:1 on
+/// the page, so high contrast takes accent 12.
+final _disc = ContextToken<Color>(
+  (context) => _highContrast(context)
+      ? FortalTokens.accent12.resolve(context)
+      : FortalTokens.accent9.resolve(context),
+);
 
 /// Muted text at 42%, for days that cannot be chosen.
 final _mutedDay = ContextToken<Color>(
@@ -194,7 +212,7 @@ RemixCalendarSelectionLayerBuilder fortalCalendarSelectionLayer({
       (context, selection) => _FortalSelectionLayer(
         selection: selection,
         inset: inset,
-        disc: FortalTokens.accent9.resolve(context),
+        disc: _disc.resolve(context),
         band: FortalTokens.accentSurface.resolve(context),
       ),
 );
