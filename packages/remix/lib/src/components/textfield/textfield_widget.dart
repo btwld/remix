@@ -309,6 +309,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   // leaves at once and must not replay an exit if a transition arrives later.
   RemixFieldMessageTransition? _messageTransition;
   bool _hasBuiltFirstFrame = false;
+  Set<WidgetState> _addedStates = const {};
 
   FocusNode get _effectiveFocusNode =>
       widget.config.focusNode ?? _internalFocusNode!;
@@ -328,6 +329,19 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
         debugLabel: '${widget.config.runtimeType} (internal)',
       );
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final added = RemixAddedWidgetStates.of(context);
+    for (final state in _addedStates.difference(added)) {
+      _styleController.update(state, false);
+    }
+    for (final state in added) {
+      _styleController.update(state, true);
+    }
+    _addedStates = added;
   }
 
   @override
