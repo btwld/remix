@@ -56,9 +56,10 @@ SwitchStyler {{valuePrefix}}SwitchStyle({
       ),
     )
     .wrap({{valuePrefix}}TouchTarget())
-    // The ring circles the 40px touch target with the control corner.
+    // A square ring around the 40px-tall touch target, as the switch's
+    // button root draws it.
     .onFocusVisible(
-      SwitchStyler().wrap({{valuePrefix}}FocusRingModifier(radius: const .circular(14))),
+      SwitchStyler().wrap({{valuePrefix}}FocusRingModifier(radius: .zero)),
     )
     .onDisabled(SwitchStyler().wrap(.opacity(0.5)))
     .merge(style);

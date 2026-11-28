@@ -55,10 +55,12 @@ CheckboxStyler uiCheckboxStyle({
     .onPressed(CheckboxStyler().scale(0.95))
     .animate(_motion)
     .wrap(uiTouchTarget())
-    // The ring circles the 40px touch target with the control corner, not
-    // the small square.
+    // The ring circles the 40px box inside the 48px tap target with the
+    // control corner, not the small square.
     .onFocusVisible(
-      CheckboxStyler().wrap(uiFocusRingModifier(radius: const .circular(14))),
+      CheckboxStyler().wrap(
+        uiFocusRingModifier(radius: const .circular(14), inset: 4),
+      ),
     )
     .onDisabled(CheckboxStyler().wrap(.opacity(0.5)))
     .merge(style);

@@ -168,11 +168,14 @@ RadioStyler _copy(FortalRadioSize size) {
       );
 }
 
-/// The 40px touch target and a focus ring around it with the control corner.
+/// The 40px touch target and a focus ring around the 40px box inside the
+/// 48px tap target, with the control corner.
 RadioStyler _target() => RadioStyler()
     .wrap(fortalTouchTarget())
     .onFocusVisible(
-      RadioStyler().wrap(fortalFocusRingModifier(radius: const .circular(14))),
+      RadioStyler().wrap(
+        fortalFocusRingModifier(radius: const .circular(14), inset: 4),
+      ),
     );
 
 /// A 1px framed card row with 12px padding and the control corner; muted on

@@ -156,11 +156,14 @@ RadioStyler _copy(UiRadioSize size) {
       .onSelected(RadioStyler().label(TextStyler().color(UiTokens.gray12())));
 }
 
-/// The 40px touch target and a focus ring around it with the control corner.
+/// The 40px touch target and a focus ring around the 40px box inside the
+/// 48px tap target, with the control corner.
 RadioStyler _target() => RadioStyler()
     .wrap(uiTouchTarget())
     .onFocusVisible(
-      RadioStyler().wrap(uiFocusRingModifier(radius: const .circular(14))),
+      RadioStyler().wrap(
+        uiFocusRingModifier(radius: const .circular(14), inset: 4),
+      ),
     );
 
 /// A 1px framed card row with 12px padding and the control corner; muted on

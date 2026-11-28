@@ -56,9 +56,10 @@ SwitchStyler fortalSwitchStyle({
       ),
     )
     .wrap(fortalTouchTarget())
-    // The ring circles the 40px touch target with the control corner.
+    // A square ring around the 40px-tall touch target, as the switch's
+    // button root draws it.
     .onFocusVisible(
-      SwitchStyler().wrap(fortalFocusRingModifier(radius: const .circular(14))),
+      SwitchStyler().wrap(fortalFocusRingModifier(radius: .zero)),
     )
     .onDisabled(SwitchStyler().wrap(.opacity(0.5)))
     .merge(style);

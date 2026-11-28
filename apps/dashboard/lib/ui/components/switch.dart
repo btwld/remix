@@ -56,10 +56,9 @@ SwitchStyler uiSwitchStyle({
       ),
     )
     .wrap(uiTouchTarget())
-    // The ring circles the 40px touch target with the control corner.
-    .onFocusVisible(
-      SwitchStyler().wrap(uiFocusRingModifier(radius: const .circular(14))),
-    )
+    // A square ring around the 40px-tall touch target, as the switch's
+    // button root draws it.
+    .onFocusVisible(SwitchStyler().wrap(uiFocusRingModifier(radius: .zero)))
     .onDisabled(SwitchStyler().wrap(.opacity(0.5)))
     .merge(style);
 
