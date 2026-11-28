@@ -160,9 +160,7 @@ void main() {
                 final icon = find.byIcon(Icons.star);
                 expect(icon, findsOneWidget);
                 final spec = tester.resolvedSpecOf<SelectTriggerSpec>(icon);
-                final expected = override
-                    ? 14.0
-                    : [12.0, 16.0, 20.0][size.index];
+                final expected = override ? 14.0 : 16.0;
                 expect(spec.icon.spec.size, expected);
                 expect(tester.getSize(icon), Size.square(expected));
                 expect(tester.takeException(), isNull);

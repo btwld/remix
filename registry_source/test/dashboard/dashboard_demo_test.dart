@@ -2732,8 +2732,17 @@ Finder _glyphIn(Finder ancestor, RemixPathGlyph glyph) =>
     find.descendant(of: ancestor, matching: _pathGlyph(glyph));
 
 double _transformAngleIn(WidgetTester tester, Finder ancestor) {
+  // The transform that turns a path chevron, not one that moves a label.
+  final glyph = find.descendant(
+    of: ancestor,
+    matching: find.byType(RemixPathIcon),
+  );
   final transform = tester.widget<Transform>(
-    find.descendant(of: ancestor, matching: find.byType(Transform)).first,
+    glyph.evaluate().isEmpty
+        ? find.descendant(of: ancestor, matching: find.byType(Transform)).first
+        : find
+              .ancestor(of: glyph.first, matching: find.byType(Transform))
+              .first,
   );
   return math
       .atan2(transform.transform.entry(1, 0), transform.transform.entry(0, 0))

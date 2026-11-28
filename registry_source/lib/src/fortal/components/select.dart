@@ -1,47 +1,58 @@
+import 'dart:math' as math;
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../motion/motion.dart';
 import '../theme/theme.dart';
 
 part 'select.g.dart';
 
 /// The sizes a select comes in. Pixel values are at 100% theme scaling.
+///
+/// The trigger text is 13px at every size.
 enum FortalSelectSize {
-  /// A 24px trigger with 12px text.
+  /// A 32px trigger.
   size1,
 
-  /// A 32px trigger with 14px text. The default.
+  /// A 40px trigger. The default.
   size2,
 
-  /// A 40px trigger with 16px text.
+  /// A 44px trigger.
   size3,
 }
 
 /// The looks a select's trigger comes in.
 enum FortalSelectVariant {
-  /// The `gray2` fill inside a 1px gray frame.
+  /// The surface fill inside a quiet 1px frame that strengthens, over the
+  /// muted fill, while hovered, pressed or open.
   surface,
 
-  /// An accent tint under accent text.
+  /// The muted fill inside the strong frame.
   soft,
 
-  /// No fill until hovered. It sits in a negative margin, so its text lines up
-  /// with the text around it.
+  /// No fill until hovered or open. It sits in a negative margin, so its text
+  /// lines up with the text around it.
   ghost,
 }
 
 /// The Fortal Select recipe: the trigger, the floating panel and its items.
 ///
-/// Content icons use size-matched 12/16/20 token defaults rather than the
-/// ambient icon size. Override the trigger icon through [style] when needed.
+/// The trigger answers hover, press and the open panel with the muted fill
+/// and the strong frame, and turns its chevron half a turn while open. A new
+/// value rises into place (an earlier one drops) while the old one leaves.
+/// The panel grows in from the trigger edge and leaves faster than it came.
+/// Items take the muted fill under the pointer or the keyboard.
 ///
 /// The panel is at least as wide as its trigger. A [style] that gives the
 /// content a `maxWidth` below the trigger's width must also set `minWidth`,
 /// which replaces the minimum, because a minimum above a maximum is invalid.
 ///
-/// [highContrast] moves the highlighted item of the surface and ghost variants
-/// to accent step 12.
+/// [highContrast] gives the surface trigger the strong frame at rest and
+/// moves the highlighted item of the surface and ghost variants to accent
+/// step 12 under step 1 text.
 @MixWidget(target: RemixSelect.new)
 SelectStyler fortalSelectStyle({
   FortalSelectVariant variant = .surface,
@@ -49,9 +60,17 @@ SelectStyler fortalSelectStyle({
   bool highContrast = false,
   SelectStyler style = const SelectStyler.create(),
 }) => SelectStyler()
-    .trigger(_trigger(variant, size))
-    .content(_content(size))
+    .trigger(_trigger(variant, size, highContrast: highContrast))
+    .content(_content())
     .item(_item(variant, size, highContrast: highContrast))
+    .panelTransition(
+      RemixPanelTransition(
+        duration: FortalMotion.standard,
+        reverseDuration: FortalMotion.instant,
+        reducedMotionDuration: FortalMotion.instant,
+        builder: _panelMotion,
+      ),
+    )
     .merge(style);
 
 /// The Fortal select item recipe, for styling one item on its own.
@@ -64,63 +83,67 @@ SelectMenuItemStyler fortalSelectMenuItemStyle({
   bool highContrast = false,
 }) => _item(variant, size, highContrast: highContrast);
 
-/// The trigger: its shape and text, then the variant's colors.
+/// The trigger: its shape and text, then the variant's colors, then the open
+/// state, which turns the chevron.
 SelectTriggerStyler _trigger(
   FortalSelectVariant variant,
-  FortalSelectSize size,
-) => _triggerBase(size)
+  FortalSelectSize size, {
+  required bool highContrast,
+}) => _triggerBase()
     .merge(_triggerScale(variant, size))
     .wrap(fortalTouchTarget())
     .merge(switch (variant) {
-      .surface => _surfaceTrigger(),
-      .soft => _tintedTrigger(
-        color: FortalTokens.accentA3(),
-        hover: FortalTokens.accentA4(),
-        disabled: FortalTokens.grayA3(),
+      .surface => _framedTrigger(
+        rest: highContrast
+            ? FortalTokens.controlBorder()
+            : FortalTokens.gray7(),
+        fill: FortalTokens.gray2(),
+        active: FortalTokens.gray3(),
       ),
-      .ghost => _tintedTrigger(
-        color: const Color(0x00000000),
-        hover: FortalTokens.accentA3(),
-        disabled: const Color(0x00000000),
+      .soft => _framedTrigger(
+        rest: FortalTokens.gray8(),
+        fill: FortalTokens.gray3(),
+        active: FortalTokens.gray4(),
       ),
+      .ghost => _ghostTrigger(),
     })
-    .onDisabled(.containerEffects(.outline(.style(.none))));
+    .selectedWhileOpen(true)
+    .onSelected(SelectTriggerStyler().indicatorAngle(math.pi))
+    .onDisabled(
+      SelectTriggerStyler()
+          .containerEffects(.outline(.style(.none)))
+          .wrap(.opacity(0.5)),
+    )
+    // The chevron turns on the transform spring; colors ride the same curve.
+    .animate(
+      AnimationConfig.curve(
+        duration: FortalSpringCurve.css.duration,
+        curve: FortalSpringCurve.css,
+      ),
+    );
 
-/// The trigger's label, placeholder, icons and focus ring. The label and icons
-/// are gray 12; the placeholder is `grayA10`.
-SelectTriggerStyler _triggerBase(FortalSelectSize size) {
-  final (:text, :icon, :indicator, :radius) = switch (size) {
-    .size1 => (
-      text: FortalTokens.text1,
-      icon: FortalTokens.space3(),
-      indicator: FortalTokens.selectTriggerIndicatorSize12(),
-      radius: FortalTokens.radius1OrFull(),
-    ),
-    .size2 => (
-      text: FortalTokens.text2,
-      icon: FortalTokens.space4(),
-      indicator: FortalTokens.selectTriggerIndicatorSize12(),
-      radius: FortalTokens.radius2OrFull(),
-    ),
-    .size3 => (
-      text: FortalTokens.text3,
-      icon: FortalTokens.spinnerSize3(),
-      indicator: FortalTokens.selectTriggerIndicatorSize3(),
-      radius: FortalTokens.radius3OrFull(),
-    ),
-  };
+/// The trigger's label, placeholder, icons, value roll and focus ring.
+SelectTriggerStyler _triggerBase() {
   TextStyler regular(Color color) => TextStyler(
-    style: text.mix(),
+    style: FortalTokens.text2.mix(),
   ).fontWeight(FortalTokens.fontWeightRegular()).color(color);
 
   return SelectTriggerStyler()
       .direction(.horizontal)
       .mainAxisAlignment(.spaceBetween)
-      .borderRadius(.all(radius))
+      .borderRadius(.all(FortalTokens.radius4OrFull()))
       .label(regular(FortalTokens.gray12()))
-      .placeholder(regular(FortalTokens.grayA10()))
-      .icon(.color(FortalTokens.gray12()).size(icon))
-      .indicator(.color(FortalTokens.gray12()).size(indicator))
+      .placeholder(regular(FortalTokens.gray10()))
+      .icon(.color(FortalTokens.gray12()).size(FortalTokens.space4()))
+      .indicator(.color(FortalTokens.gray10()).size(FortalTokens.space4()))
+      .indicatorOpacity(1)
+      .labelTransition(
+        const RemixSelectLabelTransition(
+          duration: FortalMotion.standard,
+          reverseDuration: FortalMotion.fast,
+          builder: _valueRoll,
+        ),
+      )
       .onFocusVisible(.containerEffects(fortalFocusOutline()));
 }
 
@@ -129,184 +152,137 @@ SelectTriggerStyler _triggerBase(FortalSelectSize size) {
 SelectTriggerStyler _triggerScale(
   FortalSelectVariant variant,
   FortalSelectSize size,
-) {
-  final trigger = SelectTriggerStyler().spacing(switch (size) {
-    .size1 => FortalTokens.space1(),
-    .size2 => FortalTokens.space2(),
-    .size3 => FortalTokens.space2(),
-  });
+) => switch (variant) {
+  .ghost => switch (size) {
+    .size1 || .size2 =>
+      SelectTriggerStyler()
+          .spacing(FortalTokens.space2())
+          .padding(.horizontal(FortalTokens.space2()))
+          .padding(.vertical(FortalTokens.space1()))
+          .margin(.horizontal(FortalTokens.selectGhostMarginX12()))
+          .margin(.vertical(FortalTokens.selectGhostMarginY12())),
+    .size3 =>
+      SelectTriggerStyler()
+          .spacing(FortalTokens.space2())
+          .padding(.horizontal(FortalTokens.space3()))
+          .padding(.vertical(FortalTokens.space2()))
+          .margin(.horizontal(FortalTokens.selectGhostMarginX3()))
+          .margin(.vertical(FortalTokens.selectGhostMarginY3())),
+  },
+  .surface || .soft =>
+    SelectTriggerStyler()
+        .spacing(FortalTokens.space3())
+        .height(switch (size) {
+          .size1 => FortalTokens.controlHeight1(),
+          .size2 => FortalTokens.controlHeight2(),
+          .size3 => FortalTokens.controlHeight3(),
+        })
+        .padding(.horizontal(_framedInset())),
+};
 
-  return switch (variant) {
-    .ghost => switch (size) {
-      .size1 || .size2 =>
-        trigger
-            .padding(.horizontal(FortalTokens.space2()))
-            .padding(.vertical(FortalTokens.space1()))
-            .margin(.horizontal(FortalTokens.selectGhostMarginX12()))
-            .margin(.vertical(FortalTokens.selectGhostMarginY12())),
-      .size3 =>
-        trigger
-            .padding(.horizontal(FortalTokens.space3()))
-            .padding(.vertical(FortalTokens.space2()))
-            .margin(.horizontal(FortalTokens.selectGhostMarginX3()))
-            .margin(.vertical(FortalTokens.selectGhostMarginY3())),
-    },
-    .surface || .soft => switch (size) {
-      .size1 =>
-        trigger
-            .height(FortalTokens.space5())
-            .padding(.horizontal(FortalTokens.space2())),
-      .size2 =>
-        trigger
-            .height(FortalTokens.space6())
-            .padding(.horizontal(FortalTokens.space3())),
-      .size3 =>
-        trigger
-            .height(FortalTokens.space7())
-            .padding(.horizontal(FortalTokens.space4())),
-    },
-  };
+/// The 12px content inset plus the 1px frame, which is painted inset.
+final _framedInset = ContextToken<double>(
+  (context) =>
+      FortalTokens.space3.resolve(context) +
+      FortalTokens.borderWidth1.resolve(context),
+);
+
+/// A [fill] inside a [rest] frame; hover, press, open and keyboard focus
+/// strengthen the frame to gray 8, and all but focus move to the [active]
+/// fill.
+SelectTriggerStyler _framedTrigger({
+  required Color rest,
+  required Color fill,
+  required Color active,
+}) {
+  final engaged = _frame(FortalTokens.gray8()).color(active);
+
+  return _frame(rest)
+      .color(fill)
+      .onHovered(engaged)
+      .onPressed(engaged)
+      .onSelected(engaged)
+      .onFocusVisible(_frame(FortalTokens.gray8()))
+      .onDisabled(_frame(rest).color(fill));
 }
 
-SelectTriggerStyler _surfaceTrigger() => SelectTriggerStyler()
-    .indicatorOpacity(0.9)
-    .color(FortalTokens.gray2())
-    .containerEffects(
-      .behindContent(fortalInsetSurface(strokes: [FortalTokens.gray7()])),
-    )
-    .onHovered(
-      .containerEffects(
-        .behindContent(fortalInsetSurface(strokes: [FortalTokens.grayA8()])),
-      ),
-    )
-    .onSelected(
-      .containerEffects(
-        .behindContent(fortalInsetSurface(strokes: [FortalTokens.grayA8()])),
-      ),
-    )
-    .onDisabled(
-      .color(FortalTokens.gray2())
-          .label(.color(FortalTokens.grayA11()))
-          .icon(.color(FortalTokens.grayA9()))
-          .indicator(.color(FortalTokens.grayA9()))
-          .containerEffects(
-            .behindContent(
-              fortalInsetSurface(strokes: [FortalTokens.grayA6()]).merge(
-                RemixBoxEffectLayerMix(
-                  gradients: [
-                    RemixLinearGradientMix(
-                      colors: [FortalTokens.grayA2(), FortalTokens.grayA2()],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-    );
+/// Transparent with no frame; hover, press and open take the muted fill.
+SelectTriggerStyler _ghostTrigger() {
+  final engaged = SelectTriggerStyler().color(FortalTokens.gray3());
 
-/// Accent text on a [color] fill that takes [hover] while hovered or open.
-/// Disabled turns the text gray and the fill [disabled].
-SelectTriggerStyler _tintedTrigger({
-  required Color color,
-  required Color hover,
-  required Color disabled,
-}) => SelectTriggerStyler()
-    .label(.color(FortalTokens.accent12()))
-    .placeholder(.color(FortalTokens.accent12()))
-    .placeholderOpacity(0.6)
-    .icon(.color(FortalTokens.accent12()))
-    .indicator(.color(FortalTokens.accent12()))
-    .color(color)
-    .onHovered(.color(hover))
-    .onSelected(.color(hover))
-    .onDisabled(
-      .label(.color(FortalTokens.grayA11()))
-          .icon(.color(FortalTokens.grayA9()))
-          .indicator(.color(FortalTokens.grayA9()))
-          .color(disabled),
-    );
-
-/// The floating panel: a raised, blurred panel at least as wide as the
-/// trigger.
-SelectContentStyler _content(FortalSelectSize size) {
-  final (:padding, :radius) = switch (size) {
-    .size1 => (padding: FortalTokens.space1(), radius: FortalTokens.radius3()),
-    .size2 ||
-    .size3 => (padding: FortalTokens.space2(), radius: FortalTokens.radius4()),
-  };
-
-  return SelectContentStyler()
-      .maxHeight(320)
-      .border(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()))
-      .minWidth(remixAnchorWidth())
-      .padding(.all(padding))
-      .borderRadius(.all(radius))
-      .color(FortalTokens.colorPanel())
-      .decoration(
-        BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
-      )
-      .clipBehavior(Clip.antiAlias)
-      .containerEffects(.backdropBlur(FortalTokens.panelBlur()));
+  return SelectTriggerStyler()
+      .color(const Color(0x00000000))
+      .onHovered(engaged)
+      .onPressed(engaged)
+      .onSelected(engaged)
+      .onDisabled(SelectTriggerStyler().color(const Color(0x00000000)));
 }
 
-/// An item in the panel: gray text, with the variant's highlight under the
-/// pointer, keyboard focus and press.
+SelectTriggerStyler _frame(Color color) => SelectTriggerStyler()
+    .containerEffects(.behindContent(fortalInsetSurface(strokes: [color])));
+
+/// The floating panel: the raised surface in a quiet frame with the
+/// floating shadow, 4px off the trigger and at least as wide as it.
+SelectContentStyler _content() => SelectContentStyler()
+    .maxHeight(320)
+    .minWidth(remixAnchorWidth())
+    .margin(.vertical(FortalTokens.space1()))
+    .border(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1()))
+    .padding(.horizontal(_panelInset()))
+    .padding(.vertical(_panelListInset()))
+    .borderRadius(.all(FortalTokens.radius5()))
+    .color(FortalTokens.colorPanelSolid())
+    .decoration(BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()))
+    .clipBehavior(Clip.antiAlias);
+
+/// 6px around the list, which adds 2px above and below.
+final _panelInset = _scaled(6);
+final _panelListInset = _scaled(8);
+
+/// An item in the panel: 13px text, the check 10px from the end, and the
+/// muted fill under the pointer, the keyboard and a press.
 SelectMenuItemStyler _item(
   FortalSelectVariant variant,
   FortalSelectSize size, {
   required bool highContrast,
 }) {
-  final (
-    :height,
-    :indicatorWidth,
-    :indicatorSize,
-    :radius,
-    :text,
-  ) = switch (size) {
-    .size1 => (
-      height: FortalTokens.space5(),
-      indicatorWidth: FortalTokens.selectIndicatorWidth1(),
-      indicatorSize: FortalTokens.space2(),
-      radius: FortalTokens.radius1(),
-      text: FortalTokens.text1,
-    ),
-    .size2 => (
-      height: FortalTokens.space6(),
-      indicatorWidth: FortalTokens.space5(),
-      indicatorSize: FortalTokens.selectIndicatorSize2(),
-      radius: FortalTokens.radius2(),
-      text: FortalTokens.text2,
-    ),
-    .size3 => (
-      height: FortalTokens.space6(),
-      indicatorWidth: FortalTokens.space5(),
-      indicatorSize: FortalTokens.selectIndicatorSize2(),
-      radius: FortalTokens.radius2(),
-      text: FortalTokens.text3,
-    ),
-  };
-  final highlighted = _highlighted(variant, highContrast: highContrast);
+  final radius = FortalTokens.radius2();
+  final highlighted = highContrast && variant != .soft
+      ? SelectMenuItemStyler()
+            .color(FortalTokens.accent12())
+            .text(.color(FortalTokens.accent1()))
+            .iconColor(FortalTokens.accent1())
+      : SelectMenuItemStyler().color(FortalTokens.gray3());
 
+  // Rows keep the 36px pitch of the panel; the list is its own scroll
+  // target, so no row widens past its drawn height.
   return SelectMenuItemStyler()
-      .wrap(fortalTouchTarget())
       .direction(.horizontal)
-      .height(height)
-      .padding(.horizontal(indicatorWidth))
+      .height(_itemHeight())
+      .padding(.only(left: _itemStart(), right: _itemEnd()))
       .borderRadius(.all(radius))
-      .text(TextStyler(style: text.mix()).color(FortalTokens.gray12()))
+      .text(
+        TextStyler(
+          style: FortalTokens.text2.mix(),
+        ).color(FortalTokens.gray12()),
+      )
       .indicator(
         BoxStyler(
-          alignment: .center,
-          constraints: BoxConstraintsMix.width(indicatorWidth),
+          alignment: .centerRight,
+          constraints: BoxConstraintsMix.width(_indicatorWidth()),
         ),
       )
-      .icon(IconStyler(color: FortalTokens.gray12(), size: indicatorSize))
+      .icon(
+        IconStyler(color: FortalTokens.gray12(), size: FortalTokens.space4()),
+      )
       .onHovered(highlighted)
       .onFocused(highlighted)
       .onPressed(highlighted)
       .onFocusVisible(
         SelectMenuItemStyler().container(
-          FlexBoxStyler().fortalFocusRing(radius: radius),
+          highContrast
+              ? FlexBoxStyler().fortalFocusRing(radius: radius)
+              : FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
         ),
       )
       .onDisabled(
@@ -315,29 +291,128 @@ SelectMenuItemStyler _item(
               FlexBoxStyler().wrap(fortalFocusRingModifier(visible: false)),
             )
             .color(const Color(0x00000000))
-            .text(.color(FortalTokens.grayA8()))
-            .iconColor(FortalTokens.grayA8()),
+            .wrap(.opacity(0.45)),
+      )
+      .animate(
+        AnimationConfig.curve(
+          duration: FortalMotion.instant,
+          curve: FortalMotion.easeStandard,
+        ),
       );
 }
 
-/// The item under the pointer or keyboard: the accent's solid fill under its
-/// contrast text, or a tint for the soft variant.
-SelectMenuItemStyler _highlighted(
-  FortalSelectVariant variant, {
-  required bool highContrast,
-}) {
-  final content = highContrast
-      ? FortalTokens.accent1()
-      : FortalTokens.accentContrast();
+/// [px] at the theme's scaling.
+ContextToken<double> _scaled(double px) => ContextToken<double>(
+  (context) => px * FortalTokens.space1.resolve(context) / 4,
+);
 
-  return switch (variant) {
-    .surface || .ghost =>
-      SelectMenuItemStyler()
-          .color(
-            highContrast ? FortalTokens.accent12() : FortalTokens.accentSolid(),
-          )
-          .text(.color(content))
-          .iconColor(content),
-    .soft => SelectMenuItemStyler().color(FortalTokens.accentA4()),
+final _itemHeight = _scaled(36);
+final _itemStart = _scaled(11);
+final _itemEnd = _scaled(10);
+
+/// The check's 16px glyph plus the 8px before it, so labels stop 34px from
+/// the end when an item is checked.
+final _indicatorWidth = _scaled(24);
+
+/// The new value rises 0.35em out of a 4px blur over 200ms (an earlier one
+/// drops), while the old one leaves the other way 0.3em into a 2px blur over
+/// 150ms.
+Widget _valueRoll(
+  BuildContext context,
+  RemixSelectLabelTransitionInfo info,
+  Widget label,
+) {
+  final em = FortalTokens.text2.resolve(context).fontSize!;
+  final sign = info.direction == .later ? 1.0 : -1.0;
+
+  return AnimatedBuilder(
+    animation: info.animation,
+    builder: (context, child) {
+      final t = info.animation.value;
+      final double rest;
+      final double travel;
+      final double blur;
+      if (info.entering) {
+        rest = FortalMotion.easeEnter.transform(t);
+        travel = sign * 0.35 * em * (1 - rest);
+        blur = FortalMotion.blurSoft * (1 - rest);
+      } else {
+        rest = FortalMotion.easeStandard.transform(t);
+        travel = -sign * 0.3 * em * (1 - rest);
+        blur = FortalMotion.blurSubtle * (1 - rest);
+      }
+
+      return Opacity(
+        opacity: rest.clamp(0.0, 1.0),
+        child: Transform.translate(
+          offset: Offset(0, travel),
+          child: blur > 0
+              ? ImageFiltered(
+                  imageFilter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+                  child: child,
+                )
+              : child,
+        ),
+      );
+    },
+    child: label,
+  );
+}
+
+/// The panel grows in from the trigger edge: from 6px toward the trigger,
+/// 0.97 scale and transparent, over 200ms on the enter ease. It leaves to
+/// half that offset and 0.98 scale over 100ms on the standard ease. Under
+/// reduced motion it only fades.
+Widget _panelMotion(
+  BuildContext context,
+  RemixPanelTransitionInfo info,
+  Widget panel,
+) {
+  final side = OverlayPlacement.maybeOf(context)?.side ?? OverlaySide.bottom;
+  final (toward, origin) = switch (side) {
+    OverlaySide.bottom => (const Offset(0, -6), Alignment.topCenter),
+    OverlaySide.top => (const Offset(0, 6), Alignment.bottomCenter),
+    OverlaySide.left => (const Offset(6, 0), Alignment.centerRight),
+    OverlaySide.right => (const Offset(-6, 0), Alignment.centerLeft),
   };
+
+  return RemixReducedMotionBuilder(
+    builder: (context, reduceMotion) => AnimatedBuilder(
+      animation: info.animation,
+      builder: (context, child) {
+        final t = info.animation.value;
+        final leaving =
+            info.animation.status == .reverse ||
+            info.animation.status == .dismissed;
+        if (reduceMotion) {
+          return Opacity(opacity: t, child: child);
+        }
+        final double gone;
+        final Offset offset;
+        final double scale;
+        if (leaving) {
+          gone = FortalMotion.easeStandard.transform(1 - t);
+          offset = toward / 2 * gone;
+          scale = 1 - 0.02 * gone;
+        } else {
+          gone = 1 - FortalMotion.easeEnter.transform(t);
+          offset = toward * gone;
+          scale = 1 - 0.03 * gone;
+        }
+
+        return Opacity(
+          opacity: (1 - gone).clamp(0.0, 1.0),
+          child: Transform.translate(
+            offset: offset,
+            child: Transform.scale(
+              scale: scale,
+              alignment: origin,
+              child: child,
+            ),
+          ),
+        );
+      },
+      child: panel,
+    ),
+  );
 }

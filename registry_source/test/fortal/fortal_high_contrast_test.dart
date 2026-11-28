@@ -433,12 +433,18 @@ void main() {
         (context) => fortalSelectStyle(highContrast: true).build(context),
         states: {WidgetState.hovered},
       );
-      expect(_textColor(hoveredNormal.spec.item.spec.text), ceu.light.contrast);
+      expect(
+        _textColor(hoveredNormal.spec.item.spec.text),
+        normalColors.gray.scale.step(12),
+      );
       expect(
         _textColor(hoveredHighContrast.spec.item.spec.text),
         ceu.light.scale.step(1),
       );
-      expect(hoveredNormal.spec.item.spec.icon.spec.color, ceu.light.contrast);
+      expect(
+        hoveredNormal.spec.item.spec.icon.spec.color,
+        normalColors.gray.scale.step(12),
+      );
       expect(
         hoveredHighContrast.spec.item.spec.icon.spec.color,
         ceu.light.scale.step(1),
