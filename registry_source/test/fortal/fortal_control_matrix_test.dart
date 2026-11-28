@@ -459,9 +459,9 @@ void main() {
       tester,
     ) async {
       const expectedHeights = <FortalTextFieldSize, double>{
-        FortalTextFieldSize.size1: 24,
-        FortalTextFieldSize.size2: 32,
-        FortalTextFieldSize.size3: 40,
+        FortalTextFieldSize.size1: 32,
+        FortalTextFieldSize.size2: 40,
+        FortalTextFieldSize.size3: 44,
       };
       final recipes =
           <({Color? color, RemixBoxEffectsSpec? containerEffects})>{};

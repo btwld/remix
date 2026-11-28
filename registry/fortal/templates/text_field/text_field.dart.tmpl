@@ -1,41 +1,52 @@
 // `DragStartBehavior` and `MaxLengthEnforcement` appear in the generated
 // `{{typePrefix}}TextField`/`{{typePrefix}}TextArea` constructors, so they must be visible from
 // this library even though nothing here references them directly.
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../motion/motion.dart';
 import '../theme/theme.dart';
 
 part 'text_field.g.dart';
 
 /// The sizes a text field comes in. Pixel values are at 100% theme scaling.
+///
+/// Typed text is 14px at every size.
 enum {{typePrefix}}TextFieldSize {
-  /// 24px tall, with 12px text.
+  /// 32px tall.
   size1,
 
-  /// 32px tall, with 14px text. The default.
+  /// 40px tall. The default.
   size2,
 
-  /// 40px tall, with 16px text.
+  /// 44px tall.
   size3,
 }
 
 /// The looks a text field comes in.
 enum {{typePrefix}}TextFieldVariant {
-  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
+  /// The surface fill inside a 1px strong frame.
   surface,
 
-  /// An accent tint inside a 1px accent ring, with accent-colored text.
+  /// The muted surface fill with no frame until hovered or focused.
   soft,
 }
 
 /// The Fortal TextField recipe.
 ///
 /// It reads top to bottom: what every text input shares, then the size, then
-/// the variant's colors for rest and disabled, then the error state.
+/// the variant's colors for rest, hover, focus and disabled, then the error
+/// state.
+///
+/// Focus darkens the frame to the text color; the focus ring shows only under
+/// the theme's high contrast switch. An error frame holds through hover and
+/// focus, and the label keeps its color. The helper and error rows open on a
+/// spring, fade in and settle up into place, and close on the same spring.
 @MixWidget(target: RemixTextField.new)
 TextFieldStyler {{valuePrefix}}TextFieldStyle({
   {{typePrefix}}TextFieldVariant variant = .surface,
@@ -43,26 +54,26 @@ TextFieldStyler {{valuePrefix}}TextFieldStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) => _input(
   size: _fieldSize(size),
-  look: switch (variant) {
-    .surface => _surface(),
-    .soft => _soft(),
-  },
+  look: _look(variant),
+  disabledOpacity: 0.5,
 ).merge(style);
 
 /// The sizes a text area comes in. Pixel values are at 100% theme scaling.
+///
+/// Typed text is 14px at every size.
 enum {{typePrefix}}TextAreaSize {
-  /// At least 48px tall, with 12px text.
+  /// At least 88px tall.
   size1,
 
-  /// At least 64px tall, with 14px text. The default.
+  /// At least 110px tall. The default.
   size2,
 
-  /// At least 80px tall, with 16px text.
+  /// At least 121px tall.
   size3,
 }
 
 /// The Fortal TextArea recipe: the text field's looks on a taller box whose
-/// content starts at the top.
+/// content starts at the top, with 12px padding on every side.
 @MixWidget(target: RemixTextArea.new)
 TextFieldStyler {{valuePrefix}}TextAreaStyle({
   {{typePrefix}}TextFieldVariant variant = .surface,
@@ -70,293 +81,277 @@ TextFieldStyler {{valuePrefix}}TextAreaStyle({
   TextFieldStyler style = const TextFieldStyler.create(),
 }) => _input(
   size: _areaSize(size),
-  look: switch (variant) {
-    .surface => _surface(),
-    .soft => _soft(),
-  },
+  look: _look(variant),
+  disabledOpacity: 0.6,
 ).merge(style);
+
+TextFieldStyler _look({{typePrefix}}TextFieldVariant variant) => switch (variant) {
+  .surface => _framed(
+    rest: {{typePrefix}}Tokens.controlBorder(),
+    fill: {{typePrefix}}Tokens.gray2(),
+  ),
+  .soft => _framed(rest: _softFrame(), fill: {{typePrefix}}Tokens.gray3()),
+};
 
 /// A text field or area: the shared base, then [size] and [look], then the
 /// error and disabled states.
 TextFieldStyler _input({
   required TextFieldStyler size,
   required TextFieldStyler look,
+  required double disabledOpacity,
 }) => _base()
     .merge(size)
     .merge(look)
     .variant(ContextVariant.widgetState(.error), _error())
-    .onDisabled(.containerEffects(.outline(.style(.none))))
+    .onDisabled(
+      TextFieldStyler()
+          .containerEffects(.outline(.style(.none)))
+          .container(BoxStyler().wrap(.opacity(disabledOpacity))),
+    )
     // The input container sits inside Remix's chrome gesture detector.
     // An outer wrapper would reserve space without accepting its taps.
-    .container(BoxStyler().wrap({{valuePrefix}}TouchTarget()));
+    .container(BoxStyler().wrap({{valuePrefix}}TouchTarget()))
+    .animate(
+      AnimationConfig.curve(
+        duration: {{typePrefix}}Motion.fast,
+        curve: {{typePrefix}}Motion.easeStandard,
+      ),
+    );
 
-/// What every text input shares: label and helper text, cursor, icon color,
-/// and the focus ring.
+/// What every text input shares: label and message rows, cursor, icon color,
+/// and the focus ring the theme's high contrast switch turns on.
+///
+/// The layout has no gap of its own. The label carries the space below it
+/// and each message row the space above it, so a row that closes takes its
+/// gap with it.
 ///
 /// The empty effect layers give the variant's state fragments layers to
 /// replace.
 TextFieldStyler _base() =>
     TextFieldStyler(
-          helperText: .style({{typePrefix}}Tokens.text1.mix()),
-          label: .style({{typePrefix}}Tokens.text2.mix()),
+          label: TextStyler(style: {{typePrefix}}Tokens.text2.mix())
+              .color({{typePrefix}}Tokens.gray12())
+              .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
+              .wrap(.padding(.only(bottom: {{typePrefix}}Tokens.space2()))),
+          helperText: _message(_mutedContent()),
+          errorText: _message({{typePrefix}}Tokens.error11()),
+          text: TextStyler(
+            style: {{typePrefix}}Tokens.textField.mix(),
+          ).color({{typePrefix}}Tokens.gray12()).selectionColor({{typePrefix}}Tokens.focusA5()),
+          hintText: TextStyler(style: {{typePrefix}}Tokens.textField.mix())
+              .color(_mutedContent())
+              .textHeightBehavior(
+                TextHeightBehaviorMix()
+                    .applyHeightToFirstAscent(false)
+                    .applyHeightToLastDescent(true),
+              ),
+          cursorColor: {{typePrefix}}Tokens.gray12(),
           cursorWidth: 1.5,
           containerEffects: RemixBoxEffectsMix(
             behindContent: RemixBoxEffectLayerMix(),
             overContent: RemixBoxEffectLayerMix(),
           ),
+          messageTransition: RemixFieldMessageTransition(
+            duration: {{typePrefix}}SpringCurve.smooth.duration,
+            builder: _messageMotion,
+          ),
         )
-        .wrap(
-          .iconTheme(color: {{typePrefix}}Tokens.gray11(), size: {{typePrefix}}Tokens.space4()),
-        )
-        // A text input rings on any focus, as a browser does.
-        .onFocused(.containerEffects({{valuePrefix}}FocusOutline()));
+        .layout(FlexBoxStyler().spacing(0))
+        .wrap(.iconTheme(color: _mutedContent(), size: {{typePrefix}}Tokens.space4()))
+        .onFocused(.containerEffects(_highContrastFocusOutline()));
 
-/// The box and text of a text field: one line, centered.
-TextFieldStyler _fieldSize({{typePrefix}}TextFieldSize size) {
-  final (:height, :paddingX, :spacing, :radius, :text) = switch (size) {
-    .size1 => (
-      height: {{typePrefix}}Tokens.space5(),
-      paddingX: {{typePrefix}}Tokens.space2(),
-      spacing: {{typePrefix}}Tokens.space2(),
-      radius: {{typePrefix}}Tokens.radius2OrFull(),
-      text: {{typePrefix}}Tokens.text1,
-    ),
-    .size2 => (
-      height: {{typePrefix}}Tokens.space6(),
-      paddingX: {{typePrefix}}Tokens.space2(),
-      spacing: {{typePrefix}}Tokens.space2(),
-      radius: {{typePrefix}}Tokens.radius2OrFull(),
-      text: {{typePrefix}}Tokens.text2,
-    ),
-    .size3 => (
-      height: {{typePrefix}}Tokens.space7(),
-      paddingX: {{typePrefix}}Tokens.space3(),
-      spacing: {{typePrefix}}Tokens.space3(),
-      radius: {{typePrefix}}Tokens.radius3OrFull(),
-      text: {{typePrefix}}Tokens.text3,
-    ),
-  };
+/// A helper or error row: 12px text with the row's gap above it.
+TextStyler _message(Color color) => TextStyler(
+  style: {{typePrefix}}Tokens.text1.mix(),
+).color(color).wrap(.padding(.only(top: {{typePrefix}}Tokens.space2())));
 
-  return _sized(
-    minHeight: height,
-    paddingX: paddingX,
-    paddingY: _fieldPaddingY(size)(),
-    spacing: spacing,
-    radius: radius,
-    crossAxisAlignment: .center,
-    text: text,
-  );
-}
+/// The box of a text field: one line, centered.
+TextFieldStyler _fieldSize({{typePrefix}}TextFieldSize size) => _sized(
+  minHeight: _fieldHeight(size)(),
+  padding: EdgeInsetsMix.symmetric(
+    horizontal: _framedInset(),
+    vertical: _fieldPaddingY(size)(),
+  ),
+  crossAxisAlignment: .center,
+);
 
-/// The box and text of a text area: at least a few lines, starting at the top.
-TextFieldStyler _areaSize({{typePrefix}}TextAreaSize size) {
-  final (
-    :minHeight,
-    :paddingX,
-    :paddingY,
-    :spacing,
-    :radius,
-    :text,
-  ) = switch (size) {
-    .size1 => (
-      minHeight: {{typePrefix}}Tokens.space8(),
-      paddingX: {{typePrefix}}Tokens.space2(),
-      paddingY: {{typePrefix}}Tokens.space1(),
-      spacing: {{typePrefix}}Tokens.space2(),
-      radius: {{typePrefix}}Tokens.radius2(),
-      text: {{typePrefix}}Tokens.text1,
-    ),
-    .size2 => (
-      minHeight: {{typePrefix}}Tokens.space9(),
-      paddingX: {{typePrefix}}Tokens.space2(),
-      paddingY: {{typePrefix}}Tokens.space2(),
-      spacing: {{typePrefix}}Tokens.space2(),
-      radius: {{typePrefix}}Tokens.radius2(),
-      text: {{typePrefix}}Tokens.text2,
-    ),
-    .size3 => (
-      minHeight: {{typePrefix}}Tokens.textAreaMinHeight3(),
-      paddingX: {{typePrefix}}Tokens.space3(),
-      paddingY: {{typePrefix}}Tokens.space2(),
-      spacing: {{typePrefix}}Tokens.space3(),
-      radius: {{typePrefix}}Tokens.radius3(),
-      text: {{typePrefix}}Tokens.text3,
-    ),
-  };
+/// The box of a text area: a fixed share of the field height, with its
+/// content starting at the top.
+TextFieldStyler _areaSize({{typePrefix}}TextAreaSize size) => _sized(
+  minHeight: _areaMinHeight(size)(),
+  padding: EdgeInsetsMix.all(_framedInset()),
+  crossAxisAlignment: .start,
+);
 
-  return _sized(
-    minHeight: minHeight,
-    paddingX: paddingX,
-    paddingY: paddingY,
-    spacing: spacing,
-    radius: radius,
-    crossAxisAlignment: .start,
-    text: text,
-  );
-}
-
-/// A text input's box and its text and hint style.
-///
-/// The hint keeps its line height at the bottom of the line only, so the
-/// placeholder sits where typed text will.
 TextFieldStyler _sized({
   required double minHeight,
-  required double paddingX,
-  required double paddingY,
-  required double spacing,
-  required Radius radius,
+  required EdgeInsetsMix padding,
   required CrossAxisAlignment crossAxisAlignment,
-  required TextStyleToken text,
 }) => TextFieldStyler(
   container: BoxStyler()
       .minHeight(minHeight)
-      .padding(.symmetric(horizontal: paddingX, vertical: paddingY))
-      .borderRadius(.all(radius))
+      .padding(padding)
+      .borderRadius(.all({{typePrefix}}Tokens.radius4OrFull()))
       .clipBehavior(.antiAlias),
-  spacing: spacing,
+  spacing: {{typePrefix}}Tokens.space2(),
   crossAxisAlignment: crossAxisAlignment,
-  text: .style(text.mix()),
-  hintText: .style(text.mix()).textHeightBehavior(
-    TextHeightBehaviorMix()
-        .applyHeightToFirstAscent(false)
-        .applyHeightToLastDescent(true),
-  ),
+);
+
+ContextToken<double> _fieldHeight({{typePrefix}}TextFieldSize size) =>
+    ContextToken<double>(
+      (context) => switch (size) {
+        .size1 => {{typePrefix}}Tokens.controlHeight1,
+        .size2 => {{typePrefix}}Tokens.controlHeight2,
+        .size3 => {{typePrefix}}Tokens.controlHeight3,
+      }.resolve(context),
+    );
+
+/// A text area is 2.75 field heights tall at rest: 110px beside the 40px field.
+ContextToken<double> _areaMinHeight({{typePrefix}}TextAreaSize size) =>
+    ContextToken<double>(
+      (context) =>
+          _fieldHeight(switch (size) {
+            .size1 => {{typePrefix}}TextFieldSize.size1,
+            .size2 => {{typePrefix}}TextFieldSize.size2,
+            .size3 => {{typePrefix}}TextFieldSize.size3,
+          }).resolve(context) *
+          2.75,
+    );
+
+/// The 12px content inset plus the 1px frame, which is painted inset and
+/// takes no layout space of its own.
+final _framedInset = ContextToken<double>(
+  (context) =>
+      {{typePrefix}}Tokens.space3.resolve(context) +
+      {{typePrefix}}Tokens.borderWidth1.resolve(context),
 );
 
 /// Vertical padding that centers one line of text in a field's height.
 ///
-/// This keeps the 24, 32 and 40px field heights and a centered baseline at 1x,
-/// while leaving the text line unconstrained as MediaQuery text scaling
-/// increases. The frame is an inset effect, not a layout-consuming border.
+/// The engine lays a 19.6px line out on 20 pixels, so the padding is measured
+/// against the rounded-up line. This keeps the 32, 40 and 44px field heights
+/// and a centered baseline at 1x, while leaving the text line unconstrained
+/// as MediaQuery text scaling increases.
 ContextToken<double> _fieldPaddingY({{typePrefix}}TextFieldSize size) =>
     ContextToken<double>((context) {
-      final (height, text) = switch (size) {
-        .size1 => ({{typePrefix}}Tokens.space5, {{typePrefix}}Tokens.text1),
-        .size2 => ({{typePrefix}}Tokens.space6, {{typePrefix}}Tokens.text2),
-        .size3 => ({{typePrefix}}Tokens.space7, {{typePrefix}}Tokens.text3),
-      };
-      final style = text.resolve(context);
+      final style = {{typePrefix}}Tokens.textField.resolve(context);
 
-      return (height.resolve(context) - style.fontSize! * style.height!) / 2;
+      return (_fieldHeight(size).resolve(context) -
+              (style.fontSize! * style.height!).ceilToDouble()) /
+          2;
     });
 
-/// The `gray2` fill with a neutral frame and neutral text.
-TextFieldStyler _surface() =>
-    TextFieldStyler(
-          text: .color(
-            {{typePrefix}}Tokens.gray12(),
-          ).selectionColor({{typePrefix}}Tokens.focusA5()),
-          hintText: .color({{typePrefix}}Tokens.grayA11()),
-          cursorColor: {{typePrefix}}Tokens.gray12(),
-          helperText: .color({{typePrefix}}Tokens.gray11()),
-          label: .color(
-            {{typePrefix}}Tokens.gray12(),
-          ).fontWeight({{typePrefix}}Tokens.fontWeightMedium()),
-        )
-        .color({{typePrefix}}Tokens.gray2())
-        // An unlabeled field relies on its border to be found at all.
-        .merge(
-          _effects(
-            over: {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.controlBorder()]),
-          ),
-        )
+/// The variant's [fill] inside a 1px frame that is [rest] at rest and the
+/// text color while hovered or focused. Disabled moves the fill to the muted
+/// surface and keeps the resting frame.
+TextFieldStyler _framed({required Color rest, required Color fill}) =>
+    TextFieldStyler()
+        .color(fill)
+        .merge(_frame(rest))
+        .onHovered(_frame({{typePrefix}}Tokens.gray12()))
+        .onFocused(_frame({{typePrefix}}Tokens.gray12()))
         .onDisabled(
-          _disabledText()
-              .hintText(.color(_disabledNeutralPlaceholder()))
-              .color({{typePrefix}}Tokens.gray2())
-              .merge(
-                _effects(
-                  behind: RemixBoxEffectLayerMix(
-                    gradients: [
-                      RemixLinearGradientMix(
-                        colors: [{{typePrefix}}Tokens.grayA2(), {{typePrefix}}Tokens.grayA2()],
-                      ),
-                    ],
-                  ),
-                  over: {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA6()]),
-                ),
-              ),
+          TextFieldStyler().color({{typePrefix}}Tokens.gray3()).merge(_frame(rest)),
         );
 
-/// An accent tint with accent-colored text and a regular weight.
-TextFieldStyler _soft() =>
-    TextFieldStyler(
-          text: .fontWeight({{typePrefix}}Tokens.fontWeightRegular()),
-          hintText: .fontWeight({{typePrefix}}Tokens.fontWeightRegular()),
-          cursorColor: {{typePrefix}}Tokens.accent12(),
-          helperText: .color(
-            {{typePrefix}}Tokens.gray11(),
-          ).fontWeight({{typePrefix}}Tokens.fontWeightRegular()),
-          label: .color(
-            {{typePrefix}}Tokens.gray12(),
-          ).fontWeight({{typePrefix}}Tokens.fontWeightMedium()),
-        )
-        .textColor({{typePrefix}}Tokens.accent12())
-        .text(.selectionColor({{typePrefix}}Tokens.accentA5()))
-        .onEnabled(.hintText(.color({{typePrefix}}Tokens.accentContentAlpha())))
-        // Base-level icon overrides remain available while enabled.
-        .wrap(.iconTheme(color: {{typePrefix}}Tokens.accentContent()))
-        .color({{typePrefix}}Tokens.accentA3())
-        // A blank soft field shows no text, hint or border of its own, and its
-        // tint alone is far below 3:1; the accent-8 ring keeps it findable. It
-        // is the base so caller base overrides still win; disabled clears it.
-        .merge(
-          _effects(over: {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.focus8()])),
-        )
-        .onDisabled(
-          _disabledText()
-              .hintText(.color(_disabledSoftPlaceholder()))
-              .wrap(.iconTheme(color: {{typePrefix}}Tokens.accent10()))
-              .color({{typePrefix}}Tokens.grayA3())
-              .merge(_effects(over: RemixBoxEffectLayerMix(shadows: const []))),
-        );
+/// The error frame, over whichever variant is active. It holds through hover
+/// and focus; the label keeps its color.
+TextFieldStyler _error() =>
+    _frame({{typePrefix}}Tokens.error8()).cursorColor({{typePrefix}}Tokens.error9());
 
-/// Gray text and cursor for a disabled input, with no focus ring.
-///
-/// The disabled colors apply on raw focus too, matching the enabled input's
-/// `:focus-within` behavior.
-TextFieldStyler _disabledText() => TextFieldStyler(
-  text: .color({{typePrefix}}Tokens.grayA11()).selectionColor({{typePrefix}}Tokens.grayA5()),
-  cursorColor: {{typePrefix}}Tokens.grayA11(),
-).containerEffects(RemixBoxEffectsMix(outline: BorderSideMix(style: .none)));
-
-/// The error ring and text colors, shown over whichever variant is active.
-TextFieldStyler _error() => TextFieldStyler(
-  helperText: .color({{typePrefix}}Tokens.error11()),
-  label: .color({{typePrefix}}Tokens.error11()),
-  cursorColor: {{typePrefix}}Tokens.error9(),
-  containerEffects: RemixBoxEffectsMix(
-    overContent: RemixBoxEffectLayerMix(
-      shadows: [
-        RemixBoxShadowMix(
-          kind: .inset,
-          color: {{typePrefix}}Tokens.error8(),
-          spreadRadius: {{typePrefix}}Tokens.borderWidth1(),
-        ),
-      ],
-    ),
-  ),
-);
-
-/// Sets the layer [over] the content, and empties the layer behind it or sets
-/// [behind].
-TextFieldStyler _effects({
-  RemixBoxEffectLayerMix? behind,
-  required RemixBoxEffectLayerMix over,
-}) => TextFieldStyler()
+/// A 1px inset frame of [color] over the content, with nothing behind it.
+TextFieldStyler _frame(Color color) => TextFieldStyler()
     .containerEffects(
-      RemixBoxEffectsMix.behindContent(behind ?? RemixBoxEffectLayerMix()),
+      RemixBoxEffectsMix.behindContent(RemixBoxEffectLayerMix()),
     )
-    .containerEffects(RemixBoxEffectsMix.overContent(over));
+    .containerEffects(
+      RemixBoxEffectsMix.overContent({{valuePrefix}}InsetSurface(strokes: [color])),
+    );
 
-/// The hint color of a disabled neutral input: gray-alpha-10 at half opacity.
-final _disabledNeutralPlaceholder = ContextToken<Color>((context) {
-  final color = {{typePrefix}}Tokens.grayA10.resolve(context);
+bool _themeHighContrast(BuildContext context) =>
+    {{typePrefix}}Theme.maybeOf(context)?.highContrast ?? false;
 
-  return color.withValues(alpha: color.a * 0.5);
-});
-
-/// The hint color of a disabled soft input: accent step 12 at half opacity.
-final _disabledSoftPlaceholder = ContextToken<Color>(
-  (context) => {{typePrefix}}Tokens.accent12.resolve(context).withValues(alpha: 0.5),
+/// A soft field shows no frame at rest, or the control border once the theme
+/// asks for high contrast so an unlabelled field can still be found.
+final _softFrame = ContextToken<Color>(
+  (context) => _themeHighContrast(context)
+      ? {{typePrefix}}Tokens.controlBorder.resolve(context)
+      : {{typePrefix}}Tokens.gray3.resolve(context).withValues(alpha: 0),
 );
+
+/// Hint, helper and icon content: gray 10, or gray 11 once the theme asks for
+/// high contrast so it reads at 4.5:1.
+final _mutedContent = ContextToken<Color>(
+  (context) => _themeHighContrast(context)
+      ? {{typePrefix}}Tokens.gray11.resolve(context)
+      : {{typePrefix}}Tokens.gray10.resolve(context),
+);
+
+/// The focus ring, drawn only under the theme's high contrast switch.
+RemixBoxEffectsMix _highContrastFocusOutline() => {{valuePrefix}}FocusOutline().merge(
+  RemixBoxEffectsMix(outline: BorderSideMix(color: _focusRingColor())),
+);
+
+final _focusRingColor = ContextToken<Color>(
+  (context) => _themeHighContrast(context)
+      ? {{typePrefix}}Tokens.focus8.resolve(context)
+      : {{typePrefix}}Tokens.focus8.resolve(context).withValues(alpha: 0),
+);
+
+/// A message row opens its height on the smooth spring while it fades in over
+/// 150ms and its copy rises 0.35em out of a 4px blur over 200ms. It closes
+/// its height on the same spring and fades out over 100ms.
+Widget _messageMotion(
+  BuildContext context,
+  RemixFieldMessageTransitionInfo info,
+  Widget row,
+) {
+  final span = {{typePrefix}}SpringCurve.smooth.duration;
+  final rise = {{typePrefix}}Tokens.text1.resolve(context).fontSize! * 0.35;
+
+  double progress(Duration elapsed, Duration over) =>
+      (elapsed.inMicroseconds / over.inMicroseconds).clamp(0.0, 1.0);
+
+  return AnimatedBuilder(
+    animation: info.animation,
+    builder: (context, child) {
+      final t = info.animation.value;
+      final leaving = info.animation.status == .reverse;
+      final elapsed = span * (leaving ? 1 - t : t);
+      final double height;
+      final double opacity;
+      var settle = 1.0;
+      if (leaving) {
+        height = 1 - {{typePrefix}}SpringCurve.smooth.transform(1 - t);
+        opacity = 1 - progress(elapsed, {{typePrefix}}Motion.instant);
+      } else {
+        height = {{typePrefix}}SpringCurve.smooth.transform(t);
+        opacity = progress(elapsed, {{typePrefix}}Motion.fast);
+        settle = {{typePrefix}}Motion.easeEnter.transform(
+          progress(elapsed, {{typePrefix}}Motion.standard),
+        );
+      }
+      final blur = (1 - settle) * {{typePrefix}}Motion.blurSoft;
+
+      return ClipRect(
+        child: Align(
+          alignment: AlignmentDirectional.topStart,
+          heightFactor: height.clamp(0.0, 1.0),
+          child: Opacity(
+            opacity: opacity,
+            child: Transform.translate(
+              offset: Offset(0, (1 - settle) * rise),
+              child: blur > 0
+                  ? ImageFiltered(
+                      imageFilter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+                      child: child,
+                    )
+                  : child,
+            ),
+          ),
+        ),
+      );
+    },
+    child: row,
+  );
+}

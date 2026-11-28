@@ -1,262 +1,291 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
+import 'package:remix/remix.dart';
 
 void main() {
-  for (final (size, minHeight, fontSize, radius) in const [
-    (FortalTextAreaSize.size1, 48.0, 12.0, 10.0),
-    (FortalTextAreaSize.size2, 64.0, 13.0, 10.0),
-    (FortalTextAreaSize.size3, 80.0, 15.0, 12.0),
+  for (final (size, minHeight) in const [
+    (FortalTextAreaSize.size1, 88.0),
+    (FortalTextAreaSize.size2, 110.0),
+    (FortalTextAreaSize.size3, 121.0),
   ]) {
-    testWidgets('${size.name} matches specified multiline metrics', (
+    testWidgets('text area ${size.name} is $minHeight tall at the least', (
       tester,
     ) async {
-      final result = await _resolve(tester, size: size);
-      final container = result.spec.container.spec;
-      final decoration = container.decoration! as BoxDecoration;
+      final look = await _resolve(
+        tester,
+        (_) => fortalTextAreaStyle(size: size),
+      );
+      final container = look.spec.container.spec;
 
-      expect(container.constraints?.minHeight, minHeight);
-      expect(result.spec.text.spec.style?.fontSize, fontSize);
-      expect(result.spec.crossAxisAlignment, CrossAxisAlignment.start);
-      expect((decoration.borderRadius! as BorderRadius).topLeft.x, radius);
+      expect(container.constraints?.minHeight, closeTo(minHeight, 1e-9));
+      expect(container.padding, const EdgeInsets.all(13));
+      expect(
+        (container.decoration! as BoxDecoration).borderRadius,
+        BorderRadius.circular(14),
+      );
+      expect(look.spec.text.spec.style?.fontSize, 14);
+      expect(look.spec.crossAxisAlignment, CrossAxisAlignment.start);
     });
   }
 
-  testWidgets('all variants preserve the specified outer content insets', (
-    tester,
-  ) async {
-    const expected = [
-      EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-    ];
-
-    for (final variant in FortalTextFieldVariant.values) {
-      for (var index = 0; index < FortalTextAreaSize.values.length; index++) {
-        final result = await _resolve(
-          tester,
-          variant: variant,
-          size: FortalTextAreaSize.values[index],
-        );
-        final actual = result.spec.container.spec.padding!.resolve(
-          TextDirection.ltr,
-        );
-        expect(actual.left, closeTo(expected[index].left, 0.000001));
-        expect(actual.top, closeTo(expected[index].top, 0.000001));
-        expect(actual.right, closeTo(expected[index].right, 0.000001));
-        expect(actual.bottom, closeTo(expected[index].bottom, 0.000001));
-      }
-    }
-  });
-
-  testWidgets('soft TextArea uses secondary accent content and fitted focus', (
-    tester,
-  ) async {
-    final idle = await _resolve(tester, variant: .soft);
-    final focused = await _resolve(
+  testWidgets('text area sizes scale with the theme', (tester) async {
+    final look = await _resolve(
       tester,
-      variant: .soft,
-      states: {WidgetState.focused},
+      (_) => fortalTextAreaStyle(),
+      scaling: .percent110,
     );
+    final container = look.spec.container.spec;
 
-    expect(idle.spec.hintText.spec.style?.color, idle.accentContentAlpha);
-    expect(idle.spec.text.spec.selectionColor, idle.accentA5);
-    expect(focused.spec.containerEffects?.outline.color, idle.focus8);
-    expect(focused.spec.containerEffects?.outline.width, 2);
-    expect(focused.spec.containerEffects?.outlineOffset, 2);
+    expect(container.constraints?.minHeight, closeTo(121, 1e-9));
+    // 12px scaled, plus the 1px frame, which does not scale.
+    expect(
+      container.padding!.resolve(TextDirection.ltr).left,
+      closeTo(14.2, 1e-9),
+    );
   });
 
-  testWidgets(
-    'TextField soft placeholder uses the secondary accent content role',
-    (tester) async {
-      final result = await _resolveTextFieldSoft(tester);
+  for (final (name, style, opacity) in [
+    ('field', fortalTextFieldStyle, 0.5),
+    ('area', fortalTextAreaStyle, 0.6),
+  ]) {
+    for (final mode in FortalThemeMode.values) {
+      testWidgets('$name ${mode.name}: surface frame darkens on hover and '
+          'focus, with no ring', (tester) async {
+        for (final (states, frame) in [
+          (<WidgetState>{}, FortalTokens.controlBorder),
+          ({WidgetState.hovered}, FortalTokens.gray12),
+          ({WidgetState.focused}, FortalTokens.gray12),
+        ]) {
+          final look = await _resolve(
+            tester,
+            (_) => _style(style),
+            mode: mode,
+            states: states,
+          );
+          expect(look.frame, look.token(frame), reason: '$states');
+          expect(look.fill, look.token(FortalTokens.gray2), reason: '$states');
+          final ring = look.spec.containerEffects!.outline;
+          expect(
+            ring.style == BorderStyle.none || ring.color.a == 0,
+            isTrue,
+            reason: '$states',
+          );
+        }
+      });
 
-      expect(result.spec.hintText.spec.style?.color, result.accentContentAlpha);
-      expect(result.spec.containerEffects?.outline.color, result.focus8);
-    },
-  );
-
-  testWidgets('disabled and error states reuse TextField visual policy', (
-    tester,
-  ) async {
-    for (final brightness in [Brightness.light, Brightness.dark]) {
-      for (final variant in FortalTextFieldVariant.values) {
-        final disabled = await _resolve(
+      testWidgets('$name ${mode.name}: error holds its frame through hover '
+          'and focus and keeps the label', (tester) async {
+        final look = await _resolve(
           tester,
-          variant: variant,
-          brightness: brightness,
-          states: {WidgetState.disabled, WidgetState.focused},
-        );
-        final error = await _resolve(
-          tester,
-          variant: variant,
-          brightness: brightness,
-          states: {WidgetState.error},
+          (_) => _style(style),
+          mode: mode,
+          states: {WidgetState.error, WidgetState.hovered, WidgetState.focused},
         );
 
-        expect(disabled.spec.text.spec.style?.color, disabled.grayA11);
-        expect(disabled.spec.text.spec.selectionColor, disabled.grayA5);
+        expect(look.frame, look.token(FortalTokens.error8));
         expect(
-          disabled.spec.hintText.spec.style?.color,
-          variant == .soft
-              ? disabled.accent12.withValues(alpha: 0.5)
-              : disabled.grayA10.withValues(alpha: disabled.grayA10.a * 0.5),
+          look.spec.label.spec.style?.color,
+          look.token(FortalTokens.gray12),
         );
-        expect(disabled.spec.cursorColor, disabled.grayA11);
-        expect(disabled.spec.containerEffects?.outline.style, BorderStyle.none);
-        expect(error.spec.helperText.spec.style?.color, error.error11);
-        expect(error.spec.containerEffects?.outline.style, BorderStyle.none);
-        expect(error.spec.cursorColor, error.error9);
-      }
-    }
-  });
+        expect(
+          look.spec.errorText.spec.style?.color,
+          look.token(FortalTokens.error11),
+        );
+        expect(look.spec.cursorColor, look.token(FortalTokens.error9));
+      });
 
-  testWidgets('fixed size-3 minimum does not scale', (tester) async {
-    final size2 = await _resolve(tester, size: .size2, scaling: .percent110);
-    final size3 = await _resolve(tester, size: .size3, scaling: .percent110);
-
-    expect(size2.spec.container.spec.constraints?.minHeight, 70.4);
-    expect(size3.spec.container.spec.constraints?.minHeight, 80);
-  });
-
-  testWidgets('all TextArea insets retain their scaled values', (tester) async {
-    const expected = [
-      EdgeInsets.symmetric(horizontal: 8.8, vertical: 4.4),
-      EdgeInsets.symmetric(horizontal: 8.8, vertical: 8.8),
-      EdgeInsets.symmetric(horizontal: 13.2, vertical: 8.8),
-    ];
-
-    for (final variant in FortalTextFieldVariant.values) {
-      for (var index = 0; index < FortalTextAreaSize.values.length; index++) {
-        final result = await _resolve(
+      testWidgets('$name ${mode.name}: disabled fades the box over the muted '
+          'fill and keeps the resting frame', (tester) async {
+        final look = await _resolve(
           tester,
-          variant: variant,
-          size: FortalTextAreaSize.values[index],
-          scaling: .percent110,
-        );
-        final actual = result.spec.container.spec.padding!.resolve(
-          TextDirection.ltr,
-        );
-        expect(actual.left, closeTo(expected[index].left, 0.000001));
-        expect(actual.top, closeTo(expected[index].top, 0.000001));
-        expect(actual.right, closeTo(expected[index].right, 0.000001));
-        expect(actual.bottom, closeTo(expected[index].bottom, 0.000001));
-      }
-    }
-  });
-
-  testWidgets('neutral selection uses focus-a5 in light and dark themes', (
-    tester,
-  ) async {
-    for (final brightness in [Brightness.light, Brightness.dark]) {
-      for (final variant in [FortalTextFieldVariant.surface]) {
-        final result = await _resolve(
-          tester,
-          variant: variant,
-          brightness: brightness,
-        );
-        expect(result.spec.text.spec.selectionColor, result.focusA5);
-      }
-    }
-  });
-
-  testWidgets('error retains red precedence over disabled TextArea roles', (
-    tester,
-  ) async {
-    for (final brightness in [Brightness.light, Brightness.dark]) {
-      for (final variant in FortalTextFieldVariant.values) {
-        final result = await _resolve(
-          tester,
-          variant: variant,
-          brightness: brightness,
-          states: {
-            WidgetState.disabled,
-            WidgetState.focused,
-            WidgetState.error,
-          },
+          (_) => _style(style),
+          mode: mode,
+          states: {WidgetState.disabled, WidgetState.hovered},
         );
 
-        expect(result.spec.helperText.spec.style?.color, result.error11);
-        expect(result.spec.containerEffects?.outline.style, BorderStyle.none);
-        expect(result.spec.cursorColor, result.error9);
-        expect(result.spec.text.spec.style?.color, result.grayA11);
-        expect(result.spec.text.spec.selectionColor, result.grayA5);
-      }
+        expect(look.frame, look.token(FortalTokens.controlBorder));
+        expect(look.fill, look.token(FortalTokens.gray3));
+        expect(
+          look.spec.container.widgetModifiers!
+              .whereType<OpacityModifier>()
+              .single
+              .opacity,
+          opacity,
+        );
+        expect(
+          look.spec.label.spec.style?.color,
+          look.token(FortalTokens.gray12),
+        );
+      });
     }
+
+    testWidgets('$name soft shows no frame at rest and the strong one under '
+        'high contrast', (tester) async {
+      final rest = await _resolve(tester, (_) => _style(style, soft: true));
+      final focused = await _resolve(
+        tester,
+        (_) => _style(style, soft: true),
+        states: {WidgetState.focused},
+      );
+      final contrast = await _resolve(
+        tester,
+        (_) => _style(style, soft: true),
+        highContrast: true,
+      );
+
+      expect(rest.fill, rest.token(FortalTokens.gray3));
+      expect(rest.frame!.a, 0);
+      expect(focused.frame, focused.token(FortalTokens.gray12));
+      expect(contrast.frame, contrast.token(FortalTokens.controlBorder));
+    });
+
+    testWidgets('$name rings on focus and lifts muted content only under the '
+        'theme high contrast switch', (tester) async {
+      final normal = await _resolve(
+        tester,
+        (_) => _style(style),
+        states: {WidgetState.focused},
+      );
+      final contrast = await _resolve(
+        tester,
+        (_) => _style(style),
+        states: {WidgetState.focused},
+        highContrast: true,
+      );
+
+      expect(
+        normal.spec.hintText.spec.style?.color,
+        normal.token(FortalTokens.gray10),
+      );
+      expect(
+        normal.spec.helperText.spec.style?.color,
+        normal.token(FortalTokens.gray10),
+      );
+      expect(
+        contrast.spec.containerEffects!.outline.color,
+        contrast.token(FortalTokens.focus8),
+      );
+      expect(contrast.spec.containerEffects!.outline.width, 2);
+      expect(
+        contrast.spec.hintText.spec.style?.color,
+        contrast.token(FortalTokens.gray11),
+      );
+    });
+
+    testWidgets('$name labels and message rows carry their own 8px gaps', (
+      tester,
+    ) async {
+      final look = await _resolve(tester, (_) => _style(style));
+
+      expect(look.spec.layout.spec.flex?.spec.spacing, 0);
+      expect(look.spec.label.spec.style?.fontSize, 13);
+      expect(look.spec.label.spec.style?.fontWeight, FontWeight.w500);
+      expect(look.spec.helperText.spec.style?.fontSize, 12);
+      expect(look.spec.errorText.spec.style?.fontSize, 12);
+      for (final (slot, padding) in [
+        (look.spec.label, const EdgeInsets.only(bottom: 8)),
+        (look.spec.helperText, const EdgeInsets.only(top: 8)),
+        (look.spec.errorText, const EdgeInsets.only(top: 8)),
+      ]) {
+        expect(
+          slot.widgetModifiers!.whereType<PaddingModifier>().single.padding,
+          padding,
+        );
+      }
+    });
+  }
+
+  testWidgets('a new message row opens on the spring and an old one closes '
+      'faster', (tester) async {
+    final error = ValueNotifier<String?>(null);
+    await tester.pumpWidget(
+      FortalTheme(
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: 240,
+              child: ValueListenableBuilder(
+                valueListenable: error,
+                builder: (context, text, _) =>
+                    FortalTextField(label: 'Email', errorText: text),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    final closed = tester.getSize(find.byType(FortalTextField)).height;
+
+    error.value = 'Enter a valid email';
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    final opening =
+        tester.getSize(find.byType(FortalTextField)).height - closed;
+    await tester.pumpAndSettle();
+    final open = tester.getSize(find.byType(FortalTextField)).height - closed;
+
+    // 8px gap plus the 12px row at 1.4 line height, rounded by the engine.
+    expect(open, closeTo(25, 0.5));
+    // The critically damped smooth spring is at 0.52 of its travel at 100ms.
+    expect(opening / open, closeTo(0.52, 0.06));
+
+    error.value = null;
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    final closing =
+        tester.getSize(find.byType(FortalTextField)).height - closed;
+    expect(closing / open, closeTo(0.48, 0.06));
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.byType(FortalTextField)).height, closed);
   });
 }
 
-Future<
-  ({
-    TextFieldSpec spec,
-    Color focus8,
-    Color accentA5,
-    Color accent12,
-    Color accentContentAlpha,
-    Color focusA5,
-    Color gray8,
-    Color grayA5,
-    Color grayA10,
-    Color grayA11,
-    Color error8,
-    Color error9,
-    Color error11,
+TextFieldStyler _style(
+  TextFieldStyler Function({
+    FortalTextFieldVariant variant,
+    TextFieldStyler style,
   })
->
-_resolve(
-  WidgetTester tester, {
-  FortalTextFieldVariant variant = FortalTextFieldVariant.surface,
-  FortalTextAreaSize size = FortalTextAreaSize.size2,
-  FortalScaling scaling = FortalScaling.percent100,
-  Brightness brightness = Brightness.light,
+  recipe, {
+  bool soft = false,
+}) => recipe(variant: soft ? .soft : .surface);
+
+typedef _Look = ({
+  TextFieldSpec spec,
+  Color Function(MixToken<Color> token) token,
+  Color? frame,
+  Color? fill,
+});
+
+Future<_Look> _resolve(
+  WidgetTester tester,
+  TextFieldStyler Function(BuildContext context) style, {
+  FortalThemeMode mode = .light,
+  FortalScaling scaling = .percent100,
+  bool highContrast = false,
   Set<WidgetState> states = const {},
 }) async {
-  late ({
-    TextFieldSpec spec,
-    Color focus8,
-    Color accentA5,
-    Color accent12,
-    Color accentContentAlpha,
-    Color focusA5,
-    Color gray8,
-    Color grayA5,
-    Color grayA10,
-    Color grayA11,
-    Color error8,
-    Color error9,
-    Color error11,
-  })
-  result;
+  late _Look look;
   await tester.pumpWidget(
     FortalTheme(
-      accent: .mar,
-      mode: brightness == Brightness.dark ? .dark : .light,
+      mode: mode,
       scaling: scaling,
+      highContrast: highContrast,
       child: WidgetStateProvider(
         states: states,
         child: Builder(
           builder: (context) {
-            result = (
-              spec: fortalTextAreaStyle(
-                variant: variant,
-                size: size,
-              ).build(context).spec,
-              focus8: MixScope.tokenOf(FortalTokens.focus8, context),
-              accentA5: MixScope.tokenOf(FortalTokens.accentA5, context),
-              accent12: MixScope.tokenOf(FortalTokens.accent12, context),
-              accentContentAlpha: MixScope.tokenOf(
-                FortalTokens.accentContentAlpha,
-                context,
-              ),
-              focusA5: MixScope.tokenOf(FortalTokens.focusA5, context),
-              gray8: MixScope.tokenOf(FortalTokens.gray8, context),
-              grayA5: MixScope.tokenOf(FortalTokens.grayA5, context),
-              grayA10: MixScope.tokenOf(FortalTokens.grayA10, context),
-              grayA11: MixScope.tokenOf(FortalTokens.grayA11, context),
-              error8: MixScope.tokenOf(FortalTokens.error8, context),
-              error9: MixScope.tokenOf(FortalTokens.error9, context),
-              error11: MixScope.tokenOf(FortalTokens.error11, context),
+            final spec = style(context).build(context).spec;
+            final shadows = spec.containerEffects?.overContent?.shadows;
+            look = (
+              spec: spec,
+              token: (token) => MixScope.tokenOf(token, context),
+              frame: shadows == null || shadows.isEmpty
+                  ? null
+                  : shadows.single.color,
+              fill: (spec.container.spec.decoration as BoxDecoration?)?.color,
             );
             return const SizedBox.shrink();
           },
@@ -264,32 +293,5 @@ _resolve(
       ),
     ),
   );
-  return result;
-}
-
-Future<({TextFieldSpec spec, Color focus8, Color accentContentAlpha})>
-_resolveTextFieldSoft(WidgetTester tester) async {
-  late ({TextFieldSpec spec, Color focus8, Color accentContentAlpha}) result;
-  await tester.pumpWidget(
-    FortalTheme(
-      accent: .mar,
-      child: WidgetStateProvider(
-        states: const {WidgetState.focused},
-        child: Builder(
-          builder: (context) {
-            result = (
-              spec: fortalTextFieldStyle(variant: .soft).build(context).spec,
-              focus8: MixScope.tokenOf(FortalTokens.focus8, context),
-              accentContentAlpha: MixScope.tokenOf(
-                FortalTokens.accentContentAlpha,
-                context,
-              ),
-            );
-            return const SizedBox.shrink();
-          },
-        ),
-      ),
-    ),
-  );
-  return result;
+  return look;
 }

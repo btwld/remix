@@ -80,18 +80,10 @@ void main() {
                   reason: '$reason hint',
                 );
               }
-              expect(
-                iconColor,
-                soft ? colors.accentContent : colors.gray.scale.step(11),
-                reason: reason,
-              );
-              expect(
-                hint,
-                soft
-                    ? colors.accentContentAlpha
-                    : colors.gray.scale.alphaStep(11),
-                reason: reason,
-              );
+              // Both looks are neutral; high contrast lifts muted content
+              // from gray 10 to gray 11.
+              expect(iconColor, colors.gray.scale.step(11), reason: reason);
+              expect(hint, colors.gray.scale.step(11), reason: reason);
               expect(tester.takeException(), isNull);
             }
           }
@@ -115,7 +107,6 @@ void main() {
                       TextFieldStyler().wrap(.iconTheme(color: custom)),
                     )
                   : base;
-              late Color disabledColor;
               await tester.pumpRemixApp(
                 Builder(
                   builder: (context) {
@@ -123,9 +114,6 @@ void main() {
                       FortalTheme.of(context).brightness,
                       dark ? Brightness.dark : Brightness.light,
                     );
-                    disabledColor = resolveFortalTokens(
-                      FortalTheme.of(context),
-                    ).accent.scale.step(10);
                     return area
                         ? FortalTextArea.soft(
                             enabled: enabled,
@@ -142,9 +130,11 @@ void main() {
                 accent: .mar,
                 mode: dark ? .dark : .light,
               );
+              // Disabled fades the box and keeps the content colors, so a
+              // base override holds whether or not it is repeated there.
               expect(
                 IconTheme.of(tester.element(find.byKey(iconKey))).color,
-                enabled || overrideDisabled ? custom : disabledColor,
+                custom,
               );
               expect(tester.takeException(), isNull);
             }
@@ -220,22 +210,16 @@ void main() {
                 accent: .mar,
                 mode: dark ? .dark : .light,
               );
-              final oldNeutral = colors.gray.scale.alphaStep(10);
+              // Frame and content colors ease between states.
+              await tester.pumpAndSettle();
+              final muted = colors.gray.scale.step(10);
               expect(
                 resolved.hintText.spec.style?.color,
-                enabled
-                    ? custom
-                    : soft
-                    ? colors.accent.scale.step(12).withValues(alpha: .5)
-                    : oldNeutral.withValues(alpha: oldNeutral.a * .5),
+                enabled ? custom : muted,
               );
               expect(
                 IconTheme.of(tester.element(find.byKey(iconKey))).color,
-                enabled
-                    ? custom
-                    : soft
-                    ? colors.accent.scale.step(10)
-                    : colors.gray.scale.step(11),
+                enabled ? custom : muted,
               );
               expect(tester.takeException(), isNull);
             }

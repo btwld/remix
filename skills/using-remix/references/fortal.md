@@ -253,10 +253,10 @@ navigation landmark named "Breadcrumb"; pass a localized `semanticLabel`.
 `NakedSearchField` for [shared search behavior](components.md#forms) and
 `<Prefix>TextField` for the editor, matching its `variant` (`.surface`, `.soft`)
 and `size` (`.size1`–`.size3`, default size2). `semanticLabel` is required;
-there is no visible label or helper text. Clear overlays the trailing
-`touchTargetMin` (at least 40px) without increasing the field height or
-overlapping the editor's tap area. It is not a Tab stop. Localize
-`clearSemanticLabel`.
+pass `label` to show one above the field. There is no helper text. Clear sits
+in a 24px slot the field always reserves, with a 40px target that does not
+increase the field height or overlap the editor's tap area. It is not a Tab
+stop. Localize `clearSemanticLabel`.
 
 ## Surface
 

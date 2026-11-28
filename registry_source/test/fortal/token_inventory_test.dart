@@ -50,16 +50,13 @@ final _customizationTokens = {
   'toneGreen',
   'accentRange',
   'accentThumb',
-  'space18',
   'space20',
   'space56',
-  'controlHeight1',
-  'controlHeight2',
-  'controlHeight3',
   'controlHeight4',
   'radius7',
   'shadowThumb',
-  'textField',
+  // Text areas now size from the control heights; the token stays for callers.
+  'textAreaMinHeight3',
 };
 
 void main() {

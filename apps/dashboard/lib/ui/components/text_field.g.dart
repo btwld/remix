@@ -9,7 +9,13 @@ part of 'text_field.dart';
 /// The Fortal TextField recipe.
 ///
 /// It reads top to bottom: what every text input shares, then the size, then
-/// the variant's colors for rest and disabled, then the error state.
+/// the variant's colors for rest, hover, focus and disabled, then the error
+/// state.
+///
+/// Focus darkens the frame to the text color; the focus ring shows only under
+/// the theme's high contrast switch. An error frame holds through hover and
+/// focus, and the label keeps its color. The helper and error rows open on a
+/// spring, fade in and settle up into place, and close on the same spring.
 class UiTextField extends StatelessWidget {
   const UiTextField({
     super.key,
@@ -76,7 +82,7 @@ class UiTextField extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
+  /// The surface fill inside a 1px strong frame.
   const UiTextField.surface({
     super.key,
     this.size = .size2,
@@ -141,7 +147,7 @@ class UiTextField extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiTextFieldVariant.surface;
 
-  /// An accent tint inside a 1px accent ring, with accent-colored text.
+  /// The muted surface fill with no frame until hovered or focused.
   const UiTextField.soft({
     super.key,
     this.size = .size2,
@@ -395,7 +401,7 @@ class UiTextField extends StatelessWidget {
 }
 
 /// The Fortal TextArea recipe: the text field's looks on a taller box whose
-/// content starts at the top.
+/// content starts at the top, with 12px padding on every side.
 class UiTextArea extends StatelessWidget {
   const UiTextArea({
     super.key,
@@ -459,7 +465,7 @@ class UiTextArea extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
+  /// The surface fill inside a 1px strong frame.
   const UiTextArea.surface({
     super.key,
     this.size = .size2,
@@ -521,7 +527,7 @@ class UiTextArea extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = UiTextFieldVariant.surface;
 
-  /// An accent tint inside a 1px accent ring, with accent-colored text.
+  /// The muted surface fill with no frame until hovered or focused.
   const UiTextArea.soft({
     super.key,
     this.size = .size2,

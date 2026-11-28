@@ -55,8 +55,8 @@ void main() {
                     fortalCheckboxStyle().build(context).spec.containerEffects,
                     fortalRadioStyle().build(context).spec.containerEffects,
                     fortalSwitchStyle().build(context).spec.trackEffects,
-                    fortalTextFieldStyle().build(context).spec.containerEffects,
-                    fortalTextAreaStyle().build(context).spec.containerEffects,
+                    // Text inputs ring only under the theme's high contrast switch; see
+                    // text_area_fortal_test.dart.
                     fortalSelectStyle()
                         .build(context)
                         .spec
