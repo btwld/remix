@@ -296,10 +296,16 @@ theme's high contrast. Disabled checkboxes, radios and switches fade to 50%
 and keep their state colours. Their focus ring circles the 40px touch target
 with the 14px control corner.
 
-Slider thumbs are white with a 2px `accentThumbRing` in light
-and gray3 in dark; the thumb
-is identified by its fill or its ring. The soft slider range is step 6 alone,
-with no accent alpha layered over it. Geometry and state precedence are shared.
+Sliders take a 6px `controlTrack` rail and an `accentRange` fill under a
+22px `controlThumb` lifted by `shadowThumb`, in a 40px row (5px, 18px and the
+40px touch target at size 1; 7px, 24px and 44px at size 3). The thumb carries
+a 2px `accentThumbRing`, transparent by default and the fitted ring under the
+theme's high contrast switch. A held thumb lifts to 116%; keys, track presses
+and new values glide it on the snappy spring while a dragged thumb follows the
+pointer. Thumbs draw no hover look. The soft range mixes the control ink 55%
+toward the track. Disabled sliders fade to 50% and keep their colours; the
+thumb keeps the contiguous slider focus ring. Geometry and state precedence are
+shared with the range slider.
 
 Progress bars carry their value without text, in two extents. The whole track
 (gray alpha 3, or gray alpha 4 for soft) is edged in a 1px inset

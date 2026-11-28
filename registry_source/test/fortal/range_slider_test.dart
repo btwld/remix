@@ -19,6 +19,10 @@ Finder thumb(int index) => find.descendant(
 RemixBoxAdapter part(WidgetTester tester, int index) =>
     tester.widget(thumb(index));
 
+// ignore: invalid_use_of_internal_member
+double _scale(RemixBoxAdapter thumb) =>
+    thumb.styleSpec.spec.transform?.getMaxScaleOnAxis() ?? 1;
+
 void main() {
   testWidgets('FortalRangeSlider announces each formatted bound', (
     tester,
@@ -75,27 +79,23 @@ void main() {
           await mouse.addPointer(location: Offset.zero);
           await mouse.moveTo(tester.getCenter(thumb(index)));
           await tester.pumpAndSettle();
-          expect(
-            part(tester, index).containerEffects?.outline.color,
-            FortalTokens.accentA7.resolve(context),
-          );
-          expect(
-            part(tester, 1 - index).containerEffects?.outline.style ??
-                BorderStyle.none,
-            BorderStyle.none,
-          );
+          // A hovered thumb draws no outline; it only shows its grab cursor.
+          for (final i in [index, 1 - index]) {
+            expect(
+              part(tester, i).containerEffects?.outline.style ??
+                  BorderStyle.none,
+              BorderStyle.none,
+            );
+          }
           await mouse.removePointer();
           await tester.pumpAndSettle();
           final touch = await tester.startGesture(
             tester.getCenter(thumb(index)),
           );
           await tester.pumpAndSettle();
-          expect(part(tester, index).containerEffects?.outline.width, 4);
-          expect(
-            part(tester, 1 - index).containerEffects?.outline.style ??
-                BorderStyle.none,
-            BorderStyle.none,
-          );
+          // Only the held thumb lifts to 116%.
+          expect(_scale(part(tester, index)), closeTo(1.16, 1e-9));
+          expect(_scale(part(tester, 1 - index)), 1);
           await touch.up();
           await tester.pumpAndSettle();
         }
@@ -146,7 +146,7 @@ void main() {
               await tester.pumpAndSettle();
               expect(
                 tester.getSize(find.byType(RemixRangeSlider)).height,
-                greaterThanOrEqualTo(48),
+                greaterThanOrEqualTo(40),
               );
               expect(
                 tester.getCenter(thumb(0)).dx,
