@@ -152,7 +152,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   selectors and all day states; install `calendar`. `CalendarStyler.call(...)`
   builds a `RemixCalendar` with the supplied style.
   Recipe hooks, unset by default: `monthTransition(RemixMonthTransition)`
-  animates the outgoing and incoming month grids.
+  animates the outgoing and incoming month grids; `fixedWeeks(true)` always
+  lays out six week rows.
 - **[RangeCalendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx)** — controlled complete inclusive `CivilDateRange?`, sharing
   Calendar navigation and day anatomy. First activation anchors locally without
   a callback; second eligible activation requests one ordered range and clears

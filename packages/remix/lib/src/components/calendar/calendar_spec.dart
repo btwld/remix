@@ -40,6 +40,14 @@ class CalendarSpec with _$CalendarSpec {
   @override
   final RemixMonthTransition? monthTransition;
 
+  /// Whether to always lay out six week rows, so the height does not change
+  /// between months. A shorter month is padded with empty rows of the day
+  /// height, separated by [rowSpacing].
+  ///
+  /// `null` and `false` lay out one row per week of the displayed month.
+  @override
+  final bool? fixedWeeks;
+
   const CalendarSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? weekday,
@@ -49,6 +57,7 @@ class CalendarSpec with _$CalendarSpec {
     this.weekdaySpacing,
     this.selectorSpacing,
     this.monthTransition,
+    this.fixedWeeks,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        weekday = weekday ?? const StyleSpec(spec: TextSpec()),
        day = day ?? const StyleSpec(spec: CalendarDaySpec());

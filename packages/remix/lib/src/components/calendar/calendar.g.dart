@@ -15,6 +15,7 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
   double? get weekdaySpacing;
   double? get selectorSpacing;
   RemixMonthTransition? get monthTransition;
+  bool? get fixedWeeks;
 
   @override
   Type get type => CalendarSpec;
@@ -29,6 +30,7 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
     double? weekdaySpacing,
     double? selectorSpacing,
     RemixMonthTransition? monthTransition,
+    bool? fixedWeeks,
   }) {
     return CalendarSpec(
       container: container ?? this.container,
@@ -39,6 +41,7 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
       weekdaySpacing: weekdaySpacing ?? this.weekdaySpacing,
       selectorSpacing: selectorSpacing ?? this.selectorSpacing,
       monthTransition: monthTransition ?? this.monthTransition,
+      fixedWeeks: fixedWeeks ?? this.fixedWeeks,
     );
   }
 
@@ -57,6 +60,7 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
         other?.monthTransition,
         t,
       ),
+      fixedWeeks: MixOps.lerpSnap(fixedWeeks, other?.fixedWeeks, t),
     );
   }
 
@@ -70,6 +74,7 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
     weekdaySpacing,
     selectorSpacing,
     monthTransition,
+    fixedWeeks,
   ];
 
   @override
@@ -119,7 +124,8 @@ mixin _$CalendarSpec implements Spec<CalendarSpec>, Diagnosticable {
       ..add(DoubleProperty('headerSpacing', headerSpacing))
       ..add(DoubleProperty('weekdaySpacing', weekdaySpacing))
       ..add(DoubleProperty('selectorSpacing', selectorSpacing))
-      ..add(DiagnosticsProperty('monthTransition', monthTransition));
+      ..add(DiagnosticsProperty('monthTransition', monthTransition))
+      ..add(DiagnosticsProperty('fixedWeeks', fixedWeeks));
   }
 }
 
@@ -231,6 +237,7 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
   final Prop<double>? $weekdaySpacing;
   final Prop<double>? $selectorSpacing;
   final Prop<RemixMonthTransition>? $monthTransition;
+  final Prop<bool>? $fixedWeeks;
 
   const CalendarStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
@@ -241,6 +248,7 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     Prop<double>? weekdaySpacing,
     Prop<double>? selectorSpacing,
     Prop<RemixMonthTransition>? monthTransition,
+    Prop<bool>? fixedWeeks,
     super.variants,
     super.modifier,
     super.animation,
@@ -251,7 +259,8 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
        $headerSpacing = headerSpacing,
        $weekdaySpacing = weekdaySpacing,
        $selectorSpacing = selectorSpacing,
-       $monthTransition = monthTransition;
+       $monthTransition = monthTransition,
+       $fixedWeeks = fixedWeeks;
 
   CalendarStyler({
     BoxStyler? container,
@@ -262,6 +271,7 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     double? weekdaySpacing,
     double? selectorSpacing,
     RemixMonthTransition? monthTransition,
+    bool? fixedWeeks,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<CalendarSpec>>? variants,
@@ -274,6 +284,7 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
          weekdaySpacing: Prop.maybe(weekdaySpacing),
          selectorSpacing: Prop.maybe(selectorSpacing),
          monthTransition: Prop.maybe(monthTransition),
+         fixedWeeks: Prop.maybe(fixedWeeks),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -295,6 +306,8 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
       CalendarStyler().selectorSpacing(value);
   factory CalendarStyler.monthTransition(RemixMonthTransition value) =>
       CalendarStyler().monthTransition(value);
+  factory CalendarStyler.fixedWeeks(bool value) =>
+      CalendarStyler().fixedWeeks(value);
   factory CalendarStyler.alignment(AlignmentGeometry value) =>
       CalendarStyler().alignment(value);
   factory CalendarStyler.padding(EdgeInsetsGeometryMix value) =>
@@ -798,6 +811,7 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     'weekdaySpacing',
     'selectorSpacing',
     'monthTransition',
+    'fixedWeeks',
     'animation',
     'modifier',
     'variants',
@@ -843,6 +857,11 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     return merge(CalendarStyler(monthTransition: value));
   }
 
+  /// Sets the fixedWeeks.
+  CalendarStyler fixedWeeks(bool value) {
+    return merge(CalendarStyler(fixedWeeks: value));
+  }
+
   /// Sets the animation configuration.
   @override
   CalendarStyler animate(AnimationConfig value) {
@@ -878,6 +897,7 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
       weekdaySpacing: MixOps.merge($weekdaySpacing, other?.$weekdaySpacing),
       selectorSpacing: MixOps.merge($selectorSpacing, other?.$selectorSpacing),
       monthTransition: MixOps.merge($monthTransition, other?.$monthTransition),
+      fixedWeeks: MixOps.merge($fixedWeeks, other?.$fixedWeeks),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -896,6 +916,7 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
       weekdaySpacing: MixOps.resolve(context, $weekdaySpacing),
       selectorSpacing: MixOps.resolve(context, $selectorSpacing),
       monthTransition: MixOps.resolve(context, $monthTransition),
+      fixedWeeks: MixOps.resolve(context, $fixedWeeks),
     );
 
     return StyleSpec(
@@ -916,7 +937,8 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
       ..add(DiagnosticsProperty('headerSpacing', $headerSpacing))
       ..add(DiagnosticsProperty('weekdaySpacing', $weekdaySpacing))
       ..add(DiagnosticsProperty('selectorSpacing', $selectorSpacing))
-      ..add(DiagnosticsProperty('monthTransition', $monthTransition));
+      ..add(DiagnosticsProperty('monthTransition', $monthTransition))
+      ..add(DiagnosticsProperty('fixedWeeks', $fixedWeeks));
   }
 
   @override
@@ -929,6 +951,7 @@ class CalendarStyler extends MixStyler<CalendarStyler, CalendarSpec>
     $weekdaySpacing,
     $selectorSpacing,
     $monthTransition,
+    $fixedWeeks,
     $animation,
     $modifier,
     $variants,
