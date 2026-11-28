@@ -193,6 +193,8 @@ ButtonStyler _trigger(BuildContext context) {
 
   return ButtonStyler()
       .minHeight(UiTokens.controlHeight2())
+      // The trigger takes its content width above Fortal's field floor.
+      .minWidth(scaler.scale(260))
       .padding(.only(left: 14, right: 12))
       .spacing(10)
       .borderRadius(.all(_triggerCorner()))
