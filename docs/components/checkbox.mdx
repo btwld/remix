@@ -225,6 +225,10 @@ Sets the visible label text style.
 
 Sets the gap between the checkbox square and its visible label. Defaults to 8 logical pixels.
 
+#### `indicatorBuilder(RemixCheckboxIndicatorBuilder value)`
+
+Builds the indicator inside the box in every state, including unchecked. The builder receives the value (`true`, `false`, or `null` for an indeterminate tristate checkbox) and the resolved indicator style. Its widget stays mounted when the value changes, so it can animate its own mark in and out. When set, it replaces `checkedIcon`, `uncheckedIcon`, and `indeterminateIcon`. Pass a top-level or static function so resolved specs compare equal across rebuilds.
+
 #### `labelColor(Color value)`
 
 Sets the visible label color through the generated `LabelStyleMixin` API.

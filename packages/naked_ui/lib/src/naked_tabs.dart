@@ -1,5 +1,4 @@
-import 'dart:ui' show SemanticsRole;
-
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -8,6 +7,7 @@ import 'utilities/focus_in_view.dart';
 import 'utilities/intents.dart';
 import 'utilities/naked_focusable_detector.dart';
 import 'utilities/naked_state_scope.dart';
+import 'utilities/reduced_motion.dart';
 import 'utilities/state.dart';
 
 /// Determines whether moving focus also selects a tab.
@@ -618,6 +618,17 @@ class _NakedTabState extends State<NakedTab>
   }
 }
 
+/// Builds the transition of a [NakedTabView] as it enters or leaves.
+///
+/// [animation] runs from zero to one when the view's tab becomes selected and
+/// from one to zero when another tab is selected.
+typedef NakedTabViewTransitionBuilder =
+    Widget Function(
+      BuildContext context,
+      Animation<double> animation,
+      Widget child,
+    );
+
 /// A headless tab view without visuals.
 ///
 /// Displays content for a specific tab when selected.
@@ -625,13 +636,19 @@ class _NakedTabState extends State<NakedTab>
 ///
 /// See also:
 /// - [NakedTabs], the container that manages tab selection.
-class NakedTabView extends StatelessWidget {
+class NakedTabView extends StatefulWidget {
   /// Creates the panel associated with [tabId].
   const NakedTabView({
     super.key,
     required this.child,
     required this.tabId,
     this.maintainState = true,
+    this.transitionBuilder,
+    this.animationStyle = const AnimationStyle(
+      curve: Curves.ease,
+      duration: Duration(milliseconds: 200),
+      reverseDuration: Duration(milliseconds: 200),
+    ),
   });
 
   /// The view content for the associated [tabId].
@@ -643,27 +660,252 @@ class NakedTabView extends StatelessWidget {
   /// Whether to maintain state when hidden.
   final bool maintainState;
 
+  /// Optional transition applied while the view enters and leaves.
+  ///
+  /// Without a transition builder, a view shows and hides at once. With one,
+  /// a view whose tab is deselected keeps painting until its reverse
+  /// animation is dismissed. While it leaves, it takes no space in layout, so
+  /// the selected view takes its place at once, and it stays painted where it
+  /// last sat relative to the enclosing [NakedTabs]. A leaving view does not
+  /// take pointer input, focus, or semantics. Selecting the tab again before
+  /// the animation ends reverses it from its current value.
+  ///
+  /// Changes are immediate while the user asks to reduce motion: when
+  /// [MediaQueryData.disableAnimations] is set or the platform reports
+  /// `AccessibilityFeatures.reduceMotion`.
+  final NakedTabViewTransitionBuilder? transitionBuilder;
+
+  /// Curves and durations used by [transitionBuilder].
+  final AnimationStyle animationStyle;
+
+  @override
+  State<NakedTabView> createState() => _NakedTabViewState();
+}
+
+class _NakedTabViewState extends State<NakedTabView>
+    with SingleTickerProviderStateMixin<NakedTabView> {
+  late final AnimationController _controller;
+  late CurvedAnimation _animation;
+  bool? _selected;
+
+  Duration get _forwardDuration =>
+      widget.animationStyle.duration ?? const Duration(milliseconds: 200);
+
+  Duration get _reverseDuration =>
+      widget.animationStyle.reverseDuration ??
+      const Duration(milliseconds: 200);
+
+  bool get _leaving => _selected == false && !_controller.isDismissed;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(
+          duration: _forwardDuration,
+          reverseDuration: _reverseDuration,
+          vsync: this,
+        )..addStatusListener((status) {
+          if (status.isDismissed && mounted) setState(() {});
+        });
+    _animation = _createAnimation();
+  }
+
+  CurvedAnimation _createAnimation() {
+    final curve = widget.animationStyle.curve ?? Curves.ease;
+
+    return CurvedAnimation(
+      parent: _controller,
+      curve: curve,
+      reverseCurve: widget.animationStyle.reverseCurve ?? curve.flipped,
+    );
+  }
+
+  void _syncSelection() {
+    final selected = NakedTabsScope.of(context).isTabSelected(widget.tabId);
+    if (selected == _selected) return;
+    final firstBuild = _selected == null;
+    _selected = selected;
+    final animate =
+        !firstBuild &&
+        widget.transitionBuilder != null &&
+        widget.animationStyle != AnimationStyle.noAnimation &&
+        !reducedMotionOf(context);
+    if (!animate) {
+      _controller
+        ..stop()
+        ..value = selected ? 1 : 0;
+    } else if (selected) {
+      _controller.forward();
+    } else {
+      _controller.reverse();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncSelection();
+  }
+
+  @override
+  void didUpdateWidget(covariant NakedTabView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.animationStyle != oldWidget.animationStyle) {
+      _controller
+        ..duration = _forwardDuration
+        ..reverseDuration = _reverseDuration;
+      _animation.dispose();
+      _animation = _createAnimation();
+    }
+    if (widget.transitionBuilder == null || widget.tabId != oldWidget.tabId) {
+      _selected = null;
+    }
+    _syncSelection();
+  }
+
+  @override
+  void dispose() {
+    _animation.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    assert(tabId.isNotEmpty, 'tabId cannot be empty');
-    final scope = NakedTabsScope.of(context);
-    final isSelected = scope.isTabSelected(tabId);
+    assert(widget.tabId.isNotEmpty, 'tabId cannot be empty');
+    final isSelected = _selected!;
+    final leaving = _leaving;
+    final visible = isSelected || leaving;
 
-    if (!isSelected && !maintainState) {
+    if (!visible && !widget.maintainState) {
       return const SizedBox.shrink();
     }
+
+    final panel = Semantics(
+      role: SemanticsRole.tabPanel,
+      container: true,
+      child: widget.child,
+    );
+    final transitionBuilder = widget.transitionBuilder;
 
     return ExcludeFocus(
       excluding: !isSelected,
       child: Visibility(
-        visible: isSelected,
-        maintainState: maintainState,
-        child: Semantics(
-          role: SemanticsRole.tabPanel,
-          container: true,
-          child: child,
-        ),
+        visible: visible,
+        maintainState: widget.maintainState,
+        child: transitionBuilder == null
+            ? panel
+            : ExcludeSemantics(
+                excluding: leaving,
+                child: _LeavingTabViewLayout(
+                  leaving: leaving,
+                  anchor: _anchor,
+                  child: transitionBuilder(context, _animation, panel),
+                ),
+              ),
       ),
     );
+  }
+
+  RenderObject? _anchor() => context
+      .getElementForInheritedWidgetOfExactType<NakedTabsScope>()
+      ?.findRenderObject();
+}
+
+/// Takes a leaving tab view out of layout and paints it where it last sat.
+class _LeavingTabViewLayout extends SingleChildRenderObjectWidget {
+  const _LeavingTabViewLayout({
+    required this.leaving,
+    required this.anchor,
+    required super.child,
+  });
+
+  final bool leaving;
+
+  /// The render object that the pinned position is measured against.
+  final ValueGetter<RenderObject?> anchor;
+
+  @override
+  _RenderLeavingTabView createRenderObject(BuildContext context) =>
+      _RenderLeavingTabView(leaving: leaving, anchor: anchor);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderLeavingTabView renderObject,
+  ) {
+    renderObject
+      ..leaving = leaving
+      ..anchor = anchor;
+  }
+}
+
+class _RenderLeavingTabView extends RenderProxyBox {
+  _RenderLeavingTabView({
+    required bool leaving,
+    required ValueGetter<RenderObject?> anchor,
+  }) : _leaving = leaving,
+       _anchor = anchor;
+
+  bool _leaving;
+  set leaving(bool value) {
+    if (_leaving == value) return;
+    _leaving = value;
+    markNeedsLayout();
+  }
+
+  ValueGetter<RenderObject?> _anchor;
+  set anchor(ValueGetter<RenderObject?> value) => _anchor = value;
+
+  BoxConstraints? _inFlowConstraints;
+  Offset? _inFlowPosition;
+
+  @override
+  void performLayout() {
+    final child = this.child;
+    final pinnedConstraints = _inFlowConstraints;
+    if (!_leaving || pinnedConstraints == null) {
+      _inFlowConstraints = constraints;
+      super.performLayout();
+
+      return;
+    }
+    child?.layout(pinnedConstraints);
+    size = constraints.smallest;
+  }
+
+  Offset? _positionInAnchor() {
+    final anchor = _anchor();
+    RenderObject? node = this;
+    while (node != null && node != anchor) {
+      node = node.parent;
+    }
+    if (anchor == null || node == null) return null;
+
+    return MatrixUtils.transformPoint(getTransformTo(anchor), Offset.zero);
+  }
+
+  /// How far the leaving child is moved back to where it last sat in flow.
+  Offset get _shift {
+    final pinned = _inFlowPosition;
+    if (!_leaving || pinned == null) return Offset.zero;
+    final position = _positionInAnchor();
+
+    return position == null ? Offset.zero : pinned - position;
+  }
+
+  @override
+  void applyPaintTransform(RenderBox child, Matrix4 transform) {
+    final shift = _shift;
+    transform.translateByDouble(shift.dx, shift.dy, 0, 1);
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    final child = this.child;
+    if (child == null) return;
+    if (!_leaving) _inFlowPosition = _positionInAnchor();
+    context.paintChild(child, offset + _shift);
   }
 }

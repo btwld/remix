@@ -136,6 +136,50 @@ void main() {
     await mouse.removePointer();
   });
 
+  testWidgets('range thumb lands on hover colours in one frame under reduced '
+      'motion', (tester) async {
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(reduceMotion: true);
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    final style = SliderStyler()
+        .thumbSize(const Size(20, 20))
+        .thumbColor(red)
+        .animate(.linear(const Duration(milliseconds: 600)))
+        .onHovered(
+          SliderStyler()
+              .thumbColor(blue)
+              .animate(
+                .reversible(
+                  .linear(const Duration(milliseconds: 100)),
+                  reverse: .linear(const Duration(milliseconds: 300)),
+                ),
+              ),
+        );
+    await tester.pumpWidget(
+      host(
+        RemixRangeSlider(
+          values: const [.25, .75],
+          onChanged: (_) {},
+          style: style,
+        ),
+      ),
+    );
+
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: Offset.zero);
+    await mouse.moveTo(tester.getCenter(thumb(0)));
+    await tester.pump();
+    expect(color(tester, 0), blue);
+    expect(color(tester, 1), red);
+    expect(tester.hasRunningAnimations, isFalse);
+
+    await mouse.moveTo(Offset.zero);
+    await tester.pump();
+    expect(color(tester, 0), red);
+    expect(tester.hasRunningAnimations, isFalse);
+    await mouse.removePointer();
+  });
+
   testWidgets('public example runs in a widgets-only host', (t) async {
     await t.pumpWidget(host(const example.RangeSliderExample()));
     expect(find.byType(RemixRangeSlider), findsOneWidget);

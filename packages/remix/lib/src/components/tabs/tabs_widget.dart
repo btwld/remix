@@ -80,7 +80,7 @@ class RemixTabs extends StatelessWidget {
       activationMode: activationMode,
       enabled: enabled,
       onEscapePressed: onEscapePressed,
-      child: child,
+      child: _TabOrderHost(child: child),
     );
   }
 }
@@ -268,10 +268,31 @@ class RemixTab extends StatelessWidget {
     );
 
     final registry = _TabIndicatorScope.maybeOf(context);
-    if (registry == null) return tab;
-    return _TabIndicatorAnchor(registry: registry, tabId: tabId, child: tab);
+    final anchored = registry == null
+        ? tab
+        : _TabIndicatorAnchor(registry: registry, tabId: tabId, child: tab);
+    final order = _TabOrderScope.maybeOf(context);
+    if (order == null) return anchored;
+    return _TabOrderAnchor(order: order, tabId: tabId, child: anchored);
   }
 }
+
+/// Builds the transition of a [RemixTabView] as it enters or leaves.
+///
+/// [animation] runs from zero to one while the view enters and from one to
+/// zero while it leaves. [direction] is the way the selection moved along the
+/// tab bar's axis, in physical coordinates: 1 when the newly selected tab
+/// sits right of or below the previously selected one, -1 when it sits left
+/// of or above it, and 0 when that is unknown, such as for tabs outside a
+/// [RemixTabs] or not laid out. Entering and leaving views receive the same
+/// [direction].
+typedef RemixTabViewTransitionBuilder =
+    Widget Function(
+      BuildContext context,
+      Animation<double> animation,
+      int direction,
+      Widget child,
+    );
 
 /// A tab content panel that is shown when its corresponding tab is selected.
 class RemixTabView extends StatelessWidget {
@@ -280,6 +301,12 @@ class RemixTabView extends StatelessWidget {
     required this.tabId,
     required this.child,
     this.maintainState = true,
+    this.transitionBuilder,
+    this.animationStyle = const AnimationStyle(
+      curve: Curves.ease,
+      duration: Duration(milliseconds: 200),
+      reverseDuration: Duration(milliseconds: 200),
+    ),
     this.style = const TabViewStyler.create(),
     this.styleSpec,
   });
@@ -293,6 +320,19 @@ class RemixTabView extends StatelessWidget {
   /// Whether to maintain the content's state while this tab is hidden.
   final bool maintainState;
 
+  /// Animates the view, including its styled container, as it enters and
+  /// leaves.
+  ///
+  /// `null`, the default, swaps views at once. With a builder, the view whose
+  /// tab is deselected keeps painting where it sat until its animation ends,
+  /// but takes no layout space and no pointer input, focus, or semantics.
+  /// Reselecting it midway reverses the same view. Reduced motion swaps views
+  /// at once. See [NakedTabView.transitionBuilder].
+  final RemixTabViewTransitionBuilder? transitionBuilder;
+
+  /// Durations and curves of [transitionBuilder]'s animation.
+  final AnimationStyle animationStyle;
+
   /// Style applied to the tab view container.
   final TabViewStyler style;
 
@@ -301,11 +341,31 @@ class RemixTabView extends StatelessWidget {
 
   static final styleFrom = TabViewStyler.new;
 
+  static int _directionOf(BuildContext context) {
+    final scope = NakedTabsScope.of(context);
+
+    return _TabOrderScope.maybeOf(
+          context,
+        )?.directionTo(scope.selectedTabId, scope.orientation) ??
+        0;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final transitionBuilder = this.transitionBuilder;
+
     return NakedTabView(
       tabId: tabId,
       maintainState: maintainState,
+      transitionBuilder: transitionBuilder == null
+          ? null
+          : (context, animation, child) => transitionBuilder(
+              context,
+              animation,
+              _directionOf(context),
+              child,
+            ),
+      animationStyle: animationStyle,
       child: RemixStyleSpecBuilder<TabViewSpec>(
         style: style,
         styleSpec: styleSpec,

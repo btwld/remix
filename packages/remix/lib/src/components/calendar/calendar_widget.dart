@@ -289,8 +289,11 @@ Widget _calendarDay({
         // Merge unresolved inherited styles before resolving this day's
         // context and state variants. Only the day renders, not root effects.
         final resolved = styleSpec == null
-            ? (Style.maybeOf<CalendarSpec>(context)?.merge(style) ?? style)
-                  .build(context)
+            ? remixReducedMotionSpec(
+                context,
+                (Style.maybeOf<CalendarSpec>(context)?.merge(style) ?? style)
+                    .build(context),
+              )
             : StyleSpec(spec: styleSpec);
         // Root animation can change day anatomy too. Consume its frame data
         // here without rendering the root modifiers again for every day.

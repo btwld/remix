@@ -1,6 +1,7 @@
 library remix_accordion;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/physics.dart' show SpringSimulation;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:mix/mix.dart';

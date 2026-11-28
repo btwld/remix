@@ -44,7 +44,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 - **Checkbox** — `checkedIcon` and `indeterminateIcon` are `IconData?`,
   default `null`. Leaving them unset does not mean "no icon": Remix falls
   back to its own built-in glyphs, `RemixPathGlyph.thickCheck` and
-  `RemixPathGlyph.thickDividerHorizontal`, not a blank state.
+  `RemixPathGlyph.thickDividerHorizontal`, not a blank state. A style's
+  `indicatorBuilder` replaces all three icons and is built in every state,
+  unchecked included, so its widget can animate the mark in and out.
 - **Radio and Switch** — `label` is drawn inside the same pointer, hover,
   press, focus, and semantics target as the control and is its accessible
   name; `semanticLabel` overrides it. Pass at least one of the two. The gap is
@@ -367,7 +369,9 @@ for Overlay, Navigator and toast scope placement.
   `controller` is `NakedTabController`, which the `remix` barrel does not
   re-export — import it from `package:naked_ui/naked_ui.dart` directly.
   `maintainState` (default `true`) lives on `RemixTabView`, a different
-  widget, not on `RemixTabs`.
+  widget, not on `RemixTabs`. Views swap at once unless `RemixTabView` gets a
+  `transitionBuilder(context, animation, direction, child)`; `direction` is
+  `1`, `-1`, or `0` along the bar's axis, and `animationStyle` sets timing.
 - **RemixAccordionGroup\<T\>** — purely behavioral; `controller` is
   **required**: `RemixAccordionController<String>(min: 0, max: 1)`. Menu
   auto-creates a `MenuController` when its own `controller` is omitted.
@@ -382,6 +386,10 @@ for Overlay, Navigator and toast scope placement.
   frame. Widget-state variants (`onHovered`, `onPressed`, `onFocused`,
   `onFocusVisible`, `onDisabled`) describe interaction with the trigger but
   resolve once for the whole item, so they may style `container` too.
+  `.contentMotion(...)` takes a curve or spring config (or
+  `AnimationConfig.reversible`) for open and close; the default is linear
+  200 ms. `.trailingIcon(IconStyler().icon(...))` replaces the default
+  plus/minus glyph with one icon in both states.
 - **Breadcrumbs** — a preset composition, not a Remix widget. HeroUI's
   `breadcrumbs` wraps onto more lines; Fortal's keeps one line, ellipsizes its
   steps and renders actionable ones as `<Prefix>Link`. The last step is the

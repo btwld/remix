@@ -1,5 +1,17 @@
 part of 'checkbox.dart';
 
+/// Builds a [RemixCheckbox] indicator from the checkbox's value.
+///
+/// `value` is `true` when checked, `false` when unchecked, and `null` when a
+/// tristate checkbox is indeterminate. `indicator` is the resolved indicator
+/// style for the current state.
+typedef RemixCheckboxIndicatorBuilder =
+    Widget Function(
+      BuildContext context,
+      bool? value,
+      StyleSpec<IconSpec> indicator,
+    );
+
 /// Resolved visual properties for a [RemixCheckbox].
 @MixableSpec(
   target: RemixCheckbox.new,
@@ -23,6 +35,19 @@ class CheckboxSpec with _$CheckboxSpec {
   @override
   final double labelSpacing;
 
+  /// Builds the indicator inside the box in every state, unchecked included.
+  ///
+  /// Because the builder's widget stays mounted when the value changes, it can
+  /// animate its own mark in and out, or morph between the check and the dash.
+  /// When set, it replaces the checkbox's `checkedIcon`, `uncheckedIcon` and
+  /// `indeterminateIcon`. `null`, the default, shows the check or dash glyph
+  /// while checked or indeterminate and nothing while unchecked.
+  ///
+  /// Pass a top-level or static function so that resolved specs compare equal
+  /// across rebuilds.
+  @override
+  final RemixCheckboxIndicatorBuilder? indicatorBuilder;
+
   @override
   @MixableField(setterType: RemixBoxEffectsMix)
   final RemixBoxEffectsSpec? containerEffects;
@@ -33,6 +58,7 @@ class CheckboxSpec with _$CheckboxSpec {
     StyleSpec<TextSpec>? label,
     double? labelSpacing,
     this.containerEffects,
+    this.indicatorBuilder,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        indicator = indicator ?? const StyleSpec(spec: IconSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),

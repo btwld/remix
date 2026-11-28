@@ -221,7 +221,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = CheckboxSpec();
 
-        expect(spec.props, hasLength(5));
+        expect(spec.props, hasLength(6));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.indicator));
         expect(spec.props, contains(spec.label));
@@ -237,7 +237,7 @@ void main() {
           indicator: indicatorSpec,
         );
 
-        expect(spec.props, hasLength(5));
+        expect(spec.props, hasLength(6));
         expect(spec.props, contains(containerSpec));
         expect(spec.props, contains(indicatorSpec));
         expect(spec.props, contains(spec.label));
@@ -313,7 +313,7 @@ void main() {
 
         expect(spec.container, equals(complexContainerSpec));
         expect(spec.indicator, equals(complexIndicatorSpec));
-        expect(spec.props, hasLength(5));
+        expect(spec.props, hasLength(6));
       });
     });
   });

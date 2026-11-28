@@ -1,3 +1,27 @@
+## Unreleased
+
+### Features
+
+- Re-export `NakedScrollbar` and `NakedTabsScope` from `package:remix/remix.dart`.
+- State animations from a style's `.animate(...)` land on their end value in
+  one frame while motion is reduced (`MediaQuery.disableAnimations` or the
+  platform's `reduceMotion`). This covers every widget built on
+  `RemixStyleSpecBuilder`, plus calendar days and slider thumbs.
+- Tabs: add `transitionBuilder` and `animationStyle` to `RemixTabView`. The
+  builder receives the direction the selection moved along the bar's axis.
+  Views still swap at once by default. Needs the `NakedTabView` transition
+  from the next Naked UI release.
+- Accordion: add `AccordionSpec.contentMotion` for the open and close timing,
+  a curve or spring config. The default trigger shows the `trailingIcon`
+  style's icon, when set, in place of the plus and minus.
+
+### Fixes
+
+- Accordion: toggling a panel mid-transition turns the same panel around
+  instead of growing a second one while the first fades.
+- Add `CheckboxSpec.indicatorBuilder`, set from a style, which builds the
+  checkbox indicator in every state so it can animate its mark in and out.
+
 ## 1.0.0-rc.7
 
 ### Fixes
