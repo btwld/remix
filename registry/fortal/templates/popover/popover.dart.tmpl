@@ -50,7 +50,7 @@ PopoverStyler {{valuePrefix}}PopoverStyle({
   };
 
   return PopoverStyler()
-      .border(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1()))
+      .border(.color(_frame()).width({{typePrefix}}Tokens.borderWidth1()))
       .minWidth(_minWidth)
       .maxWidth({{typePrefix}}Tokens.popoverMaxWidth())
       .padding(.all(padding))
@@ -64,6 +64,14 @@ PopoverStyler {{valuePrefix}}PopoverStyle({
 }
 
 const double _minWidth = 192;
+
+/// The quiet border, or gray 10 (3:1 on the panel) under the theme's high
+/// contrast.
+final _frame = ContextToken<Color>(
+  (context) => ({{typePrefix}}Theme.maybeOf(context)?.highContrast ?? false)
+      ? {{typePrefix}}Tokens.gray10.resolve(context)
+      : {{typePrefix}}Tokens.gray7.resolve(context),
+);
 
 const _panelTransition = RemixPanelTransition(
   duration: {{typePrefix}}Motion.spring,
