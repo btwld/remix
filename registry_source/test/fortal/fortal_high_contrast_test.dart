@@ -208,9 +208,18 @@ void main() {
         );
 
         expect(_textColor(normal.spec.text), normalColors.gray.scale.step(11));
-        expect(_textColor(highContrast.spec.text), normalColors.gray.scale.step(12));
-        expect(normal.spec.icon.spec.color, isNot(normalColors.gray.scale.step(12)));
-        expect(highContrast.spec.icon.spec.color, normalColors.gray.scale.step(12));
+        expect(
+          _textColor(highContrast.spec.text),
+          normalColors.gray.scale.step(12),
+        );
+        expect(
+          normal.spec.icon.spec.color,
+          isNot(normalColors.gray.scale.step(12)),
+        );
+        expect(
+          highContrast.spec.icon.spec.color,
+          normalColors.gray.scale.step(12),
+        );
       }
     });
 
