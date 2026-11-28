@@ -52,6 +52,7 @@ export 'components/toggle_group.dart';
 export 'components/tooltip.dart';
 export 'components/typography.dart';
 export 'icons.dart';
+export 'motion/motion.dart';
 export 'theme/theme.dart';
 
 // remix_cli:exports:end

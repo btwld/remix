@@ -26,6 +26,9 @@ export 'src/fortal/theme/palette.dart';
 export 'src/fortal/theme/theme.dart';
 export 'src/fortal/components/base_button.dart';
 
+/// MOTION
+export 'src/fortal/motion/motion.dart';
+
 /// RECIPES
 export 'src/fortal/components/accordion.dart';
 export 'src/fortal/components/app_bar.dart';

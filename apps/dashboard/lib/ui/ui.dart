@@ -52,6 +52,7 @@ export 'components/toggle_group.dart';
 export 'components/tooltip.dart';
 export 'components/typography.dart';
 export 'icons.dart';
+export 'motion/motion.dart';
 export 'recipes/agent_glyphs_recipe.dart';
 export 'recipes/answer_recipe.dart';
 export 'recipes/composer_recipe.dart';

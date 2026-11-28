@@ -200,6 +200,47 @@ fill must identify the control. Check the actual component on its host surface.
   vary with the accent, appearance, radius or scaling, so these are constants
   rather than scope tokens.
 
+## Motion helpers
+
+The `motion` item (`motion/motion.dart`) holds the visual-only helpers that
+compositions build on where one Mix animation config per styler is not
+enough. None of them handles pointer input, focus, keyboard, semantics or
+form state.
+
+- `FortalTiming` is one value's motion: `FortalCurveTiming` (a duration and a
+  curve, starting at rest) or `FortalSpringTiming` (a `SpringDescription`
+  that starts from the value's current velocity). The named timings are
+  `enter` (200ms ease-enter), `fade` (150ms ease-standard), `instant` (100ms
+  ease-standard), `snappy`, `smooth`, `morph`, `pressIn` and `pressRelease`.
+- `FortalSpringCurve` turns a spring into a `Curve` with its `duration`: the
+  time the spring stays within 0.3% of its travel. `FortalSpringCurve.css` is
+  the 440ms transform ease.
+- `FortalAnimatedVisual` animates opacity, offset, scale and blur with a
+  separate timing per channel (`FortalVisualTiming`), for a spring on the
+  transform beside a short curve on opacity.
+- `FortalSwap` cross-swaps a child when its key or type changes. The outgoing
+  child leaves layout at once and keeps painting at its last size.
+  `FortalSwapMotion.icon` is the icon switcher (scale 0.6, 2px blur, snappy
+  in, 150ms out). `FortalTextSwap` swaps strings with
+  `FortalSwapMotion.text` (0.3em rise out of a 4px blur over 200ms, 0.3em
+  lift into a 2px blur over 150ms) and can stagger the new words by
+  `staggerWord`.
+- `FortalSizeMorph` springs its size toward its child's, with separate width
+  and height timings, clipping while they differ.
+- `FortalIndicatorTrack` paints an indicator behind the
+  `FortalIndicatorAnchor` that matches `selected` and springs it to the next
+  one, keeping velocity when the selection changes again in mid-flight.
+- `FortalRollingText` rolls each digit on a 0 to 9 wheel in the direction the
+  number moved (1.05em per step, opacity `1 - d^1.5 × 1.1`, blur `3d` px,
+  0.2em feathered edges); new place values grow in on `morph`, old ones
+  leave on `smooth`.
+- `FortalUnderline` draws a line a given offset below the first baseline,
+  which `TextDecoration` cannot.
+
+Under reduced motion (`RemixReducedMotionBuilder`) every helper jumps to its
+end state, except that opacity fades over `instant`: swaps crossfade, and
+sizes, indicators and wheels move at once.
+
 ## Components
 
 `classic` is absent from button, icon button, card, checkbox, radio, switch,
