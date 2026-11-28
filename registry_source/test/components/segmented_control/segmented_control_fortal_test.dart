@@ -68,10 +68,7 @@ void main() {
       expect(result.spec.segmentSizing, RemixSegmentSizing.content);
       expect(_radius(track), frameRadius);
       expect(item.constraints!.minHeight, segment);
-      expect(
-        item.padding,
-        EdgeInsets.symmetric(horizontal: paddingX),
-      );
+      expect(item.padding, EdgeInsets.symmetric(horizontal: paddingX));
       expect(_radius(item), segmentRadius);
       expect(_radius(indicator), segmentRadius);
       expect(result.spec.item.spec.label.spec.style!.fontSize, fontSize);
