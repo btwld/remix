@@ -6,11 +6,14 @@ part of 'dialog.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// The Fortal Dialog recipe: a raised, blurred panel with a bold title.
+/// The Fortal Dialog recipe: a floating 440px panel. With a close button,
+/// the title, description and close button form a header row over a
+/// divider, then come the body and actions; without one, they stack in one
+/// padded column.
 ///
-/// The generated [UiDialog] defaults to [UiDialogSize.size3],
-/// [Alignment.center], fills up to 600 logical pixels, preserves safe
-/// viewport insets, and is modal.
+/// The generated [UiDialog] defaults to [UiDialogSize.size3] and
+/// [Alignment.center], keeps 12px from the viewport edges, and is modal. Open
+/// it with [showUiDialog] for the blurred scrim and the panel's spring.
 class UiDialog extends StatelessWidget {
   const UiDialog({
     super.key,
