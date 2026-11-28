@@ -8,8 +8,10 @@ part of 'checkbox.dart';
 
 /// The Fortal Checkbox recipe.
 ///
-/// It reads top to bottom: the box and its focus ring, then the variant's
-/// colors for rest, selected and disabled, then the touch target.
+/// It reads top to bottom: the square, then the variant's frame, fill and
+/// mark, then press, disabled and the focus ring around the touch target.
+/// The fill and mark are drawn by [_FortalCheckMark], which springs the fill
+/// in from 60%, draws the check on and morphs it into the dash.
 ///
 /// [highContrast] moves the selected fill (surface) or mark (soft) to accent
 /// step 12.
@@ -37,8 +39,8 @@ class FortalCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  /// A surface fill inside a 1px neutral frame, filled with the accent when
-  /// selected.
+  /// A surface square inside a 1px strong frame, filled with the control ink
+  /// when selected.
   const FortalCheckbox.surface({
     super.key,
     this.size = .size2,
@@ -61,7 +63,8 @@ class FortalCheckbox extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalCheckboxVariant.surface;
 
-  /// An accent tint inside a 1px accent ring, with an accent-colored mark.
+  /// The surface square at rest; selected, a 10% control-ink tint inside a
+  /// control-ink frame, with a control-ink mark.
   const FortalCheckbox.soft({
     super.key,
     this.size = .size2,
@@ -150,7 +153,8 @@ class FortalCheckbox extends StatelessWidget {
   }
 }
 
-/// The Fortal CheckboxGroupItem recipe: the checkbox recipe plus a label.
+/// The Fortal CheckboxGroupItem recipe: the checkbox recipe plus a label and
+/// an optional description under it.
 ///
 /// It exists because `RemixCheckboxGroup` is behavioral and carries no styler,
 /// so, unlike the menu, select, segmented control and toggle group items, there
@@ -179,8 +183,8 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  /// A surface fill inside a 1px neutral frame, filled with the accent when
-  /// selected.
+  /// A surface square inside a 1px strong frame, filled with the control ink
+  /// when selected.
   const FortalCheckboxGroupItem.surface({
     super.key,
     this.size = .size2,
@@ -200,7 +204,8 @@ class FortalCheckboxGroupItem<T extends Object> extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = FortalCheckboxVariant.surface;
 
-  /// An accent tint inside a 1px accent ring, with an accent-colored mark.
+  /// The surface square at rest; selected, a 10% control-ink tint inside a
+  /// control-ink frame, with a control-ink mark.
   const FortalCheckboxGroupItem.soft({
     super.key,
     this.size = .size2,
