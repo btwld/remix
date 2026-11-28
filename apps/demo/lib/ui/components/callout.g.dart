@@ -8,15 +8,18 @@ part of 'callout.dart';
 
 /// The Fortal Callout recipe.
 ///
-/// It reads top to bottom: the size, the color the icon and text share, then
-/// the variant's fill and frame.
+/// The default is a resting card: a 13px medium title over 12px secondary
+/// text, with only the icon tinted by [intent]. It reads top to bottom: the
+/// size, the intent's icon, the text colors, then the variant's fill and frame.
 ///
-/// [highContrast] moves the text and icon to accent step 12.
+/// [highContrast], or the theme's high contrast, moves the icon and text to
+/// the foreground and the frames to gray 10, which holds 3:1 on the card.
 class FortalCallout extends StatelessWidget {
   const FortalCallout({
     super.key,
-    this.variant = .soft,
+    this.variant = .surface,
     this.size = .size2,
+    this.intent = .info,
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
@@ -31,6 +34,7 @@ class FortalCallout extends StatelessWidget {
   const FortalCallout.soft({
     super.key,
     this.size = .size2,
+    this.intent = .info,
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
@@ -41,10 +45,12 @@ class FortalCallout extends StatelessWidget {
     this.dismissLabel,
   }) : variant = FortalCalloutVariant.soft;
 
-  /// A faint accent fill inside a 1px accent frame.
+  /// A resting card: the surface fill in a 1px border with a soft shadow.
+  /// The default.
   const FortalCallout.surface({
     super.key,
     this.size = .size2,
+    this.intent = .info,
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
@@ -55,10 +61,11 @@ class FortalCallout extends StatelessWidget {
     this.dismissLabel,
   }) : variant = FortalCalloutVariant.surface;
 
-  /// No fill inside a 1px accent frame.
+  /// No fill inside a 1px strong border.
   const FortalCallout.outline({
     super.key,
     this.size = .size2,
+    this.intent = .info,
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
@@ -72,6 +79,8 @@ class FortalCallout extends StatelessWidget {
   final FortalCalloutVariant variant;
 
   final FortalCalloutSize size;
+
+  final FortalCalloutIntent intent;
 
   final bool highContrast;
 
@@ -95,6 +104,7 @@ class FortalCallout extends StatelessWidget {
       style: fortalCalloutStyle(
         variant: variant,
         size: size,
+        intent: intent,
         highContrast: highContrast,
         style: style,
       ),
