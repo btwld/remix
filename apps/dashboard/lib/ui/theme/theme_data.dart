@@ -502,7 +502,7 @@ Map<MixToken<Object?>, Object> _buildScopeTokens(UiThemeData theme) {
     UiTokens.touchTargetMin: 40.0 * math.max(1.0, scaling),
     UiTokens.sidebarDestinationMinHeight: 40.0 * math.max(1.0, scaling),
     UiTokens.popoverMaxWidth: 480.0 * scaling,
-    UiTokens.dialogMaxWidth: 600.0 * scaling,
+    UiTokens.dialogMaxWidth: 440.0 * scaling,
     UiTokens.toastMaxWidth: 416.0 * scaling,
     UiTokens.space1: 4.0 * scaling,
     UiTokens.space2: 8.0 * scaling,
