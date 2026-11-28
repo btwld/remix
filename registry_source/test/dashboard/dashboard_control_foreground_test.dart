@@ -295,14 +295,15 @@ enum _Preset {
 
   /// The resting foreground of a ghost control.
   Color ink(BuildContext context) => switch (this) {
-    .fortal => MixScope.tokenOf(FortalTokens.accentContentAlpha, context),
+    .fortal => MixScope.tokenOf(FortalTokens.gray11, context),
     .vanilla => MixScope.tokenOf(VanillaTokens.foreground, context),
     .heroui => MixScope.tokenOf(HeroUiTokens.defaultForeground, context),
   };
 
   /// The foreground under the pointer or a press.
   Color highlightedInk(BuildContext context) => switch (this) {
-    .fortal => MixScope.tokenOf(FortalTokens.accentContentAlpha, context),
+    // The ghost button's secondary text turns to ink under the pointer.
+    .fortal => MixScope.tokenOf(FortalTokens.gray12, context),
     .vanilla => MixScope.tokenOf(VanillaTokens.accentForeground, context),
     // The ghost button changes only its fill under the pointer or a press.
     .heroui => MixScope.tokenOf(HeroUiTokens.defaultForeground, context),
@@ -319,7 +320,7 @@ enum _Preset {
     final context = tester.element(_control(key));
     switch (this) {
       case .fortal:
-        final disabled = MixScope.tokenOf(FortalTokens.grayA8, context);
+        final disabled = MixScope.tokenOf(FortalTokens.gray10, context);
         expect(disabled, isNot(ink(context)));
         expect(_paintedColors(tester, key), everyElement(disabled));
       case .vanilla || .heroui:

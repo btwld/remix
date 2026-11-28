@@ -234,7 +234,12 @@ class FortalSearchField extends StatelessWidget {
                         semanticLabel: clearSemanticLabel,
                         size: buttonSize,
                         onPressed: field.clear,
-                        style: _clearStyle(variant),
+                        style: _clearStyle(
+                          context,
+                          variant,
+                          buttonSize,
+                          glyph.resolve(context),
+                        ),
                       ),
                     ),
                   ),
@@ -249,12 +254,41 @@ class FortalSearchField extends StatelessWidget {
 
 /// The clear button takes the field's icon color: gray on a surface field,
 /// with a gray tint under the pointer, and the accent on a soft one.
-IconButtonStyler _clearStyle(FortalSearchFieldVariant variant) =>
-    switch (variant) {
-      .surface =>
-        IconButtonStyler()
-            .icon(.color(FortalTokens.gray11()))
-            .onHovered(.color(FortalTokens.grayA3()))
-            .onPressed(.color(FortalTokens.grayA4())),
-      .soft => IconButtonStyler().icon(.color(FortalTokens.accentContent())),
-    };
+///
+/// It keeps the compact inline box the field was laid out around: the glyph
+/// with its padding, pulled back into the field's end by an equal negative
+/// margin, rather than the icon button's full square.
+IconButtonStyler _clearStyle(
+  BuildContext context,
+  FortalSearchFieldVariant variant,
+  FortalIconButtonSize size,
+  double glyph,
+) {
+  final (padding, margin, corner) = size == .size1
+      ? (
+          FortalTokens.space1,
+          FortalTokens.iconButtonGhostMargin1,
+          FortalTokens.radius1OrFull,
+        )
+      : (
+          FortalTokens.space2,
+          FortalTokens.iconButtonGhostMargin2,
+          FortalTokens.radius2OrFull,
+        );
+  final edge = glyph + 2 * padding.resolve(context);
+  final box = IconButtonStyler()
+      .size(edge, edge)
+      .padding(.all(padding()))
+      .margin(.all(margin()))
+      .borderRadius(.all(corner()))
+      .icon(.size(glyph));
+
+  return box.merge(switch (variant) {
+    .surface =>
+      IconButtonStyler()
+          .icon(.color(FortalTokens.gray11()))
+          .onHovered(.color(FortalTokens.grayA3()))
+          .onPressed(.color(FortalTokens.grayA4())),
+    .soft => IconButtonStyler().icon(.color(FortalTokens.accentContent())),
+  });
+}

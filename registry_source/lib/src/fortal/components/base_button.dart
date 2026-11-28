@@ -10,6 +10,50 @@ import '../theme/theme.dart';
 // one runs a hover or press adjustment over a theme color, so it follows any
 // palette, including a custom one.
 
+/// The side padding of a button or menu trigger at each control size: the
+/// size's inline space plus the 1px frame, which is painted inside the box
+/// rather than laid out.
+const fortalButtonInline1 = ContextToken<double>(_inline1);
+const fortalButtonInline2 = ContextToken<double>(_inline2);
+const fortalButtonInline3 = ContextToken<double>(_inline3);
+const fortalButtonInline4 = ContextToken<double>(_inline4);
+
+double _inline1(BuildContext context) => _inline(context, FortalTokens.space3);
+double _inline2(BuildContext context) => _inline(context, FortalTokens.space4);
+double _inline3(BuildContext context) => _inline(context, FortalTokens.space18);
+double _inline4(BuildContext context) => _inline(context, FortalTokens.space20);
+
+double _inline(BuildContext context, SpaceToken space) =>
+    space.resolve(context) + FortalTokens.borderWidth1.resolve(context);
+
+/// How much of a solid button or icon button shows while hovered and while
+/// pressed. Under the theme's high contrast the button stays opaque, so its
+/// focus ring keeps its contrast, and the fill recolors instead.
+const fortalSolidHoveredOpacity = ContextToken<double>(_hoveredOpacity);
+const fortalSolidPressedOpacity = ContextToken<double>(_pressedOpacity);
+
+/// A solid button's fill while hovered and while pressed: the resting ink,
+/// or under the theme's high contrast the recolored fills.
+const fortalSolidHoveredFill = ContextToken<Color>(_hoveredFill);
+const fortalSolidPressedInk = ContextToken<Color>(_pressedInk);
+
+bool _themeHighContrast(BuildContext context) =>
+    FortalTheme.of(context).highContrast;
+
+double _hoveredOpacity(BuildContext context) =>
+    _themeHighContrast(context) ? 1 : 0.91;
+
+double _pressedOpacity(BuildContext context) =>
+    _themeHighContrast(context) ? 1 : 0.84;
+
+Color _hoveredFill(BuildContext context) => _themeHighContrast(context)
+    ? FortalTokens.accentSolidHover.resolve(context)
+    : FortalTokens.accentSolid.resolve(context);
+
+Color _pressedInk(BuildContext context) => _themeHighContrast(context)
+    ? _solidPressedFill(context)
+    : FortalTokens.accentSolid.resolve(context);
+
 /// A solid button's fill while pressed.
 ///
 /// The hover fill, darkened under a light label and lightened under a dark

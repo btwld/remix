@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -291,10 +293,10 @@ void main() {
       tester,
     ) async {
       const expected = <FortalIconButtonSize, (double, double)>{
-        FortalIconButtonSize.size1: (24, 12),
-        FortalIconButtonSize.size2: (32, 16),
-        FortalIconButtonSize.size3: (40, 20),
-        FortalIconButtonSize.size4: (48, 24),
+        FortalIconButtonSize.size1: (32, 16),
+        FortalIconButtonSize.size2: (40, 16),
+        FortalIconButtonSize.size3: (44, 16),
+        FortalIconButtonSize.size4: (48, 16),
       };
 
       for (final entry in expected.entries) {
@@ -314,11 +316,9 @@ void main() {
       }
     });
 
-    testWidgets('button recipes round loading-spinner leaves', (tester) async {
-      final expectedRadius = await resolveInFortalTheme(
-        tester,
-        (context) => fortalSpinnerStyle().build(context).spec.leafRadius,
-      );
+    testWidgets('button recipes draw a three-quarter loading ring', (
+      tester,
+    ) async {
       final button = await resolveInFortalTheme(
         tester,
         (context) => fortalButtonStyle().build(context),
@@ -328,8 +328,15 @@ void main() {
         (context) => fortalIconButtonStyle().build(context),
       );
 
-      expect(button.spec.spinner.spec.leafRadius, expectedRadius);
-      expect(iconButton.spec.spinner.spec.leafRadius, expectedRadius);
+      for (final spinner in [button.spec.spinner, iconButton.spec.spinner]) {
+        // Any leaf field would switch the spinner to its leaf painter.
+        expect(spinner.spec.leafRadius, isNull);
+        expect(spinner.spec.opacity, isNull);
+        expect(spinner.spec.size, 16);
+        expect(spinner.spec.strokeWidth, 0.75);
+        expect(spinner.spec.sweepAngle, closeTo(3 * math.pi / 2, 1e-9));
+        expect(spinner.spec.duration, const Duration(milliseconds: 700));
+      }
     });
 
     testWidgets('checkbox and radio sizes resolve exact control metrics', (

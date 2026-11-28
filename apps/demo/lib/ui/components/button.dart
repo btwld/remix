@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
@@ -9,49 +11,52 @@ part 'button.g.dart';
 
 /// The sizes a button comes in.
 ///
-/// Type, icon and corner sizes step with the height. Pixel values are at 100%
-/// theme scaling. A ghost button has no minimum height: it is as tall as its
-/// text and padding.
+/// Height, corner and side padding step with the size; the label is 13px
+/// medium and icons are 16px at every size. Pixel values are at 100% theme
+/// scaling.
 enum FortalButtonSize {
-  /// 24px tall, with 12px text.
+  /// 32px tall, with a 12px corner.
   size1,
 
-  /// 32px tall, with 14px text. The default.
+  /// 40px tall, with a 14px corner. The default.
   size2,
 
-  /// 40px tall, with 16px text.
+  /// 44px tall, with a 16px corner.
   size3,
 
-  /// 48px tall, with 18px text.
+  /// 48px tall, with a 16px corner.
   size4,
 }
 
 /// The visual weights a button comes in, from most to least emphasis.
+///
+/// Every weight is drawn in ink and neutral tones whatever the accent; the
+/// accent shows in the focus ring.
 enum FortalButtonVariant {
-  /// The accent's solid fill under its contrast label.
+  /// An ink fill under a page-colored label.
   solid,
 
-  /// A tinted accent fill under accent text.
+  /// A muted neutral fill under ink text.
   soft,
 
-  /// A faint accent surface inside a 1px accent frame.
+  /// A surface fill inside a 1px border.
   surface,
 
-  /// No fill inside a 1px accent frame.
+  /// No fill inside a 1px border.
   outline,
 
-  /// Accent text alone, with a tint under the pointer.
+  /// Secondary text alone, with a muted fill under the pointer.
   ghost,
 }
 
 /// The Fortal Button recipe.
 ///
 /// It reads top to bottom: what every button shares, then the size, then the
-/// variant's colors for each state, then focus and disabled. [style] merges
-/// last, so a call site can override any part of it.
+/// variant's look in each state, then focus and disabled. [style] merges last,
+/// so a call site can override any part of it.
 ///
-/// [highContrast] strengthens a variant: the solid fill, and the text of every
-/// other variant, move to accent step 12.
+/// [highContrast] strengthens a variant: the solid fill moves to accent step
+/// 12, borders to the strong border, and ghost text to ink.
 ///
 /// An icon takes the size's icon size rather than the ambient `IconTheme`. An
 /// icon size in [style] overrides it.
@@ -62,258 +67,229 @@ ButtonStyler fortalButtonStyle({
   bool highContrast = false,
   ButtonStyler style = const ButtonStyler.create(),
 }) {
+  final look = switch (variant) {
+    .solid => _solid(highContrast),
+    .soft => _soft(highContrast),
+    .surface => _surface(highContrast),
+    .outline => _outline(highContrast),
+    .ghost => _ghost(highContrast),
+  };
+
   return _base()
       .merge(_scale(size))
-      .merge(variant == .ghost ? _ghostLayout(size) : _controlLayout(size))
-      .merge(switch (variant) {
-        .solid => _solid(highContrast),
-        .soft => _soft(highContrast),
-        .surface => _surface(highContrast),
-        .outline => _outline(highContrast),
-        .ghost => _ghost(highContrast),
-      })
-      // Hover and press arrive quickly. These merge into the variant's own
-      // hover and press fragments, which set the colors.
-      .onHovered(ButtonStyler().animate(_activeMotion))
-      .onPressed(ButtonStyler().animate(_activeMotion))
+      .merge(look.rest)
+      .onHovered(look.hovered)
+      .onPressed(look.pressed.scale(_pressedScale))
       .onFocusVisible(.containerEffects(fortalFocusOutline()))
       // A disabled button never rings: this switches the outline off,
       // whatever color and width the focus fragment gives it.
-      .onDisabled(.containerEffects(.outline(.style(.none))))
+      .onDisabled(
+        look.disabled.containerEffects(.outline(.style(.none))).scale(1),
+      )
+      // Loading keeps the resting look; only the label gives way to the
+      // spinner. Declared after `onDisabled` so it wins over it.
+      .onLoading(look.rest.scale(1))
       .wrap(fortalTouchTarget())
       .merge(style);
 }
 
-/// How fast hover and press arrive.
-final _activeMotion = AnimationConfig.ease(const Duration(milliseconds: 40));
+/// How the button scales while held.
+const _pressedScale = 0.97;
 
-/// How fast every other change settles: the return to rest, focus, disabled.
-final _restMotion = AnimationConfig.ease(const Duration(milliseconds: 120));
+/// How much of a disabled solid button shows.
+const _solidDisabledOpacity = 0.52;
 
-/// The loading spinner sits back from the label it replaces.
-const _spinnerOpacity = 0.65;
+/// The loading ring: three quarters of a 1.5px circle, one turn per 700ms.
+const _spinnerStroke = 0.75;
+const _spinnerSweep = 3 * math.pi / 2;
+const _spinnerRevolution = Duration(milliseconds: 700);
 
-/// One full spinner revolution.
-const _spinnerRevolution = Duration(milliseconds: 800);
+/// The spinner grows in from 70% as loading starts and shrinks toward 80% as
+/// it ends.
+const _spinnerEnterScale = 0.7;
+const _spinnerExitScale = 0.8;
 
 /// A fill that paints nothing.
 const _transparent = Color(0x00000000);
 
+/// Every state change: colors, borders, shadow, opacity and the press scale.
+final _motion = AnimationConfig.curve(
+  duration: FortalMotion.fast,
+  curve: FortalMotion.easeStandard,
+);
+
+/// The label fades out and the spinner grows in as loading starts.
+const _loading = RemixLoadingTransition(
+  duration: FortalMotion.fast,
+  reverseDuration: FortalMotion.instant,
+  spinnerBuilder: _spinnerTransition,
+);
+
+Widget _spinnerTransition(
+  BuildContext context,
+  Animation<double> animation,
+  Widget child,
+) => AnimatedBuilder(
+  animation: animation,
+  child: child,
+  builder: (context, child) {
+    final ending = animation.status == AnimationStatus.reverse;
+    final t = ending
+        ? FortalMotion.easeStandard.transform(animation.value)
+        : FortalMotion.easeEnter.transform(animation.value);
+    final from = ending ? _spinnerExitScale : _spinnerEnterScale;
+
+    return Opacity(
+      opacity: t,
+      child: Transform.scale(scale: from + (1 - from) * t, child: child),
+    );
+  },
+);
+
 /// What every button shares, whatever its size or variant.
 ButtonStyler _base() => ButtonStyler()
-    .animate(_restMotion)
+    .animate(_motion)
     .direction(.horizontal)
     .mainAxisSize(.min)
+    .spacing(FortalTokens.space2())
+    .scale(1)
+    .label(
+      .style(
+        FortalTokens.text2.mix(),
+      ).fontWeight(FortalTokens.fontWeightMedium()),
+    )
+    .icon(.size(FortalTokens.space4()))
     .spinner(
       SpinnerStyler()
-          .opacity(_spinnerOpacity)
-          .leafRadius(FortalTokens.radius1())
+          .size(FortalTokens.space4())
+          .strokeWidth(_spinnerStroke)
+          .sweepAngle(_spinnerSweep)
           .duration(_spinnerRevolution),
-    );
+    )
+    .loadingTransition(_loading);
 
-/// The text, icon, spinner and corner sizes of each step.
+/// The height, side padding and corner of each step.
 ///
 /// The corners turn into a pill when the theme radius is `full`.
 ButtonStyler _scale(FortalButtonSize size) => switch (size) {
   .size1 =>
     ButtonStyler()
-        .label(.style(FortalTokens.text1.mix()))
-        .icon(.size(FortalTokens.space3()))
-        .spinner(.size(FortalTokens.space3()))
-        .borderRadius(.all(FortalTokens.radius1OrFull())),
+        .minHeight(FortalTokens.controlHeight1())
+        .padding(.horizontal(fortalButtonInline1()))
+        .borderRadius(.all(FortalTokens.radius3OrFull())),
   .size2 =>
     ButtonStyler()
-        .label(.style(FortalTokens.text2.mix()))
-        .icon(.size(FortalTokens.space4()))
-        .spinner(.size(FortalTokens.space4()))
-        .borderRadius(.all(FortalTokens.radius2OrFull())),
-  // `spinnerSize3` is the 20px step the spacing scale has no name for.
+        .minHeight(FortalTokens.controlHeight2())
+        .padding(.horizontal(fortalButtonInline2()))
+        .borderRadius(.all(FortalTokens.radius4OrFull())),
   .size3 =>
     ButtonStyler()
-        .label(.style(FortalTokens.text3.mix()))
-        .icon(.size(FortalTokens.spinnerSize3()))
-        .spinner(.size(FortalTokens.space4()))
-        .borderRadius(.all(FortalTokens.radius3OrFull())),
+        .minHeight(FortalTokens.controlHeight3())
+        .padding(.horizontal(fortalButtonInline3()))
+        .borderRadius(.all(FortalTokens.radius5OrFull())),
   .size4 =>
     ButtonStyler()
-        .label(.style(FortalTokens.text4.mix()))
-        .icon(.size(FortalTokens.space5()))
-        .spinner(.size(FortalTokens.spinnerSize3()))
-        .borderRadius(.all(FortalTokens.radius4OrFull())),
+        .minHeight(FortalTokens.controlHeight4())
+        .padding(.horizontal(fortalButtonInline4()))
+        .borderRadius(.all(FortalTokens.radius5OrFull())),
 };
 
-/// The box of a solid, soft, surface or outline button: a minimum height,
-/// padding on the sides only, a medium label and slightly quieter icons.
-ButtonStyler _controlLayout(FortalButtonSize size) {
-  final box = switch (size) {
-    .size1 =>
-      ButtonStyler()
-          .minHeight(FortalTokens.space5())
-          .padding(.horizontal(FortalTokens.space2()))
-          .spacing(FortalTokens.space1()),
-    .size2 =>
-      ButtonStyler()
-          .minHeight(FortalTokens.space6())
-          .padding(.horizontal(FortalTokens.space3()))
-          .spacing(FortalTokens.space2()),
-    .size3 =>
-      ButtonStyler()
-          .minHeight(FortalTokens.space7())
-          .padding(.horizontal(FortalTokens.space4()))
-          .spacing(FortalTokens.space3()),
-    .size4 =>
-      ButtonStyler()
-          .minHeight(FortalTokens.space8())
-          .padding(.horizontal(FortalTokens.space5()))
-          .spacing(FortalTokens.space3()),
-  };
+/// One variant's look at rest and in each state. Hover and press merge over
+/// rest; disabled replaces what it names.
+typedef _Look = ({
+  ButtonStyler rest,
+  ButtonStyler hovered,
+  ButtonStyler pressed,
+  ButtonStyler disabled,
+});
 
-  return box
-      .label(.fontWeight(FortalTokens.fontWeightMedium()))
-      .icon(.opacity(0.9));
+/// Solid: an ink fill. Hover and press thin the whole button and lift it with
+/// the resting shadow; disabled thins it further. At high contrast the fill
+/// moves to accent step 12 and recolors instead of thinning.
+_Look _solid(bool highContrast) {
+  final lifted = ButtonStyler().decoration(
+    BoxDecorationMix.create(boxShadow: FortalTokens.shadow1.mix()),
+  );
+  final rest = highContrast
+      ? _content(FortalTokens.gray1()).color(FortalTokens.accent12())
+      : _content(
+          FortalTokens.accentContrast(),
+        ).color(FortalTokens.accentSolid());
+
+  return (
+    rest: rest.wrap(.opacity(1)),
+    hovered: highContrast
+        ? lifted.color(fortalHighContrastHoverFill())
+        : lifted
+              .color(fortalSolidHoveredFill())
+              .wrap(.opacity(fortalSolidHoveredOpacity())),
+    pressed: highContrast
+        ? lifted.color(fortalHighContrastPressedFill())
+        : lifted
+              .color(fortalSolidPressedInk())
+              .wrap(.opacity(fortalSolidPressedOpacity())),
+    // A disabled solid button also drops any filter the caller added.
+    disabled: rest
+        .wrap(.opacity(_solidDisabledOpacity))
+        .wrap(fortalClearFilter()),
+  );
 }
 
-/// The box of a ghost button, which sits in a line of content like text.
-///
-/// It has no minimum height and a regular-weight label. Its padding gives the
-/// hover tint room, and a negative margin of the same size cancels that
-/// padding in layout, so the label lines up with the content around it.
-ButtonStyler _ghostLayout(FortalButtonSize size) {
-  final box = switch (size) {
-    .size1 || .size2 =>
-      ButtonStyler()
-          .padding(
-            .symmetric(
-              horizontal: FortalTokens.space2(),
-              vertical: FortalTokens.space1(),
-            ),
-          )
-          .margin(
-            .symmetric(
-              horizontal: FortalTokens.baseButtonGhostMarginX12(),
-              vertical: FortalTokens.baseButtonGhostMarginY12(),
-            ),
-          )
-          .spacing(FortalTokens.space1()),
-    .size3 =>
-      ButtonStyler()
-          .padding(
-            .symmetric(
-              horizontal: FortalTokens.space3(),
-              vertical: FortalTokens.space2(),
-            ),
-          )
-          .margin(
-            .symmetric(
-              horizontal: FortalTokens.baseButtonGhostMarginX3(),
-              vertical: FortalTokens.baseButtonGhostMarginY3(),
-            ),
-          )
-          .spacing(FortalTokens.space2()),
-    .size4 =>
-      ButtonStyler()
-          .padding(
-            .symmetric(
-              horizontal: FortalTokens.space4(),
-              vertical: FortalTokens.space2(),
-            ),
-          )
-          .margin(
-            .symmetric(
-              horizontal: FortalTokens.baseButtonGhostMarginX4(),
-              vertical: FortalTokens.baseButtonGhostMarginY4(),
-            ),
-          )
-          .spacing(FortalTokens.space2()),
-  };
+/// Soft: a muted fill that deepens a step under the pointer.
+_Look _soft(bool highContrast) => (
+  rest: _content(FortalTokens.gray12()).color(FortalTokens.gray3()),
+  hovered: ButtonStyler().color(FortalTokens.gray4()),
+  pressed: ButtonStyler().color(FortalTokens.gray4()),
+  disabled: _content(FortalTokens.gray10()).color(FortalTokens.gray3()),
+);
 
-  return box.label(.fontWeight(FortalTokens.fontWeightRegular()));
+/// Surface: the surface fill inside a border. Hover mutes the fill and lifts
+/// the button with the resting shadow; press mutes it a step further.
+_Look _surface(bool highContrast) =>
+    _framed(fill: FortalTokens.gray2(), highContrast: highContrast);
+
+/// Outline: a border with no fill, hovered and pressed like surface.
+_Look _outline(bool highContrast) =>
+    _framed(fill: _transparent, highContrast: highContrast);
+
+_Look _framed({required Color fill, required bool highContrast}) {
+  final frame = _frame(
+    highContrast ? FortalTokens.gray8() : FortalTokens.gray7(),
+  );
+
+  return (
+    rest: _content(FortalTokens.gray12()).color(fill).containerEffects(frame),
+    hovered: ButtonStyler()
+        .color(FortalTokens.gray3())
+        .decoration(
+          BoxDecorationMix.create(boxShadow: FortalTokens.shadow1.mix()),
+        ),
+    pressed: ButtonStyler().color(FortalTokens.gray4()),
+    disabled: _content(FortalTokens.gray10()).color(FortalTokens.gray3()),
+  );
 }
 
-/// Solid: the accent's labelled fill, or its strongest step at high contrast.
-///
-/// Hover and press recolor the fill and nothing else, so the label, icons,
-/// spinner and focus ring keep their colors.
-ButtonStyler _solid(bool highContrast) => highContrast
-    ? _content(FortalTokens.gray1())
-          .color(FortalTokens.accent12())
-          .onHovered(.color(fortalHighContrastHoverFill()))
-          .onPressed(.color(fortalHighContrastPressedFill()))
-          .onDisabled(_solidDisabled())
-    : _content(FortalTokens.accentContrast())
-          .color(FortalTokens.accentSolid())
-          .onHovered(.color(FortalTokens.accentSolidHover()))
-          .onPressed(.color(fortalSolidPressedFill()))
-          .onDisabled(_solidDisabled());
+/// Ghost: secondary text in the full control box, with a muted fill and ink
+/// text under the pointer.
+_Look _ghost(bool highContrast) {
+  final hovered = _content(FortalTokens.gray12()).color(FortalTokens.gray3());
 
-/// A disabled solid button, which also drops any filter the caller added.
-ButtonStyler _solidDisabled() =>
-    _disabledContent().color(FortalTokens.grayA3()).wrap(fortalClearFilter());
-
-/// Soft: a tinted accent fill that deepens a step on hover and on press.
-ButtonStyler _soft(bool highContrast) => _content(_accentText(highContrast))
-    .color(FortalTokens.accentA3())
-    .onHovered(.color(FortalTokens.accentA4()))
-    .onPressed(.color(FortalTokens.accentA5()))
-    .onDisabled(_disabledContent().color(FortalTokens.grayA3()));
-
-/// Surface: a faint accent surface inside a frame that strengthens on hover.
-ButtonStyler _surface(bool highContrast) => _content(_accentText(highContrast))
-    .color(FortalTokens.accentSurface())
-    .containerEffects(_frame([FortalTokens.accentA7()]))
-    .onHovered(.containerEffects(_frame([FortalTokens.accentA8()])))
-    .onPressed(
-      ButtonStyler()
-          .color(FortalTokens.accentA3())
-          .containerEffects(_frame([FortalTokens.accentA8()])),
-    )
-    .onDisabled(
-      _disabledContent()
-          .color(FortalTokens.grayA2())
-          .containerEffects(_frame([FortalTokens.grayA6()])),
-    );
-
-/// Outline: a frame with no fill, tinted on hover and on press.
-///
-/// High contrast adds a gray line to the accent one.
-ButtonStyler _outline(bool highContrast) => _content(_accentText(highContrast))
-    .containerEffects(
-      _frame(
-        highContrast
-            ? [FortalTokens.accentA7(), FortalTokens.grayA11()]
-            : [FortalTokens.accentA8()],
-      ),
-    )
-    .onHovered(.color(FortalTokens.accentA2()))
-    .onPressed(.color(FortalTokens.accentA3()))
-    .onDisabled(
-      _disabledContent()
-          .color(_transparent)
-          .containerEffects(_frame([FortalTokens.grayA7()])),
-    );
-
-/// Ghost: accent text alone, with a tint under the pointer.
-ButtonStyler _ghost(bool highContrast) => _content(_accentText(highContrast))
-    .color(_transparent)
-    .onHovered(.color(FortalTokens.accentA3()))
-    .onPressed(.color(FortalTokens.accentA4()))
-    .onDisabled(_disabledContent().color(_transparent));
+  return (
+    rest: _content(
+      highContrast ? FortalTokens.gray12() : FortalTokens.gray11(),
+    ).color(_transparent),
+    hovered: hovered,
+    pressed: hovered,
+    disabled: _content(FortalTokens.gray10()).color(_transparent),
+  );
+}
 
 /// One color for the label, the icons and the spinner.
 ButtonStyler _content(Color color) => ButtonStyler()
     .label(.color(color))
     .icon(.color(color))
-    .spinner(.color(color));
+    .spinner(.indicatorColor(color));
 
-/// The text color of the soft, surface, outline and ghost variants.
-Color _accentText(bool highContrast) =>
-    highContrast ? FortalTokens.accent12() : FortalTokens.accentContentAlpha();
-
-/// Disabled content: gray, with the spinner at full strength rather than its
-/// usual 65%.
-ButtonStyler _disabledContent() =>
-    _content(FortalTokens.grayA8()).spinner(.opacity(1));
-
-/// A crisp 1px line just inside the button's edge, one for each of [colors].
-RemixBoxEffectsMix _frame(List<Color> colors) =>
-    .behindContent(fortalInsetSurface(strokes: colors));
+/// A crisp 1px line just inside the button's edge.
+RemixBoxEffectsMix _frame(Color color) =>
+    .behindContent(fortalInsetSurface(strokes: [color]));

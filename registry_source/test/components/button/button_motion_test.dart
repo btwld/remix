@@ -1,63 +1,81 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
 import '../../helpers/test_helpers.dart';
 
 void main() {
   group('Fortal button motion', () {
-    testWidgets('FortalButton enters hover over 40ms and rests over 120ms', (
+    testWidgets('FortalButton thins on hover over 150ms and settles back', (
       tester,
     ) async {
       await tester.pumpRemixApp(
         FortalButton.solid(label: 'Continue', onPressed: () {}),
       );
 
-      await _expectHoverMotion(
-        tester,
-        target: find.byType(FortalButton),
-        fill: () => _fill(
-          _spec<ButtonSpec>(tester).container.spec.box?.spec.decoration,
-        ),
-      );
+      await _expectHoverMotion(tester, target: find.byType(FortalButton));
     });
 
-    testWidgets(
-      'FortalIconButton enters hover over 40ms and rests over 120ms',
-      (tester) async {
-        await tester.pumpRemixApp(
-          FortalIconButton.solid(
-            icon: Icons.add,
-            semanticLabel: 'Add',
-            onPressed: () {},
-          ),
-        );
+    testWidgets('FortalButton scales to 97% while held', (tester) async {
+      await tester.pumpRemixApp(
+        FortalButton.solid(label: 'Continue', onPressed: () {}),
+      );
+      await tester.pumpAndSettle();
+      final target = find.byType(FortalButton);
+      final width = tester.getSize(target).width;
+      double drawnWidth() =>
+          tester.getBottomRight(find.text('Continue')).dx -
+          tester.getBottomLeft(find.text('Continue')).dx;
+      final label = drawnWidth();
 
-        await _expectHoverMotion(
-          tester,
-          target: find.byType(FortalIconButton),
-          fill: () =>
-              _fill(_spec<IconButtonSpec>(tester).container.spec.decoration),
-        );
-      },
-    );
+      final press = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(press.removePointer);
+      await press.addPointer(location: tester.getCenter(target));
+      await tester.pump();
+      await press.down(tester.getCenter(target));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      // The tap reports its press after the press timeout; the scale then
+      // runs its 150ms from that frame.
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(drawnWidth(), closeTo(label * 0.97, 0.01));
+      expect(tester.getSize(target).width, width, reason: 'layout unchanged');
+
+      await press.up();
+      await tester.pumpAndSettle();
+      expect(drawnWidth(), closeTo(label, 0.01));
+    });
+
+    testWidgets('FortalIconButton thins on hover over 150ms and settles back', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        FortalIconButton.solid(
+          icon: Icons.add,
+          semanticLabel: 'Add',
+          onPressed: () {},
+        ),
+      );
+
+      await _expectHoverMotion(tester, target: find.byType(FortalIconButton));
+    });
   });
 }
 
-/// Hovers [target] and checks the solid fill between `accentSolid` and
-/// `accentSolidHover` partway through each transition.
+/// Hovers [target] and checks the solid button's opacity between rest (1)
+/// and hover (0.91) partway through each 150ms transition.
 Future<void> _expectHoverMotion(
   WidgetTester tester, {
   required Finder target,
-  required Color? Function() fill,
 }) async {
   await tester.pumpAndSettle();
-  final context = tester.element(target);
-  final idle = MixScope.tokenOf(FortalTokens.accentSolid, context);
-  final hovered = MixScope.tokenOf(FortalTokens.accentSolidHover, context);
-  expect(fill(), idle);
+  double opacity() => tester
+      .widget<Opacity>(
+        find.descendant(of: target, matching: find.byType(Opacity)).first,
+      )
+      .opacity;
+  expect(opacity(), 1);
 
   final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
   addTearDown(pointer.removePointer);
@@ -65,28 +83,19 @@ Future<void> _expectHoverMotion(
   await tester.pump();
   await pointer.moveTo(tester.getCenter(target));
   await tester.pump();
-  await tester.pump(const Duration(milliseconds: 20));
-
-  expect(fill(), isNot(anyOf(idle, hovered)));
-
   await tester.pump(const Duration(milliseconds: 30));
-  expect(fill(), hovered);
+
+  expect(opacity(), allOf(lessThan(1), greaterThan(0.91)));
+
+  await tester.pump(const Duration(milliseconds: 130));
+  expect(opacity(), closeTo(0.91, 1e-9));
 
   await pointer.moveTo(Offset.zero);
   await tester.pump();
-  await tester.pump(const Duration(milliseconds: 60));
+  await tester.pump(const Duration(milliseconds: 30));
 
-  expect(fill(), isNot(anyOf(idle, hovered)));
+  expect(opacity(), allOf(lessThan(1), greaterThan(0.91)));
 
   await tester.pumpAndSettle();
-  expect(fill(), idle);
+  expect(opacity(), 1);
 }
-
-S _spec<S extends Spec<S>>(WidgetTester tester) => tester
-    .widget<StyleSpecProvider<S>>(
-      find.byWidgetPredicate((widget) => widget is StyleSpecProvider<S>).first,
-    )
-    .spec
-    .spec;
-
-Color? _fill(Decoration? decoration) => (decoration as BoxDecoration?)?.color;

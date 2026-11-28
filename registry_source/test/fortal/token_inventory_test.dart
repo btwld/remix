@@ -32,7 +32,6 @@ final _customizationTokens = {
   'grayStroke7',
   'radiusFull',
   'radiusThumb',
-  'shadow1',
   'shadow2',
   'shadow1Layers',
   // Foundation roles the per-component re-skins will read.
@@ -50,16 +49,21 @@ final _customizationTokens = {
   'toneGreen',
   'accentRange',
   'accentThumb',
-  'space18',
-  'space20',
   'space56',
-  'controlHeight1',
-  'controlHeight2',
-  'controlHeight3',
-  'controlHeight4',
   'radius7',
   'shadowThumb',
   'textField',
+  'grayA7',
+  // The inline ghost button boxes, kept for callers that rebuild that look;
+  // the ghost recipes now draw the full control box.
+  'baseButtonGhostMarginX12',
+  'baseButtonGhostMarginY12',
+  'baseButtonGhostMarginX3',
+  'baseButtonGhostMarginY3',
+  'baseButtonGhostMarginX4',
+  'baseButtonGhostMarginY4',
+  'iconButtonGhostMargin3',
+  'iconButtonGhostMargin4',
 };
 
 void main() {
