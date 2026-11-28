@@ -709,6 +709,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
     RemixAvatarLabelBuilder? labelBuilder,
     IconData? icon,
     RemixAvatarIconBuilder? iconBuilder,
+    Widget? badge,
   }) {
     return RemixAvatar(
       key: key,
@@ -721,6 +722,7 @@ class AvatarStyler extends MixStyler<AvatarStyler, AvatarSpec>
       labelBuilder: labelBuilder,
       icon: icon,
       iconBuilder: iconBuilder,
+      badge: badge,
       child: child,
     );
   }

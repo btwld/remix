@@ -26,6 +26,7 @@ class HeroUiAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
   });
 
   /// The neutral `default` fill.
@@ -43,6 +44,7 @@ class HeroUiAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
   }) : variant = HeroUiAvatarVariant.defaultAvatar;
 
   /// A tinted fill in the avatar's color.
@@ -60,6 +62,7 @@ class HeroUiAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
   }) : variant = HeroUiAvatarVariant.soft;
 
   final HeroUiAvatarVariant variant;
@@ -88,6 +91,8 @@ class HeroUiAvatar extends StatelessWidget {
 
   final RemixAvatarIconBuilder? iconBuilder;
 
+  final Widget? badge;
+
   @override
   Widget build(BuildContext _) {
     return RemixAvatar(
@@ -105,6 +110,7 @@ class HeroUiAvatar extends StatelessWidget {
       labelBuilder: labelBuilder,
       icon: icon,
       iconBuilder: iconBuilder,
+      badge: badge,
       child: child,
     );
   }

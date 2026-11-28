@@ -25,6 +25,7 @@ class PlaygroundAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
   });
 
   final AvatarStyler style;
@@ -47,6 +48,8 @@ class PlaygroundAvatar extends StatelessWidget {
 
   final RemixAvatarIconBuilder? iconBuilder;
 
+  final Widget? badge;
+
   @override
   Widget build(BuildContext _) {
     return RemixAvatar(
@@ -59,6 +62,7 @@ class PlaygroundAvatar extends StatelessWidget {
       labelBuilder: labelBuilder,
       icon: icon,
       iconBuilder: iconBuilder,
+      badge: badge,
       child: child,
     );
   }

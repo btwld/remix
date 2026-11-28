@@ -33,6 +33,7 @@ class UiAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
   });
 
   /// A tinted accent fill under accent text.
@@ -51,6 +52,7 @@ class UiAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
   }) : variant = UiAvatarVariant.soft;
 
   /// The accent's solid fill under its contrast text.
@@ -69,6 +71,7 @@ class UiAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.badge,
   }) : variant = UiAvatarVariant.solid;
 
   final UiAvatarVariant variant;
@@ -99,6 +102,8 @@ class UiAvatar extends StatelessWidget {
 
   final RemixAvatarIconBuilder? iconBuilder;
 
+  final Widget? badge;
+
   @override
   Widget build(BuildContext _) {
     return RemixAvatar(
@@ -117,6 +122,7 @@ class UiAvatar extends StatelessWidget {
       labelBuilder: labelBuilder,
       icon: icon,
       iconBuilder: iconBuilder,
+      badge: badge,
       child: child,
     );
   }

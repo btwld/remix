@@ -131,6 +131,7 @@ RemixAvatar remixAvatarConstructor({
   RemixAvatarLabelBuilder? labelBuilder,
   IconData? icon,
   RemixAvatarIconBuilder? iconBuilder,
+  Widget? badge,
   AvatarStyler style = const AvatarStyler.create(),
   AvatarSpec? styleSpec,
 }) => throw UnimplementedError();
@@ -188,6 +189,13 @@ Optional. Optional icon rendered when no [child] or [label] is provided.
 #### `iconBuilder` → `RemixAvatarIconBuilder?`
 
 Optional. Optional builder that exposes the resolved [IconSpec] for custom icon rendering while preserving configured icon styling.
+
+#### `badge` → `Widget?`
+
+Optional. An overlay, such as a status dot, pinned to the bottom end corner.
+It paints above the container and outside its clip, so a circular avatar does
+not cut a dot on its corner. Pad or translate the badge to move it. Its
+semantics stay yours.
 
 
 ### Style Methods
@@ -264,7 +272,7 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `call({Key? key, ImageProvider? backgroundImage, ImageProvider? foregroundImage, ImageErrorListener? onBackgroundImageError, ImageErrorListener? onForegroundImageError, Widget? child, String? label, RemixAvatarLabelBuilder? labelBuilder, IconData? icon, RemixAvatarIconBuilder? iconBuilder})`
+#### `call({Key? key, ImageProvider? backgroundImage, ImageProvider? foregroundImage, ImageErrorListener? onBackgroundImageError, ImageErrorListener? onForegroundImageError, Widget? child, String? label, RemixAvatarLabelBuilder? labelBuilder, IconData? icon, RemixAvatarIconBuilder? iconBuilder, Widget? badge})`
 
 Creates a `RemixAvatar` widget with this style applied.
 
