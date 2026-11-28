@@ -1,54 +1,58 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
+{{icon:import}}
 
+import '../motion/motion.dart';
 import '../theme/theme.dart';
 import 'button.dart';
-import 'icon_button.dart';
 
 part 'toast.g.dart';
 
 /// The sizes a toast comes in. Pixel values are at 100% theme scaling.
 enum {{typePrefix}}ToastSize {
-  /// 12px text with 12px padding.
+  /// 12px text beside a 26px icon chip, 10px padding.
   size1,
 
-  /// 14px text with 16px padding. The default.
+  /// 13px text beside a 30px icon chip, 14px padding. The default.
   size2,
 
-  /// 16px text with 24px padding.
+  /// 15px text beside a 34px icon chip, 16px padding.
   size3,
 }
 
 /// How far a toast floats above the page.
 enum {{typePrefix}}ToastVariant {
-  /// A quiet shadow.
+  /// The raised shadow.
   surface,
 
-  /// A deeper shadow. The default.
+  /// The floating shadow. The default.
   classic,
 }
 
-/// The color role of the leading icon.
+/// The color role of the leading icon chip.
 ///
 /// Visual only: it never changes [RemixToastData.priority]. Choose
 /// [RemixToastPriority.assertive] explicitly when a message needs an
 /// immediate announcement.
 enum {{typePrefix}}ToastIntent {
-  /// The accent's text color.
+  /// A confirmation: the success color and a check. The default.
   accent,
 
-  /// Gray.
+  /// Gray and an info glyph.
   neutral,
 
-  /// The error color.
+  /// The error color and a warning glyph.
   error,
 }
 
 /// The Fortal Toast recipe, for [RemixToast] and [RemixToastScope].
 ///
-/// A toast is a raised, blurred panel in a 1px frame, with a ghost action and
-/// close button. It caps at 360px and shrinks with the available width.
+/// A toast is a floating card in a 1px border with a round tinted icon chip,
+/// a medium title over secondary text, and a round close button. It caps at
+/// 416px and shrinks with the available width. Inside a [RemixToastScope] it
+/// rises 16px and grows from 96% on the morph spring while it fades in over
+/// 200ms, and leaves in 140ms, sinking 8px to 97%.
 ///
 /// ```dart
 /// RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: const Shell())
@@ -61,38 +65,59 @@ ToastStyler {{valuePrefix}}ToastStyle({
   ToastStyler style = const ToastStyler.create(),
 }) {
   final metrics = _metrics(size);
+  final (tone, glyph) = switch (intent) {
+    .accent => ({{typePrefix}}Tokens.success, {{icon:check}}),
+    .neutral => ({{typePrefix}}Tokens.gray11, {{icon:infoCircled}}),
+    .error => ({{typePrefix}}Tokens.error11, {{icon:exclamationTriangle}}),
+  };
 
   return ToastStyler(
-        container: FlexBoxStyler().spacing(metrics.gap),
-        content: FlexBoxStyler().spacing({{typePrefix}}Tokens.space1()),
-        icon: IconStyler().size(metrics.iconSize).color(_intentColor(intent)),
+        container: FlexBoxStyler()
+            .spacing(metrics.gap)
+            .crossAxisAlignment(.start),
+        // The copy fills the row so the close button sits at the end and every
+        // toast spans the full width the scope allows.
+        content: FlexBoxStyler()
+            .width(double.infinity)
+            .spacing(2)
+            .padding(.only(top: metrics.copyTop)),
+        icon: IconStyler().icon(glyph).size(metrics.iconSize).color(tone()),
+        iconContainer: BoxStyler()
+            .size(metrics.chip, metrics.chip)
+            .alignment(.center)
+            .color(_chipFill(tone)())
+            .border(.all(.color(_chipBorder(tone)()).width(1)))
+            .borderRadius(.all({{typePrefix}}Tokens.radiusCircle())),
         title: TextStyler(style: metrics.text.mix())
             .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
-            .color({{typePrefix}}Tokens.gray12()),
+            .color({{typePrefix}}Tokens.gray12())
+            .maxLines(1)
+            .overflow(.ellipsis),
         description: TextStyler(
           style: metrics.text.mix(),
         ).color({{typePrefix}}Tokens.gray11()),
         action: {{valuePrefix}}ButtonStyle(variant: .ghost, size: .size1),
-        closeButton: {{valuePrefix}}IconButtonStyle(variant: .ghost, size: .size1).merge(
-          IconButtonStyler().icon(IconStyler().color({{typePrefix}}Tokens.gray11())),
+        closeButton: _closeButton(metrics.close),
+        transitionBuilder: _transition,
+        animationStyle: AnimationStyle(
+          duration: _enterSpring.duration,
+          curve: Curves.linear,
+          reverseDuration: {{typePrefix}}Motion.exit,
+          reverseCurve: Curves.linear,
         ),
+        reducedMotionDuration: {{typePrefix}}Motion.instant,
       )
-      .padding(.all(metrics.padding))
+      .padding(metrics.padding)
       .borderRadius(.all(metrics.radius))
       .maxWidth({{typePrefix}}Tokens.toastMaxWidth())
-      .containerEffects(
-        RemixBoxEffectsMix.backdropBlur({{typePrefix}}Tokens.panelBlur()),
-      )
-      .color({{typePrefix}}Tokens.colorPanel())
-      .border(
-        .all(.color({{typePrefix}}Tokens.gray6()).width({{typePrefix}}Tokens.borderWidth1())),
-      )
+      .color(_fill())
+      .border(.all(.color(_frame()).width({{typePrefix}}Tokens.borderWidth1())))
       .decoration(
         BoxDecorationMix.create(
           boxShadow:
               (variant == .surface
                       ? {{typePrefix}}Tokens.shadow3
-                      : {{typePrefix}}Tokens.shadow4)
+                      : {{typePrefix}}Tokens.shadow5)
                   .mix(),
         ),
       )
@@ -100,38 +125,174 @@ ToastStyler {{valuePrefix}}ToastStyle({
 }
 
 ({
-  double padding,
+  EdgeInsetsGeometryMix padding,
   double gap,
+  double chip,
   double iconSize,
+  double copyTop,
+  double close,
   Radius radius,
   TextStyleToken text,
 })
 _metrics({{typePrefix}}ToastSize size) => switch (size) {
   .size1 => (
-    padding: {{typePrefix}}Tokens.space3(),
+    padding: EdgeInsetsGeometryMix.directional(
+      top: 10,
+      bottom: 10,
+      start: {{typePrefix}}Tokens.space3(),
+      end: 10,
+    ),
     gap: {{typePrefix}}Tokens.space2(),
-    iconSize: {{typePrefix}}Tokens.space4(),
-    radius: {{typePrefix}}Tokens.radius3(),
+    chip: 26,
+    iconSize: 14,
+    copyTop: 4,
+    close: 28,
+    radius: {{typePrefix}}Tokens.radius5(),
     text: {{typePrefix}}Tokens.text1,
   ),
   .size2 => (
-    padding: {{typePrefix}}Tokens.space4(),
+    padding: EdgeInsetsGeometryMix.directional(
+      top: 14,
+      bottom: 14,
+      start: {{typePrefix}}Tokens.space4(),
+      end: 14,
+    ),
     gap: {{typePrefix}}Tokens.space3(),
+    chip: 30,
     iconSize: {{typePrefix}}Tokens.space4(),
-    radius: {{typePrefix}}Tokens.radius4(),
+    copyTop: 5,
+    close: 32,
+    radius: {{typePrefix}}Tokens.radius6(),
     text: {{typePrefix}}Tokens.text2,
   ),
   .size3 => (
-    padding: {{typePrefix}}Tokens.space5(),
+    padding: EdgeInsetsGeometryMix.directional(
+      top: 16,
+      bottom: 16,
+      start: {{typePrefix}}Tokens.space18(),
+      end: 16,
+    ),
     gap: {{typePrefix}}Tokens.space3(),
-    iconSize: {{typePrefix}}Tokens.space5(),
-    radius: {{typePrefix}}Tokens.radius5(),
+    chip: 34,
+    iconSize: {{typePrefix}}Tokens.space18(),
+    copyTop: 6,
+    close: 36,
+    radius: {{typePrefix}}Tokens.radius7(),
     text: {{typePrefix}}Tokens.text3,
   ),
 };
 
-Color _intentColor({{typePrefix}}ToastIntent intent) => switch (intent) {
-  .accent => {{typePrefix}}Tokens.accentContent(),
-  .neutral => {{typePrefix}}Tokens.gray11(),
-  .error => {{typePrefix}}Tokens.error11(),
-};
+/// The quiet border, or gray 10 (3:1 on the card) under the theme's high
+/// contrast.
+final _frame = ContextToken<Color>(
+  (context) => ({{typePrefix}}Theme.maybeOf(context)?.highContrast ?? false)
+      ? {{typePrefix}}Tokens.gray10.resolve(context)
+      : {{typePrefix}}Tokens.gray7.resolve(context),
+);
+
+/// The surface mixed 6% toward the page background.
+final _fill = ContextToken<Color>(
+  (context) => mixOklabPremultiplied(
+    {{typePrefix}}Tokens.colorSurface.resolve(context),
+    {{typePrefix}}Tokens.colorBackground.resolve(context),
+    .06,
+  ),
+);
+
+ContextToken<Color> _chipFill(ColorToken tone) => ContextToken<Color>(
+  (context) => mixOklabPremultiplied(
+    {{typePrefix}}Tokens.colorSurface.resolve(context),
+    tone.resolve(context),
+    .10,
+  ),
+);
+
+ContextToken<Color> _chipBorder(ColorToken tone) => ContextToken<Color>(
+  (context) => mixOklabPremultiplied(
+    {{typePrefix}}Tokens.gray7.resolve(context),
+    tone.resolve(context),
+    .24,
+  ),
+);
+
+/// A round ghost button nudged 2px out and 1px up, so it hugs the corner.
+IconButtonStyler _closeButton(double edge) => IconButtonStyler()
+    .size(edge, edge)
+    .alignment(.center)
+    .borderRadius(.all({{typePrefix}}Tokens.radiusCircle()))
+    .icon(IconStyler().size({{typePrefix}}Tokens.space4()).color({{typePrefix}}Tokens.gray10()))
+    .wrap(.transform(transform: Matrix4.translationValues(2, -1, 0)))
+    .onHovered(
+      IconButtonStyler()
+          .color({{typePrefix}}Tokens.gray3())
+          .icon(.color({{typePrefix}}Tokens.gray12())),
+    )
+    .onPressed(IconButtonStyler().scale(.96))
+    .animate(.easeOut({{typePrefix}}Motion.fast));
+
+final _enterSpring = {{typePrefix}}SpringCurve({{typePrefix}}Motion.springMorph);
+
+/// Rises 16px from the toast's edge and grows from 96% on the morph spring
+/// while fading in over 200ms; leaves in 140ms, sinking 8px to 97%. Under
+/// reduced motion it only fades.
+///
+/// The fade keeps semantics so a toast is announced from its first frame.
+Widget _transition(
+  BuildContext context,
+  Animation<double> animation,
+  RemixToastPlacement placement,
+  Widget child,
+) {
+  final fromTop = switch (placement) {
+    .topStart || .topCenter || .topEnd => true,
+    .bottomStart || .bottomCenter || .bottomEnd => false,
+  };
+  final edge = fromTop ? -1.0 : 1.0;
+  final enterMs = _enterSpring.duration.inMicroseconds / 1000;
+
+  return RemixReducedMotionBuilder(
+    builder: (context, reduceMotion) => AnimatedBuilder(
+      animation: animation,
+      child: child,
+      builder: (context, child) {
+        final t = animation.value;
+        final leaving = animation.status == .reverse;
+        if (reduceMotion) {
+          return Opacity(
+            opacity: t,
+            alwaysIncludeSemantics: true,
+            child: child,
+          );
+        }
+
+        final double opacity;
+        final double offset;
+        final double scale;
+        if (leaving) {
+          final p = {{typePrefix}}Motion.easeStandard.transform(1 - t);
+          opacity = 1 - p;
+          offset = 8 * p;
+          scale = 1 - .03 * p;
+        } else {
+          final spring = _enterSpring.transform(t);
+          final fadeEnd = ({{typePrefix}}Motion.standard.inMilliseconds / enterMs)
+              .clamp(0.0, 1.0);
+          opacity = {{typePrefix}}Motion.easeEnter.transform(
+            (t / fadeEnd).clamp(0.0, 1.0),
+          );
+          offset = 16 * (1 - spring);
+          scale = .96 + .04 * spring;
+        }
+
+        return Opacity(
+          opacity: opacity,
+          alwaysIncludeSemantics: true,
+          child: Transform.translate(
+            offset: Offset(0, edge * offset),
+            child: Transform.scale(scale: scale, child: child),
+          ),
+        );
+      },
+    ),
+  );
+}
