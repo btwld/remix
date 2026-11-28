@@ -137,7 +137,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = MenuTriggerSpec();
 
-        expect(spec.props, hasLength(4));
+        expect(spec.props, hasLength(5));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.containerEffects));
         expect(spec.props, contains(spec.label));
@@ -152,7 +152,13 @@ void main() {
         spec.debugFillProperties(builder);
         expect(
           builder.properties.map((property) => property.name),
-          unorderedEquals(['container', 'containerEffects', 'label', 'icon']),
+          unorderedEquals([
+            'container',
+            'containerEffects',
+            'label',
+            'icon',
+            'trailingIcon',
+          ]),
         );
       });
     });

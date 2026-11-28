@@ -92,6 +92,8 @@
 - The default and builder `RemixMenu` triggers resolve their style with
   `WidgetState.selected` while the menu is open, until its exit transition
   starts, so `MenuTriggerStyler().onSelected(...)` styles the open trigger.
+- Add `RemixMenuTrigger.trailingIcon` and `MenuTriggerSpec.trailingIcon`. The
+  default trigger shows an icon after its label when either sets one.
 
 ### Fixes
 

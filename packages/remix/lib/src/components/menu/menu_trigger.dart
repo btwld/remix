@@ -50,9 +50,12 @@ final class RemixMenuTriggerHandle {
 /// and expanded semantics.
 class RemixMenuTrigger {
   /// Creates a standard label/icon trigger.
-  const RemixMenuTrigger({required String this.label, this.icon})
-    : builder = null,
-      control = null;
+  const RemixMenuTrigger({
+    required String this.label,
+    this.icon,
+    this.trailingIcon,
+  }) : builder = null,
+       control = null;
 
   /// Creates a trigger that supplies custom visual content.
   ///
@@ -63,6 +66,7 @@ class RemixMenuTrigger {
   const RemixMenuTrigger.builder({
     required String this.label,
     this.icon,
+    this.trailingIcon,
     required this.builder,
   }) : control = null;
 
@@ -87,6 +91,7 @@ class RemixMenuTrigger {
     : control = builder,
       label = null,
       icon = null,
+      trailingIcon = null,
       builder = null;
 
   /// The visible default label and the accessible fallback for a
@@ -96,6 +101,11 @@ class RemixMenuTrigger {
 
   /// Optional icon shown before [label] in the default trigger.
   final IconData? icon;
+
+  /// Optional icon shown after [label] in the default trigger, such as a
+  /// chevron. Styled by [MenuTriggerStyler.trailingIcon], which can also
+  /// supply the glyph when this is `null`.
+  final IconData? trailingIcon;
 
   /// Optional custom trigger content. Null for the standard trigger.
   final ValueWidgetBuilder<NakedMenuState>? builder;

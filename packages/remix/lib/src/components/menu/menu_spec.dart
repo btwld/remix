@@ -27,15 +27,25 @@ class MenuTriggerSpec with _$MenuTriggerSpec {
   @override
   final StyleSpec<IconSpec> icon;
 
+  /// Icon style for the optional icon after the label, such as a chevron.
+  ///
+  /// The default trigger shows it when [RemixMenuTrigger.trailingIcon] is set
+  /// or when this style sets an `icon`, so a preset can supply the glyph.
+  /// It does not inherit [icon]'s style.
+  @override
+  final StyleSpec<IconSpec> trailingIcon;
+
   /// Creates a trigger spec with default empty child specs.
   const MenuTriggerSpec({
     StyleSpec<FlexBoxSpec>? container,
     this.containerEffects,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
+    StyleSpec<IconSpec>? trailingIcon,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
-       icon = icon ?? const StyleSpec(spec: IconSpec());
+       icon = icon ?? const StyleSpec(spec: IconSpec()),
+       trailingIcon = trailingIcon ?? const StyleSpec(spec: IconSpec());
 
   // Deliberate: route effects through lerpNullable so shadows/blends animate;
   // the generator's default snap-lerps unrecognized spec types.

@@ -374,7 +374,9 @@ for Overlay, Navigator and toast scope placement.
   `MenuStyler().overlay(FlexBoxStyler().minWidth(remixAnchorWidth()))`.
   The default and builder triggers resolve with `WidgetState.selected` while
   the menu is open (until its exit starts): style the open trigger with
-  `MenuTriggerStyler().onSelected(...)`.
+  `MenuTriggerStyler().onSelected(...)`. `RemixMenuTrigger(trailingIcon:)`
+  adds an icon after the label, styled by `MenuTriggerStyler().trailingIcon`,
+  which can also set the glyph (`IconStyler().icon(...)`) for a preset chevron.
   Show a keyboard shortcut or count on a row with `trailingText:` (ordinary,
   checkbox, radio, and submenu items) rather than a hand-built row; style it
   with `MenuItemStyler().trailingText(...)`, which inherits the label style.
