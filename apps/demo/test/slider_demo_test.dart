@@ -34,24 +34,16 @@ void main() {
                       idleFace = face;
                       idleBorder = border;
                     }
-                    if (states.contains(WidgetState.hovered)) {
-                      expect(border, idleBorder);
-                      expect(
-                        spec.thumbEffects!.outline.color,
-                        FortalTokens.accentA7.resolve(context),
-                      );
-                    }
+                    // Thumbs keep one face and ring in every state; hover
+                    // draws nothing and disabled fades the whole slider.
+                    expect(border, idleBorder);
+                    expect(face, idleFace);
+                    expect(face, FortalTokens.controlThumb.resolve(context));
+                    expect(
+                      spec.thumbEffects?.outline.style ?? BorderStyle.none,
+                      BorderStyle.none,
+                    );
                     expect(spec.thumbFocusEffects!.outlineOffset, 0);
-                    if (states.contains(WidgetState.disabled)) {
-                      expect(
-                        face,
-                        (dark ? FortalTokens.gray9 : FortalTokens.gray4)
-                            .resolve(context),
-                      );
-                      expect(spec.blendMode, BlendMode.srcOver);
-                    } else {
-                      expect(face, idleFace);
-                    }
                     return const SizedBox.shrink();
                   },
                 ),
@@ -63,7 +55,7 @@ void main() {
     });
   }
 
-  testWidgets('demo sliders share a 48px target and aligned label blocks', (
+  testWidgets('demo sliders share a 40px row and aligned label blocks', (
     tester,
   ) async {
     final changes = <double>[];
@@ -98,7 +90,7 @@ void main() {
     );
     final range = tester.getRect(find.byType(RemixRangeSlider));
     final single = tester.getRect(find.byType(RemixSlider));
-    expect(single.height, 48);
+    expect(single.height, 40);
     expect(range.height, single.height);
     expect(
       tester.getTopLeft(find.text('Nightly price')).dy,
