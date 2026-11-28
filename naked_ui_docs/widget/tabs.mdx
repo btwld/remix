@@ -243,10 +243,22 @@ const NakedTabView({
   required this.child,
   required this.tabId,
   this.maintainState = true,
+  this.transitionBuilder,
+  this.animationStyle = const AnimationStyle(
+    curve: Curves.ease,
+    duration: Duration(milliseconds: 200),
+    reverseDuration: Duration(milliseconds: 200),
+  ),
 })
 ```
 
 - `maintainState` keeps the widget subtree alive while hidden (defaults to true)
+- `transitionBuilder` → `NakedTabViewTransitionBuilder?` animates the view in
+  and out. Without one, views swap at once. With one, the deselected view keeps
+  painting where it sat until its reverse animation ends, takes no layout
+  space, and receives no pointer input, focus, or semantics. Reduced motion
+  swaps at once.
+- `animationStyle` sets the durations and curves of `transitionBuilder`
 
 ## Accessibility Guidance
 

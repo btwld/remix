@@ -2270,12 +2270,20 @@ class TabViewStyler extends MixStyler<TabViewStyler, TabViewSpec>
     required String tabId,
     required Widget child,
     bool maintainState = true,
+    RemixTabViewTransitionBuilder? transitionBuilder,
+    AnimationStyle animationStyle = const AnimationStyle(
+      curve: Curves.ease,
+      duration: Duration(milliseconds: 200),
+      reverseDuration: Duration(milliseconds: 200),
+    ),
   }) {
     return RemixTabView(
       key: key,
       style: this,
       tabId: tabId,
       maintainState: maintainState,
+      transitionBuilder: transitionBuilder,
+      animationStyle: animationStyle,
       child: child,
     );
   }

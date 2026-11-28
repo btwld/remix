@@ -367,7 +367,9 @@ for Overlay, Navigator and toast scope placement.
   `controller` is `NakedTabController`, which the `remix` barrel does not
   re-export — import it from `package:naked_ui/naked_ui.dart` directly.
   `maintainState` (default `true`) lives on `RemixTabView`, a different
-  widget, not on `RemixTabs`.
+  widget, not on `RemixTabs`. Views swap at once unless `RemixTabView` gets a
+  `transitionBuilder(context, animation, direction, child)`; `direction` is
+  `1`, `-1`, or `0` along the bar's axis, and `animationStyle` sets timing.
 - **RemixAccordionGroup\<T\>** — purely behavioral; `controller` is
   **required**: `RemixAccordionController<String>(min: 0, max: 1)`. Menu
   auto-creates a `MenuController` when its own `controller` is omitted.

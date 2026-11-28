@@ -133,6 +133,12 @@ class HeroUiTabView extends StatelessWidget {
     required this.tabId,
     required this.child,
     this.maintainState = true,
+    this.transitionBuilder,
+    this.animationStyle = const AnimationStyle(
+      curve: Curves.ease,
+      duration: Duration(milliseconds: 200),
+      reverseDuration: Duration(milliseconds: 200),
+    ),
   });
 
   final TabViewStyler style;
@@ -143,12 +149,18 @@ class HeroUiTabView extends StatelessWidget {
 
   final bool maintainState;
 
+  final RemixTabViewTransitionBuilder? transitionBuilder;
+
+  final AnimationStyle animationStyle;
+
   @override
   Widget build(BuildContext _) {
     return RemixTabView(
       style: heroUiTabViewStyle(style: style),
       tabId: tabId,
       maintainState: maintainState,
+      transitionBuilder: transitionBuilder,
+      animationStyle: animationStyle,
       child: child,
     );
   }

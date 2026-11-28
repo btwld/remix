@@ -203,6 +203,85 @@ repaint boundary are picked up the next time the bar paints. If the selected tab
 disappears, the indicator is hidden; if the departing tab disappears, the indicator
 jumps to the selection.
 
+## Panel transitions
+
+Tab views swap at once by default. Pass `transitionBuilder` to `RemixTabView`
+to animate a view as it enters and leaves. The builder receives an animation
+that runs from 0 to 1 while the view enters and from 1 to 0 while it leaves,
+plus the direction the selection moved: `1` when the new tab sits right of or
+below the old one, `-1` when it sits left of or above it, and `0` when unknown.
+`animationStyle` sets the durations and curves.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+Widget slideAndFade(
+  BuildContext context,
+  Animation<double> animation,
+  int direction,
+  Widget child,
+) {
+  return FadeTransition(
+    opacity: animation,
+    child: AnimatedBuilder(
+      animation: animation,
+      child: child,
+      builder: (context, child) => Transform.translate(
+        offset: Offset(direction * 8 * (1 - animation.value), 0),
+        child: child,
+      ),
+    ),
+  );
+}
+
+class AnimatedPanels extends StatefulWidget {
+  const AnimatedPanels({super.key});
+
+  @override
+  State<AnimatedPanels> createState() => _AnimatedPanelsState();
+}
+
+class _AnimatedPanelsState extends State<AnimatedPanels> {
+  String _selected = 'overview';
+
+  @override
+  Widget build(BuildContext context) => RemixTabs(
+    selectedTabId: _selected,
+    onChanged: (id) => setState(() => _selected = id),
+    child: Column(
+      children: [
+        const RemixTabBar(
+          child: Row(
+            children: [
+              RemixTab(tabId: 'overview', label: 'Overview'),
+              RemixTab(tabId: 'activity', label: 'Activity'),
+            ],
+          ),
+        ),
+        for (final id in ['overview', 'activity'])
+          RemixTabView(
+            tabId: id,
+            transitionBuilder: slideAndFade,
+            animationStyle: const AnimationStyle(
+              curve: Curves.easeOut,
+              duration: Duration(milliseconds: 200),
+              reverseDuration: Duration(milliseconds: 100),
+            ),
+            child: Text(id),
+          ),
+      ],
+    ),
+  );
+}
+```
+
+While a view leaves, it takes no layout space, so the entering view moves into
+place at once, and it keeps painting where it sat until its animation ends. A
+leaving view receives no pointer input, focus, or semantics. Selecting its tab
+again midway reverses the same view, so its state is kept. Reduced motion swaps
+views at once.
+
 ## Fortal widgets
 
 The application-owned Fortal preset provides a themed widget for this component:
@@ -313,6 +392,12 @@ RemixTabView remixTabViewConstructor({
   required String tabId,
   required Widget child,
   bool maintainState = true,
+  RemixTabViewTransitionBuilder? transitionBuilder,
+  AnimationStyle animationStyle = const AnimationStyle(
+    curve: Curves.ease,
+    duration: Duration(milliseconds: 200),
+    reverseDuration: Duration(milliseconds: 200),
+  ),
   TabViewStyler style = const TabViewStyler.create(),
   TabViewSpec? styleSpec,
 }) => throw UnimplementedError();
@@ -368,6 +453,14 @@ Optional. Called when Escape is pressed while a tab has focus.
 #### `maintainState` → `bool`
 
 Optional on `RemixTabView`. Whether the panel keeps its state while hidden. Defaults to `true`.
+
+#### `transitionBuilder` → `RemixTabViewTransitionBuilder?`
+
+Optional on `RemixTabView`. Animates the view as it enters and leaves. Defaults to `null`, which swaps views at once. See [Panel transitions](#panel-transitions).
+
+#### `animationStyle` → `AnimationStyle`
+
+Optional on `RemixTabView`. Durations and curves of `transitionBuilder`. Defaults to `Curves.ease` over 200 ms in both directions.
 
 
 ### Tab Bar Style Methods
@@ -671,6 +764,6 @@ Sets custom tab view variants.
 
 Applies widget modifiers to the tab view.
 
-#### `call({Key? key, required String tabId, required Widget child, bool maintainState = true})`
+#### `call({Key? key, required String tabId, required Widget child, bool maintainState = true, RemixTabViewTransitionBuilder? transitionBuilder, AnimationStyle animationStyle = const AnimationStyle(curve: Curves.ease, duration: Duration(milliseconds: 200), reverseDuration: Duration(milliseconds: 200))})`
 
 Creates a `RemixTabView` widget with this style applied.

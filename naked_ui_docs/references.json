@@ -115,21 +115,21 @@
     "codeSha256": "757bf5c648dee1b60db346729dc687f9475a58892e3f6210bd029f1dcf2d41ce",
     "reason": "API signature for NakedTabs; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_tabs.dart",
-    "sourceSha256": "95083f0b60a850df9dc2387d081d1c98507628781d3b1489b33139d96155e88b",
+    "sourceSha256": "d2e05af64b4b2c8b6b95f2579de9fa025d58f03d5a3c5aeca4b9e9eacbab45ed",
     "symbol": "NakedTabs"
   },
   "widget/tabs.mdx#2": {
     "codeSha256": "293d30c8482a02de265622512d51c0d9f7920db939cd69d882ecb19a4b6427b9",
     "reason": "API signature for NakedTab; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_tabs.dart",
-    "sourceSha256": "95083f0b60a850df9dc2387d081d1c98507628781d3b1489b33139d96155e88b",
+    "sourceSha256": "d2e05af64b4b2c8b6b95f2579de9fa025d58f03d5a3c5aeca4b9e9eacbab45ed",
     "symbol": "NakedTab"
   },
   "widget/tabs.mdx#3": {
-    "codeSha256": "02546146acb916472fb161a96816cade8981d128007be38a3e27b7b8a7b22a04",
+    "codeSha256": "d5630eccef8477f8a4219bed71d1427e5ae1075ef4befe28081fb5d7036934c4",
     "reason": "API signature for NakedTabView; copied from the active declaration. It describes the API and has no implementation body.",
     "source": "packages/naked_ui/lib/src/naked_tabs.dart",
-    "sourceSha256": "95083f0b60a850df9dc2387d081d1c98507628781d3b1489b33139d96155e88b",
+    "sourceSha256": "d2e05af64b4b2c8b6b95f2579de9fa025d58f03d5a3c5aeca4b9e9eacbab45ed",
     "symbol": "NakedTabView"
   },
   "widget/textfield.mdx#1": {

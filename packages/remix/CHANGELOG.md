@@ -1,3 +1,17 @@
+## Unreleased
+
+### Features
+
+- Re-export `NakedScrollbar` and `NakedTabsScope` from `package:remix/remix.dart`.
+- State animations from a style's `.animate(...)` land on their end value in
+  one frame while motion is reduced (`MediaQuery.disableAnimations` or the
+  platform's `reduceMotion`). This covers every widget built on
+  `RemixStyleSpecBuilder`, plus calendar days and slider thumbs.
+- Tabs: add `transitionBuilder` and `animationStyle` to `RemixTabView`. The
+  builder receives the direction the selection moved along the bar's axis.
+  Views still swap at once by default. Needs the `NakedTabView` transition
+  from the next Naked UI release.
+
 ## 1.0.0-rc.7
 
 ### Fixes
