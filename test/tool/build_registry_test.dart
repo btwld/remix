@@ -165,7 +165,7 @@ void main() {
       final items =
           loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
       for (final (item, dependencies) in [
-        ('calendar', ['theme', 'icon_button', 'select']),
+        ('calendar', ['theme', 'motion', 'select']),
         ('range_calendar', ['theme', 'calendar']),
         ('date_picker', ['theme', 'button', 'calendar', 'popover']),
         (
