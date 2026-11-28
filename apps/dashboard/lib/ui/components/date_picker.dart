@@ -3,7 +3,6 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../theme/theme.dart';
-import 'button.dart';
 import 'calendar.dart';
 import 'popover.dart';
 
@@ -32,7 +31,7 @@ class UiDatePicker extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.positioning = const OverlayPositionConfig(
-      sideOffset: 4,
+      sideOffset: 8,
       collisionPadding: EdgeInsets.all(8),
     ),
     this.buttonStyle = const ButtonStyler.create(),
@@ -140,32 +139,78 @@ class UiDatePicker extends StatelessWidget {
     autofocus: autofocus,
     positioning: positioning,
     icon: RemixIcons.calendar,
-    placeholderStyle: ButtonStyler()
-        .labelColor(UiTokens.gray10())
-        .labelFontWeight(UiTokens.fontWeightRegular()),
-    expandedStyle: ButtonStyler().border(
-      .color(UiTokens.focus8()).width(UiTokens.borderWidth1()),
+    trailingIcon: RemixIcons.chevronDown,
+    // The value fills the trigger so the chevron sits at its end.
+    textBuilder: (context, spec, text) => SizedBox(
+      width: double.infinity,
+      child: Text(
+        text,
+        style: spec.style,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     ),
-    buttonStyle: uiButtonStyle(variant: .outline)
-        .minHeight(uiCalendarTarget)
-        .minWidth(MediaQuery.textScalerOf(context).scale(200))
-        .spacing(UiTokens.space2())
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale(UiTokens.space4.resolve(context)),
-          ),
-        )
-        .merge(buttonStyle),
+    footerBuilder: (context, value) => UiCalendarFooter(
+      status: value == null
+          ? calendarLabels.noDate
+          : calendarLabels.fullDate(value),
+    ),
+    closeDelay: const Duration(milliseconds: 300),
+    placeholderStyle: ButtonStyler().label(
+      TextStyler().color(UiTokens.gray10()),
+    ),
+    expandedStyle: _triggerHover,
+    buttonStyle: _trigger(context).merge(buttonStyle),
     popoverStyle: uiPopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
+        .padding(.all(UiTokens.space4()))
+        .borderRadius(.all(UiTokens.radius6()))
+        .color(UiTokens.colorPanelSolid())
+        .width(MediaQuery.textScalerOf(context).scale(320))
+        .panelTransition(uiCalendarPanelTransition)
         .merge(popoverStyle),
     navigationStyle: uiCalendarNavigationStyle(context).merge(navigationStyle),
     selectorStyle: uiCalendarSelectorStyle(context).merge(selectorStyle),
     calendarStyle: uiCalendarStyle(
-      style: uiCalendarGeometry(context).merge(calendarStyle),
+      style: uiCalendarGeometry(context, width: 288).merge(calendarStyle),
     ),
   );
 }
+
+/// The trigger: a 40px field with the control corner, a 1px gray 7 frame
+/// on gray 2, a 16px muted calendar icon and chevron 9px from 13px tabular
+/// text, 12px in from each side. It never scales; hover and the open state
+/// mute it.
+ButtonStyler _trigger(BuildContext context) {
+  final scaler = MediaQuery.textScalerOf(context);
+
+  return ButtonStyler()
+      .minHeight(UiTokens.controlHeight2())
+      .minWidth(scaler.scale(200))
+      .padding(.horizontal(UiTokens.space3()))
+      .spacing(9)
+      .borderRadius(.all(UiTokens.radius4()))
+      .color(UiTokens.gray2())
+      .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())))
+      .mainAxisAlignment(.start)
+      .label(
+        TextStyler()
+            .style(UiTokens.text2.mix())
+            .fontWeight(UiTokens.fontWeightRegular())
+            .fontFeatures(const [FontFeature.tabularFigures()])
+            .color(UiTokens.gray12()),
+      )
+      .icon(.size(scaler.scale(16)).color(UiTokens.gray10()))
+      .onHovered(_triggerHover)
+      .onPressed(_triggerHover)
+      .onDisabled(ButtonStyler().wrap(.opacity(0.5)))
+      .animate(
+        AnimationConfig.curve(
+          duration: UiMotion.fast,
+          curve: UiMotion.easeStandard,
+        ),
+      );
+}
+
+final _triggerHover = ButtonStyler()
+    .color(UiTokens.gray3())
+    .border(.all(.color(UiTokens.gray8()).width(UiTokens.borderWidth1())));

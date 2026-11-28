@@ -3,7 +3,6 @@ import 'package:remix/remix.dart';
 {{icon:import}}
 
 import '../theme/theme.dart';
-import 'button.dart';
 import 'calendar.dart';
 import 'popover.dart';
 
@@ -32,7 +31,7 @@ class {{typePrefix}}DatePicker extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.positioning = const OverlayPositionConfig(
-      sideOffset: 4,
+      sideOffset: 8,
       collisionPadding: EdgeInsets.all(8),
     ),
     this.buttonStyle = const ButtonStyler.create(),
@@ -140,34 +139,84 @@ class {{typePrefix}}DatePicker extends StatelessWidget {
     autofocus: autofocus,
     positioning: positioning,
     icon: {{icon:calendar}},
-    placeholderStyle: ButtonStyler()
-        .labelColor({{typePrefix}}Tokens.gray10())
-        .labelFontWeight({{typePrefix}}Tokens.fontWeightRegular()),
-    expandedStyle: ButtonStyler().border(
-      .color({{typePrefix}}Tokens.focus8()).width({{typePrefix}}Tokens.borderWidth1()),
+    trailingIcon: {{icon:chevronDown}},
+    // The value fills the trigger so the chevron sits at its end.
+    textBuilder: (context, spec, text) => SizedBox(
+      width: double.infinity,
+      child: Text(
+        text,
+        style: spec.style,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     ),
-    buttonStyle: {{valuePrefix}}ButtonStyle(variant: .outline)
-        .minHeight({{valuePrefix}}CalendarTarget)
-        .minWidth(MediaQuery.textScalerOf(context).scale(200))
-        .spacing({{typePrefix}}Tokens.space2())
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale({{typePrefix}}Tokens.space4.resolve(context)),
-          ),
-        )
-        .merge(buttonStyle),
+    footerBuilder: (context, value) => {{typePrefix}}CalendarFooter(
+      status: value == null
+          ? calendarLabels.noDate
+          : calendarLabels.fullDate(value),
+    ),
+    closeDelay: const Duration(milliseconds: 300),
+    placeholderStyle: ButtonStyler().label(
+      TextStyler().color({{typePrefix}}Tokens.gray10()),
+    ),
+    expandedStyle: _triggerHover,
+    buttonStyle: _trigger(context).merge(buttonStyle),
     popoverStyle: {{valuePrefix}}PopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
+        .padding(.all({{typePrefix}}Tokens.space4()))
+        .borderRadius(.all({{typePrefix}}Tokens.radius6()))
+        .color({{typePrefix}}Tokens.colorPanelSolid())
+        .width(MediaQuery.textScalerOf(context).scale(320))
+        .panelTransition({{valuePrefix}}CalendarPanelTransition)
         .merge(popoverStyle),
     navigationStyle: {{valuePrefix}}CalendarNavigationStyle(
       context,
     ).merge(navigationStyle),
     selectorStyle: {{valuePrefix}}CalendarSelectorStyle(context).merge(selectorStyle),
     calendarStyle: {{valuePrefix}}CalendarStyle(
-      style: {{valuePrefix}}CalendarGeometry(context).merge(calendarStyle),
+      style: {{valuePrefix}}CalendarGeometry(context, width: 288).merge(calendarStyle),
     ),
   );
 }
+
+/// The trigger: a 40px field with the control corner, a 1px gray 7 frame
+/// on gray 2, a 16px muted calendar icon and chevron 9px from 13px tabular
+/// text, 12px in from each side. It never scales; hover and the open state
+/// mute it.
+ButtonStyler _trigger(BuildContext context) {
+  final scaler = MediaQuery.textScalerOf(context);
+
+  return ButtonStyler()
+      .minHeight({{typePrefix}}Tokens.controlHeight2())
+      .minWidth(scaler.scale(200))
+      .padding(.horizontal({{typePrefix}}Tokens.space3()))
+      .spacing(9)
+      .borderRadius(.all({{typePrefix}}Tokens.radius4()))
+      .color({{typePrefix}}Tokens.gray2())
+      .border(
+        .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
+      )
+      .mainAxisAlignment(.start)
+      .label(
+        TextStyler()
+            .style({{typePrefix}}Tokens.text2.mix())
+            .fontWeight({{typePrefix}}Tokens.fontWeightRegular())
+            .fontFeatures(const [FontFeature.tabularFigures()])
+            .color({{typePrefix}}Tokens.gray12()),
+      )
+      .icon(.size(scaler.scale(16)).color({{typePrefix}}Tokens.gray10()))
+      .onHovered(_triggerHover)
+      .onPressed(_triggerHover)
+      .onDisabled(ButtonStyler().wrap(.opacity(0.5)))
+      .animate(
+        AnimationConfig.curve(
+          duration: {{typePrefix}}Motion.fast,
+          curve: {{typePrefix}}Motion.easeStandard,
+        ),
+      );
+}
+
+final _triggerHover = ButtonStyler()
+    .color({{typePrefix}}Tokens.gray3())
+    .border(
+      .all(.color({{typePrefix}}Tokens.gray8()).width({{typePrefix}}Tokens.borderWidth1())),
+    );

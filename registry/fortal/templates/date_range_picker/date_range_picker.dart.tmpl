@@ -3,7 +3,6 @@ import 'package:remix/remix.dart';
 {{icon:import}}
 
 import '../theme/theme.dart';
-import 'button.dart';
 import 'calendar.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
@@ -34,7 +33,7 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.positioning = const OverlayPositionConfig(
-      sideOffset: 4,
+      sideOffset: 8,
       collisionPadding: EdgeInsets.all(8),
     ),
     this.buttonStyle = const ButtonStyler.create(),
@@ -154,34 +153,95 @@ class {{typePrefix}}DateRangePicker extends StatelessWidget {
     autofocus: autofocus,
     positioning: positioning,
     icon: {{icon:calendar}},
-    placeholderStyle: ButtonStyler()
-        .labelColor({{typePrefix}}Tokens.gray10())
-        .labelFontWeight({{typePrefix}}Tokens.fontWeightRegular()),
-    expandedStyle: ButtonStyler().border(
-      .color({{typePrefix}}Tokens.focus8()).width({{typePrefix}}Tokens.borderWidth1()),
+    trailingIcon: {{icon:chevronDown}},
+    footerBuilder: (context, value) => {{typePrefix}}CalendarFooter(
+      status: value == null
+          ? calendarLabels.noDate
+          : (formatRange ?? _range(calendarLabels))(value),
     ),
-    buttonStyle: {{valuePrefix}}ButtonStyle(variant: .outline)
-        .minHeight({{valuePrefix}}CalendarTarget)
-        .minWidth(MediaQuery.textScalerOf(context).scale(260))
-        .spacing({{typePrefix}}Tokens.space2())
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale({{typePrefix}}Tokens.space4.resolve(context)),
-          ),
-        )
-        .merge(buttonStyle),
+    closeDelay: const Duration(milliseconds: 300),
+    placeholderStyle: ButtonStyler().label(
+      TextStyler()
+          .color({{typePrefix}}Tokens.gray11())
+          .fontWeight({{typePrefix}}Tokens.fontWeightRegular()),
+    ),
+    expandedStyle: _triggerHover,
+    buttonStyle: _trigger(context).merge(buttonStyle),
     popoverStyle: {{valuePrefix}}PopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
+        .padding(.all(10))
+        .borderRadius(.all(_panelCorner()))
+        .color({{typePrefix}}Tokens.colorPanelSolid())
+        .panelTransition({{valuePrefix}}CalendarPanelTransition)
         .merge(popoverStyle),
     navigationStyle: {{valuePrefix}}CalendarNavigationStyle(
       context,
     ).merge(navigationStyle),
     selectorStyle: {{valuePrefix}}CalendarSelectorStyle(context).merge(selectorStyle),
     calendarStyle: {{valuePrefix}}RangeCalendarStyle(
-      style: {{valuePrefix}}CalendarGeometry(context).merge(calendarStyle),
+      style: {{valuePrefix}}CalendarGeometry(context, width: 252).merge(calendarStyle),
     ),
   );
 }
+
+String Function(CivilDateRange) _range(RemixCalendarLabels labels) =>
+    (range) =>
+        '${labels.fullDate(range.start)} – ${labels.fullDate(range.end)}';
+
+/// The trigger: a raised 40px pill-cornered field (18px corner) with the
+/// resting shadow, a 1px gray 7 frame, a 16px calendar icon and chevron 10px
+/// from 13px medium tabular text, 12px in at the end and 14px at the start.
+ButtonStyler _trigger(BuildContext context) {
+  final scaler = MediaQuery.textScalerOf(context);
+
+  return ButtonStyler()
+      .minHeight({{typePrefix}}Tokens.controlHeight2())
+      .padding(.only(left: 14, right: 12))
+      .spacing(10)
+      .borderRadius(.all(_triggerCorner()))
+      .color({{typePrefix}}Tokens.colorPanelSolid())
+      .border(
+        .all(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1())),
+      )
+      .decoration(
+        BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow1.mix()),
+      )
+      .label(
+        TextStyler()
+            .style({{typePrefix}}Tokens.text2.mix())
+            .fontWeight({{typePrefix}}Tokens.fontWeightMedium())
+            .fontFeatures(const [FontFeature.tabularFigures()])
+            .color({{typePrefix}}Tokens.gray12()),
+      )
+      .icon(.size(scaler.scale(16)).color({{typePrefix}}Tokens.gray11()))
+      .onHovered(_triggerHover)
+      .onPressed(_triggerHover)
+      .onDisabled(ButtonStyler().wrap(.opacity(0.5)))
+      .animate(
+        AnimationConfig.curve(
+          duration: {{typePrefix}}Motion.fast,
+          curve: {{typePrefix}}Motion.easeStandard,
+        ),
+      );
+}
+
+final _triggerHover = ButtonStyler()
+    .color(_hoverFill())
+    .border(
+      .all(.color({{typePrefix}}Tokens.gray8()).width({{typePrefix}}Tokens.borderWidth1())),
+    );
+
+/// The foreground mixed 3% into the raised surface.
+final _hoverFill = ContextToken<Color>(
+  (context) => Color.alphaBlend(
+    {{typePrefix}}Tokens.gray12.resolve(context).withValues(alpha: 0.03),
+    {{typePrefix}}Tokens.colorPanelSolid.resolve(context),
+  ),
+);
+
+final _triggerCorner = ContextToken<Radius>(
+  (context) => Radius.circular(18 * {{typePrefix}}Theme.of(context).scaling.factor),
+);
+
+final _panelCorner = ContextToken<Radius>(
+  (context) => Radius.circular(26 * {{typePrefix}}Theme.of(context).scaling.factor),
+);

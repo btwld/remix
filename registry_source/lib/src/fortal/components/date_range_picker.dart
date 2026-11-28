@@ -3,7 +3,6 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../theme/theme.dart';
-import 'button.dart';
 import 'calendar.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
@@ -34,7 +33,7 @@ class FortalDateRangePicker extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.positioning = const OverlayPositionConfig(
-      sideOffset: 4,
+      sideOffset: 8,
       collisionPadding: EdgeInsets.all(8),
     ),
     this.buttonStyle = const ButtonStyler.create(),
@@ -154,34 +153,95 @@ class FortalDateRangePicker extends StatelessWidget {
     autofocus: autofocus,
     positioning: positioning,
     icon: RemixIcons.calendar,
-    placeholderStyle: ButtonStyler()
-        .labelColor(FortalTokens.gray10())
-        .labelFontWeight(FortalTokens.fontWeightRegular()),
-    expandedStyle: ButtonStyler().border(
-      .color(FortalTokens.focus8()).width(FortalTokens.borderWidth1()),
+    trailingIcon: RemixIcons.chevronDown,
+    footerBuilder: (context, value) => FortalCalendarFooter(
+      status: value == null
+          ? calendarLabels.noDate
+          : (formatRange ?? _range(calendarLabels))(value),
     ),
-    buttonStyle: fortalButtonStyle(variant: .outline)
-        .minHeight(fortalCalendarTarget)
-        .minWidth(MediaQuery.textScalerOf(context).scale(260))
-        .spacing(FortalTokens.space2())
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale(FortalTokens.space4.resolve(context)),
-          ),
-        )
-        .merge(buttonStyle),
+    closeDelay: const Duration(milliseconds: 300),
+    placeholderStyle: ButtonStyler().label(
+      TextStyler()
+          .color(FortalTokens.gray11())
+          .fontWeight(FortalTokens.fontWeightRegular()),
+    ),
+    expandedStyle: _triggerHover,
+    buttonStyle: _trigger(context).merge(buttonStyle),
     popoverStyle: fortalPopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
+        .padding(.all(10))
+        .borderRadius(.all(_panelCorner()))
+        .color(FortalTokens.colorPanelSolid())
+        .panelTransition(fortalCalendarPanelTransition)
         .merge(popoverStyle),
     navigationStyle: fortalCalendarNavigationStyle(
       context,
     ).merge(navigationStyle),
     selectorStyle: fortalCalendarSelectorStyle(context).merge(selectorStyle),
     calendarStyle: fortalRangeCalendarStyle(
-      style: fortalCalendarGeometry(context).merge(calendarStyle),
+      style: fortalCalendarGeometry(context, width: 252).merge(calendarStyle),
     ),
   );
 }
+
+String Function(CivilDateRange) _range(RemixCalendarLabels labels) =>
+    (range) =>
+        '${labels.fullDate(range.start)} – ${labels.fullDate(range.end)}';
+
+/// The trigger: a raised 40px pill-cornered field (18px corner) with the
+/// resting shadow, a 1px gray 7 frame, a 16px calendar icon and chevron 10px
+/// from 13px medium tabular text, 12px in at the end and 14px at the start.
+ButtonStyler _trigger(BuildContext context) {
+  final scaler = MediaQuery.textScalerOf(context);
+
+  return ButtonStyler()
+      .minHeight(FortalTokens.controlHeight2())
+      .padding(.only(left: 14, right: 12))
+      .spacing(10)
+      .borderRadius(.all(_triggerCorner()))
+      .color(FortalTokens.colorPanelSolid())
+      .border(
+        .all(.color(FortalTokens.gray7()).width(FortalTokens.borderWidth1())),
+      )
+      .decoration(
+        BoxDecorationMix.create(boxShadow: FortalTokens.shadow1.mix()),
+      )
+      .label(
+        TextStyler()
+            .style(FortalTokens.text2.mix())
+            .fontWeight(FortalTokens.fontWeightMedium())
+            .fontFeatures(const [FontFeature.tabularFigures()])
+            .color(FortalTokens.gray12()),
+      )
+      .icon(.size(scaler.scale(16)).color(FortalTokens.gray11()))
+      .onHovered(_triggerHover)
+      .onPressed(_triggerHover)
+      .onDisabled(ButtonStyler().wrap(.opacity(0.5)))
+      .animate(
+        AnimationConfig.curve(
+          duration: FortalMotion.fast,
+          curve: FortalMotion.easeStandard,
+        ),
+      );
+}
+
+final _triggerHover = ButtonStyler()
+    .color(_hoverFill())
+    .border(
+      .all(.color(FortalTokens.gray8()).width(FortalTokens.borderWidth1())),
+    );
+
+/// The foreground mixed 3% into the raised surface.
+final _hoverFill = ContextToken<Color>(
+  (context) => Color.alphaBlend(
+    FortalTokens.gray12.resolve(context).withValues(alpha: 0.03),
+    FortalTokens.colorPanelSolid.resolve(context),
+  ),
+);
+
+final _triggerCorner = ContextToken<Radius>(
+  (context) => Radius.circular(18 * FortalTheme.of(context).scaling.factor),
+);
+
+final _panelCorner = ContextToken<Radius>(
+  (context) => Radius.circular(26 * FortalTheme.of(context).scaling.factor),
+);

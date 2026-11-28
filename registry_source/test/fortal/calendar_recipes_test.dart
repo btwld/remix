@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/fortal.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../helpers/test_helpers.dart';
 import '../vanilla/calendar_recipes_test.dart'
@@ -32,6 +33,7 @@ Widget calendar({bool range = false, bool enabled = true}) => range
       );
 
 void main() {
+  _pickerTests();
   for (final dark in [false, true]) {
     for (final range in [false, true]) {
       testWidgets(
@@ -197,6 +199,73 @@ void main() {
 class _Holder extends StatefulWidget {
   @override
   State<_Holder> createState() => _HolderState();
+}
+
+void _pickerTests() {
+  for (final range in [false, true]) {
+    testWidgets('$range picker trigger, chevron, footer and popover', (
+      t,
+    ) async {
+      await t.pumpRemixApp(
+        SizedBox(
+          width: 280,
+          child: range
+              ? FortalDateRangePicker(
+                  value: CivilDateRange(
+                    start: DateTime(2026, 11, 10),
+                    end: DateTime(2026, 11, 13),
+                  ),
+                  firstDate: DateTime(2025),
+                  lastDate: DateTime(2028),
+                  onChanged: (_) {},
+                )
+              : FortalDatePicker(
+                  value: DateTime(2026, 11, 12),
+                  firstDate: DateTime(2025),
+                  lastDate: DateTime(2028),
+                  onChanged: (_) {},
+                ),
+        ),
+      );
+      final context = t.element(find.byType(RemixButton));
+      final trigger = t
+          .widget<StyleSpecProvider<ButtonSpec>>(
+            find.byType(StyleSpecProvider<ButtonSpec>).first,
+          )
+          .spec
+          .spec
+          .container
+          .spec;
+      final decoration = trigger.box!.spec.decoration! as BoxDecoration;
+      expect(t.getSize(find.byType(RemixButton)).height, 40);
+      expect(decoration.borderRadius, BorderRadius.circular(range ? 18 : 14));
+      expect(
+        (decoration.border! as Border).top.color,
+        FortalTokens.gray7.resolve(context),
+      );
+      expect(
+        decoration.color,
+        (range ? FortalTokens.colorPanelSolid : FortalTokens.gray2).resolve(
+          context,
+        ),
+      );
+      if (range) expect(decoration.boxShadow, isNotEmpty);
+      expect(find.byIcon(RemixIcons.chevronDown), findsOneWidget);
+
+      await t.tap(find.byType(RemixButton));
+      await t.pumpAndSettle();
+      final labels = const RemixCalendarLabels();
+      expect(
+        find.text(
+          range
+              ? '${labels.fullDate(DateTime(2026, 11, 10))} – ${labels.fullDate(DateTime(2026, 11, 13))}'
+              : labels.fullDate(DateTime(2026, 11, 12)),
+        ),
+        findsWidgets,
+      );
+      expect(find.byType(FortalCalendarFooter), findsOneWidget);
+    });
+  }
 }
 
 class _HolderState extends State<_Holder> {

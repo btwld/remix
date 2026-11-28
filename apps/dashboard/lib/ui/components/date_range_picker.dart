@@ -3,7 +3,6 @@ import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 import '../theme/theme.dart';
-import 'button.dart';
 import 'calendar.dart';
 import 'popover.dart';
 import 'range_calendar.dart';
@@ -34,7 +33,7 @@ class UiDateRangePicker extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.positioning = const OverlayPositionConfig(
-      sideOffset: 4,
+      sideOffset: 8,
       collisionPadding: EdgeInsets.all(8),
     ),
     this.buttonStyle = const ButtonStyler.create(),
@@ -154,32 +153,87 @@ class UiDateRangePicker extends StatelessWidget {
     autofocus: autofocus,
     positioning: positioning,
     icon: RemixIcons.calendar,
-    placeholderStyle: ButtonStyler()
-        .labelColor(UiTokens.gray10())
-        .labelFontWeight(UiTokens.fontWeightRegular()),
-    expandedStyle: ButtonStyler().border(
-      .color(UiTokens.focus8()).width(UiTokens.borderWidth1()),
+    trailingIcon: RemixIcons.chevronDown,
+    footerBuilder: (context, value) => UiCalendarFooter(
+      status: value == null
+          ? calendarLabels.noDate
+          : (formatRange ?? _range(calendarLabels))(value),
     ),
-    buttonStyle: uiButtonStyle(variant: .outline)
-        .minHeight(uiCalendarTarget)
-        .minWidth(MediaQuery.textScalerOf(context).scale(260))
-        .spacing(UiTokens.space2())
-        .icon(
-          .size(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale(UiTokens.space4.resolve(context)),
-          ),
-        )
-        .merge(buttonStyle),
+    closeDelay: const Duration(milliseconds: 300),
+    placeholderStyle: ButtonStyler().label(
+      TextStyler()
+          .color(UiTokens.gray11())
+          .fontWeight(UiTokens.fontWeightRegular()),
+    ),
+    expandedStyle: _triggerHover,
+    buttonStyle: _trigger(context).merge(buttonStyle),
     popoverStyle: uiPopoverStyle()
-        .padding(.all(0))
-        .maxWidth(MediaQuery.textScalerOf(context).scale(480))
+        .padding(.all(10))
+        .borderRadius(.all(_panelCorner()))
+        .color(UiTokens.colorPanelSolid())
+        .panelTransition(uiCalendarPanelTransition)
         .merge(popoverStyle),
     navigationStyle: uiCalendarNavigationStyle(context).merge(navigationStyle),
     selectorStyle: uiCalendarSelectorStyle(context).merge(selectorStyle),
     calendarStyle: uiRangeCalendarStyle(
-      style: uiCalendarGeometry(context).merge(calendarStyle),
+      style: uiCalendarGeometry(context, width: 252).merge(calendarStyle),
     ),
   );
 }
+
+String Function(CivilDateRange) _range(RemixCalendarLabels labels) =>
+    (range) =>
+        '${labels.fullDate(range.start)} – ${labels.fullDate(range.end)}';
+
+/// The trigger: a raised 40px pill-cornered field (18px corner) with the
+/// resting shadow, a 1px gray 7 frame, a 16px calendar icon and chevron 10px
+/// from 13px medium tabular text, 12px in at the end and 14px at the start.
+ButtonStyler _trigger(BuildContext context) {
+  final scaler = MediaQuery.textScalerOf(context);
+
+  return ButtonStyler()
+      .minHeight(UiTokens.controlHeight2())
+      .padding(.only(left: 14, right: 12))
+      .spacing(10)
+      .borderRadius(.all(_triggerCorner()))
+      .color(UiTokens.colorPanelSolid())
+      .border(.all(.color(UiTokens.gray7()).width(UiTokens.borderWidth1())))
+      .decoration(BoxDecorationMix.create(boxShadow: UiTokens.shadow1.mix()))
+      .label(
+        TextStyler()
+            .style(UiTokens.text2.mix())
+            .fontWeight(UiTokens.fontWeightMedium())
+            .fontFeatures(const [FontFeature.tabularFigures()])
+            .color(UiTokens.gray12()),
+      )
+      .icon(.size(scaler.scale(16)).color(UiTokens.gray11()))
+      .onHovered(_triggerHover)
+      .onPressed(_triggerHover)
+      .onDisabled(ButtonStyler().wrap(.opacity(0.5)))
+      .animate(
+        AnimationConfig.curve(
+          duration: UiMotion.fast,
+          curve: UiMotion.easeStandard,
+        ),
+      );
+}
+
+final _triggerHover = ButtonStyler()
+    .color(_hoverFill())
+    .border(.all(.color(UiTokens.gray8()).width(UiTokens.borderWidth1())));
+
+/// The foreground mixed 3% into the raised surface.
+final _hoverFill = ContextToken<Color>(
+  (context) => Color.alphaBlend(
+    UiTokens.gray12.resolve(context).withValues(alpha: 0.03),
+    UiTokens.colorPanelSolid.resolve(context),
+  ),
+);
+
+final _triggerCorner = ContextToken<Radius>(
+  (context) => Radius.circular(18 * UiTheme.of(context).scaling.factor),
+);
+
+final _panelCorner = ContextToken<Radius>(
+  (context) => Radius.circular(26 * UiTheme.of(context).scaling.factor),
+);

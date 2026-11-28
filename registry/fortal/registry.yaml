@@ -490,7 +490,6 @@ items:
   date_picker:
     registryDependencies:
       - theme
-      - button
       - calendar
       - popover
     files:
@@ -502,7 +501,6 @@ items:
   date_range_picker:
     registryDependencies:
       - theme
-      - button
       - calendar
       - popover
       - range_calendar
