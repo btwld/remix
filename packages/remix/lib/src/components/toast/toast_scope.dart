@@ -211,18 +211,25 @@ class RemixToastScope extends StatelessWidget {
   static RemixToastController? maybeOf(BuildContext context) =>
       NakedToastScope.maybeOf<RemixToastData>(context);
 
-  Widget _buildToast(
+  /// Matches [NakedToastScope]'s own default.
+  static const _defaultAnimationStyle = AnimationStyle(
+    curve: Curves.easeOutCubic,
+    duration: Duration(milliseconds: 180),
+    reverseDuration: Duration(milliseconds: 120),
+  );
+
+  /// The default [ToastSpec.transitionBuilder]: a fade while the toast
+  /// travels 16 pixels from the stack's edge.
+  static Widget defaultTransitionBuilder(
     BuildContext context,
-    NakedToastState<RemixToastData> toast,
     Animation<double> animation,
+    RemixToastPlacement placement,
+    Widget child,
   ) {
-    final data = toast.data;
-    final action = data.action;
     final entranceOffset = switch (placement) {
       .topStart || .topCenter || .topEnd => -16.0,
       .bottomStart || .bottomCenter || .bottomEnd => 16.0,
     };
-    final dataStyle = data.style;
 
     return AnimatedBuilder(
       animation: animation,
@@ -236,7 +243,25 @@ class RemixToastScope extends StatelessWidget {
           child: child,
         ),
       ),
-      child: RemixToast(
+      child: child,
+    );
+  }
+
+  Widget _buildToast(
+    BuildContext context,
+    NakedToastState<RemixToastData> toast,
+    Animation<double> animation,
+    RemixToastTransitionBuilder transitionBuilder,
+  ) {
+    final data = toast.data;
+    final action = data.action;
+    final dataStyle = data.style;
+
+    return transitionBuilder(
+      context,
+      animation,
+      placement,
+      RemixToast(
         title: data.title,
         description: data.description,
         icon: data.icon,
@@ -266,6 +291,12 @@ class RemixToastScope extends StatelessWidget {
   Widget build(BuildContext context) {
     _requireNonblank(dismissLabel, 'dismissLabel');
 
+    // Resolved here, outside any toast, so the scope can time every entry.
+    final spec = RemixToast.composeStyle(style).build(context).spec;
+    final transitionBuilder =
+        spec.transitionBuilder ?? defaultTransitionBuilder;
+    final motion = spec.animationStyle;
+
     return NakedToastScope<RemixToastData>(
       controller: controller,
       placement: placement,
@@ -273,7 +304,16 @@ class RemixToastScope extends StatelessWidget {
       maxQueued: maxQueued,
       inset: inset,
       gap: gap,
-      toastBuilder: _buildToast,
+      animationStyle: motion == null
+          ? _defaultAnimationStyle
+          : _defaultAnimationStyle.copyWith(
+              curve: motion.curve,
+              duration: motion.duration,
+              reverseDuration: motion.reverseDuration,
+              reverseCurve: motion.reverseCurve,
+            ),
+      toastBuilder: (context, toast, animation) =>
+          _buildToast(context, toast, animation, transitionBuilder),
       child: child,
     );
   }

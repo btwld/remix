@@ -134,7 +134,13 @@ class _RemixToastState extends State<RemixToast> {
 
     final leading = widget.icon != null || spec.icon.spec.icon != null
         ? ExcludeSemantics(
-            child: StyledIcon(icon: widget.icon, styleSpec: spec.icon),
+            child: switch (spec.iconContainer) {
+              final container? => Box(
+                styleSpec: container,
+                child: StyledIcon(icon: widget.icon, styleSpec: spec.icon),
+              ),
+              null => StyledIcon(icon: widget.icon, styleSpec: spec.icon),
+            },
           )
         : null;
     final actionButton = action == null

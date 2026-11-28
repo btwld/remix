@@ -16,6 +16,19 @@ enum RemixToastActionPlacement {
   below,
 }
 
+/// Wraps one toast in its entrance and exit transition; see
+/// [ToastSpec.transitionBuilder].
+///
+/// [animation] runs from zero to one on entrance and back on exit. [placement]
+/// says which edge the stack grows from, so the toast can travel from it.
+typedef RemixToastTransitionBuilder =
+    Widget Function(
+      BuildContext context,
+      Animation<double> animation,
+      RemixToastPlacement placement,
+      Widget child,
+    );
+
 /// Resolved visual values for a [RemixToast].
 ///
 /// [action] and [closeButton] deliberately hold *unresolved* styles, which the
@@ -48,6 +61,11 @@ class ToastSpec with _$ToastSpec {
   @override
   final StyleSpec<IconSpec> icon;
 
+  /// A box around [icon], such as a tinted chip. `null`, the default, draws
+  /// the bare icon.
+  @override
+  final StyleSpec<BoxSpec>? iconContainer;
+
   /// Unresolved style inherited by the composed action button.
   @override
   final Style<ButtonSpec>? action;
@@ -70,16 +88,34 @@ class ToastSpec with _$ToastSpec {
   @override
   final RemixToastActionPlacement? actionPlacement;
 
+  /// How [RemixToastScope] moves each toast in and out.
+  ///
+  /// `null`, the default, fades the toast while it travels 16 pixels from the
+  /// stack's edge. The scope reads this and [animationStyle] from its own
+  /// `style`, not from each toast's data style. A standalone [RemixToast]
+  /// ignores both.
+  @override
+  final RemixToastTransitionBuilder? transitionBuilder;
+
+  /// The entrance and exit curves and durations [RemixToastScope] uses.
+  ///
+  /// Unset fields keep 180 ms in and 120 ms out on [Curves.easeOutCubic].
+  @override
+  final AnimationStyle? animationStyle;
+
   const ToastSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<FlexBoxSpec>? content,
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<IconSpec>? icon,
+    this.iconContainer,
     this.action,
     this.closeButton,
     this.containerEffects,
     this.actionPlacement,
+    this.transitionBuilder,
+    this.animationStyle,
   }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
        content = content ?? const StyleSpec(spec: FlexBoxSpec()),
        title = title ?? const StyleSpec(spec: TextSpec()),

@@ -55,6 +55,10 @@
 - `TooltipStyler` sets `transitionBuilder`, `animationStyle`, and
   `positioning`, so a style can carry tooltip motion and placement. Widget
   arguments still win; ones left at their defaults let the style decide.
+- `ToastStyler` sets `animationStyle` and `transitionBuilder`, which
+  `RemixToastScope` reads from its style to time and draw each toast's
+  entrance and exit, and `iconContainer`, a box around the leading icon.
+  `RemixToastScope.defaultTransitionBuilder` is the existing fade and slide.
 
 ## 1.0.0-rc.7
 
