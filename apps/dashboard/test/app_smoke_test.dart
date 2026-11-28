@@ -1089,7 +1089,6 @@ Rect _dialogSurfaceRect(WidgetTester tester) {
 
 /// Where a centred dialog panel actually sits vertically.
 ///
-/// The dialog centres inside its safe padded viewport, not the raw one. The
-/// bottom inset is `viewportHeight * 0.06` (54 at this height) while the top is
-/// `space6` (32), so the panel rides 11 logical pixels above the true centre.
-const _dialogCenterY = 439.0;
+/// The dialog centres inside its safe padded viewport, which keeps the same
+/// 12px on every side, so the panel sits at the true centre of the 900px view.
+const _dialogCenterY = 450.0;
