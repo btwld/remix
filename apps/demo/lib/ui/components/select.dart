@@ -64,7 +64,7 @@ SelectStyler fortalSelectStyle({
     .content(_content())
     .item(_item(variant, size, highContrast: highContrast))
     .panelTransition(
-      RemixPanelTransition(
+      const RemixPanelTransition(
         duration: FortalMotion.standard,
         reverseDuration: FortalMotion.instant,
         reducedMotionDuration: FortalMotion.instant,
