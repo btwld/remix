@@ -530,15 +530,33 @@ void main() {
           matching: find.byType(Box),
         )
         .first;
+    // Past the panel's rise and scale, so rows sit at their resting inset.
+    await tester.pump(const Duration(milliseconds: 500));
     expect(tester.getSize(overlay).width, 180);
     expect(tester.getSize(overlay).height, lessThan(180));
     final row = _menuRow(const ValueKey('dashboard-action-profile'));
-    final inset = tester.getTopLeft(row).dx - tester.getTopLeft(overlay).dx;
-    expect(inset, greaterThan(0));
-    expect(tester.getTopRight(row).dx, tester.getTopRight(overlay).dx - inset);
+    final panelPadding = uiMenuStyle()
+        .build(tester.element(row))
+        .spec
+        .overlay
+        .spec
+        .box!
+        .spec
+        .padding!
+        .resolve(TextDirection.ltr);
+    expect(
+      tester.getTopLeft(row).dx - tester.getTopLeft(overlay).dx,
+      panelPadding.left,
+    );
+    expect(
+      tester.getTopRight(overlay).dx - tester.getTopRight(row).dx,
+      panelPadding.right,
+    );
 
     await tester.tap(find.text('View profile'));
     await tester.pump();
+    // The open panel fades out before it leaves the tree.
+    await tester.pump(const Duration(milliseconds: 200));
 
     expect(find.text('View profile'), findsNothing);
     expect(find.text('Profile opened'), findsOneWidget);
