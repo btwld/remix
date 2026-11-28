@@ -168,7 +168,7 @@ void main() {
           duration: _leg,
         );
 
-        expect(spec.props, hasLength(3));
+        expect(spec.props, hasLength(6));
         expect(
           spec.props,
           containsAll(<Object?>[_container, _pulseColor, _leg]),
@@ -183,7 +183,14 @@ void main() {
         spec.debugFillProperties(builder);
         expect(
           builder.properties.map((property) => property.name),
-          unorderedEquals(['container', 'pulseColor', 'duration']),
+          unorderedEquals([
+            'container',
+            'pulseColor',
+            'duration',
+            'curve',
+            'delay',
+            'cycles',
+          ]),
         );
       });
     });
