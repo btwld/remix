@@ -199,7 +199,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = AccordionSpec();
 
-        expect(spec.props, hasLength(8));
+        expect(spec.props, hasLength(9));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.containerEffects));
         expect(spec.props, contains(spec.trigger));
@@ -228,7 +228,7 @@ void main() {
         spec.debugFillProperties(builder);
 
         final properties = builder.properties;
-        expect(properties, hasLength(8));
+        expect(properties, hasLength(9));
 
         final propertyNames = properties.map((p) => p.name).toList();
         expect(propertyNames, contains('container'));
