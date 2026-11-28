@@ -123,6 +123,12 @@ The styled surface fades in and out. By default it shows in 150ms and hides in
   surface as `child`. Its `context` is inside the overlay, so
   `OverlayPlacement.of(context)` gives the side the tooltip was placed on.
 
+A style can set the same three things with `TooltipStyler().transitionBuilder`,
+`.animationStyle`, and `.positioning`, so a design system ships its tooltip
+motion and placement in the recipe. Widget arguments win. A `transitionBuilder`
+or `positioning` argument left at its default lets the style decide, and each
+`animationStyle` field you leave unset falls back to the style's.
+
 <CodeGroup title="Motion" defaultLanguage="dart">
 ```dart
 import 'package:flutter/widgets.dart';
@@ -282,7 +288,8 @@ Optional. The semantic label for the tooltip.
 
 #### `positioning` → `OverlayPositionConfig`
 
-Optional. The overlay positioning configuration.
+Optional. The overlay positioning configuration. Left at its default, the
+style's `positioning` applies when it sets one.
 
 #### `transitionBuilder` → `Widget Function(BuildContext context, Animation<double> animation, Widget child)?`
 
@@ -349,6 +356,21 @@ Sets the hover-exit dismiss delay (`NakedTooltip.dismissDelay`).
 Sets how long after a tooltip closes hovering another trigger still skips
 `waitDuration` (`NakedTooltip.skipDelayDuration`, 300ms by default). Use
 `Duration.zero` for dense grids of triggers.
+
+#### `transitionBuilder(RemixTooltipTransitionBuilder value)`
+
+Sets the transition around the styled surface. Used while the widget's
+`transitionBuilder` is left at its default fade.
+
+#### `animationStyle(AnimationStyle value)`
+
+Sets the show and hide durations and curves. Each field set on the widget's
+`animationStyle` overrides the same field here.
+
+#### `positioning(OverlayPositionConfig value)`
+
+Sets the side, alignment, offsets, and collision padding. Used while the
+widget's `positioning` is left at `const OverlayPositionConfig()`.
 
 #### `wrap(WidgetModifierConfig value)`
 

@@ -332,7 +332,10 @@ for Overlay, Navigator and toast scope placement.
   `transitionBuilder` (`(context, animation, child)`) replaces the fade around
   the styled surface; inside it, `OverlayPlacement.of(context)` gives the
   placed side. Reduced motion shows and hides it at once, whatever the
-  durations.
+  durations. A style can set the same motion and the placement through
+  `TooltipStyler().transitionBuilder(...)`, `.animationStyle(...)`, and
+  `.positioning(...)`; widget arguments left at their defaults let the style
+  decide.
 - **RemixMenu\<T\>** — `RemixMenuTrigger` and every entry type are
   **configuration objects, not widgets**. The sealed entry hierarchy is
   `RemixMenuItem<T>`, `RemixMenuCheckboxItem<T>`, `RemixMenuRadioGroup<T>`

@@ -153,7 +153,7 @@ void main() {
       test('props includes all relevant properties', () {
         const spec = TooltipSpec();
 
-        expect(spec.props, hasLength(6));
+        expect(spec.props, hasLength(9));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.waitDuration));

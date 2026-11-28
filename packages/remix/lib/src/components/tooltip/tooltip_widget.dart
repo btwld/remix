@@ -51,6 +51,9 @@ class RemixTooltip extends StatelessWidget {
   final String? tooltipSemantics;
 
   /// The overlay positioning configuration.
+  ///
+  /// Left at its default, [TooltipSpec.positioning] applies when the style
+  /// sets it.
   final OverlayPositionConfig positioning;
 
   /// Wraps the styled tooltip surface in a transition.
@@ -60,20 +63,17 @@ class RemixTooltip extends StatelessWidget {
   /// surface. `context` is inside the overlay, so
   /// [OverlayPlacement.of] gives the side the tooltip was placed on.
   ///
-  /// Defaults to [defaultTooltipTransitionBuilder], a fade.
-  final Widget Function(
-    BuildContext context,
-    Animation<double> animation,
-    Widget child,
-  )
-  transitionBuilder;
+  /// Defaults to [defaultTooltipTransitionBuilder], a fade. Left at that
+  /// default, [TooltipSpec.transitionBuilder] applies when the style sets it.
+  final RemixTooltipTransitionBuilder transitionBuilder;
 
   /// The show and hide durations and curves, passed to
   /// [NakedTooltip.animationStyle].
   ///
   /// Unset fields keep Naked UI's defaults: 150ms to show, 75ms to hide, on
-  /// [Curves.fastOutSlowIn]. While the user asks to reduce motion, the tooltip
-  /// shows and hides at once whatever the durations.
+  /// [Curves.fastOutSlowIn]. Each unset field falls back to
+  /// [TooltipSpec.animationStyle] first. While the user asks to reduce motion,
+  /// the tooltip shows and hides at once whatever the durations.
   final AnimationStyle animationStyle;
 
   /// The style factory for [RemixTooltip].
@@ -94,6 +94,23 @@ class RemixTooltip extends StatelessWidget {
       style: style,
       styleSpec: styleSpec,
       builder: (context, spec) {
+        final transitionBuilder =
+            this.transitionBuilder == defaultTooltipTransitionBuilder
+            ? spec.transitionBuilder ?? defaultTooltipTransitionBuilder
+            : this.transitionBuilder;
+        final styled = spec.animationStyle;
+        final animationStyle = styled == null
+            ? this.animationStyle
+            : styled.copyWith(
+                duration: this.animationStyle.duration,
+                curve: this.animationStyle.curve,
+                reverseDuration: this.animationStyle.reverseDuration,
+                reverseCurve: this.animationStyle.reverseCurve,
+              );
+        final positioning = this.positioning == const OverlayPositionConfig()
+            ? spec.positioning ?? this.positioning
+            : this.positioning;
+
         return NakedTooltip(
           tooltipKey: tooltipKey,
           onOpenChanged: onOpenChanged,
