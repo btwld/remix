@@ -16,8 +16,11 @@ class UiAlert extends StatelessWidget {
     this.status = .defaultStatus,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   });
 
   final UiAlertStatus status;
@@ -26,16 +29,25 @@ class UiAlert extends StatelessWidget {
 
   final String? text;
 
+  final String? title;
+
   final IconData? icon;
 
   final Widget? child;
+
+  final VoidCallback? onDismiss;
+
+  final String? dismissLabel;
 
   @override
   Widget build(BuildContext _) {
     return RemixCallout(
       style: uiAlertStyle(status: status, style: style),
       text: text,
+      title: title,
       icon: icon,
+      onDismiss: onDismiss,
+      dismissLabel: dismissLabel,
       child: child,
     );
   }

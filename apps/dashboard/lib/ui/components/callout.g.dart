@@ -20,8 +20,11 @@ class UiCallout extends StatelessWidget {
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   });
 
   /// A tinted accent fill.
@@ -31,8 +34,11 @@ class UiCallout extends StatelessWidget {
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   }) : variant = UiCalloutVariant.soft;
 
   /// A faint accent fill inside a 1px accent frame.
@@ -42,8 +48,11 @@ class UiCallout extends StatelessWidget {
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   }) : variant = UiCalloutVariant.surface;
 
   /// No fill inside a 1px accent frame.
@@ -53,8 +62,11 @@ class UiCallout extends StatelessWidget {
     this.highContrast = false,
     this.style = const CalloutStyler.create(),
     this.text,
+    this.title,
     this.icon,
     this.child,
+    this.onDismiss,
+    this.dismissLabel,
   }) : variant = UiCalloutVariant.outline;
 
   final UiCalloutVariant variant;
@@ -67,9 +79,15 @@ class UiCallout extends StatelessWidget {
 
   final String? text;
 
+  final String? title;
+
   final IconData? icon;
 
   final Widget? child;
+
+  final VoidCallback? onDismiss;
+
+  final String? dismissLabel;
 
   @override
   Widget build(BuildContext _) {
@@ -81,7 +99,10 @@ class UiCallout extends StatelessWidget {
         style: style,
       ),
       text: text,
+      title: title,
       icon: icon,
+      onDismiss: onDismiss,
+      dismissLabel: dismissLabel,
       child: child,
     );
   }
