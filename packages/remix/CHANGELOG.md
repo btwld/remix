@@ -68,6 +68,9 @@
 - `SkeletonStyler` sets the pulse `curve`, a `delay` before the first leg,
   and a number of `cycles` after which the pulse rests on its base frame.
   The defaults keep the endless linear pulse.
+- `RemixPanelTransition.reducedMotionDuration` keeps a short panel open and
+  close while the user asks to reduce motion. Without it, panels still open
+  and close at once.
 
 ## 1.0.0-rc.7
 

@@ -449,7 +449,8 @@ class _ComboboxExitState extends State<_ComboboxExit> {
     final handle = widget.handle;
     if (!handle.isExiting) return const SizedBox.shrink();
     return RemixReducedMotionBuilder(
-      builder: (context, reduceMotion) => reduceMotion
+      builder: (context, reduceMotion) =>
+          reduceMotion && widget.transition.reducedMotionDuration == null
           ? const SizedBox.shrink()
           : RemixPanelTransitionHost(
               handle: handle,

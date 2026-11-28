@@ -21,8 +21,49 @@ Future<void> _close(WidgetTester tester) async {
   await tester.pump();
 }
 
+Widget _fade(
+  BuildContext context,
+  RemixPanelTransitionInfo info,
+  Widget panel,
+) => FadeTransition(opacity: info.animation, child: panel);
+
 void main() {
   group('RemixSelect reduced motion', () {
+    testWidgets('a style reducedMotionDuration keeps a short fade', (
+      tester,
+    ) async {
+      final harness = await MotionHarness.pump(
+        tester,
+        RemixSelect<String>(
+          onChanged: (_) {},
+          style: SelectStyler().panelTransition(
+            const RemixPanelTransition(
+              builder: _fade,
+              duration: Duration(milliseconds: 400),
+              reducedMotionDuration: Duration(milliseconds: 100),
+            ),
+          ),
+          trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+          items: const [RemixSelectItem(value: 'a', label: 'Alpha')],
+        ),
+      );
+      await harness.set(MotionRequest.values.first, enabled: true);
+
+      await _open(tester);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(effectiveOpacity(tester, find.text('Alpha')), closeTo(.5, .02));
+      await tester.pump(const Duration(milliseconds: 60));
+      expect(effectiveOpacity(tester, find.text('Alpha')), 1);
+
+      await _close(tester);
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(find.text('Alpha'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 60));
+      await tester.pump();
+      expect(find.text('Alpha'), findsNothing);
+    });
+
     testWidgets('fades the menu in and out by default', (tester) async {
       await MotionHarness.pump(tester, _select());
 
