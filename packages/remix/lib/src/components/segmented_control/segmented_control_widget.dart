@@ -19,6 +19,13 @@ class RemixSegmentedControlItem<T extends Object> {
   /// Optional icon shown before [label].
   final IconData? icon;
 
+  /// Optional content after [label], such as a count badge.
+  ///
+  /// It is decorative: the segment's accessible name comes from
+  /// [semanticLabel] or [label], so add the accessory's meaning there when it
+  /// matters.
+  final Widget? trailing;
+
   /// Accessibility label for this segment.
   ///
   /// Falls back to [label] when omitted. Icon-only items must provide a value
@@ -44,6 +51,7 @@ class RemixSegmentedControlItem<T extends Object> {
     required this.value,
     this.label,
     this.icon,
+    this.trailing,
     this.semanticLabel,
     this.enabled = true,
     this.focusNode,
@@ -334,6 +342,7 @@ class _RemixSegmentedControlItemWidget<T extends Object>
                                   styleSpec: spec.label,
                                 ),
                               ),
+                            ?data.trailing,
                           ],
                         ),
                       );

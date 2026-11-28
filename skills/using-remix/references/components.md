@@ -50,6 +50,8 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   default), like the tabs indicator. Clear the item's own selected fill.
   Segments are equal width by default;
   `.segmentSizing(RemixSegmentSizing.content)` sizes each to its content.
+  An item's `trailing:` widget (such as a badge) follows its label; put its
+  meaning in `semanticLabel`.
 
 ## Forms
 
