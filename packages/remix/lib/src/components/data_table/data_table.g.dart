@@ -26,6 +26,7 @@ mixin _$DataTableSpec implements Spec<DataTableSpec>, Diagnosticable {
   double? get rowMinHeight;
   double? get selectionColumnWidth;
   double? get sortIconSpacing;
+  RemixDataTableSortIconPlacement? get sortIconPlacement;
   RemixBoxEffectsSpec? get containerEffects;
 
   @override
@@ -52,6 +53,7 @@ mixin _$DataTableSpec implements Spec<DataTableSpec>, Diagnosticable {
     double? rowMinHeight,
     double? selectionColumnWidth,
     double? sortIconSpacing,
+    RemixDataTableSortIconPlacement? sortIconPlacement,
     RemixBoxEffectsSpec? containerEffects,
   }) {
     return DataTableSpec(
@@ -74,6 +76,7 @@ mixin _$DataTableSpec implements Spec<DataTableSpec>, Diagnosticable {
       rowMinHeight: rowMinHeight ?? this.rowMinHeight,
       selectionColumnWidth: selectionColumnWidth ?? this.selectionColumnWidth,
       sortIconSpacing: sortIconSpacing ?? this.sortIconSpacing,
+      sortIconPlacement: sortIconPlacement ?? this.sortIconPlacement,
       containerEffects: containerEffects ?? this.containerEffects,
     );
   }
@@ -108,6 +111,11 @@ mixin _$DataTableSpec implements Spec<DataTableSpec>, Diagnosticable {
         t,
       ),
       sortIconSpacing: MixOps.lerp(sortIconSpacing, other?.sortIconSpacing, t),
+      sortIconPlacement: MixOps.lerpSnap(
+        sortIconPlacement,
+        other?.sortIconPlacement,
+        t,
+      ),
       containerEffects: MixOps.lerpSnap(
         containerEffects,
         other?.containerEffects,
@@ -137,6 +145,7 @@ mixin _$DataTableSpec implements Spec<DataTableSpec>, Diagnosticable {
     rowMinHeight,
     selectionColumnWidth,
     sortIconSpacing,
+    sortIconPlacement,
     containerEffects,
   ];
 
@@ -199,6 +208,7 @@ mixin _$DataTableSpec implements Spec<DataTableSpec>, Diagnosticable {
       ..add(DoubleProperty('rowMinHeight', rowMinHeight))
       ..add(DoubleProperty('selectionColumnWidth', selectionColumnWidth))
       ..add(DoubleProperty('sortIconSpacing', sortIconSpacing))
+      ..add(DiagnosticsProperty('sortIconPlacement', sortIconPlacement))
       ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
@@ -234,6 +244,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
   final Prop<double>? $rowMinHeight;
   final Prop<double>? $selectionColumnWidth;
   final Prop<double>? $sortIconSpacing;
+  final Prop<RemixDataTableSortIconPlacement>? $sortIconPlacement;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const DataTableStyler.create({
@@ -256,6 +267,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     Prop<double>? rowMinHeight,
     Prop<double>? selectionColumnWidth,
     Prop<double>? sortIconSpacing,
+    Prop<RemixDataTableSortIconPlacement>? sortIconPlacement,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
@@ -279,6 +291,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
        $rowMinHeight = rowMinHeight,
        $selectionColumnWidth = selectionColumnWidth,
        $sortIconSpacing = sortIconSpacing,
+       $sortIconPlacement = sortIconPlacement,
        $containerEffects = containerEffects;
 
   DataTableStyler({
@@ -301,6 +314,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     double? rowMinHeight,
     double? selectionColumnWidth,
     double? sortIconSpacing,
+    RemixDataTableSortIconPlacement? sortIconPlacement,
     RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -325,6 +339,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
          rowMinHeight: Prop.maybe(rowMinHeight),
          selectionColumnWidth: Prop.maybe(selectionColumnWidth),
          sortIconSpacing: Prop.maybe(sortIconSpacing),
+         sortIconPlacement: Prop.maybe(sortIconPlacement),
          containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
@@ -369,6 +384,9 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
       DataTableStyler().selectionColumnWidth(value);
   factory DataTableStyler.sortIconSpacing(double value) =>
       DataTableStyler().sortIconSpacing(value);
+  factory DataTableStyler.sortIconPlacement(
+    RemixDataTableSortIconPlacement value,
+  ) => DataTableStyler().sortIconPlacement(value);
   factory DataTableStyler.containerEffects(RemixBoxEffectsMix value) =>
       DataTableStyler().containerEffects(value);
   factory DataTableStyler.alignment(AlignmentGeometry value) =>
@@ -888,6 +906,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     'rowMinHeight',
     'selectionColumnWidth',
     'sortIconSpacing',
+    'sortIconPlacement',
     'containerEffects',
     'animation',
     'modifier',
@@ -987,6 +1006,11 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
   /// Sets the sortIconSpacing.
   DataTableStyler sortIconSpacing(double value) {
     return merge(DataTableStyler(sortIconSpacing: value));
+  }
+
+  /// Sets the sortIconPlacement.
+  DataTableStyler sortIconPlacement(RemixDataTableSortIconPlacement value) {
+    return merge(DataTableStyler(sortIconPlacement: value));
   }
 
   /// Sets the containerEffects.
@@ -1102,6 +1126,10 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
         other?.$selectionColumnWidth,
       ),
       sortIconSpacing: MixOps.merge($sortIconSpacing, other?.$sortIconSpacing),
+      sortIconPlacement: MixOps.merge(
+        $sortIconPlacement,
+        other?.$sortIconPlacement,
+      ),
       containerEffects: MixOps.merge(
         $containerEffects,
         other?.$containerEffects,
@@ -1135,6 +1163,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
       rowMinHeight: MixOps.resolve(context, $rowMinHeight),
       selectionColumnWidth: MixOps.resolve(context, $selectionColumnWidth),
       sortIconSpacing: MixOps.resolve(context, $sortIconSpacing),
+      sortIconPlacement: MixOps.resolve(context, $sortIconPlacement),
       containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
@@ -1168,6 +1197,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
       ..add(DiagnosticsProperty('rowMinHeight', $rowMinHeight))
       ..add(DiagnosticsProperty('selectionColumnWidth', $selectionColumnWidth))
       ..add(DiagnosticsProperty('sortIconSpacing', $sortIconSpacing))
+      ..add(DiagnosticsProperty('sortIconPlacement', $sortIconPlacement))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
@@ -1192,6 +1222,7 @@ class DataTableStyler extends MixStyler<DataTableStyler, DataTableSpec>
     $rowMinHeight,
     $selectionColumnWidth,
     $sortIconSpacing,
+    $sortIconPlacement,
     $containerEffects,
     $animation,
     $modifier,
