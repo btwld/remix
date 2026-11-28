@@ -23,6 +23,7 @@ class PlaygroundTextField extends StatelessWidget {
     this.label,
     this.hintText,
     this.helperText,
+    this.errorText,
     this.error = false,
     this.keyboardType,
     this.textInputAction,
@@ -88,6 +89,8 @@ class PlaygroundTextField extends StatelessWidget {
   final String? hintText;
 
   final String? helperText;
+
+  final String? errorText;
 
   final bool error;
 
@@ -202,6 +205,7 @@ class PlaygroundTextField extends StatelessWidget {
       label: label,
       hintText: hintText,
       helperText: helperText,
+      errorText: errorText,
       error: error,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
@@ -271,6 +275,7 @@ class PlaygroundTextArea extends StatelessWidget {
     this.label,
     this.hintText,
     this.helperText,
+    this.errorText,
     this.error = false,
     this.keyboardType = TextInputType.multiline,
     this.textInputAction = TextInputAction.newline,
@@ -333,6 +338,8 @@ class PlaygroundTextArea extends StatelessWidget {
   final String? hintText;
 
   final String? helperText;
+
+  final String? errorText;
 
   final bool error;
 
@@ -441,6 +448,7 @@ class PlaygroundTextArea extends StatelessWidget {
       label: label,
       hintText: hintText,
       helperText: helperText,
+      errorText: errorText,
       error: error,
       keyboardType: keyboardType,
       textInputAction: textInputAction,

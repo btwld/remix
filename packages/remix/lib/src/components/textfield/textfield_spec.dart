@@ -127,6 +127,19 @@ class TextFieldSpec with _$TextFieldSpec {
   @override
   final StyleSpec<TextSpec> helperText;
 
+  /// Styling specification for the error row.
+  ///
+  /// The error row shows [RemixTextField.errorText] below the helper row, so
+  /// a field can show its description and its error at once.
+  @override
+  final StyleSpec<TextSpec> errorText;
+
+  /// How the helper and error rows appear and leave.
+  ///
+  /// `null` keeps the default: a row appears and leaves at once.
+  @override
+  final RemixFieldMessageTransition? messageTransition;
+
   /// Styling specification for the text field's label.
   ///
   /// Controls the appearance of the label text that describes
@@ -177,11 +190,14 @@ class TextFieldSpec with _$TextFieldSpec {
     this.crossAxisAlignment,
     StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
+    StyleSpec<TextSpec>? errorText,
+    this.messageTransition,
     StyleSpec<TextSpec>? label,
     this.containerEffects,
   }) : text = text ?? const StyleSpec(spec: TextSpec()),
        hintText = hintText ?? const StyleSpec(spec: TextSpec()),
        helperText = helperText ?? const StyleSpec(spec: TextSpec()),
+       errorText = errorText ?? const StyleSpec(spec: TextSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        container = container ?? const StyleSpec(spec: BoxSpec()),
        layout = layout ?? _defaultTextFieldLayout;

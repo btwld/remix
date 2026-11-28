@@ -10,6 +10,7 @@ part of 'textfield.dart';
 ///   controller: _controller,
 ///   hintText: 'Enter your name',
 ///   helperText: 'Required field',
+///   errorText: _nameError,
 ///   onChanged: (value) {
 ///     debugPrint('Value changed: $value');
 ///   },
@@ -24,6 +25,7 @@ class RemixTextField extends StatelessWidget {
     this.label,
     this.hintText,
     this.helperText,
+    this.errorText,
     this.error = false,
     this.keyboardType,
     this.textInputAction,
@@ -235,8 +237,19 @@ class RemixTextField extends StatelessWidget {
   /// Label text to display above the text field.
   final String? label;
 
+  /// Error text to display below the helper text.
+  ///
+  /// Puts the field in its error state, as [error] does, and is announced as
+  /// the field's error. [helperText] stays a description beside it. Without
+  /// it, a field in its error state announces [helperText] as the error.
+  final String? errorText;
+
   /// Whether the text field is in error state.
+  ///
+  /// [errorText] also sets the error state.
   final bool error;
+
+  bool get _hasError => error || errorText != null;
 
   /// A widget to display at the leading edge of the text field.
   final Widget? leading;
@@ -289,6 +302,13 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   // needs the same node for chrome tap-to-focus. Sharing one node here is
   // the gap Naked does not close for label/padding taps.
   FocusNode? _internalFocusNode;
+  // The last text of a message the caller cleared, kept while its row plays
+  // its exit.
+  final _leavingMessages = <_RemixFieldMessageKind, String>{};
+  // The transition the last build resolved. A message cleared without one
+  // leaves at once and must not replay an exit if a transition arrives later.
+  RemixFieldMessageTransition? _messageTransition;
+  bool _hasBuiltFirstFrame = false;
 
   FocusNode get _effectiveFocusNode =>
       widget.config.focusNode ?? _internalFocusNode!;
@@ -296,9 +316,12 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _hasBuiltFirstFrame = true;
+    });
     _styleController = WidgetStatesController({
       if (!widget.config.enabled) .disabled,
-      if (widget.config.error) .error,
+      if (widget.config._hasError) .error,
     });
     if (widget.config.focusNode == null) {
       _internalFocusNode = FocusNode(
@@ -333,9 +356,20 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       }
     }
 
+    _trackLeavingMessage(
+      .helper,
+      oldWidget.config.helperText,
+      widget.config.helperText,
+    );
+    _trackLeavingMessage(
+      .error,
+      oldWidget.config.errorText,
+      widget.config.errorText,
+    );
+
     _styleController
       ..update(.disabled, !widget.config.enabled)
-      ..update(.error, widget.config.error);
+      ..update(.error, widget.config._hasError);
 
     if (!widget.config.enabled || widget.config.ignorePointers == true) {
       _activePressSources.clear();
@@ -347,6 +381,18 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
     // because MouseTracker dispatches enter events to newly mounted regions.
     if (!widget.config.enabled) {
       _styleController.update(.hovered, false);
+    }
+  }
+
+  void _trackLeavingMessage(
+    _RemixFieldMessageKind kind,
+    String? oldText,
+    String? newText,
+  ) {
+    if (newText != null || _messageTransition == null) {
+      _leavingMessages.remove(kind);
+    } else if (oldText != null) {
+      _leavingMessages[kind] = oldText;
     }
   }
 
@@ -374,7 +420,33 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
     super.dispose();
   }
 
+  /// The row for one message, or `null` when it has nothing to show. A
+  /// message that was just cleared keeps its row while the exit plays.
+  Widget? _messageRow(
+    _RemixFieldMessageKind kind,
+    String? text,
+    StyleSpec<TextSpec> styleSpec,
+    RemixFieldMessageTransition? transition,
+  ) {
+    final leaving = transition == null ? null : _leavingMessages[kind];
+    final shown = text ?? leaving;
+    if (shown == null) return null;
+
+    return _RemixFieldMessageRow(
+      key: ValueKey(kind),
+      text: shown,
+      visible: text != null,
+      styleSpec: styleSpec,
+      transition: transition,
+      animateEntrance: _hasBuiltFirstFrame,
+      onExited: () {
+        if (_leavingMessages.remove(kind) != null) setState(() {});
+      },
+    );
+  }
+
   Widget _buildResolved(TextFieldSpec spec) {
+    _messageTransition = spec.messageTransition;
     final config = widget.config;
     final isMultiline =
         config.expands || config.maxLines != 1 || (config.minLines ?? 1) > 1;
@@ -383,12 +455,15 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
         : AlignmentDirectional.centerStart;
     final acceptsPointerEvents =
         config.enabled && config.ignorePointers != true;
-    final effectiveSemanticErrorText = config.error
+    final helperIsError = config.error && config.errorText == null;
+    final effectiveSemanticErrorText = config.errorText != null
+        ? _joinSemanticText([config.errorText])
+        : helperIsError
         ? _joinSemanticText([config.helperText])
         : null;
     final joinedSemanticHint = _joinSemanticText([
       config.semanticHint ?? config.hintText,
-      if (!config.error) config.helperText,
+      if (!helperIsError) config.helperText,
     ]);
     // Deliberate: NakedTextField concatenates semanticHint and
     // semanticErrorText unconditionally without deduplicating, so a hint that
@@ -430,7 +505,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       onAppPrivateCommand: config.onAppPrivateCommand,
       inputFormatters: config.inputFormatters,
       enabled: config.enabled,
-      error: config.error,
+      error: config._hasError,
       cursorWidth: spec.cursorWidth ?? 2.0,
       cursorHeight: spec.cursorHeight,
       cursorRadius: spec.cursorRadius,
@@ -512,7 +587,7 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
               )
             : styledEditableText;
 
-        return config.error
+        return config._hasError
             ? Semantics(
                 validationResult: SemanticsValidationResult.invalid,
                 child: editableWithHint,
@@ -542,7 +617,20 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
       ),
     );
 
-    final needsWrapper = config.label != null || config.helperText != null;
+    final helperRow = _messageRow(
+      _RemixFieldMessageKind.helper,
+      config.helperText,
+      spec.helperText,
+      spec.messageTransition,
+    );
+    final errorRow = _messageRow(
+      _RemixFieldMessageKind.error,
+      config.errorText,
+      spec.errorText,
+      spec.messageTransition,
+    );
+    final needsWrapper =
+        config.label != null || helperRow != null || errorRow != null;
     Widget composite = needsWrapper
         ? FlexBox(
             styleSpec: spec.layout,
@@ -552,13 +640,8 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
                   child: StyledText(config.label!, styleSpec: spec.label),
                 ),
               withAccessories,
-              if (config.helperText != null)
-                ExcludeSemantics(
-                  child: StyledText(
-                    config.helperText!,
-                    styleSpec: spec.helperText,
-                  ),
-                ),
+              ?helperRow,
+              ?errorRow,
             ],
           )
         : withAccessories;
@@ -606,6 +689,8 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
 }
 
 enum _RemixTextFieldPressSource { editable, fallback }
+
+enum _RemixFieldMessageKind { helper, error }
 
 class _RemixTextFieldFallbackGestureDetector extends StatelessWidget {
   const _RemixTextFieldFallbackGestureDetector({

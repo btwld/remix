@@ -149,6 +149,7 @@ RemixTextField remixTextFieldConstructor({
   String? label,
   String? hintText,
   String? helperText,
+  String? errorText,
   bool error = false,
   TextInputType? keyboardType,
   TextInputAction? textInputAction,
@@ -483,6 +484,10 @@ Optional. Helper text to display below the text field.
 
 Optional. Label text to display above the text field.
 
+#### `errorText` → `String?`
+
+Optional. Error text to display below the helper text. It puts the field in its error state and is announced as the field's error, while `helperText` stays a description beside it.
+
 #### `error` → `bool`
 
 Optional. Whether the text field is in error state.
@@ -640,6 +645,14 @@ Sets text alignment
 #### `helperText(TextStyler value)`
 
 Sets helper text
+
+#### `errorText(TextStyler value)`
+
+Sets error text
+
+#### `messageTransition(RemixFieldMessageTransition value)`
+
+Sets how the helper and error rows appear and leave. The builder receives the row's animation and its text, and a cleared row stays in the layout until its exit has played. Without it, rows appear and leave at once.
 
 #### `label(TextStyler value)`
 

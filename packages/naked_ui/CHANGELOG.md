@@ -1,3 +1,11 @@
+## Unreleased
+
+### Features
+
+- Tab view: add `transitionBuilder` and `animationStyle` to `NakedTabView`.
+  A deselected view keeps painting where it sat, out of layout and inert,
+  until its reverse animation ends. Views still swap at once by default.
+
 ## 2.0.0-rc.4
 
 ### Fixes

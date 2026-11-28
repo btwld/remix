@@ -24,6 +24,7 @@ class UiTextArea extends StatelessWidget {
     this.label,
     this.hintText,
     this.helperText,
+    this.errorText,
     this.error = false,
     this.keyboardType = TextInputType.multiline,
     this.textInputAction = TextInputAction.newline,
@@ -84,6 +85,7 @@ class UiTextArea extends StatelessWidget {
     this.label,
     this.hintText,
     this.helperText,
+    this.errorText,
     this.error = false,
     this.keyboardType = TextInputType.multiline,
     this.textInputAction = TextInputAction.newline,
@@ -144,6 +146,7 @@ class UiTextArea extends StatelessWidget {
     this.label,
     this.hintText,
     this.helperText,
+    this.errorText,
     this.error = false,
     this.keyboardType = TextInputType.multiline,
     this.textInputAction = TextInputAction.newline,
@@ -210,6 +213,8 @@ class UiTextArea extends StatelessWidget {
   final String? hintText;
 
   final String? helperText;
+
+  final String? errorText;
 
   final bool error;
 
@@ -319,6 +324,7 @@ class UiTextArea extends StatelessWidget {
       label: label,
       hintText: hintText,
       helperText: helperText,
+      errorText: errorText,
       error: error,
       keyboardType: keyboardType,
       textInputAction: textInputAction,

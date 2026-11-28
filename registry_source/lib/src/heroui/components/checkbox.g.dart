@@ -29,6 +29,7 @@ class HeroUiCheckbox extends StatelessWidget {
     this.autofocus = false,
     this.enableFeedback = true,
     this.label,
+    this.description,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
   });
@@ -50,6 +51,7 @@ class HeroUiCheckbox extends StatelessWidget {
     this.autofocus = false,
     this.enableFeedback = true,
     this.label,
+    this.description,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiCheckboxVariant.primary;
@@ -71,6 +73,7 @@ class HeroUiCheckbox extends StatelessWidget {
     this.autofocus = false,
     this.enableFeedback = true,
     this.label,
+    this.description,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
   }) : variant = HeroUiCheckboxVariant.secondary;
@@ -105,6 +108,8 @@ class HeroUiCheckbox extends StatelessWidget {
 
   final String? label;
 
+  final String? description;
+
   final String? semanticLabel;
 
   final MouseCursor mouseCursor;
@@ -129,6 +134,7 @@ class HeroUiCheckbox extends StatelessWidget {
       autofocus: autofocus,
       enableFeedback: enableFeedback,
       label: label,
+      description: description,
       semanticLabel: semanticLabel,
       minimumTapTargetSize: minimumTapTargetSize,
       mouseCursor: mouseCursor,

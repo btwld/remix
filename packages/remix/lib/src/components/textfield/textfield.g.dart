@@ -24,6 +24,8 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
   CrossAxisAlignment? get crossAxisAlignment;
   StyleSpec<FlexBoxSpec> get layout;
   StyleSpec<TextSpec> get helperText;
+  StyleSpec<TextSpec> get errorText;
+  RemixFieldMessageTransition? get messageTransition;
   StyleSpec<TextSpec> get label;
   RemixBoxEffectsSpec? get containerEffects;
 
@@ -49,6 +51,8 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
     CrossAxisAlignment? crossAxisAlignment,
     StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
+    StyleSpec<TextSpec>? errorText,
+    RemixFieldMessageTransition? messageTransition,
     StyleSpec<TextSpec>? label,
     RemixBoxEffectsSpec? containerEffects,
   }) {
@@ -71,6 +75,8 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
       crossAxisAlignment: crossAxisAlignment ?? this.crossAxisAlignment,
       layout: layout ?? this.layout,
       helperText: helperText ?? this.helperText,
+      errorText: errorText ?? this.errorText,
+      messageTransition: messageTransition ?? this.messageTransition,
       label: label ?? this.label,
       containerEffects: containerEffects ?? this.containerEffects,
     );
@@ -116,6 +122,12 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
       ),
       layout: layout.lerp(other?.layout, t),
       helperText: helperText.lerp(other?.helperText, t),
+      errorText: errorText.lerp(other?.errorText, t),
+      messageTransition: MixOps.lerpSnap(
+        messageTransition,
+        other?.messageTransition,
+        t,
+      ),
       label: label.lerp(other?.label, t),
       containerEffects: MixOps.lerpSnap(
         containerEffects,
@@ -144,6 +156,8 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
     crossAxisAlignment,
     layout,
     helperText,
+    errorText,
+    messageTransition,
     label,
     containerEffects,
   ];
@@ -210,6 +224,8 @@ mixin _$TextFieldSpec implements Spec<TextFieldSpec>, Diagnosticable {
       )
       ..add(DiagnosticsProperty('layout', layout))
       ..add(DiagnosticsProperty('helperText', helperText))
+      ..add(DiagnosticsProperty('errorText', errorText))
+      ..add(DiagnosticsProperty('messageTransition', messageTransition))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
@@ -244,6 +260,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
   final Prop<CrossAxisAlignment>? $crossAxisAlignment;
   final Prop<StyleSpec<FlexBoxSpec>>? $layout;
   final Prop<StyleSpec<TextSpec>>? $helperText;
+  final Prop<StyleSpec<TextSpec>>? $errorText;
+  final Prop<RemixFieldMessageTransition>? $messageTransition;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
@@ -265,6 +283,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     Prop<CrossAxisAlignment>? crossAxisAlignment,
     Prop<StyleSpec<FlexBoxSpec>>? layout,
     Prop<StyleSpec<TextSpec>>? helperText,
+    Prop<StyleSpec<TextSpec>>? errorText,
+    Prop<RemixFieldMessageTransition>? messageTransition,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
@@ -287,6 +307,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
        $crossAxisAlignment = crossAxisAlignment,
        $layout = layout,
        $helperText = helperText,
+       $errorText = errorText,
+       $messageTransition = messageTransition,
        $label = label,
        $containerEffects = containerEffects;
 
@@ -308,6 +330,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     CrossAxisAlignment? crossAxisAlignment,
     FlexBoxStyler? layout,
     TextStyler? helperText,
+    TextStyler? errorText,
+    RemixFieldMessageTransition? messageTransition,
     TextStyler? label,
     RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
@@ -331,6 +355,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
          crossAxisAlignment: Prop.maybe(crossAxisAlignment),
          layout: Prop.maybeMix(layout),
          helperText: Prop.maybeMix(helperText),
+         errorText: Prop.maybeMix(errorText),
+         messageTransition: Prop.maybe(messageTransition),
          label: Prop.maybeMix(label),
          containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
@@ -372,6 +398,11 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
       TextFieldStyler().layout(value);
   factory TextFieldStyler.helperText(TextStyler value) =>
       TextFieldStyler().helperText(value);
+  factory TextFieldStyler.errorText(TextStyler value) =>
+      TextFieldStyler().errorText(value);
+  factory TextFieldStyler.messageTransition(
+    RemixFieldMessageTransition value,
+  ) => TextFieldStyler().messageTransition(value);
   factory TextFieldStyler.label(TextStyler value) =>
       TextFieldStyler().label(value);
   factory TextFieldStyler.containerEffects(RemixBoxEffectsMix value) =>
@@ -891,6 +922,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     'crossAxisAlignment',
     'layout',
     'helperText',
+    'errorText',
+    'messageTransition',
     'label',
     'containerEffects',
     'animation',
@@ -983,6 +1016,16 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     return merge(TextFieldStyler(helperText: value));
   }
 
+  /// Sets the errorText.
+  TextFieldStyler errorText(TextStyler value) {
+    return merge(TextFieldStyler(errorText: value));
+  }
+
+  /// Sets the messageTransition.
+  TextFieldStyler messageTransition(RemixFieldMessageTransition value) {
+    return merge(TextFieldStyler(messageTransition: value));
+  }
+
   /// Sets the label.
   @override
   TextFieldStyler label(TextStyler value) {
@@ -1024,6 +1067,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     String? label,
     String? hintText,
     String? helperText,
+    String? errorText,
     bool error = false,
     TextInputType? keyboardType,
     TextInputAction? textInputAction,
@@ -1085,6 +1129,7 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
       label: label,
       hintText: hintText,
       helperText: helperText,
+      errorText: errorText,
       error: error,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
@@ -1176,6 +1221,11 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
       ),
       layout: MixOps.merge($layout, other?.$layout),
       helperText: MixOps.merge($helperText, other?.$helperText),
+      errorText: MixOps.merge($errorText, other?.$errorText),
+      messageTransition: MixOps.merge(
+        $messageTransition,
+        other?.$messageTransition,
+      ),
       label: MixOps.merge($label, other?.$label),
       containerEffects: MixOps.merge(
         $containerEffects,
@@ -1208,6 +1258,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
       crossAxisAlignment: MixOps.resolve(context, $crossAxisAlignment),
       layout: MixOps.resolve(context, $layout),
       helperText: MixOps.resolve(context, $helperText),
+      errorText: MixOps.resolve(context, $errorText),
+      messageTransition: MixOps.resolve(context, $messageTransition),
       label: MixOps.resolve(context, $label),
       containerEffects: MixOps.resolve(context, $containerEffects),
     );
@@ -1242,6 +1294,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
       ..add(DiagnosticsProperty('crossAxisAlignment', $crossAxisAlignment))
       ..add(DiagnosticsProperty('layout', $layout))
       ..add(DiagnosticsProperty('helperText', $helperText))
+      ..add(DiagnosticsProperty('errorText', $errorText))
+      ..add(DiagnosticsProperty('messageTransition', $messageTransition))
       ..add(DiagnosticsProperty('label', $label))
       ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
@@ -1265,6 +1319,8 @@ class TextFieldStyler extends MixStyler<TextFieldStyler, TextFieldSpec>
     $crossAxisAlignment,
     $layout,
     $helperText,
+    $errorText,
+    $messageTransition,
     $label,
     $containerEffects,
     $animation,

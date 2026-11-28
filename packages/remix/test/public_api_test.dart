@@ -23,6 +23,40 @@ void main() {
     expect(find.text('Ada'), findsOneWidget);
   });
 
+  testWidgets('scrollbar and tabs scope can be used through the Remix barrel', (
+    tester,
+  ) async {
+    final controller = ScrollController();
+    addTearDown(controller.dispose);
+    late NakedTabsScope scope;
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: RemixTabs(
+          selectedTabId: 'a',
+          child: Builder(
+            builder: (context) {
+              scope = NakedTabsScope.of(context);
+              return SizedBox(
+                height: 100,
+                child: NakedScrollbar(
+                  controller: controller,
+                  thumbVisibility: true,
+                  child: ListView(
+                    controller: controller,
+                    children: const [SizedBox(height: 1000)],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+    expect(scope.selectedTabId, 'a');
+    expect(find.byType(NakedScrollbar), findsOneWidget);
+  });
+
   test(
     'range slider is additive and reuses the existing single-value styler',
     () {

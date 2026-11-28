@@ -44,7 +44,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
 - **Checkbox** — `checkedIcon` and `indeterminateIcon` are `IconData?`,
   default `null`. Leaving them unset does not mean "no icon": Remix falls
   back to its own built-in glyphs, `RemixPathGlyph.thickCheck` and
-  `RemixPathGlyph.thickDividerHorizontal`, not a blank state.
+  `RemixPathGlyph.thickDividerHorizontal`, not a blank state. A style's
+  `indicatorBuilder` replaces all three icons and is built in every state,
+  unchecked included, so its widget can animate the mark in and out.
 - **Radio and Switch** — `label` is drawn inside the same pointer, hover,
   press, focus, and semantics target as the control and is its accessible
   name; `semanticLabel` overrides it. Pass at least one of the two. The gap is
@@ -52,6 +54,14 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `.labelColor(...)`. The target is the control's own size unless
   `minimumTapTargetSize` is set (default `Size.zero`; checkbox defaults to
   48x48), so opt in with `Size.square(48)` for touch.
+- **Checkbox and Radio copy** — `description` adds a second line under the
+  label inside the same target, read as the hint. A style's `.row(...)` draws
+  a box (border, padding, hover fill) around the control and its copy,
+  resolved in the control's state; `.controlAlignment(.start)` top-aligns the
+  control with the label.
+- **Radio indicator** — the indicator exists only while selected unless the
+  style sets `.keepIndicatorMounted(true)`; then style the unselected
+  indicator as hidden so it can animate out.
 - **CheckboxGroup** — standard Flutter keyboard model:
   every enabled `RemixCheckboxGroupItem` is an ordinary Tab stop in widget
   order, and Space/Enter toggle the focused option, exactly like native HTML
@@ -84,7 +94,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `TextArea` is a multiline facade with `minLines: 2`, `maxLines: null`,
   `expands`/`obscureText` fixed to `false`. Vanilla, Fortal, and HeroUI recipes
   ring the field with `onFocused`, so a click shows the ring. Other controls use
-  `onFocusVisible`.
+  `onFocusVisible`. `errorText` shows an error row below `helperText` and sets
+  the error state; `error: true` alone turns `helperText` into the error. A
+  `messageTransition` on the style animates both rows in and out.
 - **SearchField** — In Vanilla and Fortal, `remix add search_field` installs
   `<Prefix>SearchField(semanticLabel: ...)`. Both use
   `NakedSearchField` for behavior and their own TextField for the editor.
@@ -141,6 +153,10 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   `onDisabled`). Vanilla, Fortal and HeroUI ship `<Prefix>Calendar` with icon navigation, growing Select
   selectors and all day states; install `calendar`. `CalendarStyler.call(...)`
   builds a `RemixCalendar` with the supplied style.
+  Recipe hooks, unset by default: `monthTransition(RemixMonthTransition)`
+  animates the outgoing and incoming month grids; `fixedWeeks(true)` always
+  lays out six week rows; `selectionLayer` paints one selection shape beneath
+  the days from a `RemixCalendarSelection` (cells, week segments, cell size).
 - **[RangeCalendar](https://github.com/btwld/remix/blob/main/docs/components/range_calendar.mdx)** — controlled complete inclusive `CivilDateRange?`, sharing
   Calendar navigation and day anatomy. First activation anchors locally without
   a callback; second eligible activation requests one ordered range and clears
@@ -166,6 +182,9 @@ Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display
   Use `icon` for a decorative leading date-picker icon, `placeholderStyle`
   for the null-value fragment, and `expandedStyle` for the open-panel fragment
   (merged last over `buttonStyle`). Finite trigger labels ellipsize on one line.
+  Both pickers take `trailingIcon`, a trigger `textBuilder`, a `footerBuilder`
+  drawn under the calendar at its width, and `closeDelay` to keep the panel
+  open briefly after a pick (skipped under reduced motion).
   Style children independently with `buttonStyle`, `popoverStyle`,
   `calendarStyle`, `navigationStyle` and `selectorStyle`; there is no DatePicker
   `style`/`styleSpec` or public controller.
@@ -367,7 +386,9 @@ for Overlay, Navigator and toast scope placement.
   `controller` is `NakedTabController`, which the `remix` barrel does not
   re-export — import it from `package:naked_ui/naked_ui.dart` directly.
   `maintainState` (default `true`) lives on `RemixTabView`, a different
-  widget, not on `RemixTabs`.
+  widget, not on `RemixTabs`. Views swap at once unless `RemixTabView` gets a
+  `transitionBuilder(context, animation, direction, child)`; `direction` is
+  `1`, `-1`, or `0` along the bar's axis, and `animationStyle` sets timing.
 - **RemixAccordionGroup\<T\>** — purely behavioral; `controller` is
   **required**: `RemixAccordionController<String>(min: 0, max: 1)`. Menu
   auto-creates a `MenuController` when its own `controller` is omitted.
@@ -382,6 +403,10 @@ for Overlay, Navigator and toast scope placement.
   frame. Widget-state variants (`onHovered`, `onPressed`, `onFocused`,
   `onFocusVisible`, `onDisabled`) describe interaction with the trigger but
   resolve once for the whole item, so they may style `container` too.
+  `.contentMotion(...)` takes a curve or spring config (or
+  `AnimationConfig.reversible`) for open and close; the default is linear
+  200 ms. `.trailingIcon(IconStyler().icon(...))` replaces the default
+  plus/minus glyph with one icon in both states.
 - **Breadcrumbs** — a preset composition, not a Remix widget. HeroUI's
   `breadcrumbs` wraps onto more lines; Fortal's keeps one line, ellipsizes its
   steps and renders actionable ones as `<Prefix>Link`. The last step is the

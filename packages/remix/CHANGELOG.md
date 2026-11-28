@@ -1,3 +1,55 @@
+## Unreleased
+
+### Features
+
+- Re-export `NakedScrollbar` and `NakedTabsScope` from `package:remix/remix.dart`.
+- State animations from a style's `.animate(...)` land on their end value in
+  one frame while motion is reduced (`MediaQuery.disableAnimations` or the
+  platform's `reduceMotion`). This covers every widget built on
+  `RemixStyleSpecBuilder`, plus calendar days and slider thumbs.
+- Tabs: add `transitionBuilder` and `animationStyle` to `RemixTabView`. The
+  builder receives the direction the selection moved along the bar's axis.
+  Views still swap at once by default. Needs the `NakedTabView` transition
+  from the next Naked UI release.
+- Accordion: add `AccordionSpec.contentMotion` for the open and close timing,
+  a curve or spring config. The default trigger shows the `trailingIcon`
+  style's icon, when set, in place of the plus and minus.
+
+### Fixes
+
+- Accordion: toggling a panel mid-transition turns the same panel around
+  instead of growing a second one while the first fades.
+- Add `CheckboxSpec.indicatorBuilder`, set from a style, which builds the
+  checkbox indicator in every state so it can animate its mark in and out.
+- Add `RadioSpec.keepIndicatorMounted`, which keeps the radio indicator built
+  while unselected so a style can animate it out.
+- Add `description` to `RemixCheckbox`, `RemixCheckboxGroupItem` and
+  `RemixRadio`, shown under the label and read as the hint, with
+  `description`, `descriptionSpacing`, `controlAlignment`, `row` and
+  `rowEffects` style slots on `CheckboxSpec` and `RadioSpec`. `row` draws a
+  box around the control and its copy, such as a bordered card row.
+- Add `SliderSpec.thumbMotion`, a curve or spring that moves slider and range
+  slider thumbs to values set by keys, track presses or the app. Dragged
+  thumbs still follow the pointer.
+- Add `SliderSpec.thumbOverlay`, a builder for a widget drawn over each
+  slider and range slider thumb, such as a value bubble, given the thumb's
+  index, value and states in `RemixSliderThumbOverlayInfo`.
+- Calendars accept a `CalendarSpec.monthTransition`, a `RemixMonthTransition`
+  that animates the weeks when the displayed month changes, with the outgoing
+  and incoming grids both mounted and the direction known. Unset, the month
+  swaps at once.
+- Calendars accept `CalendarSpec.fixedWeeks`. When true, every month lays out
+  six week rows, padding with empty rows, so the height never changes. Unset,
+  the row count follows the month.
+- Calendars accept a `CalendarSpec.selectionLayer` builder that paints beneath
+  the days with the grid geometry and the visible selection
+  (`RemixCalendarSelection`: start and end cells and one segment per week).
+  Unset, nothing is painted and the layout is unchanged.
+- Add `trailingIcon`, `textBuilder`, `footerBuilder` and `closeDelay` to
+  `RemixDatePicker` and `RemixDateRangePicker`. The footer sits under the
+  calendar at its width; the delay keeps the panel open briefly after a pick
+  and is skipped under reduced motion.
+
 ## 1.0.0-rc.7
 
 ### Fixes

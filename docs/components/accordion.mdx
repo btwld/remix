@@ -206,6 +206,38 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
   See the [fortalAccordionStyle source code](https://github.com/btwld/remix/blob/main/registry_source/lib/src/fortal/components/accordion.dart) for all available options.
 </Info>
 
+## Open and close motion
+
+Panels open and close linearly over 200 ms. Set `contentMotion` on the style
+to change that. It takes a curve config or a spring config. Wrap two configs in
+`AnimationConfig.reversible` to close on different timing than you open.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+final smoothAccordion = AccordionStyler()
+    .contentMotion(
+      AnimationConfig.reversible(
+        AnimationConfig.springDescription(mass: 1, stiffness: 300, damping: 35),
+        reverse: AnimationConfig.easeOut(const Duration(milliseconds: 150)),
+      ),
+    )
+    .trailingIcon(IconStyler().icon(Icons.expand_more));
+```
+
+Toggling a panel during its transition turns the same panel around from where
+it is, so its content keeps its state. A curve takes the share of its duration
+that is left, and a spring keeps its velocity. A curve's `delay` and a
+config's `onEnd` are not used. Phase and keyframe configs throw
+`ArgumentError` when the accordion builds. `transitionBuilder` still decides
+what the animation does to the panel.
+
+The default trigger shows a plus that turns into a minus. Set an icon on the
+`trailingIcon` style, as above, to show that icon in both states instead, and
+style its expanded look with `onExpanded`. A `trailingIcon` widget argument
+takes precedence over the style icon.
+
 ## Reduced motion
 
 When the user asks for reduced motion, panels expand and collapse without
@@ -278,7 +310,7 @@ Optional. Optional leading icon for the trigger.
 
 #### `trailingIcon` → `IconData?`
 
-Optional. Optional trailing icon for the trigger.
+Optional. Optional trailing icon for the trigger. Without one, the default trigger shows the icon set by the `trailingIcon` style, or a plus that turns into a minus while expanded.
 
 #### `builder` → `NakedAccordionTriggerBuilder<T>?`
 
@@ -374,6 +406,12 @@ Configures the trailing icon style.
 #### `content(BoxStyler value)`
 
 Configures the expanded content container style.
+
+#### `contentMotion(AnimationConfig value)`
+
+Sets how the content opens and closes: a curve or spring config, optionally
+paired through `AnimationConfig.reversible`. Defaults to linear over 200 ms.
+See [Open and close motion](#open-and-close-motion).
 
 The methods below are the top-level Box shorthand. Each forwards to `trigger`,
 not to `container`.

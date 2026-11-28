@@ -33,6 +33,28 @@ class CalendarSpec with _$CalendarSpec {
   @override
   final double? rowSpacing;
 
+  /// Animates the weeks when the displayed month changes, with the outgoing
+  /// and incoming month grids both mounted until it completes.
+  ///
+  /// `null` swaps months at once.
+  @override
+  final RemixMonthTransition? monthTransition;
+
+  /// Whether to always lay out six week rows, so the height does not change
+  /// between months. A shorter month is padded with empty rows of the day
+  /// height, separated by [rowSpacing].
+  ///
+  /// `null` and `false` lay out one row per week of the displayed month.
+  @override
+  final bool? fixedWeeks;
+
+  /// Paints beneath the days of each month grid, given the grid's geometry
+  /// and the cells of the visible selection, so one shape can mark it.
+  ///
+  /// `null` paints nothing and leaves the layout unchanged.
+  @override
+  final RemixCalendarSelectionLayerBuilder? selectionLayer;
+
   const CalendarSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? weekday,
@@ -41,6 +63,9 @@ class CalendarSpec with _$CalendarSpec {
     this.headerSpacing,
     this.weekdaySpacing,
     this.selectorSpacing,
+    this.monthTransition,
+    this.fixedWeeks,
+    this.selectionLayer,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        weekday = weekday ?? const StyleSpec(spec: TextSpec()),
        day = day ?? const StyleSpec(spec: CalendarDaySpec());

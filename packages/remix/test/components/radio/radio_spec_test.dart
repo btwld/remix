@@ -135,7 +135,7 @@ void main() {
       test('props list contains all properties', () {
         const spec = RadioSpec();
 
-        expect(spec.props, hasLength(5));
+        expect(spec.props, hasLength(11));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.indicator));
         expect(spec.props, contains(spec.label));
@@ -156,6 +156,12 @@ void main() {
             'label',
             'labelSpacing',
             'containerEffects',
+            'keepIndicatorMounted',
+            'description',
+            'descriptionSpacing',
+            'controlAlignment',
+            'row',
+            'rowEffects',
           ]),
         );
       });
