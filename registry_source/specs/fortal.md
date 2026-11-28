@@ -153,9 +153,7 @@ fill must identify the control. Check the actual component on its host surface.
   tokens whenever a dimension has an equivalent step. Specialized measurements
   (20px icons, tiny indicators, em-relative inline typography, and bounded
   agent viewports) remain named tokens or proportions. The select trigger
-  chevron is a fixed 9px glyph (11px at size 3), named by
-  `selectTriggerIndicatorSize12`/`3`, and deliberately does not follow
-  scaling; its item check marks do scale.
+  chevron and its item check marks are 16px (`space4`) and scale.
 - Type: **12, 13, 15, 17, 20, 22, 28, 34, 40px** (`text1`–`text9`), plus
   `textField` at **14px** for typed text. Steps 1 to 6 are body text in Inter
   at 1.4 leading (1.2 at step 5, 1.15 at step 6) and −0.01em tracking (−0.02em
@@ -277,11 +275,27 @@ closes takes its gap with it. Rows open on the smooth spring, fade in over
 150ms and rise out of a 4px blur over 200ms; they close on the same spring and
 fade out over 100ms. Frame and fill changes take 150ms on the standard ease.
 
-Select triggers keep their gray-7 frame (gray alpha 8 when open or hovered):
-their value and chevron identify them. A trigger always paints its value or
-placeholder and a gray-12 chevron (at least 11.5:1 on gray-2), so under WCAG
-1.4.11 its frame (about 1.5:1) is not the information that identifies it; a
-text field can be empty and unlabelled, so its frame is.
+Select triggers are 32, 40 and 44px tall with a 14px corner, a 13px inset,
+a 12px gap and 13px text. The surface trigger is gray-2 inside a gray-7
+frame (`controlBorder` with `highContrast`); hover, press and the open panel
+move it to gray-3 inside a gray-8 frame, and keyboard focus adds the gray-8
+frame to the focus ring. Soft rests at gray-3 in gray-8 and engages at gray-4;
+ghost has no fill until engaged. Disabled fades the trigger to 0.5. A trigger
+always paints its value or gray-10 placeholder and a gray-10 chevron, so under
+WCAG 1.4.11 its frame is not the information that identifies it; a text field
+can be empty and unlabelled, so its frame is. The chevron turns half a turn
+while open on the transform spring, which the trigger's colors share. A new
+value rises 0.35em out of a 4px blur over 200ms (an earlier one drops) while
+the old one leaves 0.3em into a 2px blur over 150ms. The panel is the raised
+surface in a gray-7 frame with the floating shadow, a 16px corner, 6px
+padding plus 2px above and below the list, 4px off the trigger and at least
+as wide. It grows in from 6px toward the trigger and 0.97 scale over 200ms on
+the enter ease, and leaves to half that offset and 0.98 over 100ms; under
+reduced motion it only fades. Items are 36px rows with a 10px corner, 11px
+before and 10px after, 13px text and a 16px check; pointer, keyboard and
+press take the gray-3 fill over 100ms, and `highContrast` moves surface and
+ghost highlights to accent step 12 under step 1 text. Disabled items fade to
+0.45.
 
 Selected surface switch thumbs are white with a 2px `accentThumbRing`
 (transparent by default, the fitted ring under the theme's high contrast

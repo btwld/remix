@@ -57,6 +57,13 @@ final _customizationTokens = {
   'shadowThumb',
   // Text areas now size from the control heights; the token stays for callers.
   'textAreaMinHeight3',
+  // The select now sizes its chevron and check from the spacing scale.
+  'selectIndicatorWidth1',
+  'selectTriggerIndicatorSize12',
+  'selectTriggerIndicatorSize3',
+  // Recipes reach the opaque neutral steps for these roles now.
+  'grayA9',
+  'grayA10',
 };
 
 void main() {

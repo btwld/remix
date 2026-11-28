@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -81,33 +83,33 @@ void main() {
           (
             FortalSelectSize.size1,
             (
-              triggerHeight: 24,
-              triggerPadding: 8,
-              gap: 4,
-              triggerRadius: 6,
-              triggerIndicatorSize: 9,
-              contentPadding: 4,
-              contentRadius: 12,
-              itemHeight: 24,
-              indicatorWidth: 20,
-              indicatorSize: 8,
-              itemRadius: 6,
-              itemFontSize: 12,
+              triggerHeight: 32,
+              triggerPadding: 13,
+              gap: 12,
+              triggerRadius: 14,
+              triggerIndicatorSize: 16,
+              contentPadding: 6,
+              contentRadius: 16,
+              itemHeight: 36,
+              indicatorWidth: 24,
+              indicatorSize: 16,
+              itemRadius: 10,
+              itemFontSize: 13,
             ),
           ),
           (
             FortalSelectSize.size2,
             (
-              triggerHeight: 32,
-              triggerPadding: 12,
-              gap: 8,
-              triggerRadius: 10,
-              triggerIndicatorSize: 9,
-              contentPadding: 8,
-              contentRadius: 14,
-              itemHeight: 32,
+              triggerHeight: 40,
+              triggerPadding: 13,
+              gap: 12,
+              triggerRadius: 14,
+              triggerIndicatorSize: 16,
+              contentPadding: 6,
+              contentRadius: 16,
+              itemHeight: 36,
               indicatorWidth: 24,
-              indicatorSize: 10,
+              indicatorSize: 16,
               itemRadius: 10,
               itemFontSize: 13,
             ),
@@ -115,18 +117,18 @@ void main() {
           (
             FortalSelectSize.size3,
             (
-              triggerHeight: 40,
-              triggerPadding: 16,
-              gap: 8,
-              triggerRadius: 12,
-              triggerIndicatorSize: 11,
-              contentPadding: 8,
-              contentRadius: 14,
-              itemHeight: 32,
+              triggerHeight: 44,
+              triggerPadding: 13,
+              gap: 12,
+              triggerRadius: 14,
+              triggerIndicatorSize: 16,
+              contentPadding: 6,
+              contentRadius: 16,
+              itemHeight: 36,
               indicatorWidth: 24,
-              indicatorSize: 10,
+              indicatorSize: 16,
               itemRadius: 10,
-              itemFontSize: 15,
+              itemFontSize: 13,
             ),
           ),
         ]) {
@@ -148,19 +150,20 @@ void main() {
         expect(_radius(triggerBox), expected.triggerRadius);
         expect(trigger.indicator.spec.size, expected.triggerIndicatorSize);
 
+        // The list adds 2px above and below the panel's own inset.
         expect(
           content.container.spec.padding,
-          EdgeInsets.all(expected.contentPadding),
+          EdgeInsets.symmetric(
+            horizontal: expected.contentPadding,
+            vertical: expected.contentPadding + 2,
+          ),
         );
         expect(_radius(content.container.spec), expected.contentRadius);
         expect(content.container.spec.clipBehavior, Clip.antiAlias);
 
         expect(itemBox.constraints!.minHeight, expected.itemHeight);
         expect(itemBox.constraints!.maxHeight, expected.itemHeight);
-        expect(
-          itemBox.padding,
-          EdgeInsets.symmetric(horizontal: expected.indicatorWidth),
-        );
+        expect(itemBox.padding, const EdgeInsets.only(left: 11, right: 10));
         expect(_radius(itemBox), expected.itemRadius);
         expect(
           item.indicator.spec.constraints!.minWidth,
@@ -184,18 +187,20 @@ void main() {
       final triggerBox = spec.trigger.spec.container.spec.box!.spec;
       final item = spec.item.spec;
 
-      expect(triggerBox.constraints!.minHeight, closeTo(26.4, 1e-9));
-      expect(triggerBox.padding, const EdgeInsets.symmetric(horizontal: 8.8));
-      expect(item.indicator.spec.constraints!.minWidth, closeTo(22, 1e-9));
-      expect(item.icon.spec.size, closeTo(8.8, 1e-9));
-      expect(item.text.spec.style!.fontSize, closeTo(13.2, 1e-9));
-      expect(spec.trigger.spec.indicator.spec.size, 9);
-      final size3 = await _resolve(
-        tester,
-        fortalSelectStyle(size: .size3),
-        scaling: .percent110,
+      expect(triggerBox.constraints!.minHeight, closeTo(35.2, 1e-9));
+      // 12px scaled plus the 1px frame, which does not scale.
+      expect(
+        triggerBox.padding!.resolve(TextDirection.ltr).left,
+        closeTo(14.2, 1e-9),
       );
-      expect(size3.trigger.spec.indicator.spec.size, 11);
+      expect(item.indicator.spec.constraints!.minWidth, closeTo(26.4, 1e-9));
+      expect(
+        item.container.spec.box!.spec.constraints!.minHeight,
+        closeTo(39.6, 1e-9),
+      );
+      expect(item.icon.spec.size, closeTo(17.6, 1e-9));
+      expect(item.text.spec.style!.fontSize, closeTo(14.3, 1e-9));
+      expect(spec.trigger.spec.indicator.spec.size, closeTo(17.6, 1e-9));
     });
 
     testWidgets('full radius promotes only the trigger to a pill', (
@@ -208,7 +213,7 @@ void main() {
       );
 
       expect(_radius(spec.trigger.spec.container.spec.box!.spec), 9999);
-      expect(_radius(spec.content.spec.container.spec), 21);
+      expect(_radius(spec.content.spec.container.spec), 24);
       expect(_radius(spec.item.spec.container.spec.box!.spec), 15);
     });
   });
@@ -340,37 +345,42 @@ void main() {
         states: {WidgetState.disabled, WidgetState.hovered},
       );
       final tokens = await _tokens(tester);
+      Color frame(SelectSpec spec) => spec
+          .trigger
+          .spec
+          .containerEffects!
+          .behindContent!
+          .shadows
+          .single
+          .color;
 
       expect(_flexColor(idle.trigger.spec.container), tokens.colorSurface);
       expect(
         idle.trigger.spec.containerEffects!.behindContent!.shadows.single.kind,
         RemixBoxShadowKind.inset,
       );
-      expect(
-        idle.trigger.spec.containerEffects!.behindContent!.shadows.single.color,
-        tokens.gray7,
-      );
-      expect(
-        open.trigger.spec.containerEffects!.behindContent!.shadows.single.color,
-        tokens.grayA8,
-      );
+      expect(frame(idle), tokens.gray7);
+      expect(idle.trigger.spec.indicatorOpacity, 1);
+      expect(idle.trigger.spec.indicatorAngle ?? 0, 0);
+      expect(idle.trigger.spec.indicator.spec.color, tokens.gray10);
+      expect(idle.trigger.spec.selectedWhileOpen, isTrue);
+
+      expect(frame(open), tokens.gray8);
+      expect(_flexColor(open.trigger.spec.container), tokens.gray3);
+      expect(open.trigger.spec.indicatorAngle, closeTo(math.pi, 1e-9));
+
+      expect(frame(disabledHover), tokens.gray7);
       expect(
         _flexColor(disabledHover.trigger.spec.container),
         tokens.colorSurface,
       );
-      final disabledLayer =
-          disabledHover.trigger.spec.containerEffects!.behindContent!;
-      expect(disabledLayer.shadows.single.color, tokens.grayA6);
-      expect(disabledLayer.gradients.single.colors, [
-        tokens.grayA2,
-        tokens.grayA2,
-      ]);
       expect(
-        disabledHover.trigger.spec.label.spec.style!.color,
-        tokens.grayA11,
+        disabledHover.trigger.widgetModifiers!
+            .whereType<OpacityModifier>()
+            .single
+            .opacity,
+        0.5,
       );
-      expect(idle.trigger.spec.indicatorOpacity, 0.9);
-      expect(disabledHover.trigger.spec.indicator.spec.color, tokens.grayA9);
     });
 
     testWidgets('focus uses a solid step-8 outside outline', (tester) async {
@@ -387,41 +397,31 @@ void main() {
       expect(effects.overContent, isNull);
     });
 
-    testWidgets(
-      'soft and ghost own the specified alpha fills and placeholder opacity',
-      (tester) async {
-        final soft = await _resolve(tester, fortalSelectStyle(variant: .soft));
-        final softOpen = await _resolve(
-          tester,
-          fortalSelectStyle(variant: .soft),
-          states: {WidgetState.selected},
-        );
-        final ghost = await _resolve(
-          tester,
-          fortalSelectStyle(variant: .ghost),
-        );
-        final tokens = await _tokens(tester);
+    testWidgets('soft and ghost own the specified muted fills', (tester) async {
+      final soft = await _resolve(tester, fortalSelectStyle(variant: .soft));
+      final softOpen = await _resolve(
+        tester,
+        fortalSelectStyle(variant: .soft),
+        states: {WidgetState.selected},
+      );
+      final ghost = await _resolve(tester, fortalSelectStyle(variant: .ghost));
+      final tokens = await _tokens(tester);
 
-        expect(_flexColor(soft.trigger.spec.container), tokens.accentA3);
-        expect(_flexColor(softOpen.trigger.spec.container), tokens.accentA4);
-        expect(soft.trigger.spec.label.spec.style!.color, tokens.accent12);
-        expect(soft.trigger.spec.placeholderOpacity, 0.6);
-        expect(_flexColor(ghost.trigger.spec.container), Colors.transparent);
-        expect(ghost.trigger.spec.placeholderOpacity, 0.6);
-        final ghostBox = ghost.trigger.spec.container.spec.box!.spec;
-        expect(
-          ghostBox.padding,
-          const EdgeInsets.all(
-            0,
-          ).copyWith(left: 8, right: 8, top: 4, bottom: 4),
-        );
-        expect(
-          ghostBox.margin,
-          const EdgeInsets.symmetric(horizontal: -8, vertical: -4),
-        );
-        expect(ghostBox.constraints, isNull);
-      },
-    );
+      expect(_flexColor(soft.trigger.spec.container), tokens.gray3);
+      expect(_flexColor(softOpen.trigger.spec.container), tokens.gray4);
+      expect(soft.trigger.spec.label.spec.style!.color, tokens.gray12);
+      expect(_flexColor(ghost.trigger.spec.container), Colors.transparent);
+      final ghostBox = ghost.trigger.spec.container.spec.box!.spec;
+      expect(
+        ghostBox.padding,
+        const EdgeInsets.all(0).copyWith(left: 8, right: 8, top: 4, bottom: 4),
+      );
+      expect(
+        ghostBox.margin,
+        const EdgeInsets.symmetric(horizontal: -8, vertical: -4),
+      );
+      expect(ghostBox.constraints, isNull);
+    });
   });
 
   testWidgets('uses the retained indicator and thick-check vector paths', (
@@ -506,7 +506,11 @@ Future<
     Color grayA5,
     Color grayA6,
     Color grayA7,
+    Color gray3,
+    Color gray4,
     Color gray7,
+    Color gray8,
+    Color gray10,
     Color grayA8,
     Color grayA9,
     Color grayA11,
@@ -531,7 +535,11 @@ _tokens(WidgetTester tester, {Brightness brightness = .light}) async {
     Color grayA5,
     Color grayA6,
     Color grayA7,
+    Color gray3,
+    Color gray4,
     Color gray7,
+    Color gray8,
+    Color gray10,
     Color grayA8,
     Color grayA9,
     Color grayA11,
@@ -563,7 +571,11 @@ _tokens(WidgetTester tester, {Brightness brightness = .light}) async {
             grayA5: token(FortalTokens.grayA5),
             grayA6: token(FortalTokens.grayA6),
             grayA7: token(FortalTokens.grayA7),
+            gray3: token(FortalTokens.gray3),
+            gray4: token(FortalTokens.gray4),
             gray7: token(FortalTokens.gray7),
+            gray8: token(FortalTokens.gray8),
+            gray10: token(FortalTokens.gray10),
             grayA8: token(FortalTokens.grayA8),
             grayA9: token(FortalTokens.grayA9),
             grayA11: token(FortalTokens.grayA11),

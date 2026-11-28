@@ -1,47 +1,59 @@
+import 'dart:math' as math;
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
+import '../motion/motion.dart';
 import '../theme/theme.dart';
 
 part 'select.g.dart';
 
 /// The sizes a select comes in. Pixel values are at 100% theme scaling.
+///
+/// The trigger text is 13px at every size.
 enum {{typePrefix}}SelectSize {
-  /// A 24px trigger with 12px text.
+  /// A 32px trigger.
   size1,
 
-  /// A 32px trigger with 14px text. The default.
+  /// A 40px trigger. The default.
   size2,
 
-  /// A 40px trigger with 16px text.
+  /// A 44px trigger.
   size3,
 }
 
 /// The looks a select's trigger comes in.
 enum {{typePrefix}}SelectVariant {
-  /// The `gray2` fill inside a 1px gray frame.
+  /// The surface fill inside a quiet 1px frame that strengthens, over the
+  /// muted fill, while hovered, pressed or open.
   surface,
 
-  /// An accent tint under accent text.
+  /// The muted fill inside the strong frame.
   soft,
 
-  /// No fill until hovered. It sits in a negative margin, so its text lines up
-  /// with the text around it.
+  /// No fill until hovered or open. It sits in a negative margin, so its text
+  /// lines up with the text around it.
   ghost,
 }
 
 /// The Fortal Select recipe: the trigger, the floating panel and its items.
 ///
-/// Content icons use size-matched 12/16/20 token defaults rather than the
-/// ambient icon size. Override the trigger icon through [style] when needed.
+/// The trigger answers hover, press and the open panel with the muted fill
+/// and the strong frame, and turns its chevron half a turn while open. A new
+/// value rises into place (an earlier one drops) while the old one leaves.
+/// The panel grows in from the trigger edge and leaves faster than it came.
+/// Items take the muted fill under the pointer or the keyboard.
 ///
 /// The panel is at least as wide as its trigger. A [style] that gives the
 /// content a `maxWidth` below the trigger's width must also set `minWidth`,
 /// which replaces the minimum, because a minimum above a maximum is invalid.
 ///
-/// [highContrast] moves the highlighted item of the surface and ghost variants
-/// to accent step 12.
+/// [highContrast] gives the surface trigger the strong frame at rest and
+/// moves the highlighted item of the surface and ghost variants to accent
+/// step 12 under step 1 text. It, or the theme's high contrast switch, lifts
+/// the placeholder and chevron from gray 10 to gray 11 so they read at 4.5:1.
 @MixWidget(target: RemixSelect.new)
 SelectStyler {{valuePrefix}}SelectStyle({
   {{typePrefix}}SelectVariant variant = .surface,
@@ -49,9 +61,17 @@ SelectStyler {{valuePrefix}}SelectStyle({
   bool highContrast = false,
   SelectStyler style = const SelectStyler.create(),
 }) => SelectStyler()
-    .trigger(_trigger(variant, size))
-    .content(_content(size))
+    .trigger(_trigger(variant, size, highContrast: highContrast))
+    .content(_content())
     .item(_item(variant, size, highContrast: highContrast))
+    .panelTransition(
+      const RemixPanelTransition(
+        duration: {{typePrefix}}Motion.standard,
+        reverseDuration: {{typePrefix}}Motion.instant,
+        reducedMotionDuration: {{typePrefix}}Motion.instant,
+        builder: _panelMotion,
+      ),
+    )
     .merge(style);
 
 /// The Fortal select item recipe, for styling one item on its own.
@@ -64,249 +84,213 @@ SelectMenuItemStyler {{valuePrefix}}SelectMenuItemStyle({
   bool highContrast = false,
 }) => _item(variant, size, highContrast: highContrast);
 
-/// The trigger: its shape and text, then the variant's colors.
+/// The trigger: its shape and text, then the variant's colors, then the open
+/// state, which turns the chevron.
 SelectTriggerStyler _trigger(
   {{typePrefix}}SelectVariant variant,
-  {{typePrefix}}SelectSize size,
-) => _triggerBase(size)
+  {{typePrefix}}SelectSize size, {
+  required bool highContrast,
+}) => _triggerBase(highContrast: highContrast)
     .merge(_triggerScale(variant, size))
     .wrap({{valuePrefix}}TouchTarget())
     .merge(switch (variant) {
-      .surface => _surfaceTrigger(),
-      .soft => _tintedTrigger(
-        color: {{typePrefix}}Tokens.accentA3(),
-        hover: {{typePrefix}}Tokens.accentA4(),
-        disabled: {{typePrefix}}Tokens.grayA3(),
+      .surface => _framedTrigger(
+        rest: highContrast
+            ? {{typePrefix}}Tokens.controlBorder()
+            : {{typePrefix}}Tokens.gray7(),
+        fill: {{typePrefix}}Tokens.gray2(),
+        active: {{typePrefix}}Tokens.gray3(),
       ),
-      .ghost => _tintedTrigger(
-        color: const Color(0x00000000),
-        hover: {{typePrefix}}Tokens.accentA3(),
-        disabled: const Color(0x00000000),
+      .soft => _framedTrigger(
+        rest: {{typePrefix}}Tokens.gray8(),
+        fill: {{typePrefix}}Tokens.gray3(),
+        active: {{typePrefix}}Tokens.gray4(),
       ),
+      .ghost => _ghostTrigger(),
     })
-    .onDisabled(.containerEffects(.outline(.style(.none))));
+    .selectedWhileOpen(true)
+    .onSelected(SelectTriggerStyler().indicatorAngle(math.pi))
+    .onDisabled(
+      SelectTriggerStyler()
+          .containerEffects(.outline(.style(.none)))
+          .wrap(.opacity(0.5)),
+    )
+    // The chevron turns on the transform spring; colors ride the same curve.
+    .animate(
+      AnimationConfig.curve(
+        duration: {{typePrefix}}SpringCurve.css.duration,
+        curve: {{typePrefix}}SpringCurve.css,
+      ),
+    );
 
-/// The trigger's label, placeholder, icons and focus ring. The label and icons
-/// are gray 12; the placeholder is `grayA10`.
-SelectTriggerStyler _triggerBase({{typePrefix}}SelectSize size) {
-  final (:text, :icon, :indicator, :radius) = switch (size) {
-    .size1 => (
-      text: {{typePrefix}}Tokens.text1,
-      icon: {{typePrefix}}Tokens.space3(),
-      indicator: {{typePrefix}}Tokens.selectTriggerIndicatorSize12(),
-      radius: {{typePrefix}}Tokens.radius1OrFull(),
-    ),
-    .size2 => (
-      text: {{typePrefix}}Tokens.text2,
-      icon: {{typePrefix}}Tokens.space4(),
-      indicator: {{typePrefix}}Tokens.selectTriggerIndicatorSize12(),
-      radius: {{typePrefix}}Tokens.radius2OrFull(),
-    ),
-    .size3 => (
-      text: {{typePrefix}}Tokens.text3,
-      icon: {{typePrefix}}Tokens.spinnerSize3(),
-      indicator: {{typePrefix}}Tokens.selectTriggerIndicatorSize3(),
-      radius: {{typePrefix}}Tokens.radius3OrFull(),
-    ),
-  };
+/// The trigger's label, placeholder, icons, value roll and focus ring.
+SelectTriggerStyler _triggerBase({required bool highContrast}) {
+  final muted = highContrast ? {{typePrefix}}Tokens.gray11() : _mutedContent();
   TextStyler regular(Color color) => TextStyler(
-    style: text.mix(),
+    style: {{typePrefix}}Tokens.text2.mix(),
   ).fontWeight({{typePrefix}}Tokens.fontWeightRegular()).color(color);
 
   return SelectTriggerStyler()
       .direction(.horizontal)
       .mainAxisAlignment(.spaceBetween)
-      .borderRadius(.all(radius))
+      .borderRadius(.all({{typePrefix}}Tokens.radius4OrFull()))
       .label(regular({{typePrefix}}Tokens.gray12()))
-      .placeholder(regular({{typePrefix}}Tokens.grayA10()))
-      .icon(.color({{typePrefix}}Tokens.gray12()).size(icon))
-      .indicator(.color({{typePrefix}}Tokens.gray12()).size(indicator))
+      .placeholder(regular(muted))
+      .icon(.color({{typePrefix}}Tokens.gray12()).size({{typePrefix}}Tokens.space4()))
+      .indicator(.color(muted).size({{typePrefix}}Tokens.space4()))
+      .indicatorOpacity(1)
+      .labelTransition(
+        const RemixSelectLabelTransition(
+          duration: {{typePrefix}}Motion.standard,
+          reverseDuration: {{typePrefix}}Motion.fast,
+          builder: _valueRoll,
+        ),
+      )
       .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()));
 }
+
+final _mutedContent = ContextToken<Color>(
+  (context) => {{typePrefix}}Theme.maybeOf(context)?.highContrast ?? false
+      ? {{typePrefix}}Tokens.gray11.resolve(context)
+      : {{typePrefix}}Tokens.gray10.resolve(context),
+);
 
 /// The gap, padding and height of the trigger. A ghost trigger has no height;
 /// it takes its padding and cancels it with a negative margin.
 SelectTriggerStyler _triggerScale(
   {{typePrefix}}SelectVariant variant,
   {{typePrefix}}SelectSize size,
-) {
-  final trigger = SelectTriggerStyler().spacing(switch (size) {
-    .size1 => {{typePrefix}}Tokens.space1(),
-    .size2 => {{typePrefix}}Tokens.space2(),
-    .size3 => {{typePrefix}}Tokens.space2(),
-  });
+) => switch (variant) {
+  .ghost => switch (size) {
+    .size1 || .size2 =>
+      SelectTriggerStyler()
+          .spacing({{typePrefix}}Tokens.space2())
+          .padding(.horizontal({{typePrefix}}Tokens.space2()))
+          .padding(.vertical({{typePrefix}}Tokens.space1()))
+          .margin(.horizontal({{typePrefix}}Tokens.selectGhostMarginX12()))
+          .margin(.vertical({{typePrefix}}Tokens.selectGhostMarginY12())),
+    .size3 =>
+      SelectTriggerStyler()
+          .spacing({{typePrefix}}Tokens.space2())
+          .padding(.horizontal({{typePrefix}}Tokens.space3()))
+          .padding(.vertical({{typePrefix}}Tokens.space2()))
+          .margin(.horizontal({{typePrefix}}Tokens.selectGhostMarginX3()))
+          .margin(.vertical({{typePrefix}}Tokens.selectGhostMarginY3())),
+  },
+  .surface || .soft =>
+    SelectTriggerStyler()
+        .spacing({{typePrefix}}Tokens.space3())
+        .height(switch (size) {
+          .size1 => {{typePrefix}}Tokens.controlHeight1(),
+          .size2 => {{typePrefix}}Tokens.controlHeight2(),
+          .size3 => {{typePrefix}}Tokens.controlHeight3(),
+        })
+        .padding(.horizontal(_framedInset())),
+};
 
-  return switch (variant) {
-    .ghost => switch (size) {
-      .size1 || .size2 =>
-        trigger
-            .padding(.horizontal({{typePrefix}}Tokens.space2()))
-            .padding(.vertical({{typePrefix}}Tokens.space1()))
-            .margin(.horizontal({{typePrefix}}Tokens.selectGhostMarginX12()))
-            .margin(.vertical({{typePrefix}}Tokens.selectGhostMarginY12())),
-      .size3 =>
-        trigger
-            .padding(.horizontal({{typePrefix}}Tokens.space3()))
-            .padding(.vertical({{typePrefix}}Tokens.space2()))
-            .margin(.horizontal({{typePrefix}}Tokens.selectGhostMarginX3()))
-            .margin(.vertical({{typePrefix}}Tokens.selectGhostMarginY3())),
-    },
-    .surface || .soft => switch (size) {
-      .size1 =>
-        trigger
-            .height({{typePrefix}}Tokens.space5())
-            .padding(.horizontal({{typePrefix}}Tokens.space2())),
-      .size2 =>
-        trigger
-            .height({{typePrefix}}Tokens.space6())
-            .padding(.horizontal({{typePrefix}}Tokens.space3())),
-      .size3 =>
-        trigger
-            .height({{typePrefix}}Tokens.space7())
-            .padding(.horizontal({{typePrefix}}Tokens.space4())),
-    },
-  };
+/// The 12px content inset plus the 1px frame, which is painted inset.
+final _framedInset = ContextToken<double>(
+  (context) =>
+      {{typePrefix}}Tokens.space3.resolve(context) +
+      {{typePrefix}}Tokens.borderWidth1.resolve(context),
+);
+
+/// A [fill] inside a [rest] frame; hover, press, open and keyboard focus
+/// strengthen the frame to gray 8, and all but focus move to the [active]
+/// fill.
+SelectTriggerStyler _framedTrigger({
+  required Color rest,
+  required Color fill,
+  required Color active,
+}) {
+  final engaged = _frame({{typePrefix}}Tokens.gray8()).color(active);
+
+  return _frame(rest)
+      .color(fill)
+      .onHovered(engaged)
+      .onPressed(engaged)
+      .onSelected(engaged)
+      .onFocusVisible(_frame({{typePrefix}}Tokens.gray8()))
+      .onDisabled(_frame(rest).color(fill));
 }
 
-SelectTriggerStyler _surfaceTrigger() => SelectTriggerStyler()
-    .indicatorOpacity(0.9)
-    .color({{typePrefix}}Tokens.gray2())
-    .containerEffects(
-      .behindContent({{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.gray7()])),
-    )
-    .onHovered(
-      .containerEffects(
-        .behindContent({{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA8()])),
-      ),
-    )
-    .onSelected(
-      .containerEffects(
-        .behindContent({{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA8()])),
-      ),
-    )
-    .onDisabled(
-      .color({{typePrefix}}Tokens.gray2())
-          .label(.color({{typePrefix}}Tokens.grayA11()))
-          .icon(.color({{typePrefix}}Tokens.grayA9()))
-          .indicator(.color({{typePrefix}}Tokens.grayA9()))
-          .containerEffects(
-            .behindContent(
-              {{valuePrefix}}InsetSurface(strokes: [{{typePrefix}}Tokens.grayA6()]).merge(
-                RemixBoxEffectLayerMix(
-                  gradients: [
-                    RemixLinearGradientMix(
-                      colors: [{{typePrefix}}Tokens.grayA2(), {{typePrefix}}Tokens.grayA2()],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-    );
+/// Transparent with no frame; hover, press and open take the muted fill.
+SelectTriggerStyler _ghostTrigger() {
+  final engaged = SelectTriggerStyler().color({{typePrefix}}Tokens.gray3());
 
-/// Accent text on a [color] fill that takes [hover] while hovered or open.
-/// Disabled turns the text gray and the fill [disabled].
-SelectTriggerStyler _tintedTrigger({
-  required Color color,
-  required Color hover,
-  required Color disabled,
-}) => SelectTriggerStyler()
-    .label(.color({{typePrefix}}Tokens.accent12()))
-    .placeholder(.color({{typePrefix}}Tokens.accent12()))
-    .placeholderOpacity(0.6)
-    .icon(.color({{typePrefix}}Tokens.accent12()))
-    .indicator(.color({{typePrefix}}Tokens.accent12()))
-    .color(color)
-    .onHovered(.color(hover))
-    .onSelected(.color(hover))
-    .onDisabled(
-      .label(.color({{typePrefix}}Tokens.grayA11()))
-          .icon(.color({{typePrefix}}Tokens.grayA9()))
-          .indicator(.color({{typePrefix}}Tokens.grayA9()))
-          .color(disabled),
-    );
-
-/// The floating panel: a raised, blurred panel at least as wide as the
-/// trigger.
-SelectContentStyler _content({{typePrefix}}SelectSize size) {
-  final (:padding, :radius) = switch (size) {
-    .size1 => (padding: {{typePrefix}}Tokens.space1(), radius: {{typePrefix}}Tokens.radius3()),
-    .size2 ||
-    .size3 => (padding: {{typePrefix}}Tokens.space2(), radius: {{typePrefix}}Tokens.radius4()),
-  };
-
-  return SelectContentStyler()
-      .maxHeight(320)
-      .border(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1()))
-      .minWidth(remixAnchorWidth())
-      .padding(.all(padding))
-      .borderRadius(.all(radius))
-      .color({{typePrefix}}Tokens.colorPanel())
-      .decoration(
-        BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow5.mix()),
-      )
-      .clipBehavior(Clip.antiAlias)
-      .containerEffects(.backdropBlur({{typePrefix}}Tokens.panelBlur()));
+  return SelectTriggerStyler()
+      .color(const Color(0x00000000))
+      .onHovered(engaged)
+      .onPressed(engaged)
+      .onSelected(engaged)
+      .onDisabled(SelectTriggerStyler().color(const Color(0x00000000)));
 }
 
-/// An item in the panel: gray text, with the variant's highlight under the
-/// pointer, keyboard focus and press.
+SelectTriggerStyler _frame(Color color) => SelectTriggerStyler()
+    .containerEffects(.behindContent({{valuePrefix}}InsetSurface(strokes: [color])));
+
+/// The floating panel: the raised surface in a quiet frame with the
+/// floating shadow, 4px off the trigger and at least as wide as it.
+SelectContentStyler _content() => SelectContentStyler()
+    .maxHeight(320)
+    .minWidth(remixAnchorWidth())
+    .margin(.vertical({{typePrefix}}Tokens.space1()))
+    .border(.color({{typePrefix}}Tokens.gray7()).width({{typePrefix}}Tokens.borderWidth1()))
+    .padding(.horizontal(_panelInset()))
+    .padding(.vertical(_panelListInset()))
+    .borderRadius(.all({{typePrefix}}Tokens.radius5()))
+    .color({{typePrefix}}Tokens.colorPanelSolid())
+    .decoration(BoxDecorationMix.create(boxShadow: {{typePrefix}}Tokens.shadow5.mix()))
+    .clipBehavior(Clip.antiAlias);
+
+/// 6px around the list, which adds 2px above and below.
+final _panelInset = _scaled(6);
+final _panelListInset = _scaled(8);
+
+/// An item in the panel: 13px text, the check 10px from the end, and the
+/// muted fill under the pointer, the keyboard and a press.
 SelectMenuItemStyler _item(
   {{typePrefix}}SelectVariant variant,
   {{typePrefix}}SelectSize size, {
   required bool highContrast,
 }) {
-  final (
-    :height,
-    :indicatorWidth,
-    :indicatorSize,
-    :radius,
-    :text,
-  ) = switch (size) {
-    .size1 => (
-      height: {{typePrefix}}Tokens.space5(),
-      indicatorWidth: {{typePrefix}}Tokens.selectIndicatorWidth1(),
-      indicatorSize: {{typePrefix}}Tokens.space2(),
-      radius: {{typePrefix}}Tokens.radius1(),
-      text: {{typePrefix}}Tokens.text1,
-    ),
-    .size2 => (
-      height: {{typePrefix}}Tokens.space6(),
-      indicatorWidth: {{typePrefix}}Tokens.space5(),
-      indicatorSize: {{typePrefix}}Tokens.selectIndicatorSize2(),
-      radius: {{typePrefix}}Tokens.radius2(),
-      text: {{typePrefix}}Tokens.text2,
-    ),
-    .size3 => (
-      height: {{typePrefix}}Tokens.space6(),
-      indicatorWidth: {{typePrefix}}Tokens.space5(),
-      indicatorSize: {{typePrefix}}Tokens.selectIndicatorSize2(),
-      radius: {{typePrefix}}Tokens.radius2(),
-      text: {{typePrefix}}Tokens.text3,
-    ),
-  };
-  final highlighted = _highlighted(variant, highContrast: highContrast);
+  final radius = {{typePrefix}}Tokens.radius2();
+  final highlighted = highContrast && variant != .soft
+      ? SelectMenuItemStyler()
+            .color({{typePrefix}}Tokens.accent12())
+            .text(.color({{typePrefix}}Tokens.accent1()))
+            .iconColor({{typePrefix}}Tokens.accent1())
+      : SelectMenuItemStyler().color({{typePrefix}}Tokens.gray3());
 
+  // Rows keep the 36px pitch of the panel; the list is its own scroll
+  // target, so no row widens past its drawn height.
   return SelectMenuItemStyler()
-      .wrap({{valuePrefix}}TouchTarget())
       .direction(.horizontal)
-      .height(height)
-      .padding(.horizontal(indicatorWidth))
+      .height(_itemHeight())
+      .padding(.only(left: _itemStart(), right: _itemEnd()))
       .borderRadius(.all(radius))
-      .text(TextStyler(style: text.mix()).color({{typePrefix}}Tokens.gray12()))
+      .text(
+        TextStyler(
+          style: {{typePrefix}}Tokens.text2.mix(),
+        ).color({{typePrefix}}Tokens.gray12()),
+      )
       .indicator(
         BoxStyler(
-          alignment: .center,
-          constraints: BoxConstraintsMix.width(indicatorWidth),
+          alignment: .centerRight,
+          constraints: BoxConstraintsMix.width(_indicatorWidth()),
         ),
       )
-      .icon(IconStyler(color: {{typePrefix}}Tokens.gray12(), size: indicatorSize))
+      .icon(
+        IconStyler(color: {{typePrefix}}Tokens.gray12(), size: {{typePrefix}}Tokens.space4()),
+      )
       .onHovered(highlighted)
       .onFocused(highlighted)
       .onPressed(highlighted)
       .onFocusVisible(
         SelectMenuItemStyler().container(
-          FlexBoxStyler().{{valuePrefix}}FocusRing(radius: radius),
+          highContrast
+              ? FlexBoxStyler().{{valuePrefix}}FocusRing(radius: radius)
+              : FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)),
         ),
       )
       .onDisabled(
@@ -315,29 +299,128 @@ SelectMenuItemStyler _item(
               FlexBoxStyler().wrap({{valuePrefix}}FocusRingModifier(visible: false)),
             )
             .color(const Color(0x00000000))
-            .text(.color({{typePrefix}}Tokens.grayA8()))
-            .iconColor({{typePrefix}}Tokens.grayA8()),
+            .wrap(.opacity(0.45)),
+      )
+      .animate(
+        AnimationConfig.curve(
+          duration: {{typePrefix}}Motion.instant,
+          curve: {{typePrefix}}Motion.easeStandard,
+        ),
       );
 }
 
-/// The item under the pointer or keyboard: the accent's solid fill under its
-/// contrast text, or a tint for the soft variant.
-SelectMenuItemStyler _highlighted(
-  {{typePrefix}}SelectVariant variant, {
-  required bool highContrast,
-}) {
-  final content = highContrast
-      ? {{typePrefix}}Tokens.accent1()
-      : {{typePrefix}}Tokens.accentContrast();
+/// [px] at the theme's scaling.
+ContextToken<double> _scaled(double px) => ContextToken<double>(
+  (context) => px * {{typePrefix}}Tokens.space1.resolve(context) / 4,
+);
 
-  return switch (variant) {
-    .surface || .ghost =>
-      SelectMenuItemStyler()
-          .color(
-            highContrast ? {{typePrefix}}Tokens.accent12() : {{typePrefix}}Tokens.accentSolid(),
-          )
-          .text(.color(content))
-          .iconColor(content),
-    .soft => SelectMenuItemStyler().color({{typePrefix}}Tokens.accentA4()),
+final _itemHeight = _scaled(36);
+final _itemStart = _scaled(11);
+final _itemEnd = _scaled(10);
+
+/// The check's 16px glyph plus the 8px before it, so labels stop 34px from
+/// the end when an item is checked.
+final _indicatorWidth = _scaled(24);
+
+/// The new value rises 0.35em out of a 4px blur over 200ms (an earlier one
+/// drops), while the old one leaves the other way 0.3em into a 2px blur over
+/// 150ms.
+Widget _valueRoll(
+  BuildContext context,
+  RemixSelectLabelTransitionInfo info,
+  Widget label,
+) {
+  final em = {{typePrefix}}Tokens.text2.resolve(context).fontSize!;
+  final sign = info.direction == .later ? 1.0 : -1.0;
+
+  return AnimatedBuilder(
+    animation: info.animation,
+    builder: (context, child) {
+      final t = info.animation.value;
+      final double rest;
+      final double travel;
+      final double blur;
+      if (info.entering) {
+        rest = {{typePrefix}}Motion.easeEnter.transform(t);
+        travel = sign * 0.35 * em * (1 - rest);
+        blur = {{typePrefix}}Motion.blurSoft * (1 - rest);
+      } else {
+        rest = {{typePrefix}}Motion.easeStandard.transform(t);
+        travel = -sign * 0.3 * em * (1 - rest);
+        blur = {{typePrefix}}Motion.blurSubtle * (1 - rest);
+      }
+
+      return Opacity(
+        opacity: rest.clamp(0.0, 1.0),
+        child: Transform.translate(
+          offset: Offset(0, travel),
+          child: blur > 0
+              ? ImageFiltered(
+                  imageFilter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+                  child: child,
+                )
+              : child,
+        ),
+      );
+    },
+    child: label,
+  );
+}
+
+/// The panel grows in from the trigger edge: from 6px toward the trigger,
+/// 0.97 scale and transparent, over 200ms on the enter ease. It leaves to
+/// half that offset and 0.98 scale over 100ms on the standard ease. Under
+/// reduced motion it only fades.
+Widget _panelMotion(
+  BuildContext context,
+  RemixPanelTransitionInfo info,
+  Widget panel,
+) {
+  final side = OverlayPlacement.maybeOf(context)?.side ?? OverlaySide.bottom;
+  final (toward, origin) = switch (side) {
+    OverlaySide.bottom => (const Offset(0, -6), Alignment.topCenter),
+    OverlaySide.top => (const Offset(0, 6), Alignment.bottomCenter),
+    OverlaySide.left => (const Offset(6, 0), Alignment.centerRight),
+    OverlaySide.right => (const Offset(-6, 0), Alignment.centerLeft),
   };
+
+  return RemixReducedMotionBuilder(
+    builder: (context, reduceMotion) => AnimatedBuilder(
+      animation: info.animation,
+      builder: (context, child) {
+        final t = info.animation.value;
+        final leaving =
+            info.animation.status == .reverse ||
+            info.animation.status == .dismissed;
+        if (reduceMotion) {
+          return Opacity(opacity: t, child: child);
+        }
+        final double gone;
+        final Offset offset;
+        final double scale;
+        if (leaving) {
+          gone = {{typePrefix}}Motion.easeStandard.transform(1 - t);
+          offset = toward / 2 * gone;
+          scale = 1 - 0.02 * gone;
+        } else {
+          gone = 1 - {{typePrefix}}Motion.easeEnter.transform(t);
+          offset = toward * gone;
+          scale = 1 - 0.03 * gone;
+        }
+
+        return Opacity(
+          opacity: (1 - gone).clamp(0.0, 1.0),
+          child: Transform.translate(
+            offset: offset,
+            child: Transform.scale(
+              scale: scale,
+              alignment: origin,
+              child: child,
+            ),
+          ),
+        );
+      },
+      child: panel,
+    ),
+  );
 }

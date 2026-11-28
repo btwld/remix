@@ -100,11 +100,19 @@ void main() {
       expect(item.files.single.target, '@ui/components/$name.dart');
       expect(item.exports, ['components/$name.dart']);
       expect(catalog.resolve(name).map((item) => item.name), switch (name) {
-        'calendar' => ['theme', 'base_button', 'icon_button', 'select', name],
+        'calendar' => [
+          'theme',
+          'base_button',
+          'icon_button',
+          'motion',
+          'select',
+          name,
+        ],
         'range_calendar' => [
           'theme',
           'base_button',
           'icon_button',
+          'motion',
           'select',
           'calendar',
           name,
@@ -114,6 +122,7 @@ void main() {
           'base_button',
           'button',
           'icon_button',
+          'motion',
           'select',
           'calendar',
           'popover',
@@ -124,6 +133,7 @@ void main() {
           'base_button',
           'button',
           'icon_button',
+          'motion',
           'select',
           'calendar',
           'popover',
@@ -149,6 +159,7 @@ void main() {
       'checkbox',
       'base_button',
       'icon_button',
+      'motion',
       'select',
       'data_table',
     ]);

@@ -8,15 +8,20 @@ part of 'select.dart';
 
 /// The Fortal Select recipe: the trigger, the floating panel and its items.
 ///
-/// Content icons use size-matched 12/16/20 token defaults rather than the
-/// ambient icon size. Override the trigger icon through [style] when needed.
+/// The trigger answers hover, press and the open panel with the muted fill
+/// and the strong frame, and turns its chevron half a turn while open. A new
+/// value rises into place (an earlier one drops) while the old one leaves.
+/// The panel grows in from the trigger edge and leaves faster than it came.
+/// Items take the muted fill under the pointer or the keyboard.
 ///
 /// The panel is at least as wide as its trigger. A [style] that gives the
 /// content a `maxWidth` below the trigger's width must also set `minWidth`,
 /// which replaces the minimum, because a minimum above a maximum is invalid.
 ///
-/// [highContrast] moves the highlighted item of the surface and ghost variants
-/// to accent step 12.
+/// [highContrast] gives the surface trigger the strong frame at rest and
+/// moves the highlighted item of the surface and ghost variants to accent
+/// step 12 under step 1 text. It, or the theme's high contrast switch, lifts
+/// the placeholder and chevron from gray 10 to gray 11 so they read at 4.5:1.
 class FortalSelect<T> extends StatelessWidget {
   const FortalSelect({
     super.key,
@@ -41,7 +46,8 @@ class FortalSelect<T> extends StatelessWidget {
     this.focusNode,
   });
 
-  /// The `gray2` fill inside a 1px gray frame.
+  /// The surface fill inside a quiet 1px frame that strengthens, over the
+  /// muted fill, while hovered, pressed or open.
   const FortalSelect.surface({
     super.key,
     this.size = .size2,
@@ -64,7 +70,7 @@ class FortalSelect<T> extends StatelessWidget {
     this.focusNode,
   }) : variant = FortalSelectVariant.surface;
 
-  /// An accent tint under accent text.
+  /// The muted fill inside the strong frame.
   const FortalSelect.soft({
     super.key,
     this.size = .size2,
@@ -87,8 +93,8 @@ class FortalSelect<T> extends StatelessWidget {
     this.focusNode,
   }) : variant = FortalSelectVariant.soft;
 
-  /// No fill until hovered. It sits in a negative margin, so its text lines up
-  /// with the text around it.
+  /// No fill until hovered or open. It sits in a negative margin, so its text
+  /// lines up with the text around it.
   const FortalSelect.ghost({
     super.key,
     this.size = .size2,
