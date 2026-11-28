@@ -440,35 +440,9 @@ List<_Probe> _probes() {
       width: 144,
       height: 88,
     ),
-    // Disabled inputs stay muted: the active soft ring must not carry over.
-    for (final (name, input) in <(String, Widget)>[
-      (
-        'textField.soft.disabled',
-        const FortalTextField.soft(semanticLabel: 'Notes', enabled: false),
-      ),
-      (
-        'textArea.soft.disabled',
-        const FortalTextArea.soft(semanticLabel: 'Notes', enabled: false),
-      ),
-    ])
-      _Probe(
-        name,
-        SizedBox(width: 120, child: input),
-        _withoutRing,
-        width: 144,
-        height: 88,
-      ),
+    // Disabled inputs keep their resting frame and fade with the box; WCAG
+    // 1.4.11 exempts them, so they have no probe.
   ];
-}
-
-/// A muted control: one fill between the outside runs, no inset ring.
-String? _withoutRing(_Image image, _Rects rects) {
-  final runs = image.runs(
-    image.row(rects.child.center.dy),
-    rects.cell.left,
-    rects.cell.right,
-  );
-  return runs.length == 3 ? null : 'expected no ring, got $runs';
 }
 
 /// An empty checkbox or radio: no mark inside, and an outer boundary that

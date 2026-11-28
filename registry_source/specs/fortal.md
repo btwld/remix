@@ -260,14 +260,22 @@ Fortal's elevation shadows carry no ring, so the anchored menu, select,
 popover and combobox panels share a 1px gray-7 edge. The menu paints its
 edge as a foreground decoration, so items sized to a panel width keep it.
 
-Surface text fields and text areas use an opaque gray-2 fill and the
-`controlBorder` frame, so a field without a visible label can still be found;
-soft fields and areas keep their accent-3 fill inside a fitted `focus8` ring,
-the recipe's base frame so caller frames still win. Error replaces either
-frame with error step 8, and disabled clears the soft ring (error keeps its
-precedence). Enabled surface input hints use secondary gray content; enabled
-soft input hints and icons use secondary accent content. Disabled input
-treatments stay separate.
+Text fields are 32, 40 and 44px tall (`controlHeight1`–`controlHeight3`) and
+text areas at least 2.75 times that (88, 110 and 121px), with a 14px
+(`radius4`) corner, a 13px inset (12px plus the painted 1px frame) and 14px
+`textField` text at every size. Surface fields and areas use the gray-2 fill
+inside the `controlBorder` frame, so a field without a visible label can still
+be found. Soft fields use the gray-3 fill with no frame at rest, or the
+`controlBorder` frame under the theme's high contrast switch. Hover and focus
+turn the frame gray-12; there is no focus ring unless the theme asks for high
+contrast. Error replaces the frame with error step 8 through hover and focus,
+and the label stays gray-12. Disabled moves the fill to gray-3, keeps the
+resting frame and fades the box (0.5 for a field, 0.6 for an area). The label
+is 13px medium with 8px below it; the helper row is 12px gray-10 and the error
+row 12px error-11, each with 8px above it inside the row, so a row that
+closes takes its gap with it. Rows open on the smooth spring, fade in over
+150ms and rise out of a 4px blur over 200ms; they close on the same spring and
+fade out over 100ms. Frame and fill changes take 150ms on the standard ease.
 
 Select triggers keep their gray-7 frame (gray alpha 8 when open or hovered):
 their value and chevron identify them. A trigger always paints its value or
@@ -378,21 +386,23 @@ truncation, RTL and 200% text.
 
 `FortalSearchField` uses `NakedSearchField` for behavior and `FortalTextField`
 for the editor. The size (`size1`–`size3`) and variant (`surface` or `soft`)
-match the text field at each text scale. There is no visible label or helper
-text; `semanticLabel` names the field. The leading `search` glyph takes the
-field's icon theme (16px, gray11 on surface, accent content on soft).
-`textInputAction` defaults to search. Caller-supplied controllers and focus
-nodes remain caller-owned. Removing the caller's controller preserves its
-last editing value.
+match the text field at each text scale. An optional `label` shows above the
+field; `semanticLabel` names it either way. There is no helper text. The
+leading 18px (`space18`) `search` glyph is gray-10 at rest and gray-12 while
+the field is focused or filled. `textInputAction` defaults to search.
+Caller-supplied controllers and focus nodes remain caller-owned. Removing the
+caller's controller preserves its last editing value.
 
-The clear button is a ghost icon button: size1 (12px `close` glyph) on size1
-and size2 fields and size2 (16px) on size3, gray11 with grayA3/grayA4 hover
-and press on surface, accent content on soft. Its trailing `touchTargetMin`
-(40px minimum) overlay avoids increasing the field height. The editor always
-reserves that space, so its width and tap area do not change when Clear
-appears. Clear is visible only when the field is enabled, editable, and
-nonempty. It shares the editor's tap region, takes no Tab stop, and has its
-own semantics node so Flutter web does not lose editor focus when it appears.
+The clear button is a 24px circle with a 16px `close` glyph in gray-10; under
+the pointer it takes the gray-3 fill and a gray-12 glyph, and a press scales
+it to 0.96. It sits in a 24px slot the field always reserves at its end, so
+the editor's width and tap area do not change when Clear appears, and its
+`touchTargetMin` (40px minimum) target is centered on that slot inside the
+field. It grows in from 0.8 out of a 2px blur (scale on the snappy spring,
+fade over 150ms) and leaves the same way in 100ms. Clear is visible only when
+the field is enabled, editable, and nonempty. It shares the editor's tap
+region, takes no Tab stop, and has its own semantics node so Flutter web does
+not lose editor focus when it appears.
 
 Clear empties the text, calls `onChanged('')` before `onCleared`, and returns
 focus to the editor whether activated by tap, semantics, or Escape. An Escape

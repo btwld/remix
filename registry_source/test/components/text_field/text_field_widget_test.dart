@@ -30,8 +30,8 @@ void main() {
     ).resolve(context).spec;
     decoration = spec.container.spec.decoration! as BoxDecoration;
 
-    expect(spec.text.spec.style?.color, colors.accent.scale.step(12));
-    expect(decoration.color, colors.accent.scale.alphaStep(3));
+    expect(spec.text.spec.style?.color, colors.gray.scale.step(12));
+    expect(decoration.color, colors.gray.scale.step(3));
   });
   testWidgets('read-only Fortal fields stay focusable and selectable', (
     tester,
@@ -105,14 +105,8 @@ void main() {
       await tester.pumpRemixApp(
         Builder(
           builder: (context) {
-            expectedSelection = MixScope.tokenOf(
-              testCase.soft ? FortalTokens.accentA5 : FortalTokens.focusA5,
-              context,
-            );
-            expectedCursor = MixScope.tokenOf(
-              testCase.soft ? FortalTokens.accent12 : FortalTokens.gray12,
-              context,
-            );
+            expectedSelection = MixScope.tokenOf(FortalTokens.focusA5, context);
+            expectedCursor = MixScope.tokenOf(FortalTokens.gray12, context);
             return testCase.textArea
                 ? RemixTextArea(
                     controller: controller,

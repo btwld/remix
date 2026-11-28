@@ -46,8 +46,8 @@ void main() {
                       ).build(context).spec.trigger.spec.containerEffects,
                     fortalCheckboxStyle().build(context).spec.containerEffects,
                     fortalSwitchStyle().build(context).spec.trackEffects,
-                    fortalTextFieldStyle().build(context).spec.containerEffects,
-                    fortalTextAreaStyle().build(context).spec.containerEffects,
+                    // Text inputs ring only under the theme's high contrast switch; see
+                    // text_area_fortal_test.dart.
                     fortalCardStyle().build(context).spec.containerEffects,
                     fortalLinkStyle(
                       context,
@@ -118,8 +118,8 @@ void main() {
             builder: (context) {
               final rings = <RemixBoxEffectsSpec?>[
                 fortalSliderStyle().build(context).spec.thumbFocusEffects,
-                fortalTextFieldStyle().build(context).spec.containerEffects,
-                fortalTextAreaStyle().build(context).spec.containerEffects,
+                // Text inputs ring only under the theme's high contrast switch; see
+                // text_area_fortal_test.dart.
                 fortalToggleStyle().build(context).spec.containerEffects,
                 fortalToggleGroupStyle()
                     .build(context)

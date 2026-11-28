@@ -12,11 +12,11 @@ BoxDecoration decoration(BoxSpec spec) => spec.decoration! as BoxDecoration;
 
 void main() {
   for (final (size, height, paddingY) in const [
-    // Size 1 grows past its 24px minimum by the 13px line box at 1.4 leading
-    // until the field re-skin sets the 32px control height.
-    (FortalTextFieldSize.size1, 24.2, 3.6),
-    (FortalTextFieldSize.size2, 32.0, 6.9),
-    (FortalTextFieldSize.size3, 40.0, 9.5),
+    // The field's control heights, centering the 14px line box that the
+    // engine lays out on 20px.
+    (FortalTextFieldSize.size1, 32.0, 6.0),
+    (FortalTextFieldSize.size2, 40.0, 10.0),
+    (FortalTextFieldSize.size3, 44.0, 12.0),
   ]) {
     for (final variant in FortalTextFieldVariant.values) {
       for (final scale in [1.0, 2.0]) {
