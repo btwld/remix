@@ -197,13 +197,14 @@ See [Slider](https://github.com/btwld/remix/blob/main/docs/components/slider.mdx
 
 ## Combobox
 
-`remix add combobox` installs `<Prefix>Combobox<T>` with `theme` and `text_field`.
-Use `variant: .surface|.soft` and `size: .size1|.size2|.size3`; defaults are
-surface and size2. Its field reuses TextField. The floating suggestion panel
-uses Fortal tokens, growing wrapped rows, distinct hover/keyboard/press fills,
-and the shared overflow fades and thumb. Acceptance updates the editor; there
-is no per-option selected state, and no disabled-row style yet for rows that
-`isOptionDisabled` marks. See
+`remix add combobox` installs `<Prefix>Combobox<T>` with `theme`, `motion` and
+`text_field`. Use `variant: .surface|.soft` and `size: .size1|.size2|.size3`;
+defaults are surface and size2. Its field reuses TextField's geometry with its
+own frame (quiet at rest, accent while focused, strong over the muted fill
+while open). The floating suggestion panel grows in from the field, and rows
+share one muted fill for hover, keyboard and press, with the shared overflow
+fades. Acceptance updates the editor; there is no per-option selected state,
+and no disabled-row style yet for rows that `isOptionDisabled` marks. See
 [Combobox](https://github.com/btwld/remix/blob/main/docs/components/combobox.mdx).
 
 ## Calendar family
