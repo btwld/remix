@@ -20,7 +20,8 @@ part of 'select.dart';
 ///
 /// [highContrast] gives the surface trigger the strong frame at rest and
 /// moves the highlighted item of the surface and ghost variants to accent
-/// step 12 under step 1 text.
+/// step 12 under step 1 text. It, or the theme's high contrast switch, lifts
+/// the placeholder and chevron from gray 10 to gray 11 so they read at 4.5:1.
 class UiSelect<T> extends StatelessWidget {
   const UiSelect({
     super.key,

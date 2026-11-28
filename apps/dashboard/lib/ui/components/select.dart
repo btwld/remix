@@ -52,7 +52,8 @@ enum UiSelectVariant {
 ///
 /// [highContrast] gives the surface trigger the strong frame at rest and
 /// moves the highlighted item of the surface and ghost variants to accent
-/// step 12 under step 1 text.
+/// step 12 under step 1 text. It, or the theme's high contrast switch, lifts
+/// the placeholder and chevron from gray 10 to gray 11 so they read at 4.5:1.
 @MixWidget(target: RemixSelect.new)
 SelectStyler uiSelectStyle({
   UiSelectVariant variant = .surface,
@@ -89,7 +90,7 @@ SelectTriggerStyler _trigger(
   UiSelectVariant variant,
   UiSelectSize size, {
   required bool highContrast,
-}) => _triggerBase()
+}) => _triggerBase(highContrast: highContrast)
     .merge(_triggerScale(variant, size))
     .wrap(uiTouchTarget())
     .merge(switch (variant) {
@@ -121,7 +122,8 @@ SelectTriggerStyler _trigger(
     );
 
 /// The trigger's label, placeholder, icons, value roll and focus ring.
-SelectTriggerStyler _triggerBase() {
+SelectTriggerStyler _triggerBase({required bool highContrast}) {
+  final muted = highContrast ? UiTokens.gray11() : _mutedContent();
   TextStyler regular(Color color) => TextStyler(
     style: UiTokens.text2.mix(),
   ).fontWeight(UiTokens.fontWeightRegular()).color(color);
@@ -131,9 +133,9 @@ SelectTriggerStyler _triggerBase() {
       .mainAxisAlignment(.spaceBetween)
       .borderRadius(.all(UiTokens.radius4OrFull()))
       .label(regular(UiTokens.gray12()))
-      .placeholder(regular(UiTokens.gray10()))
+      .placeholder(regular(muted))
       .icon(.color(UiTokens.gray12()).size(UiTokens.space4()))
-      .indicator(.color(UiTokens.gray10()).size(UiTokens.space4()))
+      .indicator(.color(muted).size(UiTokens.space4()))
       .indicatorOpacity(1)
       .labelTransition(
         const RemixSelectLabelTransition(
@@ -144,6 +146,12 @@ SelectTriggerStyler _triggerBase() {
       )
       .onFocusVisible(.containerEffects(uiFocusOutline()));
 }
+
+final _mutedContent = ContextToken<Color>(
+  (context) => UiTheme.maybeOf(context)?.highContrast ?? false
+      ? UiTokens.gray11.resolve(context)
+      : UiTokens.gray10.resolve(context),
+);
 
 /// The gap, padding and height of the trigger. A ghost trigger has no height;
 /// it takes its padding and cancels it with a negative margin.
